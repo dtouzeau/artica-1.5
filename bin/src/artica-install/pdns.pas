@@ -669,7 +669,7 @@ l.add('webserver-port=8081');
 l.add('webserver-print-arguments=no');
 l.add('# wildcard-url=no');
 l.add('# wildcards=');
-if PowerDisableDisplayVersion=0 then l.add('version-string=powerdns') else l.add('version-string=nope')
+if PowerDisableDisplayVersion=0 then l.add('version-string=powerdns') else l.add('version-string=nope');
 fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.greensql.php --sets');
 if PowerDNSMySQLEngine=1 then begin
    mysql_server:=SYS.GET_MYSQL('mysql_server');

@@ -614,7 +614,6 @@ if PowerChroot=1 then l.add('chroot=./');
 if PowerActHasMaster=1 then begin
    l.add('master=yes');
    l.add('slave=no');
-
 end;
 l.add('config-dir=/etc/powerdns');
 l.add('# config-name=');
