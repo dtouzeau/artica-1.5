@@ -65,7 +65,7 @@ events("Shutdown...");
 die();
 function Parseline($buffer){
 $buffer=trim($buffer);	
-
+if(preg_match("#exec.dstat.top.php#",$buffer)){return true;}
 if(preg_match("#artica-filter#",$buffer)){return true;}
 if(preg_match("#postfix\/#",$buffer)){return true;}
 if(preg_match("#CRON\[#",$buffer)){return true;}
@@ -140,7 +140,8 @@ if(strpos($buffer,"KASINFO")>0){return;}
 //pdns dustbin
 if(strpos($buffer,"question for '")>0){return;}
 if(strpos($buffer,"answer to question '")>0){return;}
-
+if(strpos($buffer,"failed (res=3)")>0){return;}
+if(preg_match("#pdns_recursor\[[0-9]+\]: \[[0-9]+\]\s+#", $buffer)){return;}
 
 //roundcube dustbin
 if(strpos($buffer,"IMAP Error: Empty password")>0){return;}
@@ -171,9 +172,50 @@ if(strpos($buffer,"smb_register_idmap_alloc")>0){return;}
 if(strpos($buffer,"Idmap module passdb already registered")>0){return;}
 if(strpos($buffer,"Cleaning up brl and lock database after unclean shutdown")>0){return;}
 if(strpos($buffer,"winbindd_sig_term_handler")>0){return;}
+if(strpos($buffer,"wins_registration_timeout")>0){return;}
+if(strpos($buffer,":   netbios connect:")>0){return;}
 if(strpos($buffer,"cleanup_timeout_fn")>0){return;}
-
+if(strpos($buffer,"struct wbint_Gid2Sid")>0){return;}
+if(strpos($buffer,":   doing parameter")>0){return;}
+if(strpos($buffer,"param/loadparm.c")>0){return;}
+if(strpos($buffer,":   wins_registration_timeout:")>0){return;}
+if(strpos($buffer,"src: struct server_id")>0){return;}
+if(strpos($buffer,"dest: struct server_id")>0){return;}
+if(strpos($buffer,"messages: struct messaging_rec")>0){return;}
+if(strpos($buffer,"ndr/ndr.c")>0){return;}
+if(strpos($buffer,"smbd/reply.c")>0){return;}
+if(strpos($buffer,"lib/smbldap.c")>0){return;}
+if(strpos($buffer,"srvsvc_NetShare")>0){return;}
+if(strpos($buffer,"]:   Global parameter")>0){return;}
+if(strpos($buffer,"STYPE_IPC_HIDDEN")>0){return;}
+if(strpos($buffer,"STYPE_DISKTREE")>0){return;}
+if(strpos($buffer,": NTLMSSP_")>0){return;}
+if(strpos($buffer,"MSG_SMB_UNLOCK")>0){return;}
+if(strpos($buffer,":           messages: ARRAY(")>0){return;}
+if(strpos($buffer,"struct messaging_array")>0){return;}
+if(strpos($buffer,":                   msg_version              :")>0){return;}
+if(strpos($buffer,":           num_messages             :")>0){return;}
+if(strpos($buffer,":                   sid                      :")>0){return;}
+if(strpos($buffer,":               sid                      :")>0){return;}
+if(strpos($buffer,":                       id                       :")>0){return;}
+if(strpos($buffer,":               dom_name                 :")>0){return;}
+if(strpos($buffer,":                   msg_version              :")>0){return;}
+if(strpos($buffer,":                   buf                      :")>0){return;}
+if(strpos($buffer,":               result                   :")>0){return;}
+if(strpos($buffer,":               gid                      :")>0){return;}
+if(strpos($buffer,"server_unc")>0){return;}
+if(strpos($buffer,"union ntlmssp_AvValue")>0){return;}
+if(strpos($buffer,"MsvAvNbDomainName")>0){return;}
+if(strpos($buffer,"NegotiateFlags")>0){return;}
+if(strpos($buffer,"AvDnsComputerName")>0){return;}
+if(strpos($buffer,"Version: struct VERSION")>0){return;}
+if(strpos($buffer,"array: ARRAY(")>0){return;}
+if(strpos($buffer,"info_ctr")>0){return;}
+if(strpos($buffer,"init_sam_from_ldap: Entry found")>0){return;}
 //Snort dustbin
+
+//pdns_recursor[23651]: stats: 600 questions, 665 cache entries, 29 negative entries, 0% cache hits"
+// check_ntlm_password:  Authentication for user [root] -> [root] FAILED with error NT_STATUS_WRONG_PASSWORD
 if(strpos($buffer,"]: last message repeated")>0){return;}
 
 
@@ -210,6 +252,11 @@ if(strpos($buffer,"got upwards/level NS record")>0){return;}
 if(strpos($buffer,"), rcode=0, in")>0){return;}
 if(strpos($buffer,"]    ns1.")>0){return;}
 if(strpos($buffer,"error resolving, possible error: Connection refused")>0){return;}
+if(strpos($buffer,"Failed to resolve via any of the")>0){return;}
+if(strpos($buffer,"failed (res=-1)")>0){return;}
+if(strpos($buffer,"question answered from packet cache from")>0){return;}
+if(strpos($buffer,": timeout resolving")>0){return;}
+if(strpos($buffer,": query throttled")>0){return;}
 
 if(strpos($buffer,'BIND dn="cn=')>0){return;}
 if(strpos($buffer,'RESULT tag=')>0){return;}
@@ -233,6 +280,19 @@ if(preg_match("#nss_wins\[[0-9]+\]:#",$buffer)){nss_parser($buffer);return;}
 	$auth=null;
 	
 	
+	
+	if(preg_match("#pdns.+?:\s+\[LdapBackend\] Unable to search LDAP directory: Starting LDAP search: Can't contact LDAP server#",$buffer,$re)){
+		events("--> PDNS LDAP FAILED");
+		$file="/etc/artica-postfix/croned.1/pdns.Can.t.contact.LDAP.server";
+		if(IfFileTime($file,10)){
+			email_events("PowerDNS: DNS server is unable to contact the LDA server","PDNS claims:\n$buffer\nArtica will restart PowerDNS service",'system');
+			shell_exec(trim("{$GLOBALS["nohup"]} /etc/init.d/artica-postfix restart pdns >/dev/null 2>&1 &"));
+			@unlink($file);	
+			WriteFileCache($file);
+		}
+		return;
+	}	
+	
 	if(preg_match("#pdns(?:\[\d{1,5}\])?: Not authoritative for '.*',.*sending servfail to\s+(.+?)\s+\(recursion was desired\)#",$buffer,$re)){
 		events("--> PDNS Hack {$re[2]}");
 		if($GLOBALS["PDNS_HACK"]==1){
@@ -250,7 +310,7 @@ if(preg_match("#nss_wins\[[0-9]+\]:#",$buffer)){nss_parser($buffer);return;}
 	if(preg_match("#auditd\[.+?Unable to set audit pid, exiting#", $buffer)){
 		$file="/etc/artica-postfix/croned.1/Unable.to.set.audit.pid";
 		if(IfFileTime($file,10)){
-			email_events("Auditd: cannot start","audtid claims:\n$buffer\nIt seems that Auditd cannot start, if you run this computer on an OpenVZ VPS server, be sure that your Administrator has enabled audtid capability
+			email_events("Auditd: cannot start","auditd claims:\n$buffer\nIt seems that Auditd cannot start, if you run this computer on an OpenVZ VPS server, be sure that your Administrator has enabled audtid capability
 			Take a look here http://bugzilla.openvz.org/show_bug.cgi?id=1157
 			\nthis notification is not a good information.\nthe Auditd feature is now disabled\n",'system');
 			@unlink($file);

@@ -17,6 +17,7 @@ see http://www.iana.org/assignments/character-sets</AddDefaultCharset_explain>
 <AddInArticaLogonFrontPage_text>If set, the main logon front-page will add links to the Public registration pages</AddInArticaLogonFrontPage_text>
 <additional_addresses>additional addresses</additional_addresses>
 <addrbl_server_text>Add RBL servers to check</addrbl_server_text>
+<add_amanda_computer>Add a new computer/ remote directory to backup</add_amanda_computer>
 <add_a_new_group_in_this_org>Add a new group in your organization</add_a_new_group_in_this_org>
 <add_a_subdomain>Add a subdomain</add_a_subdomain>
 <add_default_www>Add default website</add_default_www>
@@ -112,6 +113,10 @@ to insure the important disks are at least dumped.</AmandapriorityExplain>
 "skip"     - skip all dumps.  Useful for sharing a single node list in several configurations.[br]
 "incronly" - do only incremental dumps. This is similar to strategy 'nofull', but will increase the dump level as usual. Full dumps will only be performed when an 'amadmin force' has been issued
 </AmandaStrategyExplain>
+<amanda_backup_server_explain>If this Artica server is a client and must send backups to a central server, set here the fully qualified hostname of the backup central server.</amanda_backup_server_explain>
+<amanda_computers_explain>This section allow you to define remote clients to backup.[br]Each added client must have amanda client installed first.[br]
+You have to define which directory to backup and the client hostname.[br]
+</amanda_computers_explain>
 <AmavisNoInternetTests>Disable any Anti-Spam Internet tests/checking</AmavisNoInternetTests>
 <amavis_bypass_servers_explain>This feature is only used if your server using postqueue filter mode.[br]
 When adding IP addresses here, these senders will not pass trough the content filter.[br] 
@@ -254,6 +259,7 @@ The directory will be stored on /automount.
 <automount_this_disk>Auto-connect this disk and make it available in /automounts directory</automount_this_disk>
 <autostart>Auto-start</autostart>
 <available_modules>Available modules</available_modules>
+<backup_server>Backup server</backup_server>
 <ban>Ban</ban>
 <banned_domains>Banned domains</banned_domains>
 <banned_host>Banned Host</banned_host>
@@ -325,6 +331,7 @@ without logging into the server</cachemgr_text>
 <Calibration_Retry_Count_text>Number of attempts to calibrate a drive</Calibration_Retry_Count_text>
 <cannot_delete_address_postfix_instance>Cannot delete this virtual IP, a postfix instance currently using it</cannot_delete_address_postfix_instance>
 <cannot_delete_address_samba_instance>Cannot delete this Virtual address, it is used by a Samba instance</cannot_delete_address_samba_instance>
+<cannot_delete_computers_use_it>Cannot delete this item, some computers use it...</cannot_delete_computers_use_it>
 <categories_white_explain>Set categories you want to allow, this is the whitelist.</categories_white_explain>
 <cat_hospitals>Sites of hospitals and medical facilities</cat_hospitals>
 <cat_medical>Medical websites</cat_medical>
@@ -548,6 +555,7 @@ The interval is specified in seconds and may be a real number.
 <DOSSiteInterval_explain>Interval for the site count threshold. The interval is specified in seconds and may be a real number</DOSSiteInterval_explain>
 <DOWNLOAD_OPENVPN_CLIENT_APPLE>OpenVPN client for Mac OSx</DOWNLOAD_OPENVPN_CLIENT_APPLE>
 <do_not_send_same_infos_before>Do not send same information before</do_not_send_same_infos_before>
+<dumpcycle>DUMP cycle</dumpcycle>
 <dumpcycleExplain>Set the number of days in the dump cycle, ie, set how often a full dump should be performed</dumpcycleExplain>
 <duplicate_domain_explain>This feature will duplicate mails to another mail server.[br]It should be used for backup features or testing purpose.[br]
 Set in the form the destination server that will receive duplicated mails.[br]
@@ -631,6 +639,7 @@ When a user add/delete/modify a file in a Samba folder, greyhole will saved it a
 <error_choose_organization>Error you need to choose at least an organization</error_choose_organization>
 <error_field_max_length>Error, the given value execeed</error_field_max_length>
 <error_please_fill_field>Error, please fill the required field</error_please_fill_field>
+<estimate>Estimate</estimate>
 <ExecBackupDeadAfterH>A backup task is turned has "Dead" after X Hours (minimal 2)</ExecBackupDeadAfterH>
 <execute_reports_each>Execute reports each</execute_reports_each>
 <expand-hosts>expand hostnames</expand-hosts>
@@ -885,6 +894,7 @@ Organizations can only create subdomains of these domains if the "Use only offic
 <matches>matches</matches>
 <matchesnot>did not matches</matchesnot>
 <MaxClients>Max clients</MaxClients>
+<maxdumps>MAX DUMPs</maxdumps>
 <MaxKeepAliveRequests>Max KeepAlive requests</MaxKeepAliveRequests>
 <maxpromotedayExplain>max number of day for a promotion, set it 0 if you don't want promotion, set it to 1 or 2 if your disk get overpromoted</maxpromotedayExplain>
 <MaxSpareServers>Max spare Servers</MaxSpareServers>
@@ -1245,6 +1255,7 @@ Do you want to perform this operation ?</reconstruct_caches_explain>
 <rejected_mails>Rejected messages</rejected_mails>
 <relaydomain_explain>A relay domain is domain that will only pass this server.[br]This server is in charge to receive messages for this domain in order to transfert them to a new server.[br]
 The new server should be your backend server that store mailboxes..</relaydomain_explain>
+<remote_clients>Remote clients</remote_clients>
 <remote_directory>Remote directory</remote_directory>
 <Reported_Uncorrect>Reported Uncorrectable Errors</Reported_Uncorrect>
 <Reported_Uncorrect_text>The count of errors that could not be recovered using hardware ECC</Reported_Uncorrect_text>

@@ -16,6 +16,7 @@ $user=new usersMenus();
 	if(isset($_GET["id-js"])){client_js();exit();}
 	if(isset($_GET["id-popup"])){client_popup();exit;}
 	if(isset($_POST["ID"])){client_save();exit;}
+	if(isset($_POST["delete-id"])){client_delete();exit;}
 	
 page();	
 
@@ -157,12 +158,14 @@ function client_save(){
 	}
 	
 	$sql_add="INSERT INTO amanda_hosts (".@implode(",", $field).") VALUES (".@implode(",", $vals).")";
-	$sql_update="UDPATE amanda_hosts SET " .@implode(",", $upd) ." WHERE ID='{$id}'";;
+	$sql_update="UPDATE amanda_hosts SET " .@implode(",", $upd) ." WHERE ID='{$id}'";;
 	$sql=$sql_add;
 	if($id>0){$sql=$sql_update;}
 	$q=new mysql();
 	$q->QUERY_SQL($sql,"artica_backup");
-	if(!$q->ok){echo $q->mysql_error;return;}
+	if(!$q->ok){echo $q->mysql_error."\n\n$sql\n";return;}
+	$sock=new sockets();
+	$sock->getFrameWork("amanda.php?save-client-config=yes");	
 }
 
 	
@@ -176,10 +179,7 @@ function page(){
 	$add=Paragraphe("64-net-server-add.png", "{add_computer}", "{add_amanda_computer}","javascript:AmandaComputer(0)");
 	
 	$html="
-	<table style='width:750px'>
-	<tr>
-	<td width=550px valign='top'>
-		<div class=explain>{amanda_computers_explain}</div>
+	<div class=explain>{amanda_computers_explain}</div>
 		<center>
 			<table style='width:100%' class=form>
 			<tr>
@@ -191,12 +191,6 @@ function page(){
 		</center>		
 		<div id='browse-amanda-list' style='width:100%;height:450px;overflow:auto;text-align:center'></div>
 		
-	</td>
-	</tr>
-	</table>
-	
-	
-	
 <script>
 		function BrowseAmandaSearchCheck(e){
 			if(checkEnter(e)){BrowseAmandaSearch();}
@@ -233,7 +227,7 @@ function clients_list(){
 	$search_sql=str_replace("%%","%",$search_sql);
 	$search_regex=str_replace(".","\.",$search);	
 	$search_regex=str_replace("*",".*?",$search);
-
+	$delete_text=$tpl->javascript_parse_text("{delete}");
 	
 	$add=imgtootltip("plus-24.png","{add}","AmandaComputer(0)");
 	$html="<center>
@@ -253,18 +247,20 @@ function clients_list(){
 		
 		if(!$q->ok){echo "<H2>$q->mysql_error</H2>";}
 		while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
-	
-
+		$img="computer-32.png";
+		$warn_text=null;
+		if($ligne["resolved"]==null){$img="warning-panneau-32.png";$warn_text="<hr>{could_not_find_iphost}";}
 		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
-		$select=imgtootltip("32-parameters.png","{edit}","AmandaComputer('{$ligne["ID"]}')");
-		$select2=imgtootltip("32-network-server.png","{edit}","AmandaComputer('{$ligne["ID"]}')");
+		$select=imgtootltip("32-parameters.png","{edit}$warn_text","AmandaComputer('{$ligne["ID"]}')");
+		$select2=imgtootltip($img,"{edit}$warn_text","AmandaComputer('{$ligne["ID"]}')");
 		$delete=imgtootltip("delete-32.png","{delete}","AmandaComputerDel('{$ligne["ID"]}')");
 		$color="black";
-
+		$href="<a href=\"javascript:blur();\" OnClick=\"javascript:AmandaComputer('{$ligne["ID"]}')\"
+		style='font-size:14px;font-weight:bold;color:$color;text-decoration:underline'>";
 		$html=$html."
 		<tr class=$classtr>
 			<td width=1%>$select2</td>
-			<td style='font-size:14px;font-weight:bold;color:$color'>{$ligne["hostname"]}<div><i style='font-size:10px'>{$ligne["resolved"]}</i></div></a></td>
+			<td style='font-size:14px;font-weight:bold;color:$color'>$href{$ligne["hostname"]}</a><div><i style='font-size:10px'>({$ligne["resolved"]})</i></div></a></td>
 			<td style='font-size:14px;font-weight:bold;color:$color'>{$ligne["directory"]}</a></td>
 			<td style='font-size:14px;font-weight:bold;color:$color'>{$ligne["dumptype"]}</td>
 			<td width=1%>$select</td>
@@ -276,27 +272,34 @@ function clients_list(){
 	$html=$html."</table></center>
 	<script>
 	
-		var x_SambaVirtalDel=function (obj) {
+		var x_AmandaComputerDel=function (obj) {
 			var results=obj.responseText;
 			if(results.length>2){alert(results);}			
 			BrowseAmandaSearch();
 		}
 	
 	
-		function SambaVirtalDel(hostname){
-			if(confirm('$sure_delete_smb_vrt ['+hostname+']')){
+		function AmandaComputerDel(ID){
+			if(confirm('$delete_text ?')){
 				var XHR = new XHRConnection();
-				XHR.appendData('delete-hostname',hostname);
-				AnimateDiv('browse-samba-list');
-    			XHR.sendAndLoad('$page', 'POST',x_SambaVirtalDel);
+				XHR.appendData('delete-id',ID);
+				AnimateDiv('browse-amanda-list');
+    			XHR.sendAndLoad('$page', 'POST',x_AmandaComputerDel);
 			}
 		}
 	
-		
-
-
 	</script>
 	
 	";
 	echo $tpl->_ENGINE_parse_body($html);
+}
+
+function client_delete(){
+	if(!is_numeric($_POST["ID"])){return;}
+	$sql="DELETE FROM amanda_hosts WHERE ID='{$_POST["ID"]}'";
+	$q=new mysql();
+	$q->QUERY_SQL($sql,"artica_backup");
+	if(!$q->ok){echo $q->mysql_error;return;}
+	$sock=new sockets();
+	$sock->getFrameWork("amanda.php?save-client-config=yes");	
 }

@@ -735,10 +735,13 @@ function status_memdump(){
 
 
 function status_left(){
+	
+	if(is_file("ressources/logs/web/debian.update.html"));
+	$apt=@file_get_contents("ressources/logs/web/debian.update.html");
 	$html=@file_get_contents("ressources/logs/status.global.html");
 	$tpl=new templates();
 	$page=CurrentPageName();
-	echo $tpl->_ENGINE_parse_body($html)."
+	echo $tpl->_ENGINE_parse_body("$apt$html")."
 	<div id='artica-meta'></div>
 	
 	<script>

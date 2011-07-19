@@ -12,7 +12,7 @@
       <MainUnit Value="0"/>
       <TargetFileExt Value=""/>
       <Title Value="setup-ubuntu"/>
-      <ActiveEditorIndexAtStart Value="1"/>
+      <ActiveEditorIndexAtStart Value="5"/>
     </General>
     <VersionInfo>
       <ProjectVersion Value=""/>
@@ -35,7 +35,7 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="setup_ubuntu"/>
         <CursorPos X="1" Y="1"/>
-        <TopLine Value="52"/>
+        <TopLine Value="1"/>
         <EditorIndex Value="0"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -44,8 +44,8 @@
         <Filename Value="setup_ubuntu_class.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="setup_ubuntu_class"/>
-        <CursorPos X="1" Y="58"/>
-        <TopLine Value="1"/>
+        <CursorPos X="29" Y="675"/>
+        <TopLine Value="628"/>
         <EditorIndex Value="5"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -112,7 +112,7 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="setup_libs"/>
         <CursorPos X="45" Y="1965"/>
-        <TopLine Value="1946"/>
+        <TopLine Value="1948"/>
         <EditorIndex Value="8"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -129,7 +129,7 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="distriDetect"/>
         <CursorPos X="1" Y="218"/>
-        <TopLine Value="184"/>
+        <TopLine Value="201"/>
         <EditorIndex Value="7"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>

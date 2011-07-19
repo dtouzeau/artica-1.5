@@ -78,7 +78,6 @@ end;
 
      if ParamStr(1)='--compile' then begin
         comp.COMPILE;
-        comp.git();
         halt(0);
      end;
      

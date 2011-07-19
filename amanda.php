@@ -20,6 +20,9 @@ $user=new usersMenus();
 	if(isset($_GET["dumptype-key"])){dumptype_popup();exit;}
 	if(isset($_POST["dumpname"])){dumptype_save();exit;}
 	if(isset($_GET["amanda-dumptypes-list"])){dumptypes_list();exit;}
+	if(isset($_GET["backup-server"])){backup_server_popup();exit;}
+	if(isset($_POST["AmandaBackupServer"])){AmandaBackupServerSave();exit;}
+	if(isset($_GET["AmandaServerResolv"])){AmandaServerResolv();exit;}
 	
 js();
 
@@ -104,7 +107,7 @@ function dumptype_save(){
 	}
 	
 	$sql_add="INSERT INTO amanda_dumptype (".@implode(",", $field).") VALUES (".@implode(",", $vals).")";
-	$sql_update="UDPATE amanda_dumptype SET " .@implode(",", $upd) ." WHERE dumpname='{$_POST["dumpname"]}'";;
+	$sql_update="UPDATE amanda_dumptype SET " .@implode(",", $upd) ." WHERE dumpname='{$_POST["dumpname"]}'";;
 	
 	$q=new mysql();	
 	$sql="SELECT * FROM amanda_dumptype WHERE dumpname='{$_POST["dumpname"]}'";
@@ -113,6 +116,8 @@ function dumptype_save(){
 	if($ligne["dumpname"]<>null){$sql=$sql_update;}
 	$q->QUERY_SQL($sql,"artica_backup");
 	if(!$q->ok){echo $q->mysql_error;return;}
+	$sock=new sockets();
+	$sock->getFrameWork("amanda.php?save-server-config=yes");
 	
 }
 
@@ -337,7 +342,7 @@ function dumptypes_list(){
 	$page=CurrentPageName();
 	$tpl=new templates();
 	$q=new mysql();
-
+	$delete_text=$tpl->_ENGINE_parse_body("{delete}");
 	
 	
 	$add=imgtootltip("plus-24.png","{add}","AddDumptypeServer('')");
@@ -359,6 +364,10 @@ function dumptypes_list(){
 		while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
 			if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
 			$delete=imgtootltip("delete-32.png","{delete}","dumpTypeDelete('{$ligne["dumpname"]}')");
+			
+			$sql="SELECT COUNT(ID) as tcount FROM amanda_hosts WHERE dumptype='{$ligne["dumpname"]}'";
+			$ligne2=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));
+			if($ligne2["tcount"]>0){$delete=imgtootltip("delete-32-grey.png","{cannot_delete_computers_use_it}");}
 			$html=$html."
 			<tr class=$classtr>
 			<td width=1%><img src='img/Database32.png'></td>
@@ -371,9 +380,101 @@ function dumptypes_list(){
 		}
 
 		
-	$html=$html."</table>";
+	$html=$html."</table>
+	<script>
+		var x_AmandaComputerDel=function (obj) {
+			var results=obj.responseText;
+			if(results.length>2){alert(results);}			
+			BrowseAmandaSearch();
+		}
+	
+	
+		function dumpTypeDelete(dumpname){
+			if(confirm('$delete_text ('+dumpname+')?')){
+				var XHR = new XHRConnection();
+				XHR.appendData('delete-id',ID);
+				AnimateDiv('browse-amanda-list');
+    			XHR.sendAndLoad('$page', 'POST',x_AmandaComputerDel);
+			}
+		}	
+	
+	
+	</script>	
+	
+	";
 	echo $tpl->_ENGINE_parse_body($html);
 	
+}
+
+function backup_server_popup(){
+	$page=CurrentPageName();
+	$tpl=new templates();	
+	$sock=new sockets();
+	$backup_server=$sock->GET_INFO("AmandaBackupServer");
+	$html="
+	<div class=explain>{amanda_backup_server_explain}</div>
+	<div id='amandabckserv'>
+	<table style='width:100%'>
+	<tr>
+	<td valign='top' style='width:1%'><span id='AmandaServerResolv'></span></td>
+	<td valign='top' style='width:99%'>
+	<table style='width:300px' class=form>
+	<tr>
+		<td class=legend>{backup_server}:</td>
+		<td>". Field_text("amanda-backup-server",$backup_server,"font-size:16px;width:250px;padding:3px")."</td>
+		<td width=1%>". button("{apply}","SaveAmandaBackupServer()")."</td>
+	</tr>
+	</table>
+	</td>
+	</tr>
+	</table>
+	
+	</div>
+	<script>
+		var x_SaveAmandaBackupServer=function (obj) {
+			var results=obj.responseText;
+			if(results.length>2){alert(results);}			
+			RefreshTab('main_config_amanda');
+		}
+	
+	
+		function SaveAmandaBackupServer(){
+				var XHR = new XHRConnection();
+				XHR.appendData('AmandaBackupServer',document.getElementById('amanda-backup-server').value);
+				AnimateDiv('amandabckserv');
+    			XHR.sendAndLoad('$page', 'POST',x_SaveAmandaBackupServer);
+			}
+			
+		function refreshAmandaServerResolv(){
+			LoadAjax('AmandaServerResolv','$page?AmandaServerResolv=yes');
+		}
+		refreshAmandaServerResolv();	
+			
+</script>
+	";
+	echo $tpl->_ENGINE_parse_body($html);
+	
+	
+}
+
+function AmandaBackupServerSave(){
+	$sock=new sockets();
+	$sock->SET_INFO("AmandaBackupServer", $_POST["AmandaBackupServer"]);
+	$sock->getFrameWork("amanda.php?set-backup-server=yes");
+	
+}
+
+function AmandaServerResolv(){
+	$sock=new sockets();
+	$tpl=new templates();
+	$backup_server=$sock->GET_INFO("AmandaBackupServer");	
+	if($backup_server==null){return;}
+	$ip=gethostbyname($backup_server);
+	if($backup_server==$ip){
+		echo $tpl->_ENGINE_parse_body(Paragraphe("server-error-64.png", $backup_server, "{could_not_find_iphost}"));
+		return;
+	}
+	echo $tpl->_ENGINE_parse_body(Paragraphe("server-ok-64.png", $backup_server, "$ip"));
 }
 
 
@@ -383,6 +484,7 @@ function tabs(){
 	$array["params"]='{parameters}';
 	$array["dumptypes"]='{Amandadumptypes}';
 	$array["remote-clients"]='{remote_clients}';
+	$array["backup-server"]='{backup_server}';
 	
 	$tpl=new templates();
 

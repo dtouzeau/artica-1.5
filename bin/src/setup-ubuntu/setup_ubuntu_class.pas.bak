@@ -672,6 +672,7 @@ l.Add('gnuplot-nox');
 l.Add('dump'); //dump: /sbin/restore
 l.add('smbclient'); //smbclient: /usr/bin/smbclient
 l.add('xinetd');
+L.add('libglib2.0-dev');
 
 for i:=0 to l.Count-1 do begin
      if not is_application_installed(l.Strings[i]) then begin
@@ -878,7 +879,6 @@ l.add('libgeoip1');
 l.add('libwrap0-dev');
 l.add('gettext');
 l.add('ruby');
-l.add('libclamav-dev'); //clamav
 l.add('rsync');
 l.add('smbfs');
 l.add('dnsutils');

@@ -19,6 +19,7 @@ System Changes
 1.5.071420: Adding a function that patching /etc/cron.d/php5, /etc/cron.d/sendmail, /etc/cron.d/awstats in order to remove notifications from these scripts.
 1.5.071420: Adding new verbosed entries when executing exec.dhcpd.compile.php --verbose for dhcpd3.conf 
 1.5.071600: Add possibility to define listen IP addresses for PowerDNS.
+Add a new watchdog when PowerDNS loose connections with LDAP.(artica will restart PowerDNS service automatically).
 
 
 Messaging Changes:

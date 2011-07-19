@@ -30,6 +30,8 @@ if($argv[1]=='--sources-list'){CheckSourcesList();die();}
 
 
 function GetUpdates(){
+@mkdir("/usr/share/artica-postfix/ressources/logs/web",755,true);
+@unlink("/usr/share/artica-postfix/ressources/logs/web/debian.update.html");
 if(COUNT_REPOS()==0){INSERT_DEB_PACKAGES();}	
 $unix=new unix();
 $tmpf=$unix->FILE_TEMP();
@@ -72,11 +74,13 @@ writelogs("Found ". strlen($datas)." bytes for apt",__FUNCTION__,__FILE__,__LINE
 		$text="You can perform upgrade of linux packages for\n".@file_get_contents("/etc/artica-postfix/apt.upgrade.cache");
 		send_email_events("new upgrade $count packages(s) ready",$text,"system");
 		
-		THREAD_COMMAND_SET(LOCATE_PHP5_BIN()." /usr/share/artica-postfix/exec.admin.status.postfix.flow.php --services");
+		$paragraph=Paragraphe('64-infos.png',"$count {system_packages}",
+		"$count {system_packages_can_be_upgraded}","javascript:Loadjs('artica.repositories.php');
+		","{system_packages_can_be_upgraded}",300,80);
+		@file_put_contents("/usr/share/artica-postfix/ressources/logs/web/debian.update.html", $paragraph);
+		shell_exec("/bin/chmod 777 /usr/share/artica-postfix/ressources/logs/web/debian.update.html");
 		
-		if($AUTOUPDATE["auto_apt"]=="yes"){
-			UPGRADE();
-		}
+		if($AUTOUPDATE["auto_apt"]=="yes"){UPGRADE();}
 	}else{
 		writelogs("No new packages...",__FUNCTION__,__FILE__,__LINE__);
 		@unlink("/etc/artica-postfix/apt.upgrade.cache");
@@ -167,6 +171,7 @@ function PACKAGE_EXTRA_INFO($pname){
 }
 
 function UPGRADE(){
+	@unlink("/usr/share/artica-postfix/ressources/logs/web/debian.update.html");
 	$unix=new unix();
 	$tmpf=$unix->FILE_TEMP();		
 $txt="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/X11R6/bin\n";
@@ -193,6 +198,14 @@ $cmd="DEBIAN_FRONTEND=noninteractive {$_GET["APT-GET"]} -o Dpkg::Options::=\"--f
 writelogs($cmd,__FUNCTION__,__FILE__,__LINE__);
 shell_exec($cmd);
 
+$cmd="DEBIAN_FRONTEND=noninteractive {$_GET["APT-GET"]} -o Dpkg::Options::=\"--force-confnew\" --force-yes --yes dist-upgrade >>$tmpf 2>&1";
+writelogs($cmd,__FUNCTION__,__FILE__,__LINE__);
+shell_exec($cmd);
+
+$cmd="DEBIAN_FRONTEND=noninteractive {$_GET["APT-GET"]} -o Dpkg::Options::=\"--force-confnew\" --force-yes --yes autoremove >>$tmpf 2>&1";
+writelogs($cmd,__FUNCTION__,__FILE__,__LINE__);
+shell_exec($cmd);
+
 $datas=@file_get_contents($tmpf);
 $datassql=addslashes($datas);
 
@@ -204,7 +217,9 @@ $q->QUERY_SQL($sql,"artica_backup");
 
 send_email_events("Debian/Ubuntu System upgrade operation",$datas,"system");
 INSERT_DEB_PACKAGES();
-THREAD_COMMAND_SET(LOCATE_PHP5_BIN()." /usr/share/artica-postfix/exec.admin.status.postfix.flow.php --services"); 	
+send_email_events("Rebooting after upgrade operation","reboot command has been performed","system");
+shell_exec("reboot");
+
 }
 
 

@@ -1726,3 +1726,7 @@ This is used in archive configurations, where only full dumps are done and the t
 You have to define which directory to backup and the client hostname.[br]
 </amanda_computers_explain>
 <add_amanda_computer>Add a new computer/ remote directory to backup</add_amanda_computer>
+<cannot_delete_computers_use_it>Cannot delete this item, some computers use it...</cannot_delete_computers_use_it>
+<remote_clients>Remote clients</remote_clients>
+<amanda_backup_server_explain>If this Artica server is a client and must send backups to a central server, set here the fully qualified hostname of the backup central server.</amanda_backup_server_explain>
+<backup_server>Backup server</backup_server>

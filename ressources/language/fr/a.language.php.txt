@@ -13,6 +13,7 @@ Effectuer l'op&eacute;ration ?</acls_folders_rebuild_text>
 <AddInArticaLogonFrontPage_text>Si activ&eacute;, des liens vont &ecirc;tre ajout&eacute;s sur la page d'enregistrement de session de l'interface principale</AddInArticaLogonFrontPage_text>
 <additional_addresses>Adresses additionnelles</additional_addresses>
 <addrbl_server_text>Ajouter des serveurs de listes noires &agrave; questionner</addrbl_server_text>
+<add_amanda_computer>Ajouter un nouvel ordinateur/R&eacute;pertoire distant &agrave; sauvegarder</add_amanda_computer>
 <add_a_new_group_in_this_org>Ajouter un nouveau groupe dans cette organisation</add_a_new_group_in_this_org>
 <add_a_subdomain>Ajouter un sous-domaine</add_a_subdomain>
 <add_default_www>Ajouter un site web par d&eacute;faut</add_default_www>
@@ -99,6 +100,9 @@ assure que les disques prioritaires sont moins d&eacute;vers&eacute;s</Amandapri
 &quot;noinc&quot; - Faire un niveau 0 &agrave; chaque fois.[br]
 &quot;skip&quot; - laisser passer toutes les extractions. Utile pour partager une liste de n%u0153ud unique dans plusieurs configurations.[br]
 &quot;incronly&quot; - Faire seulement des extractions incr&eacute;mentales. similaire &agrave; 'nofull', mais augmente le niveau d'extraction.Les extractions compl&egrave;tes sont effectu&eacute;e uniquement sur demande manuelles</AmandaStrategyExplain>
+<amanda_backup_server_explain>Si ce serveur Artica est un client et qu'il doit envoyer ses sauvegardes &agrave; un serveur de sauvegarde centralis&eacute;, indiquez ici le nom d'h&ocirc;te du serveur de sauvegardes.(le nom d'h&ocirc;te complet)</amanda_backup_server_explain>
+<amanda_computers_explain>Cette section vous permet d'indiquer des clients distants &agrave; sauvegarder.[br]Chaque client doit disposer du client Amanda avant.[br]
+Vous d&eacute;finirez pour chaque client son nom d'h&ocirc;te complet et le r&eacute;pertoire &agrave; sauvegarder.</amanda_computers_explain>
 <AmavisNoInternetTests>D&eacute;sactiver tout test utilisant des acc&egrave;s Internet</AmavisNoInternetTests>
 <amavis_bypass_servers_explain>Cette fonctionnalit&eacute; est utilis&eacute;e uniquement si votre serveur utilise le mode apr&egrave;s-queue.[br]
 Lorsque vous ajoutez une adresse IP, les &eacute;metteurs ne passeront pas &agrave; travers le filtre de contenu.[br]
@@ -217,6 +221,7 @@ Ce r&eacute;pertoire sera localis&eacute; dans /automounts</autofs_ask_dir>
 <automount_this_disk>Auto-connecter ce disque et le placer en production dans le r&eacute;pertoire /automounts</automount_this_disk>
 <autostart>D&eacute;marrage automatique</autostart>
 <available_modules>Modules disponibles</available_modules>
+<backup_server>Serveur de sauvegarde</backup_server>
 <ban>Bannir</ban>
 <banned_domains>Domaines bannis</banned_domains>
 <banned_host>H&ocirc;te banni</banned_host>
@@ -279,6 +284,7 @@ C'est une mani&egrave;re d'&ecirc;tre inform&eacute; de l'&eacute;tat du Proxy s
 <Calibration_Retry_Count_text>Nombre de tentatives de re-calibrations du disque</Calibration_Retry_Count_text>
 <cannot_delete_address_postfix_instance>Cette adresse IP ne peut &ecirc;tre supprim&eacute;e.|br]En effet, elle est utilis&eacute;e par une instance Postfix.</cannot_delete_address_postfix_instance>
 <cannot_delete_address_samba_instance>Impossible de supprimer cette adresse, elle est utilis&eacute;e par une instance Samba:</cannot_delete_address_samba_instance>
+<cannot_delete_computers_use_it>Impossible de supprimer cet &eacute;l&eacute;ment, des ordinateurs sont en cours d'utilisation.</cannot_delete_computers_use_it>
 <categories_white_explain>Indiquez les cat&eacute;gories que vous d&eacute;sirez autoriser.[br]Ceci est la liste blanche.</categories_white_explain>
 <cat_hospitals>Sites sur les h&ocirc;pitaux et installations m&eacute;dicales</cat_hospitals>
 <cat_medical>Sites m&eacute;dicaux</cat_medical>
@@ -454,6 +460,7 @@ Toutefois ceci va consommer plus de m&eacute;moire.[br]Il est conseill&eacute; d
 <DOSSiteInterval_explain>d&eacute;termine une intervalle en seconde qui autorise l%u2019affichage d%u2019un m&ecirc;me site avant une interdiction.</DOSSiteInterval_explain>
 <DOWNLOAD_OPENVPN_CLIENT_APPLE>Client VPN pour Mac OSX</DOWNLOAD_OPENVPN_CLIENT_APPLE>
 <do_not_send_same_infos_before>Ne pas envoyer la m&ecirc;me information avant</do_not_send_same_infos_before>
+<dumpcycle>Cycle d'extraction</dumpcycle>
 <dumpcycleExplain>Le nombre de jours d'un cycle de d&eacute;p&ocirc;t, indique comment une sauvegarde compl&egrave;te est effectu&eacute;e.</dumpcycleExplain>
 <duplicate_domain_explain>Cette fonctionnalit&eacute; vous permet de dupliquer les messages &agrave; destination de ce domaine vers une autre domaine de votre choix.[br]
 D&eacute;finissez dans le formulaire l'adresse du serveur de destination qui sera en charge de recevoir les messages dupliqu&eacute;s.[br]
@@ -526,6 +533,7 @@ toutes les liens seront remplac&eacute;es par l'url que vous avez d&eacute;finit
 <error_choose_organization>Erreur: vous avez besoin de sp&eacute;cifier au minimum une organisation.</error_choose_organization>
 <error_field_max_length>Erreur, la valeur donn&eacute;e exc&egrave;de</error_field_max_length>
 <error_please_fill_field>Erreur: Veuillez remplir le champs requis</error_please_fill_field>
+<estimate>Estimation</estimate>
 <ExecBackupDeadAfterH>Un t&acirc;che de sauvegarde est consid&eacute;r&eacute;e comme &quot;morte&quot; apr&egrave;s X heures (minimum 2)</ExecBackupDeadAfterH>
 <execute_reports_each>Ex&eacute;cuter les rapports chaque</execute_reports_each>
 <expand-hosts>Ajoute le nom de domaine aux noms simples</expand-hosts>
@@ -753,6 +761,7 @@ Les organisations ne pourront que cr&eacute;er des sous-domaines de ces domaines
 <matches>Correspond</matches>
 <matchesnot>Ne correspond pas</matchesnot>
 <MaxClients>Clients connect&eacute;s simultan&eacute;ment MAX</MaxClients>
+<maxdumps>Extractions MAX</maxdumps>
 <MaxKeepAliveRequests>Requ&ecirc;tes maintenues MAX</MaxKeepAliveRequests>
 <maxpromotedayExplain>nombre maximum de jours pour une promotion, indiquez 0 si vous ne d&eacute;sirez pas de promotion, 1 ou 2 si votre disque est en d&eacute;passement de promotion.</maxpromotedayExplain>
 <MaxSpareServers>Nombre maximal de processus en m&eacute;moire</MaxSpareServers>
@@ -1077,6 +1086,7 @@ D&eacute;sirez-vous lancer cette op&eacute;ration ?</reconstruct_caches_explain>
 <rejected_mails>Messages rejet&eacute;s</rejected_mails>
 <relaydomain_explain>Un domaine relais est un domaine qui travers ce serveur.[br]
 Ce serveur est en charge de recevoir les messages provenant de ce domaine et de les r&eacute;-acheminer vers un nouveau serveur.[br]Le nouveau serveur pourra &ecirc;tre le serveur final de bo&icirc;tes aux lettres</relaydomain_explain>
+<remote_clients>Clients distants</remote_clients>
 <remote_directory>R&eacute;pertoire distant</remote_directory>
 <Reported_Uncorrect>Erreurs incorrigibles</Reported_Uncorrect>
 <Reported_Uncorrect_text>Nombre des erreurs qui n'ont pu &ecirc;tre r&eacute;cup&eacute;r&eacute;es en utilisant l'ECC mat&eacute;riel</Reported_Uncorrect_text>

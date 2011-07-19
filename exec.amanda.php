@@ -8,6 +8,9 @@ if(is_array($argv)){if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["V
 
 
 if($argv[1]=='--build'){build();die();}
+if($argv[1]=='--comps'){computers();die();}
+if($argv[1]=='--resolv'){resolv_computers();die();}
+if($argv[1]=='--backup-server'){set_backup_server();die();}
 
 
 
@@ -655,8 +658,52 @@ $amlabel=$unix->find_program("amlabel");
 for($i=1;$i<$config["tapecycle"]+1;$i++){
 	shell_exec("$amlabel DailySet1 DailySet1-$i slot $i >/dev/null 2>&1");
 }
-
+set_backup_server();
 
 @file_put_contents("/etc/amanda/DailySet1/amanda.conf", @implode("\n", $f));
 echo "Starting......: Amanda server updating DailySet1 - amanda.conf success\n";
+}
+
+
+function computers(){
+	$q=new mysql();
+	$sql="SELECT * FROM amanda_hosts ORDER BY hostname";
+	$results=$q->QUERY_SQL($sql,"artica_backup");
+	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
+	$f[]="{$ligne["hostname"]}\t{$ligne["directory"]}\t{$ligne["dumptype"]}";
+	}
+	@file_put_contents("/etc/amanda/DailySet1/disklist", @implode("\n", $f));
+	$unix=new unix();
+	$php5=$unix->LOCATE_PHP5_BIN();
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim("$nohup $php5 /usr/share/artica-postfix/exec.amanda.php --resolv >/dev/null 2>&1 &");
+	shell_exec($cmd);
+	
+}
+
+function resolv_computers(){
+	$q=new mysql();
+	$sql="SELECT ID,hostname,resolved FROM amanda_hosts ORDER BY hostname";
+	$results=$q->QUERY_SQL($sql,"artica_backup");
+	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
+	if(!isset($resolved[$ligne["hostname"]])){$ipaddr=gethostbyname($ligne["hostname"]);}else{$resolved[$ligne["hostname"]];}
+	$resolved[$ligne["hostname"]]=$ipaddr;
+	if($GLOBALS["VERBOSE"]){echo "{$ligne["hostname"]} = $ipaddr\n";}
+	if($ipaddr==$ligne["hostname"]){$ipaddr=null;}
+	$sql="UPDATE amanda_hosts SET `resolved`='$ipaddr' WHERE ID='{$ligne["ID"]}'";
+	$q->QUERY_SQL($sql,"artica_backup");
+	}
+}
+
+function set_backup_server(){
+	$sock=new sockets();
+	$f[]="localhost\troot";
+	$AmandaBackupServer=trim($sock->GET_INFO("AmandaBackupServer"));
+	if($AmandaBackupServer<>null){
+		$f[]="$AmandaBackupServer\troot";
+	}
+	
+	@file_put_contents("/var/lib/amanda/.amandahosts",@implode("\n", $f));
+	
+	
 }
