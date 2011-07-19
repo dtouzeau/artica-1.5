@@ -1,0 +1,51 @@
+<add_sub_folder>Create a new sub-folder </add_sub_folder>
+<apply_config_pureftpd>Save your users parameters into virtual FTP server database</apply_config_pureftpd>
+<APP_PUREFTPD_TEXT>Pure-FTPd is a free (BSD), secure, production-quality and standard-conformant FTP server. </APP_PUREFTPD_TEXT>
+<APP_SAMBA_TEXT>Samba is an Open Source/Free Software suite that provides seamless file and print services to SMB/CIFS clients</APP_SAMBA_TEXT>
+<browse_computers>Browse computers</browse_computers>
+<current_connections>Current connections</current_connections>
+<current_connections_text>Display informations about who is connected and what happens on the FTP flow</current_connections_text>
+<delete_share>Unshare This Folder</delete_share>
+<del_folder_name>Are you sure to delete this folder ??</del_folder_name>
+<del_sub_folder>Delete this folder</del_sub_folder>
+<enable_roaming>Enable Roaming profiles</enable_roaming>
+<enable_roaming_text>If you turn this feature to green, the server will be turn to PDC mode and allow Windows client 
+to push/retreive local datas from this server from any computer join to this domain</enable_roaming_text>
+<FOLDER_IS_SHARED>This folder is already shared, users can access it in smb mode</FOLDER_IS_SHARED>
+<ftp_share>FTP Shares</ftp_share>
+<give_computer_nameip>Give the computer name or computer IP address</give_computer_nameip>
+<give_folder_name>Give here the name of the new folder you want to create.
+was based on </give_folder_name>
+<mount_name>mount name</mount_name>
+<net_share>Windows Networking share</net_share>
+<NFS_CLIENT_ADD>Connect to a NFS remote directory</NFS_CLIENT_ADD>
+<NFS_CLIENT_ADD_TEXT>Add the remote directory into Auto-connect service database. This to automatically link the remote service when try to access it</NFS_CLIENT_ADD_TEXT>
+<NFS_CLIENT_HOWTO>Click on the icon on the left pan in order to set NFS parameters in order to mount a local directory to the targeted server</NFS_CLIENT_HOWTO>
+<NTconfig>XP/2000 Policies</NTconfig>
+<NTconfig_howto>Push your Windows NT policy (*.pol) in order to make it in production mode</NTconfig_howto>
+<NTconfig_howto_title>How to create a .pol file ?</NTconfig_howto_title>
+<NTconfig_howto_title_text>Click on this icon in order to see how to create policies for your windows XP clients</NTconfig_howto_title_text>
+<NTconfig_text>Save your users policies (only if samba is set has PDC mode)</NTconfig_text>
+<privileges_settings>Shared properties and privileges; Define users privileges and folder behavior</privileges_settings>
+<roaming_profiles>Roaming profiles</roaming_profiles>
+<roaming_profiles_text>Roaming Allows a user with a computer joined to a Windows Server domain to log on to any computer on the same network and access 
+their local files and settings
+</roaming_profiles_text>
+<samba_audit>View Samba statistics</samba_audit>
+<samba_audit_text>Get events of your share directories and perform analysis</samba_audit_text>
+<selected_folder>Selected folder</selected_folder>
+<select_disk>Select the Hard Drive first</select_disk>
+<select_this_folder>Select this folder</select_this_folder>
+<SHARE_FOLDER>Share a folder</SHARE_FOLDER>
+<SHARE_FOLDER_TEXT>Share a folder on this system.[br]Browse your hard drives and point a directory to share</SHARE_FOLDER_TEXT>
+<share_this>Share This folder</share_this>
+<share_this_NFS>Share this folder using Linux NFS</share_this_NFS>
+<share_this_NFS_explain>You are ready to share this folder with NFS protocol.[br]Add a computer to give him access to this folder by using the add computer button[br]NFS protocol is used for Unix based computer[br]
+Sun's NFS protocol provides transparent remote access to shared file systems across networks. The NFS protocol is designed to be machine, operating system, 
+network architecture, and transport protocol independent.</share_this_NFS_explain>
+<unshare_this>Unshare this folder ? All shared privileges and properties will be definitively deleted</unshare_this>
+<usb_share>USB Sharing</usb_share>
+<usb_share_explain>This section allow you to "share" devices activated with "Auto-Connect" feature.[br]
+Click on a row of this list to share the device trough Windows share system.[br]
+If there is no data in this list, it means that you have no "Auto-Connect" device enabled</usb_share_explain>
+<usb_share_text>Detect your usb devices and share them in your network automatically</usb_share_text>

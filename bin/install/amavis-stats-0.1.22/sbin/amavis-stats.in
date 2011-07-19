@@ -1,0 +1,1842 @@
+#!@PERL@ -T
+#
+# amavis-stats -- generate rrds from amavis log output
+#
+# Copyright (C) 2004, 2005 Dale Walsh (buildsmart@daleenterprise.com)
+#
+# Copyright (C) 2003, 2004 Mark Lawrence (nomad@null.net)
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# ########################################################################
+#
+# Index of packages in this file
+#	AmavisStats::Boot
+#	AmavisStats::Conf
+#	AmavisStats::Daemonize
+#	AmavisStats::Lock
+#	AmavisStats::Log
+#	AmavisStats::Util
+#	AmavisStats
+#
+# ########################################################################
+#
+
+#
+package AmavisStats::Boot;
+use strict;
+use re 'taint';
+
+# Fetch all required modules (or nicely report missing ones), and compile them
+# once-and-for-all at the parent process, so that forked children can inherit
+# and share already compiled code in memory. Children will still need to 'use'
+# modules if they want to inherit from their name space.
+#
+sub fetch_modules($$@) {
+	my($reason, $required, @modules) = @_;
+	my(@missing);
+	for my $m (@modules) {
+		local($_) = $m;
+		$_ .= /^auto::/ ? '.al' : '.pm'	if !/\.(pm|pl|al)\z/;
+		s[::][/]g;
+		eval { require $_ } or push(@missing, $m);
+	}
+	die "ERROR: MISSING $reason:\n" . join('', map { "	$_\n" } @missing)
+		if $required && @missing;
+	\@missing;
+}
+
+BEGIN {
+	fetch_modules('REQUIRED BASIC MODULES', 1, qw(
+		Exporter POSIX Fcntl Errno Carp Time::HiRes
+		Unix::Syslog RRDp RRDs IO::File
+		warnings Time::localtime Time::Local
+	));
+}
+
+1;
+
+#
+package AmavisStats::Conf;
+use strict;
+use re 'taint';
+
+BEGIN {
+	use Exporter ();
+	use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
+	$VERSION		= '0.001015';
+	@ISA			= qw(Exporter);
+	%EXPORT_TAGS	= (
+		'dynamic_confvars' => [qw(
+			$log_level $file
+		)],
+		'process_confvars' => [qw(
+			$warncount
+			$locale
+			$statedir
+			$cachedir
+			$lockfile
+			$statefile
+			$namesfile
+			$countfile
+			$seenfile
+			$rrdstep
+			$spos
+			$pos
+			$eof
+			$line
+			$epoch
+			$lastepoch
+			$isodate
+			$numv
+			$lastupdate
+			$year
+			$scan_logfile
+			$scan_domains
+			%months
+			%rvid
+			%vnames
+			%occurence
+			%firstseen
+			%lastseen
+			%spamsess
+
+		)],
+		'confvars' => [qw(
+			$myproduct_name $myversion_id $myversion_id_numeric
+			$myversion $myhostname $myversion_date $scan_time
+			%current_hostname_bank %hostname_bank $background
+			$MYHOME $MYCACHE @my_domains @my_domains_maps
+			$daemonize $pid_file $current_pid
+			$daemon_user $daemon_group $desired_user $desired_group
+			$uid $daemon_chroot_dir $path
+			$DEBUG $DO_SYSLOG $SYSLOG_LEVEL $LOGFILE
+		)],
+		'platform' => [qw(
+			$unicode_aware $eol
+		)],
+
+	);
+	Exporter::export_tags qw(dynamic_confvars process_confvars confvars platform);
+}
+
+use POSIX qw(uname);
+use Carp ();
+use Errno qw(ENOENT EACCES);
+
+use vars @EXPORT;
+
+sub c($);	# prototypes
+use subs qw(c);	# access subroutine to new-style config variables
+
+BEGIN {
+	push(@EXPORT,qw(c));
+}
+
+{ # initialize new-style hash (policy bank) containing dynamic config settings
+	for my $tag ($EXPORT_TAGS{'dynamic_confvars'}) {
+		for my $v (@$tag) {
+			if ($v !~ /^([%\$\@])(.*)\z/) { die "Unsupported variable type: $v" }
+			else {
+				no strict 'refs'; my($type,$name) = ($1,$2);
+				$current_hostname_bank{$name} = $type eq '$' ? \${"AmavisStats::Conf::$name"}
+									: $type eq '@' ? \@{"AmavisStats::Conf::$name"}
+									: $type eq '%' ? \%{"AmavisStats::Conf::$name"}
+									: undef;
+			}
+		}
+	}
+	$current_hostname_bank{'hostname_bank_name'} = '';	# builtin policy
+	$hostname_bank{''} = { %current_hostname_bank };	# copy
+}
+
+# new-style access to dynamic config variables
+# return a config variable value - usually a scalar;
+# one level of indirection for scalars is allowed
+sub c($) {
+	my($name) = @_;
+	if (!exists $current_hostname_bank{$name}) {
+		Carp::croak(sprintf('No entry "%s" in policy bank "%s"',
+						$name, $current_hostname_bank{'hostname_bank_name'}));
+	}
+	my($var) = $current_hostname_bank{$name}; my($r) = ref($var);
+	!$r ? $var : $r eq 'SCALAR' ? $$var
+		: $r eq 'ARRAY' ? @$var : $r eq 'HASH' ? %$var : $var;
+}
+
+$myproduct_name = 'Amavis-Stats';
+$0 = "$myproduct_name";
+$myversion_id = '@PKGVERSION@'; $myversion_date = '2006-01-12';
+
+$myversion = "$myproduct_name-$myversion_id ($myversion_date)";
+$myversion_id_numeric =	# x.yyyzzz, allows numerical comparision, like Perl $]
+	sprintf("%8.6f", $1 + ($2 + $3/1000)/1000)
+	if $myversion_id =~ /^(\d+)(?:\.(\d*)(?:\.(\d*))?)?(.*)$/;
+
+$eol = "\n";	# native record separator in files: LF or CRLF or even CR
+$unicode_aware = $]>=5.008 && length("\x{263a}")==1 && eval { require Encode };
+
+# serves only as a quick default for other configuration settings
+$MYHOME	= '@PKGLIBDIR@/@PKGNAME@';
+
+$MYCACHE	= '@PKGCACHEDIR@/@PKGNAME@';
+
+# Create debugging output - true: log to stderr; false: log to syslog/file
+$DEBUG = 0;
+
+# Cause AmavisStats::Daemonize parameters 'background' and 'setsid' to be set,
+# resulting in the program to detach itself from the terminal
+$daemonize = 1;
+
+$rrdstep		= 300;
+
+# Customizable notification messages, logging
+
+$SYSLOG_LEVEL = 'mail.info';
+
+$DO_SYSLOG = 1;
+
+# Message-ID in notifications, log entries, ...
+$myhostname = (uname)[1];	# should be a FQDN !
+
+$file = 'file';	# path to the file(1) utility for classifying contents
+
+# prepend a lookup table label object for logging purposes
+# read and evaluate configuration files (one or more)
+sub read_config(@) {
+	my(@config_files) = @_;
+	for my $config_file (@config_files) {
+		my($msg);
+		my($errn) = stat($config_file) ? 0 : 0+$!;
+		if	($errn == ENOENT) { $msg = "does not exist" }
+		elsif ($errn)		{ $msg = "is inaccessible: $!" }
+		elsif (-d _)		{ $msg = "is a directory" }
+		elsif (!-f _)		{ $msg = "is not a regular file" }
+		elsif ($> && -o _) { $msg = "is owned by EUID $>, should be owned by root"}
+		elsif ($> && -w _) { $msg = "is writable by EUID $>, EGID $)" }
+		if ( defined $msg )	{ die "Config file \"$config_file\" $msg," }
+		$! = undef; my($rv) = do $config_file;
+		if ( !defined($rv) ) {
+			if ($@ ne '') { die "Error in config file \"$config_file\": $@" }
+			else			{ die "Error reading config file \"$config_file\": $!" }
+		}
+	}
+	$daemon_chroot_dir = ''	if !defined $daemon_chroot_dir;	# avoids warnings
+	# provide some sensible defaults for essential settings (post-defaults)
+	$pid_file		= "$MYHOME/@PKGNAME@.pid" if !defined $pid_file;
+	$scan_logfile	= '@SCAN_LOG_FILE@' if !defined $scan_logfile;
+	$daemon_user	= '@WEB_USER@' if !defined $daemon_user;
+	$daemon_group	= '@WEB_GROUP@' if !defined $daemon_group;
+
+}
+
+1;
+
+#
+package AmavisStats::Daemonize;
+use strict;
+use re 'taint';
+
+BEGIN {
+	use Exporter ();
+	use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
+	$VERSION		= '0.001015';
+	@ISA			= qw(Exporter);
+	%EXPORT_TAGS	= ();
+	@EXPORT			= qw(create_pid_file
+					get_uid get_gid
+					set_uid set_gid
+					set_user
+					safe_fork
+					loop_exit
+					loop_expire
+					untaint
+					);
+	@EXPORT_OK		= qw(&daemon
+					&check_pid_file
+					&run
+					&pre_configure_hook
+					&configure
+					&post_configure_hook
+					&pre_loop_hook
+					&loop_hook
+					&post_loop_hook
+					&fatal
+					&daemon_close
+					&log_time
+					&log
+					);
+}
+
+use Fcntl ();
+use POSIX qw(WIFEXITED WIFSIGNALED WIFSTOPPED
+					SIGINT SIG_BLOCK SIG_UNBLOCK
+					WEXITSTATUS WTERMSIG WSTOPSIG);
+use Time::HiRes;
+
+###----------------------------------------------------------------###
+
+### program flow
+sub run {
+
+
+	### pass package or object
+	my $self = ref($_[0]) ? shift() : (bless {}, shift());
+
+	### need a place to store properties
+	$self->{daemon} = {} unless defined($self->{daemon}) && ref($self->{daemon});
+
+	return 1 if check_pid_file( $self->{daemon}->{pid_file} ) > 1;
+
+	if (defined($self->{daemon}->{scan_time})) {
+		$self->{daemon}->{scan_time} = 300 unless defined($self->{daemon}->{scan_time});
+		$self->{daemon}->{scan_time} = 60 if $self->{daemon}->{scan_time} < 60; # not less than 1 minute
+		$self->{daemon}->{scan_time} = 1800 if $self->{daemon}->{scan_time} > 1800; # not more than 30 minutes
+		$self->{daemon}->{scan_time} = int($self->{daemon}->{scan_time} / 60) * 60;
+	}
+
+	$self->pre_configure_hook;		# user customizable hook
+
+	$self->configure;		# verification of passed parameters
+
+	$self->post_configure_hook; # user customizable hook
+
+	$self->pre_loop_hook;				# repeat cycle
+
+	$SIG{TERM} = $SIG{INT} = \&loop_exit;
+
+	while(! $::loop_exit) {
+		my($calc_delay)=Time::HiRes::time;
+		select(undef,undef,undef,$self->{daemon}->{scan_time} * int($calc_delay/$self->{daemon}->{scan_time})+$self->{daemon}->{scan_time}-$calc_delay+1) if defined($self->{daemon}->{scan_time});
+		$self->loop_hook if ! $::loop_exit;	# repeat cycle
+	}
+
+	$self->post_loop_hook;					# repeat cycle
+
+	$self->daemon_close;					# close the daemon
+
+}
+
+###----------------------------------------------------------------###
+
+sub loop_exit {
+	# when we get a INT or TERM signal, set the exit flag
+	$::loop_exit = 1;
+} 
+
+###----------------------------------------------------------------###
+
+### make sure it has been configured properly
+sub configure {
+	my $self = shift;
+	my $prop = $self->{daemon};
+
+	### set the log level
+	if( !defined $prop->{log_level} || $prop->{log_level} !~ /^\d+$/ ) {
+		$prop->{log_level} = 2;
+	}
+	$prop->{log_level} = 4 if $prop->{log_level} > 4;
+
+	### log to STDERR
+	if( ! defined($prop->{log_file}) ) {
+		$prop->{log_file} = '';
+
+	### log to syslog
+	}elsif( $prop->{log_file} eq 'Sys::Syslog' ) {
+
+		my $ident = defined($prop->{syslog_ident})
+			? $prop->{syslog_ident} : 'net_server';
+		$prop->{syslog_ident} = ($ident =~ /^(\w+)$/)
+			? $1 : 'net_server';
+
+		my $opt = defined($prop->{syslog_logopt})
+			? $prop->{syslog_logopt} : 'pid';
+		$prop->{syslog_logopt} = ($opt =~ /^((cons|ndelay|nowait|pid)($|\|))*/)
+			? $1 : 'pid';
+
+		my $fac = defined($prop->{syslog_facility})
+			? $prop->{syslog_facility} : 'daemon';
+		$prop->{syslog_facility} = ($fac =~ /^((\w+)($|\|))*/)
+			? $1 : 'daemon';
+
+		require Sys::Syslog;
+		Sys::Syslog::setlogsock($prop->{syslog_logsock}) || die "Syslog err [$!]";
+		if( ! Sys::Syslog::openlog($prop->{syslog_ident},
+							 $prop->{syslog_logopt},
+							 $prop->{syslog_facility}) ) {
+			die "Couldn't open syslog [$!]" if $prop->{syslog_logopt} ne 'ndelay';
+		}
+
+	### open a logging file
+	}elsif( $prop->{log_file} ) {
+
+		die "Unsecure filename \"$prop->{log_file}\""
+			unless $prop->{log_file} =~ m|^([\w\.\-/\\]+)$|;
+		$prop->{log_file} = $1;
+		open(_SERVER_LOG, ">>$prop->{log_file}")
+			or die "Couldn't open log file \"$prop->{log_file}\" [$!].";
+		_SERVER_LOG->autoflush(1);
+		$prop->{chown_log_file} = 1;
+
+	}
+
+	### see if a daemon is already running
+	if( defined $prop->{pid_file} ) {
+		if( ! eval{ check_pid_file( $prop->{pid_file} ) } ) {
+			$self->fatal( $@ );
+		}
+	}
+
+	### completetly daemonize by closing STDIN, STDOUT (should be done before fork)
+	if( ! $prop->{_is_inet} ) {
+		if( defined($prop->{setsid}) || length($prop->{log_file}) ) {
+			open STDIN,	'</dev/null' || die "Can't read /dev/null	[$!]";
+			open STDOUT, '>/dev/null' || die "Can't write /dev/null [$!]";
+		}
+	}
+
+	### background the process
+	if( defined($prop->{setsid}) || defined($prop->{background}) ) {
+		my $pid = eval{ safe_fork() };
+		if( not defined $pid ){ $self->fatal( $@ ); }
+		exit(0) if $pid;
+		$self->log(2,"Process Backgrounded");
+	}
+
+	### completely remove myself from parent process
+	if( defined($prop->{setsid}) ) {
+		&POSIX::setsid();
+	}
+
+	### completetly daemonize by closing STDERR (should be done after fork)
+	if( length($prop->{log_file}) ) {
+		open STDERR, '>&_SERVER_LOG' || die "Can't open STDERR to _SERVER_LOG [$!]";
+	}elsif( defined($prop->{setsid}) ) {
+		open STDERR, '>&STDOUT' || die "Can't open STDERR to STDOUT [$!]";
+	}
+
+	### allow for a pid file (must be done after backgrounding and chrooting)
+	### Remove of this pid may fail after a chroot to another location...
+	### however it doesn't interfere either.
+	if( defined $prop->{pid_file} ) {
+		if( eval{ create_pid_file( $prop->{pid_file} ) } ) {
+			$prop->{pid_file_unlink} = 1;
+		}else{
+			$self->fatal( $@ );
+		}
+	}
+
+	### figure out the group(s) to run as
+	if( ! defined $prop->{group} ) {
+		$self->log(1,"Group Not Defined.    Defaulting to EGID '$)'\n");
+		$prop->{group}	= $);
+	}else{
+		if( $prop->{group} =~ /^([\w-]+( [\w-]+)*)$/ ) {
+			$prop->{group} = eval{ get_gid( $1 ) };
+			$self->fatal( $@ ) if $@;
+		}else{
+			$self->fatal("Invalid group \"$prop->{group}\"");
+		}
+	}
+
+
+	### figure out the user to run as
+	if( ! defined $prop->{user} ) {
+		$self->log(1,"User Not Defined.	Defaulting to EUID '$>'\n");
+		$prop->{user}	= $>;
+	}else{
+		if( $prop->{user} =~ /^(\w+)$/ ) {
+			$prop->{user} = eval{ get_uid( $1 ) };
+			$self->fatal( $@ ) if $@;
+		}else{
+			$self->fatal("Invalid user \"$prop->{user}\"");
+		}
+	}
+
+
+	### chown any files or sockets that we need to
+	if( $prop->{group} ne $) || $prop->{user} ne $> ) {
+		my @chown_files = ();
+		push @chown_files, $prop->{pid_file} if $prop->{pid_file};
+		push @chown_files, $prop->{log_file} if $prop->{log_file};
+		my $uid = $prop->{user};
+		my $gid = (split(/\ /,$prop->{group}))[0];
+		foreach my $file (@chown_files) {
+			chown($uid,$gid,$file)
+				or $self->log(2,"Couldn't chown \"$file\" [$!]\n");
+		}
+	}
+
+
+	### perform the chroot operation
+	if( defined $prop->{chroot} ) {
+		if( ! -d $prop->{chroot} ) {
+			$self->fatal("Specified chroot \"$prop->{chroot}\" doesn't exist.\n");
+		}else{
+			$self->log(2,"Chrooting to $prop->{chroot}\n");
+			chroot( $prop->{chroot} )
+				or $self->fatal("Couldn't chroot to \"$prop->{chroot}\"");
+		}
+	}
+
+
+	### drop privileges
+	eval{
+		if( $prop->{group} ne $) ) {
+			$self->log(2,"Setting gid to \"$prop->{group}\"");
+			set_gid( $prop->{group} );
+		}
+		if( $prop->{user} ne $> ) {
+			$self->log(2,"Setting uid to \"$prop->{user}\"");
+			set_uid( $prop->{user} );
+		}
+	};
+	if( $@ ) {
+		if( $> == 0 ) {
+			$self->fatal( $@ );
+		} elsif( $< == 0) {
+			$self->log(2,"NOTICE: Effective UID changed, but Real UID is 0: $@");
+		}else{
+			$self->log(2,$@);
+		}
+	}
+
+	### set some sigs before we start the loop_hook
+	$SIG{INT} = $SIG{TERM} = $SIG{QUIT} = sub { $self->daemon_close; };
+
+	### most cases, a closed pipe will take care of itself
+	$SIG{PIPE} = 'IGNORE';
+
+#	$SIG{HUP} = sub { $self->daemon_close; sleep 5; $restart->run };
+}
+
+###----------------------------------------------------------------###
+
+### user customizable hooks
+sub pre_configure_hook {}
+sub post_configure_hook {}
+sub pre_loop_hook {}
+sub loop_hook { die "loop_hook: method not defined" }
+sub post_loop_hook {}
+sub fatal_hook {}
+
+###----------------------------------------------------------------###
+
+### what to do when all else fails
+sub fatal {
+	my $self = shift;
+	my $error = shift;
+	my ($package,$file,$line) = caller;
+	$self->fatal_hook($error, $package, $file, $line);
+
+	$self->log(0, $self->log_time . " " .	$error . "\n	at line $line in file $file");
+
+	$self->daemon_close;
+}
+
+###----------------------------------------------------------------###
+
+### standard log routine, this could very easily be
+### overridden with a syslog call
+sub write_to_log_hook {
+	my ($self, $level, $msg) = @_;
+	my $prop = $self->{daemon};
+	chomp $msg;
+	$msg =~ s/([^\n\ -\~])/sprintf("%%%02X",ord($1))/eg;
+
+	if( $prop->{log_file} ) {
+		print _SERVER_LOG $msg, "\n";
+	}elsif( defined($prop->{setsid}) ) {
+		# do nothing
+	}else{
+		my $old = select(STDERR);
+		print $msg. "\n";
+		select($old);
+	}
+
+}
+
+###----------------------------------------------------------------###
+
+### record output
+sub log {
+	my ($self, $level, $msg) = @_;
+	my $prop = $self->{server};
+
+	return unless $prop->{log_level};
+
+	$self->write_to_log_hook($prop->{log_level}, $msg);
+}
+
+###----------------------------------------------------------------###
+
+### default time format
+sub log_time {
+	my ($sec,$min,$hour,$day,$mon,$year) = localtime;
+	return sprintf("%04d/%02d/%02d-%02d:%02d:%02d", $year+1900, $mon+1, $day, $hour, $min, $sec);
+}
+
+###----------------------------------------------------------------###
+
+### this happens when the server reaches the end
+sub daemon_close{
+	my $self = shift;
+	my $prop = $self->{daemon};
+
+	$SIG{INT} = 'DEFAULT';
+
+	### remove files
+	if( defined $prop->{pid_file} && -e $prop->{pid_file} && defined $prop->{pid_file_unlink} ) {
+		unlink $prop->{pid_file} || warn "Couldn't unlink \"$prop->{pid_file}\" [$!]";
+	}
+
+	$self->log(2,$self->log_time . " Server closing!");
+
+}
+
+
+###----------------------------------------------------------------###
+
+# Return untainted copy of a string (argument can be a string or a string ref)
+sub untaint($) {
+	no re 'taint';
+	my($str);
+	local($1);	# avoid Perl taint bug: tainted global $1 propagates taintedness
+	$str = $1	if (ref($_[0]) ? ${$_[0]} : $_[0]) =~ /^(.*)\z/s;
+	$str;
+}
+
+###----------------------------------------------------------------###
+
+### check for existance of pid_file
+### if the file exists, check for a running process
+sub check_pid_file ($) {
+	no re 'taint';
+	my $pid_file = shift;
+
+	### no pid_file = return success
+	return 1 unless -e $pid_file;
+
+	### get the currently listed pid
+	if( ! open(_PID,$pid_file) ) {
+		die "Couldn't open existant pid_file \"$pid_file\" [$!]\n";
+	}
+	my $current_pid = <_PID>;
+	chomp($current_pid);
+	$current_pid = untaint($current_pid);
+	close _PID;
+
+	my $exists;
+
+
+	if ($current_pid && $current_pid != $$ && kill(0, $current_pid) ) { $exists = 1}
+
+	### running process exists, ouch
+	if( $exists ) {
+
+		if( $current_pid == $$ ) {
+			warn "Pid_file created by this same process. Doing nothing.\n";
+			return 1;
+		}else{
+			warn "Pid_file already exists for running process ($current_pid)... aborting\n";
+			return $current_pid;
+		}
+
+	### remove the pid_file
+	}else{
+
+		warn "Pid_file \"$pid_file\" already exists.	Overwriting!\n";
+		unlink $pid_file || die "Couldn't remove pid_file \"$pid_file\" [$!]\n";
+		return 1;
+
+	}
+
+	return 0;
+}
+
+###----------------------------------------------------------------###
+
+### actually create the pid_file, calls check_pid_file
+### before proceeding
+sub create_pid_file ($) {
+	my $pid_file = shift;
+
+	### see if the pid_file is already there
+	check_pid_file( $pid_file );
+
+	if( ! open(PID, ">$pid_file") ) {
+		die "Couldn't open pid file \"$pid_file\" [$!].\n";
+	}
+
+	### save out the pid and exit
+	print PID "$$\n";
+	close PID;
+
+	die "Pid_file \"$pid_file\" not created.\n" unless -e $pid_file;
+	return 1;
+}
+
+###----------------------------------------------------------------###
+
+### get the uid for the passed user
+sub get_uid ($) {
+	my $user = shift;
+	my $uid	= undef;
+
+	if( $user =~ /^\d+$/ ) {
+		$uid = $user;
+	}else{
+		$uid = getpwnam($user);
+	}
+
+	die "No such user \"$user\"\n" unless defined $uid;
+
+	return $uid;
+}
+
+###----------------------------------------------------------------###
+
+### get all of the gids that this group is (space delimited)
+sub get_gid {
+	my @gid	= ();
+
+	foreach my $group ( split( /[, ]+/, join(" ",@_) ) ) {
+		if( $group =~ /^\d+$/ ) {
+			push @gid, $group;
+		}else{
+			my $id = getgrnam($group);
+			die "No such group \"$group\"\n" unless defined $id;
+			push @gid, $id;
+		}
+	}
+
+	die "No group found in arguments.\n" unless @gid;
+
+	return join(" ",$gid[0],@gid);
+}
+
+###----------------------------------------------------------------###
+
+### change the process to run as this uid
+sub set_uid {
+	my $uid = get_uid( shift() );
+
+	POSIX::setuid($uid);
+	die "Couldn't become uid \"$uid\": $!\n" if ($< != $uid);
+
+	return 1;
+}
+
+###----------------------------------------------------------------###
+
+### change the process to run as this gid(s)
+### multiple groups must be space or comma delimited
+sub set_gid {
+	my $gids = get_gid( @_ );
+	my $gid	= (split /\s+/, $gids)[0];
+	eval { $) = $gids }; # store all the gids - this is really sort of optional
+
+	POSIX::setgid($gid);
+	my $_gid = (split /\s+/, $()[0];
+	if ($_gid != $gid) {
+		die "Couldn't become gid \"$gid\": $!\n";
+	}
+
+	return 1;
+}
+
+###----------------------------------------------------------------###
+
+### backward compatibility sub
+sub set_user {
+	my ($user, @group) = @_;
+	set_gid( @group ) || return undef;
+	set_uid( $user )	|| return undef;
+	return 1;
+}
+
+###----------------------------------------------------------------###
+
+### routine to protect process during fork
+sub safe_fork () {
+
+	### block signal for fork
+	my $sigset = POSIX::SigSet->new(SIGINT);
+	POSIX::sigprocmask(SIG_BLOCK, $sigset) or die "Can't block SIGINT for fork: [$!]\n";
+
+	### fork off a child
+	my $pid = fork;
+	unless( defined $pid ) {
+		die "Couldn't fork: [$!]\n";
+	}
+
+	### make SIGINT kill us as it did before
+	$SIG{INT} = 'DEFAULT';
+
+	### put back to normal
+	POSIX::sigprocmask(SIG_UNBLOCK, $sigset) or die "Can't unblock SIGINT for fork: [$!]\n";
+
+	return $pid;
+}
+
+1;
+
+#
+package AmavisStats::Lock;
+use strict;
+use re 'taint';
+
+BEGIN {
+	use Exporter ();
+	use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
+	$VERSION		= '0.001015';
+	@ISA			= qw(Exporter);
+	@EXPORT		= qw(&lock &unlock);
+}
+use Fcntl qw(LOCK_SH LOCK_EX LOCK_UN);
+
+use subs @EXPORT;
+
+###----------------------------------------------------------------###
+
+sub lock($) {
+	my($file_handle) = @_;
+	flock($file_handle, LOCK_EX) or die "Can't lock $file_handle: $!";
+	# NOTE: a lock is on a file, not on a file handle
+}
+
+###----------------------------------------------------------------###
+
+sub unlock($) {
+	my($file_handle) = @_;
+	flock($file_handle, LOCK_UN) or die "Can't unlock $file_handle: $!";
+}
+
+1;
+
+#
+package AmavisStats::Log;
+use strict;
+use re 'taint';
+
+BEGIN {
+	use Exporter ();
+	use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
+	$VERSION		= '0.001015';
+	@ISA			= qw(Exporter);
+	%EXPORT_TAGS	= ();
+	@EXPORT			= ();
+	@EXPORT_OK		= qw(&init
+						&write_log);
+}
+use subs @EXPORT_OK;
+
+use POSIX qw(locale_h strftime);
+use Unix::Syslog qw(:macros :subs);
+use IO::File ();
+use File::Basename;
+
+BEGIN {
+	import AmavisStats::Conf qw(:platform $myversion $myhostname $daemon_user);
+	import AmavisStats::Lock;
+}
+
+use vars qw($loghandle);	# log file handle
+use vars qw($myname);
+use vars qw($syslog_facility $syslog_priority %syslog_priority);
+use vars qw($log_to_stderr $do_syslog $logfile $DEBUG);
+
+###----------------------------------------------------------------###
+
+sub init($$$$$) {
+	my($ident, $syslog_level);
+	($ident, $log_to_stderr, $do_syslog, $syslog_level, $logfile) = @_;
+
+	# Avoid taint bug in some versions of Perl (likely in 5.004, 5.005).
+	# The 5.6.1 is fine. To test, run this one-liner:
+	#	perl -Te '"$0 $$"; $r=$$; print eval{kill(0,$$);1}?"OK\n":"BUG\n"'
+	$myname = $0;
+
+	if ($syslog_level =~ /^\s*([a-z0-9]+)\.([a-z0-9]+)\s*\z/i) {
+		$syslog_facility = eval("LOG_\U$1");
+		$syslog_priority = eval("LOG_\U$2");
+	}
+	$syslog_facility = LOG_DAEMON	if $syslog_facility !~ /^\d+\z/;
+	$syslog_priority = LOG_WARNING	if $syslog_priority !~ /^\d+\z/;
+	if ($do_syslog) {
+		openlog($ident, LOG_PID, $syslog_facility);
+	} elsif ($logfile eq '') {
+		die 'No $LOGFILE is specified (and not logging via syslog)';
+	} else {
+		$loghandle = IO::File->new($logfile,'>>')
+			or die "Failed to open log file $logfile: $!";
+		$loghandle->autoflush(1);
+		my($uid) = $daemon_user=~/^(\d+)$/ ? $1 : (getpwnam($daemon_user))[2];
+		if ($> == 0 && $uid) {
+			chown($uid,-1,$logfile)
+				or die "Can't chown logfile $logfile to $uid: $!";
+		}
+	}
+	my($msg) = "starting. $myversion at $myhostname";
+	$msg .= ", eol=\"$eol\"" if $eol ne "\n";
+	$msg .= ", Unicode aware" if $unicode_aware;
+	$msg .= ", LC_ALL=$ENV{LC_ALL}" if $ENV{LC_ALL}	ne '';
+	$msg .= ", LC_TYPE=$ENV{LC_TYPE}" if $ENV{LC_TYPE}	ne '';
+	$msg .= ", LC_CTYPE=$ENV{LC_CTYPE}" if $ENV{LC_CTYPE} ne '';
+	$msg .= ", LANG=$ENV{LANG}" if $ENV{LANG} ne '';
+	write_log(0, $msg);
+}
+
+###----------------------------------------------------------------###
+
+# Log either to syslog or a file
+sub write_log($$) {
+	my($level,$errmsg) = @_;
+
+	my($old_locale) = setlocale(LC_TIME,"C");	# English dates required!
+	my($really_log_to_stderr) = $log_to_stderr || (!$do_syslog && !$loghandle);
+	my($prefix) = '';
+	if ($really_log_to_stderr || !$do_syslog) {	# create syslog-like prefix
+		$prefix = sprintf("%s %s %s[%s]: ",
+					strftime("%b %e %H:%M:%S", localtime), $myhostname, $myname, $$);
+	}
+	$errmsg = AmavisStats::Util::sanitize_str($errmsg);
+# if (length($errmsg) > 2000) {	# crop at some arbitrary limit (< LINE_MAX)
+#	$errmsg = substr($errmsg,0,2000) . "...";
+# }
+	if ($really_log_to_stderr) {
+		print STDERR $prefix, $errmsg, $eol;
+	} elsif ($do_syslog) {
+		my($prio) = $syslog_priority;	# never go below this priority level
+		# syslog priorities: DEBUG, INFO, NOTICE, WARNING, ERR, CRIT, ALERT, EMERG
+		if	($level <= -3) { $prio = LOG_CRIT	if $prio > LOG_CRIT	}
+		elsif ($level <= -2) { $prio = LOG_ERR	 if $prio > LOG_ERR	 }
+		elsif ($level <= -1) { $prio = LOG_WARNING if $prio > LOG_WARNING }
+		elsif ($level <=	0) { $prio = LOG_NOTICE	if $prio > LOG_NOTICE	}
+		elsif ($level <=	2) { $prio = LOG_INFO	if $prio > LOG_INFO	}
+		else				 { $prio = LOG_DEBUG	if $prio > LOG_DEBUG	}
+		my($pre) = '';
+		my($logline_size) = 980;	# less than	(1023 - prefix)
+		while (length($pre . $errmsg) > $logline_size) {
+			my($avail) = $logline_size - length($pre . "...");
+			syslog($prio, "%s", $pre . substr($errmsg,0,$avail) . "...");
+			$pre = "...";
+			$errmsg = substr($errmsg, $avail);
+		}
+		syslog($prio, "%s", $pre . $errmsg);
+	} else {
+		lock($loghandle);
+		seek($loghandle,0,2) or die "Can't position log file to its tail: $!";
+		print $loghandle $prefix, $errmsg, $eol;
+		unlock($loghandle);
+	}
+	setlocale(LC_TIME, $old_locale);
+}
+
+1;
+
+#
+package AmavisStats::Util;
+use strict;
+use re 'taint';
+
+BEGIN {
+	use Exporter ();
+	use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
+	$VERSION = '0.001015';
+	@ISA = qw(Exporter);
+	%EXPORT_TAGS = ();
+	@EXPORT = ();
+	@EXPORT_OK = qw(&ll
+					&do_log
+					&debug_oneshot
+					&exit_status_str
+					&sanitize_str);
+}
+use subs @EXPORT_OK;
+use POSIX qw(WIFEXITED WIFSIGNALED WIFSTOPPED
+					WEXITSTATUS WTERMSIG WSTOPSIG);
+use Errno qw(ENOENT);
+
+BEGIN {
+	import AmavisStats::Conf qw(:platform $DEBUG c);
+	import AmavisStats::Log qw(write_log);
+}
+
+use vars qw($debug_oneshot);
+
+###----------------------------------------------------------------###
+
+sub debug_oneshot(;$$) {
+	if (@_) {
+		my($new_debug_oneshot) = shift;
+		if (($new_debug_oneshot ? 1 : 0) != ($debug_oneshot ? 1 : 0)) {
+			do_log(0, "DEBUG_ONESHOT: TURNED ".($new_debug_oneshot ? "ON" : "OFF"));
+			do_log(0, shift)	if @_;	# caller-provided extra log entry, usually
+								# the one that caused debug_oneshot call
+		}
+		$debug_oneshot = $new_debug_oneshot;
+	}
+	$debug_oneshot;
+}
+
+###----------------------------------------------------------------###
+
+# is a message log level below the current log level?
+sub ll($) {
+	my($level) = @_;
+	$level = 0	if $level > 0 && ($DEBUG || $debug_oneshot);
+	$level <= c('log_level');
+}
+
+###----------------------------------------------------------------###
+
+# write log entry
+sub do_log($$) {
+	my($level, $errmsg) = @_;
+	if (ll($level)) {
+		$level = 0	if $level > 0 && ($DEBUG || $debug_oneshot);
+		write_log($level, $errmsg);
+	}
+}
+
+###----------------------------------------------------------------###
+
+sub exit_status_str($;$) {
+	my($stat,$err) = @_; my($str);
+	if (WIFEXITED($stat)) {
+		$str = sprintf("exit %d", WEXITSTATUS($stat));
+	} elsif (WIFSTOPPED($stat)) {
+		$str = sprintf("stopped, signal %d", WSTOPSIG($stat));
+	} else {
+		$str = sprintf("DIED on signal %d (%04x)", WTERMSIG($stat),$stat);
+	}
+	$str .= ', '.$err	if $err ne '';
+	$str;
+}
+
+###----------------------------------------------------------------###
+
+# Mostly for debugging and reporting purposes:
+# Convert nonprintable characters in the argument
+# to \[rnftbe], or \octal code, and '\' to '\\',
+# and Unicode characters to \x{xxxx}, returning the sanitized string.
+sub sanitize_str {
+	my($str, $keep_eol) = @_;
+	my(%map) = ("\r" => '\\r', "\n" => '\\n', "\f" => '\\f', "\t" => '\\t',
+					"\b" => '\\b', "\e" => '\\e', "\\" => '\\\\');
+	if ($keep_eol) {
+		$str =~ s/([^\012\040-\133\135-\176])/	# and \240-\376 ?
+					exists($map{$1}) ? $map{$1} :
+					sprintf(ord($1)>255 ? '\\x{%04x}' : '\\%03o', ord($1))/eg;
+	} else {
+		$str =~ s/([^\040-\133\135-\176])/		# and \240-\376 ?
+					exists($map{$1}) ? $map{$1} :
+					sprintf(ord($1)>255 ? '\\x{%04x}' : '\\%03o', ord($1))/eg;
+	}
+	$str;
+}
+
+1;
+
+#
+package AmavisStats;
+require 5.005;	# need qr operator and \z in regexps
+use strict;
+use re 'taint';
+
+use POSIX qw(locale_h strftime setsid);
+use Errno qw(ENOENT ENOENT EACCES);
+use IO::File ();
+use File::Basename;
+use warnings;
+use Time::localtime;
+use Time::Local;
+use RRDs;
+use Fcntl ':flock';
+
+
+BEGIN {
+	import AmavisStats::Conf qw(:platform
+							:confvars
+							:process_confvars
+							:dynamic_confvars
+							c);
+	import AmavisStats::Util qw(ll
+							do_log
+							sanitize_str
+							debug_oneshot
+							exit_status_str);
+	import AmavisStats::Daemonize;
+	import AmavisStats::Log;
+}
+
+use vars qw( @ISA );
+@ISA = qw( AmavisStats::Daemonize AmavisStats::Util );
+
+###----------------------------------------------------------------###
+
+# Fetch all remaining modules.
+sub fetch_modules_extra() {
+	my(@modules);
+	for my $m ('AmavisStats::Conf', 'AmavisStats::Daemonize', 'AmavisStats::Lock', 'AmavisStats::Log', 'AmavisStats::Util',
+					sort map { s/\.pm\z//; s[/][::]g; $_ } grep { /\.pm\z/ } keys %INC) {
+		next	if !grep { $_ eq $m } qw(AmavisStats::Conf
+									AmavisStats::Daemonize
+									AmavisStats::Lock
+									AmavisStats::Log
+									AmavisStats::Util
+									Unix::Syslog
+									RRDp
+									RRDs
+									POSIX
+									Exporter
+									Fcntl
+									warnings
+									Errno
+									Carp
+									IO::File
+									Time::localtime
+									Time::Local
+									Time::HiRes);
+
+		do_log(1, sprintf("Module %-25s %s", $m, $m->VERSION || '?'));
+	}
+	for my $m ( @modules) {
+		do_log(1, sprintf("Module %-25s %s", $m, $m->VERSION || '?'));
+	}
+}
+
+delete @ENV{'IFS', 'CDPATH', 'ENV', 'BASH_ENV'};
+
+my($config_file) = '@PKGCONFIGDIR@/@PKGNAME@.conf';	# default location of config file
+
+# Consider droping privileges early, before reading config file.
+# This is only possible if running under chroot will not be needed.
+#
+my($desired_group);						# defaults to $desired_user's group
+my($desired_user);						# username or UID
+
+# collect and parse command line options
+while (@ARGV >= 2 && $ARGV[0] =~ /^-[ugc]\z/) {
+	my($opt) = shift @ARGV;
+	if ($opt eq '-u') {		# -u username
+		my($val) = shift @ARGV;
+		if ($> == 0) { $desired_user = $val }
+		else { print STDERR "Ignoring option -u when not running as root\n" }
+	} elsif ($opt eq '-g') {	# -g group
+		my($val) = shift @ARGV;
+		if ($> == 0) {
+			$desired_group = $val;
+		} else {
+			print STDERR "Ignoring option -g when not running as root\n";
+		}
+	} elsif ($opt eq '-c') {	# -c config_file
+		$config_file = shift @ARGV;
+		$config_file = untaint($config_file) if $config_file =~ m{^[A-Za-z0-9/._=+-]+\z};
+	}
+}
+
+if (defined $desired_user && ($> == 0 || $< == 0)) {	# drop privileges early
+	my($username,$passwd,$uid,$gid) =
+	$desired_user=~/^(\d+)$/ ? (undef,undef,$1,undef) :getpwnam($desired_user);
+	defined $uid or die "No such username: $desired_user\n";
+	if ("$desired_group" eq "") { $desired_group = $gid }	# for logging purposes
+	else { $gid = $desired_group=~/^(\d+)$/ ? $1 : getgrnam($desired_group) }
+	defined $gid or die "No such group: $desired_group\n";
+	$( = $gid;	# real GID
+	$) = "$gid $gid";	# effective GID
+	POSIX::setuid($uid) or die "Can't setuid to $uid: $!";
+	$> = $uid; $< = $uid;	# just in case
+	$> != 0 or die "Still running as root, aborting\n";
+	$< != 0 or die "Effective UID changed, but Real UID is 0\n";
+}
+
+umask(0027);
+POSIX::setlocale(LC_TIME,"C");  # English dates required in syslog and rfc2822!
+
+# Read config file, which may override default settings
+AmavisStats::Conf::read_config($config_file);
+
+# did we get a stop command?
+# act on command line parameters
+my($cmd) = lc($ARGV[0]);
+if ($cmd =~ /^(start|debug|foreground)?\z/) {
+	$DEBUG=1		if $cmd eq 'debug';
+	$daemonize=0	if $cmd eq 'foreground';
+} elsif ($cmd eq 'help' || $cmd !~ /^(reload|stop)\z/) {
+	die sprintf("$myversion: %s Usage:\n	$0 [-u user] [-g group] [-c config-file] ( [start] | stop | reload | debug | foreground )\n", $cmd !~ /^(reload|stop|help)\z/ ? 'Unknown Argument': '');
+} else {	# stop or reload
+	eval {	# first stop a running daemon
+		$pid_file ne '' or die "Config parameter \$pid_file not defined";
+		my($errn) = stat($pid_file) ? 0 : 0+$!;
+		$errn != ENOENT or die "No PID file $pid_file\n";
+		$errn == 0		or die "PID file $pid_file inaccessible: $!";
+		my($AmavisStats_pid);
+		if ($cmd =~ /^(reload|stop)\z/) {
+			open(PID_FILE, "< $pid_file\0") or die "Can't read file $pid_file: $!";
+			while (<PID_FILE>) { chomp; $AmavisStats_pid = $_ if /^\d+\z/ }
+			close(PID_FILE) or die "Can't close file $pid_file: $!";
+			defined($AmavisStats_pid) or die "Invalid PID in the $pid_file";
+			$AmavisStats_pid = untaint($AmavisStats_pid);
+			kill('TERM',$AmavisStats_pid) or die "Can't SIGTERM mysample[$AmavisStats_pid]: $!";
+	 	}
+		my($delay) = 1;	# seconds
+		for (;;) {
+			sleep($delay); $delay = 5;
+			last	if !kill(0,$AmavisStats_pid);	# is the old daemon still there?
+			print STDERR "Waiting for the process $AmavisStats_pid to terminate\n";
+		}
+	};
+	if ($@ ne '') { chomp($@); die "$@, can't $cmd the process\n" }
+	exit 0	if $cmd eq 'stop';
+	print STDERR "daemon terminated, waiting for the dust to settle...\n";
+	sleep 5;	# wait for the TCP socket to be released
+	print STDERR "becoming a new daemon...\n";
+}
+
+$daemonize = 0	if $DEBUG;
+
+# Set path, home and term explictly.	Don't trust environment
+$ENV{PATH} = $path			if $path ne '';
+$ENV{TERM} = 'dumb';
+$ENV{COLUMNS} = '80';
+$ENV{LINES} = '100';
+
+###----------------------------------------------------------------###
+
+	sub loadState {
+		do_log(5, "DEBUG : loadState()");
+		$spos = undef;
+		$numv = 0; # number of virus types seen
+		%occurence = ();
+
+		#
+		# Check that we have somewhere to save our status - Not much point
+		# in continuing otherwise.
+		#
+		if ((! -d "$statedir") or (! -w "$statedir")) {
+			do_log(1,"ERROR : $statedir does not exist or cannot be written to.");
+			exit;
+		}
+
+		#
+		# Load the id=name mappings file if it already exists. This file is
+		# shared between hosts
+		#
+		if (-f "$namesfile") {
+			do_log(5, "DEBUG : opening file $namesfile");
+			open (IN, "$namesfile") or die "Could not open $namesfile";
+			while (my $line = <IN>) {
+				if ($line =~ /^(\d+)\s+(.*)/) {
+					my $id = $1;
+					my $name = $2;
+					if ($name =~ /^spam$/) { # from version 0.1.12 names changed
+						$name = "Not-Delivered(SPAM)";
+					} elsif ($name =~ /^passed$/) {
+						$name = "Passed";
+					} elsif ($name =~ /^banned$/) {
+						$name = "Banned";
+					} elsif ($name =~ /^infected$/) {
+						$name = "Infected";
+					}
+					$rvid{$name} = $id;
+					$vnames{$id} = $name;
+					$numv++;
+					do_log(5, "DEBUG : Known: #$id $name");
+				}
+			}
+			close IN;
+		}
+
+		#
+		# Grab the previous position reached in the log file, plus
+		# the total number of different viruses we have seen
+		#
+		if (-f "$statefile") {
+
+			do_log(2, "opening file $statefile");
+
+			open (IN, "$statefile") or die "Could not open $statefile";
+			while (my $line = <IN>) {
+				if ($line =~ /^pos:\s*(\d+)/) {
+					$spos = $1;
+				}
+				elsif ($line =~ /^lastupdate:\s*(\d+)/) {
+					$lastupdate = $1;
+				}
+				elsif ($line =~ /^spamsess:\s*(.*)/) {
+					my @arr = split(/\s+/, $1);
+					foreach (@arr) {
+						$spamsess{$_} = 1;
+					}
+				}
+			}
+			close IN;
+
+			do_log(2, "opening file $countfile");
+			open (IN, "$countfile") or die "Could not open $countfile";
+			while (my $line = <IN>) {
+				if ($line =~ /^(\d+)\s+(\d+)/) {
+					$occurence{$1} = $2;
+				}
+			}
+			close IN;
+
+			do_log(2, "opening file $seenfile");
+			open (IN, "$seenfile") or die "Could not open $seenfile";
+			while (my $line = <IN>) {
+				if ($line =~ /^(\d+)\s+(\d+)\s+(\d+)/) {
+					$firstseen{$1} = $2;
+					$lastseen{$1}	= $3;
+				}
+			}
+			close IN;
+		}
+
+		#
+		# If we have not run before (for this host?) reset...
+		#
+		if (!defined $spos) {
+			do_log(1, "First Time Run (matching host against '$scan_domains')");
+			$spos		= 0; # position into the log file
+			$lastupdate = 0; # number of virus types seen
+		}
+
+		do_log(2, "start position: $spos numv: $numv lastupdate: $lastupdate");
+		my $tmp = "left over spam session ids: ";
+		foreach my $sid (keys %spamsess) {
+			$tmp = "$tmp $sid";
+		}
+		while ( my ($id,$count) = each (%occurence)) {
+			my $name = $vnames{$id};
+			do_log(5, "DEBUG : #$id: $name, seen $count times");
+		}
+	}
+
+	sub saveState {
+		do_log(5, "DEBUG : saveState()");
+
+		#
+		# Reset the value of spos and save it for the next time we are called
+		#
+		do_log(2, "saveState(): eof: $eof numv: $numv lastupdate: $lastupdate");
+
+		open (OUT, ">$statefile") or die "Could not write to $statefile";
+		print OUT "pos: $pos\n";
+		print OUT "lastupdate: $lastupdate\n";
+		print OUT "LC_TIME: $locale\n";
+		print OUT "spamsess: ";
+		close OUT;
+
+		open (NAMES, ">$namesfile") or die "Could not write to $namesfile";
+		foreach my $id (keys %vnames) {
+			my $name = $vnames{$id};
+			print NAMES "$id $name\n";
+		}
+		close NAMES;
+
+		open (COUNT, ">$countfile") or die "Could not write to $countfile";
+		open (SEEN, ">$seenfile") or die "Could not write to $seenfile";
+		foreach my $id (keys %occurence) {
+			print COUNT "$id $occurence{$id}\n";
+			print SEEN "$id $firstseen{$id} $lastseen{$id}\n";
+		}
+		close COUNT;
+		close SEEN;
+
+	}
+
+	sub getVid {
+		do_log(5, "DEBUG : getVid");
+		my ($virus, $epoch) = @_;
+
+		if (!exists $rvid{$virus}) {
+			$numv++;
+			$vnames{$numv} = $virus;
+			$rvid{$virus}	= $numv;
+			do_log(1, "New id: #$numv ($virus)");
+		}
+
+		my $id		= $rvid{$virus};
+		my $rrdfile = "$statedir/$id.rrd";
+
+		if (! -e $rrdfile) {
+			$occurence{$id} = 0;
+			$firstseen{$id} = $epoch;
+			$lastseen{$id}	= $epoch;
+
+			if (! createRRD($rrdfile, $id)) {
+				do_log(1, "ERROR :updateRRD: Can't create file $rrdfile: $!");
+			}
+	#		updateRRD($id, $lastupdate - $rrdstep)
+		}
+
+		return $id;
+	}
+
+	sub upCount {
+		do_log(5, "DEBUG : upCount()");
+		my ($id, $epoch) = @_;
+		$occurence{$id}++;
+		$lastseen{$id} = $epoch;
+	}
+
+	sub classify {
+		do_log(5, "DEBUG : classify()");
+		my ($sid) = @_;
+		my $id;
+
+		#
+		# Save the stats according to the classification of the email
+		# Order is important.
+		#
+		if ($line =~ /\bPassed SPAM\b/ ||				# >= amavisd-new-2004
+			$line =~ /\bPassed\b.*\bquarantine spam/) { # <	amavisd-new-2003
+			do_log(5, "DEBUG : Passed SPAM $epoch: $isodate");
+			$id = getVid("Passed SPAM", $epoch);
+			upCount($id, $epoch);
+
+		} elsif ($line =~ /\bBlocked SPAM\b/ ||		 # >= amavisd-new-2004
+				 $line =~ /\bNot-Delivered\b.*\bquarantine spam/) { # <= amavisd-new
+			do_log(5, "DEBUG : Blocked SPAM $epoch: $isodate");					#	2003
+			$id = getVid("Blocked SPAM", $epoch);
+			upCount($id, $epoch);
+
+		} elsif ($line =~ /\bPassed BANNED\b/) {		# >= amavisd-new-2004
+			do_log(5, "DEBUG : Passed BANNED $epoch: $isodate");
+			$id = getVid("Passed BANNED", $epoch);
+			upCount($id, $epoch);
+
+		} elsif ($line =~ /\bBlocked BANNED\b/) {	# >= amavisd-new-2004
+			do_log(5, "DEBUG : Blocked BANNED $epoch: $isodate");	 # with Blocked, otherwise
+			$id = getVid("Blocked BANNED", $epoch);	 # <= amavisd-new-2003
+			upCount($id, $epoch);
+
+		} elsif ($line =~ /\bPassed BAD-HEADER\b/) {
+			do_log(5, "DEBUG : Passed BAD-HEADER $epoch: $isodate");
+			$id = getVid("Passed BAD-HEADER", $epoch);
+			upCount($id, $epoch);
+
+		} elsif ($line =~ /\bPassed INFECTED\b/) {
+			do_log(5, "DEBUG : Passed INFECTED $epoch: $isodate");
+			$id = getVid("Passed INFECTED", $epoch);
+			upCount($id, $epoch);
+
+		} elsif ($line =~ /\b(Passed |Blocked )?INFECTED\s+\((.*?(\(.*?\))*?)\)/ or # amavisd-new
+				 $line =~ /\b(Possible) virus.*->\s+'(.*?)'/	 or # amavis-ng
+				 $line =~ /.*(parts)\/\d+:\s+(.*?)\s+FOUND/		or # amavis-ng
+				 $line =~ /\b(quarantine)[:|d;].*?virus='(.*?)'/ or # amavisd
+				 $line =~ /.*(part-)\d+:\s+(.*?)\s+FOUND/ ) {		 # clamav
+
+			my $viruses = $2;
+
+			#
+			# Update the overall infected emails statistics
+			#
+			if (defined $1) {
+				if ($1 =~ /Blocked /) {
+					do_log(5, "DEBUG : Blocked INFECTED $epoch: $isodate");
+					$id = getVid("Blocked INFECTED", $epoch);
+					upCount($id, $epoch);
+				} elsif ($1 =~ /Passed /) {
+					do_log(5, "DEBUG : Passed INFECTED $epoch: $isodate");
+					$id = getVid("Passed INFECTED", $epoch);
+					upCount($id, $epoch);
+				}
+			} else {
+					do_log(5, "DEBUG : Blocked INFECTED $epoch: $isodate");
+					$id = getVid("Blocked INFECTED", $epoch);
+					upCount($id, $epoch);
+			}
+			do_log(5, "DEBUG : viruses: \"$viruses\" at $epoch: $isodate");
+
+	
+			#
+			# What is this specific nasty little bugger(s) called?
+			# Update his statistics as well.
+			#
+			my @list = split(/,+\s+/, $viruses);
+			my %seen;
+			foreach my $virus (@list) {
+				if (!$seen{$virus}) {
+					$id = getVid($virus, $epoch);
+					upCount($id, $epoch);
+					$seen{$virus} = 1;
+				}
+			}
+
+		} elsif ($line =~ /\bBlocked CLEAN\b/ ||		# >= amavisd-new-2004
+				 $line =~ /\bNot-Delivered\b/) {		# <= amavisd-new-2003
+			do_log(5, "DEBUG : Blocked CLEAN $epoch: $isodate");
+			$id = getVid("Blocked CLEAN", $epoch);
+			upCount($id, $epoch);
+
+		} elsif ($line =~ /\bPassed( CLEAN)?\b/) {
+			do_log(5, "DEBUG : Passed CLEAN $epoch: $isodate");
+			$id = getVid("Passed CLEAN", $epoch);
+			upCount($id, $epoch);
+
+		}
+
+	}
+
+	sub parseFile {	
+		my ($fname, $start, $stop) = @_;
+		do_log(2 , "parseFile($fname, $start, $stop)");
+
+		#
+		# Open up the file we need to parse
+		#
+		unless (open (SCAN_LOGFILE, $fname)) {
+			do_log(1, "ERROR : Could not open file $fname: $!"); 
+		}
+		unless (seek (SCAN_LOGFILE, $start, 0)) {
+			do_log(1, "ERROR : Could not seek to $start in file $fname: $!"); 
+		}
+
+		#
+		# Loop each line until the current end of file
+		#
+		$pos = $start;
+		my $lineid = 0;
+
+		while ($pos < $stop and $line = <SCAN_LOGFILE>) {
+			#
+			# Housekeeping
+			#
+			$lineid++;
+			$lastepoch = $epoch;
+			$line =~ s/:\s+\[ID.*?\]/: /; # get rid of extra Solaris field
+
+			my ($mon, $day, $time, $host, $prog, $sid) = split(/\s+/, $line);
+
+			#
+			# Check that the environment locale matches what is being written
+			# by syslog
+			#
+			my $tmp = $months{"$mon"};
+			if (!defined $tmp) {
+				do_log(1, "ERROR : Unknown month \"$mon\" (using locale \"$locale\")");
+				$warncount++;
+				if ($warncount > 5) {
+					do_log(1, "ERROR :Too many warnings - bailing out");
+				}
+			}
+			$mon = $tmp;
+
+			#
+			# Generate a seconds-since-1970 epoch and formated date string
+			#
+			my ($hour,$min,$sec) = split (/:/, $time);
+			$epoch = timelocal($sec, $min, $hour, $day, $mon, $year-1900);
+
+			if ($epoch > time()) {
+				# date is last actually last year
+				$epoch = timelocal($sec, $min, $hour, $day, $mon, $year-1901);
+			}
+			if (!defined $lastepoch) {
+				$lastepoch = $epoch - 1;
+			}
+
+			$isodate = sprintf("%4u-%02u-%02u", $year, $mon+1, $day) .
+								" $hour:$min:$sec";
+			do_log(5, "DEBUG : line at $isodate epoch: $epoch");
+
+			#
+			# Update all rrds if we are more than $rrdstep seconds since the last
+			# update
+			#
+			if ($lastupdate == 0) {
+				$lastupdate = int($epoch / $rrdstep) * $rrdstep;
+				do_log(5, "DEBUG : First update: $lastupdate");
+			}
+
+			my $count = int(($epoch - $lastupdate) / $rrdstep);
+			for (my $i = 1; $i <= $count; $i++) {
+				$lastupdate = $lastupdate + $rrdstep;
+				foreach my $id (keys %occurence) {
+					updateRRD($id, $lastupdate);
+				}
+			}
+
+			#
+			# If this is an amavis line, and if the host matches $scan_domains then
+			# do the classification
+			#
+			if ($prog =~ /amavis.*?\[\d+\]:/ and $host =~ /$scan_domains/) {
+				classify($sid);
+			}
+
+			#
+			# Where did we get to in the file?
+			#
+			$pos = tell(SCAN_LOGFILE);
+
+			#
+			# Save the current statistics every 1000 lines. This way
+			# if the program dies we don't have to start again from the 
+			# beginning each time. Also good for monitoring the graphs
+			# to see where we are up to.
+			#
+			if (!($lineid % 1000)) {
+				saveState();;
+			}
+
+		}
+		close(SCAN_LOGFILE);	
+
+	}
+
+	sub parseRotFile { 
+		do_log(5, "DEBUG : parseRotFile()");
+		my ($scan_logfile, $spos) = @_;
+
+		my $now = time();
+		my $today	 = localtime($now);
+		my $yesterday = localtime($now - 60*60*24);
+
+		$today = sprintf("%4u%02u%02u", $today->year + 1900,
+										$today->mon + 1,
+										$today->mday);
+
+		$yesterday = sprintf("%4u%02u%02u", $yesterday->year + 1900,
+											$yesterday->mon + 1,
+											$yesterday->mday);
+
+		my $rotlogfile = undef;
+
+		if (! -f "$scan_logfile.0" && -f "$scan_logfile.0.gz" ) {
+			do_log(2 , "copying $scan_logfile.0.gz -> $scan_logfile.0");
+			`gzcat "$scan_logfile.0.gz" > "$scan_logfile.0"`;
+		}
+		
+		if (-f "$scan_logfile.0") {
+			$rotlogfile = $scan_logfile . ".0";
+		} elsif (-f "$scan_logfile.1") {
+			$rotlogfile = $scan_logfile . ".1";
+		} elsif (-f "$scan_logfile.01") {
+			$rotlogfile = $scan_logfile . ".01";
+		} elsif (-f "$scan_logfile-$today") {
+			$rotlogfile = $scan_logfile . "-$today";
+		} elsif (-f "$scan_logfile-$yesterday") {
+			$rotlogfile = $scan_logfile . "-$yesterday";
+		}
+
+		if (defined $rotlogfile) {
+			parseFile ($rotlogfile, $spos, (stat $rotlogfile)[7]);
+		} else {
+			do_log(1, "ERROR : Could not open rotated logfile.");
+			do_log(1, "ERROR :	Tried extentions .0.gz, .0, .1, .01, -$today, -$yesterday");
+		}
+	}
+
+	sub createRRD {
+		do_log(5, "DEBUG : createRRD()");
+		my ($file, $id) = @_;
+		do_log(2, "createRRD: $id -> $file");
+
+		my $start = $lastupdate - 288*$rrdstep; # 288 here must be same as largest
+												# RRA below
+		RRDs::create($file,
+					"--start", $start,
+					"--step", $rrdstep,
+					"DS:hits:COUNTER:".$rrdstep.":0:U",
+					"RRA:AVERAGE:0.5:1:300",
+					"RRA:AVERAGE:0.5:6:700",
+					"RRA:AVERAGE:0.5:24:775",
+					"RRA:AVERAGE:0.5:288:797"
+					);
+
+		my $err = RRDs::error;
+		if ($err) {
+			do_log(1, "ERROR : createRRD: $err");
+			return -1;
+		}
+		
+		#
+		# Pre-populate from the start to $lastupdate (288 times)
+		#
+		my $tmp = $start;
+		while ($tmp <= $lastupdate) {
+			updateRRD($id, $tmp);
+			$tmp += $rrdstep;
+		}
+
+		return 1;
+	}
+
+	sub updateRRD () {
+		my ($id, $epoch)	= @_;
+		my $count			= $occurence{$id};
+		my $rrdfile			= "$statedir/$id.rrd";
+		my $err;
+		my $last;
+		do_log(2, "updateRRD: $count -> $rrdfile");
+
+		if (! -f $rrdfile) {
+			do_log(1, "ERROR : updateRRD: updating $rrdfile but it doesn't exist!");
+		}
+
+		do_log(5, "DEBUG : Update: $rrdfile at $epoch count $count");
+
+		$last = RRDs::last($rrdfile);
+		$err = RRDs::error;
+		if ($err) {
+			do_log(1, "ERROR : updateRRD: $err");
+			return -1;
+		}
+
+		#
+		# We sometimes get two hits in the same second. Check for that here
+		# and basically ignore it.
+		#
+		if ($epoch > $last) {
+			my $upd = $epoch . ":" . $count;
+			RRDs::update($rrdfile, $upd);
+
+			$err = RRDs::error;
+			if ($err) {
+				do_log(1, "ERROR : updateRRD: $err");
+				do_log(1, "ERROR : Attempted to update $rrdfile at $epoch count $count");
+				return -1;
+			}
+		}
+
+		return 1;
+	}
+
+	sub internal_init {
+		$scan_domains = shift;
+		$statedir	= $MYHOME;
+		$cachedir	= $MYCACHE;
+		$namesfile = "$statedir/@PKGNAME@.names";
+
+		if ($scan_domains ne '.*') {
+			$statedir = "$statedir/$scan_domains";
+			if (! -d $statedir) {
+				do_log(1, "ERROR : could not create $statedir") && return 1 if ! mkdir($statedir, 0775);
+			}
+			$cachedir = "$cachedir/$scan_domains";
+			if (! -d $cachedir) {
+				do_log(1, "ERROR : could not create $cachedir") && return 1 if ! mkdir($cachedir, 0775);
+			}
+		}
+
+		$statefile = "$statedir/@PKGNAME@.state"; # last read position of the logfile
+		$countfile = "$statedir/@PKGNAME@.count"; # per virus totals
+		$seenfile	= "$statedir/@PKGNAME@.seen"; # first and last time() seen
+
+		if ( ! -f $scan_logfile ) {
+			do_log(1, "ERROR :file \"$scan_logfile\" does not exist");
+			return 1;
+		}
+
+		do_log(5, "DEBUG : namesfile = $namesfile");
+		do_log(5, "DEBUG : statedir  = $statedir");
+		do_log(5, "DEBUG : statefile = $statefile");
+		do_log(5, "DEBUG : countfile = $countfile");
+		do_log(5, "DEBUG : seenfile  = $seenfile");
+		return 0;
+	}
+
+###----------------------------------------------------------------###
+
+sub pre_loop_hook {
+	AmavisStats::Log::init("$myproduct_name", $DEBUG, $DO_SYSLOG, $SYSLOG_LEVEL, $LOGFILE);
+	do_log(1, "user = $daemon_user, EUID: $> ($<);    group = $daemon_group, EGID: $) ($()");
+	do_log(1, "Perl version                     $]");
+	fetch_modules_extra();	# bring additional modules into memory and compile them
+}
+
+###----------------------------------------------------------------###
+
+sub loop_hook {
+	my @scan_domains = ".*";
+	if (defined @my_domains) {
+		push(@scan_domains, @my_domains);
+	}
+
+	# Set up a locale-depenedent hash of Month-to-Numbers
+	$locale = setlocale(LC_TIME);
+	$year	= localtime->year() + 1900;
+
+	# build default (English?) hash of Month-to-Numbers
+	%months = (
+	"Jan" => "0", "Feb" => "1",	"Mar" => "2",	"Apr" => "3",
+	"May" => "4", "Jun" => "5",	"Jul" => "6",	"Aug" => "7",
+	"Sep" => "8", "Oct" => "9", "Nov" => "10", "Dec" => "11"
+	);
+
+	do_log(5, "DEBUG : locale is set to \"$locale\"");
+	for (0..11) {
+		my $tmp = strftime("%b", 0, 0, 0, 1, $_, 96);
+		$months{$tmp} = $_;
+		do_log(5, "DEBUG : $tmp");
+	}
+
+	for my $scan_domains (@scan_domains) {
+		do_log(1, sprintf("Starting -> %s", $scan_domains eq '.*' ? 'localhost' : $scan_domains));
+		my $ret = internal_init($scan_domains);
+		if (! $ret) {
+			$ret = loadState();
+		}
+
+		if (! $ret) {
+			$eof = (stat $scan_logfile)[7];
+
+			if ($eof < $spos) {
+				#
+				# The log file has rotated under us, so do the rotated scan_logfile first.
+				#
+				do_log(1, "NOTICE : scan_logfile \"$scan_logfile\" appears to have rotated");
+				$ret = parseRotFile($scan_logfile, $spos);
+				$spos = 0; # reset to the start of the file
+			}
+
+			do_log(5, "DEBUG : $scan_logfile, $spos, $eof");
+			parseFile ($scan_logfile, $spos, $eof);
+
+			saveState();
+			do_log(1, sprintf("Finished -> %s", $scan_domains eq '.*' ? 'localhost' : $scan_domains));
+		} else {
+			do_log(1, sprintf("ERROR : skipping %s.", $scan_domains != '.*' ? $scan_domains : 'localhost'));
+		}
+	}
+}
+
+###----------------------------------------------------------------###
+
+sub post_loop_hook {
+		do_log(0, "Shutting Down!");
+}
+
+my $daemon = bless {
+	daemon => {
+		user			=> (($> == 0 || $< == 0) ? $daemon_user	: undef),
+		group			=> (($> == 0 || $< == 0) ? $daemon_group : undef),
+		pid_file		=> $pid_file,
+
+		scan_time => $scan_time ? $scan_time : 300,
+		background => $daemonize ? 1 : undef,
+		setsid	 => $daemonize ? 1 : undef,
+		chroot	 => $daemon_chroot_dir ne '' ? $daemon_chroot_dir : undef,
+
+		# controls log level for AmavisStats_Daemon internal log messages:
+		#	0=err, 1=warning, 2=notice, 3=info, 4=debug
+		log_level	=> ($DEBUG ? 4 : 2),
+		log_file	=> undef,	# will be overridden to call do_log()
+	},
+}, 'AmavisStats';
+
+if ( $daemon->run ) { die "Already running!" };	# transfer control to AmavisStats::Daemon
+
+1;

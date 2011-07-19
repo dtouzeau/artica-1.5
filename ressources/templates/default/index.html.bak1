@@ -1,0 +1,31 @@
+<div id="outer">
+	<div id="header">
+		<div id="logo">
+				<img id="logo" src="img/logo.jpg" width="680" height="165" alt="" />
+		</div>
+		<div id="menu">
+		</div>
+	</div>
+<div id="content">
+	<div id=titleContent>{TEMPLATE_TITLE}</div>
+		<div id="primaryContentContainer">
+			<div id="primaryContent">
+					{TEMPLATE_CONTENT}
+			</div>
+		</div>
+		<div id="secondaryContent">
+			<div style='clear:both'></div>
+			<div id="topmenus"></div>
+		</div>
+           </div>
+		<div class="clear"></div>
+	</div>
+	<div id="footer">
+		<p>Copyright &copy; 2007 artica-postfix.</p>
+	</div>
+</div>
+<script>BuildLeftMenus();BuildTopMenus()</script>
+</body>
+</html>
+
+

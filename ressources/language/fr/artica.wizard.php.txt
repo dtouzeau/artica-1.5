@@ -1,0 +1,22 @@
+<add_credentials>Ajouter des pouvoirs</add_credentials>
+<get_mails_isp>Relever le courrier de votre FAI</get_mails_isp>
+<get_mails_isp_text>Votre bo&icirc;te aux lettres r&eacute;elle se trouve sur le serveur de courrier de votre FAI, utilisez cette section pour rapatrier les emails de cet utilisateur sur ce serveur.</get_mails_isp_text>
+<isp_server_name>Nom du serveur de courrier de votre FAI</isp_server_name>
+<play_with_your_isp>N&eacute;gocier avec votre FAI</play_with_your_isp>
+<send_isp_relay>Utiliser le serveur SMTP de votre FAI</send_isp_relay>
+<send_isp_relay_text>Si votre FAI h&eacute;berge votre domaine, vous devrez utiliser son serveur SMTP pour relayer tous les messages sortants.[br]
+Utilisez cette fonctionnalit&eacute; pour indiquer le serveur de FAI pour les messages sortants.</send_isp_relay_text>
+<send_isp_relay_text2>Indiquez l'adresse IP ou le nom du serveur (ex. smtp.fai.net) ici[br]
+Tous les domaines SMTP qui ne sont pas repris dans une organisation seront consid&eacute;r&eacute; comme &quot;domaines ext&eacute;rieurs&quot; est utiliseront le serveur distant de votre FAI.[br]
+Si votre serveur distant utilise un port SMTP non standard, veuillez l'&eacute;crire sous la forme &quot;smtp.fai.net:6000&quot;[br]
+par d&eacute;faut Postfix essaiera de r&eacute;soudre le nom en utilisant un DNS, si vous ne voulez pas que Postfix r&eacute;solve ces noms utiliser des crochets &quot;[smtp.fai.net]&quot; ou &quot;[smtp.fai.net]:6000&quot;</send_isp_relay_text2>
+<send_isp_relay_text3>Si vous utiliser le domaine de votre FAI (free.fr, laposte.net, orange.fr, ...) n'oubliez pas d'autoriser vos utilisateurs &agrave; r&eacute;gler leur adresse de courrier pour qu'elle utilise le &quot;mapping d'adresse canonique&quot; vers le domaine de votre FAI pour ne pas avoir d'ennuis avec les destinataires des courriers.</send_isp_relay_text3>
+<send_to_isp>Envoyer du courrier au serveur de votre FAI en utilisant l'authentification</send_to_isp>
+<send_to_isp_text>Votre FAI h&eacute;berge votre domaine et vous devez envoyer les courriers sortants &agrave; travers son serveur en utilisant les param&egrave;tres d'authenfication.</send_to_isp_text>
+<servername>Nom du serveur de votre FAI</servername>
+<smtp_sasl_auth_enable>Activer SASL SMTP</smtp_sasl_auth_enable>
+<smtp_sasl_auth_enable_text>Le support SASL Postfix (RFC 4954, autrefois RFC 2554) peut &ecirc;tre utilis&eacute; pour authentifier des clients  SMTP &agrave; distance au serveur  SMTP de Postfix et pour authentifier le client  SMTP de Postfix &agrave; un serveur  SMTP &agrave; distance. [Br] En recevant le courrier, le serveur  SMTP de Postfix enregistre username fourni par le client, la m&eacute;thode d'identification et l'adresse d'exp&eacute;diteur au fichier de maillog et accorde facultativement l'acc&egrave;s de courrier via &quot;le permis sasl authentifi&eacute;&quot; de restriction UCE. [Br] 
+En envoyant le courrier, le client  SMTP de Postfix peut chercher le nom du serveur  SMTP distant  ou le domaine de destination (la partie droite de l'adresse) dans une table de mot de passe SASL et si un username/password est trouv&eacute;, il utilisera username et le mot de passe pour authentifier au serveur de SMTP  distant</smtp_sasl_auth_enable_text>
+<smtp_sasl_auth_enable_text2>Vous devez activer cette fonction si vous voulez que Postfix vous authentifient aupr&egrave;s de votre serveur de messagerie de votre fournisseur d'acc&egrave;s Internet . [Br] [br]  Cliquez sur le cercle sur la gauche pour activer ou d&eacute;sactiver la fonction [br] [br] 
+
+ [Br] Donnent au serveur de courrier que nous voulons retransmettre par par exemple (le serveur name=mail.my-isp.org, username=test et c'est le mot de passe est testpass)</smtp_sasl_auth_enable_text2>

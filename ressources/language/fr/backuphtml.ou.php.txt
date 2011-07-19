@@ -1,0 +1,12 @@
+<action_delete_rule>D&eacute;sirez-vous vraiment effacer cette r&egrave;gle ?</action_delete_rule>
+<add_rule_text>Ajouter une nouvelle r&egrave;gle de sauvegarde, quand un message correspondra il sera sauvegarder dans une base de donn&eacute;es SQL.</add_rule_text>
+<backup_disabled>Fonctionnalit&eacute; d&eacute;sactiv&eacute;e</backup_disabled>
+<backup_disabled_text>Cliquez sur l'image rouge pour activer cette fonctionnalit&eacute; et activer cette r&egrave;gle</backup_disabled_text>
+<backup_enabled>Lanc&eacute;</backup_enabled>
+<backup_enabled_text>Vous pouvez d&eacute;sactiver cette fonction en cliquant sur l'image verte. Cela arr&ecirc;tera la sauvegarde de vos courriers &eacute;lectroniques vers la base de donn&eacute;es Mysql</backup_enabled_text>
+<from_match>Exp&eacute;diteurs correspondants</from_match>
+<from_text>le caract&egrave;re &quot;*&quot; est autoris&eacute;.[br]
+Vous pouvez indiquer par exemple[br]
+[blk][b]*votredomaine.com ou *@votredomaine* ou utilisateur.*@domaine.*[/b][/blk]</from_text>
+<subject_match>Sujets correspondants</subject_match>
+<to_match>Destinataires correspondants</to_match>

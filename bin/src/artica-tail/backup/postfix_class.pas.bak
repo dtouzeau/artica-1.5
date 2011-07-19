@@ -1,0 +1,605 @@
+unit postfix_class;
+
+{$MODE DELPHI}
+{$LONGSTRINGS ON}
+
+interface
+
+uses
+    Classes, SysUtils,variants,strutils,IniFiles, Process,md5,logs,unix,RegExpr in 'RegExpr.pas',zsystem;
+
+  type
+  tpostfix=class
+
+
+private
+     LOGS:Tlogs;
+     D:boolean;
+     GLOBAL_INI:TiniFIle;
+     SYS:TSystem;
+     artica_path:string;
+    dbg:boolean;
+    PROCEDURE SET_LDAP_COMPLIANCE();
+    procedure POSTFIX_CHECK_LDAP();
+public
+    procedure   Free;
+    constructor Create;
+    procedure   SAVE_CERTIFICATE();
+    function    READ_CONF(key:string):string;
+    procedure   POSTFIX_STOP();
+    function    STATUS():string;
+    function    INITD():string;
+    function    MAIN_CONF_PATH():string;
+    function    WRITE_CONF(key:string;value:string):string;
+    function    SOCKET_PATH():string;
+    procedure   POSTFIX_START();
+    function    POSTFIX_PID():string;
+    function    POSTFIX_PID_PATH():string;
+    function    POSFTIX_POSTCONF_PATH():string;
+    function    POSFTIX_MASTER_CF_PATH:string;
+    function    POSTFIX_VERSION():string;
+    procedure   POSTFIX_CHECK_SASLDB2();
+    function    SASLPASSWD_PATH():string;
+    function    POSTFIX_QUEUE_DIRECTORY():string;
+    procedure   POSTFIX_INITIALIZE_FOLDERS();
+    function    POSTFIX_STATUS():string;
+    function    POSTFIX_LDAP_COMPLIANCE():boolean;
+    procedure   POSFTIX_VERIFY_MAINCF();
+    procedure   POSTFIX_RELOAD();
+    function    POSTFIX_EXTRACT_MAINCF(key:string):string;
+
+
+END;
+
+implementation
+
+constructor tpostfix.Create;
+begin
+       forcedirectories('/etc/artica-postfix');
+       forcedirectories('/opt/artica/tmp');
+       LOGS:=tlogs.Create();
+       SYS:=Tsystem.Create;
+       dbg:=LOGS.COMMANDLINE_PARAMETERS('debug');
+
+       if not DirectoryExists('/usr/share/artica-postfix') then begin
+              artica_path:=ParamStr(0);
+              artica_path:=ExtractFilePath(artica_path);
+              artica_path:=AnsiReplaceText(artica_path,'/bin/','');
+
+      end else begin
+          artica_path:='/usr/share/artica-postfix';
+      end;
+end;
+//##############################################################################
+procedure tpostfix.free();
+begin
+    logs.Free;
+    SYS.Free;
+end;
+//##############################################################################
+function tpostfix.INITD():string;
+begin
+   if FileExists('/etc/init.d/postfix') then exit('/etc/init.d/postfix');
+end;
+//##############################################################################
+function tpostfix.MAIN_CONF_PATH():string;
+begin
+    if FileExists('/etc/dkim-filter.conf') then exit('/etc/dkim-filter.conf');
+    if FileExists('/etc/mail/dkim-filter.conf') then exit('/etc/mail/dkim-filter.conf');
+
+end;
+//##############################################################################
+function tpostfix.SASLPASSWD_PATH():string;
+begin
+  if FileExists('/opt/artica/bin/saslpasswd2') then exit('/opt/artica/bin/saslpasswd2');
+  if FileExists('/usr/sbin/saslpasswd2') then exit('/usr/sbin/saslpasswd2');
+end;
+//##############################################################################
+function tpostfix.master_path:string;
+begin
+if FIleExists('/usr/lib/postfix/master') then exit('/usr/lib/postfix/master');
+end;
+
+
+function tpostfix.POSTFIX_VERSION():string;
+var
+    path,ver:string;
+    tmp:string;
+begin
+   tmp:=logs.FILE_TEMP();
+   if not FileExists(POSFTIX_POSTCONF_PATH()) then exit;
+   fpsystem(POSFTIX_POSTCONF_PATH() +' -h mail_version >' + tmp + ' 2>&1');
+   if not fileExists(tmp) then exit;
+   ver:=logs.ReadFromFile(tmp);
+   logs.DeleteFile(tmp);
+   exit(trim(ver));
+
+end;
+//#############################################################################
+function tpostfix.POSTFIX_QUEUE_DIRECTORY():string;
+var
+    path,ver:string;
+    tmp:string;
+begin
+   if not FileExists(POSFTIX_POSTCONF_PATH()) then exit;
+   tmp:=logs.FILE_TEMP();
+   fpsystem(POSFTIX_POSTCONF_PATH() +' -h queue_directory >'+tmp+' 2>&1');
+   if not FileExists(tmp) then exit;
+   ver:=logs.ReadFromFile(tmp);
+   logs.DeleteFile(tmp);
+   exit(trim(ver));
+
+end;
+//#############################################################################
+
+function tpostfix.READ_CONF(key:string):string;
+var
+    RegExpr:TRegExpr;
+    FileDatas:TStringList;
+    i:integer;
+begin
+ if not FileExists(MAIN_CONF_PATH()) then exit;
+ FileDatas:=TstringList.Create;
+ FileDatas.LoadFromFile(MAIN_CONF_PATH());
+ RegExpr:=TRegExpr.Create;
+ RegExpr.Expression:='^'+key+'\s+(.+)';
+ for i:=0 to FileDatas.Count-1 do begin
+     if RegExpr.Exec(FileDatas.Strings[i]) then begin
+         result:=RegExpr.Match[1];
+         break;
+     end;
+
+ end;
+         FileDatas.Free;
+         RegExpr.Free;
+
+end;
+//##############################################################################
+function tpostfix.SOCKET_PATH():string;
+begin
+exit('/var/run/dkim-filter/dkim-filter.sock');
+end;
+//##############################################################################
+function tpostfix.WRITE_CONF(key:string;value:string):string;
+var
+    RegExpr:TRegExpr;
+    FileDatas:TStringList;
+    i:integer;
+    found:boolean;
+    main_path:string;
+begin
+ found:=false;
+ main_path:=MAIN_CONF_PATH();
+ if not FileExists(main_path) then exit;
+ FileDatas:=TstringList.Create;
+ FileDatas.LoadFromFile(main_path);
+ RegExpr:=TRegExpr.Create;
+ RegExpr.Expression:='^'+key+'\s+(.+)';
+ for i:=0 to FileDatas.Count-1 do begin
+     if RegExpr.Exec(FileDatas.Strings[i]) then begin
+         FileDatas.Strings[i]:=key+chr(9)+value;
+         FileDatas.SaveToFile(main_path);
+         found:=true;
+         break;
+     end;
+
+ end;
+
+         if not found then begin
+            FileDatas.Add(key+chr(9)+value);
+            FileDatas.SaveToFile(main_path);
+         end;
+
+
+         FileDatas.Free;
+         RegExpr.Free;
+
+end;
+//##############################################################################
+PROCEDURE tpostfix.SET_LDAP_COMPLIANCE();
+begin
+  if not FileExists(POSFTIX_POSTCONF_PATH()) then exit;
+  if POSTFIX_LDAP_COMPLIANCE() then begin
+         logs.set_INFOS('postfix_ldap_compliance','1');
+         exit;
+  end;
+
+  logs.set_INFOS('postfix_ldap_compliance','0');
+
+end;
+//##############################################################################
+procedure tpostfix.POSTFIX_CHECK_LDAP();
+
+begin
+
+if not POSTFIX_LDAP_COMPLIANCE() then begin
+   if FileExists('/home/artica/packages/postfix-ldap.deb') then begin
+       if FIleExists('/usr/bin/dpkg') then begin
+            fpsystem('/usr/bin/dpkg -i /home/artica/packages/postfix-ldap.deb');
+       end;
+   end;
+
+end;
+
+end;
+//##############################################################################
+procedure tpostfix.POSFTIX_VERIFY_MAINCF();
+
+
+var
+   inet_interfaces,mailbox_transport:string;
+   D:boolean;
+
+begin
+
+       if not FileExists(POSFTIX_POSTCONF_PATH()) then begin
+           logs.Debuglogs('POSFTIX_VERIFY_MAINCF() -> POSFTIX_POSTCONF_PATH !! null !!');
+           exit;
+        end;
+
+
+        if FileExists('/etc/postfix/post-install') then begin
+           if D then writeln('POSFTIX_VERIFY_MAINCF() -> /etc/postfix/post-install create-missing');
+           fpsystem('/etc/postfix/post-install create-missing');
+        end;
+
+
+
+
+        if D then writeln('POSFTIX_VERIFY_MAINCF() -> POSTFIX_EXTRACT_MAINCF(inet_interfaces)');
+        inet_interfaces:=POSTFIX_EXTRACT_MAINCF('inet_interfaces');
+        logs.Debuglogs('POSFTIX_VERIFY_MAINCF:inet_interfaces=' + inet_interfaces);
+
+        if length(inet_interfaces)=0 then begin
+           logs.Debuglogs('POSFTIX_VERIFY_MAINCF:inet_interfaces is null change to "inet_interfaces=all"');
+           fpsystem(POSFTIX_POSTCONF_PATH() + ' -e "inet_interfaces=all"');
+        end;
+
+        if inet_interfaces=', localhost' then begin
+           logs.Debuglogs('POSFTIX_VERIFY_MAINCF:inet_interfaces is ", localhost" change to "inet_interfaces=all"');
+           fpsystem(POSFTIX_POSTCONF_PATH() +' -e "inet_interfaces=all"');
+        end;
+
+        if FileExists('/etc/postfix/bounce.template.cf') then fpsystem('/bin/chown root:root /etc/postfix/bounce.template.cf >/dev/null 2>&1');
+
+
+        mailbox_transport:=POSTFIX_EXTRACT_MAINCF('mailbox_transport');
+        logs.Debuglogs('POSFTIX_VERIFY_MAINCF:mailbox_transport=' + mailbox_transport);
+
+
+
+end;
+//#####################################################################################
+function tpostfix.POSTFIX_EXTRACT_MAINCF(key:string):string;
+var
+   List:TstringList;
+   RegExpr:TRegExpr;
+   i:integer;
+
+begin
+
+    if not FileExists('/etc/postfix/main.cf') then exit;
+
+
+    try
+    list:=TstringList.Create;
+    RegExpr:=TRegExpr.Create;
+    RegExpr.Expression:='^' + key + '[=\s]+(.+)';
+
+    list.LoadFromFile('/etc/postfix/main.cf');
+    For i:=0 to list.Count -1 do begin
+
+         if RegExpr.Exec(list.Strings[i]) then begin
+            result:=RegExpr.Match[1];
+            break;
+         end;
+    end;
+
+    finally
+    RegExpr.Free;
+    List.free;
+    end;
+
+end;
+//#####################################################################################
+procedure tpostfix.POSTFIX_RELOAD();
+var pid:string;
+begin
+
+pid:=POSTFIX_PID();
+POSFTIX_VERIFY_MAINCF();
+
+if SYS.PROCESS_EXIST(pid) then begin
+   if fileExists('/usr/sbin/postfix') then fpsystem('/usr/sbin/postfix reload >/dev/null 2>&1');
+   if fileExists('/etc/init.d/postfix') then fpsystem('/etc/init.d/postfix reload >/dev/null 2>&1');
+   end
+   else begin
+       if fileExists('/usr/sbin/postfix') then fpsystem('/usr/sbin/postfix start >/dev/null 2>&1');
+       if fileExists('/etc/init.d/postfix') then fpsystem('/etc/init.d/postfix start >/dev/null 2>&1');
+end;
+
+end;
+//#####################################################################################
+function tpostfix.POSTFIX_LDAP_COMPLIANCE():boolean;
+var
+   LIST:TstringList;
+   i:integer;
+   D:Boolean;
+begin
+  result:=false;
+ if not FileExists(POSFTIX_POSTCONF_PATH()) then exit;
+ if FileExists('/etc/artica-postfix/postconf-m.conf') then begin
+    if SYS.FILE_TIME_BETWEEN_MIN('/etc/artica-postfix/postconf-m.conf')>5 then logs.DeleteFile('/etc/artica-postfix/postconf-m.conf');
+ end;
+ 
+ 
+ 
+ if not FileExists('/etc/artica-postfix/postconf-m.conf') then fpsystem(POSFTIX_POSTCONF_PATH()+' -m >/etc/artica-postfix/postconf-m.conf 2>&1');
+ if not FileExists('/etc/artica-postfix/postconf-m.conf')then exit;
+ LIST:=TStringList.Create;
+ LIST.LoadFromFile('/etc/artica-postfix/postconf-m.conf');
+ for i:=0 to LIST.Count -1 do begin
+     if trim(list.Strings[i])='ldap' then begin
+        if D then logs.Debuglogs('POSTFIX_LDAP_COMPLIANCE:: ->TRUE');
+        result:=true;
+        list.free;
+        exit;
+     end;
+
+ end;
+end;
+//##############################################################################
+procedure tpostfix.SAVE_CERTIFICATE();
+var
+   cert:string;
+   selector:string;
+   setgid:string;
+   D:boolean;
+   cmd:string;
+begin
+    D:=false;
+    D:=logs.COMMANDLINE_PARAMETERS('html');
+
+    selector:=READ_CONF('Selector');
+    forcedirectories('/etc/mail');
+    WRITE_CONF('PidFile','/var/run/dkim-filter/dkim-filter.pid');
+    WRITE_CONF('Socket','local:/var/run/dkim-filter/dkim-filter.sock');
+    WRITE_CONF('KeyFile','/etc/mail/mail.filter.private');
+    WRITE_CONF('Domain','/etc/mail/localdomains.txt');
+    WRITE_CONF('Selector','mail');
+    WRITE_CONF('Syslog','yes');
+    WRITE_CONF('AutoRestart','yes');
+    WRITE_CONF('X-Header','yes');
+    WRITE_CONF('SendReports','yes');
+    WRITE_CONF('InternalHosts','/etc/mail/localNetworks.txt');
+
+
+
+    fpsystem(artica_path + '/bin/artica-ldap -localdomains /etc/mail/localdomains.txt');
+    fpsystem(artica_path + '/bin/artica-ldap -pnetworks /etc/mail/localNetworks.txt');
+
+    fpsystem('/bin/chown postfix:postfix /etc/mail/localdomains.txt'+ ' >/dev/null 2>&1');
+    fpsystem('/bin/chown postfix:postfix /etc/mail/localNetworks.txt'+ ' >/dev/null 2>&1');
+
+    cert:=READ_CONF('KeyFile');
+
+    logs.Debuglogs('SAVE_CERTIFICATE():: /bin/cp /opt/artica/ssl/certs/lighttpd.pem '  + cert);
+    fpsystem('/bin/cp /opt/artica/ssl/certs/lighttpd.pem '  + cert + ' >/dev/null 2>&1');
+    fpsystem('/bin/chmod 600 ' + cert + ' >/dev/null 2>&1');
+    fpsystem('/bin/chown postfix:postfix ' +cert+ ' >/dev/null 2>&1');
+
+end;
+//##############################################################################
+function tpostfix.POSTFIX_STATUS():string;
+var pid,mail_version:string;
+begin
+result:='-1;0.0.0;' ;
+pid:=POSTFIX_PID();
+if not FileExists('/etc/init.d/postfix') then exit;
+if not FileExists(POSFTIX_POSTCONF_PATH()) then exit;
+
+if FileExists('/proc/' + pid + '/exe') then result:='1' else result:='0';
+mail_version:=POSTFIX_VERSION();
+result:=result + ';' + mail_version + ';' +pid
+end;
+//##############################################################################
+
+function tpostfix.STATUS:string;
+var
+ini:TstringList;
+pid:string;
+begin
+   ini:=TstringList.Create;
+   ini.Add('[POSTFIX]');
+   if FileExists(POSFTIX_POSTCONF_PATH()) then  begin
+      pid:=POSTFIX_PID();
+      if SYS.PROCESS_EXIST(pid) then ini.Add('running=1') else  ini.Add('running=0');
+      ini.Add('application_installed=1');
+      ini.Add('master_pid='+ pid);
+      ini.Add('master_memory=' + IntToStr(SYS.PROCESS_MEMORY(pid)));
+      ini.Add('master_version='+POSTFIX_VERSION());
+      ini.Add('status='+SYS.PROCESS_STATUS(pid));
+      ini.Add('service_name=APP_POSTFIX');
+      ini.Add('service_cmd=postfix');
+   end;
+
+   result:=ini.Text;
+   ini.free;
+
+end;
+//##############################################################################
+procedure tpostfix.POSTFIX_START();
+var pid:string;
+
+begin
+
+ if not FileExists(POSFTIX_POSTCONF_PATH()) then begin
+    logs.Debuglogs('POSTFIX_START:: Postfix is not installed');
+    exit;
+ end;
+
+ pid:=POSTFIX_PID();
+
+ if not SYS.PROCESS_EXIST(pid) then begin
+        logs.Debuglogs('POSTFIX_START:: Start POSTFIX service server ');
+        logs.Debuglogs('POSTFIX_START:: Pid path="'+POSTFIX_PID_PATH()+'"');
+        logs.Debuglogs('POSTFIX_START:: Version="'+POSTFIX_VERSION()+'"');
+        logs.Debuglogs('POSTFIX_START:: queue directory="'+POSTFIX_QUEUE_DIRECTORY()+'"');
+
+        POSFTIX_VERIFY_MAINCF();
+        POSTFIX_CHECK_LDAP();
+        SET_LDAP_COMPLIANCE();
+        POSTFIX_INITIALIZE_FOLDERS();
+        POSTFIX_CHECK_SASLDB2();
+
+        if FIleExists('/etc/init.d/sendmail') then begin
+           logs.Debuglogs('POSTFIX_START:: stopping sendmail.. ');
+           logs.OutputCmd('/etc/init.d/sendmail stop >/dev/null 2>&1');
+        end;
+
+        logs.Syslogs('starting Postfix main MTA');
+        logs.OutputCmd('/etc/init.d/postfix start');
+  end;
+
+
+ logs.DebugLogs('POSTFIX_START() Postfix daemon is already running using PID ' + pid + '...');
+end;
+//##############################################################################
+procedure tpostfix.POSTFIX_INITIALIZE_FOLDERS();
+var queue:string;
+
+begin
+
+queue:=POSTFIX_QUEUE_DIRECTORY();
+if length(queue)=0 then begin
+   logs.Debuglogs('POSTFIX_INITIALIZE_FOLDERS():: Queue directory is null');
+   exit;
+end;
+
+  forcedirectories(queue + '/pid');
+   forcedirectories(queue + '/corrupt');
+   forcedirectories(queue + '/trace');
+   forcedirectories(queue + '/saved');
+   forcedirectories(queue + '/private');
+   forcedirectories(queue + '/etc');
+   forcedirectories(queue + '/incoming');
+   forcedirectories(queue + '/defer');
+   forcedirectories(queue + '/maildrop');
+   forcedirectories(queue + '/public');
+   forcedirectories(queue + '/active');
+   forcedirectories(queue + '/hold');
+   forcedirectories(queue + '/flush');
+   forcedirectories(queue + '/bounce');
+   forcedirectories(queue + '/public');
+
+   Logs.OutputCmd('/bin/chmod -R 0755 '+queue);
+   Logs.OutputCmd('/bin/chmod -R 0755 '+queue+'/etc');
+   Logs.OutputCmd('/bin/chown -R root:root '+queue+'/etc');
+
+   Logs.OutputCmd('/bin/chown -R root:root /usr/libexec/postfix');
+   Logs.OutputCmd('/bin/chmod -R 0755 /usr/libexec/postfix/*');
+   Logs.OutputCmd('/bin/chmod -R 0730 '+queue+'/maildrop');
+
+   Logs.OutputCmd('/bin/chown -R postfix:postdrop '+queue+'/maildrop');
+   Logs.OutputCmd('/bin/chown -R postfix:postdrop '+queue+'/public');
+
+
+   Logs.OutputCmd('/bin/chown -R root:root '+queue+'/pid');
+   Logs.OutputCmd('/bin/chmod -R 0755 '+queue+'/pid');
+
+
+   Logs.OutputCmd('/bin/chown root:postdrop /usr/sbin/postqueue');
+   Logs.OutputCmd('/bin/chmod 2755 /usr/sbin/postqueue');
+
+   Logs.OutputCmd('/bin/chown root:postdrop /usr/sbin/postdrop');
+   Logs.OutputCmd('/bin/chmod 2755 /usr/sbin/postdrop');
+   Logs.OutputCmd('/bin/cp /etc/services '+queue+'/etc/services');
+   Logs.OutputCmd('/bin/cp /etc/resolv.conf '+queue+'/etc/resolv.conf');
+   Logs.OutputCmd('/bin/cp /etc/hosts '+queue+'/etc/hosts');
+   Logs.OutputCmd('/bin/cp /etc/localtime '+queue+'/etc/localtime');
+   Logs.OutputCmd('/bin/cp /etc/nsswitch.conf '+queue+'/etc/nsswitch.conf');
+
+
+end;
+//##############################################################################
+
+procedure tpostfix.POSTFIX_CHECK_SASLDB2();
+begin
+   if not FileExists(SASLPASSWD_PATH()) then begin
+   logs.Debuglogs('POSTFIX_CHECK_SASLDB2:: saslpasswd2 doesn''t exists');
+   exit;
+   end;
+
+   if not DirectoryExists('/var/spool/postfix/etc') then begin
+      logs.Debuglogs('POSTFIX_CHECK_SASLDB2:: Creating /var/spool/postfix/etc');
+      ForceDirectories('/var/spool/postfix/etc');
+   end;
+   
+
+   if not FileExists('/var/spool/postfix/etc/sasldb2') then begin
+      logs.Debuglogs('POSTFIX_CHECK_SASLDB2:: /var/spool/postfix/etc/sasldb2 doesn''t exists start procedure');
+      if not FileExists('/etc/sasldb2') then begin
+         logs.OutputCmd('/bin/echo cyrus|'  + SASLPASSWD_PATH() + ' -c cyrus');
+       end;
+
+      if FileExists('/etc/sasldb2') then begin
+         logs.OutputCmd('/bin/mv /etc/sasldb2 /var/spool/postfix/etc/sasldb2');
+         logs.OutputCmd('/bin/ln -s /var/spool/postfix/etc/sasldb2 /etc/sasldb2');
+      end;
+   end;
+
+    logs.OutputCmd('/bin/chown root:root /var/spool/postfix/etc/sasldb2');
+    logs.OutputCmd('/bin/chmod 755 /var/spool/postfix/etc/sasldb2');
+
+end;
+//##############################################################################
+
+
+ function tpostfix.POSTFIX_PID():string;
+ var pidp:string;
+ 
+begin
+   pidp:= POSTFIX_PID_PATH();
+   if not FileExists(pidp) then begin
+      logs.Debuglogs('POSTFIX_PID():: unable to locate pid path !!!');
+      exit;
+   end;
+   
+   result:=SYS.GET_PID_FROM_PATH(pidp);
+   
+end;
+ //##############################################################################
+ function tpostfix.POSTFIX_PID_PATH():string;
+var queue:string;
+begin
+   if not FileExists(POSFTIX_POSTCONF_PATH()) then exit;
+   fpsystem(POSFTIX_POSTCONF_PATH() + ' -h queue_directory >/opt/artica/tmp/queue_directory');
+   queue:=trim(SYS.ReadFileIntoString('/opt/artica/tmp/queue_directory'));
+   result:=queue+'/pid/master.pid';
+end;
+//##############################################################################
+function tpostfix.POSFTIX_POSTCONF_PATH:string;
+begin
+
+    if FileExists('/usr/sbin/postconf') then exit('/usr/sbin/postconf');
+end;
+//##############################################################################
+function tpostfix.POSFTIX_MASTER_CF_PATH:string;
+begin
+    if FileExists('/etc/postfix/master.cf') then exit('/etc/postfix/master.cf');
+end;
+//##############################################################################
+procedure tpostfix.POSTFIX_STOP();
+var pid:string;
+begin
+pid:=POSTFIX_PID();
+if SYS.PROCESS_EXIST(pid) then begin
+   writeln('Stopping Postfix.............: ' + pid + ' PID..');
+   if fileExists('/usr/sbin/postfix') then fpsystem('/usr/sbin/postfix stop >/dev/null 2>&1');
+   if fileExists('/etc/init.d/postfix') then fpsystem('/etc/init.d/postfix stop >/dev/null 2>&1');
+  end;
+
+end;
+//##############################################################################
+
+end.

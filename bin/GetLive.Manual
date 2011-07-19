@@ -1,0 +1,168 @@
+Description
+===========
+
+GetLive is a perl script that fetches mail from your Hotmail
+Live account. The mail is then presented to any filter (typically 
+procmail) for further processing or dropping in a local mailbox.
+
+The scripts keeps track of all downloaded message-ids to avoid double
+fetching.
+
+Messages can be marked read or moved to a folder after being downloaded.
+
+Usage
+=====
+
+./GetLive --config-file ConfigFile [--verbosity N]
+
+  - ConfigFile : Name or full path to a configuration file, with contents
+    described hereafter.
+
+  - verbosity : Optional argument, defining the verbosity of the diagnostic
+    messages and taking following values :
+      0   : Silent
+      1   : Normal output (default value)
+      2   : Extensive output
+      10  : Debugging mode
+      100 : Heavy debugging mode
+
+The configuration file takes arguments of the form  
+option = value. Empty lines or lines commented with # are possible.
+Following are the possible options :
+
+      UserName        = YourHotmailUserName (without @something)
+      Password        = YourHotmailPassword (so restrict the access rights to
+                        this configuration file.
+      Domain          = YourHotmailDomain (default 'hotmail.com', basically
+                        what's after the @ in your address)
+      Proxy           = ProxyServer if you're behind one.
+      ProxyAuth       = ProxyPassword if you're behind one with password. 
+      Downloaded      = SomeFileName (it keeps track of all id's of messages
+                        that were fetched already) 
+      FetchOnlyUnread = Yes or No (default)
+                        If Yes only messages that are marked unread are
+                        fetched.
+                        Downloaded and FetchOnlyUnread are mutual exclusive.
+      RetryLimit      = N (default 2) : how many times to retry fetching a
+                        web page via curl (the webpage fetcher behind the 
+                        scenes)
+      CurlBin         = CommandForCurl ('curl -k' by default).
+      Processor       = FilterCommand ('/usr/bin/procmail' by default). Any
+                        filtercommand taking the message in mbox format on its
+                        stdin and doing something with it.
+                        
+                          *) '/bin/cat - >> FetchedMail' might be another 
+                             interesting one to drop directly in a mbox file.
+
+                          *) The distribution contains also SmtpForward.pl and
+                             SmtpAuthForward.pl. Those can be used as 
+                             'Processor' to forward the mails to an SMTP server.
+
+      Folder          = FolderName. Folders that need to be fetched. 
+                        This option must be repeated for each folder you want 
+                        to fetch. If this option is not present then all 
+                        folders will be fetched.
+      MarkRead        = Yes or No (default) : whether the message will be 
+                        marked read after being downloaded. By the way : 
+                        it never gets marked in any way when not downloaded 
+                        due to it being already in the 
+                        Downloaded = SomeFileName (see higer) file.
+      Delete          = Yes or No (default) : whether the message will be 
+                        deleted after being downloaded. By the way : 
+                        it never gets deleted in any way when not downloaded 
+                        due to it being already in the 
+                        Downloaded = SomeFileName (see higer) file.
+      MoveToFolder    = FolderName or @FileName
+                        FolderName is the folder to which the message must be
+                        moved after being downloaded. By the way : it never 
+                        gets moved in any way when not downloaded due to it 
+                        being already in the Downloaded = SomeFileName 
+                        (see higer) file.
+                        If this argument takes the form @FileName then the
+                        FolderName is taken from the contents of the file 
+                        FileName.
+                        The idea is that f.i. a spamfilter can decide to what
+                        folder it must be moved. That spamfilter would be part
+                        of Processor    = FilterCommand (see higher) and write a
+                        FolderName (for instance Junk if considered junk) to
+                        the file FileName.
+
+Requirements
+============
+
+* UNIX/LINUX
+	* Perl - Mine is v5.8.8, feedback on other working versions welcome.
+	* curl - Mine is v7.15.5 feedback on other working versions welcome.
+         - v7.15.4 reported working.
+	* curl-ssl 	
+
+* Windows (WIN32)
+  * Combination reported working :
+    * ActiveState Perl v5.8.8
+    * curl.exe v7.10.3 from http://curl.haxx.se/
+    * openssl binaries libeay32.dll and libssl.dll version 0.9.7.d 
+      from http://curl.haxx.se/
+
+* Cygwin under Windows 
+	* Probably as UNIX/LINUX - feedback welcome.
+
+Bugs, Questions, ...
+====================
+
+https://sourceforge.net/projects/getlive
+
+Version of this file
+====================
+
+$Id: Manual,v 1.11 2007/12/02 14:38:46 jdla Exp $
+$Revision: 1.11 $
+$Name: Release_0_56 $
+
+$Log: Manual,v $
+Revision 1.11  2007/12/02 14:38:46  jdla
+*) Feature 1778902 : deletewhenread=yes option
+
+Revision 1.10  2007/08/21 21:22:01  jdla
+
+*) Revamping to catch up with MS changing the login to live login.
+   From now on only supports 'Live' boxes.
+   Please convert old ones. It's lossless.
+
+Revision 1.9  2007/08/04 19:49:16  jdla
+*) Changed Curl quoting to support Windows (thx to 'gharkink').
+*) Adapted SmtpForward.pl (also thx to 'gharkink').
+*) Added alternate SmtpAuthForward.pl (thx to 'runemaagensen').
+*) Update manual with above (and the info on working versions)
+
+Revision 1.8  2007/07/29 14:35:38  jdla
+
+*) Bug 1763128 : msn.com problems : See submitted patch 1758859
+*) Inclusion of sample SmtpForward.pl in the distribution.
+
+Revision 1.7  2007/06/19 20:30:26  jdla
+*) Bug 1739263 : --verbosity 0 should be silent.
+*) Request 1724728 : only fetch unread messages w/o id file
+
+Revision 1.6  2007/05/20 18:53:48  jdla
+*) MoveToFolder now possible on downloading.
+
+Revision 1.5  2007/05/20 12:45:34  jdla
+Merged in the 1.16.2.1 that was by mistake done on a the release branch.
+
+Revision 1.4.2.1  2007/05/20 12:39:34  jdla
+*) MarkRead is now possible on downloading.
+
+Revision 1.4  2007/05/18 17:22:43  jdla
+*) Request 1721287 : Folder selection
+
+Revision 1.3  2007/05/14 17:29:31  jdla
+*) Support 1717590 : error message => Classic named Dead now.
+
+Revision 1.2  2007/04/20 22:24:28  jdla
+Added Name keyword for release tracking.
+
+Revision 1.1  2007/04/20 20:23:28  jdla
+*** empty log message ***
+
+
+# vim:et:sw=2:ts=2:columns=80:lines=50:

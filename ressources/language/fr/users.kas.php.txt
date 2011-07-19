@@ -1,0 +1,70 @@
+<antispam_rules>R&egrave;gles Anti-Spam</antispam_rules>
+<DNSSPFChecks>Contr&ocirc;les DNS &amp; SPF</DNSSPFChecks>
+<DNS_SPF>Contr&ocirc;les DNS &amp; SPF</DNS_SPF>
+<EasternEncodings>Codages Orientaux</EasternEncodings>
+<EasternEncodings_explain>Si on active l'option, les courriers &eacute;lectroniques seront trait&eacute;s comme soup&ccedil;onneux</EasternEncodings_explain>
+<eastern_encodings>Codages Orientaux</eastern_encodings>
+<enable_disable_kas>[Fort] Vert : [/strong] est trait&eacute; comme soup&ccedil;onneux [br] [fort] Rouge : [/strong] est permis</enable_disable_kas>
+<general>G&eacute;n&eacute;ral</general>
+<group rules>R&egrave;gles - Groupe</group rules>
+<HeadersChecks>V&eacute;rification d'En-t&ecirc;tes</HeadersChecks>
+<Headers_Checks>V&eacute;rification d'En-t&ecirc;tes</Headers_Checks>
+<HEADERS_FROM_OR_TO_DIGITS>Chiffres m&eacute;lang&eacute;s dans le champs DE</HEADERS_FROM_OR_TO_DIGITS>
+<HEADERS_FROM_OR_TO_DIGITS_TEXT>Chiffres m&eacute;lang&eacute;s avec des lettres dans l'ent&ecirc;te du champs DE</HEADERS_FROM_OR_TO_DIGITS_TEXT>
+<HEADERS_FROM_OR_TO_NO_DOMAIN>Pas de domaine</HEADERS_FROM_OR_TO_NO_DOMAIN>
+<HEADERS_FROM_OR_TO_NO_DOMAIN_TEXT>Adresses sans nom de domaine</HEADERS_FROM_OR_TO_NO_DOMAIN_TEXT>
+<minimum>Minimum</minimum>
+<option_10>Liste de destinataire non v&eacute;rifi&eacute;e dans le champs A</option_10>
+<option_11>Chiffres m&eacute;lang&eacute;s avec des lettres dans l'ent&ecirc;te du champs DE</option_11>
+<option_12>Adresse sans nom de domaine</option_12>
+<option_13>SUBJECT is longeopcheck1r than 250 symbols</option_13>
+<option_14>Le SUJET contient des tas d'espaces ou des points</option_14>
+<option_15>SUJET contient des num&eacute;ro ou de l'horodatage
+[br][i] (par exemple: 14:30:35')[/i]</option_15>
+<option_17>Cor&eacute;en (iso-ir-149)</option_17>
+<option_18>Thai (windows, dos-874)</option_18>
+<option_19>Japonais (iso-2022-jp)</option_19>
+<option_20>Messages avec mots et expressions obsc&egrave;nes</option_20>
+<option_21>Si d&eacute;sactiv&eacute;, TOUTES les v&eacute;rifications sont ignor&eacute;es</option_21>
+<option_22>Les fixations d'autres que le Standard peuvent affecter le nombre de messages reconnus comme du spam</option_22>
+<option_23>Attribution du statuts  de 'Spam Probable '</option_23>
+<option_24>V&eacute;rifier les adresses ip dans le DNS</option_24>
+<option_25>Si d&eacute;sactiv&eacute;, tout les contr&ocirc;les bas&eacute; sur DNS et SPF seront ignor&eacute;s</option_25>
+<option_26>V&eacute;rification SURBL</option_26>
+<option_27>Si d&eacute;sactiv&eacute;, tous les contr&ocirc;les d' SURBL seront ignor&eacute;s</option_27>
+<option_28>Utilisation de Listes Blanches et Noires</option_28>
+<option_7>V&eacute;rifier les adresses ip dans le DNS</option_7>
+<option_8>Si actif, le moteur v&eacute;rifiera s'il y a un enregistrement  DNS pour le serveur d'o&ugrave; provient le message</option_8>
+<option_9>V&eacute;rifier les enregistrements SPF</option_9>
+<OPT_DNS_DNSBL>DNSBL</OPT_DNS_DNSBL>
+<OPT_DNS_DNSBL_TEXT>Utiliser les services DNSBL</OPT_DNS_DNSBL_TEXT>
+<OPT_DNS_HOST_IN_DNS>V&eacute;rifiez les adresses ip dans le DNS</OPT_DNS_HOST_IN_DNS>
+<OPT_DNS_HOST_IN_DNS_TEXT>Si actif, le moteur v&eacute;rifiera s'il y a un enregistrement DNS pour le serveur d'o&ugrave; le message provient</OPT_DNS_HOST_IN_DNS_TEXT>
+<OPT_FILTRATION_ON>D&eacute;tection</OPT_FILTRATION_ON>
+<OPT_FILTRATION_ON_TEXT>Si d&eacute;sactiver, TOUS les contr&ocirc;les seront ignor&eacute;s</OPT_FILTRATION_ON_TEXT>
+<OPT_HEADERS_SUBJECT_DIGIT_OR_TIME_ID>Chiffre ID ou Horodatage</OPT_HEADERS_SUBJECT_DIGIT_OR_TIME_ID>
+<OPT_HEADERS_SUBJECT_DIGIT_OR_TIME_ID_TEXT>Le SUJET contient le Chiffre ID ou l'Horodatage (comme ' le Temps : 14:30:35 ')</OPT_HEADERS_SUBJECT_DIGIT_OR_TIME_ID_TEXT>
+<OPT_HEADERS_SUBJECT_TOO_LONG>SUJET&gt;250</OPT_HEADERS_SUBJECT_TOO_LONG>
+<OPT_HEADERS_SUBJECT_TOO_LONG_TEXT>Le SUJET contient plus de 250 caract&egrave;res</OPT_HEADERS_SUBJECT_TOO_LONG_TEXT>
+<OPT_HEADERS_SUBJECT_WS_OR_DOTS>Le SUJET contient beaucoup d'espaces ou des points</OPT_HEADERS_SUBJECT_WS_OR_DOTS>
+<OPT_HEADERS_SUBJECT_WS_OR_DOTS_TEXT>Le SUJET contient beaucoup d'espaces ou des points</OPT_HEADERS_SUBJECT_WS_OR_DOTS_TEXT>
+<OPT_HEADERS_TO_UNDISCLOSED>Non r&eacute;v&eacute;l&eacute;</OPT_HEADERS_TO_UNDISCLOSED>
+<OPT_HEADERS_TO_UNDISCLOSED_TEXT>Liste non r&eacute;v&eacute;l&eacute;e de destinataires dans &Agrave;</OPT_HEADERS_TO_UNDISCLOSED_TEXT>
+<OPT_LANG_CHINESE>Chinois (gb2312)</OPT_LANG_CHINESE>
+<OPT_LANG_JAPANESE>Japonais (iso-2022-jp)</OPT_LANG_JAPANESE>
+<OPT_LANG_KOREAN>Cor&eacute;en (iso-ir-149)</OPT_LANG_KOREAN>
+<OPT_LANG_THAI>Thai (windows, dos-874)</OPT_LANG_THAI>
+<OPT_PROBABLE_SPAM_ON>Statut de Spam probable</OPT_PROBABLE_SPAM_ON>
+<OPT_PROBABLE_SPAM_ON_TEXT>Attribution du status de ' Spam Probable '</OPT_PROBABLE_SPAM_ON_TEXT>
+<OPT_SPAM_RATE_LIMIT>Niveau de d&eacute;tection</OPT_SPAM_RATE_LIMIT>
+<OPT_SPAM_RATE_LIMIT_TEXT>Les param&egrave;tres d'autres que le Standard peuvent affecter le nombre de messages reconnus comme spam</OPT_SPAM_RATE_LIMIT_TEXT>
+<OPT_SPF>SPF</OPT_SPF>
+<OPT_SPF_TEXT>V&eacute;rifiez les enregistrements de SPF</OPT_SPF_TEXT>
+<OPT_USE_DNS>Contr&ocirc;les DNS et SPF</OPT_USE_DNS>
+<OPT_USE_DNS_TEXT>Si d&eacute;sactiv&eacute;, toute la base DNS et les contr&ocirc;les SPF seront ignor&eacute;s</OPT_USE_DNS_TEXT>
+<OPT_USE_SURBL>Contr&ocirc;le SURBL</OPT_USE_SURBL>
+<OPT_USE_SURBL_TEXT>Si d&eacute;sactiv&eacute;, tous les contr&ocirc;les SURBL seront ignor&eacute;s</OPT_USE_SURBL_TEXT>
+<RuleObsceneContent>R&egrave;gles - Contenu Obsc&egrave;ne</RuleObsceneContent>
+<RuleObsceneContent_text>L'utilisation de ' [-Obsc&egrave;ne-] ' marqu&eacute; si activ&eacute;</RuleObsceneContent_text>
+<standardr>Standard (recommand&eacute;)</standardr>
+<UseofDNSBLservices>Utiliser les services DNSBL</UseofDNSBLservices>

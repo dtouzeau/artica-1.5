@@ -1,0 +1,2 @@
+<generate>Lancer la g&eacute;n&eacute;ration des pages web</generate>
+<infos_awstats_must_generate>Ce probl&egrave;me est caus&eacute; parce qu'il n'y a aucune statistique ou l'awstats n'est pas g&eacute;n&eacute;rer [br] Vous pouvez le g&eacute;n&eacute;rer par la ligne de commande : [br] [blk] [b]/usr/share/artica-postfix/bin/artica-install -awstats[/b] [/blk]</infos_awstats_must_generate>

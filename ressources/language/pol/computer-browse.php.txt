@@ -1,0 +1,11 @@
+<add_network>Dodaj now%u0105 sie%u0107</add_network>
+<add_network_text>Okre%u015Bl now%u0105 sie%u0107 (IP i maska) do skanowania, w celu znalezienia komputer&oacute;w</add_network_text>
+<delete_all_computers_warn>This operation will delete all computers in the database, do you want to perfom this operation ?</delete_all_computers_warn>
+<edit_networks>Edytuj sieci</edit_networks>
+<edit_networks_text>Dodaj lub usu%u0144 sie%u0107 aby pom&oacute;c skanerowi wykrywa%u0107 komputery</edit_networks_text>
+<import_artica_computers>Importuj komputery</import_artica_computers>
+<import_artica_computers_explain>This feature allow you to import computers list from an another Artica server</import_artica_computers_explain>
+<import_artica_computers_text>Import computers from other Articas servers</import_artica_computers_text>
+<network_scanner_execute_background>The network scanner was executed in background mode, the network list will be updated in few times</network_scanner_execute_background>
+<scan_your_network>Skanuj Twoj%u0105 sie%u0107</scan_your_network>
+<scan_your_network_text>Launch the scanner in order to refresh the computer list in your network</scan_your_network_text>

@@ -1,0 +1,23 @@
+<ADD_WIDGET>A&ntilde;adir nuevo widget.</ADD_WIDGET>
+<ADD_WIDGET_TEXT>A&ntilde;adir nuevo icono/widget en esta p&aacute;gina web.</ADD_WIDGET_TEXT>
+<artica_settings>Configuraci&oacute;n Global de Artica.</artica_settings>
+<artica_settings_text>Define la configuraci&oacute;n global correspondiente al uso de Proxy, al interfaz Web, a las configuraciones de mysql ...</artica_settings_text>
+<choose_section>Selecciona una secci&oacute;n</choose_section>
+<CLICK_TO_DELETE>Pulsa para eliminar</CLICK_TO_DELETE>
+<DELETE_THIS_TAB>Borra esta p&aacute;gina personal</DELETE_THIS_TAB>
+<DELETE_THIS_TAB_TEXT>Esta operaci&oacute;n borrar&aacute; esta p&aacute;gina y la solapa del formulario del panel.</DELETE_THIS_TAB_TEXT>
+<FILE_SHARE>Compartici&oacute;n de ficheros.</FILE_SHARE>
+<MAILBOX>Gesti&oacute;n de buzones.</MAILBOX>
+<MAIL_SECU>Mensajer&iacute;a (seguridad)</MAIL_SECU>
+<MANAGE_WIDGETS>Configurar widgets</MANAGE_WIDGETS>
+<MANAGE_WIDGETS_TEXT>Cambia el orden de visualizaci&oacute;n, borra los widgets</MANAGE_WIDGETS_TEXT>
+<MTA>Mail Transfer Agent (Postfix)</MTA>
+<NETWORK>Red</NETWORK>
+<ORG>Operaciones relacionadas con Organizaciones</ORG>
+<organizations_text>[b]Gesti&oacute;n de Organizaciones:[/b]Visualiza, Crea o Borra tus organizaciones.</organizations_text>
+<REBUILD_PAGE>Reconstruir este &aacute;rea</REBUILD_PAGE>
+<REBUILD_PAGE_TEXT>Esta operaci&oacute;n eliminar&aacute; el cache actual y reconstruir&aacute; este &aacute;rea</REBUILD_PAGE_TEXT>
+<SYSTEM>Aplicaciones de sistema y configuraci&oacute;n</SYSTEM>
+<WIDGETS_AREA>&Aacute;rea de widgets</WIDGETS_AREA>
+<WIDGETS_AREA_EXPLAIN>Pulsa en uno de estis iconos para a&ntilde;adir o [b]eliminar[/b] el icono del &aacute;rea.</WIDGETS_AREA_EXPLAIN>
+<your_organizations>Tus Organizaciones</your_organizations>

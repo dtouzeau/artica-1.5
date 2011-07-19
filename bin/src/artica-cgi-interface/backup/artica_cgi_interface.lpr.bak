@@ -1,0 +1,15 @@
+program artica_cgi_interface;
+
+{$mode objfpc}{$H+}
+
+uses
+  cgiModules, wmdump;
+
+begin
+  Application.Title:='artica-cgi-interface';
+  Application:=TModuledCGIApplication.Create(nil);
+  Application.Initialize;
+  Application.CreateForm(TCGIDatamodule1, CGIDatamodule1);
+  Application.Run;
+end.
+

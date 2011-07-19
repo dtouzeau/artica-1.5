@@ -1,0 +1,205 @@
+<AddAliasesMailing_jstext>Donnez l'adresse &eacute;lectronique compl&egrave;te qui re&ccedil;oit des courrier pour cet utilisateur</AddAliasesMailing_jstext>
+<add_alias>Ajouter un alias</add_alias>
+<add_alias_computer_text>Ajouter un nouveau pointer d'enregistrement DNS vers cet ordinateur</add_alias_computer_text>
+<add_mailing_address>Ajouter un destinataire</add_mailing_address>
+<add_new_alias>Ajouter un nouvel alias</add_new_alias>
+<add_new_alias_text>Ajouter une nouvelle adresse e-mail dans votre base de donn&eacute;es des alias</add_new_alias_text>
+<ADD_USER_GROUP_ASK>&Ecirc;tes-vous s&ucirc;rs d'Ajouter ce membre &agrave; ce groupe ?</ADD_USER_GROUP_ASK>
+<ADD_USER_GROUP_TEXT>Ajouter ce membre &agrave; un groupe existant</ADD_USER_GROUP_TEXT>
+<aliases_mailing_text>Cette section va transformer cet utilisateur en liste de distribution.Toutes les adresses e-Mail ajout&eacute;s dans la liste recevront le m&ecirc;me message destin&eacute; &agrave; cet utilisateur.
+[br] Cette fonctionnalit&eacute; reproduit le m&ecirc;me principe qu'une &quot;mailing list&quot; sans fonctionnalit&eacute;s additionnelles.</aliases_mailing_text>
+<aliases_text>Alias signifie que cet utilisateur peut avoir plus d'une adresse e-mail[br]
+Les alias emails pointent &agrave; la v&eacute;ritable adresse e-mail d'utilisateur</aliases_text>
+<AllowedSMTPTroughtInternet>Autoriser &agrave; envoyer &agrave; travers Internet</AllowedSMTPTroughtInternet>
+<AllowedSMTPTroughtInternet_disabled>Cette fonction est d&eacute;sactiv&eacute;e. Il utilise le plugin MimeDefang .[br]
+Si vous voulez utiliser cette fonction, [ul]
+[li] V&eacute;rifiez si le plugin MimeDefang est activ&eacute;[/ li]
+[li] V&eacute;rifier si l'option &quot;Autoriser l'activation ou refuser vos utilisateurs de messagerie Internet&raquo; [fr] est activ&eacute;e [/ li]
+[/ ul]</AllowedSMTPTroughtInternet_disabled>
+<AllowedSMTPTroughtInternet_text>Si vous d&eacute;sactivez cette option, l'utilisateur sera autoris&eacute; &agrave; envoyer des e-mails uniquement aux utilisateurs locaux,[br]
+si l'utilisateur envoie &agrave; l'ext&eacute;rieur du domaine, le courrier sera rejet&eacute;</AllowedSMTPTroughtInternet_text>
+<amavis_as_settings>Param&egrave;tres Anti-spam (amavis)</amavis_as_settings>
+<amavis_as_settings_text>D&eacute;finir des r&egrave;gles anti-spam pour cet utilisateur</amavis_as_settings_text>
+<Antispam>Antispam</Antispam>
+<AUTH_SETTINGS>Param&egrave;tres d'authenfication</AUTH_SETTINGS>
+<AUTH_SETTINGS_TEXT>Indiquez l'utilisateur et le mot de passe afin de se connecter &agrave; l'objet.</AUTH_SETTINGS_TEXT>
+<AV_REMOTE_SCAN>Analyse antivirale</AV_REMOTE_SCAN>
+<AV_REMOTE_SCAN_TEXT>lancez une analyse distante afin de v&eacute;rifier la pr&eacute;sence de virus</AV_REMOTE_SCAN_TEXT>
+<backup_parameters>Param&egrave;tres de sauvegarde</backup_parameters>
+<backup_parameters_text>D&eacute;finissez le service de sauvegarde pour cet utilisateur</backup_parameters_text>
+<build>Antispam</build>
+<change_password_text>Modifiez le mot de passe de cet utilisateur</change_password_text>
+<change_uid>Changer d'identifiant</change_uid>
+<change_uid_explain>Changer l'identificateur unique est une op&eacute;ration lourde, sur la base de donn&eacute;es chaque utilisateur se retrouve par son uid, ce uid permet aux utilisateurs de se connecter &agrave; l'interface et aux services du syst&egrave;me comme Samba, Imap, mail ... [br]
+Si vous changez le nom d'utilisateur, artica va essayer de reconstruire cet utilisateur vers le nouveau nom d'utilisateur que vous avez fix&eacute;, [BR]
+s'il vous pla&icirc;t v&eacute;rifiez si tous les &eacute;l&eacute;ments sont convertis apr&egrave;s l'op&eacute;ration.</change_uid_explain>
+<change_uid_text>Changez l'identifiant unique de connexion de ce compte</change_uid_text>
+<CLEAN_USER_DATAS>Nettoyez les donn&eacute;es utilisateur</CLEAN_USER_DATAS>
+<CLEAN_USER_EXPLAIN>Vous pouvez effectuer une op&eacute;ration de nettoyage afin de supprimer toutes traces de cet utilisateur</CLEAN_USER_EXPLAIN>
+<computer>Ordinateur</computer>
+<ComputerAddAlias>Donnez le nom de l'ordinateur virtuel sans domaine (nom netbios)</ComputerAddAlias>
+<ComputerCPU>Informations CPU</ComputerCPU>
+<ComputerMacAddress>Adresse MAC</ComputerMacAddress>
+<ComputerMachineType>Type de machine</ComputerMachineType>
+<ComputerOS>Syst&egrave;me d'exploitation</ComputerOS>
+<ComputerRunning>Lanc&eacute;</ComputerRunning>
+<ComputerUpTime>Uptime</ComputerUpTime>
+<computer_ip>Adresse IP de l'ordinateur</computer_ip>
+<computer_name>Nom de l'ordinateur</computer_name>
+<confirm_repair>R&eacute;parer cette bo&icirc;te aux lettres? L'op&eacute;ration sera ex&eacute;cut&eacute;e en arri&egrave;re-plan ...</confirm_repair>
+<delete_messages>Supprimer les messages qui n'existe pas</delete_messages>
+<delete_messages_text>Si un message existe sur une bo&icirc;te aux lettres, mais pas sur l'autre, et s'il y a un &quot;vieux&quot; message (il a &eacute;t&eacute; enregistr&eacute; en &quot;msinfo&quot; &agrave; la derni&egrave;re synchronisation), il est pr&eacute;sum&eacute; que le message a &eacute;t&eacute; d&eacute;lib&eacute;r&eacute;ment supprim&eacute; d'un stock, et il est &eacute;galement retir&eacute; de l'autre.
+[br] Si vous avez d&eacute;fini au vert, ce comportement sera activ&eacute; [br]</delete_messages_text>
+<delete_this_computer>Supprimer cet ordinateur</delete_this_computer>
+<delete_this_mailbox>Supprimez cette boite aux lettres</delete_this_mailbox>
+<delete_this_mailbox_text>Supprimer d&eacute;finitivement toutes les donn&eacute;es de bo&icirc;tes aux lettres sur le serveur, cette op&eacute;ration ne sera pas r&eacute;versible</delete_this_mailbox_text>
+<delete_this_user_text>Ceci va supprimer cet utilisateur de la base de donn&eacute;es. Tous les messages stock&eacute;s SERONT conserv&eacute;s.</delete_this_user_text>
+<dhcpfixed>Adresse DHCP fix&eacute;e</dhcpfixed>
+<DISCONNECT_FROM_GROUP>D&eacute;connecter cet utilisateur du groupe</DISCONNECT_FROM_GROUP>
+<displayName>Nom affich&eacute;</displayName>
+<DnsMXLength>Longueur MX</DnsMXLength>
+<DnsType>Enregistrement d'h&ocirc;te de type DNS</DnsType>
+<dnstypea>adresse h&ocirc;te</dnstypea>
+<DnsZoneName>domaine DNS</DnsZoneName>
+<DotClearUserEnabled>Activer DotClear</DotClearUserEnabled>
+<DotClearUserEnabledText>Si DotClear est install&eacute;, l'utilisateur pourra disposer de son propre blog en mettant l'option en vert</DotClearUserEnabledText>
+<duplicate_mailto>Dupliquer les mails vers</duplicate_mailto>
+<duplicate_mailto_text>Si vous remplissez ce champ, tous les mails de cet utilisateur seront reproduit &agrave; l'adresse de courriel configur&eacute;e</duplicate_mailto_text>
+<EnableUserSpamLearning>Apprentissage Anti-spam</EnableUserSpamLearning>
+<EnableUserSpamLearning_explain>Si des mails ind&eacute;sirables sont enregistr&eacute;s dans le dossier  &quot;Junk&quot; ou &quot;Courriers Ind&eacute;sirables&quot; de cette, Ils seront donn&eacute;s &agrave; SpamAssassin [b]toutes les 3 heures[/b] &agrave; des fins d'analyse.[br]Ceci afin d'augmenter consid&eacute;rablement le taux de d&eacute;tection de l'anti-Spam de messagerie Spamassassin. [br]
+Apr&egrave;s avoir analyser les messages, ils seront automatiquement supprim&eacute;s afin de ne pas polluer le dossier de la bo&icirc;te aux lettres.[br]
+[b]La proc&eacute;dure est tr&egrave;s simple[/b], placez les messages que vous consid&eacute;rez comme &eacute;tant des pourriels dans le dossier &quot;courriers ind&eacute;sirables&quot; ou &quot;Junk&quot;.[br]Pour &eacute;viter les faux positifs vous pouvez cr&eacute;er un dossier Ham dans la bo&icirc;te aux lettres et y placer les messages que vous consid&eacute;rez comme des messages non-pourriels.</EnableUserSpamLearning_explain>
+<EnableUserSpamLearning_text>Permet &agrave; artica l'analyse de la boites aux lettres junk / Spam pour envoyer des mails ind&eacute;sirables &agrave; spamassassin</EnableUserSpamLearning_text>
+<enable_file_share>Activer le partage des Fichiers</enable_file_share>
+<error_image_missing>Il y a une erreur, selon les librairies gd, assurez-vous que vous avez install&eacute; php5-gd ou les modules requis</error_image_missing>
+<export_mailbox>Synchroniser la boite aux lettres</export_mailbox>
+<export_mailbox_text>Synchroniser la Bo&icirc;te aux lettres mails et les dossiers avec une autre bo&icirc;te aux lettres</export_mailbox_text>
+<fdm_cache_not_exists>Attention, fdm n'a pas de fonctions de cache , artica ne fonctionnera pas sans cette fonction, s'il vous pla&icirc;t installer fdm en premier</fdm_cache_not_exists>
+<fdm_not_enabled>Attention, FDM n'est pas activ&eacute;, s'il vous pla&icirc;t aller &agrave; dans les addons Postfix et activer FDM</fdm_not_enabled>
+<fdm_not_installed>Attention, FDM n'est pas install&eacute;, artica ne peux ex&eacute;cuter vos r&egrave;gles, s'il vous pla&icirc;t installer fdm en premier</fdm_not_installed>
+<file_share>Fichiers Partag&eacute;s</file_share>
+<FinalDateToLive>Fin de vie</FinalDateToLive>
+<FinalDateToLive_text>Si vous d&eacute;finissez une date dans ce champ, le compte, la bo&icirc;te aux lettres sera supprim&eacute;s arriv&eacute;s &agrave; cette date</FinalDateToLive_text>
+<FTPDownloadBandwidth>Limitation de la Vitesse T&eacute;l&eacute;chargement (Ko/s)</FTPDownloadBandwidth>
+<FTPDownloadRatio>Ratio de t&eacute;l&eacute;chargement</FTPDownloadRatio>
+<FTPQuotaFiles>Quota (nombre de fichiers)</FTPQuotaFiles>
+<FTPQuotaMBytes>Quota (en megabytes)</FTPQuotaMBytes>
+<FTPStatus>Acc&egrave;s FTP</FTPStatus>
+<FTPUploadBandwidth>Limitation de la vitesse Chargement (Kb/s)</FTPUploadBandwidth>
+<FTPUploadRatio>Ratio d'upload</FTPUploadRatio>
+<ftp_access>Acc&egrave;s FTP</ftp_access>
+<gidNumber>Membre de</gidNumber>
+<givenName>Pr&eacute;nom</givenName>
+<give_computer_name>Veuillez entrer un nom r&eacute;el d'ordinateur</give_computer_name>
+<groupName>Membre original de</groupName>
+<groups>Membre des groupes</groups>
+<homeDirectory>R&eacute;pertoire d'accueil</homeDirectory>
+<homeDirectoryText>Le r&eacute;pertoire Home pour ce compte.[br]Ce peut &ecirc;tre un chemin UNC[br]Autrement c''est le chemin complet vers un r&eacute;pertoire local du serveur.</homeDirectoryText>
+<imapsync_not_installed>MailSync n'est pas install&eacute;</imapsync_not_installed>
+<imapsync_not_installed_text>Vous pouvez aller dans &quot;Centre d'installation d'applications&quot; afin d'installer cet outil pour des op&eacute;rations perfrom</imapsync_not_installed_text>
+<import_mailbox>Importe &amp; Synchronise des boites aux lettres externes</import_mailbox>
+<import_mailbox_text>Cette fonctionnalit&eacute; synchronise vos messages depuis une boite aux lettres externe vers votre bo&icirc;te aux lettres locale.</import_mailbox_text>
+<import_now>Importer les &eacute;l&eacute;ments maintenant</import_now>
+<inbound_parameters>Param&egrave;tres entrants</inbound_parameters>
+<in_the_same_organization>dans la m&ecirc;me organisation de messagerie</in_the_same_organization>
+<joomla_privileges>Droits Joomla</joomla_privileges>
+<joomla_privileges_text>D&eacute;finissez les droits du groupe Joomla de cet utilisateur</joomla_privileges_text>
+<loginShell>Shell de connexion</loginShell>
+<loginShellText>La responsabilit&eacute; de la connexion shell est de commencer &agrave; la non-connexion shell et de faire en sorte que vos variables d'environnement soient fix&eacute;es de mani&egrave;re &agrave; veiller &agrave; ce que vous pouvez obtenir tous les param&egrave;tres par d&eacute;faut n&eacute;cessaires au d&eacute;marrage</loginShellText>
+<mailboxes_rules>Filtres de boite aux lettres</mailboxes_rules>
+<mailboxes_rules_text>Contr&ocirc;lez les filtres sauvegard&eacute;s pour cette bo&icirc;te aux lettres</mailboxes_rules_text>
+<mailbox_priv>Privil&egrave;ges de la bo&icirc;te aux lettres</mailbox_priv>
+<mailing_list>Liste de diffusion</mailing_list>
+<mail_exchanger>mail exchange</mail_exchanger>
+<mime_defang_feature_not_enabled>Cette fonctionnalit&eacute; n'est pas activ&eacute;e dans MimeDefang</mime_defang_feature_not_enabled>
+<mpa>Administrer la bo&icirc;te aux lettres[br](changement de l'ACL de la bo&icirc;te aux lettres)</mpa>
+<mpat>Administrer</mpat>
+<mpc>Cr&eacute;er une nouvelle bo&icirc;te aux lettres au-dessous de la bo&icirc;te aux lettres de haut niveau [br] (les utilisateurs ordinaires ne peuvent pas cr&eacute;er de haut niveau de bo&icirc;tes aux lettres).</mpc>
+<mpct>Cr&eacute;er une nouvelle boite aux lettres</mpct>
+<mpd>Supprimer un message et/ou la boite aux lettres &eacute;galement.</mpd>
+<mpdt>Supprimer les messages</mpdt>
+<mpi>Ins&eacute;rer (d&eacute;placer ou copier) un message[br] dans la bo&icirc;te aux lettres.</mpi>
+<mpit>Ins&eacute;rer</mpit>
+<mpl>Rechercher le[br]nom de la bo&icirc;te aux lettres[br] (mais pas son contenu).</mpl>
+<mplt>Liste des bo&icirc;tes aux lettres</mplt>
+<mpp>Poster un message dans la bo&icirc;te aux lettres[br] en envoyant le message &agrave; la bo&icirc;te aux lettres de l'adresse de pr&eacute;sentation</mpp>
+<mppt>Envoyer un message</mppt>
+<mpr>Lire le contenu de la bo&icirc;te aux lettres.</mpr>
+<mprt>Lire</mprt>
+<mps>Pr&eacute;server les statuts &quot;vu&quot; et &quot;r&eacute;cent&quot; [br] des messages IMAP de sessions.</mps>
+<mpst>Pr&eacute;server les status</mpst>
+<mpw>Ecrire (changement du marquage du messsage comme[br] &quot;r&eacute;cents&quot;, &quot;r&eacute;ponse&quot; et &quot;brouillon&quot;).</mpw>
+<mpwt>Ecrire</mpwt>
+<netressources>Ressources r&eacute;seaux</netressources>
+<network_infos>Informations R&eacute;seau</network_infos>
+<no_feature_dhcp_server_not_enabled>Le serveur DHCP est d&eacute;sactiv&eacute;, vous devez l'activ&eacute; afin d'admettre cette fonctionnalit&eacute;</no_feature_dhcp_server_not_enabled>
+<no_mailbox_user>Cette utilisateur n'a pas de boite aux lettres actuellement</no_mailbox_user>
+<OCS_DEPLOY_WINDOWS>T&eacute;l&eacute;-d&eacute;ploiement de l'Agent OCS</OCS_DEPLOY_WINDOWS>
+<OCS_DEPLOY_WINDOWS_TEXT>Installez l'Agent OCS sur cet ordinateur</OCS_DEPLOY_WINDOWS_TEXT>
+<openports>Ports ouverts</openports>
+<out_of_organization>Hors de l'Organisation</out_of_organization>
+<profile>profil</profile>
+<recipient_translations>R&eacute;&eacute;criture d'adresse entrante</recipient_translations>
+<remote_imap_password>Mot de passe source imap</remote_imap_password>
+<remote_imap_server>Serveur imap source</remote_imap_server>
+<remote_imap_username>Nom d'utilisateur imap source</remote_imap_username>
+<repair_mailbox>r&eacute;parer cette boite aux lettres</repair_mailbox>
+<repair_mailbox_infos>Cette fonctionnalit&eacute; vous permet de r&eacute;parer cette bo&icirc;te aux lettres par la reconstruction de la structure des dossiers, supprimer le fichier d'index seen...[br] 
+Apr&egrave;s la transformation de bo&icirc;tes aux lettres le moteur du serveur imap sera red&eacute;marr&eacute; ...</repair_mailbox_infos>
+<repair_mailbox_text>Certains probl&egrave;mes d'acc&egrave;s ou d'ex&eacute;cution de cette bo&icirc;te aux lettres sont pr&eacute;sent, tenter de r&eacute;parer cette bo&icirc;te aux lettres</repair_mailbox_text>
+<SambaAdminServerDefined>Nom du serveur ou IP pour les chemins</SambaAdminServerDefined>
+<sambaHomeDrive>Lettre du lecteur r&eacute;seau du r&eacute;pertoire home</sambaHomeDrive>
+<sambaHomePath>R&eacute;pertoire home</sambaHomePath>
+<sambaPrimaryGroupSID>Groupe Initial</sambaPrimaryGroupSID>
+<sambaProfilePath>R&eacute;pertoire du profil</sambaProfilePath>
+<SAMBA_ERROR_CLICK>Cliquez  pour obtenir plus d'informations</SAMBA_ERROR_CLICK>
+<SAMBA_ERROR_REPORT>Rapport du serveur samba</SAMBA_ERROR_REPORT>
+<SAMBA_ERROR_USER>Erreur avec cette utilisateur</SAMBA_ERROR_USER>
+<SAMBA_GROUP_PRIVILEGES>Droits sur le groupe</SAMBA_GROUP_PRIVILEGES>
+<SAMBA_GROUP_PRIVILEGES_TEXT>D&eacute;finir les droits de l'utilisateur en s&eacute;lectionnant le groupe</SAMBA_GROUP_PRIVILEGES_TEXT>
+<SAMBA_GROUP_PRIVILEGES_WIZARD>Cet assistant vous aide &agrave; d&eacute;finir les droits d'utilisateur en s&eacute;lectionnant un groupe pr&eacute;-d&eacute;fini. [br] S&eacute;lectionnez le groupe qui va stocker cet utilisateur.[br]
+La s&eacute;lection de ce groupe est obligatoire si vous souhaitez utiliser Artica Server comme contr&ocirc;leur de domaine principal.[br]
+Elle permettra la connexion de cet utilisateur sur le domaine</SAMBA_GROUP_PRIVILEGES_WIZARD>
+<scan_it>Lancez la recherche nmap</scan_it>
+<SCHEDULE_SCAN_COMPUTER>Analyse programm&eacute;e</SCHEDULE_SCAN_COMPUTER>
+<SCHEDULE_SCAN_COMPUTER_TEXT>programmez l'analyse antivirus afin d'ex&eacute;cuter un balayage antivirus p&eacute;riodiquement</SCHEDULE_SCAN_COMPUTER_TEXT>
+<SeAddUsersPrivilege>Ajouter des groupes et des utilisateurs au domaine</SeAddUsersPrivilege>
+<search_in_orgnization>Chercher dans l'Organisation</search_in_orgnization>
+<SeBackupPrivilege>Sauvegardez les fichiers et r&eacute;pertoires</SeBackupPrivilege>
+<SeDiskOperatorPrivilege>G&eacute;rer les r&eacute;pertoires partag&eacute;s</SeDiskOperatorPrivilege>
+<see_events>Voir les derniers &eacute;v&egrave;nements</see_events>
+<SeMachineAccountPrivilege>Ajoutez des machines au domaine</SeMachineAccountPrivilege>
+<sender_canonical_text>Transformez l'adresse originale lorsque les messages vont &agrave; direction d'Internet</sender_canonical_text>
+<sender_parameters>Param&egrave;tres d'exp&eacute;diteur</sender_parameters>
+<sender_parameters_text>D&eacute;finissez l'adresse de de r&eacute;exp&eacute;dition et autres param&egrave;tres lors de l'&eacute;mission des messages</sender_parameters_text>
+<SePrintOperatorPrivilege>G&eacute;rer les imprimantes</SePrintOperatorPrivilege>
+<SeRemoteShutdownPrivilege>Force l'arr&ecirc;t d'un syst&egrave;me distant</SeRemoteShutdownPrivilege>
+<SeRestorePrivilege>Restaurer des fichiers et r&eacute;pertoires</SeRestorePrivilege>
+<SeTakeOwnershipPrivilege>Prendre possession des fichiers ou d'autres objets</SeTakeOwnershipPrivilege>
+<SimpleGroupWareActive>Simple Groupware</SimpleGroupWareActive>
+<smb_infos>Informations de partage</smb_infos>
+<smb_infos_text>Afficher les informations internes samba de cet utilisateur</smb_infos_text>
+<sync_find_user>Trouver la cible de bo&icirc;tes aux lettres</sync_find_user>
+<test_connection>Tester votre connexion</test_connection>
+<transforme_mailto>Changer l'adresse email</transforme_mailto>
+<transforme_mailto_text>Si vous remplissez ce champ, l'adresse e-mail messagerie de cet utilisateur sera transform&eacute; en adresse email configur&eacute;e</transforme_mailto_text>
+<UidNumber>Identifiant Num&eacute;rique</UidNumber>
+<UidNumberText>Cet attribut est un nombre unique qui permet d'indentifier l'utilisateur comme un membre unitaire dans la base</UidNumberText>
+<uid_number>Num&eacute;ro UID</uid_number>
+<UserSystemInfos>Param&egrave;tres syst&egrave;me</UserSystemInfos>
+<UserSystemInfos_text>D&eacute;finissez les informations utilisateur comme l'identifiant num&eacute;rique, le shell de connexion...</UserSystemInfos_text>
+<USER_DOES_NOT_EXISTS>Cet utilisateur est absent de la base de donn&eacute;es</USER_DOES_NOT_EXISTS>
+<USER_DOES_NOT_EXISTS_EXPLAIN>L'identifiant de cet utilisateur n'est pas correctement enregistr&eacute; dans la base de donn&eacute;es.[br]Certainement que celui-ci &agrave; &eacute;t&eacute; supprim&eacute; et qu'il reste des traces dans la base de donn&eacute;es.</USER_DOES_NOT_EXISTS_EXPLAIN>
+<user_has_no_quota>Cet utilisateur n'a pas de quota. Cette boite aux lettres est illimit&eacute;e...</user_has_no_quota>
+<user_is_an_obm_user>Acc&egrave;s activ&eacute; vers le calendrier OBM</user_is_an_obm_user>
+<USER_MAILBOX_WIZARD_STEP1>Cet assistant va vous aider &agrave; cr&eacute;er une nouvelle bo&icirc;te aux lettres pour cet utilisateur.[br]
+La premi&egrave;re chose est de d&eacute;finir la taille maximale de la bo&icirc;te aux lettres.[br]
+Indiquez dans le champs ci-dessous sa taille en Mo.[br]
+[b]Si vous voulez cr&eacute;er une bo&icirc;te aux lettres illimit&eacute;e en taille, indiquez le chiffre 0[/b].</USER_MAILBOX_WIZARD_STEP1>
+<user_no_mailbox>Cet utilisateur a actuellement aucun dossier de bo&icirc;tes aux lettres cr&eacute;&eacute;es sur le serveur de messagerie</user_no_mailbox>
+<user_quota>Cette bo&icirc;te aux lettres est limit&eacute;e.[br] Si vous souhaitez supprimer le quota et le transformer en illimit&eacute;, d&eacute;finissez &quot;0&quot; dans le champ</user_quota>
+<user_transport>Serveur SMTP d'&eacute;mission</user_transport>
+<user_transport_text>D&eacute;finir un serveur de routage mail pour cet utilisateur</user_transport_text>
+<use_ssl>utiliser le ssl</use_ssl>
+<VolatileIPAddress>Utilise DHCP</VolatileIPAddress>
+<warn_import>L'importation sera lanc&eacute; en arri&egrave;re-plan, pour suivre l'op&eacute;ration, cliquez sur l'ic&ocirc;ne dans les journaux afin de voir si l'op&eacute;ration sera couronn&eacute;e de succ&egrave;s</warn_import>

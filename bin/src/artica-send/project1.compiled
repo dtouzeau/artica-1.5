@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <Compiler Value="/usr/bin/ppc386" Date="1188503747"/>
+  <Params Value=" -S2cgi -OG1 -gl -vewnhi -l -Fu. -oproject1 project1.lpr"/>
+</CONFIG>

@@ -1,0 +1,66 @@
+
+<H1></H1>
+<div style='width:100%;height:728px;overflow:auto'>
+<table style='width:100%'>
+<tr>
+
+</tr>
+<tr>
+<td valign='top'>
+	<div style='width:210px' class='paragraphe' id='99ac81f3668ddf8e5efe221fa7d73cba' 
+		title="Add a new icon/Widget in this web page"
+		OnMouseOver="javascript:this.className='paragraphe_over';this.style.cursor='pointer';AffBulle('Add a new icon/Widget in this web page');"
+		OnMouseOut="javascript:this.className='paragraphe';this.style.cursor='default';HideBulle()"
+		OnClick="javascript:Loadjs('admin.tabs.php?add-icon=graphs');">
+	<table style='width:100%'>
+	<tr>
+	<td width=1% valign='top'>
+	<div OnMouseOver=";this.style.cursor='pointer';" OnMouseOut=";this.style.cursor='default';" style='width:0.5%;'>
+		<img src='img/64-circle-plus.png'  title="Add a new icon/Widget in this web page" onMouseOver="javascript:$(this).cluetip();$(this).fadeOut('slow');$(this).fadeIn('fast');AffBulle('Add a new icon/Widget in this web page');"" OnMouseOut="javascript:HideBulle();"  id='img_99ac81f3668ddf8e5efe221fa7d73cba' >
+	</div></a></td>
+	<td valign='top' ><h3 style='height:36px;'>Add a new widget</h3><div id='text_99ac81f3668ddf8e5efe221fa7d73cba' style='height:70px;font-size:11px'>Add a new icon/Widget in this web page </div></td>
+	</tr>
+	</table>
+	</div>
+	
+	</td>	
+<td valign='top'>
+	<div style='width:210px' class='paragraphe' id='e1d4a73631c831a29c44edec6f943827' 
+		title="Change the display order, delete widgets"
+		OnMouseOver="javascript:this.className='paragraphe_over';this.style.cursor='pointer';AffBulle('Change the display order, delete widgets');"
+		OnMouseOut="javascript:this.className='paragraphe';this.style.cursor='default';HideBulle()"
+		OnClick="javascript:Loadjs('admin.tabs.php?manage-icon=graphs');">
+	<table style='width:100%'>
+	<tr>
+	<td width=1% valign='top'>
+	<div OnMouseOver=";this.style.cursor='pointer';" OnMouseOut=";this.style.cursor='default';" style='width:0.5%;'>
+		<img src='img/64-widget-manage.png'  title="Change the display order, delete widgets" onMouseOver="javascript:$(this).cluetip();$(this).fadeOut('slow');$(this).fadeIn('fast');AffBulle('Change the display order, delete widgets');"" OnMouseOut="javascript:HideBulle();"  id='img_e1d4a73631c831a29c44edec6f943827' >
+	</div></a></td>
+	<td valign='top' ><h3 style='height:36px;'>Configure widgets</h3><div id='text_e1d4a73631c831a29c44edec6f943827' style='height:70px;font-size:11px'>Change the display order, delete widgets </div></td>
+	</tr>
+	</table>
+	</div>
+	
+	</td>
+<td valign='top'>
+	<div style='width:210px' class='paragraphe' id='18e9b4ce12edfcf8db86d74edc8c6d81' 
+		title="This operation will delete this page and this tab form your panel"
+		OnMouseOver="javascript:this.className='paragraphe_over';this.style.cursor='pointer';AffBulle('This operation will delete this page and this tab form your panel');"
+		OnMouseOut="javascript:this.className='paragraphe';this.style.cursor='default';HideBulle()"
+		OnClick="javascript:Loadjs('admin.tabs.php?delete-tab=graphs');">
+	<table style='width:100%'>
+	<tr>
+	<td width=1% valign='top'>
+	<div OnMouseOver=";this.style.cursor='pointer';" OnMouseOut=";this.style.cursor='default';" style='width:0.5%;'>
+		<img src='img/64-cancel.png'  title="This operation will delete this page and this tab form your panel" onMouseOver="javascript:$(this).cluetip();$(this).fadeOut('slow');$(this).fadeIn('fast');AffBulle('This operation will delete this page and this tab form your panel');"" OnMouseOut="javascript:HideBulle();"  id='img_18e9b4ce12edfcf8db86d74edc8c6d81' >
+	</div></a></td>
+	<td valign='top' ><h3 style='height:36px;'>Delete this personal page</h3><div id='text_18e9b4ce12edfcf8db86d74edc8c6d81' style='height:70px;font-size:11px'>This operation will delete this page and this tab form your panel </div></td>
+	</tr>
+	</table>
+	</div>
+	
+	</td>
+</tr>
+</table>
+
+</div>

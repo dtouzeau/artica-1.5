@@ -1,0 +1,5 @@
+<admin_name>SuperAdmin Name</admin_name>
+<APP_sugar_NOT_INSTALLED>Your SugarCRM is not installed</APP_sugar_NOT_INSTALLED>
+<install_your_sugar>Install your SugarCRM web site</install_your_sugar>
+<install_your_sugar_text>This operation will install SugarCRM core product in your organization area</install_your_sugar_text>
+<sugarservername>Web site address</sugarservername>

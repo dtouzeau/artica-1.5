@@ -1,0 +1,20 @@
+<add_computer_text>Usted puede directamente agregar un nombre Netbios de computadora al Servidor.[br]
+Indique aqu&iacute; el nombre de la computadora...[br]
+Si no quiere agregar una computadora, debe el campo en blanco...</add_computer_text>
+<add_computer_title>Agregar una nueva computadora</add_computer_title>
+<computer_name>Nombre de la computadora</computer_name>
+<configuration_success>Su servidor ha sido configurado como  PDC satisfactoriamente.</configuration_success>
+<domain_controler>Controlador de dominio</domain_controler>
+<howto1>En la estaci&oacute;n de trabajo de Windows.[br] De clic derecho sobre &quot;Mi PC&quot; y seleccione Propiedades.</howto1>
+<howto2>En la pesta&ntilde;a &quot;Nombe de Equipo&quot;, de clic en el bot&oacute;n &quot;Cambiar&quot;, luego en la secci&oacute;n &quot;Miembro de&quot; indique el nombre del dominio que configur&oacute; en Artica.</howto2>
+<howto3>Despu&eacute;s de unos segundos, en una ventana se le preguntar&aacute; por el usuario &quot;root&quot; y su contrase&ntilde;a.</howto3>
+<howto4>Despu&eacute;s de unos minutos, recibir&aacute; la confirmaci&oacute;n de que la estaci&oacute;n de trabajo es miembro del dominio.</howto4>
+<root_error_pass>La contrase&ntilde;a y su confirmaci&oacute;n difieren una de la otra.</root_error_pass>
+<root_password>Contrase&ntilde;a del Administrador NetBios del Dominio</root_password>
+<root_password_field>Contrase&ntilde;a del Administrador NetBios del Dominio</root_password_field>
+<root_password_field2>Contrase&ntilde;a del Administrador NetBios del Dominio (Confirmar)</root_password_field2>
+<root_password_text>El usuario &quot;root&quot; ser&aacute; utilizado para conectar las computadoras al dominio. Indique el password del usuario &quot;root&quot; [br] Deje en blanco si no quiere resetearlo.</root_password_text>
+<server_name>Nombre del servidor que se mostrar&aacute; en el &aacute;rea explorable de red</server_name>
+<welcome>Bienvenido al Asistente del Controlador de Dominio</welcome>
+<welcome_text>Este asistente le ayudar&aacute; a crear un PDC (Controlador de Dominio Primario) para que las Computadoras con MS Windows puedan conectarse al mismo.</welcome_text>
+<workgroup>Nombre del dominio NT que se mostrar&aacute; cuando explore la red</workgroup>

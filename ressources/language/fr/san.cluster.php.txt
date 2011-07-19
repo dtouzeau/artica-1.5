@@ -1,0 +1,7 @@
+<artica_listen_port>Port distant de la console artica</artica_listen_port>
+<cluster_server>Serveur de stockage r&eacute;seau en Cluster</cluster_server>
+<main_storage_directory>R&eacute;pertoire de stockage principal</main_storage_directory>
+<SAN_CLUSTER>Cluster r&eacute;seau de stockage</SAN_CLUSTER>
+<SAN_CLUSTER_CLIENT>Noeud client clusteur de stockage</SAN_CLUSTER_CLIENT>
+<SAN_CLUSTER_CLIENT_TEXT>Liez cet ordinateur &agrave; un Cluster r&eacute;seau de stockage Artica</SAN_CLUSTER_CLIENT_TEXT>
+<SAN_CLUSTER_TEXT>D&eacute;diez ce serveur &agrave; &ecirc;tre un serveur de stockage cluster afin de construire un environnement de Cluster de bo&icirc;tes aux lettres et autres services</SAN_CLUSTER_TEXT>

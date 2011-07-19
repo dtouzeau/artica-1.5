@@ -1,0 +1,2 @@
+<text>Ta strona pokazuje Ci co 10 sekund zdarzenia generowane przez system emailowy Postfix.</text>
+<title>Artica-PostFix - zdarzenia</title>

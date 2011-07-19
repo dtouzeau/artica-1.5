@@ -1,0 +1,68 @@
+weblocal        = $(HOME)/@/adzapper.sf/html
+webremote       = cs1,adzapper@web.sourceforge.net:htdocs
+dateptn	= [0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]
+
+_scripts: scripts/squid_redirect $(HOME)/bin/squid_redirect
+
+_sync:
+	:make _scripts
+
+_all:	_scripts cvslog.html _oldzaps
+
+_publish:
+        :make scripts/squid_redirect
+        set -uex \
+        lastrel=`cs-release lastrelease` \
+        tmpdir=`mkdirn $$TMPDIR/adzap` \
+        hg archive -r "release-$$lastrel" -t files "$$tmpdir/adzap-$$lastrel" \
+        ( set -ue \
+          cd "$$tmpdir" \
+          tar cf $(weblocal)/adzap-$$lastrel.tar.gz adzap-$$lastrel \
+          rm -f $(weblocal)/adzap.tar.gz \
+          ln -s adzap-$$lastrel.tar.gz $(weblocal)/adzap.tar.gz \
+        ) \
+        rm -rf "$$tmpdir" \
+	bsed "/TARBALL-LINE/s/adzap-$(dateptn)/adzap-$$lastrel/g" index.html \
+        hg commit -m "Update release tarball to adzap-$$lastrel." index.html
+        :make $(weblocal)/index.html $(weblocal)/CHANGELOG.txt
+        rsync -e ssh -avH --delete-excluded $(weblocal)/ $(webremote)/
+
+$(weblocal)/index.html: index.html
+        rewriteif $@ <$?
+
+$(weblocal)/CHANGELOG.txt: _always
+        >>$@ \
+        lastrel=`cs-release lastrelease` \
+        rewriteif $@ hglog -r "release-$$lastrel:0"
+
+_freshmeat:
+        :make _publish
+        set -uex \
+        lastrel=`cs-release lastrelease` \
+        bsed "s/^# Freshmeat release.*/# Freshmeat release: $$lastrel/" scripts/squid_redirect \
+        hg commit -m "Update freshmeat release string to $$lastrel." scripts/squid_redirect
+        echo SKIP cs-release freshmeat-submit
+
+scripts/squid_redirect: rc/patterns
+	@( echo "##"; echo "## Last updated `date`."; echo "##" \
+	   cat $? \
+	 ) \\
+	| rlr -f '^__DATA__' \\
+		  -t '^### END AUTO __DATA__ AREA' \\
+		  -i '$@' \\
+		  -o '$@' \\
+		  -
+        set -x \
+        change=`hg log -r -1: --template='{desc|firstline}\n' $?` \
+        hg commit -m "$$change" $@
+
+$(HOME)/bin/squid_redirect: scripts/$(@F)
+	rewriteif <$? $@
+
+_oldzaps:
+	rsync -avH --delete zaps/. $(HOME)/@/cs@zip.com.au/html/adzap/zaps/. & \
+	rsync -avH --delete zaps/. $(HOME)/@/ezos/html/cs/adzap/zaps/. & \
+	wait
+
+_always:
+	:make

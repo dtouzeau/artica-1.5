@@ -1,0 +1,6 @@
+gcc->make;
+make->make;
+gcc-c++->make;
+wget->make;
+autoconf->make;
+xinetd->xinetd;

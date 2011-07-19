@@ -1,0 +1,7 @@
+db4->ftp://rpmfind.net/linux/fedora/core/updates/4/i386/db4-4.3.27-5.fc4.i386.rpm;=force
+db4-utils->ftp://rpmfind.net/linux/fedora/core/updates/4/i386/db4-utils-4.3.27-5.fc4.i386.rpm;
+unixODBC->ftp://rpmfind.net/linux/fedora/core/4/i386/os/Fedora/RPMS/unixODBC-2.2.11-1.i386.rpm;
+openldap-servers->ftp://rpmfind.net/linux/Mandrake/2006.0/i586/media/main/openldap-servers-2.3.6-4mdk.i586.rpm;
+openldap-clients->ftp://rpmfind.net/linux/Mandrake/2006.0/i586/media/main/openldap-clients-2.3.6-4mdk.i586.rpm;
+
+

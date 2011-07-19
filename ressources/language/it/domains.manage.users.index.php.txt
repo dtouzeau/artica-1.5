@@ -1,0 +1,3 @@
+<mailbox_creation_results>Mailbox maintenance results</mailbox_creation_results>
+<mailbox_enabled>Mailbox is enabled</mailbox_enabled>
+<mailbox_not_enabled>Mailbox is not enabled, failed...</mailbox_not_enabled>

@@ -1,0 +1,6 @@
+<complete_name>Nom complet</complete_name>
+<contact>Contact</contact>
+<employeeNumber>ID de Contact</employeeNumber>
+<personal_informations>Informations personnelle</personal_informations>
+<phone_title>T&eacute;l&eacute;phone</phone_title>
+<postal_address>Adresse</postal_address>

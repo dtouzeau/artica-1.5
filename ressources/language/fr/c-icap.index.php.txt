@@ -1,0 +1,48 @@
+<cicap_title>C-ICAP et Clam Antivirus</cicap_title>
+<clamav_settings>Param&eacute;trages Clam Antivirus</clamav_settings>
+<clamav_settings_text>D&eacute;finir le comportement de Clamav avec le proxy Squid</clamav_settings_text>
+<icap_logs>&Eacute;v&egrave;nements C-Icap/Clamav</icap_logs>
+<icap_logs_text>Afficher les &eacute;v&egrave;nements des pages internet visit&eacute;s</icap_logs_text>
+<KeepAlive>Rester connect&eacute;</KeepAlive>
+<KeepAliveTimeout>D&eacute;lai imparti</KeepAliveTimeout>
+<KeepAliveTimeout_text>D&eacute;lai maximum en seconde avant d'ex&eacute;cuter la nouvelle requ&ecirc;tes.
+Si cette valeur est fix&eacute; &agrave; -1, le d&eacute;lai est d&eacute;sactiv&eacute;</KeepAliveTimeout_text>
+<KeepAlive_text>Si la fonctionnalit&eacute; est activ&eacute;e, alors le serveur c-icap essaie de ne pas fermer la connexion avec le client ICAP, mais il attend plus de demandes &agrave; travers elle.
+Cette fonctionnalit&eacute; peut am&eacute;liorer la vitesse de communication entre le client ICAP et le serveur c-icap.</KeepAlive_text>
+<MaxKeepAliveRequests>Requ&ecirc;tes maintenues MAX</MaxKeepAliveRequests>
+<MaxKeepAliveRequests_text>requ&ecirc;tes maintenues MAX</MaxKeepAliveRequests_text>
+<MaxRequestsPerChild>Requ&ecirc;tes MAX par enfant</MaxRequestsPerChild>
+<MaxRequestsPerChild_text>le nombre maximal de requ&ecirc;tes qu'un processus enfant peut servir.[br]
+Une fois que ce nombre a &eacute;t&eacute; atteint, le processus meurt.[br]
+L'objectif de ce param&egrave;tre est de minimiser le risque de fuites de m&eacute;moire et augmenter la stabilit&eacute; de c-icap.[br]
+Il peut &ecirc;tre d&eacute;sactiv&eacute; en d&eacute;finissant sa valeur &agrave; 0</MaxRequestsPerChild_text>
+<MaxServers>Nombre Maximun de Serveurs</MaxServers>
+<MaxServers_text>Nombre maximum de processus par serveur</MaxServers_text>
+<MaxSpareThreads>Nombre Maximal de Threads dispo.</MaxSpareThreads>
+<MaxSpareThreads_text>Si le nombre maximal de threads disponibles est sup&eacute;rieur &agrave; cette valeur, le serveur va tuer un processus fils.</MaxSpareThreads_text>
+<MinSpareThreads>Minimum de threads dispo.</MinSpareThreads>
+<MinSpareThreads_text>Si le nombre de threads disponibles est inf&eacute;rieur &agrave; ce nombre, le serveur d&eacute;marre un nouveau processus fils.</MinSpareThreads_text>
+<srv_clamav.ClamAvMaxFilesInArchive>Nombre maximum de fichier scanner dans l'archive</srv_clamav.ClamAvMaxFilesInArchive>
+<srv_clamav.ClamAvMaxFilesInArchive_text>D&eacute;finit le nombre maximum de fichiers dans l'archive.[br]
+Utilis&eacute; par la biblioth&egrave;que de clamav.[br]
+Mettez la valeur &agrave; 0 pour le d&eacute;sactiver.</srv_clamav.ClamAvMaxFilesInArchive_text>
+<srv_clamav.ClamAvMaxFileSizeInArchive>Taille maximum des fichiers archiv&eacute;s</srv_clamav.ClamAvMaxFileSizeInArchive>
+<srv_clamav.ClamAvMaxFileSizeInArchive_text>D&eacute;finit la taille maximale du fichier archiv&eacute;. [br]
+Utilis&eacute; par la biblioth&egrave;que de clamav.[br] Mettez la valeur &agrave; 0 pour le d&eacute;sactiver</srv_clamav.ClamAvMaxFileSizeInArchive_text>
+<srv_clamav.ClamAvMaxRecLevel>Niveau maximal de r&eacute;cursion de la compression</srv_clamav.ClamAvMaxRecLevel>
+<srv_clamav.ClamAvMaxRecLevel_text>Le niveau de r&eacute;cursion maximale. Utilis&eacute; par la biblioth&egrave;que de clamav. Mettez la valeur &agrave; 0 pour le d&eacute;sactiver.</srv_clamav.ClamAvMaxRecLevel_text>
+<srv_clamav.MaxObjectSize>Taille maximum des fichiers</srv_clamav.MaxObjectSize>
+<srv_clamav.MaxObjectSize_text>Taille maximum des fichiers qui seront scanner par Clamav</srv_clamav.MaxObjectSize_text>
+<srv_clamav.SendPercentData>Pourcentage de donn&eacute;es qui peuvent &ecirc;tre envoy&eacute;es</srv_clamav.SendPercentData>
+<srv_clamav.SendPercentData_text>Le pourcentage de donn&eacute;es qui peuvent &ecirc;tre envoy&eacute;es par le serveur c-icap avant de recevoir le corps complet d'une requ&ecirc;te.[br]
+Cette fonctionnalit&eacute; en conjonction avec la suivante peut &ecirc;tre utile, parce que si le t&eacute;l&eacute;chargement de l'objet prend beaucoup de temps, la connexion du client web au proxy peut expirer. Il faut noter que les donn&eacute;es qui d&eacute;livr&eacute;es au client web contiennent peut-&ecirc;tre un virus ou une portion de virus qui peut &ecirc;tre dangereux.[br]
+En revanche des donn&eacute;es partielles (par exemple 5% des donn&eacute;es d'un fichier zip ou d'un fichier exe)  ne peuvent, dans la plupart des cas, pas &ecirc;tre utilis&eacute;s.[br]
+Mettez la valeur &agrave; 0 pour d&eacute;sactiver cette fonctionnalit&eacute;.</srv_clamav.SendPercentData_text>
+<srv_clamav.StartSendPercentDataAfter>Pourcentage des donn&eacute;es envoy&eacute;e apr&egrave;s</srv_clamav.StartSendPercentDataAfter>
+<srv_clamav.StartSendPercentDataAfter_text>Ce n'est que si l'objet est plus gros que la taille du pourcentage de donn&eacute;es d&eacute;finit par &laquo;Pourcentage de donn&eacute;es pouvant &ecirc;tre envoy&eacute;s&quot; envoy&eacute; par le serveur c-icap avant de recevoir le corps complet de la requ&ecirc;te.</srv_clamav.StartSendPercentDataAfter_text>
+<ThreadsPerChild>Threads par enfants</ThreadsPerChild>
+<ThreadsPerChild_text>Le nombre initial de threads par processus fils</ThreadsPerChild_text>
+<Timeout>D&eacute;lai d&eacute;pass&eacute;</Timeout>
+<Timeout_text>D&eacute;lai d'annulation en seconde d'une session sans activit&eacute;s</Timeout_text>
+<ViralatorMode>Mode Viralateur</ViralatorMode>
+<ViralatorMode_text>Les param&egrave;tres suivants sont un processus exp&eacute;rimental qui permettent de forcer ClamAV &agrave; t&eacute;l&eacute;charger localement les fichiers. Pendant ce temps, C-ICAP envoi une page web qui affiche l'&eacute;tat de t&eacute;l&eacute;chargement du fichier.[br]Une fois le fichier compress&eacute;, un message est affich&eacute; permettant &agrave; l'utilisateur de r&eacute;cup&eacute;rer son fichier analys&eacute; sur le serveur depuis une page web.</ViralatorMode_text>

@@ -1,0 +1,5 @@
+<dnsmasq_DNS_cache_settings>Param&egrave;tres de Cache DNS</dnsmasq_DNS_cache_settings>
+<dnsmasq_DNS_cache_settings_text>Param&egrave;tres permettant de g&eacute;rer la temporisation des adresses</dnsmasq_DNS_cache_settings_text>
+<dnsmasq_intro>param&egrave;tres de Cache DNS</dnsmasq_intro>
+<domain-needed>Domaine n&eacute;c&eacute;ssaire</domain-needed>
+<domain-needed_text>Indique  &agrave; Dnsmasq de ne jamais transmettre en amont de requ&ecirc;tes pour des noms simples, ne comprenant donc ni points ni nom de domaine.[br] Si un nom n'est pas dans /etc/hosts ou dans la liste des baux DHCP, alors une r&eacute;ponse de type &quot;non trouv&eacute;&quot; est renvoy&eacute;e</domain-needed_text>

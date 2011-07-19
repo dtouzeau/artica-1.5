@@ -1,0 +1,2 @@
+<folders_statistics>Statistiche cartelle</folders_statistics>
+<parameters_text>Puoi modificare/aggiungere le cartelle che desideri visualizzare nel grafico delle statistiche</parameters_text>

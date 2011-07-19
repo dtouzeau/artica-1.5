@@ -1,0 +1,9 @@
+<ArchiveMail>Guarde los mensajes en el &aacute;rea espec&iacute;fica de cuarentena</ArchiveMail>
+<aveserver_intro_global>Defina aqui las normas mundiales</aveserver_intro_global>
+<delete_mail>Eliminar el correo</delete_mail>
+<NotifyFrom>Notifique Remitente</NotifyFrom>
+<NotifyFromAddress>DE Direccion para las notificaciones</NotifyFromAddress>
+<NotifyMessage>Mensaje de notificacion</NotifyMessage>
+<NotifyMessageSubject>Asunto del mensaje</NotifyMessageSubject>
+<NotifyTo>Notifique destinatario</NotifyTo>
+<when_found_virus>Cuando escanee detecte virus</when_found_virus>

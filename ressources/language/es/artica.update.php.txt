@@ -1,0 +1,18 @@
+<autoupdate_text>Esta caracteristica permite que critica para comprobar si hay nuevas versiones en el servidor de actualizaci&oacute;n de Artica.[br]Usted puede activar o desactivar el auto-instalaci&oacute;n de nuevas versiones[br]
+Si decide desactivar el auto-instalacion, el agente de actualizaci&oacute;n a esperar su solicitud para llevar a cabo auto-instalacion.</autoupdate_text>
+<CheckEveryMinutes>Comprueba actualizar cada x minutos</CheckEveryMinutes>
+<current_version>Versi&oacute;n actual</current_version>
+<enable_autoinstall>Habilitar auto-instalar</enable_autoinstall>
+<enable_autoupdate>Habilite la opcion auto-actualizacion</enable_autoupdate>
+<enable_nightlybuild>{habilitar actualizaciones nightly build}</enable_nightlybuild>
+<front_page_notify>Notifique nuevas actualizaciones en pagina frontal</front_page_notify>
+<install_package>Paquete instalado...</install_package>
+<install_package_text>&iquest;Est&aacute;s seguro de actualizar Artica Core usando este paquete?
+En caso afirmativo, el proceso de actualizaci&oacute;n se reiniciar&aacute; Artica y la interfaz no debe estar disponible para unos pocos segundos.</install_package_text>
+<perform_update_text>Esta operacion se llevara a cabo la actualizacion en segundo plano,
+Por favor, espera unos minutos y volver esta seccion en los eventos con el fin de
+ver si hay una operaci&oacute;n de UDPATE exito.
+Realizar la actualizaci&oacute;n ahora??</perform_update_text>
+<samba_notify>Notificar sobre los nuevos cambios Samba (correo tambi&eacute;n)</samba_notify>
+<update_list>Actualizar lista</update_list>
+<uri>Actualizar url del servidor</uri>

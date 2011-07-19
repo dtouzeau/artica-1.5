@@ -1,0 +1,7 @@
+<ADD_CLUSTER_RESSOUCE>Add a new cluster</ADD_CLUSTER_RESSOUCE>
+<ADD_CLUSTER_RESSOUCE_TEXT>Add a new server in your cluster collection</ADD_CLUSTER_RESSOUCE_TEXT>
+<disable_cluster_onthisserver>Disable clustering feature on this server</disable_cluster_onthisserver>
+<gluster_settings_saved>Settings saved</gluster_settings_saved>
+<order_scheduled>Order scheduled...</order_scheduled>
+<replicated_folders>Clustered directories</replicated_folders>
+<set_cluster_replicator>Define has replicator</set_cluster_replicator>

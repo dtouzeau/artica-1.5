@@ -1,0 +1,25 @@
+<AV_SCAN_PARAMETERS>Par&aacute;metros de escaneo.</AV_SCAN_PARAMETERS>
+<AV_SCAN_PARAMETERS_TEXT>Define c&oacute;mo analizar esta m&aacute;quina.</AV_SCAN_PARAMETERS_TEXT>
+<cure>Limpiar.</cure>
+<f0>S&oacute;lo Detecci&oacute;n.</f0>
+<f1>Limpiar/Dejar Pasar</f1>
+<f2>No se pudo limpiar / Dejar pasar</f2>
+<f3>No se pudo limpiar, se borra todo.</f3>
+<f4>Eliminar todo.</f4>
+<Heuristic>Activar an&aacute;lisis heur&iacute;stico.</Heuristic>
+<i0>Se limita a analizar si existe c&oacute;digo malicioso. No modifica los ficheros.</i0>
+<i1>Limpiar los elementos infectados; Si falla la limpieza, lo deja pasar.</i1>
+<i2>Limpiar los objetos infectados: Si falla la limpieza y el objeto es simple - lo borra; si el objeto infectado se encuentra en un contenedor - lo deja pasar.</i2>
+<i3>Limpia los objetos infectados: Si falla la limpieza y el objeto es simple - lo borra; si el objeto infectado se encuentra en un contenedor - borra el contenedor completo.</i3>
+<i4>Borra los objetos infectados y sus contenedores.</i4>
+<MailBases>Bases de datos de correo.</MailBases>
+<MailPlain>Mensajes en texto plano.</MailPlain>
+<Recursion>An&aacute;lisis recursivo.</Recursion>
+<SCAN_ARCHIVES>Archivos Ficheros.</SCAN_ARCHIVES>
+<SCAN_PACKED>Analiza ficheros empaquetados.</SCAN_PACKED>
+<SelfExtArchives>Ficheros autoextra&iacute;bles.</SelfExtArchives>
+<shares_access>Accesos compartidos.</shares_access>
+<shares_access_text>Introduce usuario/clave para permitir la conexi&oacute;n a la m&aacute;quina destino.</shares_access_text>
+<START_SCAN_COMPUTER>Ejecuta el an&aacute;lisis.</START_SCAN_COMPUTER>
+<START_SCAN_COMPUTER_TEXT>Lanzar el an&aacute;lisis en la m&aacute;quina destino e intentar descubrir alg&uacute;n c&oacute;digo malicioso.</START_SCAN_COMPUTER_TEXT>
+<SUCCESS_LAUNCH_SCAN_PC>Se ha enviado correctamente la orden al demonio para llevar a cabo un an&aacute;lisis de esta m&aacute;quina en segundo plano.</SUCCESS_LAUNCH_SCAN_PC>

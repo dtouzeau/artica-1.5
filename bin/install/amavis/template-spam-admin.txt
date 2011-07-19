@@ -1,0 +1,34 @@
+#
+# =============================================================================
+# This is a template for SPAM ADMINISTRATOR NOTIFICATIONS.
+# For syntax and customization instructions see README.customize.
+# Long header fields will be automatically wrapped by the program.
+#
+Date: %d
+From: %f
+Subject: SPAM FROM [?%l||LOCAL ][?%a||\[%a\] ][?%s|<>|[?%o|(?)|%s]]
+To: [? %#T |undisclosed-recipients: ;|[<%T>|, ]]
+[? %#C |#|Cc: [<%C>|, ]]
+[? %#B |#|Bcc: [<%B>|, ]]
+Message-ID: <SA%i@%h>
+
+Internal reference code for the message is %n/%i
+
+[? %a |#|[:wrap|78||  |First upstream SMTP client IP address: \[%a\] %g]]
+[? %e |#|[:wrap|78||  |According to a 'Received:' trace,\
+ the message originated at: \[%e\], %t]]
+
+[? %s |#|[:wrap|78||  |Return-Path: %s]]
+[? %m |#|[:wrap|78||  |Message-ID: %m]]
+[? %r |#|[:wrap|78||  |Resent-Message-ID: %r]]
+[? [:x-mailer]|#|[:wrap|78||  |X-Mailer: [:x-mailer]]]
+[? %j |#|[:wrap|78||  |Subject: %j]]
+[? %q |Not quarantined.|The message has been quarantined as: %q]
+
+[? %#D |#|The message WILL BE relayed to:[\n%D]
+]
+[? %#N |#|The message WAS NOT relayed to:[\n%N]
+]
+SpamAssassin report:
+[%A
+]\

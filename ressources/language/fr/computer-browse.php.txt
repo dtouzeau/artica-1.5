@@ -1,0 +1,12 @@
+<add_network>Ajouter un nouveau r&eacute;seau</add_network>
+<add_network_text>D&eacute;finir un nouveau r&eacute;seau (IP et masque) &agrave; scanner en vue de trouver des ordinateurs</add_network_text>
+<delete_all_computers_warn>Cette op&eacute;ration va supprimer tous les ordinateurs stock&eacute;s dans la base de donn&eacute;es.[br]Voulez-vous effectuer cette op&eacute;ration ?</delete_all_computers_warn>
+<edit_networks>Editer les r&eacute;seaux</edit_networks>
+<edit_networks_text>Ajouter ou supprimer des r&eacute;seaux afin d'aider &agrave; la d&eacute;tection d'ordinateurs</edit_networks_text>
+<import_artica_computers>Importer des ordinateurs</import_artica_computers>
+<import_artica_computers_explain>Cette fonctionnalit&eacute; vous permet d'importer une liste d'ordinateurs depuis un autre serveur Artica.</import_artica_computers_explain>
+<import_artica_computers_text>Importer des ordinateurs depuis d'autres serveurs Artica</import_artica_computers_text>
+<network_scanner_execute_background>Le scanner r&eacute;seau a &eacute;t&eacute; ex&eacute;cut&eacute; en arri&egrave;re-plan, la 
+liste de r&eacute;seau sera mise &agrave; jour dans quelques instants</network_scanner_execute_background>
+<scan_your_network>Analysez votre r&eacute;seau</scan_your_network>
+<scan_your_network_text>Lancement du scanner afin de rafra&icirc;chir la liste d'ordinateurs de votre r&eacute;seau</scan_your_network_text>

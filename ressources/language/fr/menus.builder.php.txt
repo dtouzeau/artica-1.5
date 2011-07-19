@@ -1,0 +1,25 @@
+<ADDRESSBOOK>Carnet d'Adresses</ADDRESSBOOK>
+<ADDRESSBOOK_TEXT>Stockez vos adresses de contacts sur ce serveur et assurer vous que vous pouvez les interroger partout</ADDRESSBOOK_TEXT>
+<AntiSpam_parameters>Vos param&egrave;tres anti-spam</AntiSpam_parameters>
+<AntiSpam_parameters_text>Personnalisez vos param&egrave;tres anti-spam selon vos besoins</AntiSpam_parameters_text>
+<calendar>Calendrier Web</calendar>
+<dotclear_user_intro>G&eacute;rer votre Blog personnel DotClear</dotclear_user_intro>
+<emailing>eMailing</emailing>
+<mailbox_rules>r&egrave;gles de boites aux lettres</mailbox_rules>
+<menu_account_text>Vos param&egrave;tres de compte</menu_account_text>
+<menu_backup_text>Rechercher des messages dans votre stockage de sauvegarde</menu_backup_text>
+<menu_calendar_text>Acc&egrave;s &agrave; votre calendrier Web de travail en groupe , utilisez le m&ecirc;me compte &agrave; l'&eacute;tablissement de la connexion</menu_calendar_text>
+<menu_fetchmail_text>Importez vos courriers d'un fournisseur d'acc&egrave;s Internet ou d'autre serveur</menu_fetchmail_text>
+<menu_messaging_text>G&eacute;rer votre serveur de courrier et tous les param&egrave;tres de s&eacute;curit&eacute;</menu_messaging_text>
+<menu_openvpn_text>Afficher les informations relatives &agrave; votre r&eacute;seau priv&eacute; virtuel</menu_openvpn_text>
+<menu_organizations_text>Utilisateurs et Organisations</menu_organizations_text>
+<menu_OUT_OF_OFFICE_text>Activer l'auto-r&eacute;ponse de la part en r&eacute;ponse aux e-mails, sur la base de votre statut (Parti, Hors du bureau, en vacances, statut personnalis&eacute;)</menu_OUT_OF_OFFICE_text>
+<menu_quarantine_text>Voir Votre anti-spam et votre quarantaine antivirus</menu_quarantine_text>
+<menu_share_text>Partagez vos dossiers locaux sur le r&eacute;seau</menu_share_text>
+<menu_sieve_text>G&eacute;rer vos r&egrave;gles de boites aux lettres</menu_sieve_text>
+<menu_statistic_text>Voir les statistiques de votre boite aux lettres</menu_statistic_text>
+<menu_system_text>G&eacute;rer votre syst&egrave;me</menu_system_text>
+<menu_webmail_text>Acc&egrave;s vers votre bo&icirc;te aux lettres</menu_webmail_text>
+<menu_web_proxy_text>G&eacute;rer votre Proxy Internet Squid</menu_web_proxy_text>
+<YOUR_ADDRESSBOOK>Remplissez vous carnet d'adresses personnel</YOUR_ADDRESSBOOK>
+<YOUR_ADDRESSBOOK_TEXT>Stockez les adresses de vos contacts sur ce serveur et soyez s&ucirc;r que vous pouvez les interroger partout</YOUR_ADDRESSBOOK_TEXT>

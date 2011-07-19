@@ -1,0 +1,65 @@
+<about>MIMEDefang est un logiciel de filtrage d'e-mails. [Br]
+Il utilise Sendmail's &quot;Milter&quot; API, certains code en C, et certains code en Perl permettent une haute performance des filtres mails. [Br]
+
+Les gens utilisent MIMEDefang pour: [ul]
+
+[li] Bloquer les virus [/ li]
+[li] Bloquer ou tagger les spams [/ li]
+[li] Supprimerune partie du courrier en HTML[/li]
+[li] Ajouter les avertissements Boilerplate pour les courrier sortant [/ li]
+[li] Supprimer ou modifier des pi&egrave;ces jointes [/li]
+[li] Remplacer les pi&egrave;ces jointes avec l'URL's [/li]
+[li] Mettre en %u0153uvre des contr&ocirc;les d'acc&egrave;s complexes. [/li]
+[/ul]</about>
+<AddWarningsInline>Ajouter Avertissements En ligne</AddWarningsInline>
+<AddWarningsInline_text>Si vous l'activez alors MIMEDefang tente sans rel&acirc;che d'ajouter des avertissements directement dans le corps du message (texte ou html), plut&ocirc;t que d'ajouter une partie &quot;WARNING.TXT&quot; MIME distincte.[br]
+Si le message n'a pas de partie texte ou HTML, dans ce cas une partie distincte MIME est alors utilis&eacute;e.</AddWarningsInline_text>
+<add_deny_ext>Ajouter une extension</add_deny_ext>
+<add_deny_ext_prompt>Donnez le nom de l'extension
+(sans point &quot;.&quot;)</add_deny_ext_prompt>
+<add_deny_ext_text>Ajouter un nouveau type de fichier interdit</add_deny_ext_text>
+<AdminAddress>Adresse de l'administrateur</AdminAddress>
+<AdminAddress_text>Nom de l'administrateur vu dans les mails envoy&eacute;s par MimeDefang</AdminAddress_text>
+<AdminName>Nom de l'administrateur</AdminName>
+<AdminName_text>Nom d'administrateur vu dans les emails envoy&eacute;s par MimeDefang</AdminName_text>
+<antispam_features>Fonctions Anti-Spam</antispam_features>
+<antivirus_features>Fonctions Antivirus</antivirus_features>
+<AUTOWHITE_LIST>Faire confiance aux messages lorsque mes utilisateurs envoient &agrave;</AUTOWHITE_LIST>
+<BACKUP_ENABLED>Activer la fonction de sauvegarde HTML</BACKUP_ENABLED>
+<backup_filters>Sauvegarde et autres filtres</backup_filters>
+<backup_rows>Nombres de mails dans le stockage de sauvegarde</backup_rows>
+<bad_exts>Mauvaises Extensions</bad_exts>
+<BIGHTML_ENABLED>fonctionnalit&eacute; de d&eacute;pouillement des grandes extensions</BIGHTML_ENABLED>
+<config>Fichier de Configuration</config>
+<CONVERT_TNEF>Convertir TNEF</CONVERT_TNEF>
+<CONVERT_TNEF_text>convertir ces aga&ccedil;ants winmail.dat en leur(s) lien(s).</CONVERT_TNEF_text>
+<DaemonAddress>Adresse du D&eacute;mon</DaemonAddress>
+<DaemonAddress_text>D&eacute;finissez l'adresse e-mail &agrave; partir de laquelle les avertissements de la quarantaine MIMEDefang et les notifications utilisateur sembleront provenir.[br]
+Un bon exemple serait mimedefang@mydomain.com.[br]
+Assurez-vous d'avoir un alias pour cette adresse si vous souhaitez que les r&eacute;ponses y parviennent.</DaemonAddress_text>
+<database_size>Quarantaine et taille de sauvegarde</database_size>
+<database_stats>Statistiques de base de donn&eacute;es</database_stats>
+<diclaimer_text>Cette fonctionnalit&eacute; vous permet d'ajouter le mod&egrave;le de texte sur chaque messages[br] Vous pouvez mettre ici le code html</diclaimer_text>
+<DISCARD_SPAM_KAS3>Rejeter les messages lorsque le niveau Kaspersky Anti-Spam est d&eacute;pass&eacute;</DISCARD_SPAM_KAS3>
+<DISCARD_SPAM_SPAMASS>Rejeter les messages lorsque le niveau spamassassin est d&eacute;pass&eacute;</DISCARD_SPAM_SPAMASS>
+<disclaimer>Avis de Non Responsabilit&eacute;</disclaimer>
+<disclaimer_servers_address>Adresses des serveurs</disclaimer_servers_address>
+<disclaimer_servers_address_text>Joindre uniquement un passe-partout, s'il y a relais &agrave; partir de adresse interne:</disclaimer_servers_address_text>
+<disclaimer_servers_q>Donnez l'adresse du serveur exp&eacute;diteur  par exemple 192.168.0 ou 192. ou 192.168.1.2</disclaimer_servers_q>
+<ENABLE_BOGOFILTER>Activer Bogofilter</ENABLE_BOGOFILTER>
+<ENABLE_CLAMAV>Activer l'antivirus ClamAV</ENABLE_CLAMAV>
+<ENABLE_DISCLAIMER>Activer le mod&egrave;le de texte</ENABLE_DISCLAIMER>
+<ENABLE_SPAMASSASSIN>Activer Spamassassin</ENABLE_SPAMASSASSIN>
+<FILTER_LOCAL_SENDER_ENABLED>Activer autoriser ou refuser vos utilisateurs de messagerie Internet</FILTER_LOCAL_SENDER_ENABLED>
+<FILTER_LOCAL_SENDER_ENABLED_TEXT>Cette fonctionnalit&eacute; vous autorise &agrave; sp&eacute;cifier si vos utilisateurs locaux sont autoris&eacute;s &agrave; &eacute;mettre des messages sur Internet.[br]Apr&egrave;s l'activation de cette fonctionnalit&eacute; vous serez autoris&eacute; &agrave; interdire/autoriser dans la section de l'utilisateur.</FILTER_LOCAL_SENDER_ENABLED_TEXT>
+<html_features>Fonctions HTML</html_features>
+<plugins>Plugins</plugins>
+<quarantines>Quarantaines</quarantines>
+<quarantine_rows>Nombre de mails en quarantaine</quarantine_rows>
+<QUARANTINE_SPAM>Quarantaine des spams lorsque les taux sont en-dessous des taux de rejets</QUARANTINE_SPAM>
+<RECIPIENT_TRANSFORM>Transformer les caract&eacute;ristiques des destinataires</RECIPIENT_TRANSFORM>
+<RECIPIENT_TRANSFORM_TEXT>Cette fonctionnalit&eacute; active:[ul][li]Les r&egrave;gles de duplication des messages des destinataires[/li][li]Les r&egrave;gles de  traduction des destinataires[/li][/ul]</RECIPIENT_TRANSFORM_TEXT>
+<SA_RCPT_EMAIL>Si du Spam est d&eacute;couvert, alors envoy&eacute; vers l'adresse email &agrave; remplir ici</SA_RCPT_EMAIL>
+<SA_RCPT_ENABLE>Activer la redirection des pourriels vers un trou noir</SA_RCPT_ENABLE>
+<spamass_score>Score Max SpamAssassin</spamass_score>
+<whitelists>Listes blanches</whitelists>

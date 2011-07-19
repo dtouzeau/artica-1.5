@@ -1,0 +1,1459 @@
+<aboveeq>est sup&eacute;rieur</aboveeq>
+<abovenot>N'est pas sup&eacute;rieur</abovenot>
+<access_events>&Eacute;v&egrave;nements d'acc&egrave;s</access_events>
+<acls_and_quotas>Acls &amp; quotas</acls_and_quotas>
+<acls_folders_rebuild_text>Ceci va reconstruire toutes les permissions.
+Effectuer l'op&eacute;ration ?</acls_folders_rebuild_text>
+<ActHasMaster>Agir en tant que ma&icirc;tre</ActHasMaster>
+<activate_openvpn_connection>Activer la connexion VPN et se reconnecter au serveur VPN</activate_openvpn_connection>
+<activedirectory_ipaddr>Adresse IP de l'AD (optionnel)</activedirectory_ipaddr>
+<AddDefaultCharset_explain>Cette option sp&eacute;cifie le jeux de caract&egrave;res par d&eacute;faut &agrave; appliquer en &eacute;crasant la r&eacute;ponse du serveur via un &eacute;l&eacute;ment META.
+[br]la valeur Off d&eacute;sactive et On passe en iso-8859-1 pour utiliser d'autres valeurs, consultez le site de IANA &agrave; cette adresse http://www.iana.org/assignments/character-sets</AddDefaultCharset_explain>
+<AddInArticaLogonFrontPage>Mettre des liens dans la page de connexion</AddInArticaLogonFrontPage>
+<AddInArticaLogonFrontPage_text>Si activ&eacute;, des liens vont &ecirc;tre ajout&eacute;s sur la page d'enregistrement de session de l'interface principale</AddInArticaLogonFrontPage_text>
+<additional_addresses>Adresses additionnelles</additional_addresses>
+<addrbl_server_text>Ajouter des serveurs de listes noires &agrave; questionner</addrbl_server_text>
+<add_a_new_group_in_this_org>Ajouter un nouveau groupe dans cette organisation</add_a_new_group_in_this_org>
+<add_a_subdomain>Ajouter un sous-domaine</add_a_subdomain>
+<add_default_www>Ajouter un site web par d&eacute;faut</add_default_www>
+<add_forwarder_text>Ajouter un nouveau serveur de Noms (DNS) &agrave; questionner pour l'ensemble de vos cartes r&eacute;seaux.</add_forwarder_text>
+<add_iscsi_disk>Ajouter un nouveau disque iSCSI</add_iscsi_disk>
+<add_iscsi_explain>Ce formulaire va vous aider &agrave; ajouter un nouveau disque iSCSI sur ce syst&egrave;me.[br]
+Vous devez indiquer l'adresse r&eacute;seau du serveur qui est cens&eacute; h&eacute;berger vos disques iSCSI.[br]
+Si des disques sont disponibles, vous serez alors amen&eacute; &agrave; les s&eacute;lectionner.</add_iscsi_explain>
+<add_keywords>Ajouter des mots clefs</add_keywords>
+<add_keywords_smtp_check>Ajouter des mots clefs dans la base afin de les rechercher dans les messages.</add_keywords_smtp_check>
+<ADD_LVM_DISK>Ajouter un nouveau disque LVM</ADD_LVM_DISK>
+<ADD_LVM_DISK_TEXT>Convertir un disque physique vers un disque LVM.[br]Toutes les donn&eacute;es seront &eacute;cras&eacute;es et d&eacute;truites.</ADD_LVM_DISK_TEXT>
+<add_members>Ajouter des membres</add_members>
+<add_mount_point>Cr&eacute;er une connexion</add_mount_point>
+<add_mount_point_text>Cr&eacute;er une connexion &agrave; un disque externe ou &agrave; un r&eacute;pertoire r&eacute;seau.</add_mount_point_text>
+<add_multiple_keywords_explain>Indiquez ici la liste des mots clefs que vous d&eacute;sirez v&eacute;rifier (s&eacute;par&eacute;s par un retour chariot).[br]
+Indiquez aussi quelle section des messages vous voulez effectuer la recherche.[br]&quot;Tous&quot; pour tout le message, &quot;sujet&quot; pour uniquement le sujet...[br]
+Indiquez aussi le score &agrave; rajouter lorsque le mot clef est trouv&eacute; dans le message.[br]
+Plus le score est &eacute;lev&eacute;, plus le message &agrave; des chances d'&ecirc;tre cat&eacute;goris&eacute; en tant que spam.</add_multiple_keywords_explain>
+<add_multiple_members_explain>Indiquez ici les membres (adresses de messagerie) que vous d&eacute;sirez ajouter.[br]
+Chaque membre devra &ecirc;tre s&eacute;par&eacute; par un retour chariot.</add_multiple_members_explain>
+<add_multiple_rbl_explain>Ajoutez ici vos serveurs RBL, s&eacute;par&eacute;s par un retour chariot,que vous voulez v&eacute;rifier</add_multiple_rbl_explain>
+<add_mysql_user_text>Ajouter un nouvel administrateur mysql pouvant se connecter au serveur</add_mysql_user_text>
+<add_new_disk>Ajouter un nouveau disque</add_new_disk>
+<add_new_route_text>Ajouter une nouvelle route TCP</add_new_route_text>
+<add_official_domains_popup_text>Ajoutez ici votre nom de domaine (ex domain.tld).
+Vous pouvez ajouter des entr&eacute;es multiples en les s&eacute;parant par une virgule:
+exemple:mydomain.com,mydomain.net)</add_official_domains_popup_text>
+<add_smb_virtual_server>Ajouter un nouveau serveur virtuel Samba qui sera &eacute;mul&eacute; par l'instance principale de Samba.</add_smb_virtual_server>
+<add_storage>Ajouter un nouveau stockage</add_storage>
+<add_subdomain_explain>Dans ce formulaire, vous pouvez ajouter un sous-domaine des domaines list&eacute;s.[br]
+Choisissez le domaine principale et indiquez le sous-domaine que vous voulez cr&eacute;er</add_subdomain_explain>
+<add_vip_members_text>Ajouter des nouveau membres dans le processus VIPTrack</add_vip_members_text>
+<add_virtual_server>Ajouter un nouveau serveur virtuel</add_virtual_server>
+<add_websites>Ajouter des sites</add_websites>
+<affect_vg_to_service>Affecter ce groupe &agrave; un service (FreeWebs ou serveurs virtuels)</affect_vg_to_service>
+<affect_vg_to_service_explain>Cette option indique que ce groupe LVM sera utilis&eacute; afin de construire automatiquement des contenants pour un service particulier.[br]Par exemple afin de d&eacute;finir des quotas par taille sur les espaces FreeWebs.[br]Les r&eacute;pertoires Web seront alors stock&eacute;s dans un disque virtuel d&eacute;di&eacute;.</affect_vg_to_service_explain>
+<Airflow_Temperature_Cel>Temp&eacute;rature de l%u2019air (WDC)</Airflow_Temperature_Cel>
+<Airflow_Temperature_Cel_text>Temp&eacute;rature de l%u2019air sur les disques Western Digital (la m&ecirc;me que la temp&eacute;rature , mais la valeur de l%u2019attribut est inf&eacute;rieure de 50).</Airflow_Temperature_Cel_text>
+<aliases_domains_explain>C'est la liste des domaines virtuels.[br]Tous les domaines list&eacute;s ci-dessous sont fictifs et pointent tous sur le domaine principal.[br]Le serveur va transformer l'adresse de destination vers la vrai adresse utilis&eacute;e.[br]
+Dans ce cas,  jhon@alias.domain.tld sera transmis vers jhon@domain.tld.</aliases_domains_explain>
+<AllowAllNetworks>Autoriser tous les r&eacute;seaux</AllowAllNetworks>
+<AllowCONNECT>Ports m&eacute;thode CONNECT</AllowCONNECT>
+<AllowCONNECT_explain>permet de sp&eacute;cifier une liste de num&eacute;ros de ports auxquels la m&eacute;thode de mandataire CONNECT pourra se connecter. Les navigateurs d'aujourd'hui utilisent cette m&eacute;thode dans le cas o&ugrave; une connexion https est requise et o&ugrave; le tunneling mandataire sur HTTP est en service.[br]
+S&eacute;par&eacute;s les num&eacute;ros de ports par un espace: 465 665 9000</AllowCONNECT_explain>
+<allowed>Autoris&eacute;</allowed>
+<allowed_catgories_text>Choisissez les cat&eacute;gories que vous d&eacute;sirez autoriser dans cette r&egrave;gle.</allowed_catgories_text>
+<allowftp_access>Autoriser l'acc&egrave;s FTP</allowftp_access>
+<AllowInternetUsersCreateOrg>Enregistrement Publique des organisations</AllowInternetUsersCreateOrg>
+<AllowInternetUsersCreateOrg_text>Si activ&eacute;, les Internautes seront en mesure de cr&eacute;er leur propre organisation.[br]Un formulaire d'enregistrement sera pr&eacute;vu &agrave; cet effet pour les aider &agrave; cr&eacute;er leur organisation.</AllowInternetUsersCreateOrg_text>
+<AllowInternetUsersCreateOrg_welcome_explain>C'est le message d'accueil qui peut &ecirc;tre ajout&eacute; sur la page du formulaire d'enregistrement</AllowInternetUsersCreateOrg_welcome_explain>
+<all_directories>Tous les dossiers</all_directories>
+<all_files>Tous les fichiers</all_files>
+<all_informations>Toutes les informations</all_informations>
+<all_messages>Tous les messages</all_messages>
+<already_used>D&eacute;j&agrave; utilis&eacute;</already_used>
+<AmandaComprateExplain>Doit &ecirc;tre 1 ou 2 nombres, optionnellement s&eacute;par&eacute;s par une virgule.[br]
+Le premier nombre et le taux compression complet alors que le deuxi&egrave;me est le taux d'incr&eacute;mentation.[br]Si le deuxi&egrave;me nombre n'est pas indiqu&eacute;, il sera alors calcul&eacute; comme &eacute;gale au premier.[br]</AmandaComprateExplain>
+<AmandaCompress>Compression des donn&eacute;es sauvegard&eacute;es</AmandaCompress>
+<AmandaCompressExplain>&quot;none&quot; - ne compresse pas le d&eacute;p&ocirc;t.[br]
+&quot;client best&quot; - compression effectu&eacute;e par le client en utilisant le meilleur taux (le plus long).[br]
+&quot;client fast&quot; - compression effectu&eacute;e par le client en utilisant un faible taux (le plus rapide).[br]
+&quot;client custom&quot; - compression sur le client utilisant votre propre programme.[br]
+&quot;server best&quot; - Compression effectu&eacute;e sur le serveur et utilisant le meilleur taux (le plus long).[br]
+&quot;server fast&quot; - Compression effectu&eacute;e sur le serveur en utilisant un faible taux (le plus rapide).[br]
+&quot;server custom&quot; - compression sur le serveur utilisant votre propre programme.[br]</AmandaCompressExplain>
+<Amandadumptypes>Types de d&eacute;p&ocirc;ts</Amandadumptypes>
+<Amandadumptypes_explain>Les types de d&eacute;p&ocirc;ts permettent de d&eacute;finir le comportement des t&acirc;ches de sauvegarde pour les donn&eacute;es sources.</Amandadumptypes_explain>
+<AmandaestimateExplain>Indique comment Amanda va effectuer son estimation.[br]
+&quot;client&quot; - Utilise le m&ecirc;me programme que celui de la sauvagarde, c'est la meilleur approche mais elle prend tu temps.[br]
+&quot;calcsize&quot; - Utilise un programme plus rapide mais le resultat est moins pr&eacute;cis.[br]
+&quot;server&quot; - Utiliser seulement un calcul de statistiques des sauvegardes pr&eacute;c&eacute;dentes. Cela prends quelques secondes mais le r&eacute;sultat peut &ecirc;tre moins pr&eacute;cis si les sources changent r&eacute;guli&egrave;rement.</AmandaestimateExplain>
+<AmandaindexExplain>Laisser un index des fichiers sauvegard&eacute;s</AmandaindexExplain>
+<AmandamaxdumpsExplain>Nombre maximum des t&acirc;ches ex&eacute;cut&eacute;e sur un client</AmandamaxdumpsExplain>
+<amandanetusage>Bande passante maximale</amandanetusage>
+<AmandapriorityExplain>Niveau de priorit&eacute; de l'extraction.[br]
+C'est utilis&eacute; surtout lorsque Amanda n'a pas de bandes pour &eacute;crire &agrave; cause d'erreurs.[br]
+Dans ce mode d&eacute;grad&eacute;,comme beaucoup d' incr&eacute;mentales tiendront sur le disque, l'augmentation de la priorit&eacute;,
+assure que les disques prioritaires sont moins d&eacute;vers&eacute;s</AmandapriorityExplain>
+<AmandaprogramExplain>Indiquer le syst&egrave;me d'extraction &agrave; utiliser</AmandaprogramExplain>
+<AmandaStrategy>Strat&eacute;gie d'extraction</AmandaStrategy>
+<AmandaStrategyExplain>&quot;standard&quot; - le niveau standard.[br]
+&quot;nofull&quot; - Faire un niveau 1 &agrave; chaque fois. Cela peut &ecirc;tre utilis&eacute; pour un syst&egrave;me de fichier petit qui ne change pas beaucoup.Amanda sauvegarde ensuite uniquement les modifications.[br]
+&quot;noinc&quot; - Faire un niveau 0 &agrave; chaque fois.[br]
+&quot;skip&quot; - laisser passer toutes les extractions. Utile pour partager une liste de n%u0153ud unique dans plusieurs configurations.[br]
+&quot;incronly&quot; - Faire seulement des extractions incr&eacute;mentales. similaire &agrave; 'nofull', mais augmente le niveau d'extraction.Les extractions compl&egrave;tes sont effectu&eacute;e uniquement sur demande manuelles</AmandaStrategyExplain>
+<AmavisNoInternetTests>D&eacute;sactiver tout test utilisant des acc&egrave;s Internet</AmavisNoInternetTests>
+<amavis_bypass_servers_explain>Cette fonctionnalit&eacute; est utilis&eacute;e uniquement si votre serveur utilise le mode apr&egrave;s-queue.[br]
+Lorsque vous ajoutez une adresse IP, les &eacute;metteurs ne passeront pas &agrave; travers le filtre de contenu.[br]
+Par exemple si vous d&eacute;sirez compl&egrave;tement laisser passer les messages sortants provenant de vos serveurs de messagerie internes.</amavis_bypass_servers_explain>
+<amavis_max_server_explain>Ce param&egrave;tre est crucial.[br]Trop petit, la machine risque d'&ecirc;tre sous-utilis&eacute;e et il y a un risque que les processus en cours de fonctionnement utilisent beaucoup de CPU par une surcharge de leur travail.[br]
+Trop grand et vous allez sur-consommer de la m&eacute;moire et du swap.[br]
+Cela d&eacute;pend en faites de la puissance de vos CPUs, de la m&eacute;moire que votre serveur dispose et du nombre de messages trait&eacute;s par heure.[br]Sur des &eacute;quipements modernes en bi-processeur ou quadri-processeur avec assez de m&eacute;moire, une valeur entre 15 &agrave; 30 est raisonnable.</amavis_max_server_explain>
+<amavis_watchdog_explain>Cette fonctionnalit&eacute; permet de s'assurer que certains sous-processus du filtre de contenu ne prennent pas la totalit&eacute; de la puissance CPU.[br]
+Si un sous-processus prend X% du CPU et que sont temps d'ex&eacute;cution d&eacute;passe la dur&eacute;e de vie, il sera alors tu&eacute; par Artica et une notification vous sera envoy&eacute;e.</amavis_watchdog_explain>
+<analyze>Analyser</analyze>
+<analyzed>Analys&eacute;</analyzed>
+<antispam_filters>Filtres anti-spam</antispam_filters>
+<ApacheKeepAlive>D&eacute;finit si votre serveur autorisera des connexions persistantes (c'est-&agrave;-dire plusieurs demandes par connexion). Cette option peut &ecirc;tre utilis&eacute;e pour emp&ecirc;cher tout client de consommer trop de ressources du serveur.[br]
+Par d&eacute;faut, la valeur est d&eacute;finie sur Off, ce qui signifie que votre serveur n'autorise pas les connexions persistantes.[br] Vous pouvez la d&eacute;finir sur on, ce qui active les connexions persistantes. Dans la plupart des cas, il est pr&eacute;f&eacute;rable de laisser KeepAlive sur Off car Apache ne peut avoir qu'un nombre limit&eacute; de processus fils et ces processus vagabonderaient sans rien faire dans l'attente d'une connexion future possible du m&ecirc;me client.[br] Si vous activez cette option, vous devriez tenir la valeur de Keep Alive Timeout basse et contr&ocirc;ler votre fichier d'erreur du serveur qui vous indique s'il vous manque des processus fils pour traiter les requ&ecirc;tes.</ApacheKeepAlive>
+<ApacheKeepAliveTimeout>The number of seconds Apache will wait for a subsequent request before closing the connection.[br]
+Once a request has been received, the timeout value specified by the Timeout directive applies.[br]
+Setting to a high value may cause performance problems in heavily loaded servers.[br]
+The higher the timeout, the more server processes will be kept occupied waiting on connections with idle clients
+</ApacheKeepAliveTimeout>
+<ApacheMaxClients>D&eacute;finit une limite au nombre total de processus serveur (c'est-&agrave;-dire le nombre de clients connect&eacute;s simultan&eacute;ment) pouvant s'ex&eacute;cuter en m&ecirc;me temps.[br]Conservez une valeur &eacute;lev&eacute;e  (par d&eacute;faut, la valeur du serveur est r&eacute;gl&eacute;e sur 150) car personne d'autre ne sera autoris&eacute; &agrave; se connecter une fois ce nombre atteint.[br] Vous ne pouvez pas d&eacute;finir une valeur sup&eacute;rieure &agrave; 256 sans recompiler Apache.[br] Sa principale raison d'&ecirc;tre est d'&eacute;viter qu'un serveur Web surcharg&eacute; ne perturbe votre syst&egrave;me d'exploitation.</ApacheMaxClients>
+<ApacheMaxKeepAliveRequests>Cette directive d&eacute;finit le nombre maximum de demandes autoris&eacute;es par connexion persistante. Le groupe Apache recommande d'utiliser un param&eacute;trage &eacute;lev&eacute;, qui am&eacute;liorera les performances de votre serveur. Par d&eacute;faut, elle est param&eacute;tr&eacute;e sur 100, ce qui convient dans la plupart des cas.</ApacheMaxKeepAliveRequests>
+<ApacheMaxRequestsPerChild>D&eacute;finit le nombre total de demandes que chaque processus serveur fils sert avant de dispara&icirc;tre.[br] La principale raison justifiant de d&eacute;finir cette valeur consiste &agrave; &eacute;viter des pertes de m&eacute;moire induites par les processus longs. La valeur par d&eacute;faut pour votre serveur est 1000.</ApacheMaxRequestsPerChild>
+<ApacheMinSpareServers>Le serveur Web Apache s'adapte de fa&ccedil;on dynamique &agrave; la charge re&ccedil;ue en maintenant un nombre de processus serveur de rechange appropri&eacute; en fonction du trafic.[br]Le serveur v&eacute;rifie le nombre de processus attendant une requ&ecirc;te et en supprime s'ils sont plus nombreux que La valeur de &quot;Processus maximum en m&eacute;moire&quot; ou en cr&eacute;e s'ils sont moins nombreux que &quot;Processus minimum en m&eacute;moire&quot;.
+[br]
+La valeur  &quot;Processus minimum en m&eacute;moire&quot; par d&eacute;faut de votre serveur est 5 ; la valeur &quot;Processus maximum en m&eacute;moire&quot; par d&eacute;faut de votre serveur est 20. [br]Ces param&egrave;tres par d&eacute;faut devraient &ecirc;tre appropri&eacute;s dans presque toutes les situations. [br]Ne d&eacute;finissez pas une valeur tr&egrave;s &eacute;lev&eacute;e pour &quot;Processus minimum en m&eacute;moire&quot; car cela cr&eacute;era une charge de traitement importante sur le serveur, m&ecirc;me si le trafic est faible.</ApacheMinSpareServers>
+<ApacheServerSignature>Activer les infos en pied de page</ApacheServerSignature>
+<ApacheServerTokens>Ent&ecirc;te de r&eacute;ponse du serveur</ApacheServerTokens>
+<ApacheStartServers>d&eacute;finit le nombre de processus cr&eacute;&eacute;s au d&eacute;marrage.[br]Du fait que le serveur Web supprime et cr&eacute;e des processus serveur, de fa&ccedil;on dynamique en fonction de la charge du trafic, il est inutile de modifier ce param&egrave;tre.[br]
+Votre serveur Web est r&eacute;gl&eacute; pour lancer huit processus serveur au d&eacute;marrage.</ApacheStartServers>
+<ApacheTimeout>en secondes, le temps pendant lequel votre serveur attend des r&eacute;ceptions et des &eacute;missions en cours de communication.[br] Plus sp&eacute;cifiquement, il d&eacute;finit le temps pendant lequel le serveur attend de recevoir une demande GET, le temps pendant lequel il attend de recevoir des paquets TCP sur une requ&ecirc;te POST ou PUT et le temps pendant lequel il attend entre des ACK r&eacute;pondant aux paquets TCP. la valeur est d&eacute;finie sur 300 secondes, ce qui convient dans la plupart des cas</ApacheTimeout>
+<apache_auth_ip_explain>Quels h&ocirc;tes peuvent acc&eacute;der aux serveurs ?
+Un nom fqdn partiel :apache.org
+Une adresse IP compl&egrave;te :10.1.2.3
+Une adresse IP partielle: 10.1
+Un r&eacute;seau/masque : 10.1.0.0/255.255.0.0
+Une notation CDIR: 10.1.0.0/16</apache_auth_ip_explain>
+<apache_mod_cache_explain>Cette section impl&eacute;mente un syst&egrave;me de cache disque afin d'acc&eacute;l&eacute;rer les processus de votre serveur web.</apache_mod_cache_explain>
+<apply_config>Appliquer les param&egrave;tres</apply_config>
+<apply_config_postfix>Arr&ecirc;te le service principal de Postfix, compile l'ensemble des param&egrave;tres et le d&eacute;marre afin de les appliquer en production</apply_config_postfix>
+<apply_network_configuration>Appliquer les param&egrave;tres R&eacute;seau</apply_network_configuration>
+<apply_network_configuration_warn>Les param&egrave;tres r&eacute;seau votre &ecirc;tre reconstruits en t&acirc;che de fond.[br]Au cours de cette op&eacute;ration, le serveur sera inaccessible.[br]
+Patientez quelques secondes et rafra&icirc;chissez cette page.</apply_network_configuration_warn>
+<APP_AD_CONNECT>Lier &agrave; Active Directory</APP_AD_CONNECT>
+<APP_AD_CONNECT_TEXT>Connecter votre serveur Artica en tant que membre d'un domaine Microsoft Active Directory</APP_AD_CONNECT_TEXT>
+<APP_AMANDA>sauvegarde Amanda</APP_AMANDA>
+<APP_ARTICA_ADM>Console d'administration Artica</APP_ARTICA_ADM>
+<APP_ARTICA_AUTH_TAIL>Surveillance des autentifications</APP_ARTICA_AUTH_TAIL>
+<APP_DNSMASQ_TEXT>Am&eacute;liorer vos performances r&eacute;seau en utilisant un cache DNS et re-directeur avec DNSMasq</APP_DNSMASQ_TEXT>
+<APP_EYEOS>eyeOS Le Bureau Web</APP_EYEOS>
+<APP_EYEOS_TEXT>eyeOS est Bureau Web en technologie cloud &agrave; travers un navigateur.Afin de fournir un outil de collaboration et de communication entre utilisateurs.</APP_EYEOS_TEXT>
+<APP_GREENSQL>Pare-feu GreenSQL</APP_GREENSQL>
+<APP_GREENSQL_ABOUT>le Pare-feu GreenSQL est un logiciel libre d&eacute;velopp&eacute; afin de prot&eacute;ger les base de donn&eacute;es des attaques par injections SQL.[br]Il travail comme un proxy au serveur mySQL.[br]Sa logiques est bas&eacute;e sur l'&eacute;valuation des requ&ecirc;tes SQL en utilisant une matrice de taux de risques  afin de bloquer des commandes SQL administratives comme (DROP, CREATE, etc...).</APP_GREENSQL_ABOUT>
+<APP_GREYHOLE>Sauvegarde (greyhole)</APP_GREYHOLE>
+<APP_GREYHOLE_TEXT>Greyhole est une application qui utilise Samba afin de cr&eacute;er un pool de stockage sur toutes les ressources disponibles quelque soit leur taille et si les ressources sont connect&eacute;es ou pas.[br]Elle vous permet de cr&eacute;er des copies redondantes des fichiers stock&eacute;s sur les partages. Ceci afin de pr&eacute;venir de la perte de donn&eacute;es...</APP_GREYHOLE_TEXT>
+<APP_IETD>Service iSCSI</APP_IETD>
+<APP_IPTACCOUNT>Statistiques TCP/IP</APP_IPTACCOUNT>
+<APP_IPTACOUNT_EXPLAIN>les Statistiques TCP/IP vous permet d'obtenir des informations sur le trafique re&ccedil;u, travers&eacute; ou achemin&eacute; en fonction de simples r&egrave;gles .</APP_IPTACOUNT_EXPLAIN>
+<APP_LXC>Conteneurs LXC</APP_LXC>
+<APP_LXC_TEXT>Cr&eacute;ez et administrez des serveurs virtuels gr&acirc;ce &agrave; l'utilisation de technologie Linux Containers</APP_LXC_TEXT>
+<APP_PDNS_INSTANCE>PowerDNS (Instance)</APP_PDNS_INSTANCE>
+<APP_POSTFWD2>R&egrave;gles de d&eacute;l&eacute;gation</APP_POSTFWD2>
+<APP_POSTFWD2_TEXT>Policy Delegation est une sorte de pare-feu qui vous autorise &agrave; d&eacute;finir des r&egrave;gles permettant de limiter les flux de messagerie</APP_POSTFWD2_TEXT>
+<APP_POWERADMIN>PowerAdmin</APP_POWERADMIN>
+<APP_POWERADMIN_NO_MCRYPT_ENCRYPT>Il semble que le module &quot;mcrypt&quot; ne soit pas correctement charg&eacute;/install&eacute;. Essayez de red&eacute;marrer l'ordinateur ou bien contactez le support Artica.</APP_POWERADMIN_NO_MCRYPT_ENCRYPT>
+<APP_POWERADMIN_TEXT>PowerAdmin est une console Web d'administration pour le serveur DNS PowerDNS avec comme base de donn&eacute;es le moteur MySQL.[br]Cliquez ici pour ouvrir la console web.</APP_POWERADMIN_TEXT>
+<APP_SNORT>Pr&eacute;vention d'intrusion r&eacute;seau (Snort)</APP_SNORT>
+<APP_SNORT_ABOUT>Snort est un logiciel libre de pr&eacute;vention d'intrusions et de syst&egrave;me de d&eacute;tection  (IDS/IPS) d&eacute;velopp&eacute; par SourceFire.[br]
+En combinant les avantages des signatures, du protocole et des inspection d'anomalies, Snort un des logiciels les plus install&eacute;s dans le mode comme syst&egrave;me IDS/IPS.</APP_SNORT_ABOUT>
+<APP_ZARAFA_INDEXER>Indexation Zarafa</APP_ZARAFA_INDEXER>
+<APP_Z_PUSH>Z-Push</APP_Z_PUSH>
+<APP_Z_PUSH_TEXT>Le logiciel Z-Push autorise les utilisateurs de t&eacute;l&eacute;phones mobiles intelligents &agrave; synchroniser leurs messages, contacts, calendriers et t&acirc;ches avec un serveur Zarafa via une connexion UMTS, GPRS, Wifi ou GSM</APP_Z_PUSH_TEXT>
+<ArticaSMTPStatsMaxFiles>Nombre de fichiers MAX</ArticaSMTPStatsMaxFiles>
+<ArticaSMTPStatsMaxFiles_explain>C'est le nombre maximal de fichiers trait&eacute;s &agrave; chaque ex&eacute;cution de l'injecteur.[br]
+Par d&eacute;faut, lorsque l'injecteur traite plus de 2400 fichiers (mails) il se tue et attend la prochaine ex&eacute;cution.</ArticaSMTPStatsMaxFiles_explain>
+<ArticaSMTPStatsTimeFrame>Lancer le processus chaque</ArticaSMTPStatsTimeFrame>
+<ArticaSMTPStatsTimeFrame_explain>C'est l'intervalle entre chaque ex&eacute;cution de l'injecteur.[br]
+Par d&eacute;faut, l'injecteur est ex&eacute;cut&eacute; toutes les 2 minutes.[br]
+Avec une attente de boucle de 50000 microsecondes, l'injecteur peut alors suivre le relais SMTP sur une cadence de 20 messages par seconde</ArticaSMTPStatsTimeFrame_explain>
+<ArticaStatusUsleep>Latence de boucle en millisecondes</ArticaStatusUsleep>
+<ArticaStatusUsleep_explain>exec.maillog.php est un service qui re&ccedil;oit en temps r&eacute;el les &eacute;v&egrave;nements SMTP. Chaque &eacute;v&egrave;nement sera traduit par un fichier de statistiques dans une file d'attente.[br]
+Le processus d'injection r (exec.postfix-logger.php)  est ordonnanc&eacute; afin de r&eacute;cup&eacute;rer ces fichiers et de les traduire en requ&ecirc;te Mysql.[br]
+Ce param&egrave;tre force l'injecteur &agrave; &quot;attendre&quot; &agrave; chaque traitement de fichier r&eacute;cup&eacute;r&eacute; dans la file d'attente afin de lib&eacute;rer le processeur et de l'emp&ecirc;cher de passer en 100% CPU pendant le traitement des fichiers.[br]La valeur par d&eacute;faut est de 50000 microsecondes (0.05 seconde) soit &agrave; peut pr&egrave;s 20 messages par seconde.[br]
+Augmenter cette valeur va r&eacute;duire la charge du processeur mais augmenter le temps de nettoyage de la file d'attente des statistiques.</ArticaStatusUsleep_explain>
+<ARTICA_ADM>Console d'administration Artica</ARTICA_ADM>
+<ARTICA_ADM_TEXT>C'est l'interface principale d'Artica sur laquelle vous &ecirc;tes en train de naviguer.</ARTICA_ADM_TEXT>
+<ARTICA_MINIADM>Interface Administrateurs/Utilisateurs</ARTICA_MINIADM>
+<ARTICA_MINIADM_TEXT>Interface Web pour les utilisateurs et les Administrateurs des organisations</ARTICA_MINIADM_TEXT>
+<ARTICA_REGISTER_OU>Formulaire d'enregistrement d'organisation</ARTICA_REGISTER_OU>
+<ARTICA_REGISTER_OU_TEXT>C'est un formulaire d'enregistrement qui autorise les clients &agrave; s'enregistrer automatiquement afin de cr&eacute;er une nouvelle organisation.</ARTICA_REGISTER_OU_TEXT>
+<ARTICA_SMTP_STATS_EXPLAIN>Le moteur de statistiques Artica est une fonctionnalit&eacute; qui fournit des graphiques, historiques et analyses sur le flux SMTP Postfix.[br]Des fonctionnalit&eacute;s en d&eacute;pendent comme VIPTrack.[br]
+Vous pouvez d&eacute;sactiver ou activer cette fonctionnalit&eacute; en fonction de vos besoins.[br]
+En effet, si vous utilisez Artica comme un serveur de messagerie uniquement pour l'acheminement des messages vers l'ext&eacute;rieur, il se peut que les statistiques ne soient pas votre priorit&eacute;.[br]</ARTICA_SMTP_STATS_EXPLAIN>
+<ARTICA_SMTP_STATS_TEXT>Param&egrave;tres du moteur de statistiques SMTP Artica.</ARTICA_SMTP_STATS_TEXT>
+<ARTICA_STATS>G&eacute;n&eacute;rateur de statistiques Artica</ARTICA_STATS>
+<AsComplexPassword>Doit utiliser un mot de passe complexe</AsComplexPassword>
+<AsWebMaster>Peut g&eacute;rer des services Internet comme des sites Web et applications Web</AsWebMaster>
+<attachments_compression_level>Niveau de compression</attachments_compression_level>
+<attachments_path>Chemin des pi&egrave;ces jointes</attachments_path>
+<attribute>Attribut</attribute>
+<at_least_one_digit_letter>Au minimum un chiffre</at_least_one_digit_letter>
+<at_least_one_lower_case_letter>Au minimum une lettre minuscule</at_least_one_lower_case_letter>
+<at_least_one_special_letter>Au minimum une lettre sp&eacute;ciale</at_least_one_special_letter>
+<at_least_one_upper_case_letter>Au minimum une lettre majuscule</at_least_one_upper_case_letter>
+<authentication_banner>Banni&egrave;re d'authentification</authentication_banner>
+<auth_mechanism>M&eacute;canismes d'authentification</auth_mechanism>
+<autofs_about>Automount ou AutoFS est une solution afin de connecter des r&eacute;pertoires distants automatiquement.[br]
+L'avantage d'utiliser ce service est que les connections s'effectuent uniquement &agrave; la demande.[br]
+Une d&eacute;connexion automatique est effectu&eacute;e au bout d'un certain temps.[br]
+En effet, les liaisons NFS/Partages Windows utilisent de la bande passante tout au long de la connexion.[br]Cette m&eacute;thode permet d'utiliser uniquement une connexion distante qui si il y en a le besoin.</autofs_about>
+<autofs_ask_dir>Indiquez ici le nom du r&eacute;pertoire qui sera le point de montage.
+Ce r&eacute;pertoire sera localis&eacute; dans /automounts</autofs_ask_dir>
+<autofs_ask_dir>Indiquez ici le nom du r&eacute;pertoire qui sera le point de montage.
+Ce r&eacute;pertoire sera localis&eacute; dans /automounts</autofs_ask_dir>
+<automatic_publicip_resolv>Ne pas R&eacute;soudre l'adresse IP publique automatiquement</automatic_publicip_resolv>
+<automount_ressource>Montages automatiques</automount_ressource>
+<automount_this_disk>Auto-connecter ce disque et le placer en production dans le r&eacute;pertoire /automounts</automount_this_disk>
+<autostart>D&eacute;marrage automatique</autostart>
+<available_modules>Modules disponibles</available_modules>
+<ban>Bannir</ban>
+<banned_domains>Domaines bannis</banned_domains>
+<banned_host>H&ocirc;te banni</banned_host>
+<bann_smtp_servers>Bannir des IPs SMTP</bann_smtp_servers>
+<bann_smtp_servers_explain>Ce formulaire va vous aider &agrave; aje]outer des adresses directement dans les r&egrave;gles pare-feux.[br]
+Les adresses seront bannis uniquement sur le port SMTP depuis Internet.[br]
+Placez dans le champs ci-dessous la liste des adresses s&eacute;par&eacute;es par un retour chariot.</bann_smtp_servers_explain>
+<bann_smtp_servers_text>Ajouter des adresses IP SMTP dans la base de Instant Iptables.</bann_smtp_servers_text>
+<ban_server_iptables>Cr&eacute;er une r&egrave;gle de pare-feu &agrave; travers PostfixInstant IpTables afin d'interdire toute connexion SMTP provenant de cet h&ocirc;te.</ban_server_iptables>
+<ban_this_destination>Bannir cette destination</ban_this_destination>
+<ban_this_server>Bannir cet h&ocirc;te</ban_this_server>
+<ban_to_domain_ask>Interdire les utilisateurs &agrave; envoyer vers ce domaine ?</ban_to_domain_ask>
+<basic>Basique</basic>
+<bind-address>Adresse IP de crochetage</bind-address>
+<blacklist_global_add_explain>Mettez ici des domaines de messagerie ou des adresses (s&eacute;par&eacute;es par des retours chariots) que vous voulez interdire.[br]
+Vous pouvez indiquer les valeurs suivantes :[br]
+[b]*@domain.tld[/b] afin de bloquer tout le domaine domain.tld.[br]
+[b]domain.tld[/b] afin de bloquer tout le domaine domain.tld.[br]
+[b]@domain.tld[/b]afin de bloquer tout le domaine domain.tld.[br]
+[b]user@domain.tld[/b] afin de bloquer l'&eacute;metteur user@domain.tld.[br]</blacklist_global_add_explain>
+<blacklist_global_explain>Cette section vous permet de bloquer des domaines ou des adresses que vous listez ici.[br]Cette section est plus restrictive que les autres fonctionnalit&eacute;s qui utilisent plut&ocirc;t les filtres additionnels.[br]
+Les messages dont les &eacute;metteurs correspondent aux r&egrave;gles seront directement rejet&eacute;s sans analyser d'autres contenus.</blacklist_global_explain>
+<blocked_ips>IPs rejet&eacute;es</blocked_ips>
+<blocked_websites>Sites interdits</blocked_websites>
+<Blocking_period>P&eacute;riode d'interdiction</Blocking_period>
+<blockio>I/O bloc</blockio>
+<block_countries>Bloquer des pays</block_countries>
+<block_keywords>Blocage par mots clefs</block_keywords>
+<block_keywords_explain>Cette section vous permet d'ajouter des mots clefs &agrave; v&eacute;rfier dans les messages par le moteur anti-spam.[br]
+Les mots clefs vont &ecirc;tre v&eacute;rifi&eacute;s dans les messages entrants et sur des ent&ecirc;tes sp&eacute;cifiques.</block_keywords_explain>
+<block_keywords_text>BLoquer et augmenter le taux de SPAM des messages entrants qui correspondent &agrave; des mots sp&eacute;cifiques</block_keywords_text>
+<block_level>Niveau de blocage</block_level>
+<bridge_setup>Cr&eacute;ation d'un pont r&eacute;seau</bridge_setup>
+<bridge_setup_lxc_explain>Cette op&eacute;ration &agrave; pour but de cr&eacute;er un pont r&eacute;seau accroch&eacute; &agrave; une carte r&eacute;seau physique afin d'ajouter des Interfaces r&eacute;seau.[br]
+De cette mani&egrave;re, vous serez en mesure de cr&eacute;er des interfaces de fa&ccedil;on illimit&eacute; et de les raccrocher &agrave; vos serveurs virtuels.[br]
+[b]Si ce serveur est h&eacute;berg&eacute; par ESXi ou VMWare Workstation[/b], vous n'avez pas besoin de construire un pont.[br]Charge &agrave; vous de cr&eacute;er autant interfaces r&eacute;seau dans cette machine virtuelle que de serveurs virtuels.</bridge_setup_lxc_explain>
+<BUILD_OPENVPN_CLIENT_CONFIG>Construire un script client</BUILD_OPENVPN_CLIENT_CONFIG>
+<BUILD_OPENVPN_CLIENT_CONFIG_TEXT>Construit un jeu de fichiers de configuration afin de permettre aux clients de se connecter au serveur tr&egrave;s simplement.</BUILD_OPENVPN_CLIENT_CONFIG_TEXT>
+<bypass_amavis>Passer outre le filtre de contenu (Amavis)</bypass_amavis>
+<bypass_amavisd>Passer le filtre de contenu</bypass_amavisd>
+<bypass_content_filter_for_inbound_domain>Passer outre le filtre de contenu pour cette destination.</bypass_content_filter_for_inbound_domain>
+<cache-size_text>D&eacute;finit la taille du cache de Dnsmasq. La valeur par d&eacute;faut est de 1500 noms.  D&eacute;finir une valeur de z&eacute;ro d&eacute;sactive le cache.</cache-size_text>
+<CacheDefaultExpire>Temps d'expiration</CacheDefaultExpire>
+<CacheDefaultExpire_explain>C'est une dur&eacute;e d'expiration pour les pages qui ne sp&eacute;cifient pas une dur&eacute;e d'expiration ou une date de modification dans leur ent&ecirc;te HTTP</CacheDefaultExpire_explain>
+<CacheDisable_explain>Cette section vous permet de d&eacute;sactiver la mise en cache pour des liens web sp&eacute;cifiques.[br]Indiquez les liens comme /index.php ou /images par exemple</CacheDisable_explain>
+<CacheMaxFileSize>Taille Maximale du contenu &agrave; mettre en cache</CacheMaxFileSize>
+<cachemgr>Cache Manager</cachemgr>
+<cachemgr_text>Le Cache Manager est un utilitaire provenant du paquetage Squid afin d'afficher des &eacute;tats et statistiques sur l'actualit&eacute; du d&eacute;mon Squid.[br]
+C'est une mani&egrave;re d'&ecirc;tre inform&eacute; de l'&eacute;tat du Proxy sans avoir &agrave; se logger sur le serveur.</cachemgr_text>
+<CacheMinExpire>Temps minimum d'expiration</CacheMinExpire>
+<CacheMinExpire_explain>Sp&eacute;cifie la dur&eacute;e minimum de mise en cache m&ecirc;me si les pages web indiques elles m&ecirc;mes une dur&eacute;e plus courte d'expiration.</CacheMinExpire_explain>
+<CacheMinFileSize>Taille minimale du contenu &agrave; mettre en cache</CacheMinFileSize>
+<CacheMinFileSize_explain>SI le contenu est trop petit, il n'y aura pas r&eacute;ellement de gain de performances.[br]Si au contraire, il est trop gros, vous allez consommer tout espace de mise en cache rapidement</CacheMinFileSize_explain>
+<caches>Caches</caches>
+<caches_squid>Cache(s) Proxy</caches_squid>
+<cache_control>Contr&ocirc;le du cache</cache_control>
+<cache_engine>Moteur de cache</cache_engine>
+<calculate_since>Calculer depuis</calculate_since>
+<Calibration_Retry_Count>Calibrations</Calibration_Retry_Count>
+<Calibration_Retry_Count_text>Nombre de tentatives de re-calibrations du disque</Calibration_Retry_Count_text>
+<cannot_delete_address_postfix_instance>Cette adresse IP ne peut &ecirc;tre supprim&eacute;e.|br]En effet, elle est utilis&eacute;e par une instance Postfix.</cannot_delete_address_postfix_instance>
+<cannot_delete_address_samba_instance>Impossible de supprimer cette adresse, elle est utilis&eacute;e par une instance Samba:</cannot_delete_address_samba_instance>
+<categories_white_explain>Indiquez les cat&eacute;gories que vous d&eacute;sirez autoriser.[br]Ceci est la liste blanche.</categories_white_explain>
+<cat_hospitals>Sites sur les h&ocirc;pitaux et installations m&eacute;dicales</cat_hospitals>
+<cat_medical>Sites m&eacute;dicaux</cat_medical>
+<cat_remote-control>Sites fournissant des services de contr&ocirc;les &agrave; distance, en passant &agrave; travers les pare-feux.[br]Les services VPN ne sont pas couverts par cette cat&eacute;gorie.</cat_remote-control>
+<cat_sslsites>Sites offrant des s&eacute;curit&eacute;s SSL, stockage de clefs, g&eacute;n&eacute;ration de clefs SSL</cat_sslsites>
+<ChangeMysqlDir_explain>Par d&eacute;faut, MySQL utilise le r&eacute;pertoire /var/lib/mysql afin d'h&eacute;berger les bases de donn&eacute;es.[br]Vous pouvez modifier le chemin afin de d&eacute;placer les bases &agrave; un autre endroit.</ChangeMysqlDir_explain>
+<change_mac_address>Modifier l'adresse MAC</change_mac_address>
+<change_mysql_directory_text>Modifier le r&eacute;pertoire qui h&eacute;berge les bases de donn&eacute;es.</change_mysql_directory_text>
+<change_organization>Changer d'organisation</change_organization>
+<change_server_hostname>Modifier le nom de votre serveur</change_server_hostname>
+<change_the_webconsole_language_text>Modifier la langue utilis&eacute;e par l'interface web</change_the_webconsole_language_text>
+<change_user_organization_text>D&eacute;placer cet utilisateur dans une autre organisation</change_user_organization_text>
+<check_client_access_ip_explain>Ajoutez l'adresse IP ici.
+Ce peut &ecirc;tre :
+192.168.1.2 correspondant &agrave; 192.168.1.2
+192.168.0 correspondant &agrave;  192.168.0.*
+192.168 correspondant &agrave;  192.168.*
+domain.tld correspondant &agrave; h&ocirc;tes avec le domaine domain.tld
+.domain.tld tcorrespondant aux h&ocirc;tes avec les sous-domaines de domain.tld</check_client_access_ip_explain>
+<check_queue_each>V&eacute;rifier dans la file d'attente chaque</check_queue_each>
+<check_rate_limit>Limite par taux d'&eacute;mission</check_rate_limit>
+<check_rcpt_limit>Limite par destinataires</check_rcpt_limit>
+<check_size_limit>Limite par taille.</check_size_limit>
+<child_ttl>Dur&eacute;e de vie</child_ttl>
+<chroot>chroot</chroot>
+<click_here>Cliquez ici</click_here>
+<clients>Clients</clients>
+<clients_restrictions>Restrictions sur les h&ocirc;tes clients</clients_restrictions>
+<client_address>Adresse du Client</client_address>
+<client_name>Nom du client</client_name>
+<compilation_schedule>Programmation de la compilation</compilation_schedule>
+<compilation_schedule_text>Programmez la re-compilation des bases afin de les mettre &agrave; jour.</compilation_schedule_text>
+<compile_missing_db>Compiler les DB manquantes</compile_missing_db>
+<compile_missing_db_www_text>Compiler les bases de donn&eacute;es manquantes afin de faire tourner le filtre en production.</compile_missing_db_www_text>
+<compile_rules>Compiler les r&egrave;gles</compile_rules>
+<comprate>Taux de compression par d&eacute;faut</comprate>
+<compress_files_after>Compresser les fichiers apr&egrave;s</compress_files_after>
+<computer_load>Charge machine</computer_load>
+<ConfirmDisableArticaWebConsole>Cette op&eacute;ration va d&eacute;sactiver le moteur Web permettant de g&eacute;n&eacute;rer la console Web Artica.
+Soyez sur que vous avez cr&eacute;er une console Web dans FreeWebs avec de valider cette action.
+D&eacute;sirez-vous continuer cette op&eacute;ration ?</ConfirmDisableArticaWebConsole>
+<connected_has>Connect&eacute; en tant que</connected_has>
+<connections_filters>filtres de connexions</connections_filters>
+<connections_for>Connexions pour</connections_for>
+<connection_name>Nom de connection</connection_name>
+<content_filter>Filtre de contenu</content_filter>
+<content_filtering>Filtrage de contenu</content_filtering>
+<content_filters>Filtres de contenu</content_filters>
+<convert_current_attachments>Convertir les pi&egrave;ces jointes actuelles.</convert_current_attachments>
+<COULD_NOT_PERF_OP_SOFT_ENABLED>Ne peut pas effectuer cette op&eacute;ration tant que le logiciel suivant est activ&eacute; :</COULD_NOT_PERF_OP_SOFT_ENABLED>
+<CPU_ASSIGN>Assigner aux CPU(s)</CPU_ASSIGN>
+<create_filesystem>Cr&eacute;er le syst&egrave;me de fichiers</create_filesystem>
+<create_filesystem_text>Cr&eacute;er le syst&egrave;me de fichiers, n&eacute;cessaire afin de cr&eacute;er la partition.</create_filesystem_text>
+<create_lvm_group>Cr&eacute;er un nouveau groupe LVM</create_lvm_group>
+<create_new_disk>Cr&eacute;er un nouveau disque</create_new_disk>
+<create_new_instance_based_on_this_instance>Cr&eacute;er une nouvelle instance bas&eacute;e sur celle-ci</create_new_instance_based_on_this_instance>
+<create_new_instance_based_on_this_instance_explain>Cette op&eacute;ration va dupliquer les param&egrave;tres de l'instance s&eacute;lectionn&eacute;e vers une nouvelle instance.[br]
+Vous avez simplement besoin d'indiquer la nouvelle adresse IP d'&eacute;coute et l'organisation associ&eacute;e.[br]
+Artica se charge de la cr&eacute;ation de l'adresse IP virtuelle et de la cr&eacute;ation de la nouvelle instance SMTP</create_new_instance_based_on_this_instance_explain>
+<create_new_virtual_disk>Cr&eacute;er un nouveau disque virtuel dans votre syst&egrave;me</create_new_virtual_disk>
+<create_your_organization>Cr&eacute;ez votre organisation</create_your_organization>
+<crossroads_multiple_weight_roundrobbinexplain>Cette section permet de modifier le comportement de la rotation Round-Robbin.[br]
+Le champs NB MAX Connexions indique combien de connexions le r&eacute;partiteur va utiliser pour le serveur cible.[br]Au del&agrave; de ce nombre, le serveur cible ne sera plus utilis&eacute;.[br]
+Utilisez 0 pour un nombre illimit&eacute;.[br]
+Le champs &quot;Poids&quot; vous permet de privil&eacute;gier des serveurs lors de la rotation.[br]Par exemple un poids de 3 indiquera au r&eacute;partiteur que il faut attendre 3 connexions avant de passer au serveur suivant.</crossroads_multiple_weight_roundrobbinexplain>
+<current>Actuellement</current>
+<Current_Pending_Sector>Secteurs en attente de r&eacute;allocation</Current_Pending_Sector>
+<Current_Pending_Sector_text>Nombre de secteurs en attente de r&eacute;-allocation</Current_Pending_Sector_text>
+<CYRUS_DB_CONFIG_TEXT>Personnalisez et d&eacute;finissez les param&egrave;tres de performances des bases de donn&eacute;es de cyrus-imap</CYRUS_DB_CONFIG_TEXT>
+<databases_are_not_compiled_warn>Les bases de donn&eacute;es ne sont pas compil&eacute;es.[br]Votre filtre ne sera pas disponible tant que toutes les bases n'ont pas &eacute;t&eacute; traduites sur le disque.</databases_are_not_compiled_warn>
+<database_configuration>Base de donn&eacute;es (Param.)</database_configuration>
+<DDOS_prevention>Pr&eacute;vention des d&eacute;nis de services</DDOS_prevention>
+<DDOS_WHITE_ADD>Le caract&egrave;re joker * peut &ecirc;tre utilis&eacute; dans les 3 derniers octets si n&eacute;cessaire.
+(exemple 127.0.0.1 ou 127.0.0.*)</DDOS_WHITE_ADD>
+<DDOS_WHITE_EXPLAIN>Des adresses peuvent &ecirc;tre mises en liste blanche afin de s'assurer qu'elles ne seront jamais interdites.[br]
+L'objectif de cette section est de prot&eacute;ger les logiciels, scripts, robots de recherche ou tout autre processus d'automatisation.[br]
+Cette section n'a pas pour but de mettre en liste blanche des adresses de clients Internet.[br]
+Ce module se d&eacute;clenche en effectuant un certain type d'attaques malveillantes.[br] C'est pour cette raison qu'il est plus appropri&eacute; de permettre au
+module de d&eacute;cider lui-m&ecirc;me si oui ou non un client en particulier devrait &ecirc;tre interdit.</DDOS_WHITE_EXPLAIN>
+<DEBIAN_TEMPLATE>Mod&egrave;le Debian</DEBIAN_TEMPLATE>
+<default_destination_concurrency_negative_feedback>Taux d'&eacute;mission n&eacute;gatif par destination.</default_destination_concurrency_negative_feedback>
+<default_destination_concurrency_negative_feedback_text>C'est le taux d'&eacute;mission lorsque les &eacute;missions SMTP ont &eacute;t&eacute;s mises en &eacute;chec.
+
+Sp&eacute;cifiez l'une des formes suivantes:
+[br] [b] nombre [/ b] [br]
+retour continu. La valeur doit &ecirc;tre dans l'intervalle 0 .. 1 inclus. Le r&eacute;glage par d&eacute;faut de &laquo;1 &raquo;.
+[br] [b] Nombre Nombre / [/ b]
+[br] [b] le num&eacute;ro  / nb &eacute;missions [/ b] Le nombre doit &ecirc;tre dans l'intervalle 0 .. 1 inclus. Avec un nombre &eacute;gal &agrave; &quot;1&quot;, la concurrence de livraison d'une destination est incr&eacute;ment&eacute; de 1 apr&egrave;s chaque succ&egrave;s pseudo-cohorte.</default_destination_concurrency_negative_feedback_text>
+<default_destination_concurrency_positive_feedback>Taux de d&eacute;livrance positif par destination</default_destination_concurrency_positive_feedback>
+<default_destination_concurrency_positive_feedback_text>Le taux, par destination, de d&eacute;livrances simultan&eacute;es apr&egrave;s &eacute;mission de messages qui se termine sans &eacute;chec[br]
+les valeurs d'&eacute;valuation sont dans la gamme 0 .. 1 inclus. [br]
+Les &eacute;missions concurrentes augmentent   concurrence jusqu'&agrave; ce qu'elles atteignent la limite de la concurrence maximale par destination . [br]
+Avec des retours positifs, les &eacute;missions sont incr&eacute;ment&eacute;es &agrave; la fin d'une s&eacute;quence avec 1/retour. [br]
+C'est l'oppos&eacute; de l'option n&eacute;gative, o&ugrave; les &eacute;missions sont d&eacute;cr&eacute;ment&eacute;es au d&eacute;but d'une s&eacute;quence de 1/retour. [br]
+[br]
+Sp&eacute;cifiez l'une des formes suivantes:
+[br] [b] nombre [/ b] [br]
+retour continu. La valeur doit &ecirc;tre dans l'intervalle 0 .. 1 inclus. Le r&eacute;glage par d&eacute;faut de &laquo;1 &raquo;.
+[br] [b] Nombre Nombre / [/ b]
+[br] [b] le num&eacute;ro  / nb &eacute;missions [/ b] Le nombre doit &ecirc;tre dans l'intervalle 0 .. 1 inclus. Avec un nombre &eacute;gal &agrave; &quot;1&quot;, la concurrence de livraison d'une destination est incr&eacute;ment&eacute; de 1 apr&egrave;s chaque succ&egrave;s pseudo-cohorte.</default_destination_concurrency_positive_feedback_text>
+<default_website>Site web par d&eacute;faut</default_website>
+<delayed>Retard&eacute;</delayed>
+<DeleteAllipTablesRules_text>Cette op&eacute;ration va supprimer TOUTES les r&egrave;gle de pare-feu.
+Voulez-vous effectuer cette op&eacute;ration ?</DeleteAllipTablesRules_text>
+<delete_all_rules>Supprimer toutes les r&egrave;gles</delete_all_rules>
+<delete_all_rules_iptables_text>Supprimer toutes les r&egrave;gles de pare-feu enregistr&eacute;es sur cette ordinateur.</delete_all_rules_iptables_text>
+<delete_all_users>Supprimer tous les utilisateurs</delete_all_users>
+<delete_all_users_text>Supprimer tous les utilisateurs h&eacute;berg&eacute;s par cette organisation.</delete_all_users_text>
+<delete_all_users_warn>Cette op&eacute;ration va supprimer tous les utilisateurs de cette organisation qui sont stock&eacute;s dans la base LDAP.
+Voulez-vous effectuer cette op&eacute;ration ?</delete_all_users_warn>
+<delete_disk_confirm>Supprimer ce disque du syst&egrave;me ?
+Le contenu sera d&eacute;truit...</delete_disk_confirm>
+<delete_openvpn_connection>Supprimer la connexion VPN et se d&eacute;connecter du serveur</delete_openvpn_connection>
+<delete_permissions>Supprimer les permissions</delete_permissions>
+<delete_this_query>Supprimer cette requ&ecirc;te ?</delete_this_query>
+<deleting>Suppression...</deleting>
+<deny_access_from_the_standard_port>Interdire l'acc&egrave;s depuis le moteur principal d'administration.</deny_access_from_the_standard_port>
+<deny_if>Rejeter si</deny_if>
+<destination>Destination</destination>
+<destination_domain>Domaine de destination</destination_domain>
+<DEVTYPE>Type de partition</DEVTYPE>
+<dhcp-domain-name-explain>Le nom de domaine que le client doit utiliser lorsqu'il r&eacute;sout des noms d'h&ocirc;te via les serveurs de noms DNS</dhcp-domain-name-explain>
+<dhcp-groupnameAdd-explain>Si vous d&eacute;sirez ins&eacute;rer cette configuration r&eacute;seau dans un nouveau groupe, indiquez ici le nom de votre &quot;shared-network&quot;</dhcp-groupnameAdd-explain>
+<dhcp-next-server-explain>utilis&eacute; pour sp&eacute;cifier l'adresse h&ocirc;te du serveur depuis lequel le fichier de d&eacute;marrage initial (sp&eacute;cifi&eacute; par le param&egrave;tre Fichier de boot PXE) sera charg&eacute;. Ce doit &ecirc;tre une adresse IP num&eacute;rique ou un nom de domaine. Si aucun param&egrave;tre ne s'applique &agrave; un client donn&eacute;, l'adresse du serveur DHCP est utilis&eacute;e.</dhcp-next-server-explain>
+<dhcp-scope-explain>C'est le nom de cette configuration vous permettant de la retrouver plus facilement.</dhcp-scope-explain>
+<dhcp-server-name_text>Peut &ecirc;tre utilis&eacute; pour indiquer aux clients le nom du serveur depuis lequel ils sont en train de d&eacute;marrer. La valeur du champ sera le nom fourni au client</dhcp-server-name_text>
+<dhcp-subnet-masq_text>Il est recommand&eacute; dans le cas o&ugrave; on utilise le m&ecirc;me masque de r&eacute;seau pour tout un site, d'utiliser ce param&egrave;tre dans chaque d&eacute;claration de sous-r&eacute;seau, puisqu'elle &eacute;crasera le masque de r&eacute;seau indiqu&eacute; &agrave; la d&eacute;claration du sous-r&eacute;seau.</dhcp-subnet-masq_text>
+<dhcpd_leases_explain>Cette section affiche les concessions acquises par les ordinateurs de votre r&eacute;seau.</dhcpd_leases_explain>
+<dhcpd_shared_network_explain>Cette section permet de d&eacute;finir un groupe de sous r&eacute;seaux afin d%u2019appliquer des caract&eacute;ristiques communes.</dhcpd_shared_network_explain>
+<DisableDisplayVersion>Activer l'affichage de la version</DisableDisplayVersion>
+<DisableHtAccess>D&eacute;sactiver la lecture .htaccess</DisableHtAccess>
+<DisablePowerDnsManagement>D&eacute;connecter PowerDNS d'Artica</DisablePowerDnsManagement>
+<DisablePowerDnsManagement_text>Cette op&eacute;ration va d&eacute;connecter PowerDNS de la gestion d'Artica.
+Cela veut dire que Artica ne prendra plus en charge les processus PowerDNS et sa base de donn&eacute;e.
+PowerDNS ne sera pas d&eacute;sinstaller et vous serez en mesure de le maintenir et de le g&eacute;rer vous m&ecirc;me</DisablePowerDnsManagement_text>
+<DisableSambaFileSharing>D&eacute;sactiver le moteur de partage sur le r&eacute;seau</DisableSambaFileSharing>
+<disableSSLv2>D&eacute;sactiver SSLv2</disableSSLv2>
+<disable_greylisting>D&eacute;sactiver le GreyListing</disable_greylisting>
+<disable_help_tooltips>D&eacute;sactiver les infos bulles d'aide en ligne</disable_help_tooltips>
+<disable_openvpn_connection>D&eacute;sactiver la connexion VPN</disable_openvpn_connection>
+<disable_tooltips>D&eacute;sactiver les infos bulles</disable_tooltips>
+<disable_vrfy_command>D&eacute;sactiver la commande VRFY</disable_vrfy_command>
+<disable_vrfy_command_text>D&eacute;sactive la commande VRFY dans le protocole.[br]Ceci arr&ecirc;te certaines techniques utilis&eacute;es pour obtenir des adresses mail.</disable_vrfy_command_text>
+<disable_webconsole_engine>D&eacute;sactiver le moteur Web de la console</disable_webconsole_engine>
+<disconnect_from_this_group>D&eacute;connecter du groupe</disconnect_from_this_group>
+<disconnect_this_disk>D&eacute;connecter ce disque</disconnect_this_disk>
+<disks>Disques</disks>
+<disks_watchdog>Surveillance des disques</disks_watchdog>
+<disk_loop_explain>Un disque virtuel dans l'esprit d'Artica est un fichier qui est stock&eacute; sur votre disque dur.[br]Ce fichier va devenir un disque dur et disposera des m&ecirc;me propri&eacute;t&eacute;s.[br]Cette technique permet alors de cr&eacute;er des conteneurs pour vos utilisateurs.</disk_loop_explain>
+<disk_watchdog>Surveillance du disque</disk_watchdog>
+<DNSBL>DNSBL</DNSBL>
+<dnsmasq_address_text>Cette section vous permet de sp&eacute;cifier une ou des adresses IP &agrave; retourner pour toute requ&ecirc;te pour les domaines fournis en option.[br]
+Les requ&ecirc;tes pour ce(s) domaine(s) ne sont jamais transmises aux serveurs amonts et re&ccedil;oivent comme r&eacute;ponse l'adresse IP sp&eacute;cifi&eacute;e.[br]
+Une utilisation courante de cette option est de rediriger la totalit&eacute; du domaine doubleclick.net vers un serveur web local afin d'&eacute;viter les banni&egrave;res publicitaires.[br]
+La  caract&eacute;ristique suppl&eacute;mentaire  est que le nom # co&iuml;ncide  avec  tout domaine. Ainsi # vers 1.2.3.4 retournera 1.2.3.4 pour toute requ&ecirc;te n'ayant de r&eacute;ponse ni dans /etc/hosts, ni dans les baux DHCP, et n'&eacute;tant pas transmise &agrave; un serveur sp&eacute;cifique.</dnsmasq_address_text>
+<dnsmasq_domain_explain>Indiquez le domaine principal pour dnsmasq. C'est une valeur optionelle mais si elle est indiqu&eacute;e :[br]
+1) Autorise les h&ocirc;tes DHCP &agrave; poss&egrave;der un nom qualif&eacute;.[br]
+2) Fournit un domaine aux h&ocirc;tes au nom simple via l'option permettant de rajouter un domaine aux h&ocirc;tes.</dnsmasq_domain_explain>
+<dns_entries>Entr&eacute;es DNS</dns_entries>
+<DOMAIN_ALIASES_IMPORT_TEXT>Ce formulaire va importer les domaines virtuels dans la base de donn&eacute;es.[br]Copiez ici les domaines de messagerie s&eacute;par&eacute;s par un retour chariot.</DOMAIN_ALIASES_IMPORT_TEXT>
+<DOMAIN_CANNOT_BE_NULL>Le domaine ne peut &ecirc;tre une valeur nulle.</DOMAIN_CANNOT_BE_NULL>
+<DOMAIN_NO_TRUSTED_IMPORT_TEXT>Ce formulaire va importer les utilisateurs vers la base de donn&eacute;es.[br]Lors de l'utilisation de domaines non confiants, vous avez besoin de maintenir une base d'adresses destinatrices.[br]Copiez ici les destinataires s&eacute;par&eacute;s par un retour chariot.</DOMAIN_NO_TRUSTED_IMPORT_TEXT>
+<DOMAIN_TRUSTED_NO_USERDB_TEXT>Ce domaine est un domaine de confiance.[br]Dans ce cas, tous les messages seront transf&eacute;r&eacute;s vers le serveur final sans v&eacute;rifier les destinataires.[br]Vous n'avez pas besoin de maintenir une base de donn&eacute;es locale.</DOMAIN_TRUSTED_NO_USERDB_TEXT>
+<dont_receive_mail_confirmation>Vous n'avez pas re&ccedil;u de message de confirmation ?</dont_receive_mail_confirmation>
+<DOSBlockingPeriod_explain>D&eacute;termine la dur&eacute;e d'interdiction en secondes</DOSBlockingPeriod_explain>
+<DOSHashTableSize>Taille de la table m&eacute;moire</DOSHashTableSize>
+<DOSHashTableSize_explain>Le nombre de n%u0153uds qui peuvent &ecirc;tre mis en m&eacute;moire pour chaque processus du moteur Web.[br]
+Augmenter ce nombre augmente les performances en r&eacute;duisant le nombre d'it&eacute;rations afin de rechercher les enregistrements.[br]
+Toutefois ceci va consommer plus de m&eacute;moire.[br]Il est conseill&eacute; d'augmenter ce param&egrave;tre si les serveurs sont tr&egrave;s charg&eacute;s.</DOSHashTableSize_explain>
+<DOSPageCount_explain>D&eacute;finie le nombre de fois ou une page peut &ecirc;tre appel&eacute;e par la m&ecirc;me adresse IP avant que celle-ci soit bloqu&eacute;e.</DOSPageCount_explain>
+<DOSPageInterval_explain>d&eacute;termine une intervalle en seconde qui autorise l%u2019affichage de la m&ecirc;me page avant une interdiction.</DOSPageInterval_explain>
+<DOSSiteCount_explain>d&eacute;finie le nombre de fois ou un site peut &ecirc;tre demand&eacute; par la m&ecirc;me adresse IP avant que celle-ci soit bloqu&eacute;e.</DOSSiteCount_explain>
+<DOSSiteInterval_explain>d&eacute;termine une intervalle en seconde qui autorise l%u2019affichage d%u2019un m&ecirc;me site avant une interdiction.</DOSSiteInterval_explain>
+<DOWNLOAD_OPENVPN_CLIENT_APPLE>Client VPN pour Mac OSX</DOWNLOAD_OPENVPN_CLIENT_APPLE>
+<do_not_send_same_infos_before>Ne pas envoyer la m&ecirc;me information avant</do_not_send_same_infos_before>
+<dumpcycleExplain>Le nombre de jours d'un cycle de d&eacute;p&ocirc;t, indique comment une sauvegarde compl&egrave;te est effectu&eacute;e.</dumpcycleExplain>
+<duplicate_domain_explain>Cette fonctionnalit&eacute; vous permet de dupliquer les messages &agrave; destination de ce domaine vers une autre domaine de votre choix.[br]
+D&eacute;finissez dans le formulaire l'adresse du serveur de destination qui sera en charge de recevoir les messages dupliqu&eacute;s.[br]
+Indiquez le domaine de destination qui remplacera le domaine de l'&eacute;metteur d'origine.[br]Dans ce cas, jhon@domain.tld sera dupliqu&eacute; en jhon@xxxx.tld dont xxxx.tld sera le domaine saisi.[br]Bien sur, le serveur de destination devra accepter cette nouvelle adresse.</duplicate_domain_explain>
+<duplicate_instance>Dupliquer l'instance</duplicate_instance>
+<duplicate_vserver>Dupliquer ce serveur VPS</duplicate_vserver>
+<duplicate_vserver_text>Cr&eacute;er un nouveau serveur VPS depuis le syst&egrave;me de ce serveur</duplicate_vserver_text>
+<duplicate_vserver_text_action>Cette op&eacute;ration va cr&eacute;er un nouveau serveur Virtuel en utilisant les donn&eacute;es et le syst&egrave;me de ce serveur.
+Vous avez simplement besoin d'indiquer la nouvelle adresse IP du nouveau serveur Virtuel.</duplicate_vserver_text_action>
+<duplicating>Duplication...</duplicating>
+<edit_openvpn_connection>Afficher les param&egrave;tres et modifier le comportement de la connexion.</edit_openvpn_connection>
+<empty_cache>Vider le cache</empty_cache>
+<empty_database>Vider la base de donn&eacute;es</empty_database>
+<EnableAuth>Activer l'authentification</EnableAuth>
+<EnableCyrusImapToAd>Activer la gestion des bo&icirc;tes aux lettres &agrave; travers l'AD</EnableCyrusImapToAd>
+<EnableDHCPUseHostnameOnFixed>Utiliser les noms d'h&ocirc;tes sur les adresses Fix&eacute;es</EnableDHCPUseHostnameOnFixed>
+<EnableDHCPUseHostnameOnFixed_explain>Si activ&eacute;, le serveur DHCP va poser la question aux serveurs DNS afin d'obtenir l'adresse IP de la machine et ainsi fournir l'adresse enregistr&eacute;e dans le DNS en lieu et place de celle fournit dans Artica (sauf si Artica est lui m&ecirc;me le serveur DNS). [br]
+Lorsque les param&egrave;tres vont &ecirc;tre construits, Artica va essayer de r&eacute;soudre l'adresse IP des machines en nom d'h&ocirc;te.[br]
+Si la r&eacute;solution est un succ&egrave;s, le param&egrave;tre sera chang&eacute; en nom d'h&ocirc;te &agrave; r&eacute;soudre en lieu et place de l'adresse IP.</EnableDHCPUseHostnameOnFixed_explain>
+<EnableDNSMASQ>Activer le service DNSMasq</EnableDNSMASQ>
+<EnableDNSMASQ_explain>Si activ&eacute;, toutes les requ&ecirc;tes syst&egrave;me passeront &agrave; travers DNSMasq en lieu et place des DNS enregistr&eacute;s dans le syst&egrave;me.</EnableDNSMASQ_explain>
+<EnableISCSI>Activer le service iSCSI</EnableISCSI>
+<EnableLDAPAmavis>Autoriser des configurations multiples via LDAP</EnableLDAPAmavis>
+<EnableLDAPAmavis_explain>Si activ&eacute;, vous serez en mesure de sp&eacute;cifier des param&egrave;tres du filtre de contenu par domaine ou par utilisateur.[br]
+L'utilisation de cette configuration va vous permettre de personnaliser les param&egrave;tres mais va augmenter le nombre de connexions au serveur LDAP</EnableLDAPAmavis_explain>
+<EnableLDAPAmavis_is_disabled_explain>L'administrateur du serveur &agrave; d&eacute;sactiver la possibilit&eacute; de d&eacute;finir les param&egrave;tres anti-spam pour chaque domaine.[br]Contactez votre administrateur si vous souhaitez utiliser cette fonctionnalit&eacute;</EnableLDAPAmavis_is_disabled_explain>
+<EnableManageUsersTroughActiveDirectory>Utiliser de fa&ccedil;on stricte le Domaine AD</EnableManageUsersTroughActiveDirectory>
+<EnableOpenVPNEndUserPage>Activer la section VPN dans l'interface utilisateur</EnableOpenVPNEndUserPage>
+<EnableOpenVPNEndUserPage_explain>Si cette option est activ&eacute;e, les utilisateurs seront en mesure de compiler les scripts de connexion via leur compte &agrave; travers l'interface utilisateur finale.</EnableOpenVPNEndUserPage_explain>
+<EnablePDNS>Activer PowerDNS</EnablePDNS>
+<EnablePhishTag_explain>PhishTag permet au filtre de r&eacute;&eacute;crire les liens dans les messages qui d&eacute;clenchent des tests anti-phishing.[br]Le plugin va inhiber le blocage d'une partie des messages qui d&eacute;clenchent les tests, et les laisser passer apr&egrave;s la r&eacute;&eacute;criture des liens. [br]</EnablePhishTag_explain>
+<EnablePhishTag_explain_form>Vous devez d&eacute;finir le ratio qui &eacute;tablit la probabilit&eacute; en pourcentage qu'un test positif entra&icirc;ne la r&eacute;&eacute;criture du message,
+par exemple, 0,1 r&eacute;&eacute;crit sur %u200B%u200Bla moyenne de 1 &agrave; 1000 messages qui correspondent &agrave; la d&eacute;tection. [br]
+toutes les liens seront remplac&eacute;es par l'url que vous avez d&eacute;finit dans le formulaire.</EnablePhishTag_explain_form>
+<EnablePublicOrganizations>Enregistrements publique des utilisateurs</EnablePublicOrganizations>
+<EnablePublicOrganizations_text>Si activ&eacute;, les administrateurs des organisations disposeront de la facult&eacute; d'autoriser des Internautes &agrave; cr&eacute;er des comptes utilisateurs dans les organisation de fa&ccedil;on publique.[br]Une formulaire d'enregistrement est alors pr&eacute;vu &agrave; cet effet.</EnablePublicOrganizations_text>
+<EnableSpamAssassinFreeMail_explain>D&eacute;tecte this des adresses eMail utilisent des services WebMail gratuits</EnableSpamAssassinFreeMail_explain>
+<enable_amavis_watchdog>Activer la surveillance</enable_amavis_watchdog>
+<ENABLE_ARTICA_SMTP_STATS>Activer le moteur de statistiques SMTP</ENABLE_ARTICA_SMTP_STATS>
+<enable_authentication>Activer l'authentification</enable_authentication>
+<enable_authentication_vpn_explain>Si activ&eacute;, le serveur va demander une authentification utilisateur/Mot de passe afin d'autoriser la liaison VPN</enable_authentication_vpn_explain>
+<enable_body_checks>Activer la v&eacute;rification dans les messages</enable_body_checks>
+<enable_feature>Activer la fonctionnalit&eacute;</enable_feature>
+<enable_grehole>Activer le backup dynamique</enable_grehole>
+<enable_grehole_text>La fonction utilise le plugin greyhole pour Samba afin de fournir un backup en temps r&eacute;el des &eacute;changes effectu&eacute;s sur vos r&eacute;pertoires partag&eacute;s.</enable_grehole_text>
+<enable_ids>Activer le syst&egrave;me de d&eacute;tection d'intrusion</enable_ids>
+<enable_ids_text>Si vert, Artica va d&eacute;marrer le syst&egrave;me de d&eacute;tection d'intrusion.[br]Vous serez en mesure de visualiser dans les &eacute;v&egrave;nements les diff&eacute;rentes attaques et informations sur ce qui se passe dans votre r&eacute;seau.</enable_ids_text>
+<enable_imap>Activer le service IMAP</enable_imap>
+<enable_imaps>Activer le service IMAP SSL</enable_imaps>
+<enable_ipblocks>Activer le service de blocage par pays</enable_ipblocks>
+<enable_ipv6>Activer IPv6</enable_ipv6>
+<enable_ipv6_text>Si vous passez en vert, Artica va activer IPv6 dans le noyau syst&egrave;me et vous serez en mesure de param&eacute;trer vos r&eacute;seaux en utilisant les fonctionnalit&eacute;s IPv6.</enable_ipv6_text>
+<enable_kill_proc>Tuer les processus</enable_kill_proc>
+<enable_ldap_authentication>Activer l'authentification LDAP</enable_ldap_authentication>
+<enable_limit_by_addresses>Activer la limitation par l'adresse du client</enable_limit_by_addresses>
+<enable_pop3>Activer le service POP3</enable_pop3>
+<enable_pop3s>Activer le service POP3 SSL</enable_pop3s>
+<enable_remote_announce_explain>Si pass&eacute; en vert, la fonctionnalit&eacute; d'annonce r&eacute;seau sera activ&eacute;e dans le moteur de partage de fichiers</enable_remote_announce_explain>
+<enable_samba_virtual_servers>Activer les serveurs virtuels</enable_samba_virtual_servers>
+<enable_samba_virtual_servers_text>SI vous passez au vert, le moteur de partage va &eacute;muler des serveurs multiples list&eacute;s ci-dessous.</enable_samba_virtual_servers_text>
+<enable_service>Activation du service</enable_service>
+<enable_syslog_client>Activer le mode d'&eacute;mission de logs</enable_syslog_client>
+<enable_syslog_client_text>Si vous passez en vert, ce serveur va envoyer ses &eacute;v&egrave;nements syst&egrave;mes vers un serveur de consolidation de logs.[br]Ce serveur va utiliser UDP et le port distant 514 afin d'envoyer les donn&eacute;es.</enable_syslog_client_text>
+<enable_syslog_server>Activer le mode r&eacute;ception de logs</enable_syslog_server>
+<enable_syslog_server_text>Si vous passez en vert, ce serveur va recevoir les &eacute;v&egrave;nements syst&egrave;mes envoy&eacute;s par des clients.[br]Ce serveur va utiliser UDP et le port distant 514 afin de recevoir les donn&eacute;es.</enable_syslog_server_text>
+<enable_viptrack>Activer VIPTrack</enable_viptrack>
+<enable_whitelisting>Activer la m&eacute;thode liste blanche</enable_whitelisting>
+<eq2>est &eacute;gale</eq2>
+<errors>Erreurs</errors>
+<error_choose_organization>Erreur: vous avez besoin de sp&eacute;cifier au minimum une organisation.</error_choose_organization>
+<error_field_max_length>Erreur, la valeur donn&eacute;e exc&egrave;de</error_field_max_length>
+<error_please_fill_field>Erreur: Veuillez remplir le champs requis</error_please_fill_field>
+<ExecBackupDeadAfterH>Un t&acirc;che de sauvegarde est consid&eacute;r&eacute;e comme &quot;morte&quot; apr&egrave;s X heures (minimum 2)</ExecBackupDeadAfterH>
+<execute_reports_each>Ex&eacute;cuter les rapports chaque</execute_reports_each>
+<expand-hosts>Ajoute le nom de domaine aux noms simples</expand-hosts>
+<expand-hosts_text>Ajoute  le  nom  de domaine aux noms simples (ne contenant pas de point dans le nom) contenus dans le fichier /etc/hosts, de la m&ecirc;me fa&ccedil;on que pour le service DHCP. Notez que cela ne s'applique pas au nom de domaine dans les CNAME, les enregistrements PTR, TXT, etc...</expand-hosts_text>
+<external_device>Disque externe</external_device>
+<FEDORA_TEMPLATE>Mod&egrave;le Fedora</FEDORA_TEMPLATE>
+<fileio>I/O fichier</fileio>
+<filename_pxe_explain>Peut &ecirc;tre utilis&eacute; pour sp&eacute;cifier le nom du fichier de d&eacute;marrage initial qui doit &ecirc;tre utilis&eacute; par un client.[br] Le nom de fichier doit &ecirc;tre un nom de fichier reconnaissable par tous les protocoles de transport de fichier que le client utilisera pour charger le fichier.</filename_pxe_explain>
+<filesystem_type>Syst&egrave;me de fichiers</filesystem_type>
+<files_and_folders_permissions>Permissions des fichier et dossiers</files_and_folders_permissions>
+<files_extension>Extension de fichiers</files_extension>
+<filterwin2k_text>Les derni&egrave;res versions de windows font des requ&ecirc;tes DNS p&eacute;riodiques auxquelles non seulement les serveurs DNS publics ne peuvent donner de r&eacute;ponse, mais qui, de surcro&icirc;t, peuvent poser des probl&egrave;mes en d&eacute;clenchant des connexions intempestives pour des liens  r&eacute;seaux avec des connexions &quot;&agrave; la demande&quot;. [br]Fournir cette option active le filtrage des requ&ecirc;tes de ce type. [br]Les requ&ecirc;tes bloqu&eacute;es sont les requ&ecirc;tes pour les entr&eacute;es de type SOA ou SRV, ainsi que les requ&ecirc;tes de type ANY avec des noms poss&eacute;dant
+des caract&egrave;res sous-lign&eacute;s (requ&ecirc;tes pour des serveurs LDAP).</filterwin2k_text>
+<firewall>Pare-feu</firewall>
+<fixed_ip_addr>Adresse IP fixe</fixed_ip_addr>
+<force_create_mode>Masque de cr&eacute;ation (forcer)</force_create_mode>
+<form_get_credentials_upd>Indiquez dans le formulaire l'adresse de messagerie d'origine et le mot de passe utilis&eacute; dans le formulaire d'enregistrement.</form_get_credentials_upd>
+<FreeMail>Messagerie gratuite</FreeMail>
+<FreeWebsEnableModEvasive>Activer l'anti-DDOS attaques</FreeWebsEnableModEvasive>
+<FreeWebsEnableModQOS>Activer le module de service de qualit&eacute; (QOS)</FreeWebsEnableModQOS>
+<FreeWebsEnableModSecurity>Activer le renforcement de la s&eacute;curit&eacute;</FreeWebsEnableModSecurity>
+<FreeWebsEnableOpenVPNProxy>Activer le mode proxy pour OpenVPN</FreeWebsEnableOpenVPNProxy>
+<FreewebsStorageDirectory>R&eacute;pertoire de stockage des sites web</FreewebsStorageDirectory>
+<FreewebsStorageDirectory_text>C'est le chemin par d&eacute;faut utilis&eacute; lors de la cr&eacute;ation des sites Web &agrave; travers FreeWeb.</FreewebsStorageDirectory_text>
+<freeweb_authldap_members_explain>Par d&eacute;faut, l'activation de l'authentification autorise tous les membres d'acc&eacute;der au site Web.[br]Vous pouvez le restreindre &agrave; des utilisateurs ou groupes sp&eacute;cifiques en remplissant le tableau ci-dessous.</freeweb_authldap_members_explain>
+<freeweb_files_perms_explain>Cette fonctionnalit&eacute; permet de v&eacute;rifier les permissions des fichiers et des dossiers de votre site Web.[br]
+Vous pouvez cr&eacute;er des r&egrave;gles permettant de piloter le moteur de permissions..[br]
+Lorsque vous activez le moteur de permissions, vous devez d&eacute;finir la fr&eacute;quence d'ex&eacute;cution (par d&eacute;faut &agrave; 60mn).[br]
+Si vous chargez des nouveaux fichiers dans l'espace Web vous serez assur&eacute; que les permissions seront respect&eacute;es.</freeweb_files_perms_explain>
+<freeweb_groupware_explain>Cliquez sur une des images ci-dessous afin de transformer votre serveur Web en un serveur groupware.</freeweb_groupware_explain>
+<freeweb_perms_add_explain>Ce formulaire va vous aider &agrave; cr&eacute;er une r&egrave;gle de permission dans les r&eacute;pertoires de votre serveur Web.[br]
+Si vous avez besoin d'appliquer une r&egrave;gle sur un sous-dossier, de le nom du sous dossier dans le champ.[br]
+Si vous avez besoin de d&eacute;finir des permissions sur des fichiers, indiquez alors l'extension des fichiers &agrave; analyser</freeweb_perms_add_explain>
+<freeweb_reverse_proxy_explain>Apache peut &ecirc;tre configur&eacute; dans les deux modes mandataire direct et mandataire inverse (aussi nomm&eacute; mode passerelle).[br]
+Un mandataire direct standard est un serveur interm&eacute;diaire qui s'intercale entre le client et le serveur demand&eacute;.[br] Pour obtenir un contenu h&eacute;berg&eacute; par le serveur demand&eacute;, le client envoie une requ&ecirc;te au mandataire en nommant le serveur demand&eacute; comme cible, puis le mandataire extrait le contenu depuis le serveur demand&eacute; et le renvoie enfin au client.[br] Le client doit &ecirc;tre configur&eacute; de mani&egrave;re appropri&eacute;e pour pouvoir utiliser le mandataire direct afin d'acc&eacute;der &agrave; d'autres sites.</freeweb_reverse_proxy_explain>
+<free_catgorized_explain>Placez ici du texte qui contient des liens Web.[br]Les liens doivent format&eacute;s comme ceci : http://domain.tld.com/something ou http://domain.tld.com.[br]
+Le moteur sera en charge de retrouver les liens dans le texte.Vous n'avez donc pas besoin de formater explicitement les adresses. Simplement, collez le texte avec des adresses...</free_catgorized_explain>
+<from_date>Depuis</from_date>
+<ftp_directory>R&eacute;pertoire FTP</ftp_directory>
+<fw_multiples_ports_explain>C'est le ou les ports de destination.[br]Indiquez 0 pour tous les ports, vous pouvez d&eacute;finir un seul port : 22 ou de multiples ports s&eacute;par&eacute;s par une virgule : 22,25,80,443</fw_multiples_ports_explain>
+<fw_sourceaddr_explain>C'est l'adresse IP source, peut &ecirc;tre une adresse simple : 163.248.0.128 ou un r&eacute;seau de type 163.248.0.0/17</fw_sourceaddr_explain>
+<generate_parameters>G&eacute;n&eacute;rer les param&egrave;tres</generate_parameters>
+<generate_reports>G&eacute;n&eacute;rer les rapports</generate_reports>
+<generate_reports_now_text>Ex&eacute;cuter et g&eacute;n&eacute;rer les rapports maintenant</generate_reports_now_text>
+<give_new_sharename>Donnez le nouveau nom de partage</give_new_sharename>
+<give_new_size_in_mb>Donnez la nouvelle taille en Mo</give_new_size_in_mb>
+<give_servername_or_ipaddr>Indiquez le nom complet de l'ordinateur ou une adresse IP</give_servername_or_ipaddr>
+<global>globale</global>
+<grace_period>P&eacute;riode de gr&acirc;ce</grace_period>
+<GRAPH_POSTFIX_REJECTED_CONNEXIONS>Connections SMTP rejet&eacute;es</GRAPH_POSTFIX_REJECTED_CONNEXIONS>
+<GREENSQL_block_level>Si le taux de risque de la requ&ecirc;te est sup&eacute;rieur &agrave; cette valeur, elle sera alors bloqu&eacute;e.</GREENSQL_block_level>
+<greensql_is_available>Le service GreenSQL est disponible.</greensql_is_available>
+<greensql_is_available_text>Cela veut dire que l'IP/Port est ouvert et attends les connexions MySQL.</greensql_is_available_text>
+<greensql_is_available_text2>Cela veut dire que l'IP/Port est ouvert et attends les connexions MySQL.</greensql_is_available_text2>
+<greensql_is_notavailable>Le service GreenSQL n'est pas disponible.</greensql_is_notavailable>
+<greensql_is_notavailable_text>Cela veut dire que l'IP/Port est ferm&eacute; et que Artica ne peut les joindre</greensql_is_notavailable_text>
+<GREENSQL_risk_always_true>Facteur de risque par une variable dont le r&eacute;sultat de l'op&eacute;ration est toujours vrai</GREENSQL_risk_always_true>
+<GREENSQL_risk_empty_password>Facteur de risque lors d'une requ&ecirc;te sur un mot de passe vide.</GREENSQL_risk_empty_password>
+<GREENSQL_risk_multiple_queries>Facteur de risque sur des multiples requ&ecirc;tes envoy&eacute;es en m&ecirc;me temps</GREENSQL_risk_multiple_queries>
+<GREENSQL_risk_or_token>Facteur de risque via l'utilisation du commutateur OR</GREENSQL_risk_or_token>
+<GREENSQL_risk_senstivite_tables>Facteur de risque lors de l'acc&egrave;s &agrave; des tables de Mysql d&eacute;termin&eacute;es comme sensibles</GREENSQL_risk_senstivite_tables>
+<GREENSQL_risk_sql_comments>Facteur de risque sur les commentaires dans la requ&ecirc;te MySQL</GREENSQL_risk_sql_comments>
+<GREENSQL_risk_union_token>Facteur de risque sur une requ&ecirc;te d'UNION</GREENSQL_risk_union_token>
+<GREENSQL_risk_var_cmp_var>Facteur de risque sur des comparaisons de variables. exemple : 1 = 1</GREENSQL_risk_var_cmp_var>
+<GREENSQL_warn_level>Niveau de risque utilise afin de g&eacute;n&eacute;rer des alertes.[br]Il est recommand&eacute; de faire tourner le logiciel avec un niveau d'alerte bas et  avec l'exp&eacute;rience de descendre le niveau de blocage</GREENSQL_warn_level>
+<greyhole_dirs_explain>Nombre de copies de chaque fichier vous d&eacute;sirez sauvegarder.
+Indiquez 0 afin de d&eacute;sactiver la fonctionnalit&eacute;.[br]
+Attention, 2 copies= 1 duplication.</greyhole_dirs_explain>
+<Hardware_ECC_Recovered>Erreurs corrig&eacute;es par code correcteur</Hardware_ECC_Recovered>
+<Hardware_ECC_Recovered_text>Temps entre les erreurs corrig&eacute;es par code correcteur  (augmente et diminue, une faible valeur est probablement mauvais).</Hardware_ECC_Recovered_text>
+<header_address_token_limit_explain>(defaut: 10240 &eacute;l&eacute;ments)[br]
+Nombre maximum d'adresses autoris&eacute;es dans un en-t&ecirc;te de message. Les informations au-del&agrave; de cette limite sont [b]effac&eacute;es[/b] mais le message n'est pas rejet&eacute;. La limite est trait&eacute;e par le serveur cleanup.</header_address_token_limit_explain>
+<header_address_token_limit_field>Nombre maximum d'adresses autoris&eacute;es</header_address_token_limit_field>
+<header_content_filters_rules>R&egrave;gles de contenu sur l'ent&ecirc;te</header_content_filters_rules>
+<header_size_limit>Taille Max de l'ent&ecirc;te</header_size_limit>
+<header_size_limit_text>(defaut: 100KB),Nombre maximal d'octets en m&eacute;moire pour un en-t&ecirc;te de message. L'exc&eacute;dent est supprim&eacute;. Cette limite est trait&eacute;e par le serveur cleanup</header_size_limit_text>
+<health>Sant&eacute;</health>
+<HELO_ADDRESS>Adresse dans le HELO</HELO_ADDRESS>
+<HELO_SERVERNAME>Nom de l'&eacute;metteur dans le HELO</HELO_SERVERNAME>
+<High_Fly_Writes>&Eacute;critures en vol&eacute;e</High_Fly_Writes>
+<High_Fly_Writes_text>Les fabricants de disques durs mettre en %u0153uvre un contr&ocirc;leur de hauteur de survol (Fly Height Monitor) qui tente de fournir des protections suppl&eacute;mentaires pour
+les op&eacute;rations d'&eacute;criture en d&eacute;tectant si une t&ecirc;te d'enregistrement survole un champ situ&eacute; en dehors de son champ de fonctionnement normal. [br]
+Si une situation de survol risqu&eacute;e est d&eacute;tect&eacute;e, le processus d'&eacute;criture est arr&ecirc;t&eacute;, et l'information est r&eacute;&eacute;crite ou r&eacute;affect&eacute;s &agrave; une r&eacute;gion s&ucirc;re du disque dur. [br]
+Cet attribut indique le nombre de ces erreurs d&eacute;tect&eacute;es au cours de la dur&eacute;e de vie du lecteur. [br]
+Cette fonctionnalit&eacute; est impl&eacute;ment&eacute;e dans la plupart des disques Seagate moderne et dans certains disque durs SCSI Western Digitals, &agrave; partir des  WDE18300 WD Enterprise et WDE9180 Ultra2, et sera incluse dans tous les futurs produits d'entreprise WD.</High_Fly_Writes_text>
+<hits_by_days>Acc&egrave;s par jour</hits_by_days>
+<hits_pourcentage>Pourcentage d'acc&egrave;s</hits_pourcentage>
+<hobby-arts>Sites Web sur l'Art, peintures, collections, statues ou sculptures, galleries...</hobby-arts>
+<holdingdisk>Activer le maintient du disque</holdingdisk>
+<holdingdiskExplain>Est-ce que le maintient du disque doit &ecirc;tre r&eacute;alis&eacute; pour ce d&eacute;pot.[br]Utile pour sauvegarder le disque lui-m&ecirc;me</holdingdiskExplain>
+<hosts_table>Table des h&ocirc;tes</hosts_table>
+<howto_ADADMIN>C'est le compte administrateur ou tout autre compte qui dispose de droits pour joindre le domaine Active Directory.[br]
+Si le compte est nomm&eacute; &quot;Administrateur&quot;, tapez ici &quot;Administrateur&quot;</howto_ADADMIN>
+<howto_ADDOMAIN>C'est le domaine utilis&eacute; dans le nom d'h&ocirc;te de votre serveur active Directory.[br]
+Si votre serveur est nomm&eacute; comme pdc01.mtdomain.tld, indiquez mtdomain.tld</howto_ADDOMAIN>
+<howto_ADIPADDR>Ce serveur doit r&eacute;soudre le nom d'h&ocirc;te du serveur Active Directory.[br]
+Si vous pensez qu'il n'en aura pas la possibilit&eacute;, indiquez ici l'adresse TCP/IP de votre serveur Active Directory</howto_ADIPADDR>
+<howto_ad_server>C'est le nom de la machine Active Directory sans le nom de domaine.[br]
+Si votre serveur est nomm&eacute; pdc01.mtdomain.tld indiquez alors pdc01</howto_ad_server>
+<howto_WINBINDPASSWORD>Vous devez cr&eacute;er un utilisateur &quot;winbind&quot; dans votre serveur Active Directory et indiquez ici le mot de passe de cet utilisateur.[br]
+Si vous utilise le service Active Directory en version Windows 2003, sachez que celui-ci n'accepte pas les connexions anonymes de winbind.[br]Dans ce cas, le d&eacute;mon local winbindd va utiliser le compte winbind et le mot de passe indiqu&eacute; ici afin de s'authentifier.</howto_WINBINDPASSWORD>
+<ID_ATA_COMPAT>Nom ATA</ID_ATA_COMPAT>
+<ID_BUS>Bus</ID_BUS>
+<ID_EDD>EDD</ID_EDD>
+<ID_FS_LABEL>label</ID_FS_LABEL>
+<ID_FS_LABEL_ENC>label</ID_FS_LABEL_ENC>
+<ID_FS_LABEL_SAFE>label</ID_FS_LABEL_SAFE>
+<ID_FS_TYPE>Syst&egrave;me de fichiers</ID_FS_TYPE>
+<ID_FS_USAGE>Utilis&eacute; pour</ID_FS_USAGE>
+<ID_FS_UUID>uuid</ID_FS_UUID>
+<ID_FS_UUID_ENC>uuid</ID_FS_UUID_ENC>
+<ID_FS_VERSION>Version</ID_FS_VERSION>
+<ID_MODEL>Mod&egrave;le</ID_MODEL>
+<id_no_such_user>Utilisateur inconnu</id_no_such_user>
+<id_no_such_user_explain>Le syst&egrave;me d'exploitation ne trouve pas cet utilisateur.[br]Cela veut dire qu'il n'aura sans doutes pas acc&egrave;s aux partages.[br]Contactez le support technique Artica afin de r&eacute;soudre cette d&eacute;faillance.</id_no_such_user_explain>
+<ID_PATH>Chemin</ID_PATH>
+<ID_REVISION>R&eacute;vision</ID_REVISION>
+<ID_SERIAL>N&deg; de s&eacute;rie</ID_SERIAL>
+<ID_SERIAL_SHORT>N&deg; de s&eacute;rie</ID_SERIAL_SHORT>
+<ID_TYPE>Type de disque</ID_TYPE>
+<ID_VENDOR>Constructeur</ID_VENDOR>
+<imaps_port>Port d'&eacute;coute IMAP SSL</imaps_port>
+<imap_port>Port d'&eacute;coute IMAP</imap_port>
+<ImmediateData>Donn&eacute;e imm&eacute;diate</ImmediateData>
+<ImmediateData_explain>Cela permet au service de Disques d'ajouter des donn&eacute;es non sollicit&eacute;es &agrave; une commande.[br] Pour obtenir de meilleures performances, ce param&egrave;tre peut &ecirc;tre activ&eacute;.</ImmediateData_explain>
+<incoming_firewall>Pare-feux entrant</incoming_firewall>
+<incompatible_system>Syst&egrave;me incompatible</incompatible_system>
+<indexing_interval>Intervalle d'indexation</indexing_interval>
+<index_warnings_text>Des informations importantes ont &eacute;t&eacute;s relev&eacute;es, cliquez ici pour les visualiser.</index_warnings_text>
+<instance>Instance</instance>
+<instance_server_name>Nom d'h&ocirc;te de l'instance</instance_server_name>
+<InternetDomainsOrgAsOnlySubdomains>Uniquement les domaines officiels</InternetDomainsOrgAsOnlySubdomains>
+<InternetDomainsOrgAsOnlySubdomains_text>Si activ&eacute;, seulement des sous-domaines des domaines officiels seront autoris&eacute;s &agrave; &ecirc;tre cr&eacute;&eacute;s dans les organisations.</InternetDomainsOrgAsOnlySubdomains_text>
+<IoType>Type d'I/O</IoType>
+<ipatccount_rule_explain>Indiquez ici les adresses TCP/IP afin d'en ressortir les statistiques d&eacute;sir&eacute;es.[br]Pour une simple adresse, indique l'adresse TCP/IP et ne remplissez pas l'option masque de r&eacute;seau.[br]
+Si vous souhaitez visualiser les statistiques de votre r&eacute;seau internet, indiquez le r&eacute;seau utilis&eacute; par vos postes de travail tel que : 192.168.1.0 255.255.255.0.[br]
+Si vous voulez afficher la somme de tout le trafique, indiquez 0.0.0.0 et le masque &agrave; 0.0.0.0.</ipatccount_rule_explain>
+<ipblocks_explain>Cette option permet de bloquer toutes les communications depuis un pays sp&eacute;cifi&eacute;.[br]Elle peut &ecirc;tre activ&eacute; si votre serveur est disponible sur Internet.[br]Les pays activ&eacute;s dans cette section ne seront plus en mesure de communiquer avec votre serveur.
+[br]Soyez attentif afin de ne pas bloquer votre propre pays... Sous quel cas, vous ne pourrez plus communiquer vous m&ecirc;me avec votre serveur.</ipblocks_explain>
+<ipblocks_text>IPDeny est un service permettant de bloquer des blocs d'adresses IP localis&eacute;es par Pays (RIR's)</ipblocks_text>
+<iptaccount_not_installed_explain>Le module de statistiques TCP/IP n'est pas install&eacute; ou compil&eacute; sur ce syst&egrave;me.[br]Il est n&eacute;cessaire de l'installer avant de pouvoir utiliser cette fonctionnalit&eacute;.[br]Pour ce faire, allez dans le Centre d'Installation d'Applications (onglet syst&egrave;me) et Installez le module de statistiques TCP/IP.[br]Si apr&egrave;s avoir effectu&eacute; l'installation, ce message s'affiche &agrave; nouveau, contactez le support technique Artica.</iptaccount_not_installed_explain>
+<ipv6_explain_enable_text>Pr&eacute;cisez les param&egrave;tres IPv6 pour votre serveur.[br]Activez ou d&eacute;sactivez IPv6 et indiquez les param&egrave;tres g&eacute;n&eacute;raux.</ipv6_explain_enable_text>
+<ip_already_exists_in_the_network>Cette adresse IP existe d&eacute;j&agrave; dans votre r&eacute;seau.</ip_already_exists_in_the_network>
+<ip_rotator>Rotation TCP/IP</ip_rotator>
+<ip_rotator_smtp_explain>La rotation TCP/IP utilise le pare-feu local afin de transf&eacute;rer les connexions vers d'autres destinations en fonction d'un &quot;taux&quot; de connections ou de probabilit&eacute;s.[br]
+Vous pouvez utiliser cette fonctionnalit&eacute; si vous avez besoin de fournir une sorte de Round Robbin ou un syst&egrave;me de balancier vers plusieurs relais de messagerie.</ip_rotator_smtp_explain>
+<ip_rotator_text>La rotation TCP/IP vous permet d'effectuer une rotation de transfert des connections SMTP vers d'autres relais de messagerie</ip_rotator_text>
+<is>est</is>
+<iscsi-secu-explain>Cette section active l'authentification afin d'acc&eacute;der au disque, indiquez ici le membre qui sera autoris&eacute;.</iscsi-secu-explain>
+<iscsi_explain>Le protocole iSCSI est un &quot;protocole de la couche application permettant le transport de commandes SCSI sur un r&eacute;seau &quot;. Ce qu%u2019il faut comprendre, c%u2019est qu%u2019il est possible d%u2019exporter un p&eacute;riph&eacute;rique au travers d%u2019un r&eacute;seau en le pr&eacute;sentant comme un p&eacute;riph&eacute;rique SCSI. Outre le fait que le protocole SCSI est un standard de l%u2019industrie d&eacute;ploy&eacute; massivement en production, le fait de passer par un r&eacute;seau IP classique permet de r&eacute;duire les co&ucirc;ts de mise en %u0153uvre par rapport au d&eacute;ploiement de solutions de stockage bas&eacute;es sur la technologie Fibre Channel. Par ailleurs, la sauvegarde des donn&eacute;es peut se faire au niveau du serveur iSCSI, ce qui limite le co&ucirc;t de la solution de sauvegarde.</iscsi_explain>
+<iscsi_IoType_explain>Le mode I/O Fichier (par d&eacute;faut), d&eacute;finit une connexion entre l'unit&eacute; logique et le mat&eacute;riel qui peut &ecirc;tre n'importe quel p&eacute;riph&eacute;rique bloc (y compris les dispositifs de blocs r&eacute;guliers comme hdX et sdX et les p&eacute;riph&eacute;riques de bloc virtuels comme LVM et les logiciels p&eacute;riph&eacute;riques RAID) ou les fichiers r&eacute;guliers.[br][br]
+Le mode I/O Bloc, quand &agrave; lui, d&eacute;finit une connexion entre l'unit&eacute; logique et un dispositif de bloc donn&eacute;. [br]
+Ce mode permet de r&eacute;aliser des lectures/&eacute;critures  en bloc direct avec l'appareil, sans passer par le cache de pagination pour toutes les op&eacute;rations. [br]
+Cela permet un traitement efficace des transferts de secteur non-align&eacute;s (environnements virtualis&eacute;s) et des transferts de grands blocs (serveurs de m&eacute;dias). [br]
+Ce mode fonctionne id&eacute;alement avec un stockage haut de gamme HBA et pour les applications qui n'ont pas besoin de mise en cache entre l'application et le disque ou si cela n&eacute;cessite le besoin de d&eacute;bit de grands blocs.</iscsi_IoType_explain>
+<iscsi_type_edit_explain>En utilisant le mode fichier, Artica va cr&eacute;er un fichier conteneur sp&eacute;cifi&eacute; par le chemin dans le formulaire.[br]
+Ce fichier sera le disque iSCSI partag&eacute;.[br]
+En mode disque, vous devrez choisir une partition qui sera le disque iSCSI partag&eacute;</iscsi_type_edit_explain>
+<jGrowlNotifsDisabled>D&eacute;sactiver les info-bulles &agrave; droite de l'&eacute;cran</jGrowlNotifsDisabled>
+<jumpto>Aller &agrave;</jumpto>
+<KeepAlive_explain>Doit &ecirc;tre utilis&eacute; lorsque vous avez un pare-feu entre Apache httpd et le serveur d'arri&egrave;re-plan, et si ce dernier tend &agrave; interrompre les connexions inactives.[br] Cette option va faire en sorte que le syst&egrave;me d'exploitation envoie des messages KEEP_ALIVE sur chacune des connexions inactives et ainsi &eacute;viter la fermeture de la connexion par le pare-feu.</KeepAlive_explain>
+<last_24h>Derni&egrave;res 24H</last_24h>
+<last_7days>Derniers 7 Jours</last_7days>
+<last_7_days>Derniers 7 jours</last_7_days>
+<last_hour>60 derni&egrave;res minutes</last_hour>
+<ldap_importation>Importation LDAP</ldap_importation>
+<ldap_importation_text>Importer des utilisateurs depuis un serveur Externe LDAP comme OpenLDAP ou Zimbra</ldap_importation_text>
+<leases>concessions</leases>
+<leave_ad>D&eacute;connecter du serveur Active Directory</leave_ad>
+<LimitRequestFields>Nombre d'ent&ecirc;tes (champs)</LimitRequestFields>
+<limit_memory>Limiter la m&eacute;moire &agrave;</limit_memory>
+<limit_swap>Limiter la m&eacute;moire SWAP &agrave;</limit_swap>
+<load_balancer>R&eacute;partition de charge</load_balancer>
+<load_balancer_instances_explain>Cette section vous permet d'activer une r&eacute;partition de charger pour vos instances SMTP.[br]
+Dans ce cas, vous devrez faire pointer les clients de messagerie vers ce instance de r&eacute;partition.[br]
+Charge &agrave; elle de transf&eacute;rer les connexions vers la bonne instance.[br]
+Cochez les cases des instances que vous d&eacute;sirez r&eacute;partir avec le processus de r&eacute;partition de charge.</load_balancer_instances_explain>
+<Load_Cycle_Count>Charger/D&eacute;charger le d&eacute;compte des cycles</Load_Cycle_Count>
+<Load_Cycle_Count_text>Nombre de cycles en position Zone d'Atterrissage</Load_Cycle_Count_text>
+<local_directory>R&eacute;pertoire local</local_directory>
+<local_directory_name>R&eacute;pertoire local</local_directory_name>
+<local_interface_bridge>Cr&eacute;er un pont depuis la carte</local_interface_bridge>
+<log_all_events>loger tous les &eacute;v&egrave;nements</log_all_events>
+<log_queries>Enregistrer les requ&ecirc;tes</log_queries>
+<lowereq>est inf&eacute;rieur</lowereq>
+<lowernot>n'est pas inf&eacute;rieur</lowernot>
+<lvcreate_explain>Cette op&eacute;ration va cr&eacute;er un nouveau disque dans ce groupe.[br]
+Le disque cr&eacute;&eacute; disposera du m&ecirc;me comportement qu'un disque normal.[br]
+Indiquez ici la taille du disque en MB.</lvcreate_explain>
+<LVM_CONVERT_DEV_EXPLAIN>S&eacute;lectionnez le disque physique disponible dans la liste.[br]
+Cela convertira votre disque en un disque LVM.[br]
+Choisissez le bon disque, car cette op&eacute;ration effacera le contenu du disque.</LVM_CONVERT_DEV_EXPLAIN>
+<LVM_CONVERT_DEV_WARN>Convertir ce disque en LVM ?
+Le contenu du disque sera &eacute;cras&eacute;</LVM_CONVERT_DEV_WARN>
+<LXC_ABOUT>Les Linux containers (lxc) sont une solution d%u2019isolation ou de virtualisation (selon l%u2019utilisation) &agrave; l%u2019instar des Jails BSD.[br]
+Contrairement &agrave; d%u2019autres solutions similaires (vserver ou openvz) sous Linux, les lxc ne n&eacute;cessitent pas de patch du noyau car faisant directement partie de la branche principale du d&eacute;veloppement du noyau.[br]
+Cette section vous permet de cr&eacute;er des Serveurs Virtuels Priv&eacute;s (VPS serveurs) vous permettant de d&eacute;ployer et de faire tourner plusieurs syst&egrave;mes Linux sur cette machine.</LXC_ABOUT>
+<lxc_autostart_explain>Si activ&eacute;, Artica s'assurera que ce serveur soit toujours d&eacute;marr&eacute;.</lxc_autostart_explain>
+<lxc_cpu_shares>Priorit&eacute; CPU du serveur virtuel</lxc_cpu_shares>
+<LXC_NET_DELETE_ASK>Cette op&eacute;ration va d&eacute;truire ce serveur Virtuel
+Voulez-vous effectuer cette op&eacute;ration ?</LXC_NET_DELETE_ASK>
+<LXC_NET_RESTART_ASK>Le service du r&eacute;seau va &ecirc;tre red&eacute;marr&eacute;, il est possible que pendant quelques temps, le serveur soit indisponible.[br]
+Voulez-vous continuer ?</LXC_NET_RESTART_ASK>
+<lxc_performances_cpu_shares_explain>Ce param&egrave;tre indique la priorit&eacute; CPU d'un serveur Virtuel par rapport aux autres.
+Voici un exemple vous permettant d'expliquer ce param&egrave;tre.[br]
+Vous assignez la valeur de 1024 au premier serveur Virtuel et la valeur 2048 au deuxi&egrave;me serveur virtuel.[br]
+Cela veut dire que chaque seconde de CPU, le deuxi&egrave;me serveur virtuel disposera du double des cycles CPU que le premier.[br]
+Par d&eacute;faut, tous les serveurs virtuels disposent de la valeur 1024</lxc_performances_cpu_shares_explain>
+<lxc_performances_explain>Cette section vous permet de &quot;Brider&quot; le serveur Virtuel afin qu'il ne consomme pas toutes les ressources m&eacute;moire et CPU  de votre serveur.</lxc_performances_explain>
+<lxc_start_options_text>Cette section pr&eacute;ciser la surveillance de ce serveur Virtuel et les param&egrave;tres du d&eacute;marrage du service.</lxc_start_options_text>
+<macro_build_bigpart_explain>Cr&eacute;er une partition compl&egrave;te et unique sur ce disque.[br]Ceci va &eacute;craser vos donn&eacute;es.</macro_build_bigpart_explain>
+<macro_build_lvm_explain>Cr&eacute;er un partition compl&egrave;te de type LVM afin de cr&eacute;er des disques virtuels LVM.</macro_build_lvm_explain>
+<mailbox_infos>Informations BAL</mailbox_infos>
+<mailbox_zarafa_infos_text>Affiche les informations techniques &agrave; propos de cette bo&icirc;te aux lettres Zarafa</mailbox_zarafa_infos_text>
+<mails>Messages</mails>
+<mailss>message(s)</mailss>
+<maindomains_explain>Cette section indique les domaines Internet autoris&eacute;s par les organisations.[br]
+Les organisations ne pourront que cr&eacute;er des sous-domaines de ces domaines si l'option &quot;Seulement les domaines officiels&quot; est activ&eacute;e.</maindomains_explain>
+<major_version>Version majeure</major_version>
+<manage_this_group>Administrer ce groupe</manage_this_group>
+<manage_websites>Administrer vos sites web</manage_websites>
+<manage_your_vpn_client_connection_text>Administrer la connexion VPN cliente vers le serveur OpenVPN.</manage_your_vpn_client_connection_text>
+<mapi_ip>Adresse locale MAPI</mapi_ip>
+<mapi_port>Port d'&eacute;coute MAPI</mapi_port>
+<matches>Correspond</matches>
+<matchesnot>Ne correspond pas</matchesnot>
+<MaxClients>Clients connect&eacute;s simultan&eacute;ment MAX</MaxClients>
+<MaxKeepAliveRequests>Requ&ecirc;tes maintenues MAX</MaxKeepAliveRequests>
+<maxpromotedayExplain>nombre maximum de jours pour une promotion, indiquez 0 si vous ne d&eacute;sirez pas de promotion, 1 ou 2 si votre disque est en d&eacute;passement de promotion.</maxpromotedayExplain>
+<MaxSpareServers>Nombre maximal de processus en m&eacute;moire</MaxSpareServers>
+<max_con>MAX Con.</max_con>
+<max_connexions>Connexions maximales</max_connexions>
+<MAX_CPU>C.P.U Max</MAX_CPU>
+<max_events_inmysql>&Eacute;v&egrave;nements MAX stock&eacute;s dans MySQL</max_events_inmysql>
+<max_messages>Nombre Max de messages</max_messages>
+<max_rcpt_to>Nombre maximal de destinataires</max_rcpt_to>
+<max_rcpt_to_onlyForLocalDomains>Seulement aux domaines locaux</max_rcpt_to_onlyForLocalDomains>
+<max_rcpt_to_onlyForLocalDomains_text>Comptabilise seulement les destinataires appartenant aux domaines locaux.[br]
+Les destinataires externes aux domaines locaux ne seront pas calcul&eacute;s.</max_rcpt_to_onlyForLocalDomains_text>
+<max_rcpt_to_text>D&eacute;fini le nombre maximal de destinataires dans les champs To ou Cc.[br]Le messages est rejet&eacute; en cas de d&eacute;passement.[br]
+0 d&eacute;sactive la restriction.</max_rcpt_to_text>
+<max_score_white_text>Indiquez ici le score &agrave; retirer au score global du filtre de contenu
+On consid&egrave;re que l'&eacute;metteur n'est pas en liste blanche sur le filtre de contenu mais uniquement sur les filtres de connexions.
+Si vous mettez 0, alors l'&eacute;metteur sera compl&egrave;tement mis en liste blanche...</max_score_white_text>
+<max_size>Taille maximale</max_size>
+<messages_list>Liste des messages</messages_list>
+<message_analyze>Analyse de Message</message_analyze>
+<message_as_analyze_text>V&eacute;rification de message. Visualisez le comportement du filtre de contenu lorsqu'il analyse un message</message_as_analyze_text>
+<messaging_events>&Eacute;v&egrave;nements de la messagerie</messaging_events>
+<messaging_events_text>Visualiser et rechercher les messages pass&eacute;s &agrave; travers le syst&egrave;me de messagerie</messaging_events_text>
+<messaging_org>Messagerie de l'organisation</messaging_org>
+<minimal_infos>Informations minimales</minimal_infos>
+<minimum_length>Taille minimale</minimum_length>
+<minor_version>Version mineure</minor_version>
+<MinSpareServers>Processus minimum en m&eacute;moire</MinSpareServers>
+<MISSING_PARAMETER>Param&egrave;tres manquants</MISSING_PARAMETER>
+<MISSING_PARAMETER_TEXT>Un ou des param&egrave;tres sont manquants, le service ne va pas tourner correctement</MISSING_PARAMETER_TEXT>
+<mod_evasive_explain>Cette fonctionnalit&eacute; d&eacute;tecte lorsqu'un utilisateur du site web effectue de multiples requ&ecirc;tes dans une p&eacute;riode tr&egrave;s courte afin de bannir temporairement l'adresse IP de cet utilisateur.[br]La p&eacute;riode d'interdiction peut &ecirc;tre tr&egrave;s courte car le module assure automatiquement l'auto-blocage si l'attaque revient..</mod_evasive_explain>
+<mod_qos_explain>La QOS permet d'affiner le param&eacute;trage des connexions que va subir le site web afin de le d&eacute;fendre contre des attaques et de limiter la bande passante.</mod_qos_explain>
+<mounts_list>Liste des connexions</mounts_list>
+<multiples_ports>Port(s)</multiples_ports>
+<multiple_instances>Instances multiples</multiple_instances>
+<Multi_Zone_Error_Rate>Erreurs &agrave; l%u2019&eacute;criture</Multi_Zone_Error_Rate>
+<Multi_Zone_Error_Rate_text>Nombre total d%u2019erreurs &agrave; l%u2019&eacute;criture d%u2019un secteur</Multi_Zone_Error_Rate_text>
+<must_choose_ipaddr>Vous devez choisir une adresse IP</must_choose_ipaddr>
+<mxrecords>Mail eXchanger (MX)</mxrecords>
+<mx_record>Enregistrement MX</mx_record>
+<myaccount>Mon compte</myaccount>
+<myaccount_text>Personnalisez votre compte, modifiez votre adresse de messagerie, votre mot de passe et vos informations syst&egrave;me.</myaccount_text>
+<mymessaging>Ma messagerie</mymessaging>
+<mysql_error>Erreur du serveur Mysql</mysql_error>
+<mysql_error_popup_credential_text>Artica n'a pas la possibilit&eacute; de se connecter sur le serveur Mysql avec les param&egrave;tres d'acc&egrave;s par d&eacute;faut.[br]
+Vous devriez cr&eacute;er un nouvel utilisateur Mysql et un  mot de passe afin de corriger ce probl&egrave;me.[br]
+Voici l'erreur qui &agrave; &eacute;t&eacute; g&eacute;n&eacute;r&eacute;e pendant la connexion Mysql.</mysql_error_popup_credential_text>
+<mysql_users>Utilisateurs Mysql</mysql_users>
+<myWebServices>Mes services Internet</myWebServices>
+<myWebServices_text>Visualiser les informations sur les services Internet que vous pouvez utiliser avec votre compte</myWebServices_text>
+<my_address_book_text>G&eacute;rer et visualiser les informations a propos de vos coll&egrave;gues et vos contacts.</my_address_book_text>
+<my_collegues>Mes coll&egrave;gues</my_collegues>
+<my_contacts>Mes contacts</my_contacts>
+<my_organizations>Mes Organisations</my_organizations>
+<my_vpn_cnx>Mon acc&egrave;s VPN</my_vpn_cnx>
+<my_vpn_cnx_text>Informations &agrave; propos de la connexion VPN au serveur, configurations, client VPN Windows...</my_vpn_cnx_text>
+<need_reboot>Vous devrez red&eacute;marrer la machine afin de faire prendre en compte les modifications</need_reboot>
+<network_legend>R&eacute;seau</network_legend>
+<network_nic>R&eacute;seau</network_nic>
+<network_softwares>Logiciels r&eacute;seaux</network_softwares>
+<next-server>Prochain serveur</next-server>
+<nics>Interfaces r&eacute;seaux</nics>
+<NIC_UNCONFIGURED_ERROR>Il semble que vos interfaces r&eacute;seaux principales ne sont pas encore param&eacute;tr&eacute;es, vous devez les &eacute;diter avant toute op&eacute;ration.</NIC_UNCONFIGURED_ERROR>
+<NoDryReboot>Pas de red&eacute;marrage en cas de panne disques</NoDryReboot>
+<NoDryReboot_explain>Si des probl&egrave;mes de disque durs sont d&eacute;tect&eacute;s, Artica va red&eacute;marrer le serveur.[br]Activer cette option interdit &agrave; Artica d'op&eacute;rer de la sorte.</NoDryReboot_explain>
+<NoGatewayForVirtualNetWork>Pas de passerelle pour les adresses virtuelles</NoGatewayForVirtualNetWork>
+<NoGatewayForVirtualNetWorkExplain>La passerelle est d&eacute;sactiv&eacute;e pour les interfaces virtuelles</NoGatewayForVirtualNetWorkExplain>
+<noteq>N'est pas &eacute;gale</noteq>
+<notify_class>Quels incidents rapporter au postmaster</notify_class>
+<notify_class_2bounce>non-livraison lui-m&ecirc;me non livrable</notify_class_2bounce>
+<notify_class_2bounce_text>Si un avis de non-livraison simple est lui-m&ecirc;me non livrable, le postmaster re&ccedil;oit un double de l'avis de non-livraison avec une copie de l'avis de non-livraison simple (non tronqu&eacute;). La notification est envoy&eacute;e &agrave; l'adresse indiqu&eacute;e au param&egrave;tre de configuration 2bounce_notice_recipient (d&eacute;faut : postmaster).</notify_class_2bounce_text>
+<notify_class_bounce>Messages ind&eacute;livrables</notify_class_bounce>
+<notify_class_bounce_text>Informe le postmaster du courrier non livrable.[br] Si le courrier est non livrable, un avis de non-livraison simple est envoy&eacute;, avec une copie du message qui n'a pas &eacute;t&eacute; livr&eacute;, ou envoie une retranscription de la session SMTP en cas de rejet du message. Pour des raisons d'intimit&eacute;, la copie envoy&eacute;e au postmaster d'un avis de non-livraison simple est tronqu&eacute;e apr&egrave;s les en-t&ecirc;tes de message originaux. [br]
+Voyez &eacute;galement le paragraphe luser_relay et &quot;2bounce&quot; (ci-dessous). [br]
+La notification est envoy&eacute;e &agrave; l'adresse indiqu&eacute;e au param&egrave;tre de configuration bounce_notice_recipient (d&eacute;faut : postmaster).</notify_class_bounce_text>
+<notify_class_delay>courriers retard&eacute;s</notify_class_delay>
+<notify_class_delay_text>Informe le postmaster des courriers retard&eacute;s. Dans ce cas, le postmaster re&ccedil;oit les en-t&ecirc;tes de message seulement. La notification est envoy&eacute;e &agrave; l'adresse indiqu&eacute;e au param&egrave;tre de configuration delay_notice_recipient (d&eacute;faut : postmaster).</notify_class_delay_text>
+<notify_class_policy>politique de restriction</notify_class_policy>
+<notify_class_policy_text>Informe le postmaster des demandes clients qui ont &eacute;t&eacute; rejet&eacute;es en raison de la politique de restriction UCE (anti-spam). [br]
+Le postmaster re&ccedil;oit une transcription de la session SMTP enti&egrave;re. La notification est envoy&eacute;e &agrave; l'adresse indiqu&eacute;e au param&egrave;tre de configuration error_notice_recipient (d&eacute;faut : postmaster).</notify_class_policy_text>
+<notify_class_protocol>erreurs de protocole</notify_class_protocol>
+<notify_class_protocol_text>Informe le postmaster des erreurs de protocole (c&ocirc;t&eacute; client ou serveur) ou des tentatives d'un client d'ex&eacute;cuter des commandes non impl&eacute;ment&eacute;es.[br]
+ Le postmaster re&ccedil;oit une transcription de la session SMTP enti&egrave;re.[br]
+La notification est envoy&eacute;e &agrave; l'adresse indiqu&eacute;e au param&egrave;tre de configuration error_notice_recipient (d&eacute;faut : postmaster).</notify_class_protocol_text>
+<notify_class_resource>Probl&egrave;me de ressource</notify_class_resource>
+<notify_class_resource_text>Informe le postmaster des courriers non d&eacute;livr&eacute;s en raison d'un probl&egrave;me de ressource (par exemple, la file d'attente &eacute;crivant les erreurs). La notification est envoy&eacute;e &agrave; l'adresse indiqu&eacute;e au param&egrave;tre de configuration error_notice_recipient (d&eacute;faut : postmaster).</notify_class_resource_text>
+<notify_class_software>probl&egrave;mes logiciels</notify_class_software>
+<notify_class_software_text>Informe le postmaster des courriers non d&eacute;livr&eacute;s en raison de probl&egrave;mes logiciels. La notification est envoy&eacute;e &agrave; l'adresse indiqu&eacute;e au param&egrave;tre de configuration error_notice_recipient (d&eacute;faut : postmaster).</notify_class_software_text>
+<not_categoryzed>Non cat&eacute;goris&eacute;</not_categoryzed>
+<no_backendmailbox_installed_explain>Il n'y a pas de serveur de bo&icirc;tes aux lettres install&eacute; sur ce syst&egrave;me (Cyrus-imap ou Zarafa).[br]
+SI vous indiquez un domaine local et recevez un email pour ce domaine, le message ne sera pas stock&eacute; et sera perdu.[br]
+Utilisez la seconde option &quot;Domaines relais&quot;.</no_backendmailbox_installed_explain>
+<NO_FEATURE_AMAVIS_NOT_ENABLED>Le filtre de contenu Amavisd-new n'est [b]pas activ&eacute;[/b].[br]Cette fonctionnalit&eacute; n'est pas disponible.[br]Contactez votre administrateur pour l'activer.</NO_FEATURE_AMAVIS_NOT_ENABLED>
+<NO_FEATURE_AMAVIS_NOT_INSTALLED>Le filtre de contenu Amavisd-new n'est [b]pas install&eacute;[/b].[br]Cette fonctionnalit&eacute; n'est pas disponible.[br]Contactez votre administrateur pour l'activer.</NO_FEATURE_AMAVIS_NOT_INSTALLED>
+<NO_RELAY_TO_THIS_SERVER_EXPLAIN>Op&eacute;ration non permise.
+Un domaine relay&eacute; ne peut &ecirc;tre achemin&eacute; vers ce serveur (lui-m&ecirc;me).
+Utilisez l'autre option (domaine local) dans ce contexte.</NO_RELAY_TO_THIS_SERVER_EXPLAIN>
+<no_such_interfaces>Pas d'interface trouv&eacute;e</no_such_interfaces>
+<no_usersameftpuser>Erreur: Le nom du compte FTP ne peut &ecirc;tre le m&ecirc;me que le nom du propri&eacute;taire du site web.</no_usersameftpuser>
+<nsrecord>Serveur de nom</nsrecord>
+<ntp_server>serveur NTP</ntp_server>
+<Offline_Uncorrectable>secteurs non r&eacute;-allouables</Offline_Uncorrectable>
+<Offline_Uncorrectable_text>Nombre de secteurs non r&eacute;-allouables</Offline_Uncorrectable_text>
+<only_use_this>Utiliser seulement ceci</only_use_this>
+<OpenVPNRemotePort>Port d'&eacute;coute du serveur OpenVPN</OpenVPNRemotePort>
+<OPENVPN_APPLY_CONFIG>Construire les param&egrave;tres VPN</OPENVPN_APPLY_CONFIG>
+<OPENVPN_APPLY_CONFIG_TEXT>Sauvegarde vos param&egrave;tres et red&eacute;marre votre processus OpenVPN afin de les mettre en mode production.</OPENVPN_APPLY_CONFIG_TEXT>
+<OPENVPN_EXPLAIN_PROXY>Les clients OpenVPN devront utiliser un proxy invers&eacute; afin d'atteindre le serveur/port VPN</OPENVPN_EXPLAIN_PROXY>
+<openvpn_fixed_ip_addr_explain>Par d&eacute;faut, le serveur VPN utilise DHCP afin de fournir une adresse libre et al&eacute;atoire dans la plage indiqu&eacute;e.[br]Ainsi chaque connexion cliente dispose d'une adresse IP unique.[br]
+Si la valeur est sup&eacute;rieur &agrave; 2, le serveur va utilis&eacute; l'adresse IP indiqu&eacute;e au lieu d'en livrer une de fa&ccedil;on al&eacute;atoire.</openvpn_fixed_ip_addr_explain>
+<openvpn_ippub_explain>Afin de g&eacute;n&eacute;rer le fichier de configuration du client, indiquez ici les informations concernant l'adresse du serveur VPN qui doit &ecirc;tre utilis&eacute;e afin d'&eacute;tablir une session sur le port du serveur VPN.</openvpn_ippub_explain>
+<openvpn_netmask_ip_explain>Indiquez ici le masque de r&eacute;seau du site distant.[br]L'adresse du masque doit &ecirc;tre sous la forme 255.255.255.0 ou 255.255.255.224 par exemple.[br]
+Ce n'est pas le masque de r&eacute;seau de votre serveur mais celui de votre site distant</openvpn_netmask_ip_explain>
+<OPENVPN_NOT_ENABLED>Le service VPN n'est pas activ&eacute;</OPENVPN_NOT_ENABLED>
+<OPENVPN_NOT_ENABLED_TEXT>Le serveur OpenVPN en mode serveur n'est pas activ&eacute;. Aucun client n'est amen&eacute; &agrave; joindre le serveur afin d'&eacute;tablir une session VPN.</OPENVPN_NOT_ENABLED_TEXT>
+<openvpn_remitesite_ip_explain>Donnez ici l'adresse r&eacute;seau local de votre site distant.[br]Elle doit &ecirc;tre sous la forme 192.168.128.0 ou 10.1.1.0. par exemple[br]
+Ce n'est pas le r&eacute;seau de votre serveur VPN mais celui de votre r&eacute;seau distant.</openvpn_remitesite_ip_explain>
+<openvpn_remotesites_routes_explain>Si votre site distant contient plusieurs r&eacute;seaux et que vous souhaitez les rendre disponibles &agrave; travers le lien VPN, indiquez ici les diff&eacute;rentes routes et r&eacute;seaux afin d'aider le serveur VPN &agrave; apprendre la configuration des r&eacute;seaux et de les  aiguiller.</openvpn_remotesites_routes_explain>
+<openvpn_server>Serveur OpenVPN</openvpn_server>
+<operating_system>Syst&egrave;me d'exploitation</operating_system>
+<operating_system_user_has>Operating system user has:</operating_system_user_has>
+<option-176>Param&egrave;tres T&eacute;l&eacute;phones IP</option-176>
+<option-176-explain>The IP phones need obviously their own IP addresses.[br]
+You can administer this manually but more common is DHCP configuration.[br]
+Using DHCP you can pass some special server ip's to the phones, as well as direct them to use a different VLAN.[br]
+Why "specific option"? This is a special vendor-specific scope option that you need to define on your DHCP server.[br]
+For example, Avaya phones are hard coded to "read" this scope option and pick up whatever settings you place there.
+</option-176-explain>
+<optional>Optionnel</optional>
+<organizations_parameters>Param&egrave;tres des organisations</organizations_parameters>
+<organizations_parameters_text>Indiquez le comportement global des organisations et des param&egrave;tres du serveur autour des organisations</organizations_parameters_text>
+<organization_administrator>Administrateur d'organisation</organization_administrator>
+<original_mail>Adresse de messagerie actuelle</original_mail>
+<outgoing>Sortant</outgoing>
+<OverWriteRestrictedDomains>Surpasser la restriction de domaines</OverWriteRestrictedDomains>
+<OverWriteRestrictedDomains_allow_text>Vous pouvez surpasser la politique de restriction aux sous-domaines.[br]Si vous d&eacute;sirez ajouter votre propre domaine, indiquez ici le domaine complet</OverWriteRestrictedDomains_allow_text>
+<page_interval>Intervalle pour une page</page_interval>
+<partition>Partition</partition>
+<partition_automount_center_text>Connecter cette partition avec le service d'Auto-connexion.</partition_automount_center_text>
+<password_no_match_policy>Le mot de passe ne correspond pas &agrave; la politique de mots de passe</password_no_match_policy>
+<password_policy>Politique de mot de passe</password_policy>
+<patterns_versions>Versions de signatures</patterns_versions>
+<pdns_listen_ip_explain>Par d&eacute;faut, Artica va essayer de d&eacute;terminer les adresses r&eacute;seaux utilis&eacute;e par votre serveur et va les transmettre au service PowerDNS.[br]Normalement, vous n'avez pas &agrave; enrichir cette liste.[br]Toutefois dans le cas ou vous d&eacute;sirez forcer le serveur DNS &agrave; n'&eacute;couter qu'une seule adresse ou vous &ecirc;tes dans un environnement VPS (OpenVPZ) o&ugrave; Artica ne peut d&eacute;tecter les adresses r&eacute;seaux, vous allez devoir indiquer quelles sont les adresses que le serveur DNS doit &eacute;couter.</pdns_listen_ip_explain>
+<perform_mysql_check>Lancer une v&eacute;rification MySQL sur cette table ?</perform_mysql_check>
+<permissions>Permissions</permissions>
+<persistante_connection>Connexion persistante</persistante_connection>
+<picture>Image</picture>
+<please_choose_an_official_domain>Veuillez choisir un domaine officiel</please_choose_an_official_domain>
+<please_register_first>Veuillez vous enregistrer d'abord</please_register_first>
+<please_while_creating_your_organization>Veuillez patienter pendant la cr&eacute;ation de votre organisation.</please_while_creating_your_organization>
+<pop3s_port>Port d'&eacute;coute POP3 SSL</pop3s_port>
+<pop3_port>Port d'&eacute;coute POP3</pop3_port>
+<postalCode>Code postal</postalCode>
+<postfinder_parameters_explain>Vous trouverez ici les param&egrave;tres qui pilotent le stockage des fichiers d'&eacute;v&egrave;nements de Postfix.[br]
+Il est important de conserver ces fichiers source qui sont l'historique des &eacute;changes de messages sur la passerelle dans un espace d&eacute;di&eacute;.[br]
+Vous devez d&eacute;finir &agrave; partir de quel moment les fichiers devront &ecirc;tre compress&eacute;s afin de r&eacute;duire leur taille sur le disque.[br]
+Les fichiers compress&eacute;s ne pourront pas &ecirc;tre analys&eacute;s par la fonctionnalit&eacute; PostFinder.</postfinder_parameters_explain>
+<PostfixNotifyMessagesRestrictions_text>notifier par email lorsqu'un message correspond &agrave; ces restrictions</PostfixNotifyMessagesRestrictions_text>
+<postfix_finder>PostFinder</postfix_finder>
+<postfix_finder_explain>PostFinder est un outil vous permettant de rechercher les s&eacute;quences de routage dans les historiques des &eacute;v&egrave;nements du serveur de messagerie.[br]Cet outil doit vous aider &agrave; trouver les bons messages en rapport avec une adresse eMail.</postfix_finder_explain>
+<postfix_search_amavis>Cette section vous permet de retrouver des &eacute;v&egrave;nements de messages qui ont travers&eacute;s l'anti-spam central nomm&eacute; &quot;Amavis&quot;.[br]Tous les messages stock&eacute;s dans cette zone ont travers&eacute;s la premi&egrave;re barri&egrave;re de filtrage de connexions comme le greylisting, les RBLs, PostScreen...[br]
+Dans ce cas, les messages estampill&eacute;s comme SPAM ont &eacute;t&eacute;s d&eacute;tect&eacute;s par les filtres de contenus comme SpamAssassin ou Kaspersky Anti-spam...</postfix_search_amavis>
+<postfix_search_events>Cette section vous permet de trouver l'historique des messages d&eacute;tect&eacute;s par Artica et sauvegard&eacute;s dans la base Mysql du serveur.</postfix_search_events>
+<postfix_search_logs>Cette section vous permet de rechercher des &eacute;v&egrave;nements de messages directement dans le fichier d'&eacute;v&egrave;nements du serveur Postfix.</postfix_search_logs>
+<postfix_search_quarantine>Cette section recherche dans la zone de [b]Quarantaine[/b].[br]
+Utilisez le formulaire afin de trouver vos messages stock&eacute;s.</postfix_search_quarantine>
+<postfix_security_synthesis_explain>Vous allez trouver ici la synth&egrave;se de vos politiques de s&eacute;curit&eacute; de votre messagerie.[br]
+Chaque politique dispose d'un lien vous permettant d'acc&eacute;der facilement &agrave; la fonctionnalit&eacute;.[br]
+Le 3&egrave;me param&egrave;tre indique l'op&eacute;ration effectu&eacute;e lorsque le message correspond &agrave; la politique.[br]
+[li]rejeter: la connexion SMTP est d&eacute;connect&eacute;e, un &eacute;v&egrave;nement est enregistr&eacute; mais pas de contenu ni de sujet enregistr&eacute;.[/li]
+[li]Passer: Le message passe &agrave; travers la politique sans &ecirc;tre inqui&eacute;t&eacute;[/li]
+[li]Pare-feu: L'&eacute;metteur ne peut pas ouvrir de port sur le serveur.[/li]
+[li]Retard&eacute;:  L'&eacute;metteur  est notifi&eacute; &agrave; revenir plus tard.[/li]</postfix_security_synthesis_explain>
+<POSTFWD2_ABOUT>PostFwd2 utilise le protocole de R&egrave;gles de d&eacute;l&eacute;gation de Postfix afin de contr&ocirc;ler les acc&egrave;s au serveur de messagerie avant que celui-ci n'accepte le message au travers de plusieurs combinaisons de r&egrave;gles sur diff&eacute;rents param&egrave;tres SMTP.[br]
+Les fonctionnalit&eacute;s majeures sont :
+combinaisons de diff&eacute;rents param&egrave;tres dans une seule r&egrave;gle.[br]
+Utilisation de Macros et d'ACL et de m&eacute;thode de groupage pour des utilisations courantes.[br]
+Requ&egrave;tes DNSBL asynchrones avec des actions arbitraires en d&eacute;pendance avec les r&egrave;gles.[br]
+D&eacute;sactivation automatiques des serveurs DNSBL qui ne r&eacute;pondent pas.[br]
+Limite du nombre de messages et de poids de messages.[br]
+Syst&egrave;me de score afin de disposer d'un contr&ocirc;le acc&egrave;s granulaire.[br]
+R&egrave;gles pouvant &ecirc;tre bas&eacute;es sur des heures et des dates.[br]
+Saut conditionnels de r&egrave;gles &agrave; r&egrave;gles.[br]
+Cache interne pour les requ&ecirc;tes et les acc&egrave;s DNS.</POSTFWD2_ABOUT>
+<postfwd2_action_rate>Cr&eacute;&eacute; un compteur qui sera incr&eacute;ment&eacute; &agrave; chaque connexion.[br]Le temps indiqu&eacute; est en secondes. Si le compteur est d&eacute;pass&eacute; pendant une p&eacute;riode de X secondes, le message sera rejet&eacute;.</postfwd2_action_rate>
+<postfwd2_action_rcpt>Cr&eacute;&eacute; un compteur qui sera incr&eacute;ment&eacute; &agrave; chaque nombre de destinataires indiqu&eacute; par le MTA.[br]Le temps indiqu&eacute; est en secondes. Si le compteur est d&eacute;pass&eacute; pendant une p&eacute;riode de X secondes, le message sera rejet&eacute;.</postfwd2_action_rcpt>
+<postfwd2_action_redirect>Apr&egrave;s le placement du message en file d'attente, le message sera r&eacute;-envoy&eacute; vers l'adresse sp&eacute;cifi&eacute;e en lieu et place de celle d'origine dans le message. [br]A noter que cette op&eacute;ration affecte aussi tous les autres destinataires du message</postfwd2_action_redirect>
+<postfwd2_action_score>Doit &ecirc;tre une valeur d&eacute;cimale ex:(0.01 or 1.5).[br]
+Vous pouvez incr&eacute;menter la valeur gr&acirc;ce &agrave; des op&eacute;rateurs:[br]
+le signe plus et n.nn ajoute n.nn au score actuel[br]
+-n.nn soustrait n.nn au score actuel[br]
+*n.nn multiplie au score actuel par n.nn[br]
+/n.nn divise au score actuel par n.nn[br]
+n.nn d&eacute;finir au score actuel &agrave; n.nn[br]
+Lorsqu'un messages arrive, par d&eacute;faut, le score maximal est de 5.0[br]
+Donc si vous d&eacute;finissez le score &agrave;  1.5 cela va ajouter 1.5 au score actuel.[br]</postfwd2_action_score>
+<postfwd2_action_size>Cr&eacute;&eacute; un compteur qui sera incr&eacute;ment&eacute; de la taille des messages re&ccedil;us.[br][br]1572864 = 1.5MB.[br]iLe temps indiqu&eacute; est en secondes. Si le compteur est d&eacute;pass&eacute; pendant une p&eacute;riode de X secondes, le message sera rejet&eacute;.</postfwd2_action_size>
+<postfwd2_item_client_address>V&eacute;rifie l'adresse IP de connexion pendant la session SMTP:[br] utilisez une notation CDIR : 192.168.1.0/24 ou IP 192.168.1.124</postfwd2_item_client_address>
+<postfwd2_item_client_name>V&eacute;rifie le nom dans la connexion SMTP du seveur qui s'y connecte:[br]:server.domain.tld ou correspond &agrave; une expression du style [\.-_](adsl|dynamic|ppp|)[\.-_]</postfwd2_item_client_name>
+<postfwd2_item_date>Donnez une date ou une tranche de date[br]
+Exemple:[br]
+29.02.2011[br]
+24.12.2011-26.12.2012[br]
+&agrave; partir de maintenant au 23 novembre[br]
+-23.09.2011
+depuis le 1er Avril &agrave; maintenant[br]
+01.04.2008-[br]</postfwd2_item_date>
+<postfwd2_item_days>Jour de la semaine ou tranche de jours dans la semaine:[br]Sun-Sat ou de fa&ccedil;on num&eacute;rique 1-3</postfwd2_item_days>
+<postfwd2_item_helo_address>V&eacute;rifie le nom du serveur dans le HELO.Utilisez !!(0.0.0.0/0) afin de v&eacute;rifier les inconnus ou utilisez une notation CDIR : 192.168.1.0/24 ou IP 192.168.1.124</postfwd2_item_helo_address>
+<postfwd2_item_helo_name>V&eacute;rifier le nom de la machine envoy&eacute;e lors du HELO:[br]:server.domain.tld ou correspond &agrave; une expression du style [\.-_](adsl|dynamic|ppp|)[\.-_]</postfwd2_item_helo_name>
+<postfwd2_item_months>Mois ou tranche de mois:[br]Jan-Dec ou de fa&ccedil;on num&eacute;rique 1-12</postfwd2_item_months>
+<postfwd2_item_rbl>V&eacute;rifie les serveurs RBL et sauvegarde le score pour la prochaine r&egrave;gle &quot;Note des RBL&quot;.[br]Donnez la liste des serveurs RBL s&eacute;par&eacute;s par une virgule.</postfwd2_item_rbl>
+<postfwd2_item_rblcount>Note des serveurs RBL.[br]
+Si non sp&eacute;cifi&eacute;, une seul RBL va faire correspondre la r&egrave;gle.[br]
+Vous pouvez sp&eacute;cifier &quot;all&quot; afin d'&eacute;valuer tous les attributs.</postfwd2_item_rblcount>
+<postfwd2_item_recipient>V&eacute;rifie l'adresse eMail du destinataire:[br]user@domain.tld ou correspond &agrave; @someshop\.tld$</postfwd2_item_recipient>
+<postfwd2_item_recipient_count>Nombre de destinataires</postfwd2_item_recipient_count>
+<postfwd2_item_reverse_client_name>R&eacute;solution inverse de l'adresse IP du client qui se connecte:[br]server.domain.tld ou correspond &agrave; une expression du style [\.-_](adsl|dynamic|ppp|)[\.-_]</postfwd2_item_reverse_client_name>
+<postfwd2_item_sender>V&eacute;rifie l'adresse de l'&eacute;metteur :user@domain.tld ou correspond &agrave; @someshop\.tld$</postfwd2_item_sender>
+<postfwd2_item_sender_mx_addrs>V&eacute;rifie l'adresse IP de la r&eacute;solution MX du domaine de l'&eacute;metteur : utilisez une notation CDIR : 192.168.1.0/24 ou IP 192.168.1.124</postfwd2_item_sender_mx_addrs>
+<postfwd2_item_sender_mx_names>V&eacute;rifie la correspondance MX de l'&eacute;metteur  :server.domain.tld ou correspond &agrave; une expression du style [\.-_](adsl|dynamic|ppp|)[\.-_]</postfwd2_item_sender_mx_names>
+<postfwd2_item_sender_ns_addrs>V&eacute;rifie l'adresse IP du serveur &eacute;metteur : utilisez une notation CDIR : 192.168.1.0/24 ou IP 192.168.1.124</postfwd2_item_sender_ns_addrs>
+<postfwd2_item_sender_ns_names>V&eacute;rifie le nom du serveur &eacute;metteur :server.domain.tld ou correspond &agrave; une expression du style [\.-_](adsl|dynamic|ppp|)[\.-_]</postfwd2_item_sender_ns_names>
+<postfwd2_item_size>Taille du message: 30000000 = 30MB</postfwd2_item_size>
+<postfwd2_item_time>Donnez une heure ou une tranche d'heure :[br]08:30:00-17:00:00</postfwd2_item_time>
+<Power-Off_Retract_Count>Arr&ecirc;ter le cycle de r&eacute;traction</Power-Off_Retract_Count>
+<Power-Off_Retract_Count_text>Nombre de cycles &quot;arr&ecirc;t du disque&quot; fix&eacute; (Fujitsu: Emergency Retract Cycle Count)</Power-Off_Retract_Count_text>
+<Power_Cycle_Count>Cycles sous tension</Power_Cycle_Count>
+<Power_Cycle_Count_text>Nombre de cycles de mise sous tension</Power_Cycle_Count_text>
+<Power_On_Hours>Temps de travail</Power_On_Hours>
+<Power_On_Hours_text>Nombre d'heures de fonctionnement</Power_On_Hours_text>
+<privileges_users_warning>Les privil&egrave;ges d&eacute;finis ici vont &quot;&eacute;craser&quot; les droits accord&eacute;s sur le groupe et l'organisation.</privileges_users_warning>
+<product_apache_name>Nom du produit</product_apache_name>
+<program>Programme</program>
+<promoting>Promotions</promoting>
+<ProxyPass_explain>Cette instruction permet de &quot;mapper&quot; des serveurs distants dans l'espace du serveur local ;[br] le serveur local ne fonctionne pas comme un proxy au sens habituel, mais appara&icirc;t comme un miroir du serveur distant ; &quot; requ&ecirc;te source&quot; est le nom d'un chemin local virtuel ; &quot;rediriger vers&quot; est une URL partielle pour le serveur distant.[br][br]Exemples:[br]
+Rediriger toutes les connexions vers 192.168.1.101 sur le port 8088[br]
+Requ&ecirc;te source:/[br]
+Rediriger vers: http://192.168.1.101:8088[br]
+[br]
+Rediriger */mirror/foo vers foo.com[br]
+Requ&ecirc;te source: /mirror/foo[br]
+Rediriger vers: http://foo.com[br]
+[br]
+Rediriger */video connections vers http://cam.hometranet.home:5555/cams/sony/stream [br]
+Requ&ecirc;te source: /video[br]
+Rediriger vers: http://cam.hometranet.home:5555/cams/sony/stream[br]
+[br]</ProxyPass_explain>
+<ProxyRequests>Proxy de transfert</ProxyRequests>
+<ProxyRequests_explain>Permet d'activer/d&eacute;sactiver la fonctionnalit&eacute; de serveur mandataire direct d'Apache</ProxyRequests_explain>
+<ProxyTimeout_explain>sp&eacute;cifie un d&eacute;lai (en secondes) pour les requ&ecirc;tes mandat&eacute;es.[br]Ceci s'av&egrave;re utile dans le cas d'un serveur d'applications lent et bogu&eacute; qui a tendance &agrave; se bloquer, et si vous pr&eacute;f&eacute;rez simplement renvoyer une erreur timeout et abandonner la connexion en douceur plut&ocirc;t que d'attendre jusqu'&agrave; ce que le serveur veuille bien r&eacute;pondre</ProxyTimeout_explain>
+<ProxyVia>Utiliser les ent&ecirc;tes Via</ProxyVia>
+<ProxyVia_explain>permet de contr&ocirc;ler l'utilisation de l'en-t&ecirc;te HTTP Via: par le mandataire. Le but recherch&eacute; est de contr&ocirc;ler le flux des requ&ecirc;tes mandat&eacute;es tout au long d'une cha&icirc;ne de serveurs mandataires.</ProxyVia_explain>
+<proxy_port>Port du proxy</proxy_port>
+<put_in_hold_queue>Placer en file d'attente inactive</put_in_hold_queue>
+<pxe_root-path>nom complet de fichier</pxe_root-path>
+<pxe_root-path_explain>sp&eacute;cifie le nom complet de fichier (avec le chemin) qui contient le disque racine du client (root disk). Le nom de fichier est une cha&icirc;ne de caract&egrave;res NVT ASCII.</pxe_root-path_explain>
+<qmgr_message_active_limit>Nombre MAX de messages dans la file d'attente active</qmgr_message_active_limit>
+<qmgr_message_recipient_limit>Nombre de destinataires en m&eacute;moire</qmgr_message_recipient_limit>
+<qmgr_message_recipient_limit_text>Le nombre maximal de destinataires conserv&eacute;s en m&eacute;moire par le processus de gestion de la file d'attente, et la taille maximale des destinataire &quot;morts/indisponibles&quot; dans le cache.</qmgr_message_recipient_limit_text>
+<QOS>QOS</QOS>
+<QOSMaxClients>Nombre max de clients</QOSMaxClients>
+<QOSMaxClients_explain>Nombre maximum de connexions TCP actives</QOSMaxClients_explain>
+<QS_ClientEntries>Entr&eacute;es Clientes</QS_ClientEntries>
+<QS_ClientEntries_explain>G&egrave;re les connexions avec un maximum de x adresses TCP/IP</QS_ClientEntries_explain>
+<QS_LimitRequestBody>Limiter la taille des donn&eacute;es des requ&ecirc;tes (bytes)</QS_LimitRequestBody>
+<QS_SrvMaxConnClose>D&eacute;sactiver le keep-alive apr&egrave;s:</QS_SrvMaxConnClose>
+<QS_SrvMaxConnClose_explain>D&eacute;sactive le keep-alive lorsque X connections sont occup&eacute;es</QS_SrvMaxConnClose_explain>
+<QS_SrvMaxConnPerIP>Connexions MAX par IP</QS_SrvMaxConnPerIP>
+<QS_SrvMaxConnPerIP_explain>Autorise seulement X connexions par IP</QS_SrvMaxConnPerIP_explain>
+<QS_SrvMinDataRate>D&eacute;bit minimum</QS_SrvMinDataRate>
+<QS_SrvMinDataRate_explain>demande minimale / vitesse de r&eacute;ponse (refuser les clients lents qui bloquent le serveur,par exemple. le serveur maintien des connexions ouvertes sans demander quoi que ce soit)</QS_SrvMinDataRate_explain>
+<quarantine_policies>R&egrave;gles de mise en quarantaine.</quarantine_policies>
+<quarantine_policies_text>Indiquez ici les actions de mise en zone de quarantaine</quarantine_policies_text>
+<query_must_be_like>La requ&ecirc;te doit &ecirc;tre comme ceci</query_must_be_like>
+<queue_management>Files d'attente</queue_management>
+<queue_management_text>Afficher les messages en attente, les supprimer, surveiller, geler la file d'attente...</queue_management_text>
+<quota_disk>Quotas</quota_disk>
+<quota_hard>Limite maximale</quota_hard>
+<quota_soft>Limite douce</quota_soft>
+<random>Al&eacute;atoire</random>
+<ratio>Ratio</ratio>
+<Raw_Read_Error_Rate>Taux de lecture brute</Raw_Read_Error_Rate>
+<Raw_Read_Error_Rate_text>Fr&eacute;quence d'apparition d'erreurs pendant la lecture de donn&eacute;es brutes</Raw_Read_Error_Rate_text>
+<rbl>RBL</rbl>
+<RBLCheckFrequency>Questionner les serveurs chaque</RBLCheckFrequency>
+<rblcount>Comptage RBL</rblcount>
+<rbl_check_artica>V&eacute;rification RBL</rbl_check_artica>
+<rbl_check_artica_text>V&eacute;rifiez l'&eacute;tat de votre serveur avec les listes RBL, afin de savoir si il est list&eacute; dans les Realtime BlackList Internet.</rbl_check_artica_text>
+<rbl_list>Liste des serveurs RBL</rbl_list>
+<Reallocated_Event_Count>D&eacute;compte des &eacute;v&eacute;nements de r&eacute;-allocation</Reallocated_Event_Count>
+<Reallocated_Event_Count_text>Quantit&eacute; d'op&eacute;rations de remappage</Reallocated_Event_Count_text>
+<Reallocated_Sector_Ct>Nb secteurs r&eacute;-allou&eacute;s</Reallocated_Sector_Ct>
+<Reallocated_Sector_Ct_text>Nombre de secteurs r&eacute;-allou&eacute;s</Reallocated_Sector_Ct_text>
+<rebuild_acls>Reconstruire les ACLs</rebuild_acls>
+<rebuild_items>Reconstruire les &eacute;l&eacute;ments</rebuild_items>
+<recheck>Op&eacute;ration de v&eacute;rification</recheck>
+<RecheckQuotasAll>Cette op&eacute;ration va effectuer une v&eacute;rification des quotas dans vos partitions.
+Les quotas seront momentan&eacute;ment arr&ecirc;t&eacute;s pendant cette op&eacute;ration.
+Voulez-vous effectuer cette op&eacute;ration ?</RecheckQuotasAll>
+<recheck_net_items>Rev&eacute;rifier les &eacute;l&eacute;ments r&eacute;seau</recheck_net_items>
+<recipient_count>Nombre de destinataires.</recipient_count>
+<recipient_domains>Domaines destinataires</recipient_domains>
+<recompile_all_db>Re-compiler toutes les bases</recompile_all_db>
+<recompile_all_db_ww_text>Reconstruit les bases des sites web &agrave; partir de la base Mysql et les retraduit sur le disque.</recompile_all_db_ww_text>
+<reconfigure_snort>Reconfigurer l'IDS</reconfigure_snort>
+<reconfigure_snort_text>Arr&ecirc;te le service, reconstruit les param&egrave;tres et d&eacute;marre le service IDS/Snort pour toutes les interfaces s&eacute;lectionn&eacute;es.</reconfigure_snort_text>
+<reconnect>Reconnecter</reconnect>
+<reconnect_openvpn_text>Fermer la connexion, rafra&icirc;chir les param&egrave;tres et reconnecter au serveur OpenVPN.</reconnect_openvpn_text>
+<reconstruct_caches>Reconstruire les caches</reconstruct_caches>
+<reconstruct_caches_explain>Cette op&eacute;ration va supprimer toutes les donn&eacute;es des caches afin de les reconstruire.
+Dans ce cas, vous perdrez les sites web enregistr&eacute;s et le proxy devra alors les remplir une nouvelle fois.
+D&eacute;sirez-vous lancer cette op&eacute;ration ?</reconstruct_caches_explain>
+<reconstruct_vlans>Reconstruire les VLANs</reconstruct_vlans>
+<record>Enregistrement</record>
+<redirect_to>Rediriger vers</redirect_to>
+<redirect_to_email>Rediriger vers une adresse</redirect_to_email>
+<RegexSimpleWords>Blocage de mots (simple)</RegexSimpleWords>
+<register_date>Date d'enregistrement</register_date>
+<register_form>Formulaire d'enregistrement</register_form>
+<registration_complete>Fin de l'enregistrement</registration_complete>
+<rejected_mails>Messages rejet&eacute;s</rejected_mails>
+<relaydomain_explain>Un domaine relais est un domaine qui travers ce serveur.[br]
+Ce serveur est en charge de recevoir les messages provenant de ce domaine et de les r&eacute;-acheminer vers un nouveau serveur.[br]Le nouveau serveur pourra &ecirc;tre le serveur final de bo&icirc;tes aux lettres</relaydomain_explain>
+<remote_directory>R&eacute;pertoire distant</remote_directory>
+<Reported_Uncorrect>Erreurs incorrigibles</Reported_Uncorrect>
+<Reported_Uncorrect_text>Nombre des erreurs qui n'ont pu &ecirc;tre r&eacute;cup&eacute;r&eacute;es en utilisant l'ECC mat&eacute;riel</Reported_Uncorrect_text>
+<reports_generated_check_postmaster_mail>Les rapports sont g&eacute;n&eacute;r&eacute;s en t&acirc;che de fond. V&eacute;rifiez votre bo&icirc;te aux lettres d&eacute;finie dans les param&egrave;tres de notification.</reports_generated_check_postmaster_mail>
+<repquota_explain>Ceci est la liste des quotas d&eacute;finis dans vos partitions.[br]
+Notez que seulement les utilisateurs qui effectu&eacute;s des d&eacute;p&ocirc;ts de fichiers sont visibles.[br]
+Ne vous inqui&eacute;tez pas de ne pas visualiser vos utilisateurs apr&egrave;s avoir d&eacute;fini des quotas.[br]Vous devrez attendre qu'ils d&eacute;posent au moins un fichier dans une des partitions.</repquota_explain>
+<reprocess_queues_text>Choquer toutes les files d'attentes de Postfix afin de le forcer &agrave; renvoyer tous les messages stock&eacute;s.</reprocess_queues_text>
+<request_from>Requ&ecirc;te source</request_from>
+<rescan-disk-system>R&eacute;-analyser les disques syst&egrave;mes</rescan-disk-system>
+<rescan-disk-system>R&eacute;-analyser les disques syst&egrave;mes</rescan-disk-system>
+<RestartServiceifReachMb>Red&eacute;marrer si le service consomme plus de</RestartServiceifReachMb>
+<RestrictNabToGroups>Restreint le carnet d'adresses aux groupes</RestrictNabToGroups>
+<reverse_client_name>R&eacute;solution inverse du nom</reverse_client_name>
+<reverse_proxy>Proxy inverse</reverse_proxy>
+<RewriteRules>R&egrave;gles de r&eacute;&eacute;criture</RewriteRules>
+<risk_always_true>Facteur de risque &quot;Toujours vrai&quot;</risk_always_true>
+<risk_empty_password>Facteur de risque sur mot de passe vide</risk_empty_password>
+<risk_multiple_queries>Facteur de risque sur les requ&ecirc;tes multiples</risk_multiple_queries>
+<risk_or_token>Facteur de risque sur &quot;OR&quot;</risk_or_token>
+<risk_senstivite_tables>Facteur de risque sur les tables sensibles</risk_senstivite_tables>
+<risk_sql_comments>Facteur de risque sur les requ&ecirc;tes MySQL</risk_sql_comments>
+<risk_union_token>Facteur de risque sur le &quot;UNION&quot;</risk_union_token>
+<risk_var_cmp_var>Facteur de risque sur les comparaisons de valeurs</risk_var_cmp_var>
+<ro>Lecture seule</ro>
+<RobotInternetUsers>Adresse du robot</RobotInternetUsers>
+<RobotInternetUsers_text>C'est l'adresse de messagerie du robot lorsque qu'il doit envoyer des messages aux utilisateurs.</RobotInternetUsers_text>
+<ROLE_DOMAIN_BDC>Contr&ocirc;leur de Domaine secondaire</ROLE_DOMAIN_BDC>
+<ROLE_DOMAIN_MEMBER>Membre d'un Domaine AD</ROLE_DOMAIN_MEMBER>
+<ROLE_DOMAIN_PDC>Contr&ocirc;leur de Domaine</ROLE_DOMAIN_PDC>
+<ROLE_STANDALONE>Serveur autonome</ROLE_STANDALONE>
+<rootpwd>Mot de passe root</rootpwd>
+<root_directory>R&eacute;pertoire racine</root_directory>
+<root_password_not_changed>Modifier le mot de passe root</root_password_not_changed>
+<root_password_not_changed_text>il est recommand&eacute; de modifier le mot de passe du compte root.[br]Le compte root permet d'acc&eacute;der au serveur &agrave; travers SSH ou via la console afin d'op&eacute;rer des t&acirc;ches syst&egrave;mes.</root_password_not_changed_text>
+<run_every_day>Ex&eacute;cuter chaque</run_every_day>
+<SambaActAsWins_explain>Ce serveur est le serveur WINS</SambaActAsWins_explain>
+<SAMBAD_NOT_IP_IN_SRVNAME>L'utilisation d'une adresse IP n'est pas autoris&eacute;e
+Vous avez besoin de d&eacute;finir le nom netbios du serveur Windows comme ceci: 
+gsx4,srv001,dom001,DOM...</SAMBAD_NOT_IP_IN_SRVNAME>
+<SAMBAD_SRVNAME_CANOT_BE_PING>Echec du test de ping sur l'h&ocirc;te cible</SAMBAD_SRVNAME_CANOT_BE_PING>
+<SAMBAD_SRVNAME_CANOT_BE_RESOLVED>Le nom d'h&ocirc;te et le domaine ne peuvent &ecirc;tre r&eacute;solus, vous avez besoin de modifier votre serveur DNS afin de r&eacute;soudre votre serveur Active Directory.
+D'une autre mani&egrave;re, remplissez le champ adresse Ip.
+Artica sauvegardera cette adresse dans le fichiers h&ocirc;tes afin de le r&eacute;soudre</SAMBAD_SRVNAME_CANOT_BE_RESOLVED>
+<SambaUsDNS>Utiliser le DNS</SambaUsDNS>
+<SambaUsDNS_explain>Le service WINS va rechercher les machines dans les DNS si il ne le retrouve pas dans sa base de donn&eacute;es</SambaUsDNS_explain>
+<samba_aliases_virtual_ip>Indique au serveur virtuel d'utiliser exclusivement cette adresse IP.[b]Attention si vous utilisez cette fonctionnalit&eacute;, tous les autres serveurs virtuels ainsi que le service principal devront utiliser la m&ecirc;me fonctionnalit&eacute;.[/b]</samba_aliases_virtual_ip>
+<samba_create_mask>Masque de cr&eacute;ation</samba_create_mask>
+<samba_create_mask_text>Lorsqu'un fichier est cr&eacute;&eacute;, les permissions sont calcul&eacute;es en relation avec les droits UNIX, indiquez ici le chmod de cr&eacute;ation.</samba_create_mask_text>
+<samba_directory_mask>Masque de r&eacute;pertoire</samba_directory_mask>
+<samba_directory_mask_text>Ce param&egrave;tre contr&ocirc;le quels sont les permissions UNIX lorsqu'un client Windows va manipuler les permissions du r&eacute;pertoire en utilisant les outils de s&eacute;curit&eacute; Microsoft.[br]
+Indiquez ici le chmod du r&eacute;pertoire</samba_directory_mask_text>
+<SAMBA_REMOTE_ANNOUNCE_EXPLAIN>Cette section peut &ecirc;tre utilis&eacute;e afin de s'assurer que tous les noms NetBIOS sur un r&eacute;seau seront annonc&eacute;s &agrave; un r&eacute;seau distant.</SAMBA_REMOTE_ANNOUNCE_EXPLAIN>
+<SAMBA_REMOTE_ANNOUNCE_EXPLAIN_FIELD>Vous pouvez ajouter des adresses IP comme 192.168.12.23 ou 192.168.1.255.[br]192.168.1.255 est soit l'adresse IP, soit  l'adresse de diffusion LMB du r&eacute;seau distant, le LMB est 192.168.12.23, ou l'adresse qui pourrait &ecirc;tre donn&eacute;e comme 192.168.1.255 o&ugrave; le masque est suppos&eacute; &ecirc;tre 255.255.255.0[br] Lorsque l'annonce envoy&eacute;e vers l'adresse de broadcast du r&eacute;seau distant, chaque h&ocirc;te recevra les annonces. C'est une op&eacute;ration bruyante sur le r&eacute;seau, mais peut &ecirc;tre n&eacute;cessaire si l'on ne conna&icirc;t pas l'adresse IP de serveur LMB. la valeur DOMAINE est facultatif (le groupe de travail) et peut &ecirc;tre soit le groupe de travail local ou de celui du r&eacute;seau distant. [br] Si vous utilisez le nom du groupe du r&eacute;seau distant, les noms de machine NetBIOS finiront par ressembler &agrave; leur appartenance au groupe de travail local. [br] Cela peut causer des probl&egrave;mes de r&eacute;solution de nom et doit &ecirc;tre &eacute;vit&eacute;.</SAMBA_REMOTE_ANNOUNCE_EXPLAIN_FIELD>
+<samba_strict_allocate>Comportement de stockage de blocs Windows</samba_strict_allocate>
+<samba_strict_allocate_text>contr&ocirc;le la gestion de l'allocation d'espace disque sur le serveur. [br]
+Lorsque ce param&egrave;tre est activ&eacute;,le serveur va changer de comportement UNIX afin de ne pas commettre de r&eacute;els blocs de stockage sur disque quand un fichier
+est &eacute;tendu via un comportement Windows. Ce comportement force le disque syst&egrave;me &agrave; allouer des blocs de m&eacute;moire r&eacute;els quand un fichier
+est cr&eacute;&eacute; ou &eacute;tendu &agrave; une taille donn&eacute;e. [br]
+Dans la terminologie UNIX, cela signifie que Samba cesse de cr&eacute;er des fichiers fragment&eacute;s. [br]
+Cela peut &ecirc;tre lent sur %u200B%u200Bcertains syst&egrave;mes lorsque vous travaillez avec des fichiers volumineux (&gt; 100 Mo). [br]
+Lorsque vous avez un syst&egrave;me de fichiers &eacute;tendu,vous pouver utiliser cette option qui permet &agrave; Samba
+d'allouer plus d'espace plus rapidement et vous corrigerez des probl&egrave;mes de timout (si vous enrenctrez sans cette option). [br]
+Avec cette fonctionnalit&eacute;, vous serez en mesure de mieux g&eacute;rer les quotas [br]
+Un autre avantage de cette option est qu'elle aidera &agrave; r&eacute;duire la fragmentation des fichiers. [br]
+Cette option offre donc des avantages certains mais sur des syst&egrave;mes de fichiers comme :. XFS, ext4, btrfs, ocfs2.[br]
+Les autres syst&egrave;mes de fichiers (ext3, ZFS, HFS  ) risquent au contraire de r&eacute;duire les performances du syst&egrave;me.[br]Surtout lorsqu'il s'agit de jouter avec des fichiers volumineux.[br]</samba_strict_allocate_text>
+<samba_virtual_explain>Les serveurs virtuels sont une technique afin de cr&eacute;er une illusion de multiples serveurs sur le r&eacute;seau alors qu'en r&eacute;alit&eacute;, un seul serveur physique est utilis&eacute;.[br]
+Il y a de nombreux avantages d'utiliser cette m&eacute;thode.[br]Elle permet par exemple de modifier le comportement global du serveur en fonction des diff&eacute;rents services de votre entreprise. Ce vous &eacute;vite alors d'installer un serveur de fichier par service.</samba_virtual_explain>
+<samba_wins_explain>Le broacast - qu'il s'agisse via la navigation ou l'enregistrement de noms et de r&eacute;solution - ne passe pas facilement &agrave; travers
+plusieurs sous-r&eacute;seaux. [br]
+De plus, de nombreux broacast ont plut&ocirc;t tendance &agrave; enliser les r&eacute;seaux. [br]
+Pour r&eacute;soudre ce probl&egrave;me, Microsoft propose d&eacute;sormais le Windows Internet Naming Service (WINS),
+[br]
+Avec WINS, un administrateur peut d&eacute;signer une seule machine agissant comme un serveur de r&eacute;solution de noms. chaque client dispose l'adresse de ce serveur WINS dans ses param&egrave;tres. [br]
+En cons&eacute;quence, l'enregistrement de noms et les r&eacute;solutions de machines peuvent &ecirc;tre adress&eacute;es &agrave; une seule machine &agrave; partir de n'importe quel point du r&eacute;seau,
+au lieu d'effectuer un broadcast continuel.</samba_wins_explain>
+<sa_debug>Mode Verbeux: Spamassassin</sa_debug>
+<search_byous>Rechercher par organisation</search_byous>
+<SecFilterCheckUnicodeEncoding>Validation de l'encodage unicode</SecFilterCheckUnicodeEncoding>
+<SecFilterCheckURLEncoding>V&eacute;rifie des caract&egrave;res sp&eacute;ciaux encod&eacute;s</SecFilterCheckURLEncoding>
+<SecFilterDefaultAction>Num&eacute;ro d'erreur ou texte</SecFilterDefaultAction>
+<SecFilterScanPost>Analyse aussi les donn&eacute;es POST</SecFilterScanPost>
+<secuirty_softwares>Logiciels de s&eacute;curit&eacute;</secuirty_softwares>
+<security_enforcement>s&eacute;curit&eacute; renforc&eacute;e</security_enforcement>
+<security_options>Options de s&eacute;curit&eacute;</security_options>
+<Seek_Error_Rate>Erreurs de positionnement</Seek_Error_Rate>
+<Seek_Error_Rate_text>Fr&eacute;quence d'erreurs pendant le positionnement de la t&ecirc;te magn&eacute;tique</Seek_Error_Rate_text>
+<Seek_Time_Performance>Moyenne des op&eacute;rations d%u2019acc&egrave;s</Seek_Time_Performance>
+<Seek_Time_Performance_text>Performance moyenne des op&eacute;rations d%u2019acc&egrave;s des t&ecirc;tes magn&eacute;tiques. Si cet attribut diminue, c%u2019est un signe de probl&egrave;mes avec le sous-syst&egrave;me m&eacute;canique.</Seek_Time_Performance_text>
+<select_messages>S&eacute;lectionner les messages</select_messages>
+<sender_ns_addrs>Adresse du serveur &eacute;metteur</sender_ns_addrs>
+<sendmail_request_form>Merci pour votre inscription,
+Afin de compl&eacute;ter votre enregistrement et d'activer votre compte, veuillez cliquer sur le lien ci-dessous.</sendmail_request_form>
+<server_time2>Horloge syst&egrave;me</server_time2>
+<server_time2_text>Modifier manuellement l'horloge syst&egrave;me</server_time2_text>
+<service_informations>Informations sur le service</service_informations>
+<service_parameters>Param&egrave;tres du service</service_parameters>
+<set_a_score>D&eacute;finir un score</set_a_score>
+<set_cachesize>Taille de la m&eacute;moire du pool de tampon</set_cachesize>
+<set_cachesize_text>D&eacute;finit la taille du pool de m&eacute;moire tampon partag&eacute;e. c'est la m&eacute;moire cache. [br]
+Le cache doit &ecirc;tre de la taille des donn&eacute;es de l'application dans des conditions normales de travail, avec une petite quantit&eacute; de m&eacute;moire suppl&eacute;mentaire pour les situations inhabituelles. [br]
+(Note: l'ensemble des donn&eacute;es actives n'est pas le m&ecirc;me que le nombre de pages consult&eacute;es simultan&eacute;ment, il est habituellement bien plus grand.) [br]
+La valeur sp&eacute;cifi&eacute;e pour ce param&egrave;tre est la valeur maximale que votre application sera en mesure d'utiliser pour votre cache en m&eacute;moire. Si votre application ne dispose pas de suffisamment de donn&eacute;es pour remplir la quantit&eacute; d'espace sp&eacute;cifi&eacute; ici, votre application utilisera uniquement la quantit&eacute; de m&eacute;moire requise par la quantit&eacute; de donn&eacute;es dont dispose votre application.
+Pour la DB, la taille du cache par d&eacute;faut est de 8 Mo. [br]
+Vous ne pouvez pas sp&eacute;cifier une valeur de taille du cache de moins de 100Ko. [br]
+Toute taille inf&eacute;rieure &agrave; 500 Mo de cache est automatiquement augment&eacute; de 25% pour tenir compte des seuil du cache;
+les tailles de cache de plus de 500 Mo sont utilis&eacute;s comme indiqu&eacute;. [br]
+La taille maximale d'un cache est de 4 Go. sur les syst&egrave;mes 32-bit et de 10 To sur les syst&egrave;mes 64-bit. [br]
+(Toutes les tailles sont des puissances de deux, ce qui signifie que 256KB est correspond &agrave; 2 ^ 18 et non pas &agrave; 256.000.) [br]
+Il est possible de sp&eacute;cifier des tailles de cache assez grand qui ne peuvent &ecirc;tre allou&eacute;es de mani&egrave;re contigu&euml; sur certaines architectures. [br]
+Par exemple, certaines versions de Solaris limitent la quantit&eacute; de m&eacute;moire qui peut &ecirc;tre allou&eacute; de fa&ccedil;on contig&uuml;e par un processus. [br]
+Si ncache est 0 ou 1, le cache sera attribu&eacute; de mani&egrave;re contigu&euml; dans la m&eacute;moire. [Br]
+Si il est sup&eacute;rieur &agrave; 1, le cache sera r&eacute;partie entre des zones ncache distinctes, dont la taille de la zone est &eacute;gale &agrave; la taille du cache initiale divis&eacute;e par ncache. [br]
+La taille du cache fourni pour ce param&egrave;tre sera arrondi au multiple de la taille de la r&eacute;gion et
+ne peut pas &ecirc;tre plus grand que la taille du cache maximale possible configur&eacute; pour votre application
+(Utiliser le set_cache_max pour ce faire). [br]
+Le param&egrave;tre ncache est ignor&eacute;  lors du redimensionnement de la m&eacute;moire cache.
+La syntaxe de ce param&egrave;tre tient sur une seule ligne avec une cha&icirc;ne d'un ou plusieurs caract&egrave;res d'espacement et la taille du cache initiale pr&eacute;vue est constitu&eacute; de trois parties: le gigaoctets de m&eacute;moire cache, les octets suppl&eacute;mentaires de m&eacute;moire cache, et le nombre de caches, &eacute;galement s&eacute;par&eacute;s par des espaces.</set_cachesize_text>
+<set_lg_bsize>Taille du buffer du journal en m&eacute;moire</set_lg_bsize>
+<set_lg_bsize_text>D&eacute;finit la taille de la m&eacute;moire tampon du journal en m&eacute;moire. [br]
+Pour la DB, quand le sous-syst&egrave;me de journalisation est configur&eacute; pour l'enregistrement sur %u200B%u200Bdisque, la taille par d&eacute;faut de
+la m&eacute;moire tampon du journal en m&eacute;moire est d'environ 32Ko. [br]
+Pour l'interface BDB SQL, lorsque le sous-syst&egrave;me de journalisation est configur&eacute; pour l'enregistrement sur %u200B%u200Bdisque,
+la taille par d&eacute;faut de la m&eacute;moire tampon du journal en m&eacute;moire est d'environ 64Ko. [br]
+Les informations du journal sont stock&eacute;es en m&eacute;moire jusqu'&agrave; ce que l'espace de stockage se remplisse ou qu'une transaction engag&eacute;e force le vidage de l'information vers un stockage stable. [br]
+En pr&eacute;sence de transactions de longue dur&eacute;e ou d'op&eacute;rations produisant de grandes quantit&eacute;s de donn&eacute;es, une plus grandes tailles de m&eacute;moire tampon peut augmenter le d&eacute;bit. [br]
+Lorsque le sous-syst&egrave;me de journalisation est configur&eacute; pour l'enregistrement en m&eacute;moire, la taille par d&eacute;faut du journal en m&eacute;moire
+tampon est 1Mo. [br]
+Les informations du journal sont stock&eacute;es en m&eacute;moire jusqu'&agrave; ce que l'espace de stockage se remplisse ou qu'une transaction est annul&eacute;e ou force la lib&eacute;ration de la m&eacute;moire pour les nouvelles op&eacute;rations. [br]
+En pr&eacute;sence de transactions de longue dur&eacute;e ou des op&eacute;rations produisant de grandes quantit&eacute;s de donn&eacute;es, la taille du tampon doit &ecirc;tre suffisante pour contenir toutes les informations du journal qui peuvent s'accumuler au cours de la plus longue transaction en cours d'ex&eacute;cution. [br]
+Lorsque du choix des tailles de la m&eacute;moire tampon du journal et des fichiers pour les journaux en m&eacute;moire, les applications doivent pr&eacute;server le contenu de la m&eacute;moire et &eacute;viter que le tampon en m&eacute;moire soit plein sans que de  l'espace puisse &ecirc;tre lib&eacute;r&eacute; a cause d'une
+op&eacute;ration qui a commenc&eacute; dans le premier journal &quot;fichier&quot; et qui serait toujours active.</set_lg_bsize_text>
+<set_lg_max>Taille maximale d'un fichier dans le journal</set_lg_max>
+<set_lg_max_text>D&eacute;finit la taille maximale d'un fichier unique dans le journal. [br]
+La valeur fix&eacute;e pour ce param&egrave;tre ne peut &ecirc;tre sup&eacute;rieure &agrave; la valeur maximale de quatre-octet non sign&eacute;. [br]
+Lorsque le sous-syst&egrave;me de journalisation est configur&eacute; pour l'enregistrement sur %u200B%u200Bdisque, la taille par d&eacute;faut d'un fichier journal est de 10 Mo. [br]
+Lorsque le sous-syst&egrave;me de journalisation est configur&eacute; pour l'enregistrement en m&eacute;moire, la taille par d&eacute;faut d'un fichier journal est 256KB. [br]
+En outre, la taille de la m&eacute;moire tampon du journal configur&eacute;s doit &ecirc;tre plus grande que la taille du fichier journal. [br]
+(Le sous-syst&egrave;me d'enregistrement divise la m&eacute;moire configur&eacute; pour les enregistrements du journal en m&eacute;moire dans des &quot;fichiers&quot;, tel 
+que des environnements de base de donn&eacute;es configur&eacute;e pour les enregistrements du journal en m&eacute;moire puissent &eacute;changer des enregistrements du journal avec d'autres membres d'un groupe de r&eacute;plication, et ces membres vent &ecirc;tre configur&eacute;s pour stocker les enregistrements du journal sur le disque.) [br]
+Lors du choix des tailles de la m&eacute;moire tampon du journal et des fichiers en m&eacute;moire pour les journaux, les applications doivent veiller &agrave; ce que la taille du journal en m&eacute;moire tampon soit assez grande pour qu'aucune transaction
+n'occupe toute la m&eacute;moire tampon, et &eacute;viter un &eacute;tat o&ugrave; le tampon en m&eacute;moire
+est plein sans que de  l'espace puisse &ecirc;tre lib&eacute;r&eacute; a cause d'une op&eacute;ration qui a commenc&eacute; dans le premier journal &quot;fichier&quot; et qui serait toujours active</set_lg_max_text>
+<set_lg_regionmax>Taille sous-jacente de la zone de log</set_lg_regionmax>
+<set_lg_regionmax_text>D&eacute;finit la taille de la zone sous-jacente l'exploitation de log de l'environnement Berkeley DB. [br]
+Par d&eacute;faut, ou si la valeur est d&eacute;finie &agrave; 0, la taille minimum est utilis&eacute; &agrave; environ 128Ko. [br]
+La r&eacute;gion de log est utilis&eacute; pour le stockage des noms de fichiers, il est peut donc n&eacute;cessaire d'augmenter la taille si un grand nombre de fichiers doivent &ecirc;tre ouverts et enregistr&eacute;s avec le gestionnaire de log Berkeley DB</set_lg_regionmax_text>
+<share_access>Acc&egrave;s au partage</share_access>
+<SimpleWords_explain>Cette section vous aide &agrave; simplement ajouter des mots et phrases.[br]Les r&egrave;gles ajout&eacute;es vont forcer le serveur de messagerie &agrave; v&eacute;rifier ces mots dans le corps et le sujet de chaque message qui transite par ce serveur.[br]
+Les messages qui correspondent aux r&egrave;gles vont &ecirc;tre automatiquement rejet&eacute;s (pas de quarantaine)</SimpleWords_explain>
+<SimpleWords_explain_add>Ajoutez des mots et phrases dans ce formulaire[br]Chaque entr&eacute;e devra &ecirc;tre s&eacute;par&eacute;e par un retour chariot.</SimpleWords_explain_add>
+<site_interval>Intervalle pour le site</site_interval>
+<size_by_days>Taille du flux par jour</size_by_days>
+<skip-character-set-client-handshake>Ignorer le &quot;charset&quot; du client</skip-character-set-client-handshake>
+<skip-character-set-client-handshake_text>Ignorer les informations de jeux de caract&egrave;res du client et utiliser celui du serveur.</skip-character-set-client-handshake_text>
+<skip-full>Passer le disque &agrave; niveau 0</skip-full>
+<skip-fullExplain>Passer le disque lors de niveau 0 est atteint, pour permettre des sauvegardes compl&egrave;tes en dehors Amanda, par exemple lorsque la machine est en mode mono-utilisateur.</skip-fullExplain>
+<skip-incr>Passer le disque lorsque le niveau 0 n'est pas atteint</skip-incr>
+<skip-incrExplain>Passer le disque lorsque le niveau 0 n'est pas atteint.Ceci est utilis&eacute; dans des configurations d'archivage, o&ugrave; seules les extractions compl&egrave;tes sont faites et les bandes enregistr&eacute;es.</skip-incrExplain>
+<SMBChangeShareName_text>Cliquez sur le lien afin de changer le nom de partage de ce r&eacute;pertoire.</SMBChangeShareName_text>
+<smbconfig>smb.conf</smbconfig>
+<smbservices>Services</smbservices>
+<smb_RootDir_text>Toutes les t&acirc;ches li&eacute;es au dossiers sur les disques devront d&eacute;marrer au r&eacute;pertoire racine.</smb_RootDir_text>
+<smtp_sasl_security_options_mutual_auth>Autoriser seulement les m&eacute;thodes qui fournissent une authentification mutuelle</smtp_sasl_security_options_mutual_auth>
+<smtp_sasl_security_options_noanonymous>Interdit les m&eacute;thodes qui autorisent l'authentification anonyme.</smtp_sasl_security_options_noanonymous>
+<smtp_sasl_security_options_nodictionary>Rejeter les m&eacute;thodes sujettes &agrave; une attaque active (sans dictionnaire).</smtp_sasl_security_options_nodictionary>
+<smtp_sasl_security_options_noplaintext>Rejette les m&eacute;thodes utilisant les mots de passe en clair.</smtp_sasl_security_options_noplaintext>
+<smtp_sasl_security_options_text>Options de s&eacute;curit&eacute; SASL</smtp_sasl_security_options_text>
+<source_address>Adresse source</source_address>
+<SpamassassinMaxRCPTScore_text>Indiquez le score &agrave; ajouter lorsque le nombre de destinataires atteint la limite.[br]Si le score total est atteint, le message sera mis en quarantaine ou rejet&eacute;.</SpamassassinMaxRCPTScore_text>
+<spamassassin_pkugins_explain>Vous trouverez ici les &quot;modules&quot; qui peuvent &ecirc;tre utilis&eacute;s par le filtre de contenu.[br]Ces modules (ou plugins) contribuent &agrave; augmenter le taux de d&eacute;tection des SPAM mais vont augmenter la charge machine et les requ&ecirc;tes DNS.[br]
+V&eacute;rifiez &agrave; disposer de serveurs DNS corrects et d'une machine suffisamment puissante pour accueillir ces modules.</spamassassin_pkugins_explain>
+<spamass_analyze_post_explain>Cette section va analyser un message en utilisant le filtre de contenu SpamAssassin.[br]
+Copiez la source du message (incluant les ent&ecirc;tes et son contenu) et collez-le dans le formulaire afin de l'ajouter dans la base de donn&eacute;es.[br]
+D&eacute;finissez l'&eacute;metteur et les destinataires (s&eacute;par&eacute;s par une virgule).</spamass_analyze_post_explain>
+<spell_checker>correcteur orthographique</spell_checker>
+<Spin_Retry_Count>Mises en rotation forc&eacute;es</Spin_Retry_Count>
+<Spin_Retry_Count_text>Nombre de mises en rotation forc&eacute;e du disque</Spin_Retry_Count_text>
+<Spin_Up_Time>Temps de rotation</Spin_Up_Time>
+<Spin_Up_Time_text>Temps de mise en rotation du disque</Spin_Up_Time_text>
+<SQUID_STATS>Statistiques du proxy cache Squid</SQUID_STATS>
+<SQUID_STATS_TEXT>La Zone de statistiques Squid est une console web permettant de visualiser des graphiques et statistiques sur l'utilisation Web des utilisateurs et les cat&eacute;gories des sites web.</SQUID_STATS_TEXT>
+<srv_clamav.MaxFileSize>Taille MAX d'un fichier</srv_clamav.MaxFileSize>
+<srv_clamav.MaxScanSize>Taille MAX de l'analyse</srv_clamav.MaxScanSize>
+<srv_clamav.MaxScanSize_text>Indiquez la taille maximum des donn&eacute;es qui doivent &ecirc;tre analys&eacute;es pour chaque fichier. Les Archives et autres conteneurs sont extraits de fa&ccedil;on recursive et analys&eacute;s via cette limite.</srv_clamav.MaxScanSize_text>
+<srv_clamav.PhishingScanURLs>Analyser les liens Phishing</srv_clamav.PhishingScanURLs>
+<srv_clamav.PhishingScanURLs_text>Lance l'analyse des liens web dans les messages et utilise un moteur heuristique.Ceci va classifier les d&eacute;tections comme &quot;Possibly Unwanted&quot; phishing comme Phishing.Heuristics.Email.*</srv_clamav.PhishingScanURLs_text>
+<srv_clamav.RefreshDaemon>Rafra&icirc;chir le d&eacute;mon chaque</srv_clamav.RefreshDaemon>
+<srv_clamav.RefreshDaemon_text>Pr&eacute;vient des fuites m&eacute;moires, Artica va red&eacute;marrer le d&eacute;mon &agrave; fr&eacute;quence r&eacute;guli&egrave;re pour remettre &agrave; 0 la m&eacute;moire vive utilis&eacute;e.</srv_clamav.RefreshDaemon_text>
+<srv_clamav.StreamMaxLength>Taille maximale du flux</srv_clamav.StreamMaxLength>
+<srv_clamav.StreamMaxLength_text>Le service antivirus utilise une sorte de protocole FTP afin de recevoir les donn&eacute;es &agrave; analyser.[br]
+Cette option vous permet de d&eacute;terminer la taille maximale des donn&eacute;es qui sera transf&eacute;r&eacute;e en flux vers le service de l'antivirus pour l'analyse d'une fichier.[br]
+Cette taille doit correspondre au minium &agrave; la taille autoris&eacute;e d'un message email qui doit transiter sur le serveur de messagerie.</srv_clamav.StreamMaxLength_text>
+<sshd_events_explain>Vous trouverez ci-joint les tentatives d'acc&egrave;s au d&eacute;mon SSH</sshd_events_explain>
+<StartServers>Processus cr&eacute;&eacute;s au d&eacute;marrage</StartServers>
+<start_options>Options de d&eacute;marrage</start_options>
+<Start_Stop_Count>Nb Arr&ecirc;ts/D&eacute;marrages</Start_Stop_Count>
+<Start_Stop_Count_text>Nombre de cycles arr&ecirc;t/d&eacute;marrage de l'axe de rotation</Start_Stop_Count_text>
+<storagebakcup_softwares>Logiciels de stockage et de sauvegarde</storagebakcup_softwares>
+<storage_directory>R&eacute;pertoire de stockage</storage_directory>
+<storage_pool>Pool de stockage</storage_pool>
+<subdomain>Sous-domaine</subdomain>
+<subnet-mask>Masque de sous-r&eacute;seau</subnet-mask>
+<suspend>Suspendre</suspend>
+<switch_mode>Mode de basculement</switch_mode>
+<sync_packages>Synchroniser les logiciels</sync_packages>
+<sync_packages_explain>V&eacute;rifie si des nouveaux logiciels sont support&eacute;s et le cas &eacute;ch&eacute;ant les installer.</sync_packages_explain>
+<syslog_server>Logs syst&egrave;me (mode serveur)</syslog_server>
+<system_grace_period_explain>la P&eacute;riode de gr&acirc;ce d&eacute;termine le temps qu'un utilisateur est autoris&eacute; &agrave; d&eacute;passer la limite douce.</system_grace_period_explain>
+<system_log>&Eacute;v&egrave;nements syst&egrave;mes</system_log>
+<system_log_text>Indiquez les param&egrave;tres afin d'envoyer les &eacute;v&egrave;nements syst&egrave;mes &agrave; un serveur central ou bien de transformer ce serveur en serveur Syslog</system_log_text>
+<system_quota_hard_explain>Le Maximum de la taille/Nb fichiers qu'un utilisateur peut disposer sur une partition lorsque la p&eacute;riode gr&acirc;ce &agrave; &eacute;t&eacute; &eacute;chue.[br]
+Les utilisateurs peuvent d&eacute;passer la &quot;limite douce&quot; mais en aucun cas d&eacute;passer leur Limite maximale</system_quota_hard_explain>
+<system_quota_soft_explain>Le Maximum de la taille/Nb fichiers qu'un utilisateur peut avoir sur une partition.[br]
+Le r&ocirc;le de la limite douce est de donner une p&eacute;riode de gr&acirc;ce.[br]
+Lorsque cette limite est atteinte, les utilisateurs seront simplement avertis que leur limite &agrave; &eacute;t&eacute; d&eacute;pass&eacute;e.[br]
+Lorsque la p&eacute;riode de gr&acirc;ce &agrave; expir&eacute;e, les utilisateurs seront bannis du stockage de fichiers.[br]le chiffre 0 rend la limite illimit&eacute;e.</system_quota_soft_explain>
+<TAB_WEBDAV>Partage Web</TAB_WEBDAV>
+<tapecycle>Cycles pour chaque destination</tapecycle>
+<tapecycleMB>Taille du cycle</tapecycleMB>
+<target_directory>R&eacute;pertoire cible</target_directory>
+<tcp_incoming>Entrant</tcp_incoming>
+<Temperature_Celsius>Temp&eacute;rature</Temperature_Celsius>
+<Temperature_Celsius_text>Temp&eacute;rature interne du disque en degr&eacute;s Celsius</Temperature_Celsius_text>
+<template_white_explain>Texte d'explication</template_white_explain>
+<template_white_explain_text>Indiquez le texte qui sera ajout&eacute; dans la page d'erreur afin d'aider l'utilisateur &agrave; renseigner les cat&eacute;gories.</template_white_explain_text>
+<tftp-server-name>Adresse du serveur TFTP</tftp-server-name>
+<tftp-server-name_explain>Utilis&eacute; pour identifier un serveur TFTP et, si le client supporte cette option, cette option devrait avoir le m&ecirc;me effet que l'option [b]Nom de serveur[/b].[br]Les clients BOOTP ne supportent probablement pas cette option.[br]Certains clients DHCP la supporteront, et d'autres la voudront obligatoirement.</tftp-server-name_explain>
+<thanks_registration_mail>Grand merci pour vous &ecirc;tre enregistr&eacute;. Un e-mail sera envoy&eacute; &agrave; votre adresse e-mail.</thanks_registration_mail>
+<this_day>Ce jour</this_day>
+<this_hour>Cette heure</this_hour>
+<threads_max_number>Nombre MAX de threads d'indexation.</threads_max_number>
+<Throughput_Performance>Performance g&eacute;n&eacute;rale en sortie du disque</Throughput_Performance>
+<Throughput_Performance_text>Performance g&eacute;n&eacute;rale en sortie du disque. Si la valeur de l%u2019attribut diminue, alors la probabilit&eacute; d%u2019avoir un probl&egrave;me avec le disque augmente.</Throughput_Performance_text>
+<TimeSynchronization>D&eacute;lai de synchronisation</TimeSynchronization>
+<time_in_seconds>Nombre de secondes</time_in_seconds>
+<today_downloaded_flow>Aujourd'hui: Flux t&eacute;l&eacute;charg&eacute;.</today_downloaded_flow>
+<top10>TOP 10</top10>
+<top10_users>TOP 10 utilisateurs</top10_users>
+<total_threshold>Seuil total</total_threshold>
+<treshold>Seuil</treshold>
+<UDMA_CRC_Error_Count>erreurs de CRC UltraDMA</UDMA_CRC_Error_Count>
+<UDMA_CRC_Error_Count_text>Nombre d'erreurs de CRC pendant un acc&egrave;s Ultra DMA</UDMA_CRC_Error_Count_text>
+<ufdbgdb_explain>Le filtre utilise des bases locales afin de v&eacute;rifier les sites web.[br]Vous avez deux bases de donn&eacute;es.[br]
+[b]Communaut&eacute; Artica[/b]:Ces bases de donn&eacute;es (environ 1.500.000 entr&eacute;es) sont automatiquement t&eacute;l&eacute;charg&eacute;es depuis les serveurs de mise &agrave; jour Artica et stock&eacute;s dans la base Mysql.[br]
+[b]Les bases ufdbguard[/b]: Ce sont des bases propri&eacute;taires et payantes (environ 9.000.000 d'entr&eacute;es). Contactez le support Artica si vous d&eacute;sirez les obtenir.[br]</ufdbgdb_explain>
+<ufdbguard_simple_intro>ufdbGuard est filtre web qui utilise des cat&eacute;gories pour filtrer les acc&egrave;s &agrave; Internet.[br]Il est tr&egrave;s rapide avec une performance de 50,000 URL v&eacute;rifi&eacute;es par seconde sur un seul processeur</ufdbguard_simple_intro>
+<UNABLE_TO_OBTAIN_INFORMATIONS_FROM>Incapacit&eacute; d'obtenir des informations avec</UNABLE_TO_OBTAIN_INFORMATIONS_FROM>
+<unfreeze>D&eacute;geler le syst&egrave;me.</unfreeze>
+<unix_permissions>Permissions Unix</unix_permissions>
+<unlimited>illimit&eacute;</unlimited>
+<updated_on>Mise &agrave; jour &agrave;</updated_on>
+<UPDATE_DEBIAN_TEMPLATE_TEXT>T&eacute;l&eacute;charger le mod&egrave;le Debian i386.[br]Ceci requi&egrave;re 350Mo d'espace disque.</UPDATE_DEBIAN_TEMPLATE_TEXT>
+<UPDATE_FEDORA_TEMPLATE_TEXT>T&eacute;l&eacute;chargement du mod&egrave;le Fedora i386, requi&egrave;re 690Mb d'espace disponible.</UPDATE_FEDORA_TEMPLATE_TEXT>
+<UPDATE_LXC_TEMPLATE_PERFOMED>La t&acirc;che d'installation/Mise &agrave; jour est ex&eacute;cut&eacute;e en t&acirc;che de fond,
+Cela peut prendre du temps.. Tout d&eacute;pend de votre bande passante Internet.</UPDATE_LXC_TEMPLATE_PERFOMED>
+<usable_mechanisms>M&eacute;canismes disponibles</usable_mechanisms>
+<useGreenSQL>Utiliser le Proxy GreenSQL</useGreenSQL>
+<UseLoopDisk>Utiliser un disque virtuel</UseLoopDisk>
+<useMySQL>Utiliser MySQL</useMySQL>
+<UsePhysCard>Utiliser une carte r&eacute;seau physique</UsePhysCard>
+<users_database>Base utilisateurs</users_database>
+<user_greylist_explain>L'administrateur du syst&egrave;me &agrave; activ&eacute; la notion de greylisting.[br]
+Le &quot;greylisting&quot; est une fonctionnalit&eacute; qui refuse les premiers messages des serveurs de messagerie inconnus.[br]
+Si un internaute vous envoi un message alors que son serveur de messagerie est inconnu, il sera convi&eacute; &agrave; renvoyer son message plus tard.[br]
+Si le message en renvoy&eacute; dans un d&eacute;lai fix&eacute; alors le message est transmis et vous serez en mesure de le recevoir.</user_greylist_explain>
+<use_another_WINS_server>Utiliser un autre serveur WINS</use_another_WINS_server>
+<use_another_WINS_server_explain>Toutes requ&ecirc;tes WINS seront redirig&eacute;es vers le serveur indiqu&eacute;. [br]Indiquez 0.0.0.0 afin de d&eacute;sactiver cette fonctionnalit&eacute;</use_another_WINS_server_explain>
+<VarWWWChmod>Permissions sur la racine /var/www</VarWWWChmod>
+<verify_disks>V&eacute;rifier les disques</verify_disks>
+<verify_disks_text>Lance une t&acirc;che de v&eacute;rification/construction en t&acirc;che de fond.</verify_disks_text>
+<viptrack_explain>VIPTrack est une fonctionnalit&eacute; qui surveille des utilisateurs appel&eacute;s Very Important Person.[br]
+L'activation de cette option va vous permettre d'&ecirc;tre inform&eacute;:[br]
+[ul]
+[li]Lorsque des messages de ou vers les membres sont stock&eacute;s dans la file d'attente.[/li]
+[li]Des messages bloqu&eacute;s ou envoy&eacute;s de ou vers ces membres via des rapports[/li]
+[/ul]
+Dans ce cas vous pourrez plus rapidement r&eacute;agir si des dysfonctionnements interviennent dans le processus de messagerie sur la liste des membres que vous avez d&eacute;cid&eacute; de surveiller.</viptrack_explain>
+<VIPTrack_text>VIPTrack est une fonctionnalit&eacute; fournissant plus d'informations sur une liste d'utilisateurs nomm&eacute;e VIP</VIPTrack_text>
+<virtual_server>Serveur virtuel</virtual_server>
+<virtual_servers>Serveurs virtuels</virtual_servers>
+<virtual_smb_ou_explain>Si vous indiquez une organisation, les administrateur de l'organisation s&eacute;lectionn&eacute;e seront amen&eacute; &agrave; g&eacute;rer ce serveur virtuel.</virtual_smb_ou_explain>
+<vpn_server_wakeupip_client_explain>Indiquez une adresse IP locale dans le r&eacute;seau du serveur.[br]
+Si une adresse IP est indiqu&eacute;e, les sites VPN distants  vont tenter d'effectuer un &quot;ping&quot; de l'adresse sp&eacute;cifi&eacute;e afin de r&eacute;veiller leur r&eacute;seau VPN et aussi d'informer de la connectivit&eacute;.[br]
+Si l'adresse distante n'est pas disponible; une notification sera envoy&eacute;e &agrave; l'administrateur local.[br]
+Cette option est uniquement effective entre deux n%u0153uds VPN Artica pour connexion de site distants.[br]Elle est ignor&eacute;e dans le cas d'une connexion VPN client &agrave; client.</vpn_server_wakeupip_client_explain>
+<vps_configure>Enregistrement des param&egrave;tres...</vps_configure>
+<vps_create>Cr&eacute;ation du serveur virtuel...</vps_create>
+<vps_directory>R&eacute;pertoire de stockage des serveurs</vps_directory>
+<VPS_FREEZE>Geler le syst&egrave;me</VPS_FREEZE>
+<VPS_FREEZE_TEXT>Place le syst&egrave;me en mode &quot;hibernation&quot; en m&eacute;moire.</VPS_FREEZE_TEXT>
+<VPS_INSTALL_ARTICA>Installer/Mettre &agrave; jour Artica</VPS_INSTALL_ARTICA>
+<VPS_INSTALL_ARTICA_TEXT>D&eacute;ployer Artica sur ce serveur Virtuel.</VPS_INSTALL_ARTICA_TEXT>
+<VPS_RESTART>Red&eacute;marrer le serveur virtuel</VPS_RESTART>
+<VPS_RESTART_TEXT>Arr&ecirc;te et red&eacute;marre le serveur virtuel.</VPS_RESTART_TEXT>
+<vps_server>Serveur VPS</vps_server>
+<VPS_SERVERS>Serveurs VPS</VPS_SERVERS>
+<vps_servers_field>Serveur(s) virtuel(s)</vps_servers_field>
+<VPS_SETTINGS_REBOOT>Les param&egrave;tres prendront effet apr&egrave;s le red&eacute;marrage du serveur virtuel</VPS_SETTINGS_REBOOT>
+<VPS_START>D&eacute;marrer le serveur virtuel</VPS_START>
+<VPS_START_TEXT>D&eacute;marre le serveur virtuel en mode d&eacute;mon</VPS_START_TEXT>
+<VPS_STOP>Arr&ecirc;ter le serveur virtuel</VPS_STOP>
+<VPS_STOP_TEXT>Arr&ecirc;ter le serveur virtuel, il sera indisponible.</VPS_STOP_TEXT>
+<VPS_UNFREEZE_TEXT>R&eacute;veil le syst&egrave;me</VPS_UNFREEZE_TEXT>
+<vps_update>Mise &agrave; jour du serveur VPS...</vps_update>
+<vps_updated>Serveur virtuel mis &agrave; jour</vps_updated>
+<waiting_user_confirmation>En attente de confirmation</waiting_user_confirmation>
+<wakeup_vpn_ip_explain>Si une adresse IP est indiqu&eacute;e, le serveur va tenter d'effectuer un &quot;ping&quot; de l'adresse distante afin de r&eacute;veiller le r&eacute;seau VPN et aussi d'informer de la connectivit&eacute;.[br]
+Si l'adresse distante n'est pas disponible; une notification sera envoy&eacute;e.</wakeup_vpn_ip_explain>
+<wake_up_ip>Adresse de r&eacute;veil</wake_up_ip>
+<WARNING_UFDBGUARD_COMPILES_RULES_ASK>Cette op&eacute;ration va reconstruire et rafra&icirc;chir les bases de donn&eacute;es de filtrage web.[br]En d&eacute;pendance avec la puissance de ce serveur, cela pourrait durer un certain temps.[br]
+Voulez-vous effectuer cette op&eacute;ration ?[br]Cette op&eacute;ration sera ex&eacute;cut&eacute;e en t&acirc;che de fond.</WARNING_UFDBGUARD_COMPILES_RULES_ASK>
+<warn_level>Niveau d'alerte</warn_level>
+<warn_pdns_is_disabled>PowerDNS est d&eacute;sactiv&eacute; sur votre serveur</warn_pdns_is_disabled>
+<watchdog_parameters>Param&egrave;tres du d&eacute;mon de surveillance</watchdog_parameters>
+<wb>Cache d'&eacute;criture</wb>
+<wbl_resolv_mx>R&eacute;soudre les MX</wbl_resolv_mx>
+<wbl_resolv_mx_explain>Si activ&eacute; les Artica va r&eacute;soudre les MX des domaines ajout&eacute;s dans cette liste et mettre les adresses des MX dans la liste blanche des filtres de connexion.</wbl_resolv_mx_explain>
+<webadministration_console>Console web d'administration</webadministration_console>
+<websites_number>Nombre de sites web</websites_number>
+<web_user>Utilisateur Web</web_user>
+<weight>Poids</weight>
+<WELCOME_ARTICA_STATS_SQUID>Bienvenue dans l'espace d&eacute;di&eacute; au Proxy Web</WELCOME_ARTICA_STATS_SQUID>
+<welcome_organization_register>Bienvenue dans le formulaire d'enregistrement d'une organisation sur Artica.[br]
+Ce formulaire vous autorise &agrave; vous enregistrer afin de cr&eacute;er une organisation sur ce serveur.[br]
+Une fois le formulaire remplit, vous serez en mesure de cr&eacute;er des bo&icirc;tes aux lettres et de disposer de nombreux services Internet comme le Webmail, un calendrier partag&eacute;, un bureau virtuel...[br]
+[i]Vous recevrez une confirmation par eMail afin de disposer des informations d'acc&egrave;s &agrave; votre compte.[/i]</welcome_organization_register>
+<welcome_registration_text>Texte d'accueil du formulaire</welcome_registration_text>
+<what_users_do>Que font vos utilisateurs ?</what_users_do>
+<whitelist_global_add_explain>Mettez ici des domaines de messagerie ou des adresses (s&eacute;par&eacute;es par des retours chariots) que vous voulez autoriser et traverser les barri&egrave;res de filtrage de [b]contenu[/b].[br]
+Vous pouvez indiquer les valeurs suivantes :[br]
+[b]*@domain.tld[/b] afin de bloquer tout le domaine domain.tld.[br]
+[b]domain.tld[/b] afin de bloquer tout le domaine domain.tld.[br]
+[b]@domain.tld[/b]afin de bloquer tout le domaine domain.tld.[br]
+[b]user@domain.tld[/b] afin de bloquer l'&eacute;metteur user@domain.tld.[br]</whitelist_global_add_explain>
+<whitelist_global_explain>Cette section d&eacute;sactive de fa&ccedil;on globale  les filtres de contenu sur les domaines list&eacute;s ici.[br]C'est une liste globale qui ne recherche pas les destinataires.[br]
+Donc les domaines ici vont autoriser les &eacute;metteurs &agrave; passer &agrave; travers les filtres de contenu sans v&eacute;rifier la destination des messages.</whitelist_global_explain>
+<winbind_user_password>Mot de passe du compte winbind</winbind_user_password>
+<windows_network_share>Partage Windows</windows_network_share>
+<wins_server>Serveur WINS</wins_server>
+<WIZARD_BACKUP_AUTOMOUNT_STORAGE_EXPLAIN>S&eacute;lectionnez le point de montage d&eacute;j&agrave; programm&eacute; et d&eacute;fini dans le centre d'auto-connexions</WIZARD_BACKUP_AUTOMOUNT_STORAGE_EXPLAIN>
+<WIZARD_BACKUP_LOCAL_STORAGE_EXPLAIN>La t&acirc;che va stocker la sauvegarde dans un r&eacute;pertoire du serveur.[br]Indiquez ici le chemin du r&eacute;pertoire qui va &ecirc;tre utilis&eacute;.</WIZARD_BACKUP_LOCAL_STORAGE_EXPLAIN>
+<worst>Pire</worst>
+<Wthreads>Threads</Wthreads>
+<Wthreads_explain>Le serveur de disques iSCSI utilise plusieurs &quot;threads&quot; afin de fournir les lectures/&eacute;critures sur le mat&eacute;riel.[br]En fonction des performances du serveur et de ce que vous d&eacute;sirez en charge syst&egrave;me, la valeur peut &ecirc;tre ajust&eacute;e avec pr&eacute;cautions.[br]
+La valeur par d&eacute;faut de 8 threads est suffisante pour l'ensemble des besoins.</Wthreads_explain>
+<www_forward>Transf&eacute;rer vers un autre site</www_forward>
+<www_ForwardTo>Site web &agrave; transf&eacute;rer</www_ForwardTo>
+<www_humanitarian_associations>Sites web &agrave; propos de des associations humanitaires ou tout ce qui s'en rapproche.</www_humanitarian_associations>
+<www_reale_state_office>Site d'achats et vente de immobilier, trouver des appartements &agrave; louer et &agrave; vendre</www_reale_state_office>
+<www_translators>Sites web offrant des services de traductions linguistiques</www_translators>
+<www_whitelisting>M&eacute;thode par liste blanche</www_whitelisting>
+<www_whitelisting_explain>Par d&eacute;faut, vous avez besoin de lister les cat&eacute;gories de sites web que vous d&eacute;sirez interdire &agrave; vos utilisateurs.[br]
+L'activation de cette fonctionnalit&eacute; vous permet de transformer le proxy en mode invers&eacute;.[br]
+Toutes les requ&ecirc;tes &quot;inconnues&quot; ou non list&eacute;es dans les cat&eacute;gories autoris&eacute;es seront alors rejet&eacute;es.[br]Lorsqu'un site web est interdit, vous pouvez autoriser vos utilisateurs &agrave; renseigner eux-m&ecirc;me les sites web dans les cat&eacute;gories autoris&eacute;es.[br]
+Le site web rajout&eacute; peut &ecirc;tre automatiquement autoris&eacute; ou en attente de votre confirmation.[br]
+En effet, vous pouvez recevoir un message &agrave; chaque demande de cat&eacute;gorisation et ainsi valider si elle correspond &agrave; votre politique.</www_whitelisting_explain>
+<www_whitelisting_text>La m&eacute;thode par liste blanche est l'oppos&eacute;e de la m&eacute;thode par liste noire.[br]
+Les utilisateurs peuvent naviguer uniquement sur les sites web dans les cat&eacute;gories autoris&eacute;es.</www_whitelisting_text>
+<ww_pictures>Tous sites permettant de manipuler des photos ou images...</ww_pictures>
+<youcanaccess_to_thefollowing_services>Vous pouvez acc&eacute;der aux services suivants</youcanaccess_to_thefollowing_services>
+<your_hostname_is_not_correct>Il semble que le nom de votre serveur ne soit pas conforme.[br]Il est important de fournir une nom de machine conforme afin de pouvoir correctement le r&eacute;soudre et de promouvoir les services Web que ce serveur peut offrir.</your_hostname_is_not_correct>
+<your_ip_address>Votre adresse IP</your_ip_address>
+<you_need_to_create_virtual_ip_first>Vous devez au moins cr&eacute;er un carte r&eacute;seau virtuelle dans la section r&eacute;seau de ce serveur.</you_need_to_create_virtual_ip_first>
+<ZarafaAllowToReinstall>Autorise le d&eacute;mon &agrave; r&eacute;installer en cas de n&eacute;c&eacute;ssit&eacute;</ZarafaAllowToReinstall>
+<zarafaMbxLang>Langue des dossiers BAL</zarafaMbxLang>
+<ZarafaStoreOutside>Stocker les pi&egrave;ces jointes sur le disque</ZarafaStoreOutside>
+<zarafa_indexer_explain>Cette fonctionnalit&eacute; permet d'indexer les messages afin d'offrir des capacit&eacute;s de recherche pour le serveur Zarafa.[br]
+Un service va r&eacute;guli&egrave;rement indexer tous les messages et de fa&ccedil;on facultative, les pi&egrave;ces jointes.[br]Lors d'une recherche d'un message, le temps de recherche sera s&eacute;rieusement r&eacute;duit.[br]
+Lorsque l'indexation des pi&egrave;ces jointe est activ&eacute;e, il est aussi possible d'indexer les contenu des fichiers (pour les types les plus communs).</zarafa_indexer_explain>
+<ZARAFA_SAFEMODE_EXPLAIN>Le serveur Zarafa est en mode &quot;Safe&quot;, cela veut dire qu'il est verrouill&eacute; et que toute op&eacute;ration sur les bo&icirc;tes aux lettres sont interdites (ex: cr&eacute;ation des bo&icirc;tes aux lettres).</ZARAFA_SAFEMODE_EXPLAIN>
+<zarafa_store_outside_text>Cette op&eacute;ration &agrave; pour but de stocker toutes les pi&egrave;ces jointes en dehors de la base MySQL.[br]
+Cette architecture permet de disposer d'un meilleur cache Mysql et une base de donn&eacute;es plus petite.[br]
+Si vous &ecirc;tes d'accord pour effectuer cette op&eacute;ration, cliquez sur le bouton ci-dessous.</zarafa_store_outside_text>
+<zimbraHowto>Pour importer un serveur Zimbra:[br]
+Utiliser [code]uid=zimbra,cn=admins,cn=zimbra[/code] [br]
+Sans sp&eacute;cifier la base de recherche.[br]
+Utiliser le filtre :[br][code](ObjectClass=zimbraAccount)[/code] afin de rechecher uniquement les utilisateurs.[br]
+Si vous n'avez pas la connaissance du mot de passe du compte zimbra, r&eacute;initialisez-le avec la commande suivante :code]sudo -u zimbra /opt/zimbra/bin/zmldappasswd [password][/code][br]</zimbraHowto>

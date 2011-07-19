@@ -1,0 +1,2 @@
+<available_websites>Autres sites web disponibles</available_websites>
+<user_events_emails_query_text>Requ&ecirc;te d'&eacute;v&egrave;nements mails et affichage des mails transf&eacute;r&eacute;s &agrave; travers le serveur de messagerie</user_events_emails_query_text>

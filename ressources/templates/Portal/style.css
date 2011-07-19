@@ -1,0 +1,138 @@
+<!--
+
+/* 
+© 2008 - Design, CSS Style by P&B Creations, pbcreations.sk
+© 2008 - Martin Plakinger (CEO)
+*/
+
+html{
+
+}
+
+body {
+	color:#333333;
+	font-family:Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size:11px;
+	margin:0 auto;
+	background-image:url("img/background.jpg"); 
+	background-repeat:repeat-x;
+	background-color:#DED5D6;
+}
+
+a, a:visited, a:link { color:#000000; text-decoration:underline; }
+
+a:hover { color: #666666; }
+
+
+
+input {
+	
+	background-image:url("img/input.gif");
+	
+}
+
+div.wrap1 {
+	width: 1022px;
+	margin: 0 auto;
+	overflow: hidden;
+	border:1px solid #c3c3c3;
+}
+
+div.wrap1 .wrap2 {
+	width: 1022px;
+	background-repeat:repeat-y;
+	
+	margin: 0 auto;
+	overflow: hidden;
+}
+
+div.wrap2 .logo {
+	width:1022px;
+	background-image: url("img/logo.png");
+	background-repeat:no-repeat;
+	color:#FFFFFF;
+	font-size:22px;
+	font-weight:bold;
+	border:1px solid black;
+	padding-left:10px;
+	height:60px;
+}
+
+div.logo .slogan {
+	font-size:9px;
+	font-weight:normal;
+	margin-top:33px;
+}
+
+div.info, div.info1 div#top_info.info{
+	width:1023px;
+
+	background-image:url(img/info1.gif);
+	background-repeat:repeat-x;
+	margin:0px;
+	padding:0px;
+	padding-top:3px;
+}
+
+div.info1 { 
+	background-image:url(img/info1.gif);
+	float:left; 
+	border-top:1px solid #fff; 
+	background-color:#e4e4e4;
+	color:#999;
+}
+
+div.info1 a, div.info1 a:link, div.info1 a:visited { color:#999; }
+
+div.info1 a:hover { color: #666; }
+
+div.wrap2 .leftpanel, div.wrap2 .rightpanel {
+	width:300px;
+	display: inline;
+	float:left;
+	background-color:white;
+	margin-top:-15px;
+}
+
+div.wrap2 .mainpanel {
+	width:710px;
+	float:left;
+	background-color:transparent;
+	padding:3px;
+}
+
+div.leftpanel .header, div.rightpanel .header {
+	background-image:url(img/header.png);
+	background-repeat:no-repeat;
+	width:180px;
+	line-height:35px;
+	padding-left:20px;
+	color:#FFFFFF;
+	overflow:hidden;
+	font-weight:bold;
+}
+
+.text { padding:8px; text-align:justify; }
+/* uplatnuje sa na left a right stlpec */
+.text img { margin-right:10px; margin-bottom: 10px; border:0;  float:left; }
+
+.text_ { padding:15px; text-align:justify; }
+/* uplatnuje sa na hlavny stlpec */
+.text_ img { vertical-align:middle; border:0; }
+
+span.divider {
+	border-bottom:1px dashed #333333; 
+	padding-bottom:5px; 
+	margin-bottom:5px; 
+	display:block;
+}
+
+div.rightpanel .inquiry, div.leftpanel .inquiry {
+	padding:8px; 
+	text-align:justify;
+
+}
+
+.inquiry a, .inquiry a:link, .inquiry a:visited, .inquiry a:hover { text-decoration:none; }
+
+-->

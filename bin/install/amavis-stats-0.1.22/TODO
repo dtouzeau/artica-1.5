@@ -1,0 +1,10 @@
+Add startup items for other platforms.
+	If you have something that works, pass it along and I'll integrate it.
+
+Create additional button types other than tabs.
+
+Create some form of data backup.
+
+Create a standalone utility to generate or regenerate the data files based on
+several log files.
+

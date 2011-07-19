@@ -1,0 +1,405 @@
+unit sugarcrm;
+
+{$MODE DELPHI}
+{$LONGSTRINGS ON}
+
+interface
+
+uses
+    Classes, SysUtils,variants,strutils,IniFiles, Process,md5,logs,unix,RegExpr in 'RegExpr.pas',zsystem;
+
+  type
+  tsugarcrm=class
+
+
+private
+     LOGS:Tlogs;
+     D:boolean;
+     GLOBAL_INI:TiniFIle;
+     SYS:TSystem;
+     artica_path:string;
+     ApacheGroupware:integer;
+
+
+public
+    procedure   Free;
+    constructor Create(const zSYS:Tsystem);
+    procedure   WriteConfig_php(organization_name:string);
+    function    VERSION(rootpath:string):string;
+END;
+
+implementation
+
+constructor tsugarcrm.Create(const zSYS:Tsystem);
+begin
+       forcedirectories('/etc/artica-postfix');
+       LOGS:=tlogs.Create();
+       SYS:=zSYS;
+       ApacheGroupware:=1;
+       if not TryStrToInt(SYS.GET_INFO('ApacheGroupware'),ApacheGroupware) then ApacheGroupware:=1;
+
+
+       if not DirectoryExists('/usr/share/artica-postfix') then begin
+              artica_path:=ParamStr(0);
+              artica_path:=ExtractFilePath(artica_path);
+              artica_path:=AnsiReplaceText(artica_path,'/bin/','');
+
+      end else begin
+          artica_path:='/usr/share/artica-postfix';
+      end;
+end;
+//##############################################################################
+procedure tsugarcrm.free();
+begin
+    FreeAndNil(logs);
+end;
+//##############################################################################
+
+function tsugarcrm.VERSION(rootpath:string):string;
+ var
+   RegExpr:TRegExpr;
+   x:string;
+   tmpstr:string;
+   l:TstringList;
+   i:integer;
+   path:string;
+   key:string;
+begin
+
+
+
+     path:=rootpath+'/sugar_version.php';
+     key:=logs.MD5FromString(path);
+     if not FileExists(path) then begin
+        logs.Debuglogs('tsugarcrm.VERSION():: unable to stat '+ path);
+        exit;
+     end;
+
+
+   result:=SYS.GET_CACHE_VERSION(key);
+   if length(result)>0 then exit;
+
+   tmpstr:=path;
+   if not FileExists(tmpstr) then exit;
+   l:=TstringList.Create;
+   RegExpr:=TRegExpr.Create;
+   l.LoadFromFile(tmpstr);
+   RegExpr.Expression:='\$sugar_version.+?([0-9\.a-z]+)';
+
+
+
+    for i:=0 to l.Count-1 do begin
+         if RegExpr.Exec(l.Strings[i]) then begin
+            result:=RegExpr.Match[1];
+            break;
+         end;
+     end;
+l.Free;
+RegExpr.free;
+SYS.SET_CACHE_VERSION(key,result);
+logs.Debuglogs('tsugarcrm.VERSION:: -> ' + result);
+end;
+//##############################################################################
+procedure tsugarcrm.WriteConfig_php(organization_name:string);
+var
+   l:Tstringlist;
+   database_name:string;
+begin
+
+organization_name:=AnsiReplaceText(organization_name,'.','_');
+database_name:='sugarcrm_'+ organization_name;
+
+l.add('define("DB_HOST", "'+logs.MYSQL_INFOS('mysql_server')+':'+logs.MYSQL_INFOS('port') +'"); ');
+l.add('define("DB_USER", "'+logs.MYSQL_INFOS('database_admin')+'"); ');
+l.add('define("DB_PASS", "'+logs.MYSQL_INFOS('database_password')+'"); ');
+
+l.Add('<?php');
+l.Add('// created: '+logs.DateTimeNowSQL());
+l.Add('$sugar_config = array (');
+l.Add('  "admin_access_control" => false,');
+l.Add('  "admin_export_only" => false,');
+l.Add('  "cache_dir" => "cache/",');
+l.Add('  "calculate_response_time" => true,');
+l.Add('  "common_ml_dir" => "",');
+l.Add('  "create_default_user" => false,');
+l.Add('  "currency" => "",');
+l.Add('  "dashlet_display_row_options" => ');
+l.Add('  array (');
+l.Add('    0 => "1",');
+l.Add('    1 => "3",');
+l.Add('    2 => "5",');
+l.Add('    3 => "10",');
+l.Add('  ),');
+l.Add('  "date_formats" => ');
+l.Add('  array (');
+l.Add('    "Y-m-d" => "2006-12-23",');
+l.Add('    "m-d-Y" => "12-23-2006",');
+l.Add('    "d-m-Y" => "23-12-2006",');
+l.Add('    "Y/m/d" => "2006/12/23",');
+l.Add('    "m/d/Y" => "12/23/2006",');
+l.Add('    "d/m/Y" => "23/12/2006",');
+l.Add('    "Y.m.d" => "2006.12.23",');
+l.Add('    "d.m.Y" => "23.12.2006",');
+l.Add('    "m.d.Y" => "12.23.2006",');
+l.Add('  ),');
+l.Add('  "datef" => "m/d/Y",');
+l.Add('  "dbconfig" => ');
+l.Add('  array (');
+l.Add('    "db_host_name" => "'+logs.MYSQL_INFOS('mysql_server')+':'+logs.MYSQL_INFOS('port')+'",');
+l.Add('    "db_host_instance" => "SQLEXPRESS",');
+l.Add('    "db_user_name" => "'+logs.MYSQL_INFOS('database_admin')+'",');
+l.Add('    "db_password" => "'+logs.MYSQL_INFOS('database_password')+'",');
+l.Add('    "db_name" => "'+database_name+'",');
+l.Add('    "db_type" => "mysql",');
+l.Add('  ),');
+l.Add('  "dbconfigoption" => ');
+l.Add('  array (');
+l.Add('    "persistent" => true,');
+l.Add('    "autofree" => false,');
+l.Add('    "debug" => 0,');
+l.Add('    "seqname_format" => "%s_seq",');
+l.Add('    "portability" => 0,');
+l.Add('    "ssl" => false,');
+l.Add('  ),');
+l.Add('  "default_action" => "index",');
+l.Add('  "default_charset" => "UTF-8",');
+l.Add('  "default_currencies" => ');
+l.Add('  array (');
+l.Add('    "AUD" => ');
+l.Add('    array (');
+l.Add('      "name" => "Australian Dollars",');
+l.Add('      "iso4217" => "AUD",');
+l.Add('      "symbol" => "$",');
+l.Add('    ),');
+l.Add('    "BRL" => ');
+l.Add('    array (');
+l.Add('      "name" => "Brazilian Reais",');
+l.Add('      "iso4217" => "BRL",');
+l.Add('      "symbol" => "R$",');
+l.Add('    ),');
+l.Add('    "GBP" => ');
+l.Add('    array (');
+l.Add('      "name" => "British Pounds",');
+l.Add('      "iso4217" => "GBP",');
+l.Add('      "symbol" => "Â£",');
+l.Add('    ),');
+l.Add('    "CAD" => ');
+l.Add('    array (');
+l.Add('      "name" => "Canadian Dollars",');
+l.Add('      "iso4217" => "CAD",');
+l.Add('      "symbol" => "$",');
+l.Add('    ),');
+l.Add('    "CNY" => ');
+l.Add('    array (');
+l.Add('      "name" => "Chinese Yuan",');
+l.Add('      "iso4217" => "CNY",');
+l.Add('      "symbol" => "ï¿¥",');
+l.Add('    ),');
+l.Add('    "EUR" => ');
+l.Add('    array (');
+l.Add('      "name" => "Euro",');
+l.Add('      "iso4217" => "EUR",');
+l.Add('      "symbol" => "â¬",');
+l.Add('    ),');
+l.Add('    "HKD" => ');
+l.Add('    array (');
+l.Add('      "name" => "Hong Kong Dollars",');
+l.Add('      "iso4217" => "HKD",');
+l.Add('      "symbol" => "$",');
+l.Add('    ),');
+l.Add('    "INR" => ');
+l.Add('    array (');
+l.Add('      "name" => "Indian Rupees",');
+l.Add('      "iso4217" => "INR",');
+l.Add('      "symbol" => "âš",');
+l.Add('    ),');
+l.Add('    "KRW" => ');
+l.Add('    array (');
+l.Add('      "name" => "Korean Won",');
+l.Add('      "iso4217" => "KRW",');
+l.Add('      "symbol" => "â©",');
+l.Add('    ),');
+l.Add('    "YEN" => ');
+l.Add('    array (');
+l.Add('      "name" => "Japanese Yen",');
+l.Add('      "iso4217" => "JPY",');
+l.Add('      "symbol" => "Â¥",');
+l.Add('    ),');
+l.Add('    "MXM" => ');
+l.Add('    array (');
+l.Add('      "name" => "Mexican Pesos",');
+l.Add('      "iso4217" => "MXM",');
+l.Add('      "symbol" => "$",');
+l.Add('    ),');
+l.Add('    "SGD" => ');
+l.Add('    array (');
+l.Add('      "name" => "Singaporean Dollars",');
+l.Add('      "iso4217" => "SGD",');
+l.Add('      "symbol" => "$",');
+l.Add('    ),');
+l.Add('    "CHF" => ');
+l.Add('    array (');
+l.Add('      "name" => "Swiss Franc",');
+l.Add('      "iso4217" => "CHF",');
+l.Add('      "symbol" => "SFr.",');
+l.Add('    ),');
+l.Add('    "THB" => ');
+l.Add('    array (');
+l.Add('      "name" => "Thai Baht",');
+l.Add('      "iso4217" => "THB",');
+l.Add('      "symbol" => "àž¿",');
+l.Add('    ),');
+l.Add('    "USD" => ');
+l.Add('    array (');
+l.Add('      "name" => "US Dollars",');
+l.Add('      "iso4217" => "USD",');
+l.Add('      "symbol" => "$",');
+l.Add('    ),');
+l.Add('  ),');
+l.Add('  "default_currency_iso4217" => "EUR",');
+l.Add('  "default_currency_name" => "Euro",');
+l.Add('  "default_currency_significant_digits" => "2",');
+l.Add('  "default_currency_symbol" => "â&#65533;¬",');
+l.Add('  "default_date_format" => "Y/m/d",');
+l.Add('  "default_decimal_seperator" => ".",');
+l.Add('  "default_email_charset" => "ISO-8859-1",');
+l.Add('  "default_email_client" => "sugar",');
+l.Add('  "default_email_editor" => "html",');
+l.Add('  "default_export_charset" => "ISO-8859-1",');
+l.Add('  "default_language" => "en_us",');
+l.Add('  "default_locale_name_format" => "s f l",');
+l.Add('  "default_max_subtabs" => "12",');
+l.Add('  "default_max_tabs" => "12",');
+l.Add('  "default_module" => "Home",');
+l.Add('  "default_navigation_paradigm" => "m",');
+l.Add('  "default_number_grouping_seperator" => ",",');
+l.Add('  "default_password" => "",');
+l.Add('  "default_permissions" => ');
+l.Add('  array (');
+l.Add('    "dir_mode" => 1528,');
+l.Add('    "file_mode" => 432,');
+l.Add('    "user" => "",');
+l.Add('    "group" => "",');
+l.Add('  ),');
+l.Add('  "default_subpanel_links" => false,');
+l.Add('  "default_subpanel_tabs" => true,');
+l.Add('  "default_swap_last_viewed" => false,');
+l.Add('  "default_swap_shortcuts" => false,');
+l.Add('  "default_theme" => "Sugar",');
+l.Add('  "default_time_format" => "h:iA",');
+l.Add('  "default_user_is_admin" => false,');
+l.Add('  "default_user_name" => "",');
+l.Add('  "demoData" => "no",');
+l.Add('  "disable_export" => false,');
+l.Add('  "disable_persistent_connections" => "false",');
+l.Add('  "display_email_template_variable_chooser" => false,');
+l.Add('  "display_inbound_email_buttons" => false,');
+l.Add('  "dump_slow_queries" => false,');
+l.Add('  "email_default_client" => "sugar",');
+l.Add('  "email_default_delete_attachments" => true,');
+l.Add('  "email_default_editor" => "html",');
+l.Add('  "email_num_autoreplies_24_hours" => 10,');
+l.Add('  "export_delimiter" => ",",');
+l.Add('  "history_max_viewed" => 10,');
+l.Add('  "host_name" => "localhost",');
+l.Add('  "import_dir" => "cache/import/",');
+l.Add('  "import_max_execution_time" => 3600,');
+l.Add('  "import_max_records_per_file" => "1000",');
+l.Add('  "installer_locked" => true,');
+l.Add('  "js_custom_version" => "",');
+l.Add('  "js_lang_version" => 1,');
+l.Add('  "languages" => ');
+l.Add('  array (');
+l.Add('    "en_us" => "English (US)",');
+l.Add('  ),');
+l.Add('  "large_scale_test" => false,');
+l.Add('  "list_max_entries_per_page" => 20,');
+l.Add('  "list_max_entries_per_subpanel" => 10,');
+l.Add('  "lock_default_user_name" => false,');
+l.Add('  "lock_homepage" => false,');
+l.Add('  "lock_subpanels" => false,');
+l.Add('  "log_dir" => ".",');
+l.Add('  "log_file" => "sugarcrm.log",');
+l.Add('  "log_memory_usage" => false,');
+l.Add('  "logger" => ');
+l.Add('  array (');
+l.Add('    "level" => "fatal",');
+l.Add('    "file" => ');
+l.Add('    array (');
+l.Add('      "ext" => ".log",');
+l.Add('      "name" => "sugarcrm",');
+l.Add('      "dateFormat" => "%c",');
+l.Add('      "maxSize" => "10MB",');
+l.Add('      "maxLogs" => 10,');
+l.Add('      "suffix" => "%m_%Y",');
+l.Add('    ),');
+l.Add('  ),');
+l.Add('  "login_nav" => false,');
+l.Add('  "max_dashlets_homepage" => "15",');
+l.Add('  "portal_view" => "single_user",');
+l.Add('  "require_accounts" => true,');
+l.Add('  "resource_management" => ');
+l.Add('  array (');
+l.Add('    "special_query_limit" => 50000,');
+l.Add('    "special_query_modules" => ');
+l.Add('    array (');
+l.Add('      0 => "Reports",');
+l.Add('      1 => "Export",');
+l.Add('      2 => "Import",');
+l.Add('      3 => "Administration",');
+l.Add('      4 => "Sync",');
+l.Add('    ),');
+l.Add('    "default_limit" => 1000,');
+l.Add('  ),');
+l.Add('  "rss_cache_time" => "10800",');
+l.Add('  "save_query" => "all",');
+l.Add('  "session_dir" => "",');
+l.Add('  "showDetailData" => true,');
+l.Add('  "showThemePicker" => true,');
+l.Add('  "site_url" => "http://localhost:81/SugarCE-Full-5.2.0f",');
+l.Add('  "slow_query_time_msec" => "100",');
+l.Add('  "sugar_version" => "5.2.0f",');
+l.Add('  "sugarbeet" => true,');
+l.Add('  "time_formats" => ');
+l.Add('  array (');
+l.Add('    "H:i" => "23:00",');
+l.Add('    "h:ia" => "11:00pm",');
+l.Add('    "h:iA" => "11:00PM",');
+l.Add('    "H.i" => "23.00",');
+l.Add('    "h.ia" => "11.00pm",');
+l.Add('    "h.iA" => "11.00PM",');
+l.Add('  ),');
+l.Add('  "timef" => "H:i",');
+l.Add('  "tmp_dir" => "cache/xml/",');
+l.Add('  "translation_string_prefix" => false,');
+l.Add('  "unique_key" => "cb26d19f5632365f305dd21bcb35ec11",');
+l.Add('  "upload_badext" => ');
+l.Add('  array (');
+l.Add('    0 => "php",');
+l.Add('    1 => "php3",');
+l.Add('    2 => "php4",');
+l.Add('    3 => "php5",');
+l.Add('    4 => "pl",');
+l.Add('    5 => "cgi",');
+l.Add('    6 => "py",');
+l.Add('    7 => "asp",');
+l.Add('    8 => "cfm",');
+l.Add('    9 => "js",');
+l.Add('    10 => "vbs",');
+l.Add('    11 => "html",');
+l.Add('    12 => "htm",');
+l.Add('  ),');
+l.Add('  "upload_dir" => "cache/upload/",');
+l.Add('  "upload_maxsize" => 3000000,');
+l.Add('  "use_common_ml_dir" => false,');
+l.Add('  "use_php_code_json" => true,');
+l.Add('  "vcal_time" => "2",');
+l.Add('  "verify_client_ip" => true,');
+l.Add(');');
+l.Add('?>');
+
+end;
+
+
+
+end.

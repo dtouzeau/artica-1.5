@@ -1,0 +1,5 @@
+<DarRestoreMBX_perform>Do you want to perform this operation? The mailbox will be erased from the defined backup container</DarRestoreMBX_perform>
+<external_resource_choose_text>Choose the external resource used to backup the mailbox datas</external_resource_choose_text>
+<restore_mailbox>Restore mailboxes</restore_mailbox>
+<restore_mailbox_ask_user>This operation will recover your current mailbox with a backuped mailbox.[br]Define here the user mailbox you want to restore.</restore_mailbox_ask_user>
+<restore_mailbox_text>Parse backup containers and restore mailboxes by selecting a defined date</restore_mailbox_text>

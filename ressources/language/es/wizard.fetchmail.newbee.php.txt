@@ -1,0 +1,26 @@
+<add_alias>Agregar una nueva cuenta de correo originial</add_alias>
+<add_alias_text>Agregar la cuenta original de correo de tu proveedor y las reglas fetchmail para recuperar el correo</add_alias_text>
+<click_on_add>De Clic sobre el bot&oacute;n &quot;Agregar&quot;</click_on_add>
+<fetchmail_add_rule>Nueva cuenta</fetchmail_add_rule>
+<fetchmail_add_rule_text>Agregar la nueva cuenta de la cual se traer&aacute; el correo a su cuenta local</fetchmail_add_rule_text>
+<fetchmail_aliases>Alias de correos a traer</fetchmail_aliases>
+<fetchmail_aliases_ask>Indique la direcci&oacute;n de la cual se traer&aacute; correo (ej.: tu@gmail.com o tu@hotmail.com...)</fetchmail_aliases_ask>
+<fetchmail_aliases_text>
+During receiving mails from fetchmail operation, the mail server engine keep the original recipient address forwarded to your account.[br]
+For example, if you fetch mail from gmail account and your original address is user@gmail.com, the email address "user@gmail.com" is not translated to your local email address.[br]
+All mails saved in backup or saved in quarantine area are indexed by the original recipient.[br]
+[b]If you not fill this section, you will not be able to query correctly your quarantine/backup area[/b]. 
+</fetchmail_aliases_text>
+<fetchmail_modify_rules>Cuentas almacenadas</fetchmail_modify_rules>
+<fetchmail_modify_rules_text>Desplegar y editar cuentas actuales</fetchmail_modify_rules_text>
+<fetch_delete_rule_confirm>&iquest;Confirma la eliminaci&oacute;n de este regla?</fetch_delete_rule_confirm>
+<GET_RIGHT_ISP_SETTINGS>Find settings</GET_RIGHT_ISP_SETTINGS>
+<GET_RIGHT_ISP_SETTINGS_TEXT>Define settings with your ISP name</GET_RIGHT_ISP_SETTINGS_TEXT>
+<messaging_accounts>Cuentas de correo</messaging_accounts>
+<not_delete_messages>No eliminar mensajes</not_delete_messages>
+<no_fetchmail_aliases>No utilizar alias de correos a traer</no_fetchmail_aliases>
+<no_fetchmail_aliases_intro>If you want to receive quarantine reports and others features, you need to add your original emails addresses</no_fetchmail_aliases_intro>
+<proto>Protocol</proto>
+<server_information>Informaci&oacute;n de Servidor</server_information>
+<session_information>Session information</session_information>
+<wizard_intro>Este Asistente le ayudar&aacute; a crear o editar cuentas oara traer correos de otros servidoress</wizard_intro>

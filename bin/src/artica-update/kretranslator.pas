@@ -1,0 +1,1 @@
+../artica-install/kretranslator.pas

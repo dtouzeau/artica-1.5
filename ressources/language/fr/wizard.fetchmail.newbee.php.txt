@@ -1,0 +1,24 @@
+<add_alias>Ajouter un nouvel email d'origine</add_alias>
+<add_alias_text>Ajouter votre email d'origine de votre FAI et les r&egrave;gles pour fetchmail</add_alias_text>
+<click_on_add>Cliquez sur Ajouter</click_on_add>
+<fetchmail_add_rule>Nouveau compte</fetchmail_add_rule>
+<fetchmail_add_rule_text>Ajouter une nouveau compte collect&eacute; et recevoir les e-mails dans votre bo&icirc;te aux lettres</fetchmail_add_rule_text>
+<fetchmail_aliases>Aliases Fetchmail</fetchmail_aliases>
+<fetchmail_aliases_ask>Donnez l'adresse email r&eacute;cup&eacute;r&eacute;e par votre r&egrave;gle (par exemple, ou you@gmail.com you@hotmail.com ...)</fetchmail_aliases_ask>
+<fetchmail_aliases_text>Lors de la r&eacute;ception de mails gr&acirc;ce &agrave; fetchmail, le moteur du serveur de messagerie  conserve l'adresse d'origine du destinataire redirig&eacute;e sur votre compte. [br]
+Par exemple, si vous r&eacute;cup&eacute;rez du courrier &agrave; partir du compte Gmail et votre adresse d'origine est user@gmail.com, l'adresse e-mail &quot;user@gmail.com&quot; n'est pas traduite dans votre adresse e-mail local. [br]
+Tous les mails sauvegard&eacute;s dans la sauvegarde ou dans la zone de quarantaine sont index&eacute;s sur le b&eacute;n&eacute;ficiaire initial. [br]
+[b] Si vous ne remplissez pas cette section, vous ne serez pas en mesure d'interroger correctement votre zone de mise en quarantaine/sauvegarde [/b].</fetchmail_aliases_text>
+<fetchmail_modify_rules>Comptes de stockage</fetchmail_modify_rules>
+<fetchmail_modify_rules_text>Afficher et &eacute;diter les comptes actuels</fetchmail_modify_rules_text>
+<fetch_delete_rule_confirm>Confirmer la suppression de cette r&egrave;gle?</fetch_delete_rule_confirm>
+<GET_RIGHT_ISP_SETTINGS>trouver les param&egrave;tres</GET_RIGHT_ISP_SETTINGS>
+<GET_RIGHT_ISP_SETTINGS_TEXT>D&eacute;finir les param&egrave;tres avec votre nom d'ISP</GET_RIGHT_ISP_SETTINGS_TEXT>
+<messaging_accounts>Comptes de messagerie</messaging_accounts>
+<not_delete_messages>Ne pas effacer les messages</not_delete_messages>
+<no_fetchmail_aliases>Aucun alias fetchmail</no_fetchmail_aliases>
+<no_fetchmail_aliases_intro>Si vous souhaitez recevoir les rapports de quarantaine, vous devez ajouter vos adresses e-mails externes</no_fetchmail_aliases_intro>
+<proto>Protocole</proto>
+<server_information>Information du serveur</server_information>
+<session_information>Information de la session</session_information>
+<wizard_intro>Cet assistant va vous aider &agrave; cr&eacute;er ou &eacute;diter des comptes de collecte de vos emails depuis d'autres serveurs mails</wizard_intro>

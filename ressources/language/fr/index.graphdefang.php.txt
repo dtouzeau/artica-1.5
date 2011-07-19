@@ -1,0 +1,2 @@
+<hourly>d'heure en heure</hourly>
+<statistics>Statistiques</statistics>

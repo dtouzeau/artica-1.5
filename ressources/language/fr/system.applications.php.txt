@@ -1,0 +1,9 @@
+<howto_install>Si vous utilisez [b] le mode source [/b], ex&eacute;cut&eacute; dans une console cette ligne de commande [br] [b]/usr/share/artica-postfix/artica-instal l addons [/b] [br] Cette op&eacute;ration vous permet de choisir qui a soutenu le produit &agrave; installer [br] [br]
+
+
+[H5] Artica G&egrave;re Postfix et les modules suppl&eacute;mentaires[/h5] si vous utilisez [b] des paquets de d&eacute;p&ocirc;ts pour debian ou RedHat (dpkg ou rpm) [/b] : [br] Vous avez 5 modules que vous pouvez t&eacute;l&eacute;charger sur sourceforge.
+
+
+
+[Ul] [li] [b] artica-postfix-smtp-relay [/b] [br] Ce paquet convertie artica pour &ecirc;tre un Relais SMTP utilisant le programme principal Postfix , bogofilter l'outil contre le spam et saslauthd [li] [b] artica-postfix-security [/b] [br] Ce paquet convertit artica en serveur de s&eacute;curit&eacute; SMTP complet utilisant Kaspersky l'Antivirus Contre le sapm et Kaspersky (licence avec 30 jours d'&eacute;valuation).
+[Li] [b] artica-postfix-mailbox [/b] [br] Ce paquet convertissent artica pour &ecirc;tre une bo&icirc;te aux lettres IMAP/POP3 le serveur</howto_install>

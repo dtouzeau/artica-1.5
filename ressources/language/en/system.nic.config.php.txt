@@ -1,0 +1,16 @@
+<AddDNSServer>Give IP Address of your new DNS Server</AddDNSServer>
+<apply_network>Apply Network configurations</apply_network>
+<apply_network_text>Save your settings and apply these configurations to the server</apply_network_text>
+<change>Change settings</change>
+<ChangeHostName>Give the full name of your server</ChangeHostName>
+<DeleteDNS>Are you sure deleting this DNS Server ?</DeleteDNS>
+<nameserver>DNS Server</nameserver>
+<network_about>This area help you about network configuration and how to configure network services[br]This is where you configure how your system is connected to the network</network_about>
+<network_style>Network system</network_style>
+<not_allowed>Not allowed to change settings</not_allowed>
+<primary_dns>Primary DNS server</primary_dns>
+<proto>proto</proto>
+<secondary_dns>Secondary DNS server</secondary_dns>
+<show_config_file_text>Read the configuration generated for your Operating system before apply settings</show_config_file_text>
+<use_dhcp>Get IP Address automatically</use_dhcp>
+<warning_wireless_nic>Artica didn't support wireless parameters, this feature is disabled</warning_wireless_nic>

@@ -1,0 +1,21 @@
+<BUILD_CLUSTER>Build cluster</BUILD_CLUSTER>
+<WIZARD_CLUSTER_CYRUS_EXPLAIN>This wizard will help you to create a mailbox server Active/passive on your network.[br]
+To set this structure you need a second running Artica server with IMAP service.[br]
+This second Artica server will be the mailboxes replica/slave.[br]
+It will receive notifications from this server in order to replicate mailboxes in realtime.[br]
+If the configuration is a success you will never loose mails.[br]
+[br]The first operation is to check if the slave server store mandatories elements for linking procedure.[br]
+If the link operation is a success the 2 artica servers (Master and slave) will change parameters and start the clustering production mode.[br]
+You will be able to return back to a standalone mode so you will not loose mail on a failed operation.[br][br]
+So, it's time to start the first procedure.[br]
+Fill the form below by setting the remote server credentials.[br]This will help Artica to talk to the remote server for checking it's status.[br]
+</WIZARD_CLUSTER_CYRUS_EXPLAIN>
+<WIZARD_CLUSTER_CYRUS_REPLICA_INFOS>Slave/replica informations</WIZARD_CLUSTER_CYRUS_REPLICA_INFOS>
+<WIZARD_CLUSTER_CYRUS_REPLICA_SUCCESS>The target server is ready</WIZARD_CLUSTER_CYRUS_REPLICA_SUCCESS>
+<WIZARD_CLUSTER_CYRUS_REPLICA_SUCCESS_EXPLAIN>This server is ready to be a replica/slave after clicking on the "build cluster" button the Master and the Slave
+will be notified to be linked in order to build a cluster configuration.[br]
+Your Master should be behind a Firewall with NAT, it is necessary to define which IP address/Server name the replica must use.
+In the form below, put the Ip address of your server act has a Master. 
+</WIZARD_CLUSTER_CYRUS_REPLICA_SUCCESS_EXPLAIN>
+<WIZARD_CLUSTER_CYRUS_WELCOME>Welcome on the Wizard for Clustering mailboxes</WIZARD_CLUSTER_CYRUS_WELCOME>
+<WIZARD_CLUSTER_ERROR>The wizard is blocked, it encounter some error, try to fix it ans restart the operation</WIZARD_CLUSTER_ERROR>

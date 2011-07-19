@@ -1,0 +1,19 @@
+<action_100_pourc>Action when score up to 100%</action_100_pourc>
+<rbl_servers>SURBL servers</rbl_servers>
+<surbl_explain>
+A Universal Resource Identifier (URI) is a standard means of addressing resources on the Web.[br]
+Common URIs such as Uniform Resource Locators (URLs) and Uniform Resource Names (URNs) are used to identify the destination of hypertext links as well as the sources of images,
+information and other objects in a Web Page. [br]
+URLs are most generally used in web sites but can also be included as part of an email message body e.g. to attract new visitors to a web site.[br]
+
+SURBLs differ from most other RBLs in that they are used to detect spam based on message body URIs.[br]
+Unlike most other RBLs, SURBLs are not used to block spam senders.[br] Instead they allow you to block messages that have spam hosts (e.g. web servers, domains, web sites) which are mentioned in message bodies. [br]
+This module use pourcent method to judge if a mail is sended by a black web or spamer computer.[br]
+In the table below, you must reach 1OO% with a list of surbl servers database.[br]to increase the detection rate, you may exceed 100% of results[br]For example you can set[br]
+[ul]
+[li]rhsbl.ahbl.org as 20%[/li]
+[li]multi.surbl.org as 30%[/li]
+[li]adult.rhs.mailpolice.com as 70%[/li]
+[/ul][br]
+
+</surbl_explain>

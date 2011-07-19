@@ -1,0 +1,1 @@
+<refresh_text_usb>Refrescar la lista de dispositivos externos</refresh_text_usb>

@@ -1,0 +1,2 @@
+mai 30 01:42:58.051597 admin[32151]: [ 2] [bootup] Logging initiated LogDebugLevel=3 to file:razor-agent.log
+mai 30 01:42:58.052167 admin[32151]: [ 2]  Razor-Agents v2.84 starting razor-admin -home=/etc/mail/spamassassin/.razor -create

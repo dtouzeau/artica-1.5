@@ -1,0 +1,222 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <ProjectOptions>
+    <PathDelim Value="/"/>
+    <Version Value="5"/>
+    <General>
+      <MainUnit Value="0"/>
+      <IconPath Value="./"/>
+      <TargetFileExt Value=""/>
+      <Title Value="artica_mailman"/>
+      <ActiveEditorIndexAtStart Value="3"/>
+    </General>
+    <VersionInfo>
+      <ProjectVersion Value=""/>
+    </VersionInfo>
+    <PublishOptions>
+      <Version Value="2"/>
+      <IgnoreBinaries Value="False"/>
+      <IncludeFileFilter Value="*.(pas|pp|inc|lfm|lpr|lrs|lpi|lpk|sh|xml)"/>
+      <ExcludeFileFilter Value="*.(bak|ppu|ppw|o|so);*~;backup"/>
+    </PublishOptions>
+    <RunParams>
+      <local>
+        <FormatVersion Value="1"/>
+        <LaunchingApplication PathPlusParams="/usr/X11R6/bin/xterm -T 'Lazarus Run Output' -e $(LazarusDir)/tools/runwait.sh $(TargetCmdLine)"/>
+      </local>
+    </RunParams>
+    <Units Count="11">
+      <Unit0>
+        <Filename Value="artica_mailman.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="artica_mailman"/>
+        <CursorPos X="36" Y="20"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="0"/>
+        <UsageCount Value="63"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="ldap.pas"/>
+        <UnitName Value="ldap"/>
+        <CursorPos X="26" Y="135"/>
+        <TopLine Value="118"/>
+        <EditorIndex Value="1"/>
+        <UsageCount Value="30"/>
+        <Bookmarks Count="1">
+          <Item0 X="1" Y="908" ID="0"/>
+        </Bookmarks>
+        <Loaded Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="blcksock.pas"/>
+        <UnitName Value="blcksock"/>
+        <CursorPos X="16" Y="309"/>
+        <TopLine Value="270"/>
+        <UsageCount Value="26"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="ssfpc.pas"/>
+        <UnitName Value="ssfpc"/>
+        <CursorPos X="3" Y="90"/>
+        <TopLine Value="79"/>
+        <EditorIndex Value="6"/>
+        <UsageCount Value="30"/>
+        <Loaded Value="True"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="mailman.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="mailman"/>
+        <CursorPos X="50" Y="344"/>
+        <TopLine Value="279"/>
+        <EditorIndex Value="3"/>
+        <UsageCount Value="63"/>
+        <Loaded Value="True"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="global_conf.pas"/>
+        <UnitName Value="global_conf"/>
+        <CursorPos X="54" Y="5295"/>
+        <TopLine Value="5465"/>
+        <EditorIndex Value="2"/>
+        <UsageCount Value="30"/>
+        <Loaded Value="True"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="confiles.pas"/>
+        <UnitName Value="confiles"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="26"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="ldapsend.pas"/>
+        <UnitName Value="ldapsend"/>
+        <CursorPos X="15" Y="169"/>
+        <TopLine Value="127"/>
+        <UsageCount Value="26"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="logs.pas"/>
+        <UnitName Value="logs"/>
+        <CursorPos X="1" Y="76"/>
+        <TopLine Value="37"/>
+        <EditorIndex Value="4"/>
+        <UsageCount Value="22"/>
+        <Loaded Value="True"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="/usr/share/fpcsrc/rtl/inc/objpash.inc"/>
+        <CursorPos X="19" Y="54"/>
+        <TopLine Value="15"/>
+        <UsageCount Value="10"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="/usr/share/fpcsrc/rtl/objpas/objpas.pp"/>
+        <UnitName Value="objpas"/>
+        <CursorPos X="33" Y="63"/>
+        <TopLine Value="24"/>
+        <EditorIndex Value="5"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit10>
+    </Units>
+    <JumpHistory Count="18" HistoryIndex="17">
+      <Position1>
+        <Filename Value="ldap.pas"/>
+        <Caret Line="371" Column="1" TopLine="330"/>
+      </Position1>
+      <Position2>
+        <Filename Value="ldap.pas"/>
+        <Caret Line="95" Column="37" TopLine="29"/>
+      </Position2>
+      <Position3>
+        <Filename Value="mailman.pas"/>
+        <Caret Line="305" Column="49" TopLine="1"/>
+      </Position3>
+      <Position4>
+        <Filename Value="mailman.pas"/>
+        <Caret Line="102" Column="75" TopLine="84"/>
+      </Position4>
+      <Position5>
+        <Filename Value="mailman.pas"/>
+        <Caret Line="272" Column="108" TopLine="215"/>
+      </Position5>
+      <Position6>
+        <Filename Value="mailman.pas"/>
+        <Caret Line="347" Column="22" TopLine="318"/>
+      </Position6>
+      <Position7>
+        <Filename Value="logs.pas"/>
+        <Caret Line="95" Column="18" TopLine="43"/>
+      </Position7>
+      <Position8>
+        <Filename Value="/usr/share/fpcsrc/rtl/objpas/objpas.pp"/>
+        <Caret Line="63" Column="39" TopLine="24"/>
+      </Position8>
+      <Position9>
+        <Filename Value="logs.pas"/>
+        <Caret Line="76" Column="19" TopLine="43"/>
+      </Position9>
+      <Position10>
+        <Filename Value="artica_mailman.lpr"/>
+        <Caret Line="20" Column="33" TopLine="1"/>
+      </Position10>
+      <Position11>
+        <Filename Value="mailman.pas"/>
+        <Caret Line="43" Column="40" TopLine="11"/>
+      </Position11>
+      <Position12>
+        <Filename Value="mailman.pas"/>
+        <Caret Line="102" Column="31" TopLine="43"/>
+      </Position12>
+      <Position13>
+        <Filename Value="ldap.pas"/>
+        <Caret Line="79" Column="36" TopLine="40"/>
+      </Position13>
+      <Position14>
+        <Filename Value="ldap.pas"/>
+        <Caret Line="133" Column="48" TopLine="99"/>
+      </Position14>
+      <Position15>
+        <Filename Value="ldap.pas"/>
+        <Caret Line="79" Column="50" TopLine="36"/>
+      </Position15>
+      <Position16>
+        <Filename Value="ldap.pas"/>
+        <Caret Line="138" Column="7" TopLine="117"/>
+      </Position16>
+      <Position17>
+        <Filename Value="mailman.pas"/>
+        <Caret Line="102" Column="31" TopLine="43"/>
+      </Position17>
+      <Position18>
+        <Filename Value="mailman.pas"/>
+        <Caret Line="80" Column="27" TopLine="63"/>
+      </Position18>
+    </JumpHistory>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="5"/>
+    <Target>
+      <Filename Value="/home/dtouzeau/developpement/artica-postfix/bin/artica-mailman"/>
+    </Target>
+    <CodeGeneration>
+      <Generate Value="Faster"/>
+    </CodeGeneration>
+    <Other>
+      <CompilerPath Value="$(CompPath)"/>
+    </Other>
+  </CompilerOptions>
+  <Debugging>
+    <Exceptions Count="2">
+      <Item1>
+        <Name Value="ECodetoolError"/>
+      </Item1>
+      <Item2>
+        <Name Value="EFOpenError"/>
+      </Item2>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

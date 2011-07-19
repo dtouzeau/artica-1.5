@@ -1,0 +1,54 @@
+html, body {
+	height: 100%;	overflow: auto; 
+	}
+	
+	/*	Main styles */
+
+
+div#middle {
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+	width: 700px;
+	height: 700px;
+	background-color: #fff; 
+	margin: auto;
+	clear:left;
+}
+
+
+
+/*	Left Nav styles */
+
+div#nav_left ul li {
+	margin: -3px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+	list-style: none;
+	width: 165px;
+}
+
+div#nav_left ul li a.header, div#nav_left ul li a.header:hover {
+	margin: 0px 0px 0px 0px;
+	padding: 2px 16px 1px 10px;
+	font: bold 8px/10px 'Helvetica', 'Tahoma', 'Verdana', sans-serif; 
+	letter-spacing: 2px; 
+	text-transform: uppercase;
+	color: #8e8785;
+	background: url('images/bg_navleft_header.gif') no-repeat top ; 
+ 	display: block; 
+	text-decoration: none;
+		border:0px;
+}
+input.button{
+   font-size:11px;
+   background-image: none;
+   background-color:#dddbdb;
+   border: 1px double #999999;
+   border-top-color: #CCCCCC;
+   border-left-color: #CCCCCC;
+   font-weight: bold;
+   filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr='#ffffffff',EndColorStr='#dddbdb');
+}
+
+
+
+

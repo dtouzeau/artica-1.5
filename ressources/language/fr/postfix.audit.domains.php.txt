@@ -1,0 +1,2 @@
+<audit_text_1>Cette page fournit une synth&egrave;se de toutes les clefs permettant des domaines divers.
+Cela permet, en partenariat avec la documentation de Postfix, de v&eacute;rifier si les tables de correspondances sont exactes</audit_text_1>

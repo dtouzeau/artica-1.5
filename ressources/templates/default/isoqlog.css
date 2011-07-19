@@ -1,0 +1,57 @@
+.domains{
+font-size:15px;
+text-transform:capitalize;
+color:#4C535C;
+letter-spacing:2px;
+}
+
+#isoqlog a:hover{
+color:#AB3413;
+border-bottom:1px solid #AB3413;
+font-weight:bold;
+}
+#isoqlog a{
+color:#AB3413;
+}
+
+.header{
+font-size:15px;
+font-family: 'Helvetica', 'Tahoma', 'Verdana', sans-serif;
+color:#4C535C;
+}
+
+#isoqlog .table_data_day{
+font-size:12px;
+font-weight:bold;
+font-family: 'Helvetica', 'Tahoma', 'Verdana', sans-serif;
+}
+
+#isoqlog .table_header{
+background-color:#1F834B;
+color:white;
+font-weight:bold;
+text-transform:capitalize;
+font-size:12px;
+}
+
+.table_top_header{
+background-color:#13512E;
+color:white;
+text-transform:capitalize;
+font-size:14px;
+font-weight:bold;
+}
+.table_footer{
+background-color:#1F834B;
+color:white;
+text-transform:capitalize;
+font-size:12px;
+}
+
+.table_data_total{
+font-size:12px;
+font-weight:bold;
+}
+.table_data{
+font-size:12px;
+}

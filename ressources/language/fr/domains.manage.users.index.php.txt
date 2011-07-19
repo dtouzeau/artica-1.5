@@ -1,0 +1,3 @@
+<mailbox_creation_results>R&eacute;sultats de la maintenance de boite aux lettres</mailbox_creation_results>
+<mailbox_enabled>Bo&icirc;te aux lettres activ&eacute;e</mailbox_enabled>
+<mailbox_not_enabled>Boite aux lettres non activ&eacute;, &eacute;chou&eacute;...</mailbox_not_enabled>

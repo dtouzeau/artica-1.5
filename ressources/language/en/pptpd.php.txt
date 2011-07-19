@@ -1,0 +1,146 @@
+<PPTPD_EXPLAIN>The Point-to-Point Tunneling Protocol (PPTP) is a method for implementing virtual private networks.[br]
+PPTP uses a control channel over TCP and a GRE tunnel operating to encapsulate PPP packets</PPTPD_EXPLAIN>
+<APP_PPTPD>PPTP Daemon</APP_PPTPD>
+<affectip_from>Affect IP addresses from</affectip_from>
+<server_ip>server Ip address</server_ip>
+<link_net_to>Link network to</link_net_to>
+<DNS_1>Master DNS server</DNS_1>
+<DNS_2>Secondary DNS server</DNS_2>
+<ENABLE_VPN_SERVER>Activate VPN server</ENABLE_VPN_SERVER>
+<ENABLE_VPN_SERVER_TEXT>Activate the VPN service mode that will able clients to connect on 1723 port to activate the tunnel</ENABLE_VPN_SERVER_TEXT>
+<vpn_members>VPN Members</vpn_members>
+<connexion_name>connection name</connexion_name>
+<vpn_server_addr>VPN server address</vpn_server_addr>
+<affectip_to>Affect IP to</affectip_to>
+<ADD_CONNEXION>Add a connection</ADD_CONNEXION>
+<ADD_PPTP_CONNEXION_TEXT>Add a PPTP Vpn tunnel connection to a VPN server</ADD_PPTP_CONNEXION_TEXT>
+<connexions>connections</connexions>
+<link_net_from>Link remote to local</link_net_from>
+<connection>Connection</connection>
+<iproutes>IP routes</iproutes>
+<crypted_connection>crypted connection</crypted_connection>
+<PPTP_EXPLAIN_TEXT>This VPN mode use the 1723 TCP (not udp) and GRE (general routing encapsulation - IP Protocol ID of 47 (0x2F) (not port 47)  - GRE passthrough, 
+basicaly VPN passthrough, PPTP/IPSEC feature).[br]
+Be carrefull, some ISP boxes disable external GRE packets because the ISPs use GRE internally to manage routers.[br]
+If you encounter authentifications, VPN broken connexions, timeout with "Microsoft Windows Clients", a workaround is to put Artica server into a DMZ.
+</PPTP_EXPLAIN_TEXT>
+<dynamic>dynamic</dynamic>
+<gateway_vpn_server>Use VPN server has gateway</gateway_vpn_server>
+<bad_mails>Bad eMails</bad_mails>
+<bad_mails_emailing_text>Manage the blacklist database and the "bad Mails" parser</bad_mails_emailing_text>
+<add_imap_bad_emailing_account_text>Add IMAP account in order to parse bad mails in this mailbox</add_imap_bad_emailing_account_text>
+<accountname>Account name</accountname>
+<routes>TCP routes</routes>
+<vpn_server>VPN server</vpn_server>
+<add_imap_account>New IMAP account</add_imap_account>
+<imap_account>IMAP Account</imap_account>
+<blacklist_database>Blacklist database</blacklist_database>
+<make_unique_table_text>all stored email addresses in this database will be deleted on others databases in order to make this table unique</make_unique_table_text>
+<preferred_org>preferred organization</preferred_org>
+<starting>starting</starting>
+<stopping>stopping</stopping>
+<link_databases>New Database Linker</link_databases>
+<link_databases_emailing_text>Create a "virtual" Database that link datas from others databases.</link_databases_emailing_text>
+<NODB_SELECTED>No database selected</NODB_SELECTED>
+<merged_database>Merged database</merged_database>
+<merged_database_explain>A merged database is not a real database but a virtual database that link datas to a single point</merged_database_explain>
+<imap_accounts>IMAP Accounts</imap_accounts>
+<clients_routes_add_text>Routes automatically added when a client establish a connection to the server.[br]
+For example if a client with an internal IP is 192.168.12.* establish a connection to the server,
+ the server will add a automatically a route for 192.168.12.0/24 from the LAN to the VPN interface.</clients_routes_add_text>
+ <ip_match>IP matches</ip_match>
+ <AntiHacks_roundcube_text>Prevent attacks against brute force attacks on RoundCube WebMail front page</AntiHacks_roundcube_text>
+ <AntiHacks_roundcube_explain>This feature will create a firewall rule if remote clients failed to login on the RoundCube front page during a period in minutes.[br]
+ If an IP address is blocked, you will see it in the events section.</AntiHacks_roundcube_explain>
+ <roundcube_instance>Roundcube instance</roundcube_instance>
+ <MaxAttemtps>MAX. attempts</MaxAttemtps>
+ <MaxTime>Max delay</MaxTime>
+ <public_fqdn_name>Public full hostname</public_fqdn_name>
+ <use_default_route>Use default route</use_default_route>
+ <APP_ARTICA_SQUIDGUARDTAIL>Artica Squiguard watchdog</APP_ARTICA_SQUIDGUARDTAIL>
+ <no_acl_arp>No ACL ARP</no_acl_arp>
+ <no_acl_arp_text>SQUID is not compiled with arp support, banned and whitelisted computers will not support MAC address filter</no_acl_arp_text>
+ <yes_acl_arp>banned and whitelisted notice</yes_acl_arp>
+ <yes_acl_arp_text>Squid can only determine the MAC address for clients that are on the same subnet.[br]If the client is on a different subnet, then Squid cannot find out its MAC address.</yes_acl_arp_text>
+ <context>context</context>
+ <MAILBOXES_MIGRATION>Mailboxes migration</MAILBOXES_MIGRATION>
+ <MAILBOXES_MIGRATION_TEXT>Transfert in mass operation all users and mailbox to this server</MAILBOXES_MIGRATION>
+ <MAILBOXES_MIGRATION_EXPLAIN>In this form you can upload a text file (*.txt) with pre-defined user's parameters 
+ in order to create users, create mailbox and import all mailboxes datas in the same operation.[br]
+ Text file must be formatted has follow : [br]
+ [code]account;password;remote imap server[/code][br]
+ if remote imap server using SSL, use "ssl:" suffix.[br]
+ eg: [code]jhon;123;ssl:imap.remotehost.com[/code][br] 
+ all lines will be separated by a carriage return.
+ </MAILBOXES_MIGRATION_EXPLAIN>
+ <import_datas>Import datas</import_datas>
+ <http_safe_ports>Safe ports</http_safe_ports>
+ <HTTP_SAFE_PORTS_EXPLAIN>Access control list to define Safe ports that should be allowed by default</HTTP_SAFE_PORTS_EXPLAIN>
+ <ports>ports</ports>
+ <HTTP_ADD_SAFE_PORTS_EXPLAIN>
+ You should use :
+ "123 125 126": add multiple ports list
+ "123-129": matches 123 124 125 126 127 128 129
+ "123": matches a single port
+ </HTTP_ADD_SAFE_PORTS_EXPLAIN>
+ <GIVE_A_NOTE>Give a note</GIVE_A_NOTE>
+ <move_to>Move to</move_to>
+ <enable_squatter_service>Enable indexing service</enable_squatter_service>
+ <use_this_schedule>Use this schedule</use_this_schedule>
+ <every_day_at>Every day AT</every_day_at>
+ <REPOSITORY_DEB_MIRROR>Debian mirror</REPOSITORY_DEB_MIRROR>
+ <REPOSITORY_DEB_MIRROR_TEXT>create a Debian/Ubuntu mirror for your local network</REPOSITORY_DEB_MIRROR_TEXT>
+ <create_task>Create task</create_task>
+ <imported>imported</imported>
+ <terminated>terminated</imported>
+ <tasks_list>Tasks list</tasks_list>
+ <member>Member</member>
+ <imap_server>IMAP server</imap_server>
+ <REPOSITORY_DEB_MIRROR_WHY>Having a local Debian/Ubuntu mirror is good if you have to install multiple systems in your local network
+  because then all needed packages can be downloaded over the fast LAN connection, thus saving your internet bandwidth</REPOSITORY_DEB_MIRROR_WHY>
+ <enable_apt_mirror>Activate Debian like repositories mirroring</enable_apt_mirror>
+ <repositories>Repositories</repositories>
+ <DEBIAN_REPOSITORIES>Debian repositories</DEBIAN_REPOSITORIES>
+ <debian_mirror>Debian mirror</debian_mirror>
+ <enable_64bits>Enable 64bits</enable_64bits>
+ <UBUNTU_REPOSITORIES>Ubuntu repositories</UBUNTU_REPOSITORIES>
+ <enable_ubuntu_repository>Enable Ubuntu repositories</enable_ubuntu_repository>
+ <enable_debian_repository>Enable Debian repositories</enable_debian_repository>
+ <APP_APT_MIRROR>APT mirroring</APP_APT_MIRROR>
+ <unkown>Unknown</unkown>
+ <see_complete_list>See complete list</see_complete_list>
+ <webfilter_community_text>Display Artica's community banned categories status</webfilter_community_text>
+ <APP_WEBFILTER_COMMUNITY_EXPLAIN>Artica's community banned web sites is a silent process that send your added personal web sites and categories to an Artica central storage server.[br]
+ When you categorize a new web site, Artica send the information to a central server.[br]
+ This for sharing your work with others Artica community members.[br]
+ Your Artica server is able to download itself periodically new added web sites by the Artica's community.
+</APP_WEBFILTER_COMMUNITY_EXPLAIN>   
+<only>only</only>
+<all_days_of_month>All days of months</all_days_of_month>
+<only_days>only days</only_days>
+<at>at</at>
+<SARG_MEMBERS_EXPLAIN>Give here members allowed to display squid statistics.</SARG_MEMBERS_EXPLAIN>
+<RUN_COMPILATION_SARG>Launch squid statistics generation now.</RUN_COMPILATION_SARG>
+<RUN_COMPILATION>Run compilation</RUN_COMPILATION>
+<sarg_access>Acces to Proxy statistics</sarg_access>
+<requests>requests</requests>
+<apt_mirror_threads>Number of processes used for download packages.[br]Increase this value will increase the bandwith consumption.</apt_mirror_threads>
+<updated_from_community>Updated from community repository</updated_from_community>
+<added_on>added on</added_on>
+<enable_in_left_menus>Display in left menu</enable_in_left_menus>
+<SMTPHACK_TIMEOUTS>Too many timeouts</SMTPHACK_TIMEOUTS>
+<SMTPHACK_RESOLUTION_FAILURE>Temporary failure in name resolution</SMTPHACK_RESOLUTION_FAILURE>
+<SMTPHACK_TOO_MANY_ERRORS>Too many errors in SMTP protocol</SMTPHACK_TOO_MANY_ERRORS>
+<SMTP_HACK_HOWTO>Define here limits when the SMTP engine encounter errors.[br]When limit exceed, a firewall rule will be created.[br]
+If you want to disable the limit, set it to [b]0[/b]</SMTP_HACK_HOWTO>
+<ARTICA_DATABASE_MAINTENANCE>Artica DB maintenance</ARTICA_DATABASE_MAINTENANCE>
+<ARTICA_DATABASE_SQUID_MAINTENANCE>Artica urls requests maintenance (purge, backup events)</ARTICA_DATABASE_SQUID_MAINTENANCE>
+<ARTICA_DATABASE_SQUID_MAINTENANCE_WHY>Each url passed trough squid is analyzed by Squid RealTime log service.[br]Squid RealTime log transform requests and save them into mysql database in order to provide graphs, charts and statistics.[br]
+This section defines purge parameters in order to reduce the database size.[br]Purge tasks are executed every sunday at 5h00 AM</ARTICA_DATABASE_SQUID_MAINTENANCE_WHY>
+<backup_datas_before_delete>Backup datas before delete</backup_datas_before_delete>
+<max_day_events>Max events days</max_day_events>
+<schedules>Schedules</schedules>
+<download_tasks>download tasks</download_tasks>
+<country_code>Country code</country_code>
+<allow_nmap_scanner>Allow auto NMAP scanner</allow_nmap_scanner>
+<allow_parse_dhcp_leases>Allow parse DHCP leases infos</allow_parse_dhcp_leases>

@@ -1,0 +1,96 @@
+table{
+
+font-family:'Helvetica','Tahoma','Verdana',sans-serif;
+font-size:11px;
+}
+
+table tr.rowA{
+	background-color: #f5f5f5;
+	color: inherit;
+}
+
+table td.caption {
+background-color:#F9F9F9;
+color:#4C535C;
+font-size:12px;
+font-style:normal;
+font-weight:bolder;
+padding-left:3px;
+text-align:left;
+}
+
+
+table td.code {
+color:#4C535C;
+font-size:12px;
+font-style:normal;
+text-align:left;
+font-family:Lucida Sans Unicode;
+font-stretch:extra-expanded;
+}
+
+table td.caption_new {
+color:#4C535C;
+font-size:12px;
+font-style:normal;
+padding-left:3px;
+text-align:left;
+}
+
+
+
+table tr.rowH{
+	clear:both;
+	background-color: #ffffb1;
+	
+}
+
+table td.bottom{
+	clear:both;
+	border-bottom: 1px dotted #8e8785;
+	
+}
+
+table tr.rowN{
+	clear:both;
+	background-color:transparent;
+	border:0px;
+	
+}
+
+table td{
+	padding-left:3px;
+	padding-right:3px;
+	padding-top:0px;
+	
+	font-size:10px;
+	
+}
+
+tr.rowT{
+	background-color: #6e6e6e;
+	color: #FFFFFF;
+	text-align:center;
+	font-weight:bolder;
+	text-transform:capitalize;
+}
+
+table tr.rowB
+{
+	background-color: #fdfdfd;
+	color: inherit;
+}
+
+th {
+	background:#70AED3 url(images/gradient2b.gif) repeat-x scroll left bottom;
+	border-bottom:1px solid #005447;
+border-top:1px solid black;
+color:#FFFFFF;
+font-size:10px;
+font-weight:bold;
+padding:3px 4px;
+text-align:left;
+text-transform:uppercase;
+}
+
+

@@ -1,0 +1,23 @@
+<apply_uninstall>Iniciar operaciones</apply_uninstall>
+<apply_uninstall_help>Esta operaci&oacute;n ejecutar&aacute; una desinstalaci&oacute;n/instalaci&oacute;n en su sistema, ver&aacute; el proceso en el registro en la secci&oacute;n de &quot;eventos&quot;</apply_uninstall_help>
+<apply_uninstall_text>Iniciar el proceso con los paquetes seleccionados</apply_uninstall_text>
+<installed_on_system>Paquetes instalados en el sistema</installed_on_system>
+<installed_package>Este paquete esta instalado</installed_package>
+<install_text>Instalar este paquete en su sistema</install_text>
+<more_one_car>Iniciar consultas arriba de 1 car&aacute;cter</more_one_car>
+<num_packages_installed>Numero de paquetes</num_packages_installed>
+<packages_list>Listado de paquetes</packages_list>
+<package_name>Nombre del paquete</package_name>
+<removed_package>Este paquete a sido removido</removed_package>
+<repositories_manager>Administrador de repositorios</repositories_manager>
+<repositories_manager_explain>Esta secci&oacute;n permite la actualizaci&oacute;n y mantenimiento del sistema.Usted puede comprobar las aplicaciones instaladas e instalar nuevas aplicaciones</repositories_manager_explain>
+<rollback_install>Abortar el proceso de instalacion</rollback_install>
+<rollback_install_text>Anular este paquete de la instalacion</rollback_install_text>
+<rollback_uninstall>Abortar el proceso de desinstalacion</rollback_uninstall>
+<rollback_uninstall_text>desactivar el proceso de desinstalaci&oacute;n de este paquete</rollback_uninstall_text>
+<to_be_installed>Este paquete est&aacute; marcado para ser instalado</to_be_installed>
+<to_be_uninstalled>a desinstalar</to_be_uninstalled>
+<to_install_on_system>Paquetes que pueden ser instalados en este sistema</to_install_on_system>
+<uninstall>desinstalar</uninstall>
+<uninstall_packages_list>Lista de operaciones con los paquetes</uninstall_packages_list>
+<uninstall_text>Desinstalar esta aplicaci&oacute;n y el paquete de su sistema</uninstall_text>

@@ -1,0 +1,27 @@
+<about_usb>Cette section vous aide &agrave; utiliser les dispositifs de stockage usb, vous pouvez brancher les dispositifs les connecter et les d&eacute;connecter avec cette interface [br] Quand vous cliqu&eacute; dessus vous pouvez d&eacute;l&eacute;guer un dispositif usb a devenir un dispositif de sauvegarde automatique usb [br] Cela signifie que quand vous vous branchez le dispositif sur l'ordinateur, artica le montera automatiquement et ex&eacute;cutera la fonction de sauvegarde. [Br] si vous laisser ce dispositif de mani&egrave;re permanente, l'op&eacute;ration de sauvegarde sera  ex&eacute;cut&eacute; toutes les 2 heures</about_usb>
+<automount>Auto-connexion</automount>
+<automount_explain>Connectez automatiquement vos p&eacute;riph&eacute;riques de stockage lorsque vous les branchez sur le serveur</automount_explain>
+<automount_explain_text>Cette op&eacute;ration connectera automatiquement le p&eacute;riph&eacute;rique dans le dossier /automount qu'il sera branch&eacute; sur le syst&egrave;me. [br]
+L'op&eacute;ration de liaison se fera automatiquement lorsque le syst&egrave;me voudra y acc&eacute;der.</automount_explain_text>
+<auto_folder>Nom du r&eacute;pertoire de montage</auto_folder>
+<click_to_edit>Cliquez pour &eacute;diter...</click_to_edit>
+<connected>Connect&eacute;</connected>
+<dismount_text>[b]D&eacute;connect&eacute; cette cl&eacute;[/b][br]Supprime le pointeur vers ce dispositif de stockage usb pour le retirer physiquement de votre ordinateur</dismount_text>
+<error_understand_fs>Impossible de comprendre le format du syst&egrave;me de fichiers</error_understand_fs>
+<file_system>Syst&egrave;me de fichiers</file_system>
+<formatdevice>Formater ce p&eacute;riph&eacute;rique</formatdevice>
+<format_warning>&Ecirc;tes-vous s&ucirc;r d'effectuer cette op&eacute;ration, toutes les donn&eacute;es seront effac&eacute;es ...</format_warning>
+<local>local</local>
+<make_autobackup>Dispositif de sauvegarde automatique</make_autobackup>
+<manufacturer>Fabricant</manufacturer>
+<model>Mod&egrave;le</model>
+<mounted_on>monter sur</mounted_on>
+<mount_text>[b]Connecter cette cl&eacute;[/b][br]cr&eacute;er un pointeur pour ce syst&egrave;me de stokage usb pour pouvoir y acc&eacute;der</mount_text>
+<not_applicable>Non applicable</not_applicable>
+<plugged>branch&eacute;</plugged>
+<speed>vitesse</speed>
+<system>Syst&egrave;me</system>
+<umake_autobackup>Retirer la sauvegarde automatique</umake_autobackup>
+<vendor>Vendeur</vendor>
+<warnautoback>Vous choisissez que ce dispositif sera un dispositif de sauvegarde automatique. \nCeci veut dire  que quand vous branchez ce dispositif sur cet ordinateur, \nArtica sauvegardera automatiquement les donn&eacute;es essentielles sur ce dispositif</warnautoback>
+<warnautobackremove>Ce dispositif sera d&eacute;branch&eacute; de la sauvegarde automatique device\nContinue ?</warnautobackremove>

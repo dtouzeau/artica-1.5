@@ -1,0 +1,7 @@
+<default_language>Language par D&eacute;faut</default_language>
+<pommo_explain>poMMo est un logiciel polyvalent de mailing de masse.[br] 
+Il peut &ecirc;tre utilis&eacute; pour ajouter une liste de diffusion de votre site Web ou pour l'organisation autonome d'envois.[br] 
+Caract&eacute;ristiques uniques telles que la possibilit&eacute; de sous-mail de vos abonn&eacute;s le distinguent d'autres solutions.[br] 
+poMMo est &eacute;crit en PHP et est fournis librement sous licence GPL</pommo_explain>
+<restore_admin>R&eacute;tablissez Administrateur et mot de passe</restore_admin>
+<restore_admin_text>le compte Admin a &eacute;t&eacute; restaur&eacute; avec succes, utilis&eacute; les identifiants du compte Administrateur d'Artica pour vous connecter</restore_admin_text>

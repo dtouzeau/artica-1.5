@@ -1,0 +1,9 @@
+CREATE TABLE `artica_events`.`notify` (
+  `daemon` varchar(20) NOT NULL,
+  `event_text` varchar(255) NOT NULL,
+  `error_id` int(2) NOT NULL,
+  `zMD5` varchar(80) NOT NULL,
+  PRIMARY KEY (`zMD5`),
+  KEY `daemon` (`daemon`,`error_id`)
+) 
+

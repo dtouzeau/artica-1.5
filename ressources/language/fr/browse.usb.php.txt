@@ -1,0 +1,1 @@
+<refresh_text_usb>Rafra&icirc;chir la liste des p&eacute;riph&eacute;riques.</refresh_text_usb>

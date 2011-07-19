@@ -1,0 +1,8 @@
+<error_no_ie>Information: Your Navigator have some incompatibilities...</error_no_ie>
+<error_no_ie_text>Currently it is not possible to provide good management Interface using Microsoft Internet Explorer or Opera.<br>
+I suggest you using [b]Mozilla Firefox[/b] instead.[br]
+Mozilla Firefox has successfully pass all ajax tests.[br]
+Please come back with an "another navigator".
+[br]If you have installed webmail, you can give/get the direct link to the interface.[br]</error_no_ie_text>
+<template>Template</template>
+<template_text>Choose your favourite template in order to skin your session</template_text>

@@ -1,0 +1,42 @@
+attributetype ( 1.3.6.1.4.1.4203.666.100.121
+        NAME ( 'rdn' )
+        SUP name )
+
+
+
+attributetype ( 1.3.6.1.4.1.4203.666.100.123
+        NAME ( 'IPPhone' )
+        SUP telephoneNumber )
+
+# This attribute handles MS/Outlook and Netscape Communicator
+
+attributetype ( 1.3.6.1.4.1.4203.666.100.124
+        NAME ( 'URL' 'homeUrl' )
+        SUP name )
+
+attributetype ( 1.3.6.1.4.1.4203.666.100.125
+        NAME ( 'comment' )
+        SUP name )
+
+attributetype ( 1.3.6.1.4.1.4203.666.100.126
+        NAME ( 'conferenceInformation' )
+        SUP name )
+
+attributetype ( 1.3.6.1.4.1.4203.666.100.127
+        NAME ( 'reports' )
+        SUP manager )
+
+objectclass     ( 1.3.6.1.4.1.4203.666.100.1
+    NAME 'officePerson'
+        DESC 'Office employee or computer user'
+    SUP inetOrgPerson
+    STRUCTURAL
+        MAY  ( c $
+               rdn $
+               otherFacsimiletelephoneNumber $
+               IPPhone $
+               URL $
+               comment $
+               reports $
+               conferenceInformation )
+    )

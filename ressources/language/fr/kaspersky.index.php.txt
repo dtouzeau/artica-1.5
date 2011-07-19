@@ -1,0 +1,8 @@
+<APP_KAS3_MILTER_TEXT>Kaspersky Anti-spam est une solution robuste et &eacute;volutive fournie par Kaspersky Lab INC.
+La fonction principale de ce produit est la vitesse et &eacute;conomise la consommation de m&eacute;moire
+Ecrit en C, Il est utilis&eacute; dans de tr&egrave;s grandes soci&eacute;t&eacute;s et fournie un tr&egrave;s bon taux de d&eacute;tections</APP_KAS3_MILTER_TEXT>
+<APP_KAV4SAMBA_TEXT>Kaspersky Antivirus pour Serveur Samba est con&ccedil;u pour prot&eacute;ger des secteurs de stockage de fichiers sur des Serveurs Samba, imitant ainsi des serveurs de fichiers Windows sous un syst&egrave;me d'exploitation Linux</APP_KAV4SAMBA_TEXT>
+<APP_KAVMILTER_TEXT>Kaspersky Antivirus Milter &eacute;dition est un antivirus de courrier &eacute;lectronique robuste d'accrochage Postfix utilisant la voie libmilter.
+C'est une solution antivirus robuste et &eacute;volutive fournie par Kaspersky Lab INC.
+Ecrit en C, Il est utilis&eacute; dans de tr&egrave;s grandes soci&eacute;t&eacute;s et fournie le tr&egrave;s bon taux de d&eacute;tections</APP_KAVMILTER_TEXT>
+<explain>Qu'est ce</explain>

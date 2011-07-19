@@ -1,0 +1,12 @@
+<about>Mailfromd est un d&eacute;mon de filtrage de courrier universel. Il est capable d'agir r&eacute;ciproquement avec n'importe quel MTA qui soutient milter ou le protocole pmilter, comme Sendmail, Postfix et MeTA1 .. [br]
+Il est capable de faire du filtrage de messages tant entrants que sortants utilisant les crit&egrave;res de complexit&eacute; arbitraire,[br] fourni par l'administrateur sous forme d'un fichier de script.</about>
+<apply_to_server>Appliquer les param&egrave;tres</apply_to_server>
+<close_windows>Toutes les op&eacute;rations ont &eacute;t&eacute; accomplies, vous pouvez fermer cette fen&ecirc;tre...</close_windows>
+<enabled_plugins>Plugins activ&eacute;s</enabled_plugins>
+<global_settings>Plugins &amp; param&egrave;tres</global_settings>
+<save_to_ldap_success>Sauver les param&egrave;tres du serveur LDAP</save_to_ldap_success>
+<save_to_server_success>Ordre envoy&eacute; avec succ&egrave;s au framwork</save_to_server_success>
+<script>Script utilisateur mailfromd</script>
+<service_mailfromd_failed>&Eacute;chec !!! Le service n'a pas r&eacute;pondu dans les temps, v&eacute;rifiez votre script</service_mailfromd_failed>
+<service_mailfromd_suc>Succ&egrave;s, tous les param&egrave;tres sont maintenant en mode production</service_mailfromd_suc>
+<USE_CLIENT_SCRIPT>Utilise votre script &agrave; la place du script artica</USE_CLIENT_SCRIPT>

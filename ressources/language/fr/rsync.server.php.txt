@@ -1,0 +1,7 @@
+<ENABLE_RSYNC_SERVER>Activation du service rsync en mode serveur</ENABLE_RSYNC_SERVER>
+<ENABLE_RSYNC_SERVER_TEXT>Si vous tournez au vert cette fonctionnalit&eacute; votre serveur sera capable de recevoir des fichiers de sauvegarde &agrave; partir d'autres serveurs[br] 
+Vous devez ajouter les utilisateurs qui seront en mesure de pousser les fichiers de sauvegarde &agrave; ce serveur</ENABLE_RSYNC_SERVER_TEXT>
+<RsyncBwlimit>Limite de bande passante E/S</RsyncBwlimit>
+<RsyncEnableStunnel>Activer SSL</RsyncEnableStunnel>
+<RsyncEnableStunnelPort>Port SSL</RsyncEnableStunnelPort>
+<storage_path>Chemin de stockage</storage_path>

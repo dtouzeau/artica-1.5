@@ -1,0 +1,20 @@
+0.1.19 Release
+------------
+
+Once installation has been completed, you can edit your httpd.conf and add
+'Include <path>/amavis-stats.alias.conf' at the end.
+
+A look at `man amavis-stats' will list the paths of all files installed in
+the 'FILES' section.
+
+
+New features/fixes:
+
+-) added a graph to display the breakdown of non-virus message statistics.
+
+-) truncate virus names to 32 character.
+
+
+--
+
+Dale Walsh

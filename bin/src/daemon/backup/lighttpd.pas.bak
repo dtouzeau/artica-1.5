@@ -1,0 +1,753 @@
+unit lighttpd;
+
+{$MODE DELPHI}
+{$LONGSTRINGS ON}
+
+interface
+
+uses
+    Classes, SysUtils,variants,strutils,IniFiles, Process,md5,logs,unix,RegExpr in 'RegExpr.pas',zsystem;
+
+  type
+  Tlighttpd=class
+
+
+private
+     LOGS:Tlogs;
+     D:boolean;
+     GLOBAL_INI:TiniFIle;
+     SYS:TSystem;
+     artica_path:string;
+
+    procedure   LIGHTTPD_DEFAULT_CONF();
+    procedure   LIGHTTPD_FIX_ERRORS();
+    procedure   LIGHTTPD_DEFAULT_CONF_SAVE();
+    function    APACHE_ARTICA_ENABLED():string;
+public
+    procedure   Free;
+    constructor Create;
+    procedure   LIGHTTPD_START();
+    function    LIGHTTPD_BIN_PATH():string;
+    function    LIGHTTPD_INITD():string;
+    function    LIGHTTPD_LOG_PATH():string;
+    function    LIGHTTPD_SOCKET_PATH():string;
+    function    LIGHTTPD_PID():string;
+    function    LIGHTTPD_GET_USER():string;
+    function    LIGHTTPD_CONF_PATH:string;
+    procedure   LIGHTTPD_CERTIFICATE();
+    function    LIGHTTPD_PID_PATH():string;
+    procedure   LIGHTTPD_STOP();
+    function    LIGHTTPD_VERSION():string;
+    FUNCTION    STATUS():string;
+    function    PHP5_CGI_BIN_PATH():string;
+    function    CACHE_STATUS:string;
+    function    LIGHTTPD_LISTEN_PORT():string;
+    function    LIGHTTPD_CERTIFICATE_PATH():string;
+
+END;
+
+implementation
+
+constructor tlighttpd.Create;
+begin
+       forcedirectories('/etc/artica-postfix');
+       forcedirectories('/opt/artica/tmp');
+       LOGS:=tlogs.Create();
+       SYS:=Tsystem.Create;
+
+
+       if not DirectoryExists('/usr/share/artica-postfix') then begin
+              artica_path:=ParamStr(0);
+              artica_path:=ExtractFilePath(artica_path);
+              artica_path:=AnsiReplaceText(artica_path,'/bin/','');
+
+      end else begin
+          artica_path:='/usr/share/artica-postfix';
+      end;
+end;
+//##############################################################################
+procedure tlighttpd.free();
+begin
+    logs.Free;
+    SYS.Free;
+end;
+//##############################################################################
+function Tlighttpd.LIGHTTPD_BIN_PATH():string;
+begin
+   if FileExists('/usr/sbin/lighttpd') then exit('/usr/sbin/lighttpd');
+   if FileExists('/opt/artica/lighttpd/sbin/lighttpd') then exit('/opt/artica/lighttpd/sbin/lighttpd');
+end;
+//##############################################################################
+function Tlighttpd.PHP5_CGI_BIN_PATH():string;
+begin
+   if FileExists('/usr/bin/php-cgi') then exit('/usr/bin/php-cgi');
+   if FileExists('/opt/artica/lighttpd/bin/php-cgi') then exit('/opt/artica/lighttpd/bin/php-cgi');
+end;
+//##############################################################################
+function Tlighttpd.LIGHTTPD_INITD():string;
+begin
+    if FileExists('/etc/init.d/lighttpd') then exit('/etc/init.d/lighttpd');
+end;
+
+//##############################################################################
+function Tlighttpd.LIGHTTPD_CONF_PATH:string;
+begin
+  if FileExists('/etc/lighttpd/lighttpd.conf') then exit('/etc/lighttpd/lighttpd.conf');
+  if FileExists('/opt/artica/conf/lighttpd.conf') then exit('/opt/artica/conf/lighttpd.conf');
+end;
+//##############################################################################
+function Tlighttpd.LIGHTTPD_PID_PATH():string;
+var
+RegExpr:TRegExpr;
+l:TStringList;
+i:integer;
+D:Boolean;
+begin
+
+
+if not FileExists(LIGHTTPD_CONF_PATH()) then begin
+   logs.Debuglogs('LIGHTTPD_PID_PATH:: unable to stat lighttpd.conf');
+   exit;
+end;
+l:=TstringList.Create;
+l.LoadFromFile(LIGHTTPD_CONF_PATH());
+RegExpr:=TRegExpr.Create;
+RegExpr.Expression:='^server\.pid-file.+?"(.+?)"';
+for i:=0 to l.Count-1 do begin
+   if RegExpr.Exec(l.Strings[i]) then begin
+    result:=RegExpr.Match[1];
+    break;
+   end;
+end;
+
+   l.Free;
+   RegExpr.free;
+end;
+//##############################################################################
+function Tlighttpd.LIGHTTPD_GET_USER();
+var
+     l:TstringList;
+     RegExpr:TRegExpr;
+     i:integer;
+     user,group:string;
+begin
+  if not FileExists(LIGHTTPD_CONF_PATH()) then exit;
+  l:=TstringList.Create;
+  RegExpr:=TRegExpr.Create;
+  l.LoadFromFile(LIGHTTPD_CONF_PATH());
+  for i:=0 to l.Count-1 do begin
+    RegExpr.Expression:='^server\.username.+?"(.+?)"';
+    if RegExpr.Exec(l.Strings[i]) then user:=RegExpr.Match[1];
+    RegExpr.Expression:='^server\.groupname.+?"(.+?)"';
+    if RegExpr.Exec(l.Strings[i]) then group:=RegExpr.Match[1];
+  end;
+  if length(user)>0 then result:=user+':'+group;
+  RegExpr.free;
+  l.free;
+end;
+//##############################################################################
+function Tlighttpd.CACHE_STATUS:string;
+var
+   sini:TiniFile;
+   f:TstringList;
+begin
+
+f:=TstringList.Create;
+f.Add(STATUS());
+f.SaveToFile('/etc/artica-postfix/cache.lighttpd.status');
+f.free;
+if not FileExists('/etc/artica-postfix/cache.global.status') then begin
+   fpsystem(artica_path + '/bin/artica-install --status >/etc/artica-postfix/cache.global.status 2>&1');
+end;
+
+sini:=TiniFile.Create('/etc/artica-postfix/cache.lighttp.status');
+if sini.ReadString('LIGHTTPD','running','0')='1' then begin
+   result:='Running...' + sini.ReadString('LIGHTTPD','master_memory','0') + ' kb mem';
+end else begin
+result:='Stopped...';
+
+end;
+sini.free;
+end;
+//##############################################################################
+
+
+procedure Tlighttpd.LIGHTTPD_START();
+var
+   cmdline:string;
+   count:integer;
+   pid:string;
+   user:string;
+begin
+
+   count:=0;
+   if not FileExists(LIGHTTPD_BIN_PATH()) then begin
+       logs.Debuglogs('LIGHTTPD_START():: it seems that lighttpd is not installed... Aborting');
+       exit;
+   end;
+
+   pid:=LIGHTTPD_PID();
+   if pid='0' then pid:=SYS.PROCESS_LIST_PID(LIGHTTPD_BIN_PATH());
+   
+   if SYS.PROCESS_EXIST(pid) then begin
+      logs.Debuglogs('LIGHTTPD_START():: lighttpd already running with PID number ' + pid);
+      exit();
+   end;
+   logs.DeleteFile('/etc/artica-postfix/cache.global.status');
+   logs.Debuglogs('LIGHTTPD_START():: Creating user www-data if does not exists');
+   SYS.AddUserToGroup('www-data','www-data','','');
+
+   
+   user:=LIGHTTPD_GET_USER();
+   logs.Debuglogs('LIGHTTPD_START():: user.........:'+user);
+   logs.Debuglogs('LIGHTTPD_START():: pid..........:'+pid);
+   logs.Debuglogs('LIGHTTPD_START():: logs path....:'+LIGHTTPD_LOG_PATH());
+   logs.Debuglogs('LIGHTTPD_START():: Socket path..:'+LIGHTTPD_SOCKET_PATH());
+   logs.Debuglogs('LIGHTTPD_START():: php5-cgi path:'+PHP5_CGI_BIN_PATH());
+   logs.Debuglogs('LIGHTTPD_START():: certificate..:'+LIGHTTPD_CERTIFICATE_PATH());
+   
+   
+
+   
+   
+   forcedirectories('/var/lib/php/session');
+   logs.OutputCmd('/bin/chown -R '+user+' /var/lib/php/session');
+
+
+   if FileExists(LIGHTTPD_INITD()) then begin
+       if not SYS.PROCESS_EXIST(pid) then begin
+          LIGHTTPD_DEFAULT_CONF();
+          if not FileExists(LIGHTTPD_CERTIFICATE_PATH()) then begin
+             logs.Debuglogs('LIGHTTPD_START() -> LIGHTTPD_CERTIFICATE()');
+             LIGHTTPD_CERTIFICATE();
+          end;
+
+          writeln('starting lighttpd............: user ' + user);
+          logs.OutputCmd(LIGHTTPD_INITD() + ' start >/dev/null 2>&1');
+          
+       end else begin
+          logs.DebugLogs('Starting......: lighttpd daemon is already running using PID ' + LIGHTTPD_PID() + '...');
+       end;
+       if not SYS.PROCESS_EXIST(LIGHTTPD_PID()) then writeln('starting lighttpd............: Failed') else writeln('starting lighttpd............: Success (PID ' + LIGHTTPD_PID() + ')');
+   exit;
+   end;
+
+
+   forcedirectories('/var/run/lighttpd');
+   forcedirectories('/opt/artica/logs/lighttpd');
+   
+   
+   
+   logs.OutputCmd('/bin/chown -R daemon:daemon /var/run/lighttpd');
+   logs.OutputCmd('/bin/chown -R daemon:daemon /opt/artica/logs/lighttpd');
+   if not FileExists('/opt/artica/ssl/certs/lighttpd.pem') then begin
+      logs.Debuglogs('LIGHTTPD_START() -> LIGHTTPD_CERTIFICATE()');
+      LIGHTTPD_CERTIFICATE();
+   end;
+
+   if not FileExists('/opt/artica/conf/Tlighttpd.conf') then begin
+      logs.OutputCmd('/bin/cp ' + artica_path + '/bin/install/Tlighttpd.conf /opt/artica/conf/Tlighttpd.conf');
+   end;
+   logs.Debuglogs('LIGHTTPD_START() -> LIGHTTPD_FIX_ERRORS()');
+   LIGHTTPD_FIX_ERRORS();
+   cmdline:=LIGHTTPD_BIN_PATH()+ ' -f /opt/artica/conf/Tlighttpd.conf >/dev/null 2>&1';
+
+
+   if not SYS.PROCESS_EXIST(LIGHTTPD_PID()) then begin
+
+          logs.OutputCmd(cmdline);
+          while not SYS.PROCESS_EXIST(LIGHTTPD_PID()) do begin
+              sleep(100);
+              inc(count);
+              if count>100 then begin
+                 logs.DebugLogs('LIGHTTPD_START():: lighttpd daemon... (failed!!!)');
+                 logs.Syslogs('LIGHTTPD_START():: Failed start lighttpd daemon with command line ' + cmdline );
+                 exit;
+              end;
+        end;
+
+      end else begin
+        logs.DebugLogs('LIGHTTPD_START():: Starting lighttpd daemon is already running using PID ' + LIGHTTPD_PID() + '...');
+        exit;
+     end;
+
+     logs.DebugLogs('LIGHTTPD_START():: Starting lighttpd daemon with new PID ' + LIGHTTPD_PID() + '...');
+     logs.Syslogs('LIGHTTPD_START():: Success start lighttpd daemon with PID ' + LIGHTTPD_PID());
+end;
+//##############################################################################
+procedure Tlighttpd.LIGHTTPD_STOP();
+ var
+    count      :integer;
+begin
+
+     count:=0;
+
+     logs.DeleteFile('/etc/artica-postfix/cache.global.status');
+     if SYS.PROCESS_EXIST(LIGHTTPD_PID()) then begin
+        writeln('Stopping lighttpd............: ' + LIGHTTPD_PID() + ' PID..');
+
+        logs.Debuglogs('LIGHTTPD_STOP() Stopping lighttpd service');
+        logs.OutputCmd('/bin/kill ' + LIGHTTPD_PID());
+        while SYS.PROCESS_EXIST(LIGHTTPD_PID()) do begin
+              sleep(100);
+              inc(count);
+              if count>100 then begin
+                 writeln('Stopping lighttpd............: Failed');
+                 exit;
+              end;
+        end;
+
+      end else begin
+        writeln('Stopping lighttpd............: Already stopped');
+     end;
+
+end;
+//##############################################################################
+FUNCTION Tlighttpd.STATUS():string;
+var
+   ini:TstringList;
+begin
+
+ini:=TstringList.Create;
+  ini.Add('[LIGHTTPD]');
+  logs.Debuglogs('STATUS() invoke lighttpd status');
+
+   if SYS.PROCESS_EXIST(LIGHTTPD_PID()) then ini.Add('running=1') else  ini.Add('running=0');
+  if FileExists(LIGHTTPD_BIN_PATH()) then begin
+     ini.Add('application_installed=1')
+  end else begin
+      ini.Add('application_installed=0');
+  end;
+
+  if APACHE_ARTICA_ENABLED()='1' then begin
+       ini.Add('application_enabled=0');
+  end else begin
+       ini.Add('application_enabled=1');
+  end;
+
+
+      ini.Add('master_pid='+LIGHTTPD_PID());
+      ini.Add('master_memory=' + IntToStr(SYS.PROCESS_MEMORY(LIGHTTPD_PID())));
+      ini.Add('master_version=' + LIGHTTPD_VERSION());
+      ini.Add('status='+SYS.PROCESS_STATUS(LIGHTTPD_PID()));
+      ini.Add('service_name=APP_LIGHTTPD');
+result:=ini.Text;
+ini.free
+end;
+//#########################################################################################
+procedure Tlighttpd.LIGHTTPD_CERTIFICATE();
+var
+   cmd:string;
+   openssl_path:string;
+begin
+openssl_path:=SYS.LOCATE_OPENSSL_TOOL_PATH();
+SYS.OPENSSL_CERTIFCATE_CONFIG();
+if Not FileExists('/etc/artica-postfix/ssl.certificate.conf') then begin
+   logs.Debuglogs('LIGHTTPD_CERTIFICATE():: unable to stat /etc/artica-postfix/ssl.certificate.conf');
+   writeln('starting lighttpd............: unable to stat default certificate infos');
+   exit;
+end;
+writeln('starting lighttpd............: Creating certificate using ');
+forcedirectories('/opt/artica/cert');
+cmd:=openssl_path+' req -new -passin pass:artica -x509 -batch -config /etc/artica-postfix/ssl.certificate.conf -keyout /opt/artica/ssl/certs/lighttpd.pem -out /opt/artica/ssl/certs/lighttpd.pem -days 365 -nodes';
+logs.OutputCmd(cmd);
+
+
+end;
+
+//#########################################################################################
+function Tlighttpd.LIGHTTPD_VERSION():string;
+var
+     l:TstringList;
+     RegExpr:TRegExpr;
+     i:integer;
+begin
+    if not FileExists(LIGHTTPD_BIN_PATH()) then exit;
+
+    fpsystem(LIGHTTPD_BIN_PATH()+' -v >/opt/artica/tmp/lighttpd.ver 2>&1');
+    if not FileExists('/opt/artica/tmp/lighttpd.ver') then exit;
+    l:=TStringList.Create;
+    l.LoadFromFile('/opt/artica/tmp/lighttpd.ver');
+    logs.DeleteFile('/opt/artica/tmp/lighttpd.ver');
+    RegExpr:=TRegExpr.Create;
+    RegExpr.Expression:='lighttpd-([0-9\.]+)';
+    For i:=0 to l.Count-1 do begin
+        if RegExpr.Exec(l.Strings[i]) then begin
+            result:=RegExpr.Match[1];
+            logs.Debuglogs('LIGHTTPD_VERSION:: ' + result);
+        end;
+    end;
+
+    l.free;
+    RegExpr.Free;
+end;
+//##############################################################################
+
+
+function Tlighttpd.LIGHTTPD_LOG_PATH():string;
+var
+RegExpr:TRegExpr;
+l:TStringList;
+i:integer;
+begin
+
+
+if not FileExists(LIGHTTPD_CONF_PATH()) then begin
+   logs.Debuglogs('LIGHTTPD_LOG_PATH:: unable to stat lighttpd.conf');
+   exit;
+end;
+l:=TstringList.Create;
+l.LoadFromFile(LIGHTTPD_CONF_PATH());
+RegExpr:=TRegExpr.Create;
+RegExpr.Expression:='^server\.errorlog.+?"(.+?)"';
+
+for i:=0 to l.Count-1 do begin
+   if RegExpr.Exec(l.Strings[i]) then begin
+    result:=RegExpr.Match[1];
+    break;
+   end;
+end;
+
+   result:=ExtractFilePath(result);
+   if Copy(result,length(result),1)='/' then result:=Copy(result,1,length(result)-1);
+   l.Free;
+   RegExpr.free;
+
+end;
+//##############################################################################
+function Tlighttpd.LIGHTTPD_CERTIFICATE_PATH():string;
+var
+RegExpr:TRegExpr;
+l:TStringList;
+i:integer;
+begin
+
+
+if not FileExists(LIGHTTPD_CONF_PATH()) then begin
+   logs.Debuglogs('LIGHTTPD_LOG_PATH:: unable to stat lighttpd.conf');
+   exit;
+end;
+l:=TstringList.Create;
+l.LoadFromFile(LIGHTTPD_CONF_PATH());
+RegExpr:=TRegExpr.Create;
+RegExpr.Expression:='^ssl\.pemfile.+?"(.+?)"';
+
+for i:=0 to l.Count-1 do begin
+   if RegExpr.Exec(l.Strings[i]) then begin
+    result:=RegExpr.Match[1];
+    break;
+   end;
+end;
+end;
+//##############################################################################
+
+
+function Tlighttpd.LIGHTTPD_LISTEN_PORT():string;
+var
+RegExpr:TRegExpr;
+l:TStringList;
+i:integer;
+begin
+if not FileExists(LIGHTTPD_CONF_PATH()) then begin
+   logs.logs('LIGHTTPD_DEFAULT_CONF:: unable to stat Tlighttpd.conf');
+   exit;
+end;
+l:=TstringList.Create;
+l.LoadFromFile(LIGHTTPD_CONF_PATH());
+RegExpr:=TRegExpr.Create;
+RegExpr.Expression:='^server\.port.+?=.+?([0-9]+)';
+for i:=0 to l.Count-1 do begin
+
+   if RegExpr.Exec(l.Strings[i]) then begin
+   result:=RegExpr.Match[1];
+   break;
+   end;
+end;
+   
+   RegExpr.Free;
+   l.free;
+   
+end;
+//##############################################################################
+
+
+procedure Tlighttpd.LIGHTTPD_DEFAULT_CONF();
+var
+RegExpr:TRegExpr;
+l:TStringList;
+i:integer;
+document:string;
+socket_path:string;
+begin
+
+
+if not FileExists(LIGHTTPD_CONF_PATH()) then begin
+   logs.logs('LIGHTTPD_DEFAULT_CONF:: unable to stat Tlighttpd.conf');
+   exit;
+end;
+
+if not FileExists(PHP5_CGI_BIN_PATH()) then begin
+   logs.logs('LIGHTTPD_DEFAULT_CONF:: unable to stat php-cgi');
+   exit;
+end;
+
+logs.OutputCmd('/bin/chmod -R 755 ' + LIGHTTPD_LOG_PATH());
+logs.OutputCmd('/bin/chown -R www-data:www-data ' + LIGHTTPD_LOG_PATH());
+
+socket_path:=LIGHTTPD_SOCKET_PATH();
+if length(socket_path)>0 then begin
+   forcedirectories(socket_path);
+   fpsystem('/bin/chmod -R 755 ' + socket_path);
+   fpsystem('/bin/chown -R www-data:www-data ' + socket_path);
+end;
+
+l:=TstringList.Create;
+l.LoadFromFile(LIGHTTPD_CONF_PATH());
+RegExpr:=TRegExpr.Create;
+RegExpr.Expression:='^server\.document-root.+?"(.+?)"';
+for i:=0 to l.Count-1 do begin
+   if RegExpr.Exec(l.Strings[i]) then begin
+    document:=RegExpr.Match[1];
+    break;
+   end;
+end;
+
+
+for i:=0 to l.Count-1 do begin
+   RegExpr.Expression:='^server\.username.+?"(.+?)"';
+   if RegExpr.Exec(l.Strings[i]) then begin
+    l.Strings[i]:='server.username = "www-data"';
+   end;
+
+   RegExpr.Expression:='^server\.groupname.+?"(.+?)"';
+   if RegExpr.Exec(l.Strings[i]) then begin
+    l.Strings[i]:='server.groupname = "www-data"';
+   end;
+end;
+   l.SaveToFile(LIGHTTPD_CONF_PATH());
+
+
+RegExpr.free;
+l.free;
+
+if document='/usr/share/artica-postfix' then begin
+   exit;
+end;
+
+   logs.logs('LIGHTTPD_DEFAULT_CONF:: Must be change ->' + document );
+   LIGHTTPD_DEFAULT_CONF_SAVE();
+
+
+
+
+end;
+//##############################################################################
+function Tlighttpd.LIGHTTPD_PID():string;
+begin
+
+if not FileExists(LIGHTTPD_PID_PATH()) then begin
+   logs.Debuglogs('LIGHTTPD_PID:: unable to resolve path for lighttpd');
+   exit(SYS.PROCESS_LIST_PID(LIGHTTPD_BIN_PATH()));
+end;
+
+result:=SYS.GET_PID_FROM_PATH(LIGHTTPD_PID_PATH());
+result:=trim(result);
+
+if length(trim(result))<2 then  begin
+   logs.Debuglogs('LIGHTTPD_PID:: unable to read '+LIGHTTPD_PID_PATH());
+   exit(SYS.PROCESS_LIST_PID(LIGHTTPD_BIN_PATH()));
+end;
+end;
+//##############################################################################
+
+function Tlighttpd.LIGHTTPD_SOCKET_PATH():string;
+var
+
+RegExpr:TRegExpr;
+l:TStringList;
+i:integer;
+
+begin
+
+if not FileExists(LIGHTTPD_CONF_PATH()) then begin
+   logs.Debuglogs('LIGHTTPD_SOCKET_PATH:: unable to stat Tlighttpd.conf');
+   exit;
+end;
+l:=TstringList.Create;
+l.LoadFromFile(LIGHTTPD_CONF_PATH());
+RegExpr:=TRegExpr.Create;
+RegExpr.Expression:='\s+"socket".+?"(.+?)"';
+for i:=0 to l.Count-1 do begin
+   if RegExpr.Exec(l.Strings[i]) then begin
+    result:=RegExpr.Match[1];
+    break;
+   end;
+end;
+   result:=ExtractFilePath(result);
+   if Copy(result,length(result),1)='/' then result:=Copy(result,1,length(result)-1);
+   l.Free;
+   RegExpr.free;
+
+end;
+//##############################################################################
+procedure Tlighttpd.LIGHTTPD_DEFAULT_CONF_SAVE();
+var
+logs:Tlogs;
+l:TStringList;
+begin
+
+logs:=Tlogs.Create;
+l:=TstringList.Create;
+logs.logs('LIGHTTPD_DEFAULT_CONF_SAVE:: Saving file ' +LIGHTTPD_CONF_PATH());
+
+l.Add('server.modules = (');
+l.Add('        "mod_access",');
+l.Add('        "mod_accesslog",');
+l.Add('        "mod_compress",');
+l.Add('        "mod_fastcgi",');
+l.Add('	"mod_status"');
+l.Add(')');
+l.Add('');
+l.Add('server.document-root        = "/usr/share/artica-postfix"');
+l.Add('server.username = "www-data"');
+l.Add('server.groupname = "www-data"');
+l.Add('server.errorlog             = "/var/log/lighttpd/error.log"');
+l.Add('index-file.names            = ( "index.php")');
+l.Add('');
+l.Add('mimetype.assign             = (');
+l.Add('  ".pdf"          =>      "application/pdf",');
+l.Add('  ".sig"          =>      "application/pgp-signature",');
+l.Add('  ".spl"          =>      "application/futuresplash",');
+l.Add('  ".class"        =>      "application/octet-stream",');
+l.Add('  ".ps"           =>      "application/postscript",');
+l.Add('  ".torrent"      =>      "application/x-bittorrent",');
+l.Add('  ".dvi"          =>      "application/x-dvi",');
+l.Add('  ".gz"           =>      "application/x-gzip",');
+l.Add('  ".pac"          =>      "application/x-ns-proxy-autoconfig",');
+l.Add('  ".swf"          =>      "application/x-shockwave-flash",');
+l.Add('  ".tar.gz"       =>      "application/x-tgz",');
+l.Add('  ".tgz"          =>      "application/x-tgz",');
+l.Add('  ".tar"          =>      "application/x-tar",');
+l.Add('  ".zip"          =>      "application/zip",');
+l.Add('  ".mp3"          =>      "audio/mpeg",');
+l.Add('  ".m3u"          =>      "audio/x-mpegurl",');
+l.Add('  ".wma"          =>      "audio/x-ms-wma",');
+l.Add('  ".wax"          =>      "audio/x-ms-wax",');
+l.Add('  ".ogg"          =>      "application/ogg",');
+l.Add('  ".wav"          =>      "audio/x-wav",');
+l.Add('  ".gif"          =>      "image/gif",');
+l.Add('  ".jar"          =>      "application/x-java-archive",');
+l.Add('  ".jpg"          =>      "image/jpeg",');
+l.Add('  ".jpeg"         =>      "image/jpeg",');
+l.Add('  ".png"          =>      "image/png",');
+l.Add('  ".xbm"          =>      "image/x-xbitmap",');
+l.Add('  ".xpm"          =>      "image/x-xpixmap",');
+l.Add('  ".xwd"          =>      "image/x-xwindowdump",');
+l.Add('  ".css"          =>      "text/css",');
+l.Add('  ".html"         =>      "text/html",');
+l.Add('  ".htm"          =>      "text/html",');
+l.Add('  ".js"           =>      "text/javascript",');
+l.Add('  ".asc"          =>      "text/plain",');
+l.Add('  ".c"            =>      "text/plain",');
+l.Add('  ".cpp"          =>      "text/plain",');
+l.Add('  ".log"          =>      "text/plain",');
+l.Add('  ".conf"         =>      "text/plain",');
+l.Add('  ".text"         =>      "text/plain",');
+l.Add('  ".txt"          =>      "text/plain",');
+l.Add('  ".dtd"          =>      "text/xml",');
+l.Add('  ".xml"          =>      "text/xml",');
+l.Add('  ".mpeg"         =>      "video/mpeg",');
+l.Add('  ".mpg"          =>      "video/mpeg",');
+l.Add('  ".mov"          =>      "video/quicktime",');
+l.Add('  ".qt"           =>      "video/quicktime",');
+l.Add('  ".avi"          =>      "video/x-msvideo",');
+l.Add('  ".asf"          =>      "video/x-ms-asf",');
+l.Add('  ".asx"          =>      "video/x-ms-asf",');
+l.Add('  ".wmv"          =>      "video/x-ms-wmv",');
+l.Add('  ".bz2"          =>      "application/x-bzip",');
+l.Add('  ".tbz"          =>      "application/x-bzip-compressed-tar",');
+l.Add('  ".tar.bz2"      =>      "application/x-bzip-compressed-tar",');
+l.Add('  ""              =>      "application/octet-stream",');
+l.Add(' )');
+l.Add('');
+l.Add('');
+l.Add('accesslog.filename          = "/var/log/lighttpd/access.log"');
+l.Add('url.access-deny             = ( "~", ".inc" )');
+l.Add('');
+l.Add('static-file.exclude-extensions = ( ".php", ".pl", ".fcgi" )');
+l.Add('server.port                 =   9000');
+l.Add('#server.bind                = "127.0.0.1"');
+l.Add('#server.error-handler-404   = "/error-handler.html"');
+l.Add('#server.error-handler-404   = "/error-handler.php"');
+l.Add('server.pid-file             = "/var/run/lighttpd.pid"');
+l.Add('server.max-fds 		    = 2048');
+l.Add('');
+l.Add('fastcgi.server = ( ".php" =>((');
+l.Add('                "bin-path" => "' + PHP5_CGI_BIN_PATH() + '",');
+l.Add('                "socket" => "/var/run/lighttpd/php.socket",');
+l.Add('		"min-procs" => 1,');
+l.Add('                "max-procs" => 2,');
+l.Add('		"max-load-per-proc" => 4,');
+l.Add('                "idle-timeout" => 20,');
+l.Add('                "bin-environment" => (');
+l.Add('                        "PHP_FCGI_CHILDREN" => "4",');
+l.Add('                        "PHP_FCGI_MAX_REQUESTS" => "100"');
+l.Add('                ),');
+l.Add('                "bin-copy-environment" => (');
+l.Add('                        "PATH", "SHELL", "USER"');
+l.Add('                ),');
+l.Add('                "broken-scriptfilename" => "enable"');
+l.Add('        ))');
+l.Add(')');
+l.Add('ssl.engine                 = "enable"');
+l.Add('ssl.pemfile                = "/opt/artica/ssl/certs/lighttpd.pem"');
+l.Add('status.status-url          = "/server-status"');
+l.Add('status.config-url          = "/server-config"');
+l.SaveToFile(LIGHTTPD_CONF_PATH());
+l.free;
+end;
+//##############################################################################
+procedure Tlighttpd.LIGHTTPD_FIX_ERRORS();
+var
+     l:TstringList;
+     RegExpr:TRegExpr;
+     i:integer;
+begin
+
+ if not FileExists('/opt/artica/conf/lighttpd.conf') then exit;
+
+ l:=Tstringlist.Create;
+ l.LoadFromFile('/opt/artica/conf/lighttpd.conf');
+ RegExpr:=TRegExpr.Create;
+ RegExpr.Expression:='^passl\.engine';
+ for i:=0 to l.Count-1 do begin
+     if RegExpr.Exec(l.Strings[i]) then begin
+         l.Strings[i]:='ssl.engine                 = "enable"';
+         l.SaveToFile('/opt/artica/conf/Tlighttpd.conf');
+         break;
+     end;
+ end;
+
+l.free;
+RegExpr.free;
+
+end;
+//##############################################################################
+function Tlighttpd.APACHE_ARTICA_ENABLED():string;
+var
+   s:string;
+begin
+
+if not FileExists(SYS.LOCATE_APACHE_INITD_PATH()) then exit('0');
+
+if not FileExists(LIGHTTPD_BIN_PATH()) then begin
+   result:='1';
+   exit;
+end;
+s:=SYS.GET_INFO('ApacheArticaEnabled');
+if length(s)=0 then exit('0');
+exit(s);
+end;
+//##############################################################################
+
+end.

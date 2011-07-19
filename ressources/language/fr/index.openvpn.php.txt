@@ -1,0 +1,54 @@
+<additional_routes>routages additionnels</additional_routes>
+<additional_routes_text>Ajouter l'information d'un sous-r&eacute;seau &agrave; votre tunnel VPN afin d'autoriser les ordinateurs &agrave; acc&egrave;der aux diff&eacute;rents r&eacute;seaux locaux.</additional_routes_text>
+<ADD_REMOTE_SITES_VPN>Ajouter un nouveau site distant</ADD_REMOTE_SITES_VPN>
+<ADD_REMOTE_SITES_VPN_TEXT>Ins&eacute;rez un nouvel objet afin de pouvoir construire le fichier de param&egrave;tres</ADD_REMOTE_SITES_VPN_TEXT>
+<BRIDGE_ETH>pont d'interface r&eacute;seau</BRIDGE_ETH>
+<b_received>Re&ccedil;us</b_received>
+<b_sent>Envoy&eacute;s</b_sent>
+<enable_openvpn_server_mode>Activer le serveur VPN</enable_openvpn_server_mode>
+<ethernet_tunnel>Tunnel Ethernet</ethernet_tunnel>
+<ip_addr>Adresse de d&eacute;part</ip_addr>
+<LOCAL_NETWORK>Afin d'autoriser les PC distants &agrave; acc&egrave;der &agrave; votre r&eacute;seau, indiquez ici les informations de votre r&eacute;seau</LOCAL_NETWORK>
+<NETWORK_CONTROL_CENTER>Centre de Controle r&eacute;seaux</NETWORK_CONTROL_CENTER>
+<NETWORK_CONTROL_CENTER_TEXT>Afficher le sch&eacute;ma r&eacute;seau de votre configuration</NETWORK_CONTROL_CENTER_TEXT>
+<openvpn_access_interface>Les sessions VPN peuvent parcourir</openvpn_access_interface>
+<openvpn_access_interface_text>Lorsqu'une session VPN est &eacute;tablie, quel r&eacute;seau interne lui sera autoris&eacute;.</openvpn_access_interface_text>
+<OPENVPN_CLIENT_SETTINGS>Configuration des clients VPN</OPENVPN_CLIENT_SETTINGS>
+<OPENVPN_CLIENT_SETTINGS_TEXT>D&eacute;finissez les param&egrave;tres que le serveur va fournir lorsque les clients cont &eacute;tablir la connexion VPN</OPENVPN_CLIENT_SETTINGS_TEXT>
+<openvpn_local>Adresse IP locale &agrave; crocheter</openvpn_local>
+<openvpn_local_text>Si sp&eacute;cifi&eacute;, OpenVPN va s'accrocher &agrave; cette adresse uniquement. Le cas &eacute;ch&eacute;ant, toutes les adresses seront accroch&eacute;es</openvpn_local_text>
+<OPENVPN_SERVER_CONNECT>Connectez votre serveur</OPENVPN_SERVER_CONNECT>
+<OPENVPN_SERVER_CONNECT_EXPLAIN>Mettez ici le fichier zip contenant les param&egrave;tres pour votre site.</OPENVPN_SERVER_CONNECT_EXPLAIN>
+<OPENVPN_SERVER_CONNECT_TEXT>Liez votre serveur &agrave; un concentrateur/F&eacute;d&eacute;rateur VPN Artica</OPENVPN_SERVER_CONNECT_TEXT>
+<OPENVPN_SERVER_SETTINGS>Configuration du serveur OpenVPN</OPENVPN_SERVER_SETTINGS>
+<OPENVPN_SERVER_SETTINGS_TEXT>D&eacute;finissez ici les param&egrave;tres du serveur VPN</OPENVPN_SERVER_SETTINGS_TEXT>
+<OPENVPN_WIZARD>D&eacute;marrage des premiers param&egrave;tres</OPENVPN_WIZARD>
+<OPENVPN_WIZARD_TEXT>D&eacute;marrez votre connection VPN rapidement sans connaissances techniques</OPENVPN_WIZARD_TEXT>
+<PKI>Infrastructure de Clef publique</PKI>
+<public_ip_addr>Adresse IP publique</public_ip_addr>
+<REMOTE_SITES_VPN>Sites distants</REMOTE_SITES_VPN>
+<REMOTE_SITES_VPN_TEXT>Administrer votre collection de sites distants</REMOTE_SITES_VPN_TEXT>
+<routed_IP_tunnel>Tunnel de routage IP</routed_IP_tunnel>
+<routes_explain>Une fois que le VPN est op&eacute;rationnel de point &agrave; point, il peut &ecirc;tre int&eacute;ressant d'&eacute;tendre la vue des clients VPN aux autres machines de votre r&eacute;seau local.[br]
+Si vous voulez forcer le client VPN &agrave; communiquer uniquement avec votre r&eacute;seau local, ajoutez une r&egrave;gle de routage de cette mani&egrave;re 0.0.0.0 0.0.0.0 [ip de votre serveur]</routes_explain>
+<SERVER_MODE_TAP>Cette directive va utiliser l'adresse IP du serveur pour le service OpenVPN.[br]
+L'interface r&eacute;seau sera mise en &quot;pont&quot; avec votre adresse locale.[br]Cela veut dire que si votre adresse est 192.168.31, vous devez indiquer ici 192.168.3.1 dans ce formulaire.</SERVER_MODE_TAP>
+<SERVER_MODE_TUNE>Cette directive va configurer le serveur afin qu'il alloue des adresses aux clients qui s'y connecte[br]Le serveur va prendre la &quot;.1&quot; pour servir de serveur final de l'interface locale.</SERVER_MODE_TUNE>
+<sessions>sessions</sessions>
+<sessions_text>Voir le status des utilisateurs connect&eacute;s &agrave; votre VPN</sessions_text>
+<site_name>Nom du site</site_name>
+<START_WIZARD>D&eacute;marrer l'assistant</START_WIZARD>
+<tunnel_type>Type de tunnel</tunnel_type>
+<VPN_DHCP_FROM>Assigner les adresses des clients depuis</VPN_DHCP_FROM>
+<VPN_DHCP_TO>Assigner les adresses des clients vers</VPN_DHCP_TO>
+<VPN_SERVER_DHCP>DHCP client</VPN_SERVER_DHCP>
+<VPN_SERVER_DHCP_MASK>Masque de r&eacute;seau VPN</VPN_SERVER_DHCP_MASK>
+<VPN_SERVER_IP>Adresse du serveur VPN</VPN_SERVER_IP>
+<WELCOME_WIZARD>Bienvenue dans l'assistant VPN</WELCOME_WIZARD>
+<WELCOME_WIZARD_TEXT>Cet assistant va vous aider &agrave; cr&eacute;er votre permier r&eacute;seau priv&eacute; virtuel, apr&egrave;s cet assistant vous serez en mesure de connecter vos clients &agrave; travers le serveur artica en VPN</WELCOME_WIZARD_TEXT>
+<WIZARD_FINISH>Fin de l'assistant</WIZARD_FINISH>
+<WIZARD_FINISH_TEXT>Votre r&eacute;seau virtuel est param&egrave;tr&eacute;, vous pouvez d&eacute;sormais g&eacute;n&eacute;rer un Clef priv&eacute; pour chaque ordinateur sens&eacute;s se connecter au serveur.[br]
+Appliquer vos param&egrave;tres</WIZARD_FINISH_TEXT>
+<WIZARD_SERVER>D&eacute;finissez ici les param&egrave;tres de votre serveur VPN[br]Cela autorisera vos clients &agrave; se connecter au serveur afin d'&eacute;tablir une session VPN.[br]Si ce serveur doit &ecirc;tre client VPN d'un autre r&eacute;seau, d&eacute;sactivez le mode serveur</WIZARD_SERVER>
+<WIZARD_STEP1>La premi&egrave;re &eacute;tape est de cr&eacute;er une clef Publique.
+Cette clef va permettre de g&eacute;n&eacute;rer une clef pour chaque client et pour le serveur.</WIZARD_STEP1>

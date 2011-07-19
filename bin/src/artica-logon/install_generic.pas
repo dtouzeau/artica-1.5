@@ -1,0 +1,1 @@
+../artica-install/install_generic.pas

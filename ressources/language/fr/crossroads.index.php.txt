@@ -1,0 +1,28 @@
+<CrossRoadsBalancingServerIP>Serveur IP d'&eacute;quilibrage de charge</CrossRoadsBalancingServerIP>
+<CrossRoadsBalancingServerIP_text>D&eacute;finissez ici l'adresse TCP/IP que le serveur &eacute;coutera. [br] Cette adresse IP sera utilis&eacute;e pour recevoir des e-mails [br] Les param&egrave;tres locaux de Postfix  seront modifi&eacute;s pour &eacute;couter l'adresse 127.0.0.1  pour emp&ecirc;cher le conflit IP/port</CrossRoadsBalancingServerIP_text>
+<CrossRoadsBalancingServerName>Nom d'h&ocirc;te du serveur ma&icirc;tre</CrossRoadsBalancingServerName>
+<CrossRoadsBalancingServerName_text>Le nom d'h&ocirc;te est important.[br]Il est utilis&eacute; par les machines esclaves pour localiser la branche LDAP principale afin d'obtenir sa configuration</CrossRoadsBalancingServerName_text>
+<CrossRoadsPoolingTime>Intervalle de temps</CrossRoadsPoolingTime>
+<CrossRoadsPoolingTime_text>Les esclaves communiquent leur statut chaque X secondes, indiquez ici l'intervalle de temps de communication</CrossRoadsPoolingTime_text>
+<crossroads_explain>Crossroads est un utilitaire qui g&egrave;re l'&eacute;quilibrage de charge et les d&eacute;connexions pour les services bas&eacute;s sur TCP. [Br]
+C'est un d&eacute;mon ex&eacute;cut&eacute; dans l'espace utilisateur, il de larges possibilit&eacute;s de configuration, il sonde les serveurs internes en utilisant des &laquo;appels d'&eacute;veil&raquo;,
+il fournit un rapports d'&eacute;tat d&eacute;taill&eacute; pour des actions sp&eacute;ciales lorsque les appels vers les serveurs internes &eacute;chouent, et bien plus. [br]
+Crossroads est ind&eacute;pendant des services : il est utilisable pour HTTP/HTTPS, SSH, SMTP, DNS, etc [br]</crossroads_explain>
+<main_server_text>D&eacute;finissez ici les param&egrave;tres du serveur &quot;source&quot;[br]
+Tous les serveurs esclaves utiliseront la base de donn&eacute;es LDAP du serveur source. [Br]
+Les politiques et les param&egrave;tres globaux de postfix seront r&eacute;pliqu&eacute;s &agrave; partir de ce serveur source vers tous les  serveurs esclaves que vous ajouterez. [Br]
+Dans ce cas, ce serveur fournira les connexions SMTP et les &eacute;quilibrera vers les serveurs esclaves.</main_server_text>
+<main_slaves_text>Ajoutez ici des serveurs esclaves qui recevrons la commande qui les transformera en copies de ce serveur afin d'obtenir une grappe de serveur.</main_slaves_text>
+<PostfixMasterServerIdentity>Adresse du serveur maitre</PostfixMasterServerIdentity>
+<PostfixMasterServerIdentity_text>Voici l'IP ou l'adresse de ce serveur.[br]
+Cette adresse sera utilis&eacute;e par les serveurs esclaves pour communiquer et obtenir leurs informations</PostfixMasterServerIdentity_text>
+<PostfixSlaveServersIdentity>Adresse du serveur esclave</PostfixSlaveServersIdentity>
+<PostfixSlaveServersIdentity_text>Indiquez les noms ou les adresse IP des serveurs esclaves</PostfixSlaveServersIdentity_text>
+<replicate_suffix>Section LDAP r&eacute;pliqu&eacute;e</replicate_suffix>
+<replicate_suffix_text>Cette branche LDAP sera r&eacute;pliqu&eacute;e par les serveurs esclaves</replicate_suffix_text>
+<slaves_servers>Serveurs esclaves</slaves_servers>
+<synchronize>Synchroniser les esclaves</synchronize>
+<synchronize_text>Cliquer sur cette image pour envoyer aux esclaves l'ordre d'activer le mode r&eacute;plication</synchronize_text>
+<warning_all_ldap_deleted>La base de donn&eacute;es LDAP principale [b]effacera les bases de donn&eacute;es LDAP distantes[/b].[br]
+Assurez vous que vos serveurs esclaves n'h&eacute;bergent pas de donn&eacute;es de production[br]
+Habituellement les esclaves sont nouvellement install&eacute;s</warning_all_ldap_deleted>

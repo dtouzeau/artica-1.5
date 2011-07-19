@@ -1,0 +1,154 @@
+<accounts_text>Change the Global Administrator username and password and LDAP Database branch</accounts_text>
+<account_settings>Administrator Konten</account_settings>
+<add_recipient>Add a new recipient</add_recipient>
+<add_recipient_text>Add a new email address in order to receive email messages</add_recipient_text>
+<advanced_settings>Erweiterte Einstellungen</advanced_settings>
+<all_modules>Alle Module</all_modules>
+<ArticaMaxLogsSize>Max. Loggr&ouml;sse</ArticaMaxLogsSize>
+<ArticaMaxLogsSize_text>Set the max size of logs files that artica will found when parsing the /var/log directories.[br]
+If a log file exceed this size, artica process will delete it automatically to not increase your disk size.
+</ArticaMaxLogsSize_text>
+<ArticaMaxTempLogFilesDay>Max Logs files Days</ArticaMaxTempLogFilesDay>
+<ArticaMaxTempLogFilesDay_text>Set the number of days live for logs files</ArticaMaxTempLogFilesDay_text>
+<ArticaProxyServerEnabled>Using global HTTP proxy</ArticaProxyServerEnabled>
+<ArticaProxyServerName>Proxy-Server</ArticaProxyServerName>
+<ArticaProxyServerPort>Proxyserver Port</ArticaProxyServerPort>
+<ArticaProxyServerUsername>Proxy-Server Port</ArticaProxyServerUsername>
+<ArticaProxyServerUserPassword>Passwort</ArticaProxyServerUserPassword>
+<ArticaWebRootURI>Link zur artica Webseite</ArticaWebRootURI>
+<ArticaWebRootURI_text>This link will be used for reports sended to yours users in order to provide release mails features from SMTP notifications</ArticaWebRootURI_text>
+<ARTICA_FILTER_MAXSUBQUEUE>Max queue processes</ARTICA_FILTER_MAXSUBQUEUE>
+<ARTICA_FILTER_MAXSUBQUEUE_TEXT>To check and release all mails into the artica-filter queue, and depends of your server load, you 
+can increase or decrease the number of process that check files into the queue[br][b]each process will release 10 mails before die.[/b]</ARTICA_FILTER_MAXSUBQUEUE_TEXT>
+<ARTICA_FILTER_QUEUE_PATH>Artica-filter Queue Pfad</ARTICA_FILTER_QUEUE_PATH>
+<ARTICA_FILTER_QUEUE_PATH_TEXT>When postfix send mails to artica content filter,the artica-filter process save eMails received in a folder before check policies,depends on your emails, flow, set this value to a correct disk size</ARTICA_FILTER_QUEUE_PATH_TEXT>
+<artica_smtp_performances>SMTP Performances</artica_smtp_performances>
+<artica_smtp_performances_text>This section allow you to disable or enables services on your SMTP Postfix gateway.[br]
+Disable services growth SMTP flow performances but it reduce email security too.</artica_smtp_performances_text>
+<artica_version>Artica Version</artica_version>
+<change_ldap_server_settings>&Auml;ndern der Einstellungen in der slapd.conf</change_ldap_server_settings>
+<change_ldap_server_settings_text>Wenn der LDAP-Server auf dem gleichen Server installiert ist,[br] werden die Einstellungen in der OpenLDAP Konfigurationsdatei ge&auml;ndert.</change_ldap_server_settings_text>
+<CPU_ALARM>CPU overload notification</CPU_ALARM>
+<email_database>Email Datenbank</email_database>
+<EnableSyslogMysql>Enable Syslog injection</EnableSyslogMysql>
+<EnableSyslogMysql_text>Diese Option erlaubt es Artica das Syslog zu bestimmen und f&uuml;gt alle Ereignisse in die Mysql-Datenbank.[br] Diese Einstellung startet den Syslog-Query Bereich in der Administrator Indexseite.</EnableSyslogMysql_text>
+<events_table_count>Mysql Events Rows number</events_table_count>
+<global_admin_account>Global administrator account</global_admin_account>
+<global_admin_confirm>Sind Sie sicher, dass Sie das Administratorkonto wechseln m&ouml;chten? This operation will change the LDAP server superuser and apply all changes according the LDAP access of all modules</global_admin_confirm>
+<global_paths>Globale Pfade</global_paths>
+<global_proxy>Globale Proxy Einstellungen</global_proxy>
+<https_port>Listen HTTPS port</https_port>
+<http_proxy>HTTP-Proxy</http_proxy>
+<http_proxy_text>Give HTTP proxy parameters to connect trough internet for downloading updates</http_proxy_text>
+<index_ldap>Index your ldap server</index_ldap>
+<index_ldap_text>This operation will stop your LDAP server and starting index attributes operation.[br]
+During this time, the LDAP server will be not available...
+</index_ldap_text>
+<infos>Globale Informationen</infos>
+<ldap_cache_size>number of entries maintain in memory</ldap_cache_size>
+<ldap_configure_bdbd>Configuring the LDAP BDB subsystem</ldap_configure_bdbd>
+<ldap_parameters>LDAP Serverparameter</ldap_parameters>
+<ldap_performances>LDAP server performances</ldap_performances>
+<ldap_performances_text>Configuring the LDAP BDB subsystem and performances related parameters</ldap_performances_text>
+<ldap_port>LDAP Serverport</ldap_port>
+<ldap_server>LDAP Servername</ldap_server>
+<ldap_suffix>LDAP Suffix</ldap_suffix>
+<LighttpdUseLdap>Enable Pop-Up Authentication</LighttpdUseLdap>
+<LighttpdUseLdap_text>Artica allows you to way to authenticate users:
+[ul]
+[li]Form Authentication in the logon page (by default)[/li]
+[li]Pop-Up authentication.[/li][/ul]
+Pop-Up authentication enable lighttpd engine web server to parse the LDAP database in order to check users accounts.</LighttpdUseLdap_text>
+<lighttp_max_load_per_proc>Maximum number of waiting processes on average per process before a new process is spawned</lighttp_max_load_per_proc>
+<lighttp_max_proc>The upper limit of the processes to start</lighttp_max_proc>
+<lighttp_min_proc>Sets the minimum processes to start</lighttp_min_proc>
+<local_database_size>local databases size</local_database_size>
+<logs_cleaning>Logs cleaning</logs_cleaning>
+<logs_cleaning_text>Define limits for the logs files</logs_cleaning_text>
+<modules_0>
+This feature [b]include[/b] all filters, anti-spam,antivirus and all features provided by artica  :[br]
+[ul]
+[li]Spam URI Realtime Blacklist[/li]
+[li]Deny Countries[/li]
+[li]Others filters rules[/li]
+[li]Forbidden attachments[/li]
+[li]Realtime Blackhole Lists rules[/li]
+[li]Domains Black List[/li]
+[li]Quarantine management[/li]
+[li]HTML Size Manager[/li]
+[li]Anti-spam[/li]
+[li]Antivirus[/li]
+[/ul]
+</modules_0>
+<modules_1>
+This feature disable all artica filters such as  :[br]
+[ul]
+[li]Spam URI Realtime Blacklist[/li]
+[li]Deny Countries[/li]
+[li]Others filters rules[/li]
+[li]Forbidden attachments[/li]
+[li]Realtime Blackhole Lists rules[/li]
+[li]Domains Black List[/li]
+[li]Quarantine management[/li]
+[li]HTML Size Manager[/li]
+[/ul]
+[br][b]Antivirus and antispam keep enabled...[/b]
+</modules_1>
+<modules_2>
+This feature disable all artica services [b]and[/b] antivirus third-party.[br]
+[b]In this configuration only Postfix and anti-spam are enabled[/b]
+</modules_2>
+<modules_3>
+This feature is the best if you want to have a strong relay server that process many messages per second, in this case Postfix is cleaned of all security addons[br]
+</modules_3>
+<MysqlMaxEventsLogs>Max syslogs events</MysqlMaxEventsLogs>
+<MysqlMaxEventsLogs_text>Artica will store all syslog informations on your MYSQL Database, it depends on your server[br]
+but for better performances you need to define a maximum number of rows stored in database (default 200 000)</MysqlMaxEventsLogs_text>
+<mysqlpass>Mysql account password</mysqlpass>
+<mysqlroot>Mysql account</mysqlroot>
+<mysqlroot_text>Can create database, insert, update, reach root account...</mysqlroot_text>
+<mysql_settings>Mysql settings</mysql_settings>
+<mysql_settings_text>Change the Mysql password, define the behavior of mysql database storage & max events</mysql_settings_text>
+<nothing_to_change>Nothing to change</nothing_to_change>
+<notification_context>Define here which notification you want to be receive</notification_context>
+<PHP_FCGI_CHILDREN>The number of php-cgi processes per lightppd processes</PHP_FCGI_CHILDREN>
+<PHP_FCGI_MAX_REQUESTS>Maximal requests before restarting php-cgi process</PHP_FCGI_MAX_REQUESTS>
+<PostfixQueueEnabled>Enable notifications when SMTP queues reach limit</PostfixQueueEnabled>
+<PostfixQueueMaxMails>Maximal mails number in postfix queue</PostfixQueueMaxMails>
+<rbl_cache_database>RBLs cache database</rbl_cache_database>
+<sa-learn>Anti-spam learning</sa-learn>
+<services_enabled>Enabled services</services_enabled>
+<set_cachesize>database cache</set_cachesize>
+<set_cachesize_text>You can increase LDAP server performance by adjusting the BDB backend 
+cache size to be at or near the size of your data set.[br]
+This is subject to the limit of 4 GB for 32 bit and 10 TB for 64 bit, and the amount of RAM you have.[br]
+The size of the data set is the sum of the Berkeley DataBase (BDB) files
+</set_cachesize_text>
+<size>size</size>
+<smtp_auth_passwd>Password AUTH</smtp_auth_passwd>
+<smtp_auth_user>Username AUTH</smtp_auth_user>
+<smtp_dest>Your email address</smtp_dest>
+<smtp_enabled>Enable SMTP notifications</smtp_enabled>
+<smtp_notifications>email notifications</smtp_notifications>
+<SMTP_NOTIFICATIONS_ADD_CC>Give the eMail address that will receive mail notifications</SMTP_NOTIFICATIONS_ADD_CC>
+<smtp_notifications_text>Be informed of system dysfunctions or mandatories scheduled tasks[br]
+do not use artica server has the main mail server[br]If it's not working you will be not be able to receive notifications
+[br]If your server requires authentification, fill fields about AUTH
+</smtp_notifications_text>
+<smtp_sender>sender mail address</smtp_sender>
+<smtp_server_name>Mail server name</smtp_server_name>
+<smtp_server_port>Mail server port</smtp_server_port>
+<sql_database>Mysql Database</sql_database>
+<SystemCPUAlarmPourc>when reach % cpu used</SystemCPUAlarmPourc>
+<tls_enabled>Enable TLS support</tls_enabled>
+<UseDNSMasq>Recommended to use Dnsmasq</UseDNSMasq>
+<UseDNSMasq_text>&lt;global_admin_account&gt;Globales Administrator Konto</UseDNSMasq_text>
+<use_apache>Use apache instead lighttpd</use_apache>
+<use_apache_text>By default, artica use lighttpd as the web server engine to provide web-interface, you can use Apache server instead.[br]
+Enable this option will shutdown lighttpd and start apache has the main web server engine.
+</use_apache_text>
+<web_interface_settings>Web interface settings</web_interface_settings>
+<web_interface_settings_text>Change the main web interface HTTP Engine parameters and performances</web_interface_settings_text>
+<without_antispam_module>Disable anti-spam</without_antispam_module>
+<without_antivirus>Disable antivirus</without_antivirus>
+<without_artica_modules>Disable artica modules</without_artica_modules>

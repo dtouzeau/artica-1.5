@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <Compiler Value="/usr/bin/fpc" Date="1244033947"/>
+  <Params Value=" -MObjFPC -Scgi -O1 -gl -vewnhi -l -Fu/home/dtouzeau/developpement/artica-postfix/bin/src/artica-interface/ -Fu. -FE/home/dtouzeau/developpement/artica-postfix/bin/ -oartica-interface interface2.lpr"/>
+</CONFIG>

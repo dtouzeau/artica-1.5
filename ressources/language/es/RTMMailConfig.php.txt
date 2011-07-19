@@ -1,0 +1,9 @@
+<event>Fila de Eventos</event>
+<LOG_DAY_LIMIT>Numero maximo de d&iacute;as de almacenamiento de bases de datos</LOG_DAY_LIMIT>
+<row_color>Color de la fila</row_color>
+<row_number>Numero de Filas</row_number>
+<RTMMail>Monitor SMTP en tiempo real</RTMMail>
+<RTMMail_TEXT>Mostrar enrutamiento de mensajes que pasaron a trav&eacute;s de su servidor de correo</RTMMail_TEXT>
+<RTM_PARAMETERS>El seguimiento de parametros en tiempo real</RTM_PARAMETERS>
+<RTM_PARAMETERS_TEXT>Esta seccion le ayudara a personalizar el seguimiento de par&aacute;metros en tiempo real</RTM_PARAMETERS_TEXT>
+<text_color>Color de texto</text_color>

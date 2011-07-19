@@ -1,0 +1,2858 @@
+/^From: .*FETCHMAIL-DAEMON.*$/ DROP Messages perdus de Fetchmail
+/^Subject: Re: PH*\ARMACY/     REJECT Message content rejected - No spam please!
+/^Subject: this going to expolad/     REJECT Message content rejected - No spam please!
+/^From: .*earthlink\.net.*$/ REJECT Too much Spam from your domain !
+/^From: .*cityofmelrose\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*lotemate\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*simcon-worldwide\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*elvisti\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*sas.samsung\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*0733\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*yyhmail\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*casino-play\.info.*$/ REJECT Too much Spam from your domain !
+/^From: .*1000editions\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*ix.netcom\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*pourhouse\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*efrei\.fr.*$/ REJECT Too much Spam from your domain !
+/^From: .*western-inventory\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*gmx\.net.*$/ REJECT Too much Spam from your domain !
+/^From: .*idg\.fr.*$/ REJECT Too much Spam from your domain !
+/^From: .*comparingisps\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*ipt06\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*skypoodle\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*iinet\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*iplanet\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*mcimail\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*acsalaska\.net.*$/ REJECT Too much Spam from your domain !
+/^From: .*wptop\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*vista\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*stunix\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*globalspec\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*mail333\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*ethailand\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*toast\.net.*$/ REJECT Too much Spam from your domain !
+/^From: .*norika-fujiwara\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*omd\.fr.*$/ REJECT Too much Spam from your domain !
+/^From: .*nicholastse\.net.*$/ REJECT Too much Spam from your domain !
+/^From: .*qdimaging\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*lovecat\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*mail15\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*internetdrive\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*trim\.net.*$/ REJECT Too much Spam from your domain !
+/^From: .*radioactivo\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*1sthotelguide\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*omd\.fr.*$/ REJECT Too much Spam from your domain !
+/^From: .*nuevoleon\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*wanadoo\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*apha\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*sapphicparadise\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*valproco\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*mtr\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*amrer\.net.*$/ REJECT Too much Spam from your domain !
+/^From: .*indiatimes\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*wtvaccess\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*witty\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*hensmann\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*esplanade\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*efrei\.fr.*$/ REJECT Too much Spam from your domain !
+/^From: .*1-call\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*adexec\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*minnesotahoops\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*esenet\.dk.*$/ REJECT Too much Spam from your domain !
+/^From: .*cais\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*systematix\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*diligenz\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*louisboston\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*poetic\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*hankyu-travel\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*1-tek\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*galaxyaviation\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*valueweb\.net.*$/ REJECT Too much Spam from your domain !
+/^From: .*doglover\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*mcintyre-group\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*ambis\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*ntralfreight\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*emdas\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*0451\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*friedmancorp\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*kunmail\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*sisinc\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*wild\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*heidelhouse\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*pediatrician\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*london\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*cheerful\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*3dldesign\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*meetingmaker\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*tecmail\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*deltametrics\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*hawaiian\.net.*$/ REJECT Too much Spam from your domain !
+/^From: .*publicist\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*watchtv\.net.*$/ REJECT Too much Spam from your domain !
+/^From: .*geologist\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*progressive-hi\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*holtkamphvac\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*legislator\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*singapore\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*tiscalinet\.it.*$/ REJECT Too much Spam from your domain !
+/^From: .*islandmicro\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*aviador-dro\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*playful\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*consultant\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*lakot\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*nsicom\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*email.msn\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*cwnet\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*wartaponsel\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*wotangate.micro.ti\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*jaguartc\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*lrs\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*btconnect\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*1dayresumes\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*telecheck\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*bootbarn\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*bestnet\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*uhsinc\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*eartlink\.net.*$/ REJECT Too much Spam from your domain !
+/^From: .*bcbsnm\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*intresys\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*tgplaw\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*sesmail\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*deliveryman\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*lbar\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*woodsidepriory\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*registerednurses\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*beyond\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*aerialimages\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*farouk\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*logisolve\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*supernetpower\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*eca\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*tcsfinance\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*006\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*suffolkconstruction\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*rivadesign\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*nurface\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*firstact\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*dublin\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*saintly\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*condor\.de.*$/ REJECT Too much Spam from your domain !
+/^From: .*beringair\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*artlover\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*iecrm\.org.*$/ REJECT Too much Spam from your domain !
+/^From: .*aerialimages\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*chanel-corp\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*writeme\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*inodes\.org.*$/ REJECT Too much Spam from your domain !
+/^From: .*kanukathuringer\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*63118\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*samerica\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*abrvavylk\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*dcswins\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*asia\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*rcn\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*bronsonhg\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*adchouston\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*01consulting\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*archaeologist\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*umpire\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*tnemec\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*alterbarge\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*4x4-edouin\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*galacticempire\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*procro\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*072\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*dr\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*lobbyist\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*jewel.posty\.net.*$/ REJECT Too much Spam from your domain !
+/^From: .*teleline\.es.*$/ REJECT Too much Spam from your domain !
+/^From: .*teacher\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*accountant\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*allvantage\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*nycmail\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*moscowmail\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*hideakifan\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*audioatlanta\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*australiamail\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*cholestech\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*barbary\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*0123\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*repairman\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*bikerider\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*generalcasualty\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*poetic\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*arcticmail\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*badgerinternet\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*huskerpedia\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*carhartt\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*i-is\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*booksarefun\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*edt02\.net.*$/ REJECT Too much Spam from your domain !
+/^From: .*ivymortgage\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*0ol\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*afm\.org.*$/ REJECT Too much Spam from your domain !
+/^From: .*sandy.flashdocs\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*afterhours\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*arkwright7.fsnet.co\.uk.*$/ REJECT Too much Spam from your domain !
+/^From: .*bbsteamatic\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*fcci-group\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*kewanee\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*optician\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*execs\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*groupeiweb\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*dreeshomes\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*gastoncustomcalls\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*csistaff\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*lehmancomm\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*2die4\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*bavdsi\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*000email\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*gmaccm\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*alversontaylor\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*nethugs\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*shaniastuff\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*priest\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*jandel\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*alumnidirector\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*bwsc\.net.*$/ REJECT Too much Spam from your domain !
+/^From: .*apothecure\.com.*$/ REJECT Too much Spam from your domain !
+#/^From: .*aol\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*cbcads\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*thomsonlearning\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*epmgpc\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*mcrespo\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*financier\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*apolloind\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*maxlk\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*bevaccess\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*compvend\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*kis-kiosk\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*imperialnetwork.zzn\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*cityofmillcreek\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*allenmatkins\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*politickin\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*incredible\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*ca.abb\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*1-800-patches\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*popstar\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*eversonlaw\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*briwaxwoodcare\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*southern-world\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*hutchbiz\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*b9\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*rescueteam\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*allergist\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*4wilmer\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*smics\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*180solutions\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*c-healthcare\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*kycon\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*animeinferno\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*axs4u\.net.*$/ REJECT Too much Spam from your domain !
+/^From: .*australiannfp\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*catlover\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*ndgroup\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*apachenitro\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*behrtech\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*difo\.net.*$/ REJECT Too much Spam from your domain !
+/^From: .*forwardair\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*mccarthylebit\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*eu.viskase\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*zoecom\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*evansville\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*ivax\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*ubi\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*fcg\.net.*$/ REJECT Too much Spam from your domain !
+/^From: .*choice\.net.*$/ REJECT Too much Spam from your domain !
+/^From: .*mmbmusic\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*berdonllp\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*codserver\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*afeindustries\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*brokenarrowranch\.com.*$/ REJECT Too much Spam from your domain !
+/^From: .*edap\.net.*$/ REJECT Too much Spam from your domain !
+
+
+# Trouvé sur  http://www.infinitejazz.net/will/geek/header_checks.txt
+
+/^Subject: Snowhite and the Seven Dwarfs - The REAL story!/	REJECT Message content rejected - No spam please!
+/^Subject: Get Viagra Online Now !!!/				REJECT Message content rejected - No spam please!
+/^Subject: ENLARGE YOUR PACAKGE GUARANTEED/			REJECT Message content rejected - No spam please!
+/^Subject: Add REAL Inches To Your Package! GUARANTEED/		REJECT Message content rejected - No spam please!
+/^Subject: At Last, Herbal V, the All Natural Alternative!/	REJECT Message content rejected - No spam please!
+/^Subject: Have Hair Loss? We Can Help You!\.\.Read on\.\./	REJECT Message content rejected - No spam please!
+/^Subject: Pill to Increase Your Ejaculation by \d{3}%/		REJECT Message content rejected - No spam please!
+/^Subject: free trial herbal viagra good for men and women/	REJECT Message content rejected - No spam please!
+/^Subject: STAYING POWER/					REJECT Message content rejected - No spam please!
+/^Subject: Isn\'t It Time You Solved Your \"little\" Problem\?\s*\d{2,6}/	REJECT Message content rejected - No spam please!
+/^Subject: Non Prescription Alternative to Viagra/		REJECT Message content rejected - No spam please!
+/^Subject: You never called me back last night\!\!\!/		REJECT Message content rejected - No spam please!
+/^Subject: Incredibly Enhanced Sensations/			REJECT Message content rejected - No spam please!
+/^Subject: Free lifetime access to best adult sites\d{2,6}/	REJECT Message content rejected - No spam please!
+/^Subject: Gay And Loving It.*\d{2,6}/				REJECT Message content rejected - No spam please!
+/^Subject: Incest Porn.*\d{2,7}/				REJECT Message content rejected - No spam please!
+/^Subject: These Girls Are Barely Legal/			REJECT Message content rejected - No spam please!
+/^Subject: These Teens Want You Now/				REJECT Message content rejected - No spam please!
+/^Subject: FURRY NAKED BARNYARD FRIENDS!/			REJECT Message content rejected - No spam please!
+/^Subject: INSTANT Daily PAY!/					REJECT Message content rejected - No spam please!
+/^Subject: INSTANT Pay to \$\d{2,3} A Day!/			REJECT Message content rejected - No spam please!
+/^Subject: The easiest way to make money on the internet!/	REJECT Message content rejected - No spam please!
+/^Subject: INTEREST RATES HAVE DROPPED/				REJECT Message content rejected - No spam please!
+/^Subject: Make Money In Your Sleep! /				REJECT Message content rejected - No spam please!
+/^Subject: Lowest Rates In Years! /				REJECT Message content rejected - No spam please!
+/^Subject: make money now!!!!!/					REJECT Message content rejected - No spam please!
+/^Subject: HOME-BASED BUSINESSES /				REJECT Message content rejected - No spam please!
+/^Subject: Sick of paying and paying and staying in debt? /	REJECT Message content rejected - No spam please!
+/^Subject: Recession Hurts!/					REJECT Message content rejected - No spam please!
+/^Subject: Got Debt\?\s*Cut Your Bills in HALF!/			REJECT Message content rejected - No spam please!
+/^Subject: Double your policy at No Extra Cost!/		REJECT Message content rejected - No spam please!
+/^Subject: Make \d{2}% Yearly Fully Secured!/			REJECT Message content rejected - No spam please!
+/^Subject: Have tax problems?\s*\[\w{4,6}\]/			REJECT Message content rejected - No spam please!
+/^Subject: Got a Mortgage\?\s{1,9}\d.\d{2}% Fixed Rate Mortgage/	REJECT Message content rejected - No spam please!
+/^Subject: Rates Have Fallen Again!\s{1,9}\d.\d{2}% Fixed Rate Mortgage/	REJECT Message content rejected - No spam please!
+/^Subject: Take Advantage of Falling Interest Rates!/		REJECT Message content rejected - No spam please!
+/^Subject: Double Your Life Insurance at NO EXTRA COST!/	REJECT Message content rejected - No spam please!
+/^Subject: Got Debt\?.*\[\w{4,6}\\]/				REJECT Message content rejected - No spam please!
+/^Subject: Are you in debt\?\s*\[\w{4,6}\\]/			REJECT Message content rejected - No spam please!
+/^Subject: Refinance rates as low as \d.\d{2}%/			REJECT Message content rejected - No spam please!
+/^Subject: Hot Casino Action - \d{2,3}% Bonus/			REJECT Message content rejected - No spam please!
+/^Subject: Double your policy at No Extra Cost!/		REJECT Message content rejected - No spam please!
+/^Subject: Need More Life Insurance\? Double it for No Extra Cost/	REJECT Message content rejected - No spam please!
+/^Subject: Did you get your money\?/				REJECT Message content rejected - No spam please!
+/^Subject: Tired of dropping stock prices\?\d{1,6}/		REJECT Message content rejected - No spam please!
+/^Subject: \d{2,6}\s*Work From Home /				REJECT Message content rejected - No spam please!
+/^Subject: Debt Consolidation.\s*\[\w{4,6}\]/			REJECT Message content rejected - No spam please!
+/^Subject: Mortgage interest rates are lowered AGAIN/		REJECT Message content rejected - No spam please!
+/^Subject: Re:  Easy money!  Muy dinero! \(/			REJECT Message content rejected - No spam please!
+/^Subject: Feel the Excitement of CyberXCasino/			REJECT Message content rejected - No spam please!
+/^Subject: Free Loan Quotations\.\.\.\.\.Lower your Rate!/		REJECT Message content rejected - No spam please!
+/^Subject: Free Vacation$/					REJECT Message content rejected - No spam please!
+/^Subject: GUARANTEED MONTHLY INCOME- Join FREE NOW!/		REJECT Message content rejected - No spam please!
+/^Subject: Is your mortgage APR as low as \d.\d{2}/		REJECT Message content rejected - No spam please!
+/^Subject: Tired of the 40 X 40.*\?/				REJECT Message content rejected - No spam please!
+/^Subject: NEVER REPAY, FREE CASH GRANTS\.*\s*\d{2,7}$/		REJECT Message content rejected - No spam please!
+/^Subject: Are You Making \$\w{2,}\+ A Month Online\?\s*\d{2,7}$/	REJECT Message content rejected - No spam please!
+/^Subject: Secure Your Financial Future!$/			REJECT Message content rejected - No spam please!
+/^Subject: \d{2,3}% OFF Your Life Insurance/			REJECT Message content rejected - No spam please!
+/^Subject: Copy Your Favorite DVD Movies !!!/			REJECT Message content rejected - No spam please!
+/^Subject: EASILY COPY ANY DVD MOVIE FOR FREE!/			REJECT Message content rejected - No spam please!
+/^Subject: Favorite Movie not on DVD?/				REJECT Message content rejected - No spam please!
+/^Subject: Try this, it really works! /				REJECT Message content rejected - No spam please!
+/^Subject: Increased Emotional Stability /			REJECT Message content rejected - No spam please!
+/^Subject: Free Travel/						REJECT Message content rejected - No spam please!
+/^Subject: Chart Returns - Charles Taylor /			REJECT Message content rejected - No spam please!
+/^Subject: You could search for a year and\.\.\.\.\./		REJECT Message content rejected - No spam please!
+/^Subject: Escape the Ordinary\.\.\.\.\.\.New Opportunity for you\.\./	REJECT Message content rejected - No spam please!
+/^Subject: This Is What You've Been Waiting For\..*\d{2,6}/	REJECT Message content rejected - No spam please!
+/^Subject: Get Rid of those Paper Piles!\s*\d{2,6}/		REJECT Message content rejected - No spam please!
+/^Subject: Imaging Software for the Home.*\d{2,6}/		REJECT Message content rejected - No spam please!
+/^Subject: End static on the cell/				REJECT Message content rejected - No spam please!
+/^Subject: Free Trials & HBC Updates!/				REJECT Message content rejected - No spam please!
+/^Subject: Free Trials from Home Business Connection/		REJECT Message content rejected - No spam please!
+/^Subject: Fw: Marketing your product or service just got easier!/	REJECT Message content rejected - No spam please!
+/^Subject: Re: I did not hear back from you$/			REJECT Message content rejected - No spam please!
+/^Subject: Safe, Easy Snoring Solution!\s*\w{2,7}/		REJECT Message content rejected - No spam please!
+/^Subject: Search Engine Bids Are Now Half Price!/		REJECT Message content rejected - No spam please!
+/^Subject: Guaranteed Top Ten Search Engine Placement!!\s*\d{2,7}/	REJECT Message content rejected - No spam please!
+/^Subject: \d{2,3} Million Fresh Email Addresses/		REJECT Message content rejected - No spam please!
+/^Subject: \d{2,3} Million Email Addresses - \$\d{2,3}/		REJECT Message content rejected - No spam please!
+/^Subject: Internet Marketing Works! -\w{48}/			REJECT Message content rejected - No spam please!
+/^Subject: Lets Learn How to market successfully!\s*\d{2,7}/	REJECT Message content rejected - No spam please!
+/^Subject: Investigate Anyone or Anything now!/			REJECT Message content rejected - No spam please!
+/^Subject: NEW!! Find out ANYTHING about ANYONE w\/ your PC!/	REJECT Message content rejected - No spam please!
+/^Subject: Protect yourself from Small pox and Anthrax Naturally\s*\w{2,7}/	REJECT Message content rejected - No spam please!
+/^Subject: Boost Your Windows Reliability/			REJECT Message content rejected - No spam please!
+/^Subject: Give Windows Operating System A Boost In Reliability!/	REJECT Message content rejected - No spam please!
+/^X-(Advertisement|\d|UltraMail|Bulkmail): /	REJECT Message content rejected - No spam please!
+/^(Received|Message-Id|X-(Mailer|Sender)):.*\b(AutoMail|E-Broadcaster|Emailer Platinum|eMarksman|Extractor|e-Merge|from stealth[^.]|Global Messenger|GroupMaster|Mailcast|MailKing|Match10|MassE-Mail|massmail\.pl|News Breaker|Powermailer|Quick Shot|Ready Aim Fire|WindoZ|WorldMerge|Yourdora)\b/	REJECT Message content rejected - No spam please!
+/^X-Mailer:.*\b(Aristotle|Avalanche|Blaster|Bomber|DejaVu|eMerge|Extractor|UltraMail|Sonic|Floodgate|GeoList|Mach10|MegaPro|Aureate|MultiMailer|Bluecom|Achi-Kochi Mail|Direct Email|Andrew's SuperCool Blastoise|MailerGear|Advanced Mass Sender)\b/	REJECT Message content rejected - No spam please!
+/^X-Server: Advanced Direct Remailer/	REJECT Message content rejected - No spam please!
+/^X-AD2000-(Serial|Register):/	REJECT Message content rejected - No spam please!
+
+# Trouvé sur http://www.securitysage.com/files/header_checks
+
+/^Bel-Tracking: .*/				REJECT Confirmed spam. Go away.
+/^Hel-Tracking: .*/				REJECT Confirmed spam. Go away.
+/^Kel-Tracking: .*/				REJECT Confirmed spam. Go away.
+/^BIC-Tracking: .*/				REJECT Confirmed spam. Go away.
+/^Lid-Tracking: .*/				REJECT Confirmed spam. Go away.
+
+# Following Will Block Spams With Many Spaces In The Subject.
+/^Subject: .*            /			REJECT Your subject had too many subsequent spaces. Please change the subject and try again.
+
+# Emails with eronious dates (or dates far in the past) will appear at the top or bottom of your mail client.
+# This is a common method that spammers use to try and get your attention on their emails.
+#/^Date: .* 2004/				REJECT Your computer still thinks it's 2004. Fix your system clock and try again.
+#/^Date: .* 2003/				REJECT Your computer still thinks it's 2003. Fix your system clock and try again.
+/^Date: .* 200[0-4]/				REJECT Your email has a date from the past. Fix your system clock and try again.
+/^Date: .* 19[0-9][0-9]/			REJECT Your email has a date from the past. Fix your system clock and try again.
+
+# This filter will block subjects that contain ISO specifications.
+# If you use any languages other than English, you might need to comment this out.
+# /^Subject: .*\=\?ISO/				REJECT We don't accept strange character sets.
+
+# This will block messages that do not have an address in the From: header.
+# Note: This may violate RFC, but blocks a very significant amount of spam. If you implement this, you risk getting listed in http://www.rfc-ignorant.org
+#/^From: <>/					REJECT You need to specify a return address, otherwise we will not accept your email.
+
+# Following Are Alphabetical Listings Of Subject Contents That Will Be Blocked.
+
+
+# Following is a listing of known mass mailer programs.
+/^X-Mailer: 0001/                               REJECT You used an email program that is used almost exclusively for spam. We do not accept email sent using this program.
+/^X-Mailer: Avalanche/                          REJECT You used an email program that is used almost exclusively for spam. We do not accept email sent using this program.
+/^X-Mailer: Crescent Internet Tool/             REJECT You used an email program that is used almost exclusively for spam. We do not accept email sent using this program.
+/^X-Mailer: DiffondiCool/                       REJECT You used an email program that is used almost exclusively for spam. We do not accept email sent using this program.
+/^X-Mailer: E-Mail Delivery Agent/              REJECT You used an email program that is used almost exclusively for spam. We do not accept email sent using this program.
+/^X-Mailer: Emailer Platinum/                   REJECT You used an email program that is used almost exclusively for spam. We do not accept email sent using this program.
+/^X-Mailer: Entity/                             REJECT You used an email program that is used almost exclusively for spam. We do not accept email sent using this program.
+/^X-Mailer: Extractor/                          REJECT You used an email program that is used almost exclusively for spam. We do not accept email sent using this program.
+/^X-Mailer: Floodgate/                          REJECT You used an email program that is used almost exclusively for spam. We do not accept email sent using this program.
+/^X-Mailer: GOTO Software Sarbacane/            REJECT You used an email program that is used almost exclusively for spam. We do not accept email sent using this program.
+/^X-Mailer: MailWorkz/                          REJECT You used an email program that is used almost exclusively for spam. We do not accept email sent using this program.
+/^X-Mailer: MassE-Mail/                         REJECT You used an email program that is used almost exclusively for spam. We do not accept email sent using this program.
+/^X-Mailer: MaxBulk.Mailer/                     REJECT You used an email program that is used almost exclusively for spam. We do not accept email sent using this program.
+/^X-Mailer: News Breaker Pro/                   REJECT You used an email program that is used almost exclusively for spam. We do not accept email sent using this program.
+/^X-Mailer: SmartMailer/                        REJECT You used an email program that is used almost exclusively for spam. We do not accept email sent using this program.
+/^X-Mailer: StormPort/                          REJECT You used an email program that is used almost exclusively for spam. We do not accept email sent using this program.
+/^X-Mailer: SuperMail-2/                        REJECT You used an email program that is used almost exclusively for spam. We do not accept email sent using this program.
+
+# Trouvé sur http://www.colino.net/postfix/header_checks
+
+#anti nimda and friends
+/^Content-Type: multipart\/related;.*type=\"multipart\/alternative\";.*boundary=\"====_ABC1234567890DEF_====\".*$/ REJECT You have a virus
+
+#HTML-only mails shouldn't exist
+#/^Content-Type: text\/html.*$/ REJECT At least provide a text/plain part to your html shit
+
+#mplayer ml
+/^Received:.*mail.mplayerhq.hu.*$/ REJECT I'm not subscribed
+#anonymizers
+/^Received: .*(barbarella\.super\.nu|cameleon.org|remailer\.privacy\.at).*$/ REJECT
+
+#Spamming top-domains (On interdit tous les pays sauf France, Grande-Bretagne, USA)
+/^Received: .*\.nz .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.biz .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.gt .*$/ REJECT Sorry, too much spam from your country 
+/^Received: .*\.cn .*$/ REJECT Sorry, too much spam from your country 
+/^Received: .*\.ru .*$/ REJECT Sorry, too much spam from your country 
+/^Received: .*\.hu .*$/ REJECT Sorry, too much spam from your country 
+/^Received: .*\.de .*$/ REJECT Sorry, too much spam from your country 
+/^Received: .*\.es .*$/ REJECT Sorry, too much spam from your country 
+/^Received: .*\.ac .*$/ REJECT Sorry, too much spam from your country 
+/^Received: .*\.ad .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ae .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.af .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ag .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ai  *$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.al .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.am .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.an .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ao .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.aq .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ar  *$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.as .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.at .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.au .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.aw .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.az .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ba .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.bb .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.bd .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.be .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.bf .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.bg .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.bh .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.bi .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.bj .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.bm .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.bn .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.bo .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.br .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.bs .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.bt .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.bv .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.by .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.bz .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ca .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.cc .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.cd .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.cf .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.cg .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ch .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ci .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ck .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.cl .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.cm .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.cn .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.co .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.cr .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.cs .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.cu .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.cv .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.cx .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.cy .*$/ REJECT Sorry, too much spam from your country
+#/^Received: .*\.cz .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.dj .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.dk .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.dm .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.do .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.dz .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ec .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ee .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.eh .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.er .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.et .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.fi .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.fj .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.fk .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.fm .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.fo .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ga .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.gb .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.gd .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ge .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.gf .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.gg .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.gh .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.gi .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.gl .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.gm .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.gn .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.gp .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.gq .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.gr .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.gs .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.gu .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.gw .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.gy .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.hk .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.hm .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.hn .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.hr .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ht .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.id .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ie .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.il .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.im .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.in .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.io .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.iq .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ir .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.is .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.it .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.je .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.jm .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.jo .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.jp .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ke .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.kg .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.kh .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ki .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.km .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.kn .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.kp .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.kr .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.kw .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ky .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.kz .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.la .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.lb .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.lc .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.li .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.lk .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.lr .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ls .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.lt .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.lu .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.lv .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ly .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ma .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.mc .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.md .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.mg .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.mh .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.mk .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ml .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.mm .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.mn .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.mo .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.mp .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.mq .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.mr .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ms .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.mt .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.mu .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.mv .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.mw .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.mx .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.my .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.mz .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.na .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.nc .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ne .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.nf .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ng .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ni .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.nl .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.no .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.np .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.nr .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.nu .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.nz .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.om .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.pa .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.pe .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.pf .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.pg .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ph .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.pk .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.pl .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.pm .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.pn .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.pr .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ps .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.pt .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.pw .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.py .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.qa .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.re .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ro .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.rw .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.sa .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.sb .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.sc .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.sd .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.se .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.sg .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.sh .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.si .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.sj .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.sk .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.sl .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.sm .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.sn .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.so .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.sr .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.st .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.su .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.sv .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.sy .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.sz .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.tc .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.td .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.tf .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.tg .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.th .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.tj .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.tk .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.tl .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.tm .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.tn .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.to .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.tp .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.tr .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.tt .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.tv .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.tw .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.tz .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ua .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ug .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.um .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.uy .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.uz .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.va .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.vc .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ve .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.vg .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.vi .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.vn .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.vu .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.wf .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ws .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.ye .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.yt .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.za .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.zm .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.zr .*$/ REJECT Sorry, too much spam from your country
+/^Received: .*\.zw .*$/ REJECT Sorry, too much spam from your country
+
+
+#Spamming domains (stupid companies)
+/^Received: .*avoska\.net.*$/ REJECT You are banned due to stupid spamming habits
+/^Received: .*yourwebsite\.com.*$/ REJECT You are banned due to stupid spamming habits
+/^Received: .*gastone\.it.*$/ REJECT You are banned due to stupid spamming habits
+/^Received: .*waloa\.com.*$/ REJECT You are banned due to stupid spamming habits
+/^Received: .*cornut\.fr.*$/ REJECT You are banned due to stupid spamming habits
+/^Received: .*microtronique\.com.*$/ REJECT You are banned due to stupid spamming habits
+/^Received: .*caminarsoftware\.com.*$/ REJECT You are banned due to stupid spamming habits
+/^Received: .*\.lk.*$/ REJECT You are banned due to stupid spamming habits
+/^Received: .*\.quik\.com.*$/ REJECT You are banned due to stupid spamming habits
+/^Received: .*rootsystems\.net.*$/ REJECT You are banned due to stupid spamming habits
+/^Received: .*webhostingtalk\.com.*$/ REJECT You are banned due to stupid spamming habits
+/^Received: .*mail\.liekki\.com.*$/ REJECT You are banned due to stupid spamming habits
+/^Received: .*h8h\.com.*$/ REJECT You are banned due to stupid spamming habits
+/^Received: .*port\.net.*$/ REJECT You are banned due to stupid spamming habits
+/^Received: .*\.eth\.net.*$/ REJECT You are banned due to stupid spamming habits
+/^Received: .*hamilton\.net.*$/ REJECT You are banned due to stupid spamming habits
+/^Received: .*indiatimes\.com.*$/ REJECT bouncetime.com
+/^Received: .*e-newsletters.*$/ REJECT newsletters forbidden
+/^Received: .*usbid\.com.*$/ REJECT
+/^Received: .*\.ixo\.com.*$/ REJECT
+/^Received: .*dsl.brasiltelecom.net.br.*$/ REJECT
+
+#Spamming domains using multiple smtp servers
+/^From: .*uol\.com\.co.*$/ REJECT You are banned due to stupid spamming habits
+/^From: .*clubsurf\.com.*$/ REJECT You are banned due to stupid spamming habits
+/^From: .*ecplaza\.net.*$/ REJECT You are banned due to stupid spamming habits
+/^From: .*advancenet\.net.*$/ REJECT You are banned due to stupid spamming habits
+/^From: .*pc-look\.com.*$/ REJECT Shut up stupid spammer
+/^From: .*pc-zone\.com.*$/ REJECT Shut up stupid spammer
+/^From: .*zone pc.*$/ REJECT Shut up stupid spammer
+/^From: .*fabricehalimi@aol\.com.*$/ REJECT Go spam elsewhere
+#/^From: .*yahoo.com\.*$/ REJECT Sorry, too much spam from yahoo, find another email address to mail me.
+/^From: .*aufeminin\.com.*$/ REJECT No mail allowed from aufeminin.com, stop spamming me please
+/^From: .*fullpromote.*$/ REJECT Welcome to fullreject.com
+/^From: .*@eyou\.com.*$/ REJECT enothing
+/^From: .*noxservices\.com.*$/ REJECT Shut up stupid spammer
+#Typical spam Subjects
+/^Subject: .*penis.*enlargement.*$/ REJECT My sexual life is ok, thanks for bothering
+/^Subject: .*penis.*growth.*$/ REJECT My sexual life is ok, thanks for bothering
+/^Subject: .*viagra.*$/ REJECT My sexual life is ok, thanks for bothering
+/^Subject: .*sex.*free.*$/ REJECT My sexual life is ok, thanks for bothering
+/^Subject: .*free.*sex.*$/ REJECT My sexual life is ok, thanks for bothering
+/^Subject: (ADV:|AD:|ADV |AD ).*$/ REJECT You are not the contents of your wallet
+/^Subject: .*special offer.*$/ REJECT special bounce
+/^Subject: .*need money.*$/ REJECT no
+/^Subject: .*Phentermine.*$/ REJECT I'm not fat 
+/^Subject: .*Video.*botschaft.*$/ REJECT fuck off
+/^Subject: .*penis.*$/ REJECT NO
+/^Subject: .*member.*pill.*$/ REJECT o0o
+
+#Spam often have many spaces to hide a reference at the end
+/^Subject: .*          .*/ REJECT Mail detected as spam - hint, change subject
+
+#American, Canadian and people using dollars as your currency, 
+#you could get false positives here !
+/^Subject: .* \$.*$/ REJECT Don't mail with dollars in subject, it makes your mail a spam.
+
+#People I don't like
+/^From: .*Sunpai@gmx\.net.*$/ REJECT I do not like you
+/^From: .*ESoft@gmx\.fr.*$/ REJECT I do not like you
+/^From: .*charles.*gepner.*$/ REJECT I do not like you
+/^From: .*gepner.*$/ REJECT I do not like you
+/^From: .*sunyx@gmx.net.*$/ REJECT I do not like you
+/^From: .*labl@skynet\.be.*$/ REJECT Stick your vinyls up where i think
+/^From: .*hermantom@dunasoft\.com.*$/ REJECT u R not on 1rc
+/^From: .*amiltrader@runbox\.com.*$/ REJECT fuck off
+#Strange From: and To: headers
+/^To: .*ndisclosed.*$/ REJECT My name isn't Undisclosed Recipients.
+/^To: $/ REJECT I have a name
+/^From: $/ REJECT I am sure you have a name
+/^From: .*bons-plans@voyages-sncf\.com.*$/ REJECT j'aime pas le train
+
+
+#attachments
+/^(.*)name=\"(.*)\.(exe|lnk|dll|shs|vbe|hta|com|vbs|vbe|js|jse|bat|cmd|vxd|scr|shm|pif|chm)\"$/ REJECT Your attachment looks like a virus to me.
+/^(.*)name=(.*)\.(exe|lnk|dll|eml|shs|vbe|hta|com|vbs|vbe|js|jse|bat|cmd|vxd|scr|shm|pif|chm)$/ REJECT Your attachment looks like a virus to me.
+#stupid charsets
+/^Content-Type:.*charset="iso-2022-jp".*$/ REJECT I don't speak japanese
+
+#false Originating-IP
+/^X-Originating-IP:..[a-z].*$/ REJECT ip
+/^X-Originating-IP:.*IP.*$/ REJECT ip
+#known spam
+/^X-Spam-Level: \*\*\*\*\*\*\*\*/ REJECT Spam
+
+# Trouvé sur http://mercury.asuka.ne.jp/filters/header_check_regex
+
+# (C) 2001 Asuka Network Service, Inc.  http://www.ansi.co.jp/
+# $Id: header_check_regex,v 1.93 2005/11/05 09:05:19 yasu Exp $
+# See http://www.ansi.co.jp/tech/mail/spam/ for detail.
+
+/^X-Mailer: *Achi-Kochi Mail/i		REJECT
+/^X-Mailer: *IM200[0-9] Version/i	REJECT
+/^X-Mailer: *IM2K Custom Version/i	REJECT
+/^X-Mailer: *Direct Email/i		REJECT
+/^X-Mailer: *adToOne version/i		REJECT
+/^X-Mailer: *DM Mailer Ver/i		REJECT
+/^X-Mailer: *Oshirase(\([0-9.]+\))?-Mailer/i	REJECT
+/^X-Mailer: *RapidShot$/i		REJECT
+/^X-Mailer: *SendMailEx/i		REJECT
+/^X-Mailer: *AutoSendMail2/i		REJECT
+/^X-Mailer: *diffondi V/i		REJECT
+/^X-Mailer: *MaxBulk Mailer v/i		REJECT
+/^X-Mailer: *Douhou@Mail version/i	REJECT
+/^X-Mailer: *Mailloop/i			REJECT
+/^X-Mailer: Version [0-9]\./i		REJECT
+/^X-Mailer: JumboMailout /i		REJECT
+/^X-Mailer: Caretop 2604$/i		REJECT
+/^X-Mailer: 007 Direct Email Easy$/i	REJECT
+/^X-Mailer: PocketMailing Ver/i		REJECT
+/^X-Mailer: The Bat! \(v1\.52f\) Business$/i	REJECT
+/^X-Mailer: DiffondiCool V/i		REJECT
+/^X-Mailer: Easy DM free$/i		REJECT
+/^X-Shiroyagi-Version:/i		REJECT
+/^X-Mailer: [A-Z0-9]{8}\.[A-Z0-9]{8}\.[A-Z0-9]{32}$/	REJECT
+/^X-Mailer: OutLook Express 3\.14159$/i	REJECT
+/^X-Mailer: jpfree Group Mail Express V/i	REJECT
+/^X-Mailer: MultiSneder[0-9]/i		REJECT
+/^X-Mailer: X Ver[0-9]\.[0-9]/i		REJECT
+/^X-Mailer: MailMagic [0-9]/i		REJECT
+/^X-Mailer: Mail Distributer/i		REJECT
+/^X-Mailer: Super Mailer [0-9]/i	REJECT
+/^X-Mailer: ACMAILER scripted by/i	REJECT
+/^X-Mailer: SMTP Sender/i		REJECT
+/^X-Mailer: anyone/i			REJECT
+/^X-Mailer: DouhouHaishin ver/i		REJECT
+/^X-Mailer: OutlookExpress$/i		REJECT
+/^X-Mailer: MailMg V/i			REJECT
+/^X-Mailer: VolleyMail\.net/i		REJECT
+/^X-Mailer: Friend Mailer Version/i	REJECT
+/^X-Mailer: Techno Mail Ver\./i		REJECT
+/^X-Bulkmail:/				REJECT
+/^X-Mail-Agent: Extra Japan @Mailer/i	REJECT
+/^X-SMTP-Proxy: Anon@JUMPERZ\.NET\//i	REJECT
+/^X-Mailer-Version:/i			REJECT
+/^X-Mailer: DM-SenderEX/i		REJECT
+/^X-Shiroyagi-ID:/i			REJECT
+/^From:.*Mail-In <mailin@/		REJECT
+/^(From|To):.*=\?iso-2022-jp\?B\?[A-Za-z0-9+]*\?=@/	REJECT
+/^Received:.*\.{16}/			REJECT
+/^Received:.*\.FreeBit\.NE\.JP /	REJECT
+/^Received: from GET004 \(flets[0-9]*\.t3\.rim\.or\.jp/i	REJECT
+#/^Subject:.*( {8}|	{3})[^ 	]{5,}$/	REJECT
+#/^Subject:.*( |	){10}$/			REJECT
+#/^Subject:.*( |	){16}/			REJECT
+#/^Subject:.*\.{6}/			REJECT
+#/^Subject:.*>{8}/			REJECT
+#/^Subject:.*!!!/			REJECT
+#/^Subject:.*( \$\$\$|\$\$\$ )/		REJECT
+#/^Subject:.*GUARANTEED/i		REJECT
+#/^Subject:.*FREE.*!/i			REJECT
+#/^Subject: *=\?[Ii][Ss][Oo]-2022-[Jj][Pp]\?B\?GyRC(TCQ|S3Y)\+NUJ6OS05cCIo/i	REJECT
+#/^Subject: Re: Your password!$/		REJECT
+/^Subject:.*=\?(gb2312|big5|ks_c_5601|euc-kr|windows-1251)\?/	REJECT
+#/^Subject: Here are the rest of my pics/	REJECT
+/^Subject: *ADV?:/i			REJECT
+#/^Subject:.*=\?[Ss][Hh][Ii][Ff][Tt]_[Jj][Ii][Ss]\?B\?lqKPs5H4jUyNkIGm/i	REJECT
+#/^Subject:.*=\?[Ee][Uu][Cc]-[Jj][Pp]\?B\?zKS\+tcL6ua258KKo/i	REJECT
+#/^Subject: *\(NASDAQ:JLWT\) *Watch *This *Stock *Trade$/i	REJECT
+#/^Subject: *=\?iso-2022-jp\?Q\?=[89A-F]/	REJECT
+#/^Subject: *=\?iso-2022-jp\?Q\?=96=A2=8F=B3=91=F8=8DL=8D=90=81=A6/	REJECT
+#/^Subject:.*[^ -~].*[^ -~].*[^ -~].*[^ -~].*[^ -~].*[^ -~]/	REJECT
+/^From:.*Content-filter at.*postmaster/i	REJECT
+/^X-X:/					REJECT
+/^X-Delete-Me:/				REJECT
+/^X-Encoding: MIME$/i			REJECT
+#/^To:.*@.*,.*@/				OK
+#/^(Errors-)?To:.*@((hotmail|excite|msn|aol|livedoor|yahoo|petfull|public)\.com|commtom\.i(com|net)|5Business.cc)/			REJECT
+/^To: *@/				REJECT
+/^To: *<#field[0-9]#/i			REJECT
+/^To:.*C:`Bulk\.Adz.*\.txt/i		REJECT
+#/^To:[^@;]*$/				REJECT
+#/^From:[^@;]*$/			REJECT
+/^Received:.*[^A-Z0-9.-]msk\.no-ip\.com[^A-Z0-9.-]/	REJECT
+/^Received:.{999}/			REJECT
+/^Content-Type:.*charset="?(DEFAULT|gb2312|big5|ks_c_5601|euc-kr|windows-1251)/	REJECT
+/^Content-Type: multipart\/mixed;.*boundary="bound".*X-Priority:/i	REJECT
+/~Content-Type: text\/html/i		REJECT
+/^Date:.* --0400$/			REJECT
+/^Message-ID: *<.*@localhost\.localdomain>/	REJECT
+/^Message-ID: *<[^@]*@?\.?>/		REJECT
+/^Message-ID: *<[^<>]* [^<>]*>/		REJECT
+/^Message-ID:[^@]*$/			REJECT
+/^From:.*<@[a-z0-9.-]*>/		REJECT
+/^Received:.*\[202\.224\.232\.1(7[6-9]|8[0-3])\]/	REJECT
+/^From:.*<#fun-club@docomo.ne.jp>/	REJECT
+/^Reply-To: @(fullpromote|trafficbbs)\.com/	REJECT
+/^From:.*@hat-in\.com>/i		REJECT
+/^From:.*=\?ISO-2022-JP\?B\?GyRCJUghPCU\/JWs5LTlwPFIbKEI=\?=/i	REJECT
+/^X-MailScanner: Found to be clean$/i	REJECT
+
+# Virus alarts
+/^Subject:  File was infected with a virus$/i		REJECT
+/^Subject: \*\*\* You have sent a virus !/i		REJECT
+/^Subject: VIRUS IN YOUR MAIL$/i			REJECT
+/^Subject: Virus Alert$/i				REJECT
+/^Subject: Warning: E-mail viruses detected$/i		REJECT
+/^Subject: Returned due to virus;/i			REJECT
+/^Subject: VIRUS (.*) IN YOUR MAIL$/i			REJECT
+/^X-Yahoo-Profile: yumima1972$/i			REJECT
+/^X-MagazineId: s1ok$/i					REJECT
+
+# Trouvé sur http://www.mecreant.org/header_checks
+
+# virus
+/^From: Hahaha <hahaha@sexyfun.net>/ REJECT virus
+/X-MailScanner: Found to be clean/ DISCARD virus
+/ms.com/ DISCARD virus swen
+/news.com/ DISCARD virus swen
+/From: "MS/ DISCARD virus swen
+/From: MS/ DISCARD virus swen
+/From: "Microsoft/ DISCARD virus swen
+/From: Microsoft/ DISCARD virus swen
+/From: "Internet/ DISCARD virus swen
+/From: Internet/ DISCARD virus swen
+/From: "Security/ DISCARD virus swen
+/From: Security/ DISCARD virus swen
+/From: "Network/ DISCARD virus swen
+/From: Network/ DISCARD virus swen
+/From: "Inet / DISCARD virus swen
+/From: Inet / DISCARD virus swen
+/From: "inet / DISCARD virus swen
+/From: inet / DISCARD virus swen
+/From: Mail Storage/ DISCARD virus swen
+/Subject:*ecurity Update/ DISCARD virus swen
+/Subject: Latest / DISCARD virus swen
+/Subject: *Microsoft*Patch/ DISCARD virus swen
+/RAV AntiVirus/ DISCARD virus swen
+/don't be late/ REJECT mystere
+/Subject: Failure Report/ DISCARD
+/infini.com/ REJECT spam
+/impact-tech.com/ DISCARD virus swen
+/Subject: *asino/ REJECT spam casino
+/Subject: mprove/ REJECT spam improve something
+/Colon/ REJECT spam
+/colon/ REJECT spam
+/hilton/ REJECT paris hilton sex tapes
+
+# truc bizarre
+/webvdr_echanger/ REJECT no web forum here
+
+#mots clefs
+/icodine/ REJECT spam vicodine
+/entermine/ REJECT spam Phentermine
+/iagra/ REJECT spam viagra
+/anax/ REJECT spam xanax
+/alium/ REJECT spam valium
+/Penis/ REJECT spam penis 
+/penis/ REJECT spam  penis
+/enlarge/ REJECT spam enlargement
+/Enlarge/ REJECT spam enlargement
+/reen*ard/ REJECT spam green card
+/weight/ REJECT spam weight
+/oney/ REJECT spam money
+/mateur/ REJECT spam amateur
+/babies/ REJECT spam babies
+/Pics/ REJECT spam pics
+/pics/ REJECT spam pics
+/NIGERIA/ REJECT spam nigeria
+
+# spammers
+/ommo.net/ REJECT spammer ommo.net
+/surinter.net/ REJECT spam facho
+/newskies.net/ REJECT spammer domain newskies
+/@lotonext.com/ REJECT spammer domain lotonext
+/savingbot.com/ REJECT spammer domain savingbot
+/go.com/ REJECT spammer domain go.com
+#/@excite.com/ REJECT spammer domain excite
+/@amoureux.com/ REJECT spammer domain amoureux
+/@hotplaisirs.com/ REJECT spammer domain hotplaisirs
+/@immo-broker.net/ REJECT spammer domain immo-broker
+/@klekoon.com/ REJECT spammer domain klekoon
+#/@yahoo.co.uk/ REJECT spammer domain yahoo.co.uk
+/@spliolist.com/ REJECT spammer domain spliolist
+#/@post.com/ REJECT spammer domain post
+/@national-isp.org/ REJECT spammer domain national-isp
+/securibon@ibase.fr/ REJECT spammer domain securibon
+/solypresse/ REJECT spammer domain solypresse
+/yehey.com/ REJECT spammer domain yehey
+/hypermart.net/ REJECT spammer domain hypermart
+/cjb.net/ REJECT spammer domain cvb
+#/nobody@localhost/ REJECT spammer nobody
+/resopink/ REJECT spammer resopink
+/artmarket.com/ REJECT spammer artmarket
+/artprice.com/ REJECT spammer artprice
+/usa.com/ REJECT spammer usa.com
+/phantomemail.com/ REJECT spammer phantomemail.com
+/allenir@lycos.co.uk/ REJECT unwanted
+/optinmailingsforyou.com/ REJECT spammer
+/atm13.fr/ REJECT spammer
+/freemail/ REJECT spam or virus 
+
+# charset de spammers
+/GB2312/ REJECT unwanted character set GB2312
+/koi8-r/ REJECT unwanted character set
+
+# logiciel de spammers
+#/^X-EM-Version:/ REJECT
+/^X-Mailer: .*(N i M A|MMailer|K-ML|Bulk Email|GoldMine|MAGIC|bomber|expeditor|Brooklyn North|Broadcast|DMailer|Extractor|EMailing List Pro|Fusion|News Breaker|dbMail|Unity|PG-MAILINGLIST PRO|Dynamic| Splio|Sarbacane|sMailing|Broadc@st|WorkZ).*$/ REJECT no mass-mailers allowed here
+
+#anonymizers
+/^Received: .*(barbarella\.super\.nu|cameleon.org|remailer\.privacy\.at).*$/ REJECT no anonymizers here
+
+# Trouvé sur http://www.dredel.com/docs/header_checks
+
+# $id: header_checks,v 1.684 2003/12/20 14:51:15 postmaster Exp $
+
+## the iframe trick
+
+/iframe src=(3D)?cid:.* height=(3D)?0 width=(3D)?0/   REJECT
+
+## Virus Prevention
+
+/name=\"(.*)\.(hta|exe|com|pif|vbs|vbe|js|jse|bat|cmd|vxd|scr|shm|pif|chm)\"$/ REJECT
+/(filename|name)=".*\.(exe|asd|chm|dll|hlp|hta|js|ocx|pif|lnk)"/        REJECT
+/.*inbox\.lv/	REJECT
+/^Content-type:.*charset\s*=[\s\"]*(big5|euc-kr|gb2312|ks_c_5601-1987|ISO-2022-JP)/ REJECT
+/.*ks_c_5601/		REJECT
+/^Subject:.*\[Big5\].*/	REJECT
+/^From: e-BlackGold/	REJECT
+/sales@intervideoinc\.com/	REJECT
+/info@grinsbacke\.de/ REJECT
+/dontreply@(mail\.ru|cantv\.com\.ve)/ REJECT
+/y?service@h8h\.com/ REJECT
+/bo(|l)letin@serviart\.com/ REJECT
+/clean@ctv\.es/ REJECT
+/money4u1@/ REJECT
+/InglesDisney@yahoo\.com\.mx/ REJECT
+/@elpicachocho\.com/ REJECT
+/msd@mixmail\.com/ REJECT
+/bobmacl@bboy\.com/ REJECT
+/info@smicorp\.web\.com/ REJECT
+/pencil@moscowmail\.com/ REJECT
+/cks409696@kornat\.net/ REJECT
+/@revistainterforum\.com/ REJECT
+/draque@draque\.com/ REJECT
+/Michael\.Ball@ebbaonline\.net/ REJECT
+/verisign@e-mailprovider\.net/ REJECT
+/frsupport@acucorp\.com/ REJECT
+/savoyenergeticos@telefonica\.net/ REJECT
+/wdw\.guest\.communications@disney\.com/ REJECT
+/susan_kwong@asean-mail\.com/ REJECT
+/edubankok2002@seychelles\.com/ REJECT
+/edusav@ourplace\.com/ REJECT
+/info@xantic\.ro/ REJECT
+/@vacaciones\.en\.la\.florida\.com/ REJECT
+/vacaciones@cablenet\.com\.ni/ REJECT
+/emailmarketing@eyou\.com/ REJECT
+/(rtutter|philiy7|mariasese-sekoh)@(lycos|mailcity)\.com/ REJECT
+/dream-soft@arrakis\.es/ REJECT
+/info\d?@pachetes?\.com/ REJECT
+/computerfinancing@proxy\.icsti\.su/ REJECT
+/(email02@btamail|(faxin01|love)@263)\.net\.cn/ REJECT
+/urgente@tiscali\.es/ REJECT
+/^from:.*patty3688j38@club\.lemonde\.fr/ REJECT
+/^from:.*silvia_oakander@dynamitemail\.com/ REJECT
+/^from:.*fdi382358@yahoo\.com/ REJECT
+/^from:.*coastinc@yeti\.host4u\.net/ REJECT
+/^from:.*submission@coastinc\.com/ REJECT
+/^from:.*inn@huladolls\.com/ REJECT
+/^from:.*francis_mochan@canoemail\.com/ REJECT
+/^(to|from):.*perfumes5@lycos\.es/ REJECT
+/^reply-to:.*fatnews@news-master\.de/ REJECT
+/^from:.*info@fatnews\.de/ REJECT
+/^(from|reply-to):.*(janine|sloppyjoe|noresponda(s|gp))@mail\.ru/ REJECT
+/^from:.*m_abach80@loveworldmail\.org/ REJECT
+/^from[ :].*Enlarige(r\d{1,6})?@msn\.com/ REJECT
+/^(from|return-path):.*tati_linda\d{1,4}@freesex\.com/ REJECT
+/No_Responder@A_Esta_Direccion\.com/ REJECT
+/info@sdwebmetro\.com/ REJECT
+/questions@uscensus\.info/ REJECT
+/^from:.*rrhh@tecnobolsa\.com/ REJECT
+/^(to|from):.*Friend@public\.com/ REJECT
+/(mzine\d|tophatpub)@tiscali\.co\.uk/ REJECT
+/^reply-to:.*survey\.dreply@spain\.buongiorno\.com/ REJECT
+/^from:.*(hghsupport|umassballer|bigdbeevers)[[:alnum:]]{3,9}@eudoramail\.com/ REJECT
+/^reply-to:.*revista educação/ REJECT
+/^from:.*thk@cm1\.ethome\.net\.tw/ REJECT
+/^from:.*info@latindominios\.com/ REJECT
+/^from:.*officegirl@officegirl\.net/ REJECT
+/^from:.*marketing@mundoloto\.com/ REJECT
+/^from:.*michaelrusin@blackseaent\.com/ REJECT
+/^from:.*(cindy_ming|Abdul Kadiri.*abdulkadiri|Brett Pernia.*bpgmk)@lycos\.co/ REJECT
+/^from:.*dietas_online@email\.it/ REJECT
+/^from:.*solutions@runsaa\.com/ REJECT
+/^(from:.*sender|to:.*bsgold)@bs\.com\.ar/ REJECT
+/^from:.*marin_dus@hongkong\.com/ REJECT
+/^from:.*sona_johns@yahoo\.ca/ REJECT
+/^from:.*catherine@promailingdirect\.com/ REJECT
+/^(return-path:|from:).*karina@boxfrog\.com/ REJECT
+/^from:.*Arthur A\. Alochi.*btmk\d{1,4}@\d{1,4}mail\.org/ REJECT
+/lauracascallana@delfin\.retecal\.es/ REJECT
+/Marketing Manager.*Emailcenter@cmmail\.com/ REJECT
+/Dr\. Carter.*ImproveEducation@address\.com/ REJECT
+/stella.*(zuheqv@aol|djbwhs@hotmail)\.com/ REJECT
+/John Parslow.*pianoman@emailgaul\.com/ REJECT
+#/ikiosko\.com.*info@ifactoria\.com/ REJECT
+/lynn_dilingham@click2asia\.com/ REJECT
+/hormiga@telesurf\.com\.py/ REJECT
+/Heather@cam\.com/ REJECT
+/noreply@(aqui\.com|buzios-total\.com|1infoworks\.com)/ REJECT
+/mjnovedades@dearriba\.com/ REJECT
+/ofertodo@freeshop\.net/ REJECT
+/^(To: recipient-usa|Reply-to: no_responder_aqui|From:.{1,20}market)@reypastor\.hispalinux\.es/ REJECT
+/vince@laposte\.net/ REJECT
+/(opt_in|abbah\d{2,3})@(yahoo|post)\.com/ REJECT
+/notificacion@valuedbrands\.com/ REJECT
+/(pedroangola2002|mar6555oats)@netscape\.net/ REJECT
+/promotions@ebay\.com/ REJECT
+/china_lutong@163\.com/ REJECT
+/b35@newmail\.net/ REJECT
+/marina_dragovich@OutFlying\.net/ REJECT
+/bonplans21@publicist\.com/ REJECT
+/info@masternetonline\.net/ REJECT
+/hdtrade@dreamwiz\.com/ REJECT
+/maildrlope@consultant\.com/ REJECT
+/grantsmoney\d+@Flashmail\.com/ REJECT
+/info@duplicd\.es/ REJECT
+/jennifer_klimek@boardermail\.com/ REJECT
+/kim_clark@c4\.com/ REJECT
+/info@scaninvent\.com/ REJECT
+/webmaster@bomberos-seguridad\.com/ REJECT
+/frisson@roche\.com/ REJECT
+/claraweb@wanadoo\.fr/ REJECT
+/mail\.de\.toni@iespana\.es/ REJECT
+/redfoxla@redfoxsystems\.com/ REJECT
+/minuevonegocio@nolimitincome\.com/ REJECT
+/Norton\d{4}@email-it\.zzn\.com/ REJECT
+/pedidos@psycanics\.org/ REJECT
+/remover@estudiobustillo\.com/ REJECT
+/marketing@charchazo\.com/ REJECT
+/webmaster@chirona\.com/ REJECT
+/makemoneyathome@btamail\.net\.cn/ REJECT
+/grabaciones_mj@dearriba\.com/ REJECT
+/bob666\.iwreq@yahoo\.ca/ REJECT
+/Steve\.Binyon@kirtland\.af\.mil/ REJECT
+/gatosons@public\.wh\.hb\.cn/ REJECT
+/top@thetop50x\.com/ REJECT
+/eugenia_popescu@clujnapoca\.ro/ REJECT
+/LA CLAVE DEL EXITO/i REJECT
+/rejected@nomago\.com/ REJECT
+/bobgrenoble@execs\.com/ REJECT
+/jeremieco@rome\.com/ REJECT
+/mikebelo@cheerful\.com/ REJECT
+/info@bizarnet\.ro/ REJECT
+/nomail@test\.com/ REJECT
+/myenvironment@interlog\.com/ REJECT
+/dougw_remove@excite\.com/ REJECT
+/admin@psycanics\.org/ REJECT
+/postal@hispateens\.com/ REJECT
+/yrn@directnotify\.com/ REJECT
+/sunita_lee@desertmail\.com/ REJECT
+/info@submit\.com/ REJECT
+/info@pccasting\.com/ REJECT
+/Kristie\d+@eltkontor\.de/ REJECT
+/lesbonsplans(\d+)?@publicist\.com/ REJECT
+/boletin-neyp@domeus\.es/ REJECT
+/vaillant@recrutonline\.com/ REJECT
+/sales@outsrc-em\.com/ REJECT
+/clientes@hispanet-technology.com/ REJECT
+/promo@sonimag.net/ REJECT
+/warezcds\d+@wowmail\.com/ REJECT
+/reply\.expleo@affinter\.com/ REJECT
+/administracion@sevillacomercio\.com/ REJECT
+/info@photodigital-printservice\.com/ REJECT
+/marklewis@froglover\.net/ REJECT
+/software@hispanet-technology\.com/ REJECT
+/(full|promo(-admin)?)@objets\.net/ REJECT
+/newsletter@waterway\.org/ REJECT
+/czcsvi@home\.de/ REJECT
+/mail1@usgreencardoffice\.dk/ REJECT
+/infoemailing@netcabo\.pt/ REJECT
+/info@pataletas\.org/ REJECT
+/Lanelle\d+@channelnewsasia\.com/ REJECT
+/buyer@sparepartssearch\.com/ REJECT
+/julieta_prandy@hotmail\.es/ REJECT
+/josemartin@mindcorp\.net/ REJECT
+/miscontactos@yahoogroups\.com/ REJECT
+/faxinsina@vip\.sina\.com/ REJECT
+/free\.shipping\.[[:alnum:]]@btinternet\.com/ REJECT
+/(cedros-boden|dcjc90210|uncleleogetz)@usa\.net/ REJECT
+/test@test11\.com/ REJECT
+/(teddybearjrpie|polishedbrass)@t-online\.com/ REJECT
+/richardshigh@rocketmail\.com/ REJECT
+/(mailing|informacao)@lojadotelemovel\.com/ REJECT
+/vediovis@vediovis\.fr/ REJECT
+/villahermosa@rebackee\.com/ REJECT
+/cathy@todooferta\.com/ REJECT
+/systemb1@comunicate\.info/ REJECT
+/elist@seapromarine\.com/ REJECT
+/info@almanaques\.net/ REJECT
+/laura@ecobrocker\.com/ REJECT
+/(listas|solojuegos)@notici[ae]s\.com/ REJECT
+/news@bluecom\.com/ REJECT
+/JohnMiner@JohnMiner\.com/ REJECT
+/mobutu\d{1,4}@flashmail\.com/ REJECT
+/info@foro-helpdesk\.com/ REJECT
+/brstones@brstones\.com/ REJECT
+/cgarnett@breton\.it/ REJECT
+/@compuocasion\.com/ REJECT
+/@nauticconsulting\.com/ REJECT
+#/@canaco\.net/ REJECT
+/@importec\.net/ REJECT
+/@ventasdirectas\.net/ REJECT
+/consumer\.protection@warwick\.net/ REJECT
+/traveloffers@getawaypromotions\.net/ REJECT
+/(directfromusa|ismaliamohammed\d{1,4}|jackm56)@mail\.com/ REJECT
+/Marketingwap@millenniumdata\.com/ REJECT
+/info@italyminutes\.it/ REJECT
+/bases@emailmarketingdbase\.com/ REJECT
+/join@usa\.com/ REJECT
+/lisa@univie\.ac\.at/ REJECT
+/Magdalen\d+@iq-net\.co\.uk/ REJECT
+/(amanda|sandy)@welcomeaway\.com/ REJECT
+/From: Sandra Delgado <sandy @.{1,12}\.dk="">/ REJECT
+/From: Dating.*Scene/	REJECT
+/harry@yours\.com/ REJECT
+/devueltos@terra\.com\.co/ REJECT
+/lisa@ifriends\.com/ REJECT
+/(marmitek|barr_mikekumani|hispa21)@email\.com/ REJECT
+/post@topmodels\.no/ REJECT
+/kathy\.phillips@mail\.internetseer\.com/ REJECT
+/(VentasPorTelefonou?|AnaRodriguezT)@tutopia\.com/ REJECT
+/njones@glotel\.com/ REJECT
+/academic@unedal\.com/ REJECT
+/peaceshirt@email\.it/ REJECT
+/dkpub@4thereal\.com/ REJECT
+/removemail@popmail\.com/ REJECT
+/sales@copydvds\.com/ REJECT
+/profile@bitsmart\.com/ REJECT
+/apopovici@keysys\.ro/ REJECT
+/info@webcompany\.net\.co/ REJECT
+/eads@mercadeodirigido\.com/ REJECT
+/fotos@photodigital-printservice\.com/ REJECT
+/okraseed@juno\.com/ REJECT
+/telefono@mas-barato\.com/ REJECT
+/Success@Microsoft\.com/ REJECT
+/wwerox111@24.yahooo.con.tw/ REJECT
+/Stephen@live-your-dreams\.us/ REJECT
+/new_soft@consultant\.com/ REJECT
+/joma21@dreamsweb\.com\.mx/ REJECT
+/mayeutica@chile\.com/ REJECT
+/sales-plus.*@gmx\.net/ REJECT
+/bigjman\d\d@port5\.com/ REJECT
+/financialfreedom@mydebtsite\.com/ REJECT
+/The-Web-Pros.*@mindspring\.com/ REJECT
+/franmarin@multidisc\.net/ REJECT
+/respond@nextchancesystems\.com/ REJECT
+/brosalu@infonegocio\.com/ REJECT
+/bmf@doctor\.com/ REJECT
+/wantmymusic@customoffers\.com/ REJECT
+/cadastro@anbio\.org\.br/ REJECT
+/hottymaria@gosympatico\.ca/ REJECT
+/expertotravel@vtr\.net/ REJECT
+/notificacion@informenbreve\.com/ REJECT
+/CompaqNotebookGiveaway@/ REJECT
+/formacion@serinter\.com/ REJECT
+/sab@sealperu\.com/ REJECT
+/ole@mundivia\.es/ REJECT
+/mailing@nethink\.net/ REJECT
+/motorcycle@qinghecq\.com/ REJECT
+/bill@sparkinteract\.com/ REJECT
+/NFLPicks@NFLPredicitions\.no-ip\.com/ REJECT
+/(s1|pedidos)@mitiendaencasa\.com/ REJECT
+/info@only10\.com/ REJECT
+/delete@nr1call\.com/ REJECT
+/AffiliateOffers@Amazon\.Com/ REJECT
+/(info|bmandell)@searchboss\.net/ REJECT
+/sandy@kontinens\.dk/ REJECT
+/(gestion\.cursos@fundacion|infontedu@edu)\.uned\.es/ REJECT
+/caldwell@national-directories\.com/ REJECT
+/visualdg@visualdg\.net/ REJECT
+/pitaya@ms29\.hinet\.net/ REJECT
+/larita@queenargentina\.zzn\.com/ REJECT
+/pymes@pymes-domicananas\.com/ REJECT
+/newsletters@the-financial-news\.com/ REJECT
+/Nittaya@cam2asia\.com/ REJECT
+/info@alta-en-buscadores\.biz/ REJECT
+/eads@mercadeounoauno\.com/ REJECT
+/info@anettele\.com/ REJECT
+/makethestart@hotpop\.com/ REJECT
+/ventas@dreammnet\.com/ REJECT
+/insider@quinlan\.colo\.netbauds\.net/ REJECT
+/devueltos@lapromocion.com/ REJECT
+/info@elmensajeromillonario.com/ REJECT
+/Meridiano_97@MexicoSub\.com/ REJECT
+/(paul|sender)@domainbasket\.com/ REJECT
+/promotion@focusolutions\.com/ REJECT
+/envio@aa50\.com/ REJECT
+/jesse@e-marketbiz\.com/ REJECT
+/epost@360cn\.com/ REJECT
+/notificacion@sistemasred\.net/ REJECT
+/info@easyincome\.com/ REJECT
+/Ncorporation@mindupmerchants\.com/ REJECT
+/prodimex1@prodigy\.net\.mx/ REJECT
+/uytoy\d+@bigpond\.com/ REJECT
+/jchoate@newyork\.com/ REJECT
+/supercacho@techie\.com/ REJECT
+/herald@ns1\.nabitel\.com/ REJECT
+/kastelic\.majda@siol\.net/ REJECT
+/team_2002@inet\.com/ REJECT
+/Marketin@marketing\.com/ REJECT
+/gaben\.yang@msa\.hinet\.net/ REJECT
+/digitalvideo@lbdata\.net/ REJECT
+/DoNotReply@notthere\.com/ REJECT
+/TISANASCENTRAL@BRTURBO\.COM/ REJECT
+/adominios@publinames\.com/ REJECT
+/manel@subprof\.com/ REJECT
+/roman\.fernandez@1001www\.com/ REJECT
+/solutions@beyondigital\.com/ REJECT
+/info@promonetmail\.com/ REJECT
+/Kaitlin\d{1,8}@pokemon-spiele\.de/ REJECT
+/freedom4@hotpop\.com/ REJECT
+/discover@techissues\.com/ REJECT
+/allisonrga@akoe\.escape\.de/ REJECT
+/info@proyect-one\.com/ REJECT
+/algerondbd@abm\.uz/ REJECT
+/crm-eae@gruposierrablanca\.com/ REJECT
+/webmaster_luis@peruvian\.bd\.net/ REJECT
+/rick1@maxgroup\.com/ REJECT
+/bigjman28@port5\.com/ REJECT
+/cuarto@netexplora\.com/ REJECT
+/C\.Service01@antro\.uu\.se/ REJECT
+/esther@ozotoner\.com/ REJECT
+/info@optinsale\.com/ REJECT
+/kenbb@consultant\.com/ REJECT
+/con.?firma.?ciones@fullcero\.com/ REJECT
+/tdinc@caramail\.com/ REJECT
+/montegoonh@aitken\.demon\.co\.uk/ REJECT
+/reply-\d{1,10}-\d{1,5}@mailtonic\.net/ REJECT
+/b2b@alcorce\.com/ REJECT
+/noes@mail\.com/ REJECT
+/mvci_reservas@publimail\.com/ REJECT
+/manuales@manual-sexual\.com/ REJECT
+/info@softrego\.com/ REJECT
+/grupoplus@grupoplus\.com/ REJECT
+/publicid_master@dearriba\.com/ REJECT
+/blackdiskusa@ciaoweb\.it/ REJECT
+/sender@wizsystems\.com/ REJECT
+/kllvf@mexico\.com/ REJECT
+/brandyng@consultant\.com/ REJECT
+/ist@mercadeopanama\.com/ REJECT
+/zine@activist\.ca/ REJECT
+/OPORTUNIDADES@AHORRO\.ES/ REJECT
+/jonas\d{1,4}@yahoo\.co\.jp/ REJECT
+/kim@virgin\.net/ REJECT
+/hdtrade@joins\.com/ REJECT
+/orlando@mundosweb\.com/ REJECT
+/bsc@gerencia\.es/ REJECT
+/adiaz\.formacion@cea\.es/ REJECT
+/suidioma@vtr\.net/ REJECT
+/sales@virtual-biz\.net/ REJECT
+/csszcodx@public\.wh\.hb\.cn/ REJECT
+/goodmansys@freeuk\.com/ REJECT
+/jonjerman@access4cheap\.com/ REJECT
+/Sales2003@88998\.com/ REJECT
+/Matchmaker@someonelikesyou\.com/ REJECT
+/administrador@elsuperweb\.com/ REJECT
+/minuevonegocio@minuevonegocio\.com/ REJECT
+/medicinaintegral@vtr\.net/ REJECT
+/revistaemcd@globo\.com/ REJECT
+/sarah.{1,10}@loveable\.com/ REJECT
+/katie.{1,10}@adexec\.com/ REJECT
+/promotions@promo\.sonicfoundry\.com/ REJECT
+/workfromhome@spray\.de/ REJECT
+/detey12@teter\.com/ REJECT
+/administrador@tu-punto-digital\.com/ REJECT
+/CelebridadesGratis@CelebridadesGratis/ REJECT
+/gale1@catcha\.com/ REJECT
+/loveme@foreveryou\.co\.uk/ REJECT
+/reply.{1,20}@balrog\.bluerockdove\.com/ REJECT
+/kuperman@gte\.net/ REJECT
+/opportunities_for_the_future@btopenworld\.com/ REJECT
+/infno@desultra\.com/ REJECT
+/boletin@casadellibro\.com/ REJECT
+/hdtrade@intizen\.com/ REJECT
+/printpal@lotto-mail\.com/ REJECT
+/editor-\d+@monterey\.triviapop.com/ REJECT
+/opinions@discountcertificates\.com/ REJECT
+/mailcenter@virtumundo\.com/ REJECT
+/freestuff4us@lists\.mailogen.com/ REJECT
+/remove@usdegrees\.com/ REJECT
+/qe@qualityemail\.com/ REJECT
+/info-pabtoi@your-info\.tv/ REJECT
+/web@usdegrees\.com/ REJECT
+/ptd@primetimedirect\.net/ REJECT
+/sparklingoffers@kongmail\.com/ REJECT
+/updates646@smilepop\.com/ REJECT
+/handspring@ic-agency\.com/ REJECT
+/handspring_europe@ic-agency\.com/ REJECT
+/Cheyennemak@webinfo\.fi/ REJECT
+/lindym7@aldurs\.nu/ REJECT
+/con-fir-ma-tion@terra\.com\.br/ REJECT
+/hairssafari2@comb\.es/ REJECT
+/e4luck@lists\.opt4email\.com/ REJECT
+/woiparques@telcel\.net\.ve/ REJECT
+/c4us@lists\.mailogen\.com/ REJECT
+/podeshacerlo\d@uol\.com\.ar/ REJECT
+/nvio@hiquality\.com\.br/ REJECT
+/vqasc@aol\.com/ REJECT
+/mail@detodotv\.cl/ REJECT
+/andrea\.powell@nwruk\.com/ REJECT
+/alice@agrar\.hu-berlin\.de/ REJECT
+/alice@wohland\.com/ REJECT
+/@Super-Bargains\.net/ REJECT
+/Jonieuhd@mailme\.dk/ REJECT
+/unsubscribe@artmarket\.com/ REJECT
+/@SmartDiscounts\.net/ REJECT
+/@SaleAlerts\.com/ REJECT
+/publi@zzn\.com/ REJECT
+/big@boss\.com/ REJECT
+/@encuentra\.com/ REJECT
+/Nasdaq_Newsdesk.{1,5}@/ REJECT
+/publicidad@reparaonline\.com/ REJECT
+/sales@priceahomeonline\.com/ REJECT
+/pwiesse@americas-learn\.com/ REJECT
+/somente_responda_pelo_link@por_favor\.com/ REJECT
+/free4@lists\.servitall.com/ REJECT
+/patrick@writemeback\.com/ REJECT
+/stmarksbooks@mindspring\.com/ REJECT
+/murcia2002@segg\.es/ REJECT
+/no_hay_nadie@alphawing\.co\.jp/ REJECT
+/sarahhenndrich@caramail\.com/ REJECT
+/wfh\.info@sapo\.pt/ REJECT
+/tojorlando@ya\.com/ REJECT
+/seleccionado@pumuki\.hispalinux\.es/ REJECT
+/remitente@ficticio\.fake/ REJECT
+/DVD@MyPremiumOffers\.com/ REJECT
+/iade@org\.nolucrativa/ REJECT
+/heather.{1,6}@writeme\.com/ REJECT
+/chan@deskway\.com/ REJECT
+/no_hay@nadie\.info/ REJECT
+/nao_de_reply@nao_responda\.com/ REJECT
+/serviceabc@web\.de/ REJECT
+/notificacion@tupais\.com/ REJECT
+/staff@afsmail\.com/ REJECT
+/estoesporunabuenacausa@porfavornosedisgusten\.com/ REJECT
+/recomendado.{1,20}@icime\.com/ REJECT
+/remover@mg\.zzn\.com/ REJECT
+/newsltr@miltnews\.com/ REJECT
+/ernestinamclaide@yahoo\.com/ REJECT
+/ventas@fotosdigitales/ REJECT
+/remove@sealandprotect\.com/ REJECT
+/basesserver@bddatos\.com/ REJECT
+/postoffice@fertig-consulting\.de/ REJECT
+/juan@tikalideas\.com/ REJECT
+/catherine@todooferta\.com/ REJECT
+/espias@gmx\.net/ REJECT
+/mercadeo@permissionmarketing\.org/ REJECT
+/subastaspc@subastaspc\.com/ REJECT
+/greatoffers@wowoffers\.com/ REJECT
+/prizeoffers@lists\.opt4email\.com/ REJECT
+/staff@yoppit\.com/ REJECT
+/usa@usgreencardoffice\.com/ REJECT
+/remitent@vtr\.net/ REJECT
+/playasbrasil@uyuyuy\.com/ REJECT
+/mercadeo\d@samerica\.com/ REJECT
+/ayuda@selftrade\.com/ REJECT
+/freddie\d{1,3}@primposta\.com/ REJECT
+/jenny@theportal\.net/ REJECT
+/admin@grupoplus\.com/ REJECT
+/marianna@aim\.it/ REJECT
+/return@mandrake\.org/ REJECT
+/return@mandrakesoft\.com/ REJECT
+/sender@coolstats\.com/ REJECT
+/info@corporate-performance\.org/ REJECT
+/tomembers@premiumsmail\.net/ REJECT
+/sales@innovativegroup\.de/ REJECT
+/asdda@asda\.cl/ REJECT
+/bodycare@mbh\.cl/ REJECT
+/adiostabaco@iespana\.es/ REJECT
+/noresponder@sintesis\.cl/ REJECT
+/adsistem@fibertel\.com\.ar/ REJECT
+/BCNSUD@telefonica\.net/ REJECT
+/VCD@vcd\.com/ REJECT
+/human_rights@hotmail\.com/ REJECT
+/flaviofarid@globo\.com/ REJECT
+/merco9@ig\.com\.br/ REJECT
+/mardom@psycanics\.org/ REJECT
+/ianmorgan@libero\.it/ REJECT
+/ddramirez@arnet\.com\.ar/ REJECT
+/Collectibles@Top-Brands\.net/ REJECT
+/joe@laptoplist\.com/ REJECT
+/news@lacompu\.net/ REJECT
+/disney@japan\.com/ REJECT
+/csmith@somfin\.com/ REJECT
+/Services@ywzc\.net/ REJECT
+/root@oblivion\.shacknet\.nu/ REJECT
+/m\.peterson@videotron\.ca/ REJECT
+/smart@sinfo\.net/ REJECT
+/info@atlasmag\.com/ REJECT
+/pcprotecter@seznam\.cz/ REJECT
+/ingenieria_2003@hotmail\.com/ REJECT
+/servicio_cliente@grupobbva\.com/ REJECT
+/support@microsoft\.com/ REJECT
+/ekarepipo@terra\.es/ REJECT
+/vacaciones@disney\.com/ REJECT
+/bbahenry@cox\.net/ REJECT
+/hoyenelmundo@hoyenelmundo\.com/ REJECT
+/cd-ingenieria@iespana\.es/ REJECT
+/nguyen@hispalinux\.es/ REJECT
+/sitesales@winzip\.com/ REJECT
+/alguien@microsoft\.com/ REJECT
+/mseventos@microsoft\.com\.ve/ REJECT
+/mssupport@gbrands\.com/ REJECT
+/soporte@webenlinea\.com/ REJECT
+/compras_novedades_compras@boletines\.terra\.es/ REJECT
+/support@computersandmusic\.com/ REJECT
+/sales@laridian\.com/ REJECT
+/sales@soundtrek\.com/ REJECT
+/wmcreq@microsoft\.com/ REJECT
+/austria@msdirectservices\.com/ REJECT
+/postmaster@eresmas\.es/ REJECT Por favor, vea los motivos en http://www.hispalinux.es/~data/postmaster-arroba-eresmas-punto-es.html
+/comunicadores@galeriamarketing\.com/ REJECT
+/elefantino@mail\.gte\.it/ REJECT
+/AVAdmin@xnet\.ro/ REJECT Please, check http://www.hispalinux.es/~data/virus.html
+/postmaster@mixmail\.com/ REJECT Please, check http://www.hispalinux.es/~data/postmaster-arroba-mixmail-punto-com.html
+/xmailbot@puremail\.com/ REJECT Please, check http://www.hispalinux.es/~data/virus.html
+/postmaster@wanadoo\.es/ REJECT Please, check http://www.hispalinux.es/~data/postmaster-arroba-wanadoo-punto-es.html
+/cristina@periodicodiario\.com/ REJECT
+/salomekokou@libero\.it/ REJECT
+/emailservice@puremail\.com/ REJECT Please, check http://www.hispalinux.es/~data/virus.html
+/postmaster1@coopelchaja\.com\.ar/ REJECT Please, check http://www.hispalinux.es/~data/virus.html
+/comite@larocque1310ap\.can\.br/ REJECT
+/(tsotc@mail2000|aurora@ms85\.url|(the-rock\.\d{4}|jet\d{4}_\d+)@yahoo|servi[sc]e@aloha|real@h8h|lenfred_lin@domex)\.com\.tw/ REJECT
+/mx1\.arnet\.com\.ar/ REJECT Your domain is sending spam. Contact to be removed.
+/radix\.objets\.net/ REJECT
+/^Subject:.*Lowest.*Priced.*Inkjet.*/	REJECT
+/^Subject: .*Save.*Inkjet.*Cartridges.*/	REJECT
+/^X-Empresa: www\.solucionesdemercadeo\.com/ REJECT
+/^Received: from.*217\.125\.79\.217/ REJECT
+/^Received: from.*80\.24\.233\.189/ REJECT
+/^Received: from.*80\.37\.139\.4/ REJECT
+/^Subject: .*free cash.*/	REJECT
+/^Subject: .*Stop  S\+P\+A\+M.*/	REJECT
+/^Subject: Any.*under.*\$.*/i	REJECT
+/^Subject: Business \&amp; Marketing Positions/ REJECT
+/^Subject: This [rR]eally [wW]ork/ REJECT
+/^Subject: Menu Ejecutivo/ REJECT
+/^Subject: Warsteiner/ REJECT
+/^Subject: La Mosca/ REJECT
+/^Subject: Le interesa\/.*@(listas\.|)hispalinux\.es/ REJECT
+/^Subject: Casas y Fincas Rusticas Rustival/ REJECT
+/^Subject: Estás a 2 clicks de una fortuna/ REJECT
+/^Subject: Proteger La Naturaleza/ REJECT
+/^Subject: Ofertas Herreria Forjada/ REJECT
+/^Subject: CARTUCHOS PARA IMPRESSORA/ REJECT
+/^Subject: New Products :  Toys -- My doggie Robot/ REJECT
+/^Subject: Oil\/Electricity\/Natural Gas Can Make You Wealthy/ REJECT
+/^Subject: Como vender tu producto o servicio en Internet/ REJECT
+/^Subject: ACTIVADORES BIOLÓGICOS PARA ELIMINAR OLORES\. ¡PUBLICIDAD!/ REJECT
+/^Subject: CN\'s Insider Info/ REJECT
+/^Subject: WHOLESALE CELLULAR ACCESSORIES BOOSTER ANTENNAS 4\.95!!/ REJECT
+/^Subject: Having trouble losing weight\?/ REJECT
+/^Subject: lose it/	REJECT
+/^Subject: lose \\\/\\\/eight/	REJECT
+/^Subject: Have a humour Lady Day/ REJECT
+/^Subject: little trick for clear cell phone calls/ REJECT
+/^Subject: SENINARIO MOTIVACIÓN-COACHING FECHAS/ REJECT
+/^Subject: El Poder del Email Publicity!!/ REJECT
+/^Subject: Make you look and feel 20 YEARS YOUNGER!/ REJECT
+/^Subject: Make some money\?/ REJECT
+/^Subject: Secure your future today/ REJECT
+/^Subject: Preregister your \.eu domain now!/ REJECT
+/^Subject: Register to win your Dream Vacation/ REJECT
+/^Subject: DESATE TODO SU PODER ILIMITADO/ REJECT
+/^Subject: COMO MEJORAR SU VIDA/ REJECT
+/^Subject: Start on your summer look now/ REJECT
+/^Subject: Doctor-Approved Pill/ REJECT
+/^Subject: LA INGENIERIA DEL EXITO PARA/ REJECT
+/^Subject: LA CLAVE DEL EXITO/ REJECT
+/^Subject: (Demostrable: |)Multipli(car|que) por \d+ las ventas en su (página |)web/ REJECT
+/^Subject: liked your web site-http:\/\// REJECT
+/^Subject: MOTIVACION PARA PYMES/ REJECT
+/^Subject: USTED DECIDE SU FUTURO:ATREVASE A TRIUNFAR/ REJECT
+/^Subject: Twisted enough. Wanna see the whole picture\?\s*Explore\./ REJECT
+/^Subject: BOOST YOUR CELL PHONE RECEPTION-ONLY \d{1}\.\d+!!!/ REJECT
+/^Subject: INVESTMENT(S FOR YOU|\/PARTNERSHIP)/ REJECT
+/^Subject: GET THE BEST INTERNET EXPOSURE--MASS E-MAIL,\s+GET [0-9]+ FREE MILLION/ REJECT
+/^Subject: Cellphone Shipping\/Billing Instructions Required/ REJECT
+/^Subject: Lock in a Lower House Payment Now/ REJECT
+/^Subject: Make you look and feel [0-9]{2} YEARS YOUNGER![0-9]{2,}/ REJECT
+/^Subject: Seen On Tv Plan Lets You tap Into Explosive Internet Growth/ REJECT
+/^Subject: Never pay for porn again !/ REJECT
+/^Subject: NO PIERDA LA GRAN OPORTUNIDAD DE SU VIDA/ REJECT
+/^Subject: U\.S\. Bank Accounts for All Foreigners!/ REJECT
+/^Subject: HGH: Treatments to reverse aging, enhance physical and mental performance, and strengthen the immune system/ REJECT
+/^Subject: 100% CHECK RECOVERY SERVICE/ REJECT
+/^Subject: When will your website be finished\?/ REJECT
+/^Subject: ADV:Harvest lots of Target Email address quickly/ REJECT
+/^Subject: A\s+powful tool/ REJECT
+/^Subject: FREE Internet Security Guide/ REJECT
+/^Subject: I have visited [[:alnum:]]\.hispalinux\.es and noticed that/ REJECT
+/^Subject: (new extensions|domain names) now only \$\d+\.\d+/ REJECT
+/^Subject: request for urgent biz assistance\/relationship/ REJECT
+/^Subject: exploited teens make wildest videos/ REJECT
+/^Subject: Here are the contracts you need to sign/ REJECT
+/^Subject: A WEBSITE YOU CAN\'T PASS UP/ REJECT
+/^Subject: An Invitation from Lisa@freightmart\.com/ REJECT
+/^Subject: I finnally found you after all this time/ REJECT
+/^Subject: Gustavo  busca peq|ueños inversores\./ REJECT
+/^Subject: Lombricultura - Una salida laboral\./ REJECT
+/^Subject: Own your home in less time and less money/ REJECT
+/^Subject: Makes your penis bigger in \d+ weeks/ REJECT
+/^Subject: COMPRE LA MEJOR BASE DE DATOS DE EMAILS/ REJECT
+/^Subject: Productos de Alta Decoraci(o|ó)n y Revestimientos/ REJECT
+/^Subject: Prescription Weight-Loss and Viagra/ REJECT
+/^Subject: Uruguay rompe relaciones con Cuba comunista/ REJECT
+/^Subject: New Free Service Takes the Headache out of your Mortgage/ REJECT
+/^Subject: Tango Argentino: Prensa Especializada proclama a/ REJECT
+/^Subject: A persepcive on investing in the Yen market/ REJECT
+/^Subject: Add Inches to your penis TODAY/ REJECT
+/^Subject: Interest Rates are Dropping(.*)How do you Capitalize/ REJECT
+/^Subject: Record Low MORTGAGE rates! \*Act Fast\*/ REJECT
+/^Subject: Introducing MultiSensit SDK/ REJECT
+/^Subject: ATTENTION! Well-Paid Job in the Internet!/ REJECT
+/^Subject: price discount for new tld extensions/ REJECT
+/^Subject: price reduction for \.BIZ and \.INFO/ REJECT
+/^Subject: Choosing the best investment for you/ REJECT
+/^Subject: PSICO[- ]TRAINING exito para vd\./ REJECT
+/^Subject: absolutely fabulous.*\d{1,3},\d{1,2}\*\d{2,4}/ REJECT
+/^Subject: GRATIS! Puro \"Porno XXX\" del Mejor GRATIS!/ REJECT
+/^Subject: as a Good Person - Conduct Education in the 21st Century/ REJECT
+#/^Subject: VIDEOCONFERENCIA INTERNACIONAL/ REJECT
+/^Subject: BE A MAGNET THAT ONLY ATTRACTS WOMEN/ REJECT
+/^Subject:.*NoVeDaDeS - Encliclopedias \&amp; Educativos - Todo lo que siempre quiso tener\./ REJECT
+/^Subject:.*PERFECCIONE SU INGLES - VISAS U\.S\.A\. - \$/ REJECT
+/^Subject: Restructure your loans for financial stability/ REJECT
+/^Subject: Obtenga ya su Biblioteca Digital/ REJECT
+/^Subject:.{,15}(Get)? Your (USA|American) Green Card/ REJECT
+/^Subject: Hola amor\. Te estoy esperando!!!/ REJECT
+/^Subject: suite a notre conversation/ REJECT
+/^Subject: EARN \$ \d{2,3},\d{3}\+\/YEAR SENDING E- MAIL !/ REJECT
+/^Subject:.*Gold Mine For Sale/ REJECT
+/^Subject: 5 CDS DE HACKERS EN ESPAÑOL/ REJECT
+/^Subject:.*domain registration savings/ REJECT
+/^Subject:.*Get todays lowest MORTGAGE RATES now/ REJECT
+/^Subject: Ya puede competir con (e|é)xito en Internet/ REJECT
+/^Subject: Repair your Credit Now/ REJECT
+/^Subject: .*perfect credit.*/	REJECT
+/^Subject: Ingénierie sociale contre les exclusions/ REJECT
+/^Subject: Como migrar su negocio a Internet con éxito/ REJECT
+/^Subject: vous avez 1 message/ REJECT
+/^Subject: Conviertete en miembro fundador de Pachete\.com/ REJECT
+/^Subject: ULTIMOINTELIGENCIA EMOCIONAL/ REJECT
+/^Subject: Reclame su viaje a Disney/ REJECT
+/^Subject: SISTEMA DE MICROPAGO VIA WEB\. LE INTERESA/ REJECT
+/^Subject: free x sites! los mejores sitios X!/ REJECT
+/^Subject: NOW YOU CAN RUN ASSET &amp; BACKGROUND CHECKS!!/ REJECT
+/^Subject: Teyf Wellness Center/ REJECT
+/^Subject: Honest Family Oriented Home based business with residual income on the net/ REJECT
+/^Subject:.*Colabora con Save the Children/ REJECT
+/^Subject: Por fin te llego la hora/ REJECT
+/^Subject: El sitio más completo de Inglés/ REJECT
+/^Subject: Ya tienes un sistema de hacer dinero/ REJECT
+/^Subject: Clean your credit right from your computer/ REJECT
+/^Subject: GANE MAS DE US$\d{2,3}\.\d{2} AL MES CON SU PC/ REJECT
+/^Subject: ¡LAS MEJORES TARIFAS TELEFONICAS!/ REJECT
+/^Subject: QUOTE FOR: .* PASSWORD:/i REJECT
+/^Subject: Tienes que ver esto!/ REJECT
+/^Subject: Te tengo muy buenas noticias!/ REJECT
+/^Subject: Attention Ebay Users!/ REJECT
+/^Subject: YOU CAN BE OF HELP/ REJECT
+/^Subject: Software para agencias de casting/ REJECT
+/^Subject:.*DRUG TESTING - DO YOU KNOW YOUR RIGHTS/ REJECT
+/^Subject: Special EURO Investor update with FREE EURO/ REJECT
+/^Subject: Financial strategies/ REJECT
+/^Subject: For safe drive - Personal Alcohol Detector/ REJECT
+/^Subject: (toner cartridges|affordable inkjet cartridges and laser toners)/ REJECT
+/^Subject: Información de interés  Público/ REJECT
+/^Subject: La lettre des bons plans No/ REJECT
+/^Subject: NE&amp;P - Nro\. \d+ - Newsletter \"Novedades Empresarias y Profesionales\"/ REJECT
+/^Subject: La LOTTO de la Florida/ REJECT
+/^Subject:\s+Una\s+persona\s+te\s+quiere\s+secretamente$/ REJECT
+/^Subject: Hola, soy Pamela !!!/ REJECT
+/^Subject: Real ZOO web site, welcome!/ REJECT
+/^Subject:.{1,10}If only I knew about this before college!/ REJECT
+/^Subject:.{1,10}constitucional, \"pensamiento doble\" orwelliano y caso Sandra/ REJECT
+/^Subject: Your Favorite Celebs Naked &amp; Uncensored!/ REJECT
+/^Subject: New Product Announcement/ REJECT
+/^Subject: i made $\d+,\d+ in two months/ REJECT
+/^Subject: Noticias PUNTOG\.NET/ REJECT
+/^Subject: APRENDA\s{1,4}O\s{1,4}MEJORE\s{1,4}SUS\s{1,4}IDIOMAS/ REJECT
+/^Subject: SevillaComercio\.com/ REJECT
+/^Subject: inkjet cartridges/ REJECT
+/^Subject:.{1,10}revelado de fotografias digitales/ REJECT
+/^Subject: Re: sobre la reparacion del MONITOR/ REJECT
+/^Subject: you are paying too much for life insurance/ REJECT
+/^Subject: French Barging Price Break/ REJECT
+/^Subject: I like sex - girl, 19 years, blonde/ REJECT
+/^Subject: ((The\s?)?USA|Apply for the) Green Card Lottery (Program|Today)/ REJECT
+/^Subject: Apply for a Green Card today/ REJECT
+/^Subject:.{1,10}Pase unas vacaciones de ensueño/ REJECT
+/^Subject: Here is that link\. [[:alnum:]]+/ REJECT
+/^Subject: Port Aventura te espera/ REJECT
+/^Subject: Cartuchos compatibles/ REJECT
+/^Subject: desole mais c'est impossible/ REJECT
+/^Subject: FREE EURO REPORT AND EURO/ REJECT
+/^Subject: The Garden of Eden/ REJECT
+/^Subject: Votaste la Chicafashion\.com\.ar de Hoy/ REJECT
+/^Subject: Viagra Delivered/ REJECT
+/^Subject: URGENT\! We need to place an order/ REJECT
+/^Subject: Informática al MEJOR PRECIO/ REJECT
+/^Subject: Buy your gift here and save up to 85%/ REJECT
+/^Subject: Información de Ventas - Información útil/ REJECT
+/^Subject: Vend(a|er) en Internet en 10 horas/ REJECT
+/^Subject: Cree en 10 horas su propio negocio en Internet/ REJECT
+/^Subject: Porque pagas tan caro por usar internet\?\?\?\?/ REJECT
+/^Subject: Cree su infoproduct en 10 horas/ REJECT
+/^Subject: Novidades de Verao/ REJECT
+/^Subject: Vediovis Productions, votre meilleur allié pour l'Internet/ REJECT
+/^Subject: Boas Férias/ REJECT
+/^Subject: TALLER DE RESIDENCIA DE OBRAS PÚBLICAS/ REJECT
+/^Subject: My family needs help/ REJECT
+/^Subject: LONG DISTANCE\/ TOLL FREE SERVICE NEEDED FROM CANADA TO ENGLAND/ REJECT
+/^Subject: Promocione su Producto o Servicio !!!/ REJECT
+/^Subject: Le compramos los cartuchos gastados de las impresoras/ REJECT
+/^Subject: Accede antes que nadie a las novedades diarias de SoloJuegos/ REJECT
+/^Subject: DINERO@FACIL/ REJECT
+/^Subject: Financial Freedom for you and your kids/ REJECT
+/^Subject: \d{2}\/\d{2} Cell Phone Report/ REJECT
+/^Subject: PROMOTE YOUR ONLINE BUSINESS/ REJECT
+/^Subject: Do Mobile Phones cause Cancer\?/ REJECT
+/^Subject: Reclame sus Vacaciones en Disney/ REJECT
+/^Subject: Radiation Shield for Cell Phones/ REJECT
+/^Subject: Sitio web Help Desk/ REJECT
+/^Subject: Discover Brazil\'s finest products for your Home and Office/ REJECT
+/^Subject: Market your product or service online/ REJECT
+/^Subject: Capacitación en Idiomas/ REJECT
+/^Subject: La liste des meilleurs sites X gratuits/ REJECT
+/^Subject: Ladies underwear.{1,15}purchase/ REJECT
+/^Subject: Want to boost your sales with Internet Marketing/ REJECT
+/^Subject: Free Euro Dollar, get involved/ REJECT
+/^Subject: Trading strategies with huge potential/ REJECT
+/^Subject: Double the speed of your computer/ REJECT
+/^Subject: I Smell Tuna Fish!/ REJECT
+/^Subject:\s+I\s+await\s+your\s+urgent\s+reply/ REJECT
+/^Subject: You are Just a Click Away From Your Getaway!/ REJECT
+/^Subject: Compaq and IBM computers starting from $\d+/ REJECT
+/^Subject: Importanti Novit.\!/ REJECT
+/^Subject: Sistema de ventilacion eolica/ REJECT
+/^Subject: Haga llegar su oferta o producto a todo el país/ REJECT
+#/^Subject: CONGRATULATIONS ! .{,7}/ REJECT
+/^Subject: En el dia del Niño Invierta en Educacion para sus hijos/ REJECT
+/^Subject: Project Manager - PMP Exam/ REJECT
+/^Subject: Take action now/ REJECT
+/^Subject: Get a free Euro.BON/ REJECT
+/^Subject: xxx- please sweety im begging you/ REJECT
+/^Subject: Barter &amp; Trade Your Services/ REJECT
+/^Subject: White teeth fast, safe, and for less/ REJECT
+/^Subject: DAMOS A CONOCER SU SITIO WEB/ REJECT
+/^Subject: OVISARA Cursos Esotericos Inscribete/ REJECT
+/^Subject: Conectate a Internet GRATIS/ REJECT
+/^Subject: Prueba Tu Suerte !!!/ REJECT
+/^Subject: \*\* One Million Visitors for FREE \*\*/ REJECT
+/^Subject: Take a moment to read this\. You have nothing to lose\./ REJECT
+/^Subject: Para estudiar en vacaciones !!/ REJECT
+/^Subject: Gane US\$\d{2,3}\.\d{2} o mas con su PC !/ REJECT
+/^Subject:.{1,15}help me cream my panties again/ REJECT
+/^Subject: Error accessing your website/ REJECT
+/^Subject: Gracias por solicitar info sobre Tantra/ REJECT
+/^Subject: Hotel Discount/ REJECT
+/^Subject: hi, this is for you/ REJECT
+/^Subject: Novedad Mundial/ REJECT
+/^Subject: Copy DVDs with your CD Burner with this software!/ REJECT
+/^Subject: qu\'en penses tu\?\?\?/ REJECT
+/^Subject: ISA Article on Embedded Real-Time Linux Automation Applications/ REJECT
+/^Subject: La Encuesta que te Cambiara la Vida/ REJECT
+/^Subject: NOW YOU CAN GROW NATURALLY LONGER REGUARDLESS OF AGE/ REJECT
+/^Subject: You, the USA, Canada and Mexico/ REJECT
+/^Subject: Analisis del Sector Inmobiliario en Espa.a/ REJECT
+/^Subject: Felicitaciones Originales y CDR Personalizados/ REJECT
+/^Subject:.{1,10}descanse su vista, ESCUCHE en lugar de leer/ REJECT
+/^Subject: A New Stimulating Sensual Lubricant For Women/ REJECT
+/^Subject: Su Negocio Dentro Y Fuera De Panam./ REJECT
+/^Subject: revelado de fotografías digitales/ REJECT
+/^Subject: Publicidad: Telefono - las tarifas mas economicas/ REJECT
+/^Subject: !!!You.{1,4}re going to Disneyland!!!/ REJECT
+/^Subject: Curso \"Diseño Web Profesional\"/ REJECT
+/^Subject: Introducing Menz\.com/ REJECT
+/^Subject: Felicitaciones Originales y CDR Personalizados/ REJECT
+/^Subject: Top 10 Destinations For The Summer!/ REJECT
+/^Subject: JOINT PARTNERSHIP VENTURE/ REJECT
+/^Subject: EARN $ \d{2,3},\d{3}\+\/YEAR SENDING E-MAIL/ REJECT
+/^Subject: Make money and download music/ REJECT
+/^Subject: PREVENCION Y ORATORIA/ REJECT
+/^Subject: Reclame sus Vacaciones/ REJECT
+/^Subject: This is 4U: Opportunity Of A Lifetime!/ REJECT
+/^Subject: Adult Content - 100. Free Webcams/ REJECT
+/^Subject: MAKE YOUR PC CREATE YOUR PAYCHECK/ REJECT
+/^Subject: oferta trabajo a tiempo parcial o completo/ REJECT
+/^Subject: fwd:  PROTECT YOURSELF AGAINST HARMFUL VIRUSES/ REJECT
+/^Subject: LA OPORTUNIDAD DE TU VIDA/ REJECT
+/^Subject: kanser tedavis/ REJECT
+/^Subject: USA Immigration Program/ REJECT
+/^Subject: Real Simple Magazine Offers A complimentary Origins Gift/ REJECT
+/^Subject: FATO RELEVANTE/ REJECT
+/^Subject: AUTOMACAO COMERCIAL/ REJECT
+/^Subject: Presentación de Propuesta - Proyecto:  Educación por Internet/ REJECT
+/^Subject: Descubra Emailbranding/ REJECT
+/^Subject: Try your own business/ REJECT
+/^Subject: Una Forma DIFERENTE de Tener un Ingreso MENSUAL/ REJECT
+/^Subject: Esto esta Ardiendo en INTERNET/ REJECT
+/^Subject: SE HACEN TRABAJOS POR ORDENADOR/ REJECT
+/^Subject: Automatic Enrollment/ REJECT
+/^Subject: Informativo - ANBio/ REJECT
+/^Subject:.{,7}Want to boost your sales with Internet Marketing/ REJECT
+/^Subject: The Newest and Fastest gateway to London/ REJECT
+/^Subject: Read This!!You Won\'t Regret It/ REJECT
+/^Subject: I made \$\d{1,3}\,\d{3} in two months/ REJECT
+/^Subject: Compaq Notebook Giveaway/ REJECT
+/^Subject: G'Day from Australia/ REJECT
+/^Subject: CURSOS Y MASTER FORMACIÓN INFORMATICA SERINTER/ REJECT
+/^Subject: Please read this letter carefully, it works 100/ REJECT
+/^Subject: China motorcycle/ REJECT
+/^Subject: Spark Interactive Newsletter/ REJECT
+/^Subject: NO MAS MUERTES DE TOROS y menos en FRANCIA/ REJECT
+/^Subject: FESTEJANDO EL MES DE LA PATRIA/ REJECT
+/^Subject: Registro de dominios internacionales COM/ REJECT
+/^Subject: Work from home in your own free time/ REJECT
+/^Subject: That is Humiliating!\s{1,10}\d{1,5}/ REJECT
+/^Subject: Special Affiliate Offers from Amazon.Com!/ REJECT
+/^Subject: OFERTAS SANTIAGOCHILE/ REJECT
+/^Subject: Eliminate Pop-Ups Forever/ REJECT
+/^Subject: INFORMACIÓN MASTER UNIVERSITARIO EN NUEVAS TECNOLOGÍAS/ REJECT
+/^Subject: The United States Healthcare Directory/ REJECT
+/^Subject: Thought about Working from Home\?/ REJECT
+/^Subject: MANIFESTACIÓN ANTI-TAURINA/ REJECT
+/^Subject: Special Savings On Inkjet Cartridges/ REJECT
+/^Subject: Quieres ver que puedo hacer con mi boquita/ REJECT
+/^Subject: Development countries. News in brief/ REJECT
+/^Subject: Siamese trio of charme/ REJECT
+/^Subject: Sea el primero en el buscador que quiera por solo un euro/ REJECT
+/^Subject: ¡Su Oficina En El Dorado Por \$\d{1,3} Mensual Con Todos Los Servicios Incluidos!/ REJECT
+/^Subject: .{1,15}Can Aging Be Reversed With HGH\?/ REJECT
+/^Subject: .Learn the hush-hush secrets of making BIG money on the Web./ REJECT
+/^Subject: CERTIFICACION OFICIAL MACROMEDIA/ REJECT
+/^Subject: Tenemos novedades!/ REJECT
+/^Subject: Bucea en los Morros de Potos./ REJECT
+/^Subject: (Fwd: )?Claim your XXX Jackpot Prize!/ REJECT
+/^Subject: Ayudenos a detener un sacrificio inutil/ REJECT
+/^Subject: PURCHASE V I A G R A ONLINE!/ REJECT
+/^Subject: Email marketing CDROM with \d{1,4} million Addresses/ REJECT
+/^Subject: PROPUESTA: Estimado Gerente General, uno de tus colegas te ha recomendado para recibir/ REJECT
+/^Subject: Protect your assets before it's too late!/ REJECT
+/^Subject: Get involved in this simple incredible program/ REJECT
+/^Subject: can i trust you with this project/ REJECT
+/^Subject: New tech research - please help/ REJECT
+/^Subject: Get your Forex credit line/ REJECT
+/^Subject: CREATE A NEW INCOME/ REJECT
+/^Subject: Make up to \$\d,\d{3} per month with your computer/ REJECT
+/^Subject: Make Extra Money/ REJECT
+/^Subject: New and Stronger Company for future growth/ REJECT
+/^Subject: Tired with the Windows XP search Facility, Check this out/ REJECT
+/^Subject: work from home, we will help you/ REJECT
+/^Subject: Ahorra hasta un \d\d\%, este verano/ REJECT
+/^Subject: Unsecured Business Loans Available/ REJECT
+/^Subject: Precisa de dinheiro honesto e imediato\? leia/ REJECT
+/^Subject: Subasta de nombres de dominio en Internet/ REJECT
+/^Subject: Pc System i Terra, ofereixen Oferta octubre ADSL GRATIS/ REJECT
+/^Subject: Oferta direcciones empresas/ REJECT
+/^Subject: Want a Big Penis\?/ REJECT
+/^Subject: Pre-Paid Tech Support - 24\/7/ REJECT
+/^Subject: Ded.quele unos instantes a SU SEGURIDAD/ REJECT
+/^Subject: Servicios de Web Hosting/ REJECT
+/^Subject: Programmazione Neurolinguistica a Lugano/ REJECT
+/^Subject: Electronica y Electricidad, Motor de Busqueda/ REJECT
+/^Subject: Intercambio de base de datos/ REJECT
+/^Subject: Thank you for signing up for Max Group B2B Services/ REJECT
+/^Subject: RUIN ANYONE ANYWHERE ANYTHING/ REJECT
+/^Subject: OFERTA URGENTE DEL NEGOCIO/ REJECT
+/^Subject: YOU HAVE TO TRY THIS! IT REALLY WORKS!!/ REJECT
+/^Subject: OBSEQUIO: INTELIGENCIA EMOCIONAL/ REJECT
+/^Subject: New Community based Flash SiteBuilder/ REJECT
+/^Subject: Pay nothing for your conference calls!/ REJECT
+/^Subject: Base de Mails para promover su producto GRATIS!!!/ REJECT
+/^Subject: Quality Diamonds at Dealer prices/ REJECT
+/^Subject: COW MEDICINE SUPPLY/ REJECT
+/^Subject: Menem lo hizo!!!/ REJECT
+/^Subject: Check it: The best Portable DVD deal ever/ REJECT
+/^Subject: GANE USD 500  DE MARRIOTT/ REJECT
+/^Subject: alargue el tama.o de su pene hasta 9 cms/ REJECT
+/^Subject: Software de Gesti.n Comercial REGO V\d\.\d Plus/ REJECT
+/^Subject: .{1,10}Por favor no lo ignores/ REJECT
+/^Subject: Highspeed, totally nasty latina site/ REJECT
+/^Subject: MarketRu News/ REJECT
+/^Subject: SIGLO XXI. PAVILIONS OFFER/ REJECT
+/^Subject: The truth about your FBI file, code/ REJECT
+/^Subject: Aumente Sus Ventas Utilizando El Tel.fono/ REJECT
+/^Subject: .{1,20}MILLION TARGETED, OPT-IN EMAIL ADDRESSES\.\.\./ REJECT
+/^Subject: CONFIGURAMOS TU RED/ REJECT
+/^Subject: We help you to realize the dream of travelling in China/ REJECT
+/^Subject: CAN YOU ASSIST/ REJECT
+/^Subject: Let us multiply your business\./ REJECT
+/^Subject: LLAMADAS TELEF.NICAS SIN COMPETENCIA EN ESPA.A/ REJECT
+/^Subject: 12 main items \( GGG-1 \)/ REJECT
+/^Subject: Godzilla vs Mothra/ REJECT
+/^Subject: FREE porn, you only need an email address/ REJECT
+/^Subject: You can make money in a slow economy/ REJECT
+/^Subject: Traducciones y servicios gratis/ REJECT
+/^Subject: SUFRE EYACULACION PRECOZ ... SUPERELA!!/ REJECT
+/^Subject: Traslade la VISION/ REJECT
+/^Subject: Adios al Corralito !!!!!/ REJECT
+/^Subject: why does your vehicle make that noise/ REJECT
+/^Subject: Acerca de su sitio web/ REJECT
+/^Subject: Miles De Letras y Wingdings Para PC!!!/ REJECT
+/^Subject: Faça o teste, preencha o cadastro e aproveite pomoç.o de lançamento/ REJECT
+/^Subject: Mais negocios para sua empresa/ REJECT
+/^Subject: GUADAGNARE DAVVERO, LEGGI E CAPIRAI!!!!/ REJECT
+/^Subject: Create a Paycheck with your PC/ REJECT
+/^Subject: NO PIERDA LA OPORTUNIDAD DE CONVERTIRSE EN CIUDADANO/ REJECT
+/^Subject: RE PARE DE GASTAR COM CARTUCHOS/ REJECT
+/^Subject: DIMINUA A CONTA DE ENERGIA/ REJECT
+/^Subject: Re: Collect, Send, and Sort!!/ REJECT
+/^Subject: GRATIS Conexion Internet/ REJECT
+/^Subject: Il portale dove potrai trovare di tutto/ REJECT
+/^Subject: .Trabajar Desde su Casa y tener la vida que desea/ REJECT
+/^Subject: Encuesta Even Lan/ REJECT
+/^Subject: Looking for an extended car Warranty/ REJECT
+/^Subject: Conoces MI Cuerpo Serrano/ REJECT
+/^Subject: Your Mortgage Rate above \d\.\d\d% click here/ REJECT
+/^Subject: What Will an Extra $\d\d,\d\d\d Buy You\?/ REJECT
+/^Subject: urgent  and confidential/ REJECT
+/^Subject: 12 main items \( ...-\d \)/ REJECT
+/^Subject: In just 48 HOURS!!! Guaranteed!/ REJECT
+/^Subject: Garden Hose Bibb Water Meter/ REJECT
+/^Subject: Lonely\?\s{1,4}Cum and see us NOW!/ REJECT
+/^Subject: Letter of intent!!!/ REJECT
+/^Subject: INFORMATICA en \$\$\$/ REJECT
+/^Subject: LOS GESTOS DEL BEBE/ REJECT
+/^Subject: LA CASA DEL TANTRA - COACHING PERSONALIZADO-SEXUALIDAD TÁNTRICA-MASAJE SENSITIVO/ REJECT
+/^Subject: You have a secret admirer/ REJECT
+/^Subject: Why do some people make a fortune on the Internet/ REJECT
+/^Subject:\s{1,3}INVIERTA EN USTED, INVIERTA EN SU SALUD Y SU BIENESTAR/ REJECT
+/^Subject: \(BRMA\) Mensagem n.o autorizada/ REJECT
+/^Subject: Venda por Internet/ REJECT
+/^Subject:.{1,5}QUIERES GANAR DINERO POR INTERNET/ REJECT
+/^Subject: LAN[ÇC]AMENTO/ REJECT
+/^Subject: RESPUESTA REQUERIDA: Confirmar la suscripción a un grupo/ REJECT
+/^Subject: FREE 30 day supply of HGH/ REJECT
+/^Subject: .{1,6}\d\d\.\d MILLION EMAIL ADDRESSES/ REJECT
+/^Subject: Bulk Email Sending/ REJECT
+/^Subject: Actually reverse aging/ REJECT
+/^Subject: Im so lonely, Ill do anything that you say/ REJECT
+/^Subject: Important mail to you/ REJECT
+/^Subject: Your road to free financially/ REJECT
+/^Subject: Save \d\d\% off the pump price/ REJECT
+/^Subject: Please respond ASAP/ REJECT
+/^Subject: E-Marketing Newsletter/ REJECT
+/^Subject: Download FREE e-Book Publishing Software/ REJECT
+/^Subject: This IS working-DO IT/ REJECT
+/^Subject: El mejor compilado de tutoriales de informatica/ REJECT
+/^Subject: Notificacion \d{1,4}/ REJECT
+/^Subject: Famosas Gratis!/ REJECT
+/^Subject: ADV\/ADULT: Quality/ REJECT
+/^Subject: YOUR HEALTH CARE/ REJECT
+/^Subject: Carreira com Internet/ REJECT
+/^Subject: Porto 2002 Cidade Tecnológica/ REJECT
+/^Subject: Ganhe uma boa grana simplesmente por estar online/ REJECT
+/^Subject: Lowest Price generic viagra/ REJECT
+/^Subject: Balanzas \&amp; Sistemas de Pesaje/ REJECT
+/^Subject: Suite of graphic!!!/ REJECT
+/^Subject: WELCOME TO THE INTERNET'S BEST KEPT SECRET!/ REJECT
+/^Subject: THIS IS THE PLACE TO GET DISCREET \"SEX ON THE SIDE\"/ REJECT
+/^Subject: Do you have a good email list\? Check this out/ REJECT
+/^Subject: Use your computer to make money/ REJECT
+/^Subject: Want to run your own dating or adult contact site/ REJECT
+/^Subject: Start Earning Today/ REJECT
+/^Subject: All African Games/ REJECT
+/^Subject: A LOGIC ANSWER TO A LOGIC PROBLEM/ REJECT
+/^Subject: BREAKTHROUGH HERBAL SEX ENHANCER/ REJECT
+/^Subject: ADULT FUC$#K FILMS...FREE PASSWORD/ REJECT
+/^Subject: Reduce Your Debt in \d Minutes/ REJECT
+/^Subject: New Human Growth Hormone Releaser/ REJECT
+/^Subject: Earn your degree without interrupting your life/ REJECT
+/^Subject: Bid on seized and unclaimed property/ REJECT
+/^Subject: SEO Tips \+ Boost Holiday Sales/ REJECT
+/^Subject: Earn Your College Degree Online/ REJECT
+/^Subject: You\'ve Got Love!/ REJECT
+/^Subject: Procura-se Profissionais!/ REJECT
+/^Subject: I am home alone waiting for you/ REJECT
+/^Subject: THIS ONE WORKS/ REJECT
+/^Subject: SUPPLEMENT YOUR INCOME/ REJECT
+/^Subject: Promise me to read this/ REJECT
+/^Subject: work-money work-money work-money work-money/ REJECT
+/^Subject: Llevate el DVD de tus suenos/ REJECT
+/^Subject: Open YOUR Blessing!/ REJECT
+/^Subject: FREE Martha Stewart Cookie Decorating Kit/ REJECT
+/^Subject: RAM and Video Cards direct from Manufacturer/ REJECT
+/^Subject: Personalize a Children\'s Book Starring YOUR Child/ REJECT
+/^Subject: Viagra - Phentermine - Xenical - Propecia and MORE!/ REJECT
+/^Subject: Get 250 full-color business or personal cards free/ REJECT
+/^Subject: Webmaster ganhe dinheiro/ REJECT
+/^Subject: Holiday Sale Blowout! order now/ REJECT
+/^Subject: The Plight of Romanian Orphans/ REJECT
+/^Subject: Learn the real secrets to wealth from Robert G\. Allen/ REJECT
+/^Subject: Make your holidays better his year/ REJECT
+/^Subject: Earn your Bachelor\'s or Master\'s degree at DeVry University Online/ REJECT
+/^Subject: Establish your credit with Platinum for Xmas/ REJECT
+/^Subject: Easily Lose 10-12 lbs\. During the Holidays/ REJECT
+/^Subject: check out south of the border/ REJECT
+/^Subject: Get paid to take surveys!/ REJECT
+/^Subject: shanghai airticket\+hotel\+transfer/ REJECT
+/^Subject: Verano Seguro/ REJECT
+/^Subject: Survey about Porn/ REJECT
+/^Subject: SE[NM]INARIO SOBRE EL EXITO/ REJECT
+/^Subject: Mortgage no income verification/ REJECT
+/^Subject: i am getting new ones on monday/ REJECT
+/^Subject: product alerts\(PAD\) for dealer to/ REJECT
+/^Subject: Lose we.ght, look great - Forever young/ REJECT
+/^Subject: .{1,5}Welcome from Samantha/ REJECT
+/^Subject: Holiday Sale Blowout! order now/ REJECT
+/^Subject: Advertise by email - we\'ve got \d+ million International Addresses/ REJECT
+/^Subject: check out south of the border/ REJECT
+/^Subject: Keep Your Summer Figure/ REJECT
+/^Subject: High Skilled Developers For Your Every Need/ REJECT
+/^Subject: Webmaster ganhe dinheiro/ REJECT
+/^Subject: LISTEN TO GREAT BOOKS AND MORE/ REJECT
+/^Subject: Need extra cash for the holidays\?/ REJECT
+/^Subject: \d more days until Christmas/ REJECT
+/^Subject: Choose a new car and have the dealers bid against each other/ REJECT
+/^Subject: LISTEN TO GREAT BOOKS AND MORE - ON YOUR FREE MP3 PLAYER!/ REJECT
+/^Subject: The BUG is back!/ REJECT
+/^Subject: .{1,10}this will help you look good and feel great/ REJECT
+/^Subject: New College Degree Program Based on Knowledge/ REJECT
+/^Subject: Do you know as much as a college graduate\?/ REJECT
+/^Subject: The lowest inkjet cartridge prices on the Internet are here!/ REJECT
+/^Subject: View photos of singles in YOUR area/ REJECT
+/^Subject: Find singles in your area today/ REJECT
+/^Subject: Ring in the Holidays with a Free Nokia/ REJECT
+/^Subject: HOT New toy for Christmas 2002/ REJECT
+/^Subject: Increase your earning potential/ REJECT
+/^Subject: Vegas style casino right from your desktop/ REJECT
+/^Subject: Is this Kevin Costner/ REJECT
+/^Subject: Printer Cartridges - Save up to/ REJECT
+/^Subject: personal alcohol detector for dealer/ REJECT
+/^Subject: hundreds of FREE thumbnailed XXX pictures updated daily/ REJECT
+/^Subject: casadellibro\.com te env.a las .ltimas novedades/ REJECT
+/^Subject: Ayudar es gratis/ REJECT
+/^Subject: Fw: Avril Lavigne - the best/ REJECT
+/^Subject: Fw: Prohibited customers.../ REJECT
+/^Subject: Fwd: Re: Admission procedure/ REJECT
+/^Subject: Fwd: Re: Reply on account for Incorrect MIME-header/ REJECT
+/^Subject: Re: According to Daos Summit/ REJECT
+/^Subject: Re: ACTR\/ACCELS Transcriptions/ REJECT
+/^Subject: Re: Brigade Ocho Free membership/ REJECT
+/^Subject: Re: Reply on account for IFRAME-Security breach/ REJECT
+/^Subject: Re: Reply on account for IIS-Security/ REJECT
+/^Subject: Re: The real estate plunger/ REJECT
+/^Subject: A very  funny website/ REJECT
+/^Subject: Relojes Rolex/ REJECT
+/^Subject: This is great! ..$/ REJECT
+/^Subject: Lo mejor para su imprerora/ REJECT
+/^Subject: enviador de e-mails/ REJECT
+/^Subject: .{1,5}RE CARTUCHOS REMANUFATURADOS PREMIUM/ REJECT
+/^Subject: Unsecured GOLD Card!/ REJECT
+/^Subject: Someone wants to meet YOU/ REJECT
+/^Subject: Husband's away! Lonely housewives!/ REJECT
+/^Subject: I am married and .... on the side/ REJECT
+/^Subject: .{1,6}Usted y su Familia Ganaron/ REJECT
+/^Subject: .{1,5}Penis Enlargement Pills on the Market!/ REJECT
+/^Subject: STOCK MARKET ALERT - TBIN REPORTS RECORD REVENUES/ REJECT
+/^Subject: Penting !! dari/ REJECT
+/^Subject: XXX Picture For You!$/ REJECT
+/^Subject: The HGH Seal, No more Pill\'s, No More Spray\'s!/ REJECT
+/^Subject: \d\d\.\d milh.es de e-mails - Divulgue voc. mesmo seu produto!!!/ REJECT
+/^Subject: Double Your Earnings Power/ REJECT
+/^Subject: Baby Boomers to GenX/ REJECT
+/^Subject: IT jobs - not just for Xmas!/ REJECT
+/^Subject: Buy Phentermine, Viagra &amp; more with NO PRESCRIPTION!  US doctors and pharmacies! Overnight Shipping!/ REJECT
+/^Subject: Roberto Matta/ REJECT
+/^Subject: RE:Regalo para las mascotas/ REJECT
+/^Subject: Aumente sus ganacias mensuales/ REJECT
+/^Subject: Llevate el DVD de tus suenos/ REJECT
+/^Subject: Ingrese al mundo de las avestruces/ REJECT
+/^Subject: Lowest Price generic viagra/ REJECT
+/^Subject: Canciones Por Encargo/ REJECT
+/^Subject: Looking to BUY Stock/ REJECT
+/^Subject: Subject: Censo Brasileiro/ REJECT
+/^Subject: Buscamos Distribuidores Representantes/ REJECT
+/^Subject: Mais de 500 mb gravados/ REJECT
+/^Subject: Aitor te envía esta noticia desde La Voz de Asturias/ REJECT
+/^Subject: 11TH INTERNATIONAL CONFERENCE ON ISO 9000/ REJECT
+/^Subject: Urgent And Confidentail/ REJECT
+/^Subject: .{1,5}WIN A NEW COMPUTER IN 30 SECONDS/ REJECT
+/^Subject: Your FREE Cell Phone is Ready to Ship/ REJECT
+/^Subject: Give her something bigger  in bed/ REJECT
+/^Subject: Rebuild Your Bad Credit with MasterCard/ REJECT
+/^Subject: To help your business succeed/ REJECT
+/^Subject: Subject: Si tenemos estabilidad, dice Fox/ REJECT
+/^Subject: Stop Snoring Today!/ REJECT
+/^Subject: You're APPROVED!/ REJECT
+/^Subject: Afortunado 2003/ REJECT
+/^Subject: Preparese para la Reforma  Fiscal/ REJECT
+/^Subject: Llegan a acuerdo guarderias con IMSS/ REJECT
+/^Subject: Atención personalizada a domicilio/ REJECT
+/^Subject: Declara PGR guerra a piratas/ REJECT
+/^Subject: LOGRANDO LA EXCELENCIA/ REJECT
+/^Subject: Choose from 3 of the hottest DVDs available/ REJECT
+/^Subject: Disfrute de un Dia de Campo Familiar en Olmue/ REJECT
+/^Subject: Netglass - Your online shopping of Glass and Crystal/ REJECT
+/^Subject: Actualice su formación cultural con el Instituto Virtual de Ciencias Humanas/ REJECT
+/^Subject: Get 12 CDs for the price of 1/ REJECT
+/^Subject: Convenio de Salud Bonificada/ REJECT
+/^Subject: EOD\/KING NOTHING HAS ARRIVED!!!Free mp3 Downloads/ REJECT
+/^Subject: A special  excite game/ REJECT
+/^Subject: TAMBIÉN ES DIVERTIDO EL CIRCO/ REJECT
+/^Subject: DYNAMICS PEACEFUL RELOCATION/ REJECT
+/^Subject: .{1,4}Take a Free Personality Test/ REJECT
+/^Subject: FROM JOHN COLEMAN/ REJECT
+/^Subject: .{1,5}NEW \/\/ COPY ANY DVD TO CD/ REJECT
+/^Subject: Alza a luz residencial, baja para la industria/ REJECT
+/^Subject: Amazing Age reversing Formula/ REJECT
+/^Subject: Are you a spammer/ REJECT
+/^Subject: Cash Advance Today - up to/ REJECT
+/^Subject: cash back refinances/ REJECT
+/^Subject: Compilation of all email directories on the web/ REJECT
+/^Subject: Copy DVD Movies - FREE Software Included/ REJECT
+/^Subject: Direct Mail is the way to go/ REJECT
+/^Subject: Don't be alone this New Year/ REJECT
+/^Subject: Ejemplo E-MISARIO Software para E-Mail Merge Masivo/ REJECT
+/^Subject: Email Marketing Resources/ REJECT
+/^Subject: .{1,8}NORTON ANTI VIRUS BLOWOUT/ REJECT
+/^Subject: About DeskWay\./ REJECT
+/^Subject: Espectacular Semana en Vina/ REJECT
+/^Subject: ever seen two girls use a strap on/ REJECT
+/^Subject: FAÇA SUA PROPAGANDA VIRTUAL/ REJECT
+/^Subject: GANHE DINHEIRO/ REJECT
+/^Subject: Get Paid Each Time Someone Uses Their Credit Card/ REJECT
+/^Subject: iusseramque dostudovanim/ REJECT
+/^Subject: Let Programmers Worldwide Bid On Your Tech Projects/ REJECT
+/^Subject: new price list -/ REJECT
+/^Subject: Number one FREE paysite/ REJECT
+/^Subject: Guiones Televisivos y Radiales/ REJECT
+/^Subject: Play FREE Games Online for Prizes/ REJECT
+/^Subject: IT IS IMPORTANT I HEAR FROM YOU/ REJECT
+/^Subject: Rechtsabteilung/ REJECT
+/^Subject: They only want to fuck/ REJECT
+/^Subject: Make money and have more time/ REJECT
+/^Subject: Revela tus fotos digitales por Internet/ REJECT
+/^Subject: Espectaculares Rebajas en Dise.o y Hosting/ REJECT
+/^Subject: .{1,5}Modelos de Cartas comerciais/ REJECT
+/^Subject: Melhore seu desempenho sexual j./ REJECT
+/^Subject: Los mejores maestros de Disney/ REJECT
+/^Subject: COPY ANY DVD TO A CD/ REJECT
+/^Subject: Se você faz prancha nos cabelos, precisa ler isto/ REJECT
+/^Subject: Save Hundreds Over Bowflex! Risk Free!/ REJECT
+/^Subject: Overture Account/ REJECT
+/^Subject: Tendências do Trabalho/ REJECT
+/^Subject: Aumente sus ventas en \d\d hrs/ REJECT
+/^Subject: \s+guaranteed\s+medical\s+card/ REJECT
+/^Subject: Especial de San Valentin - UNA semana GRATIS/ REJECT
+/^Subject: You too increase your electronic components business/ REJECT
+/^Subject: SEJA REPRESENTANTE COMERCIAL/ REJECT
+/^Subject: novidade na area de eletronica/ REJECT
+/^Subject: Promoção \"Clube dos 200\"/ REJECT
+/^Subject: Our special program can help adults like you/ REJECT
+/^Subject: DON\'T LET A COMPUTER VIRUS RUIN YOUR DAY/ REJECT
+/^Subject: MEJORE LA COBERTURA DE SU CELULAR/ REJECT
+/^Subject: UNCOVER THE TRUTH ABOUT ANYONE/ REJECT
+/^Subject: Vinarol -- For Both Men and Women/ REJECT
+/^Subject: Non Profit Debt Reduction Program/ REJECT
+/^Subject: Buy Phentermine, Didrex, Viagra and other FDA approved medications online today/ REJECT
+/^Subject: Official Auctions Membership: Get Your Username and Password Now/ REJECT
+/^Subject: Fw: PROTECT YOUR COMPUTER AGAINST HARMFUL VIRUSES/ REJECT
+/^Subject: Ingrese al Nuevo Mundo de los Negocios/ REJECT
+/^Subject: Stands para ferias y exposiciones, Carpas/ REJECT
+/^Subject: Veja na Televisão e compre pela Internet/ REJECT
+/^Subject: Declara PGR guerra a piratas/ REJECT
+/^Subject: Download  your Valentines Day Screen Saver/ REJECT
+/^Subject: Cordialmente le recordamos el Día del Amor/ REJECT
+/^Subject: Order  v_i a g r_a  from home, no doctors/ REJECT
+/^Subject: free pictures of college sluts/ REJECT
+/^Subject: Help Wanted - Excellent Pay/ REJECT
+/^Subject: They only want to fuck/ REJECT
+/^Subject: Make money and have more time/ REJECT
+/^Subject: Revela tus fotos digitales por Internet/ REJECT
+/^Subject: Is your investment worth the best/ REJECT
+/^Subject: Haga llegar su oferta o producto a/ REJECT
+/^Subject: Revolutionary Desktop-Sharing  Tools/ REJECT
+/^Subject: Melhore seu desempenho sexual/ REJECT
+/^Subject: TODO LO QUE USTED NECESITA EN MEMORIAS RAM/ REJECT
+/^Subject: Achieve Sexual Ecstacy With New Aphrodisiac/ REJECT
+/^Subject: Internet News Feeds for Executives/ REJECT
+/^Subject: Become an American citizen/ REJECT
+/^Subject: Suplemento informativo de TIKAL IDEAS/ REJECT
+/^Subject: SALVALOS DE LA CRUELDAD/ REJECT
+/^Subject: We Buy Real Estate Notes/ REJECT
+/^Subject: The Holidays Are Approaching And Interest Rates/ REJECT
+/^Subject: Need a Mortgage Loan That Works For You/ REJECT
+/^Subject: LiveMarket is a Gold Partner member with/ REJECT
+/^Subject: INFORMACION PROXIMO Curso de Hipnosis/ REJECT
+/^Subject: Great News for All Music Fans/ REJECT
+/^Subject: If you are a florist please read on/ REJECT
+/^Subject: MORTGAGE BAD CREDIT/ REJECT
+/^Subject: La Tienda del Espia/ REJECT
+/^Subject: INFORMATION FOR TRADERS/ REJECT
+/^Subject: Construcci.n de Viviendas con Sistema Americano/ REJECT
+/^Subject: Daha Fazla Odemeyin/ REJECT
+/^Subject: Government Secured Certificates That Pay You/ REJECT
+/^Subject: Meet Singles this Holiday Season/ REJECT
+/^Subject: Aumente sus ventas/ REJECT
+/^Subject: Calling All Military Personnel/ REJECT
+/^Subject: Houses for sale from/ REJECT
+/^Subject: Informacion para su real economia en llamadas de larga distancia/ REJECT
+/^Subject: Want to Buy a New Car Without all the Stress/ REJECT
+/^Subject: FILTER LOTTERY INTERNATIONAL/ REJECT
+/^Subject: FREE SHIPPING when you order your/ REJECT
+/^Subject: The first Windows Dating Program ever/ REJECT
+/^Subject: Enjoy Big Stereo Sound/ REJECT
+/^Subject: Get a Date Tonight/ REJECT
+/^Subject: Ein kleiner Traum/ REJECT
+/^Subject: Attract the opposite sex/ REJECT
+/^Subject: Roses and Chocolate to make Xmas Special/ REJECT
+/^Subject: YOU HAVE WON THE PORN LOTTERY/ REJECT
+/^Subject: Curso GIS y Teledeteccion/ REJECT
+/^Subject: Divulga..o Completa e Profissional/ REJECT
+/^Subject: Melia Buenos Aires Boutique Hotel/ REJECT
+/^Subject: UK phone numbers connected FREE to numbers in New Zealand/ REJECT
+#/^Subject: Vuelva a activar su cuenta de Yahoo/ REJECT
+/^Subject: Elimina Estres, Fatiga y Agotamiento/ REJECT
+/^Subject: Por el Futuro de sus Hijos/ REJECT
+/^Subject: .{1,5}SPECIAL EDITION VALENTINE CARDS/ REJECT
+/^Subject: Gana \d\d\.\d{1,5} dolares con este teletrabajo/ REJECT
+/^Subject: Seminario Motivaci.n y Coaching/ REJECT
+/^Subject: Euro5 le ofrece idiomas/ REJECT
+/^Subject: Dinero Seguro, Dinero en U\.S\.A/ REJECT
+/^Subject: .{1,5}Win a Loaded NEW COMPUTER Instantly/ REJECT
+/^Subject: .{1,4}DESARROLLA AL MAXIMO TODO TU POTENCIAL HUMANO/ REJECT
+/^Subject: Aumente Seus Lucros AGORA/ REJECT
+/^Subject: Su seguro dental por menos de \d,\d euros al mes/ REJECT
+/^Subject: Vivitar Digital Camera Liquidation Sale, Unbelievable Price/ REJECT
+/^Subject: Participe de um Megasucesso/ REJECT
+/^Subject: Para Professores, estudantes de medicina ou qualquer pessoa/ REJECT
+/^Subject: Hospedagem profissional de domínios e sites/ REJECT
+/^Subject: Please re-order your next set of contacts from our site/ REJECT
+/^Subject: Piden investigar a inversionistas en Cuba/ REJECT
+/^Subject: Promote Our Marketing/ REJECT
+/^Subject: FOX Fantasy Baseball Challenge/ REJECT
+/^Subject: Get Grace magazine and a 5-piece Clinique Makeup Set FREE/ REJECT
+/^Subject: Fw: Flash USB Banco de memoria/ REJECT
+/^Subject: Fw: varios = digi and web cam./ REJECT
+/^Subject: Campeonato Virtual de Tenis/ REJECT
+/^Subject: Permiso informar Superacion comoda del tabaco/ REJECT
+/^Subject: Por termino de proyecto liquidamos computadores/ REJECT
+/^Subject: Fw: Camera Snap Shot 2110/ REJECT
+/^Subject: Finally - Your Own Low Cost Teleconferencing Service/ REJECT
+/^Subject: Lista de precios .Actualizada al 4 del 3/ REJECT
+/^Subject: Get The NY Times Delivered at \d\d% off/ REJECT
+/^Subject: Soluciones Integrales de Informatica/ REJECT
+/^Subject: Se voce esta no Japao/ REJECT
+/^Subject: VOCÊ PODE GANHAR MAIS SAÚDE EM \d+/ REJECT
+/^Subject: Laboratório da revolução/ REJECT
+/^Subject: Sistema Trabalho Virtual/ REJECT
+/^Subject: Comunique-se com Segurança/ REJECT
+/^Subject: Prepare-se antes dos concorrentes/ REJECT
+/^Subject: Lidere Pessoas/ REJECT
+/^Subject: Solicitação de Contato/ REJECT
+/^Subject: Make money sitting on your butt/ REJECT
+/^Subject: Hey! Married men and women alike meet here/ REJECT
+/^Subject: Freakiest show on Earth: kinky real animal lovers/ REJECT
+/^Subject: Re: Lose weight faster and easier/ REJECT
+/^Subject: Re: Do you want to lose Weight/ REJECT
+/^Subject: Looking to BUY Stock/ REJECT
+/^Subject: Much better than Disney/ REJECT
+/^Subject: Incredible- Christina Grabs Herself/ REJECT
+/^Subject: ELearnChina 2003/ REJECT
+/^Subject: When it comes to debt, Don't Consolidate - Eliminate/ REJECT
+/^Subject: BAD Girls gone WILD/ REJECT
+/^Subject: re: FREE Tax Software to Download TODAY/ REJECT
+/^Subject: La Clave de su Fiesta es la Musica/ REJECT
+/^Subject: Autônomo com Internet/ REJECT
+/^Subject: Garments Stocks/ REJECT
+/^Subject: PROJECT FACILITATION/ REJECT
+/^Subject: Attn: Diabetics and their Families - Free Glucose Meter/ REJECT
+/^Subject: re: Your FREE Fleece Pullover from ESPN/ REJECT
+/^Subject: BUSINESS PARTNERSHIP SOLICITATION/ REJECT
+/^Subject: CheapTrips Airfares: Best Price Guaranteed/ REJECT
+/^Subject: re: Congratulations! Claim Your Complimentary Digital/ REJECT
+/^Subject: Re: YOU HAVE BEEN SELECTED/ REJECT
+/^Subject: Get a Free Motorola Phone/ REJECT
+/^Subject: Request new  car price quotes online and save money/ REJECT
+/^Subject: Para Professores, estudantes de medicina ou qualquer pessoa ligada a área médica/ REJECT
+/^Subject: Participe de um Megasucesso/ REJECT
+/^Subject: Please re-order your next set of contacts from our site/ REJECT
+/^Subject: Piden investigar a inversionistas en Cuba/ REJECT
+/^Subject: Re: do you know the most SHOCKING PORN SITE in the world/ REJECT
+/^Subject: Albert Einstein's Theory of Relativity has just been proven obsolete/ REJECT
+/^Subject: URGENT BUSINESS PARTNERSHIP SOLICITATION/ REJECT
+/^Subject: Most Websites are still not seen on MSN, Altavista/ REJECT
+/^Subject: Re: ebay's best kept secret/ REJECT
+/^Subject: Te Ayudamos a  Realizar Tu Investigación Académica/ REJECT
+/^Subject: Get a guaranteed platinum card with a 7500 dollar credit limit/ REJECT
+/^Subject: please accept your free credit report and expert help/ REJECT
+/^Subject: Re: exclusive young porn pics and videos! Never seen before/ REJECT
+/^Subject: Re: Help Wanted - Excellent Pay and Incentives/ REJECT
+/^Subject: Re: VIRUS PROTECTION IS A MUST, YOU NEED SYSTEMWORKS/ REJECT
+/^Subject: Re: Hidden sex cameras. Watch them for FREE/ REJECT
+/^Subject: kiwi casino now live - double deposit/ REJECT
+/^Subject: Canadian pharmacies are affordable and friendly/ REJECT
+/^Subject: Re: Do you want to lose Weight/ REJECT
+/^Subject: Hey! Married men and women alike meet here/ REJECT
+/^Subject: Custom Made Computers - Infotmation about/ REJECT
+/^Subject: Impresion Calidad Fotografica/ REJECT
+/^Subject: Software Ingenieria: Sap 2000, Presto, Etabs, manuales/ REJECT
+/^Subject: Fw: Reduces the symptoms of arthritis cu/ REJECT
+/^Subject: O kit de marketing mais completo do mercado/ REJECT
+/^Subject: Livecam Botschaft/ REJECT
+/^Subject: Curso gratis de recargas inkjet/ REJECT
+/^Subject: Reclama tu premio/ REJECT
+/^Subject: Advertising dollars well spent/ REJECT
+/^Subject: Nuevos Adaptadores USB/ REJECT
+/^Subject: NEW \/\/ COPY ANY DVD TO CD/ REJECT
+/^Subject: Re: \*\* DVD -&gt; CD, it\'s that simple/ REJECT
+/^Subject: Curso a distancia de lombricultura comercial/ REJECT
+/^Subject: ATTN:Sell like crazy on Ebay Today/ REJECT
+/^Subject: Increase size in weeks/ REJECT
+/^Subject: Time to gr0w that schl0ng/ REJECT
+/^Subject: Prezado bazaar-request/ REJECT
+/^Subject: 1000s Of Books on CD - That Will Read to You/ REJECT
+/^Subject: ATTN:Sell like crazy on Ebay Today/ REJECT
+/^Subject: Everybody knows you need to promote your business/ REJECT
+/^Subject: Fwd: DVD = CD, now it can be done/ REJECT
+/^Subject: Want to grow your d1ck/ REJECT
+/^Subject: us sitting by the pool/ REJECT
+/^Subject: Attn: NORTON SYSTEMWORKS CLEARANCE SALE/ REJECT
+/^Subject: I think we might be good for each other/ REJECT
+/^Subject: D0ct0rs create new pen1s pills/ REJECT
+/^Subject: Looking for a New Mortgage/ REJECT
+/^Subject: Safely  F e e l  Young/ REJECT
+/^Subject: Improve Sense Of well Being/ REJECT
+/^Subject: Are You  O v e r w e i g h t/ REJECT
+/^Subject: DAILY PAY...NO SPONSORING REQUIRED/ REJECT
+/^Subject: As  s e e n  on NBC, CBS, CNN, and Oprah/ REJECT
+/^Subject: The cure for your marriage blues/ REJECT
+/^Subject: Attn: PROTECT YOUR COMPUTER,YOU NEED SYSTEM-WORKS/ REJECT
+/^Subject: Free Vacation for Friend/ REJECT
+/^Subject: Term life insurance premiums reduced by/ REJECT
+/^Subject: Get A Bigger Dick Today/ REJECT
+/^Subject: Make lots of money in just months/ REJECT
+/^Subject: Your Health Is Important To Us/ REJECT
+/^Subject: Important! Must read! Do not Delete/ REJECT
+/^Subject: Mortgages All Time Low Again/ REJECT
+/^Subject: Hot Adult Personals - Free Trial/ REJECT
+/^Subject: Get prescribed Viagra, Diet Pills and much more/ REJECT
+/^Subject: Save on v1agra/ REJECT
+/^Subject: Free Gold Report/ REJECT
+/^Subject: Never been a better time to protect your pc/ REJECT
+/^Subject: Mortgage Rates down to Lowest since/ REJECT
+/^Subject: Transform your computer into a cash machine/ REJECT
+/^Subject: Email List containing only OpT-IN email addresses/ REJECT
+/^Subject: Mortgage Special - Best Ever/ REJECT
+/^Subject: LOTTERY WINNING INFO/ REJECT
+/^Subject: Strengthen your immune system/ REJECT
+/^Subject: Feel better, lose we1ght, and signs of aging/ REJECT
+/^Subject: Valium, Xanax, Ambien, Soma, and much more ONLINE/ REJECT
+/^Subject: 1s your cock to sma11/ REJECT
+/^Subject: increase your paypacket/ REJECT
+/^Subject: Great Opportunity, make Money with Options/ REJECT
+/^Subject: Sleep better, improve vision and memory/ REJECT
+/^Subject: P.E.N.I.L.E Growth Made Easier/ REJECT
+/^Subject: Italian ?- ?crafted Rolex/ REJECT
+/^Subject: Usted ha sido PREMIADO con unas increibles vacaciones/ REJECT
+/^Subject: S\.a\.f\.e, Natural, Significant W\.e\.i\.g\.h\.t L\.o\.s\.s/ REJECT
+/^Subject: Anorexic chicks getting plowed/ REJECT
+/^Subject: Sorority A\$s Eating Contest/ REJECT
+/^Subject: Gane \$\d\d\d\d\d d.lares en \d\d d.as/ REJECT
+/^Subject: VENGA YA MISMO A SOPLAR LAS VELITAS/ REJECT
+/^Subject: Welcome to our Free Daily Newsletter/ REJECT
+/^Subject: Usted ha sido premiado con unas vacaciones increibles/ REJECT
+/^Subject: Usted y su familia han sido adjudicados con unas vacaciones/ REJECT
+/^Subject: I n c r e a s e  Muscle/ REJECT
+/^Subject: Increase the length of your pecker/ REJECT
+/^Subject: Gana dolares desde tu casa u oficina/ REJECT
+/^Subject: La Florida es TUYA disfrutala/ REJECT
+/^Subject: promocion de invierno/ REJECT
+/^Subject: Usted y su familia han sido seleccionados para viajar a Disney/ REJECT
+/^Subject: Auction price records - Records de ventes/ REJECT
+/^Subject: Usted y su familia han sido premiados para viajar a Disney/ REJECT
+/^Subject: Usted ha sido premiado con un viaje a Disney/ REJECT
+/^Subject: My experience for men/ REJECT
+/^Subject: El drama cubano y el silencio vaticano/ REJECT
+/^Subject: Drama cubano y silencio vaticano/ REJECT
+/^Subject: Aumenta tu cartera de Clientes y tus Ventas/ REJECT
+/^Subject: DIA DE LAMADRE 10 Y 11 DE MAYO/ REJECT
+/^Subject: your free mortgage search/ REJECT
+/^Subject: Watch that security patch which came from Microsoft/ REJECT
+/^Subject: Usted y su familia han sido PREMIADOS con un viaje a Disney/ REJECT
+/^Subject: Absolutely Free Dating service/ REJECT
+/^Subject: Stands para ferias y exposiciones. Stands modulares. Carpas./ REJECT
+/^Subject: Usted y su familia han sido PREMIADOS con un viaje espectacular/ REJECT
+/^Subject: Empobrecido Empresario Local Misteriosamente Transforma una Simple Idea en/ REJECT
+/^Subject: Free Disney Screensavers/ REJECT
+/^Subject: FW: Take a look at update from Microsoft/ REJECT
+/^Subject: LAVO SU ALFOMBRA\?/ REJECT
+/^Subject: This is your free gift/ REJECT
+/^Subject: manufacturer of garments and bags in China/ REJECT
+/^Subject: EL PODER DE IMAGINAR/ REJECT
+/^Subject: Prescribed medications shipped overnight to your door/ REJECT
+/^Subject: Hasta 10 cargas de impresora por 1/ REJECT
+/^Subject: Save mon-ey with gen-eric via-gra/ REJECT
+/^Subject: ANTI_SANFERMINES Y MAS COSITAS GUAPAS SUMATE/ REJECT
+/^Subject: VIRUS IN YOUR MAIL/ REJECT Please, check http://www.hispalinux.es/~data/virus.html
+/^Subject: \{Virus\?\}/ REJECT Please, check http://www.hispalinux.es/~data/virus.html
+/^Subject: United States President Confidence Poll/ REJECT
+/^Subject: Why wouldnt you just give it to me/ REJECT
+/^Subject: DONATION FOR THE LORD/ REJECT
+/^Subject: AntiVirus Alert\!/ REJECT Please, check http://www.hispalinux.es/~data/virus.html
+/^Subject: New Microsoft Security Patch/ REJECT Please, check http://www.hispalinux.es/~data/virus.html
+/^Subject:.* \*\* Overnight Delivery \*.*/	REJECT 
+/^Subject: .*Amazing.*Vibrator/	REJECT 
+/^Subject:.*Buy online\!.*/	REJECT
+/^Subject: .*Pay Less\!/	REJECT
+/^Subject: .*Earn \$.*/		REJECT
+/^Subject: .*Save On .*/i	REJECT
+/^Subject:.*Overnight\!.*/i	REJECT
+/^Subject: .*Free Inkjet.*/	REJECT
+/^Subject: .*FREE.*Cash/i	REJECT
+/^Subject: enjoy it/		REJECT
+/^Subject:.*Get a fortune\!/	REJECT
+/^Subject: Cheapest.*online\!/	REJECT
+/^Subject: Free .* Quote?/	REJECT
+/^Subject: pénis/		REJECT
+/^Subject: Morgage rates .* low.*/      REJECT
+/^Subject: .* Save .*\% /               REJECT
+/^Subject: Refinance TODAY/             REJECT
+/^Subject: love muscle/                 REJECT
+/^Subject: .*All under \$\d{1,3}/       REJECT
+/^Subject: Make.*year for home improvement/     REJECT
+/^Subject: Need Extra Dough/            REJECT
+/^Subject: .*Bulk mailing /             REJECT
+/^Subject: im-prove/                    REJECT
+/^Subject: \!{2,10}/                    REJECT
+/^Subject: .*Refinance as low/          REJECT
+/^Subject: .*Mortgages as low as/       REJECT
+/^Subject: .*Mortgage rates/		REJECT
+/^Subject: .*Refinance today/           REJECT
+/^Subject: .*Weightloss Resolutions/    REJECT
+/^Subject: .* \d{1,2}\% cheaper/        REJECT
+/^Subject: .*make a fortune on eBay/    REJECT
+/^Subject: URGENT ASSSISTANCE/i         REJECT
+/^Subject: Urgent.* Collections/	REJECT
+/^Subject: .* under \$\d{1,3}/		REJECT
+/^Subject: .* Can You Last .* Hours/	REJECT
+/^Subject: .*low as .*\d{1,3}\%/	REJECT	
+/^Subject: .*low as \$\d{1,3}/		REJECT
+
+# Entradas que van en subject, pero pueden aparecer en el To: / J.Climent /
+
+/Alta gratis en (\d{2,} |)buscadores hispanos/ REJECT
+/FORMACIÓN Y TECNOLOGÍA INFORMATICA/ REJECT
+/Grupo Psicopedagogico de Enseñanza/ REJECT
+
+# They even say they are sending spam ! / J.Climent /
+/^X-Library: Business Promotion/ REJECT
+/^Subject: Snowhite and the Seven Dwarfs - The REAL story!/	REJECT This SUBJECT matches with a famous virus. Change it or check if you are infected.
+/^Subject: Enanito si, pero con que pedazo!/ 			REJECT This SUBJECT matches with a famous virus. Change it or check if you are infected.
+/^Subject: new photos from my party!/ 				REJECT This SUBJECT matches with a famous virus. Change it or check if you are infected.
+/^Subject: Re: Your password!$/ 				REJECT This SUBJECT matches with a famous virus. Change it or check if you are infected
+/^Subject: SAP UPDATE$/ 					REJECT This SUBJECT matches with a famous virus. Change it or check if you are infected.
+
+# Presumed exploit for http://www.cert.org/advisories/CA-2003-07.html
+/&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;/ reject possible CA-2003-07 sendmail buffer overflow exploit
+## Original file from http://infinitejazz.net/will/geek/header_checks.txt
+
+## some taken from http://www.mrbill.net/postfix/
+# $Id$
+
+# male insecurity
+
+/^Subject: Get Viagra Online Now !!!/				REJECT Message content rejected - No spam please!
+/^Subject: ENLARGE YOUR PACAKGE GUARANTEED/			REJECT Message content rejected - No spam please!
+/^Subject: Add REAL Inches To Your Package! GUARANTEED/		REJECT Message content rejected - No spam please!
+/^Subject: At Last, Herbal V, the All Natural Alternative!/	REJECT Message content rejected - No spam please!
+/^Subject: Have Hair Loss? We Can Help You!\.\.Read on\.\./	REJECT Message content rejected - No spam please!
+/^Subject: Pill to Increase Your Ejaculation by \d{3}%/		REJECT Message content rejected - No spam please!
+/^Subject: free trial herbal viagra good for men and women/	REJECT Message content rejected - No spam please!
+/^Subject: STAYING POWER/					REJECT Message content rejected - No spam please!
+/^Subject: Isn\'t It Time You Solved Your \"little\" Problem\?\s*\d{2,6}/	REJECT Message content rejected - No spam please!
+/^Subject: Non Prescription Alternative to Viagra/		REJECT Message content rejected - No spam please!
+/^Subject: .*V1@GR@/						REJECT Message content rejected - No spam please!
+/^Subject: Add Inches with the patch/				REJECT Message content rejected - No spam please!
+/^Subject: .*Penis.*Patch.*/					REJECT Message content rejected - No spam please!
+/^Subject: .*Viag\*ra.*/					REJECT Message content rejected - No spam please!
+/^Subject:.*VIAGRA.*/						REJECT Message content rejected - No spam please!
+/^Subject: INCREASE YOUR.*/					REJECT Message content rejected - No spam please!
+/^Subject: .*enlargement patch.*/				REJECT Message content rejected - No spam please!
+/^Subject: .*get it up.*/					REJECT Message content rejected - No spam please!
+/^Subject: .*Add.*inches.*/					REJECT Message content rejected - No spam please!
+/^Subject:.*viagra.*/						REJECT Message content rejected - No spam please!
+/^Subject:.*víagra.*/						REJECT Message content rejected - No spam please!
+/^Subject:.*make. it large./					REJECT Message content rejected - No spam please!
+/^Subject: Are you satisfied.*/                                 REJECT Message content rejected - No spam please!
+/^Subject: .*D\_I\*CK.*WEIGHT.*/                                REJECT Message content rejected - No spam please!
+/^Subject: .*Viag\[ra.*/                                        REJECT Message content rejected - No spam please!
+/^Subject: get younger/                                         REJECT Message content rejected - No spam please!
+/^Subject: \"I loved him.*/                                     REJECT Message content rejected - No spam please!
+/^Subject: .*Feel .* again/                                     REJECT Message content rejected - No spam please!
+/^Subject: .*Via\-Gra/                                          REJECT Message content rejected - No spam please!
+/^Subject:.*Almost ffrree.*/                                    REJECT Message content rejected - No spam please!
+/^Subject: .*BIG RO\-D.*/i                                      REJECT Message content rejected - No spam please!
+/^Subject: This patch will change your member/                  REJECT Message content rejected - No spam please!
+/^Subject: Increase In Desire/                                  REJECT Message content rejected - No spam please!
+/^Subject: You mate will be amazed/                             REJECT Message content rejected - No spam please!
+/^Subject: .*the m_an I use to b-e.*/                           REJECT Message content rejected - No spam please!
+/^Subject: .*Homeopathic HGH/                                   REJECT Message content rejected - No spam please!
+/^Subject: .*Important: moisture therapy.*/                     REJECT Message content rejected - No spam please!
+/^Subject: .*get rid of stretch marks/                          REJECT Message content rejected - No spam please!
+/^Subject: THe patch works/                                     REJECT Message content rejected - No spam please!
+/^Subject: I\"ncrease ` D\.IC'K L`ENGT-H/                       REJECT Message content rejected - No spam please!
+/^Subject: your lover will THANK YOU/                           REJECT Message content rejected - No spam please!
+/^Subject: make yourself bigger .*/                             REJECT Message content rejected - No spam please!
+/^Subject: Magnify Your Performance/                            REJECT Message content rejected - No spam please!
+/^Subject: WANNA PLEASE THE LADIES/                             REJECT Message content rejected - No spam please!
+/^Subject: be the best in bed .*/                               REJECT Message content rejected - No spam please!
+/^Subject: Raise Testosterone .*/                               REJECT Message content rejected - No spam please!
+/^Subject: FREE Male .*/i                                       REJECT Message content rejected - No spam please!
+/^Subject: More Stamina .*/                                     REJECT Message content rejected - No spam please!
+/^Subject: solve an embarrassing problem .*/                    REJECT Message content rejected - No spam please!
+/^Subject: SIZE DOES.*/i                                        REJECT Message content rejected - No spam please!
+/^Subject: WANT A BIG  ONE.*/                                   REJECT Message content rejected - No spam please!
+/^Subject: renew your vitality/                                 REJECT Message content rejected - No spam please!
+/^Subject: mutiple orgasms.*/                                   REJECT Message content rejected - No spam please!
+/^Subject: .* Viagr\@.*/                                        REJECT Message content rejected - No spam please!
+/^Subject: immaculate size/                                     REJECT Message content rejected - No spam please!
+/^Subject: Add .* inches .*/                                    REJECT Message content rejected - No spam please!
+/^Subject: .* be the best in bed/                               REJECT Message content rejected - No spam please!
+/^Subject: .*Vi.agra/ 						REJECT Message content rejected - No spam please!
+/^Subject: .*achieve* erection*/				REJECT Message content rejected - No spam please!
+/^Subject: .*gain inches/					REJECT Message content rejected - No spam please!
+/^Subject:.*v1aGR@/						REJECT Message content rejected - No spam please!
+/^Subject:.*Super v.*\!/					REJECT Message content rejected - No spam please!
+/^Subject: .*V\!agra/						REJECT Message content rejected - No spam please!
+/^Subject: You never called me back last night\!\!\!/		REJECT Message content rejected - No spam please!
+/^Subject: Incredibly Enhanced Sensations/			REJECT Message content rejected - No spam please!
+/^Subject: Free lifetime access to best adult sites\d{2,6}/	REJECT Message content rejected - No spam please!
+/^Subject: Gay And Loving It.*\d{2,6}/				REJECT Message content rejected - No spam please!
+/^Subject: Incest Porn.*\d{2,7}/				REJECT Message content rejected - No spam please!
+/^Subject: These Girls Are Barely Legal/			REJECT Message content rejected - No spam please!
+/^Subject: These Teens Want You Now/				REJECT Message content rejected - No spam please!
+/^Subject: FURRY NAKED BARNYARD FRIENDS\!/			REJECT Message content rejected - No spam please!
+/^Subject: (big|Huge).*Penis.*/					REJECT Message content rejected - No spam please!
+/^Subject: .*Vi(r)gin Degrades Herself.*/			REJECT Message content rejected - No spam please!
+/^Subject: See.*getting slammed.* /				REJECT Message content rejected - No spam please!
+/^Subject:.*P0RN Star\!/					REJECT Message content rejected - No spam please!
+/^Subject:.*getting it long and hard.*/                         REJECT Message content rejected - No spam please!
+/^Subject: .*Real Girls.*/                                      REJECT Message content rejected - No spam please!
+/^Subject:.*Jenna Orgasm.*/                                     REJECT Message content rejected - No spam please!
+/^Subject: .*farm girlzonline.*/                                REJECT Message content rejected - No spam please!
+/^Subject:.*p0rn.*/                                             REJECT Message content rejected - No spam please!
+/^Subject: .*Animal.*Sex/                                       REJECT Message content rejected - No spam please!
+/^Subject: .*wet Young boys/                                    REJECT Message content rejected - No spam please!
+/^Subject: .*Get Any Pills.*/                                   REJECT Message content rejected - No spam please!
+/^Subject: Satisfy Your Lover.*/                                REJECT Message content rejected - No spam please!
+/^Subject: .* cute hottie/                                      REJECT Message content rejected - No spam please!
+/^Subject: big honkin' bewbs/                                   REJECT Message content rejected - No spam please!
+/^Subject: chicks getting dirty.*/                              REJECT Message content rejected - No spam please!
+/^Subject: .*Blowjob.*/                                         REJECT Message content rejected - No spam please!
+/^Subject: .*Real Lesbian Sex/                                  REJECT Message content rejected - No spam please!
+/^Subject: .*Free Adult Movies/                                 REJECT Message content rejected - No spam please!
+/^Subject: .*I want to cheat on him with you/                   REJECT Message content rejected - No spam please!
+/^Subject: .*young college girls/                               REJECT Message content rejected - No spam please!
+
+
+
+# financial / money
+
+/^Subject: INSTANT Daily PAY!/					REJECT Message content rejected - No spam please!
+/^Subject: INSTANT Pay to \$\d{2,3} A Day!/			REJECT Message content rejected - No spam please!
+/^Subject: The easiest way to make money on the internet!/	REJECT Message content rejected - No spam please!
+/^Subject: INTEREST RATES HAVE DROPPED/				REJECT Message content rejected - No spam please!
+/^Subject: Make Money In Your Sleep! /				REJECT Message content rejected - No spam please!
+/^Subject: Lowest Rates In Years! /				REJECT Message content rejected - No spam please!
+/^Subject: make money now!!!!!/					REJECT Message content rejected - No spam please!
+/^Subject: HOME-BASED BUSINESSES /				REJECT Message content rejected - No spam please!
+/^Subject: Sick of paying and paying and staying in debt? /	REJECT Message content rejected - No spam please!
+/^Subject: Recession Hurts!/					REJECT Message content rejected - No spam please!
+/^Subject: Got Debt\?\s*Cut Your Bills in HALF!/			REJECT Message content rejected - No spam please!
+/^Subject: Double your policy at No Extra Cost!/		REJECT Message content rejected - No spam please!
+/^Subject: Make \d{2}% Yearly Fully Secured!/			REJECT Message content rejected - No spam please!
+/^Subject: Have tax problems?\s*\[\w{4,6}\]/			REJECT Message content rejected - No spam please!
+/^Subject: Got a Mortgage\?\s{1,9}\d.\d{2}% Fixed Rate Mortgage/	REJECT Message content rejected - No spam please!
+/^Subject: Rates Have Fallen Again!\s{1,9}\d.\d{2}% Fixed Rate Mortgage/	REJECT Message content rejected - No spam please!
+/^Subject: Take Advantage of Falling Interest Rates!/		REJECT Message content rejected - No spam please!
+/^Subject: Double Your Life Insurance at NO EXTRA COST!/	REJECT Message content rejected - No spam please!
+/^Subject: Got Debt\?.*\[\w{4,6}\\]/				REJECT Message content rejected - No spam please!
+/^Subject: Are you in debt\?\s*\[\w{4,6}\\]/			REJECT Message content rejected - No spam please!
+/^Subject: Refinance rates as low as \d.\d{2}%/			REJECT Message content rejected - No spam please!
+/^Subject: Hot Casino Action - \d{2,3}% Bonus/			REJECT Message content rejected - No spam please!
+/^Subject: Double your policy at No Extra Cost!/		REJECT Message content rejected - No spam please!
+/^Subject: Welcome to the world's best online casino!/		REJECT Message content rejected - No spam please!
+/^Subject: Need More Life Insurance\? Double it for No Extra Cost/	REJECT Message content rejected - No spam please!
+/^Subject: Did you get your money\?/				REJECT Message content rejected - No spam please!
+/^Subject: Tired of dropping stock prices\?\d{1,6}/		REJECT Message content rejected - No spam please!
+/^Subject: \d{2,6}\s*Work From Home /				REJECT Message content rejected - No spam please!
+/^Subject: Debt Consolidation.\s*\[\w{4,6}\]/			REJECT Message content rejected - No spam please!
+/^Subject: Mortgage interest rates are lowered AGAIN/		REJECT Message content rejected - No spam please!
+/^Subject: Re:  Easy money!  Muy dinero! \(/			REJECT Message content rejected - No spam please!
+/^Subject: Feel the Excitement of CyberXCasino/			REJECT Message content rejected - No spam please!
+/^Subject: Free Loan Quotations\.\.\.\.\.Lower your Rate!/		REJECT Message content rejected - No spam please!
+/^Subject: Free Vacation$/					REJECT Message content rejected - No spam please!
+/^Subject: GUARANTEED MONTHLY INCOME- Join FREE NOW!/		REJECT Message content rejected - No spam please!
+/^Subject: Is your mortgage APR as low as \d.\d{2}/		REJECT Message content rejected - No spam please!
+/^Subject: Tired of the 40 X 40.*\?/				REJECT Message content rejected - No spam please!
+/^Subject: NEVER REPAY, FREE CASH GRANTS\.*\s*\d{2,7}$/		REJECT Message content rejected - No spam please!
+/^Subject: Are You Making \$\w{2,}\+ A Month Online\?\s*\d{2,7}$/	REJECT Message content rejected - No spam please!
+/^Subject: Secure Your Financial Future!$/			REJECT Message content rejected - No spam please!
+/^Subject: \d{2,3}% OFF Your Life Insurance/			REJECT Message content rejected - No spam please!
+/^Subject: 100 Million EMAIL ADDRESSES/			REJECT Message content rejected - No spam please!
+/^Subject: Can Your Family Afford to Lose You\?/			REJECT Message content rejected - No spam please!
+/^Subject: Save \d{2}\% On Life Insurance/			REJECT Message content rejected - No spam please!
+/^Subject: instant success.*/					REJECT Message content rejected - No spam please!
+/^Subject: .*lose weight.*/					REJECT Message content rejected - No spam please!
+/^Subject: .*We1ght/						REJECT Message content rejected - No spam please!
+/^Subject: holiday surprise/					REJECT Message content rejected - No spam please!
+/^Subject: .* los(e|ing) .* pounds .*/				REJECT Message content rejected - No spam please!
+/^Subject: live your dreams/					REJECT Message content rejected - No spam please! 
+/^Subject: .*Inkjet Cartridges/					REJECT Message content rejected - No spam please!
+/^Subject:.*Mortgages .* low/					REJECT Message content rejected - No spam please! 
+/^Subject: Great rates/						REJECT Message content rejected - No spam please!	
+/^Subject: .*huge income/					REJECT Message content rejected - No spam please!
+/^Subject: .*pr1ce/						REJECT Message content rejected - No spam please! 
+/^Subject: .*PRICES\!/						REJECT Message content rejected - No spam please!
+/^Subject: .*w*e ca*n h*el*p you/				REJECT Message content rejected - No spam please!
+/^Subject: .*You look great/					REJECT Message content rejected - No spam please!
+/^Subject: .*earn.* huge income/				REJECT Message content rejected - No spam please!
+/^Subject: .*LIFE INSURANCE/					REJECT Message content rejected - No spam please!
+/^Subject: .*million email/					REJECT Message content rejected - No spam please!
+/^Subject: .*\d{2,6} people/					REJECT Message content rejected - No spam please!
+/^Subject: .*Best prices on/					REJECT
+/^Subject: .*Doctor Approved/					REJECT
+/^Subject: .*Lowest Home rates/					REJECT
+/^Subject: Save big/						REJECT
+/^Subject:.*\|/							REJECT
+/^Subject:.*weightloss/						REJECT
+/^Subject: \$\d{1,5}/						REJECT
+/^Subject: .*Make \$\d{1,5}/					REJECT
+
+
+
+# piracy
+
+/^Subject: Copy Your Favorite DVD Movies !!!/			REJECT Message content rejected - No spam please!
+/^Subject: EASILY COPY ANY DVD MOVIE FOR FREE!/			REJECT Message content rejected - No spam please!
+/^Subject: Favorite Movie not on DVD?/				REJECT Message content rejected - No spam please!
+/^Subject: .*cds from here/					REJECT Message content rejected - No spam please!
+
+# drugs
+/^Subject: .*vicodin/						REJECT
+/^Subject: .*Hydrocodone/					REJECT
+/^Subject: .*Viarga/						REJECT
+/^Subject: Get your medication here/				REJECT
+/^Subject:.*internet pharmacy/					REJECT
+/^Subject: Valium Online.*/					REJECT
+/^Subject: Next day shipping on your medication!.*/		REJECT
+/^Subject: Get Prescription Med.*/				REJECT
+/^Subject: GET ALL MEDS.*/					REJECT
+/^Subject: .*Need Pills\?/					REJECT 
+/^Subject: .*Meds for You.*/					REJECT
+/^Subject: .*Hundreds of Prescription.*/			REJECT
+/^Subject:.*Meds.*/						REJECT
+/^Subject:.*Prescription.*/					REJECT
+/^Subject: strengthen your immune system/			REJECT
+/^Subject: .*Weight Loss.*/					REJECT 
+/^Subject: .* Diet Pills .*/					REJECT
+/^Subject:.*Want PILLs.*/					REJECT
+/^Subject: CHeap PIlls.*/					REJECT 
+/^Subject: .*Precription dru\[gs.*/                             REJECT
+/^Subject:.*Prescription (Drugs|Pills).*/                               REJECT
+/^Subject: .*Order All Med.*/                                   REJECT
+/^Subject:.*Phentermine.*/                                      REJECT
+/^Subject: .*prescrip\!tion.*/                                  REJECT
+/^Subject: .*good news on aging.*/                              REJECT
+/^Subject: .*medication today\!.*/                              REJECT
+/^Subject: .*Prescrip\$tion.*/                                  REJECT
+/^Subject: Pay Pennies on the Dollar.*/                         REJECT
+/^Subject: No Pills Or Capsules/                                REJECT
+/^Subject:.*Prescri\$ption/                                     REJECT
+/^Subject:.*D\$rugs/                                            REJECT
+/^Subject: Worlds fastest shipping/                             REJECT
+/^Subject: .*Dru\!gs.*/                                         REJECT
+/^Subject: .*Pills Or Capsules/                                 REJECT
+/^Subject: .*Got Pills\?/                                       REJECT
+/^Subject: .*within .* hours of ordering\!/                     REJECT
+/^Subject: Prescr.*iption D.*rugs/                              REJECT
+/^Subject: .* days to youth/                                    REJECT
+/^Subject: Doctor\'s secret/                                    REJECT
+/^Subject: Order .* online\!/i                                  REJECT
+/^Subject: .*please you.* lover/                                REJECT
+/^Subject: take your lovelife to the next level/                REJECT
+/^Subject: .*Prescribed online/                                 REJECT
+/^Subject: .* Medical Miracle/                                  REJECT
+/^Subject: .* Thicker And Fuller .*/i                           REJECT
+/^Subject: Safe \& Natural .*/                                  REJECT
+/^Subject: No Prescription.*/i                                  REJECT
+/^Subject: no doctor vísit/					REJECT
+/^Subject: Turn Back Aging Process.*/				REJECT
+/^Subject: great oil.*/						REJECT
+/^Subject:.*help your love life/				REJECT 
+/^Subject: No Prescription.*/i                                  REJECT
+/^Subject: GET PIlls .*/                                        REJECT
+/^Subject: Free Prescriptions/                                  REJECT
+/^Subject:.* Cialis/                                            REJECT
+/^Subject: .*quality herb/					REJECT
+/^Subject: .* Xanax/						REJECT 
+/^Subject: .*Viargrrrrraa/					REJECT
+/^Subject: .* Medications/ 					REJECT
+/^Subject: .*\$\d{1,3}.* OFF/i					REJECT
+/^Subject: .* Cut-price/					REJECT
+/^Subject: .* Any Pills U Need/					REJECT
+/^Subject: .* buy HGH/						REJECT
+/^Subject: .* Real buy/						REJECT 
+
+
+
+# random
+
+/^Subject: Try this, it really works! /				REJECT Message content rejected - No spam please!
+/^Subject: Increased Emotional Stability /			REJECT Message content rejected - No spam please!
+/^Subject: Free Travel/						REJECT Message content rejected - No spam please!
+/^Subject: Chart Returns - Charles Taylor /			REJECT Message content rejected - No spam please!
+/^Subject: You could search for a year and\.\.\.\.\./		REJECT Message content rejected - No spam please!
+/^Subject: Escape the Ordinary\.\.\.\.\.\.New Opportunity for you\.\./	REJECT Message content rejected - No spam please!
+/^Subject: This Is What You've Been Waiting For\..*\d{2,6}/	REJECT Message content rejected - No spam please!
+/^Subject: Get Rid of those Paper Piles!\s*\d{2,6}/		REJECT Message content rejected - No spam please!
+/^Subject: Imaging Software for the Home.*\d{2,6}/		REJECT Message content rejected - No spam please!
+/^Subject: End static on the cell/				REJECT Message content rejected - No spam please!
+/^Subject: Free Trials &amp; HBC Updates!/				REJECT Message content rejected - No spam please!
+/^Subject: Free Trials from Home Business Connection/		REJECT Message content rejected - No spam please!
+/^Subject: Fw: Marketing your product or service just got easier!/	REJECT Message content rejected - No spam please!
+/^Subject: Re: I did not hear back from you$/			REJECT Message content rejected - No spam please!
+/^Subject: Safe, Easy Snoring Solution!\s*\w{2,7}/		REJECT Message content rejected - No spam please!
+
+# search engines
+
+/^Subject: Search Engine Bids Are Now Half Price!/		REJECT Message content rejected - No spam please!
+/^Subject: Guaranteed Top Ten Search Engine Placement!!\s*\d{2,7}/	REJECT Message content rejected - No spam please!
+
+# spamware / email addresses
+
+/^Subject: \d{2,3} Million Fresh Email Addresses/		REJECT Message content rejected - No spam please!
+/^Subject: \d{2,3} Million Email Addresses - \$\d{2,3}/		REJECT Message content rejected - No spam please!
+/^Subject: Internet Marketing Works! -\w{48}/			REJECT Message content rejected - No spam please!
+/^Subject: Lets Learn How to market successfully!\s*\d{2,7}/	REJECT Message content rejected - No spam please!
+
+# spyware
+
+/^Subject: Investigate Anyone or Anything now!/			REJECT Message content rejected - No spam please!
+/^Subject: NEW!! Find out ANYTHING about ANYONE w\/ your PC!/	REJECT Message content rejected - No spam please!
+
+# paranoia
+
+/^Subject: Protect yourself from Small pox and Anthrax Naturally\s*\w{2,7}/	REJECT Message content rejected - No spam please!
+
+# just plain unrealistic
+
+/^Subject: Boost Your Windows Reliability/			REJECT Message content rejected - No spam please!
+/^Subject: Give Windows Operating System A Boost In Reliability!/	REJECT Message content rejected - No spam please!
+
+# known spamware
+
+#/^X-(Advertisement|\d|UltraMail|Bulkmail): /	REJECT Message content rejected - No spam please!
+#/^(Received|Message-Id|X-(Mailer|Sender)):.*\b(AutoMail|E-Broadcaster|Emailer Platinum|eMarksman|Extractor|e-Merge|from stealth[^.]|Global Messenger|GroupMaster|Mailcast|MailKing|Match10|MassE-Mail|massmail\.pl|News Breaker|Powermailer|Quick Shot|Ready Aim Fire|WindoZ|WorldMerge|Yourdora)\b/	REJECT Message content rejected - No spam please!
+#/^X-Mailer:.*\b(Aristotle|Avalanche|Blaster|Bomber|DejaVu|eMerge|Extractor|UltraMail|Sonic|Floodgate|GeoList|Mach10|MegaPro|Aureate|MultiMailer|Bluecom|Achi-Kochi Mail|Direct Email|Andrew's SuperCool Blastoise|MailerGear|Advanced Mass Sender)\b/	REJECT Message content rejected - No spam please!
+#/^X-Server: Advanced Direct Remailer/	REJECT Message content rejected - No spam please!
+#/^X-AD2000-(Serial|Register):/	REJECT Message content rejected - No spam please!
+
+# Trouvé sur http://reseau.univ-aix.fr/doctech/postfix/header_checks
+
+/^Content.*name=.*\.(bas|bat|com|cpl|chm|cmd|dll|exe|hlp|hta|js|jse|lnk|msi|pif|reg|scr|sct|shs|vbs|vb|vbe|wsc|wsf|wsh)/i REJECT Extension dangereure. Renommez l'extension. Virus may be in attached files. Change extension
+/X-Mailer: superx-mailer/i REJECT No SPAM from superx-mailer
+/X-Mailer: super-mailerx/i REJECT No SPAM from superx-mailer
+/X-Mailer: lido/i REJECT No SPAM
+/X-Mailer: BandSend/i REJECT No SPAM
+/antivirus@univ-lyon2.fr/i REJECT SOFT batard et postmaster ne lit pas son courrier BASTA
+/payan@.*univ-aix.fr/i REJECT No SPAM
+/LatinMail/i REJECT No SPAM from latinmail
+/asbonline.com/i REJECT NO SPAM
+/Return-Path:*superdeals/i REJECT No SPAM
+/Return-Path:*savings/i REJECT No SPAM
+/Return-Path:*track4/i REJECT No SPAM
+/Return-Path: <bounce-/i REJECT No SPAM
+/^X-Habeas/i REJECT No SPAM
+/^From:.*Vicky/ REJECT No SPAM
+/^X-info-Mailx/ REJECT No SPAM
+/green card/i REJECT We don't need it
+/vicodine/i REJECT No SPAM
+/^Subject:.*Sildenafil/i REJECT No SPAM
+/^Subject:.*selectlotto/i REJECT No SPAM
+/^Subject:.*Rolex/i REJECT No SPAM
+/Citrate/i REJECT No SPAM
+/pills/i REJECT No SPAM
+/bestwaytofindlove.com/i REJECT No SPAM
+/goodstuff4u/i REJECT NO SPAM
+/emf2.com/i REJECT No SPAM
+/offers2005.net/i REJECT No SPAM
+/""@univ-aix.fr/i REJECT Spammer return
+/Received: from friend /i REJECT Spammer viagra over postmaster (stupid and silly)
+
+# Trouvé sur http://www.jeffborders.com/techdocs/postfix/postfix/header_checks.html
+
+/^Subject:.*=\?(big5|euc-kr|gb2312|ks_c_5601-1987)\?/			REJECT No foreign character sets, please.
+/^(Content-Type:.*|\s+)charset\s*=\s*"?(big5|euc-kr|gb2312|koi8|Windows-1251|ks_c_5601-1987)"?/	REJECT No foreign character sets, please.
+/^(Content-Type:.*|\s+)charset\s*=\s*"?(Windows-1251)\?/		REJECT Probably a windows virus.
+/^From:.*\@.*\.r[uo]/							REJECT No Russian or Romanian mail, please.
+/^From:.*\@.*\.bg/							REJECT No foreign character sets for bg, please. 
+/^From:.*\@.*\.nz/							REJECT No foreign character sets for nz, please.
+/^From:.*\@.*\.lb/							REJECT No foreign character sets for lb, please.
+/^From:.*\@.*\.cz/							REJECT No foreign character sets for cz, please.
+/^From:.*\@.*\.kr/							REJECT No foreign character sets for kr, please.
+/^From:(.*)Screen Saver /		REJECT Screensaver virus, die.
+/^From:(.*)mchsi.com/							REJECT Stop sending us crap.
+/^From:lpinsk@localnet.com]/						REJECT Stop sending us crap.
+/^From:(.*)[Aa]meritas/							REJECT Die, spammer, die.
+/opt-in/								REJECT Typical Spammer Word "Opt.."
+/^Received:.*\.{50,}/							REJECT Bogus received address
+/^(Received|Message-Id|X-(Mailer|Sender)):.*\b(AutoMail|E-Broadcaster|Emailer Platinum|eMarksman|Extractor|e-Merge|from stealth[^.]|Global Messenger|GroupMaster|Mailcast|MailKing|Match10|MassE-Mail|massmail\.pl|News Breaker|Powermailer|Quick Shot|Ready Aim Fire|WindoZ|WorldMerge|Yourdora|Lite)\b/	REJECT You're using a mass mailer, therefore you're bounced.
+/^received:.*xxxxxxxxxxxxxxxx/  					REJECT X-Rated Subject Line
+/^Received:(.*)hispeedmailer\.com/					REJECT Mass-mailer.  Die, spammer, die.
+/^From:(.*)cupid\@valentines-ecard\.com/				REJECT Potential Virus Content
+/^Return-Path:(.*)offers@/						REJECT We get too many offers.
+/^Subject:(.*)penis/							REJECT You said the p-word
+/^Subject:(.*)your password/						REJECT Die, spammer, die.
+/^Subject:(.*)Bigger Bust/						REJECT We've got big busts, already.
+/^Subject:(.*)adult/ 							REJECT X-Rated Subject Line
+/^Subject:(.*)AS SEEN ON T\.V/						REJECT We don't watch TV.
+/^Subject:(.*)barnyard/ 						REJECT No barnyard  please
+/^Subject:(.*)beast/ 							REJECT X-Rated Subject Line
+/^Subject:(.*)bitch/ 							REJECT X-Rated Subject Line
+/^Subject:(.*)bodies/ 							REJECT X-Rated Subject Line
+/^Subject:(.*)breast/ 							REJECT X-Rated Subject Line
+/^Subject:(.*)fuck/ 							REJECT X-Rated Subject Line
+/^Subject:(.*)galore/ 							REJECT X-Rated Subject Line
+/^Subject:(.*)gay/ 							REJECT X-Rated Subject Line
+/^Subject:(.*)porn/							REJECT X-Rated Subject Line
+/^Subject:(.*)slut/ 							REJECT X-Rated Subject Line
+/^Subject:(.*)HARDCORE/			              			REJECT X-Rated Subject Line
+/^Subject:(.*)russian/							REJECT God bless america
+/^Subject:(.*)teen/ 							REJECT X-Rated Subject Line
+/^Subject:(.*)viagra/ 							REJECT No thanks, we've got plenty.
+/^Subject:(.*)viaagra/ 							REJECT No thanks, we've got plenty.
+/^Subject:(.*)viiagra/ 							REJECT No thanks, we've got plenty.
+/^Subject:(.*)v1agra/ 							REJECT No thanks, we've got plenty.
+/^Subject:(.*)viagr@/ 							REJECT No thanks, we've got plenty.
+/^Subject:(.*)v1@gra/ 							REJECT No thanks, we've got plenty.
+/^Subject:(.*)viag*ra/ 							REJECT No thanks, we've got plenty.
+/^Subject:(.*)soma/ 							REJECT No thanks, we've got plenty.
+/^Subject:(.*)levitra/ 							REJECT No thanks, we've got plenty.
+/^Subject:(.*)ambien/ 							REJECT No thanks, we've got plenty.
+/^Subject:(.*)tramadol/							REJECT No thanks, we've got plenty.
+/^Subject:(.*)phentermine/						REJECT No thanks, we've got plenty.
+/^Subject:(.*)xxx/ 							REJECT X-Rated Subject Line
+/^Subject:(.*)orgasms/ 							REJECT X-Rated Subject Line
+/^Subject:(.*)size does matter/						REJECT X-Rated Subject Line
+/^(To|From|Cc|Reply-To):.*@sexyfun.net/					REJECT X-Rated Subject Line
+/^To:(.*)infomail@recurrent\.com/					REJECT Die, spammer, die.
+/^(To|From|Cc|Reply-To):.*@sunny95.com/					REJECT We don't like radio.
+/^X-Mailer:.*\b(Aristotle|Avalanche|Blaster|Bomber|DejaVu|eMerge|Extractor|UltraMail|Sonic|Floodgate|GeoList|Mach10|MegaPro|Aureate|MultiMailer|Bluecom|Achi-Kochi Mail|Direct Email|Andrew's SuperCool Blastoise|MailerGear|Advanced Mass Sender|SpireMail|MailWorkZ|UltimDBMail|Mabry|Lite)\b/	REJECT No mass-mailers, please.
+/^Subject:(.*)pen[i1]s/							REJECT You said the p-word
+/^Subject:(.*)\bdick\b/							REJECT X-rated spam
+/^(To|From|Cc|Reply-To):.*@sympatico.ca/				REJECT You spammed us, now you're blocked.  Sympatico.ca...
+/^(To|From|Cc|Reply-To):.*@optonline/					REJECT You spammed us, now you're blocked.  Optonline...
+/^(To|From|Cc|Reply-To):.*@sendspeed/					REJECT You spammed us, now you're blocked.  Sendspeed...
+/^(To|From|Cc|Reply-To):.*@pillsavings/					REJECT You spammed us, now you're blocked.  pillsavings...
+/^(To|From|Cc|Reply-To):.*@edirectmessage.com/				REJECT You spammed us, now you're blocked.  edirectmessage...
+/(.*)?\{6,\}/								REJECT Too many ?????
+/(.*)[X|x]\{3,\}/							REJECT Too many Xs
+/^(To|From|Cc|Reply-To):.*@lists.itsahullabaloo-lists.net/		REJECT No more hullabalos, please
+/^(To|From|Cc|Reply-To|Subject):.*Free Cellular Phone/			REJECT We already have cell phones.
+/^(From|mailto):.*@sina.com/						REJECT sina.com spammed us, now you're out.
+/^(From|mailto):.*@bomx1.com/						REJECT bomx1.com spammed us, now you're out.
+/^(From|mailto):.*@pornopassprt.com/					REJECT no porn mail, please.
+/^Subject:(.*)[Ss]ildenalfil/						REJECT You meant the v-word.
+/^Subject:(.*)[Cc]itrate/						REJECT You meant the v-word.
+/^Subject:(.*)[Cc]ialis/						REJECT c_ialis
+/^Subject:(.*)[Ee]nzyte/						REJECT e_nzyte 
+
+

@@ -1,0 +1,32 @@
+<add_new_poll>ajouter une nouvelle r&egrave;gle de r&eacute;cup&eacute;ration</add_new_poll>
+<aka>Autres nom DNS du serveur de mail</aka>
+<ChangeFetchMailUserText>Donner l'adresse e-mail du destinataire</ChangeFetchMailUserText>
+<cliktochange>Cliquer pour changer le destinataire</cliktochange>
+<doesntexists>N'existe pas</doesntexists>
+<edit_rules>Editer les r&egrave;gles de l'utilisateur</edit_rules>
+<fetchall>R&eacute;cup&eacute;rer tous les messages</fetchall>
+<fetchmail_explain>Cette section vous permet d'ajouter des r&egrave;gles pour r&eacute;cup&eacute;rer des messages stock&eacute;s sur le serveur de votre fournisseur d'acc&egrave;s Internet et exp&eacute;di&eacute;s par courrier &eacute;lectronique</fetchmail_explain>
+<get_mails_isp>E-mails Fetch de votre fournisseur d'acc&egrave;s &agrave; Internet</get_mails_isp>
+<hotmail_text>Vous avez choisis &quot;hotmail&quot;, l'outil Gotmail est utilis&eacute; pour cette r&egrave;gle, s'il vous plait donn&eacute; l'adresse e-mail compl&egrave;te a utiliser
+(utilisateur@hotmail.com, utilisateur@hotmail.fr...)</hotmail_text>
+<hotwayd_text>Vous avez choisi &quot;le HTTP&quot;, fetchmail utilisera pop3 local hotwayd le pour obtenir des messages, Utiliser votre nom d'utilisateur complet (par exemple hotmailuser@hotmail.com ou msnuser@msn.com) et le mot de passe que vous utilisez normalement pour acc&eacute;der &agrave; hotmail/msn/lycos/spray (eg username@lycos.fr ...)</hotwayd_text>
+<import1>Vous trouverez ici des r&egrave;gles se trouvant sur votre serveur, s&eacute;lectionnez-en une et importez la dans la base de donn&eacute;es Artica</import1>
+<import_local_rules>Importer des r&egrave;gles locales fetchmail</import_local_rules>
+<install_fetchmail>Installer le d&eacute;mon de Fetchmail</install_fetchmail>
+<interval>interval</interval>
+<keepmess>Garder les messages</keepmess>
+<load_user_rules>Trouver les r&egrave;gles utilisateurs</load_user_rules>
+<load_user_rules_text>Donnez l'adresse &eacute;lectronique de l'utilisateur dont vous voulez trouver * comme caract&egrave;re support&eacute;</load_user_rules_text>
+<localuser>Compte local</localuser>
+<multidrop>Multidrop</multidrop>
+<no_users_in_database>Pas d'utilisateur trouv&eacute; dans la base</no_users_in_database>
+<remoteuser>utilisateur distant</remoteuser>
+<rules>r&egrave;gles</rules>
+<select_user>Changez l'adresse de messagerie de l'utilisateur cible</select_user>
+<server>Serveur de bo&icirc;te aux lettres</server>
+<server_options>Options du serveur</server_options>
+<ssl>Utiliser le SSL</ssl>
+<timeout>d&eacute;lais d'expiration</timeout>
+<timeout_text>Configure Fetchmail pour abandonner apr&egrave;s un certain intervalle d'inactivit&eacute; du serveur. [Br] si cette valeur n'est pas param&egrave;tr&eacute;, un d&eacute;faut de 300 secondes est assum&eacute;</timeout_text>
+<tracepolls>Tracez tous les sondages</tracepolls>
+<user_option>Options utilisateur</user_option>

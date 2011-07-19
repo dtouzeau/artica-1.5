@@ -1,0 +1,85 @@
+<addfind_computer_text>Chercher un ordinateur et l'ajouter &agrave; ce groupe</addfind_computer_text>
+<add_attach_rule>Ajouter une nouvelle r&egrave;gle de rattachement &agrave; ce groupe</add_attach_rule>
+<add_computer>Ajouter un ordinateur</add_computer>
+<add_computer_confirm>Ajouter cet ordinateur &agrave; votre groupe ?</add_computer_confirm>
+<add_computer_text>Cr&eacute;ez une nouvelle entr&eacute;e informatique...</add_computer_text>
+<add_new_kavmilterd_rule>Ajouter une nouvelle r&egrave;gle Antivirus &agrave; ce groupe</add_new_kavmilterd_rule>
+<add_shared_folder>Ajouter un nouveau dossier partag&eacute;</add_shared_folder>
+<add_shared_folder_text>Cr&eacute;ez un nouveau point qui sera l'acc&egrave;s sur chaque r&eacute;pertoire locale des utilisateurs de ce groupe</add_shared_folder_text>
+<AllowChangeMailBoxRules>Autoriser la modification de r&egrave;gle de boite aux lettres</AllowChangeMailBoxRules>
+<AllowDansGuardianBanned>Permet d'exclure des sites Web &agrave; travers la page web interdit</AllowDansGuardianBanned>
+<AllowEmailing>Permet l'envoie de mails</AllowEmailing>
+<AllowOpenVPN>Activer la page d'utilisateur Open VPN</AllowOpenVPN>
+<AllowXapianDownload>Peut t&eacute;l&eacute;charger les fichiers &agrave; travers InstantSearch</AllowXapianDownload>
+<antivirus_rule>R&egrave;gle antivirus</antivirus_rule>
+<antivirus_text>D&eacute;finissez une r&egrave;gle sp&eacute;cifique antivirus de courrier &agrave; ce groupe avec Kaspersky</antivirus_text>
+<asav>Mail:Anti-Spam &amp; Antivirus</asav>
+<AsDnsAdministrator>Peut changer les param&egrave;tres DNS Bind9</AsDnsAdministrator>
+<AsQuarantineAdministrator>Autoriser la requ&ecirc;te de zone de quarantaine</AsQuarantineAdministrator>
+<AsSambaAdministrator>Peut g&eacute;rer Samba et les fichiers partag&eacute;s</AsSambaAdministrator>
+<as_plugin>Module Anti-Spam</as_plugin>
+<attachments_deny_text>Cette section vous permet d'ajouter un groupe d'attachements interdit dans ce groupe. [Br] Chaque courrier &eacute;lectronique achemin&eacute; &agrave; ce groupe d'utilisateurs sera pass&eacute; par l'analyse syntaxique pour &ecirc;tre filtr&eacute; pour les attachements indiqu&eacute;s.</attachments_deny_text>
+<change_password_now>Changez les mot de passe maintenant</change_password_now>
+<computers>Ordinateurs</computers>
+<computers_text>Cherchez et ajoutez des ordinateurs dans ce groupe</computers_text>
+<dansguardian_rules>Filtrage d'Url</dansguardian_rules>
+<dansguardian_rules_text>Dansguardian affecte une r&egrave;gle &agrave; ce groupe afin de d&eacute;finir l'acc&egrave;s &agrave; Internet</dansguardian_rules_text>
+<delete_members_confirm>&Ecirc;tes-vous s&ucirc;r de supprimer tous les membres de ce groupe ?</delete_members_confirm>
+<delete_selected_members>S&eacute;lectionnez Supprimer &amp; supprimer des membres</delete_selected_members>
+<FindInGroup_text>Cette fonctionnalit&eacute; recherche des utilisateurs dans ce groupe, le motif &laquo;*&raquo; est autoris&eacute;, afin de trouver vos utilisateurs</FindInGroup_text>
+<find_computer>Chercher un ordinateur</find_computer>
+<group_default_password>Mot de passe par d&eacute;faut</group_default_password>
+<group_default_password_change>Si vous passez au vert, les mots de passe des utilisateurs de ce groupe seront chang&eacute;s en mot de passe par d&eacute;faut</group_default_password_change>
+<group_default_password_text>D&eacute;finissez un mot de passe par d&eacute;faut pour l'importation massive et la cr&eacute;ation d'utilisateur</group_default_password_text>
+<group_delete_text>&Ecirc;tes-vous s&ucirc;r de vouloir supprimer ce groupe?
+si oui, tous les utilisateurs seront
+automatiquement d&eacute;plac&eacute; au groupe &quot;nogroup&quot;</group_delete_text>
+<group_settings>Configuration g&eacute;n&eacute;rale</group_settings>
+<importuser_text>Cette section vous permet d'importer des utilisateurs &agrave; partir d'un fichier texte.[br]
+Le fichier doit tenir compte de cette structure:[br]
+Chaque ligne est s&eacute;par&eacute;e par un retour chariot et une ligne doit &ecirc;tre:[b] nom d'utilisateur; mail; id utilisateur; mot de passe; Code Postal; Adresse; mobile; T&eacute;l&eacute;phone</importuser_text>
+<kaspersky_anti_spam_text>G&eacute;rer les r&egrave;gles anti-spam pour ce groupe avec Kaspersky Anti-spam 3.x</kaspersky_anti_spam_text>
+<mailing_list>Listes de distribution</mailing_list>
+<mailing_list_text>Voir les listes de diffusion enregistr&eacute; dans votre organisation</mailing_list_text>
+<members_text>Voir tous les membres de ce groupe</members_text>
+<MK_SAMBA_GROUP>Devenir un groupe Samba</MK_SAMBA_GROUP>
+<MK_SAMBA_GROUP_text>Transformer ce groupe Artica en un groupe Samba pour partager des dossiers avec ce groupe</MK_SAMBA_GROUP_text>
+<not_group_samba>Ce groupe n'est pas un groupe SAMBA</not_group_samba>
+<no_samba_group_in_ou>Vous essayez d'ajouter un groupe d&eacute;j&agrave; utilis&eacute; pour des groupes Samba. Cette op&eacute;ration n'est pas autoris&eacute;e</no_samba_group_in_ou>
+<organization_allow>Droits de l'organisation</organization_allow>
+<privileges_text>D&eacute;finir les politiques d'acc&egrave;s de tous les membres de ce groupe</privileges_text>
+<proxy>HTTP Proxy</proxy>
+<quarantine_manager>Gestionnaire de Quarantaines</quarantine_manager>
+<rebuild_shared>Reconstruire les liens</rebuild_shared>
+<rebuild_shared_text>Cette op&eacute;ration va reconstruire les liens pour tous les utilisateurs du groupe</rebuild_shared_text>
+<RemoveMailingList_text>&Ecirc;tes-vous s&ucirc;r de vouloir supprimer cette liste?</RemoveMailingList_text>
+<RemoveSharedsFolders>&Ecirc;tes-vous s&ucirc;r de vouloir supprimer tous les dossiers mont&eacute;s sur votre syst&egrave;me?
+Cette op&eacute;ration va d&eacute;connecter tous les dossiers mont&eacute;s.
+Mais, tous les dossiers sauvegard&eacute;s dans vos param&egrave;tres seront automatiquement re-mont&eacute;</RemoveSharedsFolders>
+<remove_shared_folder>Retirer li&eacute;es</remove_shared_folder>
+<remove_shared_folder_text>Supprimer tous les dossiers partag&eacute;s mont&eacute;s dans le but de nettoyer les dossiers partag&eacute;s fant&ocirc;mes</remove_shared_folder_text>
+<sambaGroupType>Type du groupe</sambaGroupType>
+<sambaSID>Nombre SID Samba</sambaSID>
+<select_org>S&eacute;lectionner une organisation</select_org>
+<SharedConf>Configuration principale</SharedConf>
+<SharedFolderPrefix>Pr&eacute;fixe ajout&eacute; sur chaque dossier</SharedFolderPrefix>
+<shared_folders>Dossiers partag&eacute;s</shared_folders>
+<shared_folders_explain>La fonctionnalit&eacute; des dossiers partag&eacute;s  vous permet de signaler un syst&egrave;me de dossier avec tous les utilisateurs de ce groupe.[br] 
+imaginez que vous souhaitez partager /home/partage avec john et sully, cette fonction va cr&eacute;er un dossier &quot;monpartage&quot; dans chaque r&eacute;pertoire home de vos utilisateurs et le pointe vers 
+/home/partage</shared_folders_explain>
+<shared_folders_text>Partager un dossier avec tous les utilisateurs de ce groupe</shared_folders_text>
+<sieve_auto_explain>Your mailbox server store a feature that allow your users to create mailbox filters in charge of sorting mails by severals conditions.[br]This powerfull feature is performed directly by the server and not by the messaging client[br]
+In this case, it provides many benefits by reducing the bandwith, reducing the messaging client process and so on..[br]
+The Artica Mailbox filter option allow Artica to add rules on each group's account based on SPAM mails.[br]Rules created will move SPAM mails directly in Junk mailboxes without any user interaction.[br]
+In this case, when you update/add an user, Artica will automatically add this rule on each mailbox.
+</sieve_auto_explain>
+<sieve_auto_script>Filtres de boite aux lettres</sieve_auto_script>
+<sieve_auto_script_text>Ajoutez des scripts qui vont automatiquement placer les spam dans les courriers ind&eacute;sirables des utilisateurs</sieve_auto_script_text>
+<smbg_typ>groupe local</smbg_typ>
+<smbg_typ2>groupe du domaine (groupe global)</smbg_typ2>
+<sure_to_delete_selected_user>&Ecirc;tes-vous s&ucirc;r de vouloir supprimer tous les utilisateurs s&eacute;lectionn&eacute;s ?</sure_to_delete_selected_user>
+<view_member>Modifier les attributs de membre</view_member>
+<warning_delete_all_users>&Ecirc;tes-vous s&ucirc;r d'effectuer cette op&eacute;ration?
+Tous les membres seront d&eacute;connect&eacute;es de ce groupe et seront transf&eacute;r&eacute; au groupe &quot;nogroup&quot;</warning_delete_all_users>
+<YahooSelectedFolders_ask>Ajouter Ce dossier &agrave; partag&eacute; pour ce groupe?</YahooSelectedFolders_ask>
+<yes_group_samba>Ce groupe est un groupe SAMBA</yes_group_samba>

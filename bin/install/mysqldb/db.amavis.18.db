@@ -1,0 +1,1 @@
+CREATE TABLE msgrcpt (mail_id varchar(12) NOT NULL,rid integer unsigned NOT NULL,ds char(1) NOT NULL, rs char(1) NOT NULL,bl char(1),wl char(1),bspam_level float, smtp_resp  varchar(255),FOREIGN KEY (rid) REFERENCES maddr(id) ON DELETE RESTRICT,FOREIGN KEY (mail_id) REFERENCES msgs(mail_id) ON DELETE CASCADE) ENGINE=InnoDB;

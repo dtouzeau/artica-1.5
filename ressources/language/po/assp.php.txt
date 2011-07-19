@@ -1,0 +1,33 @@
+<ASSP_INTERFACE>Abra a interface original</ASSP_INTERFACE>
+<ASSP_INTERFACE_TEXT>Abra a interface original do ASSP</ASSP_INTERFACE_TEXT>
+<ASSP_NOT_INSTALLED>ASSP n&atilde;o esta instalado</ASSP_NOT_INSTALLED>
+<ASSP_NOT_INSTALLED_TEXT>Clique neste &iacute;cone para instalar o ASSP e activar este recurso</ASSP_NOT_INSTALLED_TEXT>
+<DelayEmbargoTime>Tempo de reten&ccedil;&atilde;o</DelayEmbargoTime>
+<DelayEmbargoTime_text>Enter the number of minutes for which delivery, related with new 'triplet' (IP address of the sending
+host + mail from + rcpt to), is refused with a temporary failure.[br]
+ Default is 5 minutes.</DelayEmbargoTime_text>
+<DelayExpiryTime>Tempo de validade</DelayExpiryTime>
+<DelayExpiryTime_text>Enter the number of days for which whitelisted 'tuplet' is considered valid. Default is 36 days.</DelayExpiryTime_text>
+<DelayGripvalue>Valor de controlo</DelayGripvalue>
+<DelayGripvalue_text>This will restrict Delaying/Greylisting to IPs with a Gripvalue above this value.[br]
+For example 0.4.[br]
+You may set it higher to 0.5 if you want to delay only IPs with a higher probability to send Spam.[br]
+The local griplist is build during rebuildspamdb and uploaded to a global database.[br]
+In return the global griplist is downloaded.[br]
+The Gripvalue is calculated from the "spamminess" , where 0 means the IP-Block never sends spam and 1 it always send spam.
+</DelayGripvalue_text>
+<DelaySSL>SSL Greylisting</DelaySSL>
+<DelaySSL_text>Activar Greylisting para conex&otilde;es SSL</DelaySSL_text>
+<DelayWaitTime>Tempo de espera</DelayWaitTime>
+<DelayWaitTime_text>Enter the number of hours to wait for delivery attempts related with recognised 'triplet'; delivery is accepted
+immediately and the 'tuplet' (IP address of the sending host + sender's domain) is safelisted.[br]
+Default is 28 hours.</DelayWaitTime_text>
+<EnableDelaying_text>O Greylisting envolve o envio de um c&oacute;digo de erro tempor&aacute;rio &quot;451 SMTP&quot; para o servidor de envio quando uma mensagem &eacute; recebida,
+juntamente com o envio deste c&oacute;digo de erro o ASSP cria um Triplet e guarda-o.[br]
+Na segunda tentativa de entrega, se o tempo de reten&ccedil;&atilde;o do Triplet estabelecido pelo administrador do ASSP for superado, a mensagem
+ser&aacute; aceite e ser&aacute; criado umTuplet, a mensagem n&atilde;o ser&aacute; adiada novamente por um tempo de validade estabelecido pelo administrador do ASSP.</EnableDelaying_text>
+<MessageScoringLowerLimit>Etiquetar as mensagens cuja pontua&ccedil;&atilde;o &eacute; superior a</MessageScoringLowerLimit>
+<MessageScoringLowerLimitTag>Etiqueta do texto</MessageScoringLowerLimitTag>
+<MessageScoringUpperLimit>Bloquear as mensagens quando ultrapassarem a pontua&ccedil;&atilde;o</MessageScoringUpperLimit>
+<messages_scoring>Pontua&ccedil;&atilde;o das mensagens</messages_scoring>
+<messages_scoring_text>Defina a pontua&ccedil;&atilde;o que ir&aacute; permitir o bloqueio das mensagens</messages_scoring_text>

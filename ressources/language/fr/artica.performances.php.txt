@@ -1,0 +1,95 @@
+<about_perf>Cette section vous aide &agrave; d&eacute;finir les performances des processus et des services Artica selon les capcit&eacute;s de votre ordinateur. [br]
+Vous pouvez choisir de meilleures performances pour Artica afin d'avoir un &eacute;tat en temps r&eacute;el ou r&eacute;duire les performances d'Artica afin de permettre aux services principaux de disposer de plus de ressources.</about_perf>
+<ADMIN_COVER_PAGE_STATUS>Etats de la page de garde Administrateur</ADMIN_COVER_PAGE_STATUS>
+<APP_PRELOAD_NOTINSTALLED>Le processus Preload n'est pas install&eacute;</APP_PRELOAD_NOTINSTALLED>
+<APP_PRELOAD_NOTINSTALLED_TEXT>Preload est &quot;un processus readahead adaptatif&quot; qui s'ex&eacute;cute en arri&egrave;re-plan de votre syst&egrave;me et observe quels programmes vous utilisez le plus souvent et les met en cache pour acc&eacute;l&eacute;rer le temps de charge des application. [br] En utilisant Preload, vous pouvez exploiter la RAM inutilis&eacute;e et am&eacute;liorer les performances g&eacute;n&eacute;rales de votre syst&egrave;me. [br]
+L'installation de Preload sur Ubuntu est facilement r&eacute;alis&eacute;e avec la commande : [b] apt-get install preload [/b] [br] Une fois install&eacute;, le Preload d&eacute;marrera et aucune autre action n'est n&eacute;cessaire, mais continuez de lire pour des options de configuration, apprendre comment g&eacute;rer les activit&eacute;s de Preload et voir quel genre d'am&eacute;liorations Preload  apportera &agrave; votre syst&egrave;me.</APP_PRELOAD_NOTINSTALLED_TEXT>
+<artica_process>Processus Artica</artica_process>
+<artica_process_explain>Ce param&egrave;tre g&egrave;re la priorit&eacute; d'ex&eacute;cution des processus d'artica (process1,artica-install, artica-ldap...)</artica_process_explain>
+<ARTICA_PROCESS_SCHEDULE>Ordonnancement des processus</ARTICA_PROCESS_SCHEDULE>
+<ARTICA_PROCESS_SCHEDULE_EXPLAIN>Afin de vous afficher des statistiques et des &eacute;tats des services, Artica &agrave; besoin d'ex&eacute;cuter certains processus en t&acirc;che de fond.[br]
+Ces processus peuvent consommer de la ressource machine.[br]
+Vous pouvez d&eacute;finir ici la fr&eacute;quence d'ex&eacute;cution.[br]Plus elle est rallong&eacute;e mois vous avez de visibilit&eacute; en temps r&eacute;el mais vous sauvegardez de la ressource machine.[br]Plus vous la raccourcissez, plus vous disposer de l'information en temps r&eacute;el.</ARTICA_PROCESS_SCHEDULE_EXPLAIN>
+<ARTICA_PROCESS_SCHEDULE_TEXT>D&eacute;finissez l'ordonnancement d'ex&eacute;cution des processus Artica</ARTICA_PROCESS_SCHEDULE_TEXT>
+<benchmark_result>R&eacute;sultats du test</benchmark_result>
+<cpu_number>Nombre de CPUs</cpu_number>
+<default>d&eacute;faut</default>
+<DisableFollowServiceHigerThan1G>D&eacute;sactiver le limiteur de m&eacute;moire</DisableFollowServiceHigerThan1G>
+<DisableFollowServiceHigerThan1G_explain>Par d&eacute;faut, Artica d&eacute;sactive les services requis pour tourner sur un ordinateur de plus de 1Gb de m&eacute;moire vive si l'ordintateur ne dispose pas des capacit&eacute;s n&eacute;c&eacute;ssaires.[br]Il bloque le d&eacute;marrage de  SpamAssassin, amavis et Sylog-ng   Mysql si votre ordinateur ne dispose pas de la m&eacute;moire requise.[br]
+Si vous activez cette option, les services seront autoris&eacute;s &agrave; d&eacute;marrer m&ecirc;me si votre ordinateur ne dispose pas des capacit&eacute;s requises.</DisableFollowServiceHigerThan1G_explain>
+<log_fifo_size>Tampons de sortie</log_fifo_size>
+<log_fifo_size_text>Voici un tr&egrave;s important param&egrave;tre. [br]
+Les &quot;Output Buffers&quot; ainsi que &quot;log_fifo_size&quot; r&egrave;glent la taille des tampons de sortie, vers toutes les destinations. [br]
+Le tampon de sortie doit &ecirc;tre suffisamment grand pour stocker les messages de chaque source. [Br]
+Ce r&eacute;glage peut &ecirc;tre fix&eacute; de fa&ccedil;on globale ou par destination. [Br]
+Pour les &quot;Output Buffers&quot;, le nombre indiqu&eacute; est le nombre delignes/entr&eacute;es/messages qu'il peut contenir. [br]
+Par d&eacute;faut, il est fix&eacute; globalement, par prudence-
+et si votre trafic augmente trop, vous finirez par voir des messages se perdre &agrave; un certain point. [br]
+Les statistiques des messages perdus sont enregistr&eacute;s dans syslog toutes les 10 minutes, sauf si vous avez modifi&eacute; cela. [Br]
+La ligne statistiques vous permettra de savoir quelle destination perd des messages et leur nombre. [Br]
+Vous pouvez alors d&eacute;cider si vous devez augmenter la valeur globalement ou par destination, de m&ecirc;me que cela vous donne une id&eacute;e de la valeur &agrave; donner.</log_fifo_size_text>
+<low>bas</low>
+<MaxtimeBackupMailSizeCalculate>Calcule l' espace de stockage tout les</MaxtimeBackupMailSizeCalculate>
+<MaxtimeBackupMailSizeCalculate_explain>Lorsque vous utilisez la zone de quarantaine et de sauvegarde avec la fonction &agrave; la vol&eacute;e, artica calculera p&eacute;riodiquement la consommation disque de ces zones.
+Ce traitement consomme des acc&egrave;s disques (I/O) et diminue les performances du serveur lors des calculs.
+Vous pouvez augmenter ou diminuer l'intervalle en fonction de la taille moyenne de ces zones.
+La valeur par d&eacute;faut a &eacute;t&eacute; calcul&eacute; pour une zone de quarantaine/sauvegarde de 10G d'espace disque.</MaxtimeBackupMailSizeCalculate_explain>
+<medium>moyen</medium>
+<mimedefang_consumption>Consommation du serveur MimeDefang</mimedefang_consumption>
+<mimedefang_consumption_text>MimeDefang s'accroche &agrave; postfix et autorise l'ajout de multiples fonctionnalit&eacute;s avec Artica (anti-spam, sauvegardes, note de bas de page et bien d'autres...)[br]Ce logiciel est &eacute;crit en PERL et peut utiliser beaucoup de m&eacute;moire, ici, vous g&eacute;rez le comportement de MimeDefang en fonction des performances de votre machine</mimedefang_consumption_text>
+<mimedefang_macro>Comportement de MimeDefang</mimedefang_macro>
+<MX_MAXIMUM>Nombre max de processus</MX_MAXIMUM>
+<MX_MAXIMUM_TEXT>Nombre maximum de processus &agrave; lancer (le mail re&ccedil;u en n&eacute;cessite de nombreux &quot;), le processus en cours d'ex&eacute;cution est rejet&eacute; par une d&eacute;faillance temporaire, alors m&eacute;fiez-vous du nombre d'e-mails que vous recevez simultan&eacute;ment). [br] Cela ne s'applique que si vous utilisez le multiplexeur. [fr]
+La valeur par d&eacute;faut de 2 est probablement trop basse, nous vous sugg&eacute;rons de la remplacer par 10</MX_MAXIMUM_TEXT>
+<MX_MAX_AS>Limite de la M&eacute;moire Totale (kb)</MX_MAX_AS>
+<MX_MAX_AS_TEXT>Limiter l'espace m&eacute;moire des processus esclave &agrave; ces quelques kilooctets. Illimit&eacute; par d&eacute;faut.</MX_MAX_AS_TEXT>
+<MX_MAX_RSS>M&eacute;moire maximale (kb)</MX_MAX_RSS>
+<MX_MAX_RSS_TEXT>Limiter les processus esclaves r&eacute;sidents. D&eacute;finir leur taille &agrave; ce nombre de kilo-octets. La valeur par d&eacute;faut est illimit&eacute;.</MX_MAX_RSS_TEXT>
+<MX_MINIMUM>Minimum de processus &agrave; garder</MX_MINIMUM>
+<MX_MINIMUM_TEXT>Nombre minimum de processus &agrave; garder. La valeur par d&eacute;faut de 0 est probablement trop petite; une valeur de 2 est plus appropri&eacute;e.</MX_MINIMUM_TEXT>
+<MX_REQUESTS>Nombre maxi de requ&ecirc;tes</MX_REQUESTS>
+<MX_REQUESTS_TEXT>Nombre max de requ&ecirc;tes qu'un processus peut supporter</MX_REQUESTS_TEXT>
+<mysql_audit>Audit du serveur MySQL</mysql_audit>
+<mysql_audit_text>D&eacute;marrez le script &quot;MySQL High Performance Tuning&quot; afin de visualiser si vous avez les bons param&egrave;tres</mysql_audit_text>
+<mysql_benchmark>Tests de stress</mysql_benchmark>
+<mysql_benchmark_text>Testez votre serveur Mysql et visalisez le rapport afin de v&eacute;rifiez la bonne puissance de votre ordinateur.</mysql_benchmark_text>
+<mysql_performance_level_text>Astuces et param&egrave;tres pour affiner votre serveur Mysql</mysql_performance_level_text>
+<mysql_repair_text>R&eacute;parez vos bases Mysql facilement</mysql_repair_text>
+<mysql_server_consumption>Consommation du serveur Mysql</mysql_server_consumption>
+<mysql_server_text>Le serveur de base de donn&eacute;es Mysql stocke beaucoup d'informations utilis&eacute;es par Artica (y compris les journaux d'&eacute;v&egrave;nements, le cache de RouncCube, les statistiques ...), le processus du serveur mysql consomme du temps CPU et de la m&eacute;moire alors que ce service
+est un service &quot;cosm&eacute;tiques&quot;. [br]
+vous pouvez ajuster, ici, la consommation du serveur mysql</mysql_server_text>
+<NoBootWithoutIP>D&eacute;marrez les services uniquement avec le r&eacute;seau</NoBootWithoutIP>
+<NoBootWithoutIP_explain>Lorsque le serveur d&eacute;marre, certains services mettent du temps &agrave; d&eacute;marrer car le r&eacute;seau n'est pas encore fonctionnel.[br]
+Sp&eacute;cialement si le serveur est en DHCP.[br]
+Si vous activez cette fontionnalit&eacute;, Artica va d&eacute;marrer les services si et seulement si une addresse TCP/IP est allou&eacute;e.[br]Cette fonctionnalit&eacute; &agrave; pour but d'acc&eacute;l&egrave;rer le d&eacute;marrage du serveur.</NoBootWithoutIP_explain>
+<no_sql_injection>pas d'injection SQL</no_sql_injection>
+<only_errors>Uniquement les erreurs</only_errors>
+<only_mail>&Eacute;v&egrave;nements de messagerie &amp; erreurs</only_mail>
+<others_benchmarks>Autres rapports de tests</others_benchmarks>
+<service_performances>Performances du service</service_performances>
+<syslogng_intro>Si vous rencontrez toujours des probl&egrave;mes avec les messages perdus,
+regardez comment utiliser le contr&ocirc;le de flux dans l'aide de syslog-ng. [br]
+Le contr&ocirc;le de flux vous permet de r&eacute;gler finement la quantit&eacute; de messages re&ccedil;us &agrave; partir d'une source. [br] [br]
+M&ecirc;me s'il existe d'autres solutions potentiels dont vous pouvez tenir compte, comme le ralentissement de l'application source
+si elle ne peut pas transf&eacute;rer ses messages de log, etc [br] [br]
+Les utilisateurs de clients syslog traditionnels  qui envoient leurs journaux via UDP, devraient jeter un oeil &agrave; cette page sur UDP Buffer Sizing. [br] [br]
+Tant &quot;Flushing Buffers&quot; que &quot;Output Buffers&quot; doivent &ecirc;tre modifi&eacute;s sur les serveurs clients si besoin, si ils utilisent syslog-ng,
+et g&egrave;rent les charges lourdes, les sources ponctuelles, etc [br]
+Pensez &agrave; utiliser vos logs de statistiques pour vous aider &agrave; identifier les probl&egrave;mes et la charge de mani&egrave;re efficace.</syslogng_intro>
+<syslogng_max_connections>Maximum de connections</syslogng_max_connections>
+<syslogng_max_connections_text>si vous voyez de nombreux &quot;Nombre de connexions simultan&eacute;es autoris&eacute;es d&eacute;pass&eacute;&quot;, cela signifie que vous devez augmenter cette valeur. [br]
+Ce param&egrave;tre limite le nombre de connexions ouvertes simultan&eacute;ment</syslogng_max_connections_text>
+<syslogng_sync>Vidage des Tampons</syslogng_sync>
+<syslogng_sync_text>L'application syslog-ng tamponne les messages &agrave; envoy&eacute;s dans une file d'attente de sortie. [Br]
+Le param&egrave;tre sync()  sp&eacute;cifie le nombre de messages pr&eacute;sents dans ce tampon. [Br] [br]
+Par d&eacute;faut, Flushing Buffers est mis &agrave; 0, ce qui &eacute;vacue imm&eacute;diatement messages - ce qui en fonction du volume votre enregistrement, peut &ecirc;tre tr&egrave;s contraignant. [br]
+L'augmentation de ce nombre en douceur, par exemple &agrave; 10 ou 20, gardera ce nombre de messages dans la m&eacute;moire tampon avant qu'ils ne soient &eacute;crits &agrave; leur destination.</syslogng_sync_text>
+<syslog_server_consumption>Injection Syslog-ng</syslog_server_consumption>
+<syslog_server_consumption_text>Vous utilisez syslog-ng et Artica le r&eacute;gle automatiquement pour forcer l'envoi des &eacute;v&egrave;nements &agrave; mysql pour qu'ils soient affich&eacute;s.[br]
+Les injections Mysql augmentent les processus mysql et n&eacute;cessite certaines performances.[br]
+Ce param&egrave;tre vous permet de d&eacute;sactiver totalement cette fonctionnalit&eacute; ou de sp&eacute;cifier les journaux que vous souhaitez envoyer &agrave; mysql.</syslog_server_consumption_text>
+<tune_title>Performances d'Artica</tune_title>
+<useIonice>Activer le contr&ocirc;le des priorit&eacute;s I/O</useIonice>
+<useIonice_explain>SI activ&eacute;, Artica va lancer ses t&acirc;ches avec un priorit&eacute; sur les &eacute;change disques tr&egrave;s faible.</useIonice_explain>
+<very_low>Tr&egrave;s bas</very_low>

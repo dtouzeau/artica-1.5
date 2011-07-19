@@ -1,0 +1,8 @@
+<add_new_fetchmail_rule>Add a new fetchmail rule</add_new_fetchmail_rule>
+<and_send_to>and send emails to</and_send_to>
+<confirm_delete>Delete this fetchmail rule ?</confirm_delete>
+<fetch_address>Fetch address</fetch_address>
+<server_type>server type</server_type>
+<using_ssl>using SSL</using_ssl>
+<view>View rule in source format</view>
+<with_port>with port</with_port>

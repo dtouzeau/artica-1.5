@@ -1,0 +1,16 @@
+<AddDNSServer>Donnez une adresse IP &agrave; votre nouveau Serveur DNS</AddDNSServer>
+<apply_network>Appliquer les param&egrave;tres R&eacute;seau</apply_network>
+<apply_network_text>Sauver vos param&egrave;tres et appliquer cette configuration &agrave; votre serveur</apply_network_text>
+<change>Changer les param&egrave;tres</change>
+<ChangeHostName>Renseigner le nom complet de votre serveur</ChangeHostName>
+<DeleteDNS>&Ecirc;tes-vous s&ucirc;r d'effacer ce serveur DNS ?</DeleteDNS>
+<nameserver>Serveur DNS</nameserver>
+<network_about>Cette zone vous aide &agrave; la configuration r&eacute;seau et comment configurer les services r&eacute;seau[br]C'est ici que vous configurez la connectivit&eacute; de votre syst&egrave;me sur le r&eacute;seau</network_about>
+<network_style>Syst&egrave;me r&eacute;seau</network_style>
+<not_allowed>Non autoris&eacute; &agrave; changer les param&egrave;tres</not_allowed>
+<primary_dns>Serveur DNS primaire</primary_dns>
+<proto>proto</proto>
+<secondary_dns>Serveur DNS secondaire</secondary_dns>
+<show_config_file_text>Lire la configuration g&eacute;n&eacute;r&eacute;e pour votre syst&egrave;me d'exploitation avant d'appliquer les param&egrave;tres</show_config_file_text>
+<use_dhcp>Obtenir les adresses IP automatiquement</use_dhcp>
+<warning_wireless_nic>Artica ne supporte pas les param&egrave;tres sans fils, cette fonctionnalit&eacute; est d&eacute;sactiv&eacute;e</warning_wireless_nic>

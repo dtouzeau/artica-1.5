@@ -1,0 +1,2 @@
+<text>Esta pagina mostra a cada 10 segundo os eventos gerados pelo sistema de correio do Postfix</text>
+<title>Eventos Artica Postfix</title>

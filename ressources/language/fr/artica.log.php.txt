@@ -1,0 +1,2 @@
+<text>Cette page vous affiche toutes les 10 secondes les &eacute;v&egrave;nements du syst&egrave;me de messagerie Postfix</text>
+<title>&Eacute;v&egrave;nements Artica-Postfix</title>

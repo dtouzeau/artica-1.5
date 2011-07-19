@@ -1,0 +1,11 @@
+<Blacklist_addr>Robot de liste noire</Blacklist_addr>
+<enable_artica_wbl_robots_explain>Vous pouvez indiquer ici les adresses email qui vont recevoir les requ&ecirc;tes de listes blanches ou noires de vos utilisateurs.[br]
+Pour envoyer une requ&ecirc;te vers ces robots, c'est tr&egrave;s simple: [br]
+Indiquez dans le corps du message, une adresse email par ligne.[br]
+le caract&egrave;re joker &quot;*&quot; est autoris&eacute;.[br]
+user1@domain.tld[br]
+*@domain.tld[br]
+user@*.tld[br]</enable_artica_wbl_robots_explain>
+<quar_addr>Robot de rapports de quarantaine</quar_addr>
+<report_addr>Report Robot</report_addr>
+<whitelist_addr>Robot de liste blanche</whitelist_addr>

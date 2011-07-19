@@ -1,0 +1,23 @@
+
+<H1></H1>
+<div style='width:100%;height:728px;overflow:auto'>
+<table style='width:100%'>
+<tr>
+	<td valign='top'>
+	<div style='width:210px' class='paragraphe' id='257b301d68a9962aeb53542e495c7d00' 
+		OnMouseOver="javascript:this.className='paragraphe_over';this.style.cursor='pointer';lightup(document.getElementById('img_257b301d68a9962aeb53542e495c7d00'), 100);;AffBulle('{This operation will delete this page and this tab form your panel}');"
+		OnMouseOut="javascript:this.className='paragraphe';this.style.cursor='default';lightup(document.getElementById('img_257b301d68a9962aeb53542e495c7d00'), 50);;HideBulle()"
+		OnClick="javascript:Loadjs('?delete-tab=a5b3b8a4c1f83111e72ec2da8e20cba2');')">
+	<table style='width:100%'>
+	<tr>
+	<td width=1% valign='top'><img src='img/64-cancel.png'  onMouseOver="javascript:AffBulle('This operation will delete this page and this tab form your panel');lightup(this, 100);" OnMouseOut="javascript:HideBulle();lightup(this, 50);" style="filter:alpha(opacity=50);-moz-opacity:0.5;border:0px;" style="filter:alpha(opacity=50);-moz-opacity:0.5;border:0px;"  id='img_257b301d68a9962aeb53542e495c7d00'></a></td>
+	<td valign='top' ><h3 style='min-height:36px;'>Delete this personal page</h3><div id='text_257b301d68a9962aeb53542e495c7d00' style='min-height:70px;font-size:11px'>This operation will delete this page and this tab form your panel.&nbsp;</div></td>
+	</tr>
+	</table>
+	</div>
+	
+	</td>
+</tr>
+</table>
+
+</div>

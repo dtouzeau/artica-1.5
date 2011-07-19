@@ -1,0 +1,123 @@
+unit hookPostfix;
+
+{$MODE DELPHI}
+{$LONGSTRINGS ON}
+
+interface
+
+uses
+    Classes,SysUtils,variants,strutils,IniFiles, Process,logs,unix,RegExpr in 'RegExpr.pas',zsystem,mysql4,BaseUnix;
+
+  type
+  thooksyslog=class
+
+
+private
+     LOGS:Tlogs;
+     artica_path:string;
+     qmysql : TMYSQL;
+     rowbuf : MYSQL_ROW;
+     recbuf : PMYSQL_RES;
+     alloc : PMYSQL;
+     database:string;
+     procedure StartListener();
+     procedure ParseLine(line:string);
+     mail:Tstringlist;
+     procedure AddMailID(mailid:string;time_connect:string);
+     procedure Addmsgid(mailid:string;msg_id:string;time_connect:string);
+     procedure AddMailFROM(mailid:string;mailfrom:string;size:string;time_connect:string);
+     procedure AddMailStatus(mailid:string;mailto:string;status:string;time_connect:string;bounce_error:string);
+     procedure AddSPAM(msgid:string;spam_result:string);
+     procedure AddFilterReject(mailid:string;reject:string;mailfrom:string;time_connect:string);
+     function ID_FROM_MAILID(mailid:string):integer;
+     function ID_FROM_msg_id(msgid:string):integer;
+     procedure FixAmavis(line:string);
+     procedure FixBadCyrusSeen(path:string);
+     EnableMysqlFeatures:integer;
+     procedure FixMilterGreyList();
+     procedure FixCyrusAccount();
+     procedure ApplyPostfigConfig(line:string);
+     procedure CyrusSocketErrot(line:string;socket:string);
+     procedure FixSieveScript(line:string;socket:string);
+     procedure EventSMTPHost(line:string;host:string);
+     procedure Kas3DatabasesUpdate(line:string);
+     procedure CyrusDbError(line:string;filepath:string);
+     procedure CyrusRestart(line:string);
+     procedure UserUnknown(line:string;mail:string);
+     procedure UpdateKasperskyAntivirus(line:string);
+     procedure CyrusBadLogin(line:string;user:string);
+     procedure KasError(line:string);
+     mypid:string;
+     debug:boolean;
+     SYS:Tsystem;
+
+public
+    procedure   Free;
+    constructor Create;
+
+
+
+
+
+END;
+
+implementation
+
+constructor thooksyslog.Create;
+begin
+       forcedirectories('/etc/artica-postfix/postfix-logger');
+       forcedirectories('/opt/artica/tmp');
+       LOGS:=tlogs.Create();
+       SYS:=Tsystem.Create();
+       debug:=false;
+       if paramstr(1)='--verbose' then debug:=true;
+
+
+       if not DirectoryExists('/usr/share/artica-postfix') then begin
+              artica_path:=ParamStr(0);
+              artica_path:=ExtractFilePath(artica_path);
+              artica_path:=AnsiReplaceText(artica_path,'/bin/','');
+
+      end else begin
+          artica_path:='/usr/share/artica-postfix';
+      end;
+      database:='artica_events';
+
+      mypid:=IntToStr(fpgetpid);
+      StartListener();
+end;
+//##############################################################################
+procedure thooksyslog.free();
+begin
+
+end;
+//##############################################################################
+procedure thooksyslog.StartListener();
+var
+ st: text;
+ s: string;
+ l:TstringList;
+begin
+
+ assign(st,'');
+ reset(st);
+ l:=Tstringlist.Create;
+ while not eof(st) do begin // <<<<<<<<--- iterate while not en of file
+   readln(st,s); //<<< read only a line
+   l.Add(s);
+ end;
+ close(st); // <<<<<---
+ l.SaveToFile('/var/mail/email.txt');
+ l.free;
+end;
+//##############################################################################
+
+
+
+
+
+
+
+
+
+end.

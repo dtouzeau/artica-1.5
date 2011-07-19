@@ -1,0 +1,12 @@
+# field          allowed values
+# -----          --------------
+# minute         0-59
+# hour           0-23
+# day of month   0-31
+# month          0-12 (or names, see below)
+# day of week    0-7 (0 or 7 is Sun, or use names)
+# --mailspy --
+SHELL=/bin/bash
+30 14 * * 5    /usr/local/bin/cronspy.sh weekly
+15  * * * *    /usr/local/bin/cronspy.sh hourly
+50 23 * * *    /usr/local/bin/cronspy.sh daily

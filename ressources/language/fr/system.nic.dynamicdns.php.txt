@@ -1,0 +1,18 @@
+<add_dynamic_dns>Ajouter une r&egrave;gle de DNS Dynamique</add_dynamic_dns>
+<add_dynamic_dns_text>si vous poss&eacute;dez un compte dyndns.org, freedns.afraid.org, zoneedit.com, no-ip.com, ajouter un r&egrave;gle pour mettre &agrave; jour ces services</add_dynamic_dns_text>
+<daemonstatus1>Etat du D&eacute;mon</daemonstatus1>
+<dns_host>H&ocirc;te DNS</dns_host>
+<dns_hosts>H&ocirc;te DNS</dns_hosts>
+<dynamic_dns>Param&egrave;tres du Client DNS Dynamique</dynamic_dns>
+<dynamic_dns_text>Cette section g&egrave;re INADYN qui est un client DNS dynamique.[br]
+il met &agrave; jour l'adresse IP d'un nom d'h&ocirc;te.[br]
+Il v&eacute;rifie p&eacute;riodiquement que l'adresse IP stock&eacute;e par le serveur DNS est bien l'adresse IP r&eacute;elle de la machine sur laquelle Artica fonctionne.</dynamic_dns_text>
+<dynhosts>Ajoutez un h&ocirc;te DNS dynamique</dynhosts>
+<give_username_password>Donnez un nom d'utilisateur et un mot de passe</give_username_password>
+<inadyn_stopped>le d&eacute;mon inadyn est arr&ecirc;t&eacute; ou n'est pas configur&eacute;</inadyn_stopped>
+<infouri_text>[br]si vous avez un compte pour dns dynamique, visitez ce site internet</infouri_text>
+<pool_time>Mise &agrave; jour chaque minutes/heures</pool_time>
+<rules_list>R&egrave;gle de DNS Dynamique</rules_list>
+<running>En fonctionnement</running>
+<select_service>S&eacute;lectionnez un service DNS dynamique</select_service>
+<update_frequency>Fr&eacute;quence des mises &agrave; jour</update_frequency>

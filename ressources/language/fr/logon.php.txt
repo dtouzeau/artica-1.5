@@ -1,0 +1,7 @@
+<error_no_ie>Information: Votre navigateur a plusieurs incompatibilit&eacute;s</error_no_ie>
+<error_no_ie_text>Actuellement il n'est pas possible d'avoir une bonne Interface de gestion en utilisant Microsoft Internet Explorer ou Op&eacute;ra. [br]
+Je vous sugg&egrave;re d'utiliser [b] Mozilla Firefox [/b] au lieu de cela. [br] Mozilla Firefox a pass&eacute; avec succ&egrave;s le passage tous les tests d'ajax. [br]
+Revenez s'il vous pla&icirc;t avec &quot;un autre navigateur&quot;.
+[br] si vous avez install&eacute; webmail, vous pouvez donner/obtenir la liaison directe &agrave; l'interface. [br]</error_no_ie_text>
+<template>Mod&egrave;le</template>
+<template_text>Choisissez votre mod&egrave;le favori pour  votre session</template_text>

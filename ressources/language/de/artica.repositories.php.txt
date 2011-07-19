@@ -1,0 +1,23 @@
+<apply_uninstall>Launch operations</apply_uninstall>
+<apply_uninstall_help>Die Aktion wird eine De-/Installation auf dem System starten. Sie k&ouml;nnen den Fortschritt im Process-Log unter 'Events' sehen.</apply_uninstall_help>
+<apply_uninstall_text>Launch processes of selected packages</apply_uninstall_text>
+<installed_on_system>Packages Installed on this system</installed_on_system>
+<installed_package>Dieses Packet ist installiert.</installed_package>
+<install_text>Installieren Sie dieses Packet auf Ihrem System.</install_text>
+<more_one_car>Query start up to 1 caracter</more_one_car>
+<num_packages_installed>Packetnummer</num_packages_installed>
+<packages_list>Packages list</packages_list>
+<package_name>Packetname</package_name>
+<removed_package>Dieses Packet wurde entfernt</removed_package>
+<repositories_manager>Repositories Manager</repositories_manager>
+<repositories_manager_explain>This section allows you to update and maintain your system.You can check installed applications and install new applications</repositories_manager_explain>
+<rollback_install>Installation abgebrochen</rollback_install>
+<rollback_install_text>Unmark this package to be installed</rollback_install_text>
+<rollback_uninstall>Breche alle Installationen ab</rollback_uninstall>
+<rollback_uninstall_text>disable the uninstall process of this package</rollback_uninstall_text>
+<to_be_installed>This package is marked to be installed</to_be_installed>
+<to_be_uninstalled>To be uninstall</to_be_uninstalled>
+<to_install_on_system>Packages that can be installed on this system</to_install_on_system>
+<uninstall>uninstall</uninstall>
+<uninstall_packages_list>Packages list operations</uninstall_packages_list>
+<uninstall_text>Uninstall this application and package in your system</uninstall_text>

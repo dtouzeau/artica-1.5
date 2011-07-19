@@ -1,0 +1,24 @@
+<browse_mysql_server>Browse your mysql server</browse_mysql_server>
+<browse_mysql_server_text>Display database and tables of your Mysql server</browse_mysql_server_text>
+<change_mysql_power>Tune mysql engine</change_mysql_power>
+<databases_status>Databases status</databases_status>
+<database_size>Database size</database_size>
+<enable_mysql>Activate Mysql Engine</enable_mysql>
+<enable_mysql_text>If you use a local mysql server or a remote mysql server, you can enable/disable using this Database engine[br]
+It depends on your computer performances.[br]
+Some services and features using mysql (Mail backups, syslog injection...) should take more process and memory.</enable_mysql_text>
+<mysqlserver>Mysql hostname</mysqlserver>
+<mysql_account>Mysql administrator profil</mysql_account>
+<mysql_database>Mysql database engine</mysql_database>
+<mysql_database_text>Mysql database advanced options</mysql_database_text>
+<MYSQL_PASSWORD_USER>New Mysql password and username</MYSQL_PASSWORD_USER>
+<MYSQL_PASSWORD_USER_TEXT>Reset and change Mysql administrator to a new username and password</MYSQL_PASSWORD_USER_TEXT>
+<mysql_performance_level>Performance engine level</mysql_performance_level>
+<mysql_repair>Repair Mysql databases.</mysql_repair>
+<MYSQL_USER_NET>Mysql auth parameters</MYSQL_USER_NET>
+<MYSQL_USER_NET_TEXT>Change the password, username and myslq server address</MYSQL_USER_NET_TEXT>
+<performances>Performances</performances>
+<rows_number>Rows Number</rows_number>
+<tables_list>Tables list</tables_list>
+<tables_number>Tables number</tables_number>
+<table_size>Table size</table_size>

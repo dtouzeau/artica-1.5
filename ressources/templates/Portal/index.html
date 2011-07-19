@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<!-- Portal template  -->
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1250" />
+<title>{TEMPLATE_TITLE}</title>
+{TEMPLATE_HEAD}
+<style type="text/css">
+<!--
+
+div.wrap1 .wrap2 {
+	/* only with left panel- background-image: url(img/bg1.gif); */
+	/* right and left panel */ background-image: url(img/bg2.gif);
+	/* only with right panel - background-image: url(img/bg3.gif); */
+}
+
+-->
+</style>
+
+</head>
+
+<body class="yui-skin-sam">
+
+<div class="wrap1">
+
+	<div class="wrap2">
+
+		<div class="logo">
+			<div style="display:inline; float:left;">				<div class="slogan">Linux system management.</div>			
+			</div>
+			<div style="display:inline; float:right">{TEMPLATE_SEARCH}</div><br>
+			{TEMPLATE_TOP_MENUS}
+		</div>
+
+
+		<div id="menu"> 
+
+	 		<div class="menu">
+			<div class="info" id='top_info'>
+			<h1>{TEMPLATE_TITLE}</H1>
+			</div>
+        		
+			</div>
+
+
+
+			<div class="leftpanel" id='leftpanel'>
+			
+				 <div class="header"></div>
+				
+						<br />
+				 
+				 
+				 <div class="header"></div>
+				 
+				
+				  
+			</div>
+	
+			<div class="mainpanel" id='mainpanel'>
+			
+					{TEMPLATE_CONTENT}
+					
+			</div>
+					
+			
+			
+
+
+		</div>
+		
+	</div>
+
+</div>
+{TEMPLATE_BODY_YAHOO} 
+</body>
+</html>

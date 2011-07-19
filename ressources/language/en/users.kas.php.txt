@@ -1,0 +1,70 @@
+</option_15><option_16>Chinese (gb2312)<//option_15>
+<antispam_rules>Anti-Spam rules</antispam_rules>
+<DNSSPFChecks>DNS & SPF Checks</DNSSPFChecks>
+<DNS_SPF>DNS & SPF Checks</DNS_SPF>
+<EasternEncodings>Eastern Encodings</EasternEncodings>
+<EasternEncodings_explain>If option is enabled, match mails will be treated as suspicious</EasternEncodings_explain>
+<eastern_encodings>Eastern Encodings</eastern_encodings>
+<enable_disable_kas>[strong]Green:[/strong]is treated as suspicious[br][strong]Red:[/strong]is allowed</enable_disable_kas>
+<general>General</general>
+<group rules>Rules - Group</group rules>
+<HeadersChecks>Headers Checking</HeadersChecks>
+<Headers_Checks>Headers Checks</Headers_Checks>
+<HEADERS_FROM_OR_TO_DIGITS>Digits mixed in FROM</HEADERS_FROM_OR_TO_DIGITS>
+<HEADERS_FROM_OR_TO_DIGITS_TEXT>Digits mixed with letters in FROM header</HEADERS_FROM_OR_TO_DIGITS_TEXT>
+<HEADERS_FROM_OR_TO_NO_DOMAIN>No domain</HEADERS_FROM_OR_TO_NO_DOMAIN>
+<HEADERS_FROM_OR_TO_NO_DOMAIN_TEXT>Addresses with no domain name</HEADERS_FROM_OR_TO_NO_DOMAIN_TEXT>
+<minimum>Minimum</minimum>
+<option_10>Undisclosed list of recipients in TO</option_10>
+<option_11>Digits mixed with letters in FROM header</option_11>
+<option_12>Address with no domain name</option_12>
+<option_13>SUBJECT is longeopcheck1r than 250 symbols</option_13>
+<option_14>SUBJECT contains lots of spaces or dots</option_14>
+<option_15>SUBJECT contains Digit ID or Timestamp <br><i>(like 'Time: 14:30:35')</option_15>
+<option_17>Korean (iso-ir-149)</option_17>
+<option_18>Thai (windows, dos-874)</option_18>
+<option_19>Japanese (iso-2022-jp)</option_19>
+<option_20>Messages with obscene words and phrases</option_20>
+<option_21>If disabled, ALL checks will be skipped</option_21>
+<option_22>Settings other than Standard may affect the number of messages recognized as spam</option_22>
+<option_23>Assignment of the 'Probable Spam' status</option_23>
+<option_24>Check ip addresses in DNS</option_24>
+<option_25>If disabled, all DNS-based and SPF checks will be skipped</option_25>
+<option_26>SURBL Check</option_26>
+<option_27>If disabled, all SURBL checks will be skipped</option_27>
+<option_28>Use of White and Black Lists</option_28>
+<option_7>Check ip addresses in DNS</option_7>
+<option_8>If enabled, the engine will check if there is a DNS record for the server where the message has come from</option_8>
+<option_9>Check SPF Records</option_9>
+<OPT_DNS_DNSBL>DNSBL</OPT_DNS_DNSBL>
+<OPT_DNS_DNSBL_TEXT>Use of DNSBL services</OPT_DNS_DNSBL_TEXT>
+<OPT_DNS_HOST_IN_DNS>Check ip addresses in DNS</OPT_DNS_HOST_IN_DNS>
+<OPT_DNS_HOST_IN_DNS_TEXT>If enabled, the engine will check if there is a DNS record for the server where the message has come from</OPT_DNS_HOST_IN_DNS_TEXT>
+<OPT_FILTRATION_ON>Detection</OPT_FILTRATION_ON>
+<OPT_FILTRATION_ON_TEXT>If disabled, ALL checks will be skipped</OPT_FILTRATION_ON_TEXT>
+<OPT_HEADERS_SUBJECT_DIGIT_OR_TIME_ID>Digit ID or Timestamp</OPT_HEADERS_SUBJECT_DIGIT_OR_TIME_ID>
+<OPT_HEADERS_SUBJECT_DIGIT_OR_TIME_ID_TEXT>SUBJECT contains Digit ID or Timestamp (like 'Time: 14:30:35')</OPT_HEADERS_SUBJECT_DIGIT_OR_TIME_ID_TEXT>
+<OPT_HEADERS_SUBJECT_TOO_LONG>SUBJECT>250</OPT_HEADERS_SUBJECT_TOO_LONG>
+<OPT_HEADERS_SUBJECT_TOO_LONG_TEXT>SUBJECT is longer than 250 symbols</OPT_HEADERS_SUBJECT_TOO_LONG_TEXT>
+<OPT_HEADERS_SUBJECT_WS_OR_DOTS>SUBJECT spaces or dots</OPT_HEADERS_SUBJECT_WS_OR_DOTS>
+<OPT_HEADERS_SUBJECT_WS_OR_DOTS_TEXT>SUBJECT contains lots of spaces or dots</OPT_HEADERS_SUBJECT_WS_OR_DOTS_TEXT>
+<OPT_HEADERS_TO_UNDISCLOSED>Undisclosed</OPT_HEADERS_TO_UNDISCLOSED>
+<OPT_HEADERS_TO_UNDISCLOSED_TEXT>Undisclosed list of recipients in TO</OPT_HEADERS_TO_UNDISCLOSED_TEXT>
+<OPT_LANG_CHINESE>Chinese (gb2312)</OPT_LANG_CHINESE>
+<OPT_LANG_JAPANESE>Japanese (iso-2022-jp)</OPT_LANG_JAPANESE>
+<OPT_LANG_KOREAN>Korean (iso-ir-149)</OPT_LANG_KOREAN>
+<OPT_LANG_THAI>Thai (windows, dos-874)</OPT_LANG_THAI>
+<OPT_PROBABLE_SPAM_ON>Probable Spam status</OPT_PROBABLE_SPAM_ON>
+<OPT_PROBABLE_SPAM_ON_TEXT>Assignment of the 'Probable Spam' status</OPT_PROBABLE_SPAM_ON_TEXT>
+<OPT_SPAM_RATE_LIMIT>Detection Level</OPT_SPAM_RATE_LIMIT>
+<OPT_SPAM_RATE_LIMIT_TEXT>Settings other than Standard may affect the number of messages recognized as spam</OPT_SPAM_RATE_LIMIT_TEXT>
+<OPT_SPF>SPF</OPT_SPF>
+<OPT_SPF_TEXT>Check SPF Records</OPT_SPF_TEXT>
+<OPT_USE_DNS>DNS & SPF Checks</OPT_USE_DNS>
+<OPT_USE_DNS_TEXT>If disabled, all DNS-based and SPF checks will be skipped</OPT_USE_DNS_TEXT>
+<OPT_USE_SURBL>SURBL Check</OPT_USE_SURBL>
+<OPT_USE_SURBL_TEXT>If disabled, all SURBL checks will be skipped</OPT_USE_SURBL_TEXT>
+<RuleObsceneContent>Rules - Obscene Content</RuleObsceneContent>
+<RuleObsceneContent_text>Use of '[--Obscene--]' mark if enabled</RuleObsceneContent_text>
+<standardr>Standard (recommended)</standardr>
+<UseofDNSBLservices>Use of DNSBL services</UseofDNSBLservices>

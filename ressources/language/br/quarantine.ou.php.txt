@@ -1,0 +1,12 @@
+<ArticaMaxDayTemplate>Max Day Delete template</ArticaMaxDayTemplate>
+<ArticaReportQuarantineTemplate>Scheduled users reports quarantine</ArticaReportQuarantineTemplate>
+<ArticaReportQuarantineTemplate_text>This template is used to send reports to user of current stored messages and allows them to release them[br] Reports are sended by artica-quarantine program and it must be scheduled</ArticaReportQuarantineTemplate_text>
+<close_form>Close Template form</close_form>
+<quarantine_max_day>quarantine Max day</quarantine_max_day>
+<quarantine_max_day_text>Specify in day how long messages are stored on users quarantine folder[br]When messages exceed max day value, all message will be deleted automatically</quarantine_max_day_text>
+<templates>Templates</templates>
+<templates_explain>You can personnalize here the content of email notifications when artica-quarantine tool execute operations on your quarantine area</templates_explain>
+<template_deleted>When mails are automatically deleted</template_deleted>
+<template_deleted_text>When messages are over than "quarantine Max day" limit, artica-quarantine delete automatically all mails and send to users an email to inform them that their emails are deleted</template_deleted_text>
+<template_token>Tokens supported [strong]%NUMBER%[/strong] number of emails; [strong]%MAXDAY%[/strong] maximum day live of the quarantine area;
+[strong]%MAILTABLE%[/strong] HTML table of all mails query</template_token>

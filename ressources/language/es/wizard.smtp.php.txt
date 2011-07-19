@@ -1,0 +1,16 @@
+<company>Nombre de la compa&ntilde;&iacute;a</company>
+<company_domain>Indique aqu&iacute; el nombre de la empresa que ser&aacute; referencia de la organizaci&oacute;n y el dominio de correo. Puede indicar el nombre del primer dominio de correo SMTP, ej: &quot;domain.tld&quot;</company_domain>
+<company_domain_t>El nombre de la empresa y su nombre de dominio</company_domain_t>
+<domain_routing>Dominio para enrutar</domain_routing>
+<domain_routing_local>Su &quot;master domain&quot; o dominio principal ser&aacute; almacenado como local en este servidor.</domain_routing_local>
+<domain_routing_remote>Su dominio master necesita ser reenviado a un Sistema MDA o a otro servidor de correo. [br] Por favor indique el nombre o IP del servidor de correo al cual ser&aacute;n reenviados los correos atrav&eacute;s de Artica</domain_routing_remote>
+<domain_routing_text>&iquest;C&oacute;mo su dominio master ser&aacute; reenviado a trav&eacute;s de postfix?</domain_routing_text>
+<first_email>Primera direcci&oacute;n de correo</first_email>
+<first_email_text>Configure el usuario y direcci&oacute;n de correo que recibir&aacute; las notificaciones de eventos de sistemas y del servidor de correos.</first_email_text>
+<smtp_domain>Nombre del dominio SMTP</smtp_domain>
+<smtp_relay>Direcci&oacute;n IP del servidor SMTP</smtp_relay>
+<welcome_first_wizard>Bienvenido al primer asistente</welcome_first_wizard>
+<wizard_finish>El asistente ha finalizado</wizard_finish>
+<wizard_finish_failed>Por favor regrese a las &uacute;ltimas p&aacute;ginas, algunas elementos no fueron especificados</wizard_finish_failed>
+<wizard_finish_text>Presione el bot&oacute;n &quot;Aplicar&quot; para recompilar su configuraci&oacute;n y pasarlo a modo producci&oacute;n</wizard_finish_text>
+<wizard_smtp_intro>Este asistente le ayudar&aacute; a definir los primeros par&aacute;metros para que su servidor funcione en modo real de producci&oacute;n. Siga los pasos para activar el servidor de correo.</wizard_smtp_intro>

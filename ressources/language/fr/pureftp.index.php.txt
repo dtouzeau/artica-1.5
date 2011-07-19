@@ -1,0 +1,44 @@
+<AnonymousBandwidth>Bande passante anonyme</AnonymousBandwidth>
+<AnonymousBandwidth_text>Bande passante Maximum pour les utilisateurs anonymes en KB/s</AnonymousBandwidth_text>
+<AnonymousCanCreateDirs>Les utilisateurs anonymes peuvent cr&eacute;er des r&eacute;pertoires</AnonymousCanCreateDirs>
+<AnonymousCanCreateDirs_text>Est-ce que les utilisateurs anonymes sont autoris&eacute;s a cr&eacute;er de nouveaux r&eacute;pertoires ?</AnonymousCanCreateDirs_text>
+<AnonymousCantUpload>Les utilisateurs anonymes ne sont pas autoris&eacute;s a tranf&eacute;rer</AnonymousCantUpload>
+<AnonymousCantUpload_text>Refuser aux utilisateurs anonymes de transf&eacute;rer de nouveaux fichiers (non coch&eacute; = le t&eacute;l&eacute;chargement est autoris&eacute;)</AnonymousCantUpload_text>
+<AntiWarez>Anti Warez</AntiWarez>
+<AntiWarez_text>Interdire le t&eacute;l&eacute;chargement des fichiers d&eacute;tenus par &quot;ftp&quot;, c'est-&agrave;-dire. les fichiers qui ont &eacute;t&eacute; t&eacute;l&eacute;charg&eacute;es, mais pas valid&eacute;e par un administrateur local.</AntiWarez_text>
+<AutoRename>Renommer automatiquement</AutoRename>
+<AutoRename_text>Ne pas &eacute;craser des fichiers. Quand un fichier dont le nom existe d&eacute;j&agrave; est t&eacute;l&eacute;charg&eacute;, il sera automatiquement renomm&eacute; fichier.1, fichier.2, fichier.3, ...</AutoRename_text>
+<BrokenClientsCompatibility>Astuce de compatibilit&eacute; pour les clients non conformes</BrokenClientsCompatibility>
+<BrokenClientsCompatibility_text>Les utilisateurs peuvent avoir &agrave; se connecter par le biais d'Internet Explorer.[br] 
+La raison en est que IE, entre autres, essaie de se connecter anonymement et ne donne pas &agrave; pure-ftpd la possibilit&eacute; de demander un nom d'utilisateur et mot de passe. 
+[br]On peut, changer de non &agrave; oui.[br] 
+Cela peut ou ne peut pas fonctionner, cela semble d&eacute;pendre de la version de IE que l'on utilise.</BrokenClientsCompatibility_text>
+<DisplayDotFiles>Afficher l'extension des fichiers</DisplayDotFiles>
+<DisplayDotFiles_text>Liste des points de fichiers m&ecirc;me si le client n'envoie pas de &quot;-a&quot;.</DisplayDotFiles_text>
+<DontResolve>Ne pas r&eacute;soudre</DontResolve>
+<DontResolve_text>Ne pas r&eacute;soudre les noms d'h&ocirc;te dans les fichiers de log.[br] 
+Les logs sont moins bavard, mais ils utilisent moins de bande passante. 
+[br]D&eacute;finir cela pour l'activer sur des serveurs occup&eacute;s ou si vous n'avez pas un DNS en fonctionnement.</DontResolve_text>
+<enable_pureftpd>Activer le FTP sur ce serveur</enable_pureftpd>
+<enable_pureftpd_text>Si vous d&eacute;cochez, le service sera &eacute;teint et il n'y aura pas de service FTP en fonctionnement</enable_pureftpd_text>
+<LimitRecursion>Limite de r&eacute;cursion</LimitRecursion>
+<LimitRecursion_text>'ls' limites de r&eacute;cursion. Le [b]premier argument[/b] est le nombre maximum de fichiers affich&eacute;s.[br]
+Le [b]second[/b] est le nombre max de sous-r&eacute;pertoires</LimitRecursion_text>
+<MaxClientsNumber>Nombre max de clients</MaxClientsNumber>
+<MaxClientsNumber_text>Nombre maximum d'utilisateurs en simultan&eacute;</MaxClientsNumber_text>
+<MaxClientsPerIP>Maximum de clients par IP</MaxClientsPerIP>
+<MaxClientsPerIP_text>Nombre maximum de clients sim avec la m&ecirc;me adresse IP</MaxClientsPerIP_text>
+<MaxDiskUsage>Utilisation maximum du disque %</MaxDiskUsage>
+<MaxDiskUsage_text>Cette option est int&eacute;ressante lorsque la sauvegarde anonyme est autoris&eacute;e.[br]
+Comme /var/ftp est dans /var, elle sauvegarde l'espace et prot&egrave;ge les fichiers de log.[br]
+Lorsque la partition est sup&eacute;rieure &agrave; la valeur en pourcentage, les nouvelles tentatives de sauvegardes sont refus&eacute;es.</MaxDiskUsage_text>
+<MaxIdleTime>Temps d'inactivit&eacute; maximum</MaxIdleTime>
+<MaxIdleTime_text>Maximum de temps d'inactivit&eacute; en minutes (par d&eacute;faut = 15 minutes)</MaxIdleTime_text>
+<MaxLoad_text>Si le syst&egrave;me est plus charg&eacute; que la valeur suivante, les utilisateurs anonymes ne sont pas autoris&eacute;s &agrave; t&eacute;l&eacute;charger.</MaxLoad_text>
+<Max_Load>Charge Max</Max_Load>
+<NoAnonymous>Pas d'anonyme</NoAnonymous>
+<NoAnonymous_text>Interdire les connections anonymes. Autoriser seulement les utilisateurs authentifi&eacute;s.</NoAnonymous_text>
+<ProhibitDotFilesRead>Interdire la lecture des fichiers avec un point</ProhibitDotFilesRead>
+<ProhibitDotFilesRead_text>Interdire la lecture des fichiers commen&ccedil;ant par un point (.history, .ssh...)</ProhibitDotFilesRead_text>
+<ProhibitDotFilesWrite>Interdire la modification de l'extension</ProhibitDotFilesWrite>
+<ProhibitDotFilesWrite_text>Les utilisateurs ne peuvent pas supprimer / &eacute;crire des fichiers commen&ccedil;ant par un point ('.') m&ecirc;me si elles sont propri&eacute;taires.</ProhibitDotFilesWrite_text>

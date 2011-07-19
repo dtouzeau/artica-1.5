@@ -1,0 +1,143 @@
+object Form2: TForm2
+  Left = 905
+  Height = 298
+  Top = 185
+  Width = 403
+  HorzScrollBar.Page = 402
+  VertScrollBar.Page = 297
+  Caption = 'Network Settings'
+  ClientHeight = 298
+  ClientWidth = 403
+  OnCreate = FormCreate
+  object Label1: TLabel
+    Left = 16
+    Height = 18
+    Top = 64
+    Width = 97
+    Caption = 'IP Address :'
+    Font.Name = 'bitstream vera sans'
+    ParentColor = False
+  end
+  object Label2: TLabel
+    Left = 21
+    Height = 18
+    Top = 93
+    Width = 92
+    Caption = 'Net mask :'
+    Font.Name = 'bitstream vera sans'
+    ParentColor = False
+  end
+  object Label3: TLabel
+    Left = 25
+    Height = 18
+    Top = 120
+    Width = 87
+    Caption = 'Gateway :'
+    Font.Name = 'bitstream vera sans'
+    ParentColor = False
+  end
+  object Label4: TLabel
+    Left = 45
+    Height = 18
+    Top = 174
+    Width = 65
+    Caption = 'DNS 1 :'
+    Font.Name = 'bitstream vera sans'
+    ParentColor = False
+  end
+  object Label5: TLabel
+    Left = 45
+    Height = 18
+    Top = 202
+    Width = 65
+    Caption = 'DNS 2 :'
+    Font.Name = 'bitstream vera sans'
+    ParentColor = False
+  end
+  object Label6: TLabel
+    Left = 16
+    Height = 18
+    Top = 16
+    Width = 313
+    Caption = 'Static eth0 interface TCP/IP settings :'
+    Font.Name = 'bitstream vera sans'
+    ParentColor = False
+  end
+  object Label7: TLabel
+    Left = 19
+    Height = 18
+    Top = 37
+    Width = 91
+    Caption = 'hostname:'
+    Font.Name = 'bitstream vera sans'
+    ParentColor = False
+  end
+  object address: TEdit
+    Left = 136
+    Height = 23
+    Top = 59
+    Width = 240
+    TabOrder = 0
+    Text = '192.168.1.2'
+  end
+  object mask: TEdit
+    Left = 136
+    Height = 23
+    Top = 88
+    Width = 240
+    TabOrder = 1
+    Text = '255.255.255.0'
+  end
+  object gateway: TEdit
+    Left = 136
+    Height = 23
+    Top = 115
+    Width = 240
+    TabOrder = 2
+    Text = '192.168.1.1'
+  end
+  object DNS1: TEdit
+    Left = 136
+    Height = 23
+    Top = 169
+    Width = 240
+    OnChange = DNS1Change
+    TabOrder = 3
+    Text = '192.168.1.1'
+  end
+  object DNS2: TEdit
+    Left = 137
+    Height = 23
+    Top = 197
+    Width = 240
+    TabOrder = 4
+    Text = '81.253.149.2'
+  end
+  object Button4: TButton
+    Left = 168
+    Height = 36
+    Top = 240
+    Width = 208
+    Caption = 'Save....'
+    Font.Name = '-schumacher-clean-medium-r-normal-*-*-120-*-*-c-*-koi8-r'
+    OnClick = Button4Click
+    TabOrder = 5
+  end
+  object hostname_text: TEdit
+    Left = 135
+    Height = 23
+    Top = 32
+    Width = 180
+    TabOrder = 6
+  end
+  object Button5: TButton
+    Left = 319
+    Height = 20
+    Top = 33
+    Width = 59
+    Caption = 'Save....'
+    Font.Name = '-schumacher-clean-medium-r-normal-*-*-120-*-*-c-*-koi8-r'
+    OnClick = Button5Click
+    TabOrder = 7
+  end
+end

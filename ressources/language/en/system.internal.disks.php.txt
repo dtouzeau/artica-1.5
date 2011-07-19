@@ -1,0 +1,49 @@
+<ADD_VG>Add a new volume</ADD_VG>
+<ADD_VG_TEXT>A volume will be a new virtual disk with a defined size...</ADD_VG_TEXT>
+<AFFECT_VG>Link to an organization</AFFECT_VG>
+<AFFECT_VG_EXPLAIN>This feature will give organization's manageraccess to this disk part.[br]In this case, organization manager should create a virtual disk for each organization's user</AFFECT_VG_EXPLAIN>
+<AFFECT_VG_TEXT>Give this volume to an organization</AFFECT_VG_TEXT>
+<APP_LVM>Logical Volume Manager</APP_LVM>
+<APP_LVMS>Logical Volumes</APP_LVMS>
+<ATTRIBUTE_NAME>Attribute name</ATTRIBUTE_NAME>
+<change_label>Change the label name</change_label>
+<change_label_text>Give the new name of this partition</change_label_text>
+<CONNECT_HD>Connect this drive</CONNECT_HD>
+<CONNECT_HD_TEXT>Order system to mount automatically this drive</CONNECT_HD_TEXT>
+<DELETE_VG>Delete this volume</DELETE_VG>
+<DELETE_VG_TEXT>Perform removing this volume,all datas stored by this volume will be erased.</DELETE_VG_TEXT>
+<disable_monitoring>Disable monitor this disk</disable_monitoring>
+<disksize>Disk size</disksize>
+<enable_monitoring>Enable monitor this disk</enable_monitoring>
+<FLAG>Flag</FLAG>
+<FORMAT_HD>Format this disk</FORMAT_HD>
+<FORMAT_HD_TEXT>This operation will format this device to ext3 or ext4 file system type, All datas will be erased</FORMAT_HD_TEXT>
+<HD_ATTRIBUTES>Disk attributes</HD_ATTRIBUTES>
+<HD_ATTRIBUTES_TEXT>Show device SMART vendor-specific Attributes and values</HD_ATTRIBUTES_TEXT>
+<HD_INFOS>Disk infos</HD_INFOS>
+<HD_INFOS_TEXT>Display SMART status and hard drive informations</HD_INFOS_TEXT>
+<HD_STATISTICS>Disk statistics</HD_STATISTICS>
+<HD_STATISTICS_TEXT>Display statistics of periodic tests made by smart tool</HD_STATISTICS_TEXT>
+<lifetime>lifetime</lifetime>
+<LVMS_NAME>Logical volume name</LVMS_NAME>
+<LVMS_SIZE>Logical volume size</LVMS_SIZE>
+<macro_build_bigpart>Build a full partition</macro_build_bigpart>
+<macro_build_bigpart_text>Build a full partition:
+This operation will create an entire partition on this disk.
+Give the name of this disk in order to map it on your first disk.</macro_build_bigpart_text>
+<macro_build_bigpart_warning>This operation will erase all datas stored on this disk.
+Do you want to perform this operation ?</macro_build_bigpart_warning>
+<macro_build_lvm>Build LVM disk</macro_build_lvm>
+<pvcreate_dev>Initialize Logical Volume Manager for this disk</pvcreate_dev>
+<RAW_VALUE>Raw value</RAW_VALUE>
+<remaining>remaining</remaining>
+<run_shortselftestroutine>Run Short self test routine</run_shortselftestroutine>
+<run_shortselftestroutine_text>Succes: Short self-test routine has been lauched in background mode.</run_shortselftestroutine_text>
+<THRESH>Thresh</THRESH>
+<UPDATED>Updated</UPDATED>
+<vgcreate_dev>Create a new volume group</vgcreate_dev>
+<vgcreate_dev_text>Give the volume group name</vgcreate_dev_text>
+<vgmanage>Manage LVM of</vgmanage>
+<warning_label_already_set>The label entered already exists, choose an another one...</warning_label_already_set>
+<WHEN_FAILED>When failed</WHEN_FAILED>
+<WORST>Worst</WORST>

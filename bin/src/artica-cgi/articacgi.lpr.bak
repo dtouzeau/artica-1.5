@@ -1,0 +1,49 @@
+program articacgi;
+
+uses dos,oldlinux,Classes, SysUtils,global_conf,parsehttp,logs,RegExpr in 'RegExpr.pas';
+
+
+var
+   //data : array[1..max_data] of datarec;
+    i,nrdata : longint;
+    c  : char;
+    literal,aname : boolean;
+    list:TstringList;
+    zLOGS:tlogs;
+    ParsHTTP:Tparsehttp;
+    zRegExpr:TRegExpr;
+
+begin
+
+
+     zLOGS:=tlogs.Create;
+     zLOGS.logs('articacgi:: QUERY_STRING=' + getenv('QUERY_STRING'));
+     zLOGS.logs('articacgi:: REMOTE_ADDR=' + getenv('REMOTE_ADDR'));
+
+     ParsHTTP:=Tparsehttp.Create;
+
+
+
+
+     writeln ('Content-type: text/html');
+     writeln;
+     writeln('<html><head></head><body>');
+     writeln('<articadatascgi>');
+     zRegExpr:=TRegExpr.Create;
+     zRegExpr.Expression:='URI=(.+)';
+     if zRegExpr.Exec(getenv('QUERY_STRING')) then begin
+          ParsHTTP.ParseUri(zRegExpr.Match[1]);
+          for i:=0 to ParsHTTP.FileData.Count-1 do begin
+              writeln(ParsHTTP.FileData.Strings[i]);
+          end;
+     
+     end;
+ zRegExpr.Free;
+ ParsHTTP.free;
+writeln('</articadatascgi>');
+writeln('<body></html>');
+
+
+
+
+end.

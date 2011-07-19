@@ -1,0 +1,12 @@
+bison->make;
+gcc->make;
+make->make;
+gcc-c++->make;
+wget->make;
+autoconf->make;
+ed->make;
+perl-devel->make;
+nc->make;
+openjade->make;
+xinetd->xinetd;
+flex->make;

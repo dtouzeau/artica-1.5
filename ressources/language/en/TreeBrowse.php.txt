@@ -1,0 +1,2 @@
+<selected_folder>Selected folder</selected_folder>
+<select_disk>Select your Hard drive</select_disk>

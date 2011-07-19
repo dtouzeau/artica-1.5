@@ -1,0 +1,2 @@
+<hourly>por hora</hourly>
+<statistics>Estadisticas</statistics>

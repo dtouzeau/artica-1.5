@@ -1,0 +1,20 @@
+<application>Logiciel</application>
+<are_you_sure_to_install>Etes-vour s&ucirc;r de vouloir installer</are_you_sure_to_install>
+<check_installer>V&eacute;rification de l'installation</check_installer>
+<control_center>Centre de contr&ocirc;le</control_center>
+<downloading_packages>T&eacute;l&eacute;chargement ...</downloading_packages>
+<failed_downloading_file>Erreurs de t&eacute;l&eacute;chargement</failed_downloading_file>
+<failed_parsing_file>Impossible de lire le fichier de configuration</failed_parsing_file>
+<go_in_status>Vous pouvez s&eacute;lectionner l'ongle Statut des installations pour voir la progression de l'installation</go_in_status>
+<installation_status>Statut des installations</installation_status>
+<install_roundcube>Installer RoundCubeMail maintenant</install_roundcube>
+<only_debian_supported>Les syst&egrave;mes debian seulement sont support&eacute;s pour l'instant ... revenez plus tard</only_debian_supported>
+<operation_completed>Op&eacute;ration effectu&eacute;e...</operation_completed>
+<order_already_launched>Ordre d&eacute;j&agrave; ex&eacute;cut&eacute;, effacer les logs pour red&eacute;marrer l'op&eacute;ration ...</order_already_launched>
+<order_launched>Ordre ajout&eacute; &agrave; la fille d'attente, en attente d'ex&eacute;cution</order_launched>
+<perform_installation>Installation en cours ...</perform_installation>
+<remove_roundcube>D&eacute;sinstaller RoundCubeMail</remove_roundcube>
+<roundcube_is_installed>RoundCubeMail est install&eacute;</roundcube_is_installed>
+<roundcube_not_installed>RoundCube n'est pas install&eacute;, Utilisez le bouton droit pour l'installer ou mettre &agrave; jour votre syst&egrave;me</roundcube_not_installed>
+<sendorder>Envoi de l'ordre d'ex&eacute;cution &agrave; artica</sendorder>
+<text_refresh_index>L'index sera synchronis&eacute;s avec le site web d'artica ... Veuillez attendre quelques secondes</text_refresh_index>

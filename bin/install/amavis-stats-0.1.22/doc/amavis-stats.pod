@@ -1,0 +1,127 @@
+=head1 NAME
+
+B<amavis-stats> - generate e-mail statistics from amavisd-new (sys)log files.
+
+=head1 SYNOPSIS
+
+B<amavis-stats> S<[options]>
+
+=head1 DESCRIPTION
+
+B<amavis-stats> is a simple e-mail statistics generator based on amavisd-new
+and rrdtool.
+
+Statistics are read from amavisd-new (sys)log entries and stored in RRD files.
+
+There is an accompanying php script to actually generate the web pages and graphs.
+This man page is just for the perl script daemon which parses the log files.
+
+=head2 OVERVIEW
+
+In this man page you will find general information on the use of the B<amavis-stats>
+daemon.
+
+For a more detailed description of how to use the individual options of the
+B<amavis-stats> daemon, check the built-in help and included documentation.
+
+=over
+
+=item options
+
+S<[B<debug>]> ( runs in foreground )
+
+S<[B<foreground>]>
+
+S<[B<help>]>
+
+S<[B<reload>]>
+
+S<[B<start>]> ( kept for legacy )
+
+S<[B<stop>]>
+
+=item options F<( requiring arguments )>
+
+S<[B<-c E<lt>config-fileE<gt>>]>
+
+S<[B<-g E<lt>groupE<gt>>]> ( requires -u option to be specified )
+
+S<[B<-u E<lt>userE<gt>>]>
+
+=back
+
+=head1 FILES
+
+=over
+
+=item F<SCRIPTS, CONFIG AND DIRECTORIES>
+
+S<B</usr/local/sbin/amavis-stats>>
+ amavis-stats daemon.
+
+S<B</usr/local/etc/amavis-stats.conf>>
+ config file for amavis-stats daemon.
+
+S<B</usr/local/share/amavis-stats/amavis-stats.php>>
+ php script, for generating web-based graphs.
+
+S<B</usr/local/share/amavis-stats/amavis-stats.php.conf>>
+ config file for php script.
+
+S<B</usr/local/share/amavis-stats/amavis-stats.alias.conf>>
+ config file for apache.
+
+S<B</usr/local/var/lib/amavis-stats/>>
+ location of rrd files and state information.
+
+S<B</usr/local/var/cache/amavis-stats/>>
+ image cache directory, where web images are stored.
+
+=item F<PNG IMAGES AND FONTS FOR BUTTONS>
+
+S<B</usr/local/share/amavis-stats/ChalkboardBold.ttf>>
+ default truetype font.
+
+S<B</usr/local/share/amavis-stats/tab_center_blue.png>>
+ button center (blue)
+
+S<B</usr/local/share/amavis-stats/tab_center_gray.png>>
+ button center (gray)
+
+S<B</usr/local/share/amavis-stats/tab_center_white.png>>
+ button center (white)
+
+S<B</usr/local/share/amavis-stats/tab_left_blue.png>>
+ button left (blue)
+
+S<B</usr/local/share/amavis-stats/tab_left_gray.png>>
+ button left (gray)
+
+S<B</usr/local/share/amavis-stats/tab_left_white.png>>
+ button left (white)
+
+S<B</usr/local/share/amavis-stats/tab_right_blue.png>>
+ button right (blue)
+
+S<B</usr/local/share/amavis-stats/tab_right_gray.png>>
+ button right (gray)
+
+S<B</usr/local/share/amavis-stats/tab_right_white.png>>
+ button right (white)
+
+S<B</usr/local/share/amavis-stats/bullet_center_blue.png>>
+ button center (blue)
+
+S<B</usr/local/share/amavis-stats/bullet_left_blue.png>>
+ button left (blue)
+
+S<B</usr/local/share/amavis-stats/bullet_right_blue.png>>
+ button right (blue)
+
+You can substitue fonts and png images to customize the appearance.
+
+=back
+
+=head1 AUTHOR
+
+Dale Walsh E<lt>buildsmart@daleenterprise.comE<gt>

@@ -1,0 +1,19 @@
+<add_computer_text>Vous pouvez directement ajouter un nom d'ordinateur netbios pour le servir directement. [Br] Configurer ici le nom de l'ordinateur ... [br] si vous ne voulez pas ajouter un ordinateur, laisse le champs vide...</add_computer_text>
+<add_computer_title>Ajouter un nouvel ordinateur</add_computer_title>
+<computer_name>Nom de l'ordinateur</computer_name>
+<configuration_success>Configuration avec succ&egrave;s de votre serveur en tant que contr&ocirc;leur de domaine priv&eacute;</configuration_success>
+<domain_controler>Contr&ocirc;leur de domaine</domain_controler>
+<howto1>Allez sur une fen&ecirc;tre d'un poste de travail . [Br] Clic droit sur l'ordinateur et choisissez propri&eacute;t&eacute;s</howto1>
+<howto2>Sur l'&eacute;tiquette d'identification de R&eacute;seau, cliquez sur les Propri&eacute;t&eacute;s [br] Sur &quot;Identification des Changements&quot; Cliquez sur &quot;Membre de domaine&quot; et le jeu de domaine/groupe de travail que vous avez choisit dans la premi&egrave;re &eacute;tape</howto2>
+<howto3>Apr&egrave;s quelques secondes, un menu contextuel vous demande le nom d'utilisateur et le mot de passe &quot;root&quot;</howto3>
+<howto4>Apr&egrave;s quelques minutes, un menu contextuel vous confirmera que la station de travail  est maintenant un membre de votre nouveau domaine</howto4>
+<root_error_pass>Les mots de passe ne correspondent pas</root_error_pass>
+<root_password>Mot de passe Administrateur du Domaine Netbios</root_password>
+<root_password_field>Password de l'administrateur Netbios du domaine</root_password_field>
+<root_password_field2>Password de l'administrateur Netbios du domaine (confirmation)</root_password_field2>
+<root_password_text>L'utilisateur &quot;root&quot; sera utilis&eacute; pour connecter les postes de travail &agrave; votre domaine ont l'Administrateur de Domaine Netbios, mettre le mot de passe d'utilisateur &quot;root&quot; [br] 
+Laissez le vide si vous ne voulez pas le remettre</root_password_text>
+<server_name>Nom du serveur qui sera affich&eacute; dans l'explorateur du r&eacute;seau</server_name>
+<welcome>Bienvenue sur l'assistant du Contr&ocirc;leur de domaine</welcome>
+<welcome_text>Cet assistant vous aide &agrave; cr&eacute;er un CPD (Contr&ocirc;leur Principal de Domaine), afin de servir les stations de travail MS Windows qui s'y connectent.</welcome_text>
+<workgroup>Domaine Windows</workgroup>

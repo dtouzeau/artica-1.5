@@ -1,0 +1,10 @@
+README for queuegraph
+
+To install, adjust the path to your rrdtools binaries in queuegraph-rrd.sh
+
+Create a cronjob that runs queuegraph-rrd.sh every minute -- this
+populates the *.rrd database:
+
+* * * * * /webroot/queuegraph-rrd.sh
+
+Now put queuegraph.cgi into the cgi-bin directory of your webserver.

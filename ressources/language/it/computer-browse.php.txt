@@ -1,0 +1,11 @@
+<add_network>Add a new network</add_network>
+<add_network_text>Define a new network (IP & Mask) to scan in order to find computers</add_network_text>
+<delete_all_computers_warn>This operation will delete all computers in the database, do you want to perfom this operation ?</delete_all_computers_warn>
+<edit_networks>Edit networks</edit_networks>
+<edit_networks_text>Add or remove networks in order to help scanner detecting computers</edit_networks_text>
+<import_artica_computers>Import computers</import_artica_computers>
+<import_artica_computers_explain>This feature allow you to import computers list from an another Artica server</import_artica_computers_explain>
+<import_artica_computers_text>Import computers from other Articas servers</import_artica_computers_text>
+<network_scanner_execute_background>The network scanner was executed in background mode, the network list will be updated in few times</network_scanner_execute_background>
+<scan_your_network>Scan your network</scan_your_network>
+<scan_your_network_text>Launch the scanner in order to refresh the computer list in your network</scan_your_network_text>

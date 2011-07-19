@@ -1,0 +1,82 @@
+<accounts>Vos comptes</accounts>
+<ACTION_PROBABLE_MODE>Quand un SPAM ou Virus probable a &eacute;t&eacute; d&eacute;tect&eacute;</ACTION_PROBABLE_MODE>
+<ACTION_PROBABLE_MODE_SUBJECT>si accept&eacute;, sous r&eacute;serve de la mention SPAM</ACTION_PROBABLE_MODE_SUBJECT>
+<ACTION_SPAM_MODE>Quand un virus ou un spam est d&eacute;tect&eacute;</ACTION_SPAM_MODE>
+<ACTION_SPAM_SUBJECT>si accept&eacute;, sous r&eacute;serve d'ampleur de SPMA pr&eacute;fix&eacute;e</ACTION_SPAM_SUBJECT>
+<APP_AMAVISD_NEW_TEXT>Configuration du filtre mail Anti-spam et Antivirus</APP_AMAVISD_NEW_TEXT>
+<APP_OPENVPN_TEXT>Configuration du VPN (R&eacute;seau Virtuel Priv&eacute;) pour acc&eacute;der &agrave; votre r&eacute;seau</APP_OPENVPN_TEXT>
+<APP_ROUNDCUBE_TEXT>Configurer et administrer les param&egrave;tres du webmail RoundCube</APP_ROUNDCUBE_TEXT>
+<artica_performances>Performances d'Artica</artica_performances>
+<artica_performances_text>Personnaliser quelques param&egrave;tres pour r&eacute;duire ou am&eacute;liorer les performances des modules</artica_performances_text>
+<build>Version</build>
+<building_kaspersky>Construction des plugins Kaspersky...</building_kaspersky>
+<clamav_av>Antivirus ClamAV</clamav_av>
+<clamav_av_text>Voir le statut de votre antivirus Open Source</clamav_av_text>
+<disable_startup>D&eacute;sactiver le chargement automatique de cette section</disable_startup>
+<distri>Distribution</distri>
+<domain_controler>Contr&ocirc;leur de Domaine</domain_controler>
+<domain_controler_text>Faire de ce serveur un contr&ocirc;leur de domaine pour des stations de travail MS Windows</domain_controler_text>
+<enable_kaspersky>Activer les plugins Kaspersky</enable_kaspersky>
+<enable_kaspersky_antispam>Activer Kaspersky Anti-Spam sur ce serveur</enable_kaspersky_antispam>
+<enable_kaspersky_antivirus>Activer Kaspersky Anti-Virus sur ce serveur</enable_kaspersky_antivirus>
+<enable_kaspersky_text>Activer ou desactiver les plugins Kaspersky Anti-Spam et Anti-Virus sur votre serveur</enable_kaspersky_text>
+<failed_fetchmail>Impossible de compiler ces r&egrave;gles, v&eacute;rifiez si vous avez remplis tout les champs ou utilisez le formulaire d'Artica sur www.artica.fr pour cr&eacute;er un bulletin de support</failed_fetchmail>
+<first_settings>Premiers param&egrave;tres</first_settings>
+<first_settings_text>Vous venez d'installer artica, commencez ici pour cr&eacute;er les premiers param&egrave;tres...</first_settings_text>
+<install_applis>Applications d'Artica</install_applis>
+<install_applis_text>Obtenir les mise &agrave; jour d'Artica et installer de nouveaux services Artica sur votre syst&egrave;me</install_applis_text>
+<isp_account>V&ocirc;tre nom d'utilisateur chez votre FAI</isp_account>
+<isp_address_mail>L'adresse email de votre FAI</isp_address_mail>
+<isp_password>V&ocirc;tre mot de passe chez votre FAI</isp_password>
+<isp_pop3_server>L'adresse POP/IMAP du serveur email de votre FAI</isp_pop3_server>
+<isp_smtp_server>Le serveur SMTP de votre FAI</isp_smtp_server>
+<kaspersky_av_text>Voir le statut des produits de Kaspersky antivirus</kaspersky_av_text>
+<local_account>Compte sur Artica</local_account>
+<local_email>Votre adresse eMail locale</local_email>
+<local_mail>Adresse email locale</local_mail>
+<local_password>V&ocirc;tre mot de passe local</local_password>
+<manage_backups>Configurer votre sauvegarde</manage_backups>
+<manage_backups_text>Emp&ecirc;cher la perte de donn&eacute;es et d&eacute;finissez votre processus de sauvegarde de donn&eacute;e</manage_backups_text>
+<manage_services>G&eacute;rer les services du syst&egrave;me</manage_services>
+<manage_services_text>Voir  l'&eacute;tat de tous services et leurs versions et d&eacute;marrer/arr&ecirc;ter des services</manage_services_text>
+<messaging_text>Configurez votre syst&egrave;me de messagerie et  configurer votre Postfix</messaging_text>
+<nfs_share>Partage de r&eacute;pertoires en NFS</nfs_share>
+<nfs_share_text>Partagez un r&eacute;pertoire en utilisant le protocole NFS</nfs_share_text>
+<nic_settings>Parametre reseaux</nic_settings>
+<nic_settings_text>R&eacute;glez votre configuration IP</nic_settings_text>
+<play_with_isp>Jouer avec votre FAI</play_with_isp>
+<play_with_isp_text>Utiliser ce serveur comme un v&eacute;ritable serveur de mail entre vous et votre FAI (aol, free, yahoo ..)...</play_with_isp_text>
+<postfix_plugins_text>Activer ou d&eacute;sactiver les services de routage du courrier de Postfix</postfix_plugins_text>
+<postfix_smtp_reports>Rapports de Messagerie</postfix_smtp_reports>
+<postfix_smtp_reports_text>Recevoir des messages de rapports concernant l'aper&ccedil;u d'activit&eacute; postfix durant la journ&eacute;e</postfix_smtp_reports_text>
+<postmaster>Boite e-mail du Postmaster</postmaster>
+<postmaster_explain>Indiquez ici l'e-mail de l'utilisateur qui recevra les notifications :</postmaster_explain>
+<postmaster_text>Pr&eacute;cisez ici l'adresse email de l'utilisateur qui sera l'administrateur pour la r&eacute;ception des notifications</postmaster_text>
+<relay>Relais</relay>
+<relay_mail>Le domaine de votre adresse locale est-il h&eacute;berg&eacute;e sur ce serveur ? Si oui laissez ce champ vide, sinon indiquez l'adresse du serveur de courrier qui h&eacute;berge la boite e-mail de l'adresse locale</relay_mail>
+<relay_server>Serveur SMTP distant</relay_server>
+<remote_account>V&ocirc;tre compte chez v&ocirc;tre FAI</remote_account>
+<repository_manager>Installer et maintenir</repository_manager>
+<repository_manager_text>Installez des applications et des modules &agrave; partir des d&eacute;p&ocirc;ts depuis votre gestionnaire syst&egrave;me d'installation</repository_manager_text>
+<samba_audit>Voir les statistiques Samba</samba_audit>
+<samba_audit_text>R&eacute;cup&eacute;rer les &eacute;v&eacute;nements de votre r&eacute;pertoires partager et effectuer l'analyse</samba_audit_text>
+<section_security_text>Sauvegarde et param&egrave;tres antivirus</section_security_text>
+<security>Securit&eacute;</security>
+<send_auth>Authentification des mails envoy&eacute;s au FAI</send_auth>
+<send_auth_text>Est-ce que votre FAI requi&egrave;re de s'authentifier pour envoyer du courrier ? Si oui indiquez le nom d'utilisateur et le mot de passe pour aider postfix &agrave; s'authentifier aupr&egrave;s de votre FAI[br]
+Dans le cas contraire, laisser ces champs vides</send_auth_text>
+<softwares>Logiciels</softwares>
+<softwares_mangement_text>Afficher les informations des logiciels et installer les nouveaux logiciels</softwares_mangement_text>
+<ssl_certificate>Certificat SSL</ssl_certificate>
+<ssl_certificate_text>Changer les informations dans le certificat SSL de tous les services</ssl_certificate_text>
+<success_apply_kas>Configuration envoyer avec succ&egrave;s aux plugins kaspersky. Vous pouvez maintenant fermer cette fen&ecirc;tre ...</success_apply_kas>
+<sysinfos>Informations syst&egrave;me</sysinfos>
+<sysinfos_text>Voir les d&eacute;tails et informations syst&egrave;me</sysinfos_text>
+<system_information>Information systeme</system_information>
+<system_information_text>Afficher et modifier les informations de votre ordinateur</system_information_text>
+<system_memory>Afficher la m&eacute;moire</system_memory>
+<system_memory_text>Afficher l'utilisation de la m&eacute;moire de votre ordinateur</system_memory_text>
+<usefull_links>Liens utiles</usefull_links>
+<welcome_kaspersky>Bienvenue dans l'assistant d'activation Kaspersky.[br]Cet assistant vous aidera &agrave; activer le module anti-spam et antivirus sur votre serveur mail</welcome_kaspersky>
+<wizard>Assistants</wizard>
+<wizard_section_text>Aide &agrave; la configuration de votre serveur</wizard_section_text>

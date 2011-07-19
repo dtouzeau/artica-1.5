@@ -1,0 +1,4 @@
+.
+.
+amavis-stats ./amavis-stats.pod:./amavis-stats.pod:
+amavis-stats.in ./amavis-stats.in.pod:

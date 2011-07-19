@@ -1,0 +1,22 @@
+<build>Build settings</build>
+<build_domain>Build domain</build_domain>
+<build_group>Build Group</build_group>
+<build_org>Build organization</build_org>
+<build_user>Create user</build_user>
+<domain_iptext>Is this domain is a local domain ? If yes, just click on next button.[br]If this domain must be relayed to a server,put it the name or the IP address of the target server</domain_iptext>
+<domain_text>Define here the SMTP domain that will be used for your new organization.[br]The value should an Internet domain eg "domain.tld"</domain_text>
+<group_text>Now define a groupe name that will store your users, your users should be eMail users, Samba users, ftp users or Internet users</group_text>
+<launch>Launch</launch>
+<org_text>The first parameter is to set an Organization.[br]An Organization is an entity that store users, groups and mail domains.[br]
+Give the name of your first organization...
+</org_text>
+<rebuild_modules>Rebuild Postfix Modules</rebuild_modules>
+<rebuild_postfix>Rebuild Postfix</rebuild_postfix>
+<relay_type>Relay type</relay_type>
+<uid>User id</uid>
+<user>First user</user>
+<user_text>Define here the first user that will be the recipient of your new domain. In this case, you can test the settings using this user.[br]
+Do not add the domain of this user just give an UID (first letters before @).[br]
+Give the password of this new user, it will be used if you have installed cyrus has an IMAP/POP3 mailbox server</user_text>
+<welcome>Welcome on Artica Postfix</welcome>
+<welcome_text>This section will help you to define main settings on Artica-Postfix in order to make it in production mode.[br]</welcome_text>

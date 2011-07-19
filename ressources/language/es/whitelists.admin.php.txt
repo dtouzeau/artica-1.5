@@ -1,0 +1,11 @@
+<autolearning>Auto-learning</autolearning>
+<autolearning_text>This feature allow you to enable robots that will parse mailboxes in order to auto-complete white list and black list area</autolearning_text>
+<enable_artica_wbl_robots_text>If you enable this option, organization's manager will be allowed to create email addresses that will be in charge of adding email addresses in white or black list by receiving messages from users</enable_artica_wbl_robots_text>
+<enable_learning_ham_mailbox>Enable learning White list by parsing Sent mailbox</enable_learning_ham_mailbox>
+<enable_learning_spam_mailbox>Enable learning SPAM by parsing Junk mailbox</enable_learning_spam_mailbox>
+<replicate_each>Replicate settings each</replicate_each>
+<replicate_now>Launch replication now</replicate_now>
+<whitelist_explain>This area consolidate all white list & Black lists used in all modules executed by Postfix, you can add and delete senders
+in order to add a white/black list user, you need to set the recipient of each users.[br]
+Recipients could be "@domain.tlb" to white/black list for all domain or "user@domain.tlb" for a single user.
+</whitelist_explain>

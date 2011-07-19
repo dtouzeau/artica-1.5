@@ -1,0 +1,25 @@
+#!/bin/sh
+#
+# UNTESTED sample script to update the zapper script from the master copy on
+# my web page.	- Cameron Simpson <cs@zip.com.au> 21jun1999
+#
+# "wget" can be obtained from:
+#	http://sunsite.auc.dk/wget/
+#
+
+masterurl=http://adzapper.sourceforge.net/scripts/squid_redirect
+zapper=/usr/local/etc/squid_redirect	## hack to suit your site
+pidfile=/var/run/squid-noads.pid	## hack to suit, again
+
+tmp=/tmp/newzapper$$
+if wget -q --cache=off -O $tmp "$masterurl"
+then
+    [ ! -s "$tmp" ] \
+    || cmp -s "$tmp" "$zapper" \
+    || ( cat "$tmp" >"$zapper" || exit 1
+	 [ -s "$pidfile" ] && kill -1 `cat "$pidfile"`
+       )
+fi
+rm -f "$tmp"
+
+exit 0

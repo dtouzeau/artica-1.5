@@ -1,0 +1,169 @@
+<add_admin>Adicionar super administrador</add_admin>
+<add_ban_ext>Adicionar uma extens&atilde;o proibida</add_ban_ext>
+<altermime_switch>Se voc&ecirc; colocar este circulo a verde, um aviso legal ser&aacute; colocado em cada mensagem [b]enviada[/b]</altermime_switch>
+<AmavisAddExtFilter_text>Defina as extens&otilde;es de arquivos que voc&ecirc; deseja proibir.
+Separe por um espa&ccedil;o, se voc&ecirc; quiser colocar mais do que uma extens&atilde;o.
+Exemplo: exe com bat dll src ssh</AmavisAddExtFilter_text>
+<amavisBadHeaderLover>Permitir mensagens com mau cabe&ccedil;alho.</amavisBadHeaderLover>
+<amavisBypassHeaderChecks>Desactivar a verifica&ccedil;&atilde;o dos cabe&ccedil;alhos das mensagens</amavisBypassHeaderChecks>
+<amavisBypassSpamChecks>Desactivar a verifica&ccedil;&atilde;o de spam</amavisBypassSpamChecks>
+<amavisBypassVirusChecks>Desactivar a verifica&ccedil;&atilde;o de v&iacute;rus</amavisBypassVirusChecks>
+<AmavisMemoryInRAM>Direct&oacute;rio de trabalho na RAM</AmavisMemoryInRAM>
+<AmavisMemoryInRAM_TEXT>Por defeito, o Amavis usa uma pasta do disco para executar a verifica&ccedil;&atilde;o de v&iacute;rus nas mensagens. Voc&ecirc; pode aumentar o desempenho do Amavis, atribuindo uma parte de mem&oacute;ria RAM para a verifica&ccedil;&atilde;o de v&iacute;rus.[br]O valor m&iacute;nimo &eacute; de 128M[br] Ajuste o valor para 0 se voc&ecirc; quiser desactivar este recurso</AmavisMemoryInRAM_TEXT>
+<amavisNewVirusAdmin>Notificar endere&ccedil;o de e-mail (novos v&iacute;rus)</amavisNewVirusAdmin>
+<amavisSpamAdmin>spam admin to notify</amavisSpamAdmin>
+<amavisSpamKillLevel>N&iacute;vel m&aacute;ximo de spam</amavisSpamKillLevel>
+<amavisSpamLover>Permitir mensagens detectadas</amavisSpamLover>
+<amavisSpamModifiesSubj>Alterar o assunto quando for detectado spam</amavisSpamModifiesSubj>
+<amavisSpamSubjectTag>Etiqueta do assunto</amavisSpamSubjectTag>
+<amavisSpamSubjectTag2>Etiqueta do assunto</amavisSpamSubjectTag2>
+<amavisSpamTag2Level>N&iacute;vel m&iacute;nimo de spam</amavisSpamTag2Level>
+<amavisSpamTagLevel>Tag Spam info headers level</amavisSpamTagLevel>
+<amavisVirusAdmin>Notificar endere&ccedil;o de e-mail</amavisVirusAdmin>
+<amavisVirusLover>Permitir mensagens detectadas</amavisVirusLover>
+<amavisVirusQuarantineTo>Colocar em quarentena as mensagens detectas</amavisVirusQuarantineTo>
+<amavisWarnVirusRecip>Notificar o destinat&aacute;rio</amavisWarnVirusRecip>
+<amavis_domain_text>Esta sec&ccedil;&atilde;o vai alterar o comportamento da filtragem anti-spam no seu dom&iacute;nio SMTP</amavis_domain_text>
+<AMAVIS_PERFS>Performances Engine</AMAVIS_PERFS>
+<amavis_user_text>Esta sec&ccedil;&atilde;o vai alterar o comportamento da filtragem anti-spam nas suas contas de e-mail</amavis_user_text>
+<APPLY_SETTINGS_AMAVIS>Salvar e Aplicar os par&acirc;metros do Amavis no servidor</APPLY_SETTINGS_AMAVIS>
+<APP_ALTERMIME_NOT_INSTALLED>O alterMIME n&atilde;o est&aacute; instalado.[br]Se pretende activar o alterMIME, tem que o instalar primeiro.[br]V&aacute; ao centro de instala&ccedil;&atilde;o de aplica&ccedil;&otilde;es (Application Setup Center) para instalar o alterMIME no sistema</APP_ALTERMIME_NOT_INSTALLED>
+<av_rules>Regras do antiv&iacute;rus</av_rules>
+<back_to_defaults>Voltar para as configura&ccedil;&otilde;es padr&atilde;o</back_to_defaults>
+<child_timeout>Abort child if it does not complete each task in</child_timeout>
+<child_timeout_text>Este valor aumenta o tempo limite para o processo Amavisd.[br]
+Por defeito &eacute; de apenas 8 minutos.[br]
+Quando amavisd &eacute; usado com outros pacotes de correio em uma estrutura de fila de correio,
+a mensagem &eacute; transferida apenas localmente (a partir da fila de correio local para o loopback amavisd) e por isso &eacute; muito r&aacute;pido.[br]</child_timeout_text>
+<daemon_events>Eventos</daemon_events>
+<disclaimer>Aviso legar com alterMIME</disclaimer>
+<disclaimer_explain>A disclaimer is generally any statement intended to specify or delimit the scope of rights and obligations
+that may be exercised and enforced by parties in a legally-recognized relationship.[br]
+In contrast to other terms for legally operative language, the term "disclaimer" usually implies situations that involve some level of uncertainty, waiver, or risk...
+(source:wikipedia.org)
+</disclaimer_explain>
+<disclaimer_text>Add a statement intended to specify or delimit the scope of rights and obligations</disclaimer_text>
+<domains_rules>Regras dos dom&iacute;nios</domains_rules>
+<domains_rules_text>Here you can create security rules for all users stored in a specific SMTP Domain</domains_rules_text>
+<D_BOUNCE>Apagar mensagem e enviar notifica&ccedil;&atilde;o para o remetente</D_BOUNCE>
+<D_BOUNCE_EXP>A mensagem n&atilde;o ser&aacute; entregue aos seus destinat&aacute;rios, uma notifica&ccedil;&atilde;o de n&atilde;o entrega (devolu&ccedil;&atilde;o) ser&aacute; enviada ao remetente atrav&eacute;s do amavisd-new;</D_BOUNCE_EXP>
+<D_DISCARD>Apagar mensagem (buraco negro)</D_DISCARD>
+<D_DISCARD_EXP>mail will not be delivered to its recipients, sender will NOT be notified.[br]
+Effectively we lose mail (but will be quarantined unless disabled).[br]
+Losing mail is not decent for a mailer,but might be desired.</D_DISCARD_EXP>
+<D_PASS>Enviar para os destinat&aacute;rios, independentemente de ter um mau conte&uacute;do.</D_PASS>
+<D_PASS_EXP>mail will pass to recipients, regardless of bad contents;</D_PASS_EXP>
+<D_REJECT>A mensagem n&atilde;o ser&aacute; entregue aos seus destinat&aacute;rios</D_REJECT>
+<D_REJECT_EXP>mail will not be delivered to its recipients, sender should preferably get a reject, e.g. SMTP permanent reject response
+(e.g. with milter),[br]If this is not possible (e.g. different recipients have different tolerances to bad mail contents and not using LMTP)
+amavisd-new sends a bounce by itself (same as Delete Mail and send notification to sender).
+</D_REJECT_EXP>
+<edit_disclaimer>Edite o seu aviso legal</edit_disclaimer>
+<edit_disclaimer_text>Open the editor in order to modify the default disclaimer wich will be added on your outgoing emails</edit_disclaimer_text>
+<EnableBlockUsersTroughInternet>Enable External sent rules</EnableBlockUsersTroughInternet>
+<extension_list>Lista de extens&otilde;es</extension_list>
+<filter_behavior>Comportamento dos filtros</filter_behavior>
+<filter_behavior_text>Defina aqui o comportamento do amavis quando encontrar v&iacute;rus, spam, filtros...</filter_behavior_text>
+<filter_extension>Verifica&ccedil;&atilde;o do tipo de conte&uacute;do dos arquivos</filter_extension>
+<filter_extension_text>Bann attached files in mails by file content type</filter_extension_text>
+<FinalBadHeaderDestiny>Quando encontrar mau cabe&ccedil;alho</FinalBadHeaderDestiny>
+<FinalBannedDestiny>Quando encontrar extens&otilde;es proibidas</FinalBannedDestiny>
+<FinalSpamDestiny>Quando encontrar spam</FinalSpamDestiny>
+<FinalVirusDestiny>Quando encontrar v&iacute;rus</FinalVirusDestiny>
+<final_bad_header_destiny>Quando encontrar mau cabe&ccedil;alho</final_bad_header_destiny>
+<final_banned_destiny>Quando encontrar extens&otilde;es proibidas</final_banned_destiny>
+<final_destiny>Destino final</final_destiny>
+<final_spam_destiny>Quando encontrar spam</final_spam_destiny>
+<final_virus_destiny>Quando encontrar v&iacute;rus</final_virus_destiny>
+<fresh_events>Actualizar o ClamAV</fresh_events>
+<global_settings>Defini&ccedil;&otilde;es globais</global_settings>
+<ip_from>Do IP</ip_from>
+<ip_to>Para IP</ip_to>
+<local_network>Rede Local</local_network>
+<local_network_explain>This form help you to create netmask of your network.[br]In the "From IP field", set the starting IP address of your network.[br]
+for example, if your network is 192.168.1.x set [b]192.168.1.0[/b] or 192.168.0.0 for a large Network[br]
+In the "To IP field", set the last IP address of your network.[br]for example, if your network is 192.168.1.x set [b]192.168.1.255[/b][br]
+</local_network_explain>
+<local_network_text>Adicione as configura&ccedil;&otilde;es da sua rede local de forma a n&atilde;o filtrar os seus utilizares</local_network_text>
+<log_level>N&iacute;vel de registos (Log)</log_level>
+<mailfrom_notify>Sender envelope address, from which notification reports are sent from</mailfrom_notify>
+<mailfrom_notify_admin>Sender envelope address for admins notifications</mailfrom_notify_admin>
+<mailfrom_notify_recip>Sender envelope address for recipients notifications</mailfrom_notify_recip>
+<mailfrom_notify_spamadmin>Sender envelope address for Spam admin notifications</mailfrom_notify_spamadmin>
+<max_requests>Max Requests</max_requests>
+<max_requests_text>
+Max Requests controls the approximate number of tasks each child process is willing to handle.[br]
+ After that the child process terminates and the main daemon provides a new child process to take its place.[br]
+On the low side, the number should not be too small in order for the startup cost to be averaged out / sufficiently diluted over an entire child lifetime.[br]
+ A value above 5 or 10 meets this goal in most amavisd-new configurations.
+</max_requests_text>
+<max_servers>amavisd child processes to spawn number</max_servers>
+<max_servers_text>Specifies the number of instances of amavisd child processes to spawn.[br]
+ You should increase or decrease this number depending on how much memory your PC has installed.[br]
+  Make sure that this number is synchronized to the smtpd maxproc setting in the postfix/master.cf file
+ (so that you don't end up with postfix trying to connect to a non-existant queue).
+ For 4000 users a value between 5 and 10 would be a good starting point.[br]
+ With low memory (e.g. 256 MB) a value of 2 or 3 would probably do.
+</max_servers_text>
+<notification_text>Comportamento das notifica&ccedil;&otilde;es em acordo com a Detec&ccedil;&atilde;o Amavis</notification_text>
+<postfix_afterqueue>Filtro de Conte&uacute;dos Postfix After-Queue</postfix_afterqueue>
+<postfix_afterqueue_text>[b]Using Postfix After-Queue Content Filter[/b][br]
+Normally, Postfix receives mail, stores it in the mail queue and then delivers it.[br]
+With the external content filter, [b]mail is filtered AFTER it is queued.[/b][br]
+This approach decouples mail receiving processes from mail filtering processes, and gives you maximal control over how many filtering processes you are willing to run in parallel.[br]
+This method will give you all filtering features but it use more processes and memory and there is a risk to flood the Postfix queue if the filter is not be able to scan mails in time.[br]
+</postfix_afterqueue_text>
+<postfix_beforequeue>Extens&atilde;o Milter Postfix before-queue</postfix_beforequeue>
+<postfix_beforequeue_text>[b]Using Postfix before-queue Milter support[/b][br]
+Postfix version 2.3 introduces support for the Sendmail version 8 Milter (mail filter) protocol.[br]
+This protocol is used by applications that run outside the MTA to inspect SMTP events (CONNECT, DISCONNECT), SMTP commands (HELO, MAIL FROM, etc.)
+as well as mail content (headers and body).[br][b]All this happens before mail is queued.[/b][br]
+This method will use amavisd-milter process in order to hook postfix and use less processes and memory to perform email filtering operations[br]
+But there are some limitations according messages content modifications.[br]
+For example, you will not be able to user Altermime disclaimers for yours outgoing mails
+
+</postfix_beforequeue_text>
+<postfix_hooking>Conex&atilde;o ao postfix</postfix_hooking>
+<postfix_hooking_text>Defina como amavis se vai conectar ao postfix</postfix_hooking_text>
+<quarantineSuperAdmin>Super administradores</quarantineSuperAdmin>
+<quarantineSuperAdmin_text>Permitir que os Super Admins libertem mails em quarentena e recebam pedidos de utilizadoes a partir da &aacute;rea de quarentena</quarantineSuperAdmin_text>
+<replicate_all_domains>Replicar esta configura&ccedil;&atilde;o para todos os dom&iacute;nios</replicate_all_domains>
+<sanesecurity_explain>O ClamAv &eacute; uma ferramenta de antiv&iacute;rus sob licen&ccedil;a GPL para sistemas UNIX e foi concebido para detectar v&iacute;rus em mensagens de e-mails, o mecanismo de detec&ccedil;&atilde;o &eacute; muito flex&iacute;vel e tem sido usado para fornecer add-ons de assinaturas.[br]
+Os add-on de assinaturas da Sanesecurity proporcionam uma maior seguran&ccedil;a para mensagens de e-mail contra v&aacute;rios tipos de amea&ccedil;as:
+[br][b]
+Phishing, Spear phishing, falsa lotaria, malware Ecard, Casino, falsos empregos, falsos empr&eacute;stimos, 419s, falsos diplomas, pornografia, spam e outros malwares em geral.[/b][br]
+As assinaturas s&atilde;o actualizadas v&aacute;rias vezes ao dia e podem ser verificadas no nosso Twitter.[br]
+As assinaturas SaneSecurity s&atilde;o o culminar de muito trabalho e compromisso para fornecer assinaturas de qualidade profissional para a comunidade web.[br]</sanesecurity_explain>
+<sanesecurity_switch>Se quiser activar este recurso... Coloque em verde</sanesecurity_switch>
+<sanesecurity_text>Activar/Desactivas a detec&ccedil;&atilde;o de Phishing com o ClamAV e add-on de assinaturas da Sanesecurity</sanesecurity_text>
+<save_config_to_server>Guardar os ficheiros de configura&ccedil;&atilde;o do sistema</save_config_to_server>
+<save_policies>Salve as suas pol&iacute;ticas</save_policies>
+<sa_dsn_cutoff_level>N&iacute;vel de SPAM a partir do qual um DSN n&atilde;o &eacute; enviado</sa_dsn_cutoff_level>
+<sa_tag2_level_deflt>Adicionar cabe&ccedil;alhos X-Spam-Flag: YES a esse n&iacute;vel para mail verificado.</sa_tag2_level_deflt>
+<sa_tag_level_deflt>Adicionar X-SPAM*** aos cabe&ccedil;alhos ou acima desse n&iacute;vel</sa_tag_level_deflt>
+<select_domain>Seleccione o dom&iacute;nio SMTP</select_domain>
+<smtp_notification>Alertas e notifica&ccedil;&otilde;es SMTP</smtp_notification>
+<spamassassin>Funcionalidades do SpamAssassin</spamassassin>
+<spamassassin_text>Defina as pol&iacute;ticas anti-spam</spamassassin_text>
+<spam_quarantine_spammy>Verde: Coloque em quarentena se alcan&ccedil;ar esta pontua&ccedil;&atilde;o[br]Vermelho: Permitir, mas marca com spam</spam_quarantine_spammy>
+<spam_rules>Regras Anti-spam</spam_rules>
+<spam_subject_tag2_maps>Etiqueta do assunto spam</spam_subject_tag2_maps>
+<spam_subject_tag_maps>Prov&aacute;vel etiqueta do assunto</spam_subject_tag_maps>
+<start_amavis>Iniciar o Amavis</start_amavis>
+<stop_amavis>Parar o Amavis</stop_amavis>
+<trust_local>Confiar no Servidor Local</trust_local>
+<trust_local_explain>Este par&acirc;metro desactiva/activa o controlo do Amavis quando recebe uma conex&atilde;o da interface de loopback como 127.0.0.1 ou localhost.[br]
+Isso &eacute; &uacute;til quando o Artica guarda o Webmail localmente[br]
+Mas isso vai desactivar os filtros de anti-spam, se voc&ecirc; usar o FDM ou o Fetchmail para receber as mensagens atrav&eacute;s de um provedor de acesso &agrave; Internet (ISP).[br]
+[b]Em todo o caso[/b]
+[ul]
+[li]Se voc&ecirc; usar o Fetchmail: desactive este recurso[/li]
+[li]Se voc&ecirc; usar o Webmail: active este recurso[/li]
+[/ul]</trust_local_explain>
+<trust_local_text>Adicionar a interface loopback e o localhost como uma rede de confian&ccedil;a</trust_local_text>
+<trust_my_net>Ignorar a verifica&ccedil;&atilde;o da minha rede</trust_my_net>
+<virus_admin>Endere&ccedil;o de e-mail do administrador de v&iacute;rus</virus_admin>
+<warnbadhrecip>Avisar o destinat&aacute;rio quando detectar maus cabe&ccedil;alhos (Bad headers)</warnbadhrecip>
+<warnbadhsender>Avisar o remetente quando detectar maus cabe&ccedil;alhos (Bad headers)</warnbadhsender>
+<warnbannedrecip>Avisar o destinat&aacute;rio quando detectar mensagens proibidas</warnbannedrecip>
+<warnvirusrecip>Avisar o destinat&aacute;rio quando detectar v&iacute;rus</warnvirusrecip>

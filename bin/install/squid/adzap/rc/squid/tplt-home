@@ -1,0 +1,19 @@
+cache_store_log /dev/null
+cache_access_log /dev/null
+cache_log {HOME}/var/log/squid/cache.log
+pid_filename {HOME}/var/run/squid.pid
+cache_dir ufs /home/squid/cache 10240 4 4
+append_domain .carlnfd1.nsw.optushome.com.au
+cache_peer proxy-optus.home parent 8080 3130 proxy-only no-query
+cache_peer_domain proxy-optus.home !.home
+cachemgr_passwd disable all
+cache_swap_low 95
+cache_swap_high 98
+ftp_user cs@zip.com.au
+http_port 8080 8081
+#quick_abort_max 0 KB
+#quick_abort_min 0 KB
+#quick_abort_pct 100
+redirect_children 4
+redirect_program {HOME}/scripts/squid_redirect
+visible_hostname proxy-noads.home

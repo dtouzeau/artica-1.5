@@ -1,0 +1,56 @@
+#!/usr/bin/perl
+BEGIN{unshift @INC, $1 if $0 =~ /(.*)[\/]/;}
+use strict;
+use warnings;
+use RRDp;
+
+ RRDp::start "/usr/bin/rrdtool";
+my $path='/opt/artica/var/rrd/yorel';
+my %rrds = (
+# Uncomment the RRDs that need to be (re)created
+  cpu_user      => 'DERIVE:600:0:100',
+  cpu_nice      => 'DERIVE:600:0:100',
+  cpu_idle      => 'DERIVE:600:0:100',
+  cpu_system    => 'DERIVE:600:0:100',
+  cpu_iowait    => 'DERIVE:600:0:100',
+  cpu_hirq      => 'DERIVE:600:0:100',
+  cpu_sirq      => 'DERIVE:600:0:100',
+  mem_user      => 'GAUGE:600:0:U',
+  mem_cached    => 'GAUGE:600:0:U',
+  mem_buffers   => 'GAUGE:600:0:U',
+  mem_free      => 'GAUGE:600:0:U',
+  swap_used     => 'GAUGE:600:0:U',
+  swap_free     => 'GAUGE:600:0:U',
+  loadavg_1     => 'GAUGE:600:0:U',
+  loadavg_5     => 'GAUGE:600:0:U',
+  loadavg_15    => 'GAUGE:600:0:U',
+  eth0_in       => 'COUNTER:600:0:13107200',  # max of 100Mbit/s
+  eth0_out      => 'COUNTER:600:0:13107200',
+  io_sda_r      => 'COUNTER:600:0:104857600', # max of 100MB/s
+  io_sda_w      => 'COUNTER:600:0:104857600',
+  hdd_www       => 'GAUGE:600:0:U',
+  hdd_wwwlogs   => 'GAUGE:600:0:U',
+  hdd_pgsql     => 'GAUGE:600:0:U',
+  hdd_other     => 'GAUGE:600:0:U',
+  hdd_total     => 'GAUGE:600:0:U',
+  proc_system   => 'GAUGE:600:0:U',
+  proc_httpd    => 'GAUGE:600:0:U',
+  proc_pgsql    => 'GAUGE:600:0:U',
+  proc_other    => 'GAUGE:600:0:U',
+  proc_total    => 'GAUGE:600:0:U',
+httpreq       => 'DERIVE:600:0:U',
+);
+
+
+foreach my $rrd (keys %rrds) {
+  RRDp::cmd qq| create "$path/$rrd.rrd"
+    DS:$rrd:$rrds{$rrd}
+    -s 300
+    RRA:AVERAGE:0.5:1:576
+    RRA:AVERAGE:0.5:6:672
+    RRA:AVERAGE:0.5:24:732
+    RRA:AVERAGE:0.5:144:1460
+  |;
+  my $r = RRDp::read; $$r||='';
+  print "Created $rrd.rrd -> $rrds{$rrd}: $$r\n";
+}

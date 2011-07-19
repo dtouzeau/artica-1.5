@@ -1,0 +1,414 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="/"/>
+    <Version Value="6"/>
+    <Units Count="38">
+      <Unit0>
+        <Filename Value="artica_mailarchive.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="artica_mailarchive"/>
+        <CursorPos X="3" Y="70"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="0"/>
+        <UsageCount Value="103"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="mailarchive.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="mailarchive"/>
+        <CursorPos X="37" Y="413"/>
+        <TopLine Value="402"/>
+        <EditorIndex Value="5"/>
+        <UsageCount Value="103"/>
+        <Loaded Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="amavisquar.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="amavisquar"/>
+        <CursorPos X="49" Y="92"/>
+        <TopLine Value="218"/>
+        <EditorIndex Value="1"/>
+        <UsageCount Value="90"/>
+        <Loaded Value="True"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="messagestorages.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="MessageStorages"/>
+        <CursorPos X="61" Y="116"/>
+        <TopLine Value="76"/>
+        <EditorIndex Value="2"/>
+        <UsageCount Value="33"/>
+        <Loaded Value="True"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="../artica-pipe-back/artica_pipe_back.pas"/>
+        <UnitName Value="artica_pipe_back"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="4"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="../artica-pipe-back/mimedefhook.pas"/>
+        <UnitName Value="mimedefhook"/>
+        <CursorPos X="171" Y="9"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="4"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="../artica-thread-back/artica_thread_back.pas"/>
+        <UnitName Value="artica_thread_back"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="4"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="../artica-thread-back/htmlback.pas"/>
+        <UnitName Value="htmlback"/>
+        <CursorPos X="69" Y="530"/>
+        <TopLine Value="24"/>
+        <UsageCount Value="10"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="../mimemessage_src/mimemess.pas"/>
+        <UnitName Value="mimemess"/>
+        <CursorPos X="14" Y="114"/>
+        <TopLine Value="75"/>
+        <UsageCount Value="9"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="../mimemessage_src/mimepart.pas"/>
+        <UnitName Value="mimepart"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="4"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="../mimemessage_src/synachar.pas"/>
+        <UnitName Value="synachar"/>
+        <CursorPos X="32" Y="65"/>
+        <TopLine Value="29"/>
+        <UsageCount Value="4"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="../artica-thread-back/artica_mysql.pas"/>
+        <UnitName Value="artica_mysql"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="4"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="artica_mysql.pas"/>
+        <UnitName Value="artica_mysql"/>
+        <CursorPos X="14" Y="115"/>
+        <TopLine Value="191"/>
+        <EditorIndex Value="4"/>
+        <UsageCount Value="48"/>
+        <Loaded Value="True"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="../../../../../../../usr/share/fpcsrc/packages/base/mysql/mysql4.pp"/>
+        <UnitName Value="mysql4"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="4"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="../../../../../../../usr/share/fpcsrc/packages/base/mysql/mysql4types.inc"/>
+        <CursorPos X="3" Y="208"/>
+        <TopLine Value="172"/>
+        <UsageCount Value="4"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="../artica-install/logs.pas"/>
+        <UnitName Value="logs"/>
+        <CursorPos X="19" Y="16"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="40"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="../artica-ldap/articaldap.pas"/>
+        <UnitName Value="articaldap"/>
+        <CursorPos X="79" Y="65"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="36"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="../../../../../../../usr/share/fpcsrc/rtl/inc/varianth.inc"/>
+        <CursorPos X="10" Y="455"/>
+        <TopLine Value="404"/>
+        <UsageCount Value="6"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="../artica-thread-back/global_conf.pas"/>
+        <UnitName Value="global_conf"/>
+        <CursorPos X="1" Y="746"/>
+        <TopLine Value="738"/>
+        <UsageCount Value="10"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="../../../../../../../usr/share/fpcsrc/rtl/inc/systemh.inc"/>
+        <CursorPos X="31" Y="272"/>
+        <TopLine Value="236"/>
+        <UsageCount Value="5"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="../../../../../../../usr/share/fpcsrc/rtl/objpas/sysutils/datih.inc"/>
+        <CursorPos X="10" Y="123"/>
+        <TopLine Value="69"/>
+        <UsageCount Value="5"/>
+      </Unit20>
+      <Unit21>
+        <Filename Value="amavisd_milter.pas"/>
+        <UnitName Value="amavisd_milter"/>
+        <CursorPos X="46" Y="483"/>
+        <TopLine Value="840"/>
+        <UsageCount Value="10"/>
+      </Unit21>
+      <Unit22>
+        <Filename Value="../artica-install/zsystem.pas"/>
+        <UnitName Value="zsystem"/>
+        <CursorPos X="25" Y="50"/>
+        <TopLine Value="223"/>
+        <UsageCount Value="12"/>
+      </Unit22>
+      <Unit23>
+        <Filename Value="zsystem.pas"/>
+        <UnitName Value="zsystem"/>
+        <CursorPos X="23" Y="2564"/>
+        <TopLine Value="2527"/>
+        <UsageCount Value="30"/>
+      </Unit23>
+      <Unit24>
+        <Filename Value="../../../../../../../usr/share/fpcsrc/packages/fcl-base/src/inc/inifiles.pp"/>
+        <UnitName Value="IniFiles"/>
+        <CursorPos X="14" Y="981"/>
+        <TopLine Value="872"/>
+        <UsageCount Value="30"/>
+      </Unit24>
+      <Unit25>
+        <Filename Value="../../../../../../../usr/share/fpcsrc/rtl/objpas/sysutils/finah.inc"/>
+        <CursorPos X="23" Y="27"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="29"/>
+      </Unit25>
+      <Unit26>
+        <Filename Value="smtpsend.pas"/>
+        <UnitName Value="smtpsend"/>
+        <CursorPos X="11" Y="62"/>
+        <TopLine Value="26"/>
+        <UsageCount Value="29"/>
+      </Unit26>
+      <Unit27>
+        <Filename Value="blcksock.pas"/>
+        <UnitName Value="blcksock"/>
+        <CursorPos X="1" Y="87"/>
+        <TopLine Value="50"/>
+        <UsageCount Value="9"/>
+      </Unit27>
+      <Unit28>
+        <Filename Value="synafpc.pas"/>
+        <UnitName Value="synafpc"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="9"/>
+      </Unit28>
+      <Unit29>
+        <Filename Value="synsock.pas"/>
+        <UnitName Value="synsock"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="9"/>
+      </Unit29>
+      <Unit30>
+        <Filename Value="synautil.pas"/>
+        <UnitName Value="synautil"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="9"/>
+      </Unit30>
+      <Unit31>
+        <Filename Value="synacode.pas"/>
+        <UnitName Value="synacode"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="9"/>
+      </Unit31>
+      <Unit32>
+        <Filename Value="ldapsend.pas"/>
+        <UnitName Value="ldapsend"/>
+        <CursorPos X="31" Y="61"/>
+        <TopLine Value="24"/>
+        <UsageCount Value="9"/>
+      </Unit32>
+      <Unit33>
+        <Filename Value="../mimemessage_src/synaicnv.pas"/>
+        <UnitName Value="synaicnv"/>
+        <CursorPos X="55" Y="42"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="9"/>
+      </Unit33>
+      <Unit34>
+        <Filename Value="../../../../../../../usr/share/fpcsrc/2.2.2/rtl/inc/objpash.inc"/>
+        <CursorPos X="21" Y="156"/>
+        <TopLine Value="125"/>
+        <UsageCount Value="9"/>
+      </Unit34>
+      <Unit35>
+        <Filename Value="../../../../../../../usr/share/fpcsrc/2.2.2/packages/mysql/src/mysql4.pp"/>
+        <UnitName Value="mysql4"/>
+        <CursorPos X="22" Y="76"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="9"/>
+      </Unit35>
+      <Unit36>
+        <Filename Value="../../../../../../../usr/share/fpcsrc/2.2.2/packages/regexpr/src/old/regexpr.pp"/>
+        <UnitName Value="regexpr"/>
+        <CursorPos X="36" Y="148"/>
+        <TopLine Value="114"/>
+        <UsageCount Value="9"/>
+      </Unit36>
+      <Unit37>
+        <Filename Value="articaldap.pas"/>
+        <UnitName Value="articaldap"/>
+        <CursorPos X="24" Y="827"/>
+        <TopLine Value="789"/>
+        <EditorIndex Value="3"/>
+        <UsageCount Value="14"/>
+        <Loaded Value="True"/>
+      </Unit37>
+    </Units>
+    <General>
+      <ActiveEditorIndexAtStart Value="2"/>
+    </General>
+    <JumpHistory Count="27" HistoryIndex="26">
+      <Position1>
+        <Filename Value="mailarchive.pas"/>
+        <Caret Line="52" Column="1" TopLine="18"/>
+      </Position1>
+      <Position2>
+        <Filename Value="messagestorages.pas"/>
+        <Caret Line="192" Column="45" TopLine="173"/>
+      </Position2>
+      <Position3>
+        <Filename Value="mailarchive.pas"/>
+        <Caret Line="479" Column="32" TopLine="445"/>
+      </Position3>
+      <Position4>
+        <Filename Value="messagestorages.pas"/>
+        <Caret Line="1" Column="21" TopLine="1"/>
+      </Position4>
+      <Position5>
+        <Filename Value="messagestorages.pas"/>
+        <Caret Line="214" Column="31" TopLine="180"/>
+      </Position5>
+      <Position6>
+        <Filename Value="mailarchive.pas"/>
+        <Caret Line="12" Column="30" TopLine="1"/>
+      </Position6>
+      <Position7>
+        <Filename Value="mailarchive.pas"/>
+        <Caret Line="482" Column="31" TopLine="433"/>
+      </Position7>
+      <Position8>
+        <Filename Value="mailarchive.pas"/>
+        <Caret Line="481" Column="59" TopLine="447"/>
+      </Position8>
+      <Position9>
+        <Filename Value="mailarchive.pas"/>
+        <Caret Line="21" Column="1" TopLine="1"/>
+      </Position9>
+      <Position10>
+        <Filename Value="mailarchive.pas"/>
+        <Caret Line="38" Column="65" TopLine="5"/>
+      </Position10>
+      <Position11>
+        <Filename Value="artica_mailarchive.pas"/>
+        <Caret Line="65" Column="18" TopLine="1"/>
+      </Position11>
+      <Position12>
+        <Filename Value="amavisquar.pas"/>
+        <Caret Line="139" Column="37" TopLine="92"/>
+      </Position12>
+      <Position13>
+        <Filename Value="messagestorages.pas"/>
+        <Caret Line="181" Column="28" TopLine="126"/>
+      </Position13>
+      <Position14>
+        <Filename Value="messagestorages.pas"/>
+        <Caret Line="182" Column="55" TopLine="126"/>
+      </Position14>
+      <Position15>
+        <Filename Value="messagestorages.pas"/>
+        <Caret Line="169" Column="52" TopLine="141"/>
+      </Position15>
+      <Position16>
+        <Filename Value="messagestorages.pas"/>
+        <Caret Line="9" Column="60" TopLine="1"/>
+      </Position16>
+      <Position17>
+        <Filename Value="articaldap.pas"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
+      </Position17>
+      <Position18>
+        <Filename Value="artica_mailarchive.pas"/>
+        <Caret Line="66" Column="13" TopLine="1"/>
+      </Position18>
+      <Position19>
+        <Filename Value="mailarchive.pas"/>
+        <Caret Line="246" Column="17" TopLine="212"/>
+      </Position19>
+      <Position20>
+        <Filename Value="mailarchive.pas"/>
+        <Caret Line="247" Column="17" TopLine="208"/>
+      </Position20>
+      <Position21>
+        <Filename Value="artica_mailarchive.pas"/>
+        <Caret Line="70" Column="12" TopLine="1"/>
+      </Position21>
+      <Position22>
+        <Filename Value="amavisquar.pas"/>
+        <Caret Line="139" Column="36" TopLine="92"/>
+      </Position22>
+      <Position23>
+        <Filename Value="amavisquar.pas"/>
+        <Caret Line="170" Column="23" TopLine="127"/>
+      </Position23>
+      <Position24>
+        <Filename Value="amavisquar.pas"/>
+        <Caret Line="184" Column="28" TopLine="141"/>
+      </Position24>
+      <Position25>
+        <Filename Value="amavisquar.pas"/>
+        <Caret Line="247" Column="26" TopLine="208"/>
+      </Position25>
+      <Position26>
+        <Filename Value="amavisquar.pas"/>
+        <Caret Line="362" Column="30" TopLine="307"/>
+      </Position26>
+      <Position27>
+        <Filename Value="amavisquar.pas"/>
+        <Caret Line="268" Column="52" TopLine="216"/>
+      </Position27>
+    </JumpHistory>
+  </ProjectSession>
+  <Debugging>
+    <BreakPoints Count="1">
+      <Item1>
+        <Source Value="../artica-pipe-back/logs.pas"/>
+        <Line Value="671"/>
+      </Item1>
+    </BreakPoints>
+    <Exceptions Count="2">
+      <Item1>
+        <Name Value="ECodetoolError"/>
+      </Item1>
+      <Item2>
+        <Name Value="EFOpenError"/>
+      </Item2>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

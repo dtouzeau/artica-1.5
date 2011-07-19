@@ -1,0 +1,2 @@
+<available_websites>Outros web sites dispon&iacute;veis</available_websites>
+<user_events_emails_query_text>Consulta de eventos de email e exibi&ccedil;&atilde;o dos emails enviados / recebidos atrav&eacute;s do servidor de email</user_events_emails_query_text>

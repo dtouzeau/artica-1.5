@@ -1,0 +1,4 @@
+<network_hardware_infos>Informacje o sprz%u0119cie</network_hardware_infos>
+<network_hardware_infos_text>Poka%u017C informacje o kartach sieciowych</network_hardware_infos_text>
+<proc_hardware_infos>Informacje o CPU</proc_hardware_infos>
+<proc_hardware_infos_text>Wy%u015Bwietl informacje o CPU</proc_hardware_infos_text>

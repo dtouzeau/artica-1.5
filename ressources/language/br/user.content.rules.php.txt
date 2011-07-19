@@ -1,0 +1,12 @@
+<add_a_rule>Add a new rule</add_a_rule>
+<edit_a_rule>Edit rule</edit_a_rule>
+<error_header>Please select value in header field</error_header>
+<error_pattern>Please type a pattern to detect</error_pattern>
+<match_pattern>Match pattern</match_pattern>
+<only_regex_off>(Only if use regex pattern is switched off)</only_regex_off>
+<rules_list>Rules list</rules_list>
+<select_header_field>if in</select_header_field>
+<user_delete>Delete mail</user_delete>
+<user_quarantine>Put mail into quarantine</user_quarantine>
+<user_skip_antispam>Skip antispam process</user_skip_antispam>
+<use_regex>Use regex pattern</use_regex>

@@ -1,0 +1,24 @@
+<add_credentials>Agregar credenciales</add_credentials>
+<get_mails_isp>Descargar correos de tu ISP</get_mails_isp>
+<get_mails_isp_text>Sus buzones reales est&aacute;n situados en el servidor ISP de correo, utilice esta secci&oacute;n para almacenar el correo de los usuarios en este servidor.</get_mails_isp_text>
+<isp_server_name>Nombre del servidor de correo del ISP</isp_server_name>
+<play_with_your_isp>Iniciar con su ISP</play_with_your_isp>
+<send_isp_relay>Usar el servidor smtp de su ISP</send_isp_relay>
+<send_isp_relay_text>Si su ISP almacena su dominio, necesitar&aacute; usar este servidor SMTP para retransmitir todo el correo saliente. [br] Utilice esta funci&oacute;n para definir su servidor ISP de correo saliente.</send_isp_relay_text>
+<send_isp_relay_text2>Configure la direcci&oacute;n IP o el nombre del servidor (por ejemplo, smtp.isp.net) aqu&iacute;. [br] Todos los dominios SMTP que no est&aacute;n en las organizaciones se consideran como &quot;dominios extranjeros&quot; y tendr&iacute;a que usar este servidor remoto del ISP. [Br]
+Si el servidor remoto no usa un puerto SMTP est&aacute;ndar establezca algo como &quot;smtp.isp.net: 6000&quot; [br]
+por defecto, Postfix intenta resolver el nombre por DNS, si usted no quiere que Postfix resuelva, utilice corchetes como &quot;[smtp.isp.net]&quot; o &quot;[smtp.isp.net]: 6000&quot;</send_isp_relay_text2>
+<send_isp_relay_text3>Si usted usa un nombre de dominio ISP (como aol.com, laposte.net, bluewin.ch ...), no se olvide de que los usuarios puedan establecer la direcci&oacute;n de correo electr&oacute;nico &quot;asignaci&oacute;n de una direcci&oacute;n can&oacute;nica&quot; por el nombre de dominio ISP, a fin de no tener problemas con los destinatarios de su usuario contra su dominio local.</send_isp_relay_text3>
+<send_to_isp>Enviar correo electr&oacute;nico al servidor ISP mediante autenticaci&oacute;n.</send_to_isp>
+<send_to_isp_text>Su ISP le proporciona su dominio y es necesario enviar mensajes de correo electr&oacute;nico saliente desde su servidor de correo mediante par&aacute;metros de autenticaci&oacute;n de usuario y contrase&ntilde;a.</send_to_isp_text>
+<servername>Nombre del servidor ISP</servername>
+<smtp_sasl_auth_enable>habilitar smtp SASL</smtp_sasl_auth_enable>
+<smtp_sasl_auth_enable_text>
+ Postfix SASL support (RFC 4954, formerly RFC 2554) can be used to authenticate remote SMTP clients to the Postfix SMTP server, and to authenticate the Postfix SMTP client to a remote SMTP server.[br]
+When receiving mail, the Postfix SMTP server logs the client-provided username, authentication method, and sender address to the maillog file, and optionally grants mail access via the "permit sasl authenticated" UCE restriction.[br]
+When sending mail, the Postfix SMTP client can look up the remote SMTP server hostname or destination domain (the address right-hand part) in a SASL password table, and if a username/password is found, it will use that username and password to authenticate to the remote SMTP server
+</smtp_sasl_auth_enable_text>
+<smtp_sasl_auth_enable_text2>You need to enable this feature if you want to postfix authenticate to your ISP mail server.[br][br]Click on the circle on left to enable or disable the feature[br][br]
+After enter credentials required for an ISP server name.[br]Give the mail server that we want to relay through for example (server name=mail.my-isp.org, username=test and it's password is testpass)
+
+ </smtp_sasl_auth_enable_text2>

@@ -1,0 +1,127 @@
+=head1 NAME
+
+B<@PKGNAME@> - generate e-mail statistics from amavisd-new (sys)log files.
+
+=head1 SYNOPSIS
+
+B<@PKGNAME@> S<[options]>
+
+=head1 DESCRIPTION
+
+B<@PKGNAME@> is a simple e-mail statistics generator based on amavisd-new
+and rrdtool.
+
+Statistics are read from amavisd-new (sys)log entries and stored in RRD files.
+
+There is an accompanying php script to actually generate the web pages and graphs.
+This man page is just for the perl script daemon which parses the log files.
+
+=head2 OVERVIEW
+
+In this man page you will find general information on the use of the B<@PKGNAME@>
+daemon.
+
+For a more detailed description of how to use the individual options of the
+B<@PKGNAME@> daemon, check the built-in help and included documentation.
+
+=over
+
+=item options
+
+S<[B<debug>]> ( runs in foreground )
+
+S<[B<foreground>]>
+
+S<[B<help>]>
+
+S<[B<reload>]>
+
+S<[B<start>]> ( kept for legacy )
+
+S<[B<stop>]>
+
+=item options F<( requiring arguments )>
+
+S<[B<-c E<lt>config-fileE<gt>>]>
+
+S<[B<-g E<lt>groupE<gt>>]> ( requires -u option to be specified )
+
+S<[B<-u E<lt>userE<gt>>]>
+
+=back
+
+=head1 FILES
+
+=over
+
+=item F<SCRIPTS, CONFIG AND DIRECTORIES>
+
+S<B<@SBINDIR@/@PKGNAME@>>
+ @PKGNAME@ daemon.
+
+S<B<@SYSCONFDIR@/@PKGNAME@.conf>>
+ config file for @PKGNAME@ daemon.
+
+S<B<@PKGDATADIR@/@PKGNAME@.php>>
+ php script, for generating web-based graphs.
+
+S<B<@PKGDATADIR@/@PKGNAME@.php.conf>>
+ config file for php script.
+
+S<B<@PKGDATADIR@/@PKGNAME@.alias.conf>>
+ config file for apache.
+
+S<B<@PKGLIBDIR@/@PKGNAME@/>>
+ location of rrd files and state information.
+
+S<B<@PKGCACHEDIR@/@PKGNAME@/>>
+ image cache directory, where web images are stored.
+
+=item F<PNG IMAGES AND FONTS FOR BUTTONS>
+
+S<B<@PKGDATADIR@/ChalkboardBold.ttf>>
+ default truetype font.
+
+S<B<@PKGDATADIR@/tab_center_blue.png>>
+ button center (blue)
+
+S<B<@PKGDATADIR@/tab_center_gray.png>>
+ button center (gray)
+
+S<B<@PKGDATADIR@/tab_center_white.png>>
+ button center (white)
+
+S<B<@PKGDATADIR@/tab_left_blue.png>>
+ button left (blue)
+
+S<B<@PKGDATADIR@/tab_left_gray.png>>
+ button left (gray)
+
+S<B<@PKGDATADIR@/tab_left_white.png>>
+ button left (white)
+
+S<B<@PKGDATADIR@/tab_right_blue.png>>
+ button right (blue)
+
+S<B<@PKGDATADIR@/tab_right_gray.png>>
+ button right (gray)
+
+S<B<@PKGDATADIR@/tab_right_white.png>>
+ button right (white)
+
+S<B<@PKGDATADIR@/bullet_center_blue.png>>
+ button center (blue)
+
+S<B<@PKGDATADIR@/bullet_left_blue.png>>
+ button left (blue)
+
+S<B<@PKGDATADIR@/bullet_right_blue.png>>
+ button right (blue)
+
+You can substitue fonts and png images to customize the appearance.
+
+=back
+
+=head1 AUTHOR
+
+Dale Walsh E<lt>buildsmart@daleenterprise.comE<gt>

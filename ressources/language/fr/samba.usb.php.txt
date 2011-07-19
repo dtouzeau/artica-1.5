@@ -1,0 +1,11 @@
+<about>Cette fonction permet de partager automatiquement des dispositifs USB quand vous les branchez sur cet ordinateur</about>
+<add_shared_disk>Si l'on clique , vous partagerez automatiquement ce dispositif USB dans votre r&eacute;seau</add_shared_disk>
+<available_disks>Disques disponibles</available_disks>
+<folder_properties>Partages et propri&eacute;t&eacute;s du dossier</folder_properties>
+<off_time>Temps absent</off_time>
+<off_time_text>Si vous fixer un d&eacute;lai (par exemple 17:00) artica va d&eacute;monter automatiquement l'appareil afin de vous d&eacute;brancher</off_time_text>
+<remove_usb_connection>Enlever ce p&eacute;riph&eacute;rique de la liste de Partage</remove_usb_connection>
+<SAMBA_USB_SHARE>Partage de P&eacute;riph&eacute;rique USB Samba</SAMBA_USB_SHARE>
+<selected_devices>P&eacute;riph&eacute;riques s&eacute;lectionn&eacute;s</selected_devices>
+<shared_name>Nom de Partage</shared_name>
+<uuid>Identificateur de P&eacute;riph&eacute;rique</uuid>

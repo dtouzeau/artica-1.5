@@ -1,0 +1,154 @@
+<about>Samba est une suite Logicielle Open Source/Libre qui fournit le fichier uniforme et des services d'empreinte aux clients SMB/CIFS. [Br] Samba est librement disponible, &agrave; la diff&eacute;rence d'autres mises en %u0153uvre SMB/CIFS et tient compte de l'interop&eacute;rabilit&eacute; entre des serveurs Linux/Unix et des clients Windows</about>
+<add_a_shared_folder>Ajouter un nouveau dossier partag&eacute;</add_a_shared_folder>
+<add_a_shared_folder_text>Explorez vos disques et partagez des fichiers</add_a_shared_folder_text>
+<add_sub_folder>Ajouter un sous-dossier</add_sub_folder>
+<Archives>Scanner les archives</Archives>
+<auto>Automatique</auto>
+<browseable>parcourir</browseable>
+<browseable_text>Ceci contr&ocirc;le la visibilit&eacute; du partage dans la liste des partages disponibles dans le parcours r&eacute;seau.</browseable_text>
+<CHANGE_SID_COMPUTERS>Patientez, changement du SID de votre ordinateurs</CHANGE_SID_COMPUTERS>
+<CHANGE_SID_GROUPS>Veuillez patienter, changement du SID dans vos groupes de sessions</CHANGE_SID_GROUPS>
+<CHANGE_SID_TEXT>Changer le SID principal de ce serveur</CHANGE_SID_TEXT>
+<clamav_protect>Protection antivirus ClamAV</clamav_protect>
+<config>Script de configuration</config>
+<Cure>Activer l'analyse d'objets Infect&eacute;s</Cure>
+<del_folder_name>&Ecirc;tes-vous s&ucirc;r de supprimer ce dossier ??</del_folder_name>
+<del_sub_folder>Supprimer le dossier</del_sub_folder>
+<disable netbios>D&eacute;sactiver netbios</disable netbios>
+<disable netbios_text>Activer ce param&egrave;tre va rendre inop&eacute;rant le support du netbios dans Samba.[br]
+Le protocole Netbios est disponible pour toutes les version de windows &agrave; lexception de 2000 et XP.[br]
+Les ordinateurs qui support uniquement le protocole netbios ne pourront alors visualiser le serveur dans le parcours Netbios.[br]Par d&eacute;faut cette fonction est d&eacute;sactiv&eacute;e.</disable netbios_text>
+<domain logons>Domaine de connexions</domain logons>
+<domain logons_text>Si actif, le serveru Samba va fournir the service de connexion pour les Windows 9.x ins&eacute;r&eacute;s dans le domaine.[br]
+Ceci va tranformer le serveur Samba en un contr&ocirc;leur de domaine de style NT.</domain logons_text>
+<domain master>Ma&icirc;tre du domaine</domain master>
+<domain master_text>
+Tell samba to enable WAN-wide browse list collation.[br]
+Setting this option causes server to claim a special domain specific NetBIOS name that  identifies it as a domain master browser for its given workgroup.[br]
+Local master browsers in the same workgroup on broadcast-isolated subnets will give this server their local browse lists, and then ask shared server
+for a complete copy of the browse list for the  whole wide area network.
+[br]Browser clients will then contact their local master browser, and will receive the domain-wide browse list, instead of just the list for their broadcast-isolated subnet.[br]
+Note that Windows NT Primary Domain Controllers expect to be able to claim this workgroup specific special NetBIOS name that identifies
+them as domain master browsers for that workgroup by default (i.e. there is no way to prevent a Windows NT PDC from attempting to do this).[br]
+This means that if this parameter is set and this server claims the special name for a workgroup before a Windows NT PDC is able to do so then cross subnet browsing
+will behave strangely and may fail.[br]
+If  domain  logons  =  yes,  then  the default behavior is to enable the domain master parameter.[br]
+If domain logons is not enabled (the default setting), then neither will domain master be enabled by default.[br]
+When domain logons = Yes the default setting for this parameter is Yes, with the result that Samba will be a PDC.[br]
+If domain  master  = No, Samba will function as a BDC.[br]
+In general, this parameter should be set to ’No’ only on a BDC. [br]
+Default: domain master = auto
+</domain master_text>
+<domain_admin>Droits Administrateur du Domaine</domain_admin>
+<domain_admin_text>Mettez &agrave; jour le compte Administrator qui autorise le raccrochement des ordinateurs au domaine et permet les op&eacute;rations administrateur dans le r&eacute;seau.</domain_admin_text>
+<enable_disable_samba>Activer ou D&eacute;sactiver le service partage</enable_disable_samba>
+<enable_disable_samba_text>Eteindre ou d&eacute;marrer le service de partage r&eacute;seau fournit par Samba</enable_disable_samba_text>
+<enable_Editposix>Extension ldapsam/Editposix</enable_Editposix>
+<enable_Editposix_text>The ldapsam:editposix extension is based on the ldapsam:trusted optimization.[br]
+The ldapsam:trusted optimization has been developed as a performance optimization for server that uses ldap as user and group account storage.[br]
+</enable_Editposix_text>
+<find>Chercher...</find>
+<give_folder_name>Donner votre nouveau nom de dossier</give_folder_name>
+<how_to_scan>Comment scanner ?</how_to_scan>
+<Ichecker>Activer la technologie iChecker</Ichecker>
+<kantivirus_protect>Protection Antivirus</kantivirus_protect>
+<kav4samba_about>Kaspersky Anti-Virus for Samba Server is designed to protect file storage areas on Samba Servers,
+which emulate Windows file servers under the Linux operating system.[br]
+Thus, Windows-based users within a heterogeneous network are provided with safe and transparent access to data stored on Linux file servers.[br]
+Kaspersky Anti-Virus is easily integrated with the Samba Server and does not require the Samba Server or parts of the operating system to be re-compiled.</kav4samba_about>
+<kavsamba_licence_text>Envoyez le fichier  *.key pour Kaspersky Samba serveur  afin de mettre &agrave; jour la licence</kavsamba_licence_text>
+<kav_events>&Eacute;v&egrave;nements</kav_events>
+<local master>Ma&icirc;tre local</local master>
+<local master_text>This  option allows your server to try and become a local master browser on a subnet.
+[br]If set to disabled then your server will not attempt to become a local master browser on a subnet and will also lose in all browsing elections.
+By default this value is set to enabled.[br]
+Setting  this value to enabled doesn’t mean that Samba will become the local master browser on a subnet,
+just that your server will participate in elections for local master browser.[br]
+Setting this value to disabled will cause your server never to become a local master browser.
+</local master_text>
+<LocalFS>Scanner uniquement le syst&egrave;me de fichier local</LocalFS>
+<LOCAL_MASTER>Ma&icirc;tre local</LOCAL_MASTER>
+<LOCAL_MASTER_TEXT>Votre serveur est le seul de votre environnement et est toujours disponible. Il va alors prendre possession des requ&ecirc;tes du parcours r&eacute;seau et des partages sans &ecirc;tre ma&icirc;tre des sessions Windows</LOCAL_MASTER_TEXT>
+<log level>Niveau de log</log level>
+<log level_text>Permet le d&eacute;bogage niveau (niveau d'enregistrement)</log level_text>
+<MailBases>Analyse de la banque de boites aux lettres</MailBases>
+<MailPlain>Rechercher les messages au format texte brut</MailPlain>
+<MaxLoadAvg>Limite Maximal de la Charge Syst&egrave;me</MaxLoadAvg>
+<movePath>Placer en quarantaine</movePath>
+<mysql_stats>Injection de statistiques Mysql</mysql_stats>
+<no>D&eacute;sactiv&eacute;</no>
+<no_action>Ne rien faire</no_action>
+<Objects_action>Action d'objets</Objects_action>
+<OnCorrupted>Actions &agrave; prendre en cas de d&eacute;tection de fichier corrompue</OnCorrupted>
+<OnCured>Actions &agrave; ex&eacute;cut&eacute;es en cas d'une d&eacute;tection et d'une d&eacute;sinfection r&eacute;ussie d'un objet infect&eacute;</OnCured>
+<OnError>Actions &agrave; ex&eacute;cut&eacute;es si une erreur est arriv&eacute;e pendant l'analyse d'objet</OnError>
+<OnInfected>Actions &agrave; prendre en cas de d&eacute;tection de fichier infect&eacute;e.</OnInfected>
+<OnProtected>Actions &agrave; ex&eacute;cut&eacute;es en cas d'une d&eacute;tection d'un objet mot de passe prot&eacute;g&eacute;</OnProtected>
+<OnSuspicion>Actions &agrave; prendre en cas de d&eacute;tection d'un fichier soup&ccedil;onneux</OnSuspicion>
+<OnWarning>Actions &agrave; &ecirc;tre prendre en cas de d&eacute;tection d'un fichier</OnWarning>
+<options>Options</options>
+<os level>Simuler le syst&egrave;me d'exploitation</os level>
+<os level_text>This  value  controls  what  level Samba advertises itself as for browse elections.[br]
+The value of this parameter determines whether your server has a chance of becoming a local master browser for the workgroup in the local broadcast area.[br]
+[i]Note :By default, Samba will win a local master browsing election over  all  Microsoft  operating  systems  except  a  Windows  NT 4.0/2000 Domain Controller.[br]
+This means that a misconfigured Samba host can effectively isolate a subnet for browsing purposes.[br][/i]
+This parameter is largely auto-configured in the Samba-3 release series and it is seldom necessary to  manually  over-ride  the  default setting.
+[blk]
+[li]Windows for Workgroup=0[/li]
+[li]Windows 95/98=1[/li]
+[li]Windows 2000/XP=3[/li]
+[li]NT server=32[/li]
+[/blk]
+
+</os level_text>
+<Packed>Balayage de dossiers en paquets</Packed>
+<PDC>Contr&ocirc;leur de Domaine</PDC>
+<PDC_TEXT>Le serveur simule le comportement d'un cont&ocirc;leur de domaine. Il peut h&eacute;berger les clients Windows afin d'&eacute;tablir des sessions &agrave; travers ce serveur</PDC_TEXT>
+<public>publique</public>
+<public_text>Si ce param&egrave;tre est activ&eacute; pour ce fichier, alors aucun mot de passe n'est requit pour activer ce service</public_text>
+<query>Requ&ecirc;te</query>
+<read>Lire</read>
+<rebuild_samba_groups>Reconstruire les groupes commun</rebuild_samba_groups>
+<rebuild_samba_groups_text>Cette op&eacute;ration reconstruit les domaines / les groupes samba</rebuild_samba_groups_text>
+<Recursion>Activer le balayage r&eacute;cursif de r&eacute;pertoire</Recursion>
+<recycle>Corbeille fant&ocirc;me</recycle>
+<remove>Supprimer le fichier</remove>
+<samba_synchronize>Reconstruire les param&egrave;tres</samba_synchronize>
+<samba_synchronize_explain>Cette op&eacute;ration va reconstruire tous les param&egrave;tres (liens r&eacute;pertoires avec le syst&egrave;me, SID samba, dossiers de login) et red&eacute;marrer les services Samba
+Voulez-vous continuer ?</samba_synchronize_explain>
+<samba_synchronize_text>Synchroniser tous les param&egrave;tres et red&eacute;marrer les services Samba</samba_synchronize_text>
+<security>S&eacute;curit&eacute;</security>
+<selectuserfirst>Erreur: S'il vous pla&icirc;t s&eacute;lectionner d'abord un &eacute;l&eacute;ment dans la liste ...</selectuserfirst>
+<SelfExtArchives>Recherche des archives d'auto-extraction</SelfExtArchives>
+<server string>Informations Serveur</server string>
+<server string_text>
+ This  controls  what string will show up in the printer comment box in print manager and next to the IPC connection in net view.
+ [br]It can be any string that you wish to show to your users</server string_text>
+<share>Partage</share>
+<shared_folders>Dossiers partag&eacute;s</shared_folders>
+<shared_properties>Propri&eacute;t&eacute;s de partage</shared_properties>
+<SID_CHANGE_PROCESS>Veuillez patienter, changement du SID principale</SID_CHANGE_PROCESS>
+<SID_EXPLAIN>Le SID est une valeur unique: de type alphanum&eacute;rique ( [b]S-1-5-21-2596694876-1976058220-2319217280[/b] par exemple ) qui permet d'identifier un objet comme un utilisateur ou un groupe dans un r&eacute;seau Microsoft NT/200x.[br]
+Windows accorde ou refuse les acc&egrave;s et les privil&egrave;ges aux ressources gr&agrave;ce &agrave; des ACLS, que les SID permettent d'identifier.[br]
+Lorsque qu'un objet demande la ressource le SID utilisateur est recherch&eacute; par les ACLs afin de d&eacute;terminer si les droits lui sont accord&eacute;s.</SID_EXPLAIN>
+<SINGLE_MODE>Mode autonome</SINGLE_MODE>
+<SINGLE_MODE_TEXT>Le serveur est seulement un membre du domaine ou du groupe de travail d&eacute;finie et fournit juste le partage de fichiers sans aucun privil&egrave;ges
+&quot;sessions de Domaines&quot;</SINGLE_MODE_TEXT>
+<title1>Contr&ocirc;leur de domaine ou simple serveur</title1>
+<tree_select_folder_text>Double-cliquez sur l'arborescence de l'&eacute;l&eacute;ment pour ajouter un dossier</tree_select_folder_text>
+<UseAVbasesSet>Sp&eacute;cifie les bases anti-virus &agrave; utiliser</UseAVbasesSet>
+<users_and_groups>utilisateurs et groupes</users_and_groups>
+<valid>valider</valid>
+<wich_to_scan>Que scanner?</wich_to_scan>
+<windows_network_neighborhood>Voisinage r&eacute;seau Windows</windows_network_neighborhood>
+<windows_network_neighborhood_text>D&eacute;finissez le comportement du serveur dans le r&eacute;seau et lors de son parcours, si c'est un contr&ocirc;leur de domaine ou un serveur automonome...</windows_network_neighborhood_text>
+<workgroup>groupe de travail</workgroup>
+<workgroup_text>Ce param&egrave;tre pilote le groupe de travail qui va appara&icirc;tre dans le parcours r&eacute;seau.</workgroup_text>
+<write>&eacute;crire</write>
+<writeable>&eacute;crivable</writeable>
+<writeable_text>L'&eacute;criture est possible dans ce dossier</writeable_text>
+<write_list_text>liste des utilisateurs qui sont en acc&egrave;s lecture-&eacute;criture &agrave; un service.[br] 
+Si l'utilisateur connect&eacute; est dans cette liste, il sera donn&eacute; un acc&egrave;s en &eacute;criture, quel que soit l'option en lecture seule qui soit r&eacute;gl&eacute;.</write_list_text>
+<YahooSelectedFolders_ask>Voulez-vous partager ce dossier?</YahooSelectedFolders_ask>
+<YahooSelectedFolders_ask2>Donnez un nom &agrave; ce dossier partag&eacute;</YahooSelectedFolders_ask2>
+<yes>Activation</yes>

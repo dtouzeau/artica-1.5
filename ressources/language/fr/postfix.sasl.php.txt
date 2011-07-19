@@ -1,0 +1,4 @@
+<fill_database>Remplissez la base de donn&eacute;es</fill_database>
+<fill_database_text>Ajouter des serveurs dans cette base de donn&eacute;es qui n&eacute;cessitent une authentification SMTP, afin de permettre &agrave; PostFix de passer ces serveurs</fill_database_text>
+<warning_no_sasl_database>[b]Avertissement ...[/ b][br] Vous avez activ&eacute; SASL dans postfix.[br]Il n'existe pas actuellement de serveurs/nom d'utilisateur/mot de passe ajout&eacute; dans la base de donn&eacute;es.[br] 
+Pour &eacute;viter les erreurs PostFix, s'il vous pla&icirc;t, remplissez cette base de donn&eacute;es d&egrave;s que possible</warning_no_sasl_database>

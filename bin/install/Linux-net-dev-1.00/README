@@ -1,0 +1,49 @@
+NAME
+    Linux::net::dev - Perl extension for parsing /proc/net/dev
+
+SYNOPSIS
+      use Linux::net::dev;
+      my $devs = Linux::net::dev::info();
+      print "Devices (bytes read):\n";
+      foreach (keys %$devs) {
+        print "  $_ ($devs->{$_}->{rbytes})\n";
+      }
+
+DESCRIPTION
+    Linux::net::dev parses /proc/net/dev for network devices statistics. The
+    package contains these functions:
+
+    info
+        This function returns hash reference. Keys are devices' ids and
+        values are data hash references. Data hash has resource names for
+        keys and their respective values as associated values.
+
+    dev Takes device id as a single argument and returns that device's data.
+
+    devs
+        Takes list of device ids as arguments and returns array with those
+        devices' data.
+
+    Recognized resources (data hash keys): rbytes, rcompressed, rdrop,
+    rerrs, rfifo, rframe, rmulticast, rpackets, tbytes, tcarrier, tcolls,
+    tcompressed, tdrop, terrs, tfifo, tpackets,
+
+    Resources begining with "r" are values for read data, and those begining
+    with "t" are values for transmited data.
+
+    Package was built and tested on RedHat 7.2, kernel 2.4.7-10 and might
+    not work on some other versions. Please report bugs along with your
+    kernel version (uname -r or uname -a).
+
+FILES
+    /proc/net/dev
+
+REQUIRES
+    Perl 5.000
+
+SEE ALSO
+    perl(1).
+
+AUTHOR
+    Vedran Sego, vsego@math.hr
+

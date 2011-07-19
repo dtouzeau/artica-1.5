@@ -1,0 +1,14 @@
+<backup_text>Ta strefa pozwoli Ci znale%u017A%u0107 stare, zarchiwizowane emaile.[br]U%u017Cyj zapytania aby odnale%u017A%u0107 emaile</backup_text>
+<dont_know>Don't know</dont_know>
+<mail_backup_lost>Archiwum zosta%u0142o zgubione.</mail_backup_lost>
+<mail_backup_lost_text>The file source has been probably delete from Disk, you not able to resend this mail, only display it</mail_backup_lost_text>
+<q_from>Wys%u0142a%u0142em</q_from>
+<q_to>Odebra%u0142em</q_to>
+<resend_mail>Resend this mail</resend_mail>
+<resend_mail_success>Success resend</resend_mail_success>
+<resend_mail_text>Resend this mail in original mode</resend_mail_text>
+<resend_mail_text_success>The command has been successfully sended to daemon, Check mailboxes</resend_mail_text_success>
+<search_messages_that>Search my messages that</search_messages_that>
+<with_body>With these words in body</with_body>
+<with_email>matching this email address</with_email>
+<with_subject>matching this subject</with_subject>

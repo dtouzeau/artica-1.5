@@ -1,0 +1,6 @@
+<ADD_DNS_ENTRY>Add a new host</ADD_DNS_ENTRY>
+<ADD_DNS_ENTRY_TEXT>Insert a new entry in your PDNS DNS server in order to resolve it</ADD_DNS_ENTRY_TEXT>
+<pdns_addaliases_text>Give here the FQDN of the server (eg: server.domain.tld)</pdns_addaliases_text>
+<pdns_explain>PowerDNS is a versatile nameserver which supports a large number of different backends ranging from simple zonefiles to relational databases and load balancing/failover algorithms. PowerDNS tries to emphasize speed and security.
+This is the recursive nameserver that goes out to the internet and resolve queries about other domains</pdns_explain>
+<pdns_not_installed>PowerDNS is not installed on your system.[br]Click on this icon if you want to install it</pdns_not_installed>

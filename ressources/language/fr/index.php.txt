@@ -1,0 +1,10 @@
+<db_enable_mailboxes>Gestion des bo&icirc;tes aux lettres</db_enable_mailboxes>
+<db_method>Base de donn&eacute;es</db_method>
+<domains_link>Gestion de vos domaines de messagerie</domains_link>
+<domains_title>Vos domaines</domains_title>
+<srv_artica>Service artica</srv_artica>
+<srv_kav_mail>Kaspersky Antivirus For Postfix</srv_kav_mail>
+<srv_postfix>Statut des services de postfix</srv_postfix>
+<srv_postfix_infos>Infos de postfix</srv_postfix_infos>
+<srv_postfix_version>Version majeure de postfix</srv_postfix_version>
+<WELCOME>Bienvenue sur Artica</WELCOME>

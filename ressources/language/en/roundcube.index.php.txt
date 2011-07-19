@@ -1,0 +1,51 @@
+<about_roundcube_engine>Define here settings about the lighttpd engine will serve RoundCube Webmail website</about_roundcube_engine>
+<additional_message_headers>Add additional headers for outgoing messages</additional_message_headers>
+<APP_ROUNDCUBE3_PLUGINS_EXPLAIN>RoundCube Generation 3 offer new plugins generation.[br]Select in this list plugins you want to enable in the RoundCube front-end</APP_ROUNDCUBE3_PLUGINS_EXPLAIN>
+<archive>Move messages to a (user selectable) archive folder</archive>
+<artica_ldap_addr>Artica plugin: Add connection with the personal LDAP addressbook</artica_ldap_addr>
+<auto_create_user>Automatically create a new RoundCube user when log-in the first time</auto_create_user>
+<conf>Script configuration</conf>
+<confirm_rebuild>Warning, you select rebuild tables,all datas will be erased ...</confirm_rebuild>
+<database_attachments>database backed storage for temporary attachment file handling</database_attachments>
+<database_status>Tables status</database_status>
+<debug_level>System error reporting</debug_level>
+<debug_logger>Enhanced logging for debugging purposes</debug_logger>
+<default_host>The mail host chosen to perform the log-in</default_host>
+<emoticons>Replace emoticons in plain text message body with real icons</emoticons>
+<enable_caching>Enable caching of messages and mailbox data in the local database</enable_caching>
+<example_addressbook>addressbook example</example_addressbook>
+<filesystem_attachments>This is a core plugin which provides basic, filesystem based attachment temporary file handling.[br]This includes storing
+attachments of messages currently being composed, writing attachments
+to disk when drafts with attachments are re-opened and writing
+attachments to disk for inline display in current html compositions.</filesystem_attachments>
+<flag_for_deletion>Flag the message for deletion (No Trash)</flag_for_deletion>
+<flag_for_deletion_text>When a Trash folder is not present and a message is deleted, flag the message for deletion rather than deleting it immediately.[br] Setting this to 
+false causes deleted messages to be permanantly removed if there is no Trash folder</flag_for_deletion_text>
+<https_port>HTTPS Listen port</https_port>
+<http_authentication>HTTP Basic Authentication</http_authentication>
+<lighttp_max_load_per_proc>Maximum number of waiting processes on average per process before a new process is spawned</lighttp_max_load_per_proc>
+<lighttp_max_proc>The upper limit of the processes to start</lighttp_max_proc>
+<lighttp_min_proc>Sets the minimum processes to start</lighttp_min_proc>
+<locale_string>The default locale setting</locale_string>
+<managesieve>filters in Thunderbird's style</managesieve>
+<markasjunk>mark the selected message as Junk and move it to the Junk folder</markasjunk>
+<mysql>Mysql settings</mysql>
+<new_user_dialog>Present identities settings dialog to new users</new_user_dialog>
+<PHP_FCGI_CHILDREN>The number of php-cgi processes per lightppd processes</PHP_FCGI_CHILDREN>
+<PHP_FCGI_MAX_REQUESTS>Maximal requests before restarting php-cgi process</PHP_FCGI_MAX_REQUESTS>
+<product_name>Use this name to compose page titles</product_name>
+<rebuild>Rebuild</rebuild>
+<rlogs>RoundCube events</rlogs>
+<RoundCubeHTTPEngineEnabled>Enable Dedicated Web site</RoundCubeHTTPEngineEnabled>
+<RoundCubePath>RoundCube base path</RoundCubePath>
+<roundcube_ldap_directory>Access to LDAP Internal Addresses book</roundcube_ldap_directory>
+<roundcube_mysql_sources>Mysql scripts source path</roundcube_mysql_sources>
+<roundcube_web_folder>Web directory path</roundcube_web_folder>
+<show_additional_headers>Show additional message headers</show_additional_headers>
+<sieverules>filters in Thunderbird's style (advanced mode)</sieverules>
+<skip_deleted>Deleted messages should not be displayed</skip_deleted>
+<squirrelmail_usercopy>Copy a new users identity and settings from a nearby Squirrelmail installation</squirrelmail_usercopy>
+<subscriptions_option>Enable or disable the use of imap subscriptions</subscriptions_option>
+<userinfo>Display account information</userinfo>
+<user_link>Artica menu link to RoundCube</user_link>
+<vcard_attachments>Detect VCard attachments and show a button to add them to address book</vcard_attachments>

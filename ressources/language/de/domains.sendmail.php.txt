@@ -1,0 +1,3 @@
+<SendMailingToOrgs_text>Order have been sended to the daemon, eMailing operation will run in background mode in few seconds</SendMailingToOrgs_text>
+<send_to_all_users>Notify your users</send_to_all_users>
+<send_to_all_users_text>Send a notification to all users of your organizations</send_to_all_users_text>

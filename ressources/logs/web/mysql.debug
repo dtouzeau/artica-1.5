@@ -1,0 +1,4 @@
+2011-07-19 13:00:02:[mysql/QUERY_SQL()][LOCAL]:: QUERY_SQL:: DB:"artica_events" Error Number () (Access denied for user 'root'@'localhost' (using password: NO)) config:localhost:3306@: (L.380)
+2011-07-19 14:00:04:[mysql/QUERY_SQL()][LOCAL]:: QUERY_SQL:: DB:"artica_events" Error Number () (Access denied for user 'root'@'localhost' (using password: NO)) config:localhost:3306@: (L.380)
+2011-07-19 15:00:03:[mysql/QUERY_SQL()][LOCAL]:: QUERY_SQL:: DB:"artica_events" Error Number () (Access denied for user 'root'@'localhost' (using password: NO)) config:localhost:3306@: (L.380)
+2011-07-19 16:00:05:[mysql/QUERY_SQL()][LOCAL]:: QUERY_SQL:: DB:"artica_events" Error Number () (Access denied for user 'root'@'localhost' (using password: NO)) config:localhost:3306@: (L.380)

@@ -1,0 +1,6 @@
+<ADD_DNS_ENTRY>Ajouter une nouvelle entr&eacute;e</ADD_DNS_ENTRY>
+<ADD_DNS_ENTRY_TEXT>Ins&eacute;rez un nouvel ordinateur dans votre base DNS</ADD_DNS_ENTRY_TEXT>
+<pdns_addaliases_text>Indiquez ici le FQDN du serveur (par exemple:server.domain.tld)</pdns_addaliases_text>
+<pdns_explain>PowerDNS est un serveur de noms polyvalent qui . PowerDNS essaie de mettre l'accent sur la vitesse et la s&eacute;curit&eacute;.
+C'est un serveur de noms r&eacute;cursif qui permet d'interrofer internet et de r&eacute;soudre les requ&ecirc;tes sur d'autres domaines</pdns_explain>
+<pdns_not_installed>PowedDNS n'est pas install&eacute; sur votre syst&egrave;me[br]Clickez sur cet icon si vous voulez l'installer</pdns_not_installed>

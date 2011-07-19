@@ -1,0 +1,5 @@
+<httprestart>O servidor web vai ser reiniciado para aplicar as defini&ccedil;&otilde;es.[br]
+Por favor aguarde...</httprestart>
+<mimedefang>MimeDefang</mimedefang>
+<not_enabled>Este modulo n&atilde;o est&aacute; activado no Artica...</not_enabled>
+<squid>Cache do Squid proxy</squid>

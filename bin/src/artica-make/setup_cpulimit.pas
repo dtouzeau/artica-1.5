@@ -1,0 +1,134 @@
+unit setup_cpulimit;
+{$MODE DELPHI}
+//{$mode objfpc}{$H+}
+{$LONGSTRINGS ON}
+
+interface
+
+uses
+  Classes, SysUtils,strutils,RegExpr in 'RegExpr.pas',unix,IniFiles,setup_libs,distridetect,setup_suse_class,install_generic,monit,zsystem;
+
+  type
+  tsetup_cpulimit=class
+
+
+private
+     libs:tlibs;
+     distri:tdistriDetect;
+     install:tinstall;
+     function VERSIONNUM(zversion:string):integer;
+public
+      constructor Create();
+      procedure Free;
+      procedure xinstall();
+      procedure monit_xinstall();
+END;
+
+implementation
+
+constructor tsetup_cpulimit.Create();
+begin
+distri:=tdistriDetect.Create();
+libs:=tlibs.Create;
+install:=tinstall.Create;
+end;
+//#########################################################################################
+procedure tsetup_cpulimit.Free();
+begin
+  libs.Free;
+end;
+//#########################################################################################
+procedure tsetup_cpulimit.xinstall();
+var
+
+   source_folder,cmd:string;
+   l:Tstringlist;
+
+begin
+install.INSTALL_STATUS('APP_CPULIMIT',10);
+install.INSTALL_PROGRESS('APP_CPULIMIT','{downloading}');
+source_folder:=libs.COMPILE_GENERIC_APPS('cpulimit');
+
+if length(trim(source_folder))=0 then begin
+     writeln('Install postfilter failed...');
+     install.INSTALL_STATUS('APP_CPULIMIT',110);
+     exit;
+end;
+    install.INSTALL_PROGRESS('APP_CPULIMIT','{installing}');
+    install.INSTALL_STATUS('APP_CPULIMIT',20);
+    writeln('Installing cpulimit from "',source_folder,'"');
+    SetCurrentDir(source_folder);
+    fpsystem('make');
+    install.INSTALL_STATUS('APP_CPULIMIT',40);
+    if not FileExists(source_folder+'/cpulimit') then begin
+       install.INSTALL_PROGRESS('APP_CPULIMIT','{failed}');
+       install.INSTALL_STATUS('APP_CPULIMIT',110);
+       exit;
+    end;
+    install.INSTALL_STATUS('APP_CPULIMIT',100);
+    install.INSTALL_PROGRESS('APP_CPULIMIT','{success}');
+    fpsystem('/bin/cp -f '+source_folder+'/cpulimit /usr/bin/cpulimit');
+    fpsystem('/bin/touch /etc/artica-postfix/cpulimit-installed');
+end;
+//#########################################################################################
+procedure tsetup_cpulimit.monit_xinstall();
+var
+
+   source_folder,cmd:string;
+   l:Tstringlist;
+   monit:tmonit;
+   SYS:Tsystem;
+   BinVersion:integer;
+   RemoteVersionString:string;
+   RemoteVersionInt:Integer;
+begin
+SYS:=Tsystem.CReate;
+monit:=tmonit.Create(SYS);
+RemoteVersionString:=libs.COMPILE_VERSION_STRING('monit');
+RemoteVersionInt:=VERSIONNUM(RemoteVersionString);
+BinVersion:=monit.VERSIONNUM();
+install.INSTALL_STATUS('APP_MONIT',10);
+writeln(BinVersion,'=',RemoteVersionInt);
+if  RemoteVersionInt<=BinVersion then begin
+    install.INSTALL_STATUS('APP_MONIT',100);
+    install.INSTALL_PROGRESS('APP_MONIT','{installed}');
+    writeln('NO necessary to update');
+    exit;
+end;
+    monit.STOP();
+install.INSTALL_STATUS('APP_MONIT',20);
+install.INSTALL_PROGRESS('APP_MONIT','{downloading}');
+source_folder:=libs.COMPILE_GENERIC_APPS('monit');
+
+if length(trim(source_folder))=0 then begin
+     writeln('Install monit failed...');
+     install.INSTALL_STATUS('APP_MONIT',110);
+     exit;
+end;
+    install.INSTALL_PROGRESS('APP_MONIT','{compiling}');
+    install.INSTALL_STATUS('APP_MONIT',30);
+    writeln('Installing monit from "',source_folder,'"');
+    SetCurrentDir(source_folder);
+    fpsystem('./configure --prefix=/usr --includedir="\${prefix}/include" --mandir="\${prefix}/share/man" --infodir="\${prefix}/share/info" --sysconfdir=/etc --localstatedir=/var --libexecdir="\${prefix}/lib/monit" --srcdir=.  --bindir=/usr/sbin');
+    fpsystem('make');
+    install.INSTALL_PROGRESS('APP_MONIT','{installing}');
+    install.INSTALL_STATUS('APP_MONIT',30);
+    fpsystem('make install');
+
+    if FileExists(monit.BIN_PATH()) then begin
+    install.INSTALL_STATUS('APP_MONIT',100);
+    install.INSTALL_PROGRESS('APP_MONIT','{success}');
+    monit.START();
+    end;
+
+end;
+//#########################################################################################
+function tsetup_cpulimit.VERSIONNUM(zversion:string):integer;
+begin
+    zversion:=AnsiReplaceText(zversion,'.','');
+    if length(zversion)=3 then zversion:=zversion+'0';
+    TryStrToInt(zversion,result);
+
+end;
+//##############################################################################
+end.

@@ -1,0 +1,5 @@
+<DOWNLOAD_CONFIG_FILES>Fichiers de configuration</DOWNLOAD_CONFIG_FILES>
+<DOWNLOAD_CONFIG_FILES_TEXT>T&eacute;l&eacute;chargez les fichiers de configuration client VPN afin de les d&eacute;compresser dans le dossier du client OpenVpn</DOWNLOAD_CONFIG_FILES_TEXT>
+<DOWNLOAD_OPENVPN_CLIENT>Client VPN pour Windows</DOWNLOAD_OPENVPN_CLIENT>
+<DOWNLOAD_OPENVPN_CLIENT_TEXT>T&eacute;l&eacute;charger et installer le client OpenVpn puis se connecter au r&eacute;seau distant</DOWNLOAD_OPENVPN_CLIENT_TEXT>
+<WELCOME_USER_OPENVPN>Bienvenue dans la console de gestion de votre VPN</WELCOME_USER_OPENVPN>

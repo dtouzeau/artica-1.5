@@ -1,0 +1,11 @@
+gcc->make;
+make->make;
+libc6-dev->make;
+g++->make;
+wget->make;
+pkg-config->make;
+autoconf->make;
+xinetd->inetd;
+
+
+

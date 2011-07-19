@@ -1,0 +1,12 @@
+<all_quarantines_text>Vous &ecirc;tes administrateur syst&egrave;me avec tous les droits et vous pouvez interroger les quarantaine de toutes les structures</all_quarantines_text>
+<build_report_for>Rapport de construction pour</build_report_for>
+<enable_artica_quarantine_robots_explain>Ce robot est utilis&eacute; afin d'envoyer &agrave; vos utilisateurs un rapport HTML des quarantaines stock&eacute;es sur le serveur.</enable_artica_quarantine_robots_explain>
+<enable_artica_report_robots_explain>This robot is used to send to your users a report of all current white & black lists address stored on this server</enable_artica_report_robots_explain>
+<enable_html_reports>Activer les rapports email HTML</enable_html_reports>
+<explain>Expliquez</explain>
+<externalLink>Lien exterieur</externalLink>
+<ou_quarantine_reports_explain>Si vous mettez cette option en vert, tous les utilisateurs de cette organisation vont recevoir automatiquement un message de rapport de leur quarantaine.[br]Dans ce cas, ils pourront restaurer, supprimer, affichez les emails &agrave; travers le rapport g&eacute;n&eacute;r&eacute;.</ou_quarantine_reports_explain>
+<quarantine_reports_text>Envoyer des rapports HTML par emails &agrave; vos utilisateurs</quarantine_reports_text>
+<quarantine_robots>Rapports &agrave; la demande</quarantine_robots>
+<quarantine_robots_text>D&eacute;finir l'adresse eMail du robot afin que les utilisateurs puissent recevoir en r&eacute;ponse le rapport de quarantaine.</quarantine_robots_text>
+<timetosendreport>Envoyer un rapport chaque jour A</timetosendreport>

@@ -1,0 +1,14 @@
+<artica_confs>Artica files parameters</artica_confs>
+<artica_confs_explain>Backup all configurations files stored in /etc/artica-postfix</artica_confs_explain>
+<backup_container>Build Backup container each</backup_container>
+<CYRUS_ADD_RESOURCES>Add a storage resource</CYRUS_ADD_RESOURCES>
+<CYRUS_ADD_RESOURCES_TEXT>Browse Auto-mount center and select a connected resource</CYRUS_ADD_RESOURCES_TEXT>
+<CYR_BACKUP_NOW>The backup order has sent to framework, it will be executed in background mode, check logs in few times</CYR_BACKUP_NOW>
+<databases_backup_explain>Backup all databases systems include Mysql Databases and LDAP database</databases_backup_explain>
+<GENERIC_BACKUP>Backup your server datas</GENERIC_BACKUP>
+<GENERIC_BACKUP_TEXT>Schedule a backup using the Automount control center</GENERIC_BACKUP_TEXT>
+<mailboxes_backup_explain>Backup all your mailboxes datas files to the target source</mailboxes_backup_explain>
+<max_backup_container>Max containers</max_backup_container>
+<RestoreFromRsyncPathNow>Restore from resource now</RestoreFromRsyncPathNow>
+<RestoreFromRsyncPath_warn>Notice: All current datas on this server will be overrided by the backup container.[br]be sure you want to perform this operation on this server</RestoreFromRsyncPath_warn>
+<STOP_SERVICES_BACKUP_EXPLAIN>This will stop all necessary services before perform backup</STOP_SERVICES_BACKUP_EXPLAIN>

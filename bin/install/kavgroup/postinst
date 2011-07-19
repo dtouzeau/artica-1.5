@@ -1,0 +1,126 @@
+#!/bin/sh
+
+if [ x"$1" = xconfigure -a ! x"$2" = x ] ; then
+ # upgrade
+/usr/local/ap-mailfilter3/bin/scripts/post-upgrade
+/usr/local/ap-mailfilter3/bin/scripts/post-install
+if [ `find /etc/rc3.d/ -name '*kas-milter' | wc -l ` -gt 0 ] ; then
+   /etc/init.d/kas-milter start
+fi
+exit $?
+fi
+
+/usr/local/ap-mailfilter3/bin/scripts/post-install
+/usr/local/ap-mailfilter3/bin/install-key /usr/share/artica-postfix/bin/install/ASGW_00BD2AE7_081231.key
+/usr/local/ap-mailfilter3/bin/enable-updates.sh
+
+
+RCDIR="/etc/init.d"
+RCFILE="kavmilterd"
+DST="5.6"
+KAVPATH="/opt/kav/${DST}/kavmilter"
+ETCPATH="/etc/kav/${DST}/kavmilter"
+VARPATH="/var/db/kav/${DST}/kavmilter"
+LOGPATH="/var/log/kav/${DST}/kavmilter"
+BINPATH="$KAVPATH/bin"
+LIBPATH="/usr/lib"
+DAEMON="kavmilter"
+SENDMAILINIT="/etc/init.d/sendmail"
+TRIALKEY=
+
+linbin=/opt/kav/5.0/kavmilter/bin
+bsdbin=/usr/local/share/kav/5.0/kavmilter/bin
+prevmaj=""
+[ -x ${linbin}/kavmilter ] && prevmaj="`${linbin}/kavmilter -v`"
+[ -x ${bsdbin}/kavmilter ] && prevmaj="`${bsdbin}/kavmilter -v`"
+[ -n "${prevmaj}" ] && {
+  echo -e "Warning: a previous major version of KAVMilter might be installed (${prevmaj})"
+}
+
+# add kav user
+id kav 1> /dev/null 2> /dev/null && {
+    echo "WARNING: 'kav' user already exists - this may compromise application security!"
+    echo "WARNING: You should run kavmilter under a DIFFERENT user. See 'RunAsUid/Gid' in kavmilter.conf"
+    echo "WARNING: Also you should change ownership of all installed package files to alternate user/group."
+    echo
+} || { 
+ ${BINPATH}/kavmilter-setup.sh -add-user
+}
+
+echo "Registering trial key..."
+/opt/kav/5.6/kavmilter/bin/kavmilter-setup.sh -trial-key /usr/share/artica-postfix/bin/install/MLX_00BD2B2E_081231.key 1>/dev/null 2>/dev/null
+echo "setup update database"
+/opt/kav/5.6/kavmilter/bin/keepup2date.sh -install
+
+# setup dirs
+chown -R root:kav ${VARPATH}
+chown root:kav $LOGPATH
+chmod 0775 $LOGPATH
+chmod 0775 $VARPATH/run
+chmod 0770 $VARPATH/tmp
+chmod 0770 $VARPATH/licenses
+chmod 0770 $VARPATH/bases/backup
+chmod 0775 $VARPATH/mibs
+
+chown root:kav $BINPATH/$DAEMON
+chmod 0755 $BINPATH/$DAEMON
+
+chown root:kav $ETCPATH/init.d/kavmilterd
+chmod 0755 $ETCPATH/init.d/kavmilterd
+
+chown root:kav $LIBPATH/libkavcommon.so.*
+chown root:kav $LIBPATH/libkavsnmp.so.*
+chmod 0644 $LIBPATH/libkavcommon.so.*
+chmod 0644 $LIBPATH/libkavsnmp.so.*
+
+ln -s -f $ETCPATH/init.d/kavmilterd $RCDIR/$RCFILE
+
+chown -R root:kav $KAVPATH
+chmod 0755 $BINPATH/kavmilter-setup.sh
+
+# modify the sendmail config files
+${BINPATH}/kavmilter-setup.sh -add-product 1> /dev/null 2> /dev/null
+
+# add default domains
+$KAVPATH/bin/kavmilter-setup.sh -default-domains 1> /dev/null 2> /dev/null
+
+# register kavmilter as service
+$KAVPATH/bin/kavmilter-setup.sh -add-service 1> /dev/null 2> /dev/null
+
+# modify sendmail config files 
+$KAVPATH/bin/kavmilter-setup.sh -add-filter 1> /dev/null 2> /dev/null
+
+#install a cron job for backup sweeper
+$KAVPATH/bin/backup-sweeper.sh -install 1> /dev/null 2> /dev/null
+
+#warn about installing a cron job for kav user
+$KAVPATH/bin/keepup2date.sh -warn-install 
+
+cp  /usr/share/artica-postfix/bin/install/kavmilter.conf /etc/kav/5.6/kavmilter/kavmilter.conf
+cp  /usr/share/artica-postfix/bin/install/kavmilter.default.conf  /etc/kav/5.6/kavmilter/groups.d/default.conf
+
+# start kavmilter
+if test -x "${RCDIR}/${RCFILE}"; then
+    "${RCDIR}/${RCFILE}" start
+fi
+
+mandir=/usr/share/man
+[ ! -d $mandir -a -d /usr/man ] && mandir=/usr/man
+if test -d $mandir; then
+	ln -s -f $KAVPATH/man/kavmilter.5       $mandir/man5
+	ln -s -f $KAVPATH/man/kavmilter.conf.5  $mandir/man5
+	ln -s -f $KAVPATH/man/backup-sweeper.5  $mandir/man5
+	ln -s -f $KAVPATH/man/kavmilter-setup.5 $mandir/man5
+	ln -s -f $KAVPATH/man/troubleshooter.5  $mandir/man5
+    ln -f -s $KAVPATH/man/backup-sweeper.5  $mandir/man5/backup-sweeper.sh.5
+    ln -f -s $KAVPATH/man/kavmilter-setup.5 $mandir/man5/kavmilter-setup.sh.5
+    ln -f -s $KAVPATH/man/troubleshooter.5  $mandir/man5/troubleshooter.sh.5
+	ln -f -s $KAVPATH/man/licensemanager.8  $mandir/man8
+    ln -f -s $KAVPATH/man/keepup2date.8     $mandir/man8
+    ln -f -s $KAVPATH/man/keepup2date.sh.8  $mandir/man8
+fi
+
+/usr/share/artica-postfix/bin/artica-install -postfix-reconfigure-master
+
+exit 0
+

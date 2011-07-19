@@ -1,0 +1,2 @@
+<folders_statistics>Folders statistics</folders_statistics>
+<parameters_text>You can modify/add folders you want to see in the statistics pie</parameters_text>

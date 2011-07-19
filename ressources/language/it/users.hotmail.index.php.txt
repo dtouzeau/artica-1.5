@@ -1,0 +1,10 @@
+<Delete_messages>Delete messages</Delete_messages>
+<Delete_messages_text>whether the message will be deleted after being downloaded.</Delete_messages_text>
+<Domain>Domain</Domain>
+<Domain_text>Your Hotmail Domain (default 'hotmail.com', basically what's after the @ in your address)</Domain_text>
+<getlive_about>GetLive is a utility that fetches mail from your Hotmail/Windows Live account.[br]
+Fill this form in order to get all your Hotmail/Live messages and put them into your local mailbox</getlive_about>
+<MarkRead>Mark read</MarkRead>
+<MarkRead_text>whether the message will be marked read after being downloaded</MarkRead_text>
+<password_text>Your Hotmail Password</password_text>
+<username_text>Your Hotmail UserName (without @something)</username_text>

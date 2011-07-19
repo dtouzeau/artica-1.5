@@ -1,0 +1,44 @@
+<APP_BACKUPPC_TEXT>BackupPC is a high-performance, enterprise-grade system for backing up Linux, WinXX and MacOSX PCs and laptops to a server's disk.</APP_BACKUPPC_TEXT>
+<BackupPCNightlyPeriod>Nightly period</BackupPCNightlyPeriod>
+<BackupPCNightlyPeriod_text>How many days (runs) it takes BackupPC nightly to traverse the entire pool.[br]
+ Normally this is 1, which means every night it runs, it does traverse the entire pool removing unused pool files
+ </BackupPCNightlyPeriod_text>
+<BACKUPPC_FOLDER_LIST_TEXT>This section list all network shared folders that will be remotely backuped.</BACKUPPC_FOLDER_LIST_TEXT>
+<FullAgeMax>Remove old backups</FullAgeMax>
+<FullAgeMax_text>Very old full backups are removed after x days</FullAgeMax_text>
+<FullKeepCntMin>Keep x incrementals</FullKeepCntMin>
+<FullKeepCntMin_text>Number of incremental backups to keep</FullKeepCntMin_text>
+<FullPeriod>Minimum period in days between full backups</FullPeriod>
+<FullPeriod_text>Minimum period in days between full backups. A full dump will only be done if at least this much time has elapsed since the last full dump</FullPeriod_text>
+<IncrAgeMax>Remove old incrementals</IncrAgeMax>
+<IncrAgeMax_text>Very old incremental backups are removed after x days</IncrAgeMax_text>
+<IncrPeriod>Minimum period between incremental backups</IncrPeriod>
+<IncrPeriod_text>Minimum period between incremental backups</IncrPeriod_text>
+<MaxBackupPCNightlyJobs>Nightly Max Backups</MaxBackupPCNightlyJobs>
+<MaxBackupPCNightlyJobs_text>Each night, at the first wakeup, BackupPC is run.[br]
+Its job is to remove unneeded files in the pool, ie: files that only have one link.</MaxBackupPCNightlyJobs_text>
+<MaxBackups>Max backups</MaxBackups>
+<MaxBackups_text>Maximum number of simultaneous backups to run</MaxBackups_text>
+<MaxOldLogFiles>Maximum number of log files</MaxOldLogFiles>
+<MaxOldLogFiles_text>Maximum number of log files we keep around in log directory. These files are aged nightly. A setting of 14 means the log directory will contain about 2 weeks of old log files</MaxOldLogFiles_text>
+<PartialAgeMax>Max age of a failed backup</PartialAgeMax>
+<PartialAgeMax_text>A failed full backup is saved as a partial backup.[br]
+This parameter sets the age of the partial full in days: if the partial backup is older than this number of days, then rsync will ignore (not use) the partial full when the next backup is run</PartialAgeMax_text>
+<Reason_archive_done>archive done</Reason_archive_done>
+<Reason_archive_failed>archive failed</Reason_archive_failed>
+<Reason_backup_done>done</Reason_backup_done>
+<Reason_backup_failed>backup failed</Reason_backup_failed>
+<Reason_nothing_to_do>idle</Reason_nothing_to_do>
+<Reason_no_ping>no ping</Reason_no_ping>
+<Reason_restore_done>restore done</Reason_restore_done>
+<Reason_restore_failed>restore failed</Reason_restore_failed>
+<startTime>Start time</startTime>
+<Status_backup_in_progress>backup in progress</Status_backup_in_progress>
+<Status_backup_starting>backup starting</Status_backup_starting>
+<Status_idle>idle</Status_idle>
+<Status_link_pending>link pending</Status_link_pending>
+<Status_link_running>link running</Status_link_running>
+<Status_restore_in_progress>restore in progress</Status_restore_in_progress>
+<Status_restore_starting>restore starting</Status_restore_starting>
+<TopDir>Backup storage path</TopDir>
+<TopDir_text>where all the backup data is stored</TopDir_text>

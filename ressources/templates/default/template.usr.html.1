@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+
+<head>
+<title>{TEMPLATE_TITLE}</title>
+
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+<meta name="description" content="description"/>
+<meta name="keywords" content="keywords"/> 
+<meta name="author" content="author"/> 
+<link rel="stylesheet" type="text/css" href="css/users/default.css"/>
+<link rel="stylesheet" type="text/css" href="css/container.css"/>
+<link rel="stylesheet" type="text/css" href="css/container-skin.css"/>
+<link rel="stylesheet" type="text/css" href="css/rounded.css"/>
+<link rel="stylesheet" type="text/css" href="css/styles_forms.css"/>
+
+
+
+<!-- Template designed by http://templates.arcsin.se Arcsin and modified by artica dev all rights reserved -->
+
+{TEMPLATE_HEAD}
+</head>
+
+<body class="yui-skin-sam">
+<div class="main">
+	<div class="main_left">
+		<div class="content">{TOOLBOX}
+			<h1>{TEMPLATE_TITLE}</h1>
+			{TEMPLATE_CONTENT}
+
+		</div>
+
+	</div>
+
+	<div class="main_right">
+
+		<div class="link_projects">
+
+			<div class="lbl" 
+				OnMouseOver="this.style.cursor='pointer';this.style.textDecoration='overline';this.style.color='yellow';"
+				OnMouseOut="this.style.cursor='auto';this.style.textDecoration='none';this.style.color='white'"
+				
+			><table style='width:100%;margin-bottom:5px'><tr>
+				<td valign='top' style="padding-left:3px" OnClick="javascript:window.location.href='users.account.php';">{ACCOUNT}</td>
+				<td>				<img src='img/rghtu.png'  
+					OnClick="javascript:MyHref('logoff.php');"
+					onMouseOver="javascript:AffBulle('Disconnect');lightup(this, 100);this.style.cursor='pointer'" 
+					OnMouseOut="javascript:HideBulle();lightup(this, 50);this.style.cursor='auto';" 
+					style="filter:alpha(opacity=50);-moz-opacity:0.5;border:0px;" 
+					style="filter:alpha(opacity=50);-moz-opacity:0.5;border:0px;"  id=''></td>
+</tr></table></div>
+			
+
+		</div>
+		
+		<div class="link_updates">
+			{TEMPLATE_USER_MENUS}
+
+			<div class="clearer"><span></span></div>
+
+		</div>
+
+	</div>
+
+	<div class="footer">
+
+		<div class="left"></div>
+
+		<div class="right"></div>
+
+	</div>
+
+</div>
+<script>
+YAHOO.namespace("example.container");
+function init() {
+	
+
+	// Instantiate the Dialog
+	YAHOO.example.container.dialog1 = new YAHOO.widget.Dialog("dialog1", 
+							{ width : "30em",
+							  fixedcenter : true,
+							  visible : false, 
+							  constraintoviewport : true,
+							 
+							});
+							
+	YAHOO.example.container.dialog2 = new YAHOO.widget.Dialog("dialog2", 
+							{ width : "30em",
+							  fixedcenter : true,
+							  visible : false, 
+							  constraintoviewport : true,
+							 
+							});
+
+	YAHOO.example.container.dialog3 = new YAHOO.widget.Dialog("dialog3", 
+							{ width : "30em",
+							  fixedcenter : true,
+							  visible : false, 
+							  constraintoviewport : true,
+							 
+							});								
+	
+	// Render the Dialog
+	YAHOO.example.container.dialog1.render();
+	YAHOO.example.container.dialog2.render();
+	YAHOO.example.container.dialog3.render();
+
+	
+}
+
+YAHOO.util.Event.onDOMReady(init);
+</script>
+<div id="dialog1">
+	<div class="hd" id='dialog1_title'></div>
+	<div class="bd" id='dialog1_content'>
+	</div>
+</div>
+<div id="dialog2">
+	<div class="hd" id='dialog2_title'></div>
+	<div class="bd" id='dialog2_content'>
+	</div>
+</div> 
+<div id="dialog3">
+	<div class="hd" id='dialog3_title'></div>
+	<div class="bd" id='dialog3_content'>
+	</div>
+</div>  
+</body>
+
+</html>

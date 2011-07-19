@@ -1,0 +1,94 @@
+[ca]
+  default_ca                      = default_db
+[default_db]
+  dir                             = /etc/postfix/certificates
+  certs                           = /etc/postfix/certificates
+  new_certs_dir                   = /etc/postfix/certificates
+  database                        = ca.index
+  serial                          = ca.serial
+  RANDFILE                        = .rnd
+  certificate                     = ca.crt
+  private_key                     = ca.key
+  default_days                    = 365
+  default_crl_days                = 30
+  default_md                      = md5
+  preserve                        = no
+  name_opt                        = ca_default
+  cert_opt                        = ca_default
+  unique_subject                  = no
+[server_policy]
+  countryName                     = supplied
+  stateOrProvinceName             = supplied
+  localityName                    = supplied
+  organizationName                = supplied
+  organizationalUnitName          = supplied
+  commonName                      = supplied
+  emailAddress                    = supplied
+[server_cert]
+  subjectKeyIdentifier            = hash
+  authorityKeyIdentifier          = keyid:always
+  extendedKeyUsage                = serverAuth,clientAuth,msSGC,nsSGC
+  basicConstraints                = critical,CA:false
+[user_policy]
+  commonName                      = supplied
+  emailAddress                    = supplied
+
+[user_cert]
+  subjectAltName                  = email:copy
+  basicConstraints                = critical,CA:false
+  authorityKeyIdentifier          = keyid:always
+  extendedKeyUsage                = clientAuth,emailProtection
+  
+[req]
+  default_bits                    = 1024
+  default_keyfile                 = ca.key
+  distinguished_name              = default_ca
+  x509_extensions                 = extensions
+  string_mask                     = nombstr
+  req_extensions                  = req_extensions
+  input_password                  = secret
+  output_password                 = secret
+
+[default_ca]
+  countryName                     = Country Code
+  countryName_value               = US
+  countryName_min                 = 2
+  countryName_max                 = 2
+  stateOrProvinceName             = State Name
+  stateOrProvinceName_value       = Delaware
+  localityName                    = Locality Name
+  localityName_value              = Wilmington
+  organizationName                = Organization Name
+  organizationName_value          = Apache Software Foundation
+  organizationalUnitName          = Organizational Unit Name
+  organizationalUnitName_value    = artica-Postfix
+  commonName                      = Common Name
+  commonName_value                = Tomcat Demo Root CA
+  commonName_max                  = 64
+  emailAddress                    = Email Address
+  emailAddress_value              = coyote@apache.org
+  emailAddress_max                = 40
+  input_password                  = secret
+  output_password                 = secret
+
+[extensions]
+  subjectKeyIdentifier            = hash
+  authorityKeyIdentifier          = keyid:always
+  basicConstraints                = critical,CA:true
+[req_extensions]
+  nsCertType                      = objsign,email,server
+
+[postfix]
+smtpd_tls_CAfile		  = cacert.pem
+smtpd_tls_key_file		  = smtpd.key
+smtpd_tls_cert_file		  = smtpd.crt
+
+[v3_req]
+input_password                  = secret
+output_password                 = secret
+
+[v3_ca]
+subjectKeyIdentifier		= hash
+authorityKeyIdentifier		= keyid:always,issuer:always
+basicConstraints		= CA:true
+

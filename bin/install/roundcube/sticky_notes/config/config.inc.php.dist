@@ -1,0 +1,9 @@
+<?php
+
+/* database table name */
+$rcmail_config['db_table_sticky_notes'] = 'notes';
+
+/* limit of notes */
+$rcmail_config['sticky_notes_limit'] = 10;
+
+?>

@@ -1,0 +1,40 @@
+{ Ceci est un fichier ressource généré automatiquement par Lazarus }
+
+LazarusResources.Add('TForm2','FORMDATA',[
+  'TPF0'#6'TForm2'#5'Form2'#4'Left'#3#137#3#6'Height'#3'*'#1#3'Top'#3#185#0#5'W'
+  +'idth'#3#147#1#18'HorzScrollBar.Page'#3#146#1#18'VertScrollBar.Page'#3')'#1#7
+  +'Caption'#6#16'Network Settings'#12'ClientHeight'#3'*'#1#11'ClientWidth'#3
+  +#147#1#8'OnCreate'#7#10'FormCreate'#0#6'TLabel'#6'Label1'#4'Left'#2#16#6'Hei'
+  +'ght'#2#18#3'Top'#2'@'#5'Width'#2'a'#7'Caption'#6#12'IP Address :'#9'Font.Na'
+  +'me'#6#19'bitstream vera sans'#11'ParentColor'#8#0#0#6'TLabel'#6'Label2'#4'L'
+  +'eft'#2#21#6'Height'#2#18#3'Top'#2']'#5'Width'#2'\'#7'Caption'#6#10'Net mask'
+  +' :'#9'Font.Name'#6#19'bitstream vera sans'#11'ParentColor'#8#0#0#6'TLabel'#6
+  +'Label3'#4'Left'#2#25#6'Height'#2#18#3'Top'#2'x'#5'Width'#2'W'#7'Caption'#6#9
+  +'Gateway :'#9'Font.Name'#6#19'bitstream vera sans'#11'ParentColor'#8#0#0#6'T'
+  +'Label'#6'Label4'#4'Left'#2'-'#6'Height'#2#18#3'Top'#3#174#0#5'Width'#2'A'#7
+  +'Caption'#6#7'DNS 1 :'#9'Font.Name'#6#19'bitstream vera sans'#11'ParentColor'
+  +#8#0#0#6'TLabel'#6'Label5'#4'Left'#2'-'#6'Height'#2#18#3'Top'#3#202#0#5'Widt'
+  +'h'#2'A'#7'Caption'#6#7'DNS 2 :'#9'Font.Name'#6#19'bitstream vera sans'#11'P'
+  +'arentColor'#8#0#0#6'TLabel'#6'Label6'#4'Left'#2#16#6'Height'#2#18#3'Top'#2
+  +#16#5'Width'#3'9'#1#7'Caption'#6'''Static eth0 interface TCP/IP settings :'#9
+  +'Font.Name'#6#19'bitstream vera sans'#11'ParentColor'#8#0#0#6'TLabel'#6'Labe'
+  +'l7'#4'Left'#2#19#6'Height'#2#18#3'Top'#2'%'#5'Width'#2'['#7'Caption'#6#9'ho'
+  +'stname:'#9'Font.Name'#6#19'bitstream vera sans'#11'ParentColor'#8#0#0#5'TEd'
+  +'it'#7'address'#4'Left'#3#136#0#6'Height'#2#23#3'Top'#2';'#5'Width'#3#240#0#8
+  +'TabOrder'#2#0#4'Text'#6#11'192.168.1.2'#0#0#5'TEdit'#4'mask'#4'Left'#3#136#0
+  +#6'Height'#2#23#3'Top'#2'X'#5'Width'#3#240#0#8'TabOrder'#2#1#4'Text'#6#13'25'
+  +'5.255.255.0'#0#0#5'TEdit'#7'gateway'#4'Left'#3#136#0#6'Height'#2#23#3'Top'#2
+  +'s'#5'Width'#3#240#0#8'TabOrder'#2#2#4'Text'#6#11'192.168.1.1'#0#0#5'TEdit'#4
+  +'DNS1'#4'Left'#3#136#0#6'Height'#2#23#3'Top'#3#169#0#5'Width'#3#240#0#8'OnCh'
+  +'ange'#7#10'DNS1Change'#8'TabOrder'#2#3#4'Text'#6#11'192.168.1.1'#0#0#5'TEdi'
+  +'t'#4'DNS2'#4'Left'#3#137#0#6'Height'#2#23#3'Top'#3#197#0#5'Width'#3#240#0#8
+  +'TabOrder'#2#4#4'Text'#6#12'81.253.149.2'#0#0#7'TButton'#7'Button4'#4'Left'#3
+  +#168#0#6'Height'#2'$'#3'Top'#3#240#0#5'Width'#3#208#0#7'Caption'#6#8'Save...'
+  +'.'#9'Font.Name'#6'8-schumacher-clean-medium-r-normal-*-*-120-*-*-c-*-koi8-r'
+  +#7'OnClick'#7#12'Button4Click'#8'TabOrder'#2#5#0#0#5'TEdit'#13'hostname_text'
+  +#4'Left'#3#135#0#6'Height'#2#23#3'Top'#2' '#5'Width'#3#180#0#8'TabOrder'#2#6
+  +#0#0#7'TButton'#7'Button5'#4'Left'#3'?'#1#6'Height'#2#20#3'Top'#2'!'#5'Width'
+  +#2';'#7'Caption'#6#8'Save....'#9'Font.Name'#6'8-schumacher-clean-medium-r-no'
+  +'rmal-*-*-120-*-*-c-*-koi8-r'#7'OnClick'#7#12'Button5Click'#8'TabOrder'#2#7#0
+  +#0#0
+]);

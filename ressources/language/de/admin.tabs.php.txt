@@ -1,0 +1,23 @@
+<ADD_WIDGET>Neue Widget hinzuf&uuml;gen</ADD_WIDGET>
+<ADD_WIDGET_TEXT>Legen Si ein neues Widget/Ikon in diese Webseite bei.</ADD_WIDGET_TEXT>
+<artica_settings>Articas allgemeine Einstellungen</artica_settings>
+<artica_settings_text>defienieren Sie ihre Proxy, Web, mysql Einstellungen</artica_settings_text>
+<choose_section>W&auml;hlen Sie eine Abteilung</choose_section>
+<CLICK_TO_DELETE>Klicken Sie um zu l&ouml;schen</CLICK_TO_DELETE>
+<DELETE_THIS_TAB>L&ouml;schen Sie diese pers&ouml;nnliche Webseite</DELETE_THIS_TAB>
+<DELETE_THIS_TAB_TEXT>Dieser Vorgang wird diese Seite und Registerkarte l&ouml;schen von Ihrem Panel</DELETE_THIS_TAB_TEXT>
+<FILE_SHARE>File Sharing</FILE_SHARE>
+<MAILBOX>Mailboxes management</MAILBOX>
+<MAIL_SECU>Nachrichten ( Security )</MAIL_SECU>
+<MANAGE_WIDGETS>Widgets konfigurieren</MANAGE_WIDGETS>
+<MANAGE_WIDGETS_TEXT>&Auml;ndern Sie die Reihenfolge der Anzeige und l&ouml;schen Sie Widgets</MANAGE_WIDGETS_TEXT>
+<MTA>Mail transfert Agent (Postfix)</MTA>
+<NETWORK>Network</NETWORK>
+<ORG>Organisationen abh&auml;ngige Vorg&auml;ngen</ORG>
+<organizations_text>[b] Organizations Management: [/ b] Anzeigen, Anlegen oder L&ouml;schen Sie Ihre Organisation</organizations_text>
+<REBUILD_PAGE>Bereich wiederherstellen</REBUILD_PAGE>
+<REBUILD_PAGE_TEXT>Dieser Vorgang wird den aktuellen Cache l&ouml;schen und den Bereich neu erstellen</REBUILD_PAGE_TEXT>
+<SYSTEM>System-Anwendungen und Einstellungen</SYSTEM>
+<WIDGETS_AREA>Widgets Bereich</WIDGETS_AREA>
+<WIDGETS_AREA_EXPLAIN>Klicken Sie auf eines dieser Symbole zum Hinzuf&uuml;gen oder [b] l&ouml;schen [/ b] eines Symbols in Ihrem Bereich</WIDGETS_AREA_EXPLAIN>
+<your_organizations>Ihre Organisation</your_organizations>

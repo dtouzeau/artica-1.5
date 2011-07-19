@@ -1,0 +1,2 @@
+<available_websites>Outros web sites dispon&iacute;veis</available_websites>
+<user_events_emails_query_text>Eventos da fila de emails, e mostra os e-mails enviados ao servidor de emails</user_events_emails_query_text>

@@ -1,0 +1,12 @@
+Alias "/@PKGNAME@" "@PKGDATADIR@/"
+ 
+<Directory @PKGDATADIR@/>
+    Options +FollowSymLinks
+    AllowOverride None
+    order allow,deny
+    allow from all
+    <IfModule mod_expires.c>
+        ExpiresByType image/png M60
+    </IfModule>
+</Directory>
+

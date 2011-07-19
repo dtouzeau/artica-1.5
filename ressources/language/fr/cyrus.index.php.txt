@@ -1,0 +1,79 @@
+<about>Cyrus est un syst&egrave;me de courrier d'entreprise fortement &eacute;volutif  con&ccedil;u pour l'utilisation dans les environnements d'entreprise de tailles diverses utilisant des standards de technologies. [Br] 
+Les technologies de Cyrus p&egrave;sent de l'utilisation ind&eacute;pendante dans des d&eacute;partements de courrier &eacute;lectronique &agrave; un syst&egrave;me au centre g&eacute;r&eacute; dans une grande entreprise</about>
+<allowallsubscribe>Autoriser toutes les souscriptions</allowallsubscribe>
+<allowallsubscribe_text>Permet la souscription &agrave; des bo&icirc;tes aux lettres inexistantes.[br]
+Cette option est utilis&eacute;e typiquement sur les serveur post&eacute;rieur dans un Murder pour que les utilisateurs puisse s'inscrire aux bo&icirc;tes aux lettres qui ne sont pas h&eacute;berg&eacute;es par leur &quot;propre&quot; serveur.[br]
+Cette option peut &ecirc;tre aussi utilis&eacute;e comme m&eacute;thode de contournement par les clients IMAP qui ne supportent pas les bo&icirc;tes aux lettres inexistantes ou non s&eacute;lectionnables (ex. Microsoft Outlook)</allowallsubscribe_text>
+<allowanonymouslogin>Autoriser l'identification anonyme</allowanonymouslogin>
+<allowanonymouslogin_text>Permet la connexion aux utilisateurs &quot;anonyme&quot; utilisant n'importe quel mot de passe. Permet aussi l'utilisation du m&eacute;canisme SASL ANONYMOUS</allowanonymouslogin_text>
+<autocreateinboxfolders>Auto-cr&eacute;ation des sous-dossiers</autocreateinboxfolders>
+<autocreateinboxfolders_text>Si un utilisateur n'&agrave; pas de bo&icirc;te aux lettres cr&eacute;e alors sa cr&eacute;ation ainsi que celle des sous-dossiers d&eacute;pendra de deux conditions :[br]
+[ul]
+[li]1. L'utilisateur se connecte via le protocole IMAP ou POP3. (l'option &quot;quota automatique&quot; doit absolument avoir une valeur diff&eacute;rente de z&eacute;ro)[/li]
+[li]2. Un message &eacute;lectronique arrive pour l'utilisateur via le protocole LPTPD. (l'option &quot;cr&eacute;ation &agrave; la r&eacute;ception&quot; doit absolument &ecirc;tre oui)[/li]
+[/ul]
+C'est une liste des sous-dossiers s&eacute;par&eacute;s par &quot;|&quot; et sa cr&eacute;ation par le serveur d&eacute;pendra des conditions ci-dessus.</autocreateinboxfolders_text>
+<autocreatequota>Auto-cr&eacute;ation du quota</autocreatequota>
+<autocreatequota_text>Si la valeur est diff&eacute;rente de z&eacute;ro les utilisateurs normaux pourront cr&eacute;er le compte IMAP lors de la cr&eacute;ation de la bo&icirc;te aux lettres.[br]
+Le quota de l'utilisateur est fix&eacute; par une valeur positive, dans le cas contraire l'utilisateur aura un quota illimit&eacute;.</autocreatequota_text>
+<change_cyrus_password>Modifiez le mot de passe principal du compte &quot;Cyrus&quot; permettant d'effectuer des op&eacute;rations administratives sur le syst&egrave;me de gestion des bo&icirc;tes aux lettres.</change_cyrus_password>
+<config>imapd.conf</config>
+<createonpost>Cr&eacute;ation &agrave; la r&eacute;ception</createonpost>
+<createonpost_text>Si cette option est activ&eacute;e, quand cyrus recevra un courrier &eacute;lectronique pour une BAL qui n'existe pas; elle sera automatiquement cr&eacute;e</createonpost_text>
+<cyrquota>Utilisateurs &amp; quotas</cyrquota>
+<cyrreconstruct_wait>Passage de l'ordre au d&eacute;mon middleware r&eacute;ussi, le processus est ex&eacute;cut&eacute; en t&acirc;che de fond; veuillez attendre ...</cyrreconstruct_wait>
+<cyrreconstruct_waiting>Attente d'ordre ou de processus &agrave; d&eacute;marrer ...</cyrreconstruct_waiting>
+<cyrus_scan_antivirus>Analyse antivirus de vos bo&icirc;tes aux lettres</cyrus_scan_antivirus>
+<cyrus_scan_antivirus_text>Lancez une analyse antivirus p&eacute;riodique afin d'analyser des vieux messages dans vos bo&icirc;tes aux lettres.</cyrus_scan_antivirus_text>
+<defaultdomain>Domaine par d&eacute;faut</defaultdomain>
+<defaultdomain_text>Le domaine par d&eacute;faut pour les domaines virtuels de soutien.[br] Il est pr&eacute;f&eacute;rable de penser &agrave; tous les utilisateurs existants dans un domaine.[br] 
+Sans r&eacute;serve des utilisateurs sont techniquement &agrave; l'int&eacute;rieur du domaine que vous fix&eacute; ici</defaultdomain_text>
+<deletemailbox_infos>Etes-vous s&ucirc;r de vouloir effacer cette bo&icirc;te aux lettres ? Tout les messages seront supprim&eacute;s.</deletemailbox_infos>
+<duplicatesuppression>Double suppression</duplicatesuppression>
+<duplicatesuppression_text>Si activ&eacute;, Cyrus arr&ecirc;tera la livraison d'un message &agrave; une bo&icirc;te aux lettres si un message avec la m&ecirc;me ID (ou ID d'exp&eacute;dition) est inscrit comme &eacute;tant d&eacute;j&agrave; livr&eacute; &agrave; cette m&ecirc;me bo&icirc;te aux lettres.
+Enregistre la bo&icirc;te aux lettres et l'ID du message/ID d'exp&eacute;dition de toutes les livraisons r&eacute;ussie.</duplicatesuppression_text>
+<enable_cyrus_antivirus_scan>Activer l'analyse antivirus des bo&icirc;tes aux lettres</enable_cyrus_antivirus_scan>
+<enable_cyrus_antivirus_scan_text>Si vous activez cette fonctionnalit&eacute;, Artica sera alors autoris&eacute; &agrave; lancer une t&acirc;che d'analyse sur vos fichiers de bo&icirc;tes aux lettres.[br]
+Vous serez alors notifi&eacute; par eMail si des &eacute;l&eacute;ments ont &eacute;t&eacute;s d&eacute;tect&eacute;s.</enable_cyrus_antivirus_scan_text>
+<howto_cyrus_service>Chaque service peut &ecirc;tre indiqu&eacute; par son nom
+[ul]
+[li]imaps pour imap ssl[/li]
+[li]pop3 pour pop3[/li]
+[li]pop3s pour pop3 ssl[/li]
+[li]nntp pour nntp[/li]
+[/ul]
+En d'autres termes vous pouvez d&eacute;finir quelles adresses IP pourront correspondront &agrave; quel protocole :[br]
+[ul]
+[li]localhost:143[/li]
+[li]127.0.0.1:imap[/li]
+[li]192.168.1.1:imaps[/li]
+[/ul]</howto_cyrus_service>
+<mailboxes>Bo&icirc;tes aux lettres</mailboxes>
+<mailboxes_events>&Eacute;v&egrave;nements</mailboxes_events>
+<mailboxes_parameters>Propri&eacute;t&eacute;s des bo&icirc;tes aux lettres</mailboxes_parameters>
+<mailbox_size>Taille du stockage</mailbox_size>
+<maxchild>MAX instances</maxchild>
+<maxchild_text>[b]instance Max[/b][br]Est le nombre maximum d'instances du service spawn.[br]Une valeur de -1 donne un nombre d'instances illimit&eacute;es</maxchild_text>
+<maxmessagesize>Taille maximum du message</maxmessagesize>
+<maxmessagesize_text>Taille maximum des messages entrant. Cyrus rejettera tous messages d&eacute;passant cette valeur en octets.[br]
+Si la valeur est mise &agrave; z&eacute;ro cela autorisera les messages de n'importe quelle taille (valeur par d&eacute;faut).</maxmessagesize_text>
+<popminpoll>Valeur minimun de rel&egrave;ve</popminpoll>
+<popminpoll_text>Valeur minimum en minutes qu'un utilisateur devra respecter entre deux authentification POP.</popminpoll_text>
+<quotawarn>Quota d'alerte</quotawarn>
+<quotawarn_text>Pourcentage d'utilisation du quota au-del&agrave; de laquelle le serveur avertira l'utilisateur.</quotawarn_text>
+<rebuild_mailboxes>Reconstruire les bo&icirc;tes aux lettres</rebuild_mailboxes>
+<rebuild_mailboxestext>Vous pouvez reconstruire les bo&icirc;tes aux lettres.[br]
+Utilisez cette fonction en cas de corruption des donn&eacute;es.</rebuild_mailboxestext>
+<rebuild_mailboxes_text>reconstruire une ou plusieurs boites aux lettres IMAP</rebuild_mailboxes_text>
+<repair_database>R&eacute;parer la base de donn&eacute;es cyrus</repair_database>
+<repair_database_ask>D&eacute;sirez-vous r&eacute;cup&eacute;rer la base de donn&eacute;es de Cyrus-imap cela la nettoiera par la m&ecirc;me occasion.</repair_database_ask>
+<repair_database_text>R&eacute;cup&eacute;rez des bases de donn&eacute;es Cyrus-imap apr&egrave;s un crash d'application ou de syst&egrave;me</repair_database_text>
+<services_settings>Param&egrave;tres des services</services_settings>
+<services_settings_text>D&eacute;finissez ici des services de bo&icirc;te aux lettres que vous voulez fournir &agrave; ce serveur</services_settings_text>
+<squatter_reindex>R&eacute;-indexer les bo&icirc;tes aux lettres modif&eacute;es (text complet) chaque</squatter_reindex>
+<SQUATTER_SERVICE>Indexation de Cyrus IMAP</SQUATTER_SERVICE>
+<SQUATTER_SERVICE_EXPL>Une des fonctionnalit&eacute; importante de cyrus est la capacit&eacute; &agrave; indexer les messages stock&eacute;s et l'ensemble des bo&icirc;tes aux lettres afin d'effectuer des recherches rapides dans les messages.[br]
+Une fois l'indexation effectu&eacute; par squatter les performances de recherche seront grandement am&eacute;lior&eacute;es.</SQUATTER_SERVICE_EXPL>
+<SQUATTER_SERVICE_TEXT>Autoriser l'indexation des messages et des ent&ecirc;tes.</SQUATTER_SERVICE_TEXT>
+<tools>Outils</tools>
+<user>Bo&icirc;te aux lettres</user>

@@ -1,0 +1,32 @@
+<APP_CLAMAV_INSTALL_INFOS>L'ordre &agrave; &eacute;t&eacute; envoy&eacute; au Centre de Contr&ocirc;le</APP_CLAMAV_INSTALL_INFOS>
+<APP_CLAMAV_MILTER_TEXT>Module utilis&eacute; avec le serveur de Courrier Postfix pour parcourir le flux de courrier &eacute;lectronique</APP_CLAMAV_MILTER_TEXT>
+<APP_CLAMAV_TEXT>C'est un d&eacute;mon qui sert de demandes d'analyse pour acc&eacute;l&eacute;rer le temps de balayage</APP_CLAMAV_TEXT>
+<APP_CLAMSCAN_TEXT>Outil en ligne de commande pour effectuer une simple analyse</APP_CLAMSCAN_TEXT>
+<APP_FRESHCLAM_TEXT>Utilis&eacute; pour mettre &agrave; jour r&eacute;guli&egrave;rement les mod&egrave;les ClamAV</APP_FRESHCLAM_TEXT>
+<Checks>V&eacute;rifications de base de donn&eacute;es</Checks>
+<Checks_text>Nombre de v&eacute;rifications de bases de donn&eacute;es par jour</Checks_text>
+<CLAMAV_NOT_INSTALLED_CLICK_TO_INSTALL>Clam Antivirus n'est pas install&eacute; sur votre ordinateur.[br]SI vous d&eacute;sirez l'installer, cliquez sur l'ic&ocirc;ne ci-contre afin d'ex&eacute;cuter l'installation &agrave; travers Internet</CLAMAV_NOT_INSTALLED_CLICK_TO_INSTALL>
+<daily_cld>Principale bases de donn&eacute;es antivirus  quotidienne</daily_cld>
+<explain>Qu'est-ce ?</explain>
+<INSTALL_CLAMAV>Installez Clam Antivirus</INSTALL_CLAMAV>
+<INSTALL_CLAMAV_PROGRESS>L'installation de Clam Antivirus est en cours, cliquez ici pour afficher les r&eacute;sultats</INSTALL_CLAMAV_PROGRESS>
+<INSTALL_CLAMAV_TEXT>Cette op&eacute;ration va compiler et installer la derni&egrave;re version de Clam Antivirus sur votre serveur</INSTALL_CLAMAV_TEXT>
+<junk_ndb>Phishing, malware, ecards, spam, 419s, loterie, travail, stocks</junk_ndb>
+<lott_ndb>Simple escroqueries de loterie (type 7 signatures)</lott_ndb>
+<main_cld>Base de donn&eacute;es antivirus</main_cld>
+<MaxAttempts>Tentatives Maximum</MaxAttempts>
+<MaxAttempts_text>Combien de tentatives (par miroir) &agrave; faire avant d'abandonner</MaxAttempts_text>
+<mirrors>mirroirs</mirrors>
+<MSRBL-Images_hdb>Les images spam contenues dans les e-mails</MSRBL-Images_hdb>
+<MSRBL-SPAM_ndb>E-mails spam&eacute; (URL ou tout autre contenu qui semble statique)</MSRBL-SPAM_ndb>
+<phish_ndb>Phishing, malware, ecards</phish_ndb>
+<RECOMPILE_CLAMAV_TEXT>Cette op&eacute;ration va recompiler et forcer la mise &agrave; jour de votre version de Clam Antivirus</RECOMPILE_CLAMAV_TEXT>
+<rogue_hdb>Faux logiciels anti-virus, autres logiciels malveillants</rogue_hdb>
+<scam_ndb>Spam, 419s, loterie, travail, stocks</scam_ndb>
+<security_info>Mod&egrave;le additionnel pour /www.securiteinfo.com</security_info>
+<spamimg_hdb>Images Spam</spamimg_hdb>
+<spam_ldb>Spam (utilisant des signatures logiques)</spam_ldb>
+<spear_ndb>Email spears/phishing</spear_ndb>
+<winnow_malware_hdb>Les virus, chevaux de Troie et autres logiciels malveillants ne sont pas encore d&eacute;tect&eacute; par ClamAV</winnow_malware_hdb>
+<winnow_phish_complete_ndb>Signatures pour d&eacute;tecter le phishing, les urls malveillantes et les h&ocirc;tes compromis</winnow_phish_complete_ndb>
+<winnow_phish_complete_url_ndb>Similaire &agrave; &quot;Signatures pour d&eacute;tecter le phishing&quot;, sauf que toutes les urls sont utilis&eacute;es pour calculer les signatures plut&ocirc;t que soigneusement s&eacute;lectionn&eacute;s les h&ocirc;tes</winnow_phish_complete_url_ndb>

@@ -1,0 +1,2 @@
+<GNUPLOT_NOT_PNG>Gnuplot ne support pas le format png</GNUPLOT_NOT_PNG>
+<GNUPLOT_NOT_PNG_EXPLAIN>Gnuport est le moteur principal qui g&eacute;n&egrave;re les grpahiques.[br]Le format png n'est pas compil&eacute; pour gnuplot[br]Essayez d'installer &agrave; nouveau gnuplot &agrave; travers le Centre d'installation d'application d'artica[br]Si cela est un &eacute;chec, veuillez contacter votre centre de support</GNUPLOT_NOT_PNG_EXPLAIN>

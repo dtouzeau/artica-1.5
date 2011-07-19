@@ -1,0 +1,8 @@
+liblm_sensors3->ftp://rpmfind.net/linux/Mandrake/2006.0/i586/media/main/liblm_sensors3-2.9.1-4mdk.i586.rpm;
+tcp_wrappers->ftp://rpmfind.net/linux/Mandrake/2006.0/i586/media/main/tcp_wrappers-7.6-26mdk.i586.rpm;
+libnet-snmp5->ftp://rpmfind.net/linux/Mandrake/2006.0/i586/media/main/libnet-snmp5-5.2.1.2-4mdk.i586.rpm;
+cyrus-imapd->ftp://rpmfind.net/linux/Mandrake/2006.0/i586/media/main/cyrus-imapd-2.2.12-15mdk.i586.rpm;
+perl-Cyrus->ftp://rpmfind.net/linux/Mandrake/2006.0/i586/media/main/perl-Cyrus-2.2.12-15mdk.i586.rpm;
+cyrus-imapd-utils->ftp://rpmfind.net/linux/Mandrake/2006.0/i586/media/main/cyrus-imapd-utils-2.2.12-15mdk.i586.rpm;
+
+

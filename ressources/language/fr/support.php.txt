@@ -1,0 +1,5 @@
+<ARTICA_TECHNO>Artica Technology est la soci&eacute;t&eacute; derri&egrave;re le projet Open Source Artica ainsi que tous les services de support qui l'entoure. fournissant ainsi un support professionnel et des services</ARTICA_TECHNO>
+<Community_support>Support de la communaut&eacute;</Community_support>
+<Community_support_text>Enregistrez-vous dans le forum de la communaut&eacute; Artica et postez votre probl&egrave;me[br]
+Le support de la communaut&eacute; est disponible en Fran&ccedil;ais,Anglais, espagnol...</Community_support_text>
+<PROFESSIONAL_SUPPORT>Support professionnel</PROFESSIONAL_SUPPORT>

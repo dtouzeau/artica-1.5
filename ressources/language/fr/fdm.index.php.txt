@@ -1,0 +1,10 @@
+<fetchrule>R&egrave;gle de capture</fetchrule>
+<folder_to_fetch>Dossier distant &agrave; capturer</folder_to_fetch>
+<keep>Garder les messages sur le serveur</keep>
+<no-apop>D&eacute;sactiver APOP</no-apop>
+<no-apop_text>fdm tentera d'utiliser APOP pour masquer le mot de passe, si le serveur offre cette possibilit&eacute;. [br]
+Si le serveur lui-m&ecirc;me annonce qu'il supporte APOP, mais refuse ensuite
+&agrave; l'accepter, [br] fdm ne r&eacute;essayera pas avec un mot en passe clair. [fr] Pour d&eacute;sactiver APOP activez cette case &agrave; cocher</no-apop_text>
+<server_name>Serveur de messagerie distant</server_name>
+<server_port>Port distant</server_port>
+<server_type>Type de serveur</server_type>

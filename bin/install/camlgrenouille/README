@@ -1,0 +1,114 @@
+This is an old version of camlgrenouille README, up to date versions are in 
+French under the name LISEZMOI_plateforme.txt. This file is only kept here for 
+historical purposes.
+
+This software is meant to test for your broadband connection, and
+sends the results to www.grenouille.com
+
+Quick start: I suppose you have the binary version. Simply edit the user.config 
+file to satisfy your needs (especially username, password and interface 
+entries), copy the dllstr.so and dllunix.so in some directory that is present 
+in /etc/ld.so.conf and run /sbin/ldconfig (you can also do a export 
+LD_LIBRARY_PATH=/usr/local/lib (if not defined) after copying *.so there). You  
+also need to specify in the configuration file where the plugin you wish to use  
+resides. You may launch ./camlgrenouille as a simple user now.
+
+To lauch it as a daemon, simply do a camgrenouille -q &
+If you want to keep a log, use camlgrenouille > mylog &
+
+(on Linux, you should not need to use 'nohup')
+
+If you are not launching camlgrenouille from the directory where you
+unpacked it, you should put the shared library dllunix.so and dllstr.so
+in a library directory that is known by the system (mentioned in
+/etc/ld.so.conf for instance) and run ldconfig once.
+
+Options:
+-f <file> : specifies the configuration file to use (default: user.config
+in the current directory)
+-q : quiet (no output at all)
+-d : debug (very verbose output)
+-t : prints current date and time for each output
+-at : prints date and time of next event
+
+Compiling:
+You need ocaml to compile. Create a file build_linux or build_mac (doing "touch
+build_linux", for instance), according to what you want to build. Then simply
+do a make depend, and a make.
+
+Plugins:
+In order make camlgrenouille more modular, some information about how
+much data is transfered is obtained using plugins. For instance, the
+distribution for linux contains one simple plugin, shell_ifconfig.sh,
+which uses /sbin/ifconfig to find this information. The user.config file
+must point to the plugin you wish to use.
+
+Configuration:
+To configure the program, look at the user.config file. You need to
+put your grenouille user name and password there. You might want to
+change the network interface (for an adsl link, it may be ppp0, for a
+cable modem, eth0), and the path of external programs that are used
+(awk, grep ...). To find the path of these programs, you can use the
+'which' command (which awk will tell you where awk is).
+
+It may be possible that your ping program does not allow a normal user
+to set the size of the icmp packet that is set. This is why the ping
+string is not used by default.
+
+If a wrong email address is automatically generated to connect to the ftp
+serveur as anonymous, you may specify one using the ftp_password option.
+
+To disable some tests (upload for cable modems, for instance), set
+testping, testul, testdl or testbk to false.
+
+The options dl_cmd, ul_cmd, ping_cmd and breakdown_cmd are commands
+that are run when a test is successful. This is best explained through
+examples:
+
+if you have set:
+dl_cmd echo dl
+then if the measured bandwidth in 59.3 ko/s, the command that will be
+run will be
+echo dl 59.3
+
+For the time being, the measure is appended at the end of the
+command (so if you need to put something after, you need to wrap it in
+a shell script for instance).
+
+Another important point is that the execution of camlgrenouille is
+stopped until the end of the execution of the program (it is not
+forked). So run small quick programs, or have a shell script that fork
+them in the background.
+
+The commands are:
+ul_cmd: takes one argument, the result bandwidth in ko/s
+ping_cmd: takes three arguments: the number of ping sent (dependent on
+the configuration sent by grenouille.com), the number of ping received
+(from which you can deduce the number of ping lost) and the total time
+(equal to number of ping received * average trip time).
+breakdown_cmd: does not take any argument, called when a breakdown is
+detected.
+
+If these explanations are not clear, or you would like additional
+features to bind camlgrenouille to external programs (a gui, anyone ?
+;-), please send me an email.
+
+Use:
+Simply type a ./camlgrenouille. You may launch it from another
+directory than the one where it is, but you then need to specify where
+to find the configuration file (with -f <file>).
+
+You do not need to be root to use camlgrenouille.
+
+To quit the program, hit ctrl-c (or send a SIGINT signal, with a
+'killall -INT camlgrenouille' for instance). Camlgrenouille will then
+try to send unsent results and then quit. If it takes too long, you
+can hit ctrl-c again and it really quits.
+
+Bugs:
+For bug reports, feature requests and patches, send me an email at
+alan.schmitt@polytechnique.org
+
+You may want to send me the output of camlgrenouille with the -d
+option, that will tell me much about what the problem may be. Just let
+it run for a couple minutes, it should be enough.

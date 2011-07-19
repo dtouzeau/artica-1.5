@@ -1,0 +1,2 @@
+<APP_GRAPHDEFANG_TEXT>Voir les statistiques de l'activit&eacute; de MimeDefang, incluant les virus, le spam et les cheminements</APP_GRAPHDEFANG_TEXT>
+<mailspy_statistics>Voir les rapports g&eacute;n&eacute;r&eacute;s par MailSpy</mailspy_statistics>

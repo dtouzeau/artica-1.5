@@ -1,0 +1,65 @@
+<AddNewDnsReverseZone>Pour cr&eacute;er une Zone inverse, donnez la premi&egrave;re adresse IP de votre Domaine DNS
+Par exemple: 192.168.1.1 ou 10.10.10.1 ou 192.168.0.1...</AddNewDnsReverseZone>
+<AddNewDnsZone_explain>Indiquez ici le domaine qui sera ajout&eacute; apr&egrave;s le nom de votre ordinateur
+par exemple :
+si vous indiquez &quot;domain.tld&quot;, le nom de votre ordinateur &quot;ordinateur&quot; sera &quot;ordinateur.domain.tld&quot;</AddNewDnsZone_explain>
+<add_forwarder>Ajouter un nouveau DNS</add_forwarder>
+<add_new_zone>Ajoutez une zone</add_new_zone>
+<add_new_zone_tex>Ajouter une nouvelle zone &agrave; votre DNS pour qu'il puisse r&eacute;pondre &agrave; &quot;ordinateur.*.*&quot;</add_new_zone_tex>
+<computers>ordinateurs</computers>
+<config>Fichier de configuration</config>
+<dns_zones>Zones DNS</dns_zones>
+<expire_time_text>P&eacute;riode qu'attendront les DNS avant de rejeter les donn&eacute;es de zone si le serveur primaire n'est pas disponible</expire_time_text>
+<forward>zone transfert</forward>
+<forwarders>DNS publiques</forwarders>
+<forwarders_text>Indiquez ici le ou les DNS publiques (les serveurs DNS de votre FAI) utilis&eacute;s pour les requ&ecirc;tes DNS</forwarders_text>
+<forwarder_add>Ajouter ici l'adresse IP du DNS publique de votre FAI</forwarder_add>
+<forward_text>Une r&egrave;gle de transfert est une solution de transmettre basiquement un domaine.[br]</forward_text>
+<global_directory>R&eacute;pertoire de travail</global_directory>
+<global_settings>R&eacute;glages globaux</global_settings>
+<hint>Zone astuce</hint>
+<hint_text>
+The initial set of root nameservers is specified using a "hint zone".[br]
+When the server starts up, it uses the root hints to find a root nameserver and get the most recent list of root nameservers.[br]
+If no hint zone is specified for class IN, the server uses a compiled-in default set of root servers hints.[br]
+Classes other than IN have no built-in defaults hints.
+</hint_text>
+<Hostmaster_email>email du postmaster de ce serveur</Hostmaster_email>
+<Hostmaster_email_text>Quelle adresse mail doit &ecirc;tre utilis&eacute;e pour contacter l'administrateur de zone</Hostmaster_email_text>
+<hosts>H&ocirc;tes</hosts>
+<master>R&eacute;ponse autoris&eacute;es</master>
+<master_text>Le serveur a une copie des donn&eacute;es de la zone et sera en mesure de fournir des r&eacute;ponses &agrave; l'autorit&eacute;.</master_text>
+<minimal_ttl>P&eacute;riode de validit&eacute; minimum</minimal_ttl>
+<minimal_ttl_text>P&eacute;riode minimum avant que les enregistrements en cache soient effac&eacute;s et rafra&icirc;chit</minimal_ttl_text>
+<PrimaryServerName>Serveur primaire</PrimaryServerName>
+<PrimaryServerName_text>Le nom fqdn du serveur qui r&eacute;pondra aux requ&ecirc;tes</PrimaryServerName_text>
+<refresh_time>P&eacute;riode avant rafra&icirc;chissement</refresh_time>
+<refresh_time_text>P&eacute;riode qu'attendront les serveurs DNS avant de v&eacute;rifier ou de mettre &agrave; jour l'enregistrement SOA du serveur primaire</refresh_time_text>
+<retry_time>P&eacute;riode avant essai</retry_time>
+<retry_time_text>P&eacute;riode qu'attendront les DNS avant d'envoyer des requ&ecirc;tes si le DNS primaire ne r&eacute;pond pas</retry_time_text>
+<retry_time_text>&lt;expire_time&gt;P&eacute;riode avant expiration</retry_time_text>
+<search_computer>Rechercher des h&ocirc;tes</search_computer>
+<search_computer_text>Interroger la base de donn&eacute;es en vue de trouver des ordinateurs/h&ocirc;tes</search_computer_text>
+<search_explain>Vous pouvez trouver un ordinateur, en donnant l'adresse IP ou le nom de l'ordinateur dans votre zone DNS,
+caract&egrave;re &eacute;toile (*) est pris en charge.
+si vous souhaitez interroger tous les ordinateurs dans toutes les zones DNS, le type de votre mod&egrave;le et de &laquo;tous&raquo; apr&egrave;s le mot
+Exemple: PC-10 * tous les</search_explain>
+<slave>esclave</slave>
+<slave_text>A slave zone is a replica of a master zone.[br]
+The masters list specifies one or more IP addresses of master servers that the slave contacts to update its copy of the zone.[br]
+By default, transfers are made from port 53 on the servers;[br]
+this can be changed for all servers by specifying a port number before the list of IP addresses, or on a per-server basis after the IP address.[br]
+Authentication to the master can also be done with per-server TSIG keys.[br]
+If a file is specified, then the replica will be written to this file whenever the zone is changed, and reloaded from this file on a server restart.[br]
+</slave_text>
+<stub>stub</stub>
+<stub_text>A stub zone is similar to a slave zone, except that it replicates only the NS records of a master zone instead of the entire zone.[br]
+Stub zones are not a standard part of the DNS;[br]
+they are a feature specific to the BIND implementation.[br]
+Stub zones can be used to eliminate the need for glue NS record in a parent zone at the expense of maintaining a
+stub zone entry and a set of name server addresses in global settings.[br]
+This usage is not recommended for new configurations, and BIND 9 supports it only in a limited way.</stub_text>
+<ttl>P&eacute;riode de validit&eacute;</ttl>
+<ttl_text>Le temps de Libe d&eacute;crit combien de temps un dossier peut &ecirc;tre mis en cache avant d'&ecirc;tre jet&eacute;.</ttl_text>
+<zone>zone</zone>
+<ZoneDeleteWarning>Etes-vous s&ucirc;r et certain de vouloir effacer cette zone ?</ZoneDeleteWarning>

@@ -1,0 +1,26 @@
+<add_alias>Add new original email</add_alias>
+<add_alias_text>Adicione o email original do seu ISP e as regras de fetchmail</add_alias_text>
+<click_on_add>Clique no bot&atilde;o adicionar</click_on_add>
+<fetchmail_add_rule>Nova conta</fetchmail_add_rule>
+<fetchmail_add_rule_text>Add new fetched account and receive mails into your mailbox</fetchmail_add_rule_text>
+<fetchmail_aliases>Fetchmail alias</fetchmail_aliases>
+<fetchmail_aliases_ask>Give the email address fetched by your rule (eg you@gmail.com or you@hotmail.com...)</fetchmail_aliases_ask>
+<fetchmail_aliases_text>
+During receiving mails from fetchmail operation, the mail server engine keep the original recipient address forwarded to your account.[br]
+For example, if you fetch mail from gmail account and your original address is user@gmail.com, the email address "user@gmail.com" is not translated to your local email address.[br]
+All mails saved in backup or saved in quarantine area are indexed by the original recipient.[br]
+[b]If you not fill this section, you will not be able to query correctly your quarantine/backup area[/b]. 
+</fetchmail_aliases_text>
+<fetchmail_modify_rules>Armazenamento de contas</fetchmail_modify_rules>
+<fetchmail_modify_rules_text>Exibir e editar as contas existentes</fetchmail_modify_rules_text>
+<fetch_delete_rule_confirm>Tem a certeza que pretende apagar esta regra ?</fetch_delete_rule_confirm>
+<GET_RIGHT_ISP_SETTINGS>Procurar defini&ccedil;&otilde;es</GET_RIGHT_ISP_SETTINGS>
+<GET_RIGHT_ISP_SETTINGS_TEXT>Defina as configura&ccedil;&otilde;es com o nome do seu ISP</GET_RIGHT_ISP_SETTINGS_TEXT>
+<messaging_accounts>Contas de correio</messaging_accounts>
+<not_delete_messages>N&atilde;o apagar mensagens</not_delete_messages>
+<no_fetchmail_aliases>Nenhum fetchmail alias</no_fetchmail_aliases>
+<no_fetchmail_aliases_intro>Se voc&ecirc; desejar receber os relat&oacute;rios de quarentena , voc&ecirc; precisa de adicionar o seu endere&ccedil;o de email original</no_fetchmail_aliases_intro>
+<proto>Protocolo</proto>
+<server_information>Informa&ccedil;&otilde;es do servidor</server_information>
+<session_information>Informa&ccedil;&otilde;es da sess&atilde;o</session_information>
+<wizard_intro>Este assistente vai ajuda-lo a criar ou editar as contas, a fim de buscar seus e-mails de outros servidores de correio</wizard_intro>

@@ -1,0 +1,31 @@
+Make the ad*.mp3 files much smaller.
+    In particular, Steve Snyder remarks that squid's default
+	maximum_object_size_in_memory 8 KB
+    may preclude this Adzapper file from ever being accessed as TCP_MEM_HIT.
+    And anyway there's no need for it to be 1 second long. That was just
+    the smallest ready made silent MP3 I found on the web.
+
+Adzapper performance tuning.
+    How many zappers should one run in parallel?
+	On low RAM machines many zappers can be a real lose, and even
+	when RAM isn't an issue, since every URL must pass through the
+	zapper before Squid dispatches a real fetch the parallelism may
+	be a net lose anyway.
+	My current rule of thumb is "as few as possible before the squid
+	complains about ``all redirectors being busy''". Web traffic is
+	bursty, and generally fractally noisy (i.e. the spikiness is
+	pretty much the same at all granularities) unless the upstream link
+	is clogged. So more zappers may not help much.
+	The only real likelihood of gain is if squid has a serial
+		get request, redirect, dispatch it async
+	main loop. In which can busy redirectors really would be bad and
+	many redirectors is indeed a win. But I haven't read the squid code
+	in this regard.
+    Does coalescing the adjacent patterns of the same type help or hinder?
+	I've seen anecdotal remarks that this can be a lose.
+
+Join some of the ad pattern mailing lists that are assoicated with some
+    of the other zapping programs and their maintainers.
+
+Paul Weber's "check my zapper is up to date" idea.
+    Magic URL/CGI to check zapper version against current one.

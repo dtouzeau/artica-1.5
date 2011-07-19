@@ -1,0 +1,2 @@
+<REBUILD_CYRUS>Reconstruire la configuration de Cyrus</REBUILD_CYRUS>
+<REBUILD_CYRUS_TEXT>R&eacute;&eacute;crire les param&egrave;tres g&eacute;n&eacute;raux de votre serveur de bo&icirc;tes aux lettres et red&eacute;marrez les services de messagerie.</REBUILD_CYRUS_TEXT>

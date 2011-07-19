@@ -1,0 +1,30 @@
+<about_usb>This section helps you to play with usb storage devices, you can plug devices connect them and un-connect them with this interface[br]
+When click on an item you can delegate one usb device has the usb auto-backup device[br]
+This means that when you plug you device on the computer, artica will mount it automatically and perform backup feature.[br]
+If you leave this device permanently, the backup operation will be perform every 2 hours</about_usb>
+<automount>Auto-connect</automount>
+<automount_explain>Automatically connect this device when you plug it on the system</automount_explain>
+<automount_explain_text>This operation will automatically connect the device into /automounts directory when it is plugged on the system.[br]
+the linking operation will be automatic when the system wants to access it.</automount_explain_text>
+<auto_folder>Directory name point</auto_folder>
+<click_to_edit>Click to edit...</click_to_edit>
+<connected>connected</connected>
+<dismount_text>[b]Disconnect this key[/b][br]Destroy the pointer to this usb storage in order to physically remove it from the computer</dismount_text>
+<error_understand_fs>Unable to understand filesystem type</error_understand_fs>
+<file_system>File system</file_system>
+<formatdevice>Format this device</formatdevice>
+<format_warning>Are you sure to perform this operation,all datas will be erased...</format_warning>
+<local>local</local>
+<make_autobackup>Auto-backup device</make_autobackup>
+<manufacturer>manufacturer</manufacturer>
+<model>Model</model>
+<mounted_on>mounted on</mounted_on>
+<mount_text>[b]Connect this key[/b][br]create a pointer to this usb storage in order to access it</mount_text>
+<not_applicable>Not applicable</not_applicable>
+<plugged>plugged</plugged>
+<speed>speed</speed>
+<system>System</system>
+<umake_autobackup>Remove Auto-backup</umake_autobackup>
+<vendor>Vendor</vendor>
+<warnautoback>You choose that this device will be an auto-backup device.\nThis meens that when you plug this device on this computer,\nArtica will backup automatically mandatories datas on this device</warnautoback>
+<warnautobackremove>This device will be disconnected has an auto-backup device\nContinue?</warnautobackremove>

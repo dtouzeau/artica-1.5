@@ -1,0 +1,140 @@
+unit setup_dar;
+{$MODE DELPHI}
+//{$mode objfpc}{$H+}
+{$LONGSTRINGS ON}
+//ln -s /usr/lib/libmilter/libsmutil.a /usr/local/lib/libsmutil.a
+//apt-get install libmilter-dev
+interface
+
+uses
+  Classes, SysUtils,strutils,RegExpr in 'RegExpr.pas',
+  unix,IniFiles,setup_libs,distridetect,rdiffbackup,
+  install_generic;
+
+  type
+  dar=class
+
+
+private
+     libs:tlibs;
+     distri:tdistriDetect;
+     install:tinstall;
+   source_folder,cmd:string;
+   webserver_port:string;
+   artica_admin:string;
+   artica_password:string;
+   ldap_suffix:string;
+   mysql_server:string;
+   mysql_admin:string;
+   mysql_password:string;
+   ldap_server:string;
+   darClass:trdiffbackup;
+
+
+
+public
+      constructor Create();
+      procedure Free;
+      procedure xinstall();
+END;
+
+implementation
+
+constructor dar.Create();
+begin
+distri:=tdistriDetect.Create();
+libs:=tlibs.Create;
+install:=tinstall.Create;
+source_folder:='';
+darClass:=trdiffbackup.Create();
+end;
+//#########################################################################################
+procedure dar.Free();
+begin
+  libs.Free;
+end;
+//#########################################################################################
+procedure dar.xinstall();
+var
+local_int_version:integer;
+remote_int_version:integer;
+remote_str_version:string;
+cmd:string;
+begin
+
+
+  install.INSTALL_PROGRESS('APP_DAR','{checking}');
+if FileExists(darClass.dar_bin_path()) then begin
+   local_int_version:=darClass.dar_int_version();
+   remote_str_version:=libs.COMPILE_VERSION_STRING('dar');
+   remote_str_version:=AnsiReplaceText(remote_str_version,'.','');
+   if not TryStrToInt(remote_str_version,remote_int_version) then remote_int_version:=0;
+   writeln('Using dar version ',local_int_version,' against ',remote_int_version);
+   if local_int_version=remote_int_version then begin
+       install.INSTALL_PROGRESS('APP_DAR','{installed}');
+       install.INSTALL_STATUS('APP_DAR',100);
+       exit;
+   end;
+
+   if local_int_version>remote_int_version then begin
+       install.INSTALL_PROGRESS('APP_DAR','{installed}');
+       install.INSTALL_STATUS('APP_DAR',100);
+       exit;
+   end;
+end;
+
+
+  install.INSTALL_PROGRESS('APP_DAR','{downloading}');
+  install.INSTALL_STATUS('APP_DAR',30);
+  SetCurrentDir('/root');
+
+
+  if length(source_folder)=0 then source_folder:=libs.COMPILE_GENERIC_APPS('dar');
+  if not DirectoryExists(source_folder) then begin
+     writeln('Install dar failed...');
+     install.INSTALL_PROGRESS('APP_DAR','{failed}');
+     install.INSTALL_STATUS('APP_DAR',110);
+     exit;
+  end;
+
+
+  writeln('Install dar extracted on "'+source_folder+'"');
+  install.INSTALL_STATUS('APP_DAR',50);
+  install.INSTALL_PROGRESS('APP_DAR','{compiling}');
+  SetCurrentDir(source_folder);
+  cmd:='./configure --build=i486-linux-gnu --prefix=/usr --includedir="\${prefix}/include" --mandir="\${prefix}/share/man"';
+  cmd:=cmd + ' --infodir="\${prefix}/share/info" --sysconfdir=/etc --localstatedir=/var --libexecdir="\${prefix}/lib/dar"';
+  cmd:=cmd + ' --disable-maintainer-mode --disable-dependency-tracking --srcdir=.  --disable-upx --enable-mode=64 ';
+  fpsystem('cmd');
+  fpsystem('make');
+  fpsystem('make install');
+  SetCurrentDir('/root');
+
+if FileExists(darClass.dar_bin_path()) then begin
+   local_int_version:=darClass.dar_int_version();
+   remote_str_version:=libs.COMPILE_VERSION_STRING('dar');
+   remote_str_version:=AnsiReplaceText(remote_str_version,'.','');
+   if not TryStrToInt(remote_str_version,remote_int_version) then remote_int_version:=0;
+   writeln('Using dar version ',local_int_version,' against ',remote_int_version);
+   if local_int_version=remote_int_version then begin
+       install.INSTALL_PROGRESS('APP_DAR','{installed}');
+       install.INSTALL_STATUS('APP_DAR',100);
+       exit;
+   end;
+
+   if local_int_version<remote_int_version then begin
+       install.INSTALL_PROGRESS('APP_DAR','{failed}');
+       install.INSTALL_STATUS('APP_DAR',110);
+       exit;
+   end;
+end else begin
+      install.INSTALL_PROGRESS('APP_DAR','{failed}');
+      install.INSTALL_STATUS('APP_DAR',110);
+
+end;
+
+end;
+//#########################################################################################
+
+
+end.

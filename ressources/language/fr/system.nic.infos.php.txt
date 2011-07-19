@@ -1,0 +1,4 @@
+<network_hardware_infos>Informations sur le mat&eacute;riel</network_hardware_infos>
+<network_hardware_infos_text>Afficher les informations relatives &agrave; vos cartes r&eacute;seaux.</network_hardware_infos_text>
+<proc_hardware_infos>Informations sur le processeur</proc_hardware_infos>
+<proc_hardware_infos_text>Afficher les information relatives &agrave; votre processeur</proc_hardware_infos_text>

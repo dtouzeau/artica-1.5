@@ -1,0 +1,8 @@
+<enable_original_recipient>Original recipient (X-Original-To)</enable_original_recipient>
+<enable_original_recipient_text>Enable support for the [b]X-Original-To message header[/b].[br] This header is needed for multi-recipient mailboxes.[br]
+When this parameter is enabled, the cleanup daemon performs duplicate elimination on distinct pairs of (original recipient, rewritten recipient), 
+and generates non-empty original recipient queue file records.[br][br]
+When this parameter is disabled, the cleanup daemon performs duplicate elimination on the rewritten recipient address only, 
+and generates empty original recipient queue file records</enable_original_recipient_text>
+<undisclosed_recipients_header>Undisclosed Recipients Header</undisclosed_recipients_header>
+<undisclosed_recipients_header_text>Message header that the Postfix cleanup server inserts when a message contains no To: or Cc: message header.</undisclosed_recipients_header_text>

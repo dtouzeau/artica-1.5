@@ -1,0 +1,8 @@
+<action_100_pourc>Action quand le score est en hausse de 100 %</action_100_pourc>
+<rbl_explain>Ce module utilise le module de pourcentage la m&eacute;thode pour juger si un courrier est envoy&eacute; par un relais de trou noir ou un relais de spamer. [Br] Dans la table ci-dessous, vous devez atteindre 1OO  % avec une liste de base de donn&eacute;es de serveurs rbl. [Br] pour augmenter le taux de d&eacute;tection, vous pouvez exc&eacute;der 100 % de r&eacute;sultats [br] Par exemple vous pouvez mettre [br]
+[ul]
+[li]blackhole.compu.net a 20%[/li]
+[li]sbl.spamhaus.org a 30%[/li]
+[li]relays.mail-abuse.org a 70%[/li]
+[/ul][br]</rbl_explain>
+<rbl_servers>serveurs RBL/RHSBL</rbl_servers>

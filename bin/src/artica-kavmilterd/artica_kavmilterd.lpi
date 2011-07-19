@@ -1,0 +1,198 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <ProjectOptions>
+    <PathDelim Value="/"/>
+    <Version Value="6"/>
+    <General>
+      <MainUnit Value="0"/>
+      <IconPath Value="./"/>
+      <TargetFileExt Value=""/>
+      <Title Value="artica_kavmilterd"/>
+      <ActiveEditorIndexAtStart Value="5"/>
+    </General>
+    <VersionInfo>
+      <ProjectVersion Value=""/>
+    </VersionInfo>
+    <PublishOptions>
+      <Version Value="2"/>
+      <IgnoreBinaries Value="False"/>
+      <IncludeFileFilter Value="*.(pas|pp|inc|lfm|lpr|lrs|lpi|lpk|sh|xml)"/>
+      <ExcludeFileFilter Value="*.(bak|ppu|ppw|o|so);*~;backup"/>
+    </PublishOptions>
+    <RunParams>
+      <local>
+        <FormatVersion Value="1"/>
+        <LaunchingApplication PathPlusParams="/usr/X11R6/bin/xterm -T 'Lazarus Run Output' -e $(LazarusDir)/tools/runwait.sh $(TargetCmdLine)"/>
+      </local>
+    </RunParams>
+    <Units Count="14">
+      <Unit0>
+        <Filename Value="artica_kavmilterd.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="artica_kavmilterd"/>
+        <CursorPos X="11" Y="29"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="0"/>
+        <UsageCount Value="89"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="ldap.pas"/>
+        <UnitName Value="ldap"/>
+        <CursorPos X="46" Y="1002"/>
+        <TopLine Value="968"/>
+        <EditorIndex Value="1"/>
+        <UsageCount Value="42"/>
+        <Bookmarks Count="1">
+          <Item0 X="1" Y="920" ID="0"/>
+        </Bookmarks>
+        <Loaded Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="blcksock.pas"/>
+        <UnitName Value="blcksock"/>
+        <CursorPos X="16" Y="309"/>
+        <TopLine Value="270"/>
+        <UsageCount Value="23"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="ssfpc.pas"/>
+        <UnitName Value="ssfpc"/>
+        <CursorPos X="3" Y="90"/>
+        <TopLine Value="79"/>
+        <UsageCount Value="42"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="kavmilterd.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="kavmilterd"/>
+        <CursorPos X="47" Y="159"/>
+        <TopLine Value="123"/>
+        <EditorIndex Value="5"/>
+        <UsageCount Value="89"/>
+        <Loaded Value="True"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="global_conf.pas"/>
+        <UnitName Value="global_conf"/>
+        <CursorPos X="100" Y="13"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="3"/>
+        <UsageCount Value="42"/>
+        <Loaded Value="True"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="confiles.pas"/>
+        <UnitName Value="confiles"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="23"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="ldapsend.pas"/>
+        <UnitName Value="ldapsend"/>
+        <CursorPos X="15" Y="169"/>
+        <TopLine Value="127"/>
+        <UsageCount Value="23"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="logs.pas"/>
+        <UnitName Value="logs"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="6"/>
+        <UsageCount Value="34"/>
+        <Loaded Value="True"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="/usr/share/fpcsrc/rtl/inc/objpash.inc"/>
+        <CursorPos X="19" Y="54"/>
+        <TopLine Value="15"/>
+        <UsageCount Value="8"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="/usr/share/fpcsrc/rtl/objpas/objpas.pp"/>
+        <UnitName Value="objpas"/>
+        <CursorPos X="33" Y="63"/>
+        <TopLine Value="24"/>
+        <UsageCount Value="22"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="zsystem.pas"/>
+        <UnitName Value="zsystem"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="4"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="uhashlist.pas"/>
+        <UnitName Value="uHashList"/>
+        <CursorPos X="33" Y="72"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="2"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="/usr/share/fpcsrc/rtl/inc/systemh.inc"/>
+        <CursorPos X="16" Y="679"/>
+        <TopLine Value="642"/>
+        <UsageCount Value="10"/>
+      </Unit13>
+    </Units>
+    <JumpHistory Count="7" HistoryIndex="6">
+      <Position1>
+        <Filename Value="kavmilterd.pas"/>
+        <Caret Line="157" Column="22" TopLine="116"/>
+      </Position1>
+      <Position2>
+        <Filename Value="kavmilterd.pas"/>
+        <Caret Line="9" Column="60" TopLine="1"/>
+      </Position2>
+      <Position3>
+        <Filename Value="kavmilterd.pas"/>
+        <Caret Line="157" Column="18" TopLine="120"/>
+      </Position3>
+      <Position4>
+        <Filename Value="kavmilterd.pas"/>
+        <Caret Line="10" Column="101" TopLine="1"/>
+      </Position4>
+      <Position5>
+        <Filename Value="kavmilterd.pas"/>
+        <Caret Line="162" Column="22" TopLine="114"/>
+      </Position5>
+      <Position6>
+        <Filename Value="kavmilterd.pas"/>
+        <Caret Line="159" Column="39" TopLine="123"/>
+      </Position6>
+      <Position7>
+        <Filename Value="kavmilterd.pas"/>
+        <Caret Line="52" Column="14" TopLine="124"/>
+      </Position7>
+    </JumpHistory>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="5"/>
+    <Target>
+      <Filename Value="/home/dtouzeau/developpement/artica-postfix/bin/artica-kavmilterd"/>
+    </Target>
+    <CodeGeneration>
+      <Generate Value="Faster"/>
+    </CodeGeneration>
+    <Other>
+      <CompilerPath Value="$(CompPath)"/>
+    </Other>
+  </CompilerOptions>
+  <Debugging>
+    <Exceptions Count="2">
+      <Item1>
+        <Name Value="ECodetoolError"/>
+      </Item1>
+      <Item2>
+        <Name Value="EFOpenError"/>
+      </Item2>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

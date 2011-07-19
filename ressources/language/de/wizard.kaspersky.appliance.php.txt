@@ -1,0 +1,24 @@
+<KAVAPPMAIL_INTRO>This wizard will help you to set first settings in order to make your server in production mode</KAVAPPMAIL_INTRO>
+<welcome_kaspersky_mail_appliance>Welcome on Artica For Kaspersky Mail Appliance</welcome_kaspersky_mail_appliance>
+<wizardCompileButton>Build your settings</wizardCompileButton>
+<wizardCompileButton_text>Check your settings.[br]If settings are correct, click on "build your settings" in 
+order to make them in production mode and start to use your server</wizardCompileButton_text>
+<WIZARD_COMPILE>Build your settings</WIZARD_COMPILE>
+<WIZARD_COMPILE_EXPLAIN>Check your settings.[br]If settings are correct, click on "build your settings" in 
+order to make them in production mode and start to use your server</WIZARD_COMPILE_EXPLAIN>
+<WIZARD_FIRST_ORG>Your organization</WIZARD_FIRST_ORG>
+<WIZARD_FIRST_ORG_EXPLAIN>An organization is an entity that store users,groups, SMTP domains and specific features.[br]
+It should be your company name or any term you want to define an users area.
+Give on the field below the name of your organization</WIZARD_FIRST_ORG_EXPLAIN>
+<WIZARD_FIRST_ROUTED_DOMAIN>Your SMTP Domain and first routing</WIZARD_FIRST_ROUTED_DOMAIN>
+<WIZARD_FIRST_ROUTED_DOMAIN_EXPLAIN>The goal of this server is to receive mails from Internet,
+reject spam and viruses and forward messages to your Mailbox server.[br]
+Give in the first field the SMTP domain of your company and in the second field the IP address of your MailBox server.
+</WIZARD_FIRST_ROUTED_DOMAIN_EXPLAIN>
+<WIZARD_INTERNAL_SMTP_NETWORK>Your Internal Network</WIZARD_INTERNAL_SMTP_NETWORK>
+<WIZARD_INTERNAL_SMTP_NETWORK_EXPLAIN>If you want to use this server to send mails to Internet, you need to specify your users network.[br]
+In this case, the server will be able to detect outgoing/incoming mails.[br]
+Give in the field the first IP address of your network slash the CDIR of the Network Mask.[br]
+Example : 192.168.1.0/24, 10.10.10.0/16 ...[br]
+You can specify a single IP address if your Mailbox server is the only one computer able to send mail to this server.
+</WIZARD_INTERNAL_SMTP_NETWORK_EXPLAIN>

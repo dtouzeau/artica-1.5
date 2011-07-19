@@ -1,0 +1,15 @@
+<alternate_backup_server>Serveur de sauvegarde alternatif</alternate_backup_server>
+<alternate_backup_server_text>If the main backup server is failed or not available, you can use an alternate remote server to ensure that your backup is correctly set</alternate_backup_server_text>
+<APP_RSYNC_CLIENT_EXPLAIN>Indiquez ici les param&egrave;tres envoy&eacute;s par votre administrateur afin d'envoyer vos sauvegardes vers le Centre de donn&eacute;es distant</APP_RSYNC_CLIENT_EXPLAIN>
+<duration>Dur&eacute;e</duration>
+<enable_remote_sync>Activation du pousse-distant</enable_remote_sync>
+<enable_remote_sync_text>Si vous tournez au vert, Artica va pousser vos donn&eacute;es sauvegard&eacute;s vers le serveur distant</enable_remote_sync_text>
+<main_backup_server>Serveur de sauvegarde principal</main_backup_server>
+<remote_server_name>Nom du serveur distant</remote_server_name>
+<remote_server_port>Port du serveur distant</remote_server_port>
+<RsyncClientSSL>Activer SSL</RsyncClientSSL>
+<RsyncUploadBwlimit>limite d'upload de bande passante</RsyncUploadBwlimit>
+<sent>envoy&eacute;</sent>
+<sent_numfiles>Nombre de fichiers envoy&eacute;s</sent_numfiles>
+<UseOnlyRsync>Utilisez uniquement la synchronisation</UseOnlyRsync>
+<UseOnlyRsync_text>Si vous activez cette fonctionnalit&eacute;, artica-backup utilisera uniquement votre serveur distant afin de stocker vos sauvegardes.</UseOnlyRsync_text>

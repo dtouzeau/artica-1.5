@@ -1,0 +1,40 @@
+<APP_BACKUPPC_TEXT>BackupPC est syst&egrave;me de sauvegarde tr&egrave;s performant.Il permet de sauvegarder Linux, WINXX &agrave; distance des PC et portable sur le disque local du serveur.</APP_BACKUPPC_TEXT>
+<BackupPCNightlyPeriod>P&eacute;riode de nuit</BackupPCNightlyPeriod>
+<BackupPCNightlyPeriod_text>Combien de jours BackupPC va traverser enti&egrave;rement son r&eacute;pertoire de stockage.[br]Normalement 1 (tous les jours), veut dire que toutes les nuits, il va traverser son r&eacute;pertoire de stockage afin de le nettoyer.</BackupPCNightlyPeriod_text>
+<BACKUPPC_FOLDER_LIST_TEXT>Cette section liste tous les r&eacute;pertoires partag&eacute;s qui subissent des sauvegardes distantes r&eacute;guli&egrave;rement.</BACKUPPC_FOLDER_LIST_TEXT>
+<FullAgeMax>Supprimer les vieilles sauvegardes</FullAgeMax>
+<FullAgeMax_text>Les anciennes sauvegardes compl&egrave;tes sont supprim&eacute;es apr&egrave;s X jours</FullAgeMax_text>
+<FullKeepCntMin>Garder x incr&eacute;mentales</FullKeepCntMin>
+<FullKeepCntMin_text>Nombre de sauvegardes incr&eacute;mentales qu'il faut conserver</FullKeepCntMin_text>
+<FullPeriod>P&eacute;riode minimale en jour entre chaque sauvegarde compl&egrave;te</FullPeriod>
+<FullPeriod_text>P&eacute;riode minimale en jours entre chaque sauvegarde. Une sauvegarde compl&egrave;te est seulement effectu&eacute;e si il y a eu assez de temps depuis la derni&egrave;re sauvegarde</FullPeriod_text>
+<IncrAgeMax>Supprimer les anciennes incr&eacute;mentales</IncrAgeMax>
+<IncrAgeMax_text>Les sauvegardes incr&eacute;mentales seront supprim&eacute;es apr&egrave;s X jours</IncrAgeMax_text>
+<IncrPeriod>P&eacute;riode minimale entre les incr&eacute;mentales</IncrPeriod>
+<IncrPeriod_text>P&eacute;riode minimale en jours entre les diff&eacute;rentes sauvegardes incr&eacute;mentales</IncrPeriod_text>
+<MaxBackupPCNightlyJobs>Sauvegardes MAX la nuit</MaxBackupPCNightlyJobs>
+<MaxBackupPCNightlyJobs_text>Chaque nuit, au premier r&eacute;veil du d&eacute;mon, BackupPC va lancer ses t&acirc;ches afin de supprimer les fichiers non n&eacute;cessaires dans le spooler. Par exemple les fichier qui n'ont qu'un seul lien.</MaxBackupPCNightlyJobs_text>
+<MaxBackups>Sauvegardes Max.</MaxBackups>
+<MaxBackups_text>Nombre maximum de sauvegardes simultan&eacute;es.</MaxBackups_text>
+<MaxOldLogFiles>Nombre maximum de fichiers de logs</MaxOldLogFiles>
+<MaxOldLogFiles_text>Nombre maximum de fichiers de logs que BackupPC doit conserver. Ces fichiers sont dat&eacute;s la nuit.Un param&egrave;tre de 14 veut dire que le r&eacute;pertoire de log va contenir environ deux semaines de fichiers de logs</MaxOldLogFiles_text>
+<PartialAgeMax>Age maximale d'une sauvegarde ne &eacute;chec</PartialAgeMax>
+<PartialAgeMax_text>Un &eacute;chec d'une sauvegarde compl&egrave;te est sauvegard&eacute;e en temps que sauvegarde partielle.[br]Ce param&egrave;tre indique l'age maximal de conservation d'une sauvegarde partielle.[br]Une sauvegarde partielle peut &ecirc;tre r&eacute;utilis&eacute;e lors d'une future op&eacute;ration de sauvegarde.</PartialAgeMax_text>
+<Reason_archive_done>Archivage effectu&eacute;</Reason_archive_done>
+<Reason_archive_failed>Echec d'archivage</Reason_archive_failed>
+<Reason_backup_done>Effectu&eacute;</Reason_backup_done>
+<Reason_backup_failed>&Eacute;chec de la sauvegarde</Reason_backup_failed>
+<Reason_nothing_to_do>inactif</Reason_nothing_to_do>
+<Reason_no_ping>Ne r&eacute;pond pas au ping</Reason_no_ping>
+<Reason_restore_done>restauration effectu&eacute;e</Reason_restore_done>
+<Reason_restore_failed>Echec de restauration</Reason_restore_failed>
+<startTime>Heure de d&eacute;marrage</startTime>
+<Status_backup_in_progress>Sauvegarde en cours</Status_backup_in_progress>
+<Status_backup_starting>Sauvegarde d&eacute;marr&eacute;e</Status_backup_starting>
+<Status_idle>Etat inactif</Status_idle>
+<Status_link_pending>Lien en attente</Status_link_pending>
+<Status_link_running>lien en cours</Status_link_running>
+<Status_restore_in_progress>Restauration en cours</Status_restore_in_progress>
+<Status_restore_starting>D&eacute;marrage de la restauration</Status_restore_starting>
+<TopDir>R&eacute;pertoire de stockage des sauvegardes</TopDir>
+<TopDir_text>O&ugrave; sont conserv&eacute;es les sauvegardes ?</TopDir_text>

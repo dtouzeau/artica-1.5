@@ -1,0 +1,7 @@
+<ERROR_NOTIFICATION_NOT_ENABLED>Warning, Artica notification is not enabled. This feature only working if you have enabled Artica SMTP notifications</ERROR_NOTIFICATION_NOT_ENABLED>
+<PFLOGSUMM_ADD_RECIPIENT>Add a new recipient</PFLOGSUMM_ADD_RECIPIENT>
+<PFLOGSUMM_GIVE_EMAIL_ADDRESS>Give the external eMail address</PFLOGSUMM_GIVE_EMAIL_ADDRESS>
+<PFLOGSUMM_SEND_REPORT_EACH>Send report by eMail each day at</PFLOGSUMM_SEND_REPORT_EACH>
+<send_report_now>Send the report now</send_report_now>
+<send_report_now_text>The report will be executed in background mode, please check your mailbox</send_report_now_text>
+<use_send_mail>Use internal SMTP engine</use_send_mail>

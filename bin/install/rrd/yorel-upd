@@ -1,0 +1,344 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+BEGIN {
+  our $DEBUG = $ARGV[0] || 0;
+  $DEBUG && require Time::HiRes && ( our $starttime = [Time::HiRes::gettimeofday()] );
+  unshift @INC, $1 if $0 =~ /(.*)[\/]/;
+}
+
+use RRDp;
+use Linux::net::dev;
+use Net::HTTP;
+
+# these vars are now 'imported' from the BEGIN statement
+our $DEBUG;
+our $starttime;
+
+ RRDp::start "/usr/bin/rrdtool";
+my $rdir='/opt/artica/var/rrd/yorel';
+                     # (and some aditional data files)
+my $gdir='/opt/artica/share/www/system/rrd';
+
+
+                  #####################
+                  ## Update the RRDs ##
+                  #####################
+
+$DEBUG && print "Updating RRDs\n";
+
+my %rrds;
+
+# CPU-info
+{
+  my @cpuinfo;
+  my $n = 2; # two CPU's currently recongised by linux, important in calculating CPU usage
+  open(my $CPU, "/proc/stat") or die "Can't open /proc/stat: $!\n";
+  $_ && chomp && /^cpu\s/ && (@cpuinfo = split(/\s+/))
+    while(<$CPU>);
+  close($CPU);
+  %rrds = ( %rrds,
+    cpu_user     => int $cpuinfo[1]/$n,
+    cpu_nice     => int $cpuinfo[2]/$n,
+    cpu_system   => int $cpuinfo[3]/$n,
+    cpu_idle     => int $cpuinfo[4]/$n,
+    cpu_iowait   => int $cpuinfo[5]/$n,
+    cpu_hirq     => int $cpuinfo[6]/$n,
+    cpu_sirq     => int $cpuinfo[7]/$n,
+  );
+}
+
+# mem/swap-info
+{
+  my @mem; my @swap;
+  open(my $MEM, "/usr/bin/free -bo |") or die "Can't exec 'free': $!\n";
+  while(<$MEM>) {
+    next if !$_;
+    chomp;
+    @mem = split(/\s+/) if /^Mem/i;
+  } close($MEM);
+  %rrds = ( %rrds,
+    mem_user     => $mem[2]-$mem[5]-$mem[6],
+    mem_free     => $mem[3],
+    mem_buffers  => $mem[5],
+    mem_cached   => $mem[6],
+  );
+}
+  
+# Load Average$gdir/$graph[0]-$time[0].png
+{
+  my @loadavg = (split(/\s+/, `cat /proc/loadavg`))[0..2];
+  $rrds{loadavg_1}  = $loadavg[0];
+  $rrds{loadavg_5}  = $loadavg[1];
+  $rrds{loadavg_15} = $loadavg[2];
+}
+
+# Network
+{
+  my $net = Linux::net::dev::info();
+  $rrds{eth0_in}  = $net->{eth0}{rbytes};
+  $rrds{eth0_out} = $net->{eth0}{tbytes};
+}
+
+# HDD read/write
+{
+  if(-e '/proc/diskstats'){
+  open(my $DSK, '/proc/diskstats') or die "Unable to open /proc/diskstats: $!";
+  while(<$DSK>) {
+    !$_&&next;chomp;
+    s/^\s+//;
+    my @stats = split /\s+/;
+    if($stats[2] eq 'sda') {
+      $rrds{io_sda_r} = $stats[5]*512;
+      $rrds{io_sda_w} = $stats[9]*512;
+    }
+  }
+  close($DSK);
+  }
+  
+}
+
+# HDD usage
+
+
+# number of processes
+{
+  my @S = split(/\r?\n/, `/bin/ps aux`);
+  shift @S;
+  %rrds = ( %rrds,
+    proc_system => 0,
+    proc_httpd => 0,
+    proc_pgsql => 0,
+    proc_other => -3, # Don't include the 3 processes that are running
+    proc_total => -3, # while we are calculating this (ps, bash, perl)
+  );
+  foreach (@S) {
+    my @L = split(/\s+/, $_, 11);
+    $rrds{proc_total}++;
+    my $t = $L[10] =~ /^(\[[a-z0-9\/-_]+\]|init.*)$/                ? 'system' :
+    $L[10] =~ m|^postfix/i || $L[10] =~ m|postfix| ? 'pgsql' :
+    $L[10] =~ m|\/artica-postfix|                                   ? 'httpd' : 'other';  
+    $rrds{"proc_".$t}++;
+  }
+}
+
+## HTTP requests/second
+{
+  $rrds{httpreq} = 0;
+  if(my $req = Net::HTTP->new(Host => "localhost")) {
+    $req->write_request(GET => "/server-status/?auto");
+    my $data;
+    $req->read_entity_body($data, 1024) if $req->read_response_headers;
+    $rrds{httpreq} = $1 if $data =~ /Total\s*Accesses\:\s*([0-9]+)/i;
+  }
+}
+
+## and update the rrds
+{
+  foreach my $rrd (sort keys %rrds) {
+    RRDp::cmd qq| update $rdir/$rrd.rrd N:$rrds{$rrd} |;
+    my $r = RRDp::read;
+    $$r||='';
+    $DEBUG && print " Updated $rrd.rrd with $rrds{$rrd}: $$r\n";
+  }
+}
+
+
+
+                 #######################
+                 ## Create the graphs ##
+                 #######################
+
+$DEBUG && print "\nCreating graphs...\n";
+
+
+my @times =  ( [ "1day", 300, 574, "HOUR:1:HOUR:6:HOUR:6:0:%H", "Hours ->", "past 2 days" ],
+               [ "2week", 1800, 670, "DAY:1:WEEK:1:DAY:1:86400:%a", "", "past 2 weeks" ],
+               [ "3month", 7200, 730, "DAY:1:WEEK:1:WEEK:1:604800:%W", "Weeks ->", "past 2 months" ],
+               [ "4year", 43200, 1458, "MONTH:1:YEAR:1:MONTH:2:2592000:%b", "", "past 2 years" ] );
+
+# date gives a better formatted date than using a 'scalar localtime'
+(my $date = `date`) =~ s/\:/\\\:/g;
+chomp $date;
+
+my @graphs = (
+ # CPU graph
+  [ '01cpu', 'CPU Usage', qq|
+      --vertical-label "Percent"
+      --rigid
+      --alt-y-grid
+      --units-exponent 0
+      --upper-limit 100
+      --lower-limit 0
+    |, '%05.2lf %%',
+    [ 
+     [ 'cpu_user',   'AREA::#000066:"User   "' ],
+     [ 'cpu_nice',   'AREA::#000088:"Nice   ":STACK' ],
+     [ 'cpu_system', 'AREA::#0000AA:"System ":STACK' ],
+     [ 'cpu_iowait', 'AREA::#0000DD:"IO Wait":STACK' ],
+     [ 'cpu_hirq',   'AREA::#5555FF:"Hw IRQ ":STACK' ],
+     [ 'cpu_sirq',   'AREA::#9999FF:"Sw IRQ ":STACK' ],
+     [ 'cpu_idle',   'AREA::#DDDDFF:"Idle   ":STACK' ]
+    ]
+  ],
+ # Load average
+  [ '02loadavg', 'Load average', qq|
+      --vertical-label "Load average"
+      --units-exponent -3
+      --alt-autoscale-max
+    |, '%05.2lf',
+    [
+     [ 'loadavg_1',  'AREA::#eacc00:"1 Min avg "' ],
+     [ 'loadavg_5',  'AREA::#ea8f00:"5 Min avg ":STACK' ],
+     [ 'loadavg_15', 'AREA::#ff0000:"15 Min avg":STACK' ]
+    ]
+  ],
+ # Memory graph
+  [ '03mem', 'Memory usage', qq|
+      --vertical-label "Bytes 'n stuff"
+      --y-grid 134217728:4
+      --base 1024
+      --rigid
+      --lower-limit 0
+      --upper-limit 1610612736
+      --units-exponent 6
+    |, '%7.2lf %sb',
+    [
+     [ 'mem_user',   'AREA::#008800:"User   "' ],
+     [ 'mem_cached', 'AREA::#00BB00:"Cached ":STACK' ],
+     [ 'mem_buffers','AREA::#00DD00:"Buffers":STACK' ],
+     [ 'mem_free',   'AREA::#99FF99:"Free   ":STACK' ],
+    ],
+  ],
+ # Disk I/O stats
+  [ '04hddio', 'Hard disk I/O', qq|
+      --vertical-label "Bytes/second"
+      --alt-y-grid
+      --base 1024
+    |, '%6.2lf %sB/s',
+    [
+     [ 'io_sda_r', 'LINE1::#FF0000:"sda read "' ],
+     [ 'io_sda_w', 'LINE1::#0000FF:"sda write"' ]
+    ]
+  ],
+ # HDD usage
+  [ '05hdd', 'Hard disk usage', qq|
+      --vertical-label "Bytes"
+      --base 1024
+      --alt-y-grid
+      --lower-limit 0
+    |, '%7.2lf %sB',
+    [
+     [ 'hdd_www',     'AREA::#b5b600:"/usr/share    "' ],
+     [ 'hdd_pgsql',   'AREA::#dcc900:"Postfix queue":STACK' ],
+     [ 'hdd_wwwlogs', 'AREA::#feed41:"logs    ":STACK' ],
+     [ 'hdd_other',   'AREA::#fef488:"System/other ":STACK' ],
+     [ 'hdd_total',  'LINE1::#000000:"Total        "' ],
+    ]
+  ],
+ # Server processes
+  [ '06proc', 'Number of processes', qq|
+      --vertical-label "# of processes"
+      --alt-y-grid
+      --lower-limit 0
+      --units-exponent 0
+    |, '%3.0lf', 
+    [
+     [ 'proc_system',  'AREA::#a60000:"System/kernel"' ],
+     [ 'proc_httpd',   'AREA::#ff0000:"Artica       ":STACK' ],
+     [ 'proc_pgsql',   'AREA::#ff4848:"Postfix	    ":STACK' ],
+     [ 'proc_other',   'AREA::#ff7b7b:"Other        ":STACK' ],
+     [ 'proc_total',  'LINE1::#000000:"Total        "' ],
+    ]
+  ],
+ # Network
+  [ '10net-eth0', 'Network usage', qq|
+      --vertical-label "Bytes/second"
+      --alt-y-grid
+      --alt-autoscale-max
+      --lower-limit 0
+    |, '%6.2lf %sb',
+    [
+     [ 'eth0_in',  'LINE1::#FF0000:"In "' ],
+     [ 'eth0_out', 'LINE1::#0000FF:"Out"' ]
+    ]
+  ],
+ # HTTP requests/second
+  [ '20httpreq', 'Apache requests/second', qq|
+      --vertical-label "Requests/second"
+      --alt-y-grid
+      --alt-autoscale-max
+      --lower-limit 0
+    |, '%5.2lf',
+    [
+     [ 'httpreq', 'LINE1::#FF0000:"Requests/second"' ],
+    ]
+  ]
+);
+
+foreach my $graph (@graphs) {
+  my @graph = @$graph;
+
+  my $defs = '';
+  my $dat = '';
+  foreach (@{$graph[4]}) {
+    my @g = @$_;
+    $defs .= "      DEF:$g[0]=$rdir/$g[0].rrd:$g[0]:AVERAGE\n"
+      if -s "$rdir/$g[0].rrd";
+    $g[1] =~ s/\:\:#/\:$g[0]#/;
+    $dat .= qq|
+      $g[1]
+       GPRINT:$g[0]:LAST:" Current\\: $graph[3]  "
+       GPRINT:$g[0]:AVERAGE:"Avg\\: $graph[3]  "
+       GPRINT:$g[0]:MIN:"Min\\: $graph[3]  "
+       GPRINT:$g[0]:MAX:"Max\\: $graph[3]  \\n"
+    |;
+  }
+
+  foreach my $time (@times) {
+    my @time = @$time;
+		print("$gdir/$graph[0]-$time[0].png\n");
+if(-e "$gdir/$graph[0]-$time[0].png"){
+    if((stat("$gdir/$graph[0]-$time[0].png"))[9] > (time - $time[1] + 60)) {
+      $DEBUG && print " Skipping $graph[0]-$time[0]\n";
+      next;
+    }}
+
+    my $end = int(time/$time[1])*$time[1];
+    my $start = $end-(1*$time[1]*$time[2]);
+
+    my $cmd = qq| graph $gdir/$graph[0]-$time[0].png
+      --imgformat PNG
+      --height 200
+      --width 540
+      --font DEFAULT:8:/$rdir/andalemono
+      --color BACK#ffffff
+      --color SHADEA#ffffff
+      --color SHADEB#ffffff
+      --end $end
+      --start $start
+      --step $time[1]
+      --title "//$graph[1] - $time[5]"
+      --x-grid $time[3]
+      $graph[2]
+$defs
+      COMMENT:"$time[4]   \\r"
+      $dat
+      COMMENT:"\\r"
+      COMMENT:"Last Updated\\: $date \\r"
+    |;
+#    print $cmd;
+    RRDp::cmd $cmd;
+    my $r = RRDp::read;
+    $$r||=''; chomp $$r;
+    $DEBUG && print " $graph[0]-$time[0]: $$r\n";
+  }
+}
+
+
+$DEBUG && print "\nScript executed in " . Time::HiRes::tv_interval($starttime) . " sec.\n";
+
+
+

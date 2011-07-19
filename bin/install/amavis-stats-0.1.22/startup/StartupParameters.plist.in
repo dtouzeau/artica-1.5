@@ -1,0 +1,9 @@
+{
+  Description     = "@PKGNAME@";
+  Provides        = ("@PKGNAME@");
+  Messages =
+  {
+    start = "Starting @PKGNAME@";
+    stop  = "Stopping @PKGNAME@";
+  };
+}

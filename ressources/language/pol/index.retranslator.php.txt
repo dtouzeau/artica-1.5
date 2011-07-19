@@ -1,0 +1,62 @@
+<available_components>Available components saved</available_components>
+<available_products_to_be_updated>Available products to add & update</available_products_to_be_updated>
+<components>Components</components>
+<http_engine>HTTP service</http_engine>
+<proxy_settings>Proxy settings</proxy_settings>
+<RetranslatorCronMinutes>Get Kaspersky Pattern databases each</RetranslatorCronMinutes>
+<RetranslatorEnabled>Enable get Kaspersky Pattern databases</RetranslatorEnabled>
+<RetranslatorHttpdEnabled>Enable HTTP service</RetranslatorHttpdEnabled>
+<RetranslatorHttpdPort>HTTP service listen port</RetranslatorHttpdPort>
+<RetranslatorProxyAddress>Specifies a proxy to be used for downloads</RetranslatorProxyAddress>
+<RetranslatorRegionSettings>Preferred servers list region</RetranslatorRegionSettings>
+<RetranslatorReportLevel>Defines how detailed the report entries should be</RetranslatorReportLevel>
+<RetranslatorReportLevel_text>
+Detail levels are:[br]
+[ul][br]
+[li][b]0[/b]- Report only fatal errors. Only the errors, which result in program[br]
+   termination, or failure to start, are reported; for example, if a[br]
+   component failed to load a license file. Fatal errors have the 'F'[br]
+   mark in the log file.[br][/li]
+[li][b]1[/b]- Report all errors. Reports not only fatal errors, but also any error,[br]
+   which affects program behavior, but not causing the component to[br]
+   terminate. Non-fatal errors have the 'E' mark in the log file.[br][/li]
+[li][b]2[/b]- Report all errors and warnings. Also reports important information,[br]
+   which affects the component productivity, or may affect component ability[br]
+   to work in future; for example, if the license is about to be expired.[br]
+   Warnings have the 'W' mark in the log file.[br][/li]
+[li][b]3[/b]- Report everything above, including the important information about the[br]
+   component life cycle. This includes information about the component startup[br]
+   and shutdown, the expiration date of the license, the last update date and so.[br]
+   Informational messages have the 'I' mark in the log file.[br][/li]
+[li][b]4[/b]- Report everything above, including the information about the current[br]
+   component activity.  Activity messages have the 'A' mark in the log file.[br]
+   Note that the total amount of activity information may be quite large.[br][/li]
+[li][b]9[/b]- Report everything above, including the debugging information. Please use[br]
+   this level if you are reporting bugs in the product. Do not forget to turn[br]
+   it off afterwords. Debug messages have 'D' mark in the log file.[/li]
+[/ul]
+</RetranslatorReportLevel_text>
+<RetranslatorUpdateServerUrl>Specific source</RetranslatorUpdateServerUrl>
+<RetranslatorUpdateServerUrl_text>
+Specifies a custom URL from where to download the updates.[br]
+[br]URL ca be:
+[ul]
+[li]http://location/ - to use HTTP protocol;[/li]
+[li]ftp://location/  - to use FTP protocol;[/li]
+[li]/local/path      - to use a local path.[/li]
+[/ul]
+</RetranslatorUpdateServerUrl_text>
+<RetranslatorUseProxy>Work only through the proxy</RetranslatorUseProxy>
+<RetranslatorUseUpdateServerUrl>Use a specific source</RetranslatorUseUpdateServerUrl>
+<RetranslatorUseUpdateServerUrlOnly>Use only this source</RetranslatorUseUpdateServerUrlOnly>
+<RetranslatorUseUpdateServerUrlOnly_text>If used, but the update fails, the updater continues by trying the servers in its default list.[br]
+If this setting is set to "yes" (the (value assumed if not otherwise specified),[br]
+keepup2date will not fall-back if is not usable, and stop trying other servers.
+</RetranslatorUseUpdateServerUrlOnly_text>
+<RetranslatorUseUpdateServerUrl_text>
+perform an update from the specified Url.[br] If that fails, then it uses the default list of servers
+</RetranslatorUseUpdateServerUrl_text>
+<retranslator_engine>Kaspersky Retranslator Engine</retranslator_engine>
+<sources_settings>Sources settings</sources_settings>
+<Update_sites_info>Update sites info</Update_sites_info>
+<Update_sites_info_title>Update sites info (URL and regions)</Update_sites_info_title>

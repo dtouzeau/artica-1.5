@@ -1,0 +1,2 @@
+<ERROR_NO_IMG>&lt;H1&gt;Lo sentimos actualmente no hay fotos mailgraph en la carpeta img, intente m&aacute;s tarde</ERROR_NO_IMG>
+<title>Estadisticas de Postfix</title>

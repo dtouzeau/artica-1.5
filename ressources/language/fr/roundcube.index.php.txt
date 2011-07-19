@@ -1,0 +1,48 @@
+<about_roundcube_engine>D&eacute;finissez ici les param&egrave;tres du moteur lighttpd qui servira pour la page Web du Webmail RoundCube</about_roundcube_engine>
+<additional_message_headers>Ajouter des en-t&ecirc;tes suppl&eacute;mentaires pour les messages sortants</additional_message_headers>
+<APP_ROUNDCUBE3_PLUGINS_EXPLAIN>La g&eacute;n&eacute;ration 3 de Roundcube Offre la gestion des extensions.[br]S&eacute;lectionnez votre extensions dans cette liste.</APP_ROUNDCUBE3_PLUGINS_EXPLAIN>
+<archive>D&eacute;placer les messages vers un dossier d'archive (s&eacute;lection par l'utilisateur)</archive>
+<artica_ldap_addr>Plugin Artica: Ajouter une connexion avec le carnet d'adresses personnel LDAP</artica_ldap_addr>
+<auto_create_user>Cr&eacute;ez automatiquement un nouvel utilisateur RoundCube lors de  l'&eacute;tablissement de la premi&egrave;re connexion</auto_create_user>
+<conf>Configuration du script</conf>
+<confirm_rebuild>Attention, vous choisissez de reconstruire des tables, toutes les donn&eacute;es seront effac&eacute;es...</confirm_rebuild>
+<database_attachments>database backed storage for temporary attachment file handling</database_attachments>
+<database_status>Statut des tables</database_status>
+<debug_level>Rapport d'erreurs syst&egrave;me</debug_level>
+<debug_logger>Enhanced logging for debugging purposes</debug_logger>
+<default_host>L'h&ocirc;te de courrier choisi pour ex&eacute;cuter l'&eacute;tablissement de la connexion</default_host>
+<emoticons>Replace emoticons in plain text message body with real icons</emoticons>
+<enable_caching>Activer le cache des messages et de donn&eacute;es de bo&icirc;tes aux lettres dans la base de donn&eacute;es locale</enable_caching>
+<example_addressbook>Exemple de carnet d'addresses</example_addressbook>
+<filesystem_attachments>C'est un plugin principal qui fournit des services basiques sur le syst&egrave;me de fichiers bas&eacute; essentiellement sur les pi&egrave;ces jointes.[br]Il inclut le stockage des pi&egrave;ces jointes des messages en cours de r&eacute;daction et sauvegard&eacute;s temporairement avant l'envoi.</filesystem_attachments>
+<flag_for_deletion>Signalez le message pour l'effacement (Non Supprim&eacute;s)</flag_for_deletion>
+<flag_for_deletion_text>Quand un dossier Corbeille n'est pas pr&eacute;sent, et un message est supprim&eacute;, marqu&eacute; le message pour la suppression plut&ocirc;t que de le supprimer imm&eacute;diatement.[br]Mettre ce param&egrave;tre &agrave;
+faux causes la suppression de messages  de fa&ccedil;on permanente si il n'y a pas de dossier Corbeille</flag_for_deletion_text>
+<https_port>Port d'&eacute;coute HTTPS</https_port>
+<http_authentication>Authentification HTTP de base</http_authentication>
+<lighttp_max_load_per_proc>Nombre maximum d'attente de processus par processus, en moyenne, avant qu'un nouveau processus soit engendr&eacute;</lighttp_max_load_per_proc>
+<lighttp_max_proc>Limite sup&eacute;rieure des processus pour d&eacute;marrer</lighttp_max_proc>
+<lighttp_min_proc>Param&eacute;trer les processus minimaux pour d&eacute;marrer</lighttp_min_proc>
+<locale_string>La configuration locale par d&eacute;faut</locale_string>
+<managesieve>filtres dans le style de Thunderbird</managesieve>
+<markasjunk>mark the selected message as Junk and move it to the Junk folder</markasjunk>
+<mysql>Configurations Mysql</mysql>
+<new_user_dialog>Present identities settings dialog to new users</new_user_dialog>
+<PHP_FCGI_CHILDREN>Le nombre de processus php-cgi</PHP_FCGI_CHILDREN>
+<PHP_FCGI_MAX_REQUESTS>Demandes maximales avant reprise de processus php-cgi</PHP_FCGI_MAX_REQUESTS>
+<product_name>Utilisez ce nom pour composer des titres de page</product_name>
+<rebuild>Reconstruire</rebuild>
+<rlogs>&Eacute;v&egrave;nements RoundCube</rlogs>
+<RoundCubeHTTPEngineEnabled>Activ&eacute; le site internet d&eacute;di&eacute;</RoundCubeHTTPEngineEnabled>
+<RoundCubePath>Chemin de base RoundCube</RoundCubePath>
+<roundcube_ldap_directory>Acc&egrave;s vers le carnet d'adresses Interne LDAP</roundcube_ldap_directory>
+<roundcube_mysql_sources>Chemin source des scripts Mysql</roundcube_mysql_sources>
+<roundcube_web_folder>Chemin du r&eacute;pertoire web</roundcube_web_folder>
+<show_additional_headers>Show additional message headers</show_additional_headers>
+<sieverules>filtres dans le style de Thunderbird (mode avanc&eacute;)</sieverules>
+<skip_deleted>Messages Supprim&eacute;s ne devant pas &ecirc;tre montr&eacute;s</skip_deleted>
+<squirrelmail_usercopy>Copy a new users identity and settings from a nearby Squirrelmail installation</squirrelmail_usercopy>
+<subscriptions_option>Activer ou d&eacute;sactiver l'utilisation des abonnements imap</subscriptions_option>
+<userinfo>Afficher les informations du compte</userinfo>
+<user_link>Lien du menu Artica vers Roundcube</user_link>
+<vcard_attachments>Detect VCard attachments and show a button to add them to address book</vcard_attachments>

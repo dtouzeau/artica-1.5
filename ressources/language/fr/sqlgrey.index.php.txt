@@ -1,0 +1,202 @@
+<about>SQLgrey postfix est un service de mise en %u0153uvre d'une politique de gestion de la liste grise. [Br]
+SQLgrey est &eacute;crit en Perl et utilise DBI pour acc&eacute;der &agrave; une base de donn&eacute;es SQL. [Br]
+Son objectif est de r&eacute;duire le SPAM  qui tente d'atteindre les bo&icirc;tes aux lettres des utilisateurs</about>
+<add_white_list>Ajouter une liste blanche de serveurs</add_white_list>
+<admin_mail>Adresse email de l'administrateur</admin_mail>
+<admin_mail_text>qui re&ccedil;oit les notifications d'urgence (DB est &eacute;teind par exemple) &agrave; vide: de ne pas envoyer de notifications par courrier &eacute;lectronique</admin_mail_text>
+<awl_age>Age auto de la liste blanche</awl_age>
+<awl_age_text>Fixer, en jours, la dur&eacute;e de vie maximale dans la liste blanche. [br]
+Pour les sites plus grands vous aurez besoin de plus courts &acirc;ges en liste blanche liste et d'un plus grand niveau de groupe de domaine</awl_age_text>
+<classc>liste grise par r&eacute;seau de classes C</classc>
+<connect_src_throttle>&Eacute;tranglement trop de nouvelles entr&eacute;es &agrave; partir du nouvel h&ocirc;te</connect_src_throttle>
+<connect_src_throttle_text>Configur&eacute;, ce param&egrave;tre optionnel refusera un trop grand nombre de nouvelles entr&eacute;es dans la table de connexion depuis un m&ecirc;me h&ocirc;te, de la mani&egrave;re suivante:
+[ul]
+[li]S'il existe d&eacute;j&agrave; des entr&eacute;es &quot;connect_src_throttle&quot; dans la table de connexion depuis le m&ecirc;me h&ocirc;te (e-mails qui n'ont pas encore &eacute;t&eacute; reconsid&eacute;r&eacute;s)[/li]
+[li] Et s'il N'Y A PAS d'entr&eacute;e pour cette h&ocirc;te dans l'AWL (Automatic Whitelist) du domaine[/li]
+[li]Et qu'il y a MOINS d'entr&eacute;es que &quot;connect_src_throttle&quot;  dans l'AWL de la table pour cet h&ocirc;te[/li]
+[li]ALORS les nouvelles connexions entrantes depuis cet h&ocirc;te seront (temporairement) rejet&eacute;es sans que de nouvelles entr&eacute;es soient cr&eacute;&eacute;es dans la table de connexion (jusqu'&agrave; ce que quelques entr&eacute;es d&eacute;j&agrave; en attente soient reconsid&eacute;r&eacute;es avec succ&egrave;s).[/li]
+[/ul]
+Cette fonctionnalit&eacute; peut emp&ecirc;cher la table de connexion de grandir d&eacute;mesur&eacute;ment et d'&ecirc;tre pollu&eacute;es par les spams, les virus, les machines zombies, etc.[br]
+Si la valeur est &quot;0&quot; (par d&eacute;faut), cette fonctionnalit&eacute; ne sera pas utilis&eacute;.[br]</connect_src_throttle_text>
+<discrimination>Liste grise de discrimination</discrimination>
+<discrimination_add_rulenr>la discrimination ajoute le nombre de r&egrave;gle</discrimination_add_rulenr>
+<discrimination_add_rulenr_text>Ajoutez le nombre de r&egrave;gle de discrimination dans les logs</discrimination_add_rulenr_text>
+<discrimination_text>Le comportements discriminatoires est activ&eacute; par la variable de configuration &laquo;discrimination&raquo; dans sqlgrey.conf
+[br]
+[H5]Defaut[/H5]
+
+Par d&eacute;faut la discrimination est r&eacute;gl&eacute; sur &quot;off&quot;.[br]
+SQLgrey appliquera le greylisting (avec le whitelisting par d&eacute;faut et le auto-whitelisting automatique d&eacute;crit dans le HOWTO) &agrave; chaque message.[br]
+Par d&eacute;faut 'ajouter la r&egrave;gle de discrimination num&eacute;ro' est 'off'.[br]
+Lorsqu'elle est activ&eacute;e, la r&eacute;ponse de la liste grise au client aura le num&eacute;ro de la r&egrave;gle ajout&eacute; &agrave; la fin du texte de rejet. (ex. 'Greylisted for 5 minutes (2)').[br]
+[H5] Discrimination [/ h5]
+La discrimination fond&eacute;e sur le greylisting n'est utile que si vous NE VOULEZ PAS greylist tout le monde.
+[br]Il peut y avoir plusieurs raisons &agrave; cela.[br]
+Par exemple, il peut &ecirc;tre utilis&eacute; comme transition douce pour commencer le greylisting, pour le rendre progressivement de plus en plus restrictives.[br]
+Ou il peut vous aider &agrave; convaincre la direction de vous permettre de cr&eacute;er des listes grises en expliquant que vous ne mettrez sur liste grise que &quot;tout ce qui est suspect&raquo; et donc, pas &agrave; vos propres clients.
+[br]
+
+[H5] Discrimination - Qu'est-ce que c'est? [/ H5]
+
+Il a &eacute;t&eacute; tr&egrave;s difficile de trouver un nom &agrave; cette fonctionnalit&eacute;  mais, discrimination d&eacute;crit assez bien ce qu'elle fait. Elle est discriminatoire;).
+
+Je la con&ccedil;oit comme &quot;le principe de l'a&eacute;roport&quot;.[br] Tout le monde peut rester dans l'avion SAUF SI on vous trouve suspect.
+Vous pourriez avoir des cheveux longs, porter un turban, avoir la peau fonc&eacute;e ou porte simplement un t-shirt disant &quot;explosif&quot; ou &quot;GNU rocks&quot;.
+[br] Alors, vous serez, par discrimination, retenu pour une analyse plus pouss&eacute;e. (je ne dis pas que c'est juste, c'est juste un tr&egrave;s bon exemple)
+[br]
+Le m&ecirc;me principe s'applique ici.
+[br]Tout le monde est sur la liste blanche, SAUF S'IL semble suspect.[br]
+Dans ce cas, il doit passer sur les listes grises. [br]
+Ce qui est suspect est d&eacute;fini dans le fichier discrimination.regexp.[br]
+En voici un qui d&eacute;finit les expressions r&eacute;guli&egrave;res qui seront utilis&eacute;es pour v&eacute;rifier diff&eacute;rents attributs .[br]
+[br][br]
+Exemple:[br]
+sender =~@microsoft.com$
+[br][br]
+Cette ligne d&eacute;finit simplement, que si l'adresse de l'exp&eacute;diteur se termine par microsoft.com, elle est suspecte, elle sera donc ajout&eacute;e &agrave; la liste grise.[br]
+[br][br]
+Un autre exemple: [br]
+sender !~ ^(god|allah|jesus)@heaven.com$[br]
+[br][br]
+Notez le !~ qui signifie &quot;tout ce qui NE correspond PAS, est suspect&quot;.[br]
+Dans cet exemple particulier, nous disons: &quot;Nous avons confiance en Dieu, Allah ou J&eacute;sus envoy&eacute; par heaven.com, mais TOUT AUTRE sera mis sur liste grise.&quot;[br]
+
+[br]
+[H5]D&eacute;tails des r&egrave;gle[/H5]
+Les r&egrave;gles dans /discrimination.regexp sont d&eacute;finies par le triplet suivant:
+[br]
+[br] Op&eacute;rateur de comparaison attribute-regex [br]
+[br] Les op&eacute;rateurs de comparaison valides sont: [br]
+[br] = ~ &eacute;gal &agrave;
+[br] ~ n'est pas &eacute;gal &agrave;
+[br]
+Les attributs valides sont ceux envoy&eacute;s par Postfix au le d&eacute;mon de politique, mais les mauvais expliquent les plus courants (et habituels) ici:
+[ul]
+[li]exp&eacute;diteur=l'adresse mail d'origine (de MAIL FROM:) [/li]
+[li]destinataire=l'adresse mail de destinatination (de RCPT TO:)[/li]
+[li]adresse_client = adresse IP du client [/li]
+[li]client_name=le nom dns-Inverse du client[/li]
+[li]helo_name=le texte entr&eacute; comme &quot;helo text&quot;[/li]
+[/ul]
+[br]
+Les expression r&eacute;guli&egrave;re valides sont simplement des expressions r&eacute;guli&egrave;res compatibles Perl.[br]
+(sans le &quot;/&quot; en d&eacute;but et fin).[br]
+[br]
+[H5]Directive de configuration: ajout de num&eacute;ro de r&egrave;gle de discrimination[/H5]
+
+permettre l'ajout du num&eacute;ro de r&egrave;gle de la r&egrave;gle qui a provoqu&eacute; le greylisting &agrave; la fin du texte de rejet, comme ceci:[br]
+[i]Greylisted for 5 minutes (2)[/i][br]
+Dans ce cas, 2 signifie: la seconde expression r&eacute;guli&egrave;re (valide) du fichier, a caus&eacute; le greylisting.[br]
+Cette caract&eacute;ristique permet au service d'assistance d'aider les clients &agrave; comprendre pourquoi, si leur courrier est sur liste grise.[br]
+
+[br]
+[H5]Conseils sur les r&egrave;gles[/H5]
+Il est difficile de d&eacute;finir ce qui &agrave; de la valeur d'un point de vue diff&eacute;rent, et ce n'est pas, en d&eacute;finitive, une solution 100%. [br]
+Si vous avez le courage et/ou la possibilit&eacute;, vous devriez y aller avec un greylisting normale.[br]
+Je regarde souvent nos maillog et, ce faisant, je commence &agrave; voir des tendances de ce &agrave; quoi ressemble un spam.
+[br]Il faut faire la m&ecirc;me chose pour savoir ce qui est bon pour les listes grises, mais certains conseils g&eacute;n&eacute;raux sont les suivants:[br]
+[ul]
+[li]dns-inverse absent[/li]
+[li]mails de microsoft, fbi, paypal, ebay et leurs semblables[/li]
+[li]exp&eacute;diteurs NULL.(adresse de l'exp&eacute;diteur vierge)[/li]
+[li]adresses mail avec les caract&egrave;res sp&eacute;ciaux (p.ex $ ou *) [/li]
+[/ul][br]
+La premi&egrave;re occupe beaucoup de corbeille. c'est ce que font les exp&eacute;diteurs NULL, mais sachez que les exp&eacute;diteurs NULL sont aussi l&eacute;galement  utilis&eacute;s dans les mails de rebond.[br]
+[br]
+
+[H5]Guide de performances[/H5]
+
+Il ne faut pas beaucoup pour ce faire, v&eacute;rifiez si vous conservez votre liste d'expressions dans des limites raisonnables.
+[br] En fait, cette fonctionnalit&eacute; doit permettre une &eacute;conomie de performance car elle diminue la charge SQL, en fonction de votre niveau de discrimination.[br]
+[br]
+Cette fonction est utilis&eacute;e dans un sc&eacute;nario r&eacute;el avec ~100.000 comptes v&eacute;rifi&eacute;s par 10 expressions r&eacute;guli&egrave;res.[br]
+Il n'y a pas de perte de performances mesurables.[br]</discrimination_text>
+<enable_sqlgrey>Activer le serveur de politique SQLGrey</enable_sqlgrey>
+<enable_sqlgrey_text>S'il est activ&eacute;, artica ajoutera le serveur de politique &agrave; sa configuration afin de forcer postfix &agrave; demander ce qu'il doit faire lors de la r&eacute;ception de mails</enable_sqlgrey_text>
+<fqdn_white_list>Liste blanche FQDN</fqdn_white_list>
+<fqdn_white_list_text>SQLgrey attend les expressions suivantes:[br][br]
+[b]hostname.domain.com[/b] nom complet du syst&egrave;me (moins consommateur de resources)[br]
+[b]*.domain.com[/b] met sur liste blanche tout FQDN dans le domaine &quot;domain.com&quot;[br]
+[b]/regexp/[/b] met sur liste blanche tout FQDN correspondant &agrave; regexp (de loin la plus consommatrice de ressources)[br]
+[br]
+[i] Notez que vous avez besoin des deux lignes suivantes pour autoriser les deux &lt;lots of mtas&gt;.example.com et example.com [b]*.example.com example.com[/b][/i]</fqdn_white_list_text>
+<full>liste grise par adresse IP</full>
+<greymethod>M&eacute;thode par liste grise</greymethod>
+<greymethod_text>[ul]
+[li]full : liste grise par adresses IP[/li]
+[li]classc : liste grise par r&eacute;seau de classe C. ex: la connexion de 2.3.4.6 est accept&eacute;e si 2.3.4.145 s'est connect&eacute; auparavant[/li]
+[li] smart : liste grise par r&eacute;seau de classe C, &agrave; moins qu'il n'y ait pas de recherche inverse ou qu'il ressemble &agrave; une adresse d'utilisateur local[/li]
+[/ul]</greymethod_text>
+<group_domain_level>Groupe de niveau du domaine</group_domain_level>
+<group_domain_level_text>Attente de la validation de l'adresses  X pour ajouter un domaine complet dans la liste blanche automatique</group_domain_level_text>
+<ip_white_list>Liste blanche IP</ip_white_list>
+<ip_white_list_text>Ajoutez ici seulement l'addresse IP du serveur qui sera exclue du processus SQLGrey</ip_white_list_text>
+<max_connect_age>temps max de connexion</max_connect_age>
+<max_connect_age_text>ne permet pas une reconnexion apr&egrave;s x heures</max_connect_age_text>
+<optmethod>Optin / OptOut</optmethod>
+<optmethod_text>Le comportement de SQLgrey d&eacute;pend de la variable de configuration 'optmethod' dans sqlgrey.conf
+Par d&eacute;faut, la fonction Optin/Optout est r&eacute;gl&eacute;e sur 'none'.[br]
+Sqlgrey appliquera le greylisting (avec le whitelisting et  l'auto-whitelisting par d&eacute;faut d&eacute;crit dans le HOWTO) &agrave; chaque message.
+[br]
+
+Si Optin/Optout est r&eacute;gl&eacute; soit sur 'optin' ou 'optout', SQLgrey v&eacute;rifiera quatre tables pour d&eacute;cider si le greylisting doit &ecirc;tre utilis&eacute;s. [Br]
+Ces quatre tables sont:
+[ul]
+[li]optin_domain[/li]
+[li]optin_email[/li]
+[li]optout_domain[/li]
+[li]optout_email[/li]
+[/ul]
+
+elles ont chacune une seule colonne avec soit un nom de domaine soit une adresse e-mail compl&egrave;te (stock&eacute;es en tant que VARCHAR(255)).
+[br]
+[br][i][b] le contenu de chacune de ces tables *DOIT* &ecirc;tre en *minuscules *.[br] SQLgrey utilise toujours des adresse en minuscules en interne et, pour des raisons de performance, ne demandera pas &agrave; la base de donn&eacute;es de v&eacute;rifier s'il y a des casses diff&eacute;rentes.[/b][/i]
+[br]
+Si 'optin' est utilis&eacute;, sqlgrey ne met sur liste grise que dans deux cas:
+[ul]
+[li]le domaine est dans optin_domain ET l'adresse n'est pas dans optout_email,[/li]
+[li]l'adresse est dans optin_email.[/li]
+[/ul]
+[br]
+Si 'optout' est utilis&eacute;, SQLgrey ne mettra pas sur liste grise dans deux cas:
+[ul]
+[li]le domaine est dans optout_domain ET l'adresse n'est pas dans optin_email,[/li]
+[li]l'adresse est dans optout_email.[/li]
+[/ul]
+[br]
+[b][i]
+SQLgrey ne v&eacute;rifie pas si le contenu des 4 tables est coh&eacute;rent.[br]
+Par exemple, vous devriez vous assurer qu'une adresse n'est pas en m&ecirc;me temps dans optin_email et optout_email ce qui n'a pas de sens (SQLgrey ne plantera pas, mais son
+comportements peut changer d'une version &agrave; l'autre).[/i]
+[/b]
+[br][br]
+[H5]Directives de performance[/H5]
+Pour une performance maximale, vous devez utiliser la m&eacute;thode qui utilise le moins les entr&eacute;es des tables.[br]
+Si presque touts vos utilisateurs doivent &ecirc;tre sur listes grises, vous aurez de meilleures performances avec 'optout'. Si tous doivent l'&ecirc;tre, sans exception utilisez 'none'.[br]
+
+Si le statut des utilisateurs varie d'un domaine &agrave; l'autre, appliquez &agrave; l'une des tables optin/out_domain l'action par d&eacute;faut (en fonction de optmethod) par domaine et ajoutez des exceptions dans les tables optin/out_email. Cela va diminuer le nombre d'entr&eacute;es dans la base de donn&eacute;es et aider la performance.
+[br]
+[br][H5]Longues adresses e-mail[/H5]
+
+Pour la portabilit&eacute;, les adresses sont limit&eacute;s &agrave; 255 caract&egrave;res. Si vous avez des utilisateurs avec des adresses de plus de 255 caract&egrave;res,
+vous allez devoir tronquer les adresses de la m&ecirc;me mani&egrave;re que SQLgrey: il suffit de prendre les 255 premiers caract&egrave;res de l'adresse sans le reste.[br]
+Si vous avez plusieurs utilisateurs avec les 255 premiers caract&egrave;res identiques, alors &ccedil;a ne fonctionnera pas correctement (&eacute;videmment, le dernier utilisateur modifi&eacute; fixera le
+comportement pour le groupe commen&ccedil;ant par les m&ecirc;mes caract&egrave;res).[br] Comme les adresses de cette taille sont assez rares, le risque de collisions est probablement seulement th&eacute;orique.</optmethod_text>
+<reconnect_delay>D&eacute;lais de reconnexion</reconnect_delay>
+<reconnect_delay_text>ne permet pas une reconnexion avant x minutes</reconnect_delay_text>
+<reject_early_reconnect>Rejeter la premi&egrave;re reconnexion</reject_early_reconnect>
+<reject_early_reconnect_text>La valeur par d&eacute;faut pour la reconnexion rapide est la valeur affect&eacute;e &agrave; &laquo;rejeter la tentative d'abord&raquo;</reject_early_reconnect_text>
+<reject_first_attempt>Rejeter la premi&egrave;re tentative</reject_first_attempt>
+<reject_first_attempt_text>SQLgrey peux dire &agrave; Postfix de:[br]
+[ul]
+[li]de rejeter imm&eacute;diatement un message avec un code de rejet temporaire[/li]
+[li]de ne le faire que si les r&egrave;gles suivantes permettent  au message de passer[br]
+[/ul][br]
+Le premier choix emp&ecirc;chera Postfix de perdre du temps &agrave; &eacute;valuer les r&egrave;gles potentiellement couteuses.[br]
+Dans certains cas, vous pourriez vouloir que les r&egrave;gles suivantes soient inform&eacute;es de cette connexion ci.[br]
+
+[br]On peut d&eacute;finir une strat&eacute;gie de rejet diff&eacute;rente pour la premi&egrave;re tentative de connexion, et pour les reconnections pr&eacute;coce.
+[br]'immed' choisit un 'd&eacute;lai' de rejet imm&eacute;diat. Choisir le rejet retard&eacute;</reject_first_attempt_text>
+<smart>Intelligent</smart>
+<whitelists_host>Liste blanche des h&ocirc;tes</whitelists_host>
+<whitelists_host_text>O&ugrave; obtenir les mises &agrave; jour de listes blanches</whitelists_host_text>

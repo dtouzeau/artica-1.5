@@ -1,0 +1,8 @@
+<autolearning>Auto-apprentissage</autolearning>
+<autolearning_text>Cette fonctionnalit&eacute; vous permet d'activer les robots qui analyse les bo&icirc;tes aux lettres afin de compl&eacute;ter la liste blanche et liste noire du domaine</autolearning_text>
+<enable_artica_wbl_robots_text>Si vous activez cette option, le manager de l'organisation sera autoris&eacute;s &agrave; cr&eacute;er des adresses e-mail qui sera charg&eacute; d'ajouter les adresses e-mail dans la liste blanche ou noire par la r&eacute;ception des messages provenant des utilisateurs</enable_artica_wbl_robots_text>
+<enable_learning_ham_mailbox>Activer l'apprentissage Liste Blanche par l'analyse du dossier Envoy&eacute;</enable_learning_ham_mailbox>
+<enable_learning_spam_mailbox>Activer l'apprentissage par l'analyse de SPAM du dossier courrier ind&eacute;sirable</enable_learning_spam_mailbox>
+<replicate_each>R&eacute;pliquer tous les param&egrave;tres</replicate_each>
+<replicate_now>Lancer la r&eacute;plication maintenant</replicate_now>
+<whitelist_explain>Cette rubrique consolide toute les listes blanches et les listes Noires utilis&eacute;es dans tous les modules ex&eacute;cut&eacute;s par Postfix, vous pouvez ajouter et supprimer des exp&eacute;diteurs pour ajouter un utilisateur de liste blanche/noire, vous devez mettre le destinataire de chaques utilisateurs. [Br] des Destinataires pourrait &ecirc;tre &quot;@domain.tlb&quot; &agrave; ajouter &agrave; la liste blanche/noire pour tout le domaine ou &quot;user@domain.tlb&quot; pour un utilisateur seul(simple).</whitelist_explain>

@@ -1,0 +1,4 @@
+<add_share>Ajouter un dossier</add_share>
+<enable_backup>Activation de la sauvegarde distante</enable_backup>
+<enable_backup_text>Si vous mettez cette fonctionnalit&eacute; &agrave; vert, la sauvegarde d'Artica va parcourir cet ordinateur pour sauvegarder le dossier distant que vous sp&eacute;cifiez dans cette section</enable_backup_text>
+<remote_smb_share>Partage distant windows (smb)</remote_smb_share>

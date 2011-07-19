@@ -1,0 +1,572 @@
+unit hooksyslog;
+
+{$MODE DELPHI}
+{$LONGSTRINGS ON}
+
+interface
+
+uses
+    Classes,SysUtils,variants,strutils,IniFiles, Process,logs,unix,RegExpr in 'RegExpr.pas',zsystem,mysql4;
+
+  type
+  thooksyslog=class
+
+
+private
+     LOGS:Tlogs;
+     SYS:TSystem;
+     artica_path:string;
+     qmysql : TMYSQL;
+     rowbuf : MYSQL_ROW;
+     recbuf : PMYSQL_RES;
+     alloc : PMYSQL;
+     database:string;
+     procedure StartListener();
+     procedure ParseLine(line:string);
+     mail:Tstringlist;
+     procedure AddMailID(mailid:string;time_connect:string);
+     procedure Addmsgid(mailid:string;msg_id:string;time_connect:string);
+     procedure AddMailFROM(mailid:string;mailfrom:string;size:string;time_connect:string);
+     procedure AddMailStatus(mailid:string;mailto:string;status:string;time_connect:string;bounce_error:string);
+     procedure AddSPAM(msgid:string;spam_result:string);
+     procedure AddFilterReject(mailid:string;reject:string;mailfrom:string;time_connect:string);
+     function ID_FROM_MAILID(mailid:string):integer;
+     function ID_FROM_msg_id(msgid:string):integer;
+     procedure FixAmavis();
+     procedure FixBadCyrusSeen(path:string);
+     EnableMysqlFeatures:integer;
+     procedure FixMilterGreyList();
+     procedure FixCyrusAccount();
+
+     debug:boolean;
+
+
+public
+    procedure   Free;
+    constructor Create;
+
+
+
+
+
+END;
+
+implementation
+
+constructor thooksyslog.Create;
+begin
+       forcedirectories('/etc/artica-postfix');
+       forcedirectories('/opt/artica/tmp');
+       LOGS:=tlogs.Create();
+       SYS:=Tsystem.Create;
+       debug:=false;
+       if paramstr(1)='--verbose' then debug:=true;
+       if not TryStrToInt(SYS.GET_INFO('EnableMysqlFeatures'),EnableMysqlFeatures) then EnableMysqlFeatures:=1;
+
+       if not DirectoryExists('/usr/share/artica-postfix') then begin
+              artica_path:=ParamStr(0);
+              artica_path:=ExtractFilePath(artica_path);
+              artica_path:=AnsiReplaceText(artica_path,'/bin/','');
+
+      end else begin
+          artica_path:='/usr/share/artica-postfix';
+      end;
+      database:='artica_events';
+
+
+      if paramStr(1)='mid' then begin
+         writeln(ID_FROM_MAILID(paramStr(2)));
+         halt(0);
+      end;
+
+
+      StartListener();
+      mail:=Tstringlist.Create;
+end;
+//##############################################################################
+procedure thooksyslog.free();
+begin
+    logs.Free;
+    SYS.Free;
+
+
+end;
+//##############################################################################
+procedure thooksyslog.StartListener();
+var
+ st: text;
+ s: string;
+begin
+
+ assign(st,'');
+ reset(st);
+ while not eof(st) do begin // <<<<<<<<--- iterate while not en of file
+   readln(st,s); //<<< read only a line
+   ParseLine(s);
+ end;
+ close(st); // <<<<<---
+end;
+//##############################################################################
+procedure thooksyslog.ParseLine(line:string);
+var
+   RegExpr:TRegExpr;
+   RegExpr2:TRegExpr;
+   month:string;
+   year:string;
+   day:string;
+   time:string;
+   sqltime:string;
+   bounce_error:string;
+begin
+
+
+    year:=FormatDateTime('yyyy', Now);
+    RegExpr:=TRegExpr.Create;
+    RegExpr2:=TRegExpr.Create;
+    RegExpr.Expression:='^([A-ZA-z]+)\s+([0-9]+)\s+([0-9\:]+).+?:\s+([A-Z0-9]+):\s+client=(.+)';
+    if RegExpr.Exec(line) then begin
+       month:=logs.TRANSFORM_DATE_MONTH(RegExpr.Match[1]);
+       day:=RegExpr.Match[2];
+       time:=RegExpr.Match[3];
+       sqltime:=year+'-'+month+'-'+day+' ' + time;
+       if debug then writeln('Begin a new mail '+ sqltime+ ' '+ RegExpr.Match[4]);
+       AddMailID(RegExpr.Match[4],sqltime);
+       exit;
+    end;
+
+    RegExpr.Expression:='^([A-ZA-z]+)\s+([0-9]+)\s+([0-9\:]+).+?:\s+([A-Z0-9]+):\s+message-id=<(.+?)>';
+    if RegExpr.Exec(line) then begin
+       month:=logs.TRANSFORM_DATE_MONTH(RegExpr.Match[1]);
+       day:=RegExpr.Match[2];
+       time:=RegExpr.Match[3];
+       sqltime:=year+'-'+month+'-'+day+' ' + time;
+       Addmsgid(RegExpr.Match[4],RegExpr.Match[5],sqltime);
+       exit;
+    end;
+
+    RegExpr.Expression:='^([A-ZA-z]+)\s+([0-9]+)\s+([0-9\:]+).+?:\s+([A-Z0-9]+):\s+from=<(.*?)>, size=([0-9]+)';
+    if RegExpr.Exec(line) then begin
+       month:=logs.TRANSFORM_DATE_MONTH(RegExpr.Match[1]);
+       day:=RegExpr.Match[2];
+       time:=RegExpr.Match[3];
+       sqltime:=year+'-'+month+'-'+day+' ' + time;
+       AddMailFROM(RegExpr.Match[4],RegExpr.Match[5],RegExpr.Match[6],sqltime);
+       exit;
+    end;
+
+    RegExpr.Expression:='^([A-ZA-z]+)\s+([0-9]+)\s+([0-9\:]+).+?:\s+([A-Z0-9]+):\s+milter-reject:.+?:(.+?)\s+from=<(.+?)>';
+    if RegExpr.Exec(line) then begin
+       month:=logs.TRANSFORM_DATE_MONTH(RegExpr.Match[1]);
+       day:=RegExpr.Match[2];
+       time:=RegExpr.Match[3];
+       sqltime:=year+'-'+month+'-'+day+' ' + time;
+       AddFilterReject(RegExpr.Match[4],RegExpr.Match[5],RegExpr.Match[6],sqltime);
+       exit;
+    end;
+
+
+    RegExpr.Expression:='^([A-ZA-z]+)\s+([0-9]+)\s+([0-9\:]+).+?:\s+([A-Z0-9]+):\s+to=<(.+?)>,\s+orig_to=<.+?>,\s+relay=(.+?),\s+delay=.+?,\s+delays=.+?,\s+dsn=.+?,\s+status=([a-zA-Z]+)';
+    if RegExpr.Exec(line) then begin
+
+       month:=logs.TRANSFORM_DATE_MONTH(RegExpr.Match[1]);
+       day:=RegExpr.Match[2];
+       time:=RegExpr.Match[3];
+       sqltime:=year+'-'+month+'-'+day+' ' + time;
+       RegExpr2.Expression:='\s+status=.+?\s+\((.+?)\)';
+       if RegExpr2.Exec(line) then  bounce_error:=RegExpr2.Match[1];
+       AddMailStatus(RegExpr.Match[4],RegExpr.Match[5],RegExpr.Match[7],sqltime,bounce_error);
+       exit;
+    end;
+
+    RegExpr.Expression:='^([A-ZA-z]+)\s+([0-9]+)\s+([0-9\:]+).+?:\s+([A-Z0-9]+):\s+to=<(.+?)>,\s+relay=(.+?),\s+delay=.+?,\s+delays=.+?,\s+dsn=.+?,\s+status=([a-zA-Z]+)';
+    if RegExpr.Exec(line) then begin
+
+       month:=logs.TRANSFORM_DATE_MONTH(RegExpr.Match[1]);
+       day:=RegExpr.Match[2];
+       time:=RegExpr.Match[3];
+       sqltime:=year+'-'+month+'-'+day+' ' + time;
+       RegExpr2.Expression:='\s+status=.+?\s+\((.+?)\)';
+       if RegExpr2.Exec(line) then  bounce_error:=RegExpr2.Match[1];
+       AddMailStatus(RegExpr.Match[4],RegExpr.Match[5],RegExpr.Match[7],sqltime,bounce_error);
+       exit;
+    end;
+
+
+    RegExpr.Expression:='.+?spamd:\s+result:\s+([A-Z\.]).+?,mid=<(.+?)>';
+    if RegExpr.Exec(line) then begin
+       AddSPAM(RegExpr.Match[2],RegExpr.Match[1]);
+       exit;
+    end;
+
+    RegExpr.Expression:='amavisd-milter.+?could not connect to amavisd socket.+?\.sock: No such file';
+    if RegExpr.Exec(line) then begin
+       FixAmavis();
+       exit;
+    end;
+
+    RegExpr.Expression:='DBERROR: skiplist recovery\s+(.+?)\.seen:\s+ADD\s+at.+?exists';
+    if RegExpr.Exec(line) then begin
+       FixBadCyrusSeen(RegExpr.Match[1]);
+    end;
+
+
+    RegExpr.Expression:='warning:\s+connect to Milter service.+?milter-greylist.+?No\s+such\s+file\s+or\s+directory';
+    if RegExpr.Exec(line) then begin
+         FixMilterGreyList();
+    end;
+
+
+    RegExpr.Expression:='warning:\s+connect to Milter service.+?milter-greylist.+?No\s+such\s+file\s+or\s+directory';
+    if RegExpr.Exec(line) then begin
+         FixMilterGreyList();
+    end;
+
+    RegExpr.Expression:='badlogin: localhost \[127\.0\.0\.1\] plaintext cyrus SASL\(-13\): authentication failure: checkpass failed';
+    if RegExpr.Exec(line) then begin
+         FixCyrusAccount();
+    end;
+
+    logs.Debuglogs('Not Filtered :'+line);
+
+
+    //RegExpr.Expression:='.+?spamd:\s+result:\s+([A-Z\.]).+?,mid=<(.+?)>#
+
+
+
+end;
+//##############################################################################
+procedure thooksyslog.FixBadCyrusSeen(path:string);
+begin
+   if SYS.PROCESS_EXIST(SYS.PIDOF('artica-backup')) then exit;
+   path:=path+'.seen';
+
+   if FileExists('/etc/artica-postfix/cyrus.error.time') then begin
+      if SYS.FILE_TIME_BETWEEN_MIN('/etc/artica-postfix/cyrus.error.time')<15 then begin
+         logs.Syslogs('Cyrus has reported failed, but time stamp block perform operations');
+         exit;
+      end;
+   end;
+
+   fpsystem('/etc/init.d/artica-postfix start daemon &');
+   logs.NOTIFICATION('Warning Corrupted mailbox detected','Cyrus claim that '+path+'is corrupted, Artica will delete this file to repair it','system');
+   SYS.THREAD_COMMAND_SET('/usr/share/artica-postfix/bin/artica-backup --repair-seen-file ' + path );
+
+   logs.DeleteFile('/etc/artica-postfix/cyrus.error.time');
+   logs.WriteToFile('#','/etc/artica-postfix/cyrus.error.time');
+
+
+end;
+//##############################################################################
+procedure thooksyslog.FixCyrusAccount();
+
+var checktime:string;
+begin
+   if length(SYS.PIDOF('artica-install'))>0 then exit;
+   checktime:='/etc/artica-postfix/cyrus-account.error.time';
+   if FileExists(checktime) then begin
+      if SYS.FILE_TIME_BETWEEN_MIN(checktime)<15 then begin
+         logs.Syslogs('cyrus has reported failed, but time stamp block perform operations');
+         exit;
+      end;
+   end;
+
+   fpsystem('/etc/init.d/artica-postfix start daemon &');
+   logs.NOTIFICATION('Warning Cyrus claim that saslauthd cannot retreive credentials informations','Artica will try to create a default cyrus account','system');
+   SYS.THREAD_COMMAND_SET(SYS.LOCATE_PHP5_BIN()+ ' /usr/share/artica-postfix/exec.check-cyrus-account.php cyrus');
+
+   logs.DeleteFile(checktime);
+   logs.WriteToFile('#',checktime);
+
+end;
+//##############################################################################
+
+procedure thooksyslog.FixAmavis();
+begin
+   if length(SYS.PIDOF('artica-install'))>0 then exit;
+
+   if FileExists('/etc/artica-postfix/amavisd.error.time') then begin
+      if SYS.FILE_TIME_BETWEEN_MIN('/etc/artica-postfix/amavisd.error.time')<15 then begin
+         logs.Syslogs('Amvisd has reported failed, but time stamp block perform operations');
+         exit;
+      end;
+   end;
+
+   fpsystem('/etc/init.d/artica-postfix start daemon &');
+   logs.NOTIFICATION('Warning Amavis socket is not available','Postfix claim that amavis socket is not available, Artica will restart amavis service','system');
+   SYS.THREAD_COMMAND_SET('/etc/init.d/artica-postfix restart amavis');
+
+   logs.DeleteFile('/etc/artica-postfix/amavisd.error.time');
+   logs.WriteToFile('#','/etc/artica-postfix/amavisd.error.time');
+
+end;
+//##############################################################################
+procedure thooksyslog.FixMilterGreyList();
+begin
+   if length(SYS.PIDOF('artica-install'))>0 then exit;
+   if FileExists('/etc/artica-postfix/milter-greylist.error.time') then begin
+      if SYS.FILE_TIME_BETWEEN_MIN('/etc/artica-postfix/milter-greylist.error.time')<15 then begin
+         logs.Syslogs('Milter-grey list has reported failed, but time stamp block perform operations');
+         exit;
+      end;
+   end;
+
+   fpsystem('/etc/init.d/artica-postfix start daemon &');
+   logs.NOTIFICATION('Warning milter-greylist socket is not available','Postfix claim that milter-greylist socket is not available, Artica will restart milter-greylist service','system');
+   SYS.THREAD_COMMAND_SET('/etc/init.d/artica-postfix restart mgreylist');
+
+
+   logs.DeleteFile('/etc/artica-postfix/milter-greylist.error.time');
+   logs.WriteToFile('#','/etc/artica-postfix/milter-greylist.error.time');
+end;
+//##############################################################################
+procedure thooksyslog.AddFilterReject(mailid:string;reject:string;mailfrom:string;time_connect:string);
+var
+sql:string;
+id:integer;
+RegExpr:TRegExpr;
+begin
+    id:=0;
+    id:=ID_FROM_MAILID(mailid);
+    if EnableMysqlFeatures=0 then begin
+       logs.Debuglogs('thooksyslog.AddFilterReject:: EnableMysqlFeatures=0' );
+       exit;
+    end;
+
+    mailfrom:=logs.GetAsSQLText(mailfrom);
+    if debug then writeln('new mailfrom:' + mailfrom + ' id='+intToStr(id));
+
+    RegExpr:=TRegExpr.Create;
+    RegExpr.Expression:='(.+?)\@(.+)';
+    RegExpr.Exec(mailfrom);
+
+
+
+    if id=0 then begin
+      if debug then writeln(mailid+ ': milter-reject: '+ 'No id!!');
+      AddMailID(mailid,time_connect);
+    end;
+
+    reject:=logs.GetAsSQLText(reject);
+    if debug then writeln(mailid+ ': milter-reject: '+ IntToStr(id));
+    sql:='UPDATE smtp_logs SET ';
+    sql:=sql + ' sender_user="'+RegExpr.Match[1]+'",';
+    sql:=sql + ' sender_domain="'+RegExpr.Match[2]+'",';
+    sql:=sql + ' filter_reject="'+reject+'" WHERE id='+intToStr(id);
+    logs.QUERY_SQL(pchar(sql),'artica_events');
+end;
+//##############################################################################
+procedure thooksyslog.AddSPAM(msgid:string;spam_result:string);
+var
+sql:string;
+id:integer;
+begin
+
+    if EnableMysqlFeatures=0 then begin
+       logs.Debuglogs('thooksyslog.AddSPAM:: EnableMysqlFeatures=0' );
+       exit;
+    end;
+
+    if length(msgid)=0 then exit;
+    id:=ID_FROM_msg_id(msgid);
+    if id=0 then exit;
+    if debug then writeln('AddSPAM():' + spam_result + '::'+msgid+' ('+IntToStr(id)+')');
+    if trim(spam_result)='Y' then begin
+    sql:='UPDATE smtp_logs SET SPAM="1" WHERE id="'+IntToStr(id)+'"';
+    logs.QUERY_SQL(pchar(sql),'artica_events');
+     if debug then writeln('AddSPAM():'+sql);
+    end;
+
+
+end;
+
+//##############################################################################
+procedure thooksyslog.AddMailID(mailid:string;time_connect:string);
+var
+sql:string;
+id:integer;
+RegExpr:TRegExpr;
+delivery_success:string;
+begin
+
+    if EnableMysqlFeatures=0 then begin
+       logs.Debuglogs('thooksyslog.AddMailID:: EnableMysqlFeatures=0' );
+       exit;
+    end;
+
+    id:=ID_FROM_MAILID(mailid);
+    if id>0 then begin
+       if debug then writeln(mailid + ' already set');
+       exit;
+    end;
+
+            if debug then writeln(sql);
+    sql:='INSERT INTO smtp_logs(delivery_id_text,time_connect) VALUES("'+mailid+'","'+time_connect+'");';
+    logs.QUERY_SQL(pchar(sql),'artica_events');
+
+
+end;
+
+//##############################################################################
+procedure thooksyslog.AddMailStatus(mailid:string;mailto:string;status:string;time_connect:string;bounce_error:string);
+var
+sql:string;
+id:integer;
+RegExpr:TRegExpr;
+delivery_success:string;
+begin
+
+    if EnableMysqlFeatures=0 then begin
+       logs.Debuglogs('thooksyslog.AddMailStatus:: EnableMysqlFeatures=0' );
+       exit;
+    end;
+
+    id:=ID_FROM_MAILID(mailid);
+    if id=0 then begin
+       AddMailID(mailid,time_connect);
+       id:=ID_FROM_MAILID(mailid);
+       if id=0 then exit;
+    end;
+    mailto:=logs.GetAsSQLText(mailto);
+    bounce_error:=logs.GetAsSQLText(bounce_error);
+    if debug then writeln('new mailto:' + mailto + ' id='+intToStr(id));
+
+    RegExpr:=TRegExpr.Create;
+    RegExpr.Expression:='(.+?)\@(.+)';
+    RegExpr.Exec(mailto);
+    delivery_success:='yes';
+    if status='bounced' then delivery_success:='no';
+    if status='deferred' then delivery_success:='no';
+
+    if debug then writeln(mailid+': status='+ status + '"'+ bounce_error+'"');
+    sql:='UPDATE smtp_logs SET time_sended="'+ time_connect+'" ,delivery_user="'+RegExpr.Match[1]+'",';
+    sql:=sql+' delivery_domain="'+RegExpr.Match[2]+'",';
+    sql:=sql+' delivery_success="'+delivery_success+'",';
+    sql:=sql+' bounce_error="'+bounce_error+'" WHERE id='+intToStr(id);
+    if debug then writeln(sql);
+    logs.QUERY_SQL(pchar(sql),'artica_events');
+
+
+
+end;
+
+//##############################################################################
+
+procedure thooksyslog.AddMailFROM(mailid:string;mailfrom:string;size:string;time_connect:string);
+var
+sql:string;
+id:integer;
+RegExpr:TRegExpr;
+begin
+
+     if EnableMysqlFeatures=0 then begin
+       logs.Debuglogs('thooksyslog.AddMailFROM:: EnableMysqlFeatures=0' );
+       exit;
+    end;
+
+    id:=ID_FROM_MAILID(mailid);
+    if id=0 then begin
+       AddMailID(mailid,time_connect);
+       id:=ID_FROM_MAILID(mailid);
+       if id=0 then exit;
+    end;
+    mailfrom:=logs.GetAsSQLText(mailfrom);
+    if debug then writeln('new mailfrom:' + mailfrom + ' id='+intToStr(id));
+
+    RegExpr:=TRegExpr.Create;
+    RegExpr.Expression:='(.+?)\@(.+)';
+    RegExpr.Exec(mailfrom);
+    sql:='UPDATE smtp_logs SET sender_user="'+RegExpr.Match[1]+'", sender_domain="'+RegExpr.Match[2]+'", bytes="'+size+'"  WHERE id='+intToStr(id);
+             if debug then writeln(sql);
+    logs.QUERY_SQL(pchar(sql),'artica_events');
+
+
+
+
+
+end;
+
+//##############################################################################
+
+procedure thooksyslog.Addmsgid(mailid:string;msg_id:string;time_connect:string);
+var
+sql:string;
+id:integer;
+begin
+
+     if EnableMysqlFeatures=0 then begin
+       logs.Debuglogs('thooksyslog.Addmsgid:: EnableMysqlFeatures=0' );
+       exit;
+    end;
+
+    if debug then writeln('new message-id:' + msg_id );
+    id:=ID_FROM_MAILID(mailid);
+    if id=0 then begin
+       AddMailID(mailid,time_connect);
+       id:=ID_FROM_MAILID(mailid);
+       if id=0 then exit;
+    end;
+    msg_id:=logs.GetAsSQLText(msg_id);
+    if debug then writeln('new message-id:' + msg_id + ' id='+intToStr(id));
+    sql:='UPDATE smtp_logs SET msg_id_text="'+msg_id+'" WHERE id='+intToStr(id);
+             if debug then writeln(sql);
+    logs.QUERY_SQL(pchar(sql),'artica_events');
+
+
+
+end;
+
+//##############################################################################
+
+
+function thooksyslog.ID_FROM_MAILID(mailid:string):integer;
+var sql:string;
+    l:Tstringlist;
+    id:integer;
+begin
+    result:=0;
+
+
+     if EnableMysqlFeatures=0 then begin
+       logs.Debuglogs('thooksyslog.ID_FROM_MAILID:: EnableMysqlFeatures=0' );
+       exit;
+    end;
+
+    sql:='SELECT id FROM smtp_logs WHERE delivery_id_text="'+mailid+'";';
+    l:=TstringList.Create;
+    if debug then writeln('ID_FROM_MAILID(): '+sql);
+    l:=logs.QUERY_SQL_PARSE_COLUMN(sql,database,0);
+    if l.Count=0 then exit(0);
+    TryStrToInt(l.Strings[0],result);
+
+end;
+//##############################################################################
+function thooksyslog.ID_FROM_msg_id(msgid:string):integer;
+var sql:string;
+    l:Tstringlist;
+    id:integer;
+begin
+
+     if EnableMysqlFeatures=0 then begin
+       logs.Debuglogs('thooksyslog.ID_FROM_msg_id:: EnableMysqlFeatures=0' );
+       exit;
+    end;
+
+    msgid:=logs.GetAsSQLText(msgid);
+    sql:='SELECT id FROM smtp_logs WHERE msg_id_text="'+msgid+'";';
+    l:=TstringList.Create;
+    if debug then writeln('ID_FROM_msg_id(): '+sql);
+    l:=logs.QUERY_SQL_PARSE_COLUMN(sql,database,0);
+    if l.Count=0 then exit;
+    TryStrToInt(l.Strings[0],result);
+
+end;
+//##############################################################################
+
+
+
+
+
+
+
+
+end.

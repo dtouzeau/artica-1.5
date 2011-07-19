@@ -1,0 +1,19 @@
+<add_bogo_spam>Utilizador Bogo SPAM</add_bogo_spam>
+<bogo_delete>Apagar correio</bogo_delete>
+<bogo_ham>usado para enviar boas mensagens</bogo_ham>
+<bogo_intro>O Bogofilter &eacute; um filtro de correio electr&oacute;nico que classifica as mensagens como spam ou ham (n&atilde;o spam) atrav&eacute;s de uma an&aacute;lise estat&iacute;stica do cabe&ccedil;alho da mensagem e do conte&uacute;do (corpo).[br]
+O programa &eacute; capaz de aprender com as classifica&ccedil;&otilde;es e correc&ccedil;&otilde;es do utilizador.[br]
+A t&eacute;cnica estat&iacute;stica &eacute; conhecida como a t&eacute;cnica de Bayesian e &eacute; utilizada para a classifica&ccedil;&atilde;o de spam.[br]
+O Bogofilter cria uma base de dados de palavras para cada utilizador.[br]
+Para classificar as mensagens como ham (n&atilde;o spam) ou spam, o bogofilter precisa de aprender com os utilizadores de e-mail[br]
+Neste caso, voc&ecirc; precisa de criar 2 utilizadores robots (robots user).[br][br]
+[ul][li]Um para estudar o SPAM que os utilizadores encontrarem[/ li][li]Um para o Ham (n&atilde;o spam) que o Bogofilter poder&aacute; detectar.[/ li][/ ul]</bogo_intro>
+<bogo_prepend>Prefixo do assunto</bogo_prepend>
+<bogo_quarantine>Correio de quarentena</bogo_quarantine>
+<bogo_robots>Adicionar Bogofilter robots</bogo_robots>
+<bogo_spam>Usado para enviar Spam</bogo_spam>
+<if_bogo_prepend>Se seleccionou o prefixo, prefixo do assunto com</if_bogo_prepend>
+<robot>Bogofilter robots</robot>
+<spam_action>Ac&ccedil;&atilde;o sobre a detec&ccedil;&atilde;o de spam</spam_action>
+<spam_action_text>Quando o Bogofilter detectar mensagens com pontua&ccedil;&atilde;o superior a</spam_action_text>
+<type>SPAM/HAM</type>

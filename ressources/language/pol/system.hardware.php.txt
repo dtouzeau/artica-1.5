@@ -1,0 +1,11 @@
+<changeClock>To Change the clock, set the time the time exactly as shown below</changeClock>
+<change_clock_tooltip>Je%u015Bli chcesz zmieni%u0107 zegar systemowy[br] Kliknij w ten Link..</change_clock_tooltip>
+<clocks>Zegary</clocks>
+<clocks_text>Your computer has two timepieces; a battery-backed one that is always running as the ``hardware'', ``BIOS'', or ``CMOS'' clock,
+and another that is maintained by the operating system currently running on your computer as the ``system'' clock.[br]
+The hardware clock is generally only used to set the system clock when your operating system boots,
+and then from that point until you reboot or turn off your system, the system clock is the one used to keep track of time.</clocks_text>
+<convert_clock_tooltip>Ustaw zegar sprz%u0119towy na podstawie zegara systemowego</convert_clock_tooltip>
+<hardware_clock>Zegar sprz%u0119towy</hardware_clock>
+<system_clock>Zegar systemowy</system_clock>
+<wrong_date>The date given didn't match the requested format</wrong_date>

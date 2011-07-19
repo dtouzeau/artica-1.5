@@ -1,0 +1,299 @@
+unit obm;
+
+{$MODE DELPHI}
+{$LONGSTRINGS ON}
+
+interface
+
+uses
+    Classes, SysUtils,variants,strutils,IniFiles, Process,md5,logs,unix,RegExpr in 'RegExpr.pas',zsystem,lighttpd;
+
+type LDAP=record
+      admin:string;
+      password:string;
+      suffix:string;
+      servername:string;
+      Port:string;
+  end;
+
+  type
+  tobm=class
+
+
+private
+     LOGS:Tlogs;
+     D:boolean;
+     GLOBAL_INI:TiniFIle;
+     SYS:TSystem;
+     artica_path:string;
+     procedure MYSQL_SETTING();
+
+public
+    procedure   Free;
+    constructor Create;
+    function    www_path():string;
+    function    OBM_PID():string;
+    function    VERSION():string;
+    procedure   SERVICE_START();
+    procedure   SERVICE_STOP();
+    FUNCTION    STATUS():string;
+    procedure   CheckPhpIni();
+
+END;
+
+implementation
+
+constructor tobm.Create;
+begin
+       forcedirectories('/etc/artica-postfix');
+       LOGS:=tlogs.Create();
+       SYS:=Tsystem.Create;
+       D:=LOGS.COMMANDLINE_PARAMETERS('debug');
+
+       if D then logs.Debuglogs('tobm.Create():: debug=true');
+       if not DirectoryExists('/usr/share/artica-postfix') then begin
+              artica_path:=ParamStr(0);
+              artica_path:=ExtractFilePath(artica_path);
+              artica_path:=AnsiReplaceText(artica_path,'/bin/','');
+
+      end else begin
+          artica_path:='/usr/share/artica-postfix';
+      end;
+end;
+//##############################################################################
+procedure tobm.free();
+begin
+    logs.Free;
+    SYS.Free;
+end;
+//##############################################################################
+function tobm.www_path():string;
+begin
+if FileExists('/usr/share/obm') then exit('/usr/share/obm');
+end;
+//##############################################################################
+
+function tobm.OBM_PID():string;
+var
+   pidpath:string;
+   pid:string;
+begin
+     pidpath:='/var/run/lighttpd/lighttpd-obm.pid';
+     pid:=SYS.GET_PID_FROM_PATH(pidpath);
+     result:=pid;
+end;
+//##############################################################################
+procedure tobm.SERVICE_STOP();
+var
+   conf_path:string;
+   lighttpd:Tlighttpd;
+   pid:string;
+begin
+  conf_path:='/etc/artica-postfix/lighttpd-obm.conf';
+
+     if not FileExists(conf_path) then begin
+          logs.Debuglogs('tobm.SERVICE_STOP():: Unable to stat /etc/artica-postfix/lighttpd-obm.conf');
+          exit;
+     end;
+
+     if Not DirectoryExists(www_path())then begin
+        logs.Debuglogs('tobm.SERVICE_STOP():: OBM is not installed');
+        exit;
+     end;
+     lighttpd:=Tlighttpd.Create;
+     if not FileExists(lighttpd.LIGHTTPD_BIN_PATH()) then begin
+        logs.Debuglogs('tobm.SERVICE_STOP():: lighttpd is not installed');
+        exit;
+     end;
+
+pid:=OBM_PID();
+     if not SYS.PROCESS_EXIST(pid) then begin
+        writeln('Stopping obm service.........: Already stopped');
+        exit;
+     end;
+
+     writeln('Stopping obm service.........: ' + pid + ' PID');
+     fpsystem('/bin/kill ' +pid);
+     exit;
+end;
+//##################################################################################
+
+procedure tobm.SERVICE_START();
+var
+   conf_path:string;
+   lighttpd:Tlighttpd;
+   pid:string;
+begin
+     conf_path:='/etc/artica-postfix/lighttpd-obm.conf';
+     if not FileExists(conf_path) then begin
+          logs.Debuglogs('tobm.SERVICE_STOP():: Unable to stat /etc/artica-postfix/lighttpd-obm.conf');
+          exit;
+     end;
+
+     if Not DirectoryExists(www_path())then begin
+        logs.Debuglogs('tobm.SERVICE_START():: obm is not installed');
+        exit;
+     end;
+     lighttpd:=Tlighttpd.Create;
+     if not FileExists(lighttpd.LIGHTTPD_BIN_PATH()) then begin
+        logs.Debuglogs('tobm.SERVICE_START():: lighttpd is not installed');
+        exit;
+     end;
+
+
+     if SYS.GET_INFO('OBMEnabled')<>'1'  then begin
+         logs.Debuglogs('Starting obm.................: obm is installed but "disabled"');
+         exit;
+     end;
+     
+
+     
+     pid:=OBM_PID();
+     if not SYS.PROCESS_EXIST(pid) then begin
+         MYSQL_SETTING();
+         CheckPhpIni();
+         logs.OutputCmd('/bin/chown -R www-data:www-data '+www_path());
+         logs.OutputCmd(lighttpd.LIGHTTPD_BIN_PATH() + ' -f ' + '/etc/artica-postfix/lighttpd-obm.conf');
+         pid:=OBM_PID();
+
+         if not SYS.PROCESS_EXIST(pid) then begin
+            logs.Debuglogs('Starting......: obm Failed to start obm http engine');
+            exit;
+          end  else begin
+           logs.Debuglogs('Starting......: obm Success starting lighttpd for OBM pid number ' + pid);
+           end;
+     end else begin
+         logs.Debuglogs('Starting......: obm lighttpd for OBM already started with PID ' + pid);
+         exit;
+     end;
+end;
+//##############################################################################
+function tobm.VERSION():string;
+var
+   RegExpr:TRegExpr;
+   x:string;
+   tmpstr:string;
+begin
+if not FileExists(www_path()) then exit;
+result:=trim(logs.ReadFromFile(www_path()+'/VERSION'));
+end;
+//##############################################################################
+FUNCTION tobm.STATUS():string;
+var
+   ini:TstringList;
+   pid:string;
+begin
+
+  if not FileExists(www_path()) then exit;
+  ini:=TstringList.Create;
+  pid:=OBM_PID();
+
+  ini.Add('[OBM_APACHE]');
+  if SYS.PROCESS_EXIST(pid) then ini.Add('running=1') else  ini.Add('running=0');
+  ini.Add('application_installed=1');
+  ini.Add('application_enabled=1');
+  ini.Add('master_pid='+ pid);
+  ini.Add('master_memory=' + IntToStr(SYS.PROCESS_MEMORY(pid)));
+  ini.Add('master_version=' +VERSION());
+  ini.Add('status='+SYS.PROCESS_STATUS(pid));
+  ini.Add('service_name=APP_OBM_APACHE');
+  ini.Add('service_cmd=obm');
+  result:=ini.Text;
+  ini.free;
+end;
+//##############################################################################
+procedure tobm.CheckPhpIni();
+var
+l:TstringList;
+i:Integer;
+s:TiniFile;
+include_path:string;
+RegExpr:TRegExpr;
+begin
+  l:=TstringList.Create;
+  l.Add('/etc/php5/cli/php.ini');
+  l.Add('/etc/php5/cgi/php.ini');
+  RegExpr:=TRegExpr.Create;
+  RegExpr.Expression:=www_path();
+  
+  for i:=0 to l.Count-1 do begin
+  if fileExists(l.Strings[i]) then begin
+      s:=TiniFile.Create(l.Strings[i]);
+           include_path:=s.ReadString('PHP','include_path','');
+           if not RegExpr.Exec(include_path) then begin
+               logs.Debuglogs('Starting......: obm patching ' +l.Strings[i]);
+               s.WriteString('PHP','include_path',www_path());
+               s.UpdateFile;
+           end else begin
+               logs.Debuglogs('Starting......: obm '+l.Strings[i] + ' already patched..');
+           end;
+  
+  end else begin
+  
+  end;
+  end;
+
+end;
+//##############################################################################
+
+
+procedure tobm.MYSQL_SETTING();
+var
+inif:TiniFile;
+l:TstringList;
+i:integer;
+begin
+inif:=TiniFile.Create(www_path()+'/conf/obm_conf.ini');
+inif.WriteString('global','host', SYS.MYSQL_INFOS('mysql_server'));
+inif.WriteString('global','dbtype', 'mysql');
+inif.WriteString('global','db', 'obm');
+inif.WriteString('global','user', SYS.MYSQL_INFOS('database_admin'));
+inif.WriteString('global','password', '"'+SYS.MYSQL_INFOS('database_password')+'"');
+inif.UpdateFile;
+inif.Free;
+
+
+if logs.TABLE_ROWNUM('UserObm','obm')>0 then begin
+    logs.Debuglogs('Starting......: obm database and tables seems installed...');
+    exit;
+end;
+
+if FileExists(www_path()+'/scripts/2.1/create_obmdb_2.1.mysql.sql') then begin
+   if logs.EXECUTE_SQL_FILE(www_path()+'/scripts/2.1/create_obmdb_2.1.mysql.sql','obm') then begin
+    logs.Debuglogs('Starting......: obm Success creating database and tables');
+   end else begin
+    logs.Debuglogs('Starting......: obm Failed !!! creating database and tables');
+    exit;
+   end;
+end else begin
+    logs.Debuglogs('Starting......: obm Failed !!! unable to stat '+www_path()+'/scripts/2.1/create_obmdb_2.1.mysql.sql');
+    exit;
+
+end;
+
+
+l:=TstringList.Create;
+l.Add('2.1/obmdb_prefs_values_2.1.sql');
+l.Add('2.1/data-fr/obmdb_nafcode_2.1.sql');
+l.Add('2.1/obmdb_test_values_2.1.sql');
+l.Add('2.1/obmdb_default_values_2.1.sql');
+
+for i:=0 to l.Count-1 do begin
+
+if FileExists(www_path()+'/scripts/'+l.Strings[i]) then begin
+   if logs.EXECUTE_SQL_FILE(www_path()+'/scripts/'+l.Strings[i],'obm') then begin
+   end else begin
+    logs.Debuglogs('Starting......: obm Failed !!! update database and tables');
+   end;
+end else begin
+    logs.Debuglogs('Starting......: obm Failed !!! unable to stat '+www_path()+'/scripts/'+l.Strings[i]);
+
+end;
+end;
+l.free;
+
+end;
+//#############################################################################
+
+
+end.

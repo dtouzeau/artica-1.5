@@ -1,0 +1,167 @@
+#!/usr/bin/perl -w
+##---------------------------------------------------------------------------##
+##  File:
+##	$Id: mha-decode,v 1.8 2003/07/20 03:24:38 ehood Exp $
+##  Author:
+##      Earl Hood       mhonarc@mhonarc.org
+##  Description:
+##      Program to decode MIME messages.
+##---------------------------------------------------------------------------##
+##    MHonArc -- Internet mail-to-HTML converter
+##    Copyright (C) 1998	Earl Hood, mhonarc@mhonarc.org
+##
+##    This program is free software; you can redistribute it and/or modify
+##    it under the terms of the GNU General Public License as published by
+##    the Free Software Foundation; either version 2 of the License, or
+##    (at your option) any later version.
+##
+##    This program is distributed in the hope that it will be useful,
+##    but WITHOUT ANY WARRANTY; without even the implied warranty of
+##    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##    GNU General Public License for more details.
+##
+##    You should have received a copy of the GNU General Public License
+##    along with this program; if not, write to the Free Software
+##    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+##    02111-1307, USA
+##---------------------------------------------------------------------------##
+
+package mha_decode;
+
+use Getopt::Long;
+
+##---------------------------------------------------------------------------##
+##				Main routine				     ##
+##---------------------------------------------------------------------------##
+
+MAIN: {
+    unshift(@INC, 'lib');	# Should I leave this line in?
+
+    ## Grab options from @ARGV unique to this program
+    my %opts = ( );
+    Getopt::Long::Configure('pass_through');
+    GetOptions(\%opts,
+      'dcd-digest'
+    );
+    my $digest_mode = $opts{'dcd-digest'} || 0;
+
+    ## Reset pass-through of options
+    Getopt::Long::Configure('no_pass_through');
+
+    ## Initialize MHonArc
+    require 'mhamain.pl' || die qq/ERROR: Unable to require "mhamain.pl"\n/;
+    unshift(@ARGV, '-noarchive', '-nolock');
+    mhonarc::initialize();
+    mhonarc::open_archive() || exit($mhonarc::CODE);
+
+    ## Set resources
+    %readmail::MIMEFilters = (
+	'application/*'	=> 'm2h_external::filter',
+	'audio/*'	=> 'm2h_external::filter',
+	'chemical/*'	=> 'm2h_external::filter',
+	'image/*'	=> 'm2h_external::filter',
+	'model/*'	=> 'm2h_external::filter',
+	'text/*'	=> 'm2h_external::filter',
+	'video/*'	=> 'm2h_external::filter',
+    );
+    %readmail::MIMEFiltersSrc = (
+	'application/*'	=> 'mhexternal.pl',
+	'audio/*'	=> 'mhexternal.pl',
+	'chemical/*'	=> 'mhexternal.pl',
+	'image/*'	=> 'mhexternal.pl',
+	'model/*'	=> 'mhexternal.pl',
+	'text/*'	=> 'mhexternal.pl',
+	'video/*'	=> 'mhexternal.pl',
+    );
+    %readmail::MIMEFiltersArgs = (
+	'm2h_external::filter'	=> 'usename',
+    );
+
+    if ($digest_mode) {
+      $readmail::MIMEFilters{'message/*'}    = 'm2h_external::filter';
+      $readmail::MIMEFiltersSrc{'message/*'} = 'mhexternal.pl';
+    }
+
+    mhonarc::process_input() || exit($mhonarc::CODE);
+    mhonarc::close_archive() || exit($mhonarc::CODE);
+    exit(0);
+}
+
+##---------------------------------------------------------------------------##
+1;
+
+__END__
+
+=head1 NAME
+
+mha-decode - Decode MIME messages
+
+=head1 SYNOPSIS
+
+S<B<mha-decode> [I<options>] I<mailfolder> ...>
+
+S<B<mha-decode> [I<options>] -single I<msg.822>>
+
+=head1 DESCRIPTION
+
+B<mha-decode> is a utility program that is part of the B<MHonArc>
+software package.  B<mha-decode> provides basic MIME decoding for
+mail messages.
+
+If given mail folders as input, all messages within in the mail
+folders will be decoded.  All message parts are written to files.  If a
+filename is specified for a message part, that filename will be used
+when writing the part to a file.  If no filename is specified in the
+message, a unique name will be used based upon the content-type of
+the message part.
+
+A single message can be decoded by using the C<-single> option.
+
+=head1 OPTIONS
+
+B<mha-decode> takes options available to B<mhonarc>, but only those
+options affect parsing of mail folders are applicable:
+C<-conlen>,
+C<-mhpattern>,
+C<-msgsep>,
+C<-noconlen>,
+C<-outdir>,
+C<-perlinc>,
+C<-rcfile>,
+C<-single>,
+C<-umask>.
+
+Also, B<mha-decode> supports the following additional options:
+
+=over
+
+=item C<-dcd-digest>
+
+Run in message digest mode.  When this option is specified, any
+embedded C<message/rfc822> and C<message/news> parts will be saved
+instead of recursively decoding any parts contained within.
+
+=back
+
+=head1 NOTES
+
+The documentation for B<MHonArc> is distributed in HTML format.
+Due to its size and organization, it is not suited for manpage
+format.  Consult your system administrator for where the documentation
+has been installed, or see L<"AVAILABILITY"> on where you can
+access the documentation on the web.
+
+=head1 AVAILABILITY
+
+E<lt>I<http://www.mhonarc.org/>E<gt>
+
+=head1 AUTHOR
+
+Earl Hood, mhonarc@mhonarc.org
+
+MHonArc comes with ABSOLUTELY NO WARRANTY and MHonArc may be copied only
+under the terms of the GNU General Public License, which may be found in
+the MHonArc distribution.
+
+=cut
+

@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <Compiler Value="/usr/bin/ppc386" Date="1207051037"/>
+  <Params Value=" -S2cgi -OG1 -gl -vewnhi -l -Fu. -o../../artica-thread-back artica_thread_back.pas"/>
+</CONFIG>

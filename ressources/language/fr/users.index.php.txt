@@ -1,0 +1,4 @@
+<mailboxsize>Taille de votre boite aux lettres</mailboxsize>
+<receivemails>Messages re&ccedil;us</receivemails>
+<welcome>bienvenue</welcome>
+<your_organization>Votre organisation</your_organization>

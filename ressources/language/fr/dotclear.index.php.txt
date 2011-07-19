@@ -1,0 +1,14 @@
+<about>Dotclear est un logiciel de publication Web open-source cr&eacute;&eacute; en 2002 par Olivier Meunier. [br] Le projet d'un homme d'abord, Dotclear a bient&ocirc;t r&eacute;uni une &eacute;quipe comprenant des personnalit&eacute;s diff&eacute;rentes avec des exp&eacute;riences diverses.[br]
+Le but du projet est de fournir un outil convivial permettant &agrave; quelqu'un de publier sur le Web, ind&eacute;pendamment de sa comp&eacute;tences techniques.</about>
+<blog_access>Votre acc&egrave;s au blog</blog_access>
+<blog_access_text>Acc&egrave;s au site internet de votre blog</blog_access_text>
+<blog_settings>Votre Administration de Blog</blog_settings>
+<blog_settings_text>G&eacute;rez votre site Web de Blogue par l'acc&egrave;s &agrave; l'interface centrale</blog_settings_text>
+<DotClearExternalAdminUri>URL externe vers l'interface d'Administration Dotclear</DotClearExternalAdminUri>
+<DotClearExternalWebUri>URL Externe vers le port d'acc&egrave;s</DotClearExternalWebUri>
+<DotClearHttpListenPort>Port d'&eacute;coute de votre service HTTP</DotClearHttpListenPort>
+<EnableDotClearHTTPService>Activer le service HTTP pour DotClear</EnableDotClearHTTPService>
+<rebuild_tables>Reconstruire les tables</rebuild_tables>
+<tables_error>Erreurs de Tables Mysql</tables_error>
+<tables_error_text>Il semble que quelques tables soit manquantes dans la base de donn&eacute;es[br]Cliquez sur le bouton pour les installer</tables_error_text>
+<user_dotclear_access>Acc&egrave;s &agrave; votre environnement DotClear</user_dotclear_access>

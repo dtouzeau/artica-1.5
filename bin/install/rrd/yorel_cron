@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# HDD usage is collected with the following command,
+#  which can only be run as root
+/bin/chmod 644 /opt/artica/var/rrd/yorel
+/usr/share/artica-postfix/bin/install/rrd/yorel-upd

@@ -1,0 +1,58 @@
+dn: ou=papa,dc=organizations,dc=my-domain,dc=com
+ou: papa
+objectClass: organizationalUnit
+objectClass: top
+objectClass: ArticaSettings
+structuralObjectClass: organizationalUnit
+entryUUID: da0d937e-0e4c-102e-8178-2b2509993ad1
+creatorsName: cn=Manager,dc=my-domain,dc=com
+createTimestamp: 20090726162644Z
+KASPERKYASDATASRULES: DEFAULT
+RBLSERVERSACTION: pass
+SURBLSERVERSACTION: pass
+BOGOFILTERACTION: 80;prepend;*** SPAM ***
+OUTRUSTMYUSERS: yes
+KASPERKYAVSCANNINGDATAS: DEFAULT
+ARTICAFAKEDMAILFROM: pass
+ARTICADENYNOMXRECORDS: pass
+ARTICAMAXDAYQUARANTINE: 3
+entryCSN: 20090728165006.514603Z#000000#000#000000
+modifiersName: cn=Manager,dc=my-domain,dc=com
+modifyTimestamp: 20090728165006Z
+
+dn: ou=groups,ou=papa,dc=organizations,dc=my-domain,dc=com
+objectClass: organizationalUnit
+objectClass: top
+ou: groups
+structuralObjectClass: organizationalUnit
+entryUUID: da0db548-0e4c-102e-8179-2b2509993ad1
+creatorsName: cn=Manager,dc=my-domain,dc=com
+createTimestamp: 20090726162644Z
+entryCSN: 20090726162644.232495Z#000000#000#000000
+modifiersName: cn=Manager,dc=my-domain,dc=com
+modifyTimestamp: 20090726162644Z
+
+dn: ou=users,ou=papa,dc=organizations,dc=my-domain,dc=com
+objectClass: organizationalUnit
+objectClass: top
+ou: users
+structuralObjectClass: organizationalUnit
+entryUUID: da13cf00-0e4c-102e-817a-2b2509993ad1
+creatorsName: cn=Manager,dc=my-domain,dc=com
+createTimestamp: 20090726162644Z
+entryCSN: 20090726162644.272473Z#000000#000#000000
+modifiersName: cn=Manager,dc=my-domain,dc=com
+modifyTimestamp: 20090726162644Z
+
+dn: ou=computers,ou=papa,dc=organizations,dc=my-domain,dc=com
+objectClass: organizationalUnit
+objectClass: top
+ou: computers
+structuralObjectClass: organizationalUnit
+entryUUID: da193206-0e4c-102e-817b-2b2509993ad1
+creatorsName: cn=Manager,dc=my-domain,dc=com
+createTimestamp: 20090726162644Z
+entryCSN: 20090726162644.307770Z#000000#000#000000
+modifiersName: cn=Manager,dc=my-domain,dc=com
+modifyTimestamp: 20090726162644Z
+

@@ -1,0 +1,2 @@
+<realtime_events>Emails re&ccedil;us en temps r&eacute;el</realtime_events>
+<reports>Rapport</reports>

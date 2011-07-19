@@ -1,0 +1,10 @@
+<artica_services>Artica Servicios b&aacute;sicos</artica_services>
+<mail_services>Servicios de buz&oacute;n de correo</mail_services>
+<postfix_services>Postfix servicios SMTP</postfix_services>
+<samba_services>Servicios de samba</samba_services>
+<services_status_text>Esta es una visi&oacute;n general de todas las aplicaciones en su sistema. [Br] nombre de la Aplicaci&oacute;n, memoria utilizada (VmRSS) del administrador de procesos y todos los sub-procesos utilizado por el administrador PID, la versi&oacute;n principal y el estado de ejecuci&oacute;n.</services_status_text>
+<squid_services>Servicios SQUID</squid_services>
+<start>Iniciar</start>
+<start_this_service>[H5]Para iniciar este servicio[/ h5]Haga clic en la imagen[br]luego servicio iniciara.</start_this_service>
+<stop>Parar</stop>
+<stop_this_service>[H5]Para Detener este servicio[/ h5]Haga clic en la imagen[br]luego el servicio se detendr&aacute;.</stop_this_service>

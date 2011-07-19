@@ -1,0 +1,31 @@
+<active>A fila &quot;ativa&quot;</active>
+<active_text>O gerente de fila &eacute; um agendador de tarefas, que trabalha para garantir a entrega r&aacute;pida e justa do correio para todos os destinos dentro dos limites de recursos designadas [br].
+ A fila ativa &eacute; um pouco semelhante a uma fila de do processo de execu&ccedil;&atilde;o de um sistema operacional. As mensagens na fila ativa est&aacute; pronto para ser enviado (execut&aacute;vel), mas n&atilde;o est&atilde;o necessariamente no processo de envio (em execu&ccedil;&atilde;o).</active_text>
+<body_message>Corpo da mensagem</body_message>
+<body_message_text>Mostrar c&oacute;digo fonte da mensagem</body_message_text>
+<create_time>Tempo de cria&ccedil;&atilde;o</create_time>
+<deferred>A fila &quot;adiada&quot;</deferred>
+<deferred_text>Quando todos os destinat&aacute;rios de entrega de uma mensagem s&atilde;o entregues, e para alguns a entrega  falhou por uma raz&atilde;o transit&oacute;ria (que pode se suceder mais tarde),
+ a mensagem &eacute; colocada na fila de &quot;adiada&quot;</deferred_text>
+<incoming>A fila &quot;chegando&quot;</incoming>
+<incoming_text>Todos os novos e-mails que entram na na fila do Postfix s&atilde;o escritos pelo servi&ccedil;o de limpeza na fila de &quot;entrada. [br]
+ Nova na fila arquivos s&atilde;o criados com a propriedade do usu&aacute;rio do postfix&quot;, com uma m&aacute;scara de bits de acesso (ou modo) de 0600. [br]
+ Uma vez que um arquivo na fila estiver pronto para continuar a processar o servi&ccedil;o de limpeza mudan&ccedil;as no modo de arquivo na fila para 0700 &eacute; notificado  o gerenciador de filas de chegada de novas mensagens. [br]
+ O gerenciador de fila ignora  arquivos incompletos, cujo modo s&atilde;o 0600, pois estas ainda est&atilde;o sendo escritos pelo gerenciador de limpeza.</incoming_text>
+<maildrop>A fila dos &quot;retirados&quot;</maildrop>
+<maildrop_text>Mensagens que foram enviadas atrav&eacute;s do comando sendmail do Postfix, mas ainda n&atilde;o chegou na fila principal do Postfix pelo servi&ccedil;o de coleta, um processo aguarda na fila dos &quot;retirados&quot;. [br]
+As mensagens podem ser adicionadas ao processamento na fila dos &quot;retirados&quot; mesmo quando o sistema do Postfix n&atilde;o est&aacute; funcionando. [br]
+Elas v&atilde;o come&ccedil;ar a ser processada, uma vez que o Postfix &eacute; iniciado.
+A fila dos 'retirados' &eacute; drenada pelo servi&ccedil;o de coleta de &uacute;nico que varre o diret&oacute;rio das filas periodicamente ou quando notificado da chegada nova mensagem pelo programa postdrop. [br]
+O programa postdrop &eacute; um auxiliar que permite que o programa sendmail sem privil&eacute;gios do Postfix para injetar mail para a fila dos  &quot;retirados%u201D e notificar o captador (8) de servi&ccedil;os da sua chegada. [br]
+Todo o correio que entra na filas principal do Postfix faz isso atrav&eacute;s do servi&ccedil;o de limpeza. [br] O servi&ccedil;o de limpeza &eacute; respons&aacute;vel por envelopar e reescrever o cabe&ccedil;alho, verificar o %u201Cheader%u201D da mensagem, checar seu conte&uacute;do, processamento autom&aacute;tico de destinat&aacute;rios BCC, processamento de conte&uacute;do milter &eacute; notificado uma inser&ccedil;&atilde;o de confian&ccedil;a da mensagem para a fila do Postfix de &quot;entrada%u201D.</maildrop_text>
+<message_arrival_time>Tempo de chegada de mensagens</message_arrival_time>
+<message_size>Tamanho da mensagem</message_size>
+<named_attribute>Atributo nomeado</named_attribute>
+<original_recipient>Destinat&aacute;rio original</original_recipient>
+<routing_info>Informa&ccedil;&atilde;o do roteamento do Postfix</routing_info>
+<routing_info_text>Exibir informa&ccedil;&otilde;es sobre os campos utilizados do postfix</routing_info_text>
+<sender_fullname>nome completo do remetente</sender_fullname>
+<show_mail>Ver mensagem</show_mail>
+<show_queue>Exibe a lista de e-mails armazenados</show_queue>
+<too_late_or_no_queue_files>Todas as mensagens se foram, voc&ecirc; clicou muito tarde na fun&ccedil;&atilde;o ... N&atilde;o h&aacute; mensagens armazenadas ...</too_late_or_no_queue_files>

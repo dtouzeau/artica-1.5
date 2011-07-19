@@ -1,0 +1,38 @@
+<active>The "active" queue</active>
+<active_text>
+The queue manager is a delivery agent scheduler; it works to ensure fast and fair delivery of mail to all destinations within designated resource limits.[br]
+The active queue is somewhat analogous to an operating system's process run queue. Messages in the active queue are ready to be sent (runnable), but are not necessarily in the process of being sent (running). 
+</active_text>
+<body_message>Body message</body_message>
+<body_message_text>Display message source</body_message_text>
+<create_time>Create time</create_time>
+<deferred>The "deferred" queue</deferred>
+<deferred_text>
+When all the deliverable recipients for a message are delivered, and for some recipients delivery failed for a transient reason (it might succeed later), 
+the message is placed in the deferred queue</deferred_text>
+<incoming>The "incoming" queue</incoming>
+<incoming_text>
+All new mail entering the Postfix queue is written by the cleanup service into the "incoming" queue.[br]
+New queue files are created owned by the "postfix" user with an access bitmask (or mode) of 0600.[br]
+Once a queue file is ready for further processing the cleanup service changes the queue file mode to 0700 and notifies the queue manager of new mail arrival.[br]
+The queue manager ignores incomplete queue files whose mode is 0600, as these are still being written by cleanup. 
+</incoming_text>
+<maildrop>The "maildrop" queue</maildrop>
+<maildrop_text>
+Messages that have been submitted via the Postfix sendmail command, but not yet brought into the main Postfix queue by the pickup service, await processing in the "maildrop" queue.[br]
+Messages can be added to the "maildrop" queue even when the Postfix system is not running.[br]
+They will begin to be processed once Postfix is started.
+The "maildrop" queue is drained by the single threaded pickup service scanning the queue directory periodically or when notified of new message arrival by the postdrop program.[br]
+The postdrop program is a setgid helper that allows the unprivileged Postfix sendmail program to inject mail into the "maildrop" queue and to notify the pickup(8) service of its arrival.[br]
+All mail that enters the main Postfix queue does so via the cleanup service.[br] The cleanup service is responsible for envelope and header rewriting, header and body regular expression checks, automatic bcc recipient processing, milter content processing, and reliable insertion of the message into the Postfix "incoming" queue. 
+</maildrop_text>
+<message_arrival_time>Message arrival time</message_arrival_time>
+<message_size>Message size</message_size>
+<named_attribute>Named attribute</named_attribute>
+<original_recipient>Original recipient</original_recipient>
+<routing_info>Postfix routing info</routing_info>
+<routing_info_text>Display information about postfix used fields</routing_info_text>
+<sender_fullname>sender full name</sender_fullname>
+<show_mail>View message</show_mail>
+<show_queue>Display the list of mails stored</show_queue>
+<too_late_or_no_queue_files>All messages are gone, you have clicked too late on the function... No messages stored...</too_late_or_no_queue_files>

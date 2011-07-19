@@ -1,0 +1,112 @@
+<html xmlns='http://www.w3.org/1999/xhtml'>
+<head>
+	<meta http-equiv='content-type' content='text/html; charset=ISO-8859-1' />
+	<title>{TEMPLATE_TITLE}</title>
+	<!-- default template  -->
+	<meta name='keywords' content=''>
+	<meta name='description' content="">
+	<link href='css/styles_main.css'    rel="styleSheet"  type='text/css' />
+	<link href='css/styles_header.css'  rel="styleSheet"  type='text/css' />
+	<link href='css/styles_middle.css'  rel="styleSheet"  type='text/css' />
+	<link href='css/styles_tables.css'  rel="styleSheet"  type='text/css' />
+	<link href="css/styles_rounded.css" rel="stylesheet"  type="text/css" />
+	<!--[if lt IE 7]>
+	<link rel='stylesheet' type='text/css' href='css/styles_ie.css' />
+	<![endif]-->
+	<!--[if IE 7]>
+	<link rel='stylesheet' type='text/css' href='css/styles_ie7.css' />
+	<![endif]-->
+	{TEMPLATE_HEAD}
+
+</head>
+<body class="yui-skin-sam">
+<center>
+<div style="width:900px;background-image:url(css/images/bg_header.gif);background-repeat:repeat-x;background-position:center top">
+<table style="width:900px;margin:0px;padding:0px;border:0px">
+	<tr>
+		<td valign="top">
+		<table style="width:100%;border:0px solid black;padding:0px;margin:-3px;margin-left:-5px">
+			<tr>
+				<td style='height:25px'>&nbsp;</td>
+			</tr>
+			<tr>
+			   <td style='height:35px;margin:0px;padding:0px;border:0px solid black;' valign="top" align="left">
+				<table style="width:100%;margin:0px;border:0px;margin-left:-4px;margin-top:-1px;">
+					<tr>
+		 				<td style="margin:0px;padding:0px;width:160px">
+							<img src='css/images/logo.gif' style="maring:0px;padding:0px">
+						</td>
+						<td style="margin:0px;padding:0px;" valign="middle">
+							<div style="margin-top:-7px;width:100%;padding-left:5px">{TEMPLATE_SEARCH} </div>
+						</td>
+						<td style="margin:0px;padding:0px;border:0px solid black" valign="middle" align='right' width=50%>
+							{TEMPLATE_HIGH_MENUS}
+						</td>
+					</tr>
+				</table>
+			  </td>
+			</tr>
+			<tr>
+			  <td style='height:25px'>
+				<div id='menus_2' style="width:110%"><ul>{TEMPLATE_TOP_MENUS}</ul></div id='menus_2'>
+			 </td>
+			</tr>
+		</table>
+		</td>
+		<td valign="top">
+			<div style="padding-top:20px">{RIGHT}</div>
+		</td>
+	</tr>
+<tr>
+<td valign="top" colspan=2 style="margin:0px;padding:0px;margin-left:-3px;">	
+<div id='middle' style="margin-left:-2px">
+	<div id='content'>
+		<table style='width:100%'>
+			<tr>
+				<td valign='top' style='padding:0px;margin:0px;width:160px'>
+					{TEMPLATE_LEFT_MENUS}
+				</td>
+				<td valign='top' style='padding-left:3px'>
+					<div id='template_users_menus'>{TEMPLATE_USER_MENUS_H}</div>
+					<div id='BodyContentTabs'></div>
+						<div id='BodyContent'>
+							<h1 id='template_title'>{TEMPLATE_TITLE}</h1>
+							<!-- content -->
+							{TEMPLATE_CONTENT}
+							<!-- content end -->
+						</div>
+
+				</td>
+				<td valign='top'>{TEMPLATE_RIGHT_MENUS}</td>
+			</tr>	
+	</table>	
+
+	<div class='clearleft'></div>
+	<div class='clearright'></div>
+	</div id='content'>
+</div id='middle'>
+
+<div id='footer'>
+
+<div id='nav_bottom'>
+<ul>
+{TEMPLATE_TOP_MENUS}
+</ul>
+</div id='nav_bottom'>
+
+<div id='copyright'>
+<p class='note'>Artica for postfix.</p>
+</div id='copyright'>
+
+</div id='footer'></div>
+</td>
+</tr>
+</table>
+</div>
+</center>
+{TEMPLATE_BODY_YAHOO} 
+</body>
+</html>
+
+
+

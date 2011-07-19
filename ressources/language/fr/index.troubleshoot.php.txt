@@ -1,0 +1,10 @@
+<export_artica_settings>Exporter les param&egrave;tres du serveur</export_artica_settings>
+<export_artica_settings_text>Exportez tous les param&egrave;tres et les donn&eacute;es importantes</export_artica_settings_text>
+<import_artica_settings>Restaurez les param&egrave;tres d'Artica</import_artica_settings>
+<import_artica_settings_text>Restaurez compl&egrave;tement depuis une op&eacute;ration d'exportation. Tr&egrave;s utilise afin de reconstruire un nouveau serveur..</import_artica_settings_text>
+<index_ldap_databases>Indexer la base de donn&eacute;es LDAP</index_ldap_databases>
+<index_ldap_databases_text>reconstruire les attributs et les index de votre base de donn&eacute;es LDAP</index_ldap_databases_text>
+<rebuild_ldap_databases>Reconstruire la base de donn&eacute;es LDAP</rebuild_ldap_databases>
+<rebuild_ldap_databases_text>Sauvegardez votre base de donn&eacute;es LDAP et reconstruisez en une nouvelle, les donn&eacute;es ne seront pas perdus</rebuild_ldap_databases_text>
+<restore_ldap_database>Restaurez &agrave; travers InstantLDAPBackup</restore_ldap_database>
+<restore_ldap_database_text>Votre base LDAP est sauvegard&eacute;e &agrave; chaque heure, vous pouvez la restaurer gr&acirc;ce &agrave; ce mode</restore_ldap_database_text>

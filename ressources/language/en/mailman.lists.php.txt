@@ -1,0 +1,44 @@
+<access_mailman_config>Access to Mailman site configuration</access_mailman_config>
+<add_mailman>Add a new list</add_mailman>
+<add_mailman_pdns>Add this list to local DNS</add_mailman_pdns>
+<add_mailman_prompt>Give the name of your new distribution list</add_mailman_prompt>
+<add_mailman_text>This operation add a new distribution lits in mailman</add_mailman_text>
+<adminweb_mailman>Mailing list parameters</adminweb_mailman>
+<building_robots>Building robots email list</building_robots>
+<confirm_delete_mailman>Confirm deletion of this distribution list ?</confirm_delete_mailman>
+<DEFAULT_URL_PATTERN>Default url pattern</DEFAULT_URL_PATTERN>
+<emailhost>list's email domain name</emailhost>
+<global_settings>Global settings</global_settings>
+<global_settings_text>Define parameters of all mailman lists</global_settings_text>
+<listname>Distribution list name</listname>
+<MailManListAdministrator_text>Give the email address of the administrator of this new list</MailManListAdministrator_text>
+<MailManListAdminPassword_text>Give the password of the administrator list</MailManListAdminPassword_text>
+<mailman_admin>This an alias of -owner that reaches the list owner and list moderators directly.</mailman_admin>
+<mailman_admin_not_exists>This email address didn't exists, no such user</mailman_admin_not_exists>
+<mailman_bounces>This address receives bounces from members whose addresses have become either temporarily or permanently inactive.[br]
+ The -bounces address is also a mail robot that processes bounces and automatically disables or removes members as configured 
+ in the bounce processing settings.[br]
+ Any bounce messages that are either unrecognized, or do not seem to contain member addresses, are forwarded to the list administrators.</mailman_bounces>
+<mailman_confirm>This address is another email robot, which processes confirmation messages for subscription and unsubscription requests.</mailman_confirm>
+<mailman_global_options>Global Mailman settings</mailman_global_options>
+<mailman_join>by sending a message to this address, a new member can request subscription to the list.[br]
+ Both the Subject: header and body of such a message are ignored.[br]
+Note that mylist-subscribe@example.com is an alias for the -join address.</mailman_join>
+<mailman_leave>by sending a message to this address, a member can request unsubscription from the list.[br]
+ As with the -join address, the Subject: header and body of the message is ignored.[br]
+ Note that mylist-unsubscribe@example.com is an alias for the -leave address.</mailman_leave>
+<mailman_lists>Mailman lists</mailman_lists>
+<mailman_owner>This address reaches the list owner and list moderators directly.[br]
+ This is the address you use if you need to contact the person or people in charge.</mailman_owner>
+<mailman_request>This address reaches a mail robot which processes email commands that can be used to set member subscription options, as well as process other commands.[br]</mailman_request>
+<mailman_subscribe>by sending a message to this address, a new member can request subscription to the list.</mailman_subscribe>
+<mailman_unsubscribe>by sending a message to this address, a member can request unsubscription from the list.</mailman_unsubscribe>
+<mailman_waiting_replication>This mailling list wait replication from the artica service</mailman_waiting_replication>
+<mailman_web_site>Mailman Web site</mailman_web_site>
+<mailman_web_site_text>Web Mailman administration console</mailman_web_site_text>
+<pdns_mailman_explain>This feature will add the Mailman front-end interface to the DNS managed by Artica.[br]
+If you use this server has your DNS, you will be able to browse the Mailman web interface after selecting the right IP address</pdns_mailman_explain>
+<PUBLIC_ARCHIVE_URL>Public Archive url</PUBLIC_ARCHIVE_URL>
+<subject_prefix>Subject prefix</subject_prefix>
+<urlhost>List's web interface host name</urlhost>
+<view_list_mailman>Display web interface</view_list_mailman>

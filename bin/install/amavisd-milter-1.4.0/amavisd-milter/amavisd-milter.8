@@ -1,0 +1,304 @@
+.\"
+.\" $Id: amavisd-milter.8,v 1.18 2008/11/08 20:11:38 reho Exp $
+.\"
+.Dd Januar 23, 2006
+.Dt amavisd-milter 8
+.Os
+.Sh NAME
+.Nm amavisd-milter
+.Nd sendmail milter for amavisd-new
+.Sh SYNOPSIS
+.Nm
+.Op Fl fhv
+.Op Fl d Ar debug-level
+.Op Fl D Ar delivery-care-of
+.Op Fl m Ar max-conns
+.Op Fl M Ar max-wait
+.Op Fl p Ar pidfile
+.Op Fl q Ar backlog
+.Op Fl s Ar socket
+.Op Fl t Ar timeout
+.Op Fl S Ar socket
+.Op Fl T Ar timeout
+.Op Fl w Ar directory
+.Sh DESCRIPTION
+The
+.Nm
+is a sendmail milter (mail filter) for
+.Sy amavisd-new
+2.4.3 and above and
+.Sy sendmail
+8.13 and above (limited support for 8.12 is provided).
+.Pp
+Instead of older
+.Sy amavis-milter
+helper program, full
+.Sy amavisd-new
+functionality is available, including adding spam and virus information
+header fields, modifying Subject, adding address extensions and removing
+certain recipients from delivery while delivering the same message to
+the rest.
+.Pp
+For more informations you can visit amavisd-milter website:
+.Bd -literal -offset indent
+http://amavisd-milter.sourceforge.net/
+.Ed
+.Pp
+and SourceForge project:
+.Bd -literal -offset indent
+http://sourceforge.net/projects/amavisd-milter
+.Ed
+.Ss Options
+The options are as follows:
+.Bl -tag -width indent
+.It Fl d Ar debug-level
+Set the debug level to 
+.Sy debug-level Ns
+\&.
+Debugging traces become more verbose as the debug level increases.
+Maximum is 9.
+.It Fl D Ar delivery-care-of
+Set AM.PDP request attribute delivery_care_of to
+.Sy client
+(default) or
+.Sy server Ns
+\&.  When
+.Sy client
+method is used then
+.Sy amavisd-milter
+is responsible to forward the message to recipients. This method doesn't
+allow personalized header or body modification.
+.Pp
+When
+.Sy server
+method is used then
+.Sy amavisd-new
+is responsible to forward the message to recipients and can provide
+personalized header and body modification.
+$forward_method in amavisd.conf must point to some place willing to accept
+mail without further checking in
+.Sy amavisd-new Ns
+\&.
+.It Fl f              
+Run
+.Nm
+in the foreground (i.e. do not daemonize).
+Print debug messages to the terminal.
+.It Fl h
+Print help page and exit.
+.It Fl m Ar max-conns
+Maximum concurrent
+.Sy amavisd
+connections (default 0 - unlimited number of connections).
+It must agree with the $max_servers entry in amavisd.conf.
+.It Fl M Ar max-wait
+Maximum wait for connection to
+.Sy amavisd
+in seconds (default 300 = 5 minutes).
+It must be less then sending MTA timeout for a response to the final "."
+that terminates a message on sending MTA.
+.Sy sendmail
+has default value 1 hour,
+.Sy postfix
+10 minutes and
+.Sy qmail
+20 minutes.
+We suggest to use less than 10 minutes. 
+.It Fl p Ar pidfile
+Use this pid file (default /var/amavis/amavisd-milter.pid).
+.It Fl q Ar backlog
+Sets the incoming socket backlog used by
+.Xr listen 2 Ns
+\&.
+If it is not set or set to zero, the operating system default is used.
+.It Fl s Ar socket
+Communication socket between
+.Sy sendmail
+and
+.Nm
+(default /var/amavis/amavisd-milter.sock).
+The protocol spoken over this socket is
+.Sy MILTER
+(Mail FILTER).
+It must agree with the INPUT_MAIL_FILTER entry in sendmail.mc
+.It Fl S Ar socket
+Communication socket between
+.Nm
+and
+.Sy amavisd-new
+(default /var/amavis/amavisd.sock).
+The protocol spoken over this socket is
+.Sy AM.PDP
+(AMavis Policy Delegation Protocol).
+It must agree with the $unix_socketname entry in amavisd.conf.
+.It Fl t Ar timeout
+.Sy sendmail
+connection timeout in seconds (default 600 = 10 minutes).
+It must agree with the INPUT_MAIL_FILTER entry in sendmail.mc and must be
+greater than or equal to the
+.Sy amavisd-new
+connection timeout.
+When you use other milters (especially time-consuming), the timeout must be
+sufficient to process message in all milters.
+.It Fl T Ar timeout
+.Sy amavisd-new
+connection timeout in seconds (default 600 = 10 minutes).
+This timeout must be sufficient for message processing in
+.Sy amavisd-new Ns
+\&.
+It's usually a good idea to adjust them to the same value as
+.Sy sendmail
+connection timeout.
+.It Fl v
+Report the version number and exit.
+.It Fl w Ar directory
+Set working directory (default /var/amavis).
+.El
+.Ss Limited support for sendmail 8.12
+.Bl -bullet -compact
+.It
+.Fn smfi_addheader
+is used instead of
+.Fn smfi_insheader
+for
+.Li insheader
+and
+.Li addheader
+AM.PDP responses. This works well with
+.Sy amavisd-new
+2.4.3 or newer.
+.It
+.Fn smfi_progress
+isn't called when
+.Sy amavisd-milter
+wait for
+.Sy amavisd-new
+communication socket.
+.It
+AM.PDP response
+.Li quarantine
+isn't implemented.
+.El
+.Pp
+.Sh FILES
+.Bl -tag -width indent
+.It Em /var/amavis/amavisd-milter.pid
+The default process-id file.
+.It Em /var/amavis/amavisd-milter.sock
+The default
+.Sy sendmail
+communication socket.
+.It Em /var/amavis/amavisd.sock
+Th default
+.Sy amavisd-new
+communication socket.
+.It Em /var/amavis
+The default working directory.
+.El
+.Sh POLICY BANK
+When remote client is authenticated,
+.Sy amavisd-milter
+forward this information to
+.Sy amavisd-new
+through AM.PDP request attribute
+.Sy policy_bank Ns
+:
+.Bl -tag -width indent
+.It Sy SMTP_AUTH
+Indicate that the remote client is authenticated.
+.It Sy SMTP_AUTH_<MECH>
+Remote client authentication mechanism.
+.It Sy SMTP_AUTH_<MECH>_<BITS>
+The number of bits used for the key of the symmetric cipher when
+authentication mechanism use it.
+.El
+.Sh EXAMPLES
+.Ss Configuring amavisd-new
+In amavisd.conf file change protocol and socket settings to:
+.Bd -literal -offset indent
+$protocol = "AM.PDP";                      # Use AM.PDP protocol
+$unix_socketname = "$MYHOME/amavisd.sock"; # Listen on Unix socket
+### $inet_socket_port = 10024;             # Don't listen on TCP port
+.Ed
+.Pp
+Then (re)start amavisd daemon.
+.Ss Configuring sendmail
+To the sendmail.mc file add the following entries:
+.Bd -literal -offset indent
+define(`confMILTER_MACROS_ENVFROM',
+	confMILTER_MACROS_ENVFROM`, r, b')
+INPUT_MAIL_FILTER(`amavisd-milter',
+	`S=local:/var/amavis/amavisd-milter.sock,
+	F=T, T=S:10m;R:10m;E:10m')
+.Ed
+.Pp
+Then rebuild your sendmail.cf file, install it (usually to
+/etc/mail/sendmail.cf) and (re)start sendmail daemon.
+.Ss Running Nm
+This example assume that
+.Sy amavisd-new
+is running as user
+.Sy amavis Ns
+\&.
+It must agree with the entry $daemon_user in amavisd.conf.
+.Pp
+First create working directory:
+.Bd -literal -offset indent
+mkdir /var/amavis/tmp
+chmod 750 /var/amavis/tmp
+chown amavis /var/amavis/tmp
+.Ed
+.Pp
+Then start
+.Nm
+as non-priviledged user amavis:
+.Pp
+.Dl su - amavis -c \&" Ns Nm Fl w Ar /var/amavis/tmp Ns \&"
+.Ss Limiting maximum concurrent connections to amavisd
+To limit concurrent connections to 4 and fail after 10 minutes
+(10*60 secs) of waiting run
+.Nm
+with this options:
+.Pp
+.Dl su - amavis -c \&" Ns Nm Fl w Ar /var/amavis/tmp Fl m Ar 4 Fl M Ar 600 Ns \&"
+.Ss Troubleshooting
+For troubleshooting run
+.Nm
+on the foreground and set debug level to appropriate level:
+.Pp
+.Dl su - amavis -c \&" Ns Nm Fl w Ar /var/amavis/tmp Fl f Fl d Ar level Ns \&"
+.Pp
+where debug levels are:
+.Bl -tag -width "XXXX"
+.It 1
+Not errors but unexpected states (connection abort etc).
+.It 2
+Main states in message processing.
+.It 3
+All
+.Nm
+debug messages.
+.It 4-9
+Milter communication debugging (smfi_setdbg 1-6).
+.El
+.Sh SEE ALSO
+.Bd -literal
+http://amavisd-milter.sourceforge.net
+http://www.ijs.si/software/amavisd/
+http://www.sendmail.org
+.Ed
+.Sh AUTHORS
+This manual page was written by Petr Rehor <rx@rx.cz> and is based on
+Jerzy Sakol <jerzy.sakol@commgraf.pl> initial work.
+.Sh BUGS
+A community mailing lists are available at:
+.Bd -literal -offset indent
+http://sourceforge.net/mail/?group_id=138169
+.Ed
+.Pp
+Enhancements requests and problem reports are welcome.
+.Pp
+If you run into problems first check the users mailing list archive
+before asking questions on the list.
+It's highly likely somebody has already come across the same problem
+and it's been solved.

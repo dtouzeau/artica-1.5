@@ -1,0 +1,8 @@
+<failure>&eacute;chec</failure>
+<failure_text>Le nombre de requ&ecirc;tes qui ont &eacute;t&eacute; en &eacute;chec est autre que ceux en haut</failure_text>
+<recursion>r&eacute;cursion</recursion>
+<recursion_text>Le nombre de requ&ecirc;tes qui ont oblig&eacute;es le serveur &agrave; effectuer la r&eacute;cursion afin de trouver la r&eacute;ponse finale</recursion_text>
+<success_text>Le nombre de requ&ecirc;tes couronn&eacute;es de succ&egrave;s effectu&eacute;es par le server ou la zone. Une requ&ecirc;te couronn&eacute;e de succ&eacute;s est une requ&ecirc;te qui retourne NOERROR &agrave; la place de la r&eacute;ponse de r&eacute;f&eacute;rence</success_text>
+<sum>Somme</sum>
+<sum_text>La somme de toutes les requ&ecirc;tes</sum_text>
+<_text>Toutes les statistiques</_text>

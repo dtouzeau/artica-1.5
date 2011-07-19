@@ -1,0 +1,14 @@
+<artica_confs>Fichiers de configurations Artica</artica_confs>
+<artica_confs_explain>Sauvegardez toutes les configurations stock&eacute;es dans /etc/artica</artica_confs_explain>
+<backup_container>Construire une sauvegarde par</backup_container>
+<CYRUS_ADD_RESOURCES>Ajoutez une ressource de stockage</CYRUS_ADD_RESOURCES>
+<CYRUS_ADD_RESOURCES_TEXT>Parcourez le centre d'Auto-Montage et s&eacute;lectionnez une ressource connect&eacute;e</CYRUS_ADD_RESOURCES_TEXT>
+<CYR_BACKUP_NOW>L'ordre de backup &agrave; &eacute;t&eacute; envoy&eacute; au framework.Il sera ex&eacute;cut&eacute; en t&acirc;che de fond, v&eacute;rifez les &eacute;v&egrave;nements pour visualiser sont &eacute;tat.</CYR_BACKUP_NOW>
+<databases_backup_explain>Sauvegarder toutes les bases de donn&eacute;es incluant les bases MYSQL et LDAP</databases_backup_explain>
+<GENERIC_BACKUP>Sauvegarde des donn&eacute;es du serveur</GENERIC_BACKUP>
+<GENERIC_BACKUP_TEXT>Programmez une sauvegarde de votre serveur &agrave; l'aide du Centre d'Auto-connexions</GENERIC_BACKUP_TEXT>
+<mailboxes_backup_explain>Sauvegardez toutes vos bo&icirc;tes aux lettres sur la ressource d&eacute;sign&eacute;e.</mailboxes_backup_explain>
+<max_backup_container>Conteneurs Max.</max_backup_container>
+<RestoreFromRsyncPathNow>Restaurez depuis la ressource maintenant</RestoreFromRsyncPathNow>
+<RestoreFromRsyncPath_warn>Infos:: Toutes les donn&eacute;es sur votre serveur seront &eacute;cras&eacute;es par la sauvegarde choisie.[br]Soyez sur que vous voulez effectuer cette op&eacute;ration...</RestoreFromRsyncPath_warn>
+<STOP_SERVICES_BACKUP_EXPLAIN>Stoppera les services n&eacute;c&eacute;ssaires avant d'effectuer les sauvegardes</STOP_SERVICES_BACKUP_EXPLAIN>

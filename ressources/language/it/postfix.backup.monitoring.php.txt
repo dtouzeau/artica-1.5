@@ -1,0 +1,11 @@
+<artica_backup_storage>Artica backup storage</artica_backup_storage>
+<artica_backup_storage_explain>You will find here the size of your mails storage.
+[br]Mails storage means 3 areas.[br]
+
+[ul]
+[li][b]Indexed Queue[/b] means all message that are indexed in the Mysql database and used to query them[/li]
+[li][b]Quarantines means[/b] all messages detected has virus or SPAM and saved in quarantine area[/li]
+[li][b]Backup[/b] means (if you have enabled "Backup On The Fly" features) all messages stored has backup mode[/li]
+[li][b]Attachments[/b] are the attached files stored in the indexed queue[/li]
+[/ul] 
+</artica_backup_storage_explain>

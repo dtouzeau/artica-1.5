@@ -1,0 +1,7 @@
+<ENABLE_RSYNC_SERVER>Enable rsync server mode</ENABLE_RSYNC_SERVER>
+<ENABLE_RSYNC_SERVER_TEXT>If you trun to green this feature your server will be able to receive backup files from others server[br]
+You must add users that will be able to push backup files to this server</ENABLE_RSYNC_SERVER_TEXT>
+<RsyncBwlimit>limit I/O bandwidth</RsyncBwlimit>
+<RsyncEnableStunnel>Enable SSL</RsyncEnableStunnel>
+<RsyncEnableStunnelPort>SSL Port</RsyncEnableStunnelPort>
+<storage_path>Storage path</storage_path>

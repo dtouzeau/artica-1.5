@@ -1,0 +1,18 @@
+<company>Nom de l'entreprise</company>
+<company_domain>Saisir le nom de votre entreprise ainsi que le nom de domaine principal qui sera utilis&eacute; pour le serveur de messagerie SMTP</company_domain>
+<company_domain_t>Nom de votre entreprise et nom de domaine</company_domain_t>
+<domain_routing>Domaine de routage</domain_routing>
+<domain_routing_local>Votre nom de domaine principal sera sauvegard&eacute; en local sur ce serveur</domain_routing_local>
+<domain_routing_remote>Votre nom de domaine principal sera relay&eacute; vers le syst&egrave;me MDA (serveur mail)
+Saisissez le nom du serveur ou l'adresse IP de votre serveur de mail pour relayer les mails  vers le serveur Artica</domain_routing_remote>
+<domain_routing_text>Comment votre nom de domaine principal sera relay&eacute; par Postfix?</domain_routing_text>
+<first_email>Premi&egrave;re adresse du courrier &eacute;lectronique</first_email>
+<first_email_text>Mettez le premier utilisateur ou adresse &eacute;lectronique qui recevra par mail les notifications ou alertes de votre serveur mail</first_email_text>
+<smtp_domain>Nom de domaine SMTP</smtp_domain>
+<smtp_relay>Adresse du serveur SMTP</smtp_relay>
+<welcome_first_wizard>Bienvenue &agrave; votre premier assistant</welcome_first_wizard>
+<wizard_finish>L'assistant est termin&eacute;</wizard_finish>
+<wizard_finish_failed>Revenez s'il vous pla&icirc;t &agrave; vos derni&egrave;res pages, quelques &eacute;l&eacute;ments sont manquants</wizard_finish_failed>
+<wizard_finish_text>Cliquez sur le bouton Appliquer pour configurer vos param&egrave;tres et pour les passer en  mode production</wizard_finish_text>
+<wizard_smtp_intro>Cet assistant vous aidera &agrave; d&eacute;finir de premiers param&egrave;tres pour mettre votre serveur en production...
+Suivez les &eacute;tapes pour activer la messagerie sur ce serveur...</wizard_smtp_intro>

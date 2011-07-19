@@ -1,0 +1,32 @@
+<delete_all_events>Delete all events</delete_all_events>
+<emails_received>Realtime emails received</emails_received>
+<error_cyrus_pbconnect>[br][b][i]You need to check the cyrus-imap connection, it seems it stopped working.</error_cyrus_pbconnect>
+<error_cyrus_pbmailbox>[br][b][i]You need to check this mailbox, it seems it over quota.
+[br]Growth it's quota or delete this user[/b][/i].</error_cyrus_pbmailbox>
+<error_kasmilter_stopped>Kaspersky Anti-spam daemon is not started, please check whether the daemon running and the licence is valid</error_kasmilter_stopped>
+<error_kavmilter_licence>[br][b][i]You need to get a new licence key for Kaspersky antivirus for SendMail milter.
+[br]Or You must disable Kaspersky in Postfix/plugins section[/b][/i].</error_kavmilter_licence>
+<error_loopsbacktomyself>It seems that postfix is configured to relay e-mail that are directed to the internet are relayed to the same server that has postfix installed. Please check your configuration</error_loopsbacktomyself>
+<error_milter_grey_list_stopped>The Milter-greylist service stopped or ceased to function, please check configuration and service status.</error_milter_grey_list_stopped>
+<error_must_create_mailbox>[br][b][i]The mailbox is not created, and mail is refused by the imap server.
+[br]You need to create an user account or an users's alias to prevent this error[/b][/i]</error_must_create_mailbox>
+<error_relayhost>The master relay you have set for postfix is not available, change it or check your &quot;internet server relay&quot;</error_relayhost>
+<error_routing_postfix>Postifx was denied routing, please check your transports tables...</error_routing_postfix>
+<error_routing_to>Postfix is unable to route this email to the next destination server, please check your routing tables</error_routing_to>
+<graphs>Charts &amp; Statistics</graphs>
+<lines_number>Max lines</lines_number>
+<monitorix>Monitorix</monitorix>
+<mysql_not_root_configured>Error Mysql Access</mysql_not_root_configured>
+<mysql_not_root_configured_text>Artica report Access denied, you need to set the right account for mysql in order to get full artica features
+Go to Global settings/Mysql database to set this account</mysql_not_root_configured_text>
+<mysql_too_any_connections>Mysql server report there Too Many connections on Mysql server[br]you have to restart Mysql or to reboot your server</mysql_too_any_connections>
+<notification>Error detected</notification>
+<postfix_mynet_not_conf>Postfix Networks</postfix_mynet_not_conf>
+<postfix_mynet_not_conf_text>You need to set your networks in order to make Postfix in real production..[br]
+Select in theleft pan Postfix/Postfix Network settings</postfix_mynet_not_conf_text>
+<service>Application name</service>
+<smtp_notification_not_saved>eMail notifications are not set</smtp_notification_not_saved>
+<smtp_notification_not_saved_text>It is necessary for you to be informed if artica server failed or have successfully perform tasks.[br]
+Set notifications parameters in order to receive by mail all informations</smtp_notification_not_saved_text>
+<too_many_lines_exceed>Too many lines, exceed :</too_many_lines_exceed>
+<warnings>warnings errors</warnings>

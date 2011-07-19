@@ -1,0 +1,3337 @@
+# Extensions to support Postfix MTA using Openldap experimental OID's
+# Schema LDAP for Artica and all modules used around postfix
+# Be sure this fil is under schema/ directory.
+
+attributetype ( 1.3.6.1.4.1.15347.2.100
+	NAME ( 'maildrop' )
+	DESC 'RFC1274: RFC822 Mailbox'
+	EQUALITY caseIgnoreIA5Match
+	SUBSTR caseIgnoreIA5SubstringsMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256})
+
+attributetype (1.1.2.1.1.10 NAME 'transport'
+    DESC 'transport'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+
+attributetype (1.1.2.1.1.10.1.1 NAME 'KasperkyAVScanningDatas'
+    DESC 'Kaspersky Antivirus Scanning settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+
+
+attributetype (1.1.2.1.1.10.1.2 NAME 'ArticaGroupPrivileges'
+    DESC 'Specials Artica privileges for a defined user group'
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.40)  
+
+attributetype (1.1.2.1.1.10.1.3 NAME 'KasperkyASDatas'
+    DESC 'Kaspersky Anti-Spam settings actions'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+
+attributetype ( 1.1.2.1.1.10.1.4 NAME 'KasperskyASGroupNumber'
+	DESC 'numerically identifies an KAS group'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+	SINGLE-VALUE )
+
+attributetype (1.1.2.1.1.10.1.5 NAME 'KasperkyASDatasMembers'
+    DESC 'Kaspersky Anti-Spam settings members'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+
+attributetype (1.1.2.1.1.10.1.6 NAME 'KasperkyASDatasAllow'
+    DESC 'Kaspersky Anti-Spam settings White list'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype (1.1.2.1.1.10.1.7 NAME 'KasperkyASDatasDeny'
+    DESC 'Kaspersky Anti-Spam settings Black list'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype (1.1.2.1.1.10.1.8 NAME 'KasperkyASDatasRules'
+    DESC 'Kaspersky Anti-Spam settings Rules settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+
+attributetype (1.1.2.1.1.10.1.9 NAME 'MailboxActive'
+    DESC 'active or not active to local mailbox' 
+    EQUALITY booleanMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.7 SINGLE-VALUE)
+
+attributetype (1.1.2.1.1.10.1.10 NAME 'CronDatas'
+    DESC 'Cron tasks' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype (1.1.2.1.1.10.1.11 NAME 'PostfixMaincf'
+    DESC 'main.cf postfix settings' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+
+attributetype (1.1.2.1.1.10.1.12 NAME 'FetchMailsRules'
+    DESC 'Fetch mails rules tasks' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype (1.1.2.1.1.10.1.13 NAME 'FetchMailsGlobalSettings'
+    DESC 'Fetch mails Global settings' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+
+attributetype (1.1.2.1.1.10.1.14 NAME 'PostfixHeadersRegex'
+    DESC 'Postfix headers file regex' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+
+attributetype (1.1.2.1.1.10.1.15 NAME 'PostfixSSLCert'
+    DESC 'Postfix Certificate configuration' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+
+
+attributetype (1.1.2.1.1.10.1.16 NAME 'MailBoxMaxSize'
+    DESC 'User MailBox maximum size' 
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.27 SINGLE-VALUE)
+
+attributetype (1.1.2.1.1.10.1.17 NAME 'PostfixHashSmtpSaslAuth'
+    DESC 'Postfix Certificate configuration' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+
+attributetype (1.1.2.1.1.10.1.18 NAME 'SmtpdClientRestrictionsRules'
+    DESC 'main.cf smtpd_client_restrictions_rules postfix settings' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+
+attributetype (1.1.2.1.1.10.1.19 NAME 'SmtpdSenderRestrictionsRules'
+    DESC 'main.cf smtpd_client_restrictions_rules postfix settings' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+
+attributetype (1.1.2.1.1.10.1.21 NAME 'PostFixBounceTemplate'
+    DESC 'Postfix bounce template file' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+
+attributetype (1.1.2.1.1.10.1.22 NAME 'SieveScriptsUser'
+    DESC 'Sieve Rules Script Preformatted ini file' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+
+attributetype (1.1.2.1.1.10.1.23 NAME 'ArticaGlobalSettings'
+    DESC 'Artica global settings web interface' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+
+#---------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.24 NAME 'TemplateNotifyInfectedRecipient'
+    DESC 'Antivirus notifyInfectedRecipient template' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype (1.1.2.1.1.10.1.25 NAME 'TemplateNotifyInfectedSender'
+    DESC 'Antivirus notifyInfectedSender template' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype (1.1.2.1.1.10.1.261 NAME 'TemplateNotifyInfectedAdmin'
+    DESC 'Antivirus notifyInfectedAdmin template' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+#-----------------------------------------------------------------#-------------------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.26 NAME 'TemplateNotifyCorruptedRecipient'
+    DESC 'Antivirus notify corrupted recipient template' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype (1.1.2.1.1.10.1.27 NAME 'TemplateNotifyCorruptedSender'
+    DESC 'Antivirus notify corrupted sender template' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype (1.1.2.1.1.10.1.28 NAME 'TemplateNotifyCorruptedAdmin'
+    DESC 'Antivirus notify corrupted sender template' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+#---------------------------------------------------------------------------
+
+attributetype (1.1.2.1.1.10.1.29 NAME 'TemplateNotifySuspiciousRecipient'
+    DESC 'Antivirus notify suspicious recipient template' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype (1.1.2.1.1.10.1.30 NAME 'TemplateNotifySuspiciousSender'
+    DESC 'Antivirus notify suspicious sender template' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype (1.1.2.1.1.10.1.31 NAME 'TemplateNotifySuspiciousAdmin'
+    DESC 'Antivirus notify suspicious admin template' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+
+#---------------------------------------------------------------------------
+
+attributetype (1.1.2.1.1.10.1.32 NAME 'TemplateNotifyCuredRecipient'
+    DESC 'Antivirus notify cured recipient template' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype (1.1.2.1.1.10.1.33 NAME 'TemplateNotifyCuredSender'
+    DESC 'Antivirus notify cured sender template' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype (1.1.2.1.1.10.1.34 NAME 'TemplateNotifyCuredAdmin'
+    DESC 'Antivirus notify cured admin template' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+#---------------------------------------------------------------------------
+
+attributetype (1.1.2.1.1.10.1.36 NAME 'TemplateNotifyWarningRecipient'
+    DESC 'Antivirus notify warning recipient template' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype (1.1.2.1.1.10.1.37 NAME 'TemplateNotifyWarningSender'
+    DESC 'Antivirus notify warning sender template' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype (1.1.2.1.1.10.1.38 NAME 'TemplateNotifyWarningAdmin'
+    DESC 'Antivirus notify warning admin template' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+#---------------------------------------------------------------------------
+
+attributetype (1.1.2.1.1.10.1.39 NAME 'TemplateNotifyProtectedRecipient'
+    DESC 'Antivirus notify recipient Protected template' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype (1.1.2.1.1.10.1.40 NAME 'TemplateNotifyProtectedSender'
+    DESC 'Antivirus notify sender Protected template' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype (1.1.2.1.1.10.1.41 NAME 'TemplateNotifyProtectedAdmin'
+    DESC 'Antivirus notify admin Protected template' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+#---------------------------------------------------------------------------
+
+attributetype (1.1.2.1.1.10.1.42 NAME 'TemplateNotifyFilteredRecipient'
+    DESC 'Antivirus notify recipient filtered template' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype (1.1.2.1.1.10.1.43 NAME 'TemplateNotifyFilteredSender'
+    DESC 'Antivirus notify sender filtered template' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype (1.1.2.1.1.10.1.44 NAME 'TemplateNotifyFilteredAdmin'
+    DESC 'Antivirus notify admin filtered template' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+#---------------------------------------------------------------------------
+
+attributetype (1.1.2.1.1.10.1.45 NAME 'TemplateNotifyErrorSender'
+    DESC 'Antivirus notify sender error template' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype (1.1.2.1.1.10.1.46 NAME 'TemplateNotifyErrorRecipient'
+    DESC 'Antivirus notify recipient error template' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype (1.1.2.1.1.10.1.47 NAME 'TemplateNotifyErrorAdmin'
+    DESC 'Antivirus notify admin error template' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+#---------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.48 NAME 'VirtualDomainsMapsMTA'
+    DESC 'Virtua lDomains Maps MTA'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+
+#---------------------------------------------------------------------------
+
+attributetype (1.1.2.1.1.10.1.49 NAME 'SmtpdRecipientRestrictionsRules'
+    DESC 'main.cf smtpd_recipient_restrictions_rules postfix settings' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------------
+
+attributetype (1.1.2.1.1.10.1.50 NAME 'checkrecipientaccess'
+    DESC 'main.cf check_recipient_access postfix settings' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------------
+
+attributetype (1.1.2.1.1.10.1.51 NAME 'checkrecipientmxaccess'
+    DESC 'main.cf check_recipient_mx_access settings' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------------
+
+attributetype (1.1.2.1.1.10.1.52 NAME 'checkrecipientnsaccess'
+    DESC 'main.cf check_recipient_ns_access settings' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------------
+
+attributetype (1.1.2.1.1.10.1.53 NAME 'SmtpdHeloRestrictionsRules'
+    DESC 'main.cf smtpd_recipient_restrictions_rules postfix settings' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------------
+
+attributetype (1.1.2.1.1.10.1.54 NAME 'checkheloaccess'
+    DESC 'main.cf check_helo_access settings' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------------
+
+attributetype (1.1.2.1.1.10.1.55 NAME 'checkhelomxaccess'
+    DESC 'main.cf check_helo_mx_access settings' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------------
+
+attributetype (1.1.2.1.1.10.1.56 NAME 'checkhelonsaccess'
+    DESC 'main.cf check_helo_ns_access settings' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.57 NAME 'checksenderaccess'
+    DESC 'main.cf check_sender_access settings' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.58 NAME 'checksendermxaccess'
+    DESC 'main.cf check_sender_mx_access settings' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.59 NAME 'checksendernsaccess'
+    DESC 'main.cf check_sender_ns_access settings' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.60 NAME 'SenderRelayHost'
+    DESC 'main.cf Sender Relay Host for Sender_Dependent_Relay_host_Maps value' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.61 NAME 'SmtpTlsPolicyMapsValue'
+    DESC 'main.cf smtp_tls_policy_maps lookup table value for routing tables' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.62 NAME 'PostFixRestrictionClassList'
+    DESC 'Postfix restriction class key store' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#---------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.63 NAME 'PostFixRestrictionTableAction'
+    DESC 'Postfix restriction class Table values' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------------
+#---------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.64 NAME 'PostFixRestrictionClassDescription'
+    DESC 'Postfix restriction class Table details to rememeber what it is...:=)' 
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.65 NAME 'CronFileCommand'
+    DESC 'Cron command'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+
+#---------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.66 NAME 'CronFileDescriptions'
+    DESC 'Cron Datas file description'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+
+#---------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.67 NAME 'CronFileMailTo'
+    DESC 'Cron Datas file description'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+
+#---------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.68 NAME 'CronFileToDelete'
+    DESC 'Cron Datas file description'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+
+#---------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.69 NAME 'articaNameServers'
+    DESC 'Nameservers resolv.conf'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+
+#---------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.70 NAME 'articaNameServersSearchDomains'
+    DESC 'Nameservers resolv.conf'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+
+#---------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.71 NAME 'DnsMasqConfigurationFile'
+    DESC 'DNSMasq config file'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+
+#---------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.72 NAME 'NetworkCardScript'
+    DESC 'Network Card Script configuration (artica internal)'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+
+#---------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.73 NAME 'mynetworks'
+    DESC 'mynetworks postfix parameter'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+
+#---------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.74 NAME 'KasperskyAntispamRules'
+    DESC 'Kaspersky Antispam Rules'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+
+#------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.75 NAME 'KasperskyAntispamFilterConf'
+    DESC 'Kaspersky Global filter Rules'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+
+#------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.76 NAME 'KasperskyAntispamDNSConf'
+    DESC 'Kaspersky DNS Black List'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+
+#------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.77 NAME 'ArticaUserFilterRule'
+    DESC 'Artica Header rules per users'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+
+#------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.78 NAME 'SaslPassword'
+    DESC 'Artica SaslPassword'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+
+#------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.79 NAME 'ArticaMaxDayQuarantine'
+    DESC 'Artica ArticaMaxDayQuarantine'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.80 NAME 'ArticaFakedMailFrom'
+    DESC 'Artica Enable detection Faked Sender mail from'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.81 NAME 'ArticaMaxSubQueueNumber'
+    DESC 'Artica ArticaMaxSubQueueNumber'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.82 NAME 'ArticaDenyNoMXRecords'
+    DESC 'Artica ArticaDenyNoMXRecords'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.83 NAME 'FiltersExtensionsSettings'
+    DESC 'Deny files from extensions'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.84 NAME 'FiltersExtensionsGroupName'
+    DESC 'Deny files from extensions'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.85 NAME 'SmtpSaslPasswordString'
+    DESC 'Deny files from extensions'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.86 NAME 'CountryDeny'
+    DESC 'Deny eMail from specific country rule'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#------------------------------------------------------------------------
+#------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.87 NAME 'RblServers'
+    DESC 'Rbl dnsbl rules'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#------------------------------------------------------------------------
+#------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.88 NAME 'RblServersAction'
+    DESC 'Rbl dnsbl rules action'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#------------------------------------------------------------------------
+
+#------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.89 NAME 'SURBLServers'
+    DESC 'surbl rules'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#------------------------------------------------------------------------
+#------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.90 NAME 'SURBLServersAction'
+    DESC 'Rbl surbl rules action'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.91 NAME 'ArticaMaxDayTemplate'
+    DESC 'Smtp Template notification when all messages will be deleted'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.92 NAME 'ArticaReportQuarantineTemplate'
+    DESC 'Smtp Template notification for reports quarantine area'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#------------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.93 NAME 'ArticaWebRootURI'
+    DESC 'used to send smtp report and allow users to click on the links'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#-----------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.94 NAME 'BogoFilterAction'
+    DESC 'Used to define actions on bogofilter scanner for OU and user'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#-----------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.95 NAME 'BogoFilterMailType'
+    DESC 'Used to define HAM or SPAM virtual mailbox for receive messages'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#-----------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.96 NAME 'OuTrustMyUSers'
+    DESC 'Used to disable all fiters when receive emails from local users. enabled by default'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#-----------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.97 NAME 'MailManOuOwner'
+    DESC 'used to hook mailman distributions list to an Organization'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#-----------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.98 NAME 'MailmanListConfigDatas'
+    DESC 'used to hook mailman distributions list to an Organization'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#-----------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.99 NAME 'MailManRobotType'
+    DESC 'Used to specify wich robot using for this distribution list'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#-----------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.100 NAME 'MailManDistriList'
+    DESC 'Used to specify distribution list is used for email address'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#-----------------------------------------------------------------------
+#-----------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.101 NAME 'FilterFilenameExtensions'
+    DESC 'Used for mailman settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#-----------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.102 NAME 'mailmanAcceptableAliases'
+    DESC 'Used for mailman settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#-----------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.103 NAME 'mailmanGoodbyeMsg'
+    DESC 'Used for mailman settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.104 NAME 'mailmanWelcomeMsg'
+    DESC 'Used for mailman settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.105 NAME 'mailmanAutoresponseRequestText'
+    DESC 'Used for mailman settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.106 NAME 'mailmanAutoresponsePostingsText'
+    DESC 'Used for mailman settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.107 NAME 'mailmanAutoresponseAdminText'
+    DESC 'Used for mailman settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.108 NAME 'mailmanDigestFooter'
+    DESC 'Used for mailman settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.109 NAME 'mailmanDigestHeader'
+    DESC 'Used for mailman settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.110 NAME 'mailmanMsgFooter'
+    DESC 'Used for mailman settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.111 NAME 'mailmanMsgHeader'
+    DESC 'Used for mailman settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.112 NAME 'MailmanListOperation'
+    DESC 'Used for mailman settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.113 NAME 'MailManListAdministrator'
+    DESC 'Used for mailman settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.114 NAME 'MailManListAdminPassword'
+    DESC 'Used for mailman settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.115 NAME 'MailManDefaultUrlHost'
+    DESC 'Used for mailman settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.116 NAME 'MailManDefaultUrlPattern'
+    DESC 'Used for mailman settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.117 NAME 'MailManDefaulPublicArchiveUrl'
+    DESC 'Used for mailman settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.118 NAME 'MailManDefaultEmailHost'
+    DESC 'Used for mailman settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.119 NAME 'MailManAdminPassword'
+    DESC 'Used for mailman settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.120 NAME 'VirtualHostOverview'
+    DESC 'Used for mailman settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.121 NAME 'HostNameList'
+    DESC 'Used for mailman settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+#attributetype (1.1.2.1.1.10.1.122 NAME 'kavmilterConf'
+#    DESC 'kavmilter.conf settings'
+#    EQUALITY caseIgnoreIA5Match
+#    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+#attributetype (1.1.2.1.1.10.1.123 NAME 'KavMilterdRuleConf'
+#    DESC 'kavmilter group settings'
+#    EQUALITY caseIgnoreIA5Match
+#    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+#attributetype (1.1.2.1.1.10.1.124 NAME 'KavMilterdOU'
+#    DESC 'kavmilter group settings applied to a ou'
+#    EQUALITY caseIgnoreIA5Match
+#    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+#attributetype (1.1.2.1.1.10.1.125 NAME 'KavMilterdGroup'
+#    DESC 'kavmilter group settings applied to a group'
+#    EQUALITY caseIgnoreIA5Match
+#    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#---------------------------------------------------------------------
+#attributetype (1.1.2.1.1.10.1.126 NAME 'KavMilterPolicyNumber'
+#    DESC 'kavmilter group number settings applied to a group'
+#    EQUALITY caseIgnoreIA5Match
+#    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.127 NAME 'fetchmailrc'
+    DESC 'gloabl config Used to fetch mailboxes'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.128 NAME 'FetchGetLive'
+    DESC 'gloabl config Used to fetch Hotmail mailboxes'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.129 NAME 'FetchMailDaemonPoolingTime'
+    DESC 'gloabl config Used to define pooling time for fecthmail daemon'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.130 NAME 'FetchmailDaemonPostmaster'
+    DESC 'gloabl config Used to define postmaster for fecthmail daemon'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.131 NAME 'ArticaInadynPoolRule'
+    DESC 'Define the pooling time in cron of inadyn'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.132 NAME 'ArticaInadynRule'
+    DESC 'Define the rule to update dynamic dns servers'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.133 NAME 'ArticaProxyServerName'
+    DESC 'Define Proxy servername'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.134 NAME 'ArticaProxyServerPort'
+    DESC 'Define Proxy servername'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.135 NAME 'ArticaProxyServerUsername'
+    DESC 'Define Proxy servername'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.136 NAME 'ArticaProxyServerUserPassword'
+    DESC 'Define Proxy servername'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.137 NAME 'ArticaProxyServerEnabled'
+    DESC 'Define Proxy servername'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.138 NAME 'Kav4ProxyMainConf'
+    DESC 'Define Kaspersky For Proxy Server Main configuration File'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.139 NAME 'Kav4ProxyGroupsConf'
+    DESC 'Define Kaspersky For Proxy Server Main configuration File'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#---------------------------------------------------------------------
+#attributetype (1.1.2.1.1.10.1.140 NAME 'GlobalSquidConf'
+#    DESC 'Define global configuration of squid proxy'
+#    EQUALITY caseIgnoreIA5Match
+#    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.141 NAME 'AclRuleEnabled'
+    DESC 'Enable/disable ACL rule'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.143 NAME 'AclDatas'
+    DESC 'parameters of ACL rule'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.144 NAME 'SquidProxyAclsType'
+    DESC 'Type of ACL rule'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.145 NAME 'AclRuleName'
+    DESC 'Type of ACL rule'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.146 NAME 'AccessRuleEnabled'
+    DESC 'Type of ACL rule'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.147 NAME 'BigMailHTMLEnabled'
+    DESC 'BigMailHTMLEnabled'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.149 NAME 'BigMailHtmlConfig'
+    DESC 'BigMailHTMLEnabled'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.150 NAME 'BigMailHtmlRules'
+    DESC 'BigMailHtmlRules'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.151 NAME 'BigMailHtmlBody'
+    DESC 'BigMailHtmlBody'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.152 NAME 'kavmilterEnable'
+    DESC 'Enable the module.'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.153 NAME 'DansGuardianMasterConf'
+    DESC 'conf'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.154 NAME 'DansGuardianRulesName'
+    DESC 'conf'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.155 NAME 'DansGuardianCategories'
+    DESC 'conf'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.156 NAME 'DansGuardianRulesIndex'
+    DESC 'conf'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.157 NAME 'DansGuardianCategoriesPhrases'
+    DESC 'conf'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.158 NAME 'DansGuardianCategoriesWeight'
+    DESC 'conf'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.159 NAME 'DansGuardianCategoriesBannedPhraseList'
+    DESC 'conf'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.160 NAME 'DansGuardianEnableBannedRegexPurLlist'
+    DESC 'conf'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.161 NAME 'BannedRegexPurLlistRules'
+    DESC 'conf'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.162 NAME 'BannedRegexPurLlistFile'
+    DESC 'conf'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.163 NAME 'ExceptionUrlList'
+    DESC 'part of DansGuardian conf'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.164 NAME 'ExceptionSiteList'
+    DESC 'part of DansGuardian conf'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.165 NAME 'BannedExtensionList'
+    DESC 'part of DansGuardian conf'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.166 NAME 'BannedMimetype'
+    DESC 'part of DansGuardian conf'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.167 NAME 'ExceptionFileSiteList'
+    DESC 'part of DansGuardian conf'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.168 NAME 'DansGuardianMainGroupeRule'
+    DESC 'part of DansGuardian conf'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.169 NAME 'BannedPhraseListConf'
+    DESC 'part of DansGuardian conf'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.170 NAME 'WeightedPhraseListConf'
+    DESC 'part of DansGuardian conf'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.171 NAME 'BannedSiteListConf'
+    DESC 'part of DansGuardian conf'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.172 NAME 'BannedRegexPurListConf'
+    DESC 'part of DansGuardian conf'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.173 NAME 'BannedExtensionListConf'
+    DESC 'part of DansGuardian conf'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.174 NAME 'BannedMimetypeConf'
+    DESC 'part of DansGuardian conf'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.175 NAME 'ExceptionFileSiteListConf'
+    DESC 'part of DansGuardian conf'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.176 NAME 'ExceptionSiteListConf'
+    DESC 'part of DansGuardian conf'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.177 NAME 'ArticaDansGuardianGroupRuleEnabled'
+    DESC 'part of DansGuardian conf'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.178 NAME 'FilterGroupListConf'
+    DESC 'part of DansGuardian conf'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.179 NAME 'ArticaMailAddonsLevel'
+    DESC 'define performances'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.180 NAME 'ArticaEnableKav4ProxyInSquid'
+    DESC 'enable Kaspersky in squid'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.181 NAME 'PureFtpdConf'
+    DESC 'Pureftpd main configuration file'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.182 NAME 'PureFtpdEnabled'
+    DESC 'Pureftpd Enable/disable'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.183 NAME 'SqlGreyEnabled'
+    DESC 'SqlGrey Enable/disable'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.184 NAME 'SqlGreyConf'
+    DESC 'SqlGrey main configuration'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.185 NAME 'SqlGreyWLIP'
+    DESC 'SqlGrey main configuration'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.186 NAME 'SqlGreyWLHost'
+    DESC 'SqlGrey main configuration'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.187 NAME 'PostfixMainCfFile'
+    DESC 'full main.cf postfix settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.188 NAME 'PostfixBounceTemplateFile'
+    DESC 'full main.cf postfix settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.189 NAME 'PostfixSlaveServersIdentity'
+    DESC 'Identity of a blance slave server'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.190 NAME 'PostfixMasterServerIdentity'
+    DESC 'Identity of a blance master server'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.191 NAME 'PostFixSynchronizeStatus'
+    DESC 'status of a blance slaves'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.192 NAME 'CrossRoadsBalancingServerIP'
+    DESC 'Enable the crossroads balancing service'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.193 NAME 'PostfixTimeCode'
+    DESC 'Used to synchronize local settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.194 NAME 'CrossRoadsBalancingServerName'
+    DESC 'used to find datas in the LDAP tree'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.195 NAME 'FinalVirusDestiny'
+    DESC 'used For amavis'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.196 NAME 'FinalBannedDestiny'
+    DESC 'used For amavis'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.197 NAME 'FinalSpamDestiny'
+    DESC 'used For amavis'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.198 NAME 'FinalBadHeaderDestiny'
+    DESC 'used For amavis'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.199 NAME 'MailfromNotifyRecip'
+    DESC 'used For amavis'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.200 NAME 'MailfromNotifyAdmin'
+    DESC 'used For amavis'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.201 NAME 'ArticaMaxTempLogFilesDay'
+    DESC 'used For artica logs'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.202 NAME 'QuarantineMailZuAdmin'
+    DESC 'used For artica logs'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.203 NAME 'PostFixHeadersRegexFile'
+    DESC 'used For artica logs'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.204 NAME 'ArticaFoldersSizeConfig'
+    DESC 'used to follow Folder Size'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.205 NAME 'ArticaAutoUpdateConfig'
+    DESC 'Used to update artica core product'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.206 NAME 'GreyListConf'
+    DESC 'Contener for milter-greylist configuration'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.207 NAME 'MilterGreyListEnabled'
+    DESC 'Enable Milter-grey List on system'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.208 NAME 'ArticaPolicyEnabled'
+    DESC 'Artica Policy server Enable/disable'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.209 NAME 'ArticaFilterEnabled'
+    DESC 'Artica Fiter server Enable/disable'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.210 NAME 'AmavisFilterEnabled'
+    DESC 'Amavis Fiter server Enable/disable'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.211 NAME 'KasxFilterEnabled'
+    DESC 'Kaspersky Anti-spam Enable/disable'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.212 NAME 'OBMApacheFile'
+    DESC 'Obm Apache configuration file'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.213 NAME 'OBMEnabled'
+    DESC 'Enable/Disable OBM Feature'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.215 NAME 'OBMConfIni'
+    DESC 'Obm_conf.ini content'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.216 NAME 'OBMConfInc'
+    DESC 'Obm_conf.inc content'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.217 NAME 'NTPDEnabled'
+    DESC 'Activate NTPD'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.218 NAME 'NTPDConf'
+    DESC 'ntpd.conf content'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.219 NAME 'DefaultGroupPassword'
+    DESC 'Using to create standard password for each group'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.220 NAME 'iptablesRules'
+    DESC 'Iptables rules table'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.221 NAME 'AutoDomainAliases'
+    DESC 'Enable create aliases for domain'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.222 NAME 'iptablesFile'
+    DESC 'iptablesFile'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.223 NAME 'ArticaBackupConf'
+    DESC 'iptablesFile'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.224 NAME 'ArticaBackupEnabled'
+    DESC 'backup settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.225 NAME 'MysqlMaxEventsLogs'
+    DESC 'Max logs in sys_events table'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.226 NAME 'SharedFolderPrefix'
+    DESC 'Shared folder prefix'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.227 NAME 'SharedFolderList'
+    DESC 'Shared folder list'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.228 NAME 'SharedFolerConf'
+    DESC 'Shared folder list'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.229 NAME 'SqlGreyTimeCode'
+    DESC 'Shared folder list'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.230 NAME 'kasactiondef'
+     DESC 'Kaspersky Anti-spam group settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.231 NAME 'kasallowxml'
+    DESC 'Kaspersky Anti-spam group settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.232 NAME 'Kasdenyxml'
+     DESC 'Kaspersky Anti-spam group settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.233 NAME 'Kasipallowxml'
+    DESC 'Kaspersky Anti-spam group settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.234 NAME 'Kasipdenyxml'
+     DESC 'Kaspersky Anti-spam group settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.235 NAME 'kasmembersxml'
+    DESC 'Kaspersky Anti-spam group settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.236 NAME 'kasprofilexml'
+     DESC 'Kaspersky Anti-spam group settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.237 NAME 'kasruledef'
+    DESC 'Kaspersky Anti-spam group settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.238 NAME 'KasHexGroupName'
+    DESC 'Kaspersky Anti-spam group settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.239 NAME 'ApacheConfig'
+    DESC 'Apache httpd.conf'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.240 NAME 'lighttpConfig'
+    DESC 'lighthttp config'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.241 NAME 'ApacheArticaEnabled'
+    DESC 'Switch between lighthttp or apache'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.242 NAME 'MailFromdRC'
+    DESC 'Mailfromd rc configuration file '
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.243 NAME 'MailFromdUserUpdated'
+    DESC 'Mailfromd  or artica script '
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.244 NAME 'MailFromdUserScript'
+    DESC 'Mailfromd user script'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.245 NAME 'ArticaFirstWizard'
+    DESC 'Execute wizard (0|1)'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.246 NAME 'MysqlAdminAccount'
+    DESC 'Execute wizard (0|1)'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.247 NAME 'ClamavMilterEnabled'
+    DESC 'Clamav milter enabled (0|1)'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.248 NAME 'SpamAssMilterEnabled'
+    DESC 'spamassassin-milter enabled (0|1)'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.249 NAME 'SpamAssassinConfFile'
+    DESC 'spamassassin configuration file'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.250 NAME 'spfmilterEnabled'
+    DESC 'spfmilterEnabled'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.251 NAME 'SambaSMBConf'
+    DESC 'spfmilterEnabled'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.252 NAME 'relayClientcert'
+    DESC 'relay_clientcerts hash table'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.253 NAME 'relayClientcertFingerprint'
+    DESC 'relay_clientcerts hash table'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.254 NAME 'EnableSyslogMysql'
+    DESC 'Enable the syslog mysql injection'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.255 NAME 'MimeDefangEnabled'
+    DESC 'Enable MimeDefang plugin'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.256 NAME 'MimeDefangFilter'
+    DESC 'MimeDefang settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.257 NAME 'MimeDefangScriptsConf'
+    DESC 'MimeDefang auto-scripting settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.258 NAME 'MimeDefangDisclaimer'
+    DESC 'MimeDefang Disclaimer text'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.259 NAME 'CyrusConf'
+    DESC '/etc/cyrus.conf'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.260 NAME 'impadconf'
+    DESC '/etc/imapd.conf'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.262 NAME 'ArticaImapIniConf'
+    DESC 'Drive cyrus configuration'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.263 NAME 'BackupEnabled'
+    DESC 'Drive cyrus configuration'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.264 NAME 'ArticaBackupRules'
+    DESC 'email backup features'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.265 NAME 'stunnelconf'
+    DESC 'stunnelconf'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.266 NAME 'stunnelrules'
+    DESC 'stunnel rules'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.267 NAME 'DkimFilterEnabled'
+    DESC 'Activate dkim-filter'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.268 NAME 'DkimFilterConf'
+    DESC 'Activate dkim-filter'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.269 NAME 'AdLinkerConf'
+    DESC 'Active Directory cache settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.270 NAME 'MailAlternateAddress'
+    DESC 'Combination with MImeDefang Transform eMail address to another inbound'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.271 NAME 'RecipientToAdd'
+    DESC 'Combination ddd eMail address When go to a recipient'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.272 NAME 'KasperskyAntiSpamDefaultGroupCommonActionDef'
+    DESC 'Kaspersky AntiSpam Default Group Common-Action-Def'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.273 NAME 'ArticaUsbBackupKeyID'
+    DESC 'Usb key detection to backup artica datas'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.274 NAME 'MailingListAddress'
+    DESC 'Used in aliases Table to create simple mailing lists'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.275 NAME 'NmapNetworkIP'
+    DESC 'Used in aliases Table to create simple mailing lists'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.276 NAME 'NmapRotateMinutes'
+    DESC 'Used in aliases Table to create simple mailing lists'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.277 NAME 'NmapScanEnabled'
+    DESC 'Discover workstations ? 1/0'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.278 NAME 'ComputerIP'
+    DESC 'TCP/IP Address'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.279 NAME 'ComputerOpenPorts'
+    DESC 'Open Ports found by nmap'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.280 NAME 'ComputerOS'
+    DESC 'Operating system of a computer'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.281 NAME 'ComputerUpTime'
+    DESC 'Uptime of a computer'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.282 NAME 'ComputerMachineType'
+    DESC 'External machine box type'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.283 NAME 'ComputerRunning'
+    DESC 'External machine box type'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.284 NAME 'ComputerMacAddress'
+    DESC 'Computer MAC address'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.285 NAME 'ComputerHopCount'
+    DESC 'Computer HOP pings discover by NMAP'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.286 NAME 'RoundCubeLightHTTPD'
+    DESC 'Lighttpd settings for RoundCube'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.287 NAME 'RoundCubeHTTPEngineEnabled'
+    DESC 'Lighttpd enable/disable for RoundCube'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.288 NAME 'RoundCubeArticaConfigurationFile'
+    DESC 'Artica Formatted configuration for RoundCube'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.290 NAME 'RoundCubeConfigurationFile'
+    DESC 'configuration for RoundCube'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.291 NAME 'EnableMonitorix'
+    DESC 'configuration for Monitorix'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.292 NAME 'kav4sambaConf'
+    DESC 'configuration for kav4samba'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.293 NAME 'ArticaInterfaceLogon'
+    DESC 'configuration for kav4samba'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.294 NAME 'LighttpdUseLdap'
+    DESC 'Switch to LDAP authentification for lighttpd'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.295 NAME 'NamedConf'
+    DESC 'named.conf settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.296 NAME 'BindZones'
+    DESC 'zones settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.297 NAME 'ZoneContent'
+    DESC 'zones compilation hosts'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.298 NAME 'DnsType'
+    DESC 'zones compilation hosts'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.299 NAME 'DnsZoneName'
+    DESC 'zones compilation hosts'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.300 NAME 'DnsCname'
+    DESC 'zones compilation hosts'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.301 NAME 'ComputerCPU'
+    DESC 'zones compilation hosts'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.302 NAME 'DnsMXLength'
+    DESC 'zones compilation hosts'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.303 NAME 'EnableFetchmail'
+    DESC 'Enable/disable Fetchmail'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.304 NAME 'EnableFDMFetch'
+    DESC 'Enable/disable FDM For fetching mails.'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.305 NAME 'FDMArticaSets'
+    DESC 'FDM settings in ini mode'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.306 NAME 'FDMConf'
+    DESC 'FDM settings '
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.307 NAME 'PostfixMasterCfFile'
+    DESC 'Master.cf data'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.308 NAME 'MasterCFEnabled'
+    DESC 'Enable master.cf user defined'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.309 NAME 'SquidICAPClassService'
+    DESC 'Squid icap_class service'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.310 NAME 'P3ScanEnabled'
+    DESC 'P3scan active/inactive'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.311 NAME 'AdvancedMainCfDatas'
+    DESC 'User-defined main.cf datas'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.312 NAME 'AdvancedMainCfDatasType'
+    DESC 'User-defined main.cf datas'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.313 NAME 'SmtpNotificationConfig'
+    DESC 'User-defined SMTP notifications parameters'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.314 NAME 'MaxTempLogFilesDay'
+    DESC 'How long the logs files is stored'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.315 NAME 'maincfBuilder'
+    DESC 'main.cf used to build parameters'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.316 NAME 'HdBackupConfig'
+    DESC 'main.cf used to build parameters'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+
+attributetype (1.1.2.1.1.10.1.317 NAME 'MasterCfPrivate'
+    DESC 'main.cf used to build parameters'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.318 NAME 'MasterCfUnpriv'
+    DESC 'main.cf used to build parameters'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.319 NAME 'MasterCfChroot'
+    DESC 'main.cf used to build parameters'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.320 NAME 'MasterCfWakeup'
+    DESC 'main.cf used to build parameters'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.321 NAME 'MasterCfMaxproc'
+    DESC 'main.cf used to build parameters'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.322 NAME 'MasterCfCommand'
+    DESC 'main.cf used to build parameters'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.323 NAME 'MasterCfCommandParams'
+    DESC 'main.cf used to build parameters'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.324 NAME 'ArticaPerformancesSettings'
+    DESC 'Parameters used to tune performances'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.325 NAME 'MailboxSecurityParameters'
+    DESC 'cyrus-imap privileges'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.326 NAME 'MasterCfType'
+    DESC 'master.cf type parameter'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.327 NAME 'MasterCfServiceName'
+    DESC 'master.cf type name'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.328 NAME 'AllowedSMTPTroughtInternet'
+    DESC 'master.cf type name'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.329 NAME 'PostfixMiltersBehavior'
+    DESC 'master.cf type name'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+#attributetype (1.1.2.1.1.10.1.330 NAME 'ArticaSquidParameters'
+#    DESC 'used to simplify build the squid settings'
+#    EQUALITY caseIgnoreIA5Match
+#    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.331 NAME 'DansGuardianRuleKey'
+    DESC 'used to index dansguardian rules'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+#attributetype (1.1.2.1.1.10.1.332 NAME 'SquidBlockSites'
+#    DESC 'Used to filter websites'
+#    EQUALITY caseIgnoreIA5Match
+#    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.333 NAME 'MountBackupConfig'
+    DESC 'Used to filter websites'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.334 NAME 'sTunnel4enabled'
+    DESC 'Used Enable/disable stunnel'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.335 NAME 'MailArchiverEnabled'
+    DESC 'Used Enable/disable Mail archive in the fly'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.336 NAME 'SambaUsbShare'
+    DESC 'Used To share a remote device'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.337 NAME 'EnableMilterBogom'
+    DESC 'Used enable milter-bogom daemon'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.338 NAME 'EnableMysqlFeatures'
+    DESC 'Used enable milter-bogom daemon'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.339 NAME 'MysqlServerName'
+    DESC 'Used for a remote mysql server'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.340 NAME 'EnableVirtualDomainsInMailBoxes'
+    DESC 'Used enable cyrus multi-domains'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.341 NAME 'EnableCollectdDaemon'
+    DESC 'Used enable Collectd daemon'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.342 NAME 'EnableMilterSpyDaemon'
+    DESC 'Used enable Collectd daemon'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.343 NAME 'EnableUserSpamLearning'
+    DESC 'Used enable EnableUserSpamLearning daemon'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.344 NAME 'AmavisGlobalConfiguration'
+    DESC 'Used To store global settings'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.345 NAME 'AmavisConfigFile'
+    DESC 'Final amavisd.conf that will be put on the server'
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.40 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.346 NAME 'AlternateSmtpRelay'
+    DESC 'possible transport table for each user'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.347 NAME 'FinalDateToLive'
+    DESC 'After reach this date, mailbox and user is deleted'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.348 NAME 'DotClearUserEnabled'
+    DESC 'Enable creating DotClear area for user'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.349 NAME 'MailManAliasPath'
+    DESC 'Used for mailman alias'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.350 NAME 'PostFixUserTransport'
+    DESC 'Used for cyrus per users'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.351 NAME 'TransportMailmanMaps'
+    DESC 'Used for mailman in order to fill transport_maps table'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.352 NAME 'ComputerDHCP'
+    DESC 'Add fixed DHCP Value if set to 1'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.353 NAME 'DansGuardianFilterIPGroup'
+    DESC 'defin ip that will be filtered in dansguardian'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.354 NAME 'FetchMailMatchAddresses'
+    DESC 'Adding token to correspond fetchmail receive email address to the account'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.355 NAME 'homeDirectoryBinded'
+    DESC 'Used to bind other folders to homeDirectory'
+    EQUALITY caseIgnoreMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{255})
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.356 NAME 'CatchAllPostfixAddr'
+    DESC 'Used to create a catch-all address alias'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.357 NAME 'EnableBackupAccount'
+    DESC 'Used to Enable remote account for rsync'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.358 NAME 'RsyncBackupTargetPath'
+    DESC 'Used to locate the backup storage account for rsync'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#---------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.359 NAME 'ComputerCryptedInfos'
+    DESC 'Store crypted informations in order to access to the computer'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.360 NAME 'VolatileIPAddress'
+    DESC 'define this computer has no fixed IP address and need to resolve before any operation'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.361 NAME 'UsersInterfaceDatas'
+    DESC 'Used to personnalize user interface'
+    EQUALITY octetStringMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.40 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.362 NAME 'ComputerScanSchedule'
+    DESC 'Crontab for scanning computers'
+    EQUALITY octetStringMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.40 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.363 NAME 'WWWServerType'
+    DESC 'WWWServerType'
+    EQUALITY octetStringMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.40 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.364 NAME 'WWWMysqlUser'
+    DESC 'WWWMysqlUser'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.365 NAME 'WWWMysqlPassword'
+    DESC 'WWWMysqlPassword'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.366 NAME 'WWWAppliUser'
+    DESC 'WWWAppliUser'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.367 NAME 'WWWAppliPassword'
+    DESC 'WWWAppliPassword'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.368 NAME 'SenderCanonicalRelayHost'
+    DESC 'SenderCanonicalRelayHost'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.369 NAME 'SenderCanonicalRelayPassword'
+    DESC 'SenderCanonicalRelayPassword'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.370 NAME 'SenderCanonicalRelayName'
+    DESC 'SenderCanonicalRelayName'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.371 NAME 'ThumbnailPath'
+    DESC 'ThumbnailPath'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.372 NAME 'mailManOwner'
+    DESC 'mailManOwner'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#-------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.373 NAME 'MailManOwnerPassword'
+    DESC 'mailManOwner'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#-------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.374 NAME 'MailManWebServerName'
+    DESC 'MailManWebServerName'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#-------------------------------------------------------------------
+attributetype (1.1.2.1.1.10.1.375 NAME 'DisclaimerContent'
+    DESC 'DisclaimerContent container'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#--------------------------------------------------------------------
+attributetype ( 1.1.2.1.1.10.1.376 NAME 'DisclaimerOutbound'
+  DESC 'DisclaimerOutbound domain'
+  EQUALITY booleanMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.7
+  SINGLE-VALUE )
+#--------------------------------------------------------------------
+attributetype ( 1.1.2.1.1.10.1.377 NAME 'DisclaimerInbound'
+  DESC 'DisclaimerInbound domain'
+  EQUALITY booleanMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.7
+  SINGLE-VALUE )
+#--------------------------------------------------------------------
+attributetype ( 1.1.2.1.1.10.1.378 NAME 'DisclaimerActivate'
+  DESC 'DisclaimerActivate domain'
+  EQUALITY booleanMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.7
+  SINGLE-VALUE )
+#-------------------------------------------------------------------
+attributetype ( 1.1.2.1.1.10.1.379 NAME 'DisclaimerUserOverwrite'
+  DESC 'DisclaimerUserOverwrite'
+  EQUALITY booleanMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.7
+  SINGLE-VALUE )
+#-------------------------------------------------------------------
+attributetype ( 1.1.2.1.1.10.1.380 NAME 'VolumeGroupName'
+  DESC 'Logical volume groupe name for organization'
+  EQUALITY caseIgnoreIA5Match
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#-------------------------------------------------------------------
+attributetype ( 1.1.2.1.1.10.1.381 NAME 'CryptedHomePassword'
+  DESC 'Password for crypted home file'
+  EQUALITY caseIgnoreIA5Match
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#-------------------------------------------------------------------
+attributetype ( 1.1.2.1.1.10.1.382 NAME 'CryptedHome'
+  DESC 'Enable crypted home'
+  EQUALITY booleanMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.7
+  SINGLE-VALUE )
+#-------------------------------------------------------------------
+attributetype ( 1.1.2.1.1.10.1.383 NAME 'CryptedHomeSize'
+  DESC 'Size of the safebox'
+  EQUALITY caseIgnoreIA5Match
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#-------------------------------------------------------------------
+attributetype ( 1.1.2.1.1.10.1.384 NAME 'ArticaSMTPSyncCreds'
+  EQUALITY caseIgnoreIA5Match
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#-------------------------------------------------------------------
+attributetype ( 1.1.2.1.1.10.1.385 NAME 'ArticaSMTPSenderTable'
+  EQUALITY caseIgnoreIA5Match
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#-------------------------------------------------------------------
+attributetype ( 1.1.2.1.1.10.1.386 NAME 'WWWSSLMode'
+  DESC 'Enable crypted home'
+  EQUALITY booleanMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.7
+  SINGLE-VALUE )
+#-------------------------------------------------------------------
+attributetype ( 1.1.2.1.1.10.1.387 NAME 'OuBackupStorageSubDir'
+  DESC 'OuBackupStorageSubDir'
+  EQUALITY caseIgnoreIA5Match
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#------------------------------------------------------------------
+attributetype ( 1.1.2.1.1.10.1.388 NAME 'MailingListAddressGroup'
+  DESC 'MailingListAddressGroup'
+  EQUALITY caseIgnoreIA5Match
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+#------------------------------------------------------------------
+
+
+
+
+
+#deleted old attribute : ProcMailRcConfig ArticaPolicyEnabled
+
+
+
+objectclass ( 1.3.6.1.4.1.15347.2.3.1.2
+	NAME 'ArticaSettings'
+    	DESC 'special artica attributes'
+	SUP top
+	AUXILIARY
+	MAY(ArticaGroupPrivileges $ KasperkyAVScanningDatas $ KasperkyASDatas $ KasperskyASGroupNumber $ KasperkyASDatasRules $ MailboxActive $ KasperkyASDatasAllow $ KasperkyASDatasDeny $ CronDatas $ PostfixMaincf $ FetchMailsRules $ FetchMailsGlobalSettings $ PostfixHeadersRegex $ PostfixSSLCert $ MailBoxMaxSize $ PostfixHashSmtpSaslAuth $ SmtpdClientRestrictionsRules $ SmtpdRecipientRestrictionsRules $ SmtpdSenderRestrictionsRules $ PostFixBounceTemplate $ SieveScriptsUser $ ArticaGlobalSettings $ VirtualDomainsMapsMTA $ TemplateNotifyInfectedRecipient $ TemplateNotifyInfectedSender $  TemplateNotifyInfectedAdmin $ TemplateNotifyCorruptedRecipient $ TemplateNotifyCorruptedSender $ TemplateNotifyCorruptedAdmin $ TemplateNotifySuspiciousRecipient $ TemplateNotifySuspiciousSender $ TemplateNotifySuspiciousAdmin $ TemplateNotifyCuredRecipient $ TemplateNotifyCuredSender $ TemplateNotifyCuredAdmin $ TemplateNotifyWarningRecipient $ TemplateNotifyWarningSender $ TemplateNotifyWarningAdmin $ TemplateNotifyProtectedRecipient $ TemplateNotifyProtectedSender $ TemplateNotifyProtectedAdmin $ TemplateNotifyFilteredRecipient $ TemplateNotifyFilteredSender $ TemplateNotifyFilteredAdmin $ TemplateNotifyErrorRecipient $ TemplateNotifyErrorSender $ TemplateNotifyErrorAdmin $ CheckRecipientAccess $ checkrecipientmxaccess $ SmtpdHeloRestrictionsRules $ checkheloaccess $ checkhelomxaccess $ checkhelonsaccess $ checksenderaccess $ checksendermxaccess $ checksendernsaccess $ ArticaUserFilterRule $ ArticaMaxDayQuarantine $ ArticaFakedMailFrom $ ArticaDenyNoMXRecords $ FiltersExtensionsGroupName $ CountryDeny $ RblServers $ RblServersAction $ SURBLServers $ SURBLServersAction $ ArticaWebRootURI $ BogoFilterAction $ OuTrustMyUSers $ ArticaDansGuardianGroupRuleEnabled $ ArticaMailAddonsLevel $ ArticaMaxTempLogFilesDay $ ArticaFoldersSizeConfig $ ArticaAutoUpdateConfig $ ArticaFilterEnabled $ AmavisFilterEnabled $ KasxFilterEnabled $ OBMEnabled $ NTPDEnabled $ DefaultGroupPassword $ AutoDomainAliases))
+
+#---------------------------------------------------------------------------
+
+
+
+
+
+objectclass ( 1.3.6.1.4.1.15347.2.1
+	NAME 'mailUser'
+    	DESC 'E-Mail User'
+	SUP top
+	AUXILIARY
+	MUST ( uid $ mail $ maildrop)
+	MAY ( cn )
+	)
+
+objectclass ( 1.3.6.1.4.1.15347.2.3
+	NAME 'transportTable'
+    	DESC 'MTA Transport Table'
+	SUP top
+	STRUCTURAL
+	MUST ( cn $ transport )
+	)
+#===========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.104
+	NAME 'SenderDependentRelayhostMaps'
+    	DESC 'Postfix Sender_Dependent_Relay_host_Maps value'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(SenderRelayHost)
+	)
+#===========================================================
+
+objectclass ( 1.3.6.1.4.1.15347.2.105
+	NAME 'SmtpTlsPolicyMaps'
+    	DESC 'Postfix Smtp_Tls_Policy_Maps database'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(SmtpTlsPolicyMapsValue)
+	)
+#===========================================================
+
+objectclass ( 1.3.6.1.4.1.15347.2.106
+	NAME 'PostFixRestrictionClasses'
+    	DESC 'Postfix restriction classes tree'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(PostFixRestrictionClassList $ PostFixRestrictionClassDescription)
+	)
+#===========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.107
+	NAME 'PostFixRestrictionCheckAccess'
+    	DESC 'Check_*_Access database table'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(PostFixRestrictionTableAction)
+	)
+#===========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.108
+	NAME 'PostFixStructuralClass'
+    	DESC 'Building the tree allows double datas'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	)
+#===========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.109
+	NAME 'PostFixRestrictionStandardClasses'
+    	DESC 'Postfix restriction standard classes tree'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(PostFixRestrictionClassList $ PostFixRestrictionClassDescription)
+	)
+#===========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.110
+	NAME 'PostFixSmtpConnectionCacheDestinations'
+    	DESC 'Postfix smtp_connection_cache_destinations'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	)
+#===========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.111
+	NAME 'PostFixRelayDomains'
+    	DESC 'Postfix Relay_domains lookup table'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	)
+#===========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.112
+	NAME 'PostfixRelayRecipientMaps'
+    	DESC 'Postfix relay_recipient_maps  lookup table'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	)
+#===========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.113
+	NAME 'ArticaCronDatas'
+    	DESC 'Artica Cron Datas files'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(CronFileCommand $ CronFileDescriptions $ CronFileMailTo $ CronFileToDelete)
+	)
+#===========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.114
+	NAME 'ArticaNICSettings'
+    	DESC 'Artica local network settings'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(articaNameServers $ articaNameServersSearchDomains)
+	)
+#===========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.115
+	NAME 'DnsMasqSettings'
+    	DESC 'DNSMASQ local settings'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(DnsMasqConfigurationFile)
+	)
+#===========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.116
+	NAME 'NetworkCardConfiguration'
+    	DESC 'eth0, eth1... settings'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(NetworkCardScript)
+	)
+#===========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.117
+	NAME 'NetworkAliasesCardConfiguration'
+    	DESC 'eth0:0, eth1:0... settings'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(NetworkCardScript)
+	)
+#===========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.118
+	NAME 'PostfixMynetworks'
+    	DESC ' mynetworks settings'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(mynetworks)
+	)
+#===========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.119
+	NAME 'KasperskyAntiSpamSettings'
+    	DESC ' Kaspersky Anti-spam area'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(KasperskyAntispamRules $ KasperskyAntispamFilterConf $ KasperskyAntispamDNSConf $ KasperskyAntiSpamDefaultGroupCommonActionDef)
+	)
+#===========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.120
+	NAME 'SmtpSaslPasswordMaps'
+    	DESC 'Postfix smtp_sasl_password_maps  lookup table'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(SaslPassword)
+	)
+#===========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.121
+	NAME 'DomainsBlackListOu'
+    	DESC 'domains black list from ou'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	)
+#===========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.122
+	NAME 'FilterExtensionsGroup'
+    	DESC 'Deny extensions list '
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(FiltersExtensionsSettings)
+	)
+#===========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.123
+	NAME 'PostfixSmtpSaslPaswordMaps'
+    	DESC 'Postfix smtp_sasl_password_maps lookup table'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(SmtpSaslPasswordString)
+	)
+#===========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.124
+	NAME 'ArticaQuarantineTemplates'
+    	DESC 'Quarantine Notifications Templates'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(ArticaMaxDayTemplate $ ArticaReportQuarantineTemplate)
+	)
+#===========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.125
+	NAME 'ArticaBogoFilterAdmin'
+    	DESC 'User HAM SPAM bogofilter'
+	SUP top
+	AUXILIARY
+	MUST ( cn )
+	MAY(BogoFilterMailType)
+	)
+#===========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.126
+	NAME 'ArticaMailManClass'
+    	DESC 'Generate mailman distributions lists'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(MailManOuOwner $ MailmanListConfigDatas $ mailmanMsgHeader $ mailmanMsgFooter $ mailmanDigestHeader $ mailmanDigestFooter $ mailmanAutoresponseAdminText $ mailmanAutoresponsePostingsText $ mailmanAutoresponseRequestText $ mailmanWelcomeMsg $ mailmanGoodbyeMsg $ mailmanAcceptableAliases $ FilterFilenameExtensions $ MailmanListOperation $ MailManListAdministrator $ MailManListAdminPassword $ HostNameList)
+	)
+#===========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.127
+	NAME 'ArticaMailManRobots'
+    	DESC 'Define mailman smtp address'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(MailManRobotType $ MailManDistriList $ MailManAliasPath $ TransportMailmanMaps $ mailManOwner $ MailManOwnerPassword $ MailManWebServerName)
+	)
+#===========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.128
+	NAME 'ArticaMailMangGlobalConfigClass'
+    	DESC 'Generate mailman distributions general settings'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(MailManDefaultUrlHost $ MailManDefaultUrlPattern $ MailManDefaulPublicArchiveUrl $ MailManDefaultEmailHost $MailManAdminPassword $ VirtualHostOverview)
+	)
+#===========================================================
+#objectclass ( 1.3.6.1.4.1.15347.2.129
+#	NAME 'ArticaKavMilterd'
+#    	DESC 'Kaspersky Anti-virus Milter configuration'
+#	SUP top
+#	STRUCTURAL
+#	MUST ( cn )
+#	MAY(kavmilterConf $ KavMilterdRuleConf $ KavMilterdOU $ KavMilterdGroup $ KavMilterPolicyNumber $ kavmilterEnable)
+#	)
+#===========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.130
+	NAME 'ArticaFetchmail'
+    	DESC 'Fetch mail configs'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(fetchmailrc $ FetchGetLive $ FetchMailDaemonPoolingTime $ FetchmailDaemonPostmaster)
+	)
+#==========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.131
+	NAME 'ArticaInadyn'
+    	DESC 'inadyn settings'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(ArticaInadynPoolRule $ ArticaInadynRule)
+	)
+#==========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.132
+	NAME 'ArticaProxySettings'
+    	DESC 'Define global proxy manager'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(ArticaProxyServerName $ ArticaProxyServerPort $ ArticaProxyServerUsername $ ArticaProxyServerUserPassword $ ArticaProxyServerEnabled)
+	)
+#==========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.133
+	NAME 'Kav4ProxyClass'
+    	DESC 'Kav4Proxy settings'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(Kav4ProxyMainConf $ Kav4ProxyGroupsConf)
+	)
+#==========================================================
+#objectclass ( 1.3.6.1.4.1.15347.2.134
+#	NAME 'SquidProxyClass'
+#    	DESC 'Squid global configuration'
+#	SUP top
+#	STRUCTURAL
+#	MUST ( cn )
+#	MAY(GlobalSquidConf $ ArticaEnableKav4ProxyInSquid $ ArticaSquidParameters $ SquidBlockSites)
+#	)
+#==========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.135
+	NAME 'ArticaHostName'
+    	DESC 'Define to create branch for multiple servers configurations'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	)
+#==========================================================
+objectclass (1.3.6.1.4.1.15347.2.136
+	NAME 'SquidProxyAclsRule'
+    	DESC 'Squid global configuration ACLS datas'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(AclDatas $ SquidProxyAclsType $ AclRuleEnabled)
+	)
+#==========================================================
+objectclass (1.3.6.1.4.1.15347.2.137
+	NAME 'SquidProxyAccessRule'
+    	DESC 'Squid global http_access rules'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(AclRuleName $ AccessRuleEnabled)
+	)
+#==========================================================
+objectclass (1.3.6.1.4.1.15347.2.138
+	NAME 'ArticaOuBigMailHTML'
+    	DESC 'Transform to big Mail policies'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(BigMailHTMLEnabled $ BigMailHtmlConfig $ BigMailHtmlRules $ BigMailHtmlBody)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.139
+	NAME 'DansGuardianConf'
+    	DESC 'DansGuardian Master configuration'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(DansGuardianMasterConf $ DansGuardianRulesIndex $ FilterGroupListConf)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.140
+	NAME 'DansGuardianRules'
+    	DESC 'DansGuardian group configuration'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(DansGuardianRulesName $ DansGuardianCategories $ DansGuardianCategoriesPhrases $ DansGuardianCategoriesWeight $ DansGuardianCategoriesBannedPhraseList $ DansGuardianEnableBannedRegexPurLlist $ BannedRegexPurLlistRules $ BannedRegexPurLlistFile $ ExceptionUrlList $ ExceptionSiteList $ BannedExtensionList $ BannedMimetype $ ExceptionFileSiteList $ DansGuardianMainGroupeRule $ BannedSiteListConf $ WeightedPhraseListConf $ BannedPhraseListConf $ BannedRegexPurListConf $ BannedExtensionListConf $ BannedMimetypeConf $ ExceptionFileSiteListConf $ ExceptionSiteListConf $ DansGuardianRuleKey $ DansGuardianFilterIPGroup)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.141
+	NAME 'PureFtpdClass'
+    	DESC 'Pureftpd Master configuration'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(PureFtpdEnabled $ PureFtpdConf)
+	)
+#=========================================================
+
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.142
+	NAME 'SqlGreyClass'
+    	DESC 'SqlGrey Master configuration'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(SqlGreyEnabled $ SqlGreyConf $ SqlGreyWLIP $ SqlGreyWLHost $ SqlGreyTimeCode)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.143
+	NAME 'PostfixStoreFiles'
+    	DESC 'Postfix contener before save files to disk'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(PostfixMainCfFile $ PostfixBounceTemplateFile $ PostfixTimeCode $ PostFixHeadersRegexFile $ PostfixMasterCfFile)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.144
+	NAME 'BalancePostfixServers'
+    	DESC 'Postfix contener contains slaves servers'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(PostfixSlaveServersIdentity $ PostfixMasterServerIdentity $ PostFixSynchronizeStatus $ CrossRoadsBalancingServerIP $ CrossRoadsBalancingServerName)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.145
+	NAME 'AmavisGlobalSettings'
+    	DESC 'Amavis global settings'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(FinalVirusDestiny $ FinalBannedDestiny $ FinalSpamDestiny $ FinalBadHeaderDestiny $ MailfromNotifyAdmin $ MailfromNotifyRecip $ QuarantineMailZuAdmin $ AmavisGlobalConfiguration $ AmavisConfigFile)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.146
+	NAME 'MilterGreyList'
+    	DESC 'milter-greylist global settings'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(GreyListConf $ MilterGreyListEnabled)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.147
+	NAME 'OBMSystem'
+    	DESC 'NTPD System configuration'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(OBMApacheFile $ OBMConfIni $ OBMConfInc)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.148
+	NAME 'NTPDSystem'
+    	DESC 'OBM System configuration'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(NTPDConf)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.149
+	NAME 'iptables'
+    	DESC 'iptables branch'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(iptablesRules $ iptablesFile)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.150
+	NAME 'ArticaBackup'
+    	DESC 'backup branch'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(ArticaBackupEnabled $ ArticaBackupConf $ HdBackupConfig $ MountBackupConfig)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.151
+	NAME 'ArticaSettings2'
+    	DESC 'New settings'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(MysqlMaxEventsLogs $ ApacheConfig $ lighttpConfig $ ApacheArticaEnabled $ ArticaFirstWizard $ MysqlAdminAccount $ ClamavMilterEnabled $ SpamAssMilterEnabled $ spfmilterEnabled $ EnableSyslogMysql $ MimeDefangEnabled $ DkimFilterEnabled $ ArticaUsbBackupKeyID $ NmapScanEnabled $ RoundCubeLightHTTPD $  RoundCubeHTTPEngineEnabled $ RoundCubeArticaConfigurationFile $ RoundCubeConfigurationFile $ EnableMonitorix $ LighttpdUseLdap $ EnableFetchmail $ EnableFDMFetch $ MasterCFEnabled $ P3ScanEnabled $ SmtpNotificationConfig $ sTunnel4enabled $ MailArchiverEnabled $ EnableMilterBogom $ EnableMysqlFeatures $ MysqlServerName $ EnableVirtualDomainsInMailBoxes $ EnableCollectdDaemon $ EnableMilterSpyDaemon)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.152
+	NAME 'SharedFolders'
+    	DESC 'New settings'
+	SUP top
+	AUXILIARY
+	MUST ( cn )
+	MAY(SharedFolderPrefix $ SharedFolderList $ SharedFolerConf)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.153
+	NAME 'KasFiles'
+    	DESC 'Kaspersky Files configuration before apply to disk'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(KasHexGroupName $ kasactiondef $ kasallowxml $ kasdenyxml $ kasipallowxml $ kasipdenyxml $ kasmembersxml $ kasprofilexml $ kasruledef)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.154
+	NAME 'mailfromd'
+    	DESC 'Mailfromd class'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(MailFromdRC $ MailFromdUserUpdated $ MailFromdUserScript)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.155
+	NAME 'SpamAssassinClass'
+    	DESC 'SpamAssassin class'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(SpamAssassinConfFile)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.156
+	NAME 'SambaArticaClass'
+    	DESC 'SambaArticaClass'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(SambaSMBConf $ SambaUsbShare)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.157
+	NAME 'PostfixRelayClientCerts'
+    	DESC 'Relay_Client_Certs main.cf'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(relayClientcert $ relayClientcertFingerprint)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.158
+	NAME 'MimeDefangClass'
+    	DESC 'MimeDefangClass'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(MimeDefangFilter $ MimeDefangScriptsConf $ MimeDefangDisclaimer)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.159
+	NAME 'CyrusConfigClass'
+    	DESC 'CyrusConfigClass'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(CyrusConf $ impadconf $ ArticaImapIniConf)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.160
+	NAME 'OrganizationBackupSettings'
+    	DESC 'Organization Backup Settings'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(BackupEnabled $ ArticaBackupRules)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.161
+	NAME 'sTunnel4Config'
+    	DESC 'stunnel4 Settings'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(stunnelconf $ stunnelrules)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.162
+	NAME 'DkimFilterConfig'
+    	DESC 'dkim-filter Settings'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(DkimFilterConf)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.163
+	NAME 'AdLinker'
+    	DESC 'Active Directory Linking settings'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(AdLinkerConf)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.164
+	NAME 'RecipientCanonicalMaps'
+    	DESC 'Using in combination with postfix for Forwarding mails settings'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(MailAlternateAddress)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.165
+	NAME 'UserArticaClass'
+    	DESC 'Using in combination with user class for copy mails settings'
+	SUP top
+	AUXILIARY
+	MAY(RecipientToAdd $ ArticaInterfaceLogon $ 
+	MailboxSecurityParameters $ AllowedSMTPTroughtInternet $ 
+	AlternateSmtpRelay $ FinalDateToLive $ DotClearUserEnabled $ 
+	PostFixUserTransport $ EnableUserSpamLearning $ FetchMailMatchAddresses 
+	$ homeDirectoryBinded $ EnableBackupAccount $ RsyncBackupTargetPath $ UsersInterfaceDatas $
+	 ThumbnailPath $ CryptedHome $ CryptedHomePassword $ CryptedHomeSize $ SenderBccMaps)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.166
+	NAME 'MailingAliasesTable'
+    	DESC 'Class to create Table for mailing list "cn" is the original address'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(MailingListAddress $ MailingListAddressGroup)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.167
+	NAME 'NmapSettings'
+    	DESC 'Class to define nmap discover remote computers'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(NmapNetworkIP $ NmapRotateMinutes)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.168
+	NAME 'ArticaComputerInfos'
+    	DESC 'Adding nmap informations in the schema'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(ComputerIP $ ComputerOpenPorts $ ComputerOS $ ComputerUpTime $ ComputerMachineType $ ComputerRunning $
+	ComputerMacAddress $ ComputerHopCount $ DnsType $ DnsZoneName $ DnsCname $ ComputerCPU $ DnsMXLength $ 
+	ComputerDHCP $ ComputerCryptedInfos $ VolatileIPAddress $ ComputerScanSchedule)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.169
+	NAME 'kav4samba'
+    	DESC 'kav4samba Class'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(kav4sambaConf)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.170
+	NAME 'Bind'
+    	DESC 'Bind9 bind configuration'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(NamedConf $ BindZones $ ZoneContent)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.171
+	NAME 'FDMClass'
+    	DESC 'FDM Settings'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(FDMArticaSets $ FDMConf)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.172
+	NAME 'SquidICAPClass'
+    	DESC 'icap_class squid'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(SquidICAPClassService)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.173
+	NAME 'AdvancedMainCF'
+    	DESC 'using to set user-defined main.cf datas'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(AdvancedMainCfDatas $ AdvancedMainCfDatasType)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.174
+	NAME 'ArticaSettings3'
+    	DESC 'artica settings 2'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(MaxTempLogFilesDay $ ArticaPerformancesSettings)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.175
+	NAME 'PostfixMainConfigurationFile'
+    	DESC 'main_cf builder class'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(maincfBuilder $ PostfixMiltersBehavior)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.176
+	NAME 'PostfixMasterCfParam'
+    	DESC 'master.cf builder class'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(MasterCfPrivate $ MasterCfUnpriv $ MasterCfChroot $ MasterCfWakeup $ MasterCfMaxproc $ MasterCfCommand $ MasterCfCommandParams $ MasterCfType $ MasterCfServiceName)
+	)
+
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.177
+	NAME 'AdditionalPostfixMaps'
+    	DESC 'Used to set additional maps table for postfix'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(CatchAllPostfixAddr)
+	)
+#=========================================================
+objectclass (1.3.6.1.4.1.15347.2.178
+	NAME 'ApacheArtica'
+    	DESC 'Used to set additional configurations on VHOST'
+	SUP apacheConfig
+	STRUCTURAL
+	MAY(WWWServerType $ WWWMysqlUser $ WWWMysqlPassword $ WWWAppliUser $ WWWAppliPassword $ WWWSSLMode)
+	)
+#===========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.179
+	NAME 'SenderDependentSaslInfos'
+    	DESC 'Postfix smtp_sasl_password_maps  lookup table'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(SenderCanonicalRelayHost $ SenderCanonicalRelayPassword $ SenderCanonicalRelayName)
+	)
+#===========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.180
+	NAME 'DisclaimerDomain'
+    	DESC 'DisclaimerDomain'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(DisclaimerContent $ DisclaimerOutbound $ DisclaimerInbound $ DisclaimerActivate $ DisclaimerUserOverwrite)
+	)
+#===========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.181
+	NAME 'LVMGroup'
+    	DESC 'LVM Disk per organization'
+	SUP top
+	STRUCTURAL
+	MUST ( cn )
+	MAY(VolumeGroupName)
+	)
+#===========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.182
+	NAME 'ComputerAfectation'
+    	DESC 'Affect computers to users'
+	SUP top
+	STRUCTURAL
+	MUST ( cn $ ComputerMacAddress $ uid )
+	MAY(host)
+	)
+#===========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.183
+	NAME 'OuBackupStorage'
+    	DESC 'Backup to LVM settings'
+	SUP top
+	STRUCTURAL
+	MUST (cn $ OuBackupStorageSubDir)
+	)
+#===========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.184
+	NAME 'ArticaSMTPSyncDB'
+    	DESC 'synchronize SMTP tables'
+	SUP top
+	STRUCTURAL
+	MUST (cn $ ArticaSMTPSyncCreds)
+	)
+#===========================================================
+objectclass ( 1.3.6.1.4.1.15347.2.185
+	NAME 'InternalRecipients'
+    	DESC 'Recipients Table'
+	SUP top
+	STRUCTURAL
+	MUST (cn $ ArticaSMTPSenderTable)
+	)
+#==========================================================
+
+
+attributetype ( 1.3.6.1.4.1.15347.2.110 NAME 'maildest'
+	DESC 'Restricted to send only to local network'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{32768} )
+
+#attributetype ( 1.3.6.1.4.1.15347.2.111 NAME 'mailaccess'
+#	DESC 'Can be mailed to restricted groups'
+#	EQUALITY caseIgnoreMatch
+#	SUBSTR caseIgnoreSubstringsMatch
+#	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{32768} )
+
+
+attributetype (1.1.2.1.1.1 NAME 'mailForward'
+    DESC 'forward address'
+    EQUALITY caseExactIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+
+attributetype (1.1.2.1.1.2 NAME 'mailAlias'
+    DESC 'alias address'
+    EQUALITY caseExactIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26)
+attributetype (1.1.2.1.1.4 NAME 'mailDir'
+    DESC 'path of mailDir'
+    EQUALITY caseExactIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+
+attributetype (1.1.2.1.1.5 NAME 'imapMailDir'
+    DESC 'Path of ImapMailDir'
+    EQUALITY caseExactIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype (1.1.2.1.1.6 NAME 'aliasCommand'
+    DESC 'Include Command'
+    EQUALITY caseExactIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype (1.1.2.1.1.7 NAME 'accountActive'
+    DESC 'active or not active' 
+    EQUALITY booleanMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.7 SINGLE-VALUE)
+
+attributetype (1.1.2.1.1.8 NAME 'domainName'
+    DESC 'domain name'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+
+attributetype (1.1.2.1.1.9 NAME 'accountGroup'
+    DESC 'mail group'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+
+attributetype (1.1.2.1.1.11 NAME 'SenderCanonical'
+    DESC 'Sender Canonical'
+    EQUALITY caseExactIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 SINGLE-VALUE)
+
+
+objectClass (1.1.2.2.1.2 NAME 'userAccount'
+    DESC 'mail user Object'
+    SUP inetOrgPerson
+    MUST ( mailDir $ homeDirectory $ accountActive $ domainName $ accountGroup )
+    MAY  ( mailForward $ mailAlias $ imapMailDir $ SenderCanonical))
+
+objectClass (1.1.2.2.1.3 NAME 'groupAccount'
+   DESC 'ML Group Account Object'
+   SUP inetOrgPerson
+   MUST ( accountActive $ domainName $ mailDrop $ accountGroup )
+   MAY  ( aliasCommand ))
+
+objectClass (1.1.2.2.1.4 NAME 'adminAccount'
+    DESC 'admin user Object'
+    SUP inetOrgPerson
+    MUST ( domainName $ transport $ accountGroup ))
+
+objectClass (1.1.2.2.1.5 NAME 'masterAccount'
+    DESC 'master user Object'
+    SUP inetOrgPerson
+    MUST ( accountGroup ))
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.1
+  NAME 'amavisVirusLover'
+  DESC 'Virus Lover'
+  EQUALITY booleanMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.7
+  SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.2
+  NAME 'amavisBannedFilesLover'
+  DESC 'Banned Files Lover'
+  EQUALITY booleanMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.7
+  SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.3
+  NAME 'amavisBypassVirusChecks'
+  DESC 'Bypass Virus Check'
+  EQUALITY booleanMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.7
+  SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.4
+  NAME 'amavisBypassSpamChecks'
+  DESC 'Bypass Spam Check'
+  EQUALITY booleanMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.7
+  SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.5
+  NAME 'amavisSpamTagLevel'
+  DESC 'Spam Tag Level'
+  EQUALITY telephoneNumberMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.50
+  SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.6
+  NAME 'amavisSpamTag2Level'
+  DESC 'Spam Tag2 Level'
+  EQUALITY telephoneNumberMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.50
+  SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.7
+  NAME 'amavisSpamKillLevel'
+  DESC 'Spam Kill Level'
+  EQUALITY telephoneNumberMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.50
+  SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.8
+  NAME 'amavisSpamModifiesSubj'
+  DESC 'Modifies Subject on spam'
+  EQUALITY booleanMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.7
+  SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.9
+  NAME 'amavisWhitelistSender'
+  DESC 'White List Sender'
+  EQUALITY caseIgnoreIA5Match
+  SUBSTR caseIgnoreIA5SubstringsMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256} )
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.10
+  NAME 'amavisBlacklistSender'
+  DESC 'Black List Sender'
+  EQUALITY caseIgnoreIA5Match
+  SUBSTR caseIgnoreIA5SubstringsMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256} )
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.11
+  NAME 'amavisSpamQuarantineTo'
+  DESC 'Spam Quarantine to'
+  EQUALITY caseIgnoreIA5Match
+  SUBSTR caseIgnoreIA5SubstringsMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256}
+  SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.12
+  NAME 'amavisSpamLover'
+  DESC 'Spam Lover'
+  EQUALITY booleanMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.7
+  SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.13
+  NAME 'amavisBadHeaderLover'
+  DESC 'Bad Header Lover'
+  EQUALITY booleanMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.7
+  SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.14
+  NAME 'amavisBypassBannedChecks'
+  DESC 'Bypass Banned Files Check'
+  EQUALITY booleanMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.7
+  SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.15
+  NAME 'amavisBypassHeaderChecks'
+  DESC 'Bypass Header Check'
+  EQUALITY booleanMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.7
+  SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.16
+  NAME 'amavisVirusQuarantineTo'
+  DESC 'Virus quarantine location'
+  EQUALITY caseIgnoreIA5Match
+  SUBSTR caseIgnoreIA5SubstringsMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256}
+  SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.17
+  NAME 'amavisBannedQuarantineTo'
+  DESC 'Banned Files quarantine location'
+  EQUALITY caseIgnoreIA5Match
+  SUBSTR caseIgnoreIA5SubstringsMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256}
+  SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.18
+  NAME 'amavisBadHeaderQuarantineTo'
+  DESC 'Bad Header quarantine location'
+  EQUALITY caseIgnoreIA5Match
+  SUBSTR caseIgnoreIA5SubstringsMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256}
+  SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.19
+  NAME 'amavisLocal'
+  DESC 'Is user considered local'
+  EQUALITY booleanMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.7
+  SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.20
+  NAME 'amavisMessageSizeLimit'
+  DESC 'Message size limit'
+  EQUALITY caseIgnoreIA5Match
+  SUBSTR caseIgnoreIA5SubstringsMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256}
+  SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.21
+  NAME 'amavisWarnVirusRecip'
+  DESC 'Notify virus recipients'
+  EQUALITY booleanMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.7
+  SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.22
+  NAME 'amavisWarnBannedRecip'
+  DESC 'Notify banned file recipients'
+  EQUALITY booleanMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.7
+  SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.23
+  NAME 'amavisWarnBadHeaderRecip'
+  DESC 'Notify bad header recipients'
+  EQUALITY booleanMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.7
+  SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.24
+  NAME 'amavisVirusAdmin'
+  DESC 'Virus admin'
+  EQUALITY caseIgnoreIA5Match
+  SUBSTR caseIgnoreIA5SubstringsMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256}
+  SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.25
+  NAME 'amavisNewVirusAdmin'
+  DESC 'New virus admin'
+  EQUALITY caseIgnoreIA5Match
+  SUBSTR caseIgnoreIA5SubstringsMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256}
+  SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.26
+  NAME 'amavisSpamAdmin'
+  DESC 'Spam admin'
+  EQUALITY caseIgnoreIA5Match
+  SUBSTR caseIgnoreIA5SubstringsMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256}
+  SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.27
+  NAME 'amavisBannedAdmin'
+  DESC 'Banned file admin'
+  EQUALITY caseIgnoreIA5Match
+  SUBSTR caseIgnoreIA5SubstringsMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256}
+  SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.28
+  NAME 'amavisBadHeaderAdmin'
+  DESC 'Bad header admin'
+  EQUALITY caseIgnoreIA5Match
+  SUBSTR caseIgnoreIA5SubstringsMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256}
+  SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.29
+  NAME 'amavisBannedRuleNames'
+  DESC 'Banned rule names'
+  EQUALITY caseIgnoreIA5Match
+  SUBSTR caseIgnoreIA5SubstringsMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256}
+  SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.30
+  NAME 'amavisSpamDsnCutoffLevel'
+  DESC 'Spam DSN Cutoff Level'
+  EQUALITY caseIgnoreIA5Match
+  SUBSTR caseIgnoreIA5SubstringsMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256}
+  SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.31
+  NAME 'amavisSpamQuarantineCutoffLevel'
+  DESC 'Spam Quarantine Cutoff Level'
+  EQUALITY caseIgnoreIA5Match
+  SUBSTR caseIgnoreIA5SubstringsMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256}
+  SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.32
+  NAME 'amavisSpamSubjectTag'
+  DESC 'Spam Subject Tag'
+  EQUALITY caseExactIA5Match
+  SUBSTR caseExactSubstringsMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256}
+  SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.15312.2.2.1.33
+  NAME 'amavisSpamSubjectTag2'
+  DESC 'Spam Subject Tag2'
+  EQUALITY caseExactIA5Match
+  SUBSTR caseExactSubstringsMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256}
+  SINGLE-VALUE )
+
+
+objectclass ( 1.3.6.1.4.1.15312.2.2.2.1
+  NAME 'amavisAccount' AUXILIARY
+  DESC 'Amavisd Account'
+  SUP top
+  MAY ( amavisVirusLover $ amavisBypassVirusChecks $
+        amavisSpamLover $ amavisBypassSpamChecks $
+        amavisBannedFilesLover $ amavisBypassBannedChecks $
+        amavisBadHeaderLover $ amavisBypassHeaderChecks $
+        amavisSpamTagLevel $ amavisSpamTag2Level $ amavisSpamKillLevel $
+        amavisWhitelistSender $ amavisBlacklistSender $
+        amavisSpamQuarantineTo $ amavisVirusQuarantineTo $
+        amavisBannedQuarantineTo $ amavisBadHeaderQuarantineTo $
+        amavisSpamModifiesSubj $ amavisLocal $ amavisMessageSizeLimit $
+        amavisWarnVirusRecip $ amavisWarnBannedRecip $
+        amavisWarnBadHeaderRecip $ amavisVirusAdmin $ amavisNewVirusAdmin $
+        amavisSpamAdmin $ amavisBannedAdmin $ amavisBadHeaderAdmin $
+        amavisBannedRuleNames $
+        amavisSpamDsnCutoffLevel $ amavisSpamQuarantineCutoffLevel $
+        amavisSpamSubjectTag $ amavisSpamSubjectTag2 $
+        cn $ description ) )
+
+
+# Definition des objets et attributs nécessaires a OBM
+
+# Attribut : mailBoxServer
+# Le serveur hébergeant la BAL locale de l'utilisateur.
+attributetype ( 1.3.6.1.4.1.25469.1.1.1.13
+    NAME 'obmDomain'
+    DESC 'OBM domain for the entity'
+    EQUALITY caseIgnoreMatch
+    SUBSTR caseIgnoreSubstringsMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{256} )
+
+# Attribut : webAccess
+# Gestion de l'acces web de l'utilisateur. 
+#   0 : l'utilisateur n'a pas acces au web.
+#   1 : l'utilisateur a acces au web.
+attributetype ( 1.3.6.1.4.1.25469.1.1.1.1
+        NAME 'webAccess'
+        DESC 'Web access authorization. 1: ok, 0:nok'
+        EQUALITY integerMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+        SINGLE-VALUE )
+
+# Attribut : mailAccess
+# Gestion de l'acces a la messagerie pour l'utilisateur.
+#   PERMIT : l'utilisateur a acces a la messagerie.
+#   REJECT : l'utilisateur n'a pas acces a la messagerie.
+attributetype ( 1.3.6.1.4.1.25469.1.1.1.2
+        NAME 'mailAccess'
+        DESC 'Mail access authorization. PERMET: ok, REJECT: nok'
+        EQUALITY caseIgnoreMatch
+        SUBSTR caseIgnoreSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{10}
+        SINGLE-VALUE )
+
+# Attribut : mailLocalOnly
+# Gestion de l'acces a la messagerie pour l'utilisateur.
+#   local_only : l'utilisateur a acces a la messagerie locale uniquement ;
+#   attribut absent, acces total a la messagerie.
+attributetype ( 1.3.6.1.4.1.25469.1.1.1.3
+        NAME 'mailLocalOnly'
+        DESC 'Local mail restriction. non existent or local_only'
+        EQUALITY caseIgnoreMatch
+        SUBSTR caseIgnoreSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{20}
+        SINGLE-VALUE )
+
+# Attribut : mailBox
+# Liste des BAL de livraisons pour un utilisateur.
+attributetype ( 1.3.6.1.4.1.25469.1.1.1.5
+    NAME 'mailBox'
+    DESC 'RFC1274: RFC822 Mailbox'
+    EQUALITY caseIgnoreIA5Match
+    SUBSTR caseIgnoreIA5SubstringsMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256} )
+
+# Attribut : mailBoxServer
+# Le serveur hébergeant la BAL locale de l'utilisateur.
+attributetype ( 1.3.6.1.4.1.25469.1.1.1.12
+    NAME 'mailBoxServer'
+    DESC 'User mailbox server'
+    EQUALITY caseIgnoreIA5Match
+    SUBSTR caseIgnoreIA5SubstringsMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256} )
+
+# Attribut : hiddenUser
+# Attribut à utiliser dans les ACL LDAP afin de cacher tout ou partie de la
+# description de l'utilisateur (pour les requêtes anonymes par exemple)
+attributetype ( 1.3.6.1.4.1.25469.1.1.1.14
+    NAME 'hiddenUser'
+    DESC 'User must be hidden for any/some LDAP query'
+    EQUALITY booleanMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.7
+    SINGLE-VALUE )
+
+# Classe d'objet: obmUser
+# complète la description d'un utilisateur avec les paramètres OBM
+objectclass ( 1.3.6.1.4.1.25469.1.1.2.1
+	NAME 'obmUser'
+	DESC 'OBM user description'
+	SUP top AUXILIARY
+    MUST uid
+	MAY ( webAccess $ mailAccess $ mailAlias $ mailLocalOnly $ mailBox $ mailBoxServer $ obmDomain $ personalTitle $ organizationName $ hiddenUser ) )
+
+# Objet : obmSystemUser
+# Definition de l'objet specifique a l'application OBM.
+objectclass ( 1.3.6.1.4.1.25469.1.1.2.5
+	NAME 'obmSystemUser'
+	DESC 'OBM system user description'
+	SUP top AUXILIARY
+    MUST uid
+	MAY ( obmDomain ) )
+
+# Objet : obmGroup
+# Definition de l'objet specifique a l'application OBM.
+objectclass ( 1.3.6.1.4.1.25469.1.1.2.2
+    NAME 'obmGroup'
+    DESC 'OBM special groups description'
+    SUP top AUXILIARY
+    MUST cn
+    MAY ( mailBox $ mail $ mailAlias $ mailAccess $ obmDomain ) )
+
+# Objet : obmMailShare
+# Definition de l'objet permettant de stocker la description des repertoires
+# partages
+objectclass ( 1.3.6.1.4.1.25469.1.1.2.3
+    NAME 'obmMailShare'
+    DESC 'OBM Mail Share Directory description'
+    STRUCTURAL
+    MUST ( cn )
+    MAY ( mailBox $ mailBoxServer $ mail $ description $ mailAlias $ mailAccess $ obmDomain ) )
+
+# Objet : obmHost
+# Definition de l'objet permettant ed stocker la description des hôtes
+objectclass ( 1.3.6.1.4.1.25469.1.1.2.7
+    NAME 'obmHost'
+    DESC 'OBM special hosts description'
+    SUP top AUXILIARY
+    MUST cn
+    MAY ( obmDomain ) )
+
+# Attribut : myDestination
+# Permet de stocker la liste des domaines locaux. plusieurs attributs
+# 'myDestination' sont possibles
+attributetype ( 1.3.6.1.4.1.25469.1.1.1.6
+        NAME 'myDestination'
+        DESC 'Mail local domains'
+        EQUALITY caseIgnoreMatch
+        SUBSTR caseIgnoreSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{256} )
+
+# Attribut : myNetwork
+# Permet de stocker la liste des plages d'adresses a considerer comme locales
+# Plusieurs 'myNetworks' sont possibles
+attributetype ( 1.3.6.1.4.1.25469.1.1.1.7
+        NAME 'myNetwork'
+        DESC 'Mail local networks'
+        EQUALITY caseIgnoreMatch
+        SUBSTR caseIgnoreSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{256} )
+
+# Attribut : relayhost
+# Permet de stocker le relayhost a utiliser. Il doit etre precise sous la forme proto:adresseIP
+# C'est sur ce serveur que les courriers local est dirige.
+attributetype ( 1.3.6.1.4.1.25469.1.1.1.8
+        NAME 'relayhost'
+        DESC 'Relay Host'
+        EQUALITY caseIgnoreMatch
+        SUBSTR caseIgnoreSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{50} 
+        SINGLE-VALUE )
+
+# Attribut : smarthost
+# Permet de stocker le smarthost a utiliser. Il doit etre precise sous la forme proto:adresseIP
+# C'est sur ce serveur que les courriers non locaux sont diriges.
+attributetype ( 1.3.6.1.4.1.25469.1.1.1.9
+        NAME 'smarthost'
+        DESC 'Smart Host'
+        EQUALITY caseIgnoreMatch
+        SUBSTR caseIgnoreSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{50} 
+        SINGLE-VALUE )
+	
+# Attribut : localRestrictionSender
+# Permet de stocker la police par defaut a appliquer aux mails dont le champs
+# FROM fait partie d'un domaine local
+attributetype ( 1.3.6.1.4.1.25469.1.1.1.10
+        NAME 'localRestrictionSender'
+        DESC 'Default policies for local sender'
+        EQUALITY caseIgnoreMatch
+        SUBSTR caseIgnoreSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{10} 
+        SINGLE-VALUE )
+
+# Attribut : toLocalDomain
+# Permet de stocker la police par defaut a appliquer aux mails...
+attributetype ( 1.3.6.1.4.1.25469.1.1.1.11
+        NAME 'toLocalDomain'
+        DESC 'Default policies for local recipient'
+        EQUALITY caseIgnoreMatch
+        SUBSTR caseIgnoreSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{10} 
+        SINGLE-VALUE )
+
+# Attribut : imapHost
+# Hôte(s) serveur(s) IMAP pour le domaine.
+attributetype ( 1.3.6.1.4.1.25469.1.1.1.16
+        NAME 'imapHost'
+        DESC 'IMAP Hosts for domain'
+        EQUALITY caseIgnoreMatch
+        SUBSTR caseIgnoreSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{256} )
+
+# Attribut : smtpInHost
+# Hôte(s) serveur(s) SMTP entrant pour le domaine.
+attributetype ( 1.3.6.1.4.1.25469.1.1.1.17
+        NAME 'smtpInHost'
+        DESC 'SMTP-in Hosts for domain'
+        EQUALITY caseIgnoreMatch
+        SUBSTR caseIgnoreSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{256} )
+
+# Attribut : smtpOutHost
+# Hôte(s) serveur(s) SMTP sortant pour le domaine.
+attributetype ( 1.3.6.1.4.1.25469.1.1.1.18
+        NAME 'smtpOutHost'
+        DESC 'SMTP-out Hosts for domain'
+        EQUALITY caseIgnoreMatch
+        SUBSTR caseIgnoreSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{256} )
+
+# Objet : obmMailServer
+# Definition de l'objet 'obmMailServer'
+objectclass ( 1.3.6.1.4.1.25469.1.1.2.4
+    NAME 'obmMailServer'
+    DESC 'Mail servers configuration for the domain'
+    SUP top STRUCTURAL
+    MUST ( cn )
+    MAY ( myDestination $ obmDomain $ imapHost $ smtpInHost $ smtpOutHost ) )
+
+# objet : obmSamba
+# Definition de l'objet 'obmSamba'
+objectclass ( 1.3.6.1.4.1.25469.1.1.2.6
+    NAME 'obmSamba'
+    DESC 'Samba OBM informations'
+    SUP top AUXILIARY
+    MAY ( obmDomain ) )
+
+
+
+

@@ -1,0 +1,24 @@
+<browse_mysql_server>Parcourez votre serveur Mysql</browse_mysql_server>
+<browse_mysql_server_text>Affichez la base de donn&eacute;es et les tables de votre serveur Mysql.</browse_mysql_server_text>
+<change_mysql_power>Am&eacute;liorer le moteur MySQL</change_mysql_power>
+<databases_status>Statut des base de donn&eacute;es</databases_status>
+<database_size>Taille de la base de donn&eacute;es.</database_size>
+<enable_mysql>Activer MySQL</enable_mysql>
+<enable_mysql_text>Que vous utiliser un serveur MySQL local ou distant vous pouvez l'activer/d&eacute;sactiver en utilisant le moteur de base de donn&eacute;es[br]
+Cela d&eacute;pends des performances de votre ordinateur.[br]
+Plusieurs services et fonctions utilisent MySQL (Sauvegarde des messages, syslog injection ...) et consomment des processus et de la m&eacute;moire.</enable_mysql_text>
+<mysqlserver>Nom de l'h&ocirc;te MySQL</mysqlserver>
+<mysql_account>Profil de l'administrateur MySQL</mysql_account>
+<mysql_database>Moteur de base de donn&eacute;es Mysql</mysql_database>
+<mysql_database_text>Options avanc&eacute;es de la base Mysql</mysql_database_text>
+<MYSQL_PASSWORD_USER>Nouveau compte utilisateur et mot de passe MYSQL</MYSQL_PASSWORD_USER>
+<MYSQL_PASSWORD_USER_TEXT>Changer le compte et le mot de passe administrateur MYSQL</MYSQL_PASSWORD_USER_TEXT>
+<mysql_performance_level>Niveau de performance du moteur</mysql_performance_level>
+<mysql_repair>R&eacute;parer les bases de donn&eacute;es Mysql.</mysql_repair>
+<MYSQL_USER_NET>Param&egrave;tres Mysql d'authentification</MYSQL_USER_NET>
+<MYSQL_USER_NET_TEXT>Modifiez les coordonn&eacute;es vers votre moteur de base de donn&eacute;es</MYSQL_USER_NET_TEXT>
+<performances>Performances</performances>
+<rows_number>nombre de lignes</rows_number>
+<tables_list>liste des tables</tables_list>
+<tables_number>nombre de tables</tables_number>
+<table_size>Taille de la table</table_size>

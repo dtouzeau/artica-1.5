@@ -1,0 +1,19 @@
+<build>Procesar las configuraciones</build>
+<build_domain>Crear Dominio</build_domain>
+<build_group>Crear grupo</build_group>
+<build_org>Crear organizaci&oacute;n</build_org>
+<build_user>Crear usuario</build_user>
+<domain_iptext>&iquest;Es este dominio un dominio local? Si es as&iacute;, de clic en el bot&oacute;n &quot;Siguiente&quot;. [br] Para retransmitir el dominio hacia otro servidor, indique el nombre o la ip de dicho servidor.</domain_iptext>
+<domain_text>Defina aqu&iacute; el dominio SMTP que ser&aacute; usado for su nueva organizaci&oacute;n. [br] El valor debe ser un dominio v&aacute;lido de Internet, ejemplo: &quot;domain.tld&quot;</domain_text>
+<group_text>Ahora, defina el nombre de grupo donde se almacenar&aacute;n los usuarios de Correo, Dominio SAMBA, ftp o de Internet.</group_text>
+<launch>Iniciar</launch>
+<org_text>El primer par&aacute;metro a configurar es la Organizaci&oacute;n. [br] La Organizaci&oacute;n es una entidad que almacena usuarios, grupos y dominios de correos. [br] Indique el nombre de su primer organizaci&oacute;n...</org_text>
+<rebuild_modules>Reconstruir M&oacute;dulos de Postfix</rebuild_modules>
+<rebuild_postfix>Reconstruir Postfix</rebuild_postfix>
+<relay_type>Tipo de Retransmisi&oacute;n</relay_type>
+<uid>Identificaci&oacute;n del Usuario</uid>
+<user>Primer usuario</user>
+<user_text>Defina aqu&iacute; el primer usuario que ser&aacute; Destinatario de tu nuevo dominio. En este caso, puede probar la configuraci&oacute;n realizada con este usuario.[br] No agrege el nombre del dominio a este usuario, proporcione el nombre identificador antes del simbolo &quot;@&quot;.[br] 
+Indique la contrase&ntilde;a de este nuevo usuario. Esta ser&aacute; utilizada si ha instalado el programa  cyrus como servidor de correo IMAP/POP3</user_text>
+<welcome>Bienvenido a Artica - Postfix</welcome>
+<welcome_text>Esta secc&iacute;&oacute;n le ayudar&aacute; a definir las principales caracter&iacute;sticas de Artica-Postfix para hacerlo trabajar en un ambiente de Producci&oacute;n real.</welcome_text>

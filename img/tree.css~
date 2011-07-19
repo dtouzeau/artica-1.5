@@ -1,0 +1,88 @@
+.tafelTree {
+text-align: left;
+direction: ltr;
+overflow: auto;
+}
+
+.tafelTree, .tafelTree table {
+font-size: small;
+}
+
+.tafelTree, .tafelTree span, .tafelTree img, .tafelTree div {
+margin: 0;
+padding: 0;
+}
+
+.tafelTree table {
+border-collapse: collapse;
+margin: 0px;
+padding: 0px;
+border:0px;
+}
+
+.tafelTree table tr, .tafelTree table td {
+direction: ltr;
+margin: 0px;
+padding: 0px;
+clear:both;
+border:0px;
+}
+
+.tafelTree table td {
+white-space: nowrap;
+vertical-align: top;
+}
+
+.tafelTree .drag {
+cursor: pointer;
+}
+
+.tafelTree .content {
+padding: 0 0.1em;
+}
+
+.tafelTree .canevas {
+vertical-align: middle;
+padding-left:3px;
+}
+
+.tafelTree .selected {
+background-color: #9999FF;
+color: #FFFFFF;
+}
+
+.tafelTree .editable {
+display: none;
+padding: 0 0.2em;
+border: 1px solid #CCCCFF;
+background-color: #EEEEFF;
+}
+
+.tafelTree .dragOver {
+background-color: #9999CC;
+color: #EEEEFF;
+}
+
+.tafelTree .tooltip {
+display: none;
+position: absolute;
+border: 1px solid #9999FF;
+background-color: #EEEEFF;
+padding: 0.3em;
+z-index: 9000;
+}
+
+
+
+/**
+ * Multiline
+ */
+.tafelTree table td.multiline {
+background-repeat: repeat-y;
+background-position: top left;
+}
+
+.tafelTree table td.multiline2 {
+background-repeat: repeat-y;
+background-position: top left;
+}

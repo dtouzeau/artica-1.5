@@ -1,0 +1,238 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <ProjectOptions>
+    <PathDelim Value="/"/>
+    <Version Value="5"/>
+    <General>
+      <Flags>
+        <MainUnitHasUsesSectionForAllUnits Value="False"/>
+        <MainUnitHasCreateFormStatements Value="False"/>
+        <MainUnitHasTitleStatement Value="False"/>
+      </Flags>
+      <MainUnit Value="0"/>
+      <IconPath Value="./"/>
+      <TargetFileExt Value=""/>
+      <Title Value="Artica Quarantine"/>
+      <ActiveEditorIndexAtStart Value="2"/>
+    </General>
+    <VersionInfo>
+      <UseVersionInfo Value="True"/>
+      <AutoIncrementBuild Value="True"/>
+      <CurrentVersionNr Value="1"/>
+      <ProjectVersion Value=""/>
+    </VersionInfo>
+    <PublishOptions>
+      <Version Value="2"/>
+      <IgnoreBinaries Value="False"/>
+      <IncludeFileFilter Value="*.(pas|pp|inc|lfm|lpr|lrs|lpi|lpk|sh|xml)"/>
+      <ExcludeFileFilter Value="*.(bak|ppu|ppw|o|so);*~;backup"/>
+    </PublishOptions>
+    <RunParams>
+      <local>
+        <FormatVersion Value="1"/>
+        <LaunchingApplication PathPlusParams="/usr/X11R6/bin/xterm -T 'Lazarus Run Output' -e $(LazarusDir)/tools/runwait.sh $(TargetCmdLine)"/>
+      </local>
+    </RunParams>
+    <Units Count="16">
+      <Unit0>
+        <Filename Value="ArticaQuarantine.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ArticaQuarantine"/>
+        <CursorPos X="75" Y="85"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="0"/>
+        <UsageCount Value="58"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="../../../../ContentFilter/ldap.pas"/>
+        <UnitName Value="ldap"/>
+        <CursorPos X="1" Y="1080"/>
+        <TopLine Value="1002"/>
+        <UsageCount Value="7"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="ldap.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ldap"/>
+        <CursorPos X="31" Y="1065"/>
+        <TopLine Value="992"/>
+        <EditorIndex Value="1"/>
+        <UsageCount Value="58"/>
+        <Loaded Value="True"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="ldapsend.pas"/>
+        <UnitName Value="ldapsend"/>
+        <CursorPos X="3" Y="61"/>
+        <TopLine Value="19"/>
+        <UsageCount Value="7"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="blcksock.pas"/>
+        <UnitName Value="blcksock"/>
+        <CursorPos X="13" Y="90"/>
+        <TopLine Value="51"/>
+        <UsageCount Value="7"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="synafpc.pas"/>
+        <UnitName Value="synafpc"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="7"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="synsock.pas"/>
+        <UnitName Value="synsock"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="7"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="synautil.pas"/>
+        <UnitName Value="synautil"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="7"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="synacode.pas"/>
+        <UnitName Value="synacode"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="7"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="synaip.pas"/>
+        <UnitName Value="synaip"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="7"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="../artica_db_sqlite.pas"/>
+        <UnitName Value="artica_db_sqlite"/>
+        <CursorPos X="120" Y="41"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="27"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="quarantine.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="quarantine"/>
+        <CursorPos X="52" Y="87"/>
+        <TopLine Value="167"/>
+        <EditorIndex Value="2"/>
+        <UsageCount Value="58"/>
+        <Bookmarks Count="1">
+          <Item0 X="1" Y="380" ID="0"/>
+        </Bookmarks>
+        <Loaded Value="True"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="RegExpr.pas"/>
+        <UnitName Value="RegExpr"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="7"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="/usr/share/fpcsrc/rtl/linux/oldlinux.pp"/>
+        <UnitName Value="oldlinux"/>
+        <CursorPos X="11" Y="1423"/>
+        <TopLine Value="1384"/>
+        <UsageCount Value="7"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="reports.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="reports"/>
+        <CursorPos X="1" Y="438"/>
+        <TopLine Value="425"/>
+        <EditorIndex Value="3"/>
+        <UsageCount Value="47"/>
+        <Loaded Value="True"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="../logs.pas"/>
+        <UnitName Value="logs"/>
+        <CursorPos X="1" Y="507"/>
+        <TopLine Value="448"/>
+        <UsageCount Value="17"/>
+      </Unit15>
+    </Units>
+    <JumpHistory Count="12" HistoryIndex="11">
+      <Position1>
+        <Filename Value="quarantine.pas"/>
+        <Caret Line="50" Column="5" TopLine="1"/>
+      </Position1>
+      <Position2>
+        <Filename Value="quarantine.pas"/>
+        <Caret Line="486" Column="1" TopLine="418"/>
+      </Position2>
+      <Position3>
+        <Filename Value="quarantine.pas"/>
+        <Caret Line="354" Column="1" TopLine="323"/>
+      </Position3>
+      <Position4>
+        <Filename Value="quarantine.pas"/>
+        <Caret Line="350" Column="7" TopLine="295"/>
+      </Position4>
+      <Position5>
+        <Filename Value="quarantine.pas"/>
+        <Caret Line="8" Column="110" TopLine="1"/>
+      </Position5>
+      <Position6>
+        <Filename Value="quarantine.pas"/>
+        <Caret Line="40" Column="48" TopLine="2"/>
+      </Position6>
+      <Position7>
+        <Filename Value="quarantine.pas"/>
+        <Caret Line="364" Column="47" TopLine="325"/>
+      </Position7>
+      <Position8>
+        <Filename Value="reports.pas"/>
+        <Caret Line="469" Column="1" TopLine="399"/>
+      </Position8>
+      <Position9>
+        <Filename Value="reports.pas"/>
+        <Caret Line="489" Column="1" TopLine="436"/>
+      </Position9>
+      <Position10>
+        <Filename Value="reports.pas"/>
+        <Caret Line="333" Column="1" TopLine="274"/>
+      </Position10>
+      <Position11>
+        <Filename Value="reports.pas"/>
+        <Caret Line="271" Column="61" TopLine="236"/>
+      </Position11>
+      <Position12>
+        <Filename Value="reports.pas"/>
+        <Caret Line="470" Column="1" TopLine="421"/>
+      </Position12>
+    </JumpHistory>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="5"/>
+    <Target>
+      <Filename Value="/home/dtouzeau/developpement/artica-postfix/bin/artica-quarantine"/>
+    </Target>
+    <CodeGeneration>
+      <Generate Value="Faster"/>
+    </CodeGeneration>
+    <Other>
+      <CompilerPath Value="$(CompPath)"/>
+    </Other>
+  </CompilerOptions>
+  <Debugging>
+    <Exceptions Count="2">
+      <Item1>
+        <Name Value="ECodetoolError"/>
+      </Item1>
+      <Item2>
+        <Name Value="EFOpenError"/>
+      </Item2>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

@@ -1,0 +1,821 @@
+unit openldap;
+
+{$MODE DELPHI}
+{$LONGSTRINGS ON}
+
+interface
+
+uses
+    Classes, SysUtils,variants,strutils,IniFiles, Process,md5,logs,unix,RegExpr in 'RegExpr.pas',zsystem;
+
+type LDAP=record
+      admin:string;
+      password:string;
+      suffix:string;
+      servername:string;
+      Port:string;
+  end;
+
+  type
+  topenldap=class
+
+
+private
+     LOGS:Tlogs;
+     GLOBAL_INI:TiniFIle;
+     function COMMANDLINE_PARAMETERS(FoundWhatPattern:string):boolean;
+     function get_INFOS(key:string):string;
+     function get_LDAP_ADMIN():string;
+     function get_LDAP_PASSWORD():string;
+     function get_LDAP_suffix():string;
+
+     function ReadFileIntoString(path:string):string;
+     SYS:TSystem;
+     artica_path:string;
+
+
+     procedure VERIFY_SCHEMA();
+     procedure SET_DB_CONFIG();
+     procedure CHECK_SCHEMA_DEBIAN_PERMISSIONS();
+     procedure SAVE_SLAPD_CONF();
+     function FIND_USERID():string;
+
+
+
+
+
+public
+    procedure   Free;
+    constructor Create;
+    procedure   ETC_DEFAULT();
+    function    SLAPD_BIN_PATH():string;
+    function    SLAPD_CONF_PATH():string;
+    function    SCHEMA_PATH():string;
+    function    USE_SUSE_SCHEMA():boolean;
+    function    INITD_PATH():string;
+    procedure   LDAP_START();
+    procedure   LDAP_STOP();
+    function    LDAP_PID():string;
+    function    LDAP_VERSION():string;
+    function    SLAPCAT_PATH():string;
+    function    DAEMON_PATH():string;
+    function    PID_PATH():string;
+    function    get_LDAP(key:string):string;
+    procedure   set_LDAP(key:string;val:string);
+
+END;
+
+implementation
+
+constructor topenldap.Create;
+begin
+
+       LOGS:=tlogs.Create();
+       SYS:=Tsystem.Create;
+       if not DirectoryExists('/usr/share/artica-postfix') then begin
+              artica_path:=ParamStr(0);
+              artica_path:=ExtractFilePath(artica_path);
+              artica_path:=AnsiReplaceText(artica_path,'/bin/','');
+
+      end else begin
+          artica_path:='/usr/share/artica-postfix';
+      end;
+end;
+//##############################################################################
+procedure topenldap.free();
+begin
+    logs.Free;
+    SYS.Free;
+end;
+//##############################################################################
+function topenldap.SLAPD_CONF_PATH():string;
+begin
+   if FileExists('/etc/ldap/slapd.conf') then exit('/etc/ldap/slapd.conf');
+   if FileExists('/etc/openldap/slapd.conf') then exit('/etc/openldap/slapd.conf');
+   if FileExists('/opt/artica/etc/openldap/slapd.conf') then exit('/opt/artica/etc/openldap/slapd.conf');
+
+end;
+//##############################################################################
+function topenldap.SLAPCAT_PATH():string;
+begin
+if FileExists('/usr/sbin/slapcat') then exit('/usr/sbin/slapcat');
+if FileExists('/opt/artica/sbin/slapcat') then exit('/opt/artica/sbin/slapcat');
+end;
+//##############################################################################
+
+function topenldap.SCHEMA_PATH():string;
+begin
+   if DirectoryExists('/etc/ldap/schema') then exit('/etc/ldap/schema');
+   if DirectoryExists('/etc/openldap/schema') then exit('/etc/openldap/schema');
+   if DirectoryExists('/opt/artica/etc/openldap/schema') then exit('/opt/artica/etc/openldap/schema');
+end;
+//##############################################################################
+function topenldap.INITD_PATH():string;
+begin
+   if FileExists('/opt/artica/bin/slapd') then begin
+        result:=ExtractFilePath(ParamStr(0));
+        result:=result + 'artica-install slapd';
+        exit();
+   end;
+
+   if FileExists('/etc/init.d/ldap') then result:='/etc/init.d/ldap';
+   if FileExists('/etc/init.d/slapd') then result:='/etc/init.d/slapd';
+end;
+//##############################################################################
+
+function  topenldap.DAEMON_PATH():string;
+begin
+if FileExists('/usr/sbin/slapd') then exit('/usr/sbin/slapd');
+end;
+//##############################################################################
+function topenldap.USE_SUSE_SCHEMA():boolean;
+var path:string;
+begin
+  path:=SCHEMA_PATH();
+  if not DirectoryExists(path) then exit(false);
+  path:=path + '/rfc2307bis.schema';
+  if not fileExists(path) then exit(false);
+  exit(true);
+end;
+//##############################################################################
+function topenldap.LDAP_PID():string;
+var path:string;
+begin
+    path:=PID_PATH();
+    if not FileExists(path) then begin
+       exit(SYS.PROCESS_LIST_PID(SLAPD_BIN_PATH()));
+    end;
+    result:=SYS.GET_PID_FROM_PATH(PID_PATH());
+end;
+//##############################################################################
+
+
+procedure topenldap.LDAP_STOP();
+var pid:string;
+count:integer;
+D:boolean;
+begin
+  d:=COMMANDLINE_PARAMETERS('debug');
+  pid:=LDAP_PID();
+  count:=0;
+  if SYS.PROCESS_EXIST(pid) then begin
+     writeln('Stopping openLdap server.....: ' + PID + ' PID');
+
+if FileExists(INITD_PATH()) then begin
+      fpsystem(INITD_PATH() + ' stop');
+      if SYS.PROCESS_EXIST(pid) then begin
+         writeln('killing openLdap server......: ' + PID + ' PID');
+         fpsystem('/bin/kill ' + pid);
+         exit();
+      end;
+
+    exit();
+      
+end;
+
+     if D then writeln('/bin/kill ' + pid);
+     fpsystem('/bin/kill ' + pid);
+     while SYS.PROCESS_EXIST(LDAP_PID()) do begin
+           Inc(count);
+           if D then writeln('Stopping openLdap server pid.: ' + LDAP_PID() + '(count)',count);
+           sleep(100);
+           if count>100 then begin
+                  writeln('killing OpenLdap server......: ' + LDAP_PID() + ' PID (timeout)');
+                  fpsystem('/bin/kill -9 ' + LDAP_PID());
+                  break;
+           end;
+     end;
+
+     while SYS.PROCESS_EXIST(LDAP_PID()) do begin
+           Inc(count);
+           if D then writeln('Stopping openLdap server pid.: ' + LDAP_PID() + '(count)',count);
+           sleep(100);
+           if count>100 then begin
+                  writeln('killing OpenLdap server......: ' + LDAP_PID() + ' PID (timeout)');
+                  fpsystem('/bin/kill -9 ' + LDAP_PID());
+                  break;
+           end;
+     end;
+  end else begin
+      writeln('Stopping openLdap server.....: Already stopped');
+  end;
+
+end;
+//##############################################################################
+function topenldap.LDAP_VERSION():string;
+var
+    path,ver:string;
+    RegExpr:TRegExpr;
+    commandline:string;
+    D:Boolean;
+begin
+   D:=COMMANDLINE_PARAMETERS('debug');
+
+   path:=SLAPD_BIN_PATH();
+
+
+   if not FileExists(path) then begin
+      if D then logs.Debuglogs('LDAP_VERSION:: Unable to locate slapd bin');
+      exit;
+   end;
+
+   commandline:='/bin/cat -v ' + path + '|grep ''$OpenLDAP:'' >/opt/artica/logs/ldap_ver 2>&1';
+   if D then logs.Debuglogs('LDAP_VERSION:: ' + commandline);
+
+   fpsystem(commandline);
+   ver:=ReadFileIntoString('/opt/artica/logs/ldap_ver');
+   RegExpr:=TRegExpr.Create;
+   RegExpr.Expression:='\$OpenLDAP:\s+slapd\s+([0-9\.]+)';
+   if RegExpr.Exec(ver) then begin
+      ver:=RegExpr.Match[1];
+      RegExpr.Free;
+      exit(ver);
+   end;
+
+end;
+//#############################################################################
+
+procedure topenldap.LDAP_START();
+var
+   pid:string;
+   ck:integer;
+begin
+  ck:=0;
+  pid:=LDAP_PID();
+
+  
+  if length(PID)>0 then begin
+    logs.DebugLogs('Starting......: OpenLDAP is already running using PID ' + LDAP_PID() + '...');
+    writeln('starting openldap............: already running using PID ' + LDAP_PID() + '...');
+     exit();
+  end;
+  
+  logs.DebugLogs('Starting......: OpenLDAP Pid Path="' + PID_PATH() + '"');
+
+
+  if SYS.PROCESS_EXIST(LDAP_PID()) then begin
+     logs.DebugLogs('Starting......: OpenLDAP is already running using PID ' + LDAP_PID() + '...');
+
+     exit();
+  end;
+  VERIFY_SCHEMA();
+
+  logs.DebugLogs('LDAP_START:: pid (' + pid + ') doesn''t exists... try to start LDAP server PidPath should be here '+ PID_PATH());
+  if ExtractFileName(ParamStr(0))='artica-postfix' then begin
+      writeln('Starting......: OpenLDAP...');
+  end;
+
+  if FileExists(INITD_PATH()) then begin
+          writeln('starting openldap............: Initilize...');
+      SET_DB_CONFIG();
+      CHECK_SCHEMA_DEBIAN_PERMISSIONS();
+      SAVE_SLAPD_CONF();
+      ETC_DEFAULT();
+      
+      
+      logs.DebugLogs('Starting......: OpenLDAP Execute "' + INITD_PATH() + '"');
+      fpsystem(INITD_PATH() + ' start');
+
+     if SYS.PROCESS_EXIST(LDAP_PID()) then begin
+        writeln('starting openldap............: Success (PID ' + LDAP_PID() + ')');
+        logs.DebugLogs('Starting......: OpenLDAP is now running using PID ' + LDAP_PID() + '...');
+        if FileExists(ExtractFilePath(ParamStr(0)) + 'artica-ldap') then begin
+           logs.DebugLogs('LDAP_START:: Execute artica-ldap');
+           fpsystem(ExtractFilePath(ParamStr(0)) + 'artica-ldap');
+        end;
+        exit();
+     end else begin
+          logs.DebugLogs('Starting......: OpenLDAP failed , please see output in order to see why...');
+          exit;
+     end;
+  exit;
+  end;
+
+
+
+
+ if FileExists(SLAPD_BIN_PATH()) then begin
+     SET_DB_CONFIG();
+     SAVE_SLAPD_CONF();
+     logs.logs('LDAP_START:: ->' + SLAPD_BIN_PATH()+' -f ' + SLAPD_CONF_PATH());
+     fpsystem(SLAPD_BIN_PATH()+' -f ' + SLAPD_CONF_PATH());
+     pid:=LDAP_PID();
+     while not SYS.PROCESS_EXIST(pid) do begin
+           pid:=LDAP_PID();
+           sleep(100);
+           inc(ck);
+           if ck>40 then begin
+                logs.DebugLogs('Starting......: OpenLDAP server failed !!!');
+                exit;
+           end;
+     end;
+     logs.DebugLogs('Starting......: OpenLDAP server with new pid ' + pid + ' PID...');
+ end;
+  logs.logs('LDAP_START:: -> finish');
+end;
+//##############################################################################
+function topenldap.SLAPD_BIN_PATH():string;
+var path:string;
+begin
+  path:=get_INFOS('slapd_bin');
+  if length(path)>0 then begin
+   if fileExists(path) then exit(path);
+  end;
+  if FileExists('/usr/sbin/slapd') then exit('/usr/sbin/slapd');
+  if FileExists('/opt/artica/bin/slapd') then exit('/opt/artica/bin/slapd');
+end;
+//##############################################################################
+procedure topenldap.CHECK_SCHEMA_DEBIAN_PERMISSIONS();
+var
+   RegExpr:TRegExpr;
+   l:TstringList;
+   user,group:string;
+   i:Integer;
+   logs:Tlogs;
+begin
+ if not FileExists('/etc/default/slapd') then exit;
+ l:=TStringList.Create;
+ l.LoadFromFile('/etc/default/slapd');
+ RegExpr:=TRegExpr.Create;
+ For i:=0 to l.Count-1 do begin
+      RegExpr.Expression:='^SLAPD_USER="(.+?)"';
+      if RegExpr.Exec(l.Strings[i]) then user:=RegExpr.Match[1];
+
+      RegExpr.Expression:='^SLAPD_GROUP="(.+?)"';
+      if RegExpr.Exec(l.Strings[i]) then user:=RegExpr.Match[1];
+
+ end;
+
+  logs:=Tlogs.Create;
+  logs.Debuglogs('LDAP_CHECK_SCHEMA_DEBIAN_PERMISSIONS:: Apply security settings for user '+user+':'+group + ' on artica schemas');
+  fpsystem('/bin/chown '+user+':'+group+' ' + artica_path + '/bin/install/*.schema');
+  fpsystem('/bin/chown -h '+user+':'+group+' ' + SCHEMA_PATH() + '/*');
+  logs.Debuglogs('LDAP_CHECK_SCHEMA_DEBIAN_PERMISSIONS:: End...');
+end;
+//##############################################################################
+
+procedure topenldap.ETC_DEFAULT();
+var
+l:TstringList;
+begin
+
+if not FileExists('/etc/default/slapd') then exit;
+l:=TstringList.Create;
+l.Add('# Default location of the slapd.conf file. If empty, use the compiled-in');
+l.Add('# default (/etc/ldap/slapd.conf). If using the cn=config backend to store');
+l.Add('# configuration in LDIF, set this variable to the directory containing the');
+l.Add('# cn=config data.');
+l.Add('SLAPD_CONF=');
+l.Add('');
+l.Add('# System account to run the slapd server under. If empty the server');
+l.Add('# will run as root.');
+l.Add('SLAPD_USER="root"');
+l.Add('');
+l.Add('# System group to run the slapd server under. If empty the server will');
+l.Add('# run in the primary group of its user.');
+l.Add('SLAPD_GROUP="root"');
+l.Add('');
+l.Add('# Path to the pid file of the slapd server. If not set the init.d script');
+l.Add('# will try to figure it out from $SLAPD_CONF (/etc/ldap/slapd.conf by');
+l.Add('# default)');
+l.Add('SLAPD_PIDFILE=');
+l.Add('');
+l.Add('# slapd normally serves ldap only on all TCP-ports 389. slapd can also');
+l.Add('# service requests on TCP-port 636 (ldaps) and requests via unix');
+l.Add('# sockets.');
+l.Add('# Example usage:');
+l.Add('# SLAPD_SERVICES="ldap://127.0.0.1:389/ ldaps:/// ldapi:///"');
+l.Add('');
+l.Add('# If SLAPD_NO_START is set, the init script will not start or restart');
+l.Add('# slapd (but stop will still work).  Uncomment this if you are');
+l.Add('# starting slapd via some other means or if you don''t want slapd normally');
+l.Add('# started at boot.');
+l.Add('#SLAPD_NO_START=1');
+l.Add('');
+l.Add('# If SLAPD_SENTINEL_FILE is set to path to a file and that file exists,');
+l.Add('# the init script will not start or restart slapd (but stop will still');
+l.Add('# work).  Use this for temporarily disabling startup of slapd (when doing');
+l.Add('# maintenance, for example, or through a configuration management system)');
+l.Add('# when you don''t want to edit a configuration file.');
+l.Add('SLAPD_SENTINEL_FILE=/etc/ldap/noslapd');
+l.Add('');
+l.Add('# For Kerberos authentication (via SASL), slapd by default uses the system');
+l.Add('# keytab file (/etc/krb5.keytab).  To use a different keytab file,');
+l.Add('# uncomment this line and change the path.');
+l.Add('#export KRB5_KTNAME=/etc/krb5.keytab');
+l.Add('');
+l.Add('# Additional options to pass to slapd');
+l.Add('SLAPD_OPTIONS=""');
+l.SaveToFile('/etc/default/slapd');
+l.free;
+end;
+//#############################################################################
+procedure topenldap.SET_DB_CONFIG();
+var
+filedatas:TstringList;
+ldap_conf_path:string;
+
+begin
+
+    if FileExists('/opt/artica/var/openldap-data/DB_CONFIG') then exit;
+    ldap_conf_path:=SLAPD_CONF_PATH();
+    ldap_conf_path:=ExtractFilePath(ldap_conf_path);
+    forceDirectories('/opt/artica/var/openldap-data');
+    filedatas:=TstringList.Create;
+    filedatas.Add('set_cachesize 0 268435456 1');
+    filedatas.Add('set_lg_regionmax 262144');
+    filedatas.Add('set_lg_bsize 2097152');
+    logs.DebugLogs('Starting......: OpenLDAP server writing DB_CONFIG');
+    filedatas.SaveToFile('/opt/artica/var/openldap-data/DB_CONFIG');
+    filedatas.Free;
+end;
+//##############################################################################
+procedure topenldap.SAVE_SLAPD_CONF();
+var
+  ldap_suffix,artica_admin,artica_password,user:string;
+  l:TstringList;
+begin
+   artica_admin:=get_LDAP('admin');
+   artica_password:=get_LDAP('password');
+   ldap_suffix:=get_LDAP('suffix');
+
+       if length(ldap_suffix)=0 then begin
+          ldap_suffix:='dc=my-domain,dc=com';
+          Set_LDAP('suffix',ldap_suffix);
+       end;
+
+
+       if length(artica_password)=0 then begin
+          artica_password:='secret';
+          Set_LDAP('password',artica_password);
+       end;
+
+       if length(artica_admin)=0 then begin
+          artica_admin:='Manager';
+          Set_LDAP('admin',artica_admin);
+       end;
+       
+       forceDirectories('/var/lib/ldap');
+       forceDirectories('/var/run/slapd');
+       user:=FIND_USERID();
+       if length(user)>0 then begin
+          logs.Debuglogs('SAVE_SLAPD_CONF() set permission for ' + user);
+          fpsystem('/bin/chown -R ' + user + ' /var/lib/ldap');
+          fpsystem('/bin/chown -R ' + user + ' /var/run/slapd');
+       end;
+
+l:=TstringList.Create;
+l.Add('pidfile         /var/run/slapd/slapd.pid');
+l.Add('include         '+SCHEMA_PATH()+'/core.schema');
+l.Add('include         '+SCHEMA_PATH()+'/cosine.schema');
+l.Add('include         '+SCHEMA_PATH()+'/nis.schema');
+l.Add('include         '+SCHEMA_PATH()+'/inetorgperson.schema');
+l.Add('include         '+SCHEMA_PATH()+'/postfix.schema');
+l.Add('include         '+SCHEMA_PATH()+'/samba.schema');
+l.Add('');
+l.Add('argsfile        /var/run/slapd/slapd.args');
+l.Add('loglevel        none');
+l.Add('modulepath	/usr/lib/ldap');
+if FileExists('/usr/lib/ldap/back_hdb.so') then l.Add('moduleload	back_hdb');
+l.Add('loglevel 0');
+l.Add('sizelimit 500');
+l.Add('tool-threads 1');
+l.Add('backend		hdb');
+l.Add('database        hdb');
+l.Add('suffix          "' + ldap_suffix + '"');
+l.Add('rootdn "cn='+artica_admin+','+ldap_suffix+'"');
+l.Add('rootpw '+artica_password);
+l.Add('directory       /var/lib/ldap');
+l.Add('cachesize 1000');
+l.Add('dbconfig set_lk_max_objects 1500');
+l.Add('dbconfig set_lk_max_locks 1500');
+l.Add('dbconfig set_lk_max_lockers 1500');
+l.Add('');
+l.Add('index objectClass                       eq,pres');
+l.Add('index ou,cn,mail,surname,givenname      eq,pres,sub');
+l.Add('index uidNumber,gidNumber,memberUid,uid eq,pres');
+l.Add('index entryUUID,entryCSN                eq');
+l.Add('');
+l.Add('lastmod         on');
+l.Add('checkpoint      512 30');
+l.Add('access to attrs=userPassword,shadowLastChange');
+l.Add('        by dn="cn=' + artica_admin + ',' + ldap_suffix + '" write');
+l.Add('        by anonymous auth');
+l.Add('        by self write');
+l.Add('        by * none');
+l.Add('access to dn.base="" by * read');
+l.Add('password-hash {CLEARTEXT}');
+l.Add('monitoring off');
+l.Add('access to *');
+l.Add('	by dn="uid=ldapadmin,ou=sysusers,'+ldap_suffix+'" write');
+l.Add('	by peername.ip=127.0.0.1 read');
+l.SaveToFile(SLAPD_CONF_PATH());
+l.free;
+end;
+//##############################################################################
+function topenldap.FIND_USERID():string;
+var
+   RegExpr:TRegExpr;
+   l:TstringList;
+   i:Integer;
+   user:string;
+   group:string;
+
+begin
+ l:=TStringList.Create;
+  RegExpr:=TRegExpr.Create;
+
+ if FileExists('/etc/default/slapd') then begin
+
+ l.LoadFromFile('/etc/default/slapd');
+
+ For i:=0 to l.Count-1 do begin
+      RegExpr.Expression:='^SLAPD_USER="(.+?)"';
+      if RegExpr.Exec(l.Strings[i]) then user:=RegExpr.Match[1];
+
+      RegExpr.Expression:='^SLAPD_GROUP="(.+?)"';
+      if RegExpr.Exec(l.Strings[i]) then group:=RegExpr.Match[1];
+
+ end;
+ 
+ end;
+ 
+ if length(user)>0 then exit(user+':'+group);
+ l.Clear;
+
+   if not FileExists(INITD_PATH()) then exit;
+   l.LoadFromFile(INITD_PATH());
+   RegExpr.Expression:='user=([a-zA-Z0-9_\-]+)';
+   for i:=0 to l.count-1 do begin
+       if RegExpr.Exec(l.Strings[i]) then begin
+          user:=RegExpr.Match[1];
+          break;
+       end;
+   end;
+   
+   RegExpr.free;
+   l.free;
+   if length(user)>0 then exit(user+':'+user);
+end;
+//##############################################################################
+
+
+
+function topenldap.PID_PATH():string;
+var
+   conffile:string;
+   logs:Tlogs;
+   RegExpr:TRegExpr;
+   FileData:TStringList;
+   i:integer;
+begin
+
+  if FileExists('/var/run/slapd/slapd.pid') then exit('/var/run/slapd/slapd.pid');
+  
+  conffile:=SLAPD_CONF_PATH();
+  if not FileExists(conffile) then begin
+     logs.logs('LDAP_PID_PATH:: unable to stat ' + conffile);
+     exit('0');
+  end;
+
+ RegExpr:=TRegExpr.Create;
+  FileData:=TStringList.Create;
+  FileData.LoadFromFile(conffile);
+  RegExpr.Expression:='pidfile\s+(.+)';
+  For i:=0 TO FileData.Count -1 do begin
+      if RegExpr.Exec(FileData.Strings[i]) then begin
+           result:=RegExpr.Match[1];
+           break;
+      end;
+  end;
+  
+
+
+  
+   RegExpr.free;
+   FileData.free;
+
+end;
+
+ //##############################################################################
+procedure topenldap.VERIFY_SCHEMA();
+var cmd:string;
+begin
+   if not FileExists(SCHEMA_PATH() + '/postfix.schema') then begin
+      logs.Debuglogs('LDAP_VERIFY_SCHEMA:: Copy schema path ' + SCHEMA_PATH() + '/postfix.schema');
+      cmd:='/bin/cp -f ' + artica_path + '/bin/install/postfix.schema ' + SCHEMA_PATH() + '/postfix.schema >/dev/null 2>&1';
+      logs.Debuglogs(cmd);
+      fpsystem(cmd);
+   end;
+
+   if not FileExists(SCHEMA_PATH() + '/samba.schema') then begin
+      logs.Debuglogs('LDAP_VERIFY_SCHEMA:: Copy schema path' + SCHEMA_PATH() + '/postfix.schema');
+      cmd:='/bin/cp -f ' + artica_path + '/bin/install/samba.schema ' + SCHEMA_PATH() + '/samba.schema >/dev/null 2>&1';
+      logs.Debuglogs(cmd);
+      fpsystem(cmd);
+   end;
+
+
+end;
+//##############################################################################
+
+function topenldap.get_INFOS(key:string):string;
+var value:string;
+begin
+GLOBAL_INI:=TIniFile.Create('/etc/artica-postfix/artica-postfix.conf');
+value:=GLOBAL_INI.ReadString('INFOS',key,'');
+result:=value;
+GLOBAL_INI.Free;
+end;
+//#############################################################################
+function topenldap.get_LDAP(key:string):string;
+var
+   value:string;
+   Ini:TMemIniFile;
+
+begin
+Ini:=TMemIniFile.Create('/etc/artica-postfix/artica-postfix-ldap.conf');
+value:=trim(Ini.ReadString('LDAP',key,''));
+Ini.Free;
+
+if length(value)=0 then begin
+ if FileExists('/etc/artica-postfix/artica-postfix-ldap.bak.conf') then begin
+    Ini:=TMemIniFile.Create('/etc/artica-postfix/artica-postfix-ldap.bak.conf');
+    value:=Ini.ReadString('LDAP',key,'');
+    Ini.Free;
+    if length(value)>0 then begin
+       set_LDAP(key,value);
+       result:=value;
+       exit;
+    end;
+  end;
+    
+    if key='admin' then begin
+      value:=get_LDAP_ADMIN();
+      if length(value)>0 then begin
+         set_LDAP(key,value);
+         result:=value;
+         exit;
+       end;
+     end;
+     
+    if key='password' then begin
+      value:=get_LDAP_PASSWORD();
+      if length(value)>0 then begin
+         set_LDAP(key,value);
+         result:=value;
+         exit;
+       end;
+     end;
+     
+    if key='suffix' then begin
+      value:=get_LDAP_suffix();
+      if length(value)>0 then begin
+         set_LDAP(key,value);
+         result:=value;
+         exit;
+       end;
+     end;
+
+end;
+
+result:=value;
+
+end;
+//#############################################################################
+function topenldap.get_LDAP_ADMIN():string;
+var
+   RegExpr:TRegExpr;
+   l:TstringList;
+   i:integer;
+
+begin
+  if not FileExists(SLAPD_CONF_PATH()) then exit;
+  RegExpr:=TRegExpr.Create;
+  l:=TstringList.Create;
+  TRY
+  l.LoadFromFile(SLAPD_CONF_PATH());
+  RegExpr.Expression:='rootdn\s+"cn=(.+?),';
+  for i:=0 to l.Count-1 do begin
+      if  RegExpr.Exec(l.Strings[i]) then begin
+             result:=trim(RegExpr.Match[1]);
+             break;
+      end;
+  end;
+  FINALLY
+   l.free;
+   RegExpr.free;
+  END;
+end;
+//#############################################################################
+function topenldap.get_LDAP_PASSWORD():string;
+var
+   RegExpr:TRegExpr;
+   l:TstringList;
+   i:integer;
+
+begin
+  if not FileExists(SLAPD_CONF_PATH()) then exit;
+  RegExpr:=TRegExpr.Create;
+  l:=TstringList.Create;
+  TRY
+  l.LoadFromFile(SLAPD_CONF_PATH());
+  RegExpr.Expression:='rootpw\s+(.+)';
+  for i:=0 to l.Count-1 do begin
+      if  RegExpr.Exec(l.Strings[i]) then begin
+             result:=trim(RegExpr.Match[1]);
+             result:=AnsiReplaceText(result,'"','');
+             result:=AnsiReplaceText(result,'"','');
+             break;
+      end;
+  end;
+  FINALLY
+   l.free;
+   RegExpr.free;
+  END;
+end;
+//#############################################################################
+function topenldap.get_LDAP_suffix():string;
+var
+   RegExpr:TRegExpr;
+   l:TstringList;
+   i:integer;
+
+begin
+  if not FileExists(SLAPD_CONF_PATH()) then exit;
+  RegExpr:=TRegExpr.Create;
+  l:=TstringList.Create;
+  TRY
+  l.LoadFromFile(SLAPD_CONF_PATH());
+  RegExpr.Expression:='^suffix\s+(.+)';
+  for i:=0 to l.Count-1 do begin
+      if  RegExpr.Exec(l.Strings[i]) then begin
+             result:=trim(RegExpr.Match[1]);
+             result:=AnsiReplaceText(result,'"','');
+             result:=AnsiReplaceText(result,'"','');
+             break;
+      end;
+  end;
+  FINALLY
+   l.free;
+   RegExpr.free;
+  END;
+end;
+//#############################################################################
+
+function topenldap.COMMANDLINE_PARAMETERS(FoundWhatPattern:string):boolean;
+var
+   i:integer;
+   s:string;
+   RegExpr:TRegExpr;
+
+begin
+ result:=false;
+ s:='';
+ if ParamCount>1 then begin
+     for i:=2 to ParamCount do begin
+        s:=s  + ' ' +ParamStr(i);
+     end;
+ end;
+   RegExpr:=TRegExpr.Create;
+   RegExpr.Expression:=FoundWhatPattern;
+   if RegExpr.Exec(s) then begin
+      RegExpr.Free;
+      result:=True;
+   end;
+
+
+end;
+//##############################################################################
+
+function topenldap.ReadFileIntoString(path:string):string;
+var
+   List:TstringList;
+begin
+
+      if not FileExists(path) then begin
+        exit;
+      end;
+
+      List:=Tstringlist.Create;
+      List.LoadFromFile(path);
+      result:=trim(List.Text);
+      List.Free;
+end;
+//##############################################################################
+procedure topenldap.set_LDAP(key:string;val:string);
+var ini:TIniFile;
+begin
+LOGS.logs('topenldap.set_LDAP: adding informations ' + key + ' ' + val + ' in /etc/artica-postfix/artica-postfix-ldap.conf');
+ini:=TIniFile.Create('/etc/artica-postfix/artica-postfix-ldap.conf');
+ini.WriteString('LDAP',key,val);
+ini.Free;
+
+ini:=TIniFile.Create('/etc/artica-postfix/artica-postfix-ldap.bak.conf');
+ini.WriteString('LDAP',key,val);
+ini.Free;
+
+end;
+//#############################################################################
+
+end.

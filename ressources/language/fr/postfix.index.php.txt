@@ -1,0 +1,186 @@
+<2bounce_notice_recipient>destinataire de la notification de rebond</2bounce_notice_recipient>
+<2bounce_notice_recipient_text>Destinataire du courrier non livrable qui ne peut pas &ecirc;tre retourn&eacute; &agrave; l'exp&eacute;diteur</2bounce_notice_recipient_text>
+<address_verify_sender>v&eacute;rification de l'adresse de l'exp&eacute;diteur</address_verify_sender>
+<address_verify_sender_text>Adresses des exp&eacute;diteurs &agrave; utiliser dans les sondes de v&eacute;rification d'adresse</address_verify_sender_text>
+<antispam_enable_save>Appliquez vos modules et passer les en mode production ...</antispam_enable_save>
+<antispam_feature>Module Anti-Spam</antispam_feature>
+<antispam_jchekmail>Anti-Spam &amp; Anti-virus</antispam_jchekmail>
+<apply_backup_behavior>Appliquez vos configurations et passez-les en mode production</apply_backup_behavior>
+<apply_milter_behavior>Appliquez la configuration de milter behavior et passez la en mode production</apply_milter_behavior>
+<apply_multidomains_behavior>Changez le comportement de multi-domaines sur votre serveur et passez le en mode production</apply_multidomains_behavior>
+<APP_AMAVISD_NEW_TEXT>Amavis est une interface entre Postfix et les filtres antivirus/antispam.[br]Il fournit des fonctions Anti-Spam avec SpamAssassin et Antivirus avec ClamAV ainsi que d'autres filtres</APP_AMAVISD_NEW_TEXT>
+<APP_ASSP_TEXT>Anti-Spam SMTP Proxy server impl&eacute;mente des listes blanches, des filtres bayesian, un filtrage basique antiviral afin de combattre les pourriels.</APP_ASSP_TEXT>
+<APP_FETCHMAIL_TEXT>R&eacute;glages de rel&egrave;ve du courrier</APP_FETCHMAIL_TEXT>
+<APP_KAVMILTER_TEXT>G&eacute;rez le filtrage antivirus du courrier sur votre serveur de messagerie</APP_KAVMILTER_TEXT>
+<APP_KAV_MILTER_TEXT>Kaspersky Antivirus Milter edition est un robuste antivirus pour serveur de courrier utilis&eacute; par Postfix gr&acirc;ce &agrave; libmilter.</APP_KAV_MILTER_TEXT>
+<APP_MAILGRAPH_TEXT>Affichez les statistiques g&eacute;n&eacute;r&eacute;s par MailGraph.[br]MailGraph est un script perl produisant des graphiques journaliers, hebdomadaires et annuels sur les &eacute;changes effectu&eacute;s dans la messagerie</APP_MAILGRAPH_TEXT>
+<APP_MAILSPY_TEXT>Mailspy permets de contr&ocirc;ler l'activit&eacute; de votre serveur de courrier.</APP_MAILSPY_TEXT>
+<APP_MILTERGREYLIST_TEXT>Ce module fournit des fonctions de greylisting et beaucoup d'autres ...</APP_MILTERGREYLIST_TEXT>
+<APP_POMMO_TEXT>D&eacute;finissez des param&egrave;tres globaux pour votre moteur de Publipostage poMMo</APP_POMMO_TEXT>
+<APP_ROUNDCUBE_TEXT>Configurez et int&eacute;grez le Webmail RoundCube &agrave; votre syst&egrave;me</APP_ROUNDCUBE_TEXT>
+<AS_ACTIVATE>Activation des modules</AS_ACTIVATE>
+<AS_ACTIVATE_TEXT>Activer/d&eacute;sactiver les plugins anti-spam du serveur de messagerie...</AS_ACTIVATE_TEXT>
+<auto-compress>Compression automatique</auto-compress>
+<auto-compress_text>Compression automatique des pi&egrave;ces jointes entrantes et sortantes</auto-compress_text>
+<backupemail_behavior>Backup &agrave; la vol&eacute;e</backupemail_behavior>
+<backupemail_behavior_text>Activer/D&eacute;sactiver le backup &agrave; la vol&eacute;e des e-mails</backupemail_behavior_text>
+<badmx>Serveurs de courriers BAD</badmx>
+<badmx_text>Ajouter/&eacute;diter les serveurs/clients que vous d&eacute;sirez bannir</badmx_text>
+<block>bloc</block>
+<BLOCK_DOMAIN>Refuser un Domaine de messagerie</BLOCK_DOMAIN>
+<BLOCK_DOMAIN_HOWTO>Donnez le domaine de messagerie que vous voulez bloquer (ex. domaine*,domaine.*,domaine.tld)
+Si vous en avez plus qu'un, s&eacute;parez les par une virgule.</BLOCK_DOMAIN_HOWTO>
+<BLOCK_DOMAIN_TEXT>Cette macro va vous aider &agrave; interdire un domaine de messagerie SMTP</BLOCK_DOMAIN_TEXT>
+<corrupt_queue_confirm>Cette op&eacute;ration va essayer de r&eacute;activer les messages corrompus.[br]Voulez-vous effectuer cette op&eacute;ration.</corrupt_queue_confirm>
+<delay_notice_recipient>D&eacute;lai avant notification du destinataire</delay_notice_recipient>
+<delay_notice_recipient_text>Le destinataire des avis de postmaster avec les en-t&ecirc;tes de message qui ne peuvent pas &ecirc;tre livr&eacute;s dans &quot;alerte de retard&quot;</delay_notice_recipient_text>
+<dkim_filter>dkim-milter se compose d'une application bas&eacute;e sur milter A (dkim-filter) qui se raccorde &agrave; Postfix pour fournir le service de messagerie identifi&eacute; par DomainKeys</dkim_filter>
+<empty_address_recipient>adresse de destinataire vide</empty_address_recipient>
+<empty_address_recipient_text>Destinataire du courrier adress&eacute; &agrave; l'adresse nulle. Postfix n'accepte pas de telles adresses dans les commandes SMTP mais elles peuvent encore &ecirc;tre cr&eacute;&eacute;es localement comme r&eacute;sultat d'erreur de configuration ou erreur de logiciel</empty_address_recipient_text>
+<EnablePostfixAntispamPack>Activation du paquetage Anti-spam</EnablePostfixAntispamPack>
+<enable_amavis>Activer le nouveau filtre Amavisd</enable_amavis>
+<enable_amavis_text>Amavisd-new est une interface entre postfix et les filtres de contenu et antivirus.
+Il fournit les services d'anti-spam avec SpamAssassin et d'antivirus avec ClamAV</enable_amavis_text>
+<enable_APP_MAILARCHIVER>Activer le plugin Open Mail Archiver</enable_APP_MAILARCHIVER>
+<enable_APP_MAILARCHIVER_text>Si vous le placez sur vert, tous les courrier qui seront envoy&eacute;s &agrave; l'Internet ou envoy&eacute; aux bo&icirc;tes aux lettres (&agrave; l'exclusion des courrier bloqu&eacute;s) seront sauvegard&eacute;s dans une base de donn&eacute;es Mysql.[br]
+Dans ce cas vos utilisateurs seront autoris&eacute;s &agrave; chercher/r&eacute;exp&eacute;dier les messages sauvegard&eacute;s[br][br]Si vous ne d&eacute;sirez pas utiliser cette fonction, placer sur rouge ...[br][br]
+Artica utilise le logiciel MailArchiver qui peut &ecirc;tre trouv&eacute; ici :[br] https://www.milter.org/milter/61</enable_APP_MAILARCHIVER_text>
+<enable_assp>Activer Anti-Spam SMTP Proxy</enable_assp>
+<enable_assp_text>Activer ce module Anti-Spam qui impl&eacute;m&eacute;nte toutes les fonctions demand&eacute;es pour combattre les pourriels.</enable_assp_text>
+<enable_backup>Activer la sauvegarde en temps r&eacute;el</enable_backup>
+<enable_backup_amavis_text>Cette fonction active la sauvegarde au sein d'Amavis.[br]
+Tout courrier entrant ou sortant transitant par Amavis sera sauvegard&eacute; apr&egrave;s les filtres.[br]
+Note : cette fonction sauvegardera apr&egrave;s la compression automatique ou les r&egrave;gles htmlSize afin d'emp&ecirc;cher le message original</enable_backup_amavis_text>
+<ENABLE_INTERNET_DENY>Activer la restrictions des destinations externes</ENABLE_INTERNET_DENY>
+<ENABLE_INTERNET_DENY_TEXT>Si vous activez en vert cette option vous pourrez d&eacute;finir quel utilisateur sera en mesure d'envoyer des messages vers Internet ou pas.[br]Les utilisateurs interdits recevront un message d'erreur.</ENABLE_INTERNET_DENY_TEXT>
+<enable_kaspersky_as>Activer Kaspersky Anti-Spam</enable_kaspersky_as>
+<enable_kaspersky_as_text>Kaspersky Anti-spam est le module anti-spam le plus puissant de Kasperslab INC</enable_kaspersky_as_text>
+<enable_mailgraph_text>Si vous mettez en vert, Le d&eacute;mon Mailgraph va &ecirc;tre activ&eacute;.[br]Nous vous informons que cette fonctionnalit&eacute; peu consommer des ressources machine.[br]Si vous n'en avez pas besoin laissez-le tel quel.</enable_mailgraph_text>
+<enable_milter>Activer les plugins &quot;lisses&quot;</enable_milter>
+<enable_miltergreylist_text>milter-greylist est un filtre tiers qui impl&eacute;mente la technique du greylisting.</enable_miltergreylist_text>
+<enable_milter_text>Si vous placer sur vert, lorsqu'un plugin ne d&eacute;marre pas ou ne r&eacute;pond pas; les messages seront redirig&eacute;s comme si aucun plugins n'existait.[br]
+Dans l'autre cas placer sur rouge, les messages seront rejet&eacute;s et une erreur sera envoy&eacute;e aux clients.</enable_milter_text>
+<enable_postfix_autoblock>Activer Postfix Instant IpTables</enable_postfix_autoblock>
+<enable_postfix_autoblock_text>Si vous activez en vert cette fonction, Artica sera en mesure de rajouter des r&egrave;gles dans le pare-feu afin d'interdire les serveurs &eacute;metteurs qui atteignent un nombre maximal d'erreurs de transfert.</enable_postfix_autoblock_text>
+<enable_spamasssin>Activer SpamAssassin</enable_spamasssin>
+<enable_spamasssin_text>Cette option active/d&eacute;sactive spamassassin-milter, le plugin anti-spam open source standard</enable_spamasssin_text>
+<error_notice_recipient>Destinataire d'avis d'erreur</error_notice_recipient>
+<error_notice_recipient_text>Le destinataire des notification de postmaster au sujet des probl&egrave;mes de distribution du courrier qui sont provoqu&eacute;s par des erreurs de politique, de ressource, de logiciel ou de protocole</error_notice_recipient_text>
+<feature_not_installed>Le plugin n'est pas install&eacute;</feature_not_installed>
+<filters_settings>Filtres (anti-spam, antivirus, contenus ...)</filters_settings>
+<global_smtp_rules_text>Consolidez toutes les r&egrave;gles que vous pouvez d&eacute;finir pour le filtrage du courrier</global_smtp_rules_text>
+<global_whitelist_text>Consolidez toutes les listes blanches et les listes noires utilis&eacute;es dans tous les modules</global_whitelist_text>
+<Greylisting>Greylisting</Greylisting>
+<Greylisting_text>Optimiser la base de donn&eacute;es du syst&egrave;me de greylisting</Greylisting_text>
+<INSTALL_NEW_PLUGINS>Installez des nouveaux plugins</INSTALL_NEW_PLUGINS>
+<INSTALL_NEW_PLUGINS_TEXT>Utilisez le centre d'installation pour installer de nouveaux logiciels...</INSTALL_NEW_PLUGINS_TEXT>
+<INTERNET_DENY>Restriction des destinations ext&eacute;rieures</INTERNET_DENY>
+<INTERNET_DENY_TEXT>Configure postfix afin qu'il interdise ou autorise des utilisateurs &agrave; &eacute;mettre vers Internet.</INTERNET_DENY_TEXT>
+<isp_saved_without_auth>Les r&eacute;glages de votre FAI ont &eacute;t&eacute; enregistr&eacute;s sans authentification.</isp_saved_without_auth>
+<isp_saved_with_auth>Les r&eacute;glages d'authentification sp&eacute;cifiques &agrave; votre FAI seront sauvegard&eacute;s</isp_saved_with_auth>
+<isp_server_address>Adresse du serveur de Messagerie de votre FAI</isp_server_address>
+<isp_server_port>Port du serveur de Messagerie de votre FAI</isp_server_port>
+<JCHK_CLAM>Activer ClamAV &agrave; l'int&eacute;rieur du processus j-chkmail</JCHK_CLAM>
+<KAS3_TEXT>L'Anti-Spam Kaspersky est une solution robuste et &eacute;volutive fournie par Kaspersky Lab INC.</KAS3_TEXT>
+<mailbox_settings>Boites aux lettres</mailbox_settings>
+<main.cfedit_explain>Ajoutez vos propres clefs et donn&eacute;es dans le fichier de main.cf</main.cfedit_explain>
+<main.cf_edit>Options utilisateurs de Main.cf</main.cf_edit>
+<main_ldap>Bases de donn&eacute;es Ldap de Main.cf</main_ldap>
+<main_ldap_explain>Montrez une partie de main.cf avec une sauvegarde de param&egrave;tres LDAP</main_ldap_explain>
+<mange_cyrus_mailbox>G&eacute;rez le moteur IMAP/POP3 pour fournir des bo&icirc;tes aux lettres</mange_cyrus_mailbox>
+<master.cf>Master.cf</master.cf>
+<mastercf_explain>&Eacute;ditez le contenu du fichier de configuration master.cf et personnalisez les d&eacute;mons postfix</mastercf_explain>
+<MIMEDEFANG_TEXT>Instruments d'antispam,antivirus, et autres filtres customisable sur les messages email.</MIMEDEFANG_TEXT>
+<multidomains>Multi-domaines</multidomains>
+<multidomains_explain>En configuration standard, tous les utilisateurs se connectent  sur le serveur de messagerie avec leur code utilisateur.[br]Si vous activez cette fonctionnalit&eacute;, les utilisateurs disposent de leur propre adresse e-mail li&eacute; au compte.[br] 
+Ceci afin d'&ecirc;tre en conformit&eacute; avec les utilisateurs de m&ecirc;me nom.[br] [br] 
+Par exemple pour John et John Milter : [br] 
+[b] En configuration standard [/b] john et john1 a un nom d'utilisateur[br] 
+[b]En configuration multidomaine [/b] john@domain1.tld et john@domain.com ont un nom d'ouverture de session.</multidomains_explain>
+<multidomains_text>Changez le comportement de vos organisations, pour que chaque utilisateur ai un compte  &quot;utilisateur@domain.tld&quot; au lieu de compte &quot;d'utilisateur&quot;</multidomains_text>
+<NetClass>Classes r&eacute;seaux</NetClass>
+<NetClass_text>Classer les gens qui peuvent se connecter &agrave; votre messagerie dans les cat&eacute;gories</NetClass_text>
+<obm_area>G&eacute;rer le service Calendrier OBM Groupware</obm_area>
+<other_settings_text>Autres param&egrave;tres postfix non classifi&eacute;s</other_settings_text>
+<please_verify_addressisp>V&eacute;rifiez les param&egrave;tres dans le formulaire ci-dessous de telle sorte que votre serveur de messagerie puisse rediriger le courrier vers l'adresse du serveur de votre fournisseur d'acc&egrave;s.[br]
+Seuls les messages &agrave; destination d'internet seront transf&eacute;r&eacute;s vers votre fournisseur d'acc&egrave;s.[br]
+Certains fournisseurs requi&egrave;re que une authentification soit effectu&eacute;e avant d'&eacute;mettre le message.[br]
+Indiquez le compte utilisateur et le mot de passe que vous utilisez dans les param&egrave;tres de votre compte au m&ecirc;me titre que ceux que vous utilisez pour vous connecter directement au fournisseur.[br]
+Tous vos utilisateurs utiliseront ce m&ecirc;me compte.[br]
+Assurez-vous ensuite de faire en sorte que que l'adresse eMail d'exp&eacute;dition locale des comptes utilisateurs soit retransform&eacute;e par celle demand&eacute;e par le fournisseur d'acc&egrave;s.[br]
+Ce param&egrave;tre se trouve dans l'espace messagerie de chaque utilisateur.</please_verify_addressisp>
+<plugins_behavior>Comportement des Plugins</plugins_behavior>
+<plugins_behavior_text>D&eacute;finir le comportement principal lorsque les plugins ne d&eacute;marrent pas</plugins_behavior_text>
+<PostfixAutoBlockCompileFW>Compiler vos r&egrave;gles</PostfixAutoBlockCompileFW>
+<PostfixAutoBlockCompileFW_text>Compilez vos r&egrave;gles afin de les activer en production.</PostfixAutoBlockCompileFW_text>
+<PostfixAutoBlockDays>Nombre de jours maximum.</PostfixAutoBlockDays>
+<PostfixAutoBlockDays_text>Indiquez ici le nombre de jours maximal des &eacute;v&egrave;nements de SPAM d&eacute;tect&eacute;s pour une passerelle.[br]
+SI vous indiquez 2 jours par exemple, le processus va calculer les &eacute;v&egrave;nements SPAM depuis les deux derniers jours.</PostfixAutoBlockDays_text>
+<PostfixAutoBlockDenyAddWhiteList>Ajoutez un serveur en liste blanche.</PostfixAutoBlockDenyAddWhiteList>
+<PostfixAutoBlockDenyAddWhiteList_explain>Donnez l'adresse IP du serveur qui ne sera jamais bloqu&eacute;.</PostfixAutoBlockDenyAddWhiteList_explain>
+<PostfixAutoBlockEvents>Nombre d'&eacute;v&egrave;nements</PostfixAutoBlockEvents>
+<PostfixAutoBlockEvents_text>D&eacute;finissez la somme des &eacute;v&egrave;nements afin de rajouter la r&egrave;gle dans le pare-feu.[br]La valeur minimale est de 5</PostfixAutoBlockEvents_text>
+<PostfixAutoBlockManageFW>G&eacute;rer vos r&egrave;gles actives</PostfixAutoBlockManageFW>
+<PostfixAutoBlockManageFW_text>Affichez les adresses bannies et g&eacute;rez-les</PostfixAutoBlockManageFW_text>
+<PostfixAutoBlockPeriod>Chaque</PostfixAutoBlockPeriod>
+<PostfixAutoBlockPeriod_text>D&eacute;finissez ici l'horaire en minutes pour chaque cycle.[br] La valeur par d&eacute;faut est d'ex&eacute;cuter le traitement toutes les 4h - 240mn -[br]. La valeur minimale est 10mn</PostfixAutoBlockPeriod_text>
+<PostfixEnableSubmission>Activer le port de Submission</PostfixEnableSubmission>
+<PostfixEnableSubmission_text>Cette fonctionnalit&eacute; active un nouveau port d'&eacute;coute [b]587[/b]. A l'oppos&eacute; du port 25, le port standard, Il est d&eacute;di&eacute; &agrave; recevoir les messages directement par vos utilisateurs.[br]
+Vous avez besoin d'ouvrir ce port sur votre pare-feu.[br]Autrement si cette option est rouge, vous utilisateurs peuvent utiliser le port 465 (SSL) ou 25 pour s'authentifier sur le serveur de messagerie afin d'envoyer des messages.</PostfixEnableSubmission_text>
+<postfix_autoblock>Instant IpTables pour Postfix</postfix_autoblock>
+<Postfix_AutoBlock_Deny_Add>Ajouter un serveur en liste blanche</Postfix_AutoBlock_Deny_Add>
+<postfix_autoblock_explain>Postfix Instant IpTables est une fonctionnalit&eacute; qui analyse l'historique des messages.[br]Lorsque les &eacute;metteurs font trop r&eacute;gir les barri&egrave;res de s&eacute;curit&eacute;, Artica va automatiquement bannir l'adresse IP au moyen de r&egrave;gles de Pare-feux.[br]
+Avec cette fonctionnalit&eacute; vous allez augmenter les performances par le rejet des spammeurs directement par la carte r&eacute;seau.</postfix_autoblock_explain>
+<postfix_autoblock_text>Ajoutez automatiquement des r&egrave;gles de Pare-feu afin de combattre les serveurs de messagerie des spammeurs.</postfix_autoblock_text>
+<postfix_messaging>Messagerie (Postfix &amp; Cyrus-imap)</postfix_messaging>
+<postfix_plugins>Plugins &amp; addons</postfix_plugins>
+<postfix_plugins_text>Activer les modules de connections sur postfix</postfix_plugins_text>
+<POSTFIX_SMTP_NOTIFICATIONS>Notifications SMTP</POSTFIX_SMTP_NOTIFICATIONS>
+<POSTFIX_SMTP_NOTIFICATIONS_TEXT>D&eacute;finissez des adresses &eacute;lectroniques et des notifications envoy&eacute;es par le D&eacute;mon SMTP</POSTFIX_SMTP_NOTIFICATIONS_TEXT>
+<process_amavisd>Amavisd-new</process_amavisd>
+<process_amavisd-milter>Crochatage d'Amavisd-new milter</process_amavisd-milter>
+<process_cleanup>mettre &agrave; la forme canonique et mettre en file d'attente un message Postfix</process_cleanup>
+<process_pickup>processus local pickup</process_pickup>
+<process_smtpd>Serveur SMTP Postfix</process_smtpd>
+<process_spamd>Spamassassin</process_spamd>
+<process_trivial_rewrite>r&eacute;&eacute;critures et r&eacute;solutions des adresses</process_trivial_rewrite>
+<quarantine_process_progress>Progression du processus de Quarantaine</quarantine_process_progress>
+<quarantine_process_progress_text>Cette barre de progression vous affiche l'&eacute;tat d'avancement du calcul des files d'attente de quarantaines.</quarantine_process_progress_text>
+<quarantine_text>G&eacute;rez votre secteur de quarantaine global</quarantine_text>
+<rate_ressources>Taux de terme et limitation de ressources</rate_ressources>
+<rate_ressources_text>Mesurer le taux de filtres de messagerie, en limitant les ressources accord&eacute;es aux clients SMTP</rate_ressources_text>
+<RejectShortMsgs>Filtrage des messages courts</RejectShortMsgs>
+<RejectShortMsgs_text>Manipuler les messages ind&eacute;sirables, dont la taille du corps est tr&egrave;s court</RejectShortMsgs_text>
+<relayhost_1and1>1&amp;1 ISP</relayhost_1and1>
+<relayhost_1and1_text>Envoier tous vos emails en passant par le FAI 1&amp;1</relayhost_1and1_text>
+<relayhost_free>Free</relayhost_free>
+<relayhost_free_text>Envoyer tous vos emails en passant par votre fournisseur d'acc&egrave;s Free</relayhost_free_text>
+<relayhost_oleane>FAI OLEANE</relayhost_oleane>
+<relayhost_oleane_text>Envoyer tous les emails en passant par le FAI Oleane</relayhost_oleane_text>
+<relayhost_orange>FAI Orange</relayhost_orange>
+<relayhost_orange_text>Envoyer tous vos emails en passant par le FAI Orange</relayhost_orange_text>
+<relayhost_ssl>Vers Relais SSL</relayhost_ssl>
+<relayhost_ssl_text>Utiliser un serveur d'authentification SMTPS et relais pour l'envoi de mails sortants</relayhost_ssl_text>
+<relayhost_title>serveur de transfert</relayhost_title>
+<relayhost_title_text>Utiliser un serveur de relais pour le transfert des messages &agrave; des domaines ext&eacute;rieurs(FAI)</relayhost_title_text>
+<relayhost_wanadoo>FAI Wanadoo</relayhost_wanadoo>
+<relayhost_wanadoo_text>Envoyer tous vos emails en passant par le FAI Wanadoo</relayhost_wanadoo_text>
+<restriction_classes_minitext>Donner des noms des groupes facile &agrave; retenir pour les restrictions d'emails commerciaux non sollicit&eacute;s</restriction_classes_minitext>
+<SASL_STATUS>Afficher l'&eacute;tat d'authentification SMTP</SASL_STATUS>
+<SASL_STATUS_TEXT>Afficher l'information technique &agrave; propos du statut d'Authentification SMTP de ce serveur de messagerie</SASL_STATUS_TEXT>
+<SASL_TEXT>Le support SASL peut &ecirc;tre utilis&eacute; pour authentifier les clients SMTP distant au serveur SMTP Postfix</SASL_TEXT>
+<SASL_TITLE>Authentification SMTP</SASL_TITLE>
+<security_settings>Param&egrave;tres de s&eacute;curit&eacute;</security_settings>
+<smtpd_client_restrictions_icon>Restrictions sur les &eacute;metteurs</smtpd_client_restrictions_icon>
+<smtpd_client_restrictions_icon_text>Param&egrave;tres permettant de restreindre les &eacute;metteurs &agrave; travers les sessions SMTP</smtpd_client_restrictions_icon_text>
+<spamassassin_in_amavis>Spamassassin est activ&eacute; dans Amavis</spamassassin_in_amavis>
+<spamassassin_in_amavis_text>Vous utilisez Amavis et celui-ci est d&eacute;j&agrave; configur&eacute; pour utilise le service anti-spam SpamAssassin</spamassassin_in_amavis_text>
+<SPAMASSASSIN_TEXT>SpamAssassin est un projet open source mature, largement d&eacute;ploy&eacute;  qui sert de filtre de courrier afin d'identifier le spam</SPAMASSASSIN_TEXT>
+<SSL_ENABLE>Activer/D&eacute;sactiver le SSL</SSL_ENABLE>
+<SSL_ENABLE_TEXT>Activer le SMTPs (SSL) sur votre serveur mail</SSL_ENABLE_TEXT>
+<start_monitor>D&eacute;marrer le moniteur</start_monitor>
+<stop_monitor>Arr&ecirc;ter le moniteur</stop_monitor>
+<technical_address>Adresse Technique</technical_address>
+<tls_text>TLS, plus commun&eacute;ment connu comme le protocole SSL, est un m&eacute;canisme populaire pour am&eacute;liorer les communications TCP avec confidentialit&eacute; et l'authentification</tls_text>
+<transport_settings>Routage &amp; r&eacute;seaux</transport_settings>
+<tweaks>Trucs et Astuces</tweaks>

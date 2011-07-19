@@ -1,0 +1,184 @@
+
+
+div.clearleft {
+	clear: left;
+}
+
+div.clearright {
+	clear: right;
+}
+
+td.legend{
+	color:#4C535C;
+	font-size:12px;	
+	font-weight:normal;
+	text-align:right;
+	white-space: no-wrap;
+}
+
+div.search{
+
+	padding-top:7px;
+	width:300px;
+
+}
+
+
+#topbar{
+position:absolute;
+border: 1px solid black;
+padding: 2px;
+background-color: lightyellow;
+width: 220px;
+visibility: hidden;
+z-index: 100;
+}
+
+div.fieldset{
+background-image:url(images/bg_forms.png);
+background-repeat:repeat-x;
+margin-top:-2px;
+margin-left:3px;
+      		margin-right:5px;
+      		border-bottom:1px solid #879BB3;
+      		border-left:1px solid #879BB3;
+      		border-right:1px solid #879BB3;
+      		padding:5px;
+}
+
+
+
+INPUT[type="submit"],INPUT[type="file"] { 
+width: auto;
+border: 1px double #999999;
+border-top-color: #CCCCCC;
+border-left-color: #CCCCCC;
+padding: 0.15em;
+padding-left:0.4em;
+padding-right:0.4em;
+margin-top:3px;
+margin-bottom:3px;
+background-image: url(images/background_form_element.gif);
+background-repeat: repeat-x;
+color: #005447;
+font-weight: normal;
+text-transform:capitalize;
+cursor:pointer;
+	 }
+
+INPUT[type="button"] { 
+width: auto;
+border: 1px double #999999;
+border-top-color: #CCCCCC;
+border-left-color: #CCCCCC;
+padding: 0.15em;
+padding-left:0.4em;
+padding-right:0.4em;
+margin-top:3px;
+margin-bottom:3px;
+background-image: url(images/background_form_element.gif);
+background-repeat: repeat-x;
+color: #005447;
+font-weight: normal;
+text-transform:capitalize;
+cursor:pointer;
+	 }
+	 
+	 
+
+INPUT,SELECT,TEXTAREA{
+background-color:#FBFBFB;
+border-color:#D7D7D7 rgb(243, 243, 243) rgb(243, 243, 243) rgb(215, 215, 215);
+border:1px solid;
+color:#333333;
+font-size:11px;
+width:auto;
+
+}
+
+input[disabled], input[readonly], select[disabled], select[readonly], checkbox[disabled], checkbox[readonly], textarea[disabled], textarea[readonly]
+{
+ background-color: #888A8A;
+ background-image:none;
+ color: #333333;
+ cursor: default;
+}
+
+INPUT[type="text"]{
+width:90%;
+}
+div.workarea { padding:10px; float:left }
+
+ul.draglist { 
+    position: relative;
+    width: 200px; 
+    height:300px;
+    background: #f7f7f7;
+    border: 1px solid gray;
+    list-style: none;
+    margin:0;
+    padding:0;
+}
+
+ul.draglist li {
+    margin: 1px;
+    cursor: move; 
+}
+
+ul.draglist_alt { 
+    position: relative;
+    width: 200px; 
+    list-style: none;
+    margin:0;
+    padding:0;
+    padding-bottom:20px;
+}
+
+ul.draglist_alt li {
+    margin: 1px;
+    cursor: move; 
+}
+
+
+li.list1 {
+    background-color: #D1E6EC;
+    border:1px solid #7EA6B2;
+}
+
+li.list2 {
+    background-color: #D8D4E2;
+    border:1px solid #6B4C86;
+}
+
+#user_actions { float:right }
+
+/* progress bar container */
+#progressbar{
+    border:1px solid black;
+    width:300px;
+    height:20px;
+    position:relative;
+    color:black;
+}
+/* color bar */
+#progressbar div.progress{
+    position:absolute;
+    width:0;
+    height:100%;
+    overflow:hidden;
+    background-color:#369;
+}
+/* text on bar */
+#progressbar div.progress .text{
+    position:absolute;
+    text-align:center;
+    color:white;
+}
+/* text off bar */
+#progressbar div.text{
+    position:absolute;
+    width:100%;
+    height:100%;
+    text-align:center;
+}
+

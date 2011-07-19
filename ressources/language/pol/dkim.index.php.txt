@@ -1,0 +1,11 @@
+<dkim_about>DKIM is an email authentication framework that addresses the widespread issue of email forgery,
+using cryptography to verify the domain of the sender.[br]
+It allows email providers to validate an email’s originating domain, making use of blacklists and whitelists more effective.
+[br]It also makes phishing attacks easier to detect by helping to identify abusive domains.</dkim_about>
+<On-BadSignature>Signature fails to validate</On-BadSignature>
+<On-DNSError>Transient DNS error is encountered</On-DNSError>
+<On-InternalError>Internal error of some kind is encountered</On-InternalError>
+<On-NoSignature>Message arrives unsigned</On-NoSignature>
+<On-Security>Message arrives containing properties that may be a security concern</On-Security>
+<On-SignatureMissing>Message is unsigned from a domain which advertises a "we sign everything" policy</On-SignatureMissing>
+<select_action>Selects the action to be taken when</select_action>

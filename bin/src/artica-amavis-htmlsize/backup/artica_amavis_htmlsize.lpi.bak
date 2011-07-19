@@ -1,0 +1,470 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <ProjectOptions>
+    <PathDelim Value="/"/>
+    <Version Value="6"/>
+    <General>
+      <Flags>
+        <MainUnitHasUsesSectionForAllUnits Value="False"/>
+        <MainUnitHasCreateFormStatements Value="False"/>
+        <MainUnitHasTitleStatement Value="False"/>
+      </Flags>
+      <MainUnit Value="0"/>
+      <IconPath Value="./"/>
+      <TargetFileExt Value=""/>
+      <Title Value="artica-amavis-htmlsize"/>
+      <ActiveEditorIndexAtStart Value="2"/>
+    </General>
+    <VersionInfo>
+      <ProjectVersion Value=""/>
+    </VersionInfo>
+    <PublishOptions>
+      <Version Value="2"/>
+      <IgnoreBinaries Value="False"/>
+      <IncludeFileFilter Value="*.(pas|pp|inc|lfm|lpr|lrs|lpi|lpk|sh|xml)"/>
+      <ExcludeFileFilter Value="*.(bak|ppu|ppw|o|so);*~;backup"/>
+    </PublishOptions>
+    <RunParams>
+      <local>
+        <FormatVersion Value="1"/>
+        <LaunchingApplication PathPlusParams="/usr/X11R6/bin/xterm -T 'Lazarus Run Output' -e $(LazarusDir)/tools/runwait.sh $(TargetCmdLine)"/>
+      </local>
+    </RunParams>
+    <Units Count="35">
+      <Unit0>
+        <Filename Value="artica_amavis_htmlsize.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="artica_amavis_htmlsize"/>
+        <CursorPos X="41" Y="25"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="0"/>
+        <UsageCount Value="106"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="logs.pas"/>
+        <UnitName Value="logs"/>
+        <CursorPos X="96" Y="922"/>
+        <TopLine Value="870"/>
+        <EditorIndex Value="14"/>
+        <UsageCount Value="52"/>
+        <Loaded Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="zsystem.pas"/>
+        <UnitName Value="zsystem"/>
+        <CursorPos X="29" Y="752"/>
+        <TopLine Value="702"/>
+        <EditorIndex Value="9"/>
+        <UsageCount Value="16"/>
+        <Loaded Value="True"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="confiles.pas"/>
+        <UnitName Value="confiles"/>
+        <CursorPos X="124" Y="9"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="4"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="users.pas"/>
+        <UnitName Value="users"/>
+        <CursorPos X="15" Y="5"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="4"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="pwd.pas"/>
+        <UnitName Value="pwd"/>
+        <CursorPos X="71" Y="5"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="4"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="grp.pas"/>
+        <UnitName Value="grp"/>
+        <CursorPos X="71" Y="5"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="4"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="uhashlist.pas"/>
+        <UnitName Value="uHashList"/>
+        <CursorPos X="76" Y="11"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="4"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="geoip.pas"/>
+        <UnitName Value="GeoIP"/>
+        <CursorPos X="76" Y="11"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="4"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="openldap.pas"/>
+        <UnitName Value="openldap"/>
+        <CursorPos X="1" Y="77"/>
+        <TopLine Value="196"/>
+        <EditorIndex Value="1"/>
+        <UsageCount Value="52"/>
+        <Loaded Value="True"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="spfmilter.pas"/>
+        <UnitName Value="spfmilter"/>
+        <CursorPos X="76" Y="11"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="4"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="global_conf.pas"/>
+        <UnitName Value="global_conf"/>
+        <CursorPos X="54" Y="820"/>
+        <TopLine Value="783"/>
+        <EditorIndex Value="12"/>
+        <UsageCount Value="52"/>
+        <Loaded Value="True"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="htmlsizehook.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="htmlsizeHook"/>
+        <CursorPos X="17" Y="53"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="2"/>
+        <UsageCount Value="103"/>
+        <Loaded Value="True"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="/usr/share/fpcsrc/packages/extra/syslog/systemlog.pp"/>
+        <UnitName Value="systemlog"/>
+        <CursorPos X="14" Y="43"/>
+        <TopLine Value="78"/>
+        <EditorIndex Value="16"/>
+        <UsageCount Value="52"/>
+        <Loaded Value="True"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="../artica-send/mailinfos.pas"/>
+        <UnitName Value="mailinfos"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="23"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="mimemess.pas"/>
+        <UnitName Value="mimemess"/>
+        <CursorPos X="38" Y="59"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="13"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="synafpc.pas"/>
+        <UnitName Value="synafpc"/>
+        <CursorPos X="42" Y="64"/>
+        <TopLine Value="27"/>
+        <UsageCount Value="4"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="synacode.pas"/>
+        <UnitName Value="synacode"/>
+        <CursorPos X="77" Y="116"/>
+        <TopLine Value="43"/>
+        <UsageCount Value="4"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="synachar.pas"/>
+        <UnitName Value="synachar"/>
+        <CursorPos X="10" Y="174"/>
+        <TopLine Value="138"/>
+        <EditorIndex Value="7"/>
+        <UsageCount Value="12"/>
+        <Loaded Value="True"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="../artica-ldap/articaldap.pas"/>
+        <UnitName Value="articaldap"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="20"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="articaldap.pas"/>
+        <UnitName Value="articaldap"/>
+        <CursorPos X="108" Y="306"/>
+        <TopLine Value="264"/>
+        <EditorIndex Value="13"/>
+        <UsageCount Value="49"/>
+        <Loaded Value="True"/>
+      </Unit20>
+      <Unit21>
+        <Filename Value="../artica-install/bogofilter.pas"/>
+        <UnitName Value="bogofilter"/>
+        <CursorPos X="52" Y="34"/>
+        <TopLine Value="26"/>
+        <UsageCount Value="6"/>
+      </Unit21>
+      <Unit22>
+        <Filename Value="bogofilter.pas"/>
+        <UnitName Value="bogofilter"/>
+        <CursorPos X="51" Y="63"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="11"/>
+        <UsageCount Value="35"/>
+        <Loaded Value="True"/>
+      </Unit22>
+      <Unit23>
+        <Filename Value="/usr/share/fpcsrc/rtl/objpas/objpas.pp"/>
+        <UnitName Value="objpas"/>
+        <CursorPos X="8" Y="28"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="6"/>
+      </Unit23>
+      <Unit24>
+        <Filename Value="/usr/share/fpcsrc/rtl/inc/systemh.inc"/>
+        <CursorPos X="8" Y="86"/>
+        <TopLine Value="44"/>
+        <UsageCount Value="6"/>
+      </Unit24>
+      <Unit25>
+        <Filename Value="/usr/share/fpcsrc/rtl/objpas/sysutils/sysstrh.inc"/>
+        <CursorPos X="70" Y="100"/>
+        <TopLine Value="78"/>
+        <UsageCount Value="6"/>
+      </Unit25>
+      <Unit26>
+        <Filename Value="../artica-send/scanqueue.pas"/>
+        <UnitName Value="scanQueue"/>
+        <CursorPos X="61" Y="659"/>
+        <TopLine Value="620"/>
+        <EditorIndex Value="15"/>
+        <UsageCount Value="34"/>
+        <Loaded Value="True"/>
+      </Unit26>
+      <Unit27>
+        <Filename Value="../artica-thread-back/artica_mysql.pas"/>
+        <UnitName Value="artica_mysql"/>
+        <CursorPos X="61" Y="120"/>
+        <TopLine Value="90"/>
+        <UsageCount Value="9"/>
+      </Unit27>
+      <Unit28>
+        <Filename Value="artica_mysql.pas"/>
+        <UnitName Value="artica_mysql"/>
+        <CursorPos X="79" Y="142"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="10"/>
+        <UsageCount Value="19"/>
+        <Loaded Value="True"/>
+      </Unit28>
+      <Unit29>
+        <Filename Value="/usr/share/fpcsrc/rtl/objpas/classes/classesh.inc"/>
+        <CursorPos X="19" Y="519"/>
+        <TopLine Value="483"/>
+        <EditorIndex Value="8"/>
+        <UsageCount Value="16"/>
+        <Loaded Value="True"/>
+      </Unit29>
+      <Unit30>
+        <Filename Value="synautil.pas"/>
+        <UnitName Value="synautil"/>
+        <CursorPos X="67" Y="87"/>
+        <TopLine Value="38"/>
+        <EditorIndex Value="6"/>
+        <UsageCount Value="12"/>
+        <Loaded Value="True"/>
+      </Unit30>
+      <Unit31>
+        <Filename Value="mimeinln.pas"/>
+        <UnitName Value="mimeinln"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="10"/>
+      </Unit31>
+      <Unit32>
+        <Filename Value="mimepart.pas"/>
+        <UnitName Value="mimepart"/>
+        <CursorPos X="22" Y="274"/>
+        <TopLine Value="238"/>
+        <EditorIndex Value="5"/>
+        <UsageCount Value="12"/>
+        <Loaded Value="True"/>
+      </Unit32>
+      <Unit33>
+        <Filename Value="/usr/share/fpcsrc/rtl/inc/wstringh.inc"/>
+        <CursorPos X="51" Y="66"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="4"/>
+        <UsageCount Value="12"/>
+        <Loaded Value="True"/>
+      </Unit33>
+      <Unit34>
+        <Filename Value="/usr/share/fpcsrc/rtl/objpas/sysutils/finah.inc"/>
+        <CursorPos X="24" Y="31"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="3"/>
+        <UsageCount Value="11"/>
+        <Loaded Value="True"/>
+      </Unit34>
+    </Units>
+    <JumpHistory Count="30" HistoryIndex="29">
+      <Position1>
+        <Filename Value="htmlsizehook.pas"/>
+        <Caret Line="460" Column="20" TopLine="416"/>
+      </Position1>
+      <Position2>
+        <Filename Value="htmlsizehook.pas"/>
+        <Caret Line="459" Column="23" TopLine="424"/>
+      </Position2>
+      <Position3>
+        <Filename Value="htmlsizehook.pas"/>
+        <Caret Line="466" Column="21" TopLine="430"/>
+      </Position3>
+      <Position4>
+        <Filename Value="htmlsizehook.pas"/>
+        <Caret Line="460" Column="29" TopLine="430"/>
+      </Position4>
+      <Position5>
+        <Filename Value="htmlsizehook.pas"/>
+        <Caret Line="472" Column="39" TopLine="412"/>
+      </Position5>
+      <Position6>
+        <Filename Value="htmlsizehook.pas"/>
+        <Caret Line="380" Column="53" TopLine="346"/>
+      </Position6>
+      <Position7>
+        <Filename Value="mimepart.pas"/>
+        <Caret Line="156" Column="31" TopLine="120"/>
+      </Position7>
+      <Position8>
+        <Filename Value="mimepart.pas"/>
+        <Caret Line="188" Column="74" TopLine="152"/>
+      </Position8>
+      <Position9>
+        <Filename Value="mimepart.pas"/>
+        <Caret Line="571" Column="19" TopLine="535"/>
+      </Position9>
+      <Position10>
+        <Filename Value="mimepart.pas"/>
+        <Caret Line="756" Column="21" TopLine="720"/>
+      </Position10>
+      <Position11>
+        <Filename Value="mimepart.pas"/>
+        <Caret Line="770" Column="63" TopLine="734"/>
+      </Position11>
+      <Position12>
+        <Filename Value="mimepart.pas"/>
+        <Caret Line="773" Column="61" TopLine="737"/>
+      </Position12>
+      <Position13>
+        <Filename Value="mimepart.pas"/>
+        <Caret Line="789" Column="29" TopLine="753"/>
+      </Position13>
+      <Position14>
+        <Filename Value="mimepart.pas"/>
+        <Caret Line="811" Column="60" TopLine="775"/>
+      </Position14>
+      <Position15>
+        <Filename Value="mimepart.pas"/>
+        <Caret Line="812" Column="21" TopLine="772"/>
+      </Position15>
+      <Position16>
+        <Filename Value="mimepart.pas"/>
+        <Caret Line="119" Column="14" TopLine="83"/>
+      </Position16>
+      <Position17>
+        <Filename Value="htmlsizehook.pas"/>
+        <Caret Line="386" Column="1" TopLine="346"/>
+      </Position17>
+      <Position18>
+        <Filename Value="htmlsizehook.pas"/>
+        <Caret Line="384" Column="81" TopLine="356"/>
+      </Position18>
+      <Position19>
+        <Filename Value="htmlsizehook.pas"/>
+        <Caret Line="109" Column="17" TopLine="66"/>
+      </Position19>
+      <Position20>
+        <Filename Value="htmlsizehook.pas"/>
+        <Caret Line="218" Column="30" TopLine="178"/>
+      </Position20>
+      <Position21>
+        <Filename Value="htmlsizehook.pas"/>
+        <Caret Line="214" Column="1" TopLine="130"/>
+      </Position21>
+      <Position22>
+        <Filename Value="htmlsizehook.pas"/>
+        <Caret Line="127" Column="20" TopLine="80"/>
+      </Position22>
+      <Position23>
+        <Filename Value="htmlsizehook.pas"/>
+        <Caret Line="167" Column="1" TopLine="144"/>
+      </Position23>
+      <Position24>
+        <Filename Value="htmlsizehook.pas"/>
+        <Caret Line="54" Column="16" TopLine="1"/>
+      </Position24>
+      <Position25>
+        <Filename Value="htmlsizehook.pas"/>
+        <Caret Line="126" Column="1" TopLine="90"/>
+      </Position25>
+      <Position26>
+        <Filename Value="htmlsizehook.pas"/>
+        <Caret Line="52" Column="1" TopLine="200"/>
+      </Position26>
+      <Position27>
+        <Filename Value="htmlsizehook.pas"/>
+        <Caret Line="141" Column="25" TopLine="105"/>
+      </Position27>
+      <Position28>
+        <Filename Value="htmlsizehook.pas"/>
+        <Caret Line="284" Column="1" TopLine="240"/>
+      </Position28>
+      <Position29>
+        <Filename Value="htmlsizehook.pas"/>
+        <Caret Line="489" Column="60" TopLine="428"/>
+      </Position29>
+      <Position30>
+        <Filename Value="htmlsizehook.pas"/>
+        <Caret Line="194" Column="1" TopLine="141"/>
+      </Position30>
+    </JumpHistory>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="5"/>
+    <Target>
+      <Filename Value="/home/dtouzeau/developpement/artica-postfix/bin/artica-amavis-htmlsize"/>
+    </Target>
+    <CodeGeneration>
+      <Generate Value="Faster"/>
+    </CodeGeneration>
+    <Other>
+      <CompilerPath Value="$(CompPath)"/>
+    </Other>
+  </CompilerOptions>
+  <Debugging>
+    <BreakPoints Count="3">
+      <Item1>
+        <Source Value="logs.pas"/>
+        <Line Value="671"/>
+      </Item1>
+      <Item2>
+        <Source Value="htmlsizehook.pas"/>
+        <Line Value="432"/>
+      </Item2>
+      <Item3>
+        <Source Value="htmlsizehook.pas"/>
+        <Line Value="389"/>
+      </Item3>
+    </BreakPoints>
+    <Exceptions Count="2">
+      <Item1>
+        <Name Value="ECodetoolError"/>
+      </Item1>
+      <Item2>
+        <Name Value="EFOpenError"/>
+      </Item2>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

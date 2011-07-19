@@ -1,0 +1,30 @@
+acl zipworldIP src "{HOME}/rc/adzap/squid/ip-ranges@zip"
+acl zipworldDNS srcdomain zipworld.com.au zipworld.net.au zip.com.au zip.net.au zipworld.net pacific.net.au
+
+http_access allow zipworldIP
+http_access allow zipworldDNS
+
+memory_pools_limit 32 MB
+
+append_domain .zipworld.net
+
+cache_dir ufs -1 {HOME}/var/log/squid/cache 10 4 4
+
+cache_peer proxy2.syd.zipworld.net parent 8080 3130 proxy-only round-robin no-query
+cache_peer proxy1.syd.zipworld.net parent 8080 3130 proxy-only round-robin no-query
+cache_peer proxy3.syd.zipworld.net parent 8080 3130 proxy-only round-robin no-query
+cache_peer proxy4.syd.zipworld.net parent 8080 3130 proxy-only round-robin no-query
+cache_peer_domain proxy1.syd.zipworld.net !.zipworld.com.au !.zipworld.net !.zip.com.au !.zip.net.au
+cache_peer_domain proxy2.syd.zipworld.net !.zipworld.com.au !.zipworld.net !.zip.com.au !.zip.net.au
+cache_peer_domain proxy3.syd.zipworld.net !.zipworld.com.au !.zipworld.net !.zip.com.au !.zip.net.au
+cache_peer_domain proxy4.syd.zipworld.net !.zipworld.com.au !.zipworld.net !.zip.com.au !.zip.net.au
+
+cachemgr_passwd disable all
+ftp_user admin@adzap.cs.zip.com.au
+cache_mgr admin@adzap.cs.zip.com.au
+visible_hostname adzapper.cs.zip.com.au
+dns_testnames adzap.cs.zip.com.au netscape.com internic.net nlanr.net microsoft.com
+http_port 8081
+redirect_children 5
+redirect_program {HOME}/scripts/squid_redirect
+no_cache deny everything

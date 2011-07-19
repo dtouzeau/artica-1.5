@@ -1,0 +1,26 @@
+<ADD_BAN_SERVER>Ban a new server</ADD_BAN_SERVER>
+<ADD_BAN_SERVER_TEXT>Add a rule to bann a server by name, parent domains, client address, or networks</ADD_BAN_SERVER_TEXT>
+<ADD_FILTER_EXPRESSION>Add a new expression filter</ADD_FILTER_EXPRESSION>
+<ADD_FILTER_EXPRESSION_TEXT>Add a new rule that matches expressions in Mail headers</ADD_FILTER_EXPRESSION_TEXT>
+<blockips>Reject IP/Name addresses</blockips>
+<blockip_msg>Give the value of the address you want to bann.
+Example :
+192.168.5
+fateback.com
+hotpop.com</blockip_msg>
+<blockip_text>This section use postfix to bann client name, parent domains, client address, or networks</blockip_text>
+<delete_headers_regex>Delete all rules</delete_headers_regex>
+<delete_headers_regex_text>Are you sure to delete all rules ??</delete_headers_regex_text>
+<error_noaction>Error, select "action"</error_noaction>
+<error_noevent>Error, fill "log" field. This event will be added in postfix log and will returned to client when matching pattern</error_noevent>
+<error_nopattern>Error, fill the regex pattern</error_nopattern>
+<event>Event</event>
+<global_smtp_rules_explain>This section consolidate all rules you can define to filter mails, you can add rules and select the module that will handle the filter</global_smtp_rules_explain>
+<goto_globalsmtprules>To show rules list,you need to go to Security Settings/Global SMTP Rules</goto_globalsmtprules>
+<go_to_page>Go to page</go_to_page>
+<import_headers_regex>Import predefined rules</import_headers_regex>
+<import_headers_regex_text>Are you sure to Add predefined rules ?</import_headers_regex_text>
+<log>Postfix log</log>
+<postfix_regex>Filter expressions in headers</postfix_regex>
+<postfix_regex_text>Set rules that matches expressions in SMTP headers of mails received by postfix</postfix_regex_text>
+<search_string>Search string</search_string>

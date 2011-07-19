@@ -1,0 +1,16 @@
+<BAD_SCORE>Bad Score</BAD_SCORE>
+<DNSBL_settings>DNSBL RHSBL settings</DNSBL_settings>
+<DNSBL_settings_text>Set the list and score of DNS Black list servers</DNSBL_settings_text>
+<DNSERRMSG>DNS Error Message text</DNSERRMSG>
+<GOOD_SCORE>Good score</GOOD_SCORE>
+<MAINTENANCE_LEVEL>After that many policy requests the cache checks for configuration file changes</MAINTENANCE_LEVEL>
+<MAXDNSBLHITS>RBLs servers match Number to reject</MAXDNSBLHITS>
+<MAXDNSBLMSG>Max DNSBL Error text</MAXDNSBLMSG>
+<MAXDNSBLSCORE>DNSBLs score is ABOVE this value will reject immediately</MAXDNSBLSCORE>
+<MAXDNSERRMSG>Max DNS Error text</MAXDNSERRMSG>
+<MAXIDLECACHE>After that many seconds of being idle the cache checks for configuration file changes</MAXIDLECACHE>
+<MAX_PROC>Process limit on how many processes policyd-weight will spawn</MAX_PROC>
+<MIN_PROC>Minimum childs which are kept alive in idle times</MIN_PROC>
+<PolicydDaemonNotifs>Set Errors text to SMTP Sender server  when Policy Server reject messages</PolicydDaemonNotifs>
+<REJECTMSG>Reject Message text</REJECTMSG>
+<SOMAXCONN>Maximum connections which policyd-weight accepts</SOMAXCONN>

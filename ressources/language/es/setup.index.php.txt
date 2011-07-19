@@ -1,0 +1,21 @@
+<available_version>Available version</available_version>
+<CONNEXIONS_FILTERS_PRODUCTS>connections filters softwares</CONNEXIONS_FILTERS_PRODUCTS>
+<CONTENTS_FILTERS_PRODUCTS>contents filters sofwtares</CONTENTS_FILTERS_PRODUCTS>
+<CORE_PRODUCTS>core softwares</CORE_PRODUCTS>
+<current_version>Current version</current_version>
+<installation_lauched>Installation has been launched in background,
+you will see the status of the setup in few times</installation_lauched>
+<install_upgrade>Install or Upgrade</install_upgrade>
+<LICENSED_FILTERS_PRODUCTS>Commercial filters softwares</LICENSED_FILTERS_PRODUCTS>
+<MAIL_TOOLS>Mail tools</MAIL_TOOLS>
+<proxy_packages>Proxy softwares</proxy_packages>
+<refresh_index_file>Refresh index file (test connection)</refresh_index_file>
+<setup_index_explain>This section allow you to install applications that is not compiled or not installed correctly by your distribution[br]
+In some cases softwares must be comiled with specifics tokens to be more usefull.[br]
+This section allow you to send order to install softwares...</setup_index_explain>
+<smtp_packages>Messaging softwares</smtp_packages>
+<software>Software</software>
+<STATS_TOOLS>Statistics softwares</STATS_TOOLS>
+<stat_packages>Statistics softwares</stat_packages>
+<system_packages>System packages</system_packages>
+<web_packages>web/groupware softwares</web_packages>

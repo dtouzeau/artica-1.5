@@ -1,0 +1,60 @@
+<ACTIVATE_OCS_AGENT_SERVICE>Activation du service de l'agent</ACTIVATE_OCS_AGENT_SERVICE>
+<add_new_package>Ajouter un nouveau paquet dans la base</add_new_package>
+<affected>Affect&eacute;</affected>
+<APP_OCSI_LINUX_CLIENT>Ocsinventory unified agent for UNIX</APP_OCSI_LINUX_CLIENT>
+<APP_OCSI_LINUX_CLIENT_TEXT>Ocsinventory unified agent for UNIX est l'agent Linux pour le serveur OCS Inventory, clickez ici pour modifier les param&egrave;tres obligatoires.</APP_OCSI_LINUX_CLIENT_TEXT>
+<automatic_computers_injection>Injection automatique d'ordinateurs</automatic_computers_injection>
+<automatic_computers_injection_explain>L'injection automatique d'ordinateur met &agrave; jour la base de donn&eacute;es Artica en fontion de l'inventaire de OCS.[br]Chaque X minutes, le processus va v&eacute;rifier si il y a des nouveaux ordinateurs dans la base de OCS.[br]Artica va r&eacute;pliquer les informations dans la base LDAP.[br]
+Ceci afin de mettre &agrave; jour automatiquement les services r&eacute;seaux tels que le DNS, et autres services.[br]Si vous d&eacute;sirez d&eacute;sactiver cette fonctionnalit&eacute;, mettez la valeur 0 (10 &eacute;tant la valeur minimale).</automatic_computers_injection_explain>
+<certificate>certificat</certificate>
+<download_certificate>T&eacute;l&eacute;charger le certificat</download_certificate>
+<EXECUTE>Ex&eacute;cuter</EXECUTE>
+<last_com>Derni&egrave;re connexion</last_com>
+<LAUNCH>Lancer</LAUNCH>
+<OCS_ADD_PACKAGE_EXPLAIN>Les agents OCS n&eacute;c&eacute;ssitent l'utilisation de fichier compress&eacute;s au format ZIP comme paquet, vous pouvez sp&eacute;cifier 3 ordres sur un fichier zip.
+[b]Stocker[/b]: va extraire le paquet dans le dossier sp&eacute;cifi&eacute;.[br]
+[b]Ex&eacute;cuter[b]: va extraire le paquet et ex&eacute;cuter la ligne de commande sp&eacute;cifi&eacute;e.[br]
+[b]Lancer[/b]: va extraire le paquet et ex&eacute;cuter le programme sp&eacute;cifi&eacute;. (ex: fichier bat/sh)</OCS_ADD_PACKAGE_EXPLAIN>
+<ocs_affect_packages_computers>Lancer le d&eacute;ploiement de ce paquet &agrave; des ordinateurs</ocs_affect_packages_computers>
+<OCS_AGENT>Agent OCS</OCS_AGENT>
+<OCS_AGENT_INSTALL_1>T&eacute;l&eacute;chargez le fichier zip et d&eacute;compressez le.Ex&eacute;cutez OcsAgentSetup.exe sur l'ordinateur client.</OCS_AGENT_INSTALL_1>
+<OCS_AGENT_INSTALL_2>Validez la license et cliquez sur I agree.</OCS_AGENT_INSTALL_2>
+<OCS_AGENT_INSTALL_3>Renseignez les information sur le serveur OCS et son port d'&eacute;coute.[br]Si vous d&eacute;sire que l'agent utilise les param&egrave;tres du proxy d'internet Explorer (si votre proxy utilise un authentification par exemple), Activez &quot;No Proxy&quot;.[br]
+Les autres champs facultatifs vous permet d'indiquer des lignes commandes sp&eacute;cifiques (voir les commandes disponibles sur le wiki de OCS). Cliquez sur le bouton Next.</OCS_AGENT_INSTALL_3>
+<OCS_AGENT_INSTALL_4>Choisissez le r&eacute;pertoire d'installation C:\Program Files\OCS Inventory Agent par d&eacute;faut et cliquez sur le bouton &quot;install&quot;</OCS_AGENT_INSTALL_4>
+<OCS_AGENT_INSTALL_5>Cliquez sur Close afin d'enregistrer le service de l'agent dans le syst&egrave;me.</OCS_AGENT_INSTALL_5>
+<OCS_AGENT_INSTALL_CACERT>N'oubliez pas de copier le fichier de certificat dans le r&eacute;pertoire d'installation de l'agent sur les postes de travail.
+[br]Le nom de fichier doit &ecirc;tre [b]cacert.pem[/b][br]ex:C:\Program Files\OCS Inventory Agent\cacert.pem[br]
+Vous trouverez le certificat &agrave; t&eacute;l&eacute;charg&eacute; dans l'onglet certificat de cette section.</OCS_AGENT_INSTALL_CACERT>
+<OCS_AGENT_INSTALL_TITLE>Installer manuelle l'agent OCS</OCS_AGENT_INSTALL_TITLE>
+<OCS_AGENT_INTRO>Il y a deux mani&egrave;res d'inventorier un ordinateur client utilisant l'agent d'OCS Inventory NG :[br][ul]
+
+[li]Si l'ordinateur client ne peut se connecter au serveur OCS Inventory NG, l'inventaire est fait localement et enregistr&eacute; dans un fichier XML compress&eacute; avec l'extension de fichier &quot;.ocs&quot;. [br]L'utilisateur peut alors envoyer ce fichier au moyen d'un courriel, d'un disque USB ou de tout autre mani&egrave;re indiqu&eacute; par l'Administrateur, ce qui lui permettra de l'importer dans la base de donn&eacute;es au moyen du serveur d'Administration.[/li]
+[li]Si l'ordinateur client peut se connecter en utilisant le protocole HTTP au serveur de Communication &agrave;-travers le r&eacute;seau, l'agent demandera au serveur de Communication les param&egrave;tres pour l'inventaire et enverra le r&eacute;sultat de l'inventaire directement au serveur de Communication. [/li][/ul]</OCS_AGENT_INTRO>
+<ocs_certificate_explain>Si vous voulez utiliser la t&eacute;l&eacute;-distribution &agrave; travers les agents OCS, vous avez besoin de g&eacute;n&eacute;rer un certificat SSL.[br]Les ordinateurs distants requi&egrave;rent un certificat SSL valide.[br]Utilisez le service wbe http://www.cacert.org qui va vous aider &agrave; signer vos certificats et vous fournira un certificat valide et sign&eacute;.[br]Ce service est gratuit au contraire des services comme Thawte ou Verisign.[br]
+En premier lieu, va avez besoin de g&eacute;n&eacute;rer un clef priv&eacute;e et un CSR.[br]Remplissez le formulaire suivant afin de g&eacute;n&eacute;rer cette clef priv&eacute;e.</ocs_certificate_explain>
+<ocs_certificate_explain_self>Si vous voulez utiliser la t&eacute;l&eacute;-distribution &agrave; travers les agents OCS, vous avez besoin de g&eacute;n&eacute;rer un certificat SSL.[br]Cette section va vous aider &agrave; g&eacute;n&eacute;rer un certificat auto-sign&eacute;.</ocs_certificate_explain_self>
+<ocs_computer_is_not_in_ldap>Cet ordinateurs n'est pas stock&eacute; dans la base de donn&eacute;es Artica.[br]Cliquez ici afin de l'ajouter.</ocs_computer_is_not_in_ldap>
+<OCS_CONNECTED_COMPUTERS_TEXT>Cette section vous affiche les ordinateurs connect&eacute;s au service d'inventaire.[br]Ces ordinateurs sont &eacute;quip&eacute;s d'un agent client OCS</OCS_CONNECTED_COMPUTERS_TEXT>
+<OCS_COULD_NOT_RESOLVE_SSLHOST>Il semble que ce nom de serveur n'est r&eacute;solvable depuis vos DNS internes., v&eacute;rifiez si le serveur est r&eacute;solu correctement pas vos postes Windows.</OCS_COULD_NOT_RESOLVE_SSLHOST>
+<OCS_CSR_HOWTO>Copiez/collez ces lignes dans la page de cacert.org afin de g&eacute;n&eacute;rer la clef publique.</OCS_CSR_HOWTO>
+<ocs_download_certificate_text>T&eacute;l&eacute;chargez le certificat afin de l'enregistrer dans le r&eacute;pertoire d'installation de l'agent OCS</ocs_download_certificate_text>
+<OCS_MUST_CREATE_CERTIFICATE_CSR_FIRST>Vous avez besoin d'obtenir un Certificat serveur valide en premier lieu, Suivez les instructions indiqu&eacute;es dans l'ic&ocirc;ne d'aide.</OCS_MUST_CREATE_CERTIFICATE_CSR_FIRST>
+<OCS_PACKAGE_INFOS>Cette section liste les paquetages d'installation disponibles pour le d&eacute;ploiement vers les ordinateurs distants.</OCS_PACKAGE_INFOS>
+<OCS_PACKAGE_NO_CERT_SERVER>Vous n'avez pas sp&eacute;cifi&eacute; de nom de serveur dans la section certificat.
+Le paquet ne peut &ecirc;tre cr&eacute;&eacute;.</OCS_PACKAGE_NO_CERT_SERVER>
+<OCS_SERVER_ADDRESS>Adresse du serveur OCS</OCS_SERVER_ADDRESS>
+<ocs_web_params>Serveur web/interface</ocs_web_params>
+<ocs_web_params_text>Indiquez les param&egrave;tres du serveur Web et de l'interface principale d'OCS inventory.</ocs_web_params_text>
+<packages>paquetages</packages>
+<PACKAGE_AFFECT_HOWTO>Cliquez sur la case &agrave; c&ocirc;cher &agrave; c&ocirc;t&eacute; de l'ordinateur afin de lancer le d&eacute;ploiement du paquet.</PACKAGE_AFFECT_HOWTO>
+<PROLOG_FREQ>Fr&eacute;quence de connexions</PROLOG_FREQ>
+<PROLOG_FREQ_HELP>Nombre d'heures entre deux lancements de l'agent (utilis&eacute; par le service). Toutefois, l'agent prendra contact (pas n&eacute;cessairement pour envoyer un inventaire si l'inventaire n'est pas plus vieux que le nombre de jours sp&eacute;cifi&eacute;s dans FREQUENCY) avec le serveur OCS selon X nombre d'heures</PROLOG_FREQ_HELP>
+<STORE>Stocker</STORE>
+<system_os_mini>O.S.</system_os_mini>
+<upload_certificate>Charger le certificat</upload_certificate>
+<upload_server_certificate>Charger le certificat serveur.</upload_server_certificate>
+<upload_server_certificate_text_ocs>Sauvegardez sur votre poste de travail le certificat g&eacute;n&eacute;r&eacute;. Chargez-le dans le serveur en utilisant le bouton &quot;parcourir&quot; afin d'activer la disponibilit&eacute; du service de d&eacute;ploiement SSL.</upload_server_certificate_text_ocs>
+<UseFusionInventoryAgents>Utiliser les Agents Fusion Inventory</UseFusionInventoryAgents>
+<UseFusionInventoryAgents_text>Utiliser les Agents de FusionInventory en lieu et places des Agent de OCS Inventory.[br]Cette option ne requi&egrave;re qu'un seul serveur web</UseFusionInventoryAgents_text>
+<use_self_signed_certificate>Utiliser un certificat auto-sign&eacute;</use_self_signed_certificate>

@@ -1,0 +1,33 @@
+<APP_CLAMAV_INSTALL_INFOS>El pedido ha sido enviado al Centro de instalacion de aplicaciones:</APP_CLAMAV_INSTALL_INFOS>
+<APP_CLAMAV_MILTER_TEXT>Milter plugin utiliza con servidor Postfix de correo para escanear el flujo de correo electronico</APP_CLAMAV_MILTER_TEXT>
+<APP_CLAMAV_TEXT>Este es un archivo que sirve peticiones de exploracion a fin de acelerar el tiempo de exploracion</APP_CLAMAV_TEXT>
+<APP_CLAMSCAN_TEXT>Herramienta de linea de comandos para llevar a cabo un solo escaneo</APP_CLAMSCAN_TEXT>
+<APP_FRESHCLAM_TEXT>Se utiliza regularmente para actualizar los patrones de ClamAV</APP_FRESHCLAM_TEXT>
+<Checks>Controles de base de datos</Checks>
+<Checks_text>Numero de controles de bases de datos por dia</Checks_text>
+<CLAMAV_NOT_INSTALLED_CLICK_TO_INSTALL>[b] Clam Antivirus no esta instalado en el servidor [b]. [br]
+Si desea instalarlo, haga clic en el icono de abajo para realizar la instalacion a traves de internet</CLAMAV_NOT_INSTALLED_CLICK_TO_INSTALL>
+<daily_cld>principales bases de datos antivirus diariamente</daily_cld>
+<explain>&iquest;Qu&eacute; es?</explain>
+<INSTALL_CLAMAV>Instalacion de Clam Antivirus</INSTALL_CLAMAV>
+<INSTALL_CLAMAV_PROGRESS>Clam Antivirus instalacion en curso, haga clic aqui para ver eventos de instalacion</INSTALL_CLAMAV_PROGRESS>
+<INSTALL_CLAMAV_TEXT>Esta operacion podra compilar e instalar la version mas reciente Clam Antivirus en su servidor.</INSTALL_CLAMAV_TEXT>
+<junk_ndb>Phishing, malware, ecards, spam, 419s, lottery, job, stocks</junk_ndb>
+<lott_ndb>Simple lottery scams (type 7 signatures)</lott_ndb>
+<main_cld>Main antivirus databases</main_cld>
+<MaxAttempts>Los intentos de maxima</MaxAttempts>
+<MaxAttempts_text>Como muchos intentos (por espejo) antes de abandonar</MaxAttempts_text>
+<mirrors>espejos</mirrors>
+<MSRBL-Images_hdb>Las imagenes contenidas dentro de los correos spam</MSRBL-Images_hdb>
+<MSRBL-SPAM_ndb>Los mensajes de spam (URL u otro contenido que se ve estatico)</MSRBL-SPAM_ndb>
+<phish_ndb>Phishing, malware, ecards</phish_ndb>
+<RECOMPILE_CLAMAV_TEXT>Esta operacion puede recompilar la fuerza de actualizacion de la version actual Clam Antivirus</RECOMPILE_CLAMAV_TEXT>
+<rogue_hdb>Fake anti-virus software, other malware</rogue_hdb>
+<scam_ndb>Spam, 419S, loteria, puestos de trabajo, las poblaciones</scam_ndb>
+<security_info>Additionals pattern from /www.securiteinfo.com</security_info>
+<spamimg_hdb>Imagenes Spam</spamimg_hdb>
+<spam_ldb>Spam (using logical signatures)</spam_ldb>
+<spear_ndb>Email spears/phishing</spear_ndb>
+<winnow_malware_hdb>Current virus, trojan and other malware not yet detected by ClamAV</winnow_malware_hdb>
+<winnow_phish_complete_ndb>Signatures to detect phishing and other malicious url's and compromised hosts</winnow_phish_complete_ndb>
+<winnow_phish_complete_url_ndb>Similar to "Signatures to detect phishing" except that entire urls's are used to derive the signatures rather than carefully selected hosts</winnow_phish_complete_url_ndb>

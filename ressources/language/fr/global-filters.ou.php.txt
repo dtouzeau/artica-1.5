@@ -1,0 +1,8 @@
+<ArticaDenyNoMXRecords>Pas d'enregistrements MX</ArticaDenyNoMXRecords>
+<ArticaDenyNoMXRecords_text>La politique Artica v&eacute;rifie si le domaine de l'exp&eacute;diteur &agrave; un v&eacute;ritable enregistrement MX sur le serveur DNS, dans ce cas, vous pouvez rejeter les messages dans la connexion</ArticaDenyNoMXRecords_text>
+<ArticaFakedMailFrom>Des adresses d'exp&eacute;diteur falsifi&eacute;es</ArticaFakedMailFrom>
+<ArticaFakedMailFrom_text>Parfois, l'adresse de l'&eacute;metteur ne refl&egrave;te pas la v&eacute;ritable adresse d'exp&eacute;diteur utilis&eacute;s pour communiquer avec le serveur. 
+Dans ce cas, vous pouvez effectuer l'op&eacute;ration [br] Supprimer le courrier &eacute;lectronique, mettre en quarantaine utilisateur [br] pour d&eacute;sactiver cette fonctionnalit&eacute;, 
+il suffit de s&eacute;lectionner la m&eacute;thode.</ArticaFakedMailFrom_text>
+<trust_users>Faire confiance aux utilisateurs de l'Organisation</trust_users>
+<trust_users_text>Si coch&eacute;e, les exp&eacute;diteurs locaux sont plac&eacute;s sur liste blanche et seront consid&eacute;r&eacute;s comme des utilisateurs de confiance</trust_users_text>

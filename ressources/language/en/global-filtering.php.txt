@@ -1,0 +1,17 @@
+<br>This section help you to add words.
+ if these words watchs emails will be filtered and consider as REJECTED</br>
+<bt_filter_headers>Subjects rules</bt_filter_headers>
+<bt_filter_headers_from>Mail from rules</bt_filter_headers_from>
+<bt_mime_attachments>attachments rules</bt_mime_attachments>
+<extension_list_title>filtered file attachments extension list</extension_list_title>
+<from_rules_explain>This feature allows you to block mails with specified words in sender's address</from_rules_explain>
+<js_del_extension>Delete this extension filter</js_del_extension>
+<js_del_from>Delete this rule</js_del_from>
+<js_del_subject>Delete this subject rule</js_del_subject>
+<mail_from_add>Add words rule for mail from mails</mail_from_add>
+<mime_attachments_add>Set the extension name like :exe or dll or bat</mime_attachments_add>
+<mime_attachments_explain>This feature allows you to block mails with specified attached file extension.</mime_attachments_explain>
+<postfix_error>Give the postfix error when pattern is matched</postfix_error>
+<subject_add>Add words rule for mail subjects</subject_add>
+<title_header>Subjects rules</title_header>
+<title_mime>attached files filtering</title_mime>

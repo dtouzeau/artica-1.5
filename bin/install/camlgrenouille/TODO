@@ -1,0 +1,63 @@
+- add a preference for the pipe path, disabling it if it is empty
+
+- applescript
+        use "path to me" command
+        only works on Tiger ... to check whether using Tiger, use the following idea:
+                -- Binary-coded decimal of applescript version 1.10
+                property AS_VERSION_1_10 : 17826208
+                
+                on show_alert(the_title, the_message)
+                    if ((system attribute "ascv") ≥ AS_VERSION_1_10) then
+                        -- AppleScript 1.10 or later (10.4)
+                        display alert the_title message the_message
+                    else
+                        display dialog the_title & return & return & the_message ¬
+                            buttons {"OK"} default button 1 with icon note
+                    end if
+                    return
+                end show_alert
+
+- a GUI ...
+- send messages to /var/log/messages (use syslog, I guess)
+- find grep, cut, awk ... using which
+- handle upload failures
+- when "getting config" fails, all tests should be suspended until it succeeds again
+- make easy to add camlgrenouille as automatically started item under OS X:
+Etant root (Yaisse j'aime cela en, plus du terminal), j'ai créé un répertoire /Library/StartupItems/CamlGrenouille qui contient deux fichiers : CamlGrenouille et StartupParameters.plist. Voici le contenu du premier fichier :
+
+Code:
+
+!/bin/sh 
+
+ ## 
+ # Start CamlGrenouille daemon 
+ ## 
+
+ . /etc/rc.common 
+
+
+ ConsoleMessage "Starting Grenouille" 
+
+ cd /Applications/Grenouille 
+ ./camlgrenouille -at -f user.config.txt >> grenouillelog &
+et celui du second :
+
+Code:
+
+{ 
+   Description     = "Grenouille Daemon Launcher"; 
+   Provides        = ("Grenouille"); 
+   OrderPreference = "Last"; 
+   Messages = 
+   { 
+     start = "Starting Grenouille Daemon"; 
+     stop  = "Stopping Grenouille Daemon"; 
+   }; 
+ }
+Bien évidemment, tu peux éditer le premier fichier pour ajuster l'endroit où tu as sauvé l'application batracienne (cf. cd /Application/Grenouille chez moi) , et éventuellement changer le nom du fichier de log des messages (grenouillelog chez moi), ou alors mettre :
+
+Code:
+
+./camlgrenouille -at -f user.config.txt > /dev/null
+si tu ne veux pas garder les messages de la grenouille.
+

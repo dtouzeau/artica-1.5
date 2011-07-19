@@ -1,0 +1,7 @@
+<ADD_CLUSTER_RESSOUCE>Adicionar um novo cluster</ADD_CLUSTER_RESSOUCE>
+<ADD_CLUSTER_RESSOUCE_TEXT>Adicionar um novo servidor</ADD_CLUSTER_RESSOUCE_TEXT>
+<disable_cluster_onthisserver>Desactivar os recursos de cluster neste servidor</disable_cluster_onthisserver>
+<gluster_settings_saved>Settings saved</gluster_settings_saved>
+<order_scheduled>Order scheduled...</order_scheduled>
+<replicated_folders>Clustered directories</replicated_folders>
+<set_cluster_replicator>Definir como replicador</set_cluster_replicator>

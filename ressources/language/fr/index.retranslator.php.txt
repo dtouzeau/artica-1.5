@@ -1,0 +1,57 @@
+<available_components>Composants disponibles sauv&eacute;s</available_components>
+<available_products_to_be_updated>Des produits disponibles pour ajouter et mettre &agrave; jour</available_products_to_be_updated>
+<components>Composants</components>
+<http_engine>Service HTTP</http_engine>
+<proxy_settings>Param&egrave;tres du Proxy</proxy_settings>
+<RetranslatorCronMinutes>Obtenez chaque base de donn&eacute;es Kaspersky</RetranslatorCronMinutes>
+<RetranslatorEnabled>Activer les bases de donn&eacute;es Kaspersky obtenues</RetranslatorEnabled>
+<RetranslatorHttpdEnabled>Activer le service HTTP</RetranslatorHttpdEnabled>
+<RetranslatorHttpdPort>Port d'&eacute;coute du service HTTP</RetranslatorHttpdPort>
+<RetranslatorProxyAddress>Proxy pour les t&eacute;l&eacute;chargements</RetranslatorProxyAddress>
+<RetranslatorRegionSettings>Privil&eacute;gi&eacute;es la liste des serveurs de r&eacute;gion</RetranslatorRegionSettings>
+<RetranslatorReportLevel>D&eacute;finit la mani&egrave;re dont le rapport d&eacute;taill&eacute; de donn&eacute;es doit &ecirc;tre</RetranslatorReportLevel>
+<RetranslatorReportLevel_text>
+Detail levels are:[br]
+[ul][br]
+[li][b]0[/b]- Report only fatal errors. Only the errors, which result in program[br]
+   termination, or failure to start, are reported; for example, if a[br]
+   component failed to load a license file. Fatal errors have the 'F'[br]
+   mark in the log file.[br][/li]
+[li][b]1[/b]- Report all errors. Reports not only fatal errors, but also any error,[br]
+   which affects program behavior, but not causing the component to[br]
+   terminate. Non-fatal errors have the 'E' mark in the log file.[br][/li]
+[li][b]2[/b]- Report all errors and warnings. Also reports important information,[br]
+   which affects the component productivity, or may affect component ability[br]
+   to work in future; for example, if the license is about to be expired.[br]
+   Warnings have the 'W' mark in the log file.[br][/li]
+[li][b]3[/b]- Report everything above, including the important information about the[br]
+   component life cycle. This includes information about the component startup[br]
+   and shutdown, the expiration date of the license, the last update date and so.[br]
+   Informational messages have the 'I' mark in the log file.[br][/li]
+[li][b]4[/b]- Report everything above, including the information about the current[br]
+   component activity.  Activity messages have the 'A' mark in the log file.[br]
+   Note that the total amount of activity information may be quite large.[br][/li]
+[li][b]9[/b]- Report everything above, including the debugging information. Please use[br]
+   this level if you are reporting bugs in the product. Do not forget to turn[br]
+   it off afterwords. Debug messages have 'D' mark in the log file.[/li]
+[/ul]
+</RetranslatorReportLevel_text>
+<RetranslatorUpdateServerUrl>Source sp&eacute;cifique</RetranslatorUpdateServerUrl>
+<RetranslatorUpdateServerUrl_text>Sp&eacute;cifie une URL personnalis&eacute;e d'o&ugrave; t&eacute;l&eacute;charger les mises &agrave; jour.[br] 
+[br] URL peut &ecirc;tre: 
+[ul] 
+[li] http://location/ - utiliser le protocole HTTP;[/li] 
+[li] ftp://location/ - utiliser le protocole FTP;[/li] 
+[li] / local / path - pour utiliser un chemin d'acc&egrave;s local.[/li] 
+[/ul]</RetranslatorUpdateServerUrl_text>
+<RetranslatorUseProxy>Travail uniquement par le biais du proxy</RetranslatorUseProxy>
+<RetranslatorUseUpdateServerUrl>Utiliser une source sp&eacute;cifique</RetranslatorUseUpdateServerUrl>
+<RetranslatorUseUpdateServerUrlOnly>Utiliser seulement cette source</RetranslatorUseUpdateServerUrlOnly>
+<RetranslatorUseUpdateServerUrlOnly_text>Si elle est utilis&eacute;e, mais que la mise &agrave; jour a &eacute;choue, la mise &agrave; jour continue, en essayant les serveurs dans sa liste par d&eacute;faut.[br] 
+Si ce param&egrave;tre est r&eacute;gl&eacute; &agrave; &quot;oui&quot; (le (suppos&eacute; si la valeur non sp&eacute;cifi&eacute;s ailleurs), [br] 
+keepup2date ne tombent pas-si n'est pas utilisable, et cesser d'essayer d'autres serveurs.</RetranslatorUseUpdateServerUrlOnly_text>
+<RetranslatorUseUpdateServerUrl_text>effectuer une mise &agrave; jour &agrave; partir de l'URL sp&eacute;cifi&eacute;e.[br] Si cela &eacute;choue, utiliser la liste des serveurs par d&eacute;faut</RetranslatorUseUpdateServerUrl_text>
+<retranslator_engine>Moteur de traduction Kaspersky</retranslator_engine>
+<sources_settings>Param&egrave;tres sources</sources_settings>
+<Update_sites_info>Informations des sites de mise &agrave; jour</Update_sites_info>
+<Update_sites_info_title>Informations des sites de mises &agrave; jour (URL et r&eacute;gions)</Update_sites_info_title>

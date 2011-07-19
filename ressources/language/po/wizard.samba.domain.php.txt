@@ -1,0 +1,23 @@
+<add_computer_text>Pode adicionar o nome netbios de um computador por forma a poder servir o mesmo directamente.[br]
+Defina aqui o nome do computador....[br]
+Se n&atilde;o pretender adicionar um computador, deixe o campo em branco...</add_computer_text>
+<add_computer_title>Adicionar novo computador</add_computer_title>
+<computer_name>Nome do Computador</computer_name>
+<configuration_success>O seu servidor foi definido com o CDP com sucesso</configuration_success>
+<domain_controler>Controlador de Dominio</domain_controler>
+<howto1>Dirija-se a uma est&ccedil;a&atilde;o de trabalho Windows.[br]
+Clique com o bot&atilde;o direito do rato sobre &quot;O Meu Computador&quot; e seleccione propriedades</howto1>
+<howto2>No sepbrarador Identifica&ccedil;&atilde;o de Rede, clique em propriedades[br] Em &quot;Altera&ccedil;&otilde;es de Identifica&ccedil;&atilde;o&quot; clique em &quot;Membro do Dominio&quot; e defina o Dominio/Grupo de Trabalho que seleccionou no primeiro passo</howto2>
+<howto3>Ap&oacute;s alguns segundos, um pop-up ir&aacute; solicitar-lhe o utilizador e password de &quot;root&quot;</howto3>
+<howto4>Ap&oacute;s alguns minutos, um pop-up confirmar&aacute; que a esta&ccedil;&atilde;o de trabalho faz agora parte do seu dominio</howto4>
+<root_error_pass>As passwords n&atilde;o coincidem</root_error_pass>
+<root_password>Password Administrador Dominio Netbios</root_password>
+<root_password_field>Password Administrador Dominio Netbios</root_password_field>
+<root_password_field2>Password Administrador Dominio Netbios (confirmar)</root_password_field2>
+<root_password_text>O utilizador de &quot;root&quot; ser&aacute; utilizado para ligar esta&ccedil;&otilde;es de trabalho ao seu dominio, como Administrador Netbios do Dominio.
+Defina a password do utilizador &quot;root&quot;[br]
+Deixe em branco se n&atilde;o pretender redefinir a password</root_password_text>
+<server_name>Nome do servidor que ser&aacute; mostrado na &aacute;rea de navega&ccedil;&atilde;o da rede</server_name>
+<welcome>Bem vindo ao Assistente de controlador de Dominio</welcome>
+<welcome_text>Este assistente ir&aacute; ajud&aacute;-lo a criar um CDP (Controlador de Dominio Prim&aacute;rio) por forma a servir esta&ccedil;&otilde;es de trabalho MS Windows que pretenda ligar ao mesmo.</welcome_text>
+<workgroup>Dominio NT enquanto navega/pesquisa na rede</workgroup>

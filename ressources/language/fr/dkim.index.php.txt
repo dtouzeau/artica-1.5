@@ -1,0 +1,10 @@
+<dkim_about>DKIM est une structure d'authentification de courrier &eacute;lectronique qui aborde la question r&eacute;pandue de contrefa&ccedil;on de courrier &eacute;lectronique, utilisant la cryptographie pour v&eacute;rifier le domaine de l'exp&eacute;diteur.[br]
+Il permet aux fournisseurs de courrier &eacute;lectronique de valider un domaine origine de messagerie , se servant de listes noire et listes blanches plus efficace.
+[br]Il g&egrave;re aussi les attaque de phishing plus facilement d&eacute;tectable en aidant &agrave; identifier des domaines abusifs.</dkim_about>
+<On-BadSignature>Signature impossible &agrave; valider</On-BadSignature>
+<On-DNSError>Une erreur de communication DNS est survenue</On-DNSError>
+<On-InternalError>Une erreur interne est survenue</On-InternalError>
+<On-NoSignature>Messages arrivant non sign&eacute;s</On-NoSignature>
+<On-Security>Le message arrive contenant les propri&eacute;t&eacute;s qui peuvent &ecirc;tre un soucis de s&eacute;curit&eacute;</On-Security>
+<On-SignatureMissing>Le message est non sign&eacute; d'un domaine qui fait de la publicit&eacute; avec un &quot;nous signons tout&quot;</On-SignatureMissing>
+<select_action>Choisit l'action &agrave; &ecirc;tre prise quand</select_action>

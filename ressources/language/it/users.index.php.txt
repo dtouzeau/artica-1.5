@@ -1,0 +1,4 @@
+<mailboxsize>Your mailbox size</mailboxsize>
+<receivemails>Receive mails</receivemails>
+<welcome>welcome</welcome>
+<your_organization>You are in the organization</your_organization>

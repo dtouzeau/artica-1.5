@@ -1,0 +1,13 @@
+<add_nameserver>Ajouter un serveur de nom</add_nameserver>
+<add_nameserver_text>Donnez l'adresse IP ou le nom d'h&ocirc;te de votre serveur  DNS</add_nameserver_text>
+<add_search_domains>Ajouter un domaine de recherche</add_search_domains>
+<add_search_domain_text>Donner un nom de domaine</add_search_domain_text>
+<infos_dnsmasq>[br][b]Note: DNSMASQ est install&eacute;[/b], dans ce cas, les param&egrave;tres DNS vont utiliser la configuration locale de DNSMASQ plut&ocirc;t que votre configuration r&eacute;seau.
+[br]Vos serveurs DNS r&eacute;seau pointeront vers votre service local DNSMASQ[br]</infos_dnsmasq>
+<nic_dns_search>Liste de recherche pour consultation du nom d'h&ocirc;te</nic_dns_search>
+<nic_dns_search_text>La liste de recherche est normalement d&eacute;cid&eacute;e par nom de domaine local; par d&eacute;faut, il contient seulement le nom de domaine local.[br] Cela peut &ecirc;tre chang&eacute; en inscrivant le chemin de recherche de domaine d&eacute;sir&eacute;.[br]
+Si vous vous r&eacute;f&eacute;rez &agrave; un autre serveur juste par son nom sans le domaine ajout&eacute;, le DNS de votre client ajoutera le nom de serveur &agrave; chaque domaine dans cette liste et fera une consultation DNS pour obtenir les adresses IP des serveurs distants.[br]
+C'est un temps pratique sauvant la fonction pour que vous puissiez vous r&eacute;f&eacute;rer aux serveurs dans le m&ecirc;me domaine par leur nom de serveur sans devoir sp&eacute;cifier le domaine.
+[br][b]Le premier domaine inscrit doit &ecirc;tre le domaine local de votre r&eacute;seau et la liste de recherche est actuellement limit&eacute;e &agrave; six domaines avec un total de 256 caract&egrave;res.</nic_dns_search_text>
+<nic_nameserver_text>Adresses IP de vos serveurs DNS[br]La librairie de r&eacute;solution les interrogera dans l'ordre suivant</nic_nameserver_text>
+<nic_static_dns_text>Si votre FAI vous a fournit une IP fixe pour l'adresse du serveur DNS, et que vous souhaitez h&eacute;berger votre propre serveur de Mail</nic_static_dns_text>

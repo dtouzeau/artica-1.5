@@ -1,0 +1,26 @@
+<ADD_BAN_SERVER>Interdire un nouveau serveur</ADD_BAN_SERVER>
+<ADD_BAN_SERVER_TEXT>Ajouter une r&egrave;gle pour exclure un serveur par son nom, son domaine parent, son adresse client, ou son r&eacute;seau d'appartenance</ADD_BAN_SERVER_TEXT>
+<ADD_FILTER_EXPRESSION>Ajouter un nouveau filtre</ADD_FILTER_EXPRESSION>
+<ADD_FILTER_EXPRESSION_TEXT>Ajouter une nouvelle r&egrave;gle &eacute;quivalant &agrave; des formules d'en-t&ecirc;tes de courrier</ADD_FILTER_EXPRESSION_TEXT>
+<blockips>Rejeter IP/Nom adresses</blockips>
+<blockip_msg>Donnez la valeur de l'adresse que vous voulez exclure.
+Exemple :
+192.168.5
+fateback.com
+hotpop.com</blockip_msg>
+<blockip_text>Cette section utilise postfix pour exclure un nom de client, un domaine parent, une adresse client, ou des r&eacute;seaux</blockip_text>
+<delete_headers_regex>Supprimer toutes les r&egrave;gles</delete_headers_regex>
+<delete_headers_regex_text>&Ecirc;tes-vous s&ucirc;r de vouloir supprimer toutes les r&egrave;gles ??</delete_headers_regex_text>
+<error_noaction>Erreur, s&eacute;lectionnez &quot;action&quot;</error_noaction>
+<error_noevent>Erreur, remplir le champ &quot;log&quot;. Cet &eacute;v&eacute;nement sera ajout&eacute; au journal de postfix et retourn&eacute; au client lors de son identification</error_noevent>
+<error_nopattern>Erreur, veuillez remplir le mod&egrave;le regex</error_nopattern>
+<event>&Eacute;v&egrave;nement</event>
+<global_smtp_rules_explain>Cette section fusionne toutes les r&egrave;gles que vous pouvez d&eacute;finir pour filtrer le courrier, vous pouvez ajouter des r&egrave;gles et s&eacute;lectionner le module qui devra g&eacute;rer le filtre</global_smtp_rules_explain>
+<goto_globalsmtprules>Pour afficher la liste des r&egrave;gles, vous devez d'aller aux param&egrave;tres de s&eacute;curit&eacute;/R&egrave;gles SMTP Globales</goto_globalsmtprules>
+<go_to_page>Aller &agrave; la page</go_to_page>
+<import_headers_regex>Importer des r&egrave;gles pr&eacute;d&eacute;finies</import_headers_regex>
+<import_headers_regex_text>&Ecirc;tes-vous s&ucirc;r de vouloir ajouter les r&egrave;gles pr&eacute;d&eacute;finies ?</import_headers_regex_text>
+<log>Log Postfix</log>
+<postfix_regex>Filtrer les expressions dans les en-t&ecirc;tes</postfix_regex>
+<postfix_regex_text>D&eacute;finir des r&egrave;gles qui correspondent aux expressions des en-t&ecirc;tes SMTP des mails re&ccedil;us par postfix</postfix_regex_text>
+<search_string>Rechercher une cha&icirc;ne</search_string>

@@ -1,0 +1,24 @@
+<anti_spam_rate>% Taux</anti_spam_rate>
+<anti_spam_results>Informations sur la d&eacute;tection</anti_spam_results>
+<by_other>Autre</by_other>
+<by_sender>Par exp&eacute;diteur</by_sender>
+<by_subject>Par sujet</by_subject>
+<delete_mails>Supprimer les messages &eacute;lectroniques</delete_mails>
+<delete_mails_text>Supprimez tous les courrier stock&eacute;s de l'exp&eacute;diteur de cet email</delete_mails_text>
+<extra_infos>Information suppl&eacute;mentaires</extra_infos>
+<extra_infos_text>Obtenir plus d'informations sur cet Email en cliquant sur cette icone.</extra_infos_text>
+<last_quarantine_files>Derniers Emails sauvegard&eacute;s dans votre zone de quarantaine</last_quarantine_files>
+<mail_servers_ip>Serveur</mail_servers_ip>
+<messages_in_quarantine>Message(s) dans votre zone de quarantaine</messages_in_quarantine>
+<release_mail>Lib&eacute;rer l'email</release_mail>
+<release_mail_text>Envoyer cet Email &agrave; votre boite mail[br]Cet e-mail ne sera pass&eacute; par les filtres</release_mail_text>
+<search>Chercher des messages</search>
+<search_text>Chercher des messages dans votre zone de quarantaine</search_text>
+<size>Taille</size>
+<star_supported>Les caract&egrave;res &eacute;toile &quot;*&quot; sont accept&eacute;s dans les requ&ecirc;tes, si vous connaissez l'expression &quot;Regex&quot;, vous pouvez l'utiliser dans vos requ&ecirc;tes.</star_supported>
+<subject>Sujet</subject>
+<time>Heure</time>
+<total_mails>Mails dans votre zone</total_mails>
+<view>Voir</view>
+<white_list_email_text>Ajouter l'exp&eacute;diteur de cet eMail en liste Blanche et lib&eacute;rer cet eMail</white_list_email_text>
+<your_query>Votre requ&ecirc;te</your_query>

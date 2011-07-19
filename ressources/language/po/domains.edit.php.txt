@@ -1,0 +1,52 @@
+<actions>Action</actions>
+<add_user>Add user</add_user>
+<Administrator_rules>Administrator rules</Administrator_rules>
+<antivirus_protection>Antivirus protection</antivirus_protection>
+<antivirus_protection_enabled>Enable/disable antivirus domain scanning</antivirus_protection_enabled>
+<ARRAY_ALIASES>Email Aliases</ARRAY_ALIASES>
+<ARRAY_TRANSPORT>relay redirections</ARRAY_TRANSPORT>
+<attach_report>Attach&nbsp;report</attach_report>
+<av_notify_rules>Notify & actions rules</av_notify_rules>
+<bt_add_aliases>save alias</bt_add_aliases>
+<bt_delete_alias>delete alias</bt_delete_alias>
+<bt_delete_transport>Delete</bt_delete_transport>
+<bt_edit_antivirus_protection>submit</bt_edit_antivirus_protection>
+<bt_edit_mailbox>Edit Mailbox</bt_edit_mailbox>
+<bt_edit_notify>submit</bt_edit_notify>
+<bt_modify_transport>Modify transport</bt_modify_transport>
+<Corrupted>Corrupted</Corrupted>
+<Cured>Cured</Cured>
+<delete_thisuser>Delete this user</delete_thisuser>
+<domain_activated>Domain enabled</domain_activated>
+<edit>Edit.</edit>
+<edit_user>Edit this user</edit_user>
+<email>eMail address</email>
+<Error>Error</Error>
+<ERROR_DELETE_TRANSPORT>Delete redirection entry?</ERROR_DELETE_TRANSPORT>
+<Filtered>Filtered</Filtered>
+<firstname>First Name</firstname>
+<goback>Return to domains list</goback>
+<Infected>Infected</Infected>
+<js_antivirus_settings>Edit antivirus settings for this domain</js_antivirus_settings>
+<js_delete_alias_text>Are you sure to delete this alias ?</js_delete_alias_text>
+<label_add_transport>Add a relay server for this domain</label_add_transport>
+<label_email_from>eMail address</label_email_from>
+<label_email_to>target address</label_email_to>
+<label_redirect>Redirect to</label_redirect>
+<lastname>Last Name</lastname>
+<LoadKasperskySettings_adminaddr>administrator address</LoadKasperskySettings_adminaddr>
+<LoadKasperskySettings_general_title>General Settings</LoadKasperskySettings_general_title>
+<LoadKasperskySettings_title>eMails scanning settings</LoadKasperskySettings_title>
+<notify>Notify</notify>
+<no_mailbox_cause_transport>This domain does not store aliases cause all emails will be forwarded to another service/server</no_mailbox_cause_transport>
+<objects>Objects</objects>
+<Protected>Protected</Protected>
+<Quarantine>Quarantine</Quarantine>
+<QuarantinePath>Quarantine path</QuarantinePath>
+<recipient_rules>Recipient&nbsp;Rules</recipient_rules>
+<redirect_to_alias>Go to other</redirect_to_alias>
+<redirect_to_mailbox>Go to local mailbox</redirect_to_mailbox>
+<sender_rules>Sender&nbsp;rules</sender_rules>
+<Suspicious>Suspicious</Suspicious>
+<users>Users</users>
+<Warning>Warning</Warning>

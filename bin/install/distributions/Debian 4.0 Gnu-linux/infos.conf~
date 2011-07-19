@@ -1,0 +1,24 @@
+[REPOSITORIES]
+updater=/usr/bin/apt-get
+beffore_check=/usr/bin/apt-get check|/usr/bin/apt-get update
+suffix_command_line=-q -y
+prefix_command_line=install
+prefix_command_uninstall=remove
+repositories_list=/usr/bin/dpkg --get-selections
+repositories_list_expression=([a-z\-0-9\.\+]+)\s+install
+
+[APPLICATIONS]
+procmail_bin=/usr/bin/procmail
+#Force cyrdeliver to specified path.
+#cyrus_deliver_bin=/usr/bin/cyrus/bin/deliver
+#mysql_init=/etc/init.d/mysql
+#mysql_bin=/usr/bin/mysql
+#my_cnf=/etc/mysql/my.cnf
+apache2_sites_available=/etc/apache2/sites-available
+apache2_port_conf=/etc/apache2/ports.conf
+
+[LDAP]
+#prevent bdb_db_open: Warning - No DB_CONFIG file found in directory
+set_db_config=no
+get_ldap_user=/etc/default/slapd
+get_ldap_user_regex=SLAPD_USER="([a-zA-Z0-9_\-]+)"

@@ -1,0 +1,28 @@
+<APP_BACKUP_TEXT>Sauvegarder les param&egrave;tres d'Artica et les donn&eacute;es requises automatiquement</APP_BACKUP_TEXT>
+<APP_IPTABLES_TEXT>ipchains est un pare-feu logiciel libre pour Linux</APP_IPTABLES_TEXT>
+<APP_NMAP_TEXT>Trouver des ordinateurs et des services sur le r&eacute;seau</APP_NMAP_TEXT>
+<APP_NTPD_TEXT>R&eacute;gler l'horloge syst&egrave;me automatiquement</APP_NTPD_TEXT>
+<APP_ROUNDCUBE_TEXT>Configurer et int&eacute;grer le WebMail RoundCube &agrave; votre syst&egrave;me</APP_ROUNDCUBE_TEXT>
+<artica_autoupdate_text>Mise &agrave; jour automatique du programme principal d'Artica</artica_autoupdate_text>
+<artica_performances>Performances d'Artica</artica_performances>
+<artica_performances_text>Personnaliser quelques param&egrave;tres pour augmenter ou diminuer les performances des modules</artica_performances_text>
+<dns>DNS &amp; r&eacute;solutions</dns>
+<edit_acls>Editer la Liste d'Acc&egrave;s LDAP</edit_acls>
+<folders_monitor_text>Surveillez votre disque dur et suivez la taille des dossiers</folders_monitor_text>
+<mysql_database>Base de donn&eacute;es MySQL</mysql_database>
+<mysql_database_text>G&eacute;rer les r&eacute;glages MySQL et activer/d&eacute;sactiver le moteur MySQL</mysql_database_text>
+<network>R&eacute;seau &amp; cartes r&eacute;seau</network>
+<nic_dynamic_dns_text>met &agrave; jour l'adresse IP de votre serveur. V&eacute;rifier p&eacute;riodiquement si votre adresse IP enregistr&eacute; par le serveur DNS est la vraie adresse actuelle.</nic_dynamic_dns_text>
+<nic_static_dns_text>Contr&ocirc;ler les serveurs et les configurations minimales pour des r&eacute;solutions de noms d'h&ocirc;tes</nic_static_dns_text>
+<per_user_addressbook>Carnet d'adresses par utilisateur</per_user_addressbook>
+<per_user_addressbook_explain>Si vous d&eacute;finissez au vert, les clients de messagerie &agrave; distance seront en mesure d'ajouter ou d'interroger le serveur LDAP a son propre carnet d'adresses, chaque utilisateur aura un acc&egrave;s &agrave; son propre NAB</per_user_addressbook_explain>
+<remote_addressbook>Carnet d'adresses</remote_addressbook>
+<remote_addressbook_explain>Si vous placez sur vert, les clients distants tels que Thunderbird ou Outlook Express pourront utiliser le serveur LDAP comme source du carnet d'adresses</remote_addressbook_explain>
+<remote_addressbook_text>Activer/d&eacute;sactiver le carnet d'adresses global</remote_addressbook_text>
+<repository_manager>gestionnaire de d&eacute;p&ocirc;ts</repository_manager>
+<repository_manager_text>Mise &agrave; jour et installation de modules &agrave; l'aide de votre gestionnaire de d&eacute;p&ocirc;ts</repository_manager_text>
+<services>Services &amp; Applications</services>
+<system>Syst&egrave;me et Mat&eacute;riel</system>
+<update>Mise &agrave; jour &amp; Maintenance</update>
+<usb_section>G&eacute;rer les p&eacute;riph&eacute;riques USB</usb_section>
+<usb_section_text>Cr&eacute;ez un dispositif d&eacute;di&eacute; pour les fonctions de sauvegarde et brancher/d&eacute;brancher les p&eacute;riph&eacute;riques USB</usb_section_text>

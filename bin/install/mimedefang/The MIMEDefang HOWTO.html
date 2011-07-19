@@ -1,0 +1,2731 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head><title>The MIMEDefang HOWTO</title>
+
+
+
+<style type="text/css">
+PRE {
+    padding: 10px;
+    border: 1px solid #bbb;
+    background-color: #eee;
+}
+</style></head><body>
+<h1>The MIMEDefang HOWTO</h1>
+
+<h2>Mickey Hill</h2>
+
+Last updated February 28, 2008
+<p></p><hr>
+
+Recent Changes:
+
+<p></p><table>
+
+    <tbody><tr>
+        <td>February 28, 2008</td>
+        <td>&nbsp;&nbsp;&nbsp;</td>
+        <td>Added Ubuntu 2.6.15 to Known to Compile list (Andrzej Marecki)</td>
+    </tr>
+
+    <tr>
+        <td>January 24, 2008</td>
+        <td>&nbsp;&nbsp;&nbsp;</td>
+        <td>Updated MIMEDefang version</td>
+    </tr>
+
+    <tr>
+        <td>August 13, 2007</td>
+        <td>&nbsp;&nbsp;&nbsp;</td>
+        <td>Updated MIMEDefang version</td>
+    </tr>
+
+    <tr>
+        <td>August 1, 2007</td>
+        <td>&nbsp;&nbsp;&nbsp;</td>
+        <td>Added Fedora 7 to Known to Compile list (root at mail dot pet dot ac dot il)</td>
+    </tr>
+
+    <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;&nbsp;&nbsp;</td>
+        <td>Added Fedora Core 6 to Known to Compile list (root at mail dot pet dot ac dot il)</td>
+    </tr>
+
+</tbody></table>
+
+<hr>
+
+<em>This document is intended to guide an administrator through the
+installation of a Linux, BSD derivative, or UNIX system-based mail server with
+sendmail, MIMEDefang, spam filtering software, and antivirus software.</em>
+<hr>
+<p>
+
+</p><h2><a href="#s1">1. Introduction</a></h2>
+
+<ul>
+<li><a href="#ss1.1">1.1 Purpose</a>
+</li><li><a href="#ss1.2">1.2 Feedback</a>
+</li><li><a href="#ss1.3">1.3 Copyrights and Trademarks</a>
+</li><li><a href="#ss1.4">1.4 Acknowledgements and Credits</a>
+</li><li><a href="#ss1.5">1.5 Disclaimer</a>
+</li></ul>
+
+<h2><a href="#s2">2. What is MIMEDefang?</a></h2>
+
+<ul>
+<li><a href="#ss2.1">2.1 Overview</a>
+</li><li><a href="#ss2.2">2.2 Requirements</a>
+</li><li><a href="#ss2.3">2.3 Known to Compile</a>
+</li><li><a href="#ss2.4">2.4 Installation Notes</a>
+</li></ul>
+
+<h2><a href="#s3">3. Install sendmail</a></h2>
+
+<ul>
+<li><a href="#ss3.1">3.1 Overview</a>
+</li><li><a href="#ss3.2">3.2 Installation</a>
+</li></ul>
+
+<h2><a href="#s4">4. Install POP3, IMAP, and webmail services</a></h2>
+
+<h2><a href="#s5">5. Install Perl Modules</a></h2>
+
+<ul>
+<li><a href="#ss5.1">5.1 Overview</a>
+</li><li><a href="#ss5.2">5.2 Installation</a>
+</li></ul>
+
+<h2><a href="#s6">6. Install SpamAssassin</a></h2>
+
+<h2><a href="#s7">7. Install Antivirus Scanner</a></h2>
+
+<ul>
+<li><a href="#ss7.1">7.1 Overview</a>
+</li><li><a href="#ss7.2">7.2 NAI McAfee uvscan installation</a>
+</li></ul>
+
+<h2><a href="#s8">8. Install MIMEDefang</a></h2>
+
+<h2><a href="#s9">9. mimedefang-filter</a></h2>
+
+<ul>
+<li><a href="#ss9.1">9.1 Overview</a>
+</li><li><a href="#ss9.2">9.2 Functions</a>
+</li><li><a href="#ss9.3">9.3 Getting started</a>
+</li><li><a href="#ss9.4">9.4 Variables</a>
+</li><li><a href="#ss9.5">9.5 filter_begin</a>
+</li><li><a href="#ss9.6">9.6 filter</a>
+</li><li><a href="#ss9.7">9.7 filter_multipart</a>
+</li><li><a href="#ss9.8">9.8 filter_end</a>
+</li><li><a href="#ss9.9">9.9 Finishing up</a>
+</li></ul>
+
+<h2><a href="#s10">10. Sample filters</a></h2>
+
+<ul>
+<li><a href="#ss10.1">10.1 mimedefang-filter.example</a>
+</li></ul>
+
+<h2><a href="#s11">11. Testing</a></h2>
+
+<h2><a href="#s12">12. FAQ (Frequently Asked Questions)</a></h2>
+
+<ul>
+<li><a href="#ss12.1">12.1 Changes to mimedefang-filter are not taking effect</a>
+</li><li><a href="#ss12.2">12.2 Microsoft Windows unsafe file extensions</a>
+</li></ul>
+
+<h2><a href="#s13">13. GNU Free Documentation License</a></h2>
+
+<hr>
+
+<h2><a name="s1"></a>1. Introduction</h2>
+
+This document was written to guide a mail system administrator through the
+process of installing and configuring a Linux, BSD derivative, or UNIX
+system-based mail server using sendmail and MIMEDefang.  Other useful software
+is described as well, including spam filtering software and antivirus
+software.  Ancillary software is also described, including POP3, IMAP, and
+webmail software.
+
+<h2><a name="ss1.1"></a>1.1 Purpose</h2>
+
+A mail server is used to transfer electronic mail using SMTP (Simple Mail
+Transfer Protocol).  This is widely accomplished through the use of
+computers running Linux, a BSD derivative, or UNIX, and sendmail, a popular MTA
+(mail transport agent).  While a mail server can operate successfully with only
+Linux, a BSD derivative, or UNIX, and sendmail, many administrators, especially
+those who operate with limited time, equipment, and budgets, choose to
+configure their mail server to perform many other functions related to email
+delivery, such as unsolicited commercial email (spam) filtering and antivirus
+scanning.  A mail server can be rounded out with end user mail retrieval
+software and other software for administrative control and maintenance.
+
+<h2><a name="ss1.2"></a>1.2 Feedback</h2>
+
+Installation and configuration questions can be posted to the MIMEDefang
+mailing list at
+<a href="http://lists.roaringpenguin.com/mailman/listinfo/mimedefang">http://lists.roaringpenguin.com/mailman/listinfo/mimedefang</a>.
+
+<p>Send corrections, suggestions, and comments about this HOWTO to 
+<a href="mailto:mickey@mickeyhill.com">Mickey Hill
+&lt;mickey@mickeyhill.com&gt;</a>.  Please do not send installation or
+configuration questions to this address; instead, post them to the MIMEDefang
+mailing list.
+
+</p><h2><a name="ss1.3"></a>1.3 Copyrights and Trademarks</h2>
+
+The MIMEDefang HOWTO is Copyright (c) 2004 by Mickey Hill.  Permission is
+granted to copy, distribute and/or modify this document under the terms of the
+GNU Free Documentation License, Version 1.2 or any later version published by
+the Free Software Foundation; with no Invariant Sections, no Front-Cover Texts,
+and no Back-Cover Texts.  A copy of the license is included in the section
+entitled "GNU Free Documentation License".
+
+<p><a href="http://www.mimedefang.org/">MIMEDefang</a> is a trademark of
+<a href="http://www.roaringpenguin.com/">Roaring Penguin Software Inc.</a>
+
+</p><p><a href="http://www.roaringpenguin.com/">CanIt</a> is a trademark of
+<a href="http://www.roaringpenguin.com/">Roaring Penguin Software Inc.</a>
+
+</p><p>Linux is a registered trademark of Linus Torvalds.
+
+</p><p><a href="http://www.unix.org/">UNIX</a> is a registered trademark of
+<a href="http://www.opengroup.org/">The Open Group</a> in the United States and
+other countries.
+
+</p><p><a href="http://fedora.redhat.com/">Fedora</a> is a trademark or registered
+trademark of <a href="http://www.redhat.com/">Red Hat, Inc.</a>
+
+</p><p>Red Hat is a registered trademark of <a href="http://www.redhat.com/">Red
+Hat, Inc.</a>
+
+</p><p>Slackware is a registered trademark of
+<a href="http://www.slackware.com/">Slackware Linux, Inc.</a>
+
+</p><p><a href="http://www.yellowdoglinux.com/">Yellow Dog</a> is a trademark of <a href="http://www.terrasoftsolutions.com/">Terra Soft Solutions of Colorado, Inc</a>.
+
+</p><p><a href="http://www.sun.com/software/solaris/">Solaris</a> is a trademark or
+registered trademark of <a href="http://www.sun.com/">Sun Microsystems, Inc.</a>
+in the United States and other countries.
+
+</p><p>BSD is a registered trademark of Berkeley Software Design, Inc.
+
+</p><p><a href="http://www.ibm.com/servers/aix/">AIX</a> is a trademark or
+registered trademark of <a href="http://www.ibm.com/">IBM Corporation</a>.
+
+</p><p><a href="http://www.sgi.com/software/irix/">IRIX</a> is a trademark or
+registered trademark of <a href="http://www.sgi.com/">Silicon Graphics, Inc.</a>
+in the United States and other countries.
+
+</p><p><a href="http://www.sendmail.org/">Sendmail</a> is a registered trademark of
+<a href="http://www.sendmail.com/">Sendmail, Inc.</a>
+
+</p><p><a href="http://www.eudora.com/products/unsupported/qpopper/">QPopper</a> is a trademark of
+<a href="http://www.qualcomm.com/">QUALCOMM Inc.</a>
+
+</p><p>Network Associates and McAfee are registered trademarks of Network
+Associates, Inc.
+
+</p><p>AntiVir is a registered trademark of H+BEDV Datentechnik GmbH.
+
+</p><p>All other registered and unregistered trademarks in this document are the
+property of their respective owners.
+
+</p><h2><a name="ss1.4"></a>1.4 Acknowledgements and Credits</h2>
+
+Thanks to David Skoll,
+<a href="http://www.roaringpenguin.com/">Roaring Penguin Software</a>,
+for writing and maintaining MIMEDefang and providing some of the text and
+sample code in this document.  Thanks also to everyone on the MIMEDefang
+mailing list for your ideas and suggestions.
+
+<p>MIMEDefang is an open-source product, and technical support is primarily
+provided through the MIMEDefang mailing list.  For commercial support, please
+consider <a href="http://www.roaringpenguin.com/">CanIt</a>, a commercial
+product based on MIMEDefang and offered by Roaring Penguin Software.
+
+</p><h2><a name="ss1.5"></a>1.5 Disclaimer</h2>
+
+This document is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE. 
+
+<p></p><hr>
+
+<h2><a name="s2"></a>2. What is MIMEDefang?</h2>
+
+MIMEDefang is a software program for sendmail-based mail servers that
+implements antispam, antivirus, and other customizable filtering on email
+messages.  MIMEDefang uses sendmail's built-in milter, or mail filter,
+interface to individually inspect, scan, modify, and optionally reject or
+discard email messages as they pass through the mail server.  MIMEDefang is
+designed specifically for sendmail, and is not compatible with other mail
+transport agents.  MIMEDefang provides an interface between sendmail and other
+mail scanning software, and when combined with spam filtering software and
+antivirus software, MIMEDefang provides a complete, robust, and configurable
+solution for spam filtering, virus scanning, and other email filtering.
+
+<p>A typical MIMEDefang installation consists of sendmail, MIMEDefang,
+SpamAssassin, and one or more open-source or commercial antivirus scanners.
+
+</p><h2><a name="ss2.1"></a>2.1 Overview</h2>
+
+MIMEDefang uses the milter, or mail filter, interface provided by sendmail to
+intercept, inspect, and modify email messages as they travel through the mail
+server.  MIMEDefang can also send messages to external programs for further
+inspection, and modify messages based on the results.  MIMEDefang remains in
+memory, using a multiplexor and a pool of persistent child processes to
+efficiently use system resources.
+
+<p>MIMEDefang consists of four major components: <b>mimedefang</b>,
+<b>mimedefang-multiplexor</b>, <b>mimedefang.pl</b>, and
+<b>mimedefang-filter</b>.  mimedefang is written in C, and is the actual mail
+filter that interfaces with sendmail.  mimedefang splits incoming messages into
+parts and calls mimedefang-multiplexor to act on each message.
+mimedefang-multiplexor creates and manages a pool of Perl processes that
+execute mimedefang.pl, a Perl script.  mimedefang.pl then operates on the
+message parts.  mimedefang.pl does not normally need modification.
+mimedefang-filter is a Perl fragment that is read by mimedefang.pl, and serves
+as the configuration file.  This configuration file is where the vast majority
+of user customization takes place.
+
+</p><p>More advanced configurations can entirely replace mimedefang.pl and
+mimedefang-filter with a custom filter that is executed by mimedefang.
+
+</p><p>MIMEDefang is licensed under the GNU General Public License.
+
+</p><h2><a name="ss2.2"></a>2.2 Requirements</h2>
+
+A computer with Linux, a BSD derivative, or UNIX installed and capable of
+connecting to the Internet is required.  All other required software can be
+downloaded from the Internet.
+
+<p>In general, hardware requirements are the same as for sendmail.  However,
+antivirus and spam detection software often require additional hardware
+resources (memory, cpu, and/or disk).
+
+</p><p>Perl 5.001 or greater is required by MIMEDefang.  Some other packages
+described in this document may require a later version.
+
+</p><p>This HOWTO was written using Red Hat Linux 7.2, and updated using Fedora
+Core 5 Linux.  Installation on other versions of Linux, on a BSD derivative, or
+on UNIX should be similar; however, directory and file names and locations may
+be different, and installation techniques may vary.
+
+</p><p>Correct timekeeping is essential to any mail server.
+<a href="http://www.ntp.org/">NTP (network time protocol)</a> and ntpd (the NTP daemon) are recommended for this purpose.
+
+</p><p>A permanent connection to the Internet is assumed.  While a mail server with
+sendmail can be run using only a dial-up or other intermittent connection, such
+a configuration is beyond the scope of this document.
+
+</p><h2><a name="ss2.3"></a>2.3 Known to Compile</h2>
+
+<p>MIMEDefang should compile on any modern Linux, BSD derivative, or UNIX
+system.  It has been known to compile on the following systems:
+
+</p><p>Fedora 7 Linux
+<br>Fedora Core 6 Linux
+<br>Fedora Core 5 Linux
+<br>Fedora Core 4 Linux
+<br>Fedora Core 3 Linux
+<br>Fedora Core 2 Linux
+<br>Fedora Core 1 Linux
+<br>Red Hat Linux 9
+<br>Red Hat Linux 8.0
+<br>Red Hat Linux 7.3
+<br>Red Hat Linux 7.2
+<br>Red Hat Linux 7.1
+<br>Red Hat Linux 7.0
+<br>Red Hat Linux 6.2
+<br>Red Hat Linux 6.1
+<br>Red Hat Enterprise Linux ES 4
+<br>Red Hat Enterprise Linux ES 2.1
+<br>CentOS 4.4
+<br>CentOS 4.0
+<br>SUSE Linux Enterprise Server 9
+<br>SUSE Linux 8.1
+<br>SUSE Linux 7.3
+<br>Slackware Linux 10.1
+<br>Slackware Linux 10.0
+<br>Slackware Linux 9.0
+<br>Slackware Linux 8.1
+<br>Slackware Linux 8.0
+<br>Slackware Linux 7.1
+<br>Slackware Linux 7.0
+<br>Gentoo 1.4
+<br>Yellow Dog Linux 3.0.1
+<br>Caldera Open Linux 3.1
+<br>Trustix 2.1
+<br>Trustix 2.0
+<br>Linux From Scratch 3.0
+<br>Ubuntu 2.6.15-51-server
+<br>Solaris 10
+<br>Solaris 9
+<br>Solaris 8
+<br>Solaris 7
+<br>Solaris 2.5.1
+<br>FreeBSD 5.2.1-RELEASE
+<br>FreeBSD 4.9-STABLE
+<br>FreeBSD 4.5-STABLE
+<br>OpenBSD 3.0
+<br>Mac OS X 10.4
+<br>AIX 5.3
+<br>AIX 5.2
+<br>AIX 5.1
+<br>AIX 4.3.3
+<br>HP-UX 11.00
+<br>Tru64 Unix 5.0A
+<br>IRIX 6.5.21
+<br>IRIX 6.5.20
+
+</p><p>If you have successfully compiled and installed MIMEDefang on a system not
+listed here, please send a brief email with your operating system name and
+exact version number to <a href="mailto:mickey@mickeyhill.com">Mickey Hill
+&lt;mickey@mickeyhill.com&gt;</a>.
+
+</p><p>MIMEDefang has been operated on single mail servers processing fewer than
+100 messages per day to clusters of mail servers processing more than 4 million
+messages per day.
+
+</p><h2><a name="ss2.4"></a>2.4 Installation Notes</h2>
+
+<b>Don't make, build, compile or run software as the root user.</b>  Instead,
+make as a normal user, use <b>su -c</b> to install, and configure daemons to
+run as non-privileged users.
+
+<p>The more you think this doesn't apply to you, the more it does. :)
+
+</p><p></p><hr>
+
+<h2><a name="s3"></a>3. Install sendmail</h2>
+
+<a href="http://www.sendmail.org/">Sendmail Home Page</a>
+
+<p>Sendmail version 8.12.0 or later is required by MIMEDefang.  Version 8.14.1
+is recommended.  Earlier versions (8.11.x) contain errors in the libmilter code
+and may not work reliably.  Versions prior to 8.14.1 contain known security
+vulnerabilities.
+
+</p><p>Although many people have success installing sendmail from vendor packages,
+it is this author's opinion that the least problematic and most repeatable,
+reliable results are obtained by installing sendmail from the original source
+from sendmail.org.
+
+</p><h2><a name="ss3.1"></a>3.1 Overview</h2>
+
+<p>Download and unpack the source<br>
+Enable milter support in devtools/Site/site.config.m4<br>
+Build the source<br>
+Create cf/cf/sendmail.mc<br>
+Build and install the cf files<br>
+Create smmsp user and group.<br>
+Create symbolic link for man page directory.<br>
+Install<br>
+Build and install mailstats<br>
+Build and install makemap<br>
+Build and install libmilter<br>
+Build and install smrsh<br>
+Install headers and libraries for MIMEDefang<br>
+Edit /etc/mail/local-host-names<br>
+Edit /etc/mail/relay-domains<br>
+Edit /etc/mail/virtusertable<br>
+Edit /etc/mail/aliases<br>
+Create /etc/init.d/sendmail with queue runner and MIMEDefang support<br>
+Link startup script in rc3.d, rc0.d, and rc6.d
+
+</p><h2><a name="ss3.2"></a>3.2 Installation</h2>
+
+<p>Create the /usr/src/sendmail directory and cd to it.
+
+</p><p>The latest source is available from
+<a href="ftp://ftp.sendmail.org/pub/sendmail/">ftp://ftp.sendmail.org/pub/sendmail/</a>.
+This example uses version 8.14.1.
+
+</p><p>Download the source at
+<a href="ftp://ftp.sendmail.org/pub/sendmail/sendmail.8.14.1.tar.gz">ftp://ftp.sendmail.org/pub/sendmail/sendmail.8.14.1.tar.gz</a>.
+
+</p><p>Unpack the source:
+
+</p><pre>tar xvzf sendmail.8.14.1.tar.gz
+</pre>
+
+<p>Remove the source:
+
+</p><pre>rm sendmail.8.14.1.tar.gz
+</pre>
+
+<p>Cd into the sendmail-8.14.1 directory.
+
+</p><p>Beginning with version 8.13.0, sendmail is compiled by default with support
+for the milter API.  Also, libmilter will not unlink a socket when running as
+root, which was the recommended, but not default, configuration in previous
+versions.
+
+</p><p>In versions prior to 8.13.0, sendmail did not support mail filters by
+default, and must be compiled with filter support enabled by defining -DMILTER.
+To do this, create devtools/Site/site.config.m4 with the following lines:
+
+</p><pre>dnl Milter
+APPENDDEF(`conf_sendmail_ENVDEF', `-DMILTER')
+APPENDDEF(`conf_libmilter_ENVDEF', `-D_FFR_MILTER_ROOT_UNSAFE')
+</pre>
+
+<p>The first APPENDDEF enables the mail filter interface.  The second APPENDDEF
+keeps libmilter from unlinking a socket when running as root.  It is strongly
+recommended that MIMEDefang is not run as root.  MIMEDefang does not need root
+access to communicate with sendmail.
+
+</p><p>To enable SMTP AUTH, devtools/Site/site.config.m4 should also contain these
+lines:
+
+</p><pre>APPENDDEF(`conf_sendmail_ENVDEF', `-DSASL=2')
+APPENDDEF(`conf_sendmail_LIBS', `-lsasl2')
+</pre>
+
+<p>In the sendmail/ directory, build the source:
+
+</p><pre>sh Build
+</pre>
+
+<p>NOTE:  If this is not the first build in this directory tree, and you have
+changed or created any of the configuration files in the devtools/Site
+directory since the last build, use the -c option ("sh Build -c") to clear the
+previous build configuration.  This may be the case if you forgot the
+site.config.m4 file the first time, or if your distribution preinstalled
+sendmail without milter support.
+
+</p><p>Change to the cf/cf/ directory.  Copy generic-linux.mc to sendmail.mc.
+Next, tailor it as explained in cf/README.
+
+</p><p>Example sendmail.mc file:
+
+</p><pre>divert(-1)dnl
+#
+# Copyright (c) 1998, 1999 Sendmail, Inc. and its suppliers.
+#       All rights reserved.
+# Copyright (c) 1983 Eric P. Allman.  All rights reserved.
+# Copyright (c) 1988, 1993
+#       The Regents of the University of California.  All rights reserved.
+#
+# By using this file, you agree to the terms and conditions set
+# forth in the LICENSE file which can be found at the top level of
+# the sendmail distribution.
+#
+#
+divert(0)dnl
+VERSIONID(`$Id: generic-linux.mc,v 8.1 1999/09/24 22:48:05 gshapiro Exp $')
+OSTYPE(linux)dnl
+DOMAIN(generic)dnl
+define(`confBAD_RCPT_THROTTLE', `3')dnl
+define(`confTO_IDENT',`0s')dnl
+define(`confMILTER_LOG_LEVEL',`1')dnl
+define(`confAUTH_OPTIONS', `A')dnl
+FEATURE(`virtusertable',`hash -o /etc/mail/virtusertable')dnl
+FEATURE(`smrsh',`/usr/sbin/smrsh')dnl
+FEATURE(`always_add_domain')dnl
+FEATURE(`use_cw_file')dnl
+FEATURE(`local_procmail')dnl
+INPUT_MAIL_FILTER(`mimedefang', `S=unix:/var/spool/MIMEDefang/mimedefang.sock, F=T, T=S:1m;R:1m')
+MAILER(local)dnl
+MAILER(smtp)dnl
+MAILER(procmail)dnl
+</pre>
+
+The important line is INPUT_MAIL_FILTER.  This tells sendmail to send all mail
+through the specified filter.
+
+<p>The sendmail documentation includes this information about
+INPUT_MAIL_FILTER:
+
+</p><pre>[Y]ou can override the default timeouts used by sendmail when
+talking to the filters using the T= equate.  There are four fields inside
+of the T= equate:
+
+Letter      Meaning
+  C         Timeout for connecting to a filter (if 0, use system timeout)
+  S         Timeout for sending information from the MTA to a filter
+  R         Timeout for reading reply from the filter
+  E         Overall timeout between sending end-of-message to filter
+            and waiting for the final acknowledgment
+
+Note the separator between each is a ';' as a ',' already separates equates
+and therefore can't separate timeouts.  The default values (if not set in
+the config) are:
+
+T=C:5m;S:10s;R:10s;E:5m
+
+where 's' is seconds and 'm' is minutes.
+</pre>
+
+NOTE:  Some users of MIMEDefang and SpamAssassin have had troubles with filter
+timeouts.  This can be somewhat helped by increasing the timeouts:
+
+<pre>INPUT_MAIL_FILTER(`mimedefang', `S=unix:/var/spool/MIMEDefang/mimedefang.sock, F=T, T=S:5m;R:5m')
+</pre>
+
+NOTE:  This configuration is designed so that if the filter (MIMEDefang) fails
+for any reason while receiving an email, the mail server will return a tempfail
+code and "Please try again later" message.  This is highly recommended if you
+are scanning for viruses, so that incoming messages are rejected if there is
+any error.
+
+<p>On the other hand, IF you are only scanning for spam and not for viruses, IF
+it is more important to you that you get the incoming message no matter what,
+and IF you are CERTAIN that there is no risk to you or your users if an email
+is accepted even if there is an error in the filter, you may wish to allow
+incoming messages to be accepted if the filter fails.  To do this, remove the
+F=T flag.
+
+</p><pre>INPUT_MAIL_FILTER(`mimedefang', `S=unix:/var/spool/MIMEDefang/mimedefang.sock, T=S:5m;R:5m')
+</pre>
+
+Build the cf file:
+
+<pre>sh Build sendmail.cf
+</pre>
+
+If this is not a new installation, back up your current /etc/mail/sendmail.cf
+and the sendmail binary in /usr/sbin.
+
+<p>If this is a new installation, create the /etc/mail directory if it does not
+exist:
+
+</p><pre>mkdir /etc/mail
+</pre>
+
+<p>Install sendmail.cf as /etc/mail/sendmail.cf and submit.cf as
+/etc/mail/submit.cf:
+
+</p><pre>sh Build install-cf
+</pre>
+
+Create a new user smmsp and a new group smmsp with ID's of 25.
+
+<pre>/usr/sbin/useradd -u 25 -d /var/spool/mqueue -r -s /sbin/nologin smmsp
+</pre>
+
+<p>Create a symbolic link for the man pages:
+
+</p><pre>ln -s /usr/share/man /usr/man
+</pre>
+
+In the sendmail/ directory, install the sendmail binary:
+
+<pre>sh Build install
+cd ..
+</pre>
+
+<p>For each of the associated sendmail utilities (makemap, mailstats, etc.),
+read the README in the utility's directory.  When you are ready to install
+it, back up your installed version and type "sh Build install".  At a
+minimum, makemap and libmilter must be installed.  If you use smrsh or other
+utilities, install them as well.
+
+</p><pre>cd mailstats
+sh Build
+sh Build install
+cd ..
+
+cd makemap
+sh Build
+sh Build install
+cd ..
+
+cd libmilter
+sh Build
+sh Build install
+cd ..
+
+cd smrsh
+sh Build
+sh Build install
+cd ..
+</pre>
+
+Cd into the /usr/src/sendmail/sendmail-8.14.1 directory.
+
+<p>Install headers and libraries for MIMEDefang:
+
+</p><pre>mkdir -p /usr/local/include/sendmail
+cp -R include/* /usr/local/include/sendmail/
+cp -R sendmail/*.h /usr/local/include/sendmail/
+mkdir -p /usr/local/lib
+cp obj.Linux.2.6.17-1.2174_FC5.i686/*/*.a /usr/local/lib/
+</pre>
+
+NOTE: On the last "cp" command, replace "obj.Linux.2.6.17-1.2174_FC5.i686"
+with the appropriate "obj.*" directory created by the sendmail build script.
+
+<p>/etc/mail/local-host-names should have the following lines:
+
+</p><pre># local-host-names - include all aliases for your machine here.
+yourcompany.com
+mail.yourcompany.com
+</pre>
+
+Create /etc/mail/relay-domains with the following lines:
+
+<pre># relay-domains - Hosts for which relaying is permitted
+yourcompany.com
+</pre>
+
+Edit /etc/mail/virtusertable as desired.
+
+<p>Edit /etc/mail/aliases and change the alias for root to a valid address.
+
+</p><pre># Uncomment and *CHANGE* this!
+root:         insert-human-being-here
+</pre>
+
+Create or edit startup/shutdown script at /etc/init.d/sendmail to start
+MIMEDefang.  Be sure to chmod 755.  The sample script below is the Fedora Core
+default script with these two lines added:
+
+<pre>/etc/init.d/mimedefang start
+/etc/init.d/mimedefang stop
+</pre>
+
+On other systems, add those two lines where appropriate to start MIMEDefang
+before the sendmail daemon starts, and stop MIMEDefang after the sendmail
+daemon stops.
+
+<p>The 'mimedefang' init script is included with MIMEDefang and must be manually
+installed into /etc/init.d (or other appropriate location) during MIMEDefang
+installation.
+
+</p><p>In addition, you must run a queue runner to periodically check for
+administrative messages generated by MIMEDefang.  A queue runner is a separate
+sendmail process that retrieves and sends messages from a queue directory.  The
+default Fedora Core script starts a queue runner automatically, although the
+default interval may be too long.  On other systems, a queue runner can be
+started by adding the following line to your init script, after the main
+sendmail process is started:
+
+</p><pre>sendmail -Ac -qp5m
+</pre>
+
+The '5m' represents the interval at which the queue runner checks for mail (in
+this case, 5 minutes).  This time can be changed to suit your personal
+preference.
+
+The Fedora Core sample script relies on /etc/sysconfig/sendmail, which should
+contain these lines.  Note the change in queue runner time from the default 1h
+to 5m:
+
+<pre>DAEMON=yes
+QUEUE=5m
+</pre>
+
+Fedora Core sample init script:
+
+<pre>#!/bin/bash
+#
+# sendmail      This shell script takes care of starting and stopping
+#               sendmail.
+#
+# chkconfig: 2345 80 30
+# description: Sendmail is a Mail Transport Agent, which is the program \
+#              that moves mail from one machine to another.
+# processname: sendmail
+# config: /etc/mail/sendmail.cf
+# pidfile: /var/run/sendmail.pid
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# Source networking configuration.
+[ -f /etc/sysconfig/network ] &amp;&amp; . /etc/sysconfig/network
+
+# Source sendmail configureation.
+if [ -f /etc/sysconfig/sendmail ] ; then
+        . /etc/sysconfig/sendmail
+else
+        DAEMON=no
+        QUEUE=1h
+fi
+[ -z "$SMQUEUE" ] &amp;&amp; SMQUEUE="$QUEUE"
+[ -z "$SMQUEUE" ] &amp;&amp; SMQUEUE=1h
+
+# Check that networking is up.
+[ "${NETWORKING}" = "no" ] &amp;&amp; exit 0
+
+[ -f /usr/sbin/sendmail ] || exit 0
+
+RETVAL=0
+prog="sendmail"
+
+start() {
+        # Start daemons.
+
+        /etc/init.d/mimedefang start
+
+        echo -n $"Starting $prog: "
+        if test -x /usr/bin/make -a -f /etc/mail/Makefile ; then
+          make all -C /etc/mail -s &gt; /dev/null
+        else
+          for i in virtusertable access domaintable mailertable ; do
+            if [ -f /etc/mail/$i ] ; then
+                makemap hash /etc/mail/$i &lt; /etc/mail/$i
+            fi
+          done
+        fi
+        /usr/bin/newaliases &gt; /dev/null 2&gt;&amp;1
+        daemon /usr/sbin/sendmail $([ "x$DAEMON" = xyes ] &amp;&amp; echo -bd) \
+                        $([ -n "$QUEUE" ] &amp;&amp; echo -q$QUEUE) $SENDMAIL_OPTARG
+        RETVAL=$?
+        echo
+        [ $RETVAL -eq 0 ] &amp;&amp; touch /var/lock/subsys/sendmail
+
+        if ! test -f /var/run/sm-client.pid ; then
+        echo -n $"Starting sm-client: "
+        touch /var/run/sm-client.pid
+        chown smmsp:smmsp /var/run/sm-client.pid
+        if [ -x /usr/sbin/selinuxenabled ] &amp;&amp; /usr/sbin/selinuxenabled; then
+            /sbin/restorecon /var/run/sm-client.pid
+        fi
+        daemon --check sm-client /usr/sbin/sendmail -L sm-msp-queue -Ac \
+                        -q $SMQUEUE $SENDMAIL_OPTARG
+        RETVAL=$?
+        echo
+        [ $RETVAL -eq 0 ] &amp;&amp; touch /var/lock/subsys/sm-client
+        fi
+
+        return $RETVAL
+}
+
+reload() {
+        # Stop daemons.
+        echo -n $"reloading $prog: "
+        /usr/bin/newaliases &gt; /dev/null 2&gt;&amp;1
+        if [ -x /usr/bin/make -a -f /etc/mail/Makefile ]; then
+          make all -C /etc/mail -s &gt; /dev/null
+        else
+          for i in virtusertable access domaintable mailertable ; do
+            if [ -f /etc/mail/$i ] ; then
+                makemap hash /etc/mail/$i &lt; /etc/mail/$i
+            fi
+          done
+        fi
+        daemon /usr/sbin/sendmail $([ "x$DAEMON" = xyes ] &amp;&amp; echo -bd) \
+            $([ -n "$QUEUE" ] &amp;&amp; echo -q$QUEUE)
+        RETVAL=$?
+        killproc sendmail -HUP
+        RETVAL=$?
+        echo
+        if [ $RETVAL -eq 0 -a -f /var/run/sm-client.pid ]; then
+                echo -n $"reloading sm-client: "
+                killproc sm-client -HUP
+                RETVAL=$?
+                echo
+        fi
+        return $RETVAL
+}
+
+stop() {
+        # Stop daemons.
+        echo -n $"Shutting down $prog: "
+        killproc sendmail
+        RETVAL=$?
+        echo
+        [ $RETVAL -eq 0 ] &amp;&amp; rm -f /var/lock/subsys/sendmail
+        if test -f /var/run/sm-client.pid ; then
+                echo -n $"Shutting down sm-client: "
+                killproc sm-client
+                RETVAL=$?
+                echo
+                [ $RETVAL -eq 0 ] &amp;&amp; rm -f /var/run/sm-client.pid
+                [ $RETVAL -eq 0 ] &amp;&amp; rm -f /var/lock/subsys/sm-client
+        fi
+
+        /etc/init.d/mimedefang stop
+
+        return $RETVAL
+}
+
+# See how we were called.
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  reload)
+        reload
+        RETVAL=$?
+        ;;
+  restart)
+        stop
+        start
+        RETVAL=$?
+        ;;
+  condrestart)
+        if [ -f /var/lock/subsys/sendmail ]; then
+            stop
+            start
+            RETVAL=$?
+        fi
+        ;;
+  status)
+        status sendmail
+        RETVAL=$?
+        ;;
+  *)
+        echo $"Usage: $0 {start|stop|restart|condrestart|status}"
+        exit 1
+esac
+
+exit $RETVAL
+</pre>
+
+Enable sendmail:
+
+<pre>/sbin/chkconfig sendmail reset
+</pre>
+
+Create the mqueue directory:
+
+<pre>mkdir /var/spool/mqueue
+chmod 700 /var/spool/mqueue
+</pre>
+
+<hr>
+
+<h2><a name="s4"></a>4. Install POP3, IMAP, and webmail services</h2>
+
+Although not directly related to MIMEDefang, many mail servers offer POP3,
+IMAP, and webmail services for email retrieval.  Installation instructions for
+these services are beyond the scope of this document; however, the following
+programs are popular choices for these services.
+
+<p>Many mainstream distributions include some or all of these packages.
+
+</p><p><a href="http://www.eudora.com/products/unsupported/qpopper/">QUALCOMM Qpopper
+Home Page</a>
+
+</p><p>Qpopper provides POP3 services only.
+
+</p><p>NOTE:  You do not need Qpopper if you are installing Cyrus IMAP or Dovecot.
+Each of these includes its own integrated POP3 server.  If you want POP3 only,
+install Qpopper; for POP3, IMAP, and webmail, install Cyrus IMAP or Dovecot and
+SquirrelMail.
+
+</p><p><a href="http://asg.web.cmu.edu/cyrus/imapd/">Cyrus IMAP Server Home Page</a>
+
+</p><p>The Cyrus IMAP server provides both POP3 and IMAP services.
+
+</p><p><a href="http://www.dovecot.org/">Dovecot Home Page</a>
+
+</p><p>Dovecot provides both POP3 and IMAP services.
+
+</p><p><a href="http://www.squirrelmail.org/">SquirrelMail Home Page</a>
+
+</p><p>SquirrelMail is a web mail client that connects to an IMAP server.  It is
+compatible with both Cyrus IMAP and Dovecot.
+
+</p><p></p><hr>
+
+<h2><a name="s5"></a>5. Install Perl Modules</h2>
+
+<h2><a name="ss5.1"></a>5.1 Overview</h2>
+
+NOTE: Red Hat Linux 8.0 and later default to UTF-8 character sets.  For example,
+a US English installation uses en_US.UTF-8 rather than en_US.  This can cause
+problems with some Perl modules.  Until this is resolved, you may wish to change
+the server's language setting in /etc/sysconfig/i18n:
+
+<pre>LANG="en_US"
+</pre>
+
+Several Perl modules are required for proper operation.  For those who are
+familiar with the installation process, the required modules, along with
+the locations of the latest versions as of this writing, are:
+
+<p>IO-stringy
+<br>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="http://www.cpan.org/authors/id/D/DS/DSKOLL/IO-stringy-2.110.tar.gz">http://www.cpan.org/authors/id/D/DS/DSKOLL/IO-stringy-2.110.tar.gz</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="http://search.cpan.org/search?mode=dist&amp;query=IO-stringy">Search CPAN for latest distribution</a>
+
+<br>MIME-Base64
+<br>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="http://www.cpan.org/authors/id/GAAS/MIME-Base64-3.07.tar.gz">http://www.cpan.org/authors/id/GAAS/MIME-Base64-3.07.tar.gz</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="http://search.cpan.org/search?mode=dist&amp;query=MIME-Base64">Search CPAN for latest distribution</a>
+
+</p><p>NOTE:  Many Linux distributions include an old version of MIME::Base64 in the
+core Perl distribution.  In order to install a new version of MIME::Base64
+without upsetting your Linux updating tools (like up2date or the equivalent),
+you should specify INSTALLDIRS=site.<br>
+
+<br>MailTools
+<br>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="http://www.cpan.org/authors/id/M/MA/MARKOV/MailTools-1.77.tar.gz">http://www.cpan.org/authors/id/M/MA/MARKOV/MailTools-1.77.tar.gz</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="http://search.cpan.org/search?mode=dist&amp;query=MailTools">Search CPAN for latest distribution</a>
+
+<br>MIME-tools
+<br>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="http://www.cpan.org/authors/id/D/DS/DSKOLL/MIME-tools-5.420.tar.gz">http://www.cpan.org/authors/id/D/DS/DSKOLL/MIME-tools-5.420.tar.gz</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="http://search.cpan.org/search?mode=dist&amp;query=MIME-Tools">Search CPAN for latest distribution</a>
+
+<br>Digest-SHA1
+<br>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="http://www.cpan.org/authors/id/GAAS/Digest-SHA1-2.11.tar.gz">http://www.cpan.org/authors/id/GAAS/Digest-SHA1-2.11.tar.gz</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="http://search.cpan.org/search?mode=dist&amp;query=Digest-SHA1">Search CPAN for latest distribution</a>
+
+<br>libnet
+<br>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="http://www.cpan.org/authors/id/GBARR/libnet-1.21.tar.gz">http://www.cpan.org/authors/id/GBARR/libnet-1.21.tar.gz</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="http://search.cpan.org/search?mode=dist&amp;query=libnet">Search CPAN for latest distribution</a>
+
+<br>Mail-Audit
+<br>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="http://www.cpan.org/authors/id/R/RJ/RJBS/Mail-Audit-2.219.tar.gz">http://www.cpan.org/authors/id/R/RJ/RJBS/Mail-Audit-2.219.tar.gz</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="http://search.cpan.org/search?mode=dist&amp;query=Mail-Audit">Search CPAN for latest distribution</a>
+
+<br>Time-HiRes
+<br>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="http://www.cpan.org/authors/id/J/JH/JHI/Time-HiRes-1.9707.tar.gz">http://www.cpan.org/authors/id/J/JH/JHI/Time-HiRes-1.9707.tar.gz</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="http://search.cpan.org/search?mode=dist&amp;query=Time-HiRes">Search CPAN for latest distribution</a>
+
+<br>HTML-Tagset
+<br>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="http://www.cpan.org/authors/id/P/PE/PETDANCE/HTML-Tagset-3.10.tar.gz">http://www.cpan.org/authors/id/P/PE/PETDANCE/HTML-Tagset-3.10.tar.gz</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="http://search.cpan.org/search?mode=dist&amp;query=HTML-Tagset">Search CPAN for latest distribution</a>
+
+<br>HTML-Parser
+<br>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="http://www.cpan.org/authors/id/G/GA/GAAS/HTML-Parser-3.56.tar.gz">http://www.cpan.org/authors/id/G/GA/GAAS/HTML-Parser-3.56.tar.gz</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="http://search.cpan.org/search?mode=dist&amp;query=HTML-Parser">Search CPAN for latest distribution</a>
+
+<br>Compress-Zlib
+<br>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="http://www.cpan.org/authors/id/P/PM/PMQS/Compress-Zlib-2.005.tar.gz">http://www.cpan.org/authors/id/P/PM/PMQS/Compress-Zlib-2.005.tar.gz</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="http://search.cpan.org/search?mode=dist&amp;query=Compress-Zlib">Search CPAN for latest distribution</a>
+
+<br>Archive-Zip
+<br>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="http://www.cpan.org/authors/id/A/AD/ADAMK/Archive-Zip-1.20.tar.gz">http://www.cpan.org/authors/id/A/AD/ADAMK/Archive-Zip-1.20.tar.gz</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="http://search.cpan.org/search?mode=dist&amp;query=Archive-Zip">Search CPAN for latest distribution</a>
+
+</p><h2><a name="ss5.2"></a>5.2 Installation</h2>
+
+<p><a href="http://www.cpan.org/">CPAN Home Page</a>
+
+</p><p>Perl modules can be installed in a number of ways.  Generally, using packages
+provided by your distribution vendor is preferrable.  When some or all are not
+available from your vendor, modules can be installed from CPAN manually, or
+installation can be automated using the CPAN module or by using cpan2rpm or
+other similar packaging tools.  See
+<a href="http://www.cpan.org/modules/INSTALL.html">Installing CPAN Modules</a>
+for more information.
+
+</p><hr>
+
+<h2><a name="s6"></a>6. Install SpamAssassin</h2>
+
+<a href="http://spamassassin.apache.org/">SpamAssassin Home Page</a>
+
+<p>Cd to the /tmp directory.
+
+</p><p>The latest source is available from
+<a href="http://spamassassin.apache.org/downloads.cgi">http://spamassassin.apache.org/downloads.cgi</a>.
+This example uses version 3.1.0.
+
+</p><p>Download the SpamAssassin source at
+<a href="http://www.apache.org/dist/spamassassin/source/Mail-SpamAssassin-3.1.0.tar.gz">http://www.apache.org/dist/spamassassin/source/Mail-SpamAssassin-3.1.0.tar.gz</a>.
+
+</p><p>Unpack the source:
+
+</p><pre>tar xvzf Mail-SpamAssassin-3.1.0.tar.gz
+</pre>
+
+Remove the source:
+
+<pre>rm Mail-SpamAssassin-3.1.0.tar.gz
+</pre>
+
+Cd into the Mail-SpamAssassin-3.1.0 directory.
+
+<p>Install the source:
+
+</p><pre>perl Makefile.PL
+make
+su -c 'make install'
+</pre>
+
+NOTE: Don't "make test" - it does a lot of unnecessary tests we don't need, and
+can potentially start so many processes that a running sendmail process will
+reject new connections because of high server utilization.
+
+<p>To disable Bayesian filtering, add the following to
+/etc/mail/spamassassin/local.cf:
+
+</p><pre>use_bayes 0
+</pre>
+
+Test:
+
+<pre>spamassassin -t &lt; sample-nonspam.txt &gt; nonspam.out
+spamassassin -t &lt; sample-spam.txt &gt; spam.out
+</pre>
+
+Verify (using a text viewer, ie. "less") that nonspam.out has not been tagged
+as spam, and that spam.out has.
+
+<p>Cd to the /tmp directory.
+
+</p><p>Remove the source directory:
+
+</p><pre>rm -rf Mail-SpamAssassin-3.1.0
+</pre>
+
+<hr>
+
+<h2><a name="s7"></a>7. Install Antivirus Scanner</h2>
+
+<h2><a name="ss7.1"></a>7.1 Overview</h2>
+
+MIMEDefang supports many open source and commercial virus scanners, including
+the following:
+
+<p>AvpLinux
+<br>Bitdefender
+<br>clamav
+<br>Command Anti-Virus
+<br>File::Scan
+<br>FRISK F-Prot
+<br>F-Secure Anti-Virus
+<br>H+BEDV Antivir
+<br>Kaspersky
+<br>NAI McAfee uvscan
+<br>Norman Virus Control
+<br>OpenAntiVirus
+<br>Sophie
+<br>Sophos Sweep
+<br>Symantec CarrierScan
+<br>Trend Micro vscan
+<br>Trophie
+<br>Vexira
+
+</p><p>MIMEDefang automatically detects these virus scanners if they are installed
+in their default locations.
+
+</p><h2><a name="ss7.2"></a>7.2 NAI McAfee uvscan installation</h2>
+
+Cd to the /tmp directory and create a temporary subdirectory.
+
+<pre>cd /tmp
+mkdir vlp4510l
+cd vlp4510l
+</pre>
+
+<p>Copy the source package into the temporary directory.
+
+</p><p>Unpack the source:
+
+</p><pre>tar xvzf vlp4510l.tar.Z
+</pre>
+
+Remove the source:
+
+<pre>rm vlp4510l.tar.Z
+</pre>
+
+Install the source:
+
+<pre>./install-uvscan
+</pre>
+
+The install script asks a series of questions.  Accept the defaults unless you
+know you need a non-standard installation.
+
+<p>Cd to the /tmp directory.
+
+</p><p>Remove the source directory:
+
+</p><pre>rm -rf vlnx414l
+</pre>
+
+Check the installation:
+
+<pre>uvscan --version
+</pre>
+
+If you get this error, you need the compatibility libraries.  Download and
+install the compat-libstdc++-33 rpm for Fedora Core Linux.
+
+<pre>uvscan: error while loading shared libraries: libstdc++.so.5: cannot open shared object file: No such file or directory
+</pre>
+
+To update virus definitions automatically, install the following update script.
+Be sure to change the email addresses and SMTP server name.  Install as
+/usr/local/uvscan/update and add to root's crontab:
+
+<pre>0 */6 * * * /usr/local/uvscan/update
+</pre>
+
+Sample update script:
+
+<pre>#!/usr/bin/perl -w
+# uvscan virus DAT file updater written by
+# Michael Matsumura (michael+uvscan@limit.org)
+# Version 1.0
+#
+# Slightly modified by Mickey Hill
+#
+# Net::FTP and MIME::Lite are required for operation
+# and 'tar' should be in the PATH
+#
+use strict;
+use Net::FTP;
+use MIME::Lite;
+ 
+#
+# Set to the directory uvscan is located/installed in
+#
+my $uvscan_directory = "/usr/local/uvscan";
+ 
+#
+# Set to the temporary directory to download the dat archive
+#
+my $tempdir = "/tmp/dat-updates";
+ 
+#
+# Set to email address for anonymous FTP login
+#
+my $emailaddress = 'postmaster@mycompany.com';
+ 
+my $mailto = 'me@mycompany.com';
+my $smtpserver = 'mail.mycompany.com';
+ 
+# Define global variables
+#
+my ($ftp, @dirlist, $arraywalk, $localver, $serverver, $localfile,
+    @files, $file, $report, $notify);
+$report = "Mail server virus definition update\n" . localtime() . "\n\n";
+ 
+# Get the local uvscan datfile version
+#
+$localver = &amp;checkuvscanver;
+print "Currently installed version: ".$localver."\n";
+$report .= "Currently installed version: ".$localver."\n";
+ 
+# Create FTP connection
+#
+$ftp = Net::FTP-&gt;new("ftp.nai.com", Debug =&gt; 0);
+ 
+# Login
+#
+$ftp-&gt;login("anonymous",$emailaddress);
+$ftp-&gt;cwd("/pub/antivirus/datfiles/4.x");
+$ftp-&gt;binary();
+@dirlist = $ftp-&gt;ls();
+ 
+foreach $arraywalk (@dirlist) {
+    if ($arraywalk =~ /dat-([0-9]+)\.tar/i) {
+        $serverver = $1;
+        print "Version on ftp.nai.com: ".$serverver."\n";
+        $report .= "Version on ftp.nai.com: ".$serverver."\n";
+        if ($serverver &gt; $localver) {
+            $notify++;
+            print "Updating virus data files...\n";
+            $report .= "Updating virus data files...\n";
+ 
+            # Create and then change the working dir to $tempdir
+            #
+            if (!(-d $tempdir)) {
+                mkdir($tempdir, 700) or die("ERROR: Couldn't make temporary directory: $tempdir");
+            }
+            chdir $tempdir or die("ERROR: Couldn't change directory to tempdir:
+$tempdir");
+            # Download the dat file!
+            #
+            $localfile = $ftp-&gt;get($arraywalk);
+            print "Download complete...updating now\n";
+            $report .= "Download complete...updating now\n";
+ 
+            # Untar the files, store the names of them into an array
+            #
+            @files = `tar -xvf $arraywalk`;
+ 
+            foreach $file (@files) {
+                # A line break is at the end of each $file...chomp that off
+                #
+                chomp($file);
+ 
+                # Move each file to the uvscan_directory; and make sure they
+                # are lowercase
+                #
+                my $movestring = "mv $file ".$uvscan_directory."/".lc($file);
+                print " ".$movestring."\n";
+                $report .= " ".$movestring."\n";
+                system($movestring);
+            }
+ 
+            # Make sure that the installation worked, by checking if
+            # the virus scanner reports the same data file version as
+            # the one we downloaded.
+            #
+            if (&amp;checkuvscanver eq $serverver) {
+                print "Installation successful\n";
+                $report .= "Installation successful\n";
+            } else {
+                print "Error in installation, please install manually\n";
+                $report .= "Error in installation, please install manually\n";
+            }
+ 
+            #
+            # Cleanup...
+            #
+            print "Cleaning up\n";
+            $report .= "Cleaning up\n";
+ 
+            # Remove downloaded dat archive
+            #
+            unlink($arraywalk) or die("ERROR: Couldn't delete dat file: $arraywalk");
+ 
+            # Change to filesys root and remove temporary directory
+            #
+            chdir("/");
+            rmdir($tempdir) or die("ERROR: Couldn't remove tempdir: $tempdir");
+        } else { # if ($serverver &gt; $localver) {
+            print "DAT files are the same... no need to update\n";
+        }
+ 
+        # Don't want to continue if there is more than one 'dat-[0-9]+.tar' files
+        #
+        last;
+    }
+}
+$ftp-&gt;quit;
+ 
+if ($notify) {
+    my $msg = MIME::Lite-&gt;new(
+        From    =&gt;$emailaddress,
+        To      =&gt;$mailto,
+        Subject =&gt;'Mail server virus definition update',
+        Type    =&gt;'TEXT',
+        Data    =&gt;$report
+    );
+ 
+    MIME::Lite-&gt;send('smtp', $smtpserver, Timeout=&gt;60);
+ 
+    $msg-&gt;send;
+}
+ 
+exit 0;
+ 
+# uvscan --version reports...
+# "Virus data file v4119 created Feb 03 2001"
+# &amp;checkuvscanver returns the version of the data files
+#
+sub checkuvscanver {
+    if (`$uvscan_directory/uvscan --version` =~
+        /Virus data file v([0-9]+) created/) {
+        return $1;
+    }
+}
+</pre>
+
+<p>If uvscan seems to hang when scanning, try adding the following to
+mimedefang-filter (near the top, with the other variable declarations):
+
+</p><pre># Force uvscan to use old thread library
+$Features{'Virus:NAI'} = 'LD_ASSUME_KERNEL=2.4.1 /usr/local/bin/uvscan';
+</pre>
+
+<p></p><hr>
+
+<h2><a name="s8"></a>8. Install MIMEDefang</h2>
+
+<a href="http://www.mimedefang.org/">MIMEDefang Home Page</a>
+
+<p>Create a new user and group named defang for MIMEDefang.
+
+</p><pre>/usr/sbin/useradd -r -s /sbin/nologin defang
+</pre>
+
+Cd to the /tmp directory.
+
+<p>The latest source is available from
+<a href="http://www.mimedefang.org/">http://www.mimedefang.org/</a>.
+This example uses version 2.64.
+
+</p><p>Download the MIMEDefang source at
+<a href="http://www.mimedefang.org/static/mimedefang-2.64.tar.gz">http://www.mimedefang.org/static/mimedefang-2.64.tar.gz</a>.
+
+</p><p>Unpack the source:
+
+</p><pre>tar xvzf mimedefang-2.64.tar.gz
+</pre>
+
+Remove the source:
+
+<pre>rm mimedefang-2.64.tar.gz
+</pre>
+
+Cd into the mimedefang-2.64 directory.
+
+<p>Install the source:
+
+</p><pre>./configure
+make
+su -c 'make install'
+</pre>
+
+Copy the init script from the examples directory to your init directory.
+
+<pre>su -c 'cp examples/init-script /etc/init.d/mimedefang'
+</pre>
+
+Cd to the /tmp directory.
+
+<p>Remove the source directory:
+
+</p><pre>rm -rf mimedefang-2.64
+</pre>
+
+<hr>
+
+<h2><a name="s9"></a>9. mimedefang-filter</h2>
+
+<h2><a name="ss9.1"></a>9.1 Overview</h2>
+
+mimedefang-filter is the configuration file for the MIMEDefang mail filter.
+It is a Perl fragment which controls how mimedefang.pl disposes of various
+parts of a MIME message.  In addition, it contains some global variable
+settings which affect the operation of mimedefang.pl.
+
+<p>Incoming e-mail is handled as follows:
+
+</p><p>1)  For each incoming message, mimedefang creates a temporary directory,
+makes it the current directory, and splits the message into parts and saves the
+parts in various files in the directory.
+
+</p><p>The directory contains the following files:
+
+</p><pre>INPUTMSG      A file containing the complete input e-mail message, including
+              headers.
+ 
+HEADERS       A file containing just the headers, one per line.  Headers which
+              are continued over several lines in the original message are
+              collapsed into a single line in this file.
+ 
+COMMANDS      A file containing a list of commands.  Each command is a single
+              letter and may be followed by arguments.  Each command is on its
+              own line.
+</pre>
+
+Additional files containing the message body (text and/or HTML) and any
+attachments are also created.
+
+<p>When the end of the message is received, mimedefang executes the following
+command:
+
+</p><pre>/usr/bin/perl /usr/local/bin/mimedefang.pl dir
+</pre>
+
+(If you are using mimedefang-multiplexor, the multiplexor manages a pool of
+persistent Perl processes, and mimedefang itself does not start a Perl
+interpreter.)
+
+<p>The single argument dir is the temporary directory in which the message
+information has been saved.
+
+</p><p>mimedefang.pl loads mimedefang-filter and begins operations on the files
+in this directory.
+
+</p><p>2) If the file /etc/mail/mimedefang-filter.pl defines a Perl function
+called filter_begin, it is called with no arguments.  Any return value is
+ignored.
+
+</p><p>3) For each leaf part of the mail message, filter is called with four
+arguments: entity, a MIME::Entity object; fname, the suggested filename
+taken from the MIME Content-Disposition header; ext, the file extension, and
+type, the MIME Content-Type value.  For each non-leaf part of the mail
+message, filter_multipart is called with the same four arguments as filter.
+A non-leaf part of a message is a part which contains nested parts.  Such a
+part has no useful body, but you should still perform filename checks to
+check for viruses which use malformed MIME to masquerade as non-leaf parts
+(like message/rfc822).  In general, any action you perform in
+filter_multipart applies to the part itself and any contained parts.
+
+</p><p>Note that both filter and filter_multipart are optional.  If you do not
+define them, a default function that simply accepts each part is used.
+
+</p><p>4)  After all parts have been processed, the function filter_end is
+called if it has been defined.  It is passed a single argument consisting
+of the (possibly modified) MIME::Entity object representing the message
+about to be delivered.
+
+</p><h2><a name="ss9.2"></a>9.2 Functions</h2>
+
+<p>When filter_begin, filter, filter_multipart, or filter_end decide how to
+dispose of a message or a part, each can call one or more action_ subroutines.
+Each action_ subroutine is appropriate for particular filter sections (i.e. an
+action_ subroutine that only works on individual parts works only in filter,
+not in filter_begin or filter_end).  Some of the action subroutines are:
+
+</p><p><b>action_accept()</b> - Accept the part.
+
+</p><p><b>action_rebuild()</b> - Rebuild the mail body, even if mimedefang
+thinks no changes were made.  Normally, mimedefang does not alter a message
+if no changes were made.  action_rebuild may be used if you make changes to
+entities directly (by manipulating the MIME::Head, for example.)  Unless you
+call action_rebuild, mimedefang will be unaware of the changes.  Note that
+all the built-in action... routines which change a message implicitly call
+action_rebuild.
+  
+</p><p><b>action_add_header($hdr, $val)</b> - Add a header from the message.
+This can be used in filter_begin or filter_end.  The $hdr component is the
+header name without the colon, and the $val is the header value.  For
+example, to add the header:
+
+</p><pre>X-MyHeader: A nice piece of text
+</pre>
+
+<p>use:
+
+</p><pre>action_add_header("X-MyHeader", "A nice piece of text");
+</pre>
+
+<p><b>action_change_header($hdr, $val, $index)</b> - Changes an existing
+header in the message.  This can be used in filter_begin or filter_end.
+The $hdr parameter is the header name without the colon, and $val is the
+header value.  If the header does not exist, then a header with the given
+name and value is added.  The $index parameter is optional; it defaults to
+1.  If you supply it, then the $index'th occurrence of the header is
+changed, if there is more than one header with the same name.  (This is
+common with the Received: header, for example.)
+
+</p><p><b>action_insert_header($hdr, $val, $index)</b> - Add a header to the
+message in the specified position $index.  A position of 0 specifies that the
+header should be prepended before existing headers.  This can be used in
+filter_begin or filter_end.  The $hdr component is the header name without the
+colon, and the $val is the header value.
+
+</p><p><b>action_delete_header($hdr, $index)</b> - Deletes an existing header in
+the message.  This can be used in filter_begin or filter_end.  The $hdr
+parameter is the header name without the colon.
+
+</p><p>The $index parameter is optional; it defaults to 1.  If you supply it,
+then the $index'th occurrence of the header is deleted, if there is more
+than one header with the same name.
+
+</p><p><b>action_delete_all_headers($hdr)</b> - Deletes all headers with the
+specified name.  This can be used in filter_begin or filter_end.  The $hdr
+parameter is the header name without the colon.
+
+</p><p><b>action_drop()</b> - Drop the part.  If called from filter_multipart,
+drops all contained parts also.
+
+</p><p><b>action_drop_with_warning($msg)</b> - Drop the part, but add the
+warning $msg to the e-mail message.  If called from filter_multipart, drops
+all contained parts also.
+
+</p><p><b>action_accept_with_warning($msg)</b> - Accept the part, but add the
+warning $msg to the e-mail message.
+
+</p><p><b>action_replace_with_warning($msg)</b> - Drop the part and replace it
+with a text part $msg.  If called from filter_multipart, drops all contained
+parts also.
+
+</p><p><b>action_replace_with_url($entity, $doc_root, $base_url, $msg,
+[$cd_data])</b> - Drop the part, but save it in a unique location under
+$doc_root.  The part is replaced with the text message $msg.  The string
+"_URL_" in $msg is replaced with $base_url/something, which can be used to
+retrieve the message.
+ 
+</p><p>You should not use this function in filter_multipart.
+ 
+</p><p>This action is intended for stripping large parts out of the message and
+replacing them to a link on a Web server.  Here's how you would use it in
+filter():
+ 
+</p><pre>$size = (stat($entity-&gt;bodyhandle-&gt;path))[7];
+if ($size &gt; 1000000) {
+     return action_replace_with_url($entity,
+          "/home/httpd/html/mail_parts",
+          "http://mailserver.company.com/mail_parts",
+          "The attachment was larger than 1,000,000 bytes.\n" .
+          "It was removed, but may be accessed at this URL:\n\n" .
+          "\t_URL_\n");
+}
+</pre> 
+
+<p>This example moves attachments greater than 1,000,000 bytes into
+/home/httpd/html/mail_parts and replaces them with a link.  The directory
+should be accessible via a Web server at
+http://mailserver.company.com/mail_parts.
+ 
+</p><p>The generated name is created by performing a SHA1 hash of the part and
+adding the extension to the ASCII-HEX representation of the hash. If many
+different e-mails are sent containing an identical large part, only one copy
+of the part is stored, regardless of the number of senders or recipients.
+
+</p><p>For privacy reasons, you must turn off Web server indexing in the
+directory in which you place mail parts, or anyone will be able to read
+them.  If indexing is disabled, an attacker would have to guess the SHA1
+hash of a part in order to read it.
+ 
+</p><p>Optionally, a fifth argument can supply data to be saved into a hidden
+dot filename based on the generated name.  This data can then be read in on
+the fly by a CGI script or mod_perl module before serving the file to a web
+client, and used to add information to the response, such as
+Content-Disposition data.
+
+</p><p><b>action_defang($entity, $name, $fname, $type)</b> - Accept the part,
+but change its name to $name, its suggested filename to $fname and its MIME
+type to $type.  If $name or $fname are "", then mimedefang.pl generates
+generic names.  Do not use this action in filter_multipart.
+ 
+</p><p>If you use action_defang, you must define a subroutine called
+defang_warning in your filter.  This routine takes two arguments: $oldfname
+(the original name of an attachment) and $fname (the defanged version.)  It
+should return a message telling the user what happened.  For example:
+ 
+</p><pre>sub defang_warning ($$) {
+    my($oldfname, $fname) = @_;
+    return
+        "An attachment named '$oldfname' was converted to '$fname'.\n" .
+        "To recover the file, right-click on the attachment and Save As\n" .
+        "'$oldfname'\n";
+}
+</pre>
+
+<p><b>action_external_filter($entity, $cmd)</b> - Run an external UNIX
+command $cmd.  This command must read the part from the file ./FILTERINPUT
+and leave the result in ./FILTEROUTPUT.  If the command executes
+successfully, returns 1, otherwise 0.  You can test the return value and
+call another action_ if the filter failed.  Do not use this action in
+filter_multipart.
+
+</p><p><b>action_quarantine($entity, $msg)</b> - Drop and quarantine the part,
+but add the warning $msg to the e-mail message.
+
+</p><p><b>action_quarantine_entire_message()</b> - Quarantines the entire
+message in a quarantine directory on the mail server, but does not otherwise
+affect disposition of the message.  If "$msg" is non-empty, it is included
+in any administrator notification.
+
+</p><p><b>action_sm_quarantine($reason)</b> - Quarantines a message in the Sendmail
+mail queue using the new QUARANTINE facility of Sendmail 8.13.  Consult the
+Sendmail documentation for details about this facility.  If you use
+action_sm_quarantine with a version of Sendmail that lacks the QUARANTINE
+facility, mimedefang will log an error message and not quarantine the message.
+
+</p><p><b>action_bounce($reply, $code, $dsn)</b> - Bounce the entire e-mail
+message with the one-line error message $reply.  If the optional $code and
+$dsn arguments are supplied, they specify the numerical SMTP reply code and
+the extended status code (DSN code).  If the codes you supply do not make
+sense for a bounce, they are replaced with "554" and "5.7.1" respectively.
+
+</p><p>action_bounce merely makes a note that the message is to be bounced;
+remaining parts are still processed.  If action_bounce is called for more
+than one part, the mail is bounced with the message in the final call to
+action_bounce.  You can profitably call action_quarantine followed by
+action_bounce if you want to keep a copy of the offending part.  Note that
+the message is not bounced immediately; rather, remaining parts are
+processed and the message is bounced after all parts have been processed.
+
+</p><p>WARNING: action_bounce() may generate spurious bounce messages if the
+sender address is faked.  This is a particular problem with viruses.
+However, we believe that on balance, it's better to bounce a virus than to
+silently discard it.  It's almost never a good idea to hide a problem.
+
+</p><p><b>action_tempfail($msg, $code, $dsn)</b> - Cause an SMTP "temporary
+failure" code to be returned, so the sending mail relay requeues the message
+and tries again later.  The message $msg is included with the temporary
+failure code.  If the optional $code and $dsn arguments are supplied, they
+specify the numerical SMTP reply code and the extended status code (DSN
+code).  If the codes you supply do not make sense for a temporary failure,
+they are replaced with "450" and "4.7.1" respectively.
+
+</p><p><b>action_discard()</b> - Silently discard the message, notifying nobody.
+You can profitably call action_quarantine followed by action_discard if you
+want to keep a copy of the offending part.  Note that the message is not
+discarded immediately; rather, remaining parts are processed and the message
+is discarded after all parts have been processed.
+
+</p><p><b>action_notify_sender($message)</b> - This action sends an
+e-mail back to the original sender with the indicated message. You may
+call another action after this one. If action_notify_sender is called
+more than once, the messages are accumulated into a single e-mail
+message -- at most one notification message is sent per incoming
+message. The message should be terminated with a newline.
+</p><p><b>action_notify_administrator($message)</b> - This action
+e-mails the MIMEDefang administrator the supplied message. You may call
+another action after this one; action_notify_administrator does not
+affect mail processing. If action_notify_administrator is called more
+than once, the messages are accumulated into a single e- mail message
+-- at most one notification message is sent per incoming message. The
+message should be terminated with a newline.
+</p><h2><a name="ss9.3"></a>9.3 Getting started</h2>
+
+Cd to the /etc/mail directory.
+
+<p>MIMEDefang installs a working sample filter to /etc/mail/mimedefang-filter,
+or to /etc/mail/mimedefang-filter.example if mimedefang-filter already exists.
+To begin with the new sample filter, copy the sample to mimedefang-filter.
+
+</p><pre>cp mimedefang-filter.example mimedefang-filter
+</pre>
+
+<h2><a name="ss9.4"></a>9.4 Variables</h2>
+
+Change the following lines in mimedefang-filter:
+
+<pre>$AdminAddress = 'defang-admin@localhost';
+$AdminName = "MIMEDefang Administrator's Full Name";
+$DaemonAddress = 'postmaster@yourcompany.com';
+</pre>
+
+The following optional lines will modify default values.  Add any or all if
+desired.
+
+<pre>$DaemonName    = 'Your Company Mail Server';
+
+#***********************************************************************
+# Set general warning message here.  This message is printed before any
+# specific warning messages in the warning message text attachment.
+#***********************************************************************
+$GeneralWarning =
+"WARNING: This email violated Your Company's email security policy and\n" .
+"has been modified.  For more information, contact $Administrator.\n\n";
+</pre>
+
+<h2><a name="ss9.5"></a>9.5 filter_begin</h2>
+
+In sub filter_begin, in the test for suspicious characters, the default
+behavior of action_discard() can be changed to action_bounce() if desired:
+
+<pre># Reject message; do NOT allow message to reach recipient(s)
+return action_bounce("Message rejected; illegal characters in message (per RFC 2821, 2822)");
+</pre>
+
+<h2><a name="ss9.6"></a>9.6 filter</h2>
+
+Each individual message part is inspected in turn by filter.  A typical
+configuration is to scan for viruses, then further reject parts based on file
+extension.  Here is a sample filter function:
+
+<pre>sub filter ($$$$) {
+    my($entity, $fname, $ext, $type) = @_;
+
+    return if message_rejected(); # Avoid unnecessary work
+
+    # Block message/partial parts
+    if (lc($type) eq "message/partial") {
+        md_graphdefang_log('message/partial');
+        action_bounce("MIME type message/partial not accepted here");
+        return action_discard();
+    }
+
+    if (filter_bad_filename($entity)) {
+        md_graphdefang_log('bad_filename', $fname, $type);
+        return action_drop_with_warning("An attachment named $fname was removed from this document as it\nconstituted a security hazard.  If you require this document, please contact\nthe sender and arrange an alternate means of receiving it.\n");
+    }
+
+    # eml is bad if it's not multipart
+    if (re_match($entity, '\.eml')) {
+        md_graphdefang_log('non_multipart');
+        return action_drop_with_warning("A non-multipart attachment named $fname was removed from this document as it\nconstituted a security hazard.  If you require this document, please contact\nthe sender and arrange an alternate means of receiving it.\n");
+    }
+    # Clean up HTML if Anomy::HTMLCleaner is installed.
+    if ($Features{"HTMLCleaner"}) {
+        if ($type eq "text/html") {
+            return anomy_clean_html($entity);
+        }
+    }
+
+    return action_accept();
+}
+</pre>
+
+<h2><a name="ss9.7"></a>9.7 filter_multipart</h2>
+
+filter_multipart is called for multipart "container" parts such as
+message/rfc822.  The body cannot be replaced (because multipart parts have no
+body), but filenames should be checked.
+
+<pre>sub filter_multipart ($$$$) {
+    my($entity, $fname, $ext, $type) = @_;
+
+    return if message_rejected(); # Avoid unnecessary work
+
+    if (filter_bad_filename($entity)) {
+        md_graphdefang_log('bad_filename', $fname, $type);
+        action_notify_administrator("A MULTIPART attachment of type $type, named $fname was dropped.\n");
+        return action_drop_with_warning("An attachment of type $type, named $fname was removed from this document as it\nconstituted a security hazard.  If you require this document, please contact\nthe sender and arrange an alternate means of receiving it.\n");
+    }
+
+    # eml is bad if it's not message/rfc822
+    if (re_match($entity, '\.eml') and ($type ne "message/rfc822")) {
+        md_graphdefang_log('non_rfc822',$fname);
+        return action_drop_with_warning("A non-message/rfc822 attachment named $fname was removed from this document as it\nconstituted a security hazard.  If you require this document, please contact\nthe sender and arrange an alternate means of receiving it.\n");
+    }
+
+    # Block message/partial parts
+    if (lc($type) eq "message/partial") {
+        md_graphdefang_log('message/partial');
+        action_bounce("MIME type message/partial not accepted here");
+        return;
+    }
+
+    return action_accept();
+}
+</pre>
+
+<h2><a name="ss9.8"></a>9.8 filter_end</h2>
+
+A common use of filter_end is spam detection, one of the most popular uses for
+MIMEDefang.  If you have installed SpamAssassin, you can inspect the message
+and add the results of the inspection to the headers with the following code:
+
+<pre>sub filter_end ($) {
+    my($entity) = @_;
+
+    # If you want quarantine reports, uncomment next line
+    # send_quarantine_notifications();
+
+    # IMPORTANT NOTE:  YOU MUST CALL send_quarantine_notifications() AFTER
+    # ANY PARTS HAVE BEEN QUARANTINED.  SO IF YOU MODIFY THIS FILTER TO
+    # QUARANTINE SPAM, REWORK THE LOGIC TO CALL send_quarantine_notifications()
+    # AT THE END!!!
+
+    # No sense doing any extra work
+    return if message_rejected();
+
+    # Spam checks if SpamAssassin is installed
+    if ($Features{"SpamAssassin"}) {
+        if (-s "./INPUTMSG" &lt; 100*1024) {
+            # Only scan messages smaller than 100kB.  Larger messages
+            # are extremely unlikely to be spam, and SpamAssassin is
+            # dreadfully slow on very large messages.
+            my($hits, $req, $names, $report) = spam_assassin_check();
+            my($score);
+            if ($hits &lt; 40) {
+                $score = "*" x int($hits);
+            } else {
+                $score = "*" x 40;
+            }
+            # We add a header which looks like this:
+            # X-Spam-Score: 6.8 (******) NAME_OF_TEST,NAME_OF_TEST
+            # The number of asterisks in parens is the integer part
+            # of the spam score clamped to a maximum of 40.
+            # MUA filters can easily be written to trigger on a
+            # minimum number of asterisks...
+            if ($hits &gt;= $req) {
+                action_change_header("X-Spam-Score", "$hits ($score) $names");
+                md_graphdefang_log('spam', $hits, $RelayAddr);
+
+                # If you find the SA report useful, add it, I guess...
+                action_add_part($entity, "text/plain", "-suggest",
+                                "$report\n",
+                                "SpamAssassinReport.txt", "inline");
+            } else {
+                # Delete any existing X-Spam-Score header?
+                action_delete_header("X-Spam-Score");
+            }
+        }
+    }
+
+    # I HATE HTML MAIL!  If there's a multipart/alternative with both
+    # text/plain and text/html parts, nuke the text/html.  Thanks for
+    # wasting our disk space and bandwidth...
+
+    # If you want to strip out HTML parts if there is a corresponding
+    # plain-text part, uncomment the next line.
+    # remove_redundant_html_parts($entity);
+
+    md_graphdefang_log('mail_in');
+
+    # Deal with malformed MIME.
+    # Some viruses produce malformed MIME messages that are misinterpreted
+    # by mail clients.  They also might slip under the radar of MIMEDefang.
+    # If you are worried about this, you should canonicalize all
+    # e-mail by uncommenting the action_rebuild() line.  This will
+    # force _all_ messages to be reconstructed as valid MIME.  It will
+    # increase the load on your server, and might break messages produced
+    # by marginal software.  Your call.
+
+    # action_rebuild();
+}
+</pre>
+
+Another common use of filter_end is the insertion of boilerplate text into a
+message.  The append_text_boilerplate and append_html_boilerplate functions
+append text to the first text/plain or text/html part found in the message.
+These functions would be added inside the existing filter_end:
+
+<pre>append_text_boilerplate($entity, "All information contained in " .
+    "this email is confidential and may be used by the intended " .
+    "recipient only.", 0);
+append_html_boilerplate($entity, "All information contained in " .
+    "this email is confidential and may be used by the intended " .
+    "recipient only.", 0);
+</pre>
+
+<h2><a name="ss9.9"></a>9.9 Finishing up</h2>
+
+Test the filter for syntactic correctness:
+
+<pre>mimedefang.pl -test
+</pre>
+
+You can also test other filters with the -f option:
+
+<pre>mimedefang.pl -f test-filter -test
+</pre>
+
+This is useful (and recommended) when writing a new filter for a production
+server, so that the working filter can be left in place.
+
+<p>Start sendmail:
+
+</p><pre>/etc/init.d/sendmail start
+</pre>
+
+<hr>
+
+<h2><a name="s10"></a>10. Sample filters</h2>
+
+<h2><a name="ss10.1"></a>10.1 mimedefang-filter.example</h2>
+
+This is the sample filter that MIMEDefang installs in /etc/mail.
+
+<pre># -*- Perl -*-
+#***********************************************************************
+#
+# mimedefang-filter
+#
+# Suggested minimum-protection filter for Microsoft Windows clients, plus
+# SpamAssassin checks if SpamAssassin is installed.
+#
+# Copyright (C) 2002 Roaring Penguin Software Inc.
+#
+# This program may be distributed under the terms of the GNU General
+# Public License, Version 2, or (at your option) any later version.
+#
+# $Id: suggested-minimum-filter-for-windows-clients 11353 2006-05-05 13:26:11Z dfs $
+#***********************************************************************
+
+#***********************************************************************
+# Set administrator's e-mail address here.  The administrator receives
+# quarantine messages and is listed as the contact for site-wide
+# MIMEDefang policy.  A good example would be 'defang-admin@mydomain.com'
+#***********************************************************************
+$AdminAddress = 'postmaster@localhost';
+$AdminName = "MIMEDefang Administrator's Full Name";
+
+#***********************************************************************
+# Set the e-mail address from which MIMEDefang quarantine warnings and
+# user notifications appear to come.  A good example would be
+# 'mimedefang@mydomain.com'.  Make sure to have an alias for this
+# address if you want replies to it to work.
+#***********************************************************************
+$DaemonAddress = 'mimedefang@localhost';
+
+#***********************************************************************
+# If you set $AddWarningsInline to 1, then MIMEDefang tries *very* hard
+# to add warnings directly in the message body (text or html) rather
+# than adding a separate "WARNING.TXT" MIME part.  If the message
+# has no text or html part, then a separate MIME part is still used.
+#***********************************************************************
+$AddWarningsInline = 0;
+
+#***********************************************************************
+# To enable syslogging of virus and spam activity, add the following
+# to the filter:
+# md_graphdefang_log_enable();
+# You may optionally provide a syslogging facility by passing an
+# argument such as:  md_graphdefang_log_enable('local4');  If you do this, be
+# sure to setup the new syslog facility (probably in /etc/syslog.conf).
+# An optional second argument causes a line of output to be produced
+# for each recipient (if it is 1), or only a single summary line
+# for all recipients (if it is 0.)  The default is 1.
+# Comment this line out to disable logging.
+#***********************************************************************
+md_graphdefang_log_enable('mail', 1);
+
+#***********************************************************************
+# Uncomment this to block messages with more than 50 parts.  This will
+# *NOT* work unless you're using Roaring Penguin's patched version
+# of MIME tools, version MIME-tools-5.411a-RP-Patched-02 or later.
+#
+# WARNING: DO NOT SET THIS VARIABLE unless you're using at least
+# MIME-tools-5.411a-RP-Patched-02; otherwise, your filter will fail.
+#***********************************************************************
+# $MaxMIMEParts = 50;
+
+#***********************************************************************
+# Set various stupid things your mail client does below.
+#***********************************************************************
+
+# Set the next one if your mail client cannot handle multiple "inline"
+# parts.
+$Stupidity{"NoMultipleInlines"} = 0;
+
+# Detect and load Perl modules
+detect_and_load_perl_modules();
+
+# This procedure returns true for entities with bad filenames.
+sub filter_bad_filename  {
+    my($entity) = @_;
+    my($bad_exts, $re);
+
+    # Bad extensions
+    $bad_exts = '(ade|adp|app|asd|asf|asx|bas|bat|chm|cmd|com|cpl|crt|dll|exe|fxp|hlp|hta|hto|inf|ini|ins|isp|jse?|lib|lnk|mdb|mde|msc|msi|msp|mst|ocx|pcd|pif|prg|reg|scr|sct|sh|shb|shs|sys|url|vb|vbe|vbs|vcs|vxd|wmd|wms|wmz|wsc|wsf|wsh|\{[^\}]+\})';
+
+    # Do not allow:
+    # - CLSIDs  {foobarbaz}
+    # - bad extensions (possibly with trailing dots) at end
+    $re = '\.' . $bad_exts . '\.*$';
+
+    return 1 if (re_match($entity, $re));
+
+    # Look inside ZIP files
+    if (re_match($entity, '\.zip$') and
+        $Features{"Archive::Zip"}) {
+        my $bh = $entity-&gt;bodyhandle();
+        if (defined($bh)) {
+            my $path = $bh-&gt;path();
+            if (defined($path)) {
+                return re_match_in_zip_directory($path, $re);
+            }
+        }
+    }
+    return 0;
+}
+
+#***********************************************************************
+# %PROCEDURE: filter_begin
+# %ARGUMENTS:
+#  $entity -- the parsed MIME::Entity
+# %RETURNS:
+#  Nothing
+# %DESCRIPTION:
+#  Called just before e-mail parts are processed
+#***********************************************************************
+sub filter_begin {
+    my($entity) = @_;
+    # ALWAYS drop messages with suspicious chars in headers
+    if ($SuspiciousCharsInHeaders) {
+        md_graphdefang_log('suspicious_chars');
+        # action_quarantine_entire_message("Message quarantined because of suspicious characters in headers");
+        # Do NOT allow message to reach recipient(s)
+        return action_discard();
+    }
+
+    # Copy original message into work directory as an "mbox" file for
+    # virus-scanning
+    md_copy_orig_msg_to_work_dir_as_mbox_file();
+
+    # Scan for viruses if any virus-scanners are installed
+    my($code, $category, $action) = message_contains_virus();
+
+    # Lower level of paranoia - only looks for actual viruses
+    $FoundVirus = ($category eq "virus");
+
+    # Higher level of paranoia - takes care of "suspicious" objects
+    # $FoundVirus = ($action eq "quarantine");
+
+    if ($FoundVirus) {
+        md_graphdefang_log('virus', $VirusName, $RelayAddr);
+        md_syslog('warning', "Discarding because of virus $VirusName");
+        return action_discard();
+    }
+
+    if ($action eq "tempfail") {
+        action_tempfail("Problem running virus-scanner");
+        md_syslog('warning', "Problem running virus scanner: code=$code, category=$category, action=$action");
+    }
+}
+
+#***********************************************************************
+# %PROCEDURE: filter
+# %ARGUMENTS:
+#  entity -- a Mime::Entity object (see MIME-tools documentation for details)
+#  fname -- the suggested filename, taken from the MIME Content-Disposition:
+#           header.  If no filename was suggested, then fname is ""
+#  ext -- the file extension (everything from the last period in the name
+#         to the end of the name, including the period.)
+#  type -- the MIME type, taken from the Content-Type: header.
+#
+#  NOTE: There are two likely and one unlikely place for a filename to
+#  appear in a MIME message:  In Content-Disposition: filename, in
+#  Content-Type: name, and in Content-Description.  If you are paranoid,
+#  you will use the re_match and re_match_ext functions, which return true
+#  if ANY of these possibilities match.  re_match checks the whole name;
+#  re_match_ext checks the extension.  See the sample filter below for usage.
+# %RETURNS:
+#  Nothing
+# %DESCRIPTION:
+#  This function is called once for each part of a MIME message.
+#  There are many action_*() routines which can decide the fate
+#  of each part; see the mimedefang-filter man page.
+#***********************************************************************
+sub filter {
+    my($entity, $fname, $ext, $type) = @_;
+
+    return if message_rejected(); # Avoid unnecessary work
+
+    # Block message/partial parts
+    if (lc($type) eq "message/partial") {
+        md_graphdefang_log('message/partial');
+        action_bounce("MIME type message/partial not accepted here");
+        return action_discard();
+    }
+
+    if (filter_bad_filename($entity)) {
+        md_graphdefang_log('bad_filename', $fname, $type);
+        return action_drop_with_warning("An attachment named $fname was removed from this document as it\nconstituted a security hazard.  If you require this document, please contact\nthe sender and arrange an alternate means of receiving it.\n");
+    }
+
+    # eml is bad if it's not multipart
+    if (re_match($entity, '\.eml')) {
+        md_graphdefang_log('non_multipart');
+        return action_drop_with_warning("A non-multipart attachment named $fname was removed from this document as it\nconstituted a security hazard.  If you require this document, please contact\nthe sender and arrange an alternate means of receiving it.\n");
+    }
+    # This will clean up HTML if Anomy::HTMLCleaner is installed.
+    # NOTE: We consider Anomy::HTMLCleaner to be TOO BUGGY for
+    # production use.  Uncomment the next lines at your peril!
+    #if ($Features{"HTMLCleaner"}) {
+    #   if ($type eq "text/html") {
+    #       return anomy_clean_html($entity);
+    #   }
+    #}
+
+    return action_accept();
+}
+
+#***********************************************************************
+# %PROCEDURE: filter_multipart
+# %ARGUMENTS:
+#  entity -- a Mime::Entity object (see MIME-tools documentation for details)
+#  fname -- the suggested filename, taken from the MIME Content-Disposition:
+#           header.  If no filename was suggested, then fname is ""
+#  ext -- the file extension (everything from the last period in the name
+#         to the end of the name, including the period.)
+#  type -- the MIME type, taken from the Content-Type: header.
+# %RETURNS:
+#  Nothing
+# %DESCRIPTION:
+#  This is called for multipart "container" parts such as message/rfc822.
+#  You cannot replace the body (because multipart parts have no body),
+#  but you should check for bad filenames.
+#***********************************************************************
+sub filter_multipart {
+    my($entity, $fname, $ext, $type) = @_;
+
+    return if message_rejected(); # Avoid unnecessary work
+
+    if (filter_bad_filename($entity)) {
+        md_graphdefang_log('bad_filename', $fname, $type);
+        action_notify_administrator("A MULTIPART attachment of type $type, named $fname was dropped.\n");
+        return action_drop_with_warning("An attachment of type $type, named $fname was removed from this document as it\nconstituted a security hazard.  If you require this document, please contact\nthe sender and arrange an alternate means of receiving it.\n");
+    }
+
+    # eml is bad if it's not message/rfc822
+    if (re_match($entity, '\.eml') and ($type ne "message/rfc822")) {
+        md_graphdefang_log('non_rfc822',$fname);
+        return action_drop_with_warning("A non-message/rfc822 attachment named $fname was removed from this document as it\nconstituted a security hazard.  If you require this document, please contact\nthe sender and arrange an alternate means of receiving it.\n");
+    }
+
+    # Block message/partial parts
+    if (lc($type) eq "message/partial") {
+        md_graphdefang_log('message/partial');
+        action_bounce("MIME type message/partial not accepted here");
+        return;
+    }
+
+    return action_accept();
+}
+
+
+#***********************************************************************
+# %PROCEDURE: defang_warning
+# %ARGUMENTS:
+#  oldfname -- the old file name of an attachment
+#  fname -- the new "defanged" name
+# %RETURNS:
+#  A warning message
+# %DESCRIPTION:
+#  This function customizes the warning message when an attachment
+#  is defanged.
+#***********************************************************************
+sub defang_warning {
+    my($oldfname, $fname) = @_;
+    return
+        "An attachment named '$oldfname' was converted to '$fname'.\n" .
+        "To recover the file, right-click on the attachment and Save As\n" .
+        "'$oldfname'\n";
+}
+
+# If SpamAssassin found SPAM, append report.  We do it as a separate
+# attachment of type text/plain
+sub filter_end {
+    my($entity) = @_;
+
+    # If you want quarantine reports, uncomment next line
+    # send_quarantine_notifications();
+
+    # IMPORTANT NOTE:  YOU MUST CALL send_quarantine_notifications() AFTER
+    # ANY PARTS HAVE BEEN QUARANTINED.  SO IF YOU MODIFY THIS FILTER TO
+    # QUARANTINE SPAM, REWORK THE LOGIC TO CALL send_quarantine_notifications()
+    # AT THE END!!!
+
+    # No sense doing any extra work
+    return if message_rejected();
+
+    # Spam checks if SpamAssassin is installed
+    if ($Features{"SpamAssassin"}) {
+        if (-s "./INPUTMSG" &lt; 100*1024) {
+            # Only scan messages smaller than 100kB.  Larger messages
+            # are extremely unlikely to be spam, and SpamAssassin is
+            # dreadfully slow on very large messages.
+            my($hits, $req, $names, $report) = spam_assassin_check();
+            my($score);
+            if ($hits &lt; 40) {
+                $score = "*" x int($hits);
+            } else {
+                $score = "*" x 40;
+            }
+            # We add a header which looks like this:
+            # X-Spam-Score: 6.8 (******) NAME_OF_TEST,NAME_OF_TEST
+            # The number of asterisks in parens is the integer part
+            # of the spam score clamped to a maximum of 40.
+            # MUA filters can easily be written to trigger on a
+            # minimum number of asterisks...
+            if ($hits &gt;= $req) {
+                action_change_header("X-Spam-Score", "$hits ($score) $names");
+                md_graphdefang_log('spam', $hits, $RelayAddr);
+
+                # If you find the SA report useful, add it, I guess...
+                action_add_part($entity, "text/plain", "-suggest",
+                                "$report\n",
+                                "SpamAssassinReport.txt", "inline");
+            } else {
+                # Delete any existing X-Spam-Score header?
+                action_delete_header("X-Spam-Score");
+            }
+        }
+    }
+
+    # I HATE HTML MAIL!  If there's a multipart/alternative with both
+    # text/plain and text/html parts, nuke the text/html.  Thanks for
+    # wasting our disk space and bandwidth...
+
+    # If you want to strip out HTML parts if there is a corresponding
+    # plain-text part, uncomment the next line.
+    # remove_redundant_html_parts($entity);
+
+    md_graphdefang_log('mail_in');
+
+    # Deal with malformed MIME.
+    # Some viruses produce malformed MIME messages that are misinterpreted
+    # by mail clients.  They also might slip under the radar of MIMEDefang.
+    # If you are worried about this, you should canonicalize all
+    # e-mail by uncommenting the action_rebuild() line.  This will
+    # force _all_ messages to be reconstructed as valid MIME.  It will
+    # increase the load on your server, and might break messages produced
+    # by marginal software.  Your call.
+
+    # action_rebuild();
+}
+
+# DO NOT delete the next line, or Perl will complain.
+1;
+</pre>
+
+<h2><a name="s11"></a>11. Testing</h2>
+
+[todo]
+
+<h2><a name="s12"></a>12. FAQ (Frequently Asked Questions)</h2>
+
+<h2><a name="ss12.1"></a>12.1 Changes to mimedefang-filter are not taking effect</h2>
+
+If you change mimedefang-filter, you must tell the multiplexor to reread it:
+
+<pre>/etc/init.d/mimedefang reread
+</pre>
+
+<h2><a name="ss12.2"></a>12.2 Microsoft Windows unsafe file extensions</h2>
+
+The following list was originally posted by Microsoft at
+<a href="http://support.microsoft.com/default.aspx?scid=kb;EN-US;290497">http://support.microsoft.com/default.aspx?scid=kb;EN-US;290497</a>.
+
+<p>This document is no longer available on Microsoft's web site.  Another
+document providing similar information is at
+<a href="http://support.microsoft.com/kb/883260/">http://support.microsoft.com/kb/883260/</a>.
+
+</p><p>According to Microsoft, "The following list contains attachments that are considered unsafe:"
+
+</p><pre>  File
+Extension  Description
+---------  --------------------------------------------
+   ADE     Microsoft Access project extension
+   ADP     Microsoft Access project
+   ASX     Windows Media Audio / Video
+   BAS     Microsoft Visual Basic class module
+   BAT     Batch file
+   CHM     Compiled HTML Help file
+   CMD     Microsoft Windows NT Command script
+   COM     Microsoft MS-DOS program
+   CPL     Control Panel extension
+   CRT     Security certificate
+   EXE     Program
+   HLP     Help file
+   HTA     HTML program
+   INF     Setup Information
+   INS     Internet Naming Service
+   ISP     Internet Communication settings
+   JS      JScript File
+   JSE     JScript Encoded Script file
+   LNK     Shortcut
+   MDA     Microsoft Access add-in program
+   MDB     Microsoft Access program
+   MDE     Microsoft Access MDE database
+   MDT     Microsoft Access workgroup information
+   MDW     Microsoft Access workgroup information
+   MDZ     Microsoft Access wizard program
+   MSC     Microsoft Common Console document
+   MSI     Microsoft Windows Installer package
+   MSP     Microsoft Windows Installer patch
+   MST     Microsoft Windows Installer transform, Microsoft Visual Test source file
+   OPS     Office XP settings
+   PCD     Photo CD Image, Microsoft Visual compiled script
+   PIF     Shortcut to MS-DOS program
+   PRF     Microsoft Outlook profile settings
+   REG     Registration entries
+   SCF     Windows Explorer command
+   SCR     Screen saver
+   SCT     Windows Script Component
+   SHB     Shell Scrap object
+   SHS     Shell Scrap object
+   URL     Internet shortcut
+   VB      VBScript file
+   VBE     VBScript Encoded script file
+   VBS     VBScript file
+   WSC     Windows Script Component
+   WSF     Windows Script file
+   WSH     Windows Scripting Host Settings file
+</pre>
+
+<h2><a name="s13"></a>13. GNU Free Documentation License</h2>
+
+<pre>		GNU Free Documentation License
+		  Version 1.2, November 2002
+
+
+ Copyright (C) 2000,2001,2002  Free Software Foundation, Inc.
+     59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ Everyone is permitted to copy and distribute verbatim copies
+ of this license document, but changing it is not allowed.
+
+
+0. PREAMBLE
+
+The purpose of this License is to make a manual, textbook, or other
+functional and useful document "free" in the sense of freedom: to
+assure everyone the effective freedom to copy and redistribute it,
+with or without modifying it, either commercially or noncommercially.
+Secondarily, this License preserves for the author and publisher a way
+to get credit for their work, while not being considered responsible
+for modifications made by others.
+
+This License is a kind of "copyleft", which means that derivative
+works of the document must themselves be free in the same sense.  It
+complements the GNU General Public License, which is a copyleft
+license designed for free software.
+
+We have designed this License in order to use it for manuals for free
+software, because free software needs free documentation: a free
+program should come with manuals providing the same freedoms that the
+software does.  But this License is not limited to software manuals;
+it can be used for any textual work, regardless of subject matter or
+whether it is published as a printed book.  We recommend this License
+principally for works whose purpose is instruction or reference.
+
+
+1. APPLICABILITY AND DEFINITIONS
+
+This License applies to any manual or other work, in any medium, that
+contains a notice placed by the copyright holder saying it can be
+distributed under the terms of this License.  Such a notice grants a
+world-wide, royalty-free license, unlimited in duration, to use that
+work under the conditions stated herein.  The "Document", below,
+refers to any such manual or work.  Any member of the public is a
+licensee, and is addressed as "you".  You accept the license if you
+copy, modify or distribute the work in a way requiring permission
+under copyright law.
+
+A "Modified Version" of the Document means any work containing the
+Document or a portion of it, either copied verbatim, or with
+modifications and/or translated into another language.
+
+A "Secondary Section" is a named appendix or a front-matter section of
+the Document that deals exclusively with the relationship of the
+publishers or authors of the Document to the Document's overall subject
+(or to related matters) and contains nothing that could fall directly
+within that overall subject.  (Thus, if the Document is in part a
+textbook of mathematics, a Secondary Section may not explain any
+mathematics.)  The relationship could be a matter of historical
+connection with the subject or with related matters, or of legal,
+commercial, philosophical, ethical or political position regarding
+them.
+
+The "Invariant Sections" are certain Secondary Sections whose titles
+are designated, as being those of Invariant Sections, in the notice
+that says that the Document is released under this License.  If a
+section does not fit the above definition of Secondary then it is not
+allowed to be designated as Invariant.  The Document may contain zero
+Invariant Sections.  If the Document does not identify any Invariant
+Sections then there are none.
+
+The "Cover Texts" are certain short passages of text that are listed,
+as Front-Cover Texts or Back-Cover Texts, in the notice that says that
+the Document is released under this License.  A Front-Cover Text may
+be at most 5 words, and a Back-Cover Text may be at most 25 words.
+
+A "Transparent" copy of the Document means a machine-readable copy,
+represented in a format whose specification is available to the
+general public, that is suitable for revising the document
+straightforwardly with generic text editors or (for images composed of
+pixels) generic paint programs or (for drawings) some widely available
+drawing editor, and that is suitable for input to text formatters or
+for automatic translation to a variety of formats suitable for input
+to text formatters.  A copy made in an otherwise Transparent file
+format whose markup, or absence of markup, has been arranged to thwart
+or discourage subsequent modification by readers is not Transparent.
+An image format is not Transparent if used for any substantial amount
+of text.  A copy that is not "Transparent" is called "Opaque".
+
+Examples of suitable formats for Transparent copies include plain
+ASCII without markup, Texinfo input format, LaTeX input format, SGML
+or XML using a publicly available DTD, and standard-conforming simple
+HTML, PostScript or PDF designed for human modification.  Examples of
+transparent image formats include PNG, XCF and JPG.  Opaque formats
+include proprietary formats that can be read and edited only by
+proprietary word processors, SGML or XML for which the DTD and/or
+processing tools are not generally available, and the
+machine-generated HTML, PostScript or PDF produced by some word
+processors for output purposes only.
+
+The "Title Page" means, for a printed book, the title page itself,
+plus such following pages as are needed to hold, legibly, the material
+this License requires to appear in the title page.  For works in
+formats which do not have any title page as such, "Title Page" means
+the text near the most prominent appearance of the work's title,
+preceding the beginning of the body of the text.
+
+A section "Entitled XYZ" means a named subunit of the Document whose
+title either is precisely XYZ or contains XYZ in parentheses following
+text that translates XYZ in another language.  (Here XYZ stands for a
+specific section name mentioned below, such as "Acknowledgements",
+"Dedications", "Endorsements", or "History".)  To "Preserve the Title"
+of such a section when you modify the Document means that it remains a
+section "Entitled XYZ" according to this definition.
+
+The Document may include Warranty Disclaimers next to the notice which
+states that this License applies to the Document.  These Warranty
+Disclaimers are considered to be included by reference in this
+License, but only as regards disclaiming warranties: any other
+implication that these Warranty Disclaimers may have is void and has
+no effect on the meaning of this License.
+
+
+2. VERBATIM COPYING
+
+You may copy and distribute the Document in any medium, either
+commercially or noncommercially, provided that this License, the
+copyright notices, and the license notice saying this License applies
+to the Document are reproduced in all copies, and that you add no other
+conditions whatsoever to those of this License.  You may not use
+technical measures to obstruct or control the reading or further
+copying of the copies you make or distribute.  However, you may accept
+compensation in exchange for copies.  If you distribute a large enough
+number of copies you must also follow the conditions in section 3.
+
+You may also lend copies, under the same conditions stated above, and
+you may publicly display copies.
+
+
+3. COPYING IN QUANTITY
+
+If you publish printed copies (or copies in media that commonly have
+printed covers) of the Document, numbering more than 100, and the
+Document's license notice requires Cover Texts, you must enclose the
+copies in covers that carry, clearly and legibly, all these Cover
+Texts: Front-Cover Texts on the front cover, and Back-Cover Texts on
+the back cover.  Both covers must also clearly and legibly identify
+you as the publisher of these copies.  The front cover must present
+the full title with all words of the title equally prominent and
+visible.  You may add other material on the covers in addition.
+Copying with changes limited to the covers, as long as they preserve
+the title of the Document and satisfy these conditions, can be treated
+as verbatim copying in other respects.
+
+If the required texts for either cover are too voluminous to fit
+legibly, you should put the first ones listed (as many as fit
+reasonably) on the actual cover, and continue the rest onto adjacent
+pages.
+
+If you publish or distribute Opaque copies of the Document numbering
+more than 100, you must either include a machine-readable Transparent
+copy along with each Opaque copy, or state in or with each Opaque copy
+a computer-network location from which the general network-using
+public has access to download using public-standard network protocols
+a complete Transparent copy of the Document, free of added material.
+If you use the latter option, you must take reasonably prudent steps,
+when you begin distribution of Opaque copies in quantity, to ensure
+that this Transparent copy will remain thus accessible at the stated
+location until at least one year after the last time you distribute an
+Opaque copy (directly or through your agents or retailers) of that
+edition to the public.
+
+It is requested, but not required, that you contact the authors of the
+Document well before redistributing any large number of copies, to give
+them a chance to provide you with an updated version of the Document.
+
+
+4. MODIFICATIONS
+
+You may copy and distribute a Modified Version of the Document under
+the conditions of sections 2 and 3 above, provided that you release
+the Modified Version under precisely this License, with the Modified
+Version filling the role of the Document, thus licensing distribution
+and modification of the Modified Version to whoever possesses a copy
+of it.  In addition, you must do these things in the Modified Version:
+
+A. Use in the Title Page (and on the covers, if any) a title distinct
+   from that of the Document, and from those of previous versions
+   (which should, if there were any, be listed in the History section
+   of the Document).  You may use the same title as a previous version
+   if the original publisher of that version gives permission.
+B. List on the Title Page, as authors, one or more persons or entities
+   responsible for authorship of the modifications in the Modified
+   Version, together with at least five of the principal authors of the
+   Document (all of its principal authors, if it has fewer than five),
+   unless they release you from this requirement.
+C. State on the Title page the name of the publisher of the
+   Modified Version, as the publisher.
+D. Preserve all the copyright notices of the Document.
+E. Add an appropriate copyright notice for your modifications
+   adjacent to the other copyright notices.
+F. Include, immediately after the copyright notices, a license notice
+   giving the public permission to use the Modified Version under the
+   terms of this License, in the form shown in the Addendum below.
+G. Preserve in that license notice the full lists of Invariant Sections
+   and required Cover Texts given in the Document's license notice.
+H. Include an unaltered copy of this License.
+I. Preserve the section Entitled "History", Preserve its Title, and add
+   to it an item stating at least the title, year, new authors, and
+   publisher of the Modified Version as given on the Title Page.  If
+   there is no section Entitled "History" in the Document, create one
+   stating the title, year, authors, and publisher of the Document as
+   given on its Title Page, then add an item describing the Modified
+   Version as stated in the previous sentence.
+J. Preserve the network location, if any, given in the Document for
+   public access to a Transparent copy of the Document, and likewise
+   the network locations given in the Document for previous versions
+   it was based on.  These may be placed in the "History" section.
+   You may omit a network location for a work that was published at
+   least four years before the Document itself, or if the original
+   publisher of the version it refers to gives permission.
+K. For any section Entitled "Acknowledgements" or "Dedications",
+   Preserve the Title of the section, and preserve in the section all
+   the substance and tone of each of the contributor acknowledgements
+   and/or dedications given therein.
+L. Preserve all the Invariant Sections of the Document,
+   unaltered in their text and in their titles.  Section numbers
+   or the equivalent are not considered part of the section titles.
+M. Delete any section Entitled "Endorsements".  Such a section
+   may not be included in the Modified Version.
+N. Do not retitle any existing section to be Entitled "Endorsements"
+   or to conflict in title with any Invariant Section.
+O. Preserve any Warranty Disclaimers.
+
+If the Modified Version includes new front-matter sections or
+appendices that qualify as Secondary Sections and contain no material
+copied from the Document, you may at your option designate some or all
+of these sections as invariant.  To do this, add their titles to the
+list of Invariant Sections in the Modified Version's license notice.
+These titles must be distinct from any other section titles.
+
+You may add a section Entitled "Endorsements", provided it contains
+nothing but endorsements of your Modified Version by various
+parties--for example, statements of peer review or that the text has
+been approved by an organization as the authoritative definition of a
+standard.
+
+You may add a passage of up to five words as a Front-Cover Text, and a
+passage of up to 25 words as a Back-Cover Text, to the end of the list
+of Cover Texts in the Modified Version.  Only one passage of
+Front-Cover Text and one of Back-Cover Text may be added by (or
+through arrangements made by) any one entity.  If the Document already
+includes a cover text for the same cover, previously added by you or
+by arrangement made by the same entity you are acting on behalf of,
+you may not add another; but you may replace the old one, on explicit
+permission from the previous publisher that added the old one.
+
+The author(s) and publisher(s) of the Document do not by this License
+give permission to use their names for publicity for or to assert or
+imply endorsement of any Modified Version.
+
+
+5. COMBINING DOCUMENTS
+
+You may combine the Document with other documents released under this
+License, under the terms defined in section 4 above for modified
+versions, provided that you include in the combination all of the
+Invariant Sections of all of the original documents, unmodified, and
+list them all as Invariant Sections of your combined work in its
+license notice, and that you preserve all their Warranty Disclaimers.
+
+The combined work need only contain one copy of this License, and
+multiple identical Invariant Sections may be replaced with a single
+copy.  If there are multiple Invariant Sections with the same name but
+different contents, make the title of each such section unique by
+adding at the end of it, in parentheses, the name of the original
+author or publisher of that section if known, or else a unique number.
+Make the same adjustment to the section titles in the list of
+Invariant Sections in the license notice of the combined work.
+
+In the combination, you must combine any sections Entitled "History"
+in the various original documents, forming one section Entitled
+"History"; likewise combine any sections Entitled "Acknowledgements",
+and any sections Entitled "Dedications".  You must delete all sections
+Entitled "Endorsements".
+
+
+6. COLLECTIONS OF DOCUMENTS
+
+You may make a collection consisting of the Document and other documents
+released under this License, and replace the individual copies of this
+License in the various documents with a single copy that is included in
+the collection, provided that you follow the rules of this License for
+verbatim copying of each of the documents in all other respects.
+
+You may extract a single document from such a collection, and distribute
+it individually under this License, provided you insert a copy of this
+License into the extracted document, and follow this License in all
+other respects regarding verbatim copying of that document.
+
+
+7. AGGREGATION WITH INDEPENDENT WORKS
+
+A compilation of the Document or its derivatives with other separate
+and independent documents or works, in or on a volume of a storage or
+distribution medium, is called an "aggregate" if the copyright
+resulting from the compilation is not used to limit the legal rights
+of the compilation's users beyond what the individual works permit.
+When the Document is included in an aggregate, this License does not
+apply to the other works in the aggregate which are not themselves
+derivative works of the Document.
+
+If the Cover Text requirement of section 3 is applicable to these
+copies of the Document, then if the Document is less than one half of
+the entire aggregate, the Document's Cover Texts may be placed on
+covers that bracket the Document within the aggregate, or the
+electronic equivalent of covers if the Document is in electronic form.
+Otherwise they must appear on printed covers that bracket the whole
+aggregate.
+
+
+8. TRANSLATION
+
+Translation is considered a kind of modification, so you may
+distribute translations of the Document under the terms of section 4.
+Replacing Invariant Sections with translations requires special
+permission from their copyright holders, but you may include
+translations of some or all Invariant Sections in addition to the
+original versions of these Invariant Sections.  You may include a
+translation of this License, and all the license notices in the
+Document, and any Warranty Disclaimers, provided that you also include
+the original English version of this License and the original versions
+of those notices and disclaimers.  In case of a disagreement between
+the translation and the original version of this License or a notice
+or disclaimer, the original version will prevail.
+
+If a section in the Document is Entitled "Acknowledgements",
+"Dedications", or "History", the requirement (section 4) to Preserve
+its Title (section 1) will typically require changing the actual
+title.
+
+
+9. TERMINATION
+
+You may not copy, modify, sublicense, or distribute the Document except
+as expressly provided for under this License.  Any other attempt to
+copy, modify, sublicense or distribute the Document is void, and will
+automatically terminate your rights under this License.  However,
+parties who have received copies, or rights, from you under this
+License will not have their licenses terminated so long as such
+parties remain in full compliance.
+
+
+10. FUTURE REVISIONS OF THIS LICENSE
+
+The Free Software Foundation may publish new, revised versions
+of the GNU Free Documentation License from time to time.  Such new
+versions will be similar in spirit to the present version, but may
+differ in detail to address new problems or concerns.  See
+http://www.gnu.org/copyleft/.
+
+Each version of the License is given a distinguishing version number.
+If the Document specifies that a particular numbered version of this
+License "or any later version" applies to it, you have the option of
+following the terms and conditions either of that specified version or
+of any later version that has been published (not as a draft) by the
+Free Software Foundation.  If the Document does not specify a version
+number of this License, you may choose any version ever published (not
+as a draft) by the Free Software Foundation.
+
+
+ADDENDUM: How to use this License for your documents
+
+To use this License in a document you have written, include a copy of
+the License in the document and put the following copyright and
+license notices just after the title page:
+
+    Copyright (c)  YEAR  YOUR NAME.
+    Permission is granted to copy, distribute and/or modify this document
+    under the terms of the GNU Free Documentation License, Version 1.2
+    or any later version published by the Free Software Foundation;
+    with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+    A copy of the license is included in the section entitled "GNU
+    Free Documentation License".
+
+If you have Invariant Sections, Front-Cover Texts and Back-Cover Texts,
+replace the "with...Texts." line with this:
+
+    with the Invariant Sections being LIST THEIR TITLES, with the
+    Front-Cover Texts being LIST, and with the Back-Cover Texts being LIST.
+
+If you have Invariant Sections without Cover Texts, or some other
+combination of the three, merge those two alternatives to suit the
+situation.
+
+If your document contains nontrivial examples of program code, we
+recommend releasing these examples in parallel under your choice of
+free software license, such as the GNU General Public License,
+to permit their use in free software.
+</pre>
+
+</body></html>

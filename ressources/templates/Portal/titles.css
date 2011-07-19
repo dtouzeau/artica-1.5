@@ -1,0 +1,77 @@
+h5 {font-family:'Helvetica','Tahoma','Verdana',sans-serif;
+font-size:19px;
+margin-top:4px;
+margin-bottom:8px;
+text-transform: capitalize;
+color: #4C535C;
+font-weight:normal;
+}
+
+h5.noborder {
+	border-bottom: none;
+}
+
+h6 {
+	margin: 10px 0px 2px 0px;
+	padding: 0px 0px 0px 0px;
+	font: bold 13px/14px 'Helvetica', 'Tahoma', 'Verdana', sans-serif;
+	color: #000;
+}
+
+h1 {
+	margin-left:5px;
+	margin-top:0px;
+	
+	background:transparent url('images/bgQuote.gif') no-repeat scroll -5px -8px;
+	padding: 0px 0px 0px 0px;
+	font-weight:normal;
+	font: 24px/26px 'Helvetica', 'Tahoma', 'Verdana', sans-serif; 
+	color: #4C535C;
+	text-transform:capitalize;
+}
+
+h2 {
+	margin: 15px 0px 20px 0px;
+	padding: 0px 0px 0px 0px;
+	font: normal 19px/21px 'Helvetica', 'Tahoma', 'Verdana', sans-serif;
+	color: #8f341b;
+}
+
+h2 a:link, h2 a:visited, h2 a:hover, h2 a:active {
+	font: normal 19px/21px 'Helvetica', 'Tahoma', 'Verdana', sans-serif;
+	color: #8f341b;
+}
+
+h3 {
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 2px 0px;
+	font: bold 15px/18px 'Helvetica', 'Tahoma', 'Verdana', sans-serif;
+	text-transform:capitalize;
+	color: #4C535C;
+	font-weight:normal;
+}
+
+
+h4 {background-color:transparent;
+font-weight:normal;
+margin-bottom:5px;
+margin-top:0px;
+color: #4C535C;
+font-size:18px;
+font-family:'Helvetica','Tahoma','Verdana',sans-serif;
+}
+h4:first-letter{
+	font-size:22px;
+	font-weight:normal;
+	text-transform:capitalize;
+	
+}
+
+h5 {font-family:'Helvetica','Tahoma','Verdana',sans-serif;
+font-size:19px;
+margin-top:4px;
+margin-bottom:8px;
+text-transform: capitalize;
+color: #4C535C;
+font-weight:normal;
+}

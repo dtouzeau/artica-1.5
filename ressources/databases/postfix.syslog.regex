@@ -1,0 +1,13 @@
+KAVMilter Error\(13\): Active key expired;{error_kavmilter_licence};1
+verify_user\(.+?\) failed: Mailbox does not exist;{error_must_create_mailbox};1
+SASL authentication failure: no secret in database;{error_sasl_secdb};1
+warning: damaged message: corrupt.+;{error_postfix_damagedmsg};1
+to=<.+?>,\s+relay=cyrus,\s+delay=.+?status=deferred;{error_cyrus_pbmailbox};1
+subsystem private/cyrus: Connection refused;{error_cyrus_pbconnect};1
+mailfromd.rc:18: #error;{error_mailfromd_check_config};1
+KASERROR.+?mf_eoh:.+?connect to spamtest daemon.+?:\s+Incorrect I/O protocol: unexpected response from filtering service;{error_kasmilter_stopped};1
+status=deferred\s+\(Host or domain name not found. Name service error for name=(.+?)\s+;{error_routing_to};1
+relayhost configuration problem;{error_relayhost};1
+warning.+?connect to Milter service.+?milter-greylist.sock.+?No such file or directory;{error_milter_grey_list_stopped};1
+status=deferred\s+\(mail transport unavailable);{error_routing_postfix};1
+mail\s+for.+?loops back to myself;{error_loopsbacktomyself};1

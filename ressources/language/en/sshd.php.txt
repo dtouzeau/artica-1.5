@@ -1,0 +1,55 @@
+<LoginGraceTime>Login grace time</LoginGraceTime>
+<LoginGraceTime_text>The server disconnects after this time if the user has not successfully logged in.[br]
+ If the value is 0, there is no time limit.  The default is 120 seconds.</LoginGraceTime_text>
+ 
+ 
+<PermitRootLogin>Permit Root Login</PermitRootLogin>
+<PermitRootLogin_text>Specifies whether root can log in using ssh</PermitRootLogin_text>
+
+<PermitTunnel>Permit Tunnel</PermitTunnel>
+<PermitTunnel_text>Specifies whether tunX devices forwarding is allowed</PermitTunnel_text>
+
+
+<UseDNS>Use DNS</UseDNS>
+<UseDNS_sshd_text>Specifies whether daemon should look up the remote host name and check that the resolved host name for the remote IP address maps back to the very same IP address</UseDNS_sshd_text>
+
+<UsePAM>Use PAM</UsePAM>
+<UsePAM_TEXT>Enables the Pluggable Authentication Module interface.[br]
+ If set  this will enable PAM authentication using ChallengeResponseAuthentication and PasswordAuthentication 
+ in addition to PAM account and session module processing for all authentication types.[br]
+Because PAM challenge-response authentication usually serves an equivalent role to password authentication,
+you should disable either PasswordAuthentication or ChallengeResponseAuthentication.[br]
+If it is enabled, you will not be able to run sshd as a non-root user.  The default is disabled.</UsePAM_TEXT>
+
+<MaxAuthTries>Max authentications attempts</MaxAuthTries>
+<MaxAuthTries_text>Specifies the maximum number of authentication attempts permitted per connection.[br]  Once the number of failures reaches half this value, additional failures are logged</MaxAuthTries_text>
+
+<MaxSessions>Max sessions</MaxSessions>
+<MaxSessions_text>Specifies the maximum number of open sessions permitted per network connection</MaxSessions_text>
+
+<HostKey>Host key file</HostKey>
+<HostKey_text>file containing a private host key used by SSH</HostKey_text>
+
+<AuthorizedKeysFile>AuthorizedKeysFile</AuthorizedKeysFile>
+<AuthorizedKeysFile_text>File that contains	the public keys	that can be used for user authentication</AuthorizedKeysFile_text>
+
+
+<ChallengeResponseAuthentication>Challenge Response Authentication</ChallengeResponseAuthentication>
+<ChallengeResponseAuthentication_text>Specifies whether challenge-response authentication is allowed (e.g. via PAM)</ChallengeResponseAuthentication_text>
+
+<PasswordAuthentication>Password Authentication</PasswordAuthentication>
+<PasswordAuthentication_text>Specifies whether password authentication is allowed</PasswordAuthentication_text>
+
+
+<SSH_KEYS_WHY>if you want OpenSSH to automize tasks (eg BackuPC, login without password, remote installation, communication between 2 artica servers...).Therefore you need an automatic login from your server and this server or the opposite.[br]
+You don't want to enter any passwords, because you want to call ssh from a within a shell script</SSH_KEYS_WHY>
+
+<SSH_KEYS_CLIENT>generate a pair of authentication keys</SSH_KEYS_CLIENT>
+<SSH_KEYS_CLIENT_EXPLAIN>This task will generate a pair of authentication key to allow this server to connect to other server.[br]
+You need to choose the local user that should be used for your SSH tasks</SSH_KEYS_CLIENT_EXPLAIN> 
+
+<SSHD_NOFINGER_NEED_GENERATE>No fingerprint can be exported, generate the key pair first</SSHD_NOFINGER_NEED_GENERATE>
+
+
+<SSHD_KEYS_SERVER>Allow keys on this server</SSHD_KEYS_SERVER>
+<SSHD_KEYS_SERVER_TEXT>Put you rsa.pub key generated on your Linux workstation/Server/Artica in order to allow them to connect trough the SSH server</SSHD_KEYS_SERVER_TEXT>

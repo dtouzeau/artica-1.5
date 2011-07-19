@@ -1,0 +1,199 @@
+
+<H1>Computers</H1>
+<div style='width:100%;height:728px;overflow:auto'>
+<table style='width:100%'>
+<tr>
+<td valign='top'>
+	<div style='width:210px' class='paragraphe' id='e2e89ab628b85a35af5605c3434d97f2' OnClick="javascript:YahooUser(670,'domains.edit.user.php?userid=newcomputer$&ajaxmode=yes','windows: New computer');" OnMouseOver="javascript:this.className='paragraphe_over';this.style.cursor='pointer';" OnMouseOut="javascript:this.className='paragraphe';this.style.cursor='default';">
+	<table style='width:100%'>
+	<tr>
+	<td width=1% valign='top'><img src='img/64-add-computer.png'></a></td>
+	<td valign='top' ><h3 style='height:36px;'>Ajouter un nouvel ordinateur</h3><div id='text_e2e89ab628b85a35af5605c3434d97f2' style='height:70px;font-size:11px'>Ajoute un nouvel ordianteur dans la base d`Artica </div></td>
+	</tr>
+	</table>
+	</div>
+	
+	</td><td valign='top'>
+	<div style='width:210px' class='paragraphe' id='2def6591d9c00dc2e5d2017470d31536' OnClick="javascript:Loadjs('system.nic.infos.php')" OnMouseOver="javascript:this.className='paragraphe_over';this.style.cursor='pointer';" OnMouseOut="javascript:this.className='paragraphe';this.style.cursor='default';">
+	<table style='width:100%'>
+	<tr>
+	<td width=1% valign='top'><img src='img/64-win-nic-infos.png'></a></td>
+	<td valign='top' ><h3 style='height:36px;'>Informations sur le mat&eacute;riel</h3><div id='text_2def6591d9c00dc2e5d2017470d31536' style='height:70px;font-size:11px'>Afficher les informations relatives &agrave; vos cartes r&eacute;seaux. </div></td>
+	</tr>
+	</table>
+	</div>
+	
+	</td><td valign='top'>
+	<div style='width:210px' class='paragraphe' id='032fc04cabbac047931845bf9085e1f8' OnClick="javascript:Loadjs('system.nic.config.php?js=yes')" OnMouseOver="javascript:this.className='paragraphe_over';this.style.cursor='pointer';AffBulle('<b>Param&egrave;tres de R&eacute;seau IP</b><br>Changer la configuration de votre r&eacute;seau IP, ajouter des alias IP et plus ...');" OnMouseOut="javascript:this.className='paragraphe';this.style.cursor='default';HideBulle()">
+	<table style='width:100%'>
+	<tr>
+	<td width=1% valign='top'>
+	<div OnMouseOver=";this.style.cursor='pointer';" OnMouseOut=";this.style.cursor='default';" style=''>
+		<img src='img/64-win-nic.png'   id='img_032fc04cabbac047931845bf9085e1f8' >
+	</div></a></td>
+	<td valign='top' ><h3 style='height:36px;'>Param&egrave;tres de R&eacute;seau IP</h3><div id='text_032fc04cabbac047931845bf9085e1f8' style='height:70px;font-size:11px'>Changer la configuration de votre r&eacute;seau IP, ajouter des alias IP et plus...</div></td>
+	</tr>
+	</table>
+	</div>
+	
+	</td></tr><tr><td valign='top'>
+	<div style='width:210px' class='paragraphe' id='4a1c08aa7236146fa942037552b51a27' OnClick="javascript:Loadjs('setup.index.php?js=yes')" OnMouseOver="javascript:this.className='paragraphe_over';this.style.cursor='pointer';" OnMouseOut="javascript:this.className='paragraphe';this.style.cursor='default';">
+	<table style='width:100%'>
+	<tr>
+	<td width=1% valign='top'><img src='img/add-remove-64.png'></a></td>
+	<td valign='top' ><h3 style='height:36px;'>Centre d`installation d`App...</h3><div id='text_4a1c08aa7236146fa942037552b51a27' style='height:70px;font-size:11px'>Installer de nouveaux logiciels soutenus par Artica </div></td>
+	</tr>
+	</table>
+	</div>
+	
+	</td><td valign='top'>
+	<div style='width:210px' class='paragraphe' id='3958fc19f045e45b3fcf044d44d58b97' OnClick="javascript:Loadjs('system.internal.disks.php')" OnMouseOver="javascript:this.className='paragraphe_over';this.style.cursor='pointer';" OnMouseOut="javascript:this.className='paragraphe';this.style.cursor='default';">
+	<table style='width:100%'>
+	<tr>
+	<td width=1% valign='top'><img src='img/64-hd.png'></a></td>
+	<td valign='top' ><h3 style='height:36px;'>Disques durs internes</h3><div id='text_3958fc19f045e45b3fcf044d44d58b97' style='height:70px;font-size:11px'>Affichage et contr&ocirc;le des disques durs internes </div></td>
+	</tr>
+	</table>
+	</div>
+	
+	</td><td valign='top'>
+	<div style='width:210px' class='paragraphe' id='4ad40655eebcf970b0cf36c7db53681b' OnClick="javascript:Loadjs('ocs.ng.php')" OnMouseOver="javascript:this.className='paragraphe_over';this.style.cursor='pointer';AffBulle('Open Computer and Software Inventory nouvelle g&eacute;n&eacute;ration est une application d&eacute;velopp&eacute;e a aider l`administration r&eacute;seau en ayant une vision de la configuration des ordinateurs et des logiciels install&eacute;s dans le r&eacute;seau');" OnMouseOut="javascript:this.className='paragraphe';this.style.cursor='default';HideBulle()">
+	<table style='width:100%'>
+	<tr>
+	<td width=1% valign='top'>
+	<div OnMouseOver=";this.style.cursor='pointer';" OnMouseOut=";this.style.cursor='default';" style=''>
+		<img src='img/64-ocs.png'   id='img_4ad40655eebcf970b0cf36c7db53681b' >
+	</div></a></td>
+	<td valign='top' ><h3 style='height:36px;'>Inventaire OCS</h3><div id='text_4ad40655eebcf970b0cf36c7db53681b' style='height:70px;font-size:11px'>Open Computer and Software Inventory nouvelle g&eacute;n&eacute;ration est une a...</div></td>
+	</tr>
+	</table>
+	</div>
+	
+	</td></tr><tr><td valign='top'>
+	<div style='width:210px' class='paragraphe' id='2b2259b0b49561a471499c6c9be7b24c' OnClick="javascript:Loadjs('storage.center.php')" OnMouseOver="javascript:this.className='paragraphe_over';this.style.cursor='pointer';AffBulle('Ajoutez des paquets qui seront utilis&eacute;s afin d`effectuer des t&acirc;ches d`installation distantes sur vos ordinateurs');" OnMouseOut="javascript:this.className='paragraphe';this.style.cursor='default';HideBulle()">
+	<table style='width:100%'>
+	<tr>
+	<td width=1% valign='top'>
+	<div OnMouseOver=";this.style.cursor='pointer';" OnMouseOut=";this.style.cursor='default';" style=''>
+		<img src='img/software-back-64.png'   id='img_2b2259b0b49561a471499c6c9be7b24c' >
+	</div></a></td>
+	<td valign='top' ><h3 style='height:36px;'>Centre de stockage logiciels</h3><div id='text_2b2259b0b49561a471499c6c9be7b24c' style='height:70px;font-size:11px'>Ajoutez des paquets qui seront utilis&eacute;s afin d`effectuer des t&acirc;ches...</div></td>
+	</tr>
+	</table>
+	</div>
+	
+	</td><td valign='top'>
+	<div style='width:210px' class='paragraphe' id='5bc8d5c45b14074bfa18ab39eed29dbb' OnClick="javascript:Loadjs('index.openvpn.php')" OnMouseOver="javascript:this.className='paragraphe_over';this.style.cursor='pointer';AffBulle('OpenVPN est un logiciel qui vous permet de cr&eacute;er un R&eacute;seau Priv&eacute; Virtuel');" OnMouseOut="javascript:this.className='paragraphe';this.style.cursor='default';HideBulle()">
+	<table style='width:100%'>
+	<tr>
+	<td width=1% valign='top'>
+	<div OnMouseOver=";this.style.cursor='pointer';" OnMouseOut=";this.style.cursor='default';" style=''>
+		<img src='img/64-openvpn.png'   id='img_5bc8d5c45b14074bfa18ab39eed29dbb' >
+	</div></a></td>
+	<td valign='top' ><h3 style='height:36px;'>Open VPN</h3><div id='text_5bc8d5c45b14074bfa18ab39eed29dbb' style='height:70px;font-size:11px'>OpenVPN est un logiciel qui vous permet de cr&eacute;er un R&eacute;seau Priv&ea...</div></td>
+	</tr>
+	</table>
+	</div>
+	
+	</td><td valign='top'>
+	<div style='width:210px' class='paragraphe' id='8dfb7e632f5afec4d4c11f0425838c86' OnClick="javascript:Loadjs('automount.php')" OnMouseOver="javascript:this.className='paragraphe_over';this.style.cursor='pointer';AffBulle('Configurez le service de connection avec vos ressources externes (p&eacute;riph&eacute;riques, montages r&eacute;seaux)');" OnMouseOut="javascript:this.className='paragraphe';this.style.cursor='default';HideBulle()">
+	<table style='width:100%'>
+	<tr>
+	<td width=1% valign='top'>
+	<div OnMouseOver=";this.style.cursor='pointer';" OnMouseOut=";this.style.cursor='default';" style=''>
+		<img src='img/magneto-64.png'   id='img_8dfb7e632f5afec4d4c11f0425838c86' >
+	</div></a></td>
+	<td valign='top' ><h3 style='height:36px;'>Centre d`Auto-montage</h3><div id='text_8dfb7e632f5afec4d4c11f0425838c86' style='height:70px;font-size:11px'>Configurez le service de connection avec vos ressources externes (p&eacute;riph&...</div></td>
+	</tr>
+	</table>
+	</div>
+	
+	</td></tr><tr><td valign='top'>
+	<div style='width:210px' class='paragraphe' id='ff9577b48c631ee050506c929bb163ce' OnClick="javascript:Loadjs('usb.browse.php')" OnMouseOver="javascript:this.className='paragraphe_over';this.style.cursor='pointer';AffBulle('<b>Centre de contr&ocirc;le des p&eacute;riph&eacute;riques</b><br>Configurez vos p&eacute;riph&eacute;riques et contr&ocirc;lez leurs connexions avec votre serveur.');" OnMouseOut="javascript:this.className='paragraphe';this.style.cursor='default';HideBulle()">
+	<table style='width:100%'>
+	<tr>
+	<td width=1% valign='top'>
+	<div OnMouseOver=";this.style.cursor='pointer';" OnMouseOut=";this.style.cursor='default';" style=''>
+		<img src='img/usb-logo-64.png'   id='img_ff9577b48c631ee050506c929bb163ce' >
+	</div></a></td>
+	<td valign='top' ><h3 style='height:36px;'>Centre de contr&ocirc;le des p&eacute;ri...</h3><div id='text_ff9577b48c631ee050506c929bb163ce' style='height:70px;font-size:11px'>Configurez vos p&eacute;riph&eacute;riques et contr&ocirc;lez leurs connexions a...</div></td>
+	</tr>
+	</table>
+	</div>
+	
+	</td><td valign='top'>
+	<div style='width:210px' class='paragraphe' id='edeca9a0180c2255fac2c3078404caef' OnClick="javascript:Loadjs('pdns.php')" OnMouseOver="javascript:this.className='paragraphe_over';this.style.cursor='pointer';AffBulle('G&eacute;rez, ajoutez, supprimez des &eacute;l&eacute;ments dans votre table DNS');" OnMouseOut="javascript:this.className='paragraphe';this.style.cursor='default';HideBulle()">
+	<table style='width:100%'>
+	<tr>
+	<td width=1% valign='top'>
+	<div OnMouseOver=";this.style.cursor='pointer';" OnMouseOut=";this.style.cursor='default';" style=''>
+		<img src='img/dns-64.png'   id='img_edeca9a0180c2255fac2c3078404caef' >
+	</div></a></td>
+	<td valign='top' ><h3 style='height:36px;'>Syst&egrave;me PowerDNS</h3><div id='text_edeca9a0180c2255fac2c3078404caef' style='height:70px;font-size:11px'>G&eacute;rez, ajoutez, supprimez des &eacute;l&eacute;ments dans votre table DNS...</div></td>
+	</tr>
+	</table>
+	</div>
+	
+	</td><td valign='top'>
+	<div style='width:210px' class='paragraphe' id='7a30bcec69fd2b704647da1062319ebe' OnClick="javascript:Loadjs('index.gateway.php?index_dhcp=yes')" OnMouseOver="javascript:this.className='paragraphe_over';this.style.cursor='pointer';AffBulle('Le Protocole de Configuration d`H&ocirc;tes Dynamique d&eacute;fini votre r&eacute;seau pour fournir des adresses IP dynamique');" OnMouseOut="javascript:this.className='paragraphe';this.style.cursor='default';HideBulle()">
+	<table style='width:100%'>
+	<tr>
+	<td width=1% valign='top'>
+	<div OnMouseOver=";this.style.cursor='pointer';" OnMouseOut=";this.style.cursor='default';" style=''>
+		<img src='img/64-dhcp.png'   id='img_7a30bcec69fd2b704647da1062319ebe' >
+	</div></a></td>
+	<td valign='top' ><h3 style='height:36px;'>Serveur DHCP</h3><div id='text_7a30bcec69fd2b704647da1062319ebe' style='height:70px;font-size:11px'>Le Protocole de Configuration d`H&ocirc;tes Dynamique d&eacute;fini votre r&eacu...</div></td>
+	</tr>
+	</table>
+	</div>
+	
+	</td></tr><tr><td valign='top'>
+	<div style='width:210px' class='paragraphe' id='f6d37e240080d8caa723fd717f0bebb3' OnClick="javascript:Loadjs('gluster.php')" OnMouseOver="javascript:this.className='paragraphe_over';this.style.cursor='pointer';" OnMouseOut="javascript:this.className='paragraphe';this.style.cursor='default';">
+	<table style='width:100%'>
+	<tr>
+	<td width=1% valign='top'><img src='img/64-cluster.png'></a></td>
+	<td valign='top' ><h3 style='height:36px;'>Plate-forme de clusteur Glu...</h3><div id='text_f6d37e240080d8caa723fd717f0bebb3' style='height:70px;font-size:11px'>La plate-forme GLuster est une solution Open Source de clusterisation </div></td>
+	</tr>
+	</table>
+	</div>
+	
+	</td>
+</tr>
+<tr>
+<td valign='top'>
+	<div style='width:210px' class='paragraphe' id='4bbaf51a261c99aaf94f14859dbd4290' OnClick="javascript:Loadjs('admin.tabs.php?add-icon=45888a4da062f16a099a7f7c6cc15ee0');" OnMouseOver="javascript:this.className='paragraphe_over';this.style.cursor='pointer';" OnMouseOut="javascript:this.className='paragraphe';this.style.cursor='default';">
+	<table style='width:100%'>
+	<tr>
+	<td width=1% valign='top'><img src='img/64-circle-plus.png'></a></td>
+	<td valign='top' ><h3 style='height:36px;'>Ajoutez un nouveau gadget</h3><div id='text_4bbaf51a261c99aaf94f14859dbd4290' style='height:70px;font-size:11px'>Ajoutez un nouvel icon/gadget sur cette page </div></td>
+	</tr>
+	</table>
+	</div>
+	
+	</td>	
+<td valign='top'>
+	<div style='width:210px' class='paragraphe' id='f2ff12b7c9643949dce79b6d5ac64c21' OnClick="javascript:Loadjs('admin.tabs.php?manage-icon=45888a4da062f16a099a7f7c6cc15ee0');" OnMouseOver="javascript:this.className='paragraphe_over';this.style.cursor='pointer';" OnMouseOut="javascript:this.className='paragraphe';this.style.cursor='default';">
+	<table style='width:100%'>
+	<tr>
+	<td width=1% valign='top'><img src='img/64-widget-manage.png'></a></td>
+	<td valign='top' ><h3 style='height:36px;'>Param&eacute;trez vos gadgets</h3><div id='text_f2ff12b7c9643949dce79b6d5ac64c21' style='height:70px;font-size:11px'>Changez l`ordre d`affichage, supprimez des gadgets </div></td>
+	</tr>
+	</table>
+	</div>
+	
+	</td>
+<td valign='top'>
+	<div style='width:210px' class='paragraphe' id='19d64534993c6e4636186fc2aa1c18bc' OnClick="javascript:Loadjs('admin.tabs.php?delete-tab=45888a4da062f16a099a7f7c6cc15ee0');" OnMouseOver="javascript:this.className='paragraphe_over';this.style.cursor='pointer';" OnMouseOut="javascript:this.className='paragraphe';this.style.cursor='default';">
+	<table style='width:100%'>
+	<tr>
+	<td width=1% valign='top'><img src='img/64-cancel.png'></a></td>
+	<td valign='top' ><h3 style='height:36px;'>Supprimez cette page de gad...</h3><div id='text_19d64534993c6e4636186fc2aa1c18bc' style='height:70px;font-size:11px'>Cette op&eacute;ration va supprimer cette page de votre tableau de bord </div></td>
+	</tr>
+	</table>
+	</div>
+	
+	</td>
+</tr>
+</table>
+
+</div>

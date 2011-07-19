@@ -1,0 +1,368 @@
+This is the CHANGELOG for amavisd-milter.
+
+20081205:
+	amavisd-milter-1.4.0:
+
+	New features:
+	- Added new amavisd-milter option -q which sets milter socket backlog
+	  used by listen(2).
+	- Local state directory (default /var/amavis) is tunable via configure
+	  option:
+	  --localstatedir=</DIR>	      - absolute path to local state
+	  					directory.
+	- Working directory (default local state directory) is tunable via
+	  configure option:
+	  --with-working-directory=<SUBDIR>   - subdirectory of local
+						state directory.
+	  --with-working-directory=</DIR>     - absolute path to working
+						directory.
+
+	Bug and compatibility fixies:
+	- amavisd-milter convert CRLF to LF in mail body to support amavisd-new
+	  integrated DKIM signing and verification.
+	- Fixed memory leak in fts_alloc() on Solaris.
+	- Solaris doesn't have dirfd().
+	- Solaris 9 and older doesn't have sem_timedwait.
+
+20081109:
+	Local state directory (default /var/amavis) is tunable via configure
+	option: --localstatedir=<DIR>
+
+	Working directory (default local state directory) is tunable via
+	configure option:
+	--with-working-directory=<SUBDIR> subdirectory of local state directory
+	--with-working-directory=</DIR>   absolute path to working directory
+
+20081108:
+	Added new amavisd-milter option -q which sets milter socket backlog
+	used by listen(2).
+
+20081029:
+	Compatibility fix - Solaris 9 and older doesn't have sem_timedwait.
+	Use sem_trywait if sem_timedwait isn't available.
+
+	Thans to: Henrik Krohns <hege@hege.li>
+
+20081029:
+	Memory leak in fts_alloc() on Solaris fixed.
+
+	Luke Mewburn wrote:
+	  In examining the code, it appears that the implementation of
+	  fts_alloc() can leak the struct stat fts_statp if you're not using
+	  ALIGNBYTES() && ALIGN(), which I guess that Solaris doesn't have.
+	  Given that the leaked buffers are 160 bytes in size (184960/1156),
+	  I suspect that's sizeof(struct stat) and our culprit.
+
+	Thanks to: Henrik Krohns <hege@hege.li>
+	Submitted by: Luke Mewburn <luke@mewburn.net>
+
+20081028:
+	Compatibility fix - Solaris doesn't have dirfd().
+
+	Thanks to: Henrik Krohns <hege@hege.li>
+
+20080701:
+	Sync fts_open.c with the NetBSD libc (upstream) fts.c, which brought
+	in a few fixes, including one that looked like a potential memory leak.
+	Thanks to: Luke Mewburn <luke@mewburn.net>
+
+	Properly check -D option parameters.
+	Thanks to: Henrik K <hege@hege.li>
+
+20080310:
+	Convert CRLF to LF in mail body, because sendmail send always CRLF,
+	but amavisd-new requires that a message on a temporary file is in
+	a native text format of a host's file system, i.e. with LF terminated
+	lines on Unix or Linux.
+	Thanks to: David Schweikert <david@schweikert.ch> and Mark Martinec
+	<Mark.Martinec@ijs.si>
+
+20070923:
+	amavisd-milter-1.3.1
+
+	Bug fixies:
+	- Properly calculate timezone offset for synthesized Received header
+	  on platforms where gmtime() and localtime() returns the pointer to
+	  the same static struct.
+
+20070923:
+	Better explained -D option.
+
+20070915:
+	In mlfi.c:mlfi_envfrom() the gmtime() and localtime() call returns the
+	pointer to the same static struct.  Thus pointers gt and lt are
+	identical and the UTC offset is always +0000 which is bogus.
+	Thanks to: Curtis Doty <curtis@greenkey.net>
+
+20070902:
+	amavisd-milter-1.3.0
+
+	New features:
+	- Implemented AM.PDP request attribute policy_bank (amavisd-new
+	  2.5.0 or higher is required).  Currently SMTP_AUTH, SMTP_AUTH_<MECH>
+	  and SMTP_AUTH<MECH>_<BITS> policy bank names are sent when the remote
+	  client is authenticated.
+	- Added new amavisd-milter option -D client|server which allow
+	  personalized header or body modifications.
+
+	Bug fixies:
+	- fixed bug when amavisd communication buffer is growing.
+
+	Compatibility:
+	- properly get queue id when amavisd-milter is used with postfix.
+
+	Performance:
+	- improved performance under heavy load.
+
+20070901:
+	Performance optimization: use sem_timedwait instead of
+	sem_trywait+sleep(1) for amavisd connection lock.
+	Requested by: David Schweikert <david@schweikert.ch>
+
+20070831:
+	Added new amavisd-milter option -D client|server which allow
+	personalized header or body modifications.
+	Requested by: Brian C. Huffman <bhuffman@graze.net>
+
+	Fixed bug when amavisd communication buffer is growing.
+	Thanks to: Michael Moeller <mmoeller@kimchukmail.com>
+
+20070729:
+	Better compatibility with Postfix: it does give information about
+	the queue-number only after the RCPT-TO-phase.
+	Thanks to: David Schweikert <david@schweikert.ch>
+
+20061219:
+	amavisd-milter-1.2.1
+
+	New features:
+	- Implemented AM.PDP request attribute 'protocol_name'.
+	  Add folowing line to your sendmail.mc:
+
+	  define(`confMILTER_MACROS_ENVFROM', confMILTER_MACROS_ENVFROM`, r, b')
+
+	Limited support for sendmail 8.12:
+	- smfi_addheader() is used instead of smfi_insheader() for insheader
+	  and addheader AM.PDP responses. This works well with amavisd-new
+	  2.4.3 or newer.
+	- smfi_progress() isn't called when amavisd-milter wait for amavisd-new
+	  communication socket.
+	- AM.PDP response quarantine isn't implemented.
+
+	Bug fixies:
+	- add synthesized Received header for Spamassassin.
+	- properly handle IPv6 client address.
+
+20061217:
+	Added support for IPv6 addresses.
+	Thanks to: Mark Martinec <Mark.Martinec@ijs.si>
+
+20061206:
+	Limited support for legacy sendmail 8.12:
+	- AM.PDP v2 response attribute quarantine isn't implemented. 
+	Thanks to: Adam Gibson <agibson@ptm.com> 
+
+20061203:
+	Added info about user authentication to synthesized received header.
+	Format of synthesized received header is now:
+
+	Received: from <hello> (<rdns> [<ip>]) (authenticated bits=<bits>)
+		by <hostname> (<rdns> [<ip>])
+		with <protocol> (authenticated as <user>) id <qid>;
+		<date>
+		(envelope-from <sender>)
+
+	Thanks to: Jo Rhett <jrhett@netconsonance.com>
+
+20061113:
+	Limited support for legacy sendmail 8.12:
+	- amavisd-milter don't call smfi_progress when wait for amavisd-new
+	  communication socket.
+	- amavisd-milter use smfi_addheader instead of smfi_insheader for
+	  insheader and addheader AM.PDP response attributes. This work well
+	  with amavisd-new 2.4.3 or newer. Older versions are affected with
+	  bug fixed on 20060714.
+
+20061017:
+	Implemented AM.PDP request attribute protocol_name.
+
+	amavisd-milter adds Received header for the current connection to
+	the mail file as the first line because without the most recent
+	Received header, Spamassassin reports lots of false hits on rules
+	checking where the message was received from.
+	Thanks to: Jo Rhett <jrhett@netconsonance.com>
+
+	NOTE: Please add these line to your sendmail.mc:
+
+	define(`confMILTER_MACROS_ENVFROM', confMILTER_MACROS_ENVFROM`, r, b')
+
+
+20061008:
+	amavisd-milter-1.2.0
+
+	Improved amavisd connection locking.  When amavisd connection is closed,
+	lock is removed immediately.
+
+20061004:
+	Implemented AM.PDP protocol version 2.  New response attributes
+	are version_server, insheader and quarantine.
+
+	Tru64 portability fix: don't use variadic macros.
+
+20060714:
+	Fixed bug with addheader: amavisd-new assume that header is added
+	to the end of headers but sendmail insert it before first occurence
+	of the header with same name.
+	Submitted by: Krzysztof Oledzki <ole@ans.pl>
+
+20060616:
+	Amavisd communication buffer is now dynamically allocated.
+	MAXAMABUF is maximum buffer length, AMABUFCHUNK is initial length
+	and reallocation step.  Buffer is allocated for every connection.
+
+	Tru64 portability fix: replace missing daemon(8) function.
+
+20060414:
+	amavisd-milter-1.1.2
+
+	MAXAMABUF is increased from 2048 to 65536 because it must be greater
+	then confMAX_HEADERS_LENGTH which is usually set to 32768. If mail
+	header is longer than MAXAMABUF, mail is permanently rejected with
+	temporary fail return code and will never reach the recipents.
+
+	Added new configure option --with-sendmail=<DIR> which change base
+	directory in which are placed libmilter header files and library
+	(e.q. /usr/local on FreeBSD when you using sendmail from ports).
+
+20060125:
+	amavisd-milter-1.1.1
+
+	Portability release. amavisd-milter-1.1 now can be compiled on
+	FreeBSD, NetBSD, OpenBSD, Linux and Solaris.  Please report 
+	success or problems on the users mailing list.
+
+20060125:
+	Linux and Solaris portability fix: sem_t is declared as pointer on
+	*BSD but as structure on Linux and Solaris.
+
+	Solaris portability fix: search sem_init in librt.
+
+	Solaris portability fix: replace missing fts.h API.
+
+20060124:
+	amavisd-milter-1.1.0
+
+	New features:
+	- amavisd-milter can limit number of concurrent connections
+	  to amavisd-new
+	- amavisd-milter is responsible to remove message work
+	  directory
+
+20060124:
+	README is now generated from amavisd-milter(8) manual page.
+
+	Remove all files and directories in working directory because
+	amavisd-new sometimes don't do it (e.q. when antivirus fail).
+
+20060123:
+	Limit maximum concurrent connections to amavisd:
+
+	    amavisd-milter -m 4 -M 600
+
+	means that there is limit to maximum 4 concurrent connections to
+	amavisd and wait maximum 10 minutes (10*60 sec) for connection to
+	amavisd.  When connection isn't available, amavisd-milter sleep for
+	1 sec.  Every minute of waiting is sendmail triggered via
+	smfi_progress.  When time limit run out then amvisd-milter return
+	temporary fail.
+
+20060113:
+	amavisd-milter-1.0.4
+
+	Bugfix release.  Added manual page amavisd-milter(8).
+
+	INCOMPATIBILITY with 1.0.3 and previous versions:
+
+	Default working directory was changed from /var/amavis/tmp
+	to /var/amavis to accordance with amavisd-new $helpers_home
+	default value.  To go back to the previous behaviour run
+	amavisd-milter with option -w /var/amavis/tmp
+
+20060109:
+	When stopping amavisd-new one (maybe not always just one) of milter
+	threads amavisd-milter start to eat up a cpu time.
+	Submitted by: Grzegorz Piszczek <grzegorz@piszczek.name>
+
+	Fixed bug in mlfi_close(): amavisd-milter dies randomly due to
+	segmentation fault.
+	Submitted by: Grzegorz Piszczek <grzegorz@piszczek.name>
+
+20051225:
+	Added amavisd-milter(8) manual page.  README and website are
+	synchronized with this manual page.
+
+	Changed default working directory to /var/amavis (default value
+	for amavisd-new helpers home directory).
+
+20051204:
+	Some users reports problem with ENOMEM in amavis_response().
+	Consequently MAXAMABUF is increased from 1024 to 2048, amavis_request()
+	and amavis_response() returns EOVERFLOW when buffer size isn't enough
+	and truncated response is logged when debug level is >= 3.
+
+20051202:
+	Fixed default path to pidfile in README and website.
+	Submitted by: Jerzy Sakol <jerzy.sakol@commgraf.pl>
+
+20050829:
+	Added amavisd-new configuration section to README.
+
+20050701:
+	amavisd-milter-1.0.3
+
+	Bugfix release.  Properly set amavisd connection timeout.
+
+20050701:
+	Set amavisd_timeout instead of mlfi_timeout for -T option.
+	Submitted by: Mr.Sompis Junsui <sompis.j@cdg.co.th>
+
+20050701:
+	Unlink old pid file on start.
+
+20050605:
+	amavisd-milter-1.0.2
+
+	Bugix release.  Fix memory leak in mlfi_cleanup.
+
+20050529:
+	amavisd-milter-1.0.1
+
+	Portability release.  Now can be compiled on Debian 3.0, Fedora FC2 and
+	FC3, OpenBSD 3.4 and Solaris 9.  Tested on Sourceforge compile farm.
+	Please report success or problems on the users mailing list:
+
+	http://lists.sourceforge.net/lists/listinfo/amavisd-milter-users
+
+20050522:
+	Define EILSEQ on systems without it.
+
+20050520:
+	mkdtemp(3) compatibility function.
+
+20050512:
+	Initial version of README.
+
+20050512:
+	Better portability with autoconf macros from
+	http://ac-archive.sourceforge.net/
+
+20050510:
+	strlcpy(3) compatibility function.
+
+20050511:
+	amavisd-milter-1.0.0
+
+	First public release.  Fully tested on FreeBSD 5.3.
+
+
+$Id: CHANGES,v 1.65 2008/12/05 17:22:19 reho Exp $

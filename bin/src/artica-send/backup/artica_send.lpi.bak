@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <ProjectOptions>
+    <PathDelim Value="/"/>
+    <Version Value="6"/>
+    <General>
+      <MainUnit Value="0"/>
+      <IconPath Value="./"/>
+      <TargetFileExt Value=""/>
+      <Title Value="artica-send"/>
+      <ActiveEditorIndexAtStart Value="0"/>
+    </General>
+    <VersionInfo>
+      <ProjectVersion Value=""/>
+    </VersionInfo>
+    <PublishOptions>
+      <Version Value="2"/>
+      <IgnoreBinaries Value="False"/>
+      <IncludeFileFilter Value="*.(pas|pp|inc|lfm|lpr|lrs|lpi|lpk|sh|xml)"/>
+      <ExcludeFileFilter Value="*.(bak|ppu|ppw|o|so);*~;backup"/>
+    </PublishOptions>
+    <RunParams>
+      <local>
+        <FormatVersion Value="1"/>
+        <LaunchingApplication PathPlusParams="/usr/X11R6/bin/xterm -T 'Lazarus Run Output' -e $(LazarusDir)/tools/runwait.sh $(TargetCmdLine)"/>
+      </local>
+    </RunParams>
+    <Units Count="11">
+      <Unit0>
+        <Filename Value="artica_send.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="artica_send"/>
+        <CursorPos X="1" Y="21"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="0"/>
+        <UsageCount Value="77"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="scanqueue.pas"/>
+        <UnitName Value="scanQueue"/>
+        <CursorPos X="92" Y="2824"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="1"/>
+        <UsageCount Value="38"/>
+        <Bookmarks Count="1">
+          <Item0 X="1" Y="2892" ID="0"/>
+        </Bookmarks>
+        <Loaded Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="artica_send_logs.pas"/>
+        <UnitName Value="artica_send_logs"/>
+        <CursorPos X="45" Y="7"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="9"/>
+        <UsageCount Value="38"/>
+        <Loaded Value="True"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="mailinfos.pas"/>
+        <UnitName Value="mailinfos"/>
+        <CursorPos X="54" Y="30"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="5"/>
+        <UsageCount Value="38"/>
+        <Loaded Value="True"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="smtpsend.pas"/>
+        <UnitName Value="smtpsend"/>
+        <CursorPos X="11" Y="367"/>
+        <TopLine Value="310"/>
+        <EditorIndex Value="3"/>
+        <UsageCount Value="38"/>
+        <Loaded Value="True"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="mimemess.pas"/>
+        <UnitName Value="mimemess"/>
+        <CursorPos X="32" Y="533"/>
+        <TopLine Value="92"/>
+        <EditorIndex Value="6"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="mimepart.pas"/>
+        <UnitName Value="mimepart"/>
+        <CursorPos X="26" Y="46"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="4"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="ldap.pas"/>
+        <UnitName Value="ldap"/>
+        <CursorPos X="9" Y="862"/>
+        <TopLine Value="817"/>
+        <EditorIndex Value="7"/>
+        <UsageCount Value="38"/>
+        <Loaded Value="True"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="ldapsend.pas"/>
+        <UnitName Value="ldapsend"/>
+        <CursorPos X="43" Y="310"/>
+        <TopLine Value="273"/>
+        <EditorIndex Value="8"/>
+        <UsageCount Value="16"/>
+        <Loaded Value="True"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="blcksock.pas"/>
+        <UnitName Value="blcksock"/>
+        <CursorPos X="5" Y="371"/>
+        <TopLine Value="333"/>
+        <EditorIndex Value="4"/>
+        <UsageCount Value="38"/>
+        <Loaded Value="True"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="/usr/share/fpcsrc/packages/fcl-base/src/inc/inifiles.pp"/>
+        <UnitName Value="IniFiles"/>
+        <CursorPos X="24" Y="130"/>
+        <TopLine Value="110"/>
+        <EditorIndex Value="2"/>
+        <UsageCount Value="14"/>
+        <Loaded Value="True"/>
+      </Unit10>
+    </Units>
+    <JumpHistory Count="1" HistoryIndex="0">
+      <Position1>
+        <Filename Value="artica_send.lpr"/>
+        <Caret Line="21" Column="36" TopLine="1"/>
+      </Position1>
+    </JumpHistory>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="5"/>
+    <Target>
+      <Filename Value="/home/dtouzeau/developpement/artica-postfix/bin/src/artica-send/artica-send"/>
+    </Target>
+    <CodeGeneration>
+      <Generate Value="Faster"/>
+    </CodeGeneration>
+    <Other>
+      <Verbosity>
+        <ShowHintsForSenderNotUsed Value="True"/>
+      </Verbosity>
+      <CompilerPath Value="$(CompPath)"/>
+    </Other>
+  </CompilerOptions>
+  <Debugging>
+    <Exceptions Count="2">
+      <Item1>
+        <Name Value="ECodetoolError"/>
+      </Item1>
+      <Item2>
+        <Name Value="EFOpenError"/>
+      </Item2>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

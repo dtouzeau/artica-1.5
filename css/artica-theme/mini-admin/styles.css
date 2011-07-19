@@ -1,0 +1,168 @@
+html{
+font-family:Verdana,Helvetica,Arial,sans-serif;
+font-size:13px;
+vertical-align:baseline;
+}
+
+
+body{
+font-family:Verdana,Helvetica,Arial,sans-serif;
+font-size:13px;
+margin:0px
+padding:0px;
+vertical-align:baseline;
+}
+
+a:link,a:visited,a:active{
+text-decoration:underline;
+color:black;
+
+
+}
+
+H1{
+font-family:Verdana,Helvetica,Arial,sans-serif;
+font-size:22px;
+text-transform:uppercase;
+}
+
+.explain{
+-moz-border-radius: 5px 5px 5px 5px;
+background-color: #FAFAFA;
+background-image: url("/img/help_bg.png");
+background-position: 99% 0;
+background-repeat: no-repeat;
+border: 1px solid #999999;
+font-size: 12px;
+margin: 5px 5px 10px;
+min-height: 50px;
+padding: 5px 42px 5px 5px;
+}
+
+
+table.table_form{
+border:1px solid #CCCCCC;
+padding:4px;
+margin:4px;
+background-color:white;
+width:90%;
+
+}
+
+INPUT[type="submit"],INPUT[type="file"] { 
+width: auto;
+border: 1px double #999999;
+border-top-color: #CCCCCC;
+border-left-color: #CCCCCC;
+font-size:13px;
+padding:3px;
+padding-left:0.4em;
+padding-right:0.4em;
+margin-top:3px;
+margin-bottom:3px;
+background-image: url(images/background_form_element.gif);
+background-repeat: repeat-x;
+color: #005447;
+font-weight: normal;
+text-transform:capitalize;
+cursor:pointer;
+	 }
+
+INPUT[type="button"] { 
+width: auto;
+border: 1px double #999999;
+border-top-color: #CCCCCC;
+border-left-color: #CCCCCC;
+padding: 0.15em;
+padding-left:0.4em;
+padding-right:0.4em;
+margin-top:3px;
+margin-bottom:3px;
+background-image: url(images/background_form_element.gif);
+background-repeat: repeat-x;
+color: #9B1E18;
+font-weight: normal;
+text-transform:capitalize;
+cursor:pointer;
+	 }
+
+td.legend {
+    color: #4C535C;
+    font-size: 13px;
+    font-weight: normal;
+    text-align: right;
+    font-family:Verdana,Helvetica,Arial,sans-serif;
+}
+	 
+	 
+
+INPUT,SELECT,TEXTAREA{
+background-color:#FBFBFB;
+border-color:#D7D7D7 rgb(243, 243, 243) rgb(243, 243, 243) rgb(215, 215, 215);
+border:1px solid;
+color:#333333;
+width:auto;
+font-size:13px;
+padding:3px;
+}
+
+input[disabled], input[readonly], select[disabled], select[readonly], checkbox[disabled], checkbox[readonly], textarea[disabled], textarea[readonly]
+{
+ background-color: #888A8A;
+ background-image:none;
+ color: #333333;
+ cursor: default;
+}
+
+INPUT:hover,SELECT:hover,TEXTAREA:hover {
+    border: 1px solid #D01616;
+}
+INPUT[type="text"]{
+	width:90%;
+}
+h3 {
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 2px 0px;
+	font: bold 15px/18px 'Helvetica', 'Tahoma', 'Verdana', sans-serif;
+	text-transform:capitalize;
+	color: #9B1E18;
+	font-weight:normal;
+}
+
+.ui-tabs .ui-tabs-nav li a{
+text-transform:capitalize;
+font-weight:normal;
+}
+
+
+
+th {
+	-moz-background-clip:border;
+	-moz-background-inline-policy:continuous;
+	-moz-background-origin:padding;
+	background:#005447 url(/css/images/ui-bg_highlight.png) repeat-x scroll 50% 50%;
+	border:1px solid #000000;
+	color:#FFFFFF;
+	font-weight:bold;
+	text-align:center;
+	text-transform:uppercase;
+	padding:3px;
+
+}
+
+.tableView thead th.checkBoxCell,
+.tableView tbody td.checkBoxCell { padding: 0px 5px 0px 10px; width: 13px; }
+.tableView thead td,
+.tableView thead th { height: 23px; border-bottom: 1px #b1b1b1 solid; padding: 0px 5px 0px 10px; }
+.tableView thead tr { background: transparent url(/ressources/templates/default/img/thead_bg.jpg ) repeat-x left bottom;}
+.tableView thead a { color: #000000; text-decoration: none; }
+.tableView tbody tr { background-color: #ffffff; }
+.tableView tbody tr.oddRow { background-color: #fafafa; }
+.tableView tbody td {border-bottom: 1px #d5d5d5 solid; height:41px;padding: 0px 5px 0px 10px;  }
+.tableView .checkBoxCell input { margin: 0px; padding: 0px; display: block; width: 13px; height: 13px; }
+.tableView thead span, .tableView thead a { cursor: pointer; text-shadow: #fff 1px 1px 0px; }
+.tableView { width: 100%; font-family:Arial;}
+.tableView thead th { text-align: left; font-weight: normal; font-size: 11px; }
+
+
+

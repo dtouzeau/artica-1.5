@@ -1,0 +1,4 @@
+<sender_user_explain>This area is designed to transform your original address to a new one when messages are sent trough Internet[br]
+You can specify here a remote mail server that will be in charge of transfert your messages over Internet.[br]
+You can specify authentification settings if the remote server needs user name and password in order to transfert messages.</sender_user_explain>
+<smtp_internet_relay_option>SMTP relay parameters</smtp_internet_relay_option>

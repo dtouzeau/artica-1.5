@@ -1,0 +1,9 @@
+bison->make;
+gcc->make;
+make->make;
+libc6-dev->make;
+g++->make;
+wget->make;
+autoconf->make;
+openjade->make;
+flex->make;

@@ -1,0 +1,133 @@
+<accountname>Nom du compte</accountname>
+<added_on>ajout&eacute; le</added_on>
+<ADD_CONNEXION>Ajouter une connexion</ADD_CONNEXION>
+<add_imap_account>Nouveau compte IMAP</add_imap_account>
+<add_imap_bad_emailing_account_text>Ajouter un compte IMAP afin de rechercher les retours de mauvaises adresses.</add_imap_bad_emailing_account_text>
+<ADD_PPTP_CONNEXION_TEXT>Ajouter un tunnel VPN PPTP vers un serveur VPN.</ADD_PPTP_CONNEXION_TEXT>
+<affectip_from>Affecter les adresses depuis</affectip_from>
+<affectip_to>Affecter l'adresse au maximum</affectip_to>
+<allow_nmap_scanner>Autoriser l'analyse r&eacute;seau automatique</allow_nmap_scanner>
+<allow_parse_dhcp_leases>Autoriser l'analyse des concessions DHCP</allow_parse_dhcp_leases>
+<all_days_of_month>tous les jours du mois</all_days_of_month>
+<AntiHacks_roundcube_explain>Cette fonctionnalit&eacute; ajoute automatiquement une r&egrave;gle de pare-feux si des &eacute;checs d'authentification ont lieu sur la page de connexion du WebMail Roundcube.[br]Si une adresse IP est bloqu&eacute;e, elle sera affich&eacute;e dans la section &eacute;v&egrave;nements.</AntiHacks_roundcube_explain>
+<AntiHacks_roundcube_text>Pr&eacute;vient des attaques par &quot;brute force&quot; sur la page de connexion du syst&egrave;me WebMail RoundCube</AntiHacks_roundcube_text>
+<APP_APT_MIRROR>outil Miroirs APT</APP_APT_MIRROR>
+<APP_ARTICA_SQUIDGUARDTAIL>D&eacute;mon de surveillance squidGuard</APP_ARTICA_SQUIDGUARDTAIL>
+<APP_PPTPD>D&eacute;mon PPTP</APP_PPTPD>
+<APP_WEBFILTER_COMMUNITY_EXPLAIN>La communaut&eacute; Artica sur les cat&eacute;gories bannies est un processus silencieux qui ajoute vos cat&eacute;gories personnelles et sites web que vous ajoutez au serveur central Artica.[br]
+Lorsque vous ajoutez et cat&eacute;gorisez un nouveau site web Artica envoi cet ajout au serveur central.[br]Ceci afin de partager votre cat&eacute;gorisation par tous les autres serveurs Artica.[br]Votre serveur quand &agrave; lui est amener &agrave; r&eacute;cup&eacute;rer de fa&ccedil;on automatique les sites web ajout&eacute;s par les autres membres de la communaut&eacute;.</APP_WEBFILTER_COMMUNITY_EXPLAIN>
+<apt_mirror_threads>Nombre de processus utilis&eacute;s pour t&eacute;l&eacute;charger les paquetages.[br]Plus vous ajoutez des processus, plus votre bande passante va &ecirc;tre sollicit&eacute;e.</apt_mirror_threads>
+<ARTICA_DATABASE_MAINTENANCE>Maintenance de la base Artica</ARTICA_DATABASE_MAINTENANCE>
+<ARTICA_DATABASE_SQUID_MAINTENANCE>Maintenance des requ&ecirc;tes web (purge, sauvegardes des &eacute;v&egrave;nements)</ARTICA_DATABASE_SQUID_MAINTENANCE>
+<ARTICA_DATABASE_SQUID_MAINTENANCE_WHY>Chaque requ&ecirc;te web travers&eacute;e &agrave; travers le proxy est analys&eacute;e par le service de surveillance de Squid.[br]Le service Ssquid Realtime log transforme les requ&ecirc;tes en temps r&eacute;el et les enregistre dans la base de donn&eacute;es Mysql.[br] Ceci,  afin de fournir par la suite des graphiques et statistiques.[br]Cette section d&eacute;finit les param&egrave;tres de purge afin de r&eacute;duire la taille de la base de donn&eacute;es.[br]les op&eacute;rations de purge sont ex&eacute;cut&eacute;es tous les Dimanches &agrave; 5h00 du matin.</ARTICA_DATABASE_SQUID_MAINTENANCE_WHY>
+<at>&agrave;</at>
+<backup_datas_before_delete>Sauvegarder les donn&eacute;es avant suppression</backup_datas_before_delete>
+<bad_mails>Mauvaises adresses</bad_mails>
+<bad_mails_emailing_text>Administrez la base de donn&eacute;es de la liste noire des adresses emails &quot;mauvaises&quot; ainsi que le moteur d'analyse des bo&icirc;tes de r&eacute;ception des envois en masse.</bad_mails_emailing_text>
+<blacklist_database>Base liste noire</blacklist_database>
+<clients_routes_add_text>Routes IP qui sont automatiquement ajout&eacute; lorsqu'un client &eacute;tablit une communication avec le serveur.[br]Par exemple si un client se connecte avec son adresse &quot;interne&quot; comme 192.168.12.* , le serveur va automatiquement ajouter une route pour lui-m&ecirc;me 192.168.12.0/24 pour que le LAN puisse atteindre le poste distant li&eacute; par le tunnel VPN</clients_routes_add_text>
+<connection>Connexion</connection>
+<connexions>connexions</connexions>
+<connexion_name>Nom de la connexion</connexion_name>
+<context>contexte</context>
+<country_code>Code pays</country_code>
+<create_task>Cr&eacute;er un t&acirc;che</create_task>
+<crypted_connection>Connexion chiffr&eacute;e</crypted_connection>
+<debian_mirror>Miroir Debian</debian_mirror>
+<DEBIAN_REPOSITORIES>D&eacute;p&ocirc;ts Debian</DEBIAN_REPOSITORIES>
+<DNS_1>DNS Principal</DNS_1>
+<DNS_2>DNS secondaire</DNS_2>
+<download_tasks>T&acirc;ches de t&eacute;l&eacute;chargement</download_tasks>
+<dynamic>dynamique</dynamic>
+<enable_64bits>Activer le 64Bits</enable_64bits>
+<enable_apt_mirror>Activation du service de miroirs Debian/Ubuntu</enable_apt_mirror>
+<enable_debian_repository>Activer les d&eacute;p&ocirc;ts Debian</enable_debian_repository>
+<enable_in_left_menus>Afficher dans le menu de gauche</enable_in_left_menus>
+<enable_squatter_service>Activer le service d'indexation</enable_squatter_service>
+<enable_ubuntu_repository>Activer les d&eacute;p&ocirc;ts Ubuntu</enable_ubuntu_repository>
+<ENABLE_VPN_SERVER>Activation du serveur VPN</ENABLE_VPN_SERVER>
+<ENABLE_VPN_SERVER_TEXT>Activation du service VPN permettant aux postes clients ou routeurs de se connecter sur le port 1723 de ce serveur afin d'&eacute;tablir le tunnel VPN</ENABLE_VPN_SERVER_TEXT>
+<every_day_at>Chaque jour &agrave;</every_day_at>
+<gateway_vpn_server>serveur VPN comme passerelle</gateway_vpn_server>
+<GIVE_A_NOTE>Donnez une information</GIVE_A_NOTE>
+<HTTP_ADD_SAFE_PORTS_EXPLAIN>Vous pouvez utiliser :
+&quot;123 125 126&quot;: plusieurs ports en m&ecirc;me temps
+&quot;123-129&quot;: correspond &agrave; 123 124 125 126 127 128 129
+&quot;123&quot;: un seul port
+Sans les guillemets...</HTTP_ADD_SAFE_PORTS_EXPLAIN>
+<http_safe_ports>Ports autoris&eacute;s</http_safe_ports>
+<HTTP_SAFE_PORTS_EXPLAIN>Liste permettant de d&eacute;finir les ports qui vont &ecirc;tres autoris&eacute;s &agrave; sortir par d&eacute;faut.</HTTP_SAFE_PORTS_EXPLAIN>
+<imap_account>Compte IMAP</imap_account>
+<imap_accounts>Comptes IMAP</imap_accounts>
+<imap_server>Serveur IMAP</imap_server>
+<imported>import&eacute;</imported>
+<import_datas>Importer les donn&eacute;es</import_datas>
+<iproutes>Routages IP</iproutes>
+<ip_match>IP correspond &agrave;</ip_match>
+<link_databases>Nouvelle base de liaison</link_databases>
+<link_databases_emailing_text>Cr&eacute;ation d'une base &quot;virtuelle&quot; permettant de &quot;lier&quot; les donn&eacute;es d'autres tables.</link_databases_emailing_text>
+<link_net_from>Lier distant vers r&eacute;seau local</link_net_from>
+<link_net_to>Lier le r&eacute;seau &agrave;</link_net_to>
+<MAILBOXES_MIGRATION>Migration de comptes</MAILBOXES_MIGRATION>
+<MAILBOXES_MIGRATION_EXPLAIN>Dans ce formulaire, vous pouvez charger un fichier text (*.txt) avec les param&egrave;tres pr&eacute;-d&eacute;finis de vos utilisateurs &agrave; migrer.[br]Ceci afin de cr&eacute;er les bo&icirc;tes aux lettres, cr&eacute;er les comptes et importer le contenu des bo&icirc;tes aux lettres distante en une seule op&eacute;ration.[br]
+Le fichier texte doit contenir les informations format&eacute;es de la fa&ccedil;on suivante.[br]
+Les lignes doivent &ecirc;tres s&eacute;par&eacute;e par un retour chariot comme ]ceci : [br]
+[code]compte;mot de passe;serveur imap distant [/code][br][br]
+Si le serveur IMAP distant utilise SSL indiquez comme suffix &quot;ssl:&quot;[br]Exemple : 
+[br][code]jhon;123;ssl:imap.remotehost.com[/code][br]</MAILBOXES_MIGRATION_EXPLAIN>
+<MAILBOXES_MIGRATION_TEXT>Transf&eacute;rer en masse des utilisateurs et bo&icirc;tes aux lettres vers ce serveur</MAILBOXES_MIGRATION_TEXT>
+<make_unique_table_text>Toutes les adresses mails stock&eacute;s dans cette base seront supprim&eacute;s dans autres bases de votre organisation afin d'en fabriquer une base d'adresses &quot;uniques&quot;</make_unique_table_text>
+<MaxAttemtps>Tentatives MAX.</MaxAttemtps>
+<MaxTime>D&eacute;lai MAX.</MaxTime>
+<max_day_events>Nombre de jours de r&eacute;tention</max_day_events>
+<member>Membre</member>
+<merged_database>Base de liaison</merged_database>
+<merged_database_explain>Une base de liaison n'est pas une base r&eacute;elle mais une base virtuelle qui lie les autres bases sur un point unique</merged_database_explain>
+<move_to>D&eacute;placer vers</move_to>
+<NODB_SELECTED>Aucune base s&eacute;lectionn&eacute;e</NODB_SELECTED>
+<no_acl_arp>Pas de ACL ARP</no_acl_arp>
+<no_acl_arp_text>Squid n'est pas compil&eacute; avec la directive arp, les listes blanches et noires ne supporteront pas le filtrage par adresse MAC</no_acl_arp_text>
+<only>seulement</only>
+<only_days>seulement les jours</only_days>
+<ports>ports</ports>
+<PPTPD_EXPLAIN>PPTP (Point-to-point tunneling protocol) est un protocole d'encapsulation PPP sur IP con&ccedil;u par Microsoft, permettant la mise en place de r&eacute;seaux priv&eacute;s virtuels (VPN) au-dessus d'un r&eacute;seau public.[br]Layer 2 Tunneling Protocol (L2TP) et IPsec sont des protocoles inspir&eacute;s de PPTP et charg&eacute;s de le remplacer.[br]Cependant, le protocole PPTP continue d'&ecirc;tre utilis&eacute; car il est impl&eacute;ment&eacute; nativement sur les machines Windows depuis Windows 2000.[br]Toute machine Microsoft est donc capable de mettre en place un tunnel PPTP avec une machine distante sans ajout de m&eacute;canisme suppl&eacute;mentaire.</PPTPD_EXPLAIN>
+<PPTP_EXPLAIN_TEXT>Ce tunnel VPN utilise le port 1723 TCP (pas UDP) et le protocole GRE (general routing encapsulation - IP Protocol ID of 47 (0x2F) - GRE passthrough,
+basiquement l'option VPN passthrough, PPTP/IPSEC ).[br]
+Faites attention, certaines boitiers des fournisseurs d'acc&egrave;s d&eacute;sactivent l'utilisation du protocole GRE car ils l'utilisent en interne afin de se connecter sur votre boitier.[br]
+Si vous rencontrez des probl&egrave;mes d'authentification sur les postes Windows distants, assurez-vous que le GRE est activ&eacute;.[br]Le cas &eacute;ch&eacute;ant serait de mettre ce serveur Artica en DMZ</PPTP_EXPLAIN_TEXT>
+<preferred_org>organisation pr&eacute;f&eacute;r&eacute;e</preferred_org>
+<public_fqdn_name>Nom d'%u0125ote publique</public_fqdn_name>
+<repositories>D&eacute;p&ocirc;ts</repositories>
+<REPOSITORY_DEB_MIRROR>Miroir Debian</REPOSITORY_DEB_MIRROR>
+<REPOSITORY_DEB_MIRROR_TEXT>Construit un miroir de paquetages logiciels Debian ET/OU Ubuntu pour votre r&eacute;seau local</REPOSITORY_DEB_MIRROR_TEXT>
+<REPOSITORY_DEB_MIRROR_WHY>Disposer d'un miroir local Debian/Ubuntu est avantageux. Notamment si vous installez r&eacute;guli&egrave;rement des syst&egrave;mes Linux &agrave; base Debian dans votre r&eacute;seau.[br]
+Ainsi les paquetages n&eacute;cessaires pour l'installation et la mise &agrave; jour seront alors rapatri&eacute;s depuis ce serveur et non via Internet.[br]Cela permet alors d'all&eacute;ger votre bande passante.</REPOSITORY_DEB_MIRROR_WHY>
+<requests>requ&ecirc;tes</requests>
+<roundcube_instance>Instance RoundCube</roundcube_instance>
+<routes>Routage TCP</routes>
+<RUN_COMPILATION>Compiler...</RUN_COMPILATION>
+<RUN_COMPILATION_SARG>Lancer la compilation des statistiques maintenant.</RUN_COMPILATION_SARG>
+<sarg_access>Acc&egrave;s aux statistiques SQUID</sarg_access>
+<SARG_MEMBERS_EXPLAIN>Indiquez ici les membres autoris&eacute;s &agrave; visualiser le contenu des statistiques g&eacute;n&eacute;r&eacute;es par SARG</SARG_MEMBERS_EXPLAIN>
+<schedules>Ordonnancements</schedules>
+<see_complete_list>Voir la liste compl&egrave;te</see_complete_list>
+<server_ip>Adresse du serveur</server_ip>
+<SMTPHACK_RESOLUTION_FAILURE>&Eacute;chec temporaire dans la r&eacute;solution du nom</SMTPHACK_RESOLUTION_FAILURE>
+<SMTPHACK_TIMEOUTS>Trop de timeout</SMTPHACK_TIMEOUTS>
+<SMTPHACK_TOO_MANY_ERRORS>Trop d'erreurs dans le protocole SMTP</SMTPHACK_TOO_MANY_ERRORS>
+<SMTP_HACK_HOWTO>Indiquez les seuils du nombre maximal d'erreurs rencontr&eacute;es par le moteur SMTP.[br]Lorsque le seuil est atteint, un r&egrave;gle de pare-feu sera ajout&eacute;e.[br]Si vous voulez d&eacute;sactiver la surveillance d'une erreur particuli&egrave;re, indiquez [b]0[/b] dans le champs correspondant.</SMTP_HACK_HOWTO>
+<starting>D&eacute;marrage</starting>
+<stopping>Arr&ecirc;t</stopping>
+<tasks_list>Liste des t&acirc;ches</tasks_list>
+<terminated>Termin&eacute;</terminated>
+<UBUNTU_REPOSITORIES>D&eacute;p&ocirc;ts Ubuntu</UBUNTU_REPOSITORIES>
+<unkown>Inconnu</unkown>
+<updated_from_community>Mis &agrave; jour via la communaut&eacute;</updated_from_community>
+<use_default_route>Utiliser la route par d&eacute;faut</use_default_route>
+<use_this_schedule>Utiliser cette programmation</use_this_schedule>
+<vpn_members>Membres VPN</vpn_members>
+<vpn_server>Serveur VPN</vpn_server>
+<vpn_server_addr>Adresse du serveur VPN</vpn_server_addr>
+<webfilter_community_text>Affiche les sites web bannis et les cat&eacute;gories de la communaut&eacute; Artica</webfilter_community_text>
+<yes_acl_arp>Infos: listes blanches et noires</yes_acl_arp>
+<yes_acl_arp_text>Squid d&eacute;termine seulement les adresses MAC si le poste client est sur le m&ecirc;me r&eacute;seau. Le cas &eacute;ch&eacute;ant le filtrage par adresse MAC ne s'effectuera pas</yes_acl_arp_text>

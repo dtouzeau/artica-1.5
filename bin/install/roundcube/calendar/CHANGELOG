@@ -1,0 +1,20 @@
+RoundCube Calendar
+--------------------------------------------------------------------------------
+
+Version:   0.2 BETA 2
+License:   GNU GPL
+Copyright: (c) 2010 Lazlo Westerhof - Netherlands
+
+0.2 BETA 2
+--------------------------------------------------------------------------------
+basic event categories
+export calendar to ICS
+default view option
+several small bug fixes
+
+
+0.2 BETA
+--------------------------------------------------------------------------------
+full calendar
+custom backend support
+tooltips with event description

@@ -1,0 +1,243 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <ProjectOptions>
+    <PathDelim Value="/"/>
+    <Version Value="5"/>
+    <General>
+      <Flags>
+        <MainUnitHasUsesSectionForAllUnits Value="False"/>
+        <MainUnitHasCreateFormStatements Value="False"/>
+        <MainUnitHasTitleStatement Value="False"/>
+      </Flags>
+      <MainUnit Value="0"/>
+      <IconPath Value="./"/>
+      <TargetFileExt Value=""/>
+      <Title Value="Process1"/>
+      <ActiveEditorIndexAtStart Value="3"/>
+    </General>
+    <VersionInfo>
+      <ProjectVersion Value=""/>
+    </VersionInfo>
+    <PublishOptions>
+      <Version Value="2"/>
+      <IgnoreBinaries Value="False"/>
+      <IncludeFileFilter Value="*.(pas|pp|inc|lfm|lpr|lrs|lpi|lpk|sh|xml)"/>
+      <ExcludeFileFilter Value="*.(bak|ppu|ppw|o|so);*~;backup"/>
+    </PublishOptions>
+    <RunParams>
+      <local>
+        <FormatVersion Value="1"/>
+        <LaunchingApplication PathPlusParams="/usr/X11R6/bin/xterm -T 'Lazarus Run Output' -e $(LazarusDir)/tools/runwait.sh $(TargetCmdLine)"/>
+      </local>
+    </RunParams>
+    <Units Count="20">
+      <Unit0>
+        <Filename Value="artica_thread1.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="artica_thread1"/>
+        <CursorPos X="1" Y="82"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="0"/>
+        <UsageCount Value="28"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="process1.pas"/>
+        <UnitName Value="process1"/>
+        <CursorPos X="17" Y="112"/>
+        <TopLine Value="74"/>
+        <EditorIndex Value="1"/>
+        <UsageCount Value="14"/>
+        <Loaded Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="global_conf.pas"/>
+        <UnitName Value="global_conf"/>
+        <CursorPos X="59" Y="6640"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="3"/>
+        <UsageCount Value="14"/>
+        <Bookmarks Count="1">
+          <Item0 X="30" Y="6635" ID="0"/>
+        </Bookmarks>
+        <Loaded Value="True"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="process_infos.pas"/>
+        <UnitName Value="process_infos"/>
+        <CursorPos X="113" Y="39"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="2"/>
+        <UsageCount Value="14"/>
+        <Loaded Value="True"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="menus.pas"/>
+        <UnitName Value="menus"/>
+        <CursorPos X="51" Y="93"/>
+        <TopLine Value="62"/>
+        <UsageCount Value="14"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="/usr/share/fpcsrc/rtl/objpas/sysutils/sysstrh.inc"/>
+        <CursorPos X="10" Y="67"/>
+        <TopLine Value="29"/>
+        <UsageCount Value="14"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="zsystem.pas"/>
+        <UnitName Value="zsystem"/>
+        <CursorPos X="39" Y="52"/>
+        <TopLine Value="3"/>
+        <UsageCount Value="11"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="dbflaz.pas"/>
+        <UnitName Value="DBFLaz"/>
+        <CursorPos X="3" Y="10"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="11"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="registerdbf.pas"/>
+        <UnitName Value="RegisterDBF"/>
+        <CursorPos X="182" Y="11"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="10"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="fpcadds.pas"/>
+        <UnitName Value="FPCAdds"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="10"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="dynqueue.pas"/>
+        <UnitName Value="DynQueue"/>
+        <CursorPos X="22" Y="25"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="10"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="lclproc.pas"/>
+        <UnitName Value="LCLProc"/>
+        <CursorPos X="169" Y="7"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="10"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="avglvltree.pas"/>
+        <UnitName Value="AvgLvlTree"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="10"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="fileutil.pas"/>
+        <UnitName Value="FileUtil"/>
+        <CursorPos X="97" Y="20"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="10"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="lazconfigstorage.pas"/>
+        <UnitName Value="LazConfigStorage"/>
+        <CursorPos X="182" Y="18"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="10"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="lazaruspackageintf.pas"/>
+        <UnitName Value="LazarusPackageIntf"/>
+        <CursorPos X="184" Y="21"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="10"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="lclintf.pas"/>
+        <UnitName Value="lclintf"/>
+        <CursorPos X="222" Y="32"/>
+        <TopLine Value="15"/>
+        <UsageCount Value="10"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="/tmp/testcompileroptions.pas"/>
+        <UnitName Value="testcompileroptions"/>
+        <CursorPos X="120" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="10"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="/usr/lib/lazarus/lcl/interfacebase.pp"/>
+        <UnitName Value="InterfaceBase"/>
+        <CursorPos X="151" Y="28"/>
+        <TopLine Value="4"/>
+        <UsageCount Value="10"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="/usr/lib/lazarus/components/tdbf/registerdbf.pas"/>
+        <UnitName Value="RegisterDBF"/>
+        <CursorPos X="55" Y="8"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="10"/>
+      </Unit19>
+    </Units>
+    <JumpHistory Count="8" HistoryIndex="7">
+      <Position1>
+        <Filename Value="artica_thread1.pas"/>
+        <Caret Line="83" Column="1" TopLine="6"/>
+      </Position1>
+      <Position2>
+        <Filename Value="artica_thread1.pas"/>
+        <Caret Line="82" Column="2" TopLine="5"/>
+      </Position2>
+      <Position3>
+        <Filename Value="process1.pas"/>
+        <Caret Line="10" Column="56" TopLine="1"/>
+      </Position3>
+      <Position4>
+        <Filename Value="process1.pas"/>
+        <Caret Line="113" Column="10" TopLine="81"/>
+      </Position4>
+      <Position5>
+        <Filename Value="process1.pas"/>
+        <Caret Line="178" Column="14" TopLine="139"/>
+      </Position5>
+      <Position6>
+        <Filename Value="process1.pas"/>
+        <Caret Line="179" Column="30" TopLine="140"/>
+      </Position6>
+      <Position7>
+        <Filename Value="process1.pas"/>
+        <Caret Line="172" Column="1" TopLine="141"/>
+      </Position7>
+      <Position8>
+        <Filename Value="artica_thread1.pas"/>
+        <Caret Line="82" Column="1" TopLine="1"/>
+      </Position8>
+    </JumpHistory>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="5"/>
+    <Target>
+      <Filename Value="/home/dtouzeau/developpement/artica-postfix/bin/process1"/>
+    </Target>
+    <CodeGeneration>
+      <Generate Value="Faster"/>
+    </CodeGeneration>
+    <Other>
+      <CompilerPath Value="$(CompPath)"/>
+    </Other>
+  </CompilerOptions>
+  <Debugging>
+    <Exceptions Count="2">
+      <Item1>
+        <Name Value="ECodetoolError"/>
+      </Item1>
+      <Item2>
+        <Name Value="EFOpenError"/>
+      </Item2>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

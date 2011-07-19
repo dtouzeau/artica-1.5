@@ -1,0 +1,47 @@
+13:00:01 class.sockets.inc [LOCAL]::[] sockets/sockets:: ERROR: unable to stat /home/dtouzeau/developpement/artica-postfix/ressources/settings.inc line:  source file:exec.wifi.detect.cards.php
+13:00:01 class.sockets.inc [LOCAL]::[] sockets/sockets:: ERROR: unable to stat /home/dtouzeau/developpement/artica-postfix/ressources/settings.inc line:  source file:exec.wifi.detect.cards.php
+13:00:02 class.mysql.inc [LOCAL]::[] mysql/QUERY_SQL:: mysql password is null line:  line 361 source file:exec.mysql.build.php
+13:00:02 class.mysql.inc [LOCAL]::[] mysql/QUERY_SQL:: QUERY_SQL:: DB:"artica_events" Error Number () (Access denied for user 'root'@'localhost' (using password: NO)) config:localhost:3306@: (L.380) line:  line 380 source file:exec.mysql.build.php
+13:00:02 class.page.builder.inc [LOCAL]::[] pagebuilder/jsArtica:: HTTP_USER_AGENT::  line:  line 110 source file:exec.admin.status.postfix.flow.php
+13:00:02 class.page.builder.inc [LOCAL]::[] pagebuilder/jsArtica:: Using old method to load js : 1 line:  source file:exec.admin.status.postfix.flow.php
+13:00:02 class.sockets.inc [LOCAL]::[] sockets/getFrameWork:: ERROR: unable to open remote file http://127.0.0.1:47980/cmd.php?disk-get-label=/dev/sda1 line:  source file:exec.admin.status.postfix.flow.php
+13:00:02 class.sockets.inc [LOCAL]::[] sockets/getFrameWork:: ERROR: unable to open remote file http://127.0.0.1:47980/cmd.php?disk-get-label=/dev/sdb1 line:  source file:exec.admin.status.postfix.flow.php
+13:00:03 class.sockets.inc [LOCAL]::[] sockets/getFrameWork:: ERROR: unable to open remote file http://127.0.0.1:47980/cmd.php?uri=artica_version line:  source file:exec.admin.status.postfix.flow.php
+13:00:03 class.sockets.inc [LOCAL]::[] sockets/getFrameWork:: ERROR: unable to open remote file http://127.0.0.1:47980/cmd.php?dnslist=yes line:  source file:exec.admin.status.postfix.flow.php
+13:00:03 class.sockets.inc [LOCAL]::[] sockets/getFrameWork:: ERROR: unable to open remote file http://127.0.0.1:47980/cmd.php?full-hostname=yes line:  source file:exec.admin.status.postfix.flow.php
+13:00:03 class.system.network.inc [LOCAL]::[] networking/networking:: Loading success  called by exec.admin.status.postfix.flow.php daemons_status() line 87 line:  source file:exec.admin.status.postfix.flow.php
+13:00:03 class.ldap.inc [LOCAL]::[] clladp/ldap_perform_connection:: -> Call to undefined function ldap_connect()  called by exec.admin.status.postfix.flow.php hash_get_ou() line 252310 line:  line 310 source file:exec.admin.status.postfix.flow.php
+14:00:04 class.mysql.inc [LOCAL]::[] mysql/QUERY_SQL:: mysql password is null line:  line 361 source file:exec.mysql.build.php
+14:00:04 class.mysql.inc [LOCAL]::[] mysql/QUERY_SQL:: QUERY_SQL:: DB:"artica_events" Error Number () (Access denied for user 'root'@'localhost' (using password: NO)) config:localhost:3306@: (L.380) line:  line 380 source file:exec.mysql.build.php
+14:00:04 class.page.builder.inc [LOCAL]::[] pagebuilder/jsArtica:: HTTP_USER_AGENT::  line:  line 110 source file:exec.admin.status.postfix.flow.php
+14:00:04 class.page.builder.inc [LOCAL]::[] pagebuilder/jsArtica:: Using old method to load js : 1 line:  source file:exec.admin.status.postfix.flow.php
+14:00:04 class.sockets.inc [LOCAL]::[] sockets/getFrameWork:: ERROR: unable to open remote file http://127.0.0.1:47980/cmd.php?disk-get-label=/dev/sda1 line:  source file:exec.admin.status.postfix.flow.php
+14:00:04 class.sockets.inc [LOCAL]::[] sockets/getFrameWork:: ERROR: unable to open remote file http://127.0.0.1:47980/cmd.php?disk-get-label=/dev/sdb1 line:  source file:exec.admin.status.postfix.flow.php
+14:00:04 class.sockets.inc [LOCAL]::[] sockets/getFrameWork:: ERROR: unable to open remote file http://127.0.0.1:47980/cmd.php?uri=artica_version line:  source file:exec.admin.status.postfix.flow.php
+14:00:04 class.sockets.inc [LOCAL]::[] sockets/getFrameWork:: ERROR: unable to open remote file http://127.0.0.1:47980/cmd.php?dnslist=yes line:  source file:exec.admin.status.postfix.flow.php
+14:00:04 class.sockets.inc [LOCAL]::[] sockets/getFrameWork:: ERROR: unable to open remote file http://127.0.0.1:47980/cmd.php?full-hostname=yes line:  source file:exec.admin.status.postfix.flow.php
+14:00:04 class.system.network.inc [LOCAL]::[] networking/networking:: Loading success  called by exec.admin.status.postfix.flow.php daemons_status() line 87 line:  source file:exec.admin.status.postfix.flow.php
+14:00:04 class.ldap.inc [LOCAL]::[] clladp/ldap_perform_connection:: -> Call to undefined function ldap_connect()  called by exec.admin.status.postfix.flow.php hash_get_ou() line 252310 line:  line 310 source file:exec.admin.status.postfix.flow.php
+15:00:03 class.mysql.inc [LOCAL]::[] mysql/QUERY_SQL:: mysql password is null line:  line 361 source file:exec.mysql.build.php
+15:00:03 class.mysql.inc [LOCAL]::[] mysql/QUERY_SQL:: QUERY_SQL:: DB:"artica_events" Error Number () (Access denied for user 'root'@'localhost' (using password: NO)) config:localhost:3306@: (L.380) line:  line 380 source file:exec.mysql.build.php
+15:00:03 class.page.builder.inc [LOCAL]::[] pagebuilder/jsArtica:: HTTP_USER_AGENT::  line:  line 110 source file:exec.admin.status.postfix.flow.php
+15:00:03 class.page.builder.inc [LOCAL]::[] pagebuilder/jsArtica:: Using old method to load js : 1 line:  source file:exec.admin.status.postfix.flow.php
+15:00:03 class.sockets.inc [LOCAL]::[] sockets/getFrameWork:: ERROR: unable to open remote file http://127.0.0.1:47980/cmd.php?disk-get-label=/dev/sda1 line:  source file:exec.admin.status.postfix.flow.php
+15:00:03 class.sockets.inc [LOCAL]::[] sockets/getFrameWork:: ERROR: unable to open remote file http://127.0.0.1:47980/cmd.php?disk-get-label=/dev/sdb1 line:  source file:exec.admin.status.postfix.flow.php
+15:00:03 class.sockets.inc [LOCAL]::[] sockets/getFrameWork:: ERROR: unable to open remote file http://127.0.0.1:47980/cmd.php?uri=artica_version line:  source file:exec.admin.status.postfix.flow.php
+15:00:03 class.sockets.inc [LOCAL]::[] sockets/getFrameWork:: ERROR: unable to open remote file http://127.0.0.1:47980/cmd.php?dnslist=yes line:  source file:exec.admin.status.postfix.flow.php
+15:00:03 class.sockets.inc [LOCAL]::[] sockets/getFrameWork:: ERROR: unable to open remote file http://127.0.0.1:47980/cmd.php?full-hostname=yes line:  source file:exec.admin.status.postfix.flow.php
+15:00:03 class.system.network.inc [LOCAL]::[] networking/networking:: Loading success  called by exec.admin.status.postfix.flow.php daemons_status() line 87 line:  source file:exec.admin.status.postfix.flow.php
+15:00:03 class.ldap.inc [LOCAL]::[] clladp/ldap_perform_connection:: -> Call to undefined function ldap_connect()  called by exec.admin.status.postfix.flow.php hash_get_ou() line 252310 line:  line 310 source file:exec.admin.status.postfix.flow.php
+16:00:05 class.mysql.inc [LOCAL]::[] mysql/QUERY_SQL:: mysql password is null line:  line 361 source file:exec.mysql.build.php
+16:00:05 class.mysql.inc [LOCAL]::[] mysql/QUERY_SQL:: QUERY_SQL:: DB:"artica_events" Error Number () (Access denied for user 'root'@'localhost' (using password: NO)) config:localhost:3306@: (L.380) line:  line 380 source file:exec.mysql.build.php
+16:00:05 class.page.builder.inc [LOCAL]::[] pagebuilder/jsArtica:: HTTP_USER_AGENT::  line:  line 110 source file:exec.admin.status.postfix.flow.php
+16:00:05 class.page.builder.inc [LOCAL]::[] pagebuilder/jsArtica:: Using old method to load js : 1 line:  source file:exec.admin.status.postfix.flow.php
+16:00:06 class.sockets.inc [LOCAL]::[] sockets/getFrameWork:: ERROR: unable to open remote file http://127.0.0.1:47980/cmd.php?disk-get-label=/dev/sda1 line:  source file:exec.admin.status.postfix.flow.php
+16:00:06 class.sockets.inc [LOCAL]::[] sockets/getFrameWork:: ERROR: unable to open remote file http://127.0.0.1:47980/cmd.php?disk-get-label=/dev/sdb1 line:  source file:exec.admin.status.postfix.flow.php
+16:00:06 class.sockets.inc [LOCAL]::[] sockets/getFrameWork:: ERROR: unable to open remote file http://127.0.0.1:47980/cmd.php?disk-get-label=/dev/sdc1 line:  source file:exec.admin.status.postfix.flow.php
+16:00:06 class.sockets.inc [LOCAL]::[] sockets/getFrameWork:: ERROR: unable to open remote file http://127.0.0.1:47980/cmd.php?uri=artica_version line:  source file:exec.admin.status.postfix.flow.php
+16:00:06 class.sockets.inc [LOCAL]::[] sockets/getFrameWork:: ERROR: unable to open remote file http://127.0.0.1:47980/cmd.php?dnslist=yes line:  source file:exec.admin.status.postfix.flow.php
+16:00:06 class.sockets.inc [LOCAL]::[] sockets/getFrameWork:: ERROR: unable to open remote file http://127.0.0.1:47980/cmd.php?full-hostname=yes line:  source file:exec.admin.status.postfix.flow.php
+16:00:06 class.system.network.inc [LOCAL]::[] networking/networking:: Loading success  called by exec.admin.status.postfix.flow.php daemons_status() line 87 line:  source file:exec.admin.status.postfix.flow.php
+16:00:06 class.ldap.inc [LOCAL]::[] clladp/ldap_perform_connection:: -> Call to undefined function ldap_connect()  called by exec.admin.status.postfix.flow.php hash_get_ou() line 252310 line:  line 310 source file:exec.admin.status.postfix.flow.php

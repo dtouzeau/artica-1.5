@@ -1,0 +1,96 @@
+#! /bin/bash
+
+### BEGIN INIT INFO
+# Provides:       mailspy
+# Required-Start: sendmail
+# Required-Stop:
+# Default-Start:  3 5
+# Default-Stop:
+# Description:    Start the mailspy thingy
+### END INIT INFO
+
+# chkconfig: 2345 80 30
+# description: Mailspy spies on your mail.
+# processname: mailspy
+# config: /etc/mailspy.conf
+# pidfile: /var/run/mailspy/pid
+
+#
+# Generic mailspy stop start script - for SuSE, Redhat, and maybe others.
+#
+
+HTMLDIR=/usr/local/httpd/htdocs/mailspy
+RUNDIR="/var/run/mailspy"
+MAILSPYSOCKET=$RUNDIR/milter
+MAILSPYPIDFILE=$RUNDIR/pid
+LOGDIR=/var/log/mailspy
+LOGFILE=/var/log/mailspy/mailspy
+MAILSPYUSER=mailspy
+WEEKS=52
+MAILSPYBIN=/usr/local/bin/mailspy
+
+# Comment out if you don't want to do one of these
+LOGTOFILE="-f $LOGFILE"
+# LOGALLMAIL="-P procmail"
+
+case "$1" in
+    start)
+	echo "Starting mailspy"
+	id mailspy &> /dev/null || {
+		echo "Creating mailspy user, installing .procmailrc"
+		useradd -s /dev/null $MAILSPYUSER
+		mkdir -p ~mailspy/Mail
+		cp /usr/local/bin/mailspy-procmailrc ~mailspy/.procmailrc
+		chown -R mailspy ~mailspy
+		grep -q "^$MAILSPYUSER:" /etc/aliases ||
+		echo "$MAILSPYUSER: /dev/null" >> /etc/aliases
+		newaliases
+		crontab -u mailspy /usr/local/bin/crontab.spy
+	}
+	[ -d $RUNDIR -a -d $HTMLDIR ] || {
+		mkdir -p $RUNDIR \
+			$HTMLDIR \
+			$LOGDIR
+		touch   $MAILSPYPIDFILE \
+			$LOGFILE 
+		for (( EXT=1; EXT<WEEKS; EXT++)) ; do
+			touch $LOGFILE.$EXT
+			chown $MAILSPYUSER $LOGFILE.$EXT
+		done
+		chown -R $MAILSPYUSER \
+			$MAILSPYPIDFILE \
+			$LOGDIR \
+			$RUNDIR \
+			$HTMLDIR
+	}
+	# Kill any instances lying around ...
+	# kill -TERM `cat $MAILSPYPIDFILE`
+	rm -f $MAILSPYSOCKET
+	# use /bin/sh to avoid running /root/.bashrc
+	su -s /bin/sh mailspy -c "cd ; exec $MAILSPYBIN $LOGALLMAIL $LOGTOFILE -p $MAILSPYSOCKET & echo \$! > $MAILSPYPIDFILE" < /dev/null >& /dev/null
+	;;
+    stop)
+	echo -ne "Stopping mailspy .. TERM .."
+	kill -TERM `cat $MAILSPYPIDFILE`
+	sleep 5
+	echo "KILL .."
+	kill -KILL `cat $MAILSPYPIDFILE` >& /dev/null
+	> $MAILSPYPIDFILE
+	;;
+    restart|reload)
+	$0 stop
+	$0 start
+	;;
+    status)
+	if kill -0 `cat "$MAILSPYPIDFILE"`  ; then
+		echo Running `cat "$MAILSPYPIDFILE"`
+	else
+		echo Not running
+	fi
+	;;
+    *)
+	echo "Usage: $0 {start|stop|restart|reload}"
+	exit 1
+	;;
+esac
+

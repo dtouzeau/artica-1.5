@@ -1,0 +1,33 @@
+#
+# mozillaOrgPerson schema v. 0.6.3
+#
+
+# req. core
+# req. cosine
+# req. inetorgperson
+
+# attribute defs
+
+attributetype ( 1.3.6.1.4.1.13769.2.1.1 NAME ( 'mozillaNickname' ) SUP name )
+attributetype ( 1.3.6.1.4.1.13769.2.1.2 NAME ( 'mozillaUseHtmlMail' ) SYNTAX 1.3.6.1.4.1.1466.115.121.1.7 SINGLE-VALUE )
+attributetype ( 1.3.6.1.4.1.13769.2.1.3 NAME 'mozillaSecondEmail' EQUALITY caseIgnoreIA5Match SUBSTR caseIgnoreIA5SubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256} )
+attributetype ( 1.3.6.1.4.1.13769.2.1.4 NAME 'mozillaHomeLocalityName' EQUALITY caseIgnoreMatch SUBSTR caseIgnoreSubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{128} )
+attributetype ( 1.3.6.1.4.1.13769.2.1.5 NAME 'mozillaPostalAddress2' EQUALITY caseIgnoreListMatch SUBSTR caseIgnoreListSubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.41 )
+attributetype ( 1.3.6.1.4.1.13769.2.1.6 NAME 'mozillaHomePostalAddress2' EQUALITY caseIgnoreListMatch SUBSTR caseIgnoreListSubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.41 )
+attributetype ( 1.3.6.1.4.1.13769.2.1.7 NAME ( 'mozillaHomeState' ) SUP name ) 
+attributetype ( 1.3.6.1.4.1.13769.2.1.8 NAME 'mozillaHomePostalCode' EQUALITY caseIgnoreMatch SUBSTR caseIgnoreSubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{40} )
+attributetype ( 1.3.6.1.4.1.13769.2.1.9 NAME ( 'mozillaHomeCountryName' ) SUP name SINGLE-VALUE ) 
+attributetype ( 1.3.6.1.4.1.13769.2.1.10 NAME ( 'mozillaHomeFriendlyCountryName' ) EQUALITY caseIgnoreMatch SUBSTR caseIgnoreSubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+attributetype ( 1.3.6.1.4.1.13769.2.1.11 NAME ( 'mozillaHomeUrl' ) EQUALITY caseIgnoreIA5Match SUBSTR caseIgnoreIA5SubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256} )
+attributetype ( 1.3.6.1.4.1.13769.2.1.12 NAME ( 'mozillaWorkUrl' ) EQUALITY caseIgnoreIA5Match SUBSTR caseIgnoreIA5SubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256} )
+attributetype ( 1.3.6.1.4.1.13769.2.1.13 NAME ( 'nsAIMid' ) DESC 'AOL Instant Messenger (AIM) Identity' EQUALITY telephoneNumberMatch SUBSTR telephoneNumberSubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.50 )
+attributetype ( 1.3.6.1.4.1.13769.2.1.14 NAME ( 'mozillaHomeStreet' ) EQUALITY caseIgnoreMatch SUBSTR caseIgnoreSubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{128} )
+attributetype ( 1.3.6.1.4.1.13769.2.1.96 NAME ( 'mozillaCustom1' ) SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE ) 
+attributetype ( 1.3.6.1.4.1.13769.2.1.97 NAME ( 'mozillaCustom2' ) SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+attributetype ( 1.3.6.1.4.1.13769.2.1.98 NAME ( 'mozillaCustom3' ) SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+attributetype ( 1.3.6.1.4.1.13769.2.1.99 NAME ( 'mozillaCustom4' ) SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+
+objectclass ( 1.3.6.1.4.1.13769.2.2.1 NAME 'mozillaOrgPerson' SUP top AUXILIARY 
+ MAY (sn $ givenName $ cn $ mozillaNickname $ title $ telephoneNumber $ facsimileTelephoneNumber $ mobile $ pager $ homePhone $ street $ postalCode $ mozillaPostalAddress2 $ mozillaHomeStreet $ mozillaHomePostalAddress2 $ l $ mozillaHomeLocalityName $ st $ mozillaHomeState $ mozillaHomePostalCode $ c $ mozillaHomeCountryName $ co $ mozillaHomeFriendlyCountryName $ ou $ o $ mail $ mozillaSecondEmail $ mozillaUseHtmlMail $ nsAIMid $ mozillaHomeUrl $ mozillaWorkUrl $ description $ mozillaCustom1 $ mozillaCustom2 $ mozillaCustom3 $ mozillaCustom4 ) )
+
+

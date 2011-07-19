@@ -1,0 +1,2 @@
+<folders_statistics>Statistiques des dossiers</folders_statistics>
+<parameters_text>Vous pouvez modifier / ajouter des dossiers que vous voulez voir dans les statistiques</parameters_text>

@@ -1,0 +1,33 @@
+<APP_CLAMAV_INSTALL_INFOS>The order has been sent to the Setup Application Center:</APP_CLAMAV_INSTALL_INFOS>
+<APP_CLAMAV_MILTER_TEXT>Milter plugin used with Postfix Mail server in order to scan email flow</APP_CLAMAV_MILTER_TEXT>
+<APP_CLAMAV_TEXT>This is a daemon that serve scanning requests in order to speed the scanning time</APP_CLAMAV_TEXT>
+<APP_CLAMSCAN_TEXT>Command-line tool to perform single scanning</APP_CLAMSCAN_TEXT>
+<APP_FRESHCLAM_TEXT>Used to update ClamAV patterns regulary</APP_FRESHCLAM_TEXT>
+<Checks>Database checks</Checks>
+<Checks_text>Number of database checks per day</Checks_text>
+<CLAMAV_NOT_INSTALLED_CLICK_TO_INSTALL>[b]Clam Antivirus is not installed on your server[b].[br]
+If you want to install it, click on the icon below to perform installation trough internet</CLAMAV_NOT_INSTALLED_CLICK_TO_INSTALL>
+<daily_cld>Daily main antivirus databases</daily_cld>
+<explain>What is ?</explain>
+<INSTALL_CLAMAV>Install Clam Antivirus</INSTALL_CLAMAV>
+<INSTALL_CLAMAV_PROGRESS>Clam Antivirus installation in progress, click here to see installation events</INSTALL_CLAMAV_PROGRESS>
+<INSTALL_CLAMAV_TEXT>This operation will compile and install latest Clam Antivirus version on your server.</INSTALL_CLAMAV_TEXT>
+<junk_ndb>Phishing, malware, ecards, spam, 419s, lottery, job, stocks</junk_ndb>
+<lott_ndb>Simple lottery scams (type 7 signatures)</lott_ndb>
+<main_cld>Main antivirus databases</main_cld>
+<MaxAttempts>Maximum attempts</MaxAttempts>
+<MaxAttempts_text>How many attempts (per mirror) to make before giving up</MaxAttempts_text>
+<mirrors>mirrors</mirrors>
+<MSRBL-Images_hdb>Images contained within spam emails</MSRBL-Images_hdb>
+<MSRBL-SPAM_ndb>Spam emails (URLs or other content that looks static)</MSRBL-SPAM_ndb>
+<phish_ndb>Phishing, malware, ecards</phish_ndb>
+<RECOMPILE_CLAMAV_TEXT>This operation will recompile or force upgrade of your current Clam Antivirus version</RECOMPILE_CLAMAV_TEXT>
+<rogue_hdb>Fake anti-virus software, other malware</rogue_hdb>
+<scam_ndb>Spam, 419s, lottery, job, stocks</scam_ndb>
+<security_info>Additionals pattern from /www.securiteinfo.com</security_info>
+<spamimg_hdb>Spam images</spamimg_hdb>
+<spam_ldb>Spam (using logical signatures)</spam_ldb>
+<spear_ndb>Email spears/phishing</spear_ndb>
+<winnow_malware_hdb>Current virus, trojan and other malware not yet detected by ClamAV</winnow_malware_hdb>
+<winnow_phish_complete_ndb>Signatures to detect phishing and other malicious url's and compromised hosts</winnow_phish_complete_ndb>
+<winnow_phish_complete_url_ndb>Similar to "Signatures to detect phishing" except that entire urls's are used to derive the signatures rather than carefully selected hosts</winnow_phish_complete_url_ndb>

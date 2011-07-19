@@ -1,0 +1,9 @@
+<action_killmail>Delete</action_killmail>
+<action_prepend>Prepend the subject with text</action_prepend>
+<action_quarantine>Save into my Spam Quarantine area</action_quarantine>
+<org_antispam_rules>Default organization antispam rules</org_antispam_rules>
+<prepend_text>Prepend text</prepend_text>
+<spam_detection_rate>When detection rate exceed</spam_detection_rate>
+<spam_rules_intro>Kaspersky analyzes all incoming mail and assigns each message a score between 0 and 100, 
+where 0 is not spam and 100 is definitely spam.[br]
+You can define 2 rules that could correspond to your need.[br]</spam_rules_intro>

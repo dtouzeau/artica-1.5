@@ -1,0 +1,66 @@
+﻿# Un grand merci à Yann Le Moigne pour ces instructions
+
+# Récupérer le tarball de la dernière version (par exemple la 1.27)
+wget http://alan.petitepomme.net/camlgrenouille/camlgrenouille-bin-linux-1.27.tar.gz
+
+# Décompresser
+tar xvzf camlgrenouille-bin-linux-1.27.tar.gz
+
+# 'Installation'
+cd camlgrenouille-bin-linux-1.27
+mkdir /usr/local/share/camlgrenouille
+cp shell_ifconfig.sh /usr/local/share/camlgrenouille
+cp dllstr.so dllunix.so /usr/local/lib
+cp camlgrenouille /usr/local/bin
+cp user.config /etc/camlgrenouille
+
+# Configurer
+# modify line :     plugin "./shell_ifconfig..sh"      to     plugin "/usr/local/share/camlgrenouille/shell_ifconfig.sh"
+#
+# check other vars according to README file
+vim /etc/camlgrenouille
+
+---
+
+
+Créer un nouveau fichier /etc/conf.d/camlgrenouille
+-------- cut ---------
+# Logging file
+#   empty mean no logging
+
+GRENOUILLE_LOG=""
+-------------------------
+
+
+
+
+
+Créer un nouveau fichier /etc/init.d/camlgrenouille
+-------- cut ---------
+#!/sbin/runscript
+
+depend() {
+        need net
+}
+
+start() {
+        ebegin "Starting Grenouille daemon"
+        LOG_FILE="/dev/null"
+        if [ -n "${GRENOUILLE_LOG}" ]; then
+                LOG_FILE="${GRENOUILLE_LOG}"
+        fi
+        start-stop-daemon --start --quiet --exec /usr/local/bin/camlgrenouille -- -f /etc/camlgrenouille &>${LOG_FILE} & 
+        eend $?
+}
+
+stop() {
+        ebegin "Stopping Grenouille daemon"
+        start-stop-daemon --stop --quiet --exec /usr/local/bin/camlgrenouille
+        eend $?
+}
+------------------------ 
+
+Executer les commandes suivantes:
+# chmod a+rx /etc/init.d/camlgrenouille
+# /etc/init.d/camlgrenouille start
+# rc-update add camlgrenouille default

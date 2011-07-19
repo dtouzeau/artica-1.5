@@ -1,0 +1,336 @@
+unit samba;
+
+{$mode objfpc}{$H+}
+interface
+
+uses
+Classes, SysUtils,variants,strutils,IniFiles, Process,md5,logs,unix,RegExpr in 'RegExpr.pas';
+
+  type
+  Tsamba=class
+
+
+private
+     LOGS:Tlogs;
+     artica_path:string;
+     GLOBAL_INI:TiniFIle;
+     function COMMANDLINE_PARAMETERS(FoundWhatPattern:string):boolean;
+     function get_LDAP(key:string):string;
+     procedure StripDiezes(filepath:string);
+
+public
+    procedure Free;
+    constructor Create;
+    procedure smbldap_install();
+    procedure smbldap_conf();
+    procedure libnss_conf();
+    procedure pam_ldap_conf();
+    procedure nsswitch_conf();
+    procedure default_config();
+END;
+
+implementation
+
+constructor Tsamba.Create;
+begin
+       forcedirectories('/etc/artica-postfix');
+       LOGS:=tlogs.Create();
+       if not DirectoryExists('/usr/share/artica-postfix') then begin
+              artica_path:=ParamStr(0);
+              artica_path:=ExtractFilePath(artica_path);
+              artica_path:=AnsiReplaceText(artica_path,'/bin/','');
+
+      end else begin
+  artica_path:='/usr/share/artica-postfix';
+  end;
+       
+end;
+//##############################################################################
+procedure Tsamba.free();
+begin
+    logs.FRee;
+    
+
+end;
+//##############################################################################
+procedure Tsamba.nsswitch_conf();
+var
+  l:TstringList;
+  ltmp:TstringList;
+  i:integer;
+begin
+  l:=TstringList.Create;
+l.Add('# /etc/nsswitch.conf');
+l.Add('#');
+l.Add('# Example configuration of GNU Name Service Switch functionality.');
+l.Add('# If you have the `glibc-doc-reference'' and `info'' packages installed, try:');
+l.Add('# `info libc "Name Service Switch"'' for information about this file.');
+l.Add('');
+l.Add('passwd:         compat ldap');
+l.Add('group:          compat ldap');
+l.Add('shadow:         compat ldap');
+l.Add('');
+l.Add('hosts:          files mdns4_minimal [NOTFOUND=return] dns mdns4');
+l.Add('networks:       files');
+l.Add('');
+l.Add('protocols:      db files');
+l.Add('services:       db files');
+l.Add('ethers:         db files');
+l.Add('rpc:            db files');
+l.Add('');
+l.Add('netgroup:       nis');
+l.SaveToFile('/etc/nsswitch.conf');
+l.free;
+end;
+//##############################################################################
+function Tsamba.COMMANDLINE_PARAMETERS(FoundWhatPattern:string):boolean;
+var
+   i:integer;
+   s:string;
+   RegExpr:TRegExpr;
+
+begin
+ s:='';
+ result:=false;
+ if ParamCount>1 then begin
+     for i:=2 to ParamCount do begin
+        s:=s  + ' ' +ParamStr(i);
+     end;
+ end;
+   RegExpr:=TRegExpr.Create;
+   RegExpr.Expression:=FoundWhatPattern;
+   if RegExpr.Exec(s) then begin
+      RegExpr.Free;
+      result:=True;
+   end;
+
+
+end;
+//##############################################################################
+procedure Tsamba.smbldap_install();
+var
+  l:TstringList;
+  ltmp:TstringList;
+  i:integer;
+begin
+
+if not DirectoryExists('/opt/artica/samba/sbin') then exit;
+
+  l:=TstringList.Create;
+l.Add('smbldap-usershow');
+l.Add('smbldap-useradd');
+l.Add('smbldap-usermod');
+l.Add('smbldap-userlist');
+l.Add('smbldap-passwd');
+l.Add('smbldap-populate');
+l.Add('smbldap-groupdel');
+l.Add('smbldap-groupshow');
+l.Add('smbldap-groupadd');
+l.Add('smbldap-tools.spec');
+l.Add('smbldap-userdel');
+l.Add('smbldap-userinfo');
+l.Add('smbldap-groupmod');
+l.Add('smbldap_tools.pm');
+l.Add('smbencrypt');
+
+
+
+ for i:=0 to l.Count -1 do begin
+    if not FileExists('/opt/artica/samba/sbin/' + l.Strings[i]) then begin
+        fpsystem('/bin/cp ' + artica_path + '/bin/install/smbldaptools/' + l.Strings[i] + ' /opt/artica/samba/sbin/');
+    end;
+ 
+ end;
+ltmp:=TstringList.Create;
+     for i:=0 to l.Count -1 do begin
+         ltmp.LoadFromFile('/opt/artica/samba/sbin/'+ l.Strings[i]);
+              if length(ltmp.Text)>0 then begin
+                 if pos('!/usr/bin/perl',ltmp.Strings[0])>0 then begin
+                    ltmp.Strings[0]:='#!/opt/artica/bin/perl';
+                    ltmp.SaveToFile(l.Strings[i]);
+                    ltmp.Clear;
+                 end;
+              end;
+     end;
+ltmp.Free;
+l.Free;
+smbldap_conf();
+end;
+//##############################################################################
+procedure Tsamba.libnss_conf();
+var
+  l:TstringList;
+  server,port:string;
+begin
+   l:=TstringList.Create;
+  server:=Get_LDAP('server');
+  port:=Get_LDAP('port');
+  if server='*' then server:='127.0.0.1';
+  if length(port)=0 then port:='389';
+l.Add('host '+ server + ':' + port);
+l.Add('base ' + get_LDAP('suffix'));
+l.Add('uri ldap://' + server + ':' + port);
+l.Add('ldap_version 3');
+l.Add('bind_policy soft');
+l.SaveToFile('/etc/libnss-ldap.conf');
+  l.free;
+end;
+
+//##############################################################################
+procedure Tsamba.pam_ldap_conf();
+var
+  l:TstringList;
+  server,port:string;
+begin
+  l:=TstringList.Create;
+  server:=Get_LDAP('server');
+  port:=Get_LDAP('port');
+  if server='*' then server:='127.0.0.1';
+  if length(port)=0 then port:='389';
+  l.Add('host '+ server + ':' + port);
+  l.Add('base ' + get_LDAP('suffix'));
+  l.Add('uri ldap://' + server + ':' + port);
+  l.Add('ldap_version 3');
+  l.SaveToFile('/etc/pam_ldap.conf');
+  l.free;
+end;
+//##############################################################################
+procedure Tsamba.default_config();
+var
+  m:TiniFile;
+  configfile:string;
+  tmpstr:string;
+  server,port,admin:string;
+begin
+if FileExists('/etc/samba/smb.conf') then configfile:='/etc/samba/smb.conf';
+  StripDiezes(configfile);
+  admin:='cn='+get_LDAP('admin')+','+get_LDAP('suffix');
+  server:=Get_LDAP('server');
+  port:=Get_LDAP('port');
+  if server='*' then server:='127.0.0.1';
+  if length(port)=0 then port:='389';
+
+m:=TiniFile.Create('/etc/samba/smb.conf');
+tmpstr:=m.ReadString('global','ldap suffix','');
+if length(tmpstr)>0 then exit;
+  m.WriteString('global','ldap passwd sync','Yes');
+  m.WriteString('global','passdb backend','ldapsam:ldap://' + server + ':' + port+'/');
+  m.WriteString('global','ldap admin dn',admin);
+  m.WriteString('global','ldap suffix',get_LDAP('suffix'));
+  m.WriteString('global','socket options','TCP_NODELAY SO_RCVBUF=8192 SO_SNDBUF=8192');
+  m.UpdateFile;
+  m.FRee;
+end;
+//##############################################################################
+procedure Tsamba.StripDiezes(filepath:string);
+var
+list,list2:TstringList;
+i,n:integer;
+line:string;
+RegExpr:TRegExpr;
+begin
+ RegExpr:=TRegExpr.create;
+ RegExpr.expression:='#';
+    if not FileExists(filepath) then exit;
+    list:=TstringList.Create();
+    list2:=TstringList.Create();
+    list.LoadFromFile(filepath);
+    n:=-1;
+    For i:=0 to  list.Count-1 do begin
+        n:=n+1;
+         line:=list.Strings[i];
+         if length(line)>0 then begin
+
+            if not RegExpr.Exec(list.Strings[i])  then begin
+               list2.Add(list.Strings[i]);
+            end;
+         end;
+    end;
+
+     killfile(filepath);
+     list2.SaveToFile(filepath);
+
+    RegExpr.Free;
+    list2.Free;
+    list.Free;
+end;
+ //##############################################################################
+
+
+
+procedure Tsamba.smbldap_conf();
+var
+  l:TstringList;
+  server,port:string;
+begin
+ forcedirectories('/etc/smbldap-tools');
+ 
+l:=TstringList.Create;
+
+
+l.Add('slaveDN="cn='+get_LDAP('admin')+','+get_LDAP('suffix')+'"');
+l.Add('slavePw='+get_LDAP('password'));
+l.Add('masterDN="cn='+get_LDAP('admin')+','+get_LDAP('suffix')+'"');
+l.Add('masterPw='+get_LDAP('password'));
+l.SaveToFile('/etc/smbldap-tools/smbldap_bind.conf');
+l.Clear;
+
+  server:=Get_LDAP('server');
+  port:=Get_LDAP('port');
+  if server='*' then server:='127.0.0.1';
+  if length(port)=0 then port:='389';
+  
+  
+l.Add('slaveLDAP="'+server+'"');
+l.Add('slavePort="'+port+'"');
+l.Add('masterLDAP="'+server+'"');
+l.Add('masterPort="'+port+'"');
+l.Add('ldapTLS="0"');
+l.Add('verify="require"');
+l.Add('suffix="'+get_LDAP('suffix')+'"');
+l.Add('usersdn="${suffix}"');
+l.Add('computersdn="${suffix}"');
+l.Add('groupsdn="${suffix}"');
+l.Add('idmapdn="${suffix}"');
+l.Add('sambaUnixIdPooldn="cn=NextFreeUnixId,${suffix}"');
+l.Add('scope="sub"');
+l.Add('hash_encrypt="CLEARTEXT"');
+l.Add('crypt_salt_format="%s"');
+l.Add('');
+l.Add('userLoginShell="/bin/bash"');
+l.Add('userHome="/home/%U"');
+l.Add('userHomeDirectoryMode="700"');
+l.Add('userGecos="User"');
+l.Add('defaultUserGid="513"');
+l.Add('defaultComputerGid="515"');
+l.Add('skeletonDir="/etc/skel"');
+l.Add('defaultMaxPasswordAge="3650"');
+l.Add('');
+l.Add('with_smbpasswd="0"');
+l.Add('smbpasswd="/opt/artica/samba/bin/smbpasswd"');
+l.Add('');
+l.Add('with_slappasswd="0"');
+l.Add('slappasswd="/opt/artica/samba/bin/slappasswd"');
+
+l.SaveToFile('/etc/smbldap-tools/smbldap.conf');
+l.free;
+
+end;
+//##############################################################################
+function Tsamba.get_LDAP(key:string):string;
+var value:string;
+begin
+GLOBAL_INI:=TIniFile.Create('/etc/artica-postfix/artica-postfix-ldap.conf');
+value:=GLOBAL_INI.ReadString('LDAP',key,'');
+result:=value;
+GLOBAL_INI.Free;
+end;
+//#############################################################################
+
+
+
+
+
+
+
+end.

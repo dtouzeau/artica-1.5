@@ -1,0 +1,1 @@
+../artica-install/debian.pas

@@ -1,0 +1,5 @@
+<automount_add_backup>Seleccione este recurso y agregelo en el programa de servidor de copia de seguridad.</automount_add_backup>
+<automount_restore_from>Restaurar copia de seguridad de este tipo de recursos</automount_restore_from>
+<RestoreFromRsyncPath>Restaurar copia de seguridad de este articulo</RestoreFromRsyncPath>
+<RestoreFromRsyncPath_warn>Advertencia&lt;br&gt;Todos los datos en el servidor seran reemplazados por la copia de seguridad definida&lt;br&gt;Haga clic en el bot&oacute;n restaurar si desea realizar esta operacion</RestoreFromRsyncPath_warn>
+<SELECT_RESSOURCE>Seleccione el recurso</SELECT_RESSOURCE>

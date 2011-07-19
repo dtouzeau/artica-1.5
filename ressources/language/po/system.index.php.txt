@@ -1,0 +1,28 @@
+<APP_BACKUP_TEXT>Backup artica settings and required datas automatically</APP_BACKUP_TEXT>
+<APP_IPTABLES_TEXT>ipchains is a free software based firewall for Linux.</APP_IPTABLES_TEXT>
+<APP_NMAP_TEXT>Discover computers and services on a computer network</APP_NMAP_TEXT>
+<APP_NTPD_TEXT>Maintain your system clock automatically</APP_NTPD_TEXT>
+<APP_ROUNDCUBE_TEXT>Configure and integrate RoundCube WebMail in  your system</APP_ROUNDCUBE_TEXT>
+<artica_autoupdate_text>Update Artica main program periodically</artica_autoupdate_text>
+<artica_performances>Artica performances</artica_performances>
+<artica_performances_text>Personalize some parameters to reduce or increase performances modules</artica_performances_text>
+<dns>DNS & resolutions</dns>
+<edit_acls>Edit LDAP Access List</edit_acls>
+<folders_monitor_text>Monitor your hard disk and follow folders size</folders_monitor_text>
+<mysql_database>Mysql Database</mysql_database>
+<mysql_database_text>Manage mysql settings and enable/disable mysql engine</mysql_database_text>
+<network>Network & NICs</network>
+<nic_dynamic_dns_text>maintains the IP address of your host name.checks periodically whether your IP address stored by the DNS server is the real current address.</nic_dynamic_dns_text>
+<nic_static_dns_text>Manage hosts and minimal settings for hosts names resolutions</nic_static_dns_text>
+<per_user_addressbook>Per user Address Book</per_user_addressbook>
+<per_user_addressbook_explain>If you set to green, remote mail clients will be able to add or query the LDAP server has their own address book,each user will have an access to it's own NAB</per_user_addressbook_explain>
+<remote_addressbook>Address Book</remote_addressbook>
+<remote_addressbook_explain>If you set to green, remote mail clients such has Thunderbird or Outlook Express will be able to parse the LDAP server has an Address Book storage.</remote_addressbook_explain>
+<remote_addressbook_text>Enable or disable this system has a global address book</remote_addressbook_text>
+<repository_manager>repository manager</repository_manager>
+<repository_manager_text>Update and install packages according your system repositories manager</repository_manager_text>
+<services>Services & Applications</services>
+<system>System & Hardware</system>
+<update>Update & Maintain</update>
+<usb_section>Manage USB devices</usb_section>
+<usb_section_text>Create a dedicated device for backup features and connect/disconnect usb devices</usb_section_text>

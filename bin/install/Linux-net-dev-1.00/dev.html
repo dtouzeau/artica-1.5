@@ -1,0 +1,87 @@
+<HTML>
+<HEAD>
+<TITLE>Linux::net::dev - Perl extension for parsing /proc/net/dev</TITLE>
+<LINK REV="made" HREF="mailto:bhcompile@stripples.devel.redhat.com">
+</HEAD>
+
+<BODY>
+
+<A NAME="__index__"></A>
+<!-- INDEX BEGIN -->
+
+<UL>
+
+	<LI><A HREF="#name">NAME</A></LI>
+	<LI><A HREF="#synopsis">SYNOPSIS</A></LI>
+	<LI><A HREF="#description">DESCRIPTION</A></LI>
+	<LI><A HREF="#files">FILES</A></LI>
+	<LI><A HREF="#requires">REQUIRES</A></LI>
+	<LI><A HREF="#see also">SEE ALSO</A></LI>
+	<LI><A HREF="#author">AUTHOR</A></LI>
+</UL>
+<!-- INDEX END -->
+
+<HR>
+<P>
+<H1><A NAME="name">NAME</A></H1>
+<P>Linux::net::dev - Perl extension for parsing /proc/net/dev</P>
+<P>
+<HR>
+<H1><A NAME="synopsis">SYNOPSIS</A></H1>
+<PRE>
+  use Linux::net::dev;
+  my $devs = Linux::net::dev::info();
+  print &quot;Devices (bytes read):\n&quot;;
+  foreach (keys %$devs) {
+    print &quot;  $_ ($devs-&gt;{$_}-&gt;{rbytes})\n&quot;;
+  }</PRE>
+<P>
+<HR>
+<H1><A NAME="description">DESCRIPTION</A></H1>
+<P><STRONG>Linux::net::dev</STRONG> parses <STRONG>/proc/net/dev</STRONG> for network devices statistics.
+The package contains these functions:</P>
+<DL>
+<DT><STRONG><A NAME="item_info"><STRONG>info</STRONG></A></STRONG><BR>
+<DD>
+This function returns hash reference. Keys are devices' ids and values
+are data hash references. Data hash has resource names for keys and
+their respective values as associated values.
+<P></P>
+<DT><STRONG><A NAME="item_dev"><STRONG>dev</STRONG></A></STRONG><BR>
+<DD>
+Takes device id as a single argument and returns that device's data.
+<P></P>
+<DT><STRONG><A NAME="item_devs"><STRONG>devs</STRONG></A></STRONG><BR>
+<DD>
+Takes list of device ids as arguments and returns array with those
+devices' data.
+<P></P></DL>
+<P>Recognized resources (data hash keys): <STRONG>rbytes</STRONG>, <STRONG>rcompressed</STRONG>,
+<STRONG>rdrop</STRONG>, <STRONG>rerrs</STRONG>, <STRONG>rfifo</STRONG>, <STRONG>rframe</STRONG>, <STRONG>rmulticast</STRONG>, <STRONG>rpackets</STRONG>,
+<STRONG>tbytes</STRONG>, <STRONG>tcarrier</STRONG>, <STRONG>tcolls</STRONG>, <STRONG>tcompressed</STRONG>, <STRONG>tdrop</STRONG>, <STRONG>terrs</STRONG>,
+<STRONG>tfifo</STRONG>, <STRONG>tpackets</STRONG>,</P>
+<P>Resources begining with ``r'' are values for read data, and those begining
+with ``t'' are values for transmited data.</P>
+<P>Package was built and tested on RedHat 7.2, kernel 2.4.7-10 and might
+not work on some other versions. Please report bugs along with your
+kernel version (<STRONG>uname -r</STRONG> or <STRONG>uname -a</STRONG>).</P>
+<P>
+<HR>
+<H1><A NAME="files">FILES</A></H1>
+<P><STRONG>/proc/net/dev</STRONG></P>
+<P>
+<HR>
+<H1><A NAME="requires">REQUIRES</A></H1>
+<P>Perl 5.000</P>
+<P>
+<HR>
+<H1><A NAME="see also">SEE ALSO</A></H1>
+<P>perl(1).</P>
+<P>
+<HR>
+<H1><A NAME="author">AUTHOR</A></H1>
+<P>Vedran Sego, <A HREF="mailto:vsego@math.hr">vsego@math.hr</A></P>
+
+</BODY>
+
+</HTML>

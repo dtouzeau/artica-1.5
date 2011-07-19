@@ -1,0 +1,781 @@
+unit collectd;
+
+{$MODE DELPHI}
+{$LONGSTRINGS ON}
+
+interface
+
+uses
+    Classes, SysUtils,variants,strutils,Process,logs,unix,RegExpr in 'RegExpr.pas',zsystem,
+    dansguardian    in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/dansguardian.pas',
+    squid in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/squid.pas';
+
+
+
+
+  type
+  tcollectd=class
+
+
+private
+     LOGS:Tlogs;
+     SYS:TSystem;
+     artica_path:string;
+     EnableCollectdDaemon:integer;
+     function PID_PATH():string;
+     function PID_NUM():string;
+     function INITD_PATH():string;
+     function  CONF_COLLECTION_PATH():string;
+     function PHP_DATA_DIR_files(path:string):string;
+     procedure CHANGE_COLLECTION_CGI();
+     procedure INSTALL_CGI();
+     procedure WRITE_CONF();
+     procedure START_MBMON();
+
+
+
+public
+    procedure   Free;
+    constructor Create(const zSYS:Tsystem);
+    procedure   START();
+    procedure   STOP();
+    function    VERSION():string;
+    function    STATUS():string;
+    function    BIN_PATH():string;
+    function    CONF_PATH():string;
+    function    DATA_DIR():string;
+    function    PHP_DATA_DIR():string;
+
+END;
+
+implementation
+
+constructor tcollectd.Create(const zSYS:Tsystem);
+begin
+       forcedirectories('/etc/artica-postfix');
+       LOGS:=tlogs.Create();
+       SYS:=zSYS;
+
+       if Not TryStrToInt(SYS.GET_INFO('EnableCollectdDaemon'),EnableCollectdDaemon) then EnableCollectdDaemon:=0;
+
+
+       if not DirectoryExists('/usr/share/artica-postfix') then begin
+              artica_path:=ParamStr(0);
+              artica_path:=ExtractFilePath(artica_path);
+              artica_path:=AnsiReplaceText(artica_path,'/bin/','');
+
+      end else begin
+          artica_path:='/usr/share/artica-postfix';
+      end;
+end;
+//##############################################################################
+procedure tcollectd.free();
+begin
+    logs.Free;
+end;
+//##############################################################################
+procedure tcollectd.STOP();
+var
+   pid:string;
+   count:integer;
+begin
+   count:=0;
+   if not FileExists(BIN_PATH()) then begin
+      writeln('Stopping collectd............: not installed');
+      exit;
+   end;
+
+   pid:=PID_NUM();
+
+if not SYS.PROCESS_EXIST(pid) then begin
+   writeln('Stopping collectd............: already stopped');
+   exit;
+end;
+
+writeln('Stopping collectd............: pid number '+PID_NUM());
+fpsystem('/bin/kill '+ pid);
+
+  while SYS.PROCESS_EXIST(pid) do begin
+        sleep(400);
+        inc(count);
+        if count>30 then break;
+  end;
+
+
+if SYS.PROCESS_EXIST(PID_NUM()) then begin
+         writeln('Stopping collectd............: pid number '+PID_NUM() +' failed');
+         exit;
+     end else begin
+         writeln('Stopping collectd............: success');
+         exit;
+end;
+
+
+end;
+ //##############################################################################
+function tcollectd.INITD_PATH():string;
+begin
+if FileExists('/etc/init.d/collectd') then exit('/etc/init.d/collectd');
+end;
+ //##############################################################################
+ function tcollectd.PID_PATH():string;
+var
+    RegExpr:TRegExpr;
+    FileDatas:TStringList;
+    i:integer;
+begin
+
+if not FileExists(CONF_PATH()) then begin
+   logs.Debuglogs('tcollectd.PID_PATH():: Unable to stat collectd.conf');
+   exit;
+end;
+
+
+FileDatas:=TStringList.Create;
+FileDatas.LoadFromFile(CONF_PATH());
+RegExpr:=TRegExpr.Create;
+RegExpr.Expression:='^PIDFile.+?"(.+?)"';
+for i:=0 to FileDatas.Count-1 do begin
+    if RegExpr.Exec(FileDatas.Strings[i]) then begin
+         result:=RegExpr.Match[1];
+         break;
+    end;
+end;
+
+FileDatas.Free;
+RegExpr.free;
+
+
+end;
+ //##############################################################################
+ function tcollectd.CONF_COLLECTION_PATH():string;
+begin
+if FileExists('/etc/collectd/collection.conf') then exit('/etc/collectd/collection.conf');
+end;
+ //##############################################################################
+ 
+ 
+
+function tcollectd.PID_NUM():string;
+var pid:string;
+cmd:string;
+begin
+pid:=SYS.GET_PID_FROM_PATH(PID_PATH());
+cmd:='collectd -C '+CONF_PATH();
+if not FileExists('/proc/'+pid) then begin
+   logs.Debuglogs('tcollectd.PID_NUM() find pid in "'+cmd+'" pattern' );
+   pid:=SYS.PidByPatternInPath('collectd -C '+CONF_PATH());
+   logs.Debuglogs('tcollectd.PID_NUM():'+pid);
+end;
+exit(pid);
+end;
+ //##############################################################################
+ function tcollectd.BIN_PATH():string;
+begin
+if FileExists('/opt/collectd/sbin/collectd') then exit('/opt/collectd/sbin/collectd');
+end;
+ //##############################################################################
+function tcollectd.CONF_PATH():string;
+begin
+if FileExists('/opt/collectd/etc/collectd.conf') then exit('/opt/collectd/etc/collectd.conf');
+end;
+ //##############################################################################
+procedure tcollectd.START();
+var
+   pidpath:string;
+begin
+
+   if not FileExists(BIN_PATH()) then begin
+      logs.Debuglogs('Starting......: collectd is not installed');
+      exit;
+   end;
+   
+   if EnableCollectdDaemon=0 then begin
+      STOP();
+      exit;
+   end;
+   
+
+//              INSTALL_CGI();
+CHANGE_COLLECTION_CGI();
+if SYS.PROCESS_EXIST(PID_NUM()) then begin
+   logs.DebugLogs('Starting......: collectd already running using PID ' +PID_NUM()+ '...');
+   exit;
+end;
+     WRITE_CONF();
+     START_MBMON();
+     pidpath:=PID_PATH();
+     logs.DebugLogs('Starting......: collectd');
+     logs.DebugLogs('Starting......: Pid "'+PID_PATH()+'"');
+     fpsystem(SYS.EXEC_NICE()+ BIN_PATH()+' -C '+CONF_PATH()+' -P ' + pidpath);
+
+
+if not SYS.PROCESS_EXIST(PID_NUM()) then begin
+   logs.DebugLogs('Starting......: collectd Failed to start...');
+   exit;
+end else begin
+   logs.DebugLogs('Starting......: collectd success running pid ' +PID_NUM());
+end;
+
+end;
+//##############################################################################
+function tcollectd.DATA_DIR():string;
+begin
+exit('/opt/collectd/var/lib/collectd');
+end;
+//##############################################################################
+function tcollectd.PHP_DATA_DIR():string;
+
+         const
+            CR = #$0d;
+            LF = #$0a;
+            CRLF = CR + LF;
+var
+
+    i:integer;
+    dir:string;
+    FileDatas:TStringList;
+
+    line:string;
+    newpath:string;
+    D:boolean;
+begin
+   D:=false;
+   if not FileExists(BIN_PATH()) then exit;
+   dir:=DATA_DIR()+'/localhost';
+   D:=SYS.COMMANDLINE_PARAMETERS('--verbose');
+   line:='';
+   if not DirectoryExists(dir) then begin
+      logs.Debuglogs('tcollectd.PHP_DATA_DIR():: Warning unable to stat datadir path for collectd');
+      exit;
+   end;
+  FileDatas:=TStringList.Create;
+  FileDatas.AddStrings(SYS.DirDir(dir));
+  if FileDatas.Count=0 then begin
+     if D then writeln(dir,' no directories count...');
+     result:='$_GLOBAL["COLLECTD_RRD"]=Array();';
+     exit;
+  end;
+  
+  
+  for i:=0 to FileDatas.Count-1 do begin
+       if length(trim(FileDatas.Strings[i]))=0 then continue;
+       newpath:=PHP_DATA_DIR_files(dir+'/'+ FileDatas.Strings[i]);
+       if length(trim(newpath))=0 then continue;
+       line:=line+CRLF+chr(9)+'"'+FileDatas.Strings[i]+'"=>'+newpath+',';
+  end;
+
+    if Copy(line,length(line),1)=',' then begin
+     line:=Copy(line,1,length(line)-1);
+  end;
+
+   result:='$_GLOBAL["COLLECTD_RRD"]=Array('+line+');';
+
+end;
+//##############################################################################
+function tcollectd.PHP_DATA_DIR_files(path:string):string;
+
+         const
+            CR = #$0d;
+            LF = #$0a;
+            CRLF = CR + LF;
+var
+
+    i:integer;
+    dir:string;
+    FileDatas:TStringList;
+    line:string;
+    D:boolean;
+begin
+   dir:=path;
+   line:='';
+   D:=False;
+   D:=SYS.COMMANDLINE_PARAMETERS('--verbose');
+   if not DirectoryExists(dir) then exit;
+   FileDatas:=TStringList.Create;
+   FileDatas.AddStrings(SYS.DirFiles(dir,'*.rrd'));
+   if FileDatas.Count=0 then begin
+      if D then writeln(dir,' No files');
+      exit;
+   end;
+
+  for i:=0 to FileDatas.Count-1 do begin
+       if length(trim(FileDatas.Strings[i]))=0 then continue;
+
+
+       line:=line+CRLF+chr(9)+chr(9)+'"'+FileDatas.Strings[i]+'",';
+  end;
+
+    if Copy(line,length(line),1)=',' then begin
+     line:=Copy(line,1,length(line)-1);
+  end;
+
+   result:='Array('+line+')';
+
+end;
+
+//#############################################################################
+function tcollectd.VERSION():string;
+var
+    RegExpr:TRegExpr;
+    FileDatas:TStringList;
+    i:integer;
+    tmpstr:string;
+begin
+if not FileExists(BIN_PATH()) then exit;
+result:=SYS.GET_CACHE_VERSION('APP_COLLECTD');
+if length(result)>0 then exit;
+tmpstr:=logs.FILE_TEMP();
+fpsystem(BIN_PATH()+' -v >'+tmpstr+' 2>&1');
+    RegExpr:=TRegExpr.Create;
+    RegExpr.Expression:='^collectd\s+([0-9\.]+)';
+    if not FileExists(tmpstr) then exit;
+    FileDatas:=TStringList.Create;
+    
+    FileDatas.LoadFromFile(tmpstr);
+    logs.DeleteFile(tmpstr);
+    for i:=0 to FileDatas.Count-1 do begin
+        if RegExpr.Exec(FileDatas.Strings[i]) then begin
+             result:=RegExpr.Match[1];
+             break;
+        end;
+    end;
+             RegExpr.free;
+             FileDatas.Free;
+             SYS.SET_CACHE_VERSION('APP_COLLECTD',result);
+
+end;
+//#############################################################################
+function tcollectd.STATUS():string;
+var
+   ini:TstringList;
+   pid:string;
+begin
+
+   if not FileExists(BIN_PATH()) then exit;
+ini:=TstringList.Create;
+
+   ini.Add('[COLLECTD]');
+   ini.Add('service_cmd=collectd');
+   ini.Add('service_name=APP_COLLECTD');
+   ini.Add('service_disabled='+IntToStr(EnableCollectdDaemon));
+   ini.Add('master_version=' + VERSION());
+
+
+     if EnableCollectdDaemon=0 then begin
+         result:=ini.Text;
+         ini.free;
+         SYS.MONIT_DELETE('APP_COLLECTD');
+         exit;
+     end;
+
+      if SYS.MONIT_CONFIG('APP_COLLECTD',PID_PATH(),'collectd') then begin
+         ini.Add('monit=1');
+         result:=ini.Text;
+         ini.free;
+         exit;
+      end;
+
+   pid:=PID_NUM();
+   if SYS.PROCESS_EXIST(pid) then ini.Add('running=1') else  ini.Add('running=0');
+   ini.Add('application_installed=1');
+   ini.Add('master_pid='+ pid);
+   ini.Add('master_memory=' + IntToStr(SYS.PROCESS_MEMORY(pid)));
+   ini.Add('status='+SYS.PROCESS_STATUS(pid));
+   result:=ini.Text;
+   ini.free;
+
+end;
+//#########################################################################################
+procedure tcollectd.INSTALL_CGI();
+begin
+
+    if FileExists('/usr/lib/cgi-bin/collection.cgi') then begin
+       logs.Debuglogs('tcollectd.INSTALL_CGI():: collection.cgi is installed...');
+       logs.OutputCmd('/bin/chmod 755 /usr/lib/cgi-bin/collection.cgi');
+       exit;
+    end;
+
+    if not FileExists(artica_path+'/bin/install/collection.cgi.tar.gz') then begin
+       logs.Syslogs('Warning ! unable to stat '+artica_path+'/bin/install/collection.cgi.tar.gz');
+       exit;
+    end;
+    
+    if not FileExists(SYS.LOCATE_TAR()) then begin
+       logs.Syslogs('Warning ! expected tar binary tool !');
+       exit;
+    end;
+    
+    logs.OutputCmd(SYS.LOCATE_TAR()+' xf '+artica_path+'/bin/install/collection.cgi.tar.gz -C /usr/lib/cgi-bin/');
+    logs.OutputCmd('/bin/chmod 755 /usr/lib/cgi-bin/collection.cgi');
+end;
+//#########################################################################################
+procedure tcollectd.CHANGE_COLLECTION_CGI();
+var
+    RegExpr:TRegExpr;
+    FileDatas:TStringList;
+    i:integer;
+    collection_path:string;
+begin
+
+FileDatas:=TStringList.Create;
+RegExpr:=TRegExpr.Create;
+collection_path:=DATA_DIR();
+logs.DebugLogs('Starting......: collectd RRD storage in "'+collection_path+'"');
+if FileExists('/usr/lib/cgi-bin/collection.cgi') then begin
+   FileDatas.LoadFromFile('/usr/lib/cgi-bin/collection.cgi');
+   RegExpr.Expression:='^our \$Config\s+=\s+"';
+   for i:=0 to FileDatas.Count-1 do begin
+       if RegExpr.Exec(FileDatas.Strings[i]) then begin
+         logs.DebugLogs('Starting......: collectd modify line ('+IntToStr(i)+') in collection.cgi');
+         FileDatas.Strings[i]:='our $Config = "'+collection_path+'";';
+         break;
+       end;
+    end;
+end;
+
+FileDatas.SaveToFile('/usr/lib/cgi-bin/collection.cgi');
+FileDatas.Clear;
+
+if FileExists('/usr/lib/cgi-bin/collection3/lib/Collectd/Graph/Common.pm') then begin
+      FileDatas.LoadFromFile('/usr/lib/cgi-bin/collection3/lib/Collectd/Graph/Common.pm');
+      RegExpr.Expression:='^our \$DataDir';
+      for i:=0 to FileDatas.Count-1 do begin
+          if RegExpr.Exec(FileDatas.Strings[i]) then begin
+             logs.DebugLogs('Starting......: collectd modify line ('+IntToStr(i)+') in ..lib/Collectd/Graph/Common.pm');
+             FileDatas.Strings[i]:='our $DataDir = "'+collection_path+'";';
+             break;
+          end;
+      end;
+      FileDatas.SaveToFile('/usr/lib/cgi-bin/collection3/lib/Collectd/Graph/Common.pm');
+end else begin
+   logs.DebugLogs('Starting......: collectd unable to stat "/usr/lib/cgi-bin/collection3/lib/Collectd/Graph/Common.pm"');
+end;
+
+
+FileDatas.Clear;
+
+FileDatas.Free;
+RegExpr.free;
+end;
+//#########################################################################################
+procedure tcollectd.WRITE_CONF();
+var
+l:Tstringlist;
+EnableMysqlFeatures:integer;
+squid:Tsquid;
+dans:tdansguardian;
+begin
+EnableMysqlFeatures:=0;
+if not TryStrToInt(SYS.GET_INFO('EnableMysqlFeatures'),EnableMysqlFeatures) then begin
+   EnableMysqlFeatures:=0;
+end;
+l:=TstringList.Create;
+l.Add('# Config file for collectd(1).');
+l.Add('# Please read collectd.conf(5) for a list of options.');
+l.Add('# http://collectd.org/');
+l.Add('#');
+l.Add('');
+l.Add('Hostname    "localhost"');
+l.Add('FQDNLookup   false');
+l.Add('BaseDir     "/opt/collectd/var/lib/collectd"');
+l.Add('PIDFile     "/opt/collectd/var/run/collectd.pid"');
+l.Add('PluginDir   "/opt/collectd/lib/collectd"');
+l.Add('TypesDB     "/opt/collectd/lib/collectd/types.db"');
+l.Add('Interval     10');
+l.Add('ReadThreads  5');
+l.Add('');
+l.Add('LoadPlugin logfile');
+l.Add('LoadPlugin syslog');
+l.Add('');
+l.Add('#<Plugin logfile>');
+l.Add('#	LogLevel info');
+l.Add('#	File STDOUT');
+l.Add('#	Timestamp true');
+l.Add('#</Plugin>');
+l.Add('');
+l.Add('#<Plugin syslog>');
+l.Add('#	LogLevel info');
+l.Add('#</Plugin>');
+l.Add('');
+l.Add('LoadPlugin apcups');
+l.Add('LoadPlugin battery');
+l.Add('LoadPlugin cpu');
+l.Add('LoadPlugin cpufreq');
+//l.Add('#LoadPlugin csv');
+l.Add('LoadPlugin df');
+l.Add('LoadPlugin disk');
+l.Add('LoadPlugin email');
+l.Add('LoadPlugin entropy');
+l.Add('LoadPlugin exec');
+l.Add('LoadPlugin filecount');
+l.Add('LoadPlugin hddtemp');
+l.Add('LoadPlugin interface');
+//l.Add('LoadPlugin iptables');
+l.Add('LoadPlugin load');
+if FileExists(SYS.LOCATE_MBMON()) then l.Add('LoadPlugin mbmon');
+
+if FileExists(SYS.LOCATE_MEMCACHED()) then l.Add('LoadPlugin memcached');
+l.Add('LoadPlugin memory');
+l.Add('LoadPlugin multimeter');
+if EnableMysqlFeatures=1 then l.Add('LoadPlugin mysql');
+l.Add('LoadPlugin netlink');
+l.Add('LoadPlugin network');
+l.Add('LoadPlugin nfs');
+l.Add('LoadPlugin ntpd');
+l.Add('#LoadPlugin perl');
+l.Add('LoadPlugin ping');
+l.Add('LoadPlugin processes');
+l.Add('LoadPlugin rrdtool');
+if FileExists('/etc/sensors.conf') then l.Add('LoadPlugin sensors');
+l.Add('LoadPlugin swap');
+l.Add('LoadPlugin tail');
+l.Add('LoadPlugin tcpconns');
+l.Add('LoadPlugin thermal');
+l.Add('LoadPlugin unixsock');
+l.Add('LoadPlugin users');
+l.Add('LoadPlugin uuid');
+l.Add('LoadPlugin wireless');
+l.Add('#LoadPlugin xmms');
+l.Add('');
+l.Add('#<Plugin apcups>');
+l.Add('#	Host "localhost"');
+l.Add('#	Port "3551"');
+l.Add('#</Plugin>');
+l.Add('');
+l.Add('');
+//l.Add('<Plugin csv>');
+//l.Add('	DataDir "/opt/collectd/var/lib/collectd/csv"');
+//l.Add('	StoreRates false');
+//l.Add('</Plugin>');
+l.Add('');
+l.Add('#<Plugin df>');
+l.Add('#	Device "/dev/hda1"');
+l.Add('#	Device "192.168.0.2:/mnt/nfs"');
+l.Add('#	MountPoint "/home"');
+l.Add('#	FSType "ext3"');
+l.Add('#	IgnoreSelected false');
+l.Add('#</Plugin>');
+l.Add('');
+l.Add('#<Plugin disk>');
+l.Add('#	Disk "/^[hs]d[a-f][0-9]?$/"');
+l.Add('#	IgnoreSelected false');
+l.Add('#</Plugin>');
+l.Add('');
+l.Add('#<Plugin dns>');
+l.Add('#	Interface "eth0"');
+l.Add('#	IgnoreSource "192.168.0.1"');
+l.Add('#</Plugin>');
+l.Add('');
+l.Add('#<Plugin email>');
+l.Add('#	SocketFile "/opt/collectd/var/run/collectd-email"');
+l.Add('#	SocketGroup "collectd"');
+l.Add('#	SocketPerms "0770"');
+l.Add('#	MaxConns 5');
+l.Add('#</Plugin>');
+l.Add('');
+l.Add('#<Plugin exec>');
+l.Add('#	Exec "user:group" "/path/to/exec"');
+l.Add('#	NotificationExec "user:group" "/path/to/exec"');
+l.Add('#</Plugin>');
+l.Add('');
+l.Add('#<Plugin filecount>');
+l.Add('#	<Directory "/path/to/dir">');
+l.Add('#		Instance "foodir"');
+l.Add('#		Name "*.conf"');
+l.Add('#		MTime "-5m"');
+l.Add('#		Size "+10k"');
+l.Add('#	</Directory>');
+l.Add('#</Plugin>');
+l.Add('');
+l.Add('<Plugin hddtemp>');
+l.Add('#	Host "127.0.0.1"');
+l.Add('#	Port "7634"');
+l.Add('	TranslateDevicename false');
+l.Add('</Plugin>');
+l.Add('');
+l.Add('#<Plugin interface>');
+l.Add('#Interface "eth0"');
+l.Add('#IgnoreSelected false');
+l.Add('#</Plugin>');
+l.Add('');
+
+if FileExists(SYS.LOCATE_MBMON())  then begin
+START_MBMON();
+logs.DebugLogs('Starting......: collectd is enabled for Mbmon daemon');
+l.Add('<Plugin mbmon>');
+l.Add('	Host "127.0.0.1"');
+l.Add('	Port "411"');
+l.Add('</Plugin>');
+l.Add('');
+end;
+
+if FileExists(SYS.LOCATE_MEMCACHED()) then begin
+   logs.DebugLogs('Starting......: collectd is enabled for memCached daemon');
+   l.Add('<Plugin memcached>');
+   l.Add('	Host "127.0.0.1"');
+   l.Add('	Port "11211"');
+   l.Add('</Plugin>');
+   l.Add('');
+end;
+
+
+if EnableMysqlFeatures=1 then begin
+logs.DebugLogs('Starting......: collectd mysql is enabled for '+SYS.MYSQL_INFOS('mysql_server')+'@'+SYS.MYSQL_INFOS('database_admin'));
+l.Add('<Plugin mysql>');
+l.Add('	Host "'+SYS.MYSQL_INFOS('mysql_server')+'"');
+l.Add('	User "'+SYS.MYSQL_INFOS('database_admin')+'"');
+l.Add('	Password "'+SYS.MYSQL_INFOS('database_password')+'"');
+l.Add('	Database "artica_events"');
+l.Add('</Plugin>');
+end;
+l.Add('');
+l.Add('#<Plugin netlink>');
+l.Add('#	Interface "All"');
+l.Add('#	VerboseInterface "All"');
+l.Add('#	QDisc "eth0" "pfifo_fast-1:0"');
+l.Add('#	Class "ppp0" "htb-1:10"');
+l.Add('#	Filter "ppp0" "u32-1:0"');
+l.Add('#	IgnoreSelected false');
+l.Add('#</Plugin>');
+l.Add('');
+l.Add('#<Plugin network>');
+l.Add('#	Server "ff18::efc0:4a42" "25826"');
+l.Add('#	Server "239.192.74.66" "25826"');
+l.Add('#	Listen "ff18::efc0:4a42" "25826"');
+l.Add('#	Listen "239.192.74.66" "25826"');
+l.Add('#	TimeToLive "128"');
+l.Add('#	Forward false');
+l.Add('#	CacheFlush 1800');
+l.Add('#</Plugin>');
+l.Add('');
+l.Add('');
+l.Add('#<Plugin notify_email>');
+l.Add('#       SMTPServer "localhost"');
+l.Add('#	SMTPPort 25');
+l.Add('#	SMTPUser "my-username"');
+l.Add('#	SMTPPassword "my-password"');
+l.Add('#	From "collectd@main0server.com"');
+l.Add('#	# <WARNING/FAILURE/OK> on <hostname>. beware! do not use not more than two %s in this string!!!');
+l.Add('#	Subject "Aaaaaa!! %s on %s!!!!!"');
+l.Add('#	Recipient "email1@domain1.net"');
+l.Add('#	Recipient "email2@domain2.com"');
+l.Add('#</Plugin>');
+l.Add('');
+l.Add('#<Plugin ntpd>');
+l.Add('#	Host "localhost"');
+l.Add('#	Port 123');
+l.Add('#	ReverseLookups false');
+l.Add('#</Plugin>');
+l.Add('');
+l.Add('');
+l.Add('#<Plugin onewire>');
+l.Add('#	Device "-s localhost:4304"');
+l.Add('#	Sensor "F10FCA000800"');
+l.Add('#	IgnoreSelected false');
+l.Add('#</Plugin>');
+l.Add('');
+l.Add('');
+l.Add('#<Plugin ping>');
+l.Add('#	Host "host.foo.bar"');
+l.Add('#	TTL 255');
+l.Add('#</Plugin>');
+l.Add('');
+
+l.Add('<Plugin processes>');
+ squid:=Tsquid.Create;
+ dans:=tdansguardian.Create(SYS);
+if FileExists(squid.SQUID_BIN_PATH()) then l.Add(chr(9)+'Process "'+ ExtractFileName(squid.SQUID_BIN_PATH())+'"');
+if FileExists(dans.BIN_PATH()) then l.Add(chr(9)+'Process "'+ ExtractFileName(dans.BIN_PATH())+'"');
+dans.free;
+squid.free;
+l.Add('</Plugin>');
+l.Add('');
+l.Add('#<Plugin rrdtool>');
+l.Add('#	DataDir "/opt/collectd/var/lib/collectd/rrd"');
+l.Add('#	CacheTimeout 120');
+l.Add('#	CacheFlush   900');
+l.Add('#</Plugin>');
+l.Add('');
+l.Add('#<Plugin sensors>');
+l.Add('#	Sensor "it8712-isa-0290/temperature-temp1"');
+l.Add('#	Sensor "it8712-isa-0290/fanspeed-fan3"');
+l.Add('#	Sensor "it8712-isa-0290/voltage-in8"');
+l.Add('#	IgnoreSelected false');
+l.Add('#</Plugin>');
+l.Add('');
+l.Add('');
+l.Add('#<Plugin "tail">');
+l.Add('#  <File "/var/log/exim4/mainlog">');
+l.Add('#    Instance "exim"');
+l.Add('#    <Match>');
+l.Add('#      Regex "S=([1-9][0-9]*)"');
+l.Add('#      DSType "CounterAdd"');
+l.Add('#      Type "ipt_bytes"');
+l.Add('#      Instance "total"');
+l.Add('#    </Match>');
+l.Add('#    <Match>');
+l.Add('#      Regex "\\<R=local_user\\>"');
+l.Add('#      DSType "CounterInc"');
+l.Add('#      Type "email_count"');
+l.Add('#      Instance "local_user"');
+l.Add('#    </Match>');
+l.Add('#  </File>');
+l.Add('#</Plugin>');
+l.Add('');
+l.Add('#<Plugin tcpconns>');
+l.Add('#	ListeningPorts false');
+l.Add('#	LocalPort "25"');
+l.Add('#	RemotePort "25"');
+l.Add('#</Plugin>');
+l.Add('');
+l.Add('#<Plugin teamspeak2>');
+l.Add('#	Host "127.0.0.1"');
+l.Add('#	Port "51234"');
+l.Add('#	Server "8767"');
+l.Add('#</Plugin>');
+l.Add('');
+l.Add('#<Plugin thermal>');
+l.Add('#	ForceUseProcfs false');
+l.Add('#	Device "THRM"');
+l.Add('#	IgnoreSelected false');
+l.Add('#</Plugin>');
+l.Add('');
+l.Add('#<Plugin unixsock>');
+l.Add('#	SocketFile "/opt/collectd/var/run/collectd-unixsock"');
+l.Add('#	SocketGroup "collectd"');
+l.Add('#	SocketPerms "0660"');
+l.Add('#</Plugin>');
+l.Add('');
+l.Add('#<Plugin uuid>');
+l.Add('#	UUIDFile "/etc/uuid"');
+l.Add('#</Plugin>');
+l.Add('');
+l.Add('#<Plugin vmem>');
+l.Add('#	Verbose false');
+l.Add('#</Plugin>');
+l.Add('');
+l.SaveToFile(CONF_PATH());
+l.free;
+end;
+//#########################################################################################
+procedure tcollectd.START_MBMON();
+var
+l:Tstringlist;
+begin
+l:=TstringList.Create;
+if not FileExists('/etc/default/mbmon') then exit;
+l.Add('# mbmond config file');
+l.Add('#');
+l.Add('# Dustin Laurence 2005/06/17');
+l.Add('# This port seems to be appropriate and unused');
+l.Add('MBMONPORT="411"');
+l.Add('# Start mbmon as a daemon?');
+l.Add('# Set to 1 to start it');
+l.Add('# Set to 0 to disable it');
+l.Add('START_MBMON=1');
+l.SaveToFile('/etc/default/mbmon');
+l.free;
+end;
+//#########################################################################################
+end.

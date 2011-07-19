@@ -1,0 +1,23 @@
+Thu Jan  6 14:17:26 SAST 2005
+	Mailspy should be split into a few components:
+	- Milter: snarf headers and occasionally message bodies
+	- formail mbox: read mbox input from milter and create a log file for
+	  htmlspy i.e. the script will read input from either the milter, or from
+	  selected lines (triggered via procmail), or a mbox like "formail -s
+	  mailspyfilter < mbox"
+	- logfile filter: read sendmail or postfix logs and create a log file
+	  for htmlspy
+
+Wed Jan 16 20:41:25 SAST 2002
+	We should make the thing able to process BSD mailboxes.  Now *that*
+	would be useful.  (This was suggested on GLUG ... but not in connection
+	with mailspy).
+
+Thu Nov  1 15:35:13 SAST 2001
+	rcmailspy reload does kill -9, since nothing else seems to work.
+	We should really have a look at this, since it could be the cause
+	of sendmail consuming maximum CPU usage ... or maybe sendmail just
+	went crazy all by itself?
+
+Fri Oct  5 19:06:31 SAST 2001
+	The installation needs to be checked on a fresh computer.  Volunteers?

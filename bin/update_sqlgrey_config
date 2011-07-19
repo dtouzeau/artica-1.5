@@ -1,0 +1,104 @@
+#!/bin/bash
+
+# We need md5sum, diff and wget
+MD5SUM=`which md5sum 2>/dev/null`
+if [ $? -ne 0 ]
+then
+    echo "md5sum not found in PATH, can't continue"
+    exit -1
+fi
+DIFF=`which diff 2>/dev/null`
+if [ $? -ne 0 ]
+then
+    echo "diff not found in PATH, can't continue"
+    exit -1
+fi
+WGET=`which wget 2>/dev/null`
+if [ $? -ne 0 ]
+then
+    echo "wget not found in PATH, can't continue"
+    exit -1
+fi
+
+# md5sum output parsing need a known locale
+LANG=C
+LC_ALL=C
+
+MYDIR=/opt/artica/etc/sqlgrey
+CONF=/opt/artica/etc/sqlgrey.conf
+
+# Get whitelists host and pidfile from conf
+whitelist_host=`grep "^[[:space:]]*whitelists_host" $CONF | cut -d= -f2 | awk '{print $1}'`
+if [ -z "$whitelists_host" ]
+then
+    whitelists_host="sqlgrey.bouton.name"
+fi
+pidfile=`grep "^[[:space:]]*pidfile" $CONF | cut -d= -f2 | awk '{print $1}'`
+if [ -z "$pidfile" ]
+then
+    pidfile="/var/run/sqlgrey.pid"
+fi
+
+# Go into a temp directory
+MYTMP=`mktemp -d ${TMPDIR:-/tmp}/sqlgrey.XXXXXX`
+[ -n "$MYTMP" -a -d "$MYTMP" ] && cd $MYTMP || {
+	echo "Error creating temporary directory"
+	exit 1
+}
+
+# Setup a clean exit
+clean_exit() {
+    cd ~sqlgrey
+    [ -n "$MYTMP" -a -d "$MYTMP" ] && rm -rf $MYTMP
+    exit $1
+}
+trap clean_exit 2 3 15
+
+# Fetch MD5
+$WGET -q http://$whitelists_host/MD5SUMS
+
+# Check installed files
+cd $MYDIR
+TOUPDATE=`md5sum -c $MYTMP/MD5SUMS 2>/dev/null | grep FAILED | cut -d: -f1`
+
+if [ -z "$TOUPDATE" ]
+then
+    clean_exit 0
+fi
+
+cd $MYTMP
+# copy old files
+for whitelist in `cat MD5SUMS|awk '{print $2}'`
+do
+    cp $MYDIR/$whitelist . 2>/dev/null
+done
+# fetch new ones
+for todownload in $TOUPDATE
+do
+    echo "updating $MYDIR/$todownload:"
+    rm $todownload 2>/dev/null
+    $WGET -N -q http://$whitelists_host/$todownload
+    if [ -f $MYDIR/$todownload ]; then
+	$DIFF -u $MYDIR/$todownload $todownload
+    else
+	echo "new file: $todownload"
+    fi
+done
+
+md5sum -c MD5SUMS >/dev/null 2>/dev/null
+if [ $? -ne 0 ]
+then
+    # Can only happen if remote site is borked or file got corrupt in transit
+    echo "Error fetching new files, try later"
+    clean_exit -1
+fi
+
+# MD5SUMS isn't needed anymore
+rm MD5SUMS
+# Replace whitelists
+mv * $MYDIR
+
+# Reload whitelists
+kill -USR1 `cat $pidfile`
+
+clean_exit 0

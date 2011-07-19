@@ -1,0 +1,17 @@
+<company>Company name</company>
+<company_domain>Give here your company name that will be the reference of your organization and your messaging domain name such has domain.tld has your first SMTP domain name</company_domain>
+<company_domain_t>Your company name and domain name</company_domain_t>
+<domain_routing>Routing Domain</domain_routing>
+<domain_routing_local>Your master domain will be stored locally in this server</domain_routing_local>
+<domain_routing_remote>You master domain need to be relayed to MDA system (a mailbox server)[br]Please give the name or the IP address of your mail server to relay mails trought Artica server</domain_routing_remote>
+<domain_routing_text>How your master domain will be relayed trought Postfix ?</domain_routing_text>
+<first_email>First email address</first_email>
+<first_email_text>Set the first user/eMail address that will in charge to receive system events and mail server notifications</first_email_text>
+<smtp_domain>SMTP domain name</smtp_domain>
+<smtp_relay>SMTP server address</smtp_relay>
+<welcome_first_wizard>Welcome on first wizard</welcome_first_wizard>
+<wizard_finish>Wizard is finish</wizard_finish>
+<wizard_finish_failed>Please come back to last pages, some elements are missing</wizard_finish_failed>
+<wizard_finish_text>Click on the Apply button in order to build your settings and make it in production mode</wizard_finish_text>
+<wizard_smtp_intro>This wizard will help you to define first parameters in order to make your server in production mode...
+Follow steps in order to activate messaging on this server...</wizard_smtp_intro>

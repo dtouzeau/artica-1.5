@@ -1,0 +1,91 @@
+unit DaemonThread2;
+
+interface
+uses
+  Libc, Classes,logs,SysUtils,global_conf,IniFiles,RegExpr,zsystem,unix;
+type
+  TSampleThread2 = class(TThread)
+  private
+    tid          : integer;
+    logs         :tlogs;
+    GLOBAL_INI   :myconf;
+    SYS          :Tsystem;
+    regexfile    :TstringList;
+    infected_file:TstringList;
+    mini         :TiniFile;
+    artica_path  :string;
+    
+
+
+
+  protected
+    procedure Execute; override;
+  public
+    TimeToLive:TDateTime;
+    constructor Create(startSuspended: boolean; newID: integer);
+  end;
+
+
+
+
+var
+  thingCount: integer;
+  thingCountCS: TRTLCriticalSection;
+
+implementation
+//##############################################################################
+procedure TSampleThread2.Execute;
+begin
+     GLOBAL_INI   :=myconf.Create;
+     SYS          :=Tsystem.Create;
+     artica_path  :=GLOBAL_INI.get_ARTICA_PHP_PATH();
+     logs         :=tlogs.Create;
+
+
+  logs.Debuglogs('DaemonThread2:: Starting...');
+
+
+  
+
+
+
+  while not Terminated do begin
+    EnterCriticalSection(thingCountCS);
+    inc(thingCount);
+    TimeToLive:=Now;
+    Try
+      logs.Debuglogs('DaemonThread2:: -->' + artica_path + '/bin/artica-install --startall &');
+      fpsystem(artica_path + '/bin/artica-install --startall &');
+      logs.Debuglogs('DaemonThread2:: -->' + artica_path + '/bin/artica-update &');
+      fpsystem(artica_path + '/bin/artica-update &');
+      logs.Debuglogs('DaemonThread2:: -->' + artica_path + '/bin/process1 &');
+      fpsystem(artica_path + '/bin/process1 &');
+      logs.Debuglogs('DaemonThread2:: -->' + artica_path + '/bin/artica-install --graphdefang-gen &');
+      fpsystem(artica_path + '/bin/artica-install --graphdefang-gen &');
+      logs.Debuglogs('DaemonThread2:: -->' + artica_path + '/bin/artica-install --usb-backup &');
+      fpsystem(artica_path + '/bin/artica-install --usb-backup &');
+    except
+       logs.Debuglogs('DaemonThread2:: Fatal error');
+       logs.Syslogs('DaemonThread2:: Fatal error on ExecuteProcess1()');
+    end;
+    
+    LeaveCriticalSection(thingCountCS);
+    
+    __sleep(20);
+  end;
+
+  logs.Debuglogs('DaemonThread2::Execute:: -> end');
+end;
+//##############################################################################
+
+constructor TSampleThread2.Create(startSuspended: boolean;
+  newID: integer);
+begin
+  inherited Create(startSuspended);
+  tid := newID;
+end;
+
+//##############################################################################
+end.
+
+

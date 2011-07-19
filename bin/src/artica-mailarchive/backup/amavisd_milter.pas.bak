@@ -1,0 +1,1381 @@
+unit amavisd_milter;
+
+{$MODE DELPHI}
+{$LONGSTRINGS ON}
+
+interface
+
+uses
+    Classes, SysUtils,variants,strutils, Process,logs,unix,
+    RegExpr in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/RegExpr.pas',
+    zsystem in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/zsystem.pas',
+    dspam            in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/dspam.pas',
+    spamass      in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/spamass.pas';
+
+
+  type
+  tamavis=class
+
+
+private
+     LOGS:Tlogs;
+     artica_path:string;
+     SYS:Tsystem;
+     EnableAmavisDaemon:integer;
+     JCheckMailEnabled:integer;
+     dspam:tdspam;
+     spamassassin:Tspamass;
+     EnableAmavisInMasterCF:integer;
+     procedure START_MILTER();
+     procedure AMAVISD_SETCONFIG(key:string;value:string);
+     procedure include_config_files();
+     procedure STOP_MILTER();
+     procedure STOP_AMAVISD();
+     function  CHECK_MODULES():boolean;
+     procedure PatchPerlT();
+     function AMAVISD_INIT_PATH():string;
+     function MILTER_INIT_PATH():string;
+     procedure WRITE_INITD();
+     procedure CheckUnixSocketName();
+     procedure CheckMyHostname();
+     procedure CheckLogfile();
+
+public
+    procedure   Free;
+    constructor Create(const zSYS:Tsystem);
+    function    STATUS():string;
+    function    MILTER_BIN_PATH():string;
+    function    MILTER_PID_PATH():string;
+    function    MILTER_PID():string;
+    function    MILTER_VERSION():string;
+    procedure   START();
+    procedure   STOP();
+
+    function    AMAVISD_VERSION():string;
+    function    AMAVISD_BIN_PATH():string;
+    function    AMAVISD_PID():string;
+    function    AMAVISD_PID_PATH():string;
+    procedure   AMAVISD_RELOAD();
+    procedure   START_AMAVISD();
+    function    AMAVISD_CONF_PATH():string;
+    function    QUARANTINEDIR():string;
+    
+    function    AMAVIS_STAT_BIN_PATH():string;
+    procedure   AMAVIS_STAT_WRITE_CONF();
+    function    AMAVIS_STAT_PID_PATH():string;
+    function    AMAVIS_STAT_PID():string;
+    function    AMAVIS_STAT_VERSION():string;
+    procedure   MASTER_CF_DELETE_AMAVIS();
+    procedure   START_AMAVIS_STAT();
+    procedure   STOP_AMAVIS_STAT();
+    procedure   AMAVIS_TO_MASTERCF();
+   function     altermime_version():string;
+   function     altermime_bin_path():string;
+END;
+
+implementation
+
+constructor tamavis.Create(const zSYS:Tsystem);
+begin
+       forcedirectories('/etc/artica-postfix');
+       LOGS:=tlogs.Create();
+       SYS:=zSYS;
+       EnableAmavisDaemon:=0;
+       dspam:=tdspam.Create(SYS);
+       spamassassin:=Tspamass.Create(SYS);
+
+       if not TryStrToInt(SYS.GET_INFO('EnableAmavisDaemon'),EnableAmavisDaemon) then begin
+          EnableAmavisDaemon:=0;
+       end;
+       
+if not TryStrToInt(SYS.GET_INFO('EnableAmavisInMasterCF'),EnableAmavisInMasterCF) then begin
+          EnableAmavisInMasterCF:=0;
+       end;
+
+       
+       if TryStrToInt(SYS.GET_INFO('JCheckMailEnabled'),JCheckMailEnabled) then begin
+          if JCheckMailEnabled=1 then begin
+             if EnableAmavisDaemon=1 then begin
+                   EnableAmavisDaemon:=0;
+                   SYS.set_INFO('EnableAmavisDaemon','0');
+                   logs.Syslogs('Amavis was disabled because j-checkmail is enabled... unable to start 2 same services...');
+             end;
+          end;
+       end;
+
+
+       if not DirectoryExists('/usr/share/artica-postfix') then begin
+              artica_path:=ParamStr(0);
+              artica_path:=ExtractFilePath(artica_path);
+              artica_path:=AnsiReplaceText(artica_path,'/bin/','');
+
+      end else begin
+          artica_path:='/usr/share/artica-postfix';
+      end;
+end;
+//##############################################################################
+procedure tamavis.free();
+begin
+    logs.Free;
+end;
+//##############################################################################
+function tamavis.MILTER_BIN_PATH():string;
+begin
+    if FileExists('/usr/local/sbin/amavisd-milter') then exit('/usr/local/sbin/amavisd-milter');
+    if FileExists('/usr/sbin/amavis-milter') then exit('/usr/sbin/amavis-milter');
+end;
+//#############################################################################
+function tamavis.AMAVISD_BIN_PATH():string;
+begin
+    if FileExists('/usr/local/sbin/amavisd') then exit('/usr/local/sbin/amavisd');
+    if FileExists('/usr/sbin/amavisd-new') then exit('/usr/sbin/amavisd-new');
+end;
+//#############################################################################
+function tamavis.AMAVIS_STAT_BIN_PATH():string;
+begin
+    if FileExists('/usr/local/sbin/amavis-stats') then exit('/usr/local/sbin/amavis-stats');
+end;
+//#############################################################################
+function tamavis.AMAVISD_INIT_PATH():string;
+begin
+    if FileExists('/etc/init.d/amavis') then exit('/etc/init.d/amavis');
+end;
+//#############################################################################
+function tamavis.MILTER_PID_PATH():string;
+begin
+    if FileExists('/var/spool/postfix/var/run/amavisd-milter/amavisd-milter.pid') then exit('/var/spool/postfix/var/run/amavisd-milter/amavisd-milter.pid');
+    if FileExists('/var/run/amavis/amavisd-new-milter.pid') then exit('/var/run/amavis/amavisd-new-milter.pid');
+end;
+//#############################################################################
+function tamavis.MILTER_INIT_PATH():string;
+begin
+    if FileExists('/etc/init.d/amavisd-new-milter') then exit('/etc/init.d/amavisd-new-milter');
+end;
+//#############################################################################
+function tamavis.AMAVIS_STAT_PID_PATH():string;
+begin
+    if FileExists('/usr/local/var/lib/amavis-stats/amavis-stats.pid') then exit('/usr/local/var/lib/amavis-stats/amavis-stats.pid');
+end;
+//#############################################################################
+function tamavis.AMAVISD_PID_PATH():string;
+begin
+    if FileExists('/var/spool/postfix/var/run/amavisd-new/amavisd-new.pid') then exit('/var/spool/postfix/var/run/amavisd-new/amavisd-new.pid');
+    if FileExists('/var/run/amavis/amavisd.pid') then exit('/var/run/amavis/amavisd.pid');
+end;
+//#############################################################################
+function tamavis.AMAVISD_CONF_PATH():string;
+begin
+  if FileExists('/usr/local/etc/amavisd.conf') then exit('/usr/local/etc/amavisd.conf');
+  fpsystem('/bin/cp /usr/share/artica-postfix/bin/install/amavis/amavisd.conf /usr/local/etc/amavisd.conf');
+  exit('/usr/local/etc/amavisd.conf');
+end;
+//#############################################################################
+function tamavis.MILTER_PID():string;
+var
+   pid:string;
+begin
+   result:='';
+   pid:=SYS.GET_PID_FROM_PATH(MILTER_PID_PATH());
+   if pid='0' then pid:='';
+   if length(pid)=0 then pid:=SYS.PidByProcessPath(MILTER_BIN_PATH());
+   result:=pid;
+end;
+//##############################################################################
+function tamavis.AMAVISD_PID():string;
+var
+   pid:string;
+begin
+   pid:=SYS.GET_PID_FROM_PATH(AMAVISD_PID_PATH());
+   if pid='0' then pid:='';
+   if length(pid)=0 then pid:=SYS.PidByProcessPath(AMAVISD_BIN_PATH());
+   result:=pid;
+end;
+//##############################################################################
+function tamavis.AMAVIS_STAT_PID():string;
+var
+   pid:string;
+begin
+   pid:=SYS.GET_PID_FROM_PATH(AMAVIS_STAT_PID_PATH());
+   if pid='0' then pid:='';
+   if length(pid)=0 then pid:=SYS.PIDOF('Amavis-Stats');
+   result:=pid;
+end;
+//##############################################################################
+procedure tamavis.AMAVISD_RELOAD();
+var
+pid:string;
+cmd:string;
+begin
+pid:=AMAVISD_PID();
+if not SYS.PROCESS_EXIST(pid) then begin
+     START_AMAVISD();
+     exit;
+end;
+START_MILTER();
+CheckUnixSocketName();
+cmd:=AMAVISD_BIN_PATH() + ' -c /usr/local/etc/amavisd.conf -P /var/spool/postfix/var/run/amavisd-new/amavisd-new.pid reload &';
+logs.Syslogs('Reloading amavisd daemon');
+logs.Debuglogs(cmd);
+fpsystem(cmd);
+end;
+//##############################################################################
+
+function tamavis.QUARANTINEDIR():string;
+var
+i:integer;
+RegExpr:tRegExpr;
+l:TstringList;
+quar:string;
+
+begin
+result:='';
+  if not FileExists(AMAVISD_CONF_PATH()) then begin
+     logs.DebugLogs('tamavis.QUARANTINEDIR():: unable to stat amavisd.conf');
+     exit;
+  end;
+  
+  l:=TstringList.Create;
+  l.LOadFromFile(AMAVISD_CONF_PATH());
+  RegExpr:=TRegExpr.Create;
+  RegExpr.Expression:='^\$QUARANTINEDIR(.+?);';
+  for i:=0 to l.Count-1 do begin
+      if RegExpr.Exec(l.Strings[i]) then begin
+      quar:=RegExpr.Match[1];
+      break;
+      end;
+  end;
+  
+   if length(quar)>0 then begin
+       quar:=AnsiReplaceText(quar,'''','');
+       quar:=AnsiReplaceText(quar,'"','');
+       quar:=AnsiReplaceText(quar,'=','');
+       quar:=trim(quar);
+       result:=quar;
+   end;
+
+end;
+//##############################################################################
+procedure tamavis.include_config_files();
+var
+tmpstr:string;
+FileDatas:TstringList;
+i:integer;
+RegExpr:tRegExpr;
+l:TstringList;
+
+begin
+  if not FileExists(AMAVISD_CONF_PATH())then exit;
+
+  FileDatas:=TstringList.Create;
+  FileDatas.LoadFromFile(AMAVISD_CONF_PATH());
+  l:=TstringList.Create;
+  RegExpr:=TRegExpr.Create;
+  RegExpr.Expression:='include_config_files\(''(.+?)''';
+for i:=0 to FileDatas.Count-1 do begin
+        if RegExpr.Exec(FileDatas.Strings[i]) then begin
+            l.Add(RegExpr.Match[1]);
+        end;
+end;
+
+
+for i:=0 to l.Count-1 do begin
+    logs.DebugLogs('Starting......: amavisd-new Check permissions on include file: "'+ ExtractFilename(l.Strings[i])+'"');
+    fpsystem('/bin/chown root:root ' + l.Strings[i]);
+end;
+
+
+end;
+
+
+//##############################################################################
+function tamavis.MILTER_VERSION():string;
+var
+tmpstr:string;
+FileDatas:TstringList;
+i:integer;
+RegExpr:tRegExpr;
+
+begin
+
+result:=SYS.GET_CACHE_VERSION('APP_AMAVISD_MILTER');
+   if length(result)>0 then exit;
+
+tmpstr:=LOGS.FILE_TEMP();
+if not FileExists(MILTER_BIN_PATH()) then exit;
+fpsystem(MILTER_BIN_PATH()+' -v >'+tmpstr+' 2>&1');
+    RegExpr:=TRegExpr.Create;
+    RegExpr.Expression:='^amavisd-milter\s+([0-9\.]+)';
+    FileDatas:=TStringList.Create;
+    FileDatas.LoadFromFile(tmpstr);
+    logs.DeleteFile(tmpstr);
+    
+    for i:=0 to FileDatas.Count-1 do begin
+        if RegExpr.Exec(FileDatas.Strings[i]) then begin
+             result:=RegExpr.Match[1];
+             break;
+        end;
+    end;
+             RegExpr.free;
+             FileDatas.Free;
+             SYS.SET_CACHE_VERSION('APP_AMAVISD_MILTER',result);
+
+end;
+//##############################################################################
+function tamavis.AMAVISD_VERSION():string;
+var
+tmpstr:string;
+FileDatas:TstringList;
+i:integer;
+RegExpr:tRegExpr;
+D:boolean;
+begin
+
+result:=SYS.GET_CACHE_VERSION('APP_AMAVISD');
+   if length(result)>0 then exit;
+
+D:=false;
+D:=SYS.COMMANDLINE_PARAMETERS('--verbose');
+tmpstr:=LOGS.FILE_TEMP();
+if not FileExists(AMAVISD_BIN_PATH()) then exit;
+fpsystem(AMAVISD_BIN_PATH()+' -V >'+tmpstr+' 2>&1');
+    RegExpr:=TRegExpr.Create;
+    RegExpr.Expression:='^amavisd-new-([0-9\.]+).+?([0-9]+)';
+    if D then writeln('RegExpr.Expression=',RegExpr.Expression);
+    FileDatas:=TStringList.Create;
+    FileDatas.LoadFromFile(tmpstr);
+    logs.DeleteFile(tmpstr);
+
+    for i:=0 to FileDatas.Count-1 do begin
+        if D then writeln(i,') ',FileDatas.Strings[i],' > ', RegExpr.Expression);
+        if RegExpr.Exec(FileDatas.Strings[i]) then begin
+
+             result:=RegExpr.Match[1] + ' '+RegExpr.Match[2];
+             break;
+        end;
+    end;
+             RegExpr.free;
+             FileDatas.Free;
+              SYS.SET_CACHE_VERSION('APP_AMAVISD',result);
+
+end;
+//##############################################################################
+function tamavis.altermime_bin_path():string;
+begin
+if FileExists('/usr/local/bin/altermime') then exit('/usr/local/bin/altermime');
+end;
+//##############################################################################
+function tamavis.altermime_version():string;
+var
+l:TstringList;
+i:integer;
+RegExpr:tRegExpr;
+tmpstr:string;
+begin
+
+if not FileExists(altermime_bin_path()) then exit;
+
+result:=SYS.GET_CACHE_VERSION('APP_ALTERMIME');
+if length(result)>0 then exit;
+RegExpr:=TRegExpr.Create;
+RegExpr.Expression:='alterMIME v([0-9\.]+)';
+tmpstr:=logs.FILE_TEMP();
+fpsystem(altermime_bin_path() + ' --version >'+tmpstr+ ' 2>&1');
+l:=TstringList.Create;
+try
+   l.LoadFromFile(tmpstr);
+except
+      logs.Syslogs('tamavis.altermime_version() FATAL ERROR');
+      exit;
+end;
+
+logs.DeleteFile(tmpstr);
+for i:=0 to l.Count -1 do begin
+   if RegExpr.Exec(l.Strings[i]) then begin
+       result:=RegExpr.Match[1];
+       break;
+   end;
+end;
+
+SYS.SET_CACHE_VERSION('APP_ALTERMIME',result);
+l.free;
+RegExpr.free;
+end;
+//##############################################################################
+function tamavis.AMAVIS_STAT_VERSION():string;
+var
+FileDatas:TstringList;
+i:integer;
+RegExpr:tRegExpr;
+D:boolean;
+begin
+
+result:=SYS.GET_CACHE_VERSION('APP_AMAVIS_STAT');
+if length(result)>0 then exit;
+D:=false;
+D:=SYS.COMMANDLINE_PARAMETERS('--verbose');
+
+if not FileExists(AMAVIS_STAT_BIN_PATH()) then exit;
+    RegExpr:=TRegExpr.Create;
+    RegExpr.Expression:='^\$myversion_id\s+(.+?)([0-9\.]+)';
+    if D then writeln('RegExpr.Expression=',RegExpr.Expression);
+    FileDatas:=TStringList.Create;
+    FileDatas.LoadFromFile(AMAVIS_STAT_BIN_PATH());
+
+
+    for i:=0 to FileDatas.Count-1 do begin
+        if D then writeln(i,') ',FileDatas.Strings[i],' > ', RegExpr.Expression);
+        if RegExpr.Exec(FileDatas.Strings[i]) then begin
+             result:=RegExpr.Match[1];
+             break;
+        end;
+    end;
+             RegExpr.free;
+             FileDatas.Free;
+              SYS.SET_CACHE_VERSION('APP_AMAVIS_STAT',result);
+
+end;
+//##############################################################################
+procedure tamavis.START_MILTER();
+var
+   pid,cmd:string;
+   count:integer;
+begin
+
+if not FileExists(MILTER_BIN_PATH()) then begin
+   logs.DebugLogs('Starting......: amavisd-milter is not installed...');
+   exit;
+end;
+
+if not fileExists(SYS.LOCATE_SU()) then begin
+   logs.Syslogs('Starting......: amavisd-milter to locate su tool !!');
+   exit;
+end;
+
+
+if EnableAmavisInMasterCF=1 then begin
+    logs.Debuglogs('Starting......: method is set in post-queue mode..exiting starting amavis-milter');
+    exit;
+end;
+
+if not SYS.PROCESS_EXIST(AMAVISD_PID()) then begin
+    logs.Syslogs('Starting......: amavisd-milter amavisd-new is not started');
+    exit;
+end;
+
+
+forceDirectories('/var/spool/postfix/var/run/amavisd-milter');
+forceDirectories('/var/amavisd-milter');
+
+fpsystem('/bin/chown -R postfix:postfix /var/spool/postfix/var/run/amavisd-milter');
+fpsystem('/bin/chown -R postfix:postfix /var/amavis');
+fpsystem('/bin/chmod 770 /var/amavis');
+
+
+
+pid:=MILTER_PID();
+
+    if SYS.PROCESS_EXIST(pid) then begin
+       logs.DebugLogs('Starting......: amavisd-milter already exists using pid ' + pid+ '...');
+       if FileExists('amavisd-new-milter') then logs.OutputCmd('/bin/chown postfix:postfix /var/spool/postfix/var/run/amavisd-milter/amavisd-milter.sock');
+       exit;
+    end;
+logs.Debuglogs('Starting......: amavisd-milter EnableAmavisInMasterCF='+ IntToStr(EnableAmavisInMasterCF));
+    
+PatchPerlT();
+cmd:=MILTER_BIN_PATH()+' ';
+cmd:=cmd + '-f ';
+cmd:=cmd + '-m 0 ';
+cmd:=cmd + '-m 300 ';
+cmd:=cmd + '-p /var/spool/postfix/var/run/amavisd-milter/amavisd-milter.pid ';
+cmd:=cmd + '-s /var/spool/postfix/var/run/amavisd-milter/amavisd-milter.sock ';
+cmd:=cmd + '-S /var/spool/postfix/var/run/amavisd-new/amavisd-new.sock ';
+cmd:=cmd + '-t 300 ';
+cmd:=cmd + '-T 600 ';
+cmd:=cmd + '-w /var/amavis ';
+
+cmd:=SYS.LOCATE_SU() + ' postfix -c "'+cmd+'" >/dev/null 2>&1 &';
+logs.OutputCmd(cmd);
+logs.Syslogs('Starting......: amavisd-milter');
+fpsystem(cmd);
+  count:=0;
+  while not SYS.PROCESS_EXIST(MILTER_PID()) do begin
+              sleep(150);
+              inc(count);
+              if count>30 then begin
+                 writeln('');
+                 logs.DebugLogs('Starting......: amavisd-milter (timeout!!!)');
+                 break;
+              end;
+              write('.');
+        end;
+        
+        
+if not SYS.PROCESS_EXIST(MILTER_PID()) then begin
+       logs.Syslogs('Starting......: amavisd-milter in an old way');
+       fpsystem(MILTER_BIN_PATH()+' -D -p /var/spool/postfix/var/run/amavisd-milter/amavisd-milter.sock');
+       while not SYS.PROCESS_EXIST(MILTER_PID()) do begin
+              sleep(150);
+              inc(count);
+              if count>20 then begin
+                 writeln('');
+                 logs.DebugLogs('Starting......: amavisd-milter (timeout!!!)');
+                 break;
+              end;
+              write('.');
+       end;
+       logs.OutputCmd('/bin/chown postfix:postfix /var/spool/postfix/var/run/amavisd-milter/amavisd-milter.sock');
+end;
+
+
+
+    if not SYS.PROCESS_EXIST(MILTER_PID()) then begin
+         logs.DebugLogs('Starting......: amavisd-milter (failed!!!)');
+    end else begin
+         logs.DebugLogs('Starting......: amavisd-milter PID '+MILTER_PID());
+
+    end
+
+
+end;
+//##############################################################################
+procedure tamavis.START_AMAVIS_STAT();
+var
+   pid,cmd:string;
+   count:integer;
+   myhostname:string;
+   EnableMysql:integer;
+   CopyToDomainSpool:string;
+begin
+
+ if FileExists('/etc/cron.d/amavis-stats') then logs.DeleteFile('/etc/cron.d/amavis-stats');
+
+
+ if not FileExists(AMAVIS_STAT_BIN_PATH()) then begin;
+   logs.DebugLogs('Starting......: amavis-stat is not installed...');
+   exit;
+end;
+
+if EnableAmavisDaemon=0 then begin
+    logs.DebugLogs('Starting......: amavisd-new is disabled by EnableAmavisDaemon file key');
+    exit;
+end;
+
+pid:=AMAVIS_STAT_PID();
+
+    if SYS.PROCESS_EXIST(pid) then begin
+       logs.DebugLogs('Starting......: amavisd-stat already exists using pid ' + pid+ '...');
+       exit;
+    end;
+
+if FileExists('/etc/artica-postfix/settings/Daemons/AmavisConfigFile') then begin
+     logs.DebugLogs('Starting......: replicate amavis configuration file...');
+     logs.OutputCmd('/bin/cp /etc/artica-postfix/settings/Daemons/AmavisConfigFile /usr/local/etc/amavisd.conf');
+end;
+
+
+forceDirectories('/usr/local/var/lib/amavis-stats');
+forceDirectories('/usr/local/var/cache/amavis-stats');
+logs.OutputCmd('/bin/chown -R postfix:postfix /usr/local/var/lib/amavis-stats');
+logs.OutputCmd('/bin/chown -R postfix:postfix /usr/local/var/cache/amavis-stats');
+AMAVIS_STAT_WRITE_CONF();
+cmd:=AMAVIS_STAT_BIN_PATH() + ' -u postfix -g postfix -c /usr/local/etc/amavis-stats.conf';
+logs.Debuglogs(cmd);
+
+fpsystem(cmd);
+  count:=0;
+  while not SYS.PROCESS_EXIST(AMAVIS_STAT_PID()) do begin
+              sleep(150);
+              inc(count);
+              if count>30 then begin
+                 writeln('');
+                 logs.DebugLogs('Starting......: amavisd-stat (timeout!!!)');
+                 break;
+              end;
+              write('.');
+        end;
+writeln('');
+    if not SYS.PROCESS_EXIST(AMAVISD_PID()) then begin
+         logs.DebugLogs('Starting......: amavisd-stat (failed!!!)');
+    end else begin
+         logs.DebugLogs('Starting......: amavisd-stat PID '+AMAVIS_STAT_PID());
+
+    end;
+
+
+end;
+//##############################################################################
+procedure tamavis.STOP_AMAVIS_STAT();
+var pid:string;
+begin
+
+    if not FileExists(AMAVIS_STAT_BIN_PATH()) then begin
+       writeln('Stopping amavisd-stat....: not installed');
+       exit;
+    end;
+
+
+    pid:=AMAVIS_STAT_PID();
+    if not SYS.PROCESS_EXIST(pid) then begin
+       writeln('Stopping amavisd-stat....: Already stopped');
+       exit;
+    end;
+
+    writeln('Stopping amavisd-stat....: ' + pid + ' PID');
+    fpsystem('kill ' + pid);
+    pid:=SYS.PidAllByProcessPath(AMAVIS_STAT_BIN_PATH());
+
+    if length(trim(pid))>0 then begin
+       writeln('Stopping amavisd-stat....: ' + pid + ' PIDs');
+       fpsystem('/bin/kill -9 ' + pid);
+    end;
+
+end;
+//##############################################################################
+procedure tamavis.START_AMAVISD();
+var
+   pid,cmd:string;
+   count:integer;
+   myhostname:string;
+   EnableMysql:integer;
+   CopyToDomainSpool:string;
+begin
+EnableMysql:=0;
+if not FileExists(AMAVISD_BIN_PATH()) then begin
+   logs.DebugLogs('Starting......: amavisd-new is not installed...');
+   exit;
+end;
+
+if EnableAmavisDaemon=0 then begin
+    logs.DebugLogs('Starting......: amavisd-new is disabled by EnableAmavisDaemon file key');
+    exit;
+end;
+
+pid:=AMAVISD_PID();
+    if SYS.PROCESS_EXIST(pid) then begin
+       logs.DebugLogs('Starting......: amavisd-new already exists using pid ' + pid+ '...');
+       if FileExists('/var/spool/postfix/var/run/amavisd-new/amavisd-new.sock') then begin
+          logs.OutputCmd('/bin/chown postfix:postfix /var/spool/postfix/var/run/amavisd-new/amavisd-new.sock');
+       end else begin
+            CheckUnixSocketName();
+            STOP_AMAVISD();
+            exit;
+       end;
+       exit;
+    end;
+if FileExists('/etc/init.d/amavis') then SYS.DeleteService('amavis');
+if FileExists('/etc/init.d/amavisd-new-milter') then SYS.DeleteService('amavisd-new-milter');
+forceDirectories('/var/amavis/tmp');
+forceDirectories('/var/amavis/db');
+forceDirectories('/var/amavis/var');
+forceDirectories('/var/amavis/run');
+forceDirectories('/var/amavis/dspam');
+forceDirectories('/var/virusmails');
+forceDirectories('/var/log/amavis');
+
+if not FileExists('/var/log/amavis/amavis.log') then begin
+   fpsystem('/bin/touch /var/log/amavis/amavis.log');
+   fpsystem('/bin/chown postfix:postfix /var/log/amavis/amavis.log');
+end;
+
+
+ if not TryStrToInt(SYS.GET_INFO('EnableMysqlFeatures'),EnableMysql) then EnableMysql:=0;
+
+ CopyToDomainSpool:=SYS.GET_INFO('CopyToDomainSpool');
+ if length(CopyToDomainSpool)=0 then CopyToDomainSpool:='/var/spool/artica/copy-to-domain';
+ forceDirectories(CopyToDomainSpool);
+ logs.OutputCmd('/bin/chown -R postfix:postfix '+CopyToDomainSpool);
+ 
+
+ 
+ 
+forceDirectories('/var/amavis/.spamassassin');
+fpsystem('/bin/chown -R postfix:postfix /var/amavis/.spamassassin');
+fpsystem('/bin/chmod 755 /var/amavis/.spamassassin');
+forceDirectories('/var/spool/postfix/var/run/amavisd-new');
+fpsystem('/bin/chown -R postfix:postfix /var/amavis');
+fpsystem('/bin/chown -R postfix:postfix /var/virusmails');
+fpsystem('/bin/chown -R postfix:postfix /var/spool/postfix/var/run/amavisd-new');
+fpsystem('/bin/chown -R postfix:postfix /var/log/amavis');
+include_config_files();
+
+if fileExists('/var/spool/postfix/var/run/amavisd-new/amavisd-new.sock') then logs.DeleteFile('/var/spool/postfix/var/run/amavisd-new/amavisd-new.sock');
+AMAVISD_SETCONFIG('daemon_user','postfix');
+AMAVISD_SETCONFIG('daemon_group','postfix');
+
+
+
+
+
+    if not CHECK_MODULES() then begin
+         logs.Syslogs('Starting......: Please run "artica-make APP_AMAVISD_MILTER"');
+         logs.Syslogs('Starting......: In order to install components');
+         logs.Syslogs('Starting......: stopping start procedure');
+         exit;
+    end;
+
+
+if fileExists(dspam.BIN_PATH()) then begin
+      logs.Debuglogs('Starting......: Dspam is detected');
+      if EnableMysql=1 then begin
+         AMAVISD_SETCONFIG('dspam',SYS.LOCATE_DSPAM());
+         spamassassin.DSPAM_PATCH();
+         spamassassin.RAZOR_INIT();
+         spamassassin.DEFAULT_SETTINGS();
+         dspam.SET_CONFIG();
+         fpsystem('chmod u-s,a+rx ' + SYS.LOCATE_DSPAM());
+      end;
+      
+      if EnableMysql=0 then begin
+         AMAVISD_SETCONFIG('dspam',' ');
+         logs.Debuglogs('Starting......: Dspam is detected but disabled, EnableMysqlFeatures=0');
+      end;
+end else begin
+   logs.Debuglogs('Starting......: Dspam is not detected');
+
+end;
+
+logs.OutputCmd('/bin/chmod 755 /usr/local/etc/amavisd.conf');
+logs.OutputCmd('/bin/chown root:root /usr/local/etc/amavisd.conf');
+CheckMyHostname();
+CheckUnixSocketName();
+CheckLogfile();
+cmd:=AMAVISD_BIN_PATH()+' ';
+cmd:=cmd + '-u postfix ';
+cmd:=cmd + '-g postfix ';
+cmd:=cmd + '-m 5 -d 5 ';
+cmd:=cmd + '-H /var/amavis ';
+cmd:=cmd + '-T /var/amavis/tmp ';
+cmd:=cmd + '-Q /var/virusmails ';
+cmd:=cmd + '-D /var/amavis/db ';
+cmd:=cmd + '-S /var/amavis/var ';
+cmd:=cmd + '-L /var/amavis/run/amavis.lock ';
+cmd:=cmd + '-P /var/spool/postfix/var/run/amavisd-new/amavisd-new.pid ';
+cmd:=cmd + '-d 0 ';
+cmd:=cmd + '-c /usr/local/etc/amavisd.conf ';
+cmd:=cmd + '-p /var/spool/postfix/var/run/amavisd-new/amavisd-new.sock start &';
+
+     logs.Syslogs('Starting......: amavisd-new...');
+     logs.Debuglogs(cmd);
+     fpsystem(cmd);
+  count:=0;
+  while not SYS.PROCESS_EXIST(AMAVISD_PID()) do begin
+              sleep(100);
+              inc(count);
+              if count>90 then begin
+                 writeln('');
+                 logs.DebugLogs('Starting......: amavisd-new (timeout!!!)');
+                 break;
+              end;
+              write('.');
+        end;
+
+    writeln('');
+    if not SYS.PROCESS_EXIST(AMAVISD_PID()) then begin
+         logs.DebugLogs('Starting......: amavisd-new (failed!!!)');
+    end else begin
+         logs.DebugLogs('Starting......: amavisd-new PID '+AMAVISD_PID());
+         AMAVISD_RELOAD();
+    end;
+
+    if FileExists('/var/spool/postfix/var/run/amavisd-new/amavisd-new.sock') then fpsystem('/bin/chown postfix:postfix /var/spool/postfix/var/run/amavisd-new/amavisd-new.sock');
+end;
+//##############################################################################
+procedure tamavis.START();
+begin
+    logs.DebugLogs('################# AMAVIS ######################');
+    
+
+    
+    if EnableAmavisDaemon=0 then begin
+       logs.Debuglogs('Starting......: amavis components are disabled by EnableAmavisDaemon parameter');
+       STOP();
+       exit;
+    end;
+    WRITE_INITD();
+
+
+    logs.Debuglogs('Starting......: amavis components');
+    START_AMAVISD();
+    START_MILTER();
+    START_AMAVIS_STAT();
+
+end;
+//##############################################################################
+procedure tamavis.CheckUnixSocketName();
+var
+l:TstringList;
+RegExpr:tRegExpr;
+i:Integer;
+begin
+
+    if not FileExists('/usr/local/etc/amavisd.conf') then exit;
+    l:=TstringList.Create;
+    l.LoadFromFile('/usr/local/etc/amavisd.conf');
+    RegExpr:=TRegExpr.Create;
+    RegExpr.Expression:='^\$unix_socketname[\s=]+"(.+?)"';
+    for i:=0 to l.Count-1 do begin
+             if RegExpr.Exec(l.Strings[i]) then begin
+                if trim(RegExpr.Match[1])<>'/var/spool/postfix/var/run/amavisd-new/amavisd-new.sock' then begin
+                   logs.Debuglogs('Starting......: amavis change socket path to "/var/spool/postfix/var/run/amavisd-new/amavisd-new.sock"');
+                   l.Strings[i]:='$unix_socketname = "/var/spool/postfix/var/run/amavisd-new/amavisd-new.sock";';
+                   try
+                      l.SaveToFile('/usr/local/etc/amavisd.conf');
+                   except
+                      logs.Debuglogs('CheckUnixSocketName:: FATAL ERROR WHILE SAVING /usr/local/etc/amavisd.conf');
+                      exit;
+                   end;
+                   l.free;
+                   RegExpr.free;
+                   exit;
+                end;
+             end;
+
+    end;
+                   l.free;
+                   RegExpr.free;
+
+
+end;
+//##############################################################################
+procedure tamavis.CheckMyHostname();
+var
+l:TstringList;
+RegExpr:tRegExpr;
+i:Integer;
+myhostname:string;
+amavishostname:string;
+begin
+  myhostname:=SYS.HOSTNAME_g();
+  RegExpr:=TRegExpr.Create;
+  RegExpr.Expression:='(.+)\.(.+)';
+  if not RegExpr.Exec(myhostname) then myhostname:=myhostname+'.local';
+  l:=TstringList.Create;
+  if not FileExists('/usr/local/etc/amavisd.conf') then logs.WriteToFile('#','/usr/local/etc/amavisd.conf');
+  l.LoadFromFile('/usr/local/etc/amavisd.conf');
+  RegExpr.Expression:='\$myhostname(.+)';
+  for i:=0 to l.Count-1 do begin
+         if RegExpr.Exec(l.Strings[i]) then begin
+            amavishostname:=RegExpr.Match[1];
+             logs.Debuglogs('amavishostname=' +amavishostname);
+             amavishostname:=AnsiReplaceText(amavishostname,'"','');
+             amavishostname:=AnsiReplaceText(amavishostname,' ','');
+             amavishostname:=AnsiReplaceText(amavishostname,'''','');
+             amavishostname:=AnsiReplaceText(amavishostname,'=','');
+             amavishostname:=AnsiReplaceText(amavishostname,';','');
+             amavishostname:=trim(amavishostname);
+             RegExpr.Expression:='(.+)\.(.+)';
+             if not RegExpr.Exec(amavishostname) then begin
+                   logs.Debuglogs('Starting......: amavis invalid server name "'+amavishostname+'" change to "'+myhostname+'"');
+                   l.Strings[i]:='$myhostname = "'+myhostname+'";';
+                   try
+                      l.SaveToFile('/usr/local/etc/amavisd.conf');
+                   except
+                      logs.Syslogs('Starting......: amavis tamavis.CheckMyHostname() fatal error while saving /usr/local/etc/amavisd.conf');
+                   end;
+             end;
+               l.free;
+               RegExpr.free;
+               exit;
+         end;
+
+  end;
+  logs.Debuglogs('Starting......: amavis invalid server name "null" change to "'+myhostname+'"');
+  l.Add('$myhostname = "'+myhostname+'";');
+  try
+    l.SaveToFile('/usr/local/etc/amavisd.conf');
+  except
+   logs.Syslogs('Starting......: amavis tamavis.CheckMyHostname() fatal error while saving /usr/local/etc/amavisd.conf');
+  end;
+
+  l.free;
+  RegExpr.free;
+end;
+//##############################################################################
+procedure tamavis.CheckLogfile();
+var
+l:TstringList;
+RegExpr:tRegExpr;
+i:Integer;
+myhostname:string;
+patternfound:string;
+begin
+
+  l:=TstringList.Create;
+  if not FileExists('/usr/local/etc/amavisd.conf') then logs.WriteToFile('#','/usr/local/etc/amavisd.conf');
+  l.LoadFromFile('/usr/local/etc/amavisd.conf');
+  RegExpr:=TRegExpr.Create;
+  RegExpr.Expression:='\$LOGFILE(.+)';
+  for i:=0 to l.Count-1 do begin
+         if RegExpr.Exec(l.Strings[i]) then begin
+             patternfound:=RegExpr.Match[1];
+             patternfound:=AnsiReplaceText(patternfound,'"','');
+             patternfound:=AnsiReplaceText(patternfound,' ','');
+             patternfound:=AnsiReplaceText(patternfound,'''','');
+             patternfound:=AnsiReplaceText(patternfound,'=','');
+             patternfound:=AnsiReplaceText(patternfound,';','');
+             patternfound:=trim(patternfound);
+             if patternfound<>'/var/log/amavis/amavis.log' then begin
+                   logs.Debuglogs('Starting......: amavis invalid log file "'+patternfound+'" change to "/var/log/amavis/amavis.log"');
+                   l.Strings[i]:='$LOGFILE = "/var/log/amavis/amavis.log";';
+                   try
+                      l.SaveToFile('/usr/local/etc/amavisd.conf');
+                   except
+                      logs.Syslogs('Starting......: amavis tamavis.CheckMyHostname() fatal error while saving /usr/local/etc/amavisd.conf');
+                   end;
+             end;
+               l.free;
+               RegExpr.free;
+               exit;
+         end;
+
+  end;
+  logs.Debuglogs('Starting......: amavis invalid log file "null" change to "/var/log/amavis/amavis.log"');
+  l.Add('$LOGFILE = "/var/log/amavis/amavis.log";');
+  try
+    l.SaveToFile('/usr/local/etc/amavisd.conf');
+  except
+   logs.Syslogs('Starting......: amavis tamavis.CheckMyHostname() fatal error while saving /usr/local/etc/amavisd.conf');
+  end;
+
+  l.free;
+  RegExpr.free;
+end;
+//##############################################################################
+procedure tamavis.PatchPerlT();
+var
+l:TstringList;
+begin
+if not FileExists(AMAVISD_BIN_PATH()) then exit;
+l:=TstringList.Create;
+l.LoadFromFile(AMAVISD_BIN_PATH());
+if trim(l.Strings[0])<>'#!/usr/bin/perl' then begin
+    l.Strings[0]:='#!/usr/bin/perl';
+    l.SaveToFile(AMAVISD_BIN_PATH());
+end;
+
+l.free;
+end;
+//##############################################################################
+
+function tamavis.CHECK_MODULES():boolean;
+var
+   l:TstringList;
+   i:integer;
+begin
+result:=true;
+l:=TstringList.Create;
+l.Add('Crypt::OpenSSL::RSA');
+l.Add('Mail::Address');
+l.Add('Mail::DKIM');
+l.Add('Digest::SHA1');
+l.Add('IO::Stringy');
+l.Add('Unix::Syslog');
+l.Add('MIME::Words');
+l.Add('Net::Server');
+L.add('BerkeleyDB');
+L.add('GSSAPI');
+L.Add('Authen::SASL');
+L.add('XML::NamespaceSupport');
+L.add('XML::SAX');
+L.Add('XML::Filter::BufferText');
+L.Add('XML::SAX::Writer');
+L.Add('Net::LDAP');
+L.Add('Config::IniFiles');
+L.Add('Geo::IP');
+L.Add('Convert::UUlib');
+L.Add('DBI');
+     for i:=0 to l.Count-1 do begin
+         if not SYS.CHECK_PERL_MODULES(l.Strings[i]) then begin
+              logs.Debuglogs('Starting......: amavis '+l.Strings[i]+' is not installed,False');
+              result:=false;
+         end else begin
+              logs.Debuglogs('Starting......: amavis '+l.Strings[i]+' is installed,True');
+         end;
+     end;
+end;
+//##############################################################################
+
+
+procedure tamavis.AMAVISD_SETCONFIG(key:string;value:string);
+var
+   l:TstringList;
+   i:integer;
+   RegExpr:tRegExpr;
+   line:string;
+   found:boolean;
+begin
+
+l:=Tstringlist.Create;
+l.LoadFromFile('/usr/local/etc/amavisd.conf');
+line:='$'+key+' = '''+value+''';';
+RegExpr:=TRegExpr.Create;
+RegExpr.Expression:='\$'+key+'.+';
+
+for i:=0 to l.Count-1 do begin
+    if RegExpr.Exec(l.Strings[i]) then begin
+       found:=true;
+       l.Strings[i]:=line;
+       break;
+    end;
+end;
+
+if not found then l.Add(line);
+l.SaveToFile('/usr/local/etc/amavisd.conf');
+l.free;
+RegExpr.free;
+end;
+//##############################################################################
+procedure tamavis.STOP_AMAVISD();
+var pid:string;
+begin
+
+    if not FileExists(AMAVISD_BIN_PATH()) then begin
+       writeln('Stopping amavisd-new.....: not installed');
+       exit;
+    end;
+
+
+    pid:=AMAVISD_PID();
+    if not SYS.PROCESS_EXIST(pid) then begin
+       writeln('Stopping amavisd-new.....: Already stopped');
+       exit;
+    end;
+
+       writeln('Stopping amavisd-new.....: ' + pid + ' PID');
+    fpsystem('kill ' + pid);
+    pid:=SYS.PidAllByProcessPath(AMAVISD_BIN_PATH());
+    if length(trim(pid))>0 then begin
+       writeln('Stopping amavisd-new.....: ' + pid + ' PIDs');
+       fpsystem('/bin/kill -9 ' + pid);
+    end;
+
+end;
+//##############################################################################
+procedure tamavis.STOP_MILTER();
+var pid:string;
+begin
+
+    if not FileExists(MILTER_BIN_PATH()) then begin
+       writeln('Stopping amavisd-milter..: not installed');
+       exit;
+    end;
+
+
+    pid:=MILTER_PID();
+    if not SYS.PROCESS_EXIST(pid) then begin
+       writeln('Stopping amavisd-milter..: Already stopped');
+       exit;
+    end;
+
+    writeln('Stopping amavisd-milter..: ' + pid + ' PID');
+    logs.Debuglogs('Stopping amavisd-milter..: ' + pid + ' PID');
+    fpsystem('kill ' + pid);
+    pid:=SYS.PidAllByProcessPath(MILTER_BIN_PATH());
+    if length(trim(pid))>0 then begin
+    writeln('Stopping amavisd-milter..: ' + pid + ' PIDs');
+    logs.Debuglogs('Stopping amavisd-milter..: ' + pid + ' PIDs');
+     fpsystem('/bin/kill -9 ' + pid);
+    end;
+
+end;
+//##############################################################################
+
+
+procedure tamavis.STOP();
+var pid:string;
+begin
+    STOP_MILTER();
+    STOP_AMAVISD();
+    STOP_AMAVIS_STAT();
+end;
+//##############################################################################
+function tamavis.STATUS():string;
+var
+   ini:TstringList;
+   pid:string;
+   milter_enabled:integer;
+begin
+ini:=TstringList.Create;
+pid:=AMAVISD_PID();
+milter_enabled:=0;
+
+
+   if not FileExists(AMAVISD_BIN_PATH()) then exit;
+   ini.Add('[AMAVISD]');
+   if SYS.PROCESS_EXIST(pid) then ini.Add('running=1') else  ini.Add('running=0');
+   ini.Add('application_installed=1');
+   ini.Add('master_pid='+ pid);
+   ini.Add('master_memory=' + IntToStr(SYS.PROCESS_MEMORY(pid)));
+   ini.Add('master_version='+AMAVISD_VERSION());
+   ini.Add('status='+SYS.PROCESS_STATUS(pid));
+   ini.Add('service_name=APP_AMAVISD_NEW');
+   ini.Add('service_cmd=amavis');
+   ini.Add('service_disabled='+IntToStr(EnableAmavisDaemon));
+   
+
+   if FileExists(MILTER_BIN_PATH()) then begin;
+      if EnableAmavisDaemon=1 then begin
+         if EnableAmavisInMasterCF=1 then milter_enabled:=0 else milter_enabled:=1;
+      end;
+       pid:=MILTER_PID();
+      ini.Add('[AMAVISD_MILTER]');
+      if SYS.PROCESS_EXIST(pid) then ini.Add('running=1') else  ini.Add('running=0');
+      ini.Add('application_installed=1');
+      ini.Add('master_pid='+ pid);
+      ini.Add('master_memory=' + IntToStr(SYS.PROCESS_MEMORY(pid)));
+      ini.Add('master_version='+MILTER_VERSION());
+      ini.Add('status='+SYS.PROCESS_STATUS(pid));
+      ini.Add('service_name=APP_AMAVISD_MILTER');
+      ini.Add('service_cmd=amavis');
+      ini.Add('service_disabled='+IntToStr(milter_enabled));
+   end;
+   
+   if FileExists(AMAVIS_STAT_BIN_PATH()) then begin;
+      pid:=AMAVIS_STAT_PID();
+      ini.Add('[AMAVISD_STAT]');
+      if SYS.PROCESS_EXIST(pid) then ini.Add('running=1') else  ini.Add('running=0');
+      ini.Add('application_installed=1');
+      ini.Add('master_pid='+ pid);
+      ini.Add('master_memory=' + IntToStr(SYS.PROCESS_MEMORY(pid)));
+      ini.Add('master_version='+AMAVIS_STAT_VERSION());
+      ini.Add('status='+SYS.PROCESS_STATUS(pid));
+      ini.Add('service_name=APP_AMAVIS_STAT');
+      ini.Add('service_cmd=amavis');
+      ini.Add('service_disabled='+IntToStr(EnableAmavisDaemon));
+   end;
+   
+   
+   result:=ini.Text;
+   ini.free;
+
+end;
+//#########################################################################################
+procedure tamavis.AMAVIS_STAT_WRITE_CONF();
+var
+l:TstringList;
+begin
+
+l:=TstringList.Create;
+l.Add('use strict;');
+l.Add('$MYHOME				= "/usr/local/var/lib/amavis-stats";');
+l.Add('$MYCACHE				= "/usr/local/var/cache/amavis-stats";');
+l.Add('$daemon_user			= "postfix";');
+l.Add('$daemon_group			= "postfix";');
+l.Add('$pid_file			= "$MYHOME/amavis-stats.pid";');
+l.Add('$scan_logfile			= "/var/log/amavis/amavis.log";');
+l.Add('$scan_time			= undef;');
+l.Add('$path				= "/usr/local/sbin:/usr/local/bin:/usr/sbin:/sbin:/usr/bin:/bin";');
+l.Add('$DO_SYSLOG 			= 1;');
+l.Add('$SYSLOG_LEVEL			= "mail.info";');
+l.Add('$LOGFILE				= undef; ');
+l.Add('$DEBUG				= 0;');
+l.Add('1;');
+try
+   l.SaveToFile('/usr/local/etc/amavis-stats.conf');
+except
+   logs.Syslogs('tamavis.AMAVIS_STAT_WRITE_CONF():: Unable to save /usr/local/etc/amavis-stats.conf');
+end;
+end;
+//#########################################################################################
+
+procedure tamavis.WRITE_INITD();
+var
+   l:TstringList;
+   initPath:string;
+begin
+
+l:=TstringList.Create;
+l.add('#! /bin/sh');
+l.add('#');
+l.add('# amavisd-new		Startup script for the amavisd.');
+l.add('#');
+l.add('#');
+l.add('### BEGIN INIT INFO');
+l.add('# Provides:          amavisd');
+l.add('# Required-Start:    $local_fs $network');
+l.add('# Required-Stop:     $local_fs $network');
+l.add('# Should-Start:      $named');
+l.add('# Should-Stop:       $named');
+l.add('# Default-Start:     2 3 4 5');
+l.add('# Default-Stop:      0 1 6');
+l.add('# Short-Description: amavisd');
+l.add('### END INIT INFO');
+l.add('');
+l.add('PATH=/bin:/usr/bin:/sbin:/usr/sbin');
+l.add('');
+l.add('');
+l.add('start () {');
+l.add('	/etc/init.d/artica-postfix start amavis');
+l.add('}');
+l.add('');
+l.add('stop () {');
+l.add('      /etc/init.d/artica-postfix stop amavis');
+l.add('}');
+l.add('');
+l.add('case "$1" in');
+l.add('    start)');
+l.add('	/etc/init.d/artica-postfix start amavis');
+l.add('	;;');
+l.add('    stop)');
+l.add('	/etc/init.d/artica-postfix stop amavis');
+l.add('	;;');
+l.add('    reload|force-reload)');
+l.add('	/etc/init.d/artica-postfix stop amavis');
+l.add('	/etc/init.d/artica-postfix start amavis');
+l.add('	;;');
+l.add('    restart)');
+l.add('	/etc/init.d/artica-postfix stop amavis');
+l.add('	/etc/init.d/artica-postfix start amavis');
+l.add('	;;');
+l.add('    *)');
+l.add('	echo "Usage:  {start|stop|reload|force-reload|restart}"');
+l.add('	exit 3');
+l.add('	;;');
+l.add('esac');
+l.add('');
+l.add('exit 0');
+try
+if FileExists(AMAVISD_INIT_PATH()) then l.SaveToFile(AMAVISD_INIT_PATH());
+if FileExists(MILTER_INIT_PATH()) then l.SaveToFile(MILTER_INIT_PATH());
+except
+exit;
+end;
+l.free;
+
+
+end;
+//#############################################################################
+procedure tamavis.MASTER_CF_DELETE_AMAVIS();
+var
+   d:boolean;
+   l:TstringList;
+   RegExpr:tRegExpr;
+   t,i:integer;
+   f:boolean;
+begin
+
+if not FileExists('/etc/postfix/master.cf') then exit;
+l:=TstringList.Create;
+l.LoadFromFile('/etc/postfix/master.cf');
+RegExpr:=TRegExpr.Create;
+RegExpr.Expression:='^127\.0\.0\.1:10025\s+inet';
+t:=0;
+f:=false;
+for i:=0 to l.Count-1 do begin
+     if t>l.Count-1 then break;
+     if not F then begin
+        if RegExpr.Exec(l.Strings[t]) then begin
+          writeln('Delete ',l.Strings[t], ':',t,' line ',i,'(',l.Count,')');
+           l.Delete(t);
+           f:=true;
+           continue;
+        end;
+     end else begin
+        RegExpr.Expression:='\s+-o\s+';
+        if RegExpr.Exec(l.Strings[t]) then begin
+          writeln('Delete ',l.Strings[t], ':',t,' line ',i,'(',l.Count,')');
+          l.Delete(t);
+          continue;
+        end else begin
+         writeln('Break on ',l.Strings[t], ':',t,' line ',i,'(',l.Count,')');
+         break;
+        end;
+     end;
+     t:=t+1;
+     if t>l.Count-1 then break;
+end;
+
+
+RegExpr.Expression:='^amavis\s+unix\s+';
+t:=0;
+f:=false;
+for i:=0 to l.Count-1 do begin
+     if t>l.Count-1 then break;
+     if not F then begin
+        if RegExpr.Exec(l.Strings[t]) then begin
+          writeln('Delete ',l.Strings[t], ':',t,' line ',i,'(',l.Count,')');
+           l.Delete(t);
+           f:=true;
+           continue;
+        end;
+     end else begin
+        RegExpr.Expression:='\s+-o\s+';
+        if RegExpr.Exec(l.Strings[t]) then begin
+          writeln('Delete ',l.Strings[t], ':',t,' line ',i,'(',l.Count,')');
+          l.Delete(t);
+          continue;
+        end else begin
+         writeln('Break on ',l.Strings[t], ':',t,' line ',i,'(',l.Count,')');
+         break;
+        end;
+     end;
+     t:=t+1;
+     if t>l.Count-1 then break;
+end;
+try
+   l.SaveToFile('/etc/postfix/master.cf');
+except
+    logs.Syslogs('tamavis.MASTER_CF_DELETE_AMAVIS():: FATAL ERROR ON /etc/postfix/master.cf');
+    exit;
+end;
+logs.OutputCmd('postconf -e "content_filter = "');
+l.free;
+RegExpr.free;
+end;
+
+//#############################################################################
+procedure tamavis.AMAVIS_TO_MASTERCF();
+var l:TstringList;
+begin
+MASTER_CF_DELETE_AMAVIS();
+l:=TstringList.Create;
+l.LoadFromFile('/etc/postfix/master.cf');
+l.add('');
+l.add('amavis'+chr(9)+'unix'+chr(9)+'-'+chr(9)+'-'+chr(9)+'-'+chr(9)+'-'+chr(9)+'2'+chr(9)+'smtp');
+l.add('    -o smtp_data_done_timeout=1200');
+l.add('    -o smtp_send_xforward_command=yes');
+l.add('');
+l.add('');
+l.add('127.0.0.1:10025'+chr(9)+'inet'+chr(9)+'n'+chr(9)+'-'+chr(9)+'n'+chr(9)+'-'+chr(9)+'-'+chr(9)+'smtpd');
+l.add('    -o notify_clases=protocol,resource,software');
+l.add('    -o header_checks=');
+l.add('    -o content_filter=');
+l.add('    -o local_recipient_maps=');
+l.add('    -o relay_recipient_maps=');
+l.add('    -o smtpd_restriction_classes=');
+l.add('    -o smtpd_delay_reject=no');
+l.add('    -o smtpd_client_restrictions=permit_mynetworks,reject');
+l.add('    -o smtpd_helo_restrictions=');
+l.add('    -o smtpd_sender_restrictions=');
+l.add('    -o smtpd_recipient_restrictions=permit_mynetworks,reject');
+l.add('    -o smtpd_data_restrictions=reject_unauth_pipelining');
+l.add('    -o smtpd_end_of_data_restrictions=');
+l.add('    -o mynetworks=127.0.0.0/8');
+l.add('    -o strict_rfc821_envelopes=yes');
+l.add('    -o smtpd_error_sleep_time=0');
+l.add('    -o smtpd_soft_error_limit=1001');
+l.add('    -o smtpd_hard_error_limit=1000');
+l.add('    -o smtpd_client_connection_count_limit=0');
+l.add('    -o smtpd_client_connection_rate_limit=0');
+l.add('    -o receive_override_options=no_header_body_checks,no_unknown_recipient_checks');
+l.add('    -o smtp_send_xforward_command=yes');
+l.add('    -o disable_dns_lookups=yes');
+l.add('    -o local_header_rewrite_clients=');
+l.add('    -o smtpd_milters=');
+l.add('');
+
+try
+   l.SaveToFile('/etc/postfix/master.cf');
+except
+    logs.Syslogs('tamavis.MASTER_CF_DELETE_AMAVIS():: FATAL ERROR ON /etc/postfix/master.cf');
+end;
+logs.OutputCmd('postconf -e "content_filter = amavis:[127.0.0.1]:10024"');
+logs.OutputCmd('postconf -e "receive_override_options = no_address_mappings"');
+
+end;
+//#############################################################################
+
+
+
+end.
+

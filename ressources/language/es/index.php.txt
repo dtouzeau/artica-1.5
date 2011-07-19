@@ -1,0 +1,10 @@
+<db_enable_mailboxes>Administrar Buzones de correo local</db_enable_mailboxes>
+<db_method>M&eacute;todo de base de datos</db_method>
+<domains_link>Agregar, editar y administrar sus dominios de correo</domains_link>
+<domains_title>Sus Dominios</domains_title>
+<srv_artica>Servicio Artica</srv_artica>
+<srv_kav_mail>Kaspersky Antivirus para Postfix</srv_kav_mail>
+<srv_postfix>Estado del servicio Postfix</srv_postfix>
+<srv_postfix_infos>Informaci&oacute;n de Postfix</srv_postfix_infos>
+<srv_postfix_version>Postfix versi&oacute;n</srv_postfix_version>
+<WELCOME>Bienvenido a Artica-Postfix</WELCOME>

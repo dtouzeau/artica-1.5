@@ -1,0 +1,10 @@
+<artica_services>Artica Core serwisy</artica_services>
+<mail_services>Mailbox services</mail_services>
+<postfix_services>Postfix SMTP services</postfix_services>
+<samba_services>Samba services</samba_services>
+<services_status_text>To jest przegl%u0105d wszystkich us%u0142ug w Twoim systemie.[br]Nazwa us%u0142ugi, U%u017Cycie pami%u0119ci (VmRSS) g%u0142ownego procesu i wszystkich podproces&oacute;w u%u017Cywanych przez g%u0142&oacute;wny PID, g%u0142&oacute;wna wersja i status.</services_status_text>
+<squid_services>Squid</squid_services>
+<start>Start</start>
+<start_this_service>[H5]Uruchom t%u0119 us%u0142ug%u0119[/H5]Kliknij na okr%u0105g%u0142y obrazek aby uruchomi%u0107 us%u0142ug%u0119.</start_this_service>
+<stop>Stop</stop>
+<stop_this_service>[H5]Wy%u0142%u0105cz t%u0119 us%u0142ug%u0119[/H5]Kliknij na okr%u0105g%u0142y obrazek aby wy%u0142%u0105czy%u0107 us%u0142ug%u0119.</stop_this_service>

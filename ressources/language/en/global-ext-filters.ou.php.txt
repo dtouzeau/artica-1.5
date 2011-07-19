@@ -1,0 +1,37 @@
+<add_attachment_group_text>Give the name of your attachment group</add_attachment_group_text>
+<add_attachment_text>Add the deny extensions list separated by a comma</add_attachment_text>
+<add_attach_group>Add attachment group</add_attach_group>
+<add_a_new_block_ext>Add new extensions to deny</add_a_new_block_ext>
+<add_default_dangerous_extensions>Add predefined dangerous extensions list</add_default_dangerous_extensions>
+<add_subject>Add text to Subject (in any way)</add_subject>
+<add_subject_text>Add text to Subject if an attachment is filtered in any way.[br] This has lowest priority, and is only used if the previous "Add text to Subject (xxx)" are undefined.</add_subject_text>
+<attachments_explain>This section allows you to add deny attachments groups.[br]These group could be added to a user group or an a specific account.[br]eMails that match the deny attachments could be deleted, or quarantine</attachments_explain>
+<delete_default_dangerous_extensions>Delete predefined dangerous extensions list</delete_default_dangerous_extensions>
+<filters_list>Filters lists</filters_list>
+<groupslisttext>Here it is the list of all user's groups using this attachment policy</groupslisttext>
+<notifications>Notifications settings</notifications>
+<search_zip>Search for filenames within ZIP</search_zip>
+<search_zip_text>Search for filenames within ZIP archives using the internal ZIP parsing[br]Any filenames found are subject to the same checks, for instance Forbidden attachments or good list, with the
+notable difference that the rename action has no effect on ZIP files.[br]
+This is due to a shortcoming in this version of the filter; by the time the ZIP file is decoded, it is “too late” to rename the attachment. 
+[br]Only the delete or kill actions will modify ZIP files.[br]
+In order for search zip to have an effect, you must either:
+use Forbidden attachments mode  and specify in the Forbidden attachments the kill or delete  actions for select extensions.</search_zip_text>
+<subj_deleted>Add text to Subject (deleted)</subj_deleted>
+<subj_deleted_text>Add text to Subject if an attachment is deleted for any reason.
+Undefined by default, so renattach falls through to the next valid subject directive, and eventually to add subject</subj_deleted_text>
+<subj_renamed>Add text to Subject (renamed)</subj_renamed>
+<subj_renamed_text>Add text to Subject if an attachment is renamed for any reason.[br]Undefined by default, so renattach falls through to add subject</subj_renamed_text>
+<users_groups_list>User's Groups list</users_groups_list>
+<warning_html>Body Html message notification</warning_html>
+<warning_html_text>Inserts a warning message into HTML portions of the email when
+filtering occurs. The HTML is inserted at a position determined by
+htmlwarn_pos (see above) which provides a good hope for adding a
+visible warning. Unfortunately, inserting arbitrary HTML is tricky due
+to the complexity of markup interactions. Inserting warnings in HTML
+may thoroughly disrupt the original message, so use with caution</warning_html_text>
+<warning_text>Body Text message notification</warning_text>
+<warning_text_text>If an attachment is filtered, this lets you specify some warning text that
+will be inserted into any plain text portion(s) of the email.[br] This is
+effective for informing users of filtered files, but the act of inserting
+arbitrary text into an email can cause new problems.[br] Use with caution.</warning_text_text>

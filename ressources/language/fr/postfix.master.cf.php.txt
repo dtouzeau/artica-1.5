@@ -1,0 +1,113 @@
+<AddOptionService_text>Donnez l'option pour ajouter ce service, n'oublier pas d'utiliser &quot;-o&quot; si n&eacute;cessaire</AddOptionService_text>
+<add_postfix_service>Ajouter un nouveau service postfix</add_postfix_service>
+<CHROOT>Chroot</CHROOT>
+<CHROOT_TEXT>(par d&eacute;faut oui) Si vraiment le service doit &ecirc;tre chroot&eacute; dans le r&eacute;pertoire de file d'attente du courrier (le chemin d'acc&egrave;s est contr&ocirc;l&eacute; par la variable de configuration queue_directory du fichier main.cf)</CHROOT_TEXT>
+<COMMAND>Commande</COMMAND>
+<ENABLE_SMTPS>Activer SMTP SSL (smtps)</ENABLE_SMTPS>
+<generated_config>Fichier de configuration</generated_config>
+<MAXPROC>Limite de processus</MAXPROC>
+<MAXPROC_TEXT>Le nombre maximal de processus qui peuvent ex&eacute;cuter ce service simultan&eacute;ment.[br]Indiquez 0 pour aucune limite du nombre de processus.[br] [i]NOTE : quelques services Postfix doivent &ecirc;tre configur&eacute;s comme service &agrave; processus-unique (par exemple, qmgr) et quelques services doivent &ecirc;tre configur&eacute;s sans limite du nombre de processus (par exemple, cleanup).[br]Ces limites ne doivent pas &ecirc;tre chang&eacute;es.</MAXPROC_TEXT>
+<OPTIONS>options</OPTIONS>
+<PRIVATE>Priv&eacute;</PRIVATE>
+<PRIVATE_TEXT>Acc&egrave;s limit&eacute; ou pas au syst&egrave;me de messagerie.[br]
+Les services Internet (entrez inet) ne peuvent pas &ecirc;tre privatifs</PRIVATE_TEXT>
+<rebuild_configuration>Revenir &agrave; la configuration par d&eacute;faut</rebuild_configuration>
+<services_table>Table des services</services_table>
+<service_anvil>Nombre de session et contr&ocirc;le du taux de requ&ecirc;te</service_anvil>
+<service_anvil_text>Le serveur Postfix tient &agrave; jour des statistiques &agrave; propos du nombre de connexions ou des taux de requ&ecirc;te.[br]
+Cette information peut &ecirc;tre employ&eacute;e pour se d&eacute;fendre contre les clients qui harc&egrave;lent un serveur avec un nombre important de sessions simultan&eacute;es, ou avec trop de requ&ecirc;tes successives dans une p&eacute;riode configurable.[br]
+Ce serveur est destin&eacute; &agrave; fonctionner sous le contr&ocirc;le du serveur principal de Postfix.</service_anvil_text>
+<service_bounce>Rapports sur l'&eacute;tat d'avancement des livraisons</service_bounce>
+<service_bounce_text>Le d&eacute;mon bounce tient &agrave; jour des journaux par message avec informations sur l&eacute;tat de la livraison.[br]
+Chaque journal est appel&eacute; apr&egrave;s la file d'attente dont il d&eacute;pend, et est maintenu dans un sous-r&eacute;pertoire de la file d'attente figurant apr&egrave;s le nom du service dans le fichier master.cf (bounce, defer ou trace).[br]
+Ce programme s'attend &agrave; &ecirc;tre lanc&eacute; gestionnaire de processus principal</service_bounce_text>
+<service_cleanup>Normalisez et mettez le message dans la file d'attente de Postix</service_cleanup>
+<service_cleanup_text>Le d&eacute;mon cleanup traite le courrier &agrave; l'arriv&eacute;e, l'ins&egrave;re dans la file d'attente du courrier entrant, et informe le gestionnaire des files d'attente de son arriv&eacute;e</service_cleanup_text>
+<service_defer>Rapports sur l'&eacute;tat d'avancement de la livraison (defer)</service_defer>
+<service_defer_text>&quot;&quot;</service_defer_text>
+<service_discard>Annulez l'agent de distribution du courrier</service_discard>
+<service_discard_text>L'agent de non-livraison de Postfix traite les demandes de livraison du gestionnaire de files d'attente.[br]
+Chaque demande d&eacute;pend d'une file d'attente, d'une adresse d'exp&eacute;diteur, d'un domaine ou d'un nom d'h&ocirc;te qui sont trait&eacute;s comme autant de raisons de rejeter l'e-mail, ainsi que le nom du destinataire.[br]
+Le motif du rejet peut &ecirc;tre pr&eacute;fix&eacute; avec le code RFC 3463.[br]
+Ce programme s'attend &agrave; &ecirc;tre lanc&eacute; par le gestionnaire de processus principal.[br]
+L'agent de non-livraison feint la livraison de tous les destinataires dans la demande de la livraison,
+note le domaine &laquo; next-hop &raquo; ou les informations sur l'h&ocirc;te de comme raison de rejeter le courrier, met &agrave; jour la file d'attente et marque les destinataires comme termin&eacute;s ou informe le gestionnaire de file d'attente que la livraison devrait &ecirc;tre retent&eacute;e ult&eacute;rieurement.[br]Des rapports sur l'&eacute;tat de la livraison sont envoy&eacute;s au d&eacute;mon trace comme appropri&eacute;s.</service_discard_text>
+<service_error>Essai/erreur de l'agent de distribution du courrier</service_error>
+<service_error_text>l'agent de non-livraison de Postfix traite les demandes de livraison du gestionnaire de files d'attente. Chaque demande d&eacute;pends d'une file d'attente, d'une adresse d'exp&eacute;diteur, du motif de non-livraison (sp&eacute;cifi&eacute;e par le destination next-hop), et l'information sur le destinataire.[br]
+La raison peut &ecirc;tre pr&eacute;fix&eacute;e avec un code RFC 3463; si aucun n'est sp&eacute;cifi&eacute;, une valeur par d&eacute;faut de 4.0.0 ou de 5.0.0 est employ&eacute; &agrave; la place.[br]
+Ce programme s'attend &agrave; &ecirc;tre lanc&eacute; par le gestionnaire de processus principal.</service_error_text>
+<service_flush>Vidange rapide du serveur</service_flush>
+<service_flush_text>flush tient &agrave; jour un enregistrement des courriers report&eacute;s par destination.[br]
+Cette information est utilis&eacute;e pour l'am&eacute;lioration des performances des requ&ecirc;tes SMTP ETRN, ou de leur &eacute;quivalent en ligne de commande, &quot;sendmail -qR&quot; ou &quot;postqueue -f&quot;.[br]
+Ce programme s'attend &agrave; &ecirc;tre lanc&eacute; par le gestionnaire de processus principal.</service_flush_text>
+<service_lmtp>Client LMTP</service_lmtp>
+<service_lmtp_text>Le client LMTP de Postfix impl&eacute;mente les protocoles de livraison LMTP.[br]
+Il traite les requ&ecirc;tes de livraison du gestionnaire de file d'attente.[br]
+Chaque requ&ecirc;te d&eacute;pend d'une file d'attente, d'une adresse d'exp&eacute;diteur, d'un nom de domaine ou d'h&ocirc;te pour la livraison, ainsi que de l'information sur le destinataire.[br]
+Ce programme s'attend &agrave; &ecirc;tre lanc&eacute; par le gestionnaire de processus principal.</service_lmtp_text>
+<service_local>Distribution du courrier local</service_local>
+<service_local_text>Le d&eacute;mon local traite les requ&ecirc;tes de livraison du gestionnaire de files d'attente de Postfix et livre le courrier aux destinataires locaux.[br]
+Chaque requ&ecirc;te de livraison d&eacute;pend d'une file d'attente, d'une adresse d'exp&eacute;diteur, d'un nom de domaine ou d'h&ocirc;te pour la livraison et d'un ou plusieurs destinataires.[br]
+Ce programme s'attend &agrave; &ecirc;tre lanc&eacute; par le gestionnaire des locaux.[br]
+Le d&eacute;mon local mets &agrave; jour les files d'attente et marque les destinataires comme termin&eacute;s, ou il informe le gestionnaire de files d'attente que la livraison devrait &ecirc;tre tent&eacute;e &agrave; un moment ult&eacute;rieur.[br]
+Les rapports sur l'&eacute;tat d'avancement de la livraison sont envoy&eacute;s aux d&eacute;mons bounce, defer ou trace si appropri&eacute;s.</service_local_text>
+<service_maildrop>maildrop</service_maildrop>
+<service_maildrop_maildrop_text>service maildrop</service_maildrop_maildrop_text>
+<service_new>Nouveau service</service_new>
+<service_pickup>Collecte du courrier local</service_pickup>
+<service_pickup_text>Le d&eacute;mon pickup attend de voir si les nouveaux courriers on &eacute;t&eacute; d&eacute;pos&eacute; dans le r&eacute;pertoire de maildrop, et l'introduit dans le d&eacute;mon cleanup. Les fichiers . Ill seront effac&eacute;s sans notifier l'organitor.[br]
+Ce programme s'attend &agrave; &ecirc;tre lanc&eacute; par le gestionnaire des processus locaux.</service_pickup_text>
+<service_proxymap>Serveur proxy de table de consultation</service_proxymap>
+<service_proxymap_text>Le serveur proxymap fournit un service de table de recherche en lecture seule &agrave; des processus de Postfix.[br]
+Le but du service est:[br]
+[ul][li]De surmonter les restrictions chroot.[br]
+Par exemple, un serveur SMTP chroot&eacute; a besoin d'acc&eacute;der au syst&egrave;me de fichiers passwd, afin de rejeter le courrier des adresses locales inexistantes,
+mais il n'est pas pratique de conserver une copie du fichier passwd dans le chroot.[/li]
+[li] Pour consolider le nombre de tables de consultation ouvertes par plusieurs processus par le partage d'une m&ecirc;me table ouverte.[br]
+Par exemple cr&eacute;er des les connexions MySQL &agrave; partir des r&eacute;sultats de chaque processus du d&eacute;mon Postfix dans les erreurs &quot;trop de connexions&quot;. [/li]
+[/ul] Le nombre total de connexions est limit&eacute; par le nombre de processus du serveur proxymap.</service_proxymap_text>
+<service_qmgr>G&eacute;rer files d'attente</service_qmgr>
+<service_qmgr_text>Le d&eacute;mon qmgr attend l'arriv&eacute;e du courrier entrant et organise sa livraison via des processus de livraison de Postfix.[br]
+La strat&eacute;gie actuelle de routage du courrier est d&eacute;l&eacute;gu&eacute;e au d&eacute;mon trivial-rewrite.[br]
+Ce programme s'attend &agrave; &ecirc;tre ex&eacute;cut&eacute; &agrave; partir du gestionnaire de processus ma&icirc;tre</service_qmgr_text>
+<service_relay>relais</service_relay>
+<service_relay_text>relais</service_relay_text>
+<service_retry>R&eacute;essayer</service_retry>
+<service_retry_text>Service de r&eacute;essai</service_retry_text>
+<service_rewrite>R&eacute;&eacute;crire</service_rewrite>
+<service_rewrite_text>utilis&eacute; pour la r&eacute;ecriture des messages</service_rewrite_text>
+<service_scache>Cache des connexions partag&eacute;es</service_scache>
+<service_scache_text>Le serveur scache entretient un cache partag&eacute; multi-connexion.[br]
+Cette information peut &ecirc;tre utilis&eacute;e par, par exemple, des clients SMTP de Postfix ou d'autres agents de livraison de Postfix.[br]
+Le cache de connexion est organis&eacute; en noms de destination logique, en noms d'extr&eacute;mit&eacute;s physiques et en connexions.[br]
+Comme exemple pr&eacute;cis, sp&eacute;cifie les destinations SMTP logique (transport, domaine port), et sp&eacute;cifie les param&egrave;tres SMTP physiques (transports, adresse IP, port).[br]
+Une connexion SMTP peut &ecirc;tre enregistr&eacute;e apr&egrave;s une transaction de courrier r&eacute;ussie.[br]
+Dans le cas g&eacute;n&eacute;ral, une destination logique peut se r&eacute;f&eacute;rer &agrave; z&eacute;ro ou plusieurs extremit&eacute;s physiques, une extr&eacute;mit&eacute; physique peut &ecirc;tre r&eacute;f&eacute;renc&eacute;e par z&eacute;ro ou plusieurs destinations logiques, et une extr&eacute;mit&eacute; peut se r&eacute;f&eacute;rer &agrave; z&eacute;ro ou plusieurs connexions.</service_scache_text>
+<service_showq>Lister la queue de mail Postfix</service_showq>
+<service_showq_text>Le d&eacute;mon showq signale l'&eacute;tat de Postfix file d'attente.[br]
+C'est le programme qui &eacute;mule la commande sendmail de &quot;mailq&quot;.[br]
+Le d&eacute;mon showq peut &eacute;galement &ecirc;tre ex&eacute;cut&eacute; en mode autonome par le super-utilisateur.[br]
+Ce mode de fonctionnement est utilis&eacute; pour &eacute;muler la commande &quot;mailq&quot; lorsque que le syst&egrave;me de messagerie Postfix est en panne</service_showq_text>
+<service_smtp>Client SMTP</service_smtp>
+<service_smtp_text>Le client SMTP de Postfix impl&eacute;mente les protocoles de livraison de courrier SMTP.[br]
+Il traite les demandes de livraison de messages &agrave; partir du gestionnaire de file d'attente.[br]
+Chaque requ&ecirc;te sp&eacute;cifie un fichier de file d'attente, une adresse d'exp&eacute;diteur, un domaine ou un h&ocirc;te &agrave; livrer &agrave;, et des informations relatives au destinataire.[br]
+Ce programme s'attend &agrave; &ecirc;tre ex&eacute;cut&eacute; &agrave; partir du gestionnaire de processus ma&icirc;tre</service_smtp_text>
+<service_tlsmgr>Gestionnaire de cache des sessions TLS</service_tlsmgr>
+<service_tlsmgr_text>Le service tlsmgr g&egrave;re les caches de session TLS.[br]Il enregistre et retrouve les entr&eacute;es mises en cache et demand&eacute;e par les processus SMTPD et SMTP et de fa&ccedil;on p&eacute;riodique, supprime les entr&eacute;es expir&eacute;es.</service_tlsmgr_text>
+<service_trace>Rapport sur l'&eacute;tat d'avancement de la livraison (trace)</service_trace>
+<service_trace_text>&quot;&quot;</service_trace_text>
+<SERVICE_TYPE>service</SERVICE_TYPE>
+<service_verify>Serveur de v&eacute;rification d'adresse</service_verify>
+<service_verify_text>Le serveur de v&eacute;rification d'adresse verify conserve un enregistrement des adresses de destinataires qui sont connues pour &ecirc;tre livrables ou non livrables.</service_verify_text>
+<service_virtual>Agent de livraison du courrier des domaines virtuels</service_virtual>
+<service_virtual_text>L'agent de livraison virtuel est con&ccedil;u pour les services virtuels d'h&eacute;bergement de courrier.[br]
+Initialement bas&eacute;e sur l'agent de livraison locale de Postfix, cet agent recherche les destinataires gr&acirc;ce &agrave; une cartographie des recherches de leur adresse de destinataire compl&egrave;te, au lieu d'utiliser, seulement, les recherches de fichiers de mots de passe Unix cod&eacute;s en dur dans la partie locale de l'adresse.[br]
+Cet agent de livraison ne d&eacute;livre que du courrier.[br]
+D'autres caract&eacute;ristiques telles que l'acheminement du courrier, les notifications externes, etc, doivent &ecirc;tre configur&eacute;s via des cartes virtual_alias ou via des m&eacute;canismes de consultation similaire.</service_virtual_text>
+<SMTPS_TEXT>Cette section vous autorise &agrave; activer le SMTP SSL (utilisant le port 465).[br]Si vous activez cette fonctionnalit&eacute;, le ficher de configuration principal de postfix sera enrichi du service SMTPs</SMTPS_TEXT>
+<UNIPRIV>Sans privil&egrave;ges</UNIPRIV>
+<UNIPRIV_TEXT>(par d&eacute;faut oui) Que le service s'ex&eacute;cute avec les privil&egrave;ges root ou en tant que propri&eacute;taire du syst&egrave;me Postfix (le nom du propri&eacute;taire est contr&ocirc;l&eacute; par la variable de configuration mail_owner du fichier main.cf).</UNIPRIV_TEXT>
+<WAKEUP>Heure de r&eacute;veil</WAKEUP>
+<WAKEUP_TEXT>Par d&eacute;faut: 0, r&eacute;veille le service nomm&eacute; apr&egrave;s le nombre de secondes sp&eacute;cifi&eacute;. Le r&eacute;veil est impl&eacute;ment&eacute; en se connectant au service et en lan&ccedil;ant une commande de r&eacute;veil.
+[br]Sp&eacute;cifiez 0 pour ne pas activer la fonction de r&eacute;veil automatique.[br]Les services pickup, qmgr et flush n&eacute;cessite un temps de r&eacute;veil.</WAKEUP_TEXT>

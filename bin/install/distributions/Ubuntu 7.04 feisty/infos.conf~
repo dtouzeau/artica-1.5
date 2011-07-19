@@ -1,0 +1,21 @@
+[INCLUDE]
+#Get configuration file "infos.conf" from other file specified
+config=Debian 4.0 Gnu-linux
+
+[REPOSITORIES]
+updater=/usr/bin/apt-get
+beffore_check=/usr/bin/apt-get check
+suffix_command_line=-y
+prefix_command_line=install
+repositories_list=/usr/bin/dpkg --get-selections
+repositories_list_expression=([a-z\-0-9\.]+)\s+install
+
+[APPLICATIONS]
+procmail_bin=/usr/bin/procmail
+
+[LDAP]
+#prevent ERROR "bdb_db_open: Warning - No DB_CONFIG file found in directory"
+set_db_config=no
+#file and regex to obtain username daemon.
+get_ldap_user=/etc/default/slapd
+get_ldap_user_regex=SLAPD_USER="([a-zA-Z0-9_\-]+)"

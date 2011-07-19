@@ -1,0 +1,10 @@
+<artica_backup_storage>Stockage de sauvegarde Artica</artica_backup_storage>
+<artica_backup_storage_explain>Vous trouverez ici la taille de votre espace de stockage mails.
+[br] Le stockage du courrier signifie trois zones.[br]
+
+[ul]
+[li][b]File d'attente index&eacute;es[/b] d&eacute;signe tous les messages qui sont index&eacute;s dans la base de donn&eacute;es Mysql et utilis&eacute;s pour les interroger[/li]
+[li][b]Quarantaine[/b] signifie tous les messages d&eacute;tect&eacute;s comme contenant un virus ou un spam et enregistr&eacute;s dans la zone de quarantaine[/li]
+[li][b]Sauvegarde[/b] signifie (si vous avez activ&eacute; la fonctionnalit&eacute; &laquo;Sauvegarde &agrave; la vol&eacute;e&quot;) tous les messages stock&eacute;s ont un mode de sauvegarde[/li]
+[li][b]Pi&egrave;ces jointes[/b] sont les fichiers joints stock&eacute;s dans la file d'attente index&eacute;s[/li]
+[/ul]</artica_backup_storage_explain>

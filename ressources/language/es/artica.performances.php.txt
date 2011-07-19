@@ -1,0 +1,108 @@
+<about_perf>Esta secci&oacute;n ayudar&aacute; a definir el rendimiento de los procesos de Artica y servicios seg&uacute;n el rendimiento del equipo.[br]
+Usted puede elegir el mejor rendimiento pero los servicios de baja o servicios completos, pero menos prestaciones.</about_perf>
+<ADMIN_COVER_PAGE_STATUS>Estado de la pagina del administrador</ADMIN_COVER_PAGE_STATUS>
+<APP_PRELOAD_NOTINSTALLED>La precarga del demonio no esta instalada</APP_PRELOAD_NOTINSTALLED>
+<APP_PRELOAD_NOTINSTALLED_TEXT>Precarga es un &quot;demonio readahead de adaptaci&oacute;n&quot; que se ejecuta en el fondo de su sistema,
+y observa lo que los programas que utiliza con m&aacute;s frecuencia, el almacenamiento en cach&eacute; en orden a acelerar el tiempo de carga de aplicaciones.[br]
+Mediante el uso de precarga, puede poner RAM no utilizada para un buen trabajo, y mejorar el rendimiento general de su sistema.[br]
+Instalaci&oacute;n de precarga en Ubuntu es f&aacute;cil de hacer con el comando:[b]apt-get install preload[/b][br]
+Una vez instalado, se iniciar&aacute; de precarga, y no son necesarias nuevas medidas, pero sigue leyendo para conocer las opciones de configuraci&oacute;n, para aprender a controlar las actividades de precarga, y ver qu&eacute; tipo de mejoras de precarga traer&aacute; a su sistema.</APP_PRELOAD_NOTINSTALLED_TEXT>
+<artica_process>Artica procesos</artica_process>
+<artica_process_explain>Este par&aacute;metro de unidad es una bonita ejecuci&oacute;n de los procesos de Artica (process1, critica a instalar, critica-LDAP ...)</artica_process_explain>
+<ARTICA_PROCESS_SCHEDULE>Los procesos de programaci&oacute;n</ARTICA_PROCESS_SCHEDULE>
+<ARTICA_PROCESS_SCHEDULE_EXPLAIN>A fin de proporcionar las estad&iacute;sticas, grapas y los servicios de informaci&oacute;n, Artica necesidad de ejecutar algunos procesos en segundo plano.[br]
+Estos procesos se deben consumir recursos del sistema.[br] Se puede definir aqu&iacute; la frecuencia de ejecuci&oacute;n de estos procesos.[br] A m&aacute;s corto plazo se consumen m&aacute;s recursos, pero se mostrar&aacute; una situaci&oacute;n real.[br]
+Un mayor plazo permitir&aacute; segura los recursos del sistema, sino que abarcar&aacute; la visibilidad de sus servicios y las estad&iacute;sticas de estado.</ARTICA_PROCESS_SCHEDULE_EXPLAIN>
+<ARTICA_PROCESS_SCHEDULE_TEXT>Defina el tiempo para ejecutar los procesos de Artica</ARTICA_PROCESS_SCHEDULE_TEXT>
+<benchmark_result>resultado de referencia</benchmark_result>
+<cpu_number>Numero de CPUS</cpu_number>
+<default>por defecto</default>
+<DisableFollowServiceHigerThan1G>Deshabilitar Servicio de Watchdog de la memoria</DisableFollowServiceHigerThan1G>
+<DisableFollowServiceHigerThan1G_explain>Esta funci&oacute;n requiere deshabilitar los servicios de su equipo a trav&eacute;s de 1 GB de memoria.
+[br] Traba SpamAssassin, amavis y syslog-ng   servicios Myslq de inicio en orden para salvaguardar la memoria de la computadora.[br]
+Si su opcion esta en verde a esta caracter&iacute;stica, los servicios podr&aacute;n darse aun si el equipo no ten&iacute;a la memoria recomendada</DisableFollowServiceHigerThan1G_explain>
+<log_fifo_size>Buffers de salida</log_fifo_size>
+<log_fifo_size_text>Este es un lugar muy importante.[br]
+El &quot;buffers de salida&quot; y tambi&eacute;n &quot;log_fifo_size&quot; es la fijaci&oacute;n de tama&ntilde;os del b&uacute;fer de salida, que cada destino tiene[br]
+El b&uacute;fer de salida debe ser lo suficientemente grande para almacenar los mensajes entrantes de cada fuente.[br]
+Esta configuraci&oacute;n se puede establecer de forma global o por destino.[br] Para las &quot;areas de salida&quot;, el numero indicado es el numero de lineas/entradas/mensajes que puede contener.[br]
+De forma predeterminada, se establece a nivel mundial, muy conservadora - y si lo hace cualquier cantidad de tr&aacute;fico, puede acabar viendo mensajes de caer en alg&uacute;n momento.[br]
+Las estad&iacute;sticas que incluyen los mensajes de caer se imprimen a syslog cada 10 minutos, a menos que cambie esto.[br]
+En la linea de las estadisticas que le permitira saber que el destino esta cayendo mensajes y cuantos.[br]
+A continuaci&oacute;n, puede hacer determinaciones de si hay aumento a nivel mundial o por destino,
+y tambi&eacute;n una idea de cu&aacute;nto m&aacute;s grande que usted necesita para hacerlo.</log_fifo_size_text>
+<low>bajo</low>
+<MaxtimeBackupMailSizeCalculate>Calcular el tama&amp;Ntildeo de almacenamiento</MaxtimeBackupMailSizeCalculate>
+<MaxtimeBackupMailSizeCalculate_explain>Cuando se utiliza la zona de cuarentena y de copia de seguridad con la caracter&iacute;stica On the Fly, artica calcular&aacute; peri&oacute;dicamente estas zonas en el consumo de disco.[br]
+Este proceso podr&iacute;a consumir E/S del disco y disminuir el rendimiento del servidor durante el c&aacute;lculo. [br]
+Deber&iacute;a aumentar o disminuir el intervalo de acuerdo con el tama&ntilde;o medio de estas &aacute;reas.[br]
+El valor predeterminado se ha calculado para una cuarentena/copia de seguridad de un disco de 10G tama&ntilde;o.</MaxtimeBackupMailSizeCalculate_explain>
+<medium>medio</medium>
+<mimedefang_consumption>Consumo de los servidores MimeDefang</mimedefang_consumption>
+<mimedefang_consumption_text>MimeDefang enlaza postfix para permitir la adici&oacute;n de servicios con Artica (anti-spam, backup, y otros diclaimers ...)[br]
+Este software est&aacute; escrito en perl y podr&iacute;a utilizar mucha memoria, puede controlar aqu&iacute; el comportamiento de MimeDefang seg&uacute;n las prestaciones de su equipo.</mimedefang_consumption_text>
+<mimedefang_macro>Comportamiento MimeDefang</mimedefang_macro>
+<MX_MAXIMUM>Maximo de procesos</MX_MAXIMUM>
+<MX_MAXIMUM_TEXT>
+Maximum number of processes to run (mail received while this many'); processes are running is rejected with a temporary failure, so be
+wary of how many emails you receive at a time).[br]  This applies only if you DO use the multiplexor.[br]
+The default value of 2 is probably too low; we suggest 10 instead;
+</MX_MAXIMUM_TEXT>
+<MX_MAX_AS>Limite de memoria total (KB)</MX_MAX_AS>
+<MX_MAX_AS_TEXT>Limit total size of slave processes memory space to this many kilobytes. Default is unlimited.</MX_MAX_AS_TEXT>
+<MX_MAX_RSS>L&iacute;mite de memoria (KB)</MX_MAX_RSS>
+<MX_MAX_RSS_TEXT>Limit slave processes resident-set size to this many kilobytes.  Default is unlimited.</MX_MAX_RSS_TEXT>
+<MX_MINIMUM>M&iacute;nima para mantener los procesos.</MX_MINIMUM>
+<MX_MINIMUM_TEXT>Minimum number of processes to keep. The default of 0 is probably too low; we suggest 2 instead.</MX_MINIMUM_TEXT>
+<MX_REQUESTS>Consultas m&aacute;ximas</MX_REQUESTS>
+<MX_REQUESTS_TEXT>N&uacute;mero m&aacute;ximo de solicitudes de un proceso handles</MX_REQUESTS_TEXT>
+<mysql_audit>Auditar Mysql</mysql_audit>
+<mysql_audit_text>Run MySQL High Performance Tuning Script in order to see if your have rights settings</mysql_audit_text>
+<mysql_benchmark>Puntos de referencia</mysql_benchmark>
+<mysql_benchmark_text>Test your Mysql server and display the global performance with others tests</mysql_benchmark_text>
+<mysql_performance_level_text>Ajustes y consejos para ajustar su servidor MySQL</mysql_performance_level_text>
+<mysql_repair_text>Reparaci&oacute;n de bases de datos easly ...</mysql_repair_text>
+<mysql_server_consumption>Consumo del servidor Mysql</mysql_server_consumption>
+<mysql_server_text>The Mysql database server store many informations used by Artica (include events logs, RouncCube cache,statistics...) the mysql server process should take CPU times and memory while this service
+is just a cosmetic service.[br]
+you can drive here the mysql server consumption
+</mysql_server_text>
+<NoBootWithoutIP>Iniciar los servicios s&oacute;lo de red</NoBootWithoutIP>
+<NoBootWithoutIP_explain>When the server boot-up some services should take time because the server did not already have a network IP address. [br]
+Especially if the server is running in DHCP Client mode.[br]
+If you enable this feature, Artica will start services only if the server has an IP address.[br]This feature is designed to speed the boot time.</NoBootWithoutIP_explain>
+<no_sql_injection>Sin inyecci&oacute;n de Mysql</no_sql_injection>
+<only_errors>Solo errores</only_errors>
+<only_mail>Mail eventos y errores</only_mail>
+<others_benchmarks>Otros puntos de referencia</others_benchmarks>
+<service_performances>Servicios de rendimiento</service_performances>
+<syslogng_intro>
+If you are still having trouble with dropped messages,
+look into using flow control within syslog-ng.[br]
+Flow control allows you to finely tune the amount of messages received from a source.[br][br]
+Although, there are potential other issues you must account for, such as slowing down the source application if
+it cannot hand off its log messages, etc.[br][br]
+Users with traditional syslog clients sending their logs via UDP, should have a look at this page on UDP Buffer Sizing.[br][br]
+Also, "Flushing Buffers" and "Output Buffers" should be tweaked on your client servers as necessary if they are using syslog-ng,
+and handle heavy loads, sporadic sources, etc.[br]
+Remember to use your statistics log entries to help you identify problems and load effectively.
+</syslogng_intro>
+<syslogng_max_connections>Conexiones Maximas</syslogng_max_connections>
+<syslogng_max_connections_text>if you see a lot of "Number of allowed concurrent connections exceeded" that means you must increase this value.[br]
+This parameter Limits the number of simultaneously opened connections</syslogng_max_connections_text>
+<syslogng_sync>Limpiar Buffers</syslogng_sync>
+<syslogng_sync_text>
+The syslog-ng application buffers the log messages to be sent in an output queue.[br]
+The sync() parameter specifies the number of messages held in this buffer.[br][br]
+By default, Flushing Buffers is set to 0, which flushes messages immediately - which depending on your logging volume,
+can be fairly taxing.[br]
+Increasing this number gently, say to 10 or 20, will hold that number of messages in its buffer before they are written to their destination.
+</syslogng_sync_text>
+<syslog_server_consumption>Syslog-ng inyeccion</syslog_server_consumption>
+<syslog_server_consumption_text>You using syslog-ng and Artica automatically set it to force sending events to mysql in order to display them.[br]
+Mysql injection increase mysql processes and need some performances.[br]
+This parameter allow you to totally disable this feature or to specify wich logs you want to send to mysql.</syslog_server_consumption_text>
+<tune_title>Artica Performances</tune_title>
+<useIonice>Abilitar I/O prioridades</useIonice>
+<useIonice_explain>If it is enabled, artica will configure I/O scheduling priority for executed program</useIonice_explain>
+<very_low>Muy baja</very_low>

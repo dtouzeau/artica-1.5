@@ -1,0 +1,35 @@
+<add_local_domain_form>Indiquez le domaine local que vous voulez h&eacute;berg&eacute; sur ce serveur</add_local_domain_form>
+<add_local_domain_text>Les domaines locaux seront h&eacute;berg&eacute;s sur cet ordinateur et seront servis par son serveur de courrier &eacute;lectronique</add_local_domain_text>
+<add_relay_domain>Ajoutez un nouveau domaine relais</add_relay_domain>
+<add_relay_domain_text>Tous les messages &eacute;lectronique d'un &quot;domaine relais&quot; seront exp&eacute;di&eacute;s &agrave; un autre serveur.</add_relay_domain_text>
+<autoaliases>Alias-automatique</autoaliases>
+<autoaliases_text>Si vous activez cette option, chaque utilisateur aura son alias dans ce domaine lors de la mise &agrave; jour</autoaliases_text>
+<duplicate_domain>Dupliquez le domaine</duplicate_domain>
+<duplicate_domain_text>Si vous activer cette fonction, les messages &eacute;lectroniques seront exp&eacute;di&eacute;s vers la bo&icirc;te aux lettres locale ET seront dupliqu&eacute;s vers un serveur de courrier distant.</duplicate_domain_text>
+<introduction>Cette section vous aidera &agrave; cr&eacute;er des domaines SMTP.[br]
+Vous avez 2 m&eacute;thodes de cr&eacute;ation de vos domaines[br]
+[ul]
+[li][b]Domaine local[/b][br]
+les domaines locaux sont h&eacute;berg&eacute;s sur cette ordinateur et doivent &ecirc;tre livr&eacute;s dans un serveur de bo&icirc;tes aux lettres.[/li]
+[li][b]Domaines relais[/b][br]
+Tous les messages &eacute;lectroniques d'un &quot;domaine relais&quot; sont exp&eacute;di&eacute;s vers d'autres serveurs.[/li][/ul]</introduction>
+<local_domain_map>Domaines locaux</local_domain_map>
+<mx_look>[b] MX lookup[/b][ul]
+[li][b]Rouge[/b]:d&eacute;sactive la r&eacute;solution de l'ordinateur dans le DNS [/li]
+[li][b]Vert [/b] :Active la r&eacute;solution de l'ordinateur par le DNS[/li]
+[/ul]</mx_look>
+<mx_look_text>MX lookup</mx_look_text>
+<no_remote_domain_here>Actuellement, aucun jeu de domaine relay&eacute;</no_remote_domain_here>
+<relay_domain_map>Domaines non locaux achemin&eacute;s</relay_domain_map>
+<roundrobin>Round Robin</roundrobin>
+<roundrobin_text>Round robin DNS is a technique of load distribution, load balancing, or fault-tolerance provisioning multiple,
+ redundant Mail Protocol service hosts, e.g., by managing the Domain Name System's (DNS) 
+ responses to address requests from Mail server according to an appropriate statistical model.[br]
+In its simplest implementation Round-robin DNS works by responding to DNS requests not only with a single IP address,[br]
+ but a list of IP addresses of several servers that host identical services.[br]
+The order in which IP addresses from the list are returned is the basis for the term round robin.[br]
+ With each DNS response, the IP address sequence in the list is permuted. Usually, basic IP clients attempt connections with the first 
+address returned from a DNS query so that on different connection attempts clients would receive service from different providers, thus distributing the overall load among servers.
+</roundrobin_text>
+<target_computer_name>Nom ou adresse IP du serveur cible</target_computer_name>
+<target_computer_port>Port</target_computer_port>

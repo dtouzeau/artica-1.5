@@ -1,0 +1,78 @@
+<addtrustednet>Donnez votre r&eacute;seau de confiance</addtrustednet>
+<add_header>Ajouter un tag d'en-t&ecirc;te</add_header>
+<all>Pour tous messages</all>
+<amavisSpamModifiesSubj>Modifier le sujet sur les SPAM d&eacute;t&eacute;ct&eacute;s</amavisSpamModifiesSubj>
+<auto_learn>Activer l'auto-apprentissage Bayes</auto_learn>
+<block_with_required_score>Bloquer le mail si le score de SpamAssassin est sup&eacute;rieur &agrave;</block_with_required_score>
+<block_with_required_score_text>Si le r&eacute;sultat Spamassassin d&eacute;passe la valeur, le courrier sera refus&eacute; par le serveur. [br] Mettre &agrave; 0 si vous ne voulez pas bloquer les mails</block_with_required_score_text>
+<config>Fichier de configuration principal</config>
+<From>De</From>
+<ham>Lorsqu'un message ham est d&eacute;tect&eacute;</ham>
+<managed_by_mimedefang>G&eacute;r&eacute; par MimeDefang</managed_by_mimedefang>
+<managed_by_mimedefang_not_enabled>Devrait &ecirc;tre g&eacute;r&eacute; par MimeDefang</managed_by_mimedefang_not_enabled>
+<plugins>Plugins Spamassassin</plugins>
+<pyzor_text>Pyzor est un syst&egrave;me r&eacute;seau collaboratif,  pour d&eacute;tecter et bloquer les spams gr&acirc;ce &agrave; l'identification des r&eacute;sum&eacute;s de messages.[br]
+Pyzor a tout d'abord d'&ecirc;t&eacute; une impl&eacute;mentation Python de Razor. (Voir http://pyzor.sourceforge.net)</pyzor_text>
+<razor_text>ipul's Razorest une solution de d&eacute;tection de spam et de filtrage r&eacute;seau distribu&eacute;e et collaborative.[br]
+Gr&acirc;ce &agrave; la contribution des utilisateurs, Razor &eacute;tablit un catalogue de spam en propagation, distribu&eacute; et constament mis &agrave; jour qui est consult&eacute; par des clients de messagerie pour filtrer les spams connus.[br]
+La d&eacute;tection se fait avec des signatures statistiques et randomis&eacute;e qui d&eacute;t&eacute;cte efficacement le contenu spam en mutation.[br]
+La saisie de l'utilisateur est valid&eacute;e gr&acirc;ce &agrave; des affectations de r&eacute;putation fond&eacute;es sur un consensus d'affirmations de signalement et de r&eacute;vocation  qui, &agrave; son tour est utilis&eacute; pour calculer le niveau de confiance associ&eacute;es &agrave; des signatures individuelles</razor_text>
+<report_safe>Encapsulation de spam dans une pi&egrave;ce jointe</report_safe>
+<report_safe_text>Si cette option est activ&eacute;e et un message entrant est d&eacute;tect&eacute; en tant que pourriel, au lieu de modifier le message d'origine SpamAssassin va cr&eacute;er un message de rapport avec comme pi&egrave;ce jointe le message d'origine.
+Le cas &eacute;ch&eacute;ant, le message d'origine sera enrichi d'une ent&ecirc;te X-Spam- sans changements dans le corps de texte</report_safe_text>
+<required_score>Score requis par SpamAssassin pour signaler un message comme spam</required_score>
+<required_score_text>Indiquez la note requise avant que le message ne soit consid&eacute;r&eacute; comme pourriel.[br]
+n.nn peut &ecirc;tre un entier ou un nombre.[br]
+5.0 est la note par d&eacute;faut et est un peut agressive mais efficace lorsque qu'il s'agit d'une seule bo&icirc;te aux lettres.[br]
+Si vous avez plusieurs utilisateurs, voir fournisseur d'acc&egrave;s, vous allez devoir changer cette notre vers une notre plus conservatrice comme 8.0 ou 10.0.[br]</required_score_text>
+<rewrite_header>R&eacute;&eacute;criture d'en-t&ecirc;te</rewrite_header>
+<rewrite_header_txt>Par d&eacute;faut, les pourriels n'ont pas de sujets ou tout autre &eacute;l&eacute;ments du message modifi&eacute;s.[br]
+Cette option permet de modifier une ent&ecirc;te de message afin d'indiquer que la pr&eacute;sence du pourriel.[br]
+Pour le Sujet, le Sujet original sera enrichi (en d&eacute;but de phrase).[br]
+Pour le &quot;De&quot; et &quot;Vers&quot; un commentaire entre parenth&egrave;ses sera rajout&eacute; apr&egrave;s les adresses e-mails.[br]
+Vous ne pouvez que utiliser les clefs _REQD_ et _SCORE_lorsque vous modifiez le sujet. 
+[br]Attention, les parenth&egrave;ses ne sont pas permises dans l'&eacute;criture des ent&ecirc;tes.</rewrite_header_txt>
+<salearnschedule>Calendrier d'apprentissage de Spam</salearnschedule>
+<salearnschedule_text>D&eacute;finir le calendrier d'apprentissage de bo&icirc;tes aux lettres Spam</salearnschedule_text>
+<sa_dsn_cutoff_level>Niveau de Spam au-del&agrave; duquel un DSN n'est pas envoy&eacute;</sa_dsn_cutoff_level>
+<sa_kill_level_deflt>Scorte qui d&eacute;truit le message (Spam r&eacute;el)</sa_kill_level_deflt>
+<sa_quarantine_cutoff_level>Niveau  de Spam au-del&agrave; duquel un message n'est pas mis en quarantaine, mais d&eacute;truit</sa_quarantine_cutoff_level>
+<sa_tag2_level_deflt>Score pour tagg&eacute; le &quot;Sujet&quot; avec &quot;***SPAM***&quot; marqu&eacute;</sa_tag2_level_deflt>
+<sa_tag3_level_deflt>Score pour ajouter &quot;spam d&eacute;tect&eacute;&quot; dans l'en-t&ecirc;te et envoy&eacute; en quarantaine</sa_tag3_level_deflt>
+<sa_tag_level_deflt>Add X-Spam*** info headers if at, or above that level</sa_tag_level_deflt>
+<spam>Sur d&eacute;tection d'un spam</spam>
+<spamassassin_about>SpamAssassin est une solution mature largement d&eacute;ploy&eacute;e en open source qui sert de filtre de courrier afin d'identifier le spam. [Br]
+SpamAssassin utilise une vari&eacute;t&eacute; de m&eacute;canismes, y compris l'analyse des ent&ecirc;tes et l'analyse des textes, le filtrage bay&eacute;sien, DNS de blocage, le filtrage collaboratif et des bases de donn&eacute;es. [Br]
+SpamAssassin fonctionne sur un serveur, et filtres spam avant qu'ils n'atteignent votre bo&icirc;te aux lettres.</spamassassin_about>
+<title1>Options de marquage des messages</title1>
+<To>Vers</To>
+<trusted_networks>R&eacute;seaux de confiance</trusted_networks>
+<trusted_networks_text>Quels sont les r&eacute;seaux de confiance ?[br]
+Confiance veut dire que les ordinateurs &eacute;metteurs de messages seront consid&eacute;r&eacute;s comme liste blanche.[br]
+Vous pouvez indiquer un r&eacute;seau avec son masque binaire (/24 /32 /8).[br]
+ou bien une adresse TCP unique.[br]
+[blk]Voici quelques exemples:
+[li]192.168/16 (tous dans 192.168.*.*)[/li]
+[li]212.17.35.15 (simple cet ordinateur)[/li]
+[li]!10.0.1.5 10.0.1/24 (tous dans 10.0.1.* mais pas 10.0.1.5)[/li]
+[/blk]</trusted_networks_text>
+<use_auto_whitelist>Activer la liste blanche automatique</use_auto_whitelist>
+<use_auto_whitelist_text>
+The auto-whitelist, aka automatic whitelist or AWL, tracks scores for your regular correspondents in a small on-disk database.[br]
+In 3.1, it is a plugin, loaded by default in the file v310.pre.[br]
+The AWL is actually a very simple system.[BR]
+In short, the AWL is a score averaging system.[BR]
+It keeps track of the historical average of a sender, and pushes any subsequent mail towards that average.[br]
+So if someone that never sent you mail before sends you a mail that scores 20, and then sends you a second mail that would score 2.0 without the AWL,
+the AWL will push the score up to 11 on the second mail.[br]
+This is auto blacklisting, based on their past history of spam.[br]
+If that same person sent you a mail that scored 0, and then later sent one that scored 7,
+the AWL would push the score down to 3.5.[br]
+This is auto-whitelisting based on past history of nonspam.[br]
+A "sender" is identified using both the address they sent with, and their IP address, so spam claiming to be From you with forged headers will fail to get through.[br]
+But the "auto whitelist" isn't really a whitelist per-se. [br]
+It does however have a "learning white/blacklist" type behavior as a result of its averaging.[br]
+Sometimes it may appear that the AWL is assigning scores the wrong way;
+</use_auto_whitelist_text>
+<use_bayes>Activer le syst&egrave;me Bayes</use_bayes>
+<use_terse_report>Utilisation de la version laconique rapport de spam</use_terse_report>

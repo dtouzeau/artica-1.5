@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title><roundcube:object name="pagetitle" /></title>
+<meta name="Robots" content="noindex,nofollow" />
+<roundcube:include file="/includes/links.html" />
+<script type="text/javascript">
+  setTimeout("document.forms.form.submit()",20000);
+</script>
+</head>
+<body>
+<div id="taskbar"></div>
+<img src="/images/roundcube_logo.png" border="0" alt="<roundcube:object name='productname' />" style="margin:2px 12px" />
+
+<roundcube:object name="message" id="message" />
+
+<div id="login-form">
+<div class="boxtitle"><roundcube:label name="welcome" /></div>
+<div class="boxcontent">
+
+<form name="form" action="./?_task=logout&_remember_me=del" method="post">
+<p style="text-align:center;"><input name="_remember_me" type="checkbox" checked="checked" value="del" />
+<span>&nbsp;</span>
+<roundcube:label name='remember_me.delcookie' />
+</p>
+
+<p style="text-align:center;"><input type="submit" class="button mainaction" value="<roundcube:label name='remember_me.submit' />" /></p>
+
+</form>
+</div>
+</div>
+
+</body>
+</html>

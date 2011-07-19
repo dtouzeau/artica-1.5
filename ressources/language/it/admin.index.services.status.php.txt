@@ -1,0 +1,11 @@
+<artica_services>Artica Core services</artica_services>
+<mail_services>Mailbox services</mail_services>
+<postfix_services>Postfix SMTP services</postfix_services>
+<samba_services>Samba services</samba_services>
+<services_status_text>This is an overview of all applications on your system.[br]Application name, Memory used (VmRSS) of master process and all sub-process used by the master PID, the main version and the execution status.
+</services_status_text>
+<squid_services>SQUID services</squid_services>
+<start>Start</start>
+<start_this_service>[H5]Start this service[/H5]Click on the round image[br] to start the service.</start_this_service>
+<stop>Ferma</stop>
+<stop_this_service>[H5]Stop this service[/H5]Click on the round image[br] to stop the service.</stop_this_service>

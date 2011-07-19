@@ -1,0 +1,1052 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<TITLE>Ad Zapping With Squid</TITLE>
+<H1>Ad Zapping With Squid
+    <A href="http://sourceforge.net/">
+      <IMG src="http://sourceforge.net/sflogo.php?group_id=64644&amp;type=1" width="88" height="31" border="0" alt="[SourceForge Logo]">
+    </A>
+</H1>
+<A HREF="http://www.cskk.ezoshosting.com/cs/">Cameron Simpson</A>
+&lt;<A HREF="mailto:cs@zip.com.au">cs@zip.com.au</A>&gt;
+<BR>
+<A HREF="http://sourceforge.net/projects/adzapper/">SourceForge Project Page</A>
+	and <A HREF="http://sourceforge.net/mail/?group_id=64644">mailing lists</A>,
+<A HREF="http://freshmeat.net/projects/squid_redirect/">Freshmeat Project Record</A>,
+<A HREF="CHANGELOG.txt">Changelog</A>
+<BR>
+Quick installs:
+<A HREF="#install>generic</A>,
+<A HREF="http://packages.debian.org/cgi-bin/search_packages.pl?keywords=adzapper&searchon=names&subword=1&version=all&release=all">Debian</A>,
+<A HREF="http://www.freshports.org/www/adzap/">FreeBSD</A>,
+<A HREF="#gentoo">Gentoo</A>,
+<A HREF="ftp://ftp.netbsd.org/pub/NetBSD/packages/pkgsrc/www/adzap/README.html">NetBSD</A>.
+<P>
+This is a redirector for squid
+that intercepts advertising (banners, popup windows, flash animations, etc),
+page counters and some web bugs (as found).
+This has both aesthetic and bandwidth benefits.
+It's also easy to install.
+<B>Note</B>: you can <A HREF="#apache">use Apache instead of Squid</A> if you like.
+<P>
+<UL>
+    <LI>Licencing (it's basicly free)
+    <LI><A HREF="#background">Background</A>
+    <LI><A HREF="#why">Why run one of these?</A>
+	(marketing people should pay attention here!)
+    <LI><A HREF="#download">Download</A> (this is really step two of "Install")
+    <LI><A HREF="#install">Installation</A>
+	[including <A HREF="#install-win32">windows</A>]
+	(also see <A HREF="#already">Sites with the Zapper already installed</A>
+	including <A HREF="#already-zip">ZipWorld</A>)
+    <LI><A HREF="#submit">Submit new ad reports by email and help me keep the patterns up to date.</A>
+    <LI>The <A HREF="TODO">"To Do" list</A>.
+    <LI><A HREF="#updates">Updates</A>
+	(including <A HREF="#announcements">announcement/update mailing lists</A>)
+    <LI><A HREF="#proxy-pac">Using the zapper via <TT>proxy.pac</TT> files</A>
+	(and "<A HREF="#my-isp">Can I get my ISP to do this for me?</A>")
+    <LI>Are you <A HREF="#small-systems">using a very small machine for your squid</A>?
+    <LI><A HREF="#custom">Customisation</A>:<BR>
+	once installed and happy,
+	you may want to customise things.<BR>
+	For example,
+	<A HREF="#pattern-files">using your own pattern files</A>
+		[<A HREF="#syntax">syntax</A>],
+	<A HREF="#different">using a different placeholder image</A>
+	or maybe <A HREF="#more">zapping more than just ads</A>
+	(eg getting the <A HREF="#printable">"printer-friendly" versions of pages</A>),
+	or even <a href="#textads">zapping more aggressively</A>.
+	<BR>
+	You can also
+		<A HREF="#chaining">chain multiple redirectors together</A>
+		(eg to run the zapper and also SquidGuard or Squirm or suchlike).
+    <LI><A HREF="#other">Other similar software</A>
+    <LI><A HREF="#choice">Offering users a choice between zapped and unzapped browsing</A>:<BR>
+		<A HREF="#twoports">using two ports on a single squid</A>
+			(the easy and preferred way)<BR>
+		<A HREF="#doublelayer">my double-layer squid setup</A>
+    			(you don't need it!)
+    <LI><A HREF="#trouble">Troubleshooting</A>
+</UL>
+<H2>License</H2>
+As of 13oct2002, <A HREF="my-bsd-license.html">this code is available</A>
+under the terms of <A HREF="http://www.opensource.org/licenses/bsd-license.html">the BSD License</A>.
+<P>
+It remains <EM>strongly</EM> my desire that this code is not used for censorship.
+By this, I mean that while it could be adapted to block all sorts of content,
+I wish that it not be so used without parallel provision of unblocked browsing.
+Feel free to protect yourself from stuff with this code;
+do not force your blinkered view onto others without their consent.
+There are <A HREF="#choice">instructions in this page</A>
+for easy provision of zapped and unzapped
+browsing to users; please use them.
+<P>
+Previous licensing:<BR>
+Until Wednesday 26may1999, this code was free for use by all.
+However,
+the <A HREF="http://www.fed.gov.au/">Australian Government</A>
+brought in some
+<A HREF="http://www.userfriendly.org/cartoons/archives/99may/xuf000678.gif">truly</A>
+<A HREF="http://www.userfriendly.org/cartoons/archives/99jun/uf000723.gif">stupid</A>
+and <A HREF="http://www.efa.org.au/Issues/Censor/cens1.html">invasive</A>
+legislation,
+so this code is now free
+except that it <EM>MAY NOT</EM> be used
+to enforce or support
+<A HREF="http://www.ozemail.com/~mbaker/amended.html">that legislation</A>
+or other legislation of similar intent.
+I'm happy for people to use it to filter their own browsing,
+but not for people to force their morals onto others.
+<H2><A NAME=background>Background</A></H2>
+For some time at my workplace
+we've been running an ad-zapping service on our web proxy.
+This page documents how it works,
+how to use it yourself,
+how to join the mailing list for updates of the pattern file,
+and the weirdnesses of our local setup
+(which you need not duplicate yourself).
+<P>
+Ad zapping is not a new idea.
+Basicly you interpose between the reader and the web
+some kind of filter which replaces those annoying ad banners
+with something unobtrusive.
+(There are a few motivations for this;
+see <A HREF="#why">this digression</A> for mine.)
+<P>
+I first came across it at my ISP
+(<A HREF="http://www.zip.com.au/">Zip World - www.zip.com.au</A>)
+a few years ago.
+Their technique was to use a complicated
+<A HREF="http://home.netscape.com/eng/mozilla/2.0/relnotes/demo/proxy-live.html">proxy.pac file</A>.
+They supplied two: one which zapped ads and one which didn't.
+The zapping one was, I discovered, a piece of JavaScript which told your
+browser to go to one proxy for URLs matching known ad patterns
+and to the main proxy for everything else.
+The former proxy simply returned a placeholder GIF
+for everything asked of it.
+Initially I copied this for use at our site.
+<P>
+This method is a bit cumbersome.
+Firstly, you have to run a special web server to serve the placeholder GIF.
+Secondly, JavaScript interpreters are slow and (in Netscape at least)
+a tad buggy - eventually the browser gets flakey and may fall over.
+Thirdly, not all browsers support JavaScript and those that
+do needn't support proxy.pac files.
+Finally, the file was a pain to maintain and the size was making
+me fear for the sanity of the JavaScript interpreters.
+<P>
+Enter <A HREF="http://squid.nlanr.net/Squid/">squid</A>,
+arguably the best web proxy around.
+One great feature is the <A HREF="http://squid.nlanr.net/Squid/FAQ/FAQ-15.html">redirector</A>.
+This is a program which reads request information on its input
+and writes (possibly) redirected information on its output.
+If activiated, squid will consult it for every
+request, permitting easy interception of ads.
+All you have to do to activate it is place the line:
+<BLOCKQUOTE><TT><SMALL>redirect_program /home/marshall/bin/squid_redirect</SMALL></TT></BLOCKQUOTE>
+in your squid.conf file.
+Obviously, that pathname should be replaced by wherever you install the
+redirection program.
+<P>
+Attempt number 1 was a shell script.
+Short and effective,
+it was a simple while loop with a case statement.
+However,
+it seemed to have some scaling problems.
+Now it is a perl script called
+<A HREF="scripts/squid_redirect">squid_redirect</A>.
+In particular,
+because the expressions are compiled when the script starts
+the redirector runs quite efficiently.
+<H2><A NAME=install>Installation</A></H2>
+The install is meant to be fairly easy: install the script, add one line
+to your <TT>squid.conf</TT> file, restart squid.
+<P>
+Microsoft Windows users should read the <A HREF="#install-win32">notes for Windows users</A> below.
+<BR>
+<A HREF="http://www.smoothwall.org/">Smoothwall Firewall</A> users may want to see <A HREF="mailto:m.t.pot@ieee.org">Martin Pot</A>'s <A HREF="http://martybugs.net/smoothwall/adzap.cgi">Smoothwall Ad Zap Installation Instructions</A>.
+<BR>
+There's also a less wordy quick'n'dirty installation kit <A HREF="http://www.idrift.no/~gaute/conf/adzap/">here</A>
+by Gaute Lund, with this <A HREF="http://www.idrift.no/~gaute/conf/adzap/readme.txt">readme file</A>.
+<OL>
+    <LI>Install squid.<BR>
+	Frankly, this is worth doing even for a single user home system
+	(squid's very easy to install, btw).
+	Also, the ad-zapper is very useful when you're connected to the
+	outside world with a modem link.
+	<P>
+	<B>Note</B>: you can also <A HREF="#apache">use Apache instead</A>.
+	<P>
+	<B>Note</B>:
+	<blockquote>
+	minor security remark: of course your proxy (squid or apache)
+	should not be available to the internet at large.
+	Generally your proxy will be ok automatically,
+	simply by being inside your firewall.
+	However, if you install a proxy on some public machine
+	you should make sure it has some sort of access control.
+	If you're installing on a personal machine such as a laptop
+	that is sometimes on a public net,
+	probably your proxy should listen only on the local interface (127.0.0.1).
+	</blockquote>
+    <LI><A NAME="download">Fetch the software</A>.
+	<BR>
+	The easy thing to do is simply to fetch
+	just <A HREF="scripts/squid_redirect">the script</A>
+	for the default uncustomised install.
+	<BR>
+	Later, if you want to customise its behaviour,
+	fetch this tarball:
+	<A HREF="adzap-20080508.tar.gz">adzap-20080508.tar.gz</A><!--TARBALL-LINE-->
+	which contains the redirector,
+	a set of the replacement images
+	and a wrapper script for customising the environment for the zapper.
+	<BR>
+	<B><A HREF="http://www.freebsd.org/">FreeBSD</A> people</B>:
+	you can use <A HREF="http://www.freshports.org/www/adzap/">the FreeBSD FRESHports port of the zapper</A>.
+	<BR>
+	<B><A HREF="http://www.netbsd.org/">NetBSD</A> people</B>:
+	you can use <A HREF="ftp://ftp.netbsd.org/pub/NetBSD/packages/pkgsrc/www/adzap/README.html">the NetBSD package of the zapper</A>.
+	<BR>
+	<B><A HREF="http://www.debian.org/">Debian</A> people</B>:
+	you can use <A HREF="http://packages.debian.org/cgi-bin/search_packages.pl?keywords=adzapper&searchon=names&subword=1&version=all&release=all">the Debian package of the zapper</A>.
+	<BR>
+	<B><A NAME="gentoo" HREF="http://www.gentoo.org/">Gentoo</A> people</B>:
+	you can fetch the zapper with emerge:
+	<BLOCKQUOTE><TT><SMALL>emerge adzapper</SMALL></TT></BLOCKQUOTE>
+    <LI>Install the redirector in some suitable spot
+	(such as <TT>/usr/local/bin/squid_redirect</TT>).
+	<P>
+	<EM>Note 1</EM>:
+	The script must be executable. Run the command:
+	<BLOCKQUOTE><TT><SMALL>chmod a+rx <I>the-script</I></SMALL></TT></BLOCKQUOTE>
+	when it's in place.
+	<P>
+	<EM>Note 2</EM>:
+	the first line of the script says:
+	<BLOCKQUOTE><TT><SMALL>#!/usr/bin/perl</SMALL></TT></BLOCKQUOTE>
+	You may want to change this to:
+	<BLOCKQUOTE><TT><SMALL>#!/usr/local/bin/perl</SMALL></TT></BLOCKQUOTE>
+	or suchlike if your perl isn't in <TT><SMALL>/usr/bin</SMALL></TT>.
+	(Or put a symlink in <TT><SMALL>/usr/bin</SMALL></TT> - this may save you hassle
+	with other perl scripts,
+	many of which also expect a <TT><SMALL>/usr/bin/perl</SMALL></TT>.)
+	<P>
+	<EM>Note 3</EM>:
+	If you used a Windows box to fetch the script (eg via Internet Explorer)
+	and then transfered it to the machine running your squid proxy
+	then it's possible for the script to end up on your proxy in DOS text mode,
+	which means it ends every line with a CR and a NL character
+	(instead of just NL).
+	<BR>
+	If you suspect this,
+	see <A HREF="#dosmode">this troubleshooting section</A>.
+    <LI>Insert the line:
+	<BLOCKQUOTE><TT><SMALL>redirect_program <I>/path/to/</I>squid_redirect</SMALL></TT></BLOCKQUOTE>
+	into the squid.conf file.
+    <LI>Send a SIGHUP to your squid:
+	<BLOCKQUOTE><TT><SMALL>kill -1 <I>pid-of-squid</I></SMALL></TT></BLOCKQUOTE>
+	You should also do this after you've updated the script;
+	squid starts new instances of the redirector.
+	<BR>
+	Brent J. Nordquist &lt;<A HREF="mailto:bjn@visi.com">bjn@visi.com</A>&gt;
+	notes that you can also say:
+	<BLOCKQUOTE><TT><SMALL>squid -k reconfigure</SMALL></TT></BLOCKQUOTE>
+	to do the same thing.
+    <LI>Want to <A HREF="#different">use a different placeholder image</A>?<BR>
+	Want to <A HREF="#more">zap more than just ads</A>?
+    <LI><B><A NAME="submit">Help me keep the patterns up to date!</A></B><BR>
+	Just keep half an eye on the zapping.
+	<DL>
+	  <DT>If you find a page with an annoying amount of unzapped ads,
+	      <A HREF="mailto:cs@zip.com.au">let me know by email</A>.
+              Yes, that is my personal email address.
+              No, do not worry that you message may be thought annoying.
+              Also do not worry if I don't respond; sometimes I can be very slow on that;
+              prod me again after a few weeks if you hear nothing.
+	  <DD>I will want to know the page itself as well as the ad image
+	      so I can sanity check
+	      and perhaps optimise or generalise the pattern.
+	      (No, I don't care where you browse; fear no censure!)
+	      I <EM>am</EM> more interested in zapping large or animated ads;
+	      static, small, cache-friendly ads are lower on the priority queue
+	      (and perhaps we should consider leaving them alone,
+	      to encourage their use).
+	      In particular,
+	      certain small, purely text, fast loading ads
+	      are not zapped by default;
+	      patterns for them are collected and maintained
+	      and <a href="#textads">the zapper can be told to zap them</a>
+	      quite easily.
+	  <DT>If you find pages with content being zapped which should not be,
+	      also <A HREF="mailto:cs@zip.com.au">let me know by email</A>.
+	  <DD>Just as with the above.
+	      Ad zapping is inherently a moving target.
+	      Some patterns will match things which are not ads.
+	      If people are going to use this facility,
+	      I must keep the patterns well tuned.
+	</DL>
+</OL>
+<H3><A NAME="install-win32">Notes for Windows users</A></H3>
+It is possible to run squid and the zapper on a stand alone Windows box
+if your home LAN doesn't have a spare machine to run UNIX.
+An exchange with Carolyn Longfoot
+shows that the procedure is pretty well
+exactly the same as for UNIX
+except that the <TT><SMALL>redirect_program</SMALL></TT> line should look like this:
+<BLOCKQUOTE><TT><SMALL>redirect_program C:/perl/bin/perl.exe c:/squid/etc/adzapper.pl</SMALL></TT></BLOCKQUOTE>
+adjusting <TT><SMALL>C:/perl/bin/perl.exe</SMALL></TT>
+and <TT><SMALL>c:/squid/etc/adzapper.pl</SMALL></TT>
+to match your own install locations.
+This tip was obtained from the <A HREF="http://phroggy.com/bannerfilter/">BannerFilter page</A>.
+You will need <A HREF="http://www.acmeconsulting.it/pagine/opensource/squid/SquidNT.htm">SquidNT</A>
+and <A HREF="http://www.activestate.com/Products/ActivePerl/">ActivePerl</A>
+or other versions of Squid and Perl for Windows,
+for example you might run both under <A HREF="http://www.cygwin.com/">Cygwin</A>.
+It is also mentioned
+in <A HREF="http://www.mail-archive.com/squid-users@squid-cache.org/msg04770.html">this thread</A>
+from <A HREF="http://www.squid-cache.org/mailing-lists.html#squid-users">the squid-users mailing list</A>.
+<H3><A NAME="apache">Using Apache as your proxy instead of Squid</A></H3>
+Johannes Berg supplied a small patch to support using <A HREF="http://www.apache.org/">Apache2</A>
+as a proxy instead of squid.
+His addition to the Debian README for this says:
+<BLOCKQUOTE>
+Alternatively, you can also use adzapper with Apache2. This has the advantage of
+being IPv6 compatible. To do this, make Apache2 load mod_proxy and mod_redirect
+and configure it as follows:
+<BLOCKQUOTE><PRE><SMALL>
+        ProxyRequests On
+        RewriteEngine On
+        RewriteLock /var/lock/apache2/rewrite-adzapper
+        RewriteMap adzap prg:/usr/bin/adzapper.wrapper
+        &lt;Proxy *&gt;
+                Order deny,allow
+                Deny from all
+                Allow from localhost
+                RewriteRule ^proxy:(.*)$ proxy:${adzap:$1|$1} [L]
+        &lt;/Proxy&gt;
+</SMALL></PRE></BLOCKQUOTE>
+Also, edit the new "ZAP_CHANGE_VALUE" configuration variable and set it to NULL:
+<BLOCKQUOTE><TT>ZAP_CHANGE_VALUE="NULL"</TT></BLOCKQUOTE>
+</BLOCKQUOTE>
+<H2><A NAME=custom>Customisation</A></H2>
+If you start customising things
+I suggest you install <A HREF="scripts/wrapzap">the <TT>wrapzap</TT> script</A>
+next to the redirector
+and use it to effect the customisations.
+It contains all the environment variables such as <B>$ZAP_POSTMATCH</B>
+that affect the zapper's behaviour, ready for adjustment.
+<P>
+Simply tell <TT>wrapzap</TT> the full install path
+of <TT>squid_redirect</TT> and tell the <TT>squid.conf</TT> file
+the full path of the <TT>wrapzap</TT> script instead of the zapper.
+Then modify <TT>wrapzap</TT> to suit.
+Remember that all scripts should have public read/execute permissions:
+<BLOCKQUOTE><SMALL><TT>chmod a+rx <I>scripts...</I></TT></SMALL></BLOCKQUOTE>
+<H3><A NAME=pattern-files>Using Different and Extra Pattern Files</A></H3>
+You can use your own pattern files, too.
+Extra pattern files can be specified with the <B>$ZAP_PREMATCH</B> and <B>$ZAP_POSTMATCH</B>
+environment variables
+to the full pathnames of two pattern files.
+Normally you would only need to set $ZAP_POSTMATCH.
+<P>
+The patterns in $ZAP_PREMATCH
+are consulted before the main pattern list
+and the patterns in $ZAP_POSTMATCH afterwards.
+Generally you use the latter to add extra patterns
+and only use the former to correct overzapping by some erroneous
+patterns in the main pattern file.
+If you find such, tell me!
+That way your $ZAP_PREMATCH file can usually be empty and stay that way.
+<P>
+Finally,
+you can have <TT>squid_redirect</TT> ignore its inbuilt pattern list completely
+and use your own by defining the environment variable <B>$ZAP_MATCH</B>.
+<H3><A NAME="syntax">Pattern File Format</A></H3>
+The syntax of the pattern file is as follows:
+<UL>
+    <LI>Blank lines and lines commencing with octothorpes (hashes: "<B>#</B>")
+	are comments, and ignored.
+    <LI>Most lines are of the form:
+	<BLOCKQUOTE><TT><I>CLASS</I> <I>pattern</I></TT></BLOCKQUOTE>
+	<P>
+	The <I>CLASS</I> specifies the type of object the <I>pattern</I> recognises.
+	<BR>
+	The special class <B>PASS</B> means that URLs matching the <I>pattern</I>
+	should <EM>not</EM> be redirected i.e. they should be left alone and not zapped.
+	It is used to insert exceptions for general rules.
+	For example, this snippet from the pattern list:
+	<BLOCKQUOTE><SMALL><TT>PASS http://(www*.|)mozilla.org/**-banner.gif<BR>AD http://**-banner.gif</TT></SMALL></BLOCKQUOTE>
+	means zap everything ending in <B>-banner.gif</B> <I>except for</I> things at <B>mozilla.org</B>.
+	<P>
+	The pattern more resembles a Bourne shell glob than a regular expression.
+	In fact it is shorthand for a regular expression with the following
+	differences:
+	<OL>
+	    <LI>The dot ("<B>.</B>") and question mark ("<B>?</B>")
+		are not special
+		i.e. they get converted into <B>\.</B> and <B>\?</B>.
+	    <LI>The asterisk ("<B>*</B>") gets converted into <B>[^/]*</B>
+		i.e. a wildcard which doesn't cross slashes ("<B>/</B>").
+	    <LI>Two asterisks ("<B>**</B>") get converted into <B>.*</B>
+		i.e. a wildcard which <EM>does</EM> cross slashes ("<B>/</B>").
+	</OL>
+    <LI>The other type of line looks like this:
+	<BLOCKQUOTE><TT><I>CLASS</I> <I>pattern</I> <I>replacement</I></TT></BLOCKQUOTE>
+	This rewrites a URL from one form to another.
+	The syntax for the <I>pattern</I>
+	is exactly as for the first type of line.
+	The <I>replacement</I> is a perl string as would be found inside double quotes.
+	In particular, the values <TT>$1</TT>, <TT>$2</TT> etc
+	match the bracketed substrings in the <I>pattern</I> as with perl.
+	For example, this rule:
+	<BLOCKQUOTE><TT>PRINT http://(www*.|)smh.com.au(/articles/**.html) http://www.smh.com.au/cgi-bin/common/popupPrintArticle.pl?path=$2</TT></BLOCKQUOTE>
+	replaces an article with its "printer-friendly" version.
+	The <TT>$2</TT> comes from the <I>pattern</I>'s second bracketed section.
+	<P>
+	<EM>Note</EM>:
+	the PRINT rules are <EM>off</EM> by default.
+	You need to turn it on with the <TT>wrapzap</TT> script.
+</UL>
+<H3><A NAME=different>Using Different Placeholder Images</A></H3>
+The default placeholder GIF is:
+<TT><SMALL><A HREF="http://adzapper.sourceforge.net/zaps/ad.gif">http://adzapper.sourceforge.net/zaps/ad.gif</A></SMALL></TT>
+This will actually work fine
+(once cached it's irrelevant that it's not on your site).
+However, if you wish a customised placeholder
+you can do a few things to control what is used.
+Most involve the setting of environment variables
+to indicate your desires.
+<P>
+The <TT>$ZAP_MODE</TT> variable can be set to the word "<TT>CLEAR</TT>"
+to cause the zapper to use "clear" versions of the replacement images
+and text.
+This will mean the ads just "vanish" from your pages.
+The only real downside to this is that is the zapper,
+through some mischance,
+replaces some useful markup on the page then it's not very apparent.
+<P>
+The <TT>$ZAP_BASE</TT> variable can be set to point to
+a web directory containing your own versions
+of the replacement images.
+Place files named
+<TT>ad.gif</TT>,
+<TT>adbg.gif</TT>,
+<TT>ad.swf</TT>,
+<TT>closepopup.html</TT>,
+<TT>counter.gif</TT>,
+<TT>no-op.html</TT>
+<TT>no-op.js</TT>,
+and <TT>webbug.gif</TT>
+there.
+If you're using the "<B>CLEAR</B>" mode
+then you need files named <B><I>x</I>-clear<I>.ext</I></B>
+for every file <B><I>x.ext</I></B> listed above.
+<P>
+The default for <TT>$ZAP_BASE</TT> is <TT>http://adzapper.sourceforge.net/zaps</TT>.
+If you set the <TT>$ZAP_MODE</TT> variable to "<TT>CLEAR</TT>"
+then you will naturally want files named
+<TT>ad-clear.gif</TT>,
+<TT>closepopup-clear.html</TT>,
+<TT>no-op-clear.html</TT>,
+etcetera.
+<P>
+You can replace classes of ad with specific replacements.
+The following classes are known:
+<B>AD</B> for inlined images,
+<B>ADHTML</B> for separate HTML pages inserted as an ad
+(usually via FRAME, IFRAME or ILAYER tags),
+<B>ADJS</B> for javascript programs used to generate ads,
+<B>ADBG</B> for background images containing ads,
+<B>ADSWF</B> for ads implemented as Shockwave animations,
+<B>ADMP3</B> for ads implemented as MP3 audio,
+<B>ADPOPUP</B> for those mega-annoying ads which pop up
+on their own as new web pages,
+<B>COUNTER</B> for inlined visitor count images
+and <B>WEBBUG</B> for <A HREF="http://www.privacyfoundation.org/resources/glossary.asp#Web Bug">web bugs</A>.
+Each of these words matches the keyword on the start of the lines
+in the <A HREF="rc/patterns">configuration file</A>.
+To control each you would set the variable <TT>$STUBURL_<I>class</I></TT>
+to the URL of the specific replacement for that class.
+<P>
+For example, setting
+<BLOCKQUOTE><TT><SMALL>STUBURL_AD=<A HREF="http://adzapper.sourceforge.net/zaps/ad-clear.gif">http://adzapper.sourceforge.net/zaps/ad-clear.gif</A></SMALL></TT></BLOCKQUOTE>
+which would cause the inlined images to be the "clear" version
+while leaving the other classes as normal.
+That <TT>ad-clear.gif</TT>
+is a transparent single pixel GIF
+donated by David Finster
+&lt;<A HREF="mailto:dfinster@airmail.net">dfinster@airmail.net</A>&gt;.
+Another image you might like is
+<A HREF="http://adzapper.sourceforge.net/zaps/ad-grey.gif">http://adzapper.sourceforge.net/zaps/ad-grey.gif</A>,
+from Andrew Dalgleish &lt;<A HREF="mailto:andrewd@axonet.com.au">andrewd@axonet.com.au</A>&gt;,
+which is a low contrast replacement image
+which lets you see what's zapped without it standing out so much.
+<H3><A NAME="more">Zapping Things Other Than Ads</A></H3>
+The default behaviour of the zapper is to zap ads only
+(the AD*, COUNTER and WEBBUG classes).
+However,
+I desire that it can be used to zap other animated annoyances
+like flashing "NEW!" icons and glowing line images used
+in place of the venerable &lt;HR&gt; horizontal rule markup.
+Accordingly,
+the pattern list
+contains patterns for more than just ads.
+By default,
+these extra patterns are ignored.
+To cause the zapper to start using a particular class of pattern,
+set the environment variable
+<TT><SMALL>STUBURL_<I>class</I></SMALL></TT>
+to a suitable URL in the wrapzap script.
+<H4><A NAME="textads">Zapping small text ads</A></H4>
+There are currently two ad classes, <B>ADHTMLTEXT</B> and <B>ADJSTEXT</B>,
+that are supported but not active by default.
+They are for small, pure text, fast loading inline ads;
+these are the grey area where advertising (often the main revenue source for free sites)
+is present but as unobtrusive as is possible.
+Therefore, as shipped, the zapper does not zap them.
+However, by editing the wrapzap script to set <TT>STUBURL_ADHTMLTEXT</TT> and <TT>STUBURL_ADJSTEXT</TT>
+to the URLs used for <TT>STUBURL_ADHTML</TT> and <TT>STUBURL_ADJS</TT>
+these classes will be enabled.
+<H3><A NAME="#rewrite">Rewriting URLs</A></H3>
+You can also use <A HREF="#syntax">the rewrite facility</A>
+to get the <A NAME="printable">printer-friendly version of some pages</A>.
+As with the extra pattern classes,
+the <TT>PRINT</TT> class is also off by default.
+To activate it,
+just set <TT>STUBURL_PRINT</TT> to "1" in <TT>wrapzap</TT>.
+You're free to add your own rewrite classes
+(or, of course, extend <TT>PRINT</TT>).
+These classes too need their <TT>STUBURL_*</TT> variables set and exported
+in <TT>wrapzap</TT> to turn them on.
+<H3><A NAME=chaining>Chaining Redirector Programs</A></H3>
+[ <A NAME="small-systems">People running on very small systems</A>,
+  such as a low end system running something like LEAF,
+  should also see <A HREF="mailto:andrew@meredevice.com">Andrew Liebeskind</A>'s
+  nifty <A HREF="http://www.meredevice.com/adzap2squirm.html">Adzap2Squirm script</A>
+  which translates the zapper patterns for use with <A HREF="http://squirm.foote.com.au/">Squirm</A>.
+]
+<P>
+Chris Lightfoot &lt;<A HREF="mailto:chris@ex-parrot.com">chris@ex-parrot.com</A>&gt;
+wrote asking if I could make the zapper friendly to setups
+where people chain multiple redirection programs together
+(for example,
+to run both the ad zapper and another tool like SquidGuard).
+Then Adam Hope &lt;<A HREF="mailto:a.hope@csl.gov.uk">a.hope@csl.gov.uk</A>&gt;
+wrote to say that they were chaining to another redirector which wanted the full
+4 word input a redirector may expect.
+<P>
+The <A HREF="http://www.squid-cache.org/Doc/FAQ/FAQ-15.html">specification for the redirectors</A>
+says unredirected URLs
+should be indicated with a blank line, which is no good for piping the output
+of one into the next.
+Accordingly,
+to chain redirectors a wrapper program is needed to pass URLs to each redirector
+in turn.
+<P>
+To chain redirectors:
+<OL>
+  <LI>Fetch the scripts
+	<TT><A HREF="scripts/wrapzap">wrapzap</A></TT> and <TT><A HREF="scripts/zapchain">zapchain</A></TT>.
+	Install them where you installed the <TT>squid_redirect</TT> script.
+	Remember that all scripts should have public read/execute permissions:
+	<BLOCKQUOTE><SMALL><TT>chmod a+rx <I>scripts...</I></TT></SMALL></BLOCKQUOTE>
+  <LI>As stated in the <A HREF="#custom">section on customising the zapper</A>,
+	the main purpose of <TT>wrapzap</TT> is to tune the behaviour of the zapper.
+	However, it is also the hook for chaining things.
+	<OL>
+	  <LI>Adjust the setting for <TT>zapper</TT> near the top of the script.
+	  <LI>Change the last lines of <TT>wrapzap</TT> from:
+		<BLOCKQUOTE><TT>exec "$zapper"<BR>
+				# exec /path/to/zapchain "$zapper" /path/to/another/eg/squirm</TT></BLOCKQUOTE>
+		to:
+		<BLOCKQUOTE><TT># exec "$zapper"<BR>
+				exec /path/to/zapchain "$zapper" /path/to/another/eg/squirm</TT></BLOCKQUOTE>
+		and adjust the pathnames to suit. You may name as many different
+		redirectors as you like, not just two.
+	</OL>
+  <LI>Change the squid config line:
+	<BLOCKQUOTE><TT><SMALL>redirect_program <I>/path/to/</I>squid_redirect</SMALL></TT></BLOCKQUOTE>
+	to be:
+	<BLOCKQUOTE><TT><SMALL>redirect_program <I>/path/to/</I>wrapzap</SMALL></TT></BLOCKQUOTE>
+</OL>
+This causes squid to run <TT>wrapzap</TT>,
+<TT>wrapzap</TT> to run <TT>zapchain</TT>
+and <TT>zapchain</TT> to run the various redirectors correctly.
+<H2><A NAME="updates">Updates</A></H2>
+Updates are normally as simple as fetching a new version of the script.
+Simply copy it over the existing
+script and restart your squid server.
+The command "<TT><SMALL>squid&nbsp;-k&nbsp;reconfigure</SMALL></TT>" will do this,
+as will sending a SIGHUP to the squid.
+<BLOCKQUOTE><SMALL>
+<EM>Note</EM>:
+if you keep your own set of extra patterns,
+see the <A HREF="#custom">customisation section</A>
+- in particular the <A HREF="#pattern-files">section on extra pattern files</A>
+- for how to use the <A HREF="scripts/wrapzap">wrapzap script</A>
+to keep these additions separate,
+so as not to be overwritten by the script update.
+</SMALL></BLOCKQUOTE>
+You have several choices about keeping up to date with the patterns
+(and the matching <TT><SMALL>squid_redirect</SMALL></TT>).
+<UL>
+    <LI><A NAME="announcements">Join</A>
+	the <A HREF="http://lists.sourceforge.net/lists/listinfo/adzapper-announce">adzapper-announce</A>
+	or
+	the <A HREF="http://lists.sourceforge.net/lists/listinfo/adzapper-everyupdate">adzapper-everyupdate</A> mailing lists.
+	The announce list
+	gets an infrequent posting with a new script and an overview of what's changed.
+	The everyupdate list
+	gets a copy of the script and a diff of the patterns from the everyupdate post
+	every time I update the sourceforge site.
+    <LI>Don't want to join the list?<BR>
+    	Then you can simply fetch the script from this page every so often.
+	You can ask the <A HREF="http://www.netmind.com/html/users.html">URL Minder</A>
+	to keep an eye on it for you, too.
+    <LI>Alternatively, you can fetch new versions automatically.
+	At <A HREF="mailto:tfox@oliverdesign.com">Thomas B. Fox</A>'s suggestion
+	I devised the following method.
+	Have a cron job invoked like so:
+	<BLOCKQUOTE><TT><SMALL>0 0 * * * /usr/local/etc/update-zapper</SMALL></TT></BLOCKQUOTE>
+	(Hack "<TT><SMALL>/usr/local/etc/update-zapper</SMALL></TT>"
+	to match wherever you install
+	the <A HREF="scripts/update-zapper">automatic update script</A>.)
+	That should go in the crontab of some user with write permission to
+	the <TT><SMALL>squid_redirect</SMALL></TT> script
+	as installed on your squid host
+	and permission to send signals to the zapping squid daemon.
+	Probably this user is called "squid",
+	but this would work as root too.
+	Then install the <A HREF="scripts/update-zapper">update-zapper script</A>.
+	The script needs the <A HREF="http://freshmeat.net/projects/wget/">wget</A> program.
+	<BR>
+	Damien Clermonte &lt;<A HREF="mailto:damien.clermonte@free.fr">damien.clermonte@free.fr</A>&gt;
+	has sent me a copy of <A HREF="scripts/update-zapper.damien">his update script</A>
+	which you might prefer to use.
+    <LI>Don't want me to do your maintenance?<BR>
+	Copy the <A HREF="../scripts/squid_redirect">redirector</A>
+	and maintain your own set of patterns.
+	They are in the clear at the end of the script;
+	search for the string "<SMALL><TT>__DATA__</TT></SMALL>"
+	<BR>
+	Obviously I'd rather collaborate in this;
+	then we can keep a single central list.
+</UL>
+<H2><A NAME=proxy-pac>Using the zapper in <TT>proxy.pac</TT> files</A></H2>
+[ Also see: <A HREF="#my-isp">Can I get my ISP to do this for me?</A>, below. ]
+<P>
+If you have to support more than a few users,
+you may want to use a <A HREF="http://home.netscape.com/eng/mozilla/2.0/relnotes/demo/proxy-live.html"><TT>proxy.pac</TT> file</A>.
+This is a file containing a JavaScript function
+used by a browser to decide which proxy to use (if any)
+on a per-URL basis.
+This is often known as "automatic proxy configuration",
+as all you tell the browser configuration
+is the URL of the <TT>proxy.pac</TT> file.
+Once you've set this up for each of your users,
+you can then control things by editing the central file.
+Both Netscape and Internet Explorer support <TT>proxy.pac</TT> files.
+<H3><A NAME=my-isp>Can I get my ISP to do this for me?</A></H3>
+If you petition them, maybe.
+The setup at their end is pretty easy.
+However, they may refuse.
+For example, ZipWorld no longer support the zapping service themselves;
+instead I now supply this service for Zip people who wish it.
+(Essentially,
+their legal people have raised the spectre of zapping somehow being construed
+as a kind of copyright violation.
+Personally I think that's daft; it's no different to browsing in text
+mode with lynx or with image loading off in a graphical browser).
+<P>
+Thus it may become a case of "do it yourself".
+However,
+at least in my case,
+ZipWorld were happy enough to up my disc limit a bit,
+let me run the zapper all the time
+(even when not logged in),
+and automate a monthly post to a local newsgroup
+to tell people about the zapper.
+Very cool!
+<P>
+Something to bear in mind if you implement this for an ISP
+(or anywhere where the zapper isn't behind a firewall):
+to avoid having their site hammered
+ZipWorld asked me to limit access to the zapper at Zip
+to a the list of IP address ranges that they own. 
+To this end the ranges are in a file and the squid config for the zapper there
+says:
+<BLOCKQUOTE><TT>acl zipworldIP src "/home/cs/rc/squid/ip-ranges@zip"<BR>
+acl zipworldDNS srcdomain zipworld.com.au zipworld.net.au zip.com.au zip.net.au zipworld.net pacific.net.au
+</TT></BLOCKQUOTE>
+I also customised <A HREF="ERR_ACCESS_DENIED">the ERR_ACCESS_DENIED page</A>
+that squid returns for unauthorised access.
+<H3><A NAME=already>Sites with the Zapper already installed</A></H3>
+<DL>
+    <DT><A NAME=already-zip>ZipWorld</A>
+    <DD>People at Zip can simply use the prepackaged .pac file URL:
+	<BLOCKQUOTE><TT>http://adzapper.sourceforge.net/rc/proxy-zip.pac</TT></BLOCKQUOTE>
+	Users of other ISPs can contact me for details on how to I set this up.
+</DL>
+<P>
+Here are a few example <TT>.pac</TT> files
+which I've set up for various sites.
+Each would require some customisation for your own site.
+<UL>
+    <LI><A HREF="rc/proxy-home-pac.txt">proxy-home.pac</A>,
+	which I use at home.
+    <LI><A HREF="rc/proxy-zip-pac.txt">proxy-zip.pac</A>,
+	which can be used by people at my ISP
+	(<A HREF="http://www.zip.com.au/">ZipWorld</A>).
+</UL>
+<H2><A NAME="why">Why run an ad zapper?</A></H2>
+There are a few reasons one might do this:
+<UL>
+    <LI>General dislike of ads.
+	<BR>
+	I don't subscribe to this one, myself.
+	I see the arguments for using advertising to support
+	communal resources (especially ones which do not
+	of themselves generate income).
+	In particular,
+	certain small, purely text, fast loading ads
+	are not zapped <em>by default</em>;
+	patterns for them are collected and maintained
+	and <a href="#textads">the zapper can be told to zap them</a>
+	quite easily.
+    <LI>Bandwidth.
+	<BR>
+	Many ads seem to be devised by the technically illiterate.
+	You find simple GIFs with hundreds of colours,
+	tiny buttons requiring several kilobytes of download, etc.
+	The simple act of quantising the colours to a few (between 4 to 32
+	would easily suffice for most ad graphics) would have <EM>greatly</EM>
+	reduced the size of these things.
+	<BR>
+	You also find that many, maybe most, ads are CGI output.
+	Instead of intelligently redirecting the browser to
+	an image from a static library of banners
+	(which would permit proxies to cache the images,
+	saving repeated download)
+	the CGIs emit the graphics themselves.
+	Firstly, pretty much every CGI invocation has a different URL,
+	as the source site is usually identified to track
+	display rates. As a consequence identical ad graphics have different
+	names and are not recognised as hits by the cache;
+	each must be fetched
+	from the CGI even though a cached version may exist.
+	Secondly, CGI output is routinely marked no-cache;
+	even when the URL is the same the content is often refetched.
+	<BR>
+	This <A HREF="http://vancouver-webpages.com/CacheNow/">cache unfriendly behaviour</A> makes most ad banners
+	the enemy of all who pay attention to the usage of their link.
+    <LI>Animation.
+	<BR>
+	Even though I am on the end of a narrow link at home
+	(i.e. a modem)
+	my primary motivation in zapping ads is not
+	that they are huge unwieldy wastes of bandwdth
+	but that most of them are animated.
+	My normally informative browser window has these bloody
+	flashing, scrolling, moving distractions.
+	They annoy the hell out of me and many others I know.
+	A static ad can be a fine thing. Small and informative,
+	it points the way to something possibly interesting.
+	An animated GIF is an intrusive and rude wart on
+	the surface of the web.
+	And it further offends by wasting bandwidth.
+    <LI><A HREF="http://bcn.boulder.co.us/~neal/">Neal McBurnett</A>
+	&lt;<A HREF="mailto:nealmcb@bell-labs.com">nealmcb@bell-labs.com</A>&gt;
+	adds this remark:
+	<BLOCKQUOTE><SMALL>
+	Ad sites commonly set permanent cookies on your browser.  Via use of
+	the HTTP_REFERER header they can then often track your activities on
+	all sites they advertise on, and some companies advertise across a
+	very wide range of popular sites.  It wouldn't be unusual for them to
+	get personal information on you just from the URLs in the
+	HTTP_REFERER field, which may include form values including your
+	name, things you like to search for, etc.<P>
+	See also - Cookie RFC (privacy section, but note that the popular
+	browsers don't follow the guidelines!):
+	<BLOCKQUOTE><TT><A HREF="http://www.cis.ohio-state.edu/htbin/rfc/rfc2109.html">http://www.cis.ohio-state.edu/htbin/rfc/rfc2109.html</A></TT></BLOCKQUOTE>
+	</SMALL></BLOCKQUOTE>
+	He says this was his primary motivation for zapping
+	<A HREF="http://www.doubleclick.com/">doubleclick</A> ads in 1996.
+	I'd remark that while an ad zapper protects you from this
+	(cookies attached to the inlined image),
+	naturally if you follow the ad link anyway
+	(since the savvy marketer will add a useful descriptive caption
+	under the banner, permitting you to know what the zapped ad was for)
+	then you're on your own.
+</UL>
+<H2><A NAME="other">Other Similar Software</A></H2>
+Mine is hardly the only alternative you have in this line.
+<A HREF="http://www.google.com/">Google</A> maintains <A HREF="http://directory.google.com/Top/Computers/Software/Internet/Servers/Proxy/Filtering/Ad_Filters/">a useful index</A>.
+Other tools include:
+<DL>
+    <DT><A HREF="http://www.squid-cache.org/related-software.html">Squid: Related Software</A>
+    <DD>A listing of interesting software related to squid,
+	including a few other redirectors.
+    <DT><A HREF="http://www.waldherr.org/junkbuster/">Junkbuster</A>
+    <DD>Josh Marshall &lt;<A HREF="mailto:MarshallJ@switch.aust.com">MarshallJ@switch.aust.com</A>&gt;
+	briefly compares them:
+	<BLOCKQUOTE><SMALL>
+	<B>Similarities</B>:<BR>
+	Both filter out those annoying advertisement pages that waste time and
+	bandwidth, meaning money (we're paying for that!)  Both use a list of
+	sites and regular expressions to eliminate these advertisements.  Both
+	redirect the image to a default, smaller image.
+	<P>
+	That's where the similarities end.
+	<P>
+	<B>Differences</B>:<BR>
+	Ad Zapper integrates much more nicely into squid.  It is started from
+	within squid (as many processes as you like) and is basically a URL
+	redirector based on regular expressions that are contained inside the
+	script.<BR>
+	Junkbuster runs as a separate daemon, and you have to use it as a
+	hierachial cache, with junkbuster as either the parent or child.
+	I found having it as the parent (they document how to set it up
+	as a child in the docs) to be the superior configuration.  All
+	fetches from an external web page must be redirected through
+	junkbuster - which is quite slow compared to squid.  Also the
+	double handling makes for a slower transaction.
+	<P>
+	Ad Zapper zaps ads - that's it.  Junkbuster also can filter out cookies
+	and web pages (like those annoying small ones that advertise the free
+	web pages the site is from)  I have found junkbuster to be a little too
+	constrictive.  It can also to web anonymity and return wafers instead of
+	cookies for you with "leave me alone" privacy messages in them for the
+	web administrators.
+	<P>
+	My recommendation is this:  If you want tight security then go for
+	junkbuster.  You're sacrificing some speed and some pages which simply
+	wont load anymore since the pattern matching tries too hard.  If you
+	want performance without ads, go for Ad Zapper (you can even specify
+	your own image which you can't do with junkbuster)
+	</SMALL></BLOCKQUOTE>
+	I've noticed that the recent squid release (2.2STABLE4 as I type this)
+	has anonymising facilities,
+	so you can perhaps use those in conjunction with squid_redirect
+	to get what you want.
+    <DT>Craig Sanders' &lt;<A HREF="mailto:cas@taz.net.au">cas@taz.net.au</A>&gt;
+	<A HREF="http://taz.net.au/block/">squid-redir</A> tool.<BR>
+    <DD>Quite similar in intent and implementation to my own.
+    <DT><A HREF="http://www.softlab.ece.ntua.gr/~ckotso/CTC/">Cut The Crap</A>
+    <DT><A HREF="http://www.atguard.com/">AtGuard</A>
+    <DT><A HREF="http://www.webwasher.com/">WebWasher</A>
+    <DT><A HREF="http://www.zaplet.org/adzapper/">adzapper</A>
+    <DD>(No, not my ad zapper; this one is by Adam Feuer,
+	and coded in <A HREF="http://www.python.org/">Python</A>.)
+    <DT><A HREF="http://boost.linux.kz/sleezeball/">SleezeBall</A>
+    <DD>Another squid based redirector.
+    <DT><A HREF="http://www.senet.com.au/squirm/">Squirm</A>.
+    <DD>A general squid redirector which can be used for whatever
+	purpose. It doesn't seems to come with prepackaged patterns
+	for common purposes, and uses pure regexps as opposed to
+	the more shell-like regexps I use (which are transliterated into
+	real regexps).
+    <DT><A HREF="http://freshmeat.net/projects/pyredir/">pyredir</A>
+	by Don Baarda &lt;<A HREF="mailto:abo@minkirri.apana.org.au">abo@minkirri.apana.org.au</A>&gt;.
+    <DD>This is a Python based redirector with flexibility in mind,
+	coded becasue Squirm (above) lacked some features.
+	Also interesting is that he has added the ability to read my pattern files,
+	so if you desire to keep the zapping while using pyredir you can
+	do so trivially.
+	(Note that if you go this was then bugfixes for missing or overzapped
+	ads should still come to me - pyredir should pick up the changes
+	as I make them I think).
+    <DT><A HREF="http://spywaresucks.org/prox/index.html">Proxomitron</A>
+    <DD>This is for Win32 systems (Win95, 98, ME, etc).
+	It does more than ad zapping.
+    <DT><A HREF="http://phroggy.com/bannerfilter/">BannerFilter</A>
+    <DD>Another ad filter redirector for squid.
+	Like AdZapper, this can run under UNIX and Windows
+	(in fact, the instructions for getting AdZapper running under Windows
+	came from bannerFilter's home page:-).
+    <DT><STRIKE>http://www.redhatbox.org/squid/squid-bannerfilter.html</STRIKE> [page dead?]<BR>Squid-Bannerfilter mini-HOWTO
+    <DD><A HREF="mailto:dave@redhatbox.org">David Hill</A>'s
+	instructions for setting up a transparent squid proxy
+	with an ad zapper (happens to be mine ,but any other redirector
+	can readily be used).
+	It was motivated by Telstra BigPond Cable's recent bandwidth caps.
+    <DT><A HREF="http://freshmeat.net/projects/yafp/">Yet Another Filter Proxy</A>
+    <DD>A proxy to filter out advertising banners and malicious script code from web sites
+	by Andreas Gohr.
+    <DT><A HREF="http://freshmeat.net/projects/bannerfilter/?topic_id=90">BannerFilter</A>
+    <DD>Yet another redirector.
+    <DT><A HREF="http://www.privoxy.org/">Privoxy</A>
+    <DD>Privoxy is a web proxy with advanced filtering capabilities,
+	based on Internet Junkbuster &trade;.
+    <DT><A HREF="http://www.proxomitron.org/">Proxomitron</A>
+    <DD>A filtering/editing web proxy.
+    <DT><A HREF="http://freshmeat.net/projects/bfilter/">BFilter</A>
+    <DD>jart's HTML-parsing heuristic ad filter
+</DL>
+<H2><A NAME=choice>Offering your users a choice of zapped and unzapped browsing</A></H2>
+The purpose of this is to permit un-zapped
+access to the web for those few who want it
+(marketing types, as it happens:-).
+<H3><A NAME=twoports>Using two ports on a single squid</A></H3>
+Aidas Kasparas &lt;<A HREF="mailto:kaspar@lifosa.com">kaspar@lifosa.com</A>&gt;
+pointed me at squid's <TT>redirector_access</TT> facility.
+To use this you make squid listen on two ports like this:
+<BLOCKQUOTE><TT>http_port 8080 8081</TT></BLOCKQUOTE>
+Then you say that only accesses to one of the ports use the redirector:
+<BLOCKQUOTE><TT>acl nobannerport myport 8080<BR>
+redirector_access allow nobannerport</TT></BLOCKQUOTE>
+That way people using port 8080 will get the zapping service
+and people using port 8081 will get the raw, uglified web.
+<H3><A NAME=doublelayer>My double-layer squid setup</A></H2>
+At work we run a double layer squid setup.
+One day I will replace it with the two port method above,
+but I'll describe it here anyway.
+<P>
+We have a double squid cache (once on the same machine, now on separate machines).
+The usual proxy for users is:
+<BLOCKQUOTE><TT><SMALL>proxy:8080</SMALL></TT></BLOCKQUOTE>
+which has no cache and the URL redirector in its config:
+<BLOCKQUOTE><TT><SMALL>redirect_program /opt/UCSDsquid/bin/squid_redirect</SMALL></TT></BLOCKQUOTE>
+This lives off the main, non-redirecting cache at:
+<BLOCKQUOTE><TT>proxy-raw:8080</TT></BLOCKQUOTE>
+which has a big cache.
+The proxy.pac file users use points them at:
+<BLOCKQUOTE><TT><SMALL>PROXY proxy-noads:8080; PROXY proxy-raw:8080</SMALL></TT></BLOCKQUOTE>
+and the proxy-raw.pac (which shows ads) says:
+<BLOCKQUOTE><TT><SMALL>PROXY proxy-raw:8080</SMALL></TT></BLOCKQUOTE>
+The CNAMEs <TT>proxy-noads</TT> and <TT>proxy-raw</TT> point at the zapping and nonzapping squids,
+respectively.
+The CNAME <TT>proxy</TT> points at the same machine <TT>proxy-noads</TT> does.
+That way the naive and memorable setup gets a zapped view of the web.
+If your site policy is different you can just point <TT>proxy</TT>
+at the nonzapping machine and publicise the zapper as an optional service.
+<H2><A NAME=trouble>Troubleshooting</A></H2>
+This might be as unhelpful as Microsoft's online help,
+but hopefully not.
+<P>
+Basic checks:
+<OL>
+    <LI>Make sure your squid proxy is working normally
+	<EM>without</EM> the ad-zapper line in the config file.
+    <LI>Make sure the <TT><SMALL>squid_redirect</SMALL></TT> script has
+	public read and execute permission.
+	Remember that all scripts should have public read/execute oermissions:
+	<BLOCKQUOTE><SMALL><TT>chmod a+rx <I>scripts...</I></TT></SMALL></BLOCKQUOTE>
+    <LI>Make sure the <TT><SMALL>squid_redirect</SMALL></TT> script
+	is not in DOS text mode (if you fetched it from a Windows machine);
+	see <EM>Note&nbsp;3</EM> under step 2 of <A HREF="#install">the install steps</A>
+	for a fix for this.
+    <LI>Examine your <TT><SMALL>cache.log</SMALL></TT> file for
+	error messages from squid or the ad zapper.
+</OL>
+Still stumped?
+<BR>
+Here is a basic, untested, quick and dirty howto for setting this up from
+scratch if you haven't got squid running and have never used squid.
+<EM>Please</EM> attempt a normal squid install using their instructions
+(which come with the source) first!
+You should only need this is things fail obscurely and you're at a loss.
+It's just a sequence of things to do.
+Here goes:
+<DL>
+    <DT>Planning:
+    <DD>Find out your ISP's proxy server and port.
+	It's traditional that the server is called
+	<TT><SMALL>proxy.<I>your.isp.domain</I></SMALL></TT>
+	and that it listens on port 8080.
+	If that's documented by your ISP's web pages, well and good.
+	If you have to guess, try connecting to it:
+	<BLOCKQUOTE><TT><SMALL>telnet proxy.<I>your.isp.domain</I> 8080</SMALL></TT></BLOCKQUOTE>
+	If you don't get a connection, try port 3128 instead of 8080.
+	<BR>
+	If you get a complaint that the hostname is unknown,
+	you'll have to consult your ISP.
+	<BR>
+	If you get a connection, check that it's actually a web proxy.
+	Type:
+	<BLOCKQUOTE><TT><SMALL>GET http://www.zip.com.au/~cs/ HTTP/1.0</SMALL></TT></BLOCKQUOTE>
+	and press return twice
+	You should get an HTTP response (code 200 hopefully),
+	some header lines, then some HTML.
+	If you don't then that's not your ISP's proxy service,
+	and you must contact them to find out the correct details.
+
+    <DT>Basic Sanity Checks:
+    <DD>Ensure your browser works with no proxies at all set up.
+	<BR>
+	Ensure your browser works with its proxy setup to talk to your
+	ISP's proxy service.
+
+    <DT>Squid:
+    <DD>Fetch the latest squid (2.2STABLE4 as I type this), build and install.
+	<BR>
+	Edit the <TT><SMALL>squid.conf</SMALL></TT> file
+	by walking through it from beginning to end
+	in an editor, adjusting it to suit your host.
+	In particular:
+	<UL>
+	    <LI>You should make it listen on a suitable port.
+		Usually this is 8080;
+		squid's default port is 3128.
+		This is controlled by the <TT><SMALL>http_port</SMALL></TT>
+		directive.
+	    <LI>You should make your squid use your ISP's proxy as its
+		upstream service.
+		This is controlled by the <TT><SMALL>cache_peer</SMALL></TT> directive.
+		The relevant line from my squid at work says:
+		<BLOCKQUOTE><TT><SMALL>cache_peer 203.12.172.230 parent 8080 3130 no-query default</SMALL></TT></BLOCKQUOTE>
+		You would replace the "<TT><SMALL>203.12.172.230</SMALL></TT>"
+		with the name of your ISP's proxy
+		(eg&nbsp;"proxy.<I>your.isp.domain</I>")
+		and the 8080 with the matching port number
+		(probably the same).
+	</UL>
+	Run "squid -z" to initialise your cache.
+	<BR>
+	Run the squid startup script to set squid running.
+
+    <DT>Working?:
+    <DD>On your squid host, run the command:
+	<BLOCKQUOTE><TT><SMALL>netstat -an | grep -i listen</SMALL></TT></BLOCKQUOTE>
+	to check that squid (presumably) is listening on port 8080 on your machine.
+	<BR>
+	As with your ISP's proxy,
+	you should now test your proxy.
+	Run the command:
+	<BLOCKQUOTE><TT><SMALL>telnet localhost 8080</SMALL></TT></BLOCKQUOTE>
+	to check, and issue the same <TT><SMALL>GET</SMALL></TT>
+	command you used above to fetch a web page.
+
+    <DT>Test new squid:
+    <DD>Set your browser config to use the local machine
+	(well, your squid host,
+	which needn't be the same machine as where yoiur browser runs),
+	port 8080 as its proxy.
+
+    <DT>Ad zapping:
+    <DD>Add the ad-zapper line to the <SMALL></TT>squid.conf</SMALL></TT>,
+	restart the squid server and test again.
+    <DT><A NAME=dosmode>Not working? Maybe the script came fvia a DOS or Windows box
+	and is in DOS text mode?</A>
+    <DD>This usually shows up as failure (by squid) to run the script,
+	so first check your script is usable by running it by hand:
+	<BLOCKQUOTE><TT><I>the-script</I> &lt;/dev/null</TT></BLOCKQUOTE>
+	That should do nothing, with no complaints.
+	If this is greeted with messages like:
+	<BLOCKQUOTE><TT><I>the-script</I>: exec failed: No such file or directory</TT></BLOCKQUOTE>
+	then you may have spurious CR characters in there.
+	You can verify this with the command:
+	<BLOCKQUOTE><TT>sed 1q <I>the-script</I> | od -c</TT></BLOCKQUOTE>
+	which will print:
+	<BLOCKQUOTE><TT>0000000   #   !   /   u   s   r   /   b   i   n   /   p   e   r   l  \n<BR>
+	0000020</TT></BLOCKQUOTE>
+	for a good script and:
+	<BLOCKQUOTE><TT>0000000   #   !   /   u   s   r   /   b   i   n   /   p   e   r   l  \r<BR>
+	0000020  \n</TT></BLOCKQUOTE>
+	for a bad script (note that extra \r, which is a carriage return (CR)).
+	These can be deleted with the <TT>tr</TT> command, viz:
+	<BLOCKQUOTE><TT>tr -d '\015' &lt;<I>the-script</I> &gt;<I>the-script</I>.fixed<BR>
+	mv <I>the-script</I>.fixed <I>the-script</I></TT></BLOCKQUOTE>
+	which makes a new copy without the CRs
+	and then replaces the orignal with the new one.
+	The dos2unix(1) command can also be used for this task, if available.
+</DL>

@@ -1,0 +1,1802 @@
+#                              -*- Mode: Cperl -*-
+# mimedefang-filter<mimedefang> ---
+# Author           : Manoj Srivastava ( srivasta@golden-gryphon.com )
+# Created On       : Fri May 20 03:37:06 2005
+# Created On Node  : glaurung.internal.golden-gryphon.com
+# Last Modified By : Manoj Srivastava
+# Last Modified On : Tue Sep 18 10:24:52 2007
+# Last Machine Used: anzu.internal.golden-gryphon.com
+# Update Count     : 107
+# Status           : Unknown, Use with caution!
+# HISTORY          :
+# Description      :
+# Downloadable     :mimedefang-filter.txt
+#
+#use strict;
+
+#***********************************************************************
+#
+# mimedefang-filter
+#
+# Suggested minimum-protection filter for Microsoft Windows clients, plus
+# SpamAssassin checks if SpamAssassin is installed.
+#
+# Copyright (C) 2002 Roaring Penguin Software Inc.
+#
+# This program may be distributed under the terms of the GNU General
+# Public License, Version 2, or (at your option) any later version.
+#
+# $Id: suggested-minimum-filter-for-windows-clients,v 1.81 2004/10/26 18:34:33 dfs Exp $
+#***********************************************************************
+$FilterRevision = "16.42";
+
+#***********************************************************************
+# Settings for SpamAssassin.
+#
+# Set SALocalTestsOnly if you do not want to use SA's network tests.
+# Messages larger than SASizeLimit will not be scanned by SA.
+#***********************************************************************
+$SALocalTestsOnly = 0;
+$SASizeLimit = 200*1024;
+
+#***********************************************************************
+# Set administrator's e-mail address here.  The administrator receives
+# quarantine messages and is listed as the contact for site-wide
+# MIMEDefang policy.  A good example would be 'defang-admin@mydomain.com'
+#***********************************************************************
+$AdminAddress = 'postmaster@your.domain.name';
+$AdminName = "Manoj Srivastava";
+$AdminContactAddress = 'srivasta@your.domain.name';
+$OurDomains = '(your\.domain\.name|other\.domain\.name)';
+
+$MyFilterHostName = "smtp.your.domain.name";
+
+
+#***********************************************************************
+# There two values provide the thresholds for the values returned by
+# CRM114 and spamassassin before we reject them.
+#***********************************************************************
+my $CRM_THRESHOLD=120;
+my $SA_THRESHOLD=15;
+
+#***********************************************************************
+# If there is a local relay in use, like fetchmail, chacking for the
+# relay to whitelist is counterproductive -- since all mail appears local
+#***********************************************************************
+my $local_relay_in_use = 0;
+
+#***********************************************************************
+# Set this to use discard rather than bounce spam. This is useful if
+# you use a local relay like fetchmail.
+#***********************************************************************
+my $discard_not_bounce = $local_relay_in_use;
+
+#***********************************************************************
+# Set the e-mail address from which MIMEDefang quarantine warnings and
+# user notifications appear to come.  A good example would be
+# 'mimedefang@mydomain.com'.  Make sure to have an alias for this
+# address if you want replies to it to work.
+#***********************************************************************
+$DaemonAddress = 'mailer-daemon@your.domain.name';
+
+# Detect and load Perl modules
+detect_and_load_perl_modules();
+
+# Using ClamAV with default run-as-user settings
+$Features{'Virus:CLAMD'} = '/usr/sbin/clamd';
+$ClamdSock  = "/var/run/clamav/clamd.ctl";
+
+#***********************************************************************
+# If you set $AddWarningsInline to 1, then MIMEDefang tries *very* hard
+# to add warnings directly in the message body (text or html) rather
+# than adding a separate "WARNING.TXT" MIME part.  If the message
+# has no text or html part, then a separate MIME part is still used.
+#***********************************************************************
+$AddWarningsInline = 1;
+$GeneralWarning = "WARNING: This e-mail has been altered by MIMEDefang at $MyFilterHostName.\n\n";
+
+#***********************************************************************
+# To enable syslogging of virus and spam activity, add the following
+# to the filter:
+# md_graphdefang_log_enable();
+# You may optionally provide a syslogging facility by passing an
+# argument such as:  md_graphdefang_log_enable('local4');  If you do this, be
+# sure to setup the new syslog facility (probably in /etc/syslog.conf).
+# An optional second argument causes a line of output to be produced
+# for each recipient (if it is 1), or only a single summary line
+# for all recipients (if it is 0.)  The default is 1.
+# Comment this line out to disable logging.
+#***********************************************************************
+md_graphdefang_log_enable('mail', 1);
+my $debug_loglevel = 0;
+
+
+#***********************************************************************
+# Uncomment this to block messages with more than 50 parts.  This will
+# *NOT* work unless you're using Roaring Penguin's patched version
+# of MIME tools, version MIME-tools-5.411a-RP-Patched-02 or later.
+#
+# WARNING: DO NOT SET THIS VARIABLE unless you're using at least
+# MIME-tools-5.411a-RP-Patched-02; otherwise, your filter will fail.
+#***********************************************************************
+$MaxMIMEParts = 100;
+
+
+#***********************************************************************
+# Set various stupid things your mail client does below.
+#***********************************************************************
+# Set the next one if your mail client cannot handle multiple "inline"
+# parts.
+$Stupidity{"NoMultipleInlines"} = 0;
+
+# Set the next one if your mail client cannot handle nested multipart
+# messages.  DO NOT set this lightly; it will cause action_add_part to
+# work rather strangely.  Leave it at zero, even for MS Outlook, unless
+# you have serious problems.
+# $Stupidity{"flatten"} = 0;
+
+#***********************************************************************
+# Settings for file extensions.
+#
+# $bad_exts are forbidden extensions.
+# Attachments matching $office_exts may not be executable files.
+#***********************************************************************
+$bad_exts = '(' .
+  join ('|', qw{ade adp app asd asf asx bas bat chm cmd com cpl crt dll fxp hlp
+                hta hto ins isp jse? lib lnk mde msc msi msp mst ocx pcd pif
+                prg scr sct sh shb shs sys vb vbe vbs vcs vxd wmd wms wmz wsc
+                wsf wsh})
+  . '|\{[^\}]+\})';
+
+$office_exts = '(' .
+  join("|", qw{doc xml dot rtf wps xls xlt csv xlw wk4 wk3 wk1 wks xla mdb adp
+               dbf ppt pot pps ppa wmf emf mpp mpt mpd pub})
+  . ')';
+
+#***********************************************************************
+# Settings for disabling bad HTML.
+#
+# If disable_bad_html is set, some html tags will be disabled.
+# Messages larger than $dbh_sizelimit will not be checked for this.
+#***********************************************************************
+$disable_bad_html = 0;
+$dbh_sizelimit = 1024*1024;
+
+
+# The next lines force SpamAssassin modules to be loaded and rules
+# to be compiled immediately.  This may improve performance on busy
+# mail servers.  Comment the lines out if you don't like them.
+if ($Features{"SpamAssassin"}) {
+  spam_assassin_init()->compile_now(1) if defined(spam_assassin_init());
+
+  # If you want to use auto-whitelisting:
+  #   if (defined($SASpamTester)) {
+  #       use Mail::SpamAssassin::DBBasedAddrList;
+  #       my $awl = Mail::SpamAssassin::DBBasedAddrList->new();
+  #       $SASpamTester->set_persistent_address_list_factory($awl)
+  #           if defined($awl);
+  #   }
+}
+
+# This procedure returns true for entities with bad filenames.
+sub filter_bad_filename ($) {
+  my($entity) = @_;
+  my($re);
+
+  # Do not allow:
+  # - CLSIDs  {foobarbaz}
+  # - bad extensions (possibly with trailing dots) at end
+  $re = '\.' . $bad_exts . '\.*$';
+
+  return 1 if (re_match($entity, $re));
+
+  # Look inside ZIP files
+  if (re_match($entity, '\.zip$') and
+      $Features{"Archive::Zip"}) {
+    my $bh = $entity->bodyhandle();
+    if (defined($bh)) {
+      my $path = $bh->path();
+      if (defined($path)) {
+        return re_match_in_zip_directory($path, $re);
+      }
+    }
+  }
+  return 0;
+}
+
+
+#***********************************************************************
+############################ BEGIN GREYLISTING STUFF ##################
+#***********************************************************************
+# If greylist is 1, greylisting will be used.
+my $greylist = 1;
+
+# Time units (in seconds)
+my $minute = 60;
+my $hour = 60*$minute;
+my $day = 24*$hour;
+
+#
+# Greylisting is done on a triplet of
+#  sending hosts IP, mail from: and rcpt to:.
+#
+
+# When mail with a new triplet arrives, all sessions with that
+# triplet will be tempfailed for $greylist_black seconds. This would catch
+# most professional spammers; they can't afford to wait aorund to
+# resend mail, and a temporary 30 minute failure is usually not an issue.
+my $greylist_black = 30*$minute; # some people say 1 * $hour
+
+# After $greylist_black seconds, the triplet will be white-listed for
+# $greylist_grey seconds. Mail arriving in this time shall not be bounced.
+# This should allow for most legitimate senders.
+my $greylist_grey = 5*$hour;
+
+# If maile for the triplet arrives within the $greylist_grey white-listing
+# period, it will not only be accepted, it shall also be white-listed
+# for $greylist_white seconds, and this is long anough that monthly notices
+# are automatically accepted.
+my $greylist_white = 36*$day;
+
+#
+# If $greylist_subnet is true, only the first 3 octes of the IP-addresses will be
+# used in the greylist.
+my $greylist_subnet = 1;
+
+
+# If $greylist_from_domain is true, only the domain part of the mail from: address
+# will be used in the greylist.
+my $greylist_from_domain = 0;
+
+# If $greylist_to_domain is true, only the domain part of the rcpt to: address
+# will be used in the greylist.
+my $greylist_to_domain = 0;
+
+# If $greylist_from_strip is true, some stuff in the user part of the mail from:
+# address will be replaced in order to handle mailinglists and some other
+# stuff better.
+my $greylist_from_strip = 1;
+
+# If $greylist_reset_host is true, all triplets from the same host IP
+# will be reset whenever a spam triggers the reset.
+$greylist_reset_host = 0;
+
+# If $greylist_to_strip is true, some stuff in the user part of the rcpt to:
+# address will be replaced in order to handle use parameters and some other
+# stuff better.
+my $greylist_to_strip = 1;
+#***********************************************************************
+my $greylist_log = 1;
+
+our $dbh;
+
+#our $greylist_dbname   = 'DBI:Pg:database=mimedefang';
+#our $greylist_dbname   = 'DBI:Pg:dbname=mimedefang;host=localhost;port=5432;';
+our $greylist_dbname   = 'DBI:Pg:dbname=mimedefang;';
+our $greylist_username = 'defang';
+our $greylist_password = 'PASSWORD_HERE';
+
+#***********************************************************************
+# This is the list of places which we get mail from which are mailing
+# lists. These are excempt from greylist checks, and spam from them is
+# discarded, not bounced.
+#***********************************************************************
+our %gwl =
+  (
+   "aadvantage.info.aa.com"            => "64.73.138.116",
+   "alumni.iitkgp.ernet.in"            => "144.16.192.210",
+   "bmsmail3.ieee.org"                 => "140.98.193.199",
+   "cards.bankofamerica.com"           => "66.179.26.39",
+   "chat1.netcentral.net"              => "216.33.114.151",
+   "chiark.greenend.org.uk"            => "212.13.197.229",
+   "cluster5.us.messagelabs.com"       => "216.82.241.67",
+   "corp.shopharmony.com"              => "64.21.131.4",
+   "crossover.codeweavers.com"         => "209.46.25.132",
+   "cwflyris.computerworld.com"        => "199.92.213.58",
+   "cwonline.computerworld.com"        => "199.92.213.69",
+   "diesel.bestpractical.com"          => "4.79.3.63",
+   "drsfostersmith.com"                => "64.73.26.107",
+   "e.homefocuscatalog.com"            => "63.210.43.103",
+   "e.improvementscatalog.com"         => "63.210.43.103",
+   "eletters.ztechsaver.com"           => "72.2.37.147",
+   "email.bn.com"                      => "216.73.89.11",
+   "email.countrywide.com"             => "209.11.136.183",
+   "email.discovercard.com"            => "206.132.3.49",
+   "email.firststreetonline.com"       => "76.12.20.136",
+   "email.newegg.com"                  => "65.125.54.133",
+   "email.officedepot.com"             => "64.5.35.225",
+   "enews.eweek.com"                   => "72.2.38.2",
+   "enews.webbuyersguide.com"          => "204.92.135.67",
+   "engine.ieee.org"                   => "140.98.193.23",
+   "events.networkcomputing.com"       => "66.37.227.42",
+   "expediamail.com"                   => "206.132.3.45",
+   "extendedstayhotels.com"            => "66.150.50.51",
+   "firststreet.messages1.com"         => "129.41.69.80",
+   "fvwm.org"                          => "129.7.128.5",
+   "gluck.debian.org"                  => "192.25.206.10",
+   "hijli.iitkgp.ernet.in"             => "144.16.192.6",
+   "hometheatermag.email.primedia.com" => "216.73.89.11",
+   "hot-redcross.org"                  => "216.251.43.98",
+   "info.aa.com"                       => "64.73.138.118",
+   "info.cmptechdirect.com"            => "66.250.53.151",
+   "info1.quicken.com"                 => "209.11.136.183",
+   "jazzhorn.ncsc.mil"                 => "144.51.88.129",
+   "linux-nfs.org"                     => "141.211.133.37",
+   "linuxlists.org"                    => "216.85.40.94",
+   "listar.org"                        => "66.116.125.121",
+   "lists-outbound.sourceforge.net"    => "66.35.250.225",
+   "lists.alioth.debian.org"           => "217.196.43.134",
+   "lists.backports.org"               => "82.195.75.76",
+   "lists.bestpractical.com"           => "4.79.3.63",
+   "lists.crutchfield.com"             => "216.30.179.4",
+   "lists.debconf.org"                 => "82.195.75.76",
+   "lists.gnu.org"                     => "199.232.76.165",
+   "lists.linux-india.org"             => "216.103.113.202",
+   "lists.madduck.net"                 => "130.60.75.72",
+   "lists.math.uh.edu"                 => "129.7.128.18",
+   "lists.sourceforge.net"             => "66.35.250.206",
+   "lists.spambouncer.org"             => "131.161.246.83",
+   "listserv.acm.org"                  => "63.118.7.46",
+   "listserv.fnal.gov"                 => "131.225.111.29",
+   "listserver.rediff.com"             => "202.54.124.217",
+   "mail.vresp.com"                    => "209.66.113.42",
+   "mailer.last.fm"                    => "87.117.229.54",
+   "master.debian.org"                 => "70.103.162.29",
+   "mercycorps.org"                    => "207.189.99.69",
+   "messages.crutchfield.com"          => "12.4.198.133",
+   "messaging.tiaa-cref.org"           => "206.132.3.45",
+   "myuhc.1nc030.com"                  => "207.189.106.22",
+   "netflix.com"                       => "208.75.76.17",
+   "news.palmnewsletters.com"          => "216.73.89.58",
+   "newsletter.abtelectronics.com"     => "63.240.155.131",
+   "newsletter.infoworld.com"          => "63.211.217.130",
+   "newsletter.quicken.com"            => "65.197.236.51",
+   "newsletters.sdmediagroup.com"      => "216.73.89.11",
+   "notifications.paypal.com"          => "206.165.245.170",
+   "officedepot.chtah.com"             => "216.15.189.57",
+   "oit.umass.edu"                     => "128.119.100.34",
+   "opensciencegrid.org"               => "69.36.40.106",
+   "orbitz.com"                        => "65.216.67.53",
+   "outletbusiness.dell.com"           => "209.11.136.183",
+   "primediamags.chtah.com"            => "216.15.189.57",
+   "promo.tigeronline.com"             => "199.181.77.19",
+   "race.oit.umass.edu"                => "128.119.101.42",
+   "relianceindiacall.com"             => "202.138.126.225",
+   "rent.thriftyemail.net"             => "206.18.187.15",
+   "ruebert.ieee.org"                  => "140.98.193.10",
+   "schneier.com"                      => "204.11.246.1",
+   "selinux-symposium.org"             => "207.44.200.175",
+   "sho.delivery.net"                  => "209.11.136.89",
+   "shop.hammacher.com"                => "63.211.217.169",
+   "shop.josbank.com"                  => "208.49.63.39",
+   "sierraclub.org"                    => "69.59.163.42",
+   "toyotapartsandservice.com"         => "70.42.52.155",
+   "unicefusa.org"                     => "63.108.92.133",
+   "update.informationweek.com"        => "216.73.89.11",
+   "usa.redcross.org"                  => "162.6.217.63",
+   "util0.math.uh.edu"                 => "129.7.128.18",
+   "vger.rutgers.edu"                  => "128.6.225.194",
+   "wwfus.org"                         => "63.150.152.200",
+   "www1.codeweavers.com"              => "209.46.25.132",
+   "xmr3.com"                          => "137.236.223.7",
+  );
+our %gwip = map {$gql{$_} => $_} keys %gwl;
+# creditsecure.com
+# billpay.bankofamerica.com
+# service.discovercard.com
+# treocentral-mailings.com
+
+use DBI;
+use Date::Manip;
+
+#my $trace = DBI->trace(2);
+
+# Initialize database used for greylisting
+sub init_db {
+  # code to bring up $dbh
+  # prep SQL handles, etc.
+  my $current_handle ;
+  eval {
+    $current_handle =
+      DBI->connect_cached($greylist_dbname,
+                          $greylist_username,
+                          $greylist_password,
+                          {
+                           PrintError => 0,
+                           RaiseError => 0,
+                           AutoCommit => 0
+                          })
+        or die $DBI::errstr;
+  };
+  if ($@ || ! defined $current_handle) {
+    md_syslog('warning', "greylist: Could not connect to DB:$@");
+    return undef;
+  }
+#   else {
+#     md_syslog('info', "greylist: Connected to DB");
+#   }
+  $dbh = $current_handle;
+  return $dbh;
+}
+
+
+###############################
+#Greylist Subroutines  ########
+###############################
+#Strip strings
+sub address_strip ($) {
+  my($address) = @_;
+  $address = "" if (!defined($address));
+  $address =~ s/^[<\[]//;
+  $address =~ s/[>\]]$//;
+  return lc($address);
+}
+
+sub greylist_strip ($) {
+  my($a) = @_;
+  $a =~ s/;/:/g;
+  return $a;
+}
+
+sub greylist_strip_ip($) {
+  my($address) = @_;
+  #$address =~ s/(.*)\.[0-9]+$/$1\.*/ if $greylist_subnet;
+  return greylist_strip(address_strip($address));
+}
+
+sub greylist_strip_mail($$$) {
+  my($address,$domin_only,$strip_name) = @_;
+  $address   =  address_strip($address);
+  my $name   =  $address;
+  my $domain =  $address;
+  $domain    =~ s/.*@([^@]*)$/$1/;
+  $name      =~ s/@[^@]*$//;
+  if ($domin_only) { $name = "*"; }
+  elsif ($strip_name) {
+    $name =~ s/(.+)\+.*$/$1/;   # take only the user name
+
+    # Now, this is to handle adresses with ever changing numbers (some
+    # times decimal, sometimes hex). so, user_12124e6a@foo.com shall
+    # become  user_#@foo.com, but 1212-4e6a@foo.com remains unchanged
+    my $aut  = $name;
+    my $autt = $name;
+    do {
+      $aut = $autt;
+      # Look for numbers and strings with non alphanumerics on either side
+      # Numbers at the beginning and the end of the user name are also
+      # suppressed. so, this affects:
+      #   <number> <delim> <user>                -> # <delim> <user>
+      #   <name> <delim> <number> <delim> <user> -> <name> <delim> # <delim> <user>
+      #   <name> <delim> <number>                -> <name> <delim> #
+      #          <delim> <number> <delim>        -> delim> # <delim>
+      #                  <number> <delim>        -> # <delim>
+      #          <delim> <number>                -> <delim> #
+      $autt =~ s/^(|.*[^a-z0-9])[a-f0-9]*\d[a-f0-9]*(|[^a-z0-9].*)$/$1#$2/;
+    } until ($autt eq $aut);
+    $name = $aut if ($aut =~ /[a-z0-9]/); # only replace name if sane
+    #$name =~ s/[^-a-z0-9_.#]/?/g;
+  }
+  my $ret_val = $name."@".$domain;
+  # prepare for use in the DB
+  $ret_val =~ s/;/:/g;
+  return $ret_val;
+}
+
+
+sub greylist_strip_triplet(@) {
+  my($ip,$sender,$recipient) = @_;
+  $sender    = greylist_strip_mail($sender,
+                                   $greylist_from_domain,
+                                   $greylist_from_strip);
+  $recipient = greylist_strip_mail($recipient,
+                                   $greylist_to_domain,
+                                   $greylist_to_strip);
+  $ip        = greylist_strip_ip($ip);
+  return ($ip,$sender,$recipient);
+}
+
+
+# return a time string...
+sub time_string($) {
+  my ($time) = @_;
+  my $h = int($time / (60*60));
+  $time = $time % (60*60);
+  my $m = int($time / 60);
+  my $s = $time % 60;
+  my $r = "";
+  $r.="$h hours, " if ($h);
+  $r.="$m minutes and " if ($h || $m);
+  $r.="$s seconds";
+  return $r;
+}
+
+# Checks authentication
+sub check_authenticated () {
+  open(COMM, "<./COMMANDS") or return 0;
+  while(<COMM>) {
+    if (/^=auth_authen/) {
+      close(COMM);
+      return 1;
+    }
+  }
+  close(COMM);
+  return 0;
+}
+
+
+# from http://cvs.puremagic.com/viewcvs/*checkout*/greylisting/schema/whitelist_ip.txt?rev=
+my %greylist_whitelist =
+  (
+   '12.5.136.141'   => 1, # Southwest Airlines (unique sender, no retry)
+   '12.5.136.141'   => 1, # Southwest Airlines (unique sender, no retry)
+   '12.5.136.142 '  => 1, # Southwest Airlines
+   '64.12.136'      => 1, # AOL (common pool)
+   '64.12.137'      => 1, # AOL
+   '64.12.138'      => 1, # AOL
+   '64.125.132.254' => 1, # collab.net (unique sender per attempt)
+   '66.135.209'     => 1, # Ebay (for time critical alerts)
+   '66.135.197'     => 1, # Ebay
+   '66.218.66'      => 1, # Yahoo Groups servers (common pool, no retry)
+   '152.163.225'    => 1, # AOL
+   '195.238.2.105'  => 1, # skynet.be (wierd retry pattern)
+   '195.238.2.124'  => 1, # skynet.be
+   '195.238.3.12'   => 1, # skynet.be
+   '195.238.3.13'   => 1, # skynet.be
+   '204.107.120.10' => 1, # Ameritrade (no retry)
+   '205.188.156'    => 1, # AOL
+   '205.206.231'    => 1, # SecurityFocus.com (unique sender per attempt)
+   '207.115.63'     => 1, # Prodigy - broken software that retries continually ( no delay)
+   '207.171.168'    => 1, # Amazon.com
+   '207.171.180'    => 1, # Amazon.com
+   '207.171.187'    => 1, # Amazon.com
+   '207.171.188'    => 1, # Amazon.com
+   '207.171.190'    => 1, # Amazon.com
+   '213.136.52.31'  => 1, # Mysql.com (unique sender)
+   '217.158.50.178' => 1, # AXKit mailing list (unique sender per attempt
+# The following are mailing list hosts; they always retry, no point greylisting
+   '70.103.162.29'  => 1, # master.debian.org
+   '129.7.128.18'   => 1, # util0.math.uh.edu
+   '192.25.206.10'  => 1, # gluck.debian.org
+   '199.232.76.165' => 1, # lists.gnu.org
+   '140.98.193.199' => 1, # bmsmail3.ieee.org
+   '4.79.3.63'      => 1, # diesel.bestpractical.com
+   '144.51.88.129'  => 1, # jazzhorn.ncsc.mil
+   '216.33.114.151' => 1, # chat1.netcentral.net
+   '140.98.193.10'  => 1, # ruebert.ieee.org
+   '140.98.193.23'  => 1, # engine.ieee.org
+   '66.35.250.225'  => 1, # lists-outbound.sourceforge.net
+	 '63.118.7.108'   => 1, #acm mailing lists
+   '63.118.7.109'   => 1, #acm mailing lists
+   '140.98.193'     => 1, # various IEEE mailing lists
+  );
+
+sub greylist_ip_whitelist($) {
+  # checks if a given ip number or block is free from whitelisting
+  # it checks only the part of the ip number that is sent, so if
+  # you whitelist here 192.168.0, then that's all it will check
+  # against
+  my $ip = shift;
+  if ($ip =~ m/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/) {
+    return 1 if ($greylist_whitelist{"$1.$2.$3.$4"});
+    return 1 if ($greylist_whitelist{"$1.$2.$3"});
+    return 1 if ($greylist_whitelist{"$1.$2"});
+    return 1 if ($greylist_whitelist{"$1"});
+  }
+  return 0;
+}
+
+
+my %SQL_Commands =
+  (
+   'Select' => qq{
+SELECT id, create_time,last_update,record_expires,block_expires,passed_count
+FROM triplets
+WHERE relay_ip=?
+  AND mail_from=?
+  AND rcpt_to=?;
+},
+   'Insert' => qq{
+INSERT INTO triplets (relay_ip,mail_from,rcpt_to,block_expires,record_expires,
+                      create_time,last_update)
+values (?::inet, ?, ?,
+        ?::timestamp + ?::interval,
+        ?::timestamp + ?::interval,
+        ?::timestamp,  ?::timestamp);
+},
+   'Blocked' => qq {
+UPDATE triplets
+SET blocked_count=blocked_count+1, last_update=?::timestamp
+WHERE id=?;
+},
+   'Success' => qq {
+UPDATE triplets
+SET passed_count=passed_count+1,
+    record_expires=?::timestamp + ?::interval,
+    last_update=?::timestamp
+WHERE id=?;
+},
+   'Old' => qq{
+UPDATE triplets
+SET blocked_count=blocked_count+1,
+    block_expires=?::timestamp + ?::interval,
+    record_expires=?::timestamp + ?::interval,
+    last_update=?::timestamp
+WHERE id=?;
+},
+   'Reset' => qq{
+UPDATE triplets
+SET blocked_count=1,
+    block_expires=?::timestamp + ?::interval,
+    record_expires=?::timestamp + ?::interval,
+    last_update=?::timestamp
+WHERE id=?;
+},
+   'Reset_IP' => qq{
+UPDATE triplets
+SET blocked_count=1,
+    block_expires=?::timestamp + ?::interval,
+    record_expires=?::timestamp + ?::interval,
+    last_update=?::timestamp
+WHERE relay_ip=inet ?;
+},
+   'Whitelist' => qq {
+UPDATE triplets
+SET blocked_count=0, passed_count=1,
+    block_expires=?::timestamp,
+    record_expires=?::timestamp + ?::interval,
+    last_update=?::timestamp
+WHERE id=?;
+},
+  );
+
+my %Handles;
+
+# Checks if a triplet is in the grey-list.
+# Returns seconds until the triplet will be accepted, or -1 for error.
+sub greylist_check($$$) {
+  my ($ip,$sender,$recipient) = greylist_strip_triplet(@_);
+  my $result = -1;
+  my $event = "";
+
+  my $now = scalar localtime();
+
+  my $dbh = init_db() unless $dbh and $dbh->ping;
+  if (! defined $dbh) {
+    $dbh = init_db();
+    if (! defined $dbh) {
+      md_syslog('info', "greylist: No connection to DB")
+        if $greylist_log;
+    }
+  }
+  if (! defined $dbh) {
+    $result = 0;                # accept if we can't connect to the DB
+    $event = 'unknown';
+  }
+  elsif ($dbh) {
+    my $safe_from = $dbh->quote($sender);
+    my $safe_to   = $dbh->quote($recipient);
+
+    for my $sql (keys %SQL_Commands) {
+      $Handles{$sql} = $dbh->prepare($SQL_Commands{ $sql}) or
+        die $Handles{$sql}->errstr . ' preparing ' . $SQL_Commands{ $sql};
+    }
+    $Handles{Select}->execute($ip, $sender, $recipient) or
+      die $Handles{Insert}->errstr . ' executing ' . $SQL_Commands{Select};
+
+    my ($rid,$create_time,$last_update,$record_expires,$block_expires,
+        $passed_count);
+    $Handles{Select}->bind_columns( undef, \$rid, \$create_time,
+                                     \$last_update, \$record_expires,
+                                     \$block_expires, \$passed_count );
+
+    if (!$Handles{Select}->fetch()) {
+      # insert new row in database
+      $Handles{Select}->finish;
+      $Handles{Insert}->execute($ip, $sender, $recipient, $now,
+                                "$greylist_black seconds", $now,
+                                "$greylist_grey seconds", $now, $now)
+        or die $Handles{Insert}->errstr . ' executing ' . $SQL_Commands{Insert};
+      $dbh->commit() or die $dbh->errstr;
+      $result = $greylist_black;
+      $event = 'new';
+    }
+    else {
+      $Handles{Select}->finish;
+      if (Date_Cmp($now, $block_expires)   < 0 ) { #$now <= $block_expires
+        # At this point they are retrying under their blacklist window
+        $result = UnixDate($block_expires,"%s")-UnixDate($now,"%s");
+        $event = 'black';
+        #Log a note that they retried under our window
+        $Handles{Blocked}->execute($now, $rid) or
+          die $Handles{Blocked}->errstr . ' executing ' .
+            $SQL_Commands{Blocked};
+        $dbh->commit() or die $dbh->errstr;
+        $Handles{Blocked}->finish;
+      }
+      elsif (Date_Cmp($now, $record_expires) < 0) { #$now <= $record_expires
+        # At this point they are retrying past the blacklist window,
+        # but inside their expiration window.
+        $result = 0;
+        $event = 'white';
+
+        # Log a note that they retried sucessfully, and make sure they are
+        # updated to the whitelist window
+        $Handles{Success}->execute($now,"$greylist_white seconds", $now, $rid)
+          or die $Handles{Success}->errstr . ' executing ' .
+            $SQL_Commands{Success};
+        $dbh->commit() or die $dbh->errstr;
+        $Handles{Success}->finish;
+      }
+      else {                  #$now > $record_expires
+        # At this point they are retrying past their expiration
+        $Handles{Old}->execute($now, "$greylist_black seconds", $now,
+                               "$greylist_grey seconds", $now, $rid)
+          or die $Handles{Old}->errstr . ' executing ' . $SQL_Commands{Old};
+        $dbh->commit() or die $dbh->errstr;
+        $Handles{Old}->finish;
+        $result = $greylist_black;
+        $event = 'old';
+      }
+    }
+  }
+
+  md_syslog('info', "greylist: $event; $result; $ip; $sender; $recipient")
+    if $greylist_log;
+
+  return $result;
+}
+
+#Resets record(s) in the grey list.
+sub greylist_reset($$$) {
+  my ($ip,$sender,$recipient) = greylist_strip_triplet(@_);
+
+  my $dbh = init_db() unless $dbh and $dbh->ping;
+  if (! defined $dbh) {
+    $dbh = init_db();
+    if (! defined $dbh) {
+      md_syslog('info', "greylist: No connection to DB")
+        if $greylist_log;
+      return;
+    }
+  }
+  my $now = scalar localtime();
+  if ($sender && $recipient) {
+
+    my $safe_from = $dbh->quote($sender);
+    my $safe_to   = $dbh->quote($recipient);
+
+    $Handles{Select} = $dbh->prepare($SQL_Commands{Select}) or
+      die $Handles{Select}->errstr . ' preparing ' . $SQL_Commands{Select};
+    $Handles{Select}->execute($ip, $sender, $recipient) or
+      die $Handles{Select}->errstr . '  executing ' . $SQL_Commands{Select};
+    my ($rid,$create_time,$last_update,$record_expires,$block_expires,
+        $passed_count);
+    $Handles{Select}->bind_columns( undef, \$rid, \$create_time, \$last_update,
+                                    \$record_expires, \$block_expires,
+                                    \$passed_count );
+    if (!$Handles{Select}->fetch()) {
+      $Handles{Select}->finish;
+      # insert new row in database
+      $Handles{Insert} = $dbh->prepare($SQL_Commands{Insert}) or
+        die $Handles{Insert}->errstr . ' preparing ' . $SQL_Commands{Insert};
+      $Handles{Insert}->execute($ip, $sender, $recipient, $now,
+                                "$greylist_black seconds", $now,
+                                "$greylist_grey seconds", $now, $now)
+        or die $Handles{Insert}->errstr . '  executing ' . $SQL_Commands{Insert};
+      $dbh->commit() or die $dbh->errstr;
+      $Handles{Insert}->finish;
+    }
+    else {
+      $Handles{Select}->finish;
+      $Handles{Reset} = $dbh->prepare($SQL_Commands{Reset}) or
+        die $Handles{Reset}->errstr . ' preparing ' . $SQL_Commands{Reset};
+      $Handles{Reset}->execute($now, "$greylist_black seconds", $now,
+                               "$greylist_grey seconds", $now, $rid)
+        or die $Handles{Reset}->errstr . ' preparing ' . $SQL_Commands{Reset};
+      $dbh->commit() or die $dbh->errstr;
+      $Handles{Reset}->finish;
+    }
+    md_syslog('info', "greylist: reset; -; $ip; $sender; $recipient")
+      if $greylist_log;
+  }
+  else {
+    $Handles{Reset_IP} = $dbh->prepare($SQL_Commands{Reset_IP}) or
+        die $Handles{Reset_IP}->errstr . ' preparing ' . $SQL_Commands{Reset_IP};
+    $Handles{Reset_IP}->execute($now, "$greylist_black seconds", $now,
+                                "$greylist_grey seconds", $now, $ip)
+      or die $Handles{Reset_IP}->errstr . ' preparing ' . $SQL_Commands{Reset_IP};;
+    $dbh->commit() or die $dbh->errstr;
+    $Handles{Reset_IP}->finish;
+    md_syslog('info', "greylist: resetip; -, $ip")
+      if $greylist_log;
+  }
+}
+
+sub whitelist_record($$$) {
+  my ($ip,$sender,$recipient) = greylist_strip_triplet(@_);
+
+  my $dbh = init_db() unless $dbh and $dbh->ping;
+  if (! defined $dbh) {
+    $dbh = init_db();
+    if (! defined $dbh) {
+      md_syslog('info', "greylist: No connection to DB")
+        if $greylist_log;
+      return;
+    }
+  }
+
+  my $now = scalar localtime();
+  my $safe_from = $dbh->quote($sender);
+  my $safe_to   = $dbh->quote($recipient);
+
+  $Handles{Select} = $dbh->prepare($SQL_Commands{Select}) or
+      die $Handles{Select}->errstr . ' preparing ' . $SQL_Commands{Select};
+  $Handles{Select}->execute($ip, $sender, $recipient) or
+      die $Handles{Select}->errstr . '  executing ' . $SQL_Commands{Select};
+  my ($rid,$create_time,$last_update,$record_expires,$block_expires,
+      $passed_count);
+  $Handles{Select}->bind_columns( undef, \$rid, \$create_time, \$last_update,
+                                  \$record_expires, \$block_expires,
+                                  \$passed_count );
+  if (!$Handles{Select}->fetch()) {
+    $Handles{Select}->finish;
+    # insert new row in database
+    $Handles{Insert} = $dbh->prepare($SQL_Commands{Insert}) or
+        die $Handles{Insert}->errstr . ' preparing ' . $SQL_Commands{Insert};
+    $Handles{Insert}->execute($ip, $sender, $recipient, $now,
+                              0, $now, "$greylist_white seconds", $now, $now)
+        or die $Handles{Insert}->errstr . '  executing ' . $SQL_Commands{Insert};
+    $dbh->commit() or die $dbh->errstr;
+    $Handles{Insert}->finish;
+  }
+  else {
+    $Handles{Whitelist} = $dbh->prepare($SQL_Commands{Whitelist}) or
+        die $Handles{Whitelist}->errstr . ' preparing ' . $SQL_Commands{Whitelist};
+    $Handles{Whitelist}->execute($now, $now, "$greylist_white seconds", $now,
+                                 $rid)
+        or die $Handles{Whitelist}->errstr . '  executing ' . $SQL_Commands{Whitelist};
+    $dbh->commit() or die $dbh->errstr;
+    $Handles{Whitelist}->finish;
+  }
+  md_syslog('info', "greylist: whitellist; -; $ip; $sender; $recipient")
+    if $greylist_log;
+}
+
+
+
+### END GREYLISTING STUFF
+#***********************************************************************
+
+
+sub filter_recipient ($$$$$$$$$) {
+  my ($recipient, $sender, $ip, $hostname, $first, $helo,
+      $rcpt_mailer, $rcpt_host, $rcpt_addr) = @_;
+  if ($recipient =~ /^<?testcrm\@glaurung\.internal\.golden-gryphon\.com>?$/i) {
+    return ('ACCEPT_AND_NO_MORE_FILTERING', "ok");
+  }
+
+  if (defined($greylist) && $greylist) {
+    my($subnet_action); #Database tells us what to do with given IP ranges
+    # Do initialize the database
+    $dbh = init_db() unless $dbh and $dbh->ping;
+    if (! defined $dbh) {
+      $dbh = init_db();
+    }
+
+    if($dbh) {
+      my $statement=<<EOS;
+SELECT action from subnet_rules
+WHERE inet '$ip' <<= subnet
+ORDER BY subnet DESC
+LIMIT 1;
+EOS
+  ;
+      $sth = $dbh->prepare($statement) or die $dbh->errstr . ' preparing ' . $statement;
+      $sth->execute or die $dbh->errstr . ' executing ' . $statement;
+      $sth->bind_columns(undef, \$subnet_action);
+      if(!$sth->fetch()) {
+        md_syslog('warning', "filter_recipient: subnet rules check returned error!");
+      }
+      $sth->finish;
+    }
+    else {
+      md_syslog('warning', "No connection to DB!");
+    }
+    if ($subnet_action eq "black") {
+      md_syslog('info', "greylist black: $event; $result; $ip; $sender; $recipient")
+        if $greylist_log;
+      return ('REJECT', "Message rejected as SPAM. Subnet is blacklisted.");
+    }
+    if ($subnet_action eq "white") {
+      md_syslog('info', "greylist white: $event; $result; $ip; $sender; $recipient")
+        if $greylist_log;
+      return ('ACCEPT_AND_NO_MORE_FILTERING', "ok");
+    }
+    if (! $local_relay_in_use) {
+      if ($subnet_action eq "local") {
+        md_syslog('info', "greylist local: $event; $result; $ip; $sender; $recipient")
+          if $greylist_log;
+        return ('ACCEPT_AND_NO_MORE_FILTERING', "ok");
+      }
+    }
+  }
+
+  ### If we were filtering on a different machine than mail.your.domain.name
+  ### We could have used the following to check with the real mail server to see
+  ### if we could have delivered to a recipient. Use only if server responds with
+  ### a failure code for nonexistent users  at the  RCPT  TO: level. Also, this
+  ### has high overhead.
+  #   my($answer, $explanation) =
+  #     md_check_against_smtp_server($sender, $recip, "helo", 'mail.your.domain.name');
+  #   # Convert TEMPFAIL to CONTINUE
+  #   $answer = 'CONTINUE' if ($answer eq 'TEMPFAIL');
+  #   return ($answer, $explanation);
+
+  return ('CONTINUE', "Ok, go ahead.");
+}
+
+### MX_SENDER_CHECK=yes is set
+# sub filter_sender {
+#   my ($sender, $ip, $hostname, $helo) = @_;
+#   syslog('info', "Sender $sender on Host $ip ($hostname) claims to be $helo");
+#   if ($ip =~ /192.168.1.*/i) {
+#     return ('ACCEPT_AND_NO_MORE_FILTERING');
+#   }
+#   # Can't be "wesmo.com" unless it's one of our IP's.
+#   if ($helo =~ /(^|.)mydomain\.com$/i)
+#   {
+#      if ($hostip ne "127.0.0.1" and $hostip ne "$myserverIP")
+#      {
+#         syslog('info', "Host $hostip said HELO $helo");
+#         return(0, "Go away. $hostip is not a mydomain.com machine");
+#      }
+#   }
+#   # The hostname better match the helo string.
+#   if (($helo =~ /^(\d{1,3})(.)(\d{1,3})(.)(\d{1,3})(.)(\d{1,3})$/) &&
+#        ($hostip ne $helo))
+#   {
+#      syslog('info', "Host $hostip claims to be $helo");
+#      return (0, "Header forgery attempt, $ip claims to be $helo")
+#   }
+#	if ($sender =~ /^<?spammer\@badguy\.com>?$/i) {
+#		return ('REJECT', 'Sorry; spammer@badguy.com is blacklisted.');
+#	}
+#   return ('CONTINUE', "OK");
+# }
+
+### detect correct Content-Transfer-Encoding headers. (too many bounces?)
+# sub filter_bad_encoding ($) {
+#     my($entity) = @_;
+#     my($bad_enc);
+#     $bad_enc = '(plain|quoted-pintable)';
+#     $enc = $entity->head->mime_encoding;
+
+#     if ($enc =~ /$bad_enc/i) {
+#         return 1;
+#     }
+#     return 0;
+# }
+
+### make sure that MX_RELAY_CHECK=yes
+# sub filter_relay {
+#   my ($ip, $name) = @_;
+#   if ($ip =~ /^192\.168\.1/) {
+#     return('ACCEPT_AND_NO_MORE_FILTERING', "ok")
+#   }
+#   if ($name =~ /spammer\.com$/) {
+#     return ('REJECT', "Sorry; spammer.com is blacklisted");
+#	  }
+#   return ('CONTINUE', "ok");
+# }
+
+
+####################################################################
+## New function: check for corrupted JPEG files
+sub filter_corrupt_jpeg ($) {
+  my($entity) = @_;
+
+  if (re_match($entity, '\.jp(e?)g$' )) { #')){
+    my $bh = $entity->bodyhandle();
+    if (defined($bh)) {
+      my $path = $bh->path();
+      if (defined($path)) {
+        my($code, $category, $action) =
+          run_virus_scanner("djpeg -fast -dither none -grayscale -scale 1/8 -outfile /dev/null $path" );
+        if ($action ne 'proceed') {
+          return $code;
+        }
+        if ($code) {
+          return $code;
+        }
+      }
+    }
+  }
+  return 0;
+}
+###################################################################
+
+#***********************************************************************
+# %PROCEDURE: filter_begin
+# %ARGUMENTS:
+#  None
+# %RETURNS:
+#  Nothing
+# %DESCRIPTION:
+#  Called just before e-mail parts are processed
+#***********************************************************************
+sub filter_begin {
+  # ALWAYS drop messages with suspicious chars in headers
+  if (!$WasResent) {
+    if ($SuspiciousCharsInHeaders) {
+      md_graphdefang_log('suspicious_chars');
+      # action_quarantine_entire_message("Message quarantined because of \
+      #                                   suspicious characters in headers");
+      # Do NOT allow message to reach recipient(s)
+      #return action_discard();
+      if ($discard_not_bounce) {
+        return action_discard();
+      }
+      else {
+        return action_bounce("suspicious characters in message");
+      }
+    }
+
+    if ($greylist) {
+      # Do initialize the database
+      $dbh = init_db();
+    }
+
+    # Discard bad headers/lines in body
+#   if (open (INF, "./HEADERS")) {
+#     my $bad = 0;
+#     while (my line = <INF>) {
+#       $line =~ s/\n//g;
+#       if ($line =~ /^Subject:\s+.*hastalavistababy.*$/) {
+#         $bad = 1;
+#         last;
+#       }
+#     }
+#     close(INF);
+#     return action_bounce('Bad, bad header!') if ($bad);
+#   }
+
+#   if (open (INF, "./INPUTMSG")) {
+#     my $bad = 0;
+#     while (my line = <INF>) {
+#       $line =~ s/\n//g;
+#       if ($line =~ /hastalavistababy/) {
+#         $bad = 1;
+#         last;
+#       }
+#     }
+#     close(INF);
+#     return action_bounce('Bad, bad body!') if ($bad);
+#   }
+
+
+    # Copy original message into work directory as an "mbox" file for
+    # virus-scanning
+    md_copy_orig_msg_to_work_dir_as_mbox_file();
+
+    # Scan for viruses if any virus-scanners are installed
+    my($code, $category, $action) = message_contains_virus();
+
+    # Lower level of paranoia - only looks for actual viruses
+    $FoundVirus = ($category eq "virus");
+
+    # Higher level of paranoia - takes care of "suspicious" objects
+    # $FoundVirus = ($action eq "quarantine");
+
+    if ($FoundVirus) {
+      md_graphdefang_log('virus', $VirusName, $RelayAddr);
+      md_syslog('warning', "Discarding because of virus $VirusName");
+      if (defined($greylist) && $greylist) {
+        greylist_reset($RelayAddr,"","");
+      }
+      if ($discard_not_bounce) {
+        return action_discard();
+      }
+      else {
+        return action_bounce("Rejecting because of virus $VirusName");
+      }
+    }
+
+    if ($action eq "tempfail") {
+      action_tempfail("Problem running virus-scanner");
+      md_syslog('warning', "Problem running virus scanner: " .
+                "code=$code, category=$category, action=$action");
+    }
+  }
+
+  # With this line, in other filter_* routines,  you can check $Domain to see
+  # which domain is getting processed.
+  # if (stream_by_domain()) { return; }
+  #delete_ip_validation_header();
+}
+
+#***********************************************************************
+# %PROCEDURE: subject_obfuscation
+# %ARGUMENTS: None
+# %RETURNS:   1 - subject line has words we key on, 0 - pass
+# %DESCRIPTION: Called last in "sub filter"
+#***********************************************************************
+sub subject_obfuscation {
+  my ($subj, $subscore, $local_debug);
+  $subj = decode_mimewords($Subject);
+  $subscore = 0;
+
+  if ($subj =~ /^FWD:/) {$subscore = 3};
+  if ($subj =~ /[Mm][Ee][Dd][Ss]/) {$subscore += 6};
+  if ($subj =~ /[Pp][Ii][Ll][Ll][Ss]/) {$subscore += 6};
+  $subj =~ s/@/a/g;
+  $subj =~ s/1/i/g;
+  $subj =~ s/[[:punct:]]//g; ## remove punctuations
+  if ($subj =~ /[Vv][Ii][Aa][Gg][Rr][Aa]/) {$subscore += 3};
+  if ($subj =~ /[Vv][Aa][Ll][Ii][Uu][Mm]/) {$subscore += 3};
+  if ($subj =~ /[Xx][Aa][Nn][Aa][Xx]/) {$subscore += 6};
+
+  if($local_debug) {
+    if($subscore) {
+      md_graphdefang_log('subject_obfuscation_before',
+                         decode_mimewords($Subject), $subscore);
+      md_graphdefang_log('subject_obfuscation_after', $subj, $subscore);
+    }
+  }
+
+  if ($subscore > 5) {
+    # 5 seems to be a good score... two test hits
+    action_change_header('Subject', "[SPAM] $subj");
+    return 1;  ## hit!
+  } else {
+    return 0;  ## no hit
+  }
+}
+
+
+#***********************************************************************
+# %PROCEDURE: filter
+# %ARGUMENTS:
+#  entity -- a Mime::Entity object (see MIME-tools documentation for details)
+#  fname -- the suggested filename, taken from the MIME Content-Disposition:
+#           header.  If no filename was suggested, then fname is ""
+#  ext -- the file extension (everything from the last period in the name
+#         to the end of the name, including the period.)
+#  type -- the MIME type, taken from the Content-Type: header.
+#
+#  NOTE: There are two likely and one unlikely place for a filename to
+#  appear in a MIME message:  In Content-Disposition: filename, in
+#  Content-Type: name, and in Content-Description.  If you are paranoid,
+#  you will use the re_match and re_match_ext functions, which return true
+#  if ANY of these possibilities match.  re_match checks the whole name;
+#  re_match_ext checks the extension.  See the sample filter below for usage.
+# %RETURNS:
+#  Nothing
+# %DESCRIPTION:
+#  This function is called once for each part of a MIME message.
+#  There are many action_*() routines which can decide the fate
+#  of each part; see the mimedefang-filter man page.
+#***********************************************************************
+sub filter ($$$$) {
+  my($entity, $fname, $ext, $type) = @_;
+
+  return if message_rejected(); # Avoid unnecessary work
+
+  # my $SubjectDecode = decode_mimewords($Subject);
+
+  # Block message/partial parts
+  if (lc($type) eq "message/partial") {
+    md_graphdefang_log('message/partial');
+    if (defined($greylist) && $greylist) {
+      greylist_reset($RelayAddr,"","");
+    }
+    if ($discard_not_bounce) {
+      return action_discard();
+    }
+    else {
+      return action_bounce("MIME type message/partial not accepted here");
+    }
+  }
+  # Discard nasty attachments
+  if (lc($ext) eq ".bat" || lc($ext) eq ".exe" || lc($ext) eq ".pif"
+      || lc($ext) eq ".scr") {
+    if (defined($greylist) && $greylist) {
+      greylist_reset($RelayAddr,"","");
+    }
+    md_graphdefang_log('unsafe attachments');
+    if ($discard_not_bounce) {
+      return action_discard();
+    }
+    else {
+      action_bounce("Message rejected due to unsafe attachment. Please " .
+                    "resend without attachment.");
+    }
+  }
+# # Mydoom/Novarg test
+#   if (lc($ext) =~ /zip/) {
+#     my $lines = $entity->body();
+#     my $found = 0;
+#     if (scalar( @$lines )) {
+#       # It has lines....
+#       my $line = @$lines[0];
+#       $found = ( ($line =~ m/^UEsDBAoAAAAAA.{6}zy5egAlgAAAJYAA/) ||
+#                  ($line =~ m/^UEsDBAoAAAAAA.{6}KJx\+eAFgAAABYAA/) );
+#     }
+#     if ($found) {
+#       md_graphdefang_log('virus', "Found NoVarg Virus");
+#       # Change this if you dont want the subject changed:
+#       action_change_header('Subject', '[VIRUS?] ' . $Subject);
+#       action_delete_all_headers('X-Virus-Status');
+#       action_add_header('X-Virus-Status', "Yes, name=NoVarg");
+#       action_drop_with_warning(
+#                            "Dropped $fname ($type) containing virus NoVarg."
+#                               );
+#       action_quarantine($entity,
+#                      "A known virus signature was detected, and removed\n");
+#       return;
+#     }
+#   }
+
+  if (filter_bad_filename($entity)) {
+    md_graphdefang_log('bad_filename', $fname, $type);
+    return
+      action_drop_with_warning(
+    "An attachment named $fname was removed from this document as it\n" .
+    "constituted a security hazard.  If you require this document, please \n" .
+    "contact the sender and arrange an alternate means of receiving it.\n");
+  }
+  # Scan for viruses if any virus-scanners are installed
+  my($code, $category, $action) = entity_contains_virus($entity);
+  # Lower level of paranoia - only looks for actual viruses
+  $FoundVirus = ($category eq "virus");
+
+  # Higher level of paranoia - takes care of "suspicious" objects
+  # $FoundVirus = ($action eq "quarantine");
+
+  if ($FoundVirus) {
+    md_graphdefang_log('virus', $VirusName, $RelayAddr);
+    md_syslog('warning', "Discarding because of virus $VirusName");
+    if (defined($greylist) && $greylist) {
+      greylist_reset($RelayAddr,"","");
+    }
+    if ($discard_not_bounce) {
+      return action_discard();
+    }
+    else {
+      return action_bounce("Discarding because of virus $VirusName");
+    }
+  }
+
+  if ($action eq "tempfail") {
+    action_tempfail("Problem running virus-scanner");
+    md_syslog('warning', "Problem running virus scanner: " .
+              "code=$code, category=$category, action=$action");
+  }
+
+  # This is how to check for RBL's -- though usually done in SA
+#   if (relay_is_blacklisted($RelayAddr, "inputs.orbs.org")) {
+#     action_add_header("X-Blacklist-Warning",
+#                       "Relay $RelayAddr is blacklisted by ORBS");
+#   }
+
+  # eml is bad if it's not multipart
+  if (re_match($entity, '\.eml')) {
+    md_graphdefang_log('non_multipart');
+    return
+      action_drop_with_warning(
+ "A non-multipart attachment named $fname was removed from this document \n" .
+ "as it constituted a security hazard. If you require this document, \n" .
+ "please contact the sender and arrange an alternate means of receiving it.\n");
+  }
+
+  # Clean up HTML if Anomy::HTMLCleaner is installed.
+  if ($Features{"HTMLCleaner"}) {
+    if ($type eq "text/html") {
+      return anomy_clean_html($entity);
+    }
+  }
+
+    #Disable bad HTML code -- Based on work by Columbia University / Joseph Brennan
+    #Modified by KAM 2004-04-16 (may put load on the server)
+#     if ($type eq "text/html") {
+#       my($currentline, $output, $badtag);
+
+#       $badtag = 0;
+#       $output = "";
+
+#       if ($io = $entity->open("r")) {
+#         while (defined($currentline = $io->getline)) {
+#           if ($currentline =~ s/<(iframe|script|object)\b/<no-$1 /ig) {
+#             $badtag++;
+#           }
+#           $output .= $currentline;
+#         }
+#         $io->close;
+
+#         if ($badtag) {
+#           if ($io = $entity->open("w")) {
+#             $io->print($output);
+#             $io->close;
+#           }
+#           md_graphdefang_log('modify',"$badtag Iframe/Object/Script tag(s)" .
+#                              "deactivated by MIMEDefang using Columbia filter");
+#           action_change_header("X-Warning", "$badtag Iframe/Object/Script" .
+#                                "tag(s) deactivated by MIMEDefang using " .
+#                                "Columbia filter");
+#           action_rebuild();
+#         }
+#       }
+#     }
+
+
+###################################################################
+#    if (filter_corrupt_jpeg($entity)) {
+#        md_graphdefang_log('corrupt_jpeg', $fname, $type);
+#        action_bounce("Access denied. Corrupt file $fname not allowed.",
+#                      "554", "5.7.1");
+#        return action_discard();
+#    }
+
+###################################################################
+
+  # always accept the email, client can filter on the subject now
+  # that it's marked as "[SPAM] $Subject".
+  if (subject_obfuscation()) { return action_accept(); };
+
+  return action_accept();
+}
+
+#***********************************************************************
+# %PROCEDURE: filter_multipart
+# %ARGUMENTS:
+#  entity -- a Mime::Entity object (see MIME-tools documentation for details)
+#  fname -- the suggested filename, taken from the MIME Content-Disposition:
+#           header.  If no filename was suggested, then fname is ""
+#  ext -- the file extension (everything from the last period in the name
+#         to the end of the name, including the period.)
+#  type -- the MIME type, taken from the Content-Type: header.
+# %RETURNS:
+#  Nothing
+# %DESCRIPTION:
+#  This is called for multipart "container" parts such as message/rfc822.
+#  You cannot replace the body (because multipart parts have no body),
+#  but you should check for bad filenames.
+#***********************************************************************
+sub filter_multipart ($$$$) {
+  my($entity, $fname, $ext, $type) = @_;
+
+  return if message_rejected(); # Avoid unnecessary work
+
+  if (filter_bad_filename($entity)) {
+    md_graphdefang_log('bad_filename', $fname, $type);
+    action_notify_administrator("A MULTIPART attachment of type $type, " .
+                                "named $fname was dropped.\n");
+    return action_drop_with_warning("An attachment of type $type, named " .
+                                    "$fname was removed from this document" .
+                                    " as it\nconstituted a security hazard. " .
+                                    " If you require this document, please " .
+                                    "contact\nthe sender and arrange an " .
+                                    "alternate means of receiving it.\n");
+  }
+
+  # eml is bad if it's not message/rfc822
+  if (re_match($entity, '\.eml') and ($type ne "message/rfc822")) {
+    md_graphdefang_log('non_rfc822',$fname);
+    return action_drop_with_warning("A non-message/rfc822 attachment named " .
+                                    "$fname was removed from this document " .
+                                    "as it\nconstituted a security hazard. " .
+                                    "If you require this document, please  " .
+                                    "contact\nthe sender and arrange an " .
+                                    "alternate means of receiving it.\n");
+  }
+
+  # Block message/partial parts
+  if (lc($type) eq "message/partial") {
+    md_graphdefang_log('message/partial');
+    if (defined($greylist) && $greylist) {
+      greylist_reset($RelayAddr,"","");
+    }
+    if ($discard_not_bounce) {
+      return action_discard();
+    }
+    else {
+      action_bounce("MIME type message/partial not accepted here");
+    }
+    return;
+  }
+
+  return action_accept();
+}
+
+
+#***********************************************************************
+# %PROCEDURE: defang_warning
+# %ARGUMENTS:
+#  oldfname -- the old file name of an attachment
+#  fname -- the new "defanged" name
+# %RETURNS:
+#  A warning message
+# %DESCRIPTION:
+#  This function customizes the warning message when an attachment
+#  is defanged.
+#***********************************************************************
+sub defang_warning ($$) {
+  my($oldfname, $fname) = @_;
+  return
+    "An attachment named '$oldfname' was converted to '$fname'.\n" .
+      "To recover the file, right-click on the attachment and Save As\n" .
+        "'$oldfname'\n";
+}
+
+# If SpamAssassin found SPAM, append report.  We do it as a separate
+# attachment of type text/plain
+sub filter_end ($) {
+  my($entity) = @_;
+  my $hit_impact=0;
+  my $first_rec  = $entity->head->get('Received', -1);
+  my $last_rec  = $entity->head->get('Received', 0);
+  my $from_chiark;
+  my $excempt = '';
+  my $relay_name_and_addr = '';
+
+  # If this is from a mailing list
+  if (defined $RelayHostname && defined $gwl{$RelayHostname}) {
+    $excempt = $gwl{$RelayHostname};
+    $relay_name_and_addr = "$RelayHostname==";
+  }
+  elsif (defined $gwip{$RelayAddr}) {
+    $excempt = $gwip{$RelayAddr}
+  }
+  $relay_name_and_addr .= $RelayAddr;
+
+  # If you want quarantine reports, uncomment next line
+  # send_quarantine_notifications();
+
+  # IMPORTANT NOTE:  YOU MUST CALL send_quarantine_notifications() AFTER
+  # ANY PARTS HAVE BEEN QUARANTINED.  SO IF YOU MODIFY THIS FILTER TO
+  # QUARANTINE SPAM, REWORK THE LOGIC TO CALL send_quarantine_notifications()
+  # AT THE END!!!
+
+  # No sense doing any extra work
+  return if message_rejected();
+  $dbh = init_db() unless $dbh and $dbh->ping;
+
+  my $crm114;
+  my $hitval = 0;
+  if (-s "./INPUTMSG" < 1000*1024) {
+    # Only scan messages smaller than 1000kB.  Larger messages
+    # are extremely unlikely to be spam,
+    my $unsure='';
+    $crm114 =
+    `cat ./INPUTMSG | /usr/bin/crm -u /var/spool/MIMEDefang/crm114 mailreaver.crm 2>>/var/spool/MIMEDefang/crm114/crm.log`;
+
+    # Set the status of the real message, based on what crm114 did
+    if (    $crm114 =~ m/^X-CRM114-Status:\s+GOOD\s+.\s+([\.\d]+)/ms ) {
+      $hitval -= $1;
+      #action_change_header("X-CRM114-Status", "Good  ( $hitval )");
+    } elsif ( $crm114 =~ m/^X-CRM114-Status:\s+UNSURE\s+.\s+([\-\.\d]+)/ms ) {
+      $hitval -= $1;
+      # action_change_header("X-CRM114-Status", "Unsure  ( $hitval )");
+      # $unsure++;
+    } elsif ( $crm114 =~ m/^X-CRM114-Status:\s+SPAM\s+.\s+([\-\.\d]+)/ms ) {
+      $hitval -= $1;
+      action_change_header("X-CRM114-Status", "SPAM  ( $hitval )");
+    }
+
+    # Now, normalize the crm114 scores to our global model
+    if ($hitval > 0 && $hitval <= 10) {
+      $hit_impact += 3.0 + $hitval * 0.2;
+    }
+    elsif ($hitval > 10 && $hitval <= 120) {
+      $hit_impact += 5.0 + ($hitval - 10) / 110 * 10.0;
+    }
+    elsif ($hitval > 120) {
+      $hit_impact += 15.0 + ($hitval - 120) * 1.0;
+    }
+    elsif($hitval < 0 && $hitval >= -10) {
+      $hit_impact -= -1.5 + -1 * $hitval * 0.35;
+    }
+    elsif ($hitval < -10 && $hitval >= -120) {
+      $hit_impact -= 5.0 + (-1 * $hitval - 10) / 110 * 10.0;
+    }
+    elsif ($hitval < -120) {
+      $hit_impact -= 15.0 + (-1 * $hitval - 120) * 1.0;
+    }
+
+    # Record the score (not on the mail server)
+    # action_change_header("X-CRM114-Score", "$hitval");
+
+    if ($hitval < 0) {
+      if ($hitval < -50) {
+        # Really known good stuff; accept
+        my $hits = $hit_impact;
+        action_change_header("X-Spam-Value", "$hits");
+        action_change_header("X-Spam-Status", "No");
+        md_graphdefang_log('mail_in', $hits, $Sender);
+        if (defined($greylist) && $greylist) {
+          foreach my $recip (@Recipients) {
+            # action_add_header("X-Grey","White");
+            whitelist_record($RelayAddr, $Sender, $recip);
+          }
+        }
+        return('ACCEPT_AND_NO_MORE_FILTERING', "ok");
+      }
+    }
+    else {
+      if ($hitval > $CRM_THRESHOLD) {
+        # Really bad stuff, discard.
+        action_change_header("X-Spam-Status", "Yes");
+        action_change_header("X-Spam-Value", "$hitval");
+        action_quarantine_entire_message($msg);
+        #return action_discard();
+        if (defined($greylist) && $greylist) {
+          if ($greylist_reset_host) {
+            greylist_reset($RelayAddr,"","");
+          }
+          else {
+            foreach my $recip (@Recipients) {
+              greylist_reset($RelayAddr, $Sender, $recip);
+            }
+          }
+        }
+        $from_chiark= $first_rec =~ /\.chiark\.greenend\.org\.uk/ ;
+        $from_chiark= $last_rec =~ /\.chiark\.greenend\.org\.uk/
+          unless $from_chiark;
+        md_graphdefang_log('spamfromchiark', $hitval, $Sender) if $from_chiark;
+        if ($from_chiark || $discard_not_bounce || $excempt) {
+          md_graphdefang_log('discard', $hitval, $relay_name_and_addr);
+          return action_discard();
+        }
+        else {
+          md_graphdefang_log('spam', $hitval, $relay_name_and_addr);
+          return action_bounce("Rejected as SPAM.");
+        }
+      }
+    }
+  }
+  else {
+    action_change_header("X-CRM114-Score", "Message too big");
+  }
+  return if message_rejected();
+
+  # Spam checks if SpamAssassin is installed
+  if ($Features{"SpamAssassin"}) {
+    if (-s "./INPUTMSG" < 100*1024) {
+      # Only scan messages smaller than 100kB.  Larger messages
+      # are extremely unlikely to be spam, and SpamAssassin is
+      # dreadfully slow on very large messages.
+      my($hits, $req, $names, $report) = spam_assassin_check();
+      #action_change_header("X-SA-Orig", "$hits, $hitval");
+      my($score);
+      # Add in the impact of CRM 144 scores
+      $hits += $hit_impact;
+      # Record ste SA report, and the final scores
+      action_change_header("X-Spam-Value", "$hits");
+      #action_change_header("X-SA-Rep", "$hits $names");
+
+      if ($hits > $SA_THRESHOLD) {
+        # Really bad, discard
+        action_change_header("X-Spam-Status", "Yes");
+        my $qdir = get_quarantine_dir();
+        if (open(SAREPORT, ">$qdir/SA-REPORT.TXT")) {
+          print SAREPORT "$report\n";
+          close(SAREPORT);
+        }
+        action_quarantine_entire_message($msg);
+        if (defined($greylist) && $greylist) {
+          if ($greylist_reset_host) {
+            greylist_reset($RelayAddr,"","");
+          }
+          else {
+            foreach my $recip (@Recipients) {
+              greylist_reset($RelayAddr, $Sender, $recip);
+            }
+          }
+        }
+        $from_chiark= $first_rec =~ /\.chiark\.greenend\.org\.uk/ ;
+        $from_chiark= $last_rec =~ /\.chiark\.greenend\.org\.uk/
+          unless $from_chiark;
+        md_graphdefang_log('spamfromchiark', $hits, $Sender) if $from_chiark;
+        if ($from_chiark || $discard_not_bounce || $excempt) {
+          md_graphdefang_log('discard', $hits, $relay_name_and_addr);
+          return action_discard();
+        }
+        else {
+          md_graphdefang_log('spam', $hits, $relay_name_and_addr);
+          return action_bounce("Rejected as SPAM.");
+        }
+      }
+      if ($hits < 40) {
+        $score = "*" x int($hits);
+      } else {
+        $score = "*" x 40;
+      }
+      # We add a header which looks like this:
+      # X-Spam-Score: 6.8 (******) NAME_OF_TEST,NAME_OF_TEST
+      # The number of asterisks in parens is the integer part
+      # of the spam score clamped to a maximum of 40.
+      # MUA filters can easily be written to trigger on a
+      # minimum number of asterisks...
+      if ($hits >= $req) {
+        # Not so bad, but enough to greylist. Still pretty sure this is spam
+        action_change_header("X-Spam-Status", "Yes");
+        # action_change_header("X-Spam-Score", "$hits ($score) $names");
+        if (defined($greylist) && $greylist && ! $excempt) {
+          my($subnet_action);
+          # Database tells us what to do with given IP ranges
+          # Do initialize the database
+          $dbh = init_db();
+          if (greylist_ip_whitelist($RelayAddr)) {
+            md_graphdefang_log('white', $RelayAddr, $RelayHostname);
+            md_syslog('info',
+                      "greylist wlist: $event; $result; $RelayAddr; $sender; $recipient")
+              if $greylist_log;
+            # action_add_header("X-Grey","White");
+          }
+          elsif($dbh) {
+            #Check greylist
+            for my $recipient (@Recipients) {
+              next if $recipient =~ /^<?manoj\.srivastava\@stdc\.com>?$/i;
+              my $grey = greylist_check($RelayAddr,$Sender,$recipient);
+              if ($grey > 0) {
+                my $greys = time_string($grey);
+                # action_add_header("X-Grey","Grey");
+                md_graphdefang_log('grey', $grey, $RelayAddr);
+                action_change_header("X-SA-Rep", "$hits $names");
+                return action_tempfail("We will accept the mail in $grey seconds.");
+              }
+              elsif ($grey < 0) {
+                md_syslog('warning',
+                          "filter_recipient: greylist_check returned error!");
+              }
+              #else {
+              #  action_add_header("X-Grey","White");
+              #}
+            }
+          }
+        }
+        if ($hits > 10) {
+          md_graphdefang_log('realspam', $hits, $RelayAddr);
+        }
+        else {
+          md_graphdefang_log('probablespam', $hits, $RelayAddr);
+        }
+        # If you find the SA report useful, add it, I guess...
+        #action_add_part($entity, "text/plain", "-suggest",
+        #                "$report\n",
+        #                "SpamAssassinReport.txt", "inline");
+      }
+      else {
+        if ($hits > 1) {
+          action_change_header("X-Spam-Status", "Yes");
+          # action_change_header("X-Spam-Score", "$hits ($score) $names");
+          md_graphdefang_log('unsure', $hits, $RelayAddr);
+        }
+        else {
+          if ($hits < -1) {
+            # action_change_header("X-Spam-Status", "No");
+            md_graphdefang_log('good', $hits, $RelayAddr);
+            # well, we are accepting mail, may as well record is as whitelist
+            if (defined($greylist) && $greylist) {
+              # Do initialize the database
+              init_db();
+              # action_add_header("X-Grey","White");
+              foreach my $recip (@Recipients) {
+                next if $recipient =~ /^<?manoj\.srivastava\@stdc\.com>?$/i;
+                my $grey = greylist_check($RelayAddr,$Sender,$recip);
+                if ($grey > 0) {
+                  whitelist_record($RelayAddr, $Sender, $recip);
+                }
+              }
+            }
+          }
+          else {
+            # hits are around 0
+            action_change_header("X-Spam-Status", "Yes") if $hits > 0;
+            action_change_header("X-Spam-Status", "No")  if $hits < 0;
+            md_graphdefang_log('retrain', $hits, $RelayAddr);
+          }
+        }
+        # Delete any existing X-Spam-Score header?
+        #action_delete_header("X-Spam-Score");
+      }
+    }
+    else {                      # Large message
+      $hits = $hit_impact;
+      $hits = -3.0 unless $hits;
+      md_graphdefang_log('bigmessage', $hits, $RelayAddr);
+      if ($hits <= 0) {
+        action_change_header("X-Spam-Status", "No");
+      }
+      else {
+        action_change_header("X-Spam-Status", "Yes");
+      }
+      #action_change_header("X-SA-Orig", "$hits, $hitval");
+    }
+  }
+  else {                        # No spamassassin found
+    $hits = $hit_impact;
+    $hits = -3.0 unless $hits;
+    md_graphdefang_log('nospamassassin', $hits, $RelayAddr);
+    if ($hits <= 0) {
+      action_change_header("X-Spam-Status", "No");
+    }
+    else {
+      action_change_header("X-Spam-Status", "Yes");
+    }
+    #action_change_header("X-SA-Orig", "$hits, $hitval");
+  }
+
+#   # Do Spam Header and Redirect
+#   if (spam_assassin_is_spam()) {
+#     # Change Subject: header
+#     action_change_header("Subject", "*****SPAM***** $Subject");
+#   }
+
+#   if (spam_assassin_is_spam()) {
+#     # Add a header with original recipients, just for info
+#     action_add_header("X-Orig-Rcpts", join(", ", @Recipients));
+
+#     # Remove original recipients
+#     foreach $recip (@Recipients) {
+#       delete_recipient($recip);
+#     }
+
+#     # Send to spam address
+#     add_recipient('spambucket@mydomain.com');
+#   }
+
+  # I HATE HTML MAIL!  If there's a multipart/alternative with both
+  # text/plain and text/html parts, nuke the text/html.  Thanks for
+  # wasting our disk space and bandwidth...
+
+  # If you want to strip out HTML parts if there is a corresponding
+  # plain-text part, uncomment the next line.
+  # remove_redundant_html_parts($entity);
+
+  md_graphdefang_log('mail_in');
+
+  # Deal with malformed MIME.
+  # Some viruses produce malformed MIME messages that are misinterpreted
+  # by mail clients.  They also might slip under the radar of MIMEDefang.
+  # If you are worried about this, you should canonicalize all
+  # e-mail by uncommenting the action_rebuild() line.  This will
+  # force _all_ messages to be reconstructed as valid MIME.  It will
+  # increase the load on your server, and might break messages produced
+  # by marginal software.  Your call.
+
+  # action_rebuild();
+
+  # Log just the headers in a file
+#   my $logd = $Features{'Path:QUARANTINEDIR'} . "/maillog";
+#   if (-d $logd) {
+#     my $logf = "$logd/${MsgID}-Report-" . localtime() . ".txt";
+#     if (open(LOG, ">$logf")) {
+#       print LOG $report;
+#       if (open(H, 'HEADERS')) {
+#         print LOG "\nHeaders:\n" . join('', <H>);
+#         close H;
+#       } else {
+#         print LOG "\nFailed to open headers: $!\n";
+#       }
+#       close LOG;
+#     } else {
+#       md_graphdefang_log("Failed to create logfile: $logf: $!");
+#     }
+#   } else {
+#     md_graphdefang_log("No maillog dir: $logd");
+#   }
+
+
+}
+
+# sub filter_cleanup {
+#   ##Close the database connection if it's open
+#   $dbh->disconnect() if $dbh;
+# }
+
+
+# DO NOT delete the next line, or Perl will complain.
+1;
+
+
+

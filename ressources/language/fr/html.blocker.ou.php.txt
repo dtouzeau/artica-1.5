@@ -1,0 +1,19 @@
+<addhostname>URL pour les fichiers joints</addhostname>
+<addhostname_text>D&eacute;finir les URI &agrave; des fichiers joints que l'utilisateur peut utiliser pour t&eacute;l&eacute;charger des fichiers, cet uri sera ajout&eacute; dans l'adresse e-mail[br]
+Par d&eacute;faut, artica vous permet d'utiliser l'interface artica front-end pour obtenir des fichiers &laquo;http://local:port/blocked_attachments&quot;.
+[br]si vous modifiez cet uri, l'URL du fichier est le chemin complet vers le serveur[br]Dans ce cas, assurez-vous que vous avez un moteur HTTP qui  pointe sur le dossier &agrave; l'&eacute;chelle mondiale</addhostname_text>
+<body_notification>Avis de Non Responsabilit&eacute;</body_notification>
+<body_notification_text>Cet avertissement est ins&eacute;r&eacute; au d&eacute;but de chaque message envoy&eacute; aux destinataires et aux r&egrave;gles correcte,il con&ccedil;u pour informer que tous les fichiers joints, sont stock&eacute;s sur le serveur web afin de  permettre de t&eacute;l&eacute;charger des fichiers.</body_notification_text>
+<extensions>Extensions</extensions>
+<extensions_text>Toutes les extensions s&eacute;par&eacute;es par une virgule.[br]
+[b]Exemples[/b]:[ul]
+[li]pps[/li]
+[li]pps,ppt,doc,zip[/li]
+[/ul]</extensions_text>
+<from_text>caract&egrave;re &quot;*&quot; est autoris&eacute;.[br]
+Vous pouvez par exemple[br]
+[blk] [b]*@ votredomaine.com ou *@votredomaine* ou utilisateur.*@domaine.*[/ b][/blk]</from_text>
+<maxday>Maximum de jour de connexion</maxday>
+<maxsize>Taille maximum</maxsize>
+<parameters>Param&egrave;tres</parameters>
+<prependsubject>Sous r&eacute;serve de la mention</prependsubject>

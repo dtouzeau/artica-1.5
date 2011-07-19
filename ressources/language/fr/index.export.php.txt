@@ -1,0 +1,15 @@
+<launch_exportation>Lancez le processus d'exportation</launch_exportation>
+<launch_importation>Lancer le processus d'importation</launch_importation>
+<selected_resource>ressource s&eacute;lectionn&eacute;e</selected_resource>
+<use_network_drive>Choisissez &agrave; r&eacute;pertoire partag&eacute;.</use_network_drive>
+<use_network_drive_text>Le fichier compress&eacute; sera stock&eacute; sur un partage distant. Ceci est la meilleure m&eacute;thode.</use_network_drive_text>
+<use_usb_drive>Choisir un disque USB</use_usb_drive>
+<use_usb_drive_text>The compressed file will be saved on a plugged usb device</use_usb_drive_text>
+<wizard_export_config>Export des param&egrave;tres Artica</wizard_export_config>
+<wizard_export_config_step1>Cette op&eacute;ration va exporter vers un fichier compress&eacute; tous les donn&eacute;es importantes afin de reconstruire un nouveau serveur.</wizard_export_config_step1>
+<wizard_export_config_step2>The backup file must be stored outside this computer,you can chose a remote share folder or an external device.[br]If you choose an external device, please plug it on this computer
+</wizard_export_config_step2>
+<wizard_import_config>Restauration des param&egrave;tres Artica</wizard_import_config>
+<wizard_import_config_step1>This operation will restore a previous export operation to this server.</wizard_import_config_step1>
+<wizard_import_config_step2>Select the external resource used from the previous export operation...</wizard_import_config_step2>
+<wizard_import_confirm>Voulez-vous ex&eacute;cuter cette op&eacute;ration ? Toutes les donn&eacute;es locales seront effac&eacute;es et remplac&eacute;es par le conteneur s&eacute;lectionn&eacute;</wizard_import_confirm>

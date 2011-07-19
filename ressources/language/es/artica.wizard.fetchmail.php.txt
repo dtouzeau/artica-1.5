@@ -1,0 +1,34 @@
+<add_new_poll>Agregar nueva regla de busqueda</add_new_poll>
+<aka>Nombres DNS alternativos para el servidor de correo</aka>
+<ChangeFetchMailUserText>Give the recipient email address</ChangeFetchMailUserText>
+<cliktochange>Click to change the recipient</cliktochange>
+<doesntexists>No Existe</doesntexists>
+<edit_rules>Editar reglas de usuario</edit_rules>
+<fetchall>Obtener todos los mensajes</fetchall>
+<fetchmail_explain>This section allows you to add rules in order to retrieve messages stored on your ISP mail server</fetchmail_explain>
+<get_mails_isp>Buscar correo procedentes de su ISP</get_mails_isp>
+<hotmail_text>You have choose "hotmail", the GotMail tool will be used for this rule, please give the full eMail address you used eg (username@hotmail.com,username@hotmail.fr...)</hotmail_text>
+<hotwayd_text>You have choose "HTTP", fetchmail will use local pop3 hotwayd proxy to get messages, Use your full username (e.g. hotmailuser@hotmail.com or
+      msnuser@msn.com) and password that you normally use when
+      accessing hotmail/msn/lycos/spray (eg username@lycos.fr...)</hotwayd_text>
+<import1>You find here rules found in your server, select one and import it to Artica database</import1>
+<import_local_rules>Importacion local de reglas Fetmail</import_local_rules>
+<install_fetchmail>Instalar el demonio Fetchmail</install_fetchmail>
+<interval>Intervalo</interval>
+<keepmess>Conservar mensajes</keepmess>
+<load_user_rules>Buscar reglas de usuarios</load_user_rules>
+<load_user_rules_text>Give the email address of the user you want to find
+* caracter is supported</load_user_rules_text>
+<localuser>Cuenta Local</localuser>
+<multidrop>Multidrop</multidrop>
+<no_users_in_database>No hay usuarios disponibles en la base de datos</no_users_in_database>
+<remoteuser>nombre de usuario remoto</remoteuser>
+<rules>Reglas</rules>
+<select_user>Change the target user email</select_user>
+<server>Servidor de correo</server>
+<server_options>Opciones del servidor</server_options>
+<ssl>Usar ssl</ssl>
+<timeout>tiempo de espera</timeout>
+<timeout_text>Configures Fetchmail to give up after a certain interval of server inactivity.[br] If this value is not set, a default of 300 seconds is assumed</timeout_text>
+<tracepolls>Trace all polls</tracepolls>
+<user_option>Opciones de usuario</user_option>

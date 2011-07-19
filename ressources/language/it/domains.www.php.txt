@@ -1,0 +1,10 @@
+<APP_JOOMLA_TEXT>Joomla is an award-winning content management system (CMS), 
+which enables you to build Web sites and powerful online applications.[br]
+ Many aspects, including its ease-of-use and extensibility, have made Joomla the most popular Web site software available.[br]
+  Best of all, Joomla is an open source solution that is freely available to everyone.</APP_JOOMLA_TEXT>
+<service_type>Service type</service_type>
+<WWWAppliPassword>Application Manager password</WWWAppliPassword>
+<WWWAppliUser>Application Manager username</WWWAppliUser>
+<WWWMysqlPassword>Mysql Database password</WWWMysqlPassword>
+<WWWMysqlUser>Mysql Database Admin</WWWMysqlUser>
+<www_delete_web_service_confirm>This operation will uninstall this web service, Are you sure to perform this operation</www_delete_web_service_confirm>

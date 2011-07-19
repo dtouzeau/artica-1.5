@@ -1,0 +1,15 @@
+<ad_import>Importation ActiveDirectory</ad_import>
+<ad_import_text>Importez les utilisateurs de votre AD Windows 2003 dans cette organisation</ad_import_text>
+<default_language>Langage des utilisateur utilis&eacute; par d&eacute;faut dans l'interface Artica</default_language>
+<duplicate_to_remote_server>Dupliquer cette organisation vers un autre serveur</duplicate_to_remote_server>
+<filter_backup_rules>D&eacute;finissez les r&egrave;gles qui permettent de sauvegarder chaque courrier &eacute;lectronique que votre serveur re&ccedil;oit</filter_backup_rules>
+<global_quarantine_rules_text>D&eacute;finissez les param&egrave;tres principaux de la quarantaine</global_quarantine_rules_text>
+<manage_your_roundcube_text>D&eacute;inissez vos param&egrave;tres WebMail avec RoundCube</manage_your_roundcube_text>
+<manage_your_sugarcrm_text>Configurez votre SugarCRM</manage_your_sugarcrm_text>
+<ORG_SETTINGS>Param&egrave;tres de l'organisation</ORG_SETTINGS>
+<ORG_SETTINGS_TEXT>Renommez l'organisation, d&eacute;placez-la...</ORG_SETTINGS_TEXT>
+<REMOTE_ARTICA_PASSWORD>Mot de passe Administrateur</REMOTE_ARTICA_PASSWORD>
+<REMOTE_ARTICA_SERVER>Adresse du serveur Artica distant</REMOTE_ARTICA_SERVER>
+<REMOTE_ARTICA_SERVER_PORT>Port SSL du serveur Artica distant</REMOTE_ARTICA_SERVER_PORT>
+<REMOTE_ARTICA_USERNAME>nom de l'administrateur</REMOTE_ARTICA_USERNAME>
+<rename_org>Renommer l'organisation en</rename_org>

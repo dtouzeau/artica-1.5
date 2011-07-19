@@ -1,0 +1,32 @@
+#
+# Here's a procmailrc that logs messages to a today and a discarded file.  It
+# fully expects to have a cron job run regularly to keep things orderly
+# (cronspy.sh daily won't do it, actually).  If you want to delete
+# old mails, here's where.
+#
+# mailspy -p '/var/run/mailspy/milter' -P 'procmail mailspy-procmailrc'
+#
+# or (if you install this file as ~mailspy/.procmailrc), then
+# 
+# mailspy -p /var/run/mailspy/milter -P procmail
+#
+
+VERBOSE=yes
+HOST=eml
+DATE=`date +%y%m%d`
+DEFAULT=$HOME/mail/.$DATE/
+
+# Alternatively, select certain mails:
+#:0:
+#* ^(From|To|Cc|Bcc):.*(automotive-online.co.za|auctron.co.za|auctron.net|auctron.com|autoferret.co.za)
+#Mail/today
+#
+#:0:
+#Mail/discarded
+
+# Discard zero-length messages (interrupted during transmission)
+# For good measure, we'll discard truly micro messages not handled by anybody
+:0:
+* < 200
+/dev/null
+

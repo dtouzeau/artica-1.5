@@ -1,0 +1,12 @@
+CREATE TABLE `artica_events`.`sys_events` (
+  `md5` varchar(90) NOT NULL,
+  `ID` int(20) NOT NULL AUTO_INCREMENT,
+  `zDate` datetime NOT NULL,
+  `type` int(1) NOT NULL,
+  `event_text` varchar(255) NOT NULL,
+  `daemon` varchar(20) NOT NULL,
+  `msg_id` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`md5`,`ID`),
+  KEY `type` (`type`,`daemon`),
+  KEY `msg_id` (`msg_id`)
+)

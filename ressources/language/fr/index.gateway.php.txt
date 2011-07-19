@@ -1,0 +1,20 @@
+<APP_DHCP_EVENTS>Ev&egrave;nements du service DHCP</APP_DHCP_EVENTS>
+<APP_DHCP_EVENTS_TEXT>Afficher les logs en temps r&eacute;el du service DHCP</APP_DHCP_EVENTS_TEXT>
+<ARTICA_AS_GATEWAY>Artica est une passerelle</ARTICA_AS_GATEWAY>
+<ARTICA_AS_GATEWAY_EXPLAIN>Si vous param&egrave;trez au vert, Artica sera serveur DHCP , DNS, proxy, les connexions ont une passerelle r&eacute;elle</ARTICA_AS_GATEWAY_EXPLAIN>
+<ARTICA_AS_GATEWAY_TEXT>D&eacute;finit si artica est votre passerelle ou non</ARTICA_AS_GATEWAY_TEXT>
+<conf>Fichier de configuration</conf>
+<ddns_domainname>Domaine Interne</ddns_domainname>
+<EnableArticaAsDNSFirst>Artica comme serveur DNS principal</EnableArticaAsDNSFirst>
+<EnableArticaAsDNSFirst_explain>Si vous passez en vert, Artica servira alors de serveur DNS afin d'aider vos postes de travail &agrave; r&eacute;soudre les h&ocirc;tes et domaines.[br]Tr&egrave;s utilise afin de r&eacute;soudre les postes de travail entre eux et services par le service DHCP.</EnableArticaAsDNSFirst_explain>
+<EnableDHCPServer>Activer le service DHCP</EnableDHCPServer>
+<EnablePXEDHCP>Activer le DHCP d'environnement de d&eacute;marrage d'ordinateurs en r&eacute;seau (PXE)</EnablePXEDHCP>
+<fixedHosts>ordinateurs fix&eacute;s</fixedHosts>
+<max_lease_time>Temps maximum de bail</max_lease_time>
+<max_lease_time_text>Le temps devrait &ecirc;tre la longueur maximum en secondes qui seront assign&eacute;es &agrave; un bail.[br]
+La seule exception &agrave; ceci est que des longueurs dynamiques de bail de BOOTP, qui ne sont pas sp&eacute;cifi&eacute;es par le client, ne sont pas limit&eacute;es par ce maximum.</max_lease_time_text>
+<PXE>Environnement de d&eacute;marrage d'ordinateurs en r&eacute;seau</PXE>
+<PXE_DHCP_MINI_TEXT>Fournit les adresses IP &agrave; vos ordinateurs et les aide &agrave; ex&eacute;cuter le PXE depuis un autre point.</PXE_DHCP_MINI_TEXT>
+<pxe_file>Fichier de boot PXE</pxe_file>
+<pxe_server>Serveur de fourniture PXE</pxe_server>
+<range>Classe IP</range>

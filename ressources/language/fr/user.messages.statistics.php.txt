@@ -1,0 +1,3 @@
+<graph_week_quarantine>Nombre de messages enregistr&eacute;s en quarantaine</graph_week_quarantine>
+<graph_week_receive>Nombre de messages re&ccedil;u cette semaine</graph_week_receive>
+<quarantine_domains>Domaines exp&eacute;diteurs en quarantaine</quarantine_domains>

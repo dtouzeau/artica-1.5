@@ -1,0 +1,318 @@
+/**
+ * ContextMenu plugin styles
+ */
+
+.contextRow td,
+#mailboxlist li.contextRow,
+#directorylistbox li.contextRow
+{
+  background-color: #EEEEEE;
+}
+
+#rcmContextMenu,
+#rcmFolderMenu,
+#rcmAddressMenu,
+#rcmGroupMenu
+{
+  padding-top: 3px;
+}
+
+#rcmContextMenu li,
+#rcmFolderMenu li,
+#rcmAddressMenu li,
+#rcmGroupMenu li
+{
+  margin: 0;
+}
+
+#rcmContextMenu li ul,
+#rcmContextMenu li div,
+#rcmFolderMenu li ul,
+#rcmFolderMenu li div,
+#rcmAddressMenu li ul,
+#rcmAddressMenu li div,
+#rcmGroupMenu li ul,
+#rcmGroupMenu li div
+{
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: auto;
+  display: none;
+  background-color: #F9F9F9;
+  border: 1px solid #CCC;
+  padding: 1px;
+  z-index: 901;
+}
+
+#rcmContextMenu li.conmentitle,
+#rcmContextMenu li.submenu,
+#rcmFolderMenu li.conmentitle,
+#rcmFolderMenu li.submenu,
+#rcmAddressMenu li.conmentitle,
+#rcmAddressMenu li.submenu,
+#rcmGroupMenu li.conmentitle,
+#rcmGroupMenu li.submenu
+{
+  padding: 2px 8px 3px 27px;
+  cursor: default;
+}
+
+#rcmContextMenu li.submenu,
+#rcmFolderMenu li.submenu,
+#rcmAddressMenu li.submenu,
+#rcmGroupMenu li.submenu
+{
+  position: relative;
+  cursor: pointer;
+  background: url(submenu.gif) no-repeat right center;
+  padding-right: 15px;
+}
+
+#rcmContextMenu li.submenu:hover,
+#rcmFolderMenu li.submenu:hover,
+#rcmAddressMenu li.submenu:hover,
+#rcmGroupMenu li.submenu:hover
+{
+  color: #fff;
+  background-color: #CC0000;
+}
+
+#rcmContextMenu li a,
+#rcmFolderMenu li a,
+#rcmAddressMenu li a,
+#rcmGroupMenu li a
+{
+  background: url(messageactions.png) no-repeat 7px 0;
+  background-position: 7px 20px;
+}
+
+#rcmContextMenu li a.active:hover,
+#rcmFolderMenu li a.active:hover,
+#rcmAddressMenu li a.active:hover,
+#rcmGroupMenu li a.active:hover
+{
+  color: #fff;
+  background-color: #CC0000;
+}
+
+#rcmContextMenu li.disabled a,
+#rcmFolderMenu li.disabled a,
+#rcmAddressMenu li.disabled a,
+#rcmGroupMenu li.disabled a
+{
+  color: #AAA;
+  cursor: default;
+}
+
+#rcmContextMenu li.disabled a:hover,
+#rcmFolderMenu li.disabled a:hover,
+#rcmAddressMenu li.disabled a:hover,
+#rcmGroupMenu li.disabled a:hover
+{
+  color: #AAA;
+  background-color: transparent
+}
+
+#rcmContextMenu .read a
+{
+  background: url(dot.png) no-repeat 6px center;
+}
+
+#rcmFolderMenu .readfolder a
+{
+  background: url(dot.png) no-repeat 5px center;
+}
+
+#rcmContextMenu .unread a
+{
+  background: url(unread.png) no-repeat 6px center;
+}
+#rcmContextMenu .flagged a
+{
+  background: url(flagged.png) no-repeat 6px center;
+}
+
+#rcmContextMenu .unflagged a
+{
+  background: url(unflagged.png) no-repeat 6px center;
+}
+
+#rcmContextMenu .reply a
+{
+  background: url(replied.png) no-repeat 7px center;
+}
+
+#rcmContextMenu .replyall a
+{
+  background: url(replied.png) no-repeat 7px center;
+}
+
+#rcmContextMenu .forward a
+{
+  background: url(forwarded.png) no-repeat 7px center;
+}
+
+#rcmContextMenu .delete a,
+#rcmAddressMenu .deletecontact a
+{
+  background: url(deleted.png) no-repeat 7px center;
+}
+
+#rcmFolderMenu .expunge a
+{
+  background: url(icons.png) no-repeat 7px 3px;
+}
+
+#rcmFolderMenu .purge a
+{
+  background: url(icons.png) no-repeat 7px -14px;
+}
+
+#rcmFolderMenu .collapseall a
+{
+  background: url(collapsed.png) no-repeat 9px center;
+}
+
+#rcmFolderMenu .expandall a
+{
+  background: url(expanded.png) no-repeat 9px center;
+}
+
+#rcmContextMenu .print a
+{
+  background-position: 5px 1px;
+}
+
+#rcmContextMenu .source a
+{
+  background-position: 5px -35px;
+}
+
+#rcmContextMenu .save a
+{
+  background-position: 5px -17px;
+}
+
+#rcmContextMenu .open a
+{
+  background-position: 5px -53px;
+}
+
+#rcmFolderMenu .openfolder a
+{
+  background-position: 5px -53px;
+}
+
+#rcmContextMenu .edit a
+{
+  background-position: 5px -71px;
+}
+
+#rcmAddressMenu .editcontact a
+{
+  background-position: 6px -71px;
+}
+
+#rcmAddressMenu .composeto a
+{
+  background: url(composeto.png) no-repeat 7px center;
+}
+
+#rcmContextMenu ul.folders li a,
+#rcmAddressMenu ul.folders li a
+{
+  background: url(folders.png) 5px 1px no-repeat;
+}
+
+#rcmContextMenu ul.folders li.inbox a
+{
+  background-position: 5px -17px;
+}
+
+#rcmContextMenu ul.folders li.drafts a
+{
+  background-position: 5px -36px;
+}
+
+#rcmContextMenu ul.folders li.sent a
+{
+  background-position: 5px -54px;
+}
+
+#rcmContextMenu ul.folders li.junk a
+{
+  background-position: 5px -73px;
+}
+
+#rcmContextMenu ul.folders li.trash a
+{
+  background-position: 5px -90px;
+}
+
+#rcmAddressMenu ul.folders li.addressbook a
+{
+  background-position: 5px -108px;
+}
+
+#rcmAddressMenu ul.folders li.contactgroup a
+{
+  background-position: 5px -144px;
+}
+
+#rcmContextMenu div.popupmenu,
+#rcmAddressMenu div.popupmenu
+{
+  height: 129px;
+  padding: 0;
+}
+
+#rcmContextMenu ul.scrollable,
+#rcmAddressMenu ul.scrollable
+{
+  top: 15px;
+  height: 100px;
+  overflow: hidden;
+  border-top: 0;
+  border-bottom: 0;
+  margin: 0;
+}
+
+#rcmContextMenu li div,
+#rcmAddressMenu li div
+{
+  height: 12px;
+  overflow: hidden;
+}
+
+#rcmContextMenu li div.scroll_up_act,
+#rcmAddressMenu li div.scroll_up_act
+{
+  background: url(up_act.gif) #F9F9F9 center center no-repeat;
+  border-bottom: 0;
+}
+
+#rcmContextMenu li div.scroll_up_pas,
+#rcmAddressMenu li div.scroll_up_pas
+{
+  background: url(up_pas.gif) #F9F9F9 center center no-repeat;
+  border-bottom: 0;
+  cursor: default;
+}
+
+#rcmContextMenu li div.scroll_down_act,
+#rcmAddressMenu li div.scroll_down_act
+{
+  top: 117px;
+  background: url(down_act.gif) #F9F9F9 center center no-repeat;
+  border-top: 0;
+}
+
+#rcmContextMenu li div.scroll_down_pas,
+#rcmAddressMenu li div.scroll_down_pas
+{
+  top: 117px;
+  background: url(down_pas.gif) #F9F9F9 center center no-repeat;
+  border-top: 0;
+  cursor: default;
+}

@@ -1,0 +1,6 @@
+<DarRestoreMBX_perform>Voulez-vous effectuer cette op&eacute;ration ? la bo&icirc;te aux lettres sera d&eacute;truite par la sauvegarde choisie</DarRestoreMBX_perform>
+<external_resource_choose_text>Choisissez la ressource externe qui sera utilis&eacute;e afin de sauvegarder vos bo&icirc;tes aux lettres</external_resource_choose_text>
+<restore_mailbox>Restaurer les boites aux lettres</restore_mailbox>
+<restore_mailbox_ask_user>This operation will recover your current mailbox with a backuped mailbox.[br]Define here the user mailbox you want to restore.
+</restore_mailbox_ask_user>
+<restore_mailbox_text>analyse les conteneurs de sauvegarde et effectue la restauration des bo&icirc;tes aux lettres en s&eacute;lectionnant une date de sauvegarde</restore_mailbox_text>

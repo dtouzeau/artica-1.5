@@ -1,0 +1,606 @@
+unit syslogng;
+
+{$MODE DELPHI}
+{$LONGSTRINGS ON}
+
+interface
+
+uses
+    Classes, SysUtils,variants,strutils,IniFiles, Process,md5,logs,unix,RegExpr in 'RegExpr.pas',zsystem;
+
+type LDAP=record
+      admin:string;
+      password:string;
+      suffix:string;
+      servername:string;
+      Port:string;
+  end;
+
+  type
+  tsyslogng=class
+
+
+private
+     LOGS:Tlogs;
+     D:boolean;
+     GLOBAL_INI:TiniFIle;
+     SYS:TSystem;
+     artica_path:string;
+     function IF_MYSQL_CONFIGURED():boolean;
+     procedure KILL_MYSQL_INSTANCES();
+
+public
+    procedure   Free;
+    constructor Create;
+    procedure   START();
+    function    DEAMON_BIN_PATH():string;
+    function    DEAMON_CONF_PATH():string;
+    function    INITD_PATH():string;
+    function    VERSION():string;
+    FUNCTION    STATUS():string;
+    function    SYSLOG_PID():string;
+    procedure   CONFIG_MYSQL();
+    procedure   STOP();
+
+
+END;
+
+implementation
+
+constructor tsyslogng.Create;
+begin
+       forcedirectories('/etc/artica-postfix');
+       LOGS:=tlogs.Create();
+       SYS:=Tsystem.Create;
+
+
+       if not DirectoryExists('/usr/share/artica-postfix') then begin
+              artica_path:=ParamStr(0);
+              artica_path:=ExtractFilePath(artica_path);
+              artica_path:=AnsiReplaceText(artica_path,'/bin/','');
+
+      end else begin
+          artica_path:='/usr/share/artica-postfix';
+      end;
+end;
+//##############################################################################
+procedure tsyslogng.free();
+begin
+    logs.Free;
+    SYS.Free;
+end;
+//##############################################################################
+function tsyslogng.DEAMON_BIN_PATH():string;
+begin
+  if FileExists('/sbin/syslog-ng') then exit('/sbin/syslog-ng');
+end;
+//##############################################################################
+function tsyslogng.DEAMON_CONF_PATH():string;
+begin
+  if FileExists('/etc/syslog-ng/syslog-ng.conf') then exit('/etc/syslog-ng/syslog-ng.conf');
+end;
+//##############################################################################
+function tsyslogng.INITD_PATH():string;
+begin
+  if FileExists('/etc/init.d/syslog-ng') then exit('/etc/init.d/syslog-ng');
+end;
+//##############################################################################
+function tsyslogng.SYSLOG_PID():string;
+var
+   pid_path:string;
+begin
+ pid_path:='/var/run/syslog-ng.pid';
+ if FileExists(pid_path) then begin
+    result:=SYS.GET_PID_FROM_PATH(pid_path);
+    exit;
+ end;
+
+ result:=SYS.PidByProcessPath(DEAMON_BIN_PATH());
+end;
+//##############################################################################
+procedure tsyslogng.KILL_MYSQL_INSTANCES();
+var
+  cmdline:string;
+  PIDS:string;
+begin
+
+  cmdline:=SYS.LOCATE_mysql_bin()+' --host='+SYS.MYSQL_INFOS('mysql_server')+' --port='+SYS.MYSQL_INFOS('port')+' --user='+SYS.MYSQL_INFOS('database_admin');
+  cmdline:=cmdline+'(.+?)--database=artica_events';
+  logs.DebugLogs('KILL_MYSQL_INSTANCES:: finding ' + cmdline);
+  
+  PIDS:=SYS.AllPidsByPatternInPath(cmdline);
+  
+  if length(PIDS)>0 then begin
+     logs.DebugLogs('Starting......: syslog-ng stopping ghosts processes ' + PIDS);
+     logs.OutputCmd('/bin/kill ' + PIDS);
+  end;
+  
+
+end;
+
+
+procedure tsyslogng.START();
+ var
+    count      :integer;
+    cmdline    :string;
+    logs       :Tlogs;
+    FileTemp   :string;
+    PIDS       :string;
+begin
+     count:=0;
+     logs:=Tlogs.Create;
+      FileTemp:=artica_path+'/ressources/logs/syslogng.start.daemon';
+     if not FileExists(DEAMON_BIN_PATH()) then begin
+        logs.Debuglogs('tsyslogng.START():: syslog-ng is not installed');
+        exit;
+     end;
+
+
+     if not FileExists(DEAMON_CONF_PATH()) then begin
+        logs.Debuglogs('tsyslogng.START():: syslog-ng not configured');
+        exit;
+     end;
+  if not FileExists('/tmp/mysql.syslog-ng.pipe') then begin
+       fpsystem('/usr/bin/mkfifo /tmp/mysql.syslog-ng.pipe');
+       CONFIG_MYSQL();
+       fpsystem('/etc/syslog-ng/syslogng-mysql-pipe.sh &');
+       STOP();
+  end;
+  
+ if IF_MYSQL_CONFIGURED()=false then begin
+       logs.DebugLogs('Starting......: syslog-ng not configured for mysql...');
+       CONFIG_MYSQL();
+       fpsystem('/etc/syslog-ng/syslogng-mysql-pipe.sh &');
+       STOP();
+ end;
+ PIDS:=SYS.AllPidsByPatternInPath('/etc/syslog-ng/syslogng-mysql-pipe.sh');
+ if length(PIDS)>0 then begin
+        logs.DebugLogs('Starting......: killing ' + PIDS);
+        KILL_MYSQL_INSTANCES();
+        fpsystem('/bin/kill '+ PIDS);
+ end;
+ 
+   fpsystem('/etc/syslog-ng/syslogng-mysql-pipe.sh &');
+   PIDS:=SYS.AllPidsByPatternInPath('/etc/syslog-ng/syslogng-mysql-pipe.sh');
+   logs.DebugLogs('Starting......: syslog-ng mysql pipe is now running using PID ' + PIDS + '...');
+ 
+
+ if SYS.PROCESS_EXIST(SYSLOG_PID()) then begin
+        logs.DebugLogs('Starting......: syslog-ng daemon is already running using PID ' + SYSLOG_PID() + '...');
+        exit;
+ end;
+
+
+  if FileExists(INITD_PATH()) then begin
+     logs.DebugLogs('Starting......: syslog-ng ' + INITD_PATH());
+     fpsystem(INITD_PATH() + ' start >'+ FileTemp+' 2>&1');
+      if not SYS.PROCESS_EXIST(SYSLOG_PID()) then begin
+        logs.mysql_logs('2','0','Failed starting syslog-ng Daemon ' +  logs.ReadFromFile(FileTemp));
+        logs.DebugLogs('Starting......: syslog-ng Failed ! ' + logs.ReadFromFile(FileTemp));
+        exit;
+      end;
+   logs.DebugLogs('Starting......: syslog-ng daemon started with new PID ' + SYSLOG_PID() + '...');
+   logs.mysql_logs('2','1','Success starting syslog-ng Daemon');
+   exit;
+  end;
+
+end;
+//##############################################################################
+function tsyslogng.VERSION():string;
+var
+  RegExpr:TRegExpr;
+  l:TstringList;
+  i:integer;
+  FileTemp:string;
+begin
+
+     if not FileExists(DEAMON_BIN_PATH()) then begin
+        exit;
+     end;
+
+     FileTemp:=LOGS.FILE_TEMP();
+     fpsystem(DEAMON_BIN_PATH()+' -V >'+FileTemp+' 2>&1');
+
+
+     if not FileExists(FileTemp) then exit;
+
+     l:=TstringList.Create;
+     l.LoadFromFile(FileTemp);
+     logs.DeleteFile(FileTemp);
+
+     RegExpr:=tRegExpr.Create;
+     RegExpr.Expression:='syslog-ng\s+([0-9\.a-zA-Z]+)';
+
+     for i:=0 to l.Count-1 do begin
+            if RegExpr.Exec(l.Strings[i]) then begin
+               result:=RegExpr.Match[1];
+               break;
+            end else begin
+
+            end;
+    end;
+
+    l.free;
+    RegExpr.free;
+end;
+//##############################################################################
+FUNCTION tsyslogng.STATUS():string;
+var
+   ini:TstringList;
+   pid     :string;
+begin
+
+
+     if not FileExists(DEAMON_BIN_PATH()) then begin
+        logs.Debuglogs('tsyslogng.STATUS():: Unable to stat syslog-ng');
+        exit;
+     end;
+
+
+ini:=TstringList.Create;
+pid:=SYSLOG_PID();
+  ini.Add('[SYSLOGNG]');
+  if SYS.PROCESS_EXIST(pid) then ini.Add('running=1') else  ini.Add('running=0');
+      ini.Add('application_installed=1');
+      ini.Add('application_enabled=1');
+      ini.Add('master_pid='+ pid);
+      ini.Add('master_memory=' + IntToStr(SYS.PROCESS_MEMORY(pid)));
+      ini.Add('master_version=' + VERSION());
+      ini.Add('status='+SYS.PROCESS_STATUS(pid));
+      ini.Add('service_name=APP_SYSLOGNG');
+      ini.Add('start_logs=syslogng.start.daemon');
+      ini.Add('service_cmd=syslogng');
+      
+      
+result:=ini.Text;
+ini.free
+end;
+//#########################################################################################
+procedure tsyslogng.STOP();
+ var
+    count      :integer;
+begin
+
+     count:=0;
+
+
+     if SYS.PROCESS_EXIST(SYSLOG_PID()) then begin
+        writeln('Stopping syslog-ng...........: ' + SYSLOG_PID() + ' PID..');
+
+        if FileExists(INITD_PATH()) then begin
+              if FileExists('/tmp/mysql.syslog-ng.pipe') then logs.DeleteFile('/tmp/mysql.syslog-ng.pipe');
+              fpsystem(INITD_PATH() + ' stop');
+              exit;
+        end;
+
+        fpsystem('/bin/kill ' + SYSLOG_PID());
+        while sys.PROCESS_EXIST(SYSLOG_PID()) do begin
+              sleep(100);
+              inc(count);
+              if count>100 then begin
+                 writeln('Stopping syslog-ng...........: Failed');
+                 exit;
+              end;
+        end;
+
+      end else begin
+        writeln('Stopping syslog-ng...........: Already stopped');
+     end;
+
+end;
+//##############################################################################
+function tsyslogng.IF_MYSQL_CONFIGURED():boolean;
+var
+    RegExpr:TRegExpr;
+    FileDatas:TStringList;
+    i:integer;
+begin
+   result:=false;
+   if not FileExists(DEAMON_CONF_PATH()) then exit(false);
+   RegExpr:=TRegExpr.Create;
+   RegExpr.Expression:='destination d_mysql';
+   FileDatas:=TStringList.Create;
+   FileDatas.LoadFromFile(DEAMON_CONF_PATH());
+   for i:=0 to FileDatas.Count-1 do begin
+      if RegExpr.Exec(FileDatas.Strings[i]) then begin
+         result:=true;
+         break;
+      end;
+   end;
+    FileDatas.Free;
+    RegExpr.free;
+    
+    if not LOGS.IF_TABLE_EXISTS('syslogs','artica_events') then begin
+          logs.DebugLogs('Starting......: syslog-ng no mysql table...');
+          exit(false);
+    end;
+
+end;
+//##############################################################################
+procedure tsyslogng.CONFIG_MYSQL();
+ var
+    count      :integer;
+    mysql_bin:string;
+    sql        :string;
+    l,t        :TstringList;
+    SyslogNgPref:string;
+begin
+
+   mysql_bin:=SYS.LOCATE_mysql_bin();
+   if not FileExists(mysql_bin) then begin
+       logs.DebugLogs('Starting......: syslog-ng no mysql client...');
+       exit;
+   end;
+  SyslogNgPref:=SYS.GET_PERFS('SyslogNgPref');
+  if length(SyslogNgPref)=0 then SyslogNgPref:='1';
+  
+  t:=TstringList.Create;
+  if SyslogNgPref='1' then begin
+     logs.DebugLogs('Starting......: syslog-ng filter mysql to all events');
+     t.add('log {');
+     t.add('        source(s_all);');
+     t.add('        filter(f_syslog);');
+     t.add('        destination(d_mysql);');
+     t.add('};');
+  end;
+  
+  if SyslogNgPref='2' then begin
+     logs.DebugLogs('Starting......: syslog-ng filter mysql to mail events + errors');
+     t.add('log {');
+     t.add('        source(s_all);');
+     t.add('        filter(f_mail);');
+     t.add('        filter(f_at_least_notice);');
+     t.add('        filter(f_at_least_warn);');
+     t.add('        filter(f_at_least_err);');
+     t.add('        filter(f_at_least_crit);');
+     t.add('        destination(d_mysql);');
+     t.add('};');
+  end;
+  
+  if SyslogNgPref='3' then begin
+    logs.DebugLogs('Starting......: syslog-ng filter mysql to errors');
+     t.add('log {');
+     t.add('        source(s_all);');
+     t.add('        filter(f_at_least_notice);');
+     t.add('        filter(f_at_least_warn);');
+     t.add('        filter(f_at_least_err);');
+     t.add('        filter(f_at_least_crit);');
+     t.add('        destination(d_mysql);');
+     t.add('};');
+  end;
+  
+  if SyslogNgPref='4' then begin
+    logs.DebugLogs('Starting......: syslog-ng filter disabling mysql...');
+     t.add('');
+  end;
+  
+sql:='CREATE TABLE syslogs (';
+sql:=sql+'host varchar(32) default NULL,';
+sql:=sql+'facility varchar(10) default NULL,';
+sql:=sql+'priority varchar(10) default NULL,';
+sql:=sql+'level varchar(10) default NULL,';
+sql:=sql+'tag varchar(10) default NULL,';
+sql:=sql+'date datetime default NULL,';
+
+sql:=sql+'program varchar(15) default NULL,';
+sql:=sql+'msg text,';
+sql:=sql+'seq int(10) unsigned NOT NULL auto_increment,PRIMARY KEY (seq),KEY host (host),';
+sql:=sql+'KEY seq (seq),KEY program (program),KEY date (date),KEY priority (priority),KEY facility (facility)) TYPE=MyISAM;';
+
+if not LOGS.IF_TABLE_EXISTS('syslogs','artica_events') then begin
+   logs.DebugLogs('Starting......: syslog-ng create Table syslogs in artica_events database....');
+   LOGS.QUERY_SQL(pChar(sql),'artica_events');
+   if not LOGS.IF_TABLE_EXISTS('syslogs','artica_events') then begin
+      logs.DebugLogs('Starting......: syslog-ng unable to create Table syslogs in artica_events database....');
+      exit;
+   end else begin
+      logs.DebugLogs('Starting......: Success creating Table syslogs');
+   end;
+end;
+l:=TstringList.Create;
+l.add('options {');
+l.add('        chain_hostnames(0);');
+l.add('        time_reopen(10);');
+l.add('        time_reap(360);');
+l.add('        log_fifo_size(2048);');
+l.add('        create_dirs(yes);');
+l.add('        group(adm);');
+l.add('        perm(0640);');
+l.add('        dir_perm(0755);');
+l.add('        use_dns(no);');
+l.add('	stats_freq(0);');
+l.add('	bad_hostname("^gconfd$");');
+l.add('};');
+l.add('source s_all {');
+l.add('        internal();');
+l.add('        unix-stream("/dev/log");');
+l.add('        file("/proc/kmsg" log_prefix("kernel: "));');
+l.add('};');
+l.add('destination df_auth { file("/var/log/auth.log"); };');
+l.add('destination df_syslog { file("/var/log/syslog"); };');
+l.add('destination df_cron { file("/var/log/cron.log"); };');
+l.add('destination df_daemon { file("/var/log/daemon.log"); };');
+l.add('destination df_kern { file("/var/log/kern.log"); };');
+l.add('destination df_lpr { file("/var/log/lpr.log"); };');
+l.add('destination df_mail { file("/var/log/mail.log"); };');
+l.add('destination df_user { file("/var/log/user.log"); };');
+l.add('destination df_uucp { file("/var/log/uucp.log"); };');
+l.add('destination df_facility_dot_info { file("/var/log/$FACILITY.info"); };');
+l.add('destination df_facility_dot_notice { file("/var/log/$FACILITY.notice"); };');
+l.add('destination df_facility_dot_warn { file("/var/log/$FACILITY.warn"); };');
+l.add('destination df_facility_dot_err { file("/var/log/$FACILITY.err"); };');
+l.add('destination df_facility_dot_crit { file("/var/log/$FACILITY.crit"); };');
+l.add('destination df_news_dot_notice { file("/var/log/news/news.notice" owner("news")); };');
+l.add('destination df_news_dot_err { file("/var/log/news/news.err" owner("news")); };');
+l.add('destination df_news_dot_crit { file("/var/log/news/news.crit" owner("news")); };');
+l.add('destination df_debug { file("/var/log/debug"); };');
+l.add('destination df_messages { file("/var/log/messages"); };');
+l.add('destination dp_xconsole { pipe("/dev/xconsole"); };');
+l.add('destination du_all { usertty("*"); };');
+l.add('');
+l.add('destination d_mysql {');
+l.add('        pipe("/tmp/mysql.syslog-ng.pipe"');
+l.add('        template("INSERT INTO syslogs');
+l.add('        (host, facility, priority, level, tag, date, program, msg)');
+l.add('        VALUES ( ''$HOST'', ''$FACILITY'', ''$PRIORITY'', ''$LEVEL'', ''$TAG'', ''$YEAR-$MONTH-$DAY $HOUR:$MIN:$SEC'',');
+l.add('        ''$PROGRAM'', ''$MSG'' );\n") template-escape(yes));');
+l.add('};');
+l.add('');
+l.add('filter f_auth { facility(auth, authpriv); };');
+l.add('filter f_syslog { not facility(auth, authpriv); };');
+l.add('filter f_cron { facility(cron); };');
+l.add('filter f_daemon { facility(daemon); };');
+l.add('filter f_kern { facility(kern); };');
+l.add('filter f_lpr { facility(lpr); };');
+l.add('filter f_mail { facility(mail); };');
+l.add('filter f_news { facility(news); };');
+l.add('filter f_user { facility(user); };');
+l.add('filter f_uucp { facility(uucp); };');
+l.add('filter f_at_least_info { level(info..emerg); };');
+l.add('filter f_at_least_notice { level(notice..emerg); };');
+l.add('filter f_at_least_warn { level(warn..emerg); };');
+l.add('filter f_at_least_err { level(err..emerg); };');
+l.add('filter f_at_least_crit { level(crit..emerg); };');
+l.add('filter f_debug { level(debug) and not facility(auth, authpriv, news, mail); };');
+l.add('filter f_messages {');
+l.add('        level(info,notice,warn)');
+l.add('            and not facility(auth,authpriv,cron,daemon,mail,news);');
+l.add('};');
+l.add('filter f_emerg { level(emerg); };');
+l.add('filter f_xconsole {');
+l.add('    facility(daemon,mail)');
+l.add('        or level(debug,info,notice,warn)');
+l.add('        or (facility(news)');
+l.add('                and level(crit,err,notice));');
+l.add('};');
+
+l.add(t.ext);
+l.add('log {');
+l.add('        source(s_all);');
+l.add('        filter(f_auth);');
+l.add('        destination(df_auth);');
+l.add('};');
+l.add('log {');
+l.add('        source(s_all);');
+l.add('        filter(f_syslog);');
+l.add('        destination(df_syslog);');
+l.add('};');
+l.add('log {');
+l.add('        source(s_all);');
+l.add('        filter(f_daemon);');
+l.add('        destination(df_daemon);');
+l.add('};');
+l.add('log {');
+l.add('        source(s_all);');
+l.add('        filter(f_kern);');
+l.add('        destination(df_kern);');
+l.add('};');
+l.add('log {');
+l.add('        source(s_all);');
+l.add('        filter(f_lpr);');
+l.add('        destination(df_lpr);');
+l.add('};');
+l.add('log {');
+l.add('        source(s_all);');
+l.add('        filter(f_mail);');
+l.add('        destination(df_mail);');
+l.add('};');
+l.add('log {');
+l.add('        source(s_all);');
+l.add('        filter(f_user);');
+l.add('        destination(df_user);');
+l.add('};');
+l.add('log {');
+l.add('        source(s_all);');
+l.add('        filter(f_uucp);');
+l.add('        destination(df_uucp);');
+l.add('};');
+l.add('log {');
+l.add('        source(s_all);');
+l.add('        filter(f_mail);');
+l.add('        filter(f_at_least_info);');
+l.add('        destination(df_facility_dot_info);');
+l.add('};');
+l.add('log {');
+l.add('        source(s_all);');
+l.add('        filter(f_mail);');
+l.add('        filter(f_at_least_warn);');
+l.add('        destination(df_facility_dot_warn);');
+l.add('};');
+l.add('log {');
+l.add('        source(s_all);');
+l.add('        filter(f_mail);');
+l.add('        filter(f_at_least_err);');
+l.add('        destination(df_facility_dot_err);');
+l.add('};');
+l.add('log {');
+l.add('        source(s_all);');
+l.add('        filter(f_news);');
+l.add('        filter(f_at_least_crit);');
+l.add('        destination(df_news_dot_crit);');
+l.add('};');
+l.add('log {');
+l.add('        source(s_all);');
+l.add('        filter(f_news);');
+l.add('        filter(f_at_least_err);');
+l.add('        destination(df_news_dot_err);');
+l.add('};');
+l.add('log {');
+l.add('        source(s_all);');
+l.add('        filter(f_news);');
+l.add('        filter(f_at_least_notice);');
+l.add('        destination(df_news_dot_notice);');
+l.add('};');
+l.add('log {');
+l.add('        source(s_all);');
+l.add('        filter(f_debug);');
+l.add('        destination(d_mysql);');
+l.add('};');
+l.add('log {');
+l.add('        source(s_all);');
+l.add('        filter(f_messages);');
+l.add('        destination(df_messages);');
+l.add('};');
+l.add('log {');
+l.add('        source(s_all);');
+l.add('        filter(f_emerg);');
+l.add('        destination(du_all);');
+l.add('};');
+l.add('log {');
+l.add('        source(s_all);');
+l.add('        filter(f_xconsole);');
+l.add('        destination(dp_xconsole);');
+l.add('};');
+
+l.SaveToFile(DEAMON_CONF_PATH());
+
+
+
+l.clear;
+l.add('#!/bin/sh');
+l.add('#');
+l.add('# File: syslogng-mysql-pipe.sh');
+l.add('#');
+l.add('# Take input from a FIFO and run execute it as a query for');
+l.add('# a mysql database.');
+l.add('#');
+l.add('# IMPORTANT NOTE:  This could potentially be a huge security hole.');
+l.add('# You should change permissions on the FIFO accordingly.');
+l.add('#');
+l.add('');
+l.add('if [ -e /tmp/mysql.syslog-ng.pipe ]; then');
+l.add('        while [ -e /tmp/mysql.syslog-ng.pipe ]');
+l.add('                do');
+l.add('                        '+SYS.LOCATE_mysql_bin()+' --host='+SYS.MYSQL_INFOS('mysql_server')+' --port='+SYS.MYSQL_INFOS('port')+' --user='+SYS.MYSQL_INFOS('database_admin')+' --password='+SYS.MYSQL_INFOS('database_password')+' --database=artica_events < /tmp/mysql.syslog-ng.pipe');
+l.add('        done');
+l.add('else');
+l.add('        mkfifo /tmp/mysql.syslog-ng.pipe');
+l.add('fi');
+l.add('');
+l.SaveToFile('/etc/syslog-ng/syslogng-mysql-pipe.sh');
+logs.OutputCmd('/bin/chmod 777 /etc/syslog-ng/syslogng-mysql-pipe.sh');
+logs.DebugLogs('Starting......: Success Configuring syslog-ng with mysql...');
+end;
+
+end.
+

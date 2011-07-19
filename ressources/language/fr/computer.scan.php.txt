@@ -1,0 +1,25 @@
+<AV_SCAN_PARAMETERS>Param&egrave;tres d'analyse</AV_SCAN_PARAMETERS>
+<AV_SCAN_PARAMETERS_TEXT>D&eacute;finissez le comportement de l'analyse de cet ordinateur</AV_SCAN_PARAMETERS_TEXT>
+<cure>R&eacute;parer</cure>
+<f0>D&eacute;tection uniquement</f0>
+<f1>R&eacute;parer/laisser</f1>
+<f2>R&eacute;parer en &eacute;chec/laisser</f2>
+<f3>R&eacute;parer en &eacute;chec, supprimer</f3>
+<f4>Tout supprimer</f4>
+<Heuristic>Activer le balayage heuristique.</Heuristic>
+<i0>D&eacute;tection unique, fichiers inchang&eacute;s</i0>
+<i1>R&eacute;parer les objets infect&eacute;s; si impossible - laisser passer</i1>
+<i2>Nettoyer les objets infect&eacute;s; Si la d&eacute;sinfection &eacute;choue et que l'objet est simple - le supprimer, si l'objet infect&eacute; se trouve dans un conteneur - l'ignorer.</i2>
+<i3>Nettoyer les objets infect&eacute;s; Si la d&eacute;sinfection &eacute;choue et que l'objet est simple - le supprimer, si l'objet infect&eacute; se trouve dans un conteneur - supprimer l'ensemble du conteneur.</i3>
+<i4>Supprimer les objets infect&eacute;s et leur conteneur</i4>
+<MailBases>Bases de mails</MailBases>
+<MailPlain>Messages en texte brut</MailPlain>
+<Recursion>Analyse r&eacute;cursive</Recursion>
+<SCAN_ARCHIVES>Fichiers archives</SCAN_ARCHIVES>
+<SCAN_PACKED>Analyser les fichiers empact&eacute;s</SCAN_PACKED>
+<SelfExtArchives>Auto-d&eacute;compressions</SelfExtArchives>
+<shares_access>Information d'acc&egrave;s</shares_access>
+<shares_access_text>D&eacute;finissez le compte utilisateur et le mot de passe afin d'&eacute;tablir une connexion r&eacute;seau sur l'ordinateur cible</shares_access_text>
+<START_SCAN_COMPUTER>Lancer l'analyse</START_SCAN_COMPUTER>
+<START_SCAN_COMPUTER_TEXT>Lancez l'analyse antivirale sur l'ordinateur cible et tentez de d&eacute;tecter des codes malicieux.</START_SCAN_COMPUTER_TEXT>
+<SUCCESS_LAUNCH_SCAN_PC>L'ordre &agrave; &eacute;t&eacute; lanc&eacute; en t&acirc;che de fond afin d'effectuer une analyse de cet ordinateur</SUCCESS_LAUNCH_SCAN_PC>

@@ -1,0 +1,251 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <ProjectOptions>
+    <PathDelim Value="/"/>
+    <Version Value="6"/>
+    <General>
+      <Flags>
+        <MainUnitHasUsesSectionForAllUnits Value="False"/>
+        <MainUnitHasCreateFormStatements Value="False"/>
+        <MainUnitHasTitleStatement Value="False"/>
+      </Flags>
+      <MainUnit Value="0"/>
+      <IconPath Value="./"/>
+      <TargetFileExt Value=""/>
+      <Title Value="artica-thread-back"/>
+      <ActiveEditorIndexAtStart Value="1"/>
+    </General>
+    <VersionInfo>
+      <ProjectVersion Value=""/>
+    </VersionInfo>
+    <PublishOptions>
+      <Version Value="2"/>
+      <IgnoreBinaries Value="False"/>
+      <IncludeFileFilter Value="*.(pas|pp|inc|lfm|lpr|lrs|lpi|lpk|sh|xml)"/>
+      <ExcludeFileFilter Value="*.(bak|ppu|ppw|o|so);*~;backup"/>
+    </PublishOptions>
+    <RunParams>
+      <local>
+        <FormatVersion Value="1"/>
+        <LaunchingApplication PathPlusParams="/usr/X11R6/bin/xterm -T 'Lazarus Run Output' -e $(LazarusDir)/tools/runwait.sh $(TargetCmdLine)"/>
+      </local>
+    </RunParams>
+    <Units Count="23">
+      <Unit0>
+        <Filename Value="artica_thread_back.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="artica_thread_back"/>
+        <CursorPos X="12" Y="27"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="0"/>
+        <UsageCount Value="75"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="logs.pas"/>
+        <UnitName Value="logs"/>
+        <CursorPos X="47" Y="911"/>
+        <TopLine Value="848"/>
+        <EditorIndex Value="8"/>
+        <UsageCount Value="36"/>
+        <Loaded Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="zsystem.pas"/>
+        <UnitName Value="zsystem"/>
+        <CursorPos X="27" Y="418"/>
+        <TopLine Value="368"/>
+        <EditorIndex Value="2"/>
+        <UsageCount Value="18"/>
+        <Loaded Value="True"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="confiles.pas"/>
+        <UnitName Value="confiles"/>
+        <CursorPos X="124" Y="9"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="7"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="users.pas"/>
+        <UnitName Value="users"/>
+        <CursorPos X="15" Y="5"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="7"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="pwd.pas"/>
+        <UnitName Value="pwd"/>
+        <CursorPos X="71" Y="5"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="7"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="grp.pas"/>
+        <UnitName Value="grp"/>
+        <CursorPos X="71" Y="5"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="7"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="uhashlist.pas"/>
+        <UnitName Value="uHashList"/>
+        <CursorPos X="76" Y="11"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="7"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="geoip.pas"/>
+        <UnitName Value="GeoIP"/>
+        <CursorPos X="76" Y="11"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="7"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="openldap.pas"/>
+        <UnitName Value="openldap"/>
+        <CursorPos X="1" Y="77"/>
+        <TopLine Value="22"/>
+        <EditorIndex Value="4"/>
+        <UsageCount Value="36"/>
+        <Loaded Value="True"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="spfmilter.pas"/>
+        <UnitName Value="spfmilter"/>
+        <CursorPos X="76" Y="11"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="7"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="global_conf.pas"/>
+        <UnitName Value="global_conf"/>
+        <CursorPos X="102" Y="47"/>
+        <TopLine Value="14"/>
+        <EditorIndex Value="5"/>
+        <UsageCount Value="36"/>
+        <Loaded Value="True"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="mimedefhook.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="mimedefhook"/>
+        <CursorPos X="81" Y="167"/>
+        <TopLine Value="178"/>
+        <UsageCount Value="72"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="/usr/share/fpcsrc/packages/extra/syslog/systemlog.pp"/>
+        <UnitName Value="systemlog"/>
+        <CursorPos X="14" Y="43"/>
+        <TopLine Value="78"/>
+        <EditorIndex Value="9"/>
+        <UsageCount Value="36"/>
+        <Loaded Value="True"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="../artica-send/mailinfos.pas"/>
+        <UnitName Value="mailinfos"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="196"/>
+        <EditorIndex Value="7"/>
+        <UsageCount Value="35"/>
+        <Loaded Value="True"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="mimemess.pas"/>
+        <UnitName Value="mimemess"/>
+        <CursorPos X="3" Y="59"/>
+        <TopLine Value="22"/>
+        <UsageCount Value="7"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="synafpc.pas"/>
+        <UnitName Value="synafpc"/>
+        <CursorPos X="42" Y="64"/>
+        <TopLine Value="27"/>
+        <UsageCount Value="7"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="synacode.pas"/>
+        <UnitName Value="synacode"/>
+        <CursorPos X="77" Y="116"/>
+        <TopLine Value="43"/>
+        <UsageCount Value="7"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="synachar.pas"/>
+        <UnitName Value="synachar"/>
+        <CursorPos X="42" Y="64"/>
+        <TopLine Value="27"/>
+        <UsageCount Value="7"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="../artica-ldap/articaldap.pas"/>
+        <UnitName Value="articaldap"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="23"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="articaldap.pas"/>
+        <UnitName Value="articaldap"/>
+        <CursorPos X="68" Y="749"/>
+        <TopLine Value="706"/>
+        <EditorIndex Value="6"/>
+        <UsageCount Value="33"/>
+        <Loaded Value="True"/>
+      </Unit20>
+      <Unit21>
+        <Filename Value="htmlback.pas"/>
+        <UnitName Value="htmlback"/>
+        <CursorPos X="10" Y="198"/>
+        <TopLine Value="170"/>
+        <EditorIndex Value="1"/>
+        <UsageCount Value="20"/>
+        <Bookmarks Count="1">
+          <Item0 X="17" Y="490" ID="0"/>
+        </Bookmarks>
+        <Loaded Value="True"/>
+      </Unit21>
+      <Unit22>
+        <Filename Value="artica_mysql.pas"/>
+        <UnitName Value="artica_mysql"/>
+        <CursorPos X="82" Y="192"/>
+        <TopLine Value="129"/>
+        <EditorIndex Value="3"/>
+        <UsageCount Value="18"/>
+        <Loaded Value="True"/>
+      </Unit22>
+    </Units>
+    <JumpHistory Count="0" HistoryIndex="-1"/>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="5"/>
+    <Target>
+      <Filename Value="/home/dtouzeau/developpement/artica-postfix/bin/artica-thread-back"/>
+    </Target>
+    <CodeGeneration>
+      <Generate Value="Faster"/>
+    </CodeGeneration>
+    <Other>
+      <CompilerPath Value="$(CompPath)"/>
+    </Other>
+  </CompilerOptions>
+  <Debugging>
+    <BreakPoints Count="1">
+      <Item1>
+        <Source Value="logs.pas"/>
+        <Line Value="671"/>
+      </Item1>
+    </BreakPoints>
+    <Exceptions Count="2">
+      <Item1>
+        <Name Value="ECodetoolError"/>
+      </Item1>
+      <Item2>
+        <Name Value="EFOpenError"/>
+      </Item2>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

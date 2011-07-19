@@ -1,0 +1,24 @@
+<anti_spam_rate>% Rate</anti_spam_rate>
+<anti_spam_results>Detect infos</anti_spam_results>
+<by_other>Other</by_other>
+<by_sender>By sender</by_sender>
+<by_subject>By subject</by_subject>
+<delete_mails>Delete eMails</delete_mails>
+<delete_mails_text>Delete all mails stored from the sender of this eMail</delete_mails_text>
+<extra_infos>Extra informations</extra_infos>
+<extra_infos_text>Get more technical informations of this email by clicking on this icon</extra_infos_text>
+<last_quarantine_files>Last emails saved into your quarantine area</last_quarantine_files>
+<mail_servers_ip>Server</mail_servers_ip>
+<messages_in_quarantine>Message(s) in your quarantine area[br]</messages_in_quarantine>
+<release_mail>Release email</release_mail>
+<release_mail_text>Send this email to your mailbox[br]This eMail will no pass trought filters</release_mail_text>
+<search>Search messages</search>
+<search_text>Find messages in your quarantine area</search_text>
+<size>Size</size>
+<star_supported>Special caracter stars '*' is supported in queries, if you know "Regex" expressions, you can use it in your queries.</star_supported>
+<subject>Subject</subject>
+<time>Time</time>
+<total_mails>Mails in your area</total_mails>
+<view>View</view>
+<white_list_email_text>Add sender of this eMail into your White list database and release this eMail</white_list_email_text>
+<your_query>Your query</your_query>

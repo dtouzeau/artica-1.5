@@ -1,0 +1,9 @@
+<event>Ligne &eacute;v&egrave;nement</event>
+<LOG_DAY_LIMIT>Nombre maximum de jours de la base</LOG_DAY_LIMIT>
+<row_color>Row color</row_color>
+<row_number>Rows number</row_number>
+<RTMMail>Moniteur SMTP en temps r&eacute;el</RTMMail>
+<RTMMail_TEXT>Display routing messages pass trough your mail server</RTMMail_TEXT>
+<RTM_PARAMETERS>Param&egrave;tres du moniteur en temps r&eacute;el</RTM_PARAMETERS>
+<RTM_PARAMETERS_TEXT>Cette section vous aide &agrave; personnaliser en temps r&eacute;el les param&egrave;tres du moniteur</RTM_PARAMETERS_TEXT>
+<text_color>Couleur du texte</text_color>

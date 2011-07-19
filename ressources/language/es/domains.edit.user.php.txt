@@ -1,0 +1,213 @@
+<AddAliasesMailing_jstext>Give the full email address that receive mails for this user</AddAliasesMailing_jstext>
+<add_alias>Add new alias</add_alias>
+<add_alias_computer_text>Add new DNS record pointer to this computer</add_alias_computer_text>
+<add_mailing_address>Add new recipient</add_mailing_address>
+<add_new_alias>Add a new alias</add_new_alias>
+<add_new_alias_text>Add a new email address in your aliases database</add_new_alias_text>
+<ADD_USER_GROUP_ASK>Are you sure to Add this member to this group ?</ADD_USER_GROUP_ASK>
+<ADD_USER_GROUP_TEXT>Add this member to an existing group</ADD_USER_GROUP_TEXT>
+<aliases_mailing_text>This section means that all messages planned for this users will be duplicated for each email you add.
+[br]This is the same feature like a "mailing list"</aliases_mailing_text>
+<aliases_text>Aliases means that this user could have more than one email address[br]
+emails aliases created will point to the real user email address</aliases_text>
+<AllowedSMTPTroughtInternet>Allow Send trought Internet</AllowedSMTPTroughtInternet>
+<AllowedSMTPTroughtInternet_disabled>This feature is disabled. It use MimeDefang plugin.[br]
+If you want to use this feature, [ul]
+[li]Check if MimeDefang plugin is enabled[/li]
+[li]Check if "Activate allow/disallow your Internet email users"[br]option is enabled[/li]
+[/ul]
+</AllowedSMTPTroughtInternet_disabled>
+<AllowedSMTPTroughtInternet_text>If you disable this option, the user will be allowed to send email only to local users,[br]
+if user send to foreign domain, mail will be rejected</AllowedSMTPTroughtInternet_text>
+<amavis_as_settings>Anti-spam settings (amavis)</amavis_as_settings>
+<amavis_as_settings_text>Define specific anti-spam rules for this user</amavis_as_settings_text>
+<Antispam>Antispam</Antispam>
+<AUTH_SETTINGS>Authentication settings</AUTH_SETTINGS>
+<AUTH_SETTINGS_TEXT>Set username and password in order to connect to this object</AUTH_SETTINGS_TEXT>
+<AV_REMOTE_SCAN>Scan for viruses</AV_REMOTE_SCAN>
+<AV_REMOTE_SCAN_TEXT>Perform a remote scan in order to find viruses on this computer</AV_REMOTE_SCAN_TEXT>
+<backup_parameters>Backup parameters</backup_parameters>
+<backup_parameters_text>Define backup services for this user</backup_parameters_text>
+<build>Antispam</build>
+<change_password_text>Change the main account password</change_password_text>
+<change_uid>Change identifier</change_uid>
+<change_uid_explain>Change Unique identifier is a heavy operation, on the database each user is located by it's uid, this uid permit users to logon to the interface and logon to the systems service like
+Samba, Imap, mail...[br]
+If you change the user id, artica will try to rebuild this user to the new userid you set, [BR]
+please check if all features are translated after the operation.
+</change_uid_explain>
+<change_uid_text>Change the Unique identifier account used to logon to services</change_uid_text>
+<CLEAN_USER_DATAS>Clean user datas</CLEAN_USER_DATAS>
+<CLEAN_USER_EXPLAIN>You can perform a cleaning operation in order to remove all datas related to this user</CLEAN_USER_EXPLAIN>
+<computer>Computer</computer>
+<ComputerAddAlias>Give the virtual computer name without the domain (netbios name)</ComputerAddAlias>
+<ComputerCPU>CPU informations</ComputerCPU>
+<ComputerMacAddress>MAC Address</ComputerMacAddress>
+<ComputerMachineType>Machine Type</ComputerMachineType>
+<ComputerOS>Operating System</ComputerOS>
+<ComputerRunning>Running</ComputerRunning>
+<ComputerUpTime>Up Time</ComputerUpTime>
+<computer_ip>Computer IP address</computer_ip>
+<computer_name>Computer name</computer_name>
+<confirm_repair>Repair this mailbox ? The operation will be executed in background mode...</confirm_repair>
+<delete_messages>Delete messages that does not exists</delete_messages>
+<delete_messages_text>
+If a message exists on one mailbox but not the other, and it is an "old" message (it was recorded in `msinfo' at last synchronization), it is assumed that the message was deliberately deleted from one store, and is removed from the other.
+[br]If you set to green, this behavior will be enabled[br]
+</delete_messages_text>
+<delete_this_computer>Delete this computer</delete_this_computer>
+<delete_this_mailbox>Delete This mailbox</delete_this_mailbox>
+<delete_this_mailbox_text>Delete definitively all mailbox datas on the server, this operation will be not reversible</delete_this_mailbox_text>
+<delete_this_user_text>This will delete this user from user's database. All mails and others datas will not be deleted</delete_this_user_text>
+<dhcpfixed>Fixed DHCP Address</dhcpfixed>
+<DISCONNECT_FROM_GROUP>Diconnect this user from group</DISCONNECT_FROM_GROUP>
+<displayName>Display name</displayName>
+<DnsMXLength>MX Lenght</DnsMXLength>
+<DnsType>DNS Record Host type</DnsType>
+<dnstypea>host address</dnstypea>
+<DnsZoneName>DNS Zone name</DnsZoneName>
+<DotClearUserEnabled>Enable DotClear</DotClearUserEnabled>
+<DotClearUserEnabledText>If DotClear is installed,this user can hav this own DotClear web site by turn to green this option</DotClearUserEnabledText>
+<duplicate_mailto>Duplicate mails to</duplicate_mailto>
+<duplicate_mailto_text>If you fill this field, all mails to this user will be duplicated to the email address set</duplicate_mailto_text>
+<EnableUserSpamLearning>Junk Learning</EnableUserSpamLearning>
+<EnableUserSpamLearning_explain>If mails are saved into Junk folder of your mailbox  mails will be sended [b]each 3 hours[/b] to Spamassassin for analysis in order to increase the Spamassassin detection rate.[br]
+After analyze mails, there will be automatically deleted in order to not polluate junk folder.[br]
+You can create an &quot;Ham&quot; folder and put it good messages in order to decrease false-positive detection.</EnableUserSpamLearning_explain>
+<EnableUserSpamLearning_text>Allow artica parsing the junk/Spam mailbox in order to send junk mails to spamassassin</EnableUserSpamLearning_text>
+<enable_file_share>Enable File Sharing</enable_file_share>
+<error_image_missing>There is an error according gd libraries, make sure you have installed php5-gd or any modules required</error_image_missing>
+<export_mailbox>Synchronize Mailbox</export_mailbox>
+<export_mailbox_text>Synchronize mailbox mails and folders with another mailbox</export_mailbox_text>
+<fdm_cache_not_exists>Warning, fdm has no cache features, artica will not work without this feature, please install fdm first</fdm_cache_not_exists>
+<fdm_not_enabled>Warning, FDM is not enabled, please go to Postfix addons and enable FDM</fdm_not_enabled>
+<fdm_not_installed>Warning, FDM is not installed, artica will not execute your rules, please install fdm first</fdm_not_installed>
+<file_share>File Sharing</file_share>
+<FinalDateToLive>End of life</FinalDateToLive>
+<FinalDateToLive_text>If you set a date in this field, the account, mailbox will be deleted when reach this date</FinalDateToLive_text>
+<FTPDownloadBandwidth>Bandwidth (in KB/s) to limit download speeds</FTPDownloadBandwidth>
+<FTPDownloadRatio>Download Ratio</FTPDownloadRatio>
+<FTPQuotaFiles>Quota (in number of files)</FTPQuotaFiles>
+<FTPQuotaMBytes>Quota (in megabytes)</FTPQuotaMBytes>
+<FTPStatus>Enable FTP access</FTPStatus>
+<FTPUploadBandwidth>Bandwidth (in KB/s) to limit upload speeds</FTPUploadBandwidth>
+<FTPUploadRatio>Upload ratio</FTPUploadRatio>
+<ftp_access>FTP access</ftp_access>
+<gidNumber>Member of</gidNumber>
+<givenName>First name</givenName>
+<give_computer_name>Please give a real computer name</give_computer_name>
+<groupName>Original Member of</groupName>
+<groups>Member of Groups</groups>
+<homeDirectory>Home directory</homeDirectory>
+<homeDirectoryText>The home directory for the account.[br]It must be a UNC path.[br]
+ Otherwise, home directory is a fully qualified local path</homeDirectoryText>
+<imapsync_not_installed>MailSync is not installed</imapsync_not_installed>
+<imapsync_not_installed_text>You can go into "Applications setup center" in order to install this tool to perfrom operations</imapsync_not_installed_text>
+<import_mailbox>Import & Synchronize external Mailbox</import_mailbox>
+<import_mailbox_text>Synchronize elements from an external IMAP Mailbox to your internal artica MailBox.</import_mailbox_text>
+<import_now>Import elements now</import_now>
+<inbound_parameters>Inbound parameters</inbound_parameters>
+<in_the_same_organization>in the same messaging organization</in_the_same_organization>
+<joomla_privileges>Joomla privileges</joomla_privileges>
+<joomla_privileges_text>Define the Joomla group privileges of this user</joomla_privileges_text>
+<loginShell>Login Shell</loginShell>
+<loginShellText>The login shells' responsibility is to start the non-login shell and to make sure that your environment variables are set so as to
+ensure that you can get all the default parameters needed at start-up</loginShellText>
+<mailboxes_rules>Mailbox filters</mailboxes_rules>
+<mailboxes_rules_text>Manage filters saved for this mailbox</mailboxes_rules_text>
+<mailbox_priv>Mailbox privileges</mailbox_priv>
+<mailing_list>Mailing list</mailing_list>
+<mail_exchanger>mail exchange</mail_exchanger>
+<mime_defang_feature_not_enabled>This feature is not enabled in MimeDefang</mime_defang_feature_not_enabled>
+<mpa>Administer the mailbox[br](change the mailbox's ACL)</mpa>
+<mpat>Administer</mpat>
+<mpc>Create a new mailbox below the top-level mailbox[br](ordinary users cannot create top-level mailboxes).</mpc>
+<mpct>Create new mailbox</mpct>
+<mpd>Delete a message and/or the mailbox itself.</mpd>
+<mpdt>Delete messages</mpdt>
+<mpi>Insert (move or copy) a message[br] into the mailbox.</mpi>
+<mpit>Insert</mpit>
+<mpl>Look up the[br]name of the mailbox[br](but not its contents).</mpl>
+<mplt>List mailbox</mplt>
+<mpp>Post a message in the mailbox[br]by sending the message to the mailbox's submission address</mpp>
+<mppt>Post a message</mppt>
+<mpr>Read the contents of the mailbox.</mpr>
+<mprt>Read</mprt>
+<mps>Preserve the "seen" and "recent" status[br]of messages across IMAP sessions.</mps>
+<mpst>Preserve status</mpst>
+<mpw>Write (change message flags such as[br] "recent," "answered," and "draft").</mpw>
+<mpwt>Write</mpwt>
+<netressources>Network resources</netressources>
+<network_infos>Network infos</network_infos>
+<no_feature_dhcp_server_not_enabled>The DHCP server mode feature is disabled, you must enable it before enabling this feature</no_feature_dhcp_server_not_enabled>
+<no_mailbox_user>This user have no mailbox currently</no_mailbox_user>
+<OCS_DEPLOY_WINDOWS>OCS Agent remote installation</OCS_DEPLOY_WINDOWS>
+<OCS_DEPLOY_WINDOWS_TEXT>Install the OCS Windows agent on this computer</OCS_DEPLOY_WINDOWS_TEXT>
+<openports>Open ports</openports>
+<out_of_organization>Out of the Organization</out_of_organization>
+<profile>profile</profile>
+<recipient_translations>Recipient eMail address translations</recipient_translations>
+<remote_imap_password>Source imap password</remote_imap_password>
+<remote_imap_server>Source imap server</remote_imap_server>
+<remote_imap_username>Source imap username</remote_imap_username>
+<repair_mailbox>repair this mailbox</repair_mailbox>
+<repair_mailbox_infos>This feature will try to repair this mailbox by reconstruct the folders structure, delete seen index file...[br]
+After processing mailbox the imap server engine will be restarted...</repair_mailbox_infos>
+<repair_mailbox_text>Some problems to access or to run this mailbox, try to Repair this mailbox </repair_mailbox_text>
+<SambaAdminServerDefined>Server IP/Name for paths</SambaAdminServerDefined>
+<sambaHomeDrive>Home directory Map Letter</sambaHomeDrive>
+<sambaHomePath>Home directory</sambaHomePath>
+<sambaPrimaryGroupSID>Initial Group</sambaPrimaryGroupSID>
+<sambaProfilePath>Profile directory</sambaProfilePath>
+<SAMBA_ERROR_CLICK>Click on me to get more informations</SAMBA_ERROR_CLICK>
+<SAMBA_ERROR_REPORT>The samba server report :</SAMBA_ERROR_REPORT>
+<SAMBA_ERROR_USER>Error on this user</SAMBA_ERROR_USER>
+<SAMBA_GROUP_PRIVILEGES>Group privileges</SAMBA_GROUP_PRIVILEGES>
+<SAMBA_GROUP_PRIVILEGES_TEXT>Set user's privileges by selecting the appropriate group</SAMBA_GROUP_PRIVILEGES_TEXT>
+<SAMBA_GROUP_PRIVILEGES_WIZARD>This wizard will help to define the user privileges by selecting a pre-defined group.[br]Select the appropriate group that will store this user.[br]
+Selecting this group is mandatory if you want to use Artica Server has a primary Domain controler.[br]
+It will enable the connection of this user on the Domain</SAMBA_GROUP_PRIVILEGES_WIZARD>
+<scan_it>Launch nmap scan...</scan_it>
+<SCHEDULE_SCAN_COMPUTER>Schedule scan</SCHEDULE_SCAN_COMPUTER>
+<SCHEDULE_SCAN_COMPUTER_TEXT>schedule the defined antivirus scan, in order to execute antivirus analysis periodically</SCHEDULE_SCAN_COMPUTER_TEXT>
+<SeAddUsersPrivilege>Add users and groups to the domain</SeAddUsersPrivilege>
+<search_in_orgnization>Search in Organization</search_in_orgnization>
+<SeBackupPrivilege>Back up files and directories</SeBackupPrivilege>
+<SeDiskOperatorPrivilege>Manage disk shares</SeDiskOperatorPrivilege>
+<see_events>View last events</see_events>
+<SeMachineAccountPrivilege>Add machines to domain</SeMachineAccountPrivilege>
+<sender_canonical_text>Transform your original eMail address when mails will be forwarded trough internet</sender_canonical_text>
+<sender_parameters>Sender Settings</sender_parameters>
+<sender_parameters_text>Define email rewriting sent address and others parameters when sending mails</sender_parameters_text>
+<SePrintOperatorPrivilege>Manage printers</SePrintOperatorPrivilege>
+<SeRemoteShutdownPrivilege>Force shutdown from a remote system</SeRemoteShutdownPrivilege>
+<SeRestorePrivilege>Restore files and directories</SeRestorePrivilege>
+<SeTakeOwnershipPrivilege>Take ownership of files or other objects</SeTakeOwnershipPrivilege>
+<SimpleGroupWareActive>Simple Groupware</SimpleGroupWareActive>
+<smb_infos>Share informations</smb_infos>
+<smb_infos_text>Display internal samba informations of this user</smb_infos_text>
+<sync_find_user>Find target mailbox</sync_find_user>
+<test_connection>Test your connection...</test_connection>
+<transforme_mailto>Change the email address</transforme_mailto>
+<transforme_mailto_text>If you fill this field, message email address to this user will be transformed to the email address set</transforme_mailto_text>
+<UidNumber>Numeric Identifier</UidNumber>
+<UidNumberText>This attribute must contains an integer that uniquely identifies a user in an administrative domain</UidNumberText>
+<uid_number>UID number</uid_number>
+<UserSystemInfos>System Parameters</UserSystemInfos>
+<UserSystemInfos_text>Define users information such has the numeric identifier,login Shell...</UserSystemInfos_text>
+<USER_DOES_NOT_EXISTS>This user does not exists in the Database</USER_DOES_NOT_EXISTS>
+<USER_DOES_NOT_EXISTS_EXPLAIN>The user ID requested is not properly set in the database.[br]Sure that this user has been deleted and some traces are stored in the database</USER_DOES_NOT_EXISTS_EXPLAIN>
+<user_has_no_quota>This user have no quota.This mailbox is illimited...</user_has_no_quota>
+<user_is_an_obm_user>Access Enabled to OBM Calendar</user_is_an_obm_user>
+<USER_MAILBOX_WIZARD_STEP1>This wizard will help you to create a new mailbox for this user.[br]
+First is to define if the mailbox will have a limited size.[br]
+Give here the maximal size of the mailbox in MB.[br]
+[b]If you want an illimited mailbox, keep the field to 0 value[/b]
+</USER_MAILBOX_WIZARD_STEP1>
+<user_no_mailbox>This user have currently no mailbox folder created on the Mailboxes server</user_no_mailbox>
+<user_quota>This mailbox is limited.[br]If you want to remove the quota and transform it to illimited, set "0" in the field</user_quota>
+<user_transport>SMTP relay</user_transport>
+<user_transport_text>Define a specific routing mail server for this user</user_transport_text>
+<use_ssl>use ssl</use_ssl>
+<VolatileIPAddress>Use DHCP</VolatileIPAddress>
+<warn_import>The importation will be launched in background,to follow the operation click on the logs icon in order to see if the operation will be successfull</warn_import>

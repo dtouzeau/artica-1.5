@@ -1,0 +1,18 @@
+<autoupdate_text>Esta funcionalidade permite verificar se existem novas vers&otilde;es no servidor de actualiza&ccedil;&otilde;es do Artica.[br]Voc&ecirc; pode activar/desactivar a instala&ccedil;&atilde;o autom&aacute;tica das novas vers&otilde;es[br]
+Se voc&ecirc; optar por desactivar as instala&ccedil;&otilde;es autom&aacute;ticas, o agente de actualiza&ccedil;&otilde;es (update agent) vai esperar pela sua ordem para efectuar a instala&ccedil;&atilde;o.</autoupdate_text>
+<CheckEveryMinutes>Verificar actualiza&ccedil;&otilde;es a cada x minutos</CheckEveryMinutes>
+<current_version>Vers&atilde;o actual</current_version>
+<enable_autoinstall>Activar instala&ccedil;&atilde;o autom&aacute;tica</enable_autoinstall>
+<enable_autoupdate>Activar actualiza&ccedil;&otilde;es autom&aacute;ticas</enable_autoupdate>
+<enable_nightlybuild>{Activar actualiza&ccedil;&otilde;es &quot;nightly build&quot;}</enable_nightlybuild>
+<front_page_notify>Notificar novas actualiza&ccedil;&otilde;es na p&aacute;gina principal</front_page_notify>
+<install_package>Instalar pacote...</install_package>
+<install_package_text>Tem certeza que deseja actualizar o n&uacute;cleo do Artica usando este pacote?
+Se sim, o processo de actualiza&ccedil;&atilde;o ir&aacute; reiniciar o Artica e a interface web ficar&aacute; indispon&iacute;vel durante alguns segundos.</install_package_text>
+<perform_update_text>Esta opera&ccedil;&atilde;o vai efectuar as actualiza&ccedil;&otilde;es em segundo plano,
+Por favor, aguarde alguns minutos e volte a esta sec&ccedil;&atilde;o, a fim de
+verificar se as actualiza&ccedil;&otilde;es foram efectuadas com  sucesso.
+Actualizar agora?</perform_update_text>
+<samba_notify>Informar sobre novas actualiza&ccedil;&otilde;es do Samba (tamb&eacute;m por e-mail)</samba_notify>
+<update_list>Lista de actualiza&ccedil;&otilde;es</update_list>
+<uri>Endere&ccedil;o do servidor de actualiza&ccedil;&otilde;es</uri>

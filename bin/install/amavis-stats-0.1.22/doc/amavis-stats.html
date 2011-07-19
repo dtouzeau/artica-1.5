@@ -1,0 +1,138 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>amavis-stats</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<ul>
+
+		<li><a href="#overview">OVERVIEW</a></li>
+	</ul>
+
+	<li><a href="#files">FILES</a></li>
+	<li><a href="#author">AUTHOR</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p><strong>amavis-stats</strong> - generate e-mail statistics from amavisd-new (sys)log files.</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p><strong>amavis-stats</strong> [options]</p>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p><strong>amavis-stats</strong> is a simple e-mail statistics generator based on amavisd-new
+and rrdtool.</p>
+<p>Statistics are read from amavisd-new (sys)log entries and stored in RRD files.</p>
+<p>There is an accompanying php script to actually generate the web pages and graphs.
+This man page is just for the perl script daemon which parses the log files.</p>
+<p>
+</p>
+<h2><a name="overview">OVERVIEW</a></h2>
+<p>In this man page you will find general information on the use of the <strong>amavis-stats</strong>
+daemon.</p>
+<p>For a more detailed description of how to use the individual options of the
+<strong>amavis-stats</strong> daemon, check the built-in help and included documentation.</p>
+<dl>
+<dt><strong><a name="item_options">options</a></strong></dt>
+
+<dd>
+<p>[<strong>debug</strong>] ( runs in foreground )</p>
+<p>[<strong>foreground</strong>]</p>
+<p>[<strong>help</strong>]</p>
+<p>[<strong>reload</strong>]</p>
+<p>[<strong>start</strong>] ( kept for legacy )</p>
+<p>[<strong>stop</strong>]</p>
+</dd>
+<dt><strong>options <em>( requiring arguments )</em></strong></dt>
+
+<dd>
+<p>[<strong>-c&nbsp;&lt;config-file&gt;</strong>]</p>
+<p>[<strong>-g&nbsp;&lt;group&gt;</strong>] ( requires -u option to be specified )</p>
+<p>[<strong>-u&nbsp;&lt;user&gt;</strong>]</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="files">FILES</a></h1>
+<dl>
+<dt><strong><a name="item_scripts_2c_config_and_directories"><em>SCRIPTS, CONFIG AND DIRECTORIES</em></a></strong></dt>
+
+<dd>
+<p><strong>/usr/local/sbin/amavis-stats</strong>
+ amavis-stats daemon.</p>
+<p><strong>/usr/local/etc/amavis-stats.conf</strong>
+ config file for amavis-stats daemon.</p>
+<p><strong>/usr/local/share/amavis-stats/amavis-stats.php</strong>
+ php script, for generating web-based graphs.</p>
+<p><strong>/usr/local/share/amavis-stats/amavis-stats.php.conf</strong>
+ config file for php script.</p>
+<p><strong>/usr/local/share/amavis-stats/amavis-stats.alias.conf</strong>
+ config file for apache.</p>
+<p><strong>/usr/local/var/lib/amavis-stats/</strong>
+ location of rrd files and state information.</p>
+<p><strong>/usr/local/var/cache/amavis-stats/</strong>
+ image cache directory, where web images are stored.</p>
+</dd>
+<dt><strong><a name="item_png_images_and_fonts_for_buttons"><em>PNG IMAGES AND FONTS FOR BUTTONS</em></a></strong></dt>
+
+<dd>
+<p><strong>/usr/local/share/amavis-stats/ChalkboardBold.ttf</strong>
+ default truetype font.</p>
+<p><strong>/usr/local/share/amavis-stats/tab_center_blue.png</strong>
+ button center (blue)</p>
+<p><strong>/usr/local/share/amavis-stats/tab_center_gray.png</strong>
+ button center (gray)</p>
+<p><strong>/usr/local/share/amavis-stats/tab_center_white.png</strong>
+ button center (white)</p>
+<p><strong>/usr/local/share/amavis-stats/tab_left_blue.png</strong>
+ button left (blue)</p>
+<p><strong>/usr/local/share/amavis-stats/tab_left_gray.png</strong>
+ button left (gray)</p>
+<p><strong>/usr/local/share/amavis-stats/tab_left_white.png</strong>
+ button left (white)</p>
+<p><strong>/usr/local/share/amavis-stats/tab_right_blue.png</strong>
+ button right (blue)</p>
+<p><strong>/usr/local/share/amavis-stats/tab_right_gray.png</strong>
+ button right (gray)</p>
+<p><strong>/usr/local/share/amavis-stats/tab_right_white.png</strong>
+ button right (white)</p>
+<p><strong>/usr/local/share/amavis-stats/bullet_center_blue.png</strong>
+ button center (blue)</p>
+<p><strong>/usr/local/share/amavis-stats/bullet_left_blue.png</strong>
+ button left (blue)</p>
+<p><strong>/usr/local/share/amavis-stats/bullet_right_blue.png</strong>
+ button right (blue)</p>
+<p>You can substitue fonts and png images to customize the appearance.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="author">AUTHOR</a></h1>
+<p>Dale Walsh &lt;<a href="mailto:buildsmart@daleenterprise.com">buildsmart@daleenterprise.com</a>&gt;</p>
+
+</body>
+
+</html>

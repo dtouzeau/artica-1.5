@@ -1,0 +1,6 @@
+<add_network>Ajouter un nouveau R&eacute;seau</add_network>
+<auto_account_explain>Si vous activez cette fonction, un nouveau formulaire sera ajout&eacute;e &agrave; la page Web de connexion Artica.[br] Ce formulaire aide vos utilisateurs &agrave; remplir des informations pour cr&eacute;er leur compte (la bo&icirc;te aux lettres et l'acc&egrave;s &agrave; l'interface utilisateur).[br]
+Ce formulaire sera montr&eacute; si les utilisateurs sont connect&eacute;s &agrave; des r&eacute;seaux sp&eacute;cifiques que vous avez ajoutez &agrave; cette section</auto_account_explain>
+<enable_autocreate>Activer la forme de l'auto-cr&eacute;ation de comptes</enable_autocreate>
+<ipfrom>De l'Adresse IP</ipfrom>
+<ipto>Vers l'Adresse IP</ipto>

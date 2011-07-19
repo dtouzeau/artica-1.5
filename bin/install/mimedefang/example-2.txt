@@ -1,0 +1,37 @@
+   # We are a leaf, replace non-text/* MIME Attachments
+if($oneRcptIsLargeList || $oneRcptIsList && !$isAuthed) {
+	 if($lcType eq 'message/delivery-status') {
+		 md_graphdefang_log('dsn_to_list', $lcType, '');
+		 return action_bounce("Protect list against wrongly routed DSNs - rejected");
+	 }
+	if($lcType =~ /^text\// || $lcType eq 'application/x-pkcs7-signature') {
+		skahead "Keeping MIME attachment '$friendlyName' of $lcType";
+	} else {
+		my $size = (stat($entity->bodyhandle->path))[7];
+		if($size >= 10*1024) {          # larger than 10KB
+			if($size > 1024) {
+				$size = int($size / 1024);
+				if($size > 1024) {
+					$size = int($size / 1024);
+					$size .= 'MB';
+				} else {
+					$size .= 'KB';
+				}
+			} else {
+				$size .= "B";
+			}
+			skahead "Replace $lcType '$friendlyName' ($size) with URL";
+			return action_replace_with_url($entity,
+				"/var/spool/MIMEDefang_Captured_Files",
+				"http://url_server/captured_mailfiles",
+"Der Anhang '$friendlyName' wurde aufgrund seiner Groesse aus dieser
+Nachricht entfernt, kann jedoch ueber folgende URL abgerufen werden:\n
+The attachment '$friendlyName' was removed from this mail, but
+may be accessed at this URL (approx. $size):\n" .
+			"\t_URL_\n"
+			, "$lcType $friendlyName\n", $skaCfg{urlsalt});
+		} else {
+			skahead "Keeping MIME attachment '$friendlyName' of $lcType size: $size";
+		}
+	}
+}

@@ -1,0 +1,23 @@
+<ADD_WIDGET>Ajoutez un nouveau gadget</ADD_WIDGET>
+<ADD_WIDGET_TEXT>Ajoutez un nouvel icon/gadget sur cette page</ADD_WIDGET_TEXT>
+<artica_settings>Configuration g&eacute;n&eacute;rale d'Artica</artica_settings>
+<artica_settings_text>D&eacute;finissez les param&egrave;tres globaux &agrave; propos du Proxy web utilis&eacute;, le moteur de l'interface, les param&egrave;tres mysql.</artica_settings_text>
+<choose_section>Choisissez une section</choose_section>
+<CLICK_TO_DELETE>Cliquez pour supprimer</CLICK_TO_DELETE>
+<DELETE_THIS_TAB>Supprimez cette page de gadgets</DELETE_THIS_TAB>
+<DELETE_THIS_TAB_TEXT>Cette op&eacute;ration va supprimer cette page de votre tableau de bord</DELETE_THIS_TAB_TEXT>
+<FILE_SHARE>Partage de fichiers</FILE_SHARE>
+<MAILBOX>Gestion des bo&icirc;tes aux lettres</MAILBOX>
+<MAIL_SECU>Messagerie (s&eacute;curit&eacute;)</MAIL_SECU>
+<MANAGE_WIDGETS>Param&eacute;trez vos gadgets</MANAGE_WIDGETS>
+<MANAGE_WIDGETS_TEXT>Changez l'ordre d'affichage, supprimez des gadgets</MANAGE_WIDGETS_TEXT>
+<MTA>Mail transfert Agent (Postfix)</MTA>
+<NETWORK>R&eacute;seau</NETWORK>
+<ORG>Op&eacute;rations li&eacute;es aux organisations</ORG>
+<organizations_text>[b]Administration des organisations:[/b][br]Affichez, cr&eacute;ez, supprimez vos organisations</organizations_text>
+<REBUILD_PAGE>Reconstruire cette section</REBUILD_PAGE>
+<REBUILD_PAGE_TEXT>Cette op&eacute;ration va supprimer le cache et reconstruire la section.</REBUILD_PAGE_TEXT>
+<SYSTEM>Applications syst&egrave;me et param&egrave;tres</SYSTEM>
+<WIDGETS_AREA>Centre des gadgets</WIDGETS_AREA>
+<WIDGETS_AREA_EXPLAIN>Cliquez sur l'une de ces ic&ocirc;nes afin d'ajouter ou de [b] supprimer [/b] des ic&ocirc;ne sur votre zone</WIDGETS_AREA_EXPLAIN>
+<your_organizations>Votre Organisation</your_organizations>

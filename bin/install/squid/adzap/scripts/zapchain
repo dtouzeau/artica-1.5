@@ -1,0 +1,100 @@
+#!/usr/bin/perl
+#
+# Chain multiple redirectors together.
+#	- Cameron Simpson <cs@zip.com.au> 
+#
+
+use strict vars;
+
+use IO::File;
+use IPC::Open2;
+
+die "Usage: $0 redirectors...\n" if ! @ARGV;
+
+## Note that the ZAP_CHAINING variable is obsolete these days.
+## - Cameron Simpson <cs@zip.com.au> 17jul2001
+##
+##$::Chaining = ( length $ENV{ZAP_CHAINING}
+##	      ? $ENV{ZAP_CHAINING} eq 'FULL'
+##		? 2
+##		: 1
+##	      : 0
+##	      );
+$::Chaining = 0;
+
+my @sub=();
+my $nsubs=0;
+
+for my $sub (@ARGV)
+{ 
+  ++$nsubs;
+
+  my $rd = "RD$nsubs";
+  my $wr = "WR$nsubs";
+  my $pid = open2($rd, $wr, $sub);
+  die "$0: can't open2($sub): $!\n" if ! defined $pid;
+
+  autoflush $wr 1;
+
+  push(@sub,[$sub,$pid,$rd,$wr]);
+}
+
+autoflush STDOUT 1;
+
+my @words;
+my $o_;
+my $redir;
+my($sub,$pid,$rd,$wr);
+
+while (defined($_=<STDIN>))
+{ chomp;
+
+  @words = split;
+  $o_ = $_;
+
+  # pass through every redirector
+  for my $s (@sub)
+  { ($sub,$pid,$rd,$wr)=@$s;
+
+    print $wr $_, "\n";
+
+    $redir=<$rd>;
+    die "$0: unexpected EOF from [$sub]" if ! defined $redir;
+    chomp($redir);
+
+    if (length($redir))
+    # redirected
+    { my @nwords=split(/\s+/,$redir);
+
+      if (@nwords == 1)
+      # plain URL
+      { $words[0]=$nwords[0];
+      }
+      else
+      # full redirector input line
+      {
+	if (@nwords != 4)
+	{ warn "$0: @words -> @nwords";
+	}
+
+	@words=@nwords;
+      }
+
+      $_="@words";
+    }
+  }
+
+  if ($::Chaining == 0)
+  # pure redirector
+  { print STDOUT (($_ eq $o_) ? '' : $words[0]), "\n";
+  }
+  elsif ($::Chaining == 1)
+  # print new URL;
+  { print STDOUT $words[0], "\n";
+  }
+  else
+  { print STDOUT $_, "\n";
+  }
+}
+
+exit 0;

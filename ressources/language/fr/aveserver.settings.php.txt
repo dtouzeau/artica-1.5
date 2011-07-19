@@ -1,0 +1,9 @@
+<ArchiveMail>Enregistrer le courrier dans des zones de quarantaines sp&eacute;cifiques</ArchiveMail>
+<aveserver_intro_global>D&eacute;finir ici les r&egrave;gles globales</aveserver_intro_global>
+<delete_mail>Supprimer ce mail</delete_mail>
+<NotifyFrom>Notifier l'exp&eacute;diteur</NotifyFrom>
+<NotifyFromAddress>Adresse de l'exp&eacute;diteur des notifications</NotifyFromAddress>
+<NotifyMessage>Message de notification</NotifyMessage>
+<NotifyMessageSubject>Sujet du message</NotifyMessageSubject>
+<NotifyTo>Notifier les destinataires</NotifyTo>
+<when_found_virus>Quand le scanner d&eacute;tecte des virus</when_found_virus>

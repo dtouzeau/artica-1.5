@@ -1,0 +1,32 @@
+<delete_all_events>Supprimer tous les &eacute;v&egrave;nements</delete_all_events>
+<emails_received>E-mails re&ccedil;us en temps r&eacute;el</emails_received>
+<error_cyrus_pbconnect>[br][b][i]Vous devez v&eacute;rifier la connexion cyrus-imap, il semble qu'elle ne fonctionne pas.</error_cyrus_pbconnect>
+<error_cyrus_pbmailbox>[br][b][i]Veuillez v&eacute;rifier cette boite aux lettres, elle a d&eacute;pass&eacute; son quota.
+[br]Augmentez son quota ou supprimez cet utilisateur[/b][/i].</error_cyrus_pbmailbox>
+<error_kasmilter_stopped>Le d&eacute;mon Kaspersky Anti-spam n'est pas d&eacute;marr&eacute;, veuillez v&eacute;rifier que le d&eacute;mon est d&eacute;marr&eacute; ou que la licence est active.</error_kasmilter_stopped>
+<error_kavmilter_licence>[br][b][i]Vous devez obtenir une nouvelle licence pour Kaspersky Antivirus pour SendMail milter.
+[br]Ou vous devez d&eacute;sactiver Kaspersky dans la section plugins de Postfix[/br][/i].</error_kavmilter_licence>
+<error_loopsbacktomyself>Il semble que l'envoi des e-mails vers internet soit relay&eacute; vers le serveur sur lequel postfix est install&eacute;. Veuillez v&eacute;rifier votre configuration.</error_loopsbacktomyself>
+<error_milter_grey_list_stopped>Le service Milter-greylist est arr&ecirc;t&eacute; ou non fonctionnel. Veuillez v&eacute;rifier votre configuration.</error_milter_grey_list_stopped>
+<error_must_create_mailbox>[br][b][i]La boite aux lettres n'a pas &eacute;t&eacute; cr&eacute;e et les e-mails seront refus&eacute;s par le serveur imap.
+[br]Vous devez cr&eacute;er un compte utilisateur ou un alias pour &eacute;viter cette erreur.[/br][/i]</error_must_create_mailbox>
+<error_relayhost>Le relais principal que vous avez d&eacute;finit dans postfix n'est pas disponible, changez-le ou v&eacute;rifier votre &quot;relais internet&quot;</error_relayhost>
+<error_routing_postfix>Postfix n'est pas autoris&eacute; &agrave; router les e-mails, veuillez v&eacute;rifier vos table de transport ...</error_routing_postfix>
+<error_routing_to>Postfix est incapable de router cet e-mail vers le serveur de destination. Veuillez v&eacute;rifier vos tables de routage.</error_routing_to>
+<graphs>Diagrammes et statistiques</graphs>
+<lines_number>Lignes maximum</lines_number>
+<monitorix>Monitorix</monitorix>
+<mysql_not_root_configured>Erreur d'acc&egrave;s &agrave; la base de donn&eacute;es MYSQL</mysql_not_root_configured>
+<mysql_not_root_configured_text>Artica indique une erreur d'acc&egrave;s, vous devez indiquer le compte correct pour mysql afin de disposer de toutes les fonctionnalit&eacute;s.[br]
+Allez dans &quot;Param&egrave;tres Globaux &gt; Base de donn&eacute;es Mysql afin de modifier le compte.</mysql_not_root_configured_text>
+<mysql_too_any_connections>Mysql indique qu'il y &agrave; trop de connections[br]red&eacute;marrez Mysql ou votre serveur.</mysql_too_any_connections>
+<notification>Erreur d&eacute;tect&eacute;e</notification>
+<postfix_mynet_not_conf>R&eacute;glages r&eacute;seaux de Postfix</postfix_mynet_not_conf>
+<postfix_mynet_not_conf_text>Vous devez indiquer vos r&eacute;glages r&eacute;seaux pour que Postfix soit op&eacute;rationnel.[br]
+S&eacute;lectionner R&eacute;glages r&eacute;seaux de Postfix dans le panneau de droite.</postfix_mynet_not_conf_text>
+<service>Nom de l'application</service>
+<smtp_notification_not_saved>Les notifications par e-mail ne sont pas configur&eacute;es</smtp_notification_not_saved>
+<smtp_notification_not_saved_text>Il est n&eacute;cessaire d'&ecirc;tre inform&eacute; de l'ex&eacute;cution des t&acirc;ches de maintenance.[br]
+V&eacute;rifiez les param&egrave;tres de notification afin de recevoir ces informations par e-mail.</smtp_notification_not_saved_text>
+<too_many_lines_exceed>Trop de lignes :</too_many_lines_exceed>
+<warnings>Avertissements</warnings>

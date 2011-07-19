@@ -1,0 +1,35 @@
+<add_pop3_imap_text>In order to enable POP3/IMAP access for this user, 
+you must set mailbox password. 
+Give the password for this user</add_pop3_imap_text>
+<ARRAY_TITLE>LOCAL DOMAINS</ARRAY_TITLE>
+<bt_add_domain>Add a new domain</bt_add_domain>
+<edit_pop3_imap_text>If you want to edit this user,
+you must set the password for this user
+Set the new or old password</edit_pop3_imap_text>
+<ERROR_CANNOT_ADD_TRANSPORT_EXISTS><div class="error">
+You have already set a rule for this domain to relay all emails to an another mail server.<br>
+In this case, you are not allowed to add alias/domain/Mailbox system.</ERROR_CANNOT_ADD_TRANSPORT_EXISTS>
+<ERROR_CANNOT_ADD_TRANSPORT_EXISTS>Are you sure to remove this transport rule?
+aliases generated for this domain will be removed too</ERROR_CANNOT_ADD_TRANSPORT_EXISTS>
+<expand_domain>ADDRESS</expand_domain>
+<expand_domain_goto>&nbsp;</expand_domain_goto>
+<expand_domain_mailbox>IMAP/POP3</expand_domain_mailbox>
+<expand_domain_object>OBJECTS</expand_domain_object>
+<expand_domain_target>GO TO</expand_domain_target>
+<js_add_user>Add a user mailboxes - redirection</js_add_user>
+<js_del_alias>Delete this alias rule</js_del_alias>
+<js_del_domain>Delete the domain and aliases</js_del_domain>
+<js_del_transport>Delete this transport target</js_del_transport>
+<js_edit_alias>Edit this alias rule</js_edit_alias>
+<js_edit_mailbox_storage>Add/edit Mailbox storage</js_edit_mailbox_storage>
+<js_edit_transport>Edit the transport target for this domain</js_edit_transport>
+<js_expand_domain>Expand this domain to view settings</js_expand_domain>
+<PAGE_TEXT>This area is designed to manage local domains of your network. These domains store your mailboxes or local emails</PAGE_TEXT>
+<title>Manage Mailboxes and domains</title>
+<xdelete_alias_text>Are you sure to remove this alias rule? 
+mailbox will be not deleted but the Postfix mail system will be no able to transfert emails for this alias</xdelete_alias_text>
+<xdelete_domain_text>Are tou sure to remove this domain ? 
+aliases and/or transport generated for this domain will be removed too
+mailboxes will not remove</xdelete_domain_text>
+<xdelete_transport_text>Are you sure to remove this transport rule?
+aliases generated for this domain will be removed too</xdelete_transport_text>

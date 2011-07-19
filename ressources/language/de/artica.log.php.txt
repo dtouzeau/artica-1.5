@@ -1,0 +1,2 @@
+<text>Diese Seite zeigt Ihnen alle 10 Sekunden Ereignisse, die vom Postfix Mailsystem erstellt wurden.</text>
+<title>Artica-PostFix Events</title>

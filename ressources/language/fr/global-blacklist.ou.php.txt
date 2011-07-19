@@ -1,0 +1,3 @@
+<add_b_dom>Ajouter un domaine blacklist&eacute;</add_b_dom>
+<blk_ressources>http://www.joewein.net/dbl-update/</blk_ressources>
+<import_black_domain_table>Importer les blacklists artica</import_black_domain_table>

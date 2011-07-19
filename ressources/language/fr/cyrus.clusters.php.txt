@@ -1,0 +1,26 @@
+<already_a_master>Ce serveur est d&eacute;j&agrave; un ma&icirc;tre</already_a_master>
+<already_a_murder_frontend>Le serveur distant est un agr&eacute;gateur IMAP frontal, ce n'est pas compatible</already_a_murder_frontend>
+<CyrusClusterID_TEXT>[b]Universally Unique Identifiers (UUIDs)[/b][br][b]Indiquez un chiffre unique qui commence par 1 &agrave; 255[/b]
+Ceci,permettant d'activer les UUIDs des messages.[br]
+L'utilisation des UUIDs am&eacute;liore l'&eacute;fficacit&eacute; en &eacute;liminant les r&eacute;plications des messages que le r&eacute;pliqua &agrave; d&eacute;j&agrave; effectu&eacute; depuis le ma&icirc;tre.</CyrusClusterID_TEXT>
+<CYRUS_AS_REPLICA_EXPLAIN>Ce serveur &agrave; &eacute;t&eacute; d&eacute;fini en tant que r&eacute;plica.[br]
+Afin de d&eacute;sactiver cette fonctionnalit&eacute;, vous avez besoin d'envoyer un ordre depuis le serveur Ma&icirc;tre de d&eacute;sactiver ce r&eacute;plica.</CYRUS_AS_REPLICA_EXPLAIN>
+<CYRUS_CLUSTER>Bo&icirc;tes aux lettres en Cluster</CYRUS_CLUSTER>
+<CYRUS_CLUSTER_EXPLAIN>Le moteur de r&eacute;plication de Cyrus est con&ccedil;u pour reproduire le mailstore sur un
+serveurs Cyrus autonome ou un serveur &laquo;backend&raquo; dans un Cyrus Murder pour fournir un environnement de haute disponibilit&eacute;.</CYRUS_CLUSTER_EXPLAIN>
+<CYRUS_CLUSTER_TEXT>Construisez un cluster cyrus-imap afin de ne pas perdre vos donn&eacute;es de bo&icirc;tes aux lettres</CYRUS_CLUSTER_TEXT>
+<DISABLE_REPLICA>D&eacute;sactivez ce r&eacute;pliqua</DISABLE_REPLICA>
+<DISABLE_REPLICA_TEXT>Envoyer l'ordre &agrave; ce r&eacute;plica de d&eacute;sactiver le mode cluster.</DISABLE_REPLICA_TEXT>
+<ENABLE_CYRUS_CLUSTER_MASTER>Activer ce serveur en tant que ma&icirc;tre</ENABLE_CYRUS_CLUSTER_MASTER>
+<ENABLE_CYRUS_CLUSTER_MASTER_TEXT>Si vous activez cette fonctionnalit&eacute;, ce serveur sera le serveur ma&icirc;tre[br]Il sera en mesure d'ordonner &agrave; un autre serveur d'&ecirc;tre un &quot;r&eacute;plica&quot; et effectuera les r&eacute;plications de vos bo&icirc;tes aux lettres. C'est entendu que cette configuration est un cluster actif/passif.</ENABLE_CYRUS_CLUSTER_MASTER_TEXT>
+<listen_cluster_port>Pour d'&eacute;coute du cluster</listen_cluster_port>
+<master_server_cluster>Nom du seveur Ma&icirc;tre</master_server_cluster>
+<NO_NOTIFY_REPLICA_NO_ADRESS_SPECIFIED>Impossible de notifier le r&eacute;pliqua, l'adresse du r&eacute;pliqua n'a pas &eacute;t&eacute; d&eacute;finie.</NO_NOTIFY_REPLICA_NO_ADRESS_SPECIFIED>
+<REPLICATE_YOUR_MAILBOXES>R&eacute;plication des bo&icirc;tes aux lettres manuel</REPLICATE_YOUR_MAILBOXES>
+<REPLICATE_YOUR_MAILBOXES_TEXT>Par d&eacute;faut, cette op&eacute;rations est automatique. Cela cale le mode de r&eacute;plication</REPLICATE_YOUR_MAILBOXES_TEXT>
+<replica_ip>Nom/Adresse IP du r&eacute;pliqua</replica_ip>
+<replica_master_ip>Nom/IP du serveur</replica_master_ip>
+<SET_REPLICA_SERVER>D&eacute;finissez votre serveur r&eacute;pliqua</SET_REPLICA_SERVER>
+<SET_REPLICA_SERVER_EXPLAIN>Cette op&eacute;ration va notifier le serveur Artica distant afin qu'il devienne un r&eacute;pliqua des boites aux lettres</SET_REPLICA_SERVER_EXPLAIN>
+<SET_REPLICA_SERVER_TEXT>Le serveur r&eacute;pliqua est autoriser &agrave; &eacute;couter et accepter les ordres de synchronisation du serveur ma&icirc;tre</SET_REPLICA_SERVER_TEXT>
+<sync_tools_not_compiled>Les composant sync_client et sync_server ne sont pas install&eacute;s, mettez &agrave; jour l'installation de cyrus-imap &agrave; travers le Centre de contr&ocirc;le d'Applications et de disposer de cette fontionnalit&eacute;</sync_tools_not_compiled>

@@ -1,0 +1,165 @@
+html{
+background:transparent url('../css/images/bg_header.gif') repeat-x scroll -5px -8px;
+}
+
+body{
+	
+	font: 13px 'Helvetica', 'Tahoma', 'Verdana', sans-serif;
+	padding-left:50px;
+	padding-right:50px;
+	padding-top:90px;
+	background:transparent url('../css/images/logo.gif') no-repeat scroll -1px 47px;
+	border-right:1px solid #CCCCCC;
+	border-bottom:1px solid #CCCCCC;
+
+}
+
+
+
+.main{
+	background-color: #CCCCCC;
+	padding:2px;
+	margin:2px;
+}
+
+td.breadcrumb{
+	background-color: #E5E5E5;
+	color: #000000;
+	font-family: helvetica,sans-serif;
+	font-size: 9pt;
+	font-weight: bold;
+}
+
+tr.active{
+	background-color: #FFFFFF;
+}
+
+tr.active-mover{
+	background-color: #e5e5e5;
+}
+
+tr.inactive{
+	background-color: #ededed;
+}
+
+tr.inactive-mover{
+	background-color: #c5c5c5;
+}
+
+tr.menuouter{
+	background-color: #000000;
+}
+
+tr.menu{
+	background-color: #E5E5E5;
+}
+
+tr.menu table tr td{
+	font-family: helvetica,sans-serif;
+	font-size: 8pt;
+	text-align: center;
+	vertical-align: middle;
+}
+
+tr.menu a{
+	font-size: 8pt;
+	padding: 5px;
+}
+
+a.summary{
+	font-size: 12px;
+	font-weight:bold;
+}
+
+td.heading{
+	font-size: 16px;
+
+}
+
+.heading{
+	background-color: #E5E5E5;
+	color: #005447;
+	font-family: verdana,helvetica,sans-serif;
+	font-weight: bold;
+}
+
+th{
+	background-color: #e5e5e5;
+	color: #444466;
+	font-family: verdana,helvetica,sans-serif;
+	font-size: 9pt;
+	font-weight: bold;
+}
+
+td{
+	font-family: helvetica,sans-serif;
+	vertical-align: top;
+	font-size:12px;
+}
+
+tr.errors{
+	background-color: #e5e5e5;
+	color: #FF0000;
+	font-family: helvetica,sans-serif;
+	font-size: 9pt;
+}
+
+tr.messages{
+	background-color: #e5e5e5;
+	color: #000000;
+	font-family: helvetica,sans-serif;
+	font-size: 9pt;
+}
+
+.welcome{
+	background-color: #b5b5b5;
+	color: #000000;
+	font-family: helvetica,sans-serif;
+	font-size: 9pt;
+	font-weight: bold;
+}
+
+.options{
+	color: #0000FF;
+	font-family: helvetica,sans-serif;
+	font-size: 9pt;
+}
+
+textarea{
+	background-color: #FFFFFF;
+	border: #b5b5b5 1px solid;
+	color: #000000;
+	font-family: helvetica,sans-serif;
+	font-size: 8pt;
+	font-weight: normal;
+	width: 100%;
+	height: 200px;
+}
+
+textarea.direct{
+	height: 400px;
+}
+
+textarea.custom{
+	height: 200px;
+}
+
+input.text{
+	height: 25px;
+}
+
+input.position{
+	width: 25px;
+	height: 25px;
+}
+
+select{
+	background-color: #FFFFFF;
+	border: #b5b5b5 1px solid;
+	color: #000000;
+	font-family: helvetica,sans-serif;
+	font-size: 8pt;
+	font-weight: normal;
+	height: 22px;
+}
+

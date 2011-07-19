@@ -1,0 +1,175 @@
+2007 Jul 07:
+- remis post_ul_ftp et post_dl_ftp en post_ul et post_dl
+- Host correctement positionné dans les requêtes http
+- User-Agent positionné comme spécifié
+
+2007 Jun 24:
+- renommé post_dl en post_dl_ftp et post_ul en post_ul_ftp
+
+2007 Mar 29:
+- By default no fifo file is created
+
+2005 Nov 28:
+- Camlgrenouille now says hello and get the config at the alternate server
+
+2005 Nov 27:
+- The fifo pipe is no created in /tmp instead of the current directory
+- Options for an alternate testing server
+- Some code beautifying and refactoring
+- v1.27
+
+2005 Nov 18:
+- test if dl_path ends with a '/', if so, do not add it when creating the path
+to the file to download. 
+- v1.26
+
+2005 Aug 02:
+- Beginning of an interface to the outside world (using USR1 signals)
+
+2005 May 20:
+- added "grenouille_file" option to set the php interface to talk to (defaults
+to "/interface.php"
+
+2005 May 18:
+- We now follow the following rules:
+1) Je récupère la conf,
+- je regarde le temps minimal entre 2 mesures (T_MIN) (que ca soit
+ping/ul/dl)
+- je fait une pause de 0 a 10% de T_MIN
+Cela évite que 5000 client après avoir recup la conf innonde le serveur de
+mesure
+
+2) La grenouille peut pas se connecter pour la Nieme fois
+- Je fait une pause de N*0.2*T_MIN
+Si N > 5 alors N=5
+
+Et si jamais la grenouille ne connaît pas T_MIN alors pause de N*2+5
+minutes, avec N>15 -> N=15
+
+- v1.25 for OS X and v1.13 for Linux released
+
+2005 May 15:
+- ftp protocol better respected (now accept 230 after USER request)
+- v1.24 for OS X and v1.12 for Linux released
+
+2005 February 23:
+- v1.23 for Mac OS X with detailed installation instructions in French
+
+2005 February 22:
+- added "detect_router" option that defaults to false
+- router detection is now only done if asked
+- v1.11
+
+2004 November 30:
+- added "grenouille_server" and "grenouille_port" configuration options to specify what server is used
+
+2004 September 23:
+- added option "-at" that prints the time of next event
+
+2004 September 17:
+- Now prints the quality of the tested feature as returned by the serveur 
+(from 1, very bad test, to 5, very good test)
+
+2004 February 20:
+  -t now prints the time in a nicer way: YYYY/MM/DD-HH:MM:SS
+  -t now tells at what time the next event will occur
+
+2003 August 27: only call a plugin once to get the upload and download stats
+
+2003 August 04: changed the version comparison function, silently releasing 
+     1.10 again
+
+2003 July 19: added SpeedTouch plugin, better handling of non-passive ftp, 
+     v1.10
+
+2003 March 24: tree cleanup, v1.09
+
+2003 March 22: more merge, initial plugin infrastructure in place
+
+2003 March 1: merge with OSX code:
+  - do not fail when server message is misunderstood
+
+2002 December 11: now test if recent successful download before testing ping
+
+2002 February 21 : small problem with spaces while testing breakdown
+
+2002 February 20 : cleaner handling of ping failure / ping freeze
+
+2002 February 16 : added a 60 seconds timeout when testing ping; by default,
+ping_string is now set to false
+
+2002 January 13 : v1.08
+
+2001 November 12 : compiled against new version of cdk to provide more
+debugging output when logging in ftp servers.
+
+2001 October 14 : file created for testing upload is now created in /tmp.
+
+2001 September 19 : solved some problem with cdk and shared library, the
+binary version now comes with the needed libraries. v1.07
+
+2001 September 18 : cleaned error handling when getting configuration values
+to deal with upload problems. v1.06
+
+2001 August 06 : new option for the config file: ftp_password. When set to
+some chain, the email address is used when connecting as anonymous to the ftp
+password, instead of the one that is guessed using the username, hostname and
+domainname.
+
+2001 June 18 : new options for the config file: set testdl, testul,
+testping, testbk to anything other than true to disable their
+testing. v1.05
+
+2001 June 14 : synced with current cdk ftp module, don't crash when
+config file has empty lines
+
+2001 May 16 : new option '-t', prints date and time for each output
+
+2001 Mar 31 : more abstraction work for move to cdk
+
+2001 Mar 29 : better determination of local ip address using
+getsockname, start abstraction of the ftp client to move it as a Caml
+Development Kit library
+
+2001 Mar 16 : bug on some config when doing ping, to fetch the results
+back. v1.04
+
+2001 Mar 07 : added new feature: you can specify external commands to
+run when a test succeed (see the README for more information). v1.03
+
+2001 Mar 04 : removed bug that could leave some opened connections.
+
+2001 Mar 02 : updated the README for bug reports, v1.02
+
+2001 Mar 01 : removed stupid bug when doing timed operations made the
+program quit sometimes (forgot to remove a timer when an exception
+occured).
+
+2001 Feb 19 : starts testing even if cannot get last version number on
+grenouille.com.
+
+2001 Feb 17 : fixed a bug that stopped testing download or upload when
+could not connect to ftp; v1.01
+
+2001 Feb 16 : better error handling avoiding throwing away good
+results; reports new version when available at program start; v1.00
+
+2001 Feb 14 : removed a file descriptor leak when sending results;
+v0.9.99 beta 7
+
+2001 Feb 13 : default output if much cleaner, use -d to get verbose
+debug output and -q for no output at all; deal better with trailing
+spaces in the configuration file; v 0.9.99 beta 6
+
+2001 Feb 12 : ping result acquisition cleaner to deal with the Redhat
+7.0 ping command; removed many file descriptor leaks; v 0.9.99 beta 5
+
+2001 Feb 12 : implemented passive ftp; added -f option to specify
+configuration file; v 0.9.99 beta 4
+
+2001 Feb 07 : One more attempt to solve too high bandwidth problems,
+making a distinction between uploads and downloads; v 0.9.99 beta 3
+
+2001 Feb 07 : Try to solve too high bandwidth results; v 0.9.99 beta 2
+
+2001 Feb 05 : First public release; v 0.9.99 beta 1.

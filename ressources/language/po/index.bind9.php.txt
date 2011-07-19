@@ -1,0 +1,76 @@
+<AddNewDnsReverseZone>To create the reverse Zone, give the first IP address of your DNS Domain
+For example: 192.168.1.1 or 10.10.10.1 or 192.168.0.1...
+</AddNewDnsReverseZone>
+<AddNewDnsZone_explain>Give here the domain that will be added after your computer names
+for example :
+if you set "domain.tld", your computer "computer" will be "computer.domain.tld"
+</AddNewDnsZone_explain>
+<add_forwarder>Add a new DNS</add_forwarder>
+<add_new_zone>Add a new Zone</add_new_zone>
+<add_new_zone_tex>Add a new net domain zone in order to query in DNS your computer has "computer.*.*"</add_new_zone_tex>
+<computers>computers</computers>
+<config>Configuration file</config>
+<dns_zones>DNS Zones</dns_zones>
+<expire_time_text>Time that wait DNS servers before reject zones datas if the Primary server is no longer available</expire_time_text>
+<forward>forward zone</forward>
+<forwarders>Public DNS</forwarders>
+<forwarders_text>Specify here the Public DNS (Your FAI Dns servers) used to query DNS</forwarders_text>
+<forwarder_add>Give the IP address of your Public ISP DNS</forwarder_add>
+<forward_text>
+A "forward zone" is a way to configure forwarding on a per-domain basis.[br]
+A zone statement of type forward can contain a forward and/or forwarders statement,
+which will apply to queries within the domain given by the zone name.[br]
+If no forwarders statement is present or an empty list for forwarders is given, then no forwarding will be done for the domain,
+canceling the effects of any forwarders in the options statement.[br]
+Thus if you want to use this type of zone to change the behavior of the global forward option
+(that is, "forward first to", then "forward only", or vice versa, but want to use the same servers as set globally) you need to respecify the global forwarders.
+</forward_text>
+<global_directory>Working directory</global_directory>
+<global_settings>Global settings</global_settings>
+<hint>Hint zone</hint>
+<hint_text>
+The initial set of root nameservers is specified using a "hint zone".[br]
+When the server starts up, it uses the root hints to find a root nameserver and get the most recent list of root nameservers.[br]
+If no hint zone is specified for class IN, the server uses a compiled-in default set of root servers hints.[br]
+Classes other than IN have no built-in defaults hints.
+</hint_text>
+<Hostmaster_email>email of the postmaster of this server</Hostmaster_email>
+<Hostmaster_email_text>Wich email address we can use to contact this zone administrator</Hostmaster_email_text>
+<hosts>Hosts</hosts>
+<master>Authoritative answers</master>
+<master_text>The server has a master copy of the data for the zone and will be able to provide authoritative answers for it.</master_text>
+<minimal_ttl>Minimal Time To Live</minimal_ttl>
+<minimal_ttl_text>Minimal time that records are cached before deleted to refresh them</minimal_ttl_text>
+<PrimaryServerName>Primary server name</PrimaryServerName>
+<PrimaryServerName_text>The fqdn name of the server that serve queries</PrimaryServerName_text>
+<refresh_time>Refresh Time</refresh_time>
+<refresh_time_text>Time that wait DNS servers before verify or update the primary server SOA record</refresh_time_text>
+<retry_time>Retry time</retry_time>
+<retry_time_text>Expire time</retry_time_text>
+<retry_time_text>Expire time</retry_time_text>
+<search_computer>Search hosts</search_computer>
+<search_computer_text>Query the database in order to find computers/hosts</search_computer_text>
+<search_explain>You can find a computer by giving the IP address or the computer name in your Dns Zone,
+star caracter (*) is supported.
+if you want to query all computers in all DNS Zones, type your pattern and "all" word after
+Example : PC-10* all
+</search_explain>
+<slave>slave</slave>
+<slave_text>A slave zone is a replica of a master zone.[br]
+The masters list specifies one or more IP addresses of master servers that the slave contacts to update its copy of the zone.[br]
+By default, transfers are made from port 53 on the servers;[br]
+this can be changed for all servers by specifying a port number before the list of IP addresses, or on a per-server basis after the IP address.[br]
+Authentication to the master can also be done with per-server TSIG keys.[br]
+If a file is specified, then the replica will be written to this file whenever the zone is changed, and reloaded from this file on a server restart.[br]
+</slave_text>
+<stub>stub</stub>
+<stub_text>A stub zone is similar to a slave zone, except that it replicates only the NS records of a master zone instead of the entire zone.[br]
+Stub zones are not a standard part of the DNS;[br]
+they are a feature specific to the BIND implementation.[br]
+Stub zones can be used to eliminate the need for glue NS record in a parent zone at the expense of maintaining a
+stub zone entry and a set of name server addresses in global settings.[br]
+This usage is not recommended for new configurations, and BIND 9 supports it only in a limited way.</stub_text>
+<ttl>Time to Live</ttl>
+<ttl_text>The Time To Libe describes how long a record can be cached before it should be discarded.</ttl_text>
+<zone>Zona</zone>
+<ZoneDeleteWarning>Confirma que pretende eliminar esta zona?</ZoneDeleteWarning>

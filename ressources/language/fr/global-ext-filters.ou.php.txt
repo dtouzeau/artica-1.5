@@ -1,0 +1,37 @@
+<add_attachment_group_text>Donnez le nom de votre groupe d'attachement</add_attachment_group_text>
+<add_attachment_text>Ajoutez votre liste d'extension interdites s&eacute;par&eacute; par une virgule</add_attachment_text>
+<add_attach_group>Ajoutez un groupe d'attachement</add_attach_group>
+<add_a_new_block_ext>Ajoutez une nouvelle extension &agrave; interdire</add_a_new_block_ext>
+<add_default_dangerous_extensions>Ajoutez une liste d'extensions dangereuses pr&eacute;d&eacute;finies</add_default_dangerous_extensions>
+<add_subject>Ajouter un texte au sujet (si n&eacute;cessaire)</add_subject>
+<add_subject_text>Ajouter un texte si une pi&egrave;ce jointe est filtr&eacute;e.[br]
+Ceci est la priorit&eacute; la plus basse et est utilis&eacute; uniquement si l'option pr&eacute;c&eacute;dente &quot;Ajouter du texte au sujet (xxx)&quot; n'est pas d&eacute;finie.</add_subject_text>
+<attachments_explain>Cette section vous permet d'ajouter les groupes de pi&egrave;ces jointes refus&eacute;es.[br]
+Ces groupes seront ajout&eacute;s &agrave; un groupe d'utilisateurs ou un compte sp&eacute;cifique.[br]
+Les messages &eacute;lectronique qui contiendront des pi&egrave;ces jointes refus&eacute;es peuvent &ecirc;tre effac&eacute;s ou mis en quarantaine.</attachments_explain>
+<delete_default_dangerous_extensions>Effacer la liste pr&eacute;definie des extensions dangereuses</delete_default_dangerous_extensions>
+<filters_list>Listes de Filtres</filters_list>
+<groupslisttext>Voici la liste de tout les groupes d'utilisateurs qui utilisent cette politique de pi&egrave;ce jointes</groupslisttext>
+<notifications>Param&egrave;tres de notifications</notifications>
+<search_zip>Recherchez des noms de fichiers avec ZIP</search_zip>
+<search_zip_text>Recherche de noms de fichiers dans les archives ZIP en utilisant l'analyse interne ZIP [br] Tous les fichiers trouv&eacute;s sont soumis aux m&ecirc;mes v&eacute;rifications, pour ce qui est des pi&egrave;ces jointes Interdite par exemple ou d'une liste correcte, avec la notable diff&eacute;rence que l'action de renommage n'a aucun effet sur les fichiers ZIP. [br]
+Cela est d&ucirc; &agrave; une lacune dans cette version du filtre. Lorsque le fichier ZIP est d&eacute;cod&eacute;, il est trop tard pour renommer la pi&egrave;ce jointe.
+[br] Seuls les actions supprimer ou de tuer le processus vont modifier des fichiers ZIP. [br]
+Pour que rechercher zip  ait un effet, vous devez:
+Utiliser le mode pi&egrave;ce jointe interdite et pr&eacute;ciser dans Interdire le pi&egrave;ces jointes les actions supprimer ou tuer pour s&eacute;lectionner les extensions.</search_zip_text>
+<subj_deleted>Ajouter du texte au sujet (supprim&eacute;s)</subj_deleted>
+<subj_deleted_text>Ajouter du texte dans Objet si une pi&egrave;ce jointe est supprim&eacute; pour une raison quelconque.
+Non d&eacute;fini par d&eacute;faut, donc &quot;renattach&quot; &eacute;choue jusqu'&agrave; la prochaine directive valable pour, &eacute;ventuellement, ajouter un objet</subj_deleted_text>
+<subj_renamed>Ajouter du texte au sujet (renomm&eacute;s)</subj_renamed>
+<subj_renamed_text>Ajouter du texte &agrave; Objet si une pi&egrave;ce est renomm&eacute; pour une raison quelconque. [br]
+Non d&eacute;fini par d&eacute;faut, donc &quot;renattach&quot; &eacute;choue &agrave; ajouter un objet.</subj_renamed_text>
+<users_groups_list>Liste des groupe d'utilisateurs</users_groups_list>
+<warning_html>Message de notification en Html</warning_html>
+<warning_html_text>Ins&egrave;re un message d'avertissement dans les portions HTML de l'e-mail lorsqu'un filtrage se produit. Le code HTML est ins&eacute;r&eacute; dans un endroit d&eacute;termin&eacute;e par
+htmlwarn_pos (voir ci-dessus) qui fournit un bon espoir pour l'ajout d'un
+avertissement visible. Malheureusement, l'inserer du HTML arbitrairement est d&eacute;licat en raison de la complexit&eacute; des interactions des balises. L'insertion d'alertes en HTML
+peut r&eacute;ellement perturber le message d'origine, &agrave; utiliser, donc, avec prudence</warning_html_text>
+<warning_text>Notification sur le corps du texte</warning_text>
+<warning_text_text>Si une pi&egrave;ce jointe est filtr&eacute;, cela vous permet de sp&eacute;cifier un texte d'avertissement qui
+sera ins&eacute;r&eacute; dans n'importe quelle(s) partie(s) du texte de l'e-mail. [br] Ceci est efficace pour informer les utilisateurs concernant fichiers filtr&eacute;s, mais l'insertion
+ arbitraire de texte dans un courrier &eacute;lectronique peut entrainer de nouveaux probl&egrave;mes. [br] &Agrave; utiliser avec prudence.</warning_text_text>

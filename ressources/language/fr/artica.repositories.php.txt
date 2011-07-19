@@ -1,0 +1,23 @@
+<apply_uninstall>Lancer les op&eacute;rations</apply_uninstall>
+<apply_uninstall_help>Cette op&eacute;ration ex&eacute;cutera la d&eacute;sinstallation/installation dans votre syst&egrave;me, vous verrez les logs des processus dans la section &quot;&eacute;v&eacute;nements&quot;</apply_uninstall_help>
+<apply_uninstall_text>Processus de lancement de paquets choisis</apply_uninstall_text>
+<installed_on_system>Paquets install&eacute;s sur ce syst&egrave;me</installed_on_system>
+<installed_package>Ce paquet est install&eacute;</installed_package>
+<install_text>Installer ce paquet sur votre syst&egrave;me</install_text>
+<more_one_car>Requ&ecirc;te d&eacute;marrant &agrave; 1 caract&egrave;re</more_one_car>
+<num_packages_installed>Nombre de paquets</num_packages_installed>
+<packages_list>Liste des paquets</packages_list>
+<package_name>Nom du paquet</package_name>
+<removed_package>Ce paquet a &eacute;t&eacute; supprim&eacute;</removed_package>
+<repositories_manager>Gestionnaire de d&eacute;p&ocirc;ts</repositories_manager>
+<repositories_manager_explain>Cette section vous permet de mettre &agrave; jour et maintenir votre syst&egrave;me. Vous pouvez v&eacute;rifier les applications install&eacute;es et installer de nouvelles</repositories_manager_explain>
+<rollback_install>Annuler le processus d'installation</rollback_install>
+<rollback_install_text>Ne pas marquer ce paquet comme devant &ecirc;tre install&eacute;</rollback_install_text>
+<rollback_uninstall>Annuler le processus de d&eacute;sinstallation</rollback_uninstall>
+<rollback_uninstall_text>D&eacute;sactiver le processus de d&eacute;sinstallation de ce paquet</rollback_uninstall_text>
+<to_be_installed>Ce paquet est marqu&eacute; comme &eacute;tant &agrave; installer</to_be_installed>
+<to_be_uninstalled>A d&eacute;sinstaller</to_be_uninstalled>
+<to_install_on_system>Paquets qui peuvent &ecirc;tre install&eacute;s sur ce syst&egrave;me</to_install_on_system>
+<uninstall>d&eacute;sinstaller</uninstall>
+<uninstall_packages_list>Op&eacute;rations de la liste des paquets</uninstall_packages_list>
+<uninstall_text>D&eacute;sinstaller cette application et ce paquet de votre syst&egrave;me</uninstall_text>

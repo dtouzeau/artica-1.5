@@ -1,0 +1,11 @@
+<WIZARD_COMPILE>Enregistrez vos param&egrave;tres</WIZARD_COMPILE>
+<WIZARD_COMPILE_EXPLAIN>V&eacute;rifiez vos param&egrave;tres.[br]Si ils sont corrects, cliquez sur le bouton &quot;Enregistrez vos param&egrave;tres&quot; afin de les mettre en mode production.</WIZARD_COMPILE_EXPLAIN>
+<WIZARD_HTTPD_ENGINE_RETRANS_EXPLAIN>La fourniture des mises &agrave; jour requi&egrave;re HTTP/FTP ou SMB, la meilleur m&eacute;thode est de fournir un moteur HTTP.[br]
+Artica peut le faire pour vous.[br]Vous aurez seulement &agrave; d&eacute;finir le chemin web de mise &agrave; jour dans les produits Kaspersky.</WIZARD_HTTPD_ENGINE_RETRANS_EXPLAIN>
+<WIZARD_RETRANSLATOR_CHOOSE_COMPONENTS>Choisissez les produits Kaspersky</WIZARD_RETRANSLATOR_CHOOSE_COMPONENTS>
+<WIZARD_RETRANSLATOR_CHOOSE_COMPONENTS_EXPLAIN>Vous allez trouver ici 3 produits de la famille des produits Kaspersky.[br]
+[b]Kaspersky For Windows Workstation[/b] Va construire un serveur de mise &agrave; jour pour la protection des stations de travail.[br]
+[b]Kaspersky administration KIT[/b] C'est l'un des plus grosse mise &agrave; jour car elle contient tous les produits Kaspersky administr&eacute;s par cette console globale de management.[br]
+[b]Kaspersky Unix gateways[/b] Est seulement pour les produits unix utilis&eacute;s au sein d'Artica afin de prot&eacute;ger la messagerie et le proxy.[br]</WIZARD_RETRANSLATOR_CHOOSE_COMPONENTS_EXPLAIN>
+<WIZARD_RETRANSLATOR_EXPLAIN>Cet assistant va vous aider &agrave; d&eacute;finir quel composant vous avez besoin de d&eacute;finir ainsi que les services web pour fournir les mises &agrave; jour.</WIZARD_RETRANSLATOR_EXPLAIN>
+<WIZARD_RETRANSLATOR_WELCOME>Bienvenue dans l'assistant pour le retranslateur.</WIZARD_RETRANSLATOR_WELCOME>

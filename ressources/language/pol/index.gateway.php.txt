@@ -1,0 +1,20 @@
+<APP_DHCP_EVENTS>DHCPD server events</APP_DHCP_EVENTS>
+<APP_DHCP_EVENTS_TEXT>Display realtime events of your DHCP server</APP_DHCP_EVENTS_TEXT>
+<ARTICA_AS_GATEWAY>Artica has a gateway</ARTICA_AS_GATEWAY>
+<ARTICA_AS_GATEWAY_EXPLAIN>If you set to green, Artica will server DHCP server, DNS, proxy,connections has a real gateway</ARTICA_AS_GATEWAY_EXPLAIN>
+<ARTICA_AS_GATEWAY_TEXT>Define if artica will be your gateway or not</ARTICA_AS_GATEWAY_TEXT>
+<conf>Main configuration File</conf>
+<ddns_domainname>Internal Domain</ddns_domainname>
+<EnableArticaAsDNSFirst>Set Artica has First DNS</EnableArticaAsDNSFirst>
+<EnableArticaAsDNSFirst_explain>If you turn to green, Artica will serve hostname resolution with the DHCP server.[br]It is usefull to resolve easly hostnames serves by the DHCP server</EnableArticaAsDNSFirst_explain>
+<EnableDHCPServer>Enable DHCP service</EnableDHCPServer>
+<EnablePXEDHCP>Enable DHCP Preboot Execution Environment</EnablePXEDHCP>
+<fixedHosts>Fixed hosts</fixedHosts>
+<max_lease_time>Max Lease Time</max_lease_time>
+<max_lease_time_text>Time should be the maximum length in seconds that will be assigned to a lease.[br]
+The only exception to this is that Dynamic BOOTP lease lengths,  which  are not specified by the client, are not limited by this maximum.</max_lease_time_text>
+<PXE>Preboot Execution Environment</PXE>
+<PXE_DHCP_MINI_TEXT>Serve IP addresses to your computers helping them running PXE from an another point</PXE_DHCP_MINI_TEXT>
+<pxe_file>PXE boot file name</pxe_file>
+<pxe_server>PXE server address</pxe_server>
+<range>IP Range</range>

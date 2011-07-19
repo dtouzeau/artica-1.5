@@ -1,0 +1,4 @@
+<sender_user_explain>Ici vous &ecirc;tes en mesure de transformer l'adresse originale de votre boite aux lettre locale en une autre lorsque les courriers doivent partir sur Internet.[br]
+Vous pouvez aussi indiquer un serveur de messagerie qui sera en charge de transf&eacute;rer vos messages sur Internet[br]
+Indiquez alors les param&egrave;tres d'authentification d'&eacute;mission &agrave; ce serveur si n&eacute;cessaire.</sender_user_explain>
+<smtp_internet_relay_option>Param&egrave;tres du serveur email de transmission</smtp_internet_relay_option>

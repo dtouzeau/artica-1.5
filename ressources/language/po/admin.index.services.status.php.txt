@@ -1,0 +1,10 @@
+<artica_services>Servi&ccedil;os principais do Artica (Artica Core)</artica_services>
+<mail_services>Servi&ccedil;os de Caixa de Correio (Mailbox)</mail_services>
+<postfix_services>Servi&ccedil;os de SMTP Postfix</postfix_services>
+<samba_services>Servi&ccedil;os do Samba</samba_services>
+<services_status_text>Isto &eacute; uma vis&atilde;o geral de todas as aplica&ccedil;&otilde;es do seu sistema.[br]Nome da aplica&ccedil;&atilde;o, Memoria usada pelo processo principal (VmRSS) e todos os sub-processos utilizados pelo PID principal, a vers&atilde;o principal e o estado de execu&ccedil;&atilde;o.</services_status_text>
+<squid_services>Servi&ccedil;os do Squid</squid_services>
+<start>Iniciar</start>
+<start_this_service>[H5]Inicie este servi&ccedil;o[/H5]Clique na imagem redonda[br] para iniciar o servi&ccedil;o.</start_this_service>
+<stop>Parar</stop>
+<stop_this_service>[H5]Pare este servi&ccedil;o[/H5]Clique na imagem redonda[br] para parar o servi&ccedil;o.</stop_this_service>

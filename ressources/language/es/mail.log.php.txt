@@ -1,0 +1,2 @@
+<text>Esta pagina mostrara todos los eventos de 10 segundos generados por el sistema de correo Postfix.</text>
+<title>Eventos PostFix</title>

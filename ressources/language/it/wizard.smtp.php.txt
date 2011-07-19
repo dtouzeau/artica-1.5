@@ -1,0 +1,16 @@
+<company>Nome societ&agrave;</company>
+<company_domain>Dare qui il nome della vostra organizzazione e il nome del vostro dominio per messaging, cossi che dominio.tld contiene il primo nome del dominio per vostro STMP</company_domain>
+<company_domain_t>Il nome della vostra societ&agrave; e il nome del dominio</company_domain_t>
+<domain_routing>Dominio Instradamento</domain_routing>
+<domain_routing_local>Il vostro dominio master sar&agrave; memorizzato localmente sul questo server</domain_routing_local>
+<domain_routing_remote>Vostro dominio master deve essere ritrasmesso alla sistema MDA (un server per cassetti postali)[br]Dare il nome o indirizzo IP del vostro server per la posta la fine di ritrasmettere la posta via il server Artica</domain_routing_remote>
+<domain_routing_text>Come sar&agrave; ritrasmesso il vostro dominio master via Postfix?</domain_routing_text>
+<first_email>Primo indirizzo di posta elettronica</first_email>
+<first_email_text>Mettere il primo utente/indirizzo di posta elettronica che sar&agrave; responsabile del ricevimento degli eventi del sistema e notificazioni dallo server di posta</first_email_text>
+<smtp_domain>Nome del dominio SMTP</smtp_domain>
+<smtp_relay>Indirizzo del server SMTP</smtp_relay>
+<welcome_first_wizard>Benvenuto alla prima procedura guidata</welcome_first_wizard>
+<wizard_finish>la procedura guidata e conclusa</wizard_finish>
+<wizard_finish_failed>Tornare alle pagine precedenti, mancano qualche elementi</wizard_finish_failed>
+<wizard_finish_text>Cliccare sul pulsante Applicare al fine di eseguire vostri impostazioni e entrare nel modo di produzione</wizard_finish_text>
+<wizard_smtp_intro>Questa procedura guidata vi aiuter&agrave; a definire i primi parametri al fine di impostare vostro server nel modo di produzione... Seguire gli istruzioni al fine di attivare messaging sul questo server...</wizard_smtp_intro>

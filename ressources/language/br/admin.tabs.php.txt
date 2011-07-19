@@ -1,0 +1,24 @@
+<ADD_WIDGET>Adicionar um novo widget</ADD_WIDGET>
+<ADD_WIDGET_TEXT>Adicionar um novo &iacute;cone / widget nesta p&aacute;gina</ADD_WIDGET_TEXT>
+<artica_settings>Configura&ccedil;&atilde;o Global do Artica</artica_settings>
+<artica_settings_text>Definir configura&ccedil;&otilde;es globais sobre Proxy usado, interface web, configura&ccedil;&otilde;es do mysql...</artica_settings_text>
+<choose_section>Escolher uma se&ccedil;&atilde;o</choose_section>
+<CLICK_TO_DELETE>Clique para excluir</CLICK_TO_DELETE>
+<DELETE_THIS_TAB>Excluir esta p&aacute;gina pessoal</DELETE_THIS_TAB>
+<DELETE_THIS_TAB_TEXT>Esta opera&ccedil;&atilde;o ir&aacute; excluir esta p&aacute;gina e esta aba de seu painel</DELETE_THIS_TAB_TEXT>
+<FILE_SHARE>Compartilhamento de arquivos</FILE_SHARE>
+<MAILBOX>Gerenciamento de caixas de correio</MAILBOX>
+<MAIL_SECU>Mensagens (seguran&ccedil;a)</MAIL_SECU>
+<MANAGE_WIDGETS>Configurar widgets</MANAGE_WIDGETS>
+<MANAGE_WIDGETS_TEXT>Alterar a ordem de exibi&ccedil;&atilde;o, excluir widgets</MANAGE_WIDGETS_TEXT>
+<MTA>Agente de Transfer&ecirc;ncia de Email (Postfix)</MTA>
+<NETWORK>Rede</NETWORK>
+<ORG>Opera&ccedil;&otilde;es relacionadas &agrave; Organiza&ccedil;&atilde;o</ORG>
+<organizations_text>[b]Gerenciamento de Organiza&ccedil;&otilde;es:[/b]Exibir, Criar ou excluir suas organiza&ccedil;&otilde;es</organizations_text>
+<REBUILD_PAGE>Reconstruir esta &aacute;rea</REBUILD_PAGE>
+<REBUILD_PAGE_TEXT>Esta opera&ccedil;&atilde;o ir&aacute; apagar o cache atual e reconstruir&aacute; esta &aacute;rea</REBUILD_PAGE_TEXT>
+<SYSTEM>Aplica&ccedil;&otilde;es do sistema e configura&ccedil;&otilde;es</SYSTEM>
+<WIDGETS_AREA>&Aacute;rea de widgets</WIDGETS_AREA>
+<WIDGETS_AREA_EXPLAIN>Clique em um destes &iacute;cones, a fim de adicionar ou 
+[b]excluir o &iacute;cone em sua &aacute;rea</WIDGETS_AREA_EXPLAIN>
+<your_organizations>Suas Organiza&ccedil;&otilde;es</your_organizations>

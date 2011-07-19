@@ -1,0 +1,19 @@
+<ADD_NEW_DEPLOY_TASK>Ajoutez une t&acirc;che de d&eacute;ploiement</ADD_NEW_DEPLOY_TASK>
+<ADD_NEW_DEPLOY_TASK_TEXT>Ajouter une nouvelle t&acirc;che qui va entreprendre une installation distante sur cet ordinateur.</ADD_NEW_DEPLOY_TASK_TEXT>
+<ADD_NEW_SOFTWARE>Ajoutez un nouveau logiciel</ADD_NEW_SOFTWARE>
+<ADD_NEW_SOFTWARE_TEXT>Cr&eacute;ez une nouvelle entr&eacute;e afin d'effectuer un d&eacute;ploiement sur l'ordinateur cible</ADD_NEW_SOFTWARE_TEXT>
+<APP_WINEXE_NOT_INSTALLED>l'outil Ex&eacute;cution windows distante n'est pas install&eacute;</APP_WINEXE_NOT_INSTALLED>
+<APP_WINEXE_NOT_INSTALLED_TEXT>si l'outil Ex&eacute;cution windows distante n'est pas install&eacute;, vous ne serez pas en mesure d'effectuer des d&eacute;ploiements distants &agrave; travers Artica.[br]
+Cliquez sur cet icon pour installer l'outil n&eacute;c&eacute;ssaire</APP_WINEXE_NOT_INSTALLED_TEXT>
+<commandline>ligne de commande</commandline>
+<ExecuteAfter>Ex&eacute;cuter apr&egrave;s</ExecuteAfter>
+<MinutesToWait>Nombre de minutes maximum d'attente</MinutesToWait>
+<package>paquet</package>
+<refresh>rafra&icirc;chir</refresh>
+<remote_install>Installation distante</remote_install>
+<remote_install_text>Cr&eacute;ez des t&acirc;ches afin d'effectuer des d&eacute;ploiements distants de logiciels</remote_install_text>
+<resfresh_software_list>Rafra&icirc;chir la liste des logiciels</resfresh_software_list>
+<resfresh_tasks_list>Rafra&icirc;chir la liste des t&acirc;ches</resfresh_tasks_list>
+<restart_task>Red&eacute;marrer la t&acirc;che</restart_task>
+<restart_task_text>red&eacute;marrer une nouvelle fois la t&acirc;che</restart_task_text>
+<runas>Ex&eacute;cuter en tant que</runas>

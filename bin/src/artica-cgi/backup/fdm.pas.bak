@@ -1,0 +1,143 @@
+unit fdm;
+
+{$MODE DELPHI}
+{$LONGSTRINGS ON}
+
+interface
+
+uses
+    Classes, SysUtils,variants,strutils,IniFiles, Process,md5,logs,unix,RegExpr in 'RegExpr.pas',zsystem,lighttpd;
+
+type LDAP=record
+      admin:string;
+      password:string;
+      suffix:string;
+      servername:string;
+      Port:string;
+  end;
+
+  type
+  tfdm=class
+
+
+private
+     LOGS:Tlogs;
+     D:boolean;
+     GLOBAL_INI:TiniFIle;
+     SYS:TSystem;
+     artica_path:string;
+
+public
+    procedure   Free;
+    constructor Create;
+    procedure   START();
+    function    bin_path():string;
+    function    STATUS:string;
+    function    VERSION():string;
+
+    //http://fdm.sourceforge.net/
+
+
+END;
+
+implementation
+
+constructor tfdm.Create;
+begin
+       forcedirectories('/etc/artica-postfix');
+       LOGS:=tlogs.Create();
+       SYS:=Tsystem.Create;
+
+
+       if not DirectoryExists('/usr/share/artica-postfix') then begin
+              artica_path:=ParamStr(0);
+              artica_path:=ExtractFilePath(artica_path);
+              artica_path:=AnsiReplaceText(artica_path,'/bin/','');
+
+      end else begin
+          artica_path:='/usr/share/artica-postfix';
+      end;
+end;
+//##############################################################################
+procedure tfdm.free();
+begin
+    logs.Free;
+    SYS.Free;
+end;
+//##############################################################################
+procedure tfdm.START();
+var
+   import:boolean;
+begin
+
+   import:=false;
+   if not FileExists(bin_path()) then begin
+      logs.Debuglogs('tfdm.START():: unable to stat fdm, (not installed) abort..;' );
+      exit;
+   end;
+
+
+
+
+end;
+
+//##############################################################################
+function tfdm.STATUS:string;
+var
+ini:TstringList;
+pid:string;
+begin
+   ini:=TstringList.Create;
+   ini.Add('[FDM]');
+   if FileExists(BIN_PATH()) then  begin
+      ini.Add('running=1');
+      ini.Add('application_installed=1');
+      ini.Add('master_pid=0');
+      ini.Add('master_memory=0');
+      ini.Add('master_version='+VERSION());
+      ini.Add('status=croned');
+      ini.Add('service_name=APP_FDM');
+   end;
+
+   result:=ini.Text;
+   ini.free;
+
+end;
+
+end;
+//##############################################################################
+function tfdm.VERSION():string;
+var
+path:string;
+ RegExpr:TRegExpr;
+    FileDatas:TStringList;
+    i:integer;
+
+begin
+    path:=logs.FILE_TEMP();
+    fpsystem(bin_path()+ ' -vn -f /dev/null >'+ path+' 2>&1');
+    if not FileExists(path) then exit;
+    FileDatas:=TstringList.Create;
+    FileDatas.LoadFromFile(path);
+    logs.DeleteFile(path);
+    RegExpr:=TRegExpr.Create;
+    RegExpr.Expression:='version is:\s+([0-9\.]+)';
+    
+    For i:=0 to FileDatas.Count-1 do begin
+       if RegExpr.Exec(FileDatas.Strings[i]) then begin
+          result:=RegExpr.Match[1];
+          break;
+       end;
+    end;
+    
+    RegExpr.free;
+    FileDatas.free;
+end;
+//##############################################################################
+function tfdm.bin_path():string;
+begin
+if FileExists('/usr/bin/fdm') then exit('/usr/bin/fdm');
+end;
+//##############################################################################
+
+end.

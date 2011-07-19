@@ -1,0 +1,5 @@
+<automount_add_backup>S&eacute;lectionnez la ressource et ajoutez-la dans la programmation des sauvegardes de votre serveur.</automount_add_backup>
+<automount_restore_from>Restaurez la sauvegarde depuis cette ressource</automount_restore_from>
+<RestoreFromRsyncPath>Restaurez une sauvegarde depuis cet &eacute;l&eacute;ment</RestoreFromRsyncPath>
+<RestoreFromRsyncPath_warn>Attention,[br]Toutes les donn&eacute;es sur votre serveur vont &ecirc;tre &eacute;cras&eacute;es par la sauvegarde choisie.[br]Assurez-vous de vouloir r&eacute;ellement effectuer cette op&eacute;ration.</RestoreFromRsyncPath_warn>
+<SELECT_RESSOURCE>S&eacute;lectionnez cette ressource</SELECT_RESSOURCE>

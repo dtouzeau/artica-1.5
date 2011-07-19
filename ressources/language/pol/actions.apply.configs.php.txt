@@ -1,0 +1,5 @@
+<httprestart>Serwer webowy b%u0119dzie restartowany aby zastosowa%u0107 ustawienia HTTP. [br]
+Prosz%u0119 czeka%u0107...</httprestart>
+<mimedefang>MimeDefang</mimedefang>
+<not_enabled>Ten modu%u0142 nie jest aktywny w Artice</not_enabled>
+<squid>Squid proxy Cache</squid>

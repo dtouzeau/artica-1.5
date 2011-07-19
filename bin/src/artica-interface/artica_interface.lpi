@@ -1,0 +1,223 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <ProjectOptions>
+    <PathDelim Value="/"/>
+    <Version Value="6"/>
+    <General>
+      <MainUnit Value="0"/>
+      <IconPath Value="./"/>
+      <TargetFileExt Value=""/>
+      <ActiveEditorIndexAtStart Value="0"/>
+    </General>
+    <VersionInfo>
+      <ProjectVersion Value=""/>
+    </VersionInfo>
+    <PublishOptions>
+      <Version Value="2"/>
+      <IgnoreBinaries Value="False"/>
+      <IncludeFileFilter Value="*.(pas|pp|inc|lfm|lpr|lrs|lpi|lpk|sh|xml)"/>
+      <ExcludeFileFilter Value="*.(bak|ppu|ppw|o|so);*~;backup"/>
+    </PublishOptions>
+    <RunParams>
+      <local>
+        <FormatVersion Value="1"/>
+        <LaunchingApplication PathPlusParams="/usr/X11R6/bin/xterm -T 'Lazarus Run Output' -e $(LazarusDir)/tools/runwait.sh $(TargetCmdLine)"/>
+      </local>
+    </RunParams>
+    <RequiredPackages Count="1">
+      <Item1>
+        <PackageName Value="LCL"/>
+      </Item1>
+    </RequiredPackages>
+    <Units Count="12">
+      <Unit0>
+        <Filename Value="artica_interface.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="artica_interface"/>
+        <UsageCount Value="60"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="unit1.pas"/>
+        <ComponentName Value="Form1"/>
+        <IsPartOfProject Value="True"/>
+        <ResourceFilename Value="unit1.lrs"/>
+        <UnitName Value="Unit1"/>
+        <CursorPos X="1" Y="268"/>
+        <TopLine Value="215"/>
+        <EditorIndex Value="0"/>
+        <UsageCount Value="60"/>
+        <Loaded Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="lighttpd.pas"/>
+        <UnitName Value="lighttpd"/>
+        <CursorPos X="58" Y="139"/>
+        <TopLine Value="38"/>
+        <EditorIndex Value="9"/>
+        <UsageCount Value="26"/>
+        <Loaded Value="True"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="logs.pas"/>
+        <UnitName Value="logs"/>
+        <CursorPos X="23" Y="83"/>
+        <TopLine Value="36"/>
+        <EditorIndex Value="8"/>
+        <UsageCount Value="26"/>
+        <Loaded Value="True"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="zsystem.pas"/>
+        <UnitName Value="zsystem"/>
+        <CursorPos X="58" Y="9"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="10"/>
+        <UsageCount Value="25"/>
+        <Loaded Value="True"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="/usr/local/share/lazarus/lcl/forms.pp"/>
+        <UnitName Value="Forms"/>
+        <CursorPos X="15" Y="496"/>
+        <TopLine Value="465"/>
+        <EditorIndex Value="3"/>
+        <UsageCount Value="13"/>
+        <Loaded Value="True"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="global_conf.pas"/>
+        <UnitName Value="global_conf"/>
+        <CursorPos X="38" Y="792"/>
+        <TopLine Value="761"/>
+        <EditorIndex Value="7"/>
+        <UsageCount Value="13"/>
+        <Loaded Value="True"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="unit2.pas"/>
+        <ComponentName Value="Form2"/>
+        <IsPartOfProject Value="True"/>
+        <ResourceFilename Value="unit2.lrs"/>
+        <UnitName Value="Unit2"/>
+        <CursorPos X="23" Y="104"/>
+        <TopLine Value="40"/>
+        <EditorIndex Value="4"/>
+        <UsageCount Value="25"/>
+        <Loaded Value="True"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="debian_class.pas"/>
+        <UnitName Value="debian_class"/>
+        <CursorPos X="64" Y="194"/>
+        <TopLine Value="162"/>
+        <EditorIndex Value="5"/>
+        <UsageCount Value="13"/>
+        <Loaded Value="True"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="../artica-ldap/articaldap.pas"/>
+        <UnitName Value="articaldap"/>
+        <CursorPos X="1" Y="14"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="6"/>
+        <UsageCount Value="13"/>
+        <Loaded Value="True"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="squid.pas"/>
+        <UnitName Value="squid"/>
+        <CursorPos X="161" Y="11"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="1"/>
+        <UsageCount Value="12"/>
+        <Loaded Value="True"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="miltergreylist.pas"/>
+        <UnitName Value="miltergreylist"/>
+        <CursorPos X="161" Y="11"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="2"/>
+        <UsageCount Value="12"/>
+        <Loaded Value="True"/>
+      </Unit11>
+    </Units>
+    <JumpHistory Count="1" HistoryIndex="0">
+      <Position1>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="253" Column="105" TopLine="211"/>
+      </Position1>
+    </JumpHistory>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="5"/>
+    <Target>
+      <Filename Value="/home/dtouzeau/developpement/artica-postfix/bin/artica-interface"/>
+    </Target>
+    <CodeGeneration>
+      <Generate Value="Faster"/>
+    </CodeGeneration>
+    <Linking>
+      <Options>
+        <Win32>
+          <GraphicApplication Value="True"/>
+        </Win32>
+      </Options>
+    </Linking>
+    <Other>
+      <CompilerPath Value="$(CompPath)"/>
+    </Other>
+  </CompilerOptions>
+  <Debugging>
+    <BreakPoints Count="10">
+      <Item1>
+        <Source Value="../artica-install/global_conf.pas"/>
+        <Line Value="2717"/>
+      </Item1>
+      <Item2>
+        <Source Value="../artica-install/global_conf.pas"/>
+        <Line Value="11968"/>
+      </Item2>
+      <Item3>
+        <Source Value="../artica-install/global_conf.pas"/>
+        <Line Value="6646"/>
+      </Item3>
+      <Item4>
+        <Source Value="../artica-install/spamass.pas"/>
+        <Line Value="65"/>
+      </Item4>
+      <Item5>
+        <Source Value="../artica-install/spamass.pas"/>
+        <Line Value="120"/>
+      </Item5>
+      <Item6>
+        <Source Value="../artica-install/global_conf.pas"/>
+        <Line Value="4627"/>
+      </Item6>
+      <Item7>
+        <Source Value="../artica-install/mimedefang.pas"/>
+        <Line Value="92"/>
+      </Item7>
+      <Item8>
+        <Source Value="../artica-install/mimedefang.pas"/>
+        <Line Value="348"/>
+      </Item8>
+      <Item9>
+        <Source Value="../artica-install/artica_install.pas"/>
+        <Line Value="973"/>
+      </Item9>
+      <Item10>
+        <Source Value="../artica-install/process_infos.pas"/>
+        <Line Value="499"/>
+      </Item10>
+    </BreakPoints>
+    <Exceptions Count="2">
+      <Item1>
+        <Name Value="ECodetoolError"/>
+      </Item1>
+      <Item2>
+        <Name Value="EFOpenError"/>
+      </Item2>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

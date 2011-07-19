@@ -1,0 +1,10 @@
+From Address=>"From"
+To Address=>"To" 
+CC Address=>"CC" 
+Bcc Address=>"Bcc"
+Recipient=>["To","CC","Bcc"] 
+Correspondent=>["From","To","CC","Bcc"]  
+Sender=>"Sender" 
+Subject=>["Subject"] 
+Header Field=>HEADER 
+Size=>SIZE

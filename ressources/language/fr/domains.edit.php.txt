@@ -1,0 +1,52 @@
+<actions>Action</actions>
+<add_user>Ajouter un utilisateur</add_user>
+<Administrator_rules>R&egrave;gles de l'administrateur</Administrator_rules>
+<antivirus_protection>Protection Antivirus</antivirus_protection>
+<antivirus_protection_enabled>Activer / d&eacute;sactiver le scan antivirus du domaine</antivirus_protection_enabled>
+<ARRAY_ALIASES>Alias email</ARRAY_ALIASES>
+<ARRAY_TRANSPORT>Redirections de relais</ARRAY_TRANSPORT>
+<attach_report>Joindre le rapport</attach_report>
+<av_notify_rules>Notifiez et  r&egrave;gles d'actions</av_notify_rules>
+<bt_add_aliases>Sauvegarder l'alias</bt_add_aliases>
+<bt_delete_alias>Supprimer l'alias</bt_delete_alias>
+<bt_delete_transport>supprimer</bt_delete_transport>
+<bt_edit_antivirus_protection>Envoyer</bt_edit_antivirus_protection>
+<bt_edit_mailbox>&Eacute;diter la bo&icirc;te aux lettres</bt_edit_mailbox>
+<bt_edit_notify>Envoyer</bt_edit_notify>
+<bt_modify_transport>Modifiez transport</bt_modify_transport>
+<Corrupted>Corrompu</Corrupted>
+<Cured>Courant</Cured>
+<delete_thisuser>Supprimer cet utilisateur</delete_thisuser>
+<domain_activated>Domaine activ&eacute;</domain_activated>
+<edit>&Eacute;diter.</edit>
+<edit_user>&Eacute;diter cet utilisateur</edit_user>
+<email>Adresse eMail</email>
+<Error>Erreur</Error>
+<ERROR_DELETE_TRANSPORT>Supprimer la redirection d'entr&eacute;e?</ERROR_DELETE_TRANSPORT>
+<Filtered>Filtr&eacute;</Filtered>
+<firstname>Pr&eacute;nom</firstname>
+<goback>Retourner &agrave; la liste des domaines</goback>
+<Infected>Infect&eacute;</Infected>
+<js_antivirus_settings>&Eacute;diter les r&eacute;glages de l'antivirus pour ce domaine</js_antivirus_settings>
+<js_delete_alias_text>&Ecirc;tes-vous s&ucirc;r de supprimer cet alias ?</js_delete_alias_text>
+<label_add_transport>Ajouter un serveur relais pour ce domaine</label_add_transport>
+<label_email_from>Adresse eMail</label_email_from>
+<label_email_to>Adresse cible</label_email_to>
+<label_redirect>Rediriger vers</label_redirect>
+<lastname>Nom</lastname>
+<LoadKasperskySettings_adminaddr>Adresse de l'administrateur</LoadKasperskySettings_adminaddr>
+<LoadKasperskySettings_general_title>R&eacute;glages g&eacute;n&eacute;raux</LoadKasperskySettings_general_title>
+<LoadKasperskySettings_title>Param&egrave;tres de recherche d'eMails</LoadKasperskySettings_title>
+<notify>Notifier</notify>
+<no_mailbox_cause_transport>Ce domaine ne stocke pas les alias parce que tous les emails seront transmis &agrave; un autre service/ serveur</no_mailbox_cause_transport>
+<objects>Objets</objects>
+<Protected>Prot&eacute;g&eacute;</Protected>
+<Quarantine>Quarantaine</Quarantine>
+<QuarantinePath>Dossier de quarantaine</QuarantinePath>
+<recipient_rules>R&egrave;gles du b&eacute;n&eacute;ficiaire</recipient_rules>
+<redirect_to_alias>Aller &agrave; d'autres</redirect_to_alias>
+<redirect_to_mailbox>Aller &agrave; la bo&icirc;te aux lettres locale</redirect_to_mailbox>
+<sender_rules>R&egrave;gles d'exp&eacute;diteur</sender_rules>
+<Suspicious>Suspicieux</Suspicious>
+<users>Utilisateurs</users>
+<Warning>Avertissement</Warning>

@@ -1,0 +1,18 @@
+<about>NTPD est utilis&eacute; pour synchroniser l'horloge de l'ordinateur avec une base de temps commune (habituellement UTC) gr&acirc;ce au protocole NTP</about>
+<add_text_server>Cliquer sur l'image ci-dessous pour ajouter serveur de temps ...</add_text_server>
+<add_title_server>Ajouter un serveur de temp</add_title_server>
+<close_windows>Toutes les op&eacute;rations sont termin&eacute;es, vous pouvez fermer cette fen&ecirc;tre</close_windows>
+<enable_ntpd>Activer le service NTPD</enable_ntpd>
+<give_server_name>Indiquez le nom du serveur de temps</give_server_name>
+<how_to_find_timeserver>[h5]O&ugrave; puis-je trouver un serveur de temps ?[/h5]
+Par d&eacute;faut des serveurs de temps vous sont assign&eacute;s mais ils ne sont pas id&eacute;aux.[br]
+Vous obtiendrez un meilleur r&eacute;sultat si vous utilisez les [a http://www.pool.ntp.org/zone/@][u]zones continentales[/u][/a]
+(Par exemple [u][a http://www.pool.ntp.org/zone/europe]europe[/a][/u],
+[a http://www.pool.ntp.org/zone/north-america]am&eacute;rique du nord[/a], oc&eacute;anie ou asia.pool.ntp.org). Pour un r&eacute;sultat encore meilleur utilisez la zone du pays (ex. ch.pool.ntp.org pour la suisse) [br]
+- pour toutes les zones, vous pouvez utiliser le pr&eacute;fixe 0, 1 ou 2; ex 0.ch.pool.ntp.org.[br]
+Cependant, il n'existe peut-&ecirc;tre pas de zone pour votre pays ou elle ne contient qu'un ou deux serveur de temps.[br]
+Si vous connaissez des serveurs de temps assez proches (que ce soit par r&eacute;seau, avec traceroute ou ping), la mesure du temps sera sans doute meilleure.</how_to_find_timeserver>
+<ntpdconf>Fichier de configuration de NTPD</ntpdconf>
+<ntpd_apply>Appliquer les r&eacute;glages NTPD au serveur</ntpd_apply>
+<save_ntpd_ok>Enregistrement des r&eacute;glages NTPD ... OK</save_ntpd_ok>
+<save_toserver_ok>Enregistrement des r&eacute;glages NTPD sur le serveur ... OK</save_toserver_ok>

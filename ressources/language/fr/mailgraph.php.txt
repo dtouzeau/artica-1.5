@@ -1,0 +1,2 @@
+<ERROR_NO_IMG>&lt;H1&gt;D&eacute;sol&eacute; actuellement il n'y a aucune image graphique dans le dossier img, essayez plus tard.</ERROR_NO_IMG>
+<title>Statistiques Postfix</title>

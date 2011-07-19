@@ -1,0 +1,12 @@
+<add_backlistwhitelist_email>Add a black or a white email address</add_backlistwhitelist_email>
+<add_email>Add an email address</add_email>
+<add_wbl_text>Give here the eMail address you want to add in the black or white anti-spam list[br]
+The address format should be :[ul]
+[li]user@example.com[/li]
+[li]@example.com[/li]
+[li]@.example.com[/li]
+[/ul]</add_wbl_text>
+<black_list_text>An e-mail Blacklist is a list of senders contacts that will be automatically deleted</black_list_text>
+<email_type>eMail type</email_type>
+<email_type_help>If you set it to red, this email will be insterted in yout black list.[br]In other case, if you set it to green, this email will inserted into your white list</email_type_help>
+<white_list_text>An e-mail whitelist is a list of contacts that the user deems are acceptable to receive email from and should not be sent to the trash folder</white_list_text>

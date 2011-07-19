@@ -1,0 +1,6 @@
+CREATE TABLE wblist (
+  rid        integer unsigned NOT NULL,  
+  sid        integer unsigned NOT NULL,  
+  wb         varchar(10)  NOT NULL,  
+  PRIMARY KEY (rid,sid)
+);

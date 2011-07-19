@@ -1,0 +1,91 @@
+   if (open(IN,"<./HEADERS")) {
+        $head = MIME::Head->read(\*IN);
+        $from = $head->get('from');
+        $to   = $head->get('to');
+        $cc   = $head->get('cc');
+        $rec  = $head->get('received',0);  #most recent one
+        close(IN);
+        #various tests like for example
+        if ($from) {
+            chomp($from);
+            if ($from =~ /postmaster\@columbia\.edu/) {
+                md_log("Claims to be from postmaster");
+                action_bounce('You are not postmaster at columbia.edu');
+                return action_discard;
+            }	
+	}
+   }
+
+
+// Parsing recipients
+
+    for $recipient (@Recipients){
+        if($recipient =~ /^<?([^\@]+)\@([a-z\d\.-]+)>?$/i){
+            $user = lc($1);
+            $domain = lc($2);
+		}
+	}
+
+
+//
+
+This means that the mail gets delivered to the user himself AND to the programm mentioned. The program forward.pl is not too sophisticated:
+
+    #!/usr/bin/perl
+    # file ~/forward.pl
+    # called by ~/.forward which looks like this for user wwwrun:
+    # wwwrun,"| /home/wwwrun/forward.pl"
+    #
+    # mission: generate automatic mails as answers
+    #
+    BEGIN {
+            use lib "/usr/local/bin/hor.module";
+    }
+    use mailhor;
+    # This is valid for all mails generated here:
+    my $smtpserver = "gatekeeper.rosi13.de";
+    my $from = 'wwwrun@gatekeeper.rosi13.de';
+    # my $cc = 'horshack@gatekeeper.rosi13.de';
+    my $cc = '';
+
+    # Parse this mail:
+    my ($org_subject,$org_from,$org_replyto) = (undef,undef,undef);
+    my @mail = <STDIN>;
+    foreach (@mail) {
+            $org_subject = $1 if (/^Subject: (.*)$/i);
+            $org_from = $1 if (/^From: (.*)$/i);
+            $org_replyto = $1 if (/^Reply-To: (.*)$/i);
+    }
+    # Analyze
+    if ($org_subject =~ /please give me password for msdos-bootdisk/) {
+            &send_disk_password(to=>$org_from,cc=>$cc);
+            system "logger \'sending dos-password-mail to $org_from\'";
+    }
+    exit;
+
+    sub send_disk_password {
+            my (%args) = @_;
+            my $to = $args{to};
+            my $cc = $args{cc};
+            my $subject = "Re: please give me password for msdos-bootdisk";
+            my $body =<<'EODISKPASSWORD';
+    Hi,
+    thanks for your interest... blablabla.
+    From Nuernberg, Bavaria
+    yours
+    Richard Lippmann
+    EODISKPASSWORD
+            &mailhor::sendamail(smtpserver=>$smtpserver,from=>$from,
+                to=>$to,cc=>$cc,subject=>$subject,body=>$body);
+    }
+
+
+
+sub filter_relay ($$$) {
+  my ($ip, $name, $helo) = @_;
+  if (rand < 0.75) {
+      return (0, "Sorry, the magic eight ball doesn’t like you!");
+  }
+  return (1, "ok");
+}
+

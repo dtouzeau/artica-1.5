@@ -1,0 +1,43 @@
+# Joomla Group Attribute; free form text
+attributetype ( 1.3.6.1.4.1.27457.1.1
+        NAME 'JoomlaGroup'
+        DESC 'Joomla: Group to belong to'
+        EQUALITY caseIgnoreMatch
+        SUBSTR caseIgnoreSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{256} )
+
+# Joomla User Alias attribute; free form text
+attributetype ( 1.3.6.1.4.1.27457.1.3
+	NAME ('uidAlias' 'useridAlias')
+	DESC 'Aliased user id'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{256} )
+
+# Joomla Block User attribute; boolean
+attributetype ( 1.3.6.1.4.1.27457.1.4
+	NAME 'JoomlaBlockUser'
+	DESC 'If the user should be blocked'
+	EQUALITY integerMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+	)
+	
+# Joomla User Params; free form text
+attributetype ( 1.3.6.1.4.1.27457.1.5
+	NAME 'JoomlaUserParams'
+	DESC 'Joomla User Parameters'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{65535} )
+
+# Joomla User Object Class
+# Requires various elements
+# Extra name details are optional
+objectclass     ( 1.3.6.1.4.1.27457.1.2
+    NAME 'JoomlaUser'
+    DESC 'User of a Joomla instance'
+    AUXILIARY
+    MUST ( cn $ JoomlaGroup $ uid $ mail $ userPassword $ JoomlaBlockUser )
+    MAY ( givenName $ sn $ useridAlias $ displayName $ givenName $ initials $ JoomlaUserParams )
+    )
+

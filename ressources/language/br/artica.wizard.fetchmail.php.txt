@@ -1,0 +1,34 @@
+<add_new_poll>And new fetch rule</add_new_poll>
+<aka>Alternate DNS names of mailserver</aka>
+<ChangeFetchMailUserText>Give the recipient email address</ChangeFetchMailUserText>
+<cliktochange>Click to change the recipient</cliktochange>
+<doesntexists>Does not exists</doesntexists>
+<edit_rules>Edit user rules</edit_rules>
+<fetchall>Fetch all mess</fetchall>
+<fetchmail_explain>This section allows you to add rules in order to retrieve messages stored on your ISP mail server</fetchmail_explain>
+<get_mails_isp>Fetch mails from your ISP</get_mails_isp>
+<hotmail_text>You have choose "hotmail", the GotMail tool will be used for this rule, please give the full eMail address you used eg (username@hotmail.com,username@hotmail.fr...)</hotmail_text>
+<hotwayd_text>You have choose "HTTP", fetchmail will use local pop3 hotwayd proxy to get messages, Use your full username (e.g. hotmailuser@hotmail.com or
+      msnuser@msn.com) and password that you normally use when
+      accessing hotmail/msn/lycos/spray (eg username@lycos.fr...)</hotwayd_text>
+<import1>You find here rules found in your server, select one and import it to Artica database</import1>
+<import_local_rules>Import local fetchmail rules</import_local_rules>
+<install_fetchmail>Install Fetchmail Daemon</install_fetchmail>
+<interval>interval</interval>
+<keepmess>Keep messages</keepmess>
+<load_user_rules>Find users rules</load_user_rules>
+<load_user_rules_text>Give the email address of the user you want to find
+* caracter is supported</load_user_rules_text>
+<localuser>Local account</localuser>
+<multidrop>Multidrop</multidrop>
+<no_users_in_database>No users found in database</no_users_in_database>
+<remoteuser>remote username</remoteuser>
+<rules>rules</rules>
+<select_user>Change the target user email</select_user>
+<server>Mailbox server</server>
+<server_options>Server Options</server_options>
+<ssl>Use ssl</ssl>
+<timeout>timeout</timeout>
+<timeout_text>Configures Fetchmail to give up after a certain interval of server inactivity.[br] If this value is not set, a default of 300 seconds is assumed</timeout_text>
+<tracepolls>Trace all polls</tracepolls>
+<user_option>user options</user_option>

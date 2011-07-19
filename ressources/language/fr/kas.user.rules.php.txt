@@ -1,0 +1,9 @@
+<action_killmail>Supprimer</action_killmail>
+<action_prepend>Pr&eacute;fixer l'objet avec le texte</action_prepend>
+<action_quarantine>Enregistrer dans ma zone de quarantaine Spam</action_quarantine>
+<org_antispam_rules>R&egrave;gles antispam de l'organisation par d&eacute;faut</org_antispam_rules>
+<prepend_text>Pr&eacute;fixer le texte</prepend_text>
+<spam_detection_rate>Lorsque les taux de d&eacute;tection d&eacute;passe</spam_detection_rate>
+<spam_rules_intro>Kaspersky analyse tous les messages entrants et assigne &agrave; chaque message un score compris entre 0 et 100,
+o&ugrave; 0 n'est pas du spam et 100 est certainement du spam.[br]
+Vous pouvez d&eacute;finir 2 r&egrave;gles qui pourraient correspondre &agrave; votre besoin.[br]</spam_rules_intro>

@@ -1,0 +1,2 @@
+<APP_DEVICE_CONTROL>Device Control center</APP_DEVICE_CONTROL>
+<APP_DEVICE_CONTROL_TEXT>Manage devices and control links with you server</APP_DEVICE_CONTROL_TEXT>

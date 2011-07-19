@@ -1,0 +1,22 @@
+<add_computer_text>You can directly add a computer netbios name in order to serve it directly.[br]
+Set here the computer name...[br]
+If you don't want to add a computer, leave field blank...</add_computer_text>
+<add_computer_title>Add new computer</add_computer_title>
+<computer_name>Computer name</computer_name>
+<configuration_success>Success set your server has PDC</configuration_success>
+<domain_controler>Domain Controler</domain_controler>
+<howto1>Go onto a windows workstation.[br]Right click on computer and choose properties</howto1>
+<howto2>On Network identification tab,click on Properties[br]
+On "Indetification Changes" Click on "Member of domain" and set the domain/Workgroup you have choose in first step</howto2>
+<howto3>After few seconds,a pop-up ask to you the "root" username and password</howto3>
+<howto4>After few minutes,a pop-up will confirm you that the worksation is now a member of your new domain</howto4>
+<root_error_pass>Passwords did not match</root_error_pass>
+<root_password>Netbios Domain Administrator password</root_password>
+<root_password_field>Netbios Domain Administrator password</root_password_field>
+<root_password_field2>Netbios Domain Administrator password (confirm)</root_password_field2>
+<root_password_text>The user "root" will be used to connect workstations to your domain has the Netbios Domain Administrator, set the password of "root" user[br]
+Leave blank if you don't want to reset it</root_password_text>
+<server_name>Server name that will be shown on the network browsing area</server_name>
+<welcome>Welcome on Domain Controler wizard</welcome>
+<welcome_text>This wizard helps you to create a PDC (Primary domain Controler) in  order to serve MS Windows Workstation that will connect on.</welcome_text>
+<workgroup>NT Domain</workgroup>

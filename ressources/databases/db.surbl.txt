@@ -1,0 +1,131 @@
+<server>
+	<item>sc.surbl.org</item>
+	<name>SpamCop message-body URI domains</name>
+	<uri>http://www.surbl.org/data.html</uri>
+</server>
+
+<server>
+	<item>ws.surbl.org</item>
+	<name>sa-blacklist and other sources</name>
+	<uri>http://www.sa-blacklist.stearns.org/sa-blacklist</uri>
+</server>
+
+<server>
+    <item>multi.surbl.org</item>
+    <name>multi list org</name>
+    <uri>http://www.surbl.org/</uri>
+</server>
+
+
+<server>
+    <item>ob.surbl.org</item>
+    <name>Outblaze spamvertised sites</name>
+    <uri>http://www.outblaze.com</uri>
+</server>
+
+<server>
+    <item>ab.surbl.org/item>
+    <name>AbuseButler spamvertised sites</name>
+    <uri>http://www.abusebutler.com/</uri>
+</server>
+
+
+<server>
+<item>rhs.mailpolice.com</item>
+<name>MailPolice multi list</name>
+<uri>http://rhs.mailpolice.com</uri>
+</server>
+
+<server>
+<item>block.rhs.mailpolice.com</item>
+<name>MailPolice consolidated list of bulk-senders, and fraud sites</name>
+<uri>http://rhs.mailpolice.com/#rhsblock</uri>
+</server>
+
+<server>
+<item>porn.rhs.mailpolice.com</item>
+<name>MailPolice List of pornographic (sexually-explicit, 18+) websites and e-mailers.</name>
+<uri>http://rhs.mailpolice.com/#rhsporn</uri>
+</server>
+
+<server>
+<item>dynamic.rhs.mailpolice.com</item>
+<name>MailPolice Reverse DNS hostnames of dynamic PPP/DSL/cable Internet connections</name>
+<uri>http://rhs.mailpolice.com/#rhsdynamic</uri>
+</server>
+
+<server>
+<item>adult.rhs.mailpolice.com</item>
+<name>MailPolice List of adult-oriented (but not exclusively pornographic) websites</name>
+<uri>http://rhs.mailpolice.com</uri>
+</server>
+
+<server>
+<item>adv.rhs.mailpolice.com</item>
+<name>MailPolice Domains used by e-mail marketers</name>
+<uri>http://rhs.mailpolice.com/#rhsadv</uri>
+</server>
+
+<server>
+<item>webmail.rhs.mailpolice.com</item>
+<name>MailPolice Domains used by webmail providers. Like hotmail.com and yahoo.com</name>
+<uri>http://rhs.mailpolice.com/#rhswebmail</uri>
+</server>
+
+<server>
+<item>redir.rhs.mailpolice.com</item>
+<name>MailPolice Websites which redirect to another website</name>
+<uri>http://rhs.mailpolice.com/#rhsredir</uri>
+</server>
+
+<server>
+<item>rhsbl.ahbl.org</item>
+<name>Abusive Hosts Blocking List</name>
+<uri>http://ahbl.org/about</uri>
+</server>
+
+
+<server>
+<item>jwrh.dnsbl.net.au</item>
+<name>Joe Wein Spam domain blacklist</name>
+<uri>http://www.joewein.de/sw/spam-bl.htm</uri>
+</server>
+
+<server>
+<item>abuse.rfc-ignorant.org</item>
+<name>rules of the internet don't apply</name>
+<uri>http://www.rfc-ignorant.org/</uri>
+</server>
+
+<server>
+<item>whois.rfc-ignorant.org</item>
+<name>contact data for domains can be found via the WHOIS system</name>
+<uri>http://www.rfc-ignorant.org/policy-whois.php</uri>
+</server>
+
+
+<server>
+<item>whois.rfc-ignorant.org</item>
+<name>contact data for domains can be found via the WHOIS system</name>
+<uri>http://www.rfc-ignorant.org/policy-whois.php</uri>
+</server>
+
+<server>
+<item>rhsbl.sorbs.net</item>
+<name> Aggregate zone (contains all SORB RHS zones)</name>
+<uri>http://www.au.sorbs.net/using.shtml</uri>
+</server>
+
+<server>
+<item>multi.uribl.com</item>
+<name>URIBL contains all URIBL zones</name>
+<uri>http://www.uribl.com/about.shtml</uri>
+</server>
+
+
+<server>
+<item>multi.uribl.com</item>
+<name>URIBL contains all URIBL zones</name>
+<uri>http://www.uribl.com/about.shtml</uri>
+</server>
+

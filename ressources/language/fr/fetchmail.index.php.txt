@@ -1,0 +1,5 @@
+<add_new_fetchmail_rule>Ajoutez une r&egrave;gle fetch</add_new_fetchmail_rule>
+<add_new_fetchmail_rule_text>Add a new rule in order to receive mails from your Internet eMail provider</add_new_fetchmail_rule_text>
+<enable_fetchmail>Activer fetchmail</enable_fetchmail>
+<enable_fetchmail_text>Si vous placez sur vert, vous pourrez relever les messages &eacute;lectroniques de votre FAI ou autre serveur de courrier.</enable_fetchmail_text>
+<fetchmail_rules_text>Voir, &eacute;diter, ajouter vos r&egrave;gles de r&eacute;cup&eacute;ration de courrier</fetchmail_rules_text>

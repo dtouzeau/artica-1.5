@@ -1,0 +1,9 @@
+<APP_JOOMLA_TEXT>Joomla es un sistema de gesti&oacute;n de contenido premiado (CMS), que te permite crear sitios Web y aplicaciones en l&iacute;nea de gran escala.[br]
+Muchos aspectos, incluyendo su facilidad de uso y expansibilidad, han hecho de Joomla el software m&aacute;s popular del mercado para sitios Web.[br]
+Lo mejor de todo, Es que Joomla es una soluci&oacute;n de c&oacute;digo abierto que est&aacute; disponible gratuitamente para todo el mundo.</APP_JOOMLA_TEXT>
+<service_type>Tipo de servicio</service_type>
+<WWWAppliPassword>Contrase&ntilde;a de administrador</WWWAppliPassword>
+<WWWAppliUser>Usuario de Administrador</WWWAppliUser>
+<WWWMysqlPassword>Password de la Base de datos MySQL</WWWMysqlPassword>
+<WWWMysqlUser>Administrador de la Base de Datos Mysql</WWWMysqlUser>
+<www_delete_web_service_confirm>Esta operaci&oacute;n va a desinstalar este servicio web, &iquest;Est&aacute; seguro para realizar esta operaci&oacute;n?</www_delete_web_service_confirm>

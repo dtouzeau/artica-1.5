@@ -1,0 +1,27 @@
+<ADD_NETWORK_PRINTER>Agregar una nueva impresora de red</ADD_NETWORK_PRINTER>
+<ADD_NETWORK_PRINTER_TEXT>If you printer is able to receive orders from network, use this area</ADD_NETWORK_PRINTER_TEXT>
+<add_this_printer>Agregar esta impresora</add_this_printer>
+<CONNECTED_PRINTERS>Impresoras conectadas</CONNECTED_PRINTERS>
+<CONNECTED_PRINTERS_TEXT>Detectar impresoras conectadas en su sistema</CONNECTED_PRINTERS_TEXT>
+<delete_all_printers>Eliminar todas las impresoras</delete_all_printers>
+<drivers_in_collection>Controladores de impresoras en su colecci&oacute;n</drivers_in_collection>
+<found>Encontrado</found>
+<GENERATE_DRIVERS>Generar Controladores</GENERATE_DRIVERS>
+<GENERATE_DRIVERS_EXPLAIN>If you click on the button, Artica will download all known printers drivers database, it will build "gutenprint" drivers.[br]
+After this operation you will have the best drivers list in probablu found your right printer driver.[br]
+This operation should take a long time...[br]
+Read logs below in order to undertsand if there is some error during the process...
+</GENERATE_DRIVERS_EXPLAIN>
+<GENERATE_DRIVERS_TEXT>Build the drivers list in order to found the appriopriate driver for your printer</GENERATE_DRIVERS_TEXT>
+<INSTALLED_PRINTERS>Impresoras instaladas</INSTALLED_PRINTERS>
+<INSTALLED_PRINTERS_TEXT>Desinstalar o ver el estado de sus impresoras instaladas</INSTALLED_PRINTERS_TEXT>
+<localization>Localizaci&oacute;n</localization>
+<manufacturer>Fabricante</manufacturer>
+<NO_CONNECTED_PRINTERS>No hay impresoras conectadas en esta computadora</NO_CONNECTED_PRINTERS>
+<no_cups_drivers_scanned>There is no drivers-scanning operations executed.[br]Please execute drivers-scanning before this operation</no_cups_drivers_scanned>
+<printer_name>Nombre de la impresora</printer_name>
+<QUERY_DRIVERS_COLLECTION>Query drivers Collection</QUERY_DRIVERS_COLLECTION>
+<QUERY_DRIVERS_COLLECTION_TEXT>Find and query your printer drivers collection</QUERY_DRIVERS_COLLECTION_TEXT>
+<search_drivers>Consultar la base de datos de controladores</search_drivers>
+<shared_printers>Impresoras compartidas</shared_printers>
+<share_this_printer>Compartir esta impresora</share_this_printer>

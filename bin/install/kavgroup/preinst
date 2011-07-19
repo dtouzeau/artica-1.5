@@ -1,0 +1,21 @@
+#!/bin/sh
+
+if [ x"$1" = xinstall ] ; then
+
+dfs=`df -k /usr/local | grep /dev/ | awk '{print $4}'`
+if [ x"$dfs" != x ] ; then
+if [ `df -k /usr/local | grep /dev/ | awk '{print $4}'` -lt 150000 ] ; then
+  echo 'You need at least 150Mb of free space in /usr/local'
+  exit 1
+fi
+fi
+
+id mailflt3 >/dev/null 2>/dev/null && {
+    echo "Warning: user mailflt3 already exist."
+}
+
+/usr/sbin/groupadd mailflt3
+/usr/sbin/useradd -c "Kaspersky Anti-Spam user" -g mailflt3 -d /usr/local/ap-mailfilter3/run -s /bin/false mailflt3 
+fi
+exit 0
+

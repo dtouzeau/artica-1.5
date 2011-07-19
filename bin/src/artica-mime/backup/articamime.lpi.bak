@@ -1,0 +1,271 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <ProjectOptions>
+    <PathDelim Value="/"/>
+    <Version Value="6"/>
+    <General>
+      <MainUnit Value="0"/>
+      <IconPath Value="./"/>
+      <TargetFileExt Value=""/>
+      <Title Value="artica-mime"/>
+      <ActiveEditorIndexAtStart Value="1"/>
+    </General>
+    <VersionInfo>
+      <ProjectVersion Value=""/>
+    </VersionInfo>
+    <PublishOptions>
+      <Version Value="2"/>
+      <IgnoreBinaries Value="False"/>
+      <IncludeFileFilter Value="*.(pas|pp|inc|lfm|lpr|lrs|lpi|lpk|sh|xml)"/>
+      <ExcludeFileFilter Value="*.(bak|ppu|ppw|o|so);*~;backup"/>
+    </PublishOptions>
+    <RunParams>
+      <local>
+        <FormatVersion Value="1"/>
+        <LaunchingApplication PathPlusParams="/usr/X11R6/bin/xterm -T 'Lazarus Run Output' -e $(LazarusDir)/tools/runwait.sh $(TargetCmdLine)"/>
+      </local>
+    </RunParams>
+    <Units Count="13">
+      <Unit0>
+        <Filename Value="articamime.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="articamime"/>
+        <CursorPos X="19" Y="54"/>
+        <TopLine Value="29"/>
+        <EditorIndex Value="0"/>
+        <UsageCount Value="133"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="tmimedecode.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="TmimeDecode"/>
+        <CursorPos X="70" Y="464"/>
+        <TopLine Value="418"/>
+        <EditorIndex Value="1"/>
+        <UsageCount Value="133"/>
+        <Bookmarks Count="1">
+          <Item0 X="1" Y="530" ID="0"/>
+        </Bookmarks>
+        <Loaded Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="../../../../../../../usr/share/fpcsrc/rtl/objpas/classes/classesh.inc"/>
+        <CursorPos X="43" Y="679"/>
+        <TopLine Value="640"/>
+        <UsageCount Value="1"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="../../../../../../../usr/share/fpcsrc/rtl/objpas/sysutils/sysstrh.inc"/>
+        <CursorPos X="86" Y="165"/>
+        <TopLine Value="127"/>
+        <UsageCount Value="1"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="logs.pas"/>
+        <UnitName Value="logs"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="62"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="ldap.pas"/>
+        <UnitName Value="ldap"/>
+        <CursorPos X="36" Y="90"/>
+        <TopLine Value="52"/>
+        <UsageCount Value="59"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="protocol.pas"/>
+        <UnitName Value="protocol"/>
+        <CursorPos X="49" Y="238"/>
+        <TopLine Value="202"/>
+        <UsageCount Value="59"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="mimepart.pas"/>
+        <UnitName Value="mimepart"/>
+        <CursorPos X="3" Y="65"/>
+        <TopLine Value="23"/>
+        <UsageCount Value="10"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="../artica-postfix/bin/src/global_conf.pas"/>
+        <UnitName Value="global_conf"/>
+        <CursorPos X="1" Y="1091"/>
+        <TopLine Value="1053"/>
+        <UsageCount Value="20"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="mysql.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="mysql"/>
+        <CursorPos X="78" Y="45"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="50"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="synachar.pas"/>
+        <UnitName Value="synachar"/>
+        <CursorPos X="4" Y="78"/>
+        <TopLine Value="36"/>
+        <UsageCount Value="10"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="mimeinln.pas"/>
+        <UnitName Value="mimeinln"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="10"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="smtpsend.pas"/>
+        <UnitName Value="smtpsend"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="10"/>
+      </Unit12>
+    </Units>
+    <JumpHistory Count="30" HistoryIndex="29">
+      <Position1>
+        <Filename Value="articamime.lpr"/>
+        <Caret Line="129" Column="84" TopLine="1"/>
+      </Position1>
+      <Position2>
+        <Filename Value="articamime.lpr"/>
+        <Caret Line="50" Column="1" TopLine="13"/>
+      </Position2>
+      <Position3>
+        <Filename Value="articamime.lpr"/>
+        <Caret Line="57" Column="28" TopLine="15"/>
+      </Position3>
+      <Position4>
+        <Filename Value="tmimedecode.pas"/>
+        <Caret Line="41" Column="26" TopLine="2"/>
+      </Position4>
+      <Position5>
+        <Filename Value="articamime.lpr"/>
+        <Caret Line="58" Column="30" TopLine="22"/>
+      </Position5>
+      <Position6>
+        <Filename Value="tmimedecode.pas"/>
+        <Caret Line="41" Column="26" TopLine="2"/>
+      </Position6>
+      <Position7>
+        <Filename Value="tmimedecode.pas"/>
+        <Caret Line="503" Column="20" TopLine="471"/>
+      </Position7>
+      <Position8>
+        <Filename Value="tmimedecode.pas"/>
+        <Caret Line="59" Column="34" TopLine="1"/>
+      </Position8>
+      <Position9>
+        <Filename Value="tmimedecode.pas"/>
+        <Caret Line="221" Column="42" TopLine="182"/>
+      </Position9>
+      <Position10>
+        <Filename Value="tmimedecode.pas"/>
+        <Caret Line="225" Column="30" TopLine="186"/>
+      </Position10>
+      <Position11>
+        <Filename Value="tmimedecode.pas"/>
+        <Caret Line="455" Column="30" TopLine="416"/>
+      </Position11>
+      <Position12>
+        <Filename Value="tmimedecode.pas"/>
+        <Caret Line="633" Column="27" TopLine="594"/>
+      </Position12>
+      <Position13>
+        <Filename Value="tmimedecode.pas"/>
+        <Caret Line="686" Column="28" TopLine="647"/>
+      </Position13>
+      <Position14>
+        <Filename Value="tmimedecode.pas"/>
+        <Caret Line="687" Column="28" TopLine="648"/>
+      </Position14>
+      <Position15>
+        <Filename Value="tmimedecode.pas"/>
+        <Caret Line="808" Column="28" TopLine="769"/>
+      </Position15>
+      <Position16>
+        <Filename Value="tmimedecode.pas"/>
+        <Caret Line="846" Column="49" TopLine="807"/>
+      </Position16>
+      <Position17>
+        <Filename Value="tmimedecode.pas"/>
+        <Caret Line="854" Column="32" TopLine="815"/>
+      </Position17>
+      <Position18>
+        <Filename Value="tmimedecode.pas"/>
+        <Caret Line="865" Column="54" TopLine="848"/>
+      </Position18>
+      <Position19>
+        <Filename Value="tmimedecode.pas"/>
+        <Caret Line="443" Column="27" TopLine="404"/>
+      </Position19>
+      <Position20>
+        <Filename Value="tmimedecode.pas"/>
+        <Caret Line="42" Column="27" TopLine="1"/>
+      </Position20>
+      <Position21>
+        <Filename Value="tmimedecode.pas"/>
+        <Caret Line="446" Column="1" TopLine="412"/>
+      </Position21>
+      <Position22>
+        <Filename Value="tmimedecode.pas"/>
+        <Caret Line="453" Column="19" TopLine="424"/>
+      </Position22>
+      <Position23>
+        <Filename Value="tmimedecode.pas"/>
+        <Caret Line="25" Column="1" TopLine="1"/>
+      </Position23>
+      <Position24>
+        <Filename Value="tmimedecode.pas"/>
+        <Caret Line="300" Column="7" TopLine="261"/>
+      </Position24>
+      <Position25>
+        <Filename Value="articamime.lpr"/>
+        <Caret Line="58" Column="30" TopLine="22"/>
+      </Position25>
+      <Position26>
+        <Filename Value="articamime.lpr"/>
+        <Caret Line="55" Column="6" TopLine="19"/>
+      </Position26>
+      <Position27>
+        <Filename Value="articamime.lpr"/>
+        <Caret Line="54" Column="21" TopLine="1"/>
+      </Position27>
+      <Position28>
+        <Filename Value="tmimedecode.pas"/>
+        <Caret Line="491" Column="8" TopLine="451"/>
+      </Position28>
+      <Position29>
+        <Filename Value="articamime.lpr"/>
+        <Caret Line="54" Column="19" TopLine="29"/>
+      </Position29>
+      <Position30>
+        <Filename Value="tmimedecode.pas"/>
+        <Caret Line="41" Column="26" TopLine="1"/>
+      </Position30>
+    </JumpHistory>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="8"/>
+    <Target>
+      <Filename Value="/home/dtouzeau/developpement/artica-postfix/bin/artica-mime"/>
+    </Target>
+    <Other>
+      <CompilerPath Value="$(CompPath)"/>
+    </Other>
+  </CompilerOptions>
+  <Debugging>
+    <Exceptions Count="2">
+      <Item1>
+        <Name Value="ECodetoolError"/>
+      </Item1>
+      <Item2>
+        <Name Value="EFOpenError"/>
+      </Item2>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

@@ -1,0 +1,105 @@
+<AddExcludeDarFileType>Give the extension name in order to exclude compression (like *.zip)</AddExcludeDarFileType>
+<add_backup_folder>Browse your server and define which directory will be backuped</add_backup_folder>
+<APP_RSYNC_CLIENT>Remote Client synchronization</APP_RSYNC_CLIENT>
+<APP_RSYNC_CLIENT_TEXT>Configure this server to send backup to a Remote Server synchronization</APP_RSYNC_CLIENT_TEXT>
+<artica_conf>Artica configuration files</artica_conf>
+<backup_engine>Engine parameters</backup_engine>
+<backup_engine_text>Define the backup engine parameters</backup_engine_text>
+<backup_every>Perform backup every</backup_every>
+<backup_foldersize>Backup Folder size</backup_foldersize>
+<browse_external_storage>Storages collection</browse_external_storage>
+<browse_external_storage_explain>These external storage will be used if there are available to perform incremental backup.[br]If some of them are connected and available, the backup will be performed[br]
+Artica will use all of these storage. So if for example,2 storages are available, the backup will be performed twice...</browse_external_storage_explain>
+<browse_external_storage_text>List your external storages collection</browse_external_storage_text>
+<collection>Collection</collection>
+<collection_number>Collection number</collection_number>
+<compress_level>Compress level</compress_level>
+<compress_level_help>This option activates Bzip2 archive compression, which by default is turned off.[br]
+You can even specify a numeric compression level, which goes from 0 (no compression) to 9 (best compression, slow processing).[br]
+Bzip2 by default uses 6, which is the best speed/compression ratio for most files</compress_level_help>
+<connecting>Connecting</connecting>
+<container_path>Directory Path to store incrementals backup</container_path>
+<dar_pub>DAR (Disk Archive) is an excellent software made by Denis Corbin that perform incremental backup.[br]It's main goal is to reduce Archives size by using specific compress/indexing systems[br]DAR can be found at http://dar.linux.free.fr</dar_pub>
+<display_dar_collection>Display backup</display_dar_collection>
+<display_dar_collection_text>View your backup files and restore backup</display_dar_collection_text>
+<enable_incremental>Enable disable incremental backup</enable_incremental>
+<exclude_compress_file_types>Exclude files in compress engine</exclude_compress_file_types>
+<exclude_compress_file_types_text>Give extensions (width *) in order to exculde these files to the compress engine</exclude_compress_file_types_text>
+<external_storage>External storage</external_storage>
+<external_storage_text>You can use an external storage in order to store yours backups, currently externals storages supported are USB Mass media and remote Network share</external_storage_text>
+<global_settings>Global settings</global_settings>
+<global_settings_text>Define here the global parameters of the backup engine</global_settings_text>
+<homes>Home directories</homes>
+<homes_folder_exclude>Exclude some home directories</homes_folder_exclude>
+<index>Index</index>
+<indexing>Building indexes</indexing>
+<in_mysql_database>in SQL Database</in_mysql_database>
+<ldap_datas>LDAP databases</ldap_datas>
+<list_dar_collection>List collections</list_dar_collection>
+<list_dar_collection_text>Display the listing of your collections backuped in order to restore</list_dar_collection_text>
+<mailboxes>Mailboxes</mailboxes>
+<minimal_compress>Do not compress files under</minimal_compress>
+<mount_dar>Mount your backup collection</mount_dar>
+<mount_dar_text>Connect Artica to you backup area in order to query it</mount_dar_text>
+<mount_this_collection>Mount this collection</mount_this_collection>
+<mysql_datas>Mysql databases</mysql_datas>
+<nice_int>Scheduling priority (nice)</nice_int>
+<nice_int_text>Run backup process with an adjusted scheduling priority.[br]
+Range goes from -20 (highest priority) to 19 (lowest).</nice_int_text>
+<no_dar_installed>Disk Archive is not installed !</no_dar_installed>
+<no_dar_installed_text>This feature support only DAR (Disk Archive).[br]You need to install it, You should go to Application Setup Center in order to peform installation</no_dar_installed_text>
+<OnFly>Backuped mails</OnFly>
+<original_path>original path</original_path>
+<populate_text>The resource will be populated in background mode...</populate_text>
+<query_collection>Query backup collection</query_collection>
+<query_collection_explain>Give the full name of your file (star * is not supported)</query_collection_explain>
+<query_collection_text>Search files under the backup collection</query_collection_text>
+<RebuildCollectionAsk>Rebuild the collection ? It should take time depends of the size of your backup files</RebuildCollectionAsk>
+<rebuild_collection>Reconstruct collection</rebuild_collection>
+<rebuild_collection_text>This operation will build a new collection index</rebuild_collection_text>
+<refresh_cache>Refresh files caches</refresh_cache>
+<remote_foldersize>Remote storage size</remote_foldersize>
+<restore_choose_date>Choose the right container date to restore your file depends on the saved date</restore_choose_date>
+<restore_file_text>This operation will extract backup files from backup containers, define here where you want to restore this file.</restore_file_text>
+<restore_from_defined_path>Restore from defined path</restore_from_defined_path>
+<restore_from_original_path>Restore from original path</restore_from_original_path>
+<restoring_explain_operation>Success...
+The restore operation has been launched in background mode.
+in few times..
+The restore operation will be completed.</restoring_explain_operation>
+<run_backup>Run backup now</run_backup>
+<run_backup_performed>The backup procedure has been scheduled, the process will run in background mode...</run_backup_performed>
+<run_backup_text>Perform the backup now and save your containers</run_backup_text>
+<schedule_text>Define here the schedule of backup process, you can select which day the backup process will be executed</schedule_text>
+<select_your_storage>Select your storage Area</select_your_storage>
+<select_your_storage_text>In order to perform operations on your storage collection, you need to select the storage media you have set in configuration</select_your_storage_text>
+<shares_folders>Samba shared folders</shares_folders>
+<shares_folder_exclude>Exclude some shared folders</shares_folder_exclude>
+<shares_folder_exclude_text>Select yours shared folders in order to exclude them from the backup process</shares_folder_exclude_text>
+<slice_size_mb>Slice feature</slice_size_mb>
+<slice_size_mb_help>The specified size of xxx Megabytes is the maximum file size DAR will create.[br]
+If your backup is bigger, you will end up with different backup files each with a slice number before the file extension,
+so you can save each file to a different unit of your backup media (floppies, zip, CDROM, etc).</slice_size_mb_help>
+<smtp_notify>Send eMail notification</smtp_notify>
+<source_path>Source path</source_path>
+<this_device>This device</this_device>
+<userdef>User defined</userdef>
+<user_defined>User defined</user_defined>
+<user_defined_schedule_explain>By default the backup process run every day.[br]For user defined folders you can define a schedule every X minutes.[br]
+All backups will be running in incremental mode.If there is no changes, the backup will not take disk space on your backup storage media.
+[br]If you want to disable this feature, set "00" on schedule list.</user_defined_schedule_explain>
+<user_defined_text>Define here yours directories you want to backup</user_defined_text>
+<use_local_external_failed>Use local path if external storage failed</use_local_external_failed>
+<use_local_storage>Use local file system</use_local_storage>
+<use_local_storage_text>Browse the local file system and choose a local directory</use_local_storage_text>
+<use_network_storage>Use Network share folder</use_network_storage>
+<use_network_storage_text>This feature helps you to define the remote share folder in order to store your backup files</use_network_storage_text>
+<use_usb_storage>Use USB Storage</use_usb_storage>
+<use_usb_storage_explain>Plug your external device and click on "refresh" in order to display and select it</use_usb_storage_explain>
+<use_usb_storage_text>This feature helps you to define an USB Mass media disk in order to store your backup files</use_usb_storage_text>
+<view_logs>Display backup events operations</view_logs>
+<what_to_backup>what to backup ?</what_to_backup>
+<what_to_backup_text>Define here what you want to store in the backup container</what_to_backup_text>
+<WHERE_TO_BACKUP>Where to store backup files ?</WHERE_TO_BACKUP>
+<WHERE_TO_BACKUP_TEXT>Define external storages collection in order to safely store your datas</WHERE_TO_BACKUP_TEXT>
+<you_need_to_mount_collection_first>You need to mount a collection first before using this area</you_need_to_mount_collection_first>

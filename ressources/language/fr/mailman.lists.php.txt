@@ -1,0 +1,42 @@
+<access_mailman_config>Acces au site de configuration Mailman</access_mailman_config>
+<add_mailman>Ajouter une liste</add_mailman>
+<add_mailman_pdns>Ajoutez cette liste dans le serveur DNS local</add_mailman_pdns>
+<add_mailman_prompt>Entrer le nom de votre nouvelle liste de distribution</add_mailman_prompt>
+<add_mailman_text>Cette op&eacute;ration ajoute une nouvelle liste de distribution dans mailman</add_mailman_text>
+<adminweb_mailman>Param&egrave;tres de la liste de distribution</adminweb_mailman>
+<building_robots>Construction de robots de liste email</building_robots>
+<confirm_delete_mailman>Confirmez l'effacement de cette liste de distribution ?</confirm_delete_mailman>
+<DEFAULT_URL_PATTERN>Mod&egrave;le url par d&eacute;faut</DEFAULT_URL_PATTERN>
+<emailhost>Le nom de domaine de courrier &eacute;lectronique de liste</emailhost>
+<global_settings>Param&egrave;tres globaux</global_settings>
+<global_settings_text>D&eacute;finir les param&egrave;tres de toutes les listes mailman</global_settings_text>
+<listname>Nom de liste de distribution</listname>
+<MailManListAdministrator_text>Entrer l'adresse email de l'administrateur de cette nouvelle liste</MailManListAdministrator_text>
+<MailManListAdminPassword_text>Entrer le mot de passe de l'administrateur de la liste</MailManListAdminPassword_text>
+<mailman_admin>C'est un alias de -owner permettant de communiquer avec les mod&eacute;rateurs et les administrateurs de la liste</mailman_admin>
+<mailman_admin_not_exists>Cette adresse email n'existe pas, aucun  utilisateur</mailman_admin_not_exists>
+<mailman_bounces>Cette adresse re&ccedil;oit les notifications syst&egrave;me et les messages des membres temporairement ou d&eacute;finitivement inactifs.[br]
+C'est un robot qui d&eacute;sactive automatiquement les membres suivant les param&egrave;tres d&eacute;finis dans l'interface d'administration.[br]
+Chaque message envoy&eacute;s &agrave; ce robot sont envoy&eacute;s aussi aux mod&eacute;rateurs et administrateurs</mailman_bounces>
+<mailman_confirm>This address is another email robot, which processes confirmation messages for subscription and unsubscription requests.</mailman_confirm>
+<mailman_global_options>Param&egrave;tres globaux Mailman</mailman_global_options>
+<mailman_join>Par l'envoi d'un message &agrave; cette adresse, un nouveau membre peut effectuer la demande d'inscription &agrave; la liste (le sujet et le corps de texte sont ignor&eacute;s).[br]
+A savoir que c'est un alias de  -join</mailman_join>
+<mailman_leave>Par l'envoi d'un message &agrave; cette adresse, un nouveau membre peut effectuer la demande d&eacute;sinscription la liste (le sujet et le corps de texte sont ignor&eacute;s).[br]
+A savoir que c'est un alias de  -leave</mailman_leave>
+<mailman_lists>Listes mailman</mailman_lists>
+<mailman_owner>Cette adresse cible les mod&eacute;rateurs et administrateurs de la liste[br]
+Elle sert &agrave; les contacter</mailman_owner>
+<mailman_request>Cette adresse cible un robot qui re&ccedil;oit des ordres directement des mod&eacute;rateurs et administrateurs.</mailman_request>
+<mailman_subscribe>Par l'envoi d'un message &agrave; cette adresse, un nouveau membre peut effectuer la demande d'inscription la liste (le sujet et le corps de texte sont ignor&eacute;s).[br]
+A savoir que c'est un alias de  -leave</mailman_subscribe>
+<mailman_unsubscribe>Par l'envoi d'un message &agrave; cette adresse, un nouveau membre peut effectuer la demande d&eacute;sinscription la liste (le sujet et le corps de texte sont ignor&eacute;s).[br]</mailman_unsubscribe>
+<mailman_waiting_replication>Cette liste de mailling attend la reproduction du service d'artica</mailman_waiting_replication>
+<mailman_web_site>Site mailman</mailman_web_site>
+<mailman_web_site_text>Console d'administration web de mailman</mailman_web_site_text>
+<pdns_mailman_explain>Cette fonctionnalit&eacute; va ajouter l'adresse web de l'interface Mailman (service de liste de distribution) au DNS de Artica[br]
+Si vous utilisez ce serveur comme serveur DNS vous serez en mesure d'afficher l'interface web de MailMan en s&eacute;lectionnant l'adresse IP du serveur Artica</pdns_mailman_explain>
+<PUBLIC_ARCHIVE_URL>Url d'Archive Publique</PUBLIC_ARCHIVE_URL>
+<subject_prefix>Sujet du Pr&eacute;fixe</subject_prefix>
+<urlhost>L'interface web de la Liste h&eacute;berge le nom</urlhost>
+<view_list_mailman>Afficher l'interface web d'administration</view_list_mailman>

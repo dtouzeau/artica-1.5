@@ -1,0 +1,8 @@
+<addextension_help>Voc&ecirc; pode adicionar apenas uma extens&atilde;o, escrevendo o nome da extens&atilde;o ap&oacute;s o ponto, por exemplo &quot;doc&quot; ou se preferir, voc&ecirc; pode adicionar m&uacute;ltiplas extens&otilde;es separando o nome de cada extens&atilde;o por um virgula, por exemplo &quot;doc, xls, pdf, exe, com, vbs&quot;</addextension_help>
+<Auto-compress_explain>O recurso de auto compress&atilde;o permite-lhe automaticamente converter e comprimir os ficheiros anexados nos e-mails enviados e recebidos.[br]
+Este recurso t&ecirc;m dois benef&iacute;cios :[ul]
+[li]Previne que c&oacute;digos maliciosos sejam executados quando um utilizador l&ecirc; uma mensagem ou guarde um anexo.[/li]
+[li]Economiza a largura de banda atrav&eacute;s da compress&atilde;o dos documentos anexados.[/li]
+[/ul]
+Voc&ecirc; precisa de adicionar extens&otilde;es por exemplo, doc, ppt, xls, exe, com a interface de modo a permitir a compress&atilde;o dos ficheiros anexados</Auto-compress_explain>
+<enable_autocompress>Activar o recurso de auto compress&atilde;o</enable_autocompress>

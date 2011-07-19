@@ -1,0 +1,6 @@
+<add_network>Adicionar uma nova rede</add_network>
+<auto_account_explain>Se voc&ecirc; activar esse recurso, um novo formul&aacute;rio ser&aacute; adicionado na p&aacute;gina de login do Artica.[br]Este formul&aacute;rio ajuda os utilizadores a preencher a informa&ccedil;&atilde;o de forma a criarem a sua conta (caixa de correio e acesso &agrave; interface Artica).[br]
+Este formul&aacute;rio ser&aacute; mostrado se os utilizadores estiverem conectados atrav&eacute;s das redes especificas que voc&ecirc; adicionou nesta sec&ccedil;&atilde;o</auto_account_explain>
+<enable_autocreate>Activar formul&aacute;rio de auto cria&ccedil;&atilde;o de contas</enable_autocreate>
+<ipfrom>Do endere&ccedil;o de IP</ipfrom>
+<ipto>Para o endere&ccedil;o de IP</ipto>

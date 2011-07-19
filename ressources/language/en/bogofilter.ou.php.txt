@@ -1,0 +1,19 @@
+<add_bogo_spam>SPAM bogo user</add_bogo_spam>
+<bogo_delete>Delete mail</bogo_delete>
+<bogo_ham>used to send good mails</bogo_ham>
+<bogo_intro>Bogofilter is a mail filter that classifies mail as spam or ham (non-spam) by a statistical analysis of the message's header and content (body).[br]
+The program is able to learn from the user's classifications and corrections.[br]
+The statistical technique is known as the Bayesian technique and its use for spam.[br]
+Bogofilter will create a words database for each internal user.[br]
+To classify messages as ham (non-spam) or spam, bogofilter needs to learn from your users mails[br]
+In this case you need to create 2 robots users.[br][br]
+[ul][li]One for learn SPAM that your users judge[/li][li] One for Ham (not spam) that bogofilter could detect.[/li][/ul]</bogo_intro>
+<bogo_prepend>prepend subject</bogo_prepend>
+<bogo_quarantine>quarantine mail</bogo_quarantine>
+<bogo_robots>Add Bogofilter robots</bogo_robots>
+<bogo_spam>used to send spam</bogo_spam>
+<if_bogo_prepend>If prepend selected, prepend subject with</if_bogo_prepend>
+<robot>bogofiler robots</robot>
+<spam_action>Detected spam action</spam_action>
+<spam_action_text>When bogofilter detected mails as score exceed</spam_action_text>
+<type>SPAM/HAM</type>

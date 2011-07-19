@@ -1,0 +1,10 @@
+gcc->make;
+make->make;
+gcc-c++->make;
+wget->make;
+autoconf->make;
+perl-ExtUtils-MakeMaker->make;
+openjade->make;
+xinetd->xinetd;
+bison->make;
+flex->make;

@@ -1,0 +1,7 @@
+<APP_JOOMLA_TEXT>Joomla est l'un des meilleurs CMS permettant d'afficher et de construire des sites internet.</APP_JOOMLA_TEXT>
+<service_type>type de service</service_type>
+<WWWAppliPassword>Mot de passe</WWWAppliPassword>
+<WWWAppliUser>Administrateur de l'application</WWWAppliUser>
+<WWWMysqlPassword>Mot de passe de la base Mysql</WWWMysqlPassword>
+<WWWMysqlUser>Administrateur de la base Mysql</WWWMysqlUser>
+<www_delete_web_service_confirm>This operation will uninstall this web service, Are you sure to perform this operation</www_delete_web_service_confirm>

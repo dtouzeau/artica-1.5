@@ -1,0 +1,8 @@
+<failure>failure</failure>
+<failure_text>The number of queries which resulted in a failure response other than those above</failure_text>
+<recursion>recursion</recursion>
+<recursion_text>The number of queries which caused the server to perform recursion in order to find the final answer</recursion_text>
+<success_text>The number of successful queries made to the server or zone. A successful query is defined as query which returns a NOERROR response other than a referral response</success_text>
+<sum>Sum</sum>
+<sum_text>The sum of all queries</sum_text>
+<_text>Todas as estatisticas</_text>

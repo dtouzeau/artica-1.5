@@ -1,0 +1,3 @@
+<countries>pays</countries>
+<countries_deny_list>Liste de Pays interdit</countries_deny_list>
+<deny_country_explain>Cette section vous permet d'interdire ou de mettre  en quarantaine le courrier de pays sp&eacute;cifiques . [Br] S&eacute;lectionn&eacute; dans cette liste au-dessous du pays pour l'ajouter [br] Artica utilisera Geo-IP pour localiser le courrier [br] Il fait l'analyse syntaxique d'en-t&ecirc;tes  SMTP et essaye de d&eacute;terminer de quel  pays lui acheminant d'abord IPs il provient</deny_country_explain>

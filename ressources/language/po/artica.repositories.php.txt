@@ -1,0 +1,23 @@
+<apply_uninstall>Iniciar opera&ccedil;&otilde;es</apply_uninstall>
+<apply_uninstall_help>Esta opera&ccedil;&atilde;o vai executar o processo de instala&ccedil;&atilde;o/desinstala&ccedil;&atilde;o no seu sistema, voc&ecirc; pode ver o registo do processo (log) na sec&ccedil;&atilde;o de eventos.</apply_uninstall_help>
+<apply_uninstall_text>Iniciar o processo dos pacotes selecionados</apply_uninstall_text>
+<installed_on_system>Pacotes instalados no sistema</installed_on_system>
+<installed_package>Este pacote est&aacute; instalado</installed_package>
+<install_text>Instalar este pacote no seu sistema</install_text>
+<more_one_car>Consulta a partir de 1 car&aacute;cter</more_one_car>
+<num_packages_installed>N&uacute;mero de pacotes</num_packages_installed>
+<packages_list>Lista de pacotes</packages_list>
+<package_name>Nome do pacote</package_name>
+<removed_package>Este pacote foi removido</removed_package>
+<repositories_manager>Gestor de reposit&oacute;rios</repositories_manager>
+<repositories_manager_explain>Esta sec&ccedil;&atilde;o permite-lhe actualizar e manter o seu sistema. Voc&ecirc; pode verificar as aplica&ccedil;&otilde;es instaladas e instalar novas aplica&ccedil;&otilde;es</repositories_manager_explain>
+<rollback_install>Abortar o processo de instala&ccedil;&atilde;o</rollback_install>
+<rollback_install_text>Anular a selec&ccedil;&atilde;o deste pacote para que ele n&atilde;o seja instalado</rollback_install_text>
+<rollback_uninstall>Abortar o processo de desinstala&ccedil;&atilde;o</rollback_uninstall>
+<rollback_uninstall_text>Desactivar o processo de desinstala&ccedil;&atilde;o deste pacote</rollback_uninstall_text>
+<to_be_installed>Este pacote est&aacute; seleccionado para ser instalado</to_be_installed>
+<to_be_uninstalled>Para ser desinstalado</to_be_uninstalled>
+<to_install_on_system>Pacotes que podem ser instalados neste sistema</to_install_on_system>
+<uninstall>Desinstalar</uninstall>
+<uninstall_packages_list>Lista de opera&ccedil;&otilde;es dos pacotes</uninstall_packages_list>
+<uninstall_text>Desinstalar esta aplica&ccedil;&atilde;o e o pacote do sistema</uninstall_text>

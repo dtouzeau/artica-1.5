@@ -1,0 +1,1 @@
+CREATE INDEX msgrcpt_idx_rid      ON msgrcpt (rid);

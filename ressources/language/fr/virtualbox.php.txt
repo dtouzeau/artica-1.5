@@ -1,0 +1,115 @@
+<accelerate3d>Acc&eacute;l&eacute;ration 3D mat&eacute;riel</accelerate3d>
+<acpi>Contr&ocirc;leur programmable d'interruptions.</acpi>
+<ACTIVATE_ARTICA_ASPXE>Activer Artica avec PXE</ACTIVATE_ARTICA_ASPXE>
+<ACTIVATE_ARTICA_ASPXE_TEXT>Forcer ce serveur &agrave; devenir un serveur DHCP et un serveur qui va servir de chargeur de syst&egrave;mes pour Clients L&eacute;gers &agrave; travers PXE.</ACTIVATE_ARTICA_ASPXE_TEXT>
+<add_thinclient>Ajouter un client l&eacute;ger</add_thinclient>
+<add_thinclient_text>Ajouter un client l&eacute;ger dans la base afin de d&eacute;finir ses param&egrave;tres</add_thinclient_text>
+<APP_VIRTUALBOX_WEBSERVICE>Service Web VirtualBox</APP_VIRTUALBOX_WEBSERVICE>
+<AsVirtualBoxManager>Peut administrer des machines virtuelles et des clients l&eacute;gers</AsVirtualBoxManager>
+<AUDIO_LEVEL>Niveau sonore</AUDIO_LEVEL>
+<CLONE_HD>Duplication de disques</CLONE_HD>
+<CLONE_HD_TEXT>Duplique un disque d'une machine virtuelle vers un nouveau disque avec un nouvel identifiant unique (UUID)</CLONE_HD_TEXT>
+<colour_depth>Profondeur de couleur</colour_depth>
+<COMPILE_PXE_SYSTEM>Compiler le syst&egrave;me PXE</COMPILE_PXE_SYSTEM>
+<could_not_with_computername>Op&eacute;ration annul&eacute;e. R&eacute;visez le nom de l'ordinateur:</could_not_with_computername>
+<CUSTOM_CONFIG>Configuration sp&eacute;cifique</CUSTOM_CONFIG>
+<CUSTOM_CONFIG_EXPLAIN>Autorise l'utilisateur &agrave; choisir les param&egrave;tres de d&eacute;marrage</CUSTOM_CONFIG_EXPLAIN>
+<DAILY_REBOOT>Red&eacute;marrage journalier</DAILY_REBOOT>
+<DAILY_REBOOT_EXPLAIN>Va red&eacute;marrer la machine si l'ordinateur est allum&eacute; plus d'une journ&eacute;e sans session activ&eacute;e</DAILY_REBOOT_EXPLAIN>
+<DHCPD_NOT_ENABLED>Le service DHCP n'est pas activ&eacute;</DHCPD_NOT_ENABLED>
+<DHCP_THINCLIENT_NOT_INSTALLED>Par de service DHCP install&eacute;.</DHCP_THINCLIENT_NOT_INSTALLED>
+<DHCP_THINCLIENT_NOT_INSTALLED_TEXT>Cliquez sur cette ic&ocirc;ne afin de voir comment mettre en place le syst&egrave;me PXE sur votre serveur DHCP.</DHCP_THINCLIENT_NOT_INSTALLED_TEXT>
+<DONT_VT_SWITCH_STATE>Interdire l'utilisation de Ctrl Alt Fn</DONT_VT_SWITCH_STATE>
+<DONT_ZAP_STATE>Interdire Ctrl Alt Backspace</DONT_ZAP_STATE>
+<ENABLE_VIRTUALBOX_WATCHDOG>Activer la surveillance</ENABLE_VIRTUALBOX_WATCHDOG>
+<filesystem>syst&egrave;me de fichiers</filesystem>
+<format>Format</format>
+<guestmemoryballoon>Espace m&eacute;moire ballooning</guestmemoryballoon>
+<guestmemoryballoon_text>Le ballooning, tout comme un ballon que l'on gonflerait et d&eacute;gonflerait d'o&ugrave; le terme, permet &agrave; une Machine virtuelle de disposer d'une m&eacute;moire &quot;temporaire&quot; ou elle peut &ecirc;tre allou&eacute;e pour d'autres ordinateur virtuels.[br]Avec le ballooning, la m&eacute;moire allou&eacute;e &agrave; une machine virtuelle peut &ecirc;tre donn&eacute;e &agrave; une autre machine virtuelle sans avoir &agrave; &eacute;teindre la premi&egrave;re.[br]
+Ceci peut &ecirc;tre utile afin de d&eacute;marrer temporairement une machine virtuelle ou dans des environnements sophistiqu&eacute;s avec beaucoup de machines virtuelles.
+[b]Vous devez absolument les &quot;additions invit&eacute;&quot;</guestmemoryballoon_text>
+<HOWTO_INSTALL_VDI>Cette section vous permet de transformer votre serveur en un serveur de diffusion d'infrastructure de machines virtuelles.[br]Elle va vous permettre d'installer VirtualBox comme hyperviseur principal.[br]
+L'installation de ThinClient2 va vous permettre de fournir un client Terminal Server.[br]Avec ces deux logiciels vous serez en mesure de cr&eacute;er des machines virtuelles qui vont &ecirc;tre utilis&eacute;s par des clients l&eacute;gers.[br]Ces clients l&eacute;gers vont charger par le r&eacute;seau (PXE) une micro distribution afin de fournir un client TSE pour atteindre la machine virtuelle.[br]
+Clickez sur le bouton d'installation afin d'administrer vos machines virtuelles via VirtualBox et les clients l&eacute;gers via Artica.[br]
+Vous pouvez aussi utiliser cette ligne de commande:[br][b]/usr/share/artica-postfix/bin/setup-ubuntu --check-virtualbox[/b]</HOWTO_INSTALL_VDI>
+<HOWTO_PXE_DHCP>Comment activer PXE et charger le client l&eacute;ger &agrave; travers DHCP ?</HOWTO_PXE_DHCP>
+<HOWTO_PXE_DHCP_TEXT>Pour qu'un ordinateur d&eacute;marre &agrave; partir du r&eacute;seau vous avez besoin de PXE.[br]PXE est une sorte d'extension &agrave; DHCP. Vous aurez donc besoin d'un serveur DHCP &agrave; jour.[br]
+Si vous utilisez un serveur Microsoft comme serveur DHCP, consultez ces articles :[ul]
+[li]http://technet.microsoft.com/en-us/library/bb694069.aspx[/li]
+[li]http://technet.microsoft.com/en-us/library/bb680668.aspx[/li]
+[/ul]
+[b]Sur Linux et Windows vous avez besoin de rajouter ce chemin &quot;/pxe/pxelinux.0&quot; dans la directive PXE dans la configuration de votre serveur DHCP.[br]
+Sur Linux/Artica, ajoutez ces directives:
+filename &quot;/pxe/pxelinux.0&quot;;[br]
+next-server x.x.x.x;[br]
+[i]has x.x.x.x &eacute;tant l'adresse ip de CE serveur[/i]
+[br]Si vous d&eacute;sirez que Artica fasse office de serveur DHCP, vous avez besoin d'activer le serveur &agrave; travers l'interface.</HOWTO_PXE_DHCP_TEXT>
+<hpet>Timer multim&eacute;dia</hpet>
+<hpet_text>can replace the legacy system timers.[br] This is turned off by default.[br] Note that Windows supports a HPET only from Vista onwards</hpet_text>
+<hwvirtex>Intel VT-x ou AMD-V</hwvirtex>
+<hwvirtexexcl>Exclusivement Intel VT-x ou AMD-V</hwvirtexexcl>
+<ioapic>I/O APICs</ioapic>
+<keyboard>clavier</keyboard>
+<KEYBOARD_MAP>Plan du clavier</KEYBOARD_MAP>
+<largepages>Large pages</largepages>
+<MENU_SHOW>Affichage du Menu</MENU_SHOW>
+<nestedpaging>Nested paging</nestedpaging>
+<network_drivers>Pilotes r&eacute;seaux</network_drivers>
+<NO_VMS_HERE>Pas de machines virtuelles r&eacute;f&eacute;renc&eacute;es dans la biblioth&egrave;que</NO_VMS_HERE>
+<pae>Physical Address Extension (PAE)</pae>
+<RDESKTOP_SERVER>adresse du serveur du Bureau distant</RDESKTOP_SERVER>
+<rebuild_defaults>Reconstruire les param&egrave;tres</rebuild_defaults>
+<rebuild_default_warning_modules>Ceci va &eacute;craser vos choix de pilotes et de paquetages et reconstruire un nouveau jeu.</rebuild_default_warning_modules>
+<RECONNECT_AUTO>Reconnexion automatique</RECONNECT_AUTO>
+<RECONNECT_PROMPT>Demande de reconnexion</RECONNECT_PROMPT>
+<refresh_virtual_machines>Rafra&icirc;chir la liste</refresh_virtual_machines>
+<refresh_virtual_machines_text>Rafra&icirc;chit la liste des machines virtuelles</refresh_virtual_machines_text>
+<rtcuseutc>Horloge interne en UTC</rtcuseutc>
+<same_format>Format identique</same_format>
+<screen>&Eacute;cran</screen>
+<SCREEN_BLANK_TIME>&Eacute;cran noir apr&egrave;s</SCREEN_BLANK_TIME>
+<SCREEN_OFF_TIME>&Eacute;teindre la session apr&egrave;s</SCREEN_OFF_TIME>
+<SCREEN_RESOLUTION>R&eacute;solution d'&eacute;cran</SCREEN_RESOLUTION>
+<SCREEN_RESOLUTION_SEQUENCE>Activer la r&eacute;solution par s&eacute;quence</SCREEN_RESOLUTION_SEQUENCE>
+<SCREEN_STANDBY_TIME>Mise en veille apr&egrave;s</SCREEN_STANDBY_TIME>
+<SCREEN_SUSPEND_TIME>Suspendre le syst&egrave;me apr&egrave;s</SCREEN_SUSPEND_TIME>
+<SEQUENCE>S&eacute;quence</SEQUENCE>
+<session>Session</session>
+<session_name>Nom de session</session_name>
+<sound_drivers>Pilotes audio</sound_drivers>
+<source_hd>Disque dur source</source_hd>
+<start_virtual_machine>D&eacute;marrer cette machine virtuelle</start_virtual_machine>
+<stop_virtual_machine>Arr&ecirc;ter cette machine virtuelle</stop_virtual_machine>
+<storage_drivers>Pilotes de stockage</storage_drivers>
+<take_snapshot>Prendre une &quot;photo&quot; du syst&egrave;me</take_snapshot>
+<TFTP_IS_NOT_INSTALLED>Pas de serveur TFTP install&eacute;</TFTP_IS_NOT_INSTALLED>
+<thinclient>Client l&eacute;ger</thinclient>
+<thinclients>Clients l&eacute;gers</thinclients>
+<thinclient_compile_logs>&Eacute;v&egrave;nements de compilation</thinclient_compile_logs>
+<thinclient_hardware>Param&egrave;tres mat&eacute;riels</thinclient_hardware>
+<thinclient_hardware_text>Indiquer les pilotes et modules qui vont &ecirc;tre charg&eacute;s par le client l&eacute;ger lors du chargement du syst&egrave;me</thinclient_hardware_text>
+<thinclient_network_modules_explain>La liste des pilotes r&eacute;seaux disponibles qui seront charg&eacute;s pendant le d&eacute;marrage &agrave; travers le r&eacute;seau.[br]Vous d&eacute;finir plusieurs pilotes mais indiquez uniquement ceux qui seront r&eacute;ellement utilis&eacute;s par vos machines clientes afin de ne pas augmenter le temps de chargement du syst&egrave;me.</thinclient_network_modules_explain>
+<THINCLIENT_REBUILDED_TEXT>L'op&eacute;ration de reconstruction est effectu&eacute;e en t&acirc;che de fond.Visualisez les &eacute;v&egrave;nements afin de constater l'&eacute;tat d'ach&egrave;vement.</THINCLIENT_REBUILDED_TEXT>
+<thinclient_software_text>Indiquez les services qui vont &ecirc;tre inclus dans le syst&egrave;me ma&icirc;tre.[br]Ces services pourront &ecirc;tre param&eacute;tr&eacute;s par client l&eacute;ger.</thinclient_software_text>
+<THINCLIENT_TFTP_IS_NOT_INSTALLED>Sans serveur TFTP vous ne serez pas en mesure de charger un syst&egrave;me d'exploitation &agrave; travers le r&eacute;seau.[br]Vous avez besoin d'installer un serveur TFTP</THINCLIENT_TFTP_IS_NOT_INSTALLED>
+<THINCOMPILE_SYSTEM_TEXT>Compilez vos param&egrave;tres et construisez le noyau t&eacute;l&eacute;chargeable par PXE.</THINCOMPILE_SYSTEM_TEXT>
+<usb_drivers>Pilotes USB</usb_drivers>
+<USB_ENABLED>Activation USB</USB_ENABLED>
+<user_safe_mode>mode sans &eacute;chec utilisateurs</user_safe_mode>
+<user_safe_mode_text>Activez cette option afin d'annuler toute demande de cr&eacute;ation ou de suppressions des utilisateurs.[br]L'op&eacute;ration sera enregistr&eacute;e dans le syst&egrave;me et vous pouvez visualiser si vos param&egrave;tres sont corrects.</user_safe_mode_text>
+<use_this_dont_know>A utiliser si vous ne savez pas quoi choisir</use_this_dont_know>
+<utilities>utilitaires</utilities>
+<video_drivers>Pilotes vid&eacute;os</video_drivers>
+<VIRTUALBOX_ABOUT>VirtualBox est une solution de virtualisation compl&egrave;te  pour les mat&eacute;riels X86.[br]Permettant la virtualisation de serveurs, mini-syst&egrave;mes ou station de travail.[br]Elle est dor&eacute;navant la seule solution de virtualisation de grande qualit&eacute; qui soit aussi Open Source.</VIRTUALBOX_ABOUT>
+<virtualbox_manager>VirtualBox Manager</virtualbox_manager>
+<virtualbox_manager_text>Acc&egrave;dez &agrave; la console de management web de VirtualBox afin d'administrer vos machines virtuelles</virtualbox_manager_text>
+<VIRTUALBOX_WATCHDOG>Surveillance VirtualBox</VIRTUALBOX_WATCHDOG>
+<VIRTUALBOX_WATCHDOG_TEXT>Assure qu'une machine virtuelle est d&eacute;marr&eacute;e et en fonctionnement.[br]si le serveur &agrave; red&eacute;marr&eacute; cette machine virtuelle sera automatiquement relanc&eacute;e.[br]D'une autre mani&egrave;re si le serveur s'arr&ecirc;te, la machine virtuelle sera &eacute;teinte proprement.</VIRTUALBOX_WATCHDOG_TEXT>
+<virtual_box_cpus>Nombre de CPU(s)</virtual_box_cpus>
+<virtual_desktop_infr>Bureau virtuel</virtual_desktop_infr>
+<virtual_machine>Machine virtuelle</virtual_machine>
+<virtual_machines>Machines virtuelles</virtual_machines>
+<virtual_machine_name>Nom de la machine virtuelle</virtual_machine_name>
+<vramsize>Taille de la M&eacute;moire vid&eacute;o</vramsize>
+<vtxvpid>Tagged TLB (VPID)</vtxvpid>
+<windows_manager>Gestion de fen&ecirc;tres</windows_manager>

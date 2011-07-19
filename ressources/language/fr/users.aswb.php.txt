@@ -1,0 +1,7 @@
+<add_backlistwhitelist_email>Ajoutez  une adresse &eacute;lectronique de la liste noire ou blanche</add_backlistwhitelist_email>
+<add_email>Ajouter une adresse e-mail</add_email>
+<add_wbl_text>Donnez ici l'adresse &eacute;lectronique que vous voulez ajouter &agrave; la liste noire ou blanche anti-spam [br] le format d'adresse devrait &ecirc;tre : [ul] [li] utilisateur@example.com [/li] [li] @example.com [/li] [li] .example.com [/li] [/ul]</add_wbl_text>
+<black_list_text>Une Liste noire de courrier &eacute;lectronique est une liste de contacts d'exp&eacute;diteurs qui seront automatiquement supprim&eacute;s</black_list_text>
+<email_type>Type d'adresse &eacute;lectronique</email_type>
+<email_type_help>Si vous le mettez &agrave; rouge, ce courrier &eacute;lectronique sera ins&eacute;r&eacute; dans la liste noire . [Br] Dans d'autre cas, si vous le mettez &agrave; vert, ce courrier &eacute;lectronique sera ins&eacute;r&eacute; dans votre liste blanche</email_type_help>
+<white_list_text>Un courrier &eacute;lectronique whitelist est une liste de contacts que l'utilisateur consid&egrave;re comme acceptable pour recevoir le courrier &eacute;lectronique et ne devrait pas &ecirc;tre envoy&eacute; au dossier corbeille</white_list_text>

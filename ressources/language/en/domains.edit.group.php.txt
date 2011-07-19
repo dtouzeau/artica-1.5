@@ -1,0 +1,85 @@
+<addfind_computer_text>Search a computer and add it to this group</addfind_computer_text>
+<add_attach_rule>Add a new attachment rule for this group</add_attach_rule>
+<add_computer>New computer</add_computer>
+<add_computer_confirm>Add this computer to your group ?</add_computer_confirm>
+<add_computer_text>Create a new computer entry...</add_computer_text>
+<add_new_kavmilterd_rule>Add a new antivirus rule for this group</add_new_kavmilterd_rule>
+<add_shared_folder>Add a new shared folder</add_shared_folder>
+<add_shared_folder_text>Create a new point that will be access on each home directory of users of this group</add_shared_folder_text>
+<AllowChangeMailBoxRules>Allow Modify mailbox rule</AllowChangeMailBoxRules>
+<AllowDansGuardianBanned>Allow exclude web sites trough banned web page</AllowDansGuardianBanned>
+<AllowEmailing>Allow send emailing</AllowEmailing>
+<AllowOpenVPN>Enable OpenVPN user page</AllowOpenVPN>
+<AllowXapianDownload>Can download files trought InstantSearch feature</AllowXapianDownload>
+<antivirus_rule>Antivirus rule</antivirus_rule>
+<antivirus_text>Define a specific antivirus mail rule for this group with Kaspersky</antivirus_text>
+<asav>Mail:Anti-Spam & Antivirus</asav>
+<AsDnsAdministrator>Can manage DNS entries</AsDnsAdministrator>
+<AsQuarantineAdministrator>Allow to query quarantine area</AsQuarantineAdministrator>
+<AsSambaAdministrator>Can Manage Samba and shared folders</AsSambaAdministrator>
+<as_plugin>Anti-spam module</as_plugin>
+<attachments_deny_text>This section allows you to add a forbidden attachments group into this group.[br]
+Each email routed to this users group will be parsed in order to be filtered  for specified attachments.</attachments_deny_text>
+<change_password_now>Change passwords now</change_password_now>
+<computers>Computers</computers>
+<computers_text>Add/Edit computers privileges in this group</computers_text>
+<dansguardian_rules>Url filtering</dansguardian_rules>
+<dansguardian_rules_text>Affect one DansGuardian rule to this group in order to define group web access</dansguardian_rules_text>
+<delete_members_confirm>Are you sure to delete all members in this group ?</delete_members_confirm>
+<delete_selected_members>Delete selected & deleted members</delete_selected_members>
+<FindInGroup_text>This feature will search user in this group,pattern "*" is supported, give the pattern here in order to find your users</FindInGroup_text>
+<find_computer>Find a computer</find_computer>
+<group_default_password>Default password</group_default_password>
+<group_default_password_change>If you switch it to green, users password of this group will be changed to this default password</group_default_password_change>
+<group_default_password_text>Define a default password for mass importation and user creation</group_default_password_text>
+<group_delete_text>Are you sure to delete this group ?
+if yes, all users will be
+automatically moved to group "nogroup"</group_delete_text>
+<group_settings>General configuration</group_settings>
+<importuser_text>This section allows you to import users from a text file.[br]
+the file must reflect this structure:[br]
+Each line is separated by a carriage return and a line must be :[b]username;mail;userid;password;PostalCode;Address;mobile;Phone</importuser_text>
+<kaspersky_anti_spam_text>Manage anti-spam rules for this group with Kaspersky Anti-spam 3.x</kaspersky_anti_spam_text>
+<mailing_list>Mailing lists</mailing_list>
+<mailing_list_text>See mailing lists saved in your organization</mailing_list_text>
+<members_text>View all members of this group</members_text>
+<MK_SAMBA_GROUP>Be a Samba Group</MK_SAMBA_GROUP>
+<MK_SAMBA_GROUP_text>Transform this artica group on a SAMBA group in order to share folders with this group</MK_SAMBA_GROUP_text>
+<not_group_samba>This group is not a SAMBA group</not_group_samba>
+<no_samba_group_in_ou>You try to add a group already used for Samba groups. This operation is not allowed</no_samba_group_in_ou>
+<organization_allow>Organization privileges</organization_allow>
+<privileges_text>Define access policies of all members of this group</privileges_text>
+<proxy>HTTP Proxy features</proxy>
+<quarantine_manager>Quarantine Manager</quarantine_manager>
+<rebuild_shared>Rebuild users links</rebuild_shared>
+<rebuild_shared_text>This operation will reconstruct links with all users stored by this group</rebuild_shared_text>
+<RemoveMailingList_text>Are you sure to remove this mailing list ?</RemoveMailingList_text>
+<RemoveSharedsFolders>Are you sure to remove all mounted folders on your system ?
+This operation will disconnect all mounted folders.
+But, all saved folders in your settings will be re-mounted automatically</RemoveSharedsFolders>
+<remove_shared_folder>Remove linked</remove_shared_folder>
+<remove_shared_folder_text>Remove all mounted shared folder in order to clean ghosts shared folders</remove_shared_folder_text>
+<sambaGroupType>Group type</sambaGroupType>
+<sambaSID>Samba SID Number</sambaSID>
+<select_org>Select organization</select_org>
+<SharedConf>Main Configuration</SharedConf>
+<SharedFolderPrefix>Prefix added on each folder</SharedFolderPrefix>
+<shared_folders>Shared Folders</shared_folders>
+<shared_folders_explain>Shared folders feature allows you to point a system folder with all users of this group.[br]
+imaging you want to share /home/shared with john and sully, this features will create a folder "myshared" in heach home directory of yours users and point it to /home/shared</shared_folders_explain>
+<shared_folders_text>Share a folder with all users of this group</shared_folders_text>
+<sieve_auto_explain>Your mailbox server store a feature that allow your users to create mailbox filters in charge of sorting mails by severals conditions.[br]This powerfull feature is performed directly by the server and not by the messaging client[br]
+In this case, it provides many benefits by reducing the bandwith, reducing the messaging client process and so on..[br]
+The Artica Mailbox filter option allow Artica to add rules on each group's account based on SPAM mails.[br]Rules created will move SPAM mails directly in Junk mailboxes without any user interaction.[br]
+In this case, when you update/add an user, Artica will automatically add this rule on each mailbox.</sieve_auto_explain>
+<sieve_auto_script>Maibox filters</sieve_auto_script>
+<sieve_auto_script_text>Define automatically scripts that translate spam eMails into Junk mailboxes</sieve_auto_script_text>
+<smbg_typ>local group (built-in group)</smbg_typ>
+<smbg_typ2>domain group (global group)</smbg_typ2>
+<sure_to_delete_selected_user>Are you sure to delete all selected users ?</sure_to_delete_selected_user>
+<view_member>Edit member attributes</view_member>
+<warning_delete_all_users>Are you sure to perform this operation ?
+All members will be disconnected from this group
+and will be moved to "nogroup" group</warning_delete_all_users>
+<YahooSelectedFolders_ask>Add This folder has shared for this group ?</YahooSelectedFolders_ask>
+<yes_group_samba>This group is a SAMBA group</yes_group_samba>

@@ -1,0 +1,8 @@
+<ENABLE_MAILMAN>Activer le service de Mailing listes</ENABLE_MAILMAN>
+<ENABLE_MAILMAN_TEXT>Passez cette fonctionnalit&eacute; en vert afin d'activer le service Mailman pour disposer de listes de distribution</ENABLE_MAILMAN_TEXT>
+<mailman_intro>Mailman est un logiciel libre pour g&eacute;rer la discussion de courrier &eacute;lectronique et les listes d'e-newsletter.[br]
+Mailman est int&eacute;gr&eacute; au Web, le rendant facile &agrave; g&eacute;rer pour les utilisateurs et facile &agrave; administrer pour des propri&eacute;taires de liste.[br]
+Mailman soutient l'archivage incorpor&eacute;, le traitement de rebond automatique, le filtrage de contenu, la livraison de sommaire, des filtres de spam et plus.[br]
+Mailman est un logiciel libre, distribu&eacute; conform&eacute;ment &agrave; la Licence Grand publique GNU. 
+Mailman est &eacute;crit en Python, avec un peu de C pour la s&eacute;curit&eacute;.[br]
+Le nom de ce logiciel est orthographi&eacute; Mailman avec un M majuscule et un deuxi&egrave;me m minuscule. Il est incorrect de l'orthographier &quot;MailMan&quot;.</mailman_intro>

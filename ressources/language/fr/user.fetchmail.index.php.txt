@@ -1,0 +1,8 @@
+<add_new_fetchmail_rule>Ajouter une nouvelle r&egrave;gle de r&eacute;cup&eacute;ration</add_new_fetchmail_rule>
+<and_send_to>et envoy&eacute; des messages &agrave;</and_send_to>
+<confirm_delete>Supprimer cette r&egrave;gle fetchmail ?</confirm_delete>
+<fetch_address>Adresse Fetch</fetch_address>
+<server_type>Type de serveur</server_type>
+<using_ssl>utilisant le SSL</using_ssl>
+<view>Voir la r&egrave;gle en format source</view>
+<with_port>avec port</with_port>

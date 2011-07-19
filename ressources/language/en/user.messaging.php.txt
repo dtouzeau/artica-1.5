@@ -1,0 +1,4 @@
+<email_infos_query>The displayed query depend of emails listed below, if you not see some mails events according a specific inbound mail address that is not listed, add this email into your account.[br]
+especially if you have set mail-retreival rules.</email_infos_query>
+<user_fetchmail_explain>Import your mails stored in your Internet mailboxes in your local mailbox</user_fetchmail_explain>
+<user_mailman_explain>Manage email distributions lists, create email forums</user_mailman_explain>

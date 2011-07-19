@@ -1,0 +1,14 @@
+<administrator>Administrator</administrator>
+<admin_password>Global "Admin" password</admin_password>
+<admin_password_help>By default a Super administrator called "admin" is set in order to manage your web site.[br]This "admin" user is independant and is not stored in the global database.[br]
+ [br]The default password is "secret" and you must change it for security reason</admin_password_help>
+<APP_JOOMLA_NOT_INSTALLED>Your Joomla is not installed</APP_JOOMLA_NOT_INSTALLED>
+<connection_user>Connection uid</connection_user>
+<connection_user_help>Set here an user login that helping your web site to authenticate internals users inside your web site administration panel</connection_user_help>
+<install_your_joomla>Install your joomla</install_your_joomla>
+<install_your_joomla_text>Install the joomla main program in order to open your web service</install_your_joomla_text>
+<joomlaservername>Web server name</joomlaservername>
+<joomlaservername_help>Define here the domain name/server name added in your Public/Private DNS.[br]
+For example,If you want this server has www.mycompany.com, set here "www.mycompany.com"[br]
+[i]Notice this server name must be already stored on DNS servers (Internet or Intranet network)[/i]</joomlaservername_help>
+<roundcubeservername>Roundcube server name</roundcubeservername>

@@ -1,0 +1,2 @@
+<hourly>hourly</hourly>
+<statistics>Statistics</statistics>

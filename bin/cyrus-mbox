@@ -1,0 +1,943 @@
+#!/usr/bin/perl
+#
+# Manage Cyrus IMAP mailboxes
+#
+# cyrus-mbox creates, modifys or deletes Cyrus mailboxes according to a 
+# predefined scheme (inlcluding subfolders)
+#
+# Copyright (C) 2004-2008 Hans-Juergen Beie <hjb@pollux.franken.de>
+#
+# This program is free software; you can redistribute it and/or modify it under 
+# the terms of the Artistic License 2.0 or the GNU General Public License as 
+# published by the Free Software Foundation; either version 2 of the license, 
+# or (at your option) any later version.
+#
+# -------------------------------------------------------------
+#
+# -------------------------------------------------------------
+
+my $me = `basename $0`;
+chomp($me);
+my $VERSION = '0.4.0';
+my $lupdate = '2008-04-27';
+my $author  = 'hjb';
+my $header  = "$me-$VERSION ($author -- $lupdate)";
+
+# -------------------------------------------------------------
+
+use strict qw(vars);
+use Getopt::Std;
+use IMAP::Admin;
+use Term::ReadKey;
+
+# -------------------------------------------------------------
+# Default configuration
+#
+my %conf = (
+    'global:config_file'     => '/etc/cyrus-mbox.conf',
+    'global:verbose'         => 0,
+    'imap:imap_server'       => 'localhost',
+    'imap:cyrus_admin'       => 'cyrus',
+    'imap:cyrus_pwd'         => '',
+    'imap:cyrus_pwd_file'    => '/etc/imap.pwd',
+    'imap:@force_subfolders' => [qw( Trash Sent Drafts Templates )],
+    'imap:@subfolders'       => [qw( Learn Learn.Spam Learn.Ham )],
+    'imap:quota'             => 0,
+    'imap:acl'               => 'lrswipcda',
+);
+
+# -------------------------------------------------------------
+
+my %opts;
+
+#
+# parse cmd line
+#
+my $args = join( ' ', @ARGV );
+unless ( getopts( 'hv:a:p:q:f:r:s:C:ilcdDm', \%opts ) ) {
+    die "Error reading arguments: '$args', try -h for help\n";
+}
+
+my @mbox = @ARGV;
+
+#
+# parse cmd options
+#
+
+if ( $opts{C} ) {
+    $conf{'global:config_file'} = $opts{C};
+}
+
+if ( $opts{l} ) {
+    @mbox = ( '*' );
+}
+
+# read configuration
+read_config( \%conf );
+
+if ( $opts{v} > 0 ) {
+    log_msg( 'info', "Verbose level: $opts{v}" ) if $opts{v} > 1;
+    $conf{'global:verbose'} = $opts{v};
+}
+else {
+    $opts{v} = $conf{'global:verbose'};
+}
+
+if ( $opts{h} or ($args eq '') ) {
+    usage();
+    bye( 0, '' );
+}
+
+# check options
+unless ( options_ok(\%opts) ) {
+    #usage();
+    bye(-99,'');
+}
+
+#
+# for the following options we need a mbox name
+#
+bye( -1, "Missing mailbox name, try -h for help" ) if @mbox == 0;
+
+$conf{'imap:@mbox'} = \@mbox;
+
+if ( $opts{q} ) {
+    $conf{'imap:quota'} = $opts{q};
+    log_msg( 'info', "Quota: $conf{'imap:quota'} MB" ) if $opts{v} > 1;
+}
+
+if ( $opts{s} ) {
+    $conf{'imap:imap_server'} = $opts{s};
+    log_msg( 'info', "IMAP Server: $conf{'imap:imap_server'}" ) if $opts{v} > 1;
+}
+
+if ( $opts{a} ) {
+    $conf{'imap:cyrus_admin'} = $opts{a};
+    log_msg( 'info', "IMAP admin: $conf{'imap:cyrus_admin'}" ) if $opts{v} > 1;
+}
+
+if ( $opts{p} ) {
+    $conf{'imap:cyrus_pwd'} = $opts{p};
+}
+elsif ( -r $conf{'imap:cyrus_pwd_file'} ) {
+    open( PWD, $conf{'imap:cyrus_pwd_file'} )
+      or bye( -3,
+        "Cannot read imap secret form '$conf{'imap:cyrus_pwd_file'}' $!" );
+    $conf{'imap:cyrus_pwd'} = <PWD>;
+    chomp( $conf{'imap:cyrus_pwd'} );
+    close(PWD);
+}
+else {
+    print "$conf{'imap:cyrus_admin'}\@$conf{'imap:imap_server'}\'s password: ";
+    ReadMode('noecho');
+    $conf{'imap:cyrus_pwd'} = ReadLine(0);
+    chomp( $conf{'imap:cyrus_pwd'} );
+    ReadMode('normal');
+    print "\n";
+}
+
+if ( $opts{f} ) {
+    my @folders = split( /[\s,]/, $opts{f} );
+    $conf{'imap:@subfolders'} = \@folders;
+    log_msg( 'info', "Additional subfolders: '@{$conf{'imap:@subfolders'}}'" )
+      if $opts{v} > 1;
+}
+
+if ( $opts{r} ) {
+
+    # be shure that ACL only contains allowed charcters
+    my $option = lc( $opts{r} );
+    my $acl    = '';
+    foreach my $c (qw( l r s w i p c d a )) {
+        $acl .= $c if $option =~ /$c/;
+    }
+    if ( $acl eq '' ) {
+        log_msg( 'error', "ACL '$option' contains illegal charcters (not in [lrswipcda])." );
+
+    }
+    $conf{'imap:acl'} = $acl;
+    log_msg( 'info', "ACL: '$conf{'imap:acl'}'" ) if $opts{v} > 1;
+}
+
+#
+# command options
+#
+
+if ( $opts{c} ) {
+    my @subfolders =
+      ( @{ $conf{'imap:@force_subfolders'} }, @{ $conf{'imap:@subfolders'} } );
+    $conf{'imap:@subfolders'} = \@subfolders;
+    bye(-10, "Create mailbox failed.") unless imap_create_mailbox( \%conf );
+
+}
+elsif ( $opts{m} ) {
+    bye(-11, "Modify mailbox failed.") unless imap_modify_mailbox( \%conf );
+
+}
+elsif ( $opts{d} or $opts{D} ) {
+    bye(-12, "Delete mailbox failed.") unless imap_delete_mailbox( \%conf );
+
+}
+elsif ( $opts{l} ) {
+    bye(-13, "List mailboxes failed.") unless imap_list_mailbox( \%conf );
+
+}
+elsif ( $opts{i} ) {
+    bye(-14, "Info mailbox failed.") unless imap_info_mailbox( \%conf );
+}
+
+bye(0,'');
+
+# -------------------------------------------------------------
+#
+# usage
+#
+sub usage {
+    print <<__END_OF_USAGE__
+$header
+Mailbox administration tool for Cyrus IMAPd
+
+usage: $me -i mbox
+
+       $me [ -q n ] [ -f list ] [ -r acl ] -c mbox
+
+       $me [ -q n ] [ -f list ] [ -r acl ] -m mbox
+
+       $me -d mbox
+
+       $me -l
+
+       $me -h
+  mbox           mailbox name
+
+options:
+  -h             Display this help
+  -v level       Be verbose if level > 0 (default: $conf{'global:verbose'})
+  -C file        Use config file instead of $conf{'global:config_file'}
+  -i mbox        Show infos about mailbox mbox
+  -l             List alls mailboxes and show some numbers
+  -d mbox        Delete mailbox mbox including all subfolders
+  -D mbox        Same as -d but without asking "Are you really sure...?"
+  -c mbox        Create mailbox mbox
+  -m mbox        Modify mailbox mbox
+  -q n           Set quota to n MB (n=0: none; default: $conf{'imap:quota'})
+  -f list        Create additional subfolders (default: '@{$conf{'imap:@subfolders'}}')
+                 (folders '@{$conf{'imap:@force_subfolders'}}' are created anyway)
+  -r acl         Set access list of owner for all folders to acl (default: $conf{'imap:acl'})
+  -s server      IMAP server (default: $conf{'imap:imap_server'})
+  -a admin       Cyrus admin (default: $conf{'imap:cyrus_admin'})
+  -p password    Cyrus admin's password
+                 If -p is omitted or empty $me tries to read the password from 
+                 $conf{'imap:cyrus_pwd_file'} first. If this file doesn't exist, 
+                 $me asks for the password.
+Options -v, -C, -s, -a, and -p  can be used in any case.  
+examples:
+  Get informations about bill's mailbox
+    # $me -i bill
+  Create mailbox for fred including default subfolders and set a 50 MB quota:
+    # $me -q 50 -p secret -c fred
+  Delete wilma's mailbox including all subfolders:
+    # $me -v1 -p secret -d wilma
+  Set the quota of simon's mailbox to 30 MB:
+    # $me -q 30 -m simon
+__END_OF_USAGE__
+      ;
+}
+
+
+#---------------------------------------------------------------
+#
+# check for ilegal options
+#
+sub options_ok {
+	my ($opts_ref) = @_;
+
+	my @one_of_these = qw( i l m c d D);
+	my $cnt = 0;
+	foreach my $o (@one_of_these) {
+	    $cnt++ if $opts_ref->{$o};
+	}
+	if ($cnt > 1) {
+	    log_msg('error', "You must not use more than one options out of these [@one_of_these].");
+	    return undef;
+        }
+        if ($cnt == 0) {
+	    log_msg('error', "You should chose one option out of these [@one_of_these], at least.");
+	    return undef;
+	}
+	return 1;
+}
+
+#---------------------------------------------------------------
+#
+# Get a section name, something like '[foobar]'?
+# Section names may contain alphanumerical characters including '_' and '-'.
+#
+sub get_section {
+    my ($string) = @_;
+    if ( $string =~ s/^\[(.+)\]$/$1/ ) {
+        return trim($1);
+    }
+    else {
+        return undef;
+    }
+}
+
+#---------------------------------------------------------------
+#
+# Get a 'param = value list'
+#
+sub get_param_value {
+    my $string = $_;
+
+    #my ($param, $value) = split(/\s*=\s*/, $string, 2);
+    #if ($param && $value) {
+    #	return ($param, $value);
+    #} else {
+    #	return undef;
+    #};
+
+    my @list;
+
+    my ( $param, $value ) = split( /\s*=\s*/, $string );
+    if ( $param && $value ) {
+        unless ( @list = split( /[\s,]+/, $value ) ) {
+            @list[0] = $value;
+        }
+        my $value_cnt = @list;
+        return ( $param, \@list, $value_cnt );
+    }
+
+    return undef unless $param;
+}
+
+#---------------------------------------------------------------
+#
+# read config params from a Windows like ini file
+#
+# returns a hash of params if successfull, otherwhise returns undef
+#
+sub read_config {
+    my ($config) = @_;
+
+    my $conf_file = $config->{'global:config_file'};
+
+    unless ( open( CNF, $conf_file ) ) {
+        bye( -1, "Cannot open config file '$conf_file': $!" );
+        return undef;
+    }
+    log_msg( 'info', "Reading config file '$conf_file'" ) if $opts{v} > 1;
+
+    my $section = '';
+    while (<CNF>) {
+        chomp;
+        my $line = trim($_);    # trim white space
+        next if $line eq '';    # ignore empty lines
+        next if $line =~ /^[#;]/;    # ignore comment lines
+
+        my $sec = get_section($line);
+        if ($sec) {
+
+            # it's a section, something like '[foobar]'
+            $section = $sec;
+            log_msg( 'info', "[$section]" ) if $opts{v} > 2;
+        }
+        elsif ( $section ne '' ) {
+
+            # check for 'param = value' pairs
+            my ( $param, $value, $value_cnt ) = get_param_value($line);
+            if ($param) {
+
+                # it's a line like 'param = value'
+                if ( $param =~ /^@/ ) {
+
+                    # a list of values was expected
+                    $config->{"$section:$param"} = $value;
+                    log_msg( 'info', "  $section:$param = @{$value}" )
+                      if $opts{v} > 2;
+                }
+                else {
+
+                    # a scalar was expected
+                    $config->{"$section:$param"} = $value->[0];
+                    log_msg( 'info', "  $section:$param = $value->[0]" )
+                      if $opts{v} > 2;
+                }
+
+            }
+        }
+    }
+    close(CNF);
+    return $config;
+}
+
+#---------------------------------------------------------------
+#
+# Trim leading and trailing white space
+#
+
+sub trim {
+    my ($string) = @_;
+
+    $string =~ s/^\s+//;
+    $string =~ s/\s+$//;
+    $string;
+}
+
+#---------------------------------------------------------------
+#
+# terminate program
+#
+sub bye {
+    my ( $exit_code, $msg ) = @_;
+    my $err = -$exit_code;
+
+    if ( $err > 0 ) {
+        log_msg( 'err', "$msg" ) if $msg;
+        #log_msg( 'err', '*** aborted ***' );
+    }
+    else {
+        log_msg( 'info', "$msg" ) if $msg;
+    }
+    exit $exit_code;
+}
+
+#---------------------------------------------------------------
+#
+# log message
+#
+sub log_msg {
+    my ( $level, $msg ) = @_;
+
+    $level = lc($level);
+    if ( $level =~ /err|warning/ ) {
+        warn "$msg\n";
+    }
+    else {
+        print "$msg\n";
+    }
+}
+
+#---------------------------------------------------------------
+#
+# connect to imap server
+#
+sub imap_connect {
+    my ( $server, $admin, $admin_pwd ) = @_;
+
+    #
+    # connect to imap server
+    #
+    my $imap = IMAP::Admin->new(
+        'Server'   => $server,
+        'Login'    => $admin,
+        'Password' => $admin_pwd,
+        'CRAM'     => 2,
+    );
+    my $status = $imap->error;
+
+    if ( $status ne 'No Errors' ) {
+        log_msg( 'warning', "Error: $status" );
+        $imap->close();
+        return undef;
+    }
+    return $imap;
+}
+
+#---------------------------------------------------------------
+#
+# does mailbox exist?
+#
+sub mbox_exists {
+    my ( $imap, $login ) = @_;
+
+    log_msg( 'info', "Is there a mailbox '$login'?" ) if $opts{v} > 1;
+    my @folders    = $imap->list("user.$login");    # check for INBOX
+    my $folder_cnt = @folders;
+    if ($folder_cnt == 0) {
+        log_msg( 'info', "No such mailbox: '$login'" ) if $opts{v} > 1;
+        return 0;
+    }
+    log_msg( 'info', "Mailbox '$login' found." ) if $opts{v} > 1;
+    return 1;
+}
+
+#---------------------------------------------------------------
+#
+# get a list of folders in existing mailbox
+#
+sub get_folders {
+    my ( $imap, $login ) = @_;
+
+    log_msg( 'info', "Getting list of $login\'s folders" ) if $opts{v} > 1;
+
+    my @list    = $imap->list("user.$login*"); # that seems to be only wildcard cyrus knows
+
+    # we have to filter this result, to avoid mixing up things like 'user.bill' and 'user.billiboy'
+    my @folders;
+    foreach my $folder (@list) {
+    	if ($folder =~ /^user\.$login(\..+)*$/) {
+	    push @folders, $folder;
+	}
+    }
+    
+    my $folder_cnt = @folders;
+    if ($folder_cnt == 0) {
+        log_msg( 'warning', "no such mailbox: '$login'" );
+        return undef;
+    }
+    #push @folders, "user.$login";                     # add the root mailbox
+    return @folders;
+}
+
+#---------------------------------------------------------------
+#
+# get quota of a mailbox
+#
+sub get_quota {
+    my ( $imap, $login ) = @_;
+
+    log_msg( 'info', "Getting quota of $login's mailbox" ) if $opts{v} > 1;
+    my @quota = $imap->get_quota("user.$login") or return undef;
+    log_msg( 'info', "Quota of $login's mailbox: usage: $quota[1] KB, limit: $quota[2] KB" ) if $opts{v} > 1;
+    my $used  = $quota[1] / 1024;                                  # KB --> MB
+    my $limit = $quota[2] / 1024;
+    my $rate  = 0;
+    if ( $limit == 0 ) {
+
+        # no quota limit
+        $rate  = '0';
+        $limit = '0';
+    }
+    else {
+        $rate = $used / $limit * 100;
+    }
+    log_msg( 'info', "Quota of $login's mailbox: usage: $used MB, limit: $limit MB" ) if $opts{v} > 1;
+
+    return $used, $limit, $rate;
+}
+
+#---------------------------------------------------------------
+#
+# get ACL of a folder
+# returns a hash!
+#
+sub get_acl {
+    my ( $imap, $login, $folder ) = @_;
+
+    my %acl = $imap->get_acl($folder);
+    return %acl;
+}
+
+#---------------------------------------------------------------
+#
+# set ACL of a folder
+#
+sub set_acl {
+    my ( $imap, $folder, $login, $acl ) = @_;
+
+    log_msg( 'info', "Setting ACL of '$folder' to '$login:$acl'" )
+      if $opts{v} > 1;
+    my $err = $imap->set_acl( $folder, $login, $acl );
+    if ( $err != 0 ) {
+        my $status = $imap->error;
+        log_msg( 'warning', "Error: $status" );
+        $imap->close();
+        return undef;
+    }
+    log_msg( 'info', "ACL of '$folder' set to '$acl'" ) if $opts{v} > 1;
+    return 1;
+}
+
+#---------------------------------------------------------------
+#
+# set quota
+#
+sub set_quota {
+    my ( $imap, $login, $quota ) = @_;
+
+    #
+    # set quota
+    #
+    my $quota_kb = 'none';
+    if ( $quota > 0 ) {
+        $quota_kb = $quota * 1024;    # quota in KB
+        log_msg( 'info', "Setting quota of mailbox '$login' to $quota_kb KB" )
+          if $opts{v} > 1;
+    }
+    else {
+        log_msg( 'info', "Setting quota of mailbox '$login' to 'none'" )
+          if $opts{v} > 1;
+    }
+    my $err = $imap->set_quota( "user.$login", $quota_kb );
+    if ( $err != 0 ) {
+        my $status = $imap->error;
+        log_msg( 'warning', "Error: $status" );
+        return undef;
+    }
+    if ( $quota > 0 ) {
+        log_msg( 'info',
+            "Quota of mailbox '$login' set to $quota_kb KB ($quota MB)" )
+          if $opts{v} > 0;
+    }
+    else {
+        log_msg( 'info', "Quota of mailbox '$login' set to 'none'" )
+          if $opts{v} > 0;
+    }
+    return 1;
+}
+
+#---------------------------------------------------------------
+#
+# create subfolders in existing mailbox
+#
+sub create_subfolders {
+    my ( $imap, $login, @subfolders ) = @_;
+
+    #
+    # create subfolders
+    #
+    log_msg( 'info', "Creating subfolders '@subfolders'" ) if $opts{v} > 2;
+    foreach my $folder (@subfolders) {
+        log_msg( 'info', "Creating subfolder '$folder'" ) if $opts{v} > 1;
+        my $err = $imap->create("user.$login.$folder");
+        if ( $err != 0 ) {
+            my $status = $imap->error;
+            log_msg( 'warning', "Error: $status" );
+            $imap->close();
+            return undef;
+        }
+        log_msg( 'info', "Subfolder '$folder' created" ) if $opts{v} > 0;
+    }
+    return 1;
+}
+
+#---------------------------------------------------------------
+#
+# create imap mailbox
+#
+sub imap_create_mailbox {
+    my ($conf) = @_;
+
+    my $server     = $conf->{'imap:imap_server'};
+    my $admin      = $conf->{'imap:cyrus_admin'};
+    my $admin_pwd  = $conf->{'imap:cyrus_pwd'};
+    my @mbox       = @{$conf->{'imap:@mbox'}};
+    my $quota      = $conf->{'imap:quota'};
+    my $acl        = $conf->{'imap:acl'};
+    my @subfolders = @{ $conf->{'imap:@subfolders'} };
+
+    #
+    # connect to server
+    #
+    my $imap = imap_connect( $server, $admin, $admin_pwd ) or return undef;
+
+    foreach my $login (@mbox) {
+
+    #
+    # is there such a thing?
+    #
+    if ( mbox_exists( $imap, $login ) ) {
+        log_msg( 'warning', "Mailbox '$login' already exists." );
+        next;
+    }
+
+    #
+    # create mailbox
+    #
+    log_msg( 'info', "Creating mailbox '$login'" ) if $opts{v} > 1;
+    my $err = $imap->create("user.$login");
+    if ( $err != 0 ) {
+        my $status = $imap->error;
+        log_msg( 'warning', "Error: $status" );
+        $imap->close();
+        return undef;
+    }
+    log_msg( 'info', "Mailbox '$login' created" ) if $opts{v} > 0;
+
+    #
+    # create subfolders
+    #
+    create_subfolders( $imap, $login, @subfolders ) or return undef;
+
+    #
+    # set ACL for mailbox owner
+    #
+    my @folders = get_folders( $imap, $login );
+    foreach my $folder (@folders) {
+        set_acl( $imap, $folder, $login, $acl ) or return undef;
+    }
+    log_msg( 'info', "ACLs of $login\'s folders set to '$login:$acl'" )
+      if $opts{v} > 0;
+
+    #
+    # set quota
+    #
+    set_quota( $imap, $login, $quota ) or return undef;
+    }
+
+    $imap->close();
+    return 1;
+}
+
+#---------------------------------------------------------------
+#
+# remove imap mailbox
+#
+sub imap_delete_mailbox {
+    my ($conf) = @_;
+
+    my $server    = $conf->{'imap:imap_server'};
+    my $admin     = $conf->{'imap:cyrus_admin'};
+    my $admin_pwd = $conf->{'imap:cyrus_pwd'};
+    my @mbox      = @{$conf->{'imap:@mbox'}};
+
+    #my ($server, $admin, $admin_pwd, $login) = @_;
+
+    my $imap = imap_connect( $server, $admin, $admin_pwd ) or return undef;
+
+    foreach my $login (@mbox) {
+
+    #
+    # is there such a thing?
+    #
+    unless ( mbox_exists( $imap, $login ) ) {
+        log_msg( 'warning', "No such mailbox: '$login'" );
+        next;
+    }
+
+    #
+    # really?
+    #
+    if ( $opts{d} ) {
+    	print "Are you really sure to remove mailbox '$login' completely [y|N]? ";
+	my $answer = <STDIN>;
+	chomp($answer);
+	return undef if lc($answer) ne 'y';
+    }
+
+    #
+    # get a list of $login's folders
+    #
+    my @folders = get_folders( $imap, $login );
+    my $folder_cnt = @folders;
+    return undef if ( $folder_cnt == 0 );
+
+    #
+    # set admin's ACL='c' for all folders so that we can delete the stuff
+    #
+    foreach my $folder (@folders) {
+        set_acl( $imap, $folder, $admin, 'c' ) or return undef;
+    }
+
+    #
+    # remove the mailbox
+    #
+    log_msg( 'info', "Deleting mailbox '$login' including all subfolders" )
+      if $opts{v} > 1;
+    my $err = $imap->h_delete("user.$login");
+    if ( $err != 0 ) {
+        my $status = $imap->error;
+        log_msg( 'warning', "Error: $status" );
+        $imap->close();
+        return undef;
+    }
+    log_msg( 'info', "Mailbox '$login' including all subfolders deleted" )
+      if $opts{v} > 0;
+
+    }
+    $imap->close();
+    return 1;
+}
+
+#---------------------------------------------------------------
+#
+# modify mailbox
+#
+sub imap_modify_mailbox {
+    my ($conf) = @_;
+
+    my $server     = $conf->{'imap:imap_server'};
+    my $admin      = $conf->{'imap:cyrus_admin'};
+    my $admin_pwd  = $conf->{'imap:cyrus_pwd'};
+    my @mbox       = @{$conf->{'imap:@mbox'}};
+    my $quota      = $conf->{'imap:quota'};
+    my $acl        = $conf->{'imap:acl'};
+    my @subfolders = @{ $conf->{'imap:@subfolders'} };
+
+    my $imap = imap_connect( $server, $admin, $admin_pwd ) or return undef;
+
+    foreach my $login (@mbox) {
+
+    #
+    # is there such a thing?
+    #
+    unless ( mbox_exists( $imap, $login ) ) {
+        log_msg( 'warning', "No such mailbox: '$login'" );
+        next;
+    }
+
+    #
+    # create subfolders
+    #
+    if ( $opts{f} ) {
+        create_subfolders( $imap, $login, @subfolders ) or return undef;
+    }
+
+    #
+    # set quota
+    #
+    if ( $opts{q} ) {
+        set_quota( $imap, $login, $quota ) or return undef;
+    }
+
+    #
+    # set owner's ACL for all folders
+    #
+    if ( $opts{r} ) {
+        my @folders = get_folders( $imap, $login );
+        foreach my $folder (@folders) {
+            set_acl( $imap, $folder, $login, $acl ) or return undef;
+        }
+        log_msg( 'info', "ACLs of $login\'s folders set to '$login:$acl'" )
+          if $opts{v} > 0;
+    }
+    }
+
+    $imap->close();
+    return 1;
+}
+
+#---------------------------------------------------------------
+#
+# show infos for a mailbox
+#
+sub imap_info_mailbox {
+    my ($conf) = @_;
+
+    my $server    = $conf->{'imap:imap_server'};
+    my $admin     = $conf->{'imap:cyrus_admin'};
+    my $admin_pwd = $conf->{'imap:cyrus_pwd'};
+    my @mbox      = @{$conf->{'imap:@mbox'}};
+
+    my $imap = imap_connect( $server, $admin, $admin_pwd ) or return undef;
+
+    foreach my $login (@mbox) {
+
+    #
+    # is there such a thing?
+    #
+    unless ( mbox_exists( $imap, $login ) ) {
+        log_msg( 'warning', "No such mailbox: '$login'" );
+        $imap->close();
+        return undef;
+    }
+
+    #
+    # show a folder tree
+    #
+    my @folders = get_folders( $imap, $login ) or return undef;
+    my $folder_cnt = @folders;
+    return undef if $folders[0] eq '';
+    my $cnt = 0;
+    print "$login\'s mailbox has $folder_cnt folders:\n";
+    print '  Folder ', ' ' x ( 40 - length('  Folder ') ), " ACL\n";
+    print '-' x 64, "\n";
+
+    foreach my $folder ( sort @folders ) {
+        $cnt++;
+        my %acl = get_acl( $imap, $admin, $folder );
+        my ( $user, @subfolders ) = split( /\./, $folder );
+        my $levels = @subfolders;
+        my $line;
+        if ( $levels == 1 ) {
+            $line = "  INBOX ";
+        }
+        else {
+            $line = '    '
+              . '   ' x ( $levels - 2 )
+              . $subfolders[ $levels - 1 ] . ' ';
+        }
+        $line .= '.' x ( 40 - length($line) );
+        foreach my $user ( sort keys %acl ) {
+            $line .= " ($user:$acl{$user})";
+        }
+        print "$line\n";
+    }
+    print '-' x 64, "\n";
+
+    #
+    # get quota of the mailbox
+    #
+    my ( $used, $total, $rate ) = get_quota( $imap, $login );
+    printf "Quota of %s's mailbox: %.1f MB of %.1f MB used, (%.2f %)\n", $login,
+      $used, $total, $rate;
+    }
+
+    $imap->close();
+    return 1;
+}
+
+#---------------------------------------------------------------
+#
+# list all mailboxes
+#
+sub imap_list_mailbox {
+    my ($conf) = @_;
+
+    my $server    = $conf->{'imap:imap_server'};
+    my $admin     = $conf->{'imap:cyrus_admin'};
+    my $admin_pwd = $conf->{'imap:cyrus_pwd'};
+    my $login     = $conf->{'imap:mbox'};
+
+    my $imap = imap_connect( $server, $admin, $admin_pwd ) or return undef;
+
+    my @folders = get_folders( $imap, '*' ) or return undef;
+
+    #
+    # collect infos of each mailbox
+    #
+    my %mbox;
+    my %quota_limit;
+    my %quota_used;
+    my %quota_rate;
+    my $volume     = 0;
+    my $folder_cnt = 0;
+    my $max_len    = 0;
+    foreach my $folder (@folders) {
+        my ( $dummy, $mbox_name ) = split( /\./, $folder );
+        #next if $mbox_name eq '*';
+        $max_len = length($mbox_name) if length($mbox_name) > $max_len;
+        $folder_cnt++;
+        if ( exists $mbox{$mbox_name} ) {
+            $mbox{$mbox_name}++;    # count folders
+        }
+        else {
+            $mbox{$mbox_name} = 1;
+
+            # get some more data
+            my ( $used, $limit, $rate ) = get_quota( $imap, $mbox_name );
+            $quota_used{$mbox_name}  = $used;
+            $quota_limit{$mbox_name} = $limit;
+            $quota_rate{$mbox_name}  = $rate;
+            $volume += $used;
+        }
+    }
+
+    #
+    # show infos
+    #
+    my $mbox_cnt = keys %mbox;
+    print "List of mailboxes:\n";
+    foreach my $mbox_name ( sort keys %mbox ) {
+        my $total_rate = $quota_used{$mbox_name} / $volume * 100;
+        printf "%" . $max_len
+          . "s:%4u folders, usage: %6.1f /%6.1f MB (%6.2f %), total volume: %6.2f %\n",
+          $mbox_name, $mbox{$mbox_name}, $quota_used{$mbox_name},
+          $quota_limit{$mbox_name}, $quota_rate{$mbox_name}, $total_rate;
+    }
+    printf "%u mailboxes, %u folders, total mail volume %.1f MB (%.2f GB)\n",
+      $mbox_cnt, $folder_cnt, $volume, $volume / 1024.0;
+
+    return 1;
+}

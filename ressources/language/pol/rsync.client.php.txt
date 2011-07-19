@@ -1,0 +1,15 @@
+<alternate_backup_server>Alternate backup server</alternate_backup_server>
+<alternate_backup_server_text>If the main backup server is failed or not available, you can use an alternate remote server to ensure that your backup is correctly set</alternate_backup_server_text>
+<APP_RSYNC_CLIENT_EXPLAIN>Define here parameters sent by your administrator in order to send you local storage to the remote server</APP_RSYNC_CLIENT_EXPLAIN>
+<duration>duration</duration>
+<enable_remote_sync>Activate Remote Push</enable_remote_sync>
+<enable_remote_sync_text>If you turn to green, Artica will push your backuped datas to the target remote server</enable_remote_sync_text>
+<main_backup_server>Main backup server</main_backup_server>
+<remote_server_name>Remote server name</remote_server_name>
+<remote_server_port>Remote server port</remote_server_port>
+<RsyncClientSSL>Enable SSL</RsyncClientSSL>
+<RsyncUploadBwlimit>limit upload bandwidth</RsyncUploadBwlimit>
+<sent>sent</sent>
+<sent_numfiles>Number of files sended</sent_numfiles>
+<UseOnlyRsync>Use only Synchronization</UseOnlyRsync>
+<UseOnlyRsync_text>If you enable this feature, artica-backup will only use your remote server to store backuped files</UseOnlyRsync_text>

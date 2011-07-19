@@ -1,0 +1,466 @@
+unit roundcube;
+
+{$MODE DELPHI}
+{$LONGSTRINGS ON}
+
+interface
+
+uses
+    Classes, SysUtils,variants,strutils,IniFiles, Process,logs,unix,RegExpr in 'RegExpr.pas',zsystem,lighttpd;
+
+type LDAP=record
+      admin:string;
+      password:string;
+      suffix:string;
+      servername:string;
+      Port:string;
+  end;
+
+  type
+  troundcube=class
+
+
+private
+     LOGS:Tlogs;
+     D:boolean;
+     GLOBAL_INI:TiniFIle;
+     function COMMANDLINE_PARAMETERS(FoundWhatPattern:string):boolean;
+     function get_INFOS(key:string):string;
+     function get_LDAP(key:string):string;
+     function ReadFileIntoString(path:string):string;
+     SYS:TSystem;
+     artica_path:string;
+     function  roundcube_db_inc_php():string;
+     function  MYSQL_SERVER_PARAMETERS_CF(key:string):string;
+     function  MYSQL_MYCNF_PATH:string;
+     procedure mcrypt_ini();
+
+public
+    procedure   Free;
+    constructor Create;
+    procedure   START();
+    function    main_folder():string;
+    procedure   CHANGE_PHP_INI();
+    function    MYSQL_SOURCE_PATH():string;
+    procedure   ROUNDCUBE_START_SERVICE();
+    procedure   ROUNDCUBE_STOP_SERVICE();
+    function    ROUNDCUBE_PID():string;
+    function    web_folder():string;
+    function    STATUS:string;
+    function    VERSION():string;
+    procedure   DEBIAN_CONFIG();
+
+
+END;
+
+implementation
+
+constructor troundcube.Create;
+begin
+       forcedirectories('/etc/artica-postfix');
+       LOGS:=tlogs.Create();
+       SYS:=Tsystem.Create;
+       D:=COMMANDLINE_PARAMETERS('--roundcube');
+
+       if not DirectoryExists('/usr/share/artica-postfix') then begin
+              artica_path:=ParamStr(0);
+              artica_path:=ExtractFilePath(artica_path);
+              artica_path:=AnsiReplaceText(artica_path,'/bin/','');
+
+      end else begin
+          artica_path:='/usr/share/artica-postfix';
+      end;
+end;
+//##############################################################################
+procedure troundcube.free();
+begin
+    logs.Free;
+    SYS.Free;
+end;
+//##############################################################################
+procedure troundcube.START();
+var
+   import:boolean;
+begin
+
+   import:=false;
+   if not FileExists(roundcube_db_inc_php()) then begin
+      logs.Debuglogs('ROUNDCUBE:: unable to stat db.inc.php, (not installed) abort..;' );
+      exit;
+   end;
+   
+   
+   if D then writeln('DEBIAN_CONFIG();');
+   DEBIAN_CONFIG();
+   CHANGE_PHP_INI();
+   
+   if not FileExists(MYSQL_SOURCE_PATH()) then begin
+     logs.Debuglogs('ROUNDCUBE:: unable to stat sql5 commands');
+     exit;
+   end;
+
+   if not logs.IF_DATABASE_EXISTS('roundcubemail') then import:=true;
+   if not logs.IF_TABLE_EXISTS('contacts','roundcubemail') then import:=true;
+   if D then writeln('import=',import);
+   if import then begin
+      logs.Debuglogs('ROUNDCUBE:: not really set... import database');
+      logs.EXECUTE_SQL_FILE(MYSQL_SOURCE_PATH(),'roundcubemail');
+   end else begin
+      logs.Debuglogs('ROUNDCUBE:: mysql test success');
+   end;
+
+end;
+
+//##############################################################################
+function troundcube.STATUS:string;
+var
+ini:TstringList;
+pid:string;
+begin
+   ini:=TstringList.Create;
+   ini.Add('[ROUNDCUBE]');
+   if FileExists(web_folder()) then begin
+   if FileExists(roundcube_db_inc_php()) then  begin
+      pid:=ROUNDCUBE_PID();
+      if SYS.PROCESS_EXIST(pid) then ini.Add('running=1') else  ini.Add('running=0');
+      ini.Add('application_installed=1');
+      ini.Add('application_enabled='+SYS.GET_INFO('RoundCubeHTTPEngineEnabled'));
+      ini.Add('master_pid='+ pid);
+      ini.Add('master_memory=' + IntToStr(SYS.PROCESS_MEMORY(pid)));
+      ini.Add('master_version='+VERSION());
+      ini.Add('status='+SYS.PROCESS_STATUS(pid));
+      ini.Add('service_name=APP_ROUNDCUBE');
+      ini.Add('service_cmd=roundcube');
+
+   end;
+   end;
+
+   result:=ini.Text;
+   ini.free;
+
+end;
+//##############################################################################
+function troundcube.VERSION():string;
+var
+path:string;
+ RegExpr:TRegExpr;
+    FileDatas:TStringList;
+    i:integer;
+begin
+     path:=web_folder() +  '/index.php';
+
+     if not FileExists(path) then exit;
+     FileDatas:=TstringList.Create;
+     FileDatas.LoadFromFile(path);
+     RegExpr:=TRegExpr.Create;
+     RegExpr.Expression:='Version\s+([0-9\.a-zA-Z\-]+)';
+     for i:=0 to FileDatas.Count-1 do begin
+         if RegExpr.Exec(FileDatas.Strings[i]) then begin
+            result:=RegExpr.Match[1];
+            break;
+         end;
+     end;
+  RegExpr.free;
+  FileDatas.free;
+
+end;
+//##############################################################################
+procedure troundcube.mcrypt_ini();
+var
+  l:TstringList;
+begin
+   forcedirectories('/etc/php5/conf.d');
+   if FileExists('/etc/php5/conf.d/mcrypt.ini') then exit;
+   l:=TstringList.Create;
+   l.Add('extension=mcrypt.so');
+   l.SaveToFile('/etc/php5/conf.d/mcrypt.ini');
+   l.free;
+end;
+//##############################################################################
+function troundcube.roundcube_db_inc_php():string;
+begin
+   if FileExists('/etc/roundcube/db.inc.php') then exit('/etc/roundcube/db.inc.php');
+   if FileExists('/usr/share/roundcubemail/config/db.inc.php') then exit('/usr/share/roundcubemail/config/db.inc.php');
+end;
+//##############################################################################
+function troundcube.main_folder():string;
+begin
+if FileExists('/var/lib/roundcube/index.php') then exit('/var/lib/roundcube');
+if FileExists('/usr/share/roundcubemail/index.php') then exit('/usr/share/roundcubemail');
+end;
+//##############################################################################
+function troundcube.web_folder():string;
+begin
+if FileExists('/usr/share/roundcube/index.php') then exit('/usr/share/roundcube');
+if FileExists('/usr/share/roundcubemail/index.php') then exit('/usr/share/roundcubemail');
+end;
+//##############################################################################
+function troundcube.ROUNDCUBE_PID():string;
+var
+   pidpath:string;
+   pid:string;
+begin
+     pidpath:='/var/run/lighttpd/lighttpd-roundcube.pid';
+     pid:=SYS.GET_PID_FROM_PATH(pidpath);
+     result:=pid;
+end;
+
+procedure troundcube.ROUNDCUBE_START_SERVICE();
+var
+   conf_path:string;
+   lighttpd:Tlighttpd;
+   pid:string;
+begin
+     conf_path:='/etc/artica-postfix/lighttpd-roundcube.conf';
+
+        
+     if Not DirectoryExists(main_folder())then begin
+        logs.Debuglogs('ROUNDCUBE_START_SERVICE():: RoundCube is not installed');
+        exit;
+     end;
+     lighttpd:=Tlighttpd.Create;
+     if not FileExists(lighttpd.LIGHTTPD_BIN_PATH()) then begin
+        logs.Debuglogs('ROUNDCUBE_START_SERVICE():: lighttpd is not installed');
+        exit;
+     end;
+     
+     pid:=ROUNDCUBE_PID();
+     if SYS.GET_INFO('RoundCubeHTTPEngineEnabled')<>'1' then begin
+         logs.Debuglogs('ROUNDCUBE_START_SERVICE():: lighttpd is disabled');
+         logs.OutputCmd('/bin/ln -s --force ' + web_folder + ' ' +artica_path + '/webmail');
+         if SYS.PROCESS_EXIST(pid) then ROUNDCUBE_STOP_SERVICE();
+         exit;
+     end;
+     
+     
+     if not FileExists(conf_path) then begin
+          logs.Debuglogs('ROUNDCUBE_START_SERVICE():: Unable to stat /etc/artica-postfix/lighttpd-roundcube.conf');
+          exit;
+     end;
+     
+
+     if not SYS.PROCESS_EXIST(pid) then begin
+        DEBIAN_CONFIG();
+         logs.OutputCmd('/bin/chown -R www-data:www-data '+web_folder());
+         logs.OutputCmd(lighttpd.LIGHTTPD_BIN_PATH() + ' -f ' + '/etc/artica-postfix/lighttpd-roundcube.conf');
+
+     
+     pid:=ROUNDCUBE_PID();
+      if not SYS.PROCESS_EXIST(pid) then begin
+        logs.Debuglogs('ROUNDCUBE_START_SERVICE():: Failed to start http engine');
+        exit;
+      end  else begin
+        logs.Debuglogs('ROUNDCUBE_START_SERVICE():: Success starting lighttpd pid number ' + pid);
+     end;
+     end else begin
+         logs.Debuglogs('ROUNDCUBE_START_SERVICE():: lighttpd already started with PID ' + pid);
+         exit;
+     end;
+end;
+//##############################################################################
+procedure troundcube.ROUNDCUBE_STOP_SERVICE();
+var
+   conf_path:string;
+   lighttpd:Tlighttpd;
+   pid:string;
+begin
+  conf_path:='/etc/artica-postfix/lighttpd-roundcube.conf';
+
+     if not FileExists(conf_path) then begin
+          logs.Debuglogs('ROUNDCUBE_START_SERVICE():: Unable to stat /etc/artica-postfix/lighttpd-roundcube.conf');
+          exit;
+     end;
+
+     if Not DirectoryExists(main_folder())then begin
+        logs.Debuglogs('ROUNDCUBE_START_SERVICE():: RoundCube is not installed');
+        exit;
+     end;
+     lighttpd:=Tlighttpd.Create;
+     if not FileExists(lighttpd.LIGHTTPD_BIN_PATH()) then begin
+        logs.Debuglogs('ROUNDCUBE_START_SERVICE():: lighttpd is not installed');
+        exit;
+     end;
+     
+pid:=ROUNDCUBE_PID();
+     if not SYS.PROCESS_EXIST(pid) then begin
+        writeln('Stopping RoundCube service...: Already stopped');
+        exit;
+     end;
+
+     writeln('Stopping RoundCube service...: ' + pid + ' PID');
+     fpsystem('/bin/kill ' +pid);
+     exit;
+end;
+//##############################################################################
+
+procedure troundcube.DEBIAN_CONFIG();
+var
+   l:TstringList;
+begin
+     mcrypt_ini();
+     if not FileExists('/etc/roundcube/debian-db.php') then begin
+        ForceDirectories('/etc/roundcube');
+        logs.Debuglogs('DEBIAN_CONFIG():: unable to stat /etc/roundcube/debian-db.php force create it....');
+     end;
+     l:=TstringList.Create;
+l.Add('<?php');
+l.Add('##');
+l.Add('## database access settings in php format');
+l.Add('## automatically generated from /etc/dbconfig-common/roundcube.conf');
+l.Add('## by /usr/sbin/dbconfig-generate-include');
+l.Add('## Thu, 29 May 2008 11:22:21 +0200');
+l.Add('##');
+l.Add('## by default this file is managed via ucf, so you shouldn"t have to');
+l.Add('## worry about manual changes being silently discarded.  *however*,');
+l.Add('## you"ll probably also want to edit the configuration file mentioned');
+l.Add('## above too.');
+l.Add('##');
+l.Add('$dbuser="'+ SYS.MYSQL_INFOS('database_admin') + '";');
+l.Add('$dbpass="' + SYS.MYSQL_INFOS('database_password') + '";');
+l.Add('$basepath="";');
+l.Add('$dbname="roundcubemail";');
+l.Add('$dbserver="' + SYS.MYSQL_INFOS('mysql_server') + '";');
+l.Add('$dbport="' + SYS.MYSQL_INFOS('port') + '";');
+l.Add('$dbtype="mysql";');
+l.SaveToFile('/etc/roundcube/debian-db.php');
+logs.Debuglogs('saving /etc/roundcube/debian-db.php');
+
+l.CLear;
+l.Add('<?php');
+l.Add('$rcmail_config = array();');
+l.Add('$rcmail_config["db_dsnw"] = "mysql://'+SYS.MYSQL_INFOS('database_admin')+':' + SYS.MYSQL_INFOS('database_password') + '@localhost/roundcubemail";');
+l.Add('$rcmail_config["db_dsnr"] = "";');
+l.Add('$rcmail_config["db_max_length"] = 512000;  // 500K');
+l.Add('$rcmail_config["db_persistent"] = FALSE;');
+l.Add('$rcmail_config["db_table_users"] = "users";');
+l.Add('$rcmail_config["db_table_identities"] = "identities";');
+l.Add('$rcmail_config["db_table_contacts"] = "contacts";');
+l.Add('$rcmail_config["db_table_session"] = "session";');
+l.Add('$rcmail_config["db_table_cache"] = "cache";');
+l.Add('$rcmail_config["db_table_messages"] = "messages";');
+l.Add('$rcmail_config["db_sequence_users"] = "user_ids";');
+l.Add('$rcmail_config["db_sequence_identities"] = "identity_ids";');
+l.Add('$rcmail_config["db_sequence_contacts"] = "contact_ids";');
+l.Add('$rcmail_config["db_sequence_cache"] = "cache_ids";');
+l.Add('$rcmail_config["db_sequence_messages"] = "message_ids";');
+l.Add('?>');
+l.SaveToFile('/etc/roundcube/db.inc.php');
+logs.Debuglogs('saving /etc/roundcube/db.inc.php');
+
+logs.OutPutCmd('/bin/ln -s --force /etc/roundcube/db.inc.php /usr/share/roundcube/config/db.inc.php');
+l.free;
+end;
+
+//##############################################################################
+function troundcube.MYSQL_SOURCE_PATH():string;
+begin
+    if FileExists('/usr/share/dbconfig-common/data/roundcube/install/mysql') then exit('/usr/share/dbconfig-common/data/roundcube/install/mysql');
+    if FileExists('/usr/share/dbconfig-common/data/roundcube/install/mysql') then exit('/usr/share/dbconfig-common/data/roundcube/install/mysql');
+    if FileExists('/usr/share/roundcubemail/SQL/mysql5.initial.sql') then exit('/usr/share/roundcubemail/SQL/mysql5.initial.sql');
+end;
+//##############################################################################
+function troundcube.get_INFOS(key:string):string;
+var value:string;
+begin
+value:=SYS.GET_INFO(key);
+result:=value;
+end;
+//#############################################################################
+function troundcube.get_LDAP(key:string):string;
+var value:string;
+begin
+GLOBAL_INI:=TIniFile.Create('/etc/artica-postfix/artica-postfix-ldap.conf');
+value:=GLOBAL_INI.ReadString('LDAP',key,'');
+result:=value;
+GLOBAL_INI.Free;
+end;
+//#############################################################################
+function troundcube.COMMANDLINE_PARAMETERS(FoundWhatPattern:string):boolean;
+var
+   i:integer;
+   s:string;
+   RegExpr:TRegExpr;
+
+begin
+ result:=false;
+ s:='';
+ if ParamCount>1 then begin
+     for i:=2 to ParamCount do begin
+        s:=s  + ' ' +ParamStr(i);
+     end;
+ end;
+   RegExpr:=TRegExpr.Create;
+   RegExpr.Expression:=FoundWhatPattern;
+   if RegExpr.Exec(s) then begin
+      RegExpr.Free;
+      result:=True;
+   end;
+
+
+end;
+//##############################################################################
+procedure troundcube.CHANGE_PHP_INI();
+var
+php:TiniFile;
+list:TstringList;
+i:integer;
+
+begin
+list:=TstringList.Create;
+
+list.Add('/etc/php5/cgi/php.ini');
+list.Add('/opt/artica/php/php.ini');
+for i:=0 to list.count-1 do begin
+    if FileExists(list.Strings[i]) then begin
+       php:=TiniFile.Create(list.Strings[i]);
+          if php.ReadString('PHP','magic_quotes_gpc','On')<>'Off' then begin
+             php.WriteString('PHP','magic_quotes_gpc','Off');
+          end;
+      end;
+end;
+
+list.free;
+php.Free;
+end;
+
+
+
+
+
+//#############################################################################
+
+function troundcube.ReadFileIntoString(path:string):string;
+var
+   List:TstringList;
+begin
+
+      if not FileExists(path) then begin
+        exit;
+      end;
+
+      List:=Tstringlist.Create;
+      List.LoadFromFile(path);
+      result:=trim(List.Text);
+      List.Free;
+end;
+//##############################################################################
+function troundcube.MYSQL_SERVER_PARAMETERS_CF(key:string):string;
+var ini:TiniFile;
+begin
+  result:='';
+  if not FileExists(MYSQL_MYCNF_PATH()) then exit();
+  ini:=TIniFile.Create(MYSQL_MYCNF_PATH());
+  result:=ini.ReadString('mysqld',key,'');
+  ini.free;
+end;
+//#############################################################################
+function troundcube.MYSQL_MYCNF_PATH:string;
+begin
+  if FileExists('/etc/mysql/my.cnf') then exit('/etc/mysql/my.cnf');
+  if FileExists('/etc/my.cnf') then exit('/etc/my.cnf');
+  if FileExists('/opt/artica/mysql/etc/my.cnf') then exit('/opt/artica/mysql/etc/my.cnf');
+
+end;
+//#############################################################################
+
+end.

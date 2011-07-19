@@ -1,0 +1,1 @@
+../setup-ubuntu/setup_ubuntu_class.pas

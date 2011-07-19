@@ -1,0 +1,460 @@
+unit debian_class;
+
+{$MODE DELPHI}
+{$LONGSTRINGS ON}
+
+interface
+
+uses
+    Classes, SysUtils,variants,strutils,IniFiles, Process,md5,logs,unix,RegExpr in 'RegExpr.pas',zsystem,postfix_class,artica_tcp,squid;
+
+type
+
+  networks_settings=record
+        ip:string;
+        netmask:string;
+        gateway:string;
+        dns1:string;
+        dns2:string;
+  end;
+
+  type
+  tdebian=class
+
+
+private
+     LOGS:Tlogs;
+     D:boolean;
+     GLOBAL_INI:TiniFIle;
+     SYS:TSystem;
+     artica_path:string;
+     function ARTICA_VERSION():string;
+     squid:Tsquid;
+public
+    procedure   Free;
+    constructor Create;
+    function  APT_KEY_EXISTS(key:string):boolean;
+    procedure ARTICA_CD_SOURCES_LIST();
+    procedure CHECK_APT_KEYS();
+    procedure POSTFIX_COMPLIANCE();
+    function  LOAD_INTERFACES():networks_settings;
+    procedure remove_bip();
+    procedure linuxlogo();
+    function  keyboard_language():string;
+    procedure change_xorg_option(key:string;value:string);
+    procedure INSTALL_NTFS3G();
+    procedure KeyboardTofr();
+END;
+
+implementation
+
+constructor tdebian.Create;
+begin
+       forcedirectories('/etc/artica-postfix');
+       LOGS:=tlogs.Create();
+       SYS:=Tsystem.Create;
+       squid:=Tsquid.Create;
+
+       if not DirectoryExists('/usr/share/artica-postfix') then begin
+              artica_path:=ParamStr(0);
+              artica_path:=ExtractFilePath(artica_path);
+              artica_path:=AnsiReplaceText(artica_path,'/bin/','');
+
+      end else begin
+          artica_path:='/usr/share/artica-postfix';
+      end;
+end;
+//##############################################################################
+procedure tdebian.free();
+begin
+    logs.Free;
+    SYS.Free;
+    squid.free;
+end;
+//##############################################################################
+procedure tdebian.ARTICA_CD_SOURCES_LIST();
+var
+   l:TstringList;
+   gpg:string;
+begin
+
+if FileExists('/usr/bin/dpkg') then begin
+   if FileExists('/home/artica/packages/artica-squid-security.deb') then begin
+     if FileExists(squid.SQUID_BIN_PATH()) then begin
+         if not FileExists('/opt/kaspersky/kav4proxy/sbin/kav4proxy-kavicapserver') then begin
+             writeln('');
+             writeln('***************************************************');
+             writeln('');
+             writeln('      Please wait... installing Kaspersky For squid');
+             writeln('');
+             writeln('***************************************************');
+             writeln('');
+             fpsystem('apt-get -f install  --yes --force-yes');
+             fpsystem('/usr/bin/dpkg -i /home/artica/packages/artica-squid-security.deb');
+         end;
+     end;
+   end;
+end;
+
+
+gpg:=SYS.LOCATE_GPG();
+if not FileExists('/etc/artica-postfix/FROM_ISO') then begin
+   logs.Debuglogs('ARTICA_CD_SOURCES_LIST():: /etc/artica-postfix/FROM_ISO does not exists, this is not a system from Artica-ISO');
+   exit;
+end;
+
+
+if FileExists('/etc/artica-postfix/sources.list.upddated') then begin
+   logs.Debuglogs('ARTICA_CD_SOURCES_LIST():: /etc/artica-postfix/sources.list.upddated exists... Check keys');
+   CHECK_APT_KEYS();
+   exit;
+end;
+
+
+if not FileExists('/usr/bin/apt-key') then begin
+   logs.Debuglogs('ARTICA_CD_SOURCES_LIST():: unable to locate /usr/bin/apt-key tool !!!');
+   exit;
+end;
+
+
+l:=TstringList.Create;
+l.Add('deb http://www.backports.org/debian etch-backports main contrib non-free');
+l.Add('deb http://www.informatik.uni-koeln.de/fai/download etch koeln');
+l.Add('deb http://ftp.debian.org/debian/ etch main');
+l.Add('deb-src http://ftp.debian.org/debian/ etch main');
+l.Add('');
+l.Add('deb http://security.debian.org/ etch/updates main contrib');
+l.Add('deb-src http://security.debian.org/ etch/updates main contrib');
+try
+logs.Debuglogs('ARTICA_CD_SOURCES_LIST():: Modify sources.list');
+l.SaveToFile('/etc/apt/sources.list');
+l.SaveToFile('/etc/artica-postfix/sources.list.upddated');
+finally
+l.free;
+end;
+logs.OutputCmd('apt-get update --yes --force-yes');
+CHECK_APT_KEYS();
+POSTFIX_COMPLIANCE();
+linuxlogo();
+remove_bip();
+INSTALL_NTFS3G();
+
+logs.OutputCmd('apt-get install -f --yes --force-yes');
+logs.OutputCmd('apt-get install awstats --yes --force-yes');
+
+
+end;
+//##############################################################################
+procedure tdebian.POSTFIX_COMPLIANCE();
+var
+   postfix:tpostfix;
+begin
+
+postfix:=tpostfix.Create;
+if not postfix.POSTFIX_LDAP_COMPLIANCE() then begin
+   writeln('Warning...Postfix is not compliance, try to install it..');
+   logs.OutputCmd('apt-get install -f --yes --force-yes');
+   fpsystem('apt-get -t etch-backports update');
+   fpsystem('apt-get -t etch-backports install postfix-ldap --yes --force-yes');
+end;
+postfix.free;
+end;
+//##############################################################################
+procedure tdebian.INSTALL_NTFS3G();
+begin
+
+if not FileExists('/etc/artica-postfix/FROM_ISO') then begin
+   logs.Debuglogs('INSTALL_NTFS3G():: /etc/artica-postfix/FROM_ISO does not exists, this is not a system from Artica-ISO');
+   exit;
+end;
+
+if FileExists('/usr/bin/ntfs-3g') then exit;
+if not FileExists('/home/artica/packages/libfuse2.deb') then begin
+   logs.Debuglogs('INSTALL_NTFS3G:: nfs-3g is not installed and unable to stat /home/artica/packages/libfuse2.deb');
+   exit;
+end;
+
+if not FileExists('/home/artica/packages/fuse-utils.deb') then begin
+   logs.Debuglogs('INSTALL_NTFS3G:: nfs-3g is not installed and unable to stat /home/artica/packages/fuse-utils.deb');
+   exit;
+end;
+
+if not FileExists('/home/artica/packages/fuse-utils.deb') then begin
+   logs.Debuglogs('INSTALL_NTFS3G:: nfs-3g is not installed and unable to stat /home/artica/packages/ntfs-3g.deb');
+   exit;
+end;
+
+
+
+if not FileExists('/usr/lib/libfuse.so.2.7.1') then logs.OutputCmd('dpkg -i /home/artica/packages/libfuse2.deb');
+if not FileExists('/usr/lib/libfuse.so.2.7.1') then begin
+    logs.Debuglogs('INSTALL_NTFS3G:: unable to install libfuse by libfuse2.deb');
+    exit;
+end;
+
+
+if not FileExists('/usr/bin/fusermount') then logs.OutputCmd('dpkg -i /home/artica/packages/fuse-utils.deb');
+if not FileExists('/usr/bin/fusermount') then begin
+    logs.Debuglogs('INSTALL_NTFS3G:: unable to install fuse-utils by fuse-utils.deb');
+    exit;
+end;
+
+logs.OutputCmd('apt-get install -f --yes --force-yes');
+logs.OutputCmd('dpkg -i /home/artica/packages/ntfs-3g.deb');
+end;
+//##############################################################################
+
+
+
+procedure tdebian.CHECK_APT_KEYS();
+var
+   gpg:string;
+
+begin
+
+gpg:=SYS.LOCATE_GPG();
+
+ if not APT_KEY_EXISTS('EA8E8B2116BA136C') then begin
+    logs.Debuglogs('CHECK_APT_KEYS():: install EA8E8B2116BA136C key for apt');
+    fpsystem(gpg+' --keyserver pgpkeys.mit.edu --recv-key EA8E8B2116BA136C');
+    fpsystem(gpg+' -a --export EA8E8B2116BA136C | apt-key add -');
+    if APT_KEY_EXISTS('EA8E8B2116BA136C') then fpsystem('apt-get udpdate &');
+ end;
+ 
+ if not APT_KEY_EXISTS('DC13E54EAB9B66FD') then begin
+    logs.Debuglogs('CHECK_APT_KEYS():: install DC13E54EAB9B66FD key for apt');
+    logs.OutputCmd(gpg+' --keyserver pgpkeys.mit.edu --recv-key DC13E54EAB9B66FD');
+    logs.OutputCmd(gpg+' -a --export EA8E8B2116BA136C | apt-key add -');
+    if APT_KEY_EXISTS('DC13E54EAB9B66FD') then begin
+        logs.OutputCmd('apt-get udpdate') end else begin
+        logs.Debuglogs('CHECK_APT_KEYS():: Failed for DC13E54EAB9B66FD');
+    end;
+ end;
+ 
+
+end;
+//##############################################################################
+function tdebian.APT_KEY_EXISTS(key:string):boolean;
+var
+   realkey:string;
+   RegExpr:TRegExpr;
+   l:TstringList;
+   i:integer;
+   tmp:string;
+begin
+   result:=false;
+   tmp:=logs.FILE_TEMP();
+   realkey:=AnsiRightStr(key,8);
+   logs.Debuglogs('APT_KEY_EXISTS():: ' + key +' ('+realkey+')');
+   fpsystem('/usr/bin/apt-key list >'+tmp);
+   if not FileExists(tmp) then begin
+      logs.Debuglogs('APT_KEY_EXISTS():: unable to stat '+tmp);
+      exit;
+   end;
+   
+   l:=TstringList.Create;
+   l.LoadFromFile(tmp);
+   logs.DeleteFile(tmp);
+   RegExpr:=TRegExpr.Create;
+   RegExpr.Expression:=realkey;
+   for i:=0 to l.Count-1 do begin
+       if RegExpr.Exec(l.Strings[i]) then begin
+          logs.Debuglogs('APT_KEY_EXISTS():: Success !');
+          result:=True;
+          break;
+       end;
+   
+   end;
+   
+   RegExpr.free;
+   l.free;
+
+end;
+//##############################################################################
+function tdebian.LOAD_INTERFACES():networks_settings;
+var
+   RegExpr:TRegExpr;
+   l:TstringList;
+   i:integer;
+   b:boolean;
+   t:networks_settings;
+   s:TstringList;
+begin
+   if not FileExists('/etc/network/interfaces') then exit;
+   l:=TstringList.Create;
+   l.LoadFromFile('/etc/network/interfaces');
+   RegExpr:=TRegExpr.Create;
+   RegExpr.Expression:='^iface eth0 inet static';
+   
+   b:=false;
+   
+   for i:=0 to l.Count-1 do begin
+        if RegExpr.Exec(l.Strings[i]) then b:=true;
+        if b then begin
+             RegExpr.Expression:='address\s+([0-9\.]+)';
+             if RegExpr.Exec(l.Strings[i]) then t.ip:=RegExpr.Match[1];
+             RegExpr.Expression:='netmask\s+([0-9\.]+)';
+             if RegExpr.Exec(l.Strings[i]) then t.netmask:=RegExpr.Match[1];
+             RegExpr.Expression:='gateway\s+([0-9\.]+)';
+             if RegExpr.Exec(l.Strings[i]) then t.gateway:=RegExpr.Match[1];
+             RegExpr.Expression:='iface';
+             if RegExpr.Exec(l.Strings[i]) then break;
+        end;
+        
+   end;
+   
+   l.Clear;
+   if FileExists('/etc/resolv.conf') then begin
+       l.LoadFromFile('/etc/resolv.conf');
+       s:=TstringList.Create;
+       RegExpr.Expression:='^nameserver\s+(.+)';
+       for i:=0 to l.Count-1 do begin
+           if RegExpr.Exec(l.Strings[i]) then s.Add(RegExpr.Match[1]);
+       end;
+   end;
+   
+   if s.Count>0 then t.dns1:=s.Strings[0];
+   if s.Count>1 then t.dns2:=s.Strings[1];
+   
+    s.free;
+    result:=t;
+    RegExpr.free;
+    l.free;
+end;
+//##############################################################################
+procedure tdebian.remove_bip();
+var
+   RegExpr:TRegExpr;
+   l:TstringList;
+   i:integer;
+begin
+  if Fileexists('/etc/artica-postfix/remove.the.bip') then exit;
+  if not FileExists('/etc/modprobe.d/blacklist') then exit;
+  l:=TstringList.Create;
+  l.LoadFromFile('/etc/modprobe.d/blacklist');
+  RegExpr:=TRegExpr.Create;
+  RegExpr.Expression:='blacklist\s+pcspkr';
+  
+  for i:=0 to l.Count-1 do begin
+     if RegExpr.Exec(l.Strings[i]) then begin
+         l.free;
+         RegExpr.free;
+         exit;
+     end;
+  
+  end;
+  
+  l.Add('blacklist pcspkr');
+  l.SaveToFile('/etc/modprobe.d/blacklist');
+  logs.Debuglogs('remove_bip():: success remove the biiiiiiiiip !');
+  fpsystem('touch /etc/artica-postfix/remove.the.bip');
+  l.free;
+  RegExpr.free;
+end;
+//#############################################################################
+procedure tdebian.linuxlogo();
+var
+tcp:ttcp;
+l:TstringList;
+begin
+tcp:=ttcp.Create;
+l:=TstringList.Create;
+if not FileExists('/etc/artica-postfix/FROM_ISO') then exit;
+if not FileExists('/var/run/linuxlogo/issue.linuxlogo') then exit;
+l.Add('Welcome on artica-postfix version ' + ARTICA_VERSION() + ' (installed by artica-iso)');
+l.Add('if you seen this screen, you should enter "root" as login and "artica" or "artica" as password');
+l.Add('For your information, you can access to the web Interface on :');
+l.add('');
+l.add('https://' + tcp.GetIPAddressOfInterface('eth0') + ':9000');
+l.add('Just after login...');
+l.add('');
+l.add('Have fun....');
+l.add('                  David Touzeau');
+l.add('');
+l.add('');
+try
+l.SaveToFile('/var/run/linuxlogo/issue.linuxlogo');
+l.SaveToFile('/var/run/linuxlogo/issue.linuxlogo.ascii');
+finally
+l.free;
+tcp.free;
+end;
+end;
+//#############################################################################
+function tdebian.ARTICA_VERSION():string;
+var
+   l:string;
+   F:TstringList;
+
+begin
+   l:=artica_path + '/VERSION';
+   if not FileExists(l) then exit('0.00');
+   F:=TstringList.Create;
+   F.LoadFromFile(l);
+   result:=trim(F.Text);
+   F.Free;
+end;
+//#############################################################################
+function tdebian.keyboard_language();
+var
+   RegExpr:TRegExpr;
+   l:TstringList;
+   i:integer;
+begin
+    if not FileExists('/etc/X11/xorg.conf') then exit();
+    l:=TstringList.Create;
+    l.LoadFromFile('/etc/X11/xorg.conf');
+    RegExpr:=TRegExpr.Create;
+    RegExpr.Expression:='Option\s+"XkbLayout"\s+"(.+?)"';
+    for i:=0 to l.Count-1 do begin
+         if RegExpr.Exec(l.Strings[i]) then begin
+                result:=RegExpr.Match[1];
+                break;
+         end;
+    end;
+    
+    l.free;
+    RegExpr.free;
+
+end;
+//#############################################################################
+procedure tdebian.keyboardTofr();
+begin
+change_xorg_option('XkbModel','pc105');
+change_xorg_option('XkbLayout','fr');
+change_xorg_option('Xkbvariant','latin9');
+end;
+//#############################################################################
+procedure tdebian.change_xorg_option(key:string;value:string);
+var
+   RegExpr:TRegExpr;
+   l:TstringList;
+   i:integer;
+begin
+    if not FileExists('/etc/X11/xorg.conf') then exit();
+    l:=TstringList.Create;
+    l.LoadFromFile('/etc/X11/xorg.conf');
+    RegExpr:=TRegExpr.Create;
+    RegExpr.Expression:='Option\s+"'+key+'"\s+"';
+    for i:=0 to l.Count-1 do begin
+         if RegExpr.Exec(l.Strings[i]) then begin
+                l.Strings[i]:='Option'+chr(9)+'"'+key+'"'+chr(9)+'"'+value+'"';
+                try
+                l.SaveToFile('/etc/X11/xorg.conf');
+                finally
+
+                end;
+                break;
+         end;
+    end;
+
+    l.free;
+    RegExpr.free;
+
+end;
+//#############################################################################
+
+
+
+
+end.

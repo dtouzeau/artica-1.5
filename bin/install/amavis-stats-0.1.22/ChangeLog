@@ -1,0 +1,439 @@
+amavis-stats (0.1.22) stable/experimental; urgency=recommended
+
+  * added an experimental build process for the PHP rrdtool module.
+
+  * minor maintenance fixes and updates to the build process.
+
+amavis-stats (0.1.21) stable; urgency=recommended
+
+  * fixed issue with SUSE double counting banned e-mail.
+
+  * fixed issue with amavisd-new maia mailgard patches.
+
+amavis-stats (0.1.20) stable; urgency=recommended
+
+  * minor cosmetics changes.
+
+  * fixed GENTOO startup item.
+
+  * updated TIGER startup item.
+
+  * updated PANTHER startup item.
+
+amavis-stats (0.1.19) stable; urgency=recommended
+
+  * added some color to the build process.
+
+  * added a non-virus graph.
+
+  * fixed permissions of installed amavis-stats.conf file.
+
+  * fixed an issue with virus names that exceed 32 characters.
+
+  * fixed the time period displayed in the vertical column on each graph, it
+    was displaying minutes when hour was selected and hours when min was
+    selected.
+
+amavis-stats (0.1.18) stable; urgency=low
+
+  * fixed an image issue when using rrdtool 1.2.x where no virus image is
+    generated when no graphing data is present during a time period.
+
+  * fixed a tab image issue when using PHP4 and no image is generated
+    or displayed for buttons.
+
+  * preserve daemon configuration file if updating.
+
+  * updated legend.
+
+  * added 'Blocked BAD-HEADER' to stats.
+
+  * updated web interface to display Passed/Blocked BAD-HEADER.
+
+amavis-stats (0.1.17) stable; urgency=low
+
+  * moved web interface to templates to make web customization easier.
+
+  * rewrite of my_button routine to make button customization easier.
+
+  * fixed issue with fonts and png not being displayed properly on some
+    platforms.
+
+  * Added 'Passed BAD-HEADER' to stats.
+
+amavis-stats (0.1.16) stable; urgency=low
+
+  * maintainance release.
+
+  * fixed issue with startup build for non startup supported OS's.
+
+  * added Linux gentoo startup item.
+
+amavis-stats (0.1.15) stable; urgency=low
+
+  * Rewrite of perl application to remove the need for cron entries.
+
+  * Daemonized perl application.
+
+  * Created packages of required functions.
+
+  * Streamlined the application and added loging features via syslog
+    or by specifying a logfile.
+
+  * Removal of non-required functions.
+
+  * Updated menu tabs to dynamically re-arrange based on host entries.
+
+  * Added the ability to create startup items based on platforms.
+    Currently I only have startup items for Darwin 7.x and 8.x.
+
+amavis-stats (0.1.14) stable; urgency=low
+
+  * Rewrite of build/install process to correct several platform issues.
+
+  * Graphic tabs are now generated on the fly.
+
+  * Added additional graphic tabs to html output for option selection.
+
+  * Added cron routine to create/delete cron jobs.
+
+amavis-stats (0.1.14-rc1) stable; urgency=low
+
+  * Maintenance and minor bug fixes.
+
+amavis-stats (0.1.13-rc7) stable; urgency=low
+
+  * Took over project.
+
+  * Fixed install to parse files properly and provide feedback on processing steps.
+
+  * Fixed security issue allowing register_globals to be turned off.
+
+  * Added graphic tabs to html output for option selection.
+
+  * Configure portability fixes: added --with-lockfiledir to configure script.
+                               : added --with-logfile to configure script.
+                               : added --web-aliasdir to configure script.
+                               : added --with-web-url to configure script.
+
+  * Makefile portability fixes : perl is now set to the installed perl location.
+                               : added install-crontab to Makefile script
+                                 if your OS supports this type of cron method.
+                               : fixed 'sed' functions.
+                               : added settings to Makefile script to examine
+                                 configuration validity.
+
+amavis-stats (0.1.13-rc6) unstable; urgency=low
+
+  * Added a "-n" flag to allow classification limited to particular hosts.
+    Uses a directories under /var/lib/amavis-stats and /var/cache/amavis-stats
+    for each host. See man page for details.
+
+  * Thanks to Wolfgang ?? fixed up SPAM detection that I broke in 0.1.12.
+
+  * Handle extra fields (eg: [ID 23343 mail.info]) in Solaris 8 syslog.
+
+  * Create rrd files as soon as a new ID is assigned. Prevents previous ugly
+    behavour of php/rrdtool dying when called on IDs that had not yet been
+    updated.
+
+  * Fixed bug which produced different colours depending on the report period.
+
+  * Added an option to automatically refresh web page
+
+  * Now only display a single time-span (either daily, or weekly etc).
+    It doesn't make sense to calculate and transfer a yearly image
+    across the net everytime you want to view the latest 24-hour graph.
+
+  * Forced generation of PNG graphics
+
+  * When creating the RRDs, populate them with zeros starting at the beginning
+    of the previous yearly "bin boundary", which is at a maximum 288 updates
+    ago. This means that RRDs from previous versions are not producing
+    accurate data. Unfortunately this means that this version should be
+    installed "clean" (no history):
+
+  * Graphs are produced only on rrdtool "bin boundaries". This means that they
+    will be forced to have an end time which will be some multiple of the time
+    span. Ie daily graphs must end on a five minute boundary, weekly graphs on
+    a half-hour boundary etc. This together with the above RRD change should
+    now mean that for the times specified the totals will be correct.
+
+  * Thanks to Loic Pefferkorn a big php cleanup of global variables and
+    errors.
+
+  * Rewrote the classification function to account for amavisd-new-2004XXX
+    changes. The names of the final classification IDs change, which also
+    unfortunately breaks with old data. Re-install from scratch, *sigh*.
+
+  * Added a search/replace for ":" in virus names so that rrdtool does not get
+    confused.
+
+  * Added RPM spec file from Andrew Koros.
+
+  * Commented out use of %spamsess until we work out if it is needed or not.
+
+  * Warn 5 times before exiting, if we can't correctly parse a line (unknown
+    month errors).
+
+  * test for directory when searching for multiple host statistics (reduces
+    error messages)
+
+ --  <nomad@null.net>  Mon, 17 May 2004 12:04:55 +0200
+
+amavis-stats (0.1.12) unstable; urgency=low
+
+  * Makefile portability fixes thanks to James Davis. perl is now set to to
+    value of `which perl`
+
+  * Thanks to Jean Charles Delepine don't count multiple occurences of a virus
+    in the same email.
+
+  * Fixed a column ordering bug in amavis-stats.php, and made a basic column
+    calculation based on the length of the longest virus name.
+
+  * Statistics are now based on the true final determination of AMaViS:
+    Passed, Not-Delivered, INFECTED, BANNED, plus SPAM classifications of
+    Passed and Not-Delivered.
+
+  * Virus colours are now fixed per virus - generated by the md5sum of the
+    virus name. This means that all installations of amavis-stats will have
+    the same colours :-)
+
+  * fixed bug (introduced in rc2) that didn't delete the session ids from the
+    %spamsess hash.
+
+  * Fixed issue with regex not matching properly for clamav virus checker.
+
+ -- Mark Lawrence <nomad@null.net>  Sat, 27 Mar 2004 14:40:47 +0000
+
+amavis-stats (0.1.11) unstable; urgency=low
+
+  * As per patch from Chris H, can now handle virus names with spaces in them.
+    Unfortunately this breaks any amavis that separates multiple viruses by
+    spaces, but that is broken anyway if the virus scanner reports virses
+    names with spaces (which some do).
+
+  * Added locale debugging statements. Add option to force locale detection
+    (-l) otherwise English (and not "C") is assumed.
+
+  * Added do_exit function to remove lockfile on error conditions.
+
+  * amavis-ng virus detection thanks to Matthias L. Jugel.
+
+  * Now using autoconf to install - ./configure; make; make install... etc.
+
+  * Image directory has moved from /var/lib/amavis-stats/img to
+    /var/cache/amavis-stats for FHS compliance.
+
+  * Force images to be generated in PNG format. Graphs end at multiple of the
+    rrd step value.
+
+  * Limit updates to rrd files to be multiples of the "step" value. This
+    should fix many of the "missing" single virus counts and other
+    inaccuracies.
+
+  * Fixed a configure bug on --with-group.
+
+ -- Mark Lawrence <nomad@null.net>  Wed, 17 Mar 2004 22:36:40 +0000
+
+amavis-stats (0.1.10) unstable; urgency=low
+
+  * Added contents of state/seen/virus definition files to the debug option of
+    amavis-stats.php script.
+
+  * amavis-stats now uses the locale/LANG envinronment to correctly read
+    international date strings from syslog files. php script also prints out
+    localized date/time strings.
+
+  * php script now produces better error message when the rrdtool executable
+    can't be found.
+
+  * Fixed an issue were graphs could not be generated if no "Passed" emails
+    had been seen.
+
+  * TODO: Improve RPM build.
+
+ -- Mark Lawrence <nomad@null.net>  Fri,  6 Feb 2004 14:54:16 +0000
+
+amavis-stats (0.1.9) unstable; urgency=low
+
+  * Detects a "new" log entry of the form "amavisd-new[3823]:" which I have
+    never seen before.
+
+  * Fixed missing /usr/share/amavis-stats/img link (this has been bugging me
+    for ages!)
+
+  * Added "-V" option to display the version nuumber. Updated manpage.
+
+  * amavis-stats: Converted perl regex's to be non-greedy. This should
+    mean more accurate detection of virus names.
+
+  * TODO: Improve RPM build.
+
+ -- Mark Lawrence <nomad@null.net>  Thu, 27 Nov 2003 15:46:21 +0100
+
+amavis-stats (0.1.8) unstable; urgency=low
+
+  * Fixed a rotation bug introduced in version 0.1.7 (Thanks to Ricardo
+    Stella)
+
+  * TODO: Fix up the symbolic link installation problem .
+
+  * TODO: Improve RPM build.
+
+ -- Mark Lawrence <nomad@null.net>  Mon,  3 Nov 2003 19:20:33 +0100
+
+amavis-stats (0.1.7) unstable; urgency=low
+
+  * amavis-stats: Implemented a lock system to allow only one copy of
+    amavis-stats to run at a time.
+
+  * amavis-stats: The saveState() function now correctly saves the position
+    we reached in the logfile. Was previously always recording the end of
+    the file regardless of where we actually were.
+
+  * Thanks to Pål Løberg now have support for counting BANNED messages.
+
+  * amavis-stats: Correctly handle multiple viruses found in a single
+    message. Now even get a nice "corrupted" virus count.
+
+  * amavis-stats: Fixed a bug relating to reading lines that have not
+    been fully output by syslog (ie missing newline at end of the file)
+
+  * amavis-stats.php: Option to display rates per hour instead of rates per
+    minute. Idea from Tom Spencer.
+
+  * TODO: Fix up the RPM.
+
+ -- Mark Lawrence <nomad@null.net>  Thu, 23 Oct 2003 09:56:51 +0200
+
+amavis-stats (0.1.6) unstable; urgency=low
+
+  *  Debian fix only: added dependency on wwwconfig-common.
+
+ -- Mark Lawrence <nomad@null.net>  Fri, 17 Oct 2003 00:48:51 +0200
+
+amavis-stats (0.1.5) unstable; urgency=low
+
+  * TODO: Correctly handle the case where multiple viruses are found in
+    a single mail.
+
+  * TODO: Locking in amavis-stats so that we can't run more than one at
+    a time.
+
+  * amavis-stats.php: Really, really fixed the command-line rrdtool 
+    integration. It turns out that the php "exec" command doesn't collect
+    stderr
+
+  * amavis-stats.php: Added a "debug" option to the web page, to display the
+    rrdtool command that generates each graph.
+
+  * amavis-stats: Handles the new SPAM and SPAM-TAG format of amavis-new
+
+ -- Mark Lawrence <nomad@null.net>  Thu, 16 Oct 2003 14:54:39 +0200
+
+amavis-stats (0.1.4) unstable; urgency=low
+
+  * amavis-stats: Display version in help message
+
+  * amavis-stats.php: Made the command-line version of rrdtool
+    actually work.
+
+  * amavis-stats.php: Display version and type of rrdtool in web page
+
+  * wrote an apache include file to allow running amavis-stats
+    from http://host/amavis-stats/ without having to copy the script
+    into the web root.
+
+  * Updated README for new installation.
+
+ -- Mark Lawrence <nomad@null.net>  Tue,  7 Oct 2003 17:44:52 +0200
+
+amavis-stats (0.1.3) unstable; urgency=low
+
+  * amavis-stats: Must now specify log file on the command line. "-f" no
+    longer needed but kept for legacy reasons. Man page updated.
+
+  * amavis-stats: "-v" now does nothing. Default is to output summary/
+    interesting information. New option "-q" stops output.
+
+  * amavis-stats: More robust logfile and rotation handling.
+
+  * amavis-stats.php: rrdtool handling changes - if internal extentions are
+    available use them, otherwise rely on an internal function and the
+    command/shell "rrdtool" executable. Thanks to Daniel Huele.
+
+  * First attempt at RPM package. Testers needed (hint, hint)
+
+  * amavis-stats: Bugfix: Correctly ignore badly formed log lines (previously
+    saw message like "use of uninitialized value in pattern match (m//)... ")
+
+  * amavis-stats: Bugfix: If more than one virus was detected by amavis
+    then we were actually recording that as a single virus called
+    "virus1 virus2...". Now only count the first virus.
+
+  * amavis-stats: Now save the current state every 1000 lines. More robust
+    and means you can watch the graphs grow when running large files :)
+
+  * debian: dependency now on rrdtool _or_ php4-rrdtool.
+
+  * Much improved README file.
+
+  * amavis-stats: Partial CLAMAV support thanks to Alan Murrell. Needs
+    feedback (hint, hint). Does clamav really put a newline in the middle
+    of a syslog entry when more than one part is infected?
+
+  * TODO: Correctly handle the case where multiple viruses are found in
+    a single mail.
+
+  * TODO: Locking in amavis-stats so that we can't run more than one at
+    a time.
+
+  * TODO: create/include apache configuration to run the php script from
+    /usr/share/amavis-stats without having to copy/modify files.
+
+ -- Mark Lawrence <nomad@null.net>  Mon, 29 Sep 2003 13:33:55 +0000
+
+amavis-stats (0.1.2) unstable; urgency=low
+
+  * amavis-stats: Based on input from Lars Hecking, should now parse files
+    from amavisd as well as amavisd-new.
+
+  * amavis-stats: Based on input from Ricardo Stella should also now
+    work on Solaris syslog files.
+
+  * amavis-stats: Check for existence and writability of
+    /var/lib/amavis-stats during loadStats().
+
+  * amavis-stats: Added detection for SPAM (I think amavisd-new only) - Kai.
+
+  * amavis-stats.php: Fixed a bug where script would die if zero detections
+    had occurred. Support for SPAM detections.
+
+ -- Mark Lawrence <nomad@null.net>  Fri,  5 Sep 2003 20:06:03 +0000
+
+amavis-stats (0.1.1) unstable; urgency=low
+
+  * amavis-stats.php: Added a check for the existence of the php4-rrdtool
+    functions and display an error message if not found.
+
+  * Documentation: Removed amavisd-new specific comments everywhere
+    after learning that amavisd is alive and kicking
+
+  * Makefile: Changed 'make dist' to use the Debian version for the package
+    when creating the tgz archive.
+
+  * debian: added dependency on php4-rrdtool.
+
+ -- Mark Lawrence <nomad@null.net>  Thu,  4 Sep 2003 09:02:59 +0000
+
+amavis-stats (0.1.0) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Mark Lawrence <nomad@null.net>  Thu, 21 Aug 2003 13:49:55 +0000
+
+Local variables:
+mode: debian-changelog
+End:

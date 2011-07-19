@@ -1,0 +1,315 @@
+unit stunnel4;
+
+{$MODE DELPHI}
+{$LONGSTRINGS ON}
+
+interface
+
+uses
+    Classes, SysUtils,variants,strutils,IniFiles, Process,md5,logs,unix,RegExpr in 'RegExpr.pas',zsystem;
+
+  type
+  tstunnel=class
+
+
+private
+     LOGS:Tlogs;
+     D:boolean;
+     GLOBAL_INI:TiniFIle;
+     SYS:TSystem;
+     artica_path:string;
+
+public
+    procedure   Free;
+    constructor Create;
+    procedure   ETC_DEFAULT();
+    procedure   SAVE_CERTIFICATE();
+    function    READ_CONF(key:string):string;
+    function    DAEMON_BIN_PATH():string;
+    procedure   STUNNEL_START();
+    procedure   STUNNEL_STOP();
+    function    VERSION():string;
+    function    STUNNEL_STATUS():string;
+    function    STUNNEL_INITD():string;
+    function    STUNNEL_PID():string;
+    function    PID_PATH():string;
+END;
+
+implementation
+
+constructor tstunnel.Create;
+begin
+       forcedirectories('/etc/artica-postfix');
+       forcedirectories('/opt/artica/tmp');
+       LOGS:=tlogs.Create();
+       SYS:=Tsystem.Create;
+
+
+       if not DirectoryExists('/usr/share/artica-postfix') then begin
+              artica_path:=ParamStr(0);
+              artica_path:=ExtractFilePath(artica_path);
+              artica_path:=AnsiReplaceText(artica_path,'/bin/','');
+
+      end else begin
+          artica_path:='/usr/share/artica-postfix';
+      end;
+end;
+//##############################################################################
+procedure tstunnel.free();
+begin
+    logs.Free;
+    SYS.Free;
+end;
+//##############################################################################
+function tstunnel.STUNNEL_INITD():string;
+begin
+   if FileExists('/etc/init.d/stunnel4') then exit('/etc/init.d/stunnel4');
+end;
+//##############################################################################
+function tstunnel.DAEMON_BIN_PATH():string;
+begin
+   if FileExists('/usr/bin/stunnel4') then exit('/usr/bin/stunnel4');
+end;
+//##############################################################################
+function tstunnel.PID_PATH():string;
+var
+   chroot:string;
+   pid:string;
+   path:string;
+
+begin
+    chroot:=READ_CONF('chroot');
+    pid:=READ_CONF('pid');
+    path:=chroot+'/'+pid;
+    path:=AnsiReplaceText(path,'//','/');
+    path:=AnsiReplaceText(path,'//','/');
+    result:=path;
+end;
+//##############################################################################
+function tstunnel.STUNNEL_PID():string;
+var
+   path:string;
+
+begin
+    path:=PID_PATH();
+    if FileExists(path) then exit(SYS.GET_PID_FROM_PATH(path));
+end;
+//##############################################################################
+procedure tstunnel.ETC_DEFAULT();
+var
+l:TstringList;
+begin
+
+if not FileExists('/etc/default/stunnel') then exit;
+l:=TstringList.Create;
+
+l.Add('# /etc/default/stunnel');
+l.Add('# Julien LEMOINE <speedblue@debian.org>');
+l.Add('# September 2003');
+l.Add('');
+l.Add('# Change to one to enable stunnel');
+l.Add('ENABLED=1');
+l.Add('FILES="/etc/stunnel/*.conf"');
+l.Add('OPTIONS=""');
+l.Add('');
+l.Add('# Change to one to enable ppp restart scripts');
+l.Add('PPP_RESTART=0');
+l.SaveToFile('/etc/default/stunnel');
+l.free;
+end;
+//##############################################################################
+function tstunnel.READ_CONF(key:string):string;
+var
+    RegExpr:TRegExpr;
+    FileDatas:TStringList;
+    i:integer;
+begin
+ if not FileExists('/etc/stunnel/stunnel.conf') then exit;
+ FileDatas:=TstringList.Create;
+ FileDatas.LoadFromFile('/etc/stunnel/stunnel.conf');
+ RegExpr:=TRegExpr.Create;
+ RegExpr.Expression:='^'+key+'[\s=]+(.+)';
+ for i:=0 to FileDatas.Count-1 do begin
+     if RegExpr.Exec(FileDatas.Strings[i]) then begin
+         result:=RegExpr.Match[1];
+         break;
+     end;
+
+ end;
+         FileDatas.Free;
+         RegExpr.Free;
+
+end;
+//##############################################################################
+function tstunnel.VERSION():string;
+var
+    RegExpr:TRegExpr;
+    FileDatas:TStringList;
+    i:integer;
+begin
+ if not FileExists(DAEMON_BIN_PATH()) then exit;
+ FileDatas:=TstringList.Create;
+ fpsystem(DAEMON_BIN_PATH() + ' -version >/opt/artica/tmp/stunnel.ver 2>&1');
+ if not FileExists('/opt/artica/tmp/stunnel.ver') then exit;
+ FileDatas.LoadFromFile('/opt/artica/tmp/stunnel.ver');
+ logs.DeleteFile('/opt/artica/tmp/stunnel.ver');
+ RegExpr:=TRegExpr.Create;
+ RegExpr.Expression:='stunnel\s+([0-9\.]+)\s+';
+ for i:=0 to FileDatas.Count-1 do begin
+     if RegExpr.Exec(FileDatas.Strings[i]) then begin
+         result:=RegExpr.Match[1];
+         break;
+     end;
+
+ end;
+         FileDatas.Free;
+         RegExpr.Free;
+
+end;
+//##############################################################################
+procedure tstunnel.SAVE_CERTIFICATE();
+var
+   cert:string;
+   setuid:string;
+   setgid:string;
+   D:boolean;
+   cmd:string;
+begin
+    D:=logs.COMMANDLINE_PARAMETERS('html');
+    cert:=READ_CONF('cert');
+    setuid:=READ_CONF('setuid');
+    setgid:=READ_CONF('setgid');
+    logs.Debuglogs('SAVE_CERTIFICATE():: /bin/cp /opt/artica/ssl/certs/lighttpd.pem '  + cert);
+    fpsystem('/bin/cp /opt/artica/ssl/certs/lighttpd.pem '  + cert + ' >/dev/null 2>&1');
+    SYS.FILE_CHOWN(setuid,setgid,'/etc/stunnel');
+    fpsystem('/bin/chmod 600 ' + cert + ' >/dev/null 2>&1');
+end;
+//##############################################################################
+
+function tstunnel.STUNNEL_STATUS:string;
+var
+ini:TstringList;
+pid:string;
+begin
+   ini:=TstringList.Create;
+   ini.Add('[STUNNEL]');
+   if FileExists(DAEMON_BIN_PATH()) then  begin
+      pid:=STUNNEL_PID();
+      if SYS.PROCESS_EXIST(pid) then ini.Add('running=1') else  ini.Add('running=0');
+      ini.Add('application_installed=1');
+      ini.Add('master_pid='+ pid);
+      ini.Add('master_memory=' + IntToStr(SYS.PROCESS_MEMORY(pid)));
+      ini.Add('master_version='+VERSION());
+      ini.Add('status='+SYS.PROCESS_STATUS(pid));
+      ini.Add('service_name=APP_STUNNEL');
+      ini.Add('service_cmd=stunnel');
+      ini.Add('service_disabled='+ SYS.GET_INFO('sTunnel4enabled'));
+      
+      
+   end;
+
+   result:=ini.Text;
+   ini.free;
+
+end;
+//##############################################################################
+procedure tstunnel.STUNNEL_START();
+var
+   pid:string;
+   D:boolean;
+begin
+    if not FileExists(DAEMON_BIN_PATH()) then exit;
+    if not FileExists(STUNNEL_INITD()) then exit;
+    pid:=STUNNEL_PID();
+    D:=logs.COMMANDLINE_PARAMETERS('html');
+    logs.Debuglogs('STUNNEL_START:: Checking stunnel4 ('+pid+')');
+    if SYS.PROCESS_EXIST(pid) then begin
+       logs.Debuglogs('STUNNEL_START:: stunnel4 already running  PID '+pid);
+       if SYS.GET_INFO('sTunnel4enabled')='0' then STUNNEL_STOP();
+       exit;
+    end;
+    
+    if length(SYS.AllPidsByPatternInPath(DAEMON_BIN_PATH()))>0 then begin
+          if SYS.GET_INFO('sTunnel4enabled')='0' then STUNNEL_STOP();
+          exit;
+    end;
+    
+    
+
+    if SYS.GET_INFO('sTunnel4enabled')='0' then exit;
+    logs.Debuglogs('STUNNEL_START:: Starting stunnel4');
+    ETC_DEFAULT();
+    SAVE_CERTIFICATE();
+
+
+
+    fpsystem(STUNNEL_INITD() + ' start >/opt/artica/tmp/stunnel.start 2>&1');
+    logs.Debuglogs(SYS.ReadFileIntoString('/opt/artica/tmp/stunnel.start'));
+    writeln('<tr><td width=1% valign="top"><img src="img/icon-mini-ok.gif"><td valign="top" width=99%>' + SYS.ReadFileIntoStringHTML('/opt/artica/tmp/stunnel.start') + '</td></tr>');
+    logs.DeleteFile('/opt/artica/tmp/stunnel.start');
+
+
+    if not SYS.PROCESS_EXIST(STUNNEL_PID()) then begin
+        logs.Debuglogs('STUNNEL_START:: Failed to start stunnel4');
+        exit;
+    end;
+end;
+//##############################################################################
+procedure tstunnel.STUNNEL_STOP();
+var
+   D:boolean;
+   PID:string;
+begin
+    if not FileExists(DAEMON_BIN_PATH()) then exit;
+    if not FileExists(STUNNEL_INITD()) then exit;
+    D:=logs.COMMANDLINE_PARAMETERS('html');
+    
+    if D then writeln('<tr><td width=1% valign="top"><img src="img/icon_mini_info.gif"><td valign="top" width=99%>Pid path:'+PID_PATH()+'</td></tr>');
+    
+
+    
+    if not SYS.PROCESS_EXIST(STUNNEL_PID()) then begin
+       if D then  if D then begin
+          writeln('<tr><td width=1% valign="top"><img src="img/icon-mini-ok.gif"><td valign="top" width=99%>Already stopped</td></tr>');
+       end else begin
+           writeln('Stopping stunnel4 daemon......: Already stopped');
+       end;
+       PID:=SYS.AllPidsByPatternInPath(DAEMON_BIN_PATH());
+       if length(PID)>0 then begin
+         writeln('Stopping stunnel4............: ' + PID + ' PIDs');
+         fpsystem('/bin/kill -9 ' + PID);
+       
+       exit;
+    end;
+    
+       if D then  if D then begin
+          writeln('<tr><td width=1% valign="top"><img src="img/icon_mini_info.gif"><td valign="top" width=99%>stopping stunnel '+ STUNNEL_PID() + ' PID</td></tr>');
+       end else begin
+          writeln('Stopping stunnel4............: ' + STUNNEL_PID() + ' PID');
+       end;
+    
+
+    fpsystem(STUNNEL_INITD() + ' stop >/opt/artica/tmp/stunnel.start 2>&1');
+    logs.Debuglogs(SYS.ReadFileIntoString('/opt/artica/tmp/stunnel.start'));
+    logs.DeleteFile('/opt/artica/tmp/stunnel.start');
+    
+    
+PID:=SYS.AllPidsByPatternInPath(DAEMON_BIN_PATH());
+       if length(PID)>0 then begin
+         writeln('Stopping stunnel4............: ' + PID + ' PIDs');
+         fpsystem('/bin/kill -9 ' + PID);
+       end;
+
+    if SYS.PROCESS_EXIST(STUNNEL_PID()) then begin
+       if D then  if D then begin
+          writeln('<tr><td width=1% valign="top"><img src="img/icon_mini_off.gif"><td valign="top" width=99%>stopping stunnel failed to stop</td></tr>');
+       end else begin
+        writeln('Stopping stunnel4  daemon ' + STUNNEL_PID() + ' PID (failed to stop)');
+       end;
+       exit;
+    end;
+end;
+//##############################################################################
+
+
+end.

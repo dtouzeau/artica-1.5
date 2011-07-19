@@ -1,0 +1,3 @@
+<edit_photo_text>Put here the user's picture, in order to upload it into database[br]
+[b]Notice: valids formats are png,gif,jpeg[/b][br]</edit_photo_text>
+<edit_photo_title>Add user photo</edit_photo_title>

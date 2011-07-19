@@ -1,0 +1,35 @@
+<HTML><HEAD>
+<TITLE>ERROR: Access Denied by proxy</TITLE>
+</HEAD><BODY>
+<H1>ERROR</H1>
+<H2>The requested URL could not be retrieved</H2>
+<HR>
+While trying to retrieve the URL:<BR>
+<A HREF="%U">%U</A><BR>
+The following error was encountered:
+<P>
+<STRONG>
+Access Denied.
+</STRONG>
+<P>
+This ad-zapper attempts to constrain service to ZipWorld customers only.
+If you are a ZipWorld customer and still receive this error message,
+please contact me on &lt;<A HREF="mailto:%w">%w</A>&gt;
+to report this problem. I would also appreciate knowing:
+<UL>
+    <LI>The date and time you received this message.
+    <LI>The IP address of your computer.<BR>
+	UNIX users can obtain this from the output of the command:<BR>
+	<TT>ifconfig -a</TT><BR>
+	Windows users can obtain this by running the command:<BR>
+	<TT>winipcfg</TT> (Win9x) or <TT>ipconfig</TT> (WinNT and Win2k)
+</UL>
+This will let me check your IP address against the (huge!) list
+of IP ranges ZipWorld deal with.
+<EM>Please</EM> contact me with this information
+rather than simply abandoning the zapper.
+<P>
+Thank you,<BR>
+<A HREF="http://www.zip.com.au/~cs/">Cameron Simpson</A>
+&lt;<A HREF="mailto:%w">%w</A>&gt;,
+your zapper administrator.

@@ -1,0 +1,6 @@
+<base_dn>Base DN</base_dn>
+<bind_dn>Bind DN connection</bind_dn>
+<your_address_book>Twoja ksi%u0105%u017Cka adresowa</your_address_book>
+<your_address_book_text>This server can store for you your contacts.[br]This will ensure for you that these contacts will be available everywhere and everytime on all computers</your_address_book_text>
+<your_parameters>Twoje parametry</your_parameters>
+<your_parameters_text>Use these parameters and apply them to your prefered mail client in order to have access to your personal address book</your_parameters_text>

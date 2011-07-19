@@ -1,0 +1,46 @@
+<add_sub_folder>Cr&eacute;er un nouveau sous-dossier</add_sub_folder>
+<apply_config_pureftpd>Enregistrez vos param&egrave;tres d'utilisateurs dans la base de donn&eacute;es d'un serveur FTP virtuel</apply_config_pureftpd>
+<APP_PUREFTPD_TEXT>Pure-ftpd est un logiciel libre (BSD), s&eacute;curis&eacute;, conforme aux normes de qualit&eacute; et aux standards d'un serveur FTP de production.</APP_PUREFTPD_TEXT>
+<APP_SAMBA_TEXT>Samba est une suite logicielle Open Source/libre qui fournit des services int&eacute;gr&eacute;s de partage de fichiers et d'impression aux clients SMB/CIFS</APP_SAMBA_TEXT>
+<browse_computers>Parcourir les ordinateurs</browse_computers>
+<current_connections>Connexions courantes</current_connections>
+<current_connections_text>Afficher les informations &agrave; propos de qui est connect&eacute; et ce qui se produit sur le flux FTP</current_connections_text>
+<delete_share>Supprimer le partage de ce dossier</delete_share>
+<del_folder_name>Etes-vous sure de vouloir supprimer ce dossier ??</del_folder_name>
+<del_sub_folder>Supprimer ce dossier</del_sub_folder>
+<enable_roaming>Activer les profils itin&eacute;rants</enable_roaming>
+<enable_roaming_text>Si vous tournez cet ic&ocirc;ne en vert, le serveur se transformera en mode PDC et va autoriser les clients Windows &agrave; sauvegarder et r&eacute;cup&eacute;rer les donn&eacute;es locales depuis ce serveur &agrave; partir de n'importe quel ordinateur connect&eacute; au domaine.</enable_roaming_text>
+<FOLDER_IS_SHARED>Ce dossier est d&eacute;j&agrave; partag&eacute;, les utilisateurs peuvent y acc&eacute;der en mode smb</FOLDER_IS_SHARED>
+<ftp_share>Partages FTP</ftp_share>
+<give_computer_nameip>Donnez le nom de l'ordinateur ou l'adresse IP</give_computer_nameip>
+<give_folder_name>Donnez ici le nom du nouveau dossier que vous voulez cr&eacute;er.
+bas&eacute; sur</give_folder_name>
+<mount_name>Nom du point de montage</mount_name>
+<net_share>Partage r&eacute;seau Windows</net_share>
+<NFS_CLIENT_ADD>Connection &agrave; un r&eacute;pertoire NFS</NFS_CLIENT_ADD>
+<NFS_CLIENT_ADD_TEXT>Ajoutez le r&eacute;pertoire distant dans le service d'auto-connexion. Ceci afin automatiquement monter la ressource r&eacute;seau lorsque le r&eacute;pertoire est  acc&egrave;d&eacute;</NFS_CLIENT_ADD_TEXT>
+<NFS_CLIENT_HOWTO>Cliquez sur l'ic&ocirc;ne sur le panneau de gauche afin de d&eacute;finir les param&egrave;tres NFS et de monter un r&eacute;pertoire local vers le serveur destinataire</NFS_CLIENT_HOWTO>
+<NTconfig>XP/2000 Policies</NTconfig>
+<NTconfig_howto>Push your Windows NT policy (*.pol) in order to make it in production mode</NTconfig_howto>
+<NTconfig_howto_title>How to create a .pol file ?</NTconfig_howto_title>
+<NTconfig_howto_title_text>Cliquez sur cette image afin de visualiser comment cr&eacute;er les politiques pour vos clients Windows XP.</NTconfig_howto_title_text>
+<NTconfig_text>Sauvegarder les strat&eacute;gies utilisateurs (seulement si le serveur est programm&eacute; en mode PDC)</NTconfig_text>
+<privileges_settings>Propri&eacute;t&eacute;s et des privil&egrave;ges du partage. Definir les privil&egrave;ges des utilisateurs et le comportement des dossiers</privileges_settings>
+<roaming_profiles>Profils itin&eacute;rants</roaming_profiles>
+<roaming_profiles_text>Les profils itin&eacute;rants autorise un utilisateur connect&eacute; au domaine &agrave; ouvrir une session depuis n'importe quel ordinateur afin d'acc&eacute;der &agrave; ses documents et son environnement</roaming_profiles_text>
+<samba_audit>Voir les statistiques de Samba</samba_audit>
+<samba_audit_text>Voir l'&eacute;tat de vos r&eacute;pertoires partag&eacute;s et effectuer une analyse</samba_audit_text>
+<selected_folder>Dossier s&eacute;lectionn&eacute;</selected_folder>
+<select_disk>S&eacute;lectionnez le Disque Dur</select_disk>
+<select_this_folder>S&eacute;lectionner ce dossier</select_this_folder>
+<SHARE_FOLDER>Partager un dossier</SHARE_FOLDER>
+<SHARE_FOLDER_TEXT>Partager un dossier sur ce syst&egrave;me. [br] Parcourez votre disque dur et s&eacute;lectionnez un r&eacute;pertoire &agrave; partager</SHARE_FOLDER_TEXT>
+<share_this>Partager ce dossier</share_this>
+<share_this_NFS>Partagez ce dossier en utilisant NFS</share_this_NFS>
+<share_this_NFS_explain>Vous &ecirc;tes pr&ecirc;t &agrave; partager ce dossier avec le protocole NFS[br]Ajoutez un ordinateur afin de le donner les autorisations[br]Le protocol NFS est basiquement utilis&eacute; sur les ordinateurs UNIX.[br] Le protocole NFS de SUN fournit un acc&egrave;s partag&eacute; et transparent &agrave; travers le r&eacute;seau.</share_this_NFS_explain>
+<unshare_this>Supprimer le partage de ce dossier? Toutes les propri&eacute;t&eacute;s et les privil&egrave;ges du partage seront d&eacute;finitivement supprim&eacute;s</unshare_this>
+<usb_share>Partage USB</usb_share>
+<usb_share_explain>Cette section vous permet de partager vos p&eacute;riph&eacute;riques de stockage avec le service d'auto-connexion.[br]
+Cliquez dans une ligne de cette liste afin de partager le p&eacute;riph&eacute;rique &agrave; travers le partage windows.[br]
+Si aucune ligne n'est fournit dans cette liste, cela veut dire que vous n'avez pas encore de p&eacute;riph&eacute;riques en mode &quot;auto-connexion&quot;.</usb_share_explain>
+<usb_share_text>D&eacute;tecter les p&eacute;riph&eacute;riques USB et les partager automatiquement sur le r&eacute;seau</usb_share_text>

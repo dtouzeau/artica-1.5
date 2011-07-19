@@ -1,0 +1,34 @@
+acl SSL_ports port 443 563
+acl Safe_ports port 80 21 443 563 70 210 1025-65535
+acl all src 0.0.0.0/0.0.0.0
+acl everything src 0.0.0.0/0.0.0.0
+acl localhost src 127.0.0.1/255.255.255.255
+acl manager proto cache_object
+
+cache_mgr cs@zip.com.au
+
+cachemgr_passwd disable all
+client_db off
+
+ftp_list_width 78
+
+#hierarchy_stoplist
+
+http_access allow all
+icp_access allow all
+icp_port 0
+#miss_access allow all
+
+#negative_ttl 0 minutes
+#never_direct allow all
+
+prefer_direct off
+#quick_abort_max 0 KB
+#quick_abort_min 0 KB
+#quick_abort_pct 100
+
+refresh_pattern		^ftp:		1440	20%	10080
+refresh_pattern		^gopher:	1440	0%	1440
+refresh_pattern 	.		0	20%	4320
+
+uri_whitespace encode

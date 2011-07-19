@@ -1,0 +1,25 @@
+program artica_filter_smtp_out;
+
+{$mode objfpc}{$H+}
+
+uses
+  Classes, SysUtils,logs,global_conf,zsystem, mimedefang_hook;
+
+  
+  
+var
+   GLOBAL_INI   :myconf;
+   hook         :thook;
+begin
+
+
+  hook:=thook.Create();
+  hook.ScanHeaders();
+
+
+
+
+
+
+
+end.

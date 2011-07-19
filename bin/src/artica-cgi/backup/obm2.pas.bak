@@ -1,0 +1,999 @@
+unit obm2;
+
+{$MODE DELPHI}
+{$LONGSTRINGS ON}
+
+interface
+
+uses
+    Classes, SysUtils,variants,strutils,IniFiles, Process,md5,logs,unix,RegExpr in 'RegExpr.pas',zsystem;
+
+  type
+  tobm2=class
+
+
+private
+     LOGS:Tlogs;
+     D:boolean;
+     GLOBAL_INI:TiniFIle;
+     SYS:TSystem;
+     artica_path:string;
+     OBM2Enabled:integer;
+
+
+public
+    procedure   Free;
+    constructor Create(const zSYS:Tsystem);
+    function  VERSION():string;
+    function  PID_NUM():string;
+    procedure START();
+    procedure STOP();
+    function  STATUS():string;
+    procedure WRITE_APACHE_CONFIG();
+END;
+
+implementation
+
+constructor tobm2.Create(const zSYS:Tsystem);
+begin
+       forcedirectories('/etc/artica-postfix');
+       LOGS:=tlogs.Create();
+       SYS:=zSYS;
+       OBM2Enabled:=0;
+       if not TryStrToInt(SYS.GET_INFO('OBM2Enabled'),OBM2Enabled) then OBM2Enabled:=0;
+
+
+       if not DirectoryExists('/usr/share/artica-postfix') then begin
+              artica_path:=ParamStr(0);
+              artica_path:=ExtractFilePath(artica_path);
+              artica_path:=AnsiReplaceText(artica_path,'/bin/','');
+
+      end else begin
+          artica_path:='/usr/share/artica-postfix';
+      end;
+end;
+//##############################################################################
+procedure tobm2.free();
+begin
+    FreeAndNil(logs);
+end;
+//##############################################################################
+function tobm2.VERSION():string;
+  var
+   RegExpr:TRegExpr;
+   x:string;
+   tmpstr:string;
+   l:TstringList;
+   i:integer;
+   path:string;
+begin
+
+
+
+     path:='/usr/local/obm-apache/bin/obm-apache';
+     if not FileExists(path) then begin
+        logs.Debuglogs('tobm2.VERSION():: apache for OBM2 is not installed');
+        exit;
+     end;
+
+
+   result:=SYS.GET_CACHE_VERSION('APP_OBM2');
+   if length(result)>0 then exit;
+
+if not FileExists('/usr/share/obm2/obminclude/global.inc') then begin
+   logs.Debuglogs('Unable to stat /usr/share/obm2/obminclude/global.inc obm seems not be installed');
+   exit;
+end;
+     l:=TstringList.Create;
+     RegExpr:=TRegExpr.Create;
+     l.LoadFromFile('/usr/share/obm2/obminclude/global.inc');
+     RegExpr.Expression:='\$obm_version.+?([0-9\.]+)';
+     for i:=0 to l.Count-1 do begin
+         if RegExpr.Exec(l.Strings[i]) then begin
+            result:=RegExpr.Match[1];
+            break;
+         end;
+     end;
+l.Free;
+RegExpr.free;
+SYS.SET_CACHE_VERSION('APP_OBM2',result);
+logs.Debuglogs('APP_OBM2:: -> ' + result);
+end;
+//#############################################################################
+procedure tobm2.START();
+var
+   pid:string;
+   count:integer;
+begin
+
+if OBM2Enabled=0 then begin
+   logs.DebugLogs('Starting......: OBM2 is disabled');
+   STOP();
+   exit;
+end;
+
+  pid:=PID_NUM();
+
+if SYS.PROCESS_EXIST(pid) then begin
+     logs.DebugLogs('Starting......: OBM2 already running using PID ' +pid+ '...');
+     exit;
+end;
+
+    WRITE_APACHE_CONFIG();
+    fpsystem('/usr/local/obm-apache/bin/apachectl start');
+
+ count:=0;
+ while not SYS.PROCESS_EXIST(PID_NUM()) do begin
+              sleep(150);
+              inc(count);
+              if count>20 then begin
+                 logs.DebugLogs('Starting......: OBM2 daemon. (timeout!!!)');
+                 break;
+              end;
+        end;
+
+    
+
+if  not SYS.PROCESS_EXIST(PID_NUM()) then begin
+    logs.DebugLogs('Starting......: OBM2 daemon failed');
+    exit;
+end;
+
+logs.DebugLogs('Starting......: OBM2 daemon success with new PID ' + PID_NUM());
+
+
+
+end;
+//##############################################################################
+function tobm2.PID_NUM():string;
+begin
+     result:=SYS.PIDOF('obm-apache');
+end;
+//##############################################################################
+procedure tobm2.STOP();
+var
+   count:integer;
+begin
+
+    if not FileExists('/usr/local/obm-apache/bin/obm-apache') then begin
+    writeln('Stopping obm2................: Not installed');
+    exit;
+    end;
+
+    if SYS.PROCESS_EXIST(PID_NUM()) then begin
+       writeln('Stopping obm2................: ' + PID_NUM() + ' PID..');
+       fpsystem('/usr/local/obm-apache/bin/apachectl stop');
+    end;
+
+
+ count:=0;
+ while SYS.PROCESS_EXIST(PID_NUM()) do begin
+              sleep(150);
+              inc(count);
+              if count>20 then begin
+                 writeln('Stopping obm2................: ' + PID_NUM() + ' PID.. (timeout)');
+                 break;
+              end;
+        end;
+
+if  not SYS.PROCESS_EXIST(PID_NUM()) then begin
+    writeln('Stopping obm2................: success');
+    exit;
+end;
+    writeln('Stopping obm2................: failed');
+
+end;
+//#############################################################################
+procedure tobm2.WRITE_APACHE_CONFIG();
+var
+   l:Tstringlist;
+   x:Tstringlist;
+   RegExpr:TRegExpr;
+   i:integer;
+   Obm2ListenPort:string;
+
+begin
+x:=Tstringlist.Create;
+x.add('authn_file_module;modules/mod_authn_file.so');
+x.add('authn_dbm_module;modules/mod_authn_dbm.so');
+x.add('authn_anon_module;modules/mod_authn_anon.so');
+x.add('authn_dbd_module;modules/mod_authn_dbd.so');
+x.add('authn_default_module;modules/mod_authn_default.so');
+x.add('authz_host_module;modules/mod_authz_host.so');
+x.add('authz_groupfile_module;modules/mod_authz_groupfile.so');
+x.add('authz_user_module;modules/mod_authz_user.so');
+x.add('authz_dbm_module;modules/mod_authz_dbm.so');
+x.add('authz_owner_module;modules/mod_authz_owner.so');
+x.add('authz_default_module;modules/mod_authz_default.so');
+x.add('auth_basic_module;modules/mod_auth_basic.so');
+x.add('auth_digest_module;modules/mod_auth_digest.so');
+x.add('dbd_module;modules/mod_dbd.so');
+x.add('dumpio_module;modules/mod_dumpio.so');
+x.add('ext_filter_module;modules/mod_ext_filter.so');
+x.add('include_module;modules/mod_include.so');
+x.add('filter_module;modules/mod_filter.so');
+x.add('substitute_module;modules/mod_substitute.so');
+x.add('deflate_module;modules/mod_deflate.so');
+x.add('log_config_module;modules/mod_log_config.so');
+x.add('log_forensic_module;modules/mod_log_forensic.so');
+x.add('logio_module;modules/mod_logio.so');
+x.add('env_module;modules/mod_env.so');
+x.add('mime_magic_module;modules/mod_mime_magic.so');
+x.add('cern_meta_module;modules/mod_cern_meta.so');
+x.add('expires_module;modules/mod_expires.so');
+x.add('headers_module;modules/mod_headers.so');
+x.add('ident_module;modules/mod_ident.so');
+x.add('usertrack_module;modules/mod_usertrack.so');
+x.add('unique_id_module;modules/mod_unique_id.so');
+x.add('setenvif_module;modules/mod_setenvif.so');
+x.add('version_module;modules/mod_version.so');
+x.add('mime_module;modules/mod_mime.so');
+x.add('dav_module;modules/mod_dav.so');
+x.add('status_module;modules/mod_status.so');
+x.add('autoindex_module;modules/mod_autoindex.so');
+x.add('asis_module;modules/mod_asis.so');
+x.add('info_module;modules/mod_info.so');
+x.add('cgi_module;modules/mod_cgi.so');
+x.add('dav_fs_module;modules/mod_dav_fs.so');
+x.add('vhost_alias_module;modules/mod_vhost_alias.so');
+x.add('negotiation_module;modules/mod_negotiation.so');
+x.add('dir_module;modules/mod_dir.so');
+x.add('imagemap_module;modules/mod_imagemap.so');
+x.add('actions_module;modules/mod_actions.so');
+x.add('speling_module;modules/mod_speling.so');
+x.add('userdir_module;modules/mod_userdir.so');
+x.add('alias_module;modules/mod_alias.so');
+x.add('rewrite_module;modules/mod_rewrite.so');
+x.add('php5_module;modules/libphp5.so');
+
+
+
+
+Obm2ListenPort:=SYS.GET_INFO('Obm2ListenPort');
+if length(Obm2ListenPort)=0 then Obm2ListenPort:='8080';
+l:=Tstringlist.Create;
+l.Add('ServerRoot "/usr/local/obm-apache"');
+l.Add('Listen '+Obm2ListenPort);
+l.Add('');
+RegExpr:=TRegExpr.Create;
+RegExpr.Expression:='(.+?);(.+)';
+
+for i:=0 to x.Count-1 do begin
+      if RegExpr.Exec(x.Strings[i]) then begin
+         if FileExists('/usr/local/obm-apache/'+RegExpr.Match[2]) then begin
+            l.Add('LoadModule '+RegExpr.Match[1]+' ' + RegExpr.Match[2]);
+         end else begin
+             writeln('skip module "'+RegExpr.Match[1]+'" file "/usr/local/obm-apache/' + RegExpr.Match[2] + '" does not exists');
+         end;
+      end;
+end;
+
+forceDirectories('/var/log/obm2');
+logs.OutputCmd('/bin/chown -R www-data:www-data /var/log/obm2');
+
+
+l.Add('');
+l.Add('<IfModule !mpm_netware_module>');
+l.Add('<IfModule !mpm_winnt_module>');
+l.Add('');
+l.Add('User www-data');
+l.Add('Group www-data');
+l.Add('');
+l.Add('</IfModule>');
+l.Add('</IfModule>');
+l.Add('');
+l.Add('ServerAdmin you@example.com');
+l.Add('ServerName ' + SYS.HOSTNAME_g());
+l.Add('DocumentRoot "/usr/share/obm2/php"');
+l.Add('');
+l.Add('<Directory />');
+l.Add('    Options FollowSymLinks');
+l.Add('    AllowOverride None');
+l.Add('    Order deny,allow');
+l.Add('    Deny from all');
+l.Add('</Directory>');  
+l.Add('');
+l.Add('');
+l.Add('<Directory "/usr/share/obm2/php">');
+l.Add('    SetEnv OBM_INCLUDE_VAR obminclude');
+l.Add('    DirectoryIndex obm.php');
+l.Add('    AddDefaultCharset ISO-8859-15');
+l.Add('    Options Indexes FollowSymLinks');
+l.Add('    AllowOverride None');
+l.Add('    Order allow,deny');
+l.Add('    Allow from all');
+l.Add('');
+l.Add('</Directory>');
+l.Add('');
+l.Add('<IfModule dir_module>');
+l.Add('    DirectoryIndex index.html');
+l.Add('</IfModule>');
+l.Add('');
+l.Add('');
+l.Add('<FilesMatch "^\.ht">');
+l.Add('    Order allow,deny');
+l.Add('    Deny from all');
+l.Add('    Satisfy All');
+l.Add('</FilesMatch>');
+l.Add('');
+l.Add('');
+l.Add('ErrorLog "/var/log/obm2/error.log"');
+l.Add('LogLevel warn');
+l.Add('');
+l.Add('<IfModule log_config_module>');
+l.Add('    LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined');
+l.Add('    LogFormat "%h %l %u %t \"%r\" %>s %b" common');
+l.Add('');
+l.Add('    <IfModule logio_module>');
+l.Add('      LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O" combinedio');
+l.Add('    </IfModule>');
+l.Add('');
+l.Add('    CustomLog "/var/log/obm2/access.log" common');
+l.Add('    #CustomLog "logs/access_log" combined');
+l.Add('</IfModule>');
+l.Add('');
+l.Add('<IfModule alias_module>');
+l.Add('    ScriptAlias /cgi-bin/ "/usr/local/obm-apache/data/cgi-bin/"');
+l.Add('    Alias /images /usr/share/obm2/resources');
+l.Add('');
+l.Add('</IfModule>');
+l.Add('');
+l.Add('<IfModule cgid_module>');
+l.Add('');
+l.Add('</IfModule>');
+l.Add('');
+l.Add('<Directory "/usr/share/obm2/resources">');
+l.Add('    AllowOverride None');
+l.Add('    Options None');
+l.Add('    Order allow,deny');
+l.Add('    Allow from all');
+l.Add('</Directory>');
+l.Add('');
+l.Add('<Directory "/usr/local/obm-apache/data/cgi-bin">');
+l.Add('    AllowOverride None');
+l.Add('    Options None');
+l.Add('    Order allow,deny');
+l.Add('    Allow from all');
+l.Add('</Directory>');
+l.Add('');
+l.Add('');
+l.Add('DefaultType text/plain');
+l.Add('');
+l.Add('<IfModule mime_module>');
+l.Add('   ');
+l.Add('    TypesConfig conf/mime.types');
+l.Add('    #AddType application/x-gzip .tgz');
+l.Add('    AddType application/x-compress .Z');
+l.Add('    AddType application/x-gzip .gz .tgz');
+l.add('    AddType application/x-httpd-php .php .phtml');
+l.Add('    #AddHandler cgi-script .cgi');
+l.Add('    #AddHandler type-map var');
+l.Add('    #AddType text/html .shtml');
+l.Add('    #AddOutputFilter INCLUDES .shtml');
+l.Add('</IfModule>');
+l.Add('');
+l.Add('<IfModule ssl_module>');
+l.Add('SSLRandomSeed startup builtin');
+l.Add('SSLRandomSeed connect builtin');
+l.Add('</IfModule>');
+logs.WriteToFile(l.Text,'/usr/local/obm-apache/conf/obm-apache.conf');
+
+l.clear;
+
+l.add('[PHP]');
+l.add('engine=On');
+l.add('zend.ze1_compatibility_mode=Off');
+l.add('short_open_tag=On');
+l.add('asp_tags=Off');
+l.add('precision=12');
+l.add('y2k_compliance=On');
+l.add('output_buffering=Off');
+l.add('zlib.output_compression=Off');
+l.add('implicit_flush=Off');
+l.add('unserialize_callback_func=');
+l.add('serialize_precision=100');
+l.add('allow_call_time_pass_reference=On');
+l.add('safe_mode=Off');
+l.add('safe_mode_gid=Off');
+l.add('safe_mode_include_dir=');
+l.add('safe_mode_exec_dir=');
+l.add('safe_mode_allowed_env_vars=PHP_');
+l.add('safe_mode_protected_env_vars=LD_LIBRARY_PATH');
+l.add('disable_functions=');
+l.add('disable_classes=');
+l.add('expose_php=On');
+l.add('max_execution_time=30     ; Maximum execution time of each script, in seconds');
+l.add('max_input_time=60 ; Maximum amount of time each script may spend parsing request data');
+l.add('memory_limit=128M');
+l.add('error_reporting=E_ALL & ~E_NOTICE');
+l.add('display_errors=on');
+l.add('display_startup_errors=Off');
+l.add('log_errors=Off');
+l.add('log_errors_max_len=1024');
+l.add('ignore_repeated_errors=Off');
+l.add('ignore_repeated_source=Off');
+l.add('report_memleaks=On');
+l.add('track_errors=Off');
+l.add('variables_order="EGPCS"');
+l.add('register_globals=off');
+l.add('register_long_arrays=On');
+l.add('register_argc_argv=On');
+l.add('auto_globals_jit=On');
+l.add('post_max_size=8M');
+l.add('magic_quotes_gpc=On');
+l.add('magic_quotes_runtime=Off');
+l.add('magic_quotes_sybase=Off');
+l.add('auto_prepend_file=');
+l.add('auto_append_file=');
+l.add('default_mimetype="text/html"');
+l.add('doc_root=');
+l.add('user_dir=');
+l.add('enable_dl=Off');
+l.add('file_uploads=on');
+l.add('upload_max_filesize=2M');
+l.add('allow_url_fopen=On');
+l.add('allow_url_include=Off');
+l.add('default_socket_timeout=60');
+l.add('session.auto_start=off');
+l.add('include_path=.:/usr/local/obm-apache/php5/lib/php:/usr/share/obm2');
+l.add('');
+l.add('[Date]');
+l.add('');
+l.add('[filter]');
+l.add('');
+l.add('[iconv]');
+l.add('');
+l.add('[sqlite]');
+l.add('');
+l.add('[xmlrpc]');
+l.add('');
+l.add('[Pcre]');
+l.add('');
+l.add('[Syslog]');
+l.add('define_syslog_variables=Off');
+l.add('');
+l.add('[mail function]');
+l.add('SMTP=localhost');
+l.add('smtp_port=25');
+l.add('');
+l.add('[SQL]');
+l.add('sql.safe_mode=Off');
+l.add('');
+l.add('[ODBC]');
+l.add('odbc.allow_persistent=On');
+l.add('odbc.check_persistent=On');
+l.add('odbc.max_persistent=-1');
+l.add('odbc.max_links=-1');
+l.add('odbc.defaultlrl=4096');
+l.add('odbc.defaultbinmode=1');
+l.add('');
+l.add('[MySQL]');
+l.add('mysql.allow_persistent=On');
+l.add('mysql.max_persistent=-1');
+l.add('mysql.max_links=-1');
+l.add('mysql.default_port=');
+l.add('mysql.default_socket=');
+l.add('mysql.default_host=');
+l.add('mysql.default_user=');
+l.add('mysql.default_password=');
+l.add('mysql.connect_timeout=60');
+l.add('mysql.trace_mode=Off');
+l.add('');
+l.add('[MySQLi]');
+l.add('mysqli.max_links=-1');
+l.add('mysqli.default_port=3306');
+l.add('mysqli.default_socket=');
+l.add('mysqli.default_host=');
+l.add('mysqli.default_user=');
+l.add('mysqli.default_pw=');
+l.add('mysqli.reconnect=Off');
+l.add('');
+l.add('[mSQL]');
+l.add('msql.allow_persistent=On');
+l.add('msql.max_persistent=-1');
+l.add('msql.max_links=-1');
+l.add('');
+l.add('[OCI8]');
+l.add('');
+l.add('[PostgresSQL]');
+l.add('pgsql.allow_persistent=On');
+l.add('pgsql.auto_reset_persistent=Off');
+l.add('pgsql.max_persistent=-1');
+l.add('pgsql.max_links=-1');
+l.add('pgsql.ignore_notice=0');
+l.add('pgsql.log_notice=0');
+l.add('');
+l.add('[Sybase]');
+l.add('sybase.allow_persistent=On');
+l.add('sybase.max_persistent=-1');
+l.add('sybase.max_links=-1');
+l.add('sybase.min_error_severity=10');
+l.add('sybase.min_message_severity=10');
+l.add('sybase.compatability_mode=Off');
+l.add('');
+l.add('[Sybase-CT]');
+l.add('sybct.allow_persistent=On');
+l.add('sybct.max_persistent=-1');
+l.add('sybct.max_links=-1');
+l.add('sybct.min_server_severity=10');
+l.add('sybct.min_client_severity=10');
+l.add('');
+l.add('[bcmath]');
+l.add('bcmath.scale=0');
+l.add('');
+l.add('[browscap]');
+l.add('');
+l.add('[Informix]');
+l.add('ifx.default_host=');
+l.add('ifx.default_user=');
+l.add('ifx.default_password=');
+l.add('ifx.allow_persistent=On');
+l.add('ifx.max_persistent=-1');
+l.add('ifx.max_links=-1');
+l.add('ifx.textasvarchar=0');
+l.add('ifx.byteasvarchar=0');
+l.add('ifx.charasvarchar=0');
+l.add('ifx.blobinfile=0');
+l.add('ifx.nullformat=0');
+l.add('');
+l.add('[Session]');
+l.add('session.save_handler=files');
+l.add('session.use_cookies=1');
+l.add('session.name=PHPSESSID');
+l.add('session.auto_start=0');
+l.add('session.cookie_lifetime=0');
+l.add('session.cookie_path=/');
+l.add('session.cookie_domain=');
+l.add('session.cookie_httponly=');
+l.add('session.serialize_handler=php');
+l.add('session.gc_divisor=100');
+l.add('session.gc_maxlifetime=1440');
+l.add('session.bug_compat_42=1');
+l.add('session.bug_compat_warn=1');
+l.add('session.referer_check=');
+l.add('session.entropy_length=0');
+l.add('session.entropy_file=');
+l.add('session.cache_limiter=nocache');
+l.add('session.cache_expire=180');
+l.add('session.use_trans_sid=0');
+l.add('session.hash_function=0');
+l.add('session.hash_bits_per_character=4');
+l.add('url_rewriter.tags="a=href,area=href,frame=src,input=src,form=,fieldset="');
+l.add('');
+l.add('[MSSQL]');
+l.add('mssql.allow_persistent=On');
+l.add('mssql.max_persistent=-1');
+l.add('mssql.max_links=-1');
+l.add('mssql.min_error_severity=10');
+l.add('mssql.min_message_severity=10');
+l.add('mssql.compatability_mode=Off');
+l.add('mssql.secure_connection=Off');
+l.add('');
+l.add('[Assertion]');
+l.add('');
+l.add('[COM]');
+l.add('');
+l.add('[mbstring]');
+l.add('');
+l.add('[FrontBase]');
+l.add('');
+l.add('[gd]');
+l.add('');
+l.add('[exif]');
+l.add('');
+l.add('[Tidy]');
+l.add('tidy.clean_output=Off');
+l.add('');
+l.add('[soap]');
+l.add('soap.wsdl_cache_enabled=1');
+l.add('soap.wsdl_cache_dir="/tmp"');
+l.add('soap.wsdl_cache_ttl=86400');
+
+logs.WriteToFile(l.Text,'/usr/local/obm-apache/php5/lib/php.ini');
+
+
+forceDirectories('/var/lib/obm2');
+
+l.clear;
+l.add('[global]');
+l.add('title = OBM');
+l.add('external-url = obm');
+l.add('external-protocol = http');
+l.add('obm-prefix = /');
+l.add('');
+l.add('host = '+SYS.MYSQL_INFOS('server'));
+l.add('dbtype = MYSQL');
+l.add('db = obm2');
+l.add('user = '+SYS.MYSQL_INFOS('root'));
+l.add('password = "'+SYS.MYSQL_INFOS('password')+'"');
+l.add('lang = en');
+l.add('');
+l.add('');
+l.add('obm-ldap = false');
+l.add('obm-mail = true');
+l.add('obm-samba = false');
+l.add('obm-web = false');
+l.add('obm-contact = true');
+l.add('');
+l.add('; singleNameSpace mode allow only one domain');
+l.add('; login are ''login'' and not ''login@domain''');
+l.add('; Going multi-domain from mono domain needs system work (ldap, cyrus,...)');
+l.add('; Multi-domain disabled by default');
+l.add('singleNameSpace = false');
+l.add('');
+l.add('backupRoot = "/var/lib/obm2/backup"');
+l.add('');
+l.add('documentRoot="/var/lib/obm2/documents"');
+l.add('documentDefaultPath="/"');
+l.add('');
+l.add('; LDAP Authentification for obm-sync & ui');
+l.add('; ldap authentication server (specify :port if different than default)');
+l.add(';auth-ldap-server = ldap://localhost');
+l.add('; base dn for search (search are performed with scope sub, of not specified, use the server default)');
+l.add(';auth-ldap-basedn = "dc=local"');
+l.add('; filter used for the search part of the authentication');
+l.add('; See http://www.faqs.org/rfcs/rfc2254.html for filter syntax');
+l.add(';  - %u will be replace with user login');
+l.add(';  - %d will be replace with user OBM domain name');
+l.add('; ie: toto@domain.foo : %u=toto, %d=domain.foo');
+l.add('; auth-ldap-filter = "(&(uid=%u)(obmDomain=%d))"');
+l.add('');
+l.add('[automate]');
+l.add('; Automate specific parameters');
+l.add(';');
+l.add('; Log level');
+l.add('logLevel = 2');
+l.add(';');
+l.add('; LDAP server address');
+l.add('ldapServer = ldap://localhost');
+l.add(';');
+l.add('; LDAP use TLS [none|may|encrypt]');
+l.add('ldapTls = may');
+l.add(';');
+l.add('; LDAP Root');
+l.add('; Exemple : aliasource,local means that the root DN is: dc=aliasource,dc=local');
+l.add('ldapRoot = local');
+l.add('');
+l.add('; Enable Cyrus partition support');
+l.add('; if cyrusPartition is enable, a dedicated Cyrus partition is created for each OBM domain');
+l.add('; Going cyrusPartition enabled from cyrusPartition disabled needs system work');
+l.add('cyrusPartition = false');
+l.add(';');
+l.add('; ldapAllMainMailAddress :');
+l.add(';    false : publish user mail address only if mail right is enable - default');
+l.add(';    true : publish main user mail address, even if mail right is disable');
+l.add('ldapAllMainMailAddress = false');
+l.add(';');
+l.add('; userMailboxDefaultFolders are IMAP folders who are automaticaly created');
+l.add('; at user creation ( must be enclosed with " and in IMAP UTF-7 modified encoding)');
+l.add('; Small convertion table');
+l.add('; é -> &AOk-');
+l.add('; è -> &AOg-');
+l.add('; à -> &AOA-');
+l.add('; & -> &');
+l.add('; Example : userMailboxDefaultFolders = "Envoy&AOk-s,Corbeille,Brouillons,El&AOk-ments ind&AOk-sirables"');
+l.add('userMailboxDefaultFolders = ""');
+l.add(';');
+l.add('; shareMailboxDefaultFolders are IMAP folders who are automaticaly created');
+l.add('; at share creation ( must be enclosed with " and in IMAP UTF-7 modified');
+l.add('; encoding)');
+l.add('shareMailboxDefaultFolders = ""');
+l.add(';');
+l.add('; oldSidMapping mode is for compatibility with Aliamin and old install');
+l.add('; Modifying this on a running system need Samba domain work (re-register host,');
+l.add('; ACL...) ');
+l.add('; For new one, leave this to ''false''');
+l.add('oldSidMapping = false');
+l.add(';');
+l.add(';');
+l.add('; Settings use by OBM Thunderbird autoconf');
+l.add('[autoconf]');
+l.add(';');
+l.add('ldapHostname = ldap.aliacom.local');
+l.add('ldapHost = 127.0.0.1');
+l.add('ldapPort = 389');
+l.add('ldapSearchBase = "dc=local"');
+l.add('ldapAtts = cn,mail,mailAlias,mailBox,obmDomain,uid');
+l.add('ldapFilter = "mail"');
+l.add('configXml = /usr/lib/obm-autoconf/config.xml');
+l.add(';');
+l.add('; EOF');
+
+logs.WriteToFile(l.text,'/usr/share/obm2/conf/obm_conf.ini');
+l.clear;
+l.add('<script language="php">');
+l.add('///////////////////////////////////////////////////////////////////////////////');
+l.add('// OBM - File : obm_conf.inc.sample                                          //');
+l.add('//     - Desc : OBM specific site configuration Sample file                  //');
+l.add('// 2005-04-04 Pierre Baudracco                                               //');
+l.add('///////////////////////////////////////////////////////////////////////////////');
+l.add('// $Id: obm_conf.inc.sample 4339 2009-06-09 17:44:02Z pierre $ //');
+l.add('///////////////////////////////////////////////////////////////////////////////');
+l.add('');
+l.add('');
+l.add('');
+l.add('// Global parameters --------------------------------------------------------//');
+l.add('');
+l.add('// OBM host (for mail links)');
+l.add('// CGP_HOST IS DEPRECATED. See external-url,..');
+l.add('');
+l.add('// Resources alias absolute path. (default value is ''/images'')');
+l.add('// $resources_path = "$cgp_host/images"; ');
+l.add('');
+l.add('// Home page redirection');
+l.add('//$c_home_redirect = "$cgp_host" . ''calendar/calendar_index.php'';');
+l.add('');
+l.add('// Use specific langs (was $cgp_site_include)');
+l.add('//$conf_lang = true;');
+l.add('');
+l.add('// Use specific check controls (see conf/modules/module.inc)');
+l.add('//$conf_modules = true;');
+l.add('');
+l.add('// Todo lines to display');
+l.add('$cgp_todo_nb = 5;');
+l.add('');
+l.add('// Maximum rows allowed to display');
+l.add('$conf_display_max_rows = 200;');
+l.add('');
+l.add('// Allow * in search field');
+l.add('$cgp_sql_star = true;');
+l.add('// archive checkbox return only archived results');
+l.add('//$cgp_archive_only = true;');
+l.add('');
+l.add('// Tuning constants');
+l.add('$ctu_sql_limit = true;');
+l.add('');
+l.add('// MySQL (only 4.1+) charset used (for database and files !)');
+l.add('//$cmy_character_set = ''_latin1'';');
+l.add('');
+l.add('// MySQL (only 4.1+) charset collation used (for database and files !)');
+l.add('//$cmy_charset_collation = ''latin1_general_ci'';');
+l.add('');
+l.add('// is Mail enabled for OBM ? (eg: calendar)');
+l.add('$cgp_mail_enabled = true;');
+l.add('');
+l.add('// is Demo enabled (login screen array with default account)');
+l.add('$cgp_demo_enabled = false;');
+l.add('');
+l.add('// Session Cookie lifetime (in seconds, 0=session cookie)');
+l.add('$cs_lifetime = 0;');
+l.add('');
+l.add('// Use Database sessions');
+l.add('$cgp_sess_db = false;');
+l.add('//$cgp_sess_db = true;');
+l.add('');
+l.add('// Cookie name and domain');
+l.add('$cgp_cookie_name = ''OBM_Session'';');
+l.add('$cgp_cookie_domain = ''aliacom.local'';');
+l.add('');
+l.add('// authentification : ''CAS'' (SSO AliaSuite), ''ldap'' (LDAP authentication) or ''standalone'' (default)');
+l.add('//$auth_kind = ''CAS'';');
+l.add('//$cas_server = ''sso.aliacom.local'';');
+l.add('//$cas_server_port = 8443;');
+l.add('//$cas_server_uri = '''';');
+l.add('//$auth_kind=''ldap'';');
+l.add('');
+l.add('// encyption used to store password : ''PLAIN'', ''MD5SUM'' or ''CRYPT''');
+l.add('$password_encryption = ''PLAIN'';');
+l.add('');
+l.add('// Modules specific parameters ----------------------------------------------//');
+l.add('');
+l.add('// Company : Auto format fields');
+l.add('$caf_company_name = true;');
+l.add('$caf_town = true;');
+l.add('');
+l.add('// Company + Contact : Advanced search enabled by default');
+l.add('$csearch_advanced_default = false;');
+l.add('');
+l.add('// Contact : is mailing enabled by default for a new contact');
+l.add('$cgp_mailing_default = true;');
+l.add('');
+l.add('// Contact : is a new contact private by default');
+l.add('$ccontact_private_default = true;');
+l.add('');
+l.add('// Calendar : show public groups');
+l.add('$ccalendar_public_groups = true;');
+l.add('');
+l.add('// Calendar: generic E-mail resource admin for calendar module');
+l.add('//$ccalendar_resource_admin = ''resource@mydomain'';');
+l.add('');
+l.add('// Calendar first ay of week, first and last hour display');
+l.add('//$ccalendar_weekstart = ''monday'';');
+l.add('$ccalendar_first_hour = 8;');
+l.add('$ccalendar_last_hour = 20;');
+l.add('');
+l.add('// Calendar max user displayed in the calendar');
+l.add('//$ccalendar_max_users = 25;');
+l.add('');
+l.add('// Calendar Resource usage');
+l.add('$ccalendar_resource = true;');
+l.add('');
+l.add('// Set this to false if you want to forbid the insertion/update');
+l.add('// of a event when a resource is one of the reasons of the conflict.');
+l.add('// $ccalendar_resource_overbooking = false;');
+l.add('');
+l.add('// Calendar send ics file');
+l.add('$ccalendar_send_ics = true;');
+l.add('');
+l.add('// Calendar hour fraction (minutes select granularity)');
+l.add('$ccalendar_hour_fraction = 4;');
+l.add('');
+l.add('// Time : Worked days in a week (start at sunday)');
+l.add('$c_working_days = array(0,1,1,1,1,1,0);');
+l.add('');
+l.add('// Generic E-mail for Incident module');
+l.add('//$cmail_incident = ''support@mydomain'';');
+l.add('');
+l.add('// Time : activity report logo');
+l.add('$cimage_logo = ''linagora.jpg'';');
+l.add('');
+l.add('// Document : $cdocument_root and $default_path are deprecated');
+l.add('// see obm_conf.ini');
+l.add('');
+l.add('// Group : is a new group private by default');
+l.add('$cgroup_private_default = true;');
+l.add('');
+l.add('// default taxes values');
+l.add('$cdefault_tax = array (''TVA 19,6'' => 1.196, ''TVA 5,5'' => 1.055, ''Pas de TVA'' => 1);');
+l.add('');
+l.add('// default Right values; -1 = do not display');
+l.add('$cgp_default_right = array (');
+l.add('  ''resource'' => array (');
+l.add('      ''public'' => array(');
+l.add('        ''access'' => 1,');
+l.add('        ''read'' => 0,');
+l.add('        ''write'' => 0,');
+l.add('        ''admin'' => 0');
+l.add('      )');
+l.add('    ),');
+l.add('  ''mailshare'' => array (');
+l.add('      ''public'' => array(');
+l.add('        ''access'' => 1,');
+l.add('        ''read'' => 0,');
+l.add('        ''write'' => 0,');
+l.add('        ''admin'' => 0');
+l.add('      )');
+l.add('    ),');
+l.add('  ''mailbox'' => array (');
+l.add('      ''public'' => array(');
+l.add('        ''access'' => 1,');
+l.add('        ''read'' => 0,');
+l.add('        ''write'' => 0,');
+l.add('        ''admin'' => 0');
+l.add('      )');
+l.add('    ),');
+l.add('  ''calendar'' => array (');
+l.add('      ''public'' => array(');
+l.add('        ''access'' => 1,');
+l.add('        ''read'' => 1,');
+l.add('        ''write'' => 0,');
+l.add('        ''admin'' => 0');
+l.add('      )');
+l.add('    )');
+l.add('  );');
+l.add('');
+l.add('$profiles[''admin''] = array (');
+l.add('  ''section'' => array (');
+l.add('    ''default'' => 1');
+l.add('  ),');
+l.add('  ''module'' => array (');
+l.add('    ''default'' => $perm_admin,');
+l.add('    ''domain'' => 0),');
+l.add('  ''properties'' => array (');
+l.add('    ''admin_realm'' => array (''user'', ''delegation'', ''domain'')');
+l.add('    ),');
+l.add('  ''level'' => 1,');
+l.add('  ''level_managepeers'' => 1,');
+l.add('  ''access_restriction'' => ''ALLOW_ALL''');
+l.add('');
+l.add(');');
+l.add('');
+l.add('//-----------------//');
+l.add('// Displayed Infos //');
+l.add('//-----------------//');
+l.add('// --- sections --- Default is true');
+l.add('//$cgp_show[''section''] = ''''; // Needed if module order to change');
+l.add('//$cgp_show[''section''][''com''][''url''] = "$path/calendar/calendar_index.php";');
+l.add('//$cgp_show[''section''][''webmail''][''url''] = ''http://webmail'';');
+l.add('//$cgp_show[''section''][''webmail''][''url''] = $path."/horde3";');
+l.add('//$cgp_show[''section''][''webmail''][''target''] = ''_blank'';');
+l.add('');
+l.add('$cgp_show[''section''][''com''] = false;');
+l.add('$cgp_show[''section''][''prod''] = false;');
+l.add('$cgp_show[''section''][''compta''] = false;');
+l.add('');
+l.add('// --- modules --- false to hide, otherwise section');
+l.add('//$cgp_show[''module''] = ''''; // Needed if module order to change');
+l.add('//$cgp_show[''module''][''company''] = ''com'';');
+l.add('//$cgp_show[''module''][''campaign''] = ''com'';');
+l.add('');
+l.add('// Groupware configuration by default');
+l.add('$cgp_show[''module''][''company''] = false;');
+l.add('$cgp_show[''module''][''lead''] = false;');
+l.add('$cgp_show[''module''][''deal''] = false;');
+l.add('$cgp_show[''module''][''cv''] = false;');
+l.add('$cgp_show[''module''][''publication''] = false;');
+l.add('$cgp_show[''module''][''statistic''] = false;');
+l.add('$cgp_show[''module''][''time''] = false;');
+l.add('$cgp_show[''module''][''project''] = false;');
+l.add('$cgp_show[''module''][''contract''] = false;');
+l.add('$cgp_show[''module''][''incident''] = false;');
+l.add('$cgp_show[''module''][''invoice''] = false;');
+l.add('$cgp_show[''module''][''payment''] = false;');
+l.add('$cgp_show[''module''][''account''] = false;');
+l.add('$cgp_show[''module''][''document''] = ''com'';');
+l.add('');
+l.add('// --- fields ---');
+l.add('// References fields');
+l.add('//$cgp_hide[''''][''region''] = true;');
+l.add('');
+l.add('// Company module');
+l.add('//$cgp_hide[''company''][''company_number''] = true;');
+l.add('//$cgp_hide[''company''][''company_vat''] = true;');
+l.add('//$cgp_hide[''company''][''company_siret''] = true;');
+l.add('//$cgp_hide[''company''][''type''] = true;');
+l.add('//$cgp_hide[''company''][''activity''] = true;');
+l.add('//$cgp_hide[''company''][''nafcode''] = true;');
+l.add('');
+l.add('// Contact module');
+l.add('//$cgp_hide[''contact''][''function''] = true;');
+l.add('//$cgp_hide[''contact''][''contact_title''] = true;');
+l.add('//$cgp_hide[''contact''][''responsible''] = true;');
+l.add('//$cgp_hide[''contact''][''contact_service''] = true;');
+l.add('//$cgp_hide[''contact''][''contact_comment2''] = true;');
+l.add('//$cgp_hide[''contact''][''contact_comment3''] = true;');
+l.add('//$cgp_hide[''contact''][''contact_date''] = true;');
+l.add('');
+l.add('//--------------------//');
+l.add('// User specific data //');
+l.add('//--------------------//');
+l.add('// Categories available for modules :');
+l.add('// company, contact, incident, document');
+l.add('// Lang var definitions here for example : Put these in conf/lang/');
+l.add('//$l_companycategory1 = ''Category1'';');
+l.add('//$cgp_user[''company''][''category''][''companycategory1''] = array(''mode''=>''multi'');');
+l.add('//$l_contactcategory1 = ''Contact category1'';');
+l.add('//$cgp_user[''contact''][''category''][''contactcategory1''] = array(''mode''=>''multi'');');
+l.add('//$l_contactcategory2 = ''Contact category2'';');
+l.add('//$cgp_user[''contact''][''category''][''contactcategory2''] = array(''mode''=>''multi'');');
+l.add('//$l_documentcategory1 = ''Doc cat1'';');
+l.add('//$cgp_user[''document''][''category''][''documentcategory1''] = array(''mode''=>''mono'');');
+l.add('');
+l.add('');
+l.add('');
+l.add('</script>');
+logs.WriteToFile(l.text,'/usr/share/obm2/conf/obm_conf.inc');
+
+x.free;
+RegExpr.free;
+l.free;
+
+end;
+//#############################################################################
+
+
+function tobm2.STATUS();
+var
+   ini:TstringList;
+   pid:string;
+begin
+if not FileExists('/usr/local/obm-apache/bin/obm-apache') then exit;
+pid:=PID_NUM();
+
+
+      ini:=TstringList.Create;
+      ini.Add('[OBM2]');
+      if SYS.PROCESS_EXIST(pid) then ini.Add('running=1') else  ini.Add('running=0');
+      ini.Add('application_installed=1');
+      ini.Add('master_pid='+ pid);
+      ini.Add('master_memory=' + IntToStr(SYS.PROCESS_MEMORY(pid)));
+      ini.Add('master_version=' + VERSION());
+      ini.Add('status='+SYS.PROCESS_STATUS(pid));
+      ini.Add('service_name=APP_OBM2');
+      ini.Add('service_cmd=obm');
+      ini.Add('service_disabled=0');
+      result:=ini.Text;
+      ini.free;
+end;
+//##############################################################################
+end.

@@ -1,0 +1,4 @@
+<mailboxsize>Rozmiar Twojej skrzynki pocztowej</mailboxsize>
+<receivemails>Odbierz maile</receivemails>
+<welcome>Witaj</welcome>
+<your_organization>Jeste%u015B w organizacji</your_organization>

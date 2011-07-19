@@ -1,0 +1,138 @@
+unit setup_phpldapadmin;
+{$MODE DELPHI}
+//{$mode objfpc}{$H+}
+{$LONGSTRINGS ON}
+
+interface
+
+uses
+  Classes, SysUtils,strutils,RegExpr in 'RegExpr.pas',unix,IniFiles,setup_libs,distridetect,setup_suse_class,install_generic;
+
+  type
+  tsetup_phpldapadmin=class
+
+
+private
+     libs:tlibs;
+     distri:tdistriDetect;
+     install:tinstall;
+     packageSource:string;
+public
+      constructor Create();
+      procedure Free;
+      procedure xinstall();
+      procedure xinstall_phpmyadmin();
+END;
+
+implementation
+
+constructor tsetup_phpldapadmin.Create();
+begin
+distri:=tdistriDetect.Create();
+libs:=tlibs.Create;
+install:=tinstall.Create;
+if FileExists(ParamStr(2)) then packageSource:=ParamStr(2);
+end;
+//#########################################################################################
+procedure tsetup_phpldapadmin.Free();
+begin
+  libs.Free;
+end;
+//#########################################################################################
+procedure tsetup_phpldapadmin.xinstall();
+var
+
+   source_folder,cmd:string;
+   l:Tstringlist;
+   CODE_NAME:string;
+
+begin
+install.INSTALL_STATUS('APP_PHPLDAPADMIN',10);
+install.INSTALL_PROGRESS('APP_PHPLDAPADMIN','{downloading}');
+CODE_NAME:='APP_PHPLDAPADMIN';
+if FileExists(packageSource) then begin
+   writeln('Extracting from local file ' +packageSource);
+   source_folder:=libs.ExtractLocalPackage(packageSource);
+   writeln('source folder:',source_folder);
+end;
+
+
+if not DirectoryExists(source_folder) then source_folder:=libs.COMPILE_GENERIC_APPS('phpldapadmin');
+
+if length(trim(source_folder))=0 then begin
+     writeln('Install phpldapadmin failed...');
+     install.INSTALL_STATUS('APP_PHPLDAPADMIN',110);
+     exit;
+end;
+    install.INSTALL_PROGRESS('APP_PHPLDAPADMIN','{installing}');
+    install.INSTALL_STATUS('APP_PHPLDAPADMIN',70);
+writeln('Installing phpldapadmin from "',source_folder,'"');
+forceDirectories('/usr/share/phpldapadmin');
+fpsystem('/bin/cp -rf '+source_folder+'/* /usr/share/phpldapadmin/');
+fpsystem('/bin/ln -s --force /usr/share/phpldapadmin /usr/share/artica-postfix/ldap');
+fpsystem('/bin/rm -rf '+source_folder);
+
+if FileExists('/usr/share/phpldapadmin/index.php') then begin
+        install.INSTALL_STATUS(CODE_NAME,100);
+        writeln('installed');
+        install.INSTALL_PROGRESS(CODE_NAME,'{installed}');
+        install.INSTALL_STATUS(CODE_NAME,100);
+        fpsystem('/etc/init.d/artica-postfix restart apache');
+        exit;
+   end;
+
+  install.INSTALL_PROGRESS(CODE_NAME,'{failed}');
+  install.INSTALL_STATUS(CODE_NAME,110);
+  exit;
+
+end;
+//#########################################################################################
+procedure tsetup_phpldapadmin.xinstall_phpmyadmin();
+var
+
+   source_folder,cmd:string;
+   l:Tstringlist;
+   CODE_NAME:string;
+
+begin
+install.INSTALL_STATUS('APP_PHPMYADMIN',10);
+install.INSTALL_PROGRESS('APP_PHPMYADMIN','{downloading}');
+CODE_NAME:='APP_PHPMYADMIN';
+if FileExists(packageSource) then begin
+   writeln('Extracting from local file ' +packageSource);
+   source_folder:=libs.ExtractLocalPackage(packageSource);
+   writeln('source folder:',source_folder);
+end;
+
+
+if not DirectoryExists(source_folder) then source_folder:=libs.COMPILE_GENERIC_APPS('phpMyAdmin');
+
+if length(trim(source_folder))=0 then begin
+     writeln('Install phpmyadmin failed...');
+     install.INSTALL_STATUS('APP_PHPMYADMIN',110);
+     exit;
+end;
+    install.INSTALL_PROGRESS('APP_PHPMYADMIN','{installing}');
+    install.INSTALL_STATUS('APP_PHPMYADMIN',70);
+writeln('Installing phpmyadmin from "',source_folder,'"');
+forceDirectories('/usr/share/phpmyadmin');
+fpsystem('/bin/cp -rf '+source_folder+'/* /usr/share/phpmyadmin/');
+fpsystem('/bin/ln -s --force /usr/share/phpmyadmin /usr/share/artica-postfix/mysql');
+fpsystem('/bin/rm -rf '+source_folder);
+
+if FileExists('/usr/share/phpmyadmin/index.php') then begin
+        install.INSTALL_STATUS(CODE_NAME,100);
+        writeln('installed');
+        install.INSTALL_PROGRESS(CODE_NAME,'{installed}');
+        install.INSTALL_STATUS(CODE_NAME,100);
+        fpsystem('/etc/init.d/artica-postfix restart apache');
+        exit;
+   end;
+   writeln('unable to stat /usr/share/phpldapadmin/index.php');
+  install.INSTALL_PROGRESS(CODE_NAME,'{failed}');
+  install.INSTALL_STATUS(CODE_NAME,110);
+  exit;
+
+end;
+//#########################################################################################
+end.

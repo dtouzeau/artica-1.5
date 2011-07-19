@@ -1,0 +1,26 @@
+      
+           //-e -r ${sender} -m ${recipient}
+           //-e -r $(sender) -m ${extension} ${user}@${nexthop}
+           //-e -r ${sender} -m ${extension} ${user}
+
+      
+   {   if cyrus=false then begin
+         list.Add('cyrus'+ chr(9) + 'unix' + chr(9) + '-' + chr(9) + 'n' + chr(9) + 'n' + chr(9) + '-' + chr(9) + '-' + chr(9) + 'pipe');
+         list.Add(chr(9) +'flags= user=cyrus argv=/usr/sbin/cyrdeliver -e -r ${sender} -m ${extension} ${user}');
+         list.SaveToFile('/etc/postfix/master.cf');
+         list.Free;
+         writeln('Adding Cyrus in master.cf done');
+      end;
+      }
+      
+
+
+       
+       
+       
+       
+       //xShell('/usr/sbin/postconf -e virtual_mailbox_maps=hash:' + database_files + '/virtual_mailbox_maps.cf');
+                                                                                                                      
+
+dpkg-statoverride --force --update --add cyrus lmtp 750 /var/run/cyrus/socket  
+

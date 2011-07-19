@@ -1,0 +1,28 @@
+#!/bin/sh
+
+. /etc/rc.common
+
+StartService () {
+	if [ "${AMAVISCLAMAV:=-NO-}" = "-YES-" ]; then
+		echo "Starting amavis-stats"
+		@SBINDIR@/@PKGNAME@ -u @WEB_USER@ -g @WEB_GROUP@
+	else
+		NoService
+	fi
+}
+
+StopService () {
+	echo "Stopping @PKGNAME@"
+	@SBINDIR@/@PKGNAME@ stop
+}
+
+RestartService () {
+	StopService
+	StartService
+}
+
+NoService () {
+	ConsoleMessage "AMAVISCLAMAV is not enabled in /etc/hostconfig - unable to start."
+}
+
+RunService "$1"

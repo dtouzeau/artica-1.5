@@ -1,0 +1,30 @@
+<AuthorizedKeysFile>Fichier de clefs autoris&eacute;es.</AuthorizedKeysFile>
+<AuthorizedKeysFile_text>Fichier qui contient les clefs publiques utilis&eacute;es pour l'authentification des utilisateurs.</AuthorizedKeysFile_text>
+<ChallengeResponseAuthentication>Authentification par stimulation/r&eacute;ponse</ChallengeResponseAuthentication>
+<ChallengeResponseAuthentication_text>Sp&eacute;cifie si l'authentification bas&eacute;e sur la stimulation/r&eacute;ponse est autoris&eacute;e (exemple via PAM)</ChallengeResponseAuthentication_text>
+<HostKey>Fichier clef h&ocirc;te</HostKey>
+<HostKey_text>Fichier contenant la clef priv&eacute; utilis&eacute; par SSH</HostKey_text>
+<LoginGraceTime>Temps d'inactivit&eacute;</LoginGraceTime>
+<LoginGraceTime_text>Le serveur d&eacute;connectera la connexion apr&egrave;s le d&eacute;lai imparti si l'utilisateur n'a pas ouvert de session. Si la valeur est &agrave; 0, aucune limite ne sera appliqu&eacute;e (120 secondes &eacute;tant la valeur par d&eacute;faut).</LoginGraceTime_text>
+<MaxAuthTries>nb MAX de tentatives</MaxAuthTries>
+<MaxAuthTries_text>Indique le nombre maximal de tentatives d'ouvertures de sessions pour une connexion.[br]Le cas &eacute;ch&eacute;ant, les &eacute;checs suppl&eacute;mentaires seront enregistr&eacute;s dans les &eacute;v&egrave;nements.</MaxAuthTries_text>
+<MaxSessions>Sessions MAX.</MaxSessions>
+<MaxSessions_text>Indique le nombre maximal de sessions ouverte par connexion r&eacute;seau.</MaxSessions_text>
+<PasswordAuthentication>Authentification par mot de passe</PasswordAuthentication>
+<PasswordAuthentication_text>Sp&eacute;cifie si l'authentification par mot de passe est autoris&eacute;e</PasswordAuthentication_text>
+<PermitRootLogin>Autoriser ROOT.</PermitRootLogin>
+<PermitRootLogin_text>L'utilisateur Root, peux-t-il se connecter?</PermitRootLogin_text>
+<PermitTunnel>Permettre le tunnel</PermitTunnel>
+<PermitTunnel_text>Est-ce que les interfaces tunX peuvent transf&eacute;rer par tunnel les sessions.</PermitTunnel_text>
+<SSHD_KEYS_SERVER>Autoriser les clefs sur ce serveur.</SSHD_KEYS_SERVER>
+<SSHD_KEYS_SERVER_TEXT>Ajoutez votre clef rsa .pub g&eacute;n&eacute;r&eacute;e sur votre station linux ou serveur ou serveur Artica afin d'autoriser &agrave; se connecter sans avoir &agrave; entrer un compte et mot de passe.</SSHD_KEYS_SERVER_TEXT>
+<SSHD_NOFINGER_NEED_GENERATE>Aucune empreinte ne peut &ecirc;tre export&eacute;e, g&eacute;n&eacute;rez la clef public d'abord.</SSHD_NOFINGER_NEED_GENERATE>
+<SSH_KEYS_CLIENT>G&eacute;n&eacute;rer une paire de clefs d'authentification.</SSH_KEYS_CLIENT>
+<SSH_KEYS_CLIENT_EXPLAIN>Cette op&eacute;ration va g&eacute;n&eacute;rer la clef publique afin d'autoriser ce serveur &agrave; se connecter &agrave; une autre serveur.[br]Vous avez besoin de choisir l'utilisateur local qui pourrait utiliser des t&acirc;ches SSH.</SSH_KEYS_CLIENT_EXPLAIN>
+<SSH_KEYS_WHY>Si vous d&eacute;sirez automatiser des t&acirc;ches avec OpenSSH, comme BackupPC, le login sans mot de passe par clef publique, installation distante, communication entre 2 serveurs Artica, Vous avez alors besoin d'une connexion automatique entre votre machine et ce serveur. (ou l'oppos&eacute;).[br]Le serveur SSH ne doit pas demander le compte et le mot de passe pour la connexion parce qu'elle devra s'effectuer &agrave; travers un script automatique.</SSH_KEYS_WHY>
+<UseDNS>Utiliser le DNS</UseDNS>
+<UseDNS_sshd_text>Indique si le d&eacute;mon doit v&eacute;rifier les noms de machine et v&eacute;rifier que la r&eacute;solution de nom de machine correspond &agrave; l'adresse IP de connexion.</UseDNS_sshd_text>
+<UsePAM>Utiliser PAM</UsePAM>
+<UsePAM_TEXT>Active le Pluggable Authentication Module (PAM).[br]
+Si l'option est activ&eacute;e, les requ&ecirc;tes d'authentification vont utiliser le principe stimulation/r&eacute;ponse et l' authentication par mot de passe en suppl&eacute;ment du compte PAM et du module de session pour tous les types d'authentification.[br]
+Parceque l'authentification par stimulation/r&eacute;ponse de PAM fournie habituellement un r&ocirc;le &eacute;quivalent &agrave; l'authentification par mot de passe.[br]Vous &quot;devriez&quot; d&eacute;sactiver l'authentification par mot de passe ou le l'authentification par stimulation/r&eacute;ponse si vous activez cette fonction.[br]D'autre part, si elle est activ&eacute;e vous ne serez pas en mesure de lancer le d&eacute;mon SSHD en tant qu'utilisateur non-root.</UsePAM_TEXT>

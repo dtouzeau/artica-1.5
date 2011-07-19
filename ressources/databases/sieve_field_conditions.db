@@ -1,0 +1,8 @@
+Is=>matches->null
+Is not=>matches->not
+Contains=>contains->null
+Does not Contain=>contains->not 
+Matches=>matches->null
+Does not matches=>matches->not
+is regex=>regex->null
+is not regex=>regex->not

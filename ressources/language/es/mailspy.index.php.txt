@@ -1,0 +1,2 @@
+<realtime_events>Correos recibidos en tiempo real</realtime_events>
+<reports>Reportes</reports>

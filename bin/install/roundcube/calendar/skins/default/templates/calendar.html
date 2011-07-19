@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title><roundcube:object name="pagetitle" /></title>
+<roundcube:include file="/includes/links.html" />
+</head>
+<body>
+<div id='calendar'></div>
+
+<div id='export'>
+  <a href="./?_task=dummy&amp;_action=plugin.exportEvents" title="<roundcube:label name="calendar.export" />">
+    <img src="./plugins/calendar/skins/default/images/export.png" title="<roundcube:label name="calendar.export" />" />
+  </a>
+</div>
+
+<div id="event">
+  <form>
+    <p>
+      <label for="summary"><roundcube:label name="calendar.summary" /></label>:
+      <br />
+      <input name="summary" />
+    </p>
+    <p>
+      <label for="description"><roundcube:label name="calendar.description" /></label>:
+      <br />
+      <textarea name="description"></textarea>
+    </p>
+    <p>
+      <label for="category"><roundcube:label name="calendar.category" /></label>:
+      <roundcube:object name="plugin.category_html" />
+    </p>
+  </form>
+</div>
+
+<div id='description'></div>
+
+<roundcube:include file="/includes/taskbar.html" />
+<roundcube:include file="/includes/header.html" />
+<roundcube:object name="plugin.category_css" />
+</body>
+</html>

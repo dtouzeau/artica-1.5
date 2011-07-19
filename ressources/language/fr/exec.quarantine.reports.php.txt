@@ -1,0 +1,3 @@
+<quarantine_domains>Exp&eacute;diteurs de domaine de quarantaine</quarantine_domains>
+<quarantine_reports>Rapports de Quarantaine</quarantine_reports>
+<quarantine_reports_text>Vous trouverez ici tous les mails stock&eacute;s dans votre zone de quarantaine</quarantine_reports_text>

@@ -1,0 +1,27 @@
+<administrator>Administrator</administrator>
+<admin_dn>Administrator account</admin_dn>
+<admin_dn_text>Give the Active Directory Administrator account and password.[br]Usually, the Administrator has "Administrator" name is stored in cn="Administrator,cn=Users,..."
+[br]You can give here the name of the Administrator or the full "DN" path
+[br]The suffix is the first branch of your Active Directory Branch.[br]Usually if your server is named has server.domain.tld,the suffix will be "dc=server,dc=domain,dc=tld"</admin_dn_text>
+<ad_server>Active Directory server address</ad_server>
+<ad_server_text>Give here the IP address or server name of your Active Directory/MS Exchange server</ad_server_text>
+<bdu>Bad username or password. Please try again.</bdu>
+<cls>Could not bind to the Active Directory server.</cls>
+<connected>Connection success</connected>
+<err_unkown>Warning unable to logon with following</err_unkown>
+<failed>Connection Failed</failed>
+<iar>Insufficient access rights.</iar>
+<importation_completed>Importation task completed</importation_completed>
+<import_ad_title>Active Directory Members Importation</import_ad_title>
+<local_group>Select your local group</local_group>
+<local_group_text>Select in the list the Artica local group that will store your active directory users</local_group_text>
+<perform_importation>Perform the importation task</perform_importation>
+<remote_org>Select Remote organization</remote_org>
+<remote_org_text>Select the container that store users you want to import</remote_org_text>
+<restart_importation>Restart new importation</restart_importation>
+<server_name>Server address</server_name>
+<server_port>Listening port</server_port>
+<suffix>Active directory Suffix</suffix>
+<ucl>Unable to connect to the LDAP server specified[br]please,verify if ldap daemon is running or the ldap server address</ucl>
+<unable_to_connect>Unable to connect to the Active Directory server specified</unable_to_connect>
+<users>members</users>

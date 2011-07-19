@@ -1,0 +1,13 @@
+[enlartenment]
+enabled=1
+name=Enlartenment Repository for $releasever - $basearch
+baseurl=http://www.enlartenment.com/packages/fedora/$releasever/$basearch/
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-enlartenment
+gpgcheck=1
+
+          YUMINI.WriteString('enlartenment-sources','name','Enlartenment Repository for $releasever - Sources');
+          YUMINI.WriteString('enlartenment-sources','baseurl','http://www.enlartenment.com/packages/fedora/$releasever/SRPMS/');
+          YUMINI.WriteString('enlartenment-sources','gpgkey','file:///etc/pki/rpm-gpg/RPM-GPG-KEY-enlartenment');
+          YUMINI.WriteInteger('enlartenment-sources','enabled',1);
+          YUMINI.WriteInteger('enlartenment-sources','gpgcheck',1);
+          writeln('please type "yes" for the next operation if ask');    

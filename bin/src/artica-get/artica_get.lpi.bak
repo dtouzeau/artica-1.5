@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <ProjectOptions>
+    <PathDelim Value="/"/>
+    <Version Value="5"/>
+    <General>
+      <Flags>
+        <MainUnitHasUsesSectionForAllUnits Value="False"/>
+        <MainUnitHasCreateFormStatements Value="False"/>
+        <MainUnitHasTitleStatement Value="False"/>
+      </Flags>
+      <MainUnit Value="0"/>
+      <IconPath Value="./"/>
+      <TargetFileExt Value=""/>
+      <Title Value="artica-get"/>
+      <ActiveEditorIndexAtStart Value="1"/>
+    </General>
+    <VersionInfo>
+      <ProjectVersion Value=""/>
+    </VersionInfo>
+    <PublishOptions>
+      <Version Value="2"/>
+      <IgnoreBinaries Value="False"/>
+      <IncludeFileFilter Value="*.(pas|pp|inc|lfm|lpr|lrs|lpi|lpk|sh|xml)"/>
+      <ExcludeFileFilter Value="*.(bak|ppu|ppw|o|so);*~;backup"/>
+    </PublishOptions>
+    <RunParams>
+      <local>
+        <FormatVersion Value="1"/>
+        <LaunchingApplication PathPlusParams="/usr/X11R6/bin/xterm -T 'Lazarus Run Output' -e $(LazarusDir)/tools/runwait.sh $(TargetCmdLine)"/>
+      </local>
+    </RunParams>
+    <Units Count="6">
+      <Unit0>
+        <Filename Value="artica_get.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="artica_get"/>
+        <CursorPos X="1" Y="37"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="0"/>
+        <UsageCount Value="24"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="../global_conf.pas"/>
+        <UnitName Value="global_conf"/>
+        <CursorPos X="1" Y="696"/>
+        <TopLine Value="685"/>
+        <EditorIndex Value="4"/>
+        <UsageCount Value="12"/>
+        <Loaded Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="httpsend.pas"/>
+        <UnitName Value="httpsend"/>
+        <CursorPos X="23" Y="182"/>
+        <TopLine Value="115"/>
+        <UsageCount Value="12"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="wget.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wget"/>
+        <CursorPos X="62" Y="80"/>
+        <TopLine Value="49"/>
+        <EditorIndex Value="1"/>
+        <UsageCount Value="23"/>
+        <Loaded Value="True"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="ocurlacc.inc"/>
+        <CursorPos X="18" Y="5"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="3"/>
+        <UsageCount Value="11"/>
+        <Loaded Value="True"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="ocurlpub.inc"/>
+        <CursorPos X="54" Y="135"/>
+        <TopLine Value="62"/>
+        <EditorIndex Value="2"/>
+        <UsageCount Value="11"/>
+        <Loaded Value="True"/>
+      </Unit5>
+    </Units>
+    <JumpHistory Count="12" HistoryIndex="11">
+      <Position1>
+        <Filename Value="../global_conf.pas"/>
+        <Caret Line="832" Column="72" TopLine="805"/>
+      </Position1>
+      <Position2>
+        <Filename Value="../global_conf.pas"/>
+        <Caret Line="4844" Column="5" TopLine="4844"/>
+      </Position2>
+      <Position3>
+        <Filename Value="../global_conf.pas"/>
+        <Caret Line="419" Column="38" TopLine="372"/>
+      </Position3>
+      <Position4>
+        <Filename Value="wget.pas"/>
+        <Caret Line="139" Column="46" TopLine="101"/>
+      </Position4>
+      <Position5>
+        <Filename Value="ocurlacc.inc"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
+      </Position5>
+      <Position6>
+        <Filename Value="wget.pas"/>
+        <Caret Line="2" Column="1" TopLine="1"/>
+      </Position6>
+      <Position7>
+        <Filename Value="wget.pas"/>
+        <Caret Line="49" Column="18" TopLine="10"/>
+      </Position7>
+      <Position8>
+        <Filename Value="wget.pas"/>
+        <Caret Line="71" Column="14" TopLine="18"/>
+      </Position8>
+      <Position9>
+        <Filename Value="wget.pas"/>
+        <Caret Line="74" Column="90" TopLine="32"/>
+      </Position9>
+      <Position10>
+        <Filename Value="wget.pas"/>
+        <Caret Line="75" Column="1" TopLine="36"/>
+      </Position10>
+      <Position11>
+        <Filename Value="wget.pas"/>
+        <Caret Line="95" Column="117" TopLine="32"/>
+      </Position11>
+      <Position12>
+        <Filename Value="artica_get.pas"/>
+        <Caret Line="16" Column="19" TopLine="1"/>
+      </Position12>
+    </JumpHistory>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="5"/>
+    <Target>
+      <Filename Value="/home/dtouzeau/developpement/artica-postfix/bin/artica-get"/>
+    </Target>
+    <CodeGeneration>
+      <Generate Value="Faster"/>
+    </CodeGeneration>
+    <Other>
+      <CompilerPath Value="$(CompPath)"/>
+    </Other>
+  </CompilerOptions>
+  <Debugging>
+    <Exceptions Count="2">
+      <Item1>
+        <Name Value="ECodetoolError"/>
+      </Item1>
+      <Item2>
+        <Name Value="EFOpenError"/>
+      </Item2>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

@@ -1,0 +1,21 @@
+fieldset{
+padding-right:5px;
+border:0px;
+border-top:1px dotted #8e8785;
+border-left:1px dotted #8e8785;
+margin:4px;
+width:95%;
+margin-top:9px;
+padding-left:5px;
+
+}
+legend{
+	letter-spacing: 1px; 
+	background:transparent;
+	font: bold 15px/18px 'Helvetica', 'Tahoma', 'Verdana', sans-serif;
+	color: #005444;
+	text-transform:capitalize;
+	padding:10px;
+}
+
+

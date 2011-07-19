@@ -1,0 +1,3 @@
+<importing_form_text_file>Importation d'utilisateurs depuis un fichier texte</importing_form_text_file>
+<importuser_aliases_text>La ligne doit &ecirc;tre format&eacute;e comme : valueur1;valeur2;[retour chariot].Si vous d&eacute;sirez importer des aliases, &agrave; la fin de la ligne, s&eacute;parez les aliases par une virgule:[br]
+user;mail;id;password;cp;adress;mobile;phone;alias1,alias2,alias3...</importuser_aliases_text>

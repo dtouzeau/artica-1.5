@@ -1,0 +1,63 @@
+<about>milter-greylist est un stand-alone milter &eacute;crit en C qui impl&eacute;mente la m&eacute;thode de filtrage greylist, tel que propos&eacute; par Evan Harris. [br]
+Grey liste est la mise en oeuvres de l'hypoth&egrave;se que, contrairement au l&eacute;gitime MTA, les moteurs de spam ne feront pas de tentative d'envoi de leur courrier ind&eacute;sirable sur une erreur temporaire. [Br]
+Le filtre rejetera toujours le mail temporairement sur une premi&egrave;re tentative, et l'acceptera lorsque qu'un certain temps se sera &eacute;coul&eacute;.</about>
+<acl>Liste d'acc&egrave;s</acl>
+<acl_text>La premi&egrave;re fonctionnalit&eacute; de cette section est d'indiquer les listes blanches au moteur de liste grise.[br]
+Les ACL o&ugrave; &quot;Liste de contr&ocirc;le d'acc&egrave;s&quot; sont la pour ca.[br]ACL offre &agrave; l'administrateur la possibilit&eacute; de d&eacute;finir des conditions en fonction de l'&eacute;metteur, du destinataire, adresse IP.[br]Elle support aussi les DNSRBL.</acl_text>
+<addr>Adresse IP</addr>
+<addr_text>Ce param&egrave;tre est utilis&eacute; afin de sp&eacute;cifier un groupe d'adresses IP.[br]
+La syntaxe est une adresse IP suivie par une barre oblique et le masque CDIR.[br]
+Voici un exemple :
+[ul]
+[li]127.0.0.0/8[/li]
+[li]192.168.3.0/24[/li]
+[li]::1[/li]
+[/ul]
+SI le masque de r&eacute;seau est omis, /32 sera rajout&eacute; par d&eacute;faut pour adresse IPv4 et /128 pour une adresse IPv6.[br]
+Vous devriez au moins mettre en liste blanche la carte locale  (127.0.0.1/8) et si vous avez des utilisateurs locaux qui utilisent ce serveur.
+Vous devriez mettre au minimum leurs adresses si vous voulez qu'ils puissent &eacute;mettre des messages sans &ecirc;tre refus&eacute;s en liste grise.</addr_text>
+<add_acl>Ajouter une nouvelle r&egrave;gle</add_acl>
+<add_dnsrbl>Ajouter une nouvelle Classe DNSRBL</add_dnsrbl>
+<autowhite>Liste blanche automatique</autowhite>
+<Autowhitelistedtuples>Entr&eacute;e mises en liste blanche</Autowhitelistedtuples>
+<autowhite_text>Pendant combien de temps auto-liste blanche va garder le dernier &eacute;l&eacute;ments (mettre 0 pour d&eacute;sactiver l'auto-liste blanche).</autowhite_text>
+<back_to_default>Retour aux Listes DNSRBL par d&eacute;faut[br]Cela va supprimer tous vos param&egrave;tres!</back_to_default>
+<blacklist>Liste Noire</blacklist>
+<body>Expression dans le corps</body>
+<body_text>mors ou expression r&eacute;guli&egrave;re &agrave; rechercher dans le corps du message.
+Exemple d'un filtre afin de bloquer les images des spammeurs.
+src[:blank:]*=(3D)?[:blank:]*[&quot;']?[:blank:]*cid:</body_text>
+<class_name>Nom de classe</class_name>
+<config>Fichier de configuration</config>
+<delay>D&eacute;lai de liste grise</delay>
+<dnsrbl>Liste noire de relai DNS</dnsrbl>
+<dnsrbl_answer>R&eacute;ponse de service</dnsrbl_answer>
+<dnsrbl_service>Service DNSRBL</dnsrbl_service>
+<dnsrbl_text>Ceci est utilis&eacute; pour s&eacute;lectionner un DNSRBL [br]
+La liste noire DNS inverse peut &ecirc;tre utilis&eacute; pour activer une ACL.[br]
+Elles doivent &ecirc;tre d&eacute;finies et nomm&eacute;es avant qu'elles puissent &ecirc;tre utilis&eacute;es. Voici un exemple qui utilise un plus grand d&eacute;lai de greylisting pour les h&ocirc;tes pris dans le pool dynamique DNRSBL de SORBS (ceci inclura les pools des clients DSL et c&acirc;ble, qui sont bien connus pour &ecirc;tre massivement infect&eacute;s par spamwares)[br]</dnsrbl_text>
+<domain_text>Cette clause s&eacute;lectionne la source des machines bas&eacute;es sur leur nom DNS, effectue une recherche de suffixe</domain_text>
+<edit_acl>&Eacute;diter l'ACL</edit_acl>
+<edit_dnsrbl>&Eacute;diter la r&egrave;gle DNSRBL</edit_dnsrbl>
+<enable_milter>Activer Milter-greylist</enable_milter>
+<enable_milter_text>Cette option permettra de crocheter Postfix avec la fonctionnalit&eacute; milter-greylist</enable_milter_text>
+<greylist>Temps de mise en liste grise</greylist>
+<greylistedtuples>Entr&eacute;e mises en liste grise</greylistedtuples>
+<greylist_text>Combien de temps un client doit attendre avant d'accepter[br]les messages qu'il tente d'envoyer. [br]Ici, x heure(s).</greylist_text>
+<header>En-t&ecirc;te SMTP</header>
+<header_text>entr&eacute;e ou expression r&eacute;guli&egrave;re &agrave; trouver dans l'ent&ecirc;te des messages</header_text>
+<infos>Informations</infos>
+<mailfrom_text>Il est utilis&eacute; pour s&eacute;lectionner l'exp&eacute;diteur des adresses e-mail. Vous ne devriez pas utiliser cette fonction, parce que l'exp&eacute;diteur des adresses e-mail peuvent &ecirc;tre trivialement faux.</mailfrom_text>
+<method>Methode</method>
+<MILTERGREYLIST_STATUSDUMP>Liste en temps r&eacute;el des &eacute;l&eacute;ments block&eacute;s ou mis en liste blanche</MILTERGREYLIST_STATUSDUMP>
+<MILTERGREYLIST_STATUSDUMP_TEXT>Affichage de la liste des serveurs mise en miste grise ou en liste blanche</MILTERGREYLIST_STATUSDUMP_TEXT>
+<new_class_name>Ou ajouter une nouvelle classe</new_class_name>
+<rcpt>Destinataire</rcpt>
+<rcpt_text>Il est utilis&eacute; pour s&eacute;lectionner les adresses des destinataires</rcpt_text>
+<timeout>Timeout de Base de donn&eacute;es</timeout>
+<timeout_text>Pendant combien de jours la liste des &eacute;lements mis en liste grise vont &ecirc;tre conserv&eacute;s</timeout_text>
+<urlcheck>Url dans le corps de mail</urlcheck>
+<urlcheck_text>milter-greylist est en mesure d'interroger des sources externes d'information par le biais de divers URL[br] 
+Par exemple: http://www.example.net/mgl-config?rcpt=%r</urlcheck_text>
+<whitelist>Liste blanche</whitelist>
+<_text>S&eacute;lectionnez une valeur dans la liste</_text>

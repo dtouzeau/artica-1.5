@@ -1,0 +1,193 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <ProjectOptions>
+    <PathDelim Value="/"/>
+    <Version Value="6"/>
+    <General>
+      <Flags>
+        <MainUnitHasUsesSectionForAllUnits Value="False"/>
+        <MainUnitHasCreateFormStatements Value="False"/>
+        <MainUnitHasTitleStatement Value="False"/>
+      </Flags>
+      <MainUnit Value="0"/>
+      <IconPath Value="./"/>
+      <TargetFileExt Value=""/>
+      <Title Value="Artica For RoundCube"/>
+      <ActiveEditorIndexAtStart Value="3"/>
+    </General>
+    <VersionInfo>
+      <ProjectVersion Value=""/>
+    </VersionInfo>
+    <PublishOptions>
+      <Version Value="2"/>
+      <IgnoreBinaries Value="False"/>
+      <IncludeFileFilter Value="*.(pas|pp|inc|lfm|lpr|lrs|lpi|lpk|sh|xml)"/>
+      <ExcludeFileFilter Value="*.(bak|ppu|ppw|o|so);*~;backup"/>
+    </PublishOptions>
+    <RunParams>
+      <local>
+        <FormatVersion Value="1"/>
+        <LaunchingApplication PathPlusParams="/usr/X11R6/bin/xterm -T 'Lazarus Run Output' -e $(LazarusDir)/tools/runwait.sh $(TargetCmdLine)"/>
+      </local>
+    </RunParams>
+    <Units Count="14">
+      <Unit0>
+        <Filename Value="artica_roundcube.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="artica_roundcube"/>
+        <CursorPos X="20" Y="26"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="0"/>
+        <UsageCount Value="29"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="../artica-install/cyrus.pas"/>
+        <UnitName Value="cyrus"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="234"/>
+        <EditorIndex Value="1"/>
+        <UsageCount Value="15"/>
+        <Loaded Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="../artica-install/fedora.pas"/>
+        <UnitName Value="fedora"/>
+        <CursorPos X="5" Y="268"/>
+        <TopLine Value="192"/>
+        <EditorIndex Value="2"/>
+        <UsageCount Value="15"/>
+        <Loaded Value="True"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="roundcube_install.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="roundcube_install"/>
+        <CursorPos X="17" Y="158"/>
+        <TopLine Value="116"/>
+        <EditorIndex Value="3"/>
+        <UsageCount Value="29"/>
+        <Loaded Value="True"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="../artica-install/roundcube.pas"/>
+        <UnitName Value="roundcube"/>
+        <CursorPos X="36" Y="304"/>
+        <TopLine Value="284"/>
+        <UsageCount Value="14"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="../artica-install/class_install.pas"/>
+        <UnitName Value="class_install"/>
+        <CursorPos X="1" Y="3971"/>
+        <TopLine Value="4124"/>
+        <UsageCount Value="12"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="../artica-install/install_generic.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="install_generic"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="29"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="../artica-install/global_conf.pas"/>
+        <UnitName Value="global_conf"/>
+        <CursorPos X="135" Y="27"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="7"/>
+        <UsageCount Value="15"/>
+        <Loaded Value="True"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="../artica-install/zsystem.pas"/>
+        <UnitName Value="zsystem"/>
+        <CursorPos X="30" Y="2775"/>
+        <TopLine Value="2739"/>
+        <EditorIndex Value="6"/>
+        <UsageCount Value="15"/>
+        <Loaded Value="True"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="install_generic.pas"/>
+        <UnitName Value="install_generic"/>
+        <CursorPos X="75" Y="230"/>
+        <TopLine Value="154"/>
+        <EditorIndex Value="5"/>
+        <UsageCount Value="13"/>
+        <Loaded Value="True"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="../artica-install/logs.pas"/>
+        <UnitName Value="logs"/>
+        <CursorPos X="92" Y="1207"/>
+        <TopLine Value="858"/>
+        <EditorIndex Value="8"/>
+        <UsageCount Value="11"/>
+        <Loaded Value="True"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="../artica-install/lighttpd.pas"/>
+        <UnitName Value="lighttpd"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="10"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="lighttpd.pas"/>
+        <UnitName Value="lighttpd"/>
+        <CursorPos X="12" Y="15"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="10"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="roundcube.pas"/>
+        <UnitName Value="roundcube"/>
+        <CursorPos X="179" Y="331"/>
+        <TopLine Value="300"/>
+        <EditorIndex Value="4"/>
+        <UsageCount Value="11"/>
+        <Loaded Value="True"/>
+      </Unit13>
+    </Units>
+    <JumpHistory Count="1" HistoryIndex="0">
+      <Position1>
+        <Filename Value="roundcube_install.pas"/>
+        <Caret Line="166" Column="1" TopLine="132"/>
+      </Position1>
+    </JumpHistory>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="5"/>
+    <Target>
+      <Filename Value="/home/dtouzeau/developpement/artica-postfix/bin/artica-roundcube"/>
+    </Target>
+    <CodeGeneration>
+      <Generate Value="Faster"/>
+    </CodeGeneration>
+    <Other>
+      <CompilerPath Value="$(CompPath)"/>
+    </Other>
+  </CompilerOptions>
+  <Debugging>
+    <BreakPoints Count="2">
+      <Item1>
+        <Source Value="../artica-cgi/parsehttp.pas"/>
+        <Line Value="690"/>
+      </Item1>
+      <Item2>
+        <Source Value="../artica-cgi/global_conf.pas"/>
+        <Line Value="3615"/>
+      </Item2>
+    </BreakPoints>
+    <Exceptions Count="2">
+      <Item1>
+        <Name Value="ECodetoolError"/>
+      </Item1>
+      <Item2>
+        <Name Value="EFOpenError"/>
+      </Item2>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

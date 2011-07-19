@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <Compiler Value="/usr/bin/ppc386" Date="1207051037"/>
+  <Params Value=" -S2cgi -OG1 -gl -vewnhi -l -Fu/usr/local/share/lazarus/components/cgi/lib/i386-linux/ -Fu/usr/local/share/lazarus/lcl/units/i386-linux/ -Fu/usr/local/share/lazarus/lcl/units/i386-linux/gtk/ -Fu/usr/local/share/lazarus/packager/units/i386-linux/ -Fu. -o/usr/share/artica-postfix/bin/index.cgi -dLCL -dLCLgtk samplecgi.lpr"/>
+</CONFIG>

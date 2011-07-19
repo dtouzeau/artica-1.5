@@ -1,0 +1,16 @@
+#!/bin/sh
+#
+# Sanity check the patterns file against the wrapzap script, inspired by example
+# code from Scott Tregear.
+#	- Cameron Simpson <cs@zip.com.au> 27jan2002
+#
+
+echo `sed -n 's/^STUBURL_\([A-Z][A-Z0-9_]*\)=.*/\1/p' wrapzap` \
+| tr ' ' '|' \
+| { read alt
+    grep '^[^#]' ../rc/patterns \
+    | egrep -v "^($alt) " \
+    | sed 's/ .*//' \
+    | sort -u \
+    | grep -v '^PASS$'
+  }

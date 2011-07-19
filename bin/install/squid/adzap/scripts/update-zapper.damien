@@ -1,0 +1,26 @@
+#!/bin/sh
+#
+# A more capable fetcher from Damien Clermonte <damien.clermonte@free.fr>,
+# 29mar2000.
+#
+
+MASTERURL="http://adzapper.sourceforge.net/scripts/squid_redirect"
+ZAPPER="/usr/local/squid/bin/squid_redirect"
+PIDFILE="/usr/local/squid/logs/squid.pid"
+RESTARTCMD="/etc/rc.d/rc.squid"
+
+TMPFILE="/tmp/newzapper$$"
+
+/usr/bin/wget -q --cache=off -O "$TMPFILE" "$MASTERURL"
+if [ $? == 0 -a -f "$TMPFILE" -a ! -z "$TMPFILE" ]; then
+   /usr/bin/cmp -s "$TMPFILE" "$ZAPPER"
+   if [ $? == 1 ]; then
+     cp -a "$ZAPPER" "$ZAPPER".old
+     cat "$TMPFILE" > "$ZAPPER"
+     kill -HUP `cat "$PIDFILE"`
+     if [ $? == 1 ]; then
+       $RESTARTCMD
+     fi
+   fi
+fi
+rm -f "$TMPFILE"

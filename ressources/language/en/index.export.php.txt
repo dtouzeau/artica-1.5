@@ -1,0 +1,14 @@
+<launch_exportation>Launch exportation process</launch_exportation>
+<launch_importation>Launch importation process</launch_importation>
+<selected_resource>Selected resource</selected_resource>
+<use_network_drive>Choose a network shared folder</use_network_drive>
+<use_network_drive_text>The compressed file will be saved on a remote share.This is the best method</use_network_drive_text>
+<use_usb_drive>Choose an USB device</use_usb_drive>
+<use_usb_drive_text>The compressed file will be saved on a plugged usb device</use_usb_drive_text>
+<wizard_export_config>Exporting artica parameters</wizard_export_config>
+<wizard_export_config_step1>This operation will export to a compressed file all mandatories datas needs to rebuild a new server in few minutes.</wizard_export_config_step1>
+<wizard_export_config_step2>The backup file must be stored outside this computer,you can chose a remote share folder or an external device.[br]If you choose an external device, please plug it on this computer</wizard_export_config_step2>
+<wizard_import_config>Restoring artica parameters</wizard_import_config>
+<wizard_import_config_step1>This operation will restore a previous export operation to this server.</wizard_import_config_step1>
+<wizard_import_config_step2>Select the external resource used from the previous export operation...</wizard_import_config_step2>
+<wizard_import_confirm>Do you want to perform this operation ? All local datas will be erased and replaced by your selected container</wizard_import_confirm>

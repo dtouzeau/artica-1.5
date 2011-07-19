@@ -1,0 +1,2 @@
+<REBUILD_CYRUS>Restablecer la configuraci&oacute;n de Cyrus</REBUILD_CYRUS>
+<REBUILD_CYRUS_TEXT>Restablecer los par&aacute;metros globales de su buzon de correo y reiniciar servicios</REBUILD_CYRUS_TEXT>

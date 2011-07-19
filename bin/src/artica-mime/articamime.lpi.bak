@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <ProjectOptions>
+    <PathDelim Value="/"/>
+    <Version Value="5"/>
+    <General>
+      <MainUnit Value="0"/>
+      <IconPath Value="./"/>
+      <TargetFileExt Value=""/>
+      <Title Value="artica-mime"/>
+      <ActiveEditorIndexAtStart Value="2"/>
+    </General>
+    <VersionInfo>
+      <ProjectVersion Value=""/>
+    </VersionInfo>
+    <PublishOptions>
+      <Version Value="2"/>
+      <IgnoreBinaries Value="False"/>
+      <IncludeFileFilter Value="*.(pas|pp|inc|lfm|lpr|lrs|lpi|lpk|sh|xml)"/>
+      <ExcludeFileFilter Value="*.(bak|ppu|ppw|o|so);*~;backup"/>
+    </PublishOptions>
+    <RunParams>
+      <local>
+        <FormatVersion Value="1"/>
+        <LaunchingApplication PathPlusParams="/usr/X11R6/bin/xterm -T 'Lazarus Run Output' -e $(LazarusDir)/tools/runwait.sh $(TargetCmdLine)"/>
+      </local>
+    </RunParams>
+    <Units Count="12">
+      <Unit0>
+        <Filename Value="articamime.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="articamime"/>
+        <CursorPos X="37" Y="58"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="0"/>
+        <UsageCount Value="131"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="tmimedecode.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="TmimeDecode"/>
+        <CursorPos X="25" Y="670"/>
+        <TopLine Value="610"/>
+        <EditorIndex Value="2"/>
+        <UsageCount Value="131"/>
+        <Bookmarks Count="1">
+          <Item0 X="1" Y="685" ID="0"/>
+        </Bookmarks>
+        <Loaded Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="/usr/share/fpcsrc/rtl/objpas/classes/classesh.inc"/>
+        <CursorPos X="43" Y="679"/>
+        <TopLine Value="640"/>
+        <UsageCount Value="1"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="/usr/share/fpcsrc/rtl/objpas/sysutils/sysstrh.inc"/>
+        <CursorPos X="86" Y="165"/>
+        <TopLine Value="127"/>
+        <UsageCount Value="1"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="logs.pas"/>
+        <UnitName Value="logs"/>
+        <CursorPos X="29" Y="134"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="1"/>
+        <UsageCount Value="62"/>
+        <Loaded Value="True"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="ldap.pas"/>
+        <UnitName Value="ldap"/>
+        <CursorPos X="36" Y="90"/>
+        <TopLine Value="52"/>
+        <UsageCount Value="59"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="protocol.pas"/>
+        <UnitName Value="protocol"/>
+        <CursorPos X="49" Y="238"/>
+        <TopLine Value="202"/>
+        <UsageCount Value="59"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="mimepart.pas"/>
+        <UnitName Value="mimepart"/>
+        <CursorPos X="3" Y="65"/>
+        <TopLine Value="23"/>
+        <UsageCount Value="10"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="../artica-postfix/bin/src/global_conf.pas"/>
+        <UnitName Value="global_conf"/>
+        <CursorPos X="1" Y="1091"/>
+        <TopLine Value="1053"/>
+        <UsageCount Value="20"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="mysql.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="mysql"/>
+        <CursorPos X="78" Y="45"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="48"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="synachar.pas"/>
+        <UnitName Value="synachar"/>
+        <CursorPos X="4" Y="78"/>
+        <TopLine Value="36"/>
+        <UsageCount Value="10"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="mimeinln.pas"/>
+        <UnitName Value="mimeinln"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="10"/>
+      </Unit11>
+    </Units>
+    <JumpHistory Count="0" HistoryIndex="-1"/>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="5"/>
+    <Target>
+      <Filename Value="/home/dtouzeau/developpement/artica-postfix/bin/artica-mime"/>
+    </Target>
+    <CodeGeneration>
+      <Generate Value="Faster"/>
+    </CodeGeneration>
+    <Other>
+      <CompilerPath Value="$(CompPath)"/>
+    </Other>
+  </CompilerOptions>
+  <Debugging>
+    <Exceptions Count="2">
+      <Item1>
+        <Name Value="ECodetoolError"/>
+      </Item1>
+      <Item2>
+        <Name Value="EFOpenError"/>
+      </Item2>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

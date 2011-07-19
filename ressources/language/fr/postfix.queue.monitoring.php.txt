@@ -1,0 +1,32 @@
+<active>File d'attente &quot;active&quot;</active>
+<active_text>Le gestionnaire de file d'attente est un agent de prestation de programmateur, il travaille &agrave; assurer la rapide et juste distribution du courrier &agrave; toutes les destinations dans les limites des ressources d&eacute;sign&eacute;es. [br] 
+La file d'attente active est quelque peu analogue &agrave; un syst&egrave;me d'exploitation du processus de file d'attente d'ex&eacute;cution. Messages dans la file d'attente d'actifs sont pr&ecirc;ts &agrave; &ecirc;tre envoy&eacute;s (ex&eacute;cutable), mais ne sont pas n&eacute;cessairement en train d'&ecirc;tre envoy&eacute; (en marche).</active_text>
+<body_message>Corps du message</body_message>
+<body_message_text>Afficher le message source</body_message_text>
+<create_time>Cr&eacute;er du temps</create_time>
+<deferred>La file d'attente &quot;report&eacute;e&quot;</deferred>
+<deferred_text>Lorsque tous les b&eacute;n&eacute;ficiaires d'un message sont livr&eacute;s, et, que pour certains b&eacute;n&eacute;ficiaires la livraison a &eacute;chou&eacute; pour une raison transitoire (il pourra r&eacute;ussir plus tard), 
+le message est plac&eacute; dans la file d'attente diff&eacute;r&eacute;e</deferred_text>
+<incoming>La file d'attente &quot;entrante&quot;</incoming>
+<incoming_text>
+All new mail entering the Postfix queue is written by the cleanup service into the "incoming" queue.[br]
+New queue files are created owned by the "postfix" user with an access bitmask (or mode) of 0600.[br]
+Once a queue file is ready for further processing the cleanup service changes the queue file mode to 0700 and notifies the queue manager of new mail arrival.[br]
+The queue manager ignores incomplete queue files whose mode is 0600, as these are still being written by cleanup. 
+</incoming_text>
+<maildrop>File d'attente &quot;maildrop&quot;</maildrop>
+<maildrop_text>Cette section repr&eacute;sente les message qui sont pass&eacute;s &agrave; travers Postfix.[br]Les messages peuvent &ecirc;tre ajout&eacute; dans la file d'attente &quot;maildrop&quot;.[br]
+M&ecirc;me si le service postfix est stopp&eacute;.[br]Ils seront analys&eacute;s au d&eacute;marrage de Postfix.[br]
+La file d'attente Maildrop est trait&eacute; par le service &quot;pickup&quot; qui l'analyse de fa&ccedil;on p&eacute;riodique ou lorsqu'il &agrave; &eacute;t&eacute; notifi&eacute; d'un nouveau message par le service postdrop.[br]
+Le service postdrop est en charge d'injecter des messages dans la file d'attente &quot;maildrop&quot; et de notifier le service &quot;pickup&quot;.[br]
+Tous les messages qui rentrent &agrave; travers Postfix le font &agrave; travers le service cleanup.[br]Le service cleanup est responsable de la r&eacute;&eacute;criture des adresses et des enveloppes, de l'analyse des regex dans les corps de texte, des ajouts automatique bcc et de la liaison entre les plugins et la file d'attente entrante</maildrop_text>
+<message_arrival_time>Horaire d'arriv&eacute;e du message</message_arrival_time>
+<message_size>Taille du message</message_size>
+<named_attribute>Nom attribu&eacute;</named_attribute>
+<original_recipient>Destinataire d'origine</original_recipient>
+<routing_info>Information de routage Postfix</routing_info>
+<routing_info_text>Affichage des informations sur les champs utilis&eacute;s postfix</routing_info_text>
+<sender_fullname>nom complet de l'exp&eacute;diteur</sender_fullname>
+<show_mail>Voir le message</show_mail>
+<show_queue>Afficher la liste des mails stock&eacute;s</show_queue>
+<too_late_or_no_queue_files>Tous les messages sont pass&eacute;s, vous avez cliqu&eacute; trop tard sur la fonction ... Pas de messages stock&eacute;s ...</too_late_or_no_queue_files>

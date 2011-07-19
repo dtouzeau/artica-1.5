@@ -1,0 +1,110 @@
+program rpmbuilder;
+
+{$mode objfpc}{$H+}
+
+uses
+  Classes, SysUtils,strutils,baseunix,unix, builder,RegExpr;
+
+var
+   version      :string;
+   DATE         :string;
+   build        :Tbuilder;
+   sourcefolder :string;
+   cmdline      :string;
+   FileList     :TStringList;
+   i            :integer;
+   SourcePath   :string;
+   zRegExpr     :TRegExpr;
+   spec         :TstringList;
+   tmpdir       :string;
+   FileName     :string;
+
+begin
+   build:=Tbuilder.Create;
+   SourcePath:=ParamStr(1);
+   if not FileExists(SourcePath) then begin
+      writeln('Unable to stat ' + SourcePath);
+   end;
+   
+   zRegExpr:=TRegExpr.Create;
+
+
+   
+   zRegExpr.Expression:='artica-([0-9]+)\.([0-9]+)\.([0-9]+)\.tgz';
+   
+      if not zRegExpr.Exec(ExtractFileName(SourcePath)) then begin
+         writeln('Unable to extract version from ' +  ExtractFileName(SourcePath));
+         exit;
+      end;
+   
+    FileName:=zRegExpr.Match[1] + '.' + zRegExpr.Match[2] + zRegExpr.Match[3] + '.tar.bz2';
+    writeln('version : ' + zRegExpr.Match[1] + '.' + zRegExpr.Match[2] + '(' + zRegExpr.Match[3]+ ')');
+   spec:=TstringList.Create;
+   tmpdir:='/tmp/' + zRegExpr.Match[1] + '.' + zRegExpr.Match[2] + '.' + zRegExpr.Match[3];
+   forceDirectories(tmpdir);
+
+spec.Add('Summary: Artica-postfix (Core Module)');
+spec.Add('Name: artica-postfix');
+spec.Add('Version: ' + zRegExpr.Match[1] + '.' + zRegExpr.Match[2]);
+spec.Add('Release: ' + zRegExpr.Match[3]);
+spec.Add('Group: Utilities/System');
+spec.Add('BuildArchitectures: noarch');
+spec.Add('License: LGPL');
+spec.Add('Source:' + ExtractFileName(SourcePath));
+spec.Add('BuildRoot: ' + tmpdir);
+spec.Add('%description');
+spec.Add('This program allows the user to manage Postfix and squid');
+spec.Add('%prep');
+spec.Add('%setup -c artica -q -a 0');
+spec.Add('%files -f' + tmpdir);
+
+
+
+cmdline:='/bin/cp '+ SourcePath +' /usr/src/rpm/SOURCES/';
+writeln(cmdline);
+fpsystem(cmdline);
+cmdline:='tar -C '+ tmpdir  + ' -xf ' +SourcePath;
+writeln(cmdline);
+fpsystem(cmdline);
+cmdline:='cd ' + tmpdir + ' && find .|sed ''s/\.\///;'' >/tmp/sources.list';
+writeln(cmdline);
+fpsystem(cmdline);
+FileList:=TstringList.Create;
+FileList.LoadFromFile('/tmp/sources.list');
+for i:=0 to FileList.Count -1 do begin
+  if FileList.Strings[i]<>'.' then begin
+     FileList.Strings[i]:='"/' + FileList.Strings[i]  +'"';
+     //spec.Add(FileList.Strings[i]);
+  end;
+
+end;
+
+
+{fpsystem(cmdline);
+cmdline:='tar -C '+ tmpdir  + ' -xf ' +SourcePath;
+writeln(cmdline);
+fpsystem(cmdline);
+cmdline:='cd ' +tmpdir + ' && tar -cvf - * | bzip2 > /usr/src/rpm/SOURCES/' + FileName;
+writeln(cmdline);
+readln();
+fpsystem(cmdline);}
+
+
+spec.Add('%doc');
+ spec.SaveToFile('/tmp/spc.spec');
+ fpsystem(' rpmbuild -bb /tmp/spc.spec');
+
+   
+   //cmdline:='cd ' + sourcefolder + ' && find .|sed ''s/\.\///;'' >/tmp/sources.list';
+   //writeln(cmdline);
+   //fpsystem(cmdline);
+   //FileList:=TstringList.Create;
+   //FileList.LoadFromFile('/tmp/sources.list');
+   
+   writeln('Build files list........:OK');
+   
+   
+
+
+end.
+

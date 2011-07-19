@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Komodo Project File - DO NOT EDIT -->
+<project id="64482a2c-b59f-41eb-b114-0f61b387af67" kpf_version="4" name="js.kpf">
+<file id="6ff1b827-2df0-443a-be17-e0b8dd66d776" idref="64482a2c-b59f-41eb-b114-0f61b387af67" name="default.css" url="file:///home/dtouzeau/Documents/artica-postfix/default.css">
+</file>
+<file id="04d24ed5-c91f-43e5-b20f-03d11bff81c2" idref="64482a2c-b59f-41eb-b114-0f61b387af67" name="default.js" url="file:///home/dtouzeau/Documents/artica-postfix/default.js">
+</file>
+<preference-set idref="64482a2c-b59f-41eb-b114-0f61b387af67">
+  <boolean id="import_live">1</boolean>
+</preference-set>
+</project>

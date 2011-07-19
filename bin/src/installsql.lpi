@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <ProjectOptions>
+    <PathDelim Value="/"/>
+    <Version Value="5"/>
+    <General>
+      <Flags>
+        <MainUnitHasUsesSectionForAllUnits Value="False"/>
+        <MainUnitHasCreateFormStatements Value="False"/>
+        <MainUnitHasTitleStatement Value="False"/>
+      </Flags>
+      <MainUnit Value="0"/>
+      <IconPath Value="./"/>
+      <TargetFileExt Value=""/>
+      <Title Value="install-mysql"/>
+      <ActiveEditorIndexAtStart Value="1"/>
+    </General>
+    <VersionInfo>
+      <ProjectVersion Value=""/>
+    </VersionInfo>
+    <PublishOptions>
+      <Version Value="2"/>
+      <IgnoreBinaries Value="False"/>
+      <IncludeFileFilter Value="*.(pas|pp|inc|lfm|lpr|lrs|lpi|lpk|sh|xml)"/>
+      <ExcludeFileFilter Value="*.(bak|ppu|ppw|o|so);*~;backup"/>
+    </PublishOptions>
+    <RunParams>
+      <local>
+        <FormatVersion Value="1"/>
+        <LaunchingApplication PathPlusParams="/usr/X11R6/bin/xterm -T 'Lazarus Run Output' -e $(LazarusDir)/tools/runwait.sh $(TargetCmdLine)"/>
+      </local>
+    </RunParams>
+    <Units Count="13">
+      <Unit0>
+        <Filename Value="installsql.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="installsql"/>
+        <CursorPos X="104" Y="17"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="0"/>
+        <UsageCount Value="108"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="../artica/sources/Common/regex/RegExpr.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="RegExpr"/>
+        <CursorPos X="57" Y="28"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="108"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="/usr/share/fpcsrc/rtl/unix/sysutils.pp"/>
+        <UnitName Value="sysutils"/>
+        <CursorPos X="76" Y="67"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="50"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="/usr/share/lazarus/lcl/interfaces/gnome/gnomeint.pp"/>
+        <UnitName Value="GnomeInt"/>
+        <CursorPos X="11" Y="267"/>
+        <TopLine Value="211"/>
+        <UsageCount Value="2"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="/usr/share/fpcsrc/packages/base/mysql/units/i386-linux/mysql4.ppu"/>
+        <UsageCount Value="12"/>
+        <SyntaxHighlighter Value="Text"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="/usr/share/fpcsrc/packages/base/mysql/mysql40.pp"/>
+        <UnitName Value="mysql40"/>
+        <CursorPos X="29" Y="10"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="2"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="/usr/share/fpcsrc/packages/base/mysql/mysql.inc"/>
+        <CursorPos X="27" Y="33"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="2"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="/usr/share/fpcsrc/packages/base/mysql/mysql4.pp"/>
+        <UnitName Value="mysql4"/>
+        <CursorPos X="10" Y="87"/>
+        <TopLine Value="48"/>
+        <EditorIndex Value="2"/>
+        <UsageCount Value="49"/>
+        <Loaded Value="True"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="/usr/share/fpcsrc/rtl/inc/systemh.inc"/>
+        <CursorPos X="14" Y="259"/>
+        <TopLine Value="194"/>
+        <EditorIndex Value="4"/>
+        <UsageCount Value="53"/>
+        <Loaded Value="True"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="tpostmysql.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="TPostmysql"/>
+        <CursorPos X="79" Y="41"/>
+        <TopLine Value="6"/>
+        <EditorIndex Value="1"/>
+        <UsageCount Value="106"/>
+        <Loaded Value="True"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="/usr/share/fpcsrc/rtl/objpas/sysutils/datih.inc"/>
+        <CursorPos X="26" Y="97"/>
+        <TopLine Value="51"/>
+        <EditorIndex Value="3"/>
+        <UsageCount Value="44"/>
+        <Loaded Value="True"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="../postfix_daemon/procthread.pas"/>
+        <UnitName Value="ProcThread"/>
+        <CursorPos X="59" Y="99"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="19"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="../artica/sources/Common/settings/settings.pas"/>
+        <UnitName Value="Settings"/>
+        <CursorPos X="1" Y="386"/>
+        <TopLine Value="374"/>
+        <UsageCount Value="18"/>
+      </Unit12>
+    </Units>
+    <JumpHistory Count="3" HistoryIndex="2">
+      <Position1>
+        <Filename Value="tpostmysql.pas"/>
+        <Caret Line="361" Column="21" TopLine="311"/>
+      </Position1>
+      <Position2>
+        <Filename Value="tpostmysql.pas"/>
+        <Caret Line="34" Column="25" TopLine="1"/>
+      </Position2>
+      <Position3>
+        <Filename Value="tpostmysql.pas"/>
+        <Caret Line="179" Column="27" TopLine="135"/>
+      </Position3>
+    </JumpHistory>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="5"/>
+    <Target>
+      <Filename Value="/home/touzeau/APPS/atica-postfix/bin/install-sql"/>
+    </Target>
+    <CodeGeneration>
+      <Generate Value="Faster"/>
+    </CodeGeneration>
+    <Other>
+      <CompilerPath Value="$(CompPath)"/>
+    </Other>
+  </CompilerOptions>
+  <Debugging>
+    <Exceptions Count="2">
+      <Item1>
+        <Name Value="ECodetoolError"/>
+      </Item1>
+      <Item2>
+        <Name Value="EFOpenError"/>
+      </Item2>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

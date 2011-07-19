@@ -1,0 +1,32 @@
+<delete_all_events>Apagar todos os eventos</delete_all_events>
+<emails_received>E-mails recebidos em tempo real</emails_received>
+<error_cyrus_pbconnect>[br][b][i]Por favor, verifique a conex&atilde;o cyrus-imap, parece que deixou de funcionar</error_cyrus_pbconnect>
+<error_cyrus_pbmailbox>[br][b][i]Por favor, verifique esta caixa de correio, parece que ultrapassou o limite da quota.
+[br]Aumente o espa&ccedil;o da quota deste utilizador ou apague este utilizador[/b][/i].</error_cyrus_pbmailbox>
+<error_kasmilter_stopped>O daemon do Kasperky Anti-spam n&atilde;o foi iniciado. Por favor, verifique se o daemon est&aacute; sendo executado e se a licen&ccedil;a &eacute; v&aacute;lida</error_kasmilter_stopped>
+<error_kavmilter_licence>[br][b][i]Voc&ecirc; precisa de obter uma nova licen&ccedil;a para o &quot;Kaspersky Antiv&iacute;rus for SendMail&quot;.
+[br]Ou ent&atilde;o desactive o Kaspersky na sec&ccedil;&atilde;o de plugins do Postfix[br][/ i].</error_kavmilter_licence>
+<error_loopsbacktomyself>Parece que o envio de e-mails para a Internet est&aacute; a ser retransmitida para o servidor onde est&aacute; instalado o Postfix. Por favor, verifique a sua configura&ccedil;&atilde;o.</error_loopsbacktomyself>
+<error_milter_grey_list_stopped>O servi&ccedil;o Milter-greylist foi interrompido ou deixou de funcionar. Por favor, verifique a sua configura&ccedil;&atilde;o e o estado do servi&ccedil;o.</error_milter_grey_list_stopped>
+<error_must_create_mailbox>[br][b][i]A caixa de correio n&atilde;o foi criada e o correio foi rejeitado pelo servidor de imap.
+[br]Voc&ecirc; precisa de criar uma conta de utilizador ou um e-mail alias para evitar este erro.[br][/ i]</error_must_create_mailbox>
+<error_relayhost>O relay principal que voc&ecirc; definiu para o postfix n&atilde;o est&aacute; dispon&iacute;vel. Por favor, altere as suas configura&ccedil;&otilde;es ou verifique o seu &amp;quot;Internet Server Relay&amp;quot;</error_relayhost>
+<error_routing_postfix>O Postfix n&atilde;o tem permiss&otilde;es para encaminhar os e-mails. Por favor, verifique as tabelas de transporte ...</error_routing_postfix>
+<error_routing_to>O Postfix n&atilde;o &eacute; capaz de encaminhar este e-mail para o servidor de destino. Por favor, verifique as tabelas de roteamento (Routing tables).</error_routing_to>
+<graphs>Gr&aacute;ficos e Estat&iacute;sticas</graphs>
+<lines_number>M&aacute;ximo de Linhas</lines_number>
+<monitorix>Monitorix</monitorix>
+<mysql_not_root_configured>Erro de acesso ao Mysql</mysql_not_root_configured>
+<mysql_not_root_configured_text>O Artica reportou um erro de acesso, voc&ecirc; precisa de definir uma conta para o Mysql, a fim de obter todas as funcionalidades. 
+Para definir uma conta para o MySQL, v&aacute; a &quot;Configura&ccedil;&otilde;es gerais/Base dados Mysql.</mysql_not_root_configured_text>
+<mysql_too_any_connections>O servidor de Mysql reportou que existem muitas conex&otilde;es no servidor de Mysql[br]Por favor, reinicie o Mysql ou reinicie o servidor</mysql_too_any_connections>
+<notification>Erro detectado</notification>
+<postfix_mynet_not_conf>Redes do Postfix</postfix_mynet_not_conf>
+<postfix_mynet_not_conf_text>Voc&ecirc; deve definir as suas redes para Postfix ficar operacional.[br]
+Seleccione no painel da esquerda a op&ccedil;&atilde;o Postfix/defini&ccedil;&otilde;es de rede do Postfix</postfix_mynet_not_conf_text>
+<service>Nome da aplica&ccedil;&atilde;o</service>
+<smtp_notification_not_saved>As notifica&ccedil;&otilde;es por e-mail n&atilde;o est&atilde;o definidas</smtp_notification_not_saved>
+<smtp_notification_not_saved_text>&Eacute; necess&aacute;rio para si ser informado se o servidor Artica falhou ou se executou as tarefas com sucesso.[br]
+Configure os par&acirc;metros de notifica&ccedil;&atilde;o de forma a poder receber todas as informa&ccedil;&otilde;es por e-mail</smtp_notification_not_saved_text>
+<too_many_lines_exceed>Muitas linhas:</too_many_lines_exceed>
+<warnings>Aviso de erros</warnings>

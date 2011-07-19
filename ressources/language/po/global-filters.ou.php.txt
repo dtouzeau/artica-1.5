@@ -1,0 +1,8 @@
+<ArticaDenyNoMXRecords>N&atilde;o h&aacute; registros MX</ArticaDenyNoMXRecords>
+<ArticaDenyNoMXRecords_text>Artica-policy will check if the sender domain as a real MX record in the DNS server, In this case, you can reject messages in the connection </ArticaDenyNoMXRecords_text>
+<ArticaFakedMailFrom>Faked Sender addresses</ArticaFakedMailFrom>
+<ArticaFakedMailFrom_text>Sometimes, the sender address didn't reflect the real sender address used to communicate with the server.
+ In this case, you can perform operation[br]Delete the eMail, put it into user quarantine[br]for disable this feature,
+  just select pass method.</ArticaFakedMailFrom_text>
+<trust_users>Trust Organization users</trust_users>
+<trust_users_text>If checked local senders user are white listed and consider has trusted users</trust_users_text>

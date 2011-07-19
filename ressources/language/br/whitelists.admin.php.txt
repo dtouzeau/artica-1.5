@@ -1,0 +1,10 @@
+<autolearning>Auto-aprendizado</autolearning>
+<autolearning_text>Este recurso deixa voc&ecirc; ativar rob&ocirc;s que ir&atilde;o analisar as caixas de correio, a fim de auto-completar lista branca (White list) e lista negra (Black list).</autolearning_text>
+<enable_artica_wbl_robots_text>Se voc&ecirc; ativar esta op&ccedil;&atilde;o, o gerenciador do dom&iacute;nio poder&aacute; criar endere&ccedil;os de emails que ser&aacute; respons&aacute;vel pela adi&ccedil;&atilde;o de endere&ccedil;os de e-mail na lista branca (White list) ou negra (Black list), recebendo mensagens de usu&aacute;rios</enable_artica_wbl_robots_text>
+<enable_learning_ham_mailbox>Permitir a auto-aprendizagem da lista branca (White list) ao analisar a caixa de enviados</enable_learning_ham_mailbox>
+<enable_learning_spam_mailbox>Habilitar auto-aprendizagem de SPAM  pela an&aacute;lise de caixa de correio de publicidade n&atilde;o solicitada</enable_learning_spam_mailbox>
+<replicate_each>Replicar as configura&ccedil;&otilde;es</replicate_each>
+<replicate_now>Come&ccedil;ar replica&ccedil;&atilde;o agora</replicate_now>
+<whitelist_explain>Esta &aacute;rea consolida todas a lista branca (White list) e lista negra (Black list) utilizada em todos os m&oacute;dulos executados pelo Postfix, voc&ecirc; pode adicionar e excluir os remetentes
+ a fim de acrescentar um usu&aacute;rio na lista branca/preta, voc&ecirc; precisa definir o destinat&aacute;rio de cada usu&aacute;rio. [br]
+ Os destinat&aacute;rios podem ser &quot;@domain.tlb&quot; para lista branca/preta para todos os dom&iacute;nios ou &quot;user@domain.tlb&quot; para um &uacute;nico usu&aacute;rio.</whitelist_explain>

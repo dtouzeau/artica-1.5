@@ -1,0 +1,284 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <ProjectOptions>
+    <PathDelim Value="/"/>
+    <Version Value="6"/>
+    <General>
+      <Flags>
+        <MainUnitHasUsesSectionForAllUnits Value="False"/>
+        <MainUnitHasCreateFormStatements Value="False"/>
+        <MainUnitHasTitleStatement Value="False"/>
+      </Flags>
+      <MainUnit Value="0"/>
+      <IconPath Value="./"/>
+      <TargetFileExt Value=""/>
+      <Title Value="artica-mysqlpost"/>
+      <ActiveEditorIndexAtStart Value="1"/>
+    </General>
+    <VersionInfo>
+      <ProjectVersion Value=""/>
+    </VersionInfo>
+    <PublishOptions>
+      <Version Value="2"/>
+      <IgnoreBinaries Value="False"/>
+      <IncludeFileFilter Value="*.(pas|pp|inc|lfm|lpr|lrs|lpi|lpk|sh|xml)"/>
+      <ExcludeFileFilter Value="*.(bak|ppu|ppw|o|so);*~;backup"/>
+    </PublishOptions>
+    <RunParams>
+      <local>
+        <FormatVersion Value="1"/>
+        <LaunchingApplication PathPlusParams="/usr/X11R6/bin/xterm -T 'Lazarus Run Output' -e $(LazarusDir)/tools/runwait.sh $(TargetCmdLine)"/>
+      </local>
+    </RunParams>
+    <Units Count="14">
+      <Unit0>
+        <Filename Value="artica_mysqlpost.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="artica_mysqlpost"/>
+        <CursorPos X="3" Y="16"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="0"/>
+        <UsageCount Value="46"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="../global_conf.pas"/>
+        <UnitName Value="global_conf"/>
+        <CursorPos X="1" Y="696"/>
+        <TopLine Value="685"/>
+        <UsageCount Value="13"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="httpsend.pas"/>
+        <UnitName Value="httpsend"/>
+        <CursorPos X="23" Y="182"/>
+        <TopLine Value="115"/>
+        <UsageCount Value="12"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="wget.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wget"/>
+        <CursorPos X="62" Y="80"/>
+        <TopLine Value="49"/>
+        <UsageCount Value="45"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="ocurlacc.inc"/>
+        <CursorPos X="18" Y="5"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="11"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="ocurlpub.inc"/>
+        <CursorPos X="54" Y="135"/>
+        <TopLine Value="62"/>
+        <UsageCount Value="11"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="hooksyslog.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="hooksyslog"/>
+        <CursorPos X="53" Y="352"/>
+        <TopLine Value="298"/>
+        <EditorIndex Value="1"/>
+        <UsageCount Value="41"/>
+        <Loaded Value="True"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="logs.pas"/>
+        <UnitName Value="logs"/>
+        <CursorPos X="54" Y="388"/>
+        <TopLine Value="352"/>
+        <EditorIndex Value="2"/>
+        <UsageCount Value="16"/>
+        <Loaded Value="True"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="../../../../../../../usr/share/fpcsrc/2.2.2/packages/mysql/src/mysql4types.inc"/>
+        <CursorPos X="3" Y="49"/>
+        <TopLine Value="18"/>
+        <UsageCount Value="12"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="../../../../../../../usr/share/fpcsrc/2.2.2/rtl/inc/systemh.inc"/>
+        <CursorPos X="3" Y="219"/>
+        <TopLine Value="188"/>
+        <UsageCount Value="12"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="../artica-install/global_conf.pas"/>
+        <UnitName Value="global_conf"/>
+        <CursorPos X="1" Y="7678"/>
+        <TopLine Value="7641"/>
+        <EditorIndex Value="5"/>
+        <UsageCount Value="15"/>
+        <Loaded Value="True"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="zsystem.pas"/>
+        <UnitName Value="zsystem"/>
+        <CursorPos X="16" Y="2192"/>
+        <TopLine Value="2192"/>
+        <EditorIndex Value="3"/>
+        <UsageCount Value="15"/>
+        <Loaded Value="True"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="../../../../../../../usr/share/fpcsrc/2.2.2/rtl/objpas/dateutil.inc"/>
+        <CursorPos X="10" Y="259"/>
+        <TopLine Value="228"/>
+        <EditorIndex Value="4"/>
+        <UsageCount Value="13"/>
+        <Loaded Value="True"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="../../../../../../../usr/share/fpcsrc/2.2.2/rtl/unix/bunxh.inc"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="10"/>
+      </Unit13>
+    </Units>
+    <JumpHistory Count="30" HistoryIndex="29">
+      <Position1>
+        <Filename Value="zsystem.pas"/>
+        <Caret Line="1950" Column="32" TopLine="1906"/>
+      </Position1>
+      <Position2>
+        <Filename Value="zsystem.pas"/>
+        <Caret Line="1958" Column="43" TopLine="1906"/>
+      </Position2>
+      <Position3>
+        <Filename Value="hooksyslog.pas"/>
+        <Caret Line="297" Column="1" TopLine="260"/>
+      </Position3>
+      <Position4>
+        <Filename Value="hooksyslog.pas"/>
+        <Caret Line="290" Column="15" TopLine="256"/>
+      </Position4>
+      <Position5>
+        <Filename Value="logs.pas"/>
+        <Caret Line="49" Column="24" TopLine="18"/>
+      </Position5>
+      <Position6>
+        <Filename Value="logs.pas"/>
+        <Caret Line="340" Column="1" TopLine="316"/>
+      </Position6>
+      <Position7>
+        <Filename Value="logs.pas"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
+      </Position7>
+      <Position8>
+        <Filename Value="logs.pas"/>
+        <Caret Line="65" Column="36" TopLine="34"/>
+      </Position8>
+      <Position9>
+        <Filename Value="hooksyslog.pas"/>
+        <Caret Line="293" Column="50" TopLine="256"/>
+      </Position9>
+      <Position10>
+        <Filename Value="hooksyslog.pas"/>
+        <Caret Line="340" Column="22" TopLine="308"/>
+      </Position10>
+      <Position11>
+        <Filename Value="logs.pas"/>
+        <Caret Line="84" Column="28" TopLine="53"/>
+      </Position11>
+      <Position12>
+        <Filename Value="hooksyslog.pas"/>
+        <Caret Line="326" Column="1" TopLine="306"/>
+      </Position12>
+      <Position13>
+        <Filename Value="hooksyslog.pas"/>
+        <Caret Line="44" Column="15" TopLine="13"/>
+      </Position13>
+      <Position14>
+        <Filename Value="hooksyslog.pas"/>
+        <Caret Line="327" Column="10" TopLine="296"/>
+      </Position14>
+      <Position15>
+        <Filename Value="hooksyslog.pas"/>
+        <Caret Line="200" Column="21" TopLine="147"/>
+      </Position15>
+      <Position16>
+        <Filename Value="hooksyslog.pas"/>
+        <Caret Line="265" Column="26" TopLine="242"/>
+      </Position16>
+      <Position17>
+        <Filename Value="hooksyslog.pas"/>
+        <Caret Line="450" Column="1" TopLine="413"/>
+      </Position17>
+      <Position18>
+        <Filename Value="hooksyslog.pas"/>
+        <Caret Line="299" Column="27" TopLine="260"/>
+      </Position18>
+      <Position19>
+        <Filename Value="hooksyslog.pas"/>
+        <Caret Line="354" Column="36" TopLine="325"/>
+      </Position19>
+      <Position20>
+        <Filename Value="hooksyslog.pas"/>
+        <Caret Line="346" Column="1" TopLine="318"/>
+      </Position20>
+      <Position21>
+        <Filename Value="hooksyslog.pas"/>
+        <Caret Line="380" Column="1" TopLine="323"/>
+      </Position21>
+      <Position22>
+        <Filename Value="hooksyslog.pas"/>
+        <Caret Line="361" Column="1" TopLine="309"/>
+      </Position22>
+      <Position23>
+        <Filename Value="hooksyslog.pas"/>
+        <Caret Line="367" Column="1" TopLine="323"/>
+      </Position23>
+      <Position24>
+        <Filename Value="hooksyslog.pas"/>
+        <Caret Line="48" Column="42" TopLine="9"/>
+      </Position24>
+      <Position25>
+        <Filename Value="hooksyslog.pas"/>
+        <Caret Line="338" Column="9" TopLine="301"/>
+      </Position25>
+      <Position26>
+        <Filename Value="hooksyslog.pas"/>
+        <Caret Line="856" Column="77" TopLine="805"/>
+      </Position26>
+      <Position27>
+        <Filename Value="hooksyslog.pas"/>
+        <Caret Line="866" Column="51" TopLine="827"/>
+      </Position27>
+      <Position28>
+        <Filename Value="hooksyslog.pas"/>
+        <Caret Line="863" Column="37" TopLine="824"/>
+      </Position28>
+      <Position29>
+        <Filename Value="hooksyslog.pas"/>
+        <Caret Line="392" Column="137" TopLine="341"/>
+      </Position29>
+      <Position30>
+        <Filename Value="hooksyslog.pas"/>
+        <Caret Line="375" Column="1" TopLine="325"/>
+      </Position30>
+    </JumpHistory>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="8"/>
+    <Target>
+      <Filename Value="/home/dtouzeau/developpement/artica-postfix/bin/artica-mysqlpost"/>
+    </Target>
+    <Other>
+      <CompilerPath Value="$(CompPath)"/>
+    </Other>
+  </CompilerOptions>
+  <Debugging>
+    <Exceptions Count="2">
+      <Item1>
+        <Name Value="ECodetoolError"/>
+      </Item1>
+      <Item2>
+        <Name Value="EFOpenError"/>
+      </Item2>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

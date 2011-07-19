@@ -1,0 +1,3638 @@
+unit ldapconf;
+{$MODE DELPHI}
+//{$mode objfpc}{$H+}
+{$LONGSTRINGS ON}
+
+interface
+
+uses
+Classes, articaldap,SysUtils,strutils,Process,unix,global_conf,Logs,RegExpr in 'RegExpr.pas',IniFiles,BaseUnix,
+zsystem,cyrus,clamav,spamass,pureftpd,openldap,ntpd,samba,mimedefang,squid,stunnel4,dkimfilter,postfix_class,miltergreylist,lighttpd,jcheckmail,
+dansguardian,kav4samba,bind9,obm,artica_cron,dotclear,
+mailarchiver in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/mailarchiver.pas',
+kav4proxy    in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/kav4proxy.pas',
+kas3         in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/kas3.pas',
+mysql_daemon in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/mysql_daemon.pas',
+bogom,
+kavmilter,
+mailspy_milter   in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/mailspy_milter.pas',
+amavisd_milter,
+imapsync         in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/imapsync.pas',
+mailmanctl;
+
+
+  type
+  tldapconf=class
+
+
+private
+       GLOBAL_INI:myconf;
+       cyr:Tcyrus;
+       clamav:Tclamav;
+       mldap:Topenldap;
+       LDAP:Tarticaldap;
+       zntpd:tntpd;
+       LOGS:Tlogs;
+       SYS:Tsystem;
+       stunnel:Tstunnel;
+       zpostfix:tpostfix;
+       miltergreylist:tmilter_greylist;
+       lighttpd:Tlighttpd;
+       zdansguardian:tdansguardian;
+       bind9:Tbind9;
+       zobm:Tobm;
+       zcyrus:Tcyrus;
+       www_user:string;
+       PROCEDURE ChangeDiskConfig();
+       PROCEDURE DansGuardian_verif_groupfile(group_path:string);
+       PROCEDURE DansGuardian_verif_globalConfig();
+       PROCEDURE mailboxes_log(user:string;tmpfile:string);
+       function  bind_import_file(FileTable:TstringList;Zone:string):string;
+       // Kaspersky Anti-spam
+       function       KasperskyASGroupsParseFile(datas:string):string;
+       procedure      KasperskyAsBuildProfile();
+       function       KasperskyAsParseProfile(key:string;path:string):string;
+       procedure      KasperskyASGroupDeleteFiles();
+       procedure      KasperskyASParseError();
+       PROCEDURE      notifications_apply();
+       function       mailboxes_acl(ini_content:string):string;
+
+
+public
+      constructor Create();
+      procedure Free;
+
+      PROCEDURE      FoldersSizeConfig();
+      PROCEDURE      Squid(servername:string);
+      PROCEDURE      Dansguardian();
+      PROCEDURE      ApplySecuLevel();
+      PROCEDURE      FtpUsers();
+      PROCEDURE      SqlGrey(servername:string);
+      PROCEDURE      maincf();
+      PROCEDURE      crossroads_sync();
+      PROCEDURE      crossroads_apply(path:string);
+      PROCEDURE      maintenance();
+      PROCEDURE      Amavis();
+      PROCEDURE      mailboxes_sync();
+      PROCEDURE      mailbox_sync(user:string);
+      PROCEDURE      milter_greylist();
+      PROCEDURE      Enable_postfixmodules();
+      PROCEDURE      OBM_OPERATIONS();
+      PROCEDURE      NTPD();
+      PROCEDURE      iptables();
+      PROCEDURE      backup_apply();
+      PROCEDURE      SharedFolders();
+      procedure      SpamAssassin();
+      procedure      Samba();
+      PROCEDURE      mimedefang();
+      procedure      cyrusconfig();
+      procedure      cyrrepair();
+      // Kaspersky Anti-spam
+      PROCEDURE      KasperskyASGroups();
+      
+      
+      //kavmilter
+      PROCEDURE      kavmilter_settings();
+      PROCEDURE      stunnel4();
+      PROCEDURE      localdomains();
+      PROCEDURE      pnetworks();
+      PROCEDURE      dkimfilter();
+      procedure      NMAP();
+      procedure      NMAP_scan_results(path:string);
+      procedure      NMAP_SINGLE(uid:string);
+      PROCEDURE      Reconfigure_lighttpd();
+      procedure      kav4samba_save();
+      PROCEDURE      bind_import();
+      PROCEDURE      Bind_Compile();
+      PROCEDURE      fdm_exec();
+      PROCEDURE      Testldap_cmdline();
+      procedure      cyrreconstruct();
+      PROCEDURE      repair_mailbox(user:string;path:string);
+      procedure      squidnewbee();
+      procedure      dtoclear_users();
+      PROCEDURE      jckmail();
+      
+      //export mailboxes.
+      PROCEDURE      imapsync_export(user_from:string;user_to:string;delete:string);
+      PROCEDURE      imapsync_import(user:string);
+      PROCEDURE      SpamAssassin_whitelistBlacklist();
+      PROCEDURE      sa_learn();
+      FUNCTION       UNDERSTAND_fetchmailrc():TstringList;
+      
+END;
+
+implementation
+
+constructor tldapconf.Create();
+begin
+  GLOBAL_INI:=myconf.Create;
+  SYS:=GLOBAL_INI.SYS;
+  ldap:=tarticaldap.Create();
+  LOGS:=Tlogs.Create;
+  Cyr:=Tcyrus.Create(SYS);
+  clamav:=Tclamav.Create;
+  mldap:=Topenldap.Create;
+  zntpd:=tntpd.Create;
+
+  stunnel:=Tstunnel.Create(SYS);
+  zpostfix:=Tpostfix.Create(SYS);
+  miltergreylist:=Tmilter_greylist.Create(SYS);
+  lighttpd:=Tlighttpd.Create(SYS);
+  zdansguardian:=tdansguardian.Create(SYS);
+  bind9:=Tbind9.Create(SYS);
+  zobm:=Tobm.Create(SYS);
+  www_user:=lighttpd.LIGHTTPD_GET_USER();
+end;
+//#############################################################################
+PROCEDURE tldapconf.Free();
+begin
+  ldap.free;
+  cyr.FRee;
+end;
+//#############################################################################
+PROCEDURE tldapconf.NTPD();
+var
+   f :ntpd_settings;
+   Files:TstringList;
+begin
+   Enable_postfixmodules();
+   f:=ldap.Load_NTPD();
+   if length(f.NTPDConf)>0 then begin
+        Files:=TstringList.Create;
+        Files.SaveToFile(zntpd.DEAMON_CONF_PATH());
+        Files.Free;
+   end;
+   zntpd.NTPD_STOP();
+   zntpd.NTPD_START();
+end;
+//#############################################################################
+PROCEDURE tldapconf.Squid(servername:string);
+ var
+    FileS:TstringList;
+    squid:Tsquid;
+begin
+  squid:=Tsquid.Create;
+  if not FileExists(squid.SQUID_CONFIG_PATH()) then begin
+     writeln('Could not stat squid.conf');
+     exit;
+  end;
+  Files:=TstringList.Create;
+  FileS.Add(ldap.Load_squid_settings(servername));
+  LOGS.logs('Squid:: save squid config file in ' + squid.SQUID_CONFIG_PATH());
+  files.SaveToFile(squid.SQUID_CONFIG_PATH());
+  LOGS.logs('Squid:: restart squid process');
+  squid.SQUID_STOP();
+  squid.SQUID_START();
+  squid.free;
+end;
+
+//#############################################################################
+PROCEDURE tldapconf.Testldap_cmdline();
+ var
+    SETTINGS:ActiveDirectoryServer;
+
+begin
+
+    SETTINGS.server:=ParamStr(2);
+    SETTINGS.server_port:=ParamStr(3);
+    SETTINGS.dn_admin:=ParamStr(4);
+    SETTINGS.password:=ParamStr(5);
+    SETTINGS.suffix:=ParamStr(6);;
+    ldap.TestingADConnection(SETTINGS);
+    
+
+end;
+
+//#############################################################################
+PROCEDURE tldapconf.kavmilter_settings();
+var
+   kav           :tkavmilter;
+   i             :integer;
+   RegExpr       :TRegExpr;
+   RuleName      :string;
+
+begin
+   kav:=tkavmilter.Create(SYS);
+   
+   if FileExists('/etc/artica-postfix/settings/Daemons/kavmilterConf') then logs.OutputCmd('/bin/cp -f /etc/artica-postfix/settings/Daemons/kavmilterConf /etc/kav/5.6/kavmilter/kavmilter.conf');
+   SYS.DirFiles('/etc/artica-postfix/settings/Daemons','*_KavMilterGroupRule');
+   logs.Syslogs('kavmilter_settings:: get ' + IntToStr(SYS.DirListFiles.Count)+' group rule(s)');
+   if SYS.DirListFiles.Count=0 then exit;
+   RegExpr:=TRegExpr.Create;
+   RegExpr.Expression:='(.+?)_KavMilterGroupRule';
+   logs.OutputCmd('/bin/rm -rf /etc/kav/5.6/kavmilter/groups.d/*');
+   for i:=0 to SYS.DirListFiles.Count-1 do begin
+      if RegExpr.Exec(SYS.DirListFiles.Strings[i]) then begin
+          logs.Syslogs('kavmilter_settings:: Change rule ' + RegExpr.Match[1]);
+          RuleName:=RegExpr.Match[1];
+          RuleName:=AnsiReplaceText(RuleName,'.','');
+          logs.OutputCmd('/bin/cp -f /etc/artica-postfix/settings/Daemons/'+SYS.DirListFiles.Strings[i]+' /etc/kav/5.6/kavmilter/groups.d/'+lowercase(RuleName)+'.conf');
+          logs.OutputCmd('/bin/chown kav:root /etc/kav/5.6/kavmilter/groups.d/'+lowercase(RuleName)+'.conf');
+      end;
+   end;
+
+
+
+
+
+   
+  kav.RELOAD();
+
+end;
+//#############################################################################
+
+
+PROCEDURE tldapconf.jckmail();
+var
+   xjckmail:tjcheckmail;
+   jcheckMailPolicyTXT:string;
+   jcheckMailConf:string;
+   l:TstringList;
+begin
+  jcheckMailPolicyTXT:=SYS.GET_INFO('jcheckMailPolicyTXT');
+  jcheckMailConf:=SYS.GET_INFO('jcheckMailConf');
+  l:=TstringList.Create;
+  xjckmail:=tjcheckmail.Create(SYS);
+  if length(jcheckMailPolicyTXT)>0 then begin
+     l.Add(jcheckMailPolicyTXT);
+     l.SaveToFile('/var/jchkmail/cdb/j-policy.txt');
+     SetCurrentDir('/var/jchkmail/cdb');
+     logs.Debuglogs('jckmail()::Compiling jchkmail database');
+     fpsystem('make');
+  end;
+  
+  l.Clear;
+  if length(jcheckMailConf)>0 then begin
+     l.Add(jcheckMailConf);
+     l.SaveToFile(xjckmail.CONFIG_PATH());
+     logs.Debuglogs('jckmail()::Reloading jchkmail');
+     fpsystem('kill -HUP '+xjckmail.PID_NUM());
+  end;
+  
+   xjckmail.START();
+   xjckmail.free;
+end;
+//#############################################################################
+
+PROCEDURE tldapconf.squidnewbee();
+var
+   squidconf:string;
+   Files:TstringList;
+   squid:Tsquid;
+   SquidBlockSites:string;
+   Kav4ProxyConf:string;
+   Kav4Proxy:Tkav4Proxy;
+
+begin
+  Enable_postfixmodules();
+  squid:=Tsquid.Create;
+  squidconf:=SYS.GET_INFO('GlobalSquidConf');
+  SquidBlockSites:=SYS.GET_INFO('SquidBlockSites');
+  if length(squidconf)<10 then begin
+     logs.Syslogs('Bad configuration file for squid... aborting');
+     exit;
+  end;
+  
+  Files:=TstringList.Create;
+  FileS.Add(squidconf);
+  LOGS.syslogs('Squid:: save squid config file in ' + squid.SQUID_CONFIG_PATH());
+  files.SaveToFile(squid.SQUID_CONFIG_PATH());
+  FileS.Clear;
+  FileS.Add(SquidBlockSites);
+  ForceDirectories('/etc/squid3');
+  files.SaveToFile('/etc/squid3/squid-block.acl');
+  
+  
+
+  
+  
+  files.Clear;
+  
+  Kav4Proxy:=TKav4Proxy.Create(SYS);
+  
+  if SYS.GET_INFO('ArticaEnableKav4ProxyInSquid')='1' then begin
+     Kav4ProxyConf:=ldap.Load_Kav4proxy_settings();
+     if length(Kav4ProxyConf)>0 then begin
+            files.Add(Kav4ProxyConf);
+            files.SaveToFile(Kav4Proxy.CONF_PATH());
+            LOGS.syslogs('Restart Kaspersky antivirus for SQUID Daemon');
+            Kav4Proxy.KAV4PROXY_STOP();
+            Kav4Proxy.KAV4PROXY_START();
+     end;
+  end;
+  
+  
+  
+  LOGS.syslogs('Squid:: restart squid process');
+  squid:=Tsquid.Create;
+  squid.SQUID_RELOAD();
+  Files.Free;
+  Kav4Proxy.free;
+  squid.free;
+  
+
+end;
+
+
+
+
+PROCEDURE tldapconf.ApplySecuLevel();
+var
+   ArticaMailAddonsLevel:string;
+   D:boolean;
+begin
+  ArticaMailAddonsLevel:=ldap.ArticaMailAddonsLevel();
+  
+  D:=GLOBAL_INI.COMMANDLINE_PARAMETERS('--verbose');
+  LOGS.logs('ApplySecuLevel:: Email level=' + ArticaMailAddonsLevel);
+  if D then writeln('ApplySecuLevel:: Email level=' + ArticaMailAddonsLevel);
+  GLOBAL_INI.set_INFOS('ArticaMailAddonsLevel',ArticaMailAddonsLevel);
+end;
+//#############################################################################
+PROCEDURE tldapconf.Reconfigure_lighttpd();
+var
+   config:string;
+begin
+ if length(ParamStr(2))>0 then begin
+  if FileExists(ParamStr(2)) then begin
+      writeln('Reconfigure_lighttpd():: Loadind datas from ' + ParamStr(2));
+      config:=logs.ReadFromFile(ParamStr(2));
+  end else begin
+      writeln('Reconfigure_lighttpd():: Loading default config ('+ParamStr(2)+') doesn''t exists');
+      config:=lighttpd.DEFAULT_CONF();
+  end;
+  end;
+  if length(config)=0 then begin
+     writeln('Reconfigure_lighttpd():: no datas here...');
+     exit;
+  end;
+  writeln('Reconfigure_lighttpd():: Saving configuration into LDAP DATABASE');
+  ldap.lighttpd_modify_config(config);
+  writeln('Reconfigure_lighttpd():: done');
+  Enable_postfixmodules();
+  writeln('Reconfigure_lighttpd():: Restarting server');
+  lighttpd.LIGHTTPD_STOP();
+  lighttpd.LIGHTTPD_START();
+end;
+//#############################################################################
+PROCEDURE tldapconf.Bind_Compile();
+var
+   f                      :bind9_settings;
+   RegExpr                :TRegExpr;
+   l                      :TstringList;
+   zones                  :TstringList;
+   zone_name              :string;
+   zone_file              :string;
+   Zone_data              :TstringList;
+   i:integer;
+   PostfixEnabledInBind9:integer;
+   bind:tbind9;
+   conffile:string;
+begin
+
+  if not FileExists(bind9.bin_path()) then begin
+       logs.Debuglogs('Starting......: Bind9 is not installed');
+       exit;
+  end;
+
+  f:=ldap.load_bind9_settings();
+  bind:=tbind9.Create(SYS);
+  conffile:=bind.conf_path();
+  
+  if length(f.NamedConf)=0 then begin
+     logs.Debuglogs('Bind_Compile:: NamedConf is null, aborting...');
+     exit;
+  end;
+  l:=TstringList.Create;
+  l.Add(f.NamedConf);
+  logs.Debuglogs('Bind_Compile:: Saving '+conffile);
+  try
+     l.SaveToFile('/etc/bind/named.conf');
+  except
+        writeln('FATAL ERROR WHILE SAVING '+conffile);
+        logs.Syslogs('FATAL ERROR WHILE SAVING '+conffile);
+        exit;
+  end;
+  
+   l.Clear;
+   zones:=TstringList.Create;
+   RegExpr:=TRegExpr.Create;
+   
+   l.LoadFromFile(conffile);
+   
+   logs.Debuglogs('Bind_Compile:: Parsing zones in '+conffile);
+   RegExpr.Expression:='^zone\s+"(.+?)"';
+   for i:=0 to l.Count-1 do begin
+        if RegExpr.Exec(l.Strings[i]) then begin
+             zones.Add(RegExpr.Match[1]+';'+bind_import_file(l,RegExpr.Match[1]));
+        end;
+
+   end;
+  
+  Zone_data:=Tstringlist.Create;
+  RegExpr.Expression:='(.+?);(.+)';
+for i:=0 to zones.Count-1 do begin
+      if RegExpr.Exec(zones.Strings[i]) then begin
+      zone_name:=RegExpr.Match[1];
+      zone_file:=RegExpr.Match[2];
+      logs.Debuglogs('Bind_Compile:: Parsing zone:'+ zone_name +'('+ zone_file+')');
+      f:=ldap.load_bind9_zone(zone_name);
+      if length(f.NamedConf)=0 then begin
+          logs.Debuglogs('Bind_Compile:: Parsing zone:'+zone_name + ' no datas!!!');
+          end else begin
+              Zone_data.Clear;
+              Zone_data.Add(f.NamedConf);
+              try
+               Zone_data.SaveToFile(zone_file);
+              except
+               writeln('FATAL ERROR WHILE SAVING '+zone_file);
+               logs.Syslogs('FATAL ERROR WHILE SAVING '+zone_file);
+              end;
+
+      end;
+  end;
+end;
+  
+  logs.Debuglogs('Bind_Compile:: Restarting smoothly bind9...');
+  bind9.FIX_PERMISSIONS();
+  bind9.ApplyForwarders('/etc/artica-postfix/settings/Daemons/PostfixBind9DNSList');
+  bind9.ApplyLoopBack();
+  logs.OutputCmd(bind9.rndc_path() +' reload');
+  
+
+  
+  Zone_data.free;
+  l.free;
+  RegExpr.free;
+  zones.free;
+  
+end;
+//#############################################################################
+PROCEDURE tldapconf.fdm_exec();
+var
+   f               :FDM_settings;
+   i               :integer;
+   filename        :string;
+   l               :TstringList;
+begin
+
+if SYS.GET_INFO('EnableFDMFetch')<>'1' then begin
+   logs.Debuglogs('fdm_exec():: FDM is disabled');
+   exit;
+end;
+
+
+
+f:=ldap.load_FDM_settings();
+l:=TstringList.Create;
+forceDirectories('/etc/fdm');
+for i:=0 to f.FDMConf.Count-1 do begin
+    l.Add(f.FDMConf.Strings[i]);
+    filename:= '/etc/fdm/fdm.'+intTostr(i)+'.conf';
+    logs.Debuglogs('fdm_exec():: saving '+filename);
+    l.SaveToFile(filename);
+    fpsystem(GLOBAL_INI.get_ARTICA_PHP_PATH()+'/bin/artica-install --fdm-perform '+ filename + ' &');
+    l.Clear;
+end;
+l.free;
+end;
+
+
+
+//#############################################################################
+PROCEDURE tldapconf.bind_import();
+var
+   f                      :bind9_settings;
+   RegExpr                :TRegExpr;
+   l                      :TstringList;
+   zones                  :TstringList;
+   i                      :integer;
+   force                  :boolean;
+begin
+  if not FileExists(bind9.bin_path()) then begin
+       logs.Debuglogs('Starting......: Bind9 is not installed');
+       exit;
+  end;
+
+  f:=ldap.load_bind9_settings();
+  force:=GLOBAL_INI.COMMANDLINE_PARAMETERS('--force');
+  
+  if not force then begin
+     if length(f.NamedConf)>0 then exit;
+  end;
+  
+  
+  logs.Debuglogs('Starting......: Bind9 importing bind9 databases....');
+  logs.Debuglogs('Starting......: Bind9 merging includes files....');
+  
+   RegExpr:=TRegExpr.Create;
+   RegExpr.Expression:='^include "(.+?)"';
+   l:=TstringList.Create;
+   l.LoadFromFile('/etc/bind/named.conf');
+   for i:=0 to l.Count-1 do begin
+        if RegExpr.Exec(l.Strings[i]) then begin
+            logs.Debuglogs('Starting......: Bind9 merging '+ RegExpr.Match[1]);
+            l.Strings[i]:=logs.ReadFromFile(RegExpr.Match[1]);
+        end;
+   end;
+   
+   l.SaveToFile('/etc/bind/named-artica.import');
+   l.Clear;
+   zones:=TstringList.Create;
+   l.LoadFromFile('/etc/bind/named-artica.import');
+   logs.DeleteFile('/etc/bind/named-artica.import');
+   RegExpr.Expression:='^zone\s+"(.+?)"';
+   for i:=0 to l.Count-1 do begin
+        if RegExpr.Exec(l.Strings[i]) then begin
+             zones.Add(RegExpr.Match[1]+';'+bind_import_file(l,RegExpr.Match[1]));
+        end;
+   
+   end;
+
+  if not ldap.bind9_Create_master_branch(l.Text) then begin
+      logs.Debuglogs('Starting......: Unable to create bind9 branch in ldap database...');
+      exit;
+  end;
+     
+  RegExpr.Expression:='(.+?);(.+)';
+  for i:=0 to zones.Count-1 do begin
+       RegExpr.Exec(zones.Strings[i]);
+       if not ldap.bind9_Create_zone_branch(RegExpr.Match[1],RegExpr.Match[2]) then begin
+          logs.Debuglogs('Starting......: Bind9 unable to store zone "'+ RegExpr.Match[1] +' (in file ' + RegExpr.Match[2]+')');
+       end else begin
+          logs.Debuglogs('Starting......: Bind9 success store content of "' + RegExpr.Match[1] + '" zone');
+       end;
+  end;
+  
+  
+  
+
+end;
+//#############################################################################
+function tldapconf.bind_import_file(FileTable:TstringList;Zone:string):string;
+var
+   RegExpr                :TRegExpr;
+   start                  :boolean;
+   i:integer;
+begin
+start:=false;
+For i:=0 to FileTable.Count-1 do begin
+      RegExpr:=TRegExpr.Create;
+      if not start then begin
+         RegExpr.Expression :='zone\s+"'+Zone;
+         if RegExpr.Exec(FileTable.Strings[i]) then  start:=true;
+      end;
+      
+      if start then begin
+           RegExpr.Expression:='file "(.+?)"';
+           if RegExpr.Exec(FileTable.Strings[i]) then begin
+              result:=RegExpr.Match[1];
+              break;
+           end;
+           RegExpr.Expression:='};';
+           if RegExpr.Exec(FileTable.Strings[i]) then begin
+              break;
+           end;
+      
+      end;
+end;
+
+RegExpr.free;
+
+
+
+end;
+//#############################################################################
+PROCEDURE tldapconf.repair_mailbox(user:string;path:string);
+var
+l,s:TstringList;
+user_path,queue_path,first_letter,fpath,unixhierarchysep,account,tmp:string;
+cmd:string;
+begin
+zCyrus:=Tcyrus.Create(SYS);
+l:=TstringList.Create;
+l.Add(logs.DateTimeNowSQL()+': starting repair mailbox for ' +user );
+
+if not FileExists(SYS.LOCATE_SU()) then begin
+       l.Add(logs.DateTimeNowSQL()+': unable to locate su tool, abort..' );
+       l.SaveToFile(path);
+       l.free;
+       exit;
+end;
+
+if not FileExists(SYS.LOCATE_cyrreconstruct()) then begin
+       l.Add(logs.DateTimeNowSQL()+': unable to locate su cyrreconstruct, abort..' );
+       l.SaveToFile(path);
+       l.free;
+       exit;
+end;
+if not FileExists(SYS.LOCATE_cyrquota()) then begin
+       l.Add(logs.DateTimeNowSQL()+': unable to locate cyrquota, abort..' );
+       l.SaveToFile(path);
+       l.free;
+       exit;
+end;
+
+
+unixhierarchysep:=zCyrus.IMAPD_GET('unixhierarchysep');
+account:='user.'+ user;
+if LowerCase(unixhierarchysep)='yes' then account:='user/'+user;
+
+
+
+queue_path:=zCyrus.IMAPD_GET('partition-default');
+l.Add(logs.DateTimeNowSQL()+': partition-default=' +queue_path );
+first_letter:=copy(user,0,1);
+
+user_path:=AnsiReplaceText(user,'.','^');
+fpath:=queue_path+'/'+ first_letter+'/user/'+user_path;
+l.Add(logs.DateTimeNowSQL()+': mailbox path='+fpath);
+if FileExists(fpath+'/cyrus.seen') then begin
+   l.Add(logs.DateTimeNowSQL()+': delete '+fpath+'/cyrus.seen');
+   logs.DeleteFile(fpath+'/cyrus.seen');
+end;
+
+  l.Add(logs.DateTimeNowSQL()+': start repair mailbox...');
+  cmd:=SYS.LOCATE_SU() +' cyrus -c "' + SYS.LOCATE_cyrreconstruct()+ ' -r -f '+account+'"';
+  logs.Debuglogs(cmd);
+  tmp:=logs.FILE_TEMP();
+  cmd:=cmd+' >'+ tmp;
+  fpsystem(cmd);
+  s:=TstringList.Create;
+  if FIleExists(tmp) then begin
+     s.LoadFromFile(tmp);
+     l.Add(s.Text);
+  end;
+  
+ cmd:=SYS.LOCATE_SU() +' cyrus -c "'+SYS.LOCATE_cyrquota() + ' -f" >'+tmp;
+ fpsystem(cmd);
+  if FIleExists(tmp) then begin
+     s.LoadFromFile(tmp);
+     l.Add(s.Text);
+  end;
+ 
+  l.Add(logs.DateTimeNowSQL()+': restart mailbox server...');
+  zcyrus.CYRUS_DAEMON_STOP();
+  zcyrus.CYRUS_DAEMON_START();
+  
+  logs.Debuglogs(l.Text);
+  if length(path)>0 then begin
+     l.SaveToFile(path);
+     logs.OutputCmd('/bin/chmod 755 ' + path);
+  end;
+  l.free;
+  s.free;
+end;
+
+
+
+
+PROCEDURE tldapconf.maincf();
+var
+   Confd                  :postfix_settings;
+   l                      :TstringList;
+   restart                :boolean;
+   LocalPostfixTimeCode   :string;
+   header_check_path      :string;
+   D                      :boolean;
+   RegExpr                :TRegExpr;
+   spamass                :Tspamass;
+   dkim                   :Tdkim;
+   html                   :boolean;
+   mailarchive            :tmailarchive;
+   bogom                  :tbogom;
+   kas3                   :tkas3;
+   kavmilter              :tkavmilter;
+   mailspy                :tmailspy;
+   cron                   :tcron;
+   jcheckmail             :tjcheckmail;
+   mailman                :tmailman;
+   PostfixEnableMasterCfSSL:integer;
+   EnableAmavisInMasterCF  :integer;
+   PostfixEnabledInBind9  :integer;
+   smtpd_tls_CAfile       :string;
+   PostfixBounceTemplatesFileContent:string;
+   
+begin
+      PostfixEnableMasterCfSSL:=0;
+      EnableAmavisInMasterCF:=0;
+
+   if not ldap.Logged then begin
+      logs.Syslogs('tldapconf.maincf():: Unable to logon to the ldap server postfix settings stay unchanged!!!');
+      exit;
+   end;
+
+   if not FileExists(zpostfix.POSFTIX_POSTCONF_PATH()) then begin
+      logs.Debuglogs('maincf:: POSFTIX_POSTCONF_PATH() return a corrupted path or Postfix is not installed...');
+      exit;
+   end;
+   
+   if not TryStrToInt(SYS.GET_INFO('EnableAmavisInMasterCF'),EnableAmavisInMasterCF) then EnableAmavisInMasterCF:=0;
+
+   Enable_postfixmodules();
+   Confd:=ldap.Load_postfix_main_settings();
+   restart:=false;
+
+
+   LocalPostfixTimeCode:=GLOBAL_INI.get_INFOS('PostfixTimeCode');
+   logs.Debuglogs('maincf:: PostfixTimeCode :"' + Confd.PostfixTimeCode + '"<>"' + LocalPostfixTimeCode + '"');
+   
+   if length(LocalPostfixTimeCode)=0 then LocalPostfixTimeCode:='0';
+   if length(Confd.PostfixTimeCode)=0 then Confd.PostfixTimeCode:='0';
+   
+   if length(confd.PostfixTimeCode)>3 then begin
+      LOGS.Debuglogs('maincf:: PostfixTimeCode :' + Confd.PostfixTimeCode + '<>' + LocalPostfixTimeCode);
+      if Confd.PostfixTimeCode=LocalPostfixTimeCode then begin
+       logs.Debuglogs('PostfixTimeCode is the same as local PostFixTimeCode, aborting...');
+       exit;
+      end;
+   end;
+
+   
+   if length(confd.PostfixMainCfFile)>0 then begin
+
+      LOGS.Debuglogs('maincf:: Save "/etc/postfix/main.cf"');
+      l:=TstringList.Create;
+      l.Add(confd.PostfixMainCfFile);
+      l.SaveToFile('/etc/postfix/main.cf');
+      logs.OutputCmd('/bin/chmod 644 /etc/postfix/main.cf');
+      logs.OutputCmd('/bin/chown root:root /etc/postfix/main.cf');
+      
+      l.Free;
+      restart:=true;
+      LOGS.Debuglogs('Saving main.cf from LDAP Database success');
+   end else begin
+      LOGS.Debuglogs('Saving main.cf from LDAP Database failed there is no datas in PostfixMainCfFile LDAP attribute ');
+   end;
+   
+PostfixBounceTemplatesFileContent:=SYS.GET_INFO('PostfixBounceTemplatesFileContent');
+if length(PostfixBounceTemplatesFileContent)>0 then begin
+      LOGS.logs('maincf:: Save "/etc/postfix/bounce.template.cf"');
+      logs.WriteToFile(PostfixBounceTemplatesFileContent,'/etc/postfix/bounce.template.cf');
+      fpsystem('/bin/chown root:root /etc/postfix/bounce.template.cf >/dev/null 2>&1');
+      restart:=true;
+      logs.Debuglogs('Saving bounce.template.cf from settings success');
+   end else begin
+    LOGS.Debuglogs('maincf:: bounce_template disabled...');
+end;
+   
+   
+if length(confd.PostFixHeadersRegexFile)>0 then begin
+      header_check_path:=zpostfix.POSTFIX_EXTRACT_MAINCF('header_checks');
+      RegExpr:=TRegExpr.Create;
+
+      RegExpr.Expression:='(.+?):(.+)';
+      if RegExpr.Exec(header_check_path) then begin
+         header_check_path:=RegExpr.Match[2];
+      end;
+      if length(header_check_path)>0 then begin
+         LOGS.Debuglogs('maincf:: Save "'+header_check_path+'"');
+         l:=TstringList.Create;
+         l.Add(confd.PostFixHeadersRegexFile);
+         ForceDirectories(ExtractFilePath(header_check_path));
+         l.SaveToFile(header_check_path);
+         fpsystem('/bin/chown root:root '+ header_check_path + ' >/dev/null 2>&1');
+         logs.Debuglogs('Saving Save "'+header_check_path+'" from LDAP Database success');
+         l.Free;
+         restart:=true;
+      end else begin
+          logs.Debuglogs('Unable to stat header_checks key in postfix.conf');
+      end;
+end else begin
+    LOGS.Debuglogs('maincf:: header_check disabled...');
+end;
+
+
+
+if GLOBAL_INI.get_INFOS('MasterCFEnabled')='1' then begin
+   if length(confd.PostfixMasterCfFile)>0 then begin
+      LOGS.Debuglogs('maincf:: Save "/etc/postfix/master.cf"');
+      l:=TstringList.Create;
+      l.Add(confd.PostfixMasterCfFile);
+      l.SaveToFile('/etc/postfix/master.cf');
+      logs.OutputCmd('/bin/chown root:root /etc/postfix/master.cf');
+      logs.OutputCmd('/bin/chmod 644 /etc/postfix/master.cf');
+      l.Free;
+      restart:=true;
+   end;
+end;
+
+mailman:=tmailman.Create(SYS);
+if FileExists(mailman.PostFixToMailManPath()) then begin
+   if not mailman.IS_MAILMAN_IN_MASTER() then begin
+      if mailman.ADD_MAILMAN_IN_MASTER() then restart:=true;
+   end;
+end;
+mailman.free;
+zpostfix.FIX_RETRY_DAEMON();
+if not TryStrToInt(SYS.GET_INFO('PostfixEnableMasterCfSSL'),PostfixEnableMasterCfSSL) then PostfixEnableMasterCfSSL:=0;
+if not TryStrToInt(SYS.GET_INFO('PostfixEnabledInBind9'),PostfixEnabledInBind9) then PostfixEnabledInBind9:=1;
+
+if PostfixEnableMasterCfSSL=1 then begin
+   logs.Syslogs('Enable SSL in master.cf');
+   zpostfix.ENABLE_SSL(true)
+end else  begin
+    logs.Syslogs('Disable SSL in master.cf');
+    zpostfix.ENABLE_SSL(false);
+end;
+
+
+if PostfixEnabledInBind9=1 then begin
+      if FileExists('/etc/artica-postfix/settings/Daemons/PostfixBind9DNSList') then begin
+         logs.Syslogs('Apply DNS nameservers in bind9');
+         bind9.ApplyForwarders('/etc/artica-postfix/settings/Daemons/PostfixBind9DNSList');
+         bind9.ApplyLoopBack();
+         bind9.STOP();
+         bind9.START();
+      end;
+end;
+
+// Certificate ---------------------------------------------------------
+smtpd_tls_CAfile:=zpostfix.POSTFIX_EXTRACT_MAINCF('smtpd_tls_CAfile');
+if length(smtpd_tls_CAfile)>0 then begin
+    if not FileExists(smtpd_tls_CAfile) then begin
+       zpostfix.GENERATE_CERTIFICATE();
+    end;
+end;
+
+
+ForceDirectories('/etc/postfix/hash_files');
+if not FileExists('/etc/postfix/hash_files/header_checks.cf') then logs.OutputCmd('/bin/touch /etc/postfix/hash_files/header_checks.cf');
+SpamAssassin_whitelistBlacklist();
+
+
+   if restart then begin
+         logs.Syslogs('Restarting all messaging SMTP daemons....');
+         kas3:=tkas3.Create(SYS);
+         LOGS.Debuglogs('maincf:: POSTFIX_CHECK_POSTMAP()');
+         GLOBAL_INI.POSTFIX_CHECK_POSTMAP();
+         logs.Debuglogs('Executing postmap success');
+         LOGS.Debuglogs('maincf:: restart postfix');
+         zpostfix.POSFTIX_VERIFY_MAINCF();
+         logs.Debuglogs('Verify main.cf success');
+         if GLOBAL_INI.get_INFOS('KasxFilterEnabled')='1' then begin
+             kas3.RELOAD();
+             logs.Debuglogs('Restarting Kaspersky Anti-Spam success');
+         end;
+         
+         mailspy:=tmailspy.Create(SYS);
+         mailspy.STOP();
+         mailspy.START();
+         mailspy.free;
+         
+         mailarchive:=tmailarchive.Create(SYS);
+         mailarchive.STOP();
+         mailarchive.START();
+         mailarchive.Free;
+
+         clamav.MILTER_STOP();
+         clamav.MILTER_START();
+
+         kavmilter_settings();
+         
+         spamass:=Tspamass.Create(SYS);
+         spamass.MILTER_STOP();
+         spamass.MILTER_START();
+         spamass.free;
+         
+         dkim:=Tdkim.Create(SYS);
+         dkim.DKIM_FILTER_STOP();
+         dkim.DKIM_FILTER_START();
+         dkim.free;
+         
+         bogom:=tbogom.Create(SYS);
+         bogom.STOP();
+         bogom.START();
+         bogom.Free;
+         
+         Amavis();
+
+         stunnel.STUNNEL_STOP();
+         stunnel.STUNNEL_START();
+         
+         jcheckmail:=Tjcheckmail.Create(SYS);
+         jcheckmail.STOP();
+         jcheckmail.START();
+         jcheckmail.Free;
+
+         zpostfix.POSTFIX_RELOAD();
+
+         cron:=tcron.Create(SYS);
+         cron.STOP();
+         cron.START();
+         cron.free;
+         
+
+   end;
+
+   GLOBAL_INI.set_INFOS('PostfixTimeCode',Confd.PostfixTimeCode);
+end;
+//#############################################################################
+PROCEDURE tldapconf.stunnel4();
+var
+  f:stunnel4_config;
+  l:TstringList;
+  D:boolean;
+begin
+D:=logs.COMMANDLINE_PARAMETERS('html');
+f:=ldap.load_stunnel4();
+if length(f.stunnelconf)=0 then begin
+   if D then  writeln('No datas..aborting');
+   logs.Debuglogs('stunnel4():: stunnelconf is empty');
+   exit;
+end;
+
+
+if D then  writeln('Saving configuration file...');
+
+try
+ l:=TstringList.Create;
+ l.Add(f.stunnelconf);
+ l.SaveToFile('/etc/stunnel/stunnel.conf');
+ l.free;
+except
+   if D then  writeln('Error saving /etc/stunnel/stunnel.conf');
+   exit;
+end;
+ 
+if D then  writeln('Saving configuration file done');
+if D then  writeln('Restarting daemon');
+logs.Debuglogs('stunnel4():: saving configuration done');
+logs.Debuglogs('stunnel4():: restarting daemon');
+stunnel.STUNNEL_STOP();
+stunnel.STUNNEL_START();
+
+if SYS.PROCESS_EXIST(stunnel.STUNNEL_PID()) then begin
+   logs.Debuglogs('stunnel4():: restarting daemon done...');
+   if D then  writeln('Daemon started with new PID ' + stunnel.STUNNEL_PID()+'');
+end else begin
+      if D then  writeln('Error starting stunnel4 daemon !');
+      exit;
+end;
+
+
+
+end;
+//#############################################################################
+PROCEDURE tldapconf.sa_learn();
+var
+  f:TstringList;
+  i:integer;
+  userd:users_datas;
+  l:TstringList;
+  ftmp:string;
+  cmd:string;
+  uiserid:string;
+  RegExpr                :TRegExpr;
+  WBLReplicEnable:integer;
+  WBLReplicaHamEnable:integer;
+  nice:string;
+begin
+    if ldap.Logged=false then begin
+    logs.Syslogs('sa_learn:: Logged is false;aborting...');
+    exit;
+ end;
+l:=Tstringlist.Create;
+f:=TstringList.Create;
+if not TryStrToInt(SYS.GET_INFO('WBLReplicEnable'),WBLReplicEnable) then WBLReplicEnable:=0;
+if not TryStrToInt(SYS.GET_INFO('WBLReplicaHamEnable'),WBLReplicaHamEnable) then WBLReplicaHamEnable:=0;
+if FileExists('/var/log/artica-postfix/sa-learn-internal.debug') then logs.DeleteFile('/var/log/artica-postfix/sa-learn-internal.debug');
+if FileExists('/var/log/artica-postfix/sa-learn-external.debug') then logs.DeleteFile('/var/log/artica-postfix/sa-learn-external.debug');
+nice:=SYS.EXEC_NICE();
+
+   f.AddStrings(ldap.SpamAssassinAutoLearnUsers());
+   for i:=0 to f.Count-1 do begin
+       logs.Debuglogs('Parsing user ' + f.Strings[i]);
+       userd:=ldap.Load_userasdatas(f.Strings[i]);
+       l.Add('[CONF]');
+       l.Add('ImapServer=127.0.0.1');
+       l.Add('username='+f.Strings[i]);
+       l.Add('password='+userd.userPassword);
+       l.Add('enable=1');
+       l.Add('enable_spam=' +IntToStr(WBLReplicEnable));
+       l.Add('enable_ham=' +IntToStr(WBLReplicaHamEnable));
+       l.Add('UseSSL=0');
+       ftmp:=logs.FILE_TEMP();
+       try
+          l.SaveToFile(ftmp);
+          cmd:=nice+GLOBAL_INI.get_ARTICA_PHP_PATH()+'/bin/imap-learn.pl --path '+ftmp + ' >>/var/log/artica-postfix/sa-learn-internal.debug &';
+          logs.Debuglogs(cmd);
+          fpsystem(cmd);
+          sleep(1000);
+          l.Clear;
+          
+       except
+          continue;
+       end;
+   end;
+   
+logs.EVENTS(IntToStr(f.Count)+' Internal mailboxes parsed','sa-learn','');
+f.Clear;
+logs.Debuglogs('Parsing fetchmail accounts');
+f.AddStrings(UNDERSTAND_fetchmailrc());
+RegExpr:=TRegExpr.Create;
+for i:=0 to f.Count-1 do begin
+    l.Clear;
+    if length(trim(f.Strings[i]))=0 then continue;
+    l.Add('[CONF]');
+    RegExpr.Expression:='server=(.+?);';
+    if RegExpr.Exec(f.Strings[i]) then begin
+       l.Add('ImapServer='+RegExpr.Match[1]);
+       logs.Debuglogs('Parsing fetchmail '+RegExpr.Match[1]);
+    end;
+
+    RegExpr.Expression:='proto=(.+?);';
+    if RegExpr.Exec(f.Strings[i]) then begin
+       if  RegExpr.Match[1]<>'imap' then continue;
+    end;
+    
+    RegExpr.Expression:='user=(.+?);';
+    if RegExpr.Exec(f.Strings[i]) then l.Add('username='+RegExpr.Match[1]);
+
+    RegExpr.Expression:='pass=(.+?);';
+    if RegExpr.Exec(f.Strings[i]) then l.Add('password='+RegExpr.Match[1]);
+
+    RegExpr.Expression:='ssl=([0-9]);';
+    if RegExpr.Exec(f.Strings[i]) then l.Add('UseSSL='+RegExpr.Match[1]);
+
+    
+    RegExpr.Expression:='mail=(.+?);';
+    if RegExpr.Exec(f.Strings[i]) then begin
+       userd:=ldap.UserDataFromMail(RegExpr.Match[1]);
+       logs.Debuglogs('Parsing fetchmail accounts for '+userd.uid + ' enable='+userd.EnableUserSpamLearning);
+       l.Add('enable='+userd.EnableUserSpamLearning);
+    end;
+    l.Add('enable_spam='+ IntToStr(WBLReplicEnable));
+    l.Add('enable_ham='+ IntToStr(WBLReplicaHamEnable));
+    ftmp:=logs.FILE_TEMP();
+    try
+          l.SaveToFile(ftmp);
+          cmd:=nice+GLOBAL_INI.get_ARTICA_PHP_PATH()+'/bin/imap-learn.pl --path '+ftmp + ' >>/var/log/artica-postfix/sa-learn-external.debug';
+          logs.Debuglogs(cmd);
+          fpsystem(cmd);
+          sleep(1000);
+          logs.DeleteFile(ftmp);
+          l.Clear;
+
+       except
+          continue;
+       end;
+
+end;
+
+logs.EVENTS(IntToStr(f.Count)+' external mailboxes parsed','sa-learn','');
+
+   
+end;
+//#############################################################################
+FUNCTION tldapconf.UNDERSTAND_fetchmailrc():TstringList;
+var
+   RegExpr                :TRegExpr;
+   l                      :TstringList;
+   s                      :TstringList;
+   i                      :integer;
+   server                 :string;
+   pass                   :string;
+   protocol               :string;
+   user                   :string;
+   uid                    :string;
+   foundpoll              :boolean;
+   keep                   :string;
+   t                      :integer;
+begin
+s:=TstringList.Create();
+
+
+if not FileExists('/etc/fetchmailrc') then begin
+   logs.Debuglogs('UNDERSTAND_fetchmailrc:: unable to stat /etc/fetchmailrc');
+   exit;
+end;
+t:=0;
+l:=TstringList.Create;
+l.LoadFromFile('/etc/fetchmailrc');
+foundpoll:=false;
+RegExpr:=TRegExpr.Create;
+      for i:=0 to l.Count-1 do begin
+          RegExpr.Expression:='(poll\s+|server|skip|defaults)';
+          if RegExpr.Exec(l.Strings[i]) then begin
+             s.Add('');
+             t:=s.Count-1;
+          end;
+          RegExpr.Expression:='poll\s+([A-ZA-z0-9\.\-_@\$\&]+)';
+          if RegExpr.Exec(l.Strings[i]) then s.Strings[t]:=s.Strings[t]+'server='+RegExpr.Match[1]+';';
+          RegExpr.Expression:='proto[\s|"]+([A-ZA-z0-9\.\-_@\$\&]+)';
+          if RegExpr.Exec(l.Strings[i]) then s.Strings[t]:=s.Strings[t]+'protocol='+Lowercase(RegExpr.Match[1])+';';
+          RegExpr.Expression:='user[\s|"]+([A-ZA-z0-9\.\-_@\$\&]+)';
+          if RegExpr.Exec(l.Strings[i]) then s.Strings[t]:=s.Strings[t]+'user='+RegExpr.Match[1]+';';
+          RegExpr.Expression:='pass[\s|"]+([A-ZA-z0-9\.\-_@\$\&]+)';
+          if RegExpr.Exec(l.Strings[i]) then s.Strings[t]:=s.Strings[t]+'pass='+RegExpr.Match[1]+';';
+          RegExpr.Expression:='is[\s|"]+([A-ZA-z0-9\.\-_@\$\&]+)';
+          if RegExpr.Exec(l.Strings[i]) then s.Strings[t]:=s.Strings[t]+'mail='+RegExpr.Match[1]+';';
+          RegExpr.Expression:='ssl';
+          if RegExpr.Exec(l.Strings[i]) then s.Strings[t]:=s.Strings[t]+'ssl=1;';
+      end;
+result:=s;
+end;
+
+
+
+//#############################################################################
+   
+
+
+
+
+
+
+PROCEDURE tldapconf.localdomains();
+var
+  f:TstringList;
+begin
+
+   if ldap.Logged=false then begin
+    logs.logs('localdomains:: Logged is false;aborting...');
+    exit;
+ end;
+   f:=TstringList.Create;
+   f.AddStrings(ldap.Allowed_domains());
+   try
+   if length(ParamStr(2))>0 then begin
+
+          f.SaveToFile(ParamStr(2));
+
+   end else begin
+      writeln(f.Text);
+   end;
+     except
+              f.free;
+             exit;
+       end;
+   
+end;
+
+
+//#############################################################################
+PROCEDURE tldapconf.pnetworks();
+var
+  f:TstringList;
+  i:integer;
+begin
+
+   if ldap.Logged=false then begin
+    logs.logs('pnetworks:: Logged is false;aborting...');
+    exit;
+ end;
+   f:=TstringList.Create;
+   f.AddStrings(ldap.postfix_networks());
+   for i:=0 to f.Count-1 do begin
+       f.Strings[i]:=trim(f.Strings[i]);
+   end;
+   
+   try
+   if length(ParamStr(2))>0 then begin
+
+          f.SaveToFile(ParamStr(2));
+
+   end else begin
+      writeln(f.Text);
+   end;
+     except
+              f.free;
+             exit;
+       end;
+
+end;
+
+
+//############################################################################
+PROCEDURE tldapconf.dkimfilter();
+var
+  f:dkimfilter_settings;
+  conf:string;
+  mime:Tdkim;
+  l:TstringList;
+begin
+ Enable_postfixmodules();
+ if ldap.Logged=false then begin
+    logs.logs('dkimfilter:: Logged is false;aborting...');
+    exit;
+ end;
+ 
+ f:=ldap.load_dkim_filter();
+ if length(f.DkimFilterConf)=0 then begin
+    logs.logs('dkimfilter:: DkimFilterConf is null;aborting...');
+    exit;
+ end;
+ 
+ mime:=tdkim.Create(SYS);
+ l:=Tstringlist.Create;
+ l.Add(f.DkimFilterConf);
+ l.SaveToFile(mime.MAIN_CONF_PATH());
+ logs.logs('dkimfilter:: Saving new configuration done');
+ l.free;
+ mime.DKIM_FILTER_STOP();
+ mime.DKIM_FILTER_START();
+ mime.free;
+end;
+//############################################################################
+
+
+PROCEDURE tldapconf.mimedefang();
+var
+  f:mimedefang_settings;
+  mime:Tmimedefang;
+  l:TstringList;
+begin
+
+   mime:=Tmimedefang.Create(SYS);
+   if ldap.Logged=false then begin
+    logs.logs('mimedefang:: Logged is false;aborting...');
+    exit;
+ end;
+
+ if not FileExists(mime.CONF_PATH()) then begin
+    logs.Logs('mimedefang:: unable to stat configuration file...');
+    exit;
+ end;
+ 
+ f:=ldap.Load_mimedefang();
+ if length(f.MimeDefangFilter)>3 then begin
+        l:=TstringList.Create;
+        l.Add(f.MimeDefangFilter);
+        l.SaveToFile(mime.CONF_PATH());
+        l.free;
+        logs.logs('mimedefang:: Apply settings OK restart daemon');
+       if FileExists(mime.INITD()) then fpsystem(mime.INITD() + ' restart');
+ 
+ end else begin
+   logs.Logs('mimedefang:: MimeDefangFilter is nil ??!!');
+ 
+ end;
+ 
+
+end;
+
+
+PROCEDURE tldapconf.milter_greylist();
+var
+   Confd:string;
+   f:miltergreylist_settings;
+   l:TstringList;
+begin
+   if ldap.Logged=false then begin
+    logs.logs('milter_greylist:: Logged is false;aborting...');
+    exit;
+ end;
+
+  if not FileExists(miltergreylist.MILTER_GREYLIST_BIN_PATH()) then exit;
+  f:=ldap.Load_miltergreylist();
+  if length(f.GreyListConf)=0 then exit;
+  miltergreylist.MILTER_GREYLIST_STOP();
+  
+  if SYS.GET_INFO('MilterGreyListEnabled')<>'1' then exit;
+  l:=TstringList.Create;
+  l.Add(f.GreyListConf);
+  forcedirectories('/opt/artica/etc/milter-greylist');
+  l.SaveToFile('/opt/artica/etc/milter-greylist/greylist.conf');
+  if DirectoryExists('/etc/milter-greylist') then l.SaveToFile('/etc/milter-greylist/greylist.conf');
+  miltergreylist.MILTER_GREYLIST_STOP();
+  miltergreylist.MILTER_GREYLIST_START();
+
+end;
+
+//#############################################################################
+procedure tldapconf.Samba();
+var
+   conf:samba_settings;
+   samba:tsamba;
+   l:TstringList;
+
+begin
+
+  if ldap.Logged=false then begin
+   logs.logs('Samba:: Logged is false;aborting...');
+    exit;
+ end;
+  samba:=Tsamba.Create;
+  conf:=ldap.Load_samba();
+  l:=TstringList.Create;
+  
+  if length(conf.SambaSMBConf)>0 then begin
+        if FileExists(samba.smbconf_path()) then begin
+               l.Add(conf.SambaSMBConf);
+               logs.Debuglogs('Samba:: Editing '+samba.smbconf_path());
+               l.SaveToFile(samba.smbconf_path());
+               samba.FixDirectoriesChmod();
+               l.Clear;
+               l.Add(conf.SambaUsbShare);
+               logs.Debuglogs('Samba:: Editing /etc/artica-postfix/samba.usb.conf');
+               l.SaveToFile('/etc/artica-postfix/samba.usb.conf');
+               logs.Debuglogs('Samba:: Restart samba services');
+               samba.SAMBA_STOP();
+               samba.SAMBA_START();
+               logs.Debuglogs('Samba:: Done...');
+               l.free;
+               exit;
+        end;
+  end else begin
+       logs.logs('Samba:: SambaSMBConf is null');
+  
+  end;
+ 
+
+end;
+//#############################################################################
+procedure tldapconf.kav4samba_save();
+var
+   conf:kav4sambaSettings;
+   kav:Tkav4samba;
+   l:TstringList;
+   D:boolean;
+begin
+D:=GLOBAL_INI.COMMANDLINE_PARAMETERS('--verbose');
+  if ldap.Logged=false then begin
+   logs.logs('kav4samba_save:: Logged is false;aborting...');
+    exit;
+ end;
+  kav:=Tkav4samba.Create;
+  conf:=ldap.load_Kav4Samba();
+  l:=TstringList.Create;
+
+  if length(conf.kav4sambaConf)>0 then begin
+        if FileExists(kav.conf_path()) then begin
+               l.Add(conf.kav4sambaConf);
+               logs.logs('kav4samba_save:: Editing '+kav.conf_path());
+               l.SaveToFile(kav.conf_path());
+               logs.logs('kav4samba_save:: Restart kaspersky services');
+               kav.SERVICE_STOP();
+               kav.SERVICE_START();
+               logs.logs('kav4samba_save:: Done...');
+               exit;
+        end;
+  end else begin
+       logs.logs('kav4samba_save:: kav4sambaConf is null');
+
+  end;
+
+
+end;
+//#############################################################################
+
+procedure tldapconf.KasperskyASGroups();
+var
+       Groups    :TstringList;
+       D         :Boolean;
+       i         :integer;
+       f         :kas_groups;
+       tmpfile   :string;
+       l         :TstringList;
+       uid       :string;
+begin
+
+ D:=GLOBAL_INI.COMMANDLINE_PARAMETERS('--verbose');
+ if ldap.Logged=false then begin
+   logs.logs('KasperskyASGroups:: Logged is false;aborting...');
+    exit;
+ end;
+KasperskyASGroupDeleteFiles();
+Groups:=TstringList.Create;
+l:=TstringList.Create;
+Groups.AddStrings(ldap.Load_KasGroupsList());
+forceDirectories('/usr/local/ap-mailfilter3/conf/def/group');
+For i:=0 to Groups.Count-1 do begin
+    l.Clear;
+    if D then  writeln('KasperskyASGroups:: ',Groups.Strings[i]);
+    f:=ldap.Load_KasGroupDatas(Groups.Strings[i]);
+    uid:=f.KasHexGroupName;
+   logs.logs('KasperskyASGroups:: -> UID=' + uid);
+
+    tmpfile:='/usr/local/ap-mailfilter3/conf/def/group/' + KasperskyASGroupsParseFile(f.kasallowxml);
+   logs.logs('KasperskyASGroups:: -> File=' +tmpfile);
+    l.Add(f.kasallowxml);
+    l.SaveToFile(tmpfile);
+    l.Clear;
+
+tmpfile:='/usr/local/ap-mailfilter3/conf/def/group/' + KasperskyASGroupsParseFile(f.kasdenyxml);
+   logs.logs('KasperskyASGroups:: -> File=' +tmpfile);
+    l.Add(f.kasdenyxml);
+    l.SaveToFile(tmpfile);
+    l.Clear;
+    
+tmpfile:='/usr/local/ap-mailfilter3/conf/def/group/' + KasperskyASGroupsParseFile(f.kasipallowxml);
+   logs.logs('KasperskyASGroups:: -> File=' +tmpfile);
+    l.Add(f.kasipallowxml);
+    l.SaveToFile(tmpfile);
+    l.Clear;
+    
+tmpfile:='/usr/local/ap-mailfilter3/conf/def/group/' + KasperskyASGroupsParseFile(f.kasipdenyxml);
+   logs.logs('KasperskyASGroups:: -> File=' +tmpfile);
+    l.Add(f.kasipdenyxml);
+    l.SaveToFile(tmpfile);
+    l.Clear;
+    
+tmpfile:='/usr/local/ap-mailfilter3/conf/def/group/' + KasperskyASGroupsParseFile(f.kasmembersxml);
+   logs.logs('KasperskyASGroups:: -> File=' +tmpfile);
+    l.Add(f.kasmembersxml);
+    l.SaveToFile(tmpfile);
+    l.Clear;
+    
+tmpfile:='/usr/local/ap-mailfilter3/conf/def/group/' + KasperskyASGroupsParseFile(f.kasprofilexml);
+   logs.logs('KasperskyASGroups:: -> File=' +tmpfile);
+    l.Add(f.kasprofilexml);
+    l.SaveToFile(tmpfile);
+    l.Clear;
+    
+tmpfile:='/usr/local/ap-mailfilter3/conf/def/group/' + uid + '-rule.def';
+   logs.logs('KasperskyASGroups:: -> File=' +tmpfile);
+    l.Add(f.kasruledef);
+    l.SaveToFile(tmpfile);
+    l.Clear;
+    
+tmpfile:='/usr/local/ap-mailfilter3/conf/def/group/' + uid + '-action.def';
+   logs.logs('KasperskyASGroups:: -> File=' +tmpfile);
+    l.Add(f.kasactiondef);
+    l.SaveToFile(tmpfile);
+    l.Clear;
+
+end;
+
+KasperskyAsBuildProfile();
+fpsystem('/bin/chown mailflt3:mailflt3 /usr/local/ap-mailfilter3/conf/def/group/*');
+fpsystem('/bin/chmod 755 ' +GLOBAL_INI.get_ARTICA_PHP_PATH() +'/bin/install/kavgroup/kas-compile-artica.pl');
+fpsystem(GLOBAL_INI.get_ARTICA_PHP_PATH() +'/bin/install/kavgroup/kas-compile-artica.pl >/opt/artica/logs/kas.compile.tmp 2>&1');
+KasperskyASParseError();
+///usr/local/ap-mailfilter3/bin/sfupdates -s -f
+
+end;
+//#############################################################################
+procedure tldapconf.KasperskyASParseError();
+var
+   RegExpr                :TRegExpr;
+   l:tStringList;
+   i:integer;
+   error:string;
+   error_text:string;
+begin
+  if not FileExists('/opt/artica/logs/kas.compile.tmp') then exit;
+  
+  l:=TstringList.Create;
+  l.LoadFromFile('/opt/artica/logs/kas.compile.tmp');
+  RegExpr:=TRegExpr.Create;
+
+  RegExpr.Expression:='<h1 class=error>(.+?)</h1>';
+  for i:=0 to l.Count-1 do begin
+      if RegExpr.Exec(l.Strings[i]) then begin
+         error:=RegExpr.Match[1];
+        logs.logs('Error: ' + error);
+         break;
+      end;
+  
+  end;
+  
+  if length(error)=0 then begin
+      RegExpr.Expression:='<h1 class=table_title>(.+?)</h1>';
+      for i:=0 to l.Count-1 do begin
+          if RegExpr.Exec(l.Strings[i]) then begin
+             error:=RegExpr.Match[1];
+            logs.logs('Error: ' + error);
+             break;
+          end;
+      end;
+  end;
+
+  RegExpr.Expression:='successfully';
+  if RegExpr.Exec(error) then begin
+       logs.Syslogs('Kaspersky anti-spam group configuration:' + error);
+  end;
+  
+ RegExpr.Expression:='STSConfig API(.+?)</td>';
+ if RegExpr.Exec(l.Text) then begin
+     error_text:=GLOBAL_INI.HtmlToText(RegExpr.Match[1]);
+
+    logs.logs(error_text);
+     logs.Syslogs('Kaspersky anti-spam group configuration:' + error + ' ' +error_text);
+ end;
+ fpsystem('/bin/rm -f /opt/artica/logs/kas.compile.tmp');
+ RegExpr.free;
+ l.free;
+  
+
+end;
+
+//#############################################################################
+procedure tldapconf.KasperskyASGroupDeleteFiles();
+var
+   RegExpr                :TRegExpr;
+   z:Tsystem;
+   l:tStringList;
+   i:integer;
+
+begin
+   RegExpr:=TRegExpr.Create;
+   z:=Tsystem.Create;
+   l:=TstringList.Create;
+   RegExpr.Expression:='([0-9]+)-.+';
+   l.AddStrings(z.DirFiles('/usr/local/ap-mailfilter3/conf/def/group','*'));
+   for i:=0 to l.Count-1 do begin
+        if RegExpr.Exec(l.Strings[i]) then begin
+           if RegExpr.Match[1]<>'00000000' then begin
+             logs.logs('Delete '+l.Strings[i]);
+              GLOBAL_INI.DeleteFile('/usr/local/ap-mailfilter3/conf/def/group/' + l.Strings[i]);
+           end;
+        end;
+
+   end;
+   RegExpr.free;
+end;
+//#############################################################################
+procedure tldapconf.cyrusconfig();
+var
+conf:string;
+l:TstringList;
+begin
+
+ conf:=SYS.GET_INFO('CyrusConf');
+ 
+ if length(conf)=0 then begin
+   logs.Debuglogs('cyrusconfig:: config is null...');
+   exit;
+ 
+ end;
+ 
+ logs.Debuglogs('cyrusconfig():: main setting as ' + IntToStr(length(conf)) + ' bytes lenght');
+ l:=TstringList.Create;
+ l.Add(conf);
+ logs.Debuglogs('cyrusconfig():: saving /etc/cyrus.conf');
+ l.SaveToFile('/etc/cyrus.conf');
+ 
+ conf:=SYS.GET_INFO('impadconf');
+ 
+  if length(conf)>0 then begin
+    logs.Debuglogs('cyrusconfig():: saving /etc/imapd.conf');
+    l.Clear;
+    l.Add(conf);
+    try
+       l.SaveToFile('/etc/imapd.conf');
+    except
+    logs.Syslogs('cyrusconfig() cyrus-imapd Fatal error, unable to change imapd.conf..');
+    exit;
+    end;
+    
+ end else begin
+    logs.Debuglogs('cyrusconfig():: impadconf is null aborting /etc/imapd.conf');
+    exit;
+ end;
+ logs.Debuglogs('cyrusconfig():: Restart daemons');
+ cyr.CYRUS_DAEMON_STOP();
+ cyr.CYRUS_DAEMON_START();
+ 
+
+end;
+//#############################################################################
+
+
+procedure tldapconf.SpamAssassin();
+var
+   conf:spamassassin_settings;
+   spam:Tspamass;
+   l   :Tstringlist;
+begin
+
+
+ if ldap.Logged=false then begin
+   logs.logs('SpamAssassin:: Logged is false;aborting...');
+    exit;
+ end;
+   conf:=ldap.Load_spamassassin();
+   if length(conf.SpamAssassinConfFile)>0 then begin
+         spam:=Tspamass.Create(SYS);
+         l:=TstringList.Create;
+         l.Add(conf.SpamAssassinConfFile);
+         if FileExists(spam.SPAMASSASSIN_LOCAL_CF()) then begin
+            l.SaveToFile(spam.SPAMASSASSIN_LOCAL_CF());
+             spam.MILTER_STOP();
+             spam.SPAMASSASSIN_STOP();
+             spam.SPAMASSASSIN_START();
+             spam.MILTER_START();
+         end;
+   end;
+end;
+//#############################################################################
+function tldapconf.KasperskyASGroupsParseFile(datas:string):string;
+var
+   RegExpr                :TRegExpr;
+begin
+   RegExpr:=TRegExpr.Create;
+   RegExpr.Expression:='FILENAME="(.+?)"';
+   if RegExpr.Exec(datas) then result:=RegExpr.Match[1];
+   RegExpr.free;
+end;
+//#############################################################################
+procedure tldapconf.KasperskyAsBuildProfile();
+var
+   RegExpr                :TRegExpr;
+   Z:Tsystem;
+   l:TstringList;
+   t:TstringList;
+   emailxml:TstringList;
+   iplistxml:TstringList;
+   i:Integer;
+   path:string;
+begin
+   z:=Tsystem.Create;
+   l:=TstringList.Create;
+   emailxml:=TstringList.Create;
+   iplistxml:=TstringList.Create;
+   t:=TstringList.Create;
+   l.AddStrings(z.DirFiles('/usr/local/ap-mailfilter3/conf/def/group','*-action.def'));
+
+   
+t.Add('<?xml version="1.0" encoding="utf-8"?>');
+t.Add('#include <base/profiles.xml.macro>');
+t.Add('BEGIN_PROFILE_REF_LIST');
+t.Add('PROFILE_REF(0x00000000,"00000000-profile.xml","All",", ")');
+
+
+   emailxml.Add('<?xml version="1.0" encoding="utf-8"?>');
+   emailxml.Add('#include <base/emails.xml.macro>');
+   emailxml.Add('BEGIN_EMAIL_REF_LIST');
+   emailxml.Add('EMAIL_REF(0x00000000,"00000000-allow.xml","00000000-deny.xml","00000000-members.xml")');
+
+
+   iplistxml.Add('<?xml version="1.0" encoding="utf-8"?>');
+   iplistxml.Add('#include <base/iplists.xml.macro>');
+   iplistxml.Add('BEGIN_IP_REF_LIST');
+   iplistxml.Add('IP_REF(0x00000000,"00000000-ipallow.xml","00000000-ipdeny.xml")');
+
+
+
+RegExpr:=TRegExpr.Create;
+RegExpr.Expression:='([0-9]+)-action\.def';
+   for i:=0 to l.Count-1 do begin
+       if l.Strings[i]<>'00000000-action.def' then begin
+          path:='/usr/local/ap-mailfilter3/conf/def/group/'+l.Strings[i];
+         logs.logs('Profile.xml: Parse def  -> ' +path);
+          RegExpr.Exec(l.Strings[i]);
+          
+         emailxml.Add('EMAIL_REF(0x'+RegExpr.Match[1]+',"'+RegExpr.Match[1]+'-allow.xml","'+RegExpr.Match[1]+'-deny.xml","'+RegExpr.Match[1]+'-members.xml")');
+        iplistxml.Add('IP_REF(0x'+RegExpr.Match[1]+',"'+RegExpr.Match[1]+'-ipallow.xml","'+RegExpr.Match[1]+'-ipdeny.xml")');
+          
+          t.Add('PROFILE_REF(0x'+RegExpr.Match[1]+',"'+RegExpr.Match[1]+'-profile.xml","'+KasperskyAsParseProfile('_GROUP_NAME',path)+'","'+KasperskyAsParseProfile('_GROUP_MEMO',path)+'")');
+       end;
+   end;
+   
+t.Add('END_PROFILE_REF_LIST');
+emailxml.Add('END_EMAIL_REF_LIST');
+iplistxml.Add('END_IP_REF_LIST');
+
+t.SaveToFile('/usr/local/ap-mailfilter3/conf/def/group/profiles.xml');
+emailxml.SaveToFile('/usr/local/ap-mailfilter3/conf/def/group/emails.xml');
+iplistxml.SaveToFile('/usr/local/ap-mailfilter3/conf/def/group/iplists.xml');
+
+
+emailxml.free;
+iplistxml.free;
+t.free;
+RegExpr.free;
+end;
+//#############################################################################
+function tldapconf.KasperskyAsParseProfile(key:string;path:string):string;
+var
+   RegExpr                :TRegExpr;
+   l:TstringList;
+   i:integer;
+begin
+
+if not FileExists(path) then exit;
+l:=TstringList.Create;
+l.LoadFromFile(path);
+RegExpr:=TRegExpr.Create;
+RegExpr.Expression:='#define\s+'+key+'\s+"(.+?)"';
+For i:=0 to l.Count-1 do begin
+    if RegExpr.Exec(l.Strings[i]) then begin
+    result:=RegExpr.Match[1];
+    break;
+    end;
+
+end;
+
+
+RegExpr.Free;
+l.free;
+end;
+//#############################################################################
+procedure tldapconf.dtoclear_users();
+var
+users:TstringList;
+i:integer;
+userd:users_datas;
+f:tstringList;
+homeDirectory:string;
+dotclear:tdotclear;
+begin
+ if ldap.Logged=false then begin
+    logs.Debuglogs('dtoclear_users():: Logged is false;aborting...');
+    exit;
+ end;
+
+ users:=TstringList.Create;
+ users.AddStrings(ldap.DotClearUsers());
+ dotclear:=tdotclear.Create(SYS);
+ f:=TstringList.Create;
+ for i:=0 to users.Count-1 do begin
+
+     userd:=ldap.Load_userasdatas(users.Strings[i]);
+     homeDirectory:=userd.homeDirectory;
+     logs.Debuglogs('dtoclear_users():: Parsing ' + users.Strings[i]+' :' +homeDirectory);
+     if length(homeDirectory)=0 then continue;
+     f.Add(users.Strings[i]+';'+homeDirectory);
+     
+ end;
+
+ forceDirectories('/etc/artica-postfix/settings/DotClear');
+ f.SaveToFile('/etc/artica-postfix/settings/DotClear/users.conf');
+ users.free;
+ f.free;
+ dotclear.STOP();
+ dotclear.START();
+
+end;
+
+PROCEDURE tldapconf.FtpUsers();
+var
+   i:integer;
+   Confd:string;
+   l:TstringList;
+   pure_pw_path,pure_db_path,pure_passwd_path:string;
+   pure:Tpureftpd;
+   cmd:string;
+begin
+ if ldap.Logged=false then begin
+   logs.logs('FtpUsers:: Logged is false;aborting...');
+    exit;
+ end;
+ pure:=Tpureftpd.Create;
+ pure_pw_path:=pure.pure_pw_path();
+ pure_db_path:=pure.pure_db_path();
+ pure_passwd_path:=ExtractFilePath(pure_db_path) + 'pureftpd.passwd';
+ldap.Load_ftp_users();
+
+
+
+  if FileExists(pure_db_path) then fpsystem('/bin/rm -rf '+pure_db_path);
+  if FileExists(pure_passwd_path) then fpsystem('/bin/rm -rf '+pure_passwd_path);
+
+   LOGS.logs('starting updating ' + IntToStr(ldap.ftplist.count) + ' users db='+pure_db_path + ' passwd=' + pure_passwd_path);
+if ldap.ftplist.Count>0 then begin
+   for i:=0 to ldap.ftplist.Count-1 do begin
+     cmd:=ldap.ftplist.Strings[i] + ' >/dev/null 2>&1';
+     cmd:=AnsiReplaceText(cmd,'<pwdpath>',pure_pw_path);
+     
+     LOGS.Debuglogs(cmd);
+     fpsystem(cmd);
+     LOGS.Debuglogs('-> ' + GLOBAL_INI.ReadFileIntoString('/opt/artica/logs/ftpadduser.tmp'));
+     GLOBAL_INI.DeleteFile('/opt/artica/logs/ftpadduser.tmp');
+   end;
+   
+   cmd:=pure_pw_path + ' mkdb ' + pure_db_path + ' -f '+pure_passwd_path;
+   LOGS.Debuglogs(cmd);
+   fpsystem(cmd);
+end;
+
+
+if length(ParamStr(2))>0 then begin
+       Confd:=ldap.pureftpd_settings(ParamStr(2));
+       if length(Confd)>0 then begin
+          forceDirectories('/opt/artica/etc');
+          l:=TstringList.Create;
+          l.Add(Confd);
+          l.SaveToFile('/opt/artica/etc/pure-ftpd.conf');
+          l.free;
+          pure.PURE_FTPD_STOP();
+          pure.CreateDebianConfig();
+          GLOBAL_INI.PURE_FTPD_PREPARE_LDAP_CONFIG();
+          pure.PURE_FTPD_START()
+       end;
+       
+end;
+
+end;
+
+//#############################################################################
+PROCEDURE tldapconf.FoldersSizeConfig();
+var
+L:TstringList;
+F:artica_settings;
+path:string;
+i:integer;
+conf_path:string;
+sAge:integer;
+begin
+ if ldap.Logged=false then begin
+   logs.logs('FoldersSizeConfig:: Logged is false;aborting...');
+    exit;
+ end;
+ 
+ sAge:=0;
+ conf_path:='/etc/artica-postfix/FoldersSize.conf';
+logs.logs('FoldersSizeConfig()-> load '+conf_path);
+ sAge:=GLOBAL_INI.SYSTEM_FILE_MIN_BETWEEN_NOW(conf_path);
+logs.logs('FoldersSizeConfig::'+ conf_path+' Age='+DateToStr(sAge));
+ 
+ 
+ if not FileExists(conf_path) then begin
+    sAge:=1000;
+   logs.logs('FoldersSizeConfig:: file:'+conf_path+' does not exists, assume age as '+DateToStr(sAge));
+ end;
+ 
+ 
+ if sAge<5 then begin
+   logs.logs('FoldersSizeConfig:: Age is to young, aborting =>'+DateToStr(sAge));
+    exit;
+ end;
+ 
+ GLOBAL_INI.DeleteFile(conf_path);
+ F:=ldap.Load_artica_main_settings();
+ L:=TstringList.Create;
+ for i:=0 to f.ArticaFoldersSizeConfig.Count-1 do begin
+     path:=f.ArticaFoldersSizeConfig.Strings[i];
+    logs.logs('FoldersSizeConfig(): verify size of :'+ path);
+     l.Add('[' + path + ']');
+     l.Add('Size=' + IntToStr(SYS.FOLDER_SIZE(path)));
+ end;
+logs.logs('FoldersSizeConfig()-> save '+conf_path);
+ l.SaveToFile(conf_path);
+ l.free;
+ logs.logs('FoldersSizeConfig()-> end ');
+end;
+
+//#############################################################################
+PROCEDURE tldapconf.maintenance();
+var
+
+L:TstringList;
+Z:Tsystem;
+F:artica_settings;
+Execute:boolean;
+touch_path:string;
+i:integer;
+begin
+Execute:=false;
+Z:=Tsystem.Create();
+l:=TstringList.Create;
+F:=ldap.Load_artica_main_settings();
+
+if length(f.ArticaMaxTempLogFilesDay)=0 then f.ArticaMaxTempLogFilesDay:='3';
+
+if GLOBAL_INI.COMMANDLINE_PARAMETERS('--delete') then GLOBAL_INI.DeleteFile('/etc/artica-postfix/cron.maintenance');
+
+if FileExists('/bin/touch') then touch_path:='/bin/touch';
+if FileExists('/usr/bin/touch') then touch_path:='/usr/bin/touch';
+if Length(touch_path)=0 then begin
+   LOGS.logs('maintenance():: unable to find touch tool');
+   exit;
+end;
+if Not FileExists('/etc/artica-postfix/cron.maintenance') then begin
+   Execute:=true;
+
+end;
+
+if not Execute then begin
+  logs.logs('maintenance():: cron.maintenance='+IntToStr(GLOBAL_INI.SYSTEM_FILE_MIN_BETWEEN_NOW('/etc/artica-postfix/cron.maintenance')));
+   if GLOBAL_INI.SYSTEM_FILE_MIN_BETWEEN_NOW('/etc/artica-postfix/cron.maintenance')>10 then begin
+        Execute:=true;
+   end;
+end;
+
+if Execute=false then exit;
+   GLOBAL_INI.DeleteFile('/etc/artica-postfix/cron.maintenance');
+   l.AddStrings(z.RecusiveListFiles('/var/log'));
+   l.AddStrings(z.RecusiveListFiles('/opt/artica/logs'));
+   
+   for i:=0 to l.Count -1 do begin
+     if FileExists(l.Strings[i]) then begin
+       if  GLOBAL_INI.SYSTEM_FILE_DAYS_BETWEEN_NOW(l.Strings[i])>StrToInt(f.ArticaMaxTempLogFilesDay) then begin
+          logs.logs(l.Strings[i]+ ' Days=Delete ' + IntToStr(GLOBAL_INI.SYSTEM_FILE_DAYS_BETWEEN_NOW(l.Strings[i])));
+           if not GLOBAL_INI.PathIsDirectory(l.Strings[i]) then begin
+              logs.Syslogs('Delete ' + l.Strings[i]);
+              GLOBAL_INI.DeleteFile(l.Strings[i]);
+           end;
+              
+       end;
+     end;
+
+   end;
+   
+   
+fpsystem(touch_path + ' /etc/artica-postfix/cron.maintenance');
+
+end;
+//#############################################################################
+
+PROCEDURE tldapconf.crossroads_apply(path:string);
+begin
+  if not FileExists(path) then exit;
+  logs.logs('crossroads_apply() -> move ' + path + ' to /etc/artica-postfix');
+  fpsystem('/bin/mv ' + path + ' /etc/artica-postfix');
+  GLOBAL_INI.ARTICA_STOP();
+  mldap.LDAP_STOP();
+  mldap.LDAP_START();
+  GLOBAL_INI.ARTICA_START();
+end;
+//#############################################################################
+PROCEDURE tldapconf.SharedFolders();
+var
+   f:shared_folders;
+   i:integer;
+   l:TstringList;
+
+begin
+
+
+ if ldap.Logged=false then begin
+   logs.logs('FtpUsers:: Logged is false;aborting...');
+    exit;
+ end;
+   f:=ldap.Load_SharedFolderSettings();
+   if DirectoryExists('/etc/artica-postfix/SharedFolers') then fpsystem('/bin/rm -rf /etc/artica-postfix/SharedFolers');
+   ForceDirectories('/etc/artica-postfix/SharedFolers');
+   
+   
+   l:=TstringLIst.Create;
+   
+  logs.logs(IntToStr(f.gidnumber.Count) + ' rows');
+   for i:=0 to f.gidnumber.Count-1 do begin
+         if length(f.SharedFolerConf.Strings[i])>5 then begin
+            l.Add(f.SharedFolerConf.Strings[i]);
+            logs.Syslogs('Saving new shared folder configuration file /etc/artica-postfix/SharedFolers/'+ f.gidnumber.Strings[i] + '.sha');
+           logs.logs('Saving /etc/artica-postfix/SharedFolers/'+ f.gidnumber.Strings[i] + '.sha');
+            l.SaveToFile('/etc/artica-postfix/SharedFolers/'+ f.gidnumber.Strings[i] + '.sha');
+            l.Clear;
+         end else begin
+            logs.logs(f.gidnumber.Strings[i] + ': conf is empty...');
+         end;
+   end;
+   
+
+end;
+
+//#############################################################################
+PROCEDURE tldapconf.ChangeDiskConfig();
+var
+   RoundCubeLightHTTPD:string;
+   RoundCubeConfigurationFile:string;
+   l:TstringList;
+begin
+   l:=TstringList.Create;
+   RoundCubeLightHTTPD:=SYS.GET_INFO('RoundCubeLightHTTPD');
+   RoundCubeConfigurationFile:=SYS.GET_INFO('RoundCubeConfigurationFile');
+   
+   logs.Debuglogs('##############    ROUNDCUBE SETTINGS ######################');
+
+   if length(RoundCubeLightHTTPD)>0 then begin
+       forcedirectories('/etc/artica-postfix');
+       logs.Debuglogs('ChangeDiskConfig:: Save ' + '/etc/artica-postfix/lighttpd-roundcube.conf');
+       l.Add(RoundCubeLightHTTPD);
+       l.SaveToFile('/etc/artica-postfix/lighttpd-roundcube.conf');
+       l.Clear;
+   end else begin
+       logs.Debuglogs('ChangeDiskConfig:: RoundCubeLightHTTPD is null, abort');
+   end;
+
+if length(RoundCubeConfigurationFile)>0 then begin
+       forcedirectories('/usr/share/roundcube/config');
+       logs.Debuglogs('Enable_postfixmodules:: Save ' + '/usr/share/roundcube/config/main.inc.php');
+       l.Add(RoundCubeConfigurationFile);
+       l.SaveToFile('/usr/share/roundcube/config/main.inc.php');
+       fpsystem('/bin/chmod -R 755 /usr/share/roundcube/config');
+
+       if DirectoryExists('/var/lib/roundcube/config') then begin
+            logs.Debuglogs('Enable_postfixmodules:: Save ' + '/var/lib/roundcube/config/main.inc.php');
+            l.SaveToFile('/var/lib/roundcube/config/main.inc.php');
+            fpsystem('/bin/chmod -R 755 /var/lib/roundcube/config');
+       end;
+
+       l.Clear;
+   end else begin
+       logs.Debuglogs('ChangeDiskConfig:: RoundCubeConfigurationFile is null, abort');
+   end;
+
+
+end;
+//#############################################################################
+PROCEDURE tldapconf.SpamAssassin_whitelistBlacklist();
+var
+   l:Tstringlist;
+   cf:tstringList;
+   kas3_white:Tstringlist;
+   kas3_black:TstringList;
+   RegExpr:TRegExpr;
+   i,t:integer;
+   emails:TStringDynArray;
+   firstpart:string;
+   lastpart:string;
+   RegExpr2:TRegExpr;
+   spamass:Tspamass;
+   spammass_conf_path:string;
+   spammassDirectory:string;
+begin
+
+ if ldap.Logged=false then begin
+    logs.Syslogs('SpamAssassin_whitelistBlacklist:: Logged is false;aborting...');
+    exit;
+ end;
+   spamass:=Tspamass.Create(SYS);
+   spammass_conf_path:=spamass.SPAMASSASSIN_LOCAL_CF();
+   spammassDirectory:=ExtractFilePath(spammass_conf_path);
+   
+   kas3_white:=TStringList.Create;
+   kas3_white.Add('<?xml version="1.0" encoding="utf-8"?>');
+   kas3_white.Add('#include <base/common-allow.xml.macro>');
+   kas3_white.Add('BEGIN_COMMON_ALLOW_EMAIL_LIST');
+   
+   
+   kas3_black:=TStringList.Create;
+   kas3_black.Add('<?xml version="1.0" encoding="utf-8"?>');
+   kas3_black.Add('#include <base/common-deny.xml.macro>');
+   kas3_black.Add('BEGIN_COMMON_DENY_EMAIL_LIST');
+
+
+   l:=Tstringlist.Create;
+   l.AddStrings(ldap.BlackListedList());
+   logs.Debuglogs('SpamAssassin_whitelistBlacklist::' +IntToSTr(l.Count) + ' Entries');
+   RegExpr:=TRegExpr.Create;
+   RegExpr2:=TRegExpr.Create;
+   
+   RegExpr.Expression:='^(W|B)(.+?)=(.+)';
+   cf:=TstringList.Create;
+   For i:=0 to l.Count-1 do begin
+        if RegExpr.Exec(l.Strings[i]) then begin
+           logs.Debuglogs('SpamAssassin_whitelistBlacklist:: match '+l.Strings[i]);
+               emails:=GLOBAL_INI.Explode(';',RegExpr.Match[3]);
+               cf.Add('# rcpt ' + RegExpr.Match[2]);
+               for t:=0 to length(emails)-1 do begin
+                   RegExpr2.Expression:='(.*)@(.*)';
+                   RegExpr2.Exec(emails[t]);
+                   firstpart:=RegExpr2.Match[1];
+                   lastpart:=RegExpr2.Match[2];
+                   if length(firstpart)=0 then firstpart:='*';
+                   if length(lastpart)=0 then lastpart:='*';
+                   if RegExpr.Match[1]='W' then begin
+                      cf.Add('whitelist_from'+chr(9)+firstpart+'@'+lastpart);
+                      kas3_white.Add('EMAIL_ENTRY("'+firstpart+'@'+lastpart+'")');
+                   end;
+                      
+                      
+                   if RegExpr.Match[1]='B' then begin
+                      cf.Add('blacklist_from'+chr(9)+firstpart+'@'+lastpart);
+                      kas3_black.Add('EMAIL_ENTRY("'+firstpart+'@'+lastpart+'")');
+                   end;
+               end;
+        end;
+   end;
+
+ if FileExists(spamass.SPAMASSASSIN_BIN_PATH()) then begin
+  try
+    ForceDirectories(spammassDirectory);
+    cf.SaveToFile(spammassDirectory+ 'wbl.cf');
+    except
+      logs.Syslogs('SpamAssassin_whitelistBlacklist():: FATAL ERROR WHITE SAVING '+spammassDirectory+ 'wbl.cf');
+      cf.free;
+      exit;
+     end;
+     logs.Syslogs('SpamAssassin_whitelistBlacklist():: include '+spammassDirectory+ 'wbl.cf');
+     spamass.SPAMASSASSIN_ADD_INCLUDE_FILE(spammassDirectory+ 'wbl.cf');
+     spamass.SPAMASSASSIN_RELOAD();
+     spamass.Free;
+ end else begin
+   logs.Debuglogs('SpamAssassin_whitelistBlacklist():: spamassassin is not installed, skip it');
+ end;
+ 
+kas3_white.Add('END_COMMON_ALLOW_EMAIL_LIST');
+kas3_black.Add('END_COMMON_DENY_EMAIL_LIST');
+
+if FileExists('/usr/local/ap-mailfilter3/bin/mkprofiles') then begin
+   if FileExists('/usr/local/ap-mailfilter3/conf/def/common/common-deny.xml') then kas3_black.SaveToFile('/usr/local/ap-mailfilter3/conf/def/common/common-deny.xml');
+   if FileExists('/usr/local/ap-mailfilter3/conf/def/common/common-allow.xml') then kas3_white.SaveToFile('/usr/local/ap-mailfilter3/conf/def/common/common-allow.xml');
+   fpsystem('/usr/local/ap-mailfilter3/bin/mkprofiles >/dev/null 2>&1');
+end;
+
+kas3_black.Free;
+kas3_white.Free;
+cf.free;
+
+end;
+//#############################################################################
+
+
+
+
+
+PROCEDURE tldapconf.Enable_postfixmodules();
+var
+   artica:artica_settings;
+   sqlgrey:sqlgrey_settings;
+   backup:backup_settings;
+   mgrey:miltergreylist_settings;
+   RegExpr:TRegExpr;
+   mgreye:string;
+   servername:string;
+   l:TstringList;
+   mailboxinf:mailboxesinfos;
+   nmap:nmap_settings;
+   mysql:tmysql_daemon;
+   PostfixSSLCert:string;
+
+begin
+   servername:=GLOBAL_INI.SYSTEM_FQDN();
+   RegExpr:=TRegExpr.Create;
+   artica:=ldap.Load_artica_main_settings();
+   ChangeDiskConfig();
+   if not ldap.Logged then exit;
+   sqlgrey:=ldap.Load_sqlgrey_settings(servername);
+   mgrey:=ldap.Load_miltergreylist();
+   backup:=ldap.Load_backup_settings();
+   mailboxinf:=ldap.LoadMailboxes(false);
+   nmap:=ldap.load_nmap_settings();
+   
+   
+   logs.logs('Enable_postfixmodules():: starting function...');
+   ldap.admin_modify();
+   
+   if mgrey.MilterGreyListEnabled='TRUE' then mgreye:='1';
+   if mgrey.MilterGreyListEnabled<>'TRUE' then mgreye:='0';
+   
+   if length(artica.ArticaPolicyEnabled)=0 then artica.ArticaPolicyEnabled:='0';
+   if length(artica.ArticaFilterEnabled)=0 then artica.ArticaFilterEnabled:='0';
+   if length(artica.NTPDEnabled)=0 then artica.NTPDEnabled:='0';
+   if length(artica.MysqlMaxEventsLogs)=0 then artica.MysqlMaxEventsLogs:='200000';
+   if length(artica.spfmilterEnabled)=0 then artica.spfmilterEnabled:='0';
+   if length(artica.EnableSyslogMysql)=0 then artica.EnableSyslogMysql:='1';
+   if length(artica.DkimFilterEnabled)=0 then artica.DkimFilterEnabled:='0';
+   if length(artica.ArticaUsbBackupKeyID)=0 then artica.ArticaUsbBackupKeyID:='NONE';
+   if length(nmap.NmapRotateMinutes)=0 then nmap.NmapRotateMinutes:='60';
+   if length(artica.EnableFDMFetch)=0 then artica.EnableFDMFetch:='0';
+   if length(artica.MasterCFEnabled)=0 then artica.MasterCFEnabled:='0';
+   if length(artica.P3ScanEnabled)=0 then artica.P3ScanEnabled:='0';
+   if length(artica.sTunnel4enabled)=0 then artica.sTunnel4enabled:='0';
+   if length(artica.EnableMilterBogom)=0 then artica.EnableMilterBogom:='0';
+   if length(artica.MysqlServerName)=0 then artica.MysqlServerName:='127.0.0.1';
+   if length(artica.EnableCollectdDaemon)=0 then artica.EnableCollectdDaemon:='0';
+ //  if length(artica.EnableVirtualDomainsInMailBoxes)=0 then artica.EnableVirtualDomainsInMailBoxes:='0';
+
+
+   
+
+
+   
+   if length(artica.EnableMysqlFeatures)=0 then begin
+      mysql:=tmysql_daemon.Create(SYS);
+      if not FileExists(mysql.daemon_bin_path()) then artica.EnableMysqlFeatures:='0' else artica.EnableMysqlFeatures:='1';
+   end;
+      
+   
+   sys.SET_INFO('ApacheArticaEnabled',artica.ApacheArticaEnabled);
+   sys.SET_INFO('SqlGreyEnabled',IntToStr(sqlgrey.SqlGreyEnabled));
+   sys.SET_INFO('ArticaPolicyEnabled',artica.ArticaPolicyEnabled);
+   sys.SET_INFO('ArticaFilterEnabled',artica.ArticaFilterEnabled);
+   sys.SET_INFO('NTPDEnabled',artica.NTPDEnabled);
+   sys.SET_INFO('MysqlMaxEventsLogs',artica.MysqlMaxEventsLogs);
+   sys.SET_INFO('spfmilterEnabled',artica.spfmilterEnabled);
+   sys.SET_INFO('EnableSyslogMysql',artica.EnableSyslogMysql);
+   sys.SET_INFO('MailfromdStop','0');
+   sys.SET_INFO('DkimFilterEnabled',artica.DkimFilterEnabled);
+   sys.SET_INFO('ArticaUsbBackupKeyID',artica.ArticaUsbBackupKeyID);
+   sys.SET_INFO('NmapScanEnabled',artica.NmapScanEnabled);
+   sys.SET_INFO('NmapRotateMinutes',nmap.NmapRotateMinutes);
+   sys.SET_INFO('EnableFDMFetch',artica.EnableFDMFetch);
+   sys.SET_INFO('MasterCFEnabled',artica.MasterCFEnabled);
+   sys.SET_INFO('P3ScanEnabled',artica.P3ScanEnabled);
+   sys.SET_INFO('MaxTempLogFilesDay',artica.ArticaMaxTempLogFilesDay);
+   sys.SET_INFO('sTunnel4enabled',artica.sTunnel4enabled);
+   sys.SET_INFO('EnableMilterBogom',artica.EnableMilterBogom);
+   sys.SET_INFO('EnableMysqlFeatures',artica.EnableMysqlFeatures);
+   sys.SET_INFO('EnableCollectdDaemon',artica.EnableCollectdDaemon);
+   //sys.SET_INFO('EnableVirtualDomainsInMailBoxes',artica.EnableVirtualDomainsInMailBoxes);
+
+
+   
+
+   
+
+   backup_apply();
+   
+   
+   try
+   nmap.NmapNetworkIP.SaveToFile('/etc/artica-postfix/nmap.networks.conf');
+   except
+      logs.logs('Failed to save "/etc/artica-postfix/nmap.networks.conf"');
+   end;
+   
+   GLOBAL_INI.set_LDAP('cyrus_admin','cyrus');
+   GLOBAL_INI.set_LDAP('cyrus_password',mailboxinf.Cyrus_password);
+
+   logs.Syslogs('Writing artica-postfix master configuration done');
+   l:=TstringList.Create;
+   l.Add(artica.SmtpNotificationConfig);
+
+   try
+      l.SaveToFile('/etc/artica-postfix/smtpnotif.conf');
+      notifications_apply();
+   except
+       logs.Debuglogs('Failed to save "/etc/artica-postfix/smtpnotif.conf"');
+   end;
+   l.Clear;
+   
+   l.Add(artica.ArticaPerformancesSettings);
+   
+
+    try
+      l.SaveToFile('/etc/artica-postfix/performances.conf');
+   except
+       logs.Debuglogs('Failed to save "/etc/artica-postfix/performances.conf"');
+   end;
+   l.Clear;
+
+    if FileExists('/usr/share/atmailopen/libs/Atmail/Config.php') then begin
+       fpsystem(GLOBAL_INI.get_ARTICA_PHP_PATH()+'/bin/artica-make APP_ATOPENMAIL --config &');
+    end;
+
+    l.AddStrings(ldap.Allowed_domains());
+    logs.Debuglogs('Enable_postfixmodules:: '+ IntToStr(l.Count) + ' local domain(s)');
+    l.SaveToFile('/etc/artica-postfix/LocalDomains.conf');
+    l.Clear;
+   
+   
+   if length(artica.lighttpConfig)>0 then begin
+       forcedirectories('/opt/artica/logs/lighttpd');
+       logs.logs('Enable_postfixmodules:: Save ' + lighttpd.LIGHTTPD_CONF_PATH());
+       l.Add(artica.lighttpConfig);
+       l.SaveToFile(lighttpd.LIGHTTPD_CONF_PATH());
+       l.Clear;
+   end else begin
+       logs.Debuglogs('Enable_postfixmodules:: artica.lighttpConfig is null, abort');
+   end;
+   
+   PostfixSSLCert:=SYS.GET_INFO('PostfixSSLCert');
+   if length(PostfixSSLCert)>0 then begin
+       forcedirectories('/etc/artica-postfix');
+       logs.Debuglogs('Enable_postfixmodules:: Save /etc/artica-postfix/ssl.certificate.conf');
+       l.Add(PostfixSSLCert);
+       l.SaveToFile('/etc/artica-postfix/ssl.certificate.conf');
+       l.Clear;
+   end else begin
+       logs.Debuglogs('Enable_postfixmodules:: artica.PostfixSSLCert is null, abort');
+   end;
+
+   
+
+   
+
+   if length(artica.ApacheConfig)>0 then begin
+       forceDirectories('/opt/artica/conf');
+       logs.Debuglogs('Enable_postfixmodules:: Save /opt/artica/conf/artica-www.conf');
+       l.Add(artica.ApacheConfig);
+       l.SaveToFile('/opt/artica/conf/artica-www.conf');
+       l.Clear;
+   end;
+   l.Free;
+
+end;
+//#############################################################################
+PROCEDURE tldapconf.notifications_apply();
+var
+   ini_org:tinifile;
+   l:TstringList;
+   mailfrom,domain:string;
+   RegExpr              :TRegExpr;
+begin
+    if not FileExists('/etc/artica-postfix/smtpnotif.conf') then exit;
+    ini_org:=TiniFile.Create('/etc/artica-postfix/smtpnotif.conf');
+    if ini_org.ReadString('SMTP','enabled','0')='0' then exit;
+    mailfrom:=ini_org.ReadString('SMTP','smtp_sender','root@localhost');
+    
+l:=Tstringlist.Create;
+RegExpr:=TRegExpr.Create;
+RegExpr.Expression:='.+?@(.+)';
+if RegExpr.Exec(mailfrom) then domain:=RegExpr.Match[1];
+l.Add('defaults');
+l.Add('account default');
+l.Add('host '+ ini_org.ReadString('SMTP','smtp_server_name','127.0.0.1'));
+l.Add('port '+ ini_org.ReadString('SMTP','smtp_server_port','25'));
+l.Add('timeout off');
+l.Add('protocol smtp');
+l.Add('domain '+domain);
+     if length(ini_org.ReadString('SMTP','smtp_auth_user',''))>0 then begin
+        l.Add('auth plain');
+        l.Add('user '+ini_org.ReadString('SMTP','smtp_auth_user',''));
+        l.Add('password '+ini_org.ReadString('SMTP','smtp_auth_passwd',''));
+     end;
+     
+l.Add('from ' +mailfrom);
+l.Add('maildomain =');
+if ini_org.ReadString('SMTP','tls_enabled','0')='1' then begin
+   l.Add('tls on');
+   l.Add('tls_starttls on');
+   l.Add('tls_certcheck off');
+   l.Add('tls_key_file /opt/artica/ssl/certs/lighttpd.pem');
+   l.Add('tls_cert_file /opt/artica/ssl/certs/lighttpd.pem');
+end;
+
+
+  try
+      l.SaveToFile('/etc/artica-postfix/msmtprc');
+   except
+       logs.logs('Failed to save "/etc/artica-postfix/msmtprc"');
+   end;
+    
+
+end;
+
+
+//#############################################################################
+PROCEDURE tldapconf.backup_apply();
+var
+backup    :backup_settings;
+l         :TstringList;
+ini       :TIniFile;
+cmd       :string;
+cron      :tcron;
+
+begin
+  if not ldap.Logged then begin
+     logs.logs('backup_apply:: unable to logon inot ldap');
+     exit;
+  end;
+
+
+  if GLOBAL_INI.get_INFOS('ArticaBackupEnabled')<>'1' then begin
+      if FileExists('/etc/cron.d/artica-cron-backup') then begin
+          GLOBAL_INI.DeleteFile('/etc/cron.d/artica-cron-backups');
+          logs.mysql_logs('6','1','Success disable backup task');
+          logs.Debuglogs('backup_apply:: feature is disabled');
+          exit;
+      end;
+  end;
+
+  backup:=ldap.Load_backup_settings();
+  if length(backup.ArticaBackupConf)>0 then begin
+       l:=TstringList.Create;
+       l.Add(backup.ArticaBackupConf);
+       l.SaveToFile('/etc/artica-postfix/artica-backup.conf');
+       logs.Debuglogs('backup_apply:: /etc/artica-postfix/artica-backup.conf success');
+       l.Free;
+  end;
+  
+  
+  
+  
+l:=TstringList.Create;
+l.Add(backup.HdBackupConfig);
+l.SaveToFile('/etc/artica-postfix/artica-hd-backup.conf');
+logs.Debuglogs('backup_apply:: /etc/artica-postfix/artica-hd-backup success');
+l.Free;
+  
+  
+l:=TstringList.Create;
+l.Add(backup.MountBackupConfig);
+l.SaveToFile('/etc/artica-postfix/artica-netshares-backup.conf');
+logs.Debuglogs('backup_apply:: /etc/artica-postfix/artica-netshares-backup.conf');
+l.Free;
+  
+ if not FileExists('/etc/artica-postfix/artica-backup.conf') then begin
+    logs.Syslogs('Backup process was not defined.. you need to set it, browse artica.backup.index.php web page');
+    exit;
+ end;
+ 
+ cron:=tcron.Create(SYS);
+ ini:=TIniFile.Create('/etc/artica-postfix/artica-backup.conf');
+ cmd:=ini.ReadString('backup','cron_cmd','0 3 * * * root ' + GLOBAL_INI.get_ARTICA_PHP_PATH()+'/bin/artica-backup --backup');
+ l:=TstringList.Create;
+ l.Add(cmd);
+ l.SaveToFile('/etc/cron.d/artica-cron-backup');
+ logs.Debuglogs('backup_apply:: /etc/cron.d/artica.cron.backups notification success');
+ fpsystem('/bin/chmod 0644 /etc/cron.d/artica-cron-backup');
+ 
+ if ParamStr(2)='restart' then begin
+     cron:=Tcron.Create(SYS);
+     cron.STOP();
+     cron.START();
+     logs.Syslogs('artica-cron was restarted...');
+ end;
+
+ 
+
+end;
+
+
+//#############################################################################
+PROCEDURE tldapconf.OBM_OPERATIONS();
+var
+OBMApacheFile:string;
+l         :TstringList;
+OBMEnabled:Integer;
+OBMConfIni:string;
+OBMConfInc:string;
+cron:tcron;
+
+begin
+ logs.Debuglogs('OBM_OPERATIONS:: Loading settings...');
+ if not TryStrToInt(SYS.GET_INFO('OBMEnabled'),OBMEnabled) then OBMEnabled:=0;
+
+
+ 
+ if OBMEnabled=0 then begin
+      logs.Debuglogs('OBM_OPERATIONS:: OBM is disabled in this context');
+      exit;
+ end;
+ 
+ if Not directoryExists('/usr/share/obm') then begin
+     logs.Debuglogs('OBM_OPERATIONS:: OBM is not installed in this context');
+     exit;
+ end;
+
+ OBMApacheFile:=SYS.GET_INFO('OBMApacheFile');
+ OBMConfIni:=SYS.GET_INFO('OBMConfIni');
+ OBMConfInc:=SYS.GET_INFO('OBMConfInc');
+
+ 
+ if length(OBMApacheFile)=0 then begin
+     logs.Debuglogs('OBM_OPERATIONS:: OBMApacheFile is empty in this context');
+     exit;
+ end;
+ 
+ if length(OBMConfIni)>0 then begin
+      l:=TstringList.Create;
+      l.Add(OBMConfIni);
+      forcedirectories('/usr/share/obm/conf');
+      logs.Debuglogs('OBM_OPERATIONS:: updateting /usr/share/obm/conf/obm_conf.ini');
+      l.SaveToFile('/usr/share/obm/conf/obm_conf.ini');
+ end;
+
+ if length(OBMConfInc)>0 then begin
+      l:=TstringList.Create;
+      l.Add(OBMConfInc);
+      forcedirectories('/usr/share/obm/conf');
+      logs.Debuglogs('OBM_OPERATIONS:: updateting /usr/share/obm/conf/obm_conf.inc');
+      l.SaveToFile('/usr/share/obm/conf/obm_conf.inc');
+ end;
+
+
+ 
+ 
+ l:=TstringList.Create;
+ l.Add(OBMApacheFile);
+ try
+    l.SaveToFile('/etc/artica-postfix/lighttpd-obm.conf');
+ except
+ logs.Syslogs('OBM_OPERATIONS:: FATAL ERROR WHITE SAVING /etc/artica-postfix/lighttpd-obm.conf');
+ exit;
+ end;
+ 
+ 
+ l.free;
+ logs.Debuglogs('OBM_OPERATIONS:: /etc/artica-postfix/lighttpd-obm.conf ok, restart lighttpd for OBM');
+ zobm.SERVICE_STOP();
+ zobm.SERVICE_START();
+ cron:=tcron.Create(SYS);
+ cron.STOP();
+ cron.START();
+end;
+//#############################################################################
+procedure tldapconf.iptables();
+var
+   l:TstringList;
+   i:integer;
+   f:iptables_settings;
+   path:string;
+   RegExpr                :TRegExpr;
+begin
+if ParamStr(2)<>'--start' then Enable_postfixmodules();
+
+  
+ path:=GLOBAL_INI.IPTABLES_PATH();
+ if not FileExists(path) then begin
+    writeln('Starting......: iptables is not installed...');
+    exit;
+ end;
+  
+  if GLOBAL_INI.Get_INFOS('IptablesEnabled')<>'1' then begin
+      writeln('Starting......: iptables is disabled...');
+      logs.logs('iptables:: disabled...');
+      exit;
+  end;
+  l:=TstringList.Create;
+  logs.logs('iptables:: Loading settings stored in database...');
+  f:=ldap.Load_iptables_settings();
+ if length(f.iptablesFile)=0 then begin
+       if not FIleExists('/opt/artica/logs/iptables.rules') then begin
+          writeln('Starting......: iptables no rules...');
+          logs.logs('iptables:: No rules....aborting');
+          exit;
+       end else begin
+          l.LoadFromFile('/etc/artica-postfix/iptables.rules');
+          f.iptablesFile:=l.Text;
+          l.Clear;
+          l.Free;
+          l:=TstringList.Create;
+       end;
+ end;
+
+ 
+ fpsystem(path + ' -F');
+ fpsystem(path + ' -X');
+ 
+
+
+ l.Add(f.iptablesFile);
+ l.SaveToFile('/etc/artica-postfix/iptables.rules');
+ l.LoadFromFile('/etc/artica-postfix/iptables.rules');
+ RegExpr:=TRegExpr.Create;
+ for i:=0 to l.Count-1 do begin
+     RegExpr.Expression:='^iptables';
+     if RegExpr.Exec(l.Strings[i]) then begin
+          writeln('Starting......: ',l.Strings[i]);
+          logs.logs('iptables:: '+ExtractFilePath(path)+l.Strings[i]);
+          fpsystem(ExtractFilePath(path)+l.Strings[i]);
+     end;
+ end;
+end;
+//#############################################################################
+
+
+PROCEDURE tldapconf.crossroads_sync();
+var
+ confs                :crossroads_settings;
+ D                    :boolean;
+ i                    :integer;
+ IsIsMaster           :boolean;
+ order                :TIniFile;
+ ldap_admin           :string;
+ ldap_suffix          :string;
+ ldap_password        :string;
+ uri                  :string;
+ cmdline              :string;
+ 
+ 
+begin
+   D:=GLOBAL_INI.COMMANDLINE_PARAMETERS('--verbose');
+   logs.logs('Loading settings stored in database...');
+   confs:=ldap.Load_crossroads_main_settings();
+   IsIsMaster:=False;
+   if D then begin
+
+       
+       writeln('crossroads_sync():: CrossRoadsBalancingServerIP........',confs.CrossRoadsBalancingServerIP);
+       writeln('crossroads_sync():: PostfixMasterServerIdentity........',confs.PostfixMasterServerIdentity);
+       writeln('crossroads_sync():: CrossRoadsBalancingServerName......',confs.CrossRoadsBalancingServerName);
+       for i:=0 to confs.PostfixSlaveServersIdentity.Count-1 do begin
+       
+       writeln('Slave..............................[',i,']: ',confs.PostfixSlaveServersIdentity.Strings[i]);
+       end;
+   
+   end;
+   logs.logs('crossroads_sync():: CrossRoadsBalancingServerIP........'+confs.CrossRoadsBalancingServerIP);
+   logs.logs('crossroads_sync():: PostfixMasterServerIdentity........'+confs.PostfixMasterServerIdentity);
+   logs.logs('crossroads_sync():: CrossRoadsBalancingServerName......'+confs.CrossRoadsBalancingServerName);
+   
+   
+
+
+   IsIsMaster:=GLOBAL_INI.SYSTEM_ISIP_LOCAL(confs.PostfixMasterServerIdentity);
+
+
+   if not IsIsMaster then begin
+        logs.logs('crossroads_sync():: This computer is not a master');
+       logs.logs('crossroads_sync():: This computer is not a master ');
+        exit;
+   end;
+   
+   
+     ldap_admin:=trim(GLOBAL_INI.get_LDAP('admin'));
+     ldap_suffix:=trim(GLOBAL_INI.get_LDAP('suffix'));
+     ldap_password:=trim(GLOBAL_INI.get_LDAP('password'));
+
+     logs.logs('crossroads_sync() this computer is a master ip (' + confs.PostfixMasterServerIdentity + ')');
+     logs.logs('Creating file configuration....:/opt/artica/etc/crossroads.indentities.conf');
+
+   
+for i:=0 to confs.PostfixSlaveServersIdentity.Count-1 do begin
+       uri:='https://'+confs.PostfixSlaveServersIdentity.Strings[i] +':9000/listener.balance.php';
+       
+       order:=TIniFile.Create('/opt/artica/etc/crossroads.indentities.conf');
+      logs.logs('Creating file configuration....:/opt/artica/etc/crossroads.indentities.conf');
+       order.WriteString('INFOS','suffix',ldap_suffix);
+       order.WriteString('INFOS','admin',ldap_admin);
+       order.WriteString('INFOS','password',ldap_password);
+       order.WriteString('INFOS','mastr_ip',confs.PostfixMasterServerIdentity);
+       order.WriteString('INFOS','master_name',confs.CrossRoadsBalancingServerName);
+       order.WriteString('INFOS','slave_ip',confs.PostfixSlaveServersIdentity.Strings[i]);
+       order.WriteString('INFOS','pol_time', confs.CrossRoadsPoolingTime);
+       order.UpdateFile;
+       order.Free;
+
+       cmdline:='/opt/artica/bin/curl -k -A artica --connect-timeout 5  -F "crossroads=@/opt/artica/etc/crossroads.indentities.conf" ' + uri;
+       logs.logs(cmdline);
+       writeln('Send requests to ' + confs.PostfixSlaveServersIdentity.Strings[i]);
+      logs.logs(cmdline);
+       fpsystem(cmdline);
+       end;
+   
+   
+   
+
+end;
+//#############################################################################
+PROCEDURE tldapconf.imapsync_import(user:string);
+var
+   mailbox_to:users_datas;
+   admin_name,admin_password:string;
+   imapsy:timapsync;
+   logfile:string;
+   cmd:string;
+   todelete:string;
+   ConfLdap:topenldap;
+   D:boolean;
+   l:TstringList;
+   TEMP_CONF:string;
+   RemoteParametersPath:string;
+   RemoteConfig:TIniFile;
+   sslStr:string;
+begin
+   d:=false;
+   if length(user)=0 then exit;
+   d:=LOGS.COMMANDLINE_PARAMETERS('--verbose');
+   forceDirectories(GLOBAL_INI.get_ARTICA_PHP_PATH()+'/ressources/logs/imap_import');
+   fpsystem('/bin/chown -R '+www_user+' '+GLOBAL_INI.get_ARTICA_PHP_PATH()+'/ressources/logs');
+   
+   logfile:=GLOBAL_INI.get_ARTICA_PHP_PATH()+'/ressources/logs/imap_import/'+user+'.log';
+   RemoteParametersPath:='/etc/artica-postfix/settings/Daemons/'+user+'ImportMailBoxData';
+   
+   
+   
+   imapsy:=timapsync.Create(SYS);
+
+
+   if Not FileExists(imapsy.MAILSYNC_BIN_PATH()) then begin
+      logs.LogGeneric('WARNING, Unable to stat mailsync path',logfile);
+      logs.Syslogs('WARNING, Unable to stat mailsync path');
+      exit;
+   end;
+
+   if not ldap.Logged then begin
+       logs.LogGeneric('Retreive infos from LDAP failed',logfile);
+       exit;
+   end;
+   
+   
+   if not ldap.Logged then begin
+       logs.LogGeneric('Retreive infos from '+RemoteParametersPath+' failed',logfile);
+       exit;
+   end;
+   
+   ConfLdap:=topenldap.Create;
+   admin_name:=ConfLdap.get_LDAP('cyrus_admin');
+   admin_password:=ConfLdap.get_LDAP('cyrus_password');
+   ConfLdap.free;
+   mailbox_to:=ldap.Load_userasdatas(user);
+   RemoteConfig:=TiniFile.Create(RemoteParametersPath);
+   
+   if RemoteConfig.ReadString('INFO','use_ssl','no')='yes' then  sslStr:='/ssl/novalidate-cert';
+   
+
+   
+   logs.LogGeneric('Checking '+RemoteConfig.ReadString('INFO','remote_imap_server','')+sslStr,logfile);
+
+
+
+l:=TstringList.Create;
+l.Add('	store remote {');
+l.Add('	server	{'+RemoteConfig.ReadString('INFO','remote_imap_server','')+'/user='+ RemoteConfig.ReadString('INFO','remote_imap_username','') + sslStr+'}');
+l.Add('	ref	{'+RemoteConfig.ReadString('INFO','remote_imap_server','')+'}');
+l.Add('	passwd	'+RemoteConfig.ReadString('INFO','remote_imap_password',''));
+l.Add('	pat	*');
+l.Add('}');
+l.Add('store artica {');
+l.Add('	server	{127.0.0.1:143/user='+user+'/imap/novalidate-cert}');
+l.Add('	ref	{127.0.0.1:143}');
+l.Add('	passwd	'+mailbox_to.userPassword);
+l.Add('	pat	*');
+l.Add('}');
+l.Add('');
+l.Add('channel sync  remote artica {');
+l.Add('	msinfo	{127.0.0.1:143/user='+user+'/imap/novalidate-cert}msinfo');
+l.Add('	passwd	'+mailbox_to.userPassword);
+l.Add('}');
+
+TEMP_CONF:=logs.FILE_TEMP();
+logs.Syslogs('Saving mailsync configuration file into temp ' +TEMP_CONF);
+try
+   l.SaveToFile(TEMP_CONF);
+except
+logs.Syslogs('WARNING: FATAL ERROR WHILE Saving ' +TEMP_CONF);
+exit;
+end;
+
+cmd:=imapsy.MAILSYNC_BIN_PATH() + ' -d -M -f '+TEMP_CONF+' sync >>' + logfile + ' 2>&1 &';
+logs.Debuglogs('Execute "'+ cmd+'"');
+fpsystem(cmd);
+
+end;
+//#############################################################################
+
+
+
+//#############################################################################
+PROCEDURE tldapconf.imapsync_export(user_from:string;user_to:string;delete:string);
+var
+   mailbox_From:users_datas;
+   mailbox_to:users_datas;
+   admin_name,admin_password:string;
+   imapsy:timapsync;
+   logfile:string;
+   cmd:string;
+   todelete:string;
+   ConfLdap:topenldap;
+   D:boolean;
+   l:TstringList;
+   TEMP_CONF:string;
+begin
+   d:=false;
+   d:=LOGS.COMMANDLINE_PARAMETERS('--verbose');
+   logfile:=GLOBAL_INI.get_ARTICA_PHP_PATH()+'/ressources/logs/imap_export/'+user_from+'-'+user_to+'.log';
+   imapsy:=timapsync.Create(SYS);
+   
+   
+   if Not FileExists(imapsy.MAILSYNC_BIN_PATH()) then begin
+      logs.Syslogs('WARNING, Unable to stat mailsync path');
+      exit;
+   end;
+
+   if not ldap.Logged then begin
+       logs.LogGeneric('Retreive infos from LDAP failed',logfile);
+       exit;
+   end;
+   ConfLdap:=topenldap.Create;
+   admin_name:=ConfLdap.get_LDAP('cyrus_admin');
+   admin_password:=ConfLdap.get_LDAP('cyrus_password');
+   ConfLdap.free;
+   
+   
+   if trim(delete)='0' then todelete:=' -n ';
+   mailbox_From:=ldap.Load_userasdatas(user_from);
+   mailbox_to:=ldap.Load_userasdatas(user_to);
+
+  
+l:=TstringList.Create;
+l.Add('	store cyrus-inbox1 {');
+l.Add('	server	{127.0.0.1/user='+ user_from + '/ssl/novalidate-cert}');
+l.Add('	ref	{127.0.0.1}');
+l.Add('	passwd	'+mailbox_From.userPassword);
+l.Add('	pat	*');
+l.Add('}');
+l.Add('store cyrus-inbox2 {');
+l.Add('	server	{127.0.0.1/user='+user_to+'/ssl/novalidate-cert}');
+l.Add('	ref	{127.0.0.1}');
+l.Add('	passwd	'+mailbox_to.userPassword);
+l.Add('	pat	*');
+l.Add('}');
+l.Add('');
+l.Add('channel sync  cyrus-inbox1 cyrus-inbox2 {');
+l.Add('	msinfo	{127.0.0.1/user='+user_to+'/ssl/novalidate-cert}');
+l.Add('	passwd	'+mailbox_to.userPassword);
+l.Add('}');
+
+TEMP_CONF:=logs.FILE_TEMP();
+logs.Syslogs('Saving mailsync configuration file into temp ' +TEMP_CONF);
+try
+   l.SaveToFile(TEMP_CONF);
+except
+logs.Syslogs('WARNING: FATAL ERROR WHILE Saving ' +TEMP_CONF);
+exit;
+end;
+
+cmd:=imapsy.MAILSYNC_BIN_PATH() + ' -M '+todelete+'-f '+TEMP_CONF+' sync >>' + logfile + ' 2>&1 &';
+logs.Debuglogs('Execute "'+ cmd+'"');
+fpsystem(cmd);
+
+end;
+//#############################################################################
+PROCEDURE tldapconf.mailbox_sync(user:string);
+   var
+   confs                :mailboxesinfos;
+   tmpfile              :string;
+   RegExpr              :TRegExpr;
+   perltoolpath         :string;
+   cmd                  :string;
+   U                    :users_datas;
+   acl                  :string;
+
+begin
+
+
+  logs.Debuglogs('mailbox_sync:: parsing user ' + user+'...');
+  confs:=ldap.LoadMailboxes(false);
+  u:=ldap.Load_userasdatas(user);
+  RegExpr:=TRegExpr.Create;
+  RegExpr.Expression:='{[A-Z]+}';
+  
+  if not FileExists(Cyr.CYRADM_PATH()) then begin
+         writeln('Unable to stat cyradm tool !');
+         logs.Syslogs('Unable to stat cyradm tool');
+         logs.mysql_logs('4','0',user+ ':: Unable to stat cyradm tool');
+         exit;
+  end;
+  
+     perltoolpath:=GLOBAL_INI.get_ARTICA_PHP_PATH() + '/bin/cyrus-admin.pl';
+     
+     
+  if not GLOBAL_INI.SYSTEM_PROCESS_EXIST(cyr.CYRUS_PID()) then begin
+      writeln('cyrus imap daemon is not started !');
+      logs.Syslogs('cyrus imap daemon is not started !');
+      logs.mysql_logs('4','0',user+ ':: cyrus imap daemon is not started');
+      exit;
+  end;
+  
+  if not FileExists(perltoolpath) then begin
+         writeln('Unable to stat ' + perltoolpath);
+         logs.Syslogs('Unable to stat ' + perltoolpath);
+         logs.mysql_logs('4','0',user+ ':: Unable to stat ' + perltoolpath);
+         exit;
+  end;
+  
+
+  if pos('MD5}',confs.Cyrus_password)>0 then begin
+      ldap.DeleteCyrusUser();
+      writeln(user+':: Rebuild cyrus administrator ');
+      logs.mysql_logs('4','2',user+':: Rebuild cyrus administrator ');
+      ldap.CreateCyrusUser();
+      confs:=ldap.LoadMailboxes(false);
+  end;
+  
+  tmpfile:='/opt/artica/logs/' + GLOBAL_INI.MD5FromString(user+'mailbox');
+  
+  acl:=mailboxes_acl(u.MailboxSecurityParameters);
+
+  
+  if length(U.MailBoxMaxSize)>0 then begin
+     cmd:=perltoolpath + ' -u cyrus -p ' + confs.Cyrus_password + ' -m '  + user + ' -q ' + U.MailBoxMaxSize + ' -a ' + acl+' >' + tmpfile + ' 2>&1';
+  end else begin
+      cmd:=perltoolpath + ' -u cyrus -p ' + confs.Cyrus_password + ' -m '  + user+  ' -a ' + acl+' >' + tmpfile + ' 2>&1';
+  end;
+  
+  logs.Debuglogs('mailbox_sync::' + cmd);
+  fpsystem(cmd);
+  writeln(logs.ReadFromFile(tmpfile));
+  logs.Debuglogs('mailbox_sync::' + logs.ReadFromFile(tmpfile));
+  mailboxes_log(user,tmpfile);
+  if not FileExists(tmpfile) then exit;
+  logs.DeleteFile(tmpfile);
+  
+  
+end;
+
+//#############################################################################
+function tldapconf.mailboxes_acl(ini_content:string):string;
+var
+   sini:TiniFile;
+   l:TstringList;
+   tmp:string;
+   value:string;
+   resultat:string;
+   i:integer;
+begin
+
+if length(ini_content)=0 then begin
+   writeln('mailboxes_acl:: Unable to get content of the configuration sended!!  assume lrswipkxtecd, check LDAP connection');
+   logs.Syslogs('mailboxes_acl:: Unable to get content of the configuration sended assume lrswipkxtecd check LDAP connection');
+   exit('lrswipkxtecd');
+end;
+
+
+tmp:=LOGS.FILE_TEMP();
+l:=TstringList.Create;
+l.Add(ini_content);
+l.SaveToFile(tmp);
+l.Clear;
+
+
+
+if not FileExists(tmp) then begin
+   writeln('mailboxes_acl:: Unable to stat temp file ' + tmp+ ' assume lrswipkxtecda');
+   logs.Syslogs('mailboxes_acl:: Unable to stat temp file ' + tmp+ ' assume lrswipkxtecda');
+   exit('lrswipkxtecda');
+end;
+
+resultat:='';
+sini:=TiniFile.Create(tmp);
+sini.ReadSection('mailbox',l);
+for i:=0 to l.Count-1 do begin
+    value:=sini.ReadString('mailbox',l.Strings[i],'0');
+    if value='1' then begin
+         logs.Debuglogs('mailboxes_acl:: found acl '+l.Strings[i]);
+         resultat:=resultat+l.Strings[i];
+    end;
+end;
+logs.DeleteFile(tmp);
+result:=resultat;
+end;
+//#############################################################################
+
+
+
+PROCEDURE tldapconf.mailboxes_log(user:string;tmpfile:string);
+var
+   l:TstringList;
+   RegExpr:TRegExpr;
+   i:integer;
+begin
+
+   if not FileExists(tmpfile) then begin
+       logs.mysql_logs('4','0',user+':: Unable to stat results ' + tmpfile);
+       exit;
+   end;
+
+   l:=TstringList.Create;
+   l.LoadFromFile(tmpfile);
+   RegExpr:=TRegExpr.Create;
+   for i:=0 to l.Count-1 do begin
+         RegExpr.Expression:='Error(.+?)Please login first';
+         if RegExpr.Exec(l.Strings[i]) then begin
+          logs.mysql_logs('4','0',user+':: Connection failed err.1, cyrus admin has bad password set in artica');
+          exit;
+         end;
+          RegExpr.Expression:='Mailbox already exists';
+         if RegExpr.Exec(l.Strings[i]) then exit;
+
+          RegExpr.Expression:='Created Mailbox';
+         if RegExpr.Exec(l.Strings[i]) then begin
+          logs.mysql_logs('4','1',user+':: success created mailbox');
+          exit;
+         end;
+
+         RegExpr.Expression:='Setting Quota';
+         if RegExpr.Exec(l.Strings[i]) then begin
+          logs.mysql_logs('4','1',user+':: success setting Quota');
+          exit;
+         end;
+          
+
+   end;
+   logs.mysql_logs('4','0',user+':: '+l.Text);
+
+
+end;
+//#############################################################################
+PROCEDURE tldapconf.mailboxes_sync();
+   var
+   confs                :mailboxesinfos;
+   i                    :integer;
+   RegExpr              :TRegExpr;
+   perltoolpath         :string;
+   cmd                  :string;
+
+begin
+
+
+  confs:=ldap.LoadMailboxes(true);
+  RegExpr:=TRegExpr.Create;
+  RegExpr.Expression:='{[A-Z]+}';
+  perltoolpath:=GLOBAL_INI.get_ARTICA_PHP_PATH() + '/bin/cyrus-admin.pl';
+  
+  if not FileExists(perltoolpath) then begin
+         logs.mysql_logs('4','0','Unable to stat ' + perltoolpath);
+         exit;
+  end;
+  
+  
+  if pos('MD5}',confs.Cyrus_password)>0 then begin
+      ldap.DeleteCyrusUser();
+      logs.mysql_logs('4','2','Rebuild cyrus administrator ');
+      ldap.CreateCyrusUser();
+      confs:=ldap.LoadMailboxes(true);
+  end;
+  
+  for i:=0 to confs.Users.Count-1 do begin
+     logs.logs('user:.....'+confs.Users.Strings[i]);
+      cmd:=perltoolpath + ' -u cyrus -p ' + confs.Cyrus_password + ' -m '  + confs.Users.Strings[i];
+      LOGS.Debuglogs(cmd);
+      fpsystem(perltoolpath + ' -u cyrus -p ' + confs.Cyrus_password + ' -m '  + confs.Users.Strings[i]);
+  end;
+  
+  logs.logs('Cyrus password:.....'+confs.Cyrus_password);
+  
+end;
+//#############################################################################
+PROCEDURE tldapconf.SqlGrey(servername:string);
+var
+
+   l                    :TStringList;
+   confs                :sqlgrey_settings;
+   LocalTimeCode        :string;
+
+begin
+
+  LOGS.logs('SqlGrey:: load SqlGrey main settings');
+  confs:=ldap.Load_sqlgrey_settings(servername);
+  GLOBAL_INI.set_INFOS('SqlGreyIsActive',IntToStr(confs.SqlGreyEnabled));
+
+
+  if length(confs.SqlGreyConf)>0 then begin
+   LocalTimeCode:=GLOBAL_INI.get_INFOS('SqlGreyTimeCode');
+  logs.logs('SqlGrey:: SqlGreyTimeCode :"' + confs.SqlGreyTimeCode + '"<>"' + LocalTimeCode + '"');
+
+   if length(LocalTimeCode)=0 then LocalTimeCode:='0';
+   if length(confs.SqlGreyTimeCode)=0 then confs.SqlGreyTimeCode:='0';
+
+
+   if confs.SqlGreyTimeCode=LocalTimeCode then begin
+      logs.logs('SqlGrey:: SqlGreyTimeCodeimeCode is the same as local LocalTimeCode, aborting...');
+       exit;
+   end;
+  LOGS.logs('SqlGrey:: SqlGreyTimeCode :' + confs.SqlGreyTimeCode + '<>' + LocalTimeCode);
+  
+      //GLOBAL_INI.SQLGREY_STOP();
+      l:=TStringList.Create;
+      l.Add(confs.SqlGreyConf);
+      l.SaveToFile('/opt/artica/etc/sqlgrey.conf');
+      l.free;
+      GLOBAL_INI.set_INFOS('SqlGreyTimeCode',confs.SqlGreyTimeCode);
+
+  if confs.SqlGreyEnabled=1 then begin
+         //GLOBAL_INI.SQLGREY_START();
+     end else begin
+         //GLOBAL_INI.SQLGREY_STOP();
+   end;
+  
+  end;
+
+end;
+
+//#############################################################################
+PROCEDURE tldapconf.DansGuardian();
+   var
+
+   l                    :TStringList;
+   confs                :dansguardian_settings;
+   i                    :integer;
+   folder_name          :string;
+   folder_index         :integer;
+   tmpfile              :string;
+   squid                :tsquid;
+
+begin
+
+  LOGS.logs('DansGuardian:: load dansguardian main settings');
+  confs:=ldap.Load_Dansguardian_MainConfiguration();
+  if length(confs.DansGuardianMasterConf)=0 then begin
+      logs.logs('DansGuardian:: Failed no datas found...');
+       LOGS.logs('DansGuardian:: Failed no datas found...');
+       exit;
+  end;
+  
+  LOGS.logs('DansGuardian:: DansGuardianMasterConf:: ' + IntToStr(length(confs.DansGuardianMasterConf)) + ' bytes lenght');
+ logs.logs('DansGuardian:: ' + IntToStr(length(confs.DansGuardianMasterConf)) + ' bytes lenght');
+  l:=TstringList.Create;
+  l.Add(confs.DansGuardianMasterConf);
+  l.SaveToFile(zdansguardian.CONF_PATH());
+  l.Clear;
+  DansGuardian_verif_globalConfig();
+ logs.logs('DansGuardian:: '+zdansguardian.CONF_PATH()+' saved');
+  
+  
+ logs.logs('DansGuardian:: FilterGroupListConf:: ' + IntToStr(length(confs.FilterGroupListConf)) + ' bytes lenght');
+  l:=TstringList.Create;
+  l.Add(confs.DansGuardianMasterConf);
+  try
+     l.SaveToFile(zdansguardian.filtergroupslist_path());
+  except
+    logs.logs('DansGuardian:: Fatal error saving "' +zdansguardian.filtergroupslist_path()+'"');
+  end;
+  l.Clear;
+  
+  
+ logs.Debuglogs('DansGuardian:: load DansGuardianRulesIndex='+IntToStr(confs.DansGuardianRulesIndex.Count));
+  
+  For i:=0 to confs.DansGuardianRulesIndex.Count-1 do begin
+       folder_index:=i+1;
+       folder_name:='/etc/dansguardian/group_' + IntToStr(folder_index) ;
+      logs.Debuglogs('DansGuardian:: preparing Group '+folder_name);
+       forcedirectories(folder_name);
+       tmpfile:=ldap.Load_Dansguardian_fileconfig(IntToStr(folder_index),'DansGuardianMainGroupeRule');
+      logs.logs('DansGuardian:: DansGuardianMainGroupeRule=' + IntToStr(length(tmpfile)) + ' bytes lenght');
+       if length(tmpfile)>0 then begin
+         logs.Debuglogs('DansGuardian:: /etc/dansguardian/dansguardianf' + IntToStr(folder_index)+ '.conf');
+          l.Add(tmpfile);
+          l.SaveToFile('/etc/dansguardian/dansguardianf' + IntToStr(folder_index)+ '.conf');
+          l.Clear;
+       end;
+
+       tmpfile:=ldap.Load_Dansguardian_fileconfig(IntToStr(folder_index),'ExceptionFileSiteListConf');
+       logs.Debuglogs('DansGuardian:: ' + folder_name + '/exceptionfilesitelist (' + intToStr(length(tmpfile)) + ')');
+       l.Add(tmpfile);
+       l.SaveToFile(folder_name + '/exceptionfilesitelist');
+       l.Clear;
+
+       tmpfile:='';
+       logs.Debuglogs('DansGuardian:: ' + folder_name + '/exceptionfileurllist (' + intToStr(length(tmpfile)) + ')');
+       l.Add(tmpfile);
+       l.SaveToFile(folder_name + '/exceptionfileurllist');
+       l.Clear;
+       
+       tmpfile:=ldap.Load_Dansguardian_fileconfig(IntToStr(folder_index),'ExceptionSiteListConf');
+      logs.Debuglogs('DansGuardian:: ' + folder_name + '/exceptionsitelist (' + intToStr(length(tmpfile)) + ')');
+       l.Add(tmpfile);
+       l.SaveToFile(folder_name + '/exceptionsitelist');
+       l.Clear;
+       
+       tmpfile:=ldap.Load_Dansguardian_fileconfig(IntToStr(folder_index),'WeightedPhraseListConf');
+      logs.Debuglogs('DansGuardian:: ' + folder_name + '/weightedphraselist (' + intToStr(length(tmpfile)) + ')');
+       l.Add(tmpfile);
+       l.SaveToFile(folder_name + '/weightedphraselist');
+       l.Clear;
+       
+       tmpfile:=ldap.Load_Dansguardian_fileconfig(IntToStr(folder_index),'BannedSiteListConf');
+      logs.Debuglogs('DansGuardian:: ' + folder_name + '/bannedsitelist (' + intToStr(length(tmpfile)) + ')');
+       l.Add(tmpfile);
+       l.SaveToFile(folder_name + '/bannedsitelist');
+       l.Clear;
+       
+       tmpfile:=ldap.Load_Dansguardian_fileconfig(IntToStr(folder_index),'BannedRegexPurListConf');
+      logs.Debuglogs('DansGuardian:: ' + folder_name + '/bannedregexpurllist (' + intToStr(length(tmpfile)) + ')');
+       l.Add(tmpfile);
+       l.SaveToFile(folder_name + '/bannedregexpurllist');
+       l.Clear;
+       
+       tmpfile:=ldap.Load_Dansguardian_fileconfig(IntToStr(folder_index),'BannedPhraseListConf');
+      logs.Debuglogs('DansGuardian:: ' + folder_name + '/bannedphraselist (' + intToStr(length(tmpfile)) + ')');
+       l.Add(tmpfile);
+       l.SaveToFile(folder_name + '/bannedphraselist');
+       l.Clear;
+       
+       tmpfile:=ldap.Load_Dansguardian_fileconfig(IntToStr(folder_index),'BannedMimetypeConf');
+      logs.Debuglogs('DansGuardian:: ' + folder_name + '/bannedmimetypelist (' + intToStr(length(tmpfile)) + ')');
+       l.Add(tmpfile);
+       l.SaveToFile(folder_name + '/bannedmimetypelist');
+       l.Clear;
+       
+       tmpfile:=ldap.Load_Dansguardian_fileconfig(IntToStr(folder_index),'BannedExtensionListConf');
+      logs.Debuglogs('DansGuardian:: ' + folder_name + '/bannedextensionlist (' + intToStr(length(tmpfile)) + ')');
+       l.Add(tmpfile);
+       l.SaveToFile(folder_name + '/bannedextensionlist');
+       l.Clear;
+       
+       DansGuardian_verif_groupfile('/etc/dansguardian/dansguardianf' + IntToStr(folder_index)+ '.conf');
+  end;
+  
+        logs.Debuglogs('DansGuardian:: Apply security owner');
+        logs.OutputCmd('/bin/chown -R squid:squid /etc/dansguardian');
+        logs.Debuglogs('DansGuardian:: reloading DansGuardian....');
+        zdansguardian.DANSGUARDIAN_RELOAD();
+
+        logs.Debuglogs('DansGuardian:: reloading squid....');
+        squid:=Tsquid.Create;
+        squid.SQUID_RELOAD();
+        squid.free;
+  
+end;
+ //#############################################################################
+PROCEDURE tldapconf.DansGuardian_verif_groupfile(group_path:string);
+var
+
+RegExpr              :TRegExpr;
+l                    :TstringList;
+i                    :integer;
+filepath             :string;
+begin
+   if not FileExists(group_path) then exit;
+   l:=TstringList.Create;
+   l.LoadFromFile(group_path);
+   RegExpr:=TRegExpr.Create;
+   RegExpr.Expression:='^([a-z0-9_\-]+)[\s='']+(.+?)''';
+   
+   
+   for i:=0 to l.Count-1 do begin
+       if RegExpr.Exec(l.Strings[i]) then begin
+          filepath:=RegExpr.Match[2];
+          if DirectoryExists(ExtractFilePath(filepath)) then begin
+             if not FileExists(filepath) then begin
+                logs.logs('"' + filepath + '" not exists perhaps not supported yet..');
+                 if FileExists('/etc/dansguardian/' + ExtractFileName(filepath) )then begin
+                      logs.logs('copy source file from "/etc/dansguardian/' + ExtractFileName(filepath) + '"');
+                       fpsystem('/bin/cp /etc/dansguardian/' + ExtractFileName(filepath) + ' ' + filepath);
+                 end else begin
+                     fpsystem('/bin/touch ' + filepath);
+
+                 end;
+             end;
+             
+          end;
+          
+       end;
+   end;
+   
+
+end;
+ //#############################################################################
+PROCEDURE tldapconf.DansGuardian_verif_globalConfig();
+var
+   maxsparechildren:string;
+   minsparechildren:string;
+   minchildren     :string;
+begin
+
+  minchildren:=zdansguardian.DANSGUARDIAN_CONFIG_VALUE('minchildren');
+  minsparechildren:=zdansguardian.DANSGUARDIAN_CONFIG_VALUE('minsparechildren');
+  maxsparechildren:=zdansguardian.DANSGUARDIAN_CONFIG_VALUE('maxsparechildren');
+  
+  
+ logs.logs('minchildren=' + minchildren);
+ logs.logs('maxsparechildren=' + maxsparechildren);
+
+
+  if length(minchildren)=0 then begin
+     zdansguardian.DANSGUARDIAN_CONFIG_VALUE_SET('minchildren','8');
+     minchildren:='8';
+  end;
+  
+  if length(maxsparechildren)=0 then begin
+     zdansguardian.DANSGUARDIAN_CONFIG_VALUE_SET('maxsparechildren','32');
+     maxsparechildren:='32';
+  end;
+
+  if length(minsparechildren)=0 then begin
+     zdansguardian.DANSGUARDIAN_CONFIG_VALUE_SET('minsparechildren','4');
+     maxsparechildren:='4';
+  end;
+  
+  if StrToInt(minchildren)=0 then begin
+     zdansguardian.DANSGUARDIAN_CONFIG_VALUE_SET('minchildren','8');
+     minchildren:='8';
+  end;
+
+  if StrToInt(maxsparechildren)=0 then begin
+     zdansguardian.DANSGUARDIAN_CONFIG_VALUE_SET('maxsparechildren','32');
+     maxsparechildren:='32';
+  end;
+
+  if StrToInt(minsparechildren)=0 then begin
+     zdansguardian.DANSGUARDIAN_CONFIG_VALUE_SET('minsparechildren','4');
+     maxsparechildren:='4';
+  end;
+
+  if StrToInt(minsparechildren)>StrToInt(maxsparechildren) then begin
+     zdansguardian.DANSGUARDIAN_CONFIG_VALUE_SET('minsparechildren','4');
+     minsparechildren:='4';
+  end;
+
+end;
+ //#############################################################################
+
+PROCEDURE tldapconf.Amavis();
+var
+   amavis:tamavis;
+   l:TstringList;
+   confpath:string;
+   confdata:string;
+   AlterMimeTXTDisclaimer:string;
+   AlterMimeHTMLDisclaimer:string;
+   EnableAmavisInMasterCF  :integer;
+begin
+
+
+     confdata:=SYS.GET_INFO('AmavisConfigFile');
+
+
+     if length(confdata)<5 then begin
+        logs.Syslogs('tldapconf.Amavis():: LDAP Config is null !');
+        exit;
+     end;
+
+     l:=TstringList.Create;
+     amavis:=tamavis.Create(SYS);
+     confpath:=amavis.AMAVISD_CONF_PATH();
+     logs.Syslogs('tldapconf.Amavis():: saving new amavis config on "'+ confpath+'"');
+     l.Add(confdata);
+     l.SaveToFile(confpath);
+     l.Free;
+
+     AlterMimeTXTDisclaimer:=SYS.GET_INFO('AlterMimeTXTDisclaimer');
+     if length(AlterMimeTXTDisclaimer)>0 then logs.WriteToFile(AlterMimeTXTDisclaimer,'/usr/local/etc/altermime-disclaimer.txt');
+
+     AlterMimeHTMLDisclaimer:=SYS.GET_INFO('AlterMimeHTMLDisclaimer');
+     if length(AlterMimeHTMLDisclaimer)>0 then logs.WriteToFile(AlterMimeHTMLDisclaimer,'/usr/local/etc/altermime-disclaimer.html');
+     
+     if not TryStrToInt(SYS.GET_INFO('EnableAmavisInMasterCF'),EnableAmavisInMasterCF) then EnableAmavisInMasterCF:=0;
+     
+     if EnableAmavisInMasterCF=1 then begin
+             logs.Syslogs('tldapconf.Amavis():: Change amavis to post-queue method...');
+             amavis.AMAVIS_TO_MASTERCF();
+     end else begin
+           logs.Syslogs('tldapconf.Amavis():: Change amavis to pre-queue method...');
+           amavis.MASTER_CF_DELETE_AMAVIS();
+     end;
+
+
+     logs.Syslogs('tldapconf.Amavis():: Restart amavis...');
+     amavis.AMAVISD_RELOAD();
+     logs.Syslogs('tldapconf.Amavis():: success Restart amavis...');
+     amavis.FRee;
+     
+end;
+
+ //#############################################################################
+procedure tldapconf.NMAP();
+
+var
+   verbose:boolean;
+   nmap:nmap_settings;
+   cdir:string;
+   i:integer;
+   cmd:string;
+   s,mypid:string;
+   NmapRotateMinutes:string;
+   NmapRotate:Integer;
+   Start:boolean;
+   NmapMinutes:integer;
+begin
+   mypid:=intTostr(fpgetpid);
+   cdir:='';
+   Start:=false;
+   verbose:=GLOBAL_INI.COMMANDLINE_PARAMETERS('--verbose');
+   if GLOBAL_INI.COMMANDLINE_PARAMETERS('--force') then begin
+      logs.nmap('NMAP()::['+mypid+'] --force has been used...');
+      verbose:=true;
+   end;
+
+   
+   if not FileExists(SYS.LOCATE_NMAP()) then begin
+       if verbose then logs.nmap('NMAP()::['+mypid+'] unable to stat nmap tool');
+       exit;
+   end;
+   
+   
+    if not ldap.Logged then begin
+       if verbose then logs.nmap('NMAP()::['+mypid+'] unable to log into ldap database...aborting');
+       exit;
+    end;
+   
+   if GLOBAL_INI.get_INFOS('NmapScanEnabled')<>'1' then begin
+      if verbose then logs.nmap('NMAP()::['+mypid+'] NmapScanEnabled is disabled, aborting...');
+      exit;
+   end;
+   
+    s:=SYS.PidByProcessPath(SYS.LOCATE_NMAP());
+    if length(s)>0 then logs.nmap('NMAP()::['+mypid+'] an Nmap process running "'+s+'"');
+
+  if length(s)>0 then begin
+      logs.nmap('NMAP()::['+mypid+'] already instances ('+s+') exists...aborting');
+      exit;
+   end;
+   
+   
+   NmapRotateMinutes:=GLOBAL_INI.get_INFOS('NmapRotateMinutes');
+   if length(NmapRotateMinutes)=0 then NmapRotateMinutes:='60';
+   NmapRotate:=StrToInt(NmapRotateMinutes);
+   
+   if not GLOBAL_INI.COMMANDLINE_PARAMETERS('--force') then begin
+      if Not FileExists('/etc/artica-postfix/nmap.touch') then begin
+             logs.nmap('NMAP()::['+mypid+'] counter /etc/artica-postfix/nmap.touch doesn''t Exists start=true');
+             Start:=true;
+         end else begin
+             NmapMinutes:=SYS.FILE_TIME_BETWEEN_MIN('/etc/artica-postfix/nmap.touch');
+             if NmapMinutes>NmapRotate then Start:=True;
+      end;
+   end else begin
+       start:=true;
+   end;
+   
+   
+   
+    if not Start then exit;
+    logs.nmap('NMAP()::['+mypid+'] Reset counter');
+    logs.OutputCmd('/bin/touch /etc/artica-postfix/nmap.touch');
+    logs.nmap('NMAP()::['+mypid+'] Rotation every ' + IntToStr(NmapRotate) + ' min Current status is ' + IntToStr(NmapMinutes) + ' min');
+
+
+   
+   nmap:=ldap.load_nmap_settings;
+   for i:=0 to nmap.NmapNetworkIP.Count-1 do begin
+       if length(trim(nmap.NmapNetworkIP.Strings[i]))>0 then begin
+          cdir:=cdir +trim(nmap.NmapNetworkIP.Strings[i]) + ' ';
+       end;
+   end;
+   logs.nmap('NMAP()::['+mypid+'] cdir(s)='+cdir);
+
+   
+   // -F  Fast mode - Scan fewer ports than the default scan
+   
+   cmd:=SYS.LOCATE_NMAP()+' -O '+cdir +' -oN /etc/artica-postfix/nmap.map --system-dns -p1';
+   logs.nmap('NMAP()::['+mypid+'] Running nmap scanner with following options');
+   logs.nmap(cmd);
+   logs.OutputCmd('/bin/touch /etc/artica-postfix/nmap1.touch');
+   logs.OutputCmd(cmd);
+
+   
+   NMAP_scan_results('/etc/artica-postfix/nmap.map');
+   logs.OutputCmd('/bin/chmod 755 /usr/share/artica-postfix/ressources/logs/nmap.log');
+   logs.nmap('NMAP()::['+mypid+'] Executed...in '+IntToStr(SYS.FILE_TIME_BETWEEN_MIN('/etc/artica-postfix/nmap1.touch'))+' minutes');
+   logs.nmap('---------------------------------------------------');
+   
+
+end;
+ //#############################################################################
+ procedure tldapconf.NMAP_SINGLE(uid:string);
+
+var
+   verbose:boolean;
+   cdir:string;
+   cmd:string;
+   mypid:string;
+   f:users_datas;
+begin
+   f:=ldap.Load_userasdatas(uid);
+   mypid:='';
+
+   if  f.ComputerInfos.computerip='0.0.0.0'  then f.ComputerInfos.computerip:='';
+   
+   if length(f.ComputerInfos.computerip)>0 then begin
+       cdir:=f.ComputerInfos.computerip;
+   end else begin
+       cdir:=uid;
+       cdir:=AnsiReplaceText(cdir,'$','');
+   end;
+   
+   
+   verbose:=GLOBAL_INI.COMMANDLINE_PARAMETERS('--verbose');
+
+   if not FileExists(SYS.LOCATE_NMAP()) then begin
+       if verbose then writeln('NMAP()::['+mypid+'] unable to stat nmap tool');
+       exit;
+   end;
+
+
+    if not ldap.Logged then begin
+       if verbose then writeln('NMAP()::['+mypid+'] unable to log into ldap database...aborting');
+       exit;
+    end;
+
+
+   logs.Debuglogs('NMAP()::['+mypid+'] cdir(s)='+cdir);
+   cmd:=SYS.LOCATE_NMAP()+' -v -F -O '+cdir +' -oN /etc/artica-postfix/'+cdir+'.map --system-dns --version-light';
+   logs.OutputCmd(cmd);
+   logs.Debuglogs('NMAP()::['+mypid+'] Executed...');
+    NMAP_scan_results('/etc/artica-postfix/'+cdir+'.map');
+   
+end;
+ //############################################################################
+procedure tldapconf.NMAP_scan_results(path:string);
+const
+            CR = #$0d;
+            LF = #$0a;
+            CRLF = CR + LF;
+var
+   verbose              :boolean;
+   RegExpr              :TRegExpr;
+   l                    :TstringList;
+   i                    :integer;
+   A                    :boolean;
+   comp                 :computer_infos;
+   mypid                :string;
+
+begin
+  verbose:=GLOBAL_INI.COMMANDLINE_PARAMETERS('--verbose');
+  if not FileExists(path) then exit;
+  
+  RegExpr:=TRegExpr.Create;
+  RegExpr.Expression:='^Interesting ports on';
+  A:=false;
+  l:=TstringList.Create;
+  l.LoadFromFile(path);
+  mypid:=intTostr(fpgetpid);
+  if verbose then writeln('scanning ',l.Count,' lines');
+  
+  for i:=0 to l.count-1 do begin
+      RegExpr.Expression:='^Interesting ports on';
+
+      if not A then begin
+         if RegExpr.Exec(l.Strings[i]) then begin
+            A:=True;
+            comp.computername:='';
+            comp.computerip:='';
+            comp.computer_ports:='';
+            comp.running:='';
+            comp.OS:='';
+            comp.uptime:='';
+            comp.hop:='';
+            comp.comput_type:='';
+            comp.mac:='';
+         
+         
+            RegExpr.Expression:='^Interesting ports on\s+(.+?)(\.home|\.local)\s+\(([0-9\.]+)';
+            if RegExpr.Exec(l.Strings[i]) then begin
+              comp.computername:=RegExpr.Match[1];
+              comp.computerip:=RegExpr.Match[3];
+            end;
+
+            RegExpr.Expression:='^Interesting ports on\s+([0-9\.]+):';
+            if RegExpr.Exec(l.Strings[i]) then begin
+               comp.computerip:=RegExpr.Match[1];
+            end;
+         
+            if verbose then begin
+               if length(comp.computerip)=0 then writeln('failed for ' + l.Strings[i]);
+            end;
+         end;
+      end;
+
+      
+      
+      if A=true then begin
+         RegExpr.Expression:='^[0-9]+/.+';
+         if RegExpr.Exec(l.Strings[i]) then comp.computer_ports:=comp.computer_ports+ l.Strings[i] + CRLF;
+         RegExpr.Expression:='^Running:\s+(.+)';
+         if RegExpr.Exec(l.Strings[i]) then comp.Running:=RegExpr.Match[1];
+         RegExpr.Expression:='^OS details:\s+(.+)';
+         if RegExpr.Exec(l.Strings[i]) then comp.OS:=RegExpr.Match[1];
+         RegExpr.Expression:='^Uptime:\s+(.+)';
+         if RegExpr.Exec(l.Strings[i]) then comp.uptime:=RegExpr.Match[1];
+         
+         RegExpr.Expression:='^MAC Address:\s+(.+?)\s+\((.+?)\)';
+         if RegExpr.Exec(l.Strings[i]) then begin
+             comp.mac:=RegExpr.Match[1];
+             comp.comput_type:=RegExpr.Match[2];
+         end;
+         
+         RegExpr.Expression:='^Network Distance:\s+(.+)';
+         
+
+         
+         if RegExpr.Exec(l.Strings[i]) then begin
+            comp.hop:=RegExpr.Match[1];
+            A:=false;
+            if verbose then begin
+            
+               writeln('');
+               writeln('');
+               writeln('computerip...........:',comp.computerip);
+               writeln('mac..................:',comp.mac);
+               writeln('comput_type..........:',comp.comput_type);
+               writeln('computername.........:',comp.computername);
+               writeln('computer_ports.......:',comp.computer_ports);
+               writeln('running..............:',comp.running);
+               writeln('OS...................:',comp.OS);
+               writeln('Uptime...............:',comp.Uptime);
+               writeln('Hop..................:',comp.hop);
+            end;
+            logs.nmap('NMAP()::['+mypid+'] Adding computer '+comp.computerip + '(' + comp.computername + ')');
+            ldap.AddScannerComputer(comp);
+            
+         end;
+         
+      end;
+    end;
+    logs.DeleteFile(path);
+  end;
+   
+ //############################################################################
+procedure tldapconf.cyrreconstruct();
+var l:TstringList;
+
+begin
+
+l:=TstringList.Create;
+if FileExists(GLOBAL_INI.get_ARTICA_PHP_PATH()+'/ressources/logs/cyrreconstruct') then l.LoadFromFile(GLOBAL_INI.get_ARTICA_PHP_PATH()+'/ressources/logs/cyrreconstruct');
+l.Add(logs.DateTimeNowSQL()+ ' starting reconstruct mailboxes');
+l.SaveToFile(GLOBAL_INI.get_ARTICA_PHP_PATH()+'/ressources/logs/cyrreconstruct');
+
+
+  if ParamStr(1)='--cyrreconstruct' then begin
+        if not FileExists(SYS.LOCATE_SU()) then begin
+           writeln('unable to locate "su"');
+           halt(0);
+        end;
+        if not FileExists(SYS.LOCATE_cyrreconstruct()) then begin
+             writeln('unable to locate "cyrreconstruct"');
+             halt(0);
+        end;
+       fpsystem('/bin/touch /etc/artica-postfix/cyrus-stop');
+       l.Add(logs.DateTimeNowSQL()+ ' Reconstruct mailboxes... please waiting few minutes...');
+       fpsystem(SYS.LOCATE_SU() + ' cyrus -c ' + SYS.LOCATE_cyrreconstruct()+' >>'+GLOBAL_INI.get_ARTICA_PHP_PATH()+'/ressources/logs/cyrreconstruct');
+       fpsystem('echo "'+logs.DateTimeNowSQL()+' END...." >>'+GLOBAL_INI.get_ARTICA_PHP_PATH()+'/ressources/logs/cyrreconstruct');
+       logs.DeleteFile('/etc/artica-postfix/cyrus-stop');
+       halt(0);
+  end;
+
+l.Add(logs.DateTimeNowSQL()+ ' reconstruct mailboxes end');
+l.SaveToFile(GLOBAL_INI.get_ARTICA_PHP_PATH()+'/ressources/logs/cyrreconstruct');
+l.free;
+end;
+ //############################################################################
+procedure tldapconf.cyrrepair();
+begin
+     cyr:=Tcyrus.Create(SYS);
+     cyr.REPAIR_CYRUS();
+     halt(0);
+end;
+end.
+

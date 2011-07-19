@@ -1,0 +1,4 @@
+<DNS_BLACK_LIST>Blacklist des DNS</DNS_BLACK_LIST>
+<DNS_BLACK_LIST_TEXT>Liste de services de Liste Noires &Agrave; BASE DE DNS</DNS_BLACK_LIST_TEXT>
+<DNS_HOST>Serveur de nom DNS</DNS_HOST>
+<DNS_RATE>Taux DNS</DNS_RATE>

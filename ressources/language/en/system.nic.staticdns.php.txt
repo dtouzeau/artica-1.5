@@ -1,0 +1,15 @@
+</nic_dns_search_text><nic_nameserver>Name servers<//nic_dns_search_text>
+<add_nameserver>Add a name server</add_nameserver>
+<add_nameserver_text>Give IP address or hostname of your DNS server</add_nameserver_text>
+<add_search_domains>Add a search domain</add_search_domains>
+<add_search_domain_text>Give a domain name</add_search_domain_text>
+<infos_dnsmasq>[br][b]Note: DNSMASQ is installed[/b], in this case, DNS settings will drive DNSMASQ local configuration instead your network configuration.
+[br]Your network DNS servers configuration will just point to your DNSMASQ local process[br]</infos_dnsmasq>
+<nic_dns_search>Search list for host-name lookup</nic_dns_search>
+<nic_dns_search_text>The search list is normally determined from the local domain name; by default, it contains only the local domain name.<br> This may be changed by listing the desired domain search path.<br>
+If you refer to another server just by its name without the domain added on, DNS on your client will append the server name 
+to each domain in this list and do an DNS lookup on each to get the remote servers’ IP address.<br>
+This is a handy time saving feature to have so that you can refer to servers in the same domain by only their servername without having to specify the domain.
+<br><strong>The first domain listed must be the home domain of your network and The search list is currently limited to six domains with a total of 256 characters.</nic_dns_search_text>
+<nic_nameserver_text>IP addresses of your DNS name servers.<br>The resolver library queries them in the order listed</nic_nameserver_text>
+<nic_static_dns_text>If your ISP provides you with a fixed or static IP DNS address server, and you want to host your own mail server</nic_static_dns_text>

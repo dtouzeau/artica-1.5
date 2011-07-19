@@ -1,0 +1,3 @@
+<graph_week_quarantine>NB messages saved in quarantine</graph_week_quarantine>
+<graph_week_receive>NB Emails receive this week</graph_week_receive>
+<quarantine_domains>Sender Domains in quarantine</quarantine_domains>

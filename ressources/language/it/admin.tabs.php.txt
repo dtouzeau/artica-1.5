@@ -1,0 +1,23 @@
+<ADD_WIDGET>Aggiungi un nuovo widget</ADD_WIDGET>
+<ADD_WIDGET_TEXT>Aggiungi una nuova icona/Widget in questa pagina</ADD_WIDGET_TEXT>
+<artica_settings>Configurazione Globale di Artica</artica_settings>
+<artica_settings_text>Definisci le configurazioni globali sul tipo di Proxy usato, interfaccia web, configurazione mysql...</artica_settings_text>
+<choose_section>Scegli una sezione</choose_section>
+<CLICK_TO_DELETE>Click per eliminare</CLICK_TO_DELETE>
+<DELETE_THIS_TAB>Cancella questa pagina personale</DELETE_THIS_TAB>
+<DELETE_THIS_TAB_TEXT>Questa operazione canceller&agrave; questa pagina e questo tab form dal tuo pannello</DELETE_THIS_TAB_TEXT>
+<FILE_SHARE>File Sharing</FILE_SHARE>
+<MAILBOX>Mailboxes management</MAILBOX>
+<MAIL_SECU>Messaging (security)</MAIL_SECU>
+<MANAGE_WIDGETS>Configure widgets</MANAGE_WIDGETS>
+<MANAGE_WIDGETS_TEXT>Change the display order, delete widgets</MANAGE_WIDGETS_TEXT>
+<MTA>Mail transfert Agent (Postfix)</MTA>
+<NETWORK>Rete</NETWORK>
+<ORG>Organizations related operations</ORG>
+<organizations_text>[b]Organizations management:[/b]Display, Create or delete your organizations</organizations_text>
+<REBUILD_PAGE>Rebuild this area</REBUILD_PAGE>
+<REBUILD_PAGE_TEXT>This operation will erase the current cache and rebuild this area</REBUILD_PAGE_TEXT>
+<SYSTEM>System applications and settings</SYSTEM>
+<WIDGETS_AREA>Widgets Area</WIDGETS_AREA>
+<WIDGETS_AREA_EXPLAIN>Click on one of these icons in order to add or to [b]delete[/b] icon on your area</WIDGETS_AREA_EXPLAIN>
+<your_organizations>La tua Organizzazione</your_organizations>

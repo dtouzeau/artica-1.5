@@ -1,0 +1,10 @@
+<artica_services>Artica Core Dienste</artica_services>
+<mail_services>Mailbox Dienste</mail_services>
+<postfix_services>Postfix SMTP Dienste</postfix_services>
+<samba_services>Samba Dienste</samba_services>
+<services_status_text>Dies ist eine &Uuml;bersicht &uuml;ber alle Anwedungen auf Ihrem System. Wie z.B. Anwendungsname, Speicherverbrauch des Hauptprozesses und aller Unterprozesse.</services_status_text>
+<squid_services>SQUID Dienste</squid_services>
+<start>Start</start>
+<start_this_service>[H5]Service starten[/H5]Bitte auf das Bild clicken[br] um den Service zu starten.</start_this_service>
+<stop>Stop</stop>
+<stop_this_service>[H5]Service stoppen[/H5]Bitte auf das Bild clicken[br] um den Service zu stoppen.</stop_this_service>

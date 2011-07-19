@@ -1,0 +1,92 @@
+html {
+	margin: 0px 20px 0px 20px; 
+	padding: 20px 20px 0px 0px; 
+	background-color:#005447;
+}
+
+body {
+	margin: 0px 0px 0px 0px; 
+	padding: 5px; 
+	border:1px solid #CCCCCC;
+	width:680px;
+	font: 10px/13px 'Helvetica', 'Tahoma', 'Verdana', sans-serif; 
+
+}
+
+* {
+	padding: 0px;
+	margin: 0px;
+}
+
+
+
+table,p,font{
+
+font-family:'Helvetica','Tahoma','Verdana',sans-serif;
+font-size:11px;
+}
+
+address{
+margin:20px;
+}
+
+hr{
+border:1px dotted #CCCCCC;
+margin-top:5px;
+margin-bottom:5px;
+}
+
+INPUT[type="submit"],INPUT[type="file"] { 
+width: auto;
+border: 1px double #999999;
+border-top-color: #CCCCCC;
+border-left-color: #CCCCCC;
+padding: 0.15em;
+padding-left:0.4em;
+padding-right:0.4em;
+margin-top:3px;
+margin-bottom:3px;
+background-image: url(../images/background_form_element.gif);
+background-repeat: repeat-x;
+color: #005447;
+font-weight: normal;
+text-transform:capitalize;
+cursor:pointer;
+	 }
+
+INPUT[type="button"] { 
+width: auto;
+border: 1px double #999999;
+border-top-color: #CCCCCC;
+border-left-color: #CCCCCC;
+padding: 0.15em;
+padding-left:0.4em;
+padding-right:0.4em;
+margin-top:3px;
+margin-bottom:3px;
+background-image: url(../images/background_form_element.gif);
+background-repeat: repeat-x;
+color: #005447;
+font-weight: normal;
+text-transform:capitalize;
+cursor:pointer;
+	 }
+
+INPUT,SELECT,TEXTAREA{
+background-color:#FBFBFB;
+border-color:#D7D7D7 rgb(243, 243, 243) rgb(243, 243, 243) rgb(215, 215, 215);
+border:1px solid;
+color:#333333;
+font-family:Arial,Helvetica,sans-serif;
+font-size:11px;
+padding-left:5px;
+padding-right:1px;
+background-image: url(../images/background_form_element.gif);
+width:auto;
+
+}
+INPUT[type="text"]{
+margin-right:4px;
+margin-left:4px;
+}
+

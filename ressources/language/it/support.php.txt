@@ -1,0 +1,5 @@
+<ARTICA_TECHNO>ARTICA technology is the company behind Artica and all technologies and services related to them, 
+providing a support and services.</ARTICA_TECHNO>
+<Community_support>Community support</Community_support>
+<Community_support_text>Register trough official Artica Community forum and post your requests[br]Community support is available in French, English, Spanish...</Community_support_text>
+<PROFESSIONAL_SUPPORT>Professional support</PROFESSIONAL_SUPPORT>

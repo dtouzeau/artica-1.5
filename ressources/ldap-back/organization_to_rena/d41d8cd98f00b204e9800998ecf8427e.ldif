@@ -1,0 +1,55 @@
+dn: ou=organization_to_rena,dc=organizations,dc=my-domain,dc=com
+ou: organization_to_rena
+objectClass: organizationalUnit
+objectClass: top
+objectClass: ArticaSettings
+structuralObjectClass: organizationalUnit
+entryUUID: 2823cfd4-5799-102e-8e58-5517e6d3c9fb
+creatorsName: cn=Manager,dc=my-domain,dc=com
+createTimestamp: 20091027230651Z
+ArticaGroupPrivileges: DEFAULT
+RblServersAction: pass
+SURBLServersAction: pass
+BogoFilterAction: 80;prepend;*** SPAM ***
+OuTrustMyUSers: yes
+KasperkyASDatasRules: DEFAULT
+entryCSN: 20091027232556.593024Z#000000#000#000000
+modifiersName: cn=Manager,dc=my-domain,dc=com
+modifyTimestamp: 20091027232556Z
+
+dn: ou=groups,ou=organization_to_rena,dc=organizations,dc=my-domain,dc=com
+objectClass: organizationalUnit
+objectClass: top
+ou: groups
+structuralObjectClass: organizationalUnit
+entryUUID: 283cb6f2-5799-102e-8e59-5517e6d3c9fb
+creatorsName: cn=Manager,dc=my-domain,dc=com
+createTimestamp: 20091027230652Z
+entryCSN: 20091027230652.037040Z#000000#000#000000
+modifiersName: cn=Manager,dc=my-domain,dc=com
+modifyTimestamp: 20091027230652Z
+
+dn: ou=users,ou=organization_to_rena,dc=organizations,dc=my-domain,dc=com
+objectClass: organizationalUnit
+objectClass: top
+ou: users
+structuralObjectClass: organizationalUnit
+entryUUID: 283d0b70-5799-102e-8e5a-5517e6d3c9fb
+creatorsName: cn=Manager,dc=my-domain,dc=com
+createTimestamp: 20091027230652Z
+entryCSN: 20091027230652.039209Z#000000#000#000000
+modifiersName: cn=Manager,dc=my-domain,dc=com
+modifyTimestamp: 20091027230652Z
+
+dn: ou=computers,ou=organization_to_rena,dc=organizations,dc=my-domain,dc=com
+objectClass: organizationalUnit
+objectClass: top
+ou: computers
+structuralObjectClass: organizationalUnit
+entryUUID: 283d4cac-5799-102e-8e5b-5517e6d3c9fb
+creatorsName: cn=Manager,dc=my-domain,dc=com
+createTimestamp: 20091027230652Z
+entryCSN: 20091027230652.040880Z#000000#000#000000
+modifiersName: cn=Manager,dc=my-domain,dc=com
+modifyTimestamp: 20091027230652Z
+

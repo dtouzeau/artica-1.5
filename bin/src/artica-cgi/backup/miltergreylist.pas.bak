@@ -1,0 +1,636 @@
+unit miltergreylist;
+
+{$MODE DELPHI}
+{$LONGSTRINGS ON}
+
+interface
+
+uses
+    Classes, SysUtils,variants,strutils,IniFiles, Process,md5,logs,unix,RegExpr in 'RegExpr.pas',zsystem,postfix_class;
+
+  type
+  tmilter_greylist=class
+
+
+private
+     LOGS:Tlogs;
+     D:boolean;
+     GLOBAL_INI:TiniFIle;
+     SYS:TSystem;
+     artica_path:string;
+     postfix:Tpostfix;
+     MilterGreyListEnabled:integer;
+public
+    procedure   Free;
+    constructor Create(const zSYS:Tsystem);
+    //function    STATUS:string;
+    function    MILTER_GREYLIST_PID_PATH():string;
+    function    MILTER_GREYLIST_PID():string;
+    function    MILTER_GREYLIST_ETC_DEFAULT():string;
+    procedure   MILTER_GREYLIST_START();
+    procedure   MILTER_GREYLIST_CHANGE_INIT_TO_POSTFIX();
+    function    MILTER_GREYLIST_INITD():string;
+    function    MILTER_GREYLIST_CONF_PATH():string;
+    function    MILTER_GREYLIST_BIN_PATH():string;
+    function    MILTER_GREYLIST_GET_VALUE(key:string):string;
+    function    MILTER_GREYLIST_SET_VALUE(key:string;value:string):string;
+    procedure   MILTER_GREYLIST_CHANGE_PID_IN_INITD();
+    procedure   MILTER_GREYLIST_STOP();
+    procedure   FIX_RACL();
+    FUNCTION    STATUS():string;
+END;
+
+implementation
+
+constructor tmilter_greylist.Create(const zSYS:Tsystem);
+begin
+       forcedirectories('/etc/artica-postfix');
+       forcedirectories('/opt/artica/tmp');
+       LOGS:=tlogs.Create();
+       SYS:=zSYS;
+       postfix:=Tpostfix.Create(SYS);
+       if not TryStrToInt(SYS.GET_INFO('MilterGreyListEnabled'),MilterGreyListEnabled) then MilterGreyListEnabled:=0;
+       
+
+       if not DirectoryExists('/usr/share/artica-postfix') then begin
+              artica_path:=ParamStr(0);
+              artica_path:=ExtractFilePath(artica_path);
+              artica_path:=AnsiReplaceText(artica_path,'/bin/','');
+
+      end else begin
+          artica_path:='/usr/share/artica-postfix';
+      end;
+end;
+//##############################################################################
+procedure tmilter_greylist.free();
+begin
+    logs.Free;
+    postfix.free;
+
+end;
+//##############################################################################
+function tmilter_greylist.MILTER_GREYLIST_PID_PATH():string;
+begin
+  result:=MILTER_GREYLIST_GET_VALUE('pidfile');
+end;
+//############################################################################# #
+function tmilter_greylist.MILTER_GREYLIST_PID():string;
+var D:boolean;
+begin
+exit(SYS.GET_PID_FROM_PATH(MILTER_GREYLIST_PID_PATH()));
+exit;
+end;
+//############################################################################# #
+function tmilter_greylist.MILTER_GREYLIST_CONF_PATH():string;
+begin
+if FileExists('/etc/milter-greylist/greylist.conf') then exit('/etc/milter-greylist/greylist.conf');
+if FileExists('/etc/mail/greylist.conf') then exit('/etc/mail/greylist.conf');
+if FileExists('/opt/artica/etc/milter-greylist/greylist.conf') then exit('/opt/artica/etc/milter-greylist/greylist.conf');
+end;
+ //##############################################################################
+ function tmilter_greylist.MILTER_GREYLIST_BIN_PATH():string;
+begin
+if FileExists('/usr/sbin/milter-greylist') then exit('/usr/sbin/milter-greylist');
+if FileExists('/usr/bin/milter-greylist') then exit('/usr/bin/milter-greylist');
+if FileExists('/opt/artica/bin/milter-greylist') then exit('/opt/artica/bin/milter-greylist');
+end;
+ //##############################################################################
+FUNCTION tmilter_greylist.STATUS():string;
+ var ini     :TstringList;
+begin
+   ini:=TstringList.Create;
+   ini.Add('[MILTER_GREYLIST]');
+   if FileExists(MILTER_GREYLIST_BIN_PATH()) then  begin
+      if SYS.PROCESS_EXIST(MILTER_GREYLIST_PID()) then ini.Add('running=1') else  ini.Add('running=0');
+      ini.Add('application_installed=1');
+      ini.Add('master_pid='+ MILTER_GREYLIST_PID());
+      ini.Add('master_memory=' + IntToStr(SYS.PROCESS_MEMORY(MILTER_GREYLIST_PID())));
+      ini.Add('master_version=4.0.0');
+      ini.Add('status='+SYS.PROCESS_STATUS(MILTER_GREYLIST_PID()));
+      ini.Add('service_name=APP_MILTERGREYLIST');
+      ini.Add('service_cmd=mgreylist');
+      ini.Add('service_disabled='+IntToStr(MilterGreyListEnabled));
+      
+
+   end;
+   result:=ini.Text;
+   ini.free;
+end;
+//******************************************************************************
+ procedure tmilter_greylist.MILTER_GREYLIST_STOP();
+ var
+    count:integer;
+    processes:string;
+begin
+count:=0;
+  if not FileExists(MILTER_GREYLIST_BIN_PATH()) then exit;
+
+  if fileExists(MILTER_GREYLIST_INITD()) then begin
+     logs.OutputCmd(MILTER_GREYLIST_INITD() + ' stop');
+     processes:=SYS.PROCESS_LIST_PID(MILTER_GREYLIST_BIN_PATH());
+    if length(processes)>0 then begin
+      writeln('Stopping milter-greylist.....: ' + processes +' PID(s)');
+      logs.OutputCmd('/bin/kill ' + processes);
+    end;
+    exit;
+  end;
+
+
+  processes:=SYS.PROCESS_LIST_PID(MILTER_GREYLIST_BIN_PATH());
+
+  if length(processes)>0 then begin
+      writeln('Stopping milter-greylist.....: ' + processes +' PID(s)');
+      logs.OutputCmd('/bin/kill ' + processes);
+  end;
+
+  if SYS.PROCESS_EXIST(MILTER_GREYLIST_PID()) then begin
+   writeln('Stopping milter-greylist.....: ' + MILTER_GREYLIST_PID() + ' PID');
+   logs.OutputCmd('/bin/kill ' + MILTER_GREYLIST_PID());
+   sleep(100);
+  while SYS.PROCESS_EXIST(MILTER_GREYLIST_PID()) do begin
+        sleep(1000);
+        inc(count);
+
+        if count>50 then begin
+           writeln('Stopping milter-greylist.....: ' + MILTER_GREYLIST_PID() + ' PID (timeout) kill it');
+           logs.OutputCmd('/bin/kill -9 ' + MILTER_GREYLIST_PID());
+           break;
+        end;
+  end;
+   exit;
+  end;
+
+  if not SYS.PROCESS_EXIST(MILTER_GREYLIST_PID()) then begin
+     writeln('Stopping milter-greylist.....: Already stopped');
+  end;
+
+  //MILTER_GREYLIST_PID
+end;
+//############################################################################
+procedure tmilter_greylist.MILTER_GREYLIST_CHANGE_PID_IN_INITD();
+  var
+     l:TstringList;
+     RegExpr:TRegExpr;
+     i:integer;
+     initPath:string;
+     pidpath:string;
+
+begin
+   initPath:=MILTER_GREYLIST_INITD();
+   pidpath:=MILTER_GREYLIST_PID_PATH();
+   
+   if not FileExists(initPath) then begin
+      logs.Debuglogs('MILTER_GREYLIST_CHANGE_PID_IN_INITD:: unable to stat init.d script');
+      exit;
+   end;
+   
+   if length(pidpath)=0 then begin
+      logs.Debuglogs('MILTER_GREYLIST_CHANGE_PID_IN_INITD:: unable to locate "pidfile" value in "'+MILTER_GREYLIST_CONF_PATH()+'" config file !');
+      exit;
+   end;
+
+   
+   l:=TstringList.Create;
+   l.LoadFromFile(MILTER_GREYLIST_INITD());
+   RegExpr:=TRegExpr.Create;
+   RegExpr.Expression:='^PIDFILE=.+';
+   for i:=0 to l.Count-1 do begin
+       if RegExpr.Exec(l.Strings[i]) then begin
+          l.Strings[i]:='PIDFILE="'+pidpath+'"';
+          logs.Debuglogs('MILTER_GREYLIST_CHANGE_PID_IN_INITD:: success change PIDFILE to ' + pidpath);
+          try
+             l.SaveToFile(MILTER_GREYLIST_INITD());
+          except
+             logs.Debuglogs('MILTER_GREYLIST_CHANGE_PID_IN_INITD:: fatal error while saving ' + MILTER_GREYLIST_INITD());
+             exit;
+          end;
+          break;
+       end;
+   end;
+
+   l.free;
+   RegExpr.free;
+end;
+//############################################################################
+
+
+
+
+function tmilter_greylist.MILTER_GREYLIST_SET_VALUE(key:string;value:string):string;
+  var
+     l:TstringList;
+     RegExpr:TRegExpr;
+     i:integer;
+
+begin
+result:='';
+   if not FileExists(MILTER_GREYLIST_CONF_PATH()) then exit;
+try
+   l:=TstringList.Create;
+   l.LoadFromFile(MILTER_GREYLIST_CONF_PATH());
+   RegExpr:=TRegExpr.Create;
+   RegExpr.Expression:='^'+key+'.+?"(.+?)"';
+   for i:=0 to l.Count-1 do begin
+        if RegExpr.Exec(l.Strings[i]) then begin
+            l.Strings[i]:=key+ ' "'+value+'"';
+            l.SaveToFile(MILTER_GREYLIST_CONF_PATH());
+            break;
+        end;
+   end;
+except
+    logs.Debuglogs('MILTER_GREYLIST_SET_VALUE('+key+') FATAL ERROR');
+end;
+   l.free;
+   RegExpr.free;
+end;
+ //##############################################################################
+ function tmilter_greylist.MILTER_GREYLIST_GET_VALUE(key:string):string;
+  var
+     l:TstringList;
+     RegExpr:TRegExpr;
+     i:integer;
+
+
+begin
+
+
+   if not FileExists(MILTER_GREYLIST_CONF_PATH()) then begin
+      logs.Debuglogs('MILTER_GREYLIST_GET_VALUE:: unable to get configuration file ' + MILTER_GREYLIST_CONF_PATH());
+      exit;
+   end;
+try
+
+   l:=TstringList.Create;
+   l.LoadFromFile(MILTER_GREYLIST_CONF_PATH());
+   RegExpr:=TRegExpr.Create;
+   RegExpr.Expression:='^'+key+'.+?"(.+?)"';
+   for i:=0 to l.Count-1 do begin
+        if RegExpr.Exec(l.Strings[i]) then begin
+            result:=RegExpr.Match[1];
+
+            break;
+        end;
+   end;
+except
+    logs.Debuglogs('MILTER_GREYLIST_GET_VALUE('+key+') FATAL ERROR');
+end;
+   l.free;
+   RegExpr.free;
+   if length(result)=0 then logs.Debuglogs('MILTER_GREYLIST_GET_VALUE:: unable to get infos on ' + key + ' expression=^'+key+'.+?"(.+?)"' );
+end;
+ //##############################################################################
+function tmilter_greylist.MILTER_GREYLIST_ETC_DEFAULT():string;
+var
+   l:TstringList;
+   D:boolean;
+begin
+result:='';
+if not FileExists('/etc/default/milter-greylist') then exit;
+l:=TstringList.Create;
+l.Add('# Defaults for milter-greylist initscript');
+l.Add('# sourced by /etc/init.d/milter-greylist');
+l.Add('# installed at /etc/default/milter-greylist by the maintainer scripts');
+l.Add('# 2006-08-18 Herbert Straub');
+l.Add('');
+l.Add('# Change to one to enable milter-greylist');
+l.Add('# Don''t forget to edit the configurationfile /etc/mail/greylist.conf');
+l.Add('ENABLED=1');
+l.Add('');
+l.Add('PIDFILE="/var/run/milter-greylist/milter-greylist.pid"');
+l.Add('SOCKET="/var/run/milter-greylist/greylist.sock"');
+l.Add('USER="postfix"');
+l.Add('');
+l.Add('# Other options');
+l.Add('# OPTIONS=""');
+try
+l.SaveToFile('/etc/default/milter-greylist');
+except
+    logs.Debuglogs('MILTER_GREYLIST_ETC_DEFAULT:: FATAL ERROR WHILE WRITING ON /etc/default/milter-greylist is there appArmor or SeLinux here ???' );
+    logs.syslogs('MILTER_GREYLIST_ETC_DEFAULT:: FATAL ERROR WHILE WRITING ON /etc/default/milter-greylist is there appArmor or SeLinux here ???' );
+    l.free;
+    exit;
+end;
+logs.Debuglogs('MILTER_GREYLIST_ETC_DEFAULT: /etc/default/milter-greylist OK');
+end;
+//############################################################################# #
+function tmilter_greylist.MILTER_GREYLIST_INITD():string;
+begin
+    if FileExists('/etc/init.d/milter-greylist') then exit('/etc/init.d/milter-greylist');
+end;
+ //##############################################################################
+procedure tmilter_greylist.MILTER_GREYLIST_CHANGE_INIT_TO_POSTFIX();
+var
+    RegExpr:TRegExpr;
+    FileDatas:TStringList;
+    i:integer;
+    l:Tstringlist;
+begin
+ if not FileExists(MILTER_GREYLIST_INITD()) then begin
+    logs.Debuglogs('MILTER_GREYLIST_CHANGE_INIT_TO_POSTFIX:: unable to stat milter-greylist init.d');
+    exit;
+ end;
+ FileDatas:=TstringList.Create;
+ FileDatas.LoadFromFile(MILTER_GREYLIST_INITD());
+ RegExpr:=TRegExpr.Create;
+
+ for i:=0 to FileDatas.Count-1 do begin
+      RegExpr.Expression:='^USER=.+';
+ 
+     if RegExpr.Exec(FileDatas.Strings[i]) then begin
+         logs.Debuglogs('MILTER_GREYLIST_CHANGE_INIT_TO_POSTFIX:: found ' + FileDatas.Strings[i]);
+         FileDatas.Strings[i]:='USER="postfix"';
+         FileDatas.SaveToFile(MILTER_GREYLIST_INITD());
+         break;
+     end;
+     
+ end;
+ 
+ 
+ if FIleExists('/sbin/chkconfig') then begin
+         logs.Debuglogs('MILTER_GREYLIST_CHANGE_INIT_TO_POSTFIX:: save /etc/init.d/milter-greylist');
+         l:=TstringList.Create;
+         l.Add('#!/bin/sh');
+         l.Add('# $Id: rc-redhat.sh.in,v 1.7 2006/08/20 05:20:51 manu Exp $');
+         l.Add('#  init file for milter-greylist');
+         l.Add('#');
+         l.Add('# chkconfig: - 79 21');
+         l.Add('# description: Milter Greylist Daemon');
+         l.Add('#');
+         l.Add('# processname: /usr/bin/milter-greylist');
+         l.Add('# config: /etc/mail/greylist.conf');
+         l.Add('# pidfile: /var/run/milter-greylist/milter-greylist.pid');
+         l.Add('');
+         l.Add('# source function library');
+         l.Add('. /etc/init.d/functions');
+         l.Add('');
+         l.Add('pidfile="/var/run/milter-greylist/milter-greylist.pid"');
+         l.Add('socket="/var/run/milter-greylist/milter-greylist.sock"');
+         l.Add('user="postfix"');
+         l.Add('OPTIONS="-u $user -P $pidfile -p $socket"');
+         l.Add('if [ -f /etc/sysconfig/milter-greylist ]');
+         l.Add('then');
+         l.Add('    . /etc/sysconfig/milter-greylist');
+         l.Add('fi');
+         l.Add('RETVAL=0');
+         l.Add('prog="Milter-Greylist"');
+         l.Add('');
+         l.Add('start() {');
+         l.Add('        echo -n $"Starting $prog: "');
+         l.Add('        if [ $UID -ne 0 ]; then');
+         l.Add('                RETVAL=1');
+         l.Add('                failure');
+         l.Add('        else');
+         l.Add('		daemon '+MILTER_GREYLIST_BIN_PATH()+' $OPTIONS');
+         l.Add('                RETVAL=$?');
+         l.Add('                [ $RETVAL -eq 0 ] && touch /var/lock/subsys/milter-greylist');
+         l.Add('		[ $RETVAL -eq 0 ] && success || failure');
+         l.Add('        fi;');
+         l.Add('        echo ');
+         l.Add('        return $RETVAL');
+         l.Add('}');
+         l.Add('');
+         l.Add('stop() {');
+         l.Add('        echo -n $"Stopping $prog: "');
+         l.Add('        if [ $UID -ne 0 ]; then');
+         l.Add('                RETVAL=1');
+         l.Add('                failure');
+         l.Add('        else');
+         l.Add('                killproc '+MILTER_GREYLIST_BIN_PATH());
+         l.Add('                RETVAL=$?');
+         l.Add('                [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/milter-greylist');
+         l.Add('		[ $RETVAL -eq 0 ] && success || failure');
+         l.Add('        fi;');
+         l.Add('        echo');
+         l.Add('        return $RETVAL');
+         l.Add('}');
+         l.Add('');
+         l.Add('');
+         l.Add('restart(){');
+         l.Add('	stop');
+         l.Add('	start');
+         l.Add('}');
+         l.Add('');
+         l.Add('condrestart(){');
+         l.Add('    [ -e /var/lock/subsys/milter-greylist ] && restart');
+         l.Add('    return 0');
+         l.Add('}');
+         l.Add('');
+         l.Add('case "$1" in');
+         l.Add('  start)');
+         l.Add('	start');
+         l.Add('	;;');
+         l.Add('  stop)');
+         l.Add('	stop');
+         l.Add('	;;');
+         l.Add('  restart)');
+         l.Add('	restart');
+         l.Add('        ;;');
+         l.Add('  condrestart)');
+         l.Add('	condrestart');
+         l.Add('	;;');
+         l.Add('  status)');
+         l.Add('        status milter-greylist');
+         l.Add('	RETVAL=$?');
+         l.Add('        ;;');
+         l.Add('  *)');
+         l.Add('	echo $"Usage: $0 {start|stop|status|restart|condrestart}"');
+         l.Add('	RETVAL=1');
+         l.Add('esac');
+         l.Add('');
+         l.Add('exit $RETVAL');
+         l.SaveToFile('/etc/init.d/milter-greylist');
+         l.Free;
+   end;
+         FileDatas.Free;
+         RegExpr.Free;
+
+end;
+ //##############################################################################
+procedure tmilter_greylist.MILTER_GREYLIST_START();
+var
+
+   configfile:string;
+   cmd:string;
+   count:integer;
+   socketPath:string;
+   user:string;
+   pid_path:string;
+   pid_dir:string;
+   RegExpr:TRegExpr;
+begin
+
+
+
+    if not FileExists(MILTER_GREYLIST_BIN_PATH()) then begin
+       logs.Debuglogs('MILTER_GREYLIST_START:: unable to stat milter-greylist binary');
+       exit;
+    end;
+
+
+    if MilterGreyListEnabled=0 then begin
+       logs.Debuglogs('MILTER_GREYLIST_START:: MilterGreyListEnabled -> Disabled');
+       exit;
+    end else begin
+        logs.Debuglogs('MILTER_GREYLIST_START:: MilterGreyListEnabled -> ' + sys.get_INFO('MilterGreyListEnabled'));
+    end;
+    
+    
+    
+
+  if SYS.PROCESS_EXIST(MILTER_GREYLIST_PID()) then begin
+     logs.DebugLogs('MILTER_GREYLIST_START:: milter-greylist already running using PID ' +MILTER_GREYLIST_PID()+ '...');
+     exit;
+  end;
+  
+  
+   FIX_RACL();
+
+
+
+
+   if FileExists(MILTER_GREYLIST_INITD()) then begin
+          if not SYS.PROCESS_EXIST(MILTER_GREYLIST_PID()) then begin
+             MILTER_GREYLIST_CHANGE_INIT_TO_POSTFIX();
+             MILTER_GREYLIST_SET_VALUE('pidfile','/var/run/milter-greylist/milter-greylist.pid');
+             MILTER_GREYLIST_SET_VALUE('socket','/var/run/milter-greylist/greylist.sock');
+             MILTER_GREYLIST_CHANGE_PID_IN_INITD();
+             pid_path:=MILTER_GREYLIST_PID_PATH();
+             DeleteFile(pid_path);
+             pid_dir:='/var/run/milter-greylist';
+             try
+                logs.DebugLogs('MILTER_GREYLIST_START:: Creating folder ' +pid_dir);
+                ForceDirectories(pid_dir);
+                logs.OutputCmd('/bin/chown -R postfix:postfix '+ pid_dir);
+             finally
+                    logs.DebugLogs('MILTER_GREYLIST_START:: Fatal error while creating pid path');
+             end;
+             
+             logs.DebugLogs('Starting......: PidPath: ' +pid_path);
+             logs.DebugLogs('Starting......: Pid....: ' +MILTER_GREYLIST_PID());
+             logs.DebugLogs('Starting......: Config.: ' +MILTER_GREYLIST_CONF_PATH());
+             logs.DebugLogs('Starting......: milter-greylist...');
+
+
+             MILTER_GREYLIST_ETC_DEFAULT();
+             logs.DebugLogs('Starting......: Get values...');
+
+
+             MILTER_GREYLIST_SET_VALUE('user','postfix');
+
+             socketPath:=MILTER_GREYLIST_GET_VALUE('socket');
+
+             if FileExists(socketPath) then DeleteFile(socketPath);
+
+             socketPath:=ExtractFilePath(socketPath);
+
+             if Copy(socketPath,length(socketPath),1)='/' then socketPath:=Copy(socketPath,1,length(socketPath)-1);
+
+             user:=MILTER_GREYLIST_GET_VALUE('user');
+
+             sys.AddUserToGroup(user,'mail','','');
+             sys.AddUserToGroup('postfix',user,'','');
+             
+             logs.DebugLogs('Starting......: running as '+user);
+             
+
+             logs.DebugLogs('Starting......: milter-greylist Socket Directory=' + socketPath + ' user (' + user + ')');
+
+             forceDirectories(socketPath);
+             logs.OutputCmd('/bin/chmod -R 755 ' +socketPath);
+             SYS.FILE_CHOWN('postfix','postfix',socketPath);
+             
+             forceDirectories('/var/lib/milter-greylist');
+             SYS.FILE_CHOWN(user,user,'/var/lib/milter-greylist');
+
+
+             logs.OutputCmd(MILTER_GREYLIST_INITD() + ' start');
+             
+             if not SYS.PROCESS_EXIST(MILTER_GREYLIST_PID()) then begin
+             
+             end;
+             
+             exit;
+          end else begin
+             logs.DebugLogs('Starting......: milter-greylist already running using PID ' +MILTER_GREYLIST_PID()+ '...');
+
+             logs.OutputCmd('/bin/chown -R postfix:'+user +' '+ socketPath);
+          end;
+      exit;
+   end;
+
+
+    logs.OutputCmd('/bin/chown root:root /opt/artica/bin/milter-greylist');
+    logs.OutputCmd('/bin/chmod 755 /opt/artica/bin/milter-greylist');
+
+    DeleteFile(pid_path);
+
+
+
+
+
+    if not FileExists(configfile) then begin
+       logs.Debuglogs('MILTER_GREYLIST_START:: Could not start milter-greylist,config file does not exists');
+    end;
+
+    cmd:='/opt/artica/bin/milter-greylist -f ' + configfile +' -d /opt/artica/var/milter-greylist/greylist.db -P /var/run/milter-greylist/milter-greylist.pid -p /var/run/milter-greylist/milter-greylist.sock';
+    logs.Debuglogs('MILTER_GREYLIST_START:: ' + cmd);
+    logs.OutputCmd(cmd);
+    count:=0;
+  while not SYS.PROCESS_EXIST(MILTER_GREYLIST_PID()) do begin
+        sleep(500);
+        if D then writeln('wait 500:',count);
+        inc(count);
+        if count>20 then begin
+
+           logs.DebugLogs('Starting......: milter-greylist failed to start' );
+           if ExtractFileName(ParamStr(0))<>'process1' then writeln('try to run '+cmd + ' to see what''s wrong');
+           exit;
+           break;
+        end;
+
+  end;
+
+    if ExtractFileName(ParamStr(0))<>'process1' then logs.DebugLogs('Starting......: milter-greylist with new PID ' +MILTER_GREYLIST_PID());
+    logs.mysql_logs('2','1','Success start milter-greylist daemon PID '+ MILTER_GREYLIST_PID());
+end;
+
+
+//##############################################################################
+procedure tmilter_greylist.FIX_RACL();
+var
+    RegExpr:TRegExpr;
+    i:integer;
+    l:Tstringlist;
+    conf_path:string;
+    Fix:boolean;
+begin
+Fix:=false;
+conf_path:=MILTER_GREYLIST_CONF_PATH();
+if not FileExists(conf_path) then begin
+   logs.Syslogs('FATAL ERROR, unable to stat greylist.conf');
+   exit;
+end;
+
+
+l:=TstringList.Create;
+l.LoadFromFile(conf_path);
+RegExpr:=TRegExpr.Create;
+RegExpr.Expression:='^racl\s+(.+)';
+for i:=0 to l.Count-1 do begin
+    if RegExpr.Exec(l.Strings[i]) then begin
+       logs.Debuglogs('Starting......: milter-greylist fix "racl" line ' + IntToStr(i));
+       l.Strings[i]:='acl ' + RegExpr.Match[1];
+       fix:=true;
+    end;
+end;
+
+if fix then begin
+   l.SaveToFile(conf_path);
+end;
+
+l.free;
+RegExpr.free;
+end;
+//##############################################################################
+
+end.

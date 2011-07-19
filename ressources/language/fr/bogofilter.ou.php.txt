@@ -1,0 +1,19 @@
+<add_bogo_spam>Utilisateur bogo SPAM</add_bogo_spam>
+<bogo_delete>Supprimer le message</bogo_delete>
+<bogo_ham>utilis&eacute; pour envoyer les bons messages</bogo_ham>
+<bogo_intro>Bogofilter est un filtre de courrier qui classe les messages comme spam ou ham (non-spam) par une analyse statistique des en-t&ecirc;te de courrier et du contenu (corps).[br]
+Le programme peut apprendre du classement des utilisateurs ainsi que de leurs corrections.[br]
+L'analyse statistique est connue sous le nom de technique Bayesienne et son utilisation pour le spam.[br]
+Bogofilter cr&eacute;era une base de donn&eacute;es des mots pour chaque utilisateur.[br]
+Pour le classement des messages comme ham (non-spam) ou spam, bogofilter &agrave; besoin d'apprendre du courrier des utilisateurs.[br]
+Pour ce faire vous devrez cr&eacute;er 2 utilisateurs robots.[br][br]
+[ul][lli]Le premier pour apprendre les SPAM que vos utilisateurs trouveront[/li][li]Le second pour les ham (non-spam) que bogofilter d&eacute;tectera.[/li][/ul]</bogo_intro>
+<bogo_prepend>Sujet Prepend</bogo_prepend>
+<bogo_quarantine>message mit en quarantaine</bogo_quarantine>
+<bogo_robots>Ajouter des robots Bogofilter</bogo_robots>
+<bogo_spam>Utilis&eacute; pour envoyer du spam</bogo_spam>
+<if_bogo_prepend>Si ajouter au d&eacute;but est s&eacute;lectionn&eacute;, ajouter au d&eacute;but du sujet</if_bogo_prepend>
+<robot>robots bogofilter</robot>
+<spam_action>Action lors de la d&eacute;tection d'un spam</spam_action>
+<spam_action_text>Quand bogofilter d&eacute;tecte des messages dont le score est sup&eacute;rieur &agrave;</spam_action_text>
+<type>SPAM/HAM</type>

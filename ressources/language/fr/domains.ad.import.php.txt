@@ -1,0 +1,25 @@
+<administrator>Administrateur</administrator>
+<admin_dn>Compte administrateur</admin_dn>
+<admin_dn_text>Donnez le compte d'Administrateur d'Annuaire Actif et le mot de passe. [Br] D'habitude, l'Administrateur fait stocker le nom &quot;d'Administrateur&quot; dans cn = &quot;l'Administrateur, cn=Users...&quot; [br] Vous pouvez donner ici le nom de l'Administrateur ou le chemin &quot;DN&quot; complet [br] le suffixe est la premi&egrave;re branche de votre Branche d'Annuaire Active. [Br] D'habitude si votre serveur est nomm&eacute; a server.domain.tld, le suffixe sera &quot;dc=server, dc=domain, dc=tld&quot;</admin_dn_text>
+<ad_server>Adresse du serveur Active Directory</ad_server>
+<ad_server_text>Donnez ici l'adresse IP ou le nom du serveur  d'Annuaire Active Directory/serveur MS  Exchange</ad_server_text>
+<bdu>Mauvais utilisateur ou mot de passe. Veuillez r&eacute;essayer.</bdu>
+<cls>Ne pouvait pas &ecirc;tre lier au serveur d'Annuaire Active Directory.</cls>
+<connected>Connexion r&eacute;ussie</connected>
+<err_unkown>Avertissement si incapable d'ouvrir une session</err_unkown>
+<failed>Connexion &eacute;chou&eacute;e</failed>
+<iar>Droits d'acc&egrave;s insuffisants.</iar>
+<importation_completed>T&acirc;che d'importation achev&eacute;e</importation_completed>
+<import_ad_title>Importation de Membres Active Directory</import_ad_title>
+<local_group>S&eacute;lectionnez votre groupe local</local_group>
+<local_group_text>Choisissez dans la liste le groupe local Artica qui stockera vos utilisateurs active directory</local_group_text>
+<perform_importation>Ex&eacute;cutez la t&acirc;che d'importation</perform_importation>
+<remote_org>Choisissez l'organisation &Agrave; distance</remote_org>
+<remote_org_text>Choisissez le conteneur qui stocke des utilisateurs que vous voulez importer</remote_org_text>
+<restart_importation>Red&eacute;marrer une nouvelle importation</restart_importation>
+<server_name>Adresse du serveur</server_name>
+<server_port>Port en &eacute;coute</server_port>
+<suffix>Suffixe Active directory</suffix>
+<ucl>Incapable de connecter au serveur LDAP sp&eacute;cifi&eacute; [br] s'il vous pla&icirc;t, v&eacute;rifier si le d&eacute;mon ldap fonctionne ou l'adresse de serveur ldap</ucl>
+<unable_to_connect>Incapable de connecter au serveur Active Directory  sp&eacute;cifi&eacute;</unable_to_connect>
+<users>Membres</users>

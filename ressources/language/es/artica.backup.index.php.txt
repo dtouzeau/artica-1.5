@@ -1,0 +1,64 @@
+<about>Toda la informaci&oacute;n se almacena en 2 bases de datos utilizadas por Artica.[Br]
+LDAP se utiliza para todos los ajustes y las cuentas. Mysql se utiliza para eventos y productos relacionados con el uso que Mysql.[Br]
+Artica crea estos ajustes de copia de seguridad con el fin de restablecerse si el servidor se cae</about>
+<add_folder>A&ntilde;adir una nueva carpeta</add_folder>
+<add_has_backup>A&ntilde;adir este disco como copia de seguridad de almacenamiento</add_has_backup>
+<add_share_folder>A&ntilde;adir una nueva carpeta de un recurso remoto compartido</add_share_folder>
+<add_share_folder_text>Dar parametros de control remoto a fin de ayudar a conectar Artica con la capeta remota sbm..</add_share_folder_text>
+<archives_files>archivo(s) archivado(s)</archives_files>
+<ArticaBackupMaxTimeToLiveInDay>Maximo tiempo de vida para un contenedor</ArticaBackupMaxTimeToLiveInDay>
+<available_disks>Discos disponibles</available_disks>
+<backup_now>Copia de seguridad ahora</backup_now>
+<backup_now_text>Realice ahora una nueva copia de seguridad</backup_now_text>
+<backup_path>Ruta de la copia de seguridad</backup_path>
+<backup_time>Realizar copia de seguridad todos los d&iacute;as a las</backup_time>
+<browse_dar>Busca tu DAR contenedor ..</browse_dar>
+<browse_dar_text>Esta secci&oacute;n le ayudar&aacute; a encontrar y restaurar archivos de copia de seguridad en su contenedor. [Br] Utilice el campo de b&uacute;squeda para encontrar los archivos que usted desea restaurar o para obtener el estado</browse_dar_text>
+<close_windows>Todas las operaciones de copia de seguridad se ejecutan ... Puede cerrar las ventanas ahora</close_windows>
+<compile_rules_ok>Su configuraci&oacute;n se ha grabado correctamente</compile_rules_ok>
+<connect_as>Conectar como</connect_as>
+<connect_share>Conecte esto en modo compartir carpeta</connect_share>
+<dar_is_not_installed>DAR no est&aacute; instalado!</dar_is_not_installed>
+<dar_is_not_installed_text>Archivo de disco (DAR) la aplicaci&oacute;n no est&aacute; instalada en su sistema.[Br] Esta funci&oacute;n no esta corriendo en tu sistema[br]
+Por favor, instala &quot;DAR&quot; a trav&eacute;s de su aplicaci&oacute;n favorita repositorio del administrador &quot;apt-get, aptitude, yum, slapt-get,etc.. (o gestor de repositorio utilizando Artica)[br] Antes de utilizar esta caracter&iacute;stica ...</dar_is_not_installed_text>
+<database_files_number>N&uacute;mero de archivos almacenados</database_files_number>
+<database_number>Base de datos</database_number>
+<disk_add_caption>Este disco se a&ntilde;ade en el posible almacenamiento de copia de seguridad.
+si el disco est&aacute; conectado,
+Artica exportar&aacute; autom&aacute;ticamente copias de seguridad almacenadas en el disco (incluyendo las carpetas compartidas de samba tambi&eacute;n).
+&iquest;Desea Confirmar este comportamiento?</disk_add_caption>
+<disk_retranslation>Retraducci&oacute;n del disco</disk_retranslation>
+<disk_retranslation_text>Esta caracter&iacute;stica le permite obtener m&aacute;s datos de copia de seguridad de un disco duro interno/externo.[Br]
+Cuando se realiza la copia de seguridad est&aacute;ndar y si el disco duro externo est&aacute; conectado, [br]
+Artica duplicara la copia de seguridad est&aacute;ndar y todos los datos de almacenamiento a este disco (incluyendo los directorios compartidos de samba, buzones de correo, etc ...).[ br]
+Utilice esta secci&oacute;n para seleccionar el disco duro y la carpeta de destino y todo se realiza autom&aacute;ticamente. [Br]
+conecte su disco antes de seleccionarlo y lo detectara autom&aacute;ticamente</disk_retranslation_text>
+<enable_artica_backup>Habilitar funciones de copia de seguridad Artica</enable_artica_backup>
+<evry_day_at>Todos los d&iacute;as a las</evry_day_at>
+<folder_size>Tama&ntilde;o de la carpeta</folder_size>
+<howto_restore>Las tareas programadas se almacena en el [b]/etc/cron.d/artica.cron.backups[/ b][br]
+[H5]Restaurar:[/ H5]
+Para restaurar una copia de seguridad almacenada, puede ejecutar la l&iacute;nea de comando[br]
+[b]artica-ldap --restore (ruta del archivo)[b][br]
+Artica-ldap se encuentra en /usr/share/postfix-Artica</howto_restore>
+<info>Informaci&oacute;n</info>
+<perform_restore>Realizar el proceso de restauraci&oacute;n</perform_restore>
+<personal_folders>Carpetas personales</personal_folders>
+<restore_all_database>Restaurar todos los archivos de la base de datos que se almacenan este archivo</restore_all_database>
+<restore_all_database_text>Esta operaci&oacute;n le ayudar&aacute; a restaurar todos los archivos almacenados en el archivo seleccionado contenedor,
+navegar por el servidor con el fin de especificar la carpeta que almacenar&aacute; los archivos restaurados.</restore_all_database_text>
+<restore_full_database>Restaurar todo un contenedor</restore_full_database>
+<restore_single_file>Restaurar solamente este archivo seleccionado</restore_single_file>
+<saved_date>Guardar fecha</saved_date>
+<selected_disks>Selecci&oacute;nar discos</selected_disks>
+<select_this_disk>Seleccione este disco como un disco de copia de seguridad</select_this_disk>
+<shares_list>Ubicaciones en lista de carpetas remotas</shares_list>
+<share_folder>Compartir Carpeta</share_folder>
+<share_retranslation>Retraducci&oacute;n de compartidos</share_retranslation>
+<share_retranslation_text>Esta caracter&iacute;stica realiza la copia de seguridad de todos los datos en un servidor remoto utilizando un directorio compartido.
+Todos los datos de la copia de seguridad ser&aacute;n copiados en modo incremental.Puede recuperar todos los archivos de la versi&oacute;n en un tiempo determinado.[Br]
+Esta funci&oacute;n ejecuta la herramienta artica-backup-share. y enviar las notificaciones en caso de que la tarea tenga &eacute;xito o no</share_retranslation_text>
+<storage_list>Lista de contenedores de almacenamiento</storage_list>
+<success_sendcommand>Orden enviada a Artica OK ....</success_sendcommand>
+<target_restore_folder>Restaurar la carpeta de destino</target_restore_folder>
+<usb_device_id>Fuente del dispositivo externo ID</usb_device_id>

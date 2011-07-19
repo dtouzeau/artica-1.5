@@ -1,0 +1,2 @@
+<QuarantineAutoCleanEnabled>Activer l'auto-nettoyage de la zone de quarantaine</QuarantineAutoCleanEnabled>
+<QuarantineMaxDayToLive>Nbr de Jour Max dans la zone de quarantaine</QuarantineMaxDayToLive>

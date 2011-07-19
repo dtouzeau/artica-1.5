@@ -1,0 +1,122 @@
+AMAVIS-STATS(1)              amavisd-new companion             AMAVIS-STATS(1)
+
+
+
+NNAAMMEE
+       aammaavviiss--ssttaattss - generate e-mail statistics from amavisd-new (sys)log
+       files.
+
+SSYYNNOOPPSSIISS
+       aammaavviiss--ssttaattss [options]
+
+DDEESSCCRRIIPPTTIIOONN
+       aammaavviiss--ssttaattss is a simple e-mail statistics generator based on amavisd-
+       new and rrdtool.
+
+       Statistics are read from amavisd-new (sys)log entries and stored in RRD
+       files.
+
+       There is an accompanying php script to actually generate the web pages
+       and graphs.  This man page is just for the perl script daemon which
+       parses the log files.
+
+       OOVVEERRVVIIEEWW
+
+       In this man page you will find general information on the use of the
+       aammaavviiss--ssttaattss daemon.
+
+       For a more detailed description of how to use the individual options of
+       the aammaavviiss--ssttaattss daemon, check the built-in help and included documen‐
+       tation.
+
+       options
+           [ddeebbuugg] ( runs in foreground )
+
+           [ffoorreeggrroouunndd]
+
+           [hheellpp]
+
+           [rreellooaadd]
+
+           [ssttaarrtt] ( kept for legacy )
+
+           [ssttoopp]
+
+       options _( _r_e_q_u_i_r_i_n_g _a_r_g_u_m_e_n_t_s _)
+           [--cc <<ccoonnffiigg--ffiillee>>]
+
+           [--gg <<ggrroouupp>>] ( requires -u option to be specified )
+
+           [--uu <<uusseerr>>]
+
+FFIILLEESS
+       _S_C_R_I_P_T_S_, _C_O_N_F_I_G _A_N_D _D_I_R_E_C_T_O_R_I_E_S
+           //uussrr//llooccaall//ssbbiinn//aammaavviiss--ssttaattss
+            amavis-stats daemon.
+
+           //uussrr//llooccaall//eettcc//aammaavviiss--ssttaattss..ccoonnff
+            config file for amavis-stats daemon.
+
+           //uussrr//llooccaall//sshhaarree//aammaavviiss--ssttaattss//aammaavviiss--ssttaattss..pphhpp
+            php script, for generating web-based graphs.
+
+           //uussrr//llooccaall//sshhaarree//aammaavviiss--ssttaattss//aammaavviiss--ssttaattss..pphhpp..ccoonnff
+            config file for php script.
+
+           //uussrr//llooccaall//sshhaarree//aammaavviiss--ssttaattss//aammaavviiss--ssttaattss..aalliiaass..ccoonnff
+            config file for apache.
+
+           //uussrr//llooccaall//vvaarr//lliibb//aammaavviiss--ssttaattss//
+            location of rrd files and state information.
+
+           //uussrr//llooccaall//vvaarr//ccaacchhee//aammaavviiss--ssttaattss//
+            image cache directory, where web images are stored.
+
+       _P_N_G _I_M_A_G_E_S _A_N_D _F_O_N_T_S _F_O_R _B_U_T_T_O_N_S
+           //uussrr//llooccaall//sshhaarree//aammaavviiss--ssttaattss//CChhaallkkbbooaarrddBBoolldd..ttttff
+            default truetype font.
+
+           //uussrr//llooccaall//sshhaarree//aammaavviiss--ssttaattss//ttaabb__cceenntteerr__bblluuee..ppnngg
+            button center (blue)
+
+           //uussrr//llooccaall//sshhaarree//aammaavviiss--ssttaattss//ttaabb__cceenntteerr__ggrraayy..ppnngg
+            button center (gray)
+
+           //uussrr//llooccaall//sshhaarree//aammaavviiss--ssttaattss//ttaabb__cceenntteerr__wwhhiittee..ppnngg
+            button center (white)
+
+           //uussrr//llooccaall//sshhaarree//aammaavviiss--ssttaattss//ttaabb__lleefftt__bblluuee..ppnngg
+            button left (blue)
+
+           //uussrr//llooccaall//sshhaarree//aammaavviiss--ssttaattss//ttaabb__lleefftt__ggrraayy..ppnngg
+            button left (gray)
+
+           //uussrr//llooccaall//sshhaarree//aammaavviiss--ssttaattss//ttaabb__lleefftt__wwhhiittee..ppnngg
+            button left (white)
+
+           //uussrr//llooccaall//sshhaarree//aammaavviiss--ssttaattss//ttaabb__rriigghhtt__bblluuee..ppnngg
+            button right (blue)
+
+           //uussrr//llooccaall//sshhaarree//aammaavviiss--ssttaattss//ttaabb__rriigghhtt__ggrraayy..ppnngg
+            button right (gray)
+
+           //uussrr//llooccaall//sshhaarree//aammaavviiss--ssttaattss//ttaabb__rriigghhtt__wwhhiittee..ppnngg
+            button right (white)
+
+           //uussrr//llooccaall//sshhaarree//aammaavviiss--ssttaattss//bbuulllleett__cceenntteerr__bblluuee..ppnngg
+            button center (blue)
+
+           //uussrr//llooccaall//sshhaarree//aammaavviiss--ssttaattss//bbuulllleett__lleefftt__bblluuee..ppnngg
+            button left (blue)
+
+           //uussrr//llooccaall//sshhaarree//aammaavviiss--ssttaattss//bbuulllleett__rriigghhtt__bblluuee..ppnngg
+            button right (blue)
+
+           You can substitue fonts and png images to customize the appearance.
+
+AAUUTTHHOORR
+       Dale Walsh <buildsmart@daleenterprise.com>
+
+
+
+0.1.22                            2009-02-24                   AMAVIS-STATS(1)

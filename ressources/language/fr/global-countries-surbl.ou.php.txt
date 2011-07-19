@@ -1,0 +1,11 @@
+<action_100_pourc>Action quand le score est en hausse de 100 %</action_100_pourc>
+<rbl_servers>serveurs SURBL</rbl_servers>
+<surbl_explain>Un Identificateur de Ressource Universel (URI) est un moyen standard d'adresser des ressources sur le Web. [Br] URIS Commun comme des Rep&egrave;res de Ressource Uniformes (URLs) et Uniform Resource Names (URNs) sont utilis&eacute; pour identifier la destination de liens hypertexte aussi bien que les sources d'images, l'information et d'autres objets dans une Page Web. [Br] URLs sont plus g&eacute;n&eacute;ralement utilis&eacute; dans des sites Web, mais peuvent aussi &ecirc;tre inclus comme la partie d'un corps de message &eacute;lectronique par exemple pour attirer un nouveau visiteur sur un site internet.[br]
+
+SURBL est diff&egrave;rent de la plupart des autres RBLs dans lesquels ils sont utilis&eacute;s pour d&eacute;tecter le spam bas&eacute; sur le corps de message URIs. [Br] &Agrave; la diff&eacute;rence de la plupart des autres RBLs, SURBLs n'est pas utilis&eacute; pour bloquer des exp&eacute;diteurs spameurs. [Br] Au lieu de cela ils vous permettent de bloquer les messages qui ont des h&ocirc;tes de spam (par exemple des serveurs Web, des domaines, des sites Web) qui sont mentionn&eacute;s dans des corps de message. [Br]
+Ce module utilise la m&eacute;thode de pourcentage pour juger si un courrier est envoy&eacute; par un site internet ou un ordinateur spameur. [Br] Dans la table ci-dessous, vous devez atteindre 1OO% avec une liste de base de donn&eacute;es de serveurs surbl. [Br] pour augmenter le taux de d&eacute;tection, vous pouvez exc&eacute;der 100 % de r&eacute;sultats [br] Par exemple vous pouvez mettre [br]
+[ul]
+[li]rhsbl.ahbl.org as 20%[/li]
+[li]multi.surbl.org as 30%[/li]
+[li]adult.rhs.mailpolice.com as 70%[/li]
+[/ul][br]</surbl_explain>

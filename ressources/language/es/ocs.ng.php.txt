@@ -1,0 +1,79 @@
+<ACTIVATE_OCS_AGENT_SERVICE>Activate agent service</ACTIVATE_OCS_AGENT_SERVICE>
+<add_new_package>Add a new package in database</add_new_package>
+<affected>Affected</affected>
+<APP_OCSI_LINUX_CLIENT>Ocsinventory unified agent for UNIX</APP_OCSI_LINUX_CLIENT>
+<APP_OCSI_LINUX_CLIENT_TEXT>Ocsinventory unified agent for UNIX is the Linux Network Agent for OCS Inventory, click here to set mandatories settings</APP_OCSI_LINUX_CLIENT_TEXT>
+<automatic_computers_injection>Automatic computers injection</automatic_computers_injection>
+<automatic_computers_injection_explain>Automatic computers injection will update Artica LDAP database with the OCS Database.[br]
+Each X minutes, it check if there is new computers updated.[br]
+When a new computer sends it's datas, and being added to the OCS Database, Artica will replicate informations to the LDAP database.[br]
+In this case, DNS, Network services will be automatically updated.[br]
+If you want to disable this feature, set parameter to 0</automatic_computers_injection_explain>
+<certificate>Certificate</certificate>
+<download_certificate>Download certificate</download_certificate>
+<EXECUTE>Execute</EXECUTE>
+<last_com>Last connection</last_com>
+<LAUNCH>Launch</LAUNCH>
+<OCS_ADD_PACKAGE_EXPLAIN>OCS Agents requires that you package is in zip compressed format, you can specify 2 orders about a zip package.[br]
+[b]Store[/b] will extract only the package in the specified path.[br]
+[b]Execute[/b]Will extract package and execute the specified command lines tokens.[br]
+[b]Launch[/b]Will extract package and execute just the executable file specified (eg a bat/sh file).
+</OCS_ADD_PACKAGE_EXPLAIN>
+<ocs_affect_packages_computers>Launch deployment of this package to target computers</ocs_affect_packages_computers>
+<OCS_AGENT>OCS AGent</OCS_AGENT>
+<OCS_AGENT_INSTALL_1>Download the zipped file, extract it and run OcsAgentSetup.exe on client computer..</OCS_AGENT_INSTALL_1>
+<OCS_AGENT_INSTALL_2>Validate license agreement by clicking I agree button</OCS_AGENT_INSTALL_2>
+<OCS_AGENT_INSTALL_3>Fill in OCS Inventory NG Communication server address and port.[br]
+If you do not wish to use Microsoft Internet Explorer proxy settings (because your proxy requires authentication for example), 
+enable No Proxy checkbox.[br]
+ The miscellaneous field allows you to pass the agent other command line arguments (cf Agent's command line switches). Then click Next button.
+</OCS_AGENT_INSTALL_3>
+<OCS_AGENT_INSTALL_4>Choose destination folder, C:\Program Files\OCS Inventory Agent by default, and click Install button.</OCS_AGENT_INSTALL_4>
+<OCS_AGENT_INSTALL_5>Click Close button to register OCS inventory NG agent service into System.</OCS_AGENT_INSTALL_5>
+<OCS_AGENT_INSTALL_CACERT>Do not forget to copy the certificat file to the installation directory of the agent.[br]File name must be cacert.pem[br]eg:C:\Program Files\OCS Inventory Agent\cacert.pem[br]
+You will find the certificat in the certificate tab on this section.</OCS_AGENT_INSTALL_CACERT>
+<OCS_AGENT_INSTALL_TITLE>Manually installing Service version of Agent.</OCS_AGENT_INSTALL_TITLE>
+<OCS_AGENT_INTRO>When the OCS Inventory NG Agent is launched, it queries the Communication server using the HTTP protocol.[br]
+The server can answer nothing (not time for an inventory and no package to deploy), and the agent stops.[br]
+Otherwise, the server may answer that Agent has to:
+[ul]
+[li]Send an inventory: the agent retrieves all computer properties and sends them using the HTTP protocol to the server.[br]
+ The server answers this only if the last inventory date in the database is older than the general option FREQUENCY, specified in days (see Managing OCS Inventory NG general options.)[/li]
+[li]Discover the network: Agent retrieves all computer properties, scans his subnet for active devices listening on the network, then sends this information using the HTTP protocol to the server.[br]
+ The server answers only if the computer is elected to run IPDISCOVERY (see Using IP discovery feature.)[/li]
+[li]Deploy a package: Agent contacts the deployment server using the HTTPS protocol to get the information file, downloads package fragments from the repository, rebuilds the package and launches it.[/li]
+[/ul] 
+</OCS_AGENT_INTRO>
+<ocs_certificate_explain>If you want to use remote deployement, you need to generate a certificate.
+[br]Remote computers requiress SSL access to validate server before trying to download from it, you need SSL certificates for use with your server.[br]
+You can use http://www.cacert.org  services: they sign your certificates, and provide one certificate aiming to be used with many FOSS projects, 
+because it's free instead of paid certificates like the ones from Thawte or Verisign.[br]
+First, you need to generate a private key and a CSR.[br]Fill the form below that requires mandatories informations to generate this private key.
+</ocs_certificate_explain>
+<ocs_certificate_explain_self>If you want to use remote deployement, you need to generate a certificate.[br]
+This section helps you to generate a slef-signed certificate</ocs_certificate_explain_self>
+<ocs_computer_is_not_in_ldap>This computer is not stored in the Artica Database.[br]You click here in order to add it.</ocs_computer_is_not_in_ldap>
+<OCS_CONNECTED_COMPUTERS_TEXT>This section display your computers connected to the inventory service</OCS_CONNECTED_COMPUTERS_TEXT>
+<OCS_COULD_NOT_RESOLVE_SSLHOST>It seems that this server name is not in your private DNS!, please, verify if the server is resolved by your computers.</OCS_COULD_NOT_RESOLVE_SSLHOST>
+<OCS_CSR_HOWTO>Copy and paste these lines in the cacert.org website in order to generate the public certificate</OCS_CSR_HOWTO>
+<ocs_download_certificate_text>Download the certificate and save it in the OCS Agent installation directory</ocs_download_certificate_text>
+<OCS_MUST_CREATE_CERTIFICATE_CSR_FIRST>You need to obtain a valid Server Certificate first, follow instructions display in the help icon</OCS_MUST_CREATE_CERTIFICATE_CSR_FIRST>
+<OCS_PACKAGE_INFOS>This section display packages available for deployements to remote computers</OCS_PACKAGE_INFOS>
+<OCS_PACKAGE_NO_CERT_SERVER>You did not set server name in the certificate section, the package cannot be created</OCS_PACKAGE_NO_CERT_SERVER>
+<OCS_SERVER_ADDRESS>OCS server address</OCS_SERVER_ADDRESS>
+<ocs_web_params>Web server/interface</ocs_web_params>
+<ocs_web_params_text>Set parameters of the web server and the interface of OCS Inventory</ocs_web_params_text>
+<packages>Packages</packages>
+<PACKAGE_AFFECT_HOWTO>Click on the checkbox near computers in order to launch the package deployement</PACKAGE_AFFECT_HOWTO>
+<PROLOG_FREQ>Frequency connections</PROLOG_FREQ>
+<PROLOG_FREQ_HELP>Number of hours between two run of the agent (useful for the service). Therefore, the agent will contact (not necessary send an inventory if inventory is not older than
+FREQUENCY days) ocs server every X hours.</PROLOG_FREQ_HELP>
+<STORE>Store</STORE>
+<system_os_mini>O.S.</system_os_mini>
+<upload_certificate>upload certificate</upload_certificate>
+<upload_server_certificate>Upload Server Certificate</upload_server_certificate>
+<upload_server_certificate_text_ocs>Save your generated certificate to a file name server.crt on your computer, 
+upload it to the server using browse button and make the SSL deployment service available</upload_server_certificate_text_ocs>
+<UseFusionInventoryAgents>Use Fusion Inventory Agents</UseFusionInventoryAgents>
+<UseFusionInventoryAgents_text>Use the Agents instead the orginal OCS Inventory Agents.[br]This requires only one web server</UseFusionInventoryAgents_text>
+<use_self_signed_certificate>Use self-signed certificate</use_self_signed_certificate>

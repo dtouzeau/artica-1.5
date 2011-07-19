@@ -1,0 +1,9 @@
+<changeClock>Pour Changer l'horloge, mettez le temps le temps exactement comme indiqu&eacute; ci-dessous</changeClock>
+<change_clock_tooltip>Si vous voulez changer l'heure syst&egrave;me[br]Cliquez sur le lien ...</change_clock_tooltip>
+<clocks>Horloges</clocks>
+<clocks_text>Votre ordinateur poss&egrave;de deux horloges; une horloge sauvegard&eacute; par pile qui tourne en permanence: Horloge mat&eacute;rielle (&quot;BIOS&quot; ou &quot;CMOS&quot;) et une seconde horloge g&eacute;r&eacute;e par le syst&egrave;me d'exploitation: Horloge syst&egrave;me.[br]
+L'horloge mat&eacute;rielle est g&eacute;n&eacute;ralement utilis&eacute;e pour initialiser l'horloge syst&egrave;me lors du d&eacute;marrage de votre syst&egrave;me d'exploitation, cette horloge syst&egrave;me est utilis&eacute;e ensuite pour suivre le temps.</clocks_text>
+<convert_clock_tooltip>R&eacute;gler l'horloge mat&eacute;rielle par rapport &agrave; l'horloge syst&egrave;me</convert_clock_tooltip>
+<hardware_clock>Horloge mat&eacute;rielle</hardware_clock>
+<system_clock>Horloge syst&egrave;me</system_clock>
+<wrong_date>La date donn&eacute;e ne correspondent pas au format requis</wrong_date>

@@ -1,0 +1,103 @@
+#!/usr/bin/perl
+##---------------------------------------------------------------------------##
+##  File:
+##	$Id: mhonarc,v 2.10 2003/07/20 03:24:38 ehood Exp $
+##  Author:
+##      Earl Hood       mhonarc@mhonarc.org
+##  Description:
+##      MHonArc is a Perl program to convert mail to HTML.  See
+##	accompany documentation for full details.
+##---------------------------------------------------------------------------##
+##    MHonArc -- Internet mail-to-HTML converter
+##    Copyright (C) 1995-1999	Earl Hood, mhonarc@mhonarc.org
+##
+##    This program is free software; you can redistribute it and/or modify
+##    it under the terms of the GNU General Public License as published by
+##    the Free Software Foundation; either version 2 of the License, or
+##    (at your option) any later version.
+##
+##    This program is distributed in the hope that it will be useful,
+##    but WITHOUT ANY WARRANTY; without even the implied warranty of
+##    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##    GNU General Public License for more details.
+##
+##    You should have received a copy of the GNU General Public License
+##    along with this program; if not, write to the Free Software
+##    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+##    02111-1307, USA
+##---------------------------------------------------------------------------##
+
+##---------------------------------------------------------------------------##
+##				Main routine				     ##
+##---------------------------------------------------------------------------##
+
+MAIN: {
+    unshift(@INC, 'lib');	# Should I leave this line in?
+
+    require 'mhamain.pl' || die qq/ERROR: Unable to require "mhamain.pl"\n/;
+    mhonarc::initialize();
+    mhonarc::process_input() ? exit(0) : exit($mhonarc::CODE);
+}
+
+##---------------------------------------------------------------------------##
+1;
+
+__END__
+
+=head1 NAME
+
+mhonarc - convert mail/news messages to HTML
+
+=head1 SYNOPSIS
+
+S<B<mhonarc> [I<options>] [I<arguments>]>
+
+=head1 DESCRIPTION
+
+B<MHonArc> is a Perl program for converting mail, or news, messages
+into HTML archives.  B<MHonArc> can also be used to convert
+individual messages into HTML documents.
+
+The documentation for B<MHonArc> is distributed in HTML format.
+Due to its size and organization, it is not suited for manpage
+format.  Consult your system administrator for where the documentation
+has been installed, or see L<"AVAILABILITY"> on where you can
+access the documentation on the web.
+
+Running "C<mhonarc -help>" will give a summary of the command-line
+options available.
+
+=head1 PREREQUISITES
+
+B<Fcntl>,
+B<File::Basename>,
+B<Getopt::Long>,
+B<Symbol>,
+B<Time::Local>
+
+=head1 COREQUISITES
+
+B<Digest::MD5>,
+
+=head1 OSNAMES
+
+any
+
+=head1 AVAILABILITY
+
+E<lt>I<http://www.mhonarc.org/>E<gt>
+
+=head1 SCRIPT CATEGORIES
+
+Mail
+
+=head1 AUTHOR
+
+Earl Hood, mhonarc@mhonarc.org
+
+MHonArc comes with ABSOLUTELY NO WARRANTY and MHonArc may be copied only
+under the terms of the GNU General Public License, which may be found in
+the MHonArc distribution.
+
+=cut
+

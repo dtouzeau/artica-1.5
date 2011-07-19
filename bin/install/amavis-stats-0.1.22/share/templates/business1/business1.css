@@ -1,0 +1,92 @@
+/* The content of the body */
+body{
+background:#f1f1f1 url(images/bkgnd.gif);
+color:#000000;
+font:12px Verdana,Arial,Helvetica,sans-serif;
+margin:0px;padding:0;
+scrollbar-3dlight-color:#CCCCCC;
+scrollbar-arrow-color:#000000;
+scrollbar-base-color:#CCCCCC;
+scrollbar-darkshadow-color:#2F4F4F;
+scrollbar-face-color:#CCCCCC;
+scrollbar-highlight-color:#CCCCCC;
+scrollbar-shadow-color:#CCCCCC;
+scrollbar-track-color:#F1F1F1
+}
+
+/* General font families for common tags */
+font,th,td,p{font:12px Verdana,Arial,Helvetica,sans-serif}
+
+/* General text */
+.gentiny{font-size:9px}
+.gensmall{font-size:10px}
+td.genmed,.genmed{font-size:11px}
+.explaintitle{font-size:11px;font-weight:bold;color:#5C81B1}
+.t11g {font-family: tahoma;font-size: 11px;color:#646464;text-decoration: none;}
+.v11r {font-family: Verdana, Arial, Helvetica, sans-serif;font-size: 11px;font-weight: bold;color:#CD3232;text-decoration: none;}
+.v11g {font-family: Verdana, Arial, Helvetica, sans-serif;font-size: 11px;color:#646464;text-decoration: none;}
+
+/* General page style */
+a:link,a:active,a:visited,a.postlink{color:#4682b4;text-decoration:none}
+a:hover{color:#000000;text-decoration:underline}
+
+/* Name of poster in viewmsg.php and other places */
+.name{font-size:11px;font-weight: bold}
+
+hr{border: 0px solid #757575;border-top-width:1px;height:0px}
+
+/* Main table cell colours and backgrounds */
+.row1{background:#f5f5f5}
+.row2,.helpline{background:#ececec}
+.row3{background:#e3e3e3}
+td.spacerow{background:#ffffff}
+
+/* Table Header cells */
+th{background:#f1f1f1 url(images/lines.gif);color:#333333;font-size:11px;
+font-weight:bold;height:27px;white-space:nowrap;text-align:center;padding-left:8px;padding-right:8px}
+
+/* This is the border line & background colour round the entire page */
+.bodyline{background:#fbfbfb;border:1px solid #666666}
+.bodyline2{width:778px;background:#fbfbfb;border:1px solid #666666}
+
+/* This is the outline round the main tables */
+.forumline{background:#757575;border:0;width:100%}
+.forumline2{background:#757575;border:0;width:780px}
+
+/* The largest text used in the index page title and toptic title etc. */
+.maintitle,h1{
+font:bold 20px/120% "Trebuchet MS",Verdana,Arial,Helvetica,sans-serif;text-decoration:none;color:#939393}
+
+.subtitle,h2{font:bold 18px/180% "Trebuchet MS",Verdana,Arial,Helvetica,sans-serif;
+text-decoration:none}
+
+/* This is for the error messages that pop up */
+.errorline{background:#d3e4f3;border:1px solid #666666}
+
+/* Form elements */
+form{display:inline}
+
+input{font:11px Verdana,Arial,Helvetica,sans-serif}
+
+select{background:#ffffff;font:11px Verdana,Arial,Helvetica,sans-serif}
+
+input.button,input.liteoption,.fakebut{border:1px solid #000000;background:#d3e4f3;font-size:11px}
+input.catbutton{border:1px solid #000000;background:#d3e4f3;font-size:10px}
+input.mainoption{border:1px solid #000000;background:#d3e4f3;font-size:11px;font-weight:bold}
+
+a.but,a.but:hover,a.but:visited{color:#000000;text-decoration:none}
+
+/* Gets rid of the need for border="0" on hyperlinked images */
+img{border:0}
+
+/* This is the header table with imac screen */
+.scrntbkg{background:url(images/scrn_t.gif) repeat-x;height:14px;width:100%}
+.scrnbbkg{background:url(images/scrn_b.gif) repeat-x;height:14px;width:100%}
+.scrnlbkg{background:url(images/scrn_l.gif) repeat-y;width:14px}
+.scrnrbkg{background:url(images/scrn_r.gif) repeat-y;width:14px}
+.scrn{width:100%;text-align:center}
+td.scrnm{background:#ffffff}
+
+/* This is the background behind some tables */
+.tablebkgnd1{background:#f1f1f1 url(images/index_48.gif);width:780px;font-size:10px}
+.tablebkgnd2{background:#f1f1f1 url(images/index_51.gif);width:780px;font-size:10px}

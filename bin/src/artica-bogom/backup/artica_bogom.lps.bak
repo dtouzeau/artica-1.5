@@ -1,0 +1,203 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="/"/>
+    <Version Value="6"/>
+    <Units Count="22">
+      <Unit0>
+        <Filename Value="artica_bogom.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="artica_bogom"/>
+        <CursorPos X="12" Y="28"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="0"/>
+        <UsageCount Value="49"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="bogom_parse.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="bogom_parse"/>
+        <CursorPos X="58" Y="212"/>
+        <TopLine Value="176"/>
+        <EditorIndex Value="1"/>
+        <UsageCount Value="49"/>
+        <Loaded Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="../artica-pipe-back/artica_pipe_back.pas"/>
+        <UnitName Value="artica_pipe_back"/>
+        <CursorPos X="52" Y="6"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="8"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="../artica-pipe-back/mimedefhook.pas"/>
+        <UnitName Value="mimedefhook"/>
+        <CursorPos X="1" Y="499"/>
+        <TopLine Value="463"/>
+        <EditorIndex Value="4"/>
+        <UsageCount Value="18"/>
+        <Loaded Value="True"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="../artica-thread-back/artica_thread_back.pas"/>
+        <UnitName Value="artica_thread_back"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="7"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="../artica-thread-back/htmlback.pas"/>
+        <UnitName Value="htmlback"/>
+        <CursorPos X="69" Y="530"/>
+        <TopLine Value="2"/>
+        <EditorIndex Value="3"/>
+        <UsageCount Value="19"/>
+        <Loaded Value="True"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="../mimemessage_src/mimemess.pas"/>
+        <UnitName Value="mimemess"/>
+        <CursorPos X="27" Y="139"/>
+        <TopLine Value="103"/>
+        <UsageCount Value="9"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="../mimemessage_src/mimepart.pas"/>
+        <UnitName Value="mimepart"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="7"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="../mimemessage_src/synachar.pas"/>
+        <UnitName Value="synachar"/>
+        <CursorPos X="32" Y="65"/>
+        <TopLine Value="29"/>
+        <UsageCount Value="7"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="../artica-thread-back/artica_mysql.pas"/>
+        <UnitName Value="artica_mysql"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="7"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="artica_mysql.pas"/>
+        <UnitName Value="artica_mysql"/>
+        <CursorPos X="63" Y="5"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="10"/>
+        <UsageCount Value="24"/>
+        <Loaded Value="True"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="/usr/share/fpcsrc/packages/base/mysql/mysql4.pp"/>
+        <UnitName Value="mysql4"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="7"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="/usr/share/fpcsrc/packages/base/mysql/mysql4types.inc"/>
+        <CursorPos X="3" Y="208"/>
+        <TopLine Value="172"/>
+        <UsageCount Value="7"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="../artica-install/logs.pas"/>
+        <UnitName Value="logs"/>
+        <CursorPos X="31" Y="560"/>
+        <TopLine Value="522"/>
+        <EditorIndex Value="9"/>
+        <UsageCount Value="24"/>
+        <Loaded Value="True"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="../artica-ldap/articaldap.pas"/>
+        <UnitName Value="articaldap"/>
+        <CursorPos X="4" Y="607"/>
+        <TopLine Value="571"/>
+        <EditorIndex Value="8"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="/usr/share/fpcsrc/rtl/inc/varianth.inc"/>
+        <CursorPos X="10" Y="455"/>
+        <TopLine Value="404"/>
+        <EditorIndex Value="7"/>
+        <UsageCount Value="19"/>
+        <Loaded Value="True"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="../artica-thread-back/global_conf.pas"/>
+        <UnitName Value="global_conf"/>
+        <CursorPos X="85" Y="25"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="5"/>
+        <UsageCount Value="19"/>
+        <Loaded Value="True"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="/usr/share/fpcsrc/rtl/inc/systemh.inc"/>
+        <CursorPos X="31" Y="272"/>
+        <TopLine Value="236"/>
+        <UsageCount Value="8"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="/usr/share/fpcsrc/rtl/objpas/sysutils/datih.inc"/>
+        <CursorPos X="10" Y="123"/>
+        <TopLine Value="69"/>
+        <UsageCount Value="8"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="../artica-thread-back/spamass.pas"/>
+        <UnitName Value="spamass"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="6"/>
+        <UsageCount Value="18"/>
+        <Loaded Value="True"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="bogom.pas"/>
+        <UnitName Value="bogom"/>
+        <CursorPos X="1" Y="468"/>
+        <TopLine Value="400"/>
+        <EditorIndex Value="2"/>
+        <UsageCount Value="18"/>
+        <Loaded Value="True"/>
+      </Unit20>
+      <Unit21>
+        <Filename Value="spamass.pas"/>
+        <UnitName Value="spamass"/>
+        <CursorPos X="18" Y="320"/>
+        <TopLine Value="275"/>
+        <UsageCount Value="10"/>
+      </Unit21>
+    </Units>
+    <General>
+      <ActiveEditorIndexAtStart Value="1"/>
+    </General>
+    <JumpHistory Count="0" HistoryIndex="-1"/>
+  </ProjectSession>
+  <Debugging>
+    <BreakPoints Count="1">
+      <Item1>
+        <Source Value="../artica-pipe-back/logs.pas"/>
+        <Line Value="671"/>
+      </Item1>
+    </BreakPoints>
+    <Exceptions Count="2">
+      <Item1>
+        <Name Value="ECodetoolError"/>
+      </Item1>
+      <Item2>
+        <Name Value="EFOpenError"/>
+      </Item2>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

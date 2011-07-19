@@ -1,0 +1,4 @@
+<backup_parameters>Param&egrave;tres de sauvegarde</backup_parameters>
+<ENABLE_RSYNC_ACCOUNT>Activer le compte Rsync</ENABLE_RSYNC_ACCOUNT>
+<ENABLE_RSYNC_ACCOUNT_TEXT>Si vous activez cette fonction, le compte utilisateur et le mot de passe de cet utilisateur sera autoris&eacute; &agrave; pousser des sauvegardes sur ce serveur.</ENABLE_RSYNC_ACCOUNT_TEXT>
+<storage_path>chemin de l'Espace de stockage pour cet utilisateur</storage_path>

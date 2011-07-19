@@ -1,0 +1,3 @@
+<permit_tls_clientcerts>Permettez des certificats client tls</permit_tls_clientcerts>
+<permit_tls_clientcerts_text>Permet la requ&ecirc;te lorsque le certificat client SMTP distant est r&eacute;pertori&eacute; dans les certificats empreintes relais client.[br] 
+L'empreinte digitale dig&eacute;rer algorithme est configurable via le param&egrave;tre smtpd_tls_fingerprint_digest (cod&eacute; en dur comme md5 avant Postfix version 2,5)</permit_tls_clientcerts_text>

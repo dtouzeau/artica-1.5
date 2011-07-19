@@ -1,0 +1,9 @@
+<ArchiveMail>Salve a mensagem dentro de uma &aacute;rea espec&iacute;fica da quarentena</ArchiveMail>
+<aveserver_intro_global>Defina aqui as regras gerais</aveserver_intro_global>
+<delete_mail>Apagar a mensagem</delete_mail>
+<NotifyFrom>Notificar o remetente</NotifyFrom>
+<NotifyFromAddress>Endere&ccedil;o para notifica&ccedil;&otilde;es</NotifyFromAddress>
+<NotifyMessage>Mensagem de notifica&ccedil;&atilde;o</NotifyMessage>
+<NotifyMessageSubject>Assunto da mensagem</NotifyMessageSubject>
+<NotifyTo>Notificar o destinat&aacute;rio</NotifyTo>
+<when_found_virus>Quando o antiv&iacute;rus detectar um v&iacute;rus</when_found_virus>

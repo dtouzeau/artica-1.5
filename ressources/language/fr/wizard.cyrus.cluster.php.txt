@@ -1,0 +1,19 @@
+<BUILD_CLUSTER>Construire le clusteur</BUILD_CLUSTER>
+<WIZARD_CLUSTER_CYRUS_EXPLAIN>Cet assistant va vous aider &agrave; cr&eacute;er un clusteur IMAP Actif/passif dans votre r&eacute;seau.[br]
+Afin de cr&eacute;er cette structure, vous avez besoin d'un serveur Artica secondaire avec le service IMAP.[br]
+Ce serveur secondaire sera alors un r&eacute;pliqua/Esclave de vos bo&icirc;tes aux lettres.[br]
+Il recevra des ordres de synchronisation depuis ce serveur afin de r&eacute;pliquer les messages en temps r&eacute;el.[br]
+[br]Si cette op&eacute;ration r&eacute;ussie, vous ne perdrez jamais de courriers.[br]
+La premi&egrave;re op&eacute;ration est de v&eacute;rifier si le serveur distant contient toutes les recommandations n&eacute;cessaires pour l'inter-connexion.[br]
+Si l'inter-connexion est un succ&egrave;s, les deux serveurs Artica (le Ma&icirc;tre et l'esclave) vont &eacute;changer leurs param&egrave;tres et d&eacute;marrer la proc&eacute;dure de clusteur.[br]
+Vous serez en mesure de retourner en arri&egrave;re et retransformer les serveurs en autonome.[br]Un &eacute;chec aura tr&egrave;s peu de cons&eacute;quences.[br]
+Bon... Il est temps de d&eacute;marrer la proc&eacute;dure.[br]
+Remplissez le formulaire ci-joint avec les param&egrave;tres d'autorisations du serveur distant.[br]
+Ceci va aider Artica &agrave; discuter avec ce serveur afin de v&eacute;rifier son &eacute;tat.[br]</WIZARD_CLUSTER_CYRUS_EXPLAIN>
+<WIZARD_CLUSTER_CYRUS_REPLICA_INFOS>Inforamtion sur l'Esclave/r&eacute;pliqua</WIZARD_CLUSTER_CYRUS_REPLICA_INFOS>
+<WIZARD_CLUSTER_CYRUS_REPLICA_SUCCESS>Le serveur distant est pr&ecirc;t.</WIZARD_CLUSTER_CYRUS_REPLICA_SUCCESS>
+<WIZARD_CLUSTER_CYRUS_REPLICA_SUCCESS_EXPLAIN>Ce serveur est pr&ecirc;t pour &ecirc;tre un r&eacute;pliqua. Cliquez sur le bouton, &quot;Construire le clusteur&quot;.[br]Les deux serveurs seront notifi&eacute;s de s'inter-connecter.[br]
+Votre serveur ma&icirc;tre pourrait &ecirc;tre derri&egrave;re un pare-feu &quot;natt&eacute;&quot;.[br]Il est n&eacute;cessaire de d&eacute;finir son adresse IP afin d'indiquer au r&eacute;pliqua quelle adresse il doit utiliser.[br]
+Dans le champs ci-dessous, indiquez l'adresse de ce serveur qui agit en tant que ma&icirc;tre.</WIZARD_CLUSTER_CYRUS_REPLICA_SUCCESS_EXPLAIN>
+<WIZARD_CLUSTER_CYRUS_WELCOME>Welcome on the Wizard for Clustering mailboxes</WIZARD_CLUSTER_CYRUS_WELCOME>
+<WIZARD_CLUSTER_ERROR>L'assistant est bloqu&eacute;, une erreur &agrave; &eacute;t&eacute; rencontr&eacute;e, essayez de la corriger et red&eacute;marrez l'op&eacute;ration.</WIZARD_CLUSTER_ERROR>

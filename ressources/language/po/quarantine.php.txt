@@ -1,0 +1,2 @@
+<QuarantineAutoCleanEnabled>Enable auto-cleaning Quarantine area</QuarantineAutoCleanEnabled>
+<QuarantineMaxDayToLive>Max day to live in quarantine area</QuarantineMaxDayToLive>

@@ -1,0 +1,130 @@
+<!--
+
+/* 
+© 2008 - Design, CSS Style by P&B Creations, pbcreations.sk
+© 2008 - Martin Plakinger (CEO)
+*/
+
+div#menu .menu {
+		height: 47px;
+		width: 1000px;
+		
+	}
+	
+	*> div#menu .menu { margin-top: -14px; }
+	
+	div#menu .menu ul {
+		padding: 0;
+		list-style: none;
+		line-height: normal;
+		margin-left: -7px;
+	}
+	
+	*> div#menu .menu ul { margin-left:0; }
+	
+	div#menu .menu li {
+		display: inline;
+		
+	}
+	
+	div#menu li span.left {
+		background-image:url(img/menu-left.gif);
+		background-repeat:no-repeat;
+		width: 5px;
+		height: 64px;
+		overflow: visible;
+		position: relative;
+		bottom:15px;
+		vertical-align: bottom;
+		visibility:visible;
+		display:block;
+		padding-top: 15px;
+		margin-bottom: -32px;
+		float:left;
+	}
+	
+	div#menu li span.hlavny {
+		background-image:url(img/menu-central.gif);
+		background-repeat:repeat-x;
+		height: 64px;
+		overflow: visible;
+		position: relative;
+		bottom:15px;
+		vertical-align: bottom;
+		visibility:visible;
+		display:block;
+		float: left;
+		padding-top: 15px;
+		margin-bottom: -32px;
+		text-align: center;
+		text-decoration: none;
+		padding-left:40px;
+		padding-right:40px;
+	}
+	
+	
+	div#menu li span.hlavny a, div#menu li span.hlavny a:visited, div#menu li span.hlavny a:link { color:#000000; }
+	
+	div#menu li span.hlavny_ {
+		height: 64px;
+		overflow: visible;
+		position: relative;
+		bottom:15px;
+		vertical-align: bottom;
+		visibility:visible;
+		display:block;
+		float: left;
+		padding-top: 15px;
+		margin-bottom: -32px;
+		text-align: center;
+		text-decoration: none;
+		padding-left:45px;
+		padding-right:45px;
+	}
+	
+	div#menu li span.right {
+		background-image:url(img/menu-right.gif);
+		background-repeat:no-repeat;
+		width: 6px;
+		height:64px;
+		overflow: visible;
+		position: relative;
+		bottom:15px;
+		vertical-align: bottom;
+		visibility:visible;
+		display:block;
+		padding-top: 15px;
+		margin-bottom: -32px;
+		float: left;
+	}
+	
+	div#menu .menu a, div#menu .menu a:visited, div#menu .menu a:active {
+		color:#black;
+		font-size:14px;
+		display:block;
+		float: left;
+		padding: 16px 0 0 0;
+		margin:0;
+		text-align: center;
+		text-decoration: none;
+	}
+
+	div#menu .menu img {
+		display:block;
+		float: left;
+		margin: 0px;
+		margin-bottom: -16px;
+		padding: 12px 0 0 0;
+		text-align: center;
+		text-decoration: none;
+	}
+	
+	div#menu .menu a:hover { color:#FFFFFF; text-decoration:underline; }
+
+
+
+	
+
+}
+
+-->

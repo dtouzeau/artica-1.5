@@ -1,0 +1,2 @@
+<selected_folder>Dossier s&eacute;lectionn&eacute;</selected_folder>
+<select_disk>S&eacute;lectionner votre disque dur</select_disk>

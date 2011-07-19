@@ -1,0 +1,1 @@
+../setup-ubuntu/setup_fedora_class.pas

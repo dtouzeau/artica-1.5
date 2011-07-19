@@ -1,0 +1,26 @@
+You should be able to build this software to work with any version of PHP and RRDTool.
+
+In our exmaples we'll be assuming that RRDTool is version 1.0.49 installed in
+/usr/local/rrdtool and PHP is version 5.1.6 installed in /usr/local/php-5.1.6.
+
+It is recommended that Mac OS X users configure amavis-stats with the following options.
+
+./configure \
+--prefix=/usr \
+--localstatedir=/var \
+--mandir=/usr/share/man \
+--sysconfdir=/etc \
+--enable-startup
+
+If you wish to build the PHP rrdtool module, the following configure command would be
+used to generate the installation and build the PHP rrdtool module.
+
+./configure \
+--prefix=/usr \
+--localstatedir=/var \
+--mandir=/usr/share/man \
+--sysconfdir=/etc \
+--enable-startup \
+--enable-rrdtool \
+--with-php-config=/usr/local/php-5.1.6/bin/php-config
+

@@ -1,0 +1,26 @@
+<battery>Bateria</battery>
+<cpu>C.P.U</cpu>
+<cpufreq>Frecuencia de la CPU</cpufreq>
+<df>Espacio en los discos</df>
+<disk>disco</disk>
+<dns>Las consultas DNS</dns>
+<enable_collected_daemon>Habilitar el archivo collectd</enable_collected_daemon>
+<entropy>Entropia</entropy>
+<hddtemp>Temperatura del disco duro</hddtemp>
+<interface>Interface de red</interface>
+<irq>Interrups</irq>
+<load>Load average</load>
+<mysql>Base de Datos MySQL</mysql>
+<netlink>Network link</netlink>
+<ntpd>Network Time Daemon</ntpd>
+<plugin>Servicio</plugin>
+<show_graph>Ver grafico</show_graph>
+<span_plugin_instance_text>Instance:</span_plugin_instance_text>
+<span_type_instance_text>Tipo de Grafica</span_type_instance_text>
+<swap>Memoria swap</swap>
+<tcpconns>Conecciones TCP</tcpconns>
+<thermal>Termica</thermal>
+<vmem>Paginacion memoria virtual</vmem>
+<wireless>Red Inalambrica</wireless>
+<zoom_in>Zoom +</zoom_in>
+<zoom_out>Zoom -</zoom_out>

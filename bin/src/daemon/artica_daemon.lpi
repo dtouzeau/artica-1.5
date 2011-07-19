@@ -1,0 +1,657 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <ProjectOptions>
+    <PathDelim Value="/"/>
+    <Version Value="6"/>
+    <General>
+      <Flags>
+        <MainUnitHasUsesSectionForAllUnits Value="False"/>
+        <MainUnitHasCreateFormStatements Value="False"/>
+        <MainUnitHasTitleStatement Value="False"/>
+      </Flags>
+      <MainUnit Value="0"/>
+      <IconPath Value="./"/>
+      <TargetFileExt Value=""/>
+      <Title Value="Artica-postfix"/>
+      <ActiveEditorIndexAtStart Value="2"/>
+    </General>
+    <VersionInfo>
+      <ProjectVersion Value=""/>
+    </VersionInfo>
+    <PublishOptions>
+      <Version Value="2"/>
+      <IgnoreBinaries Value="False"/>
+      <IncludeFileFilter Value="*.(pas|pp|inc|lfm|lpr|lrs|lpi|lpk|sh|xml)"/>
+      <ExcludeFileFilter Value="*.(bak|ppu|ppw|o|so);*~;backup"/>
+    </PublishOptions>
+    <RunParams>
+      <local>
+        <FormatVersion Value="1"/>
+        <LaunchingApplication PathPlusParams="/usr/X11R6/bin/xterm -T 'Lazarus Run Output' -e $(LazarusDir)/tools/runwait.sh $(TargetCmdLine)"/>
+      </local>
+    </RunParams>
+    <Units Count="77">
+      <Unit0>
+        <Filename Value="artica_daemon.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="artica_daemon"/>
+        <CursorPos X="18" Y="77"/>
+        <TopLine Value="24"/>
+        <EditorIndex Value="2"/>
+        <UsageCount Value="201"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="../procthread.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ProcThread"/>
+        <CursorPos X="15" Y="27"/>
+        <TopLine Value="80"/>
+        <UsageCount Value="201"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="../../artica/sources/Common/settings/settings.pas"/>
+        <UnitName Value="Settings"/>
+        <CursorPos X="1" Y="1266"/>
+        <TopLine Value="597"/>
+        <UsageCount Value="74"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="/usr/share/fpcsrc/rtl/linux/oldlinux.pp"/>
+        <UnitName Value="oldlinux"/>
+        <CursorPos X="10" Y="1325"/>
+        <TopLine Value="1286"/>
+        <UsageCount Value="11"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="../../postfix_conf/post_conf.pas"/>
+        <UnitName Value="post_conf"/>
+        <CursorPos X="28" Y="10"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="53"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="../../postfix_conf/tpostmysql.pas"/>
+        <UnitName Value="TPostmysql"/>
+        <CursorPos X="78" Y="57"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="2"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="../../artica-install/class_install.pas"/>
+        <UnitName Value="class_install"/>
+        <CursorPos X="131" Y="9"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="48"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="/usr/share/fpcsrc/rtl/objpas/sysutils/finah.inc"/>
+        <CursorPos X="25" Y="28"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="5"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="../../artica-install/confiles.pas"/>
+        <UnitName Value="confiles"/>
+        <CursorPos X="63" Y="91"/>
+        <TopLine Value="70"/>
+        <UsageCount Value="43"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="/usr/share/fpcsrc/rtl/unix/sysutils.pp"/>
+        <UnitName Value="sysutils"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="2"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="/usr/share/fpcsrc/rtl/inc/dosh.inc"/>
+        <CursorPos X="11" Y="109"/>
+        <TopLine Value="70"/>
+        <UsageCount Value="17"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="/usr/share/fpcsrc/rtl/objpas/sysutils/filutilh.inc"/>
+        <CursorPos X="12" Y="53"/>
+        <TopLine Value="7"/>
+        <UsageCount Value="17"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="../../artica/sources/Common/scanfolder/scanfolder.pas"/>
+        <UnitName Value="scanfolder"/>
+        <CursorPos X="7" Y="22"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="54"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="../userdb.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="userdb"/>
+        <CursorPos X="62" Y="279"/>
+        <TopLine Value="201"/>
+        <UsageCount Value="200"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="../logs.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="logs"/>
+        <CursorPos X="251" Y="329"/>
+        <TopLine Value="136"/>
+        <UsageCount Value="200"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="../common.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="common"/>
+        <CursorPos X="1" Y="231"/>
+        <TopLine Value="186"/>
+        <UsageCount Value="200"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="/usr/share/fpcsrc/rtl/objpas/classes/classesh.inc"/>
+        <CursorPos X="76" Y="1265"/>
+        <TopLine Value="1234"/>
+        <UsageCount Value="14"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="../syncho.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="syncho"/>
+        <CursorPos X="3" Y="14"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="210"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="../../artica-install/global_conf.pas"/>
+        <UnitName Value="global_conf"/>
+        <CursorPos X="68" Y="658"/>
+        <TopLine Value="651"/>
+        <UsageCount Value="19"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="../../artica-install/debian.pas"/>
+        <UnitName Value="debian"/>
+        <CursorPos X="4" Y="166"/>
+        <TopLine Value="110"/>
+        <UsageCount Value="19"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="../process_infos.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="process_infos"/>
+        <CursorPos X="6" Y="393"/>
+        <TopLine Value="358"/>
+        <UsageCount Value="191"/>
+      </Unit20>
+      <Unit21>
+        <Filename Value="../global_conf.pas"/>
+        <UnitName Value="global_conf"/>
+        <CursorPos X="5" Y="1436"/>
+        <TopLine Value="1397"/>
+        <UsageCount Value="33"/>
+        <Bookmarks Count="2">
+          <Item0 X="1" Y="4353" ID="0"/>
+          <Item1 X="1" Y="4748" ID="1"/>
+        </Bookmarks>
+      </Unit21>
+      <Unit22>
+        <Filename Value="../confiles.pas"/>
+        <UnitName Value="confiles"/>
+        <CursorPos X="14" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="30"/>
+      </Unit22>
+      <Unit23>
+        <Filename Value="../kav_mail.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="kav_mail"/>
+        <CursorPos X="98" Y="59"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="141"/>
+      </Unit23>
+      <Unit24>
+        <Filename Value="/usr/share/fpcsrc/fcl/inc/inifiles.pp"/>
+        <UnitName Value="IniFiles"/>
+        <CursorPos X="3" Y="132"/>
+        <TopLine Value="93"/>
+        <UsageCount Value="3"/>
+      </Unit24>
+      <Unit25>
+        <Filename Value="../procthread3.pas"/>
+        <UnitName Value="ProcThread3"/>
+        <CursorPos X="15" Y="34"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="11"/>
+      </Unit25>
+      <Unit26>
+        <Filename Value="../../../../ContentFilter/filter.pas"/>
+        <UnitName Value="filter"/>
+        <CursorPos X="139" Y="128"/>
+        <TopLine Value="106"/>
+        <UsageCount Value="6"/>
+      </Unit26>
+      <Unit27>
+        <Filename Value="../../../../ContentFilter/scanqueue.pas"/>
+        <UnitName Value="scanQueue"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="372"/>
+        <UsageCount Value="6"/>
+      </Unit27>
+      <Unit28>
+        <Filename Value="../procthread2.pas"/>
+        <UnitName Value="ProcThread2"/>
+        <CursorPos X="38" Y="44"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="11"/>
+      </Unit28>
+      <Unit29>
+        <Filename Value="../procthread1.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ProcThread1"/>
+        <CursorPos X="1" Y="28"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="104"/>
+      </Unit29>
+      <Unit30>
+        <Filename Value="../../../../ContentFilter/ldap.pas"/>
+        <UnitName Value="ldap"/>
+        <CursorPos X="11" Y="168"/>
+        <TopLine Value="127"/>
+        <UsageCount Value="8"/>
+      </Unit30>
+      <Unit31>
+        <Filename Value="/usr/share/fpcsrc/fcl/inc/process.pp"/>
+        <UnitName Value="process"/>
+        <CursorPos X="32" Y="26"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="6"/>
+      </Unit31>
+      <Unit32>
+        <Filename Value="common.pas"/>
+        <UnitName Value="common"/>
+        <CursorPos X="28" Y="9"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="6"/>
+      </Unit32>
+      <Unit33>
+        <Filename Value="logs.pas"/>
+        <UnitName Value="logs"/>
+        <CursorPos X="43" Y="1467"/>
+        <TopLine Value="1418"/>
+        <EditorIndex Value="12"/>
+        <UsageCount Value="24"/>
+        <Loaded Value="True"/>
+      </Unit33>
+      <Unit34>
+        <Filename Value="oldlinux.pp"/>
+        <UnitName Value="oldlinux"/>
+        <CursorPos X="1" Y="741"/>
+        <TopLine Value="741"/>
+        <UsageCount Value="7"/>
+      </Unit34>
+      <Unit35>
+        <Filename Value="textrec.inc"/>
+        <CursorPos X="41" Y="35"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="6"/>
+      </Unit35>
+      <Unit36>
+        <Filename Value="global_conf.pas"/>
+        <UnitName Value="global_conf"/>
+        <CursorPos X="66" Y="9117"/>
+        <TopLine Value="9084"/>
+        <EditorIndex Value="0"/>
+        <UsageCount Value="40"/>
+        <Bookmarks Count="1">
+          <Item0 X="1" Y="7194" ID="0"/>
+        </Bookmarks>
+        <Loaded Value="True"/>
+      </Unit36>
+      <Unit37>
+        <Filename Value="zsystem.pas"/>
+        <UnitName Value="zsystem"/>
+        <CursorPos X="14" Y="3165"/>
+        <TopLine Value="3080"/>
+        <EditorIndex Value="5"/>
+        <UsageCount Value="24"/>
+        <Loaded Value="True"/>
+      </Unit37>
+      <Unit38>
+        <Filename Value="uhashlist.pas"/>
+        <UnitName Value="uHashList"/>
+        <CursorPos X="141" Y="10"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="7"/>
+      </Unit38>
+      <Unit39>
+        <Filename Value="ldapsend.pas"/>
+        <UnitName Value="ldapsend"/>
+        <CursorPos X="3" Y="61"/>
+        <TopLine Value="29"/>
+        <UsageCount Value="7"/>
+      </Unit39>
+      <Unit40>
+        <Filename Value="blcksock.pas"/>
+        <UnitName Value="blcksock"/>
+        <CursorPos X="42" Y="61"/>
+        <TopLine Value="30"/>
+        <UsageCount Value="7"/>
+      </Unit40>
+      <Unit41>
+        <Filename Value="synafpc.pas"/>
+        <UnitName Value="synafpc"/>
+        <CursorPos X="4" Y="98"/>
+        <TopLine Value="67"/>
+        <UsageCount Value="7"/>
+      </Unit41>
+      <Unit42>
+        <Filename Value="synsock.pas"/>
+        <UnitName Value="synsock"/>
+        <CursorPos X="4" Y="67"/>
+        <TopLine Value="5"/>
+        <UsageCount Value="7"/>
+      </Unit42>
+      <Unit43>
+        <Filename Value="synautil.pas"/>
+        <UnitName Value="synautil"/>
+        <CursorPos X="4" Y="98"/>
+        <TopLine Value="66"/>
+        <UsageCount Value="7"/>
+      </Unit43>
+      <Unit44>
+        <Filename Value="synacode.pas"/>
+        <UnitName Value="synacode"/>
+        <CursorPos X="4" Y="98"/>
+        <TopLine Value="66"/>
+        <UsageCount Value="7"/>
+      </Unit44>
+      <Unit45>
+        <Filename Value="daemonthread1.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="DaemonThread1"/>
+        <CursorPos X="43" Y="57"/>
+        <TopLine Value="26"/>
+        <EditorIndex Value="3"/>
+        <UsageCount Value="85"/>
+        <Loaded Value="True"/>
+      </Unit45>
+      <Unit46>
+        <Filename Value="/usr/share/fpcsrc/rtl/inc/systemh.inc"/>
+        <CursorPos X="62" Y="636"/>
+        <TopLine Value="599"/>
+        <UsageCount Value="7"/>
+      </Unit46>
+      <Unit47>
+        <Filename Value="daemonthread2.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="DaemonThread2"/>
+        <CursorPos X="1" Y="57"/>
+        <TopLine Value="9"/>
+        <UsageCount Value="78"/>
+      </Unit47>
+      <Unit48>
+        <Filename Value="/usr/share/fpcsrc/rtl/objpas/strutils.pp"/>
+        <UnitName Value="strutils"/>
+        <CursorPos X="31" Y="7"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="7"/>
+      </Unit48>
+      <Unit49>
+        <Filename Value="samba.pas"/>
+        <UnitName Value="samba"/>
+        <CursorPos X="64" Y="284"/>
+        <TopLine Value="250"/>
+        <UsageCount Value="13"/>
+      </Unit49>
+      <Unit50>
+        <Filename Value="daemonthread3.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="DaemonThread3"/>
+        <CursorPos X="1" Y="85"/>
+        <TopLine Value="19"/>
+        <UsageCount Value="66"/>
+      </Unit50>
+      <Unit51>
+        <Filename Value="daemonthread4.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="DaemonThread4"/>
+        <CursorPos X="1" Y="50"/>
+        <TopLine Value="7"/>
+        <UsageCount Value="65"/>
+      </Unit51>
+      <Unit52>
+        <Filename Value="/usr/share/fpcsrc/packages/base/libc/unistdh.inc"/>
+        <CursorPos X="10" Y="61"/>
+        <TopLine Value="30"/>
+        <UsageCount Value="10"/>
+      </Unit52>
+      <Unit53>
+        <Filename Value="openldap.pas"/>
+        <UnitName Value="openldap"/>
+        <CursorPos X="66" Y="279"/>
+        <TopLine Value="230"/>
+        <EditorIndex Value="10"/>
+        <UsageCount Value="31"/>
+        <Loaded Value="True"/>
+      </Unit53>
+      <Unit54>
+        <Filename Value="/usr/share/fpcsrc/rtl/objpas/sysutils/datih.inc"/>
+        <CursorPos X="24" Y="114"/>
+        <TopLine Value="66"/>
+        <UsageCount Value="8"/>
+      </Unit54>
+      <Unit55>
+        <Filename Value="users.pas"/>
+        <UnitName Value="users"/>
+        <CursorPos X="24" Y="57"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="8"/>
+      </Unit55>
+      <Unit56>
+        <Filename Value="pwd.pas"/>
+        <UnitName Value="pwd"/>
+        <CursorPos X="71" Y="5"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="8"/>
+      </Unit56>
+      <Unit57>
+        <Filename Value="grp.pas"/>
+        <UnitName Value="grp"/>
+        <CursorPos X="71" Y="5"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="8"/>
+      </Unit57>
+      <Unit58>
+        <Filename Value="spfmilter.pas"/>
+        <UnitName Value="spfmilter"/>
+        <CursorPos X="5" Y="211"/>
+        <TopLine Value="134"/>
+        <EditorIndex Value="13"/>
+        <UsageCount Value="30"/>
+        <Loaded Value="True"/>
+      </Unit58>
+      <Unit59>
+        <Filename Value="mimedefang.pas"/>
+        <UnitName Value="mimedefang"/>
+        <CursorPos X="147" Y="11"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="14"/>
+        <UsageCount Value="30"/>
+        <Loaded Value="True"/>
+      </Unit59>
+      <Unit60>
+        <Filename Value="squid.pas"/>
+        <UnitName Value="squid"/>
+        <CursorPos X="147" Y="11"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="15"/>
+        <UsageCount Value="30"/>
+        <Loaded Value="True"/>
+      </Unit60>
+      <Unit61>
+        <Filename Value="stunnel4.pas"/>
+        <UnitName Value="stunnel4"/>
+        <CursorPos X="147" Y="11"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="7"/>
+      </Unit61>
+      <Unit62>
+        <Filename Value="dkimfilter.pas"/>
+        <UnitName Value="dkimfilter"/>
+        <CursorPos X="151" Y="60"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="7"/>
+      </Unit62>
+      <Unit63>
+        <Filename Value="postfix_class.pas"/>
+        <UnitName Value="postfix_class"/>
+        <CursorPos X="120" Y="51"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="8"/>
+        <UsageCount Value="28"/>
+        <Loaded Value="True"/>
+      </Unit63>
+      <Unit64>
+        <Filename Value="mailgraph_class.pas"/>
+        <UnitName Value="mailgraph_class"/>
+        <CursorPos X="89" Y="22"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="7"/>
+      </Unit64>
+      <Unit65>
+        <Filename Value="lighttpd.pas"/>
+        <UnitName Value="lighttpd"/>
+        <CursorPos X="40" Y="330"/>
+        <TopLine Value="296"/>
+        <EditorIndex Value="9"/>
+        <UsageCount Value="30"/>
+        <Loaded Value="True"/>
+      </Unit65>
+      <Unit66>
+        <Filename Value="../artica-install/debian_class.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="debian_class"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="59"/>
+      </Unit66>
+      <Unit67>
+        <Filename Value="../artica-install/zsystem.pas"/>
+        <UnitName Value="zsystem"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="17"/>
+      </Unit67>
+      <Unit68>
+        <Filename Value="/usr/share/fpcsrc/rtl/inc/varianth.inc"/>
+        <CursorPos X="10" Y="455"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="16"/>
+        <UsageCount Value="29"/>
+        <Loaded Value="True"/>
+      </Unit68>
+      <Unit69>
+        <Filename Value="debian_class.pas"/>
+        <UnitName Value="debian_class"/>
+        <CursorPos X="1" Y="58"/>
+        <TopLine Value="24"/>
+        <EditorIndex Value="7"/>
+        <UsageCount Value="29"/>
+        <Loaded Value="True"/>
+      </Unit69>
+      <Unit70>
+        <Filename Value="xfce.pas"/>
+        <UnitName Value="xfce"/>
+        <CursorPos X="14" Y="12"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="1"/>
+        <UsageCount Value="27"/>
+        <Loaded Value="True"/>
+      </Unit70>
+      <Unit71>
+        <Filename Value="artica_tcp.pas"/>
+        <UnitName Value="artica_tcp"/>
+        <CursorPos X="39" Y="52"/>
+        <TopLine Value="10"/>
+        <UsageCount Value="13"/>
+      </Unit71>
+      <Unit72>
+        <Filename Value="../artica-install/dansguardian.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="dansguardian"/>
+        <CursorPos X="18" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="48"/>
+      </Unit72>
+      <Unit73>
+        <Filename Value="dansguardian.pas"/>
+        <UnitName Value="dansguardian"/>
+        <CursorPos X="78" Y="54"/>
+        <TopLine Value="126"/>
+        <EditorIndex Value="11"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit73>
+      <Unit74>
+        <Filename Value="/usr/share/fpcsrc/rtl/objpas/sysutils/osutilsh.inc"/>
+        <CursorPos X="10" Y="28"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="6"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit74>
+      <Unit75>
+        <Filename Value="bind9.pas"/>
+        <UnitName Value="bind9"/>
+        <CursorPos X="27" Y="22"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="20"/>
+      </Unit75>
+      <Unit76>
+        <Filename Value="/usr/share/fpcsrc/rtl/objpas/sysutils/sysstrh.inc"/>
+        <CursorPos X="10" Y="111"/>
+        <TopLine Value="74"/>
+        <EditorIndex Value="4"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit76>
+    </Units>
+    <JumpHistory Count="0" HistoryIndex="-1"/>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="5"/>
+    <Target>
+      <Filename Value="/home/dtouzeau/developpement/artica-postfix/bin/artica-postfix"/>
+    </Target>
+    <CodeGeneration>
+      <Generate Value="Faster"/>
+    </CodeGeneration>
+    <Other>
+      <CompilerPath Value="$(CompPath)"/>
+    </Other>
+  </CompilerOptions>
+  <Debugging>
+    <BreakPoints Count="3">
+      <Item1>
+        <Source Value="daemonthread1.pas"/>
+        <Line Value="1"/>
+      </Item1>
+      <Item2>
+        <Source Value="global_conf.pas"/>
+        <Line Value="13015"/>
+      </Item2>
+      <Item3>
+        <Source Value="global_conf.pas"/>
+        <Line Value="7196"/>
+      </Item3>
+    </BreakPoints>
+    <Exceptions Count="2">
+      <Item1>
+        <Name Value="ECodetoolError"/>
+      </Item1>
+      <Item2>
+        <Name Value="EFOpenError"/>
+      </Item2>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

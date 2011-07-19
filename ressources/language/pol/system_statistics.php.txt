@@ -1,0 +1,6 @@
+<detected_this_month>Detected This Month</detected_this_month>
+<hour>hour</hour>
+<messages_by_hour>number of Messages by hour</messages_by_hour>
+<messages_by_minutes>Messages receive by minutes</messages_by_minutes>
+<trend_day>Hours trend of</trend_day>
+<trend_month>Monthly Trend of</trend_month>

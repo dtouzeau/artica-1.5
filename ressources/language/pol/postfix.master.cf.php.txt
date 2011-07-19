@@ -1,0 +1,139 @@
+<AddOptionService_text>Give the option to add on this service, do not forget to use "-o" if needed</AddOptionService_text>
+<add_postfix_service>Add a new postfix service</add_postfix_service>
+<CHROOT>Chroot</CHROOT>
+<CHROOT_TEXT>(default yes) Whether or not the service  runs  chrooted
+to the mail queue directory (pathname is controlled by the queue_directory  configuration  variable in the main.cf file)</CHROOT_TEXT>
+<COMMAND>Command</COMMAND>
+<ENABLE_SMTPS>Enable SMTP SSL (smtps)</ENABLE_SMTPS>
+<generated_config>Configuration file</generated_config>
+<MAXPROC>Process limit</MAXPROC>
+<MAXPROC_TEXT>The maximum number of processes  that  may  execute this  service  simultaneously.[br]
+Specify  0  for  no process count limit.[br]
+[i]NOTE: Some Postfix services must be configured as a single-process  service  (for example, qmgr) and some services must be configured
+with no process limit (for example, cleanup).[br]These limits must not be changed.
+</MAXPROC_TEXT>
+<OPTIONS>options</OPTIONS>
+<PRIVATE>Private</PRIVATE>
+<PRIVATE_TEXT>Whether or not access is  restricted  to  the  mail system.
+[br]Internet  (type  inet)  services can't be private</PRIVATE_TEXT>
+<rebuild_configuration>Rebuild to default config</rebuild_configuration>
+<services_table>Services Table</services_table>
+<service_anvil>Session count and request rate control</service_anvil>
+<service_anvil_text> The Postfix anvil server maintains statistics about client connection counts or client request rates.[br]
+This information can be used to defend against clients that hammer a server with either too many simultaneous sessions,
+or with too many successive requests within a configurable time interval.[br]
+This server is designed to run under control by the Postfix master server.</service_anvil_text>
+<service_bounce>Delivery status reports</service_bounce>
+<service_bounce_text>The  bounce daemon maintains per-message log files with delivery status information.[br]
+Each log file is named after the queue file that it corresponds to, and is kept in a queue subdirectory named after the service name in
+the master.cf file (either bounce, defer or trace).[br]
+This program expects to be run from the master process manager</service_bounce_text>
+<service_cleanup>Canonicalize and enqueue Postfix message</service_cleanup>
+<service_cleanup_text>The cleanup daemon processes inbound mail, inserts it into the incoming mail queue, and informs the queue manager of its arrival</service_cleanup_text>
+<service_defer>Delivery status reports (defer)</service_defer>
+<service_defer_text> </service_defer_text>
+<service_discard>Discard mail delivery agent</service_discard>
+<service_discard_text>The  Postfix  discard delivery agent processes delivery requests from the queue manager.[br]
+Each request specifies a queue file, a sender address, a domain or host name that is treated as the reason for discarding the mail,
+and recipient information.[br]
+The reason may be prefixed with an RFC 3463-compatible detail code.[br]
+This program expects to be run from the master process manager.[br]
+The discard delivery agent pretends to deliver all recipients in the delivery request,
+logs the "next-hop" domain or host information as the reason for discarding the mail, updates the queue file and marks  recipients  as
+finished or informs the queue manager that delivery should be tried again at a later time.[br]Delivery status reports are sent to the trace daemon as appropriate.
+</service_discard_text>
+<service_error>Error/retry mail delivery agent</service_error>
+<service_error_text>he  Postfix error delivery agent processes delivery requests from the queue manager.[br]
+Each request specifies a queue file, a sender address, the reason for non-delivery (specified as the next-hop destination), and recipient information.[br]
+The reason may be prefixed with an RFC 3463-compatible detail code; if none is specified a default 4.0.0 or 5.0.0 code is used instead.[br]
+This program expects to be run from the master process manager.</service_error_text>
+<service_flush>Fast flush server</service_flush>
+<service_flush_text>The  flush  server  maintains  a record of deferred mail by destination.[br]
+This information is used to improve the performance of the SMTP ETRN request, and of its command-line equivalent, "sendmail -qR" or "postqueue -f".[br]
+This program expects to be run from the master(8) process manager.</service_flush_text>
+<service_lmtp>LMTP client</service_lmtp>
+<service_lmtp_text>
+The  Postfix  LMTP  client  implements the LMTP mail delivery protocols.[br]
+It processes message delivery requests from the queue manager.[br]
+Each request specifies a queue file, a sender address, a domain or host to deliver to, and recipient information.[br]
+This program expects to be run from the master process manager</service_lmtp_text>
+<service_local>Local mail delivery</service_local>
+<service_local_text> The local daemon processes delivery requests from the Postfix queue manager to deliver mail to local recipients.[br]
+Each delivery request specifies a queue file, a sender address, a domain or host to deliver to, and one or
+more recipients.[br]
+This program expects to be run from the master process manager.[br]
+The local daemon updates queue files and marks recipients as finished, or it informs the queue manager that delivery should be tried again at a later time.[br]
+Delivery status reports are sent to the  bounce ,defer or trace daemon as appropriate.
+</service_local_text>
+<service_maildrop>maildrop</service_maildrop>
+<service_maildrop_maildrop_text>maildrop service</service_maildrop_maildrop_text>
+<service_new>New service</service_new>
+<service_pickup>Local mail pickup</service_pickup>
+<service_pickup_text>The  pickup  daemon  waits  for  hints  that new mail has been dropped into the maildrop directory,
+and feeds it into the cleanup daemon.  Ill-formatted files are deleted without notifying the originator.[br]This program expects to be run from the master process manager
+</service_pickup_text>
+<service_proxymap>Lookup table proxy server</service_proxymap>
+<service_proxymap_text>The proxymap server provides read-only table lookup service to Postfix processes.[br]
+The purpose of the service is:[br]
+[ul][li]To  overcome  chroot restrictions.[br]
+For example, a chrooted SMTP server needs access to the system passwd file in order to reject mail for non-existent local addresses,
+but it is not practical to maintain a copy of the passwd file in the chroot jail.[/li]
+[li]To consolidate the number of open lookup tables by sharing one open table among multiple processes.[br]
+For example, making mysql connections from every Postfix daemon process results in "too many connections" errors.[/li]
+[/ul]The total number of connections is limited by the number of proxymap server processes.</service_proxymap_text>
+<service_qmgr>Queue manager</service_qmgr>
+<service_qmgr_text> The  qmgr daemon awaits the arrival of incoming mail and arranges for its delivery via Postfix delivery processes.[br]
+The actual mail routing strategy is delegated to the trivial-rewrite daemon.[br]
+This program expects to be run from the master process manager</service_qmgr_text>
+<service_relay>relay</service_relay>
+<service_relay_text>relay</service_relay_text>
+<service_retry>Retry</service_retry>
+<service_retry_text>Retry service</service_retry_text>
+<service_rewrite>Rewrite</service_rewrite>
+<service_rewrite_text>used to rewrite mails</service_rewrite_text>
+<service_scache>Shared connection cache server</service_scache>
+<service_scache_text>The scache server maintains a shared multi-connection cache.[br]
+This information can be used by, for example, Postfix SMTP clients or other Postfix delivery agents.[br]
+The connection cache is organized into logical destination names, physical endpoint names, and connections.[br]
+As a specific example, logical SMTP destinations specify (transport, domain, port), and physical SMTP endpoints specify (transport, IP address, port).[br]
+An SMTP connection may be saved after a successful mail transaction.[br]
+In the general case, one logical destination may refer to zero or more physical endpoints, one physical endpoint may be referenced by zero or more logical destinations,
+and one endpoint may refer to zero or more connections.</service_scache_text>
+<service_showq>List the Postfix mail queue</service_showq>
+<service_showq_text>The showq daemon reports the Postfix mail queue status.[br]
+It is the program that emulates the sendmail "mailq" command.[br]
+The showq daemon can also be run in stand-alone mode by the superuser.[br]
+This mode of operation is used to emulate the "mailq" command while the Postfix mail system is down</service_showq_text>
+<service_smtp>SMTP client</service_smtp>
+<service_smtp_text>The  Postfix  SMTP  client  implements the SMTP mail delivery protocols.[br]
+It processes message delivery requests from the queue manager.[br]
+Each request specifies a queue file, a sender address, a domain or host to deliver to, and recipient information.[br]
+This program expects to be run from the master process manager</service_smtp_text>
+<service_tlsmgr>TLS session cache manager</service_tlsmgr>
+<service_tlsmgr_text>he tlsmgr manages the Postfix TLS session caches.[br]
+It stores and retrieves cache entries on request by smtpd and smtp processes, and periodically removes entries that have expired</service_tlsmgr_text>
+<service_trace>Delivery status reports (trace)</service_trace>
+<service_trace_text> </service_trace_text>
+<SERVICE_TYPE>service</SERVICE_TYPE>
+<service_verify>Address verification server</service_verify>
+<service_verify_text>The verify address verification server maintains a record of what recipient addresses are known to be deliverable or undeliverable.</service_verify_text>
+<service_virtual>Virtual domain mail delivery agent</service_virtual>
+<service_virtual_text> The  virtual delivery agent is designed for virtual mail hosting services.[br]
+Originally based on the Postfix local delivery agent, this agent looks up recipients with map lookups of their full recipient address, instead
+of using hard-coded unix password file lookups of the address local part only.[br]
+This delivery agent only delivers mail.[br]
+Other features such as mail forwarding, out-of-office notifications, etc., must be configured via virtual_alias maps or via similar lookup mechanisms.</service_virtual_text>
+<SMTPS_TEXT>This section allows you to enable SMTPs (usually running on 465 port).[br]
+If you enable this feature, the master configuration file with smtps service will be added.[br]
+If you disable this feature, the master configuration file with smtps service will be deleted.[br]
+</SMTPS_TEXT>
+<UNIPRIV>Unprivileged</UNIPRIV>
+<UNIPRIV_TEXT>(default yes) Whether the service runs with root privileges or as the  owner of
+the Postfix system (the owner name is controlled by the mail_owner configuration variablein the main.cf file).</UNIPRIV_TEXT>
+<WAKEUP>Wake up time</WAKEUP>
+<WAKEUP_TEXT>
+(default: 0)   Automatically  wake  up the named service after the specified number of seconds. The wake up is  implemented
+by  connecting to the service and sending a wake up request.
+A ? at the  end  of  the  wake-up time  field requests that no wake up events be sent before the first time a service is used.
+Specify 0 for no automatic wake up.[br]The pickup, qmgr and flush daemons require a wake up timer
+</WAKEUP_TEXT>

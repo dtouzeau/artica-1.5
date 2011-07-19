@@ -1,0 +1,4 @@
+<mailboxsize>Your mailbox size</mailboxsize>
+<receivemails>Receive mails</receivemails>
+<welcome>welcome</welcome>
+<your_organization>Est&aacute; associado &agrave; Organiza&ccedil;&atilde;o / Empresa</your_organization>

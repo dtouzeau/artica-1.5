@@ -1,0 +1,98 @@
+#!/usr/bin/perl -w
+##---------------------------------------------------------------------------##
+##  File:
+##	$Id: mha-dbedit,v 1.8 2003/07/20 03:24:38 ehood Exp $
+##  Author:
+##      Earl Hood       mhonarc@mhonarc.org
+##  Description:
+##      Program to modify database w/o editing archive files.
+##---------------------------------------------------------------------------##
+##    MHonArc -- Internet mail-to-HTML converter
+##    Copyright (C) 1998-1999	Earl Hood, mhonarc@mhonarc.org
+##
+##    This program is free software; you can redistribute it and/or modify
+##    it under the terms of the GNU General Public License as published by
+##    the Free Software Foundation; either version 2 of the License, or
+##    (at your option) any later version.
+##
+##    This program is distributed in the hope that it will be useful,
+##    but WITHOUT ANY WARRANTY; without even the implied warranty of
+##    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##    GNU General Public License for more details.
+##
+##    You should have received a copy of the GNU General Public License
+##    along with this program; if not, write to the Free Software
+##    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+##    02111-1307, USA
+##---------------------------------------------------------------------------##
+
+package mha_dbedit;
+
+##---------------------------------------------------------------------------##
+##				Main routine				     ##
+##---------------------------------------------------------------------------##
+
+MAIN: {
+    unshift(@INC, 'lib');	# Should I leave this line in?
+
+    ## Initialize MHonArc
+    require 'mhamain.pl' || die qq/ERROR: Unable to require "mhamain.pl"\n/;
+    mhonarc::initialize();
+
+    ## Open archive
+    unshift(@ARGV, '-readdb', '-lock');
+    if (!mhonarc::open_archive()) {
+	die "ERROR: Unable to open archive\n"; }
+
+    ## Write database
+    print STDOUT "\nWriting database ...\n"  unless $mhonarc::QUIET;
+    my $status = mhonarc::output_db($mhonarc::DBPathName);
+    mhonarc::close_archive();
+    exit($status ? 0 : 1);
+}
+
+##---------------------------------------------------------------------------##
+1;
+
+__END__
+
+=head1 NAME
+
+mha-dbedit - make database edits to a MHonArc archive
+
+=head1 SYNOPSIS
+
+S<B<mha-dbedit> [I<options>]>
+
+=head1 DESCRIPTION
+
+B<mha-dbedit> is a utility program that is part of the B<MHonArc>
+software package.  The program allows archive database edits to be
+made without causing HTML pages to be touched.
+
+The documentation for B<MHonArc> is distributed in HTML format.
+Due to its size and organization, it is not suited for manpage
+format.  Consult your system administrator for where the documentation
+has been installed, or see L<"AVAILABILITY"> on where you can
+access the documentation on the web.
+
+=head1 EXAMPLE
+
+Typical usage:
+
+  shell> mha-dbedit -rcfile res.mrc -outdir /path/to/archive
+
+=head1 AVAILABILITY
+
+E<lt>I<http://www.mhonarc.org/>E<gt>
+
+=head1 AUTHOR
+
+Earl Hood, mhonarc@mhonarc.org
+
+MHonArc comes with ABSOLUTELY NO WARRANTY and MHonArc may be copied only
+under the terms of the GNU General Public License, which may be found in
+the MHonArc distribution.
+
+=cut
+

@@ -1,0 +1,5 @@
+<generate>Launch web pages generation</generate>
+<infos_awstats_must_generate>This problem is caused because there is no statistics or the awstats are not generated[br]
+You can generate it by command-line :[br]
+[blk][b]/usr/share/artica-postfix/bin/artica-install -awstats generate[/b][/blk]
+</infos_awstats_must_generate>

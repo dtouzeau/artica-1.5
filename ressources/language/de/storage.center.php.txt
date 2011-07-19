@@ -1,0 +1,19 @@
+<ADD_NEW_DEPLOY_TASK>Add a new deploy task</ADD_NEW_DEPLOY_TASK>
+<ADD_NEW_DEPLOY_TASK_TEXT>Add a new task that will perform remote installation to this computer</ADD_NEW_DEPLOY_TASK_TEXT>
+<ADD_NEW_SOFTWARE>Add a new software</ADD_NEW_SOFTWARE>
+<ADD_NEW_SOFTWARE_TEXT>Create a new entry in order to perform deployment on target remote computers</ADD_NEW_SOFTWARE_TEXT>
+<APP_WINEXE_NOT_INSTALLED>Windows remote execution is not installed</APP_WINEXE_NOT_INSTALLED>
+<APP_WINEXE_NOT_INSTALLED_TEXT>if Windows remote execution is not installed you are not be able to perform remote softwares deployment trough Artica[br]
+Click on this icon to perform Windows remote execution installation</APP_WINEXE_NOT_INSTALLED_TEXT>
+<commandline>command-line</commandline>
+<ExecuteAfter>Execute after</ExecuteAfter>
+<MinutesToWait>Max minutes processing</MinutesToWait>
+<package>Package</package>
+<refresh>refresh</refresh>
+<remote_install>Remote install</remote_install>
+<remote_install_text>Create tasks in order to perform remote installations</remote_install_text>
+<resfresh_software_list>Refresh softwares list</resfresh_software_list>
+<resfresh_tasks_list>Refresh install tasks list</resfresh_tasks_list>
+<restart_task>Restart task</restart_task>
+<restart_task_text>Retry task execution another time</restart_task_text>
+<runas>Run as</runas>

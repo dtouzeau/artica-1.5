@@ -1,0 +1,4 @@
+<network_hardware_infos>Hardware informations</network_hardware_infos>
+<network_hardware_infos_text>Display hardware informations of your Network cards</network_hardware_infos_text>
+<proc_hardware_infos>CPU Hardware informations</proc_hardware_infos>
+<proc_hardware_infos_text>Display your CPU Informations</proc_hardware_infos_text>

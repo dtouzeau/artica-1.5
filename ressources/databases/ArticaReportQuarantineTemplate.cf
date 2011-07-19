@@ -1,0 +1,14 @@
+<SUBJECT>Quarantine area report (%NUMBER% emails)</SUBJECT>
+<FROM>postmaster</FROM>
+<TEMPLATE>
+Dear<br>
+This is a report of yours quarantine area.<br>
+You will find here %NUMBER% emails stored on our server<br>
+Here it is how to use this report:<br>
+<ul>
+<li>If you want to relase one of them, click on the <code><strong>release</code> link</strong>.</li>
+<li>If you want to delete one of them, click on the <code><strong>delete </code> link</strong>.</li>
+<li>If you want to delete all of them, click on the <code><strong>delete all</code> link</strong>.</li>
+</ul>
+%MAILTABLE%
+</TEMPLATE>

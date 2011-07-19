@@ -1,0 +1,8 @@
+<default_destination_recipient_limit>Limite de destinataire de destination par d&eacute;faut</default_destination_recipient_limit>
+<default_destination_recipient_limit_text>Nombre maximum de destinataires par livraison.[br]
+Ceci est la limite par d&eacute;faut pour la livraison via les agents lmtp, pipe, smtp et virtual delivery.[br]
+L'&eacute;tablissement de ce param&egrave;tre &agrave; une valeur de 1 change la signification de la correspondance de la limite de simultan&eacute;it&eacute; par destination depuis la simultan&eacute;it&eacute; par domaine dans la simultan&eacute;it&eacute; par destinataires</default_destination_recipient_limit_text>
+<smtpd_recipient_limit>Nombre Max de destinataires</smtpd_recipient_limit>
+<smtpd_recipient_limit_text>Nombre de destinataires maximum que le serveur SMTP de Postfix  accepte par demande de livraison</smtpd_recipient_limit_text>
+<virtual_mailbox_limit>Limite d'une bo&icirc;te aux lettres virtuelle</virtual_mailbox_limit>
+<virtual_mailbox_limit_text>Taille maximum en octets d'une bo&icirc;te aux lettres ou d'un fichier maildir. Si z&eacute;ro pas de limites.</virtual_mailbox_limit_text>

@@ -1,0 +1,268 @@
+unit install_generic;
+{$MODE DELPHI}
+//{$mode objfpc}{$H+}
+{$LONGSTRINGS ON}
+
+interface
+
+uses
+  Classes, SysUtils,strutils,unix,
+  RegExpr in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/RegExpr.pas',
+  logs in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/logs.pas',
+  zsystem in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/zsystem.pas',
+  
+  IniFiles;
+
+  type
+  tinstall=class
+
+
+private
+       LOGS:Tlogs;
+       SYS:Tsystem;
+       artica_path:string;
+       DirListFiles:TstringList;
+       function DirDir(FilePath: string):TstringList;
+
+public
+      constructor Create();
+      procedure Free;
+      function COMPILE_GENERIC(package_name:string):string;
+      CHEK_LOCAL_VERSION_BEFORE:integer;
+
+END;
+
+implementation
+
+constructor tinstall.Create();
+begin
+       forcedirectories('/etc/artica-postfix');
+       LOGS:=tlogs.Create();
+       SYS:=Tsystem.Create;
+       DirListFiles:=TstringList.Create;
+       if not DirectoryExists('/usr/share/artica-postfix') then begin
+              artica_path:=ParamStr(0);
+              artica_path:=ExtractFilePath(artica_path);
+              artica_path:=AnsiReplaceText(artica_path,'/bin/','');
+
+      end else begin
+          artica_path:='/usr/share/artica-postfix';
+      end;
+end;
+//############################################################################
+procedure tinstall.Free();
+begin
+   SYS.Free;
+   logs.Free;
+end;
+//############################################################################
+function tinstall.COMPILE_GENERIC(package_name:string):string;
+var
+   LOG                                  :Tlogs;
+   gcc_path,make_path,wget_path,compile_source:string;
+   auto:TiniFile;
+   tmp:string;
+   sys:Tsystem;
+   FILE_TEMP:TstringList;
+   FILE_EXT:string;
+   package_version:string;
+   DECOMPRESS_OPT:string;
+   www_prefix:string;
+   uri_download:string;
+   target_file:string;
+   RegExpr:TRegExpr;
+   int_version                          :integer;
+   FileNamePrefix                       :string;
+   local_folder                         :string;
+   autoupdate_path                      :string;
+   remote_uri                           :string;
+   index_file                           :string;
+   i                                    :integer;
+   package_name_suffix                  :string;
+   label                                 myEnd;
+
+
+
+begin
+
+
+
+
+    local_folder:='';
+    remote_uri:='http://www.artica.fr/download';
+    index_file:='http://www.artica.fr/auto.update.php';
+    LOG:=Tlogs.Create;
+    FILE_TEMP:=TStringList.Create;
+    RegExpr:=TRegExpr.Create;
+    package_name_suffix:=package_name;
+
+
+ if ParamCount>0 then begin
+     for i:=0 to ParamCount do begin
+       RegExpr.Expression:='--remote-path=(.+)';
+       if RegExpr.Exec(ParamStr(i)) then begin
+           remote_uri:=RegExpr.Match[1];
+       end;
+
+       RegExpr.Expression:='--remote-index=(.+)';
+       if RegExpr.Exec(ParamStr(i)) then begin
+           index_file:=RegExpr.Match[1];
+       end;
+
+       RegExpr.Expression:='--folder=(.+)';
+       if RegExpr.Exec(ParamStr(i)) then begin
+          local_folder:=RegExpr.Match[1];
+          logs.Debuglogs('Starting installation of ' + package_name + ' application using local folder ...'+local_folder);
+       end;
+
+    end;
+ end;
+
+    fpsystem('cd ' + ExtractFilePath(ParamStr(0)));
+
+    forcedirectories('/opt/artica/install/sources');
+    if FileExists('/opt/artica/install/sources/' + package_name) then fpsystem('/bin/rm -rf /opt/artica/install/sources/' + package_name);
+
+
+    logs.Debuglogs('Checking last supported version of ' + package_name + ' from ' + remote_uri+'/'+index_file);
+
+    if local_folder='' then SYS.WGET_DOWNLOAD_FILE(index_file,'/opt/artica/install/sources/autoupdate.ini');
+    if local_folder='' then begin
+       autoupdate_path:='/opt/artica/install/sources/autoupdate.ini';
+    end else begin
+        autoupdate_path:=local_folder + '/autoupdate.ini';
+        if not FileExists(autoupdate_path) then begin
+             logs.Debuglogs('unable to stat ' + autoupdate_path);
+             exit;
+        end;
+    end;
+    auto:=TIniFile.Create(autoupdate_path);
+
+    FILE_EXT:=auto.ReadString('NEXT',package_name + '_ext','tar.gz');
+    www_prefix:=auto.ReadString('NEXT',package_name + '_prefix','');
+    FileNamePrefix:=auto.ReadString('NEXT',package_name + '_filename_prefix',package_name  + '-');
+
+
+
+    package_version:=auto.ReadString('NEXT',package_name,'');
+    target_file:=FileNamePrefix + package_version + '.' + FILE_EXT;
+
+
+
+    auto.Free;
+
+    if local_folder='' then begin
+       uri_download:=remote_uri + '/' + target_file;
+       if length(www_prefix)>0 then uri_download:=remote_uri+'/' + www_prefix + '/' + target_file;
+    end else begin
+       uri_download:=local_folder + '/' + target_file;
+       if length(www_prefix)>0 then uri_download:=local_folder + '/' + www_prefix + '/' + target_file;
+    end;
+
+    logs.Debuglogs('');
+    logs.Debuglogs('');
+    logs.Debuglogs('###################################################################');
+    logs.Debuglogs(chr(9)+'version..............:"' +package_version+'"');
+    logs.Debuglogs(chr(9)+'extension............:"' +FILE_EXT+'"');
+    logs.Debuglogs(chr(9)+'prefix...............:"' +www_prefix+'"');
+    logs.Debuglogs(chr(9)+'FileName Prefix......:"' +FileNamePrefix+'"');
+    logs.Debuglogs(chr(9)+'Target file..........:"' +target_file+'"');
+    logs.Debuglogs(chr(9)+'uri..................:"' +uri_download + '"');
+
+
+
+
+
+    if length(package_version)=0 then begin
+         logs.Debuglogs('http source problem [NEXT]\' + package_name +  ' is null...aborting');
+         exit;
+    end;
+
+    if CHEK_LOCAL_VERSION_BEFORE>0 then begin
+       RegExpr.Expression:='([0-9\.]+)';
+       if RegExpr.Exec(package_version) then begin
+              tmp:=AnsiReplaceText(RegExpr.Match[1],'.','');
+              int_version:=StrToInt(tmp);
+              logs.Debuglogs(chr(9)+'Check version........:remote=' +IntToStr(int_version) + '<> local=' + IntToStr(CHEK_LOCAL_VERSION_BEFORE));
+       end else begin
+            exit;
+       end;
+
+       if CHEK_LOCAL_VERSION_BEFORE>=int_version then begin
+          logs.Debuglogs(chr(9)+'Checked..............:updated, nothing to do');
+          exit;
+       end;
+    end;
+
+    logs.Debuglogs('###################################################################');
+    logs.Debuglogs('');
+    logs.Debuglogs('');
+
+    if FILE_EXT='tar.bz2' then DECOMPRESS_OPT:='xjf' else DECOMPRESS_OPT:='xf';
+
+     if DirectoryExists('/opt/artica/install/sources/' + package_name_suffix) then logs.OutputCmd('/bin -rm -rf /opt/artica/install/sources/' + package_name);
+     logs.Debuglogs('Creating directory ' + '/opt/artica/install/sources/' + package_name);
+     forcedirectories('/opt/artica/install/sources/' + package_name);
+
+    logs.Debuglogs('Get: ' + uri_download);
+
+    if local_folder='' then begin
+       SYS.WGET_DOWNLOAD_FILE(uri_download,'/opt/artica/install/sources/' + target_file);
+    end else begin
+        fpsystem('/bin/cp -fv ' + uri_download + ' ' +  '/opt/artica/install/sources/' + target_file);
+    end;
+
+    if not FileExists('/opt/artica/install/sources/' + target_file) then begin
+        logs.Debuglogs('Unable to stat /opt/artica/install/sources/' + target_file);
+        exit;
+    end;
+
+    logs.Debuglogs('Uncompress the package...');
+    logs.OutputCmd('/bin/tar -' + DECOMPRESS_OPT + ' /opt/artica/install/sources/' + target_file + ' -C /opt/artica/install/sources/' + package_name);
+    DirDir('/opt/artica/install/sources/' + package_name);
+
+
+    if DirListFiles.Count=0 then begin
+       logs.OutputCmd('/bin/rm -rf /opt/artica/install/sources/'+package_name);
+       logs.OutputCmd('/bin/rm /opt/artica/install/sources/'+target_file);
+       goto myEnd;
+    end;
+    compile_source:='/opt/artica/install/sources/' + package_name + '/' + sys.DirListFiles.Strings[0];
+    logs.Debuglogs('SUCCESS: "' + compile_source + '"');
+    result:=compile_source;
+ goto myEnd;
+
+myEnd:
+    FILE_TEMP.free;
+
+
+end;
+
+//##############################################################################
+function tinstall.DirDir(FilePath: string):TstringList;
+Var Info : TSearchRec;
+    D:boolean;
+Begin
+
+
+   DirListFiles.Clear;
+  If FindFirst (FilePath+'/*',faDirectory,Info)=0 then begin
+    Repeat
+      if Info.Name<>'..' then begin
+         if Info.Name <>'.' then begin
+           if info.Attr=48 then begin
+              DirListFiles.Add(Info.Name);
+           end;
+
+         end;
+      end;
+
+    Until FindNext(info)<>0;
+    end;
+  FindClose(Info);
+  DirDir:=DirListFiles;
+end;
+//#########################################################################################
+
+
+end.

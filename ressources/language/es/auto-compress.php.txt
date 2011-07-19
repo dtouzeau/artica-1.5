@@ -1,0 +1,8 @@
+<addextension_help>Usted se puede byt extensi&oacute;n escribiendo s&oacute;lo el nombre de la extensi&oacute;n despu&eacute;s del punto por ejemplo, &quot;doc&quot; o usted puede agregar varias extensiones de nombre de la extensi&oacute;n separados por una coma, por ejemplo &quot;, doc, xls, pdf, exe, com, vbs&quot;</addextension_help>
+<Auto-compress_explain>Auto-comprimir caracter&iacute;stica le permite convertir y comprimir autom&aacute;ticamente los archivos adjuntos en salida / correos entrantes.[br]
+Esta funci&oacute;n tiene 2 ventajas:[ul]
+[li]prevenir c&oacute;digos maliciosos ejecutables ejecuta autom&aacute;ticamente cuando los usuarios leer el correo o guardar archivos adjuntos.[/li]
+[li]ahorrar ancho de banda mediante la compresi&oacute;n de documentos adjuntos.[/li]
+[/ul]
+Usted necesita agregar extensiones por ejemplo, doc, ppt, xls, exe, com en la interfaz con el fin de habilitar la compresi&oacute;n de los archivos adjuntos</Auto-compress_explain>
+<enable_autocompress>Habilitar funcion auto-comprimir</enable_autocompress>

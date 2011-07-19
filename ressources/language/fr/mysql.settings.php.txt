@@ -1,0 +1,73 @@
+<bind-address>Adresse IP d'&eacute;coute</bind-address>
+<innodb_additional_mem_pool_size>Taille du pool de m&eacute;moire additionnelle INNODB</innodb_additional_mem_pool_size>
+<innodb_additional_mem_pool_size_text>Stocke la structure interne des donn&eacute;es.[br]
+Assurez-vous qu'il est assez grand pour stocker des donn&eacute;es concernant toutes vos tables InnoDB (vous verrez des avertissements dans le journal des erreurs si le serveur utilise la m&eacute;moire de l'OS &agrave; la place).</innodb_additional_mem_pool_size_text>
+<innodb_buffer_pool_size>Taille du pool de m&eacute;moire tampon INNODB</innodb_buffer_pool_size>
+<innodb_buffer_pool_size_text>Alors que la taille de la cl&eacute; de la m&eacute;moire tampon est la variable &agrave; cibler pour les tables MyISAM, pour les tables InnoDB, il faut plus t&ocirc;t cibler la taille du pool de la m&eacute;moire tampon d'innodb.[br]
+Encore une fois, vous le voudrez aussi &eacute;lev&eacute; que possible afin de minimiser l'utilisation des disques lents.[br]
+Sur un serveur d&eacute;di&eacute; MySQL faisant tourner des tables InnoDB, vous pouvez r&eacute;gler cela &agrave; 80% de la m&eacute;moire totale disponible.</innodb_buffer_pool_size_text>
+<join_buffer_size>JOIN: Taille fu buffeur</join_buffer_size>
+<join_buffer_size_text>La taille de la m&eacute;moire tampon qui est utilis&eacute;e pour les parcours d'index simple, les parcours de plage d'index et les liaisons qui n'utilisent pas les index et celles qui effectuent des analyses compl&egrave;tes des tables.[br]
+Normalement, la meilleure fa&ccedil;on d'obtenir des liaisons rapides est d'ajouter des index.[br]
+Augmenter la valeur de join_buffer_size pour obtenir une liaison compl&egrave;te plus rapidement lors de l'ajout d'index n'est pas possible.[br]
+Un tampon de liaison est allou&eacute; pour chaque liaison compl&egrave;te entre deux tables.[br]
+Pour une liaison complexe entre plusieurs tables pour laquelle les index ne sont pas utilis&eacute;s, plusieurs tampons de liaison pourraient &ecirc;tre n&eacute;cessaires.</join_buffer_size_text>
+<key_buffer>KEY: Buffeur</key_buffer>
+<key_buffer_size>KEY: Taille du buffeur</key_buffer_size>
+<key_buffer_size_text>Les blocs d'index pour les tables MyISAM sont mises en tampon et sont partag&eacute;es par tous les threads. [br]
+key_buffer_size est la taille du tampon utilis&eacute; pour les blocs d'index.[br]
+Le tampon de cl&eacute;s est &eacute;galement connu comme le cache de cl&eacute;s[br]
+Vous pouvez augmenter la valeur pour obtenir une meilleure gestion d'index pour toutes les lectures et &eacute;critures multiples;[br]
+sur un syst&egrave;me dont la fonction principale est d'ex&eacute;cuter MySQL en utilisant le moteur MyISAM, 25% de la m&eacute;moire totale de la machine est une valeur acceptable pour cette variable.[br]
+Cependant, vous devez &ecirc;tre conscient que, si vous mettez une valeur trop grande (par exemple, plus de 50% de la m&eacute;moire totale de la machine),
+votre syst&egrave;me pourrait commencer &agrave; paginer et de devenir extr&ecirc;mement lent</key_buffer_size_text>
+<key_buffer_text>Fixez key_buffer &agrave; 5 - 50% de votre RAM en fonction de la quantit&eacute; que vous utilisez pour les tables MyISAM, mais gardez la taille du pool de la m&eacute;moire tampon de key_buffer_size   InnoDB inf&eacute;rieure &agrave; 80% de votre RAM</key_buffer_text>
+<max_allowed_packet>Taille maximal du paquet autoris&eacute;</max_allowed_packet>
+<max_allowed_packet_text>Taille maximum d'un paquet ou de n'importe quelle chaine g&eacute;n&eacute;r&eacute;e/interm&eacute;diaire</max_allowed_packet_text>
+<max_connections>Connections maximum</max_connections>
+<max_connections_text>Le nombre de connexions simultan&eacute;es autoris&eacute;es. Par d&eacute;faut 151</max_connections_text>
+<myisam_sort_buffer_size>Taille de la m&eacute;moire tampon de MyISAM SORT</myisam_sort_buffer_size>
+<myisam_sort_buffer_size_text>La taille tu tampon allou&eacute; lors d'un tri avec des indexes MyISAM pendant une op&eacute;ration &quot;REPAIR TABLE&quot; ou lors de la cr&eacute;ation des indexes avec les commandes &quot;CREATE INDEX ou ALTER TABLE&quot;</myisam_sort_buffer_size_text>
+<mysql_settings>Param&egrave;tres du serveur Mysql</mysql_settings>
+<net_buffer_length>&Eacute;tendue de la m&eacute;moire tampon NET</net_buffer_length>
+<net_buffer_length_text>Taille initiale de la m&eacute;moire tampon pour la communication client/serveur</net_buffer_length_text>
+<query_cache_limit>QUERY: limite de cache</query_cache_limit>
+<query_cache_limit_text>Ne pas mettre en cache les r&eacute;sultats qui sont sup&eacute;rieure &agrave; ce nombre d'octets. La valeur par d&eacute;faut est de 1Mo</query_cache_limit_text>
+<query_cache_size>Taille du cache pour QUERY</query_cache_size>
+<query_cache_size_text>La quantit&eacute; de m&eacute;moire allou&eacute;e pour la mise en cache des r&eacute;sultats de requ&ecirc;te.[br]
+La valeur par d&eacute;faut est 0, ce qui d&eacute;sactive le cache de requ&ecirc;tes.[br]
+Les valeurs admissibles sont des multiples de 1024; les autres valeurs sont arrondies au multiple le plus proche</query_cache_size_text>
+<read_buffer_size>Taille de la m&eacute;moire tampon READ</read_buffer_size>
+<read_buffer_size_text>Chaque thread qui effectue une analyse s&eacute;quentielle alloue une m&eacute;moire tampon de cette taille (en octets) pour chaque table qu'il scanne.[br]
+Si vous faites beaucoup d'analyse s&eacute;quentielle, vous pourriez vouloir augmenter cette valeur, qui est par d&eacute;faut &agrave; 131072. La valeur de cette variable doit &ecirc;tre un multiple de 4Ko.[br]
+Si elle est r&eacute;gl&eacute;e &agrave; une valeur qui n'est pas un multiple de 4 Ko, sa valeur sera arrondie au multiple le plus proche de 4Ko.</read_buffer_size_text>
+<read_rnd_buffer_size>Taille de la m&eacute;moire tampon READ rnd</read_rnd_buffer_size>
+<read_rnd_buffer_size_text>Utilis&eacute; apr&egrave;s un tri par ordre, lors de la lecture dans l'ordre.[br]Si vous utilisez beaucoup de requ&ecirc;tes avec des &quot;ORDER BY&quot;, augmenter cette valeur peut am&eacute;liorer les performances.[br]
+Retenez que &agrave; l'inverse de la valeur taille du tampon de la clef et cache table, ce tampon est allou&eacute; pour chaque thread.[br]Il est par d&eacute;faut &agrave; 128K.[br]La tradition est de calculer 1K pour chaque 1MB de m&eacute;moire vive.[br]3GB de m&eacute;moire &eacute;quivaudrait &agrave; 3MB de tampon.</read_rnd_buffer_size_text>
+<skip-external-locking>passer le verrouillage externe</skip-external-locking>
+<skip-external-locking_text>Le verrouillage externe est l'utilisation de syst&egrave;me de verrouillage de fichiers pour g&eacute;rer les conflits entre plusieurs processus concernant les tables de donn&eacute;es.[br]
+Le verrouillage externe est utilis&eacute; dans les situations o&ugrave; un seul processus tels que le serveur MySQL ne peut pas &ecirc;tre consid&eacute;r&eacute; comme le seul processus qui n&eacute;cessite un acc&egrave;s aux tables</skip-external-locking_text>
+<sort_buffer>SORT: buffeur</sort_buffer>
+<sort_buffer_size>Taille du buffeur &quot;SORT&quot;</sort_buffer_size>
+<sort_buffer_size_text>Chaque thread qui doit faire un tri alloue une m&eacute;moire tampon de cette taille. Augmentez cette valeur pour acc&eacute;l&eacute;rer l'op&eacute;ration ORDER BY ou GROUP BY</sort_buffer_size_text>
+<sort_buffer_text>Le sort_buffer est tr&egrave;s utile pour acc&eacute;l&eacute;rer les op&eacute;rations myisamchk (c'est pourquoi il est fix&eacute; beaucoup plus &eacute;lev&eacute;s &agrave; cette fin dans les fichiers de configuration par d&eacute;faut), mais il peut aussi &ecirc;tre utile lors de l'ex&eacute;cution quotidienne d'un grand nombre de tris.[br]
+Vous pouvez avantageusement monter &agrave; 9 Mo sur un serveur de 3Go ex&eacute;cutant un bon peu tri.</sort_buffer_text>
+<table_cache>TABLE: Cache</table_cache>
+<table_cache>TABLE: Cache</table_cache>
+<table_open_cache>TABLE: Cache d'ouverture</table_open_cache>
+<table_open_cache_text>Le nombre de tables ouvertes pour l'ensemble des threads.[br]
+Augmenter cette valeur, augmente le nombre de descripteurs de fichiers.</table_open_cache_text>
+<thread_cache_size>Taille du cache des Threads</thread_cache_size>
+<thread_cache_size_text>Combien de Threads le serveur doit mettre en cache pour une r&eacute;utilisation. [br]
+Lorsqu'un client se d&eacute;connecte, les threads du client sont mis en cache si il ya moins de threads. [br]
+Les demandes de threads sont satisfaits par la r&eacute;utilisation de threads tir&eacute;s du cache, si c'est possible, et seulement quand le cache est vide , un nouveau thread peut &ecirc;tre cr&eacute;&eacute;. [br]
+Cette variable peut &ecirc;tre augment&eacute;e pour am&eacute;liorer les performances si vous avez un grand nombre de nouvelles connexions. [br]
+(Normalement, cela ne constitue pas une am&eacute;lioration notable des performances si vous avez une mise en %u0153uvre correcte des threads.)</thread_cache_size_text>
+<tmp_table_size>TABLES: taille des tables temporaires</tmp_table_size>
+<tmp_table_size_text>Cette variable d&eacute;termine la taille maximale pour une table temporaire en m&eacute;moire.[br]
+Si la table devient trop grande, une table MyISAM est cr&eacute;&eacute; sur le disque.[br]
+Essayez d'&eacute;viter les tables temporaires en optimisant les requ&ecirc;tes lorsque cela est possible, mais lorsque cela n'est pas possible, essayez de vous assurer que les tables temporaires sont toujours stock&eacute;es dans la m&eacute;moire. [br]
+Regarder la liste des processus pour les requ&ecirc;tes avec des tables temporaires qui prennent trop de temps &agrave; r&eacute;soudre, peut vous donner une alerte pr&eacute;coce que la taille de la table tmp doit &ecirc;tre augment&eacute;e.[br]
+N'oubliez pas que la m&eacute;moire est aussi allou&eacute;e par thread.[br]
+Un exemple o&ugrave; cette augmentation &agrave; bien fonctionn&eacute; est un serveur o&ugrave; elle est pass&eacute;e de 32 Mo (par d&eacute;faut) &agrave; 64 Mo, avec un effet imm&eacute;diat[br].
+La r&eacute;solution plus rapide des requ&ecirc;tes abouti &agrave; moins de threads actifs &agrave; un moment donn&eacute;, avec des avantages tant pour le serveur que pour la m&eacute;moire disponible.</tmp_table_size_text>

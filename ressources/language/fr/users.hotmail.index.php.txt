@@ -1,0 +1,10 @@
+<Delete_messages>Supprimer les messages</Delete_messages>
+<Delete_messages_text>Le message sera effac&eacute; apr&egrave;s sa r&eacute;cup&eacute;ration.</Delete_messages_text>
+<Domain>Domaine</Domain>
+<Domain_text>Votre domaine Hotmail (par d&eacute;faut 'hotmail.com', mais g&eacute;n&eacute;ralement ce qui est apr&egrave;s @ est votre adresse)</Domain_text>
+<getlive_about>GetLive est un outil qui collecte les mails de votre compte Hotmail/Windows Live.[br]
+Remplissez ce formulaire pour r&eacute;cup&eacute;rer tous vos messages Hotmail/Live et les stocker localement.</getlive_about>
+<MarkRead>Marqu&eacute; comme lu</MarkRead>
+<MarkRead_text>Le message sera marqu&eacute; comme lu apr&egrave;s sa r&eacute;cup&eacute;ration</MarkRead_text>
+<password_text>Votre mot de passe Hotmail</password_text>
+<username_text>Votre identifiant Hotmail (sans @hotmail.com)</username_text>

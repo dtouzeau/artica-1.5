@@ -1,0 +1,9 @@
+/*#taskbar a.button-sticky_notes {
+  background: url('sticky_notes.png') 0px 4px no-repeat;
+}*/
+
+#notes {
+  margin-top: 55px;
+  width: 100%;
+  height: 90%;
+}

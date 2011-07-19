@@ -1,0 +1,11 @@
+<WIZARD_COMPILE>Guardar par&acirc;metros</WIZARD_COMPILE>
+<WIZARD_COMPILE_EXPLAIN>Verifique os seus par&acirc;metros, se estiverem correctos, clique no bot&atilde;o &quot;Guardar par&acirc;metros&quot;</WIZARD_COMPILE_EXPLAIN>
+<WIZARD_HTTPD_ENGINE_RETRANS_EXPLAIN>Para fornecer as actualiza&ccedil;&otilde;es &eacute; necess&aacute;rio definir os protocolos HTTP, FTP ou SMB, a melhor forma &eacute; configurar o motor HTTP.[br]
+Artica pode fazer isto por si.[br]Neste caso, voc&ecirc; precisa de definir os seus produtos Kasperky para serem actualizados atrav&eacute;s do motor HTTP</WIZARD_HTTPD_ENGINE_RETRANS_EXPLAIN>
+<WIZARD_RETRANSLATOR_CHOOSE_COMPONENTS>Escolhas os produtos Kaspersky</WIZARD_RETRANSLATOR_CHOOSE_COMPONENTS>
+<WIZARD_RETRANSLATOR_CHOOSE_COMPONENTS_EXPLAIN>Voc&ecirc; vai encontrar tr&ecirc;s fam&iacute;lias de produtos Kaspersky.[br]
+[b]Kaspersky para esta&ccedil;&otilde;es de trabalho Windows[/b] Servidor web apenas para actualiza&ccedil;&otilde;es de produtos Kaspersky em ambiente Windows.[br]
+[b]KIT de administra&ccedil;&atilde;o Kaspersky[b] Servidor web para fornecer actualiza&ccedil;&otilde;es para todos os produtos Kasperky geridos pela consola geral da Kaspersky.[br]
+[b]Kaspersky para Unix[/b] Servidor web para produtos Unix, usado para proteger os servidores de Email ou Proxy com o Artica</WIZARD_RETRANSLATOR_CHOOSE_COMPONENTS_EXPLAIN>
+<WIZARD_RETRANSLATOR_EXPLAIN>Este assistente vai ajud&aacute;-lo a definir quais os componentes que voc&ecirc; precisa para definir e executar o servi&ccedil;o HTTP de forma a fornecer as actualiza&ccedil;&otilde;es</WIZARD_RETRANSLATOR_EXPLAIN>
+<WIZARD_RETRANSLATOR_WELCOME>Bem-vindo ao assistente Retranslator</WIZARD_RETRANSLATOR_WELCOME>

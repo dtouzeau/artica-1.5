@@ -1,0 +1,19 @@
+<KAVAPPMAIL_INTRO>Cet assistant va vous aider &agrave; param&eacute;trer votre serveur afin de le mettre en production</KAVAPPMAIL_INTRO>
+<welcome_kaspersky_mail_appliance>Bienvenue dans Artica pour Kaspersky Mail appliance</welcome_kaspersky_mail_appliance>
+<wizardCompileButton>Construire vos param&egrave;tres</wizardCompileButton>
+<wizardCompileButton_text>V&eacute;rifiez vos param&egrave;tres.[br]Si ils sont corrects, appuyez sur le bouton construire vos param&egrave;tres afin de le mettre en production et de d&eacute;marrer l'utilisation de votre serveur.</wizardCompileButton_text>
+<WIZARD_COMPILE>Construire vos param&egrave;tres</WIZARD_COMPILE>
+<WIZARD_COMPILE_EXPLAIN>V&eacute;rifiez vos param&egrave;tres.[br]Si ils sont corrects, appuyez sur le bouton construire vos param&egrave;tres afin de le mettre en production et de d&eacute;marrer l'utilisation de votre serveur.</WIZARD_COMPILE_EXPLAIN>
+<WIZARD_FIRST_ORG>Votre organisation</WIZARD_FIRST_ORG>
+<WIZARD_FIRST_ORG_EXPLAIN>Une organisation est une entit&eacute; qui regroupe des utilisateurs, groupes et domaines SMTP avec des fonctionnalit&eacute;s sp&eacute;cifiques.[br]
+Cela peut &ecirc;tre par exemple le nom de votre entreprise ou tout autre nom qui vous permet de d&eacute;finir cette &quot;zone&quot;.[br]
+Donnez un nom dans le champs organisation.</WIZARD_FIRST_ORG_EXPLAIN>
+<WIZARD_FIRST_ROUTED_DOMAIN>Votre domaine SMTP et premier routage.</WIZARD_FIRST_ROUTED_DOMAIN>
+<WIZARD_FIRST_ROUTED_DOMAIN_EXPLAIN>Le but de ce serveur est de recevoir les messages provenant d'Internet, rejeter les pourriels et les virus et de transmettre uniquement les messages sains &agrave; votre serveur de bo&icirc;tes aux lettres.[br]
+Indiquez dans le premier champs le domaine de messagerie de votre entreprise et dans le second l'adresse r&eacute;seau de votre serveur de bo&icirc;tes aux lettres.</WIZARD_FIRST_ROUTED_DOMAIN_EXPLAIN>
+<WIZARD_INTERNAL_SMTP_NETWORK>Votre r&eacute;seau interne</WIZARD_INTERNAL_SMTP_NETWORK>
+<WIZARD_INTERNAL_SMTP_NETWORK_EXPLAIN>Si vous d&eacute;sirez utiliser ce serveur comme un serveur d'&eacute;mission vers Internet, vous devez sp&eacute;cifier votre r&eacute;seau interne.[br]
+Dans ce cas, le serveur sera capable de diff&eacute;rencier les flux entrants des flux sortants.[br]
+Donnez la premi&egrave;re adresse r&eacute;seau slash le mask binaire.[br]
+Exemple:192.168.1.0/24, 10.10.10.0/16 ...[br]
+Vous pouvez sp&eacute;cifiez une adresse unique si votre serveur de bo&icirc;tes aux lettres est l'unique &eacute;metteur des messages &agrave; destination d'Internet.</WIZARD_INTERNAL_SMTP_NETWORK_EXPLAIN>

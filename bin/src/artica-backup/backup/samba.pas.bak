@@ -1,0 +1,1000 @@
+unit samba;
+
+{$mode objfpc}{$H+}
+interface
+
+uses
+Classes, SysUtils,variants,strutils,IniFiles,zsystem, Process,md5,logs,unix,RegExpr in 'RegExpr.pas',openldap;
+
+  type
+  Tsamba=class
+
+
+private
+     LOGS:Tlogs;
+     artica_path:string;
+     GLOBAL_INI:TiniFIle;
+     function COMMANDLINE_PARAMETERS(FoundWhatPattern:string):boolean;
+     function ReadFileIntoString(path:string):string;
+     procedure StripDiezes(filepath:string);
+     function lib_pam_ldap_path():string;
+     function lib_nss_ldap_path():string;
+     function auth_client_config_path():string;
+     procedure ETC_LDAP_CONF_SET_VALUE(key:string;value:string);
+     procedure SMB_CONF_SET_VALUE(key:string;value:string);
+     function AUTH_CLIENT_CONFIG_VERIF_PROFILE(profilename:string):boolean;
+     SYS:TSystem;
+     openldap:topenldap;
+
+public
+    procedure Free;
+    constructor Create;
+    procedure smbldap_conf();
+    procedure libnss_conf();
+    procedure pam_ldap_conf();
+    procedure nsswitch_conf();
+    procedure default_config();
+    
+    procedure SAMBA_START();
+    procedure SAMBA_STOP();
+    FUNCTION  SAMBA_STATUS():string;
+    function  SAMBA_VERSION():string;
+    function  SMBD_PATH():string;
+    function  SMBD_PID():string;
+    function  NMBD_PID():string;
+    function  INITD_PATH():string;
+    function  PBEDIT_PATH():string;
+    function  smbpasswd_path():string;
+    function  slappasswd_path():string;
+    function  smbconf_path():string;
+    function  vfs_path():string;
+    FUNCTION  SAMBA_AUDIT():string;
+
+    
+    function  WINBIND_PID():string;
+    function  WINBIND_BIN_PATH():string;
+    function  INITD_WINBIND_PATH():string;
+    procedure WINBIND_START();
+    procedure WINBIND_STOP();
+    function  WINBIND_VERSION():string;
+    procedure FixDirectoriesChmod();
+    procedure PAM_LDAP_SECRET();
+    procedure SAMBA_VFS_PLUGINS();
+    procedure AUTH_CLIENT_CONFIG();
+
+
+END;
+
+implementation
+
+constructor Tsamba.Create;
+begin
+       forcedirectories('/etc/artica-postfix');
+       LOGS:=tlogs.Create();
+       SYS:=Tsystem.CReate;
+       if not DirectoryExists('/usr/share/artica-postfix') then begin
+              artica_path:=ParamStr(0);
+              artica_path:=ExtractFilePath(artica_path);
+              artica_path:=AnsiReplaceText(artica_path,'/bin/','');
+
+      end else begin
+  artica_path:='/usr/share/artica-postfix';
+  end;
+  
+  openldap:=Topenldap.Create;
+       
+end;
+//##############################################################################
+procedure Tsamba.free();
+begin
+    logs.FRee;
+    
+
+end;
+//##############################################################################
+procedure Tsamba.nsswitch_conf();
+var
+  l:TstringList;
+  ltmp:TstringList;
+  i:integer;
+begin
+
+if not FileExists(lib_pam_ldap_path()) then begin
+   logs.Debuglogs('nsswitch_conf:: unable to stat pam_ldap.so');
+   exit;
+end;
+
+if not FileExists(lib_nss_ldap_path()) then begin
+   logs.Debuglogs('nsswitch_conf:: unable to stat libnss-ldap');
+   exit;
+end;
+  l:=TstringList.Create;
+l.Add('# /etc/nsswitch.conf');
+l.Add('#');
+l.Add('# Example configuration of GNU Name Service Switch functionality.');
+l.Add('# If you have the `glibc-doc-reference'' and `info'' packages installed, try:');
+l.Add('# `info libc "Name Service Switch"'' for information about this file.');
+l.Add('bind_policy soft');
+l.Add('');
+l.Add('passwd:         compat ldap');
+l.Add('group:          compat ldap');
+l.Add('shadow:         compat ldap');
+l.Add('');
+l.Add('hosts:          files mdns4_minimal dns mdns4');
+l.Add('networks:       files');
+l.Add('');
+l.Add('protocols:      db files');
+l.Add('services:       db files');
+l.Add('ethers:         db files');
+l.Add('rpc:            db files');
+l.Add('');
+l.Add('netgroup:       nis');
+l.SaveToFile('/etc/nsswitch.conf');
+l.free;
+end;
+//##############################################################################
+function Tsamba.COMMANDLINE_PARAMETERS(FoundWhatPattern:string):boolean;
+var
+   i:integer;
+   s:string;
+   RegExpr:TRegExpr;
+
+begin
+ s:='';
+ result:=false;
+ if ParamCount>1 then begin
+     for i:=2 to ParamCount do begin
+        s:=s  + ' ' +ParamStr(i);
+     end;
+ end;
+   RegExpr:=TRegExpr.Create;
+   RegExpr.Expression:=FoundWhatPattern;
+   if RegExpr.Exec(s) then begin
+      RegExpr.Free;
+      result:=True;
+   end;
+
+
+end;
+//##############################################################################
+function Tsamba.SMBD_PATH():string;
+begin
+ if FileExists('/usr/sbin/smbd') then exit('/usr/sbin/smbd');
+end;
+//##############################################################################
+function Tsamba.WINBIND_BIN_PATH():string;
+begin
+ if FileExists('/usr/sbin/winbindd') then exit('/usr/sbin/winbindd');
+end;
+//##############################################################################
+function Tsamba.SMBD_PID():string;
+begin
+if FileExists('/var/run/smbd.pid') then exit(SYS.GET_PID_FROM_PATH('/var/run/smbd.pid'));
+if FileExists('/var/run/samba/smbd.pid') then exit(SYS.GET_PID_FROM_PATH('/var/run/samba/smbd.pid'));
+end;
+//##############################################################################
+function Tsamba.NMBD_PID():string;
+begin
+if FileExists('/var/run/nmbd.pid') then exit(SYS.GET_PID_FROM_PATH('/var/run/nmbd.pid'));
+if FileExists('/var/run/samba/nmbd.pid') then exit(SYS.GET_PID_FROM_PATH('/var/run/samba/nmbd.pid'));
+end;
+//##############################################################################
+function Tsamba.WINBIND_PID():string;
+begin
+    if FileExists('/var/run/samba/winbindd.pid') then exit(SYS.GET_PID_FROM_PATH('/var/run/samba/winbindd.pid'));
+end;
+//##############################################################################
+function Tsamba.INITD_PATH():string;
+begin
+ if FileExists('/etc/init.d/samba') then exit('/etc/init.d/samba');
+end;
+//##############################################################################
+function Tsamba.INITD_WINBIND_PATH():string;
+begin
+ if FileExists('/etc/init.d/samba') then exit('/etc/init.d/samba');
+end;
+//##############################################################################
+function Tsamba.PBEDIT_PATH():string;
+begin
+    if FileExists('/usr/bin/pdbedit') then exit('/usr/bin/pdbedit');
+end;
+//#########################################################################################
+function Tsamba.smbpasswd_path():string;
+begin
+ if FileExists('/usr/bin/smbpasswd') then exit('/usr/bin/smbpasswd');
+end;
+//##############################################################################
+function Tsamba.smbconf_path():string;
+begin
+ if FileExists('/etc/samba/smb.conf') then exit('/etc/samba/smb.conf');
+end;
+//##############################################################################
+function Tsamba.slappasswd_path():string;
+begin
+if FileExists('/usr/sbin/slappasswd') then exit('/usr/sbin/slappasswd');
+end;
+//##############################################################################
+function Tsamba.vfs_path():string;
+begin
+if DirectoryExists('/usr/lib/samba/vfs') then exit('/usr/lib/samba/vfs');
+end;
+//##############################################################################
+procedure Tsamba.SAMBA_VFS_PLUGINS();
+begin
+
+if not DirectoryExists(vfs_path()) then begin
+       logs.Debuglogs('SAMBA_VFS_PLUGINS:: unable to stat vfs samba path');
+       exit;
+end;
+
+if not FileExists(vfs_path()+'/mysql_audit.so') then begin
+    if FileExists(artica_path +'/bin/install/vfs/mysql_audit.so') then begin
+       logs.OutputCmd('/bin/ln -s '+artica_path +'/bin/install/vfs/mysql_audit.so '+vfs_path()+'/mysql_audit.so');
+    end;
+end;
+end;
+//##############################################################################
+
+procedure Tsamba.SAMBA_START();
+var
+   pid:string;
+   err:string;
+begin
+
+if not FileExists(SMBD_PATH()) then exit;
+if not FileExists(INITD_PATH()) then exit;
+if not FileExists(smbpasswd_path()) then exit;
+
+pid:=SMBD_PID();
+
+if SYS.PROCESS_EXIST(pid) then begin
+   logs.Debuglogs('SAMBA_START:: SMBD Already running PID ' + pid);
+   exit;
+end;
+
+
+   logs.Debuglogs('SAMBA_START:: Integrate system to ldap');
+   
+   fpsystem(smbpasswd_path()+' -w ' + openldap.ldap_settings.password);
+
+   PAM_LDAP_SECRET();
+   libnss_conf();
+   pam_ldap_conf();
+   nsswitch_conf();
+   smbldap_conf();
+   default_config();
+   AUTH_CLIENT_CONFIG();
+   FixDirectoriesChmod();
+   SAMBA_VFS_PLUGINS();
+   SAMBA_AUDIT();
+
+
+
+  err:=ReadFileIntoString(logs.OutputCmdR(INITD_PATH + ' start'));
+  
+   pid:=SMBD_PID();
+  
+     if not SYS.PROCESS_EXIST(pid) then begin
+        logs.Debuglogs('SAMBA_START:: Failed to start samba with error ' + err);
+        exit;
+     end;
+     
+  logs.Debuglogs('SAMBA_START:: SMBD running PID ' + pid);
+
+end;
+//##############################################################################
+procedure Tsamba.PAM_LDAP_SECRET();
+var
+   l:TstringList;
+begin
+
+l:=TstringList.Create;
+l.Add(openldap.ldap_settings.password);
+logs.Debuglogs('PAM_LDAP_SECRET:: Save /etc/pam_ldap.secret');
+l.SaveToFile('/etc/pam_ldap.secret');
+logs.OutputCmd('/bin/chmod 600 /etc/pam_ldap.secret');
+l.free;
+end;
+//##############################################################################
+
+
+procedure Tsamba.SAMBA_STOP();
+var
+   pid:string;
+begin
+
+if not FileExists(SMBD_PATH()) then exit;
+if not FileExists(INITD_PATH()) then exit;
+
+pid:=SMBD_PID();
+
+
+
+if not SYS.PROCESS_EXIST(pid) then begin
+   writeln('Stopping SAMBA ..............: Already stopped');
+   exit;
+end;
+
+     writeln('Stopping SAMBA ..............: ' + pid + ' PID');
+     fpsystem(INITD_PATH() + ' stop >/opt/artica/logs/samba.start 2>&1');
+  if SYS.PROCESS_EXIST(pid) then begin
+       writeln('Stopping SAMBA ..............: killing ' + pid + ' PID');
+       fpsystem('/bin/kill -9 ' + pid);
+  end;
+     
+     
+end;
+//##############################################################################
+procedure Tsamba.WINBIND_STOP();
+var
+   pid:string;
+begin
+
+if not FileExists(WINBIND_BIN_PATH()) then exit;
+if not FileExists(INITD_WINBIND_PATH()) then exit;
+
+pid:=WINBIND_PID();
+
+
+
+if not SYS.PROCESS_EXIST(pid) then begin
+   writeln('Stopping WINBIND.............: Already stopped');
+   exit;
+end;
+
+     writeln('Stopping WINBIND.............: ' + pid + ' PID');
+     fpsystem(INITD_WINBIND_PATH() + ' stop >/opt/artica/logs/samba.start 2>&1');
+end;
+//##############################################################################
+function Tsamba.SAMBA_VERSION():string;
+var
+   RegExpr:TRegExpr;
+   x:string;
+begin
+forcedirectories('/opt/artica/logs');
+fpsystem(SMBD_PATH() + ' -V >/opt/artica/logs/samba.version');
+x:=ReadFileIntoString('/opt/artica/logs/samba.version');
+RegExpr:=TRegExpr.Create;
+RegExpr.Expression:='Version\s+([0-9a-z\.]+)';
+if RegExpr.Exec(x) then result:=trim(RegExpr.Match[1]);
+end;
+//##############################################################################
+function Tsamba.WINBIND_VERSION():string;
+var
+   RegExpr:TRegExpr;
+   x:string;
+begin
+forcedirectories('/opt/artica/logs');
+fpsystem(WINBIND_BIN_PATH() + ' -V >/opt/artica/logs/samba.version');
+x:=ReadFileIntoString('/opt/artica/logs/samba.version');
+RegExpr:=TRegExpr.Create;
+RegExpr.Expression:='Version\s+([0-9a-z\.]+)';
+if RegExpr.Exec(x) then result:=trim(RegExpr.Match[1]);
+end;
+//##############################################################################
+FUNCTION Tsamba.SAMBA_AUDIT():string;
+var
+   l:TstringList;
+begin
+
+if not FileExists(artica_path+'/smb-audit/config/config.php') then begin
+   logs.Debuglogs('SAMBA_AUDIT: Unable to stat '+artica_path+'/smb-audit/config/config.php');
+   exit;
+end;
+   l:=TstringList.Create;
+l.Add('<?');
+l.Add('//Setup language from lang dir');
+l.Add('//available english russian ukrainian');
+l.Add('$lang="english";');
+l.Add('//$lang="russian";');
+l.Add('//$lang="ukrainian";');
+l.Add('');
+l.Add('//Database connection Setup');
+l.Add('$db_type = "mysql";     // mysql or pgsql');
+l.Add('$db_host = "'+SYS.MYSQL_INFOS('mysql_server')+':' + SYS.MYSQL_INFOS('port')+'";');
+l.Add('$db_user = "'+SYS.MYSQL_INFOS('database_admin')+'";');
+l.Add('$db_pass = "'+SYS.MYSQL_INFOS('database_password')+'";');
+l.Add('$db_name = "artica_events";');
+l.Add('?>');
+
+l.SaveToFile(artica_path+'/smb-audit/config/config.php')
+end;
+//##############################################################################
+
+FUNCTION Tsamba.SAMBA_STATUS():string;
+var
+   ini:TstringList;
+   pid:string;
+begin
+
+  if not FileExists(SMBD_PATH()) then exit;
+  ini:=TstringList.Create;
+  pid:=SMBD_PID();
+  
+  ini.Add('[SAMBA_SMBD]');
+  if SYS.PROCESS_EXIST(pid) then ini.Add('running=1') else  ini.Add('running=0');
+  ini.Add('application_installed=1');
+  ini.Add('application_enabled=1');
+      ini.Add('master_pid='+ pid);
+      ini.Add('master_memory=' + IntToStr(SYS.PROCESS_MEMORY(pid)));
+      ini.Add('master_version=' + SAMBA_VERSION());
+      ini.Add('status='+SYS.PROCESS_STATUS(pid));
+      ini.Add('service_name=APP_SAMBA_SMBD');
+
+  pid:=NMBD_PID();
+  ini.Add('[SAMBA_NMBD]');
+  if SYS.PROCESS_EXIST(pid) then ini.Add('running=1') else  ini.Add('running=0');
+  ini.Add('application_installed=1');
+  ini.Add('application_enabled=1');
+      ini.Add('master_pid='+ pid);
+      ini.Add('master_memory=' + IntToStr(SYS.PROCESS_MEMORY(pid)));
+      ini.Add('master_version=' + SAMBA_VERSION());
+      ini.Add('status='+SYS.PROCESS_STATUS(pid));
+      ini.Add('service_name=APP_SAMBA_NMBD');
+
+
+if FileExists(WINBIND_BIN_PATH()) then begin
+     pid:=WINBIND_PID();
+   ini.Add('[SAMBA_WINBIND]');
+  if SYS.PROCESS_EXIST(pid) then ini.Add('running=1') else  ini.Add('running=0');
+  ini.Add('application_installed=1');
+  ini.Add('application_enabled=1');
+      ini.Add('master_pid='+ pid);
+      ini.Add('master_memory=' + IntToStr(SYS.PROCESS_MEMORY(pid)));
+      ini.Add('master_version=' + WINBIND_VERSION());
+      ini.Add('status='+SYS.PROCESS_STATUS(pid));
+      ini.Add('service_name=APP_SAMBA_WINBIND');
+
+
+end;
+
+result:=ini.Text;
+ini.free
+end;
+//#########################################################################################
+
+procedure Tsamba.WINBIND_START();
+var pid:string;
+begin
+    if not FileExists(WINBIND_BIN_PATH()) then exit;
+    if not FileExists(INITD_WINBIND_PATH()) then exit;
+    pid:=WINBIND_PID();
+    
+ if SYS.PROCESS_EXIST(pid) then begin
+   logs.Debuglogs('WINBIND_START:: WINBIND running PID ' + pid);
+   exit;
+end;
+  fpsystem(INITD_WINBIND_PATH() + ' start >/opt/artica/logs/samba.start 2>&1');
+    
+ pid:=WINBIND_PID();
+
+     if not SYS.PROCESS_EXIST(pid) then begin
+        logs.Debuglogs('WINBIND_START:: Failed to start winbind with error ' + ReadFileIntoString('/opt/artica/logs/samba.start'));
+        exit;
+     end;
+
+  logs.Debuglogs('WINBIND_START:: WINBIND running PID ' + pid);
+
+end;
+//##############################################################################
+procedure Tsamba.libnss_conf();
+var
+  l:TstringList;
+  server,port:string;
+begin
+
+if not FileExists(lib_pam_ldap_path()) then begin
+   logs.Debuglogs('pam_ldap_conf:: unable to stat pam_ldap.so');
+   exit;
+end;
+
+if not FileExists(lib_nss_ldap_path()) then begin
+   logs.Debuglogs('pam_ldap_conf:: unable to stat libnss-ldap');
+   exit;
+end;
+
+   l:=TstringList.Create;
+  server:=openldap.ldap_settings.servername;
+  port:=openldap.ldap_settings.Port;
+
+l.Add('host '+ server + ':' + port);
+l.Add('base ' +openldap.ldap_settings.suffix);
+l.Add('uri ldap://' + server + ':' + port);
+l.Add('ldap_version 3');
+l.Add('bind_policy soft');
+l.SaveToFile('/etc/libnss-ldap.conf');
+
+if FileExists('/usr/share/libnss-ldap/ldap.conf') then l.SaveToFile('/usr/share/libnss-ldap/ldap.conf');
+l.free;
+end;
+
+//##############################################################################
+function Tsamba.lib_pam_ldap_path():string;
+begin
+if FileExists('/lib/security/pam_ldap.so') then exit('/lib/security/pam_ldap.so');
+end;
+//##############################################################################
+function Tsamba.lib_nss_ldap_path():string;
+begin
+  if FIleExists('/etc/init.d/libnss-ldap') then exit('/etc/init.d/libnss-ldap');
+  if FileExists('/usr/lib/libnss_ldap.so') then exit('/usr/lib/libnss_ldap.so');
+end;
+//##############################################################################
+function Tsamba.auth_client_config_path():string;
+begin
+  if FIleExists('/usr/sbin/auth-client-config') then exit('/usr/sbin/auth-client-config');
+end;
+//##############################################################################
+procedure Tsamba.AUTH_CLIENT_CONFIG();
+var
+l:TstringList;
+
+begin
+   if not Fileexists(auth_client_config_path()) then begin
+     logs.Debuglogs('AUTH_CLIENT_CONFIG:: auth-client-config does not exists... Aborting, i think it is not Ubuntu...not a problem');
+     exit;
+   end;
+   
+   if FileExists('/etc/auth-client-config/profile.d/open_ldap') then begin
+        if AUTH_CLIENT_CONFIG_VERIF_PROFILE('open_ldap') then exit;
+   end;
+
+   
+ l:=TstringList.Create;
+l.Add('[open_ldap]');
+l.Add('nss_passwd=passwd: compat ldap');
+l.Add('nss_group=group: compat ldap');
+l.Add('nss_shadow=shadow: compat ldap');
+l.Add('pam_auth=auth       required     pam_env.so');
+l.Add(' auth       sufficient   pam_unix.so likeauth nullok');
+l.Add(' auth       sufficient   pam_ldap.so use_first_pass');
+l.Add(' auth       required     pam_deny.so');
+l.Add('pam_account=account    sufficient   pam_unix.so');
+l.Add(' account    sufficient   pam_ldap.so');
+l.Add(' account    required     pam_deny.so');
+l.Add('pam_password=password   sufficient   pam_unix.so nullok md5 shadow use_authtok');
+l.Add(' password   sufficient   pam_ldap.so use_first_pass');
+l.Add(' password   required     pam_deny.so');
+l.Add('pam_session=session    required     pam_limits.so');
+l.Add(' session    required     pam_mkhomedir.so skel=/etc/skel/');
+l.Add(' session    required     pam_unix.so');
+l.Add(' session    optional     pam_ldap.so');
+l.SaveToFile('/etc/auth-client-config/profile.d/open_ldap');
+l.free;
+logs.OutputCmd(auth_client_config_path()+' -a -p open_ldap');
+end;
+//##############################################################################
+function Tsamba.AUTH_CLIENT_CONFIG_VERIF_PROFILE(profilename:string):boolean;
+var
+l:TstringList;
+i,n:integer;
+line:string;
+RegExpr:TRegExpr;
+begin
+result:=false;
+line:=logs.FILE_TEMP();
+fpsystem(auth_client_config_path() + ' -l > ' + line + ' 2>&1');
+if not Fileexists(line) then begin
+   logs.Debuglogs('AUTH_CLIENT_CONFIG_VERIF_PROFILE:: Unable to stat ' + line);
+   exit;
+end;
+
+ RegExpr:=TRegExpr.Create;
+ RegExpr.Expression:=profilename;
+ l:=TStringList.Create;
+ l.LoadFromFile(line);
+ For i:=0 to l.Count-1 do begin
+   if RegExpr.Exec(l.Strings[i]) then begin
+      logs.Debuglogs('AUTH_CLIENT_CONFIG_VERIF_PROFILE:: ' + profilename + ' exists');
+      result:=true;
+      break;
+   end;
+ end;
+
+   l.free;
+   RegExpr.free;
+
+
+END;
+//##############################################################################
+
+
+//##############################################################################
+procedure Tsamba.pam_ldap_conf();
+var
+  l:TstringList;
+  server,port,admin,password:string;
+  nssignore:string;
+begin
+if not FileExists(lib_pam_ldap_path()) then begin
+   logs.Debuglogs('pam_ldap_conf:: unable to stat pam_ldap.so');
+   exit;
+end;
+
+if not FileExists(lib_nss_ldap_path()) then begin
+   logs.Debuglogs('pam_ldap_conf:: unable to stat libnss-ldap');
+   exit;
+end;
+
+  l:=TstringList.Create;
+  server:=openldap.ldap_settings.servername;
+  port:=openldap.ldap_settings.Port;
+  admin:='cn='+openldap.ldap_settings.admin+','+openldap.ldap_settings.suffix;
+  password:=openldap.ldap_settings.password;
+  
+  forcedirectories('/etc/pam.d');
+
+  
+  
+  ETC_LDAP_CONF_SET_VALUE('host',server);
+  ETC_LDAP_CONF_SET_VALUE('port',port);
+  ETC_LDAP_CONF_SET_VALUE('uri','ldap://'+server+':'+port);
+  ETC_LDAP_CONF_SET_VALUE('ldap_version','3');
+  ETC_LDAP_CONF_SET_VALUE('rootbinddn',admin);
+  ETC_LDAP_CONF_SET_VALUE('bind_policy','soft');
+  ETC_LDAP_CONF_SET_VALUE('scope','sub');
+  ETC_LDAP_CONF_SET_VALUE('base',openldap.ldap_settings.suffix);
+  ETC_LDAP_CONF_SET_VALUE('nss_initgroups_ignoreusers','avahi,avahi-autoipd,backup,bin,bind,cyrus,daemon,dhcp,dovecot,games,gnats,haldaemon,hplip,irc,klog,libuuid,list,lp,mail,man,messagebus,mysql,news,ntp,openfire,openldap,polkituser,postfix,postgres,proxy,sshd,stunnel4,sync,sys,syslog,uucp,www-data');
+
+
+
+  SMB_CONF_SET_VALUE('ldap suffix',openldap.ldap_settings.suffix);
+  SMB_CONF_SET_VALUE('ldap admin dn',admin);
+
+  
+  
+  l.Add('host '+ server);
+  l.Add('port '+ port);
+  l.Add('base ' + openldap.ldap_settings.suffix);
+  l.Add('rootbinddn ' +admin);
+  l.Add('ldap_version 3');
+  l.Add('pam_password clear');
+  l.Add('bind_policy soft');
+  logs.Debuglogs('pam_ldap_conf:: saving /etc/pam_ldap.conf');
+  l.SaveToFile('/etc/pam_ldap.conf');
+  l.Clear;
+  
+  l.Add('@include common-auth');
+  l.Add('@include common-account');
+  l.Add('@include common-session');
+  logs.Debuglogs('pam_ldap_conf:: saving /etc/pam.d/samba');
+  l.SaveToFile('/etc/pam.d/samba');
+  l.Clear;
+
+
+  l.Add(password);
+  logs.Debuglogs('pam_ldap_conf:: saving /etc/ldap.secret');
+  l.SaveToFile('/etc/ldap.secret');
+  fpsystem('/bin/chmod 600 /etc/ldap.secret');
+  l.Clear;
+
+
+   l.Add('#');
+   l.Add('# /etc/pam.d/common-account - authorization settings common to all services');
+   l.Add('#');
+   l.Add('# This file is included from other service-specific PAM config files,');
+   l.Add('# and should contain a list of the authorization modules that define');
+   l.Add('# the central access policy for use on the system.  The default is to');
+   l.Add('# only deny service to users whose accounts are expired in /etc/shadow.');
+   l.Add('#');
+   l.Add('account sufficient pam_ldap.so');
+   l.Add('account required   pam_unix.so try_first_pass');
+   logs.Debuglogs('pam_ldap_conf:: saving /etc/pam.d/common-account');
+   l.SaveToFile('/etc/pam.d/common-account');
+   l.Clear;
+
+
+
+   l.Add('#');
+   l.Add('# /etc/pam.d/common-auth - authentication settings common to all services');
+   l.Add('#');
+   l.Add('# This file is included from other service-specific PAM config files,');
+   l.Add('# and should contain a list of the authentication modules that define');
+   l.Add('# the central authentication scheme for use on the system');
+   l.Add('# (e.g., /etc/shadow, LDAP, Kerberos, etc.).  The default is to use the');
+   l.Add('# traditional Unix authentication mechanisms.');
+   l.Add('#');
+   l.Add('auth sufficient pam_ldap.so');
+   l.Add('auth	requisite	pam_unix.so nullok_secure try_first_pass');
+   l.Add('auth	optional	pam_smbpass.so migrate missingok');
+   logs.Debuglogs('pam_ldap_conf:: saving /etc/pam.d/common-auth');
+   l.SaveToFile('/etc/pam.d/common-auth');
+   l.Clear;
+
+
+   l.Add('#');
+   l.Add('# /etc/pam.d/common-password - password-related modules common to all services');
+   l.Add('#');
+   l.Add('# This file is included from other service-specific PAM config files,');
+   l.Add('# and should contain a list of modules that define the services to be');
+   l.Add('# used to change user passwords.  The default is pam_unix.');
+   l.Add('');
+   l.Add('# Explanation of pam_unix options:');
+   l.Add('#');
+   l.Add('# The "nullok" option allows users to change an empty password, else');
+   l.Add('# empty passwords are treated as locked accounts.');
+   l.Add('#');
+   l.Add('# The "md5" option enables MD5 passwords.  Without this option, the');
+   l.Add('# default is Unix crypt.');
+   l.Add('#');
+   l.Add('# The "obscure" option replaces the old `OBSCURE_CHECKS_ENAB'' option in');
+   l.Add('# login.defs.');
+   l.Add('#');
+   l.Add('# You can also use the "min" option to enforce the length of the new');
+   l.Add('# password.');
+   l.Add('#');
+   l.Add('# See the pam_unix manpage for other options.');
+   l.Add('');
+   l.Add('password   sufficient  pam_ldap.so');
+   l.Add('password   requisite   pam_unix.so nullok obscure md5 try_first_pass');
+   l.Add('');
+   l.Add('# Alternate strength checking for password. Note that this');
+   l.Add('# requires the libpam-cracklib package to be installed.');
+   l.Add('# You will need to comment out the password line above and');
+   l.Add('# uncomment the next two in order to use this.');
+   l.Add('# (Replaces the `OBSCURE_CHECKS_ENAB'', `CRACKLIB_DICTPATH'')');
+   l.Add('#');
+   l.Add('# password required	  pam_cracklib.so retry=3 minlen=6 difok=3');
+   l.Add('# password required	  pam_unix.so use_authtok nullok md5 try_first_pass');
+   l.Add('');
+   l.Add('# minimally-intrusive inclusion of smbpass in the stack for');
+   l.Add('# synchronization.  If the module is absent or the passwords don''t');
+   l.Add('# match, this module will be ignored without prompting; and if the ');
+   l.Add('# passwords do match, the NTLM hash for the user will be updated');
+   l.Add('# automatically.');
+   l.Add('password   optional   pam_smbpass.so nullok use_authtok use_first_pass missingok');
+   l.SaveToFile('/etc/pam.d/common-password');
+   l.Clear;
+
+  l.free;
+end;
+//##############################################################################
+procedure Tsamba.default_config();
+var
+  m:TiniFile;
+  configfile:string;
+  tmpstr:string;
+  server,port,admin:string;
+begin
+if FileExists('/etc/samba/smb.conf') then configfile:='/etc/samba/smb.conf';
+  StripDiezes(configfile);
+  admin:='cn='+openldap.ldap_settings.admin+','+openldap.ldap_settings.suffix;
+  server:=openldap.ldap_settings.servername;
+  port:=openldap.ldap_settings.Port;
+  if server='*' then server:='127.0.0.1';
+  if length(port)=0 then port:='389';
+
+m:=TiniFile.Create('/etc/samba/smb.conf');
+tmpstr:=m.ReadString('global','ldap suffix','');
+if length(tmpstr)>0 then exit;
+  m.WriteString('global','ldap passwd sync','Yes');
+  m.WriteString('global','passdb backend','ldapsam:ldap://' + server + ':' + port+'/');
+  m.WriteString('global','ldap admin dn',admin);
+  m.WriteString('global','ldap suffix',openldap.ldap_settings.suffix);
+  m.WriteString('global','socket options','TCP_NODELAY SO_RCVBUF=8192 SO_SNDBUF=8192');
+  m.UpdateFile;
+  m.FRee;
+end;
+//##############################################################################
+procedure Tsamba.StripDiezes(filepath:string);
+var
+list,list2:TstringList;
+i,n:integer;
+line:string;
+RegExpr:TRegExpr;
+begin
+ RegExpr:=TRegExpr.create;
+ RegExpr.expression:='#';
+    if not FileExists(filepath) then exit;
+    list:=TstringList.Create();
+    list2:=TstringList.Create();
+    list.LoadFromFile(filepath);
+    n:=-1;
+    For i:=0 to  list.Count-1 do begin
+        n:=n+1;
+         line:=list.Strings[i];
+         if length(line)>0 then begin
+
+            if not RegExpr.Exec(list.Strings[i])  then begin
+               list2.Add(list.Strings[i]);
+            end;
+         end;
+    end;
+
+
+     list2.SaveToFile(filepath);
+
+    RegExpr.Free;
+    list2.Free;
+    list.Free;
+end;
+ //##############################################################################
+
+
+
+procedure Tsamba.smbldap_conf();
+var
+  l:TstringList;
+  server,port:string;
+begin
+ forcedirectories('/etc/smbldap-tools');
+ 
+l:=TstringList.Create;
+
+
+l.Add('slaveDN="cn='+openldap.ldap_settings.admin+','+openldap.ldap_settings.suffix+'"');
+l.Add('slavePw='+openldap.ldap_settings.password);
+l.Add('masterDN="cn='+openldap.ldap_settings.admin+','+openldap.ldap_settings.suffix+'"');
+l.Add('masterPw='+openldap.ldap_settings.password);
+l.SaveToFile('/etc/smbldap-tools/smbldap_bind.conf');
+l.Clear;
+
+  server:=openldap.ldap_settings.servername;
+  port:=openldap.ldap_settings.port;
+
+  
+  
+l.Add('slaveLDAP="'+server+'"');
+l.Add('slavePort="'+port+'"');
+l.Add('masterLDAP="'+server+'"');
+l.Add('masterPort="'+port+'"');
+l.Add('ldapTLS="0"');
+l.Add('verify="require"');
+l.Add('suffix="'+openldap.ldap_settings.suffix+'"');
+l.Add('usersdn="ou=users,dc=samba,${suffix}"');
+l.Add('computersdn="ou=computers,dc=samba,${suffix}"');
+l.Add('groupsdn="ou=groups,dc=samba,${suffix}"');
+l.Add('idmapdn="ou=Idimap,dc=samba,${suffix}"');
+l.Add('sambaUnixIdPooldn="cn=NextFreeUnixId,${suffix}"');
+l.Add('scope="sub"');
+l.Add('hash_encrypt="CLEARTEXT"');
+l.Add('crypt_salt_format="%s"');
+l.Add('');
+l.Add('userLoginShell="/bin/bash"');
+l.Add('userHome="/home/%U"');
+l.Add('userHomeDirectoryMode="700"');
+l.Add('userGecos="User"');
+l.Add('defaultUserGid="513"');
+l.Add('defaultComputerGid="515"');
+l.Add('skeletonDir="/etc/skel"');
+l.Add('defaultMaxPasswordAge="3650"');
+l.Add('');
+l.Add('with_smbpasswd="0"');
+l.Add('smbpasswd="'+smbpasswd_path()+'"');
+l.Add('');
+l.Add('with_slappasswd="0"');
+l.Add('slappasswd="' + slappasswd_path() + '"');
+
+l.SaveToFile('/etc/smbldap-tools/smbldap.conf');
+l.free;
+
+end;
+//#############################################################################
+function Tsamba.ReadFileIntoString(path:string):string;
+var
+   List:TstringList;
+begin
+
+      if not FileExists(path) then begin
+        exit;
+      end;
+
+      List:=Tstringlist.Create;
+      List.LoadFromFile(path);
+      result:=List.Text;
+      List.Free;
+end;
+//##############################################################################
+procedure Tsamba.ETC_LDAP_CONF_SET_VALUE(key:string;value:string);
+var
+   RegExpr:TRegExpr;
+   list:TstringList;
+   i:Integer;
+   found:boolean;
+begin
+    found:=false;
+    list:=TstringList.Create();
+    RegExpr:=TRegExpr.Create;
+    if FileExists('/etc/ldap.conf') then list.LoadFromFile('/etc/ldap.conf');
+    RegExpr.Expression:='^'+key+'\s+(.+)';
+    for i:=0 to list.Count-1 do begin
+          if RegExpr.Exec(list.Strings[i]) then begin
+              logs.Debuglogs('ETC_LDAP_CONF_SET_VALUE:: (modify) key ' + key+'="'+value+'"');
+              list.Strings[i]:=key + ' ' + value;
+              found:=true;
+              break;
+          end;
+    
+    end;
+    if not found then begin
+     list.Add(key + ' ' + value);
+     logs.Debuglogs('ETC_LDAP_CONF_SET_VALUE:: (Add new) key' + key+'="'+value+'"');
+    end;
+    list.SaveToFile('/etc/ldap.conf');
+    list.Free;
+    RegExpr.free;
+end;
+//##############################################################################
+procedure Tsamba.SMB_CONF_SET_VALUE(key:string;value:string);
+var
+
+   list:TIniFile;
+   path:string;
+begin
+     path:=smbconf_path();
+ list:=TiniFile.Create(path);
+    list.WriteString('global',key,value);
+    logs.Debuglogs('SMB_CONF_SET_VALUE:: [global]' + key+'="'+value+'" (' + path+')');
+    list.UpdateFile;
+    list.Free;
+end;
+//##############################################################################
+procedure Tsamba.FixDirectoriesChmod();
+var
+
+   list:TIniFile;
+   sections:TstringList;
+   path:string;
+   i:Integer;
+begin
+    forceDirectories('/home/.infected');
+    logs.OutputCmd('/bin/chmod 777 /home/.infected');
+
+     path:=smbconf_path();
+     sections:=TstringList.Create;
+     if not FileExists(path) then exit;
+     list:=TiniFile.Create(path);
+     list.ReadSections(sections);
+     for i:=0 to sections.Count-1 do begin
+         path:=list.ReadString(sections.Strings[i],'path','');
+         if length(path)>0 then begin
+            logs.Debuglogs('FixDirectoriesChmod:: '+path);
+            if not DirectoryExists(path) then ForceDirectories(path);
+            fpsystem('/bin/chmod 0777 ' + path + ' >/dev/null 2>&1');
+         end;
+         path:=list.ReadString(sections.Strings[i],'recycle:repository','');
+         if length(path)>0 then begin
+            logs.Debuglogs('FixDirectoriesChmod:: '+path);
+           // if not DirectoryExists(path) then ForceDirectories(path);
+            //fpsystem('/bin/chmod 0777 ' + path + ' >/dev/null 2>&1');
+         end;
+         
+         
+         
+     end;
+
+    sections.free;
+    list.Free;
+end;
+//##############################################################################
+function Tsamba.ParseSharedDirectories():TstringList;
+var
+
+   list:TIniFile;
+   sections:TstringList;
+   res:TstringList;
+   path:string;
+   i:Integer;
+begin
+     res:=TstringList.Create;
+     result:=res;
+     path:=smbconf_path();
+     sections:=TstringList.Create;
+     if not FileExists(path) then exit;
+     list:=TiniFile.Create(path);
+     list.ReadSections(sections);
+     for i:=0 to sections.Count-1 do begin
+         path:=list.ReadString(sections.Strings[i],'path','');
+         if length(path)>0 then begin
+            if DirectoryExists(path) then res.Add(path);
+         end;
+     end;
+
+    sections.free;
+    list.Free;
+    result:=res;
+end;
+//##############################################################################
+
+
+end.

@@ -1,0 +1,417 @@
+dnl
+dnl  Copyright (C) 2006 Dale Walsh <buildsmart@daleenterprise.com>
+dnl
+dnl  This program is free software; you can redistribute it and/or modify
+dnl  it under the terms of the GNU General Public License as published by
+dnl  the Free Software Foundation; either version 2 of the License, or
+dnl  (at your option) any later version.
+dnl
+dnl  This program is distributed in the hope that it will be useful,
+dnl  but WITHOUT ANY WARRANTY; without even the implied warranty of
+dnl  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+dnl  GNU General Public License for more details.
+dnl
+dnl  You should have received a copy of the GNU General Public License
+dnl  along with this program; if not, write to the Free Software
+dnl  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+dnl
+
+AC_INIT(config.rrdtool)
+
+dnl
+dnl Checks for the configure options
+dnl
+
+AC_DEFUN([AS_WITH_PHP_CONFIG],[
+  AC_ARG_WITH(php-config,
+[  --with-php-config=PATH],[
+  PHP_CONFIG=$withval
+],[
+  PHP_CONFIG=php-config
+])
+
+if test -n "$PHP_CONFIG"; then
+	PHP_SHLIB_SUFFIX_NAMES
+	PHP_PREFIX=`$PHP_CONFIG --prefix 2>/dev/null`
+	PHP_INCLUDES=`$PHP_CONFIG --includes 2>/dev/null`
+	PHP_EXTENSION_DIR=`$PHP_CONFIG --extension-dir`
+ 
+	if test -z "$PHP_PREFIX"; then
+		AC_MSG_ERROR(Cannot find php-config. Please use --with-php-config=PATH)
+	fi
+	AC_MSG_CHECKING(for PHP prefix)
+	AC_MSG_RESULT($PHP_PREFIX)
+	AC_MSG_CHECKING(for PHP includes)
+	AC_MSG_RESULT($PHP_INCLUDES)
+	AC_MSG_CHECKING(for PHP extension directory)
+	AC_MSG_RESULT($PHP_EXTENSION_DIR)
+fi
+])
+
+CONFIGURE_PART(Configuring build)
+
+AC_CANONICAL_SYSTEM
+
+AM_INIT_AUTOMAKE(amavis-stats, "0.1.22")
+
+build_php="no"
+enable_static=no
+enable_shared=yes
+
+CONFIGURE_PART(Checking for apps)
+
+AC_PROG_AWK
+AC_PROG_CC
+AC_PROG_CC_C_O
+AC_PATH_PROG(CP, cp, cp)
+AC_PATH_PROG(CHMOD, chmod, chmod)
+AC_PATH_PROG(CHOWN, chown, chown)
+AC_PATH_PROGS(GZCAT, gzcat, no)
+AC_PATH_PROGS(NROFF, gnroff nroff)
+AC_PATH_PROGS(TROFF, groff troff)
+AC_PROG_LIBTOOL
+AC_PATH_PROG(LN, ln, ln)
+AC_PATH_PROG(MV, mv, mv)
+AC_PATH_PROG([PATCH], patch, no)
+AC_PATH_PROG([PERL], perl, no)
+AC_PATH_PROG(RM, rm, rm)
+AC_PATH_PROG(SED, sed, no)
+AC_PATH_PROGS(TAR, tar gnutar gtar)
+AC_PATH_PROG(TR, tr, no)
+AS_CONFIG_NICE(config.nice)
+
+CPPFLAGS="$CPPFLAGS -DHAVE_CONFIG_H"
+CFLAGS_CLEAN='$(CFLAGS)'
+
+touch .deps
+
+AM_CONFIG_HEADER(config.h)
+
+if test "$TR" = no; then AC_MSG_ERROR([tr is required]);fi
+
+if test "$PERL" = no; then
+  AC_MSG_ERROR([
+
+perl is not found!!!
+])
+fi
+$PERL -e 'require 5.007;' || {
+   AC_MSG_ERROR([Perl 5.007 or better is required])
+}
+
+PERL_VERSION=`$PERL -MConfig -e 'print $Config{version}'`
+
+if test "$GZCAT" = no; then
+  AC_MSG_ERROR([
+
+gzcat not found!!!
+
+])
+fi
+
+if test "$PATCH" = no; then
+  AC_MSG_ERROR([
+
+patch not found!!!
+
+])
+fi
+
+if test "$SED" = no; then
+  AC_MSG_ERROR([
+
+sed not found!!!
+
+])
+fi
+
+if test "$TAR" = no; then
+  AC_MSG_ERROR([
+
+tar not found!!!
+
+])
+fi
+
+
+if test "$enable_debug" != "yes"; then
+  PHP_SET_LIBTOOL_VARIABLE([--silent])
+fi
+
+sinclude(config.rrdtool)
+
+AC_ARG_WITH(log-file,
+[  --with-log-file	  logfile to read (default=/var/log/amavis.log)],
+scan_log_file=$withval, scan_log_file="/var/log/amavis.log")
+
+AC_ARG_ENABLE(id-check,
+[  --enable-id-check	  use id utility instead of /etc/passwd parsing],
+use_id=$enableval, use_id="no")
+
+AC_ARG_ENABLE(yp-check,
+[  --enable-yp-check	  use ypmatch utility instead of /etc/passwd parsing],
+use_yp=$enableval, use_yp="no")
+
+AC_ARG_ENABLE(netinfo-check,
+[  --enable-netinfo-check use netinfo utility instead of /etc/passwd parsing],
+use_netinfo=$enableval, use_netinfo="no")
+
+AC_ARG_ENABLE(startup,
+[  --enable-startup	  build startup item (not all OS's supported],
+can_build_startup=$enableval, can_build_startup=no)
+
+AC_ARG_ENABLE(web,
+[  --disable-web	  disable test for web user/group],
+test_web=$enableval, test_web=yes)
+
+AC_ARG_WITH(user, 
+[  --with-user=uid	  name of the web user (default=www)],
+web_user="$withval", web_user="www")
+
+AC_ARG_WITH(setrgid, 
+[  --with-setrgid=uid	  if perl supports setrgid (default=no)],
+HAVE_SETRGID="$withval", HAVE_SETRGID=no)
+
+AC_ARG_WITH(group, 
+[  --with-group=gid	  name of the web group (default=www)],
+web_group="$withval", web_group="www")
+
+AC_DEFINE_UNQUOTED(WEB_USER,"$web_user",[name of the web user])
+AC_DEFINE_UNQUOTED(WEB_GROUP,"$web_group",[name of the web group])
+
+dnl AM_MAINTAINER_MODE
+
+case "$target_os" in
+linux*)
+	case `uname -r` in
+		*gento*)
+			build_startup="yes"
+			is_gentoo="yes"
+			;;
+	esac
+	;;
+cygwin*)
+	AC_DEFINE(C_CYGWIN,1,[os is cygwin])
+	if test "$test_web" = "yes"; then
+		if test ! -r /etc/passwd; then
+		   test_web="no"
+		fi
+	fi
+	;;
+solaris*)
+	AC_DEFINE(C_SOLARIS,1,[os is solaris])
+	;;
+freebsd*)
+	AC_DEFINE(C_BSD,1,[os is freebsd])
+	;;
+dragonfly*)
+	AC_DEFINE(C_BSD,1,[os is dragonfly])
+	;;
+openbsd*)
+	AC_DEFINE(C_BSD,1,[os is OpenBSD])
+	;;
+bsdi*)
+	AC_DEFINE(C_BSD,1,[os is BSDI BSD/OS])
+	;;
+netbsd*)
+	AC_DEFINE(C_BSD,1,[os is NetBSD])
+	;;
+bsd*)
+	AC_DEFINE(C_BSD,1,[os is bsd flavor])
+	;;
+beos*)
+	AC_DEFINE(C_BEOS,1,[os is beos])
+	;;
+darwin*)
+	build_startup="yes"
+	use_netinfo="yes"
+	LINK_CMD='-dynamic -flat_namespace -bundle -Wl,-undefined -Wl,suppress'
+	case `uname -r|cut -d. -f1` in
+		8)
+			is_darwin="TIGER"
+			;;
+		7)
+			is_darwin="PANTHER"
+			;;
+		*)
+		  AC_MSG_ERROR([
+
+Requires darwin 7.x or 8.x!!!
+
+])
+			;;
+	esac
+
+	;;
+os2*)
+	AC_DEFINE(C_OS2,1,[os is OS/2])
+	;;
+sco*)
+	AC_DEFINE(C_SCO,1,[os is sco])
+	;;
+hpux*)
+	AC_DEFINE(C_HPUX,1,[os is hpux])
+	;;
+aix*)
+	LINK_CMD='-Wl,-G -export-dynamic -avoid-version -prefer-pic -module -rpath $(rrdtooldir)'
+	AC_DEFINE(C_AIX,1,[os is aix])
+	;;
+nto-qnx*)
+	AC_DEFINE(C_QNX6,1,[os is QNX 6.x.x])
+	;;
+irix*)
+	AC_DEFINE(C_IRIX,1,[os is irix])
+	;;
+interix*)
+	if test "$test_web" = "yes"; then
+		if test ! -r /etc/passwd; then
+		   test_web="no"
+		fi
+	fi
+	;;
+*)
+	;;
+esac
+
+if test $can_build_startup = "no"; then
+	build_startup="no"
+fi
+
+AM_CONDITIONAL(BUILD_PHP, test "$build_php" = "yes")
+AM_CONDITIONAL(BUILD_STARTUP, test "$build_startup" = "yes")
+AM_CONDITIONAL(BUILD_DARWIN_TIGER, test "$is_darwin" = "TIGER")
+AM_CONDITIONAL(SETRGID, test "$HAVE_SETRGID" = "yes")
+AM_CONDITIONAL(BUILD_DARWIN_PANTHER, test "$is_darwin" = "PANTHER")
+AM_CONDITIONAL(BUILD_GENTOO, test "$is_gentoo" = "yes")
+
+if test $use_id = "no" -a $use_yp = "no" -a $use_netinfo = "no"; then
+	use_pass="yes"
+fi
+
+dnl Check for user/group
+if test "$test_web" = "yes"; then
+CONFIGURE_PART(Checking for user/group)
+	if test "$use_pass" = "yes"; then
+		AC_MSG_CHECKING(for $web_user in /etc/passwd)
+		if test -r /etc/passwd; then
+			webuser=`cat /etc/passwd|grep -e "^${web_user}:"`
+			webgroup=`cat /etc/group|grep -e "^${web_group}:"`
+		fi
+	fi
+
+	if test "$use_id" = "yes"; then
+		AC_MSG_CHECKING(for $web_user using id)
+		id $web_user > /dev/null 2>&1
+		if test "$?" = 0 ; then
+			webuser=1
+			AC_PATH_PROG(GETENT, getent)
+			if test -n "$GETENT" ; then
+				webgroup=`$GETENT group | grep -e "^${web_group}"`
+			else
+				webgroup=`cat /etc/group|grep -e "^${web_group}"`
+			fi
+		fi
+	fi
+
+	if test "$use_netinfo" = "yes"; then
+		AC_MSG_CHECKING(for $web_user using netinfo)
+		webuser=`/usr/bin/nidump passwd . |grep -e "^${web_user}:"`
+		webgroup=`/usr/bin/nidump group . |grep -e "^${web_group}:"`
+	fi
+
+	if test "$use_yp" = "yes"; then
+		AC_MSG_CHECKING(for $web_user using ypmatch)
+		webuser=`ypmatch ${web_user} passwd`
+		webgroup=`ypmatch ${web_group} group`
+	fi
+
+	if test -z "$webuser" || test -z "$webgroup"; then
+		AC_MSG_RESULT(no)
+		AC_MSG_ERROR([User $web_user (and/or group $web_group) doesn't exist. Please read the documentation !])
+	else
+		AC_MSG_RESULT([yes, user $web_user and group $web_group exist.])
+	fi
+else
+CONFIGURE_PART(Not checking for user/group)
+fi
+
+SCAN_LOG_FILE="$scan_log_file"
+WEB_USER="$web_user"
+WEB_GROUP="$web_group"
+AC_SUBST(SCAN_LOG_FILE)
+AC_SUBST(WEB_USER)
+AC_SUBST(WEB_GROUP)
+AC_SUBST(AWK)
+AC_SUBST(CC)
+AC_SUBST(CFLAGS)
+AC_SUBST(CPP)
+AC_SUBST(CPPFLAGS)
+AC_SUBST(CXX)
+AC_SUBST(CXXFLAGS)
+AC_SUBST(LIBTOOL)
+AC_SUBST(LINK_CMD)
+
+
+CONFIGURE_PART(Creating files)
+AC_OUTPUT([
+doc/Makefile
+etc/Makefile
+sbin/Makefile
+share/Makefile
+startup/Makefile
+php/Makefile
+Makefile
+])
+
+CONFIGURE_PART(Configure is DONE!)
+cat << X
+
+           using user: $web_user
+          using group: $web_group
+X
+
+if test "$test_web" = "yes"; then
+	if test "$use_id" = "yes"; then
+	cat << X
+      verifying by id: $use_id
+X
+	fi
+	if test "$use_yp" = "yes"; then
+	cat << X
+      verifying by yp: $use_yp
+X
+	fi
+	if test "$use_pass" = "yes"; then
+	cat << X
+  verifying by passwd: $use_passwd
+X
+	fi
+	if test "$use_netinfo" = "yes"; then
+	cat << X
+ verifying by netinfo: $use_netinfo
+X
+	fi
+else
+	cat << X
+         no user test: $test_web
+X
+fi
+
+cat << X
+
+                   OS: $target_os
+          Perl Binary: $PERL
+         Perl Version: $PERL_VERSION
+         Perl setrgid: $HAVE_SETRGID
+         Startup Item: $can_build_startup
+           PHP module: $build_php
+
+
+Thank you for choosing $PACKAGE-$VERSION
+
+X
+CONFIGURE_PART(Type 'make' to compile the software and use 'make install' to 
+install everything.
+
+                -- Dale Walsh <buildsmart@daleenterprise.com>
+)

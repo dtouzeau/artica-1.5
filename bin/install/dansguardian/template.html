@@ -1,0 +1,69 @@
+<HTML><HEAD><TITLE>DansGuardian - Access Denied</TITLE></HEAD>
+<BODY BGCOLOR="#FFFFFF">
+	<center>
+	<div style="margin-top:100px;width:451px;background-color:red;text-align:center;padding:1px;">
+	<table style="width:450px;border:1px solid white;background-color:red">
+	<TR>
+	<TD><div style="font-family:verdana, arial,sans serif;color:white;font-size:22px;font-weight:bold" align="center">Access has been Denied</div></td>
+	<TR>
+	<TD BGCOLOR="#FFFFFF" ALIGN="CENTER">
+		<TABLE WIDTH="100%" CELLSPACING="10" CELLPADDING="10" BORDER="0">
+			<TR>
+			<TD ALIGN="CENTER">
+				<div style="width:90%;border:1px solid red">
+					<div style="width:99%;border:1px solid white;background-color:red">
+					<p style="font-family:verdana, arial, sans serif;color:white;font-size:38px;font-weight:bolder">S T O P</P>
+					</div>
+				</div>
+			</TD>
+			</TR>
+			<TR>
+			<TD BGCOLOR="#FFFFFF" ALIGN="CENTER" style="color:#CCCCCC">
+			<p style="font-family:verdana, arial, sans serif;font-size:13px;font-weight:bold"><b>Access to the page has been denied</b>
+			<table style="width:100%;margin:5px;padding:5px;border:1px solid #CCCCCC">
+				<tr>
+					<td colspan=2 align="center"><code>YOU -USER- (-IP-)</code></td>
+		
+				</tr>
+				<tr>
+					
+					<td align="center"> <code><a href="-URL-">-URL-</a></code></td>
+				</tr>
+				<tr>
+					<td colspan=2 align="center"><code>-REASONGIVEN-</code></td>
+				</tr>
+				<tr>
+					<td colspan=2 align="center"><code>-REASONLOGGED-</code></td>
+				</tr>
+				<!-- USER_BUTTON -->
+			</table>
+			
+			<p style="font-family:verdana, arial, sans serif;font-size:11px;font-weight:bold">
+			Please contact the Network Administrator if you think there has been an error</p>
+			</TD>
+			</TR>
+		</table>
+	</td>
+</tr>
+</table>
+</div>
+</CENTER>
+</BODY>
+</HTML>
+<!--
+The available variables are as follows:
+- URL- gives the URL the user was trying to get to.
+- REASONGIVEN- gives the nice reason (i.e. not quoting the banned phrase).
+- REASONLOGGED- gives the reason that gets logged including full details.
+- USER- gives the username if known.
+- USERBUTTON- add a button that unlock banned web site
+- IP- gives the originating IP.
+
+You need to remove the space between the - and the variable to use them
+in your HTML.  They are there above so extra processing is not required.
+
+More example templates are likely to be found on the DansGuardian web site
+on the Extras page.
+
+Daniel Barron 2002-03-27
+--!>

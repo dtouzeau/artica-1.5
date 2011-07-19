@@ -1,0 +1,572 @@
+unit openvpn;
+
+{$MODE DELPHI}
+{$LONGSTRINGS ON}
+
+interface
+
+uses
+    Classes, SysUtils,variants,strutils,IniFiles,md5,logs,unix,RegExpr in 'RegExpr.pas',zsystem,tcpip;
+
+
+
+  type
+  topenvpn=class
+
+
+private
+     LOGS:Tlogs;
+     D:boolean;
+     SYS:TSystem;
+     artica_path:string;
+     function PID_NUM():string;
+     EnableOPenVPNServerMode:integer;
+
+
+public
+    procedure   Free;
+    constructor Create(const zSYS:Tsystem);
+    procedure   START();
+    procedure   STOP();
+//    function    STATUS():string;
+    function    BIN_PATH():string;
+    function    VERSION():string;
+    function    DirRessources:string;
+    procedure   VerifConfig();
+    procedure   BuildCertificate();
+    procedure   CREATE_BRIDGE();
+    procedure   ChangeCommonName(commonname:string);
+
+
+END;
+
+implementation
+
+constructor topenvpn.Create(const zSYS:Tsystem);
+begin
+       forcedirectories('/etc/artica-postfix');
+       LOGS:=tlogs.Create();
+       SYS:=zSYS;
+       EnableOPenVPNServerMode:=0;
+
+       if not DirectoryExists('/usr/share/artica-postfix') then begin
+              artica_path:=ParamStr(0);
+              artica_path:=ExtractFilePath(artica_path);
+              artica_path:=AnsiReplaceText(artica_path,'/bin/','');
+
+      end else begin
+          artica_path:='/usr/share/artica-postfix';
+      end;
+
+      if not TryStrtoInt(SYS.GET_INFO('EnableOPenVPNServerMode'),EnableOPenVPNServerMode) then EnableOPenVPNServerMode:=0;
+
+end;
+//##############################################################################
+procedure topenvpn.free();
+begin
+    logs.Free;
+
+end;
+//##############################################################################
+function topenvpn.BIN_PATH():string;
+begin
+     if FileExists('/usr/sbin/openvpn') then exit('/usr/sbin/openvpn');
+
+end;
+//##############################################################################
+function topenvpn.PID_NUM():string;
+begin
+     result:=SYS.GET_PID_FROM_PATH('/var/run/openvpn/openvpn-server.pid');
+end;
+//##############################################################################
+function topenvpn.DirRessources:string;
+begin
+     if DirectoryExists('/usr/share/doc/openvpn-2.0.9/easy-rsa/2.0') then exit('/usr/share/doc/openvpn-2.0.9/easy-rsa/2.0');
+     if DirectoryExists('/usr/share/doc/openvpn/examples/easy-rsa/2.0') then exit('/usr/share/doc/openvpn/examples/easy-rsa/2.0');
+     exit('/usr/share/artica-postfix/bin/install/openvpn');
+
+end;
+//##############################################################################
+
+procedure topenvpn.START();
+var
+   l:TstringList;
+   pid:string;
+   parms:string;
+   count:integer;
+   cmd:string;
+
+begin
+  pid:=PID_NUM();
+  count:=0;
+
+   if not FileExists(BIN_PATH()) then begin
+      logs.DebugLogs('Starting......: OpenVPN is not installed. expected "/usr/sbin/openvpn"');
+      exit;
+   end;
+
+   if SYS.PROCESS_EXIST(pid) then begin
+      logs.DebugLogs('Starting......: OpenVPN is already running PID ' + pid + '...');
+      exit;
+   end;
+
+   if EnableOPenVPNServerMode=0 then begin
+       logs.DebugLogs('Starting......: OpenVPN server mode is disabled');
+       exit;
+   end;
+
+      forceDirectories('/etc/openvpn');
+
+   if FileExists('/etc/artica-postfix/settings/Daemons/ArticaOpenVPNServerSettings') then begin
+      logs.OutputCmd('/bin/cp /etc/artica-postfix/settings/Daemons/ArticaOpenVPNServerSettings /etc/openvpn/server.conf');
+   end;
+
+   if not FileExists('/etc/openvpn/server.conf') then begin
+      logs.Debuglogs('Starting......: OpenVPN unable to stat /etc/openvpn/server.conf');
+      exit;
+   end;
+
+   logs.DebugLogs('Starting......: OpenVPN ressources....: ' + DirRessources() + '...');
+   logs.DebugLogs('Starting......: OpenVPN version.......: ' + VERSION() + '...');
+   logs.DebugLogs('Starting......: OpenVPN server config.: /etc/openvpn/server.conf');
+
+   if not SYS.ip_forward_enabled() then begin
+         logs.Syslogs('Starting......:  OpenVPN Enable IP Forwarding');
+         fpsystem('sysctl -w net.ipv4.ip_forward=1');
+   end else begin
+        logs.Syslogs('Starting......:  OpenVPN IP Forwarding is enabled');
+   end;
+
+   VerifConfig();
+   if not FileExists('/etc/artica-postfix/openvpn/keys/' + Uppercase(SYS.HOSTNAME_g()) + '.key') then BuildCertificate();
+   forceDirectories('/var/run/openvpn');
+   logs.OutputCmd(BIN_PATH()+' --mktun --dev tap0');
+   CREATE_BRIDGE();
+   cmd:=BIN_PATH()+' --dev tap0 --config /etc/openvpn/server.conf  --daemon --writepid /var/run/openvpn/openvpn-server.pid';
+   logs.OutputCmd(cmd);
+
+  while not SYS.PROCESS_EXIST(PID_NUM()) do begin
+        sleep(500);
+        inc(count);
+
+        if count>50 then begin
+              logs.DebugLogs('Starting......: OpenVPN Failed');
+              break;
+        end;
+  end;
+
+  pid:=PID_NUM();
+  if SYS.PROCESS_EXIST(pid) then begin
+      logs.DebugLogs('Starting......: Success with PID number '+ pid);
+
+  end;
+end;
+
+//##############################################################################
+procedure topenvpn.VerifConfig();
+begin
+        ForceDirectories('/etc/artica-postfix/openvpn');
+    if not DirectoryExists(DirRessources()) then begin
+       logs.DebugLogs('Starting......: OpenVPN Unable to stat ressources dir');
+       exit();
+    end;
+
+    if not FIleExists('/etc/artica-postfix/openvpn/clean-all') then logs.OutputCmd('/bin/cp -rfv '+DirRessources+'/* /etc/artica-postfix/openvpn/');
+
+
+
+end;
+//##############################################################################
+procedure topenvpn.BuildCertificate();
+var
+ini:TiniFile;
+l:TstringList;
+server_name:string;
+cmd:string;
+RegExpr:TRegExpr;
+begin
+  VerifConfig();
+  ini:=TiniFile.Create('/etc/artica-postfix/settings/Daemons/ArticaOpenVPNSettings');
+  l:=TstringList.Create;
+  server_name:=UpperCase(SYS.HOSTNAME_g());
+  RegExpr:=TRegExpr.Create;
+  RegExpr.Expression:='(.+?)\.';
+  if RegExpr.Exec(server_name) then server_name:=RegExpr.Match[1];
+  RegExpr.free;
+
+l.add('export EASY_RSA="`pwd`"');
+l.add('export OPENSSL="openssl"');
+l.add('export PKCS11TOOL="pkcs11-tool"');
+l.add('export GREP="grep"');
+l.add('export KEY_CONFIG=`$EASY_RSA/whichopensslcnf $EASY_RSA`');
+l.add('export KEY_DIR="$EASY_RSA/keys"');
+l.add('export PKCS11_MODULE_PATH="dummy"');
+l.add('export PKCS11_PIN="dummy"');
+l.add('export KEY_SIZE=1024');
+l.add('export CA_EXPIRE=3650');
+l.add('export KEY_EXPIRE=3650');
+l.add('export KEY_COUNTRY="'+ ini.ReadString('GLOBAL','KEY_COUNTRY','US')+'"');
+l.add('export KEY_PROVINCE="'+ ini.ReadString('GLOBAL','KEY_PROVINCE','CA')+'"');
+l.add('export KEY_CITY="'+ ini.ReadString('GLOBAL','KEY_CITY','SanFrancisco')+'"');
+l.add('export KEY_ORG="'+ ini.ReadString('GLOBAL','KEY_ORG','Fort-fuston')+'"');
+l.add('export KEY_EMAIL="'+ ini.ReadString('GLOBAL','KEY_EMAIL','me@localhost.localdomain')+'"');
+try
+l.SaveToFile('/etc/artica-postfix/openvpn/vars');
+except
+ logs.Syslogs('BuildCertificate():: Unable to save file /etc/artica-postfix/openvpn/vars');
+ exit;
+end;
+
+forceDirectories('/etc/artica-postfix/openvpn/keys');
+
+l.Clear;
+l.add('# For use with easy-rsa version 2.0');
+l.add('HOME='+chr(9)+' .');
+l.add('RANDFILE='+chr(9)+' /root/.rnd');
+l.add('openssl_conf='+chr(9)+' openssl_init');
+l.add('');
+l.add('[ openssl_init ]');
+l.add('oid_section='+chr(9)+'new_oids');
+l.add('engines                ='+chr(9)+'engine_section');
+l.add('[ new_oids ]');
+l.add('[ ca ]');
+l.add('default_ca='+chr(9)+'CA_default		');
+l.add('[ CA_default ]');
+l.add('');
+l.add('dir='+chr(9)+'/etc/artica-postfix/openvpn/keys');
+l.add('certs='+chr(9)+'$dir			# Where the issued certs are kept');
+l.add('crl_dir='+chr(9)+'$dir			# Where the issued crl are kept');
+l.add('database='+chr(9)+'$dir/index.txt	# database index file.');
+l.add('new_certs_dir='+chr(9)+'$dir			# default place for new certs.');
+l.add('certificate='+chr(9)+'$dir/ca.crt	 	# The CA certificate');
+l.add('serial='+chr(9)+'$dir/serial 		# The current serial number');
+l.add('crl='+chr(9)+'$dir/crl.pem 		# The current CRL');
+l.add('private_key='+chr(9)+'$dir/ca.key	 	# The private key');
+l.add('RANDFILE='+chr(9)+'$dir/.rand		# private random number file');
+l.add('');
+l.add('x509_extensions='+chr(9)+'usr_cert		# The extentions to add to the cert');
+l.add('default_days='+chr(9)+'3650			# how long to certify for');
+l.add('default_crl_days= 30			# how long before next CRL');
+l.add('default_md='+chr(9)+'md5			# which md to use.');
+l.add('preserve='+chr(9)+'no			# keep passed DN ordering');
+l.add('policy='+chr(9)+'policy_anything');
+l.add('');
+l.add('[ policy_match ]');
+l.add('countryName='+chr(9)+'match');
+l.add('stateOrProvinceName='+chr(9)+'match');
+l.add('organizationName='+chr(9)+'match');
+l.add('organizationalUnitName='+chr(9)+'optional');
+l.add('commonName='+chr(9)+'supplied');
+l.add('emailAddress='+chr(9)+'optional');
+l.add('[ policy_anything ]');
+l.add('countryName='+chr(9)+'optional');
+l.add('stateOrProvinceName='+chr(9)+'optional');
+l.add('localityName='+chr(9)+'optional');
+l.add('organizationName='+chr(9)+'optional');
+l.add('organizationalUnitName='+chr(9)+'optional');
+l.add('commonName='+chr(9)+'supplied');
+l.add('emailAddress='+chr(9)+'optional');
+l.add('[ req ]');
+l.add('default_bits='+chr(9)+'1024');
+l.add('default_keyfile ='+chr(9)+'privkey.pem');
+l.add('distinguished_name='+chr(9)+'req_distinguished_name');
+l.add('attributes='+chr(9)+'req_attributes');
+l.add('x509_extensions='+chr(9)+'v3_ca');
+l.add('');
+l.add('# Passwords for private keys if not present they will be prompted for');
+l.add('# input_password='+chr(9)+'secret');
+l.add('# output_password='+chr(9)+'secret');
+l.add('string_mask='+chr(9)+'nombstr');
+l.add('');
+l.add('[ req_distinguished_name ]');
+l.add('countryName='+chr(9)+'Country Name (2 letter code)');
+l.add('countryName_default='+chr(9)+ini.ReadString('GLOBAL','KEY_COUNTRY','US'));
+l.add('countryName_min='+chr(9)+'2');
+l.add('countryName_max='+chr(9)+'2');
+l.add('stateOrProvinceName='+chr(9)+'State or Province Name (full name)');
+l.add('stateOrProvinceName_default='+chr(9)+ini.ReadString('GLOBAL','KEY_PROVINCE','CA'));
+l.add('localityName='+chr(9)+'Locality Name (eg, city)');
+l.add('localityName_default='+chr(9)+ini.ReadString('GLOBAL','KEY_CITY','SanFrancisco'));
+l.add('0.organizationName='+chr(9)+'Organization Name (eg, company)');
+l.add('0.organizationName_default='+chr(9)+ini.ReadString('GLOBAL','KEY_ORG','Fort-fuston'));
+l.add('organizationalUnitName='+chr(9)+'Organizational Unit Name (eg, section)');
+l.add('commonName='+chr(9)+'Common Name (eg, your name or your server\''s hostname)');
+l.add('commonName_max='+chr(9)+'64');
+l.add('emailAddress='+chr(9)+'Email Address');
+l.add('emailAddress_default='+chr(9)+ini.ReadString('GLOBAL','KEY_EMAIL','me@localhost.localdomain'));
+l.add('emailAddress_max='+chr(9)+'40');
+l.add('organizationalUnitName_default='+chr(9)+ini.ReadString('GLOBAL','KEY_ORG','Fort-fuston'));
+l.add('commonName_default='+chr(9)+ini.ReadString('GLOBAL','KEY_ORG','Fort-fuston')+' CA');
+l.add('[ req_attributes ]');
+l.add('challengePassword='+chr(9)+'A challenge password');
+l.add('challengePassword_min='+chr(9)+'4');
+l.add('challengePassword_max='+chr(9)+'20');
+l.add('unstructuredName='+chr(9)+'An optional company name');
+l.add('');
+l.add('[ usr_cert ]');
+l.add('basicConstraints=CA:FALSE');
+l.add('nsComment='+chr(9)+'"Easy-RSA Generated Certificate"');
+l.add('subjectKeyIdentifier=hash');
+l.add('authorityKeyIdentifier=keyid,issuer:always');
+l.add('extendedKeyUsage=clientAuth');
+l.add('keyUsage='+chr(9)+'digitalSignature');
+l.add('[ server ]');
+l.add('basicConstraints=CA:FALSE');
+l.add('nsCertType='+chr(9)+'server');
+l.add('nsComment='+chr(9)+'"Easy-RSA Generated Server Certificate"');
+l.add('subjectKeyIdentifier=hash');
+l.add('authorityKeyIdentifier=keyid,issuer:always');
+l.add('extendedKeyUsage=serverAuth');
+l.add('keyUsage='+chr(9)+'digitalSignature, keyEncipherment');
+l.add('');
+l.add('[ v3_req ]');
+l.add('basicConstraints='+chr(9)+'CA:FALSE');
+l.add('keyUsage='+chr(9)+'nonRepudiation, digitalSignature, keyEncipherment');
+l.add('[ v3_ca ]');
+l.add('subjectKeyIdentifier=hash');
+l.add('authorityKeyIdentifier=keyid:always,issuer:always');
+l.add('basicConstraints='+chr(9)+'CA:true');
+l.add('[ crl_ext ]');
+l.add('authorityKeyIdentifier=keyid:always,issuer:always');
+l.add('');
+l.add('[ engine_section ]');
+l.add('[ pkcs11_section ]');
+l.add('engine_id='+chr(9)+'pkcs11');
+l.add('dynamic_path='+chr(9)+'/usr/lib/engines/engine_pkcs11.so');
+l.add('MODULE_PATH='+chr(9)+'dummy');
+l.add('PIN='+chr(9)+'dummy');
+l.add('init='+chr(9)+'0');
+try
+   l.SaveToFile('/etc/artica-postfix/openvpn/openssl.cnf');
+except
+logs.Syslogs('BuildCertificate():: Unable to save file /etc/artica-postfix/openvpn/openssl.cnf');
+ exit;
+end;
+
+logs.OutputCmd('/bin/chmod 777 /etc/artica-postfix/openvpn/vars');
+if ParamStr(2)='--rebuild' then begin
+   SetCurrentDir('/etc/artica-postfix/openvpn');
+   fpsystem('. ./vars');
+   fpsystem('./clean-all');
+end;
+
+if not FileExists('/etc/artica-postfix/openvpn/keys/ca.key') then begin
+logs.OutputCmd('openssl req -batch -days 3650 -nodes -new -newkey rsa:1024 -sha1 -x509 -keyout "/etc/artica-postfix/openvpn/keys/ca.key" -out "/etc/artica-postfix/openvpn/keys/ca.crt" -config /etc/artica-postfix/openvpn/openssl.cnf');
+end else begin
+    logs.DebugLogs('Starting......: OpenVPN ca.key OK');
+end;
+
+if not FileExists('/etc/artica-postfix/openvpn/keys/'+server_name+'.csr') then begin
+   cmd:='openssl req -batch -days 3650 -nodes -new -newkey rsa:1024 -keyout "/etc/artica-postfix/openvpn/keys/'+server_name+'.key"';
+   cmd:=cmd +' -out "/etc/artica-postfix/openvpn/keys/'+server_name+'.csr" -extensions server -config "/etc/artica-postfix/openvpn/openssl.cnf"';
+   logs.OutputCmd(cmd);
+end else begin
+        logs.DebugLogs('Starting......: OpenVPN '+server_name+'.csr OK');
+end;
+
+if not FileExists('/etc/artica-postfix/openvpn/keys/'+server_name+'.crt') then begin
+cmd:='openssl ca -batch -days 3650 -out "/etc/artica-postfix/openvpn/keys/'+server_name+'.crt"';
+cmd:=cmd+ ' -in "/etc/artica-postfix/openvpn/keys/'+server_name+'.csr" -extensions server -md sha1 -config "/etc/artica-postfix/openvpn/openssl.cnf"';
+logs.OutputCmd(cmd);
+end else begin
+        logs.DebugLogs('Starting......: OpenVPN '+server_name+'.crt OK');
+end;
+
+
+
+if not FileExists('/etc/artica-postfix/openvpn/keys/dh1024.pem') then begin
+   logs.OutputCmd('openssl dhparam -out /etc/artica-postfix/openvpn/keys/dh1024.pem 1024');
+end else begin
+    logs.DebugLogs('Starting......: OpenVPN dh1024.pem OK');
+end;
+
+logs.OutputCmd('/bin/chmod 0600 /etc/artica-postfix/openvpn/keys/*');
+
+l.free;
+end;
+
+
+procedure topenvpn.STOP();
+var
+   pid:string;
+   count:integer;
+mini:TiniFile;
+eth:string;
+begin
+pid:=PID_NUM();
+    mini:=TiniFile.Create('/etc/artica-postfix/settings/Daemons/ArticaOpenVPNSettings');
+    eth:=mini.ReadString('GLOBAL','BRIDGE_ETH','');
+count:=0;
+if SYS.PROCESS_EXIST(PID_NUM()) then begin
+   writeln('Stopping OpenVPN......................: ' + pid + ' PID..');
+   fpsystem('/bin/kill ' + pid);
+end;
+  while SYS.PROCESS_EXIST(PID_NUM()) do begin
+        sleep(100);
+        count:=count+1;
+        if count>20 then begin
+            fpsystem('/bin/kill -9 ' + PID_NUM());
+            break;
+        end;
+  end;
+
+if not SYS.PROCESS_EXIST(PID_NUM()) then begin
+   logs.Syslogs('Stopping OpenVPN......................: Success');
+   fpsystem('ifconfig br0 down');
+   fpsystem('brctl delbr br0');
+   fpsystem('openvpn --rmtun --dev tap0');
+   fpsystem('ifdown ' + eth);
+   fpsystem('ifup ' + eth);
+end;
+
+
+
+end;
+//#########################################################################################
+procedure topenvpn.CREATE_BRIDGE();
+var
+brctl:string;
+l:TstringList;
+RegExpr:TRegExpr;
+gw:boolean;
+i:integer;
+t:TstringList;
+mini:TiniFile;
+eth:string;
+eth_ip:string;
+eth_broadcast:string;
+eth_gateway:string;
+tcp:ttcpip;
+settcp:string;
+network,netmask:string;
+begin
+    brctl:=SYS.LOCATE_BRCTL();
+    tcp:=ttcpip.Create;
+    if not FileExists(brctl) then begin
+       logs.Syslogs('Starting......: OpenVPN (Bridge) Unable to locate brctl tool');
+       exit;
+    end;
+    settcp:=tcp.IP_ADDRESS_INTERFACE('br0');
+    if settcp='0.0.0.0' then settcp:='';
+    if length(settcp)>0 then begin
+          logs.Debuglogs('Starting......: OpenVPN Already br0 bridged for '+tcp.IP_ADDRESS_INTERFACE('br0'));
+          exit;
+    end;
+
+    mini:=TiniFile.Create('/etc/artica-postfix/settings/Daemons/ArticaOpenVPNSettings');
+    eth:=mini.ReadString('GLOBAL','BRIDGE_ETH','');
+    network:=mini.ReadString('GLOBAL','IP_START','');
+    netmask:=mini.ReadString('GLOBAL','NETMASK','');
+
+
+    if length(eth)=0 then begin
+       logs.Debuglogs('Starting......: OpenVPN failed to determine which NIC to bridge');
+         exit;
+    end;
+
+    if length(network)=0 then begin
+       logs.Debuglogs('Starting......: OpenVPN failed to determine which IP to route');
+         exit;
+    end;
+
+    if length(netmask)=0 then begin
+       logs.Debuglogs('Starting......: OpenVPN failed to determine which Mask to route');
+         exit;
+    end;
+
+
+    logs.Debuglogs('Starting......: OpenVPN (Bridge) get ' + eth + ' information');
+
+    eth_ip:=tcp.IP_ADDRESS_INTERFACE(eth);
+    eth_broadcast:=tcp.IP_BROADCAST_INTERFACE(eth);
+    eth_gateway:=tcp.IP_LOCAL_GATEWAY(eth);
+
+if length(eth_ip)=0 then begin
+       logs.Debuglogs('Starting......: OpenVPN failed to determine ip addr of ' + eth);
+         exit;
+    end;
+
+if length(eth_broadcast)=0 then begin
+       logs.Debuglogs('Starting......: OpenVPN failed to determine broadcast ' + eth);
+         exit;
+    end;
+
+if length(eth_gateway)=0 then begin
+       logs.Debuglogs('Starting......: OpenVPN failed to determine gateway of ' + eth);
+         exit;
+    end;
+
+
+logs.OutputCmd('brctl addbr br0');
+logs.OutputCmd('brctl addif br0 tap0');
+logs.OutputCmd('brctl addif br0 '+eth);
+logs.OutputCmd('ifconfig '+eth+' 0.0.0.0 promisc up');
+logs.OutputCmd('ifconfig tap0 0.0.0.0 promisc up');
+logs.OutputCmd('ifconfig br0 '+eth_ip+' netmask '+netmask+' broadcast '+eth_broadcast);
+logs.OutputCmd('route add default gw '+eth_gateway);
+logs.OutputCmd('route add -net '+network+' netmask '+netmask+' gw '+eth_gateway);
+
+
+
+
+
+
+
+end;
+//#########################################################################################
+procedure topenvpn.ChangeCommonName(commonname:string);
+var
+     RegExpr:TRegExpr;
+     l:tstringlist;
+     i:integer;
+begin
+
+if not FileExists('/etc/artica-postfix/openvpn/openssl.cnf') then begin
+    logs.Syslogs('topenvpn.ChangeCommonName():: Unable to stat /etc/artica-postfix/openvpn/openssl.cnf' );
+    exit;
+end;
+
+l:=TstringList.Create;
+l.LoadFromFile('/etc/artica-postfix/openvpn/openssl.cnf');
+RegExpr:=TRegExpr.Create;
+RegExpr.Expression:='^commonName_default';
+for i:=0 to l.Count-1 do begin
+    if RegExpr.exec(l.strings[i]) then begin
+       logs.Debuglogs('Change commonName_default to ' + commonname);
+       l.Strings[i]:='commonName_default='+chr(9)+commonname;
+       try
+          l.SaveToFile('/etc/artica-postfix/openvpn/openssl.cnf');
+       except
+         logs.Syslogs('topenvpn.ChangeCommonName():: Unable to save /etc/artica-postfix/openvpn/openssl.cnf' );
+         exit;
+       end;
+    end;
+end;
+
+l.free;
+RegExpr.free;
+end;
+//#########################################################################################
+
+
+
+function topenvpn.VERSION():string;
+var
+   l:string;
+   RegExpr:TRegExpr;
+begin
+   if not FileExists(BIN_PATH) then exit;
+   l:=SYS.ExecPipe(BIN_PATH() + ' --version');
+   RegExpr:=TRegExpr.Create;
+   RegExpr.Expression:='^OpenVPN\s+(.+?)\s+';
+   RegExpr.Exec(l);
+   result:=RegExpr.Match[1];
+   RegExpr.free;
+end;
+//#############################################################################
+
+
+
+
+
+end.

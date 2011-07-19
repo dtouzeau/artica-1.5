@@ -1,0 +1,9 @@
+<go_to_page>Got to page</go_to_page>
+<informations>Message information</informations>
+<resend>Resend this email</resend>
+<resend_text>If resend operation is successfull, this mail will be deleted from your quarantine area</resend_text>
+<search_intro>Set words to to find in your quarantine mails body:</search_intro>
+<this_week>This week</this_week>
+<top_senders>TOP Senders</top_senders>
+<view_message>View this message</view_message>
+<yesterday>Yesterday</yesterday>

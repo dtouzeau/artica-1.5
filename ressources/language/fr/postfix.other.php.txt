@@ -1,0 +1,6 @@
+<enable_original_recipient>Destinataire original (X-Original-To)</enable_original_recipient>
+<enable_original_recipient_text>Active la prise en charge de [b]l'en-t&ecirc;te de message X-Original-To[/b].[br] Cet en-t&ecirc;te est n&eacute;cessaire pour les bo&icirc;tes aux lettres multi-destinataire.[br]
+Lorsque ce param&egrave;tre est activ&eacute;, le d&eacute;mon cleanup ex&eacute;cute l'&eacute;limination des doublons sur des paires distinctes de (destinataire original, destinataire r&eacute;&eacute;crit), et g&eacute;n&egrave;re des archives non-vides de fichiers de file d'attente des destinataires originaux.[br][br]
+Lorsque ce param&egrave;tre est d&eacute;sactiv&eacute;, le d&eacute;mon cleanup ex&eacute;cute l'&eacute;limination des doublons uniquement sur l'adresse r&eacute;&eacute;crite du destinataire original, et g&eacute;n&egrave;re une archive vides du fichiers file d'attente du destinataire original</enable_original_recipient_text>
+<undisclosed_recipients_header>En-t&ecirc;te destinataires cach&eacute;s</undisclosed_recipients_header>
+<undisclosed_recipients_header_text>En-t&ecirc;te de message que cleanup ins&egrave;re quand un message ne contient pas d'en-t&ecirc;te &quot;pour  :&quot; ou &quot;copie cach&eacute;e :&quot;.</undisclosed_recipients_header_text>

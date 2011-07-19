@@ -1,0 +1,1 @@
+<fetchmail_daemon_settings>Configuraci&oacute;n del demonio Fetchmail</fetchmail_daemon_settings>

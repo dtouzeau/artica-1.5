@@ -1,0 +1,60 @@
+<about>Toutes les informations sont stock&eacute;es dans deux bases de donn&eacute;es utilis&eacute;es par Artica[br]
+LDAP est utilis&eacute; pour l'ensemble des param&egrave;tres et comptes utilisateurs. Mysql est utilis&eacute; pour les &eacute;v&egrave;nements des services[br]Artica peut sauvegarder ces param&egrave;tres afin de les restaurer si le serveur est en panne</about>
+<add_folder>Ajouter un nouveau dossier</add_folder>
+<add_has_backup>Ajouter ce disque comme syst&egrave;me de sauvegarde</add_has_backup>
+<add_share_folder>Ajouter un nouveau dossier partag&eacute; distant</add_share_folder>
+<add_share_folder_text>Indiquez les param&egrave;tres distant pour aider artica &agrave; se connecter au dossier smb distant</add_share_folder_text>
+<archives_files>Fichiers d'archives</archives_files>
+<ArticaBackupMaxTimeToLiveInDay>Nb jours Max &agrave; Sauvegarder</ArticaBackupMaxTimeToLiveInDay>
+<available_disks>Disques disponibles</available_disks>
+<backup_now>Sauvegarder maintenant</backup_now>
+<backup_now_text>Lancer une nouvelle sauvegarde</backup_now_text>
+<backup_path>Chemin de sauvegarde</backup_path>
+<backup_time>Sauvegarder tous les jours &agrave;</backup_time>
+<browse_dar>Parcourir les conteneurs DAR</browse_dar>
+<browse_dar_text>Cette section vous aide &agrave; trouver et restaurer les fichiers sauvegard&eacute;s dans votre conteneur.[br]
+Utilisez le champ de recherche pour trouver les fichiers que vous voulez restaurer ou pour obtenir leurs Etats</browse_dar_text>
+<close_windows>Toutes les op&eacute;ration de sauvegarde on &eacute;t&eacute;s ex&eacute;cut&eacute;es ... Vous pouvez fermer cette fen&ecirc;tre</close_windows>
+<compile_rules_ok>Enregistrement des param&egrave;tres OK ...</compile_rules_ok>
+<connect_as>Se connecter en tant que</connect_as>
+<connect_share>Connecter le dossier partag&eacute; distant</connect_share>
+<dar_is_not_installed>DAR n'est pas install&eacute; !</dar_is_not_installed>
+<dar_is_not_installed_text>L'application DAR (Disk Archive) n'est pas install&eacute;e sur votre syst&egrave;me.[br]
+Cette fonctionnalit&eacute; ne peut pas fonctionner sur votre syst&egrave;me[br]
+Veuillez installer l'application DAR &agrave; l'aide de votre gestionnaire de paquets favori (ou utiliser le gestionnaire de paquets d'artica)[br]
+Avant d'utiliser cette fonctionnalit&eacute; ...</dar_is_not_installed_text>
+<database_files_number>Nombre de fichiers sauvegard&eacute;s</database_files_number>
+<database_number>Base de donn&eacute;es</database_number>
+<disk_add_caption>Ce disque a &eacute;t&eacute; ajout&eacute; comme syst&egrave;me de sauvegarde.
+Si ce disque n'est pas branch&eacute;, artica exportera automatiquement les sauvegardes sur ce disque (dossier samba inclus).
+Confirmez-vous ceci ?</disk_add_caption>
+<disk_retranslation>Disque de transfert de sauvegarde</disk_retranslation>
+<disk_retranslation_text>Cette fonctionnalit&eacute; permet la sauvegarde de plus de donn&eacute;es vers un disque interne/externe..[br]
+Lorsqu'une sauvegarde standard est ex&eacute;cut&eacute;e et si le disque externe est connect&eacute;,[br]
+artica dupliquera la sauvegarde standard et toutes le donn&eacute;es mandat&eacute;es vers cet espace de stockage (dossiers partag&eacute;s de samba, bo&icirc;tes aux lettres, etc).[br]
+Utiliser cette section pour choisir le disque dur, le dossier cible et tout ce qui sera ex&eacute;cut&eacute;.[br]
+Connecter le disque et s&eacute;lectionnez-le, il sera automatiquement d&eacute;couvert.</disk_retranslation_text>
+<enable_artica_backup>Activer les fonctions de sauvegarde</enable_artica_backup>
+<evry_day_at>Chaque jour &agrave;</evry_day_at>
+<folder_size>Taille du dossier</folder_size>
+<howto_restore>La t&acirc;che programm&eacute;e est stock&eacute;e dans [b]/etc/cron.d/artica.cron.backups [/b] [br] [H5]Restaurer : [/H5] Pour restaurer un conteneur de secours, ex&eacute;cutez  la ligne de commande [br] [b] artica-ldap - restore (le chemin de fichier) [b] [br] artica-ldap est plac&eacute; dans /usr/share/artica-postfix</howto_restore>
+<info>info</info>
+<perform_restore>Ex&eacute;cuter une restauration</perform_restore>
+<personal_folders>Dossiers personnels</personal_folders>
+<restore_all_database>Restaurer tout les fichiers de la base de donn&eacute;es que stocke ce fichier</restore_all_database>
+<restore_all_database_text>Cette op&eacute;ration vous permettra de restaurer tout les fichiers contenus dans le container s&eacute;lectionn&eacute;, parcourez votre serveur pour indiquer quel dossier devra contenir les fichiers &agrave; restaurer.</restore_all_database_text>
+<restore_full_database>Restaurer un conteneur entier</restore_full_database>
+<restore_single_file>Restaurer uniquement ce fichier s&eacute;lectionn&eacute;</restore_single_file>
+<saved_date>Date sauvegard&eacute;e</saved_date>
+<selected_disks>Disques s&eacute;lectionn&eacute;s</selected_disks>
+<select_this_disk>S&eacute;lectionner ce disque comme disque de backup</select_this_disk>
+<shares_list>Liste des dossiers cible distants</shares_list>
+<share_folder>Partager ce dossier</share_folder>
+<share_retranslation>Partages de retransmission</share_retranslation>
+<share_retranslation_text>Cette fonctionnalit&eacute; permet la sauvegarde de toutes les donn&eacute;es vers un serveur distant en utilisant un r&eacute;pertoire partag&eacute;.
+Toutes les donn&eacute;es seront sauvegard&eacute;es en mode incr&eacute;mental. Vous pourrez retrouvez toutes les version des fichiers.[br]
+Cette fonctionnalit&eacute; utilise l'outil artica-backup-share, il envoie des notifications si la t&acirc;che &agrave; r&eacute;ussi ou non</share_retranslation_text>
+<storage_list>Liste des conteneurs de stockage</storage_list>
+<success_sendcommand>Envoi de l'ordre &agrave; artica OK...</success_sendcommand>
+<target_restore_folder>Dossier de restauration cible</target_restore_folder>
+<usb_device_id>ID du p&eacute;riph&eacute;rique externe source</usb_device_id>

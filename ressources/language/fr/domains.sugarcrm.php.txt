@@ -1,0 +1,5 @@
+<admin_name>Nom du Super Administrateur</admin_name>
+<APP_sugar_NOT_INSTALLED>Votre SugarCRM n'est pas install&eacute;</APP_sugar_NOT_INSTALLED>
+<install_your_sugar>Installer votre site SugarCRM</install_your_sugar>
+<install_your_sugar_text>Installer votre site SugarCRM</install_your_sugar_text>
+<sugarservername>Adresse du site Web</sugarservername>

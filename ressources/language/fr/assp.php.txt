@@ -1,0 +1,25 @@
+<ASSP_INTERFACE>Afficher l'interface originale</ASSP_INTERFACE>
+<ASSP_INTERFACE_TEXT>Ouvrez l'interface originale du produit ASSP</ASSP_INTERFACE_TEXT>
+<ASSP_NOT_INSTALLED>ASSP n'est pas install&eacute;</ASSP_NOT_INSTALLED>
+<ASSP_NOT_INSTALLED_TEXT>Clickez sur cet icon si vous voulez installer ASSP et activer cette fonctionnalit&eacute;</ASSP_NOT_INSTALLED_TEXT>
+<DelayEmbargoTime>Temps de r&eacute;tention</DelayEmbargoTime>
+<DelayEmbargoTime_text>Entrez le nombre de minutes d'attente pour les 3 informations (adresse IP,email et destinataire) avant d'autoriser le serveur &agrave; recevoir les courriers (par d&eacute;faut 5 minutes)</DelayEmbargoTime_text>
+<DelayExpiryTime>Temps d'expiration</DelayExpiryTime>
+<DelayExpiryTime_text>Entrez le nombre de jours de r&eacute;tention de la base des adresses valid&eacute;es par le greylisting. Par d&eacute;faut 36 jours.</DelayExpiryTime_text>
+<DelayGripvalue>valeur d'accroche</DelayGripvalue>
+<DelayGripvalue_text>Ceci va restreindre le delais d'attente d'une adresse du greylisting lorsque la valeur d'accroche est sup&eacute;rieur &agrave; cette valeur.[br]
+Par exemple 0.4: 
+Si vous mettez une valeur sup&eacute;rieur &agrave; 0.5, seules les addresses avec un fort taux de probabilit&eacute; d'&eacute;mettre du spam seront greylist&eacute;es.[br]
+La valeur d'accroche est calcul&eacute;e par le taux de spam o&ugrave; 0 indique que l'adresse IP n'envoie jamais de SPAM et que avec 1, l'adresse envoi toujours du SPAM</DelayGripvalue_text>
+<DelaySSL>Greylister aussi le SSL</DelaySSL>
+<DelaySSL_text>Activer le Greylisting dans les sessions SMTP SSL</DelaySSL_text>
+<DelayWaitTime>Temps d'attente</DelayWaitTime>
+<DelayWaitTime_text>Indiquez le nombre d'heure d'attente des 3 variables (adresse IP, &eacute;metteur, destinataire) .
+la d&eacute;livrance est imm&eacute;diatement accept&eacute;e. et les deux variables (adresse IP, domaine de l'&eacute;metteur) sont rajout&eacute;s dans la liste blanche.[br]
+La valeur par d&eacute;faut est de 28 heures.</DelayWaitTime_text>
+<EnableDelaying_text>Le greylisting ASSP est con&ccedil;u pour renvoyer une erreur au serveur de messagerie &eacute;metteur. Au fur et &agrave; mesure des &eacute;missions de ces erreurs renvoy&eacute;es ASSP va stocker le tripl&eacute;. A la deuxi&egrave;me tentative d'&eacute;mission si le Temps de r&eacute;tention pour le tripl&eacute; &agrave; &eacute;t&eacute; d&eacute;pass&eacute;, le message sera accept&eacute; et un doublon sera cr&eacute;&eacute; afin de ne plus retarder une nouvelle fois pendant le  Temps d'expiration</EnableDelaying_text>
+<MessageScoringLowerLimit>&quot;tagger&quot; les messages dont le score exc&egrave;de</MessageScoringLowerLimit>
+<MessageScoringLowerLimitTag>Texte du &quot;tag&quot;</MessageScoringLowerLimitTag>
+<MessageScoringUpperLimit>Refuser les messages dont le score exc&egrave;de</MessageScoringUpperLimit>
+<messages_scoring>Score des messages</messages_scoring>
+<messages_scoring_text>Indiquez les scores qui vont permettre le blocage des messages.</messages_scoring_text>

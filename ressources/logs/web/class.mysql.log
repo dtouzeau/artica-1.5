@@ -1,0 +1,8 @@
+2011-07-19 13:00:02: [QUERY_SQL()]:: [9459] [DAEMON]::::[]:mysql/QUERY_SQL:: mysql password is null in class.mysql.inc line 361
+2011-07-19 13:00:02: [QUERY_SQL()]:: [9459] [DAEMON]::::[]:mysql/QUERY_SQL:: QUERY_SQL:: DB:"artica_events" Error Number () (Access denied for user 'root'@'localhost' (using password: NO)) config:localhost:3306@: (L.380) in class.mysql.inc line 380
+2011-07-19 14:00:04: [QUERY_SQL()]:: [12144] [DAEMON]::::[]:mysql/QUERY_SQL:: mysql password is null in class.mysql.inc line 361
+2011-07-19 14:00:04: [QUERY_SQL()]:: [12144] [DAEMON]::::[]:mysql/QUERY_SQL:: QUERY_SQL:: DB:"artica_events" Error Number () (Access denied for user 'root'@'localhost' (using password: NO)) config:localhost:3306@: (L.380) in class.mysql.inc line 380
+2011-07-19 15:00:03: [QUERY_SQL()]:: [13747] [DAEMON]::::[]:mysql/QUERY_SQL:: mysql password is null in class.mysql.inc line 361
+2011-07-19 15:00:03: [QUERY_SQL()]:: [13747] [DAEMON]::::[]:mysql/QUERY_SQL:: QUERY_SQL:: DB:"artica_events" Error Number () (Access denied for user 'root'@'localhost' (using password: NO)) config:localhost:3306@: (L.380) in class.mysql.inc line 380
+2011-07-19 16:00:05: [QUERY_SQL()]:: [16184] [DAEMON]::::[]:mysql/QUERY_SQL:: mysql password is null in class.mysql.inc line 361
+2011-07-19 16:00:05: [QUERY_SQL()]:: [16184] [DAEMON]::::[]:mysql/QUERY_SQL:: QUERY_SQL:: DB:"artica_events" Error Number () (Access denied for user 'root'@'localhost' (using password: NO)) config:localhost:3306@: (L.380) in class.mysql.inc line 380

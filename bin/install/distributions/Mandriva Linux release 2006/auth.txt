@@ -1,0 +1,10 @@
+libsasl2->ftp://rpmfind.net/linux/Mandrake/2006.0/i586/media/main/libsasl2-2.1.22-11mdk.i586.rpm;
+libsasl2-devel->ftp://rpmfind.net/linux/Mandrake/2006.0/i586/media/main/libsasl2-devel-2.1.22-11mdk.i586.rpm;
+libsasl2-plug-ldapdb->ftp://rpmfind.net/linux/Mandrake/2006.0/i586/media/main/libsasl2-plug-ldapdb-2.1.22-11mdk.i586.rpm;
+libsasl2-plug-gssapi->ftp://rpmfind.net/linux/Mandrake/2006.0/i586/media/main/libsasl2-plug-gssapi-2.1.22-11mdk.i586.rpm;
+libsasl2-plug-digestmd5->ftp://rpmfind.net/linux/Mandrake/2006.0/i586/media/main/libsasl2-plug-digestmd5-2.1.22-11mdk.i586.rpm;
+cyrus-sasl->ftp://rpmfind.net/linux/Mandrake/2006.0/i586/media/main/cyrus-sasl-2.1.22-11mdk.i586.rpm;
+libpostfix1->ftp://rpmfind.net/linux/Mandrake/2006.0/i586/media/main/libpostfix1-2.2.5-7mdk.i586.rpm;
+
+
+

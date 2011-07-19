@@ -1,0 +1,21 @@
+<artica_console_port>Artica web console port</artica_console_port>
+<connect_and_next>Connect and next step</connect_and_next>
+<CYRUS_MURDER_CONNECT_BACKEND>Connect this server to the backend</CYRUS_MURDER_CONNECT_BACKEND>
+<CYRUS_MURDER_CONNECT_BACKEND_EXPLAIN>In the following form, give the backend server address and credentials to connect to the remote Artica SSL web console</CYRUS_MURDER_CONNECT_BACKEND_EXPLAIN>
+<CYRUS_MURDER_CONNECT_BACKEND_TEXT>Make this server has a frontend and notify the backend to add a new frontend server</CYRUS_MURDER_CONNECT_BACKEND_TEXT>
+<IS_DIFFERENT_THAN>is different than</IS_DIFFERENT_THAN>
+<MURDER_BACKEND_SERVER>Backend server name</MURDER_BACKEND_SERVER>
+<MURDER_HAS_FRONTEND>This server is a frontend server</MURDER_HAS_FRONTEND>
+<MURDER_HAS_FRONTEND_TEXT>This server is linked to a backend server for clustering mailboxes, if you want to disonnect it, turn to red this circle</MURDER_HAS_FRONTEND_TEXT>
+<murder_link_now>Link this server to backend server now</murder_link_now>
+<MURDER_VERIFY_DONE>The backend server has successfully authenticate your request, you can now proceed linking the 2 servers</MURDER_VERIFY_DONE>
+<MURDER_VERIFY_GO>
+[b]Be carrefull this server will use the backend server for users database, organizations and so on.[/b][br] 
+verify that 389,3905 ports are open in your firewall from this server to the backend server
+[br]If it is the first time you link a backend, the backend server will 
+turn off the Postfix MTA mail server (if it is installed).[br]
+The remote backend server will be switch to be only a Mailboxes/Databases server only...
+</MURDER_VERIFY_GO>
+<MURDER_VERIFY_GO_SUCCESS>This frontend server has been successfully added to the target backend server, all messaging services will be restarted to apply new parameters</MURDER_VERIFY_GO_SUCCESS>
+<REQUIRE_FULL_HOSTNAME>A full hostname is required</REQUIRE_FULL_HOSTNAME>
+<SERVER_REQUESTED>The backed server you set:</SERVER_REQUESTED>

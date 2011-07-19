@@ -1,0 +1,21 @@
+<bind9_with_postfix>bind9 et Postfix</bind9_with_postfix>
+<disable_dns_lookups>D&eacute;sactive le client DNS de Postfix</disable_dns_lookups>
+<disable_dns_lookups_text>Pour forcer Postfix &agrave; lire le fichier /etc/hosts, activer cette option.[[br]
+Dans ce cas, vous ne pouvez utiliser d'enregistrements MX et vous pourriez vouloir indiquer le relayhost pour l'envoi du courrier sortant.[br]
+Note : L'activation de cette option d&eacute;sactive uniquement le client DNS et oblige Postfix &agrave; utiliser [b]libc resolver[/b], cela ne d&eacute;sactive pas l'appel aux DNS de Posfix et du syst&egrave;me d'exploitation.</disable_dns_lookups_text>
+<DNS_SETTINGS>R&eacute;glages des requ&ecirc;tes DNS</DNS_SETTINGS>
+<hostname>Nom d'h&ocirc;te</hostname>
+<ignore_mx_lookup_error>Ignorez les erreurs MX</ignore_mx_lookup_error>
+<ignore_mx_lookup_error_text>Ce param&egrave;tre permet de contr&ocirc;ler ce qu'il se passe lorsqu'un serveur de nom ne r&eacute;ponds par &agrave; une requ&ecirc;te MX.[br]
+Par d&eacute;faut, Postfix retarde la livraison et essaie de nouveau apr&egrave;s quelques temps.[br]
+Activer pour forcer les A record lookup.[br]
+Cela ce r&eacute;f&egrave;re au fait que certains serveurs DNS renvoient SERVFAIL au lieu de &quot;n'existe pas&quot; lorsqu'ils sont interrog&eacute;s sur un enregistrement MX.[br]
+Si vous d&eacute;sactiver, Postfix n'essaiera JAMAIS le A record.[br]
+Si vous activer il utilisera le A record.</ignore_mx_lookup_error_text>
+<myhostname>Nom du Serveur</myhostname>
+<myorigin>Domaine d'origine</myorigin>
+<postfix_better_with_bind9>Bind9 n'est pas install&eacute;</postfix_better_with_bind9>
+<postfix_better_with_bind9_explain>Acc&eacute;l&egrave;re la r&eacute;solution des noms par Postfix en utilisant serveur DNS local comportant un cache</postfix_better_with_bind9_explain>
+<postfix_bind_activated>Postfix et bind9</postfix_bind_activated>
+<postfix_bind_activated_text>Postfix utilise Bind9 pour les requ&ecirc;tes DNS et acc&egrave;l&egrave;re</postfix_bind_activated_text>
+<postfix_not_bind_activated>Am&eacute;lioration des perfomances</postfix_not_bind_activated>

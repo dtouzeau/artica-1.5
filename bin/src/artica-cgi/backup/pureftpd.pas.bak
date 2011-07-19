@@ -1,0 +1,513 @@
+unit pureftpd;
+
+{$MODE DELPHI}
+{$LONGSTRINGS ON}
+
+interface
+
+uses
+    Classes, SysUtils,variants,strutils,IniFiles, Process,md5,logs,unix,RegExpr in 'RegExpr.pas',zsystem;
+
+type LDAP=record
+      admin:string;
+      password:string;
+      suffix:string;
+      servername:string;
+      Port:string;
+  end;
+
+  type
+  tpureftpd=class
+
+
+private
+     LOGS:Tlogs;
+     GLOBAL_INI:TiniFIle;
+     function COMMANDLINE_PARAMETERS(FoundWhatPattern:string):boolean;
+     function get_INFOS(key:string):string;
+     function get_LDAP(key:string):string;
+     function ReadFileIntoString(path:string):string;
+     SYS:TSystem;
+     artica_path:string;
+     procedure DEBIAN_LINK();
+
+
+public
+    procedure   Free;
+    constructor Create;
+    function    PURE_FTPD_VERSION():string;
+    function    DAEMON_BIN_PATH():string;
+    function    PURE_FTPD_INITD():string;
+    function    PURE_FTPD_PID() :string;
+    function    PURE_FTPD_STATUS:string;
+    procedure   ETC_DEFAULT();
+    procedure   LDAP_CONF();
+    procedure   PURE_FTPD_START();
+    procedure   PURE_FTPD_STOP();
+    function    pure_pw_path():string;
+    function    pure_db_path():string;
+    procedure   CreateDebianConfig();
+
+
+END;
+
+implementation
+
+constructor tpureftpd.Create;
+begin
+       forcedirectories('/etc/artica-postfix');
+       LOGS:=tlogs.Create();
+       SYS:=Tsystem.Create;
+       if not DirectoryExists('/usr/share/artica-postfix') then begin
+              artica_path:=ParamStr(0);
+              artica_path:=ExtractFilePath(artica_path);
+              artica_path:=AnsiReplaceText(artica_path,'/bin/','');
+
+      end else begin
+          artica_path:='/usr/share/artica-postfix';
+      end;
+end;
+//##############################################################################
+procedure Tpureftpd.free();
+begin
+    logs.Free;
+end;
+//##############################################################################
+procedure Tpureftpd.ETC_DEFAULT();
+var
+l:TstringList;
+begin
+
+if not FileExists('/etc/default/pure-ftpd-common') then exit;
+l:=TstringList.Create;
+l.Add('# Configuration for pure-ftpd');
+l.Add('# (this file is sourced by /bin/sh, edit accordingly)');
+l.Add('');
+l.Add('# STANDALONE_OR_INETD');
+l.Add('# valid values are "standalone" and "inetd".');
+l.Add('# Any change here overrides the setting in debconf.');
+l.Add('STANDALONE_OR_INETD=standalone');
+l.Add('');
+l.Add('# VIRTUALCHROOT: ');
+l.Add('# whether to use binary with virtualchroot support');
+l.Add('# valid values are "true" or "false"');
+l.Add('# Any change here overrides the setting in debconf.');
+l.Add('VIRTUALCHROOT=false');
+l.Add('');
+l.Add('# UPLOADSCRIPT: if this is set and the daemon is run in standalone mode,');
+l.Add('# pure-uploadscript will also be run to spawn the program given below');
+l.Add('# for handling uploads. see /usr/share/doc/pure-ftpd/README.gz or');
+l.Add('# pure-uploadscript(8)');
+l.Add('');
+l.Add('# example: UPLOADSCRIPT=/usr/local/sbin/uploadhandler.pl');
+l.Add('UPLOADSCRIPT=');
+l.Add('');
+l.Add('# if set, pure-uploadscript will spawn $UPLOADSCRIPT running as the');
+l.Add('# given uid and gid');
+l.Add('UPLOADUID=');
+l.Add('UPLOADGID=');
+l.SaveToFile('/etc/default/pure-ftpd-common');
+l.free;
+end;
+//##############################################################################
+function Tpureftpd.DAEMON_BIN_PATH():string;
+begin
+    if FileExists('/usr/sbin/pure-ftpd') then exit('/usr/sbin/pure-ftpd');
+    if FileExists('/usr/sbin/pure-ftpd-ldap') then exit('/usr/sbin/pure-ftpd-ldap');
+    if FileExists('/opt/artica/sbin/pure-ftpd') then exit('/opt/artica/sbin/pure-ftpd');
+end;
+//##############################################################################
+function Tpureftpd.pure_pw_path():string;
+begin
+    if FileExists('/usr/bin/pure-pw') then exit('/usr/bin/pure-pw');
+    if FileExists('/opt/artica/bin/pure-pw') then exit('/opt/artica/bin/pure-pw');
+end;
+//##############################################################################
+function Tpureftpd.pure_db_path():string;
+begin
+    if FileExists('/etc/pure-ftpd/conf/PureDB') then exit(trim(ReadFileIntoString('/etc/pure-ftpd/conf/PureDB')));
+    exit('/opt/artica/var/pureftpd/pureftpd.pdb');
+end;
+//##############################################################################
+function Tpureftpd.PURE_FTPD_STATUS:string;
+var
+ini:TstringList;
+begin
+   ini:=TstringList.Create;
+   ini.Add('[PUREFTPD]');
+   if FileExists(DAEMON_BIN_PATH()) then  begin
+      if SYS.PROCESS_EXIST(PURE_FTPD_PID()) then ini.Add('running=1') else  ini.Add('running=0');
+      ini.Add('pureftpd_installed=1');
+      ini.Add('application_installed=1');
+      ini.Add('master_pid='+ PURE_FTPD_PID());
+      ini.Add('master_memory=' + IntToStr(SYS.PROCESS_MEMORY(PURE_FTPD_PID())));
+      ini.Add('master_version=' + PURE_FTPD_VERSION());
+      ini.Add('status='+SYS.PROCESS_STATUS(PURE_FTPD_PID()));
+      ini.Add('service_name=APP_PUREFTPD');
+   end;
+   
+   result:=ini.Text;
+   ini.free;
+   
+end;
+//##############################################################################
+
+function Tpureftpd.PURE_FTPD_VERSION():string;
+var
+   l:TstringList;
+   i:integer;
+   RegExpr:TRegExpr;
+begin
+    if Not Fileexists(DAEMON_BIN_PATH()) then exit;
+
+    fpsystem(DAEMON_BIN_PATH()+' -h >/opt/artica/logs/pure.ftpd.h.txt');
+    l:=TstringList.Create;
+    l.LoadFromFile('/opt/artica/logs/pure.ftpd.h.txt');
+
+
+    RegExpr:=TRegExpr.Create;
+    RegExpr.Expression:='pure-ftpd v([0-9\.]+)';
+    for i:=0 to l.Count-1 do begin
+         if RegExpr.Exec(l.Strings[i]) then begin
+            result:=RegExpr.Match[1];
+            break;
+         end;
+    end;
+
+l.free;
+RegExpr.free;
+end;
+//##############################################################################
+function Tpureftpd.PURE_FTPD_PID() :string;
+begin
+if FileExists('/var/run/pure-ftpd/pure-ftpd.pid') then exit(SYS.GET_PID_FROM_PATH('/var/run/pure-ftpd/pure-ftpd.pid'));
+if FileExists('/var/run/pure-ftpd.pid') then exit(SYS.GET_PID_FROM_PATH('/var/run/pure-ftpd.pid'));
+
+exit(SYS.PROCESS_LIST_PID('pure-ftpd \(SERVER\)'));
+
+
+end;
+//##############################################################################
+function Tpureftpd.PURE_FTPD_INITD():string;
+begin
+    if FileExists('/etc/init.d/pure-ftpd') then exit('/etc/init.d/pure-ftpd');
+    if FileExists('/etc/init.d/pure-ftpd-ldap') then exit('/etc/init.d/pure-ftpd-ldap');
+end;
+//##############################################################################
+procedure tpureftpd.CreateDebianConfig();
+var
+   l:TstringList;
+   RegExpr:TRegExpr;
+   CF:TstringList;
+   i:Integer;
+begin
+   if Not DirectoryExists('/etc/pure-ftpd/conf') then exit;
+
+    l:=Tstringlist.Create;
+    l.Add('no');
+    l.SaveToFile('/etc/pure-ftpd/conf/PAMAuthentication');
+    l.Clear;
+    
+    if not FileExists('/opt/artica/etc/pure-ftpd.conf') then exit;
+    CF:=TstringList.Create;
+    CF.LoadFromFile('/opt/artica/etc/pure-ftpd.conf');
+    RegExpr:=TRegExpr.Create;
+    RegExpr.Expression:='^([A-Za-z0-9]+)\s+(.+)';
+    for i:=0 to CF.Count-1 do begin
+        if RegExpr.Exec(CF.Strings[i]) then begin
+           if trim(RegExpr.Match[1])<>'PureDB' then begin
+              if trim(RegExpr.Match[1])<>'Umask' then begin
+                 if trim(RegExpr.Match[1])<>'PIDFile' then begin
+                   if trim(RegExpr.Match[1])<>'FileSystemCharset' then begin
+                      l.Add(trim(RegExpr.Match[2]));
+                      l.SaveToFile('/etc/pure-ftpd/conf/' + trim(RegExpr.Match[1]));
+                      l.Clear;
+                   end;
+                 end;
+              end;
+           end;
+        end;
+    end;
+    
+    
+
+    l:=Tstringlist.Create;
+    l.Add('yes');
+    l.SaveToFile('/etc/pure-ftpd/conf/CreateHomeDir');
+    l.Clear;
+CF.free;
+RegExpr.Free;
+l.free;
+exit;
+end;
+//##############################################################################
+procedure tpureftpd.LDAP_CONF();
+var
+   l:TstringList;
+   artica_admin,artica_password,ldap_server,ldap_server_port,artica_suffix:string;
+begin
+
+if not FileExists('/etc/pure-ftpd/db/ldap.conf') then exit;
+    artica_admin:=get_LDAP('admin');
+    artica_password:=get_LDAP('password');
+    artica_suffix:=get_LDAP('suffix');
+    ldap_server:=Get_LDAP('server');
+    ldap_server_port:=Get_LDAP('port');
+
+    if length(ldap_server)=0 then ldap_server:='127.0.0.1';
+    if ldap_server='*' then ldap_server:='127.0.0.1';
+    if length(ldap_server_port)=0 then ldap_server_port:='389';
+
+l:=Tstringlist.Create;
+l.Add('#############################################');
+l.Add('#                                           #');
+l.Add('# Sample Pure-FTPd LDAP configuration file. #');
+l.Add('# See README.LDAP for explanations.         #');
+l.Add('#                                           #');
+l.Add('#############################################');
+l.Add('');
+l.Add('');
+l.Add('# Optional : name of the LDAP server. Default : localhost');
+l.Add('');
+l.Add('LDAPServer ' + ldap_server);
+l.Add('');
+l.Add('');
+l.Add('# Optional : server port. Default : 389');
+l.Add('');
+l.Add('LDAPPort   ' + ldap_server_port);
+l.Add('');
+l.Add('');
+l.Add('# Mandatory : the base DN to search accounts from. No default.');
+l.Add('');
+l.Add('LDAPBaseDN '+artica_suffix);
+l.Add('');
+l.Add('');
+l.Add('# Optional : who we should bind the server as.');
+l.Add('#            Default : binds anonymously');
+l.Add('');
+l.Add('LDAPBindDN cn='+artica_admin+',' + artica_suffix);
+l.Add('');
+l.Add('');
+l.Add('# Password if we don''t bind anonymously');
+l.Add('# This configuration file should be only readable by root');
+l.Add('');
+l.Add('LDAPBindPW ' + artica_password);
+l.Add('');
+l.Add('');
+l.Add('# Optional : default UID, when there''s no entry in an user object');
+l.Add('');
+l.Add('# LDAPDefaultUID 500');
+l.Add('');
+l.Add('');
+l.Add('# Optional : default GID, when there''s no entry in an user object');
+l.Add('');
+l.Add('# LDAPDefaultGID 100');
+l.Add('');
+l.Add('');
+l.Add('# Filter to use to find the object that contains user info');
+l.Add('# \L is replaced by the login the user is trying to log in as');
+l.Add('# The default filter is (&(objectClass=posixAccount)(uid=\L))');
+l.Add('');
+l.Add('LDAPFilter (&(objectClass=PureFTPdUser)(uid=\L)(FTPStatus=TRUE))');
+l.Add('');
+l.Add('');
+l.Add('# Attribute to get the home directory');
+l.Add('# Default is homeDirectory (the standard attribute from posixAccount)');
+l.Add('');
+l.Add('LDAPHomeDir homeDirectory');
+l.Add('');
+l.Add('');
+l.Add('# LDAP protocol version to use');
+l.Add('# Version 3 (default) is mandatory with recent releases of OpenLDAP.');
+l.Add('');
+l.Add('LDAPVersion 3');
+l.SaveToFile('/etc/pure-ftpd/db/ldap.conf');
+l.free;
+end;
+//#############################################################################
+function tpureftpd.get_INFOS(key:string):string;
+var value:string;
+begin
+GLOBAL_INI:=TIniFile.Create('/etc/artica-postfix/artica-postfix.conf');
+value:=GLOBAL_INI.ReadString('INFOS',key,'');
+result:=value;
+GLOBAL_INI.Free;
+end;
+//#############################################################################
+function tpureftpd.get_LDAP(key:string):string;
+var value:string;
+begin
+GLOBAL_INI:=TIniFile.Create('/etc/artica-postfix/artica-postfix-ldap.conf');
+value:=GLOBAL_INI.ReadString('LDAP',key,'');
+result:=value;
+GLOBAL_INI.Free;
+end;
+//#############################################################################
+function tpureftpd.COMMANDLINE_PARAMETERS(FoundWhatPattern:string):boolean;
+var
+   i:integer;
+   s:string;
+   RegExpr:TRegExpr;
+
+begin
+ result:=false;
+ s:='';
+ if ParamCount>1 then begin
+     for i:=2 to ParamCount do begin
+        s:=s  + ' ' +ParamStr(i);
+     end;
+ end;
+   RegExpr:=TRegExpr.Create;
+   RegExpr.Expression:=FoundWhatPattern;
+   if RegExpr.Exec(s) then begin
+      RegExpr.Free;
+      result:=True;
+   end;
+
+
+end;
+//##############################################################################
+
+function tpureftpd.ReadFileIntoString(path:string):string;
+var
+   List:TstringList;
+begin
+
+      if not FileExists(path) then begin
+        exit;
+      end;
+
+      List:=Tstringlist.Create;
+      List.LoadFromFile(path);
+      result:=trim(List.Text);
+      List.Free;
+end;
+//##############################################################################
+procedure tpureftpd.DEBIAN_LINK();
+begin
+if not DirectoryExists('/etc/pure-ftpd/auth') then exit;
+if FileExists('/etc/pure-ftpd/auth/50pure') then exit;
+fpsystem('/bin/ln -s /etc/pure-ftpd/conf/PureDB /etc/pure-ftpd/auth/50pure');
+end;
+//##############################################################################
+
+
+procedure tpureftpd.PURE_FTPD_START();
+ var
+    count      :integer;
+    D          :boolean;
+    pid:string;
+begin
+
+     if Not FileExists(DAEMON_BIN_PATH()) then begin
+           logs.DebugLogs('Starting......: pure-ftpd unable to stat daemon path (not installed)');
+           exit;
+     end;
+     
+     
+     if not FileExists('/etc/pure-ftpd/pureftpd.pdb') then begin
+       logs.DebugLogs('Starting......: pure-ftpd no users set');
+       exit;
+     end;
+     
+     pid:=PURE_FTPD_PID();
+     if FileExists(PURE_FTPD_INITD()) then begin
+        if not SYS.PROCESS_EXIST(pid) then begin
+              logs.DebugLogs('Starting......: pure-ftpd');
+              LDAP_CONF();
+              ETC_DEFAULT();
+              CreateDebianConfig();
+              DEBIAN_LINK();
+              fpsystem(PURE_FTPD_INITD() + ' start >/opt/artica/logs/pureftpd-init 2>&1');
+              logs.DebugLogs('Starting......: ' +ReadFileIntoString('/opt/artica/logs/pureftpd-init'));
+              exit;
+        end else begin
+           logs.DebugLogs('Starting......: pure-ftpd daemon is already running using PID ' + pid + '...');
+           exit;
+        end;
+    end else begin
+    logs.DebugLogs('Starting......: pure-ftpd is installed by artica version 1.1');
+    end;
+
+     
+
+     count:=0;
+     if not SYS.IsUserExists('ftp') then SYS.AddUserToGroup('ftp','ftp','','');
+
+     D:=COMMANDLINE_PARAMETERS('debug');
+
+     if not FileExists('/opt/artica/sbin/pure-config.pl') then begin
+         if D then logs.DebugLogs('Starting......: pure-ftpd unable to stat /opt/artica/sbin/pure-config.pl');
+         exit;
+     end;
+
+     if not SYS.PROCESS_EXIST(pid) then begin
+
+        fpsystem('/opt/artica/sbin/pure-config.pl /opt/artica/etc/pure-ftpd.conf >/dev/null 2>&1');
+        while not SYS.PROCESS_EXIST(pid) do begin
+              sleep(100);
+              inc(count);
+              if count>200 then begin
+                 logs.DebugLogs('Starting......: pure-ftpd... (failed!!!)');
+                 exit;
+              end;
+        end;
+
+      end else begin
+      logs.DebugLogs('Starting......: pure-ftpd daemon is already running using PID ' + pid + '...');
+        exit;
+     end;
+
+     logs.DebugLogs('Starting......: pure-ftpd daemon with new PID ' + pid + '...');
+end;
+//##############################################################################
+procedure tpureftpd.PURE_FTPD_STOP();
+ var
+    pid:string;
+    count:integer;
+begin
+count:=0;
+pid:=PURE_FTPD_PID();
+if Not FileExists(DAEMON_BIN_PATH()) then exit;
+
+if FileExists(PURE_FTPD_INITD()) then begin
+        if SYS.PROCESS_EXIST(pid) then begin
+           writeln('Stopping pure-ftpd...........: ' + pid + ' PID');
+           fpsystem(PURE_FTPD_INITD() + ' stop');
+           if SYS.PROCESS_EXIST(pid) then begin
+              writeln('Stopping pure-ftpd...........: Killing '+ pid);
+              fpsystem('/bin/kill -9 ' + pid + ' >/dev/null 2>&1');
+              exit;
+           end;
+           exit;
+
+        end else begin
+            writeln('Stopping pure-ftpd...........: Already stopped');
+            exit;
+        end;
+end;
+        
+
+
+  if not FileExists('/opt/artica/sbin/pure-config.pl') then exit;
+  pid:=PURE_FTPD_PID();
+  if SYS.PROCESS_EXIST(pid) then begin
+   writeln('Stopping pure-ftpd...........: ' + pid + ' PID');
+   fpsystem('/bin/kill ' + pid + ' >/dev/null 2>&1');
+
+  while SYS.PROCESS_EXIST(PURE_FTPD_PID()) do begin
+        sleep(100);
+        inc(count);
+        fpsystem('/bin/kill ' + PURE_FTPD_PID() + ' >/dev/null 2>&1');
+        if count>30 then break;
+  end;
+   exit;
+  end;
+
+  if not SYS.PROCESS_EXIST(PURE_FTPD_PID()) then begin
+     writeln('Stopping pure-ftpd...........: Already stopped');
+  end;
+end;
+//##############################################################################
+
+end.

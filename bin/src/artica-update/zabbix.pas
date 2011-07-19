@@ -1,0 +1,1 @@
+../artica-install/zabbix.pas

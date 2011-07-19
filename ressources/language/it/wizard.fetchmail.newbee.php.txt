@@ -1,0 +1,26 @@
+<add_alias>Add new original email</add_alias>
+<add_alias_text>Add your original email from your ISP and fetchmail rules</add_alias_text>
+<click_on_add>Click on add button</click_on_add>
+<fetchmail_add_rule>New account</fetchmail_add_rule>
+<fetchmail_add_rule_text>Add new fetched account and receive mails into your mailbox</fetchmail_add_rule_text>
+<fetchmail_aliases>Fetchmail aliases</fetchmail_aliases>
+<fetchmail_aliases_ask>Give the email address fetched by your rule (eg you@gmail.com or you@hotmail.com...)</fetchmail_aliases_ask>
+<fetchmail_aliases_text>
+During receiving mails from fetchmail operation, the mail server engine keep the original recipient address forwarded to your account.[br]
+For example, if you fetch mail from gmail account and your original address is user@gmail.com, the email address "user@gmail.com" is not translated to your local email address.[br]
+All mails saved in backup or saved in quarantine area are indexed by the original recipient.[br]
+[b]If you not fill this section, you will not be able to query correctly your quarantine/backup area[/b]. 
+</fetchmail_aliases_text>
+<fetchmail_modify_rules>Storage accounts</fetchmail_modify_rules>
+<fetchmail_modify_rules_text>Display and edit current accounts</fetchmail_modify_rules_text>
+<fetch_delete_rule_confirm>Confirm deletion of this rule ?</fetch_delete_rule_confirm>
+<GET_RIGHT_ISP_SETTINGS>Find settings</GET_RIGHT_ISP_SETTINGS>
+<GET_RIGHT_ISP_SETTINGS_TEXT>Define settings with your ISP name</GET_RIGHT_ISP_SETTINGS_TEXT>
+<messaging_accounts>Messaging accounts</messaging_accounts>
+<not_delete_messages>Don't delete messages</not_delete_messages>
+<no_fetchmail_aliases>No fetchmail aliases</no_fetchmail_aliases>
+<no_fetchmail_aliases_intro>If you want to receive quarantine reports and others features, you need to add your original emails addresses</no_fetchmail_aliases_intro>
+<proto>Protocol</proto>
+<server_information>Server information</server_information>
+<session_information>Session information</session_information>
+<wizard_intro>This wizard will help to create or edit accounts in order to fetch your emails from other mail servers</wizard_intro>

@@ -1,0 +1,9 @@
+<SUBJECT>%NUMBER% emails deleted on your quarantine area</SUBJECT>
+<FROM>postmaster</FROM>
+<TEMPLATE>
+Dear<br>
+The mail server as deleted %NUMBER% emails stored into your quarantine area.<br>
+These mails was deleted because they reach the maximal quarantine %MAXDAY% days<br>
+
+</TEMPLATE>
+

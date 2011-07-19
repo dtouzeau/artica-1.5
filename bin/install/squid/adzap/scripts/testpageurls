@@ -1,0 +1,12 @@
+#!/bin/sh
+#
+
+iflag=-i
+case $1 in +i) iflag=; shift ;; esac
+
+if [ "x$*" = x- ]
+then  cat
+else  pageurls $iflag -x ${1+"$@"}
+fi \
+| squid_redirect -v 2>&1 1>/dev/null \
+| grep '^[A-Z][A-Z0-9_]* '

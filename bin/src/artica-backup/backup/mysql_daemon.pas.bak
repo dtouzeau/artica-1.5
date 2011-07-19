@@ -1,0 +1,647 @@
+unit mysql_daemon;
+
+{$MODE DELPHI}
+{$LONGSTRINGS ON}
+
+interface
+
+uses
+    Classes, SysUtils,variants,strutils,IniFiles, Process,md5,logs,unix,RegExpr in 'RegExpr.pas',zsystem;
+
+type LDAP=record
+      admin:string;
+      password:string;
+      suffix:string;
+      servername:string;
+      Port:string;
+  end;
+
+  type
+  tmysql_daemon=class
+
+
+private
+     LOGS:Tlogs;
+     D:boolean;
+     GLOBAL_INI:TiniFIle;
+     SYS:Tsystem;
+     artica_path:string;
+     procedure CleanIniMysql();
+
+
+public
+    procedure   Free;
+    constructor Create(const zSYS:Tsystem);
+    function    VERSION():string;
+    procedure   SERVICE_START();
+    procedure   SERVICE_STOP();
+    FUNCTION    STATUS():string;
+    function    CNF_PATH():string;
+    function    INIT_PATH():string;
+    function    PID_PATH():string;
+    function    SERVER_PARAMETERS(key:string):string;
+    function    SERVER_DEFAULTS(key:string):string;
+    function    PID_NUM():string;
+    function    daemon_bin_path():string;
+    function    mysqld_safe_path():string;
+    procedure   SET_MYSQLD_PARAMETERS(key:string;value:string);
+    procedure   SET_PARAMETERS(bigkey:string;key:string;value:string);
+    procedure   DELETE_MYSQLD_PARAMETERS(bikeykey:string;key:string);
+    procedure   CHANGE_ROOT_PASSWORD(password:string);
+    procedure   REPAIR_DATABASES();
+    procedure   TUNE_MYSQL();
+    function    MON():string;
+END;
+
+implementation
+
+constructor tmysql_daemon.Create(const zSYS:Tsystem);
+begin
+       forcedirectories('/etc/artica-postfix');
+       LOGS:=tlogs.Create();
+       SYS:=zSYS;
+       D:=LOGS.COMMANDLINE_PARAMETERS('debug');
+
+       if D then logs.Debuglogs('tobm.Create():: debug=true');
+       if not DirectoryExists('/usr/share/artica-postfix') then begin
+              artica_path:=ParamStr(0);
+              artica_path:=ExtractFilePath(artica_path);
+              artica_path:=AnsiReplaceText(artica_path,'/bin/','');
+
+      end else begin
+          artica_path:='/usr/share/artica-postfix';
+      end;
+end;
+//##############################################################################
+procedure tmysql_daemon.free();
+begin
+    logs.Free;
+end;
+//##############################################################################
+function tmysql_daemon.PID_PATH():string;
+var
+   pidpath:string;
+begin
+     pidpath:=SERVER_PARAMETERS('pid-file');
+     result:=pidpath;
+end;
+//##############################################################################
+function tmysql_daemon.PID_NUM():string;
+begin
+     result:=trim(SYS.GET_PID_FROM_PATH(PID_PATH()));
+     if not FileExists('/proc/'+result+'/exe') then begin
+         result:=SYS.PidByProcessPath(daemon_bin_path());
+     end;
+end;
+//##############################################################################
+function tmysql_daemon.CNF_PATH():string;
+begin
+  if FileExists('/opt/artica/mysql/etc/my.cnf') then exit('/opt/artica/mysql/etc/my.cnf');
+  if FileExists('/etc/mysql/my.cnf') then exit('/etc/mysql/my.cnf');
+  if FileExists('/etc/my.cnf') then exit('/etc/my.cnf');
+end;
+//#############################################################################
+function tmysql_daemon.daemon_bin_path():string;
+begin
+  exit(SYS.LOCATE_mysqld_bin());
+end;
+//#############################################################################
+
+function tmysql_daemon.INIT_PATH():string;
+begin
+  if FileExists('/etc/init.d/mysql') then exit('/etc/init.d/mysql');
+  if FileExists('/etc/init.d/mysqld') then exit('/etc/init.d/mysqld');
+end;
+//#############################################################################
+function tmysql_daemon.mysqld_safe_path():string;
+begin
+  if FileExists('/usr/bin/mysqld_safe') then exit('/usr/bin/mysqld_safe');
+end;
+//#############################################################################
+procedure tmysql_daemon.SET_MYSQLD_PARAMETERS(key:string;value:string);
+var Ini:TiniFile;
+begin
+
+  if not FileExists(CNF_PATH()) then exit();
+  ini:=TiniFile.Create(CNF_PATH());
+  ini.WriteString('mysqld',key,value);
+  ini.UpdateFile;
+  ini.free;
+end;
+//#############################################################################
+procedure tmysql_daemon.DELETE_MYSQLD_PARAMETERS(bikeykey:string;key:string);
+var Ini:TiniFile;
+begin
+
+  if not FileExists(CNF_PATH()) then exit();
+  ini:=TiniFile.Create(CNF_PATH());
+  ini.DeleteKey(bikeykey,key);
+  ini.UpdateFile;
+  ini.free;
+end;
+//#############################################################################
+procedure tmysql_daemon.SET_PARAMETERS(bigkey:string;key:string;value:string);
+var Ini:TiniFile;
+begin
+
+  if not FileExists(CNF_PATH()) then exit();
+  ini:=TiniFile.Create(CNF_PATH());
+  ini.WriteString(bigkey,key,value);
+  ini.UpdateFile;
+  ini.free;
+end;
+//#############################################################################
+
+function tmysql_daemon.SERVER_PARAMETERS(key:string):string;
+var Ini:TMemIniFile;
+begin
+  result:='';
+  if not FileExists(CNF_PATH()) then exit();
+  ini:=TMemIniFile.Create(CNF_PATH());
+  result:=ini.ReadString('mysqld',key,'');
+
+  if length(result)=0 then result:=ini.ReadString('mysqld_safe',key,'');
+
+  if length(result)=0 then begin
+     result:=SERVER_DEFAULTS(key);
+  end;
+
+  ini.free;
+end;
+//#############################################################################
+function tmysql_daemon.SERVER_DEFAULTS(key:string):string;
+var
+   tmp_file:string;
+   tmpd:string;
+   RegExpr:TRegExpr;
+begin
+  result:='';
+  if not FileExists(SYS.LOCATE_mysqld_bin()) then exit();
+  tmp_file:=logs.FILE_TEMP();
+  fpsystem(SYS.LOCATE_mysqld_bin() + ' --print-defaults >'+tmp_file+ ' 2>&1');
+  tmpd:=logs.ReadFromFile(tmp_file)+' ';
+  logs.DeleteFile(tmp_file);
+  RegExpr:=TRegExpr.Create;
+  RegExpr.Expression:='--'+key+'=(.+?)\s+';
+  if RegExpr.Exec(tmpd) then begin
+     logs.Debuglogs('SERVER_DEFAULTS:: ' + key+ '=' + RegExpr.Match[1]);
+     result:=RegExpr.Match[1];
+  end else begin
+     logs.Debuglogs('SERVER_DEFAULTS:: unable to determine ' +  RegExpr.Expression + ' in ' + tmpd);
+  end;
+  
+  RegExpr.free;
+end;
+//#############################################################################
+procedure tmysql_daemon.SERVICE_STOP();
+var
+   conf_path:string;
+   pid:string;
+begin
+  if not FileExists(SYS.LOCATE_mysqld_bin()) then exit;
+   pid:=PID_NUM();
+   
+   
+  if not FileExists(INIT_PATH()) then begin
+     logs.Debuglogs('tmysql_daemon.SERVICE_STOP():: unable to stat init.d path');
+     exit;
+  end;
+  if not SYS.PROCESS_EXIST(pid) then begin
+     writeln('Stopping mysql...............: Already stopped');
+     TUNE_MYSQL();
+     pid:=SYS.PidAllByProcessPath(SYS.LOCATE_mysqld_bin());
+     if length(pid)>0 then begin
+        writeln('Stopping mysql all instances.: ' + pid + ' PID(s)');
+        fpsystem('/bin/kill '+pid);
+     end;
+     exit;
+  end;
+  
+  writeln('Stopping mysql...............: ' + pid + ' PID');
+  fpsystem(INIT_PATH() + ' stop');
+  TUNE_MYSQL();
+  pid:=SYS.PidAllByProcessPath(SYS.LOCATE_mysqld_bin());
+  if length(pid)>0 then begin
+    writeln('Stopping mysql all instances.: ' + pid + ' PID(s)');
+    fpsystem('/bin/kill '+pid);
+  end;
+  
+  
+end;
+//##################################################################################
+function tmysql_daemon.VERSION():string;
+var
+   RegExpr:TRegExpr;
+   x:string;
+   tmpstr:string;
+begin
+  RegExpr:=TRegExpr.Create;
+  x:=logs.FILE_TEMP();
+  fpsystem(sys.LOCATE_mysqld_bin() + ' --version >' + x + ' 2>&1');
+  tmpstr:=logs.ReadFromFile(x);
+  logs.DeleteFile(x);
+  RegExpr.Expression:='Ver\s+(.+?)\s+';
+  if RegExpr.Exec(tmpstr) then result:=RegExpr.Match[1];
+  RegExpr.Free;
+end;
+//##############################################################################
+FUNCTION tmysql_daemon.STATUS():string;
+var
+   ini:TstringList;
+   pid:string;
+begin
+
+  if not FileExists(SYS.LOCATE_mysqld_bin()) then exit;
+  ini:=TstringList.Create;
+  pid:=PID_NUM();
+
+  ini.Add('[ARTICA_MYSQL]');
+  if SYS.PROCESS_EXIST(pid) then ini.Add('running=1') else  ini.Add('running=0');
+  ini.Add('application_installed=1');
+  ini.Add('application_enabled=1');
+  ini.Add('master_pid='+ pid);
+  ini.Add('master_memory=' + IntToStr(SYS.PROCESS_MEMORY(pid)));
+  ini.Add('master_version=' +VERSION());
+  ini.Add('status='+SYS.PROCESS_STATUS(pid));
+  ini.Add('service_name=APP_MYSQL_ARTICA');
+  ini.Add('service_cmd=mysql');
+  ini.Add('start_logs=mysql.start.daemon');
+  ini.Add('service_disabled='+ SYS.GET_INFO('EnableMysqlFeatures'));
+  
+
+  
+  result:=ini.Text;
+  ini.free;
+end;
+//##############################################################################
+procedure tmysql_daemon.SERVICE_START();
+var
+   cmd,pid   :string;
+   i     :integer;
+   D:boolean;
+   l:TstringList;
+   datadir,logbin,FileTemp,syslog,EnableMysqlFeatures:string;
+   artica_backup_pid:string;
+   processname:string;
+begin
+i:=0;
+ FileTemp:=artica_path+'/ressources/logs/mysql.start.daemon';
+ processname:=ExtractFileName(ParamStr(0));
+if not FileExists(SYS.LOCATE_mysqld_bin()) then begin
+   logs.DebugLogs('Starting......: Mysql is not installed, abort');
+   exit;
+end;
+EnableMysqlFeatures:=SYS.GET_INFO('EnableMysqlFeatures');
+
+if length(EnableMysqlFeatures)=0 then begin
+    logs.DebugLogs('Starting......: Mysql unable to understand "EnableMysqlFeatures" parameter');
+    exit;
+end;
+
+if  SYS.GET_INFO('MysqlTooManyConnections')='1' then begin
+    logs.DebugLogs('Starting......: Mysql MysqlTooManyConnections=1, abort');
+    exit;
+end;
+
+if processname<>'artica-backup' then begin
+   artica_backup_pid:=SYS.PIDOF('artica-backup');
+   if SYS.PROCESS_EXIST(artica_backup_pid) then begin
+      logs.Syslogs('Starting......: Mysql is disabled until artica-backup is running');
+      exit;
+   end;
+end;
+
+
+
+if SYS.PROCESS_EXIST(PID_NUM()) then begin
+     if SYS.GET_INFO('EnableMysqlFeatures')='0' then begin
+        logs.Syslogs('Starting......: Mysql is disabled by "EnableMysqlFeatures" stop it...');
+        SERVICE_STOP();
+     end;
+     logs.DebugLogs('Starting......: Mysql is already running using PID ' + PID_NUM() + '...');
+     exit();
+  end;
+  
+if SYS.GET_INFO('EnableMysqlFeatures')='0' then begin
+   logs.Debuglogs('Starting......: Mysql is disabled by "EnableMysqlFeatures"...');
+   exit;
+end;
+
+
+if FileExists(INIT_PATH()) then begin
+   datadir:=SERVER_PARAMETERS('datadir');
+   logbin:=SERVER_PARAMETERS('log_bin');
+   if length(logbin)=0 then logbin:=SERVER_PARAMETERS('log');
+   logbin:=ExtractFileDir(logbin);
+   syslog:=SYS.LOCATE_SYSLOG_PATH();
+   TUNE_MYSQL();
+   logs.DebugLogs('Starting......: Mysql my.cnf........:' +CNF_PATH());
+   logs.DebugLogs('Starting......: Mysql init.d........:' +INIT_PATH());
+   logs.DebugLogs('Starting......: Mysql Pid path......:' +SERVER_PARAMETERS('pid-file'));
+   logs.DebugLogs('Starting......: Mysql log-bin.......:' +logbin);
+   logs.DebugLogs('Starting......: datadir.............:' +datadir);
+   logs.DebugLogs('Starting......: syslog..............:' +syslog);
+
+   if length(logbin)>0 then logs.OutputCmd('/bin/chown -R mysql:mysql '+logbin);
+   forcedirectories('/var/run/mysqld');
+   logs.OutputCmd('/bin/chown -R mysql:mysql /var/run/mysqld');
+   logs.OutputCmd('/bin/chown -R mysql:mysql /var/log/mysql');
+   fpsystem(INIT_PATH() + ' start >/opt/artica/logs/mysql.init 2>&1');
+   logs.Debuglogs(logs.ReadFromFile('/opt/artica/logs/mysql.init'));
+end;
+ pid:=PID_NUM();
+ if not SYS.PROCESS_EXIST(pid) then begin
+    logs.DebugLogs('Starting......: Mysql failed');
+ end else begin
+   logs.DebugLogs('Starting......: Mysql success PID ' + pid);
+   logs.DeleteFile(FileTemp);
+ end;
+
+end;
+//############################################################################# #
+function tmysql_daemon.MON():string;
+var
+l:TstringList;
+begin
+
+if not FileExists(SYS.LOCATE_mysqld_bin()) then begin
+   logs.DebugLogs('Starting......: Mysql is not installed, abort');
+   exit;
+end;
+
+l:=TstringList.Create;
+
+l.Add('check process '+ExtractFileName(SYS.LOCATE_mysqld_bin())+' with pidfile '+PID_PATH());
+l.Add('group daemons');
+l.Add('start program = "'+INIT_PATH()+' start"');
+l.Add('stop program = "'+INIT_PATH()+' stop"');
+l.Add('if 5 restarts within 5 cycles then timeout');
+
+result:=l.Text;
+l.free;
+
+end;
+//##############################################################################
+
+procedure tmysql_daemon.TUNE_MYSQL();
+var tmp:string;
+begin
+   if not FileExists(CNF_PATH()) then exit;
+   tmp:=SYS.GET_PERFS('MysqlNice');
+   SYS.StripDiezes(CNF_PATH());
+   if length(tmp)=0 then begin
+      logs.DebugLogs('Starting......: Mysql is not tuned in artica interface');
+      exit;
+   end;
+   
+       DELETE_MYSQLD_PARAMETERS('mysqld','net_buffer_length');
+       DELETE_MYSQLD_PARAMETERS('mysqld','thread_stack');
+       DELETE_MYSQLD_PARAMETERS('mysqld','myisam_sort_buffer_size');
+       DELETE_MYSQLD_PARAMETERS('mysqld','thread_cache_size');
+       DELETE_MYSQLD_PARAMETERS('mysqld','query_cache_size');
+       DELETE_MYSQLD_PARAMETERS('mysqld','thread_concurrency');
+       DELETE_MYSQLD_PARAMETERS('mysqld','max_connections');
+       DELETE_MYSQLD_PARAMETERS('mysqld','write_buffer');
+       DELETE_MYSQLD_PARAMETERS('mysqld','read_buffer');
+
+
+       DELETE_MYSQLD_PARAMETERS('isamchk','read_buffer');
+       DELETE_MYSQLD_PARAMETERS('isamchk','write_buffer');
+       DELETE_MYSQLD_PARAMETERS('myisamchk','write_buffer');
+       DELETE_MYSQLD_PARAMETERS('myisamchk','read_buffer');
+       CleanIniMysql();
+       logs.DebugLogs('Starting......: set mysql in performances number "'+tmp+'"');
+       
+
+   
+   if tmp='4' then begin
+       logs.DebugLogs('Starting......: set mysql in very poor performances');
+       SET_MYSQLD_PARAMETERS('key_buffer','8K');
+       SET_MYSQLD_PARAMETERS('max_allowed_packet','500K');
+       SET_MYSQLD_PARAMETERS('table_cache','4');
+       SET_MYSQLD_PARAMETERS('sort_buffer_size','32k');
+       SET_MYSQLD_PARAMETERS('read_buffer_size','128K');
+       SET_MYSQLD_PARAMETERS('read_rnd_buffer_size','128K');
+       SET_MYSQLD_PARAMETERS('net_buffer_length','1K');
+       SET_MYSQLD_PARAMETERS('thread_stack','32K');
+       SET_MYSQLD_PARAMETERS('max_connections','2');
+
+
+
+       SET_PARAMETERS('isamchk','key_buffer','4M');
+       SET_PARAMETERS('isamchk','sort_buffer_size','4M');
+       
+       SET_PARAMETERS('myisamchk','key_buffer','4M');
+       SET_PARAMETERS('myisamchk','sort_buffer_size','4M');
+       CleanIniMysql();
+       
+       exit;
+   end;
+   
+   if tmp='3' then begin
+       logs.DebugLogs('Starting......: set mysql in poor performances');
+       SET_MYSQLD_PARAMETERS('key_buffer','16K');
+       SET_MYSQLD_PARAMETERS('max_allowed_packet','1M');
+       SET_MYSQLD_PARAMETERS('table_cache','4');
+       SET_MYSQLD_PARAMETERS('sort_buffer_size','64k');
+       SET_MYSQLD_PARAMETERS('read_buffer_size','256K');
+       SET_MYSQLD_PARAMETERS('read_rnd_buffer_size','256K');
+       SET_MYSQLD_PARAMETERS('net_buffer_length','2K');
+       SET_MYSQLD_PARAMETERS('thread_stack','64K');
+       SET_MYSQLD_PARAMETERS('max_connections','10');
+       DELETE_MYSQLD_PARAMETERS('mysqld','myisam_sort_buffer_size');
+       
+       SET_PARAMETERS('isamchk','key_buffer','8M');
+       SET_PARAMETERS('isamchk','sort_buffer_size','8M');
+       
+       SET_PARAMETERS('myisamchk','key_buffer','8M');
+       SET_PARAMETERS('myisamchk','sort_buffer_size','8M');
+       CleanIniMysql();
+       exit;
+   end;
+   
+   if tmp='2' then begin
+       logs.DebugLogs('Starting......: set mysql in medium performances');
+       SET_MYSQLD_PARAMETERS('key_buffer','16M');
+       SET_MYSQLD_PARAMETERS('max_allowed_packet','1M');
+       SET_MYSQLD_PARAMETERS('table_cache','64');
+       SET_MYSQLD_PARAMETERS('sort_buffer_size','512k');
+       SET_MYSQLD_PARAMETERS('read_buffer_size','256K');
+       SET_MYSQLD_PARAMETERS('read_rnd_buffer_size','512K');
+       SET_MYSQLD_PARAMETERS('myisam_sort_buffer_size','8M');
+       SET_MYSQLD_PARAMETERS('max_connections','100');
+
+
+       SET_PARAMETERS('isamchk','key_buffer','20M');
+       SET_PARAMETERS('isamchk','sort_buffer_size','20M');
+       SET_PARAMETERS('isamchk','read_buffer','2M');
+       SET_PARAMETERS('isamchk','write_buffer','2M');
+
+       SET_PARAMETERS('myisamchk','key_buffer','20M');
+       SET_PARAMETERS('myisamchk','sort_buffer_size','20M');
+       SET_PARAMETERS('myisamchk','read_buffer','2M');
+       SET_PARAMETERS('myisamchk','write_buffer','2M');
+       CleanIniMysql();
+       exit;
+   end;
+   
+   if tmp='1' then begin
+       logs.DebugLogs('Starting......: set mysql in large performances');
+       SET_MYSQLD_PARAMETERS('key_buffer','256M');
+       SET_MYSQLD_PARAMETERS('max_allowed_packet','1M');
+       SET_MYSQLD_PARAMETERS('table_cache','256');
+       SET_MYSQLD_PARAMETERS('sort_buffer_size','1M');
+       SET_MYSQLD_PARAMETERS('read_buffer_size','1M');
+       SET_MYSQLD_PARAMETERS('read_rnd_buffer_size','4M');
+       SET_MYSQLD_PARAMETERS('myisam_sort_buffer_size','64M');
+       SET_MYSQLD_PARAMETERS('thread_cache_size','8');
+       SET_MYSQLD_PARAMETERS('query_cache_size','16M');
+       SET_MYSQLD_PARAMETERS('thread_concurrency','8');
+       SET_MYSQLD_PARAMETERS('max_connections','1000');
+
+
+       SET_PARAMETERS('isamchk','key_buffer','128M');
+       SET_PARAMETERS('isamchk','sort_buffer_size','128M');
+       SET_PARAMETERS('isamchk','read_buffer','2M');
+       SET_PARAMETERS('isamchk','write_buffer','2M');
+
+       SET_PARAMETERS('myisamchk','key_buffer','128M');
+       SET_PARAMETERS('myisamchk','sort_buffer_size','128M');
+       SET_PARAMETERS('myisamchk','read_buffer','2M');
+       SET_PARAMETERS('myisamchk','write_buffer','2M');
+       CleanIniMysql();
+       exit;
+   end;
+
+
+end;
+//############################################################################# #
+procedure tmysql_daemon.CleanIniMysql();
+var
+l:TstringList;
+RegExpr:TRegExpr;
+i:integer;
+begin
+    if not FileExists(CNF_PATH()) then exit;
+    l:=TstringList.Create;
+    l.LoadFromFile(CNF_PATH());
+    RegExpr:=TRegExpr.Create;
+    RegExpr.Expression:='^\=(.+)';
+    for i:=0 to l.Count-1 do begin
+        if RegExpr.Exec(l.Strings[i]) then begin
+           l.Strings[i]:=RegExpr.Match[1];
+        end;
+    end;
+    
+    
+    l.SaveToFile(CNF_PATH());
+    l.Free;
+    RegExpr.free;
+end;
+//############################################################################# #
+procedure tmysql_daemon.REPAIR_DATABASES();
+var
+   l:TstringList;
+   dir:string;
+   i:Integer;
+begin
+     
+ if not FileExists('/usr/bin/myisamchk') then begin
+     LOGS.Syslogs('tmysql_daemon.REPAIR_DATABASES() unable to stat /usr/bin/myisamchk');
+     exit;
+  end;
+  SERVICE_STOP(); 
+  dir:=SERVER_PARAMETERS('datadir');
+
+
+  if Not DirectoryExists(dir) then begin
+       LOGS.Syslogs('tmysql_daemon.REPAIR_DATABASES() unable to stat '+dir);
+       exit;
+  end;
+
+
+  l:=TstringList.Create;
+  l.Add('amavis');
+  l.Add('artica_backup');
+  l.Add('artica_events');
+  l.Add('mysql');
+  l.Add('obm');
+  l.Add('pommo');
+  l.Add('roundcubemail');
+  for i:=0 to l.Count-1 do begin
+       if DirectoryExists(dir+'/'+l.Strings[i]) then begin
+            logs.Debuglogs('REPAIR_DATABASES:: checking '+dir+'/'+l.Strings[i]+'/*.MYI');
+            fpsystem('/usr/bin/myisamchk -r '+dir+'/'+l.Strings[i]+'/*.MYI');
+       end;
+  end;
+  SERVICE_START();
+end;
+//############################################################################# #
+
+
+procedure tmysql_daemon.CHANGE_ROOT_PASSWORD(password:string);
+var
+pid:string;
+mysqld_bin:string;
+sql:string;
+count:integer;
+begin
+if not FileExists(SYS.LOCATE_mysqld_bin()) then begin
+   writeln('Mysql is not installed...');
+   exit;
+end;
+
+if not FileExists('/usr/bin/mysqld_safe') then begin
+   writeln('mysqld_safe is not installed...');
+   exit;
+end;
+
+mysqld_bin:=SYS.LOCATE_mysqld_bin();
+writeln('Stopping mysql daemon...');
+SERVICE_STOP();
+writeln('running in --skip-grant-tables mode');
+fpsystem('/usr/bin/mysqld_safe --skip-grant-tables &');
+  count:=0;
+  while not SYS.PROCESS_EXIST(pid) do begin
+        sleep(500);
+        count:=count+1;
+
+        if count>80 then begin
+            writeln('running in --skip-grant-tables mode failed');
+            exit;
+        end;
+        pid:=SYS.PIDOF(mysqld_bin);
+  end;
+ writeln('running in --skip-grant-tables mode width PID '+pid);
+ 
+ 
+ sql:='update user set password = password("'+password+'") where user = "root"';
+ logs.QUERY_SQL(pchar(sql),'mysql');
+ writeln('Success...stopping grant mode');
+ fpsystem('/bin/kill '+pid);
+   count:=0;
+  while SYS.PROCESS_EXIST(pid) do begin
+        sleep(500);
+        count:=count+1;
+        if count>80 then break;
+        pid:=SYS.PIDOF(mysqld_bin);
+  end;
+  count:=0;
+   SYS.set_MYSQL('database_admin','root');
+   SYS.set_MYSQL('database_password',password);
+   writeln('Starting mysql');
+   SERVICE_START();
+   fpsystem('/etc/init.d/artica-postfix restart &');
+end;
+
+
+
+{procedure tmysql_daemon.CleanIniMysql();
+
+  root    :=MYSQL_INFOS('database_admin') +#0;
+  password:=MYSQL_INFOS('database_password') +#0;
+  port    :=MYSQL_SERVER_PARAMETERS_CF('port') +#0;
+  server  :=MYSQL_INFOS('mysql_server') +#0;
+ }
+
+end.

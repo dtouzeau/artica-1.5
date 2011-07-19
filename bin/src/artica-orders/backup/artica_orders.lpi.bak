@@ -1,0 +1,476 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <ProjectOptions>
+    <PathDelim Value="/"/>
+    <Version Value="7"/>
+    <General>
+      <Flags>
+        <MainUnitHasUsesSectionForAllUnits Value="False"/>
+        <MainUnitHasCreateFormStatements Value="False"/>
+        <MainUnitHasTitleStatement Value="False"/>
+        <LRSInOutputDirectory Value="False"/>
+      </Flags>
+      <MainUnit Value="0"/>
+      <TargetFileExt Value=""/>
+      <Title Value="artica-orders"/>
+      <ActiveEditorIndexAtStart Value="2"/>
+    </General>
+    <VersionInfo>
+      <ProjectVersion Value=""/>
+    </VersionInfo>
+    <PublishOptions>
+      <Version Value="2"/>
+      <IgnoreBinaries Value="False"/>
+      <IncludeFileFilter Value="*.(pas|pp|inc|lfm|lpr|lrs|lpi|lpk|sh|xml)"/>
+      <ExcludeFileFilter Value="*.(bak|ppu|ppw|o|so);*~;backup"/>
+    </PublishOptions>
+    <RunParams>
+      <local>
+        <FormatVersion Value="1"/>
+        <LaunchingApplication PathPlusParams="/usr/X11R6/bin/xterm -T 'Lazarus Run Output' -e $(LazarusDir)/tools/runwait.sh $(TargetCmdLine)"/>
+      </local>
+    </RunParams>
+    <Units Count="52">
+      <Unit0>
+        <Filename Value="artica_orders.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="artica_orders"/>
+        <CursorPos X="15" Y="13"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="0"/>
+        <UsageCount Value="206"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="sprocess.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="sprocess"/>
+        <CursorPos X="14" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="206"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="process.pas"/>
+        <UnitName Value="artica_process"/>
+        <CursorPos X="6" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="8"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="artica_process.pas"/>
+        <UnitName Value="sprocess"/>
+        <CursorPos X="13" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="8"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="principale.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="principale"/>
+        <CursorPos X="66" Y="95"/>
+        <TopLine Value="61"/>
+        <EditorIndex Value="2"/>
+        <UsageCount Value="206"/>
+        <Bookmarks Count="1">
+          <Item0 X="1" Y="118" ID="0"/>
+        </Bookmarks>
+        <Loaded Value="True"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="logs.pas"/>
+        <UnitName Value="logs"/>
+        <CursorPos X="27" Y="1005"/>
+        <TopLine Value="1178"/>
+        <UsageCount Value="103"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="global_conf.pas"/>
+        <UnitName Value="global_conf"/>
+        <CursorPos X="5" Y="23"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="101"/>
+        <Bookmarks Count="1">
+          <Item0 X="1" Y="4485" ID="1"/>
+        </Bookmarks>
+      </Unit6>
+      <Unit7>
+        <Filename Value="zsystem.pas"/>
+        <UnitName Value="zsystem"/>
+        <CursorPos X="46" Y="3310"/>
+        <TopLine Value="3408"/>
+        <EditorIndex Value="1"/>
+        <UsageCount Value="101"/>
+        <Loaded Value="True"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="confiles.pas"/>
+        <UnitName Value="confiles"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="9"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="uhashlist.pas"/>
+        <UnitName Value="uHashList"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="9"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="ldapsend.pas"/>
+        <UnitName Value="ldapsend"/>
+        <CursorPos X="3" Y="61"/>
+        <TopLine Value="19"/>
+        <UsageCount Value="9"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="blcksock.pas"/>
+        <UnitName Value="blcksock"/>
+        <CursorPos X="1" Y="87"/>
+        <TopLine Value="45"/>
+        <UsageCount Value="9"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="asn1util.pas"/>
+        <UnitName Value="asn1util"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="9"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="geoip.pas"/>
+        <UnitName Value="GeoIP"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="9"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="RegExpr.pas"/>
+        <UnitName Value="RegExpr"/>
+        <CursorPos X="50" Y="6"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="95"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="common.pas"/>
+        <UnitName Value="common"/>
+        <CursorPos X="54" Y="242"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="95"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="process_infos.pas"/>
+        <UnitName Value="process_infos"/>
+        <CursorPos X="49" Y="35"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="101"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="../../../../../../../usr/share/fpcsrc/rtl/objpas/dateutil.inc"/>
+        <CursorPos X="24" Y="260"/>
+        <TopLine Value="222"/>
+        <UsageCount Value="100"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="../../../../../../../usr/share/fpcsrc/packages/base/hash/md5.pp"/>
+        <UnitName Value="md5"/>
+        <CursorPos X="19" Y="131"/>
+        <TopLine Value="102"/>
+        <UsageCount Value="74"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="../../../../../../../usr/share/fpcsrc/rtl/objpas/sysutils/sysstrh.inc"/>
+        <CursorPos X="21" Y="111"/>
+        <TopLine Value="70"/>
+        <UsageCount Value="9"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="samba.pas"/>
+        <UnitName Value="samba"/>
+        <CursorPos X="72" Y="28"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="82"/>
+      </Unit20>
+      <Unit21>
+        <Filename Value="cyrus.pas"/>
+        <UnitName Value="cyrus"/>
+        <CursorPos X="38" Y="619"/>
+        <TopLine Value="584"/>
+        <UsageCount Value="48"/>
+      </Unit21>
+      <Unit22>
+        <Filename Value="users.pas"/>
+        <UnitName Value="users"/>
+        <CursorPos X="9" Y="5"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="73"/>
+      </Unit22>
+      <Unit23>
+        <Filename Value="clamav.pas"/>
+        <UnitName Value="clamav"/>
+        <CursorPos X="1" Y="433"/>
+        <TopLine Value="403"/>
+        <UsageCount Value="70"/>
+      </Unit23>
+      <Unit24>
+        <Filename Value="../../../../../../../usr/share/fpcsrc/rtl/unix/unix.pp"/>
+        <UnitName Value="Unix"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="2"/>
+        <UsageCount Value="9"/>
+      </Unit24>
+      <Unit25>
+        <Filename Value="../../../../../../../usr/share/fpcsrc/rtl/linux/linux.pp"/>
+        <UnitName Value="Linux"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="69"/>
+      </Unit25>
+      <Unit26>
+        <Filename Value="../../../../../../../usr/share/fpcsrc/rtl/unix/baseunix.pp"/>
+        <UnitName Value="BaseUnix"/>
+        <CursorPos X="84" Y="70"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="33"/>
+      </Unit26>
+      <Unit27>
+        <Filename Value="pureftpd.pas"/>
+        <UnitName Value="pureftpd"/>
+        <CursorPos X="54" Y="446"/>
+        <TopLine Value="418"/>
+        <EditorIndex Value="3"/>
+        <UsageCount Value="55"/>
+        <Loaded Value="True"/>
+      </Unit27>
+      <Unit28>
+        <Filename Value="roundcube.pas"/>
+        <UnitName Value="roundcube"/>
+        <CursorPos X="17" Y="51"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="55"/>
+      </Unit28>
+      <Unit29>
+        <Filename Value="ntpd.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ntpd"/>
+        <CursorPos X="8" Y="20"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="120"/>
+      </Unit29>
+      <Unit30>
+        <Filename Value="spamass.pas"/>
+        <UnitName Value="spamass"/>
+        <CursorPos X="48" Y="213"/>
+        <TopLine Value="162"/>
+        <UsageCount Value="19"/>
+      </Unit30>
+      <Unit31>
+        <Filename Value="mimedefang.pas"/>
+        <UnitName Value="mimedefang"/>
+        <CursorPos X="25" Y="122"/>
+        <TopLine Value="78"/>
+        <UsageCount Value="48"/>
+      </Unit31>
+      <Unit32>
+        <Filename Value="openldap.pas"/>
+        <UnitName Value="openldap"/>
+        <CursorPos X="39" Y="686"/>
+        <TopLine Value="606"/>
+        <UsageCount Value="46"/>
+      </Unit32>
+      <Unit33>
+        <Filename Value="../../../../../../../usr/share/fpcsrc/packages/fcl-base/src/inc/inifiles.pp"/>
+        <UnitName Value="IniFiles"/>
+        <CursorPos X="14" Y="981"/>
+        <TopLine Value="954"/>
+        <UsageCount Value="46"/>
+      </Unit33>
+      <Unit34>
+        <Filename Value="../artica-install/bogofilter.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="bogofilter"/>
+        <CursorPos X="17" Y="17"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="99"/>
+      </Unit34>
+      <Unit35>
+        <Filename Value="../artica-update/scanqueue.pas"/>
+        <UnitName Value="scanQueue"/>
+        <CursorPos X="23" Y="1434"/>
+        <TopLine Value="1338"/>
+        <UsageCount Value="45"/>
+      </Unit35>
+      <Unit36>
+        <Filename Value="../artica-install/squid.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="squid"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="12"/>
+        <UsageCount Value="90"/>
+      </Unit36>
+      <Unit37>
+        <Filename Value="../artica-install/global_conf.pas"/>
+        <UnitName Value="global_conf"/>
+        <CursorPos X="1" Y="1"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="6"/>
+      </Unit37>
+      <Unit38>
+        <Filename Value="stunnel4.pas"/>
+        <UnitName Value="stunnel4"/>
+        <CursorPos X="32" Y="28"/>
+        <TopLine Value="8"/>
+        <UsageCount Value="5"/>
+      </Unit38>
+      <Unit39>
+        <Filename Value="mailgraph_class.pas"/>
+        <UnitName Value="mailgraph_class"/>
+        <CursorPos X="18" Y="12"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="41"/>
+      </Unit39>
+      <Unit40>
+        <Filename Value="lighttpd.pas"/>
+        <UnitName Value="lighttpd"/>
+        <CursorPos X="11" Y="710"/>
+        <TopLine Value="652"/>
+        <UsageCount Value="16"/>
+      </Unit40>
+      <Unit41>
+        <Filename Value="miltergreylist.pas"/>
+        <UnitName Value="miltergreylist"/>
+        <CursorPos X="14" Y="539"/>
+        <TopLine Value="436"/>
+        <UsageCount Value="10"/>
+      </Unit41>
+      <Unit42>
+        <Filename Value="postfix_class.pas"/>
+        <UnitName Value="postfix_class"/>
+        <CursorPos X="31" Y="120"/>
+        <TopLine Value="144"/>
+        <UsageCount Value="35"/>
+      </Unit42>
+      <Unit43>
+        <Filename Value="../artica-install/monitorix.pas"/>
+        <UnitName Value="monitorix"/>
+        <CursorPos X="38" Y="45"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="32"/>
+      </Unit43>
+      <Unit44>
+        <Filename Value="kav4samba.pas"/>
+        <UnitName Value="kav4samba"/>
+        <CursorPos X="1" Y="223"/>
+        <TopLine Value="176"/>
+        <UsageCount Value="21"/>
+      </Unit44>
+      <Unit45>
+        <Filename Value="squid.pas"/>
+        <UnitName Value="squid"/>
+        <CursorPos X="8" Y="153"/>
+        <TopLine Value="126"/>
+        <UsageCount Value="17"/>
+      </Unit45>
+      <Unit46>
+        <Filename Value="fdm.pas"/>
+        <UnitName Value="fdm"/>
+        <CursorPos X="65" Y="62"/>
+        <TopLine Value="60"/>
+        <UsageCount Value="16"/>
+      </Unit46>
+      <Unit47>
+        <Filename Value="syslogng.pas"/>
+        <UnitName Value="syslogng"/>
+        <CursorPos X="61" Y="32"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="11"/>
+      </Unit47>
+      <Unit48>
+        <Filename Value="../artica-install/obm.pas"/>
+        <UnitName Value="obm"/>
+        <CursorPos X="26" Y="153"/>
+        <TopLine Value="1"/>
+        <UsageCount Value="11"/>
+      </Unit48>
+      <Unit49>
+        <Filename Value="awstats.pas"/>
+        <UnitName Value="awstats"/>
+        <CursorPos X="33" Y="223"/>
+        <TopLine Value="188"/>
+        <UsageCount Value="10"/>
+      </Unit49>
+      <Unit50>
+        <Filename Value="../artica-install/artica_cron.pas"/>
+        <UnitName Value="artica_cron"/>
+        <CursorPos X="34" Y="117"/>
+        <TopLine Value="84"/>
+        <UsageCount Value="10"/>
+      </Unit50>
+      <Unit51>
+        <Filename Value="../artica-install/zsystem.pas"/>
+        <UnitName Value="zsystem"/>
+        <CursorPos X="27" Y="3520"/>
+        <TopLine Value="3489"/>
+        <UsageCount Value="10"/>
+      </Unit51>
+    </Units>
+    <JumpHistory Count="4" HistoryIndex="3">
+      <Position1>
+        <Filename Value="artica_orders.pas"/>
+        <Caret Line="13" Column="15" TopLine="1"/>
+      </Position1>
+      <Position2>
+        <Filename Value="zsystem.pas"/>
+        <Caret Line="56" Column="27" TopLine="20"/>
+      </Position2>
+      <Position3>
+        <Filename Value="principale.pas"/>
+        <Caret Line="79" Column="61" TopLine="42"/>
+      </Position3>
+      <Position4>
+        <Filename Value="principale.pas"/>
+        <Caret Line="89" Column="26" TopLine="48"/>
+      </Position4>
+    </JumpHistory>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="8"/>
+    <Target>
+      <Filename Value="/home/dtouzeau/developpement/artica-postfix/bin/artica-orders"/>
+    </Target>
+    <SearchPaths>
+      <OtherUnitFiles Value="/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/"/>
+    </SearchPaths>
+    <Other>
+      <CompilerPath Value="$(CompPath)"/>
+    </Other>
+  </CompilerOptions>
+  <Debugging>
+    <BreakPoints Count="4">
+      <Item1>
+        <Source Value="ntpd.pas"/>
+        <Line Value="94"/>
+      </Item1>
+      <Item2>
+        <Source Value="global_conf.pas"/>
+        <Line Value="6638"/>
+      </Item2>
+      <Item3>
+        <Source Value="../artica-install/bogofilter.pas"/>
+        <Line Value="83"/>
+      </Item3>
+      <Item4>
+        <Source Value="principale.pas"/>
+        <Line Value="287"/>
+      </Item4>
+    </BreakPoints>
+    <Exceptions Count="2">
+      <Item1>
+        <Name Value="ECodetoolError"/>
+      </Item1>
+      <Item2>
+        <Name Value="EFOpenError"/>
+      </Item2>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

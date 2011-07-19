@@ -1,0 +1,8 @@
+<addextension_help>Vous pouvez ajouter une extension en tapant juste le nom d'extension apr&egrave;s le point eg &quot;doc&quot; ou vous pouvez ajouter des extensions multiples par le nom d'extension s&eacute;par&eacute; par une virgule eg &quot;doc, xls, pdf, exe, com, vbs&quot;</addextension_help>
+<Auto-compress_explain>La fonction d'auto-compression vous permet de  convertir automatiquement et comprimer des fichiers attach&eacute;s dans des courriers sortants/entrants. [br] 
+Cette fonction a 2 avantages :[ul]
+[li] Emp&ecirc;chent des codes ex&eacute;cutables malveillants de s'ex&eacute;cuter automatiquement quand vos utilisateurs lisent les courrier ou sauvegradent les pieces jointes.[/li]
+[li] &Eacute;conomise la bande passante en compressant des documents attach&eacute;s.[/li]
+[/ul]
+Vous pouvez ajouter des extensions eg doc, ppt, xls, exe, com dans l'interface pour permettre la compression des fichiers attach&eacute;s</Auto-compress_explain>
+<enable_autocompress>Activer la fonction d'auto-compression</enable_autocompress>

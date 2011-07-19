@@ -1,0 +1,27 @@
+<bogus-priv>bogus private</bogus-priv>
+<bogus-priv_text>Never forward addresses in the non-routed address spaces</bogus-priv_text>
+<cache-size>Size of local cache</cache-size>
+<code>zinc go to 192.168.1.30</code>
+<dnmasq_interface_text>If you want dnsmasq to listen for requests only on specified interfaces (and the loopback) give the name of the interface (eg eth0) here.</dnmasq_interface_text>
+<dnsmasq_address>address to force to an IP</dnsmasq_address>
+<dnsmasq_domain_text>Expand hosts</dnsmasq_domain_text>
+<dnsmasq_intro_settings>Dnsmasq caches internet addresses (A records and AAAA records) and address-to-name mappings (PTR records), reducing the load on upstream servers and improving performance (especially on modem connections)...</dnsmasq_intro_settings>
+<dnsmasq_listen_address>Or listen addresse(s)</dnsmasq_listen_address>
+<dnsmasq_listen_address_text>Or, which to listen on by address (remember to include 127.0.0.1 if you use this).</dnsmasq_listen_address_text>
+<domain-needed>Domain needed</domain-needed>
+<domain-needed_text>Never forward plain names (without a dot or domain part)</domain-needed_text>
+<domain_or_server>Domain or computer name</domain_or_server>
+<filterwin2k>filter useless windows-originated DNS</filterwin2k>
+<ip>IP address</ip>
+<li>Sets the "domain" DHCP option thereby potentially setting the domain of all systems configured by DHCP </li>
+<log-queries>Log queries</log-queries>
+<log-queries_text>For debugging purposes, log each DNS query as it passes through dnsmasq.</log-queries_text>
+<no-negcache>No negative cache</no-negcache>
+<no-negcache_text>If you want to disable negative caching, enable this</no-negcache_text>
+<no-poll>no pool</no-poll>
+<no-poll_text>If you don't want dnsmasq to poll resolv.conf or other resolv files for changes and re-read them then disable this.</no-poll_text>
+<no-resolv>no resolv</no-resolv>
+<no-resolv_text>If you don't want dnsmasq to read resolv.conf or any other file, getting its servers from this settings instead (see below), then uncomment this.</no-resolv_text>
+<resolv-file>resolv file location path</resolv-file>
+<resolv-file_text>Change this if you want dns to get its upstream servers from somewhere other that /etc/resolv.conf</resolv-file_text>
+<strict-order>strict order</strict-order>

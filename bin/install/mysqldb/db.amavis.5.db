@@ -1,0 +1,22 @@
+
+CREATE TABLE msgs (
+  mail_id    varchar(12)   NOT NULL PRIMARY KEY,  
+  secret_id  varchar(12)   DEFAULT '',  
+  am_id      varchar(20)   NOT NULL,    
+  time_num   integer unsigned NOT NULL, 
+  time_iso   char(16)      NOT NULL,    
+  sid        integer unsigned NOT NULL, 
+  policy     varchar(255)  DEFAULT '',  
+  client_addr varchar(255) DEFAULT '',  
+  size       integer unsigned NOT NULL, 
+  content    char(1),                   
+  quar_type  char(1),                   
+  quar_loc   varchar(255)  DEFAULT '',  
+  dsn_sent   char(1),                   
+  spam_level float,                     
+  message_id varchar(255)  DEFAULT '',  
+  from_addr  varchar(255)  DEFAULT '',  
+  subject    varchar(255)  DEFAULT '',  
+  host       varchar(255)  NOT NULL,    
+  FOREIGN KEY (sid) REFERENCES maddr(id) ON DELETE RESTRICT
+) ENGINE=InnoDB;

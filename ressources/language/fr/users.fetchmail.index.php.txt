@@ -1,0 +1,9 @@
+<add_new_fetchmail_rule>ajouter une nouvelle r&egrave;gle de r&eacute;cup&eacute;ration</add_new_fetchmail_rule>
+<add_new_fetchmail_rule_text>Cr&eacute;ez une r&egrave;gle qui permet au serveur d'importer vos courrier sur votre bo&icirc;te aux lettres</add_new_fetchmail_rule_text>
+<and_send_to>et envoyer vers</and_send_to>
+<confirm_delete>suppression de la r&egrave;gle fetchmail ?</confirm_delete>
+<fetch_address>Adresse Fetch</fetch_address>
+<service_fetchmail_disabled_admin>Avertissement, le service de courrier fetchmail est actuellement  hors service, vos r&egrave;gles ne seront pas mis en mode de production...</service_fetchmail_disabled_admin>
+<using_ssl>utiliser ssl</using_ssl>
+<view>Voir la r&egrave;gle dans le format source</view>
+<with_port>avec le port</with_port>

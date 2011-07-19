@@ -1,0 +1,68 @@
+<about>All informations are stored in 2 databases used by Artica.[br]
+LDAP is used for all settings and accounts. Mysql is used for events and product related that use Mysql.[br]
+Artica should backup these settings in order to restore them if this server crash</about>
+<add_folder>Adicionar uma nova pasta</add_folder>
+<add_has_backup>Add this disk has a backup storage disk</add_has_backup>
+<add_share_folder>Add a new remote share folder</add_share_folder>
+<add_share_folder_text>Give the remote parameters in order to help artica connect to he remode smb chare folder..</add_share_folder_text>
+<archives_files>files archive(s)</archives_files>
+<ArticaBackupMaxTimeToLiveInDay>Max Days a container live</ArticaBackupMaxTimeToLiveInDay>
+<available_disks>Discos dispon&iacute;veis</available_disks>
+<backup_now>Efectuar c&oacute;pia de seguran&ccedil;a</backup_now>
+<backup_now_text>Perform a new backup now</backup_now_text>
+<backup_path>Caminho da c&oacute;pia de seguran&ccedil;a</backup_path>
+<backup_time>Efectuar c&oacute;pia de seguran&ccedil;a todos os dias &agrave;s</backup_time>
+<browse_dar>Browse your DAR conteners..</browse_dar>
+<browse_dar_text>This section will help you to find and restore files backup in your contener.[br]Use the search field in order to find files you want to restore or to get status</browse_dar_text>
+<close_windows>Todas as opera&ccedil;&otilde;es da c&oacute;pia de seguran&ccedil;a foram executadas... Voc&ecirc; j&aacute; pode fechar est&aacute; janela</close_windows>
+<compile_rules_ok>Guardando as defini&ccedil;&otilde;es OK...</compile_rules_ok>
+<connect_as>Conectar como</connect_as>
+<connect_share>Connect this remode share folder</connect_share>
+<dar_is_not_installed>DAR n&atilde;o est&aacute; instalado !</dar_is_not_installed>
+<dar_is_not_installed_text>Disk Archive (DAR) application is not installed on your system.[br]This feature cannot be running on you system[br]
+Please install "dar" application using your favorite repository manager (or using artica repository manager)[br]Before using this feature...</dar_is_not_installed_text>
+<database_files_number>N&uacute;mero de ficheiros armazenados</database_files_number>
+<database_number>Base de dados</database_number>
+<disk_add_caption>This disk is added into possible backup storage.
+if this disk is plugged,
+artica will export automatically backups storages on this disk (include samba shared folders too).
+Do you Confirm this behavior ?
+</disk_add_caption>
+<disk_retranslation>Retranslation disk</disk_retranslation>
+<disk_retranslation_text>This feature allows you to backup more datas to an internal/external hard drive.[br]
+When standard backup is performed and if the external hard drive is plugged,[br]
+artica will duplicate standard backup and all mandatories datas to this storage (include samba shared directories, mailboxes and so on...).[br]
+Use this section to select your hard drive and target folder and all will be automatically performed.[br]
+plugg your disk before and select it, it will be discovered automatically</disk_retranslation_text>
+<enable_artica_backup>Enable Artica Backup features</enable_artica_backup>
+<evry_day_at>Todos os dias &agrave;s</evry_day_at>
+<folder_size>Tamanho da pasta</folder_size>
+<howto_restore>
+Schedule task is stored in [b]/etc/cron.d/artica.cron.backups[/b][br]
+[H5]Restoring:[/H5]
+To restore a backup container, execute by command-line [br]
+[b]artica-ldap --restore (file path)[b][br]
+artica-ldap is located in /usr/share/artica-postfix</howto_restore>
+<info>Informa&ccedil;&atilde;o</info>
+<perform_restore>Efectuar processo de restauro da c&oacute;pia de seguran&ccedil;a</perform_restore>
+<personal_folders>Pastas pessoais</personal_folders>
+<restore_all_database>Restore all files of the database that store this file</restore_all_database>
+<restore_all_database_text>This operation will help you restoring all files stored in your selected file container,
+browse your server in order to specify wich folder will store restored files.</restore_all_database_text>
+<restore_full_database>Restore a full container</restore_full_database>
+<restore_single_file>Restore aonly this selected file</restore_single_file>
+<saved_date>Data guardada</saved_date>
+<selected_disks>Discos seleccionados</selected_disks>
+<select_this_disk>Select this disk has a backup disk</select_this_disk>
+<shares_list>Target remote folders list</shares_list>
+<share_folder>Partilhar pasta</share_folder>
+<share_retranslation>Retranslation shares</share_retranslation>
+<share_retranslation_text>This feature allows you to backup all datas in remote server using a share directory.
+All datas will be backuped on incremental mode.So you can retreive all files version time.[br]
+This feature running artica-backup-share tool. it send notifications if task is succeed or not
+
+</share_retranslation_text>
+<storage_list>Storage containers list</storage_list>
+<success_sendcommand>Send order to artica OK....</success_sendcommand>
+<target_restore_folder>Target restore folder</target_restore_folder>
+<usb_device_id>ID da fonte do dispositivo externo</usb_device_id>

@@ -1,0 +1,572 @@
+unit process_infos;
+
+{$mode objfpc}{$H+}
+interface
+
+uses
+Classes, SysUtils,variants,strutils,unix, Process,md5,logs,baseunix,RegExpr in 'RegExpr.pas',global_conf in 'global_conf.pas',spamass,clamav,spfmilter,openldap,zsystem,cyrus,squid,
+dkimfilter,postfix_class,mailgraph_class,miltergreylist,roundcube,dansguardian,kav4samba,kav4proxy,bind9,mysql_daemon,
+kavmilter in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/kavmilter.pas',
+dnsmasq   in   '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/dnsmasq.pas',
+saslauthd in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/saslauthd.pas',
+collectd  in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/collectd.pas',
+
+bogom;
+
+  type
+  Tprocessinfos=class
+
+
+private
+     GLOBAL_INI:MyConf;
+     LOGS:Tlogs;
+     function ExecPipe(commandline:string;ShowOut:boolean):string;
+     function MD5FromFile(path:string):string;
+     ArrDatas:TStringList;
+     function ReadFileIntoString(path:string):string;
+     function COMMANDLINE_PARAMETERS(FoundWhatPattern:string):boolean;
+     debug:boolean;
+     ccyrus:Tcyrus;
+     squid:tsquid;
+     postfix:Tpostfix;
+     mailgraph:tMailgraphClass;
+     miltergreylist:tmilter_greylist;
+     roundcube:TRoundCube;
+     dansguardian:Tdansguardian;
+     kav4samba:Tkav4samba;
+     kav4proxy:Tkav4proxy;
+     bind9:Tbind9;
+     zmysql:tmysql_daemon;
+     dnsmasq:tdnsmasq;
+     SYS:Tsystem;
+
+public
+    procedure Free;
+    constructor Create;
+    Enable_echo:boolean;
+    function ISprocessExist(process:string):boolean;
+    function get_file_permission(path:string):string;
+    function ExecPipe2(commandline:string;ShowOut:boolean):string;
+    procedure killfile(path:string);
+    function ExecStream(commandline:string;ShowOut:boolean):TMemoryStream;
+    procedure AutoKill(force:boolean);
+    procedure auto_restart();
+    function isProcessExists2(processname:string):boolean;
+END;
+
+implementation
+
+constructor Tprocessinfos.Create;
+begin
+       forcedirectories('/etc/artica-postfix');
+       GLOBAL_INI:=MyConf.Create();
+       LOGS:=tlogs.Create();
+       LOGS.Enable_echo:=Enable_echo;
+       debug:=GLOBAL_INI.get_DEBUG_DAEMON();
+       ccyrus:=Tcyrus.Create;
+       squid:=Tsquid.Create;
+       postfix:=Tpostfix.Create;
+       mailgraph:=tMailgraphClass.Create;
+       miltergreylist:=tmilter_greylist.Create;
+       roundcube:=Troundcube.Create;
+       dansguardian:=Tdansguardian.Create;
+       kav4samba:=Tkav4samba.Create;
+       kav4proxy:=Tkav4proxy.CReate;
+       bind9:=Tbind9.Create;
+       zmysql:=tmysql_daemon.Create(GLOBAL_INI.SYS);
+end;
+//##############################################################################
+
+function Tprocessinfos.COMMANDLINE_PARAMETERS(FoundWhatPattern:string):boolean;
+var
+   i:integer;
+   s:string;
+   RegExpr:TRegExpr;
+
+begin
+ s:='';
+ result:=false;
+ if ParamCount>1 then begin
+     for i:=2 to ParamCount do begin
+        s:=s  + ' ' +ParamStr(i);
+     end;
+ end;
+   RegExpr:=TRegExpr.Create;
+   RegExpr.Expression:=FoundWhatPattern;
+   if RegExpr.Exec(s) then begin
+      RegExpr.Free;
+      result:=True;
+   end;
+
+
+end;
+//##############################################################################
+function Tprocessinfos.ISprocessExist(process:string):boolean;
+var
+   infos:string;
+   RegExpr:TRegExpr;
+begin
+
+
+     Result:=False;
+    if Enable_echo then  writeln('Tprocessinfos.ISprocessExist("' + process + '")');
+    if debug then LOGS.logs('Tprocessinfos.ISprocessExist("' + process + '")');
+
+    if Enable_echo then  writeln('Tprocessinfos.ISprocessExist("' + process + '")');
+    if Enable_echo then  writeln('Tprocessinfos.ISprocessExist -> /usr/bin/top -b -n1');
+    
+    if debug then LOGS.logs('Tprocessinfos.ISprocessExist -> usr/bin/top -b -n1');
+    infos:=ExecPipe2('/usr/bin/top -b -n1',false);
+    if length(infos)=0 then begin
+      if debug then LOGS.logs('Tprocessinfos.ISprocessExist -> ERROR NO INFOS !!!');
+    end;
+    
+    if debug then LOGS.logs('Tprocessinfos.ISprocessExist -> starting rexp engine...');
+    RegExpr:=TRegExpr.create;
+    RegExpr.expression:='([0-9]+)([0-9a-zA-Z\.\:\-_ ]+)' + process;
+    if debug then LOGS.logs('Tprocessinfos.ISprocessExist ->' + RegExpr.expression);
+    if Enable_echo then writeln('ISprocessExist -> ' + RegExpr.expression);
+
+    if RegExpr.Exec(infos) then  repeat
+       if debug then LOGS.logs('Tprocessinfos.ISprocessExist -> Matched...');
+       if debug then LOGS.logs('Tprocessinfos.ISprocessExist -> "' + RegExpr.Match[0]);
+       if length(RegExpr.Match[2])>0 then begin
+          if Enable_echo then writeln('Tprocessinfos.ISprocessExist ->' +RegExpr.Match[1] + ' ==> ' +  RegExpr.Match[2]);
+          if debug then LOGS.logs('Tprocessinfos.ISprocessExist -> ' +RegExpr.Match[1] + ' ==> ' +  RegExpr.Match[2]);
+          Result:=true;
+       end;
+    until not RegExpr.ExecNext;
+
+    if Result=False then begin
+       if Enable_echo then writeln('ISprocessExist -> FALSE');
+       if debug then LOGS.logs('Tprocessinfos.ISprocessExist -> FALSE');
+    end;
+
+    if Result=True then begin
+       if Enable_echo then writeln('ISprocessExist -> TRUE');
+       if debug then LOGS.logs('Tprocessinfos.ISprocessExist -> TRUE');
+    end;
+       
+    RegExpr.Free;
+
+end;
+//##############################################################################
+function Tprocessinfos.isProcessExists2(processname:string):boolean;
+var
+   S:TStringList;
+   RegExpr:TRegExpr;
+   i:integer;
+begin
+     if not fileexists('/bin/ps') then begin
+        writeln('Unable to locate /bin/ps');
+        end;
+
+     RegExpr:=TRegExpr.create;
+     S:=TstringList.Create;
+     S.LoadFromStream(ExecStream('/bin/ps -eww -orss,vsz,comm',false));
+     RegExpr.expression:=processname;
+     for i:=0 to S.Count -1 do begin
+         if RegExpr.Exec(S.Strings[i]) then begin
+                RegExpr.Free;
+                S.free;
+                exit(true);
+         end;
+     
+     end;
+
+RegExpr.Free;
+S.free;
+exit(false);
+
+end;
+
+
+procedure  Tprocessinfos.Free;
+begin
+    LOGS.Free;
+    GLOBAL_INI.Free;
+    ArrDatas.Free;
+end;
+//##############################################################################
+function Tprocessinfos.ExecPipe(commandline:string;ShowOut:boolean):string;
+begin
+if debug then LOGS.logs('Tprocessinfos.ExecPipe ->' + commandline);
+fpsystem(commandline + ' >/tmp/artica.cmdLines.tmp');
+result:=ReadFileIntoString('/tmp/artica.cmdLines.tmp');
+end;
+//##############################################################################
+
+function Tprocessinfos.ExecStream(commandline:string;ShowOut:boolean):TMemoryStream;
+const
+  READ_BYTES = 2048;
+
+var
+  M: TMemoryStream;
+  P: TProcess;
+  n: LongInt;
+  BytesRead: LongInt;
+
+begin
+
+  M := TMemoryStream.Create;
+  BytesRead := 0;
+  P := TProcess.Create(nil);
+  P.CommandLine := commandline;
+  P.Options := [poUsePipes];
+  if ShowOut then WriteLn('-- executing ' + commandline + ' --');
+  if debug then LOGS.Logs('Tprocessinfos.ExecPipe -> ' + commandline);
+
+  P.Execute;
+  while P.Running do begin
+    M.SetSize(BytesRead + READ_BYTES);
+    n := P.Output.Read((M.Memory + BytesRead)^, READ_BYTES);
+    if n > 0 then begin
+      Inc(BytesRead, n);
+    end
+    else begin
+      Sleep(100);
+    end;
+
+  end;
+
+  repeat
+    M.SetSize(BytesRead + READ_BYTES);
+    n := P.Output.Read((M.Memory + BytesRead)^, READ_BYTES);
+    if n > 0 then begin
+      Inc(BytesRead, n);
+    end;
+  until n <= 0;
+  M.SetSize(BytesRead);
+  exit(M);
+end;
+//##############################################################################
+//##############################################################################
+
+function Tprocessinfos.ExecPipe2(commandline:string;ShowOut:boolean):string;
+const
+  READ_BYTES = 2048;
+  CR = #$0d;
+  LF = #$0a;
+  CRLF = CR + LF;
+
+var
+  S: TStringList;
+  M: TMemoryStream;
+  P: TProcess;
+  n: LongInt;
+  BytesRead: LongInt;
+  xRes:string;
+
+begin
+
+  M := TMemoryStream.Create;
+  BytesRead := 0;
+  P := TProcess.Create(nil);
+  P.CommandLine := commandline;
+  P.Options := [poUsePipes];
+  xRes:='';
+  if ShowOut then WriteLn('-- executing ' + commandline + ' --');
+  if debug then LOGS.Logs('Tprocessinfos.ExecPipe -> ' + commandline);
+
+  P.Execute;
+  while P.Running do begin
+    M.SetSize(BytesRead + READ_BYTES);
+    n := P.Output.Read((M.Memory + BytesRead)^, READ_BYTES);
+    if n > 0 then begin
+      Inc(BytesRead, n);
+    end
+    else begin
+      Sleep(100);
+    end;
+    
+  end;
+
+  repeat
+    M.SetSize(BytesRead + READ_BYTES);
+    n := P.Output.Read((M.Memory + BytesRead)^, READ_BYTES);
+    if n > 0 then begin
+      Inc(BytesRead, n);
+    end;
+  until n <= 0;
+  M.SetSize(BytesRead);
+  S := TStringList.Create;
+  S.LoadFromStream(M);
+  if ShowOut then WriteLn('-- linecount = ', S.Count, ' --');
+  if debug then LOGS.Logs('Tprocessinfos.ExecPipe -> ' + IntTostr(S.Count) + ' lines');
+  for n := 0 to S.Count - 1 do
+  begin
+    if length(S[n])>1 then begin
+      xRes:=xRes + S[n] +CRLF;
+    end;
+  end;
+  if ShowOut  then WriteLn(xRes + '-- end --');
+  if debug then LOGS.Logs('Tprocessinfos.ExecPipe -> exit');
+  S.Free;
+  P.Free;
+  M.Free;
+  exit( xRes);
+end;
+//##############################################################################
+
+function Tprocessinfos.ReadFileIntoString(path:string):string;
+         const
+            CR = #$0d;
+            LF = #$0a;
+            CRLF = CR + LF;
+var
+   Afile:text;
+   datas:string;
+   datas_file:string;
+begin
+     datas_file:='';
+      if not FileExists(path) then begin
+        LOGS.logs('Error:thProcThread.ReadFileIntoString -> file not found (' + path + ')');
+        exit;
+
+      end;
+      TRY
+     assign(Afile,path);
+     reset(Afile);
+     while not EOF(Afile) do
+           begin
+           readln(Afile,datas);
+           datas_file:=datas_file + datas +CRLF;
+           end;
+
+close(Afile);
+             EXCEPT
+              LOGS.logs('Error:thProcThread.ReadFileIntoString -> unable to read (' + path + ')');
+           end;
+result:=datas_file;
+
+
+end;
+//##############################################################################
+procedure Tprocessinfos.auto_restart();
+var PID,path:string;
+INI:myconf;
+begin
+    INI:=myconf.Create;
+    path:=INI.get_ARTICA_PHP_PATH();
+    if FileExists('/etc/artica-postfix/artica-agent.pid') then begin
+       PID:=ReadFileIntoString('/etc/artica-postfix/artica-agent.pid');
+       PID:=trim(PID);
+    end;
+    
+    if length(PID)=0 then begin
+        writeln('starting artica-postfix daemon');
+        fpsystem(path +'/bin/artica-postfix');
+        exit;
+    end;
+       
+    writeln('stopping artica-postfix daemon pid '+PID);
+    
+    if not fileExists('/proc/' + PID + '/exe') then begin
+        writeln('starting artica-postfix daemon');
+        fpsystem(path +'/bin/artica-postfix');
+        exit;
+    end;
+
+
+    fpsystem('echo hhh >/etc/artica-postfix/shutdown');
+    sleep(100);
+
+   fpsystem('/bin/kill ' + PID);
+    while fileExists('/proc/' + PID + '/exe') do begin
+          sleep(100);
+       writeln('Waiting please... artica pid (' + PID + ') currently stop all threads created...');
+    end;
+    writeln('starting artica-postfix daemon');
+    fpsystem(path +'/bin/artica-postfix');
+    
+    
+end;
+
+
+procedure Tprocessinfos.AutoKill(force:boolean);
+var PID,FETCHMAIL_PID,INADYN_PID:string;
+   moinsnef:string;
+   D:boolean;
+   count:integer;
+   spamass:Tspamass;
+   clamav:Tclamav;
+   ldap:Topenldap;
+   spf:tspf;
+   pids:string;
+   dkim:Tdkim;
+   kavmilter:Tkavmilter;
+   bogom:Tbogom;
+   saslauthd:tsaslauthd;
+   collectd:tcollectd;
+begin
+  PID:=GLOBAL_INI.ARTICA_DAEMON_GET_PID();
+  FETCHMAIL_PID:=GLOBAL_INI.FETCHMAIL_PID();
+  dnsmasq:=tdnsmasq.create;
+  INADYN_PID:=GLOBAL_INI.INADYN_PID();
+  spamass:=Tspamass.Create;
+  clamav:=Tclamav.Create;
+  ldap:=Topenldap.Create;
+  spf:=tspf.Create;
+  dkim:=Tdkim.Create;
+  
+  D:=COMMANDLINE_PARAMETERS('debug');
+  moinsnef:='';
+  if force=true then moinsnef:='-9 ';
+  if D then writeln(' ARTICA PID=' + PID );
+  count:=0;
+     if GLOBAL_INI.SYSTEM_PROCESS_EXIST(PID) then begin
+                  writeln('Stopping artica..............: ' + PID + ' PID..');
+                  fpsystem('kill ' +moinsnef+ PID);
+
+                  while GLOBAL_INI.SYSTEM_PROCESS_EXIST(PID) do begin
+                        sleep(100);
+                        Inc(count);
+                        if count>20 then break;
+                  end;
+     end;
+     
+    SYS:=Tsystem.Create();
+    pids:=SYS.PROCESS_LIST_PID(GLOBAL_INI.get_ARTICA_PHP_PATH() + '/bin/artica-install');
+    pids:=AnsiReplaceText(pids,intTostr(fpgetpid),'');
+
+    
+    if length(trim(pids))>0 then begin
+         writeln('Stopping artica-install......: proc(s) ' + pids + ' PID..');
+         fpsystem('/bin/kill -9 ' + pids);
+    end;
+     
+
+    GLOBAL_INI.BOA_STOP();
+
+
+//--------------fetchmail stopping ----------------------------------------------------
+    if GLOBAL_INI.SYSTEM_PROCESS_EXIST(FETCHMAIL_PID) then begin
+                  writeln('Stopping fetchmail...........: ' + FETCHMAIL_PID + ' PID..');
+                  fpsystem('kill ' +moinsnef+ FETCHMAIL_PID);
+                  while GLOBAL_INI.SYSTEM_PROCESS_EXIST(FETCHMAIL_PID) do begin
+                        Sleep(100);
+                        Inc(count);
+                        if count>30 then break;
+
+                  end;
+     end;
+//---------------------------------------------------------------------------------------
+
+//--------------inadyn stopping ----------------------------------------------------
+    if length(INADYN_PID)>0 then begin
+                  GLOBAL_INI.INADYN_PERFORM_STOP();
+                  while length(trim(GLOBAL_INI.INADYN_PID()))>0 do begin
+                        Sleep(100);
+                        Inc(count);
+                        if count>20 then begin
+                           writeln('Stopping inadyn..............: timout while stop '+GLOBAL_INI.INADYN_PID());
+                           break;
+                        end;
+
+                  end;
+     end;
+//---------------------------------------------------------------------------------------
+
+
+GLOBAL_INI.APACHE_ARTICA_STOP();
+postfix.POSTFIX_STOP();
+GLOBAL_INI.MAILFROMD_STOP();
+miltergreylist.MILTER_GREYLIST_STOP();
+dkim.DKIM_FILTER_STOP();
+GLOBAL_INI.AMAVISD_STOP();
+clamav.FRESHCLAM_STOP();
+spamass.SPAMASSASSIN_STOP();
+spamass.MILTER_STOP();
+spf.SPF_MILTER_STOP();
+clamav.CLAMD_STOP();
+clamav.MILTER_STOP();
+
+//collectd
+collectd:=tcollectd.Create;
+collectd.STOP();
+collectd.Free;
+
+//DnsMasq
+dnsmasq.DNSMASQ_STOP_DAEMON();
+
+
+//kavmilter
+kavmilter:=tkavmilter.Create;
+kavmilter.STOP();
+kavmilter.free;
+
+//bogom
+bogom:=Tbogom.Create;
+bogom.STOP();
+bogom.Free;
+
+GLOBAL_INI.AMAVISD_STOP();
+ldap.LDAP_STOP();
+
+//saslauthd;
+saslauthd:=tsaslauthd.Create;
+saslauthd.STOP();
+saslauthd.Free;
+
+ccyrus.CYRUS_DAEMON_STOP();
+zmysql.SERVICE_STOP();
+squid.SQUID_STOP();
+dansguardian.DANSGUARDIAN_STOP();
+
+
+
+
+mailgraph.MAILGRAPH_STOP();
+kav4proxy.KAV4PROXY_STOP();
+GLOBAL_INI.ARTICA_STOP();
+roundcube.ROUNDCUBE_STOP_SERVICE();
+kav4samba.SERVICE_STOP();
+bind9.STOP();
+
+
+end;
+
+
+//##############################################################################
+function Tprocessinfos.get_file_permission(path:string):string;
+var
+   s:string;
+   RegExpr:TRegExpr;
+
+begin
+
+//nx:=Tunix.Create;
+//nx.get_file_permission(path);
+
+s:=ExecPipe2('/usr/bin/stat ' + path,False);
+RegExpr:=TRegExpr.Create;
+RegExpr.Expression:='Access: \(([0-9]+)\/';
+if RegExpr.Exec(s) then result:=RegExpr.Match[1];
+RegExpr.Free
+end;
+//##############################################################################
+
+function Tprocessinfos.MD5FromFile(path:string):string;
+var
+Digest:TMD5Digest;
+begin
+Digest:=MD5File(path);
+exit(MD5Print(Digest));
+end;
+//##############################################################################
+procedure Tprocessinfos.killfile(path:string);
+Var F : Text;
+begin
+ if not FileExists(path) then begin
+        LOGS.logs('Error:Tprocessinfos.killfile -> file not found (' + path + ')');
+        exit;
+ end;
+TRY
+ Assign (F,path);
+ Erase (f);
+ EXCEPT
+ LOGS.logs('Error:Tprocessinfos.killfile -> unable to delete (' + path + ')');
+ end;
+end;
+//##############################################################################
+end.

@@ -1,0 +1,30 @@
+<about>OBM is a global Groupware, Messaging, CRM and Project appliation.[br] It is mainly used as an Exchange Or Notes/Domino Mail and groupware replacement but also as simple contact databases to full CRM. OBM advanced shared calendar and contacts has connectors with MS Outlook, Thunderbird/Lightning or PDA.
+OBM is always evolving and the data and the database model are subject to change.</about>
+<apacheconf>Lighttpd Config file</apacheconf>
+<close_now>All operations completed, You can close the windows now</close_now>
+<domains_updated>Domains updated</domains_updated>
+<enable_obm>Enable OBM Features</enable_obm>
+<exporting_obm>Exporting Artica users to OBM (waiting please)....</exporting_obm>
+<export_artica_users>Export Artica users</export_artica_users>
+<export_artica_users_text>This feature allows you to create all users you have already created in Artica to OBM database</export_artica_users_text>
+<external_protocol>External protocol</external_protocol>
+<external_url>External URL</external_url>
+<external_url_text>Should be for example :
+for https://extranet.aliasource.fr/obm/ [br]
+external url = extranet.aliasource.fr[br]
+external protocol = https[br]</external_url_text>
+<group_failed>Group Failed</group_failed>
+<group_updated>Group updated/added</group_updated>
+<https_port>HTTPS port of the web server</https_port>
+<main_settings>Main settings</main_settings>
+<OBMSyncCron>Sync Period</OBMSyncCron>
+<OBMSyncCron_text>OBM use Mysql database to store users[br]You need to export LDAP users to the OBM database in order to allow them access on it[br]
+To do you can program a period in minutes or  hour (m or h ) that allow artica to perform periodically exportation.</OBMSyncCron_text>
+<obm_connect_has_admin>Connect to OBM administrator using the same Artica Login</obm_connect_has_admin>
+<organizations_added>Organizations/Domains Added</organizations_added>
+<syncevents>Synchronizations Events</syncevents>
+<update_global_admin>Insert Global Artica Administrator in OBM (GLobal)</update_global_admin>
+<user_added>Users added</user_added>
+<user_failed>Users Failed</user_failed>
+<user_updated>Users updated</user_updated>
+<warn_export_obm>Are you sure to export all artica users to OBM ?</warn_export_obm>

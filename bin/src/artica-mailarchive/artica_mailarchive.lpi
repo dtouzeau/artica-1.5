@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <ProjectOptions>
+    <PathDelim Value="/"/>
+    <Version Value="6"/>
+    <General>
+      <Flags>
+        <MainUnitHasUsesSectionForAllUnits Value="False"/>
+        <MainUnitHasCreateFormStatements Value="False"/>
+        <MainUnitHasTitleStatement Value="False"/>
+      </Flags>
+      <SessionStorage Value="InProjectDir"/>
+      <MainUnit Value="0"/>
+      <IconPath Value="./"/>
+      <TargetFileExt Value=""/>
+      <Title Value="artica-mailarchive"/>
+    </General>
+    <VersionInfo>
+      <UseVersionInfo Value="True"/>
+      <ProjectVersion Value="0.0.0.0"/>
+    </VersionInfo>
+    <PublishOptions>
+      <Version Value="2"/>
+      <IgnoreBinaries Value="False"/>
+      <IncludeFileFilter Value="*.(pas|pp|inc|lfm|lpr|lrs|lpi|lpk|sh|xml)"/>
+      <ExcludeFileFilter Value="*.(bak|ppu|ppw|o|so);*~;backup"/>
+    </PublishOptions>
+    <RunParams>
+      <local>
+        <FormatVersion Value="1"/>
+        <LaunchingApplication PathPlusParams="/usr/X11R6/bin/xterm -T 'Lazarus Run Output' -e $(LazarusDir)/tools/runwait.sh $(TargetCmdLine)"/>
+      </local>
+    </RunParams>
+    <Units Count="4">
+      <Unit0>
+        <Filename Value="artica_mailarchive.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="artica_mailarchive"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="mailarchive.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="mailarchive"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="amavisquar.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="amavisquar"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="messagestorages.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="MessageStorages"/>
+      </Unit3>
+    </Units>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="8"/>
+    <Target>
+      <Filename Value="/home/dtouzeau/developpement/artica-postfix/bin/artica-mailarchive"/>
+    </Target>
+    <Other>
+      <CompilerPath Value="$(CompPath)"/>
+    </Other>
+  </CompilerOptions>
+</CONFIG>

@@ -1,0 +1,221 @@
+<about_half_a_minute>environ une minute et demi</about_half_a_minute>
+<about_time>environ</about_time>
+<access_to_web_administration_interface>Acc&egrave;s &agrave; la console web d'administration.</access_to_web_administration_interface>
+<add_ldap_database_link>Lier la base LDAP</add_ldap_database_link>
+<add_ldap_database_link_text>Ajouter une nouvelle connexion vers un serveur LDAP/Active Directory</add_ldap_database_link_text>
+<add_qos_service>Ajout d'un service QOS</add_qos_service>
+<add_qos_service_explain>Ce formulaire &agrave; pour but d'ajouter un service QOS sur votre carte r&eacute;seau.[br]La carte r&eacute;seau sera alors crochet&eacute;e par le service QOS afin d'ajuster la bande passante disponible.</add_qos_service_explain>
+<add_qos_service_text>Ajouter un nouveau service Q.O.S (Qualit&eacute; de service) bas&eacute;e sur une interface r&eacute;seau.</add_qos_service_text>
+<add_to_left_menu>Ajouter au menu de gauche</add_to_left_menu>
+<adSearchPopupHowto>Ce formulaire vous aide &agrave; trouver le DN correct sur votre serveur LDAP/Active Directory distant.[br]
+Donnez l'adresse de votre serveur Active Directory et cliquez sur le bouton {browse}</adSearchPopupHowto>
+<alert_in_frontpage_website_categorize>Alerter si des sites ne sont pas cat&eacute;goris&eacute;s sur la page de garde</alert_in_frontpage_website_categorize>
+<alias_maps>Base d'aliases</alias_maps>
+<AllowAddOrgs>Peut ajouter ou supprimer des organisations</AllowAddOrgs>
+<AllowAddSMTPDomains>Peut supprimer/editer/Ajouter des domaines de messagerie.</AllowAddSMTPDomains>
+<AllowChangePassword>Autoris&eacute; &agrave; modifier le mot de passe</AllowChangePassword>
+<AllowExecuteSystemsTasks>Peut ex&eacute;cuter des t&acirc;ches syst&egrave;me</AllowExecuteSystemsTasks>
+<amavis-template-dsn>mod&egrave;le pour les messages neutres (sans virus, pas de spam, non bannis).</amavis-template-dsn>
+<APP_APACHE_SRC>Service original Apache</APP_APACHE_SRC>
+<APP_CLUEBRINGER>ClueBringer (Policyd V2)</APP_CLUEBRINGER>
+<APP_DDCLIENT>Client DNS Dynamique</APP_DDCLIENT>
+<APP_GROUPWARE_APACHE_TEXT>Activer/D&eacute;sactiver la possibilit&eacute; de cr&eacute;er des application groupwares dans les organisations</APP_GROUPWARE_APACHE_TEXT>
+<APP_LIBGSL>librairie Libgsl</APP_LIBGSL>
+<APP_MYSQLHOTCOPY>MysqlHotCopy</APP_MYSQLHOTCOPY>
+<APP_OPENSSL>librairie OpenSSL</APP_OPENSSL>
+<APP_PERL>Syst&egrave;me PERL</APP_PERL>
+<APP_SQUID_CLAMAV_TAIL>squidclamav RealTime log</APP_SQUID_CLAMAV_TAIL>
+<APP_UFDBGUARD_PARAMETERS>Param&egrave;tres et personnalisations du d&eacute;mon UfDbGuard.</APP_UFDBGUARD_PARAMETERS>
+<APP_VIRTUALBOX>VirtualBox</APP_VIRTUALBOX>
+<artica-meta-create-account-text>Pour cr&eacute;er un compte, remplissez le formulaire suivant.[br]Vous allez recevoir automatiquement le num&eacute;ro de s&eacute;rie dans Artica.[br]Ce num&eacute;ro de s&eacute;rie sera utilis&eacute; afin d'identifier votre serveur dans votre organisation.</artica-meta-create-account-text>
+<ArticaMetaPoolTimeMin>Pooling de communication</ArticaMetaPoolTimeMin>
+<ArticaMetaSerial>Indiquez ici le num&eacute;ro de s&eacute;rie d&eacute;j&agrave; enregistr&eacute; et votre compte utilisateur autoris&eacute; &agrave; ajouter des nouveaux serveurs dans l'organisation de Artica Meta.</ArticaMetaSerial>
+<artica_meta_artica_must_update>serveur devant &ecirc;tre mis &agrave; jour vers la derni&egrave;re version d'Artica.</artica_meta_artica_must_update>
+<artica_meta_artica_must_update_ok>Tous les serveurs sont &agrave; jour.</artica_meta_artica_must_update_ok>
+<ARTICA_META_BAD_DOMAIN_LIST>Le domain de cette adresse eMail ne correspond aux domaines g&eacute;r&eacute;s par ce serveur.
+Les domaines disponibles sont les suivants:</ARTICA_META_BAD_DOMAIN_LIST>
+<ARTICA_META_BLOCKED>Cette fonctionnalit&eacute; est disponible via la console globale de management.</ARTICA_META_BLOCKED>
+<artica_meta_communications_lost>Serveurs qui ne rapportent pas leur &eacute;tat convenablement.Ces serveurs semblent ne plus communiquer.</artica_meta_communications_lost>
+<artica_meta_delete_computer>Supprimer cet ordinateur de fa&ccedil;on logique.[br]Notifie l'ordinateur &agrave; se d&eacute;sengager de la console et le supprimer d&eacute;finitivement de la base de donn&eacute;es</artica_meta_delete_computer>
+<artica_meta_operation_scheduled>L'op&eacute;ration &agrave; &eacute;t&eacute; ordonnanc&eacute;e et va &ecirc;tre ex&eacute;cut&eacute;e lorsque l'ordinateur distant &eacute;mettra son &eacute;tat &agrave; la console.</artica_meta_operation_scheduled>
+<artica_meta_schedules>Op&eacute;rations en attente et programm&eacute;es</artica_meta_schedules>
+<artica_meta_servers_load_failed>Serveurs d&eacute;passant certaines limites de charge machine.[br]La charge est repr&eacute;sent&eacute;e par une moyenne d'utilisation CPU, m&eacute;moire et lecture/&eacute;criture disques.[br]V&eacute;rifiez si le mat&eacute;riel est en ad&eacute;quation avec les services install&eacute;s</artica_meta_servers_load_failed>
+<artica_meta_servers_load_ok>Tous les serveurs disposent d'une bonne performance</artica_meta_servers_load_ok>
+<artica_meta_services_failed_text>Services en &eacute;chec de fonctionnement.[br]Des serveurs ne peuvent pas d&eacute;marrer certains services.</artica_meta_services_failed_text>
+<artica_meta_services_ok_text>Tous les services fonctionnent correctement</artica_meta_services_ok_text>
+<artica_meta_synchronize_servers>Demander au serveur d'envoyer ses donn&eacute;es et param&egrave;tres afin de re-synchroniser les informations entre Artica Meta ce serveur distant.</artica_meta_synchronize_servers>
+<artica_meta_update_computer>Lancer la mise &agrave; jour du logiciel Artica pour cet ordinateur</artica_meta_update_computer>
+<AsNetworksAdministrator>Peut g&eacute;rer les r&eacute;seaux des serveurs</AsNetworksAdministrator>
+<BypassProxy>Surpasser le proxy</BypassProxy>
+<categorized>cat&eacute;goris&eacute;s</categorized>
+<cat_computing>Informatique, science informatique</cat_computing>
+<cat_passwords>Sites web de stockage de mots de passe et d'informations s&eacute;curis&eacute;es</cat_passwords>
+<certifier>Certificateur</certifier>
+<clamav_protect_disable_text>Activer/d&eacute;sactiver le d&eacute;mon ClamAV antivirus dans votre syst&egrave;me.</clamav_protect_disable_text>
+<client_mode>Mode client</client_mode>
+<CLOUD>Cloud</CLOUD>
+<cluebringer_access>Acc&egrave;s &agrave; l'interface d&eacute;di&eacute; &agrave; Policyd</cluebringer_access>
+<CLUEBRINGER_MEMBERS_EXPLAIN>Indiquez ici les membres qui disposeront des acc&egrave;s pour se connecter &agrave; l'interface d'administration d&eacute;di&eacute;e &agrave; Policyd V2</CLUEBRINGER_MEMBERS_EXPLAIN>
+<communications>Communications</communications>
+<communication_lost>&Eacute;chec de communication</communication_lost>
+<containers>Conteneurs</containers>
+<CreateAlbum>Auto-cr&eacute;er l'album</CreateAlbum>
+<create_an_account>Cr&eacute;er un compte</create_an_account>
+<currently_user_opendns_service>Le service utilise actuellement les serveurs DNS de OpenDNS comme serveurs DNS principaux.</currently_user_opendns_service>
+<database_type>Type de base</database_type>
+<delete_computer>Supprimer l'ordinateur</delete_computer>
+<delete_freeweb_text>&Ecirc;tes-vous certain de vouloir supprimer cet &eacute;l&eacute;ment ? Toutes les donn&eacute;es seront alors d&eacute;truites.</delete_freeweb_text>
+<delete_from_group>Supprimer du groupe</delete_from_group>
+<delete_service>Supprimer ce service</delete_service>
+<delete_without_notify>Supprimer sans notifier</delete_without_notify>
+<destination_port>Port de destination</destination_port>
+<domainType>Type de domaine</domainType>
+<ENABLE_APACHE_GROUPWARE>Activer le service Apache Groupware</ENABLE_APACHE_GROUPWARE>
+<ENABLE_CLAMAV_TEXT>Si vous passez en mode rouge, des services qui utilisent le filtre antivirus Clamav seront d&eacute;sactiv&eacute;s</ENABLE_CLAMAV_TEXT>
+<enable_client_mode>Activer le mode client</enable_client_mode>
+<enable_cluebringer_text>Policyd est un anti-spam qui s'ajoute &agrave; Postfix. Il permet d'effectuer des murs de liste grise, des limitation d'&eacute;metteurs par nombre de messages, volumes et/ou tranches horaires.
+Il permet de faire de l'analyse de spam, listes noires et auto-listes noires via la commande de protocole HELO.</enable_cluebringer_text>
+<enable_freeweb>Activer le service FreeWebs</enable_freeweb>
+<enable_freeweb_text>FreeWebs est un service qui active la possibilit&eacute; de cr&eacute;er des espaces Web pour vos utilisateurs.[br]Le service Artica Groupware quand &agrave; lui propose des services web groupware d&eacute;j&agrave; d&eacute;velopp&eacute;s.[br]FreeWebs fournit simplement l'espace web avec un domaine virtuel, une base de donn&eacute;es mysql et un acc&egrave;s FTP afin d'autoriser les utilisateurs &agrave; installer et publier du contenu Web.[br]FreeWebs utilise les ports standards (80/443) et utilise le service Apache disponible par d&eacute;faut sur le syst&egrave;me.</enable_freeweb_text>
+<enable_ipv6>Activer ipv6</enable_ipv6>
+<enable_ldap_sync_service>Activation du service sync.</enable_ldap_sync_service>
+<enable_picasa_replication>Activer la r&eacute;plication vers Picasa Web</enable_picasa_replication>
+<enable_qos_service>Activation du service QOS</enable_qos_service>
+<enforce-https-official-certificate>Forcer l'utilisation d'un certificat officiel</enforce-https-official-certificate>
+<enforce-https-with-hostname>Forcer HTTPS avec le nom d'h&ocirc;te</enforce-https-with-hostname>
+<ERROR_MUST_DEFINE_PASSWORD>Vous devez d&eacute;finir un mot de passe avant de continuer</ERROR_MUST_DEFINE_PASSWORD>
+<external_ip>Adresse externe</external_ip>
+<free_web_servers>FreeWebs</free_web_servers>
+<free_web_servers_text>Activer/d&eacute;sactiver le service FreeWebs qui autorise &agrave; cr&eacute;er des espaces de serveurs web pour les utilisateurs de ce serveur.</free_web_servers_text>
+<hardware>Mat&eacute;riel</hardware>
+<howto>Comment faire ?</howto>
+<https-prohibit-insecure-sslv2>Bannir le sslv2 non s&eacute;curis&eacute;.</https-prohibit-insecure-sslv2>
+<install_app>La t&acirc;che &agrave; &eacute;t&eacute; programm&eacute;e pour s'ex&eacute;cuter en t&acirc;che de fond dans quelques secondes.
+Rafra&icirc;chissez cette page ou bien visualisez les &eacute;v&egrave;nements afin de suivre sa progression.</install_app>
+<instances>Instances</instances>
+<InternalRouter>Routeur interne</InternalRouter>
+<InternalRouterText>Transformer cette instance en un routeur Interne qui permet de transf&eacute;rer les messages aux autres instances en mode Round-robin</InternalRouterText>
+<internal_networks_explain>Ici ce sont les r&eacute;seaux internes de votre soci&eacute;t&eacute;.[br]Des r&eacute;seaux utilis&eacute;s par les services de vos serveurs qui n&eacute;cessitent l'identification de vos postes internes tels que le Proxy, la d&eacute;couverte des ordinateurs et la messagerie (Postfix)</internal_networks_explain>
+<IS_A_VMWARE_VIRTUAL_MACHINE>Est une Machine virtuelle VMWare</IS_A_VMWARE_VIRTUAL_MACHINE>
+<join>Joindre</join>
+<large_server>Serveur puissant</large_server>
+<last_seen>Derni&egrave;re connexion</last_seen>
+<ldap_user_dn>Utilisateur LDAP (DN)</ldap_user_dn>
+<leaf_result_attribute>leaf result attribute</leaf_result_attribute>
+<less_than_a_minute>moins d'une minute</less_than_a_minute>
+<less_than_time>moins de</less_than_time>
+<loading>Chargement</loading>
+<log_connections>Enregistrer les connexions</log_connections>
+<low>faible</low>
+<MaxEventsPerServer>Max &eacute;v&egrave;nements par serveur</MaxEventsPerServer>
+<medium_server>Serveur moyen</medium_server>
+<meta-console>Console Globale de management</meta-console>
+<meta-console-text>Connectez votre serveur Artica &agrave; la console globale de management afin d'administrer plusieurs serveurs Artica depuis un point unique</meta-console-text>
+<meta_console_address>Adresse de la Meta console</meta_console_address>
+<meta_delete_computer_confirm>Confirmez la suppression de cet ordinateur.[br]Toutes les donn&eacute;es relatives seront supprim&eacute;es.[br]L'ordinateur sera alors notifi&eacute; afin de se d&eacute;sengager de la M&eacute;ta console.[br]
+Lorsque la t&acirc;che de d&eacute;sengagement sera correctement accomplie, l'ordinateur sera supprim&eacute; de la console.</meta_delete_computer_confirm>
+<new_bandwith>Nouvelle bande passante</new_bandwith>
+<new_password>Nouveau mot de passe</new_password>
+<nic_bandwith>Bande passante de la carte</nic_bandwith>
+<not_an_fqdn>Ce n'est pas un nom d'h&ocirc;te complet (fqdn)</not_an_fqdn>
+<not_categorized>Non cat&eacute;goris&eacute;s</not_categorized>
+<official>Officielle</official>
+<old_password>Ancien mot de passe</old_password>
+<opendns_about>OpenDNS fournit: [br]
+Le cont&ocirc;le parentale avec plus de 50 cat&eacute;gories de filtrage web &agrave; choisir.[br]
+Un acc&egrave;s plus rapide par le fait que les serveurs DNS r&eacute;pondent plus vite que ceux du fournisseur d'acc&egrave;s.[br]
+Une protection contre le phishing identifi&eacute; directement par le syst&egrave;me DNS</opendns_about>
+<opendns_network_label>&eacute;tiquette donn&eacute;e &agrave; votre r&eacute;seau</opendns_network_label>
+<operation_launched_in_background>L'op&eacute;ration &agrave; &eacute;t&eacute; programm&eacute;e en t&acirc;che de fond</operation_launched_in_background>
+<PicasaLocalFolder>Dossier dans votre r&eacute;pertoire personnel</PicasaLocalFolder>
+<picasausername>Compte Picasa</picasausername>
+<picasaweb>Picasa, r&eacute;plication de photos</picasaweb>
+<picasaweb_text>Sauvegarder automatiquement vos photos dans Album Web Picasa</picasaweb_text>
+<PICASA_WEBHOWTO>Cette fonctionnalit&eacute; vous permet de sauvegarder vos photos dans un r&eacute;pertoire sp&eacute;cifique de votre dossier personnel partag&eacute; sur le serveur.[br]
+Lorsque des photos sont pr&eacute;sentes dans ce r&eacute;pertoire sp&eacute;cifique, le serveur va sauvegarder automatiquement vos photos toutes les 30mn  dans votre Album web Picasa que vous sp&eacute;cifiez dans le formulaire.[br]
+Si les photos sont correctement sauvegard&eacute;es, elles seront d&eacute;plac&eacute;es dans un sous-r&eacute;pertoire du dossier nomm&eacute; &quot;Uploaded&quot;.</PICASA_WEBHOWTO>
+<postfix>Messagerie</postfix>
+<PostFixEnableAiguilleuse>Activer l'instance en tant que routeur</PostFixEnableAiguilleuse>
+<PostFixEnableAiguilleuse_text>Une instance de routage interne est capable de transf&eacute;rer les messages aux autres instances.[br]Ceci afin de cr&eacute;er une sorte de Round-robin interne au serveur</PostFixEnableAiguilleuse_text>
+<PostFixEnableQueueInMemory>Activer le d&eacute;placement de la file d'attente de Postfix en m&eacute;moire vive</PostFixEnableQueueInMemory>
+<PostFixEnableQueueInMemory_text>Cette op&eacute;ration va d&eacute;placer la file d'attente de Postfix du disque dur vers la m&eacute;moire vive.[br]Cette op&eacute;ration va am&eacute;liorer de fa&ccedil;on significative les performances de Postfix mais vous perdrez des messages &eacute;lectroniques si le serveur red&eacute;marre ou est subitement arr&ecirc;t&eacute;.</PostFixEnableQueueInMemory_text>
+<postfix_multi_add_aiguilleuse_server>Ajouter une instance interne dans la liste des serveurs rout&eacute;s</postfix_multi_add_aiguilleuse_server>
+<postfix_tmpfs>File d'attente en m&eacute;moire vive</postfix_tmpfs>
+<postfix_tmpfs_text>Changer l'emplacement de file d'attente en m&eacute;moire vive plut&ocirc;t que sur le disque dur</postfix_tmpfs_text>
+<priority>Priorit&eacute;</priority>
+<Q.O.S>Qualit&eacute; de service</Q.O.S>
+<qos_artica_explain>Cette section administre le service de gestion de bande passante (Q.O.S).[br]Pour ce faire, assurez-vous que vos postes de travail et serveurs utilisent bien ce serveur comme passerelle principale dans leurs propri&eacute;t&eacute;s r&eacute;seaux.[br]Ce serveur sera en charge d'attraper les communications r&eacute;seaux et de les transf&eacute;rer vers les limiteurs de bande passante.[br]Puis, il transfert les paquets vers la passerelle de destination ou d'origine.</qos_artica_explain>
+<qos_class_delete_confirm>&Ecirc;tes-vous s&ucirc;r de vouloir supprimer ce conteneur de bande passante ?
+Toutes les r&egrave;gles de pare-feux associ&eacute;es &agrave; ce conteneur vont &ecirc;tre d&eacute;truites.</qos_class_delete_confirm>
+<qos_class_explain>D&eacute;finition du conteneur. Vous pouvez cr&eacute;er des r&egrave;gles r&eacute;seaux bas&eacute;es sur des adresses sources et/ou destinations qui permettront de transf&eacute;rer les paquets r&eacute;seaux vers ce conteneur de bande passante.[br]Vous pouvez ajouter une valeur de d&eacute;passement qui permettra de booster la r&egrave;gle en cas de d&eacute;passement de la bande passante r&eacute;serv&eacute;e.</qos_class_explain>
+<qos_class_name>Nom du conteneur</qos_class_name>
+<qos_intro>D&eacute;finissez des r&egrave;gles de limitation de bande passante et taux de consommation afin de g&eacute;rer les priorit&eacute;s des services r&eacute;seaux.</qos_intro>
+<qos_new_bandwith_container>Ajout d'un conteneur de bande passante bas&eacute; sur le service QOS crochet&eacute;</qos_new_bandwith_container>
+<qos_over>OverBoost</qos_over>
+<qos_service_delete_confirm>&ecirc;tes-vous sur de vouloir supprimer ce service QOS?
+Tous les conteneurs et r&egrave;gles pare-feu associ&eacute;es seront d&eacute;truits.</qos_service_delete_confirm>
+<qos_service_name>Nom du service QOS</qos_service_name>
+<query_filter>Filtre de recherche</query_filter>
+<register>S'enregistrer</register>
+<remote>distant</remote>
+<remote_users_databases>Bases utilisateurs distantes</remote_users_databases>
+<remote_users_databases_howto>Cette section vous aide &agrave; ajouter des serveurs de v&eacute;rification LDAP/Active Directory pour le syst&egrave;me Postfix.[br]Vous pouvez ajouter plusieurs serveurs et bases pour chaque cat&eacute;gorie</remote_users_databases_howto>
+<remote_users_databases_text>Indiquer des bases externes afin de v&eacute;rifier des aliases et adresses de messagerie</remote_users_databases_text>
+<remove_from_index_page>Retirer de la page d'index</remove_from_index_page>
+<resolv_domains>R&eacute;soudre les domaines de messagerie</resolv_domains>
+<result_attribute>result attribute</result_attribute>
+<retypepassword>Retaper le mot de passe</retypepassword>
+<routed_servers>serveurs rout&eacute;s</routed_servers>
+<router>routeur</router>
+<SAMBA_LDAP_EXTERN_TEXT>Cette section vous permet de modifier les coordonn&eacute;es du serveur LDAP pour la v&eacute;rifications des utilisateurs.[br]
+Par d&eacute;faut, Artica utilise son propre serveur LDAP afin de vous aider &agrave; administrer les utilisateurs et leur acc&egrave;s.[br]Vous pouvez ici utiliser vos propres param&egrave;tres LDAP.</SAMBA_LDAP_EXTERN_TEXT>
+<schedule_task>T&acirc;che de programmation</schedule_task>
+<science_weather>Sites relatifs &agrave; la m&eacute;t&eacute;o (pr&eacute;visions m&eacute;t&eacute;orologiques, climat ...)</science_weather>
+<scope>Port&eacute;e</scope>
+<searchbasedn>DN de la base de recherche</searchbasedn>
+<search_base>Base de recherche</search_base>
+<search_remote_database>Rechercher la base distante</search_remote_database>
+<serial>Num&eacute;ro de s&eacute;rie</serial>
+<server_host>Nom du serveur</server_host>
+<server_mode>Mode serveur</server_mode>
+<small_server>Petit serveur</small_server>
+<smtp_bind_address6>adresse r&eacute;seau num&eacute;rique IPv6 optionnelle &agrave; partir de laquelle le client SMTP &eacute;tablit ses connexions</smtp_bind_address6>
+<source_port>Port source</source_port>
+<special_result_attribute>special result attribute</special_result_attribute>
+<specify_an_internet_domain>Sp&eacute;cifiez un domaine Internet en premier.</specify_an_internet_domain>
+<specify_an_organization_first>Sp&eacute;cifiez une organisation</specify_an_organization_first>
+<specify_a_server_first>Sp&eacute;cifiez un serveur d'abord</specify_a_server_first>
+<synchronization>Synchronisation</synchronization>
+<synchronize_server>Synchroniser le serveur</synchronize_server>
+<sync_user>Utilisateur pour la syncrhonisation</sync_user>
+<template-spam-admin>mod&egrave;le de Notification de Spam administrateur</template-spam-admin>
+<template-spam-sender>mod&egrave;le de Notification de Spam &eacute;metteur</template-spam-sender>
+<template-virus-admin>mod&egrave;le de Notification de virus administrateur</template-virus-admin>
+<template-virus-recipient>mod&egrave;le de Notification de Spam destinataire</template-virus-recipient>
+<template-virus-sender>mod&egrave;le de Notification de virus &eacute;metteur</template-virus-sender>
+<THIS_PAGE_NOT_EXISTS>Cette page n'existe pas</THIS_PAGE_NOT_EXISTS>
+<top10_hits>Top 10 des requ&ecirc;tes</top10_hits>
+<transport>Transport</transport>
+<UFDBGUARD_SSL_OPTS>Am&eacute;liorez le niveau de protection contre le phishing, les proxies et sites webs utilisant des certificats SSL non conformes.[br]
+Dans ce cas, un site l&eacute;gitime utilisant une addresse IP dans le lien web ou un certificat non conforme sera interdit.</UFDBGUARD_SSL_OPTS>
+<unjoin>D&eacute;connecter</unjoin>
+<update_artica_computer>Mise &agrave; jour Artica</update_artica_computer>
+<update_type>Type de mise &agrave; jour</update_type>
+<UseDynamicIpService>Activer le service IP dynamique</UseDynamicIpService>
+<useOpenDNS>Activation du service OpenDNS</useOpenDNS>
+<versions>versions</versions>
+<VIEW_WEBSITE_INFOS_TEXT>Voir les informations du site web et les diff&eacute;rents acc&egrave;s aux modules.</VIEW_WEBSITE_INFOS_TEXT>
+<virtual_alias_maps>Base d'aliases virtuels</virtual_alias_maps>
+<virtual_mailbox_maps>Base de bo&icirc;tes aux lettres virtuelles</virtual_mailbox_maps>
+<visited_websites>Sites web visit&eacute;s</visited_websites>
+<VPN>VPN</VPN>
+<waiting_replication>En attente de r&eacute;plication</waiting_replication>
+<webplugins>Sites offrant des extensions (plugins) pour sites web, dates, compteurs, flash, g&eacute;olocalisations</webplugins>
+<websites_not_categorized>Sites web non cat&eacute;goris&eacute;s</websites_not_categorized>
+<websites_not_categorized_text>Vous pouvez am&eacute;liorer les filtres web de la communaut&eacute; en appliquant des cat&eacute;gories aux sites web visit&eacute;s par vos utilisateurs</websites_not_categorized_text>
+<web_interface>Interface WEB</web_interface>
+<www_clothing>Sites web a propos de la mode et des v&ecirc;tements</www_clothing>
+<www_government>Sites web sur les collectivit&eacute;s, institutions r&eacute;gionales et organisations gouvernementales</www_government>
+<www_schools>Sites web parlant d'&eacute;coles, hautes &eacute;coles, universit&eacute;s, instituts d'&eacute;ducation.</www_schools>
+<your_account>Votre compte</your_account>
+<you_should_use_one_of_this_dn>Vous devriez utiliser l'un de ces DNs</you_should_use_one_of_this_dn>

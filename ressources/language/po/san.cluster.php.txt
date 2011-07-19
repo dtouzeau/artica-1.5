@@ -1,0 +1,7 @@
+<artica_listen_port>Remote Artica listent port</artica_listen_port>
+<cluster_server>Network Cluster Storage server IP</cluster_server>
+<main_storage_directory>Main storage directory</main_storage_directory>
+<SAN_CLUSTER>Network Cluster Storage</SAN_CLUSTER>
+<SAN_CLUSTER_CLIENT>Network Cluster Storage client</SAN_CLUSTER_CLIENT>
+<SAN_CLUSTER_CLIENT_TEXT>Link this computer to an Artica Network Cluster storage</SAN_CLUSTER_CLIENT_TEXT>
+<SAN_CLUSTER_TEXT>Dedicate this server to be a Network storage in order to build a Cluster environment for IMAP or other services</SAN_CLUSTER_TEXT>

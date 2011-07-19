@@ -1,0 +1,7 @@
+<ADD_CLUSTER_RESSOUCE>Ajouter un nouveau cluster</ADD_CLUSTER_RESSOUCE>
+<ADD_CLUSTER_RESSOUCE_TEXT>Ajouter un nouveau serveur dans votre biblioth&egrave;que</ADD_CLUSTER_RESSOUCE_TEXT>
+<disable_cluster_onthisserver>D&eacute;sactiver le cluster sur cet ordinateur</disable_cluster_onthisserver>
+<gluster_settings_saved>Param&egrave;tres cluster sauvegard&eacute;s</gluster_settings_saved>
+<order_scheduled>Ordre programm&eacute;...</order_scheduled>
+<replicated_folders>R&eacute;pertoires mirror&eacute;s</replicated_folders>
+<set_cluster_replicator>D&eacute;finir en tant que r&eacute;plicateur</set_cluster_replicator>

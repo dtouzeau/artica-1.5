@@ -1,0 +1,4 @@
+<ENABLE_OUT_OF_OFFICE>Activer l'auto-r&eacute;ponse</ENABLE_OUT_OF_OFFICE>
+<ENABLE_OUT_OF_OFFICE_TEXT>Si vous tournez le cercle au vert, le serveur de messagerie envoie automatiquement par e-mail une r&eacute;ponse  de vos mod&egrave;les personnalis&eacute;s en r&eacute;ponse aux e-mails.</ENABLE_OUT_OF_OFFICE_TEXT>
+<OUT_OF_OFFICE_TEXT>Cette section vous permet de cr&eacute;er et d'envoyer automatiquement des e-mails de r&eacute;ponse automatique par rapport &agrave; vos mod&egrave;les personnalis&eacute;s en r&eacute;ponse aux e-mails, bas&eacute; sur votre statut (continue, en dehors du bureau, vacances,  Etat libre/occup&eacute;), m&ecirc;me si vous &ecirc;tes loin de votre ordinateur.</OUT_OF_OFFICE_TEXT>
+<vacation_message>message d'absence</vacation_message>

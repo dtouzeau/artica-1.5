@@ -1,0 +1,143 @@
+
+h2
+{
+	font-family: Arial,Helvetica,sans-serif;
+	font-size: 18px;
+	font-weight: bold;
+	padding: 0px;
+}
+td.mainContent{
+	color: #000000;
+	background-color: #f0f0f0;
+}
+table.dk,tr.dk,td.dk{
+	background-color: #222244;
+}
+table.md,tr.md,td.md{
+	background-color: #b1b1b9;
+}
+tr.lt,td.lt{
+	background-color: #f0f0f0;
+}
+.bigTitle{
+	font-family: Arial,Helvetica,sans-serif;
+	font-size: 16px;
+	color: #FFFFFF;
+	font-weight: bold;
+}
+.small{
+	font-family: Arial,Helvetica,sans-serif;
+	font-size: 11px;
+}
+A.tblheader:link, 
+A.tblheader:active, 
+A.tblheader:visited,
+A.tblheader:hover{
+	font-size: 12px;
+	font-weight: bold;
+	color: #FFFFFF;
+}
+.tblheader{
+	font-family: Arial,Helvetica,sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #FFFFFF;
+}
+.hilite{
+	;
+}
+.folderList{
+	font-family: Arial,Helvetica,sans-serif;
+	font-size: 12px;
+	color: #FFFFFF;
+}
+.mainHeading{
+	font-family: Arial,Helvetica,sans-serif;
+	color: #FFFFFF;
+}
+A.mainHeading:link, 
+A.mainHeading:active, 
+A.mainHeading:visited,
+A.mainHeading:hover{
+	color: #FFFFFF;
+}
+.mainHeadingSmall{
+	font-family: Arial,Helvetica,sans-serif;
+	color: #FFFFFF;
+	font-size: 12px;
+}
+A.mainHeadingSmall:link,
+A.mainHeadingSmall:visited,
+A.mainHeadingSmall:active,
+A.mainHeadingSmall:hover{
+	color: #FFFFFF;
+	font-size: 11px;
+}
+.mainLight{
+	font-family: Arial,Helvetica,sans-serif;
+	color: #FFFFFF;
+}
+.error{
+	font-family: Arial,Helvetica,sans-serif;
+	color: #FF6666;
+}
+A.mainLight:link, 
+A.mainLight:active, 
+A.mainLight:visited,
+A.mainLight:hover{
+	color: #FFFFFF;
+}
+.mainLightSmall{
+	font-family: Arial,Helvetica,sans-serif;
+	color: #FFFFFF;
+	font-size: 11px;
+}
+A.mainLightSmall:link,
+A.mainLightSmall:visited,
+A.mainLightSmall:active,
+A.mainLightSmall:hover{
+	color: #FFFFFF;
+	font-size: 11px;
+}
+A.mainlt{
+	color: #888888;
+}
+A.nae{
+	font-weight: bold;
+}
+A.nac{
+	color: #EE9900;
+}
+.nads{
+	color: #444444;
+	padding: 6px 30px 6px 30px;
+	/*color: #444444;*/
+}
+.ra{
+	text-align: right;
+}
+span.quotes{
+	color: blue;
+}
+A.rmnav:link,
+A.rmnav:active,
+A.rmnav:visited,
+A.rmnav:hover{
+	color: #FFAA00;
+}
+td.subthread{
+	color: #888888;
+}
+A.splink{
+	color: #AA0000;
+}
+
+.menuText{
+	font-family: Arial,Helvetica,sans-serif;
+	font-size: 12px;
+	color: #FFFFFF;
+	font-weight: bold;
+}
+.menuText td{
+	vertical-align: bottom;
+}

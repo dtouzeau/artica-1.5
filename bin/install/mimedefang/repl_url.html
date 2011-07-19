@@ -1,0 +1,353 @@
+<html><head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2">
+<meta name="GENERATOR" content="VI">
+<meta name="AUTHOR" content="Steffen Kaiser">
+<meta name="COPYRIGHT" content="&#169; 2006 Steffen Kaiser">
+<meta name="KEYWORDS" content="mimedefang mail filter"><title>Remove attachements and replace by URL</title></head><body>
+
+<h3>HOWTO remove attachements from a mail and make them available through the Web (via URL)</h3>
+
+This feature bases on the function
+<code>action_replace_with_url</code> and patches by Jeremy Mates
+(http://lists.roaringpenguin.com/pipermail/mimedefang/2003-June/014908.html).
+You'll need a server capable of serving files, usually a Webserver,
+but a FTP server will do as well. MIMEDefang and the server must share a
+directory, into which MIMEDefang will write and the server will read from.
+
+<p>I will proceed assuming you use a Web-Server :-).
+
+</p><p>The security implications are such:
+<br>MIMEDefang will remove the attachment from the mail and save it
+into a file named <tt>&#171;sha1_from_content&#187;.&#171;original_extension&#187;</tt>.
+That means:
+<br>a) that the original filename except the extension is lost (but can be preserved, see below), and
+<br>b) that it is unlikely that someones can guess the filename
+unless he already got hold of the content. That's why there is no strong
+need to protect the shared file except for:
+</p><ul>
+<li>content manipulation and deletion, and
+</li><li>filename guessing.
+</li></ul>
+
+<ol>
+
+<li>First, create a directory into which the MIMEDefang user can write
+and the Webserver can read from, e.g.:
+
+<pre>drwxr-x---    2 mdefang  www-data     8192 Jun 16 12:16 /var/spool/MIMEDefang_Captured_Files</pre>
+
+The directory is owned by the mimedefang user, which can read and write it,
+the webserver can read its content, all others are denied.
+<br>These permissions will cover the first security consideration above.
+
+</li><li>Setup the server to serve the files in this directory, e.g. for
+the Apache, you can add this section:
+
+<pre># MIME Defang captured files
+Alias /captured_mailfiles/        /var/spool/MIMEDefang_Captured_Files/
+
+&lt;Directory "/var/spool/MIMEDefang_Captured_Files"&gt;
+        AddDefaultCharset Off
+        DefaultType application/octet-stream
+        Options None
+        AllowOverride None
+        Order allow,deny
+        Allow from all
+&lt;/Directory&gt;</pre>
+
+<strong>Note:</strong> It is strongly advisable to not allow directory
+indexing, otherwise you might leak information, because <em>anyone</em>
+can easily read <em>any file your server recieved</em> and you've ordered
+MIMEDefang to capture.
+<br>All two security considerations above are covered now.
+
+<p>Surf to <tt>http://url_server/captured_mailfiles/</tt>, you should
+see a denial error.
+</p><p>Then create a test file there, e.g. named <tt>test</tt>, and try to
+access it, it must work.
+
+</p></li><li>Setup MIMEDefang to actually put some files there.
+
+<p>Attachments are available in the function <tt>filter</tt> only. Hence,
+you'll have to wind up some logic to decide <em>which</em> attachements
+are entitled for distributing via Web rather than email.  My filter
+contains this code: <font size="-1">Note: <code>$entity</code> is the
+first argument of the sub <tt>filter</tt>, <code>$lcType</code> is the
+<code>lc()</code> of the forth argument (the supposed content type),
+<code>$friendlyName</code> is a humanized and securified version of the
+file name (the second argument), all other variables are computed by
+the filter.</font>
+</p><pre>   # We are a leaf, replace non-text/* MIME Attachments
+if($oneRcptIsLargeList || $oneRcptIsList &amp;&amp; !$isAuthed) {
+	 if($lcType eq 'message/delivery-status') {
+		 md_graphdefang_log('dsn_to_list', $lcType, '');
+		 return action_bounce("Protect list against wrongly routed DSNs - rejected");
+	 }
+	if($lcType =~ /^text\// || $lcType eq 'application/x-pkcs7-signature') {
+		skahead "Keeping MIME attachment '$friendlyName' of $lcType";
+	} else {
+		my $size = (stat($entity-&gt;bodyhandle-&gt;path))[7];
+		if($size &gt;= 10*1024) {          # larger than 10KB
+			if($size &gt; 1024) {
+				$size = int($size / 1024);
+				if($size &gt; 1024) {
+					$size = int($size / 1024);
+					$size .= 'MB';
+				} else {
+					$size .= 'KB';
+				}
+			} else {
+				$size .= "B";
+			}
+			skahead "Replace $lcType '$friendlyName' ($size) with URL";
+			return action_replace_with_url($entity,
+				"/var/spool/MIMEDefang_Captured_Files",
+				"http://url_server/captured_mailfiles",
+"Der Anhang '$friendlyName' wurde aufgrund seiner Groesse aus dieser
+Nachricht entfernt, kann jedoch ueber folgende URL abgerufen werden:\n
+The attachment '$friendlyName' was removed from this mail, but
+may be accessed at this URL (approx. $size):\n" .
+			"\t_URL_\n"
+			, "$lcType $friendlyName\n", $skaCfg{urlsalt});
+		} else {
+			skahead "Keeping MIME attachment '$friendlyName' of $lcType size: $size";
+		}
+	}
+}</pre>
+What's all this about?
+<ul>
+<li><code>if($oneRcptIsLargeList || $oneRcptIsList &amp;&amp; !$isAuthed) {</code>
+<br>replacements take place only when sending to a list of many recipients
+or to a list, when the sender is <em>not</em> authentificated.
+
+</li><li><code>if($lcType eq 'message/delivery-status') </code>
+<br>DSNs to a list?? That's SPAM, no list is sending out mail, bounce it.
+
+</li><li><code>if($lcType =~ /^text\// || $lcType eq 'application/x-pkcs7-signature')</code>
+<br>Pure text attachements and signatures are kept in the mail.
+
+</li><li><code>return action_replace_with_url(</code>
+<br>That's the actual function to remove the attachment and replace it
+with a warning. See <tt>man mimedefang-filter</tt> about the meaning of
+all the paramters.
+
+<ul>
+<li>The second argument is the absolute path to the local directory the
+files are storred in.
+</li><li>The third one is the prefix of the
+URL. MIMEDefang will append a slash and the
+<tt>&#171;sha1_from_content&#187;.&#171;original_extension&#187;</tt>
+part.
+</li><li>The forth one is the message inserted into the Warning part of the
+mail, any occurence of <tt>_URL_</tt> is replaced by the full URL.
+</li><li>The fifth argument actually allows you to <em>preserve the original
+filename</em>. See below.
+</li></ul>
+
+<p>My function <tt>skahead</tt> logs the message to syslog and, if running
+in verbose mode, adds a header line. These are my debug-in-production
+fallbacks.
+
+</p><p>To generate the <tt>$friendlyName</tt> I use the function:
+</p><pre>sub skaFriendlyName ($) {
+        my $fname = $_[0];
+
+        $fname =~ s/[^a-zA-z0-9_.-]+/_/g;
+        $fname = "unnamed_item" if length($fname) &lt; 1 || $fname eq '_';
+
+        return $fname;
+}</pre>
+on the 2nd argument of <tt>sub filter</tt>.
+
+</li></ul></li></ol>
+
+Now send a test mail you are sure about triggering the condition to
+replace an attachement.
+
+<p>Check out the mail, the spool directory and if you can access the link.
+Note: Because of the 5th argument you ought to find a hidden file with
+the same name (well, and the dot of course) in the directory.
+<br>E.g. use: <code>wget http://url_server/captured_mailfiles/XYZ.ext</code>
+
+</p><hr>
+
+<h3>HOWTO preserve the original filename</h3>
+
+Again, this neat feature has been brought to you by Jeremy Mates
+(http://lists.roaringpenguin.com/pipermail/mimedefang/2003-June/014908.html).
+
+<p>The fifth argument of the <tt>action_replace_with_url</tt> function
+instructs MIMEDefang to store arbitary data into a file named <tt><font size="+1"><b>.</b></font>&#171;sha1_from_content&#187;.&#171;original_extension&#187;</tt>
+(with the leading dot!!) into the same directory as the captured file,
+<tt>/var/spool/MIMEDefang_Captured_Files</tt> in my case.  I decided to
+store the original content type as well as the original filename.
+
+</p><p>Now you have to configure the Webserver to pass this information back
+to the client, which then has to decide what to do with it. Normally
+the user gets this filename, when he tries to save the file.
+
+</p><p>Jeremy implemented a perl script callable by mod_perl, I took it and
+added some extra stuff for my needs.
+
+</p><ul>
+<li>Configure Apache to use <tt>mod_perl</tt>. Well, you need to consult
+the Apache docs or just tell your distribution to include mod_perl.
+
+</li><li>Locate the Perl site directory (well that's the same
+<tt>/usr/local/bin</tt> is for <tt>/usr/bin</tt>), mine is named
+<tt>/usr/local/lib/site_perl</tt>.  And create a directory <tt>Apache</tt>
+in it and finally the file <tt>Apache/AddContentDisposition.pm</tt>
+<br>with this content:
+<pre># Apache 1.3 mod_perl PerlTypeHandler to add the Content-Disposition
+# header to outgoing files from a ".filename" file in the same directory
+# containing the real file.  This allows files with names such as
+# "341ee566.gif" to have a human-friendly name associated with them.
+#
+# See RFC 2183 for more information on the Content-Disposition header.
+#
+# Enable this module with a PerlTypeHandler directive for the
+# &lt;Directory&gt; or similar areas in question after installing this file
+# under an Apache directory in @INC.
+#
+# PerlTypeHandler Apache::AddContentDisposition
+#
+# The author disclaims all copyrights and releases this module into the
+# public domain.
+
+package Apache::AddContentDisposition;
+
+use Apache::Constants qw(OK DECLINED);
+
+# to determine the Content-Type of the file
+use File::MMagic;
+
+#	rename	from	=&gt;		to
+my %map = (
+        'image/pjpeg' =&gt; 'image/jpeg'
+);
+my %needMagic = (
+        'application/octet-stream' =&gt; 1
+        , 'application/binary' =&gt; 1
+);
+
+sub handler {
+        my $r = shift;
+
+#LOG!  $r-&gt;warn("In AddContentDisposition" . $r-&gt;filename);
+
+        # /foo/bar file from Apache -&gt; /foo/.bar metafile
+        (my $metafile = $r-&gt;filename) =~ s,/([^/]+)$,/.$1,;
+
+        # first line of data should contain mime type, tab, then the
+        # recommended filename
+        unless(open(FILE, $metafile)) {
+                $r-&gt;log_reason("No such metafile \"$metafile\": $! " . $r-&gt;filename);
+                return DECLINED;
+        }
+        my $filename = &lt;FILE&gt;;
+        close FILE;
+
+#LOG!  $r-&gt;warn("$metafile -&gt; $filename");
+
+        return DECLINED unless $filename;
+
+        my $mime_type = undef;
+        if($filename =~ s!^([a-z0-9-]+/\S+)\s+!!i) {
+                $mime_type = lc($1);
+        }
+
+        # sanitize out characters not listed and .. runs to mitigate potential
+        # security problems on clients
+        $filename =~ s/[^\w.-]//g;
+        $filename =~ s/\.\.+/\./g;
+        # Lowercase extension
+        $filename =~ s/\.([^\.]*[A-Z][^\.]*)$/\.\L$1/g;
+
+#LOG!        $r-&gt;warn("1: MIME type = '$mime_type', filename = '$filename'");
+
+        return DECLINED unless $filename;
+
+        if(!$mime_type || defined $needMagic{$mime_type}) {
+                # need to set Content-Type as is set to text/plain once our custom
+                # Content-Disposition header is set, which trips up Mozilla
+                my $type = File::MMagic-&gt;new-&gt;checktype_filename($r-&gt;filename);
+
+                $mime_type = $type if $type;
+
+#LOG!                $r-&gt;warn("File/MMagic: MIME type = '$mime_type', filename = '$filename'");
+        }
+
+        return DECLINED unless $mime_type;
+
+        if(my $type = $map{lc($mime_type)}) {
+                $mime_type = $type;
+        }
+
+        $r-&gt;content_type($mime_type);
+        $r-&gt;headers_out-&gt;set("Content-Disposition" =&gt; "inline; filename=$filename");
+
+        return OK;
+        }
+
+1; </pre>
+
+What's all this about?
+<br>Well, basically the dot-file for the requested file is read and,
+if it provides the filename (and MIME type), sends this information
+back to the client.  The <tt>File::MMagic</tt> module helps to detect
+a proper MIME type for the file, if
+<br>a) the content type was not specified in the mail, or
+<br>b) was a generic one, listed in the <tt>needMagic</tt> hash.
+
+<p>The <tt>map</tt> hash renames some MIME types.
+
+
+</p></li><li>Change the MIMEDefang related configuration of Apache:
+<pre># MIME Defang captured files
+Alias /captured_mailfiles/        /var/spool/MIMEDefang_Captured_Files/
+
+&lt;Directory "/var/spool/MIMEDefang_Captured_Files"&gt;
+	<font size="+1"><b>SetHandler perl-script
+	PerlTypeHandler Apache::AddContentDisposition</b></font>
+	AddDefaultCharset Off
+	DefaultType application/octet-stream
+	Options None
+	AllowOverride None
+	Order allow,deny
+	Allow from all
+&lt;/Directory&gt;</pre>
+The two new lines instruct Apache to pass any request to the
+directory through a Perl script (actually a Perl module) named
+<tt>Apache::AddContentDisposition</tt>.
+
+</li><li>Reload Apache and check that no errors show up.
+
+</li><li>Test with a file <em>that has a corresponding dot file!</em>, e.g.:
+<pre>wget -S http://url_server/captured_mailfiles/XYZ.ext
+<em>[snip]</em>
+HTTP request sent, awaiting response...
+ 1 HTTP/1.1 200 OK
+ 2 Date: Fri, 16 Jun 2006 14:27:41 GMT
+ 3 Server: Apache/1.3.26 (Unix) Debian GNU/Linux mod_auth_pam/1.0a mod_ssl/2.8.9 OpenSSL/0.9.6c mod_perl/1.26
+<font size="+1"><b> 4 Content-Disposition: inline; filename=FILENAME.pdf</b></font>
+ 5 Last-Modified: Thu, 01 Jun 2006 19:07:40 GMT
+ 6 ETag: "b8bc5-34e8-447f3afc"
+ 7 Accept-Ranges: bytes
+ 8 Content-Length: 13544
+ 9 Keep-Alive: timeout=15, max=100
+10 Connection: Keep-Alive
+<font size="+1"><b>11 Content-Type: application/pdf</b></font>
+<em>[snip]</em></pre>
+
+You ought to see the proper content type and filename in the particular
+lines.
+
+
+
+
+<p></p><hr>
+<font size="1">
+<a href="ftp://ftp.cs.pdx.edu/pub/elvis/"><img src="repl_url_fichiers/vi.gif" alt="Elvis - The VI clone"></a>
+</font>
+</li></ul></body></html>

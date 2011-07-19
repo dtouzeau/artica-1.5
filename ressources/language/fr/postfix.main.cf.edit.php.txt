@@ -1,0 +1,5 @@
+<maincf_data>Donn&eacute;e cl&eacute;</maincf_data>
+<maincf_key>Fichier cl&eacute;</maincf_key>
+<main_help>Cette section vous permet d'ajouter des entr&eacute;es dans le fichier de configuration main.cf.[br]Chaque entr&eacute;e peut remplacer le param&egrave;tre pr&eacute;format&eacute; d'Artica ou d'ajouter des donn&eacute;es au param&egrave;tre pr&eacute;format&eacute;[br]Par exemple : virtual_transport_maps - &gt; /etc/postfix/mytransport.cf - &gt; add[br]
+default_process_limit - &gt; 100 - &gt; remplacent</main_help>
+<perso_maincf>Personnalisez le fichier de configuration main.cf</perso_maincf>

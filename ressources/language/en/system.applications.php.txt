@@ -1,0 +1,37 @@
+<howto_install>If you using [b]source mode[/b], run in a console this command line[br]
+[b]/usr/share/artica-postfix/artica-install addons[/b]
+[br]This operation allows you to select which supported product to install[br][br]
+
+[H5]Artica Manage postfix and addons[/H5]
+If you using [b]repositories packages for debian or RedHat (dpkg or rpm)[/b]:[br]
+You have 5 modules that you can download on sourceforge.
+
+[ul]
+[li][b]artica-postfix-smtp-relay[/b][br]
+This package convert artica to be an SMTP Relay using postfix main program,bogofilter anti-spam tool and saslauthd
+[li][b]artica-postfix-security[/b][br]
+This package convert artica to a full SMTP security server using Kaspersky Anti-spam and Kaspersky Anti-virus (license with 30 days to evaluate them).
+[li][b]artica-postfix-mailbox[/b][br]
+This package convert artica to be a mailbox IMAP/POP3 server using cyrus-imap
+[li][b]artica-postfix-webmail[/b][br]
+This package add a webmail module in artica using RoundCube eMail and Mysql.
+[/ul]
+
+There is an order to install these packages, for example, if you want to install a full mail server (mailbox and webmail) you must install in this direction : [br]
+artica-postfix-smtp-relay -> artica-postfix-security -> artica-postfix-mailbox ->artica-postfix-webmail[br]
+[br][br]
+[blk][b]http://sourceforge.net[/b][/blk]
+
+[br][br]
+[H5]Artica Manage Squid and addons[/H5]
+This section is currently on "beta stage"[br]
+if you want to test it, please let me know (david.touzeau@fr.kaspersky.com)
+[br][br]
+If you using [b]repositories packages for debian or RedHat(dpkg or rpm) [/b]:[br]
+You have 2 modules that you can download on sourceforge.
+[ul]
+[li][b]artica-squid-proxy[/b][br]
+This package convert artica to be a proxy server using Squid 3.x
+[li][b]artica-squid-security[/b][br]
+This package add security modules for Squid 3.x using DansGuardian and Kaspersky Anti-Virus For Squid ICAP (license with 30 days to evaluate it).
+[/ul]</howto_install>

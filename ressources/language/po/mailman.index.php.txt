@@ -1,0 +1,8 @@
+<ENABLE_MAILMAN>Enable Mailing list service</ENABLE_MAILMAN>
+<ENABLE_MAILMAN_TEXT>Turn this feature to green in order to enable the Mailman mailing list distribution list</ENABLE_MAILMAN_TEXT>
+<mailman_intro>
+Mailman is free software for managing electronic mail discussion and e-newsletter lists.[br]
+Mailman is integrated with the web, making it easy for users to manage their accounts and for list owners to administer their lists.[br]
+Mailman supports built-in archiving, automatic bounce processing, content filtering, digest delivery, spam filters, and more.[br]
+Mailman is free software, distributed under the GNU General Public License. Mailman is written in the Python programming language, with a little bit of C code for security.[br]
+The name of this software is spelled Mailman with a capital leading M and a lowercase second m. It is incorrect to spell it "MailMan". </mailman_intro>

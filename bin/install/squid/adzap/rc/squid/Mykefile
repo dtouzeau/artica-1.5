@@ -1,0 +1,21 @@
+:import	SYSTEMID
+
+subnets	= $('ip-ranges@*.raw' G)
+acls	= $(subnets P)
+sites	= home zip cisra
+confs	= conf-$((sites))
+
+all:	$(acls) conf-$(SYSTEMID)
+
+$(acls):	$@.raw
+	subn2n4 <$? >$@
+
+conf-%: tplt tplt-%
+	envsub tplt tplt-$(@S[-]) >$@
+	:make _update@$(SYSTEMID)
+
+_update@cisra:
+	cd $$HOME/tmp/cfg/squid/sweet || exit 1 \
+	  cp $./conf-cisra squid.conf || exit 1 \
+	  cvs commit -m "" squid.conf
+

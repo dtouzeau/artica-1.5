@@ -1,0 +1,106 @@
+<AddExcludeDarFileType>Donnez le nom d'extension en vue d'exclure la compression (comme *. zip)</AddExcludeDarFileType>
+<add_backup_folder>Explorer votre serveur et d&eacute;finissez quels r&eacute;pertoires seront sauvegard&eacute;s</add_backup_folder>
+<APP_RSYNC_CLIENT>Moteur de Synchronisation distante</APP_RSYNC_CLIENT>
+<APP_RSYNC_CLIENT_TEXT>configurez ce serveur afin qu'il pousse vos sauvegardes vers un serveur r&eacute;seaux de synchronisation</APP_RSYNC_CLIENT_TEXT>
+<artica_conf>Fichiers de configuration Artica</artica_conf>
+<backup_engine>Moteur de param&egrave;tres</backup_engine>
+<backup_engine_text>D&eacute;finir les param&egrave;tres du moteur de sauvegarde</backup_engine_text>
+<backup_every>Effectuez chaque sauvegarde</backup_every>
+<backup_foldersize>Taille du dossier de sauvegarde</backup_foldersize>
+<browse_external_storage>Bibliotheque de stockages</browse_external_storage>
+<browse_external_storage_explain>Ces ressources externes seront utilis&eacute;es si elles sont disponibles. Si l'un d'entre elles est disponible, la sauvegarde sera effectu&eacute;e.[br]
+Artica va utiliser toutes les ressources list&eacute;es. Par exemple si 2 ressources sont disponibles, la sauvegarde sera effectu&eacute;e des les deux ressources de fa&ccedil;on s&eacute;quentielle.</browse_external_storage_explain>
+<browse_external_storage_text>Lister vos ressources externes</browse_external_storage_text>
+<collection>Bibliotheque</collection>
+<collection_number>Nombre de bibliotheques</collection_number>
+<compress_level>Niveau de compression</compress_level>
+<compress_level_help>Cette option active la compression d'archive Bzip2, qui par d&eacute;faut est d&eacute;sactiv&eacute;.[br]
+Vous pouvez m&ecirc;me indiquer un niveau de compression num&eacute;rique, qui va de 0 (pas de compression) &agrave; 9 (meilleure compression, lenteur de la transformation).[br]
+Bzip2 utilise par d&eacute;faut 6, qui est la meilleure vitesse et taux de compression pour la plupart des fichiers</compress_level_help>
+<connecting>En cours de connexion</connecting>
+<container_path>Chemin du r&eacute;pertoire pour stocker les sauvegardes incr&eacute;mentales</container_path>
+<dar_pub>DAR ou Disk Archive est un excellent logiciel &eacute;crit par Denis Corbin qui effectue de la suavegarde de fa&ccedil;on incr&eacute;mentale. Son objectif est de r&eacute;duire la taille des archives gr&agrave;ce &agrave; l'utilisation d'algorithmes sp&eacute;cifiques d'indexation.[br]DAR peut trouv&eacute; sur le site http://dar.linux.free.fr</dar_pub>
+<display_dar_collection>Affichage de sauvegarde</display_dar_collection>
+<display_dar_collection_text>Consultez vos fichiers sauvegard&eacute;s et restaurez  la sauvegarde</display_dar_collection_text>
+<enable_incremental>Activer d&eacute;sactiver la sauvegarde incr&eacute;mentale</enable_incremental>
+<exclude_compress_file_types>Exclure les fichiers de compression du moteur</exclude_compress_file_types>
+<exclude_compress_file_types_text>Donnez les extensions (largeur *) afin d'exclure ces fichiers du moteur de compression</exclude_compress_file_types_text>
+<external_storage>Stockage externe</external_storage>
+<external_storage_text>Vous pouvez utiliser une unit&eacute; de stockage externe pour stocker vos sauvegardes, actuellement les stockages externes sont des m&eacute;dias de stockage de Masse USB et des partages r&eacute;seaux</external_storage_text>
+<global_settings>Param&egrave;tres globaux</global_settings>
+<global_settings_text>D&eacute;finissez ici les param&egrave;tres globaux du moteur de sauvegarde</global_settings_text>
+<homes>R&eacute;pertoires d'accueil</homes>
+<homes_folder_exclude>Exclure certains r&eacute;pertoires d'accueil</homes_folder_exclude>
+<index>Index</index>
+<indexing>Reconstruire les indexes</indexing>
+<in_mysql_database>Dans la base de donn&eacute;e SQL</in_mysql_database>
+<ldap_datas>Bases de donn&eacute;es LDAP</ldap_datas>
+<list_dar_collection>Liste des collections</list_dar_collection>
+<list_dar_collection_text>Afficher la liste de vos collections sauvegard&eacute;s afin de restaurer</list_dar_collection_text>
+<mailboxes>Boites aux lettres</mailboxes>
+<minimal_compress>Ne pas compresser les fichiers sous</minimal_compress>
+<mount_dar>Montez votre collection de sauvegarde</mount_dar>
+<mount_dar_text>Connectez Artica &agrave; votre zone de sauvegarde afin d'interroger</mount_dar_text>
+<mount_this_collection>connecter une biblioth&egrave;que</mount_this_collection>
+<mysql_datas>Bases de donn&eacute;es Mysql</mysql_datas>
+<nice_int>Priorit&eacute; de Planification (bon)</nice_int>
+<nice_int_text>D&eacute;marrer le processus de sauvegarde, avec un calendrier de priorit&eacute;.[br]
+S'&eacute;tend de -20 (priorit&eacute; la plus &eacute;lev&eacute;e) &agrave; 19 (plus bas).</nice_int_text>
+<no_dar_installed>L'archive de disque n'est pas install&eacute;e</no_dar_installed>
+<no_dar_installed_text>Cette fonctionnalit&eacute; ne supportent que DAR (Archive de disque).[br] Vous devez l'installer, il faut aller au Centre d'installation en vue de l'installer</no_dar_installed_text>
+<OnFly>Messages sauvegard&eacute;s</OnFly>
+<original_path>chemin d'origine</original_path>
+<populate_text>La ressource sera peupl&eacute;e en arri&egrave;re-plan ...</populate_text>
+<query_collection>Requ&ecirc;te de collection de sauvegarde</query_collection>
+<query_collection_explain>Donnez le nom complet de votre fichier (&eacute;toile * ne sont pas pris en charge)</query_collection_explain>
+<query_collection_text>Recherche de fichiers dans le cadre de la collection
+de sauvegarde</query_collection_text>
+<RebuildCollectionAsk>Reconstruisez la collection? Cela devrait prendre du temps car cela d&eacute;pend de la taille de vos fichiers de sauvegarde</RebuildCollectionAsk>
+<rebuild_collection>Reconstruire la collection</rebuild_collection>
+<rebuild_collection_text>Cette op&eacute;ration va recr&eacute;e une nouvelle index de collection</rebuild_collection_text>
+<refresh_cache>Rafraichir les caches de fichiers</refresh_cache>
+<remote_foldersize>Taille de stockage &agrave; distance</remote_foldersize>
+<restore_choose_date>Choisissez le conteneur et sa date afin de restaurer le fichier</restore_choose_date>
+<restore_file_text>Cette op&eacute;ration va extraire les fichiers sauvegard&eacute;s depuis le conteneur.Indiquez ici o&ugrave; les fichiers vont &ecirc;tre restaur&eacute;s.</restore_file_text>
+<restore_from_defined_path>Restauration depuis le chemin d&eacute;fini</restore_from_defined_path>
+<restore_from_original_path>Restaurer &agrave; partir du chemin d'origine</restore_from_original_path>
+<restoring_explain_operation>Succ&egrave;s ...
+L'op&eacute;ration de restauration a &eacute;t&eacute; lanc&eacute; en arri&egrave;re-plan.
+en peu de temps ..
+L'op&eacute;ration de restauration sera achev&eacute;e.</restoring_explain_operation>
+<run_backup>Lancer la sauvegarde maintenant</run_backup>
+<run_backup_performed>Le processus de sauvegarde &agrave; &eacute;t&eacute; programm&eacute;, il va tourner en t&acirc;che de fond..</run_backup_performed>
+<run_backup_text>Lancez la sauvegarde maintenant et remplissez vos conteneurs.</run_backup_text>
+<schedule_text>Pr&eacute;ciser ici le calendrier des sauvegardes, vous pouvez choisir le jour, o&ugrave; le processus de sauvegarde sera ex&eacute;cut&eacute;</schedule_text>
+<select_your_storage>selectionnez votre espace de stockage</select_your_storage>
+<select_your_storage_text>Afin d'effectuer les op&eacute;rations dans votre biblotheque, il est n&eacute;c&eacute;ssaire de s&eacute;lectionner votre ressource externe de stockage que vosu avez pr&eacute;c&eacute;demment ajout&eacute;</select_your_storage_text>
+<shares_folders>Dossiers partag&eacute;s Samba</shares_folders>
+<shares_folder_exclude>Exclure des dossiers partag&eacute;s</shares_folder_exclude>
+<shares_folder_exclude_text>S&eacute;lectionnez votre dossiers partag&eacute;s afin de les exclure du processus de sauvegarde</shares_folder_exclude_text>
+<slice_size_mb>Fonction tranche de taille</slice_size_mb>
+<slice_size_mb_help>La taille  xxx en m&eacute;gaoctets est la taille maximale que les fichiers DAR peuvent cr&eacute;es.[br]
+Si votre sauvegarde est plus grande, vous allez vous retrouver avec des fichiers de sauvegarde ayant un num&eacute;ro avec une tranche avant l'extension du fichier,
+de sorte que vous pouvez enregistrer chaque fichier sur une autre unit&eacute; de support de sauvegarde (disquettes, ZIP, CDROM, etc.)</slice_size_mb_help>
+<smtp_notify>Envoyer un mail de notification</smtp_notify>
+<source_path>Chemin source</source_path>
+<this_device>Ce dispositif</this_device>
+<userdef>Utilisateur d&eacute;fini</userdef>
+<user_defined>Utilisateur d&eacute;fini</user_defined>
+<user_defined_schedule_explain>Par d&eacute;faut, le processus de sauvegarde fonctionne tous les jours.[br] Pour les dossiers d&eacute;finis par l'utilisateur, vous pouvez d&eacute;finir un calendrier de toutes les X minutes.[br]
+Toutes les sauvegardes sont en mode incr&eacute;mentales.Si il n'y a pas de changements, la sauvegarde ne prend pas d'espace disque sur votre support de stockage.
+[br]Si vous voulez d&eacute;sactiver cette fonction, r&eacute;glez &quot;00&quot; sur le calendrier de la liste.</user_defined_schedule_explain>
+<user_defined_text>D&eacute;finissez ici les r&eacute;pertoires que vous voulez sauvegarder</user_defined_text>
+<use_local_external_failed>Utilisez le chemin d'acc&egrave;s local si le stockage externe a &eacute;chou&eacute;</use_local_external_failed>
+<use_local_storage>Utiliser le syst&egrave;me de fichier de ce serveur.</use_local_storage>
+<use_local_storage_text>Parcourez le syst&egrave;me de fichiers de ce serveur et choisissez un r&eacute;pertoire.</use_local_storage_text>
+<use_network_storage>Utiliser les dossiers partag&eacute;s R&eacute;seau</use_network_storage>
+<use_network_storage_text>Cette fonctionnalit&eacute; vous aide &agrave; d&eacute;finir le partage de dossier distant pour stocker vos fichiers de sauvegarde</use_network_storage_text>
+<use_usb_storage>Utiliser le Stockage USB</use_usb_storage>
+<use_usb_storage_explain>Branchez votre p&eacute;riph&eacute;rique externe et cliquez sur &quot;Actualiser&quot; pour l'afficher et le s&eacute;lectionner</use_usb_storage_explain>
+<use_usb_storage_text>Cette fonctionnalit&eacute; vous permet de d&eacute;finir un disque USB de Stockage de Masse en vue de stocker vos fichiers de sauvegarde</use_usb_storage_text>
+<view_logs>Afficher les &eacute;v&eacute;nements des op&eacute;rations de sauvegarde</view_logs>
+<what_to_backup>que voulez-vous sauvegarder ?</what_to_backup>
+<what_to_backup_text>Pr&eacute;ciser ce que vous souhaitez stocker dans le conteneur de sauvegarde</what_to_backup_text>
+<WHERE_TO_BACKUP>O&ugrave; stocker vos sauvegardes ?</WHERE_TO_BACKUP>
+<WHERE_TO_BACKUP_TEXT>D&eacute;finissez une ressource externe afin de sauvegarder vos conteneurs &agrave; l'ext&eacute;rieur de ce serveur.</WHERE_TO_BACKUP_TEXT>
+<you_need_to_mount_collection_first>Vous avez besoin de connecter une biblioth&egrave;que afin d'utiliser cette section.</you_need_to_mount_collection_first>

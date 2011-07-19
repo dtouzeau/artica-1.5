@@ -1,0 +1,8 @@
+<error_no_ie>Informacion: Su navegador tiene algunas incompatibilidades ...</error_no_ie>
+<error_no_ie_text>Actualmente no es posible proporcionar una buena gesti&oacute;n de la interfaz con Microsoft Internet Explorer u Opera.&lt;br&gt;
+Le sugiero que utilize [b]Mozilla Firefox[/b] en su lugar.[br]
+Mozilla Firefox ha conseguido superar todas las pruebas de AJAX.[br]
+Por favor, vuelva con &quot;otro navegador&quot;.
+[br]Si ha instalado webmail, puede dar/obtener el enlace directo a la interfaz.[br]</error_no_ie_text>
+<template>Plantilla</template>
+<template_text>Elija su plantilla favorita para sus sesiones</template_text>

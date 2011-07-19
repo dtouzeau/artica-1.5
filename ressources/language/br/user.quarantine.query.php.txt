@@ -1,0 +1,24 @@
+<anti_spam_rate>% Taxa</anti_spam_rate>
+<anti_spam_results>Informa&ccedil;&otilde;es detectadas</anti_spam_results>
+<by_other>Outros</by_other>
+<by_sender>Por remetente</by_sender>
+<by_subject>Por assunto</by_subject>
+<delete_mails>Apagar emails</delete_mails>
+<delete_mails_text>Deletar todos os emails guardados do remetente deste email</delete_mails_text>
+<extra_infos>Informa&ccedil;&otilde;es extras</extra_infos>
+<extra_infos_text>Trazer mais informa&ccedil;&otilde;es t&eacute;cnicas sobre este e-mail clicando neste &iacute;cone</extra_infos_text>
+<last_quarantine_files>&Uacute;ltimos emails guardados em sua &aacute;rea de quarentena</last_quarantine_files>
+<mail_servers_ip>Servidor</mail_servers_ip>
+<messages_in_quarantine>Mensagem(ns) em sua &aacute;rea de quarentena[br]</messages_in_quarantine>
+<release_mail>Emails liberados</release_mail>
+<release_mail_text>Envie este email para sua caixa[br]Este email n&atilde;o vai passar por filtros</release_mail_text>
+<search>Procurar mensagens</search>
+<search_text>Procurar mensagens em sua &aacute;rea de quarentena</search_text>
+<size>Tamanho</size>
+<star_supported>O caractere especial '*' &eacute; suportado em buscas, voc&ecirc; pode usar em suas pesquisas.</star_supported>
+<subject>Assunto</subject>
+<time>Hora</time>
+<total_mails>Emails em sua &aacute;rea</total_mails>
+<view>Visualizar</view>
+<white_list_email_text>Adicionar o remetente deste email na base de dados de sua lista branca (White list) e entregar este email</white_list_email_text>
+<your_query>Sua fila</your_query>

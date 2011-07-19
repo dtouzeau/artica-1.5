@@ -1,0 +1,16 @@
+<BAD_SCORE>Mauvais score</BAD_SCORE>
+<DNSBL_settings>Param&egrave;tres DNSBL RHSBL</DNSBL_settings>
+<DNSBL_settings_text>D&eacute;finissez la liste et les scores des serveurs DNS des listes noires</DNSBL_settings_text>
+<DNSERRMSG>Texte Message d'erreur DNS</DNSERRMSG>
+<GOOD_SCORE>bons scores</GOOD_SCORE>
+<MAINTENANCE_LEVEL>Apr&egrave;s combien de requ&ecirc;tes le fichier de configuration sera recharg&eacute;</MAINTENANCE_LEVEL>
+<MAXDNSBLHITS>Nombre de serveurs RBLs pour rejeter le message</MAXDNSBLHITS>
+<MAXDNSBLMSG>Erreur DNSBL</MAXDNSBLMSG>
+<MAXDNSBLSCORE>Les scores DNSBL des messages sup&eacute;rieur &agrave; cette valeur seront imm&eacute;diatement rejet&eacute;s</MAXDNSBLSCORE>
+<MAXDNSERRMSG>Erreur DNS</MAXDNSERRMSG>
+<MAXIDLECACHE>Apr&egrave;s combien de secondes, le moteur recharge son fichier de configuration</MAXIDLECACHE>
+<MAX_PROC>Combien de processus le moteur va pr&eacute;-charger</MAX_PROC>
+<MIN_PROC>Nombre minimal de processus charg&eacute;s en m&eacute;moire m&ecirc;me en cas de non-activit&eacute;</MIN_PROC>
+<PolicydDaemonNotifs>Indiquez les erreurs que va afficher le moteur &agrave; l'ordinateur &eacute;metteur en cas de rejet.</PolicydDaemonNotifs>
+<REJECTMSG>Message de rejet</REJECTMSG>
+<SOMAXCONN>Nombre maximal de connexions accept&eacute;e par le moteur.</SOMAXCONN>

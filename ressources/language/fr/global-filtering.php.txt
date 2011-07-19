@@ -1,0 +1,17 @@
+<br>Cette section vous aide &agrave; ajouter des mots cl&eacute;.
+Si ces mots  apparaissent dans un email, ils  seront filtr&eacute;s et seront REJETES par le serveur</br>
+<bt_filter_headers>R&egrave;gles de Sujets</bt_filter_headers>
+<bt_filter_headers_from>Mail &agrave; partir de r&egrave;gles</bt_filter_headers_from>
+<bt_mime_attachments>r&egrave;gles de pi&egrave;ces jointes</bt_mime_attachments>
+<extension_list_title>filtrer la liste d'extension de pi&egrave;ces jointes</extension_list_title>
+<from_rules_explain>Cette fonctionnalit&eacute; vous permet de bloquer les mails avec des mots dans l'adresse de l'exp&eacute;diteur</from_rules_explain>
+<js_del_extension>Supprimer ce filtre d'extension</js_del_extension>
+<js_del_from>Supprimer cette r&egrave;gle</js_del_from>
+<js_del_subject>Supprimer cette r&egrave;gle de sujet</js_del_subject>
+<mail_from_add>Ajouter une r&egrave;gle de mots pour le courrier &eacute;lectronique</mail_from_add>
+<mime_attachments_add>R&eacute;gler le nom de l'extension: exe ou dll ou bat</mime_attachments_add>
+<mime_attachments_explain>Cette fonctionnalit&eacute; vous permet de bloquer les mails avec une extension de fichier joint.</mime_attachments_explain>
+<postfix_error>Donnez l'erreur  postfix  lorsque le mod&egrave;le correspond</postfix_error>
+<subject_add>Ajouter la r&egrave;gle pour les mots sujets de mail</subject_add>
+<title_header>R&egrave;gles de Sujets</title_header>
+<title_mime>le filtrage des fichiers joints</title_mime>

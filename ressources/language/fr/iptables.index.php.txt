@@ -1,0 +1,42 @@
+<about>IPTables est un programme de pare-feu.[br]
+Il peut restreindre l'acc&egrave;s par port, par adresse IP, ou par les propri&eacute;t&eacute;s des paquets.[br]
+Les pare-feu ne sont pas tout ce dont vous avez besoin pour la s&eacute;curit&eacute;, mais ils sont un premier pas excellent.</about>
+<ACCEPT>Autoriser les connexions</ACCEPT>
+<add_inboundrule>R&egrave;gles &agrave; l'arriv&eacute;e</add_inboundrule>
+<add_inboundrule_text>Ajoutez une r&egrave;gle pour Permettre ou refuser des connexions &agrave; votre serveur</add_inboundrule_text>
+<close_windows>Toutes les op&eacute;rations de Pare-feu iptables sont achev&eacute;es, Vous pouvez fermer les fen&ecirc;tres maintenant</close_windows>
+<compile>Compiler les r&egrave;gles</compile>
+<compile_rules_ok>Compilation des r&egrave;gles OK...</compile_rules_ok>
+<compile_text>Compilez la r&egrave;gle et sauvegardez-la pour la faire passer en mode production</compile_text>
+<DROP>Rejeter (sans notification)</DROP>
+<enable_iptables>Activer votre Pare-feu IpTables</enable_iptables>
+<from_help>Devrait &ecirc;tre : [br]
+une plage d'adresse IP : [br]
+[blk] 192.168.1.12-192.168.1.56 [/blk]
+Une adresse IP : [br]
+[blk] 192.168.1.12 [/blk]
+Une adresse IP avec un masque de sous-r&eacute;seau cidr : [br]
+[blk] 192.168.1.12/24 [/blk]
+un nom d'h&ocirc;te : [br]
+[blk] mandataire p19.ovh.net [/blk]</from_help>
+<insert_default>R&egrave;gles par d&eacute;faut</insert_default>
+<insert_default_text>Ajoutez des r&egrave;gles pr&eacute;d&eacute;finies pour s&eacute;curiser votre serveur artica</insert_default_text>
+<iptablesconf>Voir la configuration</iptablesconf>
+<iptablescurrules>Statut des r&egrave;gles actuelles</iptablescurrules>
+<iptables_from>De</iptables_from>
+<iptables_frommac>Ou de l'adresse MAC</iptables_frommac>
+<iptables_INPUT>Entrant</iptables_INPUT>
+<iptables_nic>NIC</iptables_nic>
+<iptables_ports>Peut &ecirc;tre ::[br]
+Un simple port : [br]
+[blk]80[/blk]
+Une tranche de ports:[br]
+[blk]500:600[/blk]
+Une liste de ports:[br]
+[blk]80,21,443,9000,143,993[/blk]</iptables_ports>
+<iptables_results>R&eacute;sultat</iptables_results>
+<local_port>Port local</local_port>
+<log_this_event>Enregistrez cette r&egrave;gle si &eacute;quivalent</log_this_event>
+<proto>Protocole</proto>
+<REJECT>Rejeter (notifier)</REJECT>
+<save_toserver_ok>Sauvegardez l'ordre vers le serveur OK...</save_toserver_ok>

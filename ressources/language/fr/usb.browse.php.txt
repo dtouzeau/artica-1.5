@@ -1,0 +1,2 @@
+<APP_DEVICE_CONTROL>Centre de contr&ocirc;le des p&eacute;riph&eacute;riques</APP_DEVICE_CONTROL>
+<APP_DEVICE_CONTROL_TEXT>G&eacute;rer les p&eacute;riph&eacute;riques et v&eacute;rifier leurs connexions avec votre serveur.</APP_DEVICE_CONTROL_TEXT>

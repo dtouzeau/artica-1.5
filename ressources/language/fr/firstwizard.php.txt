@@ -1,0 +1,20 @@
+<build>Cr&eacute;ez les param&egrave;tres</build>
+<build_domain>Cr&eacute;ez le domaine</build_domain>
+<build_group>Cr&eacute;ez le groupe</build_group>
+<build_org>Cr&eacute;ez une organisation</build_org>
+<build_user>Cr&eacute;ez un utilisateur</build_user>
+<domain_iptext>Est-ce que ce domaine est un domaine local ? Si oui, cliquez juste sur le bouton suivant. [Br] si ce domaine doit &ecirc;tre relay&eacute; &agrave; un serveur, mettre le nom ou l'adresse IP du serveur cible</domain_iptext>
+<domain_text>D&eacute;finissez ici le domaine SMTP qui sera utilis&eacute; pour votre nouvelle organisation. [Br] la valeur devra &ecirc;tre un domaine d'Internet eg &quot;domain.tld&quot;</domain_text>
+<group_text>D&eacute;finissez maintenant un nom de groupe qui stockera vos utilisateurs, vos utilisateurs devront &ecirc;tre des utilisateurs de courrier &eacute;lectronique, des utilisateurs Samba, des utilisateurs  ftp ou des internautes</group_text>
+<launch>Lancement</launch>
+<org_text>Le premier param&egrave;tre sert &agrave; configurer une Organisation. [Br] une Organisation est une entit&eacute; qui stocke des utilisateurs, des groupes et des domaines de courrier &eacute;lectronique [Br] 
+Donnez le nom de votre premi&egrave;re organisation...</org_text>
+<rebuild_modules>Cr&eacute;ez les Modules Postfix</rebuild_modules>
+<rebuild_postfix>Cr&eacute;ez Postfix</rebuild_postfix>
+<relay_type>Type de relais</relay_type>
+<uid>id de l'Utilisateur</uid>
+<user>Premier Utilisateur</user>
+<user_text>D&eacute;finissez ici le premier utilisateur qui sera le destinataire de votre nouveau domaine. Dans ce cas, vous pouvez tester les param&egrave;tres utilis&eacute; par cet utilisateur. [Br] n'ajoutez pas le domaine de cet utilisateur donnez juste un UID (premi&egrave;res lettres avant @). [Br]
+Donnez le mot de passe de ce nouvel utilisateur, il sera utilis&eacute; si vous avez install&eacute; Cyrus comme un serveur de bo&icirc;te aux lettres IMAP/POP3</user_text>
+<welcome>Bienvenue sur Artica</welcome>
+<welcome_text>Cette section va vous aider &agrave; d&eacute;finir vos param&egrave;tres sur Artica-Postfix pour pouvoir les passer en mode production.[br]</welcome_text>

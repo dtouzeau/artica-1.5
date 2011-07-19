@@ -1,0 +1,71 @@
+<active_tls>Apply settings...</active_tls>
+<CertificateMaxDays>Expire in</CertificateMaxDays>
+<certificate_infos>SSL Certificate informations</certificate_infos>
+<client_certificate_fingerprints>Client-certificate fingerprints</client_certificate_fingerprints>
+<client_certificate_fingerprints_text>List of remote SMTP client-certificate fingerprints for which the Postfix
+SMTP server will allow access with the [b]permit_tls_clientcerts[/b] (see Security restrictions classes artica feature).[br]
+The fingerprint digest algorithm is configurable via the [b]smtpd_tls_fingerprint_digest[/b] parameter (hard-coded as md5 prior to Postfix version 2.5).[br]
+Postfix lookup tables are in the form of (key, value) pairs.[br]
+Since we only need the key, the value can be chosen freely,e.g.[blk]
+[li]D7:04:2F:A7:0B:8C:A5:21:FA:31:77:E1:41:8A:EE:80 lutzpc.at.hom[/li]
+[li]5B:57:FE:31:CA:69:3D:FB:9E:99:22:9D:2B:8B:89:73   *.myjob.com[/li]
+[li]42:4A:62:71:DF:FC:3D:47:FA:27:77:D0:BB:46:8B:05   *[/li]
+[/blk]
+</client_certificate_fingerprints_text>
+<download_certificates>Download certificates</download_certificates>
+<download_windows_certificate>Download Outlook certificate</download_windows_certificate>
+<enable_tls_postfix>Enable TLS in postfix...</enable_tls_postfix>
+<encrypt_explain>announce STARTTLS support to SMTP clients, and require that clients use TLS encryption.[br]
+According to RFC 2487 this MUST NOT be applied in case of a publicly-referenced SMTP server.[br]
+Instead, this option should be used only on dedicated servers.</encrypt_explain>
+<fingerprint>Fingerprint</fingerprint>
+<generate_certificate>Generate new certificate</generate_certificate>
+<generate_cert_ok>Generating certificate order OK, testing it</generate_cert_ok>
+<host>Host</host>
+<may_explain>Announce STARTTLS support to SMTP clients, but do not require that clients use TLS encryption</may_explain>
+<none_explain>TLS will not be used</none_explain>
+<restarting_postfix>Apply settings to postfix and restart it OK</restarting_postfix>
+<save_cert_ok>Saving certificate into disk OK</save_cert_ok>
+<smtpd_tls_ask_ccert>Ask a remote SMTP client for a client certificate</smtpd_tls_ask_ccert>
+<smtpd_tls_ask_ccert_text>This information is needed for certificate based mail relaying with, for example, "the permit tls client certs" feature.[br]
+Some clients such as Netscape will either complain if no certificate is available (for the list of CAs in $smtpd_tls_CAfile) or will
+offer multiple client certificates to choose from.[br]
+This may be annoying, so this option is "off" by default.</smtpd_tls_ask_ccert_text>
+<smtpd_tls_auth_only>Mandatory TLS communications</smtpd_tls_auth_only>
+<smtpd_tls_auth_only_text>When TLS encryption is optional in the Postfix SMTP server,
+do not announce or accept SASL authentication over unencrypted connections</smtpd_tls_auth_only_text>
+<smtpd_tls_received_header>Include information about the protocol</smtpd_tls_received_header>
+<smtpd_tls_received_header_text>
+Request that the Postfix SMTP server produces [br]
+[b]Received: message headers[/b] that include information about the protocol and cipher used, as well as the
+client CommonName and client certificate issuer CommonName.[br]
+This is disabled by default, as the information may be modified in transit through other mail servers.[br]
+Only information that was recorded by the final destination can be trusted.
+</smtpd_tls_received_header_text>
+<smtpd_tls_req_ccert>Mandatory client certificate</smtpd_tls_req_ccert>
+<smtpd_tls_req_ccert_text>With mandatory TLS encryption, require a trusted remote SMTP client certificate in order to allow TLS connections to proceed.[br]
+When TLS encryption is optional, this setting is ignored with a warning written to the mail log.</smtpd_tls_req_ccert_text>
+<smtp_tls_mandatory_protocols>Mandatory protocols</smtp_tls_mandatory_protocols>
+<smtp_tls_mandatory_protocols_text>
+List of SSL/TLS protocols that the Postfix SMTP client will use with mandatory TLS encryption.[br]
+the values are separated by whitespace, commas or colons.[br]
+In the policy table "protocols" attribute (see smtp tls policy maps) the only valid separator is colon.[br]
+[b]An empty value means allow all protocols.[/b][br]
+The valid protocol names, are [b]"SSLv2", "SSLv3" and "TLSv1"[/b].
+With Postfix up to 2.5 version, the parameter syntax is expanded to support protocol exclusions.[br]
+One can now explicitly exclude SSLv2 by setting [b]"!SSLv2"[/b].[br]
+To exclude both SSLv2 and SSLv3 set [b]!SSLv2, !SSLv3"[/b].[br]
+Listing the protocols to include, rather than protocols to exclude, is still supported; use the form you find more intuitive.[br]
+Since SSL version 2 has known protocol weaknesses and is now deprecated, the default setting excludes "SSLv2".[br]
+This means that by default, SSL version 2 will not be used at the "encrypt" security level and higher.[br]
+See the documentation of the smtp_tls_policy_maps parameter and TLS_README for more information about security levels.[br]
+</smtp_tls_mandatory_protocols_text>
+<test_cert_failed>Failed testing certificate</test_cert_failed>
+<test_cert_ok>Testing certificate OK</test_cert_ok>
+<test_TLS>Test Postfix TLS..</test_TLS>
+<tls_encrypt>Mandatory TLS encryption</tls_encrypt>
+<tls_label>SMTP TLS security level</tls_label>
+<tls_may>Opportunistic TLS</tls_may>
+<tls_settings>Generate & advanced settings</tls_settings>
+<you_can_close>You can close this windows now all operations has been executed</you_can_close>
+<_explain>TLS will not be used</_explain>

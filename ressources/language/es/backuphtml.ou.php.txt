@@ -1,0 +1,12 @@
+<action_delete_rule>&iquest;Esta seguro de eliminar esta regla ?</action_delete_rule>
+<add_rule_text>A&ntilde;adir una nueva regla de copia de seguridad, cuando un correo electr&oacute;nico sea igual a sus pol&iacute;ticas, ser&aacute; respaldados en la base de datos SQL.</add_rule_text>
+<backup_disabled>Cracteristica Incapacitada</backup_disabled>
+<backup_disabled_text>Haga clic en la imagen roja con el fin de habilitar esta funcion y hacer activas estas reglas</backup_disabled_text>
+<backup_enabled>Corriendo</backup_enabled>
+<backup_enabled_text>Usted puede deshabilitar esta caracteristica, haga clic en la imagen verde. Esta detendra la copia de seguridad de correos electr&oacute;nicos a la base de datos Mysql</backup_enabled_text>
+<from_match>Un remitente coincide</from_match>
+<from_text>caracter &quot;*&quot; se permite. [br]
+Puede configurar, por ejemplo, [br]
+[SMT] [b] * @ yourdomain.com o * @ youdomain * o usuario @ dominio .* .* [/ b] [/ BLK]</from_text>
+<subject_match>Asunto del partido</subject_match>
+<to_match>Un receptor coincide</to_match>

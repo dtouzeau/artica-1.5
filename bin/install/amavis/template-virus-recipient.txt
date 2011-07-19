@@ -1,0 +1,41 @@
+#
+# =============================================================================
+# This is a template for VIRUS/BANNED/BAD-HEADER RECIPIENTS NOTIFICATIONS.
+# For syntax and customization instructions see README.customize.
+# Long header fields will be automatically wrapped by the program.
+#
+Date: %d
+From: %f
+Subject: [? [:ccat_maj] |Clean (?) mail|Clean mail|TEMPFAIL-ed mail|\
+OVERSIZED mail|INVALID HEADER in mail|SPAM|SPAM|UNCHECKED contents in mail|\
+BANNED contents (%F) in mail|VIRUS (%V) in mail]\
+ TO YOU from [?%s|<>|[?%o|(?)|%s]]
+To: [? %#T |undisclosed-recipients: ;|[<%T>|, ]]
+[? %#C |#|Cc: [<%C>|, ]]
+Message-ID: <VR%i@%h>
+
+[? %#V |[? %#F ||BANNED CONTENTS ALERT]|VIRUS ALERT]
+
+Our content checker found
+[? %#V |#|[:wrap|78|    |  |[?%#V|viruses|virus|viruses]: %V]]
+[? %#F |#|[:wrap|78|    |  |banned [?%#F|names|name|names]: %F]]
+[? %#X |#|[[:wrap|78|    |  |%X]\n]]
+
+in an email to you [? %S |from unknown sender:|from:]
+  %o
+[? %S |claiming to be: %s|#]
+
+Our internal reference code for your message is %n/%i
+
+[? %a |#|[:wrap|78||  |First upstream SMTP client IP address: \[%a\] %g]]
+[? %e |#|[:wrap|78||  |According to a 'Received:' trace,\
+ the message originated at: \[%e\], %t]]
+
+[? %s |#|[:wrap|78||  |Return-Path: %s]]
+[? %m |#|[:wrap|78||  |Message-ID: %m]]
+[? %r |#|[:wrap|78||  |Resent-Message-ID: %r]]
+[? [:x-mailer]|#|[:wrap|78||  |X-Mailer: [:x-mailer]]]
+[? %j |#|[:wrap|78||  |Subject: %j]]
+[? %q |Not quarantined.|The message has been quarantined as: %q]
+
+Please contact your system administrator for details.

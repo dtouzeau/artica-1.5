@@ -1,0 +1,8 @@
+CREATE TABLE users (
+  id         int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+  priority   integer      NOT NULL DEFAULT '7',
+  policy_id  integer unsigned NOT NULL DEFAULT '1',
+  email      varchar(255) NOT NULL UNIQUE,
+  fullname   varchar(255) DEFAULT NULL,  
+  local      char(1)
+);

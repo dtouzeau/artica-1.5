@@ -1,0 +1,54 @@
+
+<H1></H1>
+<div style='width:100%;height:728px;overflow:auto'>
+<table style='width:100%'>
+<tr>
+
+</tr>
+<tr>
+<td valign='top'>
+	<div style='width:210px' class='paragraphe' id='197b447696bc67749380790fe53ffece' 
+		OnMouseOver="javascript:this.className='paragraphe_over';this.style.cursor='pointer';lightup(document.getElementById('img_197b447696bc67749380790fe53ffece'), 100);;AffBulle('{{ADD_WIDGET_TEXT}}');"
+		OnMouseOut="javascript:this.className='paragraphe';this.style.cursor='default';lightup(document.getElementById('img_197b447696bc67749380790fe53ffece'), 50);;HideBulle()"
+		OnClick="javascript:Loadjs('users.tabs.php?add-icon=index&uid=');">
+	<table style='width:100%'>
+	<tr>
+	<td width=1% valign='top'><img src='img/64-circle-plus.png'  onMouseOver="javascript:AffBulle('{ADD_WIDGET_TEXT}');lightup(this, 100);" OnMouseOut="javascript:HideBulle();lightup(this, 50);" style="filter:alpha(opacity=50);-moz-opacity:0.5;border:0px;" style="filter:alpha(opacity=50);-moz-opacity:0.5;border:0px;"  id='img_197b447696bc67749380790fe53ffece'></a></td>
+	<td valign='top' ><h3 style='min-height:36px;'>{ADD_WIDGET}</h3><div id='text_197b447696bc67749380790fe53ffece' style='min-height:70px;font-size:11px'>{ADD_WIDGET_TEXT}.&nbsp;</div></td>
+	</tr>
+	</table>
+	</div>
+	
+	</td>	
+<td valign='top'>
+	<div style='width:210px' class='paragraphe' id='614437e89f66777392705f627046e0e7' 
+		OnMouseOver="javascript:this.className='paragraphe_over';this.style.cursor='pointer';lightup(document.getElementById('img_614437e89f66777392705f627046e0e7'), 100);;AffBulle('{{MANAGE_WIDGETS_TEXT}}');"
+		OnMouseOut="javascript:this.className='paragraphe';this.style.cursor='default';lightup(document.getElementById('img_614437e89f66777392705f627046e0e7'), 50);;HideBulle()"
+		OnClick="javascript:Loadjs('users.tabs.php?manage-icon=index&uid=');">
+	<table style='width:100%'>
+	<tr>
+	<td width=1% valign='top'><img src='img/64-widget-manage.png'  onMouseOver="javascript:AffBulle('{MANAGE_WIDGETS_TEXT}');lightup(this, 100);" OnMouseOut="javascript:HideBulle();lightup(this, 50);" style="filter:alpha(opacity=50);-moz-opacity:0.5;border:0px;" style="filter:alpha(opacity=50);-moz-opacity:0.5;border:0px;"  id='img_614437e89f66777392705f627046e0e7'></a></td>
+	<td valign='top' ><h3 style='min-height:36px;'>{MANAGE_WIDGETS}</h3><div id='text_614437e89f66777392705f627046e0e7' style='min-height:70px;font-size:11px'>{MANAGE_WIDGETS_TEXT}.&nbsp;</div></td>
+	</tr>
+	</table>
+	</div>
+	
+	</td>
+<td valign='top'>
+	<div style='width:210px' class='paragraphe' id='da23b656535ddcd8f45976f473e3d669' 
+		OnMouseOver="javascript:this.className='paragraphe_over';this.style.cursor='pointer';lightup(document.getElementById('img_da23b656535ddcd8f45976f473e3d669'), 100);;AffBulle('{{DELETE_THIS_TAB_TEXT}}');"
+		OnMouseOut="javascript:this.className='paragraphe';this.style.cursor='default';lightup(document.getElementById('img_da23b656535ddcd8f45976f473e3d669'), 50);;HideBulle()"
+		OnClick="javascript:Loadjs('users.tabs.php?delete-tab=index&uid=');">
+	<table style='width:100%'>
+	<tr>
+	<td width=1% valign='top'><img src='img/64-cancel.png'  onMouseOver="javascript:AffBulle('{DELETE_THIS_TAB_TEXT}');lightup(this, 100);" OnMouseOut="javascript:HideBulle();lightup(this, 50);" style="filter:alpha(opacity=50);-moz-opacity:0.5;border:0px;" style="filter:alpha(opacity=50);-moz-opacity:0.5;border:0px;"  id='img_da23b656535ddcd8f45976f473e3d669'></a></td>
+	<td valign='top' ><h3 style='min-height:36px;'>{DELETE_THIS_TAB}</h3><div id='text_da23b656535ddcd8f45976f473e3d669' style='min-height:70px;font-size:11px'>{DELETE_THIS_TAB_TEXT}.&nbsp;</div></td>
+	</tr>
+	</table>
+	</div>
+	
+	</td>
+</tr>
+</table>
+
+</div>

@@ -1,0 +1,6 @@
+<add_network>A&ntilde;adir una nueva red</add_network>
+<auto_account_explain>Si se habilita esta caracter&iacute;stica, una forma nueva se a&ntilde;adir&aacute; en la p&aacute;gina web de inicio de sesi&oacute;n Artica.[br] Esta forma ayuda a los usuarios informaci&oacute;n suya para llenar el fin de crear su cuenta (buz&oacute;n de correo y el acceso a la interfaz de usuario).[br]
+Este formulario se mostrar&aacute; si los usuarios est&aacute;n conectados trought redes espec&iacute;ficas que a&ntilde;adir en esta secci&oacute;n</auto_account_explain>
+<enable_autocreate>Activar formulario Auto-crear la cuenta</enable_autocreate>
+<ipfrom>Desde la direccion IP</ipfrom>
+<ipto>A la direcci&oacute;n IP</ipto>

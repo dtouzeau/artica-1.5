@@ -1,0 +1,62 @@
+smtp      inet  n       -       n       -       -       smtpd
+	-o content_filter=kas3scan:127.0.0.1:9026
+cleanup   unix  n       -       -       -       0       cleanup
+qmgr      fifo  n       -       n       300     1       qmgr
+tlsmgr    unix  -       -       -       1000?   1       tlsmgr
+rewrite   unix  -       -       -       -       -       trivial-rewrite
+bounce    unix  -       -       -       -       0       bounce
+defer     unix  -       -       -       -       0       bounce
+trace     unix  -       -       -       -       0       bounce
+verify    unix  -       -       -       -       1       verify
+flush     unix  n       -       -       1000?   0       flush
+proxymap  unix  -       -       n       -       -       proxymap
+smtp      unix  -       -       -       -       -       smtp
+relay     unix  -       -       -       -       -       smtp
+	-o fallback_relay=
+showq     unix  n       -       -       -       -       showq
+error     unix  -       -       -       -       -       error
+discard   unix  -       -       -       -       -       discard
+local     unix  -       n       n       -       -       local
+virtual   unix  -       n       n       -       -       virtual
+lmtp      unix  -       -       n       -       -       lmtp
+anvil     unix  -       -       -       -       1       anvil
+scache	  unix	-	-	-	-	1	scache
+maildrop  unix  -       n       n       -       -       pipe
+  flags=DRhu user=vmail argv=/usr/bin/maildrop -d ${recipient}
+uucp      unix  -       n       n       -       -       pipe
+  flags=Fqhu user=uucp argv=uux -r -n -z -a$sender - $nexthop!rmail ($recipient)
+ifmail    unix  -       n       n       -       -       pipe
+  flags=F user=ftn argv=/usr/lib/ifmail/ifmail -r $nexthop ($recipient)
+bsmtp     unix  -       n       n       -       -       pipe
+  flags=Fq. user=bsmtp argv=/usr/lib/bsmtp/bsmtp -t$nexthop -f$sender $recipient
+scalemail-backend unix	-	n	n	-	2	pipe
+  flags=R user=scalemail argv=/usr/lib/scalemail/bin/scalemail-store ${nexthop} ${user} ${extension}
+mailman   unix  -       n       n       -       -       pipe
+  flags=FR user=list argv=/usr/lib/mailman/bin/postfix-to-mailman.py
+  ${nexthop} ${user}
+cyrus	unix	-	n	n	-	-	pipe
+	flags= user=cyrus argv=/usr/sbin/cyrdeliver -e -r ${sender} -m ${extension} ${user}
+procmail	unix	-	n	n	-	-	pipe
+	flags=R user=cyrus argv=/usr/bin/procmail -t -m USER=${user} EXTENSION=${extension} /etc/procmailrc
+127.0.0.1:9026 inet 	n  	n       n       -       20      spawn
+   	user=mailflt3 argv=/usr/local/ap-mailfilter3/bin/kas-pipe
+127.0.0.1:9025 inet    n       -       n       -       25      smtpd
+    -o smtpd_authorized_xforward_hosts=127.0.0.0/8
+    -o local_recipient_maps=
+    -o relay_recipient_maps=
+    -o smtpd_restriction_classes=
+    -o smtpd_client_restrictions=
+    -o smtpd_helo_restrictions=
+    -o smtpd_sender_restrictions=
+    -o smtpd_recipient_restrictions=permit_mynetworks,reject
+    -o mynetworks=127.0.0.0/8
+    -o strict_rfc821_envelopes=no
+    -o smtpd_error_sleep_time=0
+    -o smtpd_soft_error_limit=1001
+    -o smtpd_hard_error_limit=1000
+
+kas3scan      unix  -       -       n       -       10      smtp
+        -o smtp_send_xforward_command=yes
+127.0.0.1:10025	inet	n	n	n	-	10	spawn
+	user=kluser argv=/opt/kav/5.5/kav4mailservers/bin/smtpscanner
+

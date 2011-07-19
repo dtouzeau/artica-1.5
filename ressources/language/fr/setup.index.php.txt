@@ -1,0 +1,21 @@
+<available_version>Version disponible</available_version>
+<CONNEXIONS_FILTERS_PRODUCTS>filtres de connexions</CONNEXIONS_FILTERS_PRODUCTS>
+<CONTENTS_FILTERS_PRODUCTS>Filtrage de contenu</CONTENTS_FILTERS_PRODUCTS>
+<CORE_PRODUCTS>logiciels de base</CORE_PRODUCTS>
+<current_version>Version actuelle</current_version>
+<installation_lauched>L'installation a &eacute;t&eacute; lanc&eacute;e en arri&egrave;re-plan,
+vous verrez l'&eacute;tat de l'installation dans un instant</installation_lauched>
+<install_upgrade>Installer</install_upgrade>
+<LICENSED_FILTERS_PRODUCTS>Logiciels de filtrage commercial</LICENSED_FILTERS_PRODUCTS>
+<MAIL_TOOLS>Outils de Messagerie</MAIL_TOOLS>
+<proxy_packages>Logiciels Proxy</proxy_packages>
+<refresh_index_file>Mise &agrave; jour du fichier d'index (test de la connexion)</refresh_index_file>
+<setup_index_explain>Cette section vous permet d'installer des applications qui ne sont pas compil&eacute; ou pas correctement install&eacute; par votre distribution [br]
+Dans certains cas, les logiciels doivent &ecirc;tre compil&eacute;s avec les sp&eacute;cificit&eacute;s particuli&egrave;res pour &ecirc;tre plus adapt&eacute;s. [br]
+Cette section vous permet d'envoyer la commande d'installation des logiciels ...</setup_index_explain>
+<smtp_packages>Logiciels de messagerie</smtp_packages>
+<software>Logiciel</software>
+<STATS_TOOLS>Logiciels de statistiques</STATS_TOOLS>
+<stat_packages>Logiciels de statistiques</stat_packages>
+<system_packages>Syst&egrave;me de paquets</system_packages>
+<web_packages>Logiciels web/travail collaboratif</web_packages>

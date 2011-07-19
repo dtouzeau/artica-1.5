@@ -1,0 +1,5 @@
+CREATE TABLE mailaddr (
+  id         int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  priority   integer      NOT NULL DEFAULT '7', 
+  email      varchar(255) NOT NULL UNIQUE
+);

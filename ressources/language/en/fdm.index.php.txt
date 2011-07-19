@@ -1,0 +1,10 @@
+<fetchrule>Fetching rule</fetchrule>
+<folder_to_fetch>Remote folder to fetch</folder_to_fetch>
+<keep>Leave messages on server</keep>
+<no-apop>Disable APOP</no-apop>
+<no-apop_text>fdm will attempt to use APOP to obscure the password, if the server offers it.[br]
+If the server advertises itself as supporting APOP but subsequently refuses
+to accept it,[br]fdm will not retry with a cleartext password.[br] Disable APOP by enabling this checkbox</no-apop_text>
+<server_name>Remote mailbox server</server_name>
+<server_port>Remote port</server_port>
+<server_type>Server type</server_type>

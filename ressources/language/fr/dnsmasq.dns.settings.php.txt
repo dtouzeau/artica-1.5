@@ -1,0 +1,28 @@
+<bogus-priv>Fausse r&eacute;solution inverse</bogus-priv>
+<bogus-priv_text>Fausse r&eacute;solution inverse pour les r&eacute;seaux priv&eacute;s.[br] Toutes les requ&ecirc;tes DNS inverses pour des adresses IP priv&eacute;es (ie 192.168.x.x, etc...) qui ne sont pas trouv&eacute;es dans /etc/hosts ou dans le fichier de baux DHCP se voient retourn&eacute;es une r&eacute;ponse &quot;pas de tel domaine&quot; (&quot;no such domain&quot;) au lieu d'&ecirc;tre transmises aux serveurs de nom amont (&quot;upstream server&quot;).</bogus-priv_text>
+<cache-size>Nombre d'&eacute;l&eacute;ments dans le cache local</cache-size>
+<code>Le zinc va &agrave; 192.168.1.30</code>
+<dnmasq_interface_text>N'&eacute;couter que sur l'interface r&eacute;seau sp&eacute;cifi&eacute;e. Dnsmasq ajoute automatiquement l'interface locale (&quot;loopback&quot;) &agrave; la liste des interfaces lorsque l'option est utilis&eacute;e.  Si aucune option n'est  donn&eacute;e,  Dnsmasq  &eacute;coutera sur toutes les interfaces disponibles.  Les alias d'interfaces IP (e-g &quot;eth1:0&quot;) ne peuvent &ecirc;tre utilis&eacute;s.</dnmasq_interface_text>
+<dnsmasq_address>L'adresse pour forcer &agrave; un IP</dnsmasq_address>
+<dnsmasq_domain_text>&lt;expand-hosts&gt;H&ocirc;te &eacute;tendu</dnsmasq_domain_text>
+<dnsmasq_intro_settings>dnsmasq est un serveur DHCP et DNS &agrave; faible empreinte m&eacute;moire. Il offre &agrave; la fois les services DNS et DHCP pour un r&eacute;seau local (LAN).
+Dnsmasq  accepte les requ&ecirc;tes DNS et y r&eacute;ponds soit en utilisant un petit cache local, soit en effectuant une requ&ecirc;te &agrave; un serveur DNS r&eacute;cursif externe (par exemple celui de votre fournisseur d'acc&egrave;s internet).[br] Il charge le contenu du fichier /etc/hosts afin que les noms locaux n'apparaissant pas dans les DNS globaux soient tout de m&ecirc;me r&eacute;solus, et assure &eacute;galement la r&eacute;solution de nom pour les h&ocirc;tes pr&eacute;sents dans le service DHCP.[br]</dnsmasq_intro_settings>
+<dnsmasq_listen_address>Ou adresses d'&eacute;coute</dnsmasq_listen_address>
+<dnsmasq_listen_address_text>Ou qui, &agrave; l'&eacute;coute sur une adresse (ne pas oublier d'inclure 127.0.0.1 si vous l'utilisez).</dnsmasq_listen_address_text>
+<domain-needed>Domaine n&eacute;c&eacute;ssaire</domain-needed>
+<domain-needed_text>Indique  &agrave; Dnsmasq de ne jamais transmettre en amont de requ&ecirc;tes pour des noms simples, ne comprenant donc ni points ni nom de domaine.[br] Si un nom n'est pas dans /etc/hosts ou dans la liste des baux DHCP, alors une r&eacute;ponse de type &quot;non trouv&eacute;&quot; est renvoy&eacute;e</domain-needed_text>
+<domain_or_server>Domaine ou nom d'ordinateur</domain_or_server>
+<filterwin2k>Filtrer requ&ecirc;tes DNS p&eacute;riodiques MS. Windows</filterwin2k>
+<ip>Adresse IP</ip>
+<li>D&eacute;finit l'opition DHCP &quot;domaine&quot;  ainsi potentiellement la cr&eacute;ation du domaine de tous les syst&egrave;mes configur&eacute;s par DHCP</li>
+<log-queries>Enregistrer les requ&ecirc;tes</log-queries>
+<log-queries_text>Enregistrer les r&eacute;sultats des requ&ecirc;tes DNS trait&eacute;es par Dnsmasq dans un fichier de traces (&quot;logs&quot;). Active la g&eacute;n&eacute;ration d'un &eacute;tat complet du cache lors de la r&eacute;ception d'un signal SIGUSR1</log-queries_text>
+<no-negcache>Pas de cache n&eacute;gatif</no-negcache>
+<no-negcache_text>D&eacute;sactive le &quot;cache n&eacute;gatif&quot;. Le &quot;cache n&eacute;gatif&quot; permet &agrave; Dnsmasq de se souvenir des r&eacute;ponses de type &quot;no such domain&quot; fournies par les serveurs DNS en amont et de fournir les r&eacute;ponses sans avoir &agrave; re-transmettre les requ&ecirc;tes aux serveurs amont</no-negcache_text>
+<no-poll>Pas de v&eacute;rification de changements</no-poll>
+<no-poll_text>Ne pas v&eacute;rifier r&eacute;guli&egrave;rement si le fichier /etc/resolv.conf a &eacute;t&eacute; modifi&eacute;</no-poll_text>
+<no-resolv>Ne pas charger les DNS syst&egrave;mes.</no-resolv>
+<no-resolv_text>Ne pas lire le contenu du fichier /etc/resolv.conf. N'obtenir l'adresse des serveurs de nom amont que depuis la ligne de commande ou le fichier de configuration de Dnsmasq</no-resolv_text>
+<resolv-file>Chemin de l'emplacement du fichier des adresses des serveurs DNS</resolv-file>
+<resolv-file_text>Lis les adresses des serveurs de nom amont dans le fichier de nom &lt;fichier&gt;, au lieu du fichier /etc/resolv.conf. [br]Dnsmasq  peut lire plusieurs fichiers de type resolv.conf, le premier fichier sp&eacute;cifi&eacute; remplace le fichier par d&eacute;faut, le contenu des suivants est rajout&eacute; dans la liste des fichiers &agrave; consulter. Seul le fichier ayant la derni&egrave;re date de modification sera charg&eacute; en m&eacute;moire.</resolv-file_text>
+<strict-order>l'ordre strict</strict-order>

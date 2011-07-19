@@ -1,0 +1,70 @@
+<about> milter-greylist is a stand-alone milter written in C that implements the  greylist filtering method, as proposed by Evan Harris.[br]
+Grey listing works by assuming that, unlike legitimate MTA, spam engines will not retry sending their junk mail on a temporary error.[br]
+The filter will always reject mail temporarily on a first attempt, then accept it after some time has elapsed.</about>
+<acl>Access List</acl>
+<acl_text>
+The primary use of this feautre is to setup milter-greylist whitelist.[br] It also offers a handy blacklist feature.[br] 
+Access-lists (ACL) are used to do that.[br] ACL enable the administrator  to  specify  complex  conditions  on sender IP, sender DNS address,
+sender e-mail address, and recipient e-mail address.[br]
+If support for DNSRBL was built-in, it is even possible to use DNSRBL in ACL.</acl_text>
+<addr>IP address</addr>
+<addr_text>
+This clause is used to specify a netblock of source IP addresses.[br]
+The syntax is an IP address followed by a slash and a CIDR netmask.[br]
+Here is an example:
+[ul]
+[li]127.0.0.0/8[/li]
+[li]192.168.3.0/24[/li]
+[li]::1[/li]
+[/ul]
+If the netmask is ommitted, /32 is assumed for an IPv4 address and /128 is assumed for an IPv6 address.[br]
+You  should  at  least  whitelist localhost (127.0.0.1/8), and if you have some user clients connecting to the machine,
+you should whitelist the addresses they connect from if you don’t want them to get error messages when sending e-mail.
+</addr_text>
+<add_acl>Add new acl</add_acl>
+<add_dnsrbl>Add new DNSRBL Class</add_dnsrbl>
+<autowhite>auto-whitelisting</autowhite>
+<Autowhitelistedtuples>Auto-whitelisted tuples</Autowhitelistedtuples>
+<autowhite_text>How long does auto-whitelisting last (set it to 0 to disable auto-whitelisting).</autowhite_text>
+<back_to_default>Back to default DNSRBL Lists[br]This will delete all your settings !</back_to_default>
+<blacklist>Blacklist</blacklist>
+<body>Expression in body</body>
+<body_text>String or regular expression searched in message body
+Example of content filtering for fighting image SPAM
+src[:blank:]*=(3D)?[:blank:]*["']?[:blank:]*cid:
+</body_text>
+<class_name>Class name</class_name>
+<config>Configuration file</config>
+<delay>Greylisting delay</delay>
+<dnsrbl>DNS Relay black list</dnsrbl>
+<dnsrbl_answer>Service answer</dnsrbl_answer>
+<dnsrbl_service>DNSRBL Service</dnsrbl_service>
+<dnsrbl_text>This is used to select a DNSRBL[br]
+DNS  Reverse  Black  List can be used to toggle an ACL.[br]
+They must be defined and named before they can be used. Here is an example which uses a bigger greylisting delay for hosts caught in the SORBS dynamic pool DNRSBL (this
+will include DSL and cable customers pools, which are well known to be massively infected by spamwares)[br]</dnsrbl_text>
+<domain_text> This clause selects source machines based on their DNS name, performing a suffix search</domain_text>
+<edit_acl>Edit ACL</edit_acl>
+<edit_dnsrbl>Edit DNSRBL Rule</edit_dnsrbl>
+<enable_milter>Enable Milter-greylist</enable_milter>
+<enable_milter_text>This option will allow hook Postfix with milter-greylist feature</enable_milter_text>
+<greylist>Greylisting time</greylist>
+<greylistedtuples>greylisted tuples</greylistedtuples>
+<greylist_text>How long a client has to wait before we accept[br]the messages it retries to send.[br]Here, x hour(s).</greylist_text>
+<header>SMTP Header</header>
+<header_text>String or regular expression searched in message headers</header_text>
+<infos>Informations</infos>
+<mailfrom_text>This is used to select sender e-mail addresses. You should not use that feature, because sender e-mail addresses can be trivially forged.</mailfrom_text>
+<method>Method</method>
+<MILTERGREYLIST_STATUSDUMP>Current block/white status</MILTERGREYLIST_STATUSDUMP>
+<MILTERGREYLIST_STATUSDUMP_TEXT>Display the list of servers that are greylisted or whitelisted</MILTERGREYLIST_STATUSDUMP_TEXT>
+<new_class_name>Or add a new class</new_class_name>
+<rcpt>Recipient</rcpt>
+<rcpt_text>This is used to select recipient addresses</rcpt_text>
+<timeout>Database Timeout</timeout>
+<timeout_text>How long (days) will the greylist database retain tuples</timeout_text>
+<urlcheck>Url in body</urlcheck>
+<urlcheck_text> milter-greylist is able to query external sources of information through various URL[br]
+Example:http://www.example.net/mgl-config?rcpt=%r</urlcheck_text>
+<whitelist>whitelist</whitelist>
+<_text>Por favor, seleccione um valor da lista</_text>

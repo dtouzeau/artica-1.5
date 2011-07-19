@@ -1,0 +1,2 @@
+<enable_c_icap>Activer C-ICAP Antivirus</enable_c_icap>
+<enable_c_icap_text>C-icap vous permet de crocheter SQUID afin de fournir une fonction d'analyse antivirus et de prot&eacute;ger les fichiers t&eacute;l&eacute;charg&eacute;s via Internet</enable_c_icap_text>

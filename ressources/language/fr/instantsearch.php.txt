@@ -1,0 +1,7 @@
+<crawl_each>Explorer chaque serveur</crawl_each>
+<crawl_each_0>Si vous d&eacute;finissez la valeur 0, la fonction sera disponible pour vos utilisateurs, mais le serveur ne sera que explor&eacute;es manuellement</crawl_each_0>
+<crawl_now>Explorer maintenant!</crawl_now>
+<InstantSearch_enable>Activer InstantSearch</InstantSearch_enable>
+<InstantSearch_enable_text>Si vous activez cette fonctionnalit&eacute; au vert, les utilisateurs interrogeront artica pour trouver des documents stock&eacute;s sur ce serveur.[br] 
+Artica explore votre serveur afin d'analyser les documents en fonction des privil&egrave;ges de l'utilisateur.[br] 
+Dans ce cas, aucun document ne peut &ecirc;tre perdu, un simple moteur de recherche sera affich&eacute; dans le but de trouver la bonne information</InstantSearch_enable_text>

@@ -1,0 +1,14 @@
+<backup_text>Cette zone vous permet de retrouver d'anciens emails sauvegard&eacute;s [br] utilisez le formulaire de requ&ecirc;te en vue de retrouver les emails</backup_text>
+<dont_know>Inconnu</dont_know>
+<mail_backup_lost>Le Mail d'origine est perdu</mail_backup_lost>
+<mail_backup_lost_text>Le fichier source a &eacute;t&eacute; probablement supprim&eacute; du disque,  vous ne pouvez pas renvoyer ce mail, uniquement l'afficher</mail_backup_lost_text>
+<q_from>J'ai &eacute;t&eacute; envoy&eacute;</q_from>
+<q_to>J'ai &eacute;t&eacute; re&ccedil;u</q_to>
+<resend_mail>Renvoyez ce message</resend_mail>
+<resend_mail_success>Renvoie avec succ&egrave;s</resend_mail_success>
+<resend_mail_text>Renvoyer le mail en mode d'origine</resend_mail_text>
+<resend_mail_text_success>La commande a &eacute;t&eacute; envoy&eacute;e au d&eacute;mon, analyse de bo&icirc;tes aux lettres</resend_mail_text_success>
+<search_messages_that>Rechercher mes messages qui</search_messages_that>
+<with_body>Avec ces mots dans le corps</with_body>
+<with_email>correspondant &agrave; cette adresse e-mail</with_email>
+<with_subject>correspondant &agrave; cet objet</with_subject>

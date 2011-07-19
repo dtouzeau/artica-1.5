@@ -1,0 +1,83 @@
+0.4.0
+06-05-09
+	Major change - changed to using dir /var/log/mailspy instead of
+	files in /var/log.  This solves the problem where running as the
+	user mailspy causes log rotation to fail.
+
+	Also a migration routine 
+		cronspy.sh migrate-from-old-logfiles
+		cronspy.sh regen
+		cronspy.sh redo-log-rotation
+		cat /var/log/mailspy.* | cronspy.sh regen-split-logs-stdin 
+
+05-04-29
+	Changed "Fri" to "5" because Fedora seems think "Fri" should be
+	"Friday", which is not portable (I think).
+
+05-03-22
+	Added /usr/local/bin to rcscript. 
+
+05-03-04 10:18
+	Added "excludelocalmail" option to config file so that we can report
+	only outside traffic (which is all that some people are interested in).
+	Redhatted the startup script
+
+03-01-14 09:16:12 
+	Miscellaneous mods to RC files, and new mailspy.m4 to demonstrate
+	how it's all done.
+
+02-08-15 18:05:29
+	Making departmental summaries -- each department gets its own directory
+	if it has a list file for its users.
+
+02-07-26 21:55:07
+	Used <BASE HREF="../"> and put domain mail, individual mail, and logs
+	in separate directories.  (If you feel like making files named
+	mail/j/jo/joe/joeuser.example.com, feel free to modify the code.)
+
+02-07-25 12:00:15
+	Declared to be version 0.2.0
+
+02-07-01 10:06:05
+	Generated report dates are now in a NOWRAP table element. Much cuter.
+
+Wed Apr  3 18:50:38 SAST 2002
+	Added log message to process functionality, making it possible to
+	log a message to a procmail-controlled mailbox (v. cute, sez I)
+
+Wed Jan 23 15:20:00 SAST 2002
+	Visual: moved `Mail from' and `Mail to' to inside the table so that
+	the columns line up.
+	Got it right the second time .. 17:36
+
+Mon Jan 21 09:07:21 SAST 2002
+	Bug: log rotation did not set ownership on /var/log/mailspy if the last
+	file did not exist.
+
+Thu Jan 17 21:35:41 SAST 2002
+	Made an word mangler thingy so I can finally upload an example to the
+	website.
+
+Wed Jan 16 20:45:29 SAST 2002
+	Many changes:
+	Separate incoming vs outgoing addresses in the log
+	Show totals in the user log
+	Have a favourite domain to separate from other domains
+	Show all details in sorted list
+	Sort by clicking on a column heading
+	Initial screen is the top offenders screen
+	Chop subject lines and email addresses to fit in one line (usually)
+
+Thu Nov  1 15:32:55 SAST 2001
+	htmlspy.pl now logs all mails for each address and domain
+	hmmm .. maybe it's time to put it in a database and make sql queries
+	cronspy.sh now has a settable history limit ...
+
+Mon Oct 29 16:39:58 SAST 2001
+	Fixed up cronspy to do proper rotation
+
+Thu Oct  4 16:36:18 SAST 2001
+	Figured out why there were too many attachment names.  Duh.
+
+Sat Sep 29 08:12:01 SAST 2001
+	Hmm.  Most mail is junk.

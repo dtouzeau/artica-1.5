@@ -1,0 +1,226 @@
+<html xmlns='http://www.w3.org/1999/xhtml'>
+<head>
+	<meta http-equiv='content-type' content='text/html; charset=utf-8' />
+	<title>{TEMPLATE_TITLE}</title>
+	<!-- default template  -->
+	<meta name='keywords' content=''>
+	<meta name='description' content="">
+	<link href='css/styles_main.css'    rel="styleSheet"  type='text/css' />
+	<link href='css/styles_header.css'  rel="styleSheet"  type='text/css' />
+	<link href='css/styles_middle.css'  rel="styleSheet"  type='text/css' />
+	<link href='css/styles_forms.css'   rel="styleSheet"  type='text/css' />
+	<link href='css/styles_tables.css'  rel="styleSheet"  type='text/css' />
+	<link href="css/styles_rounded.css" rel="stylesheet"  type="text/css" />
+	<link rel="stylesheet" href="css/styles_tabs.css" type="text/css" />
+	<!--[if lt IE 7]>
+	<link rel='stylesheet' type='text/css' href='css/styles_ie.css' />
+	<![endif]-->
+	<!--[if IE 7]>
+	<link rel='stylesheet' type='text/css' href='css/styles_ie7.css' />
+	<![endif]-->
+	{TEMPLATE_HEAD}
+</head>
+<body class="yui-skin-sam">
+<div id='header'>{RIGHT}
+	<div id='menus_1'>
+		<span class='left'><a href='../../'><img src='css/images/logo.gif' alt='' /></a></span><span class=left>{TEMPLATE_SEARCH}</span>
+	<ul>
+	{TEMPLATE_HIGH_MENUS}
+		
+	</ul>
+	
+	</div id='nav_primary'>
+
+	<div id='menus_2'>
+	<ul>
+		{TEMPLATE_TOP_MENUS}
+	</ul>
+	</div id='menus_2'>
+
+</div id='header'>
+
+<div id='middle'>
+	<div id='content'>
+		<table style='width:100%'>
+			<tr>
+				<td valign='top' style='padding:0px;margin:0px;width:160px'>
+					{TEMPLATE_LEFT_MENUS}
+				</td>
+				<td valign='top' style='padding-left:3px'>
+					<div id='template_users_menus'>{TEMPLATE_USER_MENUS_H}</div>
+					<div id='BodyContent'>
+					
+					<h1 id='template_title'>{TEMPLATE_TITLE}</h1>
+					<!-- content -->
+					{TEMPLATE_CONTENT}
+					<!-- content end -->
+					</div>
+				</td>
+				<td valign='top'>{TEMPLATE_RIGHT_MENUS}</td>
+			</tr>	
+	</table>	
+
+	<div class='clearleft'></div>
+	<div class='clearright'></div>
+	</div id='content'>
+</div id='middle'>
+
+<div id='footer'>
+
+<div id='nav_bottom'>
+<ul>
+{TEMPLATE_TOP_MENUS}
+</ul>
+</div id='nav_bottom'>
+
+<div id='copyright'>
+<p class='note'>Artica for postfix.</p>
+</div id='copyright'>
+
+</div id='footer'></div>
+
+<script>LeftMenushide();</script>
+<script>
+YAHOO.namespace("example.container");
+
+function init() {
+	
+
+	// Instantiate the Dialog
+
+	YAHOO.example.container.dialogS = new YAHOO.widget.Dialog("dialogS", 
+							{ width : "30em",
+							  fixedcenter : true,
+							  visible : false, 
+							  constraintoviewport : true,
+							 
+							});
+
+
+	YAHOO.example.container.dialog0= new YAHOO.widget.Dialog("dialog0", 
+							{ width : "750px",
+							  xy:[100,100],
+							  fixedcenter : false,
+							  visible : false, 
+							  constraintoviewport : true,
+							  draggable:true,
+							  close:true,
+						          modal :false,
+							iframe :false,
+							
+							 
+							});
+
+
+	YAHOO.example.container.dialog1 = new YAHOO.widget.Dialog("dialog1", 
+							{ width : "30em",
+							  fixedcenter : true,
+							  visible : false, 
+							  constraintoviewport : true,
+							 
+							});
+							
+	YAHOO.example.container.dialog2 = new YAHOO.widget.Dialog("dialog2", 
+							{ width : "30em",
+							  fixedcenter : true,
+							  visible : false, 
+							  constraintoviewport : true,
+							 
+							});
+
+	YAHOO.example.container.dialog3 = new YAHOO.widget.Dialog("dialog3", 
+							{ width : "30em",
+							  fixedcenter : true,
+							  visible : false, 
+							  constraintoviewport : true,
+							 
+							});
+							
+	YAHOO.example.container.dialog4 = new YAHOO.widget.Dialog("dialog4", 
+							{ width : "30em",
+							  fixedcenter : true,
+							  visible : false, 
+							  constraintoviewport : true,
+							 
+							});
+
+	YAHOO.example.container.dialog5 = new YAHOO.widget.Dialog("dialog5", 
+							{ width : "30em",
+							  fixedcenter : true,
+							  visible : false, 
+							  constraintoviewport : true,
+							 
+							});
+
+	YAHOO.example.container.dialog6 = new YAHOO.widget.Dialog("dialog6", 
+							{ width : "30em",
+							  fixedcenter : true,
+							  visible : false, 
+							  constraintoviewport : true,
+							 
+							});									
+	
+	// Render the Dialog
+	YAHOO.example.container.dialogS.render();
+	YAHOO.example.container.dialog0.render();
+	YAHOO.example.container.dialog1.render();
+	YAHOO.example.container.dialog2.render();
+	YAHOO.example.container.dialog3.render();
+	YAHOO.example.container.dialog4.render();
+	YAHOO.example.container.dialog5.render();
+	YAHOO.example.container.dialog6.render();
+	
+}
+
+YAHOO.util.Event.onDOMReady(init);
+</script>
+
+<div id="dialogS">
+	<div class="hd" id='dialogS_title'></div>
+	<div class="bd" id='dialogS_content'>
+	</div>
+</div> 
+
+
+<div id="dialog0">
+	<div class="hd" id='dialog0_title'></div>
+	<div class="bd" id='dialog0_content'>
+	</div>
+</div> 
+
+
+<div id="dialog1">
+	<div class="hd" id='dialog1_title'></div>
+	<div class="bd" id='dialog1_content'>
+	</div>
+</div>
+<div id="dialog2">
+	<div class="hd" id='dialog2_title'></div>
+	<div class="bd" id='dialog2_content'>
+	</div>
+</div> 
+<div id="dialog3">
+	<div class="hd" id='dialog3_title'></div>
+	<div class="bd" id='dialog3_content'>
+	</div>
+</div>
+<div id="dialog4">
+	<div class="hd" id='dialog4_title'></div>
+	<div class="bd" id='dialog4_content'>
+	</div>
+</div>
+<div id="dialog5">
+	<div class="hd" id='dialog5_title'></div>
+	<div class="bd" id='dialog5_content'>
+	</div>
+</div> 
+<div id="dialog6">
+	<div class="hd" id='dialog6_title'></div>
+	<div class="bd" id='dialog6_content'>
+	</div>
+</div>  
+</body>
+</html>
+
+
+

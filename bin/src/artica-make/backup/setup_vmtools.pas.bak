@@ -1,0 +1,81 @@
+unit setup_vmtools;
+{$MODE DELPHI}
+//{$mode objfpc}{$H+}
+{$LONGSTRINGS ON}
+
+interface
+
+uses
+  Classes, SysUtils,strutils,RegExpr in 'RegExpr.pas',unix,IniFiles,setup_libs,distridetect,setup_suse_class,install_generic;
+
+  type
+  tsetup_vmtools=class
+
+
+private
+     libs:tlibs;
+     distri:tdistriDetect;
+     install:tinstall;
+     packageSource:string;
+public
+      constructor Create();
+      procedure Free;
+      procedure xinstall();
+END;
+
+implementation
+
+constructor tsetup_vmtools.Create();
+begin
+distri:=tdistriDetect.Create();
+libs:=tlibs.Create;
+install:=tinstall.Create;
+if FileExists(ParamStr(2)) then packageSource:=ParamStr(2);
+end;
+//#########################################################################################
+procedure tsetup_vmtools.Free();
+begin
+  libs.Free;
+end;
+//#########################################################################################
+procedure tsetup_vmtools.xinstall();
+var
+
+   source_folder,cmd:string;
+   l:Tstringlist;
+
+begin
+install.INSTALL_STATUS('APP_VMTOOLS',10);
+install.INSTALL_PROGRESS('APP_VMTOOLS','{downloading}');
+
+if FileExists(packageSource) then begin
+   writeln('Extracting from local file ' +packageSource);
+   source_folder:=libs.ExtractLocalPackage(packageSource);
+   writeln('source folder:',source_folder);
+end;
+
+
+if not DirectoryExists(source_folder) then source_folder:=libs.COMPILE_GENERIC_APPS('VMwareTools');
+
+if length(trim(source_folder))=0 then begin
+     writeln('Install VMwareTools failed...');
+     install.INSTALL_STATUS('APP_VMTOOLS',110);
+     exit;
+end;
+    install.INSTALL_PROGRESS('APP_VMTOOLS','{installing}');
+    install.INSTALL_STATUS('APP_VMTOOLS',70);
+writeln('Installing VMwareTools from "',source_folder,'"');
+SetCurrentDir(source_folder);
+fpsystem('./vmware-install.pl --default');
+fpsystem('/bin/rm -rf '+source_folder);
+if FIleExists('/usr/sbin/vmware-guestd') then begin
+       install.INSTALL_STATUS('APP_VMTOOLS',100);
+       install.INSTALL_PROGRESS('APP_VMTOOLS','{installed}');
+  end else begin
+       install.INSTALL_STATUS('APP_VMTOOLS',110);
+       install.INSTALL_PROGRESS('APP_VMTOOLS','{failed}');
+  end;
+
+end;
+//#########################################################################################
+end.

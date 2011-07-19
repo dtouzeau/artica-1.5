@@ -1,0 +1,9 @@
+<go_to_page>Aller &agrave; la page</go_to_page>
+<informations>Message d'information</informations>
+<resend>Renvoyer cet email</resend>
+<resend_text>Si l'op&eacute;ration pr&eacute;c&eacute;dente est r&eacute;ussie, cet email sera supprim&eacute; de votre zone de quarantaine</resend_text>
+<search_intro>Ensemble de mots &agrave; trouver dans le corps des emails de votre zone de quarantaine :</search_intro>
+<this_week>Cette semaine</this_week>
+<top_senders>Palmar&egrave;s des Exp&eacute;diteurs</top_senders>
+<view_message>Voir ce message</view_message>
+<yesterday>Hier</yesterday>

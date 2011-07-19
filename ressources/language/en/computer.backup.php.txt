@@ -1,0 +1,4 @@
+<add_share>Add a folder</add_share>
+<enable_backup>Enable remote backup feature</enable_backup>
+<enable_backup_text>If you turn to green this feature, Artica backup will browse this computer in order to backup remote folder you specifiy in this section</enable_backup_text>
+<remote_smb_share>Remote microsoft share (smb)</remote_smb_share>

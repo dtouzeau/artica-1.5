@@ -1,0 +1,12 @@
+#! /bin/sh
+#
+# Created by configure
+
+CFLAGS='-g -O2' \
+CXXFLAGS='-g -O2' \
+CC='gcc' \
+CXX='g++' \
+'./configure' \
+'dummy' \
+'tr' \
+"$@"

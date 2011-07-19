@@ -1,0 +1,514 @@
+<activate_disclaimer>Activate disclaimer</activate_disclaimer>
+<AddressProxyServer>Proxy server address</AddressProxyServer>
+<add_dns_entry>Add a DNS entry</add_dns_entry>
+<add_user_text>Create a new user and a mailbox in the server database</add_user_text>
+<administrate_this_server>Administrate this server</administrate_this_server>
+<administration_tools>Administration tools</administration_tools>
+<affect_to_a_virtual_group>Affect to a virtual group</affect_to_a_virtual_group>
+<affect_to_group_explain>This form helps you to store this computer to an Artica Meta virtual group in order to retreive it easly and to manage this server trough a group</affect_to_group_explain>
+<AllowArticaMetaAddUsers>Allow Adding/Delete users locally</AllowArticaMetaAddUsers>
+<AllowArticaMetaAddUsers_explain>By default, when the remote server is connected to the global management console, it is not possible to add new users locally.[br]
+Enable this feature will allow local administrator to create new users.</AllowArticaMetaAddUsers_explain>
+<AllowTrashServers>Can put servers into trash</AllowTrashServers>
+<AllowViewMailStats>Can view messaging statistics</AllowViewMailStats>
+<allow_squid_localhost>Allow connect to Proxy with loopback address</allow_squid_localhost>
+<all_nics>All NICs</all_nics>
+<all_servers>all servers</all_servers>
+<analyzed_networks>Analyzed networks</analyzed_networks>
+<APP_FUSE>Fuse filesystem</APP_FUSE>
+<APP_HAMSTERDB>hamsterdb Embedded Storage</APP_HAMSTERDB>
+<APP_KASPERSKY_UPDATE_UTILITY>Kaspersky Update Utility</APP_KASPERSKY_UPDATE_UTILITY>
+<APP_KASPERSKY_UPDATE_UTILITY_EXPLAIN>
+Kaspersky Update Utility is the application designed for downloading updates of selected Kaspersky Lab applications from the specified update source.[br]
+The application allows saving updates in a local or network folder, from which they can be distributed on computers without Internet access.[br]
+Kaspersky Update Utility establishes connection to an update source according to the specified settings and checks if any updates for the selected applications
+ are available.[br]
+If any updates for the selected applications are available,  
+Kaspersky Update Utility downloads them into the selected folder.[br]
+After the download, the application checks the updates for integrity.[br]
+Results of the application's operation are logged in a report.
+</APP_KASPERSKY_UPDATE_UTILITY_EXPLAIN>
+<APP_KASPERSKY_UPDATE_UTILITY_TEXT>Kaspersky Update Utility is the application designed for downloading updates of selected Kaspersky Lab applications from the specified update source.</APP_KASPERSKY_UPDATE_UTILITY_TEXT>
+<APP_LESSFS>Data deduplicating filesystem</APP_LESSFS>
+<APP_NO_VBOXADDITIONS>VirtualBox guest additions is not installed</APP_NO_VBOXADDITIONS>
+<APP_OPENLDAP>LDAP server</APP_OPENLDAP>
+<APP_PIWIGO>Piwigo</APP_PIWIGO>
+<APP_PIWIGO_TEXT>Piwigo is a photo gallery software for the web that comes with powerful features to publish and manage your collection of pictures</APP_PIWIGO_TEXT>
+<APP_SABNZBDPLUS>SABnzbd Newsreader</APP_SABNZBDPLUS>
+<APP_SABNZBDPLUS_EXPLAIN>SABnzbd is an open-source cross-platform binary newsreader.
+It simplifies the process of downloading from Usenet dramatically,
+thanks to its friendly web-based user interface and advanced
+built-in post-processing options that automatically verify, repair,
+extract and clean up posts downloaded from Usenet.
+</APP_SABNZBDPLUS_EXPLAIN>
+<APP_SABNZBDPLUS_TEXT>SABnzbd is an open-source cross-platform binary newsreader.It simplifies the process of downloading from Usenet dramatically.</APP_SABNZBDPLUS_TEXT>
+<APP_SAMBA_RESTART>Restart Samba services</APP_SAMBA_RESTART>
+<APP_SAMBA_RESTART_TEXT>Click on this item in order to stop all samba services and to start them in order to refresh all settings</APP_SAMBA_RESTART_TEXT>
+<APP_TOKYOCABINET>TokyoCabinet libraries</APP_TOKYOCABINET>
+<APP_UFDBGUARD_TAIL>UfdbGuard Watchdog</APP_UFDBGUARD_TAIL>
+<APP_VBOXADDITIONS>VirtualBox guest additions</APP_VBOXADDITIONS>
+<APP_VNSTAT>vnStat</APP_VNSTAT>
+<APP_ZARAFA_LICENSED>Zarafa License service</APP_ZARAFA_LICENSED>
+<APP_ZFS_FUSE>ZFS Fuse filesystem</APP_ZFS_FUSE>
+<are_you_sure_to_restart_umount_mount>Are you sure to umount directories and re-mount directories?[br]Links will be cuted off during this operation...</are_you_sure_to_restart_umount_mount>
+<ArticaMetaDisableMasterAccount>Disable change Master Account</ArticaMetaDisableMasterAccount>
+<ArticaMetaDisableMasterAccount_explain>Disable possibility to change Master Account credentials</ArticaMetaDisableMasterAccount_explain>
+<ArticaMetaDisableSetupCenter>Disable Setup Center</ArticaMetaDisableSetupCenter>
+<ArticaMetaDisableSetupCenter_explain>Disable any operations on the Setup center area</ArticaMetaDisableSetupCenter_explain>
+<artica_meta_hard_drive_become_full>servers with hard drives that exceed more than 80% of their capacity</artica_meta_hard_drive_become_full>
+<artica_meta_hard_drive_ok>no server have hard drives in capacity limit</artica_meta_hard_drive_ok>
+<artica_meta_openports>List open ports and listening services on your servers inside your network, it can helps you to monitor or to secure your server by referencing all open ports</artica_meta_openports>
+<artica_meta_ping_enable>If enabled, remote servers will ask (around each 2 minutes) if there is any task for them.[br]They will not send status and informations but just request if there is any operations scheduled to preform</artica_meta_ping_enable>
+<ARTICA_META_SERVER_NOT_REPORT_ITS_STATUS>This server did not report it's status.[br]Perhaps server is down or the Artica Version is not compatible with this feature...</ARTICA_META_SERVER_NOT_REPORT_ITS_STATUS>
+<artica_meta_system_update>System update</artica_meta_system_update>
+<artica_meta_system_update_text>servers can be updated by it's official system repository manager</artica_meta_system_update_text>
+<artica_meta_waiting_operations_text>The central server currently waiting this server to report all executed scheduled task</artica_meta_waiting_operations_text>
+<ascendent>Ascendent</ascendent>
+<AsFetchMailAdministrator>Can manage mail retreival rules</AsFetchMailAdministrator>
+<AsUrisViewer>Can view uris in proxy statistics</AsUrisViewer>
+<AsVirtualBoxManager>Can manage virtual machines</AsVirtualBoxManager>
+<AsVPNAdministrator>Can manage VPN networks</AsVPNAdministrator>
+<AsWebAdministrator>Can manage websites</AsWebAdministrator>
+<authenticate_users_no_binaries>Artica is unable to find [b]squid_ldap_auth[b] binary, if you read this information, please contact Artica Technology support team</authenticate_users_no_binaries>
+<authenticate_users_ntlm_failed_explain>Currently your proxy did not meet requirements to perform NTLM authentication.[br]You need at least Samba server+Winbind and squid compiled with NTLM.[br]
+Go into the setup center and upgrade Samba.[br]Once Samba installed, upgrade Squid</authenticate_users_ntlm_failed_explain>
+<automatic_swap_cleaning>Automatic Swap cleaning</automatic_swap_cleaning>
+<automatic_swap_cleaning_explain>Automatic Swap cleaning force the system to empty the Swap memory when exceed a pourcentage or a Max memory in MB.[br]
+Some applications and for some system tasks, the swap memory is used but never cleaned.[br]This cause the system using more and more disk usage that should load the server and increase system I/O.[br]
+This feature will check the Swap system each 30Mn and clean it according limits sets.
+[br][strong]0 in the Max size field means that only pourcentage is used to calculate the limit.
+[br]If you set a value in this field, the robot will use the Max size in MB has the main limit instead the pourcentage.[/strong]
+</automatic_swap_cleaning_explain>
+<BACKGROUND_DELETE>Background deletion</BACKGROUND_DELETE>
+<Bare_newline_test>Bare newline test</Bare_newline_test>
+<broadcast_has_ipaddr>Broadcast will be restricted to IP address</broadcast_has_ipaddr>
+<bucketsize_database>bucketsize database</bucketsize_database>
+<build_awstats_statistics>Run the statistics compilation now</build_awstats_statistics>
+<categorize_this_query>Categorize this query</categorize_this_query>
+<CLIENTS_SCRIPTS>Clients scripts</CLIENTS_SCRIPTS>
+<CLIENTS_SCRIPTS_OPENVPN_EXPLAIN>In this section you can download OpenVPN configuration scripts that will be used by OpenVPN clients on Windows, Smartphones ,Linux...</CLIENTS_SCRIPTS_OPENVPN_EXPLAIN>
+<client_connection_count_limit>Client connection count limit</client_connection_count_limit>
+<client_connection_count_limit_text>How many simultaneous connections any client is allowed</client_connection_count_limit_text>
+<client_request_buffer_max_size>Resquest buffer MAX size</client_request_buffer_max_size>
+<client_request_buffer_max_size_text>This specifies the maximum buffer size of a client request.[br]
+It prevents squid eating too much memory when somebody uploads a large file.</client_request_buffer_max_size_text>
+<Command_pipelining_test>Command pipelining test</Command_pipelining_test>
+<company_privileges>Company privileges</company_privileges>
+<connection_date>Connection date</connection_date>
+<database_path>Database path</database_path>
+<default_delivery_slot_cost>Delivery slot cost</default_delivery_slot_cost>
+<default_delivery_slot_cost_text>
+How often the Postfix queue manager's scheduler is allowed to preempt delivery of one message with another.[br]
+Each transport maintains a so-called "available delivery slot counter" for each message.[br]
+One message can be preempted by another one when the other message can be delivered using no more delivery slots (i.e., invocations of delivery agents) than the current message counter has accumulated (or will eventually accumulate - see about slot loans below). This parameter controls how often is the counter incremented - it happens after each default_delivery_slot_cost recipients have been delivered.[br]
+The cost of 0 is used to disable the preempting scheduling completely.[br]
+The minimum value the scheduling algorithm can use is 2 - use it if you want to maximize the message throughput rate.[br]
+Although there is no maximum, it doesn't make much sense to use values above say 50.[br]
+The only reason why the value of 2 is not the default is the way this parameter affects the delivery of mailing-list mail.[br]
+In the worst case, their delivery can take somewhere between (cost+1/cost) and (cost/cost-1) times more than if the preemptive scheduler was disabled.[br]
+The default value of 5 turns out to provide reasonable message response times while making sure the mailing-list deliveries are not extended by more than 20-25 percent even in the worst case. 
+</default_delivery_slot_cost_text>
+<default_delivery_slot_discount>Delivery slot discount</default_delivery_slot_discount>
+<default_delivery_slot_discount_text>
+ This parameter speeds up the moment when a message preemption can happen.[br]
+ Instead of waiting until the full amount of delivery slots required is available, the preemption can happen when transport delivery slot discount percent of 
+ the required amount plus transport delivery slot loan still remains to be accumulated.[br]
+ Note that the full amount will still have to be accumulated before another preemption can take place later
+ </default_delivery_slot_discount_text>
+<default_delivery_slot_loan>Delivery slot loan</default_delivery_slot_loan>
+<default_delivery_slot_loan_text>
+ This parameter speeds up the moment when a message preemption can happen.[br]
+ Instead of waiting until the full amount of delivery slots required is available, the preemption can happen when transport delivery slot discount percent of the required amount plus transport delivery slot loan still remains to be accumulated.[br]
+ Note that the full amount will still have to be accumulated before another preemption can take place later
+ </default_delivery_slot_loan_text>
+<default_destination_concurrency_failed_cohort_limit>destination concurrency failed cohort limit</default_destination_concurrency_failed_cohort_limit>
+<default_destination_rate_delay>Destination rate delay</default_destination_rate_delay>
+<default_destination_rate_delay_text>The default amount of delay that is inserted between individual deliveries to the same destination;[br]
+ with per-destination recipient limit > 1, a destination is a domain, otherwise it is a recipient.[br]
+To enable the delay, specify a non-zero time value (an integral value plus an optional one-letter suffix that specifies the time unit).[br]
+Time units: s (seconds), m (minutes), h (hours), d (days), w (weeks). The default time unit is s (seconds). 
+ </default_destination_rate_delay_text>
+<default_extra_recipient_limit>Extra recipient limit</default_extra_recipient_limit>
+<default_extra_recipient_limit_text>The default value for the extra per-transport limit imposed on the number of in-memory recipients.[br]
+This extra recipient space is reserved for the cases when the Postfix queue manager's scheduler preempts one message with another and suddenly needs some extra recipients slots for the chosen message in order to avoid performance degradation.
+</default_extra_recipient_limit_text>
+<delete_this_user_dn>Delete user's LDAP branch</delete_this_user_dn>
+<delete_this_user_dn_text>Delete simply this user in the LDAP database without delete any other information</delete_this_user_dn_text>
+<descendent>Descendent</descendent>
+<destination_concurrency_failed_cohort_limit_text>How many pseudo-cohorts must suffer connection or handshake failure before a specific destination is considered unavailable (and further delivery is suspended).[br]
+ Specify zero to disable this feature.[br]
+ A destination's pseudo-cohort failure count is reset each time a delivery completes without connection or handshake failure for that specific destination.[br]
+ A pseudo-cohort is the number of deliveries equal to a destination's delivery concurrency
+ </destination_concurrency_failed_cohort_limit_text>
+<destination_limit>Destination limit</destination_limit>
+<dhcp>dhcp</dhcp>
+<DisableArticaMetaAgentInformations>Hide Artica Meta connexions informations</DisableArticaMetaAgentInformations>
+<DisableArticaMetaAgentInformations_explain>Remove any informations about Artica Global Management console connection in the remote console</DisableArticaMetaAgentInformations_explain>
+<DisableEtcHosts>Do not allow artica change hosts file</DisableEtcHosts>
+<DisableExplorer>Disable Explorer</DisableExplorer>
+<DisableExplorer_explain>Ban remote administrators to use the Explorer features that allow to browse the filesystem</DisableExplorer_explain>
+<DisableNetworksManagement>Disable Network Interface Management</DisableNetworksManagement>
+<DisableNetworksManagement_text>This ban remote administrators to change network interfaces settings on the local Management interface (including Virtual network interfaces features too)</DisableNetworksManagement_text>
+<DisableRebootOrShutDown>Disable reboot or shutdown</DisableRebootOrShutDown>
+<DisableRebootOrShutDown_explain>This ban remote administrators to reboot or shutdown server trough the local Management interface</DisableRebootOrShutDown_explain>
+<disable_winbindd>Disable Winbindd daemon</disable_winbindd>
+<disconnected_from_the_console>disconnected from the_console</disconnected_from_the_console>
+<discover_computers>Discover computers</discover_computers>
+<dnsbl>DNSBL</dnsbl>
+<domain_throttle>Domain throttle</domain_throttle>
+<domain_throttle_domain_explain>In this section you can match your SMTP engines with specific destinations domains.[br]
+Add your domain eg "yahoo.com" and select in the list your SMTP engine</domain_throttle_domain_explain>
+<domain_throttle_explain>Some destination servers need to receive mails smoothly or in other case, you need to speedup sending mails trough a specific destination.[br]
+ This section will helps you to perform this operation.[br]
+ First you need to create an SMTP Daemon with specifics parameters.[br]Second is to associate destination domains to your SMTP daemons.
+ </domain_throttle_explain>
+<domain_throttle_explain_edit>Here you can tune your SMTP Sender engine in order to reduce/increase it's process[br]Use tooltips in order to understand what parameter do</domain_throttle_explain_edit>
+<domain_throttle_text>Domain throttle allow you to reduce the Postfix SMTP sender engine according destination domains</domain_throttle_text>
+<dos_filemode>Write access allow to change ACLs</dos_filemode>
+<dos_filemode_text>Default: Disabled.[br]The default behavior in Samba is to provide UNIX-like behavior where only the owner of
+ a file/directory is able to change the permissions on it.[br]
+ However, this behavior is often confusing to DOS/Windows users.[br]
+ Enabling this parameter allows a user who has write access to the file (by whatever means) 
+ to modify the permissions (including ACL) on it.[br]
+ Note that a user belonging to the group owning the file will not be allowed to change permissions
+  if the group is only granted read access.[br] Ownership of the file/directory may also be changed.</dos_filemode_text>
+<EmergingThreats>Emerging Threats</EmergingThreats>
+<EmergingThreats_text>Emerging Threats is a collection point for a number of security projects, mostly related to Intrusion Detection and network Traffic Analysis.</EmergingThreats_text>
+<EnablePrintersSharing>Enable Printers sharing</EnablePrintersSharing>
+<enable_EmergingThreats>Activate Emerging Threats update</enable_EmergingThreats>
+<enable_graphs>Enable graphics</enable_graphs>
+<ENABLE_KUPDUTILITY>Activate Kaspersky Update utility service</ENABLE_KUPDUTILITY>
+<ENABLE_KUPDUTILITY_TEXT>If you enable this feature, Update Utility will checks automatically updates each hour</ENABLE_KUPDUTILITY_TEXT>
+<ENABLE_POSTSCREEN>Activate PostScreen service</ENABLE_POSTSCREEN>
+<enable_replication>Enable replication mode</enable_replication>
+<enable_sabnzbdplus>Activate sabnzbdplus service</enable_sabnzbdplus>
+<enable_spamasssin_milter>Enable Spamassassin Milter Edition</enable_spamasssin_milter>
+<ENABLE_TRANSACTIONS>Enable transactions</ENABLE_TRANSACTIONS>
+<ERROR_APP_NMAP_NOT_INSTALLED>Unable to perform operation, Nmap security scanner is not installed</ERROR_APP_NMAP_NOT_INSTALLED>
+<ERROR_NO_NETWORK_SPECIFIED>There is no network set in the server configuration operation cannot be executed</ERROR_NO_NETWORK_SPECIFIED>
+<fetchmail_remote_port_explain>If the remote mailbox server did not listen to a standard port, set the port in this field.[br]
+Leave 0 if remote port is a standard port</fetchmail_remote_port_explain>
+<fileservers>File Servers</fileservers>
+<file_deduplication>File deduplication</file_deduplication>
+<file_deduplication_explain>Data deduplication is a specialized data compression technique for eliminating coarse-grained redundant data,
+ typically to improve storage utilization.[br]
+ In the deduplication process, duplicate data is deleted, leaving only one copy of the data to be stored, along with references to the unique copy of data.[br]
+ Deduplication is able to reduce the required storage capacity since only the unique data is stored.[br]
+Data deduplication increases the speed of service and reduces costs.[br]
+The benefits from data deduplication start with increasing overall data integrity and end with reducing overall data protection costs.[br]
+Data deduplication lets users reduce the amount of disk they need for backup by 90 percent or more, and with reduced acquisition costs—and reduced power, space, and cooling requirements.[br]
+Deduplication can also provide significant energy, space, cooling and costs savings, by reducing the amount of data stored. It contributes significantly in the process of Data Center Transformation through reducing carbon footprints due to savings on storage space and reduces the recurring cost of human resource to management and administration.[br]
+[i]Extract of wikipedia[/i]
+</file_deduplication_explain>
+<file_deduplication_text>File deduplication is an intelligently process that reduce storage space usage on the fly, resulting in space savings as high as 30%-40%.</file_deduplication_text>
+<file_servers>Files Servers</file_servers>
+<find_user_in_db_explain>Search an user in this server database</find_user_in_db_explain>
+<freewebs_explain>This section allows you to create Free websites called has FreeWebs.
+[br]FreeWebs create a web space for users in your server.[br]It create a mysql database and perform statistics trough awstats for the web server.</freewebs_explain>
+<freeze_replication>Freeze the replication</freeze_replication>
+<groupwaresww_explain>This section allow you to install groupwares.[br]When adding a groupware, you add a final application such has a web server engine or a webmail or a blog.[br]
+It does not allow access to a mysql database and does not allow to access to the working folder trough FTP.[br]
+Application is automatically installed by the remote server.[br]You just have to set the correct DNS entry and play with it.</groupwaresww_explain>
+<groupwares_choose_available>Choose the Groupware you wants to install.[br]It is possible that not all available groupwares are listed. It depends if your server can accept some groupwares.</groupwares_choose_available>
+<group_privileges>Group privileges</group_privileges>
+<GROUP_PRIV_MEMBERS_EXPLAIN>Define here Artica Meta members that will match the group privileges.[br]Each member added here will use privileges associated to this group</GROUP_PRIV_MEMBERS_EXPLAIN>
+<hide_no_mac>Hide Unknown Mac Address</hide_no_mac>
+<hide_unknown_os>Hide Unknown OS</hide_unknown_os>
+<home_products>Home products</home_products>
+<host_port>Host port</host_port>
+<ignore_expect_100>Prevents 417 errors</ignore_expect_100>
+<ignore_expect_100_text>This option makes Squid ignore any Expect: 100-continue header present
+in the request.[br]RFC 2616 requires that Squid being unable to satisfy the response expectation MUST return a 417 error.</ignore_expect_100_text>
+<index_sort_order>Index page sort order</index_sort_order>
+<initial_destination_concurrency>initial destination concurrency</initial_destination_concurrency>
+<initial_destination_concurrency_text>The initial per-destination concurrency level for parallel delivery to the same destination.[br]
+With per-destination recipient limit > 1, a destination is a domain, otherwise it is a recipient.[br]
+[b]Warning: with concurrency of 1, one bad message can be enough to block all mail to a site.[/b]
+</initial_destination_concurrency_text>
+<INSTALL_VBOX_TOOLS>Install VirtualBox Additions</INSTALL_VBOX_TOOLS>
+<INSTALL_VBOX_TOOLS_TEXT>Get better performances on your server by installing VirtualBox guest additions</INSTALL_VBOX_TOOLS_TEXT>
+<instant_messengers>Instant messengers</instant_messengers>
+<INTERNAL_NETWROK_ADD_EXPLAIN>
+In this form, you must set a CIDR entry.[br]
+CIDR notation is a compact specification of an Internet Protocol address and its associated routing prefix.[br]
+For example, the address specification 192.168.100.1/24 represents the given IPv4 address and its associated routing prefix 192.168.100.0, 
+or equivalently, its subnet mask 255.255.255.0.[br]
+An another example: the IPv4 block 192.168.0.0/22 represents the 1024 IPv4 addresses from 192.168.0.0 to 192.168.3.255.
+</INTERNAL_NETWROK_ADD_EXPLAIN>
+<in_trash>in trash</in_trash>
+<ipaddr>IP Address</ipaddr>
+<IS_A_VIRTUALBOX_VIRTUAL_MACHINE>It's a VirtualBox virtual machine</IS_A_VIRTUALBOX_VIRTUAL_MACHINE>
+<kaspersky_products>Kaspersky Products</kaspersky_products>
+<LESSFS_BACKGROUND_DELETE> when enabled, lessfs will spawn a dedicated thread when a file is truncated or deleted.[br]
+if disabled, truncating or deleting large files will a  time  consuming  operation.[br]
+Although  the actual deletion process is still time consuming with selected,
+it will appear to be very fast for the user who deletes the file</LESSFS_BACKGROUND_DELETE>
+<LESSFS_BLKSIZE>blocks size</LESSFS_BLKSIZE>
+<lessfs_cachesize>The cachesize in megabytes that lessfs is allowed to use as write cache</lessfs_cachesize>
+<LESSFS_COMMIT_INTERVAL>Maximum age (seconds) of entries that are kept in the cache. After this the cache will be written to disk</LESSFS_COMMIT_INTERVAL>
+<LESSFS_COMMIT_INTERVAL_FIELD>Max cache age</LESSFS_COMMIT_INTERVAL_FIELD>
+<LESSFS_DYNAMIC_DEFRAGMENTATION>Allow automatic database defragmentation</LESSFS_DYNAMIC_DEFRAGMENTATION>
+<LESSFS_ENABLE_TRANSACTIONS>Enable or disable transactions. Without transactions enabled lessfs will need to be repaired with fsck after a crash.[br]
+The downside of enabling transactions is a mild performance impact.</LESSFS_ENABLE_TRANSACTIONS>
+<lessfs_freeze_replication>
+ When  disabled  all  data  stored  on  the master is directly send to the slave.[br]
+ When enabled the master will write data stored in a replog file as well as it’s databases.[br]
+ The replog file will be used to transfer the data to the slave when replication becomes enabled.</lessfs_freeze_replication>
+<lessfs_master>Master</lessfs_master>
+<LESSFS_MAX_THREADS>Do not set it higher then the number of CPU cores available in the system.[br]
+Lessfs will use x CPU cores for LZO or QUICKLZ compression to compress X data blocks in parallel.[br]
+The performance will suffer when  this  number is set higher then the number of CPU cores that are available in the system
+</LESSFS_MAX_THREADS>
+<lessfs_mount_explain>This section will create directories mounted has deduplication storage[br]
+Select an empty folder or create a new one with the "browse" button</lessfs_mount_explain>
+<link_user_to_a_group>Link to a group</link_user_to_a_group>
+<link_user_to_a_group_text>Link this user to a user's group</link_user_to_a_group_text>
+<logfile>Log file</logfile>
+<LogFormat>Log format</LogFormat>
+<logged_into_the_console>Logged into the console</logged_into_the_console>
+<loggoff>Logoff</loggoff>
+<LogSeparator>Log separator</LogSeparator>
+<LogType>Log type</LogType>
+<LogTypeF>FTP log file</LogTypeF>
+<LogTypeM>Mail log file</LogTypeM>
+<LogTypeW>Web log file</LogTypeW>
+<maintenance_tasks>Maintenance tasks</maintenance_tasks>
+<managed_servers>Managed servers</managed_servers>
+<MANAGE_YOUR_MAILBOX_SERVER>Manage your Zarafa Mailbox server</MANAGE_YOUR_MAILBOX_SERVER>
+<member_of_folowing_groups>Member of folowing groups</member_of_folowing_groups>
+<MEMORY_BALLON_ASK_MB>Give the memory ballon in MB</MEMORY_BALLON_ASK_MB>
+<MEMORY_SIZE_ASK>Give the memory in MB</MEMORY_SIZE_ASK>
+<messages_pluri>message(s)</messages_pluri>
+<META_NMAP_SCAN_SCHEDULED>Network scanning operation has been scheduled.The remote server will execute the task has soon has possible</META_NMAP_SCAN_SCHEDULED>
+<minute>Minute</minute>
+<modify_network_card_parameters>Edit Network card settings</modify_network_card_parameters>
+<mount_has_deduplication_folder>Mount has deduplication filesystem</mount_has_deduplication_folder>
+<MOVE_SERVER_TO_PROD>Move this server to the production list ?</MOVE_SERVER_TO_PROD>
+<MOVE_SERVER_TO_TRASH_ASK>Move this server to trash list ?</MOVE_SERVER_TO_TRASH_ASK>
+<nat_configuration>NAT configuration</nat_configuration>
+<network_stats>Network stats.</network_stats>
+<NO_DATA_COME_BACK_LATER>No data are currently saved, statistics can be generated, please come back later</NO_DATA_COME_BACK_LATER>
+<only_active_cards>Only active cards</only_active_cards>
+<OPENVPN_CONN_STATUS_EXPLAIN>This is the list of VPN connected nodes, it display informations about bandwith usage and connections time</OPENVPN_CONN_STATUS_EXPLAIN>
+<open_ports>Open ports</open_ports>
+<pagefusion>Page fusion</pagefusion>
+<panel>Panel</panel>
+<PANEL_RIGHT_ADMINISTRATE_FOLOWING_SERVERS>Administrate the folowing servers in your organization...</PANEL_RIGHT_ADMINISTRATE_FOLOWING_SERVERS>
+<password2>Re-type password</password2>
+<pause_the_queue>Pause the queue</pause_the_queue>
+<pause_the_queue_explain>In this section you can freeze the mail delivery process.[br]
+If you turn to red, the server keep listening process and will accept new messages but messages will stay stored on the disk.
+</pause_the_queue_explain>
+<pause_the_queue_text>Freeze the delivery process while allowing mail to arrive</pause_the_queue_text>
+<perimeter_defense>Defense perimeter</perimeter_defense>
+<PingEnable>Enable Ping</PingEnable>
+<PortProxyServer>Proxy server port</PortProxyServer>
+<postfix_parameters>Postfix parameters</postfix_parameters>
+<PostScreen>PostScreen</PostScreen>
+<postscreen_bare_newline_action>Bare newline action</postscreen_bare_newline_action>
+<postscreen_bare_newline_action_text>The action that postscreen takes when an SMTP client sends a bare newline character, that is, a newline not preceded by carriage return</postscreen_bare_newline_action_text>
+<postscreen_bare_newline_enable>Enable bare newline checks</postscreen_bare_newline_enable>
+<postscreen_bare_newline_enable_text>Enable "bare newline" SMTP protocol tests.[br]These tests are expensive: a client must disconnect after it passes the test, before it can talk to a real Postfix SMTP server</postscreen_bare_newline_enable_text>
+<postscreen_bare_newline_ttl>Bare newline TTL</postscreen_bare_newline_ttl>
+<postscreen_bare_newline_ttl_text>The amount of time that postscreen will use the result from a successful "bare newline" SMTP protocol test.[br]
+During this time, the client IP address is excluded from this test.[br]
+The default is long because a client must disconnect after it passes the test, before it can talk to a real Postfix SMTP server.
+Specify a non-zero time value (an integral value plus an optional one-letter suffix that specifies the time unit). Time units: s (seconds), m (minutes), h (hours), d (days), w (weeks)</postscreen_bare_newline_ttl_text>
+<POSTSCREEN_BARRE_NEWLINE_EXPLAIN>SMTP is a line-oriented protocol: lines have a limited length, and are terminated with CR+LF. Lines ending in a "bare" LF, that is newline not preceded by carriage return, are not allowed in SMTP</POSTSCREEN_BARRE_NEWLINE_EXPLAIN>
+<postscreen_cache_cleanup_interval>Cache cleanup interval</postscreen_cache_cleanup_interval>
+<postscreen_cache_cleanup_interval_text>The amount of time between postscreen cache cleanup runs.[br] Cache cleanup increases the load on the cache database and should therefore not be run frequently.
+</postscreen_cache_cleanup_interval_text>
+<postscreen_cache_retention_time>Cache retention time</postscreen_cache_retention_time>
+<postscreen_cache_retention_time_text>The amount of time that postscreen will cache an expired temporary whitelist entry before it is removed.[br]
+This prevents clients from being logged as "NEW" just because their cache entry expired an hour ago.
+</postscreen_cache_retention_time_text>
+<postscreen_dnsbl_action>DNSBL Action</postscreen_dnsbl_action>
+<postscreen_dnsbl_action_text>The action that postscreen takes when an SMTP client's combined DNSBL score is equal to or greater than a threshold</postscreen_dnsbl_action_text>
+<postscreen_dnsbl_sites>Optional list of DNS white/blacklist domains, filters and weight factors.</postscreen_dnsbl_sites>
+<postscreen_dnsbl_threshold>DNSBL threshold</postscreen_dnsbl_threshold>
+<postscreen_dnsbl_threshold_text>The inclusive lower bound for blocking an SMTP client, based on its combined DNSBL score</postscreen_dnsbl_threshold_text>
+<postscreen_dnsbl_ttl>DNSBL TTL</postscreen_dnsbl_ttl>
+<postscreen_dnsbl_ttl>threshold</postscreen_dnsbl_ttl>
+<postscreen_dnsbl_ttl_text>
+The amount of time that postscreen will use the result from a successful DNS blocklist test.[br]
+ During this time, the client IP address is excluded from this test.[br]
+ The default is relatively short, because a good client can immediately talk to a real Postfix SMTP server</postscreen_dnsbl_ttl_text>
+<postscreen_forbidden_commands>forbidden commands</postscreen_forbidden_commands>
+<postscreen_forbidden_commands_text>List of commands that the postscreen server considers in violation of the SMTP protocol.</postscreen_forbidden_commands_text>
+<POSTSCREEN_MINI_TEXT>PostScreen blocks connections from zombies and other spambots</POSTSCREEN_MINI_TEXT>
+<postscreen_non_smtp_command_action>Non-SMTP command action</postscreen_non_smtp_command_action>
+<postscreen_non_smtp_command_action_text>The action that postscreen takes when an SMTP client sends non-SMTP commands as specified</postscreen_non_smtp_command_action_text>
+<postscreen_non_smtp_command_enable>Enable non smtp command</postscreen_non_smtp_command_enable>
+<postscreen_non_smtp_command_explain>Some spambots send their mail through open proxies. A symptom of this is the usage of commands such as CONNECT and other non-SMTP commands.</postscreen_non_smtp_command_explain>
+<postscreen_non_smtp_command_title>Non-SMTP command test</postscreen_non_smtp_command_title>
+<postscreen_non_smtp_command_ttl>Non-SMTP command TTL</postscreen_non_smtp_command_ttl>
+<postscreen_non_smtp_command_ttl_text>The amount of time that postscreen will use the result from a successful "non_smtp_command" SMTP protocol test. During this time, the client IP address is excluded from this test.[br] The default is long because a client must disconnect after it passes the test, before it can talk to a real Postfix SMTP server</postscreen_non_smtp_command_ttl_text>
+<postscreen_pipelining_action>action</postscreen_pipelining_action>
+<postscreen_pipelining_action_text>The action that postscreen takes when an SMTP sender sends multiple commands instead of sending one command and waiting for the server to respond</postscreen_pipelining_action_text>
+<postscreen_pipelining_enable>Enable multiple commands checks</postscreen_pipelining_enable>
+<postscreen_pipelining_enable_text>Enable "pipelining" SMTP protocol tests in the postscreen server. These tests are expensive: a good client must disconnect after it passes the test, before it can talk to a real Postfix SMTP server.</postscreen_pipelining_enable_text>
+<postscreen_pipelining_explain>By default, SMTP is a half-duplex protocol: the sender and receiver send one command and one response at a time.[br]
+Unlike the Postfix SMTP server, postscreen does not announce support for ESMTP command pipelining.[br]
+Therefore, senders are not allowed to send multiple commands</postscreen_pipelining_explain>
+<postscreen_pipelining_ttl>Pipeline TTL</postscreen_pipelining_ttl>
+<postscreen_pipelining_ttl_text>The amount of time that postscreen will use the result from a successful "pipelining" SMTP protocol test.[br]
+During this time, the client IP address is excluded from this test.[br]
+The default is long because a good client must disconnect after it passes the test, before it can talk to a real Postfix SMTP server
+</postscreen_pipelining_ttl_text>
+<postscreen_post_queue_limit>Post-Queue limit</postscreen_post_queue_limit>
+<postscreen_post_queue_limit_text>The number of clients that can be waiting for service from a real SMTP server process. When this queue is full, all clients will receive a 421 reponse.</postscreen_post_queue_limit_text>
+<postscreen_pre_queue_limit>Pre-queue Limit</postscreen_pre_queue_limit>
+<postscreen_pre_queue_limit_text>The number of non-whitelisted clients that can be waiting for a decision whether they will receive service from a real SMTP server process. When this queue is full, all non-whitelisted clients will receive a 421 reponse</postscreen_pre_queue_limit_text>
+<POSTSCREEN_TEXT>
+PostScreen blocks connections from zombies and other spambots that are responsible for about 90% of all spam.[br]It is
+implemented as a single process to make this defense as cheap as possible.
+</POSTSCREEN_TEXT>
+<prefix_size>Prefix size</prefix_size>
+<process>Process</process>
+<processes_number>Processes Number</processes_number>
+<proxiesandFirewall>Proxies & FireWalls</proxiesandFirewall>
+<proxy_address>Proxy address</proxy_address>
+<proxy_servers>Proxy servers</proxy_servers>
+<quick_links>Quick links</quick_links>
+<rate_delay>Rate delay</rate_delay>
+<rebuild_all_scripts>Rebuild all scripts</rebuild_all_scripts>
+<rebuild_parameters>Rebuild parameters</rebuild_parameters>
+<receive>receive</receive>
+<remote_port>Remote port</remote_port>
+<remote_privileges>Remote privileges</remote_privileges>
+<remote_privileges_explain>This section allows you to lock or unlock features on the Management console used by local administrators.</remote_privileges_explain>
+<remove_from_trash>Remove from trash</remove_from_trash>
+<replication>Replication</replication>
+<REPLICATION_ROLE>Replication role</REPLICATION_ROLE>
+<reply_header_max_size>Reply Header MAX size</reply_header_max_size>
+<report_type>Report type</report_type>
+<restart_lessfs_service>Restart lessFS service</restart_lessfs_service>
+<restart_lessfs_service_text>Umount all directories and re-mount them is the same process</restart_lessfs_service_text>
+<restart_network>Restart Network service</restart_network>
+<restart_network_text>Restart the network service of this computer</restart_network_text>
+<restart_virtual_machine>Restart virtual machine</restart_virtual_machine>
+<routing_domains>Routing domains</routing_domains>
+<sarg_auth_failures>autentication failures report</sarg_auth_failures>
+<sarg_date_format>Date format in reports</sarg_date_format>
+<sarg_date_time>bytes used per day and hour report</sarg_date_time>
+<sarg_denied>denied sites with full URL report</sarg_denied>
+<sarg_downloads>downloads per user reports</sarg_downloads>
+<sarg_everybody>Use "everybody" instead</sarg_everybody>
+<sarg_ignore>This record will be ignored</sarg_ignore>
+<sarg_ip>Use ip address instead</sarg_ip>
+<sarg_lastlog>How many reports files must be keept</sarg_lastlog>
+<sarg_long_url>full url is showed in report</sarg_long_url>
+<sarg_overwrite_report>tasks with records without user id</sarg_overwrite_report>
+<sarg_records_without_userid>records without user id (no authentication)</sarg_records_without_userid>
+<sarg_reports>Sarg reports</sarg_reports>
+<sarg_resolve_ip>Convert ip address to dns name</sarg_resolve_ip>
+<sarg_sites_users>users and sites report</sarg_sites_users>
+<sarg_site_user_time_date>sites, dates, times and bytes report</sarg_site_user_time_date>
+<sarg_title>report title</sarg_title>
+<sarg_topsites>site, connect and bytes report</sarg_topsites>
+<sarg_topsites_num>Topsites number</sarg_topsites_num>
+<sarg_topusers>users, sites, times, bytes, connects</sarg_topusers>
+<sarg_topuser_exp>0 = no limit</sarg_topuser_exp>
+<sarg_topuser_num>How many users in topsites report.</sarg_topuser_num>
+<sarg_users_sites>Users sites</sarg_users_sites>
+<sarg_user_ip>Use Ip Address instead userid in reports</sarg_user_ip>
+<security_packages>Security packages</security_packages>
+<selected_accents>selected</selected_accents>
+<serial_number>Serial Number</serial_number>
+<servers_list>servers list</servers_list>
+<server_informations>Server informations</server_informations>
+<server_settings>Server settings</server_settings>
+<setup_center>Setup center</setup_center>
+<SiteDomain>Main domain name</SiteDomain>
+<slave_ip>Slave IP address</slave_ip>
+<slave_port>Slave listen port</slave_port>
+<smtp_daemon_name>SMTP Daemon name</smtp_daemon_name>
+<smtp_senders>SMTP senders</smtp_senders>
+<SourceCustom>Custom source</SourceCustom>
+<SourceCustomPath>Custom source path</SourceCustomPath>
+<SourceKlabServer>USe Kaspersky Lab servers</SourceKlabServer>
+<squid_instant_messengers_explain>By default, the proxy did not allow connections from instant messengers clients such has AOL Instant Messenger, IRC, Yahoo Messenger
+Google Talk, MSN to enable these clients going trough the proxy, enable them in fields below</squid_instant_messengers_explain>
+<squid_instant_messengers_text>Activate possibility to use instant messengers trough the proxy</squid_instant_messengers_text>
+<static>static</static>
+<storage_size>Storage size</storage_size>
+<SUGAR_WARNING_FINISH_INSTALL>To rebuild the configuration or to finish the install, you need to click on the link below</SUGAR_WARNING_FINISH_INSTALL>
+<SuperAdmin>Super-Admin</SuperAdmin>
+<SuperAdminChangeExplain>This form allows you to change SuperAdmin credentials such has username and password.[br]
+Give the username and the password you would like to change.[br]
+When then server will connect to the global Management console it make the change operation.[br]After submiting form, please wait few minutes (around 15 minutes).
+</SuperAdminChangeExplain>
+<synchronize_organizations_text>Ask server to report organizations saved locally and erase central server datas with the remote server</synchronize_organizations_text>
+<system_operations>System operations</system_operations>
+<TAB_EVENTS_BACKUP>Backup</TAB_EVENTS_BACKUP>
+<TAB_EVENTS_CLOUD>Artica Meta</TAB_EVENTS_CLOUD>
+<TAB_EVENTS_KASPERSKY_UPDATES>Kaspersky updates</TAB_EVENTS_KASPERSKY_UPDATES>
+<TAB_EVENTS_LOGS_CLEANING>Cleaning</TAB_EVENTS_LOGS_CLEANING>
+<TAB_EVENTS_MAILBOX>Mailboxes</TAB_EVENTS_MAILBOX>
+<TAB_EVENTS_POSTFIX>Postfix</TAB_EVENTS_POSTFIX>
+<TAB_EVENTS_PROXY>Proxy</TAB_EVENTS_PROXY>
+<TAB_EVENTS_SMTP>SMTP</TAB_EVENTS_SMTP>
+<TAB_EVENTS_SYSTEM>System</TAB_EVENTS_SYSTEM>
+<TAB_EVENTS_UPDATE>Updates</TAB_EVENTS_UPDATE>
+<TAB_EVENTS_VPN>VPN</TAB_EVENTS_VPN>
+<TempFolder>Temp folder</TempFolder>
+<THIS_USER_DOES_NOT_EXISTS>This user does not exists</THIS_USER_DOES_NOT_EXISTS>
+<threshold>threshold</threshold>
+<topcpu_explain>When remote server report to the global management console it sends the TOP 10 of processes that consume CPU.[br]
+You can display here processes reported by remote servers.[br]
+useful to monitor a process that handle to much CPUs.
+[br]Notice that remote server report a snapshot to the management console.[br]You may analyze if the process stay in memory for a long time.[br]
+</topcpu_explain>
+<topmem_explain>When remote server report to the global management console it sends the TOP 10 of processes that consume memory (virtual and physical).[br]
+VSZ is the virtual memory size, part of which may be in physical memory and part of which may be swapped to disk.[br]
+RSS is the physical memory used by the process.[br]
+You can display here processes reported by remote servers.[br]
+useful to monitor a process that handle to much CPUs.
+[br]Notice that remote server report a snapshot to the management console.[br]You may analyze if the process stay in memory for a long time.[br] 
+</topmem_explain>
+<topsites_num>How many sites in topsites report</topsites_num>
+<topsites_sort_order>Sort for topsites report</topsites_sort_order>
+<topsites_sort_order_BYTES>Sort by BYTES</topsites_sort_order_BYTES>
+<topsites_sort_order_CONNECT>Sort by CONNECT</topsites_sort_order_CONNECT>
+<top_processes>TOP processes</top_processes>
+<trash>Trash</trash>
+<UpdatesFolder>Update folder</UpdatesFolder>
+<update_packages>Update packages</update_packages>
+<update_serial_number>Update serial number</update_serial_number>
+<UseAuthenticationProxyServer>Use proxy authentification</UseAuthenticationProxyServer>
+<UsePassiveFtpMode>Use FTP PASSIVE Mode</UsePassiveFtpMode>
+<UseProxyServer>Use Proxy server</UseProxyServer>
+<users_and_computers>Users & computers</users_and_computers>
+<users_databases>Users databases</users_databases>
+<UserWatch>UserWatch</UserWatch>
+<vbox_nat_configuration_explain>This section allow you to NAT ports from the host virtualizer to the Virtual Machine.[br]Usefull if you need to access to the virtual machine using the host virtualizer IP address</vbox_nat_configuration_explain>
+<vbox_need_reboot_text>You need to reboot the virtual machine in order to make settings applied in production mode</vbox_need_reboot_text>
+<vbox_port>Virtual Machine port</vbox_port>
+<view_html>View HTML</view_html>
+<view_source>View source</view_source>
+<virtualizers>Virtualizers</virtualizers>
+<virtual_machine_port>Virtual machine port</virtual_machine_port>
+<vpn_servers>VPN Servers</vpn_servers>
+<waiting_operations>Waiting tasks</waiting_operations>
+<wakeup_computer>Remote Wake-up</wakeup_computer>
+<wakeup_computer_text>turn on this computer using a special network message called a magic packet</wakeup_computer_text>
+<WARN_QUEUE_FREEZE>Warning, queue is frozen</WARN_QUEUE_FREEZE>
+<webservers>Web servers</webservers>
+<website>Website</website>
+<websites_categorized>Categorized websites</websites_categorized>
+<web_console_access>Web console access</web_console_access>
+<working_directory>working directory</working_directory>
+<workstations>Workstations</workstations>
+<WrongMXPlugin>WrongMX determines if an email was sent to a lower preference MX when a higher preference MX was likely available.</WrongMXPlugin>
+<www_chat>Sites for realtime chatting and instant messaging.</www_chat>
+<your_network>Your network</your_network>
+<ZARAFA_ABOUT>Nowadays, e-mail is one of the mission critical applications of a company.[br]
+Zarafa combines the usabillity of Outlook with the stability and flexibility of a Linux server.[br]
+Not only Outlook is supported natively, but users can use also the web 2.0 Outlook "Look & Feel" webaccess,
+all ActiveSync compatible mobile devices and BlackBerry handhelds via the BlackBerry Enterprise Server.
+</ZARAFA_ABOUT>
+<zarafa_license>Zarafa License</zarafa_license>
+<ZARAFA_LICENSE_USE_FREE>Currently, you using the Free Zarafa version</ZARAFA_LICENSE_USE_FREE>
+<ZARAFA_SERVERS>Mailbox Servers (Zarafa)</ZARAFA_SERVERS>
+<zarafa_servers2>Zarafa Servers</zarafa_servers2>
+<ZARAFA_UPDATE_SERIAL_EXPLAIN>Give here the serial number generated on the Zarafa portal (https://portal.zarafa.com)</ZARAFA_UPDATE_SERIAL_EXPLAIN>

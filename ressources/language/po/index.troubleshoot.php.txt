@@ -1,0 +1,10 @@
+<export_artica_settings>Export server settings</export_artica_settings>
+<export_artica_settings_text>Export all parameters and mandatories datas</export_artica_settings_text>
+<import_artica_settings>Restore artica parameters</import_artica_settings>
+<import_artica_settings_text>Restore parameters from a previous export operation, useful to restore your server completely</import_artica_settings_text>
+<index_ldap_databases>Index LDAP Database</index_ldap_databases>
+<index_ldap_databases_text>reconstruct attributes and indexes of your LDAP database</index_ldap_databases_text>
+<rebuild_ldap_databases>Rebuild LDAP database</rebuild_ldap_databases>
+<rebuild_ldap_databases_text>Backup your LDAP database and build a new one, datas will not be lost</rebuild_ldap_databases_text>
+<restore_ldap_database>Restore trough InstantLDAPBackup</restore_ldap_database>
+<restore_ldap_database_text>You LDAP Database is backuped each hour, you can restore it by this way</restore_ldap_database_text>

@@ -1,0 +1,15 @@
+<about>Dotclear is an open-source web publishing software created in 2002 by Olivier Meunier.[br]
+A one man's project at first, Dotclear soon gathered a team comprising different personalities with various backgrounds.[br]
+The project's purpose is to provide a user-friendly tool allowing anyone to publish on the web, regardless of their technical skills.</about>
+<blog_access>Your blog access</blog_access>
+<blog_access_text>Access to your blog web site</blog_access_text>
+<blog_settings>Your Blog Administration</blog_settings>
+<blog_settings_text>Manage your Blog website by access to the central interface</blog_settings_text>
+<DotClearExternalAdminUri>External URI to Dotclear Administration interface</DotClearExternalAdminUri>
+<DotClearExternalWebUri>External URI to access port</DotClearExternalWebUri>
+<DotClearHttpListenPort>HTTP service listen port</DotClearHttpListenPort>
+<EnableDotClearHTTPService>Enable HTTP service for DotClear</EnableDotClearHTTPService>
+<rebuild_tables>Rebuild tables</rebuild_tables>
+<tables_error>Mysql Tables errors</tables_error>
+<tables_error_text>It seems that some tables missing in database[br]Click on the button bellow in order to install them</tables_error_text>
+<user_dotclear_access>Access to your DotClear area</user_dotclear_access>

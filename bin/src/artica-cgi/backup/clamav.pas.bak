@@ -1,0 +1,865 @@
+unit clamav;
+
+{$MODE DELPHI}
+{$LONGSTRINGS ON}
+
+interface
+
+uses
+    Classes, SysUtils,variants,strutils,IniFiles, Process,md5,logs,unix,RegExpr in 'RegExpr.pas',zsystem;
+
+type LDAP=record
+      admin:string;
+      password:string;
+      suffix:string;
+      servername:string;
+      Port:string;
+  end;
+
+  type
+  TClamav=class
+
+
+private
+     LOGS:Tlogs;
+     GLOBAL_INI:TiniFIle;
+     function COMMANDLINE_PARAMETERS(FoundWhatPattern:string):boolean;
+     function get_INFOS(key:string):string;
+     function ReadFileIntoString(path:string):string;
+     SYS:TSystem;
+     artica_path:string;
+
+
+public
+    procedure   Free;
+    constructor Create;
+    function  MILTER_PID():string;
+    function  MILTER_DAEMON_PATH():string;
+    function  MILTER_INITD_PATH():string;
+    procedure MILTER_ETC_DEFAULT();
+    procedure MILTER_START();
+    procedure MILTER_STOP();
+    function  MILTER_SOCK_PATH():string;
+    function  MILTER_GET_SOCK_PATH():string;
+    FUNCTION  MILTER_STATUS():string;
+    procedure MILTER_CHANGE_INITD();
+    
+    
+    function  CLAMAV_VERSION():string;
+    function  CLAMD_PID() :string;
+    function  CLAMAV_PATTERN_VERSION():string;
+    function  CLAMD_BIN_PATH():string;
+    function  CLAMD_CONF_PATH():string;
+    function  CLAMD_GETINFO(Key:String):string;
+    function  CLAMAV_INITD():string;
+    FUNCTION  CLAMAV_STATUS():string;
+    procedure CLAMD_START();
+    procedure CLAMD_STOP();
+    function  StartStopDaemonPath():string;
+    
+    function  FRESHCLAM_PATH():string;
+    function  FRESHCLAM_INITD():string;
+    procedure FRESHCLAM_STOP();
+    function  FRESHCLAM_CONF_PATH():string;
+    function  FRESHCLAM_GETINFO(Key:String):string;
+    procedure FRESHCLAM_SETINFO(Key:String;value:string);
+    FUNCTION  FRESHCLAM_STATUS():string;
+    function  FRESHCLAM_PID() :string;
+    procedure FRESHCLAM_START();
+    
+    function AMAVISD_PID() :string;
+
+
+END;
+
+implementation
+
+constructor TClamav.Create;
+begin
+       forcedirectories('/etc/artica-postfix');
+       LOGS:=tlogs.Create();
+       SYS:=Tsystem.Create;
+       if not DirectoryExists('/usr/share/artica-postfix') then begin
+              artica_path:=ParamStr(0);
+              artica_path:=ExtractFilePath(artica_path);
+              artica_path:=AnsiReplaceText(artica_path,'/bin/','');
+
+      end else begin
+          artica_path:='/usr/share/artica-postfix';
+      end;
+end;
+//##############################################################################
+procedure TClamav.free();
+begin
+    logs.Free;
+end;
+//##############################################################################
+function TClamav.MILTER_DAEMON_PATH():string;
+begin
+    if FileExists('/usr/sbin/clamav-milter') then exit('/usr/sbin/clamav-milter');
+end;
+//#############################################################################
+function TClamav.StartStopDaemonPath():string;
+begin
+if FileExists('/sbin/start-stop-daemon') then exit('/sbin/start-stop-daemon');
+end;
+//#############################################################################
+function TClamav.MILTER_PID():string;
+begin
+    if FileExists('/var/run/clamav/clamav-milter.pid') then exit(SYS.GET_PID_FROM_PATH('/var/run/clamav/clamav-milter.pid'));
+end;
+//#############################################################################
+function TClamav.AMAVISD_PID() :string;
+begin
+ if FileExists('/var/run/amavisd/amavis-artica.pid') then exit(SYS.GET_PID_FROM_PATH('/var/run/amavisd/amavis-artica.pid'));
+ if FileExists('/var/run/amavis/amavisd.pid') then exit(SYS.GET_PID_FROM_PATH('/var/run/amavis/amavisd.pid'));
+end;
+//##############################################################################
+function TClamav.CLAMD_PID() :string;
+begin
+result:=SYS.GET_PID_FROM_PATH(CLAMD_GETINFO('PidFile'));
+end;
+//##############################################################################
+function TClamav.MILTER_INITD_PATH():string;
+begin
+    if FileExists('/etc/init.d/clamav-milter') then exit('/etc/init.d/clamav-milter');
+end;
+//#############################################################################
+function TClamav.MILTER_SOCK_PATH():string;
+var path:string;
+begin
+    path:=MILTER_GET_SOCK_PATH();
+    if length(path)>0 then exit(path);
+    if FileExists('/var/run/clamav/clamav-milter.ctl') then exit('/var/run/clamav/clamav-milter.ctl');
+    if FileExists('/var/spool/postfix/clamav/clamav-milter.ctl') then exit('/var/spool/postfix/clamav/clamav-milter.ctl');
+end;
+//#############################################################################
+function TClamav.MILTER_GET_SOCK_PATH():string;
+var
+RegExpr:TRegExpr;
+l:TStringList;
+i:integer;
+begin
+if not FileExists('/etc/default/clamav-milter') then exit;
+  l:=TstringList.Create;
+  l.LoadFromFile('/etc/default/clamav-milter');
+  RegExpr:=TRegExpr.Create;
+  RegExpr.Expression:='^SOCKET=local:(.+)';
+  for i:=0 to l.Count-1 do begin
+     if RegExpr.Exec(l.Strings[i]) then begin
+        result:=RegExpr.Match[1];
+        break;
+     end;
+  end;
+  RegExpr.free;
+  l.free;
+
+end;
+//#############################################################################
+function TClamav.CLAMD_BIN_PATH():string;
+begin
+if FileExists('/usr/sbin/clamd') then exit('/usr/sbin/clamd');
+if FileExists('/opt/artica/sbin/clamd') then exit('/opt/artica/sbin/clamd');
+end;
+//#############################################################################
+function TClamav.CLAMAV_INITD():string;
+begin
+if FileExists('/etc/init.d/clamav-daemon') then exit('/etc/init.d/clamav-daemon');
+end;
+//#############################################################################
+
+function TClamav.FRESHCLAM_PATH():string;
+begin
+if FileExists('/usr/bin/freshclam') then exit('/usr/bin/freshclam');
+if FileExists('/opt/artica/bin/freshclam') then exit('/opt/artica/bin/freshclam');
+end;
+//##############################################################################
+function TClamav.FRESHCLAM_INITD():string;
+begin
+    if FileExists('/etc/init.d/clamav-freshclam') then exit('/etc/init.d/clamav-freshclam');
+end;
+//##############################################################################
+function TClamav.FRESHCLAM_CONF_PATH():string;
+begin
+    if FileExists('/etc/clamav/freshclam.conf') then exit('/etc/clamav/freshclam.conf');
+    if FileExists('/opt/artica/etc/freshclam.conf') then exit('/opt/artica/etc/freshclam.conf');
+end;
+//##############################################################################
+function TClamav.CLAMD_CONF_PATH():string;
+begin
+   if FileExists('/etc/clamav/clamd.conf') then exit('/etc/clamav/clamd.conf');
+   if FileExists('/opt/artica/etc/clamd.conf') then exit('/opt/artica/etc/clamd.conf');
+end;
+//##############################################################################
+FUNCTION TClamav.FRESHCLAM_STATUS():string;
+var
+   ini:TstringList;
+begin
+   ini:=TstringList.Create;
+   ini.Add('[FRESHCLAM]');
+if FileExists(FRESHCLAM_PATH()) then  begin
+      if SYS.PROCESS_EXIST(FRESHCLAM_PID()) then ini.Add('running=1') else  ini.Add('running=0');
+      ini.Add('application_installed=1');
+      ini.Add('master_pid='+ FRESHCLAM_PID());
+      ini.Add('master_memory=' + IntToStr(SYS.PROCESS_MEMORY(FRESHCLAM_PID())));
+      ini.Add('master_version=' + CLAMAV_VERSION());
+      ini.Add('status='+SYS.PROCESS_STATUS(FRESHCLAM_PID()));
+      ini.Add('service_name=APP_FRESHCLAM');
+end;
+result:=ini.Text;
+ini.free;
+end;
+//#########################################################################################
+function TClamav.FRESHCLAM_PID() :string;
+begin
+result:=SYS.GET_PID_FROM_PATH(FRESHCLAM_GETINFO('PidFile'));
+end;
+//##############################################################################
+function TClamav.FRESHCLAM_GETINFO(Key:String):string;
+var
+RegExpr:TRegExpr;
+l:TStringList;
+i:integer;
+begin
+ if not FileExists(FRESHCLAM_CONF_PATH()) then exit;
+ l:=TStringList.Create;
+ RegExpr:=TRegExpr.Create;
+ l.LoadFromFile(FRESHCLAM_CONF_PATH());
+ RegExpr.Expression:='^' + Key + '\s+(.+)';
+ For i:=0 to l.Count-1 do begin
+     if RegExpr.Exec(l.Strings[i]) then begin
+        result:=RegExpr.Match[1];
+        break;
+     end;
+
+ end;
+  RegExpr.Free;
+  l.free;
+end;
+//##############################################################################
+procedure TClamav.CLAMD_START();
+ var
+    count      :integer;
+    D          :boolean;
+    cmdline    :string;
+    Socket     :string;
+    PidPath    :string;
+begin
+     if not FileExists(CLAMD_BIN_PATH()) then exit;
+     count:=0;
+     D:=COMMANDLINE_PARAMETERS('debug');
+
+     if SYS.PROCESS_EXIST(CLAMD_PID()) then begin
+        logs.DebugLogs('Starting......: clamav daemon is already running using PID ' + CLAMD_PID() + '...');
+        exit;
+     end;
+
+     if FileExists(CLAMAV_INITD()) then begin
+         fpsystem(CLAMAV_INITD() + ' start >/dev/null 2>&1');
+         exit;
+     end;
+
+     Socket:=ExtractFilePath(CLAMD_GETINFO('LocalSocket'));
+     logs.logs('CLAMD_START:: Socket path='+Socket);
+     PidPath:=ExtractFilePath(CLAMD_GETINFO('PidFile'));
+     logs.logs('CLAMD_START:: PidPath='+PidPath);
+
+
+     cmdline:='/opt/artica/sbin/clamd --config-file /opt/artica/etc/clamd.conf';
+     if not SYS.IsUserExists('amavis') then begin
+        logs.logs('CLAMD_START:: Create amavis user');
+        SYS.AddUserToGroup('amavis','amavis','','');
+     end;
+
+     forceDirectories('/opt/artica/logs/clamav');
+     forceDirectories(Socket);
+     forceDirectories(PidPath);
+     fpsystem('/bin/chmod 755 /opt/artica/logs/clamav');
+     fpsystem('/bin/chmod 755 ' + Socket);
+     fpsystem('/bin/chmod 755 ' + PidPath);
+     fpsystem('/bin/chown -R amavis:amavis /opt/artica/logs/clamav');
+     fpsystem('/bin/chown -R amavis:amavis ' + Socket);
+     fpsystem('/bin/chown -R amavis:amavis ' + PidPath);
+     fpsystem('/bin/chown -R amavis:amavis /opt/artica/clamav');
+
+
+     if not FileExists('/opt/artica/sbin/clamd') then begin
+         if D then writeln('CLAMD_START:: Starting......: clamd is not installed (could not stat /opt/artica/sbin/clamd)');
+         exit;
+     end;
+
+     if not SYS.PROCESS_EXIST(CLAMD_PID()) then begin
+
+        logs.Debuglogs('AMAVISD_START:: Start clamav "' + cmdline + '"');
+        fpsystem(cmdline);
+        while not SYS.PROCESS_EXIST(CLAMD_PID()) do begin
+              sleep(100);
+              inc(count);
+              if count>200 then begin
+                 logs.DebugLogs('Starting......: clamav daemon. (failed!!!)');
+                 exit;
+              end;
+        end;
+
+      end else begin
+        logs.DebugLogs('Starting......: clamav daemon is already running using PID ' + CLAMD_PID() + '...');
+        exit;
+     end;
+
+     logs.DebugLogs('Starting......: clamav daemon with new PID ' + CLAMD_PID() + '...');
+     logs.Syslogs('success starting clamav with new PID  ' + CLAMD_PID() + '...' );
+
+end;
+//##############################################################################
+FUNCTION TClamav.CLAMAV_STATUS():string;
+var
+   ini:TstringList;
+begin
+      ini:=TstringList.Create;
+   ini.Add('[CLAMAV]');
+if FileExists(CLAMD_BIN_PATH()) then  begin
+      if SYS.PROCESS_EXIST(CLAMD_PID()) then ini.Add('running=1') else  ini.Add('running=0');
+      ini.Add('application_installed=1');
+      ini.Add('master_pid='+ CLAMD_PID());
+      ini.Add('master_memory=' + IntToStr(SYS.PROCESS_MEMORY(CLAMD_PID())));
+      ini.Add('master_version=' + CLAMAV_VERSION());
+      ini.Add('status='+SYS.PROCESS_STATUS(CLAMD_PID()));
+      ini.Add('pattern_version=' + CLAMAV_PATTERN_VERSION());
+      ini.Add('service_name=APP_CLAMAV');
+   end;
+result:=ini.Text;
+ini.free
+end;
+
+//#########################################################################################
+procedure TClamav.CLAMD_STOP();
+var
+count:integer;
+D:boolean;
+procs:string;
+begin
+  d:=COMMANDLINE_PARAMETERS('debug');
+  count:=0;
+
+  MILTER_STOP();
+
+  if FileExists(CLAMAV_INITD()) then begin
+     fpsystem(CLAMAV_INITD() + ' stop');
+     procs:=SYS.PROCESS_LIST_PID(CLAMD_BIN_PATH());
+     if length(procs)>0 then begin
+          writeln('Stopping clamav daemon.......: procs ' + procs);
+          fpsystem('/bin/kill ' + procs);
+     end;
+   exit;
+ end;
+
+
+
+
+  if SYS.PROCESS_EXIST(CLAMD_PID()) then begin
+     writeln('Stopping clamav daemon.......: ' + CLAMD_PID() + ' PID');
+     if D then writeln('/opt/artica/bin/amavisd -c /opt/artica/etc/amavis/amavisd.conf -P /var/run/amavisd/amavis-artica.pid stop');
+     fpsystem('/opt/artica/bin/amavisd -c /opt/artica/etc/amavis/amavisd.conf -P /var/run/amavisd/amavis-artica.pid stop');
+     while SYS.PROCESS_EXIST(AMAVISD_PID()) do begin
+           Inc(count);
+           sleep(100);
+           if count>20 then begin
+                  writeln('killing amavisd-new..........: ' + AMAVISD_PID() + ' PID (timeout)');
+                  fpsystem('/bin/kill -9 ' + AMAVISD_PID());
+                  break;
+           end;
+     end;
+  end else begin
+      writeln('Stopping amavisd-new.........: Already stopped');
+  end;
+
+end;
+//##############################################################################
+
+procedure TClamav.FRESHCLAM_SETINFO(Key:String;value:string);
+var
+RegExpr:TRegExpr;
+l:TStringList;
+i:integer;
+F:boolean;
+begin
+ f:=False;
+ l:=TStringList.Create;
+ if not FileExists(FRESHCLAM_CONF_PATH()) then begin
+    l.Add(key + ' ' + value);
+    l.SaveToFile(FRESHCLAM_CONF_PATH());
+    l.free;
+    exit;
+ end;
+
+
+ RegExpr:=TRegExpr.Create;
+ l.LoadFromFile(FRESHCLAM_CONF_PATH());
+ RegExpr.Expression:='^' + Key + '\s+(.+)';
+ For i:=0 to l.Count-1 do begin
+     if RegExpr.Exec(l.Strings[i]) then begin
+        F:=true;
+        l.Strings[i]:=key + ' ' + value;
+        break;
+     end;
+
+ end;
+
+  if not F then l.Add(key + ' ' + value);
+  l.SaveToFile(FRESHCLAM_CONF_PATH());
+  RegExpr.Free;
+  l.free;
+end;
+//##############################################################################
+procedure TClamav.FRESHCLAM_START();
+var SYS:Tsystem;
+   D:Boolean;
+   cmdline,DatabaseDirectory:string;
+   count:integer;
+begin
+    count:=0;
+
+
+
+
+     if not FileExists(FRESHCLAM_PATH()) then begin
+         logs.Debuglogs('FRESHCLAM_START:: freshclam is not installed (could not stat freshclam)');
+         exit;
+     end;
+     
+     
+     if SYS.PROCESS_EXIST(FRESHCLAM_PID()) then exit();
+     DatabaseDirectory:=CLAMD_GETINFO('DatabaseDirectory');
+     
+     logs.DebugLogs('FRESHCLAM_START:: Main Configuration path....:' + FRESHCLAM_CONF_PATH());
+     logs.DebugLogs('FRESHCLAM_START:: PidPath....................:'+FRESHCLAM_GETINFO('PidFile'));
+     logs.DebugLogs('FRESHCLAM_START:: Clamav main configuration..:'+CLAMD_CONF_PATH());
+     logs.DebugLogs('FRESHCLAM_START:: DatabaseDirectory..........:'+DatabaseDirectory);
+     FRESHCLAM_SETINFO('NotifyClamd',CLAMD_CONF_PATH());
+     FRESHCLAM_SETINFO('DatabaseDirectory',DatabaseDirectory);
+     
+     if FileExists(FRESHCLAM_INITD()) then begin
+           FRESHCLAM_SETINFO('PidFile','/var/run/clamav/freshclam.pid');
+           FRESHCLAM_SETINFO('UpdateLogFile','/var/log/clamav/freshclam.log');
+           FRESHCLAM_SETINFO('DatabaseOwner','clamav');
+           
+           if not SYS.PROCESS_EXIST(FRESHCLAM_PID()) then begin
+               logs.DebugLogs('FRESHCLAM_START:: starting fresh clam');
+               fpsystem(FRESHCLAM_INITD() +' start >/opt/artica/logs/fresh.tmp 2>&1');
+               logs.DebugLogs('FRESHCLAM_START:: ' + ReadFileIntoString('/opt/artica/logs/fresh.tmp'));
+               exit;
+           end else begin
+              logs.DebugLogs('FRESHCLAM_START:: fresh clam is already running using PID ' + FRESHCLAM_PID() + '...');
+              exit;
+           end;
+           
+     end else begin
+         logs.DebugLogs('FRESHCLAM_START:: fresh clam is installed using artica method...');
+
+     end;
+
+
+   FRESHCLAM_SETINFO('DatabaseOwner','amavis');
+   FRESHCLAM_SETINFO('DNSDatabaseInfo','current.cvd.clamav.net');
+   FRESHCLAM_SETINFO('DatabaseMirror','database.clamav.net');
+
+   FRESHCLAM_SETINFO('PidFile','/var/run/clamav/artica-freshclam.pid');
+   FRESHCLAM_SETINFO('DatabaseDirectory','/opt/artica/clamav/patterns');
+   FRESHCLAM_SETINFO('Checks','12');
+
+
+
+
+   forcedirectories('/var/run/clamav');
+   forcedirectories('/opt/artica/logs/clamav');
+   forcedirectories('/opt/artica/clamav/patterns');
+
+   SYS:=Tsystem.Create();
+   if not SYS.IsUserExists('amavis') then SYS.AddUserToGroup('amavis','amavis','','');
+   fpsystem('/bin/chown amavis:amavis /var/run/clamav');
+   fpsystem('/bin/chown -R amavis:amavis /opt/artica/logs/clamav');
+   fpsystem('/bin/chown -R amavis:amavis /opt/artica/clamav');
+   if FileExists('/opt/artica/logs/clamav/update.log') then DeleteFile('/opt/artica/logs/clamav/update.log');
+   cmdline:='/opt/artica/bin/freshclam --daemon-notify=/opt/artica/etc/clamd.conf --pid=/var/run/clamav/artica-freshclam.pid --config-file=/opt/artica/etc/freshclam.conf --daemon --quiet --user=amavis >/dev/null 2>&1 &';
+
+
+     if not SYS.PROCESS_EXIST(FRESHCLAM_PID()) then begin
+        fpsystem(cmdline);
+        logs.DebugLogs('FRESHCLAM_START:: Start freshclam "' + cmdline + '"');
+        fpsystem(cmdline);
+        while not SYS.PROCESS_EXIST(FRESHCLAM_PID()) do begin
+              sleep(100);
+              inc(count);
+              if count>200 then begin
+                 logs.DebugLogs('FRESHCLAM_START:: fresh clam daemon. (failed!!!)');
+                 exit;
+              end;
+        end;
+
+      end else begin
+        logs.DebugLogs('FRESHCLAM_START:: fresh clam is already running using PID ' + FRESHCLAM_PID() + '...');
+        exit;
+     end;
+
+     logs.DebugLogs('FRESHCLAM_START:: fresh clam with new PID ' + FRESHCLAM_PID() + '...');
+
+
+end;
+//##############################################################################
+
+procedure TClamav.FRESHCLAM_STOP();
+var
+count:integer;
+pids:string;
+begin
+
+  count:=0;
+  if SYS.PROCESS_EXIST(FRESHCLAM_PID()) then begin
+     writeln('Stopping fresh clam..........: ' + FRESHCLAM_PID() + ' PID');
+     fpsystem('/bin/kill ' + FRESHCLAM_PID());
+     while SYS.PROCESS_EXIST(FRESHCLAM_PID()) do begin
+           Inc(count);
+           sleep(100);
+           if count>100 then begin
+                  writeln('killing fresh clam...........: ' + FRESHCLAM_PID() + ' PID');
+                  fpsystem('/bin/kill -9 ' + FRESHCLAM_PID());
+                  break;
+           end;
+     end;
+
+
+
+     if not SYS.PROCESS_EXIST(FRESHCLAM_PID()) then begin
+         writeln('Stopping fresh clam..........: stopped');
+     end;
+
+  end else begin
+      writeln('Stopping fresh clam..........: Already stopped');
+  end;
+
+     pids:=SYS.PROCESS_LIST_PID('/opt/artica/bin/freshclam');
+     while length(pids)>0 do begin
+         writeln('Stopping fresh clam..........: ' + pids + ' PID');
+         fpsystem('/bin/kill ' + pids);
+         sleep(200);
+         pids:=SYS.PROCESS_LIST_PID('/opt/artica/bin/freshclam');
+
+     end;
+
+end;
+//##############################################################################
+
+procedure TClamav.MILTER_ETC_DEFAULT();
+var
+   l:TstringList;
+begin
+    if not FileExists('/etc/default/clamav-milter') then exit();
+l:=TstringList.Create;
+l.Add('OPTIONS="--max-children=2 -ol"');
+l.Add('#If you want to set an alternate pidfile (why?) please do it here:');
+l.Add('#PIDFILE=/var/run/clamav/clamav-milter.pid');
+l.Add('#If you want to set an alternate socket, do so here (remember to change ');
+l.Add('#  sendmail.mc):');
+l.Add('#SOCKET=local:/var/run/clamav/clamav-milter.ctl');
+l.Add('#');
+l.Add('#For postfix, you might want these settings:');
+l.Add('USE_POSTFIX=''yes''');
+l.Add('SOCKET=local:/var/spool/postfix/clamav/clamav-milter.ctl');
+l.SaveToFile('/etc/default/clamav-milter');
+l.free;
+end;
+//#############################################################################
+procedure TClamav.MILTER_START();
+var
+   socket_path:string;
+   daemon_path:string;
+   pidfile:string;
+   daemon_option:string;
+   cmd:string;
+begin
+   socket_path:='/var/spool/postfix/clamav/clamav-milter.ctl';
+   pidfile:='/var/run/clamav/clamav-milter.pid';
+   daemon_option:='-q -f '+socket_path;
+   daemon_path:=MILTER_DAEMON_PATH();
+   if not FileExists(daemon_path) then exit;
+   
+   if FileExists('/etc/init.d/clamav-milter') then begin
+      fpsystem('/bin/rm /etc/init.d/clamav-milter');
+      SYS.RemoveService('clamav-milter');
+   end;
+   
+   
+   
+   if get_INFOS('ClamavMilterEnabled')<>'1' then begin
+        logs.DebugLogs('clamav-milter daemon is disabled');
+        exit;
+   end;
+   
+   if SYS.PROCESS_EXIST(MILTER_PID()) then begin
+        logs.DebugLogs('clamav-milter daemon is already running using PID ' + MILTER_PID() + '...');
+        exit;
+   end;
+   
+   
+   if FileExists(MILTER_INITD_PATH()) then SYS.RemoveService('clamav-milter');
+   
+   MILTER_ETC_DEFAULT();
+   MILTER_CHANGE_INITD();
+   
+
+
+   
+   forcedirectories('/var/spool/postfix/clamav');
+   if SYS.IsUserExists('clamav') then begin
+      fpsystem('/bin/chown -R clamav:clamav /var/spool/postfix/clamav');
+      SYS.AddUserToGroup('postfix','clamav','','');
+      SYS.AddUserToGroup('clamav','postfix','','');
+      SYS.AddUserToGroup('clamav','mail','','');
+   end;
+   
+   
+   if FileExists(StartStopDaemonPath()) then begin
+          cmd:=StartStopDaemonPath() +' --start --quiet --pidfile ' + pidfile + ' ';
+          cmd:=cmd+ '--chuid clamav --make-pidfile --exec ' + daemon_path + ' ' + daemon_option;
+          logs.DebugLogs('MILTER_START:: EXEC "'+ cmd + '"');
+          fpsystem(cmd);
+          
+          if not SYS.PROCESS_EXIST(MILTER_PID()) then begin
+             logs.DebugLogs('clamav-milter daemon failed to start');
+             exit;
+          end;
+          exit;
+   end;
+   
+   
+   
+   fpsystem(MILTER_INITD_PATH() + ' start >/dev/null 2>&1');
+
+
+   if not SYS.PROCESS_EXIST(MILTER_PID()) then begin
+     logs.DebugLogs('clamav-milter daemon failed to start');
+     exit;
+   end;
+end;
+//#############################################################################
+procedure Tclamav.MILTER_CHANGE_INITD();
+var
+l:TstringList;
+initpath:string;
+begin
+  if not FileExists(MILTER_INITD_PATH()) then exit;
+  initpath:=MILTER_INITD_PATH();
+  l:=TstringList.Create;
+  
+
+l.Add('#!/bin/sh');
+l.Add('#Begin ' + initpath);
+
+ if fileExists('/sbin/chkconfig') then begin
+    l.Add('# chkconfig: 2345 11 89');
+    l.Add('# description: Artica-postfix Daemon');
+ end;
+
+l.Add('case "$1" in');
+l.Add(' start)');
+l.Add('    /usr/share/artica-postfix/bin/artica-install start clammilter');
+l.Add('    ;;');
+l.Add('');
+l.Add('  stop)');
+l.Add('    /usr/share/artica-postfix/bin/artica-install stop clammilter');
+l.Add('    ;;');
+l.Add('');
+l.Add(' restart)');
+l.Add('     /usr/share/artica-postfix/bin/artica-install start clammilter');
+l.Add('     sleep 3');
+l.Add('     /usr/share/artica-postfix/bin/artica-install stop clammilter');
+l.Add('    ;;');
+l.Add('');
+l.Add('  *)');
+l.Add('    echo "Usage: $0 {start|stop|restart}');
+l.Add('    exit 1');
+l.Add('    ;;');
+l.Add('esac');
+l.Add('exit 0');
+l.SaveToFile(MILTER_INITD_PATH());
+l.free;
+end;
+//#############################################################################
+
+
+procedure TClamav.MILTER_STOP();
+var
+count:integer;
+D:boolean;
+begin
+  if not FileExists(MILTER_DAEMON_PATH()) then exit;
+  d:=COMMANDLINE_PARAMETERS('debug');
+  count:=0;
+
+  if SYS.PROCESS_EXIST(MILTER_PID()) then begin
+     writeln('Stopping clamav-milter daemon: ' + MILTER_PID() + ' PID');
+
+
+     while SYS.PROCESS_EXIST(MILTER_PID()) do begin
+           Inc(count);
+            fpsystem('/bin/kill ' + MILTER_PID());
+           sleep(100);
+           if count>20 then begin
+                  writeln('killing clamav-milter........: ' + MILTER_PID() + ' PID (timeout)');
+                   fpsystem('/bin/kill -9 ' + MILTER_PID());
+                  break;
+           end;
+     end;
+  end else begin
+      writeln('Stopping clamav-milter daemon: Already stopped');
+  end;
+
+end;
+//##############################################################################
+function TClamav.ReadFileIntoString(path:string):string;
+var
+   List:TstringList;
+begin
+
+      if not FileExists(path) then begin
+        exit;
+      end;
+
+      List:=Tstringlist.Create;
+      List.LoadFromFile(path);
+      result:=List.Text;
+      List.Free;
+end;
+//##############################################################################
+function TClamav.COMMANDLINE_PARAMETERS(FoundWhatPattern:string):boolean;
+var
+   i:integer;
+   s:string;
+   RegExpr:TRegExpr;
+
+begin
+ result:=false;
+ s:='';
+ if ParamCount>1 then begin
+     for i:=2 to ParamCount do begin
+        s:=s  + ' ' +ParamStr(i);
+     end;
+ end;
+   RegExpr:=TRegExpr.Create;
+   RegExpr.Expression:=FoundWhatPattern;
+   if RegExpr.Exec(s) then begin
+      RegExpr.Free;
+      result:=True;
+   end;
+
+
+end;
+//##############################################################################
+FUNCTION TClamav.MILTER_STATUS():string;
+var
+   ini:TstringList;
+begin
+if not FileExists(MILTER_DAEMON_PATH()) then exit;
+      ini:=TstringList.Create;
+      ini.Add('[CLAMAV_MILTER]');
+      if SYS.PROCESS_EXIST(MILTER_PID()) then ini.Add('running=1') else  ini.Add('running=0');
+      ini.Add('application_installed=1');
+      ini.Add('master_pid='+ MILTER_PID());
+      ini.Add('master_memory=' + IntToStr(SYS.PROCESS_MEMORY(MILTER_PID())));
+      ini.Add('master_version=' + CLAMAV_VERSION());
+      ini.Add('status='+SYS.PROCESS_STATUS(MILTER_PID()));
+      ini.Add('pattern_version=' + CLAMAV_PATTERN_VERSION());
+      ini.Add('service_name=APP_CLAMAV_MILTER');
+
+
+      result:=ini.Text;
+      ini.free
+end;
+
+//#########################################################################################
+function TClamav.CLAMAV_VERSION():string;
+var
+    RegExpr:TRegExpr;
+    FileDatas:TStringList;
+    i:integer;
+begin
+if not FileExists(CLAMD_BIN_PATH()) then exit;
+fpsystem(CLAMD_BIN_PATH()+' --version >/opt/artica/logs/clamav.tmp');
+    RegExpr:=TRegExpr.Create;
+    RegExpr.Expression:='ClamAV\s+([0-9\.a-z]+)';
+    FileDatas:=TStringList.Create;
+    FileDatas.LoadFromFile('/opt/artica/logs/clamav.tmp');
+    for i:=0 to FileDatas.Count-1 do begin
+        if RegExpr.Exec(FileDatas.Strings[i]) then begin
+             result:=RegExpr.Match[1];
+             break;
+        end;
+    end;
+             RegExpr.free;
+             FileDatas.Free;
+
+end;
+//#############################################################################
+function TClamav.CLAMAV_PATTERN_VERSION():string;
+var
+    RegExpr:TRegExpr;
+    FileDatas:TStringList;
+    i:integer;
+    main_dbver:string;
+begin
+if not FileExists(CLAMD_BIN_PATH()) then exit;
+fpsystem(CLAMD_BIN_PATH() +' -V >/opt/artica/logs/clamav.pattern.tmp');
+    RegExpr:=TRegExpr.Create;
+
+    FileDatas:=TStringList.Create;
+    FileDatas.LoadFromFile('/opt/artica/logs/clamav.pattern.tmp');
+    for i:=0 to FileDatas.Count-1 do begin
+        RegExpr.Expression:='^ClamAV (.+)/([0-9]+)';
+        if RegExpr.Exec(FileDatas.Strings[i]) then begin
+             main_dbver:=RegExpr.Match[2];
+        end;
+
+
+
+    end;
+    result:=main_dbver;
+
+             RegExpr.free;
+             FileDatas.Free;
+
+end;
+//#############################################################################
+function TClamav.get_INFOS(key:string):string;
+var value:string;
+begin
+GLOBAL_INI:=TIniFile.Create('/etc/artica-postfix/artica-postfix.conf');
+value:=GLOBAL_INI.ReadString('INFOS',key,'');
+result:=value;
+GLOBAL_INI.Free;
+end;
+//#############################################################################
+function TClamav.CLAMD_GETINFO(Key:String):string;
+var
+RegExpr:TRegExpr;
+l:TStringList;
+i:integer;
+begin
+ if not FileExists(CLAMD_CONF_PATH()) then exit;
+ l:=TStringList.Create;
+ RegExpr:=TRegExpr.Create;
+ l.LoadFromFile(CLAMD_CONF_PATH());
+ RegExpr.Expression:='^' + Key + '\s+(.+)';
+ For i:=0 to l.Count-1 do begin
+     if RegExpr.Exec(l.Strings[i]) then begin
+        result:=RegExpr.Match[1];
+        break;
+     end;
+
+ end;
+  RegExpr.Free;
+  l.free;
+end;
+
+//##############################################################################
+
+end.

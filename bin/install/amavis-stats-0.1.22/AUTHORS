@@ -1,0 +1,20 @@
+Authors:
+	Mark Lawrence 			<nomad@null.net> (Original Author.)
+	Dale Walsh				<buildsmart@daleenterprise.com> Project Author/Leader.
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Contributors:
+
+	timing - amavis-stats daemon.
+	Mark Martinec			<Mark.Martinec+amavis@ijs.si> Author of 'amavisd-new'
+
+	graphing - Passed Bad Headers.
+	Alessio Romano			<alertino@gmail.com>
+
+	virus name truncation - restricts virus names to 32 chars for display.
+	Joel Nimety				<jnimety@perimeterusa.com>
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

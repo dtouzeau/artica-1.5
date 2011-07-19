@@ -1,0 +1,110 @@
+[ca]
+default_ca=default_db
+unique_subject=no
+
+[default_db]
+dir=.
+certs=.
+  new_certs_dir                = /etc/ssl/certs/new
+  database                = /etc/ssl/certs/new/ca.index
+  serial                = /etc/ssl/certs/new/ca.serial
+RANDFILE=.rnd
+certificate=ca.crt
+private_key=ca.key
+  default_days                = 730
+default_crl_days=30
+default_md=md5
+preserve=no
+name_opt=ca_default
+cert_opt=ca_default
+unique_subject=no
+policy=policy_match
+
+[server_policy]
+countryName=supplied
+stateOrProvinceName=supplied
+localityName=supplied
+organizationName=supplied
+organizationalUnitName=supplied
+  commonName                      = Tomcat Demo Root CA.local
+emailAddress=supplied
+
+[server_cert]
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid:always
+extendedKeyUsage=serverAuth,clientAuth,msSGC,nsSGC
+  basicConstraints                = critical,CA:false
+
+[user_policy]
+  commonName                      = Tomcat Demo Root CA.local
+emailAddress=supplied
+
+[user_cert]
+subjectAltName=email:copy
+  basicConstraints                = critical,CA:false
+authorityKeyIdentifier=keyid:always
+extendedKeyUsage=clientAuth,emailProtection
+
+[req]
+default_bits=1024
+default_keyfile=ca.key
+distinguished_name=default_ca
+x509_extensions=extensions
+string_mask=nombstr
+req_extensions=req_extensions
+input_password=secret
+output_password=secret
+
+[default_ca]
+countryName=Country Code
+countryName_value=US
+countryName_min=2
+countryName_max=2
+stateOrProvinceName=State Name
+stateOrProvinceName_value=Delaware
+localityName=Locality Name
+localityName_value=Wilmington
+organizationName=Organization Name
+organizationName_value=Apache Software Foundation
+organizationalUnitName=Organizational Unit Name
+organizationalUnitName_value=artica-Postfix
+  commonName                      = Tomcat Demo Root CA.local
+  commonName_value                = Tomcat Demo Root CA.local
+commonName_max=64
+emailAddress=Email Address
+emailAddress_value=coyote@apache.org
+emailAddress_max=40
+unique_subject=no
+
+[extensions]
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid:always
+  basicConstraints                = critical,CA:false
+
+[req_extensions]
+nsCertType=objsign,email,server
+
+[CA_default]
+policy=policy_match
+
+[policy_match]
+countryName=match
+stateOrProvinceName=match
+organizationName=match
+organizationalUnitName=optional
+  commonName                      = Tomcat Demo Root CA.local
+emailAddress=optional
+
+[policy_anything]
+countryName=optional
+stateOrProvinceName=optional
+localityName=optional
+organizationName=optional
+organizationalUnitName=optional
+  commonName                      = Tomcat Demo Root CA.local
+emailAddress=optional
+
+[v3_ca]
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid:always,issuer:always
+  basicConstraints                = critical,CA:false

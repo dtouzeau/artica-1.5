@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <Compiler Value="/usr/bin/fpc" Date="1308292692"/>
+  <Params Value=" -MObjFPC -Sgi -O1 -TLinux -Pi386 -gl -vewnhi -l -Fi/usr/share/fpcsrc/2.2.2/rtl/linux/ -Fu/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/ -Fu. -FE/home/dtouzeau/developpement/artica-postfix/bin/ -oartica-install artica_install.pas"/>
+</CONFIG>

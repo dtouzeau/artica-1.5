@@ -1,0 +1,20 @@
+<addhostname>URI to attached files</addhostname>
+<addhostname_text>Define the URI to attached files that user can use to download files, this uri will be added into the email[br]
+By default,artica allows you to use the artica front-end interface to get files "http://local:port/blocked_attachments".
+[br]if you change this uri, the URL to the file will be the full path to the server[br]In this case be sure that you have one HTTP engine that point to the global folder</addhostname_text>
+<body_notification>Disclaimer</body_notification>
+<body_notification_text>This disclaimer is inserted at the top of each message sended to recipients and match rules,
+it designed to inform that all attached files are stored in the web server in order to allows them to download files.</body_notification_text>
+<extensions>Extensions</extensions>
+<extensions_text>Separate all extensions by a comma.[br]
+[b]Examples[/b]:[ul]
+[li]pps[/li]
+[li]pps,ppt,doc,zip[/li]
+[/ul]</extensions_text>
+<from_text>caracter "*" is allowed.[br]
+You can set for example[br]
+[blk][b]*@yourdomain.com or *@youdomain* or user.*@domain.*[/b][/blk]</from_text>
+<maxday>Max day to live</maxday>
+<maxsize>Max size</maxsize>
+<parameters>Parameters</parameters>
+<prependsubject>Prepend Subject to</prependsubject>

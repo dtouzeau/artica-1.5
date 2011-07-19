@@ -1,0 +1,50 @@
+<AnonymousBandwidth>Anonymous Bandwidth</AnonymousBandwidth>
+<AnonymousBandwidth_text>Maximum bandwidth for anonymous users in KB/s</AnonymousBandwidth_text>
+<AnonymousCanCreateDirs>Anonymous Can Create Dirs</AnonymousCanCreateDirs>
+<AnonymousCanCreateDirs_text>Are anonymous users allowed to create new directories ?</AnonymousCanCreateDirs_text>
+<AnonymousCantUpload>Anonymous Can't Upload</AnonymousCantUpload>
+<AnonymousCantUpload_text>Disallow anonymous users to upload new files (unchecked = upload is allowed)</AnonymousCantUpload_text>
+<AntiWarez>Anti Warez</AntiWarez>
+<AntiWarez_text>Disallow downloading of files owned by "ftp", ie. files that were uploaded but not validated by a local admin.</AntiWarez_text>
+<AutoRename>Auto-rename</AutoRename>
+<AutoRename_text>Never overwrite files. When a file whoose name already exist is uploaded, it get automatically renamed to file.1, file.2, file.3, ...</AutoRename_text>
+<BrokenClientsCompatibility>Compatibility hacks for broken clients</BrokenClientsCompatibility>
+<BrokenClientsCompatibility_text>
+Users might have trouble connecting through Internet Explorer.[br]
+This is because IE, among others, tries to connect anonymously and may not give pure-ftpd the proper chance to request a username and password.
+[br]One can, change from no to yes.[br]
+This might or might not work, it seems to depend upon what version of IE that someone is using.</BrokenClientsCompatibility_text>
+<DisplayDotFiles>Display Dot Files</DisplayDotFiles>
+<DisplayDotFiles_text>List dot-files even when the client doesn't send "-a".</DisplayDotFiles_text>
+<DontResolve>Don't Resolve</DontResolve>
+<DontResolve_text>
+Don't resolve host names in log files.[br]
+Logs are less verbose, but it uses less bandwidth.
+[br]Set this to enabled on very busy servers or if you don't have a working DNS.
+</DontResolve_text>
+<enable_pureftpd>Enable FTP on this server</enable_pureftpd>
+<enable_pureftpd_text>If you uncheck this, the serivce will be turned off and there is no FTP service running</enable_pureftpd_text>
+<LimitRecursion>Limit Recursion</LimitRecursion>
+<LimitRecursion_text> 'ls' recursion limits. The [b]first argument[/b] is the maximum number of files to be displayed.[br]
+The [b]second one[/b] is the max subdirectories depth
+</LimitRecursion_text>
+<MaxClientsNumber>Max Clients Number</MaxClientsNumber>
+<MaxClientsNumber_text>Maximum number of simultaneous users</MaxClientsNumber_text>
+<MaxClientsPerIP>Max Clients Per IP</MaxClientsPerIP>
+<MaxClientsPerIP_text>Maximum number of sim clients with the same IP address</MaxClientsPerIP_text>
+<MaxDiskUsage>Max Disk Usage %</MaxDiskUsage>
+<MaxDiskUsage_text>This option is useful with servers where anonymous upload is allowed. [br]
+As /var/ftp is in /var, it save some space and protect the log files.[br]
+When the partition is more that X percent full,new uploads are disallowed.</MaxDiskUsage_text>
+<MaxIdleTime>Max Idle Time</MaxIdleTime>
+<MaxIdleTime_text>Maximum idle time in minutes (default = 15 minutes)</MaxIdleTime_text>
+<MaxLoad_text>If the system is more loaded than the following value,anonymous users aren't allowed to download.</MaxLoad_text>
+<Max_Load>Max Load</Max_Load>
+<NoAnonymous>No Anonymous</NoAnonymous>
+<NoAnonymous_text>Disallow anonymous connections. Only allow authenticated users.</NoAnonymous_text>
+<ProhibitDotFilesRead>Prohibit Dot Files Read</ProhibitDotFilesRead>
+<ProhibitDotFilesRead_text>Prohibit *reading* of files beginning with a dot (.history, .ssh...)</ProhibitDotFilesRead_text>
+<ProhibitDotFilesWrite>Prohibit Dot Files Write</ProhibitDotFilesWrite>
+<ProhibitDotFilesWrite_text>
+Users can't delete/write files beginning with a dot ('.') even if they own them.
+</ProhibitDotFilesWrite_text>

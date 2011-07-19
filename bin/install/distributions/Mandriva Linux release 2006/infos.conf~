@@ -1,0 +1,29 @@
+[REPOSITORIES]
+updater=/usr/sbin/urpmi
+beffore_check=/usr/sbin/urpmi.update -a|urpmi --no-verify-rpm --auto-select -v --force --auto
+prefix_command_line=--force --auto
+suffix_command_line=
+repositories_list=/bin/rpm -qa
+repositories_list_expression=([a-z\-_A-Z0-9]+)-[0-9\.]+
+
+[INSTALL]
+#updater_config_path=/etc/yum.conf
+update_config=no
+#update_config_mode=inifile
+#update_config_notif=enlartenment->enabled=1
+#update_config_source=enlartment.ini
+#update_after_execute=rpm --import http://www.enlartenment.com/RPM-GPG-KEY.mf
+disable_selinux=no
+
+
+[APPLICATIONS]
+procmail_bin=/usr/bin/procmail
+cyrus_deliver=
+apache2_sites_available=/etc/httpd/conf.d
+
+
+[LDAP]
+#prevent bdb_db_open: Warning - No DB_CONFIG file found in directory
+set_db_config=yes
+get_ldap_user=/etc/init.d/ldap
+get_ldap_user_regex=user=([a-zA-Z0-9_\-]+)

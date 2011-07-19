@@ -1,0 +1,12 @@
+<ArticaMaxDayTemplate>Mod&egrave;le de Suppression de la purge</ArticaMaxDayTemplate>
+<ArticaReportQuarantineTemplate>Rapports de quarantaines utilisateurs programm&eacute;s</ArticaReportQuarantineTemplate>
+<ArticaReportQuarantineTemplate_text>Ce mod&egrave;le est utilis&eacute; afin d'envoyer des rapports aux utilisateurs des messages stock&eacute;s et les autorise &agrave; lib&eacute;rer les messages.[br]Les rapports sont envoy&eacute;s par le processus artica-quarantaine et doit &ecirc;tre programm&eacute;.</ArticaReportQuarantineTemplate_text>
+<close_form>Fermer le formulaire</close_form>
+<quarantine_max_day>Jour Max en quarantaine</quarantine_max_day>
+<quarantine_max_day_text>Sp&eacute;cifiez le temps de vie (en jours)  des messages de quarantaine avant qu'ils soient d&eacute;truits</quarantine_max_day_text>
+<templates>Th&egrave;mes</templates>
+<templates_explain>Vous pouvez personnaliser le contenu du message de notification lorsque artica-quarantaine vaec ax&eacute;cuter les op&eacute;rations dans l'espace quarantaine</templates_explain>
+<template_deleted>Lorsque les mails sont automatiquement supprim&eacute;s</template_deleted>
+<template_deleted_text>Lorsque les messages ont une dur&eacute;e de vie sup&eacute;rieur &agrave; la limite, artica-quarantine va les supprimer et informer les utilisateurs de ces suppressions</template_deleted_text>
+<template_token>mots clefs support&eacute;s [strong]%NUMBER%[/strong] nombre de messages; [strong]%MAXDAY%[/strong] jours maximum de vie dans la quarantaine;
+[strong]%MAILTABLE%[/strong] table html de liste des messages</template_token>

@@ -1,0 +1,4 @@
+<email_infos_query>La requ&ecirc;te affich&eacute;e d&eacute;pend des adresses de messagerie list&eacute;es ci-dessous. Si certains messages ne sont pas visibles avec une adresse de r&eacute;ception non list&eacute;e, ajoutez l'adresse eMail dans votre profil.[br]
+Sp&eacute;cifiquement si vous avez rajout&eacute; des r&egrave;gle de rapatriement de messages.</email_infos_query>
+<user_fetchmail_explain>Importer r&eacute;guli&egrave;rement  vos messages stock&eacute;s chez votre fournisseur Internet dans votre boite aux lettres locale.</user_fetchmail_explain>
+<user_mailman_explain>Administrez des listes de distributions (cr&eacute;ez des forums par messagerie).</user_mailman_explain>

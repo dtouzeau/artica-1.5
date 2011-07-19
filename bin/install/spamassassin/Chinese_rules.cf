@@ -1,0 +1,1984 @@
+# SpamAssassin rules file: Chinese subject and body tests
+#
+# Maintainer: Quang-Anh Tran, <qa@ccert.edu.cn>,
+#             at CERNET Computer Emergency Response Team (CCERT)
+#
+# Please don't modify this file as your changes will be overwritten with
+# the next update. Use @@LOCAL_RULES_DIR@@/local.cf instead.
+# See 'perldoc Mail::SpamAssassin::Conf' for details.
+#
+# <@LICENSE>
+# Copyright 2004-2005 CERNET Computer Emergency Response Team (CCERT)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# </@LICENSE>
+#
+##############################################################################
+#
+# Chinese_rules.cf, updated 2006 Oct 1
+#
+# Test against 121824 spam and 207961 ham
+# (using only the Chinese_rules.cf)
+#
+#	Threshold	Spam recall	Ham error
+#	0.5	82.8%	1.3%
+#	1.0	78.2%	0.5%
+#	1.5	74.5%	0.2%
+#	2.0	71.6%	0.1%
+#	2.5	69.4%	0.0%
+#	3.0	67.3%	0.0%
+#	3.5	64.6%	0.0%
+#	4.0	62.6%	0.0%
+#	4.5	61.6%	0.0%
+#
+# It takes 0.0165 seconds to scan an email with size 1434.4620 bytes (P4-2.8G CPU)
+
+# More info on CCERT website : http://www.ccert.edu.cn/spam/sa/Chinese_rules.htm
+# ******************************************************************************
+
+header CN_SUBJECT_1	Subject =~ /ÓÅ»Ý/
+describe CN_SUBJECT_1	Subject contains "ÓÅ»Ý"
+score CN_SUBJECT_1	1.254
+
+header CN_SUBJECT_5	Subject =~ /ºÏ×÷/
+describe CN_SUBJECT_5	Subject contains "ºÏ×÷"
+score CN_SUBJECT_5	0.233
+
+header CN_SUBJECT_6	Subject =~ /·¢Æ±/
+describe CN_SUBJECT_6	Subject contains "·¢Æ±"
+score CN_SUBJECT_6	0.055
+
+header CN_SUBJECT_9	Subject =~ /ÊµÒµ/
+describe CN_SUBJECT_9	Subject contains "ÊµÒµ"
+score CN_SUBJECT_9	1.226
+
+header CN_SUBJECT_12	Subject =~ /´ú¿ª/
+describe CN_SUBJECT_12	Subject contains "´ú¿ª"
+score CN_SUBJECT_12	2.460
+
+header CN_SUBJECT_13	Subject =~ /Æ±£¡/
+describe CN_SUBJECT_13	Subject contains "Æ±£¡"
+score CN_SUBJECT_13	0.039
+
+header CN_SUBJECT_25	Subject =~ /¸÷Àà/
+describe CN_SUBJECT_25	Subject contains "¸÷Àà"
+score CN_SUBJECT_25	0.015
+
+header CN_SUBJECT_31	Subject =~ /²ÆÎñ/
+describe CN_SUBJECT_31	Subject contains "²ÆÎñ"
+score CN_SUBJECT_31	0.050
+
+header CN_SUBJECT_33	Subject =~ /ÔË×÷/
+describe CN_SUBJECT_33	Subject contains "ÔË×÷"
+score CN_SUBJECT_33	0.532
+
+header CN_SUBJECT_34	Subject =~ /½ÚÊ¡/
+describe CN_SUBJECT_34	Subject contains "½ÚÊ¡"
+score CN_SUBJECT_34	1.500
+
+header CN_SUBJECT_36	Subject =~ /ÊÂÒË/
+describe CN_SUBJECT_36	Subject contains "ÊÂÒË"
+score CN_SUBJECT_36	0.204
+
+header CN_SUBJECT_45	Subject =~ /Ã³Ò×/
+describe CN_SUBJECT_45	Subject contains "Ã³Ò×"
+score CN_SUBJECT_45	0.493
+
+header CN_SUBJECT_48	Subject =~ /»¥Àû/
+describe CN_SUBJECT_48	Subject contains "»¥Àû"
+score CN_SUBJECT_48	1.061
+
+header CN_SUBJECT_50	Subject =~ /»¥»Ý/
+describe CN_SUBJECT_50	Subject contains "»¥»Ý"
+score CN_SUBJECT_50	0.997
+
+header CN_SUBJECT_70	Subject =~ /ÉÌÎñ/
+describe CN_SUBJECT_70	Subject contains "ÉÌÎñ"
+score CN_SUBJECT_70	0.780
+
+header CN_SUBJECT_72	Subject =~ /Ë°Îñ/
+describe CN_SUBJECT_72	Subject contains "Ë°Îñ"
+score CN_SUBJECT_72	0.351
+
+header CN_SUBJECT_73	Subject =~ /¾Æµê/
+describe CN_SUBJECT_73	Subject contains "¾Æµê"
+score CN_SUBJECT_73	0.879
+
+header CN_SUBJECT_78	Subject =~ /²É¹º/
+describe CN_SUBJECT_78	Subject contains "²É¹º"
+score CN_SUBJECT_78	1.080
+
+header CN_SUBJECT_81	Subject =~ /¼¼ÇÉ/
+describe CN_SUBJECT_81	Subject contains "¼¼ÇÉ"
+score CN_SUBJECT_81	0.112
+
+header CN_SUBJECT_84	Subject =~ /»ªÀû/
+describe CN_SUBJECT_84	Subject contains "»ªÀû"
+score CN_SUBJECT_84	0.363
+
+header CN_SUBJECT_90	Subject =~ /ÑÐÐÞ/
+describe CN_SUBJECT_90	Subject contains "ÑÐÐÞ"
+score CN_SUBJECT_90	1.320
+
+header CN_SUBJECT_93	Subject =~ /±ÜË°/
+describe CN_SUBJECT_93	Subject contains "±ÜË°"
+score CN_SUBJECT_93	1.380
+
+header CN_SUBJECT_98	Subject =~ /ÄúµÄ/
+describe CN_SUBJECT_98	Subject contains "ÄúµÄ"
+score CN_SUBJECT_98	0.763
+
+header CN_SUBJECT_112	Subject =~ /¼Òµç/
+describe CN_SUBJECT_112	Subject contains "¼Òµç"
+score CN_SUBJECT_112	1.320
+
+header CN_SUBJECT_113	Subject =~ /³¬µÍ/
+describe CN_SUBJECT_113	Subject contains "³¬µÍ"
+score CN_SUBJECT_113	0.772
+
+header CN_SUBJECT_115	Subject =~ /·¿¼Û/
+describe CN_SUBJECT_115	Subject contains "·¿¼Û"
+score CN_SUBJECT_115	1.080
+
+header CN_SUBJECT_117	Subject =~ /3000¶à¼Ò/
+describe CN_SUBJECT_117	Subject contains "3000¶à¼Ò"
+score CN_SUBJECT_117	1.380
+
+header CN_SUBJECT_118	Subject =~ /ÏíÊÜÈ«¹ú/
+describe CN_SUBJECT_118	Subject contains "ÏíÊÜÈ«¹ú"
+score CN_SUBJECT_118	1.380
+
+header CN_SUBJECT_137	Subject =~ /°¢Àï/
+describe CN_SUBJECT_137	Subject contains "°¢Àï"
+score CN_SUBJECT_137	1.128
+
+header CN_SUBJECT_141	Subject =~ /¼ÑºÍ/
+describe CN_SUBJECT_141	Subject contains "¼ÑºÍ"
+score CN_SUBJECT_141	0.332
+
+header CN_SUBJECT_142	Subject =~ /Ç±ÔÚ/
+describe CN_SUBJECT_142	Subject contains "Ç±ÔÚ"
+score CN_SUBJECT_142	1.320
+
+header CN_SUBJECT_143	Subject =~ /ÉãÏñ»ú/
+describe CN_SUBJECT_143	Subject contains "ÉãÏñ»ú"
+score CN_SUBJECT_143	1.200
+
+header CN_SUBJECT_148	Subject =~ /ÌØ¼Û/
+describe CN_SUBJECT_148	Subject contains "ÌØ¼Û"
+score CN_SUBJECT_148	1.150
+
+header CN_SUBJECT_161	Subject =~ /Æ±¾Ý/
+describe CN_SUBJECT_161	Subject contains "Æ±¾Ý"
+score CN_SUBJECT_161	1.320
+
+header CN_SUBJECT_164	Subject =~ /ÓëÄú/
+describe CN_SUBJECT_164	Subject contains "ÓëÄú"
+score CN_SUBJECT_164	0.707
+
+header CN_SUBJECT_170	Subject =~ /»ªÂ¡/
+describe CN_SUBJECT_170	Subject contains "»ªÂ¡"
+score CN_SUBJECT_170	0.034
+
+header CN_SUBJECT_175	Subject =~ /\(¾­Àí/
+describe CN_SUBJECT_175	Subject contains "\(¾­Àí"
+score CN_SUBJECT_175	0.029
+
+header CN_SUBJECT_180	Subject =~ /¸ºÔðÈË\(/
+describe CN_SUBJECT_180	Subject contains "¸ºÔðÈË\("
+score CN_SUBJECT_180	0.400
+
+header CN_SUBJECT_188	Subject =~ /±¨¹Ø/
+describe CN_SUBJECT_188	Subject contains "±¨¹Ø"
+score CN_SUBJECT_188	1.320
+
+header CN_SUBJECT_190	Subject =~ /AD:ÐÅÏ¢/
+describe CN_SUBJECT_190	Subject contains "AD:ÐÅÏ¢"
+score CN_SUBJECT_190	0.328
+
+header CN_SUBJECT_191	Subject =~ / ·¢ Æ±/
+describe CN_SUBJECT_191	Subject contains " ·¢ Æ±"
+score CN_SUBJECT_191	1.260
+
+header CN_SUBJECT_194	Subject =~ /Î¬ÐÞ/
+describe CN_SUBJECT_194	Subject contains "Î¬ÐÞ"
+score CN_SUBJECT_194	0.900
+
+header CN_SUBJECT_196	Subject =~ /¹©Ó¦/
+describe CN_SUBJECT_196	Subject contains "¹©Ó¦"
+score CN_SUBJECT_196	1.080
+
+header CN_SUBJECT_197	Subject =~ /×ÊÔ´ÔÚ/
+describe CN_SUBJECT_197	Subject contains "×ÊÔ´ÔÚ"
+score CN_SUBJECT_197	1.260
+
+header CN_SUBJECT_199	Subject =~ /²Æ¸»×ÊÔ´/
+describe CN_SUBJECT_199	Subject contains "²Æ¸»×ÊÔ´"
+score CN_SUBJECT_199	1.200
+
+header CN_SUBJECT_200	Subject =~ /Æ÷²Ä/
+describe CN_SUBJECT_200	Subject contains "Æ÷²Ä"
+score CN_SUBJECT_200	1.200
+
+header CN_SUBJECT_203	Subject =~ /½ø³ö¿Ú/
+describe CN_SUBJECT_203	Subject contains "½ø³ö¿Ú"
+score CN_SUBJECT_203	1.140
+
+header CN_SUBJECT_217	Subject =~ /Ãâ·Ñ×¢²á/
+describe CN_SUBJECT_217	Subject contains "Ãâ·Ñ×¢²á"
+score CN_SUBJECT_217	1.080
+
+header CN_SUBJECT_219	Subject =~ /Ïã¸Û¹«Ë¾/
+describe CN_SUBJECT_219	Subject contains "Ïã¸Û¹«Ë¾"
+score CN_SUBJECT_219	1.200
+
+header CN_SUBJECT_221	Subject =~ /ÊµÕ½/
+describe CN_SUBJECT_221	Subject contains "ÊµÕ½"
+score CN_SUBJECT_221	1.140
+
+header CN_SUBJECT_224	Subject =~ /´ò°Ü/
+describe CN_SUBJECT_224	Subject contains "´ò°Ü"
+score CN_SUBJECT_224	0.853
+
+header CN_SUBJECT_226	Subject =~ /¾¡ÔÚ/
+describe CN_SUBJECT_226	Subject contains "¾¡ÔÚ"
+score CN_SUBJECT_226	0.881
+
+header CN_SUBJECT_227	Subject =~ /¹ÜÀíÓë/
+describe CN_SUBJECT_227	Subject contains "¹ÜÀíÓë"
+score CN_SUBJECT_227	0.960
+
+header CN_SUBJECT_228	Subject =~ /¼¼ÄÜ/
+describe CN_SUBJECT_228	Subject contains "¼¼ÄÜ"
+score CN_SUBJECT_228	0.093
+
+header CN_SUBJECT_230	Subject =~ /»Ø¸´£¡/
+describe CN_SUBJECT_230	Subject contains "»Ø¸´£¡"
+score CN_SUBJECT_230	1.320
+
+header CN_SUBJECT_231	Subject =~ /ÆóÒµÐÅÏ¢/
+describe CN_SUBJECT_231	Subject contains "ÆóÒµÐÅÏ¢"
+score CN_SUBJECT_231	0.486
+
+header CN_SUBJECT_232	Subject =~ /¸¶¿î/
+describe CN_SUBJECT_232	Subject contains "¸¶¿î"
+score CN_SUBJECT_232	1.080
+
+header CN_SUBJECT_236	Subject =~ /ÌáÉý/
+describe CN_SUBJECT_236	Subject contains "ÌáÉý"
+score CN_SUBJECT_236	0.789
+
+header CN_SUBJECT_238	Subject =~ /½µµÍ/
+describe CN_SUBJECT_238	Subject contains "½µµÍ"
+score CN_SUBJECT_238	0.502
+
+header CN_SUBJECT_239	Subject =~ /Èº·¢/
+describe CN_SUBJECT_239	Subject contains "Èº·¢"
+score CN_SUBJECT_239	1.080
+
+header CN_SUBJECT_242	Subject =~ /ºÏ°ì/
+describe CN_SUBJECT_242	Subject contains "ºÏ°ì"
+score CN_SUBJECT_242	0.192
+
+header CN_SUBJECT_244	Subject =~ /Ó¡Ë¢/
+describe CN_SUBJECT_244	Subject contains "Ó¡Ë¢"
+score CN_SUBJECT_244	1.080
+
+header CN_SUBJECT_248	Subject =~ /ÓÃºÍ/
+describe CN_SUBJECT_248	Subject contains "ÓÃºÍ"
+score CN_SUBJECT_248	1.080
+
+header CN_SUBJECT_249	Subject =~ /¼ÒÍ¥ÓÃ/
+describe CN_SUBJECT_249	Subject contains "¼ÒÍ¥ÓÃ"
+score CN_SUBJECT_249	1.080
+
+header CN_SUBJECT_251	Subject =~ /´ú  ¿ª/
+describe CN_SUBJECT_251	Subject contains "´ú  ¿ª"
+score CN_SUBJECT_251	0.726
+
+header CN_SUBJECT_254	Subject =~ /¹ó¹«Ë¾/
+describe CN_SUBJECT_254	Subject contains "¹ó¹«Ë¾"
+score CN_SUBJECT_254	1.140
+
+header CN_SUBJECT_259	Subject =~ /³±Á÷/
+describe CN_SUBJECT_259	Subject contains "³±Á÷"
+score CN_SUBJECT_259	0.523
+
+header CN_SUBJECT_263	Subject =~ /2006×îÐÂ/
+describe CN_SUBJECT_263	Subject contains "2006×îÐÂ"
+score CN_SUBJECT_263	1.140
+
+header CN_SUBJECT_267	Subject =~ /Àè¹æ/
+describe CN_SUBJECT_267	Subject contains "Àè¹æ"
+score CN_SUBJECT_267	0.345
+
+header CN_SUBJECT_269	Subject =~ /»úÆ±/
+describe CN_SUBJECT_269	Subject contains "»úÆ±"
+score CN_SUBJECT_269	1.020
+
+header CN_SUBJECT_270	Subject =~ /Ê±ÉÐÊýÂë/
+describe CN_SUBJECT_270	Subject contains "Ê±ÉÐÊýÂë"
+score CN_SUBJECT_270	1.080
+
+header CN_SUBJECT_271	Subject =~ /¡¢Ê±ÉÐ/
+describe CN_SUBJECT_271	Subject contains "¡¢Ê±ÉÐ"
+score CN_SUBJECT_271	1.080
+
+header CN_SUBJECT_272	Subject =~ /ÍøÉÏ×¬Ç®/
+describe CN_SUBJECT_272	Subject contains "ÍøÉÏ×¬Ç®"
+score CN_SUBJECT_272	1.020
+
+header CN_SUBJECT_275	Subject =~ /ÔËÊä/
+describe CN_SUBJECT_275	Subject contains "ÔËÊä"
+score CN_SUBJECT_275	0.023
+
+header CN_SUBJECT_276	Subject =~ /Ö÷»ú/
+describe CN_SUBJECT_276	Subject contains "Ö÷»ú"
+score CN_SUBJECT_276	0.900
+
+header CN_SUBJECT_279	Subject =~ /ÓÊÏäÁËÂð/
+describe CN_SUBJECT_279	Subject contains "ÓÊÏäÁËÂð"
+score CN_SUBJECT_279	0.228
+
+header CN_SUBJECT_280	Subject =~ /Äú¸Ä/
+describe CN_SUBJECT_280	Subject contains "Äú¸Ä"
+score CN_SUBJECT_280	0.973
+
+header CN_SUBJECT_287	Subject =~ /ÔËÓÃ/
+describe CN_SUBJECT_287	Subject contains "ÔËÓÃ"
+score CN_SUBJECT_287	1.020
+
+header CN_SUBJECT_296	Subject =~ /Æ±0\.5-2%/
+describe CN_SUBJECT_296	Subject contains "Æ±0\.5-2%"
+score CN_SUBJECT_296	0.108
+
+header CN_SUBJECT_303	Subject =~ /ÌØ»Ý/
+describe CN_SUBJECT_303	Subject contains "ÌØ»Ý"
+score CN_SUBJECT_303	1.020
+
+header CN_SUBJECT_308	Subject =~ /ÑéÖ¤ºó/
+describe CN_SUBJECT_308	Subject contains "ÑéÖ¤ºó"
+score CN_SUBJECT_308	0.008
+
+header CN_SUBJECT_313	Subject =~ /ÒÑ³ÉÎª/
+describe CN_SUBJECT_313	Subject contains "ÒÑ³ÉÎª"
+score CN_SUBJECT_313	0.633
+
+header CN_SUBJECT_315	Subject =~ /×¬Ç®ÒÑ/
+describe CN_SUBJECT_315	Subject contains "×¬Ç®ÒÑ"
+score CN_SUBJECT_315	0.960
+
+header CN_SUBJECT_320	Subject =~ /Ö»Ðè/
+describe CN_SUBJECT_320	Subject contains "Ö»Ðè"
+score CN_SUBJECT_320	0.570
+
+header CN_SUBJECT_321	Subject =~ /¼ÒÍ¥µçÄÔ/
+describe CN_SUBJECT_321	Subject contains "¼ÒÍ¥µçÄÔ"
+score CN_SUBJECT_321	0.960
+
+header CN_SUBJECT_324	Subject =~ /ÍâÉÌ/
+describe CN_SUBJECT_324	Subject contains "ÍâÉÌ"
+score CN_SUBJECT_324	0.960
+
+header CN_SUBJECT_325	Subject =~ /\(AD\)¸ßÇå/
+describe CN_SUBJECT_325	Subject contains "\(AD\)¸ßÇå"
+score CN_SUBJECT_325	0.960
+
+header CN_SUBJECT_328	Subject =~ /ÓÑÇéÁ´½Ó/
+describe CN_SUBJECT_328	Subject contains "ÓÑÇéÁ´½Ó"
+score CN_SUBJECT_328	0.960
+
+header CN_SUBJECT_331	Subject =~ /TO;»Ø¸´/
+describe CN_SUBJECT_331	Subject contains "TO;»Ø¸´"
+score CN_SUBJECT_331	0.019
+
+header CN_SUBJECT_337	Subject =~ /ÎªÄú/
+describe CN_SUBJECT_337	Subject contains "ÎªÄú"
+score CN_SUBJECT_337	1.080
+
+header CN_SUBJECT_339	Subject =~ /ÏàÉÌ/
+describe CN_SUBJECT_339	Subject contains "ÏàÉÌ"
+score CN_SUBJECT_339	0.665
+
+header CN_SUBJECT_346	Subject =~ /·ÖÏí!/
+describe CN_SUBJECT_346	Subject contains "·ÖÏí!"
+score CN_SUBJECT_346	0.900
+
+header CN_SUBJECT_351	Subject =~ /¹ÜÀí×ÊÁÏ/
+describe CN_SUBJECT_351	Subject contains "¹ÜÀí×ÊÁÏ"
+score CN_SUBJECT_351	0.900
+
+header CN_SUBJECT_353	Subject =~ /ÇÔÌý/
+describe CN_SUBJECT_353	Subject contains "ÇÔÌý"
+score CN_SUBJECT_353	0.780
+
+header CN_SUBJECT_358	Subject =~ /ÍøÂç×¬Ç®/
+describe CN_SUBJECT_358	Subject contains "ÍøÂç×¬Ç®"
+score CN_SUBJECT_358	0.900
+
+header CN_SUBJECT_364	Subject =~ /Õñ·á/
+describe CN_SUBJECT_364	Subject contains "Õñ·á"
+score CN_SUBJECT_364	0.050
+
+header CN_SUBJECT_366	Subject =~ /TO£º/
+describe CN_SUBJECT_366	Subject contains "TO£º"
+score CN_SUBJECT_366	0.877
+
+header CN_SUBJECT_367	Subject =~ /±¨¼Û/
+describe CN_SUBJECT_367	Subject contains "±¨¼Û"
+score CN_SUBJECT_367	0.840
+
+header CN_SUBJECT_371	Subject =~ /º½¿ÕÍø/
+describe CN_SUBJECT_371	Subject contains "º½¿ÕÍø"
+score CN_SUBJECT_371	0.900
+
+header CN_SUBJECT_372	Subject =~ /ÂÃÓÎº½¿Õ/
+describe CN_SUBJECT_372	Subject contains "ÂÃÓÎº½¿Õ"
+score CN_SUBJECT_372	0.900
+
+header CN_SUBJECT_375	Subject =~ /ÖÐ¹úÂÃÓÎ/
+describe CN_SUBJECT_375	Subject contains "ÖÐ¹úÂÃÓÎ"
+score CN_SUBJECT_375	0.840
+
+header CN_SUBJECT_376	Subject =~ /5600Ôª/
+describe CN_SUBJECT_376	Subject contains "5600Ôª"
+score CN_SUBJECT_376	0.840
+
+header CN_SUBJECT_377	Subject =~ /ÉÌ¹ÜÀí/
+describe CN_SUBJECT_377	Subject contains "ÉÌ¹ÜÀí"
+score CN_SUBJECT_377	0.329
+
+header CN_SUBJECT_378	Subject =~ /ÍøÂçÓªÏú/
+describe CN_SUBJECT_378	Subject contains "ÍøÂçÓªÏú"
+score CN_SUBJECT_378	0.769
+
+header CN_SUBJECT_380	Subject =~ /¡°µçÄÔ/
+describe CN_SUBJECT_380	Subject contains "¡°µçÄÔ"
+score CN_SUBJECT_380	0.137
+
+header CN_SUBJECT_382	Subject =~ /µçÄÔ°æ¡±/
+describe CN_SUBJECT_382	Subject contains "µçÄÔ°æ¡±"
+score CN_SUBJECT_382	0.137
+
+header CN_SUBJECT_385	Subject =~ /×îÐÂ¡°/
+describe CN_SUBJECT_385	Subject contains "×îÐÂ¡°"
+score CN_SUBJECT_385	0.137
+
+header CN_SUBJECT_387	Subject =~ /ÎÄ¼þ£¡/
+describe CN_SUBJECT_387	Subject contains "ÎÄ¼þ£¡"
+score CN_SUBJECT_387	0.840
+
+header CN_SUBJECT_391	Subject =~ /¿Í»§ÄúºÃ/
+describe CN_SUBJECT_391	Subject contains "¿Í»§ÄúºÃ"
+score CN_SUBJECT_391	0.554
+
+header CN_SUBJECT_394	Subject =~ /×¢ËÜ/
+describe CN_SUBJECT_394	Subject contains "×¢ËÜ"
+score CN_SUBJECT_394	0.780
+
+header CN_SUBJECT_395	Subject =~ /ÏÐÖÃ/
+describe CN_SUBJECT_395	Subject contains "ÏÐÖÃ"
+score CN_SUBJECT_395	0.840
+
+header CN_SUBJECT_397	Subject =~ /´Ï´Ù/
+describe CN_SUBJECT_397	Subject contains "´Ï´Ù"
+score CN_SUBJECT_397	1.320
+
+header CN_SUBJECT_400	Subject =~ /AD£º/
+describe CN_SUBJECT_400	Subject contains "AD£º"
+score CN_SUBJECT_400	1.080
+
+header CN_SUBJECT_402	Subject =~ /Æ±ÑéÖ¤/
+describe CN_SUBJECT_402	Subject contains "Æ±ÑéÖ¤"
+score CN_SUBJECT_402	0.008
+
+header CN_SUBJECT_408	Subject =~ /Ö°Òµ»¯/
+describe CN_SUBJECT_408	Subject contains "Ö°Òµ»¯"
+score CN_SUBJECT_408	0.546
+
+header CN_SUBJECT_409	Subject =~ /È«Ì×·ÑÓÃ/
+describe CN_SUBJECT_409	Subject contains "È«Ì×·ÑÓÃ"
+score CN_SUBJECT_409	0.780
+
+header CN_SUBJECT_415	Subject =~ /×¬Ç®ÐÂ/
+describe CN_SUBJECT_415	Subject contains "×¬Ç®ÐÂ"
+score CN_SUBJECT_415	0.780
+
+header CN_SUBJECT_416	Subject =~ /×¢²áÏã¸Û/
+describe CN_SUBJECT_416	Subject contains "×¢²áÏã¸Û"
+score CN_SUBJECT_416	0.780
+
+header CN_SUBJECT_420	Subject =~ /»Ø ¸´/
+describe CN_SUBJECT_420	Subject contains "»Ø ¸´"
+score CN_SUBJECT_420	0.108
+
+header CN_SUBJECT_428	Subject =~ /Í³³ï/
+describe CN_SUBJECT_428	Subject contains "Í³³ï"
+score CN_SUBJECT_428	0.780
+
+header CN_SUBJECT_432	Subject =~ /×îÐÂÍøÂç/
+describe CN_SUBJECT_432	Subject contains "×îÐÂÍøÂç"
+score CN_SUBJECT_432	0.780
+
+header CN_SUBJECT_434	Subject =~ /ÐÂÇ÷ÊÆ/
+describe CN_SUBJECT_434	Subject contains "ÐÂÇ÷ÊÆ"
+score CN_SUBJECT_434	0.780
+
+header CN_SUBJECT_439	Subject =~ /£©ÊÕ/
+describe CN_SUBJECT_439	Subject contains "£©ÊÕ"
+score CN_SUBJECT_439	0.780
+
+header CN_SUBJECT_443	Subject =~ /±¦Ê¥/
+describe CN_SUBJECT_443	Subject contains "±¦Ê¥"
+score CN_SUBJECT_443	0.006
+
+header CN_SUBJECT_446	Subject =~ /ÐÐÕþ¹¤×÷/
+describe CN_SUBJECT_446	Subject contains "ÐÐÕþ¹¤×÷"
+score CN_SUBJECT_446	0.720
+
+header CN_SUBJECT_449	Subject =~ /´ú ¿ª/
+describe CN_SUBJECT_449	Subject contains "´ú ¿ª"
+score CN_SUBJECT_449	1.260
+
+header CN_SUBJECT_450	Subject =~ /²æ³µ/
+describe CN_SUBJECT_450	Subject contains "²æ³µ"
+score CN_SUBJECT_450	0.780
+
+header CN_SUBJECT_451	Subject =~ /×¼Ôò/
+describe CN_SUBJECT_451	Subject contains "×¼Ôò"
+score CN_SUBJECT_451	0.660
+
+header CN_SUBJECT_454	Subject =~ /¸ßÐ§/
+describe CN_SUBJECT_454	Subject contains "¸ßÐ§"
+score CN_SUBJECT_454	0.780
+
+header CN_SUBJECT_455	Subject =~ /¸ß³±/
+describe CN_SUBJECT_455	Subject contains "¸ß³±"
+score CN_SUBJECT_455	0.082
+
+header CN_SUBJECT_456	Subject =~ /Áé»î/
+describe CN_SUBJECT_456	Subject contains "Áé»î"
+score CN_SUBJECT_456	0.498
+
+header CN_SUBJECT_462	Subject =~ /Õ÷¼¯ÓÑÇé/
+describe CN_SUBJECT_462	Subject contains "Õ÷¼¯ÓÑÇé"
+score CN_SUBJECT_462	0.780
+
+header CN_SUBJECT_463	Subject =~ /ÖÐ²ã/
+describe CN_SUBJECT_463	Subject contains "ÖÐ²ã"
+score CN_SUBJECT_463	0.720
+
+header CN_SUBJECT_466	Subject =~ /¶©ÔÄ/
+describe CN_SUBJECT_466	Subject contains "¶©ÔÄ"
+score CN_SUBJECT_466	0.560
+
+header CN_SUBJECT_467	Subject =~ /ÉÌ»ú/
+describe CN_SUBJECT_467	Subject contains "ÉÌ»ú"
+score CN_SUBJECT_467	0.636
+
+header CN_SUBJECT_471	Subject =~ /£©Äú/
+describe CN_SUBJECT_471	Subject contains "£©Äú"
+score CN_SUBJECT_471	0.111
+
+header CN_SUBJECT_473	Subject =~ /ÓëÐ½/
+describe CN_SUBJECT_473	Subject contains "ÓëÐ½"
+score CN_SUBJECT_473	0.780
+
+header CN_SUBJECT_475	Subject =~ /ÎÄÃØÖ°Òµ/
+describe CN_SUBJECT_475	Subject contains "ÎÄÃØÖ°Òµ"
+score CN_SUBJECT_475	0.720
+
+header CN_SUBJECT_478	Subject =~ /ºêº£/
+describe CN_SUBJECT_478	Subject contains "ºêº£"
+score CN_SUBJECT_478	0.094
+
+header CN_SUBJECT_485	Subject =~ /ÔõÑù»ñµÃ/
+describe CN_SUBJECT_485	Subject contains "ÔõÑù»ñµÃ"
+score CN_SUBJECT_485	0.720
+
+header CN_SUBJECT_486	Subject =~ /»ñµÃ¸ü/
+describe CN_SUBJECT_486	Subject contains "»ñµÃ¸ü"
+score CN_SUBJECT_486	0.720
+
+header CN_SUBJECT_488	Subject =~ /¸üÇ¿ÁÒ/
+describe CN_SUBJECT_488	Subject contains "¸üÇ¿ÁÒ"
+score CN_SUBJECT_488	0.720
+
+header CN_SUBJECT_491	Subject =~ /¼¨Ð§/
+describe CN_SUBJECT_491	Subject contains "¼¨Ð§"
+score CN_SUBJECT_491	0.720
+
+header CN_SUBJECT_495	Subject =~ /»¯ÑµÁ·/
+describe CN_SUBJECT_495	Subject contains "»¯ÑµÁ·"
+score CN_SUBJECT_495	0.900
+
+header CN_SUBJECT_497	Subject =~ /¸ß¼¶ÎÄÃØ/
+describe CN_SUBJECT_497	Subject contains "¸ß¼¶ÎÄÃØ"
+score CN_SUBJECT_497	0.720
+
+header CN_SUBJECT_500	Subject =~ /ÄúÔÚ/
+describe CN_SUBJECT_500	Subject contains "ÄúÔÚ"
+score CN_SUBJECT_500	0.720
+
+header CN_SUBJECT_501	Subject =~ /µÄÐÔ°®/
+describe CN_SUBJECT_501	Subject contains "µÄÐÔ°®"
+score CN_SUBJECT_501	0.720
+
+header CN_SUBJECT_504	Subject =~ /¹«Ë¾ÉÌÒµ/
+describe CN_SUBJECT_504	Subject contains "¹«Ë¾ÉÌÒµ"
+score CN_SUBJECT_504	0.141
+
+header CN_SUBJECT_509	Subject =~ /¡¢½»Í¨/
+describe CN_SUBJECT_509	Subject contains "¡¢½»Í¨"
+score CN_SUBJECT_509	0.660
+
+header CN_SUBJECT_510	Subject =~ /µÏ»ù/
+describe CN_SUBJECT_510	Subject contains "µÏ»ù"
+score CN_SUBJECT_510	0.138
+
+header CN_SUBJECT_511	Subject =~ /ÖÐ¹úÈí¼þ/
+describe CN_SUBJECT_511	Subject contains "ÖÐ¹úÈí¼þ"
+score CN_SUBJECT_511	0.540
+
+header CN_SUBJECT_513	Subject =~ /³Ö¾Ã/
+describe CN_SUBJECT_513	Subject contains "³Ö¾Ã"
+score CN_SUBJECT_513	0.660
+
+header CN_SUBJECT_515	Subject =~ /Ç¿ÁÒ¸ü/
+describe CN_SUBJECT_515	Subject contains "Ç¿ÁÒ¸ü"
+score CN_SUBJECT_515	0.660
+
+header CN_SUBJECT_517	Subject =~ /¹¤×÷ÓÊ¼þ/
+describe CN_SUBJECT_517	Subject contains "¹¤×÷ÓÊ¼þ"
+score CN_SUBJECT_517	0.660
+
+header CN_SUBJECT_524	Subject =~ /ºÃ£º/
+describe CN_SUBJECT_524	Subject contains "ºÃ£º"
+score CN_SUBJECT_524	1.320
+
+header CN_SUBJECT_533	Subject =~ /¹ÜÀí¸ß¼¶/
+describe CN_SUBJECT_533	Subject contains "¹ÜÀí¸ß¼¶"
+score CN_SUBJECT_533	0.660
+
+header CN_SUBJECT_536	Subject =~ /½ÚÄÜ/
+describe CN_SUBJECT_536	Subject contains "½ÚÄÜ"
+score CN_SUBJECT_536	0.600
+
+header CN_SUBJECT_547	Subject =~ /Èí¼þÍø/
+describe CN_SUBJECT_547	Subject contains "Èí¼þÍø"
+score CN_SUBJECT_547	0.720
+
+header CN_SUBJECT_549	Subject =~ /ÍøÕ÷¼¯/
+describe CN_SUBJECT_549	Subject contains "ÍøÕ÷¼¯"
+score CN_SUBJECT_549	0.660
+
+header CN_SUBJECT_554	Subject =~ /ÕÅÎ°Ã÷/
+describe CN_SUBJECT_554	Subject contains "ÕÅÎ°Ã÷"
+score CN_SUBJECT_554	0.236
+
+header CN_SUBJECT_557	Subject =~ /´ú¡£/
+describe CN_SUBJECT_557	Subject contains "´ú¡£"
+score CN_SUBJECT_557	0.333
+
+header CN_SUBJECT_558	Subject =~ /°ïÊÖ/
+describe CN_SUBJECT_558	Subject contains "°ïÊÖ"
+score CN_SUBJECT_558	0.600
+
+header CN_SUBJECT_562	Subject =~ /¾°ÐË/
+describe CN_SUBJECT_562	Subject contains "¾°ÐË"
+score CN_SUBJECT_562	0.115
+
+header CN_SUBJECT_565	Subject =~ /ÓïÒô¶ÌÐÅ/
+describe CN_SUBJECT_565	Subject contains "ÓïÒô¶ÌÐÅ"
+score CN_SUBJECT_565	0.660
+
+header CN_SUBJECT_572	Subject =~ /  ·¢   Æ/
+describe CN_SUBJECT_572	Subject contains "  ·¢   Æ"
+score CN_SUBJECT_572	0.490
+
+header CN_SUBJECT_575	Subject =~ /¾­Àí±Ø¿´/
+describe CN_SUBJECT_575	Subject contains "¾­Àí±Ø¿´"
+score CN_SUBJECT_575	0.600
+
+header CN_SUBJECT_576	Subject =~ /»¥ÁªÍøµÄ/
+describe CN_SUBJECT_576	Subject contains "»¥ÁªÍøµÄ"
+score CN_SUBJECT_576	0.600
+
+header CN_SUBJECT_577	Subject =~ /¹©Çó/
+describe CN_SUBJECT_577	Subject contains "¹©Çó"
+score CN_SUBJECT_577	0.600
+
+header CN_SUBJECT_581	Subject =~ /ÉÌÒµ£¡/
+describe CN_SUBJECT_581	Subject contains "ÉÌÒµ£¡"
+score CN_SUBJECT_581	0.126
+
+header CN_SUBJECT_588	Subject =~ /»îÈË/
+describe CN_SUBJECT_588	Subject contains "»îÈË"
+score CN_SUBJECT_588	0.540
+
+header CN_SUBJECT_593	Subject =~ /Re:Âà±H:/
+describe CN_SUBJECT_593	Subject contains "Re:Âà±H:"
+score CN_SUBJECT_593	0.600
+
+header CN_SUBJECT_594	Subject =~ /»¯¹¤¡¢/
+describe CN_SUBJECT_594	Subject contains "»¯¹¤¡¢"
+score CN_SUBJECT_594	0.720
+
+header CN_SUBJECT_595	Subject =~ /¾ö²ß/
+describe CN_SUBJECT_595	Subject contains "¾ö²ß"
+score CN_SUBJECT_595	0.480
+
+header CN_SUBJECT_597	Subject =~ /\.¾­Àí/
+describe CN_SUBJECT_597	Subject contains "\.¾­Àí"
+score CN_SUBJECT_597	0.600
+
+header CN_SUBJECT_602	Subject =~ /¡¢½¨Öþ/
+describe CN_SUBJECT_602	Subject contains "¡¢½¨Öþ"
+score CN_SUBJECT_602	0.426
+
+header CN_SUBJECT_605	Subject =~ /½¨Õ¾/
+describe CN_SUBJECT_605	Subject contains "½¨Õ¾"
+score CN_SUBJECT_605	0.540
+
+header CN_SUBJECT_612	Subject =~ /¼¾Æ®/
+describe CN_SUBJECT_612	Subject contains "¼¾Æ®"
+score CN_SUBJECT_612	0.900
+
+header CN_SUBJECT_613	Subject =~ /ÍøÉÏÃâ·Ñ/
+describe CN_SUBJECT_613	Subject contains "ÍøÉÏÃâ·Ñ"
+score CN_SUBJECT_613	0.540
+
+header CN_SUBJECT_616	Subject =~ / - Àî¿ª/
+describe CN_SUBJECT_616	Subject contains " - Àî¿ª"
+score CN_SUBJECT_616	0.540
+
+header CN_SUBJECT_617	Subject =~ /Îï×Ê/
+describe CN_SUBJECT_617	Subject contains "Îï×Ê"
+score CN_SUBJECT_617	0.082
+
+header CN_SUBJECT_618	Subject =~ /    ·¢  /
+describe CN_SUBJECT_618	Subject contains "    ·¢  "
+score CN_SUBJECT_618	0.443
+
+header CN_SUBJECT_620	Subject =~ /¸´ Googl/
+describe CN_SUBJECT_620	Subject contains "¸´ Googl"
+score CN_SUBJECT_620	0.540
+
+header CN_SUBJECT_625	Subject =~ /±îÁö/
+describe CN_SUBJECT_625	Subject contains "±îÁö"
+score CN_SUBJECT_625	0.960
+
+header CN_SUBJECT_627	Subject =~ /³êÉè¼Æ/
+describe CN_SUBJECT_627	Subject contains "³êÉè¼Æ"
+score CN_SUBJECT_627	0.660
+
+header CN_SUBJECT_631	Subject =~ /²ÆË°/
+describe CN_SUBJECT_631	Subject contains "²ÆË°"
+score CN_SUBJECT_631	0.540
+
+header CN_SUBJECT_635	Subject =~ /°ïÄã/
+describe CN_SUBJECT_635	Subject contains "°ïÄã"
+score CN_SUBJECT_635	0.540
+
+header CN_SUBJECT_637	Subject =~ /°Í°Í/
+describe CN_SUBJECT_637	Subject contains "°Í°Í"
+score CN_SUBJECT_637	0.660
+
+header CN_SUBJECT_638	Subject =~ /Æó Òµ/
+describe CN_SUBJECT_638	Subject contains "Æó Òµ"
+score CN_SUBJECT_638	0.780
+
+header CN_SUBJECT_645	Subject =~ /¾­µä¹ÜÀí/
+describe CN_SUBJECT_645	Subject contains "¾­µä¹ÜÀí"
+score CN_SUBJECT_645	0.540
+
+header CN_SUBJECT_646	Subject =~ /-ÉÏ\/º£/
+describe CN_SUBJECT_646	Subject contains "-ÉÏ\/º£"
+score CN_SUBJECT_646	0.540
+
+header CN_SUBJECT_647	Subject =~ /×ÉÑ¯ÓªÏú/
+describe CN_SUBJECT_647	Subject contains "×ÉÑ¯ÓªÏú"
+score CN_SUBJECT_647	0.540
+
+header CN_SUBJECT_648	Subject =~ /2006¾­µä/
+describe CN_SUBJECT_648	Subject contains "2006¾­µä"
+score CN_SUBJECT_648	0.540
+
+header CN_SUBJECT_649	Subject =~ /ÓªÏú×ÊÁÏ/
+describe CN_SUBJECT_649	Subject contains "ÓªÏú×ÊÁÏ"
+score CN_SUBJECT_649	0.540
+
+header CN_SUBJECT_651	Subject =~ /Åú·¢/
+describe CN_SUBJECT_651	Subject contains "Åú·¢"
+score CN_SUBJECT_651	0.480
+
+header CN_SUBJECT_652	Subject =~ /Äú·ÖÏí/
+describe CN_SUBJECT_652	Subject contains "Äú·ÖÏí"
+score CN_SUBJECT_652	1.020
+
+header CN_SUBJECT_654	Subject =~ /¹¤³ÌÏîÄ¿/
+describe CN_SUBJECT_654	Subject contains "¹¤³ÌÏîÄ¿"
+score CN_SUBJECT_654	0.540
+
+header CN_SUBJECT_655	Subject =~ /¿âÓë/
+describe CN_SUBJECT_655	Subject contains "¿âÓë"
+score CN_SUBJECT_655	0.540
+
+header CN_SUBJECT_657	Subject =~ /¡¢Ð­»á/
+describe CN_SUBJECT_657	Subject contains "¡¢Ð­»á"
+score CN_SUBJECT_657	0.540
+
+header CN_SUBJECT_658	Subject =~ /ÃûÂ¼/
+describe CN_SUBJECT_658	Subject contains "ÃûÂ¼"
+score CN_SUBJECT_658	0.540
+
+header CN_SUBJECT_660	Subject =~ /¹«Ë¾¡¢/
+describe CN_SUBJECT_660	Subject contains "¹«Ë¾¡¢"
+score CN_SUBJECT_660	0.540
+
+header CN_SUBJECT_662	Subject =~ /¡¢»¯¹¤/
+describe CN_SUBJECT_662	Subject contains "¡¢»¯¹¤"
+score CN_SUBJECT_662	0.288
+
+header CN_SUBJECT_665	Subject =~ /ÓÅ »Ý/
+describe CN_SUBJECT_665	Subject contains "ÓÅ »Ý"
+score CN_SUBJECT_665	0.226
+
+header CN_SUBJECT_668	Subject =~ /¡¾211job/
+describe CN_SUBJECT_668	Subject contains "¡¾211job"
+score CN_SUBJECT_668	0.540
+
+header CN_SUBJECT_670	Subject =~ /RO:»Ø¸´/
+describe CN_SUBJECT_670	Subject contains "RO:»Ø¸´"
+score CN_SUBJECT_670	0.031
+
+header CN_SUBJECT_671	Subject =~ /×ð¾´µÄ/
+describe CN_SUBJECT_671	Subject contains "×ð¾´µÄ"
+score CN_SUBJECT_671	0.313
+
+header CN_SUBJECT_672	Subject =~ /\,´úÀí/
+describe CN_SUBJECT_672	Subject contains "\,´úÀí"
+score CN_SUBJECT_672	0.540
+
+header CN_SUBJECT_675	Subject =~ /½¨²Ä/
+describe CN_SUBJECT_675	Subject contains "½¨²Ä"
+score CN_SUBJECT_675	0.480
+
+header CN_SUBJECT_681	Subject =~ /ÊµÎñ/
+describe CN_SUBJECT_681	Subject contains "ÊµÎñ"
+score CN_SUBJECT_681	0.960
+
+header CN_SUBJECT_685	Subject =~ /½¨Öþ¡¢/
+describe CN_SUBJECT_685	Subject contains "½¨Öþ¡¢"
+score CN_SUBJECT_685	0.720
+
+header CN_SUBJECT_687	Subject =~ /ÃÀ°×/
+describe CN_SUBJECT_687	Subject contains "ÃÀ°×"
+score CN_SUBJECT_687	0.420
+
+header CN_SUBJECT_688	Subject =~ /¡¢»·±£/
+describe CN_SUBJECT_688	Subject contains "¡¢»·±£"
+score CN_SUBJECT_688	0.480
+
+header CN_SUBJECT_689	Subject =~ /½»Í¨¡¢/
+describe CN_SUBJECT_689	Subject contains "½»Í¨¡¢"
+score CN_SUBJECT_689	0.480
+
+header CN_SUBJECT_695	Subject =~ /   Æ±/
+describe CN_SUBJECT_695	Subject contains "   Æ±"
+score CN_SUBJECT_695	1.097
+
+header CN_SUBJECT_696	Subject =~ /ÔÁ·á/
+describe CN_SUBJECT_696	Subject contains "ÔÁ·á"
+score CN_SUBJECT_696	0.042
+
+header CN_SUBJECT_697	Subject =~ /·ÖÎöÓë/
+describe CN_SUBJECT_697	Subject contains "·ÖÎöÓë"
+score CN_SUBJECT_697	0.574
+
+header CN_SUBJECT_698	Subject =~ /»·±£¹¤³Ì/
+describe CN_SUBJECT_698	Subject contains "»·±£¹¤³Ì"
+score CN_SUBJECT_698	0.480
+
+header CN_SUBJECT_699	Subject =~ /¶ÔÊÖ/
+describe CN_SUBJECT_699	Subject contains "¶ÔÊÖ"
+score CN_SUBJECT_699	0.877
+
+header CN_SUBJECT_705	Subject =~ /-Éî\/ÛÚ/
+describe CN_SUBJECT_705	Subject contains "-Éî\/ÛÚ"
+score CN_SUBJECT_705	0.540
+
+header CN_SUBJECT_710	Subject =~ /¹¤ÒÕÆ·/
+describe CN_SUBJECT_710	Subject contains "¹¤ÒÕÆ·"
+score CN_SUBJECT_710	0.480
+
+header CN_SUBJECT_711	Subject =~ /ÍøÁª/
+describe CN_SUBJECT_711	Subject contains "ÍøÁª"
+score CN_SUBJECT_711	0.480
+
+header CN_SUBJECT_712	Subject =~ /×î½ü»¹ºÃ/
+describe CN_SUBJECT_712	Subject contains "×î½ü»¹ºÃ"
+score CN_SUBJECT_712	0.480
+
+header CN_SUBJECT_715	Subject =~ /¼Û¸ñÂð£¿/
+describe CN_SUBJECT_715	Subject contains "¼Û¸ñÂð£¿"
+score CN_SUBJECT_715	0.480
+
+header CN_SUBJECT_717	Subject =~ /È«°¸/
+describe CN_SUBJECT_717	Subject contains "È«°¸"
+score CN_SUBJECT_717	0.444
+
+header CN_SUBJECT_721	Subject =~ /×ÉÑ¯²ß»®/
+describe CN_SUBJECT_721	Subject contains "×ÉÑ¯²ß»®"
+score CN_SUBJECT_721	0.480
+
+header CN_SUBJECT_722	Subject =~ /Òõ¾¥/
+describe CN_SUBJECT_722	Subject contains "Òõ¾¥"
+score CN_SUBJECT_722	0.480
+
+header CN_SUBJECT_724	Subject =~ /ÊÐ³¡ÓªÏú/
+describe CN_SUBJECT_724	Subject contains "ÊÐ³¡ÓªÏú"
+score CN_SUBJECT_724	0.360
+
+header CN_SUBJECT_726	Subject =~ /²ß»®ÏîÄ¿/
+describe CN_SUBJECT_726	Subject contains "²ß»®ÏîÄ¿"
+score CN_SUBJECT_726	0.480
+
+header CN_SUBJECT_729	Subject =~ /´óÅú/
+describe CN_SUBJECT_729	Subject contains "´óÅú"
+score CN_SUBJECT_729	0.420
+
+header CN_SUBJECT_730	Subject =~ /ÖØ°õ/
+describe CN_SUBJECT_730	Subject contains "ÖØ°õ"
+score CN_SUBJECT_730	0.540
+
+header CN_SUBJECT_738	Subject =~ /ÑÐÌÖ°à/
+describe CN_SUBJECT_738	Subject contains "ÑÐÌÖ°à"
+score CN_SUBJECT_738	0.540
+
+header CN_SUBJECT_739	Subject =~ /¹úÇìÖÐÇï/
+describe CN_SUBJECT_739	Subject contains "¹úÇìÖÐÇï"
+score CN_SUBJECT_739	0.480
+
+header CN_SUBJECT_743	Subject =~ /ºÃÏûÏ¢!/
+describe CN_SUBJECT_743	Subject contains "ºÃÏûÏ¢!"
+score CN_SUBJECT_743	0.480
+
+header CN_SUBJECT_752	Subject =~ /¿ªÍØ/
+describe CN_SUBJECT_752	Subject contains "¿ªÍØ"
+score CN_SUBJECT_752	0.420
+
+header CN_SUBJECT_753	Subject =~ /ÀÍ¶¯ÕùÒé/
+describe CN_SUBJECT_753	Subject contains "ÀÍ¶¯ÕùÒé"
+score CN_SUBJECT_753	0.480
+
+header CN_SUBJECT_754	Subject =~ /½â¾ö·½°¸/
+describe CN_SUBJECT_754	Subject contains "½â¾ö·½°¸"
+score CN_SUBJECT_754	0.360
+
+header CN_SUBJECT_759	Subject =~ /Ð­»áÈ«Ì×/
+describe CN_SUBJECT_759	Subject contains "Ð­»áÈ«Ì×"
+score CN_SUBJECT_759	0.480
+
+header CN_SUBJECT_761	Subject =~ /³ÉÈËÓÃÆ·/
+describe CN_SUBJECT_761	Subject contains "³ÉÈËÓÃÆ·"
+score CN_SUBJECT_761	0.480
+
+header CN_SUBJECT_764	Subject =~ /AD;»Ø¸´/
+describe CN_SUBJECT_764	Subject contains "AD;»Ø¸´"
+score CN_SUBJECT_764	0.090
+
+header CN_SUBJECT_768	Subject =~ /»¹ºÃÂð£¿/
+describe CN_SUBJECT_768	Subject contains "»¹ºÃÂð£¿"
+score CN_SUBJECT_768	0.420
+
+header CN_SUBJECT_769	Subject =~ /ÄÐÅ®ÇéÈ¤/
+describe CN_SUBJECT_769	Subject contains "ÄÐÅ®ÇéÈ¤"
+score CN_SUBJECT_769	0.420
+
+header CN_SUBJECT_770	Subject =~ / ´ßÇé/
+describe CN_SUBJECT_770	Subject contains " ´ßÇé"
+score CN_SUBJECT_770	0.420
+
+header CN_SUBJECT_773	Subject =~ /×ÉÑ¯£¡/
+describe CN_SUBJECT_773	Subject contains "×ÉÑ¯£¡"
+score CN_SUBJECT_773	0.480
+
+header CN_SUBJECT_778	Subject =~ /¡¢µçÁ¦/
+describe CN_SUBJECT_778	Subject contains "¡¢µçÁ¦"
+score CN_SUBJECT_778	0.480
+
+header CN_SUBJECT_784	Subject =~ /º£ÖÞ/
+describe CN_SUBJECT_784	Subject contains "º£ÖÞ"
+score CN_SUBJECT_784	0.309
+
+header CN_SUBJECT_788	Subject =~ /ÉÌ°Á/
+describe CN_SUBJECT_788	Subject contains "ÉÌ°Á"
+score CN_SUBJECT_788	0.420
+
+header CN_SUBJECT_790	Subject =~ /¿ª¿Î£¡/
+describe CN_SUBJECT_790	Subject contains "¿ª¿Î£¡"
+score CN_SUBJECT_790	0.480
+
+header CN_SUBJECT_791	Subject =~ /·ÂÃû/
+describe CN_SUBJECT_791	Subject contains "·ÂÃû"
+score CN_SUBJECT_791	0.660
+
+header CN_SUBJECT_792	Subject =~ /×¢²áµÇÂ½/
+describe CN_SUBJECT_792	Subject contains "×¢²áµÇÂ½"
+score CN_SUBJECT_792	0.420
+
+header CN_SUBJECT_793	Subject =~ /¸ß¾«/
+describe CN_SUBJECT_793	Subject contains "¸ß¾«"
+score CN_SUBJECT_793	0.540
+
+header CN_SUBJECT_797	Subject =~ /-»·Çò/
+describe CN_SUBJECT_797	Subject contains "-»·Çò"
+score CN_SUBJECT_797	0.420
+
+header CN_SUBJECT_800	Subject =~ /Í¬³Ç/
+describe CN_SUBJECT_800	Subject contains "Í¬³Ç"
+score CN_SUBJECT_800	0.326
+
+header CN_SUBJECT_803	Subject =~ /»Ø¸´£»/
+describe CN_SUBJECT_803	Subject contains "»Ø¸´£»"
+score CN_SUBJECT_803	0.195
+
+header CN_SUBJECT_804	Subject =~ /Ìá¹©·þÎñ/
+describe CN_SUBJECT_804	Subject contains "Ìá¹©·þÎñ"
+score CN_SUBJECT_804	0.068
+
+header CN_SUBJECT_810	Subject =~ /±£ÎÂ/
+describe CN_SUBJECT_810	Subject contains "±£ÎÂ"
+score CN_SUBJECT_810	0.360
+
+header CN_SUBJECT_812	Subject =~ /±íÇé/
+describe CN_SUBJECT_812	Subject contains "±íÇé"
+score CN_SUBJECT_812	0.360
+
+header CN_SUBJECT_813	Subject =~ /¡¢ÓÊ¼þ/
+describe CN_SUBJECT_813	Subject contains "¡¢ÓÊ¼þ"
+score CN_SUBJECT_813	0.420
+
+header CN_SUBJECT_816	Subject =~ /°®Çé¹«Ô¢/
+describe CN_SUBJECT_816	Subject contains "°®Çé¹«Ô¢"
+score CN_SUBJECT_816	0.420
+
+header CN_SUBJECT_819	Subject =~ /SM ÄÐÅ®/
+describe CN_SUBJECT_819	Subject contains "SM ÄÐÅ®"
+score CN_SUBJECT_819	0.420
+
+header CN_SUBJECT_820	Subject =~ /×¿Ô½ÖÐ¹ú/
+describe CN_SUBJECT_820	Subject contains "×¿Ô½ÖÐ¹ú"
+score CN_SUBJECT_820	0.420
+
+header CN_SUBJECT_827	Subject =~ /Éî·á/
+describe CN_SUBJECT_827	Subject contains "Éî·á"
+score CN_SUBJECT_827	0.021
+
+header CN_SUBJECT_831	Subject =~ /ÀûÆ÷/
+describe CN_SUBJECT_831	Subject contains "ÀûÆ÷"
+score CN_SUBJECT_831	0.360
+
+header CN_SUBJECT_834	Subject =~ /¡£´ú/
+describe CN_SUBJECT_834	Subject contains "¡£´ú"
+score CN_SUBJECT_834	0.360
+
+header CN_SUBJECT_840	Subject =~ /ÖÐÇï²»/
+describe CN_SUBJECT_840	Subject contains "ÖÐÇï²»"
+score CN_SUBJECT_840	0.360
+
+header CN_SUBJECT_841	Subject =~ /ÂÛÎÄÕ÷¸å/
+describe CN_SUBJECT_841	Subject contains "ÂÛÎÄÕ÷¸å"
+score CN_SUBJECT_841	0.420
+
+header CN_SUBJECT_843	Subject =~ /Êý¾ÝÖÐÐÄ/
+describe CN_SUBJECT_843	Subject contains "Êý¾ÝÖÐÐÄ"
+score CN_SUBJECT_843	0.360
+
+header CN_SUBJECT_845	Subject =~ /²»ËÍÀñ/
+describe CN_SUBJECT_845	Subject contains "²»ËÍÀñ"
+score CN_SUBJECT_845	0.360
+
+header CN_SUBJECT_846	Subject =~ /Ë÷È¡/
+describe CN_SUBJECT_846	Subject contains "Ë÷È¡"
+score CN_SUBJECT_846	0.300
+
+header CN_SUBJECT_847	Subject =~ /ÉÏº£µçÐÅ/
+describe CN_SUBJECT_847	Subject contains "ÉÏº£µçÐÅ"
+score CN_SUBJECT_847	0.360
+
+header CN_SUBJECT_855	Subject =~ /µí·Û/
+describe CN_SUBJECT_855	Subject contains "µí·Û"
+score CN_SUBJECT_855	0.360
+
+header CN_SUBJECT_856	Subject =~ /µçÐÅÊý¾Ý/
+describe CN_SUBJECT_856	Subject contains "µçÐÅÊý¾Ý"
+score CN_SUBJECT_856	0.360
+
+header CN_SUBJECT_857	Subject =~ /ÖÐ»ªÒ½Ò©/
+describe CN_SUBJECT_857	Subject contains "ÖÐ»ªÒ½Ò©"
+score CN_SUBJECT_857	0.360
+
+header CN_SUBJECT_860	Subject =~ /Íø---/
+describe CN_SUBJECT_860	Subject contains "Íø---"
+score CN_SUBJECT_860	0.360
+
+header CN_SUBJECT_861	Subject =~ /Ò½Ò©»¯¹¤/
+describe CN_SUBJECT_861	Subject contains "Ò½Ò©»¯¹¤"
+score CN_SUBJECT_861	0.360
+
+header CN_SUBJECT_862	Subject =~ /¹«ÎÄ/
+describe CN_SUBJECT_862	Subject contains "¹«ÎÄ"
+score CN_SUBJECT_862	0.360
+
+header CN_SUBJECT_866	Subject =~ /·áÐØ/
+describe CN_SUBJECT_866	Subject contains "·áÐØ"
+score CN_SUBJECT_866	0.360
+
+header CN_SUBJECT_868	Subject =~ /ÄúÒª/
+describe CN_SUBJECT_868	Subject contains "ÄúÒª"
+score CN_SUBJECT_868	0.420
+
+header CN_SUBJECT_870	Subject =~ / - »ª³¿/
+describe CN_SUBJECT_870	Subject contains " - »ª³¿"
+score CN_SUBJECT_870	0.360
+
+header CN_SUBJECT_871	Subject =~ /ìî¶»/
+describe CN_SUBJECT_871	Subject contains "ìî¶»"
+score CN_SUBJECT_871	0.360
+
+header CN_SUBJECT_872	Subject =~ /¿¥½Ý/
+describe CN_SUBJECT_872	Subject contains "¿¥½Ý"
+score CN_SUBJECT_872	0.360
+
+header CN_SUBJECT_873	Subject =~ /°´ 1\.5% /
+describe CN_SUBJECT_873	Subject contains "°´ 1\.5% "
+score CN_SUBJECT_873	0.010
+
+header CN_SUBJECT_882	Subject =~ /¼æÈÝ/
+describe CN_SUBJECT_882	Subject contains "¼æÈÝ"
+score CN_SUBJECT_882	0.360
+
+header CN_SUBJECT_885	Subject =~ /ÀàÂÛÎÄ/
+describe CN_SUBJECT_885	Subject contains "ÀàÂÛÎÄ"
+score CN_SUBJECT_885	0.360
+
+header CN_SUBJECT_886	Subject =~ /²ýÂ¡/
+describe CN_SUBJECT_886	Subject contains "²ýÂ¡"
+score CN_SUBJECT_886	0.042
+
+header CN_SUBJECT_893	Subject =~ /¿ªµê/
+describe CN_SUBJECT_893	Subject contains "¿ªµê"
+score CN_SUBJECT_893	0.300
+
+header CN_SUBJECT_898	Subject =~ /Ë°£¡/
+describe CN_SUBJECT_898	Subject contains "Ë°£¡"
+score CN_SUBJECT_898	0.005
+
+header CN_SUBJECT_900	Subject =~ /ÏËÎ¬/
+describe CN_SUBJECT_900	Subject contains "ÏËÎ¬"
+score CN_SUBJECT_900	0.360
+
+header CN_SUBJECT_904	Subject =~ /ÄúºÃ£¡½Ú/
+describe CN_SUBJECT_904	Subject contains "ÄúºÃ£¡½Ú"
+score CN_SUBJECT_904	0.360
+
+header CN_SUBJECT_905	Subject =~ /ÈË»ú/
+describe CN_SUBJECT_905	Subject contains "ÈË»ú"
+score CN_SUBJECT_905	0.300
+
+header CN_SUBJECT_909	Subject =~ /-±±\/¾©/
+describe CN_SUBJECT_909	Subject contains "-±±\/¾©"
+score CN_SUBJECT_909	0.360
+
+header CN_SUBJECT_911	Subject =~ /Àí²ÆÌá¹©/
+describe CN_SUBJECT_911	Subject contains "Àí²ÆÌá¹©"
+score CN_SUBJECT_911	0.300
+
+header CN_SUBJECT_912	Subject =~ /\[ÉÏº£/
+describe CN_SUBJECT_912	Subject contains "\[ÉÏº£"
+score CN_SUBJECT_912	0.300
+
+header CN_SUBJECT_913	Subject =~ /4£¬5ÔÂ/
+describe CN_SUBJECT_913	Subject contains "4£¬5ÔÂ"
+score CN_SUBJECT_913	0.300
+
+header CN_SUBJECT_914	Subject =~ /±ê×¼ÌåÖØ/
+describe CN_SUBJECT_914	Subject contains "±ê×¼ÌåÖØ"
+score CN_SUBJECT_914	0.300
+
+header CN_SUBJECT_915	Subject =~ /¹¤³§Éè±¸/
+describe CN_SUBJECT_915	Subject contains "¹¤³§Éè±¸"
+score CN_SUBJECT_915	0.300
+
+header CN_SUBJECT_920	Subject =~ /ÖÂ¸ºÔðÈË/
+describe CN_SUBJECT_920	Subject contains "ÖÂ¸ºÔðÈË"
+score CN_SUBJECT_920	0.069
+
+header CN_SUBJECT_921	Subject =~ /¿ÉÒÔ¸Ä±ä/
+describe CN_SUBJECT_921	Subject contains "¿ÉÒÔ¸Ä±ä"
+score CN_SUBJECT_921	0.300
+
+header CN_SUBJECT_924	Subject =~ /Äú¾Í/
+describe CN_SUBJECT_924	Subject contains "Äú¾Í"
+score CN_SUBJECT_924	0.300
+
+header CN_SUBJECT_925	Subject =~ /ºØ¿¨/
+describe CN_SUBJECT_925	Subject contains "ºØ¿¨"
+score CN_SUBJECT_925	0.240
+
+header CN_SUBJECT_930	Subject =~ /½ÌÑ§Æ½Ì¨/
+describe CN_SUBJECT_930	Subject contains "½ÌÑ§Æ½Ì¨"
+score CN_SUBJECT_930	0.300
+
+header CN_SUBJECT_931	Subject =~ /¹óË¾/
+describe CN_SUBJECT_931	Subject contains "¹óË¾"
+score CN_SUBJECT_931	0.329
+
+header CN_SUBJECT_932	Subject =~ /¹ã¸æ£º/
+describe CN_SUBJECT_932	Subject contains "¹ã¸æ£º"
+score CN_SUBJECT_932	0.480
+
+header CN_SUBJECT_934	Subject =~ /Éú²ú¼Æ»®/
+describe CN_SUBJECT_934	Subject contains "Éú²ú¼Æ»®"
+score CN_SUBJECT_934	0.300
+
+header CN_SUBJECT_938	Subject =~ /Æ÷ÈË/
+describe CN_SUBJECT_938	Subject contains "Æ÷ÈË"
+score CN_SUBJECT_938	0.891
+
+header CN_SUBJECT_941	Subject =~ /-¿ª-½²/
+describe CN_SUBJECT_941	Subject contains "-¿ª-½²"
+score CN_SUBJECT_941	0.420
+
+header CN_SUBJECT_945	Subject =~ /ÑµÁ·Óª/
+describe CN_SUBJECT_945	Subject contains "ÑµÁ·Óª"
+score CN_SUBJECT_945	0.367
+
+header CN_SUBJECT_949	Subject =~ /Õ÷¸å£º/
+describe CN_SUBJECT_949	Subject contains "Õ÷¸å£º"
+score CN_SUBJECT_949	0.360
+
+header CN_SUBJECT_950	Subject =~ /¿Æ¼¼Àà/
+describe CN_SUBJECT_950	Subject contains "¿Æ¼¼Àà"
+score CN_SUBJECT_950	0.360
+
+header CN_SUBJECT_954	Subject =~ /¡¢Ò½Ò©/
+describe CN_SUBJECT_954	Subject contains "¡¢Ò½Ò©"
+score CN_SUBJECT_954	0.300
+
+header CN_SUBJECT_957	Subject =~ /\/ÉÏ-º£/
+describe CN_SUBJECT_957	Subject contains "\/ÉÏ-º£"
+score CN_SUBJECT_957	0.420
+
+header CN_SUBJECT_959	Subject =~ /¶ÌÐÅ--/
+describe CN_SUBJECT_959	Subject contains "¶ÌÐÅ--"
+score CN_SUBJECT_959	0.300
+
+header CN_SUBJECT_961	Subject =~ /ÂíÐ¡½ã/
+describe CN_SUBJECT_961	Subject contains "ÂíÐ¡½ã"
+score CN_SUBJECT_961	0.300
+
+header CN_SUBJECT_963	Subject =~ /¶Î£¡/
+describe CN_SUBJECT_963	Subject contains "¶Î£¡"
+score CN_SUBJECT_963	0.300
+
+header CN_SUBJECT_964	Subject =~ /Óë¹Ø»³/
+describe CN_SUBJECT_964	Subject contains "Óë¹Ø»³"
+score CN_SUBJECT_964	0.300
+
+header CN_SUBJECT_965	Subject =~ /ÍØÕ¹Óë/
+describe CN_SUBJECT_965	Subject contains "ÍØÕ¹Óë"
+score CN_SUBJECT_965	0.300
+
+header CN_SUBJECT_966	Subject =~ /´ï¹«Ë¾/
+describe CN_SUBJECT_966	Subject contains "´ï¹«Ë¾"
+score CN_SUBJECT_966	0.001
+
+header CN_SUBJECT_967	Subject =~ /Ô£Ç¿/
+describe CN_SUBJECT_967	Subject contains "Ô£Ç¿"
+score CN_SUBJECT_967	0.185
+
+header CN_SUBJECT_969	Subject =~ /ÐÂÊÖ/
+describe CN_SUBJECT_969	Subject contains "ÐÂÊÖ"
+score CN_SUBJECT_969	0.300
+
+header CN_SUBJECT_970	Subject =~ /--¿Í»§/
+describe CN_SUBJECT_970	Subject contains "--¿Í»§"
+score CN_SUBJECT_970	0.300
+
+header CN_SUBJECT_971	Subject =~ /ÌåÖØ²âÁ¿/
+describe CN_SUBJECT_971	Subject contains "ÌåÖØ²âÁ¿"
+score CN_SUBJECT_971	0.300
+
+header CN_SUBJECT_972	Subject =~ /¿É´ú/
+describe CN_SUBJECT_972	Subject contains "¿É´ú"
+score CN_SUBJECT_972	0.047
+
+header CN_SUBJECT_973	Subject =~ /»ñÈ¡/
+describe CN_SUBJECT_973	Subject contains "»ñÈ¡"
+score CN_SUBJECT_973	0.240
+
+header CN_SUBJECT_974	Subject =~ /ADÔÚÏß/
+describe CN_SUBJECT_974	Subject contains "ADÔÚÏß"
+score CN_SUBJECT_974	0.300
+
+header CN_SUBJECT_975	Subject =~ /¿Í»§ÍØÕ¹/
+describe CN_SUBJECT_975	Subject contains "¿Í»§ÍØÕ¹"
+score CN_SUBJECT_975	0.300
+
+header CN_SUBJECT_977	Subject =~ /ÔÚÏß±ê×¼/
+describe CN_SUBJECT_977	Subject contains "ÔÚÏß±ê×¼"
+score CN_SUBJECT_977	0.300
+
+header CN_SUBJECT_980	Subject =~ /¹Ø»³µÄ/
+describe CN_SUBJECT_980	Subject contains "¹Ø»³µÄ"
+score CN_SUBJECT_980	0.300
+
+header CN_SUBJECT_984	Subject =~ /Éú»î!/
+describe CN_SUBJECT_984	Subject contains "Éú»î!"
+score CN_SUBJECT_984	0.240
+
+header CN_SUBJECT_986	Subject =~ /³É½»/
+describe CN_SUBJECT_986	Subject contains "³É½»"
+score CN_SUBJECT_986	0.300
+
+header CN_SUBJECT_993	Subject =~ /´úÀí¹«Ë¾/
+describe CN_SUBJECT_993	Subject contains "´úÀí¹«Ë¾"
+score CN_SUBJECT_993	0.274
+
+header CN_SUBJECT_996	Subject =~ /ÖÇÍ¨/
+describe CN_SUBJECT_996	Subject contains "ÖÇÍ¨"
+score CN_SUBJECT_996	0.145
+
+header CN_SUBJECT_997	Subject =~ /¸Ä±äÏÖÔÚ/
+describe CN_SUBJECT_997	Subject contains "¸Ä±äÏÖÔÚ"
+score CN_SUBJECT_997	0.300
+
+header CN_SUBJECT_1000	Subject =~ /ÂÛÎÄºÍ/
+describe CN_SUBJECT_1000	Subject contains "ÂÛÎÄºÍ"
+score CN_SUBJECT_1000	0.300
+
+body CN_BODY_2	/ÓÐÏÞ¹«Ë¾/
+describe CN_BODY_2	Body contains "ÓÐÏÞ¹«Ë¾"
+score CN_BODY_2	0.001
+
+body CN_BODY_3	/·¢Æ±/
+describe CN_BODY_3	Body contains "·¢Æ±"
+score CN_BODY_3	0.055
+
+body CN_BODY_4	/¹ã¸æ/
+describe CN_BODY_4	Body contains "¹ã¸æ"
+score CN_BODY_4	0.001
+
+body CN_BODY_5	/ÏúÊÛ/
+describe CN_BODY_5	Body contains "ÏúÊÛ"
+score CN_BODY_5	0.287
+
+body CN_BODY_7	/ÔËÊä/
+describe CN_BODY_7	Body contains "ÔËÊä"
+score CN_BODY_7	0.036
+
+body CN_BODY_8	/ÓÅ»Ý/
+describe CN_BODY_8	Body contains "ÓÅ»Ý"
+score CN_BODY_8	0.001
+
+body CN_BODY_9	/½¨Öþ/
+describe CN_BODY_9	Body contains "½¨Öþ"
+score CN_BODY_9	0.001
+
+body CN_BODY_11	/ÉÌÆ·/
+describe CN_BODY_11	Body contains "ÉÌÆ·"
+score CN_BODY_11	0.383
+
+body CN_BODY_14	/´ú¿ª/
+describe CN_BODY_14	Body contains "´ú¿ª"
+score CN_BODY_14	1.655
+
+body CN_BODY_16	/ÁªÏµÈË/
+describe CN_BODY_16	Body contains "ÁªÏµÈË"
+score CN_BODY_16	0.281
+
+body CN_BODY_21	/ÊµÒµ/
+describe CN_BODY_21	Body contains "ÊµÒµ"
+score CN_BODY_21	0.034
+
+body CN_BODY_26	/¹ó¹«Ë¾/
+describe CN_BODY_26	Body contains "¹ó¹«Ë¾"
+score CN_BODY_26	2.160
+
+body CN_BODY_33	/µØË°/
+describe CN_BODY_33	Body contains "µØË°"
+score CN_BODY_33	0.099
+
+body CN_BODY_34	/½øÏî/
+describe CN_BODY_34	Body contains "½øÏî"
+score CN_BODY_34	0.074
+
+body CN_BODY_36	/¸¶¿î/
+describe CN_BODY_36	Body contains "¸¶¿î"
+score CN_BODY_36	0.832
+
+body CN_BODY_40	/°²×°/
+describe CN_BODY_40	Body contains "°²×°"
+score CN_BODY_40	0.001
+
+body CN_BODY_45	/ÑéÖ¤/
+describe CN_BODY_45	Body contains "ÑéÖ¤"
+score CN_BODY_45	0.001
+
+body CN_BODY_46	/À´µç/
+describe CN_BODY_46	Body contains "À´µç"
+score CN_BODY_46	0.003
+
+body CN_BODY_49	/µãÊý/
+describe CN_BODY_49	Body contains "µãÊý"
+score CN_BODY_49	0.380
+
+body CN_BODY_51	/´óÐ¡/
+describe CN_BODY_51	Body contains "´óÐ¡"
+score CN_BODY_51	0.016
+
+body CN_BODY_52	/º£¹Ø/
+describe CN_BODY_52	Body contains "º£¹Ø"
+score CN_BODY_52	0.189
+
+body CN_BODY_61	/ÐÛºñ/
+describe CN_BODY_61	Body contains "ÐÛºñ"
+score CN_BODY_61	0.005
+
+body CN_BODY_69	/¾­Àí\//
+describe CN_BODY_69	Body contains "¾­Àí\/"
+score CN_BODY_69	0.102
+
+body CN_BODY_77	/ÏêÇé/
+describe CN_BODY_77	Body contains "ÏêÇé"
+score CN_BODY_77	0.480
+
+body CN_BODY_79	/½É¿î/
+describe CN_BODY_79	Body contains "½É¿î"
+score CN_BODY_79	2.513
+
+body CN_BODY_81	/ÎÒË¾/
+describe CN_BODY_81	Body contains "ÎÒË¾"
+score CN_BODY_81	2.400
+
+body CN_BODY_85	/×âÁÞ/
+describe CN_BODY_85	Body contains "×âÁÞ"
+score CN_BODY_85	0.410
+
+body CN_BODY_89	/\(¾­Àí/
+describe CN_BODY_89	Body contains "\(¾­Àí"
+score CN_BODY_89	1.669
+
+body CN_BODY_91	/²éÑ¯/
+describe CN_BODY_91	Body contains "²éÑ¯"
+score CN_BODY_91	0.001
+
+body CN_BODY_96	/³¤ÆÚÓÐÐ§/
+describe CN_BODY_96	Body contains "³¤ÆÚÓÐÐ§"
+score CN_BODY_96	0.005
+
+body CN_BODY_97	/Íê³É²»ÁË/
+describe CN_BODY_97	Body contains "Íê³É²»ÁË"
+score CN_BODY_97	0.004
+
+body CN_BODY_98	/Ë°Îñ/
+describe CN_BODY_98	Body contains "Ë°Îñ"
+score CN_BODY_98	0.001
+
+body CN_BODY_99	/¹óË¾/
+describe CN_BODY_99	Body contains "¹óË¾"
+score CN_BODY_99	2.700
+
+body CN_BODY_103	/ÐÅÏ¢³¤ÆÚ/
+describe CN_BODY_103	Body contains "ÐÅÏ¢³¤ÆÚ"
+score CN_BODY_103	2.420
+
+body CN_BODY_105	/²»ÁËÃ¿ÔÂ/
+describe CN_BODY_105	Body contains "²»ÁËÃ¿ÔÂ"
+score CN_BODY_105	2.441
+
+body CN_BODY_106	/ÕæÎ±/
+describe CN_BODY_106	Body contains "ÕæÎ±"
+score CN_BODY_106	0.013
+
+body CN_BODY_112	/¶î¶È/
+describe CN_BODY_112	Body contains "¶î¶È"
+score CN_BODY_112	0.080
+
+body CN_BODY_116	/´òÈÅ/
+describe CN_BODY_116	Body contains "´òÈÅ"
+score CN_BODY_116	0.059
+
+body CN_BODY_124	/µÖ¿Û/
+describe CN_BODY_124	Body contains "µÖ¿Û"
+score CN_BODY_124	2.121
+
+body CN_BODY_126	/Ã¿ÔÂÓÐ/
+describe CN_BODY_126	Body contains "Ã¿ÔÂÓÐ"
+score CN_BODY_126	0.020
+
+body CN_BODY_129	/ÉîÛÚ/
+describe CN_BODY_129	Body contains "ÉîÛÚ"
+score CN_BODY_129	0.001
+
+body CN_BODY_130	/Óë¹ó/
+describe CN_BODY_130	Body contains "Óë¹ó"
+score CN_BODY_130	0.001
+
+body CN_BODY_134	/¾ø¶ÔÊÇÕæ/
+describe CN_BODY_134	Body contains "¾ø¶ÔÊÇÕæ"
+score CN_BODY_134	0.175
+
+body CN_BODY_135	/ÁªÏµµç»°/
+describe CN_BODY_135	Body contains "ÁªÏµµç»°"
+score CN_BODY_135	0.001
+
+body CN_BODY_137	/Æ±£¡/
+describe CN_BODY_137	Body contains "Æ±£¡"
+score CN_BODY_137	0.209
+
+body CN_BODY_146	/ÆäËü·þÎñ/
+describe CN_BODY_146	Body contains "ÆäËü·þÎñ"
+score CN_BODY_146	2.580
+
+body CN_BODY_151	/ÉÌÌÖ/
+describe CN_BODY_151	Body contains "ÉÌÌÖ"
+score CN_BODY_151	0.018
+
+body CN_BODY_154	/²ÍÒû/
+describe CN_BODY_154	Body contains "²ÍÒû"
+score CN_BODY_154	0.034
+
+body CN_BODY_155	/Çëµç/
+describe CN_BODY_155	Body contains "Çëµç"
+score CN_BODY_155	0.038
+
+body CN_BODY_164	/¹úË°/
+describe CN_BODY_164	Body contains "¹úË°"
+score CN_BODY_164	0.064
+
+body CN_BODY_167	/Æ±¾Ý/
+describe CN_BODY_167	Body contains "Æ±¾Ý"
+score CN_BODY_167	0.027
+
+body CN_BODY_180	/ºÏ×÷£¡/
+describe CN_BODY_180	Body contains "ºÏ×÷£¡"
+score CN_BODY_180	0.905
+
+body CN_BODY_183	/¿ÉÒÔ¸ù¾Ý/
+describe CN_BODY_183	Body contains "¿ÉÒÔ¸ù¾Ý"
+score CN_BODY_183	0.329
+
+body CN_BODY_186	/£©Äú/
+describe CN_BODY_186	Body contains "£©Äú"
+score CN_BODY_186	0.790
+
+body CN_BODY_191	/·þÎñÒµ/
+describe CN_BODY_191	Body contains "·þÎñÒµ"
+score CN_BODY_191	0.036
+
+body CN_BODY_197	/±¾¹«Ë¾/
+describe CN_BODY_197	Body contains "±¾¹«Ë¾"
+score CN_BODY_197	0.313
+
+body CN_BODY_201	/Ë°ÂÊ/
+describe CN_BODY_201	Body contains "Ë°ÂÊ"
+score CN_BODY_201	0.029
+
+body CN_BODY_224	/´«Õæ/
+describe CN_BODY_224	Body contains "´«Õæ"
+score CN_BODY_224	0.105
+
+body CN_BODY_225	/Ë³×£/
+describe CN_BODY_225	Body contains "Ë³×£"
+score CN_BODY_225	1.117
+
+body CN_BODY_228	/×ð¾´µÄ/
+describe CN_BODY_228	Body contains "×ð¾´µÄ"
+score CN_BODY_228	0.202
+
+body CN_BODY_229	/Ç¢ÉÌ/
+describe CN_BODY_229	Body contains "Ç¢ÉÌ"
+score CN_BODY_229	0.396
+
+body CN_BODY_230	/»òµ£ÐÄ/
+describe CN_BODY_230	Body contains "»òµ£ÐÄ"
+score CN_BODY_230	0.039
+
+body CN_BODY_240	/ºÃ£º/
+describe CN_BODY_240	Body contains "ºÃ£º"
+score CN_BODY_240	0.340
+
+body CN_BODY_249	/ÓÐÐ§£¬Èç/
+describe CN_BODY_249	Body contains "ÓÐÐ§£¬Èç"
+score CN_BODY_249	0.077
+
+body CN_BODY_260	/¡¢ÆäËü/
+describe CN_BODY_260	Body contains "¡¢ÆäËü"
+score CN_BODY_260	0.010
+
+body CN_BODY_263	/£¬ÈçÐë/
+describe CN_BODY_263	Body contains "£¬ÈçÐë"
+score CN_BODY_263	0.001
+
+body CN_BODY_265	/ÏÖÍê³É/
+describe CN_BODY_265	Body contains "ÏÖÍê³É"
+score CN_BODY_265	0.020
+
+body CN_BODY_267	/ºÏ×÷Ò»´Î/
+describe CN_BODY_267	Body contains "ºÏ×÷Ò»´Î"
+score CN_BODY_267	0.069
+
+body CN_BODY_269	/µ£ÐÄ£¬¿É/
+describe CN_BODY_269	Body contains "µ£ÐÄ£¬¿É"
+score CN_BODY_269	0.002
+
+body CN_BODY_271	/±Ë´ËºÏ×÷/
+describe CN_BODY_271	Body contains "±Ë´ËºÏ×÷"
+score CN_BODY_271	0.028
+
+body CN_BODY_272	/È«¹ú¸÷µØ/
+describe CN_BODY_272	Body contains "È«¹ú¸÷µØ"
+score CN_BODY_272	0.009
+
+body CN_BODY_274	/½Ï¶àÏÖ/
+describe CN_BODY_274	Body contains "½Ï¶àÏÖ"
+score CN_BODY_274	0.136
+
+body CN_BODY_276	/ ÈË£º/
+describe CN_BODY_276	Body contains " ÈË£º"
+score CN_BODY_276	0.035
+
+body CN_BODY_287	/»òµ½/
+describe CN_BODY_287	Body contains "»òµ½"
+score CN_BODY_287	0.002
+
+body CN_BODY_293	/¶«Ý¸/
+describe CN_BODY_293	Body contains "¶«Ý¸"
+score CN_BODY_293	0.147
+
+body CN_BODY_302	/Ç¢Ì¸/
+describe CN_BODY_302	Body contains "Ç¢Ì¸"
+score CN_BODY_302	0.803
+
+body CN_BODY_308	/»òÎÒ/
+describe CN_BODY_308	Body contains "»òÎÒ"
+score CN_BODY_308	0.005
+
+body CN_BODY_318	/»¥»Ý/
+describe CN_BODY_318	Body contains "»¥»Ý"
+score CN_BODY_318	0.001
+
+body CN_BODY_350	/»¥Àû/
+describe CN_BODY_350	Body contains "»¥Àû"
+score CN_BODY_350	0.003
+
+body CN_BODY_358	/»òºÏ×÷/
+describe CN_BODY_358	Body contains "»òºÏ×÷"
+score CN_BODY_358	0.001
+
+body CN_BODY_359	/»áÓë/
+describe CN_BODY_359	Body contains "»áÓë"
+score CN_BODY_359	0.011
+
+body CN_BODY_368	/£¬±Ø³É/
+describe CN_BODY_368	Body contains "£¬±Ø³É"
+score CN_BODY_368	0.001
+
+body CN_BODY_369	/Ò»´Î£¬±Ø/
+describe CN_BODY_369	Body contains "Ò»´Î£¬±Ø"
+score CN_BODY_369	0.494
+
+body CN_BODY_373	/¶àÄêÒ»Ö±/
+describe CN_BODY_373	Body contains "¶àÄêÒ»Ö±"
+score CN_BODY_373	0.002
+
+body CN_BODY_376	/³ÉÁ¢¶àÄê/
+describe CN_BODY_376	Body contains "³ÉÁ¢¶àÄê"
+score CN_BODY_376	0.123
+
+body CN_BODY_389	/6%×óÓÒ/
+describe CN_BODY_389	Body contains "6%×óÓÒ"
+score CN_BODY_389	0.001
+
+body CN_BODY_390	/Ë¾ºÏ×÷/
+describe CN_BODY_390	Body contains "Ë¾ºÏ×÷"
+score CN_BODY_390	0.353
+
+body CN_BODY_407	/ÐËÂ¡/
+describe CN_BODY_407	Body contains "ÐËÂ¡"
+score CN_BODY_407	1.195
+
+body CN_BODY_431	/¿ªÆ±/
+describe CN_BODY_431	Body contains "¿ªÆ±"
+score CN_BODY_431	0.460
+
+body CN_BODY_456	/¼á³ÖÒÔ¡°/
+describe CN_BODY_456	Body contains "¼á³ÖÒÔ¡°"
+score CN_BODY_456	0.012
+
+body CN_BODY_463	/¡¢·þÎñ/
+describe CN_BODY_463	Body contains "¡¢·þÎñ"
+score CN_BODY_463	0.316
+
+body CN_BODY_476	/¿ÉÉÏÍø/
+describe CN_BODY_476	Body contains "¿ÉÉÏÍø"
+score CN_BODY_476	0.055
+
+body CN_BODY_484	/×óÓÒ£©/
+describe CN_BODY_484	Body contains "×óÓÒ£©"
+score CN_BODY_484	0.001
+
+body CN_BODY_491	/¾­Àí¡¢/
+describe CN_BODY_491	Body contains "¾­Àí¡¢"
+score CN_BODY_491	0.508
+
+body CN_BODY_495	/¹ãÖÝÊÐ/
+describe CN_BODY_495	Body contains "¹ãÖÝÊÐ"
+score CN_BODY_495	0.779
+
+body CN_BODY_504	/¹ãÖÝ¡¢/
+describe CN_BODY_504	Body contains "¹ãÖÝ¡¢"
+score CN_BODY_504	0.044
+
+body CN_BODY_526	/×÷Îª¹«Ë¾/
+describe CN_BODY_526	Body contains "×÷Îª¹«Ë¾"
+score CN_BODY_526	0.036
+
+body CN_BODY_533	/Ë°¡¢/
+describe CN_BODY_533	Body contains "Ë°¡¢"
+score CN_BODY_533	0.207
+
+body CN_BODY_552	/ÕæÕý×öµ½/
+describe CN_BODY_552	Body contains "ÕæÕý×öµ½"
+score CN_BODY_552	0.044
+
+body CN_BODY_574	/×ÉÑ¯¡¢/
+describe CN_BODY_574	Body contains "×ÉÑ¯¡¢"
+score CN_BODY_574	0.105
+
+body CN_BODY_588	/1\.5%×óÓÒ/
+describe CN_BODY_588	Body contains "1\.5%×óÓÒ"
+score CN_BODY_588	2.220
+
+body CN_BODY_589	/¡¢±Ø/
+describe CN_BODY_589	Body contains "¡¢±Ø"
+score CN_BODY_589	1.020
+
+body CN_BODY_602	/Óà¶î/
+describe CN_BODY_602	Body contains "Óà¶î"
+score CN_BODY_602	0.006
+
+body CN_BODY_604	/Ð¡Ê±ÒµÎñ/
+describe CN_BODY_604	Body contains "Ð¡Ê±ÒµÎñ"
+score CN_BODY_604	0.657
+
+body CN_BODY_620	/Ê÷Á¢¹«Ë¾/
+describe CN_BODY_620	Body contains "Ê÷Á¢¹«Ë¾"
+score CN_BODY_620	0.687
+
+body CN_BODY_656	/´úÕ÷/
+describe CN_BODY_656	Body contains "´úÕ÷"
+score CN_BODY_656	0.087
+
+body CN_BODY_657	/\(24Ð¡Ê±/
+describe CN_BODY_657	Body contains "\(24Ð¡Ê±"
+score CN_BODY_657	1.219
+
+body CN_BODY_659	/ÉÌì÷£¡/
+describe CN_BODY_659	Body contains "ÉÌì÷£¡"
+score CN_BODY_659	2.520
+
+body CN_BODY_688	/£¬¾´Çë/
+describe CN_BODY_688	Body contains "£¬¾´Çë"
+score CN_BODY_688	0.120
+
+body CN_BODY_696	/½øÏú´æ/
+describe CN_BODY_696	Body contains "½øÏú´æ"
+score CN_BODY_696	1.740
+
+body CN_BODY_701	/ÆóÒµÖ±½Ó/
+describe CN_BODY_701	Body contains "ÆóÒµÖ±½Ó"
+score CN_BODY_701	0.031
+
+body CN_BODY_702	/Æ±¶î/
+describe CN_BODY_702	Body contains "Æ±¶î"
+score CN_BODY_702	0.208
+
+body CN_BODY_703	/ÎÞ±êÌâ/
+describe CN_BODY_703	Body contains "ÎÞ±êÌâ"
+score CN_BODY_703	1.680
+
+body CN_BODY_707	/¡£»¶Ó­/
+describe CN_BODY_707	Body contains "¡£»¶Ó­"
+score CN_BODY_707	0.060
+
+body CN_BODY_708	/²èµã/
+describe CN_BODY_708	Body contains "²èµã"
+score CN_BODY_708	1.380
+
+body CN_BODY_711	/¹«Ë¾ÏÖÓÐ/
+describe CN_BODY_711	Body contains "¹«Ë¾ÏÖÓÐ"
+score CN_BODY_711	0.050
+
+body CN_BODY_715	/\)ÄúºÃ/
+describe CN_BODY_715	Body contains "\)ÄúºÃ"
+score CN_BODY_715	1.740
+
+body CN_BODY_717	/±êÌâÎÄµµ/
+describe CN_BODY_717	Body contains "±êÌâÎÄµµ"
+score CN_BODY_717	1.680
+
+body CN_BODY_719	/ÖÐÐÄ×÷Îª/
+describe CN_BODY_719	Body contains "ÖÐÐÄ×÷Îª"
+score CN_BODY_719	0.007
+
+body CN_BODY_721	/°¸Àý·ÖÎö/
+describe CN_BODY_721	Body contains "°¸Àý·ÖÎö"
+score CN_BODY_721	0.780
+
+body CN_BODY_728	/£º______/
+describe CN_BODY_728	Body contains "£º______"
+score CN_BODY_728	1.740
+
+body CN_BODY_739	/ÈçÐè/
+describe CN_BODY_739	Body contains "ÈçÐè"
+score CN_BODY_739	0.412
+
+body CN_BODY_740	/ÉÌÌ¸/
+describe CN_BODY_740	Body contains "ÉÌÌ¸"
+score CN_BODY_740	0.166
+
+body CN_BODY_787	/»ÝµÄ/
+describe CN_BODY_787	Body contains "»ÝµÄ"
+score CN_BODY_787	0.001
+
+body CN_BODY_794	/¡¢ÅàÑµ/
+describe CN_BODY_794	Body contains "¡¢ÅàÑµ"
+score CN_BODY_794	0.013
+
+body CN_BODY_795	/ÒÆ¶¯µç»°/
+describe CN_BODY_795	Body contains "ÒÆ¶¯µç»°"
+score CN_BODY_795	0.811
+
+body CN_BODY_806	/µÈÆäËü/
+describe CN_BODY_806	Body contains "µÈÆäËü"
+score CN_BODY_806	0.006
+
+body CN_BODY_808	/ºÏ×÷¡£/
+describe CN_BODY_808	Body contains "ºÏ×÷¡£"
+score CN_BODY_808	0.070
+
+body CN_BODY_810	/¶ÔÍâ´ú/
+describe CN_BODY_810	Body contains "¶ÔÍâ´ú"
+score CN_BODY_810	2.220
+
+body CN_BODY_811	/£ºÀî/
+describe CN_BODY_811	Body contains "£ºÀî"
+score CN_BODY_811	0.060
+
+body CN_BODY_824	/¹«Ë¾±¾×Å/
+describe CN_BODY_824	Body contains "¹«Ë¾±¾×Å"
+score CN_BODY_824	0.561
+
+body CN_BODY_826	/¾´ÇëÔ­ÁÂ/
+describe CN_BODY_826	Body contains "¾´ÇëÔ­ÁÂ"
+score CN_BODY_826	1.405
+
+body CN_BODY_834	/Áª Ïµ/
+describe CN_BODY_834	Body contains "Áª Ïµ"
+score CN_BODY_834	0.335
+
+body CN_BODY_838	/½ø³ö¿Ú/
+describe CN_BODY_838	Body contains "½ø³ö¿Ú"
+score CN_BODY_838	0.005
+
+body CN_BODY_839	/¹«Ë¾ÊµÁ¦/
+describe CN_BODY_839	Body contains "¹«Ë¾ÊµÁ¦"
+score CN_BODY_839	0.013
+
+body CN_BODY_853	/Ëù¿ª/
+describe CN_BODY_853	Body contains "Ëù¿ª"
+score CN_BODY_853	0.016
+
+body CN_BODY_858	/Ö±½Ó¿ª³ö/
+describe CN_BODY_858	Body contains "Ö±½Ó¿ª³ö"
+score CN_BODY_858	1.365
+
+body CN_BODY_864	/µ¥Î»Ãû³Æ/
+describe CN_BODY_864	Body contains "µ¥Î»Ãû³Æ"
+score CN_BODY_864	0.960
+
+body CN_BODY_865	/µÈ°´/
+describe CN_BODY_865	Body contains "µÈ°´"
+score CN_BODY_865	0.003
+
+body CN_BODY_866	/Îª¹ó/
+describe CN_BODY_866	Body contains "Îª¹ó"
+score CN_BODY_866	0.002
+
+body CN_BODY_869	/ÏÖÓÐÈ«¹ú/
+describe CN_BODY_869	Body contains "ÏÖÓÐÈ«¹ú"
+score CN_BODY_869	1.620
+
+body CN_BODY_874	/¿ª»ò/
+describe CN_BODY_874	Body contains "¿ª»ò"
+score CN_BODY_874	0.019
+
+body CN_BODY_879	/£º¡¡/
+describe CN_BODY_879	Body contains "£º¡¡"
+score CN_BODY_879	0.360
+
+body CN_BODY_895	/¼¯ÍÅ¡¢/
+describe CN_BODY_895	Body contains "¼¯ÍÅ¡¢"
+score CN_BODY_895	0.306
+
+body CN_BODY_916	/³ÇÊÐÓÐ/
+describe CN_BODY_916	Body contains "³ÇÊÐÓÐ"
+score CN_BODY_916	0.005
+
+body CN_BODY_928	/¸ø¹ó/
+describe CN_BODY_928	Body contains "¸ø¹ó"
+score CN_BODY_928	0.817
+
+body CN_BODY_931	/×ªÕÊ/
+describe CN_BODY_931	Body contains "×ªÕÊ"
+score CN_BODY_931	0.143
+
+body CN_BODY_946	/ËùÓÐÐÐÒµ/
+describe CN_BODY_946	Body contains "ËùÓÐÐÐÒµ"
+score CN_BODY_946	1.462
+
+body CN_BODY_953	/¹«Ë¾³ÐÅµ/
+describe CN_BODY_953	Body contains "¹«Ë¾³ÐÅµ"
+score CN_BODY_953	0.346
+
+body CN_BODY_972	/×ÉÑ¯£¡/
+describe CN_BODY_972	Body contains "×ÉÑ¯£¡"
+score CN_BODY_972	1.067
+
+body CN_BODY_982	/µçÄÔ°æ/
+describe CN_BODY_982	Body contains "µçÄÔ°æ"
+score CN_BODY_982	0.376
+
+body CN_BODY_992	/\, ÕæÕý/
+describe CN_BODY_992	Body contains "\, ÕæÕý"
+score CN_BODY_992	0.143
+
+body CN_BODY_998	/ÓÃµ½µÄ»°/
+describe CN_BODY_998	Body contains "ÓÃµ½µÄ»°"
+score CN_BODY_998	1.560
+

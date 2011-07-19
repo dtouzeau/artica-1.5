@@ -1,0 +1,441 @@
+<activate_disclaimer>Activation de l'avis de non responsabilit&eacute;</activate_disclaimer>
+<AddressProxyServer>Adresse du Proxy</AddressProxyServer>
+<add_dns_entry>Ajouter une entr&eacute;e DNS</add_dns_entry>
+<add_user_text>Cr&eacute;ez un nouvel utilisateur et une bo&icirc;te aux lettres sur ce serveur.</add_user_text>
+<administrate_this_server>Administrer ce serveur</administrate_this_server>
+<administration_tools>Outils d'administration</administration_tools>
+<affect_to_a_virtual_group>Affecter &agrave; un groupe virtuel</affect_to_a_virtual_group>
+<affect_to_group_explain>Ce formulaire vous aider &agrave; ranger vos serveurs dans des groupes Artica Meta afin de les retrouver plus facilement et de les administrer &agrave; travers un groupe</affect_to_group_explain>
+<AllowArticaMetaAddUsers>Autoriser l'ajout/suppression des utilisateurs localement</AllowArticaMetaAddUsers>
+<AllowArticaMetaAddUsers_explain>Par d&eacute;faut, lorsque le serveur distant est connect&eacute; &agrave; la console globale de management, il n'est pas possible d'ajouter des utilisateurs localement.[br]
+L'activation de cette fonctionnalit&eacute; autorise les administrateurs locaux &agrave; cr&eacute;er des utilisateurs localement.</AllowArticaMetaAddUsers_explain>
+<AllowTrashServers>Peut mettre des serveurs dans la corbeille</AllowTrashServers>
+<AllowViewMailStats>Peut visualiser les statistiques de messagerie</AllowViewMailStats>
+<allow_squid_localhost>Autoriser &agrave; se connecter au proxy depuis l'adresse locale (localhost ou 127.0.0.1)</allow_squid_localhost>
+<all_nics>Toutes les cartes</all_nics>
+<all_servers>Tous les serveurs</all_servers>
+<analyzed_networks>R&eacute;seaux analys&eacute;s</analyzed_networks>
+<APP_FUSE>Syst&egrave;me de fichiers FUSE</APP_FUSE>
+<APP_HAMSTERDB>Base de donn&eacute;es hamsterdb</APP_HAMSTERDB>
+<APP_KASPERSKY_UPDATE_UTILITY>Kaspersky Update Utility</APP_KASPERSKY_UPDATE_UTILITY>
+<APP_KASPERSKY_UPDATE_UTILITY_EXPLAIN>Kaspersky Update Utility est une application con&ccedil;ue pour t&eacute;l&eacute;charger les mises &agrave; jour des produits Kaspersky Lab depuis une source sp&eacute;cifique.[br]
+L'application permet de sauvegarder les mises &agrave; jour sur un r&eacute;pertoire r&eacute;seau assurant ainsi la retraduction locale des mises &agrave; jour sans n&eacute;cessiter l'acc&egrave;s &agrave; Internet.[br]
+Kaspersky Update Utility &eacute;tablit une connexion sur les sources de mise &agrave; jour en fonction des param&egrave;tres sp&eacute;cifi&eacute;s et v&eacute;rifie si des mises &agrave; jour sont n&eacute;cessaires &agrave; r&eacute;cup&eacute;rer.[br]Apr&egrave;s le t&eacute;l&eacute;chargement des modules de mise &agrave; jour, Kaspersky Update Utility s'assure de la conformit&eacute; des mises &agrave; jour.</APP_KASPERSKY_UPDATE_UTILITY_EXPLAIN>
+<APP_KASPERSKY_UPDATE_UTILITY_TEXT>Kaspersky Update Utility est une application con&ccedil;ue pour t&eacute;l&eacute;charger les mises &agrave; jour des produits Kaspersky Lab depuis une source sp&eacute;cifique.</APP_KASPERSKY_UPDATE_UTILITY_TEXT>
+<APP_LESSFS>Syst&egrave;me de fichiers en d&eacute;duplication</APP_LESSFS>
+<APP_NO_VBOXADDITIONS>Les additions invit&eacute; ne sont pas install&eacute;s.</APP_NO_VBOXADDITIONS>
+<APP_OPENLDAP>Serveur LDAP</APP_OPENLDAP>
+<APP_PIWIGO>Piwigo</APP_PIWIGO>
+<APP_PIWIGO_TEXT>Piwigo est un logiciel de galerie photo pour le web, b&acirc;ti par une communaut&eacute; active d'utilisateurs et de d&eacute;veloppeurs</APP_PIWIGO_TEXT>
+<APP_SABNZBDPLUS>SABnzbd Newsreader</APP_SABNZBDPLUS>
+<APP_SABNZBDPLUS_EXPLAIN>Une des qualit&eacute;s de sabnzbd est d' &ecirc;tre multi-servers. Vous pouvez m&ecirc;me configurer les serveurs les uns par rapport aux autres:
+[b]Vous pouvez les faire fonctionner simultan&eacute;ment.[br] Id&eacute;al pour ceux qui veulent &ecirc;tre au maximum de leur bande passante.[br] Vous pouvez les faire fonctionner simultan&eacute;ment. Id&eacute;al pour ceux qui veulent &ecirc;tre au maximum de leur bande passante.[br] Ceux qui poss&egrave;dent une connexion Internet en tr&egrave;s haut d&eacute;bit (Fibre optique du F.A.I Orange ou C&acirc;ble de Num&eacute;ricable) peuvent cumuler deux serveurs usenet ou cumuler les diff&eacute;rentes adresses de son serveur de Newsgroup.[br] Avec Giganews vous pourrez par exemple mettre 25 connexions sur l' adresse Europ&eacute;enne (news-europe.giganews.com) et 25 autres sur l' adresse Am&eacute;ricaine (news.giganews.com)</APP_SABNZBDPLUS_EXPLAIN>
+<APP_SABNZBDPLUS_TEXT>Sabnzbd permet de t&eacute;l&eacute;charger sur les newsgroups depuis votre navigateur internet. C'est une sorte de webnews. Ils g&egrave;rent le nzb, ils r&eacute;parent et d&eacute;compressent automatiquement les fichiers rar. Il est tr&egrave;s l&eacute;ger</APP_SABNZBDPLUS_TEXT>
+<APP_SAMBA_RESTART>Red&eacute;marrer les services Samba</APP_SAMBA_RESTART>
+<APP_SAMBA_RESTART_TEXT>Cliquez ici afin d'arr&ecirc;ter tous les services samba, puis de les re-d&eacute;marrer afin de rafra&icirc;chir tous les param&egrave;tres.</APP_SAMBA_RESTART_TEXT>
+<APP_TOKYOCABINET>Librairies TokyoCabinet</APP_TOKYOCABINET>
+<APP_UFDBGUARD_TAIL>Surveillance du filtre UfdbGuard</APP_UFDBGUARD_TAIL>
+<APP_VBOXADDITIONS>additions invit&eacute; VirtualBox</APP_VBOXADDITIONS>
+<APP_VNSTAT>vnStat</APP_VNSTAT>
+<APP_ZARAFA_LICENSED>Service de licence Zarafa</APP_ZARAFA_LICENSED>
+<APP_ZFS_FUSE>Syst&egrave;me de fichiers ZFS pour FUSE</APP_ZFS_FUSE>
+<are_you_sure_to_restart_umount_mount>&Ecirc;tes-vous certain de d&eacute;monter les r&eacute;pertoires actuels et de les remonter ?[br]Les liens seront un court moment inaccessibles.</are_you_sure_to_restart_umount_mount>
+<ArticaMetaDisableMasterAccount>D&eacute;sactiver la modification du compte ma&icirc;tre</ArticaMetaDisableMasterAccount>
+<ArticaMetaDisableMasterAccount_explain>D&eacute;sactive la possibilit&eacute; de modifier le SuperAdmin et les coordonn&eacute;es de la base LDAP</ArticaMetaDisableMasterAccount_explain>
+<ArticaMetaDisableSetupCenter>D&eacute;sactiver le Centre d'installation</ArticaMetaDisableSetupCenter>
+<ArticaMetaDisableSetupCenter_explain>Interdit toute op&eacute;ration sur le centre d'installation sur le serveur distant</ArticaMetaDisableSetupCenter_explain>
+<artica_meta_hard_drive_become_full>serveurs qui exc&egrave;dent plus de 80% de leur capacit&eacute; de stockage.</artica_meta_hard_drive_become_full>
+<artica_meta_hard_drive_ok>Aucun serveur ne d&eacute;passe la limite de leur capacit&eacute;</artica_meta_hard_drive_ok>
+<artica_meta_openports>Liste tous les ports ouverts et &agrave; l'&eacute;coute sur vos serveurs dans votre r&eacute;seau. Cela peut vous aider &agrave; surveiller et s&eacute;curiser vos serveurs par le r&eacute;f&eacute;rencement des ports ouverts.</artica_meta_openports>
+<artica_meta_ping_enable>Si activ&eacute;, les serveurs distants vont demander (&agrave; peu pr&egrave;s toutes les 2 minutes) si il y a des t&acirc;ches programm&eacute;es.[br]Ils ne vont pas envoyer leur &eacute;tats mais juste faire une requ&ecirc;te afin de savoir si des op&eacute;rations ne sont pas &agrave; effectuer</artica_meta_ping_enable>
+<ARTICA_META_SERVER_NOT_REPORT_ITS_STATUS>Ce serveur n'&eacute;met pas son &eacute;tat.[br]Peut &ecirc;tre que le serveur n'est pas en fonctionnement ou que la version d'Artica n'est pas compatible avec cette fonctionnalit&eacute;.</ARTICA_META_SERVER_NOT_REPORT_ITS_STATUS>
+<artica_meta_system_update>Mise &agrave; jour syst&egrave;me</artica_meta_system_update>
+<artica_meta_system_update_text>serveurs qui peuvent &ecirc;tre mis &agrave; jour &agrave; travers la mise &agrave; jour officielle de la distribution Linux</artica_meta_system_update_text>
+<artica_meta_waiting_operations_text>Le serveur central est en attente du rapport d'ex&eacute;cution des t&acirc;ches programm&eacute;es de ce serveur.</artica_meta_waiting_operations_text>
+<ascendent>Tri ascendant</ascendent>
+<AsFetchMailAdministrator>Peut administrer des r&egrave;gles de rapatriement de messages</AsFetchMailAdministrator>
+<AsUrisViewer>Peut visualiser les liens dans les statistiques proxy</AsUrisViewer>
+<AsVirtualBoxManager>Peut administrer des machines virtuelles</AsVirtualBoxManager>
+<AsVPNAdministrator>Peut administrer des r&eacute;seaux VPN</AsVPNAdministrator>
+<AsWebAdministrator>Peut administrer des sites web</AsWebAdministrator>
+<authenticate_users_no_binaries>Artica est dans l'incapacit&eacute; de trouver le binaire [b]squid_ldap_auth[/b], si ce message s'affiche, veuillez contacter le support Technique de Artica technology.</authenticate_users_no_binaries>
+<authenticate_users_ntlm_failed_explain>Pour l'instant, votre Proxy ne r&eacute;pond pas aux pr&eacute;-requis afin d'offrir l'authentification NTLM (Domaine Microsoft).[br]Vous devez disposer au moins de Samba avec Winbind et de Squid compil&eacute; avec la directive NTLM.[br]
+Allez dans le centre d'installation, mettez &agrave; jour Samba.[br]Une fois cette op&eacute;ration effectu&eacute;e, mettez &agrave; jour Squid.</authenticate_users_ntlm_failed_explain>
+<automatic_swap_cleaning>Nettoyage automatique du cache</automatic_swap_cleaning>
+<automatic_swap_cleaning_explain>Le nettoyage automatique du cache permet de force le syst&egrave;me &agrave; vider son fichier de m&eacute;moire pagin&eacute;e lorsqu'il atteint une limite en pourcentage ou en MB.[br]
+Des applications et des t&acirc;ches syst&egrave;mes utilise le fichier de pagination or celui-ci n'est jamais vid&eacute;.[br]Ceci peut forcer le syst&egrave;me &agrave; utiliser de plus en plus le disque dur comme m&eacute;moire syst&egrave;me et fait baisser les performances en augmentant les I/O.[br]
+Cette option v&eacute;rifie la sant&eacute; du &quot;Swap&quot; toutes les 30Mn et le nettoie en fonction des limites sp&eacute;cifi&eacute;es.[br][strong]0 dans la valeur de Taille maximale veut dire que seul le pourcentage est pris en compte.[br]Si vous utilisez une valeur en MB, le robot d&eacute;finira la limite par rapport &agrave; la taille utilis&eacute;e en MB au lieu du pourcentage d'utilisation.[/strong]</automatic_swap_cleaning_explain>
+<BACKGROUND_DELETE>Suppression en t&acirc;che de fond</BACKGROUND_DELETE>
+<Bare_newline_test>Tests des lignes &quot;nues&quot;</Bare_newline_test>
+<broadcast_has_ipaddr>Le broadcast est limit&eacute; &agrave; l'adresse IP</broadcast_has_ipaddr>
+<bucketsize_database>Taille du tri de comptage de la base</bucketsize_database>
+<build_awstats_statistics>Lancer maintenant la compilation des statistiques</build_awstats_statistics>
+<categorize_this_query>Cat&eacute;goriser cette requ&ecirc;te</categorize_this_query>
+<CLIENTS_SCRIPTS>Scripts clients</CLIENTS_SCRIPTS>
+<CLIENTS_SCRIPTS_OPENVPN_EXPLAIN>Dans cette section, vous pouvez t&eacute;l&eacute;charger les fichiers de configuration qui seront utilis&eacute;s par les clients VPN sous Windows, Smartphones, Linux...</CLIENTS_SCRIPTS_OPENVPN_EXPLAIN>
+<client_connection_count_limit>Limite des connexions clientes</client_connection_count_limit>
+<client_connection_count_limit_text>Combien de connexions simultan&eacute;es sont autoris&eacute;es. [br]
+Par d&eacute;faut, la limite est fix&eacute;e &agrave; la moiti&eacute; de la valeur qui limite le nombre de processus. [br]
+[b] Pour d&eacute;sactiver cette fonction, sp&eacute;cifiez une limite &agrave; 0. [/b]</client_connection_count_limit_text>
+<client_request_buffer_max_size>Taille MAX du buffer lors d'une requ&ecirc;te</client_request_buffer_max_size>
+<client_request_buffer_max_size_text>Sp&eacute;cifie la taille maximale du buffer pour une requ&ecirc;te.[br]
+Ceci pr&eacute;vient le proxy de prendre trop de m&eacute;moire lorsque qu'un utilisateur &quot;pousse&quot; (upload)  un fichier volumineux</client_request_buffer_max_size_text>
+<Command_pipelining_test>Test des commandes SMTP</Command_pipelining_test>
+<company_privileges>Droits sur la soci&eacute;t&eacute;</company_privileges>
+<connection_date>Date de connexion</connection_date>
+<database_path>Chemin vers la base de donn&eacute;es</database_path>
+<default_delivery_slot_cost>Rythme d'ordonnancement</default_delivery_slot_cost>
+<default_delivery_slot_cost_text>Rythme o&ugrave; l'ordonnanceur du gestionnaire des files d'attente de Postfix est autoris&eacute; &agrave; donner la priorit&eacute; &agrave; un message sur un autre.
+
+Chaque transport maintient un &quot;compteur de slot de livraison valide&quot; pour chaque message. Un message peut prendre la priorit&eacute; &agrave; un autre lorsqu'il peut &ecirc;tre livr&eacute; sans utiliser plus de slot (c'est &agrave; dire des invocations d'agents de livraison) que le compteur de message courant a accumul&eacute; (ou va accumuler - voir plus loin). Ce param&egrave;tre contr&ocirc;le &agrave; quel rythme ce compteur est incr&eacute;ment&eacute; - ceci arrive chaque fois que default_delivery_slot_cost destinataires ont &eacute;t&eacute; livr&eacute;s.
+
+Le co&ucirc;t 0 est utilis&eacute; pour d&eacute;sactiver le droit de pr&eacute;emption. La valeur minimale que l'algorythme de l'ordonnanceur peut utiliser est 2 - utilisez-la si vous voules maximiser la rapidit&eacute; de transfert des messages. Bien qu'il n'y ai pas de maximum, les valeurs &eacute;lev&eacute;es telles 50 n'ont aucun sens.
+
+La seule raison pour laquelle 2 n'est pas la valeur par d&eacute;faut est qu'il affecte le livraison des listes de diffusion. Dans le pire des cas, leur temps de livraison peut prendre entre (co&ucirc;t 1/co&ucirc;t) et (co&ucirc;t/co&ucirc;t-1) plus de temps que si le droit de pr&eacute;emption est d&eacute;sactiv&eacute;. La valeur par d&eacute;faut 5 est un compromis raisonnable &eacute;vitant que les livraisons des listes de diffusions ne soient ralenties de 20 &agrave; 25% dans le pire des cas.</default_delivery_slot_cost_text>
+<default_delivery_slot_discount>moment d'une pr&eacute;emption de message</default_delivery_slot_discount>
+<default_delivery_slot_discount_text>param&egrave;tre:default_delivery_slot_discount[br]Ce param&egrave;tre d&eacute;termine le moment o&ugrave; une pr&eacute;emption de message peut avoir lieu. Au lieu d'attendre que le compteur ait atteint la valeur d&eacute;sir&eacute;e, la pr&eacute;emption peut arriver lorsque transport_delivery_slot_discount% de la valeur requise plus transport_delivery_slot_loan restent &agrave; accumuler. Notez que la valeur totale doit &ecirc;tre atteinte avant qu'une autre pr&eacute;emption puisse avoir lieu ult&eacute;rieurement.</default_delivery_slot_discount_text>
+<default_delivery_slot_loan>Pr&ecirc;t de slot de livraison</default_delivery_slot_loan>
+<default_delivery_slot_loan_text>param&egrave;tre:default_delivery_slot_loan[br]
+Ce param&egrave;tre d&eacute;termine le moment o&ugrave; une pr&eacute;emption de message peut avoir lieu. Au lieu d'attendre que le compteur ait atteint la valeur d&eacute;sir&eacute;e, la pr&eacute;emption peut arriver lorsque transport_delivery_slot_discount% de la valeur requise plus transport_delivery_slot_loan restent &agrave; accumuler. Notez que la valeur totale doit &ecirc;tre atteinte avant qu'une autre pr&eacute;emption puisse avoir lieu ult&eacute;rieurement.</default_delivery_slot_loan_text>
+<default_destination_concurrency_failed_cohort_limit>Limite concurrente d'ensemble de processus en &eacute;chec</default_destination_concurrency_failed_cohort_limit>
+<default_destination_rate_delay>R&eacute;tention d'acheminement</default_destination_rate_delay>
+<default_destination_rate_delay_text>Le temps de retardement qui est ins&eacute;r&eacute; entre les livraisons individuelles vers la m&ecirc;me destination; [br] &agrave; la limite des destinataires par destination &gt; 1, une destination est un domaine, sinon elle est un destinataire [br] Afin de permettre le d&eacute;lai, sp&eacute;cifier une valeur non nulle de temps (une valeur enti&egrave;re, plus &eacute;ventuellement un suffixe &agrave; une lettre qui indique l'unit&eacute; de temps) [br] Les unit&eacute;s de temps:. s (secondes), m (minutes), h (heures), d (jours), w (semaines). L'unit&eacute; de temps par d&eacute;faut est s (secondes).</default_destination_rate_delay_text>
+<default_extra_recipient_limit>Limite Extra du nombre de destinataire</default_extra_recipient_limit>
+<default_extra_recipient_limit_text>Valeur par d&eacute;faut de la limite extra de chaque transport impos&eacute;e au nombre de destinataires en m&eacute;moire. Cet espace destinataire extra est r&eacute;serv&eacute; pour le cas ou l'ordonnanceur du gestionnaire des files d'attente de Postfix donne la priorit&eacute; &agrave; un message sur un autre et soudainement requiert d'autres slot destinataires pour ce message pour &eacute;viter une d&eacute;gradation des performances.</default_extra_recipient_limit_text>
+<delete_this_user_dn>Supprimer la branche LDAP</delete_this_user_dn>
+<delete_this_user_dn_text>Supprimer simplement cet utilisateur dans la base LDAP sans supprimer les autres informations.</delete_this_user_dn_text>
+<descendent>tri descendant</descendent>
+<destination_concurrency_failed_cohort_limit_text>Combien de pseudo-cohortes doivent souffrir d'&eacute;checs de connexions avant qu'un destination sp&eacute;cifique ne soit consid&eacute;r&eacute; comme indisponible (et que la transmission des autres messages soit suspendue). [br] Sp&eacute;cifiez z&eacute;ro pour d&eacute;sactiver cette fonctionnalit&eacute;. [br] le comptage d'une destination est r&eacute;initialis&eacute; &agrave; chaque fois qu'une livraison est mise en succ&egrave;s pour la destination. [br] Un pseudo-cohorte est le nombre de livraisons &eacute;gal &agrave; la concurrence de livraison d'une destination</destination_concurrency_failed_cohort_limit_text>
+<destination_limit>Limite de dest.</destination_limit>
+<dhcp>dhcp</dhcp>
+<DisableArticaMetaAgentInformations>Cacher les informations de connexions &agrave; Artica Meta</DisableArticaMetaAgentInformations>
+<DisableArticaMetaAgentInformations_explain>Supprime de l'affichage toutes les informations concernant la connexion &agrave; la console globale de management.</DisableArticaMetaAgentInformations_explain>
+<DisableEtcHosts>Interdire Artica de modifier le fichier d'h&ocirc;tes</DisableEtcHosts>
+<DisableExplorer>D&eacute;sactiver l'explorateur</DisableExplorer>
+<DisableExplorer_explain>Active l'interdiction de parcourir les r&eacute;pertoires du syst&egrave;me de fichiers &agrave; travers l'explorateur Artica.</DisableExplorer_explain>
+<DisableNetworksManagement>D&eacute;sactiver la gestion de l'interface r&eacute;seau</DisableNetworksManagement>
+<DisableNetworksManagement_text>Ceci interdit aux administrateurs locaux de modifier certains param&egrave;tres r&eacute;seaux &agrave; travers l'interface locale. (incluant aussi les interfaces r&eacute;seau virtuelles).</DisableNetworksManagement_text>
+<DisableRebootOrShutDown>D&eacute;sactiver l'arr&ecirc;t ou red&eacute;marrage</DisableRebootOrShutDown>
+<DisableRebootOrShutDown_explain>Ceci interdit les commandes d'arr&ecirc;t ou de red&eacute;marrage du syst&egrave;me &agrave; travers l'interface locale d'administration.</DisableRebootOrShutDown_explain>
+<disable_winbindd>D&eacute;sactiver le d&eacute;mon Winbindd</disable_winbindd>
+<disconnected_from_the_console>Fermeture de session.</disconnected_from_the_console>
+<discover_computers>D&eacute;couverte d'ordinateurs</discover_computers>
+<dnsbl>DNSBL</dnsbl>
+<domain_throttle>Limitation de domaine</domain_throttle>
+<domain_throttle_domain_explain>Cette section vous permet de faire correspondre les moteurs SMTP avec des domaines de destination sp&eacute;cifiques.[br]
+Ajoutez votre domaine comme &quot;yahoo.com&quot; et s&eacute;lectionnez dans la liste le moteur de transmission SMTP</domain_throttle_domain_explain>
+<domain_throttle_explain>Des serveurs sur Internet demandent que les messages soient envoy&eacute;s &agrave; une certaine fr&eacute;quence ou bien vous avez besoin d'acc&eacute;l&eacute;rer la transmission des messages en fonction de domaines sp&eacute;cifiques.[br]Cette section vous aide &agrave; effectuer ce besoin.[br]
+D'abord vous cr&eacute;ez un moteur de transmission avec des param&egrave;tres sp&eacute;cifiques et en second, vous affectez les domaines de messagerie &agrave; ce ou ces moteurs.</domain_throttle_explain>
+<domain_throttle_explain_edit>Ici, vous pouvez personnaliser les param&egrave;tres du moteur d'&eacute;mission de messages afin de r&eacute;duire ou d'augmenter ses processus.[br]Utilisez les aides &agrave; c&ocirc;t&eacute; des champs afin de comprendre la fonctionnalit&eacute;</domain_throttle_explain_edit>
+<domain_throttle_text>La &quot;Limitation de domaine&quot; vous autorise &agrave; r&eacute;duire le moteur d'&eacute;mission SMTP en fonction de domaines de destination particuliers</domain_throttle_text>
+<dos_filemode>Droits en &eacute;criture autorise les ACLs</dos_filemode>
+<dos_filemode_text>D&eacute;sactiv&eacute; par d&eacute;faut.[br]
+Le comportement de Samba est de fournir une comportement Unix lorsque seulement le propri&eacute;taire d'un fichier/r&eacute;pertoire est autoris&eacute; &agrave; modifier les permissions.[br]
+Toutefois, ce comportement est souvent source de confusion sur les syst&egrave;mes Windows.[br]
+L'activation de ce param&egrave;tre permet &agrave; un utilisateur qui a acc&egrave;s en &eacute;criture au fichier (par n'importe quel moyen)
+de modifier les autorisations (y compris les ACL). [br]
+Notez qu'un utilisateur appartenant au groupe propri&eacute;taire du fichier ne sera pas autoris&eacute; &agrave; modifier les autorisations si le groupe est seulement autoris&eacute; qu'&agrave; la lecture. [br] le propri&eacute;taire du fichier / r&eacute;pertoire peut &eacute;galement &ecirc;tre chang&eacute;.</dos_filemode_text>
+<EmergingThreats>Nouvelles menaces</EmergingThreats>
+<EmergingThreats_text>Emerging Threats est un point de collecte d'un certain nombre de projets de s&eacute;curit&eacute;, principalement li&eacute;s &agrave; la d&eacute;tection d'intrusion et analyse de trafic r&eacute;seau.
+Ceci vous permet de cr&eacute;er automatiquement des r&egrave;gles de pare-feux sur une base de signature r&eacute;guli&egrave;rement t&eacute;l&eacute;charg&eacute;e.</EmergingThreats_text>
+<EnablePrintersSharing>Activer le partage d'imprimantes</EnablePrintersSharing>
+<enable_EmergingThreats>Activer les mises &agrave; jour &quot;Emerging Threats&quot;</enable_EmergingThreats>
+<enable_graphs>Activer les graphiques</enable_graphs>
+<ENABLE_KUPDUTILITY>Activer le service Kaspersky Update Utility</ENABLE_KUPDUTILITY>
+<ENABLE_KUPDUTILITY_TEXT>Si vous activez cette fonctionnalit&eacute;, Update Utility v&eacute;rifiera automatiquement chaque heure s'il y a des mises &agrave; jour</ENABLE_KUPDUTILITY_TEXT>
+<ENABLE_POSTSCREEN>Activer le service PostScreen</ENABLE_POSTSCREEN>
+<enable_replication>Activer la r&eacute;plication</enable_replication>
+<enable_sabnzbdplus>Activer le service SAbnzBdPlus</enable_sabnzbdplus>
+<enable_spamasssin_milter>Activer Spamassassin en Milter Edition</enable_spamasssin_milter>
+<ENABLE_TRANSACTIONS>Activer les transactions</ENABLE_TRANSACTIONS>
+<ERROR_APP_NMAP_NOT_INSTALLED>Impossible d'effectuer l'op&eacute;ration, NMAP security scanner n'est pas install&eacute;</ERROR_APP_NMAP_NOT_INSTALLED>
+<ERROR_NO_NETWORK_SPECIFIED>Il n'y a pas de r&eacute;seau ajout&eacute; dans la configuration du serveur, l'op&eacute;ration en peut &ecirc;tre ex&eacute;cut&eacute;e</ERROR_NO_NETWORK_SPECIFIED>
+<fetchmail_remote_port_explain>Si le serveur n'&eacute;coute pas sur un port standard, indiquez ici le num&eacute;ro du port, laissez 0 si le port est standard</fetchmail_remote_port_explain>
+<fileservers>Serveurs de fichiers</fileservers>
+<file_deduplication>Syst&egrave;me de d&eacute;duplication</file_deduplication>
+<file_deduplication_explain>la d&eacute;duplication (&eacute;galement appel&eacute;e factorisation ou stockage d'instance unique) est une technique de sauvegarde de donn&eacute;es, consistant &agrave; factoriser des s&eacute;quences de donn&eacute;es identiques afin d'&eacute;conomiser l'espace utilis&eacute;.[br]
+Chaque fichier est d&eacute;coup&eacute; en une multitude de tron&ccedil;ons.[br] &Agrave; chacun de ces tron&ccedil;ons est associ&eacute; un identifiant unique, ces identifiants &eacute;tant stock&eacute;s dans un index. L'objectif de la d&eacute;duplication est de ne stocker qu'une seule fois un m&ecirc;me tron&ccedil;on.[br]
+L'avantage le plus important est la r&eacute;duction d'espace occup&eacute; par les sauvegardes : selon le cabinet Gartner, cette technologie permet de diviser par 20 voire par 30 les besoins en espace de stockage.
+[br]Un avantage indirect, cons&eacute;quence du pr&eacute;c&eacute;dent, est la diminution de la bande passante n&eacute;cessaire &agrave; la sauvegarde dans le cas de la d&eacute;duplication &agrave; la source.
+[i]Extrait du Wikip&eacute;dia[/i]</file_deduplication_explain>
+<file_deduplication_text>Le syst&egrave;me de &quot;d&eacute;duplication&quot; est une technique permettant de r&eacute;duire &quot;au vol&quot; de fa&ccedil;on consid&eacute;rable l'utilisation de l'espace disque (environ 30 &agrave; 90% de compression)</file_deduplication_text>
+<file_servers>Serveurs de fichiers</file_servers>
+<find_user_in_db_explain>Trouver un utilisateur dans la base de donn&eacute;es du serveur</find_user_in_db_explain>
+<freewebs_explain>Cette section vous permet de cr&eacute;er des espaces Web appel&eacute;s FreeWebs.[br]
+FreeWebs cr&eacute;&eacute; un espace de stockage Web pour les utilisateurs comprenant une base Mysql, l'ex&eacute;cution de PHP et des statistiques de connexions avec awstats.
+L'espace de stockage est disponible via FTP et offre &agrave; l'utilisateur d'y d&eacute;poser des scripts PHP ou pages HTML.</freewebs_explain>
+<freeze_replication>Geler la r&eacute;plication</freeze_replication>
+<groupwaresww_explain>Cette section vous permet d'installer des groupwares.[br]Lorsque vous ajoutez un groupware, vous ajoutez une application permettant par exemple de g&eacute;n&eacute;rer un site web, d'acc&eacute;der &agrave; la messagerie par le web.[br]Toutefois, cette fonctionnalit&eacute; n'autorisera pas l'acc&egrave;s &agrave; la base de donn&eacute;es Mysql ni un acc&egrave;s par FTP au r&eacute;pertoire de travail.[br]L'application est automatiquement install&eacute;e par le serveur distant.[br]Vous avez simplement &agrave; vous assurer des entr&eacute;es DNS et de jouer avec l'application.</groupwaresww_explain>
+<groupwares_choose_available>Choisissez l'application groupware que vous voulez installer sur le serveur.Il est possible que toutes les applications ne soient pas disponibles. En effet, cela d&eacute;pend si le serveur accepte leur utilisations ou leurs compatibilit&eacute;s</groupwares_choose_available>
+<group_privileges>Droits sur le groupe</group_privileges>
+<GROUP_PRIV_MEMBERS_EXPLAIN>Indiquez ici les membres associ&eacute;s au droits du groupe.[br]Chaque membre ajout&eacute; dans cette section se verra attribu&eacute; les privil&egrave;ges d&eacute;finis pour ce groupe.</GROUP_PRIV_MEMBERS_EXPLAIN>
+<hide_no_mac>Enlever les adresses MAC inconnues</hide_no_mac>
+<hide_unknown_os>Retirer les syst&egrave;mes inconnus</hide_unknown_os>
+<home_products>Produits pour la Maison</home_products>
+<host_port>Port du h&ocirc;te</host_port>
+<ignore_expect_100>Pr&eacute;vention des erreurs 417</ignore_expect_100>
+<ignore_expect_100_text>Cette option permet au proxy d'ignorer les ent&ecirc;tes &quot;Expect: 100-continue&quot; envoy&eacute;es par les serveurs Web.[br]En effet, La RFC 2616 demande au Proxy de satisfaire ces ent&ecirc;tes par un retour d'erreur 417.[br]L'activation de cette option permet alors de forcer le proxy &agrave; continuer...</ignore_expect_100_text>
+<index_sort_order>Tri de la page d'index</index_sort_order>
+<initial_destination_concurrency>nombre initial de livraisons parall&egrave;les</initial_destination_concurrency>
+<initial_destination_concurrency_text>Le nombre initial de livraisons parall&egrave;les vers la m&ecirc;me destination. Cette limite s'applique aux livraisons via les agents de livraison smtp, pipe et virtual.[br]
+Attention : avec une valeur fix&eacute;e &agrave; 1, un seul message incorrect peut suffire &agrave; bloquer le courrier de tout un site.</initial_destination_concurrency_text>
+<INSTALL_VBOX_TOOLS>Installez les additions invit&eacute;</INSTALL_VBOX_TOOLS>
+<INSTALL_VBOX_TOOLS_TEXT>Obtenez de meilleures performances sur votre serveur en installant les additions invit&eacute;</INSTALL_VBOX_TOOLS_TEXT>
+<instant_messengers>Messageries instantan&eacute;es</instant_messengers>
+<INTERNAL_NETWROK_ADD_EXPLAIN>Dans ce formulaire, vous devez indiquer une entr&eacute;e au format CDIR.[br]
+Une notation CDIR est forme compress&eacute;e d'une adresse Internet associ&eacute;e &agrave; son pr&eacute;fixe de routage.[br]
+Par exemple, l'adresse 192.168.100.0/24 repr&eacute;sente adresse IPV4 192.168.100.0 et son masque associ&eacute; de 255.255.255.0.[br]
+Un autre exemple 192.168.0.0/22 repr&eacute;sente les 1024 adresses IP de la 192.168.0.0 &agrave; la 192.168.3.255.</INTERNAL_NETWROK_ADD_EXPLAIN>
+<in_trash>Dans la corbeille</in_trash>
+<ipaddr>Adresse IP</ipaddr>
+<IS_A_VIRTUALBOX_VIRTUAL_MACHINE>Est une machine virtuelle VirtualBox</IS_A_VIRTUALBOX_VIRTUAL_MACHINE>
+<kaspersky_products>Produits Kaspersky</kaspersky_products>
+<LESSFS_BACKGROUND_DELETE>Si activ&eacute;, LessFS va pr&eacute;charger un processus d&eacute;di&eacute; lorsqu'un fichier est tronqu&eacute; ou supprim&eacute;.[br]M&ecirc;me si le processus de suppression en temps r&eacute;el prend beaucoup de temps. il sera ressenti comme tr&egrave;s rapide pour l'utilisateur.[br]
+Si d&eacute;sactiv&eacute;, les fichiers volumineux tronqu&eacute;s ou supprim&eacute;s vont consommer des ressources.[br]</LESSFS_BACKGROUND_DELETE>
+<LESSFS_BLKSIZE>Taille des blocs</LESSFS_BLKSIZE>
+<lessfs_cachesize>La taille du cache en MB qui est conserv&eacute; en m&eacute;moire &agrave; des fin d'optimisations</lessfs_cachesize>
+<LESSFS_COMMIT_INTERVAL>Dur&eacute;e maximale en secondes que les entr&eacute;es sont stock&eacute;es en m&eacute;moire, au d&eacute;lai imparti le cache est &eacute;crit sur le disque.</LESSFS_COMMIT_INTERVAL>
+<LESSFS_COMMIT_INTERVAL_FIELD>Dur&eacute;e MAX du cache</LESSFS_COMMIT_INTERVAL_FIELD>
+<LESSFS_DYNAMIC_DEFRAGMENTATION>Autoriser la d&eacute;fragmentation automatique de la base de donn&eacute;es</LESSFS_DYNAMIC_DEFRAGMENTATION>
+<LESSFS_ENABLE_TRANSACTIONS>Active ou d&eacute;sactive les transactions.[br]Sans les transactions activ&eacute;es, vous aurez besoin de lancer un fsck apr&egrave;s un crash syst&egrave;me.[br]L'inconv&eacute;nient de permettre des transactions est un impact suppl&eacute;mentaire (mais l&eacute;ger) sur les performances.</LESSFS_ENABLE_TRANSACTIONS>
+<lessfs_freeze_replication>Lorsqu'il est d&eacute;sactiv&eacute; toutes les donn&eacute;es stock&eacute;es sur le ma&icirc;tre sont directement envoy&eacute;es &agrave; l'esclave. [br]
+Lorsqu'il est activ&eacute; le ma&icirc;tre &eacute;crira les donn&eacute;es stock&eacute;es dans un fichier replog ainsi que dans les bases CTI. [br]
+Le fichier replog sera utilis&eacute; pour transf&eacute;rer les donn&eacute;es vers l'esclave lorsque la r&eacute;plication est activ&eacute;e.</lessfs_freeze_replication>
+<lessfs_master>Ma&icirc;tre</lessfs_master>
+<LESSFS_MAX_THREADS>Net pas mettre un nombre sup&eacute;rieur au nombre de processeurs que le serveur dispose.[br]
+LessFS va utilise X CPU(s) pour la compression afin de compresser X blocs de donn&eacute;es en parall&egrave;le.[br]
+Les performances s'en ressentiront lorsque ce nombre est plus &eacute;lev&eacute; que le nombre de c%u0153urs  processeurs disponibles.</LESSFS_MAX_THREADS>
+<lessfs_mount_explain>Cette section vous aide &agrave; cr&eacute;er des r&eacute;pertoires qui vont &ecirc;tre mont&eacute;s en tant que stockage de d&eacute;duplication.[br]
+S&eacute;lectionnez un r&eacute;pertoire vide ou cr&eacute;ez-en un &agrave; l'aide du bouton &quot;parcourir...&quot;</lessfs_mount_explain>
+<link_user_to_a_group>Lier &agrave; un groupe</link_user_to_a_group>
+<link_user_to_a_group_text>Lier cet utilisateur &agrave; un groupe utilisateur</link_user_to_a_group_text>
+<logfile>Fichier de log</logfile>
+<LogFormat>Format de log</LogFormat>
+<logged_into_the_console>Ouverture de session</logged_into_the_console>
+<loggoff>Fermeture de session</loggoff>
+<LogSeparator>S&eacute;parateur d'&eacute;v&egrave;nement</LogSeparator>
+<LogType>Type de log</LogType>
+<LogTypeF>Fichier de log FTP</LogTypeF>
+<LogTypeM>Fichier de log mail</LogTypeM>
+<LogTypeW>Fichier de log Web</LogTypeW>
+<maintenance_tasks>T&acirc;ches de maintenance</maintenance_tasks>
+<managed_servers>Serveurs administr&eacute;s</managed_servers>
+<MANAGE_YOUR_MAILBOX_SERVER>Administrer votre serveur de bo&icirc;tes aux lettres Zarafa</MANAGE_YOUR_MAILBOX_SERVER>
+<member_of_folowing_groups>Membre des groupes suivants</member_of_folowing_groups>
+<MEMORY_BALLON_ASK_MB>Donnez la m&eacute;moire de ballon en MB</MEMORY_BALLON_ASK_MB>
+<MEMORY_SIZE_ASK>Donnez la m&eacute;moire en MB</MEMORY_SIZE_ASK>
+<messages_pluri>message(s)</messages_pluri>
+<META_NMAP_SCAN_SCHEDULED>L'op&eacute;ration de d&eacute;couverte r&eacute;seaux &agrave; &eacute;t&eacute; programm&eacute;e, le serveur distant va ex&eacute;cuter cette t&acirc;che le plus rapidement possible d&egrave;s qu'il en a la connaissance.</META_NMAP_SCAN_SCHEDULED>
+<minute>Minute</minute>
+<modify_network_card_parameters>Modifier les param&egrave;tres de la carte</modify_network_card_parameters>
+<mount_has_deduplication_folder>Monter ce r&eacute;pertoire en tant que syst&egrave;me de d&eacute;duplication</mount_has_deduplication_folder>
+<MOVE_SERVER_TO_PROD>Replacer ce serveur dans l'espace de production ?</MOVE_SERVER_TO_PROD>
+<MOVE_SERVER_TO_TRASH_ASK>D&eacute;placer ce serveur dans la corbeille ?</MOVE_SERVER_TO_TRASH_ASK>
+<nat_configuration>Configuration NAT</nat_configuration>
+<network_stats>Stats. R&eacute;seaux</network_stats>
+<NO_DATA_COME_BACK_LATER>Aucune donn&eacute;e n'est actuellement enregistr&eacute;e. Les statistiques ne peuvent pas &ecirc;tre g&eacute;n&eacute;r&eacute;s.[br]
+Veuillez revenir un peu plus tard.</NO_DATA_COME_BACK_LATER>
+<only_active_cards>Seulement les cartes actives</only_active_cards>
+<OPENVPN_CONN_STATUS_EXPLAIN>C'est la liste des clients VPN connect&eacute;s. Elle affiche les informations telle que l'utilisation de la bande passante et les heures de connexion...</OPENVPN_CONN_STATUS_EXPLAIN>
+<open_ports>Ports ouverts</open_ports>
+<pagefusion>Page fusion</pagefusion>
+<panel>Panneau</panel>
+<PANEL_RIGHT_ADMINISTRATE_FOLOWING_SERVERS>Administrez les serveurs suivants dans votre organisation...</PANEL_RIGHT_ADMINISTRATE_FOLOWING_SERVERS>
+<password2>Re-tapez le mot de passe</password2>
+<pause_the_queue>Geler la file d'attente</pause_the_queue>
+<pause_the_queue_explain>Dans cette section, vous pouvez geler le processus de transmission des messages.[br]
+Si vous passez le rond en rouge, le serveur va continuer &agrave; recevoir les messages mais il vont rester stock&eacute;s sur le disque dur au lieu d'&ecirc;tre transmis.</pause_the_queue_explain>
+<pause_the_queue_text>G&egrave;le le processus de transmission mais autorise toujours la r&eacute;ception des messages</pause_the_queue_text>
+<perimeter_defense>D&eacute;fense p&eacute;rim&egrave;trique</perimeter_defense>
+<PingEnable>Activer le &quot;ping&quot;</PingEnable>
+<PortProxyServer>Port du serveur proxy</PortProxyServer>
+<postfix_parameters>Param&egrave;tres Postfix</postfix_parameters>
+<PostScreen>PostScreen</PostScreen>
+<postscreen_bare_newline_action>Action sur une nouvelle ligne nue</postscreen_bare_newline_action>
+<postscreen_bare_newline_action_text>Op&eacute;ration effectu&eacute;e lorsque un &eacute;metteur envoie un caract&egrave;re de nouvelle ligne nue PostScreen. C'est &agrave; dire un saut de ligne qui n'est pas pr&eacute;c&eacute;d&eacute; d'un retour chariot.</postscreen_bare_newline_action_text>
+<postscreen_bare_newline_enable>V&eacute;rification d'une nouvelle ligne &quot;nue&quot;</postscreen_bare_newline_enable>
+<postscreen_bare_newline_enable_text>Active les tests sur les nouvelles lignes &quot;nues&quot;.[br]Ces testes sont assez co&ucirc;teux sur le flux.[br]En effet l'&eacute;metteur si il a pass&eacute; les tests avec succ&egrave;s doit se d&eacute;connecter et se reconnecter afin de discuter avec l'instance SMTP de production.[br]En contre partie, c'est tr&egrave;s efficace contre les spams.</postscreen_bare_newline_enable_text>
+<postscreen_bare_newline_ttl>Nouvelle ligne nue (Temps de vie).</postscreen_bare_newline_ttl>
+<postscreen_bare_newline_ttl_text>La r&eacute;tention d'un r&eacute;sultat succ&egrave;s pour le &quot;saut de ligne nue&quot;. [br]
+L'adresse IP &eacute;mettrice est alors exclu des prochains tests[br]
+La valeur par d&eacute;faut est longue, car un &eacute;metteur doit se d&eacute;connecter apr&egrave;s avoir satisfait &agrave; l'&eacute;preuve, avant de pouvoir parler au vrai serveur SMTP de Postfix.
+Sp&eacute;cifiez une valeur non nulle de temps (une valeur enti&egrave;re, plus &eacute;ventuellement un suffixe &agrave; une lettre qui indique l'unit&eacute; de temps). Les unit&eacute;s de temps: s (secondes), m (minutes), h (heures), d (jours), w (semaines)</postscreen_bare_newline_ttl_text>
+<POSTSCREEN_BARRE_NEWLINE_EXPLAIN>SMTP est un protocole orient&eacute; &quot;ligne&quot;: les lignes ont une longueur limit&eacute;e, et sont termin&eacute;es par un retour chariot CR   LF. Les lignes se terminant par un &quot;nu&quot; LF, (un retour &agrave; la ligne mais qui n'est pas pr&eacute;c&eacute;d&eacute;e par un retour chariot), ne sont pas autoris&eacute;s par le protocol SMTP</POSTSCREEN_BARRE_NEWLINE_EXPLAIN>
+<postscreen_cache_cleanup_interval>Intervalle de nettoyage du cache</postscreen_cache_cleanup_interval>
+<postscreen_cache_cleanup_interval_text>La quantit&eacute; de temps entre les nettoyages du cache de PostScreen. [br] Le nettoyage augmente la charge sur la base de donn&eacute;es et ne devrait donc pas &ecirc;tre ex&eacute;cut&eacute; fr&eacute;quemment.</postscreen_cache_cleanup_interval_text>
+<postscreen_cache_retention_time>Temps de r&eacute;tention du cache</postscreen_cache_retention_time>
+<postscreen_cache_retention_time_text>La quantit&eacute; de temps que PostScreen va mettre en cache une entr&eacute;e en liste blanche temporaire qui va &ecirc;tre expir&eacute;e avant qu'elle ne soit retir&eacute;e. [br] Cela emp&ecirc;che les clients d'&ecirc;tre logg&eacute; en tant que &quot;Nouveau&quot; simplement parce que leur entr&eacute;e dans le cache a expir&eacute;e il ya une heure.</postscreen_cache_retention_time_text>
+<postscreen_dnsbl_action>Action sur les d&eacute;tections DNSBL</postscreen_dnsbl_action>
+<postscreen_dnsbl_action_text>Op&eacute;ration &agrave; effectuer lorsque le score DNSBL d'un &eacute;metteur SMTP est &eacute;gale ou sup&eacute;rieure &agrave; un seuil d&eacute;finit</postscreen_dnsbl_action_text>
+<postscreen_dnsbl_sites>Liste DNS des serveurs en liste blanche et listes noires ainsi que leur pond&eacute;ration</postscreen_dnsbl_sites>
+<postscreen_dnsbl_threshold>Seuil DNSBL</postscreen_dnsbl_threshold>
+<postscreen_dnsbl_threshold_text>La limite inf&eacute;rieure inclusive pour bloquer un &eacute;mtteur , en fonction de son score combin&eacute; avec les listes DNSBL</postscreen_dnsbl_threshold_text>
+<postscreen_dnsbl_ttl>Temps de vie DNSBL</postscreen_dnsbl_ttl>
+<postscreen_dnsbl_ttl>&lt;seuil&gt; seuil</postscreen_dnsbl_ttl>
+<postscreen_dnsbl_ttl_text>La quantit&eacute; de temps que PostScreen utilisera lorsque qu'un serveur n'est pas dans les listes noires DNS. [br]
+Pendant ce temps, l'adresse IP de l'&eacute;metteur est exclu de ce test. [br]
+La valeur par d&eacute;faut est relativement courte, car un serveur &eacute;metteur peut imm&eacute;diatement parler &agrave; un vrai serveur SMTP afin d'&eacute;mettre ses messages.</postscreen_dnsbl_ttl_text>
+<postscreen_forbidden_commands>commandes interdites</postscreen_forbidden_commands>
+<postscreen_forbidden_commands_text>Liste des commandes interdites et en violation avec le protocole SMTP</postscreen_forbidden_commands_text>
+<POSTSCREEN_MINI_TEXT>PostScreen bloque les connexions provenant des zombies et autres SpamBots</POSTSCREEN_MINI_TEXT>
+<postscreen_non_smtp_command_action>Action sur les commandes Non SMTP</postscreen_non_smtp_command_action>
+<postscreen_non_smtp_command_action_text>L'action prise par PostScreen lorsqu'un &eacute;metteur &eacute;met des commandes non prises en charge par le protocole SMTP et sp&eacute;cifi&eacute;es</postscreen_non_smtp_command_action_text>
+<postscreen_non_smtp_command_enable>Activer le test des commandes non SMTP</postscreen_non_smtp_command_enable>
+<postscreen_non_smtp_command_explain>Certains SpamBots &eacute;mettent leur messages &agrave; travers des Proxys. Par ce fait, des commandes comme CONNECT sont envoy&eacute;es alors qu'elle n'appartiennent pas au protocole SMTP</postscreen_non_smtp_command_explain>
+<postscreen_non_smtp_command_title>Commandes non SMTP</postscreen_non_smtp_command_title>
+<postscreen_non_smtp_command_ttl>Temps de vie</postscreen_non_smtp_command_ttl>
+<postscreen_non_smtp_command_ttl_text>La quantit&eacute; de temps que PostScreen utilisera lorsque le r&eacute;sultat est un succ&egrave;s  lors du test de protocole SMTP sur les commandes Non SMTP. [br] Pendant ce temps, l'adresse IP de l'&eacute;metteur est exclu de ce test. [br] La valeur par d&eacute;faut est longue car un &eacute;metteur correct doit se d&eacute;connecter puis se reconnecter afin d'&eacute;mettre ses messages.</postscreen_non_smtp_command_ttl_text>
+<postscreen_pipelining_action>Action sur les r&eacute;sultats</postscreen_pipelining_action>
+<postscreen_pipelining_action_text>Action prise lors un &eacute;metteur &eacute;met de multiples commandes SMTP en m&ecirc;me temps au lieu d'attendre la r&eacute;ponse du serveur.</postscreen_pipelining_action_text>
+<postscreen_pipelining_enable>Activer la v&eacute;rification des commandes multiples</postscreen_pipelining_enable>
+<postscreen_pipelining_enable_text>Activer les tests &quot;pipeline&quot; de protocole SMTP sur le service PostScreen. Ces tests sont co&ucirc;teux: un &eacute;metteur doit se d&eacute;connecter apr&egrave;s avoir satisfait les tests, avant de pouvoir continuer &agrave; &eacute;mettre ses messages.</postscreen_pipelining_enable_text>
+<postscreen_pipelining_explain>Par d&eacute;faut, SMTP est un protocole mi-duplex: l'exp&eacute;diteur et le r&eacute;cepteur envoient une commande et une r&eacute;ponse l'un apr&egrave;s l'autre [br].
+Contrairement au serveur SMTP traditionnel, PostScreen n'annonce pas le support ESMTP. [br]
+Par cons&eacute;quent, les exp&eacute;diteurs ne sont pas autoris&eacute;s &agrave; envoyer de multiples commandes en m&ecirc;me temps.</postscreen_pipelining_explain>
+<postscreen_pipelining_ttl>Temps de vie</postscreen_pipelining_ttl>
+<postscreen_pipelining_ttl_text>La quantit&eacute; de temps que PostScreen utilisera lorsque le r&eacute;sultat est un succ&egrave;s du &quot;pipelining&quot; lors du test de protocole SMTP. [br] Pendant ce temps, l'adresse IP de l'&eacute;metteur est exclu de ce test. [br] La valeur par d&eacute;faut est longue car un &eacute;metteur correct doit se d&eacute;connecter puis se reconnecter afin d'&eacute;mettre ses messages.</postscreen_pipelining_ttl_text>
+<postscreen_post_queue_limit>Limite apr&egrave;s-Queue</postscreen_post_queue_limit>
+<postscreen_post_queue_limit_text>Le nombre d'&eacute;metteurs qui peuvent attendre afin d'&eacute;mettre leur messages vers le vrai processus d'&eacute;coute SMTP.[br]Lorsque cette file d'attente est combl&eacute;e, les &eacute;metteurs re&ccedil;oivent une erreur 421</postscreen_post_queue_limit_text>
+<postscreen_pre_queue_limit>Limite Avant-queue</postscreen_pre_queue_limit>
+<postscreen_pre_queue_limit_text>Le nombre des &eacute;metteurs (non mis en liste blanche) qui doivent attendre une d&eacute;cision avant de pouvoir se connecter sur le processus d'&eacute;coute SMTP..[br]Lorsque cette file d'attente est combl&eacute;e, les &eacute;metteurs re&ccedil;oivent une erreur 421</postscreen_pre_queue_limit_text>
+<POSTSCREEN_TEXT>PostScreen bloque les connexions provenant des zombies et autres SpamBots qui sont responsables de 90% des spams re&ccedil;us.[br]Il est impl&eacute;ment&eacute; comme un processus unique afin de proposer une d&eacute;fense la plus l&eacute;g&egrave;re possible.</POSTSCREEN_TEXT>
+<prefix_size>Taille du pr&eacute;fixe</prefix_size>
+<process>Processus</process>
+<processes_number>Nombres de processus</processes_number>
+<proxiesandFirewall>Serveurs Proxy et Pare-Feu</proxiesandFirewall>
+<proxy_address>Adresse du serveur proxy</proxy_address>
+<proxy_servers>Serveurs Proxy</proxy_servers>
+<quick_links>Liens rapides</quick_links>
+<rate_delay>R&eacute;tention</rate_delay>
+<rebuild_all_scripts>reconstruire tous les scripts</rebuild_all_scripts>
+<rebuild_parameters>Reconstruire les param&egrave;tres</rebuild_parameters>
+<receive>R&eacute;ception</receive>
+<remote_port>port distant</remote_port>
+<remote_privileges>Droits distants</remote_privileges>
+<remote_privileges_explain>Cette section vous permet de verrouiller ou d&eacute;verrouiller les fonctions sur la console de gestion utilis&eacute;s par les administrateurs locaux.</remote_privileges_explain>
+<remove_from_trash>Supprimer de la corbeille</remove_from_trash>
+<replication>R&eacute;plication</replication>
+<REPLICATION_ROLE>R&ocirc;le de la r&eacute;plication</REPLICATION_ROLE>
+<reply_header_max_size>Taille MAX des ent&ecirc;tes de r&eacute;ponse.</reply_header_max_size>
+<report_type>Type de rapport</report_type>
+<restart_lessfs_service>Red&eacute;marrer lessFS</restart_lessfs_service>
+<restart_lessfs_service_text>D&eacute;monte tous les montages en d&eacute;duplication et les remonte en une seule op&eacute;ration</restart_lessfs_service_text>
+<restart_network>Red&eacute;marrer les r&eacute;seaux</restart_network>
+<restart_network_text>Red&eacute;marrer les services r&eacute;seaux de ce serveur.</restart_network_text>
+<restart_virtual_machine>Red&eacute;marrer la machine virtuelle</restart_virtual_machine>
+<routing_domains>Domaines &agrave; router</routing_domains>
+<sarg_auth_failures>&Eacute;checs d'authentification</sarg_auth_failures>
+<sarg_date_format>Format des dates dans les rapports</sarg_date_format>
+<sarg_date_time>Poids utilis&eacute;s par jour et par heure</sarg_date_time>
+<sarg_denied>Sites interdits avec liens complets</sarg_denied>
+<sarg_downloads>T&eacute;l&eacute;chargements par utilisateur</sarg_downloads>
+<sarg_everybody>Utiliser tout le monde</sarg_everybody>
+<sarg_ignore>L'enregistrement est ignor&eacute;</sarg_ignore>
+<sarg_ip>Utiliser l'adresse IP &agrave; la place</sarg_ip>
+<sarg_lastlog>Combien de rapports doivent &ecirc;tre conserv&eacute;s</sarg_lastlog>
+<sarg_long_url>liens complets affich&eacute;s</sarg_long_url>
+<sarg_overwrite_report>Op&eacute;rations sur les enregistrements sans id utilisateur</sarg_overwrite_report>
+<sarg_records_without_userid>Enregistrements sans id utilisateur (pas d'authentification)</sarg_records_without_userid>
+<sarg_reports>Rapports SARG</sarg_reports>
+<sarg_resolve_ip>Convertir les IP en nom d'h&ocirc;tes</sarg_resolve_ip>
+<sarg_sites_users>Utilisateurs et rapport de sites</sarg_sites_users>
+<sarg_site_user_time_date>Sites, dates, heures, poids</sarg_site_user_time_date>
+<sarg_title>Titre du rapport</sarg_title>
+<sarg_topsites>Site, connexions et rapport de poids</sarg_topsites>
+<sarg_topsites_num>nombre du Top des sites web</sarg_topsites_num>
+<sarg_topusers>Utilisateurs, sites, temps, poids, connexions</sarg_topusers>
+<sarg_topuser_exp>0 = Sans limite</sarg_topuser_exp>
+<sarg_topuser_num>Combien d'utilisateurs dans le top des sites web</sarg_topuser_num>
+<sarg_users_sites>Sites utilisateurs</sarg_users_sites>
+<sarg_user_ip>Utilise l'adresse IP &agrave; la place des id utilisateurs dans les rapports</sarg_user_ip>
+<security_packages>Paquets de s&eacute;curit&eacute;</security_packages>
+<selected_accents>s&eacute;lectionn&eacute;(s)</selected_accents>
+<serial_number>Num&eacute;ro de s&eacute;rie</serial_number>
+<servers_list>Liste des serveurs</servers_list>
+<server_informations>Informations serveur</server_informations>
+<server_settings>Param&egrave;tres serveur</server_settings>
+<setup_center>Centre d'installations</setup_center>
+<SiteDomain>nom de Domaine principal</SiteDomain>
+<slave_ip>Adresse IP de l'esclave</slave_ip>
+<slave_port>Port d'&eacute;coute de l'esclave</slave_port>
+<smtp_daemon_name>Nom du moteur SMTP</smtp_daemon_name>
+<smtp_senders>Emetteurs SMTP</smtp_senders>
+<SourceCustom>Source sp&eacute;cifi&eacute;e</SourceCustom>
+<SourceCustomPath>Adresse de la source</SourceCustomPath>
+<SourceKlabServer>Utiliser les serveurs de Kaspersky Lab</SourceKlabServer>
+<squid_instant_messengers_explain>Par d&eacute;faut, le proxy n'accepte pas de transmettre les messagerie instantan&eacute;es comme AOL, IRC, Yahoo, Google Talk ou bien MSN.[br]
+Activez-les dans les champs ci-dessous.</squid_instant_messengers_explain>
+<squid_instant_messengers_text>Activez la prise en charge des messagerie instantan&eacute;es par le proxy.</squid_instant_messengers_text>
+<static>statique</static>
+<storage_size>Taille de stockage</storage_size>
+<SUGAR_WARNING_FINISH_INSTALL>Attention! Pour reconstruire la configuration ou finir correctement l'installation, vous devez cliquer sur le lien ci-dessous (a ne faire qu'une seule fois) m&ecirc;me si ce message est toujours visible</SUGAR_WARNING_FINISH_INSTALL>
+<SuperAdmin>Super-administrateur</SuperAdmin>
+<SuperAdminChangeExplain>Ce formulaire vous permet de changer le compte du Super-Utilisateur du serveur distant.[br]
+Indiquez les param&egrave;tres...[br]Une fois soumis, la console d'administration va attendre le retour du serveur afin de lui indiquer l'op&eacute;ration de modification &agrave; effectuer.[br]Veuillez donc attendre quelques minutes (environ 15 Minutes).</SuperAdminChangeExplain>
+<synchronize_organizations_text>Demandez &agrave; ce serveur d'&eacute;mettre ses organisations afin de r&eacute;initialiser les donn&eacute;es du serveur central avec celles h&eacute;berg&eacute;es par le serveur distant.</synchronize_organizations_text>
+<system_operations>Op&eacute;rations syst&egrave;mes</system_operations>
+<TAB_EVENTS_BACKUP>Sauvegardes</TAB_EVENTS_BACKUP>
+<TAB_EVENTS_CLOUD>Artica Meta</TAB_EVENTS_CLOUD>
+<TAB_EVENTS_KASPERSKY_UPDATES>Kaspersky</TAB_EVENTS_KASPERSKY_UPDATES>
+<TAB_EVENTS_LOGS_CLEANING>Nettoyage</TAB_EVENTS_LOGS_CLEANING>
+<TAB_EVENTS_MAILBOX>Bo&icirc;tes aux lettres</TAB_EVENTS_MAILBOX>
+<TAB_EVENTS_POSTFIX>Postfix</TAB_EVENTS_POSTFIX>
+<TAB_EVENTS_PROXY>Proxy</TAB_EVENTS_PROXY>
+<TAB_EVENTS_SMTP>SMTP</TAB_EVENTS_SMTP>
+<TAB_EVENTS_SYSTEM>Syst&egrave;me</TAB_EVENTS_SYSTEM>
+<TAB_EVENTS_UPDATE>Mises &agrave; jour</TAB_EVENTS_UPDATE>
+<TAB_EVENTS_VPN>VPN</TAB_EVENTS_VPN>
+<TempFolder>Dossier temporaire</TempFolder>
+<THIS_USER_DOES_NOT_EXISTS>Cet utilisateur n'existe pas</THIS_USER_DOES_NOT_EXISTS>
+<threshold>seuil</threshold>
+<topcpu_explain>Lorsque le serveur &eacute;met son rapport &agrave; la console de supervision, il ajoute le top 10  des processus qui consomment de la puissance CPU. [br]
+Vous pouvez visualiser ici les processus rapport&eacute;s par les serveurs distants.[br]
+Tr&egrave;s utile lorsqu'il s'agit de v&eacute;rifier si un processus prend trop de CPU.[br]
+Il est &agrave; noter que le serveur distant &eacute;met un &eacute;tat ponctuel des t&acirc;ches syst&egrave;mes. Il faut v&eacute;rifier que le processus reste longtemps en m&eacute;moire avant de s'y attacher.</topcpu_explain>
+<topmem_explain>Lorsque le serveur &eacute;met son rapport &agrave; la console de supervision, il ajoute le top 10  des processus qui consomment de la m&eacute;moire. [br]
+Vous pouvez visualiser ici les processus rapport&eacute;s par les serveurs distants.[br]
+Tr&egrave;s utile lorsqu'il s'agit de v&eacute;rifier si un processus prend trop de m&eacute;moire syst&egrave;me.[br]
+VSZ comprend la m&eacute;moire virtuelle comme le ficher de pagination quand &agrave; RSS s'attache &agrave; la m&eacute;moire physique utilis&eacute; par le processus.
+Il est &agrave; noter que le serveur distant &eacute;met un &eacute;tat ponctuel des t&acirc;ches syst&egrave;mes. Il faut v&eacute;rifier que le processus reste suffisamment longtemps en m&eacute;moire avant de s'y attacher.</topmem_explain>
+<topsites_num>Combien de sites dans le top des sites web</topsites_num>
+<topsites_sort_order>Tri du rapport top des sites web</topsites_sort_order>
+<topsites_sort_order_BYTES>Tri par poids</topsites_sort_order_BYTES>
+<topsites_sort_order_CONNECT>Tri par connexion</topsites_sort_order_CONNECT>
+<top_processes>TOP des Processus</top_processes>
+<trash>corbeille</trash>
+<UpdatesFolder>Dossier de mise &agrave; jour</UpdatesFolder>
+<update_packages>Paquets applicatifs</update_packages>
+<update_serial_number>Mettre &agrave; jour le num&eacute;ro de s&eacute;rie</update_serial_number>
+<UseAuthenticationProxyServer>Utiliser l'authentification Proxy</UseAuthenticationProxyServer>
+<UsePassiveFtpMode>Utiliser le mode FTP PASSIF</UsePassiveFtpMode>
+<UseProxyServer>Utiliser un serveur Proxy</UseProxyServer>
+<users_and_computers>Utilisateurs &amp; ordinateurs</users_and_computers>
+<users_databases>Bases de donn&eacute;es utilisateurs</users_databases>
+<UserWatch>UserWatch</UserWatch>
+<vbox_nat_configuration_explain>Cette section vous permet de cr&eacute;er des r&egrave;gles de NAT entre le virtualisateur et la machine virtuelle.[br]Utile lorsque vous souhaitez contacter la machine virtuelle &agrave; travers l'adresse IP du virtualisateur.</vbox_nat_configuration_explain>
+<vbox_need_reboot_text>Vous devez red&eacute;marrer la machine virtuelle afin d'appliquer les param&egrave;tres en mode production.</vbox_need_reboot_text>
+<vbox_port>Port de la machine virtuelle</vbox_port>
+<view_html>Afficher HTML</view_html>
+<view_source>Voir la source</view_source>
+<virtualizers>Virtualisateurs</virtualizers>
+<virtual_machine_port>Port de la machine virtuelle</virtual_machine_port>
+<vpn_servers>Serveurs VPN</vpn_servers>
+<waiting_operations>T&acirc;che(s) en attente</waiting_operations>
+<wakeup_computer>R&eacute;veil par le r&eacute;seau</wakeup_computer>
+<wakeup_computer_text>D&eacute;marrer cet ordinateur en utilisant un message r&eacute;seau sp&eacute;cifique nomm&eacute; &quot;magic packet&quot;</wakeup_computer_text>
+<WARN_QUEUE_FREEZE>Attention, la file d'attente est gel&eacute;e</WARN_QUEUE_FREEZE>
+<webservers>serveurs web</webservers>
+<website>Site web</website>
+<websites_categorized>Sites web cat&eacute;goris&eacute;s</websites_categorized>
+<web_console_access>Acc&egrave;s &agrave; la console Web</web_console_access>
+<working_directory>R&eacute;pertoire de travail</working_directory>
+<workstations>Stations de travail</workstations>
+<WrongMXPlugin>WrongMx d&eacute;termine si un serveur de messagerie utilise un champs MX de faible poids au lieu du poids appropri&eacute;.</WrongMXPlugin>
+<www_chat>Sites web fournissant la messagerie instantan&eacute;e, les dialogues en direct.</www_chat>
+<your_network>Votre r&eacute;seau</your_network>
+<ZARAFA_ABOUT>Aujourd'hui, le courrier &eacute;lectronique est devenu l'une des applications cruciales de l'entreprise.[br] Zarafa allie l'ergonomie d'Outlook &agrave; la stabilit&eacute; et la flexibilit&eacute; d'un serveur Linux.[br] Non seulement Outlook est pris en charge nativement, mais l'utilisateur final peut &eacute;galement recourir au logiciel Web 2.0 WebAcces, offrant l'apparence et la convivialit&eacute; d'Outlook, sur tout appareil mobile compatible ActiveSync ou Blackberry via BES (Blackberry Enterprise Server)</ZARAFA_ABOUT>
+<zarafa_license>Licence Zarafa</zarafa_license>
+<ZARAFA_LICENSE_USE_FREE>Vous utilisez en ce moment la version gratuite du serveur Zarafa</ZARAFA_LICENSE_USE_FREE>
+<ZARAFA_SERVERS>Bo&icirc;tes aux lettres (Zarafa)</ZARAFA_SERVERS>
+<zarafa_servers2>Serveurs Zarafa</zarafa_servers2>
+<ZARAFA_UPDATE_SERIAL_EXPLAIN>Indiquez ici le num&eacute;ro de s&eacute;rie g&eacute;n&eacute;r&eacute; sur le portail de Zarafa (https://portal.zarafa.com)</ZARAFA_UPDATE_SERIAL_EXPLAIN>

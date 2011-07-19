@@ -1,0 +1,2 @@
+<audit_text_1>This page provide a synthesis of all keys allowing various Domains
+It allows you, in partnership with the postfix documentation, to check if the correspondences tables are exact</audit_text_1>

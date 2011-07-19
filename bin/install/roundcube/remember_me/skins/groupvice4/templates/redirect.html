@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title><roundcube:object name="pagetitle" /></title>
+<roundcube:include file="/includes/links.html" />
+<meta 
+http-equiv="refresh" 
+content="10;URL=./">
+
+<script type="text/javascript">
+  setTimeout('document.location.href="./";',10000);
+</script>
+</head>
+<body>
+<div id="taskbar"></div>
+<img src="/images/roundcube_logo.png" border="0" alt="<roundcube:object name='productname' />" hspace="10" />
+
+<roundcube:object name="message" id="message" />
+<script type="text/javascript">
+if(parent.roundcube_wrapper){
+  setTimeout("parent.close();",8000);
+}
+else{
+  setTimeout("self.close();",8000);
+}
+</script>
+</body>
+</html>

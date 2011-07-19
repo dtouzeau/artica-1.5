@@ -1,0 +1,168 @@
+<!doctype linuxdoc system>
+
+<!--
+mailspy: mail logger
+$Id: mailspy.sgml,v 1.7 2006/05/16 12:52:15 andrewm Exp $
+-->
+
+
+<article>
+
+<!-- All about this document -->
+<title>mailspy mail logger</title>
+<author>Andrew McGill, <tt>andrew at ledge dot co.za</tt></author>
+<date>$Revision: 1.7 $ $Date: 2006/05/16 12:52:15 $</date>
+<abstract>
+	mailspy is a sendmail milter program (mail filter).
+	For each mail that is filtered, the the sender,
+	recipient, subject line and attachment names are logged.
+	Complete mail headers can be logged.
+</abstract>
+<!-- Table of contents -->
+<toc>
+<!--    -->
+
+<sect>Introduction
+<p>
+	mailspy is a sendmail milter program (mail filter).
+	For each mail that is filtered, the the sender,
+	recipient, subject line and attachment names are logged.
+	<p>
+	mail headers can be logged to a file.
+	<p>
+	mailspy can also pipe messages to a process.  You can use
+	procmail to archive selected message headers or bodies.  If you
+	can concieve of something else useful that you can do with
+	a stream of message headers and bodies, you can do that too.
+
+<sect>Installation
+<p>
+Check that you have MILTER support in your distribution of <tt>sendmail</tt>
+otherwise, obtain a version of <tt>sendmail</tt> with milter support. You should
+have something like this.
+<tscreen><verb>
+foo:~ $ sendmail -d < /dev/null | grep -A5 "Compiled"
+ Compiled with: DNSMAP HESIOD HES_GETMAILHOST LDAPMAP LOG MAP_REGEX
+                MATCHGECOS MILTER MIME7TO8 MIME8TO7 NAMED_BIND NETINET NETINET6
+                NETUNIX NEWDB NIS PIPELINING SASL SCANF STARTTLS TCPWRAPPERS
+                USERDB USE_LDAP_INIT
+</verb></tscreen>
+<p>
+<p>
+The main targets for the make file are:
+<descrip>
+<tag>make all</tag>
+	Compile C source to executable.  Requires sendmail libmilter
+	header files and libraries.
+<tag>make install</tag>
+	Install files in <tt>/usr/local/bin</tt>.  You can set the <tt>DESTDIR</tt>
+	variable if you want to install files in a different root directory.
+<tag>make start</tag>
+	Try to mangle your <tt>/etc/mail/linux.mc</tt> (m4 source file) into
+	<tt>/etc/sendmail.cf</tt> and start mailspy.
+	This appends mailspy filter rules to <tt>/etc/mail/linux.mc</tt> and run
+	it through <tt>m4</tt> to produce <tt>/etc/sendmail.cf</tt>.
+	Also installs and creates links in <tt>/etc/init.d</tt> and
+	<tt>/etc/init.d/rc3.d</tt>.
+<tag>make dist</tag>
+	Make distribution in tar.gz format.
+</descrip>
+
+If <tt>make start</tt> doesn't do it for you on your system, you
+might be using something other than SuSE Linux 7.2 / 7.3.  Send me a patch that
+makes it work for your system, and I'll see what I can do.  <tt>make
+install</tt> installs the binaries, but does not configure sendmail to use the
+filter, and does not create links in /etc/init.d to make sure that the program works.
+<p>
+If you don't have sendmail libraries and header files installed, you are 
+going to struggle just a little.  You will have to install sendmail-devel (d4
+series on SuSE 8.0) in order for this to work.  If you are using sendmail-8.11
+or so, you will need to uncomment -lsfio in the Makefile.
+<p>
+The program installs in <tt>/usr/local/bin</tt> by default (and
+you can't change this either).  The default mailspy startup file
+listens on a unix socket <tt>/var/run/mailspy/milter</tt> and
+logs mail details to <tt>/var/log/mailspy/mailspy</tt>.  If you want to
+log mail headers, you have to specify a log file yourself.
+<p>
+The program appends to the end of the log files.  To rotate the log
+files there is a program called cronspy.sh which should do the trick, and
+which should be runnable as a user `mailspy', although this has never really
+been established.
+<p>
+<sect>Usage
+<p>
+The usage for mailspy is:
+<tscreen><verb>
+./mailspy -p socket [-f logfile] [-h headerlog] [-P pipe-msg-to-cmd]
+</verb></tscreen>
+The items are:
+<descrip>
+<tag>-p /var/run/mailspy/milter</tag>
+	The socket specifies how mailspy connects to the sendmail process it is
+	spying on, you can specify a unix socket (a named pipe) or an IPV4 or
+	IPV6 socket. 
+<tag>-f /var/log/mailspy/mailspy</tag>
+	The log file records messages in terms of the envelope sender and
+	recipient, and also the subject and attachment names.  The particular
+	log format is only understood by <tt>htmlspy.pl</tt>.
+<tag>-h /var/log/mailspy/headers</tag>
+	If you want to log only headers of each message, then this is one
+	way to do it.
+<tag>-P procmail</tag>
+	All mail can be piped to a process. If mailspy is running as the user
+	`mailspy', then the contents of <tt>~mailspy/.procmailrc</tt> will
+	determine what happens with each message. Using procmail rules you
+	can archive messages, forward selected messages to arbitary recipients,
+	and do any amount of interesting things.  <bf>Note: If the process
+	fails to handle the message, the error is ignored.</bf>
+	<p>
+	If you use procmail delivery together with a global
+	<tt>/etc/procmailrc</tt>, you may find that procmail does not deliver
+	the mail quickly enough, and you get sporadic 451 message failures.
+	This happens if you use the anomy sanitizer from procmail.  The
+	solution is not to do this.
+</descrip>
+
+<sect>Questions (without answers)
+<p>
+Coming soon to this paragraph (erm), answers to your questions --
+<itemize>
+<item>Why would I want this program (to see who's talking to whom, and 
+	what they are up to)
+<item>Can I use this with my anti-virus program (yes) (but don't ask us about
+	anti-virus).
+<item>Can I use this with other mail programs than sendmail (no, unless you set
+	up sendmail as an intermediate relay)
+<item>Can I archive message bodies (yes, using procmail)
+<item>What program can I use to process the log files (htmlspy). If you logged
+	the message bodies, you can use imap to read the log files.
+<item>Is it morally right to spy on people's mail (of course not)
+<item>Are there legal issues (not just a few)
+<item>It doesn't work on my system - will you fix it (we may if you will pay)
+<item>I used your program and sendmail says ``4.7.1 Try again later'' - when is
+	later? (sendmail can't talk to the mailspy program ... you'll have to
+	fix it - see previous question.)
+<item>Help, I broke my system! (You broke your system.)
+</itemize>
+
+<sect>Legal issues
+<p>
+Does your company, country, state, municipality or local mafia
+boss permit the logging of e-mail?  Do you have to notify people
+that their e-mail is being logged?  Does logging the e-mail 
+imply a responsibilty on you to read the log?  It turns out we
+don't know.
+<p>
+No statement is made about the legal implications of using this
+program (except for this statement, which says there is nothing
+to say).  If you need to know, consult a real live legal
+practitioner.  I am not a lawyer.  (And the chances are there is
+some really great page out there will all of this information on
+for all countries...)
+<p>
+Another thing -- this program is licenced under the GNU General
+Public License.  
+
+</article>
+

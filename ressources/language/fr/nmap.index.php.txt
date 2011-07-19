@@ -1,0 +1,18 @@
+<about>Nmap est un scanner de s&eacute;curit&eacute; de l'origine &eacute;crit par Gordon Lyon (Fiodor). [Fr]
+Il est utilis&eacute;s pour d&eacute;couvrir l'informatique et les services sur un r&eacute;seau informatique, en cr&eacute;ant ainsi une &quot;carte virtuelle&quot; du r&eacute;seau. [br]
+Tout comme beaucoup de scanners simples de ports, Nmap est capable de d&eacute;couvrir de mani&egrave;re passive les services sur un r&eacute;seau aussi bien
+qu'un service de d&eacute;couverte de protocole. [br]
+En outre, Nmap est en mesure de d&eacute;terminer des d&eacute;tails sur les diff&eacute;rents ordinateurs distants. [Br]
+Il s'agit notamment du syst&egrave;me d'exploitation, le type, la disponibilit&eacute;, logiciel utilis&eacute; pour faire fonctionner un service,
+pr&eacute;cise le num&eacute;ro de version de ce produit, la pr&eacute;sence de certains pare-feu et des techniques, sur un r&eacute;seau local, m&ecirc;me vendeur de la carte r&eacute;seau &agrave; distance.</about>
+<add_network>Ajouter un nouveau r&eacute;seau &agrave; scanner</add_network>
+<add_network_text>Ajoutez la plage IP &agrave; parcourir pour d&eacute;couvrir des nouveaux ordinateurs distants</add_network_text>
+<ip>Adresse TCP/IP</ip>
+<mask>Masque r&eacute;seau</mask>
+<networks_list>Liste de r&eacute;seaux</networks_list>
+<NmapRotateMinutes>Temps d'analyse (en minutes)</NmapRotateMinutes>
+<NmapScanEnabled>Activer l'analyse de votre r&eacute;seau</NmapScanEnabled>
+<nmap_logs>&Eacute;v&egrave;nements NMAP</nmap_logs>
+<nmap_logs_text>Voir des &eacute;v&eacute;nements ordonn&eacute;s par artica</nmap_logs_text>
+<perform_scan>Ex&eacute;cutez l'analyse</perform_scan>
+<perform_scan_text>Ex&eacute;cutez une analyse maintenant et broacaster vos r&eacute;seaux pour d&eacute;couvrir des ordinateurs</perform_scan_text>

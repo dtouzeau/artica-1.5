@@ -1,0 +1,10 @@
+<default_destination_recipient_limit>default destination recipient limit</default_destination_recipient_limit>
+<default_destination_recipient_limit_text>
+The default maximal number of recipients per message delivery.[br]
+This is the default limit for delivery via the lmtp, pipe, smtp and virtual delivery agents.[br]
+Setting this parameter to a value of 1 changes the meaning of the corresponding per-destination concurrency limit from concurrency per domain into concurrency per recipient
+</default_destination_recipient_limit_text>
+<smtpd_recipient_limit>smtpd recipient limit</smtpd_recipient_limit>
+<smtpd_recipient_limit_text>The maximal number of recipients that the Postfix SMTP server accepts per message delivery request</smtpd_recipient_limit_text>
+<virtual_mailbox_limit>Virtual mailbox limit</virtual_mailbox_limit>
+<virtual_mailbox_limit_text>The maximal size in bytes of an individual mailbox or maildir file, or zero (no limit).</virtual_mailbox_limit_text>

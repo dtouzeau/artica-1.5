@@ -1,0 +1,213 @@
+unit setup_glusterfs;
+{$MODE DELPHI}
+//{$mode objfpc}{$H+}
+{$LONGSTRINGS ON}
+//ln -s /usr/lib/libmilter/libsmutil.a /usr/local/lib/libsmutil.a
+//apt-get install libmilter-dev
+interface
+
+uses
+  Classes, SysUtils,strutils,RegExpr in 'RegExpr.pas',
+  unix,IniFiles,setup_libs,distridetect,zsystem,
+  install_generic;
+
+  type
+  install_glusterfs=class
+
+
+private
+     libs:tlibs;
+     distri:tdistriDetect;
+     install:tinstall;
+   source_folder,cmd:string;
+   webserver_port:string;
+   artica_admin:string;
+   artica_password:string;
+   ldap_suffix:string;
+   mysql_server:string;
+   mysql_admin:string;
+   mysql_password:string;
+   ldap_server:string;
+   SYS:Tsystem;
+
+
+
+public
+      constructor Create();
+      procedure Free;
+      procedure xinstall();
+      procedure fuseinstall();
+END;
+
+implementation
+
+constructor install_glusterfs.Create();
+begin
+libs:=tlibs.Create;
+install:=tinstall.Create;
+source_folder:='';
+SYS:=Tsystem.Create();
+if DirectoryExists(ParamStr(2)) then source_folder:=ParamStr(2);
+end;
+//#########################################################################################
+procedure install_glusterfs.Free();
+begin
+  libs.Free;
+
+end;
+
+//#########################################################################################
+procedure install_glusterfs.xinstall();
+var
+   CODE_NAME:string;
+   cmd:string;
+   zdate:string;
+   smbsources:string;
+   l:Tstringlist;
+   i:integer;
+begin
+
+    CODE_NAME:='APP_GLUSTERFS';
+
+
+  SetCurrentDir('/root');
+  install.INSTALL_STATUS(CODE_NAME,10);
+  fuseinstall();
+  install.INSTALL_STATUS(CODE_NAME,30);
+  install.INSTALL_PROGRESS(CODE_NAME,'{downloading}');
+  install.INSTALL_STATUS(CODE_NAME,40);
+  if length(source_folder)=0 then source_folder:=libs.COMPILE_GENERIC_APPS('glusterfs');
+
+
+
+  if not DirectoryExists(source_folder) then begin
+     writeln('Install '+CODE_NAME+' failed...');
+     install.INSTALL_STATUS(CODE_NAME,110);
+     exit;
+  end;
+
+
+
+   zdate:=FormatDateTime('yyyy-mm-dd-hh', Now);
+   smbsources:='/root/gluster-sources-'+zdate;
+   writeln('Install '+CODE_NAME+' extracted on "'+source_folder+'"');
+   if DirectoryExists(smbsources) then begin
+       writeln('Install '+CODE_NAME+' removing old sources');
+       fpsystem('/bin/rm -rf '+smbsources);
+   end;
+
+   forceDirectories(smbsources);
+   writeln('copy source files in  '+smbsources);
+   fpsystem('/bin/cp -rf '+source_folder+'/* '+smbsources+'/');
+   writeln('copy source files in  '+smbsources +' done');
+  install.INSTALL_STATUS(CODE_NAME,50);
+  install.INSTALL_PROGRESS(CODE_NAME,'{compiling}');
+  SetCurrentDir(smbsources);
+// fpsystem('./autogen.sh');
+
+ cmd:='./configure -prefix=/usr --includedir="\${prefix}/include" --mandir="\${prefix}/share/man" --infodir="\${prefix}/share/info" --sysconfdir=/etc --localstatedir=/var --libexecdir="\${prefix}/lib/glusterfs"';
+ writeln(cmd);
+ fpsystem(cmd);
+
+  install.INSTALL_PROGRESS(CODE_NAME,'{installing}');
+  install.INSTALL_STATUS(CODE_NAME,80);
+  fpsystem('make && make install');
+  fpsystem('/bin/rm -f /etc/artica-postfix/versions.cache');
+  SetCurrentDir('/root');
+
+  if FileExists('/usr/sbin/glusterfsd') then begin
+     install.INSTALL_PROGRESS(CODE_NAME,'{installed}');
+     install.INSTALL_STATUS(CODE_NAME,100);
+     if DirectoryExists(smbsources) then fpsystem('/bin/rm -rf '+smbsources);
+     exit;
+  end;
+
+
+
+     writeln('Install '+CODE_NAME+' failed...');
+     install.INSTALL_STATUS(CODE_NAME,110);
+     exit;
+
+
+
+end;
+//#########################################################################################
+procedure install_glusterfs.fuseinstall();
+var
+   CODE_NAME:string;
+   cmd:string;
+   zdate:string;
+   smbsources:string;
+   l:Tstringlist;
+   i:integer;
+begin
+
+    CODE_NAME:='APP_GLUSTERFS';
+    if FIleExists('/usr/bin/fusermount') then exit;
+
+  SetCurrentDir('/root');
+  install.INSTALL_STATUS(CODE_NAME,15);
+  install.INSTALL_STATUS(CODE_NAME,20);
+  install.INSTALL_PROGRESS(CODE_NAME,'{downloading}');
+  install.INSTALL_STATUS(CODE_NAME,25);
+  if length(source_folder)=0 then source_folder:=libs.COMPILE_GENERIC_APPS('glfsfuse');
+
+
+
+  if not DirectoryExists(source_folder) then begin
+     writeln('Install '+CODE_NAME+' failed...');
+     install.INSTALL_STATUS(CODE_NAME,110);
+     exit;
+  end;
+
+
+
+   zdate:=FormatDateTime('yyyy-mm-dd-hh', Now);
+   smbsources:='/root/gluster-sources-'+zdate;
+   writeln('Install '+CODE_NAME+' extracted on "'+source_folder+'"');
+   if DirectoryExists(smbsources) then begin
+       writeln('Install '+CODE_NAME+' removing old sources');
+       fpsystem('/bin/rm -rf '+smbsources);
+   end;
+
+   forceDirectories(smbsources);
+   writeln('copy source files in  '+smbsources);
+   fpsystem('/bin/cp -rf '+source_folder+'/* '+smbsources+'/');
+   writeln('copy source files in  '+smbsources +' done');
+  install.INSTALL_STATUS(CODE_NAME,30);
+  install.INSTALL_PROGRESS(CODE_NAME,'{compiling}');
+ SetCurrentDir(smbsources);
+// fpsystem('./autogen.sh');
+
+ cmd:='./configure -prefix=/usr';
+ writeln(cmd);
+ fpsystem(cmd);
+
+  install.INSTALL_PROGRESS(CODE_NAME,'{installing}');
+  install.INSTALL_STATUS(CODE_NAME,35);
+  fpsystem('make && make install');
+  fpsystem('/bin/rm -f /etc/artica-postfix/versions.cache');
+  SetCurrentDir('/root');
+
+  if FileExists('/usr/bin/fusermount') then begin
+     install.INSTALL_PROGRESS(CODE_NAME,'{installed}');
+     if DirectoryExists(smbsources) then fpsystem('/bin/rm -rf '+smbsources);
+     exit;
+  end;
+
+
+
+     writeln('Install '+CODE_NAME+' failed...');
+     if DirectoryExists(smbsources) then fpsystem('/bin/rm -rf '+smbsources);
+     exit;
+
+
+
+end;
+
+
+
+
+
+
+end.

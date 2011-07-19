@@ -1,0 +1,6 @@
+<base_dn>Base DN</base_dn>
+<bind_dn>Connexion DN Bind</bind_dn>
+<your_address_book>Votre Carnet d'Adresses</your_address_book>
+<your_address_book_text>Ce serveur vous permet de stocker vos contacts. [br] Ceci vous assurera que ces contacts seront disponibles partout et &agrave; chaque fois sur tous les ordinateurs</your_address_book_text>
+<your_parameters>Vos param&egrave;tres</your_parameters>
+<your_parameters_text>Utilisez ces param&egrave;tres et appliquer les &agrave; votre client de messagerie afin d'avoir acc&egrave;s &agrave; votre carnet d'adresses personnel</your_parameters_text>

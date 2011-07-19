@@ -1,0 +1,1 @@
+../artica-install/process_infos.pas

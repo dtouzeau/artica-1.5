@@ -1,0 +1,12 @@
+<add_a_rule>Ajouter une nouvelle r&egrave;gle</add_a_rule>
+<edit_a_rule>Editer une r&egrave;gle</edit_a_rule>
+<error_header>Choisissez s'il vous pla&icirc;t la valeur dans le champ d'en-t&ecirc;te</error_header>
+<error_pattern>Tapez s'il vous pla&icirc;t un mod&egrave;le pour d&eacute;tecter</error_pattern>
+<match_pattern>Mod&egrave;le d'allumettes</match_pattern>
+<only_regex_off>( Seulement si l'utilisation du mod&egrave;le regex est &eacute;teinte)</only_regex_off>
+<rules_list>Liste de r&egrave;gles</rules_list>
+<select_header_field>Si dans</select_header_field>
+<user_delete>Supprimer le message</user_delete>
+<user_quarantine>Envoyer le message &eacute;lectronique en quarantaine</user_quarantine>
+<user_skip_antispam>Ignorez le processus contre le spam</user_skip_antispam>
+<use_regex>Utilisez le mod&egrave;le de regex</use_regex>

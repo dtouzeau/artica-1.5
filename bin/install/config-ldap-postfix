@@ -1,0 +1,16 @@
+
+
+
+/etc/postfix/virtual_alias_domains.ldap
+server_host= 127.0.0.1
+server_port= 389
+bind= no
+timeout= 20
+search_base=dc=nodomain
+query_filter= (&(objectclass=domainRelatedObject)(associatedDomain=%s))
+result_attribute= associatedDomain
+scope= sub
+
+
+trasport_table:
+$sr =  ldap_search($ld, "dc=nodomain",'(&(cn=%s)(objectclass=transportTable))');

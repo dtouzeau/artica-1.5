@@ -1,0 +1,27 @@
+<ADD_NETWORK_PRINTER>Dodaj now%u0105 drukark%u0119 sieciow%u0105</ADD_NETWORK_PRINTER>
+<ADD_NETWORK_PRINTER_TEXT>Je%u015Bli drukarka jest zdolna odbiera%u0107 zlecania z sieci, u%u017Cyj tej strefy</ADD_NETWORK_PRINTER_TEXT>
+<add_this_printer>Dodaj t%u0119 drukark%u0119</add_this_printer>
+<CONNECTED_PRINTERS>Pod%u0142%u0105czone drukarki</CONNECTED_PRINTERS>
+<CONNECTED_PRINTERS_TEXT>Skanuj pod%u0142%u0105czone do systemu drukarki</CONNECTED_PRINTERS_TEXT>
+<delete_all_printers>Usu%u0144 wszystkie drukarki</delete_all_printers>
+<drivers_in_collection>Printers drivers in your collection</drivers_in_collection>
+<found>found</found>
+<GENERATE_DRIVERS>Generate Drivers</GENERATE_DRIVERS>
+<GENERATE_DRIVERS_EXPLAIN>If you click on the button, Artica will download all known printers drivers database, it will build "gutenprint" drivers.[br]
+After this operation you will have the best drivers list in probablu found your right printer driver.[br]
+This operation should take a long time...[br]
+Read logs below in order to undertsand if there is some error during the process...
+</GENERATE_DRIVERS_EXPLAIN>
+<GENERATE_DRIVERS_TEXT>Build the drivers list in order to found the appriopriate driver for your printer</GENERATE_DRIVERS_TEXT>
+<INSTALLED_PRINTERS>Installed printers</INSTALLED_PRINTERS>
+<INSTALLED_PRINTERS_TEXT>Uninstall or get status of your installed printers</INSTALLED_PRINTERS_TEXT>
+<localization>localization</localization>
+<manufacturer>Manufacturer</manufacturer>
+<NO_CONNECTED_PRINTERS>Nie ma pod%u0142%u0105czonych drukarek w tym komputerze</NO_CONNECTED_PRINTERS>
+<no_cups_drivers_scanned>There is no drivers-scanning operations executed.[br]Please execute drivers-scanning before this operation</no_cups_drivers_scanned>
+<printer_name>Nazwa drukarki</printer_name>
+<QUERY_DRIVERS_COLLECTION>Query drivers Collection</QUERY_DRIVERS_COLLECTION>
+<QUERY_DRIVERS_COLLECTION_TEXT>Find and query your printer drivers collection</QUERY_DRIVERS_COLLECTION_TEXT>
+<search_drivers>Query the drivers database</search_drivers>
+<shared_printers>Udost%u0119pnione drukarki</shared_printers>
+<share_this_printer>Udost%u0119pnij t%u0119 drukark%u0119</share_this_printer>

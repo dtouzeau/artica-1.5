@@ -1,0 +1,26 @@
+<ADD_NETWORK_PRINTER>Ajouter une nouvelle imprimante r&eacute;seau</ADD_NETWORK_PRINTER>
+<ADD_NETWORK_PRINTER_TEXT>Si votre imprimante est capable de recevoir des ordres du r&eacute;seau, utiliser cette zone</ADD_NETWORK_PRINTER_TEXT>
+<add_this_printer>Ajouter cette imprimante</add_this_printer>
+<CONNECTED_PRINTERS>Imprimantes connect&eacute;es</CONNECTED_PRINTERS>
+<CONNECTED_PRINTERS_TEXT>Scannez vos imprimantes branch&eacute;es sur votre syst&egrave;me</CONNECTED_PRINTERS_TEXT>
+<delete_all_printers>Supprimer toutes les impimantes</delete_all_printers>
+<drivers_in_collection>Pilotes d'imprimantes de votre collection</drivers_in_collection>
+<found>trouv&eacute;</found>
+<GENERATE_DRIVERS>Pilotes g&eacute;n&eacute;riques</GENERATE_DRIVERS>
+<GENERATE_DRIVERS_EXPLAIN>Si vous cliquez sur le bouton, Artica va t&eacute;l&eacute;charger la base de donn&eacute;es de tous les pilotes d'imprimantes connus, il va construire les pilotes &quot;gutenprint&quot;.[br]
+Apr&egrave;s cette op&eacute;ration, vous aurez la liste des meilleurs pilotes et sans doute trouver votre pilote d'imprimante appropri&eacute;.[br]
+Cette op&eacute;ration devrait prendre un certain temps ...[br]
+Lisez les journaux ci-dessous pour comprendre s'il y a eu une erreur durant le processus ...</GENERATE_DRIVERS_EXPLAIN>
+<GENERATE_DRIVERS_TEXT>Construire la liste des pilotes en vue de trouver le pilote appropri&eacute; de votre imprimante</GENERATE_DRIVERS_TEXT>
+<INSTALLED_PRINTERS>Imprimantes install&eacute;es</INSTALLED_PRINTERS>
+<INSTALLED_PRINTERS_TEXT>D&eacute;sinstaller ou obtenir le statut de vos imprimantes install&eacute;es</INSTALLED_PRINTERS_TEXT>
+<localization>localisation</localization>
+<manufacturer>Fabricant</manufacturer>
+<NO_CONNECTED_PRINTERS>Pas d'imprimantes branch&eacute;es sur cette ordinateur</NO_CONNECTED_PRINTERS>
+<no_cups_drivers_scanned>Il n'y a aucune op&eacute;ration de recherche de pilotes ex&eacute;cut&eacute;e. [br] Ex&eacute;cutez svp la recherche de pilotes avant cette op&eacute;ration</no_cups_drivers_scanned>
+<printer_name>Nom de l'imprimante</printer_name>
+<QUERY_DRIVERS_COLLECTION>Interrogez la collection de pilotes</QUERY_DRIVERS_COLLECTION>
+<QUERY_DRIVERS_COLLECTION_TEXT>Interrogez et trouvez votre collection de pilotes d'imprimante</QUERY_DRIVERS_COLLECTION_TEXT>
+<search_drivers>Requ&ecirc;te de la base de donn&eacute;es des pilotes</search_drivers>
+<shared_printers>Imprimantes partag&eacute;es</shared_printers>
+<share_this_printer>Partager cette imprimante</share_this_printer>

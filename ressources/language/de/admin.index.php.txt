@@ -1,0 +1,31 @@
+<delete_all_events>L&ouml;sche alle Ereignisse.</delete_all_events>
+<emails_received>Echtzeit Emails erhalten.</emails_received>
+<error_cyrus_pbconnect>[br][b][i]Sie m&uuml;ssen die Cyrus-Imap Verbindung &uuml;berpr&uuml;fen, da es so aussieht, dass diese nicht mehr funktioniert.</error_cyrus_pbconnect>
+<error_cyrus_pbmailbox>[br][b][i]Bitte &uuml;berpr&uuml;fen Sie dieses Postfach, es scheint seine Kapazit&auml;t zu &uuml;bersteigen.
+[br]Kapazit&auml;t erh&ouml;hen oder Benutzer l&ouml;schen[/b][/i].</error_cyrus_pbmailbox>
+<error_kasmilter_stopped>Der Kaspersky Anti-spam Daemon wurde nicht gestartet, bitte &uuml;berpr&uuml;fen Sie, ob der Daemon l&auml;uft und ob die Lizenz g&uuml;ltig ist.</error_kasmilter_stopped>
+<error_kavmilter_licence>[br][b][i]Sie ben&ouml;tigen einen neuen Lizenzschl&uuml;ssel f&uuml;r 'Kaspersky antivirus for SendMail milter'.
+[br]oder Sie m&uuml;ssen Kaspersky im Postfix/plugins Bereich deaktivieren[/b][/i].</error_kavmilter_licence>
+<error_loopsbacktomyself>Es scheint, dass Postfix so konfiguriert ist, dass E-Mails in das Internet gesendet werden, die dann zu diesem Server zur&uuml;ckkommen. Bitte &uuml;berpr&uuml;fen Sie Ihre Konfiguration</error_loopsbacktomyself>
+<error_milter_grey_list_stopped>Der Milter-greylist Service wurde gestoppt oder hat aufgeh&ouml;rt zu funktionieren. Bitte &uuml;berpr&uuml;fen Sie die Konfiguration und den Servicestatus.</error_milter_grey_list_stopped>
+<error_must_create_mailbox>[br][b][i]Das Postfach wurde nicht erstellt und wird vom IMAP-Server zur&uuml;ckgewiesen.
+[br]Sie m&uuml;ssen ein Benutzerkonto erstellen oder ein Mail Alias um diesen Fehler zu vermeiden.[/b][/i]</error_must_create_mailbox>
+<error_relayhost>Das Master Relay, welches Sie f&uuml;r Postfix Eingestellt haben ist nich Verf&uuml;gbar. Bitte &auml;ndern Sie die Einstellungen oder &Uuml;berpr&uuml;fen Sie Ihren Internet Relay Server.</error_relayhost>
+<error_routing_postfix>Postfix verweigert das routing, bitte &uuml;berpr&uuml;fen Sie Ihre Transport Tables.</error_routing_postfix>
+<error_routing_to>Postfix kann die Mail nicht an den n&auml;chsten Zielserver weiterleiten, bitte pr&uuml;fen Sie die Routing-Tabellen</error_routing_to>
+<graphs>Charts &amp;amp; Statistik</graphs>
+<lines_number>max. Linien</lines_number>
+<monitorix>Monitorix</monitorix>
+<mysql_not_root_configured>Fehler Mysql Zugriff</mysql_not_root_configured>
+<mysql_not_root_configured_text>Zugriff verweigert ! Bitte erstellen Sie einen Account f&uuml;r MySQL um die volle Berechtigung f&uuml;r Artica zu erhalten.
+Gehen Sie dazu auf Globale Einstellungen/MySQL Datenbank und richten Sie dort den Zugang ein.</mysql_not_root_configured_text>
+<mysql_too_any_connections>Zuviele Verbindungen auf den MySQL Server. Bitte starten Sie MySQL neu, oder den Server.</mysql_too_any_connections>
+<notification>Fehler gefunden.</notification>
+<postfix_mynet_not_conf>Postfix Netzwerk</postfix_mynet_not_conf>
+<postfix_mynet_not_conf_text>Sie m&uuml;ssen Ihre Netzwerkverbindungen &auml;ndern, um Postfix richtig nutzen zu k&ouml;nnen.[br]
+Bitte w&auml;hlen Sie im ControlPanel Postfix den Men&uuml;punkt Postfix Netzwerk Einstellungen aus.</postfix_mynet_not_conf_text>
+<service>Anwendungsname</service>
+<smtp_notification_not_saved>Die eMail Benachrichtigung wurde nicht gesetzt.</smtp_notification_not_saved>
+<smtp_notification_not_saved_text>Bitte setzen Sie Benachrichtigungsoptionen um per Mail Informationen &uuml;ber Ihr Artica System zu bekommen.</smtp_notification_not_saved_text>
+<too_many_lines_exceed>Too many lines, Exit !</too_many_lines_exceed>
+<warnings>Fehlermeldungen</warnings>

@@ -1,0 +1,4 @@
+<conditions>Conditions</conditions>
+<give_the_rulename>Donner un nom &agrave; la nouvelle r&egrave;gle</give_the_rulename>
+<sieve_rule_explain>Cette section affiche les r&egrave;gles principales stock&eacute;es dans votre compte. Vous ne pouvez activer qu'une r&egrave;gle dans votre compte. Vous pouvez d&eacute;sactiver toutes les r&egrave;gles et activer celle que vous voulez</sieve_rule_explain>
+<the_following_matches>Les r&egrave;gles suivantes correspondent</the_following_matches>
