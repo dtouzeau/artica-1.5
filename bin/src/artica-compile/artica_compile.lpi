@@ -12,7 +12,7 @@
       <MainUnit Value="0"/>
       <TargetFileExt Value=""/>
       <Title Value="artica-compile"/>
-      <ActiveEditorIndexAtStart Value="0"/>
+      <ActiveEditorIndexAtStart Value="2"/>
     </General>
     <VersionInfo>
       <ProjectVersion Value=""/>
@@ -35,7 +35,7 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="artica_compile"/>
         <CursorPos X="1" Y="81"/>
-        <TopLine Value="39"/>
+        <TopLine Value="35"/>
         <EditorIndex Value="0"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -188,8 +188,8 @@
         <Filename Value="compile.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="compile"/>
-        <CursorPos X="1" Y="1"/>
-        <TopLine Value="1"/>
+        <CursorPos X="49" Y="767"/>
+        <TopLine Value="733"/>
         <EditorIndex Value="2"/>
         <UsageCount Value="150"/>
         <Loaded Value="True"/>

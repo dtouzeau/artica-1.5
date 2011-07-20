@@ -886,7 +886,7 @@ Execute('rm -rf ' + BasePath+'/nohup.out');
 
 langues();
 
-Execute('php5 /usr/share/artica-postfix/exec.shm.php --compile-lang');
+Execute('php5 /usr/share/artica-postfix/compile-lang.php');
 
 
 
