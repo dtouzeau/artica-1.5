@@ -1047,6 +1047,7 @@ if(($users->LinuxDistriCode=='DEBIAN') or ($users->LinuxDistriCode=='UBUNTU')){
 	
 		
 	$html=$html.spacer('{network_softwares}');
+	$html=$html.BuildRows("APP_DHCP",$GlobalApplicationsStatus,"dhcp");
 	if($MEM_TOTAL_INSTALLEE>700000){$html=$html.BuildRows("APP_PDNS",$GlobalApplicationsStatus,"pdns");}
 	if($MEM_TOTAL_INSTALLEE>700000){$html=$html.BuildRows("APP_POWERADMIN",$GlobalApplicationsStatus,"poweradmin");}
 	$html=$html.BuildRows("APP_OPENVPN",$GlobalApplicationsStatus,"openvpn");

@@ -1497,6 +1497,7 @@ end;
   t.add('/etc/php5/apache2/php.ini');
   t.add('/etc/php/php.ini');
   t.add('/etc/php-cgi-fcgi.ini');
+  t.add('/etc/php5/fastcgi/php.ini');
 
   for i:=0 to t.Count-1 do begin
       if FileExists(t.Strings[i]) then begin
@@ -1557,6 +1558,7 @@ sofile:string;
 soname:string;
 libdir:string;
 LOCATE_PHP5_EXTENSION_DIR:string;
+NoPHPMcrypt:integer;
 begin
 
 
@@ -1577,6 +1579,7 @@ for i:=0 to sys.DirListFiles.Count-1 do begin
 
 end;
 
+if not TryStrToInt(SYS.GET_INFO('NoPHPMcrypt'),NoPHPMcrypt) then NoPHPMcrypt:=0;
 
 t:=Tstringlist.Create;
 t.Add('/etc/php5/conf.d/mcrypt.ini');
@@ -1666,9 +1669,12 @@ z.add('xmlrpc.so');
 z.add('session.so');
 z.add('gettext.so');
 z.add('mbstring.so');
-z.add('mcrypt.so');
-z.add('ming.so');
-
+if NoPHPMcrypt=0 then begin
+   z.add('mcrypt.so');
+   z.add('ming.so');
+end else begin
+  logs.Debuglogs('Starting......: lighttpd: mcrypt is disabled');
+end;
 
 
 if DisableEaccelerator=1 then begin

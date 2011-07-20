@@ -132,7 +132,7 @@ echo "Starting......: PowerDNS 'powerdns' database OK\n";
 			$q->QUERY_SQL("alter table records add auth bool;","powerdns");
 			$q->QUERY_SQL("create index orderindex on records(ordername);","powerdns");
 			$q->QUERY_SQL("alter table records change column type type VARCHAR(10);","powerdns");
-			
+	
 		}
 		
 	}
@@ -167,10 +167,13 @@ echo "Starting......: PowerDNS 'powerdns' database OK\n";
 	$q->QUERY_SQL($sql,"powerdns");
 		if(!$q->ok){
 			echo "Starting......: PowerDNS creating 'domainmetadata' table FAILED\n";
+		}else{
+			
+			$q->QUERY_SQL("create index domainmetaidindex on domainmetadata(domain_id);","powerdns");  
 		}
 		
 	}	
-
+	
 	if(!$q->TABLE_EXISTS("cryptokeys", "powerdns")){
 		echo "Starting......: PowerDNS creating 'cryptokeys' table\n";
 		$sql="create table cryptokeys (
@@ -184,6 +187,8 @@ echo "Starting......: PowerDNS 'powerdns' database OK\n";
 	$q->QUERY_SQL($sql,"powerdns");
 		if(!$q->ok){
 			echo "Starting......: PowerDNS creating 'cryptokeys' table FAILED\n";
+		}else{
+			$q->QUERY_SQL("create index domainidindex on cryptokeys(domain_id);","powerdns");
 		}
 		
 	}		
@@ -375,12 +380,27 @@ function dnsseck(){
 			echo "Starting......: PowerDNS pdnssec securing zone {$ligne["name"]}\n";
 			shell_exec("$pdnssec rectify-zone {$ligne["name"]} >/dev/null 2>&1");
 			shell_exec("$pdnssec add-zone-key {$ligne["name"]} >/dev/null 2>&1");
+			shell_exec("$pdnssec secure-zone {$ligne["name"]} >/dev/null 2>&1");
+			shell_exec("$pdnssec set-presigned {$ligne["name"]} >/dev/null 2>&1");
 			if(!dnsseck_is_crypto($ligne["id"])){
 				echo "Starting......: PowerDNS pdnssec securing zone {$ligne["name"]} Failed\n";
 				continue;
 			}
+			
+			
 		}
-		echo "Starting......: PowerDNS pdnssec checking zone {$ligne["name"]} OK\n";
+		
+		$zones=array();
+		$ok=false;
+		exec("$pdnssec show-zone {$ligne["name"]} 2>&1",$zones);
+		while (list ($num1, $line2) = each ($zones) ){
+			if(preg_match("#Zone has NSEC semantics#", $line2)){
+				echo "Starting......: PowerDNS pdnssec checking zone {$ligne["name"]} OK\n";
+				$ok=true;
+				break;
+			}
+		}
+		if(!$ok){echo "Starting......: PowerDNS pdnssec checking zone {$ligne["name"]} not secure...\n";}
 		
 	}
 

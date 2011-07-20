@@ -542,6 +542,7 @@ var
    PowerDNSDNSSEC:integer;
    PowerDNSDisableLDAP:integer;
    gmysql,launch_ldap:string;
+   PowerDNSPublicMode:integer;
 begin
 if DisablePowerDnsManagement=1 then exit;
 
@@ -555,6 +556,7 @@ if not TryStrToInt(SYS.GET_INFO('PowerChroot'),PowerChroot) then PowerChroot:=0;
 if not TryStrToInt(SYS.GET_INFO('PowerActHasMaster'),PowerActHasMaster) then PowerActHasMaster:=0;
 if not TryStrToInt(SYS.GET_INFO('PowerDNSDNSSEC'),PowerDNSDNSSEC) then PowerDNSDNSSEC:=0;
 if not TryStrToInt(SYS.GET_INFO('PowerDNSDisableLDAP'),PowerDNSDisableLDAP) then PowerDNSDisableLDAP:=0;
+if not TryStrToInt(SYS.GET_INFO('PowerDNSPublicMode'),PowerDNSPublicMode) then PowerDNSPublicMode:=0;
 
 
 
@@ -615,12 +617,18 @@ if PowerDNSMySQLEngine=1 then gmysql:='gmysql ';
 
 
 //if ldapserver='127.0.0.1' then ldapserver:='localhost';
-l.add('allow-recursion='+cdirlist);
+if PowerDNSPublicMode=0 then l.add('allow-recursion='+cdirlist);
 l.add('#allow-recursion=0.0.0.0/0 ');
 l.add('#allow-recursion-override=on');
 l.add('cache-ttl=20');
-if PowerChroot=1 then l.add('chroot=./');
+if PowerChroot=1 then begin
+   logs.DebugLogs('Starting......: PowerDNS is chrooted...');
+   l.add('chroot=./');
+end;
+
+
 if PowerActHasMaster=1 then begin
+   logs.DebugLogs('Starting......: PowerDNS Act has master');
    l.add('master=yes');
    l.add('slave=no');
 end;
@@ -642,7 +650,7 @@ l.add('lazy-recursion=yes');
 l.add('# load-modules=');
 l.add('#local-address=0.0.0.0');
 l.add('local-address='+iplist);
-l.add('# local-ipv6=');
+l.add('local-ipv6=::1');
 l.add('local-port=53');
 l.add('log-dns-details=on');
 l.add('log-failed-updates=on');

@@ -181,7 +181,7 @@ $page=CurrentPageName();
 	$PowerActHasMaster=$sock->GET_INFO("PowerActHasMaster");
 	$PowerDNSDNSSEC=$sock->GET_INFO("PowerDNSDNSSEC");
 	$PowerDNSDisableLDAP=$sock->GET_INFO("PowerDNSDisableLDAP");
-	
+	$PowerChroot=$sock->GET_INFO("PowerChroot");
 	
 	if(!is_numeric($EnablePDNS)){$EnablePDNS=1;}
 	if(!is_numeric($PowerDNSMySQLEngine)){$PowerDNSMySQLEngine=0;}
@@ -192,6 +192,9 @@ $page=CurrentPageName();
 	if(!is_numeric($PowerDisableDisplayVersion)){$PowerDisableDisplayVersion=0;}
 	if(!is_numeric($PowerDNSDNSSEC)){$PowerDNSDNSSEC=0;}
 	if(!is_numeric($PowerDNSDisableLDAP)){$PowerDNSDisableLDAP=0;}
+	if(!is_numeric($PowerChroot)){$PowerChroot=0;}
+	
+	
 	$POWER_DNS_MYSQL=1;
 	$GREENSQL=1;
 	$DNSDNSSEC=1;
@@ -296,6 +299,7 @@ $page=CurrentPageName();
 			}else{XHR.appendData('PowerDNSDNSSEC',0);}
 			if(document.getElementById('PowerDNSMySQLEngine').checked){XHR.appendData('PowerDNSMySQLEngine',1);}else{XHR.appendData('PowerDNSMySQLEngine',0);}
 			if(document.getElementById('PowerDNSDisableLDAP').checked){XHR.appendData('PowerDNSDisableLDAP',1);}else{XHR.appendData('PowerDNSDisableLDAP',0);}
+			if(document.getElementById('PowerChroot').checked){XHR.appendData('PowerChroot',1);}else{XHR.appendData('PowerChroot',0);}
 			
 			
 			
@@ -1540,6 +1544,9 @@ function PDNSRestartIfUpToMB(){
 	$sock->SET_INFO("PowerDNSMySQLEngine",$_GET["PowerDNSMySQLEngine"]);
 	$sock->SET_INFO("DisablePowerDnsManagement",$_GET["DisablePowerDnsManagement"]);
 	$sock->SET_INFO("PowerDNSDisableLDAP",$_GET["PowerDNSDisableLDAP"]);
+	$sock->SET_INFO("PowerChroot",$_GET["PowerChroot"]);
+	
+	
 	$sock->getFrameWork("cmd.php?pdns-restart=yes");
 
 }

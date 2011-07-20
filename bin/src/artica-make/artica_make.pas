@@ -20,7 +20,7 @@ uses
   setup_opendkim, setup_ufdbguard, setup_dkimproxy, setup_dkimmilter,
   setup_dropbox, setup_crossroads, setup_squidclamav, setup_cluebringer,
   setup_awstats, setup_sabnzbdplus, setup_openldap, setup_lxc, setup_snort,
-  setup_greensql, setup_amanda, setup_mysqlserver;
+  setup_greensql, setup_amanda, setup_mysqlserver, setup_dhcpd;
 
 var
    collectd:tsetup_collectd;
@@ -100,6 +100,7 @@ var
    snort:install_snort;
    greensql:install_greensql;
    app_amanda:amanda;
+   dhcpd:tdhcpd;
 begin
 
 
@@ -199,6 +200,14 @@ begin
          snort.install_dnet();
          halt(0);
    end ;
+
+    if ParamStr(1)='APP_DHCP' then begin
+         dhcpd:=tdhcpd.Create;
+         dhcpd.xinstall();
+         zinstall.EMPTY_CACHE();
+         halt(0);
+   end ;
+
 
    if ParamStr(1)='APP_CPULIMIT' then begin
          cpulimit:=tsetup_cpulimit.Create;
@@ -1593,6 +1602,7 @@ begin
    writeln('APP_POWERADMIN...........: install PowerAdmin Web console for PowerDNS');
    writeln('APP_IPTACCOUNT...........: install xt_ACCOUNT iptables module');
    writeln('APP_AMANDA...............: install Amanda backup system');
+   writeln('APP_DHCP.................: install isc dhcp  system');
 
 
 
