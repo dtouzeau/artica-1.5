@@ -504,6 +504,7 @@ l.add('perl-IO-Compress');
 //l.add('perl-Digest-MD5');
 l.add('perl-Net-SSLeay');
 l.add('mod_security');
+l.add('mod_evasive');
 
 
 l.Add('htop');

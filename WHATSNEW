@@ -1,4 +1,4 @@
-1.5.072014
+1.5.072019: 
 ========================================================================================
 
 System Changes
@@ -21,6 +21,11 @@ System Changes
 1.5.071600: Add possibility to define listen IP addresses for PowerDNS.
 1.5.072014: Add a new watchdog when PowerDNS loose connections with LDAP.(artica will restart PowerDNS service automatically).
 1.5.072014: Add DNSSEC support in PowerDNS
+1.5.072019: Adding possibility to upgarde Mysql server to the latest version.
+1.5.072019: change libjpeg-devel -> libjpeg62-devel For SuSe 11.2x in setup-suse
+1.5.072019: Remove cyrus-sasl-md5 For SuSe 11.2x in setup-suse
+1.5.072019: Fix some errors while installing RPMForge in setup-centos. 
+1.5.072019: Improve removing Zarafa using "artica-make APP_ZARAFA --remove" command line
 
 
 Messaging Changes:

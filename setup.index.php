@@ -1035,6 +1035,7 @@ if(($users->LinuxDistriCode=='DEBIAN') or ($users->LinuxDistriCode=='UBUNTU')){
 		}
 	}
 	$html=$html.BuildRows("APP_PHPLDAPADMIN",$GlobalApplicationsStatus,"phpldapadmin");
+	$html=$html.BuildRows("APP_MYSQL",$GlobalApplicationsStatus,"mysql-server");
 	$html=$html.BuildRows("APP_PHPMYADMIN",$GlobalApplicationsStatus,"phpMyAdmin");
 	$html=$html.BuildRows("APP_GREENSQL",$GlobalApplicationsStatus,"greensql-fw");
 		

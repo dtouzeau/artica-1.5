@@ -12,7 +12,7 @@
       <MainUnit Value="0"/>
       <TargetFileExt Value=""/>
       <Title Value="artica-install"/>
-      <ActiveEditorIndexAtStart Value="10"/>
+      <ActiveEditorIndexAtStart Value="8"/>
     </General>
     <VersionInfo>
       <ProjectVersion Value=""/>
@@ -773,8 +773,8 @@
         <Filename Value="zarafa_server.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="zarafa_server"/>
-        <CursorPos X="27" Y="1220"/>
-        <TopLine Value="1149"/>
+        <CursorPos X="130" Y="765"/>
+        <TopLine Value="724"/>
         <EditorIndex Value="8"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>

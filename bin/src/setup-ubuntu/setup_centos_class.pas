@@ -558,6 +558,7 @@ l.add('upx');
 //DEVEL
 l.Add('gcc ');
 l.Add('make');
+l.add('cmake');
 l.add('bison');
 l.add('glib-devel');
 l.add('expat-devel'); //for squid
@@ -1105,8 +1106,16 @@ function tcentos.RPMFORGE():boolean;
 var
    u:string;
    link:string;
-
+    MAJOR:integer;
+    MINOR:integer;
+    distri:tdistriDetect;
+    filename:string;
 begin
+   distri:=tdistriDetect.Create();
+   MAJOR:=distri.DISTRI_MAJOR;
+   MINOR:=distri.DISTRI_MINOR;
+   writeln('Checking.............: Base: Code CENTOS ('+distri.DISTRINAME_VERSION+') MAJOR='+IntToStr(MAJOR) ,' MINOR=',MINOR);
+
    result:=false;
    if not libs.RPM_is_application_installed('rpmforge-release') then begin
    writeln('Some mandatories packages need to turn you distribution into:');
@@ -1125,13 +1134,22 @@ begin
    end;
 
    writeln('Checking.............: retrieve rpmforge-release');
-   if ARCH=64 then link:='http://rpmforge.sw.be/redhat/el5/en/x86_64/rpmforge/RPMS/rpmforge-release-0.5.1-1.el5.rf.x86_64.rpm';
-   if ARCH=32 then link:='http://rpmforge.sw.be/redhat/el5/en/i386/rpmforge/RPMS/rpmforge-release-0.5.1-1.el5.rf.i386.rpm';
-
-
-
-
-   fpsystem('rpm -iv '+link);
+   if ARCH=64 then begin
+      if MINOR>3 then begin
+         link:='http://rpmforge.sw.be/redhat/el5/en/x86_64/rpmforge/RPMS/rpmforge-release-0.5.1-1.el5.rf.x86_64.rpm';
+         filename:='rpmforge-release-0.5.1-1.el5.rf.x86_64.rpm';
+      end;
+//      if MINOR>5 then link:='http://tree.repoforge.org/redhat/el6/en/x86_64/rpmforge/RPMS/rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm';
+   end;
+   if ARCH=32 then begin
+       if MINOR>3 then begin
+          link:='http://rpmforge.sw.be/redhat/el5/en/i386/rpmforge/RPMS/rpmforge-release-0.5.1-1.el5.rf.i386.rpm';
+          filename:='rpmforge-release-0.5.1-1.el5.rf.i386.rpm';
+       end;
+       //if MINOR>5 then link:='http://tree.repoforge.org/redhat/el6/en/i386/rpmforge/RPMS/rpmforge-release-0.5.2-2.el6.rf.i686.rpm';
+   end;
+   fpsystem('wget '+link);
+   fpsystem('rpm -iv '+filename);
    fpsystem('/bin/rm -rf /tmp/packages.list');
    if not libs.RPM_is_application_installed('rpmforge-release') then begin
       writeln('Unable to install rpmforge-release');

@@ -20,7 +20,7 @@ uses
   setup_opendkim, setup_ufdbguard, setup_dkimproxy, setup_dkimmilter,
   setup_dropbox, setup_crossroads, setup_squidclamav, setup_cluebringer,
   setup_awstats, setup_sabnzbdplus, setup_openldap, setup_lxc, setup_snort,
-  setup_greensql, setup_amanda;
+  setup_greensql, setup_amanda, setup_mysqlserver;
 
 var
    collectd:tsetup_collectd;
@@ -69,7 +69,7 @@ var
    acx:tacx;
    hostpad:tsetup_hostapd;
    SYS:Tsystem;
-   mysql:tsetup_mysql;
+   mysql:mysql_server;
    winexe:tsetup_winexe;
    ocsi:tsetup_ocs;
    assp:tsetup_assp;
@@ -634,7 +634,8 @@ begin
 
 
    if ParamStr(1)='APP_MYSQL' then begin
-         mysql:=tsetup_mysql.Create;
+         mysql:=mysql_server.Create;
+         fpsystem('/usr/share/artica-postfix/bin/setup-ubuntu --check-base-system');
          mysql.xinstall();
          zinstall.EMPTY_CACHE();
          halt(0);

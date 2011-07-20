@@ -10,15 +10,15 @@ $sock=new sockets();
 if($sock->GET_INFO("EnableLDAPSyncProvClient")==1){die();}
 
 if(!$ldap->ExistsDN("dc=organizations,$ldap->suffix")){
-	write_syslog("Create new entry dc=organizations,$ldap->suffix",__FILE__);
+	writelogs("Create new entry dc=organizations,$ldap->suffix",__FUNCTION,__FILE__,__LINE__);
 	$upd["objectClass"][]="top";
 	$upd["objectClass"][]="organization";
 	$upd["objectClass"][]="dcObject";
 	$upd["o"][]="organizations";
 	$upd["dc"][]="organizations";
 	if(!$ldap->ldap_add("dc=organizations,$ldap->suffix",$upd)){
-		write_syslog("Unable to create new entry dc=organizations,$ldap->suffix",__FILE__);
-		write_syslog($ldap->ldap_last_error,__FILE__);
+		writelogs("Unable to create new entry dc=organizations,$ldap->suffix",__FUNCTION,__FILE__,__LINE__);
+		writelogs($ldap->ldap_last_error,__FUNCTION,__FILE__,__LINE__);
 		die();
 	}
 
@@ -49,12 +49,12 @@ if(is_array($neworganizations)){
 
 
 if($ldap->ExistsDN("dc=samba,$ldap->suffix")){
-	write_syslog("Move Samba branch: \"dc=samba,$ldap->suffix\"",__FILE__);
+	writelogs("Move Samba branch: \"dc=samba,$ldap->suffix\"",__FUNCTION,__FILE__,__LINE__);
 	mouvUser("dc=samba",$ldap->suffix,"dc=organizations,$ldap->suffix");
 }
 
 if(!$ldap->ExistsDN("dc=NAB,$ldap->suffix")){
-	write_syslog("Creating Address book root tree,dc=NAB,$ldap->suffix",__FILE__);
+	writelogs("Creating Address book root tree,dc=NAB,$ldap->suffix",__FUNCTION,__FILE__,__LINE__);
 	CreateNAB();
 }
 
@@ -69,7 +69,7 @@ function GetOus(){
 	$attrs=array();
 	$sr=ldap_search($con, $dn, $filter);
 	if(!$sr){
-		write_syslog("Looks good, no organizations in first branch..,$ldap->suffix",__FILE__);
+		writelogs("Looks good, no organizations in first branch..,$ldap->suffix",__FUNCTION,__FILE__,__LINE__);
 		return array();
 	
 	}
@@ -94,9 +94,9 @@ function mouvDN($olddn,$newdnroot){
 	$newParent="dc=organizations,$ldap->suffix";
 	
 	if(!ldap_rename($ldap->ldap_connection, $dn, $newdn, $newParent, true)){
-		write_syslog("failed move $newdn,$ldap->suffix",__FILE__);
+		writelogs("failed move $newdn,$ldap->suffix",__FUNCTION,__FILE__,__LINE__);
 	}else{
-		write_syslog("success move $newdn,$ldap->suffix",__FILE__);
+		writelogs("success move $newdn,$ldap->suffix",__FUNCTION,__FILE__,__LINE__);
 	}
 }
 
@@ -109,7 +109,7 @@ function CheckUsers($org){
 		$upd["objectClass"][]="organizationalUnit";
 		$upd["ou"]="users";
 		if(!$ldap->ldap_add($dn_users,$upd)){
-			write_syslog("failed create $dn_users,$ldap->suffix",__FILE__);
+			writelogs("failed create $dn_users,$ldap->suffix",__FUNCTION,__FILE__,__LINE__);
 			return null;
 		}
 	}
@@ -130,7 +130,7 @@ function CheckGroups($org){
 		$upd["objectClass"][]="organizationalUnit";
 		$upd["ou"]="groups";
 		if(!$ldap->ldap_add($dn_users,$upd)){
-			write_syslog("failed create $dn_users,$ldap->suffix",__FILE__);
+			writelogs("failed create $dn_users,$ldap->suffix",__FUNCTION,__FILE__,__LINE__);
 			return null;
 		}
 	}
@@ -151,9 +151,9 @@ function mouvUser($olddn,$olddnRoot,$newroot){
 	$newParent=$newroot;
 	
 	if(!ldap_rename($ldap->ldap_connection, $dn, $newdn, $newParent, true)){
-		write_syslog("failed move $dn",__FILE__);
+		writelogs("failed move $dn",__FUNCTION,__FILE__,__LINE__);
 	}else{
-		write_syslog("success move $newdn,$newParent",__FILE__);
+		writelogs("success move $newdn,$newParent",__FUNCTION,__FILE__,__LINE__);
 	}	
 	
 	
@@ -209,7 +209,7 @@ function CreateNAB(){
 		$upd["o"][]="NAB";
 		$upd["dc"][]="NAB";
 		if(!$ldap->ldap_add($dn,$upd)){
-			write_syslog("failed creating $dn",__FILE__);
+			writelogs("failed creating $dn",__FUNCTION,__FILE__,__LINE__);
 		}
 		
 	}

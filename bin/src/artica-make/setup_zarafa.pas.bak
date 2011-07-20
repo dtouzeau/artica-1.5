@@ -758,6 +758,7 @@ if arch=32 then begin
       fpsystem('/bin/cp -rfd '+source_folder+'* /');
       install.INSTALL_STATUS(CODE_NAME,100);
       install.INSTALL_PROGRESS(CODE_NAME,'{success}');
+      libs.NOTIFICATION('Success install zarafa','Artica make has successfully installed Zarafa','mailbox');
       fpsystem('/etc/init.d/artica-postfix restart zarafa');
       fpsystem('/etc/init.d/artica-postfix restart apache');
       fpsystem('/etc/init.d/artica-postfix restart zarafa-web');
@@ -955,6 +956,7 @@ l.add('/usr/local/lib/libvmime.so');
 l.add('/usr/local/lib/libzarafaclient.so');
 
 
+
 if DirectoryExists('/usr/local/lib/zarafa') then begin
    writeln('Remove directory /usr/local/lib/zarafa');
    fpsystem('/bin/rm -rf /usr/local/lib/zarafa');
@@ -1141,6 +1143,70 @@ l.add('/usr/lib/php5/extensions/mapi.la');
 l.add('/etc/php5/conf.d/zarafa.ini');
 l.add('/usr/lib/php/modules/mapi.so');
 l.add('/usr/lib/php/modules/mapi.la');
+l.add('/usr/bin/zarafa-indexer');
+l.add('/usr/bin/zarafa-dagent');
+l.add('/usr/bin/zarafa-fsck');
+l.add('/usr/bin/zarafa-backup');
+l.add('/usr/bin/zarafa-ical');
+l.add('/usr/bin/zarafa-msr');
+l.add('/usr/bin/zarafa-spooler');
+l.add('/usr/bin/zarafa-ssm');
+l.add('/usr/bin/zarafa-monitor');
+l.add('/usr/bin/zarafa-admin');
+l.add('/usr/bin/zarafa-server');
+l.add('/usr/bin/zarafa-gateway');
+l.add('/usr/bin/zarafa-passwd');
+l.add('/usr/bin/zarafa-stats');
+l.add('/usr/bin/zarafa-licensed');
+l.add('/usr/bin/zarafa-report');
+l.add('/usr/bin/zarafa-autorespond');
+l.add('/usr/bin/zarafa-restore');
+l.add('/usr/lib/libvmime.so.0');
+l.add('/usr/lib/libical.a');
+l.add('/usr/lib/libcommon_util.la');
+l.add('/usr/lib/libcommon_mapi.la');
+l.add('/usr/lib/libicalss.la');
+l.add('/usr/lib/libicalvcal.a');
+l.add('/usr/lib/libical.so.0.44.0');
+l.add('/usr/lib/libinetmapi.la');
+l.add('/usr/lib/libcommon_ssl.la');
+l.add('/usr/lib/libmapi.so.0.0.0');
+l.add('/usr/lib/zarafa/dbplugin.so');
+l.add('/usr/lib/zarafa/ldapmsplugin.so');
+l.add('/usr/lib/zarafa/unixplugin.so');
+l.add('/usr/lib/zarafa/ldapplugin.so');
+l.add('/usr/lib/php5/extensions/mapi.so');
+l.add('/usr/lib/libicalmapi.so.1.0.0');
+l.add('/usr/lib/libarchiver.so');
+l.add('/usr/lib/libicalss.a');
+l.add('/usr/lib/libicalvcal.so.0.44.0');
+l.add('/usr/lib/libinetmapi.so.1.0.0');
+l.add('/usr/lib/libcommon_util.a');
+l.add('/usr/lib/libicalmapi.la');
+l.add('/usr/lib/libfreebusy.la');
+l.add('/usr/lib/libicalmapi.so');
+l.add('/usr/lib/libcommon_ssl.a');
+l.add('/usr/lib/libmapi.so.0');
+l.add('/usr/lib/libinetmapi.so');
+l.add('/usr/lib/libicalvcal.la');
+l.add('/usr/lib/libarchiver.la');
+l.add('/usr/lib/libzarafasync.a');
+l.add('/usr/lib/libicalss.so');
+l.add('/usr/lib/libzarafaclient.so');
+l.add('/usr/lib/libical.so.0');
+l.add('/usr/lib/libzarafasync.la');
+l.add('/usr/lib/libicalvcal.so');
+l.add('/usr/lib/libvmime.so.0.0.0');
+l.add('/usr/lib/libical.la');
+l.add('/usr/lib/libicalss.so.0.44.0');
+l.add('/usr/lib/libvmime.la');
+l.add('/usr/lib/libarchiver.so.0');
+l.add('/usr/lib/libmapi.la');
+l.add('/usr/lib/libicalmapi.so.1');
+l.add('/usr/lib/libicalvcal.so.0');
+l.add('/usr/lib/libfreebusy.a');
+l.add('/usr/lib/libcommon_mapi.so');
+
 
 forceDirectories('/home/zarafa-compile');
 

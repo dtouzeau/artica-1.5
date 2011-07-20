@@ -753,6 +753,19 @@ if sys.PROCESS_EXIST(pid) then begin
       logs.DebugLogs('Starting zarafa..............: Zarafa-server already running PID '+ pid);
       exit;
 end;
+    if not FileExists('/usr/lib/libicui18n.so.40') then begin
+       if FileExists('/usr/lib/libicui18n.so.44') then fpsystem('/bin/ln -s  /usr/lib/libicui18n.so.44 /usr/lib/libicui18n.so.40');
+    end;
+
+     if not FileExists('/usr/lib/libicuuc.so.40') then begin
+        if FileExists('/usr/lib/libicuuc.so.44') then fpsystem('/bin/ln -s  /usr/lib/libicuuc.so.44 /usr/lib/libicuuc.so.40');
+     end;
+
+     if not FileExists('/usr/lib/libicudata.so.40') then begin
+        if FileExists('/usr/lib/libicudata.so.44') then fpsystem('/bin/ln -s  /usr/lib/libicudata.so.44 /usr/lib/libicudata.so.40');
+     end;
+
+
 
      if not TryStrToInt(SYS.GET_INFO('ZarafaStoreOutside'),ZarafaStoreOutside) then ZarafaStoreOutside:=0;
      if ZarafaStoreOutside=1 then begin

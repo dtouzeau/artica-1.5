@@ -743,6 +743,7 @@ l.add('libpcap0.8-dev');
 l.add('byacc');
 l.Add('gcc');
 l.Add('make');
+l.Add('cmake');
 l.Add('build-essential');
 l.Add('flex');
 l.add('libsasl2-dev');

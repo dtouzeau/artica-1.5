@@ -247,10 +247,12 @@ var
    i:integer;
    distri:tdistriDetect;
    SUZE_MAJOR:integer;
+   SUZE_MINOR:integer;
 begin
    distri:=tdistriDetect.Create();
    SUZE_MAJOR:=distri.DISTRI_MAJOR;
-   writeln('Checking.............: Base: Code SUSE ('+distri.DISTRINAME_VERSION+') MAJOR='+IntToStr(SUZE_MAJOR));
+   SUZE_MINOR:=distri.DISTRI_MINOR;
+   writeln('Checking.............: Base: Code SUSE ('+distri.DISTRINAME_VERSION+') MAJOR='+IntToStr(SUZE_MAJOR) ,' MINOR=',SUZE_MINOR);
 
 f:='';
 l:=TstringList.Create;
@@ -369,13 +371,18 @@ l.Add('libmysqlclient-devel');
 l.Add('cyrus-sasl-saslauthd');
 l.Add('cyrus-sasl');
 l.Add('cyrus-sasl-plain');
-l.add('cyrus-sasl-md5');
+if  SUZE_MAJOR>10 then begin
+    if SUZE_MINOR<2 then l.add('cyrus-sasl-md5');
+end;
+
+
 l.Add('perl-Authen-SASL-Cyrus');
 l.add('perl-Authen-SASL');
 
 l.Add('sudo');
 l.Add('gcc ');
 l.Add('make');
+L.add('cmake');
 
 l.Add('libexpat-devel'); //for squid;
 l.Add('libxml2-devel');  //for squid
@@ -398,7 +405,10 @@ l.add('keyutils-devel');
 l.add('krb5-devel');
 l.add('libgcc');
 l.add('libidn-devel');
-l.add('libjpeg-devel');
+if  SUZE_MAJOR>10 then begin
+    if SUZE_MINOR>1 then l.add('libjpeg62-devel');
+    if SUZE_MINOR<2 then l.add('libjpeg-devel');
+end;
 l.add('libaio-devel');
 l.add('libattr-devel');
 l.add('libacl-devel');
@@ -625,7 +635,7 @@ l.Add('sendmail-devel');
 l.add('netpbm');
 //l.add('gifsicle');
 l.add('giflib');
-l.add('giflib-prog');
+l.add('giflib-progs');
 l.add('giflib-devel');
 l.add('gocr');
 l.add('ocrad');

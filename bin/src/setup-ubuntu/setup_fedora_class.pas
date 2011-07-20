@@ -400,6 +400,7 @@ L.add('patch');
 l.Add('make');
 l.add('bison');
 l.add('byacc');
+l.add('cmake');
 l.add('glib-devel');
 l.add('expat-devel'); //for squid
 l.add('libxml2-devel'); //for squid
