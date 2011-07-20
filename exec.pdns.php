@@ -9,6 +9,7 @@ if(is_array($argv)){if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["V
 
 if($argv[1]=="--mysql"){checkMysql();exit;}
 if($argv[1]=="--poweradmin"){poweradmin();exit;}
+if($argv[1]=="--dnsseck"){dnsseck();exit;}
 
 
 
@@ -358,5 +359,51 @@ if(!$q->TABLE_EXISTS("zone_templ_records", "powerdns")){
 echo "Starting......: PowerDNS Mysql done...\n";
 poweradmin();
 }
+
+function dnsseck(){
+	
+	$unix=new unix();
+	$pdnssec=$unix->find_program("pdnssec");
+	if(!is_file($pdnssec)){echo "Starting......: PowerDNS pdnssec no such binary !!!\n";return;}
+	$sql="SELECT id,name FROM domains";
+	$q=new mysql();
+	$results=$q->QUERY_SQL($sql,'powerdns');
+	if(!$q->ok){echo "$q->mysql_error\n";}
+	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
+		echo "Starting......: PowerDNS pdnssec checking zone {$ligne["name"]}\n"; 
+		if(!dnsseck_is_crypto($ligne["id"])){
+			echo "Starting......: PowerDNS pdnssec securing zone {$ligne["name"]}\n";
+			shell_exec("$pdnssec rectify-zone {$ligne["name"]} >/dev/null 2>&1");
+			shell_exec("$pdnssec add-zone-key {$ligne["name"]} >/dev/null 2>&1");
+			if(!dnsseck_is_crypto($ligne["id"])){
+				echo "Starting......: PowerDNS pdnssec securing zone {$ligne["name"]} Failed\n";
+				continue;
+			}
+		}
+		echo "Starting......: PowerDNS pdnssec checking zone {$ligne["name"]} OK\n";
+		
+	}
+
+	
+	
+	
+}
+function dnsseck_is_crypto($id){
+	$q=new mysql();
+	$mres=false;
+	$sql="SELECT id,content FROM cryptokeys WHERE domain_id=$id";
+	$results=$q->QUERY_SQL($sql,'powerdns');
+	if(!$q->ok){echo "$q->mysql_error\n";}
+	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
+		
+		if(strlen($ligne["content"])>50){
+			echo "Starting......: PowerDNS pdnssec securing zone Already done with key [{$ligne["id"]}] ". strlen($ligne["content"]). " bytes\n";
+			$mres=true;
+		}
+	}
+return $mres;
+}
+
+
 
 ?>

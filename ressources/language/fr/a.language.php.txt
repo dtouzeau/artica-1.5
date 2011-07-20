@@ -416,6 +416,7 @@ Le contenu sera d&eacute;truit...</delete_disk_confirm>
 <dhcpd_shared_network_explain>Cette section permet de d&eacute;finir un groupe de sous r&eacute;seaux afin d%u2019appliquer des caract&eacute;ristiques communes.</dhcpd_shared_network_explain>
 <DisableDisplayVersion>Activer l'affichage de la version</DisableDisplayVersion>
 <DisableHtAccess>D&eacute;sactiver la lecture .htaccess</DisableHtAccess>
+<DisableLDAPDatabase>D&eacute;sactiver l'utilisation de la base LDAP</DisableLDAPDatabase>
 <DisablePowerDnsManagement>D&eacute;connecter PowerDNS d'Artica</DisablePowerDnsManagement>
 <DisablePowerDnsManagement_text>Cette op&eacute;ration va d&eacute;connecter PowerDNS de la gestion d'Artica.
 Cela veut dire que Artica ne prendra plus en charge les processus PowerDNS et sa base de donn&eacute;e.
@@ -802,6 +803,7 @@ Si vous mettez 0, alors l'&eacute;metteur sera compl&egrave;tement mis en liste 
 <must_choose_ipaddr>Vous devez choisir une adresse IP</must_choose_ipaddr>
 <mxrecords>Mail eXchanger (MX)</mxrecords>
 <mx_record>Enregistrement MX</mx_record>
+<mx_records>Enregistrements MX</mx_records>
 <myaccount>Mon compte</myaccount>
 <myaccount_text>Personnalisez votre compte, modifiez votre adresse de messagerie, votre mot de passe et vos informations syst&egrave;me.</myaccount_text>
 <mymessaging>Ma messagerie</mymessaging>
@@ -1099,6 +1101,8 @@ Ne vous inqui&eacute;tez pas de ne pas visualiser vos utilisateurs apr&egrave;s 
 <rescan-disk-system>R&eacute;-analyser les disques syst&egrave;mes</rescan-disk-system>
 <rescan-disk-system>R&eacute;-analyser les disques syst&egrave;mes</rescan-disk-system>
 <RestartServiceifReachMb>Red&eacute;marrer si le service consomme plus de</RestartServiceifReachMb>
+<restart_pdns>Red&eacute;marrer PowerDNS</restart_pdns>
+<restart_pdns_text>Red&eacute;marre PowerDNS afin de rafra&icirc;chir les param&egrave;tres et les d&eacute;mons</restart_pdns_text>
 <RestrictNabToGroups>Restreint le carnet d'adresses aux groupes</RestrictNabToGroups>
 <reverse_client_name>R&eacute;solution inverse du nom</reverse_client_name>
 <reverse_proxy>Proxy inverse</reverse_proxy>

@@ -239,6 +239,7 @@ var
    bind9:tbind9;
    loglevel:integer;
    PowerDNSLogsQueries:integer;
+   PowerDNSDNSSEC:integer;
    straces:string;
 begin
     pid:=PID_NUM();
@@ -249,6 +250,7 @@ begin
     end;
      if not TryStrToInt(SYS.GET_INFO('PowerDNSLogLevel'),loglevel) then loglevel:=1;
      if not TryStrToInt(SYS.GET_INFO('PowerDNSLogsQueries'),PowerDNSLogsQueries) then PowerDNSLogsQueries:=0;
+     if not TryStrToInt(SYS.GET_INFO('PowerDNSDNSSEC'),PowerDNSDNSSEC) then PowerDNSDNSSEC:=0;
 
 
 
@@ -536,7 +538,9 @@ var
    PowerDisableDisplayVersion:integer;
    PowerChroot:integer;
    PowerActHasMaster:integer;
-   gmysql:string;
+   PowerDNSDNSSEC:integer;
+   PowerDNSDisableLDAP:integer;
+   gmysql,launch_ldap:string;
 begin
 if DisablePowerDnsManagement=1 then exit;
 
@@ -548,9 +552,13 @@ if not TryStrToInt(SYS.GET_INFO('PowerUseGreenSQL'),PowerUseGreenSQL) then Power
 if not TryStrToInt(SYS.GET_INFO('PowerDisableDisplayVersion'),PowerDisableDisplayVersion) then PowerDisableDisplayVersion:=0;
 if not TryStrToInt(SYS.GET_INFO('PowerChroot'),PowerChroot) then PowerChroot:=0;
 if not TryStrToInt(SYS.GET_INFO('PowerActHasMaster'),PowerActHasMaster) then PowerActHasMaster:=0;
+if not TryStrToInt(SYS.GET_INFO('PowerDNSDNSSEC'),PowerDNSDNSSEC) then PowerDNSDNSSEC:=0;
+if not TryStrToInt(SYS.GET_INFO('PowerDNSDisableLDAP'),PowerDNSDisableLDAP) then PowerDNSDisableLDAP:=0;
 
 
 
+
+if not FileExists(SYS.LOCATE_GENERIC_BIN('pdnssec')) then PowerDNSDNSSEC:=0;
 if not MYSQL_EXISTS() then PowerDNSMySQLEngine:=0;
 PowerDNSListenAddrDefault:=true;
 tcp:=ttcpip.Create;
@@ -596,7 +604,7 @@ end;
 
 logs.DebugLogs('Starting......: PowerDNS log level '+IntToStr(loglevel));
 l:=Tstringlist.Create;
-ldapserver:=zldap.ldap_settings.servername;
+
 if Copy(iplist,length(iplist),1)=',' then iplist:=Copy(iplist,1,length(iplist)-1);
 if Copy(cdirlist,length(cdirlist),1)=',' then cdirlist:=Copy(cdirlist,1,length(cdirlist)-1);
 if PowerDNSMySQLEngine=1 then gmysql:='gmysql ';
@@ -625,7 +633,10 @@ l.add('# disable-tcp=no');
 l.add('# distributor-threads=3');
 l.add('# fancy-records=no');
 l.add('guardian=yes');
-l.add('launch='+ gmysql+'ldap');
+
+launch_ldap:=' ldap';
+if PowerDNSDisableLDAP=1 then launch_ldap:='';
+l.add('launch='+ gmysql+launch_ldap);
 l.add('lazy-recursion=yes');
 l.add('# load-modules=');
 l.add('#local-address=0.0.0.0');
@@ -669,37 +680,50 @@ l.add('webserver-port=8081');
 l.add('webserver-print-arguments=no');
 l.add('# wildcard-url=no');
 l.add('# wildcards=');
-if PowerDisableDisplayVersion=0 then l.add('version-string=powerdns') else l.add('version-string=nope')
+if PowerDisableDisplayVersion=0 then l.add('version-string=powerdns') else l.add('version-string=nope');
+
+
+
 fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.greensql.php --sets');
 if PowerDNSMySQLEngine=1 then begin
    mysql_server:=SYS.GET_MYSQL('mysql_server');
    if not TryStrToInt(SYS.GET_MYSQL('port'),mysql_port) then mysql_port:=3306;
+
    if PowerUseGreenSQL=1 then begin
       mysql_server:=SYS.GET_MYSQL('GreenIP');
       if not TryStrToInt(SYS.GET_MYSQL('GreenPort'),mysql_port) then mysql_port:=3305;
    end;
    if length(mysql_server)=0 then mysql_server:='127.0.0.1';
+   logs.DebugLogs('Starting......: PowerDNS MySQL backend is enabled ['+mysql_server+':'+IntTostr(mysql_port)+']');
+
    l.add('gmysql-host='+mysql_server);
    l.add('gmysql-user='+SYS.GET_MYSQL('database_admin'));
    l.add('gmysql-password='+SYS.GET_MYSQL('database_password'));
    l.add('gmysql-port='+IntTostr(mysql_port));
    l.add('gmysql-dbname=powerdns');
+   if PowerDNSDNSSEC=1 then begin
+      l.add('gmysql-dnssec');
+      logs.DebugLogs('Starting......: PowerDNS dnssec is enabled');
+   end;
 end;
 
-if ldapserver='127.0.0.1' then localldap:=true;
-if ldapserver='localhost' then localldap:=true;
+if PowerDNSDisableLDAP=1 then logs.DebugLogs('Starting......: PowerDNS LDAP backend is disabled');
 
+if PowerDNSDisableLDAP=0 then begin
+    ldapserver:=zldap.ldap_settings.servername;
+    if ldapserver='127.0.0.1' then localldap:=true;
+    if ldapserver='localhost' then localldap:=true;
 
-l.add('ldap-host='+ldapserver+':'+zldap.ldap_settings.Port+'');
-l.add('ldap-basedn=ou=dns,'+zldap.ldap_settings.suffix);
+   l.add('ldap-host='+ldapserver+':'+zldap.ldap_settings.Port+'');
+   l.add('ldap-basedn=ou=dns,'+zldap.ldap_settings.suffix);
 
-
-if not localldap then begin
+   if not localldap then begin
    l.add('ldap-binddn="cn='+zldap.ldap_settings.admin+','+zldap.ldap_settings.suffix+'"');
    l.add('ldap-secret="'+zldap.ldap_settings.password+'"');
 end;
+   l.add('ldap-method=simple');
+end;
 
-l.add('ldap-method=simple');
 forceDirectories('/etc/powerdns/pdns.d');
 logs.WriteToFile(l.Text,'/etc/powerdns/pdns.conf');
 logs.DebugLogs('Starting......: PowerDNS updating /etc/powerdns/pdns.conf done...');
@@ -709,17 +733,20 @@ logs.DebugLogs('Starting......: PowerDNS updating /etc/powerdns/pdns.conf done..
 //http://wiki.debian.org/DebianEdu/LdapifyServices
 l.clear;
 
+if PowerDNSDisableLDAP=0 then begin
+   if not localldap then l.add('ldap-host='+ldapserver+':'+zldap.ldap_settings.Port+'');
+   l.add('ldap-basedn=ou=dns,'+zldap.ldap_settings.suffix);
 
-if not localldap then l.add('ldap-host='+ldapserver+':'+zldap.ldap_settings.Port+'');
-l.add('ldap-basedn=ou=dns,'+zldap.ldap_settings.suffix);
+   if not localldap then begin
+      l.add('ldap-binddn="cn='+zldap.ldap_settings.admin+','+zldap.ldap_settings.suffix+'"');
+      l.add('ldap-secret="'+zldap.ldap_settings.password+'"');
+   end;
 
-if not localldap then begin
-   l.add('ldap-binddn="cn='+zldap.ldap_settings.admin+','+zldap.ldap_settings.suffix+'"');
-   l.add('ldap-secret="'+zldap.ldap_settings.password+'"');
+   l.add('ldap-method=simple');
 end;
 
-l.add('ldap-method=simple');
 l.add('recursor=127.0.0.1:1553');
+
 if PowerDNSMySQLEngine=1 then begin
    l.add('gmysql-host='+mysql_server);
    l.add('gmysql-port='+IntTostr(mysql_port));

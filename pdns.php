@@ -20,6 +20,10 @@ if(isset($_GET["tabs"])){tabs();exit;}
 
 if(isset($_GET["config"])){config();exit;}
 if(isset($_GET["network-pdns-table"])){listen_ip_list();exit;}
+if(isset($_GET["RestartPDNS"])){RestartPDNS();exit;}
+
+
+
 if(isset($_POST["RemoteAddAddr"])){listen_ip_add();exit;}
 if(isset($_POST["RemoteDelAddr"])){listen_ip_del();exit;}
 
@@ -51,11 +55,10 @@ if(isset($_GET["RefreshDNSList"])){echo dnslist();exit;}
 if(isset($_GET["popup-add-dns"])){echo popup_adddns();exit;}
 if(isset($_GET["SaveDNSEntry"])){AddDNSEntry();exit;}
 if(isset($_GET["DelDNSEntry"])){DelDNSEntry();exit;}
-if(isset($_GET["DisablePowerDnsManagement"])){DisablePowerDnsManagement();exit;}
 if(isset($_GET["EnablePDNS"])){EnablePDNS();exit;}
 if(isset($_GET["PowerDNSLogsQueries"])){SaveLogsSettings();exit;}
 if(isset($_GET["PDNSRestartIfUpToMB"])){PDNSRestartIfUpToMB();exit;}
-if(isset($_POST["PowerDNSMySQLEngine"])){PowerDNSMySQLEngine();exit;}
+
 
 js();
 
@@ -77,10 +80,7 @@ function DelPointerDC(){
 	$sock->getFrameWork("cmd.php?artica-meta-export-dns=yes");		
 }
 
-function DisablePowerDnsManagement(){
-	$sock=new sockets();
-	$sock->SET_INFO("DisablePowerDnsManagement",$_GET["DisablePowerDnsManagement"]);
-}
+
 
 function EnablePDNS(){
 	$sock=new sockets();
@@ -179,6 +179,9 @@ $page=CurrentPageName();
 	$PowerUseGreenSQL=$sock->GET_INFO("PowerUseGreenSQL");
 	$PowerDisableDisplayVersion=$sock->GET_INFO("PowerDisableDisplayVersion");
 	$PowerActHasMaster=$sock->GET_INFO("PowerActHasMaster");
+	$PowerDNSDNSSEC=$sock->GET_INFO("PowerDNSDNSSEC");
+	$PowerDNSDisableLDAP=$sock->GET_INFO("PowerDNSDisableLDAP");
+	
 	
 	if(!is_numeric($EnablePDNS)){$EnablePDNS=1;}
 	if(!is_numeric($PowerDNSMySQLEngine)){$PowerDNSMySQLEngine=0;}
@@ -187,21 +190,27 @@ $page=CurrentPageName();
 	if(!is_numeric($DisablePowerDnsManagement)){$DisablePowerDnsManagement=0;}
 	if(!is_numeric($PowerUseGreenSQL)){$PowerUseGreenSQL=0;}
 	if(!is_numeric($PowerDisableDisplayVersion)){$PowerDisableDisplayVersion=0;}
+	if(!is_numeric($PowerDNSDNSSEC)){$PowerDNSDNSSEC=0;}
+	if(!is_numeric($PowerDNSDisableLDAP)){$PowerDNSDisableLDAP=0;}
 	$POWER_DNS_MYSQL=1;
 	$GREENSQL=1;
+	$DNSDNSSEC=1;
 	if(!$user->POWER_DNS_MYSQL){$POWER_DNS_MYSQL=0;$PowerDNSMySQLEngine=0;}	
 	if(!$user->APP_GREENSQL_INSTALLED){$GREENSQL=0;$PowerUseGreenSQL=0;}
+	if(!$user->PDNSSEC_INSTALLED){$PowerDNSDNSSEC=0;$DNSDNSSEC=0;}
+	
 	
 	$DisablePowerDnsManagement_text=$tpl->javascript_parse_text("{DisablePowerDnsManagement_text}");	
 	
 	$html="
+	<div id='PowerDNSMAsterConfigDiv'>
 	<div class=explain>{pdns_explain}</div>
 	
 	
 <table style='width:100%' class=form>
 				<tr>
 					<td valign='top' class=legend nowrap>{DisablePowerDnsManagement}:</td>
-					<td width=1%>". Field_checkbox("DisablePowerDnsManagement",1,$DisablePowerDnsManagement,"DisablePowerDnsManagementCheck()")."</td>
+					<td width=1%>". Field_checkbox("DisablePowerDnsManagement",1,$DisablePowerDnsManagement,"EnablePowerDNSMySQLEngineCheck()")."</td>
 				</tr>
 				<tr>
 					<td valign='top' class=legend nowrap>{EnablePDNS}:</td>
@@ -210,11 +219,20 @@ $page=CurrentPageName();
 				<tr>
 					<td valign='top' class=legend nowrap>{ActHasMaster}:</td>
 					<td width=1%>". Field_checkbox("PowerActHasMaster",1,$PowerActHasMaster)."</td>
+				</tr>
+				<tr>
+					<td valign='top' class=legend nowrap>{DisableLDAPDatabase}:</td>
+					<td width=1%>". Field_checkbox("PowerDNSDisableLDAP",1,$PowerDNSDisableLDAP,"EnablePowerDNSMySQLEngineCheck()")."</td>
 				</tr>				
+						
 				<tr>
 					<td valign='top' class=legend nowrap>{useMySQL}:</td>
 					<td width=1%>". Field_checkbox("PowerDNSMySQLEngine",1,$PowerDNSMySQLEngine,"EnablePowerDNSMySQLEngineCheck()")."</td>
 				</tr>
+				<tr>	
+					<td valign='top' class=legend nowrap>DNSSEC:</td>
+					<td width=1%>". Field_checkbox("PowerDNSDNSSEC",1,$PowerDNSDNSSEC)."</td>
+				</tr>					
 				<tr>
 					<td valign='top' class=legend nowrap>{useGreenSQL}:</td>
 					<td width=1%>". Field_checkbox("PowerUseGreenSQL",1,$PowerUseGreenSQL)."</td>
@@ -234,6 +252,7 @@ $page=CurrentPageName();
 				</tr>
 				<tr><td colspan=2 align='right'>". button("{apply}","SavePDNSWatchdog()")."</td></tr>							
 			</table>
+			</div>
 <hr>
 <div class=explain>{pdns_listen_ip_explain}</div>
 
@@ -241,20 +260,7 @@ $page=CurrentPageName();
 
 			
 <script>
-		function DisablePowerDnsManagementCheck(){
-			var XHR = new XHRConnection();
-			if(document.getElementById('DisablePowerDnsManagement').checked){
-				if(confirm('$DisablePowerDnsManagement_text')){
-						XHR.appendData('DisablePowerDnsManagement','1');
-					}else{
-					document.getElementById('DisablePowerDnsManagement').checked=false;
-					return;
-				}
-			}else{
-				XHR.appendData('DisablePowerDnsManagement','0');
-			}
-			XHR.sendAndLoad('$page', 'GET');	
-		}
+
 		
 	var x_EnablePowerDNSMySQLEngineCheck=function (obj) {
 			var results=obj.responseText;
@@ -263,15 +269,7 @@ $page=CurrentPageName();
 		}			
 		
 		function EnablePowerDNSMySQLEngineCheck(){
-			var XHR = new XHRConnection();
-			var GREENSQL=$GREENSQL;
-			document.getElementById('PowerUseGreenSQL').disabled=true;
-			if(document.getElementById('PowerDNSMySQLEngine').checked){
-			XHR.appendData('PowerDNSMySQLEngine','1');
-			if(GREENSQL==1){document.getElementById('PowerUseGreenSQL').disabled=false;}
-			}else{XHR.appendData('PowerDNSMySQLEngine','0');}
-			XHR.sendAndLoad('$page', 'POST',x_EnablePowerDNSMySQLEngineCheck);		
-		
+				CheckDNSMysql();
 		}
 		
 		function EnablePDNSCheck(){
@@ -292,10 +290,25 @@ $page=CurrentPageName();
 			if(document.getElementById('PowerDisableDisplayVersion').checked){XHR.appendData('PowerDisableDisplayVersion',1);}else{XHR.appendData('PowerDisableDisplayVersion',0);}
 			if(document.getElementById('PowerChroot').checked){XHR.appendData('PowerChroot',1);}else{XHR.appendData('PowerChroot',0);}
 			if(document.getElementById('PowerActHasMaster').checked){XHR.appendData('PowerActHasMaster',1);}else{XHR.appendData('PowerActHasMaster',0);}
+			if(document.getElementById('PowerDNSDNSSEC').checked){
+				XHR.appendData('PowerDNSDNSSEC',1);
+				document.getElementById('PowerDNSDisableLDAP').checked=true;
+			}else{XHR.appendData('PowerDNSDNSSEC',0);}
+			if(document.getElementById('PowerDNSMySQLEngine').checked){XHR.appendData('PowerDNSMySQLEngine',1);}else{XHR.appendData('PowerDNSMySQLEngine',0);}
+			if(document.getElementById('PowerDNSDisableLDAP').checked){XHR.appendData('PowerDNSDisableLDAP',1);}else{XHR.appendData('PowerDNSDisableLDAP',0);}
 			
 			
 			
-			XHR.sendAndLoad('$page', 'GET');	
+			if(document.getElementById('DisablePowerDnsManagement').checked){
+				if(confirm('$DisablePowerDnsManagement_text')){XHR.appendData('DisablePowerDnsManagement','1');}else{XHR.appendData('DisablePowerDnsManagement','0');}
+			}else{
+				XHR.appendData('DisablePowerDnsManagement','0');
+			}			
+			
+			
+			
+			AnimateDiv('PowerDNSMAsterConfigDiv');
+			XHR.sendAndLoad('$page', 'GET',x_EnablePowerDNSMySQLEngineCheck);	
 		}
 
 
@@ -305,25 +318,34 @@ $page=CurrentPageName();
 			var DisablePowerDnsManagement=$DisablePowerDnsManagement;
 			var EnablePDNS=$EnablePDNS;
 			var GREENSQL=$GREENSQL;
+			var DNSDNSSEC=$DNSDNSSEC;
 			document.getElementById('PowerDNSMySQLEngine').disabled=true;
 			document.getElementById('PowerUseGreenSQL').disabled=true;
+			document.getElementById('PowerDNSDNSSEC').disabled=true;
 			if(DisablePowerDnsManagement==1){return;}
 			if(EnablePDNS==0){return;}
-			if(POWER_DNS_MYSQL==1){document.getElementById('PowerDNSMySQLEngine').disabled=false;}
+			if(POWER_DNS_MYSQL==1){
+				document.getElementById('PowerDNSMySQLEngine').disabled=false;
+			}
+			
 			if(document.getElementById('PowerDNSMySQLEngine').disabled==false){
 				if(document.getElementById('PowerDNSMySQLEngine').checked){
-					if(GREENSQL==1){
-						document.getElementById('PowerUseGreenSQL').disabled=false;
+					if(GREENSQL==1){document.getElementById('PowerUseGreenSQL').disabled=false;}
+					if(DNSDNSSEC==1){
+						document.getElementById('PowerDNSDNSSEC').disabled=false;
+							if(document.getElementById('PowerDNSDNSSEC').checked){
+								document.getElementById('PowerDNSDisableLDAP').disabled=true;
+							}else{
+								document.getElementById('PowerDNSDisableLDAP').disabled=false;
+							}
+						}
 					}
 				}
 			}
-		}
 		
 		
 		
-		function RefreshPDNSNetworkTable(){
-			LoadAjax('network-pdns-table','$page?network-pdns-table=yes');
-		}
+		function RefreshPDNSNetworkTable(){LoadAjax('network-pdns-table','$page?network-pdns-table=yes');}
 		
 		function PdnsRemoteAddAddr(){
 			var ip=prompt('$listen_ip');
@@ -549,13 +571,16 @@ echo $tpl->_ENGINE_parse_body($html);
 
 function tabs(){
 	
-	
+	$sock=new sockets();
 	$page=CurrentPageName();
 	$tpl=new templates();
+	$PowerDNSDisableLDAP=$sock->GET_INFO("PowerDNSDisableLDAP");
 	$array["status"]='{status}';
 	$array["config"]='{parameters}';
-	$array["popup"]='{dns_entries}';
-	$array["logs"]='{events}';
+	if($PowerDNSDisableLDAP<>1){
+		$array["popup"]='{dns_entries}';
+	}
+		$array["logs"]='{events}';
 	
 	
 	
@@ -588,14 +613,18 @@ function status_section(){
 	$DisablePowerDnsManagement=$sock->GET_INFO("DisablePowerDnsManagement");
 	$EnablePDNS=$sock->GET_INFO("EnablePDNS");
 	$PowerDNSMySQLEngine=$sock->GET_INFO("PowerDNSMySQLEngine");
+	$PowerDNSDisableLDAP=$sock->GET_INFO("PowerDNSDisableLDAP");
 	if(!is_numeric($EnablePDNS)){$EnablePDNS=1;}
 	if(!is_numeric($PowerDNSMySQLEngine)){$PowerDNSMySQLEngine=0;}
 	if(!is_numeric($PDNSRestartIfUpToMB)){$PDNSRestartIfUpToMB=700;}
 	if(!is_numeric($DisablePowerDnsManagement)){$DisablePowerDnsManagement=0;}
+	if(!is_numeric($PowerDNSDisableLDAP)){$PowerDNSDisableLDAP=0;}
+	
 	
 	
 	$DisablePowerDnsManagement_text=$tpl->javascript_parse_text("{DisablePowerDnsManagement_text}");
 	$add=Paragraphe("dns-cp-add-64.png","{ADD_DNS_ENTRY}","{ADD_DNS_ENTRY_TEXT}","javascript:AddPDNSEntry()");
+	$restart=Paragraphe("64-recycle.png","{restart_pdns}","{restart_pdns_text}","javascript:RestartPDNS()");
 	$nic=Buildicon64('DEF_ICO_IFCFG');
 	
 	if($DisablePowerDnsManagement==1){
@@ -605,6 +634,8 @@ function status_section(){
 	if($EnablePDNS==0){
 		$add=Paragraphe("dns-cp-add-64-grey.png","{ADD_DNS_ENTRY}","{ADD_DNS_ENTRY_TEXT}","");
 	}	
+	
+	if($PowerDNSDisableLDAP==1){$add=null;}
 	
 	if($PowerDNSMySQLEngine==1){
 		if($user->POWERADMIN_INSTALLED){
@@ -632,7 +663,7 @@ function status_section(){
 			
 			
 		</td>
-		<td valign='top'><div class=explain>{pdns_explain}</div><hr>$poweradmin<br>$add<br>$nic</td>
+		<td valign='top'><div class=explain>{pdns_explain}</div><hr>$poweradmin<br>$restart<br>$add<br>$nic</td>
 	</tr>
 	</table>
 	<script>
@@ -640,6 +671,20 @@ function status_section(){
 			LoadAjax('pdns_status','$page?PowerDNS-status=yes');
 		
 		}
+		
+	var x_RestartPDNS=function (obj) {
+			var results=obj.responseText;
+			if (results.length>0){alert(results);}
+			RefreshPDNSStatus();
+			
+		}
+	
+	function RestartPDNS(){
+		var XHR = new XHRConnection();
+		XHR.appendData('RestartPDNS','yes');
+		XHR.sendAndLoad('$page', 'POST',x_RestartPDNS);
+	}
+		
 		RefreshPDNSStatus();
 	</script>
 	";
@@ -1451,6 +1496,10 @@ function SaveLogsSettings(){
 	$sock->SET_INFO("PowerDNSLogsQueries",$_GET["PowerDNSLogsQueries"]);
 	$sock->getFrameWork("cmd.php?pdns-restart=yes");
 }
+function RestartPDNS(){
+	$sock=new sockets();
+	$sock->getFrameWork("cmd.php?pdns-restart=yes");	
+}
 
 function events_query(){
 	
@@ -1487,14 +1536,14 @@ function PDNSRestartIfUpToMB(){
 	$sock->SET_INFO("PowerDisableDisplayVersion",$_GET["PowerDisableDisplayVersion"]);
 	$sock->SET_INFO("PowerChroot",$_GET["PowerChroot"]);
 	$sock->SET_INFO("PowerActHasMaster",$_GET["PowerActHasMaster"]);
+	$sock->SET_INFO("PowerDNSDNSSEC",$_GET["PowerDNSDNSSEC"]);
+	$sock->SET_INFO("PowerDNSMySQLEngine",$_GET["PowerDNSMySQLEngine"]);
+	$sock->SET_INFO("DisablePowerDnsManagement",$_GET["DisablePowerDnsManagement"]);
+	$sock->SET_INFO("PowerDNSDisableLDAP",$_GET["PowerDNSDisableLDAP"]);
 	$sock->getFrameWork("cmd.php?pdns-restart=yes");
 
 }
 
-function PowerDNSMySQLEngine(){
-	$sock=new sockets();
-	$sock->SET_INFO("PowerDNSMySQLEngine",$_POST["PowerDNSMySQLEngine"]);	
-	$sock->getFrameWork("cmd.php?pdns-restart=yes");
-}
+
 
 ?>

@@ -489,6 +489,7 @@ Name  should  be  the name that will be provided to the client</dhcp-server-name
 <dhcpd_shared_network_explain>All subnets that share the same physical network can be grouped under a Shared Network object called here has "groups"</dhcpd_shared_network_explain>
 <DisableDisplayVersion>Disable the display version feature</DisableDisplayVersion>
 <DisableHtAccess>Disable .htaccess</DisableHtAccess>
+<DisableLDAPDatabase>Disable LDAP Database</DisableLDAPDatabase>
 <DisablePowerDnsManagement>Unlink PowerDNS from Artica</DisablePowerDnsManagement>
 <DisablePowerDnsManagement_text>This operation will unlink PowerDNS from Artica process.
 It means that Artica will not handle PowerDNS process and database.
@@ -936,6 +937,7 @@ Organizations can only create subdomains of these domains if the "Use only offic
 <must_choose_ipaddr>You must choose an IP address</must_choose_ipaddr>
 <mxrecords>Mail eXchanger records (MX)</mxrecords>
 <mx_record>MX record</mx_record>
+<mx_records>MX records</mx_records>
 <myaccount>My Account</myaccount>
 <myaccount_text>Modify your account, email address, passwords and system informations</myaccount_text>
 <mymessaging>My Messaging</mymessaging>
@@ -1266,6 +1268,8 @@ When define quota for a specific user, wait until this user have saved a file on
 <rescan-disk-system>Re-scan the system disk</rescan-disk-system>
 <rescan-disk-system>Re-scan the system disk</rescan-disk-system>
 <RestartServiceifReachMb>Restart if service consume more than</RestartServiceifReachMb>
+<restart_pdns>Restart PowerDNS</restart_pdns>
+<restart_pdns_text>Restart PowerDNS in order to refresh settings and daemons</restart_pdns_text>
 <RestrictNabToGroups>Restrict AdressBook colleagues to only groups members</RestrictNabToGroups>
 <reverse_client_name>Reverse client name</reverse_client_name>
 <reverse_proxy>Reverse Proxy</reverse_proxy>

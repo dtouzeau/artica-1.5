@@ -1730,3 +1730,7 @@ You have to define which directory to backup and the client hostname.[br]
 <remote_clients>Remote clients</remote_clients>
 <amanda_backup_server_explain>If this Artica server is a client and must send backups to a central server, set here the fully qualified hostname of the backup central server.</amanda_backup_server_explain>
 <backup_server>Backup server</backup_server>
+<DisableLDAPDatabase>Disable LDAP Database</DisableLDAPDatabase>
+<mx_records>MX records</mx_records>
+<restart_pdns>Restart PowerDNS</restart_pdns>
+<restart_pdns_text>Restart PowerDNS in order to refresh settings and daemons</restart_pdns_text> 
