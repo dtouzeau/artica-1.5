@@ -659,6 +659,13 @@
 			
 			
 			$f[]=$this->WORKING_DIRECTORY;
+			include_once("/usr/share/artica-postfix/framework/class.unix.inc");
+			$unix=new unix();
+			$GLOBALS["MAX_RECUSIVE_DIRS"]=40;
+			$GLOBALS["RECURSVIVE_INC"]=0;
+			$dirs=$unix->getDirectories($this->WORKING_DIRECTORY);
+			while (list ($num, $ligne) = each ($dirs) ){$f[]=$ligne;}
+			
 			return @implode(":",$f);
 		}
 		
@@ -673,8 +680,16 @@
 		
 		
 		public function php_values(){
-			$f[]="\tphp_value  include_path \".:/usr/share/php\"";
 			
+			$includes[]=".";
+			$includes[]="/usr/share/php";
+			$includes[]="$this->WORKING_DIRECTORY";
+			$includes[]="/usr/share/php5";
+			$includes[]="/usr/local/share/php";
+			$includes[]="/usr/share/php5/PEAR";
+			$includes[]="/usr/share/pear";
+			$f[]="\tphp_value  include_path \"". @implode(":", $includes)."\"";
+
 			if(($this->groupware=="ZARAFA") OR ($this->groupware=="ZARAFA_MOBILE")){
 				$f[]="\tphp_value magic_quotes_gpc \"off\"";
 			}

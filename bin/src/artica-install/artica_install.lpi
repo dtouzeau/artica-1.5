@@ -12,7 +12,7 @@
       <MainUnit Value="0"/>
       <TargetFileExt Value=""/>
       <Title Value="artica-install"/>
-      <ActiveEditorIndexAtStart Value="4"/>
+      <ActiveEditorIndexAtStart Value="13"/>
     </General>
     <VersionInfo>
       <ProjectVersion Value=""/>
@@ -1138,8 +1138,8 @@
         <Filename Value="amanda.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="amanda"/>
-        <CursorPos X="1" Y="69"/>
-        <TopLine Value="18"/>
+        <CursorPos X="1" Y="112"/>
+        <TopLine Value="55"/>
         <EditorIndex Value="13"/>
         <UsageCount Value="23"/>
         <Loaded Value="True"/>

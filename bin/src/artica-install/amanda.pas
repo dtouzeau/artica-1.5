@@ -109,12 +109,6 @@ begin
    end;
 
 
-if SYS.PROCESS_EXIST(PID_NUM()) then begin
-   logs.DebugLogs('Starting......:  Amanda server Already running using PID ' +PID_NUM()+ '...');
-   exit;
-end;
-
-
    cmd:=SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.amanda.php --build';
    fpsystem(cmd);
 

@@ -457,6 +457,7 @@ class usersMenus {
 	var $POWERADMIN_INSTALLED=false;
 	var $APACHE_MOD_CACHE=false;
 	var $APP_AMANDA_INSTALLED=false;
+	var $PDNSSEC_INSTALLED=false;
 	
 	
 	private function CheckIndexDefaults($_GLOBAL){
@@ -852,7 +853,7 @@ class usersMenus {
 			$this->POWER_DNS_MYSQL=$_GLOBAL["POWER_DNS_MYSQL"];
 			$this->POWERADMIN_INSTALLED=$_GLOBAL["POWERADMIN_INSTALLED"];
 			$this->APP_AMANDA_INSTALLED=$_GLOBAL["APP_AMANDA_INSTALLED"];
-			
+			$this->PDNSSEC_INSTALLED=$_GLOBAL["PDNSSEC_INSTALLED"];
 			
 			
 			if(isset($_GLOBAL["ISCSI_CLIENT_INSTALLED"])){$this->ISCSI_CLIENT_INSTALLED=$_GLOBAL["ISCSI_CLIENT_INSTALLED"];}

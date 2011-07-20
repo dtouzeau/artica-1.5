@@ -697,7 +697,7 @@ begin
 
    amanda:=tamanda.Create(SYS);
    if FileExists(amanda.BIN_PATH()) then list.Add('$_GLOBAL["APP_AMANDA_INSTALLED"]=True;') else list.Add('$_GLOBAL["APP_AMANDA_INSTALLED"]=False;');
-   amanda.Free
+   amanda.Free;
 
    if FIleExists(SYS.LOCATE_GENERIC_BIN('ietd')) then list.add('$_GLOBAL["ISCSI_INSTALLED"]=True;') else list.Add('$_GLOBAL["ISCSI_INSTALLED"]=False;');
    if FIleExists(SYS.LOCATE_GENERIC_BIN('iscsiadm')) then list.add('$_GLOBAL["ISCSI_CLIENT_INSTALLED"]=True;') else list.Add('$_GLOBAL["ISCSI_CLIENT_INSTALLED"]=False;');

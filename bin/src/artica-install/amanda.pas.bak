@@ -66,42 +66,6 @@ end;
 writeln('Stopping Amanda server.......: xinetd -> not applicable');
 exit;
 end;
-   pidstring:=PID_NUM();
-   writeln('Stopping Artica-status.......: ' + pidstring + ' PID..');
-   cmd:=SYS.LOCATE_GENERIC_BIN('kill')+' '+pidstring+' >/dev/null 2>&1';
-   fpsystem(cmd);
-
-   count:=0;
-   while SYS.PROCESS_EXIST(pidstring) do begin
-        sleep(200);
-        count:=count+1;
-        if count>50 then begin
-            if length(pidstring)>0 then begin
-               if SYS.PROCESS_EXIST(pidstring) then begin
-                     writeln('Stopping Artica-status.......: kill pid '+ pidstring+' after timeout');
-                  fpsystem('/bin/kill -9 ' + pidstring);
-               end;
-            end;
-            break;
-        end;
-        pidstring:=PID_NUM();
-  end;
-
-  count:=0;
-  pids:=Tstringlist.Create;
-  pids.AddStrings(SYS.PIDOF_PATTERN_PROCESS_LIST(SYS.LOCATE_PHP5_BIN()+'\s+/usr/share/artica-postfix/exec.status.php'));
-  writeln('Stopping Artica-status.......: ',pids.Count,' childrens.');
-  for i:=0 to pids.Count-1 do begin
-        if not TryStrToInt(pids.Strings[i],fpid) then continue;
-        if fpid>2 then begin
-              writeln('Stopping Artica-status.......: kill pid ',fpid);
-              fpsystem('/bin/kill -9 '+ IntToStr(fpid));
-        end;
-  end;
-
-  if not SYS.PROCESS_EXIST(PID_NUM()) then    writeln('Stopping Artica-status.......: success');
-end;
-
 //##############################################################################
 function tamanda.BIN_PATH():string;
 begin

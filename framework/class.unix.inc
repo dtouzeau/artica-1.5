@@ -4,8 +4,8 @@ include_once(dirname(__FILE__).'/class.ini-frame.inc');
 include_once("/usr/share/artica-postfix/ressources/class.sockets.inc");
 include_once("/usr/share/artica-postfix/ressources/class.ini.inc");
 $GLOBALS["SSLKEY_PATH"]="/etc/ssl/certs/apache";
-
-
+$GLOBALS["MAX_RECUSIVE_DIRS"]=200;
+$GLOBALS["RECURSVIVE_INC"]=0;
 class unix {
 	
 	var $proc_status;
@@ -2671,18 +2671,20 @@ public function LOCATE_STUNNEL_BIN(){
 	}
 	
 public	function getDirectories($directory){
+	$GLOBALS["RECURSVIVE_INC"]=$GLOBALS["RECURSVIVE_INC"]+1;
+	
+	if($GLOBALS["RECURSVIVE_INC"]>$GLOBALS["MAX_RECUSIVE_DIRS"]){return;}
 	$array_items = array();
 	if ($handle = opendir($directory)) {
 		while (false !== ($file = readdir($handle))) {
 			if ($file != "." && $file != "..") {
 				if (is_dir($directory. "/" . $file)) {
 						$array_items = array_merge($array_items, $this->getDirectories($directory. "/" . $file));
-					
-					$file = $directory . "/" . $file;
-					$array_items[] = preg_replace("/\/\//si", "/", $file);
+						$file = $directory . "/" . $file;
+						$array_items[] = preg_replace("/\/\//si", "/", $file);
 				} else {
-					$file = $directory . "/" . $file;
-					$array_items[] = preg_replace("/\/\//si", "/", $file);
+					//$file = $directory . "/" . $file;
+					//$array_items[] = preg_replace("/\/\//si", "/", $file);
 				}
 			}
 		}

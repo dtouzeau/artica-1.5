@@ -577,6 +577,7 @@ function buildHost($uid=null,$hostname,$ssl=null,$d_path=null,$Params=array()){
 	$sock=$GLOBALS["CLASS_SOCKETS"];
 	$users=$GLOBALS["CLASS_USERS_MENUS"];
 	$AuthLDAP=0;
+	$EnableLDAPAllSubDirectories=0;
 	$APACHE_MOD_AUTHNZ_LDAP=$users->APACHE_MOD_AUTHNZ_LDAP;
 	$freeweb=new freeweb($hostname);
 	$Params=$freeweb->Params;
@@ -589,6 +590,8 @@ function buildHost($uid=null,$hostname,$ssl=null,$d_path=null,$Params=array()){
 	
 	
 	if(isset($Params["LDAP"]["enabled"])){$AuthLDAP=$Params["LDAP"]["enabled"];}
+	if(isset($Params["LDAP"]["EnableLDAPAllSubDirectories"])){$EnableLDAPAllSubDirectories=$Params["LDAP"]["EnableLDAPAllSubDirectories"];}
+
 	
 	//server signature.
 	if(!isset($Params["SECURITY"])){$Params["SECURITY"]["ServerSignature"]=null;}
@@ -688,16 +691,8 @@ function buildHost($uid=null,$hostname,$ssl=null,$d_path=null,$Params=array()){
 			$conf[]="\tRewriteEngine On";
 			$conf[]="\tRewriteRule (.*) $freeweb->ForwardTo";
 		}
-	
-	
-	//DIRECTORY
-	$conf[]="\t<Directory \"$freeweb->WORKING_DIRECTORY\">\n";
-		$conf[]="\t\tDirectoryIndex $DirectoryIndex";
-    	$conf[]="\t\tOptions Indexes +FollowSymLinks MultiViews";
-		$conf[]=$freeweb->WebDav();
-		$conf[]=$freeweb->AllowOverride();
-		$conf[]="\t\tOrder allow,deny";
-		$conf[]=$freeweb->AllowFrom();
+		
+		$ldapRule=null;
 		if($AuthLDAP==1){
 			echo "Starting......: Apache \"$hostname\" ldap authentication enabled\n";
 			$ldap=$GLOBALS["CLASS_LDAP"];
@@ -706,22 +701,38 @@ function buildHost($uid=null,$hostname,$ssl=null,$d_path=null,$Params=array()){
 				$usr=new user($uid);
 				$dn_master_branch="ou=users,ou=$usr->ou,dc=organizations,$ldap->suffix";
 			}
-			$conf[]="";
-		    $conf[]="\t\tAuthName \"". base64_decode($Params["LDAP"]["authentication_banner"])."\"";
-		    $conf[]="\t\tAuthType Basic";
-		    $conf[]="\t\tAuthLDAPURL ldap://$ldap->ldap_host:$ldap->ldap_port/$dn_master_branch?uid";
-		   	$conf[]="\t\tAuthLDAPBindDN cn=$ldap->ldap_admin,$ldap->suffix";
-		   	$conf[]="\t\tAuthLDAPBindPassword $ldap->ldap_password";
-			$conf[]="\t\tAuthLDAPGroupAttribute memberUid";
-			$conf[]="\t\tAuthBasicProvider ldap";
-		    $conf[]="\t\tAuthzLDAPAuthoritative off";
+			
+		    $ldapAuth[]="\t\tAuthName \"". base64_decode($Params["LDAP"]["authentication_banner"])."\"";
+		    $ldapAuth[]="\t\tAuthType Basic";
+		    $ldapAuth[]="\t\tAuthLDAPURL ldap://$ldap->ldap_host:$ldap->ldap_port/$dn_master_branch?uid";
+		   	$ldapAuth[]="\t\tAuthLDAPBindDN cn=$ldap->ldap_admin,$ldap->suffix";
+		   	$ldapAuth[]="\t\tAuthLDAPBindPassword $ldap->ldap_password";
+			$ldapAuth[]="\t\tAuthLDAPGroupAttribute memberUid";
+			$ldapAuth[]="\t\tAuthBasicProvider ldap";
+		    $ldapAuth[]="\t\tAuthzLDAPAuthoritative off";
 		    $AuthUsers=$freeweb->AuthUsers();
-		    if($AuthUsers<>null){$conf[]=$AuthUsers;}else{$conf[]="\t\trequire valid-user";}	
-		    $conf[]="";	
-		}
-		$conf[]=$freeweb->mod_rewrite();
+		    if($AuthUsers<>null){$ldapAuth[]=$AuthUsers;}else{$ldapAuth[]="\t\trequire valid-user";}	
+		    $ldapAuth[]="";	
+		    $ldapRule=@implode("\n", $ldapAuth);
+		}		
 	
+	
+	//DIRECTORY
+	$allowFrom=$freeweb->AllowFrom();
+		
+	$conf[]="\t<Directory \"$freeweb->WORKING_DIRECTORY/\">\n";
+		$conf[]="\t\tDirectoryIndex $DirectoryIndex";
+    	$conf[]="\t\tOptions Indexes +FollowSymLinks MultiViews";
+		$conf[]=$freeweb->WebDav();
+		$conf[]=$freeweb->AllowOverride();
+		$conf[]="\t\tOrder allow,deny";
+		$conf[]=$allowFrom;
+		$conf[]=$freeweb->mod_rewrite();
+		if($ldapRule<>null){$conf[]=$ldapRule;}
 	$conf[]="\t</Directory>";
+
+	
+	
 	
 	if($freeweb->UseReverseProxy==1){
 	

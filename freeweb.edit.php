@@ -356,6 +356,7 @@ function params_enable_ldap_authentication(){
 	$Params=unserialize(base64_decode($ligne["Params"]));	
 	$Params["LDAP"]["enabled"]=$_GET["enable_ldap_authentication"];
 	$Params["LDAP"]["authentication_banner"]=$_GET["authentication_banner"];
+	$Params["LDAP"]["EnableLDAPAllSubDirectories"]=$_GET["EnableLDAPAllSubDirectories"];
 	$Params["SECURITY"]["ServerSignature"]=$_GET["ApacheServerSignature"];
 	$Params["SECURITY"]["DisableHtAccess"]=$_GET["DisableHtAccess"];
 	
@@ -457,6 +458,7 @@ function params(){
 	
 	
 	$authentication_banner=$Params["LDAP"]["authentication_banner"];
+	$EnableLDAPAllSubDirectories=$Params["LDAP"]["EnableLDAPAllSubDirectories"];
 	if(strlen($authentication_banner)<3){
 		$authentication_banner=base64_encode($tpl->javascript_parse_text("{$_GET["servername"]}::{authentication}"));
 	}
@@ -464,6 +466,7 @@ function params(){
 	$ApacheServerSignature=$Params["SECURITY"]["ServerSignature"];
 	$DisableHtAccess=$Params["SECURITY"]["DisableHtAccess"];
 	if(!is_numeric($ApacheServerSignature)){$ApacheServerSignature=$ServerSignature;}
+	if(!is_numeric($EnableLDAPAllSubDirectories)){$EnableLDAPAllSubDirectories=0;}
 
 $mod_security="
 	<tr>
@@ -506,6 +509,7 @@ if($FreeWebsEnableModEvasive==0){
 	$html="
 	<div style='font-size:16px;font-weight:bold'>{authentication}</div>
 	<div id='auth-apache-div'>
+	<input type='hidden' id='EnableLDAPAllSubDirectories' value='$EnableLDAPAllSubDirectories'>
 	<table style='width:100%' class=form>
 	<tr>
 		<td class=legend>{enable_ldap_authentication}:</td>
@@ -578,12 +582,17 @@ if($FreeWebsEnableModEvasive==0){
 		function CheckApacheForm(){
 			document.getElementById('enable_ldap_authentication').disabled=true;
 			document.getElementById('authentication_banner').disabled=true;
+			document.getElementById('EnableLDAPAllSubDirectories').disabled=true;
+			
 			
 			
 			var APACHE_MOD_AUTHNZ_LDAP=$APACHE_MOD_AUTHNZ_LDAP;
 			if(APACHE_MOD_AUTHNZ_LDAP==1){
 				document.getElementById('enable_ldap_authentication').disabled=false;
 				document.getElementById('authentication_banner').disabled=false;
+				if(document.getElementById('enable_ldap_authentication').checked){
+					document.getElementById('EnableLDAPAllSubDirectories').disabled=false;
+				}
 			}
 		}
 		
@@ -604,15 +613,25 @@ if($FreeWebsEnableModEvasive==0){
 			
 			if(document.getElementById('enable_ldap_authentication').checked){
 				XHR.appendData('enable_ldap_authentication',1);
+				document.getElementById('EnableLDAPAllSubDirectories').disabled=false;
 			}else{
 				XHR.appendData('enable_ldap_authentication',0);
+				document.getElementById('EnableLDAPAllSubDirectories').disabled=true;
 			}
 
 			if(document.getElementById('DisableHtAccess').checked){
 				XHR.appendData('DisableHtAccess',1);
 			}else{
 				XHR.appendData('DisableHtAccess',0);
-			}			
+			}
+
+			if(document.getElementById('EnableLDAPAllSubDirectories').checked){
+				XHR.appendData('EnableLDAPAllSubDirectories',1);
+			}else{
+				XHR.appendData('EnableLDAPAllSubDirectories',0);
+			}				
+
+			
 			
 			
 			XHR.appendData('authentication_banner',base64_encode(document.getElementById('authentication_banner').value));

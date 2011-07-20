@@ -25,7 +25,7 @@ $f[]="{";
 $f[]="#	only_from	= <Amanda server>";
 $f[]="	socket_type	= stream";
 $f[]="	protocol	= tcp";
-$f[]="	wait		= yes";
+$f[]="	wait		= no";
 $f[]="	user		= root";
 $f[]="	group		= root";
 $f[]="	groups		= yes";
@@ -642,7 +642,7 @@ if(!is_dir("/etc/amanda/DailySet1")){@mkdir("/etc/amanda/DailySet1",644,true);}
 if(!is_dir("/dumps/amanda")){@mkdir("/dumps/amanda",640,true);}
 if(!is_dir("/dumps/amandatapes/DailySet1")){@mkdir("/dumps/amandatapes/DailySet1",640,true);}
 if(!is_file("/etc/amanda/DailySet1/disklist")){@file_put_contents("/etc/amanda/DailySet1/disklist", " ");}
-
+if(!is_dir("/var/lib/amanda/gnutar-lists")){@mkdir("/var/lib/amanda/gnutar-lists",true,600);}
 for($i=1;$i<$config["tapecycle"]+1;$i++){
 	if(!is_dir("/dumps/amandatapes/DailySet1/slot$i")){
 		@mkdir("/dumps/amandatapes/DailySet1/slot$i",640,true);
@@ -702,8 +702,12 @@ function set_backup_server(){
 	if($AmandaBackupServer<>null){
 		$f[]="$AmandaBackupServer\troot";
 	}
-	
+	if(!is_dir("/var/lib/amanda")){@mkdir("/var/lib/amanda",644,true);}
 	@file_put_contents("/var/lib/amanda/.amandahosts",@implode("\n", $f));
+	@file_put_contents("/root/.amandahosts",@implode("\n", $f));
+	shell_exec("/bin/chmod 600 /var/lib/amanda/.amandahosts");
+	shell_exec("/bin/chmod 600 /root/.amandahosts");
+	if(!is_dir("/var/lib/amanda/gnutar-lists")){@mkdir("/var/lib/amanda/gnutar-lists",true,600);}
 	
 	
 }
