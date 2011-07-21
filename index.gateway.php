@@ -34,7 +34,7 @@ if(isset($_GET["EnableArticaAsGateway"])){gateway_save();exit;}
 if(isset($_GET["popup-network-masks"])){popup_networks_masks();exit;}
 if(isset($_GET["show-script"])){dhcp_scripts();exit;}
 
-
+if(isset($_POST["OnlySetGateway"])){OnlySetGateway_save();exit;}
 
 function index_script(){
 	$tpl=new templates();
@@ -91,6 +91,7 @@ function dhcp_index_js(){
 		var x_EnableDHCPServerSave= function (obj) {
 			var tempvalue=obj.responseText;
 			if(tempvalue.length>0){alert(tempvalue);}
+			if(document.getElementById('main_config_dhcpd')){RefreshTab('main_config_dhcpd');}
 			YahooWin3Hide();
 		}			
 		
@@ -144,7 +145,7 @@ var x_SaveDHCPSettings= function (obj) {
 			XHR.appendData('EnableArticaAsDNSFirst',0);
 		}
 		
-		if(document.getElementById('OnlySetGateway').checked){XHR.appendData('OnlySetGateway',0);	}else{XHR.appendData('OnlySetGateway',1);}
+		
 		if(document.getElementById('EnableDHCPUseHostnameOnFixed').checked){XHR.appendData('EnableDHCPUseHostnameOnFixed',1);}else{XHR.appendData('EnableDHCPUseHostnameOnFixed',0);}
 		XHR.appendData('ddns_domainname',document.getElementById('ddns_domainname').value);
 		document.getElementById('dhscpsettings').innerHTML='<center><img src=\"img/wait_verybig.gif\"></center>';
@@ -430,15 +431,27 @@ function dhcp_form(){
 			</div><br>
 			<script>
 				function OnlySetGatewayCheck(){
+					var XHR = new XHRConnection();
+					if(document.getElementById('OnlySetGateway').checked){XHR.appendData('OnlySetGateway',1);	}else{XHR.appendData('OnlySetGateway',0);}
+					XHR.sendAndLoad('$page', 'POST');
+					OnlySetGatewayFCheck();					
+					
+					
+				}
+				
+				function OnlySetGatewayFCheck(){
 					if(document.getElementById('OnlySetGateway').checked){
 						document.getElementById('EnableArticaAsDNSFirst').disabled=true;
 					}else{
 						document.getElementById('EnableArticaAsDNSFirst').disabled=false;
 					}
 				
-				}
+				}				
 				
-			OnlySetGatewayCheck();
+				
+				
+				
+			OnlySetGatewayFCheck();
 			</script>
 			
 		
@@ -687,8 +700,6 @@ function dhcp_save(){
 	$dhcp->range1=$_GET["range1"];
 	$dhcp->range2=$_GET["range2"];
 	$dhcp->subnet=$_GET["subnet"];
-	$dhcp->OnlySetGateway=$_GET["OnlySetGateway"];
-	$sock->SET_INFO("DHCPOnlySetGateway", $_GET["OnlySetGateway"]);
 	$dhcp->broadcast=$_GET["broadcast"];
 	$dhcp->WINS=$_GET["WINS"];
 	
@@ -704,6 +715,13 @@ function dhcp_save(){
 	$dhcp->EnableArticaAsDNSFirst=$_GET["EnableArticaAsDNSFirst"];
 	$dhcp->Save();
 	}
+	
+	
+	
+function OnlySetGateway_save(){
+	$sock=new sockets();
+	$sock->SET_INFO("DHCPOnlySetGateway", $_POST["OnlySetGateway"]);
+}	
 	
 	
 function gateway_enable(){

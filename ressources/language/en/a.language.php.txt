@@ -1733,4 +1733,15 @@ You have to define which directory to backup and the client hostname.[br]
 <DisableLDAPDatabase>Disable LDAP Database</DisableLDAPDatabase>
 <mx_records>MX records</mx_records>
 <restart_pdns>Restart PowerDNS</restart_pdns>
-<restart_pdns_text>Restart PowerDNS in order to refresh settings and daemons</restart_pdns_text> 
+<restart_pdns_text>Restart PowerDNS in order to refresh settings and daemons</restart_pdns_text>
+<compile_postfix>Compile Postfix</compile_postfix> 
+<freeweb_alias_explain>
+Aliases are used to map between URLs and filesystem paths.[br]
+This allows for content which is not directly under the website root served as part of the web document tree.
+In the form on the first field, add the urls you want user to use eg /images.[br]
+In the second field set the local directory this url need to use eg: /folder/pictures/img
+If you need to use regular expressions use "REGEX:" prefix on the first field.[br]
+Example : REGEX:^/icons(.*) will use the /folder/pictures/icons$1.
+</freeweb_alias_explain>
+<freeweb_is_groupware_feature_disabled>Your website is designed to provide a defined groupware, in this case, this feature is disabled</freeweb_is_groupware_feature_disabled>
+<change_computer_text>Modify the netbiosname, give here the new netbiosname:</change_computer_text>

@@ -3777,10 +3777,10 @@ function getobjectDNClass($dn,$fulldn=0){
 	}   
 
 	
-	function Ldap_rename_dn($newdn,$olddn,$parent_dn) {
+	function Ldap_rename_dn($newdn,$olddn,$parent_dn=null) {
 		$r= @ldap_rename($this->ldap_connection,$olddn,$newdn,$parent_dn,true);
 		if(!$r){
-   			$this->ldap_last_error='Error number ' . ldap_errno($this->ldap_connection) . "\nAction:LDAP Ldap_rename_dn\ndn:$olddn -> $newdn\n" . ldap_err2str(ldap_errno($this->ldap_connection));
+   			$this->ldap_last_error='Error number ' . ldap_errno($this->ldap_connection) . "\nAction:LDAP Ldap_rename_dn\nSource dn:$olddn\nRenamed dn:$newdn\nParent DN:$parent_dn\n" . ldap_err2str(ldap_errno($this->ldap_connection));
    			writelogs("ERROR rename DN :  $olddn to $newdn :" . ldap_err2str(ldap_errno($this->ldap_connection)),__CLASS__ . "/" . __FUNCTION__,__FILE__);return false;}
    		return true;		
 	}  	

@@ -319,6 +319,7 @@ domain.tld correspondant &agrave; h&ocirc;tes avec le domaine domain.tld
 <compilation_schedule_text>Programmez la re-compilation des bases afin de les mettre &agrave; jour.</compilation_schedule_text>
 <compile_missing_db>Compiler les DB manquantes</compile_missing_db>
 <compile_missing_db_www_text>Compiler les bases de donn&eacute;es manquantes afin de faire tourner le filtre en production.</compile_missing_db_www_text>
+<compile_postfix>Compiler Postfix</compile_postfix>
 <compile_rules>Compiler les r&egrave;gles</compile_rules>
 <comprate>Taux de compression par d&eacute;faut</comprate>
 <compress_files_after>Compresser les fichiers apr&egrave;s</compress_files_after>
@@ -559,12 +560,18 @@ des caract&egrave;res sous-lign&eacute;s (requ&ecirc;tes pour des serveurs LDAP)
 <FreeWebsEnableOpenVPNProxy>Activer le mode proxy pour OpenVPN</FreeWebsEnableOpenVPNProxy>
 <FreewebsStorageDirectory>R&eacute;pertoire de stockage des sites web</FreewebsStorageDirectory>
 <FreewebsStorageDirectory_text>C'est le chemin par d&eacute;faut utilis&eacute; lors de la cr&eacute;ation des sites Web &agrave; travers FreeWeb.</FreewebsStorageDirectory_text>
+<freeweb_alias_explain>Les aliases sont utilis&eacute;s pour faire correspondre des urls &agrave; des r&eacute;pertoires situ&eacute;s dans votre espace web.[br]
+Cela autorise alors l'affiche de contenu qui n'est pas directement stock&eacute; sur le disque &agrave; l'emplacement exacte du lien web.[br]
+Dans le formulaire, indiquez dans Alias le lien virtuel que les internautes doivent utiliser (Exemple /images) et dans r&eacute;pertoire, le chemin sur le disque correspondant.(Exemple /folder/pictures/img).[br]
+Si vous d&eacute;sirez utiliser les expressions r&eacute;guli&egrave;res, indiquez en pr&eacute;fixe &quot;REGEX:&quot; dans alias.[br]
+Exemple REGEX:^/icons(.*) va utiliser le r&eacute;pertoire  /folder/pictures/icons$1.</freeweb_alias_explain>
 <freeweb_authldap_members_explain>Par d&eacute;faut, l'activation de l'authentification autorise tous les membres d'acc&eacute;der au site Web.[br]Vous pouvez le restreindre &agrave; des utilisateurs ou groupes sp&eacute;cifiques en remplissant le tableau ci-dessous.</freeweb_authldap_members_explain>
 <freeweb_files_perms_explain>Cette fonctionnalit&eacute; permet de v&eacute;rifier les permissions des fichiers et des dossiers de votre site Web.[br]
 Vous pouvez cr&eacute;er des r&egrave;gles permettant de piloter le moteur de permissions..[br]
 Lorsque vous activez le moteur de permissions, vous devez d&eacute;finir la fr&eacute;quence d'ex&eacute;cution (par d&eacute;faut &agrave; 60mn).[br]
 Si vous chargez des nouveaux fichiers dans l'espace Web vous serez assur&eacute; que les permissions seront respect&eacute;es.</freeweb_files_perms_explain>
 <freeweb_groupware_explain>Cliquez sur une des images ci-dessous afin de transformer votre serveur Web en un serveur groupware.</freeweb_groupware_explain>
+<freeweb_is_groupware_feature_disabled>Votre site fournit un &quot;groupware&quot; d&eacute;finit, dans ce cas, cette fonctionnalit&eacute; est d&eacute;sactiv&eacute;e.</freeweb_is_groupware_feature_disabled>
 <freeweb_perms_add_explain>Ce formulaire va vous aider &agrave; cr&eacute;er une r&egrave;gle de permission dans les r&eacute;pertoires de votre serveur Web.[br]
 Si vous avez besoin d'appliquer une r&egrave;gle sur un sous-dossier, de le nom du sous dossier dans le champ.[br]
 Si vous avez besoin de d&eacute;finir des permissions sur des fichiers, indiquez alors l'extension des fichiers &agrave; analyser</freeweb_perms_add_explain>

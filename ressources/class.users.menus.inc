@@ -922,13 +922,18 @@ class usersMenus {
 				}
 				
 				
-				if($this->AsPostfixAdministrator){
+				if($this->AsSystemAdministrator){
 					$menus["{manage_your_server}"]="javascript:ConfigureYourserver()";
 					$menus["{global settings}"]="javascript:Loadjs(\"artica.settings.php?js=yes\")";
 					$menus["{softwares_install}"]="javascript:Loadjs(\"setup.index.php?js=yes\");";
 					$menus["{services}"]="javascript:Loadjs(\"admin.index.services.status.php?js=yes\");";
-					
+				}
+				
+				if($this->POSTFIX_INSTALLED){
+					if($this->AsPostfixAdministrator){
+						$menus["{compile_postfix}"]="javascript:Loadjs(\"postfix.compile.php\");";
 					}
+				}
 				$menus["{explorer}"]="javascript:Loadjs(\"tree.php\");";
 				$menus["{logoff}"]="javascript:logoff()";
 				$menus["{cache}"]="javascript:CacheOff();";

@@ -20,7 +20,7 @@ if(isset($_GET["tabs"])){tabs();exit;}
 
 if(isset($_GET["config"])){config();exit;}
 if(isset($_GET["network-pdns-table"])){listen_ip_list();exit;}
-if(isset($_GET["RestartPDNS"])){RestartPDNS();exit;}
+if(isset($_POST["RestartPDNS"])){RestartPDNS();exit;}
 
 
 

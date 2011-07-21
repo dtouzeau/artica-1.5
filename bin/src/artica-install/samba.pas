@@ -1306,6 +1306,7 @@ end;
   logs.Debuglogs('Starting......: Samba /etc/pam_ldap.conf done');
 
   logs.WriteToFile(ldap_conf.Text,'/etc/nss_ldap.conf');
+  logs.WriteToFile(ldap_conf.Text,'/etc/libnss-ldap.conf');
   logs.Debuglogs('Starting......: Samba /etc/nss_ldap.conf done');
   if directoryExists('/usr/share/libnss-ldap') then begin
      logs.WriteToFile(ldap_conf.Text,'/usr/share/libnss-ldap/ldap.conf');

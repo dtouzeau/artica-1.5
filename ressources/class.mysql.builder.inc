@@ -2204,6 +2204,19 @@ public function CheckTablesPostfilter(){
 			$this->QUERY_SQL($sql,'artica_backup');
 			if($this->ok){writelogs("Fatal: $this->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
 		}
+		
+		
+		if(!$this->TABLE_EXISTS('freewebs_aliases','artica_backup')){
+			$sql="CREATE TABLE `artica_backup`.`freewebs_aliases` (
+				`ID` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+				`servername` VARCHAR( 128 ) NOT NULL ,
+				`alias` VARCHAR( 255 ) NOT NULL ,
+				`directory` VARCHAR( 255 ) NOT NULL ,
+				INDEX ( `servername` )
+				) ";
+			$this->QUERY_SQL($sql,'artica_backup');
+			if($this->ok){writelogs("Fatal: $this->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
+		}		
   
 	
  			

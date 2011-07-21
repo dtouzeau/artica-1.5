@@ -37,165 +37,7 @@ function js(){
 	}
 	
 	$title=$tpl->_ENGINE_parse_body('{apply config}',"postfix.index.php");
-	$html="
-	
-	
-	
-	function StartCompilePostfix(){
-		YahooWin(500,'$page?popup=yes','$title');
-		setTimeout('ApplyAmavis()',1000);
-	}
-	
-	var x_ApplyAmavis= function (obj) {
-		var tempvalue=obj.responseText;
-		FilLogs(tempvalue);
-		compile_kavmilter();
-	}	
-	
-	var x_compile_kavmilter= function (obj) {
-		var tempvalue=obj.responseText;
-		FilLogs(tempvalue);
-		compile_kasmilter();
-	}	
-	
-	var x_compile_kasmilter= function (obj) {
-		var tempvalue=obj.responseText;
-		FilLogs(tempvalue);
-		compile_miltergreylist();
-	}
-	
-	var x_compile_miltergreylist= function (obj) {
-		var tempvalue=obj.responseText;
-		FilLogs(tempvalue);
-		compile_postfix_save();
-	}	
-
-	var x_compile_postfix_save= function (obj) {
-		var tempvalue=obj.responseText;
-		FilLogs(tempvalue);
-		compile_postfix_server();
-	}		
-
-	var x_compile_postfix_server= function (obj) {
-		var tempvalue=obj.responseText;
-		FilLogs(tempvalue);
-		compile_header_check();
-	}
-	var x_compile_header_check= function (obj) {
-		var tempvalue=obj.responseText;
-		FilLogs(tempvalue);
-		check_sender_access()
-	}
-	var x_check_sender_access= function (obj) {
-		var tempvalue=obj.responseText;
-		FilLogs(tempvalue);
-		finish();
-	}	
-
-	
-	
-	
-	function finish(){
-		ChangeStatus(100);
-		document.getElementById('wait_image').innerHTML='&nbsp;';
-		document.getElementById('wait_image').innerHTML='&nbsp;';
-	}
-	
-
-	function FilLogs(logs){
-		logs=escapeVal(logs,'<br>');
-		var textlogs=document.getElementById('textlogs').innerHTML;
-		textlogs='<div style=\"margin:3px;padding:3px;border-bottom:1px solid #CCCCCC\"><code>'+logs+'</code></div>'+textlogs;
-		document.getElementById('textlogs').innerHTML=textlogs;
-	}
-	
-	function escapeVal(content,replaceWith){
-		content = escape(content) 
-	
-			for(i=0; i<content.length; i++){
-				if(content.indexOf(\"%0D%0A\") > -1){
-					content=content.replace(\"%0D%0A\",replaceWith)
-				}
-				else if(content.indexOf(\"%0A\") > -1){
-					content=content.replace(\"%0A\",replaceWith)
-				}
-				else if(content.indexOf(\"%0D\") > -1){
-					content=content.replace(\"%0D\",replaceWith)
-				}
-	
-			}	
-		return unescape(content);
-	}	
-	
-	function ApplyAmavis(){
-		ChangeStatus(10);
-		var XHR = new XHRConnection();
-		XHR.appendData('ApplyAmavis','yes');
-		XHR.sendAndLoad('$page', 'GET',x_ApplyAmavis);	
-		}
-	function compile_kavmilter(){
-		ChangeStatus(15);
-		var XHR = new XHRConnection();
-		XHR.appendData('compile_kavmilter','yes');
-		XHR.sendAndLoad('$page', 'GET',x_compile_kavmilter);	
-		}	
-	
-	function compile_kasmilter(){
-		ChangeStatus(30);
-		var XHR = new XHRConnection();
-		XHR.appendData('compile_kasmilter','yes');
-		XHR.sendAndLoad('$page', 'GET',x_compile_kasmilter);	
-		}	
-		
-	function compile_miltergreylist(){
-		ChangeStatus(35);
-		var XHR = new XHRConnection();
-		XHR.appendData('compile_miltergreylist','yes');
-		XHR.sendAndLoad('$page', 'GET',x_compile_miltergreylist);	
-		}			
-
-	function compile_postfix_save(){
-		ChangeStatus(45);
-		var XHR = new XHRConnection();
-		XHR.appendData('compile_postfix_save','yes');
-		XHR.sendAndLoad('$page', 'GET',x_compile_postfix_save);	
-		
-		}
-	function compile_postfix_server(){
-		ChangeStatus(50);
-		var XHR = new XHRConnection();
-		XHR.appendData('compile_postfix_server','yes');
-		XHR.sendAndLoad('$page', 'GET',x_compile_postfix_server);	
-		}
-	function compile_header_check(){
-		ChangeStatus(70);
-		var XHR = new XHRConnection();
-		XHR.appendData('compile_header_check','yes');
-		XHR.sendAndLoad('$page', 'GET',x_compile_header_check);	
-		}
-		
-	function check_sender_access(){
-		ChangeStatus(75);
-		var XHR = new XHRConnection();
-		XHR.appendData('check_sender_access','yes');
-		XHR.sendAndLoad('$page', 'GET',x_check_sender_access);			
-	}
-		
-	var x_ChangeStatus= function (obj) {
-		var tempvalue=obj.responseText;
-		document.getElementById('progression_postfix_compile').innerHTML=tempvalue;
-	}		
-		
-		
-	function ChangeStatus(number){
-		var XHR = new XHRConnection();
-		XHR.appendData('Status',number);
-		XHR.sendAndLoad('$page', 'GET',x_ChangeStatus);	
-	}
-
-	
-	StartCompilePostfix();
-	";
+	$html="YahooWin(500,'$page?popup=yes','$title');";
 	echo $html;
 	}
 	
@@ -203,6 +45,7 @@ function js(){
 function popup(){
 	$users=new usersMenus();
 	$tpl=new templates();
+	$page=CurrentPageName();
 	if(!$users->AsPostfixAdministrator){
 		$error=$tpl->_ENGINE_parse_body("{ERROR_NO_PRIVS}");
 		echo "<H3>$error<H3>";
@@ -211,8 +54,8 @@ function popup(){
 	$pourc=0;
 	$table=Status(0);
 	$color="#5DD13D";
-	$html="<H1>{APP_POSTFIX}</H1>
-	<p class=caption>{APPLY_SETTINGS_POSTFIX}</p>
+	$html="
+	<div class=explain>{APPLY_SETTINGS_POSTFIX}</div>
 	<table style='width:100%'>
 	<tr>
 		<td width=1%><div id='wait_image'><img src='img/wait.gif'></div>
@@ -235,7 +78,47 @@ function popup(){
 	</tr>
 	</table>
 	<br>
-	" . RoundedLightWhite("<div id='textlogs' style='width:99%;height:120px;overflow:auto'></div>")."";
+	<div id='textlogs' style='width:99%;height:120px;overflow:auto'></div>
+	
+	<script>
+	function StartCompilePostfix(){
+		setTimeout('ApplyAmavis()',1000);
+	}
+
+	function finish(){
+		ChangeStatus(100);
+		document.getElementById('wait_image').innerHTML='&nbsp;';
+		document.getElementById('wait_image').innerHTML='&nbsp;';
+		if(document.getElementById('admin_perso_tabs')){RefreshTab('admin_perso_tabs');}
+		if(document.getElementById('main_config_postfix')){RefreshTab('main_config_postfix');}
+		YahooWinHide();
+		
+		
+	}
+	
+	function ApplyAmavis(){
+		ChangeStatus(10);
+		LoadAjaxSilent('textlogs','$page?ApplyAmavis=yes');
+		}
+		
+
+		
+	var x_ChangeStatus= function (obj) {
+		var tempvalue=obj.responseText;
+		document.getElementById('progression_postfix_compile').innerHTML=tempvalue;
+	}		
+		
+		
+	function ChangeStatus(number){
+		var XHR = new XHRConnection();
+		XHR.appendData('Status',number);
+		XHR.sendAndLoad('$page', 'GET',x_ChangeStatus);	
+	}
+
+	
+	StartCompilePostfix();
+	</script>
+	";
 	
 	echo $tpl->_ENGINE_parse_body($html,"postfix.index.php");
 }
@@ -257,19 +140,31 @@ function compile_amavis(){
 	$tpl=new templates();
 	$users=new usersMenus();
 	$users->LoadModulesEnabled();
+	$page=CurrentPageName();
+	
+	$script="
+	<div id='compile_amavis'></div>
+	<script>
+		ChangeStatus(15);
+		LoadAjaxSilent('compile_amavis','$page?compile_kavmilter=yes');
+	</script>	
+	
+	";
+	
 	if(!$users->AMAVIS_INSTALLED){
-			echo $tpl->_ENGINE_parse_body("<strong>{APP_AMAVISD_NEW}:</strong> {error_module_not_installed}");
+			echo $tpl->_ENGINE_parse_body("<strong>{APP_AMAVISD_NEW}:</strong> {error_module_not_installed}").$script;
 			die();
 	}
 	
 	if($users->EnableAmavisDaemon<>1){
-		echo $tpl->_ENGINE_parse_body("<strong>{APP_AMAVISD_NEW}:</strong> {error_module_not_enabled}");
+		echo $tpl->_ENGINE_parse_body("<strong>{APP_AMAVISD_NEW}:</strong> {error_module_not_enabled}").$script;
 		die();		
 	}
 include_once("ressources/class.amavis.inc");
 $amavis=new amavis();
 $amavis->SaveToServer();	
-
+$sock=new sockets();
+$sock->getFrameWork("services.php?restart-postfix-all=yes");
 
 	
 }
@@ -278,13 +173,23 @@ function compile_kavmilter(){
 	$tpl=new templates();
 	$users=new usersMenus();
 	$users->LoadModulesEnabled();	
+	$page=CurrentPageName();
+	
+	$script="
+	<div id='compile_miltergreylist'></div>
+	<script>
+		ChangeStatus(35);
+		LoadAjaxSilent('compile_miltergreylist','$page?compile_miltergreylist=yes');
+	</script>
+	";	
+	
 	if(!$users->KAV_MILTER_INSTALLED){
-			echo $tpl->_ENGINE_parse_body("<strong>{APP_KAVMILTER}:</strong> {error_module_not_installed}");
+			echo $tpl->_ENGINE_parse_body("<strong>{APP_KAVMILTER}:</strong> {error_module_not_installed}").$script;
 			die();
 	}	
 	
 	if($users->KAVMILTER_ENABLED<>1){
-		echo $tpl->_ENGINE_parse_body("<strong>{APP_KAVMILTER}:</strong> {error_module_not_enabled})");
+		echo $tpl->_ENGINE_parse_body("<strong>{APP_KAVMILTER}:</strong> {error_module_not_enabled})").$script;
 		die();		
 	}	
 	
@@ -298,12 +203,22 @@ function compile_kasmilter(){
 	$tpl=new templates();
 	$users=new usersMenus();
 	$users->LoadModulesEnabled();
+	$page=CurrentPageName();
+	
+	$script="
+	<div id='compile_kasmilter'></div>
+	<script>
+		ChangeStatus(30);
+		LoadAjaxSilent('compile_kasmilter','$page?compile_kavmilter=yes');
+	</script>
+	";
+	
 if(!$users->kas_installed){
-			echo $tpl->_ENGINE_parse_body("<strong>{APP_KAS3}:</strong> {error_module_not_installed}");
+			echo $tpl->_ENGINE_parse_body("<strong>{APP_KAS3}:</strong> {error_module_not_installed}").$script;
 			die();
 	}		
 if($users->KasxFilterEnabled<>1){
-		echo $tpl->_ENGINE_parse_body("<strong>{APP_KAS3}:</strong> {error_module_not_enabled})");
+		echo $tpl->_ENGINE_parse_body("<strong>{APP_KAS3}:</strong> {error_module_not_enabled})").$script;
 		die();	
 }
 	include_once("ressources/class.kas-filter.inc");
@@ -313,36 +228,77 @@ if($users->KasxFilterEnabled<>1){
 
 function compile_postfix_save(){
 	$tpl=new templates();
-	$tpl=new templates();
+	$page=CurrentPageName();
 	$main=new main_cf();
 	$main->save_conf();
-	echo $tpl->_ENGINE_parse_body("<br><strong>{APP_POSTFIX}:</strong>{postfix_main_settings} {success}");
+	
+	$script="
+	<div id='compile_postfix_save'></div>
+	<script>
+		ChangeStatus(50);
+		LoadAjaxSilent('compile_postfix_save','$page?compile_postfix_server=yes');
+	</script>
+	";		
+	
+	echo $tpl->_ENGINE_parse_body("<br><strong>{APP_POSTFIX}:</strong>{postfix_main_settings} {success}").$script;
 }
 function compile_postfix_server(){	
 	$tpl=new templates();
 	$main=new main_cf();
+	$page=CurrentPageName();
+	
+	$script="
+	<div id='compile_postfix_server'></div>
+	<script>
+		ChangeStatus(55);
+		LoadAjaxSilent('compile_postfix_server','$page?compile_header_check=yes');
+	</script>
+	";		
+	
 	if(!$main->save_conf_to_server()){
-			echo $tpl->_ENGINE_parse_body("<br><strong>{APP_POSTFIX}:</strong>{postfix_main_settings} {error}");
+			echo $tpl->_ENGINE_parse_body("<br><strong>{APP_POSTFIX}:</strong>{postfix_main_settings} {error}").$script;
 			echo $tpl->_ENGINE_parse_body('<br>{postfix_main_settings} {error}');
 			return null;
 		}	
-	echo $tpl->_ENGINE_parse_body("<br><strong>{APP_POSTFIX}:</strong>{apply config} {success}");
+	echo $tpl->_ENGINE_parse_body("<br><strong>{APP_POSTFIX}:</strong>{apply config} {success}").$script;
 	
 }
 function compile_header_check(){	
 		$tpl=new templates();
 		$filters=new main_header_check();
-		$filters->SaveToDaemon();		
-		echo $tpl->_ENGINE_parse_body("<strong>{POSTFIX_FILTERS}:</strong>&nbsp;{apply config}&nbsp;{success}");
+		$filters->SaveToDaemon();	
+		$page=CurrentPageName();	
+		
+	$script="
+	<div id='compile_header_check'></div>
+	<script>
+		ChangeStatus(70);
+		LoadAjaxSilent('compile_header_check','$page?check_sender_access=yes');
+	</script>
+	";				
+		
+	echo $tpl->_ENGINE_parse_body("<strong>{POSTFIX_FILTERS}:</strong>&nbsp;{apply config}&nbsp;{success}").$script;
 		
 }
 function check_sender_access(){
 	$tpl=new templates();
 	$main=new main_cf();
 	$u=$main->check_sender_access();
+	
+	$script="
+	<script>
+		finish();
+	</script>
+	";		
+	
 	if($u>0){
-		echo $tpl->_ENGINE_parse_body("\n{ENABLE_INTERNET_DENY} {success} {$u} {users} {enabled}","postfix.index.php");
-	}	
+		echo $tpl->_ENGINE_parse_body("\n{ENABLE_INTERNET_DENY} {success} {$u} {users} {enabled}","postfix.index.php").$script;
+}	else{
+		echo $script;
+	}
+	
+	$sock=new sockets();
+	$sock->getFrameWork("services.php?restart-postfix-all=yes");
 	
 }
 
@@ -350,17 +306,26 @@ function compile_miltergreylist(){
 	$users=new usersMenus();
 	$tpl=new templates();
 	$users->LoadModulesEnabled();
+	$page=CurrentPageName();
 	
 	$policy=new policydweight();
 	$policy->SaveConf();
 	
+	$script="
+	<div id='compile_miltergreylist'></div>
+	<script>
+		ChangeStatus(45);
+		LoadAjaxSilent('compile_miltergreylist','$page?compile_postfix_save=yes');
+	</script>
+	";	
+	
 	if($users->MILTERGREYLIST_INSTALLED<>1){
-		echo $tpl->_ENGINE_parse_body("<strong>{APP_MILTERGREYLIST}:</strong> {error_module_not_installed})");
+		echo $tpl->_ENGINE_parse_body("<strong>{APP_MILTERGREYLIST}:</strong> {error_module_not_installed})").$script;
 		die();	
 	}	
 	
 if($users->MilterGreyListEnabled<>1){
-		echo $tpl->_ENGINE_parse_body("<strong>{APP_MILTERGREYLIST}:</strong> {error_module_not_enabled})");
+		echo $tpl->_ENGINE_parse_body("<strong>{APP_MILTERGREYLIST}:</strong> {error_module_not_enabled})").$script;
 		die();	
 	}
 	

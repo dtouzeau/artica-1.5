@@ -420,7 +420,7 @@ function backup_server_popup(){
 	<td valign='top' style='width:99%'>
 	<table style='width:300px' class=form>
 	<tr>
-		<td class=legend>{backup_server}:</td>
+		<td class=legend nowrap>{backup_server}:</td>
 		<td>". Field_text("amanda-backup-server",$backup_server,"font-size:16px;width:250px;padding:3px")."</td>
 		<td width=1%>". button("{apply}","SaveAmandaBackupServer()")."</td>
 	</tr>

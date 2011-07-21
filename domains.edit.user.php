@@ -975,6 +975,8 @@ function AJAX_COMPUTER() {
 	$users = new usersMenus ( );
 	$sock = new sockets ( );
 	$page = CurrentPageName ();
+	$tpl = new templates ( );
+	$modify_js_text=$tpl->javascript_parse_text("{change}");
 	
 	$EnableDHCPServer = $sock->GET_INFO ( 'EnableDHCPServer' );
 	
@@ -1099,13 +1101,13 @@ function AJAX_COMPUTER() {
 					
 					<td class=legend nowrap>{computer_name}:</strong></td>
 					<td width=1%>&nbsp;</td>
-					<td align=left>" . Field_text ( 'uid', $computer->uid, 'width:100%;font-size:14px;padding:3px;font-weight:bold' ) . "</strong></td>
+					<td align=left>" . Field_text ( 'uid', $computer->uid, 'width:100%;font-size:14px;padding:3px;font-weight:bold;width:220px' ) . "</strong>&nbsp;<span id='modifyNameComp'></span></td>
 				</tr>								
 				<tr>
 					
 					<td class=legend nowrap>{computer_ip}:</strong></td>
 					<td width=1%>&nbsp;</td>
-					<td align=left>" . Field_text ( 'ComputerIP', $computer->ComputerIP, 'width:100%;;font-size:14px;padding:3px;font-weight:bold' ) . "</strong></td>
+					<td align=left>" . field_ipv4('ComputerIP', $computer->ComputerIP, 'font-size:14px;padding:3px;font-weight:bold' ) . "</strong></td>
 				</tr>			
 				<tr>
 					
@@ -1203,12 +1205,23 @@ var x_ComputerFindByMac= function (obj) {
 		XHR.sendAndLoad('$page', 'GET',x_ComputerFindByMac);	
 		
 	}
-
+	
+	
+	function CheckUidComp(){
+		var uid='$computer->uid';
+		if(uid.length==0){return;}
+		if(uid=='newcomputer'){return;}
+		document.getElementById('uid').disabled=true;
+		document.getElementById('modifyNameComp').innerHTML='&nbsp;&nbsp;<a href=javascript:blur(); OnClick=javascript:Loadjs(\"domains.computer.modifyname.php?userid={$_GET["userid"]}\"); style=\"font-size:14px;text-decoration:underline\">$modify_js_text</a>';
+		
+		
+	}
+CheckUidComp();
 </script>	
 	
 	";
 	
-	$tpl = new templates ( );
+	
 	return $tpl->_ENGINE_parse_body ( $html );
 }
 

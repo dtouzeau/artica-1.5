@@ -300,6 +300,10 @@ function popup_tabs(){
 		
 		$array["groupwares"]='{groupwares}';
 		
+		if($apache->groupware==null){
+			$array["aliases"]='{aliases}';
+		}
+		
 		$users=new usersMenus();
 		if($users->awstats_installed){
 			//$array["awstats"]='{APP_AWSTATS}';
@@ -330,7 +334,12 @@ function popup_tabs(){
 		if($num=="mod_cache"){
 				$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"freeweb.edit.cache.php?servername={$_GET["servername"]}&freewebs=1&group_id={$_REQUEST["group_id"]}\"><span>$ligne</span></a></li>\n");
 				continue;
-		}				
+		}
+
+		if($num=="aliases"){
+				$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"freeweb.edit.aliases.php?servername={$_GET["servername"]}&freewebs=1&group_id={$_REQUEST["group_id"]}\"><span>$ligne</span></a></li>\n");
+				continue;
+		}			
 		
 		$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"$page?$num=yes&servername={$_GET["servername"]}&group_id={$_REQUEST["group_id"]}\"><span>$ligne</span></a></li>\n");
 	}

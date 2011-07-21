@@ -656,10 +656,7 @@ function SaveBind9Zone($ip){
 			
 		}
 		
-		if(!preg_match('#([0-9]+)\.([0-9]+)\.([0-9]+)#',$ip,$re)){
-			echo "Wrong range!\n";
-			return null;
-		}		
+		if(!preg_match('#([0-9]+)\.([0-9]+)\.([0-9]+)#',$ip,$re)){return null;}		
 		
 		$arpa="{$re[3]}.{$re[2]}.{$re[1]}";
 		

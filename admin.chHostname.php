@@ -40,6 +40,7 @@ function popup(){
 	if(!is_numeric($DisableNetworksManagement)){$DisableNetworksManagement=0;}	
 	if(preg_match("#Name or service not known#", $hostname)){$mustchangeHostname=true;$hostname=null;}
 	if(preg_match("#locahost\.localdomain#", $hostname)){$mustchangeHostname=true;}
+	if(preg_match("#[A-Za-z]+\s+[A-Za-z]+#", $hostname)){$mustchangeHostname=true;}
 	$explain="{change_server_hostname}";
 	if($mustchangeHostname){$explain="{your_hostname_is_not_correct}";}
 	$netbiosname_field=$tpl->javascript_parse_text("{netbiosname}");
@@ -58,6 +59,8 @@ function popup(){
 	}else{
 		$netbiosname=$hostname;
 	}
+	
+	if(preg_match("#[A-Za-z]+\s+[A-Za-z]+#", $netbiosname)){$netbiosname=null;}
 	
 	$html="
 	<div id='chhostdiv'>

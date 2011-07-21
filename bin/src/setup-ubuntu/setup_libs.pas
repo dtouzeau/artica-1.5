@@ -206,7 +206,7 @@ if length(kernelversion)=0 then begin
    exit;
 end;
 
-writeln('Kernel version is '+kernelversion);
+writeln('Checking.............: Kernel version is '+kernelversion);
 result:=kernelversion;
 CACHE_KERNEL_VERSION:=kernelversion;
 

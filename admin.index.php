@@ -514,9 +514,17 @@ function status_right(){
 	$mustchangeHostname=false;
 	if(preg_match("#Name or service not known#", $hostname)){$mustchangeHostname=true;}
 	if(preg_match("#locahost\.localdomain#", $hostname)){$mustchangeHostname=true;}
+	if(preg_match("#[A-Za-z]+\s+[A-Za-z]+#", $hostname)){$mustchangeHostname=true;}
 	
-	writelogs("hostname=$hostname mustchangeHostname=$mustchangeHostname",__FUNCTION__,__FILE__,__LINE__);
-	
+	if(!$mustchangeHostname){
+		if(preg_match("#locahost\.localdomain#", $users->hostname)){$mustchangeHostname=true;}
+		
+	}
+	if($mustchangeHostname){
+	writelogs("hostname=\"$hostname\" mustchangeHostname=True",__FUNCTION__,__FILE__,__LINE__);
+	}else{
+		writelogs("hostname=\"$hostname\" mustchangeHostname=False",__FUNCTION__,__FILE__,__LINE__);
+	}
 	
 	if($mustchangeHostname){echo "<script>Loadjs('admin.chHostname.php');</script>";}	
 	

@@ -210,7 +210,6 @@ class dhcpd{
 		$this->pxe_file=$ini->_params["SET"]["pxe_file"];
 		$this->pxe_enable=$ini->_params["SET"]["pxe_enable"];
 		$this->ntp_server=$ini->_params["SET"]["ntp_server"];
-		$this->OnlySetGateway=$ini->_params["SET"]["OnlySetGateway"];
 		$this->subnet=$ini->_params["SET"]["subnet"];
 		$this->broadcast=$ini->_params["SET"]["broadcast"];
 		$this->WINS=$ini->_params["SET"]["WINS"];
@@ -252,7 +251,6 @@ class dhcpd{
 		$ini=$ini."EnableArticaAsDNSFirst=$this->EnableArticaAsDNSFirst\n";
 		$ini=$ini."ntp_server=$this->ntp_server\n";
 		$ini=$ini."subnet=$this->subnet\n";
-		if(is_numeric($this->OnlySetGateway)){$ini=$ini."OnlySetGateway=$this->OnlySetGateway\n";}
 		$ini=$ini."broadcast=$this->broadcast\n";
 		$ini=$ini."WINS=$this->WINS\n";
 		

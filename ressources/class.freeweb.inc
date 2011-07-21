@@ -438,7 +438,7 @@
 		
 		
 		public function CheckWorkingDirectory(){
-			if(!$this->AS_ROOT){return;}
+			
 			if($this->IsGroupWareFromArtica()){
 				$this->CheckDirectoryRights();
 				return;
@@ -476,10 +476,6 @@
 				$this->WORKING_DIRECTORY="/var/www/html";return;
 			}
 			
-			
-			
-			
-				
 			if($this->CheckWorkingDirectoryLoop()){return;}
 			if($this->CheckWorkingDirectoryLVM()){return;}
 
@@ -499,7 +495,7 @@
 		private function CheckWorkingDirectoryLoop(){
 			if($this->UseLoopDisk==0){return false;}
 			if(!is_dir($this->LoopMounts)){
-				echo "Starting......: Apache \"$this->servername\" $this->LoopMounts no such directory\n";
+				if($this->AS_ROOT){echo "Starting......: Apache \"$this->servername\" $this->LoopMounts no such directory\n";}
 				return false;
 			}
 			
@@ -514,14 +510,18 @@
 			if($vgservices["freewebs"]==null){return false;}
 			if($this->lvm_size==0){return false;}
 			if($this->lvm_vg==null){return false;}
-			echo "Starting......: Apache \"$this->servername\" stored on an LVM group $this->lvm_vg partition ({$this->lvm_size}MB)\n";
-			$lvm=new lvm_root();
-			if(!$lvm->CreateLVS($this->lvm_vg,$this->servername,$this->lvm_size,"$this->lvm_vg-$this->servername")){return false;}
-			echo "Starting......: Apache \"$this->servername\" $this->lvm_vg/$this->lvm_vg-$this->servername success\n";
+			if($this->AS_ROOT){
+				echo "Starting......: Apache \"$this->servername\" stored on an LVM group $this->lvm_vg partition ({$this->lvm_size}MB)\n";
+				$lvm=new lvm_root();
+				if(!$lvm->CreateLVS($this->lvm_vg,$this->servername,$this->lvm_size,"$this->lvm_vg-$this->servername")){return false;}
+				echo "Starting......: Apache \"$this->servername\" $this->lvm_vg/$this->lvm_vg-$this->servername success\n";
+			}
 			$this->WORKING_DIRECTORY="/automounts/$this->lvm_vg-$this->servername";
-			exec("/bin/ls -lah $this->WORKING_DIRECTORY 2>&1",$results);
-			if($GLOBALS["VERBOSE"]){while (list ($num, $line) = each ($results)){echo "CheckWorkingDirectoryLVM() -> $line\n";}}
-			$this->CheckDirectoryRights();
+			if($this->AS_ROOT){
+				exec("/bin/ls -lah $this->WORKING_DIRECTORY 2>&1",$results);
+				if($GLOBALS["VERBOSE"]){while (list ($num, $line) = each ($results)){echo "CheckWorkingDirectoryLVM() -> $line\n";}}
+				$this->CheckDirectoryRights();
+			}
 			return true;
 			
 			
@@ -538,6 +538,7 @@
 		
 		
 		private function CheckDirectoryRights(){
+			if(!$this->AS_ROOT){return;}
 			$this->WORKING_DIRECTORY=str_replace("//","/",$this->WORKING_DIRECTORY);
 			echo "Starting......: Apache \"$this->servername\" working directory on $this->WORKING_DIRECTORY\n";
 			if(!is_dir($this->WORKING_DIRECTORY)){@mkdir($this->WORKING_DIRECTORY,666,true);}
@@ -670,8 +671,28 @@
 		}
 		
 		public function Aliases(){
+			$already=array();
 			if($this->groupware=="Z-PUSH"){
 				$f[]="Alias /Microsoft-Server-ActiveSync $this->WORKING_DIRECTORY/index.php";
+				$already["/Microsoft-Server-ActiveSync"]=true;
+			}
+			
+			$sql="SELECT * FROM freewebs_aliases WHERE servername='{$_GET["servername"]}' ORDER BY alias";
+			$q=new mysql();
+			$results=$q->QUERY_SQL($sql,'artica_backup');
+			while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
+				$Alias=trim($ligne["alias"]);
+				$directory=trim($ligne["directory"]);
+				if($Alias==null){continue;}
+				$regex=false;
+				if(preg_match("^REGEX:(.+)", $Alias,$re)){$Alias=$re[1];$regex=true;}
+				
+				if(substr($Alias, 0,1)<>'/'){$Alias="/$Alias";}
+				if(substr($directory, 0,1)<>'/'){$directory="/$directory";}
+				if(isset($already[$Alias])){continue;}
+				$directory=$this->WORKING_DIRECTORY.$directory;
+				$already[$Alias]=true;
+				if(!$regex){$f[]="Alias $Alias $directory";}else{$f[]="AliasMatch $Alias $directory";}
 			}
 			
 			return @implode("\n",$f);
@@ -967,7 +988,11 @@
 			$q->QUERY_SQL($sql,"artica_backup");
 			
 			$sql="DELETE FROM freewebs_proxy WHERE `servername`='$this->servername'";
-			$q->QUERY_SQL($sql,"artica_backup");			
+			$q->QUERY_SQL($sql,"artica_backup");		
+
+			$sql="DELETE FROM freewebs_aliases WHERE `servername`='$this->servername'";
+			$q->QUERY_SQL($sql,"artica_backup");				
+			
 			
 			
 			$ldap=new clladp();

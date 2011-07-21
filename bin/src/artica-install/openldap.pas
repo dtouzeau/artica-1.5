@@ -1005,7 +1005,7 @@ l.Add('dbconfig set_lk_max_lockers 1500');
 l.Add('');
 l.Add('index objectClass                       eq,pres');
 l.Add('index ou,cn,mail,surname,givenname      eq,pres,sub');
-l.Add('index uniqueMember,mailAlias,associatedDomain,ComputerIP            eq,pres');
+l.Add('index uniqueMember,mailAlias,associatedDomain,ComputerIP,ComputerMacAddress    eq,pres');
 l.Add('index uidNumber,gidNumber,memberUid,uid eq,pres');
 l.Add('index entryUUID,entryCSN                eq');
 l.Add('index aRecord            pres,eq');

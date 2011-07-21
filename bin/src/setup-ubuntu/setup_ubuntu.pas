@@ -56,7 +56,7 @@ begin
 
       if ParamStr(1)='--check-base-php' then begin
 
-          writeln('check-base-php Starting checking base system on ' +distri.DISTRINAME + ' ' + distri.DISTRINAME_VERSION+' CODE=' +distri.DISTRINAME_CODE );
+          writeln('check-base-php Starting checking base system on ' +distri.DISTRINAME + ' ' + distri.DISTRINAME_VERSION+' CODE=' +distri.DISTRINAME_CODE +' Kernel version: '+libs.KERNEL_VERSION() );
 
          if distri.DISTRINAME_CODE='UBUNTU' then begin
             install:=tubuntu.Create;
@@ -519,7 +519,7 @@ if length(paramstr(1))>0 then begin
      end;
 end;
 writeln('initialize... ');
-writeln('Detected:',distri.DISTRINAME_CODE+' "' + distri.DISTRINAME_VERSION+'"... Major version:', distri.DISTRI_MAJOR,' Minor:', distri.DISTRI_MINOR,' Arch:',libs.ArchStruct(),'bits');
+writeln('Detected:',distri.DISTRINAME_CODE+' "' + distri.DISTRINAME_VERSION+'" Major version:', distri.DISTRI_MAJOR,' Minor:', distri.DISTRI_MINOR,' Arch:',libs.ArchStruct(),'bits kernel: "'+libs.KERNEL_VERSION()+'"');
 
 if FileExists('/etc/init.d/zimbra') then begin
    writeln('It seems that Zimbra is installed on this computer.');

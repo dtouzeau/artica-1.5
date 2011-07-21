@@ -524,14 +524,25 @@ function computers_delete(){
 }
 
 function computer_list(){
+	$tofindorg=$_GET["tofind"];
 	if($_GET["tofind"]=='*'){$_GET["tofind"]=null;}
 	if($_GET["tofind"]==null){$tofind="*";}else{$tofind="*{$_GET["tofind"]}*";}
+	$tofind=str_replace("**", "*", $tofind);
 	$filter_search="(&(objectClass=ArticaComputerInfos)(|(cn=$tofind)(ComputerIP=$tofind)(uid=$tofind))(gecos=computer))";
 	
 $ldap=new clladp();
-$attrs=array("uid","ComputerIP","ComputerOS","ComputerMachineType");
+$attrs=array("uid","ComputerIP","ComputerOS","ComputerMachineType","ComputerMacAddress");
 $dn="$ldap->suffix";
 $hash=$ldap->Ldap_search($dn,$filter_search,$attrs,20);
+
+if(IsPhysicalAddress($tofindorg)){
+	$tofind=strtolower($tofindorg);
+	$tofind=str_replace('-',":",$tofind);
+	$patternMac="(&(objectclass=posixAccount)(ComputerMacAddress=$tofind))";
+	$hash2=$ldap->Ldap_search($dn,$patternMac,$attrs,20);
+}
+
+
 
 $PowerDNS="<td width=1%><h3>&nbsp;|&nbsp;</h3></td><td><h3>". texttooltip('{APP_PDNS}','{APP_PDNS_TEXT}',"javascript:Loadjs('pdns.php')")."</h3></td>";
 
@@ -561,31 +572,17 @@ $html="
 for($i=0;$i<$hash["count"];$i++){
 	$realuid=$hash[$i]["uid"][0];
 	$hash[$i]["uid"][0]=str_replace('$','',$hash[$i]["uid"][0]);
+	
 	$js=MEMBER_JS($realuid,1);
-	
-	if($_GET["mode"]=="dansguardian-ip-group"){
-			$js_add="<td width=1%>" . imgtootltip('add-18.gif',"{add_computer}","AddComputerToDansGuardian('$realuid','{$_GET["value"]}')")."</td>";
-	}
-	
-	if($_GET["mode"]=="selection"){
-		$js="{$_GET["callback"]}('$realuid');";
-	}
-	
-
-	
+	$Alreadyrealuid[$realuid]=true;
+	if($_GET["mode"]=="dansguardian-ip-group"){$js_add="<td width=1%>" . imgtootltip('add-18.gif',"{add_computer}","AddComputerToDansGuardian('$realuid','{$_GET["value"]}')")."</td>";}
+	if($_GET["mode"]=="selection"){$js="{$_GET["callback"]}('$realuid');";}
 	$ip=$hash[$i][strtolower("ComputerIP")][0];
 	$os=$hash[$i][strtolower("ComputerOS")][0];
 	$type=$hash[$i][strtolower("ComputerMachineType")][0];
 	$name=$hash[$i]["uid"][0];
 	if(strlen($name)>25){$name=substr($name,0,23)."...";}
-	
-	
-	if($os=="Unknown"){
-		if($type<>"Unknown"){
-			$os=$type;
-		}
-	}
-	
+	if($os=="Unknown"){if($type<>"Unknown"){$os=$type;}}
 	if(strlen($os)>20){$os=texttooltip(substr($os,0,17).'...',$os,null,null,1);}
 	if(strlen($ip)>20){$ip=texttooltip(substr($ip,0,17).'...',$ip,null,null,1);}
 	
@@ -602,6 +599,43 @@ for($i=0;$i<$hash["count"];$i++){
 	</tr>
 	";
 	}
+	
+	if(is_array($hash2)){
+		for($i=0;$i<$hash2["count"];$i++){
+			$realuid=$hash2[$i]["uid"][0];
+			if(isset($Alreadyrealuid[$realuid])){continue;}
+			$hash2[$i]["uid"][0]=str_replace('$','',$hash2[$i]["uid"][0]);
+			$js=MEMBER_JS($realuid,1);
+			$Alreadyrealuid[$realuid]=true;
+			if($_GET["mode"]=="dansguardian-ip-group"){$js_add="<td width=1%>" . imgtootltip('add-18.gif',"{add_computer}","AddComputerToDansGuardian('$realuid','{$_GET["value"]}')")."</td>";}
+			if($_GET["mode"]=="selection"){$js="{$_GET["callback"]}('$realuid');";}
+			$ip=$hash2[$i][strtolower("ComputerIP")][0];
+			$os=$hash2[$i][strtolower("ComputerOS")][0];
+			$type=$hash2[$i][strtolower("ComputerMachineType")][0];
+			$name=$hash2[$i]["uid"][0];
+			if(strlen($name)>25){$name=substr($name,0,23)."...";}
+			if($os=="Unknown"){if($type<>"Unknown"){$os=$type;}}
+			if(strlen($os)>20){$os=texttooltip(substr($os,0,17).'...',$os,null,null,1);}
+			if(strlen($ip)>20){$ip=texttooltip(substr($ip,0,17).'...',$ip,null,null,1);}
+			
+			
+			if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
+			$js=str_replace("javascript:",'',$js);
+			$html=$html . 
+			"<tr>
+			<td width=1% class=$classtr><img src='img/computer-32.png'></td>
+			<td $roolover nowrap><a href='#' OnClick=\"javascript:$js\" style='font-size:13px;text-decoration:underline'>$name</a></td>
+			<td $roolover style='font-size:13px'>$ip</a></td>
+			<td $roolover style='font-size:13px'>$os</a></td>
+			$js_add
+			</tr>
+			";	
+		}		
+		
+	}
+	
+	
+	
 $html=$html . "</tbody></table>";
 $tpl=new templates();
 return  $tpl->_ENGINE_parse_body($html);		

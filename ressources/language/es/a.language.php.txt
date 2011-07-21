@@ -370,6 +370,7 @@ domain.tld to match hosts width domain domain.tld
 <compilation_schedule_text>Schedule the databases re-compilation in order to update changes</compilation_schedule_text>
 <compile_missing_db>Compile missing DBs</compile_missing_db>
 <compile_missing_db_www_text>Compile missing databases in order to make the filter running</compile_missing_db_www_text>
+<compile_postfix>Compile Postfix</compile_postfix>
 <compile_rules>Compile rules</compile_rules>
 <comprate>Default compression rate</comprate>
 <compress_files_after>Compress files after</compress_files_after>
@@ -665,6 +666,14 @@ The filename should be a filename recognizable to whatever file transfer protoco
 <FreeWebsEnableOpenVPNProxy>Activate Mod proxy For OpenVPN service</FreeWebsEnableOpenVPNProxy>
 <FreewebsStorageDirectory>Websites storage directory</FreewebsStorageDirectory>
 <FreewebsStorageDirectory_text>It is the default path used when creating websites with FreeWebs</FreewebsStorageDirectory_text>
+<freeweb_alias_explain>
+Aliases are used to map between URLs and filesystem paths.[br]
+This allows for content which is not directly under the website root served as part of the web document tree.
+In the form on the first field, add the urls you want user to use eg /images.[br]
+In the second field set the local directory this url need to use eg: /folder/pictures/img
+If you need to use regular expressions use "REGEX:" prefix on the first field.[br]
+Example : REGEX:^/icons(.*) will use the /folder/pictures/icons$1.
+</freeweb_alias_explain>
 <freeweb_authldap_members_explain>By default, enabling authentication will allow all members to access to the website.[br]you can restrict it to specified members, groups by filling this table</freeweb_authldap_members_explain>
 <freeweb_files_perms_explain>This feature enables checking files and folders permissions on your web site.[br]
 You are able to create rules that drive the permissions engine.[br]
@@ -672,6 +681,7 @@ When enabling the permission engine, you have to set the frequency check operati
 If your upload files or directories on your web storage area, you will be ensure thar permissions are respected.
 </freeweb_files_perms_explain>
 <freeweb_groupware_explain>Click on one of the groupware listed below in order to transform you webserver to a "groupware" application.</freeweb_groupware_explain>
+<freeweb_is_groupware_feature_disabled>Your website is designed to provide a defined groupware, in this case, this feature is disabled</freeweb_is_groupware_feature_disabled>
 <freeweb_perms_add_explain>This form helps you to create a permission rule.[br]
 Rule start to check permission on the base of your webserver.[br]
 If you need to apply specific rule on a subfolder, give the subfolder name in the field.[br]

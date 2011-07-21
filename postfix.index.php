@@ -278,19 +278,13 @@ return $html;
 function POSTFIX_STATUS(){
 	$users=new usersMenus();
 	$tpl=new templates();
-	$href="<a href=\"javascript:blur();\" OnClick=\"javascript:ApplyPostfixConfig();\" style='font-size:14px;font-weight:bold;text-decoration:underline'>";
-	$apply=
-	"<table style='width:100%;margin-top:-35px'>
-	<tr>
-	<td valign='top' width=1%>".imgtootltip("apply-config-44.gif","{apply_config}","ApplyPostfixConfig()")."</td>
-	<td width=99%><div style='font-size:14px'>$href{apply_config}</a></div><i style='font-size:12px'>{apply_config_postfix}</i></td>
-	</tr>
-	</table>";
 	
-	$apply=$tpl->_ENGINE_parse_body($apply);
+	
+	
+	
 	
 	$script="
-		<div style='margin:8px'>$apply</div>
+		
 			<script>
 				PostfixStatusBar();
 				

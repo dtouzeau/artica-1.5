@@ -16,9 +16,9 @@
 	js();
 
 function js(){
-	
+	if($_GET["replace-start-root"]=="yes"){$_GET["replace-start-root"]=1;}
 	$page=CurrentPageName();
-	echo "YahooWinBrowse(550,'$page?popup=yes&root={$_GET["start-root"]}&field={$_GET["field"]}','Browse')";
+	echo "YahooWinBrowse(550,'$page?popup=yes&root={$_GET["start-root"]}&field={$_GET["field"]}&replace-start-root={$_GET["replace-start-root"]}','Browse')";
 	echo $html;
 	
 	
@@ -49,14 +49,14 @@ function popup(){
 	function LoadTree(){
 		$(document).ready(function(){
 			$('#browser').treeview({
-			url: '$page?startpath={$_GET["root"]}&field={$_GET["field"]}'
+			url: '$page?startpath={$_GET["root"]}&field={$_GET["field"]}&org-root={$_GET["root"]}&replace-start-root={$_GET["replace-start-root"]}'
 			})
 		});
 	
 	}
 	
 	function BrowserExpand(encpath){
-		LoadAjax('browser-infos','$page?browser-infos='+encpath+'&field={$_GET["field"]}');
+		LoadAjax('browser-infos','$page?browser-infos='+encpath+'&field={$_GET["field"]}&org-root={$_GET["root"]}&replace-start-root={$_GET["replace-start-root"]}');
 	
 	}
 	
@@ -75,6 +75,9 @@ function brower_infos(){
 	$root=base64_decode($_GET["browser-infos"]);
 	$RootTile=basename($root);
 	$give_folder_name=$tpl->javascript_parse_text("{give_folder_name}");
+	if(!is_numeric($_GET["replace-start-root"])){$_GET["replace-start-root"]=0;}
+	$orginal_root=base64_decode($_GET["org-root"]);
+	$strippedroot=str_replace($orginal_root, "",$root);
 	
 	
 	if($_GET["field"]<>null){
@@ -117,7 +120,8 @@ function brower_infos(){
 				alert('{$_GET["field"]} No such field');
 				return;
 			}
-			document.getElementById('{$_GET["field"]}').value='$root';
+			var stripped={$_GET["replace-start-root"]};
+			if(stripped==0){document.getElementById('{$_GET["field"]}').value='$root';}else{document.getElementById('{$_GET["field"]}').value='$strippedroot';}
 			YahooWinBrowseHide();
 		}
 	

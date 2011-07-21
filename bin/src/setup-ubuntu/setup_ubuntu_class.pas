@@ -23,7 +23,8 @@ private
        function Explode(const Separator, S: string; Limit: Integer = 0):TStringDynArray;
        procedure DisableApparmor();
        function UbuntuName():string;
-
+       procedure checkRepostitories6();
+       procedure S00vzreboot();
 
 
 public
@@ -98,11 +99,14 @@ begin
       exit;
     end;
 
-
-
+    if FileExists('/etc/rc6.d/S00vzreboot') then begin
+       writeln('Patching  /etc/rc6.d/S00vzreboot for the issue...');
+       S00vzreboot();
+    end;
     if not FileExists('/tmp/apt-update.patch') then begin
        if distri.DISTRINAME_CODE='DEBIAN' then begin
           if distri.DISTRINAME_VERSION='6' then begin
+             checkRepostitories6();
              writeln('Do want the installer patch your debian "sources.list" ?......: [Y]');
               readln(u);
               if length(u)=0 then u:='Y';
@@ -691,7 +695,7 @@ var
    UbuntuIntVer:integer;
    libs:tlibs;
    non_free:boolean;
-   
+   KERNEL_VERSION:string;
 begin
 f:='';
 UbuntuIntVer:=9;
@@ -700,6 +704,8 @@ distri:=tdistriDetect.Create();
 libs:=tlibs.Create;
 if not TryStrToInt(distri.DISTRINAME_VERSION,UbuntuIntVer) then UbuntuIntVer:=9;
 non_free:=libs.IS_DEBIAN_NON_FREE_IN_SOURCE_LIST();
+KERNEL_VERSION:=libs.KERNEL_VERSION();
+
 
 //l.Add('dhcp3-client');
 l.Add('cron');
@@ -1005,8 +1011,13 @@ if distri.DISTRINAME_CODE='DEBIAN' then begin
    end;
 
    if distri.DISTRINAME_VERSION='5' then begin
+   if  FileExists('/lib/modules/'+KERNEL_VERSION+'/kernel/fs/autofs4/autofs4.ko') then begin
       l.add('autofs');
       l.add('autofs-ldap');
+   end else begin
+       writeln('Checking.............: /lib/modules/'+KERNEL_VERSION+'/kernel/fs/autofs4/autofs4.ko no such file !');
+       writeln('Checking.............: autofs and autofs-ldap will be skipped');
+   end;
       l.add('libltdl3-dev');
 
       l.add('libtommath-dev'); //clamav
@@ -1046,8 +1057,13 @@ if distri.DISTRINAME_CODE='DEBIAN' then begin
 
 
    if distri.DISTRINAME_VERSION='6' then begin
-        l.add('autofs5');
-        l.add('autofs5-ldap');
+      if  FileExists('/lib/modules/'+KERNEL_VERSION+'/kernel/fs/autofs4/autofs4.ko') then begin
+          l.add('autofs5');
+          l.add('autofs5-ldap');
+      end else begin
+          writeln('Checking.............: /lib/modules/'+KERNEL_VERSION+'/kernel/fs/autofs4/autofs4.ko no such file !');
+          writeln('Checking.............: autofs5 and autofs5-ldap will be skipped');
+      end;
         l.add('libltdl-dev');
         l.add('libtommath-dev'); //clamav
         l.add('memtester');
@@ -1967,6 +1983,45 @@ begin
 
 
 end;
+procedure tubuntu.checkRepostitories6();
+var
+   RegExpr:TRegExpr;
+   L:Tstringlist;
+   x:string;
+   found:boolean;
+   i:integer;
+begin
+     if not FileExists('/etc/apt/sources.list') then begin
+         Writeln('WARNING !!!  /etc/apt/sources.list no such file');
+         Writeln('You should answer "yes" in the next question !');
+         Writeln('Type Enter to continue...');
+         readln(x);
+         exit;
+     end;
+     found:=false;
+     RegExpr:=TRegExpr.Create;
+     RegExpr.Expression:='^deb.+?squeeze';
+     l:=Tstringlist.Create;
+     l.LoadFromFile('/etc/apt/sources.list');
+     for i:=0 to l.Count -1 do begin
+         if  RegExpr.Exec(l.Strings[i]) then found:=true;
+     end;
+
+     if not found then begin
+        Writeln('WARNING !!!  /etc/apt/sources.list misconfigured.');
+        writeln('It seems you running a debian squeeze on your system');
+        writeln('But id did not find any repository about it...');
+        writeln('Before continue, you should verify the /etc/apt/sources.list');
+        writeln('Or answer to "yes" on the next question..');
+        Writeln('Type Enter to continue...');
+        readln(x);
+        exit;
+     end;
+end;
+
+
+
+
 function tubuntu.VirtualBoxAptConf():boolean;
 var
    l:Tstringlist;
@@ -2022,6 +2077,18 @@ distri:=tdistriDetect.Create();
 end;
 
 //########################################################################################
+procedure tubuntu.S00vzreboot();
+var
+   l:Tstringlist;
+begin
+l:=Tstringlist.Create;
+l.Add('#!/bin/bash');
+l.add('./reboot');
+l.SaveToFile('/etc/rc6.d/S00vzreboot');
+l.free;
+writeln('Patching /etc/rc6.d/S00vzreboot done...');
+end;
+
 function tubuntu.checkApps(l:tstringlist):string;
 var
    f:string;

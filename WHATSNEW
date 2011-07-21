@@ -1,4 +1,4 @@
-1.5.072101: 
+1.5.072120: 
 ========================================================================================
 
 System Changes
@@ -27,6 +27,8 @@ System Changes
 1.5.072019: Fix some errors while installing RPMForge in setup-centos. 
 1.5.072101: Fix Artica did not write /etc/php5/fastcgi/php.ini on OpenSuze 11.2 system that cause many php modules are not loaded for Artica interface.
 1.5.072101: Add possibility to upgrade DHCP server trough Setup center.
+1.5.072120: Some VPS providers offer a squeeze distribution but the sources.list is for a lenny : setup-ubuntu or setup-debian is able to detect it and inform that there is a misconfigured sources.list.
+1.5.072120: Add a new function to fix issue "insserv: warning: script is corrupt or invalid: /etc/init.d/../rc6.d/S00vzreboot" this is a know bug that setup-ubuntu or setup-debian is able fix on VPS servers.
 
 Messaging Changes:
 -------------------------------------------------
@@ -38,7 +40,8 @@ Messaging Changes:
 1.5.071220: Fix sometimes the Artica daemon did not detect Amavid-new in memory and try the start the service.
 1.5.071414: Fix many amavis reload tasks has been performed by Artica that cause amavis to stop.
 1.5.071723: When artica encounter /usr/lib/libinetmapi.so.1: undefined symbol: _ZTIN5vmime6objectE", by default, it automatically re-install Zarafa. (this feature can also be disabled under Zarafa section)
-1.5.072019: Improve removing Zarafa using "artica-make APP_ZARAFA --remove" command line
+1.5.072019: Improve removing Zarafa using "artica-make APP_ZARAFA --remove" command line.
+1.5.072113: Fix unable to compile postfix parameters. (a new link has been added in the top menu).
 
 File Sharing changes
 -------------------------------------------------
@@ -46,6 +49,8 @@ File Sharing changes
 1.5.071123: Adding a new feature "Samba Watch" that help to read Samba logs.
 1.5.071123: Introduce possibility to create "Virtual samba servers" and affect them to organizations (like postfix multiple instances)
 1.5.071520: Add possibility to modify the remote announce feature in samba.
+Fix Artica did not set the /etc/libnss-ldap.conf 
+Sometimes, rename a computer did not work. The rename computer function has been rebuilded. 
 
 
 FreeWebs changes
@@ -58,6 +63,7 @@ FreeWebs changes
 1.5.071723: Add DNS checking function when creating a virtualhost
 1.5.071723: Add mod_cache support
 1.5.071723: Add more options in order to tune Apache processes.
+1.5.072113: Add possibility to manage aliases in virtualhosts.
 
 
 1.5.062900
