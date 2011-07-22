@@ -540,6 +540,7 @@ l:TstringList;
 PHP_FCGI_CHILDREN:Integer;
 PHP_FCGI_MAX_REQUESTS:integer;
 max_procs:integer;
+LighttpdRunAsminimal:integer;
 begin
 result:='';
 l:=TstringList.Create;
@@ -547,7 +548,7 @@ l:=TstringList.Create;
 forceDirectories('/usr/share/artica-postfix/framework');
 forceDirectories('/usr/share/artica-postfix/ressources/sock');
 fpsystem('/bin/chmod -R 755 /usr/share/artica-postfix/framework');
-
+if not TryStrToInt(SYS.GET_INFO('LighttpdRunAsminimal'),LighttpdRunAsminimal) then LighttpdRunAsminimal:=0;
 PHP_FCGI_CHILDREN:=3;
 max_procs:=2;
 PHP_FCGI_MAX_REQUESTS:=500;
@@ -555,6 +556,11 @@ if not InsufficentRessources then begin
      PHP_FCGI_CHILDREN:=2;
      PHP_FCGI_MAX_REQUESTS:=1000;
      max_procs:=1;
+end;
+
+if LighttpdRunAsminimal=1 then begin
+       max_procs:=1;
+       PHP_FCGI_CHILDREN:=1;
 end;
 
 

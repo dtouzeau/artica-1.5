@@ -26,6 +26,8 @@ if(preg_match("#--nowachdog#",$GLOBALS["COMMANDLINE"])){$GLOBALS["DISABLE_WATCHD
 
 if(posix_getuid()<>0){die("Cannot be used in web server mode\n\n");}
 $sock=new sockets();
+$DisableArticaStatusService=$sock->GET_INFO("DisableArticaStatusService");
+if(!is_numeric($DisableArticaStatusService)){$DisableArticaStatusService=0;}
 $unix=new unix();
 $GLOBALS["ArticaWatchDogList"]=unserialize(base64_decode($sock->GET_INFO("ArticaWatchDogList")));
 $GLOBALS["PHP5"]=$unix->LOCATE_PHP5_BIN();
@@ -157,6 +159,7 @@ if($argv[1]=="--snort"){echo snort();exit;}
 if($argv[1]=="--xload"){echo xLoadAvg();$GLOBALS["VERBOSE"]=true;exit;}
 if($argv[1]=="--greyhole-watchdog"){greyhole_watchdog();exit;}
 if($argv[1]=="--greensql"){echo greensql();exit;}
+if($argv[1]=="--nscd"){echo nscd();exit;}
 
 
 
@@ -212,6 +215,13 @@ if(strlen($argv[1])>0){
 	die();
 }
 
+if($DisableArticaStatusService==1){
+	events("-> launch_all_status()","MAIN",__LINE__);
+	launch_all_status();
+	die();	
+}
+
+
 $pidfile="/etc/artica-postfix/".basename(__FILE__).".pid";
 $unix=new unix();
 if($unix->process_exists(@file_get_contents($pidfile))){
@@ -222,7 +232,7 @@ $mem=round(((memory_get_usage()/1024)/1000),2);events("{$mem}MB artica-status Me
 print "Starting......: artica-status Memory {$GLOBALS["TOTAL_MEMORY_MB"]}MB\n";
 if(!function_exists("pcntl_fork")){$nofork=true;}
 if($GLOBALS["TOTAL_MEMORY_MB"]<400){$nofork=true;}
-
+if($DisableArticaStatusService==1){$nofork=true;}
 
 
 if($nofork){
@@ -245,14 +255,16 @@ if($nofork){
 	shell_exec(trim($nohup." ".$unix->LOCATE_PHP5_BIN()." ".dirname(__FILE__)."/exec.parse-orders.php >/dev/null 2>&1 &"));	
 	die();
 	
-}
-
 if(function_exists("pcntl_signal")){
 	pcntl_signal(SIGTERM,'sig_handler');
 	pcntl_signal(SIGINT, 'sig_handler');
 	pcntl_signal(SIGCHLD,'sig_handler');
 	pcntl_signal(SIGHUP, 'sig_handler');
+}	
+	
 }
+
+
 
 
 
@@ -685,7 +697,7 @@ function launch_all_status($force=false){
 	 "pptpd","pptp_clients","apt_mirror","squid_clamav_tail","ddclient","cluebringer","apachesrc","zarafa_web","zarafa_ical","zarafa_dagent","zarafa_indexer",
 	"zarafa_monitor","zarafa_gateway","zarafa_spooler","zarafa_server","assp","openvpn","vboxguest","sabnzbdplus","SwapWatchdog","artica_meta_scheduler",
 	"OpenVPNClientsStatus","stunnel","meta_checks","zarafa_licensed","CheckCurl","ufdbguardd_tail","vnstat","NetAdsWatchdog","munin","autofs","greyhole",
-	"dnsmasq","iscsi","watchdog_yorel","postfwd2","vps_servers","smartd","crossroads_multiple","auth_tail","greyhole_watchdog","greensql"
+	"dnsmasq","iscsi","watchdog_yorel","postfwd2","vps_servers","smartd","crossroads_multiple","auth_tail","greyhole_watchdog","greensql","nscd"
 	);
 	$data1=$GLOBALS["TIME_CLASS"];
 	$data2 = time();
@@ -3116,6 +3128,54 @@ function greensql_version(){
 	}
 	
 }
+
+function nscd(){
+	if(!$GLOBALS["CLASS_USERS"]->NSCD_INSTALLED){
+		if($GLOBALS["VERBOSE"]){echo __FUNCTION__." NSCD_INSTALLED = FALSE\n";}
+		return;
+	}
+	$bin=$GLOBALS["CLASS_UNIX"]->find_program("nscd");
+	$EnableNSCD=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("EnableNSCD");
+	if(!is_numeric($EnableNSCD)){$EnableNSCD=1;}
+	$pid_path="/var/run/nscd/nscd.pid";
+	$master_pid=trim(@file_get_contents($pid_path));	
+	$version=nscd_version($bin);
+	if(!$GLOBALS["CLASS_UNIX"]->process_exists($master_pid)){$master_pid=$GLOBALS["CLASS_UNIX"]->PIDOF($bin);}
+	if($EnableNSCD==0){
+		if($GLOBALS["CLASS_UNIX"]->process_exists($master_pid)){shell_exec("/etc/init.d/nscd stop");}
+	}
+	
+	
+	$l[]="[APP_NSCD]";
+	$l[]="service_name=APP_NSCD";
+	$l[]="master_version=$version";
+
+	$l[]="service_disabled=$EnableNSCD";
+	$l[]="watchdog_features=1";
+	$l[]="family=system";
+	if($EnableNSCD==0){$l[]="";return implode("\n",$l);return;}
+	
+	 if(!$GLOBALS["CLASS_UNIX"]->process_exists($master_pid)){
+		shell_exec("/etc/init.d/nscd start");
+		$l[]="";
+		return implode("\n",$l);
+	}	
+	$l[]=GetMemoriesOf($master_pid);
+	$l[]="";
+	return implode("\n",$l);return;		
+	
+	
+}
+
+function nscd_version($bin){
+	if(isset($GLOBALS[__FUNCTION__])){return $GLOBALS[__FUNCTION__];}
+	exec("$bin -V 2>&1",$results);
+	while (list ($num, $line) = each ($results)){
+		if(preg_match("#nscd.+?([0-9\.]+)#", $line)){$GLOBALS[__FUNCTION__]=$re[1];return $re[1];}
+	}
+	
+}
+
 function greensql(){
 	
 	if(!$GLOBALS["CLASS_USERS"]->APP_GREENSQL_INSTALLED){
@@ -3633,11 +3693,7 @@ function artica_background(){
 	 	$l[]="watchdog_features=1";
 	 	$l[]="family=system";
 	 	$l[]="installed=1";
-	 	if($EnableArticaBackground<>1){
-	 		$l[]="";$l[]="";
-			return implode("\n",$l);
-			return;
-	 	}
+	 	if($EnableArticaBackground<>1){$l[]="";$l[]="";return implode("\n",$l);}
 	
 	$master_pid=$GLOBALS["CLASS_UNIX"]->get_pid_from_file($pid_path);
 	

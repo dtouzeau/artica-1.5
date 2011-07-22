@@ -1745,3 +1745,48 @@ Example : REGEX:^/icons(.*) will use the /folder/pictures/icons$1.
 </freeweb_alias_explain>
 <freeweb_is_groupware_feature_disabled>Your website is designed to provide a defined groupware, in this case, this feature is disabled</freeweb_is_groupware_feature_disabled>
 <change_computer_text>Modify the netbiosname, give here the new netbiosname:</change_computer_text>
+<artica_optimize_explain>This section will help you in order to optimize your server in order to fit your needs.[br]By default artica try to provide the maximum services on your server.[br]
+But these service should handle memory and processes.
+</artica_optimize_explain>
+<APACHE_GROUPWARE_DISABLE_EXPLAIN>Apache groupware is a second Web server instance designed to provide Web groupwares for organizations.
+[br]This will be smoothly turn to FreeWebs that use the first Web server instance.[br]
+If you will use only FreeWeb has the main web service, disable this feature.
+[b]You will free 67Mb memory[/b]
+</APACHE_GROUPWARE_DISABLE_EXPLAIN>
+<optimization>Optimization</optimization>
+<APP_NSCD>Name Service cache Daemon</APP_NSCD>
+<NSCD_DISABLE_EXPLAIN>Name Service cache Daemon is used to cache internal connections such has LDAP, DNS...It use a memory cache.[br][b]Disable it will free from 7 to 10Mb memory[/b]</NSCD_DISABLE_EXPLAIN>
+<LighttpdRunAsminimal>Minimal processes for Artica Web engines</LighttpdRunAsminimal>
+<reduce_artica_web_explain>Artica use 2 web servers (http engine and framework) in order to provide this Web administration.[br]Enable this feature will reduce Web processes to minimal.[br]
+You will safe  163Mb memory.[br]You can safely enable this feature if you use the Artica Web administration port only for managing this server (no webmails and other web services).
+</LighttpdRunAsminimal>
+<SlapdThreads>number of threads that can be used by OpenLDAP</SlapdThreads>
+<SlapdThreads_explain>Artica use the OpenLDAP server for managing users/passwords by default, the OpenLDAP server can use 16 threads.[br]This is for a general settings for hundred users using for example OpenLDAP has a Samba server or for authenticate many users or for a DNS server using LDAP backend.[br]
+Minimal threads is 2 and will safe minimal 20Mb memory[br]In the opposite, if you have LDAP issues, increase this number[br]Set 0 to turn to default threads</SlapdThreads_explain>
+<DisableArticaStatusService_explain>Artica-Status is a service that report status of all services running on the system and ensure that are up or down.[br]
+By default Artica-status run in memory has a deamon.[br]
+Disable Artica Status will not remove status and watchog features but it will not stay in memory and will be executed periodically.[br]
+Uncheck the box: Around 25Mb memory free
+</DisableArticaStatusService_explain>
+<system_packages_can_be_upgraded>System packages that should be updated/upgraded</system_packages_can_be_upgraded>
+<DisableArticaExecutorService_explain>
+Artica executor is a daemon that run in memory in order to schedule commands periodically.[br]
+Disable Artica Executor will not remove this task but switch it's process to be executed periodically.[br]
+uncheck the box: Around 23Mb memory free.
+</DisableArticaExecutorService_explain>
+<DisableEnableArticaBackgroundService_explain>
+Artica Background is a daemon that run in memory in order to execute scheduled commands from a queue.[br]It is in charge to accept interface orders and others daemons orders.[br]
+Disable Artica Executor will not remove this task but switch it's process to be executed periodically.[br]
+Uncheck the box: Around 18Mb memory free.
+</DisableEnableArticaBackgroundService_explain>
+<Reduce_mysql_explain>
+Mysql engine is the SQL database used for saving some Artica settings, and provide content for multiple services.
+[br]By default if your sever is higher to 550 Mb artica will turn mysql to maximal performances.[br]
+Maximal performances means maximal memory used.[br]
+Lower config will get 278Mb free.[br]
+Very lower config will get 320Mb free[br]
+</Reduce_mysql_explain>
+<lower_config>Lower config</lower_config>
+<very_lower_config>Very lower config</very_lower_config>
+
+

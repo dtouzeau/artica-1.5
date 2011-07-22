@@ -56,18 +56,18 @@ function index(){
 	
 	//$content=main_config(1);
 	
-	$html=RoundedLightWhite("
+	$html="
 	
 	<table style='width:100%'>
 	<tr>
 	<td width=1% valign='top'><img src='img/bg_perf.jpg'></td>
 	<td valign='top'><div id='artica_perfomances_services_status'></div></td>
 	</tr>
-	</table>")."
+	</table>
 	<table style='width:100%'>
 	<tr>
 		<td colspan=2 valign='top'><br>
-		".RoundedLightWhite("<p style='font-size:14px'>{about_perf}</p>")."
+		<p style='font-size:14px'>{about_perf}</p>
 		</td>
 	</tr>
 	</table>
@@ -495,28 +495,23 @@ function main_tabs(){
 	$page=CurrentPageName();
 	$array["index"]='{index}';
 	$array["artica_process"]='{artica_process}';
+	$array["optimize"]='{optimization}';
 	
 	
 	while (list ($num, $ligne) = each ($array) ){
+		if($num=="optimize"){$html[]= "<li><a href=\"artica.optimize.php\"><span>$ligne</span></a></li>\n";continue;}
 		$html[]= "<li><a href=\"$page?main=$num&hostname=$hostname\"><span>$ligne</span></a></li>\n";
 		
 		}
 	
 	
 	return "
-	<div id=main_config_articaproc style='width:100%;height:480px;overflow:auto'>
+	<div id=main_config_articaproc style='width:100%;height:650px;overflow:auto'>
 		<ul>". implode("\n",$html)."</ul>
 	</div>
 		<script>
 				$(document).ready(function(){
-					$('#main_config_articaproc').tabs({
-				    load: function(event, ui) {
-				        $('a', ui.panel).click(function() {
-				            $(ui.panel).load(this.href);
-				            return false;
-				        });
-				    }
-				});
+					$('#main_config_articaproc').tabs();
 			
 
 			});

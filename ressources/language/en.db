@@ -1,4 +1,4 @@
-a:9986:{s:10:"ADD_WIDGET";s:16:"Add a new widget";s:15:"ADD_WIDGET_TEXT";s:38:"Add a new icon/Widget in this web page";s:15:"artica_settings";s:27:"Artica Global configuration";s:20:"artica_settings_text";s:73:"Define global settings about Proxy used, web interface, mysql settings...";s:14:"choose_section";s:16:"Choose a section";s:15:"CLICK_TO_DELETE";s:15:"Click to delete";s:15:"DELETE_THIS_TAB";s:25:"Delete this personal page";s:20:"DELETE_THIS_TAB_TEXT";s:65:"This operation will delete this page and this tab form your panel";s:10:"FILE_SHARE";s:12:"File Sharing";s:7:"MAILBOX";s:20:"Mailboxes management";s:9:"MAIL_SECU";s:20:"Messaging (security)";s:14:"MANAGE_WIDGETS";s:17:"Configure widgets";s:19:"MANAGE_WIDGETS_TEXT";s:40:"Change the display order, delete widgets";s:3:"MTA";s:30:"Mail transfert Agent (Postfix)";s:7:"NETWORK";s:7:"Network";s:3:"ORG";s:32:"Organizations related operations";s:18:"organizations_text";s:76:"[b]Organizations management:[/b]Display, Create or delete your organizations";s:12:"REBUILD_PAGE";s:17:"Rebuild this area";s:17:"REBUILD_PAGE_TEXT";s:65:"This operation will erase the current cache and rebuild this area";s:6:"SYSTEM";s:32:"System applications and settings";s:12:"WIDGETS_AREA";s:12:"Widgets Area";s:20:"WIDGETS_AREA_EXPLAIN";s:81:"Click on one of these icons in order to add or to [b]delete[/b] icon on your area";s:18:"your_organizations";s:18:"Your Organizations";s:15:"edit_photo_text";s:119:"Put here the user's picture, in order to upload it into database[br]
+a:10002:{s:10:"ADD_WIDGET";s:16:"Add a new widget";s:15:"ADD_WIDGET_TEXT";s:38:"Add a new icon/Widget in this web page";s:15:"artica_settings";s:27:"Artica Global configuration";s:20:"artica_settings_text";s:73:"Define global settings about Proxy used, web interface, mysql settings...";s:14:"choose_section";s:16:"Choose a section";s:15:"CLICK_TO_DELETE";s:15:"Click to delete";s:15:"DELETE_THIS_TAB";s:25:"Delete this personal page";s:20:"DELETE_THIS_TAB_TEXT";s:65:"This operation will delete this page and this tab form your panel";s:10:"FILE_SHARE";s:12:"File Sharing";s:7:"MAILBOX";s:20:"Mailboxes management";s:9:"MAIL_SECU";s:20:"Messaging (security)";s:14:"MANAGE_WIDGETS";s:17:"Configure widgets";s:19:"MANAGE_WIDGETS_TEXT";s:40:"Change the display order, delete widgets";s:3:"MTA";s:30:"Mail transfert Agent (Postfix)";s:7:"NETWORK";s:7:"Network";s:3:"ORG";s:32:"Organizations related operations";s:18:"organizations_text";s:76:"[b]Organizations management:[/b]Display, Create or delete your organizations";s:12:"REBUILD_PAGE";s:17:"Rebuild this area";s:17:"REBUILD_PAGE_TEXT";s:65:"This operation will erase the current cache and rebuild this area";s:6:"SYSTEM";s:32:"System applications and settings";s:12:"WIDGETS_AREA";s:12:"Widgets Area";s:20:"WIDGETS_AREA_EXPLAIN";s:81:"Click on one of these icons in order to add or to [b]delete[/b] icon on your area";s:18:"your_organizations";s:18:"Your Organizations";s:15:"edit_photo_text";s:119:"Put here the user's picture, in order to upload it into database[br]
 [b]Notice: valids formats are png,gif,jpeg[/b][br]";s:16:"edit_photo_title";s:14:"Add user photo";s:5:"about";s:482:"MIMEDefang is a framework for filtering e-mail.[br]
 It uses Sendmail's "Milter" API, some C glue code, and some Perl code to let you write high-performance mail filters in Perl.[br]
 
@@ -2079,7 +2079,34 @@ In the form on the first field, add the urls you want user to use eg /images.[br
 In the second field set the local directory this url need to use eg: /folder/pictures/img
 If you need to use regular expressions use "REGEX:" prefix on the first field.[br]
 Example : REGEX:^/icons(.*) will use the /folder/pictures/icons$1.
-";s:37:"freeweb_is_groupware_feature_disabled";s:95:"Your website is designed to provide a defined groupware, in this case, this feature is disabled";s:20:"change_computer_text";s:54:"Modify the netbiosname, give here the new netbiosname:";s:18:"add_pop3_imap_text";s:115:"In order to enable POP3/IMAP access for this user, 
+";s:37:"freeweb_is_groupware_feature_disabled";s:95:"Your website is designed to provide a defined groupware, in this case, this feature is disabled";s:20:"change_computer_text";s:54:"Modify the netbiosname, give here the new netbiosname:";s:23:"artica_optimize_explain";s:219:"This section will help you in order to optimize your server in order to fit your needs.[br]By default artica try to provide the maximum services on your server.[br]
+But these service should handle memory and processes.
+";s:32:"APACHE_GROUPWARE_DISABLE_EXPLAIN";s:300:"Apache groupware is a second Web server instance designed to provide Web groupwares for organizations.
+[br]This will be smoothly turn to FreeWebs that use the first Web server instance.[br]
+If you will use only FreeWeb has the main web service, disable this feature.
+[b]You will free 67Mb memory[/b]
+";s:12:"optimization";s:12:"Optimization";s:8:"APP_NSCD";s:25:"Name Service cache Daemon";s:20:"NSCD_DISABLE_EXPLAIN";s:160:"Name Service cache Daemon is used to cache internal connections such has LDAP, DNS...It use a memory cache.[br][b]Disable it will free from 7 to 10Mb memory[/b]";s:20:"LighttpdRunAsminimal";s:40:"Minimal processes for Artica Web engines";s:25:"reduce_artica_web_explain";s:344:"Artica use 2 web servers (http engine and framework) in order to provide this Web administration.[br]Enable this feature will reduce Web processes to minimal.[br]
+You will safe  163Mb memory.[br]You can safely enable this feature if you use the Artica Web administration port only for managing this server (no webmails and other web services).
+";s:12:"SlapdThreads";s:46:"number of threads that can be used by OpenLDAP";s:20:"SlapdThreads_explain";s:441:"Artica use the OpenLDAP server for managing users/passwords by default, the OpenLDAP server can use 16 threads.[br]This is for a general settings for hundred users using for example OpenLDAP has a Samba server or for authenticate many users or for a DNS server using LDAP backend.[br]
+Minimal threads is 2 and will safe minimal 20Mb memory[br]In the opposite, if you have LDAP issues, increase this number[br]Set 0 to turn to default threads";s:34:"DisableArticaStatusService_explain";s:354:"Artica-Status is a service that report status of all services running on the system and ensure that are up or down.[br]
+By default Artica-status run in memory has a deamon.[br]
+Disable Artica Status will not remove status and watchog features but it will not stay in memory and will be executed periodically.[br]
+Uncheck the box: Around 25Mb memory free
+";s:31:"system_packages_can_be_upgraded";s:47:"System packages that should be updated/upgraded";s:36:"DisableArticaExecutorService_explain";s:245:"
+Artica executor is a daemon that run in memory in order to schedule commands periodically.[br]
+Disable Artica Executor will not remove this task but switch it's process to be executed periodically.[br]
+uncheck the box: Around 23Mb memory free.
+";s:44:"DisableEnableArticaBackgroundService_explain";s:329:"
+Artica Background is a daemon that run in memory in order to execute scheduled commands from a queue.[br]It is in charge to accept interface orders and others daemons orders.[br]
+Disable Artica Executor will not remove this task but switch it's process to be executed periodically.[br]
+Uncheck the box: Around 18Mb memory free.
+";s:20:"Reduce_mysql_explain";s:348:"
+Mysql engine is the SQL database used for saving some Artica settings, and provide content for multiple services.
+[br]By default if your sever is higher to 550 Mb artica will turn mysql to maximal performances.[br]
+Maximal performances means maximal memory used.[br]
+Lower config will get 278Mb free.[br]
+Very lower config will get 320Mb free[br]
+";s:12:"lower_config";s:12:"Lower config";s:17:"very_lower_config";s:17:"Very lower config";s:18:"add_pop3_imap_text";s:115:"In order to enable POP3/IMAP access for this user, 
 you must set mailbox password. 
 Give the password for this user";s:11:"ARRAY_TITLE";s:12:"Domains list";s:13:"bt_add_domain";s:16:"Add a new domain";s:19:"edit_pop3_imap_text";s:98:"If you want to edit this user,
 you must set the password for this user

@@ -164,6 +164,11 @@ A partial IP address: 10.1
 A network/netmask pair: 10.1.0.0/255.255.0.0
 A network/nnn CIDR specification: 10.1.0.0/16
 </apache_auth_ip_explain>
+<APACHE_GROUPWARE_DISABLE_EXPLAIN>Apache groupware is a second Web server instance designed to provide Web groupwares for organizations.
+[br]This will be smoothly turn to FreeWebs that use the first Web server instance.[br]
+If you will use only FreeWeb has the main web service, disable this feature.
+[b]You will free 67Mb memory[/b]
+</APACHE_GROUPWARE_DISABLE_EXPLAIN>
 <apache_mod_cache_explain>This section implement disk caching in order to speed up you web server</apache_mod_cache_explain>
 <apply_config>Apply settings</apply_config>
 <apply_config_postfix>Stop Postfix main system, recompile all parameters and start postfix in order to make parameters in production mode</apply_config_postfix>
@@ -190,6 +195,7 @@ The logic is based on evaluation of SQL commands using a risk scoring matrix as 
 <APP_IPTACOUNT_EXPLAIN>TCP/IP Accounting allow you to obtain informations about traffic received,passed,transfered according rules</APP_IPTACOUNT_EXPLAIN>
 <APP_LXC>LXC containers</APP_LXC>
 <APP_LXC_TEXT>Create and manage Virtual Private servers with Linux Containers technology</APP_LXC_TEXT>
+<APP_NSCD>Name Service cache Daemon</APP_NSCD>
 <APP_PDNS_INSTANCE>PowerDNS (Instance)</APP_PDNS_INSTANCE>
 <APP_POSTFWD2>Policy Delegation</APP_POSTFWD2>
 <APP_POSTFWD2_TEXT>Policy delegation is a kind of Firewall that allow you to define a set of rules to restrict messaging</APP_POSTFWD2_TEXT>
@@ -224,6 +230,9 @@ Increase the value will reduce the processor consumption but increase the time t
 <ARTICA_ADM_TEXT>This is the main web Artica console that you currently using</ARTICA_ADM_TEXT>
 <ARTICA_MINIADM>End-users/Admin web Interface</ARTICA_MINIADM>
 <ARTICA_MINIADM_TEXT>Web front-end for users and organization's administrators</ARTICA_MINIADM_TEXT>
+<artica_optimize_explain>This section will help you in order to optimize your server in order to fit your needs.[br]By default artica try to provide the maximum services on your server.[br]
+But these service should handle memory and processes.
+</artica_optimize_explain>
 <ARTICA_REGISTER_OU>Organization Register form</ARTICA_REGISTER_OU>
 <ARTICA_REGISTER_OU_TEXT>This a form that allow Internet user to register in order to automatically create a new organization</ARTICA_REGISTER_OU_TEXT>
 <ARTICA_SMTP_STATS_EXPLAIN>Artica SMTP statistics engine is a feature generating graphs, charts, messages history based on the Postfix flow.[br]
@@ -340,6 +349,7 @@ This includes using a third party computer. Traditional VPN is not covered</cat_
 <cat_sslsites>Sites about Web SSL security, offer ssl key storage, ssl key generation...</cat_sslsites>
 <ChangeMysqlDir_explain>By default, mysql store files and databases in /var/lib/mysql, you can change it to an order place.[br]
 Use the form below in order to specify the new directory</ChangeMysqlDir_explain>
+<change_computer_text>Modify the netbiosname, give here the new netbiosname:</change_computer_text>
 <change_mac_address>Change MAC Address</change_mac_address>
 <change_mysql_directory_text>Change the directory that store mysql databases.</change_mysql_directory_text>
 <change_organization>Change organization</change_organization>
@@ -488,7 +498,22 @@ Name  should  be  the name that will be provided to the client</dhcp-server-name
 <dhcp-subnet-masq_text>Can be used in each subnet declaration to  set the  desired  subnet  mask, since any subnet-mask option statement will override the subnet mask declared in the subnet statement</dhcp-subnet-masq_text>
 <dhcpd_leases_explain>This section display leases acquired by computers.</dhcpd_leases_explain>
 <dhcpd_shared_network_explain>All subnets that share the same physical network can be grouped under a Shared Network object called here has "groups"</dhcpd_shared_network_explain>
+<DisableArticaExecutorService_explain>
+Artica executor is a daemon that run in memory in order to schedule commands periodically.[br]
+Disable Artica Executor will not remove this task but switch it's process to be executed periodically.[br]
+uncheck the box: Around 23Mb memory free.
+</DisableArticaExecutorService_explain>
+<DisableArticaStatusService_explain>Artica-Status is a service that report status of all services running on the system and ensure that are up or down.[br]
+By default Artica-status run in memory has a deamon.[br]
+Disable Artica Status will not remove status and watchog features but it will not stay in memory and will be executed periodically.[br]
+Uncheck the box: Around 25Mb memory free
+</DisableArticaStatusService_explain>
 <DisableDisplayVersion>Disable the display version feature</DisableDisplayVersion>
+<DisableEnableArticaBackgroundService_explain>
+Artica Background is a daemon that run in memory in order to execute scheduled commands from a queue.[br]It is in charge to accept interface orders and others daemons orders.[br]
+Disable Artica Executor will not remove this task but switch it's process to be executed periodically.[br]
+Uncheck the box: Around 18Mb memory free.
+</DisableEnableArticaBackgroundService_explain>
 <DisableHtAccess>Disable .htaccess</DisableHtAccess>
 <DisableLDAPDatabase>Disable LDAP Database</DisableLDAPDatabase>
 <DisablePowerDnsManagement>Unlink PowerDNS from Artica</DisablePowerDnsManagement>
@@ -842,6 +867,7 @@ This file will be the shared iSCSI disk.[br]In disk mode, you will have to choos
 <ldap_importation_text>Importing users from an external LDAP server such OpenLDAP or Zimbra</ldap_importation_text>
 <leases>leases</leases>
 <leave_ad>Disconnect From the Active Directory server</leave_ad>
+<LighttpdRunAsminimal>Minimal processes for Artica Web engines</LighttpdRunAsminimal>
 <LimitRequestFields>Request headers (fields)</LimitRequestFields>
 <limit_memory>Limit memory to</limit_memory>
 <limit_swap>Limit memory SWAP to</limit_swap>
@@ -859,6 +885,7 @@ Select SMTP instances in the list that will receive connections from the load ba
 <log_queries>Log queries</log_queries>
 <lowereq>is lower</lowereq>
 <lowernot>is not lower</lowernot>
+<lower_config>Lower config</lower_config>
 <lvcreate_explain>This operation will create a new LVM disk on this group.[br]
 The created disk will be the same behvior of a real disk and can be used like a real disk.[br]
 Give here the disk size in MB.
@@ -1002,6 +1029,7 @@ Use relayed domain instead until there is no mailbox server installed.[br]
 <NO_RELAY_TO_THIS_SERVER_EXPLAIN>Operation not permitted, a relayed domain cannot be the server itself, use local domain for this operation</NO_RELAY_TO_THIS_SERVER_EXPLAIN>
 <no_such_interfaces>No such interfaces</no_such_interfaces>
 <no_usersameftpuser>Error: the FTP user cannot be the same has the Website owner username</no_usersameftpuser>
+<NSCD_DISABLE_EXPLAIN>Name Service cache Daemon is used to cache internal connections such has LDAP, DNS...It use a memory cache.[br][b]Disable it will free from 7 to 10Mb memory[/b]</NSCD_DISABLE_EXPLAIN>
 <nsrecord>Name server record</nsrecord>
 <ntp_server>NTP server</ntp_server>
 <Offline_Uncorrectable>Off-line Scan Uncorrectable Count</Offline_Uncorrectable>
@@ -1025,6 +1053,7 @@ This is not your network of the VPN server but the network of your remote site.
 <openvpn_server>OpenVPN server</openvpn_server>
 <operating_system>Operating system</operating_system>
 <operating_system_user_has>Operating system user has:</operating_system_user_has>
+<optimization>Optimization</optimization>
 <option-176>IP phones configuration</option-176>
 <option-176-explain>The IP phones need obviously their own IP addresses.[br]
 You can administer this manually but more common is DHCP configuration.[br]
@@ -1259,6 +1288,16 @@ Do you want to perform this operation ?</reconstruct_caches_explain>
 <record>Record</record>
 <redirect_to>Redirect to</redirect_to>
 <redirect_to_email>Redirect to address</redirect_to_email>
+<reduce_artica_web_explain>Artica use 2 web servers (http engine and framework) in order to provide this Web administration.[br]Enable this feature will reduce Web processes to minimal.[br]
+You will safe  163Mb memory.[br]You can safely enable this feature if you use the Artica Web administration port only for managing this server (no webmails and other web services).
+</reduce_artica_web_explain>
+<Reduce_mysql_explain>
+Mysql engine is the SQL database used for saving some Artica settings, and provide content for multiple services.
+[br]By default if your sever is higher to 550 Mb artica will turn mysql to maximal performances.[br]
+Maximal performances means maximal memory used.[br]
+Lower config will get 278Mb free.[br]
+Very lower config will get 320Mb free[br]
+</Reduce_mysql_explain>
 <RegexSimpleWords>Block words (simple)</RegexSimpleWords>
 <register_date>Register date</register_date>
 <register_form>Register form</register_form>
@@ -1476,6 +1515,9 @@ Each entry must be separated by a carriage return.
 <skip-incr>skip the disk when the level 0 is NOT due</skip-incr>
 <skip-incrExplain>skip the disk when the level 0 is NOT due.[br]
 This is used in archive configurations, where only full dumps are done and the tapes saved.</skip-incrExplain>
+<SlapdThreads>number of threads that can be used by OpenLDAP</SlapdThreads>
+<SlapdThreads_explain>Artica use the OpenLDAP server for managing users/passwords by default, the OpenLDAP server can use 16 threads.[br]This is for a general settings for hundred users using for example OpenLDAP has a Samba server or for authenticate many users or for a DNS server using LDAP backend.[br]
+Minimal threads is 2 and will safe minimal 20Mb memory[br]In the opposite, if you have LDAP issues, increase this number[br]Set 0 to turn to default threads</SlapdThreads_explain>
 <SMBChangeShareName_text>Click on the link in order to change the share name</SMBChangeShareName_text>
 <smbconfig>smb.conf</smbconfig>
 <smbservices>Services</smbservices>
@@ -1531,6 +1573,7 @@ It should match your MTA's limit for a maximum attachment size</srv_clamav.Strea
 <system_grace_period_explain>The grace period,which determines the lenght if time that a user is allowed to exceed the soft limit</system_grace_period_explain>
 <system_log>System logging</system_log>
 <system_log_text>Define parameters in order to send system events to a central server or to transform Artica has en central log server</system_log_text>
+<system_packages_can_be_upgraded>System packages that should be updated/upgraded</system_packages_can_be_upgraded>
 <system_quota_hard_explain>The maximum blocks/inodes a quota user may have on a partition when a grace period is set.[br]
 Users may exceed a soft limit, but they can never exceed their hard limit.</system_quota_hard_explain>
 <system_quota_soft_explain>The maximum blocks/inodes a quota user may have on this partition.[br]
@@ -1601,6 +1644,7 @@ If the sender server will resend the mail later, the message will be accepted.
 <VarWWWChmod>Permissions on root /var/www</VarWWWChmod>
 <verify_disks>Verify disks</verify_disks>
 <verify_disks_text>Launch a disks verification/building task in background mode</verify_disks_text>
+<very_lower_config>Very lower config</very_lower_config>
 <viptrack_explain>VIPTrack is a feature that monitoring specific users called Very Important Person.[br]
 Enable this feature will inform you about:[br]
 [ul]

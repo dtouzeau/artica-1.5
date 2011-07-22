@@ -863,7 +863,7 @@ if(preg_match("#pdns_recursor\[.+?:\s+Failed to update \. records, RCODE=2#",$bu
 $file="/etc/artica-postfix/croned.1/restart.pdns.RCODE2.error";
 	if(IfFileTime($file,5)){
 				events("PowerDNS: Unable to query Public DNS");
-				email_events("PowerDNS: Unable to query Public DNS","PowerDNS claim: $buffer,It seems that your Public DNS are not available or network is down",'system');
+				//email_events("PowerDNS: Unable to query Public DNS","PowerDNS claim: $buffer,It seems that your Public DNS are not available or network is down",'system');
 				WriteFileCache($file);
 				return;
 			}else{

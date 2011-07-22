@@ -1851,6 +1851,9 @@ LighttpdUseUnixSocket:integer;
 lighttpdPhpPort:integer;
 DenyMiniWebFromStandardPort:integer;
 LighttpdArticaDisableSSLv2:integer;
+LighttpdArticaMaxProcs:integer;
+LighttpdArticaMaxChildren:integer;
+LighttpdRunAsminimal:integer;
 begin
 ArticaHttpsPort:=9000;
 NoLDAPInLighttpdd:=0;
@@ -1862,6 +1865,9 @@ if not tryStrToInt(sys.GET_INFO('LighttpdUseUnixSocket'),LighttpdUseUnixSocket) 
 if not tryStrToInt(sys.GET_INFO('lighttpdPhpPort'),lighttpdPhpPort) then lighttpdPhpPort:=1808;
 if not tryStrToInt(sys.GET_INFO('DenyMiniWebFromStandardPort'),DenyMiniWebFromStandardPort) then DenyMiniWebFromStandardPort:=0;
 if not tryStrToInt(sys.GET_INFO('LighttpdArticaDisableSSLv2'),LighttpdArticaDisableSSLv2) then LighttpdArticaDisableSSLv2:=0;
+if not tryStrToInt(sys.GET_INFO('LighttpdArticaMaxProcs'),LighttpdArticaMaxProcs) then LighttpdArticaMaxProcs:=0;
+if not tryStrToInt(sys.GET_INFO('LighttpdArticaMaxChildren'),LighttpdArticaMaxChildren) then LighttpdArticaMaxChildren:=0;
+if not tryStrToInt(sys.GET_INFO('LighttpdRunAsminimal'),LighttpdRunAsminimal) then LighttpdRunAsminimal:=0;
 
 
 
@@ -1903,6 +1909,14 @@ if not InsufficentRessources then begin
      PHP_FCGI_CHILDREN:=2;
      PHP_FCGI_MAX_REQUESTS:=1000;
      max_procs:=1;
+end;
+
+if LighttpdArticaMaxProcs>0 then max_procs:=LighttpdArticaMaxProcs;
+if LighttpdArticaMaxChildren>0 then PHP_FCGI_CHILDREN:=LighttpdArticaMaxChildren;
+
+if LighttpdRunAsminimal=1 then begin
+       max_procs:=1;
+       PHP_FCGI_CHILDREN:=1;
 end;
 
 l:=TstringList.Create;

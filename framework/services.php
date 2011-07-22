@@ -15,6 +15,14 @@ if(isset($_GET["greensql-status"])){greensql_status();exit;}
 if(isset($_GET["greensql-reload"])){greensql_reload();exit;}
 if(isset($_GET["greensql-logs"])){greensql_logs();exit;}
 if(isset($_GET["restart-postfix-all"])){restart_postfix_all();exit;}
+if(isset($_GET["restart-apache-groupware"])){restart_apache_groupware();exit;}
+if(isset($_GET["restart-artica-status"])){restart_artica_status();exit;}
+if(isset($_GET["stop-nscd"])){stop_nscd();exit;}
+if(isset($_GET["restart-lighttpd"])){restart_lighttpd();exit;}
+if(isset($_GET["restart-ldap"])){restart_ldap();exit;}
+if(isset($_GET["restart-mysql"])){restart_mysql();exit;}
+if(isset($_GET["restart-cron"])){restart_cron();exit;}
+if(isset($_GET["total-memory"])){total_memory();exit;}
 
 
 
@@ -41,12 +49,61 @@ function syslogger(){
 	
 }
 
+function total_memory(){
+	$unix=new unix();
+	echo "<articadatascgi>". $unix->TOTAL_MEMORY_MB()."</articadatascgi>";
+}
+
+function restart_ldap(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim("$nohup /etc/init.d/artica-postfix restart ldap >/dev/null 2>&1 &");
+	shell_exec($cmd);
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);
+}
+function restart_cron(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim("$nohup /etc/init.d/artica-postfix restart fcron >/dev/null 2>&1 &");
+	shell_exec($cmd);
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);
+}
+function restart_mysql(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim("/etc/init.d/artica-postfix stop mysql;/etc/init.d/artica-postfix stop mysql;/etc/init.d/artica-postfix start mysql");
+	$unix->THREAD_COMMAND_SET($cmd);
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	
+}
+
 function restart_postfix_all(){
 	$unix=new unix();
 	$nohup=$unix->find_program("nohup");
 	$cmd=trim("$nohup /etc/init.d/artica-postfix restart postfix-heavy >/dev/null 2>&1 &");
 	shell_exec($cmd);
 	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	
+}
+
+function restart_apache_groupware(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim("$nohup /etc/init.d/artica-postfix restart apache-groupware >/dev/null 2>&1 &");
+	shell_exec($cmd);
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);		
+}
+function restart_artica_status(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim("$nohup /etc/init.d/artica-postfix restart artica-status >/dev/null 2>&1 &");
+	shell_exec($cmd);
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);		
+}
+function stop_nscd(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim("$nohup /etc/init.d/nscd stop >/dev/null 2>&1 &");
+	shell_exec($cmd);
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);		
 }
 
 
@@ -89,6 +146,11 @@ function greensql_reload(){
 	$cmd=trim("$nohup /usr/share/artica-postfix/bin/artica-install --greensql-reload ". time()." >/dev/null 2>&1 &");
 	shell_exec($cmd);
 	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);		
+}
+
+function restart_lighttpd(){
+	$unix=new unix();
+	$unix->THREAD_COMMAND_SET("/etc/init.d/artica-postfix restart apache");
 }
 
 function changeRootPasswd(){

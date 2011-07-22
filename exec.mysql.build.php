@@ -39,23 +39,40 @@ if($argv[1]=='--mysqlcheck'){mysqlcheck($argv[2],$argv[3]);die();}
 
 
 
-
+$sock=new sockets();
 $q=new mysqlserver();
+$MysqlConfigLevel=$sock->GET_INFO("MysqlConfigLevel");
+if(!is_numeric($MysqlConfigLevel)){$MysqlConfigLevel=0;}
 
-$unix=new unix();
-$mem=$unix->TOTAL_MEMORY_MB();
-echo "\n";
-echo "Starting......: Mysql my.cnf........: Total memory {$mem}MB\n";
-
-if($mem<550){
-	echo "Starting......:Mysql my.cnf........: SWITCH TO LOWER CONFIG.\n";
-	$datas=$q->Mysql_low_config();
-	if($mem<390){
+if($MysqlConfigLevel>0){
+	if($MysqlConfigLevel==1){
+		echo "Starting......:Mysql my.cnf........: SWITCH TO LOWER CONFIG.\n";
+		$datas=$q->Mysql_low_config();
+	}
+	
+	if($MysqlConfigLevel==2){
 		echo "Starting......:Mysql my.cnf........: SWITCH TO VERY LOWER CONFIG.\n";
 		$datas=$q->Mysql_verlow_config();
+	}	
+}
+
+
+if($MysqlConfigLevel==0){
+	$unix=new unix();
+	$mem=$unix->TOTAL_MEMORY_MB();
+	echo "\n";
+	echo "Starting......: Mysql my.cnf........: Total memory {$mem}MB\n";
+	
+	if($mem<550){
+		echo "Starting......:Mysql my.cnf........: SWITCH TO LOWER CONFIG.\n";
+		$datas=$q->Mysql_low_config();
+		if($mem<390){
+			echo "Starting......:Mysql my.cnf........: SWITCH TO VERY LOWER CONFIG.\n";
+			$datas=$q->Mysql_verlow_config();
+		}
+	}else{
+		$datas=$q->BuildConf();
 	}
-}else{
-	$datas=$q->BuildConf();
 }
 
 if(!is_file($argv[1])){echo "Starting......:Mysql my.cnf........: unable to stat {$argv[1]}\n";die();}

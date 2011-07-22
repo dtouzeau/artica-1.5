@@ -67,6 +67,7 @@ class mysqlserver{
 	}
 	
 	function Mysql_verlow_config(){
+		
 		$this->main_array["max_allowed_packet"]=1;
 		$this->main_array["key_buffer"]=16;
 		$this->main_array["table_cache"]=1;

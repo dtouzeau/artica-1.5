@@ -695,6 +695,7 @@ begin
    if FIleExists(LOCATE_APACHE_MODULES_PATH+'/mod_cache.so') then list.Add('$_GLOBAL["APACHE_MOD_CACHE"]=True;') else list.Add('$_GLOBAL["APACHE_MOD_CACHE"]=False;');
    if FileExists(SYS.LOCATE_GENERIC_BIN('iptaccount')) then list.Add('$_GLOBAL["IPTABLES_ACCOUNTING_EXISTS"]=True;') else list.Add('$_GLOBAL["IPTABLES_ACCOUNTING_EXISTS"]=False;');
    if FileExists(SYS.LOCATE_GENERIC_BIN('pdnssec')) then list.Add('$_GLOBAL["PDNSSEC_INSTALLED"]=True;') else list.Add('$_GLOBAL["PDNSSEC_INSTALLED"]=False;');
+   if FileExists(SYS.LOCATE_GENERIC_BIN('nscd')) then list.Add('$_GLOBAL["NSCD_INSTALLED"]=True;') else list.Add('$_GLOBAL["NSCD_INSTALLED"]=False;');
 
 
 

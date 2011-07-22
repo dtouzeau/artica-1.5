@@ -21,6 +21,9 @@ private
      EnableMilterSpyDaemon:integer;
      RetranslatorEnabled:integer;
      RetranslatorCronMinutes:integer;
+     EnableArticaStatus:integer;
+     EnableArticaExecutor:integer;
+     EnableArticaBackground:integer;
      IsoQlogRetryTimes:integer;
      isoqlog:tisoqlog;
      function ARTICA_VERSION():string;
@@ -62,6 +65,11 @@ if not TryStrToInt(SYS.GET_INFO('RetranslatorEnabled'),RetranslatorEnabled) then
 if not TryStrToInt(SYS.GET_INFO('RetranslatorCronMinutes'),RetranslatorCronMinutes) then RetranslatorCronMinutes:=60;
 if not TryStrToInt(SYS.GET_INFO('EnableMilterSpyDaemon'),EnableMilterSpyDaemon) then EnableMilterSpyDaemon:=0;
 if not TryStrToInt(SYS.GET_INFO('IsoQlogRetryTimes'),IsoQlogRetryTimes) then IsoQlogRetryTimes:=30;
+if not TryStrToInt(SYS.GET_INFO('EnableArticaStatus'),EnableArticaStatus) then EnableArticaStatus:=1;
+if not TryStrToInt(SYS.GET_INFO('EnableArticaExecutor'),EnableArticaExecutor) then EnableArticaExecutor:=1;
+if not TryStrToInt(SYS.GET_INFO('EnableArticaBackground'),EnableArticaBackground) then EnableArticaBackground:=1;
+
+
 
 
        if not DirectoryExists('/usr/share/artica-postfix') then begin
@@ -380,13 +388,14 @@ PostfixPostmaster:string;
 php5bin:string;
 spamass:Tspamass;
 cyrus:Tcyrus;
+ArticaStatusadded:boolean;
 
 
 begin
       nolog:=',nolog(true)';
       l:=TstringList.Create;
       backup_command:='';
-
+      ArticaStatusadded:=false;
        if not TryStrToInt(SYS.GET_INFO('EnableFetchmail'),EnableFetchmail) then EnableFetchmail:=0;
 
       tmp:=SYS.GET_PERFS('ProcessNice');
@@ -485,7 +494,8 @@ fpsystem('/bin/rm -f /etc/cron.d/artica-cron-executor/*');
       if not TryStrToInt(SYS.GET_INFO('systemMaxOverloaded'),systemMaxOverloaded) then begin
          SYS.isoverloadedTooMuch();
              if not TryStrToInt(SYS.GET_INFO('systemMaxOverloaded'),systemMaxOverloaded) then begin
-                  systemMaxOverloaded:=(SYS.CPU_NUMBER()+2)*2;
+                  systemMaxOverloaded:=(SYS.CPU_NUMBER()+1);
+                  SYS.set_INFO('systemMaxOverloaded',IntToStr(systemMaxOverloaded));
              end;
       end;
 
@@ -559,12 +569,18 @@ fpsystem('/bin/rm -f /etc/cron.d/artica-cron-executor/*');
       l.Add('@'+Nicet+nolog+',lavg1('+IntToStr(systemMaxOverloaded)+') 1h ' +cmdnice+php5bin+ ' ' +artica_path+'/exec.hdparm.php');
 
       if SYS.MEM_TOTAL_INSTALLEE()<400000 then begin
+          ArticaStatusadded:=true;
           logs.DebugLogs('Starting......: Daemon (fcron) switch to very lower config');
           l.Add('@'+Nicet+nolog+',lavg1('+IntToStr(systemMaxOverloaded)+') 3 ' +cmdnice+php5bin+ ' ' +artica_path+'/exec.status.php --all');
           l.Add('@'+Nicet+nolog+',lavg1('+IntToStr(systemMaxOverloaded)+') 5 ' +cmdnice+php5bin+ ' ' +artica_path+'/exec.executor.php');
           l.Add('@'+Nicet+nolog+',lavg1('+IntToStr(systemMaxOverloaded)+') 10s ' +cmdnice+php5bin+ ' ' +artica_path+'/exec.parse-orders.php');
       end;
 
+      if not ArticaStatusadded then begin
+         if EnableArticaStatus=0 then l.Add('@'+Nicet+nolog+',lavg1('+IntToStr(systemMaxOverloaded)+') 3 ' +cmdnice+php5bin+ ' ' +artica_path+'/exec.status.php --all');
+         if EnableArticaExecutor=0 then l.Add('@'+Nicet+nolog+',lavg1('+IntToStr(systemMaxOverloaded)+') 5 ' +cmdnice+php5bin+ ' ' +artica_path+'/exec.executor.php');
+         if EnableArticaBackground=0 then l.Add('@'+Nicet+nolog+',lavg1('+IntToStr(systemMaxOverloaded)+') 6s ' +cmdnice+php5bin+ ' ' +artica_path+'/exec.parse-orders.php');
+      end;
 
 
 // ---------------------------------- artica-learn ---------------------------------------------------------------------------------------------------------

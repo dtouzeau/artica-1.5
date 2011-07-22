@@ -819,6 +819,7 @@ var
   LDAPSyncProvClientBindPassword:string;
   NoLDAPBackMonitor:integer;
   artica_password_cmd:string;
+  SlapdThreads:integer;
 
 begin
    EnableRemoteAddressBook:=0;
@@ -835,6 +836,8 @@ begin
    if not TryStrToInt(SYS.GET_INFO('EnableLDAPSyncProvClient'),EnableLDAPSyncProvClient) then EnableLDAPSyncProvClient:=0;
    if not TryStrToInt(SYS.GET_INFO('NoLDAPBackMonitor'),NoLDAPBackMonitor) then NoLDAPBackMonitor:=0;
    if not TryStrToint(SYS.GET_INFO('OpenLDAPLogLevel'),loglevel) then loglevel:=0;
+   if not TryStrToint(SYS.GET_INFO('SlapdThreads'),SlapdThreads) then SlapdThreads:=0;
+
    SyncProvUserDN:=SYS.GET_INFO('SyncProvUserDN');
    LDAPSyncProvClientServer:=SYS.GET_INFO('LDAPSyncProvClientServer');
    LDAPSyncProvClientSearchBase:=SYS.GET_INFO('LDAPSyncProvClientSearchBase');
@@ -997,7 +1000,7 @@ l.Add('rootpw '+artica_password);
 l.Add('directory       /var/lib/ldap');
 
 if not TRyStrToINt(SYS.GET_INFO('LdapDBCachesize'),LdapDBCachesize) then LdapDBCachesize:=1000;
-
+if SlapdThreads>1 then l.Add('threads '+IntToStr(SlapdThreads));
 l.Add('cachesize '+ IntToStr(LdapDBCachesize));
 l.Add('dbconfig set_lk_max_objects 1500');
 l.Add('dbconfig set_lk_max_locks 1500');

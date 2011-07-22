@@ -139,6 +139,7 @@ Une adresse IP compl&egrave;te :10.1.2.3
 Une adresse IP partielle: 10.1
 Un r&eacute;seau/masque : 10.1.0.0/255.255.0.0
 Une notation CDIR: 10.1.0.0/16</apache_auth_ip_explain>
+<APACHE_GROUPWARE_DISABLE_EXPLAIN>Apache groupware est un service secondaire Web afin de fournir des groupwares par organisation.[br]Cette fonctionnalit&eacute; migre doucement vers FreeWebs &eacute;tant l'instance premi&egrave;re du service Web.[br]Si vous utilisez uniquement FreeWeb comme service Web principal, d&eacute;sactivez Apache Groupware cela va lib&eacute;rer &agrave; peu pr&egrave;s 67Mb de m&eacute;moire.</APACHE_GROUPWARE_DISABLE_EXPLAIN>
 <apache_mod_cache_explain>Cette section impl&eacute;mente un syst&egrave;me de cache disque afin d'acc&eacute;l&eacute;rer les processus de votre serveur web.</apache_mod_cache_explain>
 <apply_config>Appliquer les param&egrave;tres</apply_config>
 <apply_config_postfix>Arr&ecirc;te le service principal de Postfix, compile l'ensemble des param&egrave;tres et le d&eacute;marre afin de les appliquer en production</apply_config_postfix>
@@ -162,6 +163,7 @@ Patientez quelques secondes et rafra&icirc;chissez cette page.</apply_network_co
 <APP_IPTACOUNT_EXPLAIN>les Statistiques TCP/IP vous permet d'obtenir des informations sur le trafique re&ccedil;u, travers&eacute; ou achemin&eacute; en fonction de simples r&egrave;gles .</APP_IPTACOUNT_EXPLAIN>
 <APP_LXC>Conteneurs LXC</APP_LXC>
 <APP_LXC_TEXT>Cr&eacute;ez et administrez des serveurs virtuels gr&acirc;ce &agrave; l'utilisation de technologie Linux Containers</APP_LXC_TEXT>
+<APP_NSCD>D&eacute;mon de mise en cache interne</APP_NSCD>
 <APP_PDNS_INSTANCE>PowerDNS (Instance)</APP_PDNS_INSTANCE>
 <APP_POSTFWD2>R&egrave;gles de d&eacute;l&eacute;gation</APP_POSTFWD2>
 <APP_POSTFWD2_TEXT>Policy Delegation est une sorte de pare-feu qui vous autorise &agrave; d&eacute;finir des r&egrave;gles permettant de limiter les flux de messagerie</APP_POSTFWD2_TEXT>
@@ -190,6 +192,7 @@ Augmenter cette valeur va r&eacute;duire la charge du processeur mais augmenter 
 <ARTICA_ADM_TEXT>C'est l'interface principale d'Artica sur laquelle vous &ecirc;tes en train de naviguer.</ARTICA_ADM_TEXT>
 <ARTICA_MINIADM>Interface Administrateurs/Utilisateurs</ARTICA_MINIADM>
 <ARTICA_MINIADM_TEXT>Interface Web pour les utilisateurs et les Administrateurs des organisations</ARTICA_MINIADM_TEXT>
+<artica_optimize_explain>Cette section va vous permettre d'optimiser votre serveur afin qu'il puisse correspondre au mieux &agrave; vos attentes.[br]par d&eacute;faut, Artica vous offre un maximum de fonctionnalit&eacute;s sur votre serveur.[br]Mais celles-ci consomme de la ressource..[br]Ici, quelques astuces pour lib&eacute;rer de la m&eacute;moire.</artica_optimize_explain>
 <ARTICA_REGISTER_OU>Formulaire d'enregistrement d'organisation</ARTICA_REGISTER_OU>
 <ARTICA_REGISTER_OU_TEXT>C'est un formulaire d'enregistrement qui autorise les clients &agrave; s'enregistrer automatiquement afin de cr&eacute;er une nouvelle organisation.</ARTICA_REGISTER_OU_TEXT>
 <ARTICA_SMTP_STATS_EXPLAIN>Le moteur de statistiques Artica est une fonctionnalit&eacute; qui fournit des graphiques, historiques et analyses sur le flux SMTP Postfix.[br]Des fonctionnalit&eacute;s en d&eacute;pendent comme VIPTrack.[br]
@@ -291,6 +294,7 @@ C'est une mani&egrave;re d'&ecirc;tre inform&eacute; de l'&eacute;tat du Proxy s
 <cat_remote-control>Sites fournissant des services de contr&ocirc;les &agrave; distance, en passant &agrave; travers les pare-feux.[br]Les services VPN ne sont pas couverts par cette cat&eacute;gorie.</cat_remote-control>
 <cat_sslsites>Sites offrant des s&eacute;curit&eacute;s SSL, stockage de clefs, g&eacute;n&eacute;ration de clefs SSL</cat_sslsites>
 <ChangeMysqlDir_explain>Par d&eacute;faut, MySQL utilise le r&eacute;pertoire /var/lib/mysql afin d'h&eacute;berger les bases de donn&eacute;es.[br]Vous pouvez modifier le chemin afin de d&eacute;placer les bases &agrave; un autre endroit.</ChangeMysqlDir_explain>
+<change_computer_text>Modifier le nom netbios, indiquez ici le nouveau nom de la machine.</change_computer_text>
 <change_mac_address>Modifier l'adresse MAC</change_mac_address>
 <change_mysql_directory_text>Modifier le r&eacute;pertoire qui h&eacute;berge les bases de donn&eacute;es.</change_mysql_directory_text>
 <change_organization>Changer d'organisation</change_organization>
@@ -415,7 +419,15 @@ Le contenu sera d&eacute;truit...</delete_disk_confirm>
 <dhcp-subnet-masq_text>Il est recommand&eacute; dans le cas o&ugrave; on utilise le m&ecirc;me masque de r&eacute;seau pour tout un site, d'utiliser ce param&egrave;tre dans chaque d&eacute;claration de sous-r&eacute;seau, puisqu'elle &eacute;crasera le masque de r&eacute;seau indiqu&eacute; &agrave; la d&eacute;claration du sous-r&eacute;seau.</dhcp-subnet-masq_text>
 <dhcpd_leases_explain>Cette section affiche les concessions acquises par les ordinateurs de votre r&eacute;seau.</dhcpd_leases_explain>
 <dhcpd_shared_network_explain>Cette section permet de d&eacute;finir un groupe de sous r&eacute;seaux afin d%u2019appliquer des caract&eacute;ristiques communes.</dhcpd_shared_network_explain>
+<DisableArticaExecutorService_explain>Artica Executor est un service qui tourne en m&eacute;moire afin de programmer l'ex&eacute;cution p&eacute;riodique de certaines t&acirc;ches de maintenance. [br]
+D&eacute;sactiver cette fonctionnalit&eacute; ne va pas arr&ecirc;ter le service mais va l'ex&eacute;cuter p&eacute;riodiquement au lieu de le laisser en m&eacute;moire.[br]
+D&eacute;cocher la case: Lib&egrave;re a peu pr&egrave;s 23Mb de m&eacute;moire vive.</DisableArticaExecutorService_explain>
+<DisableArticaStatusService_explain>Artica Status est un service qui rapporte sur les &eacute;tats des services qui tournent sur votre serveur.[br]Le cas &eacute;ch&eacute;ant, il est en charge de s'assurer que ces services sont en activit&eacute;.[br]Par d&eacute;faut, il tourne en m&eacute;moire.
+D&eacute;sactiver cette fonctionnalit&eacute; ne va pas arr&ecirc;ter le service mais va l'ex&eacute;cuter p&eacute;riodiquement au lieu de le laisser en m&eacute;moire.[br]
+D&eacute;cocher la case: Lib&egrave;re a peu pr&egrave;s 25Mb de m&eacute;moire vive.</DisableArticaStatusService_explain>
 <DisableDisplayVersion>Activer l'affichage de la version</DisableDisplayVersion>
+<DisableEnableArticaBackgroundService_explain>Artica Background est un service qui tourne en m&eacute;moire afin d'ex&eacute;cuter des programmes depuis une file d'attente.[br]Il est en charge d'accepter les ordres &eacute;manant de l'interface et des autres d&eacute;mons.[br]D&eacute;sactiver cette fonctionnalit&eacute; ne va pas arr&ecirc;ter le service mais va l'ex&eacute;cuter p&eacute;riodiquement au lieu de le laisser en m&eacute;moire.[br]
+D&eacute;cocher la case: Lib&egrave;re a peu pr&egrave;s 18Mb de m&eacute;moire vive.</DisableEnableArticaBackgroundService_explain>
 <DisableHtAccess>D&eacute;sactiver la lecture .htaccess</DisableHtAccess>
 <DisableLDAPDatabase>D&eacute;sactiver l'utilisation de la base LDAP</DisableLDAPDatabase>
 <DisablePowerDnsManagement>D&eacute;connecter PowerDNS d'Artica</DisablePowerDnsManagement>
@@ -711,6 +723,7 @@ En mode disque, vous devrez choisir une partition qui sera le disque iSCSI parta
 <ldap_importation_text>Importer des utilisateurs depuis un serveur Externe LDAP comme OpenLDAP ou Zimbra</ldap_importation_text>
 <leases>concessions</leases>
 <leave_ad>D&eacute;connecter du serveur Active Directory</leave_ad>
+<LighttpdRunAsminimal>Processus minimaux pour les services Web d'Artica</LighttpdRunAsminimal>
 <LimitRequestFields>Nombre d'ent&ecirc;tes (champs)</LimitRequestFields>
 <limit_memory>Limiter la m&eacute;moire &agrave;</limit_memory>
 <limit_swap>Limiter la m&eacute;moire SWAP &agrave;</limit_swap>
@@ -728,6 +741,7 @@ Cochez les cases des instances que vous d&eacute;sirez r&eacute;partir avec le p
 <log_queries>Enregistrer les requ&ecirc;tes</log_queries>
 <lowereq>est inf&eacute;rieur</lowereq>
 <lowernot>n'est pas inf&eacute;rieur</lowernot>
+<lower_config>Config Basse</lower_config>
 <lvcreate_explain>Cette op&eacute;ration va cr&eacute;er un nouveau disque dans ce groupe.[br]
 Le disque cr&eacute;&eacute; disposera du m&ecirc;me comportement qu'un disque normal.[br]
 Indiquez ici la taille du disque en MB.</lvcreate_explain>
@@ -870,6 +884,7 @@ Un domaine relay&eacute; ne peut &ecirc;tre achemin&eacute; vers ce serveur (lui
 Utilisez l'autre option (domaine local) dans ce contexte.</NO_RELAY_TO_THIS_SERVER_EXPLAIN>
 <no_such_interfaces>Pas d'interface trouv&eacute;e</no_such_interfaces>
 <no_usersameftpuser>Erreur: Le nom du compte FTP ne peut &ecirc;tre le m&ecirc;me que le nom du propri&eacute;taire du site web.</no_usersameftpuser>
+<NSCD_DISABLE_EXPLAIN>Le D&eacute;mon de mise en cache interne (NSCD) est utilis&eacute; afin de mettre en cache les connexions internes telles que LDAP, DNS..... [br]Il utilise la m&eacute;moire comme cache.[br]Le d&eacute;sactiver va &eacute;conomiser au minimum 7Mb</NSCD_DISABLE_EXPLAIN>
 <nsrecord>Serveur de nom</nsrecord>
 <ntp_server>serveur NTP</ntp_server>
 <Offline_Uncorrectable>secteurs non r&eacute;-allouables</Offline_Uncorrectable>
@@ -892,6 +907,7 @@ Ce n'est pas le r&eacute;seau de votre serveur VPN mais celui de votre r&eacute;
 <openvpn_server>Serveur OpenVPN</openvpn_server>
 <operating_system>Syst&egrave;me d'exploitation</operating_system>
 <operating_system_user_has>Operating system user has:</operating_system_user_has>
+<optimization>Optimization</optimization>
 <option-176>Param&egrave;tres T&eacute;l&eacute;phones IP</option-176>
 <option-176-explain>The IP phones need obviously their own IP addresses.[br]
 You can administer this manually but more common is DHCP configuration.[br]
@@ -1088,6 +1104,11 @@ D&eacute;sirez-vous lancer cette op&eacute;ration ?</reconstruct_caches_explain>
 <record>Enregistrement</record>
 <redirect_to>Rediriger vers</redirect_to>
 <redirect_to_email>Rediriger vers une adresse</redirect_to_email>
+<reduce_artica_web_explain>Artica utilise 2 serveurs Web (Le moteur HTTP et le Framework) afin de vous fournir l'interface d'administration.[br]Activer cette fonctionnalit&eacute; va r&eacute;duire au minimum les processus utilis&eacute;s.[br]
+Vous allez &eacute;conomiser environ 163Mb de m&eacute;moire.[br]Vous pouvez activer cette fonctionnalit&eacute; en toute confiance si vous utiliser uniquement le moteur Web Artica comme interface d'administration</reduce_artica_web_explain>
+<Reduce_mysql_explain>Le serveur MySQL est le moteur SQL utilis&eacute; afin de stocker des param&egrave;tres d'Artica et de fournir un espace de contenu pour des services multiples.[br]Par d&eacute;faut et si votre serveur dispose de plus de 550Mb de m&eacute;moire vive, Artica le configure aux maximum de ses capacit&eacute;s.[br]
+Config basse: vous lib&egrave;rera 278Mb.[br]
+Config Tr&egrave;s basse: vous lib&egrave;rera 320Mb.[br]</Reduce_mysql_explain>
 <RegexSimpleWords>Blocage de mots (simple)</RegexSimpleWords>
 <register_date>Date d'enregistrement</register_date>
 <register_form>Formulaire d'enregistrement</register_form>
@@ -1258,6 +1279,9 @@ Les messages qui correspondent aux r&egrave;gles vont &ecirc;tre automatiquement
 <skip-fullExplain>Passer le disque lors de niveau 0 est atteint, pour permettre des sauvegardes compl&egrave;tes en dehors Amanda, par exemple lorsque la machine est en mode mono-utilisateur.</skip-fullExplain>
 <skip-incr>Passer le disque lorsque le niveau 0 n'est pas atteint</skip-incr>
 <skip-incrExplain>Passer le disque lorsque le niveau 0 n'est pas atteint.Ceci est utilis&eacute; dans des configurations d'archivage, o&ugrave; seules les extractions compl&egrave;tes sont faites et les bandes enregistr&eacute;es.</skip-incrExplain>
+<SlapdThreads>Nombre de threads utilisables par OpenLDAP</SlapdThreads>
+<SlapdThreads_explain>Artica utilise le service OpenLDAP afin de g&eacute;rer les utilisateurs/mots de passe.[br]Par d&eacute;faut le moteur LDAP peut utiliser 16 threads.[br]Cette configuration est d&eacute;di&eacute;e pour une utilisation intensive des requ&ecirc;tes vers la base LDAP avec des centaines d'utilisateurs telles qu'un serveur de fichiers SAMBA ou un serveur DNS. Si au contraire vous avez des probl&egrave;mes de connexion , augmentez cette valeur.[br]Le minium de 2 threads va vous faire &eacute;conomiser 20Mb de de m&eacute;moire.[br]
+Indiquez 0 afin de retourner &agrave; la valeur par d&eacute;faut.</SlapdThreads_explain>
 <SMBChangeShareName_text>Cliquez sur le lien afin de changer le nom de partage de ce r&eacute;pertoire.</SMBChangeShareName_text>
 <smbconfig>smb.conf</smbconfig>
 <smbservices>Services</smbservices>
@@ -1310,6 +1334,7 @@ Cette taille doit correspondre au minium &agrave; la taille autoris&eacute;e d'u
 <system_grace_period_explain>la P&eacute;riode de gr&acirc;ce d&eacute;termine le temps qu'un utilisateur est autoris&eacute; &agrave; d&eacute;passer la limite douce.</system_grace_period_explain>
 <system_log>&Eacute;v&egrave;nements syst&egrave;mes</system_log>
 <system_log_text>Indiquez les param&egrave;tres afin d'envoyer les &eacute;v&egrave;nements syst&egrave;mes &agrave; un serveur central ou bien de transformer ce serveur en serveur Syslog</system_log_text>
+<system_packages_can_be_upgraded>Paquetages syst&egrave;mes qui peuvent &ecirc;tre mis &agrave; jour.</system_packages_can_be_upgraded>
 <system_quota_hard_explain>Le Maximum de la taille/Nb fichiers qu'un utilisateur peut disposer sur une partition lorsque la p&eacute;riode gr&acirc;ce &agrave; &eacute;t&eacute; &eacute;chue.[br]
 Les utilisateurs peuvent d&eacute;passer la &quot;limite douce&quot; mais en aucun cas d&eacute;passer leur Limite maximale</system_quota_hard_explain>
 <system_quota_soft_explain>Le Maximum de la taille/Nb fichiers qu'un utilisateur peut avoir sur une partition.[br]
@@ -1370,6 +1395,7 @@ Si le message en renvoy&eacute; dans un d&eacute;lai fix&eacute; alors le messag
 <VarWWWChmod>Permissions sur la racine /var/www</VarWWWChmod>
 <verify_disks>V&eacute;rifier les disques</verify_disks>
 <verify_disks_text>Lance une t&acirc;che de v&eacute;rification/construction en t&acirc;che de fond.</verify_disks_text>
+<very_lower_config>Config Tr&egrave;s Basse</very_lower_config>
 <viptrack_explain>VIPTrack est une fonctionnalit&eacute; qui surveille des utilisateurs appel&eacute;s Very Important Person.[br]
 L'activation de cette option va vous permettre d'&ecirc;tre inform&eacute;:[br]
 [ul]

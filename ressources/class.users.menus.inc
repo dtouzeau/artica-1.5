@@ -458,6 +458,7 @@ class usersMenus {
 	var $APACHE_MOD_CACHE=false;
 	var $APP_AMANDA_INSTALLED=false;
 	var $PDNSSEC_INSTALLED=false;
+	var $NSCD_INSTALLED=false;
 	
 	
 	private function CheckIndexDefaults($_GLOBAL){
@@ -642,6 +643,7 @@ class usersMenus {
 			if(isset($_GLOBAL["SIEVE_PORT"])){$this->SIEVE_PORT=$_GLOBAL["SIEVE_PORT"];}
 			if(isset($_GLOBAL["Z_PUSH_INSTALLED"])){$this->Z_PUSH_INSTALLED=$_GLOBAL["Z_PUSH_INSTALLED"];}
 			if(isset($_GLOBAL["APACHE_MOD_CACHE"])){$this->APACHE_MOD_CACHE=$_GLOBAL["APACHE_MOD_CACHE"];}
+			if(isset($_GLOBAL["NSCD_INSTALLED"])){$this->NSCD_INSTALLED=$_GLOBAL["NSCD_INSTALLED"];}
 			
 			
 			
