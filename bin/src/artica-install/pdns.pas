@@ -543,6 +543,7 @@ var
    PowerDNSDisableLDAP:integer;
    gmysql,launch_ldap:string;
    PowerDNSPublicMode:integer;
+   PowerActAsSlave:integer;
 begin
 if DisablePowerDnsManagement=1 then exit;
 
@@ -557,6 +558,7 @@ if not TryStrToInt(SYS.GET_INFO('PowerActHasMaster'),PowerActHasMaster) then Pow
 if not TryStrToInt(SYS.GET_INFO('PowerDNSDNSSEC'),PowerDNSDNSSEC) then PowerDNSDNSSEC:=0;
 if not TryStrToInt(SYS.GET_INFO('PowerDNSDisableLDAP'),PowerDNSDisableLDAP) then PowerDNSDisableLDAP:=0;
 if not TryStrToInt(SYS.GET_INFO('PowerDNSPublicMode'),PowerDNSPublicMode) then PowerDNSPublicMode:=0;
+if not TryStrToInt(SYS.GET_INFO('PowerActAsSlave'),PowerActAsSlave) then PowerActAsSlave:=0;
 
 
 
@@ -630,8 +632,15 @@ end;
 if PowerActHasMaster=1 then begin
    logs.DebugLogs('Starting......: PowerDNS Act has master');
    l.add('master=yes');
-   l.add('slave=no');
 end;
+
+if PowerActAsSlave=1 then begin
+   logs.DebugLogs('Starting......: PowerDNS Act has Slave');
+   l.add('slave=yes');
+end;
+
+
+
 l.add('config-dir=/etc/powerdns');
 l.add('# config-name=');
 l.add('# control-console=no');

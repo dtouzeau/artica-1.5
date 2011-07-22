@@ -75,10 +75,11 @@ if($MysqlConfigLevel==0){
 	}
 }
 
-if(!is_file($argv[1])){echo "Starting......:Mysql my.cnf........: unable to stat {$argv[1]}\n";die();}
+if(!is_file($argv[1])){echo "\nStarting......:Mysql my.cnf........: unable to stat {$argv[1]}\n";die();}
 
 @file_put_contents($argv[1],$datas);
-echo "Starting......: Mysql my.cnf........:Updating \"{$argv[1]}\" success ". strlen($datas)." bytes\n";
+echo "\nStarting......: Mysql my.cnf\n";
+echo "Starting......: Mysql Updating \"{$argv[1]}\" success ". strlen($datas)." bytes\n";
 
 function checks(){
 	$GLOBALS["DEBUG"]=true;$GLOBALS["VERBOSE"]=true;ini_set('display_errors', 1);ini_set('error_reporting', E_ALL);ini_set('error_prepend_string',null);ini_set('error_append_string',null);

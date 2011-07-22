@@ -78,6 +78,7 @@ class mysqlserver{
 		$conf="[client]\n";
 		$conf=$conf ."port=3306\n";
 		$conf=$conf ."socket=/var/run/mysqld/mysqld.sock\n";
+		$conf=$conf . $this->ssl_client_mode();
 		$conf=$conf ."\n";
 		$conf=$conf ."[mysqld_safe]\n";
 		$conf=$conf ."socket=/var/run/mysqld/mysqld.sock\n";
@@ -88,6 +89,7 @@ class mysqlserver{
 		$conf=$conf ."pid-file=/var/run/mysqld/mysqld.pid\n";
 		$conf=$conf ."socket=/var/run/mysqld/mysqld.sock\n";
 		$conf=$conf ."port=3306\n";	
+		$conf=$conf .$this->ssl_server_mode();
 		if($this->main_array["bind-address"]<>null){
 			$conf=$conf ."bind-address={$this->main_array["bind-address"]}\n";
 		}		
@@ -154,6 +156,7 @@ class mysqlserver{
 		$conf="[client]\n";
 		$conf=$conf ."port=3306\n";
 		$conf=$conf ."socket=/var/run/mysqld/mysqld.sock\n";
+		$conf=$conf . $this->ssl_client_mode();
 		$conf=$conf ."\n";
 		$conf=$conf ."[mysqld_safe]\n";
 		$conf=$conf ."socket=/var/run/mysqld/mysqld.sock\n";
@@ -164,6 +167,7 @@ class mysqlserver{
 		$conf=$conf ."pid-file=/var/run/mysqld/mysqld.pid\n";
 		$conf=$conf ."socket=/var/run/mysqld/mysqld.sock\n";
 		$conf=$conf ."port=3306\n";
+		$conf=$conf .$this->ssl_server_mode();
 		if($this->main_array["bind-address"]<>null){
 			$conf=$conf ."bind-address={$this->main_array["bind-address"]}\n";
 		}		
@@ -241,8 +245,56 @@ class mysqlserver{
 		return $SpecificConf;
 		
 	}
+	private function ssl_client_mode(){
+		if(!isset($GLOBALS["AS_ROOT"])){if(posix_getuid()==0){$GLOBALS["AS_ROOT"]=true;}}
+		if(!$GLOBALS["AS_ROOT"]){return;}
+		$sock=new sockets();
+		$mysqlSSL=$sock->GET_INFO("mysqlSSL");
+		if(!is_numeric($mysqlSSL)){$mysqlSSL=0;}
+		if($mysqlSSL==0){return null;}		
+		$files[]="/etc/ssl/certs/mysql/cacert.pem";
+		$files[]="/etc/ssl/certs/mysql-client/client-cert.pem";
+		$files[]="/etc/ssl/certs/mysql-client/client-key.pem";		
+		$continue=true;
+		while (list ($i, $filename) = each ($files) ){if(!is_file($filename)){echo "$filename no such file\n";$continue=false;}}
+		if(!$continue){return null;}
+		if(is_file("/etc/ssl/certs/mysql-client/cacert.pem")){$cacert="/etc/ssl/certs/mysql-client/cacert.pem";}else{$cacert="/etc/ssl/certs/mysql/cacert.pem";}
+		$f[]="ssl-ca=$cacert";
+		$f[]="ssl-cert=/etc/ssl/certs/mysql-client/client-cert.pem";
+		$f[]="ssl-key=/etc/ssl/certs/mysql-client/client-key.pem";
+		$f[]="";
+		return @implode("\n", $f);		
+	}
 	
+
 	
+	private function ssl_server_mode(){
+		if(!isset($GLOBALS["AS_ROOT"])){if(posix_getuid()==0){$GLOBALS["AS_ROOT"]=true;}}
+		if(!$GLOBALS["AS_ROOT"]){return;}
+		$sock=new sockets();
+		$mysqlSSL=$sock->GET_INFO("mysqlSSL");
+		if(!is_numeric($mysqlSSL)){$mysqlSSL=0;}
+		if($mysqlSSL==0){return null;}
+		$files[]="/etc/ssl/certs/mysql/cacert.pem";
+		$files[]="/etc/ssl/certs/mysql/server-cert.pem";
+		$files[]="/etc/ssl/certs/mysql/server-key.pem";
+		$continue=true;
+		while (list ($i, $filename) = each ($files) ){if(!is_file($filename)){echo "$filename no such file\n";$continue=false;}}
+		if(!$continue){
+			shell_exec("/usr/share/artica-postfix/bin/artica-install --mysql-certificate");
+			reset($files);
+			$continue=true;
+			while (list ($i, $filename) = each ($files) ){if(!is_file($filename)){echo "$filename no such file\n";$continue=false;}}
+		}
+		if(!$continue){return null;}
+		$f[]="ssl";
+		$f[]="ssl-ca=/etc/ssl/certs/mysql/cacert.pem";
+		$f[]="ssl-cert=/etc/ssl/certs/mysql/server-cert.pem";
+		$f[]="ssl-key=/etc/ssl/certs/mysql/server-key.pem";
+		$f[]=""; 		
+		return @implode("\n", $f);
+		
+	}
 	
 	function BuildConf(){
 		if(!isset($GLOBALS["AS_ROOT"])){if(posix_getuid()==0){$GLOBALS["AS_ROOT"]=true;}}
@@ -252,6 +304,7 @@ class mysqlserver{
 		$conf="[client]\n";
 		$conf=$conf ."port=3306\n";
 		$conf=$conf ."socket=/var/run/mysqld/mysqld.sock\n";
+		$conf=$conf . $this->ssl_client_mode();
 		$conf=$conf ."\n";
 		$conf=$conf ."[mysqld_safe]\n";
 		$conf=$conf ."socket=/var/run/mysqld/mysqld.sock\n";
@@ -273,6 +326,14 @@ class mysqlserver{
 
 		if($this->main_array["skip-character-set-client-handshake"]=="yes"){
 			$mysqld["skip-character-set-client-handshake"]="";
+		}
+		
+		$ssl=$this->ssl_server_mode();
+		if($ssl<>null){
+			$mysqld["ssl"]=null;
+			$mysqld["ssl-ca"]="/etc/ssl/certs/mysql/cacert.pem";
+			$mysqld["ssl-cert"]="/etc/ssl/certs/mysql/server-cert.pem";
+			$mysqld["ssl-key"]="/etc/ssl/certs/mysql/server-key.pem";	
 		}
 		
 		$mysqld["user"]="mysql";

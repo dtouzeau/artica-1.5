@@ -3201,8 +3201,10 @@ var
 //   gbini:myconf;
    apache_artica:tapache_artica;
    squid:Tsquid;
+   zmysql:tmysql_daemon;
 begin
   LOGS:=Tlogs.Create;
+  zmysql:=tmysql_daemon.Create(SYS);
   logs.Debuglogs('Change ssl certificate...');
   logs.Debuglogs('Generate configuration file');
   SYS.OPENSSL_CERTIFCATE_CONFIG();
@@ -3220,8 +3222,14 @@ begin
   cyrus.CYRUS_DAEMON_STOP();
   cyrus.CYRUS_DAEMON_START();
   
-  
-  
+  logs.Debuglogs('Change MySQL certificate');
+  zmysql.SSL_KEY();
+  zmysql.TUNE_MYSQL();
+  zmysql.SERVICE_STOP();
+  zmysql.SERVICE_START();
+
+
+
   postfix:=tpostfix.Create(SYS);
   logs.Debuglogs('Change Postfix certificate');
   fpsystem('rm -rf /etc/ssl/certs/postfix/*');

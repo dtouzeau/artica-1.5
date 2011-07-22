@@ -202,7 +202,7 @@ function certificate_hosts_add(){
 function js_certificate(){
 $page=CurrentPageName();
 $tpl=new templates();
-$title=$tpl->_ENGINE_parse_body('{ssl_certificate}','configure.server.php');
+$title=$tpl->_ENGINE_parse_body('{ssl_certificate}&raquo;{certificate infos}','configure.server.php');
 
 	
 	$users=new usersMenus();
@@ -491,7 +491,7 @@ function postfix_tls_certificate(){
 	$hosts=button("{hosts}","javascript:Loadjs('$page?certificate-hosts-js=yes')");
 	
 		
-	$html="<H1>{certificate infos}</h1>
+	$html="
 	<form name='ffm_certificate'>
 	<input type='hidden' id='TreePostfixTLSCertificateInfosSubmit' name='TreePostfixTLSCertificateInfosSubmit' value='yes'>
 	<table>

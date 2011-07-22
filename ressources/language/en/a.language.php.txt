@@ -1788,5 +1788,13 @@ Very lower config will get 320Mb free[br]
 </Reduce_mysql_explain>
 <lower_config>Lower config</lower_config>
 <very_lower_config>Very lower config</very_lower_config>
+<mysql_ssl_explain>This section help you to allow Mysql using secure connection with SSL</mysql_ssl_explain>
+<mysql_explain_enable_ssl>If you turn to green, you will enable Mysql server in secure connection with SSL</mysql_explain_enable_ssl>
+<ssl_keys>SSL keys</ssl_keys>
+<ssl_mysql_client_keys>This are the SSL clients keys that you can use in other mysql configuration file.[br]If the next server is an artica server extract this file under /etc/ssl/certs/mysql-client directory</ssl_mysql_client_keys>
+<ActHasSlave>Act has slave</ActHasSlave>
+<generate_ssl_keys>Generate SSL Keys</generate_ssl_keys>
+<generate_ssl_keys_text>Generate the SSL Keys for this service in order to enable the SSL encryption connections</generate_ssl_keys_text>
+<UseSSL>Use the SSL encryption</UseSSL>
 
 

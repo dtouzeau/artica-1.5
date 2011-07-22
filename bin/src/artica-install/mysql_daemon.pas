@@ -67,6 +67,7 @@ public
     procedure   TUNE_MYSQL();
     procedure   CHANGE_MYSQL_ROOT();
     function    MON():string;
+    procedure   SSL_KEY();
 END;
 
 implementation
@@ -1239,7 +1240,82 @@ end;
    SERVICE_START();
    fpsystem('/etc/init.d/artica-postfix restart &');
 end;
+//##############################################################################
+procedure tmysql_daemon.SSL_KEY();
+var
+   openssl:string;
+   tmp,cf_path,cmd,CertificateMaxDays,tmpstr:string;
+   ldap:topenldap;
+   sslconf:TiniFile;
+   servername,extensions:string;
+   input_password:string;
+begin
+SYS:=Tsystem.Create();
+ForceDirectories('/etc/ssl/certs/mysql');
+tmp:=logs.FILE_TEMP();
+ldap:=Topenldap.Create;
+logs.WriteToFile(ldap.ldap_settings.password,tmp);
+SYS.OPENSSL_CERTIFCATE_CONFIG();
+cf_path:=SYS.OPENSSL_CONFIGURATION_PATH();
+openssl:=SYS.LOCATE_OPENSSL_TOOL_PATH();
+CertificateMaxDays:=SYS.GET_INFO('CertificateMaxDays');
+if length(SYS.OPENSSL_CERTIFCATE_HOSTS())>0 then extensions:=' -extensions HOSTS_ADDONS ';
+if length(CertificateMaxDays)=0 then CertificateMaxDays:='730';
+servername:=GetHostname();
+sslconf:=TiniFile.Create(cf_path);
+input_password:=sslconf.ReadString('req','input_password','');
+logs.WriteToFile('','/etc/ssl/certs/mysql/index.txt');
+logs.WriteToFile('01','/etc/ssl/certs/mysql/serial');
+cmd:=openssl+' genrsa -out /etc/ssl/certs/mysql/ca.key 1024';
+logs.Debuglogs(cmd);
+fpsystem(cmd);
+logs.DebugLogs('starting certificate.........: Using configuration file '+cf_path);
+cmd:=openssl+' req -new -x509 -keyout /etc/ssl/certs/mysql/cakey.pem -out /etc/ssl/certs/mysql/cacert.pem -config '+cf_path+extensions+' -days '+CertificateMaxDays;
+logs.Debuglogs(cmd);
+fpsystem(cmd);
+cmd:=openssl+' req -new -keyout /etc/ssl/certs/mysql/server-key.pem -out /etc/ssl/certs/mysql/server-req.pem -config '+cf_path+extensions+' -days '+CertificateMaxDays;
+logs.Debuglogs(cmd);
+fpsystem(cmd);
+tmpstr:=logs.FILE_TEMP();
+logs.WriteToFile(input_password,tmpstr);
+cmd:=openssl+' rsa -in /etc/ssl/certs/mysql/server-key.pem -out /etc/ssl/certs/mysql/server-key.pem -passin file:'+tmpstr;
+logs.Debuglogs(cmd);
+fpsystem(cmd);
+logs.DeleteFile(tmpstr);
+tmpstr:=logs.FILE_TEMP();
+logs.WriteToFile(input_password,tmpstr);
+cmd:=openssl+' ca -policy policy_anything -batch -out /etc/ssl/certs/mysql/server-cert.pem -cert /etc/ssl/certs/mysql/cacert.pem -passin file:'+tmpstr+' -keyfile /etc/ssl/certs/mysql/cakey.pem -config '+cf_path+extensions+' -infiles /etc/ssl/certs/mysql/server-req.pem ';
+logs.Debuglogs(cmd);
+fpsystem(cmd);
+logs.DeleteFile(tmpstr);
 
+//local client
+ForceDirectories('/etc/ssl/certs/mysql-client');
+cmd:=openssl+' req -new -keyout /etc/ssl/certs/mysql-client/client-key.pem -out /etc/ssl/certs/mysql-client/client-req.pem -days 3600 -config '+cf_path+extensions+' -days '+CertificateMaxDays;
+tmpstr:=logs.FILE_TEMP();
+logs.WriteToFile(input_password,tmpstr);
+cmd:=openssl+' rsa -in /etc/ssl/certs/mysql-client/client-key.pem -out /etc/ssl/certs/mysql-client/client-key.pem -passin file:'+tmpstr;
+logs.Debuglogs(cmd);
+fpsystem(cmd);
+logs.DeleteFile(tmpstr);
+
+tmpstr:=logs.FILE_TEMP();
+logs.WriteToFile(input_password,tmpstr);
+cmd:=openssl+' ca -policy policy_anything -batch -out /etc/ssl/certs/mysql-client/client-cert.pem -cert /etc/ssl/certs/mysql/cacert.pem -passin file:'+tmpstr+' -keyfile /etc/ssl/certs/mysql/cakey.pem -config '+cf_path+extensions+' -infiles /etc/ssl/certs/mysql-client/client-req.pem';
+logs.Debuglogs(cmd);
+fpsystem(cmd);
+forceDirectories('/etc/ssl/certs/mysql-client-download');
+fpsystem('/bin/cp -f /etc/ssl/certs/mysql/cacert.pem /etc/ssl/certs/mysql-client-download/cacert.pem');
+fpsystem('/bin/cp -f /etc/ssl/certs/mysql-client/client-cert.pem /etc/ssl/certs/mysql-client-download/client-cert.pem');
+fpsystem('/bin/cp -f /etc/ssl/certs/mysql-client/client-key.pem /etc/ssl/certs/mysql-client-download/client-key.pem');
+SetCurrentDir('/etc/ssl/certs/mysql-client-download');
+logs.DeleteFile('/etc/ssl/certs/mysql-client-download/mysql-ssl-client.tar');
+fpsystem('/bin/tar -cf mysql-ssl-client.tar *');
+SetCurrentDir('/root');
+
+
+end;
+//##############################################################################
 
 
 {procedure tmysql_daemon.CleanIniMysql();

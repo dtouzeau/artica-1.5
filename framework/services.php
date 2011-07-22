@@ -23,6 +23,7 @@ if(isset($_GET["restart-ldap"])){restart_ldap();exit;}
 if(isset($_GET["restart-mysql"])){restart_mysql();exit;}
 if(isset($_GET["restart-cron"])){restart_cron();exit;}
 if(isset($_GET["total-memory"])){total_memory();exit;}
+if(isset($_GET["mysql-ssl-keys"])){mysql_ssl_key();exit;}
 
 
 
@@ -146,6 +147,14 @@ function greensql_reload(){
 	$cmd=trim("$nohup /usr/share/artica-postfix/bin/artica-install --greensql-reload ". time()." >/dev/null 2>&1 &");
 	shell_exec($cmd);
 	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);		
+}
+
+function mysql_ssl_key(){
+	$cmd=trim("/usr/share/artica-postfix/bin/artica-install --mysql-certificate 2>&1");
+	exec($cmd,$results);
+	writelogs_framework("$cmd " .count($results)." rows",__FUNCTION__,__FILE__,__LINE__);
+	while (list ($num, $line) = each ($results)){writelogs_framework("$line",__FUNCTION__,__FILE__,__LINE__);}
+
 }
 
 function restart_lighttpd(){

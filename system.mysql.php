@@ -48,6 +48,9 @@ function tabs(){
 	$users=new usersMenus();
 	$array["popup"]='{mysql_settings}';
 	$array["members"]='{mysql_users}';
+	$array["ssl"]='{ssl}';
+	
+	
 	
 	if($users->APP_GREENSQL_INSTALLED){
 		$array["greensql"]='{APP_GREENSQL}';
@@ -58,6 +61,11 @@ function tabs(){
 			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"greensql.php\"><span>$ligne</span></a></li>\n");
 			continue;
 		}
+		
+		if($num=="ssl"){
+			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"system.mysql.ssl.php\"><span>$ligne</span></a></li>\n");
+			continue;
+		}		
 		
 		$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"$page?$num=yes\"><span>$ligne</span></a></li>\n");
 	}

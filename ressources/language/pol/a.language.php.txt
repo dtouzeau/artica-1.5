@@ -4,6 +4,7 @@
 <acls_and_quotas>ACLS & Quotas</acls_and_quotas>
 <acls_folders_rebuild_text>This will rebuild all permissions and ACLs, perform this operation ?</acls_folders_rebuild_text>
 <ActHasMaster>Act has Master</ActHasMaster>
+<ActHasSlave>Act has slave</ActHasSlave>
 <activate_openvpn_connection>Activate the VPN connection and connect to the VPN server</activate_openvpn_connection>
 <activedirectory_ipaddr>AD IP address (optional)</activedirectory_ipaddr>
 <AddDefaultCharset_explain>This directive specifies a default value for the media type charset parameter (the name of a character encoding) to be added to a response if and only if the response's content-type is either text/plain or text/html.[br]
@@ -728,6 +729,8 @@ The engine will try to find all urls added in your text, sou you did not need to
 <generate_parameters>Generate parameters</generate_parameters>
 <generate_reports>Generate reports</generate_reports>
 <generate_reports_now_text>Execute and generate reports now</generate_reports_now_text>
+<generate_ssl_keys>Generate SSL Keys</generate_ssl_keys>
+<generate_ssl_keys_text>Generate the SSL Keys for this service in order to enable the SSL encryption connections</generate_ssl_keys_text>
 <give_new_sharename>Give the new share name</give_new_sharename>
 <give_new_size_in_mb>Give the new size in MB</give_new_size_in_mb>
 <give_servername_or_ipaddr>Give the servername or the ip address</give_servername_or_ipaddr>
@@ -984,6 +987,8 @@ Organizations can only create subdomains of these domains if the "Use only offic
 You should create the Mysql username and password in order to fix this issue.[br]
 Here it is the error that artica encounter during a Mysql connection: [br]
 </mysql_error_popup_credential_text>
+<mysql_explain_enable_ssl>If you turn to green, you will enable Mysql server in secure connection with SSL</mysql_explain_enable_ssl>
+<mysql_ssl_explain>This section help you to allow Mysql using secure connection with SSL</mysql_ssl_explain>
 <mysql_users>Mysql users</mysql_users>
 <myWebServices>My Web services</myWebServices>
 <myWebServices_text>Get informations about all web services you can using with your Account</myWebServices_text>
@@ -1557,6 +1562,8 @@ need to tune the Stream* options.[br]
 This option allows you to specify the upper limit for data size that will be transfered to remote daemon when scanning a single file.[br]
 It should match your MTA's limit for a maximum attachment size</srv_clamav.StreamMaxLength_text>
 <sshd_events_explain>You will find here all login connexions on your system</sshd_events_explain>
+<ssl_keys>SSL keys</ssl_keys>
+<ssl_mysql_client_keys>This are the SSL clients keys that you can use in other mysql configuration file.[br]If the next server is an artica server extract this file under /etc/ssl/certs/mysql-client directory</ssl_mysql_client_keys>
 <StartServers>Start servers</StartServers>
 <start_options>Start options</start_options>
 <Start_Stop_Count>Start/Stop count</Start_Stop_Count>
@@ -1637,6 +1644,7 @@ depends on your bandwith it should take a long time...</UPDATE_LXC_TEMPLATE_PERF
 Greylisting means that when and unknown sender try to send a message to you, the server will reject the connection and explain to the server that want to send the message to resend the mail later.[br]
 If the sender server will resend the mail later, the message will be accepted.
 </user_greylist_explain>
+<UseSSL>Use the SSL encryption</UseSSL>
 <use_another_WINS_server>Use Another WINS Server</use_another_WINS_server>
 <use_another_WINS_server_explain>With this option enabled, 
  Samba will direct all WINS requests to the specified server[br]

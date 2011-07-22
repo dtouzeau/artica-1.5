@@ -305,10 +305,11 @@ if ParamStr(1)='--change-mysqldir' then begin
    zmysql.CHANGE_MYSQL_ROOT();
    halt(0);
 end;
-
-
-
-
+if ParamStr(1)='--mysql-certificate' then begin
+    zmysql:=tmysql_daemon.Create(SYS);
+   zmysql.SSL_KEY();
+   halt(0);
+end;
 
 if ParamStr(1)='--artica-status-reload' then begin
    zarticastatus:=tarticastatus.Create(SYS);

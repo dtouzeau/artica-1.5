@@ -1,4 +1,4 @@
-1.5.072120: 
+1.5.072218: 
 ========================================================================================
 
 System Changes
@@ -29,6 +29,9 @@ System Changes
 1.5.072101: Add possibility to upgrade DHCP server trough Setup center.
 1.5.072120: Some VPS providers offer a squeeze distribution but the sources.list is for a lenny : setup-ubuntu or setup-debian is able to detect it and inform that there is a misconfigured sources.list.
 1.5.072120: Add a new function to fix issue "insserv: warning: script is corrupt or invalid: /etc/init.d/../rc6.d/S00vzreboot" this is a know bug that setup-ubuntu or setup-debian is able fix on VPS servers.
+1.5.072213: Add a new feature that help you to get more than 600Mb memory free (see http://www.artica.fr/forum/viewtopic.php?f=10&t=4162&start=0)
+1.5.072217: Add possibility to turn MySQL in SSL Mode.
+1.5.072217: Add slave mode in PowerDNS section.
 
 Messaging Changes:
 -------------------------------------------------
@@ -94,8 +97,10 @@ System Changes
 1.5.062812: Fix ipdeny table is not created.
 1.5.062900: The system root password can be changed with Artica front-end interface under the same section of the Master Manager password
 1.5.062900: Add possibility to fix ip address for VPN clients.
-1.5.062900: Add possibility to specify credentials on the Artica siste-to-site VPN client when enable Authentication method on the VPN server
-s:
+1.5.062900: Add possibility to specify credentials on the Artica siste-to-site VPN client when enable Authentication method on the VPN servers
+
+
+
 Interface Changes:
 -------------------------------------------------
 1.5.061120: Adding new feature that enables password enforcement policy.

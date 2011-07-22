@@ -651,6 +651,7 @@
 				$f[]="/usr/share/artica-postfix/framework";
 				$f[]="/usr/share/artica-postfix/user-backup";
 				$f[]="/usr/share/artica-postfix/user-backup/ressources";
+				$f[]="/etc/ssl/certs/mysql-client-download";
 			}
 			
 			if(($this->groupware=="ZARAFA") OR ($this->groupware=="ZARAFA_MOBILE") OR ($this->groupware=="Z-PUSH")){

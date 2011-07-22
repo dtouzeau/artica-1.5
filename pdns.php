@@ -182,6 +182,7 @@ $page=CurrentPageName();
 	$PowerDNSDNSSEC=$sock->GET_INFO("PowerDNSDNSSEC");
 	$PowerDNSDisableLDAP=$sock->GET_INFO("PowerDNSDisableLDAP");
 	$PowerChroot=$sock->GET_INFO("PowerChroot");
+	$PowerActAsSlave=$sock->GET_INFO("PowerActAsSlave");
 	
 	if(!is_numeric($EnablePDNS)){$EnablePDNS=1;}
 	if(!is_numeric($PowerDNSMySQLEngine)){$PowerDNSMySQLEngine=0;}
@@ -193,6 +194,8 @@ $page=CurrentPageName();
 	if(!is_numeric($PowerDNSDNSSEC)){$PowerDNSDNSSEC=0;}
 	if(!is_numeric($PowerDNSDisableLDAP)){$PowerDNSDisableLDAP=0;}
 	if(!is_numeric($PowerChroot)){$PowerChroot=0;}
+	if(!is_numeric($PowerActAsSlave)){$PowerActAsSlave=0;}
+	
 	
 	
 	$POWER_DNS_MYSQL=1;
@@ -223,6 +226,10 @@ $page=CurrentPageName();
 					<td valign='top' class=legend nowrap>{ActHasMaster}:</td>
 					<td width=1%>". Field_checkbox("PowerActHasMaster",1,$PowerActHasMaster)."</td>
 				</tr>
+				<tr>
+					<td valign='top' class=legend nowrap>{ActHasSlave}:</td>
+					<td width=1%>". Field_checkbox("PowerActAsSlave",1,$PowerActAsSlave)."</td>
+				</tr>				
 				<tr>
 					<td valign='top' class=legend nowrap>{DisableLDAPDatabase}:</td>
 					<td width=1%>". Field_checkbox("PowerDNSDisableLDAP",1,$PowerDNSDisableLDAP,"EnablePowerDNSMySQLEngineCheck()")."</td>
@@ -293,6 +300,10 @@ $page=CurrentPageName();
 			if(document.getElementById('PowerDisableDisplayVersion').checked){XHR.appendData('PowerDisableDisplayVersion',1);}else{XHR.appendData('PowerDisableDisplayVersion',0);}
 			if(document.getElementById('PowerChroot').checked){XHR.appendData('PowerChroot',1);}else{XHR.appendData('PowerChroot',0);}
 			if(document.getElementById('PowerActHasMaster').checked){XHR.appendData('PowerActHasMaster',1);}else{XHR.appendData('PowerActHasMaster',0);}
+			if(document.getElementById('PowerActAsSlave').checked){XHR.appendData('PowerActAsSlave',1);}else{XHR.appendData('PowerActAsSlave',0);}
+			
+			
+			
 			if(document.getElementById('PowerDNSDNSSEC').checked){
 				XHR.appendData('PowerDNSDNSSEC',1);
 				document.getElementById('PowerDNSDisableLDAP').checked=true;
@@ -1545,6 +1556,8 @@ function PDNSRestartIfUpToMB(){
 	$sock->SET_INFO("DisablePowerDnsManagement",$_GET["DisablePowerDnsManagement"]);
 	$sock->SET_INFO("PowerDNSDisableLDAP",$_GET["PowerDNSDisableLDAP"]);
 	$sock->SET_INFO("PowerChroot",$_GET["PowerChroot"]);
+	$sock->SET_INFO("PowerActAsSlave",$_GET["PowerActAsSlave"]);
+	
 	
 	
 	$sock->getFrameWork("cmd.php?pdns-restart=yes");

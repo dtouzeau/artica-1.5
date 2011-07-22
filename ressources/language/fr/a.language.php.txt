@@ -5,6 +5,7 @@
 <acls_folders_rebuild_text>Ceci va reconstruire toutes les permissions.
 Effectuer l'op&eacute;ration ?</acls_folders_rebuild_text>
 <ActHasMaster>Agir en tant que ma&icirc;tre</ActHasMaster>
+<ActHasSlave>Agir en tant qu'esclave</ActHasSlave>
 <activate_openvpn_connection>Activer la connexion VPN et se reconnecter au serveur VPN</activate_openvpn_connection>
 <activedirectory_ipaddr>Adresse IP de l'AD (optionnel)</activedirectory_ipaddr>
 <AddDefaultCharset_explain>Cette option sp&eacute;cifie le jeux de caract&egrave;res par d&eacute;faut &agrave; appliquer en &eacute;crasant la r&eacute;ponse du serveur via un &eacute;l&eacute;ment META.
@@ -598,6 +599,8 @@ Le moteur sera en charge de retrouver les liens dans le texte.Vous n'avez donc p
 <generate_parameters>G&eacute;n&eacute;rer les param&egrave;tres</generate_parameters>
 <generate_reports>G&eacute;n&eacute;rer les rapports</generate_reports>
 <generate_reports_now_text>Ex&eacute;cuter et g&eacute;n&eacute;rer les rapports maintenant</generate_reports_now_text>
+<generate_ssl_keys>G&eacute;n&eacute;rer les clefs SSL</generate_ssl_keys>
+<generate_ssl_keys_text>Gen&eacute;rer les clefs SSL pour ce service afin d'activer l'encryption des connexions en SSL</generate_ssl_keys_text>
 <give_new_sharename>Donnez le nouveau nom de partage</give_new_sharename>
 <give_new_size_in_mb>Donnez la nouvelle taille en Mo</give_new_size_in_mb>
 <give_servername_or_ipaddr>Indiquez le nom complet de l'ordinateur ou une adresse IP</give_servername_or_ipaddr>
@@ -832,6 +835,8 @@ Si vous mettez 0, alors l'&eacute;metteur sera compl&egrave;tement mis en liste 
 <mysql_error_popup_credential_text>Artica n'a pas la possibilit&eacute; de se connecter sur le serveur Mysql avec les param&egrave;tres d'acc&egrave;s par d&eacute;faut.[br]
 Vous devriez cr&eacute;er un nouvel utilisateur Mysql et un  mot de passe afin de corriger ce probl&egrave;me.[br]
 Voici l'erreur qui &agrave; &eacute;t&eacute; g&eacute;n&eacute;r&eacute;e pendant la connexion Mysql.</mysql_error_popup_credential_text>
+<mysql_explain_enable_ssl>Si vous passez en vert, vous allez activer MySQL en connexion s&eacute;curis&eacute;e SSL</mysql_explain_enable_ssl>
+<mysql_ssl_explain>Cette section vous aide &agrave; autoriser Mysql &agrave; utiliser une connexion s&eacute;curis&eacute;e avec SSL.</mysql_ssl_explain>
 <mysql_users>Utilisateurs Mysql</mysql_users>
 <myWebServices>Mes services Internet</myWebServices>
 <myWebServices_text>Visualiser les informations sur les services Internet que vous pouvez utiliser avec votre compte</myWebServices_text>
@@ -1317,6 +1322,8 @@ D&eacute;finissez l'&eacute;metteur et les destinataires (s&eacute;par&eacute;s 
 Cette option vous permet de d&eacute;terminer la taille maximale des donn&eacute;es qui sera transf&eacute;r&eacute;e en flux vers le service de l'antivirus pour l'analyse d'une fichier.[br]
 Cette taille doit correspondre au minium &agrave; la taille autoris&eacute;e d'un message email qui doit transiter sur le serveur de messagerie.</srv_clamav.StreamMaxLength_text>
 <sshd_events_explain>Vous trouverez ci-joint les tentatives d'acc&egrave;s au d&eacute;mon SSH</sshd_events_explain>
+<ssl_keys>Clefs SSL</ssl_keys>
+<ssl_mysql_client_keys>Ce sont les clefs SSL clientes que vous pouvez utiliser dans d'autres configurations Mysql.Si l'autre serveur est un serveur Artica, d&eacute;compressez ce fichier dans le r&eacute;pertoire /etc/ssl/certs/mysql-client directory</ssl_mysql_client_keys>
 <StartServers>Processus cr&eacute;&eacute;s au d&eacute;marrage</StartServers>
 <start_options>Options de d&eacute;marrage</start_options>
 <Start_Stop_Count>Nb Arr&ecirc;ts/D&eacute;marrages</Start_Stop_Count>
@@ -1390,6 +1397,7 @@ Cela peut prendre du temps.. Tout d&eacute;pend de votre bande passante Internet
 Le &quot;greylisting&quot; est une fonctionnalit&eacute; qui refuse les premiers messages des serveurs de messagerie inconnus.[br]
 Si un internaute vous envoi un message alors que son serveur de messagerie est inconnu, il sera convi&eacute; &agrave; renvoyer son message plus tard.[br]
 Si le message en renvoy&eacute; dans un d&eacute;lai fix&eacute; alors le message est transmis et vous serez en mesure de le recevoir.</user_greylist_explain>
+<UseSSL>Utiliser l'encryption SSL</UseSSL>
 <use_another_WINS_server>Utiliser un autre serveur WINS</use_another_WINS_server>
 <use_another_WINS_server_explain>Toutes requ&ecirc;tes WINS seront redirig&eacute;es vers le serveur indiqu&eacute;. [br]Indiquez 0.0.0.0 afin de d&eacute;sactiver cette fonctionnalit&eacute;</use_another_WINS_server_explain>
 <VarWWWChmod>Permissions sur la racine /var/www</VarWWWChmod>
