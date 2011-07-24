@@ -810,6 +810,12 @@ begin
                  exit();
               end;
 
+              if ParamStr(2)='zarafa-lmtp' then begin
+                 zarafa:=tzarafa_server.Create(SYS);
+                 zarafa.DAGENT_STOP();
+                 exit();
+              end;
+
               if ParamStr(2)='zarafa-server' then begin
                  zarafa:=tzarafa_server.Create(SYS);
                  zarafa.SERVER_STOP();
@@ -1608,7 +1614,7 @@ begin
                writeln('|zabbix|hamachi|kav4proxy|postfilter|vmtools|zarafa|zarafa-web|monit|wifi[proxy-pac|artica-notifier|mldonkey|backuppc|kav4fs|ocsweb|ocsagent');
                writeln('|openssh|auditd|squidguard-http|fetchmail-logger|dkfilter|ufdb|ufdb-tail|squidguard-tail|framework|dkim-milter|dropbox|artica-policy|virtualbox-web');
                writeln('|tftpd|crossroads|artica-status|artica-exec|artica-back|pptpd|pptpd-clients|apt-mirror|squidclamav-tail|ddclient|cluebringer|apachesrc');
-               writeln('|sabnzbdplus|fcron|fuse|vnstat|winbindd|munin|greyhole|amavis-milter|iscsi|auth-logger|snort|greensql|amanda');
+               writeln('|sabnzbdplus|fcron|fuse|vnstat|winbindd|munin|greyhole|amavis-milter|iscsi|auth-logger|snort|greensql|amanda|zarafa-lmtp');
                exit();
             end;
 
@@ -1916,6 +1922,14 @@ begin
                  zarafa.SERVER_START();
                  exit();
               end;
+
+              if ParamStr(2)='zarafa-lmtp' then begin
+                 zarafa:=tzarafa_server.Create(SYS);
+                 zarafa.DAGENT_START();
+                 exit();
+              end;
+
+
 
               if ParamStr(2)='mldonkey' then begin
                  mldonkey:=tmldonkey.Create(SYS);
@@ -2749,7 +2763,7 @@ begin
                writeln('|sysloger|zabbix|kav4proxy|postfilter|vmtools|zarafa|zarafa-web|monit|wifi|proxy-pac|artica-notifier|mldonkey|backuppc|kav4fs|ocsweb|ocsagent');
                writeln('|openssh|auditd|squidguard-http|fetchmail-logger|dkfilter|ufdb|ufdb-tail|squidguard-tail|framework|dkim-milter|dropbox|artica-policy|virtualbox-web');
                writeln('|tftpd|crossroads|artica-status|artica-exec|artica-back|pptpd|pptpd-clients|apt-mirror|squidclamav-tail|ddclient|cluebringer|apachesrc');
-               writeln('|sabnzbdplus|fcron|fuse|vnstat|winbindd|munin|greyhole|amavis-milter|iscsi|auth-logger|snort|greensql|amanda');
+               writeln('|sabnzbdplus|fcron|fuse|vnstat|winbindd|munin|greyhole|amavis-milter|iscsi|auth-logger|snort|greensql|amanda|zarafa-lmtp');
                exit();
             end;
 

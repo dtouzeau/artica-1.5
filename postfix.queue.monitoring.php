@@ -421,7 +421,7 @@ $table[]="<table cellspacing='0' cellpadding='0' border='0' class='tableView' st
 	if(!$q->ok){$table[]="<tr><td>". $q->mysql_error."</td></tr>";}
 	$page=CurrentPageName();
 	
-	
+	$rowscount=mysql_num_rows($results);
 	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
 		if($ligne["context"]==null){$ligne["context"]="{unknown}";}
 		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
@@ -443,14 +443,16 @@ $table[]="<table cellspacing='0' cellpadding='0' border='0' class='tableView' st
 	$table[]="</table>";
 	$table_finale=@implode("\n",$table);
 	$time=time();
-	$gp->width=350;
-	$gp->height=450;
-	$gp->ViewValues=false;
-	$gp->x_title="{errors}";
-	$gp->pie();	
-
-	if(count($gp->xdata)>1){
-		$img="<center><img src='ressources/logs/web/$filename?time=$time'></center>";
+	if($rowscount>0){
+		$gp->width=350;
+		$gp->height=450;
+		$gp->ViewValues=false;
+		$gp->x_title="{errors}";
+		$gp->pie();	
+	
+		if(count($gp->xdata)>1){
+			$img="<center><img src='ressources/logs/web/$filename?time=$time'></center>";
+		}
 	}
 	
 	$html="

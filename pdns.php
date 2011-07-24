@@ -59,6 +59,8 @@ if(isset($_GET["EnablePDNS"])){EnablePDNS();exit;}
 if(isset($_GET["PowerDNSLogsQueries"])){SaveLogsSettings();exit;}
 if(isset($_GET["PDNSRestartIfUpToMB"])){PDNSRestartIfUpToMB();exit;}
 
+if(isset($_GET["infos"])){pdns_infos();exit;}
+if(isset($_GET["pdns-infos-query"])){pdns_infos_query();exit;}
 
 js();
 
@@ -592,10 +594,9 @@ function tabs(){
 	$PowerDNSDisableLDAP=$sock->GET_INFO("PowerDNSDisableLDAP");
 	$array["status"]='{status}';
 	$array["config"]='{parameters}';
-	if($PowerDNSDisableLDAP<>1){
-		$array["popup"]='{dns_entries}';
-	}
-		$array["logs"]='{events}';
+	if($PowerDNSDisableLDAP<>1){$array["popup"]='{dns_entries}';}
+	$array["infos"]='{infos}';
+	$array["logs"]='{events}';
 	
 	
 	
@@ -1040,8 +1041,10 @@ function PDNSStatus(){
 	$tpl=new templates();
 	if(is_file("ressources/logs/global.status.ini")){
 		$ini=new Bs_IniHandler("ressources/logs/global.status.ini");
+		writelogs(count($ini->_params). " items",__FUNCTION__,__FILE__,__LINE__);
 	}else{
 		$sock=new sockets();
+		writelogs("cmd.php?Global-Applications-Status=yes",__FUNCTION__,__FILE__,__LINE__);
 		$datas=base64_decode($sock->getFrameWork('cmd.php?Global-Applications-Status=yes'));
 		$ini=new Bs_IniHandler($datas);
 	}
@@ -1562,6 +1565,66 @@ function PDNSRestartIfUpToMB(){
 	
 	$sock->getFrameWork("cmd.php?pdns-restart=yes");
 
+}
+
+function pdns_infos(){
+	$page=CurrentPageName();
+$html="<div id='pdns-infos'></div>
+
+<script>
+	function LoadPdns(uri){
+		LoadAjax('pdns-infos','$page?pdns-infos-query='+escape(uri));
+	
+	}
+
+LoadPdns('');
+</script>
+
+";
+	echo $html;
+	
+}
+
+function pdns_infos_query(){
+
+	include_once(dirname(__FILE__)."/ressources/class.ccurl.inc");
+	$uri="http://127.0.0.1:8081";
+	if($_GET["pdns-infos-query"]<>null){$uri="http://127.0.0.1:8081/{$_GET["pdns-infos-query"]}";}
+	
+	writelogs("URI:$uri",__FILE__,__FUNCTION__,__LINE__);
+	
+	$curl=new ccurl($uri,true);
+	if(!$curl->get()){
+		echo "<H2>$uri ($curl->error)</H2>";return;
+	}
+	$datas=$curl->data;
+	writelogs(strlen($datas)." bytes ",__FILE__,__FUNCTION__,__LINE__);
+	if(strlen($datas)==0){$curl=new ccurl("http://127.0.0.1:8081",true);$curl->get();$datas=$curl->data;}
+	
+	
+	if(preg_match("#<body.*?>(.+?)</body>#s", $datas,$re)){$datas=$re[1];}
+	if(preg_match("#<h2>(.+?)</h2>#s", $datas,$re)){$datas=str_replace($re[0], "<div style='font-size:16px;margin-bottom:10px;border-bottom:1px solid black'>{$re[1]}</div>", $datas);}
+	
+	if(preg_match_all("#<a href=(.+?)>#", $datas, $hrf)){
+		while (list ($index, $line) = each ($hrf[0]) ){
+			$datas=str_replace($line, "<a href=\"javascript:blur();\" OnClick=\"javascript:LoadPdns('{$hrf[1][$index]}')\" style='font-size:13px;text-decoration:underline'>", $datas);
+			
+		}
+		
+		
+	}
+	
+	$datas=str_replace("table border=1", "table cellspacing='0' cellpadding='0' border='0' style='width:100%'", $datas);
+	$datas=str_replace("#ff0000","#CCCCCC", $datas);
+	$datas=str_replace("<td colspan=3 bgcolor=#0000ff>","<td colspan=3 bgcolor=black style='font-size:13px'>", $datas);
+	$datas=str_replace("<td>","<td style='font-size:13px'>", $datas);
+	$datas=str_replace("<font color=#ffffff>","<font color=black style='font-size:13px'>", $datas);
+	$datas=str_replace("<td align=right>","<td style='font-size:13px' align=right>", $datas);
+	
+	echo $datas;
+	
+	
+	
 }
 
 

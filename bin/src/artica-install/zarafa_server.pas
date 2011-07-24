@@ -46,7 +46,7 @@ private
     procedure GATEWAY_START();
     procedure SPOOLER_START();
     procedure MONITOR_START();
-    procedure DAGENT_START();
+
     procedure LIGHTTPD_START();
     procedure APACHE_CONFIG();
     procedure INDEXER_START();
@@ -58,7 +58,7 @@ private
     procedure SPOOLER_STOP();
     procedure MONITOR_STOP();
     procedure GATEWAY_STOP();
-    procedure DAGENT_STOP();
+
     procedure LICENSED_STOP();
     procedure INDEXER_STOP();
     procedure ICAL_STOP();
@@ -68,6 +68,8 @@ public
     procedure   Free;
     constructor Create(const zSYS:Tsystem);
     procedure START();
+    procedure DAGENT_START();
+    procedure DAGENT_STOP();
     function  VERSION(nocache:boolean=false):string;
     function  SERVER_BIN_PATH():string;
     procedure WEB_ACCESS_CONFIG();
@@ -1204,6 +1206,7 @@ count:=0;
 pid:=DAGENT_GET_PID();
 if sys.PROCESS_EXIST(pid) then begin
       logs.DebugLogs('Starting zarafa..............: Zarafa-LMTP success running PID '+ pid);
+      logs.NOTIFICATION('Zarafa DAgent (LTMP) successfully started pid '+pid,'Zarafa Dagent was successfully started "'+logs.ReadFromFile(tmpstr)+'"','mailbox');
       exit;
 end;
 logs.DebugLogs('Starting zarafa..............: Zarafa-LMTP failed');
@@ -1350,7 +1353,8 @@ begin
        writeln('Stopping Zarafa-LMTP.........: Already stopped');
        exit;
    end;
-       writeln('Stopping Zarafa-LMTP.........: PID '+pid);
+
+   writeln('Stopping Zarafa-LMTP.........: PID '+pid);
    fpsystem('/bin/kill '+ pid);
   while sys.PROCESS_EXIST(pid) do begin
       sleep(100);
@@ -1366,6 +1370,7 @@ begin
 pid:=DAGENT_GET_PID();
    if not sys.PROCESS_EXIST(pid) then begin
        writeln('Stopping Zarafa-LMTP.........: stopped');
+       logs.NOTIFICATION('Zarafa DAgent (LTMP) PID '+pid+' successfully stopped','Zarafa Dagent was successfully stopped','mailbox');
        exit;
    end;
        writeln('Stopping Zarafa-LMTP.........: failed');

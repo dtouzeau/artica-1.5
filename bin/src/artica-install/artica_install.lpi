@@ -12,7 +12,7 @@
       <MainUnit Value="0"/>
       <TargetFileExt Value=""/>
       <Title Value="artica-install"/>
-      <ActiveEditorIndexAtStart Value="14"/>
+      <ActiveEditorIndexAtStart Value="13"/>
     </General>
     <VersionInfo>
       <ProjectVersion Value=""/>
@@ -67,13 +67,13 @@
       <Unit3>
         <Filename Value="class_install.pas"/>
         <UnitName Value="class_install"/>
-        <CursorPos X="23" Y="3227"/>
-        <TopLine Value="3194"/>
+        <CursorPos X="145" Y="2766"/>
+        <TopLine Value="2755"/>
         <EditorIndex Value="4"/>
         <UsageCount Value="100"/>
         <Bookmarks Count="2">
-          <Item0 X="93" Y="2758" ID="1"/>
-          <Item1 X="1" Y="8061" ID="3"/>
+          <Item0 X="93" Y="2772" ID="1"/>
+          <Item1 X="1" Y="8075" ID="3"/>
         </Bookmarks>
         <Loaded Value="True"/>
       </Unit3>
@@ -775,8 +775,8 @@
         <Filename Value="zarafa_server.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="zarafa_server"/>
-        <CursorPos X="130" Y="765"/>
-        <TopLine Value="748"/>
+        <CursorPos X="117" Y="1209"/>
+        <TopLine Value="1175"/>
         <EditorIndex Value="13"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -1151,19 +1151,19 @@
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="global_conf.pas"/>
-        <Caret Line="11694" Column="1" TopLine="11677"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
       </Position1>
       <Position2>
         <Filename Value="global_conf.pas"/>
-        <Caret Line="1" Column="1" TopLine="1"/>
+        <Caret Line="10" Column="147" TopLine="1"/>
       </Position2>
       <Position3>
         <Filename Value="global_conf.pas"/>
-        <Caret Line="208" Column="31" TopLine="174"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
       </Position3>
       <Position4>
         <Filename Value="global_conf.pas"/>
-        <Caret Line="2911" Column="59" TopLine="2860"/>
+        <Caret Line="39" Column="3" TopLine="1"/>
       </Position4>
       <Position5>
         <Filename Value="global_conf.pas"/>
@@ -1171,103 +1171,103 @@
       </Position5>
       <Position6>
         <Filename Value="global_conf.pas"/>
-        <Caret Line="39" Column="5" TopLine="1"/>
+        <Caret Line="11" Column="157" TopLine="1"/>
       </Position6>
       <Position7>
-        <Filename Value="artica_cron.pas"/>
-        <Caret Line="563" Column="128" TopLine="528"/>
+        <Filename Value="global_conf.pas"/>
+        <Caret Line="12" Column="175" TopLine="1"/>
       </Position7>
       <Position8>
-        <Filename Value="artica_cron.pas"/>
-        <Caret Line="1" Column="1" TopLine="1"/>
+        <Filename Value="toolsversions.pas"/>
+        <Caret Line="50" Column="32" TopLine="1"/>
       </Position8>
       <Position9>
-        <Filename Value="artica_cron.pas"/>
-        <Caret Line="585" Column="95" TopLine="531"/>
+        <Filename Value="global_conf.pas"/>
+        <Caret Line="12" Column="175" TopLine="1"/>
       </Position9>
       <Position10>
-        <Filename Value="artica_cron.pas"/>
-        <Caret Line="1" Column="1" TopLine="1"/>
+        <Filename Value="amavisd_milter.pas"/>
+        <Caret Line="1015" Column="178" TopLine="983"/>
       </Position10>
       <Position11>
-        <Filename Value="artica_cron.pas"/>
-        <Caret Line="422" Column="50" TopLine="388"/>
+        <Filename Value="class_install.pas"/>
+        <Caret Line="3227" Column="23" TopLine="2684"/>
       </Position11>
       <Position12>
-        <Filename Value="artica_cron.pas"/>
-        <Caret Line="431" Column="50" TopLine="388"/>
+        <Filename Value="class_install.pas"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
       </Position12>
       <Position13>
-        <Filename Value="artica_cron.pas"/>
-        <Caret Line="454" Column="50" TopLine="388"/>
+        <Filename Value="class_install.pas"/>
+        <Caret Line="12" Column="160" TopLine="1"/>
       </Position13>
       <Position14>
-        <Filename Value="artica_cron.pas"/>
-        <Caret Line="456" Column="45" TopLine="422"/>
+        <Filename Value="class_install.pas"/>
+        <Caret Line="614" Column="18" TopLine="580"/>
       </Position14>
       <Position15>
-        <Filename Value="artica_cron.pas"/>
-        <Caret Line="567" Column="112" TopLine="533"/>
+        <Filename Value="class_install.pas"/>
+        <Caret Line="814" Column="45" TopLine="773"/>
       </Position15>
       <Position16>
-        <Filename Value="global_conf.pas"/>
-        <Caret Line="39" Column="5" TopLine="1"/>
+        <Filename Value="class_install.pas"/>
+        <Caret Line="815" Column="37" TopLine="773"/>
       </Position16>
       <Position17>
-        <Filename Value="global_conf.pas"/>
-        <Caret Line="1" Column="1" TopLine="1"/>
+        <Filename Value="class_install.pas"/>
+        <Caret Line="819" Column="44" TopLine="773"/>
       </Position17>
       <Position18>
-        <Filename Value="global_conf.pas"/>
-        <Caret Line="11" Column="84" TopLine="1"/>
+        <Filename Value="class_install.pas"/>
+        <Caret Line="1928" Column="31" TopLine="1886"/>
       </Position18>
       <Position19>
-        <Filename Value="global_conf.pas"/>
-        <Caret Line="12" Column="104" TopLine="1"/>
+        <Filename Value="class_install.pas"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
       </Position19>
       <Position20>
-        <Filename Value="global_conf.pas"/>
-        <Caret Line="12" Column="104" TopLine="1"/>
+        <Filename Value="class_install.pas"/>
+        <Caret Line="815" Column="31" TopLine="781"/>
       </Position20>
       <Position21>
-        <Filename Value="global_conf.pas"/>
-        <Caret Line="1" Column="1" TopLine="1"/>
+        <Filename Value="class_install.pas"/>
+        <Caret Line="1926" Column="42" TopLine="1894"/>
       </Position21>
       <Position22>
-        <Filename Value="global_conf.pas"/>
-        <Caret Line="10" Column="147" TopLine="1"/>
+        <Filename Value="class_install.pas"/>
+        <Caret Line="1920" Column="44" TopLine="1894"/>
       </Position22>
       <Position23>
-        <Filename Value="global_conf.pas"/>
+        <Filename Value="class_install.pas"/>
         <Caret Line="1" Column="1" TopLine="1"/>
       </Position23>
       <Position24>
-        <Filename Value="global_conf.pas"/>
-        <Caret Line="39" Column="3" TopLine="1"/>
+        <Filename Value="class_install.pas"/>
+        <Caret Line="815" Column="31" TopLine="781"/>
       </Position24>
       <Position25>
-        <Filename Value="global_conf.pas"/>
-        <Caret Line="1" Column="1" TopLine="1"/>
+        <Filename Value="class_install.pas"/>
+        <Caret Line="1617" Column="145" TopLine="1571"/>
       </Position25>
       <Position26>
-        <Filename Value="global_conf.pas"/>
-        <Caret Line="11" Column="157" TopLine="1"/>
+        <Filename Value="zarafa_server.pas"/>
+        <Caret Line="71" Column="27" TopLine="35"/>
       </Position26>
       <Position27>
-        <Filename Value="global_conf.pas"/>
-        <Caret Line="12" Column="175" TopLine="1"/>
+        <Filename Value="zarafa_server.pas"/>
+        <Caret Line="700" Column="15" TopLine="666"/>
       </Position27>
       <Position28>
-        <Filename Value="toolsversions.pas"/>
-        <Caret Line="50" Column="32" TopLine="1"/>
+        <Filename Value="zarafa_server.pas"/>
+        <Caret Line="720" Column="14" TopLine="707"/>
       </Position28>
       <Position29>
-        <Filename Value="global_conf.pas"/>
-        <Caret Line="12" Column="175" TopLine="1"/>
+        <Filename Value="zarafa_server.pas"/>
+        <Caret Line="1373" Column="34" TopLine="1339"/>
       </Position29>
       <Position30>
-        <Filename Value="amavisd_milter.pas"/>
-        <Caret Line="1015" Column="178" TopLine="983"/>
+        <Filename Value="zarafa_server.pas"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
       </Position30>
     </JumpHistory>
   </ProjectOptions>

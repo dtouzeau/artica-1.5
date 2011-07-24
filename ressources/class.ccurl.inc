@@ -9,24 +9,28 @@ class ccurl{
 	var $ArticaProxyServerPort=3128;
 	var $ArticaProxyServerUsername=null;
 	var $ArticaProxyServerUserPassword=null;
-	function ccurl($uri){
+	function ccurl($uri,$noproxyload=false){
 			$this->uri=$uri;
-			$ini=new Bs_IniHandler();
-			$sock=new sockets();
-			$datas=$sock->GET_INFO("ArticaProxySettings");
-			$ini->loadString($datas);
-			$this->ArticaProxyServerEnabled=$ini->_params["PROXY"]["ArticaProxyServerEnabled"];
-			$this->ArticaProxyServerName=$ini->_params["PROXY"]["ArticaProxyServerName"];
-			$this->ArticaProxyServerPort=$ini->_params["PROXY"]["ArticaProxyServerPort"];
-			$this->ArticaProxyServerUsername=trim($ini->_params["PROXY"]["ArticaProxyServerUsername"]);
-			$this->ArticaProxyServerUserPassword=$ini->_params["PROXY"]["ArticaProxyServerUserPassword"];			
+			if(!$noproxyload){
+				$ini=new Bs_IniHandler();
+				$sock=new sockets();
+				$datas=$sock->GET_INFO("ArticaProxySettings");
+				$ini->loadString($datas);
+				$this->ArticaProxyServerEnabled=$ini->_params["PROXY"]["ArticaProxyServerEnabled"];
+				$this->ArticaProxyServerName=$ini->_params["PROXY"]["ArticaProxyServerName"];
+				$this->ArticaProxyServerPort=$ini->_params["PROXY"]["ArticaProxyServerPort"];
+				$this->ArticaProxyServerUsername=trim($ini->_params["PROXY"]["ArticaProxyServerUsername"]);
+				$this->ArticaProxyServerUserPassword=$ini->_params["PROXY"]["ArticaProxyServerUserPassword"];
+			}			
 	}
 	
 	function get(){
-				
-			while (list ($num, $ligne) = each ($this->parms)){
-				$curlPost .='&'.$num.'=' . urlencode($ligne);
-			}		
+		$curlPost=null;
+			if(isset($this->parms)){
+				if(count($this->parms)>0){
+					while (list ($num, $ligne) = each ($this->parms)){$curlPost .='&'.$num.'=' . urlencode($ligne);}	
+				}
+			}	
 				
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, "$this->uri");
@@ -36,7 +40,7 @@ class ccurl{
 			curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible;)");
 			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-			curl_setopt($ch, CURLOPT_POSTFIELDS, $curlPost);	
+			if($curlPost<>null){curl_setopt($ch, CURLOPT_POSTFIELDS, $curlPost);}	
 			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Expect:'));
 			$this->data=curl_exec($ch);
 			$error=curl_errno($ch);		

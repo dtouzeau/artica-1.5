@@ -69,7 +69,7 @@ $sql="SELECT AVG( `load` ) AS sload, DATE_FORMAT( stime, '%i' ) AS ttime FROM `l
 
 	$q=new mysql();
 	$results=$q->QUERY_SQL($sql,"artica_events");
-	
+
 	
 	
 	
@@ -90,7 +90,10 @@ $sql="SELECT AVG( `load` ) AS sload, DATE_FORMAT( stime, '%i' ) AS ttime FROM `l
 	}		
 	$count=mysql_num_rows($results);
 	
-	if(mysql_num_rows($results)==0){return;}	
+	if(mysql_num_rows($results)==0){
+		writelogs("mysql return no rows",__FUNCTION__,__FILE__,__LINE__);
+		return;
+	}	
 	
 	if(!$q->ok){echo $q->mysql_error;}
 	$c=0;

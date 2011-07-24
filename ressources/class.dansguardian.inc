@@ -644,6 +644,7 @@ class dansguardian_rules{
 									"ringtones"=>"{ringtones}",
 									"recreation/wellness"=>"{recreation_wellness}",
 									"recreation/travel"=>"{recreation_travel}",
+									"recreation/nightout"=>"{recreation_nightout}",
 									"governments"=>"{www_government}",
 									"recreation/schools"=>"{www_schools}",
 									"housing/reale_state_office"=>"{www_reale_state_office}",
@@ -766,7 +767,7 @@ class dansguardian_rules{
 		  	"humanitarian"=>"humanitarian-20.png",
 		  	"hobby/arts"=>"art-20.png",
 		  	"remote-control"=>"20-win-nic.png",
-									
+			"recreation/nightout"=>"icon_nightclub.png"						
 		  	
 		  	
 		  	);

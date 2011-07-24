@@ -121,6 +121,9 @@ function FillMemory(){
 	
 	$users=new settings_inc();
 	$sock=new sockets();
+	$DisableArticaStatusService=$sock->GET_INFO("DisableArticaStatusService");
+	if(!is_numeric($DisableArticaStatusService)){$DisableArticaStatusService=0;}
+	$GLOBALS["ARTICA_STATUS_DISABLED"]=$DisableArticaStatusService;
 	$GLOBALS["SQUID_INSTALLED"]=$users->SQUID_INSTALLED;
 	$GLOBALS["POSTFIX_INSTALLED"]=$users->POSTFIX_INSTALLED;
 	$GLOBALS["SAMBA_INSTALLED"]=$users->SAMBA_INSTALLED;
@@ -496,7 +499,7 @@ if(!is_numeric($GLOBALS["TIME"]["GROUP2"])){$GLOBALS["TIME"]["GROUP2"]=time();re
 		if($GLOBALS["SQUID_INSTALLED"]){$array[]="exec.dansguardian.injector.php";}
 	}
 	if($GLOBALS["CYRUS_IMAP_INSTALLED"]){$array[]="exec.cyrus-restore.php --ad-sync";}
-	
+	if($GLOBALS["ARTICA_STATUS_DISABLED"]==1){$array[]="exec.status.php --all";}
 	
 	if(is_array($array)){
 		while (list ($index, $file) = each ($array) ){

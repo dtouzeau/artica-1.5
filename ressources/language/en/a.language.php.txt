@@ -1818,4 +1818,5 @@ Very lower config will get 320Mb free[br]
 <EnableRebootAfterUpgrade>Reboot system after system upgrade task</EnableRebootAfterUpgrade>
 <APP_DRUSH7>Drush for Drupal7</APP_DRUSH7>
 <modules>Modules</modules>
+<recreation_nightout>All sites about how to have a night out including restaurants, pubs, night clubs...</recreation_nightout>
 

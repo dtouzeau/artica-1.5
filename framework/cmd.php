@@ -1796,6 +1796,11 @@ function ForceRefreshRight(){
 
 function Global_Applications_Status(){
 		$unix=new unix();
+		
+		$nohup=$unix->find_program("nohup");
+		$cmd=$nohup." " .  $unix->LOCATE_PHP5_BIN().' /usr/share/artica-postfix/exec.status.php --all >/dev/null 2>&1 &';
+		shell_exec(trim($cmd));
+		
 		if(isset($_GET["status-forced"])){
 			$unix->THREAD_COMMAND_SET('/usr/share/artica-postfix/bin/artica-install --artica-status-reload');
 			return;

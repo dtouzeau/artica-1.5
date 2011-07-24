@@ -661,9 +661,10 @@ function SwapWatchdog(){
 }
 
 function xLoadAvg(){
+	if(!isset($GLOBALS["CLASS_UNIX"])){CheckCallable();}
 	if(function_exists("sys_getloadavg")){
-		$timeDaemonFile=$unix->file_time_min("/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".time");
-		$DaemonTime=$unix->file_time_min($timeDaemonFile);		
+		$timeDaemonFile=$GLOBALS["CLASS_UNIX"]->file_time_min("/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".time");
+		$DaemonTime=$GLOBALS["CLASS_UNIX"]->file_time_min($timeDaemonFile);		
 		if($DaemonTime<3){return;}
 		@unlink($timeDaemonFile);
 		@file_put_contents($timeDaemonFile, time());
@@ -672,6 +673,8 @@ function xLoadAvg(){
 		events("System load $internal_load",__FUNCTION__,__LINE__);
 		if(!is_dir("/var/log/artica-postfix/loadavg")){@mkdir("/var/log/artica-postfix/loadavg",644,true);}
 		@file_put_contents("/var/log/artica-postfix/loadavg/".time(), $internal_load);
+	}else{
+		events("Fatal: System load \"sys_getloadavg\" no such function ",__FUNCTION__,__LINE__);
 	}	
 	
 }

@@ -18,7 +18,10 @@ include_once(dirname(__FILE__).'/ressources/class.sockets.inc');
 events("Memory: FINISH ".round(((memory_get_usage()/1024)/1000),2) ." after includes line: ".__LINE__);
 
 if(posix_getuid()<>0){die("Cannot be used in web server mode\n\n");}
+$GLOBALS["COMMANDLINE"]=implode(" ",$argv);
+if(strpos($GLOBALS["COMMANDLINE"],"--verbose")>0){$GLOBALS["VERBOSE"]=true;$GLOBALS["debug"]=true;$GLOBALS["DEBUG"]=true;ini_set('html_errors',0);ini_set('display_errors', 1);ini_set('error_reporting', E_ALL);}
 
+if($argv[1]=='--amavis-port'){postfix_is_amavis_port($argv[2]);die();}
 
 $unix=new unix();
 $pidfile="/etc/artica-postfix/".basename(__FILE__).".pid";
@@ -35,6 +38,7 @@ events("Memory: ".round(((memory_get_usage()/1024)/1000),2) ." after usersMenus(
 $_GET["server"]=$users->hostname;
 $_GET["IMAP_HACK"]=array();
 $GLOBALS["ZARAFA_INSTALLED"]=$users->ZARAFA_INSTALLED;
+$GLOBALS["AMAVIS_INSTALLED"]=$users->AMAVIS_INSTALLED;
 $GLOBALS["POP_HACK"]=array();
 $GLOBALS["SMTP_HACK"]=array();
 $GLOBALS["PHP5_BIN"]=LOCATE_PHP5_BIN2();
@@ -224,6 +228,10 @@ if(strpos($buffer,"IMAP thread exiting")>0){return;}
 if(strpos($buffer,"Client disconnected")>0){return;}
 if(strpos($buffer,"starting the Postfix mail system")>0){return;}
 if(strpos($buffer,"Postfix mail system is already running")>0){return;}
+if(strpos($buffer,": Perl version")>0){return;}
+if(strpos($buffer,": No decoder for")>0){return;}
+if(strpos($buffer,"Using primary internal av scanner")>0){return;}
+if(strpos($buffer,"starting.  /usr/local/sbin/amavisd")>0){return;}
 
 if(preg_match("#kavmilter\[.+?\[tid.+?New message from:#",$buffer,$re)){return null;}
 if(preg_match("#assp\[.+?LDAP Results#",$buffer,$re)){return null;}
@@ -286,6 +294,7 @@ if(preg_match("#amavis\[.+?\s+loaded$#",trim($buffer))){return null;}
 if(preg_match("#amavis\[.+?\s+Internal decoder#",trim($buffer))){return null;}
 if(preg_match("#amavis\[.+?\s+Creating db#",trim($buffer))){return null;}
 if(preg_match("#smtpd\[.+? warning:.+?address not listed for hostname#",$buffer)){return null;}
+
 if(preg_match("#postfix\/policyd-weight\[.+?SPAM#",$buffer)){return null;}
 if(preg_match("#postfix\/policyd-weight\[.+?decided action=550#",$buffer)){return null;}
 if(preg_match("#qmgr\[.+?: removed#",$buffer)){return null;}
@@ -296,6 +305,39 @@ if(preg_match("#zarafa-dagent.+?Client disconnected#",$buffer)){return null;}
 
 
 if(regex_amavis($buffer)){return;}
+
+
+if(preg_match("#[.+?:\s+connect to 127\.0\.0\.1\[127\.0\.0\.1\]:2003:\s+Connection refused#", $buffer,$re)){
+	$file="/etc/artica-postfix/croned.1/postfix.port.2003.Connection.refused";
+	$timefile=file_time_min($file);
+	if($timefile>5){
+			email_events("Postfix: Connect to zarafa LMTP port Connection refused zarafa-lmtp will be restarted",
+			"postfix claim \n$buffer\nArtica will try to restart zarafa-lmtp daemon.","postfix");
+			shell_exec(trim("{$GLOBALS["NOHUP_PATH"]} /etc/init.d/artica-postfix restart zarafa-lmtp >/dev/null 2>&1 &"));
+			@file_put_contents($file,"#");
+		}else{events("Postfix: Connect to zarafa LMTP port Connection refused: {$timefile}Mn/5Mn");}
+	return;			
+	}
+
+
+
+if(preg_match("#smtp\[.+?:\s+connect to 127\.0\.0\.1\[127\.0\.0\.1\]:([0-9]+):\s+Connection refused#", $buffer,$re)){
+	if(postfix_is_amavis_port($re[1])){
+		$file="/etc/artica-postfix/croned.1/postfix.port.{$re[1]}.Connection.refused";
+		$timefile=file_time_min($file);
+		if($timefile>5){
+			email_events("Postfix: Connect to amavis port {$re[1]} Connection refused Amavis will be restarted",
+			"postfix claim \n$buffer\nArtica will try to restart amavis daemon.","postfix");
+			shell_exec(trim("{$GLOBALS["NOHUP_PATH"]} /etc/init.d/artica-postfix restart amavis --by-exec-maillog >/dev/null 2>&1 &"));
+			@file_put_contents($file,"#");
+		}else{events("Postfix: Connect to amavis port {$re[1]} Connection refused: {$timefile}Mn/5Mn");}
+		return;			
+		
+	}
+}
+	
+
+
 
 if(preg_match("#cyrus\/.+?\[[0-9]+]#",$buffer)){
 	include_once(dirname(__FILE__)."/ressources/class.cyrus.maillog.inc");
@@ -3454,6 +3496,42 @@ function Postfix_Addconnection_error($hostname,$ip,$error_text){
 	$ser=serialize($array);
 	@file_put_contents("/var/log/artica-postfix/smtp-connections/". md5($ser).".err",$ser);
 	
+}
+
+
+function postfix_is_amavis_port($portToCheck){
+	if(!isset($GLOBALS["AMAVIS_INSTALLED"])){$users=new settings_inc();$GLOBALS["AMAVIS_INSTALLED"]=$users->AMAVIS_INSTALLED;}
+	
+	
+	if(!$GLOBALS["AMAVIS_INSTALLED"]){if($GLOBALS["VERBOSE"]){echo "AMAVIS_INSTALLED -> FALSE\n";return false;}}
+	events("Postfix: bind 127.0.0.1 port $portToCheck: -> check Amavis");
+	$f=explode("\n",@file_get_contents("/usr/local/etc/amavisd.conf"));
+	while (list ($num, $line) = each ($f) ){
+			if(preg_match("#inet_socket_port.+?\[(.+?)\]#", $line,$re)){
+				$inet_socket_port=$re[1];
+				if(strpos($inet_socket_port, ",")){
+					$socketstmp=explode(",",$inet_socket_port);while (list ($a, $b) = each ($socketstmp) ){$socket[$b]=true;}
+				}else{
+					$socket[$inet_socket_port]=true;
+				}
+			}
+		}
+
+	if(!isset($socket)){
+		events("Postfix: unable to detect sockets port");
+		return false;
+	}
+	
+	if(!isset($socket[$portToCheck])){events("Postfix: $portToCheck no such array...");
+		return false;
+	}
+	
+	if($socket[$portToCheck]){
+		events("Postfix: $portToCheck is an amavis port");
+		return true;
+	}
+	
+	return false;
 }
 
  
