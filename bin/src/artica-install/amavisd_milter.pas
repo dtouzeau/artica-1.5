@@ -991,6 +991,7 @@ fpsystem('/bin/cp /usr/share/artica-postfix/bin/install/amavis/check-external-us
 
 
 forceDirectories('/usr/local/etc/amavis');
+forcedirectories('/var/spool/postfix/var/run/amavisd-new');
 fpsystem('/bin/chown postfix:postfix /usr/local/etc/amavis');
 fpsystem('/bin/chown -R postfix:postfix /usr/local/etc/amavis/*');
 fpsystem('/bin/chmod -R 755 /usr/local/etc/amavis');
@@ -1011,7 +1012,7 @@ fpsystem('/bin/chmod 755 /usr/local/etc/sender_scores_sitewide');
 
 include_config_files();
 
-//if FileExists('/var/spool/postfix/var/run/amavisd-new/amavisd-new.pid') then logs.DeleteFile('/var/spool/postfix/var/run/amavisd-new/amavisd-new.pid');
+if FileExists('/var/spool/postfix/var/run/amavisd-new/amavisd-new.pid') then fpsystem('/bin/chown postfix:postfix /var/spool/postfix/var/run/amavisd-new/amavisd-new.pid');
 //if fileExists('/var/spool/postfix/var/run/amavisd-new/amavisd-new.sock') then logs.DeleteFile('/var/spool/postfix/var/run/amavisd-new/amavisd-new.sock');
 fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.amavis.php');
 

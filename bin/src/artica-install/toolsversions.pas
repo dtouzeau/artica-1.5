@@ -46,6 +46,11 @@ public
     function     POWERADMIN_VERSION():string;
     function     IPTACCOUNT_VERSION():string;
     function     AMANDA_VERSION():string;
+    function     DRUPAL7_VERSION():string;
+    function     DRUSH7_VERSION():string;
+
+
+
 END;
 
 implementation
@@ -919,6 +924,93 @@ begin
 
 end;
 //########################################################################################
+function ttoolsversions.DRUPAL7_VERSION():string;
+var
+   l:Tstringlist;
+   tmpstr:string;
+   RegExpr:TRegExpr;
+   i:integer;
+   D:boolean;
+begin
+
+     D:=false;
+     result:=SYS.GET_CACHE_VERSION('APP_DRUPAL7');
+     if length(result)>2 then exit;
+     D:=SYS.COMMANDLINE_PARAMETERS('--drupal');
+     tmpstr:='/usr/share/drupal7/modules/system/system.info';
+
+
+
+     if not FileExists(tmpstr) then begin
+        if D then writeln('Unable to stat '+tmpstr);
+        exit;
+     end;
+l:=Tstringlist.Create;
+l.LoadFromFile(tmpstr);
+
+if D then writeln('File:',tmpstr);
+
+RegExpr:=TRegExpr.Create;
+if D then writeln('Lines:',l.Count);
+RegExpr.Expression:='version = "([0-9\.]+)';
+for i:=0 to l.Count-1 do begin
+    if RegExpr.Exec(l.Strings[i]) then begin
+       result:=RegExpr.Match[1];
+       break;
+    end;
+end;
+     SYS.SET_CACHE_VERSION('APP_DRUPAL7',result);
+    l.free;
+    RegExpr.free;
+end;
+//#####################################################################################
+function ttoolsversions.DRUSH7_VERSION():string;
+var
+   l:Tstringlist;
+   tmpstr,binpath:string;
+   RegExpr:TRegExpr;
+   i:integer;
+   D:boolean;
+begin
+
+     D:=false;
+     result:=SYS.GET_CACHE_VERSION('APP_DRUSH7');
+     if length(result)>2 then exit;
+     binpath:=SYS.LOCATE_GENERIC_BIN('drush7');
+     if not Fileexists(binpath) then exit;
+
+     tmpstr:=logs.FILE_TEMP();
+     fpsystem(binpath+' --version >'+tmpstr+' 2>&1');
+
+
+
+
+     if not FileExists(tmpstr) then begin
+        if D then writeln('Unable to stat '+tmpstr);
+        exit;
+     end;
+l:=Tstringlist.Create;
+l.LoadFromFile(tmpstr);
+
+if D then writeln('File:',tmpstr);
+
+RegExpr:=TRegExpr.Create;
+if D then writeln('Lines:',l.Count);
+RegExpr.Expression:='version\s+([0-9\.]+)';
+for i:=0 to l.Count-1 do begin
+    if RegExpr.Exec(l.Strings[i]) then begin
+       result:=RegExpr.Match[1];
+       break;
+    end;
+end;
+     SYS.SET_CACHE_VERSION('APP_DRUSH7',result);
+    l.free;
+    RegExpr.free;
+end;
+//#####################################################################################
+
+
+
 
 
 end.

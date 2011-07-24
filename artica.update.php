@@ -62,6 +62,8 @@ var x_SaveArticaUpdateForm= function (obj) {
 		
 		if(document.getElementById('auto_apt')){
 			if(document.getElementById('auto_apt').checked){XHR.appendData('auto_apt','yes');}else{XHR.appendData('auto_apt','no');}
+			if(document.getElementById('EnableRebootAfterUpgrade').checked){XHR.appendData('EnableRebootAfterUpgrade','1');}else{XHR.appendData('EnableRebootAfterUpgrade','0');}
+			
 		}		
 
 		
@@ -130,7 +132,10 @@ $configDisk=trim($sock->GET_INFO('ArticaAutoUpdateConfig'));
 $ini->loadString($configDisk);	
 $AUTOUPDATE=$ini->_params["AUTOUPDATE"];	
 $EnableNightlyInFrontEnd=$sock->GET_INFO("EnableNightlyInFrontEnd");
+$EnableRebootAfterUpgrade=$sock->GET_INFO("EnableRebootAfterUpgrade");
 if($EnableNightlyInFrontEnd==null){$EnableNightlyInFrontEnd=1;}
+
+if(!is_numeric($EnableRebootAfterUpgrade)){$EnableRebootAfterUpgrade=0;}
 
 
 	if(trim($AUTOUPDATE["uri"])==null){$AUTOUPDATE["uri"]="http://www.artica.fr/auto.update.php";}
@@ -176,19 +181,31 @@ if($EnableNightlyInFrontEnd==null){$EnableNightlyInFrontEnd=1;}
 	<tr>
 	<td width=1% nowrap align='right' class=legend>{front_page_notify}:</strong></td>
 	<td align='left'>" . Field_yesno_checkbox('front_page_notify',$AUTOUPDATE["front_page_notify"])."</td>
-	</tr>
-	<tr>";
-	if($users->SAMBA_INSTALLED){
-	$form=$form."<td width=1% nowrap align='right' class=legend>{auto_apt}:</strong></td>
-	<td align='left'>" . Field_yesno_checkbox('auto_apt',$AUTOUPDATE["auto_apt"])."</td>
 	</tr>";
-	}
-
-	if(is_file("/usr/bin/apt-get")){
+	if($users->SAMBA_INSTALLED){
 	$form=$form."<td width=1% nowrap align='right' class=legend>{samba_notify}:</strong></td>
 	<td align='left'>" . Field_yesno_checkbox('samba_notify',$AUTOUPDATE["samba_notify"])."</td>
 	</tr>";
+	}	
+	
+	
+	$form=$form."
+	<tr><td colspan=2>&nbsp;</td></tr>
+	<tr>";
+	if(is_file("/usr/bin/apt-get")){
+	$form=$form."<td width=1% nowrap align='right' class=legend>{auto_apt}:</strong></td>
+	<td align='left'>" . Field_yesno_checkbox('auto_apt',$AUTOUPDATE["auto_apt"],"CheckAutoApt()")."</td>
+	</tr>
+	<tr>
+		<td width=1% nowrap align='right' class=legend>{EnableRebootAfterUpgrade}:</strong></td>
+		<td align='left'>" . Field_checkbox('EnableRebootAfterUpgrade',1,$EnableRebootAfterUpgrade)."</td>
+	</tr>	
+	
+	
+	";
 	}
+
+
 	
 	$ip=new networking();
 	
@@ -223,6 +240,17 @@ if($EnableNightlyInFrontEnd==null){$EnableNightlyInFrontEnd=1;}
 	</table>
 	</form>
 	</div>
+	
+	<script>
+		function CheckAutoApt(){
+			document.getElementById('EnableRebootAfterUpgrade').disabled=true;
+			if(document.getElementById('auto_apt').checked){
+				document.getElementById('EnableRebootAfterUpgrade').disabled=false;
+			}
+		}
+	
+	CheckAutoApt();
+	</script>
 	";
 	
 
@@ -264,14 +292,7 @@ function main_artica_update_tabs(){
 	</div>
 		<script>
 				$(document).ready(function(){
-					$('#main_config_artica_update').tabs({
-				    load: function(event, ui) {
-				        $('a', ui.panel).click(function() {
-				            $(ui.panel).load(this.href);
-				            return false;
-				        });
-				    }
-				});
+					$('#main_config_artica_update').tabs();
 			
 			
 			});
@@ -296,6 +317,7 @@ $ini->loadString($configDisk);
 	$sock->SET_INFO("WgetBindIpAddress",$_GET["WgetBindIpAddress"]);
 	$sock->SET_INFO("EnableNightlyInFrontEnd",$_GET["EnableNightlyInFrontEnd"]);
 	$sock->SaveConfigFile($data,"ArticaAutoUpdateConfig");
+	if(isset($_GET["EnableRebootAfterUpgrade"])){$sock->SET_INFO("EnableRebootAfterUpgrade", $_GET["EnableRebootAfterUpgrade"]);}
 	$sock->getFrameWork("cmd.php?ForceRefreshLeft=yes");
 	$tpl=new templates();
 		

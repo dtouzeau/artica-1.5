@@ -794,6 +794,7 @@ l.add('php5-curl');
 l.add('php5-sqlite');
 l.Add('php-pear');
 l.add('php5-dev'); // To compile PHP5
+l.add('libssh2-php');
 
 
 l.add('libmodule-build-perl');
@@ -867,7 +868,6 @@ l.add('iptables-dev');
 l.add('libssl-dev');
 l.add('libpcap0.8-dev');
 l.add('libsasl2-dev');
-l.add('libreadline5-dev');
 l.add('libcdb-dev');
 l.add('pkg-config');
 l.add('libpspell-dev');
@@ -1006,6 +1006,7 @@ if distri.DISTRINAME_CODE='DEBIAN' then begin
       l.add('libdigest-md5-perl');
       l.add('autofs-ldap');
       l.add('libltdl3-dev');
+      l.add('libreadline5-dev');
       if non_free then l.Add('lha');
 
    end;
@@ -1044,6 +1045,7 @@ if distri.DISTRINAME_CODE='DEBIAN' then begin
       l.add('libboost-filesystem1.35.0');
       l.add('libboost-system1.35.0');
       l.add('libicu38');
+      l.add('libreadline5-dev');
 
 
      if FileExists('/sbin/udevsettle')  then begin
@@ -1094,6 +1096,7 @@ if distri.DISTRINAME_CODE='DEBIAN' then begin
         l.add('libboost-filesystem1.42.0');
         l.add('libboost-system1.42.0');
         l.add('libicu44');
+        l.add('libreadline6-dev');
 
 
 
@@ -1674,7 +1677,6 @@ l.add('libmysqlclient-dev');
 l.add('libsqlite3-dev');
 l.add('libpq-dev');
 l.add('liblua5.1-0-dev');
-l.add('liblua50-dev');
 l.add('liblualib50-dev');
 l.add('php5-gd');
 l.add('php-pear');

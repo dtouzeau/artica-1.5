@@ -366,8 +366,8 @@ function writelogs($text=null,$function=null,$line=0){
 		if($database<>null){
 			$ok=@mysql_select_db($database);
 	    	if (!$ok){
-	    		$errnum=mysql_errno($this->mysql_connection);
-	    		$des=mysql_error();
+	    		$errnum=@mysql_errno($this->mysql_connection);
+	    		$des=@mysql_error();
 	    		$this->mysql_error=$des;
 	    		$time=date('h:i:s');
 	    		

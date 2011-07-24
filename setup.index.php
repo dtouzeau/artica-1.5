@@ -781,6 +781,8 @@ $html=$html.BuildRows("APP_PHPMYADMIN",$GlobalApplicationsStatus,"phpMyAdmin");
 		$html=$html.BuildRows("APP_OPENGOO",$GlobalApplicationsStatus,"opengoo");
 		$html=$html.BuildRows("APP_GROUPOFFICE",$GlobalApplicationsStatus,"groupoffice-com");
 		$html=$html.BuildRows("APP_DRUPAL",$GlobalApplicationsStatus,"drupal");
+		$html=$html.BuildRows("APP_DRUPAL7",$GlobalApplicationsStatus,"drupal7");
+		$html=$html.BuildRows("APP_DRUSH7",$GlobalApplicationsStatus,"drush7");
 		$html=$html.BuildRows("APP_PIWIGO",$GlobalApplicationsStatus,"piwigo");
 		$html=$html.BuildRows("APP_SABNZBDPLUS",$GlobalApplicationsStatus,"sabnzbd");
 	}

@@ -2902,6 +2902,19 @@ begin
           logs.Syslogs('FATAL ERROR on CGI_ALL_APPLIS_INSTALLED after toolsversions.VNSTAT()');
     end;
 
+    try
+       ArrayList.Add('[APP_DRUPAL7] "'+toolsversions.DRUPAL7_VERSION()+'"');
+    except
+          logs.Syslogs('FATAL ERROR on CGI_ALL_APPLIS_INSTALLED after toolsversions.DRUPAL7_VERSION()');
+    end;
+
+    try
+       ArrayList.Add('[APP_DRUSH7] "'+toolsversions.DRUSH7_VERSION()+'"');
+    except
+          logs.Syslogs('FATAL ERROR on CGI_ALL_APPLIS_INSTALLED after toolsversions.DRUSH7_VERSION()');
+    end;
+
+
 
     //AWSTATS
 
@@ -2977,6 +2990,8 @@ begin
      //phpmyadmin
     ArrayList.Add('[APP_PHPMYADMIN] "' + PHPMYADMIN_VERSION() + '"');
     ArrayList.Add('[APP_DRUPAL] "' + DRUPAL_VERSION() + '"');
+
+
 
     ArrayList.Add('[APP_CLAMAV_MILTER] "' + clamav.CLAMAV_VERSION() + '"');
     ArrayList.Add('[APP_CLAMAV] "' + clamav.CLAMAV_VERSION() + '"');

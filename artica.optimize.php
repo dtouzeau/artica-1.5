@@ -45,9 +45,12 @@ function popup2(){
 	$MysqlConfigLevel=$sock->GET_INFO("MysqlConfigLevel");
 	if($memory<550){$disable_mysql=1;}
 	if(!is_numeric($EnableNSCD)){$EnableNSCD=1;}
-	if(!is_numeric($LighttpdRunAsminimal)){$LighttpdRunAsminimal=1;}
+	if(!is_numeric($LighttpdRunAsminimal)){$LighttpdRunAsminimal=0;}
 	if(!is_numeric($EnableArticaStatus)){$EnableArticaStatus=1;}
 	if(!is_numeric($EnableArticaExecutor)){$EnableArticaExecutor=1;}
+	if(!is_numeric($EnableArticaBackground)){$EnableArticaBackground=1;}
+	
+	
 	if(!is_numeric($MysqlConfigLevel)){$MysqlConfigLevel=0;}
 	$users=new usersMenus();
 	

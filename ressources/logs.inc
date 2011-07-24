@@ -17,8 +17,9 @@ function writeToFile($text,$filepath){
 	@fclose($f);
 }
 function writelogs($text=null,$function=null,$file_source=null,$line=null){
+	$name=null;
 	if(!isset($GLOBALS["VERBOSE"])){$GLOBALS["VERBOSE"]=false;}
-	$name="[{$_SESSION["uid"]}]";
+	if(isset($_SESSION["uid"])){$name="[{$_SESSION["uid"]}]";}
 	if($file_source==null){$file_source= __FILE__ ;}
 	$prefix="[CONSOLE]::";
 	if(function_exists("posix_getuid")){if(posix_getuid()==0){$prefix="[DAEMON]::";}}

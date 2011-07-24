@@ -436,6 +436,7 @@ class settings_inc {
 	var $APACHE_MOD_CACHE=false;
 	var $APP_AMANDA_INSTALLED=false;
 	var $NSCD_INSTALLED=false;
+	var $DRUPAL7_INSTALLED=false;
 	private function CheckIndexDefaults($_GLOBAL){
 		return $_GLOBAL;
 		foreach($this as $key => $value) {
@@ -824,6 +825,8 @@ class settings_inc {
 			$this->OPENVPN_APPLIANCE=$_GLOBAL["OPENVPN_APPLIANCE"];
 			if(isset($_GLOBAL["Z_PUSH_INSTALLED"])){$this->Z_PUSH_INSTALLED=$_GLOBAL["Z_PUSH_INSTALLED"];}
 			if(isset($_GLOBAL["APP_AMANDA_INSTALLED"])){$this->APP_AMANDA_INSTALLED=$_GLOBAL["APP_AMANDA_INSTALLED"];}
+			if(isset($_GLOBAL["DRUPAL7_INSTALLED"])){$this->DRUPAL7_INSTALLED=$_GLOBAL["DRUPAL7_INSTALLED"];}
+			
 			
 			
 			

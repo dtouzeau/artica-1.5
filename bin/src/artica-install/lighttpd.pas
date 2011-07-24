@@ -1669,6 +1669,8 @@ z.add('xmlrpc.so');
 z.add('session.so');
 z.add('gettext.so');
 z.add('mbstring.so');
+z.add('ssh2.so');
+z.add('uploadprogress.so');
 if NoPHPMcrypt=0 then begin
    z.add('mcrypt.so');
    z.add('ming.so');

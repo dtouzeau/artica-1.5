@@ -23,6 +23,7 @@
 	if(isset($_GET["DeleteEvent"])){main_event_delete();exit;}
 	if(isset($_GET["apply_upgrade"])){upgrade_to_system();exit;}
 	if(isset($_GET["popup"])){popup();exit;}
+	if(isset($_GET["tabs"])){tabs();exit;}
 	//main_page();
 	
 	main_js();
@@ -48,7 +49,7 @@ var {$prefix}timeout=0;
 
 
 function LoadAptPage(){
-	YahooWinT(750,'$page?popup=yes','$title');
+	YahooWinT(750,'$page?tabs=yes','$title');
 	setTimeout(\"initapt()\",1000);
 }
 
@@ -166,13 +167,9 @@ function SearchPackage(){
 	var q=document.getElementById('search_p').value;
 	if(document.getElementById('switch')){tab=document.getElementById('switch').value;}
 	var err=document.getElementById('more_one_car').value;
-	if(q.length>1){
-		document.getElementById('error').innerHTML='';
-		LoadAjax('package_list','$page?main=list_packages&query='+q+'&tab='+tab);
-		LoadAjax('package_list_install','$page?main=list_install_packages&query='+q+'&tab='+tab);
-	}else{
-		document.getElementById('error').innerHTML=err;
-	}
+	document.getElementById('error').innerHTML='';
+	LoadAjax('package_list','$page?main=list_packages&query='+q+'&tab='+tab);
+	LoadAjax('package_list_install','$page?main=list_install_packages&query='+q+'&tab='+tab);
 }
 
 
@@ -202,34 +199,51 @@ LoadAptPage();
 echo $html;	
 	
 }
+
+function tabs(){
+	$page=CurrentPageName();
+	$array["config"]='{packages_list}';
+	$array["uninstall_list"]='{uninstall_packages_list}';
+	$array["events"]='{events}';
+	$array["update"]='{system_update}';
+
+	$page=CurrentPageName();
+	$tpl=new templates();
+	while (list ($num, $ligne) = each ($array) ){
+		
+		$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"$page?main=$num&tab=$num&hostname={$_GET["hostname"]}\"><span>$ligne</span></a></li>\n");
+		}
+	
+	
+echo "
+	<div id=admin_apt_settings style='width:99%;height:auto;'>
+		<ul>". implode("\n",$html)."</ul>
+	</div>
+		<script>
+				$(document).ready(function(){
+					$('#admin_apt_settings').tabs();
+			
+			
+			});
+		</script>";		
+	
+	
+}
+
 	
 function popup(){
-
+	
+	
+	
 $html="
-<H1>{repositories_manager}</H1>
-<table style='width:650px' align=center>
-<tr>
-<td valign='top'>
-	<img src='img/256-apt.png'>
-</td>
-<td valign='top'><p class='caption'>{repositories_manager_explain}</p>
+<td valign='top'><div class='explain'>{repositories_manager_explain}</p>
 <div id='servinfosAPT'></div>
-</td>
-</tr>
-<tr>
-	<td colspan=2><br>
-	<div id='main_configapt'>
-		</div>
-	</td>
-</tr>
-		
-</table>
+<div id='main_configapt'></div>
 ";
 $tpl=new templates();
 echo $tpl->_ENGINE_parse_body($html);
 		
-	
-	
+
 }
 
 
@@ -268,24 +282,28 @@ function main_configapt(){
 	
 	$form="
 	<input type='hidden' id='more_one_car' value='{more_one_car}'>
-	<table style='width:100%'>
+	<table style='width:100%' class=form>
 	
 	<tr>
-		<td width=1% nowrap' align='right'><strong>{package_name}</strong>:</td>
-		<td>" . Field_text('search_p',null,'width:190px',null,null,null,false,"SearchPackageEnter(event)")."</td>
+		<td width=1% nowrap' align='right'><strong>{packages_list}</strong>:</td>
+		<td>" . Field_text('search_p',null,'font-size:14px;width:95%x',null,null,null,false,"SearchPackageEnter(event)")."</td>
 		<td nowrap><span id='error' style='color:red'></span></d>
-		<td><input type='button' value='{search}&nbsp;&raquo;' OnClick=\"javascript:SearchPackage();\"></td>
+		<td>". button("{search}","SearchPackage()")."</td>
 	</tr>	
 	</table>";
 	
 	
-	$form=RoundedLightGrey($form);
-	$html=main_tabs() . "<br><H5>{packages_list}</H5><br>$form<br>
+
+	$html="$form<br>
 	
 	
 	
-	<div id='package_list'>".main_package_list()."</div>
+	<div id='package_list'></div>
 	<div id='package_list_install'></div>
+	
+	<script>
+		SearchPackage();
+	</script>
 	";
 	
 	
@@ -298,7 +316,7 @@ function main_configapt(){
 
 
 function main_package_uninstall(){
-$html=main_tabs()."
+$html="
 <table style='width:100%'>
 <tr>
 <td style='width:100%' valign='top'>
@@ -340,13 +358,21 @@ function main_package_list(){
 	$html="
 	<input type='hidden' id='p_queries' value='{$_GET["query"]}'>
 	<input type='hidden' id='switch' value='{$_GET["tab"]}'>
-	<table style='width:100%'>";
+	<center>
+<table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
+<thead class='thead'>
+	<tr>
+		
+		<th colspan=4>{installed_on_system}&nbsp;|&nbsp;{$_GET["query"]}</th>
+	</tr>
+</thead>
+<tbody class='tbody'>";
 	
 	
 	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
 		
 			$r=$ligne["package_status"];
-			$uri="<a href='#' OnClick=\"javascript:PackageInfos('{$ligne["package_name"]}')\">";
+			$uri="<a href='#' OnClick=\"javascript:PackageInfos('{$ligne["package_name"]}')\" style='font-size:14px'>";
 			switch ($r) {
 				case 'rc':$img=imgtootltip('icon_mini_off.gif','{removed_package}');$uri=null;break;
 				case "ii":$img=imgtootltip('icon-mini-ok.gif','{installed_package}');break;
@@ -359,20 +385,20 @@ function main_package_list(){
 			
 			
 			
-		
+			if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
 			$html=$html."
-			<tr ". CellRollOver_jaune().">
+			<tr class=$classtr>
 			<td width=1%><img src='img/fw_bold.gif'></td>
 			<td width=1%>$img</td>
 			<td width=1% nowrap><strong>$uri{$ligne["package_name"]}</strong></a></td>
-			<td width=99% nowrap><strong>$uri{$ligne["package_info"]}...</strong></a></td>
+			<td width=99% nowrap><strong>$uri{$ligne["package_info"]}</strong></a></td>
 			</tr>
 			";
 	}
 
 	$html=$html . "</table>";
 	$html="
-	<H5>{installed_on_system}</h5>
+	
 	<div style='overflow-y:auto;width:100%;height:210px'>$html</div>";
 	$tpl=new templates();
 	return  RoundedLightWhite($tpl->_ENGINE_parse_body($html));
@@ -403,20 +429,7 @@ function main_switch(){
 	
 }
 
-function main_tabs(){
-	$page=CurrentPageName();
-	$array["config"]='{packages_list}';
-	$array["uninstall_list"]='{uninstall_packages_list}';
-	$array["events"]='{events}';
-	$array["update"]='{system_update}';
 
-	while (list ($num, $ligne) = each ($array) ){
-		if($_GET["main"]==$num){$class="id=tab_current";}else{$class=null;}
-		$html=$html . "<li><a href=\"javascript:LoadAjax('main_configapt','$page?main=$num&tab=$num&hostname={$_GET["hostname"]}')\" $class>$ligne</a></li>\n";
-			
-		}
-	return "<div id=tablist>$html</div>";		
-}
 
 function SaveConf(){
 	$artica=new artica_general();
@@ -637,7 +650,7 @@ function PackageSTATUS($pname){
 	
 function main_events(){
 	
-	$html=main_tabs()."<H5>{events}</H5>
+	$html="<H5>{events}</H5>
 	<div id='events'>" . main_events_list()."</div>";
 	$tpl=new templates();
 	return $tpl->_ENGINE_parse_body($html);
@@ -737,10 +750,9 @@ function main_events_artica_events(){
 function main_update(){
 	$sock=new sockets();
 	$datas=trim($sock->getFrameWork('cmd.php?aptcheck=yes'));
-	$html=main_tabs()."<table style='width:100%'>
+	$html="<table style='width:100%'>
 	<tr>
-	<td valign='top'>
-	<H5>{system_update}</H5>";
+	<td valign='top' width=99%>";
 	
 	if(preg_match('#nb:([0-9]+)\s+#is',$datas,$re)){
 		$html=$html . RoundedLightYellow("
@@ -761,15 +773,23 @@ function main_update(){
 	</table>";
 	
 	$tbl=explode("\n",$datas);
-	$t="<table style='width:100%'>";
+	$t="<center>
+<table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:99%'>
+<thead class='thead'>
+	<tr>
+		<th colspan=2>{packages_to_upgrade}&nbsp;|&nbsp;$search_regex&nbsp;|&nbsp;$search_sql</th>
+	</tr>
+</thead>
+<tbody class='tbody'>";
 	
 	
 	while (list ($num, $ligne) = each ($tbl) ){
 		if(trim($ligne)<>null){
-				$uri="<a href='#' OnClick=\"javascript:PackageInfos('$ligne')\">";
+			if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
+			$uri="<a href='#' OnClick=\"javascript:PackageInfos('$ligne')\" style='font-size:16px;text-decoration:underline'>";
 			$t=$t."
-			<tr ". CellRollOver_jaune().">
-			<td width=1%><img src='img/fw_bold.gif'></td>
+			<tr class=$classtr>
+			<td width=1%><img src='img/software-task-48.png'></td>
 			<td width=99% nowrap>$uri$ligne</a></td>
 			</tr>";
 		}
@@ -777,7 +797,7 @@ function main_update(){
 	}
 	
 	$t=$t . "</table>";
-	$t="<div style='width:100%;height:200px;overflow:auto'>$t</div>";
+	$t="<div style='width:100%;height:300px;overflow:auto'>$t</div>";
 	$t=RoundedLightWhite($t);
 	$tpl=new templates();
 	return $tpl->_ENGINE_parse_body("$html$t");

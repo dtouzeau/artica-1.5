@@ -165,7 +165,7 @@ $amavis=new amavis();
 $amavis->SaveToServer();	
 $sock=new sockets();
 $sock->getFrameWork("services.php?restart-postfix-all=yes");
-
+echo $script;
 	
 }
 
@@ -229,8 +229,6 @@ if($users->KasxFilterEnabled<>1){
 function compile_postfix_save(){
 	$tpl=new templates();
 	$page=CurrentPageName();
-	$main=new main_cf();
-	$main->save_conf();
 	
 	$script="
 	<div id='compile_postfix_save'></div>
@@ -244,7 +242,6 @@ function compile_postfix_save(){
 }
 function compile_postfix_server(){	
 	$tpl=new templates();
-	$main=new main_cf();
 	$page=CurrentPageName();
 	
 	$script="
@@ -255,18 +252,11 @@ function compile_postfix_server(){
 	</script>
 	";		
 	
-	if(!$main->save_conf_to_server()){
-			echo $tpl->_ENGINE_parse_body("<br><strong>{APP_POSTFIX}:</strong>{postfix_main_settings} {error}").$script;
-			echo $tpl->_ENGINE_parse_body('<br>{postfix_main_settings} {error}');
-			return null;
-		}	
 	echo $tpl->_ENGINE_parse_body("<br><strong>{APP_POSTFIX}:</strong>{apply config} {success}").$script;
 	
 }
 function compile_header_check(){	
 		$tpl=new templates();
-		$filters=new main_header_check();
-		$filters->SaveToDaemon();	
 		$page=CurrentPageName();	
 		
 	$script="
@@ -282,9 +272,7 @@ function compile_header_check(){
 }
 function check_sender_access(){
 	$tpl=new templates();
-	$main=new main_cf();
-	$u=$main->check_sender_access();
-	
+
 	$script="
 	<script>
 		finish();
@@ -331,7 +319,7 @@ if($users->MilterGreyListEnabled<>1){
 	
 	$milter=new milter_greylist();
 	$milter->SaveToLdap();
-	echo $tpl->_ENGINE_parse_body("<br><strong>{APP_MILTERGREYLIST}:</strong>{apply config} {success}");
+	echo $tpl->_ENGINE_parse_body("<br><strong>{APP_MILTERGREYLIST}:</strong>{apply config} {success}").$script;
 	}
 
 

@@ -161,7 +161,6 @@ end;
   end;
 
   install.INSTALL_STATUS(PROJECT_NAME,100);
-  fpsystem('/etc/init.d/artica-postfix restart apache-groupware');
   fpsystem('/etc/init.d/artica-postfix restart daemon');
   install.INSTALL_PROGRESS(PROJECT_NAME,'{installed}');
 end;

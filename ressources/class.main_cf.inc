@@ -3015,50 +3015,26 @@ class main_perso{
 	var $list;
 	
 	function main_perso(){
-		$this->BuildTree();
+		if(posix_getuid()==0){$GLOBALS["AS_ROOT"]=true;}else{$GLOBALS["AS_ROOT"]=false;}
 		$this->load_array();
 	}
 	
 	
-	function BuildTree(){
-	$ldap=new clladp();
-    $this->dn="cn=maincf_perso,cn=artica,$ldap->suffix";
-	if(!$ldap->ExistsDN($this->dn)){
-			$upd["objectClass"][]='top';
-			$upd["objectClass"][]='PostFixStructuralClass';
-			$upd["cn"][]='maincf_perso';
-			$ldap->ldap_add($this->dn,$upd);
-			}
-	}
+	
 	
 	function add($key,$value,$type){
-		$ldap=new clladp();
-		$key=strtolower($key);
-		$dn="cn=$key,$this->dn";
-		if(!$ldap->ExistsDN($dn)){
-			writelogs("adding new dn $dn",__CLASS__.'/'.__FUNCTION__,__FILE__);
-			$upd["objectClass"][]='top';
-			$upd["objectClass"][]='AdvancedMainCF';
-			$upd["cn"][]=$key;
-			$upd["AdvancedMainCfDatas"][]=$value;
-			$upd["AdvancedMainCfDatasType"][]=$type;
-			if(!$ldap->ldap_add($dn,$upd)){
-				echo $ldap->ldap_last_error;
-				return false;
-			}
-			
-			
+		$q=new mysql();
+		$key=strtolower(trim($key));
+		$sql="SELECT `postfix_key` FROM postfix_perso_settings WHERE postfix_key='$key'";
+		$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"artica_backup"));	
+		if($ligne["postfix_key"]<>null){
+			$sql="UDPATE postfix_perso_settings SET postfix_value='$value',postfix_type='$type' WHERE postfix_key='$key'";
 		}else{
-			$upd["AdvancedMainCfDatas"][0]=$value;
-			$upd["AdvancedMainCfDatasType"][0]=$type;
-		
-			if(!$ldap->Ldap_modify($dn,$upd)){
-				echo $ldap->ldap_last_error;
-				return false;
-			}
-			
+			$sql="INSERT INTO postfix_perso_settings (postfix_key,postfix_type,postfix_value) VALUES('$key','$type','$value')";
 		}
-
+		
+		$q->QUERY_SQL($sql,"artica_backup");
+		if(!$q->ok){echo $q->mysql_error."\nfile: ".__FILE__."\nline:".__LINE__;return;}
 		$sock=new sockets();
 		$sock->getFrameWork("cmd.php?postfix-perso-settings=yes");
 		
@@ -3067,56 +3043,63 @@ class main_perso{
 	
 	
 	function load_array(){
-		$ldap=new clladp();
-		$pattern="(objectclass=AdvancedMainCF)";
-		$sr =@ldap_search($ldap->ldap_connection,$this->dn,$pattern,array());
-		if(!$sr){
-			writepostfixlogs("MAINPERSO: failed parsing new dn $this->dn $pattern",__CLASS__.'/'.__FUNCTION__,__FILE__);
-			return array();}
-		$hash=ldap_get_entries($ldap->ldap_connection,$sr);
 		
-		for ($i=0;$i<$hash["count"];$i++){
-			if($hash["$i"]["cn"][0]<>null){
-				$res[strtolower($hash["$i"]["cn"][0])]=array("VALUE"=>$hash["$i"][strtolower("AdvancedMainCfDatas")][0],"TYPE"=>$hash["$i"][strtolower("AdvancedMainCfDatasType")][0]);
-				$this->list[strtolower($hash["$i"]["cn"][0])]=true;
-			}
+		$sql="SELECT * FROM postfix_perso_settings ORDER BY postfix_key";
+		$q=new mysql();
+		$results=$q->QUERY_SQL($sql,"artica_backup");
+		while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
+			$res[$ligne["postfix_key"]]=array("VALUE"=>$ligne["postfix_value"],"TYPE"=>$ligne["postfix_type"]);
+			
 		}
-	
-	$this->main_array=$res;
+		
+		$this->main_array=$res;
 		
 		
 	}
 	
 	function Delete($key){
-		$dn="cn=$key,$this->dn";
-		$ldap=new clladp();
-		$ldap->ldap_delete($dn,true);
-		unset($this->main_array);
-		$this->load_array();
-		$sock=new sockets();
+		$sql="DELETE FROM postfix_perso_settings WHERE postfix_key='$key'";
+		$q=new mysql();
+		$results=$q->QUERY_SQL($sql,"artica_backup");		
+		if(!$q->ok){echo $q->mysql_error."\nfile: ".__FILE__."\nline:".__LINE__;return;}
 		$sock->getFrameWork("cmd.php?postfix-perso-settings=yes");
 		
 	}
 	
 	function replace_conf($conf){
 		if(!is_array($this->main_array)){
+			if($GLOBALS["AS_ROOT"]){echo "Starting......: Postfix [PERSO]: No array, no config to replace, aborting\n";}
 			writepostfixlogs("MAINPERSO:: No array, no config to replace, aborting");
 			return $conf;}
-		$tbl=explode("\n",$conf);
+			
+		if(count($this->main_array)==0){
+			if($GLOBALS["AS_ROOT"]){echo "Starting......: Postfix [PERSO]: No array, no config to replace, aborting\n";}
+			return;
+		}
+		
+		$data=@file_get_contents($conf);
+		$tbl=explode("\n",$data);
+		if($GLOBALS["AS_ROOT"]){echo "Starting......: Postfix [PERSO]: $conf ". strlen($data)." bytes (". count($tbl)." rows)\n";}
 		while (list ($num, $val) = each ($tbl) ){
 			if(preg_match('#(.+)[\s=]+(.+)#',$val,$re)){
 				$key=strtolower($re[1]);
 				$orginal_value=$re[2];
-				if($this->main_array[$key]["TYPE"]==null){continue;}
+				if($this->main_array[$key]["TYPE"]==null){
+					if($GLOBALS["AS_ROOT"]){echo "Starting......: Postfix [PERSO]: $key - no type, aborting\n";}
+					continue;
+				}
+				if($GLOBALS["AS_ROOT"]){echo "Starting......: Postfix [PERSO]:[$key] {$this->main_array[$key]["TYPE"]}\n";}
 				writepostfixlogs("MAINPERSO: $key={$this->main_array[$key]["TYPE"]}",__CLASS__.'/'.__FUNCTION__,__FILE__);
 				switch ($this->main_array[$key]["TYPE"]) {
 					case "r":
 						$tbl[$num]="$key = {$this->main_array[$key]["VALUE"]}";
+						if($GLOBALS["AS_ROOT"]){echo "Starting......: Postfix [PERSO]:[$key] replace $val by {$this->main_array[$key]["VALUE"]}\n";}
 						writepostfixlogs("MAINPERSO: replace $val by {$this->main_array[$key]["VALUE"]}",__CLASS__.'/'.__FUNCTION__,__FILE__);
-						unset($this->main_array[strtolower($key)]);
+						unset($this->main_array[$key]);
 						break;
 					case "a":
 						$tbl[$num]="$key = $orginal_value {$this->main_array[$key]["VALUE"]}";
+						if($GLOBALS["AS_ROOT"]){echo "Starting......: Postfix [PERSO]:[$key] add {$this->main_array[$key]["VALUE"]} with $val\n";}
 						writepostfixlogs("MAINPERSO: add {$this->main_array[$key]["VALUE"]} with $val",__CLASS__.'/'.__FUNCTION__,__FILE__);
 						unset($this->main_array[$key]);
 						break;
@@ -3130,14 +3113,18 @@ class main_perso{
 		reset($tbl);
 		reset($this->main_array);
 		if(is_array($this->main_array)){
+			if(count($this->main_array)>0){
 			while (list ($num, $val) = each ($this->main_array) ){
 				if($val["VALUE"]<>null){
+				if($GLOBALS["AS_ROOT"]){echo "Starting......: Postfix [PERSO]:[$key] added\n";}
 				$tbl[]="$num = {$val["VALUE"]}";
 				}
 				
 			}
 			
-		}
+		}}
+		
+		if(count($tbl)>0){@file_put_contents($conf, @implode("\n", $tbl));}
 		return implode("\n",$tbl);
 		
 	}

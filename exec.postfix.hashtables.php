@@ -58,6 +58,7 @@ if($argv[1]=="--postmaster"){postmaster();die();}
 
 if($argv[1]=="--relayhost"){
 	relayhost();
+	perso_settings();
 	shell_exec("{$GLOBALS["postfix"]} reload >/dev/null 2>&1");
 	die();
 }
@@ -69,6 +70,7 @@ if($argv[1]=="--bcc"){
 	recipient_bcc_maps_build();
 	sender_bcc_maps();
 	sender_bcc_maps_build();
+	perso_settings();
 	shell_exec("{$GLOBALS["postfix"]} reload >/dev/null 2>&1");
 	die();
 }
@@ -76,6 +78,7 @@ if($argv[1]=="--bcc"){
 if($argv[1]=="--recipient-canonical"){
 	recipient_canonical_maps_build();
 	recipient_canonical_maps();
+	perso_settings();
 	shell_exec("{$GLOBALS["postfix"]} reload >/dev/null 2>&1");
 	die();	
 }
@@ -97,6 +100,7 @@ if($argv[1]=="--transport"){
 	mydestination_search();
 	mydestination();	
 	relayhost();
+	perso_settings();
 	echo "Starting......: Postfix reloading\n";
 	shell_exec("{$GLOBALS["postfix"]} reload >/dev/null 2>&1");
 	die();}
@@ -110,6 +114,7 @@ if($argv[1]=="--aliases"){
 	build_aliases_maps();
 	build_virtual_alias_maps();
 	postmaster();
+	perso_settings();
 	echo "Starting......: Postfix reloading\n";
 	shell_exec("{$GLOBALS["postfix"]} reload >/dev/null 2>&1");
 	die();}
@@ -122,6 +127,7 @@ if($argv[1]=="--smtp-passwords"){
 	sender_dependent_relayhost_maps();
 	smtp_sasl_password_maps_build();
 	smtp_sasl_password_maps();
+	perso_settings();
 	echo "Starting......: Postfix reloading\n";
 	shell_exec("{$GLOBALS["postfix"]} reload >/dev/null 2>&1");
 	die();}	
@@ -130,6 +136,7 @@ if($argv[1]=="--smtp-generic-maps"){
 	sender_canonical_maps_build();
 	smtp_generic_maps_build_global();
 	smtp_generic_maps();
+	perso_settings();
 	echo "Starting......: Postfix reloading\n";
 	shell_exec("{$GLOBALS["postfix"]} reload >/dev/null 2>&1");
 	die();}		
@@ -182,8 +189,14 @@ restrict_relay_domains();
 relayhost();
 postmaster();
 build_cyrus_lmtp_auth();
+perso_settings();
 
 shell_exec("{$GLOBALS["postfix"]} reload >/dev/null 2>&1");
+
+function perso_settings(){
+	$main=new main_perso();
+	$main->replace_conf("/etc/postfix/main.cf");
+}
 
 
 function recipient_bcc_maps(){

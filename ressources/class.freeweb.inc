@@ -5,6 +5,8 @@
 	include_once(dirname(__FILE__).'/class.mysql.inc');
 	include_once(dirname(__FILE__).'/class.groups.inc');
 	include_once(dirname(__FILE__).'/class.lvm.root.inc');
+	include_once(dirname(__FILE__).'/class.drupal.inc');
+	
 	
 	
 	class freeweb{
@@ -645,6 +647,7 @@
 		public function open_basedir(){
 				$f[]="/usr/share/php";
 				$f[]="/usr/share/php5";
+				$f[]="/var/lighttpd/upload";
 			
 			if($this->IsGroupWareFromArtica()){
 				$f[]="/usr/share/artica-postfix/ressources";
@@ -721,6 +724,14 @@
 				$f[]="\tphp_value register_globals \"off\"";
 				$f[]="\tphp_value magic_quotes_runtime \"off\"";
 				$f[]="\tphp_value short_open_tag \"off\"";
+			}
+			
+			if($this->groupware=="DRUPAL"){
+				$f[]="\tphp_value session.auto_start 0";
+				$f[]="\tphp_value xdebug.show_exception_trace  0";
+				$f[]="\tphp_value session.cache_limiter \"nocache\"";
+				$f[]="\tphp_value magic_quotes_gpc to \"off\"";
+				$f[]="\tphp_value allow_url_fopen  \"On\"";	
 			}
 			
 		
@@ -806,6 +817,20 @@
 		
 		
 		public function mod_rewrite(){
+			
+			if($this->groupware=="DRUPAL"){
+				$f[]="\t<IfModule mod_rewrite.c>";
+				$f[]="\t\tRewriteEngine on";
+   			 	$f[]="\t\tRewriteBase /";
+			   	$f[]="\t\tRewriteCond %{REQUEST_FILENAME} !-f";
+			   	$f[]="\t\tRewriteCond %{REQUEST_FILENAME} !-d";
+			   	$f[]="\t\tRewriteRule ^(.*)$ index.php?q=$1 [L,QSA]";
+			   	$f[]=$this->mod_rewrite;
+			   	$f[]="</IfModule>";
+			   	return @implode("\n",$f);
+				
+			}
+			
 			if(trim($this->mod_rewrite)==null){return;}
 			$f[]="\t<IfModule mod_rewrite.c>";
 			$f[]=$this->mod_rewrite;

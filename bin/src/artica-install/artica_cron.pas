@@ -564,6 +564,7 @@ fpsystem('/bin/rm -f /etc/cron.d/artica-cron-executor/*');
 
       l.Add('@'+Nicet+nolog+',lavg1('+IntToStr(systemMaxOverloaded)+') 30s ' +cmdnice+php5bin+ ' ' +artica_path+'/exec.syslog-engine.php --auth-logs');
       l.Add('@'+Nicet+nolog+',lavg1('+IntToStr(systemMaxOverloaded)+') 10s ' +cmdnice+php5bin+ ' ' +artica_path+'/exec.syslog-engine.php --snort');
+      l.Add('@'+Nicet+nolog+',lavg1('+IntToStr(systemMaxOverloaded)+') 3  ' +cmdnice+artica_path+'/bin/process1');
       l.Add('@'+Nicet+nolog+',lavg1('+IntToStr(systemMaxOverloaded)+') 10 ' +cmdnice+php5bin+ ' ' +artica_path+'/exec.rsync.events.php');
       l.Add('@'+Nicet+nolog+',lavg1('+IntToStr(systemMaxOverloaded)+') 20 ' +cmdnice+php5bin+ ' ' +artica_path+'/exec.cleanfiles.php');
       l.Add('@'+Nicet+nolog+',lavg1('+IntToStr(systemMaxOverloaded)+') 1h ' +cmdnice+php5bin+ ' ' +artica_path+'/exec.hdparm.php');
@@ -577,9 +578,20 @@ fpsystem('/bin/rm -f /etc/cron.d/artica-cron-executor/*');
       end;
 
       if not ArticaStatusadded then begin
-         if EnableArticaStatus=0 then l.Add('@'+Nicet+nolog+',lavg1('+IntToStr(systemMaxOverloaded)+') 3 ' +cmdnice+php5bin+ ' ' +artica_path+'/exec.status.php --all');
-         if EnableArticaExecutor=0 then l.Add('@'+Nicet+nolog+',lavg1('+IntToStr(systemMaxOverloaded)+') 5 ' +cmdnice+php5bin+ ' ' +artica_path+'/exec.executor.php');
-         if EnableArticaBackground=0 then l.Add('@'+Nicet+nolog+',lavg1('+IntToStr(systemMaxOverloaded)+') 6s ' +cmdnice+php5bin+ ' ' +artica_path+'/exec.parse-orders.php');
+         if EnableArticaStatus=0 then begin
+            logs.DebugLogs('Starting......: Daemon (fcron) execute periodically exec.status.php (Artica Status)');
+            l.Add('@'+Nicet+nolog+',lavg1('+IntToStr(systemMaxOverloaded)+') 3 ' +cmdnice+php5bin+ ' ' +artica_path+'/exec.status.php --all');
+         end;
+
+         if EnableArticaExecutor=0 then begin
+             logs.DebugLogs('Starting......: Daemon (fcron) execute periodically exec.executor.php (Artica executor)');
+             l.Add('@'+Nicet+nolog+',lavg1('+IntToStr(systemMaxOverloaded)+') 5 ' +cmdnice+php5bin+ ' ' +artica_path+'/exec.executor.php');
+
+         end;
+         if EnableArticaBackground=0 then begin
+              logs.DebugLogs('Starting......: Daemon (fcron) execute periodically exec.parse-orders.php (Artica orders)');
+              l.Add('@'+Nicet+nolog+',lavg1('+IntToStr(systemMaxOverloaded)+') 10s ' +cmdnice+php5bin+ ' ' +artica_path+'/exec.parse-orders.php --manual');
+         end;
       end;
 
 

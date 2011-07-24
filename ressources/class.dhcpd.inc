@@ -440,7 +440,7 @@ private function GetMyDNS(){
 			$conf=$conf."option ms-classless-static-routes ". implode(" ,",$routes["COMPILE"]).";\n";
 			$conf=$conf."option rfc3442-classless-static-routes ". implode(" ,",$routes["COMPILE"]).";\n";
 		}
-		if(!preg_match('#([0-9]+)\.([0-9]+)\.([0-9]+)#',$this->WINS)){
+		if(preg_match('#([0-9]+)\.([0-9]+)\.([0-9]+)#',$this->WINS)){
 			$conf=$conf."option netbios-name-servers $this->WINS;\n";
 		}
 		
@@ -592,6 +592,7 @@ private function GetMyDNS(){
 			$ComputerMacAddress=$hash[$i][strtolower("ComputerMacAddress")][0];
 			if(!$IP->isIPAddress($ip_addr)){continue;}
 			if($ComputerMacAddress==null){continue;}
+			if(!$this->IsPhysicalAddress($ComputerMacAddress)){continue;}
 			$ARR[$uid]=array("MAC"=>"hardware ethernet $ComputerMacAddress","IP"=>"fixed-address $ip_addr");
 		}
 		
@@ -604,12 +605,59 @@ private function GetMyDNS(){
 	
 	for($i=0;$i<$count;$i++){
 		$uid=$hash[$i]["cn"][0];	
+		$MacAddress=$hash[$i][strtolower("dhcpHWAddress")][0];
+		if(!$this->IsPhysicalAddress($MacAddress)){continue;}
 		$ARR[$uid]=array("MAC"=>"hardware ".$hash[$i][strtolower("dhcpHWAddress")][0],"IP"=>$hash[$i][strtolower("dhcpStatements")][0]);
 	}
 	
 	return $ARR;
 	
 	}
+	
+	private function  IsPhysicalAddress($address){
+		$address=strtoupper(trim($address));
+		if($address=="UNKNOWN"){return null;}
+		$address=str_replace(":","-",$address);
+		If(strlen($address) > 18){
+			writelogs("$address too many caracters, exceed 18 ",__CLASS__."/".__FUNCTION__,__FILE__,__LINE__);
+			return false;
+		}
+		If($address == ""){
+			writelogs("$address is null !",__CLASS__."/".__FUNCTION__,__FILE__,__LINE__);
+			return false;
+		}
+		If(!preg_match("#^[0-9A-Z]+(\-[0-9A-Z]+)+(\-[0-9A-Z]+)+(\-[0-9A-Z]+)+(\-[0-9A-Z]+)+(\-[0-9A-Z]+)$#i",$address)){
+			writelogs("$address did not match pattern ",__CLASS__."/".__FUNCTION__,__FILE__,__LINE__);
+			return false;
+		}
+		$Array=explode("-",$address);
+		If(strlen($Array[0]) != 2){
+			writelogs("$address: array 0 did not match 2",__CLASS__."/".__FUNCTION__,__FILE__,__LINE__);
+			return false;
+		}
+		If(strlen($Array[1]) != 2){
+			writelogs("$address:array 1 did not match 2",__CLASS__."/".__FUNCTION__,__FILE__,__LINE__);
+			return false;
+		}
+		If(strlen($Array[2]) != 2){
+			writelogs("$address:array 2 did not match 2",__CLASS__."/".__FUNCTION__,__FILE__,__LINE__);
+			return false;
+		}
+		If(strlen($Array[3]) != 2){
+			writelogs("$address:array 3 did not match 2",__CLASS__."/".__FUNCTION__,__FILE__,__LINE__);
+			return false;
+		}
+		If(strlen($Array[4]) != 2){
+			writelogs("$address:array 4 did not match 2",__CLASS__."/".__FUNCTION__,__FILE__,__LINE__);
+			return false;
+		}
+		If(strlen($Array[5]) != 2){
+			writelogs("$address:array 5 did not match 2",__CLASS__."/".__FUNCTION__,__FILE__,__LINE__);
+			return false;
+		}
+		writelogs("$address ok",__CLASS__."/".__FUNCTION__,__FILE__,__LINE__);
+		return true;
+	}	
 	
 	
 	private function SetFixedAddresses(){

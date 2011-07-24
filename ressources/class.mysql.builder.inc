@@ -573,7 +573,19 @@ public function check_storage_table(){
 		KEY `OnlyNotify` (`OnlyNotify`))";
 		$this->QUERY_SQL($sql,"artica_backup");
 		if(!$this->ok){writelogs($this->mysql_error,__FUNCTION__,__FILE__,__LINE__);}
-	}	
+	}
+
+	
+	if(!$this->TABLE_EXISTS('postfix_perso_settings','artica_backup')){	
+		$sql="CREATE TABLE `artica_backup`.`postfix_perso_settings` (
+			`postfix_key` VARCHAR( 90 ) NOT NULL ,
+			`postfix_value` VARCHAR( 255 ) NOT NULL ,
+			`postfix_type` VARCHAR( 10 ) NOT NULL ,
+			PRIMARY KEY ( `postfix_key` )
+			)";
+		$this->QUERY_SQL($sql,"artica_backup");
+		if(!$this->ok){writelogs($this->mysql_error,__FUNCTION__,__FILE__,__LINE__);}
+	} 	
 
 	
 		
@@ -2158,8 +2170,17 @@ public function CheckTablesPostfilter(){
 		if(!$this->FIELD_EXISTS("freeweb","resolved_ipaddr","artica_backup")){	
 			$sql="ALTER TABLE `freeweb` ADD `resolved_ipaddr` VARCHAR( 255 ) NOT NULL";
 			$this->QUERY_SQL($sql,'artica_backup');				
+		}	
+
+		if(!$this->FIELD_EXISTS("freeweb","DrupalInfos","artica_backup")){
+			$sql="ALTER TABLE `freeweb` ADD `DrupalInfos`longtext NOT NULL";
+			$this->QUERY_SQL($sql,'artica_backup');
+		}		
+
+		if(!$this->FIELD_EXISTS("freeweb","DrupalModules","artica_backup")){
+			$sql="ALTER TABLE `freeweb` ADD `DrupalModules`longtext NOT NULL";
+			$this->QUERY_SQL($sql,'artica_backup');
 		}			
- 			
 			
 
 		  

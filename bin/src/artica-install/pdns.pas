@@ -241,6 +241,8 @@ var
    PowerDNSLogsQueries:integer;
    PowerDNSDNSSEC:integer;
    straces:string;
+   dnsmasq_bin:string;
+   dnsmasq_pid:string;
 begin
     pid:=PID_NUM();
     if DisablePowerDnsManagement=1 then begin
@@ -281,7 +283,14 @@ begin
 
     forcedirectories('/var/run/pdns');
     CONFIG_DEFAULT();
-
+    dnsmasq_bin:=SYS.LOCATE_GENERIC_BIN('dnsmasq');
+    if FileExists(dnsmasq_bin) then  begin
+       dnsmasq_pid:=SYS.PIDOF(dnsmasq_bin);
+       if SYS.PROCESS_EXIST(dnsmasq_pid) then begin
+          logs.DebugLogs('Starting......: PowerDNS killing DnsMASQ PID '+ dnsmasq_pid);
+          fpsystem('/bin/kill -9 '+dnsmasq_pid+' >/dev/null 2>&1');
+       end;
+    end;
     bind9.STOP();
     if loglevel>8 then straces:=' --log-dns-details --log-failed-updates --loglevel=3';
     fpsystem(BIN_PATH()+' --daemon --guardian=yes --recursor=127.0.0.1:1553 --config-dir=/etc/powerdns --lazy-recursion=yes'+straces);
@@ -544,6 +553,7 @@ var
    gmysql,launch_ldap:string;
    PowerDNSPublicMode:integer;
    PowerActAsSlave:integer;
+   PdnsNoWriteConf:integer;
 begin
 if DisablePowerDnsManagement=1 then exit;
 
@@ -559,9 +569,13 @@ if not TryStrToInt(SYS.GET_INFO('PowerDNSDNSSEC'),PowerDNSDNSSEC) then PowerDNSD
 if not TryStrToInt(SYS.GET_INFO('PowerDNSDisableLDAP'),PowerDNSDisableLDAP) then PowerDNSDisableLDAP:=0;
 if not TryStrToInt(SYS.GET_INFO('PowerDNSPublicMode'),PowerDNSPublicMode) then PowerDNSPublicMode:=0;
 if not TryStrToInt(SYS.GET_INFO('PowerActAsSlave'),PowerActAsSlave) then PowerActAsSlave:=0;
+if not TryStrToInt(SYS.GET_INFO('PdnsNoWriteConf'),PdnsNoWriteConf) then PdnsNoWriteConf:=0;
 
 
-
+if PdnsNoWriteConf=1 then begin
+      logs.DebugLogs('Starting......: PowerDNS PdnsNoWriteConf is enabled, skip the config and aborting pdns.conf');
+      exit;
+end;
 
 if not FileExists(SYS.LOCATE_GENERIC_BIN('pdnssec')) then PowerDNSDNSSEC:=0;
 if not MYSQL_EXISTS() then PowerDNSMySQLEngine:=0;

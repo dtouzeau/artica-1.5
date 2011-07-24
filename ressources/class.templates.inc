@@ -2790,6 +2790,7 @@ function CheckSessions(){
 		$noback["miniadm.register.php"]=true;
 		$noback["miniadm.logoff.php"]=true;
 		$noback["exec.shm.php"]=true;
+		$noback["cron.notifs.php"]=true;
 		
 		if(!class_exists("usersMenus")){
 			writelogs("Unable to stat class usersMenus include ".dirname(__FILE__)."/class.users.menus.inc",__CLASS__.'/'.__FUNCTION__,__FILE__);

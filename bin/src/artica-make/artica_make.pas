@@ -20,7 +20,7 @@ uses
   setup_opendkim, setup_ufdbguard, setup_dkimproxy, setup_dkimmilter,
   setup_dropbox, setup_crossroads, setup_squidclamav, setup_cluebringer,
   setup_awstats, setup_sabnzbdplus, setup_openldap, setup_lxc, setup_snort,
-  setup_greensql, setup_amanda, setup_mysqlserver, setup_dhcpd;
+  setup_greensql, setup_amanda, setup_mysqlserver, setup_dhcpd, setup_drupal7;
 
 var
    collectd:tsetup_collectd;
@@ -101,6 +101,7 @@ var
    greensql:install_greensql;
    app_amanda:amanda;
    dhcpd:tdhcpd;
+   drupal7:tsetup_drupal7;
 begin
 
 
@@ -404,6 +405,26 @@ begin
    if ParamStr(1)='APP_DRUPAL' then begin
          drupal:=tsetup_drupal.Create;
          drupal.xinstall();
+         halt(0);
+   end;
+
+   if ParamStr(1)='APP_DRUPAL7' then begin
+         drupal7:=tsetup_drupal7.Create;
+         drupal7.xinstall();
+         zinstall.EMPTY_CACHE();
+         halt(0);
+   end;
+
+   if ParamStr(1)='APP_DRUSH7' then begin
+         drupal7:=tsetup_drupal7.Create;
+         drupal7.APP_DRUSH();
+         zinstall.EMPTY_CACHE();
+         halt(0);
+   end;
+
+   if ParamStr(1)='APP_UPLOADPROGRESS' then begin
+         drupal7:=tsetup_drupal7.Create;
+         drupal7.APP_UPLOAD_PROGRESS();
          halt(0);
    end;
 
@@ -1641,8 +1662,10 @@ begin
    writeln('APP_PIWIGO...............: install PIWIGO sources');
    writeln('APP_EYEOS................: install EyeOS sources');
    writeln('APP_MOD_QOS..............: install mod_qos for apache');
-
-
+   writeln('APP_DRUPAL...............: install drupal 6.x version');
+   writeln('APP_DRUPAL7..............: install drupal 7.x version');
+   writeln('APP_DRUSH7...............: install drush 7.x version');
+   writeln('APP_UPLOADPROGRESS.......: install UploadProgress php extension');
 
 
 

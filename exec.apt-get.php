@@ -9,7 +9,13 @@ include_once(dirname(__FILE__).'/framework/class.unix.inc');
 include_once(dirname(__FILE__).'/framework/frame.class.inc');
 
 $_GET["APT-GET"]="/usr/bin/apt-get";
-if(!is_file($_GET["APT-GET"])){die();}
+
+
+
+if(!is_file($_GET["APT-GET"])){
+	if(is_file("/usr/bin/yum")){CheckYum();die();exit;}
+	die();
+}
 
 if(systemMaxOverloaded()){
 	writelogs("This system is too many overloaded, die()",__FUNCTION__,__FILE__,__LINE__);
@@ -173,6 +179,9 @@ function PACKAGE_EXTRA_INFO($pname){
 function UPGRADE(){
 	@unlink("/usr/share/artica-postfix/ressources/logs/web/debian.update.html");
 	$unix=new unix();
+	$sock=new sockets();
+	$EnableRebootAfterUpgrade=$sock->GET_INFO("EnableRebootAfterUpgrade");
+	if(!is_numeric($EnableRebootAfterUpgrade)){$EnableRebootAfterUpgrade=0;}
 	$tmpf=$unix->FILE_TEMP();		
 $txt="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/X11R6/bin\n";
 $txt=$txt."echo \$PATH >$tmpf 2>&1\n";
@@ -217,8 +226,10 @@ $q->QUERY_SQL($sql,"artica_backup");
 
 send_email_events("Debian/Ubuntu System upgrade operation",$datas,"system");
 INSERT_DEB_PACKAGES();
-send_email_events("Rebooting after upgrade operation","reboot command has been performed","system");
-shell_exec("reboot");
+if($EnableRebootAfterUpgrade==1){
+	send_email_events("Rebooting after upgrade operation","reboot command has been performed","system");
+	shell_exec("reboot");
+}
 
 }
 
@@ -260,6 +271,26 @@ if($Major==6){
 		echo "CheckSourcesList:  /etc/apt/sources.list configured, done...\n";	
 }
 
+}
+
+function CheckYum(){
+	@unlink("/usr/share/artica-postfix/ressources/logs/web/debian.update.html");
+	exec("/usr/bin/yum check-updates 2>&1",$results);
+	while (list ($num, $val) = each ($results) ){
+	if(preg_match("#(.+?)\s+(.+?)\s+updates#", $val)){$p[$re[1]]=true;$packages[]=$re[1];}}
+		
+	$count=count($p);
+	if($count>0){
+		@file_put_contents("/etc/artica-postfix/apt.upgrade.cache",implode("\n",$packages));
+		$text="You can perform upgrade of linux packages for\n".@file_get_contents("/etc/artica-postfix/apt.upgrade.cache");
+		send_email_events("new upgrade $count packages(s) ready",$text,"system");
+		
+		$paragraph=Paragraphe('64-infos.png',"$count {system_packages}",
+		"$count {system_packages_can_be_upgraded}",null,"{system_packages_can_be_upgraded}",300,80);
+		@file_put_contents("/usr/share/artica-postfix/ressources/logs/web/debian.update.html", $paragraph);
+		shell_exec("/bin/chmod 777 /usr/share/artica-postfix/ressources/logs/web/debian.update.html");		
+	}
+	
 }
 
 

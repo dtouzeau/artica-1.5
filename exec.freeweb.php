@@ -47,6 +47,16 @@ if($argv[1]=="--perms"){FDpermissions($argv[2]);die();}
 if($argv[1]=="--failed-start"){CheckFailedStart();die();exit;}
 if($argv[1]=="--install-groupware"){install_groupware($argv[2]);die();exit;}
 if($argv[1]=="--resolv"){resolv_servers();die();exit;}
+if($argv[1]=="--drupal"){createdupal($argv[2]);die();exit;}
+if($argv[1]=="--drupal-infos"){drupal_infos($argv[2]);die();exit;}
+if($argv[1]=="--drupal-uadd"){drupal_add_user($argv[2],$argv[3]);die();exit;}
+if($argv[1]=="--drupal-udel"){drupal_deluser($argv[2],$argv[3]);die();exit;}
+if($argv[1]=="--drupal-uact"){drupal_enuser($argv[2],$argv[3],$argv[4]);die();exit;}
+if($argv[1]=="--drupal-upriv"){drupal_privuser($argv[2],$argv[3],$argv[4]);die();exit;}
+if($argv[1]=="--drupal-cron"){drupal_cron();die();exit;}
+if($argv[1]=="--drupal-modules"){drupal_dump_modules($argv[2]);die();exit;}
+if($argv[1]=="--drupal-modules-install"){drupal_install_modules($argv[2]);die();exit;}
+
 
 
 
@@ -70,6 +80,15 @@ function help(){
 	echo "--perms............................: Check files and folders permissions\n";
 	echo "--failed-start.....................: Verify why Apache daemon did not want to run\n";
 	echo "--resolv...........................: Verify if hostnames are in DNS\n";
+	echo "--drupal...........................: Install drupal site for [servername]\n";
+	echo "--drupal-infos.....................: Populate drupal informations in Artica database for [servername]\n";
+	echo "--drupal-uadd......................: Create new drupal [user] for [servername]\n";
+	echo "--drupal-udel......................: Delete  [user] for [servername]\n";
+	echo "--drupal-uact......................: Activate  [user] 1/0 for [servername]\n";
+	echo "--drupal-upriv.....................: set privileges  [user] administrator|user|anonym for [servername]\n";
+	echo "--drupal-cron......................: execute necessary cron for all drupal websites\n";
+	echo "--drupal-modules...................: dump drupal modules for [servername]\n";
+	echo "--drupal-modules-install...........: install pre-defined modules [servername]\n";
 }
 
 function create_cron_task(){
@@ -128,11 +147,21 @@ function remove_files(){
 }
 
 function build(){
+	$unix=new unix();
+	$mef=basename(__FILE__);
+	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
+	$oldpid=@file_get_contents($pidfile);
+	if($unix->process_exists($oldpid,$mef)){
+		echo "Starting......: Apache building : Process Already exist pid $oldpid line:".__LINE__."\n";
+		return;
+	}	
+	@file_put_contents($pidfile, getmypid());		
+	
 	CheckHttpdConf();
 	RemoveAllSites();
 	create_cron_task();
 	$sock=new sockets();
-	$unix=new unix();
+	
 	$varWwwPerms=$sock->GET_INFO("varWwwPerms");
 	if($varWwwPerms==null){$varWwwPerms=755;}
 	
@@ -1133,6 +1162,9 @@ function resolv_servers(){
 	
 	@unlink($filetime);
 	@file_put_contents($filetime, time());
+	$nohup=$unix->find_program("nohup");
+	$drupal_cron=trim("$nohup ". $unix->LOCATE_PHP5_BIN()." " .__FILE__." --drupal-cron >/dev/null 2>&1 &");
+	shell_exec($drupal_cron);
 	
 	$sql="SELECT servername,resolved_ipaddr FROM freeweb ORDER BY servername";
 	$q=new mysql();
@@ -1170,6 +1202,99 @@ function resolv_servers(){
 		
 	}	
 	
+}
+
+function createdupal($servername){
+	if($servername==null){return;}
+	$f=new drupal_vhosts($servername);
+	$f->install();
+	
+}
+
+function drupal_infos($servername){
+	if($servername==null){return;}
+	$f=new drupal_vhosts($servername);
+	$f->populate_infos();	
+}
+function drupal_add_user($uid,$servername){
+	if($servername==null){return;}
+	if($uid==null){return;}
+	$f=new drupal_vhosts($servername);
+	$f->add_user($uid);	
+}
+
+function drupal_deluser($uid,$servername){
+	if($servername==null){return;}
+	if($uid==null){return;}	
+	$f=new drupal_vhosts($servername);
+	$f->del_user($uid);		
+}
+
+function drupal_enuser($uid,$enable,$servername){
+	if($GLOBALS["VERBOSE"]){echo "Starting......: Apache \"$servername\" drupal_enuser() $uid enable->[$enable]\n";}
+	if($servername==null){return;}
+	if($uid==null){return;}	
+	$f=new drupal_vhosts($servername);
+	$f->active_user($uid,$enable);	
+}
+
+function drupal_privuser($uid,$priv,$servername){
+	if($GLOBALS["VERBOSE"]){echo "Starting......: Apache \"$servername\" drupal_privuser() $uid enable->[$priv]\n";}
+	if($servername==null){return;}
+	if($uid==null){return;}	
+	$f=new drupal_vhosts($servername);
+	$f->priv_user($uid,$priv);	
+}
+
+function drupal_dump_modules($servername){
+	if($GLOBALS["VERBOSE"]){echo "Starting......: Apache \"$servername\" drupal_dump_modules()\n";}
+	if($servername==null){return;}
+	$f=new drupal_vhosts($servername);
+	$f->dump_modules();
+	
+}
+
+function drupal_cron(){
+	$users=new usersMenus();
+	if(!$users->DRUPAL7_INSTALLED){die();}
+	$pidtime="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".time";
+	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
+	$oldpid=@file_get_contents($pidfile);
+	$unix=new unix();
+	$drush7=$unix->find_program("drush7");
+	if(!is_file($drush7)){die();}
+	if($unix->process_exists($oldpid,basename(__FILE__))){die();}
+	if($unix->file_time_min($pidtime)<60){die();}
+	@file_put_contents($pidfile, getmypid());
+	@unlink($pidtime);
+	@file_put_contents($pidtime, time());
+	$sql="SELECT servername FROM freeweb WHERE groupware='DRUPAL'";
+	$q=new mysql();
+	$results=$q->QUERY_SQL($sql,'artica_backup');
+	if(!$q->ok){if($GLOBALS["VERBOSE"]){echo $q->mysql_error."\n";return;}}
+	$count=mysql_num_rows($results);
+	echo "Starting......: Apache checking drupal cron web sites count:$count\n";
+	if($count==0){return;}
+	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){	
+		$dd=new drupal_vhosts($ligne["servername"]);
+		$dd->install_modules();	
+		shell_exec("$drush7 --root=$dd->www_dir cron >/dev/null 2>&1");
+	}
+}
+
+function drupal_install_modules($servername){
+	if($GLOBALS["VERBOSE"]){echo "Starting......: Apache \"$servername\" drupal_install_modules()\n";}
+	if($servername==null){return;}
+	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".$servername.pid";
+	$oldpid=@file_get_contents($pidfile);
+	$unix=new unix();
+	$drush7=$unix->find_program("drush7");
+	if(!is_file($drush7)){die();}
+	if($unix->process_exists($oldpid,basename(__FILE__))){die();}	
+	@file_put_contents($pidfile, getmypid());
+	
+	$f=new drupal_vhosts($servername);
+	$f->install_modules();	
 }
 
 

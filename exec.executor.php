@@ -137,6 +137,7 @@ function FillMemory(){
 	$GLOBALS["XAPIAN_PHP_INSTALLED"]=$users->XAPIAN_PHP_INSTALLED;
 	$GLOBALS["AUDITD_INSTALLED"]=$users->APP_AUDITD_INSTALLED;
 	$GLOBALS["VIRTUALBOX_INSTALLED"]=$users->VIRTUALBOX_INSTALLED;
+	$GLOBALS["DRUPAL7_INSTALLED"]=$users->DRUPAL7_INSTALLED;
 	if($GLOBALS["VERBOSE"]){writelogs("DANSGUARDIAN_INSTALLED={$GLOBALS["DANSGUARDIAN_INSTALLED"]}","MAIN",__FILE__,__LINE__);}
 	$GLOBALS["EnableArticaWatchDog"]=GET_INFO_DAEMON("EnableArticaWatchDog");
 	if($GLOBALS["VERBOSE"]){if($GLOBALS["POSTFIX_INSTALLED"]){events("Postfix is installed...");}}
@@ -362,6 +363,10 @@ function group30(){
 	
 	if($GLOBALS["SQUID_INSTALLED"]){$array[]="exec.squid.stats.php --graphs";}
 	if($GLOBALS["SAMBA_INSTALLED"]){$array[]="exec.picasa.php";}
+	if($GLOBALS["DRUPAL7_INSTALLED"]){$array[]="exec.freeweb.php --drupal-cron";}
+	
+	
+	
 	$array[]="exec.emerging.threats.php";
 	$array[]="exec.my-rbl.check.php --checks";
 	
@@ -435,20 +440,23 @@ function group10(){
 
 //toutes les minutes
 function group0(){
-	$GLOBALS["TIME"]["GROUP0"]=$GLOBALS["TIME"]["GROUP0"]+1;
-	if($GLOBALS["TIME"]["GROUP0"]<20){return;}
 	
-	events("Starting {$GLOBALS["TIME"]["GROUP0"]}",__FUNCTION__,__LINE__);
-	$GLOBALS["TIME"]["GROUP0"]=0;
+	if(!is_numeric($GLOBALS["TIME"]["GROUP0"])){$GLOBALS["TIME"]["GROUP0"]=time();return;}
+	if(($GLOBALS["TIME"]["GROUP0"]==0)){$GLOBALS["TIME"]["GROUP0"]=time();return;} 	
+	$mins=calc_time_min($GLOBALS["TIME"]["GROUP0"]);
+	
+	if($mins<1){return;}	
+
+
+	events("Starting {$GLOBALS["TIME"]["GROUP0"]} 1mn",__FUNCTION__,__LINE__);
+	$GLOBALS["TIME"]["GROUP0"]=time();
 
 	if($GLOBALS["POSTFIX_INSTALLED"]){
 		$array[]="exec.whiteblack.php";
 		$array[]="exec.postfix-logger.php";
 	}
 	
-	
-	$array2[]="process1";
-	
+
 	if(is_array($array)){
 		while (list ($index, $file) = each ($array) ){
 			if(system_is_overloaded()){events(__FUNCTION__. ":: die, overloaded");die();}
@@ -457,24 +465,21 @@ function group0(){
 			$GLOBALS["CMDS"][]=$cmd;
 		}
 	}
-	if(is_array($array2)){
-		while (list ($index, $file) = each ($array2) ){
-			if(system_is_overloaded()){events(__FUNCTION__. ":: die, overloaded");die();}
-			$cmd="/usr/share/artica-postfix/bin/$file";
-			events("schedule $cmd",__FUNCTION__,__LINE__);
-			$GLOBALS["CMDS"][]=$cmd;
-		}	
-	}
+
 	@file_put_contents("/etc/artica-postfix/pids/".basename(__FILE__).".GLOBALS",serialize($GLOBALS["TIME"]));
 
 }
 //toutes les 2 minutes
 function group2(){
-	$GLOBALS["TIME"]["GROUP2"]=$GLOBALS["TIME"]["GROUP2"]+1;
-	if($GLOBALS["TIME"]["GROUP2"]<40){return;}
 	
-	events("Starting {$GLOBALS["TIME"]["GROUP2"]}",__FUNCTION__,__LINE__);
-	$GLOBALS["TIME"]["GROUP2"]=0;
+	
+if(!is_numeric($GLOBALS["TIME"]["GROUP2"])){$GLOBALS["TIME"]["GROUP2"]=time();return;}
+	if(($GLOBALS["TIME"]["GROUP2"]==0)){$GLOBALS["TIME"]["GROUP2"]=time();return;} 	
+	$mins=calc_time_min($GLOBALS["TIME"]["GROUP2"]);
+	
+	if($mins<2){return;}	
+	events("Starting {$GLOBALS["TIME"]["GROUP2"]} 2mn",__FUNCTION__,__LINE__);
+	$GLOBALS["TIME"]["GROUP2"]=time();
 	
 	
 	$array[]="exec.dhcpd-leases.php";

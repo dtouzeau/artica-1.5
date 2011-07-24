@@ -7,15 +7,17 @@ $GLOBALS["CLASS_UNIX"]=new unix();
 $pidfile="/etc/artica-postfix/".basename(__FILE__).".pid";
 $oldpid=@file_get_contents($pidfile);
 events("Found old PID $oldpid");
-sleep(1);
-if($GLOBALS["CLASS_UNIX"]->process_exists($oldpid)){
+if($GLOBALS["CLASS_UNIX"]->process_exists($oldpid,basename(__FILE__))){
 	events("Already executed PID: $oldpid.. aborting the process");
 	die();
 }
-
+$pid=getmypid();
+file_put_contents($pidfile,$pid);
+events("ufdbtail starting PID $pid...");
+$GLOBALS["ufdbGenTable"]=$GLOBALS["CLASS_UNIX"]->find_program("ufdbGenTable");
 if($argv[1]=='--date'){echo date("Y-m-d H:i:s")."\n";}
 
-$pid=getmypid();
+
 
 @mkdir("/var/log/artica-postfix/squid-stats",0666,true);
 
@@ -24,7 +26,9 @@ $GLOBALS["PHP5_BIN"]=$GLOBALS["CLASS_UNIX"]->LOCATE_PHP5_BIN();
 if(is_file("/var/log/artica-postfix/ufdbguard-tail.debug")){@unlink("/var/log/artica-postfix/ufdbguard-tail.debug");}
 events("Running new $pid ");
 events_ufdb_exec("Artica ufdb-tail running $pid");
-file_put_contents($pidfile,$pid);
+events("ufdbGenTable = {$GLOBALS["ufdbGenTable"]}");
+
+
 $pipe = fopen("php://stdin", "r");
 while(!feof($pipe)){
 	$buffer .= fgets($pipe, 4096);
@@ -85,6 +89,35 @@ if(strpos($buffer,'seconds to allow worker')>0){return ;}
 		return;
 	}
 	
+	if(preg_match('#\*FATAL.+? cannot read from "(.+?)".+?: No such file or directory#', $buffer,$re)){
+		events("cannot read {$re[1]} -> \"$buffer\"");
+		$newfile=str_replace(".ufdb", "", $re[1]);
+		if(!is_file($newfile)){
+			events("cannot $newfile no such file, create it");
+			@file_put_contents($newfile, "");
+		}
+		if(!is_file(dirname($newfile)."/urls")){
+			@file_put_contents(dirname($newfile)."/urls", "");
+		}
+		
+		if(!is_file(dirname($newfile)."/expressions")){
+			@file_put_contents(dirname($newfile)."/expressions", "");
+		}		
+		
+		$category=str_replace("/var/lib/squidguard/", "", dirname($newfile));
+		$category=str_replace("web-filter-plus/BL/", "", $category);
+		$category=str_replace("blacklist-artica/", "", $category);
+		$category=str_replace("personal-categories/", "", $category);
+		
+		if(preg_match("#\/(.+?)$#", $category,$re)){$category=$re[1];}
+		$cmd="{$GLOBALS["ufdbGenTable"]} -n -D -W -t $category -d $newfile -u ". dirname($newfile)."/urls";
+		events("Category $category -> $cmd");
+		shell_exec($cmd);
+		shell_exec("/bin/chown -R squid:squid ". dirname($newfile)." >/dev/null 2>&1 &");
+		return;
+		
+	}
+	
 	
 	if(preg_match('#\*FATAL\*\s+cannot read from\s+"(.+?)"#',$buffer,$re)){
 		events("Problem on {$re[1]}");
@@ -104,14 +137,17 @@ if(strpos($buffer,'seconds to allow worker')>0){return ;}
 		return;		
 	}
 	
-	
-	if(preg_match("#FATAL\*\s+expression list\s+(.+?):\s+No such file or directory#",$buffer,$re)){
-		events("Expression list: Problem on {$re[1]}");
-		shell_exec("/bin/touch {$re[1]}");
-		$cmd="{$GLOBALS["PHP5_BIN"]} /usr/share/artica-postfix/exec.squidguard.php --build";
-		$GLOBALS["CLASS_UNIX"]->THREAD_COMMAND_SET($cmd);
+	if(preg_match("#\*FATAL.+?expression list\s+(.+?):\s+No such file or directory#", $buffer,$re)){
+		events("Expression list: Problem on {$re[1]} -> \"$buffer\"");
+		events("Creating directory ".dirname($re[1]));
+		@mkdir(dirname($re[1],755,true));
+		events("Creating empty file ".$re[1]);
+		@file_put_contents($re[1], " ");
+		shell_exec("/etc/init.d/ufdb reload &");
 		return;
 	}
+	
+
 
 	if(preg_match("#the new configuration and database are loaded for ufdbguardd ([0-9\.]+)#",$buffer,$re)){
 		$GLOBALS["CLASS_UNIX"]->send_email_events("UfdbGuard v{$re[1]} has reloaded new configuration and database",null,"proxy");

@@ -287,6 +287,9 @@ begin
         logs.DebugLogs('Starting......: dnsmasq saving /etc/dnsmasq.conf done...');
      end else begin
         logs.DebugLogs('Starting......: dnsmasq is not yet set by Artica ('+intTostr(DnsMasqConfigurationFileLength)+') bytes');
+        SYS.set_INFO('EnableDNSMASQ','0');
+        fpsystem(SYS.LOCATE_GENERIC_BIN('nohup')+ ' /etc/init.d/artica-postfix restart artica-status >/dev/null 2>&1 &');
+        exit;
      end;
 
      if not FileExists('/etc/dnsmasq.resolv.conf') then fpsystem('/bin/cp -f /etc/resolv.conf /etc/dnsmasq.resolv.conf');

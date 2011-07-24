@@ -146,6 +146,13 @@ function listOfAvailableServices($freeweb=false){
 			if($user->AsSystemAdministrator){$array["ARTICA_REGISTER_OU"]="{ARTICA_REGISTER_OU}";}
 		}
 		$array["ARTICA_MINIADM"]="{ARTICA_MINIADM}";
+		
+		if($user->DRUPAL7_INSTALLED){
+			$array["DRUPAL"]="{APP_DRUPAL}";
+		}
+		
+		
+		
 	}
 	$array["ARTICA_USR"]="{APP_ARTICA_USR}";
 	return $array;

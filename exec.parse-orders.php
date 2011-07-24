@@ -15,12 +15,20 @@ if($unix->process_exists($oldpid)){
 	die();
 }
 
+if($argv[1]=="--manual"){
+	
+	FillMemory();ParseLocalQueue();die();}
 
+$sock=new sockets();
+$EnableArticaBackground=$sock->GET_INFO("EnableArticaBackground");
+if(!is_numeric($EnableArticaBackground)){$EnableArticaBackground=1;}
+if($EnableArticaBackground==0){die();}
 $GLOBALS["TOTAL_MEMORY_MB"]=$unix->TOTAL_MEMORY_MB();
 
 
 if($GLOBALS["TOTAL_MEMORY_MB"]<400){
-	
+	$oldpid=@file_get_contents($GLOBALS["EXEC_PID_FILE"]);
+	if($unix->process_exists($oldpid,basename(__FILE__))){events("Process Already exist pid $oldpid");die();}	
 	$childpid=posix_getpid();
 	echo("Starting......: artica-background lower config, remove fork\n");
 	@file_put_contents($GLOBALS["EXEC_PID_FILE"],$childpid);
@@ -105,7 +113,8 @@ function FillMemory(){
 	include_once(dirname(__FILE__).'/ressources/class.sockets.inc');
 	$GLOBALS["CLASS_SOCKETS"]=new sockets();
 	$GLOBALS["CLASS_USERS"]=new usersMenus();
-	$GLOBALS["CLASS_UNIX"]=new unix();			
+	$GLOBALS["CLASS_UNIX"]=new unix();	
+	$GLOBALS["TOTAL_MEMORY_MB"]=$GLOBALS["CLASS_UNIX"]->TOTAL_MEMORY_MB();	
 	$GLOBALS["NICE"]=$GLOBALS["CLASS_UNIX"]->EXEC_NICE();
 	$GLOBALS["NOHUP"]=$GLOBALS["CLASS_UNIX"]->find_program("nohup");
 	$GLOBALS["systemMaxOverloaded"]=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("systemMaxOverloaded");
@@ -130,6 +139,8 @@ $Toremove["exec.squid-tail.php"]=true;
 $Toremove["exec.fetmaillog.php"]=true;
 $Toremove["exec.dansguardian-tail.php"]=true;	
 $Toremove["exec.auth-tail.php"]=true;	
+$Toremove["exec.artica-filter-daemon.php"]=true;	
+$Toremove["exec.postfix-logger.php"]=true;	
 if(!is_file($pgrep)){return;}
 	
 	
@@ -194,7 +205,16 @@ if(!is_file($pgrep)){return;}
 				events("killing exec.postfix-logger.php it freeze...",__FUNCTION__,__LINE__);
 				shell_exec("/bin/kill -9 {$re[1]}");
 				}
-			}			
+			}	
+
+			if($filename=="exec.openvpn.php"){
+				if($time>5){
+				$GLOBALS["CLASS_UNIX"]->send_email_events("[artica-background] exec.openvpn.php is killed after {$time}Mn live",null,"system");
+				events("killing exec.openvpn.php it freeze...",__FUNCTION__,__LINE__);
+				shell_exec("/bin/kill -9 {$re[1]}");
+				}
+			}				
+			
 			$array[]="[{$re[1]}] $filename ({$time}Mn)";
 		}
 	}
@@ -232,10 +252,15 @@ if(!is_file($pgrep)){return;}
 }
 
 function ParseLocalQueue(){
+	$mef=basename(__FILE__);
+	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
+	$oldpid=@file_get_contents($pidfile);
+	if($GLOBALS["CLASS_UNIX"]->process_exists($oldpid,$mef)){events("Process Already exist pid $oldpid line:".__LINE__);return;}	
+	@file_put_contents($pidfile, getmypid());	
 	
-$MemoryInstances=MemoryInstances();
-if($MemoryInstances>4){events("Too much php processes in memory, aborting");return;}
-if(!is_numeric($MemoryInstances)){$MemoryInstances=0;}
+	$MemoryInstances=MemoryInstances();
+	if($MemoryInstances>4){events("Too much php processes in memory, aborting");return;}
+	if(!is_numeric($MemoryInstances)){$MemoryInstances=0;}
 
 if(is_file("/etc/artica-postfix/orders.queue")){
 		$size=@filesize("/etc/artica-postfix/orders.queue");
@@ -312,7 +337,7 @@ if(is_file("/etc/artica-postfix/background")){
 	if($count_max+$MemoryInstances>10){$count_max=10-$MemoryInstances;}
 	
 	if($GLOBALS["TOTAL_MEMORY_MB"]<400){
-		events("Lower config switch to 2 max processes...");
+		events("Lower config switch to 2 max processes...mem:{$GLOBALS["TOTAL_MEMORY_MB"]}MB");
 		$count_max=2;
 	}	
 	
@@ -337,7 +362,7 @@ if(is_file("/etc/artica-postfix/background")){
 		$count++;
 		events("[NORMAL]:: running in normal mode $nice$cmd$devnull &");
 		shell_exec("$nice$cmd$devnull &");
-		events("[NORMAL]:: $cmd was successfully executed, parse next");
+		events("[NORMAL]::[$num] $cmd was successfully executed, parse next");
 		unset($orders[$num]);
 		if($count>=$count_max){break;}
 	}

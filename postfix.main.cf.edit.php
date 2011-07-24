@@ -151,7 +151,7 @@ function main_config(){
 	
 	$page=CurrentPageName();
 	$options=array("r"=>"{replace}","a"=>"{add}");
-	$intro="<p class=caption style='font-size:13px'>{main_help}</p>";
+	$intro="<div class=explain style='font-size:13px'>{main_help}</div>";
 	
 	$form1="
 	<hr>

@@ -1785,7 +1785,7 @@ public function alt_stat($file) {
 		$chk=$datas;
 		
 		while (list ($num, $ligne) = each ($chk) ){
-			if(preg_match("#(.+?)\s+(.+?)\s+#",$ligne)){
+			if(preg_match("#(.+?)\s+(.+?)\s+#",$ligne,$re)){
 				if(trim(strtolower($dev))==trim(strtolower($re[1]))){
 					if(trim(strtolower($mount))==trim(strtolower($re[2]))){
 						return null;
@@ -1868,7 +1868,7 @@ public function alt_stat($file) {
 		
 	}
 	
-	public function process_exists($pid){
+	public function process_exists($pid,$filename=null){
 		$pid=trim($pid);
 		if(!is_numeric($pid)){return false;}
 		if($this->PID_IS_CHROOTED($pid)){return false;}
@@ -1877,9 +1877,22 @@ public function alt_stat($file) {
 		if($pid<50){return false;}
 		if(is_file("/proc/$pid/exe")){
 			if(is_file("/proc/$pid/status")){$this->proc_status=@file_get_contents("/proc/$pid/status");}
+			if($GLOBALS["VERBOSE"]){echo "filename: $filename\n";}
+			if($filename<>null){
+				$filename=str_replace(".", "\.", $filename);
+				$cmdline=@file_get_contents("/proc/$pid/cmdline");
+				if($GLOBALS["VERBOSE"]){echo "cmdline: $cmdline\n";}
+				if(preg_match("#$filename#",$cmdline)){return true;}else{return false;}
+			}
 			return true;
+		}else{
+			if($GLOBALS["VERBOSE"]){echo "/proc/$pid/exe no such file\n";}
 		}
 		if(is_file("/proc/$pid/cmdline")){
+			if($GLOBALS["VERBOSE"]){echo "filename: $filename\n";}	
+			$cmdline=@file_get_contents("/proc/$pid/cmdline");
+			if($GLOBALS["VERBOSE"]){echo "cmdline: $cmdline\n";}
+			if(preg_match("#$filename#",$cmdline)){return true;}else{return false;}
 			if(is_file("/proc/$pid/status")){$this->proc_status=@file_get_contents("/proc/$pid/status");}
 			return true;
 		}

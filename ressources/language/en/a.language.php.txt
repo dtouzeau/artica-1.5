@@ -1796,5 +1796,26 @@ Very lower config will get 320Mb free[br]
 <generate_ssl_keys>Generate SSL Keys</generate_ssl_keys>
 <generate_ssl_keys_text>Generate the SSL Keys for this service in order to enable the SSL encryption connections</generate_ssl_keys_text>
 <UseSSL>Use the SSL encryption</UseSSL>
-
+<APP_DRUPAL7>Drupal 7.x</APP_DRUPAL7>
+<smtp_notification_not_saved>eMails notifications are not set</smtp_notification_not_saved>
+<DRUPAL_VERSION>Drupal version</DRUPAL_VERSION>
+<SITE_URI>Web site uri</SITE_URI>
+<DATABASE_DRIVER>Database driver</DATABASE_DRIVER>
+<DATABASE_HOSTNAME>Database hostname</DATABASE_HOSTNAME>
+<DATABASE_NAME>Database name</DATABASE_NAME>
+<DATABASE>Database</DATABASE>
+<DRUPAL_BOOTSTRAP>Drupal Boostrap</DRUPAL_BOOTSTRAP>
+<DRUPAL_USER>Drupal user</DRUPAL_USER>
+<DEFAULT_THEME>Default theme</DEFAULT_THEME>
+<ADMINISTRATION_THEME>Administration theme</ADMINISTRATION_THEME>
+<PHP_CONFIGURATION>PHP configuration path</PHP_CONFIGURATION>
+<DRUSH_VERSION>Drush version</DRUSH_VERSION>
+<DRUPAL_ROOT>Drupal root</DRUPAL_ROOT>
+<SITE_PATH>Site path</SITE_PATH>
+<FILE_DIRECTORY_PATH>File directory path</FILE_DIRECTORY_PATH>
+<UPDATED>updated on</UPDATED>
+<anonymous>anonymous</anonymous>
+<EnableRebootAfterUpgrade>Reboot system after system upgrade task</EnableRebootAfterUpgrade>
+<APP_DRUSH7>Drush for Drupal7</APP_DRUSH7>
+<modules>Modules</modules>
 

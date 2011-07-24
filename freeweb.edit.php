@@ -271,8 +271,15 @@ function popup_tabs(){
 	
 	$array["popup"]='{website}';
 	
+
+	
 	if($_GET["servername"]<>null){
 		$apache=new freeweb($_GET["servername"]);
+		
+		if($apache->groupware=="DRUPAL"){
+			$array["drupal"]='{APP_DRUPAL}';
+		}			
+		
 		if($apache->UseReverseProxy==1){
 			$array["reverse"]='{reverse_proxy}';
 		}
@@ -298,11 +305,15 @@ function popup_tabs(){
 			$array["mod_cache"]='{cache_engine}';
 		}
 		
-		$array["groupwares"]='{groupwares}';
+		if($apache->groupware<>"DRUPAL"){
+			$array["groupwares"]='{groupwares}';
+		}
 		
 		if($apache->groupware==null){
 			$array["aliases"]='{aliases}';
 		}
+		
+
 		
 		$users=new usersMenus();
 		if($users->awstats_installed){
@@ -340,6 +351,11 @@ function popup_tabs(){
 				$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"freeweb.edit.aliases.php?servername={$_GET["servername"]}&freewebs=1&group_id={$_REQUEST["group_id"]}\"><span>$ligne</span></a></li>\n");
 				continue;
 		}			
+		
+		if($num=="drupal"){
+				$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"freeweb.drupal.php?servername={$_GET["servername"]}&freewebs=1&group_id={$_REQUEST["group_id"]}\"><span>$ligne</span></a></li>\n");
+				continue;
+		}		
 		
 		$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"$page?$num=yes&servername={$_GET["servername"]}&group_id={$_REQUEST["group_id"]}\"><span>$ligne</span></a></li>\n");
 	}

@@ -76,7 +76,7 @@ if not SYS.PROCESS_EXIST(PID_NUM()) then begin
 end;
    pidstring:=PID_NUM();
    writeln('Stopping Artica-status.......: ' + pidstring + ' PID..');
-   cmd:=SYS.LOCATE_GENERIC_BIN('kill')+' '+pidstring+' >/dev/null 2>&1';
+   cmd:=SYS.LOCATE_GENERIC_BIN('kill')+' -9 '+pidstring+' >/dev/null 2>&1';
    fpsystem(cmd);
 
    count:=0;

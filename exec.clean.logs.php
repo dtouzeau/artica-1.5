@@ -46,6 +46,11 @@ function maillog(){
 	if($BackupMailLogPath==null){$BackupMailLogPath="/home/maillog-backup";}
 	if(!is_dir("$BackupMailLogPath")){@mkdir($BackupMailLogPath,666,true);}
 	
+	foreach (glob("/usr/share/artica-postfix/*") as $filename) {
+		if(is_numeric(basename($filename))){@unlink($filename);}
+	}
+	
+	
 	$c=0;
 	foreach (glob("/var/log/mail-backup/*") as $filename) {
 		$c++;

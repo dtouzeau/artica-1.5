@@ -516,10 +516,9 @@ function status_right(){
 	if(preg_match("#locahost\.localdomain#", $hostname)){$mustchangeHostname=true;}
 	if(preg_match("#[A-Za-z]+\s+[A-Za-z]+#", $hostname)){$mustchangeHostname=true;}
 	
-	if(!$mustchangeHostname){
-		if(preg_match("#locahost\.localdomain#", $users->hostname)){$mustchangeHostname=true;}
-		
-	}
+	if(!$mustchangeHostname){if(preg_match("#locahost\.localdomain#", $users->hostname)){$mustchangeHostname=true;}}
+	if(!$mustchangeHostname){if(strpos($hostname, ".")==0){$mustchangeHostname=true;}}
+	
 	if($mustchangeHostname){
 	writelogs("hostname=\"$hostname\" mustchangeHostname=True",__FUNCTION__,__FILE__,__LINE__);
 	}else{

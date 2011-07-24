@@ -209,10 +209,12 @@ if($argv[1]=="--amavis-full"){
 	echo @implode("\n",$conf);
 	die();
 }
-
-if(strlen($argv[1])>0){
-	write_syslog("Unable to understand {$argv[1]}",basename(__FILE__));
-	die();
+if($argv[1]=="--verbose"){unset($argv[1]);}
+if(isset($argv[1])){
+	if(strlen($argv[1])>0){
+		write_syslog("Unable to understand {$argv[1]}",basename(__FILE__));
+		die();
+	}
 }
 
 if($DisableArticaStatusService==1){
@@ -223,9 +225,10 @@ if($DisableArticaStatusService==1){
 
 
 $pidfile="/etc/artica-postfix/".basename(__FILE__).".pid";
+$pid=@file_get_contents($pidfile);
 $unix=new unix();
-if($unix->process_exists(@file_get_contents($pidfile))){
-	print "Starting......: artica-status Already executed...\n";
+if($unix->process_exists($pid,(basename(__FILE__)))){
+	print "Starting......: artica-status Already executed PID $pid...\n";
 	die();
 }
 $mem=round(((memory_get_usage()/1024)/1000),2);events("{$mem}MB artica-status Memory {$GLOBALS["TOTAL_MEMORY_MB"]}MB","MAIN",__LINE__);
@@ -255,18 +258,18 @@ if($nofork){
 	shell_exec(trim($nohup." ".$unix->LOCATE_PHP5_BIN()." ".dirname(__FILE__)."/exec.parse-orders.php >/dev/null 2>&1 &"));	
 	die();
 	
+
+	
+}
+
+
+
 if(function_exists("pcntl_signal")){
 	pcntl_signal(SIGTERM,'sig_handler');
 	pcntl_signal(SIGINT, 'sig_handler');
 	pcntl_signal(SIGCHLD,'sig_handler');
 	pcntl_signal(SIGHUP, 'sig_handler');
 }	
-	
-}
-
-
-
-
 
 
 set_time_limit(0);
@@ -298,49 +301,54 @@ if ($pid == -1) {
 	$count=0;
 	while ($stop_server==false) {
 		$count++;
-		sleep(1);
+		sleep(5);
 		$mem=round(((memory_get_usage()/1024)/1000),2);
+		$timeDaemonFile=$unix->file_time_min("/etc/artica-postfix/pids/exec.status.time");
+		$DaemonTime=$unix->file_time_min($timeDaemonFile);
 		$timefile=$unix->file_time_min("/usr/share/artica-postfix/ressources/logs/global.status.ini");
 		
 		
-		if($count==10){events("waiting $count/120 {$mem}MB global.status.ini:{$timefile}Mn",__FUNCTION__,__LINE__);}
-		if($count==30){events("waiting $count/120 {$mem}MB global.status.ini:{$timefile}Mn",__FUNCTION__,__LINE__);}
-		if($count==60){events("waiting $count/120 {$mem}MB global.status.ini:{$timefile}Mn",__FUNCTION__,__LINE__);}
-		if($count==100){events("waiting $count/120 {$mem}MB global.status.ini:{$timefile}Mn",__FUNCTION__,__LINE__);}
+		events("WAIT: $timefile/2mn {$mem}MB global.status.ini:{$timefile}Mn",__FUNCTION__,__LINE__);
+
 		
 		if(is_file("/usr/share/artica-postfix/ressources/logs/launch.status.task")){
 			events("launch.status.task detected",__FUNCTION__,__LINE__);
 			if(!is_file("/etc/artica-postfix/launch.status.lock")){@file_put_contents("/etc/artica-postfix/launch.status.lock",time());}
 			$timeLock=$unix->file_time_min("/etc/artica-postfix/launch.status.lock");
 			events("timeLock {$timeLock}Mn",__FUNCTION__,__LINE__);
-			@unlink("/usr/share/artica-postfix/ressources/logs/launch.status.task");
+			
 			if($timeLock>0){
-				try {launch_all_status(true);} catch (Exception $e) {writelogs("Fatal while running function launch_all_status $e",__FUNCTION__,__FILE__,__LINE__);}
+				@unlink("/usr/share/artica-postfix/ressources/logs/launch.status.task");
+				@unlink($DaemonTime);@file_put_contents($DaemonTime, time());
 				@unlink("/etc/artica-postfix/launch.status.lock");
+				try {launch_all_status(true);} catch (Exception $e) {writelogs("Fatal while running function launch_all_status $e",__FUNCTION__,__FILE__,__LINE__);}
+				continue;
 			}
 			
 		}
 		
-		if($timefile>2){
-			events("global.status.ini time ($timefile) is more than 2Mn  -> Launch all status...",__FUNCTION__,__LINE__);
+		if($DaemonTime>=3){
+			events("global.status.ini time ($DaemonTime) is more than 2Mn  -> Launch all status...",__FUNCTION__,__LINE__);
+			@unlink($DaemonTime);@file_put_contents($DaemonTime, time());
 			try {launch_all_status(true);} catch (Exception $e) {writelogs("Fatal while running function launch_all_status $e",__FUNCTION__,__FILE__,__LINE__);}
 			$count=0;
+			continue;			
+		}
+		
+		if($timefile>3){
+			@unlink($DaemonTime);@file_put_contents($DaemonTime, time());
+			events("global.status.ini time ($timefile) is more than 2Mn  -> Launch all status...",__FUNCTION__,__LINE__);
+			try {launch_all_status(true);} catch (Exception $e) {writelogs("Fatal while running function launch_all_status $e",__FUNCTION__,__FILE__,__LINE__);}
 			continue;
 		}
 		
 		if(!is_file("/usr/share/artica-postfix/ressources/logs/global.status.ini")){
+			@unlink($DaemonTime);@file_put_contents($DaemonTime, time());
 			events("global.status.ini does not exists  -> Launch all status...",__FUNCTION__,__LINE__);
 			try {launch_all_status(true);} catch (Exception $e) {writelogs("Fatal while running function launch_all_status $e",__FUNCTION__,__FILE__,__LINE__);}
-			$count=0;
 			continue;
 		}		
 		
-		if($count>120){
-			$count=0;
-			events("Counter ($count) is up to 120 -> Launch all status...",__FUNCTION__,__LINE__);
-			try {launch_all_status(true);} catch (Exception $e) {writelogs("Fatal while running function launch_all_status $e",__FUNCTION__,__FILE__,__LINE__);}
-			continue;
-		}
 		
 		if($reload){
 			$reload=false;
@@ -352,8 +360,8 @@ if ($pid == -1) {
 			$GLOBALS["ArticaWatchDogList"]=unserialize(base64_decode($GLOBALS["CLASS_SOCKETS"]->GET_INFO("ArticaWatchDogList")));
 			unset($GLOBALS["GetVersionOf"]);	
 			if(!is_file("/usr/share/artica-postfix/ressources/logs/global.status.ini")){
+				@unlink($DaemonTime);@file_put_contents($DaemonTime, time());
 				launch_all_status(true);
-				$count=0;
 			}
 			$GLOBALS["AMAVIS_WATCHDOG"]=unserialize(@file_get_contents("/etc/artica-postfix/amavis.watchdog.cache"));
 			
@@ -654,6 +662,11 @@ function SwapWatchdog(){
 
 function xLoadAvg(){
 	if(function_exists("sys_getloadavg")){
+		$timeDaemonFile=$unix->file_time_min("/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".time");
+		$DaemonTime=$unix->file_time_min($timeDaemonFile);		
+		if($DaemonTime<3){return;}
+		@unlink($timeDaemonFile);
+		@file_put_contents($timeDaemonFile, time());
 		$array_load=sys_getloadavg();
 		$internal_load=$array_load[0];
 		events("System load $internal_load",__FUNCTION__,__LINE__);
@@ -665,7 +678,7 @@ function xLoadAvg(){
 
 
 function launch_all_status($force=false){
-	
+
 	xLoadAvg();
 	
 	$trace=debug_backtrace();if(isset($trace[1])){$called=" called by ". basename($trace[1]["file"])." {$trace[1]["function"]}() line {$trace[1]["line"]}";events("$called",__FUNCTION__,__LINE__);}	
@@ -722,14 +735,12 @@ function launch_all_status($force=false){
 					events("System is overloaded: {$GLOBALS["SYSTEM_INTERNAL_LOAD"]}, pause 2 seconds",__FUNCTION__,__LINE__);
 					AmavisWatchdog();
 					greyhole_watchdog();
-					sleep(2);
 					return;
 				}else{
 					if(systemMaxOverloaded()){
-					events("System is very overloaded {$GLOBALS["SYSTEM_INTERNAL_LOAD"]}, pause 5  seconds",__FUNCTION__,__LINE__);
+					events("System is very overloaded {$GLOBALS["SYSTEM_INTERNAL_LOAD"]}, stop",__FUNCTION__,__LINE__);
 					AmavisWatchdog();
 					greyhole_watchdog();
-					sleep(5);
 					return;
 					}
 				}
@@ -745,11 +756,15 @@ function launch_all_status($force=false){
 		}
 	}
 	
-@unlink("/usr/share/artica-postfix/ressources/logs/global.status.ini");
-file_put_contents("/usr/share/artica-postfix/ressources/logs/global.status.ini",@implode("\n",$conf));
-@chmod(770,"/usr/share/artica-postfix/ressources/logs/global.status.ini");
-@file_put_contents("/etc/artica-postfix/cache.global.status",@implode("\n",$conf));	
-events("creating status done ". count($conf)." lines....",__FUNCTION__,__LINE__);
+	@unlink("/usr/share/artica-postfix/ressources/logs/global.status.ini");
+	file_put_contents("/usr/share/artica-postfix/ressources/logs/global.status.ini",@implode("\n",$conf));
+	@chmod(770,"/usr/share/artica-postfix/ressources/logs/global.status.ini");
+	@file_put_contents("/etc/artica-postfix/cache.global.status",@implode("\n",$conf));	
+	events("creating status done ". count($conf)." lines....",__FUNCTION__,__LINE__);
+	$cmd=trim("{$GLOBALS["nohup"]} {$GLOBALS["NICE"]} {$GLOBALS["PHP5"]} ".dirname(__FILE__)."/exec.parse-orders.php --manual >/dev/null 2>&1 &");
+	events($cmd);
+	shell_exec($cmd);
+
 }
 // ========================================================================================================================================================
 
@@ -1772,7 +1787,7 @@ function mysql_watchdog(){
 	exec("$mysqladmin processlist 2>&1",$results);
 	
 	while (list ($num, $ligne) = each ($results) ){
-		if(!preg_match("#\|\s+([0-9]+)\s+\|.+?\|.+?\|\s+(.+?)\s+\|.+?\|.+?\|\s+(.+?)\s+|(.+?)\|#",$line,$re)){
+		if(preg_match("#\|\s+([0-9]+)\s+\|.+?\|.+?\|\s+(.+?)\s+\|.+?\|.+?\|\s+(.+?)\s+|(.+?)\|#",$line,$re)){
 			$ID=$re[1];
 			$DB=$re[2];
 			$State=$re[3];

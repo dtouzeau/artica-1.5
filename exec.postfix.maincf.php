@@ -102,6 +102,7 @@ if($argv[1]=='--reconfigure'){
 	file_put_contents('/etc/postfix/main.cf',$main->main_cf_datas);
 	echo "Starting......: Postfix Building main.cf ". strlen($main->main_cf_datas). " bytes done line ". __LINE__."\n";
 	_DefaultSettings();
+	perso_settings();
 	die();
 }
 
@@ -176,6 +177,7 @@ if($argv[1]=='--write-maincf'){
 	echo "Starting......: Postfix Building main.cf ". strlen($main->main_cf_datas). "line ". __LINE__." bytes done\n";
 	if(!is_file("/etc/postfix/hash_files/header_checks.cf")){@file_put_contents("/etc/postfix/hash_files/header_checks.cf","#");}
 	_DefaultSettings();
+	perso_settings();
 	if($argv[2]=='no-restart'){appliSecu();die();}
 	echo "Starting......: restarting postfix\n";
 	$unix->send_email_events("Postfix will be restarted","Line: ". __LINE__."\nIn order to apply new configuration file","postfix");
@@ -189,6 +191,7 @@ if($argv[1]=='--maincf'){
 	$main->save_conf_to_server(1);
 	file_put_contents('/etc/postfix/main.cf',$main->main_cf_datas);
 	_DefaultSettings();
+	perso_settings();
 	if($GLOBALS["DEBUG"]){echo @file_get_contents("/etc/postfix/main.cf");}
 	die();
 }
@@ -1372,16 +1375,7 @@ function disable_smtp_sasl(){
 
 function perso_settings(){
 	$main=new main_perso();
-	if(!is_array($main->main_array)){
-		echo "Starting......: Postfix no main.cf tokens defined by admin\n";
-		return;
-	}
-	while (list ($key, $array) = each ($main->main_array) ){
-		echo "Starting......: Postfix Added by administrator: $key = {$array["VALUE"]}\n";
-		postconf($key,$array["VALUE"]);
-		
-	}
-	
+	$main->replace_conf("/etc/postfix/main.cf");
 	if($GLOBALS["RELOAD"]){exec("{$GLOBALS["postfix"]} reload");}
 	
 }

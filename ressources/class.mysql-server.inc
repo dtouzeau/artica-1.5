@@ -9,6 +9,9 @@ class mysqlserver{
 	var $mysql_version_string=0;
 	var $mysqlvbin=0;
 	var $innodb_file_per_table=0;
+	var $VERSION_MAJOR;
+	var $VERSION_MINOR;
+	var $VERSION_REV;
 	
 	function mysqlserver(){
 		$this->load();
@@ -16,6 +19,7 @@ class mysqlserver{
 		$this->mysql_version_string=$users->mysqld_version;
 		
 	if(posix_getuid()==0){
+			$GLOBALS["AS_ROOT"]=true;
 			echo "Starting......: Mysql version.......:$this->mysql_version_string\n";
 			
 		}
@@ -24,6 +28,9 @@ class mysqlserver{
 			if(strlen($re[1])==1){$re[1]=$re[1].'0';}
 			if(strlen($re[2])==1){$re[2]=$re[2].'0';}
 			if(strlen($re[3])==1){$re[3]=$re[3].'0';}
+			$this->VERSION_MAJOR=$re[1];
+			$this->VERSION_MINOR=$re[2];
+			$this->VERSION_REV=$re[3];
 			$this->mysqlvbin=$re[1].$re[2].$re[3];
 		}
 		
@@ -66,12 +73,33 @@ class mysqlserver{
 		
 	}
 	
+	private function default_character_set(){
+		
+		if($this->VERSION_MAJOR>4){
+				if($this->VERSION_MAJOR<6){
+					if($this->VERSION_REV<3){
+						return "default-character-set";
+					}
+				}
+			}
+			
+			if($this->VERSION_MAJOR>4){
+				if($this->VERSION_MAJOR>4){
+					if($this->VERSION_REV>=3){
+						return "character-set-server";
+					}
+				}
+			}
+		
+	}
+	
 	function Mysql_verlow_config(){
 		
 		$this->main_array["max_allowed_packet"]=1;
 		$this->main_array["key_buffer"]=16;
 		$this->main_array["table_cache"]=1;
 		if(posix_getuid()==0){
+			$GLOBALS["AS_ROOT"]=true;
 			echo "Starting......: Mysql binary version:$this->mysqlvbin\n";
 		}
 		
@@ -94,9 +122,9 @@ class mysqlserver{
 			$conf=$conf ."bind-address={$this->main_array["bind-address"]}\n";
 		}		
 		
-		if($this->main_array["default-character-set"]<>null){
-			$conf=$conf ."default-character-set={$this->main_array["default-character-set"]}\n";
-		}
+		if($GLOBALS["AS_ROOT"]){echo "Starting......: Mysql Major:$this->VERSION_MAJOR; Minor:$this->VERSION_MAJOR; rev: $this->VERSION_REV\n";}
+		
+		if($this->main_array["default-character-set"]<>null){$conf=$conf.$this->default_character_set()."=".$this->main_array["default-character-set"];}
 		
 		if($this->main_array["skip-character-set-client-handshake"]=="yes"){
 			$conf=$conf ."skip-character-set-client-handshake\n";
@@ -172,9 +200,9 @@ class mysqlserver{
 			$conf=$conf ."bind-address={$this->main_array["bind-address"]}\n";
 		}		
 		
-		if($this->main_array["default-character-set"]<>null){
-			$conf=$conf ."default-character-set={$this->main_array["default-character-set"]}\n";
-		}
+	
+		if($this->main_array["default-character-set"]<>null){$conf=$conf.$this->default_character_set()."=".$this->main_array["default-character-set"];}
+		
 		
 		if($this->main_array["skip-character-set-client-handshake"]=="yes"){
 			$conf=$conf ."skip-character-set-client-handshake\n";
@@ -319,10 +347,7 @@ class mysqlserver{
 		}
 		$conf=$conf ."[mysqld]\n";
 		
-		if($this->main_array["default-character-set"]<>null){
-			$mysqld["default-character-set"]="{$this->main_array["default-character-set"]}";
-			$mysqld["character-set-server"]="{$this->main_array["default-character-set"]}";
-		}	
+		if($this->main_array["default-character-set"]<>null){$mysqld[$this->default_character_set()]=$this->main_array["default-character-set"];}	
 
 		if($this->main_array["skip-character-set-client-handshake"]=="yes"){
 			$mysqld["skip-character-set-client-handshake"]="";

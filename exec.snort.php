@@ -109,7 +109,7 @@ function build(){
 	$sock=new sockets();
 
 	$snort_version=snort_version();
-	if(preg_match("#([0-9]+\.([0-9]+)\.#",$snort_version,$re)){
+	if(preg_match("#([0-9]+)\.([0-9]+)\.#",$snort_version,$re)){
 		$inver="{$re[1]}{$re[2]}";
 	}
 	echo "Starting......: Snort Daemon version $snort_version ($inver)\n";

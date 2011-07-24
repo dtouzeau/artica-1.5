@@ -311,14 +311,7 @@ echo "
 	</div>
 		<script>
 				$(document).ready(function(){
-					$('#admin_index_settings').tabs({
-				    load: function(event, ui) {
-				        $('a', ui.panel).click(function() {
-				            $(ui.panel).load(this.href);
-				            return false;
-				        });
-				    }
-				});
+					$('#admin_index_settings').tabs();
 			
 			
 			});
