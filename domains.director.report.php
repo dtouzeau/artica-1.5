@@ -108,8 +108,8 @@ function popup(){
 	<tr>
 		<td valign='top'><img src='img/postmaster-identity-128.png' id='report-image'></td>
 		<td>
-		<div style='font-size:14px'>{global_director_report_explain}</div>
-		<table style='width:100%'>
+		<div style='font-size:14px' class=explain>{global_director_report_explain}</div>
+		<table style='width:100%' class=form>
 		<tr>
 			<td class=legend style='font-size:13px'>{enabled}:</td>
 			<td>". Field_checkbox("report_enabled",1,$ligne["enabled"])."</td>
@@ -125,7 +125,7 @@ function popup(){
 					<td>
 						". Field_array_Hash($cron->cron_hours,"hour",$array["hour"],null,null,0,"font-size:13px;padding:3px")."</td>
 					<td width=1% style='font-size:13px'>:</td>
-					<td>". Field_array_Hash($cron->cron_hours,"min",$array["min"],null,null,0,"font-size:13px;padding:3px")."</td>
+					<td>". Field_array_Hash($cron->cron_mins,"min",$array["min"],null,null,0,"font-size:13px;padding:3px")."</td>
 				</tr>
 				</table>
 			</td>

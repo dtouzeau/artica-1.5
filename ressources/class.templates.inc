@@ -1444,7 +1444,7 @@ function array_move_position($array = '', $from = '', $to = ''){
 	
 }
 
-function array_insert($array = array(), $position = '' , $elements= ''){
+function array_insert_artica($array = array(), $position = '' , $elements= ''){
 writelogs("insert in position=$position elements ($elements)",__FUNCTION__,__FILE__);
 	
 	if ($position == '' || (!is_array($array)) || $elements == ''){

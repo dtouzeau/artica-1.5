@@ -1030,7 +1030,7 @@ function Restrictions_insert_acl($rulename,$index,$value){
 		writelogs("Array as ".count($array_src) . " rows",__CLASS__.'/'.__FUNCTION__,__FILE__);
 		if(count($array_src)>0){
 			$newpos=$index+2;
-			$new_array=array_insert($array_src,$newpos,"allow $value");
+			$new_array=array_insert_artica($array_src,$newpos,"allow $value");
 		}else{
 			$this->AddAccessRule($rulename,'allow',$value);
 			return null;
@@ -1327,7 +1327,7 @@ function Restriction_delete_acl($rulename,$ruleindex,$aclindex){
 			writelogs("Array as ".count($array_src) . " rows",__CLASS__.'/'.__FUNCTION__,__FILE__);
 			if(count($array_src)>0){
 				$newpos=$index+2;
-				$new_array=array_insert($array_src,$newpos,$line);
+				$new_array=array_insert_artica($array_src,$newpos,$line);
 			}else{
 				$this->icap_add_restrictions_rule($class_name,$switch,$acl,$isnot);
 				return null;

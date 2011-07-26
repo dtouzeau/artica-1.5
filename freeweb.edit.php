@@ -179,8 +179,18 @@ function groupwares_save(){
 	$q=new mysql();
 	$q->QUERY_SQL($sql,"artica_backup");
 	if(!$q->ok){echo $q->mysql_error;return;}
+	
+	$sql="SELECT ID FROM drupal_queue_orders WHERE `ORDER`='DELETE_FREEWEB' AND `servername`='{$ligne["servername"]}'";
+	$ligneDrup=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));	
+	if(!is_numeric($ligneDrup["ID"])){$ligneDrup["ID"]=0;}
+	if($ligneDrup["ID"]==0){
+		$sql="INSERT INTO drupal_queue_orders(`ORDER`,`servername`) VALUES('INSTALL_GROUPWARE','{$_POST["servername"]}')";
+		$q=new mysql();
+		$q->QUERY_SQL($sql,"artica_backup");
+		if(!$q->ok){echo $q->mysql_error;return;}
+	}
 	$sock=new sockets();
-	$sock->getFrameWork("cmd.php?freeweb-groupware={$_POST["servername"]}&servername={$_POST["servername"]}");
+	$sock->getFrameWork("drupal.php?perform-orders=yes");	
 }
 	
 	
@@ -836,7 +846,13 @@ function popup(){
 		
 	}
 	$NewServer=0;
-	if($ligne["servername"]==null){$NewServer=1;}
+	if(trim($ligne["servername"]==null)){$NewServer=1;}
+	
+	if($NewServer==0){
+		$domain="<div style='font-size:16px'>{$ligne["servername"]}</div>
+			<input type='hidden' value='{$ligne["servername"]}' id='servername'>
+			<input type='hidden' value='{$ligne["domainname"]}' id='domainname'>";
+	}
 	
 	$html="
 	<table style='width:100%'>
@@ -1053,23 +1069,25 @@ function popup(){
 		}	
 		
 		function SaveFreeWebMain(){
+			var NewServer=$NewServer;
 			var XHR = new XHRConnection();
-			var sitename=document.getElementById('servername').value;
-			var www_a=document.getElementById('domainname').value;
-			var www_b=document.getElementById('servername').value;
-			var www_t=www_a.length+www_b.length;
-			if(www_t<2){
-				alert('$error_please_fill_field:$acl_dstdomain'); 
-				return;
-			}
+			if(NewServer==1){
+				var sitename=document.getElementById('servername').value;
+				var www_a=document.getElementById('domainname').value;
+				var www_b=document.getElementById('servername').value;
+				var www_t=www_a.length+www_b.length;
+				if(www_t<2){
+					alert('$error_please_fill_field:$acl_dstdomain'); 
+					return;
+				}
 			
-			if(sitename!=='_default_'){
-				var x=document.getElementById('domainname').value;
-				if(x.length==0){alert('$error_please_fill_field:$acl_dstdomain');return;}
-			}else{
-				document.getElementById('domainname').value='';
-			}
-						
+				if(sitename!=='_default_'){
+					var x=document.getElementById('domainname').value;
+					if(x.length==0){alert('$error_please_fill_field:$acl_dstdomain');return;}
+				}else{
+					document.getElementById('domainname').value='';
+				}
+			}		
 			
 			
 			if(document.getElementById('useMysql').checked){
@@ -1126,13 +1144,16 @@ function popup(){
 			
 			if(document.getElementById('vg_size')){XHR.appendData('vg_size',document.getElementById('vg_size').value);}
 			XHR.appendData('lvm_vg','{$ligne["lvm_vg"]}');
-			if(sitename!=='_default_'){
-				var www_a=document.getElementById('domainname').value;
-				var www_b=document.getElementById('servername').value;
-				if(www_a.length>0){XHR.appendData('servername',www_a+'.'+www_b);}else{XHR.appendData('servername',www_b);}
-    		}else{
-    			XHR.appendData('servername','_default_');
+			if(NewServer==1){
+				if(sitename!=='_default_'){
+					var www_b=document.getElementById('domainname').value;
+					var www_a=document.getElementById('servername').value;
+					if(www_a.length>0){XHR.appendData('servername',www_a+'.'+www_b);}else{XHR.appendData('servername',www_b);}
+    				}else{
+    				XHR.appendData('servername','_default_');
+    			}
     		}
+    		if(NewServer==0){XHR.appendData('servername',document.getElementById('servername').value);}
     		XHR.appendData('domainname',document.getElementById('domainname').value);
     		XHR.appendData('uid',uid);
     		XHR.appendData('mysql_database',document.getElementById('mysql_database').value);

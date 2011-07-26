@@ -111,6 +111,106 @@ public function LOCATE_VBoxHeadless(){
 		if(is_file("/var/run/vboxadd-service.pid")){return "/var/run/vboxadd-service.pid";}
 	}
 	
+	
+	public function CreateUnixUser($username,$groupname=null,$displayname=null){
+		if($this->UnixUserExists($username)){return true;}
+		include_once(dirname(__FILE__)."/class.settings.inc");
+		$user=new usersMenus();
+		if($groupname==null){$groupname=$username;}
+		if($displayname==null){$displayname=$username;}
+		
+		if(!$this->UnixGroupExists($groupname)){
+			$groupadd=$this->find_program("groupadd");
+			$cmd="$groupadd $groupname >/dev/null 2>&1";
+			if($GLOBALS["VERBOSE"]){echo "CreateUnixUser() $user->LinuxDistriCode \"$cmd\"\n";}
+			shell_exec($cmd);	
+			if(!$this->UnixGroupExists($groupname)){return false;}
+		}
+		
+		$cmd=null;
+		$useradd=$this->find_program("useradd");
+		if($user->LinuxDistriCode=="CENTOS"){
+			$cmd="$useradd -m -g $groupname -d /home/$username -c \"$displayname\" $username >/dev/null 2>&1";
+		}
+		if($user->LinuxDistriCode=="SUSE"){
+			$cmd="$useradd -m -g $groupname -d /home/$username -c \"$displayname\" $username >/dev/null 2>&1";
+		}		
+		if($user->LinuxDistriCode=="FEDORA"){
+			$cmd="$useradd -m -g $groupname -d /home/$username -c \"$displayname\" $username >/dev/null 2>&1";
+		}
+		if($user->LinuxDistriCode=="MANDRAKE"){
+			$cmd="$useradd -m -g $groupname -d /home/$username -c \"$displayname\" $username >/dev/null 2>&1";
+		}						
+		if($cmd==null){
+			$cmd="useradd -m -g $groupname -G adm -d /home/$username -s /bin/bash -c \"$displayname\" $username >/dev/null 2>&1";
+		}
+		
+		
+		
+		if($GLOBALS["VERBOSE"]){echo "CreateUnixUser() $user->LinuxDistriCode \"$cmd\"\n";}
+		shell_exec($cmd);	
+		return $this->UnixUserExists($username);
+		
+		
+	}
+	
+	public function JAVA_HOME_GET(){
+		$f=explode("\n", @file_get_contents("/etc/environment"));
+		while (list ($num, $val) = each ($f) ){
+			if(preg_match("#JAVA_HOME=(.+)#", $val,$re)){
+				$re[1]=str_replace('"', "", $re[1]);
+				if(is_dir($re[1])){return $re[1];}
+			}
+		}
+		
+	}
+	
+	public function JAVA_HOME_SET($dir){
+		$f=explode("\n", @file_get_contents("/etc/environment"));
+		while (list ($num, $val) = each ($f) ){
+			if(preg_match("#JAVA_HOME=(.+)#", $val,$re)){
+				$re[1]=str_replace('"', "", $re[1]);
+				if($re[1]==$dir){return;}
+				$f[$num]="JAVA_HOME=\"$dir\"";
+				@file_put_contents("/etc/environment", @implode("\n", $f));
+				return;
+			}
+		}
+		
+		$f[]="JAVA_HOME=\"$dir\"";
+		@file_put_contents("/etc/environment", @implode("\n", $f));
+		
+	}	
+	
+	private function UnixGroupExists($groupname){
+		$getent=$this->find_program("getent");
+		exec("$getent group $groupname 2>&1",$results);
+		while (list ($num, $val) = each ($results) ){
+			if(preg_match("#^$groupname#", $val)){
+				if($GLOBALS["VERBOSE"]){echo "UnixGroupExists() $val Match\n";}
+				return true;}else{if($GLOBALS["VERBOSE"]){echo "UnixGroupExists() $val no match\n";}}
+		}
+		if($GLOBALS["VERBOSE"]){echo "UnixGroupExists() group:$groupname does not exists in database\n";}	
+		return false;
+		
+	}
+	
+	private function UnixUserExists($username){
+		
+		$getent=$this->find_program("getent");
+		$cmd="$getent shadow $username 2>&1";
+		if($GLOBALS["VERBOSE"]){echo "UnixUserExists() \"$cmd\"\n";}
+		exec($cmd,$results);
+		while (list ($num, $val) = each ($results) ){
+			if(preg_match("#^$username#", $val)){
+				if($GLOBALS["VERBOSE"]){echo "UnixUserExists() $val Match\n";}
+				return true;}
+				if($GLOBALS["VERBOSE"]){echo "UnixUserExists() $val No match\n";}
+		}
+		if($GLOBALS["VERBOSE"]){echo "UnixUserExists() user:$username does not exists in database\n";}	
+		return false;
+	}
+	
 
 
 	public function sysctl($key,$value){

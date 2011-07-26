@@ -1550,6 +1550,8 @@ end;
 end;
 //#############################################################################
 procedure topenldap.ChangeSettings(server_name:string;port:string;username:string;password:string;suffix:string;ChangeSlapd:string);
+var
+   nohup:string;
 begin
  Set_LDAP('admin',username);
  Set_LDAP('password',password);
@@ -1561,7 +1563,8 @@ begin
  fpsystem('/usr/share/artica-postfix/bin/process1 --checkout --force '+ logs.DateTimeNowSQL());
  LDAP_STOP();
  LDAP_START();
- SYS.THREAD_COMMAND_SET(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.change.password.php');
+ nohup:=SYS.LOCATE_GENERIC_BIN('nohup');
+ fpsystem(trim(nohup+' '+ SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.change.password.php >/dev/null 2>&1 &'));
 end;
 //#############################################################################
 function topenldap.CREATE_CERTIFICATE():boolean;

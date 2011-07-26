@@ -739,13 +739,14 @@ function buildHost($uid=null,$hostname,$ssl=null,$d_path=null,$Params=array()){
 	
 	
 	if($hostname<>"_default_"){$conf[]="\tServerName $hostname";}
+	$php_open_base_dir=$freeweb->open_basedir();
 	$conf[]="\tServerAdmin $ServerAdmin";
 	$conf[]="\tServerSignature $ServerSignature";
 	$conf[]="\tDocumentRoot $freeweb->WORKING_DIRECTORY";
 		$conf[]=$freeweb->mod_evasive();
 		$conf[]=$freeweb->Charsets();
 		$conf[]="\tphp_value  error_log  \"$freeweb->WORKING_DIRECTORY/php_logs/php.log\"";
-		$conf[]="\tphp_value open_basedir \"".$freeweb->open_basedir()."\"";
+		if($php_open_base_dir<>null){$conf[]="\tphp_value open_basedir \"$php_open_base_dir\"";}
 		$conf[]=$freeweb->php_values();
 		$conf[]=$freeweb->WebdavHeader();
 		$conf[]=$freeweb->QUOS();
@@ -1139,6 +1140,8 @@ function install_groupware($servername){
 			return;
 		break;
 		
+		case "GROUPOFFICE":
+			group_office_install($servername);
 		
 		default:
 			;
@@ -1415,8 +1418,17 @@ function drupal_schedules(){
 					$f=new drupal_vhosts($servername);
 					$f->priv_user($uid,$value);	
 				}
-			break;			
-			
+			break;	
+
+			case "DELETE_FREEWEB":
+				writelogs("DELETE_FREEWEB: servername:$servername (uid=$uid, value=$value)",__FUNCTION__,__FILE__,__LINE__);
+				remove_host($servername);
+				break;
+				
+			case "INSTALL_GROUPWARE":
+				writelogs("INSTALL_GROUPWARE: servername:$servername (uid=$uid, value=$value)",__FUNCTION__,__FILE__,__LINE__);
+				install_groupware($servername);
+				break;
 			
 		}
 		
@@ -1425,6 +1437,38 @@ function drupal_schedules(){
 		
 	}
 		
+	
+}
+
+function group_office_install($servername,$nobuildHost=false){
+	$sources="/usr/local/share/artica/group-office";
+	$unix=new unix();
+	$cp=$unix->find_program("cp");
+	$freeweb=new freeweb($servername);
+	if(!is_dir($sources)){writelogs("[$servername] $sources no such directory",__FUNCTION__,__FILE__,__LINE__);return;}
+	if(!is_dir($freeweb->WORKING_DIRECTORY)){writelogs("[$servername] $freeweb->WORKING_DIRECTORY no such directory",__FUNCTION__,__FILE__,__LINE__);return;}
+	shell_exec("/bin/cp -rf $sources/* $freeweb->WORKING_DIRECTORY/");
+	@file_put_contents("$freeweb->WORKING_DIRECTORY/config.php", "");
+	shell_exec("/bin/chmod 666 $freeweb->WORKING_DIRECTORY/config.php");
+	
+	$apacheusername=$unix->APACHE_SRC_ACCOUNT();
+	shell_exec("/bin/chown -R $apacheusername:$apacheusername $freeweb->WORKING_DIRECTORY");
+	if(!is_dir("/home/$servername")){@mkdir("/home/$servername");}
+	include_once(dirname(__FILE__)."/ressources/class.group-office.php");
+	$gpoffice=new group_office($servername);
+	$gpoffice->www_dir=$freeweb->WORKING_DIRECTORY;
+	$gpoffice->writeconfigfile();
+	
+	
+	shell_exec("/bin/chown  $apacheusername:$apacheusername /home/$servername");
+	shell_exec("/bin/chown  -R $apacheusername:$apacheusername /home/$servername");	
+	
+	
+	
+	//a la find chmod 644 /var/www/office.touzeau.com/group-office/config.php 
+	
+	if(!$nobuildHost){buildHost(null,$servername);}
+	
 	
 }
 

@@ -669,6 +669,7 @@
 		}
 		
 		public function open_basedir(){
+				if($this->groupware=="GROUPOFFICE"){return null;}
 				$f[]="/usr/share/php";
 				$f[]="/usr/share/php5";
 				$f[]="/var/lighttpd/upload";
@@ -705,7 +706,7 @@
 				$already["/Microsoft-Server-ActiveSync"]=true;
 			}
 			
-			$sql="SELECT * FROM freewebs_aliases WHERE servername='{$_GET["servername"]}' ORDER BY alias";
+			$sql="SELECT * FROM freewebs_aliases WHERE servername='$this->servername' ORDER BY alias";
 			$q=new mysql();
 			$results=$q->QUERY_SQL($sql,'artica_backup');
 			while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
@@ -713,7 +714,7 @@
 				$directory=trim($ligne["directory"]);
 				if($Alias==null){continue;}
 				$regex=false;
-				if(preg_match("^REGEX:(.+)", $Alias,$re)){$Alias=$re[1];$regex=true;}
+				if(preg_match("#^REGEX:(.+)#", $Alias,$re)){$Alias=$re[1];$regex=true;}
 				
 				if(substr($Alias, 0,1)<>'/'){$Alias="/$Alias";}
 				if(substr($directory, 0,1)<>'/'){$directory="/$directory";}
@@ -756,6 +757,15 @@
 				$f[]="\tphp_value session.cache_limiter \"nocache\"";
 				$f[]="\tphp_value magic_quotes_gpc \"Off\"";
 				$f[]="\tphp_value allow_url_fopen  \"On\"";	
+			}
+			
+			if($this->groupware=="GROUPOFFICE"){
+				$f[]="\tphp_value output_buffering \"Off\"\n";
+				$f[]="\tphp_value magic_quotes_gpc \"off\"";
+				$f[]="\tphp_admin_flag engine \"on\"";
+        		$f[]="\tphp_admin_value open_basedir \"none\"";
+        		$f[]="UseCanonicalName On";
+				
 			}
 			
 		

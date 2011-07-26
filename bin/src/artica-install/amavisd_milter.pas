@@ -1019,7 +1019,7 @@ fpsystem('/bin/chmod 755 /usr/local/etc/sender_scores_sitewide');
 
 include_config_files();
 
-if FileExists('/var/spool/postfix/var/run/amavisd-new/amavisd-new.pid') then fpsystem('/bin/chown postfix:postfix /var/spool/postfix/var/run/amavisd-new/amavisd-new.pid');
+
 //if fileExists('/var/spool/postfix/var/run/amavisd-new/amavisd-new.sock') then logs.DeleteFile('/var/spool/postfix/var/run/amavisd-new/amavisd-new.sock');
 fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.amavis.php');
 
@@ -1110,11 +1110,9 @@ end;
 
 cmd:=cmd+' start &';
 logs.NOTIFICATION('starting amavisd-new daemon','Artica starting the Amavisd-new daemon with cmdline:'+cmd +' '+slogs.Text ,'postfix' );
-logs.Debuglogs('Starting......: amavisd: using '+cmd);
+
 
 SaveConfig();
-logs.Syslogs('Starting......: amavisd-new...');
-
 logs.Debuglogs(cmd);
 
 
@@ -1122,8 +1120,19 @@ fpsystem('/bin/chmod 644 /var/amavis-plugins/check-external-users.conf');
 fpsystem('/bin/chmod 755 /var/amavis-plugins');
 fpsystem('/bin/chown root:root /var/amavis-plugins');
 fpsystem('/bin/chown root:root /var/amavis-plugins/check-external-users.conf');
-fpsystem(cmd);
 
+if FileExists('/var/spool/postfix/var/run/amavisd-new/amavisd-new.pid') then begin
+       logs.Debuglogs('Starting......: amavisd-new removing amavisd-new.pid...');
+       logs.DeleteFile('/var/spool/postfix/var/run/amavisd-new/amavisd-new.pid');
+end else begin
+       logs.Debuglogs('Starting......: amavisd-new amavisd-new.pid no such file...');
+end;
+
+// * * * *
+logs.Syslogs('Starting......: amavisd-new...');
+logs.Debuglogs('Starting......: amavisd: using '+cmd);
+fpsystem(cmd);
+// * * * *
 
 count:=0;
   while not SYS.PROCESS_EXIST(AMAVISD_PID()) do begin
@@ -1148,7 +1157,7 @@ count:=0;
          logs.NOTIFICATION('[ARTICA]: ('+SYS.HOSTNAME_g()+') Amavis has been successfully started PID '+AMAVISD_PID(),'this is an information...','system');
          logs.DebugLogs('Starting......: amavisd-new PID '+AMAVISD_PID());
     end;
-
+    if FileExists('/var/spool/postfix/var/run/amavisd-new/amavisd-new.pid') then fpsystem('/bin/chown postfix:postfix /var/spool/postfix/var/run/amavisd-new/amavisd-new.pid');
     if FileExists('/var/spool/postfix/var/run/amavisd-new/amavisd-new.sock') then fpsystem('/bin/chown postfix:postfix /var/spool/postfix/var/run/amavisd-new/amavisd-new.sock');
 end;
 //##############################################################################

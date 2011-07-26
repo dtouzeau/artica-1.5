@@ -147,10 +147,8 @@ function listOfAvailableServices($freeweb=false){
 		}
 		$array["ARTICA_MINIADM"]="{ARTICA_MINIADM}";
 		
-		if($user->DRUPAL7_INSTALLED){
-			$array["DRUPAL"]="{APP_DRUPAL}";
-		}
-		
+		if($user->DRUPAL7_INSTALLED){$array["DRUPAL"]="{APP_DRUPAL}";}
+		if($user->GROUPOFFICE_INSTALLED){$array["GROUPOFFICE"]="{APP_GROUPOFFICE}";}
 		
 		
 	}

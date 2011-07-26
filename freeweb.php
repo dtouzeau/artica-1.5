@@ -665,20 +665,37 @@ function listwebs_search(){
 		
 		$href="<a href=\"javascript:blur();\" OnClick=\"javascript:Loadjs('freeweb.edit.php?hostname={$ligne["servername"]}')\"
 		style='font-size:13px;text-decoration:underline;font-weight:bold'>";
+		$color="black";
+		$delete=imgtootltip("delete-24.png","{delete}","FreeWebDelete('{$ligne["servername"]}')");
+		$sql="SELECT ID FROM drupal_queue_orders WHERE `ORDER`='DELETE_FREEWEB' AND `servername`='{$ligne["servername"]}'";
+		$ligneDrup=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));	
+		if($ligne["ID"]>0){
+			$edit=imgtootltip("folder-tasks-32.png","{delete}");
+			$color="#CCCCCC";
+			$delete=imgtootltip("delete-32-grey.png","{delete} {scheduled}");
+			
+		}
+		$sql="SELECT ID FROM drupal_queue_orders WHERE `ORDER`='INSTALL_GROUPWARE' AND `servername`='{$ligne["servername"]}'";
+		if($ligne["ID"]>0){
+			$edit=imgtootltip("folder-tasks-32.png","{installing}","Loadjs('freeweb.edit.php?hostname={$ligne["servername"]}')");
+			$color="#CCCCCC";
+			$delete=imgtootltip("delete-32-grey.png","{installing}");
+			$groupware="<span style='text-align:right;font-size:11px;font-weight:bold;font-style:italic;color:#B64B13;float:right'>&nbsp;({installing} {{$vhosts->TEXT_ARRAY[$ligne["groupware"]]["TITLE"]}})</span>";
+			
+		}		
 		
 		$html=$html."
 			<tr class=$classtr>
 			<td width=1%>$edit</td>
-			<td nowrap>$groupware$forward_text<span style='float:left'><strong style='font-size:13px'>$href$servername_text</a>$added_port$sizevg</strong></span></td>
+			<td nowrap style='color:$color'>$groupware$forward_text<span style='float:left'><strong style='font-size:13px;style='color:$color'>$href$servername_text</a>$added_port$sizevg</strong></span></td>
 			<td width=1%><img src='img/$ssl'></td>
 			<td width=1%>$statistics</td>
 			<td width=1%>$exec_statistics</td>
 			<td nowrap><strong style='font-size:13px'>{$ligne["uid"]}$ipDetect</strong></td>
-			<td width=1%>". imgtootltip("delete-24.png","{delete}","FreeWebDelete('{$ligne["servername"]}')")."</td>
+			<td width=1%>$delete</td>
 			</tr>
 			";
-		
-	}	
+		}	
 	
 	$html=$html."
 	</tbody>
@@ -732,8 +749,12 @@ function FreeWebLeftMenuSave(){
 
 function delete(){
 	writelogs("Delete server \"{$_GET["delete-servername"]}\"",__FUNCTION__,__FILE__,__LINE__);
+	$sql="INSERT INTO drupal_queue_orders(`ORDER`,`servername`) VALUES('DELETE_FREEWEB','{$_GET["delete-servername"]}')";
+	$q=new mysql();
+	$q->QUERY_SQL($sql,"artica_backup");
+	if(!$q->ok){echo $q->mysql_error;return;}
 	$sock=new sockets();
-	$sock->getFrameWork("cmd.php?ApacheDirDelete=". urlencode($_GET["delete-servername"]));
+	$sock->getFrameWork("drupal.php?perform-orders=yes");	
 	}
 
 function apache_src_status(){

@@ -1592,7 +1592,8 @@ l.Add('postfix-pcre');
 l.Add('mailman');
 l.Add('spamc');
 l.Add('rpm');
-
+l.add('tnef');
+L.add('php5-pspell');
 
 l.Add('netpbm');
 l.Add('gifsicle');

@@ -35,7 +35,10 @@ class drupal_vhosts{
 			$this->ServerPort=$ligne["ServerPort"];
 			if($this->www_dir==null){$this->www_dir="/var/www/$this->servername";}
 			$this->drupalDatabase="drupal_".md5(strtolower(trim($this->servername)));
-			if($ligne["mysql_database"]<>null){$this->drupalDatabase=$ligne["mysql_database"];}
+			if($ligne["mysql_database"]<>null){$this->drupalDatabase=$ligne["mysql_database"];}else{
+				$sql="UPDATE freeweb SET mysql_database='{$this->drupalDatabase} WHERE servername='$this->servername'";
+				$q->QUERY_SQL($sql,"artica_backup");
+			}
 			$this->DrupalModules=unserialize(base64_decode($ligne["DrupalModules"]));
 	}
 	

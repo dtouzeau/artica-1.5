@@ -12,6 +12,7 @@ include_once(dirname(__FILE__) . '/framework/frame.class.inc');
 
 
 if($argv[1]=="--build"){build();die();}
+if($argv[1]=="--javadirs"){checkJavaDirs();die();}
 
 
 
@@ -20,6 +21,7 @@ function build(){
 	$ldap=new clladp();
 	$sock=new sockets();
 	$TomcatListenPort=$sock->GET_INFO($TomcatListenPort);
+	$unix=new unix();
 	if(!is_numeric($TomcatListenPort)){$TomcatListenPort=8080;}
 	@mkdir('/opt/openemm/tomcat/conf',644,true);
 	$f[]="<?xml version='1.0' encoding='utf-8'?>";
@@ -179,5 +181,58 @@ function build(){
 	$f[]="</Server>";	
 	@file_put_contents("/opt/openemm/tomcat/conf/server.xml", @implode("\n", $f));
 	echo "Starting......:  Tomcat server server.xml done...\n";	
+	
+	$java=$unix->JAVA_HOME_GET();
+	if(!is_dir($java)){
+		echo "Starting......: Tomcat server JAVA_HOME not set try to find a good one...\n";
+		checkJavaDirs();	
+	}
+	
+	
 
 }
+
+function checkJavaDirs(){
+	$unix=new unix();
+	$dirs=$unix->dirdir("/opt/openemm");
+	while (list ($index, $directory) = each ($dirs) ){
+		$dirtmp=basename($directory);
+		if(is_file("$directory/bin/java")){
+			
+			$vbin=getjavaversion("$directory/bin/java");
+			echo "Starting......: Tomcat found $dirtmp $vbin\n";
+			$jaws[$vbin]=$directory;
+		}
+			
+	}
+	if(!is_array($jaws)){
+		echo "Starting......: Tomcat server unable to find java\n";
+		return;
+		
+	}
+	krsort($jaws);
+	while (list ($index, $directory) = each ($jaws) ){
+		$f[]=$directory;
+	}
+	
+	if(is_dir($f[0])){
+		echo "Starting......: Tomcat server set java to {$f[0]}\n";
+		$unix->JAVA_HOME_SET($f[0]);
+	}
+	
+}
+
+function getjavaversion($path){
+	
+	exec("$path -version 2>&1",$results);
+	while (list ($index, $directory) = each ($results) ){
+		if(preg_match('#java version\s+"(.+?)"#', $directory,$re)){
+			$v=$re[1];
+			$v=str_replace(".", "", $v);
+			$v=str_replace("_", "", $v);
+			return intval($v);
+		}
+	}
+	
+}
+

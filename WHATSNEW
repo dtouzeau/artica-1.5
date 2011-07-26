@@ -1,4 +1,4 @@
-1.5.072600: 
+1.5.072619: 
 ========================================================================================
 
 System Changes
@@ -71,6 +71,7 @@ FreeWebs changes
 1.5.071723: Add more options in order to tune Apache processes.
 1.5.072113: Add possibility to manage aliases in virtualhosts.
 1.5.072600: Add Tomcat support for both installation, monitoring and administration.
+1.5.072619: Add Group-Office support inside FreeWebs for groupware installation.
 
 
 1.5.062900

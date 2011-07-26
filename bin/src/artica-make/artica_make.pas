@@ -183,6 +183,13 @@ begin
        halt(0);
  end;
 
+ if ParamStr(1)='APP_TOMCAT6' then begin
+       openemm:=tsetup_openemm.Create();
+       openemm.tomcat6();
+       zinstall.EMPTY_CACHE();
+       halt(0);
+ end;
+
  if ParamStr(1)='APP_TOMCAT' then begin
        fpsystem('/usr/share/artica-postfix/bin/setup-ubuntu --check-base-system');
        openemm:=tsetup_openemm.Create();
