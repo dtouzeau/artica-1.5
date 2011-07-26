@@ -442,6 +442,8 @@ class settings_inc {
 	var $TOMCAT_JAVA="";
 	var $TOMCAT_DIR="";
 	var $APACHE_MOD_TOMCAT=false;
+	var $OPENEMM_INSTALLED=false;
+	var $OPENEMM_VERSION="";
 	private function CheckIndexDefaults($_GLOBAL){
 		return $_GLOBAL;
 		foreach($this as $key => $value) {
@@ -823,6 +825,7 @@ class settings_inc {
 			$this->IPTABLES_ACCOUNTING_EXISTS=$_GLOBAL["IPTABLES_ACCOUNTING_EXISTS"];
 			$this->POWER_DNS_MYSQL=$_GLOBAL["POWER_DNS_MYSQL"];
 			$this->POWERADMIN_INSTALLED=$_GLOBAL["POWERADMIN_INSTALLED"];
+			$this->OPENEMM_INSTALLED=$_GLOBAL["OPENEMM_INSTALLED"];
 			
 			if(isset($_GLOBAL["ISCSI_CLIENT_INSTALLED"])){$this->ISCSI_CLIENT_INSTALLED=$_GLOBAL["ISCSI_CLIENT_INSTALLED"];}
 			if($this->LinuxDistriCode=="DEBIAN"){$this->AS_DEBIAN_FAMILY=true;}
@@ -836,7 +839,7 @@ class settings_inc {
 			$this->TOMCAT_JAVA=$_GLOBAL["TOMCAT_JAVA"];
 			$this->TOMCAT_DIR=$_GLOBAL["TOMCAT_DIR"];
 			$this->APACHE_MOD_TOMCAT=$_GLOBAL["APACHE_MOD_TOMCAT"];
-			
+			$this->OPENEMM_VERSION=$_GLOBAL["OPENEMM_VERSION"];
 			
 			if(isset($_GLOBAL["deduplication_installed"])){$this->deduplication_installed=$_GLOBAL["deduplication_installed"];}
 			$this->EnableManageUsersTroughActiveDirectory=$_GLOBAL["EnableManageUsersTroughActiveDirectory"];

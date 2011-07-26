@@ -22,7 +22,8 @@ policyd_weight, backuppc, kav4fs, ocsi, ocsagent, sshd, auditd, squidguard_page,
 dkfilter, ufdbguardd, dkimmilter, dropbox, articapolicy, virtualbox, tftpd,
 crossroads, articastatus, articaexecutor, articabackground, pptpd, apt_mirror,
 ddclient, cluebringer, apachesrc, toolsversions, sabnzbdplus, fusermount,
-vnstat, munin,greyhole,autofs, iscsitarget, snort,greensql, amanda, tomcat;
+vnstat, munin, greyhole, autofs, iscsitarget, snort, greensql, amanda, tomcat,
+openemm;
 
 var
 install:Tclass_install;

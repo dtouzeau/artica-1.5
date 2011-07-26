@@ -1,4 +1,5 @@
 <?php
+if(posix_getuid()<>0){session_start();if(!isset($_SESSION["uid"])){if(isset($_GET["js"])){echo "document.location.href='logoff.php';";die();}}}
 include_once(dirname(__FILE__) . '/ressources/class.main_cf.inc');
 include_once(dirname(__FILE__) . '/ressources/class.ldap.inc');
 include_once(dirname(__FILE__) . "/ressources/class.sockets.inc");
@@ -8,6 +9,7 @@ include_once(dirname(__FILE__) . "/ressources/class.mysql.inc");
 
 if(isset($_GET["install_status"])){install_status();exit;}
 if(posix_getuid()<>0){
+	if(!isset($_SESSION["uid"])){if(!isset($_GET["js"])){echo "document.location.href='logoff.php';";die();}}
 	$user=new usersMenus();
 	if($user->AsSystemAdministrator==false){
 		$tpl=new templates();
@@ -677,7 +679,7 @@ if($users->POSTFIX_INSTALLED){
 	if($users->ZARAFA_INSTALLED){
 		$html=$html.BuildRows("APP_Z_PUSH",$GlobalApplicationsStatus,"z-push");
 	}
-	
+	$html=$html.BuildRows("APP_OPENEMM",$GlobalApplicationsStatus,"OpenEMM");
 	$html=$html.BuildRows("APP_ALTERMIME",$GlobalApplicationsStatus,"altermime");
 	if(!$users->KASPERSKY_SMTP_APPLIANCE){$html=$html.BuildRows("APP_POMMO",$GlobalApplicationsStatus,"pommo");}
 	$html=$html.BuildRows("APP_MSMTP",$GlobalApplicationsStatus,"msmtp");
@@ -785,6 +787,7 @@ $html=$html.BuildRows("APP_PHPMYADMIN",$GlobalApplicationsStatus,"phpMyAdmin");
 		$html=$html.BuildRows("APP_DRUSH7",$GlobalApplicationsStatus,"drush7");
 		$html=$html.BuildRows("APP_PIWIGO",$GlobalApplicationsStatus,"piwigo");
 		$html=$html.BuildRows("APP_SABNZBDPLUS",$GlobalApplicationsStatus,"sabnzbd");
+		$html=$html.BuildRows("APP_OPENEMM",$GlobalApplicationsStatus,"OpenEMM");
 	}
 if($users->cyrus_imapd_installed){
 	$html=$html.spacer('webmails');

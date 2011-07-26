@@ -465,6 +465,7 @@ class usersMenus {
 	var $TOMCAT_JAVA="";
 	var $TOMCAT_DIR="";
 	var $APACHE_MOD_TOMCAT=false;
+	var $OPENEMM_INSTALLED=false;
 	
 	private function CheckIndexDefaults($_GLOBAL){
 		return $_GLOBAL;
@@ -866,7 +867,10 @@ class usersMenus {
 			$this->TOMCAT_INSTALLED=$_GLOBAL["TOMCAT_INSTALLED"];
 			$this->TOMCAT_JAVA=$_GLOBAL["TOMCAT_JAVA"];
 			$this->TOMCAT_DIR=$_GLOBAL["TOMCAT_DIR"];	
-			$this->APACHE_MOD_TOMCAT=$_GLOBAL["APACHE_MOD_TOMCAT"];				
+			$this->APACHE_MOD_TOMCAT=$_GLOBAL["APACHE_MOD_TOMCAT"];
+			$this->OPENEMM_INSTALLED=$_GLOBAL["OPENEMM_INSTALLED"];
+
+			
 			
 			if(isset($_GLOBAL["ISCSI_CLIENT_INSTALLED"])){$this->ISCSI_CLIENT_INSTALLED=$_GLOBAL["ISCSI_CLIENT_INSTALLED"];}
 			if($this->LinuxDistriCode=="DEBIAN"){$this->AS_DEBIAN_FAMILY=true;}
@@ -1673,6 +1677,10 @@ private function build_user_left_menus(){
 					if($EnableCluebringer==1){
 						$array["{messaging}"]["SUB"]["Policyd Adm."]="javascript:s_PopUp('cluebringer/index.php','800','800')";
 					}
+				}
+				
+				if($this->OPENEMM_INSTALLED){
+					$array["{messaging}"]["SUB"]["{APP_OPENEMM}"]="javascript:Loadjs('openemm.php')";
 				}
 				
 				$array=$this->MAILBOXES_MENUS($array);

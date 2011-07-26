@@ -10,6 +10,7 @@ uses
 Classes, SysUtils,Process,strutils,IniFiles,RegExpr in 'RegExpr.pas',unix,logs,dateutils,uHashList,Geoip,BaseUnix,md5,dhcp_server,openvpn,cups,pdns, obm2,
 samba,smartd,xapian,opengoo,dstat,sugarcrm,rsync,tcpip,policyd_weight,apache_artica, autofs,nfsserver,framework,ocsi,assp,gluster,zabbix,hamachi,vmwaretools,phpldapadmin,zarafa_server,squidguard,emailrelay,mldonkey,backuppc,kav4fs,
 ocsagent,sshd,auditd,dkfilter,ufdbguardd,dkimmilter,dropbox,articapolicy,virtualbox,crossroads,articastatus,articaexecutor,articabackground,pptpd,ddclient,cluebringer,toolsversions,sabnzbdplus,fusermount,vnstat,munin,greyhole,snort,greensql,tomcat,
+openemm,
 mailarchiver in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/mailarchiver.pas',
 kavmilter    in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/kavmilter.pas',
 kas3         in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/kas3.pas',
@@ -2682,6 +2683,7 @@ var
    greyhole:tgreyhole;
    openvpn:topenvpn;
    tomcat:ttomcat;
+   openemm:topenemm;
 begin
 
    debug:=false;
@@ -2784,7 +2786,14 @@ begin
     end;
     tomcat.free;
 
-
+   //openEMM
+    openemm:=topenemm.Create(SYS);
+    try
+       ArrayList.Add('[APP_OPENEMM] "'+openemm.VERSION()+'"');
+    except
+          logs.Syslogs('FATAL ERROR on CGI_ALL_APPLIS_INSTALLED after openemm.VERSION()');
+    end;
+    openemm.free;
 
     // OpenSSH
     sshd:=tsshd.Create(SYS);
@@ -5904,6 +5913,8 @@ var
    greyhole:tgreyhole;
    snort:tsnort;
    greensql:tgreensql;
+   tomcat:ttomcat;
+   openemm:topenemm;
 begin
      logs:=Tlogs.Create;
      spfm:=tspf.Create;
@@ -5974,6 +5985,12 @@ begin
 
     greensql:=tgreensql.Create(SYS);
     greensql.START();
+
+    openemm:=topenemm.Create(SYS);
+    openemm.START();
+
+    tomcat:=ttomcat.CReate(SYS);
+    tomcat.START();
 
 
     if SYS.PROCESS_EXIST(SYS.PIDOF('artica-backup')) then begin

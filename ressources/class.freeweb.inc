@@ -613,6 +613,13 @@
 			if(!$this->APACHE_MOD_TOMCAT){return null;}
 			if(!isset($this->Params["JkMount"])){return null;}
 			if($this->Params["JkMount"]==0){return null;}
+			$users=new usersMenus();
+			if($users->OPENEMM_INSTALLED){
+				$OpenEMMEnable=$sock->GET_INFO("OpenEMMEnable");
+				if(!is_numeric($OpenEMMEnable)){$OpenEMMEnable=1;}
+				if($OpenEMMEnable==1){return;}
+			}	
+			
 			if($this->AS_ROOT){echo "Starting......: Apache \"$this->servername\" Adding tomcat connector\n";}
 			$f[]="\t<IfModule mod_jk.c>";
 			$f[]="\t\tJkMount / default";

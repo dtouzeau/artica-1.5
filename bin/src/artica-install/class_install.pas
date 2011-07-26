@@ -12,7 +12,7 @@ uses
   jcheckmail,dhcp_server,dstat,rsync,smartd,tcpip,policyd_weight,apache_artica,autofs,assp,pdns,gluster,nfsserver,zabbix,hamachi,postfilter, vmwaretools,zarafa_server,monit,wifi,
   emailrelay,mldonkey,backuppc,kav4fs,ocsi,ocsagent,sshd,auditd,squidguard_page,dkfilter,ufdbguardd,squidguard,framework,dkimmilter,dropbox,articapolicy,virtualbox,tftpd,crossroads,articastatus,articaexecutor,articabackground,pptpd,
   apt_mirror,cluebringer,apachesrc,sabnzbdplus,fusermount,vnstat,munin,greyhole,iscsitarget,postfwd2,snort,greensql,amanda,
-  mailarchiver in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/mailarchiver.pas',ddclient,tomcat,
+  mailarchiver in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/mailarchiver.pas',ddclient,tomcat,openemm,
   kas3         in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/kas3.pas',
   kavmilter    in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/kavmilter.pas',
   dnsmasq      in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/dnsmasq.pas',
@@ -652,6 +652,7 @@ var
    greensql:tgreensql;
    amanda:tamanda;
    tomcat:ttomcat;
+   openemm:topenemm;
 begin
     GLOBAL_INI:=myconf.Create;
     Zclam:=TClamav.Create;
@@ -785,6 +786,14 @@ begin
                tomcat.free;
                exit();
             end;
+            if ParamStr(2)='openemm' then begin
+               openemm:=topenemm.Create(GLOBAL_INI.SYS);
+               openemm.STOP();
+               openemm.free;
+               exit();
+            end;
+
+
 
 
            if ParamStr(2)='fcron' then begin
@@ -1620,7 +1629,7 @@ begin
                writeln('|zabbix|hamachi|kav4proxy|postfilter|vmtools|zarafa|zarafa-web|monit|wifi[proxy-pac|artica-notifier|mldonkey|backuppc|kav4fs|ocsweb|ocsagent');
                writeln('|openssh|auditd|squidguard-http|fetchmail-logger|dkfilter|ufdb|ufdb-tail|squidguard-tail|framework|dkim-milter|dropbox|artica-policy|virtualbox-web');
                writeln('|tftpd|crossroads|artica-status|artica-exec|artica-back|pptpd|pptpd-clients|apt-mirror|squidclamav-tail|ddclient|cluebringer|apachesrc');
-               writeln('|sabnzbdplus|fcron|fuse|vnstat|winbindd|munin|greyhole|amavis-milter|iscsi|auth-logger|snort|greensql|amanda|zarafa-lmtp|tomcat');
+               writeln('|sabnzbdplus|fcron|fuse|vnstat|winbindd|munin|greyhole|amavis-milter|iscsi|auth-logger|snort|greensql|amanda|zarafa-lmtp|tomcat|openemm');
                exit();
             end;
 
@@ -1748,6 +1757,7 @@ var
    greensql:tgreensql;
    amanda:tamanda;
    tomcat:ttomcat;
+   openemm:topenemm;
 begin
     GLOBAL_INI:=myconf.Create;
     SYS:=Tsystem.Create;
@@ -2100,6 +2110,12 @@ begin
                tomcat:=ttomcat.Create(GLOBAL_INI.SYS);
                tomcat.START();
                tomcat.free;
+               exit();
+            end;
+            if ParamStr(2)='openemm' then begin
+               openemm:=topenemm.Create(GLOBAL_INI.SYS);
+               openemm.START();
+               openemm.free;
                exit();
             end;
 
@@ -2777,7 +2793,7 @@ begin
                writeln('|sysloger|zabbix|kav4proxy|postfilter|vmtools|zarafa|zarafa-web|monit|wifi|proxy-pac|artica-notifier|mldonkey|backuppc|kav4fs|ocsweb|ocsagent');
                writeln('|openssh|auditd|squidguard-http|fetchmail-logger|dkfilter|ufdb|ufdb-tail|squidguard-tail|framework|dkim-milter|dropbox|artica-policy|virtualbox-web');
                writeln('|tftpd|crossroads|artica-status|artica-exec|artica-back|pptpd|pptpd-clients|apt-mirror|squidclamav-tail|ddclient|cluebringer|apachesrc');
-               writeln('|sabnzbdplus|fcron|fuse|vnstat|winbindd|munin|greyhole|amavis-milter|iscsi|auth-logger|snort|greensql|amanda|zarafa-lmtp|tomcat');
+               writeln('|sabnzbdplus|fcron|fuse|vnstat|winbindd|munin|greyhole|amavis-milter|iscsi|auth-logger|snort|greensql|amanda|zarafa-lmtp|tomcat|openemm');
                exit();
             end;
 

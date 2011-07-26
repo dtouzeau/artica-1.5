@@ -32,7 +32,7 @@ System Changes
 1.5.072213: Add a new feature that help you to get more than 600Mb memory free (see http://www.artica.fr/forum/viewtopic.php?f=10&t=4162&start=0)
 1.5.072217: Add possibility to turn MySQL in SSL Mode.
 1.5.072217: Add slave mode in PowerDNS section.
-1.5.072600: fix http://bugs.mysql.com/bug.php?id=54088 when upgrading to Mysql 5.5.3
+1.5.072600: Fix http://bugs.mysql.com/bug.php?id=54088 when upgrading to Mysql 5.5.3
 
 
 Messaging Changes:

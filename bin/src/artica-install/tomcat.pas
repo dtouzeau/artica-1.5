@@ -19,6 +19,7 @@ private
      SYS:TSystem;
      artica_path:string;
      TomcatEnable:integer;
+     OpenEMMEnable:integer;
      binpath:string;
 
      procedure JAVA_HOME_SET(path:string);
@@ -46,6 +47,8 @@ begin
        SYS:=zSYS;
        binpath:=BIN_PATH();
        if not TryStrToInt(SYS.GET_INFO('TomcatEnable'),TomcatEnable) then TomcatEnable:=1;
+       if not TryStrToInt(SYS.GET_INFO('OpenEMMEnable'),OpenEMMEnable) then OpenEMMEnable:=1;
+       if FileExists('/home/openemm/bin/openemm.sh') then if OpenEMMEnable=1 then TomcatEnable:=0;
 
 
 end;

@@ -1824,4 +1824,6 @@ Very lower config will get 320Mb free[br]
 <APP_TOMCAT>Tomcat Web server</APP_TOMCAT>
 <tomcat_admin_interface>Tomcat Admin web interface</tomcat_admin_interface>
 <enable_tomcatjconet>Activate Apache Tomcat Connector</enable_tomcatjconet>
-<jkMount_explain>Add the JkMount directive for *.do,*.jsp,*.jspx,*.cfm,*.cfc,*.cfchart,*.cfres files</jkMount_explain>  
+<jkMount_explain>Add the JkMount directive for *.do,*.jsp,*.jspx,*.cfm,*.cfc,*.cfchart,*.cfres files</jkMount_explain>
+<OPENEMM_INSTALLED_ENABLED_FEATURE_DISABLED>OpenEMM service is installed and enabled. It is incompatible to run 2 tomcat server is a single server.[br]If you need to use this feature, disable OpenEMM service.</OPENEMM_INSTALLED_ENABLED_FEATURE_DISABLED> 
+<APP_OPENEMM>OpenEMM service</APP_OPENEMM>

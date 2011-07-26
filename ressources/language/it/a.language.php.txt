@@ -201,6 +201,7 @@ The logic is based on evaluation of SQL commands using a risk scoring matrix as 
 <APP_LXC>LXC containers</APP_LXC>
 <APP_LXC_TEXT>Create and manage Virtual Private servers with Linux Containers technology</APP_LXC_TEXT>
 <APP_NSCD>Name Service cache Daemon</APP_NSCD>
+<APP_OPENEMM>OpenEMM service</APP_OPENEMM>
 <APP_PDNS_INSTANCE>PowerDNS (Instance)</APP_PDNS_INSTANCE>
 <APP_POSTFWD2>Policy Delegation</APP_POSTFWD2>
 <APP_POSTFWD2_TEXT>Policy delegation is a kind of Firewall that allow you to define a set of rules to restrict messaging</APP_POSTFWD2_TEXT>
@@ -1061,6 +1062,7 @@ Use relayed domain instead until there is no mailbox server installed.[br]
 <Offline_Uncorrectable>Off-line Scan Uncorrectable Count</Offline_Uncorrectable>
 <Offline_Uncorrectable_text>Quantity of uncorrected errors</Offline_Uncorrectable_text>
 <only_use_this>Only use this</only_use_this>
+<OPENEMM_INSTALLED_ENABLED_FEATURE_DISABLED>OpenEMM service is installed and enabled. It is incompatible to run 2 tomcat server is a single server.[br]If you need to use this feature, disable OpenEMM service.</OPENEMM_INSTALLED_ENABLED_FEATURE_DISABLED>
 <OpenVPNRemotePort>OpenVPN server listen port</OpenVPNRemotePort>
 <OPENVPN_APPLY_CONFIG>Build VPN parameters</OPENVPN_APPLY_CONFIG>
 <OPENVPN_APPLY_CONFIG_TEXT>Save your settings and restart your OpenVPN process in order to make it in production mode</OPENVPN_APPLY_CONFIG_TEXT>

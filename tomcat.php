@@ -42,10 +42,23 @@ function parameters(){
 	$page=CurrentPageName();
 	$tpl=new templates();	
 	$sock=new sockets();
-	$TomcatListenPort=$sock->GET_INFO($TomcatListenPort);
+	$TomcatListenPort=$sock->GET_INFO("TomcatListenPort");
 	$TomcatEnable=$sock->GET_INFO("TomcatEnable");
 	if(!is_numeric($TomcatListenPort)){$TomcatListenPort=8080;}
 	if(!is_numeric($TomcatEnable)){$TomcatEnable=1;}
+	
+	$users=new usersMenus();
+	if($users->OPENEMM_INSTALLED){
+		$OpenEMMEnable=$sock->GET_INFO("OpenEMMEnable");
+		if(!is_numeric($OpenEMMEnable)){$OpenEMMEnable=1;}
+		if($OpenEMMEnable==1){
+			echo $tpl->_ENGINE_parse_body("<div class=explain>{OPENEMM_INSTALLED_ENABLED_FEATURE_DISABLED}</div>");
+			return;
+			
+		}
+	}
+	
+	
 	$ldap=new clladp();
 	$ueim="http://{$_SERVER["SERVER_ADDR"]}:$TomcatListenPort/manager/html/";
 	

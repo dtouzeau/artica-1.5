@@ -14,7 +14,7 @@ uses
   mailspy_milter   in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/mailspy_milter.pas',
   imapsync         in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/imapsync.pas',
   amavisd_milter   in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/amavisd_milter.pas',
-  mailmanctl       in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/mailmanctl.pas';
+  mailmanctl       in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/mailmanctl.pas',openemm;
 
 
 type
@@ -620,6 +620,7 @@ var
    apachesrc            :tapachesrc;
    amanda               :tamanda;
    tomcat               :ttomcat;
+   openemm              :topenemm;
    openldap_admin,openldap_password,openldap_server:string;
 begin
        verbosed:=false;
@@ -698,6 +699,16 @@ begin
    if FileExists(SYS.LOCATE_GENERIC_BIN('pdnssec')) then list.Add('$_GLOBAL["PDNSSEC_INSTALLED"]=True;') else list.Add('$_GLOBAL["PDNSSEC_INSTALLED"]=False;');
    if FileExists(SYS.LOCATE_GENERIC_BIN('nscd')) then list.Add('$_GLOBAL["NSCD_INSTALLED"]=True;') else list.Add('$_GLOBAL["NSCD_INSTALLED"]=False;');
    if FileExists('/usr/share/drupal7/index.php') then list.Add('$_GLOBAL["DRUPAL7_INSTALLED"]=True;') else list.Add('$_GLOBAL["DRUPAL7_INSTALLED"]=False;');
+   if FileExists('/home/openemm/bin/openemm.sh') then begin
+      list.Add('$_GLOBAL["OPENEMM_INSTALLED"]=True;');
+      openemm:=Topenemm.Create(SYS);
+      list.Add('$_GLOBAL["OPENEMM_VERSION"]="'+openemm.VERSION()+'";');
+      openemm.Free;
+   end else begin
+      list.Add('$_GLOBAL["OPENEMM_INSTALLED"]=False;');
+      list.add('$_GLOBAL["OPENEMM_VERSION"]="";');
+   end;
+
 
    tomcat:=ttomcat.Create(SYS);
    if FIleExists(tomcat.BIN_PATH()) then begin

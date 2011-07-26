@@ -421,6 +421,14 @@ function params2(){
 	$APACHE_MOD_TOMCAT=0;
 	if($user->APACHE_MOD_TOMCAT){$APACHE_MOD_TOMCAT=1;}
 	
+	$users=new usersMenus();
+	if($users->OPENEMM_INSTALLED){
+		$OpenEMMEnable=$sock->GET_INFO("OpenEMMEnable");
+		if(!is_numeric($OpenEMMEnable)){$OpenEMMEnable=1;}
+		if($OpenEMMEnable==1){$APACHE_MOD_TOMCAT=0;}
+	}	
+	
+	
 $html="
 	<div style='font-size:16px;font-weight:bold'>{language}</div>
 	<div id='other-apache-div'>

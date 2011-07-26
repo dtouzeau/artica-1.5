@@ -2619,6 +2619,11 @@ function tomcat(){
 	
 	$TomcatEnable=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("TomcatEnable");
 	if(!is_numeric($TomcatEnable)){$TomcatEnable=1;}
+	if(!$GLOBALS["CLASS_USERS"]->OPENEMM_INSTALLED){
+		$OpenEMMEnable=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("OpenEMMEnable");
+		if(!is_numeric($OpenEMMEnable)){$OpenEMMEnable=1;}
+		if($OpenEMMEnable==1){$TomcatEnable=0;}
+	}
 	
 	$pid_path="/opt/openemm/tomcat/temp/tomcat.pid";
 	$master_pid=trim(@file_get_contents($pid_path));
@@ -2638,6 +2643,46 @@ function tomcat(){
 	 	
 		if(!$GLOBALS["CLASS_UNIX"]->process_exists($master_pid)){
 			WATCHDOG("APP_TOMCAT","tomcat");
+			$l[]="";
+			return implode("\n",$l);
+			return;
+		}	
+		$l[]=GetMemoriesOf($master_pid);
+		$l[]="";
+	
+	return implode("\n",$l);return;		
+	
+}
+function openemm(){
+	if(!$GLOBALS["CLASS_USERS"]->OPENEMM_INSTALLED){return;}
+	$OpenEMMEnable=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("OpenEMMEnable");
+	if(!is_numeric($OpenEMMEnable)){$OpenEMMEnable=1;}
+	$grep=$GLOBALS["CLASS_UNIX"]->find_program("grep");
+	$ps=$GLOBALS["CLASS_UNIX"]->find_program("ps");
+	$awk=$GLOBALS["CLASS_UNIX"]->find_program("awk");
+	
+	$cmd="$ps -eo pid,command|$grep -E \"\/home\/openemm.*?org\.apache\.catalina\"|$grep -v grep|$awk '{print $1}' 2>&1";
+	exec($cmd,$results);
+	$master_pid=trim(@implode("", $results));
+	
+	
+	$master_pid=trim(@file_get_contents($pid_path));
+	
+	
+		$l[]="[APP_OPENEMM]";
+		$l[]="service_name=APP_OPENEMM";
+	 	$l[]="master_version=".$GLOBALS["CLASS_USERS"]->OPENEMM_VERSION;
+	 	$l[]="service_cmd=spamd";	
+	 	$l[]="service_disabled=$TomcatEnable";
+	 	$l[]="pid_path=$pid_path";
+	 	$l[]="watchdog_features=1";
+	 	$l[]="family=smtp";
+	 	
+	 	if($OpenEMMEnable==0){$l[]="";return implode("\n",$l);return;}
+	 	
+	 	
+		if(!$GLOBALS["CLASS_UNIX"]->process_exists($master_pid)){
+			WATCHDOG("APP_OPENEMM","openemm");
 			$l[]="";
 			return implode("\n",$l);
 			return;

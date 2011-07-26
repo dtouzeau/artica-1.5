@@ -639,6 +639,7 @@ function RESTART_SYSLOG(){
 function send_email_events($subject,$text,$context,$date=null,$attached_files=array(),$recipient=null){
 	
 	$arr_APP=array(
+		"APP_OPENEMM"=>"OpenEMM service",
 		"APP_TOMCAT"=>"Tomcat Web server",
 		"APP_GREENSQL"=>"GreenSQL Firewall",
 		"APP_ZARAFA_WEB"=>"Zarafa web server",

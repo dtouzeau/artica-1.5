@@ -169,6 +169,7 @@ Patientez quelques secondes et rafra&icirc;chissez cette page.</apply_network_co
 <APP_LXC>Conteneurs LXC</APP_LXC>
 <APP_LXC_TEXT>Cr&eacute;ez et administrez des serveurs virtuels gr&acirc;ce &agrave; l'utilisation de technologie Linux Containers</APP_LXC_TEXT>
 <APP_NSCD>D&eacute;mon de mise en cache interne</APP_NSCD>
+<APP_OPENEMM>Service OpenEMM</APP_OPENEMM>
 <APP_PDNS_INSTANCE>PowerDNS (Instance)</APP_PDNS_INSTANCE>
 <APP_POSTFWD2>R&egrave;gles de d&eacute;l&eacute;gation</APP_POSTFWD2>
 <APP_POSTFWD2_TEXT>Policy Delegation est une sorte de pare-feu qui vous autorise &agrave; d&eacute;finir des r&egrave;gles permettant de limiter les flux de messagerie</APP_POSTFWD2_TEXT>
@@ -916,6 +917,7 @@ Utilisez l'autre option (domaine local) dans ce contexte.</NO_RELAY_TO_THIS_SERV
 <Offline_Uncorrectable>secteurs non r&eacute;-allouables</Offline_Uncorrectable>
 <Offline_Uncorrectable_text>Nombre de secteurs non r&eacute;-allouables</Offline_Uncorrectable_text>
 <only_use_this>Utiliser seulement ceci</only_use_this>
+<OPENEMM_INSTALLED_ENABLED_FEATURE_DISABLED>Le service OpenEMM est install&eacute; et activ&eacute;.[br]Ce n'est pas comptable d'utiliser deux instances Tomcat avec cette configuration.[br]Si vous d&eacute;sirez utiliser cette fonctionnalit&eacute;, d&eacute;sactivez le service OpenEMM.</OPENEMM_INSTALLED_ENABLED_FEATURE_DISABLED>
 <OpenVPNRemotePort>Port d'&eacute;coute du serveur OpenVPN</OpenVPNRemotePort>
 <OPENVPN_APPLY_CONFIG>Construire les param&egrave;tres VPN</OPENVPN_APPLY_CONFIG>
 <OPENVPN_APPLY_CONFIG_TEXT>Sauvegarde vos param&egrave;tres et red&eacute;marre votre processus OpenVPN afin de les mettre en mode production.</OPENVPN_APPLY_CONFIG_TEXT>
