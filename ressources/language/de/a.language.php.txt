@@ -54,6 +54,7 @@ Choose the main domain and set the subdomain you want to create.[br]
 <add_vip_members_text>Add new members into the VIPTrack process</add_vip_members_text>
 <add_virtual_server>Add a new Virtual server</add_virtual_server>
 <add_websites>Add websites</add_websites>
+<ADMINISTRATION_THEME>Administration theme</ADMINISTRATION_THEME>
 <affect_vg_to_service>Affect this group to a service (FreeWebs or Virtuals servers)</affect_vg_to_service>
 <affect_vg_to_service_explain>This option define that this LVM group will be used to create container for a given service.[br]For example, if you define this group to FreeWebs, you will be able to define a quotas in FreeWebs.[br]Web directory will be stored in a dedicated Virtual disk
 </affect_vg_to_service_explain>
@@ -133,6 +134,7 @@ For modern dual or quad CPU hosts with enough memory a value between 15 and 50 i
 If a child process hang more that X CPU % and it's execution reach the max time to live, it kill the child process and send a notification to the administrator</amavis_watchdog_explain>
 <analyze>Analyze</analyze>
 <analyzed>Analyzed</analyzed>
+<anonymous>anonymous</anonymous>
 <antispam_filters>Anti-Spam filters</antispam_filters>
 <ApacheKeepAlive>The Keep-Alive extension to HTTP/1.0 and the persistent connection feature of HTTP/1.1 provide long-lived HTTP sessions which allow multiple requests to be sent over the same TCP connection.[br]
 In some cases this has been shown to result in an almost 50% speedup in latency times for HTML documents with many images.
@@ -182,6 +184,8 @@ Wait few seconds and refresh this web page</apply_network_configuration_warn>
 <APP_ARTICA_ADM>Artica Web Administration interface</APP_ARTICA_ADM>
 <APP_ARTICA_AUTH_TAIL>Authentication Watchdog</APP_ARTICA_AUTH_TAIL>
 <APP_DNSMASQ_TEXT>Improve Network performances by using a DNS cache and DNS redirector using dnsmasq</APP_DNSMASQ_TEXT>
+<APP_DRUPAL7>Drupal 7.x</APP_DRUPAL7>
+<APP_DRUSH7>Drush for Drupal7</APP_DRUSH7>
 <APP_EYEOS>eyeOS the Cloud Desktop</APP_EYEOS>
 <APP_EYEOS_TEXT>eyeOS is an open source web desktop following the cloud computing concept that seeks to enable collaboration and communication among users</APP_EYEOS_TEXT>
 <APP_GREENSQL>GreenSQL Firewall</APP_GREENSQL>
@@ -207,6 +211,7 @@ The logic is based on evaluation of SQL commands using a risk scoring matrix as 
 <APP_SNORT_ABOUT>Snort is an open source network intrusion prevention and detection system (IDS/IPS) developed by Sourcefire.[br]
 Combining the benefits of signature, protocol, and anomaly-based inspection, Snort is the most widely deployed 
 IDS/IPS technology worldwide</APP_SNORT_ABOUT>
+<APP_TOMCAT>Tomcat Web server</APP_TOMCAT>
 <APP_ZARAFA_INDEXER>Zarafa Indexer</APP_ZARAFA_INDEXER>
 <APP_Z_PUSH>Z-Push</APP_Z_PUSH>
 <APP_Z_PUSH_TEXT>The Z-Push software allows users with PDA's and Smartphones to synchronize their email,
@@ -422,8 +427,12 @@ For example is you define a server to 3 it will handle 3 connexions more before 
 <Current_Pending_Sector>Current Pending Sector Count</Current_Pending_Sector>
 <Current_Pending_Sector_text>Current quantity of unstable sectors (waiting for remapping)</Current_Pending_Sector_text>
 <CYRUS_DB_CONFIG_TEXT>Tune and define parameters for the Cyrus Imap databases</CYRUS_DB_CONFIG_TEXT>
+<DATABASE>Database</DATABASE>
 <databases_are_not_compiled_warn>Databases are not compiled.[br]Your filter will not be available until all databases are not translated from MySQL database to disk.</databases_are_not_compiled_warn>
 <database_configuration>Database configuration</database_configuration>
+<DATABASE_DRIVER>Database driver</DATABASE_DRIVER>
+<DATABASE_HOSTNAME>Database hostname</DATABASE_HOSTNAME>
+<DATABASE_NAME>Database name</DATABASE_NAME>
 <DDOS_prevention>DDOS Prevention</DDOS_prevention>
 <DDOS_WHITE_ADD>Wildcards can be used on up to the last 3 octets if necessary.
 (eg: 127.0.0.1 or 127.0.0.*)
@@ -464,6 +473,7 @@ Constant feedback. The value must be in the range 0..1 inclusive. The default se
 [br][b]number / number[/b]
 [br][b]number / concurrency[/b] The number must be in the range 0..1 inclusive. With number equal to "1", a destination's delivery concurrency is incremented by 1 after each successful pseudo-cohort.
 </default_destination_concurrency_positive_feedback_text>
+<DEFAULT_THEME>Default theme</DEFAULT_THEME>
 <default_website>Default website</default_website>
 <delayed>delayed</delayed>
 <DeleteAllipTablesRules_text>This operation will delete ALL firewall rules.
@@ -583,6 +593,12 @@ The interval is specified in seconds and may be a real number.
 <DOSSiteInterval_explain>Interval for the site count threshold. The interval is specified in seconds and may be a real number</DOSSiteInterval_explain>
 <DOWNLOAD_OPENVPN_CLIENT_APPLE>OpenVPN client for Mac OSx</DOWNLOAD_OPENVPN_CLIENT_APPLE>
 <do_not_send_same_infos_before>Do not send same information before</do_not_send_same_infos_before>
+<DRUPAL_BOOTSTRAP>Drupal Boostrap</DRUPAL_BOOTSTRAP>
+<drupal_refresh_ordered>Refresh information requested and scheduled... please wait few times</drupal_refresh_ordered>
+<DRUPAL_ROOT>Drupal root</DRUPAL_ROOT>
+<DRUPAL_USER>Drupal user</DRUPAL_USER>
+<DRUPAL_VERSION>Drupal version</DRUPAL_VERSION>
+<DRUSH_VERSION>Drush version</DRUSH_VERSION>
 <dumpcycle>DUMP cycle</dumpcycle>
 <dumpcycleExplain>Set the number of days in the dump cycle, ie, set how often a full dump should be performed</dumpcycleExplain>
 <duplicate_domain_explain>This feature will duplicate mails to another mail server.[br]It should be used for backup features or testing purpose.[br]
@@ -630,6 +646,7 @@ It is useful in providing training to email users about company policies and gen
  all the URLs will be replaced by the url that you set in this form</EnablePhishTag_explain_form>
 <EnablePublicOrganizations>Public user registration</EnablePublicOrganizations>
 <EnablePublicOrganizations_text>If checked, organization's administrator is able to allow public internet users to create accounts with a register form</EnablePublicOrganizations_text>
+<EnableRebootAfterUpgrade>Reboot system after system upgrade task</EnableRebootAfterUpgrade>
 <EnableSpamAssassinFreeMail_explain>detect email addresses using free webmail services</EnableSpamAssassinFreeMail_explain>
 <enable_amavis_watchdog>Enable watchdog</enable_amavis_watchdog>
 <ENABLE_ARTICA_SMTP_STATS>Enable SMTP statistics engine</ENABLE_ARTICA_SMTP_STATS>
@@ -660,6 +677,7 @@ When a user add/delete/modify a file in a Samba folder, greyhole will saved it a
 <enable_syslog_client_text>If you turn to green this server will send system events to remote master servers.[br]This server will use UDP on remote 514 port in order to send datas</enable_syslog_client_text>
 <enable_syslog_server>Activate System log (server mode)</enable_syslog_server>
 <enable_syslog_server_text>If you turn to green this server will receive system events from remote servers.[br]This server will use UDP on locate port 514 in order to receive datas</enable_syslog_server_text>
+<enable_tomcatjconet>Activate Apache Tomcat Connector</enable_tomcatjconet>
 <enable_viptrack>Activate VIPTrack</enable_viptrack>
 <enable_whitelisting>Activate WhiteListing method</enable_whitelisting>
 <eq2>is equal</eq2>
@@ -680,6 +698,7 @@ The filename should be a filename recognizable to whatever file transfer protoco
 <filesystem_type>Filesystem type</filesystem_type>
 <files_and_folders_permissions>Files and folders permissions</files_and_folders_permissions>
 <files_extension>Files extension</files_extension>
+<FILE_DIRECTORY_PATH>File directory path</FILE_DIRECTORY_PATH>
 <filterwin2k_text>Makes dnsmasq ignore certain DNS requests which are made by Windows boxen every few minutes</filterwin2k_text>
 <firewall>Firewall</firewall>
 <fixed_ip_addr>Fixed IP address</fixed_ip_addr>
@@ -861,6 +880,7 @@ This mode works ideally with high-end storage HBAs and for applications that  ei
 <iscsi_type_edit_explain>Using the File mode, Artica will create a file container specified by the path field
 This file will be the shared iSCSI disk.[br]In disk mode, you will have to choose the disk partition that will be the iSCSI disk</iscsi_type_edit_explain>
 <jGrowlNotifsDisabled>Disable tooltips notifications</jGrowlNotifsDisabled>
+<jkMount_explain>Add the JkMount directive for *.do,*.jsp,*.jspx,*.cfm,*.cfc,*.cfchart,*.cfres files</jkMount_explain>
 <jumpto>Jump to</jumpto>
 <KeepAlive_explain>Use it when a firewall between the reverse proxy and the backend-server.</KeepAlive_explain>
 <last_24h>Last 24H</last_24h>
@@ -965,6 +985,7 @@ Organizations can only create subdomains of these domains if the "Use only offic
 <MinSpareServers>Min Spare servers</MinSpareServers>
 <MISSING_PARAMETER>Missing parameters</MISSING_PARAMETER>
 <MISSING_PARAMETER_TEXT>A parameter is missing, the service should not running proprely</MISSING_PARAMETER_TEXT>
+<modules>Modules</modules>
 <mod_evasive_explain>This feature detects when a single client is making multiple requests in a short period of time,
  and denies further requests from that client.[br]
  The period for which the ban is in place can be very short, because it just gets renewed the next time a request is detected from that same host.
@@ -1086,6 +1107,7 @@ Usually you did not have to change this section.[br]Sometimes, you need to force
 <perform_mysql_check>Perform MySQL check on this table ?</perform_mysql_check>
 <permissions>Permissions</permissions>
 <persistante_connection>Persistante connection</persistante_connection>
+<PHP_CONFIGURATION>PHP configuration path</PHP_CONFIGURATION>
 <picture>Picture</picture>
 <please_choose_an_official_domain>Please, select an official domain</please_choose_an_official_domain>
 <please_register_first>Please register first</please_register_first>
@@ -1292,6 +1314,7 @@ In this case,you will loose all cached websites and Squid Cache must refill them
 Do you want to perform this operation ?</reconstruct_caches_explain>
 <reconstruct_vlans>Reconstruct VLANs</reconstruct_vlans>
 <record>Record</record>
+<recreation_nightout>All sites about how to have a night out including restaurants, pubs, night clubs...</recreation_nightout>
 <redirect_to>Redirect to</redirect_to>
 <redirect_to_email>Redirect to address</redirect_to_email>
 <reduce_artica_web_explain>Artica use 2 web servers (http engine and framework) in order to provide this Web administration.[br]Enable this feature will reduce Web processes to minimal.[br]
@@ -1513,6 +1536,8 @@ Messages that matches rules will be automatically rejected by the mail server</S
 Each entry must be separated by a carriage return.
 </SimpleWords_explain_add>
 <site_interval>Site interval</site_interval>
+<SITE_PATH>Site path</SITE_PATH>
+<SITE_URI>Web site uri</SITE_URI>
 <size_by_days>FLow size by day</size_by_days>
 <skip-character-set-client-handshake>Ignore client charset</skip-character-set-client-handshake>
 <skip-character-set-client-handshake_text>ignore client information and use the default server character </skip-character-set-client-handshake_text>
@@ -1528,6 +1553,7 @@ Minimal threads is 2 and will safe minimal 20Mb memory[br]In the opposite, if yo
 <smbconfig>smb.conf</smbconfig>
 <smbservices>Services</smbservices>
 <smb_RootDir_text>All directories tasks will started on the specifed directory</smb_RootDir_text>
+<smtp_notification_not_saved>eMails notifications are not set</smtp_notification_not_saved>
 <smtp_sasl_security_options_mutual_auth>Only allow methods that provide mutual authentication</smtp_sasl_security_options_mutual_auth>
 <smtp_sasl_security_options_noanonymous>Disallow methods that allow anonymous authentication</smtp_sasl_security_options_noanonymous>
 <smtp_sasl_security_options_nodictionary>Disallow methods subject to passive (dictionary) attack</smtp_sasl_security_options_nodictionary>
@@ -1613,6 +1639,7 @@ If the value of this attribute is decreasing there is a high probability that th
 <TimeSynchronization>Time synchronization</TimeSynchronization>
 <time_in_seconds>Number of seconds</time_in_seconds>
 <today_downloaded_flow>Today: Downloaded flow</today_downloaded_flow>
+<tomcat_admin_interface>Tomcat Admin web interface</tomcat_admin_interface>
 <top10>TOP 10</top10>
 <top10_users>TOP 10 users</top10_users>
 <total_threshold>Total threshold</total_threshold>
@@ -1629,6 +1656,7 @@ ufdbGuard is designed for use with the popular web proxy Squid</ufdbguard_simple
 <unfreeze>Unfreeze the system</unfreeze>
 <unix_permissions>UNIX permissions</unix_permissions>
 <unlimited>unlimited</unlimited>
+<UPDATED>updated on</UPDATED>
 <updated_on>Updated on</updated_on>
 <UPDATE_DEBIAN_TEMPLATE_TEXT>Download the pre-configured Debian i386 template, require 350Mo free space.</UPDATE_DEBIAN_TEMPLATE_TEXT>
 <UPDATE_FEDORA_TEMPLATE_TEXT>Download the pre-configured Fedora i386 template, require 690Mo free space.</UPDATE_FEDORA_TEMPLATE_TEXT>
@@ -1743,6 +1771,7 @@ The default value of 8 should be sufficient for most purposes</Wthreads_explain>
 <www_forward>Forward to other website</www_forward>
 <www_ForwardTo>New website to forward</www_ForwardTo>
 <www_humanitarian_associations>All sites related to humanitarian associations</www_humanitarian_associations>
+<www_imagehosting>All images/pitures storages web sites</www_imagehosting>
 <www_reale_state_office>Sites about all types of realestate, bying and selling homes, finding appartments for rent and selling</www_reale_state_office>
 <www_translators>All sites offer language translations</www_translators>
 <www_whitelisting>WhiteListing method</www_whitelisting>

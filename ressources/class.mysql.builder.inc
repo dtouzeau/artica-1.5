@@ -2237,8 +2237,22 @@ public function CheckTablesPostfilter(){
 				) ";
 			$this->QUERY_SQL($sql,'artica_backup');
 			if($this->ok){writelogs("Fatal: $this->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
-		}		
-  
+		}	
+
+		
+		if(!$this->TABLE_EXISTS('drupal_queue_orders','artica_backup')){
+			$sql="CREATE TABLE IF NOT EXISTS `drupal_queue_orders` (
+			  `ID` int(11) NOT NULL AUTO_INCREMENT,
+			  `ORDER` varchar(20) NOT NULL,
+			  `value` varchar(255) NOT NULL,
+			  `servername` varchar(255) NOT NULL,
+			  PRIMARY KEY (`ID`),
+			  KEY `ORDER` (`ORDER`),
+			  KEY `servername` (`servername`)
+			) ";		
+		$this->QUERY_SQL($sql,'artica_backup');
+			if($this->ok){writelogs("Fatal: $this->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
+		}
 	
  			
 

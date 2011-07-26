@@ -24,6 +24,7 @@ if(isset($_GET["restart-mysql"])){restart_mysql();exit;}
 if(isset($_GET["restart-cron"])){restart_cron();exit;}
 if(isset($_GET["total-memory"])){total_memory();exit;}
 if(isset($_GET["mysql-ssl-keys"])){mysql_ssl_key();exit;}
+if(isset($_GET["restart-tomcat"])){retart_tomcat();exit;}
 
 
 
@@ -66,6 +67,19 @@ function restart_cron(){
 	$unix=new unix();
 	$nohup=$unix->find_program("nohup");
 	$cmd=trim("$nohup /etc/init.d/artica-postfix restart fcron >/dev/null 2>&1 &");
+	shell_exec($cmd);
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);
+}
+function restart_tomcat(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$php5=$unix->LOCATE_PHP5_BIN();
+	$cmd=trim("$nohup /usr/share/artica-postfix/exec.freeweb.php --httpd >/dev/null 2>&1 &");
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);
+	shell_exec($cmd);
+	
+	
+	$cmd=trim("$nohup /etc/init.d/artica-postfix restart tomcat >/dev/null 2>&1 &");
 	shell_exec($cmd);
 	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);
 }

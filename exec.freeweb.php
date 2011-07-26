@@ -56,6 +56,8 @@ if($argv[1]=="--drupal-upriv"){drupal_privuser($argv[2],$argv[3],$argv[4]);die()
 if($argv[1]=="--drupal-cron"){drupal_cron();die();exit;}
 if($argv[1]=="--drupal-modules"){drupal_dump_modules($argv[2]);die();exit;}
 if($argv[1]=="--drupal-modules-install"){drupal_install_modules($argv[2]);die();exit;}
+if($argv[1]=="--drupal-reinstall"){drupal_reinstall($argv[2]);die();exit;}
+if($argv[1]=="--drupal-schedules"){drupal_schedules();die();exit;}
 
 
 
@@ -89,6 +91,7 @@ function help(){
 	echo "--drupal-cron......................: execute necessary cron for all drupal websites\n";
 	echo "--drupal-modules...................: dump drupal modules for [servername]\n";
 	echo "--drupal-modules-install...........: install pre-defined modules [servername]\n";
+	echo "--drupal-schedules.................: Run artica orders on the servers\n";
 }
 
 function create_cron_task(){
@@ -256,7 +259,7 @@ function CheckHttpdConf(){
 	$FreeWebsEnableModQOS=$sock->GET_INFO("FreeWebsEnableModQOS");
 	$FreeWebsEnableOpenVPNProxy=$sock->GET_INFO("FreeWebsEnableOpenVPNProxy");
 	$FreeWebsOpenVPNRemotPort=trim($sock->GET_INFO("FreeWebsOpenVPNRemotPort"));
-	
+	$TomcatEnable=$sock->GET_INFO("TomcatEnable");
 	if($FreeWebListen==null){$FreeWebListen="*";}
 	if($FreeWebListen<>"*"){$FreeWebListenApache="$FreeWebListen";}
 	if(!isset($FreeWebListenApache)){$FreeWebListenApache="*";}
@@ -268,6 +271,7 @@ function CheckHttpdConf(){
 	if(!is_numeric($FreeWebsEnableModEvasive)){$FreeWebsEnableModEvasive=0;}
 	if(!is_numeric($FreeWebsEnableModQOS)){$FreeWebsEnableModQOS=0;}		
 	if(!is_numeric($FreeWebsEnableOpenVPNProxy)){$FreeWebsEnableOpenVPNProxy=0;}
+	if(!is_numeric($TomcatEnable)){$TomcatEnable=1;}
 	
 	
 	if(is_file("/etc/apache2/sites-enabled/000-default")){@unlink("/etc/apache2/sites-enabled/000-default");}
@@ -443,6 +447,10 @@ function CheckHttpdConf(){
 	
 	if(!is_dir("$DAEMON_PATH/mods-enabled")){@mkdir("$DAEMON_PATH/mods-enabled",666,true);}
 	
+	@unlink("/etc/libapache2-mod-jk/workers.properties");
+	@unlink("/etc/apache2/workers.properties");	
+	@unlink("$DAEMON_PATH/conf.d/jk.conf");
+	
 	$users=new usersMenus();
 	$APACHE_MODULES_PATH=$users->APACHE_MODULES_PATH;
 	$array["php5_module"]="libphp5.so";
@@ -456,11 +464,41 @@ function CheckHttpdConf(){
 	$array["mem_cache_module"]="mod_mem_cache.so";
 	$array["expires_module"]="mod_expires.so";
 	$array["status_module"]="mod_status.so";
+	
+	if($users->TOMCAT_INSTALLED){
+		if($TomcatEnable==1){
+			if(is_dir($users->TOMCAT_DIR)){
+				if(is_dir($users->TOMCAT_JAVA)){
+					$array["jk_module"]="mod_jk.so";
+					$ftom[]="workers.tomcat_home=$users->TOMCAT_DIR";
+					$ftom[]="workers.java_home=$users->TOMCAT_JAVA";
+					$ftom[]="ps=/";
+					$ftom[]="worker.list=ajp13_worker";
+					$ftom[]="worker.ajp13_worker.port=8009";
+					$ftom[]="worker.ajp13_worker.host=127.0.0.1";
+					$ftom[]="worker.ajp13_worker.type=ajp13";
+					$ftom[]="worker.ajp13_worker.lbfactor=1";
+					$ftom[]="worker.loadbalancer.type=lb";
+					$ftom[]="worker.loadbalancer.balance_workers=ajp13_worker";
+					$ftom[]="";		
+					@file_put_contents("/etc/apache2/workers.properties", @implode("\n", $ftom));
+					@mkdir("/etc/libapache2-mod-jk",644);
+					@file_put_contents("/etc/libapache2-mod-jk/workers.properties", @implode("\n", $ftom));	
+					$faptom[]="<ifmodule mod_jk.c>";
+					$faptom[]="\tJkWorkersFile /etc/apache2/workers.properties";
+					$faptom[]="\tJkLogFile /var/log/apache2/mod_jk.log";
+					$faptom[]="\tJkLogLevel error";
+					$faptom[]="</ifmodule>";
+					@file_put_contents("$DAEMON_PATH/conf.d/jk.conf", @implode("\n", $faptom));	
+				}
+			}			
+		}
+		
+	}
 	 
-	
-	
 
-	
+
+
 	@unlink("$DAEMON_PATH/mods-enabled/mod-security.load");
 	@unlink("$DAEMON_PATH/mods-enabled/mod_security.load");
 	@unlink("$DAEMON_PATH/mods-enabled/mod-evasive.load");
@@ -468,6 +506,7 @@ function CheckHttpdConf(){
 	@unlink("$DAEMON_PATH/mods-enabled/status.conf");
 	@unlink("$DAEMON_PATH/mods-enabled/status.load");
 	@unlink("$DAEMON_PATH/mods-enabled/php5.load");
+	@unlink("$DAEMON_PATH/mods-enabled/jk.load");
 	
 	$sock=new sockets();
 	$FreeWebsDisableMOdQOS=$sock->GET_INFO("FreeWebsDisableMOdQOS");
@@ -748,14 +787,17 @@ function buildHost($uid=null,$hostname,$ssl=null,$d_path=null,$Params=array()){
 	
 	//DIRECTORY
 	$allowFrom=$freeweb->AllowFrom();
-		
+	$JkMount=$freeweb->JkMount();	
+	if($JkMount<>null){$conf[]=$JkMount;}
+	
+	
 	$conf[]="\t<Directory \"$freeweb->WORKING_DIRECTORY/\">\n";
 		$conf[]="\t\tDirectoryIndex $DirectoryIndex";
     	$conf[]="\t\tOptions Indexes +FollowSymLinks MultiViews";
 		$conf[]=$freeweb->WebDav();
 		$conf[]=$freeweb->AllowOverride();
 		$conf[]="\t\tOrder allow,deny";
-		$conf[]=$allowFrom;
+		if($allowFrom<>null){$conf[]=$allowFrom;}
 		$conf[]=$freeweb->mod_rewrite();
 		if($ldapRule<>null){$conf[]=$ldapRule;}
 	$conf[]="\t</Directory>";
@@ -825,6 +867,11 @@ function buildHost($uid=null,$hostname,$ssl=null,$d_path=null,$Params=array()){
 	@mkdir("$freeweb->WORKING_DIRECTORY",666,true);
 	
 	if($freeweb->groupware=="EYEOS"){install_EYEOS($hostname);}
+	if($freeweb->groupware=="DRUPAL"){
+		$unix=new unix();
+		$nohup=$unix->find_program("nohup");
+		shell_exec("$nohup ". $unix->LOCATE_PHP5_BIN()." /usr/share/artica-postfix/exec.freeweb.php --drupal-infos \"$hostname\" >/dev/null 2>&1 &");
+	}
 	
 }
 
@@ -1295,6 +1342,90 @@ function drupal_install_modules($servername){
 	
 	$f=new drupal_vhosts($servername);
 	$f->install_modules();	
+}
+
+function drupal_reinstall($servername){
+	if($GLOBALS["VERBOSE"]){echo "Starting......: Apache \"$servername\" drupal_install_modules()\n";}
+	if($servername==null){return;}	
+	$unix=new unix();
+	$drush7=$unix->find_program("drush7");
+	if(!is_file($drush7)){die();}	
+	$f=new drupal_vhosts($servername);
+	$f->DrushInstall();
+}
+
+function drupal_schedules(){
+	$q=new mysql();
+	$sql="SELECT * FROM drupal_queue_orders ORDER BY ID";
+	$results=$q->QUERY_SQL($sql,"artica_backup");
+	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
+		$uid=null;$password=null;$value=null;
+		if($ligne["value"]<>null){$data=unserialize(base64_decode($ligne["value"]));}
+		$order=$ligne["ORDER"];
+		$servername=$ligne["servername"];
+		if(isset($data["USER"])){$uid=$data["USER"];}
+		if(isset($data["PASSWORD"])){$password=$data["USER"];}
+		if(isset($data["value"])){$value=$data["value"];}
+		
+		writelogs("order:$order servername:$servername (uid=$uid)",__FUNCTION__,__FILE__,__LINE__);
+		
+		switch ($order){
+			
+			case "REFRESH_INFOS":
+				if($servername<>null){
+					$f=new drupal_vhosts($servername);
+					$f->populate_infos();
+				}
+			break;
+			
+			case "REFRESH_MODULES":
+				if($servername<>null){
+					$f=new drupal_vhosts($servername);
+					$f->dump_modules();
+					$f->install_modules();	
+				}
+			break;			
+			
+			
+			
+			case "DELETE_USER":
+				if($servername<>null){
+					$f=new drupal_vhosts($servername);
+					$f->del_user($uid);	
+				}
+			break;	
+
+			case "CREATE_USER":
+				if($servername<>null){
+					$f=new drupal_vhosts($servername);
+					$f->add_user($uid,$password);	
+				}
+			break;	
+
+			case "ENABLE_USER":
+				if($servername<>null){
+					$f=new drupal_vhosts($servername);
+					$f->active_user($uid,$value);	
+				}
+			break;			
+
+			case "PRIV_USER":
+				writelogs("PRIV_USER: servername:$servername (uid=$uid, value=$value)",__FUNCTION__,__FILE__,__LINE__);
+				if($servername<>null){
+					$f=new drupal_vhosts($servername);
+					$f->priv_user($uid,$value);	
+				}
+			break;			
+			
+			
+		}
+		
+		$sql="DELETE FROM drupal_queue_orders WHERE ID={$ligne["ID"]}";
+		$q->QUERY_SQL($sql,"artica_backup");
+		
+	}
+		
+	
 }
 
 

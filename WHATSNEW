@@ -1,4 +1,4 @@
-1.5.072218: 
+1.5.072600: 
 ========================================================================================
 
 System Changes
@@ -32,7 +32,8 @@ System Changes
 1.5.072213: Add a new feature that help you to get more than 600Mb memory free (see http://www.artica.fr/forum/viewtopic.php?f=10&t=4162&start=0)
 1.5.072217: Add possibility to turn MySQL in SSL Mode.
 1.5.072217: Add slave mode in PowerDNS section.
-fix http://bugs.mysql.com/bug.php?id=54088 when upgrading to Mysql 5.5.3
+1.5.072600: fix http://bugs.mysql.com/bug.php?id=54088 when upgrading to Mysql 5.5.3
+
 
 Messaging Changes:
 -------------------------------------------------
@@ -46,6 +47,7 @@ Messaging Changes:
 1.5.071723: When artica encounter /usr/lib/libinetmapi.so.1: undefined symbol: _ZTIN5vmime6objectE", by default, it automatically re-install Zarafa. (this feature can also be disabled under Zarafa section)
 1.5.072019: Improve removing Zarafa using "artica-make APP_ZARAFA --remove" command line.
 1.5.072113: Fix unable to compile postfix parameters. (a new link has been added in the top menu).
+1.5.072600: Fix unable to define organization to a zarafa organization.
 
 File Sharing changes
 -------------------------------------------------
@@ -53,8 +55,8 @@ File Sharing changes
 1.5.071123: Adding a new feature "Samba Watch" that help to read Samba logs.
 1.5.071123: Introduce possibility to create "Virtual samba servers" and affect them to organizations (like postfix multiple instances)
 1.5.071520: Add possibility to modify the remote announce feature in samba.
-Fix Artica did not set the /etc/libnss-ldap.conf 
-Sometimes, rename a computer did not work. The rename computer function has been rebuilded. 
+1.5.072600: Fix Artica did not set the /etc/libnss-ldap.conf 
+1.5.072600: Sometimes, rename a computer did not work. The rename computer function has been rebuilded. 
 
 
 FreeWebs changes
@@ -68,6 +70,7 @@ FreeWebs changes
 1.5.071723: Add mod_cache support
 1.5.071723: Add more options in order to tune Apache processes.
 1.5.072113: Add possibility to manage aliases in virtualhosts.
+1.5.072600: Add Tomcat support for both installation, monitoring and administration.
 
 
 1.5.062900

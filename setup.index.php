@@ -1040,6 +1040,7 @@ if(($users->LinuxDistriCode=='DEBIAN') or ($users->LinuxDistriCode=='UBUNTU')){
 	$html=$html.BuildRows("APP_MYSQL",$GlobalApplicationsStatus,"mysql-server");
 	$html=$html.BuildRows("APP_PHPMYADMIN",$GlobalApplicationsStatus,"phpMyAdmin");
 	$html=$html.BuildRows("APP_GREENSQL",$GlobalApplicationsStatus,"greensql-fw");
+	$html=$html.BuildRows("APP_TOMCAT",$GlobalApplicationsStatus,"apache-tomcat");
 		
 	//$html=$html.BuildRows("APP_EACCELERATOR",$GlobalApplicationsStatus,"eaccelerator");
 	$html=$html.spacer('{smtp_packages}');

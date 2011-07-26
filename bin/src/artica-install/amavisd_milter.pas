@@ -148,9 +148,14 @@ begin
 end;
 //##############################################################################
 function tamavis.MILTER_BIN_PATH():string;
+var path:string;
 begin
     if FileExists('/usr/local/sbin/amavisd-milter') then exit('/usr/local/sbin/amavisd-milter');
     if FileExists('/usr/sbin/amavis-milter') then exit('/usr/sbin/amavis-milter');
+    path:=SYS.LOCATE_GENERIC_BIN('amavisd-milter');
+    if FileExists(path) then exit(path);
+    path:=SYS.LOCATE_GENERIC_BIN('amavis-milter');
+    if FileExists(path) then exit(path);
 end;
 //#############################################################################
 function tamavis.AMAVISD_BIN_PATH():string;
@@ -712,6 +717,8 @@ cmd:=cmd + '-T 600 ';
 cmd:=cmd + '-w /var/amavis ';
 
 cmd:=SYS.LOCATE_SU() + ' postfix -c "'+cmd+'" >/dev/null 2>&1 &';
+if FileExists('/var/spool/postfix/var/run/amavisd-milter/amavisd-milter.pid') then logs.DeleteFile('/var/spool/postfix/var/run/amavisd-milter/amavisd-milter.pid');
+
 logs.OutputCmd(cmd);
 logs.Debuglogs('Starting......: amavisd-milter');
 fpsystem(cmd);

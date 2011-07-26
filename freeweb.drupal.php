@@ -72,8 +72,18 @@ function members(){
 	$tpl=new templates();	
 	$delete_this_user_text=$tpl->javascript_parse_text("{delete_this_user_text}");
 	$page=CurrentPageName();
-	$sql="SELECT DrupalInfos from freeweb WHERE servername='{$_GET["servername"]}'";
+	
 	$q=new mysql();
+	$sql="SELECT * FROM drupal_queue_orders WHERE `servername`='{$_GET["servername"]}'";
+	$results=$q->QUERY_SQL($sql,"artica_backup");
+	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
+		if($ligne["value"]<>null){$data=unserialize(base64_decode($ligne["value"]));}
+		$ORDERS[$ligne["ORDER"]][$data["USER"]]=true;
+	}
+	
+	
+	$sql="SELECT DrupalInfos from freeweb WHERE servername='{$_GET["servername"]}'";
+	
 	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));	
 	$DrupalInfos=unserialize(base64_decode($ligne["DrupalInfos"]));
 	$array=$DrupalInfos["USERS"];	
@@ -95,7 +105,7 @@ $html="<div id='drupal2animate'>
 <table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
 <thead class='thead'>
 	<tr>
-	<th>&nbsp;</th>
+	<th>". imgtootltip("refresh-24.png","{refresh}","RefreshTab('main_config_drupal')")."</th>
 	<th>{members}</th>
 	<th>{privileges}</th>
 	<th>{enable}</th>
@@ -109,6 +119,7 @@ $html="<div id='drupal2animate'>
 		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
 		$hrfroles="<a href=\"javascript:blur();\" OnClick=\"javascript:DrupalRole('$uid')\" style='font-size:14px;text-decoration:underline'>";
 		$roles="$hrfroles{$ligne["INFOS"]["USER_ROLES"]}";
+		$color="black";
 		if(strpos($roles, ",")>0){
 			$tbl=explode(",", $roles);
 			$roles=null;
@@ -117,16 +128,49 @@ $html="<div id='drupal2animate'>
 			}
 		}
 		$md=md5($ligne["NAME"]);
-		$delete=imgtootltip("delete-32.png","{delete}","MemberDrupalDelete('{$ligne["NAME"]}')");
 		if($ligne["INFOS"]["USER_STATUS"]=="active"){$ligne["INFOS"]["USER_STATUS"]=1;}else{$ligne["INFOS"]["USER_STATUS"]=0;}
+		$delete=imgtootltip("delete-32.png","{delete}","MemberDrupalDelete('{$ligne["NAME"]}')");
+		$enable=Field_checkbox($md, 1,$ligne["INFOS"]["USER_STATUS"],"DrupalMemberActive('{$ligne["NAME"]}','$md')");
+		
+		
+		if(isset($ORDERS["DELETE_USER"][$ligne["NAME"]])){
+			$delete=imgtootltip("folder-tasks-32.png","{scheduled}");
+			$color="#CCCCCC";
+			$enable="&nbsp;";
+			$roles="{delete}:{scheduled}";
+		}
+		
+		if(isset($ORDERS["PRIV_USER"][$ligne["NAME"]])){
+			$color="#CCCCCC";
+			$roles="{apply}:{scheduled}";
+		}
+		
+
 		$html=$html."<tr class=$classtr>
 		<td width=1%><img src='img/user-32.png'></td>
-		<td style='font-size:14px'><strong>{$ligne["NAME"]}</strong></td>
-		<td style='font-size:14px'><strong>$roles</strong></td>
-		<td width=1%>". Field_checkbox($md, 1,$ligne["INFOS"]["USER_STATUS"],"DrupalMemberActive('{$ligne["NAME"]}','$md')")."</td>
+		<td style='font-size:14px'><strong style='color:$color'>{$ligne["NAME"]}</strong></td>
+		<td style='font-size:14px'><strong style='color:$color'>$roles</strong></td>
+		<td width=1%>$enable</td>
 		<td width=1%>$delete</td>
 		</tr>
 	";
+	}
+	
+	if(isset($ORDERS["CREATE_USER"])){
+		while (list ($uid, $vals) = each ($ORDERS["CREATE_USER"]) ){
+			if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
+			$color="#CCCCCC";
+			$enable="&nbsp;";
+			$roles="{add}:{scheduled}";
+			$html=$html."<tr class=$classtr>
+			<td width=1%><img src='img/user-32.png'></td>
+			<td style='font-size:14px'><strong style='color:$color'>$uid</strong></td>
+			<td style='font-size:14px'><strong style='color:$color'>$roles</strong></td>
+			<td width=1%>$enable</td>
+			<td width=1%>$delete</td>
+			</tr>";	
+			
+		}
 	}
 
 	echo $tpl->_ENGINE_parse_body($html."</table>")."
@@ -201,8 +245,15 @@ $html="<div id='drupal2animate'>
 
 function members_enable(){
 	$uid=$_POST["uid"];
+	
+	$data=addslashes(base64_encode(serialize(array("USER"=>$uid,"value"=>$_POST["value"]))));
+	$sql="INSERT INTO drupal_queue_orders(servername,`ORDER`,`value`) VALUES('{$_POST["servername"]}','ENABLE_USER','$data')";
+	$q=new mysql();
+	$q->QUERY_SQL($sql,"artica_backup");
+	if(!$q->ok){echo $q->mysql_error;return;}
 	$sock=new sockets();
-	$sock->getFrameWork("drupal.php?enable-user=$uid&servername={$_POST["servername"]}&enabled={$_POST["value"]}");	
+	$sock->getFrameWork("drupal.php?perform-orders=yes");		
+	
 }
 
 function members_add(){
@@ -214,15 +265,25 @@ function members_add(){
 		return;
 	}
 	
+	$data=addslashes(base64_encode(serialize(array("USER"=>$uid,"PASSWORD"=>$u->password))));
+	$sql="INSERT INTO drupal_queue_orders(servername,`ORDER`,`value`) VALUES('{$_POST["servername"]}','CREATE_USER','$data')";
+	$q=new mysql();
+	$q->QUERY_SQL($sql,"artica_backup");
+	if(!$q->ok){echo $q->mysql_error;return;}
 	$sock=new sockets();
-	$sock->getFrameWork("drupal.php?add-user=$uid&servername={$_POST["servername"]}");
+	$sock->getFrameWork("drupal.php?perform-orders=yes");
 	
 }
 
 function members_del(){
 	$uid=$_POST["uid"];
+	$data=addslashes(base64_encode(serialize(array("USER"=>$uid))));
+	$sql="INSERT INTO drupal_queue_orders(servername,`ORDER`,`value`) VALUES('{$_POST["servername"]}','DELETE_USER','$data')";
+	$q=new mysql();
+	$q->QUERY_SQL($sql,"artica_backup");
+	if(!$q->ok){echo $q->mysql_error;return;}
 	$sock=new sockets();
-	$sock->getFrameWork("drupal.php?del-user=$uid&servername={$_POST["servername"]}");	
+	$sock->getFrameWork("drupal.php?perform-orders=yes");	
 }
 
 function status(){
@@ -235,7 +296,15 @@ function status(){
 	$DrupalInfos=unserialize(base64_decode($ligne["DrupalInfos"]));
 	$array=$DrupalInfos["GLOBAL_STATUS"];
 	
-	$html="
+	$sql="SELECT ID FROM drupal_queue_orders WHERE `ORDER`='REFRESH_INFOS'";
+	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));	
+	if($ligne["ID"]>0){
+		$infos="<div class=explain>{drupal_refresh_ordered}</div>";
+	}
+	
+	
+	
+	$html="$infos
 <div id='drupalanimate'>
 <table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
 <thead class='thead'>
@@ -371,38 +440,59 @@ function RefreshDrupalInfos(){
 	$sock=new sockets();
 	$sock->getFrameWork("drupal.php?RefreshDrupalInfos=yes&servername={$_POST["servername"]}");
 	
+	$data=null;
+	$sql="INSERT INTO drupal_queue_orders(servername,`ORDER`,`value`) VALUES('{$_POST["servername"]}','REFRESH_INFOS','')";
+	$q=new mysql();
+	$q->QUERY_SQL($sql,"artica_backup");
+	if(!$q->ok){echo $q->mysql_error;return;}
+	$sock=new sockets();
+	$sock->getFrameWork("drupal.php?perform-orders=yes");		
+	
+	
 }
 
 function members_privs(){
 	$sock=new sockets();
 	$uid=$_POST["uid"];
 	
-	if(isset($_POST["administrator"])){
-		$sock->getFrameWork("drupal.php?priv-user=$uid&servername={$_POST["servername"]}&priv=administrator");
-		return;
-	}
-	if(isset($_POST["duser"])){
-		$sock->getFrameWork("drupal.php?priv-user=$uid&servername={$_POST["servername"]}&priv=user");
-		return;
-	}
-	if(isset($_POST["an"])){
-		$sock->getFrameWork("drupal.php?priv-user=$uid&servername={$_POST["servername"]}&priv=anonym");
-		return;
-	}			
+	if(isset($_POST["administrator"])){$priv="administrator";unset($_POST["duser"]);unset($_POST["an"]);}
+	if(isset($_POST["duser"])){$priv="user";unset($_POST["an"]);}
+	if(isset($_POST["an"])){$priv="anonym";}	
+
+	$data=addslashes(base64_encode(serialize(array("USER"=>$uid,"value"=>$priv))));
+	$sql="INSERT INTO drupal_queue_orders(servername,`ORDER`,`value`) VALUES('{$_POST["servername"]}','PRIV_USER','$data')";
+	$q=new mysql();
+	$q->QUERY_SQL($sql,"artica_backup");
+	if(!$q->ok){echo $q->mysql_error;return;}
+	$sock=new sockets();
+	$sock->getFrameWork("drupal.php?perform-orders=yes");		
 	
 }
 
 function modules(){
 	$tpl=new templates();	
 	$page=CurrentPageName();
+	
+$q=new mysql();	
+$sql="SELECT ID FROM drupal_queue_orders WHERE `ORDER`='REFRESH_MODULES'";
+	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));	
+	if($ligne["ID"]>0){
+		$infos="<div class=explain>{drupal_refresh_ordered}</div>";
+	}	
+	
 	$sql="SELECT DrupalModules from freeweb WHERE servername='{$_GET["servername"]}'";
-	$q=new mysql();
+	
 	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));	
 	$DrupalModules=unserialize(base64_decode($ligne["DrupalModules"]));
 	
 	
-	$html="
+	
+	
+	$html="$infos
 <div id='drupalanimate3'>
+<table style='width:100%'>
+<tr>
+<td valign='top' width=100%'>
 <table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
 <thead class='thead'>
 	<tr>
@@ -423,7 +513,14 @@ function modules(){
 	}
 	
 	
-	echo $tpl->_ENGINE_parse_body($html."</table>")."
+	echo $tpl->_ENGINE_parse_body($html."</table>
+	</td>
+	<td valign='top'></td>
+	</tr>
+	</table>
+	
+	
+	")."
 	</div>
 	<script>
 		var x_RefreshModulesInfos=function (obj) {
@@ -448,6 +545,15 @@ function modules(){
 
 function modules_infos(){
 	$sock=new sockets();
-	$sock->getFrameWork("drupal.php?modules-refresh=yes&servername={$_POST["servername"]}");
+	//$sock->getFrameWork("drupal.php?RefreshDrupalInfos=yes&servername={$_POST["servername"]}");
+	
+	$data=null;
+	$sql="INSERT INTO drupal_queue_orders(servername,`ORDER`,`value`) VALUES('{$_POST["servername"]}','REFRESH_MODULES','')";
+	$q=new mysql();
+	$q->QUERY_SQL($sql,"artica_backup");
+	if(!$q->ok){echo $q->mysql_error;return;}
+	$sock=new sockets();
+	$sock->getFrameWork("drupal.php?perform-orders=yes");		
+	
 	
 }

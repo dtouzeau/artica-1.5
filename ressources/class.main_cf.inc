@@ -3062,11 +3062,12 @@ class main_perso{
 		$q=new mysql();
 		$results=$q->QUERY_SQL($sql,"artica_backup");		
 		if(!$q->ok){echo $q->mysql_error."\nfile: ".__FILE__."\nline:".__LINE__;return;}
+		$sock=new sockets();
 		$sock->getFrameWork("cmd.php?postfix-perso-settings=yes");
 		
 	}
 	
-	function replace_conf($conf){
+function replace_conf($conf){
 		if(!is_array($this->main_array)){
 			if($GLOBALS["AS_ROOT"]){echo "Starting......: Postfix [PERSO]: No array, no config to replace, aborting\n";}
 			writepostfixlogs("MAINPERSO:: No array, no config to replace, aborting");
@@ -3077,65 +3078,31 @@ class main_perso{
 			return;
 		}
 		
-		$data=@file_get_contents($conf);
-		$tbl=explode("\n",$data);
-		if($GLOBALS["AS_ROOT"]){echo "Starting......: Postfix [PERSO]: $conf ". strlen($data)." bytes (". count($tbl)." rows)\n";}
-		while (list ($num, $val) = each ($tbl) ){
-			if(preg_match('#(.+)[\s=]+(.+)#',$val,$re)){
-				$key=strtolower($re[1]);
-				$orginal_value=$re[2];
-				if($this->main_array[$key]["TYPE"]==null){
-					if($GLOBALS["AS_ROOT"]){echo "Starting......: Postfix [PERSO]: $key - no type, aborting\n";}
-					continue;
-				}
-				if($GLOBALS["AS_ROOT"]){echo "Starting......: Postfix [PERSO]:[$key] {$this->main_array[$key]["TYPE"]}\n";}
-				writepostfixlogs("MAINPERSO: $key={$this->main_array[$key]["TYPE"]}",__CLASS__.'/'.__FUNCTION__,__FILE__);
-				switch ($this->main_array[$key]["TYPE"]) {
-					case "r":
-						$tbl[$num]="$key = {$this->main_array[$key]["VALUE"]}";
-						if($GLOBALS["AS_ROOT"]){echo "Starting......: Postfix [PERSO]:[$key] replace $val by {$this->main_array[$key]["VALUE"]}\n";}
-						writepostfixlogs("MAINPERSO: replace $val by {$this->main_array[$key]["VALUE"]}",__CLASS__.'/'.__FUNCTION__,__FILE__);
-						unset($this->main_array[$key]);
-						break;
-					case "a":
-						$tbl[$num]="$key = $orginal_value {$this->main_array[$key]["VALUE"]}";
-						if($GLOBALS["AS_ROOT"]){echo "Starting......: Postfix [PERSO]:[$key] add {$this->main_array[$key]["VALUE"]} with $val\n";}
-						writepostfixlogs("MAINPERSO: add {$this->main_array[$key]["VALUE"]} with $val",__CLASS__.'/'.__FUNCTION__,__FILE__);
-						unset($this->main_array[$key]);
-						break;
-					default:
-						break;
-				}
-				
-			}
-			
+		if(!isset($GLOBALS["postconf"])){
+			$unix=new unix();
+			$GLOBALS["postconf"]=$unix->find_program("postconf");
 		}
-		reset($tbl);
-		reset($this->main_array);
+		
 		if(is_array($this->main_array)){
-			if(count($this->main_array)>0){
-			while (list ($num, $val) = each ($this->main_array) ){
-				if($val["VALUE"]<>null){
-				if($GLOBALS["AS_ROOT"]){echo "Starting......: Postfix [PERSO]:[$key] added\n";}
-				$tbl[]="$num = {$val["VALUE"]}";
+			if(count($this->main_array)>0){		
+				reset($this->main_array);
+				while (list ($num, $val) = each ($this->main_array) ){
+					if(isset($ALREADY[$num])){continue;}
+					$ALREADY[$num]=true;
+					if($val["VALUE"]==null){
+						if($GLOBALS["AS_ROOT"]){echo "Starting......: Postfix [PERSO]: No value for $num, skip\n";}
+						continue;
+					}
+					if($GLOBALS["AS_ROOT"]){echo "Starting......: Postfix [PERSO]: $num = {$val["VALUE"]}\n";}
+					system("{$GLOBALS["postconf"]} -e \"$num = {$val["VALUE"]}\" >/dev/null 2>&1");
 				}
-				
 			}
-			
-		}}
-		
-		if(count($tbl)>0){@file_put_contents($conf, @implode("\n", $tbl));}
-		return implode("\n",$tbl);
-		
+		}
 	}
-	
-	
 
 }
 
-function bouce_template_file_default(){
-	
-}
+function bouce_template_file_default(){}
 
 
 class bounces_templates{

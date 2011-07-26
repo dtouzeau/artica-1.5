@@ -22,7 +22,7 @@ policyd_weight, backuppc, kav4fs, ocsi, ocsagent, sshd, auditd, squidguard_page,
 dkfilter, ufdbguardd, dkimmilter, dropbox, articapolicy, virtualbox, tftpd,
 crossroads, articastatus, articaexecutor, articabackground, pptpd, apt_mirror,
 ddclient, cluebringer, apachesrc, toolsversions, sabnzbdplus, fusermount,
-vnstat, munin,greyhole,autofs, iscsitarget, snort,greensql, amanda;
+vnstat, munin,greyhole,autofs, iscsitarget, snort,greensql, amanda, tomcat;
 
 var
 install:Tclass_install;
@@ -137,6 +137,7 @@ zautofs:tautofs;
 ztapachesrc:tapachesrc;
 ztiscsitarget:tiscsitarget;
 zgreensql:tgreensql;
+ztomcat:ttomcat;
 begin
 debug:=false;
 if ParamStr(1)='--verbose2' then debug:=true;
@@ -202,6 +203,12 @@ zlogs.commandlog();
 if ParamStr(1)='--mailflt3' then  begin
    SYS.verbosed:=true;
    SYS.AddUserToGroup('mailflt3','mailflt3','','');
+   halt(0);
+end;
+
+if Paramstr(1)='--tomcat-version' then begin
+   ztomcat:=ttomcat.Create(SYS);
+   writeln(ztomcat.VERSION());
    halt(0);
 end;
 

@@ -39,8 +39,11 @@ if($GLOBALS["TOTAL_MEMORY_MB"]<400){
 	shell_exec("$renice_bin 19 $childpid &");
 	events("Started pid $childpid",__FUNCTION__,__LINE__);	
 	ParseLocalQueue();
-	$nohup=$unix->find_program("nohup");
-	shell_exec(trim($nohup." ".$unix->LOCATE_PHP5_BIN()." ".dirname(__FILE__)."/exec.executor.php --all >/dev/null 2>&1"));
+	if($GLOBALS["EXECUTOR_DAEMON_ENABLED"]==1){
+		$nohup=$unix->find_program("nohup");
+		shell_exec(trim($nohup." ".$unix->LOCATE_PHP5_BIN()." ".dirname(__FILE__)."/exec.executor.php --all >/dev/null 2>&1"));
+	}
+	
 	die();
 }
 
@@ -119,6 +122,12 @@ function FillMemory(){
 	$GLOBALS["NOHUP"]=$GLOBALS["CLASS_UNIX"]->find_program("nohup");
 	$GLOBALS["systemMaxOverloaded"]=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("systemMaxOverloaded");
 	$GLOBALS["CPU_NUMBER"]=intval($GLOBALS["CLASS_USERS"]->CPU_NUMBER);
+	$EnableArticaExecutor=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("EnableArticaExecutor");
+	
+	if(!is_numeric($EnableArticaExecutor)){$EnableArticaExecutor=1;}	
+	$GLOBALS["EXECUTOR_DAEMON_ENABLED"]=$EnableArticaExecutor;
+	
+
 	
 }
 
@@ -252,11 +261,17 @@ if(!is_file($pgrep)){return;}
 }
 
 function ParseLocalQueue(){
-	$mef=basename(__FILE__);
-	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
-	$oldpid=@file_get_contents($pidfile);
-	if($GLOBALS["CLASS_UNIX"]->process_exists($oldpid,$mef)){events("Process Already exist pid $oldpid line:".__LINE__);return;}	
-	@file_put_contents($pidfile, getmypid());	
+	
+		$EnableArticaBackground=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("EnableArticaBackground");
+		if(!is_numeric($EnableArticaBackground)){$EnableArticaBackground=1;}	
+	
+	if($EnableArticaBackground==0){
+		$mef=basename(__FILE__);
+		$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
+		$oldpid=@file_get_contents($pidfile);
+		if($GLOBALS["CLASS_UNIX"]->process_exists($oldpid,$mef)){events("Process Already exist pid $oldpid line:".__LINE__);return;}	
+		@file_put_contents($pidfile, getmypid());	
+	}
 	
 	$MemoryInstances=MemoryInstances();
 	if($MemoryInstances>4){events("Too much php processes in memory, aborting");return;}
@@ -319,6 +334,7 @@ if(is_file("/etc/artica-postfix/background")){
 	
 	if(count($orders)==0){
 		events("artica-executor: queue is empty...");
+		artica_exec();
 		return null;
 	}
 	
@@ -381,10 +397,21 @@ if(is_file("/etc/artica-postfix/background")){
 			events("Queued ". count($orders)." order(s)");
 		}
 	}
+	
+	
 
 }
 
-
+function artica_exec(){
+	if($GLOBALS["EXECUTOR_DAEMON_ENABLED"]==0){
+		$nohup=$GLOBALS["CLASS_UNIX"]->find_program("nohup");
+		$nice=$GLOBALS["NICE"];
+		$cmd=trim($nice.$nohup." ".$GLOBALS["CLASS_UNIX"]->LOCATE_PHP5_BIN()." ".dirname(__FILE__)."/exec.executor.php --all >/dev/null 2>&1");
+		events("Executor disabled execute it \"$cmd\"");
+				
+		shell_exec($cmd);
+	}
+}
 
 function events($text){
 		

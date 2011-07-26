@@ -11,6 +11,12 @@ include_once(dirname(__FILE__).'/ressources/class.system.network.inc');
 if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["VERBOSE"]=true;}
 if(preg_match("#--force#",implode(" ",$argv))){$GLOBALS["FORCE"]=true;}
 
+if(system_is_overloaded(__FILE__)){
+	writelogs("This system is overloaded, die()",__FUNCTION__,__FILE__,__LINE__);
+	die();
+}
+
+
 if($argv[1]=='--clean-tmp'){CleanLogs();die();}
 if($argv[1]=='--clean-sessions'){sessions_clean();die();}
 if($argv[1]=='--clean-install'){CleanOldInstall();die();}
@@ -173,6 +179,9 @@ function CleanLogs(){
 	CleanDirLogs('/opt/artica/install');
 	$unix->events(basename(__FILE__).":: ".__FUNCTION__." Cleaning phplogs");
 	phplogs();
+	$unix->events(basename(__FILE__).":: ".__FUNCTION__." Cleaning /opt/openemm/tomcat/logs");
+	CleanDirLogs('/opt/openemm/tomcat/logs');
+	
 
 	$unix->events(basename(__FILE__).":: ".__FUNCTION__." Cleaning PHP Sessions");
 	sessions_clean();

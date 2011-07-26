@@ -131,7 +131,7 @@ if($argv[1]=="--ddclient"){echo "\n".ddclient();exit;}
 if($argv[1]=="--cluebringer"){echo "\n".cluebringer();exit;}
 if($argv[1]=="--apachesrc"){echo "\n".apachesrc();exit;}
 if($argv[1]=="--assp"){echo "\n".assp();exit;}
-if($argv[1]=="--freewebs"){echo "\n".apachesrc()."\n".pure_ftpd();exit;}
+if($argv[1]=="--freewebs"){echo "\n".apachesrc()."\n".pure_ftpd()."\n".tomcat();exit;}
 if($argv[1]=="--openvpn"){echo "\n".openvpn();exit;}
 if($argv[1]=="--vboxguest"){echo "\n".vboxguest();exit;}
 if($argv[1]=="--sabnzbdplus"){echo "\n".sabnzbdplus();exit;}
@@ -160,6 +160,7 @@ if($argv[1]=="--xload"){echo xLoadAvg();$GLOBALS["VERBOSE"]=true;exit;}
 if($argv[1]=="--greyhole-watchdog"){greyhole_watchdog();exit;}
 if($argv[1]=="--greensql"){echo greensql();exit;}
 if($argv[1]=="--nscd"){echo nscd();exit;}
+if($argv[1]=="--tomcat"){echo tomcat();exit;}
 
 
 
@@ -713,7 +714,7 @@ function launch_all_status($force=false){
 	 "pptpd","pptp_clients","apt_mirror","squid_clamav_tail","ddclient","cluebringer","apachesrc","zarafa_web","zarafa_ical","zarafa_dagent","zarafa_indexer",
 	"zarafa_monitor","zarafa_gateway","zarafa_spooler","zarafa_server","assp","openvpn","vboxguest","sabnzbdplus","SwapWatchdog","artica_meta_scheduler",
 	"OpenVPNClientsStatus","stunnel","meta_checks","zarafa_licensed","CheckCurl","ufdbguardd_tail","vnstat","NetAdsWatchdog","munin","autofs","greyhole",
-	"dnsmasq","iscsi","watchdog_yorel","postfwd2","vps_servers","smartd","crossroads_multiple","auth_tail","greyhole_watchdog","greensql","nscd"
+	"dnsmasq","iscsi","watchdog_yorel","postfwd2","vps_servers","smartd","crossroads_multiple","auth_tail","greyhole_watchdog","greensql","nscd","tomcat"
 	);
 	$data1=$GLOBALS["TIME_CLASS"];
 	$data2 = time();
@@ -732,12 +733,14 @@ function launch_all_status($force=false){
 	while (list ($num, $func) = each ($functions) ){
 		if(function_exists($func)){
 			$mem=round(((memory_get_usage()/1024)/1000),2);
+			
 			events("running function \"$func\" {$mem}MB in memory",__FUNCTION__,__LINE__);
 			if(!$force){
 				if(system_is_overloaded()){
-					events("System is overloaded: {$GLOBALS["SYSTEM_INTERNAL_LOAD"]}, pause 2 seconds",__FUNCTION__,__LINE__);
+					events("System is overloaded: {$GLOBALS["SYSTEM_INTERNAL_LOAD"]}, pause 10 seconds",__FUNCTION__,__LINE__);
 					AmavisWatchdog();
 					greyhole_watchdog();
+					sleep(10);
 					return;
 				}else{
 					if(systemMaxOverloaded()){
@@ -755,7 +758,7 @@ function launch_all_status($force=false){
 				writelogs("Fatal while running function $func ($e)",__FUNCTION__,__FILE__,__LINE__);
 			}
 			
-			if(trim($results)<>null){$conf[]=$results;}
+			if(trim($results)<>null){$conf[]=$results;usleep(5000);}
 		}
 	}
 	
@@ -2611,7 +2614,40 @@ function spamassassin(){
 	
 }
 //========================================================================================================================================================
-
+function tomcat(){
+	if(!$GLOBALS["CLASS_USERS"]->TOMCAT_INSTALLED){return;}
+	
+	$TomcatEnable=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("TomcatEnable");
+	if(!is_numeric($TomcatEnable)){$TomcatEnable=1;}
+	
+	$pid_path="/opt/openemm/tomcat/temp/tomcat.pid";
+	$master_pid=trim(@file_get_contents($pid_path));
+	
+	
+		$l[]="[APP_TOMCAT]";
+		$l[]="service_name=APP_TOMCAT";
+	 	$l[]="master_version=".$GLOBALS["CLASS_USERS"]->TOMCAT_VERSION;
+	 	$l[]="service_cmd=spamd";	
+	 	$l[]="service_disabled=$TomcatEnable";
+	 	$l[]="pid_path=$pid_path";
+	 	$l[]="watchdog_features=1";
+	 	$l[]="family=web";
+	 	
+	 	if($TomcatEnable==0){$l[]="";return implode("\n",$l);return;}
+	 	
+	 	
+		if(!$GLOBALS["CLASS_UNIX"]->process_exists($master_pid)){
+			WATCHDOG("APP_TOMCAT","tomcat");
+			$l[]="";
+			return implode("\n",$l);
+			return;
+		}	
+		$l[]=GetMemoriesOf($master_pid);
+		$l[]="";
+	
+	return implode("\n",$l);return;		
+	
+}
 function iscsi_pid_path(){
 	if(is_file("/var/run/ietd.pid")){return "/var/run/ietd.pid";}
 	if(is_file("/var/run/iscsi_trgt.pid")){return "/var/run/iscsi_trgt.pid";}

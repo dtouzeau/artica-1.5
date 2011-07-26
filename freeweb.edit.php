@@ -20,7 +20,7 @@
 	if(isset($_GET["params"])){params();exit;}
 	if(isset($_GET["params2"])){params2();exit;}
 	if(isset($_GET["enable_ldap_authentication"])){params_enable_ldap_authentication();exit;}
-	if(isset($_GET["AddDefaultCharset"])){OthersValuesSave();exit;}
+	if(isset($_POST["AddDefaultCharset"])){OthersValuesSave();exit;}
 	
 	if(isset($_GET["groupwares"])){groupwares_index();}
 	if(isset($_POST["FreeWebToGroupWare"])){groupwares_save();exit;}
@@ -404,7 +404,12 @@ function params2(){
 	$q=new mysql();
 	$sock=new sockets();
 	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));	
-	$Params=unserialize($ligne["Params"]);	
+	$Params=unserialize(base64_decode($ligne["Params"]));
+	
+	if(!isset($Params["JkMount"])){$Params["JkMount"]=0;}
+	$users=new usersMenus();
+	$APACHE_MOD_TOMCAT=0;
+	if($user->APACHE_MOD_TOMCAT){$APACHE_MOD_TOMCAT=1;}
 	
 $html="
 	<div style='font-size:16px;font-weight:bold'>{language}</div>
@@ -415,12 +420,22 @@ $html="
 		<td>". Field_text("AddDefaultCharset",$Params["AddDefaultCharset"],"font-size:13px;padding:3px;width:220px")."</td>
 		<td width=1%>". help_icon("{AddDefaultCharset_explain}")."</td>
 	</tr>
+	<tr>
+		<td class=legend>{enable_tomcatjconet}:</td>
+		<td>". Field_checkbox("JkMount",1,$Params["JkMount"])."</td>
+		<td width=1%>". help_icon("{jkMount_explain}")."</td>
+	</tr>	
+	<tr>
+		<td colspan=2 align='right'><hr>". button("{apply}","ApacheOthersValuesSave()")."</td>
+	</tr>
 	</table>
 	<br>
 	</div>
 	
 	<script>
 		var x_ApacheOthersValuesSave=function (obj) {
+			var results=obj.responseText;			
+			if(results.length>0){alert(results);}			
 			RefreshTab('main_config_freewebedit');
 		}
 	
@@ -428,8 +443,14 @@ $html="
 		function ApacheOthersValuesSave(){
 			var XHR = new XHRConnection();
 			XHR.appendData('AddDefaultCharset',document.getElementById('AddDefaultCharset').value);
+			if(document.getElementById('JkMount').checked){XHR.appendData('JkMount',1);}else{XHR.appendData('JkMount',0);}
 			XHR.appendData('servername','{$_GET["servername"]}');
-    		XHR.sendAndLoad('$page', 'GET',x_ApacheOthersValuesSave);
+    		XHR.sendAndLoad('$page', 'POST',x_ApacheOthersValuesSave);
+		} 
+		
+		function Checkjkmount(){
+			var APACHE_MOD_TOMCAT=$APACHE_MOD_TOMCAT;
+			if(APACHE_MOD_TOMCAT==0){document.getElementById('JkMount').disabled=true;document.getElementById('JkMount').checked=false;}
 		}
 		
 	</script>";	
@@ -439,19 +460,18 @@ $html="
 }
 
 function OthersValuesSave(){
-	$sql="SELECT * FROM freeweb WHERE servername='{$_GET["servername"]}'";
+	$sql="SELECT * FROM freeweb WHERE servername='{$_POST["servername"]}'";
 	$page=CurrentPageName();
 	$tpl=new templates();
 	$q=new mysql();
 	$sock=new sockets();
 	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));	
-	$Params=unserialize($ligne["Params"]);
-
-	$Params["AddDefaultCharset"]=$_GET["AddDefaultCharset"];
+	$Params=unserialize(base64_decode($ligne["Params"]));
+	$Params["AddDefaultCharset"]=$_POST["AddDefaultCharset"];
+	$Params["JkMount"]=$_POST["JkMount"];
 	
-	
-	$data=addslashes(serialize($Params));
-	$sql="UPDATE freeweb SET `Params`='$data' WHERE servername='{$_GET["servername"]}'";
+	$data=addslashes(base64_encode(serialize($Params)));
+	$sql="UPDATE freeweb SET `Params`='$data' WHERE servername='{$_POST["servername"]}'";
 	$q->QUERY_SQL($sql,"artica_backup");
 	if(!$q->ok){echo $q->mysql_error;return;}
 	$sock=new sockets();
@@ -762,7 +782,12 @@ function popup(){
 			unset($dda[0]);
 			$domainname=@implode(".",$dda);
 		}else{
-			$hostname=str_replace(".{$ligne["domainname"]}","",$ligne["servername"]);
+			$ff=explode(".",$ligne["servername"]);
+			if(count($ff)>2){
+				$hostname=str_replace(".{$ligne["domainname"]}","",$ligne["servername"]);
+			}else{
+				$hostname=null;
+			}
 			$domainname=$ligne["domainname"];
 			$parcourir_domaines=null;
 		}
@@ -772,9 +797,9 @@ function popup(){
 	
 	$domain="<table style='width:100%'>
 		<tr>
-			<td>".Field_text("servername",$hostname,"font-size:13px;padding:3px")."</td>
+			<td>".Field_text("servername",$hostname,"font-size:15px;padding:3px;font-weight:bold")."</td>
 			<td style='font-size:14px' align='center' width=1%>&nbsp;.&nbsp;</td>
-			<td>".Field_text("domainname",$domainname,"font-size:13px;padding:3px;width:220px")."</td>
+			<td>".Field_text("domainname",$domainname,"font-size:15px;padding:3px;width:220px;font-weight:bold")."</td>
 			<td>$parcourir_domaines</td>
 		</tr>
 		</table>";
@@ -786,7 +811,13 @@ function popup(){
 			unset($dd[0]);
 			$domainname=@implode(".",$dd);
 		}else{
-			$hostname=str_replace(".{$ligne["domainname"]}","",$ligne["servername"]);
+			$ff=explode(".",$ligne["servername"]);
+			if(count($ff)>2){
+				$hostname=str_replace(".{$ligne["domainname"]}","",$ligne["servername"]);
+			}else{
+				$hostname=null;
+			}
+			
 			$domainname=$ligne["domainname"];
 		}
 
@@ -797,9 +828,9 @@ function popup(){
 		$domain="
 		<table style='width:100%'>
 		<tr>
-			<td>".Field_text("servername",$hostname,"font-size:13px;padding:3px")."</td>
+			<td>".Field_text("servername",$hostname,"font-size:15px;padding:3px;font-weight:bold")."</td>
 			<td style='font-size:14px' align='center' width=1%>&nbsp;.&nbsp;</td>
-			<td>". Field_array_Hash($c,"domainname",$domainname,"style:font-size:13px;padding:3px;")."</td>
+			<td>". Field_array_Hash($c,"domainname",$domainname,"style:font-size:15px;padding:3px;font-weight:bold")."</td>
 		</tr>
 		</table>";
 		
@@ -939,7 +970,9 @@ function popup(){
 		}
 		
 		var x=document.getElementById('servername').value;
-		if(x.length>0){
+		var z=document.getElementById('domainname').value;
+		var w=x.length+z.length;
+		if(w>0){
 			document.getElementById('servername').disabled=true;
 			document.getElementById('domainname').disabled=true;
 			}
@@ -1022,10 +1055,10 @@ function popup(){
 		function SaveFreeWebMain(){
 			var XHR = new XHRConnection();
 			var sitename=document.getElementById('servername').value;
-			
-			var x=document.getElementById('servername').value;
-			
-			if(x.length<2){
+			var www_a=document.getElementById('domainname').value;
+			var www_b=document.getElementById('servername').value;
+			var www_t=www_a.length+www_b.length;
+			if(www_t<2){
 				alert('$error_please_fill_field:$acl_dstdomain'); 
 				return;
 			}
@@ -1094,7 +1127,9 @@ function popup(){
 			if(document.getElementById('vg_size')){XHR.appendData('vg_size',document.getElementById('vg_size').value);}
 			XHR.appendData('lvm_vg','{$ligne["lvm_vg"]}');
 			if(sitename!=='_default_'){
-    			XHR.appendData('servername',document.getElementById('servername').value+'.'+document.getElementById('domainname').value);
+				var www_a=document.getElementById('domainname').value;
+				var www_b=document.getElementById('servername').value;
+				if(www_a.length>0){XHR.appendData('servername',www_a+'.'+www_b);}else{XHR.appendData('servername',www_b);}
     		}else{
     			XHR.appendData('servername','_default_');
     		}
@@ -1292,6 +1327,18 @@ function Save(){
 		if($uid<>null){$u=new user($uid);$ou=$u->ou;}
 		if($ou<>null){if($FreewebsStorageDirectory<>null){$www_dir="$FreewebsStorageDirectory/$servername";}}
 		$sock=new sockets();
+		$servername=str_replace('..', '.', $servername);
+		$servername=str_replace('/', '.', $servername);
+		$servername=str_replace('\\', '.', $servername);
+		$servername=str_replace(' ', '.', $servername);
+		$servername=str_replace('$', '.', $servername);
+		$servername=str_replace('#', '.', $servername);
+		$servername=str_replace('%', '.', $servername);
+		$servername=str_replace('*', '.', $servername);
+		
+		if(substr($servername, strlen($servername)-1,1)=='.'){$servername=substr($servername, 0,strlen($servername)-1);}
+		if(substr($servername,0,1)=='.'){$servername=substr($servername, 1,strlen($servername));}
+		
 		$sock->getFrameWork("freeweb.php?force-resolv=yes");
 		$sql="INSERT INTO freeweb (mysql_password,mysql_username,ftpuser,ftppassword,useSSL,servername,mysql_database,
 		uid,useMysql,useFTP,lvm_vg,lvm_size,UseLoopDisk,LoopMounts,ou,domainname,www_dir,ServerPort,UseReverseProxy,ProxyPass,Forwarder,ForwardTo)

@@ -16,7 +16,20 @@ if($unix->process_exists(@file_get_contents($GLOBALS["EXEC_PID_FILE"]))){
 FillMemory();
 if($argv[1]=='--mails-archives'){mailarchives();die();}
 if($argv[1]=='--stats-console'){stats_console();die();}
-if($argv[1]=='--all'){launch_all_status();die();}
+
+if($argv[1]=='--all'){
+	$unix=new unix();
+	$pidfile="/etc/artica-postfix/".basename(__FILE__).".pid";
+	$pidtime="/etc/artica-postfix/".basename(__FILE__).".time";
+	if($unix->file_time_min($pidtime)<3){die();}
+	@unlink($pidtime);
+	@file_put_contents($pidtime, time());
+	$oldpid=@file_get_contents($pidfile);
+	if($unix->process_exists($oldpid,basename(__FILE__))){events("Process $oldpid  already in memory","MAIN");die();}
+	@file_put_contents($pidfile, getmypid());
+	launch_all_status();die();
+}
+
 if(preg_match("#--(.+)#", $argv[1],$re)){if(function_exists($re[1])){events("Execute {$re[1]}() -> \"{$argv[1]}\"" ,"MAIN");call_user_func($re[1]);die();}}
 
 
@@ -122,8 +135,12 @@ function FillMemory(){
 	$users=new settings_inc();
 	$sock=new sockets();
 	$DisableArticaStatusService=$sock->GET_INFO("DisableArticaStatusService");
+	$EnableArticaExecutor=$sock->GET_INFO("EnableArticaExecutor");
 	if(!is_numeric($DisableArticaStatusService)){$DisableArticaStatusService=0;}
+	if(!is_numeric($EnableArticaExecutor)){$EnableArticaExecutor=1;}
+	
 	$GLOBALS["ARTICA_STATUS_DISABLED"]=$DisableArticaStatusService;
+	$GLOBALS["EXECUTOR_DAEMON_ENABLED"]=$EnableArticaExecutor;
 	$GLOBALS["SQUID_INSTALLED"]=$users->SQUID_INSTALLED;
 	$GLOBALS["POSTFIX_INSTALLED"]=$users->POSTFIX_INSTALLED;
 	$GLOBALS["SAMBA_INSTALLED"]=$users->SAMBA_INSTALLED;
@@ -196,13 +213,13 @@ function launch_all_status(){
 	
 	while (list ($num, $func) = each ($functions) ){
 		if($system_is_overloaded){
-				events("System is overloaded: ({$GLOBALS["SYSTEM_INTERNAL_LOAD"]}}, pause 2 seconds",__FUNCTION__,__LINE__);
-				sleep(2);
+				events("System is overloaded: ({$GLOBALS["SYSTEM_INTERNAL_LOAD"]}}, pause 10 seconds",__FUNCTION__,__LINE__);
+				sleep(10);
 				continue;
 			}else{
 				if($systemMaxOverloaded){
-					events("System is very overloaded, pause 5  seconds",__FUNCTION__,__LINE__);
-					sleep(5);
+					events("System is very overloaded, pause stop",__FUNCTION__,__LINE__);
+					return;
 					continue;
 				}
 			}
@@ -247,6 +264,7 @@ function launch_all_status(){
 		if($GLOBALS["TOTAL_MEMORY_MB"]<400){
 			$unix=new unix();
 			$cmd=trim($nohup." ".$unix->LOCATE_PHP5_BIN()." ".dirname(__FILE__)."/exec.parse-orders.php >/dev/null 2>&1 &");
+			
 			shell_exec($cmd);	
 		}		
 	}

@@ -44,8 +44,8 @@
         <Filename Value="setup_ubuntu_class.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="setup_ubuntu_class"/>
-        <CursorPos X="22" Y="797"/>
-        <TopLine Value="749"/>
+        <CursorPos X="28" Y="908"/>
+        <TopLine Value="880"/>
         <EditorIndex Value="5"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -217,7 +217,7 @@
         <UsageCount Value="40"/>
       </Unit21>
     </Units>
-    <JumpHistory Count="27" HistoryIndex="26">
+    <JumpHistory Count="28" HistoryIndex="27">
       <Position1>
         <Filename Value="setup_centos_class.pas"/>
         <Caret Line="586" Column="14" TopLine="552"/>
@@ -326,6 +326,10 @@
         <Filename Value="setup_ubuntu_class.pas"/>
         <Caret Line="1060" Column="96" TopLine="1027"/>
       </Position27>
+      <Position28>
+        <Filename Value="setup_ubuntu_class.pas"/>
+        <Caret Line="764" Column="62" TopLine="749"/>
+      </Position28>
     </JumpHistory>
   </ProjectOptions>
   <CompilerOptions>

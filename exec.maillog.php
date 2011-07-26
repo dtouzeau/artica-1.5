@@ -39,6 +39,7 @@ $_GET["server"]=$users->hostname;
 $_GET["IMAP_HACK"]=array();
 $GLOBALS["ZARAFA_INSTALLED"]=$users->ZARAFA_INSTALLED;
 $GLOBALS["AMAVIS_INSTALLED"]=$users->AMAVIS_INSTALLED;
+
 $GLOBALS["POP_HACK"]=array();
 $GLOBALS["SMTP_HACK"]=array();
 $GLOBALS["PHP5_BIN"]=LOCATE_PHP5_BIN2();
@@ -86,10 +87,13 @@ fclose($pipe);
 events("Shutdown...");
 die();
 function Parseline($buffer){
+	
 $buffer=trim($buffer);
 if($buffer==null){return null;}
 
 if(is_file("/var/log/artica-postfix/smtp-hack-reconfigure")){smtp_hack_reconfigure();}
+if(strpos($buffer,"]: SA dbg:")>0){return;} 
+if(strpos($buffer,") SA dbg:")>0){return;} 
 if(strpos($buffer,"enabling PIX workarounds: disable_esmtp delay_dotcrlf")>0){return;} 
 if(strpos($buffer,"]: child: exiting: idle for")>0){return;} 
 if(strpos($buffer,"]: master: child")>0){return;} 
@@ -307,17 +311,53 @@ if(preg_match("#zarafa-dagent.+?Client disconnected#",$buffer)){return null;}
 if(regex_amavis($buffer)){return;}
 
 
-if(preg_match("#[.+?:\s+connect to 127\.0\.0\.1\[127\.0\.0\.1\]:2003:\s+Connection refused#", $buffer,$re)){
-	$file="/etc/artica-postfix/croned.1/postfix.port.2003.Connection.refused";
-	$timefile=file_time_min($file);
-	if($timefile>5){
-			email_events("Postfix: Connect to zarafa LMTP port Connection refused zarafa-lmtp will be restarted",
-			"postfix claim \n$buffer\nArtica will try to restart zarafa-lmtp daemon.","postfix");
-			shell_exec(trim("{$GLOBALS["NOHUP_PATH"]} /etc/init.d/artica-postfix restart zarafa-lmtp >/dev/null 2>&1 &"));
-			@file_put_contents($file,"#");
-		}else{events("Postfix: Connect to zarafa LMTP port Connection refused: {$timefile}Mn/5Mn");}
-	return;			
+	if(preg_match("#\]:\s+bayes: cannot open bayes databases\s+(.+?)\/bayes_.+?R/O: tie failed#", $buffer,$re)){
+		events("cannot open bayes databases , unlink '{$re[1]}/bayes_seen' '{$re[1]}/bayes_toks'");
+		if(is_file("{$re[1]}/bayes_seen")){@unlink("{$re[1]}/bayes_seen");}
+		if(is_file("{$re[1]}/bayes_toks")){@unlink("{$re[1]}/bayes_toks");}
+		return;
 	}
+
+
+	if(preg_match("#zarafa-gateway.+?Unable to negotiate SSL connection#", $buffer,$re)){
+		$file="/etc/artica-postfix/croned.1/zarafa-gateway.Unable.to.negotiate.SSL.connection";
+		$timefile=file_time_min($file);
+		if($timefile>10){
+				email_events("Zarafa IMAP/POP3 SSL issue",
+				"zarafa-gateway claim \n$buffer\nThere is an SSL issue\nplease Check Artica Technology support service.","mailbox");
+				@file_put_contents($file,"#");
+			}else{events("Zarafa IMAP/POP3 Unable to negotiate SSL connection {$timefile}Mn/5Mn");}
+		return;			
+	}
+
+
+	if(preg_match("#smtpd\[.+?warning:\s+connect to Milter service unix:\/var\/spool\/postfix\/var\/run\/amavisd-milter\/amavisd-milter\.sock: No such file or directory#", $buffer,$re)){
+		$file="/etc/artica-postfix/croned.1/postfix.amavisd-milter.sock.No.such.file.or.directory";
+		$timefile=file_time_min($file);
+		if($timefile>10){
+			$amavis=amavisd_milter_bin_path();
+			if(strlen($amavis)<5){
+				email_events("Postfix: amavisd-milter is not installed !, change the postfix method",
+				"postfix claim \n$buffer\nit seems that amavisd-milte is not installed\nYou should re-install amavis or just\nChange amavis hooking to after-queue in order to use amavis main daemon.","postfix");
+				@file_put_contents($file,"#");
+				return;
+			}
+		}
+	}
+
+
+
+	if(preg_match("#\[.+?:\s+connect to 127\.0\.0\.1\[127\.0\.0\.1\]:2003:\s+Connection refused#", $buffer,$re)){
+		$file="/etc/artica-postfix/croned.1/postfix.port.2003.Connection.refused";
+		$timefile=file_time_min($file);
+		if($timefile>5){
+				email_events("Postfix: Connect to zarafa LMTP port Connection refused zarafa-lmtp will be restarted",
+				"postfix claim \n$buffer\nArtica will try to restart zarafa-lmtp daemon.","postfix");
+				shell_exec(trim("{$GLOBALS["NOHUP_PATH"]} /etc/init.d/artica-postfix restart zarafa-lmtp >/dev/null 2>&1 &"));
+				@file_put_contents($file,"#");
+			}else{events("Postfix: Connect to zarafa LMTP port Connection refused: {$timefile}Mn/5Mn");}
+		return;			
+		}
 
 
 
@@ -3496,6 +3536,14 @@ function Postfix_Addconnection_error($hostname,$ip,$error_text){
 	$ser=serialize($array);
 	@file_put_contents("/var/log/artica-postfix/smtp-connections/". md5($ser).".err",$ser);
 	
+}
+
+function amavisd_milter_bin_path(){
+	
+	$path=$GLOBALS["CLASS_UNIX"]->find_program('amavisd-milter');
+	if(is_file($path)){return $path;}
+	$path=$GLOBALS["CLASS_UNIX"]->find_program('amavis-milter');
+	if(is_file($path)){return $path;}	
 }
 
 

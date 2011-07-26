@@ -1819,4 +1819,9 @@ Very lower config will get 320Mb free[br]
 <APP_DRUSH7>Drush for Drupal7</APP_DRUSH7>
 <modules>Modules</modules>
 <recreation_nightout>All sites about how to have a night out including restaurants, pubs, night clubs...</recreation_nightout>
-
+<drupal_refresh_ordered>Refresh information requested and scheduled... please wait few times</drupal_refresh_ordered>
+<www_imagehosting>All images/pitures storages web sites</www_imagehosting>
+<APP_TOMCAT>Tomcat Web server</APP_TOMCAT>
+<tomcat_admin_interface>Tomcat Admin web interface</tomcat_admin_interface>
+<enable_tomcatjconet>Activate Apache Tomcat Connector</enable_tomcatjconet>
+<jkMount_explain>Add the JkMount directive for *.do,*.jsp,*.jspx,*.cfm,*.cfc,*.cfchart,*.cfres files</jkMount_explain>  

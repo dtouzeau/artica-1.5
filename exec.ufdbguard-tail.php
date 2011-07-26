@@ -73,6 +73,8 @@ if(strpos($buffer,'max-logfile-size')>0){return ;}
 if(strpos($buffer,'check-proxy-tunnels')>0){return ;}
 if(strpos($buffer,'seconds to allow worker')>0){return ;}
 
+	if(preg_match("#\] REDIR\s+#", $buffer)){return;}
+
 
 	if(preg_match('#FATAL\*\s+table\s+"(.+?)"\s+could not be parsed.+?14#',$buffer,$re)){
 		events("Table on {$re[1]} crashed");

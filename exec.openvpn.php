@@ -586,14 +586,16 @@ if(count($routess)==0){
  		}
  		
  		$remote_site_routes=unserialize(base64_decode($ligne["remote_site_routes"]));
-		while (list ($num, $site_mask) = each ($remote_site_routes) ){
-			if(!isset($already[$num])){
-				echo "Starting......: OpenVPN $sitename ($num $site_mask)\n";
-				$rou[]=" --route $num $site_mask";
-				$iroute[]="iroute $num $site_mask";
-				$already[$num]=true;
+ 		if(is_array($remote_site_routes)){
+			while (list ($num, $site_mask) = each ($remote_site_routes) ){
+				if(!isset($already[$num])){
+					echo "Starting......: OpenVPN $sitename ($num $site_mask)\n";
+					$rou[]=" --route $num $site_mask";
+					$iroute[]="iroute $num $site_mask";
+					$already[$num]=true;
+				}
 			}
-		}
+ 		}
  		echo "Starting......: OpenVPN cdd $sitename\n";
  		@file_put_contents("/etc/openvpn/cdd/$sitename",@implode("\n", $iroute) );
  		

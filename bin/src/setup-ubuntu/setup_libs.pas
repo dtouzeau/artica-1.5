@@ -819,8 +819,8 @@ begin
     writeln('');
     writeln('');
 
-    if FILE_EXT='tar.bz2' then DECOMPRESS_OPT:='xjf' else DECOMPRESS_OPT:='xzf';
-    if FILE_EXT='tar' then DECOMPRESS_OPT:='xf';
+    if FILE_EXT='tar.bz2' then DECOMPRESS_OPT:='xjpf' else DECOMPRESS_OPT:='xzpf';
+    if FILE_EXT='tar' then DECOMPRESS_OPT:='xpf';
     if FILE_EXT='zip' then DECOMPRESS_OPT:='';
 
      if DirectoryExists('/tmp/artica/install/sources/' + package_name) then fpsystem('/bin -rm -rf /tmp/artica/install/sources/' + package_name);

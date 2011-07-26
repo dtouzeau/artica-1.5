@@ -637,6 +637,7 @@ class dansguardian_rules{
 									
 									"filehosting"=>"{filehosting}",
 									"pictures"=>"{ww_pictures}",
+									"imagehosting"=>"{www_imagehosting}",
 									"religion"=>"{religion}",
 									"sect"=>"{sect}",
 									
@@ -767,8 +768,9 @@ class dansguardian_rules{
 		  	"humanitarian"=>"humanitarian-20.png",
 		  	"hobby/arts"=>"art-20.png",
 		  	"remote-control"=>"20-win-nic.png",
-			"recreation/nightout"=>"icon_nightclub.png"						
-		  	
+			"recreation/nightout"=>"icon_nightclub.png",	
+			"imagehosting"=>"picasa_icon.png",
+		  	"pictures"=>"cat_pictures.png"
 		  	
 		  	);
 									

@@ -42,12 +42,14 @@
 		var $ProxyPass;
 		var $Forwarder=0;
 		var $ForwardTo=0;
+		var $APACHE_MOD_TOMCAT=false;
 		
 		function freeweb($servername=null){
 			$users=new usersMenus();
 			$this->APACHE_DIR_SITES_ENABLED=$users->APACHE_DIR_SITES_ENABLED;
 			$this->SQUID_CACHMGR=$users->SQUID_CACHMGR;
 			$this->APACHE_RUN_USER=$users->APACHE_RUN_USER;
+			$this->APACHE_MOD_TOMCAT=$users->APACHE_MOD_TOMCAT;
 			if($GLOBALS["posix_getuid"]==0){$this->AS_ROOT=true;}
 			if($servername<>null){
 				$this->WORKING_DIRECTORY="/var/www/$servername";
@@ -607,6 +609,28 @@
 			
 		}
 		
+		public function JkMount(){
+			if(!$this->APACHE_MOD_TOMCAT){return null;}
+			if(!isset($this->Params["JkMount"])){return null;}
+			if($this->Params["JkMount"]==0){return null;}
+			if($this->AS_ROOT){echo "Starting......: Apache \"$this->servername\" Adding tomcat connector\n";}
+			$f[]="\t<IfModule mod_jk.c>";
+			$f[]="\t\tJkMount / default";
+			$f[]="\t\tJkMount /* default";
+			$f[]="\t\tJkMount /*.jsp ajp13_worker";
+			$f[]="\t\tJkMount /*.jsp ajp13_worker";
+			$f[]="\t\tJkMount /*.cfm ajp13_worker";
+			$f[]="\t\tJkMount /*.cfc ajp13_worker";
+			$f[]="\t\tJkMount /*.do ajp13_worker";
+			$f[]="\t\tJkMount /*.jsp ajp13_worker";
+			$f[]="\t\tJkMount /*.cfchart ajp13_worker";
+			$f[]="\t\tJkMount /*.cfres ajp13_worker";
+   			$f[]="\t\tJkLogFile /var/log/apache2/mod_jk.log";
+			$f[]="\t</IfModule>";
+			return @implode("\n", $f);
+		}
+		
+		
 		public function AllowFrom(){
 			
 			if(!isset($this->Params["LimitByIp"]["enabled"])){$this->Params["LimitByIp"]["enabled"]=0;}
@@ -730,7 +754,7 @@
 				$f[]="\tphp_value session.auto_start 0";
 				$f[]="\tphp_value xdebug.show_exception_trace  0";
 				$f[]="\tphp_value session.cache_limiter \"nocache\"";
-				$f[]="\tphp_value magic_quotes_gpc to \"off\"";
+				$f[]="\tphp_value magic_quotes_gpc \"Off\"";
 				$f[]="\tphp_value allow_url_fopen  \"On\"";	
 			}
 			

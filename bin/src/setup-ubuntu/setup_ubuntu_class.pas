@@ -905,13 +905,14 @@ l.add('apache2-prefork-dev');
 l.add('libapache2-mod-php5');
 l.add('libapache2-mod-evasive');
 L.add('libapache2-mod-proxy-html');
+L.add('libapache2-mod-jk');
 l.add('libiodbc2-dev');
 
 //openLdap compilation
 l.add('libslp-dev');
 l.add('libperl-dev');
 l.add('python-mysqldb');
-L.add('xtables-addons-common');
+L.add('xtables-addons-modules');
 L.add('xtables-addons-source');
 
 

@@ -630,6 +630,7 @@ function SERVICES_STATUS(){
 			$html=$html . BuildRow($users,$ini->_params["BOA"],"{APP_BOA}");
 			$html=$html . BuildRow($users,$ini->_params["FRAMEWORK"],"{APP_FRAMEWORK}");
 			$html=$html . BuildRow($users,$ini->_params["APP_APACHE_SRC"],"{APP_APACHE_SRC}");
+			$html=$html . BuildRow($users,$ini->_params["APP_TOMCAT"],"{APP_TOMCAT}");
 			$html=$html . BuildRow($users,$ini->_params["APP_GROUPWARE_APACHE"],"{APP_GROUPWARE_APACHE}");
 			$html=$html . BuildRow($users,$ini->_params["LDAP"],"{APP_LDAP}");
 			$html=$html . BuildRow($users,$ini->_params["ARTICA_MYSQL"],"{APP_MYSQL_ARTICA}");

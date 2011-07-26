@@ -8,7 +8,7 @@ uses
   RegExpr,zsystem,IniFiles,
   global_conf in 'global_conf.pas',common,process_infos,cyrus,clamav,spamass,pureftpd,roundcube,openldap,spfmilter,samba,mimedefang,bogofilter,squid,stunnel4,dkimfilter,
   postfix_class,mailgraph_daemon,lighttpd,miltergreylist,dansguardian,monitorix,kav4samba,awstats,ntpd,kav4proxy,bind9,fdm,p3scan,syslogng,kas3,isoqlog,dhcp_server,cups,wifi,
-  dnsmasq,kavmilter,  jcheckmail, rdiffbackup,openvpn,strutils,xapian,dstat,BaseUnix,nfsserver,policyd_weight,tcpip,pdns,mysql_daemon,assp,postfilter, vmwaretools,phpldapadmin,zarafa_server,squidguard,backuppc,auditd,sshd,toolsversions,apachesrc,amanda,
+  dnsmasq,kavmilter,  jcheckmail, rdiffbackup,openvpn,strutils,xapian,dstat,BaseUnix,nfsserver,policyd_weight,tcpip,pdns,mysql_daemon,assp,postfilter, vmwaretools,phpldapadmin,zarafa_server,squidguard,backuppc,auditd,sshd,toolsversions,apachesrc,amanda,tomcat,
   collectd         in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/collectd.pas',
   fetchmail        in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/fetchmail.pas',
   mailspy_milter   in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/mailspy_milter.pas',
@@ -619,6 +619,7 @@ var
    toolsversions        :ttoolsversions;
    apachesrc            :tapachesrc;
    amanda               :tamanda;
+   tomcat               :ttomcat;
    openldap_admin,openldap_password,openldap_server:string;
 begin
        verbosed:=false;
@@ -698,8 +699,21 @@ begin
    if FileExists(SYS.LOCATE_GENERIC_BIN('nscd')) then list.Add('$_GLOBAL["NSCD_INSTALLED"]=True;') else list.Add('$_GLOBAL["NSCD_INSTALLED"]=False;');
    if FileExists('/usr/share/drupal7/index.php') then list.Add('$_GLOBAL["DRUPAL7_INSTALLED"]=True;') else list.Add('$_GLOBAL["DRUPAL7_INSTALLED"]=False;');
 
-
-
+   tomcat:=ttomcat.Create(SYS);
+   if FIleExists(tomcat.BIN_PATH()) then begin
+      list.Add('$_GLOBAL["TOMCAT_INSTALLED"]=True;');
+      list.add('$_GLOBAL["TOMCAT_VERSION"]="'+tomcat.VERSION()+'";');
+      list.add('$_GLOBAL["TOMCAT_JAVA"]="'+tomcat.JAVA_HOME_GET()+'";');
+      list.add('$_GLOBAL["TOMCAT_DIR"]="'+tomcat.ROOT_DIR()+'";');
+      if FIleExists(LOCATE_APACHE_MODULES_PATH+'/mod_jk.so') then list.Add('$_GLOBAL["APACHE_MOD_TOMCAT"]=True;') else list.Add('$_GLOBAL["APACHE_MOD_TOMCAT"]=False;');
+   end else begin
+      list.Add('$_GLOBAL["TOMCAT_INSTALLED"]=False;');
+      list.add('$_GLOBAL["TOMCAT_VERSION"]="";');
+      list.add('$_GLOBAL["TOMCAT_JAVA"]="";');
+      list.add('$_GLOBAL["TOMCAT_DIR"]="";');
+      list.Add('$_GLOBAL["APACHE_MOD_TOMCAT"]=False;');
+   end;
+   tomcat.free;
 
    amanda:=tamanda.Create(SYS);
    if FileExists(amanda.BIN_PATH()) then list.Add('$_GLOBAL["APP_AMANDA_INSTALLED"]=True;') else list.Add('$_GLOBAL["APP_AMANDA_INSTALLED"]=False;');

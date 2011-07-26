@@ -539,7 +539,16 @@ function RESTART_SYSLOG(){
 function send_email_events($subject,$text,$context,$date=null,$attached_files=array(),$recipient=null){
 	
 	$arr_APP=array(
+		"APP_TOMCAT"=>"Tomcat Web server",
 		"APP_GREENSQL"=>"GreenSQL Firewall",
+		"APP_ZARAFA_WEB"=>"Zarafa web server",
+		"APP_ZARAFA_SERVER"=>"Zarafa server",
+		"APP_ZARAFA_SPOOLER"=>"Zarafa Spooler",
+		"APP_ZARAFA_DAGENT"=>"Zarafa Delivery Agent",
+		"APP_ZARAFA_GATEWAY"=>"Zarafa Gateway",			
+		"APP_ZARAFA_MONITOR"=>"Zarafa Monitor",	
+		"APP_ZARAFA_ICAL"=>"iCal, CalDav Gateway",
+		"APP_ZARAFA_LICENSED"=>"Zarafa license service",
 		"APP_ZARAFA"=>"Zarafa Mail server",
 		"APP_SNORT"=>"Intrusion Detection System (Snort)",
 		"APP_OCSI"=>"OCS Inventory",
@@ -553,12 +562,12 @@ function send_email_events($subject,$text,$context,$date=null,$attached_files=ar
 		"APP_MUNIN"=>"Munin Statistics Client",
 		"APP_BACKUPPC"=>"BackupPC Daemon",
 		"APP_STUNNEL"=>"sTunnel daemon",
-		"APP_ZARAFA_LICENSED"=>"Zarafa license service",
+		
 		"APP_UFDBGUARD_TAIL"=>"UfdbGuard Watchdog",
 		"APP_OPENVPN"=>"OpenVPN Server",
 		"OPENVPN_SERVER"=>"OpenVPN server",
 		"APP_VBOXADDITIONS"=>"VirtualBox guest additions",
-		"APP_ZARAFA_ICAL"=>"iCal, CalDav Gateway",
+		
 		"APP_ARTICA_EXECUTOR"=>"Artica Executor Daemon",
 		"APP_GLUSTER"=>"Gluster Cluster daemon",
 		"APP_APACHE_SRC"=>"Apache source Daemon",
@@ -630,12 +639,6 @@ function send_email_events($subject,$text,$context,$date=null,$attached_files=ar
 		"APP_AMAVISD_NEW"=>"Amavis Daemon",
 		"APP_CLAMAV_MILTER"=>"ClamAV For Postfix",
 		"APP_MAILSPY"=>"MailSpy",
-		"APP_ZARAFA_WEB"=>"Zarafa web server",
-		"APP_ZARAFA_SERVER"=>"Zarafa server",
-		"APP_ZARAFA_SPOOLER"=>"Zarafa Spooler",
-		"APP_ZARAFA_DAGENT"=>"Zarafa Delivery Agent",
-		"APP_ZARAFA_GATEWAY"=>"Zarafa Gateway",			
-		"APP_ZARAFA_MONITOR"=>"Zarafa Monitor",
 		"APP_GROUPWARE_APACHE"=>"Apache for Groupwares",
 		"APP_ARTICA"=>"Artica service",
 		
@@ -2686,13 +2689,17 @@ public function LOCATE_STUNNEL_BIN(){
 public	function getDirectories($directory){
 	$GLOBALS["RECURSVIVE_INC"]=$GLOBALS["RECURSVIVE_INC"]+1;
 	
-	if($GLOBALS["RECURSVIVE_INC"]>$GLOBALS["MAX_RECUSIVE_DIRS"]){return;}
+	if($GLOBALS["RECURSVIVE_INC"]>$GLOBALS["MAX_RECUSIVE_DIRS"]){
+		error_log("PHP Fatal: cannot parse directory [instance {$GLOBALS["RECURSVIVE_INC"]}], maximum recursive of {$GLOBALS["MAX_RECUSIVE_DIRS"]} has been reached ");
+		return;
+	}
 	$array_items = array();
 	if ($handle = opendir($directory)) {
 		while (false !== ($file = readdir($handle))) {
 			if ($file != "." && $file != "..") {
 				if (is_dir($directory. "/" . $file)) {
-						$array_items = array_merge($array_items, $this->getDirectories($directory. "/" . $file));
+						$newarrayDirectories= $this->getDirectories($directory. "/" . $file);
+						if(is_array($newarrayDirectories)){$array_items = array_merge($array_items,$newarrayDirectories);}
 						$file = $directory . "/" . $file;
 						$array_items[] = preg_replace("/\/\//si", "/", $file);
 				} else {

@@ -20,7 +20,8 @@ uses
   setup_opendkim, setup_ufdbguard, setup_dkimproxy, setup_dkimmilter,
   setup_dropbox, setup_crossroads, setup_squidclamav, setup_cluebringer,
   setup_awstats, setup_sabnzbdplus, setup_openldap, setup_lxc, setup_snort,
-  setup_greensql, setup_amanda, setup_mysqlserver, setup_dhcpd, setup_drupal7;
+  setup_greensql, setup_amanda, setup_mysqlserver, setup_dhcpd, setup_drupal7,
+  setup_openemm;
 
 var
    collectd:tsetup_collectd;
@@ -102,6 +103,7 @@ var
    app_amanda:amanda;
    dhcpd:tdhcpd;
    drupal7:tsetup_drupal7;
+   openemm:tsetup_openemm;
 begin
 
 
@@ -172,6 +174,23 @@ begin
          snort.libpcap();
          halt(0);
    end ;
+
+
+ if ParamStr(1)='APP_OPENEMM' then begin
+       openemm:=tsetup_openemm.Create();
+       openemm.openemm_install();
+       zinstall.EMPTY_CACHE();
+       halt(0);
+ end;
+
+ if ParamStr(1)='APP_TOMCAT' then begin
+       fpsystem('/usr/share/artica-postfix/bin/setup-ubuntu --check-base-system');
+       openemm:=tsetup_openemm.Create();
+       openemm.tomcat();
+       zinstall.EMPTY_CACHE();
+       halt(0);
+ end;
+
 
    if ParamStr(1)='APP_GREENSQL' then begin
           fpsystem('/usr/share/artica-postfix/bin/setup-ubuntu --check-base-system');
@@ -1666,6 +1685,9 @@ begin
    writeln('APP_DRUPAL7..............: install drupal 7.x version');
    writeln('APP_DRUSH7...............: install drush 7.x version');
    writeln('APP_UPLOADPROGRESS.......: install UploadProgress php extension');
+   writeln('APP_OPENEMM..............: install OpenEMM application');
+   writeln('APP_TOMCAT...............: install Tomcat web server');
+
 
 
 

@@ -22,6 +22,7 @@
 	if(isset($_GET["status"])){status();exit;}
 	if(isset($_GET["categories"])){categories();exit;}
 	if(isset($_GET["cat-search"])){categories_search();exit;}
+	if(isset($_POST["delete-cat-pattern"])){pattern_delete();exit;}
 js();
 
 
@@ -66,6 +67,14 @@ function FormatNumber($number, $decimals = 0, $thousand_separator = '&nbsp;', $d
   return strtr($tmp1, array(' ' => $thousand_separator, '.' => $decimal_point));
 } 
 
+function pattern_delete(){
+	$sql="DELETE FROM dansguardian_community_categories WHERE pattern='{$_POST["pattern"]}' AND category='{$_POST["category"]}'";
+	$q=new mysql();
+	$q->QUERY_SQL($sql,"artica_backup");
+	if(!$q->ok){echo $q->mysql_error;}
+	
+}
+
 function categories(){
 	$page=CurrentPageName();
 	$tpl=new templates();
@@ -91,6 +100,23 @@ function categories(){
 		
 		function CatSearchCheck(e){
 			if(checkEnter(e)){CatSearch();}
+		}
+		
+		
+	var x_DansGuardianCommunityDeletePattern= function (obj) {
+				var results=obj.responseText;
+				if(results.length>0){alert(results);}
+				CatSearch();
+			}
+		
+		function DansGuardianCommunityDeletePattern(category,pattern){
+			var XHR = new XHRConnection();
+			XHR.appendData('delete-cat-pattern','yes');
+			XHR.appendData('category',category);
+			XHR.appendData('pattern',pattern);
+			AnimateDiv('AR_CAT_LIST');
+			XHR.sendAndLoad('$page', 'POST',x_DansGuardianCommunityDeletePattern);
+		
 		}
 		
 		
@@ -147,7 +173,7 @@ function categories_search(){
 <thead class='thead'>
 	<tr>
 	<th >&nbsp;</th>
-	<th colspan=2>{website}</th>
+	<th colspan=3>{website}</th>
 	</tr>
 </thead>
 <tbody class='tbody'>";		
@@ -159,6 +185,7 @@ function categories_search(){
 			
 			<td width=100%><strong style='font-size:14px'>{$ligne["pattern"]}</strong></td>
 			<td width=1% nowrap style='font-size:14px'><div style='font-size:11px'><i>{date}:{$ligne["zDate"]}<br>{category}:{$ligne["category"]}</i></strong></td>
+			<td width=1% nowrap style='font-size:14px'>". imgtootltip("delete-32.png","{delete}","DansGuardianCommunityDeletePattern('{$ligne["category"]}','{$ligne["pattern"]}')")."</td>
 			</tr>
 			";		
 		

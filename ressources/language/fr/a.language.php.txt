@@ -50,6 +50,7 @@ Choisissez le domaine principale et indiquez le sous-domaine que vous voulez cr&
 <add_vip_members_text>Ajouter des nouveau membres dans le processus VIPTrack</add_vip_members_text>
 <add_virtual_server>Ajouter un nouveau serveur virtuel</add_virtual_server>
 <add_websites>Ajouter des sites</add_websites>
+<ADMINISTRATION_THEME>Th&egrave;me pour l'administration du site</ADMINISTRATION_THEME>
 <affect_vg_to_service>Affecter ce groupe &agrave; un service (FreeWebs ou serveurs virtuels)</affect_vg_to_service>
 <affect_vg_to_service_explain>Cette option indique que ce groupe LVM sera utilis&eacute; afin de construire automatiquement des contenants pour un service particulier.[br]Par exemple afin de d&eacute;finir des quotas par taille sur les espaces FreeWebs.[br]Les r&eacute;pertoires Web seront alors stock&eacute;s dans un disque virtuel d&eacute;di&eacute;.</affect_vg_to_service_explain>
 <Airflow_Temperature_Cel>Temp&eacute;rature de l%u2019air (WDC)</Airflow_Temperature_Cel>
@@ -115,6 +116,7 @@ Cela d&eacute;pend en faites de la puissance de vos CPUs, de la m&eacute;moire q
 Si un sous-processus prend X% du CPU et que sont temps d'ex&eacute;cution d&eacute;passe la dur&eacute;e de vie, il sera alors tu&eacute; par Artica et une notification vous sera envoy&eacute;e.</amavis_watchdog_explain>
 <analyze>Analyser</analyze>
 <analyzed>Analys&eacute;</analyzed>
+<anonymous>anonyme</anonymous>
 <antispam_filters>Filtres anti-spam</antispam_filters>
 <ApacheKeepAlive>D&eacute;finit si votre serveur autorisera des connexions persistantes (c'est-&agrave;-dire plusieurs demandes par connexion). Cette option peut &ecirc;tre utilis&eacute;e pour emp&ecirc;cher tout client de consommer trop de ressources du serveur.[br]
 Par d&eacute;faut, la valeur est d&eacute;finie sur Off, ce qui signifie que votre serveur n'autorise pas les connexions persistantes.[br] Vous pouvez la d&eacute;finir sur on, ce qui active les connexions persistantes. Dans la plupart des cas, il est pr&eacute;f&eacute;rable de laisser KeepAlive sur Off car Apache ne peut avoir qu'un nombre limit&eacute; de processus fils et ces processus vagabonderaient sans rien faire dans l'attente d'une connexion future possible du m&ecirc;me client.[br] Si vous activez cette option, vous devriez tenir la valeur de Keep Alive Timeout basse et contr&ocirc;ler votre fichier d'erreur du serveur qui vous indique s'il vous manque des processus fils pour traiter les requ&ecirc;tes.</ApacheKeepAlive>
@@ -153,6 +155,8 @@ Patientez quelques secondes et rafra&icirc;chissez cette page.</apply_network_co
 <APP_ARTICA_ADM>Console d'administration Artica</APP_ARTICA_ADM>
 <APP_ARTICA_AUTH_TAIL>Surveillance des autentifications</APP_ARTICA_AUTH_TAIL>
 <APP_DNSMASQ_TEXT>Am&eacute;liorer vos performances r&eacute;seau en utilisant un cache DNS et re-directeur avec DNSMasq</APP_DNSMASQ_TEXT>
+<APP_DRUPAL7>Drupal 7.x</APP_DRUPAL7>
+<APP_DRUSH7>Drush pour Drupal 7</APP_DRUSH7>
 <APP_EYEOS>eyeOS Le Bureau Web</APP_EYEOS>
 <APP_EYEOS_TEXT>eyeOS est Bureau Web en technologie cloud &agrave; travers un navigateur.Afin de fournir un outil de collaboration et de communication entre utilisateurs.</APP_EYEOS_TEXT>
 <APP_GREENSQL>Pare-feu GreenSQL</APP_GREENSQL>
@@ -174,6 +178,7 @@ Patientez quelques secondes et rafra&icirc;chissez cette page.</apply_network_co
 <APP_SNORT>Pr&eacute;vention d'intrusion r&eacute;seau (Snort)</APP_SNORT>
 <APP_SNORT_ABOUT>Snort est un logiciel libre de pr&eacute;vention d'intrusions et de syst&egrave;me de d&eacute;tection  (IDS/IPS) d&eacute;velopp&eacute; par SourceFire.[br]
 En combinant les avantages des signatures, du protocole et des inspection d'anomalies, Snort un des logiciels les plus install&eacute;s dans le mode comme syst&egrave;me IDS/IPS.</APP_SNORT_ABOUT>
+<APP_TOMCAT>Service Web Tomcat</APP_TOMCAT>
 <APP_ZARAFA_INDEXER>Indexation Zarafa</APP_ZARAFA_INDEXER>
 <APP_Z_PUSH>Z-Push</APP_Z_PUSH>
 <APP_Z_PUSH_TEXT>Le logiciel Z-Push autorise les utilisateurs de t&eacute;l&eacute;phones mobiles intelligents &agrave; synchroniser leurs messages, contacts, calendriers et t&acirc;ches avec un serveur Zarafa via une connexion UMTS, GPRS, Wifi ou GSM</APP_Z_PUSH_TEXT>
@@ -360,8 +365,12 @@ Le champs &quot;Poids&quot; vous permet de privil&eacute;gier des serveurs lors 
 <Current_Pending_Sector>Secteurs en attente de r&eacute;allocation</Current_Pending_Sector>
 <Current_Pending_Sector_text>Nombre de secteurs en attente de r&eacute;-allocation</Current_Pending_Sector_text>
 <CYRUS_DB_CONFIG_TEXT>Personnalisez et d&eacute;finissez les param&egrave;tres de performances des bases de donn&eacute;es de cyrus-imap</CYRUS_DB_CONFIG_TEXT>
+<DATABASE>Base de donn&eacute;es</DATABASE>
 <databases_are_not_compiled_warn>Les bases de donn&eacute;es ne sont pas compil&eacute;es.[br]Votre filtre ne sera pas disponible tant que toutes les bases n'ont pas &eacute;t&eacute; traduites sur le disque.</databases_are_not_compiled_warn>
 <database_configuration>Base de donn&eacute;es (Param.)</database_configuration>
+<DATABASE_DRIVER>Pilote de base de donn&eacute;es</DATABASE_DRIVER>
+<DATABASE_HOSTNAME>Serveur de la base de donn&eacute;es</DATABASE_HOSTNAME>
+<DATABASE_NAME>Nom de la base de donn&eacute;es</DATABASE_NAME>
 <DDOS_prevention>Pr&eacute;vention des d&eacute;nis de services</DDOS_prevention>
 <DDOS_WHITE_ADD>Le caract&egrave;re joker * peut &ecirc;tre utilis&eacute; dans les 3 derniers octets si n&eacute;cessaire.
 (exemple 127.0.0.1 ou 127.0.0.*)</DDOS_WHITE_ADD>
@@ -391,6 +400,7 @@ Sp&eacute;cifiez l'une des formes suivantes:
 retour continu. La valeur doit &ecirc;tre dans l'intervalle 0 .. 1 inclus. Le r&eacute;glage par d&eacute;faut de &laquo;1 &raquo;.
 [br] [b] Nombre Nombre / [/ b]
 [br] [b] le num&eacute;ro  / nb &eacute;missions [/ b] Le nombre doit &ecirc;tre dans l'intervalle 0 .. 1 inclus. Avec un nombre &eacute;gal &agrave; &quot;1&quot;, la concurrence de livraison d'une destination est incr&eacute;ment&eacute; de 1 apr&egrave;s chaque succ&egrave;s pseudo-cohorte.</default_destination_concurrency_positive_feedback_text>
+<DEFAULT_THEME>Th&egrave;me par d&eacute;faut</DEFAULT_THEME>
 <default_website>Site web par d&eacute;faut</default_website>
 <delayed>Retard&eacute;</delayed>
 <DeleteAllipTablesRules_text>Cette op&eacute;ration va supprimer TOUTES les r&egrave;gle de pare-feu.
@@ -475,6 +485,12 @@ Toutefois ceci va consommer plus de m&eacute;moire.[br]Il est conseill&eacute; d
 <DOSSiteInterval_explain>d&eacute;termine une intervalle en seconde qui autorise l%u2019affichage d%u2019un m&ecirc;me site avant une interdiction.</DOSSiteInterval_explain>
 <DOWNLOAD_OPENVPN_CLIENT_APPLE>Client VPN pour Mac OSX</DOWNLOAD_OPENVPN_CLIENT_APPLE>
 <do_not_send_same_infos_before>Ne pas envoyer la m&ecirc;me information avant</do_not_send_same_infos_before>
+<DRUPAL_BOOTSTRAP>Amorce du site</DRUPAL_BOOTSTRAP>
+<drupal_refresh_ordered>T&acirc;che d'Information Drupal programm&eacute;e, veuillez patienter</drupal_refresh_ordered>
+<DRUPAL_ROOT>Racine du site Drupal</DRUPAL_ROOT>
+<DRUPAL_USER>Utilisateur Drupal</DRUPAL_USER>
+<DRUPAL_VERSION>Version de Drupal</DRUPAL_VERSION>
+<DRUSH_VERSION>Version de Drush</DRUSH_VERSION>
 <dumpcycle>Cycle d'extraction</dumpcycle>
 <dumpcycleExplain>Le nombre de jours d'un cycle de d&eacute;p&ocirc;t, indique comment une sauvegarde compl&egrave;te est effectu&eacute;e.</dumpcycleExplain>
 <duplicate_domain_explain>Cette fonctionnalit&eacute; vous permet de dupliquer les messages &agrave; destination de ce domaine vers une autre domaine de votre choix.[br]
@@ -512,6 +528,7 @@ par exemple, 0,1 r&eacute;&eacute;crit sur %u200B%u200Bla moyenne de 1 &agrave; 
 toutes les liens seront remplac&eacute;es par l'url que vous avez d&eacute;finit dans le formulaire.</EnablePhishTag_explain_form>
 <EnablePublicOrganizations>Enregistrements publique des utilisateurs</EnablePublicOrganizations>
 <EnablePublicOrganizations_text>Si activ&eacute;, les administrateurs des organisations disposeront de la facult&eacute; d'autoriser des Internautes &agrave; cr&eacute;er des comptes utilisateurs dans les organisation de fa&ccedil;on publique.[br]Une formulaire d'enregistrement est alors pr&eacute;vu &agrave; cet effet.</EnablePublicOrganizations_text>
+<EnableRebootAfterUpgrade>Red&eacute;marrer apr&egrave;s une mise &agrave; jour syst&egrave;me</EnableRebootAfterUpgrade>
 <EnableSpamAssassinFreeMail_explain>D&eacute;tecte this des adresses eMail utilisent des services WebMail gratuits</EnableSpamAssassinFreeMail_explain>
 <enable_amavis_watchdog>Activer la surveillance</enable_amavis_watchdog>
 <ENABLE_ARTICA_SMTP_STATS>Activer le moteur de statistiques SMTP</ENABLE_ARTICA_SMTP_STATS>
@@ -541,6 +558,7 @@ toutes les liens seront remplac&eacute;es par l'url que vous avez d&eacute;finit
 <enable_syslog_client_text>Si vous passez en vert, ce serveur va envoyer ses &eacute;v&egrave;nements syst&egrave;mes vers un serveur de consolidation de logs.[br]Ce serveur va utiliser UDP et le port distant 514 afin d'envoyer les donn&eacute;es.</enable_syslog_client_text>
 <enable_syslog_server>Activer le mode r&eacute;ception de logs</enable_syslog_server>
 <enable_syslog_server_text>Si vous passez en vert, ce serveur va recevoir les &eacute;v&egrave;nements syst&egrave;mes envoy&eacute;s par des clients.[br]Ce serveur va utiliser UDP et le port distant 514 afin de recevoir les donn&eacute;es.</enable_syslog_server_text>
+<enable_tomcatjconet>Activer le connecteur Tomcat d'Apache</enable_tomcatjconet>
 <enable_viptrack>Activer VIPTrack</enable_viptrack>
 <enable_whitelisting>Activer la m&eacute;thode liste blanche</enable_whitelisting>
 <eq2>est &eacute;gale</eq2>
@@ -560,6 +578,7 @@ toutes les liens seront remplac&eacute;es par l'url que vous avez d&eacute;finit
 <filesystem_type>Syst&egrave;me de fichiers</filesystem_type>
 <files_and_folders_permissions>Permissions des fichier et dossiers</files_and_folders_permissions>
 <files_extension>Extension de fichiers</files_extension>
+<FILE_DIRECTORY_PATH>Chemin du fichier de r&eacute;pertoire</FILE_DIRECTORY_PATH>
 <filterwin2k_text>Les derni&egrave;res versions de windows font des requ&ecirc;tes DNS p&eacute;riodiques auxquelles non seulement les serveurs DNS publics ne peuvent donner de r&eacute;ponse, mais qui, de surcro&icirc;t, peuvent poser des probl&egrave;mes en d&eacute;clenchant des connexions intempestives pour des liens  r&eacute;seaux avec des connexions &quot;&agrave; la demande&quot;. [br]Fournir cette option active le filtrage des requ&ecirc;tes de ce type. [br]Les requ&ecirc;tes bloqu&eacute;es sont les requ&ecirc;tes pour les entr&eacute;es de type SOA ou SRV, ainsi que les requ&ecirc;tes de type ANY avec des noms poss&eacute;dant
 des caract&egrave;res sous-lign&eacute;s (requ&ecirc;tes pour des serveurs LDAP).</filterwin2k_text>
 <firewall>Pare-feu</firewall>
@@ -716,6 +735,7 @@ Ce mode fonctionne id&eacute;alement avec un stockage haut de gamme HBA et pour 
 Ce fichier sera le disque iSCSI partag&eacute;.[br]
 En mode disque, vous devrez choisir une partition qui sera le disque iSCSI partag&eacute;</iscsi_type_edit_explain>
 <jGrowlNotifsDisabled>D&eacute;sactiver les info-bulles &agrave; droite de l'&eacute;cran</jGrowlNotifsDisabled>
+<jkMount_explain>Ajoute les directives jkMount pour les fichiers *.do,*.jsp,*.jspx,*.cfm,*.cfc,*.cfchart,*.cfres</jkMount_explain>
 <jumpto>Aller &agrave;</jumpto>
 <KeepAlive_explain>Doit &ecirc;tre utilis&eacute; lorsque vous avez un pare-feu entre Apache httpd et le serveur d'arri&egrave;re-plan, et si ce dernier tend &agrave; interrompre les connexions inactives.[br] Cette option va faire en sorte que le syst&egrave;me d'exploitation envoie des messages KEEP_ALIVE sur chacune des connexions inactives et ainsi &eacute;viter la fermeture de la connexion par le pare-feu.</KeepAlive_explain>
 <last_24h>Derni&egrave;res 24H</last_24h>
@@ -817,6 +837,7 @@ Si vous mettez 0, alors l'&eacute;metteur sera compl&egrave;tement mis en liste 
 <MinSpareServers>Processus minimum en m&eacute;moire</MinSpareServers>
 <MISSING_PARAMETER>Param&egrave;tres manquants</MISSING_PARAMETER>
 <MISSING_PARAMETER_TEXT>Un ou des param&egrave;tres sont manquants, le service ne va pas tourner correctement</MISSING_PARAMETER_TEXT>
+<modules>Modules</modules>
 <mod_evasive_explain>Cette fonctionnalit&eacute; d&eacute;tecte lorsqu'un utilisateur du site web effectue de multiples requ&ecirc;tes dans une p&eacute;riode tr&egrave;s courte afin de bannir temporairement l'adresse IP de cet utilisateur.[br]La p&eacute;riode d'interdiction peut &ecirc;tre tr&egrave;s courte car le module assure automatiquement l'auto-blocage si l'attaque revient..</mod_evasive_explain>
 <mod_qos_explain>La QOS permet d'affiner le param&eacute;trage des connexions que va subir le site web afin de le d&eacute;fendre contre des attaques et de limiter la bande passante.</mod_qos_explain>
 <mounts_list>Liste des connexions</mounts_list>
@@ -938,6 +959,7 @@ For example, Avaya phones are hard coded to "read" this scope option and pick up
 <perform_mysql_check>Lancer une v&eacute;rification MySQL sur cette table ?</perform_mysql_check>
 <permissions>Permissions</permissions>
 <persistante_connection>Connexion persistante</persistante_connection>
+<PHP_CONFIGURATION>Chemin du fichier de configuration php</PHP_CONFIGURATION>
 <picture>Image</picture>
 <please_choose_an_official_domain>Veuillez choisir un domaine officiel</please_choose_an_official_domain>
 <please_register_first>Veuillez vous enregistrer d'abord</please_register_first>
@@ -1107,6 +1129,7 @@ Dans ce cas, vous perdrez les sites web enregistr&eacute;s et le proxy devra alo
 D&eacute;sirez-vous lancer cette op&eacute;ration ?</reconstruct_caches_explain>
 <reconstruct_vlans>Reconstruire les VLANs</reconstruct_vlans>
 <record>Enregistrement</record>
+<recreation_nightout>Sites sur les sorties du soir telles que les restaurants, pubs, caf&eacute;s, bo&icirc;tes de nuits...</recreation_nightout>
 <redirect_to>Rediriger vers</redirect_to>
 <redirect_to_email>Rediriger vers une adresse</redirect_to_email>
 <reduce_artica_web_explain>Artica utilise 2 serveurs Web (Le moteur HTTP et le Framework) afin de vous fournir l'interface d'administration.[br]Activer cette fonctionnalit&eacute; va r&eacute;duire au minimum les processus utilis&eacute;s.[br]
@@ -1277,6 +1300,8 @@ La r&eacute;gion de log est utilis&eacute; pour le stockage des noms de fichiers
 Les messages qui correspondent aux r&egrave;gles vont &ecirc;tre automatiquement rejet&eacute;s (pas de quarantaine)</SimpleWords_explain>
 <SimpleWords_explain_add>Ajoutez des mots et phrases dans ce formulaire[br]Chaque entr&eacute;e devra &ecirc;tre s&eacute;par&eacute;e par un retour chariot.</SimpleWords_explain_add>
 <site_interval>Intervalle pour le site</site_interval>
+<SITE_PATH>Chemin du site</SITE_PATH>
+<SITE_URI>Url du site web</SITE_URI>
 <size_by_days>Taille du flux par jour</size_by_days>
 <skip-character-set-client-handshake>Ignorer le &quot;charset&quot; du client</skip-character-set-client-handshake>
 <skip-character-set-client-handshake_text>Ignorer les informations de jeux de caract&egrave;res du client et utiliser celui du serveur.</skip-character-set-client-handshake_text>
@@ -1291,6 +1316,7 @@ Indiquez 0 afin de retourner &agrave; la valeur par d&eacute;faut.</SlapdThreads
 <smbconfig>smb.conf</smbconfig>
 <smbservices>Services</smbservices>
 <smb_RootDir_text>Toutes les t&acirc;ches li&eacute;es au dossiers sur les disques devront d&eacute;marrer au r&eacute;pertoire racine.</smb_RootDir_text>
+<smtp_notification_not_saved>Les notifications eMail ne sont pas personnalis&eacute;es</smtp_notification_not_saved>
 <smtp_sasl_security_options_mutual_auth>Autoriser seulement les m&eacute;thodes qui fournissent une authentification mutuelle</smtp_sasl_security_options_mutual_auth>
 <smtp_sasl_security_options_noanonymous>Interdit les m&eacute;thodes qui autorisent l'authentification anonyme.</smtp_sasl_security_options_noanonymous>
 <smtp_sasl_security_options_nodictionary>Rejeter les m&eacute;thodes sujettes &agrave; une attaque active (sans dictionnaire).</smtp_sasl_security_options_nodictionary>
@@ -1368,6 +1394,7 @@ Lorsque la p&eacute;riode de gr&acirc;ce &agrave; expir&eacute;e, les utilisateu
 <TimeSynchronization>D&eacute;lai de synchronisation</TimeSynchronization>
 <time_in_seconds>Nombre de secondes</time_in_seconds>
 <today_downloaded_flow>Aujourd'hui: Flux t&eacute;l&eacute;charg&eacute;.</today_downloaded_flow>
+<tomcat_admin_interface>Console d'administration Tomcat</tomcat_admin_interface>
 <top10>TOP 10</top10>
 <top10_users>TOP 10 utilisateurs</top10_users>
 <total_threshold>Seuil total</total_threshold>
@@ -1382,6 +1409,7 @@ Lorsque la p&eacute;riode de gr&acirc;ce &agrave; expir&eacute;e, les utilisateu
 <unfreeze>D&eacute;geler le syst&egrave;me.</unfreeze>
 <unix_permissions>Permissions Unix</unix_permissions>
 <unlimited>illimit&eacute;</unlimited>
+<UPDATED>Mis &agrave; jour le</UPDATED>
 <updated_on>Mise &agrave; jour &agrave;</updated_on>
 <UPDATE_DEBIAN_TEMPLATE_TEXT>T&eacute;l&eacute;charger le mod&egrave;le Debian i386.[br]Ceci requi&egrave;re 350Mo d'espace disque.</UPDATE_DEBIAN_TEMPLATE_TEXT>
 <UPDATE_FEDORA_TEMPLATE_TEXT>T&eacute;l&eacute;chargement du mod&egrave;le Fedora i386, requi&egrave;re 690Mb d'espace disponible.</UPDATE_FEDORA_TEMPLATE_TEXT>
@@ -1482,6 +1510,7 @@ La valeur par d&eacute;faut de 8 threads est suffisante pour l'ensemble des beso
 <www_forward>Transf&eacute;rer vers un autre site</www_forward>
 <www_ForwardTo>Site web &agrave; transf&eacute;rer</www_ForwardTo>
 <www_humanitarian_associations>Sites web &agrave; propos de des associations humanitaires ou tout ce qui s'en rapproche.</www_humanitarian_associations>
+<www_imagehosting>Sites web permettant le stockage d'images et de photos.</www_imagehosting>
 <www_reale_state_office>Site d'achats et vente de immobilier, trouver des appartements &agrave; louer et &agrave; vendre</www_reale_state_office>
 <www_translators>Sites web offrant des services de traductions linguistiques</www_translators>
 <www_whitelisting>M&eacute;thode par liste blanche</www_whitelisting>

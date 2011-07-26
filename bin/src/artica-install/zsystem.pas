@@ -4373,6 +4373,7 @@ begin
     CertificateMaxDays:=GET_INFO('CertificateMaxDays');
     if length(CertificateMaxDays)=0 then CertificateMaxDays:='730';
     fpsystem('/bin/rm -rf /etc/ssl/certs/new');
+    forceDirectories('/etc/ssl/certs/new');
 
     FILI:=TstringList.Create;
     FILI.LoadFromFile(default_conf);

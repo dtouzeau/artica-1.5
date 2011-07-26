@@ -342,6 +342,11 @@ function popup(){
 	if($users->PUREFTP_INSTALLED){
 		$array["pure-ftpd"]='{APP_PUREFTPD}';
 	}
+	if($users->TOMCAT_INSTALLED){
+		$array["tomcat"]='{APP_TOMCAT}';
+	}
+		
+	
 	
 	
 	
@@ -353,6 +358,12 @@ function popup(){
 			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"pureftp.index.php?pure-ftpd-page=yes\"><span>$ligne</span></a></li>\n");
 			continue;
 		}
+		
+		if($num=="tomcat"){
+			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"tomcat.php\"><span>$ligne</span></a></li>\n");
+			continue;
+		}		
+		
 		$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"$page?$num=yes\"><span>$ligne</span></a></li>\n");
 	}
 	
@@ -734,7 +745,7 @@ function apache_src_status(){
 	$datas=$sock->getFrameWork("cmd.php?apachesrc-ini-status=yes");
 	writelogs(strlen($datas)." bytes for apache status",__CLASS__,__FUNCTION__,__FILE__,__LINE__);
 	$ini->loadString(base64_decode($datas));
-	$status=DAEMON_STATUS_ROUND("APP_APACHE_SRC",$ini,null,0)."<br>".DAEMON_STATUS_ROUND("PUREFTPD",$ini,null,0).$refresh;
+	$status=DAEMON_STATUS_ROUND("APP_APACHE_SRC",$ini,null,0)."<br>".DAEMON_STATUS_ROUND("PUREFTPD",$ini,null,0)."<br>".DAEMON_STATUS_ROUND("APP_TOMCAT",$ini,null,0).$refresh;
 	echo $tpl->_ENGINE_parse_body($status);	
 	
 }

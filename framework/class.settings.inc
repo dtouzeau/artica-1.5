@@ -112,6 +112,8 @@ class settings_inc {
 	var $APACHE_MOD_AUTHNZ_LDAP=false;
 	var $OPENVPN_APPLIANCE=false;
 	var $SIEVE_PORT=0;
+	var $TOMCAT_INSTALLED=false;
+	var $TOMCAT_VERSION="";
 	/* This licence must be used Only with Artica-for postfix */
 	var $ChartLicence="D1XFWGMEW9L.HSK5T4Q79KLYCK07EK";
 	/*you cannot use it without any authorizations of maani.us.
@@ -437,6 +439,9 @@ class settings_inc {
 	var $APP_AMANDA_INSTALLED=false;
 	var $NSCD_INSTALLED=false;
 	var $DRUPAL7_INSTALLED=false;
+	var $TOMCAT_JAVA="";
+	var $TOMCAT_DIR="";
+	var $APACHE_MOD_TOMCAT=false;
 	private function CheckIndexDefaults($_GLOBAL){
 		return $_GLOBAL;
 		foreach($this as $key => $value) {
@@ -535,6 +540,8 @@ class settings_inc {
 			if(isset($_GLOBAL["DAVFS_INSTALLED"])){$this->DAVFS_INSTALLED=$_GLOBAL["DAVFS_INSTALLED"];;}
 			if(isset($_GLOBAL["APACHE_MOD_QOS"])){$this->APACHE_MOD_QOS=$_GLOBAL["APACHE_MOD_QOS"];;}
 			if(isset($_GLOBAL["APACHE_MOD_CACHE"])){$this->APACHE_MOD_CACHE=$_GLOBAL["APACHE_MOD_CACHE"];}
+			if(isset($_GLOBAL["TOMCAT_INSTALLED"])){$this->TOMCAT_INSTALLED=$_GLOBAL["TOMCAT_INSTALLED"];}
+			if(isset($_GLOBAL["TOMCAT_VERSION"])){$this->APACHE_MOD_CACHE=$_GLOBAL["TOMCAT_VERSION"];}
 			
 			
 			
@@ -826,8 +833,9 @@ class settings_inc {
 			if(isset($_GLOBAL["Z_PUSH_INSTALLED"])){$this->Z_PUSH_INSTALLED=$_GLOBAL["Z_PUSH_INSTALLED"];}
 			if(isset($_GLOBAL["APP_AMANDA_INSTALLED"])){$this->APP_AMANDA_INSTALLED=$_GLOBAL["APP_AMANDA_INSTALLED"];}
 			if(isset($_GLOBAL["DRUPAL7_INSTALLED"])){$this->DRUPAL7_INSTALLED=$_GLOBAL["DRUPAL7_INSTALLED"];}
-			
-			
+			$this->TOMCAT_JAVA=$_GLOBAL["TOMCAT_JAVA"];
+			$this->TOMCAT_DIR=$_GLOBAL["TOMCAT_DIR"];
+			$this->APACHE_MOD_TOMCAT=$_GLOBAL["APACHE_MOD_TOMCAT"];
 			
 			
 			if(isset($_GLOBAL["deduplication_installed"])){$this->deduplication_installed=$_GLOBAL["deduplication_installed"];}

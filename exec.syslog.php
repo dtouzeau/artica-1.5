@@ -65,6 +65,8 @@ events("Shutdown...");
 die();
 function Parseline($buffer){
 $buffer=trim($buffer);	
+if(strpos($buffer,"]: SA dbg:")>0){return;} 
+if(strpos($buffer,") SA dbg:")>0){return;} 
 if(preg_match("#exec.dstat.top.php#",$buffer)){return true;}
 if(preg_match("#artica-filter#",$buffer)){return true;}
 if(preg_match("#postfix\/#",$buffer)){return true;}
@@ -279,13 +281,37 @@ if(preg_match("#nss_wins\[[0-9]+\]:#",$buffer)){nss_parser($buffer);return;}
 	if($auth->ParseLog($buffer)){return;}
 	$auth=null;
 	
-	
+if(preg_match("#pam_ldap: error trying to bind \(Invalid credentials\)#",$buffer,$re)){
+	$file="/etc/artica-postfix/croned.1/pam_ldap.Invalid.credentials";
+	if(IfFileTime($file,10)){
+			email_events("pam_ldap: system unable to contact the LDAP server","system claims:\n$buffer\nArtica will reconfigure nss-ldap system\nSome systems request rebooting\nto be sure, reboot your server",'system');
+			shell_exec(trim("{$GLOBALS["nohup"]} /usr/share/artica-postfix/bin/artica-install --nsswitch >/dev/null 2>&1 &"));
+			@unlink($file);	
+			WriteFileCache($file);
+		}
+		return;
+	}	
+
+
+
+if(preg_match("#net:\s+failed to bind to server.+?Error: Invalid credentials#",$buffer,$re)){
+	$file="/etc/artica-postfix/croned.1/net.Invalid.credentials";
+	if(IfFileTime($file,10)){
+			email_events("Samba/net: system unable to contact the LDAP server","Samba/net claims:\n$buffer\nArtica will reconfigure samba system\n",'system');
+			shell_exec(trim("{$GLOBALS["nohup"]} {$GLOBALS["LOCATE_PHP5_BIN"]} /usr/share/artica-postfix/exec.samba.php --build >/dev/null 2>&1 &"));
+			@unlink($file);	
+			WriteFileCache($file);
+		}
+		return;
+	}	
+
+
 	
 	if(preg_match("#pdns.+?:\s+\[LdapBackend\] Unable to search LDAP directory: Starting LDAP search: Can't contact LDAP server#",$buffer,$re)){
 		events("--> PDNS LDAP FAILED");
 		$file="/etc/artica-postfix/croned.1/pdns.Can.t.contact.LDAP.server";
 		if(IfFileTime($file,10)){
-			email_events("PowerDNS: DNS server is unable to contact the LDA server","PDNS claims:\n$buffer\nArtica will restart PowerDNS service",'system');
+			email_events("PowerDNS: DNS server is unable to contact the LDAP server","PDNS claims:\n$buffer\nArtica will restart PowerDNS service",'system');
 			shell_exec(trim("{$GLOBALS["nohup"]} /etc/init.d/artica-postfix restart pdns >/dev/null 2>&1 &"));
 			@unlink($file);	
 			WriteFileCache($file);

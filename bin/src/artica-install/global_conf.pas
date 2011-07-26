@@ -9,7 +9,7 @@ uses
 //depreciated oldlinux -> linux
 Classes, SysUtils,Process,strutils,IniFiles,RegExpr in 'RegExpr.pas',unix,logs,dateutils,uHashList,Geoip,BaseUnix,md5,dhcp_server,openvpn,cups,pdns, obm2,
 samba,smartd,xapian,opengoo,dstat,sugarcrm,rsync,tcpip,policyd_weight,apache_artica, autofs,nfsserver,framework,ocsi,assp,gluster,zabbix,hamachi,vmwaretools,phpldapadmin,zarafa_server,squidguard,emailrelay,mldonkey,backuppc,kav4fs,
-ocsagent,sshd,auditd,dkfilter,ufdbguardd,dkimmilter,dropbox,articapolicy,virtualbox,crossroads,articastatus,articaexecutor,articabackground,pptpd,ddclient,cluebringer,toolsversions,sabnzbdplus,fusermount,vnstat,munin,greyhole,snort,greensql,
+ocsagent,sshd,auditd,dkfilter,ufdbguardd,dkimmilter,dropbox,articapolicy,virtualbox,crossroads,articastatus,articaexecutor,articabackground,pptpd,ddclient,cluebringer,toolsversions,sabnzbdplus,fusermount,vnstat,munin,greyhole,snort,greensql,tomcat,
 mailarchiver in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/mailarchiver.pas',
 kavmilter    in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/kavmilter.pas',
 kas3         in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/kas3.pas',
@@ -2681,6 +2681,7 @@ var
    ldap:topenldap;
    greyhole:tgreyhole;
    openvpn:topenvpn;
+   tomcat:ttomcat;
 begin
 
    debug:=false;
@@ -2702,6 +2703,7 @@ begin
     rdiffbackup:=trdiffbackup.Create;
     xxfce:=txfce.Create;
     toolsversions:=ttoolsversions.CReate(SYS);
+
 
 
     ArrayList.Add('<SECURITY_MODULES>');
@@ -2773,6 +2775,14 @@ begin
 
 
     fusermount.Free;
+    //tomcat
+    tomcat:=ttomcat.Create(SYS);
+    try
+       ArrayList.Add('[APP_TOMCAT] "'+tomcat.VERSION()+'"');
+    except
+          logs.Syslogs('FATAL ERROR on CGI_ALL_APPLIS_INSTALLED after tomcat.VERSION()');
+    end;
+    tomcat.free;
 
 
 

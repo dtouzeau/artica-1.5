@@ -27,7 +27,7 @@ $ou_decrypted=base64_decode($_GET["ou"]);
 $html="
 
 function ZARAFA_OU_LOAD(){
-	YahooWin3('530','$page?popup=yes&ou=$ou_decrypted','$title');
+	YahooWin3('415','$page?popup=yes&ou=$ou_decrypted','$title');
 	
 	}
 	
@@ -76,7 +76,7 @@ function popup(){
 			";
 		}
 
-	$enable=Paragraphe_switch_img("{ENABLE_ZARAFA_COMPANY}","{ENABLE_ZARAFA_COMPANY_TEXT}","zarafaEnabled",$zarafaEnabled);
+	$enable=Paragraphe_switch_img("{ENABLE_ZARAFA_COMPANY}","{ENABLE_ZARAFA_COMPANY_TEXT}","zarafaEnabled",$zarafaEnabled,null,400);
 	
 	$html="
 	$enable
@@ -94,6 +94,7 @@ function zarafaEnabled(){
 	$ldap=new clladp();
 	$dn="ou={$_GET["ou"]},dc=organizations,$ldap->suffix";
 	$upd["objectClass"]="zarafa-company";
+	$upd["cn"]=$_GET["ou"];
 	if($_GET["zarafaEnabled"]==1){
 		if(!$ldap->Ldap_add_mod("$dn",$upd)){
 			echo $ldap->ldap_last_error;

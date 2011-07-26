@@ -57,15 +57,22 @@ while (list ($servername, $ligne) = each ($MAIN["BACKENDS"]) ){	$cd[]="--backend
 
 function multiples_start(){
 	$GLOBALS["CLASS_UNIX"]=new unix();
+	$xr=$GLOBALS["CLASS_UNIX"]->find_program("xr");
+	
+	if(!is_file($xr)){
+		if($GLOBALS["VERBOSE"]){echo "Starting......: Crossroads multiple xr no such binary\n";}
+		return;
+	} 
+		
+	
 	$sql="SELECT * FROM crossroads_smtp";
 	$q=new mysql();
 	$results=$q->QUERY_SQL($sql,"artica_backup");
 	if(!$q->ok){echo "Starting......: Crossroads multiple $q->mysql_error\n";return;}
 	if(mysql_num_rows($results)==0){echo "Starting......: Crossroads multiple no interfaces set\n";return;}
 	
-	$xr=$GLOBALS["CLASS_UNIX"]->find_program("xr");
+	
 	$nohup=$GLOBALS["CLASS_UNIX"]->find_program("nohup");
-	if(!is_file($xr)){echo "Starting......: Crossroads multiple xr no such binary\n";return;} 
 	
 	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){	
 		$arrayConf=unserialize($ligne["parameters"]);

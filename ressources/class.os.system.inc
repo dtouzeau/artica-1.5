@@ -238,21 +238,22 @@ function system_is_overloaded($file=null){
 			$users=new usersMenus();
 			$GLOBALS["CPU_NUMBER"]=intval($users->CPU_NUMBER);
 	}
-	
+	if($GLOBALS["VERBOSE"]){
 	if(function_exists("debug_backtrace")){
 		try {
 			$trace=@debug_backtrace();
 			if(isset($trace[1])){$called=" called by ". basename($trace[1]["file"])." {$trace[1]["function"]}() line {$trace[1]["line"]}";}
 			} catch (Exception $e) {}
 		}	
-	
+	$d->events("Load: $internal_load max=$cpunum  $called","/var/log/artica-postfix/syslog.log");
+	}
 	$d=new debuglogs();
 	
 	$array_load=sys_getloadavg();
 	$internal_load=$array_load[0];
 	$cpunum=$GLOBALS["CPU_NUMBER"]+0.5;
 	if($file==null){$file=basename(__FILE__);}
-	$d->events("Load: $internal_load max=$cpunum  $called","/var/log/artica-postfix/syslog.log");
+	
 
 	if($internal_load>$cpunum){
 		$GLOBALS["SYSTEM_INTERNAL_LOAD"]=$internal_load;

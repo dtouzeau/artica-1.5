@@ -200,8 +200,13 @@ function main_table(){
 			<tr ". CellRollOver().">
 				<td width=1% nowrap><strong style='font-size:13px'>{maincf_key}:</strong></td>
 				<td>" . Field_text('key',$num,'width:100%;font-size:13px;padding:3px')."</td>
-				<td width=1% nowrap><strong style='font-size:13px'>{maincf_data}:</strong></td>
-				<td>" . Field_text('data',$val["VALUE"],'width:100%;font-size:13px;padding:3px')."</td>
+			</tr>
+			<tr>
+				<td width=1% nowrap colspan=2><strong style='font-size:13px'>{maincf_data}:</strong></td>
+			</tr>
+			<tr>
+			
+				<td colspan=2>" . Field_text('data',$val["VALUE"],'width:100%;font-size:13px;padding:3px')."</td>
 				<td>" .Field_hidden("opt","r")."</td>
 				<td width=1%>" . imgtootltip('delete-32.png','{delete}',"MainPersoDelete('$num')")."</td>
 			</tr>

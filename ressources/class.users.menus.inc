@@ -460,6 +460,11 @@ class usersMenus {
 	var $PDNSSEC_INSTALLED=false;
 	var $NSCD_INSTALLED=false;
 	var $DRUPAL7_INSTALLED=false;
+	var $TOMCAT_VERSION=false;
+	var $TOMCAT_INSTALLED=false;
+	var $TOMCAT_JAVA="";
+	var $TOMCAT_DIR="";
+	var $APACHE_MOD_TOMCAT=false;
 	
 	private function CheckIndexDefaults($_GLOBAL){
 		return $_GLOBAL;
@@ -857,7 +862,11 @@ class usersMenus {
 			$this->POWERADMIN_INSTALLED=$_GLOBAL["POWERADMIN_INSTALLED"];
 			$this->APP_AMANDA_INSTALLED=$_GLOBAL["APP_AMANDA_INSTALLED"];
 			$this->PDNSSEC_INSTALLED=$_GLOBAL["PDNSSEC_INSTALLED"];
-			
+			$this->TOMCAT_VERSION=$_GLOBAL["TOMCAT_VERSION"];
+			$this->TOMCAT_INSTALLED=$_GLOBAL["TOMCAT_INSTALLED"];
+			$this->TOMCAT_JAVA=$_GLOBAL["TOMCAT_JAVA"];
+			$this->TOMCAT_DIR=$_GLOBAL["TOMCAT_DIR"];	
+			$this->APACHE_MOD_TOMCAT=$_GLOBAL["APACHE_MOD_TOMCAT"];				
 			
 			if(isset($_GLOBAL["ISCSI_CLIENT_INSTALLED"])){$this->ISCSI_CLIENT_INSTALLED=$_GLOBAL["ISCSI_CLIENT_INSTALLED"];}
 			if($this->LinuxDistriCode=="DEBIAN"){$this->AS_DEBIAN_FAMILY=true;}

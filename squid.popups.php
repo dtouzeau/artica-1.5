@@ -1850,7 +1850,25 @@ function CalculCDR(){
 		
 	}
 	
+function CheckTomcatPort($newport){
+$users=new usersMenus();	
+if(!$users->TOMCAT_INSTALLED){return false;}
+$sock=new sockets();
+$TomcatListenPort=$sock->GET_INFO($TomcatListenPort);
+if(!is_numeric($TomcatListenPort)){$TomcatListenPort=8080;}				
+$TomcatEnable=$sock->GET_INFO("TomcatEnable");
+if(!is_numeric($TomcatEnable)){$TomcatEnable=1;}
+if($TomcatEnable==1){
+	if($TomcatListenPort==$newport){return true;}	
+}
+return false;
+}
+	
 function listen_port_save(){
+		if(!is_numeric($_GET["listenport"])){return null;}
+		if(CheckTomcatPort($_GET["listenport"])){echo "Apache Tomcat use 8080 port try other port eg:3128 !";return;	}
+
+		
 		$squid=new squidbee();
 		$squid->listen_port=$_GET["listenport"];
 		if(!$squid->SaveToLdap()){
@@ -1858,7 +1876,7 @@ function listen_port_save(){
 			exit;
 		}else{
 			$tpl=new templates();
-			echo $tpl->_ENGINE_parse_body('Port:{success}');
+			echo $tpl->_ENGINE_parse_body("Port:{$_GET["listenport"]} ({success})");
 		}		
 		
 	}

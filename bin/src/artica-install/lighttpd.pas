@@ -890,7 +890,9 @@ forcedirectories('/opt/artica/ssl/certs');
 cmd:=openssl_path+' req -new -passin pass:artica -x509 -batch -config /etc/artica-postfix/ssl.certificate.conf '+extensions+'-keyout /opt/artica/ssl/certs/lighttpd.pem -out /opt/artica/ssl/certs/lighttpd.pem -days '+CertificateMaxDays+' -nodes';
 logs.OutputCmd(cmd);
 
+//openssl genrsa -des3 -passout  pass:artica -out www.domain.ext.key 1024
 
+//openssl req -new -passin pass:artica -batch -config /etc/artica-postfix/ssl.certificate.conf -key www.domain.ext.key -out www.domain.ext.csr
 
 end;
 
@@ -955,7 +957,12 @@ if not FileExists(LIGHTTPD_CONF_PATH()) then begin
    exit;
 end;
 l:=TstringList.Create;
-l.LoadFromFile(LIGHTTPD_CONF_PATH());
+try
+   l.LoadFromFile(LIGHTTPD_CONF_PATH());
+except
+   result:='/var/log/lighttpd';
+   exit;
+end;
 RegExpr:=TRegExpr.Create;
 RegExpr.Expression:='^server\.errorlog.+?"(.+?)"';
 
@@ -1670,7 +1677,7 @@ z.add('session.so');
 z.add('gettext.so');
 z.add('mbstring.so');
 z.add('ssh2.so');
-z.add('uploadprogress.so');
+
 if NoPHPMcrypt=0 then begin
    z.add('mcrypt.so');
    z.add('ming.so');
