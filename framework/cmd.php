@@ -6104,7 +6104,7 @@ function SYSLOG_QUERY(){
 	writelogs_framework("Pattern \"$pattern\"" ,__FUNCTION__,__FILE__,__LINE__);
 	$maxrows=500;
 	if(strlen($pattern)>1){
-		$maxrows=2000;
+		$maxrows=3000;
 		$grep="|".$unix->find_program("grep")." -E '$pattern'";
 	}
 	
@@ -6112,6 +6112,18 @@ function SYSLOG_QUERY(){
 	$l=$unix->FILE_TEMP();
 	$cmd="$tail -n $maxrows $syslogpath$grep 2>&1";
 	exec($cmd,$results);
+	if(count($results)<3){
+		$maxrows=$maxrows+2000;
+		$cmd="$tail -n $maxrows $syslogpath$grep 2>&1";
+		exec($cmd,$results);	
+	}
+	
+	if(count($results)<3){
+		$maxrows=$maxrows+5000;
+		$cmd="$tail -n $maxrows $syslogpath$grep 2>&1";
+		exec($cmd,$results);	
+	}	
+	
 	krsort($results);
 	writelogs_framework($cmd." ". count($results)." rows " ,__FUNCTION__,__FILE__,__LINE__);
 	echo "<articadatascgi>" .base64_encode(serialize($results))."</articadatascgi>";

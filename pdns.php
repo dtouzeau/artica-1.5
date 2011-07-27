@@ -448,49 +448,25 @@ function listen_ip_list(){
 	echo $tpl->_ENGINE_parse_body($html);	
 		
 	}
-
-
-function js(){
 	
+function js_common(){
 	$page=CurrentPageName();
-	$prefix=str_replace('.','_',$page);
 	$tpl=new templates();
-	$title=$tpl->_ENGINE_parse_body('{APP_PDNS}');
-	$addaliases=$tpl->_ENGINE_parse_body('{pdns_addaliases_text}');
 	$ADD_DNS_ENTRY=$tpl->_ENGINE_parse_body('{ADD_DNS_ENTRY}');
-	
-	$start="{$prefix}StartPage();";
-	if(isset($_GET["in-front-ajax"])){
-		$start="{$prefix}StartPage2();";
-	}
-	
+	$addaliases=$tpl->_ENGINE_parse_body('{pdns_addaliases_text}');
 	
 	$html="
-		var mem_dn='';
-		var mem_dc='';
-		notshow=0;
-		function {$prefix}StartPage(){
-			YahooWin3('750','$page?tabs=yes','$title');
-		}
-		
-		function {$prefix}StartPage2(){
-			if(!document.getElementById('BodyContent')){alert('BodyContent no such id');}
-			$('#BodyContent').load('$page?tabs=yes');
-		}		
-		
-		function EditDNSEntry(dn,name){
-			YahooWin4('600','$page?popup-dn=yes&dn-entry='+dn,name);
-		}
-		
-		function EditMXEntry(dn,name){
-			YahooWin4('600','$page?mx=yes&dn-entry='+dn,name);
-		}		
-		
-		
-		
-		function AddPDNSEntry(){
+	function AddPDNSEntry(){
 			YahooWin4('450','$page?popup-add-dns=yes','$ADD_DNS_ENTRY');
 		}
+		
+	var x_SaveDNSEntry=function (obj) {
+			var results=obj.responseText;
+			if (results.length>0){alert(results);return;}
+			YahooWin4Hide();
+			RefreshDNSList();
+			
+		}	
 		
 	var x_DNSAddAssociatedDomain=function (obj) {
 			var results=obj.responseText;
@@ -500,11 +476,7 @@ function js(){
 			
 		}
 		
-	
-
-			
-		
-		function DNSAddAssociatedDomain(dn,dc){
+	function DNSAddAssociatedDomain(dn,dc){
 			mem_dn=dn;
 			mem_dc=dc;
 			notshow=0;
@@ -519,15 +491,7 @@ function js(){
 		}
 		
 		
-	var x_SaveDNSEntry=function (obj) {
-			var results=obj.responseText;
-			if (results.length>0){alert(results);return;}
-			YahooWin4Hide();
-			RefreshDNSList();
-			
-		}		
-		
-		
+
 		function DelDNSEntry(dn){
 			var XHR = new XHRConnection();
 			XHR.appendData('DelDNSEntry',dn);
@@ -558,14 +522,57 @@ function js(){
 			XHR.appendData('pattern',document.getElementById('search-dns').value);
 			document.getElementById('dns_list').innerHTML='<center style=\"width:100%\"><img src=img/wait_verybig.gif></center>';
 			XHR.sendAndLoad('$page', 'GET',x_RefreshDNSList);
-		
 		}
 		
-	
+		function EditDNSEntry(dn,name){
+			YahooWin4('600','$page?popup-dn=yes&dn-entry='+dn,name);
+		}
+		
+		function EditMXEntry(dn,name){
+			YahooWin4('600','$page?mx=yes&dn-entry='+dn,name);
+		}			
 		
 		function QueryPowerDNSCHange(e){
 			if(checkEnter(e)){RefreshDNSList();}
+		}				
+	
+	";
+	
+	return $html;
+}	
+
+
+function js(){
+	
+	$page=CurrentPageName();
+	$prefix=str_replace('.','_',$page);
+	$tpl=new templates();
+	$title=$tpl->_ENGINE_parse_body('{APP_PDNS}');
+	$js_common=js_common();
+	
+	$start="{$prefix}StartPage();";
+	if(isset($_GET["in-front-ajax"])){
+		$start="{$prefix}StartPage2();";
+	}
+	
+	
+	$html="
+		var mem_dn='';
+		var mem_dc='';
+		notshow=0;
+		function {$prefix}StartPage(){
+			YahooWin3('750','$page?tabs=yes','$title');
 		}
+		
+		function {$prefix}StartPage2(){
+			if(!document.getElementById('BodyContent')){alert('BodyContent no such id');}
+			$('#BodyContent').load('$page?tabs=yes');
+		}		
+		
+		$js_common
+		
+		
+
 		
 	
 	$start";
@@ -715,9 +722,15 @@ function popup(){
 	$user=new usersMenus();
 	$sock=new sockets();
 	$tpl=new templates();
+	$js_common=js_common();
+	$sock=new sockets();
+	$EnableDNSMASQLDAPDB=$sock->GET_INFO("EnableDNSMASQLDAPDB");
+	if(!is_numeric($EnableDNSMASQLDAPDB)){$EnableDNSMASQLDAPDB=0;}	
+	
 	
 	if(!$user->POWER_DNS_INSTALLED){
-		not_installed();return null;
+		if(!$user->dnsmasq_installed){not_installed();return null;}
+		if($EnableDNSMASQLDAPDB==0){not_installed();return null;}
 	}
 	$html="
 	<div id='dns_list' style='width:100%;height:590px;overflow:auto'></div>
@@ -726,6 +739,7 @@ function popup(){
 			LoadAjax('dns_list','$page?RefreshDNSList=yes');
 			
 		}
+		$js_common
 		refreshpdnlist();
 	</script>
 	";
@@ -736,8 +750,11 @@ echo $tpl->_ENGINE_parse_body($html);
 
 function dnslist(){
 	$sock=new sockets();
+	$users=new usersMenus();
 	$EnablePDNS=$sock->GET_INFO("EnablePDNS");
 	if(!is_numeric($EnablePDNS)){$EnablePDNS=1;}
+	$EnableDNSMASQLDAPDB=$sock->GET_INFO("EnableDNSMASQLDAPDB");
+	if(!is_numeric($EnableDNSMASQLDAPDB)){$EnableDNSMASQLDAPDB=0;}	
 	
 	$original_pattern=$_GET["pattern"];
 	if(trim($_GET["pattern"])==null){$pattern="*";}else{
@@ -754,7 +771,7 @@ function dnslist(){
 		
 		
 		if($EnablePDNS==0){
-			$warn="<center><div style='font-size:14px;color:red'>{warn_pdns_is_disabled}</div><hr></center>";
+			if(!$users->dnsmasq_installed){$warn="<center><div style='font-size:14px;color:red'>{warn_pdns_is_disabled}</div><hr></center>";}else{if($EnableDNSMASQLDAPDB==0){$warn="<center><div style='font-size:14px;color:red'>{warn_pdns_is_disabled}</div><hr></center>";}}
 		}
 		
 		$html="$warn

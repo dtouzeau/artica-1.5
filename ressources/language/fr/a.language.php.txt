@@ -513,6 +513,8 @@ Vous avez simplement besoin d'indiquer la nouvelle adresse IP du nouveau serveur
 Lorsque les param&egrave;tres vont &ecirc;tre construits, Artica va essayer de r&eacute;soudre l'adresse IP des machines en nom d'h&ocirc;te.[br]
 Si la r&eacute;solution est un succ&egrave;s, le param&egrave;tre sera chang&eacute; en nom d'h&ocirc;te &agrave; r&eacute;soudre en lieu et place de l'adresse IP.</EnableDHCPUseHostnameOnFixed_explain>
 <EnableDNSMASQ>Activer le service DNSMasq</EnableDNSMASQ>
+<EnableDNSMASQLDAPDB>Utiliser la base LDAP</EnableDNSMASQLDAPDB>
+<EnableDNSMASQLDAPDB_explain>Par d&eacute;faut, Artica utilise un fichier plat afin de stocker les adresses &agrave; r&eacute;soudre.[br]Vous pouvez utiliser la base LDAP en activant cette option.[[br]Ceci a pour but de r&eacute;unir les deux bases entre elles.[br]Cette option est int&eacute;ressante si vous d&eacute;sirez passer du service DNS PowerDNS (avec LDAP) au service DNSMasq et vis-versa.</EnableDNSMASQLDAPDB_explain>
 <EnableDNSMASQ_explain>Si activ&eacute;, toutes les requ&ecirc;tes syst&egrave;me passeront &agrave; travers DNSMasq en lieu et place des DNS enregistr&eacute;s dans le syst&egrave;me.</EnableDNSMASQ_explain>
 <EnableISCSI>Activer le service iSCSI</EnableISCSI>
 <EnableLDAPAmavis>Autoriser des configurations multiples via LDAP</EnableLDAPAmavis>
@@ -702,6 +704,20 @@ Si vous utilise le service Active Directory en version Windows 2003, sachez que 
 <imap_port>Port d'&eacute;coute IMAP</imap_port>
 <ImmediateData>Donn&eacute;e imm&eacute;diate</ImmediateData>
 <ImmediateData_explain>Cela permet au service de Disques d'ajouter des donn&eacute;es non sollicit&eacute;es &agrave; une commande.[br] Pour obtenir de meilleures performances, ce param&egrave;tre peut &ecirc;tre activ&eacute;.</ImmediateData_explain>
+<IncludeDHCPLdapDatabase>Fixer les adresses r&eacute;solues</IncludeDHCPLdapDatabase>
+<IncludeDHCPLdapDatabase_explain>Il s'agit d'une fonctionnalit&eacute; de base de Artica.[br]
+Artica auto-enrichie sa base LDAP des machines qu'il trouve.[br]
+Lorsqu'il trouve un triplet comprenant :[br]
+
+1) Son nom de machine[br]
+2) Son adresse IP[br]
+3) Son adresse MAC[br]
+
+il renseigne l'ordinateur dans sa base LDAP.[br]
+Puis le DHCP est alors incr&eacute;ment&eacute;.[br]
+Cette fonctionnalit&eacute; est mise par d&eacute;faut car Artica peut &ecirc;tre aussi un serveur DNS.[br]
+Comme il peut avoir un temps de latence entre la nouvelle adresse IP donn&eacute;e par le serveur DHCP et la mise &agrave; jour du serveur DNS il &agrave; &eacute;t&eacute; choisi de fixed l'adresse IP dans le DHCP.[br]
+Ainsi les deux services sont en accord avec les machines clientes.</IncludeDHCPLdapDatabase_explain>
 <incoming_firewall>Pare-feux entrant</incoming_firewall>
 <incompatible_system>Syst&egrave;me incompatible</incompatible_system>
 <indexing_interval>Intervalle d'indexation</indexing_interval>
@@ -745,6 +761,7 @@ En mode disque, vous devrez choisir une partition qui sera le disque iSCSI parta
 <last_hour>60 derni&egrave;res minutes</last_hour>
 <ldap_importation>Importation LDAP</ldap_importation>
 <ldap_importation_text>Importer des utilisateurs depuis un serveur Externe LDAP comme OpenLDAP ou Zimbra</ldap_importation_text>
+<ldap_records>Enregistrements LDAP</ldap_records>
 <leases>concessions</leases>
 <leave_ad>D&eacute;connecter du serveur Active Directory</leave_ad>
 <LighttpdRunAsminimal>Processus minimaux pour les services Web d'Artica</LighttpdRunAsminimal>

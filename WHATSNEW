@@ -1,4 +1,4 @@
-1.5.072619: 
+1.5.072718: 
 ========================================================================================
 
 System Changes
@@ -33,6 +33,9 @@ System Changes
 1.5.072217: Add possibility to turn MySQL in SSL Mode.
 1.5.072217: Add slave mode in PowerDNS section.
 1.5.072600: Fix http://bugs.mysql.com/bug.php?id=54088 when upgrading to Mysql 5.5.3
+1.5.072718: Fix misconfigurations on DNSMasq service.
+1.5.072718: Add possibility to use the LDAP backend database in order to resolve addresses using DNSMasq service.
+1.5.072718: Fix unable to display DNSMasq events.
 
 
 Messaging Changes:

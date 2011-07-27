@@ -447,14 +447,16 @@ private function GetMyDNS(){
 		
 		
 		
-		if(!preg_match('#([0-9]+)\.([0-9]+)\.([0-9]+)#',$this->subnet,$re)){
+		if(!preg_match('#([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)#',$this->subnet,$re)){
 			if(!preg_match('#([0-9]+)\.([0-9]+)\.([0-9]+)#',$this->range1,$re)){
 				preg_match('#([0-9]+)\.([0-9]+)\.([0-9]+)#',$this->broadcast,$re);
 			}
 		}
 			
+		$range_suffix=0;
+		if(is_numeric($re[4])){if($re[4]>0){$range_suffix=$re[4];}}
 		$conf=$conf."\n";
-		$conf=$conf."subnet {$re[1]}.{$re[2]}.{$re[3]}.0 netmask $this->netmask {\n";
+		$conf=$conf."subnet {$re[1]}.{$re[2]}.{$re[3]}.$range_suffix netmask $this->netmask {\n";
 		if(preg_match('#([0-9]+)\.([0-9]+)\.([0-9]+)#',$this->range1,$re)){
 			$conf=$conf."\trange $this->range1 $this->range2;\n";
 		}
@@ -664,7 +666,10 @@ private function GetMyDNS(){
 		$sock=new sockets();
 		$conf=null;
 		$EnableDHCPUseHostnameOnFixed=$sock->GET_INFO("EnableDHCPUseHostnameOnFixed");
+		$IncludeDHCPLdapDatabase=Field_checkbox("IncludeDHCPLdapDatabase",1,$IncludeDHCPLdapDatabase);
 		if(!is_numeric($EnableDHCPUseHostnameOnFixed)){$EnableDHCPUseHostnameOnFixed=0;}
+		if(!is_numeric($IncludeDHCPLdapDatabase)){$IncludeDHCPLdapDatabase=1;}
+		if($IncludeDHCPLdapDatabase==0){return;}
 		$array=$this->LoadfixedAddresses();
 		if(!is_array($array)){return null;}
 		while (list ($num, $ligne) = each ($array) ){

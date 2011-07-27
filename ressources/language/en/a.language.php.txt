@@ -1832,3 +1832,14 @@ Very lower config will get 320Mb free[br]
 <rebuild_groupware_warning>This operation will erase all web site datas, do you want to perform this operation ?</rebuild_groupware_warning>
 <rebuild_groupoffice>Repair or Rebuild Group-Office</rebuild_groupoffice>
 <rebuild_groupoffice_text>Erase all datas and rebuild the groupware database and code</rebuild_groupoffice_text>
+<IncludeDHCPLdapDatabase>Fix resolved hosts IP addresses</IncludeDHCPLdapDatabase>
+<IncludeDHCPLdapDatabase_explain>When the DHCP give an IP address, Artica try to understand the hosts.[br]If the MAC address, the hostname and the IP address can be retreived, it automatically fix it in the DHCP server.[br]
+If you did not want to fix computer addresses, disable this feature[br]
+If this feature is disabled, fixed hosts in Artica database will not be added.
+</IncludeDHCPLdapDatabase_explain>
+<EnableDNSMASQLDAPDB>Use LDAP database</EnableDNSMASQLDAPDB>
+<EnableDNSMASQLDAPDB_explain>By default, artica use a flat file in order to fill the hostname database.[br]You can use the LDAP database by enabling this feature.[br]
+This will merge the 2 databases, flat files and the LDAP backend.[br]
+This option is usefull if you want to switch from PowerDNS to DNSMasq or the opposite.
+</EnableDNSMASQLDAPDB_explain>
+<ldap_records>LDAP records</ldap_records>

@@ -50,13 +50,21 @@ function js(){
 
 function tabs(){
 	
+	$sock=new sockets();
+	$EnableDNSMASQLDAPDB=$sock->GET_INFO("EnableDNSMASQLDAPDB");
+	if(!is_numeric($EnableDNSMASQLDAPDB)){$EnableDNSMASQLDAPDB=0;}
 	
 	$page=CurrentPageName();
 	$tpl=new templates();
 	$array["params"]='{dnsmasq_DNS_cache_settings}';
+	if($EnableDNSMASQLDAPDB==1){$array["record-ldap"]='{ldap_records}';}
 	$array["records"]='{dnsmasq_DNS_records}';
 	$array["hosts"]='{hosts}';
 	$array["logs"]='{events}';
+	
+
+	
+	
 	
 	
 	
@@ -69,7 +77,13 @@ function tabs(){
 		if($num=="records"){
 			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"dnsmasq.records.settings.php\"><span>$ligne</span></a></li>\n");
 			continue;
-		}		
+		}
+
+		if($num=="record-ldap"){
+			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"pdns.php?popup=yes\"><span>$ligne</span></a></li>\n");
+			continue;
+		}				
+		
 		if($num=="hosts"){
 			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"dnsmasq.hosts.settings.php\"><span>$ligne</span></a></li>\n");
 			continue;

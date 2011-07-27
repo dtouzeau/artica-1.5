@@ -145,7 +145,7 @@ var x_SaveDHCPSettings= function (obj) {
 			XHR.appendData('EnableArticaAsDNSFirst',0);
 		}
 		
-		
+		if(document.getElementById('IncludeDHCPLdapDatabase').checked){XHR.appendData('IncludeDHCPLdapDatabase',1);}else{XHR.appendData('IncludeDHCPLdapDatabase',0);}
 		if(document.getElementById('EnableDHCPUseHostnameOnFixed').checked){XHR.appendData('EnableDHCPUseHostnameOnFixed',1);}else{XHR.appendData('EnableDHCPUseHostnameOnFixed',0);}
 		XHR.appendData('ddns_domainname',document.getElementById('ddns_domainname').value);
 		document.getElementById('dhscpsettings').innerHTML='<center><img src=\"img/wait_verybig.gif\"></center>';
@@ -283,6 +283,8 @@ function dhcp_form(){
 	$sock=new sockets();
 	$EnableDHCPServer=$sock->GET_INFO('EnableDHCPServer');
 	$EnableDHCPUseHostnameOnFixed=$sock->GET_INFO('EnableDHCPUseHostnameOnFixed');
+	$IncludeDHCPLdapDatabase=$sock->GET_INFO('IncludeDHCPLdapDatabase');
+	if(!is_numeric($IncludeDHCPLdapDatabase)){$IncludeDHCPLdapDatabase=1;}
 	
 	if(count($domains)==0){$dom=Field_text('ddns_domainname',$dhcp->ddns_domainname,"font-size:13px;");}
 	else{
@@ -314,6 +316,7 @@ function dhcp_form(){
 	}
 	
 	$EnableDHCPUseHostnameOnFixed=Field_checkbox("EnableDHCPUseHostnameOnFixed",1,$EnableDHCPUseHostnameOnFixed);
+	$IncludeDHCPLdapDatabase=Field_checkbox("IncludeDHCPLdapDatabase",1,$IncludeDHCPLdapDatabase,"OnlySetGatewayFCheck()");
 	
 	$html="
 
@@ -326,14 +329,22 @@ function dhcp_form(){
 				<td>$EnableArticaAsDNSFirst</td>
 				<td>&nbsp;</td>
 				<td>". help_icon('{EnableArticaAsDNSFirst_explain}')."</td>
-			</tr>	
-
+			</tr>
+			<tr>
+				<td class=legend style='font-size:13px'>{IncludeDHCPLdapDatabase}:</td>
+				<td>$IncludeDHCPLdapDatabase</td>
+				<td>&nbsp;</td>
+				<td>". help_icon('{IncludeDHCPLdapDatabase_explain}')."</td>
+			</tr>				
+			
 			<tr>
 				<td class=legend style='font-size:13px'>{EnableDHCPUseHostnameOnFixed}:</td>
 				<td>$EnableDHCPUseHostnameOnFixed</td>
 				<td>&nbsp;</td>
 				<td>". help_icon('{EnableDHCPUseHostnameOnFixed_explain}')."</td>
-			</tr>			
+			</tr>				
+
+		
 			
 			<tr>
 				<td class=legend style='font-size:13px'>{nic}:</td>
@@ -356,7 +367,7 @@ function dhcp_form(){
 			
 			<tr>
 				<td class=legend style='font-size:13px'>{subnet}:</td>
-				<td>".field_ipv4('subnet',$dhcp->subnet,null,true)."</td>
+				<td>".field_ipv4('subnet',$dhcp->subnet,null,false)."</td>
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
 			</tr>			
@@ -445,6 +456,13 @@ function dhcp_form(){
 					}else{
 						document.getElementById('EnableArticaAsDNSFirst').disabled=false;
 					}
+					
+					if(!document.getElementById('IncludeDHCPLdapDatabase').checked){
+						document.getElementById('EnableDHCPUseHostnameOnFixed').disabled=true;}else{
+						document.getElementById('EnableDHCPUseHostnameOnFixed').disabled=false;
+						}
+					
+					
 				
 				}				
 				
@@ -691,6 +709,7 @@ function dhcp_save(){
 	$sock=new sockets();
 	$sock->SET_INFO('EnableDHCPServer',$_GET["EnableDHCPServer"]);
 	$sock->SET_INFO('EnableDHCPUseHostnameOnFixed',$_GET["EnableDHCPUseHostnameOnFixed"]);
+	$sock->SET_INFO("IncludeDHCPLdapDatabase", $_GET["IncludeDHCPLdapDatabase"]);
 	
 	
 	$dhcp->listen_nic=$_GET["dhcp_listen_nic"];

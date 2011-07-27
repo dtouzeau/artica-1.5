@@ -26,15 +26,37 @@ function page(){
 	$tpl=new templates();
 	$rebuild_groupware_warning=$tpl->_ENGINE_parse_body("{rebuild_groupware_warning}");
 	
+	$h=new vhosts();
+	$hash=$h->listOfAvailableServices(true);
+	$sql="SELECT groupware FROM freeweb WHERE servername='{$_GET["servername"]}'";
+	$page=CurrentPageName();
+	$tpl=new templates();
+	$q=new mysql();
+	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));		
+	if($ligne["groupware"]<>null){
+		$groupware_text="
+		<table style='width:100%' class=form>
+		<tr>
+			<td width=1% valign='top'><img src='img/{$h->IMG_ARRAY_64[$ligne["groupware"]]}'></td>
+			<td valign='top' width=99%>
+				<div style='font-size:16px'>{current}:&nbsp;<strong>&laquo;&nbsp;{$hash[$ligne["groupware"]]}&nbsp;&raquo;</strong><hr>
+					<i style='font-size:13px'>{{$h->TEXT_ARRAY[$ligne["groupware"]]["TEXT"]}}</i>
+				</div>
+			</td>
+		</tr>
+		</table>";
+		
+	}	
+	
 	$sql="SELECT ID FROM drupal_queue_orders WHERE `ORDER`='REBUILD_GROUPWARE' AND `servername`='{$_GET["servername"]}'";
 	if($ligne["ID"]>0){
 		$rebuild_groupware=Paragraphe("64-install-soft-grey.png", "{rebuild_groupoffice}", "{scheduled}");
 		
 	}else{
-		$rebuild_groupware=Paragraphe("64-install-soft.png", "{rebuild_groupoffice}", "{rebuild_groupofficetext}","javascript:RebuildGroupOffice()");
+		$rebuild_groupware=Paragraphe("64-install-soft.png", "{rebuild_groupoffice}", "{rebuild_groupoffice_text}","javascript:RebuildGroupOffice()");
 	}
 	
-	$tr[]=$rebuild_groupware;
+	$tr[]=$tpl->_ENGINE_parse_body($rebuild_groupware);
 	
 	
 
@@ -55,7 +77,7 @@ function page(){
 		}
 	}			
 	
-$html="<div style='width:100%' id='groupofficediv'>
+$html="<div style='width:100%' id='groupofficediv'>$groupware_text
 <table style='width:100%'>
 <tr>
 <td valign='top'><div id='mysql-status'></div></td>

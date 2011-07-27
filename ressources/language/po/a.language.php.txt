@@ -626,6 +626,11 @@ When building the settings, Artica will try to resolv the IP address to hostname
 If resolution is successfull the DHCP settings will be switched to hostname instead using the Ip address.
 </EnableDHCPUseHostnameOnFixed_explain>
 <EnableDNSMASQ>Activate DNSMasq service</EnableDNSMASQ>
+<EnableDNSMASQLDAPDB>Use LDAP database</EnableDNSMASQLDAPDB>
+<EnableDNSMASQLDAPDB_explain>By default, artica use a flat file in order to fill the hostname database.[br]You can use the LDAP database by enabling this feature.[br]
+This will merge the 2 databases, flat files and the LDAP backend.[br]
+This option is usefull if you want to switch from PowerDNS to DNSMasq or the opposite.
+</EnableDNSMASQLDAPDB_explain>
 <EnableDNSMASQ_explain>If enabled, all system DNS queries will pass trough DNSMasq instead using standard saved DNS</EnableDNSMASQ_explain>
 <EnableISCSI>Enable ISCSI service</EnableISCSI>
 <EnableLDAPAmavis>Allow multiple configurations from LDAP Database</EnableLDAPAmavis>
@@ -839,6 +844,11 @@ In this case, the winbindd daemon will use the user winbind user and the passwor
 <imap_port>Listen IMAP port</imap_port>
 <ImmediateData>Immediate Data</ImmediateData>
 <ImmediateData_explain>This  allows the initiator to append unsolicited data to a command.[br]To achieve better performance, this should be enabled</ImmediateData_explain>
+<IncludeDHCPLdapDatabase>Fix resolved hosts IP addresses</IncludeDHCPLdapDatabase>
+<IncludeDHCPLdapDatabase_explain>When the DHCP give an IP address, Artica try to understand the hosts.[br]If the MAC address, the hostname and the IP address can be retreived, it automatically fix it in the DHCP server.[br]
+If you did not want to fix computer addresses, disable this feature[br]
+If this feature is disabled, fixed hosts in Artica database will not be added.
+</IncludeDHCPLdapDatabase_explain>
 <incoming_firewall>incoming firewall</incoming_firewall>
 <incompatible_system>Icompatible system</incompatible_system>
 <indexing_interval>Indexing interval</indexing_interval>
@@ -890,6 +900,7 @@ This file will be the shared iSCSI disk.[br]In disk mode, you will have to choos
 <last_hour>Last hour</last_hour>
 <ldap_importation>LDAP Importation</ldap_importation>
 <ldap_importation_text>Importing users from an external LDAP server such OpenLDAP or Zimbra</ldap_importation_text>
+<ldap_records>LDAP records</ldap_records>
 <leases>leases</leases>
 <leave_ad>Disconnect From the Active Directory server</leave_ad>
 <LighttpdRunAsminimal>Minimal processes for Artica Web engines</LighttpdRunAsminimal>
