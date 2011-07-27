@@ -1000,6 +1000,8 @@ You should create the Mysql username and password in order to fix this issue.[br
 Here it is the error that artica encounter during a Mysql connection: [br]
 </mysql_error_popup_credential_text>
 <mysql_explain_enable_ssl>If you turn to green, you will enable Mysql server in secure connection with SSL</mysql_explain_enable_ssl>
+<mysql_perso_conf>Personal settings</mysql_perso_conf>
+<mysql_perso_conf_text>Add your own settings in the mysqld section of your server.[br]This settings will be added only under this section</mysql_perso_conf_text>
 <mysql_ssl_explain>This section help you to allow Mysql using secure connection with SSL</mysql_ssl_explain>
 <mysql_users>Usu&aacute;rios mysql</mysql_users>
 <myWebServices>My Web services</myWebServices>
@@ -1286,6 +1288,9 @@ The path is formatted as a character string consisting of characters from the NV
 <Reallocated_Sector_Ct>Reallocated Sector Count</Reallocated_Sector_Ct>
 <Reallocated_Sector_Ct_text>Quantity of remapped sectors</Reallocated_Sector_Ct_text>
 <rebuild_acls>reconstruct acls</rebuild_acls>
+<rebuild_groupoffice>Repair or Rebuild Group-Office</rebuild_groupoffice>
+<rebuild_groupoffice_text>Erase all datas and rebuild the groupware database and code</rebuild_groupoffice_text>
+<rebuild_groupware_warning>This operation will erase all web site datas, do you want to perform this operation ?</rebuild_groupware_warning>
 <rebuild_items>Rebuild items</rebuild_items>
 <recheck>Checking operation</recheck>
 <RecheckQuotasAll>This will perform a filsystem quota checks on your partitions

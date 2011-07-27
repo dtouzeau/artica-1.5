@@ -1,8 +1,9 @@
 <?php
-$GLOBALS["FORCE"]=false;
+$GLOBALS["FORCE"]=false;$GLOBALS["REINSTALL"]=false;
 if(is_array($argv)){
 	if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["VERBOSE"]=true;}
 	if(preg_match("#--force#",implode(" ",$argv))){$GLOBALS["FORCE"]=true;}
+	if(preg_match("#--reinstall#",implode(" ",$argv))){$GLOBALS["REINSTALL"]=true;}
 	if($GLOBALS["VERBOSE"]){ini_set('html_errors',0);ini_set('display_errors', 1);ini_set('error_reporting', E_ALL);}
 }
 if(posix_getuid()<>0){die("Cannot be used in web server mode\n\n");}
@@ -1115,7 +1116,7 @@ function CheckFailedStart(){
 	
 }
 
-function install_groupware($servername){
+function install_groupware($servername,$rebuild=false){
 	$sql="SELECT groupware FROM freeweb WHERE servername='$servername'";
 	$q=new mysql();
 	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));	
@@ -1141,7 +1142,7 @@ function install_groupware($servername){
 		break;
 		
 		case "GROUPOFFICE":
-			group_office_install($servername);
+			group_office_install($servername,false,$rebuild);
 		
 		default:
 			;
@@ -1429,6 +1430,11 @@ function drupal_schedules(){
 				writelogs("INSTALL_GROUPWARE: servername:$servername (uid=$uid, value=$value)",__FUNCTION__,__FILE__,__LINE__);
 				install_groupware($servername);
 				break;
+				
+			case "REBUILD_GROUPWARE":
+				writelogs("INSTALL_GROUPWARE: servername:$servername (uid=$uid, value=$value)",__FUNCTION__,__FILE__,__LINE__);
+				install_groupware($servername,true);
+				break;				
 			
 		}
 		
@@ -1440,7 +1446,7 @@ function drupal_schedules(){
 	
 }
 
-function group_office_install($servername,$nobuildHost=false){
+function group_office_install($servername,$nobuildHost=false,$rebuild=false){
 	$sources="/usr/local/share/artica/group-office";
 	$unix=new unix();
 	$cp=$unix->find_program("cp");
@@ -1457,6 +1463,7 @@ function group_office_install($servername,$nobuildHost=false){
 	include_once(dirname(__FILE__)."/ressources/class.group-office.php");
 	$gpoffice=new group_office($servername);
 	$gpoffice->www_dir=$freeweb->WORKING_DIRECTORY;
+	$gpoffice->rebuildb=$rebuild;
 	$gpoffice->writeconfigfile();
 	
 	

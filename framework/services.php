@@ -25,7 +25,8 @@ if(isset($_GET["restart-cron"])){restart_cron();exit;}
 if(isset($_GET["total-memory"])){total_memory();exit;}
 if(isset($_GET["mysql-ssl-keys"])){mysql_ssl_key();exit;}
 if(isset($_GET["restart-tomcat"])){retart_tomcat();exit;}
-
+if(isset($_GET["mysqld-perso"])){mysqld_perso();exit;}
+if(isset($_GET["mysqld-perso-save"])){mysqld_perso_save();exit;}
 
 
 
@@ -197,4 +198,21 @@ function greensql_logs(){
 	exec($cmd,$results);		
 	writelogs_framework($cmd ." ". count($results)." rows",__FUNCTION__,__FILE__,__LINE__);
 	echo "<articadatascgi>". base64_encode(serialize($results))."</articadatascgi>";
-}	
+}
+
+function mysqld_perso(){
+	$datas=base64_encode(@file_get_contents("/etc/artica-postfix/my.cnf.mysqld"));
+	echo "<articadatascgi>$datas</articadatascgi>";	
+}
+function mysqld_perso_save(){
+	$datas=base64_decode($_GET["mysqld-perso-save"]);
+	@file_put_contents("/etc/artica-postfix/my.cnf.mysqld", trim($datas));
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim("$nohup /etc/init.d/artica-postfix restart mysql >/dev/null 2>&1 &");
+	shell_exec($cmd);
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);			
+	
+}
+
+

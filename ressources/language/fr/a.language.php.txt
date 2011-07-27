@@ -858,6 +858,8 @@ Si vous mettez 0, alors l'&eacute;metteur sera compl&egrave;tement mis en liste 
 Vous devriez cr&eacute;er un nouvel utilisateur Mysql et un  mot de passe afin de corriger ce probl&egrave;me.[br]
 Voici l'erreur qui &agrave; &eacute;t&eacute; g&eacute;n&eacute;r&eacute;e pendant la connexion Mysql.</mysql_error_popup_credential_text>
 <mysql_explain_enable_ssl>Si vous passez en vert, vous allez activer MySQL en connexion s&eacute;curis&eacute;e SSL</mysql_explain_enable_ssl>
+<mysql_perso_conf>Param&egrave;tres sp&eacute;cifiques</mysql_perso_conf>
+<mysql_perso_conf_text>Ajoutez vos propres param&egrave;tres dans la section [mysqld] de votre serveur.[br]Ces param&egrave;tres ne seront ajout&eacute;s que dans cette section.</mysql_perso_conf_text>
 <mysql_ssl_explain>Cette section vous aide &agrave; autoriser Mysql &agrave; utiliser une connexion s&eacute;curis&eacute;e avec SSL.</mysql_ssl_explain>
 <mysql_users>Utilisateurs Mysql</mysql_users>
 <myWebServices>Mes services Internet</myWebServices>
@@ -1111,6 +1113,10 @@ Rediriger vers: http://cam.hometranet.home:5555/cams/sony/stream[br]
 <Reallocated_Sector_Ct>Nb secteurs r&eacute;-allou&eacute;s</Reallocated_Sector_Ct>
 <Reallocated_Sector_Ct_text>Nombre de secteurs r&eacute;-allou&eacute;s</Reallocated_Sector_Ct_text>
 <rebuild_acls>Reconstruire les ACLs</rebuild_acls>
+<rebuild_groupoffice>R&eacute;parer ou reconstruire Group-Office</rebuild_groupoffice>
+<rebuild_groupoffice_text>Supprime toutes les donn&eacute;es et reconstruit la base de donn&eacute;es ainsi que le code original.</rebuild_groupoffice_text>
+<rebuild_groupware_warning>Cette op&eacute;ration va d&eacute;truire toutes les donn&eacute;es du site web d&eacute;j&agrave; enregistr&eacute;es.
+Voulez-vous effectuer cette op&eacute;ration ?</rebuild_groupware_warning>
 <rebuild_items>Reconstruire les &eacute;l&eacute;ments</rebuild_items>
 <recheck>Op&eacute;ration de v&eacute;rification</recheck>
 <RecheckQuotasAll>Cette op&eacute;ration va effectuer une v&eacute;rification des quotas dans vos partitions.

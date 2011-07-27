@@ -119,7 +119,7 @@ function popup(){
 		$tr[]=$mysql_benchmark;
 		$tr[]=$mysql_audit;
 
-	$tables[]="<table style='width:100%'><tr>";
+	$tables[]="<table style='width:750px'><tr>";
 	$t=0;
 	while (list ($key, $line) = each ($tr) ){
 			$line=trim($line);
@@ -161,6 +161,7 @@ $html="<div style='width:720px'>
 }
 
 function mysql_status(){
+	$specific=Paragraphe("script-64.png", "{mysql_perso_conf}", "{mysql_perso_conf_text}","javascript:Loadjs('system.mysql.perso.php')",null,250);
 	$refresh="<div style='text-align:right;margin-top:8px'>".imgtootltip("refresh-24.png","{refresh}","RefreshTab('main_config_mysql')")."</div>";
 	$sock=new sockets();
 	$tpl=new templates();
@@ -169,7 +170,7 @@ function mysql_status(){
 	$datas=$sock->getFrameWork("services.php?mysql-status=yes");
 	writelogs(strlen($datas)." bytes for mysql status",__CLASS__,__FUNCTION__,__FILE__,__LINE__);
 	$ini->loadString(base64_decode($datas));
-	$status=DAEMON_STATUS_ROUND("ARTICA_MYSQL",$ini,null,0)."<br>".DAEMON_STATUS_ROUND("MYSQL_CLUSTER_MGMT",$ini,null,0).$refresh;
+	$status=DAEMON_STATUS_ROUND("ARTICA_MYSQL",$ini,null,0)."<br>".DAEMON_STATUS_ROUND("MYSQL_CLUSTER_MGMT",$ini,null,0).$refresh."<br>$specific";
 	echo $tpl->_ENGINE_parse_body($status);	
 	
 }

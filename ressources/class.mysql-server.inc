@@ -113,6 +113,8 @@ class mysqlserver{
 		$conf=$conf ."nice=0\n";
 		$conf=$conf ."\n";
 		$conf=$conf ."[mysqld]\n";
+		$SpecificConf=$this->GetUsersSpecificConf();
+		if($SpecificConf<>null){$conf=$conf.$SpecificConf."\n";}
 		$conf=$conf ."user=mysql\n";
 		$conf=$conf ."pid-file=/var/run/mysqld/mysqld.pid\n";
 		$conf=$conf ."socket=/var/run/mysqld/mysqld.sock\n";
@@ -191,6 +193,8 @@ class mysqlserver{
 		$conf=$conf ."nice=0\n";
 		$conf=$conf ."\n";
 		$conf=$conf ."[mysqld]\n";
+		$SpecificConf=$this->GetUsersSpecificConf();
+		if($SpecificConf<>null){$conf=$conf.$SpecificConf."\n";}
 		$conf=$conf ."user=mysql\n";
 		$conf=$conf ."pid-file=/var/run/mysqld/mysqld.pid\n";
 		$conf=$conf ."socket=/var/run/mysqld/mysqld.sock\n";
@@ -253,24 +257,14 @@ class mysqlserver{
 	
 	private function GetUsersSpecificConf(){
 		
+		
 		if(!$GLOBALS["AS_ROOT"]){return;}
 		if(!is_file("/etc/artica-postfix/my.cnf.mysqld")){
 			if($GLOBALS["VERBOSE"]){"mysqld: /etc/artica-postfix/my.cnf.mysqld no such file\n";}
 		}
 		$datas=@file_get_contents("/etc/artica-postfix/my.cnf.mysqld");
-		if($GLOBALS["VERBOSE"]){"mysqld: Personal settings loading ". strlen($datas)." bytes\n";}
-		$f=explode("\n",$datas);
-		while (list ($i, $line) = each ($f) ){
-			if($line==null){continue;}
-			if(preg_match("#(.+?)=(.+)#",$line,$re)){
-				if($GLOBALS["VERBOSE"]){"mysqld: Personal settings loading {$re[1]}={$re[2]}\n";}
-				$SpecificConf[trim(strtolower($re[1]))]=trim($re[2]);
-			}else{
-				$SpecificConf[trim(strtolower($line))]="";
-			}
-		}
+		return $datas;
 		
-		return $SpecificConf;
 		
 	}
 	private function ssl_client_mode(){
@@ -346,6 +340,9 @@ class mysqlserver{
 			echo "Starting......: Mysql ". count($SpecificConf)." specific tokens\n";
 		}
 		$conf=$conf ."[mysqld]\n";
+		if($SpecificConf<>null){
+			$conf=$conf.$SpecificConf."\n";
+		}
 		
 		if($this->main_array["default-character-set"]<>null){$mysqld[$this->default_character_set()]=$this->main_array["default-character-set"];}	
 

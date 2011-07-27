@@ -3743,7 +3743,7 @@ function artica_executor(){
 	$pid_path="/etc/artica-postfix/exec.executor.php.daemon.pid";
 	$master_pid=trim(@file_get_contents($pid_path));
 	$EnableArticaExecutor=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("EnableArticaExecutor");
-	if(!is_numeric($EnableArticaExecutor==null)){$EnableArticaExecutor=1;}
+	if(!is_numeric($EnableArticaExecutor)){$EnableArticaExecutor=1;}
 		$l[]="[APP_ARTICA_EXECUTOR]";
 		$l[]="service_name=APP_ARTICA_EXECUTOR";
 	 	$l[]="master_version=".GetVersionOf("artica");
@@ -3763,6 +3763,16 @@ function artica_executor(){
 	
 	
 	if(!$GLOBALS["CLASS_UNIX"]->process_exists($master_pid)){
+		//$bin=$GLOBALS["CLASS_UNIX"]->find_program("inetd");
+		exec($GLOBALS["PHP5"]." ".dirname(__FILE__)."/exec.executor.php --all --verbose 2>&1",$results);
+		$GLOBALS["CLASS_UNIX"]->send_email_events("Artica Executor report",
+		"This is the debug report when executing artica-executor
+		Is disabled ?:$EnableArticaExecutor
+		pid:$pid_path
+		Pid found:$master_pid
+		------------------------------------
+		".@implode("\n", $results),"system");
+		
 		WATCHDOG("APP_ARTICA_EXECUTOR","artica-exec");
 		$l[]="running=0\ninstalled=1";$l[]="";
 		return implode("\n",$l);

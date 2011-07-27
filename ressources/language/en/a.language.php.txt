@@ -1827,3 +1827,8 @@ Very lower config will get 320Mb free[br]
 <jkMount_explain>Add the JkMount directive for *.do,*.jsp,*.jspx,*.cfm,*.cfc,*.cfchart,*.cfres files</jkMount_explain>
 <OPENEMM_INSTALLED_ENABLED_FEATURE_DISABLED>OpenEMM service is installed and enabled. It is incompatible to run 2 tomcat server is a single server.[br]If you need to use this feature, disable OpenEMM service.</OPENEMM_INSTALLED_ENABLED_FEATURE_DISABLED> 
 <APP_OPENEMM>OpenEMM service</APP_OPENEMM>
+<mysql_perso_conf>Personal settings</mysql_perso_conf>
+<mysql_perso_conf_text>Add your own settings in the mysqld section of your server.[br]This settings will be added only under this section</mysql_perso_conf_text>
+<rebuild_groupware_warning>This operation will erase all web site datas, do you want to perform this operation ?</rebuild_groupware_warning>
+<rebuild_groupoffice>Repair or Rebuild Group-Office</rebuild_groupoffice>
+<rebuild_groupoffice_text>Erase all datas and rebuild the groupware database and code</rebuild_groupoffice_text>

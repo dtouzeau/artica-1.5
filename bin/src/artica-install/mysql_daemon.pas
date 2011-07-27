@@ -1293,6 +1293,8 @@ logs.DeleteFile(tmpstr);
 ForceDirectories('/etc/ssl/certs/mysql-client');
 cmd:=openssl+' req -new -keyout /etc/ssl/certs/mysql-client/client-key.pem -out /etc/ssl/certs/mysql-client/client-req.pem -days 3600 -config '+cf_path+extensions+' -days '+CertificateMaxDays;
 tmpstr:=logs.FILE_TEMP();
+logs.Debuglogs(cmd);
+fpsystem(cmd);
 logs.WriteToFile(input_password,tmpstr);
 cmd:=openssl+' rsa -in /etc/ssl/certs/mysql-client/client-key.pem -out /etc/ssl/certs/mysql-client/client-key.pem -passin file:'+tmpstr;
 logs.Debuglogs(cmd);

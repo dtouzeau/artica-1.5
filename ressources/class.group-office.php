@@ -8,6 +8,7 @@ class group_office{
 	var $servername;
 	var $database;
 	var $uid;
+	var $rebuildb=false;
 	function group_office($servername){
 		if($servername<>null){
 			$this->servername=$servername;
@@ -43,6 +44,8 @@ class group_office{
 		$unix=new unix();
 		$q=new mysql();
 		$firstinstall=false;
+		if($this->rebuildb){$q->DELETE_DATABASE($this->database);}
+		if($GLOBALS["REINSTALL"]){$q->DELETE_DATABASE($this->database);}
 		
 		if(!$q->DATABASE_EXISTS($this->database)){
 			echo "Starting......: Apache \"$this->servername\" create database $this->database\n";
@@ -306,7 +309,9 @@ class group_office{
 				
 				$GO_MODULES->add_module('ldapauth');
 				echo "Starting......: Apache \"$this->servername\" save_setting upgrade_mtime\n";
+				
 				$GO_CONFIG->save_setting('upgrade_mtime', $GO_CONFIG->mtime);
+				
 				if($uid<>null){
 					$u=new user($uid);
 					$password=$u->password;
