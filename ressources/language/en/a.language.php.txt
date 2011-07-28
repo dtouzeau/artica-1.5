@@ -1843,3 +1843,12 @@ This will merge the 2 databases, flat files and the LDAP backend.[br]
 This option is usefull if you want to switch from PowerDNS to DNSMasq or the opposite.
 </EnableDNSMASQLDAPDB_explain>
 <ldap_records>LDAP records</ldap_records>
+<OPENEMM_ABOUT>OpenEMM is a feature-rich web-based enterprise application for email marketing,
+ newsletters and service mails (transaction mails and event or time triggered mails).[br]
+ OpenEMM offers a great user interface, sophisticated bounce management, link tracking, lots of graphical realtime statistics,
+  a CMS module and a scripting feature to implement individual tasks.</OPENEMM_ABOUT>
+<server_url>Server URL</server_url>
+<mailerror_recipient>Mail Error recipient</mailerror_recipient>
+<amavis_enable_db>Enable use of BerkeleyDB/libdb (SNMP and nanny)</amavis_enable_db>
+<amavis_enable_global_cache>Enable use of libdb-based</amavis_enable_global_cache>
+ 

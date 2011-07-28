@@ -27,8 +27,8 @@ if(isset($_GET["mysql-ssl-keys"])){mysql_ssl_key();exit;}
 if(isset($_GET["restart-tomcat"])){retart_tomcat();exit;}
 if(isset($_GET["mysqld-perso"])){mysqld_perso();exit;}
 if(isset($_GET["mysqld-perso-save"])){mysqld_perso_save();exit;}
-
-
+if(isset($_GET["openemm-status"])){openemm_status();exit;}
+if(isset($_GET["restart-openemm"])){openemm_restart();exit;}
 
 
 while (list ($num, $line) = each ($_GET)){$f[]="$num=$line";}
@@ -198,6 +198,17 @@ function greensql_logs(){
 	exec($cmd,$results);		
 	writelogs_framework($cmd ." ". count($results)." rows",__FUNCTION__,__FILE__,__LINE__);
 	echo "<articadatascgi>". base64_encode(serialize($results))."</articadatascgi>";
+}
+function openemm_status(){
+	exec(LOCATE_PHP5_BIN2()." /usr/share/artica-postfix/exec.status.php --openemm --nowachdog",$results);
+	echo "<articadatascgi>". base64_encode(@implode("\n",$results))."</articadatascgi>";		
+}
+function openemm_restart(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim("$nohup /etc/init.d/artica-postfix restart openemm >/dev/null 2>&1 &");
+	shell_exec($cmd);
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);		
 }
 
 function mysqld_perso(){

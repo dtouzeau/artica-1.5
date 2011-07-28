@@ -24,7 +24,7 @@ page();
 function page(){
 	$page=CurrentPageName();
 	$tpl=new templates();
-	$rebuild_groupware_warning=$tpl->_ENGINE_parse_body("{rebuild_groupware_warning}");
+	$rebuild_groupware_warning=$tpl->javascript_parse_text("{rebuild_groupware_warning}");
 	
 	$h=new vhosts();
 	$hash=$h->listOfAvailableServices(true);

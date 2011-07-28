@@ -17,14 +17,14 @@ private
        index_file:string;
        local_folder:string;
        CACHE_KERNEL_VERSION:string;
-       DirListFiles:TstringList;
+
        function   GET_HTTP_PROXY:string;
        function   LOCATE_CURL():string;
        function   LOCATE_MAKE():string;
        function   LOCATE_GCC():string;
        procedure  SET_HTTP_PROXY(proxy_string:string);
        function   REMOVE_HTTP_PROXY:string;
-       function   DirDir(FilePath: string):TstringList;
+
        function   ReadFileIntoString(path:string):string;
        function   Explode(const Separator, S: string; Limit: Integer = 0):TStringDynArray;
        function   CHECK_PERL_MODULES_SECOND(ModulesToCheck:string):boolean;
@@ -39,8 +39,10 @@ private
        procedure  ZARAFA_INSTALL_PERFORM();
        function   GET_INFO(key:string):string;
 public
+      DirListFiles:TstringList;
       constructor Create();
       procedure Free;
+      function DirDir(FilePath: string):TstringList;
       function WGET_DOWNLOAD_FILE(uri:string;file_path:string):boolean;
       function COMPILE_GENERIC_APPS(package_name:string;onlydownload:boolean=false):string;
       function ARTICA_VERSION():string;

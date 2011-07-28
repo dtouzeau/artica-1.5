@@ -465,6 +465,7 @@ var
    RegExpr:TRegExpr;
    i:integer;
    D:boolean;
+   tmpstr:string;
 begin
     D:=false;
     result:=false;
@@ -482,11 +483,20 @@ begin
        exit;
     end;
     RegExpr:=TRegExpr.Create;
-    RegExpr.Expression:='ii\s+(.+?)\s+';
+
 
     
     for i:=0 to l.Count-1 do begin
+        RegExpr.Expression:='ii\s+(.+?)\s+';
         if RegExpr.Exec(l.Strings[i]) then begin
+           if lowercase(appname)='xtables-addons-modules' then begin
+                tmpstr:=RegExpr.Match[1];
+                RegExpr.Expression:='xtables-addons-modules.+?';
+                if RegExpr.Exec(tmpstr) then begin
+                 result:=true;
+                 break;
+                end;
+           end;
            if lowercase(trim(RegExpr.Match[1]))=trim(lowercase(appname)) then begin
            result:=true;
            break;

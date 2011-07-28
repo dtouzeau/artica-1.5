@@ -869,6 +869,7 @@ function buildHost($uid=null,$hostname,$ssl=null,$d_path=null,$Params=array()){
 	@mkdir("$freeweb->WORKING_DIRECTORY",666,true);
 	
 	if($freeweb->groupware=="EYEOS"){install_EYEOS($hostname);}
+	if($freeweb->groupware=="GROUPOFFICE"){group_office_install($hostname,true);}
 	if($freeweb->groupware=="DRUPAL"){
 		$unix=new unix();
 		$nohup=$unix->find_program("nohup");
@@ -1117,15 +1118,14 @@ function CheckFailedStart(){
 }
 
 function install_groupware($servername,$rebuild=false){
-	$sql="SELECT groupware FROM freeweb WHERE servername='$servername'";
-	$q=new mysql();
-	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));	
-	if($ligne["groupware"]==null){
-		 echo "Starting......: Apache \"$servername\" no groupware set\n";	
+	
+	$free=new freeweb($servername);
+	if($free->groupware==null){
+		 writelogs("Starting......: Apache \"$servername\" no groupware set",__FUNCTION__,__FILE__,__LINE__);
 		 return;
 	}
 	
-	echo "Starting......: Apache \"$servername\" -> \"{$ligne["groupware"]}\"\n";	
+	writelogs("Starting......: Apache \"$servername\" -> \"$free->groupware\"",__FUNCTION__,__FILE__,__LINE__);
 	switch ($ligne["groupware"]) {
 		case "ARTICA_USR":
 			install_groupware_ARTICA_USR($servername);
@@ -1142,6 +1142,7 @@ function install_groupware($servername,$rebuild=false){
 		break;
 		
 		case "GROUPOFFICE":
+			writelogs("group_office_install($servername,false,$rebuild)",__FUNCTION__,__FILE__,__LINE__);
 			group_office_install($servername,false,$rebuild);
 		
 		default:
@@ -1432,7 +1433,7 @@ function drupal_schedules(){
 				break;
 				
 			case "REBUILD_GROUPWARE":
-				writelogs("INSTALL_GROUPWARE: servername:$servername (uid=$uid, value=$value)",__FUNCTION__,__FILE__,__LINE__);
+				writelogs("INSTALL_GROUPWARE: servername:\"$servername\" (uid=$uid, value=$value)",__FUNCTION__,__FILE__,__LINE__);
 				install_groupware($servername,true);
 				break;				
 			
@@ -1453,8 +1454,15 @@ function group_office_install($servername,$nobuildHost=false,$rebuild=false){
 	$freeweb=new freeweb($servername);
 	if(!is_dir($sources)){writelogs("[$servername] $sources no such directory",__FUNCTION__,__FILE__,__LINE__);return;}
 	if(!is_dir($freeweb->WORKING_DIRECTORY)){writelogs("[$servername] $freeweb->WORKING_DIRECTORY no such directory",__FUNCTION__,__FILE__,__LINE__);return;}
-	shell_exec("/bin/cp -rf $sources/* $freeweb->WORKING_DIRECTORY/");
-	@file_put_contents("$freeweb->WORKING_DIRECTORY/config.php", "");
+	
+	if(!is_file("$freeweb->WORKING_DIRECTORY/functions.inc.php")){$mustrebuild=true;}
+	if(!$mustrebuild){$mustrebuild=$rebuild;}
+	
+	if($mustrebuild){
+		writelogs("[$servername] copy sources...",__FUNCTION__,__FILE__,__LINE__);
+		shell_exec("/bin/cp -rf $sources/* $freeweb->WORKING_DIRECTORY/");
+		@file_put_contents("$freeweb->WORKING_DIRECTORY/config.php", "");
+	}
 	shell_exec("/bin/chmod 666 $freeweb->WORKING_DIRECTORY/config.php");
 	
 	$apacheusername=$unix->APACHE_SRC_ACCOUNT();
@@ -1464,6 +1472,7 @@ function group_office_install($servername,$nobuildHost=false,$rebuild=false){
 	$gpoffice=new group_office($servername);
 	$gpoffice->www_dir=$freeweb->WORKING_DIRECTORY;
 	$gpoffice->rebuildb=$rebuild;
+	writelogs("[$servername] gpoffice->writeconfigfile() $freeweb->WORKING_DIRECTORY",__FUNCTION__,__FILE__,__LINE__);
 	$gpoffice->writeconfigfile();
 	
 	

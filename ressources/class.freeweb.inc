@@ -59,10 +59,11 @@
 		}
 		
 		private function load(){
-			if($this->AS_ROOT){echo "Starting......: Apache \"$this->servername\" Load DB..\n";}
+			if($this->AS_ROOT){writelogs("Starting......: Apache \"$this->servername\" Load DB..",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
 			$sql="SELECT * from freeweb WHERE servername='$this->servername'";
 			$q=new mysql();
 			$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"artica_backup"));
+			if(!$q->ok){writelogs("Fatal $q->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
 			$this->groupware=$ligne["groupware"];
 			$this->servername=$ligne["servername"];
 			if(strlen($ligne["Params"])>5){$this->Params=@unserialize(base64_decode($ligne["Params"]));}
@@ -71,6 +72,7 @@
 			$this->UseLoopDisk=$ligne["UseLoopDisk"];
 			$this->LoopMounts=$ligne["LoopMounts"];
 			$this->useMysql=$ligne["useMysql"];
+			if($this->AS_ROOT){writelogs("Starting......: Apache \"$this->servername\" groupware:$this->groupware",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
 			if($ligne["useSSL"]==1){$this->SSL_enabled=true;}
 			if(isset($this->Params["LimitByIp"]["enabled"])){$this->LimitByIp=$this->Params["LimitByIp"]["enabled"];}
 			$this->mod_rewrite=base64_decode($ligne["mod_rewrite"]);
@@ -676,7 +678,9 @@
 		}
 		
 		public function open_basedir(){
-				if($this->groupware=="GROUPOFFICE"){return null;}
+				if($this->groupware=="GROUPOFFICE"){
+					$f[]="/home/$this->servername";
+				}
 				$f[]="/usr/share/php";
 				$f[]="/usr/share/php5";
 				$f[]="/var/lighttpd/upload";

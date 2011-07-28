@@ -217,6 +217,9 @@ class drupal_vhosts{
 		$array["panels"]=true;
 		$array["calendar"]=true;
 		$array["admin"]=true;
+		$array["andromeda"]=true;
+		$array["block_class-7.x-1.x"]=true;
+		$array["nice_menus-7.x-2.x"]=true;
 		if(!is_array($this->DrupalModules)){return null;}
 		if(count($this->DrupalModules)<2){return null;}
 		

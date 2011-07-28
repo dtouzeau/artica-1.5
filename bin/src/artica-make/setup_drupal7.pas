@@ -40,6 +40,7 @@ public
       procedure xinstall();
       procedure APP_UPLOAD_PROGRESS();
       procedure APP_DRUSH();
+      procedure langupack();
 END;
 
 implementation
@@ -128,6 +129,7 @@ end;
 
   install.INSTALL_PROGRESS(PROJECT_NAME,'{installed}');
   install.INSTALL_STATUS(PROJECT_NAME,100);
+  langupack();
   APP_UPLOAD_PROGRESS();
   fpsystem('/etc/init.d/artica-postfix restart daemon');
 
@@ -227,6 +229,23 @@ begin
   install.INSTALL_STATUS('APP_UPLOAD_PROGRESS',100);
   fpsystem('/etc/init.d/artica-postfix restart apache');
   fpsystem('/etc/init.d/artica-postfix restart apachesrc');
+
+
+end;
+//#########################################################################################
+procedure tsetup_drupal7.langupack();
+begin
+
+
+if not DirectoryExists('/usr/share/drupal/profiles/standard/translations') then begin
+   writeln('/usr/share/drupal/profiles/standard/translations no such dirctory');
+   exit;
+end;
+  source_folder:=libs.COMPILE_GENERIC_APPS('drupal-langpack');
+  if length(source_folder)>0 then begin
+     writeln('Extracting '+source_folder+'/* /usr/share/drupal/profiles/standard/translations/');
+     fpsystem('/bin/cp -rf '+source_folder+'* /usr/share/drupal/profiles/standard/translations/');
+  end;
 
 
 end;

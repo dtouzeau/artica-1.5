@@ -123,6 +123,8 @@ You have to define which directory to backup and the client hostname.[br]
 <amavis_bypass_servers_explain>This feature is only used if your server using postqueue filter mode.[br]
 When adding IP addresses here, these senders will not pass trough the content filter.[br] 
 For example, if you need to completly bypass outgoing messages, put here IP addresses of your mail server that able to send messages for outgoing transferts.</amavis_bypass_servers_explain>
+<amavis_enable_db>Enable use of BerkeleyDB/libdb (SNMP and nanny)</amavis_enable_db>
+<amavis_enable_global_cache>Enable use of libdb-based</amavis_enable_global_cache>
 <amavis_max_server_explain>
 This is the crucial performance parameter.[br] Too small and the
 machine is underutilized and there is a risk of using CPU by overload processes,
@@ -954,6 +956,7 @@ Per default all values are set to 1024
 <macro_build_lvm_explain>Create a full LVM partition on this disk that allow you to create LVM disks after[br]This will erase datas and create one partition</macro_build_lvm_explain>
 <mailbox_infos>Mailbox informations</mailbox_infos>
 <mailbox_zarafa_infos_text>Display technical informations about this Zarafa mailbox</mailbox_zarafa_infos_text>
+<mailerror_recipient>Mail Error recipient</mailerror_recipient>
 <mails>eMails</mails>
 <mailss>Message(s)</mailss>
 <maindomains_explain>Here it is the list of officials domains allowed by organizations.[br]
@@ -1076,6 +1079,10 @@ Use relayed domain instead until there is no mailbox server installed.[br]
 <Offline_Uncorrectable>Off-line Scan Uncorrectable Count</Offline_Uncorrectable>
 <Offline_Uncorrectable_text>Quantity of uncorrected errors</Offline_Uncorrectable_text>
 <only_use_this>Only use this</only_use_this>
+<OPENEMM_ABOUT>OpenEMM is a feature-rich web-based enterprise application for email marketing,
+ newsletters and service mails (transaction mails and event or time triggered mails).[br]
+ OpenEMM offers a great user interface, sophisticated bounce management, link tracking, lots of graphical realtime statistics,
+  a CMS module and a scripting feature to implement individual tasks.</OPENEMM_ABOUT>
 <OPENEMM_INSTALLED_ENABLED_FEATURE_DISABLED>OpenEMM service is installed and enabled. It is incompatible to run 2 tomcat server is a single server.[br]If you need to use this feature, disable OpenEMM service.</OPENEMM_INSTALLED_ENABLED_FEATURE_DISABLED>
 <OpenVPNRemotePort>OpenVPN server listen port</OpenVPNRemotePort>
 <OPENVPN_APPLY_CONFIG>Build VPN parameters</OPENVPN_APPLY_CONFIG>
@@ -1476,6 +1483,7 @@ click on the link below
 </sendmail_request_form>
 <server_time2>System clock</server_time2>
 <server_time2_text>Modify manually the system clock</server_time2_text>
+<server_url>Server URL</server_url>
 <service_informations>Service informations</service_informations>
 <service_parameters>Service Parameters</service_parameters>
 <set_a_score>Set a score</set_a_score>

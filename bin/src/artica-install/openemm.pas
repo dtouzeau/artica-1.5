@@ -82,7 +82,7 @@ end;
 
    su:=SYS.LOCATE_GENERIC_BIN('su');
    tmpstr:=logs.FILE_TEMP();
-   cmd:='su -c "'+binpath +' stop" openemm >'+tmpstr+' 2>&1';
+   cmd:='su -m -c "'+binpath +' stop" --login openemm >'+tmpstr+' 2>&1';
    fpsystem(cmd);
    pids:=TStringlist.Create;
    pids.LoadFromFile(tmpstr);
@@ -132,7 +132,7 @@ end;
   if FileExists('/usr/share/artica-postfix/exec.openemm.php') then fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.openemm.php --build');
    su:=SYS.LOCATE_GENERIC_BIN('su');
    tmpstr:=logs.FILE_TEMP();
-   cmd:='su -c "'+binpath +' start" openemm >'+tmpstr+' 2>&1';
+   cmd:='su -m -c "'+binpath +' start" --login openemm >'+tmpstr+' 2>&1';
    fpsystem(cmd);
    pids:=TStringlist.Create;
    pids.LoadFromFile(tmpstr);

@@ -470,6 +470,7 @@ l.Add('lsof');
 l.Add('dar');
 l.Add('preload');
 l.Add('nmap');
+l.add('python-mysql');
 fpsystem('/bin/rm -rf /tmp/packages.list');
 
 for i:=0 to l.Count-1 do begin

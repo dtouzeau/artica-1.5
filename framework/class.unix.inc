@@ -149,6 +149,26 @@ public function LOCATE_VBoxHeadless(){
 		
 		if($GLOBALS["VERBOSE"]){echo "CreateUnixUser() $user->LinuxDistriCode \"$cmd\"\n";}
 		shell_exec($cmd);	
+		if(!$this->UnixUserExists($username)){
+		if($user->LinuxDistriCode=="CENTOS"){
+			$cmd="$useradd -m -d /home/$username -c \"$displayname\" $username >/dev/null 2>&1";
+		}
+		if($user->LinuxDistriCode=="SUSE"){
+			$cmd="$useradd -m -d /home/$username -c \"$displayname\" $username >/dev/null 2>&1";
+		}		
+		if($user->LinuxDistriCode=="FEDORA"){
+			$cmd="$useradd -m -d /home/$username -c \"$displayname\" $username >/dev/null 2>&1";
+		}
+		if($user->LinuxDistriCode=="MANDRAKE"){
+			$cmd="$useradd -m -d /home/$username -c \"$displayname\" $username >/dev/null 2>&1";
+		}						
+		if($cmd==null){
+			$cmd="useradd -m --d /home/$username -s /bin/bash -c \"$displayname\" $username >/dev/null 2>&1";
+		}
+			if($GLOBALS["VERBOSE"]){echo "CreateUnixUser() $user->LinuxDistriCode \"$cmd\"\n";}
+			shell_exec($cmd);
+		}
+		
 		return $this->UnixUserExists($username);
 		
 		

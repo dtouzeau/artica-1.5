@@ -323,7 +323,7 @@ function popup_tabs(){
 			$array["aliases"]='{aliases}';
 		}
 		
-		if($apache->groupware="GROUPOFFICE"){
+		if($apache->groupware=="GROUPOFFICE"){
 			unset($array["groupwares"]);
 			$array["groupoffice"]='{APP_GROUPOFFICE}';
 		}

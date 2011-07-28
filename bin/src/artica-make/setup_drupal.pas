@@ -37,7 +37,7 @@ public
       constructor Create();
       procedure Free;
       procedure xinstall();
-      procedure xremove();
+
 END;
 
 implementation
@@ -107,7 +107,7 @@ end;
     source_folder:='';
     install.INSTALL_STATUS(PROJECT_NAME,30);
     install.INSTALL_PROGRESS(PROJECT_NAME,'{downloading}');
-    if length(source_folder)=0 then source_folder:=libs.COMPILE_GENERIC_APPS('drupal');
+    source_folder:=libs.COMPILE_GENERIC_APPS('drupal');
 
    if not DirectoryExists(source_folder) then begin
      writeln('Install drupal failed...');
@@ -165,16 +165,7 @@ end;
   install.INSTALL_PROGRESS(PROJECT_NAME,'{installed}');
 end;
 //#########################################################################################
-procedure tsetup_drupal.xremove();
-begin
-fpsystem('/etc/init.d/kavmilterd stop >/dev/null 2>&1');
-fpsystem('/opt/kav/5.6/kavmilter/bin/kavmilter-setup.sh -del-service');
-fpsystem('/bin/rm -rf /opt/kav/5.6/kavmilter >/dev/null 2>&1');
-fpsystem('/bin/rm  /etc/init.d/kavmilterd >/dev/null 2>&1');
-fpsystem('rm -rf /var/db/kav/5.6/kavmilter >/dev/null 2>&1');
-fpsystem('rm -rf /etc/kav/5.6 >/dev/null 2>&1');
-end;
-//#########################################################################################
+
 
 
 

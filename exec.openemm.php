@@ -74,11 +74,17 @@ function checkdb(){
 		@mkdir("/home/openemm/logs",755,true);
 		
 	}
+	
+	$aa_complain=$unix->find_program("aa-complain");
+	if(is_file($aa_complain)){shell_exec("$aa_complain $JAVA_HOME/bin/java");}
+	if(!is_file("/home/openemm/webapps/openemm/WEB-INF/classes/messages_en_US.properties")){
+		shell_exec("/bin/cp /home/openemm/webapps/openemm/WEB-INF/classes/messages_en.properties /home/openemm/webapps/openemm/WEB-INF/classes/messages_en_US.properties");
+	}
 	cms_properties();
 	
 	if(!is_dir("/home/openemm/work/Catalina/openemm/_")){@mkdir("/home/openemm/work/Catalina/openemm/_",755,true);}
-	
-	shell_exec("/bin/chown openemm:openemm /home/openemm/logs");
+	shell_exec("/bin/chown openemm /home/openemm");
+	shell_exec("/bin/chown -R openemm /home/openemm");
 	
 	if(is_numeric(is_tomcat_running())){
 		echo "Starting......: OpenEMM stopping tomcat first...\n";
@@ -95,12 +101,13 @@ function checkdb(){
 
 function cms_properties(){
 $q=new mysql();	
+if($q->mysql_server=="localhost"){$q->mysql_server="127.0.0.1";}
 $cms[]="#####################################################";
 $cms[]="# Database settings";
 $cms[]="#####################################################";
 $cms[]="";
 $cms[]="cmsdb.driverClassName=com.mysql.jdbc.Driver";
-$cms[]="cmsdb.url=jdbc:mysql://$q->mysql_server/openemm_cms?useUnicode=true&amp;characterEncoding=UTF8&amp;jdbcCompliantTruncation=false";
+$cms[]="cmsdb.url=jdbc:mysql://$q->mysql_server:$q->mysql_port/openemm_cms?useUnicode=true&amp;characterEncoding=UTF8&amp;jdbcCompliantTruncation=false";
 $cms[]="cmsdb.dialect=org.hibernate.dialect.MySQLDialect";
 $cms[]="cmsdb.username=$q->mysql_admin";
 $cms[]="cmsdb.password=$q->mysql_password";
@@ -119,12 +126,21 @@ echo "Starting......: OpenEMM creating cms.properties done.\n";
 }
 
 function emm_properties(){
-$q=new mysql();		
+$sock=new sockets();
+$OpenEMMServerURL=$sock->GET_INFO("OpenEMMServerURL");
+$OpenEMMMailErrorRecipient=$sock->GET_INFO("OpenEMMMailErrorRecipient");
+$OpenEMMUserAgent=$sock->GET_INFO("OpenEMMUserAgent");
+if($OpenEMMServerURL==null){$OpenEMMServerURL="http://127.0.0.1:8080";}	
+if($OpenEMMMailErrorRecipient==null){$OpenEMMMailErrorRecipient="openemm@localhost";}
+if($OpenEMMUserAgent==null){$OpenEMMUserAgent="OpenEMM V2011";}
+
+$q=new mysql();
+if($q->mysql_server=="localhost"){$q->mysql_server="127.0.0.1";}		
 $emm[]="###############################################################################";
 $emm[]="# Database Connection Settings (dataAccessContxt.xml, etc.)";
 $emm[]="###############################################################################";
 $emm[]="jdbc.driverClassName=com.mysql.jdbc.Driver";
-$emm[]="jdbc.url=jdbc:mysql://$q->mysql_server/openemm?useUnicode=yes&characterEncoding=UTF-8&useOldAliasMetadataBehavior=true";
+$emm[]="jdbc.url=jdbc:mysql://$q->mysql_server:$q->mysql_port/openemm?useUnicode=yes&characterEncoding=UTF-8&useOldAliasMetadataBehavior=true";
 $emm[]="jdbc.dialect=org.hibernate.dialect.MySQLDialect";
 $emm[]="jdbc.username=$q->mysql_admin";
 $emm[]="jdbc.password=$q->mysql_password";
@@ -135,7 +151,7 @@ $emm[]="";
 $emm[]="###############################################################################";
 $emm[]="# System Default Values";
 $emm[]="###############################################################################";
-$emm[]="system.url=http://192.168.1.105:8080";
+$emm[]="system.url=$OpenEMMServerURL";
 $emm[]="system.logdir=/home/openemm/var/log";
 $emm[]="system.upload=/tmp";
 $emm[]="system.updateserver=http://www.openemm.org/";
@@ -146,7 +162,7 @@ $emm[]="# Feature Default Values";
 $emm[]="###############################################################################";
 $emm[]="password.expire.days=-1";
 $emm[]="fckpath=fckeditor-2.6.4.1";
-$emm[]="ecs.server.url=http://192.168.1.105:8080";
+$emm[]="ecs.server.url=$OpenEMMServerURL";
 $emm[]="";
 $emm[]="# max number of recipients in database";
 $emm[]="recipient.maxRows=200000";
@@ -171,7 +187,7 @@ $emm[]="";
 $emm[]="# available languages for online help";
 $emm[]="onlinehelp.languages = de,en,fr";
 $emm[]="";
-$emm[]="mail.error.recipient=openemm@localhost";
+$emm[]="mail.error.recipient=$OpenEMMMailErrorRecipient";
 $emm[]="";
 $emm[]="###############################################################################";
 $emm[]="# Default Values for Caches (Images, Tracking, User Forms, Mailings, Backend)";
@@ -207,7 +223,7 @@ $emm[]="mailgun.ini.xmlvalidate=False";
 $emm[]="mailgun.ini.domain=openemm.invalid";
 $emm[]="mailgun.ini.mail_log_number=400";
 $emm[]="mailgun.ini.eol=LF";
-$emm[]="mailgun.ini.mailer=OpenEMM V2011";
+$emm[]="mailgun.ini.mailer=$OpenEMMUserAgent";
 $emm[]="";
 $emm[]="###############################################################################";
 $emm[]="# Import Wizard";

@@ -44,8 +44,8 @@
         <Filename Value="setup_ubuntu_class.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="setup_ubuntu_class"/>
-        <CursorPos X="22" Y="1596"/>
-        <TopLine Value="1543"/>
+        <CursorPos X="18" Y="497"/>
+        <TopLine Value="445"/>
         <EditorIndex Value="5"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -111,8 +111,8 @@
         <Filename Value="setup_libs.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="setup_libs"/>
-        <CursorPos X="33" Y="209"/>
-        <TopLine Value="150"/>
+        <CursorPos X="44" Y="1582"/>
+        <TopLine Value="1565"/>
         <EditorIndex Value="8"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -138,8 +138,8 @@
         <Filename Value="setup_suse_class.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="setup_suse_class"/>
-        <CursorPos X="20" Y="638"/>
-        <TopLine Value="621"/>
+        <CursorPos X="37" Y="725"/>
+        <TopLine Value="700"/>
         <EditorIndex Value="1"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
@@ -217,119 +217,127 @@
         <UsageCount Value="40"/>
       </Unit21>
     </Units>
-    <JumpHistory Count="28" HistoryIndex="27">
+    <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
-        <Filename Value="setup_centos_class.pas"/>
-        <Caret Line="586" Column="14" TopLine="552"/>
+        <Filename Value="setup_ubuntu_class.pas"/>
+        <Caret Line="106" Column="33" TopLine="86"/>
       </Position1>
       <Position2>
-        <Filename Value="setup_centos_class.pas"/>
-        <Caret Line="587" Column="14" TopLine="552"/>
+        <Filename Value="setup_ubuntu_class.pas"/>
+        <Caret Line="9" Column="28" TopLine="1"/>
       </Position2>
       <Position3>
-        <Filename Value="setup_centos_class.pas"/>
-        <Caret Line="799" Column="14" TopLine="765"/>
+        <Filename Value="setup_ubuntu_class.pas"/>
+        <Caret Line="2115" Column="5" TopLine="2047"/>
       </Position3>
       <Position4>
-        <Filename Value="setup_centos_class.pas"/>
-        <Caret Line="964" Column="14" TopLine="930"/>
+        <Filename Value="setup_ubuntu_class.pas"/>
+        <Caret Line="106" Column="33" TopLine="86"/>
       </Position4>
       <Position5>
-        <Filename Value="setup_centos_class.pas"/>
-        <Caret Line="965" Column="14" TopLine="930"/>
+        <Filename Value="setup_ubuntu_class.pas"/>
+        <Caret Line="1986" Column="34" TopLine="339"/>
       </Position5>
       <Position6>
-        <Filename Value="setup_suse_class.pas"/>
-        <Caret Line="255" Column="137" TopLine="221"/>
+        <Filename Value="setup_ubuntu_class.pas"/>
+        <Caret Line="125" Column="70" TopLine="103"/>
       </Position6>
       <Position7>
-        <Filename Value="setup_suse_class.pas"/>
-        <Caret Line="1" Column="1" TopLine="1"/>
+        <Filename Value="setup_ubuntu_class.pas"/>
+        <Caret Line="1971" Column="1" TopLine="1963"/>
       </Position7>
       <Position8>
         <Filename Value="setup_ubuntu_class.pas"/>
-        <Caret Line="749" Column="43" TopLine="732"/>
+        <Caret Line="26" Column="18" TopLine="1"/>
       </Position8>
       <Position9>
         <Filename Value="setup_ubuntu_class.pas"/>
-        <Caret Line="106" Column="33" TopLine="86"/>
+        <Caret Line="27" Column="32" TopLine="18"/>
       </Position9>
       <Position10>
         <Filename Value="setup_ubuntu_class.pas"/>
-        <Caret Line="9" Column="28" TopLine="1"/>
+        <Caret Line="2068" Column="10" TopLine="2015"/>
       </Position10>
       <Position11>
         <Filename Value="setup_ubuntu_class.pas"/>
-        <Caret Line="2115" Column="5" TopLine="2047"/>
+        <Caret Line="2072" Column="23" TopLine="2036"/>
       </Position11>
       <Position12>
         <Filename Value="setup_ubuntu_class.pas"/>
-        <Caret Line="106" Column="33" TopLine="86"/>
+        <Caret Line="706" Column="36" TopLine="664"/>
       </Position12>
       <Position13>
-        <Filename Value="setup_ubuntu_class.pas"/>
-        <Caret Line="1986" Column="34" TopLine="339"/>
+        <Filename Value="setup_libs.pas"/>
+        <Caret Line="76" Column="31" TopLine="47"/>
       </Position13>
       <Position14>
         <Filename Value="setup_ubuntu_class.pas"/>
-        <Caret Line="125" Column="70" TopLine="103"/>
+        <Caret Line="714" Column="91" TopLine="698"/>
       </Position14>
       <Position15>
         <Filename Value="setup_ubuntu_class.pas"/>
-        <Caret Line="1971" Column="1" TopLine="1963"/>
+        <Caret Line="1014" Column="54" TopLine="970"/>
       </Position15>
       <Position16>
         <Filename Value="setup_ubuntu_class.pas"/>
-        <Caret Line="26" Column="18" TopLine="1"/>
+        <Caret Line="1021" Column="41" TopLine="981"/>
       </Position16>
       <Position17>
-        <Filename Value="setup_ubuntu_class.pas"/>
-        <Caret Line="27" Column="32" TopLine="18"/>
+        <Filename Value="setup_ubuntu.pas"/>
+        <Caret Line="59" Column="175" TopLine="18"/>
       </Position17>
       <Position18>
-        <Filename Value="setup_ubuntu_class.pas"/>
-        <Caret Line="2068" Column="10" TopLine="2015"/>
+        <Filename Value="setup_ubuntu.pas"/>
+        <Caret Line="63" Column="89" TopLine="25"/>
       </Position18>
       <Position19>
         <Filename Value="setup_ubuntu_class.pas"/>
-        <Caret Line="2072" Column="23" TopLine="2036"/>
+        <Caret Line="1060" Column="96" TopLine="1027"/>
       </Position19>
       <Position20>
         <Filename Value="setup_ubuntu_class.pas"/>
-        <Caret Line="706" Column="36" TopLine="664"/>
+        <Caret Line="764" Column="62" TopLine="749"/>
       </Position20>
       <Position21>
-        <Filename Value="setup_libs.pas"/>
-        <Caret Line="76" Column="31" TopLine="47"/>
+        <Filename Value="setup_suse_class.pas"/>
+        <Caret Line="197" Column="46" TopLine="179"/>
       </Position21>
       <Position22>
-        <Filename Value="setup_ubuntu_class.pas"/>
-        <Caret Line="714" Column="91" TopLine="698"/>
+        <Filename Value="setup_suse_class.pas"/>
+        <Caret Line="672" Column="58" TopLine="638"/>
       </Position22>
       <Position23>
-        <Filename Value="setup_ubuntu_class.pas"/>
-        <Caret Line="1014" Column="54" TopLine="970"/>
+        <Filename Value="setup_suse_class.pas"/>
+        <Caret Line="904" Column="34" TopLine="870"/>
       </Position23>
       <Position24>
-        <Filename Value="setup_ubuntu_class.pas"/>
-        <Caret Line="1021" Column="41" TopLine="981"/>
+        <Filename Value="setup_suse_class.pas"/>
+        <Caret Line="923" Column="34" TopLine="870"/>
       </Position24>
       <Position25>
-        <Filename Value="setup_ubuntu.pas"/>
-        <Caret Line="59" Column="175" TopLine="18"/>
+        <Filename Value="setup_suse_class.pas"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
       </Position25>
       <Position26>
-        <Filename Value="setup_ubuntu.pas"/>
-        <Caret Line="63" Column="89" TopLine="25"/>
+        <Filename Value="setup_suse_class.pas"/>
+        <Caret Line="672" Column="58" TopLine="638"/>
       </Position26>
       <Position27>
-        <Filename Value="setup_ubuntu_class.pas"/>
-        <Caret Line="1060" Column="96" TopLine="1027"/>
+        <Filename Value="setup_suse_class.pas"/>
+        <Caret Line="725" Column="37" TopLine="700"/>
       </Position27>
       <Position28>
-        <Filename Value="setup_ubuntu_class.pas"/>
-        <Caret Line="764" Column="62" TopLine="749"/>
+        <Filename Value="setup_libs.pas"/>
+        <Caret Line="53" Column="44" TopLine="19"/>
       </Position28>
+      <Position29>
+        <Filename Value="setup_ubuntu_class.pas"/>
+        <Caret Line="1777" Column="32" TopLine="1737"/>
+      </Position29>
+      <Position30>
+        <Filename Value="setup_ubuntu_class.pas"/>
+        <Caret Line="19" Column="41" TopLine="1"/>
+      </Position30>
     </JumpHistory>
   </ProjectOptions>
   <CompilerOptions>

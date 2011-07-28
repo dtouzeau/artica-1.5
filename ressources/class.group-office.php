@@ -44,7 +44,9 @@ class group_office{
 		$unix=new unix();
 		$q=new mysql();
 		$firstinstall=false;
-		if($this->rebuildb){$q->DELETE_DATABASE($this->database);}
+		if($this->rebuildb){
+			writelogs("[$this->servername] DELETE_DATABASE",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+			$q->DELETE_DATABASE($this->database);}
 		if($GLOBALS["REINSTALL"]){$q->DELETE_DATABASE($this->database);}
 		
 		if(!$q->DATABASE_EXISTS($this->database)){

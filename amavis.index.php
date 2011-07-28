@@ -817,7 +817,8 @@ function log_level_save(){
 function filterbehavior_explain(){
 	$tpl=new templates();
 	if($_GET["D_EXPLAIN"]==null){return null;}
-	echo $tpl->_ENGINE_parse_body("{{$_GET["D_EXPLAIN"]}_EXP}");
+	
+	echo "<div class=explain>".$tpl->_ENGINE_parse_body("{{$_GET["D_EXPLAIN"]}_EXP}")."</div>";
 	
 }
 
@@ -842,21 +843,7 @@ function filterbehavior_js(){
 		XHR.sendAndLoad('$page', 'GET',x_d_exp);
 	}
 	
-	var x_SaveAmavisPerformances=function(obj){
-      var tempvalue=obj.responseText;
-	  if(tempvalue.length>0){alert(tempvalue);}
-      LoadAmavisFilterBehavior();
-      }	
-	
-	function SaveAmavisPerformances(){
-		var XHR = new XHRConnection();
-		XHR.appendData('AmavisMemoryInRAM',document.getElementById('AmavisMemoryInRAM').value);
-		XHR.appendData('max_servers',document.getElementById('max_servers').value);
-		XHR.appendData('max_requests',document.getElementById('max_requests').value);
-		XHR.appendData('child_timeout',document.getElementById('child_timeout').value);
-		document.getElementById('performancesamavis').innerHTML='<center style=\"width:100%\"><img src=img/wait_verybig.gif></center>';
-		XHR.sendAndLoad('$page', 'GET',x_SaveAmavisPerformances);		
-		}
+
 	
 	
 	 LoadAmavisFilterBehavior();
@@ -1308,10 +1295,10 @@ $page=CurrentPageName();
 	$final_bad_header_destiny=Field_array_Hash($array,"final_bad_header_destiny",$amavis->main_array["BEHAVIORS"]["final_bad_header_destiny"],"load_d_exp(this)");
 	
 	
-$behavior_form="	<form name='FFM_filterbehavior_popup'>
+$behavior_form="<div id='FFM_filterbehavior_popup'>
 	<input type='hidden' name='INI_SAVE' value='BEHAVIORS' id='INI_SAVE'>
 	
-	<table style='width:100%'>	
+	<table style='width:100%' class=form>	
 	<tr>
 		<td class=legend nowrap>{final_virus_destiny}:</td>
 		<td>$final_virus_destiny</td>
@@ -1330,24 +1317,34 @@ $behavior_form="	<form name='FFM_filterbehavior_popup'>
 	</tr>
 	<tr>
 		<td class=legend nowrap>{EnableBlockUsersTroughInternet}:</td>
-		<td>". Field_numeric_checkbox_img('EnableBlockUsersTroughInternet',$amavis->EnableBlockUsersTroughInternet)."</td>
+		<td>". Field_checkbox('EnableBlockUsersTroughInternet',1,$amavis->EnableBlockUsersTroughInternet)."</td>
 	</tr>
 	<tr>
 		<td class=legend nowrap>{trust_my_net}:</td>
-		<td>". Field_numeric_checkbox_img('trust_my_net',$amavis->main_array["BEHAVIORS"]["trust_my_net"])."</td>
-	</tr>	
+		<td>". Field_checkbox('trust_my_net',1,$amavis->main_array["BEHAVIORS"]["trust_my_net"])."</td>
+	</tr>
 	<tr>
-		<td colspan=2 align='right'>". button("{apply}","ParseForm('FFM_filterbehavior_popup','$page',true);")."</td>
+		<td class=legend nowrap>{amavis_enable_db}:</td>
+		<td>". Field_checkbox('enable_db',1,$amavis->main_array["BEHAVIORS"]["enable_db"],"CheckAmaCache()")."</td>
+	</tr>
+	<tr>
+		<td class=legend nowrap>{amavis_enable_global_cache}:</td>
+		<td>". Field_checkbox('enable_global_cache',1,$amavis->main_array["BEHAVIORS"]["enable_global_cache"])."</td>
+	</tr>	
+	
+	
+	<tr>
+		<td colspan=2 align='right'>". button("{apply}","SaveAmavisFilterBehavior();")."</td>
 	</tr>
 	<tr>
 	<td>&nbsp;</td>
-	<td><div id=D_EXPLAIN class=explain></div></td>
+	<td><span id=D_EXPLAIN></span></td>
 	</tr>
 	</table>
-	</form>	";
+	</div>	";
 	
 $performances="
-<table style='width:100%'>	
+<table style='width:100%' class=form>	
 	<tr>
 		<td class=legend nowrap>{AmavisMemoryInRAM}:</td>
 		<td>" . Field_text('AmavisMemoryInRAM',$AmavisMemoryInRAM,"width:50px")."&nbsp;<strong style='font-size:13px'>M</strong></td>
@@ -1388,7 +1385,46 @@ $performances="
 			<div style='font-size:16px'>{AMAVIS_PERFS}</div>
 				$performances
 		</div>
+		
+<script>
+	var x_SaveAmavisPerformances=function(obj){
+      var tempvalue=obj.responseText;
+	  if(tempvalue.length>0){alert(tempvalue);}
+      LoadAmavisFilterBehavior();
+      }	
 	
+	function SaveAmavisPerformances(){
+		var XHR = new XHRConnection();
+		XHR.appendData('AmavisMemoryInRAM',document.getElementById('AmavisMemoryInRAM').value);
+		XHR.appendData('max_servers',document.getElementById('max_servers').value);
+		XHR.appendData('max_requests',document.getElementById('max_requests').value);
+		XHR.appendData('child_timeout',document.getElementById('child_timeout').value);
+		AnimateDiv('performancesamavis');
+		XHR.sendAndLoad('$page', 'GET',x_SaveAmavisPerformances);		
+		}	
+	function SaveAmavisFilterBehavior(){
+		var XHR = new XHRConnection();
+		XHR.appendData('INI_SAVE','BEHAVIORS');
+		XHR.appendData('final_virus_destiny',document.getElementById('final_virus_destiny').value);
+		XHR.appendData('final_banned_destiny',document.getElementById('final_banned_destiny').value);
+		XHR.appendData('final_spam_destiny',document.getElementById('final_spam_destiny').value);
+		XHR.appendData('final_bad_header_destiny',document.getElementById('final_bad_header_destiny').value);
+		if(document.getElementById('EnableBlockUsersTroughInternet').checked){XHR.appendData('EnableBlockUsersTroughInternet',1);}else{XHR.appendData('EnableBlockUsersTroughInternet',0);}
+		if(document.getElementById('trust_my_net').checked){XHR.appendData('trust_my_net',1);}else{XHR.appendData('trust_my_net',0);}
+		if(document.getElementById('enable_db').checked){XHR.appendData('enable_db',1);}else{XHR.appendData('enable_db',0);}
+		if(document.getElementById('enable_global_cache').checked){XHR.appendData('enable_global_cache',1);}else{XHR.appendData('enable_global_cache',0);}
+		AnimateDiv('performancesamavis'); 
+		XHR.sendAndLoad('$page', 'GET',x_SaveAmavisPerformances);	    
+	}
+	
+	function CheckAmaCache(){
+		document.getElementById('enable_global_cache').disabled=true;
+		if(document.getElementById('enable_db').checked){
+			document.getElementById('enable_global_cache').disabled=false;
+		}
+	}
+	CheckAmaCache();
+</script>
 	";
 	
 	$tpl=new templates();
@@ -1662,6 +1698,7 @@ function filterextension_del(){
 function INI_SAVE(){
 	$amavis=new amavis();
 	while (list ($num, $ligne) = each ($_GET) ){
+		writelogs("Saving [$num]=[$ligne]",__FUNCTION__,__FILE__,__LINE__);
 		$amavis->main_array[$_GET["INI_SAVE"]][$num]=$ligne;
 	}
 	$amavis->EnableBlockUsersTroughInternet=$_GET["EnableBlockUsersTroughInternet"];

@@ -435,6 +435,9 @@ function buildconf(){
 		if($this->main_array["BEHAVIORS"]["max_requests"]==null){$this->main_array["BEHAVIORS"]["max_requests"]="30";}
 		if($this->main_array["BEHAVIORS"]["max_servers"]==null){$this->main_array["BEHAVIORS"]["max_servers"]="5";}
 		if($this->main_array["BEHAVIORS"]["trust_my_net"]==null){$this->main_array["BEHAVIORS"]["trust_my_net"]="0";}
+		if(!is_numeric($this->main_array["BEHAVIORS"]["enable_db"])){$this->main_array["BEHAVIORS"]["enable_db"]="0";}
+		if(!is_numeric($this->main_array["BEHAVIORS"]["enable_global_cache"])){$this->main_array["BEHAVIORS"]["enable_global_cache"]="0";}
+		
 		
 		
 		if(posix_getuid()==0){echo "Starting......: amavisd-new build configuration loglevel:{$this->main_array["BEHAVIORS"]["log_level"]}\n";}
@@ -474,8 +477,8 @@ function buildconf(){
 		$conf=$conf."\$MIN_EXPANSION_QUOTA =      100*1024;  # bytes  (default undef, not enforced)\n";
 		$conf=$conf."\$MAX_EXPANSION_QUOTA = 300*1024*1024;  # bytes  (default undef, not enforced)\n";
 		$conf=$conf."\n";
-		$conf=$conf."\$enable_db = 0;              # enable use of BerkeleyDB/libdb (SNMP and nanny)\n";
-		$conf=$conf."\$enable_global_cache = 0;    # enable use of libdb-based cache if \$enable_db=1\n";
+		$conf=$conf."\$enable_db = {$this->main_array["BEHAVIORS"]["enable_db"]};              # enable use of BerkeleyDB/libdb (SNMP and nanny)\n";
+		$conf=$conf."\$enable_global_cache = {$this->main_array["BEHAVIORS"]["enable_global_cache"]};    # enable use of libdb-based cache if \$enable_db=1\n";
 		$conf=$conf."\$nanny_details_level = 2;    # nanny verbosity: 1: traditional, 2: detailed\n";
 		if($this->EnableDKIMVerification==1){
 			$conf=$conf."\$enable_dkim_verification = 1;  # enable DKIM signatures verification\n";

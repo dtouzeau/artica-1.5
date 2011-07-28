@@ -161,6 +161,7 @@ if($argv[1]=="--greyhole-watchdog"){greyhole_watchdog();exit;}
 if($argv[1]=="--greensql"){echo greensql();exit;}
 if($argv[1]=="--nscd"){echo nscd();exit;}
 if($argv[1]=="--tomcat"){echo tomcat();exit;}
+if($argv[1]=="--openemm"){echo openemm();exit;}
 
 
 
@@ -2662,11 +2663,12 @@ function openemm(){
 	$awk=$GLOBALS["CLASS_UNIX"]->find_program("awk");
 	
 	$cmd="$ps -eo pid,command|$grep -E \"\/home\/openemm.*?org\.apache\.catalina\"|$grep -v grep|$awk '{print $1}' 2>&1";
+	if($GLOBALS["VERBOSE"]){echo "$cmd\n";}
 	exec($cmd,$results);
 	$master_pid=trim(@implode("", $results));
 	
 	
-	$master_pid=trim(@file_get_contents($pid_path));
+	
 	
 	
 		$l[]="[APP_OPENEMM]";

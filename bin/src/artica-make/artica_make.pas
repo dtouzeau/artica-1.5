@@ -21,7 +21,7 @@ uses
   setup_dropbox, setup_crossroads, setup_squidclamav, setup_cluebringer,
   setup_awstats, setup_sabnzbdplus, setup_openldap, setup_lxc, setup_snort,
   setup_greensql, setup_amanda, setup_mysqlserver, setup_dhcpd, setup_drupal7,
-  setup_openemm;
+  setup_openemm, setup_mysqlnd;
 
 var
    collectd:tsetup_collectd;
@@ -104,6 +104,7 @@ var
    dhcpd:tdhcpd;
    drupal7:tsetup_drupal7;
    openemm:tsetup_openemm;
+   mysqlnd:tsetup_mysqlnd;
 begin
 
 
@@ -140,6 +141,12 @@ begin
    if ParamStr(1)='APP_OPENVPN' then begin
       fpsystem('/usr/share/artica-postfix/bin/setup-ubuntu --check-openvpn');
       zinstall.EMPTY_CACHE();
+      halt(0);
+   end;
+
+   if ParamStr(1)='APP_PHP5_MYSQLND' then begin
+      mysqlnd:=tsetup_mysqlnd.Create();
+      mysqlnd.xinstall();
       halt(0);
    end;
 
@@ -440,6 +447,15 @@ begin
          zinstall.EMPTY_CACHE();
          halt(0);
    end;
+
+   if ParamStr(1)='APP_DRUPAL7_LANGS' then begin
+         drupal7:=tsetup_drupal7.Create;
+         drupal7.langupack();
+         zinstall.EMPTY_CACHE();
+         halt(0);
+   end;
+
+
 
    if ParamStr(1)='APP_DRUSH7' then begin
          drupal7:=tsetup_drupal7.Create;
@@ -1691,6 +1707,7 @@ begin
    writeln('APP_DRUPAL...............: install drupal 6.x version');
    writeln('APP_DRUPAL7..............: install drupal 7.x version');
    writeln('APP_DRUSH7...............: install drush 7.x version');
+   writeln('APP_DRUPAL7_LANGS........: install drupal 7.x language pack');
    writeln('APP_UPLOADPROGRESS.......: install UploadProgress php extension');
    writeln('APP_OPENEMM..............: install OpenEMM application');
    writeln('APP_TOMCAT...............: install Tomcat web server');
