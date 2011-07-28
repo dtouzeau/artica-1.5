@@ -698,7 +698,11 @@ begin
    if FileExists(SYS.LOCATE_GENERIC_BIN('iptaccount')) then list.Add('$_GLOBAL["IPTABLES_ACCOUNTING_EXISTS"]=True;') else list.Add('$_GLOBAL["IPTABLES_ACCOUNTING_EXISTS"]=False;');
    if FileExists(SYS.LOCATE_GENERIC_BIN('pdnssec')) then list.Add('$_GLOBAL["PDNSSEC_INSTALLED"]=True;') else list.Add('$_GLOBAL["PDNSSEC_INSTALLED"]=False;');
    if FileExists(SYS.LOCATE_GENERIC_BIN('nscd')) then list.Add('$_GLOBAL["NSCD_INSTALLED"]=True;') else list.Add('$_GLOBAL["NSCD_INSTALLED"]=False;');
+   if FileExists(SYS.LOCATE_GENERIC_BIN('msktutil')) then list.Add('$_GLOBAL["MSKTUTIL_INSTALLED"]=True;') else list.Add('$_GLOBAL["MSKTUTIL_INSTALLED"]=False;');
    if FileExists('/usr/share/drupal7/index.php') then list.Add('$_GLOBAL["DRUPAL7_INSTALLED"]=True;') else list.Add('$_GLOBAL["DRUPAL7_INSTALLED"]=False;');
+
+
+
    if FileExists('/home/openemm/bin/openemm.sh') then begin
       list.Add('$_GLOBAL["OPENEMM_INSTALLED"]=True;');
       openemm:=Topenemm.Create(SYS);
@@ -1516,6 +1520,10 @@ end;
        list.Add('$_GLOBAL["SQUID_NTLM_AUTH"]="' + squid.ntml_auth_path() + '";' );
        list.Add('$_GLOBAL["SQUID_BIN_PATH"]="' + squid.SQUID_BIN_PATH() + '";' );
        list.Add('$_GLOBAL["SQUID_CACHMGR"]="' + squid.cachemgr_path() + '";' );
+       list.Add('$_GLOBAL["squid_kerb_auth_path"]="' + squid.squid_kerb_auth_path() + '";' );
+
+
+
        list.Add('$_GLOBAL["SQUID_BIN_VERSION"]=' + IntToStr(squid.SQUID_BIN_VERSION(squid.SQUID_VERSION())) + ';' );
        if squid.ntlm_enabled() then  list.Add('$_GLOBAL["SQUID_NTLM_ENABLED"]=True;') else list.Add('$_GLOBAL["SQUID_NTLM_ENABLED"]=False;');
        if squid.SQUID_ARP_ACL_ENABLED()=1 then list.Add('$_GLOBAL["SQUID_ARP_ACL_ENABLED"]=True;') else list.Add('$_GLOBAL["SQUID_ARP_ACL_ENABLED"]=False;');

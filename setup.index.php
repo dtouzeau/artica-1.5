@@ -847,6 +847,7 @@ $html="
 	$html=$html.BuildRows("APP_SQUID",$GlobalApplicationsStatus,"squid3");
 	$html=$html.BuildRows("APP_SARG",$GlobalApplicationsStatus,"sarg");
 	$html=$html.BuildRows("APP_SAMBA",$GlobalApplicationsStatus,"samba");
+	$html=$html.BuildRows("APP_MSKTUTIL",$GlobalApplicationsStatus,"msktutil");
 
 	$html=$html.spacer('{CONTENTS_FILTERS_PRODUCTS}');
 	$html=$html.BuildRows("APP_UFDBGUARD",$GlobalApplicationsStatus,"ufdbGuard");

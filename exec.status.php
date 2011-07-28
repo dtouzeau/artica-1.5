@@ -11,7 +11,7 @@ include_once(dirname(__FILE__)."/ressources/class.os.system.inc");
 $mem=round(((memory_get_usage()/1024)/1000),2);events("{$mem}MB after class.os.system.inc","MAIN",__LINE__);
 include_once(dirname(__FILE__)."/framework/class.settings.inc");
 $mem=round(((memory_get_usage()/1024)/1000),2);events("{$mem}MB after class.settings.inc","MAIN",__LINE__);
-
+$GLOBALS["FORCE"]=false;
 $GLOBALS["DISABLE_WATCHDOG"]=false;
 $GLOBALS["MY-POINTER"]="/etc/artica-postfix/pids/". basename(__FILE__).".pointer";
 $GLOBALS["COMMANDLINE"]=implode(" ",$argv);
@@ -23,6 +23,7 @@ if(strpos($GLOBALS["COMMANDLINE"],"--verbose")>0){
 	
 }
 if(preg_match("#--nowachdog#",$GLOBALS["COMMANDLINE"])){$GLOBALS["DISABLE_WATCHDOG"]=true;}
+if(preg_match("#--force#",$GLOBALS["COMMANDLINE"])){$GLOBALS["FORCE"]=true;}
 
 if(posix_getuid()<>0){die("Cannot be used in web server mode\n\n");}
 $sock=new sockets();
@@ -163,7 +164,7 @@ if($argv[1]=="--nscd"){echo nscd();exit;}
 if($argv[1]=="--tomcat"){echo tomcat();exit;}
 if($argv[1]=="--openemm"){echo openemm();exit;}
 
-
+if($GLOBALS["VERBOSE"]){echo "cannot understand {$argv[1]} assume perhaps it is a function\n";}
 
 
 if($argv[1]=="--functions"){
@@ -665,15 +666,23 @@ function SwapWatchdog(){
 function xLoadAvg(){
 	if(!isset($GLOBALS["CLASS_UNIX"])){CheckCallable();}
 	if(function_exists("sys_getloadavg")){
-		$timeDaemonFile=$GLOBALS["CLASS_UNIX"]->file_time_min("/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".time");
-		$DaemonTime=$GLOBALS["CLASS_UNIX"]->file_time_min($timeDaemonFile);		
-		if($DaemonTime<3){return;}
+		$timeDaemonFile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".time";
+		if(!is_file($timeDaemonFile)){@file_put_contents($timeDaemonFile, time());$GLOBALS["FORCE"]=true;}
+		$DaemonTime=$GLOBALS["CLASS_UNIX"]->file_time_min($timeDaemonFile);	
+		
+		if($GLOBALS["VERBOSE"]){echo "\"$timeDaemonFile\" : $DaemonTime minutes...\n";}	
+		
+		if(!$GLOBALS["FORCE"]){
+			if($DaemonTime<3){if($GLOBALS["VERBOSE"]){echo "End due of time\n";}return;}
+		}
 		@unlink($timeDaemonFile);
 		@file_put_contents($timeDaemonFile, time());
 		$array_load=sys_getloadavg();
 		$internal_load=$array_load[0];
+		if($GLOBALS["VERBOSE"]){echo "System load $internal_load\n";}
 		events("System load $internal_load",__FUNCTION__,__LINE__);
 		if(!is_dir("/var/log/artica-postfix/loadavg")){@mkdir("/var/log/artica-postfix/loadavg",644,true);}
+		if($GLOBALS["VERBOSE"]){echo "saving in /var/log/artica-postfix/loadavg...\n";}
 		@file_put_contents("/var/log/artica-postfix/loadavg/".time(), $internal_load);
 	}else{
 		events("Fatal: System load \"sys_getloadavg\" no such function ",__FUNCTION__,__LINE__);

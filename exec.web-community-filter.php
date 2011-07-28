@@ -21,6 +21,14 @@ if($argv[1]=="--groupby"){WriteCategoriesStatus();die();}
 	$sock=new sockets();
 	$users=new usersMenus();
 	if(!$users->SQUID_INSTALLED){die();}
+	$system_is_overloaded=system_is_overloaded();
+	if($system_is_overloaded){
+		$unix=new unix();
+		$unix->send_email_events("Overloaded system, Web filtering maintenance databases tasks aborted", "Artica will wait a new better time...", "proxy");
+		die();
+	}
+	
+	
 	$SQUIDEnable=$sock->GET_INFO("SQUIDEnable");
 	if($SQUIDEnable==null){$SQUIDEnable=1;}
 	if($SQUIDEnable<>1){
@@ -286,6 +294,14 @@ function uncompress($srcName, $dstName) {
 	
 
 function patterns(){
+	
+	$system_is_overloaded=system_is_overloaded();
+	if($system_is_overloaded){
+		$unix=new unix();
+		$unix->send_email_events("Overloaded system, Web filtering maintenance databases tasks aborted [writing categories]", "Artica will wait a new better time...", "proxy");
+		die();
+	}	
+	
 	echo "Starting......: Artica database community please wait writing categories\n";
 	$sql="SELECT category FROM dansguardian_community_categories WHERE enabled=1 GROUP by category";
 	$q=new mysql();
@@ -341,6 +357,14 @@ function WriteCategory($category){
 }
 
 function fillSitesInfos(){
+	
+	$system_is_overloaded=system_is_overloaded();
+	if($system_is_overloaded){
+		$unix=new unix();
+		$unix->send_email_events("Overloaded system, Web filtering maintenance databases tasks aborted [writing Sites informations]", "Artica will wait a new better time...", "proxy");
+		die();
+	}	
+	
 	$sql="SELECT website FROM dansguardian_sitesinfos WHERE LENGTH(dbpath)=0";
 	$q=new mysql();
 	$results=$q->QUERY_SQL($sql,"artica_backup");	
@@ -415,6 +439,15 @@ function WriteCategoriesStatus($force=false){
 		
 		if($time<300){return;}
 	}
+	
+	$system_is_overloaded=system_is_overloaded();
+	if($system_is_overloaded){
+		$unix=new unix();
+		$unix->send_email_events("Overloaded system, Web filtering maintenance databases tasks aborted [writing categories status]", "Artica will wait a new better time...", "proxy");
+		die();
+	}		
+	
+	
 	
 	$sql="SELECT COUNT( zmd5 ) AS tcount, category FROM dansguardian_community_categories WHERE enabled =1 GROUP BY category ORDER BY tcount desc";	
 	$q=new mysql();

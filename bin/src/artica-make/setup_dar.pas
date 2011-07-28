@@ -85,7 +85,7 @@ begin
   install.INSTALL_STATUS('APP_DAR',50);
   install.INSTALL_PROGRESS('APP_DAR','{compiling}');
   SetCurrentDir(source_folder);
-  cmd:='./configure --build=i486-linux-gnu --prefix=/usr --includedir="\${prefix}/include" --mandir="\${prefix}/share/man"';
+  cmd:='./configure --prefix=/usr --includedir="\${prefix}/include" --mandir="\${prefix}/share/man"';
   cmd:=cmd + ' --infodir="\${prefix}/share/info" --sysconfdir=/etc --localstatedir=/var --libexecdir="\${prefix}/lib/dar"';
   cmd:=cmd + ' --disable-maintainer-mode --disable-dependency-tracking --srcdir=.  --disable-upx --enable-mode=64 ';
   fpsystem(cmd);

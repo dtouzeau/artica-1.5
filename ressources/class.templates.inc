@@ -2292,8 +2292,8 @@ function Paragraphe32($title,$text,$js,$img,$size=220){
 		$title=$re[1];
 		
 	}else{
-	$text="{{$text}}";
-	$title="{{$title}}";
+		if(!preg_match("#noacco:(.+)#",$text,$re)){$text="{{$text}}";}else{$text=$re[1];}
+		$title="{{$title}}";
 	}
 	
 		$id=md5($js);

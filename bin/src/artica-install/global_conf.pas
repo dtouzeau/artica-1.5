@@ -2932,6 +2932,12 @@ begin
     except
           logs.Syslogs('FATAL ERROR on CGI_ALL_APPLIS_INSTALLED after toolsversions.DRUSH7_VERSION()');
     end;
+     try
+       ArrayList.Add('[APP_MSKTUTIL] "'+toolsversions.APP_MSKTUTIL_VERSION()+'"');
+    except
+          logs.Syslogs('FATAL ERROR on CGI_ALL_APPLIS_INSTALLED after toolsversions.APP_MSKTUTIL_VERSION()');
+    end;
+
 
 
 

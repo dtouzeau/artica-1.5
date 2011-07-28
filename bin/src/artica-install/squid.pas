@@ -78,6 +78,7 @@ public
     function    icap_enabled():boolean;
     function    ntlm_enabled():boolean;
     function    cachemgr_path():string;
+    function    squid_kerb_auth_path():string;
 
     procedure   TAIL_START();
     procedure   TAIL_STOP();
@@ -802,6 +803,24 @@ if FileExists('/usr/local/lib/squid/ldap_auth') then exit('/usr/local/lib/squid/
 if FileExists('/usr/local/lib64/squid/ldap_auth') then exit('/usr/local/lib64/squid/ldap_auth');
 if FileExists('/opt/artica/libexec/squid_ldap_auth') then exit('/opt/artica/libexec/squid_ldap_auth');
 end;
+//#############################################################################
+function tsquid.squid_kerb_auth_path():string;
+begin
+if FileExists('/usr/lib/squid3/squid_kerb_auth') then exit('/usr/lib/squid3/squid_kerb_auth');
+if FileExists('/usr/lib64/squid3/squid_kerb_auth') then exit('/usr/lib64/squid3/squid_kerb_auth');
+if FileExists('/lib/squid3/squid_kerb_auth') then exit('/lib/squid3/squid_kerb_auth');
+if FileExists('/lib64/squid3/squid_kerb_auth') then exit('/lib64/squid3/squid_kerb_auth');
+if FileExists('/usr/lib/squid/squid_kerb_auth') then exit('/usr/lib/squid/squid_kerb_auth');
+if FileExists('/usr/lib/squid/squid_kerb_auth') then exit('/usr/lib/squid/squid_kerb_auth');
+if FileExists('/usr/lib64/squid/squid_kerb_auth') then exit('/usr/lib64/squid/squid_kerb_auth');
+if FileExists('/usr/lib64/squid/squid_kerb_auth') then exit('/usr/lib64/squid/squid_kerb_auth');
+if FileExists('/usr/local/lib/squid/squid_kerb_auth') then exit('/usr/local/lib/squid/squid_kerb_auth');
+if FileExists('/usr/local/lib64/squid/squid_kerb_auth') then exit('/usr/local/lib64/squid/squid_kerb_auth');
+if FileExists('/opt/artica/libexec/squid_kerb_auth') then exit('/opt/artica/libexec/squid_kerb_auth');
+end;
+//#############################################################################
+
+
 //#############################################################################
  function tsquid.cachemgr_path():string;
 begin

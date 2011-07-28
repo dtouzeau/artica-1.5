@@ -19,7 +19,9 @@ if(function_exists("posix_getuid")){
 if($GLOBALS["DEBUG_MEM"]){events("Memory: class.users.menus.inc -> ".round(((memory_get_usage()/1024)/1000),2) ." LOADED line:".__LINE__);}
 
 class usersMenus {
+
 	var $TreePage=array("domains.edit.group.php"=>true,"samba.index.php"=>true);
+	var $squid_kerb_auth_path=null;
 	var $ArchStruct=0;
 	var $menus;
 	var $main_left_menus=array();
@@ -466,6 +468,7 @@ class usersMenus {
 	var $TOMCAT_DIR="";
 	var $APACHE_MOD_TOMCAT=false;
 	var $OPENEMM_INSTALLED=false;
+	var $MSKTUTIL_INSTALLED=false;
 	
 	private function CheckIndexDefaults($_GLOBAL){
 		return $_GLOBAL;
@@ -869,8 +872,8 @@ class usersMenus {
 			$this->TOMCAT_DIR=$_GLOBAL["TOMCAT_DIR"];	
 			$this->APACHE_MOD_TOMCAT=$_GLOBAL["APACHE_MOD_TOMCAT"];
 			$this->OPENEMM_INSTALLED=$_GLOBAL["OPENEMM_INSTALLED"];
-
-			
+			$this->MSKTUTIL_INSTALLED=$_GLOBAL["MSKTUTIL_INSTALLED"];
+			if(isset($_GLOBAL["squid_kerb_auth_path"])){$this->squid_kerb_auth_path=$_GLOBAL["squid_kerb_auth_path"];}
 			
 			if(isset($_GLOBAL["ISCSI_CLIENT_INSTALLED"])){$this->ISCSI_CLIENT_INSTALLED=$_GLOBAL["ISCSI_CLIENT_INSTALLED"];}
 			if($this->LinuxDistriCode=="DEBIAN"){$this->AS_DEBIAN_FAMILY=true;}

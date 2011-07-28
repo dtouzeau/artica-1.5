@@ -29,7 +29,7 @@ public
       procedure kav4proxy_install();
       procedure sarg_install();
       function command_line_squid(path:string=''):string;
-
+      procedure msktutil();
      procedure  squidguard_install();
      function   command_line_squidguard():string;
 
@@ -49,6 +49,69 @@ end;
 procedure tsetup_squid.Free();
 begin
   libs.Free;
+end;
+//#########################################################################################
+
+procedure tsetup_squid.msktutil();
+var
+source_folder:string;
+logs:Tlogs;
+SYS:TSystem;
+squid:tsquid;
+localversion:string;
+remoteversion:string;
+remoteBinVersion:int64;
+LocalBinVersion:int64;
+CODE_NAME:string;
+begin
+
+ CODE_NAME:='APP_MSKUTIL';
+ squid:=tsquid.Create;
+ logs:=Tlogs.Create;
+ SYS:=Tsystem.Create();
+
+ install.INSTALL_PROGRESS(CODE_NAME,'{checking}');
+
+  if FileExists(SYS.LOCATE_GENERIC_BIN('msktutil')) then begin
+       install.INSTALL_STATUS(CODE_NAME,100);
+       install.INSTALL_PROGRESS(CODE_NAME,'{installed}');
+       exit;
+  end;
+ source_folder:=libs.COMPILE_GENERIC_APPS('msktutil');
+  if not DirectoryExists(source_folder) then begin
+     writeln('Install msktutil failed...');
+     install.INSTALL_STATUS(CODE_NAME,110);
+     install.INSTALL_PROGRESS(CODE_NAME,'{failed}');
+     exit;
+  end;
+  SetCurrentDir(source_folder);
+
+  install.INSTALL_PROGRESS(CODE_NAME,'{compiling}');
+  if FileExists(source_folder+'/msktutil_0.3.16-7.diff') then fpsystem('patch < '+source_folder+'/msktutil_0.3.16-7.diff');
+
+       cmd:='./configure --prefix=/usr --includedir="\${prefix}/include" --mandir="\${prefix}/share/man"';
+       cmd:=cmd + ' --infodir="\${prefix}/share/info" --sysconfdir=/etc --localstatedir=/var';
+       writeln(cmd);
+
+       fpsystem(cmd);
+       install.INSTALL_STATUS(CODE_NAME,60);
+       fpsystem('make');
+       install.INSTALL_PROGRESS(CODE_NAME,'{installing}');
+       fpsystem('make install');
+       install.INSTALL_STATUS(CODE_NAME,80);
+
+       if not FileExists(SYS.LOCATE_GENERIC_BIN('msktutil')) then begin
+          writeln('Compilation failed....');
+          writeln('');
+          install.INSTALL_STATUS(CODE_NAME,110);
+          install.INSTALL_PROGRESS(CODE_NAME,'{failed}');
+          exit;
+       end;
+
+  install.INSTALL_STATUS(CODE_NAME,100);
+  install.INSTALL_PROGRESS(CODE_NAME,'{installed}');
+  SetCurrentDir('/root');
+  writeln('success');
 end;
 //#########################################################################################
 procedure tsetup_squid.sarg_install();
@@ -121,6 +184,7 @@ ntlm_auth_helper:string;
 enable_ntlm_auth_helpers:string;
 enable_basic_auth_helpers:string;
 enable_negotiate_auth_helpers:string;
+squid_kerb_auth,negotiate,digest:string;
 begin
        if not DirectoryExists(path) then begin
           writeln('Some token needs to parse the source directory.');
@@ -170,6 +234,8 @@ begin
        cmd:=cmd+' --enable-wccpv2';
        cmd:=cmd+' --enable-arp-acl';
 
+       digest:=',digest';
+
        if FileExists(SYS.LOCATE_GENERIC_BIN('smbd')) then begin
           ntlm_auth:=',ntlm';
           enable_ntlm_auth_helpers:=' --enable-ntlm-auth-helpers=no_check';
@@ -178,8 +244,15 @@ begin
           enable_basic_auth_helpers:=',MSNT,multi-domain-NTLM,SMB ';
        end;
 
+       if FileExists(SYS.LOCATE_GENERIC_BIN('msktutil')) then begin
+         enable_negotiate_auth_helpers:=' --enable-negotiate-auth-helpers=squid_kerb_auth --enable-stacktraces';
+         digest:='';
+         negotiate:=',negotiate';
+       end;
 
-       cmd:=cmd+' --enable-auth=basic,digest'+ntlm_auth;
+
+
+       cmd:=cmd+' --enable-auth=basic'+digest+ntlm_auth+negotiate;
        cmd:=cmd+' --enable-digest-auth-helpers=ldap,password';
        cmd:=cmd+' --enable-external-acl-helpers=ip_user,ldap_group,unix_group,wbinfo_group';
        cmd:=cmd+' --enable-basic-auth-helpers=LDAP'+enable_basic_auth_helpers;
@@ -221,21 +294,29 @@ begin
  LocalBinVersion:=squid.SQUID_BIN_VERSION(localversion);
 
  if ParamStr(2)<>'--reconfigure' then begin
- writeln('Check versions...');
- remoteversion:=libs.COMPILE_VERSION_STRING('squid3');
- remoteBinVersion:=squid.SQUID_BIN_VERSION(remoteversion);
- writeln('Local version...........: ',LocalBinVersion,' as ',localversion);
- writeln('Remote version..........: ',remoteBinVersion,' as ',remoteversion);
+    writeln('Check versions...');
+    remoteversion:=libs.COMPILE_VERSION_STRING('squid3');
+    remoteBinVersion:=squid.SQUID_BIN_VERSION(remoteversion);
+    writeln('Local version...........: ',LocalBinVersion,' as ',localversion);
+    writeln('Remote version..........: ',remoteBinVersion,' as ',remoteversion);
  
- if LocalBinVersion>=remoteBinVersion then begin
-     writeln('No changes..........: Success');
-     install.INSTALL_PROGRESS('APP_SQUID','{installed}');
-     install.INSTALL_STATUS('APP_SQUID',100);
-     exit();
+    if LocalBinVersion>=remoteBinVersion then begin
+       writeln('No changes..........: Success');
+       install.INSTALL_PROGRESS('APP_SQUID','{installed}');
+       install.INSTALL_STATUS('APP_SQUID',100);
+       exit();
+    end;
  end;
- end;
+
+ msktutil();
+
  writeln('Prepare installation or upgrade....');
-          install.INSTALL_PROGRESS('APP_SQUID','{downloading}');
+ install.INSTALL_STATUS('APP_SQUID',30);
+ writeln('whereis ??? ->');
+ fpsystem('whereis gcc');
+ fpsystem('whereis make');
+
+ install.INSTALL_PROGRESS('APP_SQUID','{downloading}');
  
   source_folder:=libs.COMPILE_GENERIC_APPS('squid3');
   if not DirectoryExists(source_folder) then begin
@@ -247,11 +328,21 @@ begin
   install.INSTALL_PROGRESS('APP_SQUID','{compiling}');
   cmd:=command_line_squid(source_folder);
   fpsystem(cmd);
+
+
+  install.INSTALL_PROGRESS('APP_SQUID','{compiling}');
   install.INSTALL_STATUS('APP_SQUID',60);
   if FileExists('/usr/sbin/squid3') then fpsystem('/bin/rm -f /usr/sbin/squid3');
   if fileExists(SYS.LOCATE_GENERIC_BIN('squid3')) then fpsystem('/bin/rm -f '+SYS.LOCATE_GENERIC_BIN('squid3'));
-  fpsystem('make && make install');
+
+  install.INSTALL_PROGRESS('APP_SQUID','{compiling}');
   install.INSTALL_STATUS('APP_SQUID',80);
+  fpsystem('make');
+
+  install.INSTALL_PROGRESS('APP_SQUID','{installing}');
+  install.INSTALL_STATUS('APP_SQUID',80);
+  fpsystem('make install');
+
 
        if not FileExists(squid.SQUID_BIN_PATH()) then begin
           writeln('Compilation failed....');
@@ -272,8 +363,7 @@ begin
        end;
 
   install.INSTALL_PROGRESS('APP_SQUID','{installing}');
-  fpsystem('/bin/cp -rfv ' + source_folder + '/helpers/digest_auth/ldap/digest_ldap_auth /usr/lib/squid3/');
-
+  if FileExists(source_folder + '/helpers/digest_auth/ldap/digest_ldap_auth') then fpsystem('/bin/cp -rfv ' + source_folder + '/helpers/digest_auth/ldap/digest_ldap_auth /usr/lib/squid3/');
   logs.DeleteFile('/etc/artica-postfix/versions.cache');
   install.INSTALL_STATUS('APP_SQUID',90);
   fpsystem('/usr/share/artica-postfix/bin/process1 --force');

@@ -370,6 +370,8 @@ $sock=new sockets();
 
 	$users=new usersMenus();
 	$your_network=Paragraphe('folder-realyrules-64.png','{your_network}','{your_network_text}',"javascript:Loadjs('squid.popups.php?script=network')");
+	$APP_SQUIDKERAUTH=Paragraphe('wink3_bg.png','{APP_SQUIDKERAUTH}','{APP_SQUIDKERAUTH_TEXT}',"javascript:Loadjs('squid.adker.php')");
+	
 	$listen_port=Paragraphe('network-connection2.png','{listen_port}','{listen_port_text}',"javascript:Loadjs('squid.popups.php?script=listen_port')");
 	$dns_servers=Paragraphe('64-bind.png','{dns_servers}','{dns_servers_text}',"javascript:Loadjs('squid.popups.php?script=dns')");
 	$applysquid=applysquid_icon();
@@ -404,9 +406,13 @@ $sock=new sockets();
 	if($users->SARG_INSTALLED){
 		$sarg=Paragraphe('sarg-logo.png','{APP_SARG}','{display_product_events}',"javascript:Loadjs('sarg.php')","{display_product_events}");
 	}
-
-
- 	
+	
+	if(!$users->MSKTUTIL_INSTALLED){
+		$APP_SQUIDKERAUTH=Paragraphe('wink3_bg-grey.png','{APP_SQUIDKERAUTH}','{APP_SQUIDKERAUTH_TEXT}',"javascript:Loadjs('squid.adker.php')");
+	}
+	if(strlen($users->squid_kerb_auth_path)<2){
+		$APP_SQUIDKERAUTH=Paragraphe('wink3_bg-grey.png','{APP_SQUIDKERAUTH}','{APP_SQUIDKERAUTH_TEXT}',"javascript:Loadjs('squid.adker.php')");
+	}
 	
 	if($sock->GET_INFO("SquidActHasReverse")==1){
 		$listen_port=null;
@@ -429,6 +435,7 @@ if($sock->GET_INFO("SquidEnableProxyPac")<>1){$proxy_pac_rules=null;}
 	$tr=array();
 	$tr[]=$applysquid;
 	$tr[]=$your_network;
+	$tr[]=$APP_SQUIDKERAUTH;
 	$tr[]=$your_network_loupe;
 	$tr[]=$listen_port;
 	$tr[]=$dns_servers;

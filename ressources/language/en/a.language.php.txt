@@ -1851,4 +1851,17 @@ This option is usefull if you want to switch from PowerDNS to DNSMasq or the opp
 <mailerror_recipient>Mail Error recipient</mailerror_recipient>
 <amavis_enable_db>Enable use of BerkeleyDB/libdb (SNMP and nanny)</amavis_enable_db>
 <amavis_enable_global_cache>Enable use of libdb-based</amavis_enable_global_cache>
- 
+<APP_MSKTUTIL>keytab client for MS Active Directory</APP_MSKTUTIL>
+<clean_datas>Clean datas</clean_datas>
+<APP_SQUIDKERAUTH>Squid kerberos Autentication</APP_SQUIDKERAUTH>
+<APP_SQUIDKERAUTH_TEXT>Squid kerberos Autentication allow to integrate squid authentication with a Microsoft Active Directory server 2003/2008</APP_SQUIDKERAUTH_TEXT>
+ <APP_SQUIDKERAUTH_TEXT_REF>Your Windows user must be a member of the "SQUID_USERS" group in Active Directory.[br]
+Both Windows machines should be able to ping the Linux server by name (and vice versa), and you may need to run "ipconfig /flushdns" at times.[br]
+A reboot may help too, if you want to be really sure there's no cruft hanging around.[br]
+For Windows 2008 server you need to install [b]Hotfix 951191[/b].
+</APP_SQUIDKERAUTH_TEXT_REF>
+<EnableWindowsAuthentication>Enable authentication via MS Windows</EnableWindowsAuthentication>
+<WINDOWS_DNS_SUFFIX>Windows server DNS suffix</WINDOWS_DNS_SUFFIX>
+<WINDOWS_SERVER_NETBIOSNAME>Windows server netbiosname</WINDOWS_SERVER_NETBIOSNAME>
+<WINDOWS_SERVER_TYPE>Windows server type</WINDOWS_SERVER_TYPE>
+<WINDOWS_NAME_SERVICE_NOT_KNOWN>Unable to resolve Windows server hostname</WINDOWS_NAME_SERVICE_NOT_KNOWN>

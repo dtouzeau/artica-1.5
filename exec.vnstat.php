@@ -9,6 +9,11 @@ include_once(dirname(__FILE__).'/ressources/class.system.network.inc');
 	if(posix_getuid()<>0){die("Cannot be used in web server mode\n\n");}
 	if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["VERBOSE"]=true;}
 	if(preg_match("#--force#",implode(" ",$argv))){$GLOBALS["FORCE"]=true;}
+	
+	$system_is_overloaded=system_is_overloaded();
+	writelogs("System is overloaded, aborting...","MAIN",__FILE__,__LINE__);
+	if($system_is_overloaded){die();}	
+	
 
 if($argv[1]=='--build'){build();exit;}
 if($argv[1]=='--stats'){build_stats();exit;}

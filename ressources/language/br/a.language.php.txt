@@ -122,6 +122,8 @@ You have to define which directory to backup and the client hostname.[br]
 <amavis_bypass_servers_explain>This feature is only used if your server using postqueue filter mode.[br]
 When adding IP addresses here, these senders will not pass trough the content filter.[br] 
 For example, if you need to completly bypass outgoing messages, put here IP addresses of your mail server that able to send messages for outgoing transferts.</amavis_bypass_servers_explain>
+<amavis_enable_db>Enable use of BerkeleyDB/libdb (SNMP and nanny)</amavis_enable_db>
+<amavis_enable_global_cache>Enable use of libdb-based</amavis_enable_global_cache>
 <amavis_max_server_explain>
 This is the crucial performance parameter.[br] Too small and the
 machine is underutilized and there is a risk of using CPU by overload processes,
@@ -199,6 +201,7 @@ The logic is based on evaluation of SQL commands using a risk scoring matrix as 
 <APP_IPTACOUNT_EXPLAIN>TCP/IP Accounting allow you to obtain informations about traffic received,passed,transfered according rules</APP_IPTACOUNT_EXPLAIN>
 <APP_LXC>LXC containers</APP_LXC>
 <APP_LXC_TEXT>Create and manage Virtual Private servers with Linux Containers technology</APP_LXC_TEXT>
+<APP_MSKTUTIL>keytab client for MS Active Directory</APP_MSKTUTIL>
 <APP_NSCD>Name Service cache Daemon</APP_NSCD>
 <APP_OPENEMM>OpenEMM service</APP_OPENEMM>
 <APP_PDNS_INSTANCE>PowerDNS (Instance)</APP_PDNS_INSTANCE>
@@ -211,6 +214,13 @@ The logic is based on evaluation of SQL commands using a risk scoring matrix as 
 <APP_SNORT_ABOUT>Snort is an open source network intrusion prevention and detection system (IDS/IPS) developed by Sourcefire.[br]
 Combining the benefits of signature, protocol, and anomaly-based inspection, Snort is the most widely deployed 
 IDS/IPS technology worldwide</APP_SNORT_ABOUT>
+<APP_SQUIDKERAUTH>Squid kerberos Autentication</APP_SQUIDKERAUTH>
+<APP_SQUIDKERAUTH_TEXT>Squid kerberos Autentication allow to integrate squid authentication with a Microsoft Active Directory server 2003/2008</APP_SQUIDKERAUTH_TEXT>
+<APP_SQUIDKERAUTH_TEXT_REF>Your Windows user must be a member of the "SQUID_USERS" group in Active Directory.[br]
+Both Windows machines should be able to ping the Linux server by name (and vice versa), and you may need to run "ipconfig /flushdns" at times.[br]
+A reboot may help too, if you want to be really sure there's no cruft hanging around.[br]
+For Windows 2008 server you need to install [b]Hotfix 951191[/b].
+</APP_SQUIDKERAUTH_TEXT_REF>
 <APP_TOMCAT>Tomcat Web server</APP_TOMCAT>
 <APP_ZARAFA_INDEXER>Zarafa Indexer</APP_ZARAFA_INDEXER>
 <APP_Z_PUSH>Z-Push</APP_Z_PUSH>
@@ -373,6 +383,7 @@ domain.tld to match hosts width domain domain.tld
 <check_size_limit>check size limit</check_size_limit>
 <child_ttl>Time to live</child_ttl>
 <chroot>chroot</chroot>
+<clean_datas>Clean datas</clean_datas>
 <click_here>Click here</click_here>
 <clients>Clients</clients>
 <clients_restrictions>Clients restrictions</clients_restrictions>
@@ -644,6 +655,7 @@ It is useful in providing training to email users about company policies and gen
 <EnablePublicOrganizations_text>If checked, organization's administrator is able to allow public internet users to create accounts with a register form</EnablePublicOrganizations_text>
 <EnableRebootAfterUpgrade>Reboot system after system upgrade task</EnableRebootAfterUpgrade>
 <EnableSpamAssassinFreeMail_explain>detect email addresses using free webmail services</EnableSpamAssassinFreeMail_explain>
+<EnableWindowsAuthentication>Enable authentication via MS Windows</EnableWindowsAuthentication>
 <enable_amavis_watchdog>Enable watchdog</enable_amavis_watchdog>
 <ENABLE_ARTICA_SMTP_STATS>Enable SMTP statistics engine</ENABLE_ARTICA_SMTP_STATS>
 <enable_authentication>Enable authentication</enable_authentication>
@@ -944,6 +956,7 @@ Per default all values are set to 1024
 <macro_build_lvm_explain>Create a full LVM partition on this disk that allow you to create LVM disks after[br]This will erase datas and create one partition</macro_build_lvm_explain>
 <mailbox_infos>Mailbox informations</mailbox_infos>
 <mailbox_zarafa_infos_text>Display technical informations about this Zarafa mailbox</mailbox_zarafa_infos_text>
+<mailerror_recipient>Mail Error recipient</mailerror_recipient>
 <mails>eMails</mails>
 <mailss>Message(s)</mailss>
 <maindomains_explain>Here it is the list of officials domains allowed by organizations.[br]
@@ -1066,6 +1079,10 @@ Use relayed domain instead until there is no mailbox server installed.[br]
 <Offline_Uncorrectable>Off-line Scan Uncorrectable Count</Offline_Uncorrectable>
 <Offline_Uncorrectable_text>Quantity of uncorrected errors</Offline_Uncorrectable_text>
 <only_use_this>Only use this</only_use_this>
+<OPENEMM_ABOUT>OpenEMM is a feature-rich web-based enterprise application for email marketing,
+ newsletters and service mails (transaction mails and event or time triggered mails).[br]
+ OpenEMM offers a great user interface, sophisticated bounce management, link tracking, lots of graphical realtime statistics,
+  a CMS module and a scripting feature to implement individual tasks.</OPENEMM_ABOUT>
 <OPENEMM_INSTALLED_ENABLED_FEATURE_DISABLED>OpenEMM service is installed and enabled. It is incompatible to run 2 tomcat server is a single server.[br]If you need to use this feature, disable OpenEMM service.</OPENEMM_INSTALLED_ENABLED_FEATURE_DISABLED>
 <OpenVPNRemotePort>OpenVPN server listen port</OpenVPNRemotePort>
 <OPENVPN_APPLY_CONFIG>Build VPN parameters</OPENVPN_APPLY_CONFIG>
@@ -1466,6 +1483,7 @@ click on the link below
 </sendmail_request_form>
 <server_time2>System clock</server_time2>
 <server_time2_text>Modify manually the system clock</server_time2_text>
+<server_url>Server URL</server_url>
 <service_informations>Service informations</service_informations>
 <service_parameters>Service Parameters</service_parameters>
 <set_a_score>Set a score</set_a_score>
@@ -1767,7 +1785,11 @@ You can set patterns in this way :[br]
 <whitelist_global_explain>This section disbale content filters about domains listed here.[br]This is a global white list that did not perform recipient checks.[br]
 So domains here will allow senders to pass trough filters without checking any recipient</whitelist_global_explain>
 <winbind_user_password>winbind user password</winbind_user_password>
+<WINDOWS_DNS_SUFFIX>Windows server DNS suffix</WINDOWS_DNS_SUFFIX>
+<WINDOWS_NAME_SERVICE_NOT_KNOWN>Unable to resolve Windows server hostname</WINDOWS_NAME_SERVICE_NOT_KNOWN>
 <windows_network_share>Windows network share</windows_network_share>
+<WINDOWS_SERVER_NETBIOSNAME>Windows server netbiosname</WINDOWS_SERVER_NETBIOSNAME>
+<WINDOWS_SERVER_TYPE>Windows server type</WINDOWS_SERVER_TYPE>
 <wins_server>WINS server</wins_server>
 <WIZARD_BACKUP_AUTOMOUNT_STORAGE_EXPLAIN>Select the programmed mouted maps you had set in the Automount center</WIZARD_BACKUP_AUTOMOUNT_STORAGE_EXPLAIN>
 <WIZARD_BACKUP_LOCAL_STORAGE_EXPLAIN>Task will store backup container on a specified directory.[br]Give here the local directory that will be used.</WIZARD_BACKUP_LOCAL_STORAGE_EXPLAIN>

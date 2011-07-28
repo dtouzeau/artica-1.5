@@ -358,6 +358,13 @@ function ApplyConfig(){
 	$conf=$squid->BuildSquidConf();
 	@file_put_contents("/etc/artica-postfix/settings/Daemons/GlobalSquidConf",$conf);
 	@file_put_contents($SQUID_CONFIG_PATH,$conf);
+	
+	if($squid->EnableKerbAuth){
+		shell_exec($unix->LOCATE_PHP5_BIN(). " ". dirname(__FILE__)."/exec.kerbauth.php --build");
+		
+	}
+			
+	
 	squidclamav();
 	wrapzap();
 	certificate_generate();

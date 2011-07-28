@@ -29,6 +29,8 @@ if(isset($_GET["mysqld-perso"])){mysqld_perso();exit;}
 if(isset($_GET["mysqld-perso-save"])){mysqld_perso_save();exit;}
 if(isset($_GET["openemm-status"])){openemm_status();exit;}
 if(isset($_GET["restart-openemm"])){openemm_restart();exit;}
+if(isset($_GET["kerbauth"])){kerbauth();exit;}
+
 
 
 while (list ($num, $line) = each ($_GET)){$f[]="$num=$line";}
@@ -122,6 +124,14 @@ function stop_nscd(){
 	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);		
 }
 
+function kerbauth(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim("$nohup ".$unix->LOCATE_PHP5_BIN(). " /usr/share/artica-postfix/exec.kerbauth.php --build");
+	shell_exec($cmd);
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);
+
+}
 
 function openvpn(){
 	$unix=new unix();

@@ -71,6 +71,7 @@ function AddPointerDc(){
 	if(!$ldap->Ldap_add_mod($dn,$upd)){echo $ldap->ldap_last_error;return;}
 	$sock=new sockets();
 	$sock->getFrameWork("cmd.php?artica-meta-export-dns=yes");
+	restart_dnsmasq();
 	
 }
 function DelPointerDC(){
@@ -80,6 +81,7 @@ function DelPointerDC(){
 	if(!$ldap->Ldap_del_mod($dn,$upd)){echo $ldap->ldap_last_error;return;}
 	$sock=new sockets();
 	$sock->getFrameWork("cmd.php?artica-meta-export-dns=yes");		
+	restart_dnsmasq();
 }
 
 
@@ -114,7 +116,8 @@ function DelDNSEntry(){
 	}
 	
 	$sock=new sockets();
-	$sock->getFrameWork("cmd.php?artica-meta-export-dns=yes");			
+	$sock->getFrameWork("cmd.php?artica-meta-export-dns=yes");	
+	restart_dnsmasq();		
 	
 }
 
@@ -135,7 +138,8 @@ function AddDNSEntry(){
 	$pdns=new pdns($DnsZoneName);
 	if(!$pdns->EditIPName($computername,$ComputerIP,"A",null)){echo $pdns->last_error;return;}
 	$sock=new sockets();
-	$sock->getFrameWork("cmd.php?artica-meta-export-dns=yes");			
+	$sock->getFrameWork("cmd.php?artica-meta-export-dns=yes");	
+	restart_dnsmasq();		
 	
 }
 
@@ -1407,9 +1411,21 @@ function popup_mx_delete(){
 	$array=unserialize(base64_decode($_GET["delete-mx-record"]));
 	$ldap=new clladp();
 	$upd["mxrecord"]=$array["entry"];
-	if(!$ldap->Ldap_del_mod($array["dn"],$upd)){
-		echo $ldap->ldap_last_error;
-	}
+	if(!$ldap->Ldap_del_mod($array["dn"],$upd)){echo $ldap->ldap_last_error;return ;}
+	restart_dnsmasq();
+	
+}
+function restart_dnsmasq(){
+	$user=new usersMenus();
+	if(!$user->dnsmasq_installed){return;}
+	$EnableDNSMASQLDAPDB=$sock->GET_INFO("EnableDNSMASQLDAPDB");
+	if(!is_numeric($EnableDNSMASQLDAPDB)){$EnableDNSMASQLDAPDB=0;}	
+	if($EnableDNSMASQLDAPDB==0){return null;}
+	include_once(dirname(__FILE__)."/ressources/class.dnsmasq.inc");
+	$dnsmasq=new dnsmasq();
+	$dnsmasq->SaveConfToServer();
+
+	
 }
 
 function popup_mx_save(){
@@ -1418,9 +1434,8 @@ function popup_mx_save(){
 	$ldap=new clladp();
 	$upd=array();
 	$upd["mxrecord"]="{$_GET["score"]} {$_GET["host"]}";
-	if(!$ldap->Ldap_add_mod($dn,$upd)){
-		echo $ldap->ldap_last_error;
-	}
+	if(!$ldap->Ldap_add_mod($dn,$upd)){echo $ldap->ldap_last_error;return;}
+	restart_dnsmasq();
 }
 
 function popup_ns_save(){
@@ -1429,20 +1444,17 @@ function popup_ns_save(){
 	$ldap=new clladp();
 	$upd=array();
 	$upd["nsrecord"]="{$_GET["host"]}";
-	if(!$ldap->Ldap_add_mod($dn,$upd)){
-		echo $ldap->ldap_last_error;
-	}	
+	if(!$ldap->Ldap_add_mod($dn,$upd)){echo $ldap->ldap_last_error;return;}
+	restart_dnsmasq();	
 }
 
 function popup_arecord_edit(){
 	$dn=$_GET["dn"];
-	
 	$ldap=new clladp();
 	$upd=array();
 	$upd["aRecord"][0]="{$_GET["aRecord-soa"]}";
-	if($ldap->Ldap_modify($dn,$upd)){
-		echo $ldap->ldap_last_error;
-	}
+	if($ldap->Ldap_modify($dn,$upd)){echo $ldap->ldap_last_error;return;}
+	restart_dnsmasq();
 }
 
 //dNSTTL aRecord nSRecord cNAMERecord sOARecord pTRRecord hInfoRecord mXRecord tXTRecord rPRecord aFSDBRecord KeyRecord aAAARecord lOCRecord sRVRecord nAPTRRecord kXRecord certRecord dSRecord sSHFPRecord iPSecKeyRecord rRSIGRecord nSECRecord dNSKeyRecord dHCIDRecord sPFRecord

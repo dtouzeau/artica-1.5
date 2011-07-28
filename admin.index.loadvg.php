@@ -12,7 +12,7 @@ if(isset($_GET["tabs"])){tabs();exit;}
 if(isset($_GET["hour"])){hour();exit;}
 if(isset($_GET["today"])){today();exit;}
 if(isset($_GET["week"])){week();exit;}
-
+if(isset($_POST["LoadAvgClean"])){LoadAvgClean();exit;}
 
 function js(){
 	
@@ -91,7 +91,8 @@ $sql="SELECT AVG( `load` ) AS sload, DATE_FORMAT( stime, '%i' ) AS ttime FROM `l
 	$count=mysql_num_rows($results);
 	
 	if(mysql_num_rows($results)==0){
-		writelogs("mysql return no rows",__FUNCTION__,__FILE__,__LINE__);
+		$allrows=$q->COUNT_ROWS('loadavg', "artica_events");
+		writelogs("mysql return no rows from a table of $allrows rows ",__FUNCTION__,__FILE__,__LINE__);
 		return;
 	}	
 	
@@ -206,7 +207,29 @@ $sql="SELECT AVG( `load` ) AS sload, DATE_FORMAT( stime, '%i' ) AS ttime FROM `l
 	
 	$gp->line_green();
 	
-	echo "<img src='ressources/logs/loadavg-hour.png'></div>";	
+	echo "
+	<div id='loadavg-clean'>
+	<img src='ressources/logs/loadavg-hour.png'></div></div>
+	<div style='text-align:right'><hr>".button("{clean_datas}","LoadAvgClean()")."</div>
+	<script>
+	
+	var x_LoadAvgClean=function(obj){
+      var tempvalue=obj.responseText;
+	  if(tempvalue.length>0){alert(tempvalue);}
+      YahooWin3Hide();
+      document.getElementById('loadavggraph').innerHTML='';
+      }	
+	
+	function LoadAvgClean(){
+		var XHR = new XHRConnection();
+		XHR.appendData('LoadAvgClean','yes');
+		
+		AnimateDiv('loadavg-clean');
+		XHR.sendAndLoad('$page', 'POST',x_LoadAvgClean);		
+		}	
+	
+	
+	";	
 	
 	
 }
@@ -343,6 +366,13 @@ $sql="SELECT AVG( `load` ) AS sload, DATE_FORMAT( stime, '%d' ) AS ttime FROM `l
 	echo "<img src='ressources/logs/loadavg-7d.png'></div>";	
 	
 	
+	
+}
+
+function LoadAvgClean(){
+	$q=new mysql();
+	$q->DELETE_TABLE("loadavg", "artica_events");
+	$q->BuildTables();
 	
 }
 

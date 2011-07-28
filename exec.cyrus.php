@@ -43,6 +43,9 @@ function kinit_config(){
 	
 	
 	$sock=new sockets();
+	$EnableKerbAuth=$sock->GET_INFO("EnableKerbAuth");
+	if(!is_numeric("$EnableKerbAuth")){$EnableKerbAuth=0;}	
+	if($EnableKerbAuth==1){echo "Enable Kerberos authentification is enabled, Aborting\n";}
 	$CyrusToAD=$sock->GET_INFO("CyrusToAD");
 	$EnableSambaActiveDirectory=$sock->GET_INFO("EnableSambaActiveDirectory");
 	if(!is_numeric($EnableSambaActiveDirectory)){$EnableSambaActiveDirectory=0;}

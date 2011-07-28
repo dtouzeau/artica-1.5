@@ -1,6 +1,8 @@
 <?php
-
+define("alse",null);
 class settings_inc {
+
+	var $squid_kerb_auth_path=null;
 	var $TreePage=array("domains.edit.group.php"=>true,"samba.index.php"=>true);
 	var $ArchStruct=0;
 	var $menus;
@@ -444,6 +446,7 @@ class settings_inc {
 	var $APACHE_MOD_TOMCAT=false;
 	var $OPENEMM_INSTALLED=false;
 	var $OPENEMM_VERSION="";
+	var $MSKTUTIL_INSTALLED=false;
 	private function CheckIndexDefaults($_GLOBAL){
 		return $_GLOBAL;
 		foreach($this as $key => $value) {
@@ -479,7 +482,7 @@ class settings_inc {
 					die("Unable to stat $settings");
 			}
 
-			
+			if(isset($_GLOBAL["squid_kerb_auth_path"])){$this->squid_kerb_auth_path=$_GLOBAL["squid_kerb_auth_path"];}
 			if(isset($_GLOBAL["NSCD_INSTALLED"])){$this->NSCD_INSTALLED=$_GLOBAL["NSCD_INSTALLED"];}
 			$this->cyrus_ldap_admin_password=$_GLOBAL["cyrus_ldap_admin_password"];
 			if(isset($_GLOBAL["AutomaticConfig"])){$this->AutomaticConfig=$_GLOBAL["AutomaticConfig"];}
@@ -840,6 +843,8 @@ class settings_inc {
 			$this->TOMCAT_DIR=$_GLOBAL["TOMCAT_DIR"];
 			$this->APACHE_MOD_TOMCAT=$_GLOBAL["APACHE_MOD_TOMCAT"];
 			$this->OPENEMM_VERSION=$_GLOBAL["OPENEMM_VERSION"];
+			$this->MSKTUTIL_INSTALLED=$_GLOBAL["MSKTUTIL_INSTALLED"];
+			
 			
 			if(isset($_GLOBAL["deduplication_installed"])){$this->deduplication_installed=$_GLOBAL["deduplication_installed"];}
 			$this->EnableManageUsersTroughActiveDirectory=$_GLOBAL["EnableManageUsersTroughActiveDirectory"];

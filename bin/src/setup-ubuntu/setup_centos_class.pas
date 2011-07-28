@@ -1023,6 +1023,15 @@ f:='';
 l:=TstringList.Create;
 l.Add('squid');
 l.Add('awstats');
+l.Add('cyrus-sasl-gssapi');
+l.Add('cvs');
+l.Add('autoconf');
+l.Add('automake');
+l.Add('openldap');
+l.Add('openldap-devel');
+l.Add('krb5-workstation');
+l.Add('krb5-devel');
+l.Add('gcc-c++');
 
 for i:=0 to l.Count-1 do begin
      if not libs.RPM_is_application_installed(l.Strings[i]) then begin

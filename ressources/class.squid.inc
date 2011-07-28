@@ -1525,7 +1525,7 @@ class squidbee{
 	var $EnableChangeRequestSize=0;
 	var $allow_squid_localhost=0;
 	var $ignore_expect_100=0;
-	
+	var $EnableKerbAuth=0;
 	
 	function squidbee(){
 		if(posix_getuid()==0){$this->ASROOT=true;}
@@ -1545,7 +1545,8 @@ class squidbee{
 		$this->enable_UfdbGuard=$sock->GET_INFO("EnableUfdbGuard");
 		$this->enable_adzapper=$sock->GET_INFO("EnableAdZapper");
 		$this->enable_squidclamav=$sock->GET_INFO("EnableSquidClamav");
-		
+		$this->EnableKerbAuth=$sock->GET_INFO("EnableKerbAuth");
+		if(!is_numeric($this->EnableKerbAuth)){$this->EnableKerbAuth=0;}
 
 		
 		$this->CheckVersion();
@@ -2055,7 +2056,7 @@ public function SquidGuardDatabasesStatus($all=0){
 		private function ldap_auth_conf(){
 			if(!is_array($this->global_conf_array)){$this->ParseConfig();}
 			if($GLOBALS["VERBOSE"]){if(!$this->ASROOT){$GLOBALS["VERBOSE"]=false;}}
-			
+			if($this->EnableKerbAuth==1){return "#--------- LDAP AUTH settings\n#squid_kerb_auth enabled\n";}
 			if($GLOBALS["VERBOSE"]){
 				echo "DEBUG : LDAP_AUTH:$this->LDAP_AUTH\n";
 				echo "DEBUG : LDAP_EXTERNAL_AUTH:$this->LDAP_EXTERNAL_AUTH\n";
@@ -2378,9 +2379,38 @@ public function SquidGuardDatabasesStatus($all=0){
 			
 		}
 		
+		private function krb_auth_conf(){
+			if(!$this->ASROOT){return;}
+			$unix=new unix();
+			$hostname_bin=$unix->find_program("hostname");
+			exec("$hostname_bin -f 2>&1",$results);
+			$myFullHostname=trim(@implode("", $results));
+			if($this->EnableKerbAuth==0){return null;}
+			$users=new usersMenus();
+			$binary=$users->squid_kerb_auth_path;
+			if(strlen($binary)<2){
+				return "#No squid_kerb_auth in compilation !\n";
+			}
+			$conf[]= "#--------- kerberos AUTH settings myhostname $myFullHostname\n";
+			$conf[]= "auth_param negotiate program $users->squid_kerb_auth_path -d -s HTTP/$myFullHostname";
+			$conf[]= "auth_param negotiate children 10";
+			$conf[]= "auth_param negotiate keep_alive on";
+			$conf[]= "auth_param basic realm Squid proxy-caching web server";
+			$conf[]= "authenticate_cache_garbage_interval 10 seconds";
+			$conf[]= "authenticate_ttl 0 hour";
+			$conf[]= "#--------- kerberos ACL settings";
+			$conf[]= "acl AUTHENTICATED proxy_auth REQUIRED";
+			$conf[]=$this->WHITELISTED_AUTH();	
+			$conf[]=$this->WHITELISTED_AUTH_BROWSERS();	
+			$conf[]="";	
+			return @implode("\n", $conf);		
+		}
+		
+		
 		private function ntlm_auth_conf(){
 			// voir permissions on /var/lib/samba/winbindd_privileged
 			// http://www.cyberciti.biz/faq/squid-ntlm-authentication-configuration-howto/
+			if($this->EnableKerbAuth==1){return "#--------- NTLM AUTH settings\n#squid_kerb_auth enabled\n";}
 			$users=new usersMenus();
 			if($this->NTLM_AUTH==0){return null;}
 			if(!$users->SQUID_NTLM_ENABLED){
@@ -2716,6 +2746,7 @@ function BuildSquidConf(){
 		$conf=$conf . "authenticate_ip_ttl 60 seconds\n";
 		$conf=$conf . $this->ntlm_auth_conf();
 		$conf=$conf . $this->ldap_auth_conf();
+		$conf=$conf . $this->krb_auth_conf();
 		$conf=$conf . "#--------- TWEEKS PERFORMANCES\n";
 		$conf=$conf . "# http://blog.last.fm/2007/08/30/squid-optimization-guide\n";
 		$conf=$conf . "memory_pools off\n";
@@ -2815,7 +2846,15 @@ function BuildSquidConf(){
 				@mkdir("/var/cache/samba/winbindd_privileged",0755,true);
 				if(posix_getuid()==0){shell_exec("chgrp squid /var/cache/samba/winbindd_privileged/");}
 				$office_network=null;
+		}	
+
+		if($this->EnableKerbAuth==1){
+				$acl_access_time=$http_access_time;
+				$GLOBALS["HTTP_ACCESS"]["LDAP_AUTH"]="http_access allow AUTHENTICATED\n";
+				$office_network=null;
 		}		
+		
+		
 		if($SquidActHasReverse<>1){
 			if($this->enable_dansguardian==1){
 				$office_network=null;

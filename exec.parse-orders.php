@@ -261,7 +261,7 @@ if(!is_file($pgrep)){return;}
 }
 
 function ParseLocalQueue(){
-	
+		if(systemMaxOverloaded()){events("[OVERLOAD]:: running in max overload mode, aborting queue");return;}
 		$EnableArticaBackground=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("EnableArticaBackground");
 		if(!is_numeric($EnableArticaBackground)){$EnableArticaBackground=1;}	
 	
@@ -355,14 +355,24 @@ if(is_file("/etc/artica-postfix/background")){
 	if($GLOBALS["TOTAL_MEMORY_MB"]<400){
 		events("Lower config switch to 2 max processes...mem:{$GLOBALS["TOTAL_MEMORY_MB"]}MB");
 		$count_max=2;
-	}	
+	}
+
+	while (list ($num, $cmd) = each ($orders) ){
+		if(trim($cmd)==null){continue;}
+		if(preg_match("#artica-make#", $cmd)){
+			events("artica-make detected \"$cmd\", execute this task first...");
+			shell_exec("$nice$cmd$devnull");
+			unset($orders[$num]);
+		}
+	}
+	reset($orders);
 	
 	
 	events("Orders:$orders_number Loaded instances:$MemoryInstances Max to order:$count_max");
 	
 	while (list ($num, $cmd) = each ($orders) ){
 		if(trim($cmd)==null){continue;}
-		if(systemMaxOverloaded()){events("[OVERLOAD]:: running in max overload mode, aborting queue");break;}
+		
 		$devnull=" >/dev/null 2>&1";
 		if(strpos($cmd,">")>0){$devnull=null;}
 

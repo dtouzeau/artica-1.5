@@ -592,6 +592,15 @@ begin
          halt(0);
    end;
 
+    if ParamStr(1)='APP_MSKTUTIL' then begin
+       fpsystem('/usr/share/artica-postfix/bin/setup-ubuntu --check-squid');
+       squid:=tsetup_squid.Create;
+       squid.msktutil();
+       zinstall.EMPTY_CACHE();
+       halt(0);
+    end;
+
+
 
    if ParamStr(1)='APP_SQUIDGUARD' then begin
          squid:=tsetup_squid.Create;
@@ -1722,6 +1731,7 @@ begin
    writeln('APP_SQUID................: install SQUID3 with ICAP enabled');
    writeln('APP_SQUID................:  --reconfigure to recompile');
    writeln('APP_SQUID................:  --configure to display only configure directives');
+   writeln('APP_MSKTUTIL.............:  install keytab client for Microsoft Active Directory');
    writeln('');
    writeln('APP_SQUIDGUARD...........: install SquidGuard');
    writeln('APP_SQUIDGUARD...........:  --reconfigure to recompile (not implemented)');

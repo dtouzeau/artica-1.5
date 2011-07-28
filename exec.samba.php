@@ -604,6 +604,17 @@ function kinit(){
 function activedirectory(){
 	
 	$sock=new sockets();
+	$EnableKerbAuth=$sock->GET_INFO("EnableKerbAuth");
+	if(!is_numeric("$EnableKerbAuth")){$EnableKerbAuth=0;}	
+	if($EnableKerbAuth==1){
+		$verbosed=null;
+		if($GLOBALS["VERBOSE"]){$verbosed=" --verbose";}
+		$unix=new unix();
+		$cmd=$unix->LOCATE_PHP5_BIN()." ". dirname(__FILE__)."/exec.kerbauth.php --build$verbosed";
+		echo "Enable Kerberos authentification is enabled, executing kerberos auth\n";
+		shell_exec($cmd);
+	
+	}
 	$config=unserialize(base64_decode($sock->GET_INFO("SambaAdInfos")));
 	$domain=strtoupper($config["ADDOMAIN"]);	
 	$server=strtoupper($config["ADSERVER"]);
@@ -695,6 +706,7 @@ function activedirectory_ping(){
 	exec("$cmd",$kinit_results);
 	while (list ($num, $ligne) = each ($kinit_results) ){
 		if(preg_match("#Clock skew too great while getting initial credentials#", $ligne)){$unix->send_email_events("Active Directory connection clock issue", "kinit program claim\n$ligne\n$clock_explain", "system");}
+		if(preg_match("#Client not found in Kerberos database while getting initial credentials#", $ligne)){$unix->send_email_events("Active Directory authentification issue", "kinit program claim\n$ligne\n", "system");}
 		if($GLOBALS["VERBOSE"]){echo "kinit: $ligne\n";}
 	}	
 	

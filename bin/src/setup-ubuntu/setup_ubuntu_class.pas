@@ -804,7 +804,7 @@ l.add('php5-curl');
 l.add('php5-sqlite');
 l.Add('php-pear');
 l.add('php5-dev'); // To compile PHP5
-l.add('libssh2-php');
+
 
 
 l.add('libmodule-build-perl');
@@ -922,8 +922,7 @@ l.add('libiodbc2-dev');
 l.add('libslp-dev');
 l.add('libperl-dev');
 l.add('python-mysqldb');
-L.add('xtables-addons-modules');
-L.add('xtables-addons-source');
+
 
 
 
@@ -1108,6 +1107,9 @@ if distri.DISTRINAME_CODE='DEBIAN' then begin
         l.add('libboost-system1.42.0');
         l.add('libicu44');
         l.add('libreadline6-dev');
+        l.add('libssh2-php');
+        L.add('xtables-addons-modules');
+        L.add('xtables-addons-source');
 
 
 
@@ -1255,6 +1257,9 @@ if distri.DISTRINAME_CODE='UBUNTU' then begin
        l.add('libjs-excanvas');
        l.add('libjs-mochikit');
        l.add('libapache-mod-security');
+       l.add('libssh2-php');
+       L.add('xtables-addons-modules');
+       L.add('xtables-addons-source');
 
     end;
 
@@ -1272,6 +1277,7 @@ if distri.DISTRINAME_CODE='UBUNTU' then begin
        l.add('libboost-filesystem1.40.0');
        l.add('libboost-system1.40.0');
        l.add('libicu42');
+
     end;
 
 
@@ -1930,6 +1936,18 @@ f:='';
 l:=TstringList.Create;
 l.Add('squid3');
 l.Add('squidclient');
+l.Add('libldap2-dev');
+l.Add('libkrb5-dev');
+l.Add('libsasl2-dev');
+l.Add('libsasl2-modules-gssapi-heimdal');
+l.Add('libroken18-heimdal');
+l.Add('libasn1-8-heimdal');
+//l.Add('libx509-4-heimdal'); no exists
+l.Add('libheimntlm0-heimdal');
+l.Add('libgssapi2-heimdal');
+l.Add('krb5-clients');
+l.Add('krb5-config');
+l.Add('krb5-user');
 
 
 if distri.DISTRINAME_CODE='UBUNTU' then begin

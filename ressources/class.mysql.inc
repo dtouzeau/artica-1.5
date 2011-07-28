@@ -956,6 +956,11 @@ function BackupTable($tablename,$database,$addons=array(),$zmd5=false,$endquery=
 		$results=@mysql_query("DROP DATABASE `$database`");	
 	}
 	
+	FUNCTION DELETE_TABLE($table,$database){
+		if(!function_exists("mysql_connect")){return 0;}
+		$this->QUERY_SQL("DROP TABLE `$table`",$database);
+	}	
+	
 	
 	FUNCTION COUNT_ROWS($table,$database){
 		if(!function_exists("mysql_connect")){return 0;}

@@ -48,7 +48,7 @@ public
     function     AMANDA_VERSION():string;
     function     DRUPAL7_VERSION():string;
     function     DRUSH7_VERSION():string;
-
+    function     APP_MSKTUTIL_VERSION():string;
 
 
 END;
@@ -867,6 +867,46 @@ begin
   RegExpr.free;
   l.free;
   SYS.SET_CACHE_VERSION('AMANDA_VERSION',result);
+
+end;
+//########################################################################################
+function ttoolsversions.APP_MSKTUTIL_VERSION():string;
+ var
+    RegExpr:TRegExpr;
+    filetemp:string;
+    binpath:string;
+    l:TstringList;
+    i:integer;
+
+begin
+  SYS:=Tsystem.Create();
+  logs:=Tlogs.Create;
+
+  binpath:=SYS.LOCATE_GENERIC_BIN('msktutil');
+
+     if not FileExists(binpath) then begin
+        logs.Debuglogs('ttoolsversions.APP_MSKTUTIL_VERSION():: not installed');
+        exit;
+     end;
+  filetemp:=logs.FILE_TEMP();
+  result:=SYS.GET_CACHE_VERSION('APP_MSKTUTIL');
+  if length(result)>2 then exit;
+  fpsystem(binpath+' --version >'+filetemp +' 2>&1');
+  RegExpr:=TRegExpr.Create;
+  RegExpr.Expression:='version.+?([0-9\.]+)';
+  l:=TstringList.Create;
+  L.LoadFromFile(filetemp);
+  for i:=0 to l.Count-1 do begin
+   if RegExpr.Exec(l.Strings[i]) then begin
+      result:=RegExpr.Match[1];
+      break;
+   end else begin
+      logs.Debuglogs('ttoolsversions.APP_MSKTUTIL_VERSION():: Not found "'+l.Strings[i]+'"');
+   end;
+  end;
+  RegExpr.free;
+  l.free;
+  SYS.SET_CACHE_VERSION('APP_MSKTUTIL',result);
 
 end;
 //########################################################################################

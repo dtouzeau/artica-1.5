@@ -8,6 +8,15 @@ $GLOBALS["ADDLOG"]="/var/log/artica-postfix/".basename(__FILE__).".log";
 $users=new usersMenus();
 if(!$users->SQUID_INSTALLED){die();}
 $file="/usr/share/artica-postfix/ressources/databases/UserAgents.txt";
+
+	$system_is_overloaded=system_is_overloaded();
+	if($system_is_overloaded){
+		$unix=new unix();
+		$unix->send_email_events("Overloaded system, UserAgents maintenance table task aborted", "Artica will wait a new better time...", "proxy");
+		die();
+	}
+
+
 if(!is_file($file)){die();}
 $pidfile="/etc/artica-postfix/".basename(__FILE__).".pid";
 $unix=new unix();
