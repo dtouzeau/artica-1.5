@@ -254,8 +254,11 @@ if ParamStr(1)='--change-initd' then  begin
    halt(0);
 end;
 
-
-
+if Paramstr(1)='--pure-ftp-reload' then begin
+   zpureftpd:=Tpureftpd.Create;
+   zpureftpd.PURE_FTPD_RELOAD();
+   halt(0);
+end;
 
 
 

@@ -49,6 +49,7 @@ function tabs(){
 	$array["popup"]='{mysql_settings}';
 	$array["members"]='{mysql_users}';
 	$array["ssl"]='{ssl}';
+	$array["globals"]='{globals_values}';
 	
 	
 	
@@ -65,6 +66,11 @@ function tabs(){
 		if($num=="ssl"){
 			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"system.mysql.ssl.php\"><span>$ligne</span></a></li>\n");
 			continue;
+		}
+
+		if($num=="globals"){
+			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"system.mysql.globals.php\"><span>$ligne</span></a></li>\n");
+			continue;
 		}		
 		
 		$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"$page?$num=yes\"><span>$ligne</span></a></li>\n");
@@ -72,7 +78,7 @@ function tabs(){
 	
 	
 	echo "
-	<div id=main_config_mysql style='width:100%;height:730px;overflow:auto'>
+	<div id=main_config_mysql style='width:100%;height:750px;overflow:auto'>
 		<ul>". implode("\n",$html)."</ul>
 	</div>
 		<script>
@@ -119,7 +125,7 @@ function popup(){
 		$tr[]=$mysql_benchmark;
 		$tr[]=$mysql_audit;
 
-	$tables[]="<table style='width:750px'><tr>";
+	$tables[]="<table style='width:500px'><tr>";
 	$t=0;
 	while (list ($key, $line) = each ($tr) ){
 			$line=trim($line);
@@ -139,8 +145,8 @@ function popup(){
 $html="<div style='width:720px'>
 <table style='width:100%'>
 <tr>
-<td valign='top'><div id='mysql-status'></div></td>
-<td valign='top'>
+<td valign='top' width=1%><div id='mysql-status' style='width:250px'></div></td>
+<td valign='top' width=99%>
 	". implode("\n",$tables)."
 	</td>
 	</tr>
@@ -161,7 +167,7 @@ $html="<div style='width:720px'>
 }
 
 function mysql_status(){
-	$specific=Paragraphe("script-64.png", "{mysql_perso_conf}", "{mysql_perso_conf_text}","javascript:Loadjs('system.mysql.perso.php')",null,250);
+	$specific=Paragraphe("script-64.png", "{mysql_perso_conf}", "{mysql_perso_conf_text}","javascript:Loadjs('system.mysql.perso.php')",null,220);
 	$refresh="<div style='text-align:right;margin-top:8px'>".imgtootltip("refresh-24.png","{refresh}","RefreshTab('main_config_mysql')")."</div>";
 	$sock=new sockets();
 	$tpl=new templates();

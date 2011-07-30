@@ -108,27 +108,43 @@ if($argv[1]=='--reconfigure'){
 
 
 function smtp_cmdline_restrictions(){
-	
+		
+		
+		
 	    $sock=new sockets();
 	    $disable_vrfy_command=$sock->GET_INFO("disable_vrfy_command");
 	    if(!is_numeric($disable_vrfy_command)){$disable_vrfy_command=0;}
 	    if($disable_vrfy_command==1){postconf("disable_vrfy_command","yes");}else{postconf("disable_vrfy_command","no");}
 	
 	
-		if($GLOBALS["VERBOSE"]){echo "Starting......: Postfix -> smtpd_recipient_restrictions() function\n";}
+		if($GLOBALS["VERBOSE"]){echo "\n ***\nStarting......: Postfix -> smtpd_recipient_restrictions() function\n ***\n";}
 		smtpd_recipient_restrictions();
-		if($GLOBALS["VERBOSE"]){echo "Starting......: Postfix -> smtpd_client_restrictions() function\n";}
+		if($GLOBALS["VERBOSE"]){echo "\n ***\nStarting......: Postfix -> smtpd_client_restrictions() function\n ***\n";}
 		smtpd_client_restrictions();
-		if($GLOBALS["VERBOSE"]){echo "Starting......: Postfix -> smtpd_sender_restrictions() function\n";}
+		if($GLOBALS["VERBOSE"]){echo "\n ***\nStarting......: Postfix -> smtpd_sender_restrictions() function\n ***\n";}
 		smtpd_sender_restrictions();
-		if($GLOBALS["VERBOSE"]){echo "Starting......: Postfix -> smtpd_end_of_data_restrictions() function\n";}
+		
+		if($GLOBALS["VERBOSE"]){echo "\n ***\nStarting......: Postfix -> smtpd_data_restrictions() function\n ***\n";}
+		smtpd_data_restrictions();
+		if($GLOBALS["VERBOSE"]){echo "\n ***\nStarting......: Postfix -> smtpd_end_of_data_restrictions() function\n ***\n";}
 		smtpd_end_of_data_restrictions();
 		if($GLOBALS["RELOAD"]){
-			if($GLOBALS["VERBOSE"]){echo "Starting......: Postfix -> ReloadPostfix() function\n";}
+			if($GLOBALS["VERBOSE"]){echo "\n ***\nStarting......: Postfix -> ReloadPostfix() function\n ***\n";}
 			ReloadPostfix(true);
 		
 		}	
 	
+}
+
+function smtpd_data_restrictions(){
+	include_once(dirname(__FILE__)."/ressources/class.smtp_data_restrictions.inc");
+	$smtpd_data_restrictions=new smtpd_data_restrictions("master");
+	if($GLOBALS["VERBOSE"]){echo "Starting......: Postfix -> smtpd_data_restrictions->compile() function\n";}
+	$smtpd_data_restrictions->compile();
+	if($GLOBALS["VERBOSE"]){echo "Starting......: Postfix -> compiled \"$smtpd_data_restrictions->restriction_final\"\n";}
+	if($smtpd_data_restrictions->restriction_final<>null){
+		postconf("smtpd_data_restrictions",$smtpd_data_restrictions->restriction_final);
+	}
 }
 
 
@@ -629,7 +645,7 @@ if(!isset($GLOBALS["CLASS_SOCKET"])){$GLOBALS["CLASS_SOCKET"]=new sockets();$soc
 	$EnableArticaPolicyFilter=$sock->GET_INFO("EnableArticaPolicyFilter");
 	$EnableAmavisInMasterCF=$sock->GET_INFO('EnableAmavisInMasterCF');
 	$EnableAmavisDaemon=$sock->GET_INFO('EnableAmavisDaemon');		
-
+	$amavis_internal=null;
 	if(is_array($tbl)){
 		while (list ($num, $ligne) = each ($tbl) ){
 		$ligne=trim($ligne);
@@ -639,30 +655,31 @@ if(!isset($GLOBALS["CLASS_SOCKET"])){$GLOBALS["CLASS_SOCKET"]=new sockets();$soc
 		}
 	}
 
+	$hashToDelete[]="check_client_access hash:/etc/postfix/check_client_access";
+	$hashToDelete[]="check_client_access \"hash:/etc/postfix/postfix_allowed_connections\"";
+	$hashToDelete[]="check_client_access hash:/etc/postfix/postfix_allowed_connections";
+	$hashToDelete[]="reject_non_fqdn_hostname";
+	$hashToDelete[]="reject_unknown_sender_domain";
+	$hashToDelete[]="reject_non_fqdn_sender";
+	$hashToDelete[]="reject_unauth_pipelining";
+	$hashToDelete[]="reject_invalid_hostname";
+	$hashToDelete[]="reject_unknown_client_hostname";
+	$hashToDelete[]="reject_unknown_reverse_client_hostname";
+	$hashToDelete[]="reject_invalid_hostname";
+	$hashToDelete[]="reject_rbl_client zen.spamhaus.org";
+	$hashToDelete[]="reject_rbl_client sbl.spamhaus.org";
+	$hashToDelete[]="reject_rbl_client cbl.abuseat.org";
+	$hashToDelete[]="reject_unauth_pipelining";
+	$hashToDelete[]="reject_unauth_pipelining";
+	$hashToDelete[]="reject_rbl_client=zen.spamhaus.org";
+	$hashToDelete[]="reject_rbl_client=sbl.spamhaus.org";
+	$hashToDelete[]="reject_rbl_client=sbl.spamhaus.org";
+	$hashToDelete[]="check_client_access hash:/etc/postfix/amavis_internal";	
 	
-	
-	
-	unset($newHash["check_client_access hash:/etc/postfix/check_client_access"]);
-	unset($newHash["check_client_access \"hash:/etc/postfix/postfix_allowed_connections\""]);
-	unset($newHash["check_client_access hash:/etc/postfix/postfix_allowed_connections"]);
-	unset($newHash["reject_non_fqdn_hostname"]);
-	unset($newHash["reject_unknown_sender_domain"]);
-	unset($newHash["reject_non_fqdn_sender"]);
-	unset($newHash["reject_unauth_pipelining"]);
-	unset($newHash["reject_invalid_hostname"]);
-	unset($newHash["reject_unknown_client_hostname"]);
-	unset($newHash["reject_unknown_reverse_client_hostname"]);
-	unset($newHash["reject_invalid_hostname"]);
-	unset($newHash["reject_rbl_client zen.spamhaus.org"]);
-	unset($newHash["reject_rbl_client sbl.spamhaus.org"]);
-	unset($newHash["reject_rbl_client cbl.abuseat.org"]);
-	unset($newHash["reject_unauth_pipelining"]);
-	unset($newHash["reject_unauth_pipelining"]);
-	unset($newHash["reject_rbl_client=zen.spamhaus.org"]);
-	unset($newHash["reject_rbl_client=sbl.spamhaus.org"]);
-	unset($newHash["reject_rbl_client=sbl.spamhaus.org"]);
-	
-	unset($newHash["check_client_access hash:/etc/postfix/amavis_internal"]);
+	while (list ($num, $ligne) = each ($hashToDelete) ){
+		if(isset($newHash[$ligne])){unset($newHash[$ligne]);}
+	}
+
 	
 	
 	if($GLOBALS["VERBOSE"]){
@@ -675,25 +692,27 @@ if(!isset($GLOBALS["CLASS_SOCKET"])){$GLOBALS["CLASS_SOCKET"]=new sockets();$soc
 		$newHash[$check_client_access]=$check_client_access;
 	}
 	$smtpd_client_restrictions=array();
-	if(is_array($newHash)){	
-		while (list ($num, $ligne) = each ($newHash) ){
-			if(preg_match("#hash:(.+)$#",$ligne,$re)){
-				$path=trim($re[1]);
-				if(!is_file($path)){
-					echo "Starting......: smtpd_client_restrictions: bungled \"$ligne\"\n"; 
-					continue;
+	if(isset($newHash)){
+		if(is_array($newHash)){	
+			while (list ($num, $ligne) = each ($newHash) ){
+				if(preg_match("#hash:(.+)$#",$ligne,$re)){
+					$path=trim($re[1]);
+					if(!is_file($path)){
+						echo "Starting......: smtpd_client_restrictions: bungled \"$ligne\"\n"; 
+						continue;
+					}
 				}
+				
+				if(preg_match("#reject_rbl_client=(.+?)$#",$ligne,$re)){
+					$rbl=trim($re[1]);
+						echo "Starting......: reject_rbl_client: bungled \"$ligne\" fix it\n"; 
+						$num="reject_rbl_client $rbl";
+						continue;
+					}
+				}			
+				$smtpd_client_restrictions[]=$num;
 			}
-			
-			if(preg_match("#reject_rbl_client=(.+?)$#",$ligne,$re)){
-				$rbl=trim($re[1]);
-					echo "Starting......: reject_rbl_client: bungled \"$ligne\" fix it\n"; 
-					$num="reject_rbl_client $rbl";
-					continue;
-				}
-			}			
-			$smtpd_client_restrictions[]=$num;
-		}
+	}
 	
 if(!isset($GLOBALS["CLASS_SOCKET"])){$GLOBALS["CLASS_SOCKET"]=new sockets();$sock=$GLOBALS["CLASS_SOCKET"];}else{$sock=$GLOBALS["CLASS_SOCKET"];}
 	$reject_unknown_client_hostname=$sock->GET_INFO('reject_unknown_client_hostname');
@@ -744,8 +763,9 @@ if(!isset($GLOBALS["CLASS_SOCKET"])){$GLOBALS["CLASS_SOCKET"]=new sockets();$soc
 		
 		
 		
-		unset($array_cleaned["permit_mynetworks"]);
-		unset($array_cleaned["permit_sasl_authenticated"]);
+		if(isset($array_cleaned["permit_mynetworks"])){unset($array_cleaned["permit_mynetworks"]);};
+		if(isset($array_cleaned["permit_sasl_authenticated"])){unset($array_cleaned["permit_sasl_authenticated"]);}
+		
 		
 		unset($smtpd_client_restrictions);
 		$smtpd_client_restrictions=array();
@@ -785,6 +805,7 @@ if(!isset($GLOBALS["CLASS_SOCKET"])){$GLOBALS["CLASS_SOCKET"]=new sockets();$soc
 
 function restrict_relay_domains(){
 	$ldap=new clladp();
+	$f=array();
 	$dn="dc=organizations,$ldap->suffix";
 	$attr=array("cn");
 	$pattern="(&(objectclass=PostfixRelayRecipientMaps)(cn=@*))";
@@ -961,7 +982,8 @@ function smtpd_recipient_restrictions(){
 	}
 	
 function amavis_bypass_byrecipients(){
-	
+	$f=array();
+	$count=0;
 	$users=new usersMenus();
 	$q=new mysql();
 	$unix=new unix();
@@ -1428,10 +1450,9 @@ function smtpd_sender_restrictions(){
 		if($smtpd_sender_restrictions_black<>null){$smtpd_sender_restrictions[]=$smtpd_sender_restrictions_black;}
 	}
 	
-	if(!is_array($smtpd_sender_restrictions)){
-		postconf("smtpd_sender_restrictions");
-		return;
-	}
+	if(!isset($smtpd_sender_restrictions)){postconf("smtpd_sender_restrictions");return;}
+	if(!is_array($smtpd_sender_restrictions)){postconf("smtpd_sender_restrictions");return;}
+	
 	$final=@implode(",",$smtpd_sender_restrictions);
 	postconf("smtpd_sender_restrictions",$final);
 	postconf("smtpd_helo_restrictions",$final);

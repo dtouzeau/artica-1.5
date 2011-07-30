@@ -9,6 +9,7 @@ if($usersmenus->AsPostfixAdministrator==false){header('location:users.index.php'
 
 		if(isset($_GET["script"])){ajax_js();exit;}
 		if(isset($_GET["ajax-pop"])){ajax_pop();exit;}
+		if(isset($_GET["ajax-tabs"])){ajax_tabs();exit;}
 		if(isset($_GET["message_size_limit"])){save();exit;}
 		if(isset($_GET["PostfixNotifyMessagesRestrictions"])){PostfixNotifyMessagesRestrictions_save();exit;}
 		if(isset($_GET["ArticaPolicyFilterMaxRCPTInternalDomainsOnly"])){ArticaPolicyFilterMaxRCPTInternalDomainsOnly_save();exit;}
@@ -24,7 +25,7 @@ function ajax_js(){
 	var x='$x';
 	$datas
 	function LoadMain(){
-		YahooWinS(550,'$page?ajax-pop=yes','$title');
+		YahooWinS(650,'$page?ajax-tabs=yes','$title');
 	}
 	
 	
@@ -39,6 +40,40 @@ function ajax_js(){
 	
 	
 }
+
+function ajax_tabs(){
+	$page=CurrentPageName();
+	$tpl=new templates();
+	if(!isset($_GET["hostname"])){$hostname="master";}
+	$array["ajax-pop"]="{main_parameters}";
+	$array["smtpd_data_restrictions"]="{smtpd_data_restrictions}";
+	
+	
+	
+	while (list ($num, $ligne) = each ($array) ){
+		if($num=="smtpd_data_restrictions"){
+			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"postfix.smtp_data_restrictions.php?hostname=$hostname\"><span>$ligne</span></a></li>\n");
+			continue;
+		}
+		
+		
+		$html[]=  $tpl->_ENGINE_parse_body("<li><a href=\"$page?$num=yes&hostname=$hostname\"><span>$ligne</span></a></li>\n");
+	}
+	
+	
+	echo "
+	<div id=main_config_messages_restrictions style='width:100%;height:600px;overflow:auto'>
+		<ul>". implode("\n",$html)."</ul>
+	</div>
+		<script>
+		  $(document).ready(function() {
+			$(\"#main_config_messages_restrictions\").tabs();});
+		</script>";		
+	
+	
+	
+}
+
 
 function PostfixNotifyMessagesRestrictions_save(){
 	$sock=new sockets();

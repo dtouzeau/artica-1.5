@@ -555,7 +555,7 @@ function Add(){
 	}
 	
 	$this->VerifyDefault();
-	$ldap=new  clladp();
+	$ldap=new clladp();
 	
 	
 	$this->dn="cn=$this->uid,ou=Computer,dc=samba,dc=organizations,$ldap->suffix";

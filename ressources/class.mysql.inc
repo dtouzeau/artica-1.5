@@ -730,19 +730,19 @@ function BackupTable($tablename,$database,$addons=array(),$zmd5=false,$endquery=
 		
 	
 	
-	function TABLE_EXISTS($table,$database){
-		if(!isset($GLOBALS["__MYSQL_TABLE_EXISTS"])){$GLOBALS["__MYSQL_TABLE_EXISTS"]=array();}
-		if(isset($GLOBALS["__MYSQL_TABLE_EXISTS"][$database][$table])){if($GLOBALS["__MYSQL_TABLE_EXISTS"][$database][$table]==true){return true;}}
-		if(isset($_SESSION["__MYSQL_TABLE_EXISTS"][$database][$table])){if($_SESSION["__MYSQL_TABLE_EXISTS"][$database][$table]==true){return true;}}
+	function TABLE_EXISTS($table,$database,$nocache=false){
+		if(!$nocache){
+			if(!isset($GLOBALS["__MYSQL_TABLE_EXISTS"])){$GLOBALS["__MYSQL_TABLE_EXISTS"]=array();}
+			if(isset($GLOBALS["__MYSQL_TABLE_EXISTS"][$database][$table])){if($GLOBALS["__MYSQL_TABLE_EXISTS"][$database][$table]==true){return true;}}
+			if(isset($_SESSION["__MYSQL_TABLE_EXISTS"][$database][$table])){if($_SESSION["__MYSQL_TABLE_EXISTS"][$database][$table]==true){return true;}}
+		}
+		
 		if(!$this->DATABASE_EXISTS($database)){
 			$this->writeLogs("Database $database does not exists...create it",__CLASS__.'/'.__FUNCTION__,__FILE__);
 			$this->CREATE_DATABASE($database);
 			if(!$this->DATABASE_EXISTS($database)){$this->writeLogs("Unable to create $database database",__CLASS__.'/'.__FUNCTION__,__FILE__);
 			return false;}
 		}
-		
-		
-		
 		
 		$sql="SHOW TABLES";
 		$results=$this->QUERY_SQL($sql,$database);
@@ -842,7 +842,45 @@ function BackupTable($tablename,$database,$addons=array(),$zmd5=false,$endquery=
 	writelogs("success set privileges on $server_database",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 	return true;		
 		
-}		
+}	
+
+	function SHOW_VARIABLES(){
+		$sql="SHOW VARIABLES;";
+		$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
+	if(!$bd){
+    		$errnum=mysql_error();
+    		$des=mysql_error();
+    		$this->mysql_error=$des;
+    		return null;
+		}
+		$results=@mysql_query($sql);
+		$errnum=mysql_error();
+    	$des=mysql_error();
+    	$this->mysql_error=$des;
+		
+		
+		while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+			$Variable_name=$ligne["Variable_name"];
+			$array[$Variable_name]=$ligne["Value"];
+			}
+			return $array;
+		}
+		
+	function SET_VARIABLES($key,$value){
+		
+		$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
+		if(!$bd){
+    		$errnum=mysql_error();
+    		$des=mysql_error();
+    		$this->mysql_error=$des;
+    		return null;
+			}
+		$results=@mysql_query("SET GLOBAL $key = $value");
+		$errnum=mysql_error();
+    	$des=mysql_error();
+    	$this->mysql_error=$des;
+		}		
+
 		
 	function DATABASE_LIST(){
 		$sql="SHOW DATABASES";
@@ -903,13 +941,16 @@ function BackupTable($tablename,$database,$addons=array(),$zmd5=false,$endquery=
 	
 	
 	
-	FUNCTION CREATE_DATABASE($database){
+	FUNCTION CREATE_DATABASE($database,$nocache=false){
+		
+		if(!$nocache){
 		if($this->DATABASE_EXISTS($database)){
+			writelogs("CREATE_DATABASE $database Already exists aborting",__CLASS__,__FILE__,__FILE__,__LINE__);
 			$this->ok=true;
 			return true;
-		}
+		}}
 		$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
-		
+		writelogs("CREATE DATABASE $database",__CLASS__,__FILE__,__FILE__,__LINE__);
 		if(!$bd){
     		$des=mysql_error();
     		$errnum=mysql_errno();	
@@ -952,6 +993,7 @@ function BackupTable($tablename,$database,$addons=array(),$zmd5=false,$endquery=
 	
 	FUNCTION DELETE_DATABASE($database){
 		if(!function_exists("mysql_connect")){return 0;}
+		writelogs("DELETE DATABASE $database",__CLASS__,__FILE__,__FILE__,__LINE__);
 		$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
 		$results=@mysql_query("DROP DATABASE `$database`");	
 	}

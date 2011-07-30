@@ -62,13 +62,12 @@ function tabs(){
 
 
 
-$page=CurrentPageName();
-$GLOBALS["CPU_NUMBER"]=intval($users->CPU_NUMBER);
-$cpunum=$GLOBALS["CPU_NUMBER"]+1;
-$sql="SELECT AVG( `load` ) AS sload, DATE_FORMAT( stime, '%i' ) AS ttime FROM `loadavg` WHERE `stime` > DATE_SUB( NOW( ) , INTERVAL 15 MINUTE ) GROUP BY ttime ORDER BY `ttime` ASC";
-
-	$q=new mysql();
-	$results=$q->QUERY_SQL($sql,"artica_events");
+		$page=CurrentPageName();
+		$GLOBALS["CPU_NUMBER"]=intval($users->CPU_NUMBER);
+		$cpunum=$GLOBALS["CPU_NUMBER"]+1;
+		$q=new mysql();
+		$sql="SELECT AVG( `load` ) AS sload, DATE_FORMAT( stime, '%i' ) AS ttime FROM `loadavg` WHERE `stime` > DATE_SUB( NOW( ) , INTERVAL 15 MINUTE ) GROUP BY ttime ORDER BY `ttime` ASC";
+		$results=$q->QUERY_SQL($sql,"artica_events");
 
 	
 	
@@ -90,10 +89,20 @@ $sql="SELECT AVG( `load` ) AS sload, DATE_FORMAT( stime, '%i' ) AS ttime FROM `l
 	}		
 	$count=mysql_num_rows($results);
 	
+	
 	if(mysql_num_rows($results)==0){
 		$allrows=$q->COUNT_ROWS('loadavg', "artica_events");
 		writelogs("mysql return no rows from a table of $allrows rows ",__FUNCTION__,__FILE__,__LINE__);
-		return;
+		if($allrows>10){
+			$sql="SELECT AVG( `load` ) AS sload, DATE_FORMAT( stime, '%h:%i' ) AS ttime FROM `loadavg` WHERE `stime` > DATE_SUB( NOW( ) , INTERVAL 200 MINUTE ) GROUP BY ttime ORDER BY `ttime` ASC";
+			$results=$q->QUERY_SQL($sql,"artica_events");
+			if(mysql_num_rows($results)==0){
+				writelogs("mysql return no rows from a table of $allrows rows (200mns)",__FUNCTION__,__FILE__,__LINE__);
+				return;
+			}
+		}
+		
+		
 	}	
 	
 	if(!$q->ok){echo $q->mysql_error;}
@@ -113,21 +122,16 @@ $sql="SELECT AVG( `load` ) AS sload, DATE_FORMAT( stime, '%i' ) AS ttime FROM `l
 				unset($red);
 			}
 		}
-		
-	
-
-		
-		
 		if($GLOBALS["VERBOSE"]){echo "<li>{$ligne["stime"]} -> {$ligne["ttime"]} -> {$ligne["sload"]}</LI>";};
 	}
 	if(isset($red["START"])){$area[]=array($red["START"],$c);}
-
-	$file=time();
+	$targetedfile="ressources/logs/".basename(__FILE__).".png";
+	if(is_file($targetedfile)){@unlink($targetedfile);}
 	$gp=new artica_graphs();
 	$gp->RedAreas=$area;
 	$gp->width=300;
 	$gp->height=120;
-	$gp->filename="ressources/logs/$file.png";
+	$gp->filename="$targetedfile";
 	$gp->xdata=$xdata;
 	$gp->ydata=$ydata;
 	$gp->y_title=null;
@@ -141,11 +145,11 @@ $sql="SELECT AVG( `load` ) AS sload, DATE_FORMAT( stime, '%i' ) AS ttime FROM `l
 	//$gp->SetFillColor('green'); 
 	
 	$gp->line_green();
-	
+	if(!is_file($targetedfile)){writelogs("$targetedfile no such file!",__FUNCTION__,__FILE__,__LINE__);}
 	echo "<div onmouseout=\"javascript:this.className='paragraphe';this.style.cursor='default';\" onmouseover=\"javascript:this.className='paragraphe_over';
 	this.style.cursor='pointer';\" id=\"6ce2f4832d82c6ebaf5dfbfa1444ed58\" OnClick=\"javascript:Loadjs('admin.index.loadvg.php?all=yes')\" class=\"paragraphe\" style=\"width: 300px; min-height: 112px; cursor: default;\">
 	<h3 style='text-transform: none;margin-bottom:5px'>$computer_load</h3>
-	<img src='ressources/logs/$file.png'></div>";
+	<img src='$targetedfile'></div>";
 
 	
 function hour(){
@@ -202,7 +206,7 @@ $sql="SELECT AVG( `load` ) AS sload, DATE_FORMAT( stime, '%i' ) AS ttime FROM `l
 	$gp->margin0=true;
 	$gp->Fillcolor="blue@0.9";
 	$gp->color="146497";
-	
+	$tpl=new templates();
 	//$gp->SetFillColor('green'); 
 	
 	$gp->line_green();
@@ -210,7 +214,7 @@ $sql="SELECT AVG( `load` ) AS sload, DATE_FORMAT( stime, '%i' ) AS ttime FROM `l
 	echo "
 	<div id='loadavg-clean'>
 	<img src='ressources/logs/loadavg-hour.png'></div></div>
-	<div style='text-align:right'><hr>".button("{clean_datas}","LoadAvgClean()")."</div>
+	<div style='text-align:right'><hr>".$tpl->_ENGINE_parse_body(button("{clean_datas}","LoadAvgClean()"))."</div>
 	<script>
 	
 	var x_LoadAvgClean=function(obj){

@@ -430,7 +430,7 @@ function params2(){
 	if(!isset($Params["JkMount"])){$Params["JkMount"]=0;}
 	$users=new usersMenus();
 	$APACHE_MOD_TOMCAT=0;
-	if($user->APACHE_MOD_TOMCAT){$APACHE_MOD_TOMCAT=1;}
+	if($users->TOMCAT_INSTALLED){if($user->APACHE_MOD_TOMCAT){$APACHE_MOD_TOMCAT=1;}}
 	
 	$users=new usersMenus();
 	if($users->OPENEMM_INSTALLED){
@@ -481,7 +481,7 @@ $html="
 			var APACHE_MOD_TOMCAT=$APACHE_MOD_TOMCAT;
 			if(APACHE_MOD_TOMCAT==0){document.getElementById('JkMount').disabled=true;document.getElementById('JkMount').checked=false;}
 		}
-		
+		Checkjkmount();
 	</script>";	
 
 	echo $tpl->_ENGINE_parse_body($html);
@@ -1048,7 +1048,8 @@ function popup(){
 		document.getElementById('ftppassword').disabled=true;
 	
 		if(document.getElementById('useMysql').checked){
-			document.getElementById('mysql_database').disabled=false;
+			var mysql_database=document.getElementById('mysql_database').value;
+			if(mysql_database.length==0){document.getElementById('mysql_database').disabled=false;}
 			document.getElementById('mysql_username').disabled=false;
 			document.getElementById('mysql_password').disabled=false;
 		}
@@ -1340,10 +1341,11 @@ function Save(){
 	if($ligne["servername"]<>null){
 		if($uid<>null){$u=new user($uid);$ou=$u->ou;}
 		if(!$users->AsSystemAdministrator){$ou=$_SESSION["ou"];}
-		
+			
 		$sql="UPDATE freeweb SET 
 			mysql_password='$mysql_password',
 			mysql_username='$mysql_username',
+			mysql_database='$mysql_database',
 			ftpuser='$ftpuser',
 			ftppassword='$ftppassword',
 			uid='$uid',
@@ -1397,10 +1399,15 @@ function Save(){
 	
 	if($_GET["useFTP"]==1){
 		if($users->PUREFTP_INSTALLED){
-			$pure=new pureftpd_user();
-			if(!$pure->CreateUser($ftpuser,$ftppassword,$servername)){
-				echo "FTP: Failed\n";
-				return;
+			if(trim($ftpuser)<>null){
+				if(trim($ftppassword)<>null){
+					$pure=new pureftpd_user();
+					if(!$pure->CreateUser($ftpuser,$ftppassword,$servername)){
+						echo "FTP: Failed\n";
+						return;
+					}
+				$sock->getFrameWork("services.php?reload-pure-ftpd=yes");
+				}
 			}
 		}
 	}

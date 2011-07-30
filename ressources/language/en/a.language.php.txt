@@ -1865,3 +1865,31 @@ For Windows 2008 server you need to install [b]Hotfix 951191[/b].
 <WINDOWS_SERVER_NETBIOSNAME>Windows server netbiosname</WINDOWS_SERVER_NETBIOSNAME>
 <WINDOWS_SERVER_TYPE>Windows server type</WINDOWS_SERVER_TYPE>
 <WINDOWS_NAME_SERVICE_NOT_KNOWN>Unable to resolve Windows server hostname</WINDOWS_NAME_SERVICE_NOT_KNOWN>
+<www_malware>infected web sites or allow to download/store malwares, virus...</www_malware>
+<ApacheDisableModDavFS>Disable WebDAV service</ApacheDisableModDavFS>
+<smtpd_data_restrictions_explain>Optional access restrictions that the Postfix SMTP server applies in the context of the SMTP DATA command</smtp_data_restrictions_explain>
+<smtpd_data_restrictions>DATA Protocol restrictions</smtpd_data_restrictions>
+<order>order</order>
+<globals_values>Global Values</globals_values>
+<compile_rules_explain>Compile your rules and make them in production mode...</compile_rules_explain>
+<key>Key</key>
+<defer_text>Defer the request. The client is told to try again later.[br]
+This restriction is useful at the end of a restriction list, to make the default policy explicit.</defer_text>
+<check_client_mx_access>check client MX</check_client_mx_access>
+<check_client_mx_access_text>Search the specified access database for the MX hosts for the client hostname, and execute the corresponding action</check_client_mx_access_text>
+<check_client_ns_access>check client name server</check_client_ns_access>
+<check_client_ns_access_text>Search the specified access database for the DNS servers for the client hostname, and execute the corresponding action</check_client_ns_access_text>
+<check_reverse_client_hostname_access>check reverse client hostname</check_reverse_client_hostname_access>
+<check_reverse_client_hostname_access_text>Search the specified access database for the unverified reverse client hostname, parent domains, client IP address, or networks obtained by stripping least significant octets</check_reverse_client_hostname_access_text>
+<check_reverse_client_hostname_mx_access>check reverse client hostname mx</check_reverse_client_hostname_mx_access>
+<check_reverse_client_hostname_mx_access_text>Search the specified access database for the MX hosts for the unverified reverse client hostname, and execute the corresponding action</check_reverse_client_hostname_mx_access_text>
+<check_reverse_client_hostname_ns_access>check reverse client hostname Name server</check_reverse_client_hostname_ns_access>
+<check_reverse_client_hostname_ns_access_text>Search the specified access database for the DNS servers for the unverified reverse client hostname, and execute the corresponding action.</check_reverse_client_hostname_ns_access_text>
+<permit_dnswl_client>Permit reversed client under the dnswl_domain</permit_dnswl_client>
+<permit_dnswl_client_text>[b]dnswl_domain=d.d.d.d[/b][br]Accept the request when the reversed client network address is listed with the A record "d.d.d.d" under dns white list domain.</permit_dnswl_client_text>
+<permit_rhswl_client>[b]rhswl_domain=d.d.d.d[/b][br]Accept the request when the client hostname is listed with the A record "d.d.d.d" under rhswl_domain.</permit_rhswl_client>
+<reject_rhsbl_helo>Reject rhsbl helo</reject_rhsbl_helo>
+<reject_rhsbl_helo_text>[b]rbl_domain=d.d.d.d[/b]Reject the request when the HELO or EHLO hostname hostname is listed with the A record "d.d.d.d" under rbl_domain</reject_rhsbl_helo_text>
+<reject_rhsbl_reverse_client>reject rhsbl reverse client</reject_rhsbl_reverse_client>
+<reject_rhsbl_reverse_client_text>[b]rbl_domain=d.d.d.d[/b]Reject the request when the unverified reverse client hostname is listed with the A record "d.d.d.d" under rbl_domain</reject_rhsbl_reverse_client_text>
+<require>require</require>

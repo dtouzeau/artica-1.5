@@ -1888,6 +1888,7 @@ function Hash_GetALLUsers(){
 		$this->ldap_perform_connection();
 		$ld =$this->ldap_connection;
 		$bind =$this->ldapbind;
+		$log=null;
 		if($ou<>null){$suffix="ou=$ou,dc=organizations,$this->suffix";}else{$suffix=$this->suffix;}
 		
 		//--------------------- associatedDomain
@@ -2154,7 +2155,7 @@ function Hash_GetALLUsers(){
 				$arr[$hash[$i]["cn"][0]]=$hash[$i]["cn"][0];
 			}
 		}
-		return $arr;		
+		if(isset($arr)){return $arr;}		
 	}
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	

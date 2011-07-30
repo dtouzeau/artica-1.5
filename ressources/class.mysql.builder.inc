@@ -574,6 +574,22 @@ public function check_storage_table(){
 		$this->QUERY_SQL($sql,"artica_backup");
 		if(!$this->ok){writelogs($this->mysql_error,__FUNCTION__,__FILE__,__LINE__);}
 	}
+	
+	
+	if(!$this->TABLE_EXISTS('smtpd_data_restrictions','artica_backup')){	
+		$sql="CREATE TABLE `artica_backup`.`smtpd_data_restrictions` (
+			`ID` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+			`restriction` VARCHAR( 50 ) NOT NULL ,
+			`hostname` VARCHAR( 128 ) NOT NULL ,
+			`restrictions_datas` LONGTEXT NOT NULL ,
+			`enabled` INT( 1 ) NOT NULL DEFAULT '1',
+			`zorder` INT( 2 ) NOT NULL ,
+			KEY `hostname`(`hostname` ),
+			INDEX ( `restriction` , `enabled` , `zorder` )
+			) ";
+		$this->QUERY_SQL($sql,"artica_backup");
+		if(!$this->ok){writelogs($this->mysql_error,__FUNCTION__,__FILE__,__LINE__);}
+	}	
 
 	
 	if(!$this->TABLE_EXISTS('postfix_perso_settings','artica_backup')){	
@@ -2208,7 +2224,9 @@ public function CheckTablesPostfilter(){
 				`ProxyPass` VARCHAR( 255 ) NOT NULL ,
 				`zmd5` VARCHAR( 95 ) NOT NULL ,
 				PRIMARY KEY ( `zmd5` ) ,
-				INDEX ( `servername` , `ProxyPass` )
+				KEY `servername` (`servername`),
+				KEY `ProxyPass` (`ProxyPass`)
+				
 				) ";
 			$this->QUERY_SQL($sql,'artica_backup');
 			if($this->ok){writelogs("Fatal: $this->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}

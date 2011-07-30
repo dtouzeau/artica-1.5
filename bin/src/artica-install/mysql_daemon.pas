@@ -1264,52 +1264,42 @@ if length(CertificateMaxDays)=0 then CertificateMaxDays:='730';
 servername:=GetHostname();
 sslconf:=TiniFile.Create(cf_path);
 input_password:=sslconf.ReadString('req','input_password','');
-logs.WriteToFile('','/etc/ssl/certs/mysql/index.txt');
-logs.WriteToFile('01','/etc/ssl/certs/mysql/serial');
-cmd:=openssl+' genrsa -out /etc/ssl/certs/mysql/ca.key 1024';
-logs.Debuglogs(cmd);
-fpsystem(cmd);
-logs.DebugLogs('starting certificate.........: Using configuration file '+cf_path);
-cmd:=openssl+' req -new -x509 -keyout /etc/ssl/certs/mysql/cakey.pem -out /etc/ssl/certs/mysql/cacert.pem -config '+cf_path+extensions+' -days '+CertificateMaxDays;
-logs.Debuglogs(cmd);
-fpsystem(cmd);
-cmd:=openssl+' req -new -keyout /etc/ssl/certs/mysql/server-key.pem -out /etc/ssl/certs/mysql/server-req.pem -config '+cf_path+extensions+' -days '+CertificateMaxDays;
-logs.Debuglogs(cmd);
-fpsystem(cmd);
-tmpstr:=logs.FILE_TEMP();
-logs.WriteToFile(input_password,tmpstr);
-cmd:=openssl+' rsa -in /etc/ssl/certs/mysql/server-key.pem -out /etc/ssl/certs/mysql/server-key.pem -passin file:'+tmpstr;
-logs.Debuglogs(cmd);
-fpsystem(cmd);
-logs.DeleteFile(tmpstr);
-tmpstr:=logs.FILE_TEMP();
-logs.WriteToFile(input_password,tmpstr);
-cmd:=openssl+' ca -policy policy_anything -batch -out /etc/ssl/certs/mysql/server-cert.pem -cert /etc/ssl/certs/mysql/cacert.pem -passin file:'+tmpstr+' -keyfile /etc/ssl/certs/mysql/cakey.pem -config '+cf_path+extensions+' -infiles /etc/ssl/certs/mysql/server-req.pem ';
-logs.Debuglogs(cmd);
-fpsystem(cmd);
-logs.DeleteFile(tmpstr);
 
-//local client
-ForceDirectories('/etc/ssl/certs/mysql-client');
-cmd:=openssl+' req -new -keyout /etc/ssl/certs/mysql-client/client-key.pem -out /etc/ssl/certs/mysql-client/client-req.pem -days 3600 -config '+cf_path+extensions+' -days '+CertificateMaxDays;
-tmpstr:=logs.FILE_TEMP();
-logs.Debuglogs(cmd);
-fpsystem(cmd);
-logs.WriteToFile(input_password,tmpstr);
-cmd:=openssl+' rsa -in /etc/ssl/certs/mysql-client/client-key.pem -out /etc/ssl/certs/mysql-client/client-key.pem -passin file:'+tmpstr;
-logs.Debuglogs(cmd);
-fpsystem(cmd);
-logs.DeleteFile(tmpstr);
+fpsystem('/bin/rm -f /etc/ssl/certs/mysql/*');
 
-tmpstr:=logs.FILE_TEMP();
-logs.WriteToFile(input_password,tmpstr);
-cmd:=openssl+' ca -policy policy_anything -batch -out /etc/ssl/certs/mysql-client/client-cert.pem -cert /etc/ssl/certs/mysql/cacert.pem -passin file:'+tmpstr+' -keyfile /etc/ssl/certs/mysql/cakey.pem -config '+cf_path+extensions+' -infiles /etc/ssl/certs/mysql-client/client-req.pem';
-logs.Debuglogs(cmd);
+cmd:=openssl+' req -new -x509 -passout pass:'+input_password+' -config '+cf_path+extensions+' -keyout /var/lib/mysql/mysql-ca-key.pem -out /var/lib/mysql/mysql-ca-cert.pem -days '+CertificateMaxDays;
+logs.Debuglogs('Starting......: Mysql ssl: '+cmd);
 fpsystem(cmd);
+
+cmd:=openssl+' req -new -passout pass:'+input_password+' -config '+cf_path+extensions+' -keyout /var/lib/mysql/mysql-server-key.pem -out /var/lib/mysql/mysql-server-req.pem -days '+CertificateMaxDays;
+logs.Debuglogs('Starting......: Mysql ssl: '+cmd);
+fpsystem(cmd);
+
+cmd:=openssl+' x509 -req -in /var/lib/mysql/mysql-server-req.pem -passin pass:'+input_password+' -days 3600 -CA /var/lib/mysql/mysql-ca-cert.pem -CAkey /var/lib/mysql/mysql-ca-key.pem -set_serial 01 -out /var/lib/mysql/mysql-server-cert.pem';
+logs.Debuglogs('Starting......: Mysql ssl: '+cmd);
+fpsystem(cmd);
+
+cmd:=openssl+' req -new -passout pass:'+input_password+' -config '+cf_path+extensions+' -keyout /var/lib/mysql/mysql-client-key.pem -out /var/lib/mysql/mysql-client-req.pem -days '+CertificateMaxDays;
+logs.Debuglogs('Starting......: Mysql ssl: '+cmd);
+fpsystem(cmd);
+
+cmd:=openssl+' x509 -req -in /var/lib/mysql/mysql-client-req.pem -passin pass:'+input_password+' -days '+CertificateMaxDays+' -CA /var/lib/mysql/mysql-ca-cert.pem -CAkey /var/lib/mysql/mysql-ca-key.pem -set_serial 01 -out /var/lib/mysql/mysql-client-cert.pem';
+logs.Debuglogs('Starting......: Mysql ssl: '+cmd);
+fpsystem(cmd);
+
+cmd:=openssl+' rsa -passin pass:'+input_password+' -in /var/lib/mysql/mysql-server-key.pem -out /var/lib/mysql/mysql-server-key.pem';
+logs.Debuglogs('Starting......: Mysql ssl: '+cmd);
+fpsystem(cmd);
+
+cmd:=openssl+' rsa -passin pass:'+input_password+' -in /var/lib/mysql/mysql-client-key.pem -out /var/lib/mysql/mysql-client-key.pem';
+logs.Debuglogs('Starting......: Mysql ssl: '+cmd);
+fpsystem(cmd);
+
+fpsystem('/bin/chown mysql:mysql /var/lib/mysql/*.pem');
 forceDirectories('/etc/ssl/certs/mysql-client-download');
-fpsystem('/bin/cp -f /etc/ssl/certs/mysql/cacert.pem /etc/ssl/certs/mysql-client-download/cacert.pem');
-fpsystem('/bin/cp -f /etc/ssl/certs/mysql-client/client-cert.pem /etc/ssl/certs/mysql-client-download/client-cert.pem');
-fpsystem('/bin/cp -f /etc/ssl/certs/mysql-client/client-key.pem /etc/ssl/certs/mysql-client-download/client-key.pem');
+fpsystem('/bin/cp -f /var/lib/mysql/mysql-ca-cert.pem /etc/ssl/certs/mysql-client-download/cacert.pem');
+fpsystem('/bin/cp -f /var/lib/mysql/mysql-client-cert.pem /etc/ssl/certs/mysql-client-download/client-cert.pem');
+fpsystem('/bin/cp -f /var/lib/mysql/mysql-client-key.pem /etc/ssl/certs/mysql-client-download/client-key.pem');
 SetCurrentDir('/etc/ssl/certs/mysql-client-download');
 logs.DeleteFile('/etc/ssl/certs/mysql-client-download/mysql-ssl-client.tar');
 fpsystem('/bin/tar -cf mysql-ssl-client.tar *');

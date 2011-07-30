@@ -405,17 +405,39 @@ function sig_handler($signo) {
 
 
 function watchdog_me(){
+	$unix=new unix();
 	if($GLOBALS["TOTAL_MEMORY_MB"]<400){
 		events("watchdog_me: {$GLOBALS["TOTAL_MEMORY_MB"]}M installed on this computer, aborting",__FUNCTION__,__LINE__);
-		$unix=new unix();
+		
 		$cmd=trim($nohup." ".$unix->LOCATE_PHP5_BIN()." ".dirname(__FILE__)."/exec.parse-orders.php >/dev/null 2>&1 &");
+		shell_exec($cmd);	
+		$cmd=trim($nohup." ".$unix->LOCATE_PHP5_BIN()." ".__FILE__." --all >/dev/null 2>&1 &");
+		shell_exec($cmd);	
+		$cmd=trim($nohup." /etc/init.d/artica-postfix restart fcron >/dev/null 2>&1 &");
 		shell_exec($cmd);	
 		return;
 	}
-	$unix=new unix();
+	$sock=new sockets();
+	$DisableArticaStatusService=$sock->GET_INFO("DisableArticaStatusService");
+	if(!is_numeric($DisableArticaStatusService)){$DisableArticaStatusService=0;}
+
+	if($DisableArticaStatusService==1){
+		$time_file=$unix->file_time_min($GLOBALS["MY-POINTER"]);
+		events("Pointer: {$GLOBALS["MY-POINTER"]} = {$time_file}Mn",__FUNCTION__,__LINE__);
+		if($time_file>3){
+			events("Pointer: start artica-status !!!",__FUNCTION__,__LINE__);
+			$cmd=trim($nohup." ".$unix->LOCATE_PHP5_BIN()." ".__FILE__." --all >/dev/null 2>&1 &");
+			shell_exec($cmd);	
+			$cmd=trim($nohup." /etc/init.d/artica-postfix restart fcron >/dev/null 2>&1 &");
+			shell_exec($cmd);	
+		}
+		return;
+	}
+	
+	
 	$time_file=$unix->file_time_min($GLOBALS["MY-POINTER"]);
 	events("Pointer: {$GLOBALS["MY-POINTER"]} = {$time_file}Mn",__FUNCTION__,__LINE__);
-	if($time_file>2){
+	if($time_file>3){
 		events("Pointer: restart artica-status !!!",__FUNCTION__,__LINE__);
 		shell_exec("{$GLOBALS["nohup"]} /etc/init.d/artica-postfix restart artica-status >/dev/null 2>&1 &");
 		
@@ -673,7 +695,11 @@ function xLoadAvg(){
 		if($GLOBALS["VERBOSE"]){echo "\"$timeDaemonFile\" : $DaemonTime minutes...\n";}	
 		
 		if(!$GLOBALS["FORCE"]){
-			if($DaemonTime<3){if($GLOBALS["VERBOSE"]){echo "End due of time\n";}return;}
+			if($DaemonTime<3){
+				events("End due of time ($timeDaemonFile) = $DaemonTime < 3",__FUNCTION__,__LINE__);
+				if($GLOBALS["VERBOSE"]){echo "End due of time\n";}
+				return;
+			}
 		}
 		@unlink($timeDaemonFile);
 		@file_put_contents($timeDaemonFile, time());
@@ -937,12 +963,13 @@ function squid_clamav_tail(){
 // ========================================================================================================================================================
 function WATCHDOG($APP_NAME,$cmd){
 		if($GLOBALS["DISABLE_WATCHDOG"]){return null;}
+		if(!isset($GLOBALS["ArticaWatchDogList"][$APP_NAME])){$GLOBALS["ArticaWatchDogList"][$APP_NAME]=1;}
 		if($GLOBALS["ArticaWatchDogList"][$APP_NAME]==null){$GLOBALS["ArticaWatchDogList"][$APP_NAME]=1;}
 		if($GLOBALS["ArticaWatchDogList"][$APP_NAME]==1){
+			$cmd="{$GLOBALS["NICE"]} {$GLOBALS["PHP5"]} ".dirname(__FILE__)."/exec.watchdog.php --start-process \"$APP_NAME\" \"$cmd\" >/dev/null 2>&1 &";
 			events("WATCHDOG: running $APP_NAME ($cmd)",basename(__FILE__));
-			exec("/etc/init.d/artica-postfix start $cmd 2>&1",$results);
-			if($GLOBALS["VERBOSE"]){echo "\n".@implode("\n",$results)."\n";return;}
-			$GLOBALS["CLASS_UNIX"]->send_email_events("$APP_NAME stopped","Artica tried to start it:\n".@implode("\n",$results),"system");
+			shell_exec($cmd);
+		
 		}	
 	
 }
@@ -5959,28 +5986,10 @@ function events($text,$function=null,$line=0){
 		}	
 		
 function bandwith(){
-	$file="/usr/share/artica-postfix/ressources/logs/web/bandwith-mon.txt";
-	$ftime=file_time_min($file);
-	events("$ftime ". basename($file),__FUNCTION__,__LINE__);
-	if($ftime<10){return;}
-	exec("/usr/share/artica-postfix/bin/bandwith.pl 2>&1",$results);
-	$text=@implode("",$results);
-	if(!preg_match("#([0-9\.,]+)#",$text,$re)){
-		events("$text unable to preg_match",__FUNCTION__,__LINE__);
-		return;
-	}
-	
-		$re[1]=str_replace(",",".",$re[1]);
-		$mbs=round($re[1],0);
-		events("$mbs MB/S bandwith",__FUNCTION__,__LINE__);
-		$sql="INSERT INTO bandwith_stats (`zDate`,`bandwith`) VALUES(NOW(),'$mbs');";
-		$q=new mysql();
-		$q->QUERY_SQL($sql,"artica_events");
-		if(!$q->ok){events("$q->mysql_error \"$sql\"",__FUNCTION__,__LINE__);}
-		@unlink($file);
-		@file_put_contents($file,$mbs);
-		@chmod($file,0770);
-	}
+	$cmd="{$GLOBALS["NICE"]} {$GLOBALS["PHP5"]} ".dirname(__FILE__)."/exec.watchdog.php --bandwith >/dev/null 2>&1 &";
+	events($cmd,__FUNCTION__,__LINE__);
+	shell_exec($cmd);
+}
 	
 function phpmyadmin_perms(){
 	

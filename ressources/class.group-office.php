@@ -30,9 +30,9 @@ class group_office{
 			$this->www_dir=$ligne["www_dir"];
 			$this->ServerPort=$ligne["ServerPort"];
 			if($this->www_dir==null){$this->www_dir="/var/www/$this->servername";}
-			$this->database="groupOffice_".md5(strtolower(trim($this->servername)));
+			$this->database="groupOffice_".time();
 			if($ligne["mysql_database"]<>null){$this->database=$ligne["mysql_database"];}else{
-				$sql="UPDATE freeweb SET mysql_database='{$this->database} WHERE servername='$this->servername'";
+				$sql="UPDATE freeweb SET mysql_database='{$this->database}' WHERE servername='$this->servername'";
 				$q->QUERY_SQL($sql,"artica_backup");
 			}
 			$this->uid=$ligne["uid"];
@@ -46,12 +46,17 @@ class group_office{
 		$firstinstall=false;
 		if($this->rebuildb){
 			writelogs("[$this->servername] DELETE_DATABASE",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
-			$q->DELETE_DATABASE($this->database);}
-		if($GLOBALS["REINSTALL"]){$q->DELETE_DATABASE($this->database);}
+			$q->DELETE_DATABASE($this->database,true);
+			writelogs("[$this->servername] CREATE_DATABASE",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+			$q=new mysql();
+			$q->CREATE_DATABASE($this->database,true);
+		}
+			if($GLOBALS["REINSTALL"]){$q->DELETE_DATABASE($this->database);$q->CREATE_DATABASE($this->database,true);}
 		
 		if(!$q->DATABASE_EXISTS($this->database)){
+			writelogs("[$this->servername] DATABASE DOES NOT EXISTS Create e new one",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 			echo "Starting......: Apache \"$this->servername\" create database $this->database\n";
-			$q->CREATE_DATABASE($this->database);
+			$q->CREATE_DATABASE($this->database,true);
 			
 		}else{
 			echo "Starting......: Apache \"$this->servername\" create $this->database OK\n";
@@ -65,30 +70,36 @@ class group_office{
 			$mysql=$unix->find_program("mysql");
 			if(is_file("$this->www_dir/install/sql/groupoffice.sql")){
 				$cmd="$mysql -u $q->mysql_admin -p\"$q->mysql_password\" --batch --database=$this->database < $this->www_dir/install/sql/groupoffice.sql";
-				echo "Starting......: Apache \"$this->servername\" Creating tables....\n";
+				writelogs("[$this->servername] \"$this->servername\" Creating tables....",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+				writelogs("[$this->servername] $cmd",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 				echo "Starting......: Apache $cmd\n";
 				
-				system($cmd);
+				exec($cmd,$talesexec);
+				while (list ($num,  ) = each ($talesexec)){
+					writelogs("[$this->servername] \"$this->servername\" $ligne",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+				}
+				
+				
 				if(!$this->testtables()){
-					echo "Starting......: Apache \"$this->servername\" Creating tables FAILED\n";
+					writelogs("[$this->servername] \"$this->servername\" Creating tables FAILED",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 					$firstinstall=true;
 				}
 			}else{
-				echo "Starting......: Apache \"$this->servername\" $this->www_dir/install/sql/groupoffice.sql no such file\n";
+				writelogs("[$this->servername] \"$this->servername\" $this->www_dir/install/sql/groupoffice.sql no such file !!!!!",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 			}
 		}else{
-			echo "Starting......: Apache \"$this->servername\" tables OK\n";
+			writelogs("[$this->servername] \"$this->servername\" $ligne tables OK",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 		}
 		
-		
+		if($q->mysql_server=="localhost"){$q->mysql_server="127.0.0.1";}
 		$gpoffice[]="<?php";
 		$gpoffice[]="\$config['enabled']=true;";
 		$gpoffice[]="\$config['id']=\"groupoffice\";";
 		$gpoffice[]="\$config['debug']=false;";
 		$gpoffice[]="\$config['debug_log']=false;";
 		$gpoffice[]="\$config['info_log']=\"/home/$this->servername/log/info.log\";";
-		$gpoffice[]="\$config['debug_display_errors']=true;";
-		$gpoffice[]="\$config['log']=false;";
+		$gpoffice[]="\$config['debug_display_errors']=False;";
+		$gpoffice[]="\$config['log']=True;";
 		$gpoffice[]="\$config['language']=\"en\";";
 		$gpoffice[]="\$config['default_country']=\"NL\";";
 		$gpoffice[]="\$config['default_timezone']=\"Europe/Amsterdam\";";
@@ -227,11 +238,21 @@ class group_office{
 		$mapping[]="			);";
 		$mapping[]="";		
 		@file_put_contents("$this->www_dir/ldapauth.config.php", @implode("\n", $mapping));
-		if($firstinstall){$this->autoinstall();}
+		
+		if($this->rebuildb){$this->autoinstall();}else{
+		if($firstinstall){$this->autoinstall();}}
 		
 	}
 	
 	private function autoinstall(){
+			$q=new mysql();
+			writelogs("FREEWEB: running autoinstall()",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+			if(!$q->DATABASE_EXISTS($this->database)){
+			writelogs("[$this->servername] DATABASE DOES NOT EXISTS Create e new one",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+			$q->CREATE_DATABASE($this->database);
+			}
+			
+			
 			global $GO_LANGUAGE, $lang, $GO_EVENTS;
 			require("$this->www_dir/Group-Office.php");
 			require_once("$this->www_dir/classes/filesystem.class.inc");
@@ -309,15 +330,19 @@ class group_office{
 					}
 				}
 				
+				writelogs("Adding LDAPAUTH Module GO_MODULES->add_module('ldapauth')",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 				$GO_MODULES->add_module('ldapauth');
 				echo "Starting......: Apache \"$this->servername\" save_setting upgrade_mtime\n";
 				
 				$GO_CONFIG->save_setting('upgrade_mtime', $GO_CONFIG->mtime);
 				
-				if($uid<>null){
-					$u=new user($uid);
+				if($this->uid<>null){
+					
+					$u=new user($this->uid);
 					$password=$u->password;
 					$mail=$u->mail;
+					$uid=$this->uid;
+					writelogs("Adding $this->uid/$u->password/$mail Module GO_USERS->add_user",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 				}else{
 					$ldap=new clladp();
 					$uid=$ldap->ldap_admin;
@@ -326,7 +351,8 @@ class group_office{
 				}
 				
 				$GO_USERS->nextid('go_users');
-				echo "Starting......: Apache \"$this->servername\" adding \"$uid\" language {$GO_LANGUAGE->language} user $mail\n";
+				writelogs("Starting......: Apache \"$this->servername\" adding \"$uid\" language {$GO_LANGUAGE->language} user $mail",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+				
 				$user['id']=1;
 				$user['language'] = $GO_LANGUAGE->language;
 				$user['first_name']=$GO_CONFIG->product_name;
@@ -343,7 +369,7 @@ class group_office{
 				//$GO_USERS->debug=true;
 				
 				$GO_USERS->add_user($user,array(1,2,3),array($GO_CONFIG->group_everyone));
-				
+				writelogs("Starting......: Apache installtion of group office success",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 		
 	}
 	
@@ -373,10 +399,11 @@ class group_office{
 			$tables[]="go_state";
 			$tables[]="go_users";
 			$tables[]="go_users_groups";
-
+			unset($GLOBALS["__MYSQL_TABLE_EXISTS"]);
 			$q=new mysql();
 			while (list ($index, $yable) = each ($tables) ){
-				if(!$q->TABLE_EXISTS($yable, $this->database)){
+
+				if(!$q->TABLE_EXISTS($yable, $this->database,true)){
 					echo "Starting......: Apache \"$this->servername\" create $yable no such table\n";
 					return false;
 				}

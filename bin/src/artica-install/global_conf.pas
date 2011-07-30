@@ -5679,6 +5679,9 @@ begin
     if FileExists('/usr/share/artica-postfix/bin/artica-attachments') then logs.DeleteFile('/usr/share/artica-postfix/bin/artica-attachments');
     if FileExists('/etc/artica-postfix/settings/Daemons/lessfsConf') then SYS.THREAD_COMMAND_SET(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.lessfs.php');
     if not FileExists('/etc/artica-postfix/locales.gen') then SYS.THREAD_COMMAND_SET(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.locale.gen.php');
+    if FileExists('/etc/dhcp/dhclient-exit-hooks.d/sendmail') then logs.DeleteFile('/etc/dhcp/dhclient-exit-hooks.d/sendmail');
+
+
     if FileExists('/usr/bin/apt-get') then fpsystem(trim(nohup+' '+SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.apt-get.php --sources-list >/dev/null 2>&1 &'));
     if FileExists('/etc/imapd.conf') then begin
        if Not FileExists('/etc/artica-postfix/cyrus-configured.lock') then begin
@@ -8492,113 +8495,8 @@ end;
 
 //##############################################################################
 function MyConf.LINUX_DISTRIBUTION():string;
-var
-   RegExpr:TRegExpr;
-   FileTMP:TstringList;
-   Filedatas:TstringList;
-   i:integer;
-   distri_name,distri_ver,distri_provider:string;
-   D:boolean;
 begin
-  D:=COMMANDLINE_PARAMETERS('debug');
-  if length(get_INFOS('LinuxDistribution'))>0 then begin
-     exit(get_INFOS('LinuxDistribution'));
-  end;
-
-  RegExpr:=TRegExpr.Create;
-  if FileExists('/etc/lsb-release') then begin
-      if not FileExists('/etc/redhat-release') then begin
-             if D then Writeln('/etc/lsb-release detected (not /etc/redhat-release detected)');
-             fpsystem('/bin/cp /etc/lsb-release /opt/artica/logs/lsb-release');
-             FileTMP:=TstringList.Create;
-             FileTMP.LoadFromFile('/opt/artica/logs/lsb-release');
-             for i:=0 to  FileTMP.Count-1 do begin
-                 RegExpr.Expression:='DISTRIB_ID=(.+)';
-                 if RegExpr.Exec(FileTMP.Strings[i]) then distri_provider:=trim(RegExpr.Match[1]);
-                 RegExpr.Expression:='DISTRIB_RELEASE=([0-9\.]+)';
-                 if RegExpr.Exec(FileTMP.Strings[i]) then distri_ver:=trim(RegExpr.Match[1]);
-                 RegExpr.Expression:='DISTRIB_CODENAME=(.+)';
-                 if RegExpr.Exec(FileTMP.Strings[i]) then distri_name:=trim(RegExpr.Match[1]);
-             end;
-
-             result:=distri_provider + ' ' +  distri_ver + ' ' +  distri_name;
-             set_INFOS('LinuxDistribution',result);
-             RegExpr.Free;
-             FileTMP.Free;
-             exit();
-      end;
-  end;
-  Filedatas:=TstringList.Create;
-  if FileExists('/etc/debian_version') then begin
-       if D then Writeln('/etc/debian_version detected');
-       Filedatas:=TstringList.Create;
-       Filedatas.LoadFromFile('/etc/debian_version');
-       RegExpr.Expression:='([0-9\.]+)';
-       if RegExpr.Exec(Filedatas.Strings[0]) then begin
-          Set_infos('LinuxDistribution','Debian ' + RegExpr.Match[1] +' Gnu-linux');
-          result:='Debian ' + RegExpr.Match[1] +' Gnu-linux';
-          RegExpr.Free;
-          Filedatas.Free;
-          exit();
-       end;
-  end;
-  //Fedora
-  if FileExists('/etc/redhat-release') then begin
-     Filedatas:=TstringList.Create;
-    try Filedatas.LoadFromFile('/etc/redhat-release') except writeln('/etc/redhat-release: FATAL error line 8305');exit; end;
-
-     if D then Writeln('/etc/redhat-release detected -> ' + Filedatas.Strings[0]);
-
-     RegExpr.Expression:='Fedora Core release\s+([0-9]+)';
-     if RegExpr.Exec(Filedatas.Strings[0]) then begin
-          Set_infos('LinuxDistribution','Fedora Core release ' + RegExpr.Match[1]);
-          result:='Fedora Core release ' + RegExpr.Match[1];
-          RegExpr.Free;
-          Filedatas.Free;
-          exit();
-       end;
-      RegExpr.Expression:='Fedora release\s+([0-9]+)';
-      if RegExpr.Exec(Filedatas.Strings[0]) then begin
-         Set_infos('LinuxDistribution','Fedora release ' + RegExpr.Match[1]);
-         result:='Fedora release ' + RegExpr.Match[1];
-         RegExpr.Free;
-         Filedatas.Free;
-         exit();
-      end;
-
-      //Mandriva
-      RegExpr.Expression:='Mandriva Linux release\s+([0-9]+)';
-      if RegExpr.Exec(Filedatas.Strings[0]) then begin
-         Set_infos('LinuxDistribution','Mandriva Linux release ' + RegExpr.Match[1]);
-         result:='Mandriva Linux release ' + RegExpr.Match[1];
-         RegExpr.Free;
-         Filedatas.Free;
-         exit();
-      end;
-      //CentOS
-      RegExpr.Expression:='CentOS release\s+([0-9]+)';
-      if RegExpr.Exec(Filedatas.Strings[0]) then begin
-         result:='CentOS release ' + RegExpr.Match[1];
-         Set_infos('LinuxDistribution',result);
-         RegExpr.Free;
-         Filedatas.Free;
-         exit();
-      end;
-
-    end;
-
-   //Suse
-   if FileExists('/etc/SuSE-release') then begin
-       Filedatas:=TstringList.Create;
-       Filedatas.LoadFromFile('/etc/SuSE-release');
-       result:=trim(Filedatas.Strings[0]);
-       Set_infos('LinuxDistribution',result);
-       Filedatas.Free;
-       exit;
-   end;
-
-
-
+exit(SYS.LINUX_DISTRIBUTION());
 end;
 //##############################################################################
 procedure MyConf.ShowScreen(line:string);

@@ -235,7 +235,7 @@ function shared_edit(){
 
 	<tr>
 		<td class=legend style='font-size:13px'>{subnet-mask}:</td>
-		<td>".field_ipv4('subnet-mask',$ligne["subnet-mask"],'font-size:14px;padding:3px')."</td>
+		<td>".field_ipv4('subnet-mask_'.$t,$ligne["subnet-mask"],'font-size:14px;padding:3px')."</td>
 		<td>". help_icon("{dhcp-subnet-masq_text}")."</td>
 	</tr>	
 	
@@ -310,7 +310,7 @@ var x_SharedDHCPNetSave= function (obj) {
 		XHR.appendData('sharednet_name',document.getElementById('sharednet_name').value);
 		XHR.appendData('groupnameAdd',document.getElementById('groupnameAdd').value);
 		XHR.appendData('scope',document.getElementById('scope').value);
-		XHR.appendData('subnet',document.getElementById('subnet').value);
+		XHR.appendData('subnet',document.getElementById('subnet_'.$t).value);
 		XHR.appendData('netmask',document.getElementById('netmask_$t').value);
 		XHR.appendData('routers',document.getElementById('routers').value);
 		XHR.appendData('range1',document.getElementById('range1_$t').value);

@@ -2,6 +2,7 @@
 include_once(dirname(__FILE__). '/class.ini.inc');
 include_once(dirname(__FILE__). '/class.sockets.inc');
 include_once(dirname(__FILE__). '/class.users.menus.inc');
+include_once(dirname(__FILE__). '/class.mysql.inc');
 
 class mysqlserver{
 	
@@ -45,7 +46,13 @@ class mysqlserver{
 		$ini->loadString($datas);
 		$this->main_array=$ini->_params["MYSQL"];
 		$this->BuildDefault();
+		$this->LOAD_VARIABLES();
 		
+	}
+	
+	private function LOAD_VARIABLES(){
+		$q=new mysql();
+		return $q->SHOW_VARIABLES();
 	}
 	
 	private function BuildDefault(){
@@ -93,6 +100,12 @@ class mysqlserver{
 		
 	}
 	
+	private function setssl(){
+		$q=new mysql();
+		$q->SET_VARIABLES("have_openssl","YES");
+		$q->SET_VARIABLES("have_ssl", "YES");
+	}
+	
 	function Mysql_verlow_config(){
 		
 		$this->main_array["max_allowed_packet"]=1;
@@ -101,6 +114,8 @@ class mysqlserver{
 		if(posix_getuid()==0){
 			$GLOBALS["AS_ROOT"]=true;
 			echo "Starting......: Mysql binary version:$this->mysqlvbin\n";
+			if(!is_file("/etc/mysql/debian-start")){@file_put_contents("/etc/mysql/debian-start", "");}
+			shell_exec("/bin/chmod 755 /etc/mysql/debian-start");
 		}
 		
 		$conf="[client]\n";
@@ -116,6 +131,7 @@ class mysqlserver{
 		$SpecificConf=$this->GetUsersSpecificConf();
 		if($SpecificConf<>null){$conf=$conf.$SpecificConf."\n";}
 		$conf=$conf ."user=mysql\n";
+		$conf=$conf ."log-error\n";
 		$conf=$conf ."pid-file=/var/run/mysqld/mysqld.pid\n";
 		$conf=$conf ."socket=/var/run/mysqld/mysqld.sock\n";
 		$conf=$conf ."port=3306\n";	
@@ -214,6 +230,7 @@ class mysqlserver{
 		
 		$conf=$conf ."basedir=/usr\n";
 		$conf=$conf ."datadir=/var/lib/mysql\n";
+		$conf=$conf ."log-error\n";
 		$conf=$conf ."tmpdir=/tmp\n";
 		$conf=$conf. "skip-locking\n";
 		$conf=$conf. "skip-bdb\n";
@@ -257,16 +274,55 @@ class mysqlserver{
 	
 	private function GetUsersSpecificConf(){
 		
+			
+		
 		
 		if(!$GLOBALS["AS_ROOT"]){return;}
 		if(!is_file("/etc/artica-postfix/my.cnf.mysqld")){
 			if($GLOBALS["VERBOSE"]){"mysqld: /etc/artica-postfix/my.cnf.mysqld no such file\n";}
 		}
 		$datas=@file_get_contents("/etc/artica-postfix/my.cnf.mysqld");
-		return $datas;
+		$tbl=explode("\n",$datas);
 		
+		
+		
+		while (list ($index, $value) = each ($tbl) ){
+			if(substr($value, 0,1)=="#"){continue;}
+			if(preg_match("#(.+?)=(.+)#", $value,$re)){
+				$key=trim(strtolower($re[1]));
+				if($this->TestsParametersToDelete($key)){
+					echo "Starting......: Mysql \"$key\" is depreciated\n";
+					$tbl[$index]="#$key={$re[2]} - depreciated";
+					$save=true;
+					continue;
+				}
+				
+				echo "Starting......: Mysql checking $key done\n";
+			}
+			
+		}
+		
+		if($save){@file_put_contents("/etc/artica-postfix/my.cnf.mysqld", @implode("\n", $tbl));}
+		
+		return @implode("\n", $tbl);
 		
 	}
+	
+	private function TestsParametersToDelete($param){
+		if($this->VERSION_MAJOR>4){
+			if($this->VERSION_MAJOR>4){
+				if($this->VERSION_REV>=3){
+						$array["master-connect-retry"]=true;
+					}
+				}
+			}
+
+		if(!is_array($array)){return false;}
+		if(isset($array[$param])){return true;}
+		
+	}
+	
+	
 	private function ssl_client_mode(){
 		if(!isset($GLOBALS["AS_ROOT"])){if(posix_getuid()==0){$GLOBALS["AS_ROOT"]=true;}}
 		if(!$GLOBALS["AS_ROOT"]){return;}
@@ -297,9 +353,9 @@ class mysqlserver{
 		$mysqlSSL=$sock->GET_INFO("mysqlSSL");
 		if(!is_numeric($mysqlSSL)){$mysqlSSL=0;}
 		if($mysqlSSL==0){return null;}
-		$files[]="/etc/ssl/certs/mysql/cacert.pem";
-		$files[]="/etc/ssl/certs/mysql/server-cert.pem";
-		$files[]="/etc/ssl/certs/mysql/server-key.pem";
+		$files[]="/var/lib/mysql/mysql-ca-cert.pem";
+		$files[]="/var/lib/mysql/mysql-server-cert.pem";
+		$files[]="/var/lib/mysql/mysql-server-key.pem";
 		$continue=true;
 		while (list ($i, $filename) = each ($files) ){if(!is_file($filename)){echo "$filename no such file\n";$continue=false;}}
 		if(!$continue){
@@ -310,10 +366,11 @@ class mysqlserver{
 		}
 		if(!$continue){return null;}
 		$f[]="ssl";
-		$f[]="ssl-ca=/etc/ssl/certs/mysql/cacert.pem";
-		$f[]="ssl-cert=/etc/ssl/certs/mysql/server-cert.pem";
-		$f[]="ssl-key=/etc/ssl/certs/mysql/server-key.pem";
-		$f[]=""; 		
+		$f[]="ssl-ca=/var/lib/mysql/mysql-ca-cert.pem";
+		$f[]="ssl-cert=/var/lib/mysql/mysql-server-cert.pem";
+		$f[]="ssl-key=/var/lib/mysql/mysql-server-key.pem";
+		$f[]=""; 	
+		$this->setssl();	
 		return @implode("\n", $f);
 		
 	}
@@ -353,9 +410,9 @@ class mysqlserver{
 		$ssl=$this->ssl_server_mode();
 		if($ssl<>null){
 			$mysqld["ssl"]=null;
-			$mysqld["ssl-ca"]="/etc/ssl/certs/mysql/cacert.pem";
-			$mysqld["ssl-cert"]="/etc/ssl/certs/mysql/server-cert.pem";
-			$mysqld["ssl-key"]="/etc/ssl/certs/mysql/server-key.pem";	
+			$mysqld["ssl-ca"]="/var/lib/mysql/mysql-ca-cert.pem";
+			$mysqld["ssl-cert"]="/var/lib/mysql/mysql-server-cert.pem";
+			$mysqld["ssl-key"]="/var/lib/mysql/mysql-server-key.pem";	
 		}
 		
 		$mysqld["user"]="mysql";
@@ -455,6 +512,7 @@ class mysqlserver{
 		$mysqld["max_connect_errors"]="1000";
 		$mysqld["query_cache_type"]="1";
 		$mysqld["default-storage-engine"]="MyISAM";
+		$mysqld["log-error"]="";
 		
 		if(count($SpecificConf)>0){
 			while (list ($key, $value) = each ($SpecificConf) ){

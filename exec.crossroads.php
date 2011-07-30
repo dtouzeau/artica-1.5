@@ -55,6 +55,20 @@ while (list ($servername, $ligne) = each ($MAIN["BACKENDS"]) ){	$cd[]="--backend
 @file_put_contents("/etc/artica-postfix/croassroads.cmdline",@implode(" ",$cd));
 }
 
+function LoadIpAddresses(){
+	$unix=new unix();
+	$ifconfig=$unix->find_program("ifconfig");
+	exec("$ifconfig 2>&1",$results);
+	while (list ($index, $line) = each ($results) ){
+		if(preg_match("#inet adr:([0-9\.]+)#", $line,$re)){
+			echo "Starting......: Crossroads multiple found interface '{$re[1]}'\n";
+			$GLOBALS["INET_I"][trim($re[1])]=true;
+		}
+	}
+	
+	
+}
+
 function multiples_start(){
 	$GLOBALS["CLASS_UNIX"]=new unix();
 	$xr=$GLOBALS["CLASS_UNIX"]->find_program("xr");
@@ -64,7 +78,7 @@ function multiples_start(){
 		return;
 	} 
 		
-	
+	LoadIpAddresses();
 	$sql="SELECT * FROM crossroads_smtp";
 	$q=new mysql();
 	$results=$q->QUERY_SQL($sql,"artica_backup");
@@ -85,7 +99,7 @@ function multiples_start(){
 		$cd=array();
 		$cd[]=$xr;
 		if(count($arrayConf["INSTANCES"])==0){
-			echo "Starting......: Crossroads multiple $ipaddr No clients set\n";
+			echo "Starting......: Crossroads multiple \"$ipaddr\" No clients set\n";
 			continue;
 		}		
 		
@@ -100,7 +114,7 @@ function multiples_start(){
 				echo "Starting......: Crossroads multiple round-robbin to $ip:25{$instancesParams["MAXCONS"][$ip]}:{$instancesParams["WEIGTH"][$ip]}...\n";
 				$cd[]="--backend $ip:25:{$instancesParams["MAXCONS"][$ip]}:{$instancesParams["WEIGTH"][$ip]}";
 			}
-			echo "Starting......: Crossroads multiple $ipaddr...\n";
+			echo "Starting......: Crossroads multiple \"$ipaddr\"...\n";
 			$cmdline=trim($nohup." ".@implode(" ",$cd)." >/dev/null 2>&1 &");
 			if($GLOBALS["VERBOSE"]){echo $cmdline."\n";}
 			shell_exec($cmdline);
@@ -108,14 +122,19 @@ function multiples_start(){
 				sleep(1);
 				$pid=multiples_pid($ipaddr);
 				if($pid>0){
-					echo "Starting......: Crossroads multiple $ipaddr Success PID $pid...\n";
+					echo "Starting......: Crossroads multiple \"$ipaddr\" Success PID $pid...\n";
 					break;
 				}
 			}
 		
 			if(multiples_pid($ipaddr)==0){
-				echo "Starting......: Crossroads multiple $ipaddr Failed...\n";
-				echo "Starting......: Crossroads multiple $cmdline\n";
+				echo "Starting......: Crossroads multiple \"$ipaddr\" Failed...\n";
+				if(!isset($GLOBALS["INET_I"][$ipaddr])){
+					echo "Starting......: Crossroads multiple \"$ipaddr\" seems not exists on this system, remove it...\n";
+					$sql="DELETE FROM crossroads_smtp WHERE ipaddr='$ipaddr'";
+					$q->QUERY_SQL($sql,"artica_backup");
+				}
+				echo "Starting......: Crossroads multiple \"$cmdline\"\n";
 			
 			}
 		}else{

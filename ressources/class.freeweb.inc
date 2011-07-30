@@ -18,6 +18,7 @@
 		var $WORKING_DIRECTORY='';
 		var $SQUID_CACHMGR='';
 		var $APACHE_RUN_USER='';
+		var $APACHE_RUN_GROUP='';
 		var $LimitByIp=0;
 		var $Params=array();
 		var $mod_rewrite='';
@@ -44,13 +45,21 @@
 		var $ForwardTo=0;
 		var $APACHE_MOD_TOMCAT=false;
 		
+		
 		function freeweb($servername=null){
 			$users=new usersMenus();
+			if($GLOBALS["posix_getuid"]==0){$this->AS_ROOT=true;}
 			$this->APACHE_DIR_SITES_ENABLED=$users->APACHE_DIR_SITES_ENABLED;
 			$this->SQUID_CACHMGR=$users->SQUID_CACHMGR;
-			$this->APACHE_RUN_USER=$users->APACHE_RUN_USER;
+			if($this->AS_ROOT){
+				$unix=new unix();
+				$this->APACHE_RUN_USER=$unix->APACHE_SRC_ACCOUNT();
+				$this->APACHE_RUN_GROUP=$unix->APACHE_SRC_GROUP();
+			}
+			
+			
 			$this->APACHE_MOD_TOMCAT=$users->APACHE_MOD_TOMCAT;
-			if($GLOBALS["posix_getuid"]==0){$this->AS_ROOT=true;}
+			
 			if($servername<>null){
 				$this->WORKING_DIRECTORY="/var/www/$servername";
 				$this->servername=$servername;
@@ -560,9 +569,9 @@
 			if(!is_dir("/var/log/apache2")){@mkdir("/var/log/apache2",666,true);}
 			
 			if(strlen($this->APACHE_RUN_USER)>3){
-				shell_exec("/bin/chown -R $this->APACHE_RUN_USER:$this->APACHE_RUN_USER $this->WORKING_DIRECTORY 2>&1 &");
-				shell_exec("/bin/chown -R $this->APACHE_RUN_USER:$this->APACHE_RUN_USER $this->WORKING_DIRECTORY/* 2>&1 &");
-				shell_exec("/bin/chown -R $this->APACHE_RUN_USER:$this->APACHE_RUN_USER /var/log/apache2 2>&1 &");
+				shell_exec("/bin/chown -R $this->APACHE_RUN_USER:$this->APACHE_RUN_GROUP $this->WORKING_DIRECTORY 2>&1 &");
+				shell_exec("/bin/chown -R $this->APACHE_RUN_USER:$this->APACHE_RUN_GROUP $this->WORKING_DIRECTORY/* 2>&1 &");
+				shell_exec("/bin/chown -R $this->APACHE_RUN_USER:$this->APACHE_RUN_GROUP /var/log/apache2 2>&1 &");
 			}
 			
 			
@@ -617,6 +626,7 @@
 			if($this->Params["JkMount"]==0){return null;}
 			$users=new usersMenus();
 			if($users->OPENEMM_INSTALLED){
+				$sock=new sockets();
 				$OpenEMMEnable=$sock->GET_INFO("OpenEMMEnable");
 				if(!is_numeric($OpenEMMEnable)){$OpenEMMEnable=1;}
 				if($OpenEMMEnable==1){return;}
@@ -680,6 +690,7 @@
 		public function open_basedir(){
 				if($this->groupware=="GROUPOFFICE"){
 					$f[]="/home/$this->servername";
+					$f[]="/home/$this->servername/cache";
 				}
 				$f[]="/usr/share/php";
 				$f[]="/usr/share/php5";

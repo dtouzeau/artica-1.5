@@ -672,6 +672,7 @@ class dansguardian_rules{
 									"searchengines"=>"{searchengines}",
 									"translators"=>"{www_translators}",
 									"spyware"=>"{www_spyware}",
+									"malware"=>"{www_malware}",
 									"tracker"=>"{www_tracker}",
 									
 									
@@ -770,7 +771,8 @@ class dansguardian_rules{
 		  	"remote-control"=>"20-win-nic.png",
 			"recreation/nightout"=>"icon_nightclub.png",	
 			"imagehosting"=>"picasa_icon.png",
-		  	"pictures"=>"cat_pictures.png"
+		  	"pictures"=>"cat_pictures.png",
+		  	"malware"=>"icon_malwares.png"
 		  	
 		  	);
 									

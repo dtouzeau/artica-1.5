@@ -42,6 +42,9 @@ class dnsmasq{
 		while (list ($index, $line) = each ($tpl) ){
 			if(trim($line)==null){continue;}
 			if(substr(trim($line),0,1)=="#"){continue;}
+			if(preg_match("#^server=#", $line)){continue;}
+			if(preg_match("#^local=#", $line)){continue;}
+			if(preg_match("#^ptr-record=#", $line)){continue;}
 			writelogs("Parsing $line",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 			if(preg_match('#^([a-zA-Z\-\_]+)=(.+)#',$line,$regs)){
 				if(trim($regs[1])=="EnableDNSMASQ"){continue;}
@@ -187,8 +190,9 @@ class dnsmasq{
 			if($index==null){continue;}
 			if(isset($GLOBALS["ARRAY_ADRESSES_DONE"][$index])){continue;}
 			$GLOBALS["ARRAY_ADRESSES_DONE"][$index]=true;
-				$conf=$conf . "address=/$index/$value\n";
-			
+			$re=explode(".", $value);
+			$conf=$conf . "address=/$index/$value\n";
+			$conf=$conf . "ptr-record={$re[3]}.{$re[2]}.{$re[1]}.{$re[0]}.in-addr.arpa,\"$index\"\n";
 		}}
 		
 		$ldapAddresses=$this->ldap_addesses();
@@ -220,15 +224,46 @@ class dnsmasq{
 	}
 	
 	private function ldap_addesses(){
+
+		
+		
 		if($this->EnableDNSMASQLDAPDB==0){return;}
+		
+		if(count($this->array_interface)==0){
+			include_once(dirname(__FILE__)."/class.system.network.inc");
+			$net=new networking();
+			while (list ($eth, $ip_addr) = each ($net->array_TCP) ){
+				if($ip_addr=="127.0.0.1"){continue;}
+				if($ip_addr=="0.0.0.0"){continue;}
+				$array_interface[]=$ip_addr;
+			}
+		}else{
+			$array_interface=$this->array_interface;
+		}	
+		
+		$reverse_ip=$array_interface[0];
+		
 		if(count($this->array_ldap_addresses)>0){
 			reset($this->array_ldap_addresses);
 			while (list ($hostname, $arecord) = each ($this->array_ldap_addresses) ){
 				if(trim($hostname)==null){continue;}
-				$f[]="address=/$hostname/$arecord";		
+				$f[]="address=/$hostname/$arecord";	
+				$re=explode(".", $arecord);
+				if($GLOBALS["VERBOSE"]){echo "PTR {$re[3]}.{$re[2]}.{$re[1]}.{$re[0]}.in-addr.arpa\n";}
+				$reverse["{$re[3]}.{$re[2]}.{$re[1]}.{$re[0]}.in-addr.arpa"]=$hostname;
+				
 			}
 			
-			if(count($f)>0){return @implode("\n", $f);}
+			if(count($f)>0){
+				
+				if(isset($reverse)){
+					if(count($reverse)>0){
+						while (list ($a, $b) = each ($reverse) ){
+							$f[]="ptr-record=$a,\"$b\"";
+						}
+					}
+				}
+				return @implode("\n", $f);}
 		}
 		$ldap=new clladp();
 		$pattern="(&(objectclass=dNSDomain2)(|(aRecord=*)(associatedDomain=*)(dc=*)))";
@@ -250,9 +285,22 @@ class dnsmasq{
 						if(isset($GLOBALS["ARRAY_ADRESSES_DONE"][$hostname])){continue;}
 						$this->array_ldap_addresses[$hostname]=$arecord;
 						$GLOBALS["ARRAY_ADRESSES_DONE"][$hostname]=true;
+						$rz=explode(".", $arecord);
+						$reverse["{$re[3]}.{$rz[2]}.{$rz[1]}.{$rz[0]}.in-addr.arpa"]=$hostname;
 						$f[]="address=/$hostname/$arecord";				
 					}
-				}		
+				}
+
+			if(isset($reverse)){
+				if(count($reverse)>0){
+					while (list ($a, $b) = each ($reverse) ){
+						$f[]="ptr-record=$a,\"$b\"";
+					}
+				}
+			}	
+			
+			
+			
 			
 		}else{return null;}
 		if(count($f)>0){return @implode("\n", $f);}

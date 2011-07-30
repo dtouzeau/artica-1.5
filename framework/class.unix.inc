@@ -928,7 +928,29 @@ public function shellEscapeChars($path){
 			while (list ($num, $line) = each ($tbl)){if(preg_match("#User\s+(.+)#",$line,$re)){return trim("{$re[1]}");}}
 		}
 		
+		if(is_file("/etc/apache2/uid.conf")){
+			$tbl=explode("\n",@file_get_contents("/etc/apache2/uid.conf"));
+			while (list ($num, $line) = each ($tbl)){if(preg_match("#User\s+(.+)#",$line,$re)){return trim("{$re[1]}");}}	
+		}
+		
 	}	
+	
+	public function APACHE_SRC_GROUP(){
+		$httpd_conf=$this->LOCATE_APACHE_CONF_PATH();
+		if(is_file($httpd_conf)){
+			$tbl=explode("\n",@file_get_contents($httpd_conf));
+			while (list ($num, $line) = each ($tbl)){if(preg_match("#Group\s+(.+)#",$line,$re)){return trim("{$re[1]}");}}
+		}
+		
+		if(is_file("/etc/apache2/uid.conf")){
+			$tbl=explode("\n",@file_get_contents("/etc/apache2/uid.conf"));
+			while (list ($num, $line) = each ($tbl)){if(preg_match("#Group\s+(.+)#",$line,$re)){return trim("{$re[1]}");}}	
+		}
+
+		return $this->APACHE_SRC_ACCOUNT();
+		
+	}
+	
 	
 public function EXEC_NICE(){
 	$tmp=null;
@@ -2079,13 +2101,13 @@ public function alt_stat($file) {
 			if(preg_match('#SERVER_CONFIG_FILE="(.+?)"#',$ligne,$re)){$r["SERVER_CONFIG_FILE"]=$re[1];}
 		}
 		
-		if(!isset($r["HTTPD_ROOT"])){
-			if(is_file($r["SERVER_CONFIG_FILE"])){
-				$GLOBALS[__FUNCTION__]=$r["SERVER_CONFIG_FILE"];
-				return $GLOBALS[__FUNCTION__];
-			}
-			
+		
+		if(is_file($r["SERVER_CONFIG_FILE"])){
+			$GLOBALS[__FUNCTION__]=$r["SERVER_CONFIG_FILE"];
+			return $GLOBALS[__FUNCTION__];
 		}
+			
+		
 		
 		if(file_exists("{$r["HTTPD_ROOT"]}/{$r["SERVER_CONFIG_FILE"]}")){
 			if(isset($r["HTTPD_ROOT"])){$GLOBALS[__FUNCTION__]="{$r["HTTPD_ROOT"]}/{$r["SERVER_CONFIG_FILE"]}";}
@@ -2539,6 +2561,10 @@ public function IsProtectedDirectory($folder){
  //############################################################################# 
 
 public function getmodpathfromconf(){
+	if(is_dir("/etc/apache2/mods-enabled")){return "/etc/apache2";}
+	if(is_dir("/etc/httpd/mods-enabled")){return "/etc/httpd";}
+	if(is_dir("/usr/local/etc/httpd/mods-enabled")){return "/usr/local/etc/httpd";}
+	if(is_dir("/usr/local/etc/apache2/mods-enabled")){return "/usr/local/etc/apache2";}
 	$httpdconf=$this->LOCATE_APACHE_CONF_PATH();
 	if($httpdconf=="/etc/httpd/conf/httpd.conf"){return "/etc/httpd";}
 	if($httpdconf=="/usr/local/etc/httpd/conf/httpd.conf"){return "/usr/local/etc/httpd";}
@@ -2547,8 +2573,9 @@ public function getmodpathfromconf(){
 
 
 public function APACHE_DIR_SITES_ENABLED(){
+	if(is_dir("/etc/apache2/sites-enabled")){return '/etc/apache2/sites-enabled';}
 	$httpdconf=$this->LOCATE_APACHE_CONF_PATH();
-	$DAEMON_PATH=$this->getmodpathfromconf($httpdconf);
+	$DAEMON_PATH=$this->getmodpathfromconf();
 	return $DAEMON_PATH."/sites-enabled";
 	$mods_enabled=$DAEMON_PATH."/mods-enabled";	
 	

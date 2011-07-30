@@ -907,7 +907,7 @@ $html="
 $field_domains
 <tr>
 	<td class=legend>{computer_name}:</strong></td>
-	<td align=left>". Field_text("computername",null,"width:220px;font-size:14px","script:SaveDNSEntryCheck(event)","FillDNSNAME()")."</strong></td>
+	<td align=left>". Field_text("computername-pdns-entry",null,"width:220px;font-size:14px","script:SaveDNSEntryCheck(event)","FillDNSNAME()")."</strong></td>
 </tr>
 
 
@@ -928,7 +928,7 @@ $field_domains
 		}
 		
 		function FillDNSNAME(){
-			var computername=document.getElementById('computername').value;
+			var computername=document.getElementById('computername-pdns-entry').value;
 			var DnsZoneName=document.getElementById('DnsZoneName').value;
 			if(computername.length==0){return;}
 			if(DnsZoneName.length==0){return;}
@@ -937,7 +937,7 @@ $field_domains
 		
 		function SaveDNSEntry(){
 			var ok=1;
-			var computername=document.getElementById('computername').value;
+			var computername=document.getElementById('computername-pdns-entry').value;
 			var DnsZoneName=document.getElementById('DnsZoneName').value;
 			var ComputerIP=document.getElementById('ComputerIP').value;		
 			if(DnsZoneName.length==0){ok=0;}
@@ -953,7 +953,7 @@ $field_domains
 		}
 		
 		function SaveDNSCheckFields(){
-			document.getElementById('computername').disabled=true;
+			document.getElementById('computername-pdns-entry').disabled=true;
 			document.getElementById('DnsZoneName').disabled=true;
 			
 			var ComputerIP=document.getElementById('ComputerIP').value;
@@ -961,7 +961,7 @@ $field_domains
 			document.getElementById('DnsZoneName').disabled=false;
 			var DnsZoneName=document.getElementById('DnsZoneName').value;
 			if(DnsZoneName.length==0){return;}
-			document.getElementById('computername').disabled=false;
+			document.getElementById('computername-pdns-entry').disabled=false;
 			
 		}
 		SaveDNSCheckFields();
@@ -1417,6 +1417,7 @@ function popup_mx_delete(){
 }
 function restart_dnsmasq(){
 	$user=new usersMenus();
+	$sock=new sockets();
 	if(!$user->dnsmasq_installed){return;}
 	$EnableDNSMASQLDAPDB=$sock->GET_INFO("EnableDNSMASQLDAPDB");
 	if(!is_numeric($EnableDNSMASQLDAPDB)){$EnableDNSMASQLDAPDB=0;}	

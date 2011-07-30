@@ -66,7 +66,7 @@ var
    pidstring:string;
    fpid,i:integer;
    cmdline,tmpstr,env:string;
-   su:string;
+   su,distri:string;
 begin
 if not FileExists(binpath) then begin
    writeln('Stopping OpenEMM server......: Not installed');
@@ -78,11 +78,13 @@ if not SYS.PROCESS_EXIST(PID_NUM()) then begin
         exit;
 end;
    pidstring:=PID_NUM();
-   writeln('Stopping OpenEMM server......: ' + pidstring + ' PID..');
+   distri:=SYS.DISTRIBUTION_CODE();
+   writeln('Stopping OpenEMM server......: ' + pidstring + ' PID.. "',distri,'"');
 
    su:=SYS.LOCATE_GENERIC_BIN('su');
    tmpstr:=logs.FILE_TEMP();
-   cmd:='su -m -c "'+binpath +' stop" --login openemm >'+tmpstr+' 2>&1';
+   if distri='SUSE' then cmd:=su+' -m -c "'+binpath +' stop" --login openemm >'+tmpstr+' 2>&1';
+   if length(cmd)=0 then cmd:=su+' -c "'+binpath +' stop" --login openemm >'+tmpstr+' 2>&1';
    fpsystem(cmd);
    pids:=TStringlist.Create;
    pids.LoadFromFile(tmpstr);
@@ -112,6 +114,7 @@ var
    fpid,i:integer;
    cmdline,tmpstr,env:string;
    su:string;
+   distri:string;
 begin
 
    if not FileExists(binpath) then begin
@@ -129,10 +132,13 @@ if SYS.PROCESS_EXIST(PID_NUM()) then begin
    logs.DebugLogs('Starting......: OpenEMM server Already running using PID ' +PID_NUM()+ '...');
    exit;
 end;
+distri:=SYS.DISTRIBUTION_CODE();
   if FileExists('/usr/share/artica-postfix/exec.openemm.php') then fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.openemm.php --build');
    su:=SYS.LOCATE_GENERIC_BIN('su');
    tmpstr:=logs.FILE_TEMP();
-   cmd:='su -m -c "'+binpath +' start" --login openemm >'+tmpstr+' 2>&1';
+   if distri='SUSE' then cmd:=su+' -m -c "'+binpath +' start" --login openemm >'+tmpstr+' 2>&1';
+   if length(cmd)=0 then cmd:=su+' -c "'+binpath +' start" --login openemm >'+tmpstr+' 2>&1';
+
    fpsystem(cmd);
    pids:=TStringlist.Create;
    pids.LoadFromFile(tmpstr);

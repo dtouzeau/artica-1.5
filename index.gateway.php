@@ -502,6 +502,7 @@ function dhcp_computers_scripts(){
 
 	
 	while (list ($num, $ligne) = each ($array) ){
+		if(preg_match("#^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$#", trim($num))){continue;}
 		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
 		$ligne["MAC"]=str_replace("hardware ethernet","",$ligne["MAC"]);
 		$js=MEMBER_JS("$num$",1,1);

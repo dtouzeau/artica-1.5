@@ -30,6 +30,9 @@ if(isset($_GET["mysqld-perso-save"])){mysqld_perso_save();exit;}
 if(isset($_GET["openemm-status"])){openemm_status();exit;}
 if(isset($_GET["restart-openemm"])){openemm_restart();exit;}
 if(isset($_GET["kerbauth"])){kerbauth();exit;}
+if(isset($_GET["reload-pure-ftpd"])){pureftpd_reload();exit;}
+if(isset($_GET["restart-ftp"])){pureftpd_restart();exit;}
+
 
 
 
@@ -89,9 +92,13 @@ function restart_tomcat(){
 function restart_mysql(){
 	$unix=new unix();
 	$nohup=$unix->find_program("nohup");
-	$cmd=trim("/etc/init.d/artica-postfix stop mysql;/etc/init.d/artica-postfix stop mysql;/etc/init.d/artica-postfix start mysql");
-	$unix->THREAD_COMMAND_SET($cmd);
+	$cmd=trim("$nohup ".$unix->LOCATE_PHP5_BIN(). " /usr/share/artica-postfix/exec.mysql.build.php --build >/dev/null 2>&1");
 	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	
+	shell_exec($cmd);
+	$cmd=trim("$nohup /etc/init.d/artica-postfix restart mysql >/dev/null 2>&1 &");
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	
+	shell_exec($cmd);
+	
 }
 
 function restart_postfix_all(){
@@ -217,6 +224,21 @@ function openemm_restart(){
 	$unix=new unix();
 	$nohup=$unix->find_program("nohup");
 	$cmd=trim("$nohup /etc/init.d/artica-postfix restart openemm >/dev/null 2>&1 &");
+	shell_exec($cmd);
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);		
+}
+
+function pureftpd_reload(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim("$nohup /usr/share/artica-postfix/bin/artica-install --pure-ftp-reload >/dev/null 2>&1 &");
+	shell_exec($cmd);
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);		
+}
+function pureftpd_restart(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim("$nohup /etc/init.d/artica-postfix restart ftp >/dev/null 2>&1 &");
 	shell_exec($cmd);
 	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);		
 }

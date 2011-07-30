@@ -9,7 +9,7 @@
 <database_attachments>database backed storage for temporary attachment file handling</database_attachments>
 <database_status>Statut des tables</database_status>
 <debug_level>Rapport d'erreurs syst&egrave;me</debug_level>
-<debug_logger>Enhanced logging for debugging purposes</debug_logger>
+<debug_logger>Augmenter le niveau de traces</debug_logger>
 <default_host>L'h&ocirc;te de courrier choisi pour ex&eacute;cuter l'&eacute;tablissement de la connexion</default_host>
 <emoticons>Replace emoticons in plain text message body with real icons</emoticons>
 <enable_caching>Activer le cache des messages et de donn&eacute;es de bo&icirc;tes aux lettres dans la base de donn&eacute;es locale</enable_caching>

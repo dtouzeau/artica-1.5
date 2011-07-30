@@ -233,11 +233,17 @@ function events_class($text){
 
 
 function system_is_overloaded($file=null){
+	$d=new debuglogs();
 	if(!isset($GLOBALS["CPU_NUMBER"])){
 			include_once(dirname(__FILE__).'/class.users.menus.inc');
 			$users=new usersMenus();
 			$GLOBALS["CPU_NUMBER"]=intval($users->CPU_NUMBER);
 	}
+	
+	$array_load=sys_getloadavg();
+	$internal_load=$array_load[0];
+	$cpunum=$GLOBALS["CPU_NUMBER"]+0.5;	
+	
 	if($GLOBALS["VERBOSE"]){
 	if(function_exists("debug_backtrace")){
 		try {
@@ -245,13 +251,9 @@ function system_is_overloaded($file=null){
 			if(isset($trace[1])){$called=" called by ". basename($trace[1]["file"])." {$trace[1]["function"]}() line {$trace[1]["line"]}";}
 			} catch (Exception $e) {}
 		}	
-	$d->events("Load: $internal_load max=$cpunum  $called","/var/log/artica-postfix/syslog.log");
+		$d->events("Load: $internal_load max=$cpunum  $called","/var/log/artica-postfix/syslog.log");
 	}
-	$d=new debuglogs();
-	
-	$array_load=sys_getloadavg();
-	$internal_load=$array_load[0];
-	$cpunum=$GLOBALS["CPU_NUMBER"]+0.5;
+
 	if($file==null){$file=basename(__FILE__);}
 	
 

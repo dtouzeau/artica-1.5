@@ -2,16 +2,16 @@
 <CertificateMaxDays>Expire dans</CertificateMaxDays>
 <certificate_infos>Informations de Certificat SSL</certificate_infos>
 <client_certificate_fingerprints>Empreintes digitales de certificat de client</client_certificate_fingerprints>
-<client_certificate_fingerprints_text>List of remote SMTP client-certificate fingerprints for which the Postfix
-SMTP server will allow access with the [b]permit_tls_clientcerts[/b] (see Security restrictions classes artica feature).[br]
-The fingerprint digest algorithm is configurable via the [b]smtpd_tls_fingerprint_digest[/b] parameter (hard-coded as md5 prior to Postfix version 2.5).[br]
-Postfix lookup tables are in the form of (key, value) pairs.[br]
-Since we only need the key, the value can be chosen freely,e.g.[blk]
+<client_certificate_fingerprints_text>Demande au client SMTP distant un certificat client.[br] Cette information est n&eacute;cessaire pour le relais de messages bas&eacute; sur les certificats.
+
+[br]Certains clients tels Netscape se plaindront si aucun certificat n'est disponible (pour la liste des autorit&eacute;s de /etc/postfix/certs) ou offriront plusieurs certificats client au choix. Pour &eacute;viter les g&ecirc;nes, cette option est d&eacute;sactiv&eacute;e par d&eacute;faut.
+[br]
+par exemple:[br]
+,e.g.[blk]
 [li]D7:04:2F:A7:0B:8C:A5:21:FA:31:77:E1:41:8A:EE:80 lutzpc.at.hom[/li]
-[li]5B:57:FE:31:CA:69:3D:FB:9E:99:22:9D:2B:8B:89:73   *.myjob.com[/li]
-[li]42:4A:62:71:DF:FC:3D:47:FA:27:77:D0:BB:46:8B:05   *[/li]
-[/blk]
-</client_certificate_fingerprints_text>
+[li]5B:57:FE:31:CA:69:3D:FB:9E:99:22:9D:2B:8B:89:73 *.myjob.com[/li]
+[li]42:4A:62:71:DF:FC:3D:47:FA:27:77:D0:BB:46:8B:05 *[/li]
+[/blk]</client_certificate_fingerprints_text>
 <download_certificates>T&eacute;l&eacute;chargez les certificats</download_certificates>
 <download_windows_certificate>T&eacute;l&eacute;chargez le certificat pour MS Outlook</download_windows_certificate>
 <enable_tls_postfix>Activer le TLS dans postfix...</enable_tls_postfix>
@@ -25,10 +25,10 @@ Since we only need the key, the value can be chosen freely,e.g.[blk]
 <restarting_postfix>Appliquez les param&egrave;tres vers Postfix et red&eacute;marrer le OK</restarting_postfix>
 <save_cert_ok>Sauvegarder le certificat sur le disque OK</save_cert_ok>
 <smtpd_tls_ask_ccert>Demandez un certificat client &agrave; un client SMTP distant</smtpd_tls_ask_ccert>
-<smtpd_tls_ask_ccert_text>This information is needed for certificate based mail relaying with, for example, "the permit tls client certs" feature.[br]
-Some clients such as Netscape will either complain if no certificate is available (for the list of CAs in $smtpd_tls_CAfile) or will
-offer multiple client certificates to choose from.[br]
-This may be annoying, so this option is "off" by default.</smtpd_tls_ask_ccert_text>
+<smtpd_tls_ask_ccert_text>Demande au client SMTP distant un certificat client.[br] Cette information est n&eacute;cessaire pour le relais de messages bas&eacute; sur les certificats.
+
+[br]Certains clients tels Netscape se plaindront si aucun certificat n'est disponible (pour la liste des autorit&eacute;s de /etc/postfix/certs) ou offriront plusieurs certificats client au choix. Pour &eacute;viter les g&ecirc;nes, cette option est d&eacute;sactiv&eacute;e par d&eacute;faut.
+[br]</smtpd_tls_ask_ccert_text>
 <smtpd_tls_auth_only>Communications TLS obligatoire</smtpd_tls_auth_only>
 <smtpd_tls_auth_only_text>Lorsque le chiffrement TLS est facultatif dans le serveur SMTP Postfix, 
 n'annoncer ou n'accepter pas l'authentification SASL en clair sur les connexions</smtpd_tls_auth_only_text>
@@ -41,8 +41,7 @@ This is disabled by default, as the information may be modified in transit throu
 Only information that was recorded by the final destination can be trusted.
 </smtpd_tls_received_header_text>
 <smtpd_tls_req_ccert>Certificat client Mandataire</smtpd_tls_req_ccert>
-<smtpd_tls_req_ccert_text>With mandatory TLS encryption, require a trusted remote SMTP client certificate in order to allow TLS connections to proceed.[br]
-When TLS encryption is optional, this setting is ignored with a warning written to the mail log.</smtpd_tls_req_ccert_text>
+<smtpd_tls_req_ccert_text>Lorsque le chiffrement TLS est impos&eacute;, requiert un certificat du client SMTP pour autoriser la connexion TLS.[br]Lorsque le chiffrement TLS est optionel, les clients SMTP distants peuvent outrepasser cette restriction simplement en n'utilisant pas STARTTLS. Pour cette raison, une connexion TLS sera utilis&eacute;e ainsi seulement si &quot;smtpd_tls_ask_ccert = yes&quot;.</smtpd_tls_req_ccert_text>
 <smtp_tls_mandatory_protocols>Protocole Mandataire</smtp_tls_mandatory_protocols>
 <smtp_tls_mandatory_protocols_text>
 List of SSL/TLS protocols that the Postfix SMTP client will use with mandatory TLS encryption.[br]

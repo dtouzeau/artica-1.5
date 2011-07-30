@@ -138,6 +138,7 @@ If a child process hang more that X CPU % and it's execution reach the max time 
 <analyzed>Analyzed</analyzed>
 <anonymous>anonymous</anonymous>
 <antispam_filters>Anti-Spam filters</antispam_filters>
+<ApacheDisableModDavFS>Disable WebDAV service</ApacheDisableModDavFS>
 <ApacheKeepAlive>The Keep-Alive extension to HTTP/1.0 and the persistent connection feature of HTTP/1.1 provide long-lived HTTP sessions which allow multiple requests to be sent over the same TCP connection.[br]
 In some cases this has been shown to result in an almost 50% speedup in latency times for HTML documents with many images.
 </ApacheKeepAlive>
@@ -382,9 +383,19 @@ This should be
 domain.tld to match hosts width domain domain.tld
 .domain.tld to match hosts width all sub-domains of domain.tld
 </check_client_access_ip_explain>
+<check_client_mx_access>check client MX</check_client_mx_access>
+<check_client_mx_access_text>Search the specified access database for the MX hosts for the client hostname, and execute the corresponding action</check_client_mx_access_text>
+<check_client_ns_access>check client name server</check_client_ns_access>
+<check_client_ns_access_text>Search the specified access database for the DNS servers for the client hostname, and execute the corresponding action</check_client_ns_access_text>
 <check_queue_each>Check queue each</check_queue_each>
 <check_rate_limit>check Rate limit</check_rate_limit>
 <check_rcpt_limit>Check recipient limit</check_rcpt_limit>
+<check_reverse_client_hostname_access>check reverse client hostname</check_reverse_client_hostname_access>
+<check_reverse_client_hostname_access_text>Search the specified access database for the unverified reverse client hostname, parent domains, client IP address, or networks obtained by stripping least significant octets</check_reverse_client_hostname_access_text>
+<check_reverse_client_hostname_mx_access>check reverse client hostname mx</check_reverse_client_hostname_mx_access>
+<check_reverse_client_hostname_mx_access_text>Search the specified access database for the MX hosts for the unverified reverse client hostname, and execute the corresponding action</check_reverse_client_hostname_mx_access_text>
+<check_reverse_client_hostname_ns_access>check reverse client hostname Name server</check_reverse_client_hostname_ns_access>
+<check_reverse_client_hostname_ns_access_text>Search the specified access database for the DNS servers for the unverified reverse client hostname, and execute the corresponding action.</check_reverse_client_hostname_ns_access_text>
 <check_size_limit>check size limit</check_size_limit>
 <child_ttl>Time to live</child_ttl>
 <chroot>chroot</chroot>
@@ -400,6 +411,7 @@ domain.tld to match hosts width domain domain.tld
 <compile_missing_db_www_text>Compile missing databases in order to make the filter running</compile_missing_db_www_text>
 <compile_postfix>Compile Postfix</compile_postfix>
 <compile_rules>Compile rules</compile_rules>
+<compile_rules_explain>Compile your rules and make it in production mode...</compile_rules_explain>
 <comprate>Default compression rate</comprate>
 <compress_files_after>Compress files after</compress_files_after>
 <computer_load>Server Load</computer_load>
@@ -487,6 +499,8 @@ Constant feedback. The value must be in the range 0..1 inclusive. The default se
 </default_destination_concurrency_positive_feedback_text>
 <DEFAULT_THEME>Default theme</DEFAULT_THEME>
 <default_website>Default website</default_website>
+<defer_text>Defer the request. The client is told to try again later.[br]
+This restriction is useful at the end of a restriction list, to make the default policy explicit.</defer_text>
 <delayed>delayed</delayed>
 <DeleteAllipTablesRules_text>This operation will delete ALL firewall rules.
 Do you want to perform this operation ?
@@ -772,6 +786,7 @@ The engine will try to find all urls added in your text, sou you did not need to
 <give_new_size_in_mb>Give the new size in MB</give_new_size_in_mb>
 <give_servername_or_ipaddr>Give the servername or the ip address</give_servername_or_ipaddr>
 <global>global</global>
+<globals_values>Global Values</globals_values>
 <grace_period>Grace period</grace_period>
 <GRAPH_POSTFIX_REJECTED_CONNEXIONS>Rejected SMTP connexions</GRAPH_POSTFIX_REJECTED_CONNEXIONS>
 <GREENSQL_block_level>If query risk is bigger then specified value, query will be blocked</GREENSQL_block_level>
@@ -906,6 +921,7 @@ This file will be the shared iSCSI disk.[br]In disk mode, you will have to choos
 <jkMount_explain>Add the JkMount directive for *.do,*.jsp,*.jspx,*.cfm,*.cfc,*.cfchart,*.cfres files</jkMount_explain>
 <jumpto>Jump to</jumpto>
 <KeepAlive_explain>Use it when a firewall between the reverse proxy and the backend-server.</KeepAlive_explain>
+<key>Key</key>
 <last_24h>Last 24H</last_24h>
 <last_7days>Last 7 days</last_7days>
 <last_7_days>Last 7 days</last_7_days>
@@ -1121,6 +1137,7 @@ Why "specific option"? This is a special vendor-specific scope option that you n
 For example, Avaya phones are hard coded to "read" this scope option and pick up whatever settings you place there.
 </option-176-explain>
 <optional>Optional</optional>
+<order>order</order>
 <organizations_parameters>Organizations Parameters</organizations_parameters>
 <organizations_parameters_text>Define global behavior of all organizations and server parameters according organizations</organizations_parameters_text>
 <organization_administrator>Organization's administrator</organization_administrator>
@@ -1138,6 +1155,9 @@ For example, Avaya phones are hard coded to "read" this scope option and pick up
 Usually you did not have to change this section.[br]Sometimes, you need to force PowerDNS to listen specific IPs and not others or add a listen address that Artica cannot detect (OpenVZ, VPS servers).[br]In this case, add IP addresses you want PowerDNS to listen.</pdns_listen_ip_explain>
 <perform_mysql_check>Perform MySQL check on this table ?</perform_mysql_check>
 <permissions>Permissions</permissions>
+<permit_dnswl_client>Permit reversed client under the dnswl_domain</permit_dnswl_client>
+<permit_dnswl_client_text>[b]dnswl_domain=d.d.d.d[/b][br]Accept the request when the reversed client network address is listed with the A record "d.d.d.d" under dns white list domain.</permit_dnswl_client_text>
+<permit_rhswl_client>[b]rhswl_domain=d.d.d.d[/b][br]Accept the request when the client hostname is listed with the A record "d.d.d.d" under rhswl_domain.</permit_rhswl_client>
 <persistante_connection>Persistante connection</persistante_connection>
 <PHP_CONFIGURATION>PHP configuration path</PHP_CONFIGURATION>
 <picture>Picture</picture>
@@ -1367,6 +1387,10 @@ Very lower config will get 320Mb free[br]
 <register_form>Register form</register_form>
 <registration_complete>Registration complete</registration_complete>
 <rejected_mails>Rejected messages</rejected_mails>
+<reject_rhsbl_helo>Reject rhsbl helo</reject_rhsbl_helo>
+<reject_rhsbl_helo_text>[b]rbl_domain=d.d.d.d[/b]Reject the request when the HELO or EHLO hostname hostname is listed with the A record "d.d.d.d" under rbl_domain</reject_rhsbl_helo_text>
+<reject_rhsbl_reverse_client>reject rhsbl reverse client</reject_rhsbl_reverse_client>
+<reject_rhsbl_reverse_client_text>[b]rbl_domain=d.d.d.d[/b]Reject the request when the unverified reverse client hostname is listed with the A record "d.d.d.d" under rbl_domain</reject_rhsbl_reverse_client_text>
 <relaydomain_explain>A relay domain is domain that will only pass this server.[br]This server is in charge to receive messages for this domain in order to transfert them to a new server.[br]
 The new server should be your backend server that store mailboxes..</relaydomain_explain>
 <remote_clients>Remote clients</remote_clients>
@@ -1378,6 +1402,7 @@ The new server should be your backend server that store mailboxes..</relaydomain
 When define quota for a specific user, wait until this user have saved a file on the specified storage</repquota_explain>
 <reprocess_queues_text>Flush all the Postfix queues to force postfix to resend stored messages</reprocess_queues_text>
 <request_from>Request from</request_from>
+<require>require</require>
 <rescan-disk-system>Re-scan the system disk</rescan-disk-system>
 <rescan-disk-system>Re-scan the system disk</rescan-disk-system>
 <RestartServiceifReachMb>Restart if service consume more than</RestartServiceifReachMb>
@@ -1589,6 +1614,8 @@ Minimal threads is 2 and will safe minimal 20Mb memory[br]In the opposite, if yo
 <smbconfig>smb.conf</smbconfig>
 <smbservices>Services</smbservices>
 <smb_RootDir_text>All directories tasks will started on the specifed directory</smb_RootDir_text>
+<smtpd_data_restrictions>DATA Protocol restrictions</smtpd_data_restrictions>
+<smtpd_data_restrictions_explain>Optional access restrictions that the Postfix SMTP server applies in the context of the SMTP DATA command</smtpd_data_restrictions_explain>
 <smtp_notification_not_saved>eMails notifications are not set</smtp_notification_not_saved>
 <smtp_sasl_security_options_mutual_auth>Only allow methods that provide mutual authentication</smtp_sasl_security_options_mutual_auth>
 <smtp_sasl_security_options_noanonymous>Disallow methods that allow anonymous authentication</smtp_sasl_security_options_noanonymous>
@@ -1812,6 +1839,7 @@ The default value of 8 should be sufficient for most purposes</Wthreads_explain>
 <www_ForwardTo>New website to forward</www_ForwardTo>
 <www_humanitarian_associations>All sites related to humanitarian associations</www_humanitarian_associations>
 <www_imagehosting>All images/pitures storages web sites</www_imagehosting>
+<www_malware>infected web sites or allow to download/store malwares, virus...</www_malware>
 <www_reale_state_office>Sites about all types of realestate, bying and selling homes, finding appartments for rent and selling</www_reale_state_office>
 <www_translators>All sites offer language translations</www_translators>
 <www_whitelisting>WhiteListing method</www_whitelisting>

@@ -120,6 +120,7 @@ Si un sous-processus prend X% du CPU et que sont temps d'ex&eacute;cution d&eacu
 <analyzed>Analys&eacute;</analyzed>
 <anonymous>anonyme</anonymous>
 <antispam_filters>Filtres anti-spam</antispam_filters>
+<ApacheDisableModDavFS>D&eacute;sactiver le service WebDAV</ApacheDisableModDavFS>
 <ApacheKeepAlive>D&eacute;finit si votre serveur autorisera des connexions persistantes (c'est-&agrave;-dire plusieurs demandes par connexion). Cette option peut &ecirc;tre utilis&eacute;e pour emp&ecirc;cher tout client de consommer trop de ressources du serveur.[br]
 Par d&eacute;faut, la valeur est d&eacute;finie sur Off, ce qui signifie que votre serveur n'autorise pas les connexions persistantes.[br] Vous pouvez la d&eacute;finir sur on, ce qui active les connexions persistantes. Dans la plupart des cas, il est pr&eacute;f&eacute;rable de laisser KeepAlive sur Off car Apache ne peut avoir qu'un nombre limit&eacute; de processus fils et ces processus vagabonderaient sans rien faire dans l'attente d'une connexion future possible du m&ecirc;me client.[br] Si vous activez cette option, vous devriez tenir la valeur de Keep Alive Timeout basse et contr&ocirc;ler votre fichier d'erreur du serveur qui vous indique s'il vous manque des processus fils pour traiter les requ&ecirc;tes.</ApacheKeepAlive>
 <ApacheKeepAliveTimeout>The number of seconds Apache will wait for a subsequent request before closing the connection.[br]
@@ -324,9 +325,19 @@ Ce peut &ecirc;tre :
 192.168 correspondant &agrave;  192.168.*
 domain.tld correspondant &agrave; h&ocirc;tes avec le domaine domain.tld
 .domain.tld tcorrespondant aux h&ocirc;tes avec les sous-domaines de domain.tld</check_client_access_ip_explain>
+<check_client_mx_access>V&eacute;rification du MX</check_client_mx_access>
+<check_client_mx_access_text>Recherche dans une table de h&ocirc;tes MX pour le nom du client qui se connecte et ex&eacute;cute l'action correspondante</check_client_mx_access_text>
+<check_client_ns_access>V&eacute;rifier le client en DNS</check_client_ns_access>
+<check_client_ns_access_text>Recherche le serveur DNS dans une table pour le client qui se connecte et ex&eacute;cute l'action correspondante</check_client_ns_access_text>
 <check_queue_each>V&eacute;rifier dans la file d'attente chaque</check_queue_each>
 <check_rate_limit>Limite par taux d'&eacute;mission</check_rate_limit>
 <check_rcpt_limit>Limite par destinataires</check_rcpt_limit>
+<check_reverse_client_hostname_access>V&eacute;rifie l'adresse inverse du nom d'h&ocirc;te</check_reverse_client_hostname_access>
+<check_reverse_client_hostname_access_text>Recherche dans une table l'adresse inverse du client non v&eacute;rifi&eacute;, ses domaines parents ou tout autre r&eacute;seaux.</check_reverse_client_hostname_access_text>
+<check_reverse_client_hostname_mx_access>V&eacute;rifie l'adresse inverse du MX</check_reverse_client_hostname_mx_access>
+<check_reverse_client_hostname_mx_access_text>Recherche dans une table le MX de l'h&ocirc;te pour les nom d'h&ocirc;tes non v&eacute;rifi&eacute;s en mode reverse et ex&eacute;cute l'action correspondante.</check_reverse_client_hostname_mx_access_text>
+<check_reverse_client_hostname_ns_access>V&eacute;rifie l'adresse inverse du nom d'h&ocirc;te via DNS</check_reverse_client_hostname_ns_access>
+<check_reverse_client_hostname_ns_access_text>Recherche le serveur DNS dans une table pour le client qui se connecte et dont son nom d'h&ocirc;te n'a put &ecirc;tre v&eacute;rifi&eacute; en mode r&eacute;solution invers&eacute;e et ex&eacute;cute l'action correspondante</check_reverse_client_hostname_ns_access_text>
 <check_size_limit>Limite par taille.</check_size_limit>
 <child_ttl>Dur&eacute;e de vie</child_ttl>
 <chroot>chroot</chroot>
@@ -342,6 +353,7 @@ domain.tld correspondant &agrave; h&ocirc;tes avec le domaine domain.tld
 <compile_missing_db_www_text>Compiler les bases de donn&eacute;es manquantes afin de faire tourner le filtre en production.</compile_missing_db_www_text>
 <compile_postfix>Compiler Postfix</compile_postfix>
 <compile_rules>Compiler les r&egrave;gles</compile_rules>
+<compile_rules_explain>Compiler les r&egrave;gles et les mettre en production....</compile_rules_explain>
 <comprate>Taux de compression par d&eacute;faut</comprate>
 <compress_files_after>Compresser les fichiers apr&egrave;s</compress_files_after>
 <computer_load>Charge machine</computer_load>
@@ -413,6 +425,7 @@ retour continu. La valeur doit &ecirc;tre dans l'intervalle 0 .. 1 inclus. Le r&
 [br] [b] le num&eacute;ro  / nb &eacute;missions [/ b] Le nombre doit &ecirc;tre dans l'intervalle 0 .. 1 inclus. Avec un nombre &eacute;gal &agrave; &quot;1&quot;, la concurrence de livraison d'une destination est incr&eacute;ment&eacute; de 1 apr&egrave;s chaque succ&egrave;s pseudo-cohorte.</default_destination_concurrency_positive_feedback_text>
 <DEFAULT_THEME>Th&egrave;me par d&eacute;faut</DEFAULT_THEME>
 <default_website>Site web par d&eacute;faut</default_website>
+<defer_text>Retarde la requ&ecirc;te. [br]Le client est pri&eacute; de r&eacute;essayer plus tard. Cette restriction est pratique en fin de liste de restrictions pour rendre explicite la politique par d&eacute;faut</defer_text>
 <delayed>Retard&eacute;</delayed>
 <DeleteAllipTablesRules_text>Cette op&eacute;ration va supprimer TOUTES les r&egrave;gle de pare-feu.
 Voulez-vous effectuer cette op&eacute;ration ?</DeleteAllipTablesRules_text>
@@ -638,6 +651,7 @@ Le moteur sera en charge de retrouver les liens dans le texte.Vous n'avez donc p
 <give_new_size_in_mb>Donnez la nouvelle taille en Mo</give_new_size_in_mb>
 <give_servername_or_ipaddr>Indiquez le nom complet de l'ordinateur ou une adresse IP</give_servername_or_ipaddr>
 <global>globale</global>
+<globals_values>Valeurs globales</globals_values>
 <grace_period>P&eacute;riode de gr&acirc;ce</grace_period>
 <GRAPH_POSTFIX_REJECTED_CONNEXIONS>Connections SMTP rejet&eacute;es</GRAPH_POSTFIX_REJECTED_CONNEXIONS>
 <GREENSQL_block_level>Si le taux de risque de la requ&ecirc;te est sup&eacute;rieur &agrave; cette valeur, elle sera alors bloqu&eacute;e.</GREENSQL_block_level>
@@ -766,6 +780,7 @@ En mode disque, vous devrez choisir une partition qui sera le disque iSCSI parta
 <jkMount_explain>Ajoute les directives jkMount pour les fichiers *.do,*.jsp,*.jspx,*.cfm,*.cfc,*.cfchart,*.cfres</jkMount_explain>
 <jumpto>Aller &agrave;</jumpto>
 <KeepAlive_explain>Doit &ecirc;tre utilis&eacute; lorsque vous avez un pare-feu entre Apache httpd et le serveur d'arri&egrave;re-plan, et si ce dernier tend &agrave; interrompre les connexions inactives.[br] Cette option va faire en sorte que le syst&egrave;me d'exploitation envoie des messages KEEP_ALIVE sur chacune des connexions inactives et ainsi &eacute;viter la fermeture de la connexion par le pare-feu.</KeepAlive_explain>
+<key>Clef</key>
 <last_24h>Derni&egrave;res 24H</last_24h>
 <last_7days>Derniers 7 Jours</last_7days>
 <last_7_days>Derniers 7 jours</last_7_days>
@@ -977,6 +992,7 @@ Why "specific option"? This is a special vendor-specific scope option that you n
 For example, Avaya phones are hard coded to "read" this scope option and pick up whatever settings you place there.
 </option-176-explain>
 <optional>Optionnel</optional>
+<order>ordre</order>
 <organizations_parameters>Param&egrave;tres des organisations</organizations_parameters>
 <organizations_parameters_text>Indiquez le comportement global des organisations et des param&egrave;tres du serveur autour des organisations</organizations_parameters_text>
 <organization_administrator>Administrateur d'organisation</organization_administrator>
@@ -993,6 +1009,9 @@ For example, Avaya phones are hard coded to "read" this scope option and pick up
 <pdns_listen_ip_explain>Par d&eacute;faut, Artica va essayer de d&eacute;terminer les adresses r&eacute;seaux utilis&eacute;e par votre serveur et va les transmettre au service PowerDNS.[br]Normalement, vous n'avez pas &agrave; enrichir cette liste.[br]Toutefois dans le cas ou vous d&eacute;sirez forcer le serveur DNS &agrave; n'&eacute;couter qu'une seule adresse ou vous &ecirc;tes dans un environnement VPS (OpenVPZ) o&ugrave; Artica ne peut d&eacute;tecter les adresses r&eacute;seaux, vous allez devoir indiquer quelles sont les adresses que le serveur DNS doit &eacute;couter.</pdns_listen_ip_explain>
 <perform_mysql_check>Lancer une v&eacute;rification MySQL sur cette table ?</perform_mysql_check>
 <permissions>Permissions</permissions>
+<permit_dnswl_client>Permettre la r&eacute;solution invers&eacute;e dans le domaine dnswl_domain</permit_dnswl_client>
+<permit_dnswl_client_text>[b]dnswl_domain=d.d.d.d[/b][br]Accepte la connexion lorsque l'adresse r&eacute;seau trouv&eacute;e par r&eacute;solution invers&eacute;e  est list&eacute;e avec l'enregistrement A  &quot;d.d.d.d&quot; dans dnswl_domain</permit_dnswl_client_text>
+<permit_rhswl_client>[b]rhswl_domain=d.d.d.d[/b][br]Accepte la connexion lorsque le nom d'h&ocirc;te du client est list&eacute;e avec un enregistrement A &quot;d.d.d.d&quot; de rhswl_domain</permit_rhswl_client>
 <persistante_connection>Connexion persistante</persistante_connection>
 <PHP_CONFIGURATION>Chemin du fichier de configuration php</PHP_CONFIGURATION>
 <picture>Image</picture>
@@ -1181,6 +1200,10 @@ Config Tr&egrave;s basse: vous lib&egrave;rera 320Mb.[br]</Reduce_mysql_explain>
 <register_form>Formulaire d'enregistrement</register_form>
 <registration_complete>Fin de l'enregistrement</registration_complete>
 <rejected_mails>Messages rejet&eacute;s</rejected_mails>
+<reject_rhsbl_helo>Rejeter RHSBL via HELO</reject_rhsbl_helo>
+<reject_rhsbl_helo_text>[b]rbl_domain=d.d.d.d[/b]Rejette la requ&ecirc;te lorsque le nom d'h&ocirc;te est list&eacute; avec l'enregistrement A &quot;d.d.d.d&quot; du domaine rbl_domain</reject_rhsbl_helo_text>
+<reject_rhsbl_reverse_client>Rejeter le RHSBL invers&eacute; de l'h&ocirc;te</reject_rhsbl_reverse_client>
+<reject_rhsbl_reverse_client_text>[b]rbl_domain=d.d.d.d[/b][br]Rejette la requ&ecirc;te lorsque le nom d'h&ocirc;te  non v&eacute;rifi&eacute; par la rs&eacute;olution invers&eacute;e est list&eacute; avec l'enregistrement A &quot;d.d.d.d&quot; du domaine rbl_domain</reject_rhsbl_reverse_client_text>
 <relaydomain_explain>Un domaine relais est un domaine qui travers ce serveur.[br]
 Ce serveur est en charge de recevoir les messages provenant de ce domaine et de les r&eacute;-acheminer vers un nouveau serveur.[br]Le nouveau serveur pourra &ecirc;tre le serveur final de bo&icirc;tes aux lettres</relaydomain_explain>
 <remote_clients>Clients distants</remote_clients>
@@ -1193,6 +1216,7 @@ Notez que seulement les utilisateurs qui effectu&eacute;s des d&eacute;p&ocirc;t
 Ne vous inqui&eacute;tez pas de ne pas visualiser vos utilisateurs apr&egrave;s avoir d&eacute;fini des quotas.[br]Vous devrez attendre qu'ils d&eacute;posent au moins un fichier dans une des partitions.</repquota_explain>
 <reprocess_queues_text>Choquer toutes les files d'attentes de Postfix afin de le forcer &agrave; renvoyer tous les messages stock&eacute;s.</reprocess_queues_text>
 <request_from>Requ&ecirc;te source</request_from>
+<require>requi&egrave;re</require>
 <rescan-disk-system>R&eacute;-analyser les disques syst&egrave;mes</rescan-disk-system>
 <rescan-disk-system>R&eacute;-analyser les disques syst&egrave;mes</rescan-disk-system>
 <RestartServiceifReachMb>Red&eacute;marrer si le service consomme plus de</RestartServiceifReachMb>
@@ -1356,6 +1380,8 @@ Indiquez 0 afin de retourner &agrave; la valeur par d&eacute;faut.</SlapdThreads
 <smbconfig>smb.conf</smbconfig>
 <smbservices>Services</smbservices>
 <smb_RootDir_text>Toutes les t&acirc;ches li&eacute;es au dossiers sur les disques devront d&eacute;marrer au r&eacute;pertoire racine.</smb_RootDir_text>
+<smtpd_data_restrictions>Restrictions de protocole DATA</smtpd_data_restrictions>
+<smtpd_data_restrictions_explain>Cette section repr&eacute;sente des r&egrave;gles qui peuvent &ecirc;tre activ&eacute;es lorsque l'&eacute;metteur envoi les donn&eacute;es d'un message (commande DATA)</smtpd_data_restrictions_explain>
 <smtp_notification_not_saved>Les notifications eMail ne sont pas personnalis&eacute;es</smtp_notification_not_saved>
 <smtp_sasl_security_options_mutual_auth>Autoriser seulement les m&eacute;thodes qui fournissent une authentification mutuelle</smtp_sasl_security_options_mutual_auth>
 <smtp_sasl_security_options_noanonymous>Interdit les m&eacute;thodes qui autorisent l'authentification anonyme.</smtp_sasl_security_options_noanonymous>
@@ -1555,6 +1581,7 @@ La valeur par d&eacute;faut de 8 threads est suffisante pour l'ensemble des beso
 <www_ForwardTo>Site web &agrave; transf&eacute;rer</www_ForwardTo>
 <www_humanitarian_associations>Sites web &agrave; propos de des associations humanitaires ou tout ce qui s'en rapproche.</www_humanitarian_associations>
 <www_imagehosting>Sites web permettant le stockage d'images et de photos.</www_imagehosting>
+<www_malware>Sites infect&eacute;s ou proposant de t&eacute;l&eacute;charger, stocker des virus ou malwares...</www_malware>
 <www_reale_state_office>Site d'achats et vente de immobilier, trouver des appartements &agrave; louer et &agrave; vendre</www_reale_state_office>
 <www_translators>Sites web offrant des services de traductions linguistiques</www_translators>
 <www_whitelisting>M&eacute;thode par liste blanche</www_whitelisting>

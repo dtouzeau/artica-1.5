@@ -782,7 +782,7 @@ function sasl_popup(){
 			
 		}	
 	
-	$tab="<div id=main_popup_sasl_auth style='width:100%;height:550px;overflow:auto'>
+	$tab="<div id=main_popup_sasl_auth style='width:100%;height:600px;overflow:auto'>
 		<ul>". implode("\n",$html)."</ul>
 	</div>
 		<script>

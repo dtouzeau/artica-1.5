@@ -3542,12 +3542,15 @@ function postfix_body_checks(){
 
 
 function postfix_smtp_senders_restrictions(){
+	$unix=new unix();
+	$php5=$unix->LOCATE_PHP5_BIN();
+	$nohup=$unix->find_program("nohup");
 	$hostname=trim($_GET["postfix-smtp-sender-restrictions"]);
 	if($hostname=="master"){
-		sys_THREAD_COMMAND_SET(LOCATE_PHP5_BIN2()." /usr/share/artica-postfix/exec.postfix.maincf.php --smtp-sender-restrictions");
+		shell_exec(trim("$nohup $php5 /share/artica-postfix/exec.postfix.maincf.php --smtp-sender-restrictions >/dev/null 2>&1 &"));
 		return;
 	}
-	sys_THREAD_COMMAND_SET(LOCATE_PHP5_BIN2()." /usr/share/artica-postfix/exec.postfix-multi.php --instance-reconfigure \"$hostname\"");	
+	shell_exec(trim("$nohup $php5 /usr/share/artica-postfix/exec.postfix-multi.php --instance-reconfigure \"$hostname\" >/dev/null 2>&1 &"));	
 }
 
 

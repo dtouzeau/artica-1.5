@@ -281,6 +281,15 @@ if(preg_match("#nss_wins\[[0-9]+\]:#",$buffer)){nss_parser($buffer);return;}
 	if($auth->ParseLog($buffer)){return;}
 	$auth=null;
 	
+$artica_status_pointer="/etc/artica-postfix/pids/exec.status.php.pointer";
+if(IfFileTime($artica_status_pointer,3)){
+	events("--> artica-status --all");
+	shell_exec(trim("{$GLOBALS["nohup"]} {$GLOBALS["LOCATE_PHP5_BIN"]} /usr/share/artica-postfix/exec.status --all >/dev/null 2>&1 &"));
+	WriteFileCache($artica_status_pointer);
+}
+	
+	
+	
 if(preg_match("#pam_ldap: error trying to bind \(Invalid credentials\)#",$buffer,$re)){
 	$file="/etc/artica-postfix/croned.1/pam_ldap.Invalid.credentials";
 	if(IfFileTime($file,10)){

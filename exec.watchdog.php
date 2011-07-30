@@ -14,15 +14,17 @@ include_once(dirname(__FILE__)."/framework/frame.class.inc");
 if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["VERBOSE"]=true;}
 if(preg_match("#--force#",implode(" ",$argv))){$GLOBALS["FORCE"]=true;}
 
+if($argv[1]=="--start-process"){startprocess($argv[2],$argv[3]);exit;}
 
 $unix=new unix();
+$GLOBALS["CLASS_UNIX"]=$unix;
 $pidfile="/etc/artica-postfix/".basename(__FILE__)."pid";
 $currentpid=trim(@file_get_contents($pidefile));
 if($unix->process_exists($currentpid)){die();}
 
 @file_put_contents($pidfile,getmypid());
 
-
+if($argv[1]=="--bandwith"){bandwith();exit;}
 if($argv[1]=="--loadavg"){loadavg();exit;}
 if($argv[1]=="--mem"){loadmem();exit;}
 if($argv[1]=="--cpu"){loadcpu();exit;}
@@ -32,6 +34,47 @@ if($argv[1]=="--queues"){ParseLoadQeues();exit;}
 
 checkProcess1();
 
+function startprocess($APP_NAME,$cmd){
+	$unix=new unix();
+	exec("/etc/init.d/artica-postfix start $cmd 2>&1",$results);
+	if($GLOBALS["VERBOSE"]){echo "\n".@implode("\n",$results)."\n";return;}
+	$unix->send_email_events("$APP_NAME stopped","Artica tried to start it:\n".@implode("\n",$results),"system");
+	
+}
+function bandwith(){
+	
+	$file="/usr/share/artica-postfix/ressources/logs/web/bandwith-mon.txt";
+	$ftime=file_time_min($file);
+	events("$ftime ". basename($file),__FUNCTION__,__LINE__);
+	if($ftime<10){return;}
+	if($GLOBALS["VERBOSE"]){echo "\n***\n/usr/share/artica-postfix/bin/bandwith.pl\n***\n";}
+	exec("/usr/share/artica-postfix/bin/bandwith.pl 2>&1",$results);
+	$text=@implode("",$results);
+	if(!preg_match("#([0-9\.,]+)#",$text,$re)){
+		events("$text unable to preg_match",__FUNCTION__,__LINE__);
+		return;
+	}
+	
+		$re[1]=str_replace(",",".",$re[1]);
+		$mbs=round($re[1],0);
+		events("$mbs MB/S bandwith",__FUNCTION__,__LINE__);
+		$sql="INSERT INTO bandwith_stats (`zDate`,`bandwith`) VALUES(NOW(),'$mbs');";
+		$q=new mysql();
+		$q->QUERY_SQL($sql,"artica_events");
+		if(!$q->ok){events("$q->mysql_error \"$sql\"",__FUNCTION__,__LINE__);}
+		@unlink($file);
+		@file_put_contents($file,$mbs);
+		@chmod($file,0770);
+	}
+
+function events($text,$function=null,$line=0){
+		$filename=basename(__FILE__);
+		if(!isset($GLOBALS["CLASS_UNIX"])){
+			include_once(dirname(__FILE__)."/framework/class.unix.inc");
+			$GLOBALS["CLASS_UNIX"]=new unix();
+		}
+		$GLOBALS["CLASS_UNIX"]->events("$filename $function:: $text (L.$line)","/usr/share/artica-postfix/ressources/logs/launch.watchdog.task");	
+		}	
 function checkProcess1(){
 	
 	$unix=new unix();

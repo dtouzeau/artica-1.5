@@ -47,13 +47,12 @@ function page(){
 			<tr>
 				<td>". Field_text("WebDavMember",null,"font-size:13px;padding:3px;width:220px")."</td>
 				<td><input type='button' value='{browse}...' OnClick=\"javascript:Loadjs('MembersBrowse.php?field-user=WebDavMember&prepend-guid=1')\"></td>
+				<td>". button("{add}","SaveWebDavAccess()")."</td>
 			</tr>
 		</table>
 		</td>
 	</tr>
-	<tr>
-		<td colspan=2 align=right><hr>". button("{apply}","SaveWebDavAccess()")."</td>
-	</tr>
+	
 	</table>
 	<p>&nbsp;</p>
 	<div id='webdav-members-list' style='width:100%;height:350px;overflow:auto'></div>

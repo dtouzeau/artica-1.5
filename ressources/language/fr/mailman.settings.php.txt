@@ -53,7 +53,7 @@ requests as well.</admin_immed_notify_text>
 <autorespond_admin_text>Mailman doit-il envoyer une r&eacute;ponse aux messages envoy&eacute;s &agrave; &quot;-owner&quot;</autorespond_admin_text>
 <autorespond_postings>Activer l'auto-r&eacute;ponse</autorespond_postings>
 <autorespond_postings_text>Should Mailman send an auto-response to mailing list posters?</autorespond_postings_text>
-<autorespond_requests>Enable Auto-responses to the -request address</autorespond_requests>
+<autorespond_requests>Activer la r&eacute;ponse automatique pour les messages vers &quot;-request&quot;</autorespond_requests>
 <autorespond_requests_text>Should Mailman send an auto-response to emails sent to the -request address?[br]
 If you choose yes, decide whether you want Mailman to discard the original email, or forward it on to the system as a normal mail command.</autorespond_requests_text>
 <autoresponse_admin_text>Auto-response text to send to -owner emails.</autoresponse_admin_text>
@@ -156,11 +156,11 @@ Content filtering works like this: when a message is received by the list and yo
 [br]Then, each multipart/alternative section will be replaced by just the first alternative that is non-empty after filtering if collapse_alternatives is enabled.
 [br]Finally, any text/html parts that are left in the message may be converted to text/plain if convert_html_to_plaintext is enabled and the site is configured to allow these conversions.
 </contentfiltering_text>
-<convert_html_to_plaintext>convert text/html parts to html</convert_html_to_plaintext>
+<convert_html_to_plaintext>Convertir les parties du messages text/html en html</convert_html_to_plaintext>
 <convert_html_to_plaintext_text>Should Mailman convert text/html parts to plain text?[br] This conversion happens after MIME attachments have been stripped.</convert_html_to_plaintext_text>
-<copypost>Do not send a copy of a member's own post</copypost>
+<copypost>ne pas envoyer une copie du membre propri&eacute;taire du sujet en g&eacute;n&eacute;ral</copypost>
 <create_address_from>Cr&eacute;er des robots depuis</create_address_from>
-<default_member_moderation>Default member moderation</default_member_moderation>
+<default_member_moderation>Membre mod&eacute;rateur par d&eacute;faut</default_member_moderation>
 <default_member_moderation_text>
 By default, should new list member postings be moderated?[br]
 Each list member has a moderation flag which says whether messages from the list member can be posted directly to the list,
@@ -189,7 +189,7 @@ It should be as succinct as you can get it, while still identifying what the lis
 <digest_send_periodic_text>Should a digest be dispatched daily when the size threshold isn't reached?</digest_send_periodic_text>
 <digest_size_threshhold>taille du seuil</digest_size_threshhold>
 <digest_size_threshhold_text>How big in Kb should a digest be before it gets sent out? </digest_size_threshhold_text>
-<digest_volume_frequency>Volume Frequency</digest_volume_frequency>
+<digest_volume_frequency>Fr&eacute;quence du volume</digest_volume_frequency>
 <digest_volume_frequency_text>How often should a new digest volume be started? </digest_volume_frequency_text>
 <discard>Refuser</discard>
 <discard_these_nonmembers>rejeter les non-membres</discard_these_nonmembers>
@@ -227,7 +227,7 @@ header.[br]
 </encode_ascii_prefixes_text>
 <exclude>Exclure</exclude>
 <exclude_explain>Supprime les pi&egrave;ces jointes qui ne disposent pas d'une r&egrave;gle de fichier</exclude_explain>
-<explicit_address>Explicit address</explicit_address>
+<explicit_address>Adresse explicite</explicit_address>
 <filter_action>Action du filtre</filter_action>
 <filter_action_text>Action to take when a message matches the content filtering rules.[br]
 
@@ -249,7 +249,7 @@ Note this action is not taken if after filtering the message still contains cont
 <first_strip_reply_to>Strip reply-to</first_strip_reply_to>
 <first_strip_reply_to_text>Should any existing Reply-To: header[br] found in the original message be stripped?[br]
 If so, this will be done regardless of whether an explict[br] Reply-To: header is added by Mailman or not.</first_strip_reply_to_text>
-<forward_auto_discards>Discards email from non-members</forward_auto_discards>
+<forward_auto_discards>Supprimer les messages des non-membres</forward_auto_discards>
 <forward_auto_discards_text>Should messages from non-members, which are automatically discarded, be forwarded to the list moderator?</forward_auto_discards_text>
 <forward_to_list_owner>Forward to list -owner</forward_to_list_owner>
 <gateway_to_mail>News to email</gateway_to_mail>
@@ -448,8 +448,8 @@ To support these types of mailing lists, select Explicit address and[br]
 set the Reply-To: address below to point to the parallel list.</reply_goes_to_list_text>
 <reply_to_address>Reply-To address</reply_to_address>
 <reply_to_address_text>Note that if the original message contains a Reply-To: header, it will not be changed.</reply_to_address_text>
-<require_approval>Require approval</require_approval>
-<require_explicit_destination>Require explicit destination</require_explicit_destination>
+<require_approval>Requi&egrave;re l'approbation</require_approval>
+<require_explicit_destination>Requi&egrave;re une destination explicite</require_explicit_destination>
 <require_explicit_destination_text>Must posts have list named in destination (to, cc) field (or be among the acceptable alias names, specified below)?[br]
 Many (in fact, most) spams do not explicitly name their myriad destinations in the explicit destination addresses [br]
 - in fact often the To: field has a totally bogus address for obfuscation.[br]

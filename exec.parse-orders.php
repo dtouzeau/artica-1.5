@@ -324,9 +324,10 @@ if(is_file("/etc/artica-postfix/background")){
 		$time_status=file_time_min("/usr/share/artica-postfix/ressources/logs/global.status.ini");
 		events("global.status.ini $time_exec Min");
 		if($time_status>5){
-			events("artica-status is freeze ($time_status minutes), restart it (see /tmp/watchdog.status.log");
+			events("artica-status is freeze ($time_status minutes for /usr/share/artica-postfix/ressources/logs/global.status.ini), restart it (see /tmp/watchdog.status.log)");
 			system(trim("/etc/init.d/artica-postfix restart artica-status >/tmp/watchdog.status.log 2>&1"),$results);
-			events("done...");
+			$cmd=trim($nice.$nohup." ".$GLOBALS["CLASS_UNIX"]->LOCATE_PHP5_BIN()." ".dirname(__FILE__)."/exec.status.php --all >/dev/null 2>&1 &");
+			events("$cmd done...");
 		}	
 	}
 	events("artica-executor: {$time_exec}mn; artica-status: {$time_status}mn ");

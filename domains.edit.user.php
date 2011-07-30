@@ -540,7 +540,7 @@ var x_dhcpfixedSave= function (obj) {
 function AJAX_COMPUTER_DNS_JS_SAVE() {
 	$comp = new computers ($_GET["userid"]);
 	$comp->VolatileIPAddress = $_GET["VolatileIPAddressSave"];
-	$comp->Edit ();
+	$comp->Edit();
 }
 function AJAX_COMPUTER_DHCP_JS_SAVE() {
 	$comp = new computers ($_GET["userid"]);

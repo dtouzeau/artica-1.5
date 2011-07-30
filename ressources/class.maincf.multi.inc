@@ -166,15 +166,17 @@ public function SET_BIGDATA($key,$value){
 			}
 		}
 		
-		if(is_array($conf)){
-			echo "Starting......: Postfix \"$this->myhostname\" check_client_access: ". count($conf)." entries\n";
-			@file_put_contents($target_file,@implode("\n",$conf));
-			$unix=new unix();
-			$postmap=$unix->find_program("postmap");
-			
-			shell_exec("$postmap hash:$target_file");
-			
-			return "check_client_access hash:$target_file";
+		if(isset($conf)){
+			if(is_array($conf)){
+				echo "Starting......: Postfix \"$this->myhostname\" check_client_access: ". count($conf)." entries\n";
+				@file_put_contents($target_file,@implode("\n",$conf));
+				$unix=new unix();
+				$postmap=$unix->find_program("postmap");
+				
+				shell_exec("$postmap hash:$target_file");
+				
+				return "check_client_access hash:$target_file";
+			}
 		}
 		
 		
@@ -2768,8 +2770,9 @@ private function certificate_openssl_conf(){
 }
 
 function PostFixMultiVerifyRights(){
+	if($_REQUEST["hostname"]=="master"){$_GET["ou"]="master";}
 	if(!isset($_GET["ou"])){return false;}
-	$ou=$_GET["ou"];
+	$ou=$_REQUEST["ou"];
 	if(is_base64_encoded($ou)){$ou=base64_decode($ou);}
 	
 	$usersmenus=new usersMenus();

@@ -77,17 +77,21 @@ function parameters(){
 	$FreeWebsEnableOpenVPNProxy=$sock->GET_INFO("FreeWebsEnableOpenVPNProxy");
 	$FreeWebsOpenVPNRemotPort=$sock->GET_INFO("FreeWebsOpenVPNRemotPort");
 	$FreeWebsDisableSSLv2=$sock->GET_INFO("FreeWebsDisableSSLv2");
+	$ApacheDisableModDavFS=$sock->GET_INFO("ApacheDisableModDavFS");
 	$FreeWebPerformances=unserialize(base64_decode($sock->GET_INFO("FreeWebPerformances")));
+	
 	
 	$JSFreeWebsEnableModSecurity=1;
 	$JSFreeWebsEnableModEvasive=1;
 	$JSFreeWebsEnableModQOS=1;
 	$JSFreeWebsEnableOpenVPNProxy=1;
+	$JSFreeWebsEnableWebDav=1;
 	if(!is_numeric($ApacheServerSignature)){$ApacheServerSignature=1;}
 	if(!is_numeric($FreeWebsEnableModSecurity)){$FreeWebsEnableModSecurity=0;}
 	if(!is_numeric($FreeWebsEnableModQOS)){$FreeWebsEnableModQOS=0;}
 	if(!is_numeric($FreeWebsEnableOpenVPNProxy)){$FreeWebsEnableOpenVPNProxy=0;}
 	if(!is_numeric($FreeWebsDisableSSLv2)){$FreeWebsDisableSSLv2=0;}
+	if(!is_numeric($ApacheDisableModDavFS)){$ApacheDisableModDavFS=0;}
 	if($ApacheServerTokens==null){$ApacheServerTokens="Full";}
 	$varWwwPerms=$sock->GET_INFO("varWwwPerms");
 	if($varWwwPerms==null){$varWwwPerms=755;}
@@ -102,6 +106,7 @@ function parameters(){
 	if(!$users->APACHE_MOD_EVASIVE){$JSFreeWebsEnableModEvasive=0;}
 	if(!$users->APACHE_MOD_QOS){$JSFreeWebsEnableModQOS=0;}
 	if(!$users->APACHE_PROXY_MODE){$JSFreeWebsEnableOpenVPNProxy=0;}
+	if(!$users->APACHE_MODE_WEBDAV){$JSFreeWebsEnableWebDav=0;}
 	if(!is_numeric($FreeWebsOpenVPNRemotPort)){
 		if($users->OPENVPN_INSTALLED){
 			include_once(dirname(__FILE__).'/ressources/class.openvpn.inc');
@@ -119,6 +124,7 @@ function parameters(){
 	if(!is_numeric($FreeWebPerformances["StartServers"])){$FreeWebPerformances["StartServers"]=5;}
 	if(!is_numeric($FreeWebPerformances["MaxClients"])){$FreeWebPerformances["MaxClients"]=50;}
 	if(!is_numeric($FreeWebPerformances["MaxRequestsPerChild"])){$FreeWebPerformances["MaxRequestsPerChild"]=10000;}
+	
 	
 	
 	
@@ -160,6 +166,11 @@ function parameters(){
 		<td>". Field_checkbox("FreeWebsEnableModQOS",1,$FreeWebsEnableModQOS)."</td>
 		<td>&nbsp;</td>
 	</tr>
+	<tr>
+		<td class=legend>{ApacheDisableModDavFS}:</td>
+		<td>". Field_checkbox("ApacheDisableModDavFS",1,$ApacheDisableModDavFS)."</td>
+		<td>&nbsp;</td>
+	</tr>	
 	<tr>
 		<td class=legend>{FreeWebsEnableOpenVPNProxy}:</td>
 		<td>". Field_checkbox("FreeWebsEnableOpenVPNProxy",1,$FreeWebsEnableOpenVPNProxy,"FreeWebsEnableOpenVPNProxyCheck()")."</td>
@@ -249,6 +260,9 @@ function parameters(){
 			if(document.getElementById('FreeWebsEnableModQOS').checked){XHR.appendData('FreeWebsEnableModQOS',1);}else{XHR.appendData('FreeWebsEnableModQOS',0);}
 			if(document.getElementById('FreeWebsEnableOpenVPNProxy').checked){XHR.appendData('FreeWebsEnableOpenVPNProxy',1);}else{XHR.appendData('FreeWebsEnableOpenVPNProxy',0);}
 			if(document.getElementById('FreeWebsDisableSSLv2').checked){XHR.appendData('FreeWebsDisableSSLv2',1);}else{XHR.appendData('FreeWebsDisableSSLv2',0);}
+			if(document.getElementById('ApacheDisableModDavFS').checked){XHR.appendData('ApacheDisableModDavFS',1);}else{XHR.appendData('ApacheDisableModDavFS',0);}
+			
+			
 			
 			if(document.getElementById('KeepAlive').checked){XHR.appendData('KeepAlive',1);}else{XHR.appendData('KeepAlive',0);}
 			XHR.appendData('Timeout',document.getElementById('Timeout').value);
@@ -270,6 +284,7 @@ function parameters(){
 			var JSFreeWebsEnableModEvasive=$JSFreeWebsEnableModEvasive;
 			var JSFreeWebsEnableModQOS=$JSFreeWebsEnableModQOS;
 			var JSFreeWebsEnableOpenVPNProxy=$JSFreeWebsEnableOpenVPNProxy;
+			var JSFreeWebsEnableWebDav=$JSFreeWebsEnableWebDav;
 			if(JSFreeWebsEnableModSecurity==0){
 				document.getElementById('FreeWebsEnableModSecurity').checked=false;
 				document.getElementById('FreeWebsEnableModSecurity').disabled=true;
@@ -287,6 +302,14 @@ function parameters(){
 				document.getElementById('FreeWebsEnableOpenVPNProxy').disabled=true;
 				document.getElementById('FreeWebsOpenVPNRemotPort').disabled=true;
 			}
+			
+			if(JSFreeWebsEnableWebDav==0){
+				document.getElementById('ApacheDisableModDavFS').checked=false;
+				document.getElementById('ApacheDisableModDavFS').disabled=true;
+				
+			}			
+			
+			 
 			
 		}
 		
@@ -320,6 +343,7 @@ function SaveMacterConfig(){
 	$sock->SET_INFO("FreeWebsOpenVPNRemotPort",$_GET["FreeWebsOpenVPNRemotPort"]);
 	$sock->SET_INFO("FreeWebsEnableOpenVPNProxy",$_GET["FreeWebsEnableOpenVPNProxy"]);
 	$sock->SET_INFO("FreeWebsDisableSSLv2",$_GET["FreeWebsDisableSSLv2"]);
+	$sock->SET_INFO("ApacheDisableModDavFS" ,$_GET["ApacheDisableModDavFS"]);
 	$sock->SET_INFO("varWwwPerms",$_GET["varWwwPerms"]);
 	$sock->SaveConfigFile(base64_encode(serialize($_GET)), "FreeWebPerformances");
 	
@@ -750,6 +774,7 @@ function FreeWebLeftMenuSave(){
 function delete(){
 	writelogs("Delete server \"{$_GET["delete-servername"]}\"",__FUNCTION__,__FILE__,__LINE__);
 	$sql="INSERT INTO drupal_queue_orders(`ORDER`,`servername`) VALUES('DELETE_FREEWEB','{$_GET["delete-servername"]}')";
+	writelogs($sql,__FUNCTION__,__FILE__,__LINE__);
 	$q=new mysql();
 	$q->QUERY_SQL($sql,"artica_backup");
 	if(!$q->ok){echo $q->mysql_error;return;}

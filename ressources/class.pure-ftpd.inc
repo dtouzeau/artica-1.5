@@ -606,6 +606,10 @@ class pureftpd_user{
 		
 		
 		$dn="dc=$servername,dc=pureftpd,dc=organizations,$ldap->suffix";
+		if($ldap->ExistsDN($dn)){$ldap->ldap_delete($dn,true);}
+		
+		
+		
 		if(!$ldap->ExistsDN($dn)){
 				$update_array['objectClass'][]='top';
 				$update_array['objectClass'][]='dcObject';
@@ -631,6 +635,8 @@ class pureftpd_user{
 		}
 		
 		$dn="cn=$username,dc=$servername,dc=pureftpd,dc=organizations,$ldap->suffix";
+		if($ldap->ExistsDN($dn)){$ldap->ldap_delete($dn,true);}
+		
 		if(!$ldap->ExistsDN($dn)){
 			$update_array["objectClass"][]="userAccount";
 			$update_array["objectClass"][]="PureFTPdUser";
@@ -666,7 +672,7 @@ class pureftpd_user{
 			}			
 		}
 	$sock=new sockets();
-	$sock->getFrameWork("cmd.php?pure-ftpd-users=yes");
+	$sock->getFrameWork("services.php?reload-pure-ftpd=yes");
 	return true;
 	}
 	

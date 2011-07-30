@@ -257,6 +257,15 @@ function security_postfix(){
 	$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"artica_backup"));
 	if($ligne["tcount"]==0){$Blacklist_rules="{no_rules}";}else{$Blacklist_rules="{$ligne["tcount"]}&nbsp;{rules}";}
 	
+	
+	// smtpd_data_restrictions
+	$smtpd_data_restrictions_js="Loadjs('postfix.smtp_data_restrictions.php?js=yes&hostname=$hostname')";
+	$sql="SELECT COUNT(*) as tcount FROM smtpd_data_restrictions WHERE enabled=1 AND hostname='$hostname'";
+	$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"artica_backup"));
+	if($ligne["tcount"]==0){$smtpd_data_restrictions_rules="{no_rules}";}else{$smtpd_data_restrictions_rules="{$ligne["tcount"]}&nbsp;{rules}";}
+	
+	
+	
 	//Attachments ------------------------------------------------------------------------------------
 	$enable_attachment_blocking_postfix=$main->GET("enable_attachment_blocking_postfix");
 	$attachs_js="Loadjs('domains.edit.attachblocking.ou.php?ou=$ou_encoded&hostname=$hostname');";
@@ -433,6 +442,13 @@ function security_postfix(){
 		<td width='230px'><a href=\"javascript:blur()\" OnClick=\"javascript:$PostfixHideClientMua_js\" $stylea>$PostfixHideClientMua</a></td>
 		<td width=1% nowrap><strong style='font-size:13px'>{pass}</td>
 	</tr>
+	<tr>
+		<td class=legend width='350px'>{smtpd_data_restrictions}:</td>
+		<td width='230px'><a href=\"javascript:blur()\" OnClick=\"javascript:$smtpd_data_restrictions_js\" $stylea>$smtpd_data_restrictions_rules</a></td>
+		<td width=1% nowrap><strong style='font-size:13px'>{rules}</td>
+	</tr>	
+	
+	
 	
 	
 	</table>

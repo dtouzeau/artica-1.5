@@ -417,6 +417,8 @@ private function GetMyDNS(){
 		$conf=$conf."authoritative;\n";
 		$conf=$conf."max-lease-time $this->max_lease_time;\n";
 		$conf=$conf."default-lease-time $this->max_lease_time;\n";
+		$conf=$conf."get-lease-hostnames true;\n";
+		
 
 		
 		if($this->gateway<>null){
@@ -516,6 +518,7 @@ private function GetMyDNS(){
 					echo "Starting......: DHCP SERVER no name servers set, try to get defaults via resolv.conf\n";
 					$resolv_conf=explode("\n",@file_get_contents("/etc/resolv.conf"));
 					while (list ($index, $lines) = each ($resolv_conf) ){
+						if(preg_match("#127\.0\.0\.1#",$lines)){continue;}
 						if(preg_match("#^nameserver\s+(.+)#",$lines,$re)){
 							$g=trim($re[1]);
 							if($g=="127.0.0.1"){continue;}
@@ -577,7 +580,7 @@ private function GetMyDNS(){
 	function LoadfixedAddresses(){
 		$ldap=new clladp();
 		$IP=new IP();	
-		$filter=array("computerip","ComputerMacAddress","cn","uid");
+		$filter=array("computerip","ComputerMacAddress","cn","uid","DnsZoneName");
 		$query="(&(objectClass=ArticaComputerInfos)(DnsZoneName=$this->ddns_domainname))";
 		$hash=$ldap->Ldap_search($ldap->suffix,$query,$filter);
 		$count=$hash["count"];
@@ -592,10 +595,14 @@ private function GetMyDNS(){
 			}
 			$ip_addr=$hash[$i]["computerip"][0];
 			$ComputerMacAddress=$hash[$i][strtolower("ComputerMacAddress")][0];
+			$DnsZoneName=$hash[$i][strtolower("DnsZoneName")][0];
+			if($DnsZoneName<>$this->ddns_domainname){$DnsZoneName=$this->ddns_domainname;}
+			
+			
 			if(!$IP->isIPAddress($ip_addr)){continue;}
 			if($ComputerMacAddress==null){continue;}
 			if(!$this->IsPhysicalAddress($ComputerMacAddress)){continue;}
-			$ARR[$uid]=array("MAC"=>"hardware ethernet $ComputerMacAddress","IP"=>"fixed-address $ip_addr");
+			$ARR[$uid]=array("MAC"=>"hardware ethernet $ComputerMacAddress","IP"=>"fixed-address $ip_addr","domainname"=>$DnsZoneName);
 		}
 		
 	$query="(&(objectClass=dhcpHost)(cn=*))";
@@ -674,7 +681,7 @@ private function GetMyDNS(){
 		if(!is_array($array)){return null;}
 		while (list ($num, $ligne) = each ($array) ){
 				if($num==null){continue;}
-				
+				if(preg_match("#^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$#", trim($num))){continue;}
 				$IP=$ligne["IP"];
 				$IP=trim(str_replace("fixed-address","",$IP));
 				
@@ -684,10 +691,13 @@ private function GetMyDNS(){
 						$ligne["IP"]="fixed-address $hostname";
 					}
 				}
-				
+				$domainname=$ligne["domainname"];
+				if(preg_match("#localhost#",$domainname)){$domainname=null;}
 				$conf=$conf ."\thost $num{\n";
 				$conf=$conf ."\t\t{$ligne["MAC"]};\n";
 				$conf=$conf ."\t\t{$ligne["IP"]};\n";
+				$conf=$conf ."\t\toption host-name \"$num\";\n";
+				if($domainname<>null){$conf=$conf ."\t\toption domain-name \"$domainname\";\n";}
 				$conf=$conf ."\t}\n";
 		
 			}

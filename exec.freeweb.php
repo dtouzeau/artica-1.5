@@ -130,6 +130,7 @@ function reload_apache(){
 		exec($cmd,$results);
 		while (list ($num, $ligne) = each ($results) ){
 			if(preg_match("#Cannot load .+?mod_dav_fs.+?into server#",$ligne)){
+				echo "Starting......: Apache $ligne\n";
 				echo "Starting......: Apache mod_dav_fs failed, disable it\n";
 				$sock=new sockets();
 				$sock->SET_INFO("ApacheDisableModDavFS",1);
@@ -149,6 +150,18 @@ function reload_apache(){
 function remove_files(){
 	if(is_file("/etc/httpd/conf.d/README")){@unlink("/etc/httpd/conf.d/README");}
 }
+
+function patch_suse_default_server(){
+		$tmp123=@file_get_contents("/etc/apache2/default-server.conf");
+		$tmp123=str_replace("/srv/www/htdocs","/var/www",$tmp123);
+		$tmp123=str_replace("/srv/www/","/var/www/",$tmp123);
+		$tmp123=str_replace("Options None","Options Indexes FollowSymLinks MultiViews",$tmp123);
+		$tmp123=str_replace("Include /etc/apache2/conf.d/*.conf","",$tmp123);
+		$tmp123=str_replace("Include /etc/apache2/mod_userdir.conf","",$tmp123);
+		@file_put_contents("/etc/apache2/default-server.conf", $tmp123);$tmp123=null;	
+}
+
+
 
 function build(){
 	$unix=new unix();
@@ -246,10 +259,13 @@ function CheckHttpdConf(){
 	$sock=$GLOBALS["CLASS_SOCKETS"];
 	$unix=new unix();
 	$httpdconf=$unix->LOCATE_APACHE_CONF_PATH();
+	if(!is_file($httpdconf)){
+		echo "Starting......: Apache unable to stat configuration file\n";return;
+	}
 	$d_path=$unix->APACHE_DIR_SITES_ENABLED();
 	$DAEMON_PATH=$unix->getmodpathfromconf($httpdconf);
 	if(is_file("/etc/apache2/sites-available/default-ssl")){@unlink("/etc/apache2/sites-available/default-ssl");}
-	
+	echo "Starting......: Apache daemon path: \"$DAEMON_PATH\"\n";
 	$ApacheDisableModDavFS=$sock->GET_INFO("ApacheDisableModDavFS");
 	$FreeWebListen=trim($sock->GET_INFO("FreeWebListen"));
 	$FreeWebListenPort=$sock->GET_INFO("FreeWebListenPort");
@@ -267,17 +283,21 @@ function CheckHttpdConf(){
 	
 	if(!is_numeric($FreeWebListenSSLPort)){$FreeWebListenSSLPort=443;}
 	if(!is_numeric($FreeWebListenPort)){$FreeWebListenPort=80;}
-	if(!is_numeric($ApacheDisableModDavFS)){$ApacheDisableModDavFS=80;}
+	if(!is_numeric($ApacheDisableModDavFS)){$ApacheDisableModDavFS=0;}
 	if(!is_numeric($FreeWebsEnableModSecurity)){$FreeWebsEnableModSecurity=0;}
 	if(!is_numeric($FreeWebsEnableModEvasive)){$FreeWebsEnableModEvasive=0;}
 	if(!is_numeric($FreeWebsEnableModQOS)){$FreeWebsEnableModQOS=0;}		
 	if(!is_numeric($FreeWebsEnableOpenVPNProxy)){$FreeWebsEnableOpenVPNProxy=0;}
 	if(!is_numeric($TomcatEnable)){$TomcatEnable=1;}
 	
+	$users=new usersMenus();
+	$APACHE_MODULES_PATH=$users->APACHE_MODULES_PATH;	
+	
 	
 	if(is_file("/etc/apache2/sites-enabled/000-default")){@unlink("/etc/apache2/sites-enabled/000-default");}
 	if(is_file("/etc/apache2/sites-available/default")){@unlink("/etc/apache2/sites-available/default");}
-	
+	if(is_file("/etc/apache2/conf.d/zarafa-webaccess.conf")){@unlink("/etc/apache2/conf.d/zarafa-webaccess.conf");}
+	if(is_file("/etc/apache2/conf.d/zarafa-webaccess-mobile.conf")){@unlink("/etc/apache2/conf.d/zarafa-webaccess-mobile.conf");}
 	
 	$sql="SELECT ServerPort FROM freeweb WHERE ServerPort>0 GROUP BY ServerPort";
 	$q=new mysql();
@@ -372,10 +392,22 @@ function CheckHttpdConf(){
 		if(preg_match("#StartServers\s+#",$ligne)){$f[$num]=null;}
 		if(preg_match("#MaxClients\s+#",$ligne)){$f[$num]=null;}
 		if(preg_match("#MaxRequestsPerChild\s+#",$ligne)){$f[$num]=null;}
+		if(preg_match("#LoadModule\s+#",$ligne)){$f[$num]=null;}
 	}
 	
 	
 	$FreeWebPerformances=unserialize(base64_decode($sock->GET_INFO("FreeWebPerformances")));
+	
+	
+	if(!isset($FreeWebPerformances["Timeout"])){$FreeWebPerformances["Timeout"]=300;}
+	if(!isset($FreeWebPerformances["KeepAlive"])){$FreeWebPerformances["KeepAlive"]=0;}
+	if(!isset($FreeWebPerformances["MaxKeepAliveRequests"])){$FreeWebPerformances["MaxKeepAliveRequests"]=100;}
+	if(!isset($FreeWebPerformances["KeepAliveTimeout"])){$FreeWebPerformances["KeepAliveTimeout"]=15;}
+	if(!isset($FreeWebPerformances["MinSpareServers"])){$FreeWebPerformances["MinSpareServers"]=5;}
+	if(!isset($FreeWebPerformances["MaxSpareServers"])){$FreeWebPerformances["MaxSpareServers"]=10;}
+	if(!isset($FreeWebPerformances["StartServers"])){$FreeWebPerformances["StartServers"]=5;}
+	if(!isset($FreeWebPerformances["MaxClients"])){$FreeWebPerformances["MaxClients"]=50;}
+	if(!isset($FreeWebPerformances["MaxRequestsPerChild"])){$FreeWebPerformances["MaxRequestsPerChild"]=10000;}	
 	if(!is_numeric($FreeWebPerformances["Timeout"])){$FreeWebPerformances["Timeout"]=300;}
 	if(!is_numeric($FreeWebPerformances["KeepAlive"])){$FreeWebPerformances["KeepAlive"]=0;}
 	if(!is_numeric($FreeWebPerformances["MaxKeepAliveRequests"])){$FreeWebPerformances["MaxKeepAliveRequests"]=100;}
@@ -417,14 +449,12 @@ function CheckHttpdConf(){
 			$httpd[]="KeepAlive On";
 		}
 	}
-	
-	
-	
-	$httpd[]="Include mods-enabled/*.load";
-	$httpd[]="Include mods-enabled/*.conf";
-	$httpd[]="Include mods-enabled/*.init";
+	//$dir_master=$unix->getmodpathfromconf();
+	$httpd[]="Include $DAEMON_PATH/mods-enabled/*.load";
+	$httpd[]="Include $DAEMON_PATH/mods-enabled/*.conf";
+	$httpd[]="Include $DAEMON_PATH/mods-enabled/*.init";
 	if(basename($httpdconf)<>"httpd.conf"){$httpd[]="Include httpd.conf";}
-	$httpd[]="Include ports.conf";
+	$httpd[]="Include $DAEMON_PATH/ports.conf";
 	if($FreeWebsEnableModSecurity==1){$httpd[]="Include mod_security.conf";}
 	if($FreeWebsEnableModEvasive==1){$httpd[]="Include mod_evasive.conf";}
 	
@@ -439,12 +469,32 @@ function CheckHttpdConf(){
 	$status[]="</IfModule>";
 	@file_put_contents("$DAEMON_PATH/mods-enabled/mod-status.init", @implode("\n", $status));
 	
+	if(is_file("/etc/apache2/sysconfig.d/loadmodule.conf")){$httpd[]="Include /etc/apache2/sysconfig.d/loadmodule.conf";}
+	if(is_file("/etc/apache2/uid.conf")){$httpd[]="Include /etc/apache2/uid.conf";}
+	if(is_file("/etc/apache2/default-server.conf")){patch_suse_default_server();$httpd[]="Include /etc/apache2/default-server.conf";}
+	$httpd[]="Include $DAEMON_PATH/conf.d/";
+	$httpd[]="Include $DAEMON_PATH/sites-enabled";
+	if(is_file("$APACHE_MODULES_PATH/mod_php5.so")){$httpd[]="LoadModule php5_module $APACHE_MODULES_PATH/mod_php5.so";}
+	if(is_file("$APACHE_MODULES_PATH/mod_ldap.so")){$httpd[]="LoadModule ldap_module $APACHE_MODULES_PATH/mod_ldap.so";}
 	
-	$httpd[]="Include conf.d/";
-	$httpd[]="Include sites-enabled";
+	
+	
+	
+	if($ApacheDisableModDavFS==0){
+			if(is_file("$APACHE_MODULES_PATH/mod_dav.so")){echo "Starting......: Apache dav_module is enabled\n";$httpd[]="LoadModule dav_module $APACHE_MODULES_PATH/mod_dav.so";}		
+			if(is_file("$APACHE_MODULES_PATH/mod_dav_lock.so")){echo "Starting......: Apache dav_lock_module is enabled\n";$httpd[]="LoadModule dav_lock_module $APACHE_MODULES_PATH/mod_dav_lock.so";}
+			if(is_file("$APACHE_MODULES_PATH/mod_dav_fs.so")){echo "Starting......: Apache dav_fs_module is enabled\n";$httpd[]="LoadModule dav_fs_module $APACHE_MODULES_PATH/mod_dav_fs.so";}			
+	}		
+	
 	$httpd[]="";
 	echo "Starting......: Apache $httpdconf done\n";
 	@file_put_contents($httpdconf,@implode("\n",$httpd));
+	
+	
+	
+	
+	// MODULES -----------------------------------------------------------------------
+	
 	
 	if(!is_dir("$DAEMON_PATH/mods-enabled")){@mkdir("$DAEMON_PATH/mods-enabled",666,true);}
 	
@@ -452,12 +502,9 @@ function CheckHttpdConf(){
 	@unlink("/etc/apache2/workers.properties");	
 	@unlink("$DAEMON_PATH/conf.d/jk.conf");
 	
-	$users=new usersMenus();
-	$APACHE_MODULES_PATH=$users->APACHE_MODULES_PATH;
+	
 	$array["php5_module"]="libphp5.so";
-	$array["dav_module"]="mod_dav.so";
-	$array["dav_lock_module"]="mod_dav_lock.so";
-	$array["dav_fs_module"]="mod_dav_fs.so";
+	//$array["access_module"]="mod_access.so";
 	$array["qos_module"]="mod_qos.so";
 	$array["rewrite_module"]="mod_rewrite.so";
 	$array["cache_module"]="mod_cache.so";
@@ -465,6 +512,9 @@ function CheckHttpdConf(){
 	$array["mem_cache_module"]="mod_mem_cache.so";
 	$array["expires_module"]="mod_expires.so";
 	$array["status_module"]="mod_status.so";
+	//$array["mime_module"]="mod_mime.so";
+	
+	
 	
 	if($users->TOMCAT_INSTALLED){
 		if($TomcatEnable==1){
@@ -508,6 +558,9 @@ function CheckHttpdConf(){
 	@unlink("$DAEMON_PATH/mods-enabled/status.load");
 	@unlink("$DAEMON_PATH/mods-enabled/php5.load");
 	@unlink("$DAEMON_PATH/mods-enabled/jk.load");
+	@unlink("$DAEMON_PATH/mods-enabled/dav_lock_module.load");
+	@unlink("$DAEMON_PATH/mods-enabled/dav_module.load");
+	@unlink("$DAEMON_PATH/mods-enabled/dav_fs_module.load");	
 	
 	$sock=new sockets();
 	$FreeWebsDisableMOdQOS=$sock->GET_INFO("FreeWebsDisableMOdQOS");
@@ -546,14 +599,7 @@ if($FreeWebsEnableModEvasive==1){
 	
 	
 	
-	if($ApacheDisableModDavFS==1){
-		unset($array["dav_fs_module"]);
-		unset($array["dav_module"]);
-		unset($array["dav_lock_module"]);
-		@unlink("$DAEMON_PATH/mods-enabled/dav_lock_module.load");
-		@unlink("$DAEMON_PATH/mods-enabled/dav_module.load");
-		@unlink("$DAEMON_PATH/mods-enabled/dav_fs_module.load");
-	}
+
 	
 	$sql="SELECT COUNT(servername) as tcount FROM freeweb WHERE UseReverseProxy=1";
 	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));
@@ -608,6 +654,10 @@ if($FreeWebsEnableModEvasive==1){
 
 function apache_security($DAEMON_PATH){
 	$sock=new sockets();
+	$unix=new unix();
+	shell_exec("/bin/chown ". $unix->APACHE_SRC_ACCOUNT().':'.$unix->APACHE_SRC_GROUP()." /var/www");
+	shell_exec("/bin/chmod 755 /var/www");
+	
 	$ApacheServerTokens=$sock->GET_INFO("ApacheServerTokens");
 	$ApacheServerSignature=$sock->GET_INFO("ApacheServerSignature");
 	if(!is_numeric($ApacheServerSignature)){$ApacheServerSignature=1;}
@@ -675,6 +725,7 @@ function buildHost($uid=null,$hostname,$ssl=null,$d_path=null,$Params=array()){
 	if(!$APACHE_MOD_AUTHNZ_LDAP){$AuthLDAP=0;}
 	
 	$apache_usr=$unix->APACHE_SRC_ACCOUNT();
+	$apache_group=$unix->APACHE_SRC_GROUP();
 	$FreeWebListen=$sock->GET_INFO("FreeWebListen");
 	$FreeWebListenPort=$sock->GET_INFO("FreeWebListenPort");
 	$FreeWebListenSSLPort=$sock->GET_INFO("FreeWebListenSSLPort");
@@ -1126,7 +1177,8 @@ function install_groupware($servername,$rebuild=false){
 	}
 	
 	writelogs("Starting......: Apache \"$servername\" -> \"$free->groupware\"",__FUNCTION__,__FILE__,__LINE__);
-	switch ($ligne["groupware"]) {
+	
+	switch ($free->groupware) {
 		case "ARTICA_USR":
 			install_groupware_ARTICA_USR($servername);
 			return;
@@ -1143,6 +1195,7 @@ function install_groupware($servername,$rebuild=false){
 		
 		case "GROUPOFFICE":
 			writelogs("group_office_install($servername,false,$rebuild)",__FUNCTION__,__FILE__,__LINE__);
+			if($rebuild){buildHost(null,$servername);};
 			group_office_install($servername,false,$rebuild);
 		
 		default:
@@ -1367,16 +1420,19 @@ function drupal_schedules(){
 		$uid=null;$password=null;$value=null;
 		if($ligne["value"]<>null){$data=unserialize(base64_decode($ligne["value"]));}
 		$order=$ligne["ORDER"];
+		writelogs("order:{$ligne["ORDER"]} ID:{$ligne["ID"]}",__FUNCTION__,__FILE__,__LINE__);
 		$servername=$ligne["servername"];
 		if(isset($data["USER"])){$uid=$data["USER"];}
 		if(isset($data["PASSWORD"])){$password=$data["USER"];}
 		if(isset($data["value"])){$value=$data["value"];}
-		
+		$ID=$ligne["ID"];
 		writelogs("order:$order servername:$servername (uid=$uid)",__FUNCTION__,__FILE__,__LINE__);
 		
 		switch ($order){
 			
 			case "REFRESH_INFOS":
+				$sql="DELETE FROM drupal_queue_orders WHERE ID=$ID";
+				$q->QUERY_SQL($sql,"artica_backup");					
 				if($servername<>null){
 					$f=new drupal_vhosts($servername);
 					$f->populate_infos();
@@ -1384,6 +1440,8 @@ function drupal_schedules(){
 			break;
 			
 			case "REFRESH_MODULES":
+				$sql="DELETE FROM drupal_queue_orders WHERE ID=$ID";
+				$q->QUERY_SQL($sql,"artica_backup");					
 				if($servername<>null){
 					$f=new drupal_vhosts($servername);
 					$f->dump_modules();
@@ -1394,6 +1452,8 @@ function drupal_schedules(){
 			
 			
 			case "DELETE_USER":
+				$sql="DELETE FROM drupal_queue_orders WHERE ID=$ID";
+				$q->QUERY_SQL($sql,"artica_backup");					
 				if($servername<>null){
 					$f=new drupal_vhosts($servername);
 					$f->del_user($uid);	
@@ -1408,6 +1468,8 @@ function drupal_schedules(){
 			break;	
 
 			case "ENABLE_USER":
+				$sql="DELETE FROM drupal_queue_orders WHERE ID=$ID";
+				$q->QUERY_SQL($sql,"artica_backup");					
 				if($servername<>null){
 					$f=new drupal_vhosts($servername);
 					$f->active_user($uid,$value);	
@@ -1415,6 +1477,8 @@ function drupal_schedules(){
 			break;			
 
 			case "PRIV_USER":
+				$sql="DELETE FROM drupal_queue_orders WHERE ID=$ID";
+				$q->QUERY_SQL($sql,"artica_backup");					
 				writelogs("PRIV_USER: servername:$servername (uid=$uid, value=$value)",__FUNCTION__,__FILE__,__LINE__);
 				if($servername<>null){
 					$f=new drupal_vhosts($servername);
@@ -1423,24 +1487,29 @@ function drupal_schedules(){
 			break;	
 
 			case "DELETE_FREEWEB":
+				$sql="DELETE FROM drupal_queue_orders WHERE ID=$ID";
+				$q->QUERY_SQL($sql,"artica_backup");					
 				writelogs("DELETE_FREEWEB: servername:$servername (uid=$uid, value=$value)",__FUNCTION__,__FILE__,__LINE__);
 				remove_host($servername);
 				break;
 				
 			case "INSTALL_GROUPWARE":
+				$sql="DELETE FROM drupal_queue_orders WHERE ID=$ID";
+				$q->QUERY_SQL($sql,"artica_backup");					
 				writelogs("INSTALL_GROUPWARE: servername:$servername (uid=$uid, value=$value)",__FUNCTION__,__FILE__,__LINE__);
 				install_groupware($servername);
 				break;
 				
 			case "REBUILD_GROUPWARE":
+				$sql="DELETE FROM drupal_queue_orders WHERE ID=$ID";
+				$q->QUERY_SQL($sql,"artica_backup");				
 				writelogs("INSTALL_GROUPWARE: servername:\"$servername\" (uid=$uid, value=$value)",__FUNCTION__,__FILE__,__LINE__);
 				install_groupware($servername,true);
 				break;				
 			
 		}
 		
-		$sql="DELETE FROM drupal_queue_orders WHERE ID={$ligne["ID"]}";
-		$q->QUERY_SQL($sql,"artica_backup");
+
 		
 	}
 		
@@ -1466,7 +1535,8 @@ function group_office_install($servername,$nobuildHost=false,$rebuild=false){
 	shell_exec("/bin/chmod 666 $freeweb->WORKING_DIRECTORY/config.php");
 	
 	$apacheusername=$unix->APACHE_SRC_ACCOUNT();
-	shell_exec("/bin/chown -R $apacheusername:$apacheusername $freeweb->WORKING_DIRECTORY");
+	$apachegroup=$unix->APACHE_SRC_GROUP();
+	shell_exec("/bin/chown -R $apacheusername:$apachegroup $freeweb->WORKING_DIRECTORY");
 	if(!is_dir("/home/$servername")){@mkdir("/home/$servername");}
 	include_once(dirname(__FILE__)."/ressources/class.group-office.php");
 	$gpoffice=new group_office($servername);
@@ -1476,8 +1546,8 @@ function group_office_install($servername,$nobuildHost=false,$rebuild=false){
 	$gpoffice->writeconfigfile();
 	
 	
-	shell_exec("/bin/chown  $apacheusername:$apacheusername /home/$servername");
-	shell_exec("/bin/chown  -R $apacheusername:$apacheusername /home/$servername");	
+	shell_exec("/bin/chown  $apacheusername:$apachegroup /home/$servername");
+	shell_exec("/bin/chown  -R $apacheusername:$apachegroup /home/$servername");	
 	
 	
 	

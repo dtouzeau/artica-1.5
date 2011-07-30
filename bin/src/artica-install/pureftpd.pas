@@ -48,6 +48,7 @@ public
     function    PURE_FTPD_INITD():string;
     function    PURE_FTPD_PID() :string;
     function    PURE_FTPD_STATUS:string;
+    procedure   PURE_FTPD_RELOAD();
     procedure   ETC_DEFAULT();
     procedure   LDAP_CONF();
     procedure   PURE_FTPD_START();
@@ -524,6 +525,84 @@ end;
   l.free;
   RegExpr.free;
 end;
+//##############################################################################
+
+procedure tpureftpd.PURE_FTPD_RELOAD();
+ var
+    count      :integer;
+    pid:string;
+    STANDALONE_OR_INETD:string;
+    cmd:string;
+    binpath:string;
+    varWwwPerms:string;
+begin
+      binpath:=DAEMON_BIN_PATH();
+     if Not FileExists(binpath) then begin
+           logs.DebugLogs('Starting......: pure-ftpd is not installed (reloading)');
+           exit;
+     end;
+     varWwwPerms:=SYS.GET_INFO('varWwwPerms');
+     if length(varWwwPerms)=0 then varWwwPerms:='755';
+
+     if PureFtpdEnabled=0 then begin
+           logs.DebugLogs('Starting......: pure-ftpd is disabled (reloading)');
+           PURE_FTPD_STOP();
+           exit;
+     end;
+
+     pid:=PURE_FTPD_PID();
+     if Not SYS.PROCESS_EXIST(pid) then begin
+        logs.DebugLogs('Starting......: pure-ftpd is not running, start it (reloading pid:'+pid+')');
+        PURE_FTPD_START();
+        exit;
+     end;
+
+
+
+     STANDALONE_OR_INETD:=GET_DEFAULT_VALUES('STANDALONE_OR_INETD');
+     if STANDALONE_OR_INETD='inetd' then begin
+        ETC_DEFAULT();
+        logs.DebugLogs('Starting......: pure-ftpd is linked to inetd, disable inetd for pure-ftpd (reloading pid:'+pid+')');
+        DISABLE_INETD();
+        FIX_CONFIG_ERRORS();
+        if not SYS.IsUserExists('ftp') then SYS.AddUserToGroup('ftp','ftp','','');
+        PURE_FTPD_STOP();
+     end;
+
+
+     logs.DebugLogs('Starting......: pure-ftpd daemon...(reloading pid:'+pid+')');
+     if not SYS.IsUserExists('ftp') then SYS.AddUserToGroup('ftp','ftp','','');
+     LDAP_CONF();
+     PURE_FTPD_LOCAL_DB();
+     CreateDebianConfig();
+     FIX_CONFIG_ERRORS();
+     fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.pureftpd.php');
+
+     if RemovePureDB=1 then begin
+           logs.DebugLogs('Starting......: pure-ftpd remove PureDB feature (reloading pid:'+pid+')');
+           if FileExists('/etc/pure-ftpd/conf/PureDB') then logs.DeleteFile('/etc/pure-ftpd/conf/PureDB');
+     end;
+
+     forceDirectories('/var/www');
+     fpsystem('/bin/chmod '+varWwwPerms+' /var/www >/dev/null 2>&1 &');
+
+     cmd:=SYS.LOCATE_GENERIC_BIN('kill')+' -HUP '+pid;
+     fpsystem(cmd);
+
+
+     pid:=PURE_FTPD_PID();
+     if SYS.PROCESS_EXIST(pid) then begin
+        logs.DebugLogs('Starting......: Reloading pure-ftpd success with PID '+pid);
+        exit;
+     end;
+
+     logs.DebugLogs('Starting......: pure-ftpd Reloading failed');
+     logs.DebugLogs('Starting......: pure-ftpd Reloading daemon using "'+cmd+'"');
+
+end;
+//##############################################################################
+
+
 //##############################################################################
 
 procedure tpureftpd.PURE_FTPD_START();

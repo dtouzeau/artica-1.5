@@ -530,6 +530,7 @@ function inject($category,$file=null){
 	$prefix="INSERT IGNORE INTO dansguardian_community_categories (zmd5,zDate,category,pattern,uuid) VALUES ";
 	
 	while (list ($index, $www) = each ($f)){
+		if(preg_match("#^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$#", $www)){continue;}
 		$www=trim(strtolower($www));
 		if($www=="thisisarandomentrythatdoesnotexist.com"){continue;}
 		if($www==null){continue;}
