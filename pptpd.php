@@ -129,7 +129,7 @@ function connexions_list(){
 	<script>
 	var x_VPNDelCon= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			RefreshConexionList();
 	}		
 		function VPNDelCon(con){
@@ -290,7 +290,7 @@ function add_vpn_popup_routes(){
 		
 	var x_CalcRouteCDIR= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){document.getElementById('route_real').value=tempvalue;}
+			if(tempvalue.length>3){document.getElementById('route_real').value=tempvalue;}
 		}			
 		
 		function CalcRouteCDIR(){
@@ -303,13 +303,13 @@ function add_vpn_popup_routes(){
 		
 	var x_SaveNewRoute= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}
+			if(tempvalue.length>3){alert(tempvalue);}
 			RefreshRoutesList();
 		}			
 		
 		function SaveNewRoute(){
 			var tempvalue=document.getElementById('route_real').value;
-			if(tempvalue.length>0){
+			if(tempvalue.length>3){
 				var XHR = new XHRConnection();
 				XHR.appendData('route_real',document.getElementById('route_real').value);
 				if(document.getElementById('use_vpn_server').checked){XHR.appendData('use_vpn_server',1);}else{XHR.appendData('use_vpn_server',0);}
@@ -377,7 +377,7 @@ function addvpn_routes_popup_list(){
 	
 	var x_RouteVPNDelete= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			RefreshRoutesList();
 		}			
 	
@@ -484,7 +484,7 @@ function add_vpn_popup_form(){
 	<script>
 	var x_SavePPTPDConnexion= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			YahooWin2Hide();
 			if(document.getElementById('main_config_pptpd')){RefreshTab('main_config_pptpd');}
 	}			
@@ -825,7 +825,7 @@ function server_config(){
 	<script>
 	var x_SavePPTPDServerForm= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			RefreshTab('main_config_pptpd');
 	}	
 
@@ -853,7 +853,7 @@ function SavePPTPDServerForm(){
 	
 	var x_SavePPTPDServerForm= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			RefreshServerRoutes();
 	}
 
@@ -872,7 +872,7 @@ function SavePPTPDServerForm(){
 	
 	var x_CalcRouteServerCDIR= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){document.getElementById('server_route_real').value=tempvalue;}
+			if(tempvalue.length>3){document.getElementById('server_route_real').value=tempvalue;}
 		}			
 		
 		function CalcRouteServerCDIR(){
@@ -1069,7 +1069,7 @@ function local_users(){
 	
 	var x_VPNAddMember= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			Refresh_vpn();
 	}		
 		function VPNAddMember(uid){
@@ -1177,7 +1177,7 @@ function vpn_users(){
 		
 	var x_VPNDelMember= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			Refresh_vpn();
 		}
 				

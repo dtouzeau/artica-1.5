@@ -73,7 +73,7 @@ function js(){
 	
 	var x_MBXCheckrights= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){
+		if(tempvalue.length>3){
 			mbxFilogs(tempvalue);
 			finish_failed();
 			return;

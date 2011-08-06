@@ -136,7 +136,7 @@ function status(){
 	<script>
 	var x_SaveMaxProcesses= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		RefreshTab('main_config_amavis');
 	}		
 	

@@ -20,6 +20,8 @@ class mysql{
 		$phpPage=basename($_SERVER["SCRIPT_FILENAME"]);
 	  	$this->CurrentPageName=$phpPage;
 	  	$this->FillSettings();
+	  	if($this->mysql_server=="localhost"){$this->mysql_server="127.0.0.1";}
+		if($this->mysql_server=="locahost"){$this->mysql_server="127.0.0.1";}
 		}
 	
 	private function FillSettings(){

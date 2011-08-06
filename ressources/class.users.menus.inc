@@ -469,6 +469,8 @@ class usersMenus {
 	var $APACHE_MOD_TOMCAT=false;
 	var $OPENEMM_INSTALLED=false;
 	var $MSKTUTIL_INSTALLED=false;
+	var $OPENEMM_SENDMAIL_INSTALLED=false;
+	var $OPENEMM_SENDMAIL_VERSION=false;
 	
 	private function CheckIndexDefaults($_GLOBAL){
 		return $_GLOBAL;
@@ -654,6 +656,8 @@ class usersMenus {
 			if(isset($_GLOBAL["APACHE_MOD_CACHE"])){$this->APACHE_MOD_CACHE=$_GLOBAL["APACHE_MOD_CACHE"];}
 			if(isset($_GLOBAL["NSCD_INSTALLED"])){$this->NSCD_INSTALLED=$_GLOBAL["NSCD_INSTALLED"];}
 			if(isset($_GLOBAL["DRUPAL7_INSTALLED"])){$this->DRUPAL7_INSTALLED=$_GLOBAL["DRUPAL7_INSTALLED"];}
+			if(isset($_GLOBAL["OPENEMM_SENDMAIL_INSTALLED"])){$this->OPENEMM_SENDMAIL_INSTALLED=$_GLOBAL["OPENEMM_SENDMAIL_INSTALLED"];}
+			if(isset($_GLOBAL["OPENEMM_SENDMAIL_VERSION"])){$this->OPENEMM_SENDMAIL_VERSION=$_GLOBAL["OPENEMM_SENDMAIL_VERSION"];}
 			
 			
 			
@@ -1423,9 +1427,7 @@ private function build_user_left_menus(){
 			
 			if($sock->GET_INFO("WifiCardOk")==1){$array["system"]["SUB"]["WIFI"]="javascript:Loadjs('system.wifi.php')";}
 			if($this->dhcp_installed){
-				if(!$this->KASPERSKY_WEB_APPLIANCE){
 					$array["system"]["SUB"]["{APP_DHCP}"]="javascript:Loadjs('index.gateway.php?index_dhcp=yes&in-front-ajax=yes')";
-				}
 			}
 			
 			if($sock->GET_INFO("QOSInLeftMenu")==1){
@@ -1479,10 +1481,8 @@ private function build_user_left_menus(){
 			
 			$array["system"]["SUB"]["{APP_OPENSSH}"]="javascript:Loadjs('sshd.php?in-front-ajax=yes')";
 			
-			if($this->APP_SABNZBDPLUS_INSTALLED){
-				$array["system"]["SUB"]["{APP_SABNZBDPLUS}"]="javascript:Loadjs('sabnzbdplus.php?in-front-ajax=yes')";
-				
-			}
+			if($this->OPENEMM_INSTALLED){$array["system"]["SUB"]["{APP_OPENEMM}"]="javascript:Loadjs('openemm.php')";}			
+			if($this->APP_SABNZBDPLUS_INSTALLED){$array["system"]["SUB"]["{APP_SABNZBDPLUS}"]="javascript:Loadjs('sabnzbdplus.php?in-front-ajax=yes')";}
 			
 			if($this->OPENVPN_INSTALLED){
 				$array["{APP_OPENVPN}"]["MAIN"]="javascript:Loadjs('index.openvpn.php?infront=yes')";
@@ -1800,7 +1800,17 @@ private function build_user_left_menus(){
 		
 		}
 		
-		if($this->KASPERSKY_WEB_APPLIANCE){unset($array["{fileshare}"]);}
+		if($this->KASPERSKY_WEB_APPLIANCE){
+			unset($array["{fileshare}"]);
+			unset($array["{APP_OPENVPN}"]);
+			unset($array["{events}"]["SUB"]["{APP_OPENVPN}"]);
+			unset($array["system"]["SUB"]["FreeWebs"]);
+			unset($array["system"]["SUB"]["{load_balancing}"]);
+			unset($array["system"]["SUB"]["VPN IPSEC"]);
+			unset($array["system"]["SUB"]["VPN PPTP"]);
+			unset($array["system"]["SUB"]["{APP_DHCP}"]);
+			unset($array["system"]["SUB"]["{APP_PDNS}"]);
+		}			
 		
 		$menus=$this->BuildArticaMenus($array,$sub_array_pages);
 		$this->toplinks=$menus;

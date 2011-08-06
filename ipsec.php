@@ -180,7 +180,7 @@ function NetToNet(){
 	<script>
 		var x_CalcRouteIpsecServerCDIR= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){document.getElementById('Leftsubnet').value=tempvalue;}
+			if(tempvalue.length>3){document.getElementById('Leftsubnet').value=tempvalue;}
 		}			
 		
 		function CalcRouteIpsecServerCDIR(){
@@ -192,7 +192,7 @@ function NetToNet(){
 
 		var x_CalcRouteIpsecServerCDIR2= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){document.getElementById('rightsubnet').value=tempvalue;}
+			if(tempvalue.length>3){document.getElementById('rightsubnet').value=tempvalue;}
 		}			
 		
 		function CalcRouteIpsecServerCDIR2(){

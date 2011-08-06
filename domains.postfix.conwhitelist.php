@@ -38,7 +38,7 @@ function js(){
 		
 var x_OU_AutoBlockDenyAddWhiteList= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue);}
+	if(tempvalue.length>3){alert(tempvalue);}
 	LoadAjax('OUBlockDenyAddWhiteList','$page?BlockDenyAddWhiteList=yes&ou=$ou');
 }
 	

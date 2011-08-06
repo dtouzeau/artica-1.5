@@ -90,7 +90,7 @@ function dhcp_index_js(){
 		
 		var x_EnableDHCPServerSave= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}
+			if(tempvalue.length>3){alert(tempvalue);}
 			if(document.getElementById('main_config_dhcpd')){RefreshTab('main_config_dhcpd');}
 			YahooWin3Hide();
 		}			
@@ -114,7 +114,7 @@ function dhcp_index_js(){
 		
 var x_SaveDHCPSettings= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue);}
+	if(tempvalue.length>3){alert(tempvalue);}
 	RefreshTab('main_config_dhcpd');
 	}		
 		
@@ -156,7 +156,7 @@ var x_SaveDHCPSettings= function (obj) {
 		
 var x_SavePXESettings= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue);}
+	if(tempvalue.length>3){alert(tempvalue);}
 	PxeConfig();
 	}		
 	

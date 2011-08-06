@@ -110,7 +110,7 @@ function main_config_pureftpd_js(){
 	$html="
 	var x_SERVER_FTP_JS_START=function(obj){
       var tempvalue=obj.responseText;
-      if(tempvalue.length>0){alert(tempvalue);}
+      if(tempvalue.length>3){alert(tempvalue);}
      document.getElementById('imgftp').innerHTML='<center style=\"width:100%\">&nbsp;</center>';
       
       }	

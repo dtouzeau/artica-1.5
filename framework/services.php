@@ -32,6 +32,8 @@ if(isset($_GET["restart-openemm"])){openemm_restart();exit;}
 if(isset($_GET["kerbauth"])){kerbauth();exit;}
 if(isset($_GET["reload-pure-ftpd"])){pureftpd_reload();exit;}
 if(isset($_GET["restart-ftp"])){pureftpd_restart();exit;}
+if(isset($_GET["dmicode"])){dmicode();exit;}
+if(isset($_GET["php-ini-set"])){PHP_INI_SET();exit;}
 
 
 
@@ -54,6 +56,20 @@ function syslogger(){
 	$cmd=trim("$nohup /etc/init.d/artica-postfix restart sysloger >/dev/null 2>&1 &");
 	shell_exec($cmd);
 	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);
+	
+}
+
+function dmicode(){
+	if(is_file("/etc/artica-postfix/dmidecode.cache")){
+		echo "<articadatascgi>". @file_get_contents("/etc/artica-postfix/dmidecode.cache")."</articadatascgi>";
+		return;
+	}
+	$unix=new unix();
+	$php5=$unix->LOCATE_PHP5_BIN();
+	$cmd=trim("$nohup /usr/share/artica-postfix/exec.dmidecode.php >/dev/null 2>&1");
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	
+	shell_exec($cmd);
+	echo "<articadatascgi>". @file_get_contents("/etc/artica-postfix/dmidecode.cache")."</articadatascgi>";
 	
 }
 
@@ -256,6 +272,13 @@ function mysqld_perso_save(){
 	shell_exec($cmd);
 	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);			
 	
+}
+function PHP_INI_SET(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim("$nohup /usr/share/artica-postfix/bin/artica-install --php-ini >/dev/null 2>&1 &");
+	shell_exec($cmd);
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);		
 }
 
 

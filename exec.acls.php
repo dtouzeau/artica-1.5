@@ -120,12 +120,14 @@ function ApplySingleAcls($directory){
 					continue;
 				}
 				if($acls->acls_array["recursive"]==1){$recurs="-R ";}
+				$groupname=utf8_encode($groupname);
 				$cmd="$setfacl_bin $recurs-m g:\"$groupname\":$perms_strings $dir 2>&1";
 				$events[]=$cmd;
 				exec("$cmd",$events);
 				
 				
 				if($acls->acls_array["default"]==1){
+					$groupname=utf8_encode($groupname);
 					$cmd="$setfacl_bin $recurs-m d:g:\"$groupname\":$perms_strings $dir 2>&1";
 					$events[]=$cmd;
 					exec("$cmd",$events);					
@@ -150,12 +152,14 @@ function ApplySingleAcls($directory){
 					continue;
 				}
 				if($aclsClass->acls_array["recursive"]==1){$recurs="R";}
+				$member=utf8_encode($member);
 				$cmd="$setfacl_bin -m$recurs u:\"$member\":$perms_strings $dir 2>&1";
 				$events[]=$cmd;
 				exec("$cmd",$events);
 				
 				
 				if($aclsClass->acls_array["default"]==1){
+					$member=utf8_encode($member);
 					$cmd="$setfacl_bin -m$recurs d:u:\"$member\":$perms_strings $dir 2>&1";
 					$events[]=$cmd;
 					exec("$cmd",$events);					

@@ -57,7 +57,7 @@ function delete_js(){
 	}
 	var x_delete_message_id= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}
+		if(tempvalue.length>3){alert(tempvalue);}
 		YahooWin2Hide();
 		}			
 	
@@ -177,7 +177,7 @@ function loadMain(){
 	
 var x_QuarantineMailSettingsSave= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}
+		if(tempvalue.length>3){alert(tempvalue);}
 		QuarantineMailSettings();
 	}		
 	

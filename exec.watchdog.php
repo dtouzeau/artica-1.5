@@ -42,6 +42,10 @@ function startprocess($APP_NAME,$cmd){
 	
 }
 function bandwith(){
+	$sock=new sockets();
+	$EnableBandwithCalculation=$sock->GET_INFO("EnableBandwithCalculation");
+	if(!is_numeric($EnableBandwithCalculation)){$EnableBandwithCalculation=0;}
+	if($EnableBandwithCalculation==0){return;}	
 	
 	$file="/usr/share/artica-postfix/ressources/logs/web/bandwith-mon.txt";
 	$ftime=file_time_min($file);

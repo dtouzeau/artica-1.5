@@ -96,7 +96,7 @@ var x_{$prefix}ChargeLogs=function (obj) {
 	
 var x_{$prefix}LaunchInstall=function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}
+		if(tempvalue.length>3){alert(tempvalue);}
 		
 	}		
 

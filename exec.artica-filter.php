@@ -1,5 +1,6 @@
 #!/usr/bin/php
 <?php
+ini_set("bug_compat_42" , "off"); ini_set("session.bug_compat_warn" , "off"); 
 include_once(dirname(__FILE__).'/ressources/class.ini.inc');
 include_once(dirname(__FILE__).'/ressources/class.ldap.inc');
 include_once(dirname(__FILE__).'/ressources/class.domains.diclaimers.inc');

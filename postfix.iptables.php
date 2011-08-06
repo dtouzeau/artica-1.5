@@ -178,7 +178,7 @@ if(isset($_GET["white-js"])){
 	
 var x_EnablePostfixAutoBlock= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue);}
+	if(tempvalue.length>3){alert(tempvalue);}
 	RefreshTab('instant_iptables_tabs');
 }
 	
@@ -193,7 +193,7 @@ var x_EnablePostfixAutoBlock= function (obj) {
 	
 var x_AutoBlockDenyAddWhiteList= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue);}
+	if(tempvalue.length>3){alert(tempvalue);}
 	LoadAjax('BlockDenyAddWhiteList','$page?BlockDenyAddWhiteList=yes');
 }
 	
@@ -239,7 +239,7 @@ var x_AutoBlockDenyAddWhiteList= function (obj) {
 		
 var x_PostfixEnableFwRule= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}
+		if(tempvalue.length>3){alert(tempvalue);}
 	}		
 		
 			
@@ -456,13 +456,13 @@ function status(){
 <script>
 	var x_InstantIpTablesInLeftMenuSave= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)};
+		if(tempvalue.length>3){alert(tempvalue)};
 		CacheOff();
 	}	
 
 	var x_DeleteAllRules= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)};
+		if(tempvalue.length>3){alert(tempvalue)};
 		
 	}	
 		
@@ -575,7 +575,7 @@ $html="
 <script>
 	var x_PostfixAutoBlockParametersSave= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			RefreshTab('instant_iptables_tabs');
 	}			
 		
@@ -698,7 +698,7 @@ $refresh
 		
 	var x_CompileSSHDRules= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}
+		if(tempvalue.length>3){alert(tempvalue);}
 	}		
 		
 
@@ -802,7 +802,7 @@ function firewall_rules(){
 	<script>
 	var x_PostfixIptableDelete= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		PostfixIptablesSearch();
 	}	
 	
@@ -816,7 +816,7 @@ function firewall_rules(){
 		
 	var x_PostfixEnableFwRule= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}
+		if(tempvalue.length>3){alert(tempvalue);}
 	}		
 		
 
@@ -1000,7 +1000,7 @@ function ban_servers_popup(){
 	
 	var x_BannSmtpAdd= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)};
+		if(tempvalue.length>3){alert(tempvalue)};
 		YahooWin3Hide();
 	}			
 		
@@ -1099,7 +1099,7 @@ function firewall_events(){
 	
 	var x_EventDisableIpTables= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)};
+		if(tempvalue.length>3){alert(tempvalue)};
 		
 	}			
 		

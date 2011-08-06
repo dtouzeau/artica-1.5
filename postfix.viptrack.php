@@ -120,7 +120,7 @@ function dbstatus(){
 	<script>
 	var x_VIPTrackGenerate= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);return;};
+		if(tempvalue.length>3){alert(tempvalue);return;};
 		
 	}	
 	
@@ -236,7 +236,7 @@ function status(){
 	<script>
 	var x_EnableVIPTrackSave= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);return;};
+		if(tempvalue.length>3){alert(tempvalue);return;};
 		RefreshTab('main_postfix_viptrack');
 	}	
 	
@@ -374,13 +374,13 @@ function members_list(){
 	<script>
 	var x_DeleteVipTrack= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);return;};
+		if(tempvalue.length>3){alert(tempvalue);return;};
 		VipTrackMembersRefresh();
 	}
 	
 	var x_VipTrackEnable= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);return;};
+		if(tempvalue.length>3){alert(tempvalue);return;};
 		
 	}	
 	
@@ -421,7 +421,7 @@ function members_add_popup(){
 	
 	var x_MembersVIPTrackSave= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)};
+		if(tempvalue.length>3){alert(tempvalue)};
 		YahooWin2Hide();
 		RefreshTab('main_postfix_viptrack');
 	}			

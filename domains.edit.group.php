@@ -134,7 +134,7 @@ $html="
 
 	var x_addgroup= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			if(document.getElementById('GroupSettings')){
 				LoadAjax('GroupSettings','domains.edit.group.php?LoadGroupSettings=&ou=$ou_encrypted&encoded=yes')
 			}
@@ -213,14 +213,14 @@ function LoadGroupAjaxSettingsPage(){
 
 	var x_addgroup= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			$start
 		}
 		
 	
 	var x_DeleteMembersGroup= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			RefreshTab('main_group_config');
 		}
 		
@@ -343,7 +343,7 @@ function GROUP_SIEVE_JS(){
 			
 		function x_SieveSaveArticaFilters(obj){
 				var tempvalue=obj.responseText;
-				if(tempvalue.length>0){alert(tempvalue);}
+				if(tempvalue.length>3){alert(tempvalue);}
 				SieveGroupOptions();
 				YahooWin3(500,'$page?sieve-update-users=$gid','$title');
 				}			
@@ -468,8 +468,14 @@ function LIST_GROUPS_FROM_OU_search(){
 	$search=str_replace(".",'\.',$search);
 	$search=str_replace("*",'.*?',$search);
 	
-	$tr[]=Paragraphe("64-folder-group-add.png","{add_group}","{add_a_new_group_in_this_org}",
+	$addgroup=Paragraphe("64-folder-group-add.png","{add_group}","{add_a_new_group_in_this_org}",
 	"javascript:Loadjs('$page?popup-add-group=yes&ou={$_GET["ou"]}')");
+	if($ldap->EnableManageUsersTroughActiveDirectory){
+			$addgroup=Paragraphe("64-folder-group-add-grey.png","{add_group}","{add_a_new_group_in_this_org}","");
+	}
+	
+	
+	$tr[]=$addgroup;
 	
 if(is_array($hash)){
 			while (list ($num, $line) = each ($hash)){
@@ -634,7 +640,63 @@ function GROUP_DEFAULT_PASSWORD_SAVE(){
 	
 }
 
+function GROUP_SETTINGS_PAGE_ACTIVE_DIRECTORY(){
+	if(isset($_GET["tab"])){GROUP_SETTINGS_PAGE_CONTENT();exit;}
+	$users=new usersMenus();
+	$tpl=new templates();
+	$no_priv = $tpl->javascript_parse_text ("{ERROR_NO_PRIVS}" );
+	$page=CurrentPageName();	
+	if($users->AsOrgAdmin){$users->AllowAddUsers=true;}
+	if(!$users->AsArticaAdministrator){
+		if(!$users->AllowAddUsers){
+			if(!$users->AsOrgAdmin){writelogs("AsOrgAdmin:False",__FUNCTION__,__FILE__,__LINE__);}
+			if(!$users->AllowAddUsers){writelogs("AllowAddUsers:False",__FUNCTION__,__FILE__,__LINE__);}
+			echo "<H1>$no_priv :&laquo;". $tpl->javascript_parse_text("{AllowAddUsers}")."&raquo;</H1>";
+			return null;
+		}
+	}
+	$array["members"]='{members}';
+	$array["groups"]='{groups} '.base64_decode($_GET["ou"]);
+	
+	$_GET["LoadGroupSettings"]=urlencode($_GET["LoadGroupSettings"]);
+	while (list ($num, $ligne) = each ($array) ){
+		$ligne=$tpl->_ENGINE_parse_body($ligne);
+		
+		if($num=="members"){
+			$html[]= "<li><a href=\"$page?MembersList={$_GET["LoadGroupSettings"]}&ou={$_GET["ou"]}\"><span>$ligne</span></a></li>\n";
+			continue;
+		}
+		
+		$html[]= "<li><a href=\"$page?LoadGroupSettings={$_GET["LoadGroupSettings"]}&tab=$num&ou={$_GET["ou"]}\"><span>$ligne</span></a></li>\n";
+	}
+	
+	
+	echo "
+	<div id=main_group_config style='width:100%;height:550px;overflow:auto'>
+		<ul>". implode("\n",$html)."</ul>
+	</div>
+		<script>
+				$(document).ready(function(){
+					$('#main_group_config').tabs();
+			
+			
+			});
+		</script>";		
+		
+	
+	
+			
+}
+
+
 function GROUP_SETTINGS_PAGE(){
+	$ldap=new clladp();
+	if($ldap->EnableManageUsersTroughActiveDirectory){
+		writelogs("Loading tabs for Active Directory",__FUNCTION__,__FILE__,__LINE__);
+		GROUP_SETTINGS_PAGE_ACTIVE_DIRECTORY();
+		return;
+	}
+	
 	
 	if(isset($_GET["tab"])){GROUP_SETTINGS_PAGE_CONTENT();exit;}
 	$users=new usersMenus();
@@ -707,6 +769,7 @@ function GROUP_SETTINGS_PAGE_CONTENT(){
 	$ldap=new clladp();
 	$page=CurrentPageName();
 	$num=$_GET["LoadGroupSettings"];
+	writelogs("Loading group $num",__FUNCTION__,__FILE__,__LINE__);
 	if(is_base64_encoded($_GET["ou"])){$_GET["ou"]=base64_decode($_GET["ou"]);}
 	$ou_conn=$_GET["ou"];
 	
@@ -984,6 +1047,8 @@ function MEMBERS_LIST($gid){
 		$import_member=null;
 		$import_members=null;
 		$delete_members=null;
+		$add_member=imgtootltip('member-add-64-grey.png','{add_member}');
+		
 	}
 	
 //".(MEMBERS_LIST_LIST($gid)) ."	
@@ -1186,7 +1251,6 @@ function MEMBERS_LIST_LIST($gid){
 	writelogs("found $count members for (gidnumber=$gid)",__FUNCTION__,__FILE__,__LINE__);
 	if(!is_array($members)){return null;}
 	
-	
 	$html="
 <table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
 <thead class='thead'>
@@ -1212,6 +1276,7 @@ function MEMBERS_LIST_LIST($gid){
 		
 		if(isset($already[$uid])){continue;}
 		$delete=imgtootltip('delete-32.png','{disconnect_from_this_group}',"DeleteUserFromGroup('$uid')");
+		if($group->EnableManageUsersTroughActiveDirectory){$delete=imgtootltip('delete-32-grey.png','{disconnect_from_this_group}',"");}
 		$already[$uid]=true;
 		
 		if(strlen($search)>0){if(!preg_match("#$search#",$uid)){continue;}}

@@ -123,7 +123,7 @@ $html="
 	
 	var X_CLUEBRINGER_SAVE=function(obj){
       var tempvalue=obj.responseText;
-	  if(tempvalue.length>0){alert(tempvalue);}
+	  if(tempvalue.length>3){alert(tempvalue);}
       RefreshTab('main_config_cluebringer');
       }	
 	
@@ -269,7 +269,7 @@ function remote_users(){
 		
 	var x_RemoteDelMember= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			refresh_remote_users();
 		}
 				
@@ -331,7 +331,7 @@ function local_users(){
 	
 	var x_SargAddMember= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			refresh_remote_users();
 	}		
 		function SargAddMember(uid){

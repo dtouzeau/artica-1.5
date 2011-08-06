@@ -209,23 +209,23 @@ function js(){
 		
 		var x_WizardFamily= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			WizardRetransWgetShow();
 		 }
 
 		var x_WizardHTTPEngineSave= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			WizardApache();
 		 }
 		var x_WizardRetranSaveApache= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			WizardFinish();
 		 }	
 		var x_WizardRetransCompile= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			RefreshTab('retranslator_main');
 			YahooWin2Hide();
 		 }

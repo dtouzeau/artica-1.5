@@ -8,7 +8,10 @@ if(isset($_GET["smbd-logs"])){smbdlogs();exit;}
 if(isset($_GET["testparm"])){testparm();exit;}
 if(isset($_GET["idof"])){idof();exit;}
 if(isset($_GET["wins-list"])){winsdat();exit;}
-
+if(isset($_GET["test-ads-join"])){testadsjoin();exit;}
+if(isset($_GET["adsinfos"])){adsinfos();exit;}
+if(isset($_GET["getent"])){getent();exit;}
+if(isset($_GET["getent-group"])){getent_group();exit;}
 
 
 
@@ -78,6 +81,45 @@ function smbdlogs(){
 	
 }
 
+function testadsjoin(){
+	$unix=new unix();
+	$net=$unix->LOCATE_NET_BIN_PATH();
+	exec("$net ads testjoin 2>&1",$results);
+	writelogs_framework("$cmd = " . count($results)." rows",__FUNCTION__,__FILE__,__LINE__);	
+	while (list ($num, $line) = each ($results)){
+		if(preg_match("#Join to domain is not valid:(.+)#", $line,$re)){
+			echo "<articadatascgi>FALSE:{$re[1]}</articadatascgi>";
+			return;
+		}
+		
+		if(preg_match("#Join is OK#", $line,$re)){
+			echo "<articadatascgi>TRUE</articadatascgi>";
+			return;
+		}
+		
+	}
+	
+}
+function adsinfos(){
+	$unix=new unix();
+	$net=$unix->LOCATE_NET_BIN_PATH();
+	exec("$net ads info 2>&1",$results);
+	writelogs_framework("$cmd = " . count($results)." rows",__FUNCTION__,__FILE__,__LINE__);	
+	while (list ($num, $line) = each ($results)){
+		if(preg_match("#(.+?):(.+)#", $line,$re)){
+			$array[trim($re[1])]=trim($re[2]);
+		}
+		
+		
+		
+	}
+	
+	echo "<articadatascgi>". base64_encode(serialize($array))."</articadatascgi>";
+	
+}
+
+
+
 function winsdat(){
 	$unix=new unix();
 	$dat="/var/lib/samba/wins.dat";
@@ -108,3 +150,56 @@ function winsdat(){
 	
 }
 
+function getent(){
+	$pattern=trim($_GET["getent"]);
+	$pattern=str_replace(".","\.", $pattern);
+	$pattern=str_replace("*",".*?", $pattern);
+	$unix=new unix();
+	$getent=$unix->find_program("getent");
+	if($pattern<>null){
+		$grep=$unix->find_program("grep");
+		$pipe="|grep -i -E \"$pattern\"";
+	}
+	
+	$cmd="$getent passwd$pipe 2>&1";
+	exec($cmd,$results);
+	
+	while (list ($num, $line) = each ($results)){
+		if(preg_match("#^(.+?):.*?:#", $line,$re)){
+			$return[$re[1]]=$re[1];
+		}else{
+			$false++;
+		}
+	}
+	writelogs_framework("$cmd = " . count($results)." rows $false bad lines return ". count($return)." rows",__FUNCTION__,__FILE__,__LINE__);
+	echo "<articadatascgi>". base64_encode(serialize($return))."</articadatascgi>";	
+	
+	
+}
+function getent_group(){
+	$pattern=trim($_GET["getent-group"]);
+	$pattern=str_replace(".","\.", $pattern);
+	$pattern=str_replace("*",".*?", $pattern);
+	$unix=new unix();
+	$getent=$unix->find_program("getent");
+	if($pattern<>null){
+		$grep=$unix->find_program("grep");
+		$pipe="|grep -i -E \"$pattern\"";
+	}
+	
+	$cmd="$getent group$pipe 2>&1";
+	exec($cmd,$results);
+	
+	while (list ($num, $line) = each ($results)){
+		if(preg_match("#^(.+?):.*?#", $line,$re)){
+			$return[$re[1]]=$re[1];
+		}else{
+			$false++;
+		}
+	}
+	
+	writelogs_framework("$cmd = " . count($results)." rows $false bad lines return ". count($return)." rows",__FUNCTION__,__FILE__,__LINE__);
+	echo "<articadatascgi>". base64_encode(serialize($return))."</articadatascgi>";	
+	
+	
+}

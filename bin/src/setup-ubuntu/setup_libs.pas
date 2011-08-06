@@ -39,6 +39,7 @@ private
        procedure  ZARAFA_INSTALL_PERFORM();
        function   GET_INFO(key:string):string;
 public
+       sexport:string;
       DirListFiles:TstringList;
       constructor Create();
       procedure Free;
@@ -92,6 +93,15 @@ begin
 if not DirectoryExists('/opt/artica/tmp') then forceDirectories('/opt/artica/tmp');
 index_file:='http://www.artica.fr/auto.update.php';
 local_folder:='';
+
+  sexport:=' LD_LIBRARY_PATH="/lib:/lib64:/usr/lib:/usr/lib64:/usr/local/lib:/usr/lib/libmilter"';
+  sexport:=sexport+' LDFLAGS="-L/lib -L/usr/local/lib -L/usr/lib/libmilter -L/usr/lib -L/usr/lib64 -L/lib64"';
+  sexport:=sexport+' CPPFLAGS="-I/usr/include/ -I/usr/local/include -I/usr/include/libpng12 -I/usr/include/sasl -I/usr/include/libmilter -I/usr/include/linux -I/usr/include/sm/os -I/usr/include/openssl';
+  sexport:=sexport+' -I/usr/include/mysql -I/usr/include/freetype2 -I/usr/include/dbi -I/usr/include/libxml2"';
+  sexport:=sexport+' PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/bin/X11"';
+
+
+
 end;
 //#########################################################################################
 procedure tlibs.Free();

@@ -447,6 +447,7 @@ class settings_inc {
 	var $OPENEMM_INSTALLED=false;
 	var $OPENEMM_VERSION="";
 	var $MSKTUTIL_INSTALLED=false;
+	var $OPENEMM_SENDMAIL_VERSION="";
 	private function CheckIndexDefaults($_GLOBAL){
 		return $_GLOBAL;
 		foreach($this as $key => $value) {
@@ -844,7 +845,7 @@ class settings_inc {
 			$this->APACHE_MOD_TOMCAT=$_GLOBAL["APACHE_MOD_TOMCAT"];
 			$this->OPENEMM_VERSION=$_GLOBAL["OPENEMM_VERSION"];
 			$this->MSKTUTIL_INSTALLED=$_GLOBAL["MSKTUTIL_INSTALLED"];
-			
+			$this->OPENEMM_SENDMAIL_VERSION=$_GLOBAL["OPENEMM_SENDMAIL_VERSION"];
 			
 			if(isset($_GLOBAL["deduplication_installed"])){$this->deduplication_installed=$_GLOBAL["deduplication_installed"];}
 			$this->EnableManageUsersTroughActiveDirectory=$_GLOBAL["EnableManageUsersTroughActiveDirectory"];

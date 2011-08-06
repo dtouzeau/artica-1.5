@@ -185,3 +185,65 @@ div .form{
 	-webkit-border-radius: 5px;
 	-o-border-radius: 5px;		
 }
+
+
+.returnToKwicks {
+	display:block;
+	border:1px dashed #888;
+	padding:5px;
+	float:right;
+}
+.returnToKwicks:hover {
+	background-color: #5e5e76;
+	text-decoration: none;
+	color: #aaa;
+}
+
+/* defaults for all examples */
+.kwicks {
+	list-style: none;
+	position: relative;
+	margin: 0;
+	padding: 0;
+}
+.kwicks li{
+	display: block;
+	overflow: hidden;
+	padding: 0;
+	cursor: pointer;
+}
+
+/* example 1 */
+#QuickLinksTop .kwicks li{
+	float: left;
+	width: 125px;
+	height: 100px;
+	margin-right: 5px;
+}
+#QuickLinksTop #kwick1 { 
+	background-color: #53b388;
+	background-image: url('/img/kwicks4.png');
+}
+#QuickLinksTop #kwick2 {
+	background-color: #5a69a9;
+	background-image: url('/img/kwicks5.png');
+}
+#QuickLinksTop #kwick3 {
+	background-color: #c26468;
+	background-image: url('/img/kwicks3.png');
+}
+#QuickLinksTop #kwick4 { 
+	background-color: #bf7cc7;
+	background-image: url('/img/kwicks2.png');
+}
+#QuickLinksTop #kwick5 { 
+	background-color: #bf7cc7;
+	background-image: url('/img/kwicks1.png');
+	margin-right: none;
+}
+#QuickLinksTop #kwick6 { 
+	background-color: #bf7cc7;
+	background-image: url('/img/kwicks6.png');
+	margin-right: none;
+}
+

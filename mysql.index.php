@@ -21,7 +21,7 @@ if(isset($_GET["repair-databases"])){repair_database();exit;}
 if(isset($_GET["popup"])){popup();exit;}
 if(isset($_GET["mysql-settings-popup"])){mysql_settings_js();exit;}
 if(isset($_GET["mysql-settings-popup-show"])){echo mysql_settings(true);exit;}
-
+if(isset($_POST["PHPDefaultMysqlserver"])){mysql_php_save();exit;}
 	js();
 	
 	
@@ -83,8 +83,8 @@ function mystatus(){
 	}
 	
 	function Loadall(){
-		demarre();
-		ChargeLogs();
+		{$prefix}demarre();
+		{$prefix}ChargeLogs();
 		mystatus();
 		$ajax
 		LoadAjax('mysql_status','$page?mysqlstatus=yes');
@@ -100,7 +100,7 @@ function mystatus(){
 function popup(){
 	
 $html="
-	<h1>{APP_MYSQL_ARTICA}</H1><span id='scripts'><script type=\"text/javascript\" src=\"$page?script=load_functions\"></script></span>
+	<span id='scripts'><script type=\"text/javascript\" src=\"$page?script=load_functions\"></script></span>
 	<table style='width:100%'>
 	<tr>
 	<td width=1% valign='top'>".RoundedLightWhite("<img src='img/bg_mysql.png'style='margin-right:30px;margin-bottom:5px'>")."</td>
@@ -269,7 +269,7 @@ function mysql_settings_js(){
 	$page=CurrentPageName();
 	$js="
 	function {$prefix}LoadMainRI(){
-		YahooWin3('450','$page?mysql-settings-popup-show=yes','$title');
+		YahooWin3('550','$page?mysql-settings-popup-show=yes','$title');
 		}	
 		
 		
@@ -303,21 +303,26 @@ function mysql_settings($notitle=false){
 		
 		$servername=$artica->MysqlServerName;
 		
+		$sock=new sockets();
+		$UseSamePHPMysqlCredentials=$sock->GET_INFO("UseSamePHPMysqlCredentials");
+		if(!is_numeric($UseSamePHPMysqlCredentials)){$UseSamePHPMysqlCredentials=1;}
+		
+		
 	$html="
 	
-	<table style='width:100%'>
+	<table style='width:100%' class=form>
 	
 		<tr>
-		<td align='right' nowrap class=legend>{mysqlserver}:</strong></td>
-		<td align='left'>" . Field_text('mysqlserver',$servername,'width:90px;padding:3px;font-size:13px',null,null,'')."</td>
+			<td align='right' nowrap class=legend>{mysqlserver}:</strong></td>
+			<td align='left'>" . Field_text('mysqlserver',$servername,'width:110px;padding:3px;font-size:14px',null,null,'')."</td>
 		</tr>	
 		<tr>
-		<td align='right' nowrap class=legend>{mysqlroot}:</strong></td>
-		<td align='left'>" . Field_text('mysqlroot',$rootm,'width:90px;padding:3px;font-size:13px',null,null,'{mysqlroot_text}')."</td>
+			<td align='right' nowrap class=legend>{mysqlroot}:</strong></td>
+			<td align='left'>" . Field_text('mysqlroot',$rootm,'width:110px;padding:3px;font-size:14px',null,null,'{mysqlroot_text}')."</td>
 		</tr>
 		<tr>
-		<td align='right' nowrap class=legend>{mysqlpass}:</strong></td>
-		<td align='left'>" . Field_password("mysqlpass",$pwd,"width:90px;padding:3px;font-size:13px")."</td>
+			<td align='right' nowrap class=legend>{mysqlpass}:</strong></td>
+			<td align='left'>" . Field_password("mysqlpass",$pwd,"width:110px;padding:3px;font-size:14px")."</td>
 		</tr>
 		<tr>
 			<td colspan=2 align='right'>
@@ -325,10 +330,91 @@ function mysql_settings($notitle=false){
 			</td>
 		</tr>	
 	</table>
+	
+	<div class=explain>{mysqldefault_php_text}</div>
+<table style='width:100%' class=form>	
+		<tr>
+			<td align='right' nowrap class=legend>{UseSamePHPMysqlCredentials}:</strong></td>
+			<td align='left'>" . Field_checkbox('UseSamePHPMysqlCredentials',1,$UseSamePHPMysqlCredentials,"MysqlDefaultCredCheck()")."</td>
+		</tr>		
+		<tr>
+			<td align='right' nowrap class=legend>{mysqlserver}:</strong></td>
+			<td align='left'>" . Field_text('PHPDefaultMysqlserver',$PHPDefaultMysqlserver,'width:110px;padding:3px;font-size:14px',null,null,'')."</td>
+		</tr>
+		<tr>
+			<td align='right' nowrap class=legend>{listen_port}:</strong></td>
+			<td align='left'>" . Field_text('PHPDefaultMysqlserverPort',$PHPDefaultMysqlserverPort,'width:110px;padding:3px;font-size:14px',null,null,'')."</td>
+		</tr>				
+		<tr>
+			<td align='right' nowrap class=legend>{mysqlroot}:</strong></td>
+			<td align='left'>" . Field_text('PHPDefaultMysqlRoot',$PHPDefaultMysqlRoot,'width:110px;padding:3px;font-size:14px',null,null)."</td>
+		</tr>
+		<tr>
+			<td align='right' nowrap class=legend>{mysqlpass}:</strong></td>
+			<td align='left'>" . Field_password("PHPDefaultMysqlPass",$PHPDefaultMysqlPass,"width:110px;padding:3px;font-size:14px")."</td>
+		</tr>
+		<tr>
+			<td colspan=2 align='right'>
+				<hr>". button("{apply}","SavePhpCredentials()")."
+			</td>
+		</tr>	
+	</table>
+	
+	<script>
+	function MysqlDefaultCredCheck(){
+		document.getElementById('PHPDefaultMysqlserver').disabled=false;
+		document.getElementById('PHPDefaultMysqlserverPort').disabled=false;
+		document.getElementById('PHPDefaultMysqlRoot').disabled=false;
+		document.getElementById('PHPDefaultMysqlPass').disabled=false;
+	
+	
+		if(document.getElementById('UseSamePHPMysqlCredentials').checked){
+			document.getElementById('PHPDefaultMysqlserver').disabled=true;
+			document.getElementById('PHPDefaultMysqlserverPort').disabled=true;
+			document.getElementById('PHPDefaultMysqlRoot').disabled=true;
+			document.getElementById('PHPDefaultMysqlPass').disabled=true;		
+		
+		}
+	}
+	
+var x_SavePhpCredentials=function(obj){
+		Loadjs('$page?mysql-settings-popup=yes');
+
+      }	      
+		
+	function SavePhpCredentials(){
+			
+			var XHR = new XHRConnection();
+			if(document.getElementById('UseSamePHPMysqlCredentials').checked){XHR.appendData('UseSamePHPMysqlCredentials',1);}else{XHR.appendData('UseSamePHPMysqlCredentials',0);}
+    		XHR.appendData('PHPDefaultMysqlserver',document.getElementById('PHPDefaultMysqlserver').value);
+    		XHR.appendData('PHPDefaultMysqlserverPort',document.getElementById('PHPDefaultMysqlserverPort').value);
+    		XHR.appendData('PHPDefaultMysqlRoot',document.getElementById('PHPDefaultMysqlRoot').value);
+    		XHR.appendData('PHPDefaultMysqlPass',document.getElementById('PHPDefaultMysqlPass').value);
+    		XHR.sendAndLoad('$page','POST',x_SavePhpCredentials);
+		
+		
+	}	
+
+	
+	
+	MysqlDefaultCredCheck();
+	</script>
+	
 	";	
 	
 $tpl=new templates();
 return $tpl->_ENGINE_parse_body($html,"artica.settings.php");	
+}
+
+function mysql_php_save(){
+	$sock=new sockets();
+	$sock->SET_INFO("UseSamePHPMysqlCredentials", $_POST["UseSamePHPMysqlCredentials"]);
+	$sock->SET_INFO("PHPDefaultMysqlserver", $_POST["PHPDefaultMysqlserver"]);
+	$sock->SET_INFO("PHPDefaultMysqlserverPort", $_POST["PHPDefaultMysqlserverPort"]);
+	$sock->SET_INFO("PHPDefaultMysqlRoot", $_POST["PHPDefaultMysqlRoot"]);
+	$sock->SET_INFO("PHPDefaultMysqlPass", $_POST["PHPDefaultMysqlPass"]);
+	$sock->getFrameWork("services.php?php-ini-set=yes");
+	
 }
 
 function js_mysql_save_account(){

@@ -18,12 +18,14 @@
 	if(isset($_GET["mkdirp"])){mkdirp();exit;}
 	if(isset($_GET["TreeRightInfos"])){TreeRightInfos();exit;}
 	if(isset($_GET["userlists"])){echo folder_security_list_users();exit;}
-	if(isset($_GET["AddUserToFolder"])){folder_security_adduser();exit;}
-	if(isset($_GET["SaveUseridPrivileges"])){folder_security_save_priv();exit;}
+	if(isset($_POST["AddUserToFolder"])){folder_security_adduser();exit;}
+	if(isset($_POST["SaveUseridPrivileges"])){folder_security_save_priv();exit;}
+	if(isset($_POST["DeleteAllFolderSecu"])){folder_security_clean_priv();exit;}
 	if(isset($_GET["main"])){main_switch();exit;}
 	if(isset($_POST["ChangeShareNameOrg"])){folder_change_sharename();exit;}
-	
+	if(isset($_GET["jsaddons"])){echo jsaddons();exit;}
 	if(!CheckSambaUniqueRights()){echo "<H1>$ERROR_NO_PRIVS</H1>";die();}
+	if(isset($_GET["main-params-js"])){main_parameters_js();exit;}
 	if(isset($_GET["RestartServices"])){restart_services();exit;}
 	if(isset($_GET["script"])){popup_js();exit;}
 	if(isset($_GET["popup"])){popup_page();exit;}
@@ -58,6 +60,15 @@
 	if(isset($_GET["GreyHoleCopySave"])){GreyHoleCopySave();exit;}
 	
 	die("Wrong query");
+	
+	
+function main_parameters_js(){
+	$page=CurrentPageName();
+	$tpl=new templates();
+	$title=$tpl->_ENGINE_parse_body("{SAMBA_MAIN_PARAMS}");
+	echo "YahooWin5('550','$page?main=yes&remove-icons=yes','$title')";
+	
+}	
 
 	
 function ChekGlobalRights(){
@@ -214,16 +225,7 @@ function popup_js(){
 		$('#BodyContent').load('$page?popup=yes$jsindex');
 	}
 	
-	function neighborhood(){
-		YahooWin2(350,'$page?neighborhood=yes','$windows_network_neighborhood');
-	}
-	
-	function x_Save_neighborhood_form(obj) {
-		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}
-		RefreshTab('main_config_samba');	
-		neighborhood();
-	}		
+	". jsaddons()."	
 	
 	function Save_neighborhood_form(field_id){
 		var value=document.getElementById(field_id).value;
@@ -235,38 +237,7 @@ function popup_js(){
 	
 	}
 	
-	function x_DomainAdminSave(obj) {
-		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
-		YahooWin2Hide();
-	}			
-	
-	
-	function DomainAdminSave(){
-		var password1=document.getElementById('password1').value;
-		var password2=document.getElementById('password2').value;
-		
-		if(password1!==password2){
-			alert('$ERR_NO_PASS_MATCH');
-			return false;
-		}
-		
-		document.getElementById('DomainAdminSave').innerHTML='<center><img src=\"img/wait_verybig.gif\"></center>';
-		var XHR = new XHRConnection();
-		XHR.appendData('domain-admin-save',password1);
-		XHR.sendAndLoad('$page', 'GET',x_DomainAdminSave);			
-	
-	}
-	
-	function DomainAdminSaveKey(e){
-		if(checkEnter(e)){
-				DomainAdminSave();
-			}
-	}
-	
-	function DomainAdmin(){
-		YahooWin2(350,'$page?DomainAdmin=yes','$domain_admin');
-	}
+
 	
 	$json
 	$samba
@@ -388,8 +359,17 @@ if($_GET["hostname"]==null){$hostname=$users->hostname;$_GET["hostname"]=$hostna
 	return $tpl->_ENGINE_parse_body($status);	
 	
 }
+function main_status_winbindd(){
+if($_GET["hostname"]==null){$hostname=$users->hostname;$_GET["hostname"]=$hostname;}else{$hostname=$_GET["hostname"];}		
+	$ini=new Bs_IniHandler();
+	$sock=new sockets();
+	$ini->loadString($sock->getFrameWork("cmd.php?samba-status=yes"));
+	$status=DAEMON_STATUS_ROUND("SAMBA_WINBIND",$ini);
+	$tpl=new templates();
+	return $tpl->_ENGINE_parse_body($status);	
+	
+}
 function main_status_scannedonly(){
-		
 	$ini=new Bs_IniHandler();
 	$sock=new sockets();
 	$ini->loadString($sock->getFrameWork("cmd.php?samba-status=yes"));
@@ -446,7 +426,7 @@ function main_status(){
 	
 	$ad=main_status_active_directory();
 	if($ad<>null){$ad="<br>$ad";}
-return "<div style='width:290px'>".main_status_smbd() . "<br>" . main_status_nmbd()."$ad<br>".main_status_scannedonly()."</div>";
+	return "<div style='width:290px'>".main_status_smbd() . "<br>" . main_status_nmbd()."<br>".main_status_winbindd()."$ad<br>".main_status_scannedonly()."</div>";
 	
 }
 
@@ -462,8 +442,7 @@ function main_smb_config(){
 	$SambaEnabled=$sock->GET_INFO("SambaEnabled");
 	$EnableSambaActiveDirectory=$sock->GET_INFO("EnableSambaActiveDirectory");
 	if($SambaEnabled==null){$SambaEnabled=1;}	
-	$disable_samba=Paragraphe("server-disable-64.png",'{enable_disable_samba}','{enable_disable_samba_text}',
-	"javascript:Loadjs('samba.disable.php');",'{enable_disable_samba_text}',260,null,1);	
+	
 	
 	$version=$smb->SAMBA_VERSION;
 	if(preg_match("#^([0-9]+)\.([0-9]+)\.([0-9]+)#",$version,$re)){$major=$re[1];$minor=$re[2];$build=$re[3];}	
@@ -487,6 +466,11 @@ function main_smb_config(){
 		$logh[$i]=$i;
 	}
 	
+	if(!isset($_GET["remove-icons"])){
+		
+	$disable_samba=Paragraphe("server-disable-64.png",'{enable_disable_samba}','{enable_disable_samba_text}',
+	"javascript:Loadjs('samba.disable.php');",'{enable_disable_samba_text}',260,null,1);		
+	
 	$icon_samba_type=Paragraphe("64-server-ask.png",'{windows_network_neighborhood}','{windows_network_neighborhood_text}',
 	"javascript:neighborhood();",'{windows_network_neighborhood}',260,null,1);
 	
@@ -500,7 +484,7 @@ function main_smb_config(){
 	$restart=Paragraphe("64-refresh.png",'{APP_SAMBA_RESTART}','{APP_SAMBA_RESTART_TEXT}',
 	"javascript:RestartSmbServices();",'{APP_SAMBA_RESTART_TEXT}',260,null,1);
 	
-	
+	}
 	
 	
 	$enable_Editposix=$tpl->_ENGINE_parse_body("{enable_Editposix}").':';
@@ -715,11 +699,7 @@ $domain_master
 		
 	}
 	
-	var x_SaveSambaMainConfiguration=function (obj) {
-			tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}
-			RefreshTab('main_config_samba');
-	    }
+
 	
 	
 		function SaveSambaMainConfiguration(){
@@ -765,22 +745,90 @@ $domain_master
 			XHR.sendAndLoad('$page', 'GET',x_SaveSambaMainConfiguration);		
 		}
 
-		function RestartSmbServices(){
-			var XHR = new XHRConnection();
-			XHR.appendData('RestartServices','yes');
-			XHR.sendAndLoad('$page', 'GET',x_SaveSambaMainConfiguration);		
-			
-		}
+	". jsaddons()."
 		
 	
 	
 	CheckFieldsSamba();
+	</script>
 	";
 	
 	
 	echo $tpl->_ENGINE_parse_body($html);
 	
 }
+
+function jsaddons(){
+	$page=CurrentPageName();
+	$tpl=new templates();
+	$windows_network_neighborhood=$tpl->_ENGINE_parse_body("{windows_network_neighborhood}");
+	$ERR_NO_PASS_MATCH=$tpl->_ENGINE_parse_body("{ERR_NO_PASS_MATCH}");
+	$html="
+	function x_DomainAdminSave(obj) {
+		var tempvalue=obj.responseText;
+		if(tempvalue.length>3){alert(tempvalue);}	
+		YahooWin2Hide();
+		if(document.getElementById('main_config_samba')){RefreshTab('main_config_samba');}
+		if(document.getElementById('main_samba_quicklinks_config')){RefreshTab('main_samba_quicklinks_config');}		
+	}			
+	
+	
+	function DomainAdminSave(){
+		var password1=document.getElementById('password1').value;
+		var password2=document.getElementById('password2').value;
+		
+		if(password1!==password2){
+			alert('$ERR_NO_PASS_MATCH');
+			return false;
+		}
+		AnimateDiv('DomainAdminSave');
+		var XHR = new XHRConnection();
+		XHR.appendData('domain-admin-save',password1);
+		XHR.sendAndLoad('$page', 'GET',x_DomainAdminSave);			
+	
+	}
+	
+	function DomainAdminSaveKey(e){
+		if(checkEnter(e)){
+				DomainAdminSave();
+			}
+	}
+	
+	function DomainAdmin(){
+		YahooWin2(350,'$page?DomainAdmin=yes','$domain_admin');
+	}	
+	
+	function neighborhood(){
+		YahooWin2(350,'$page?neighborhood=yes','$windows_network_neighborhood');
+	}
+	
+	function x_Save_neighborhood_form(obj) {
+		var tempvalue=obj.responseText;
+		if(tempvalue.length>3){alert(tempvalue);}
+		RefreshTab('main_config_samba');	
+		neighborhood();
+	}	
+	var x_SaveSambaMainConfiguration=function (obj) {
+		tempvalue=obj.responseText;
+		if(tempvalue.length>3){alert(tempvalue);}
+		if(document.getElementById('main_config_samba')){RefreshTab('main_config_samba');}
+		if(document.getElementById('main_samba_quicklinks_config')){RefreshTab('main_samba_quicklinks_config');}
+		if(!document.getElementById('main_config_samba')){if(document.getElementById('MainSambaConfigDiv')){Loadjs('samba.index.php?main-params-js=yes');}}
+	   }
+	
+	
+	function RestartSmbServices(){
+		var XHR = new XHRConnection();
+		XHR.appendData('RestartServices','yes');
+		XHR.sendAndLoad('$page', 'GET',x_SaveSambaMainConfiguration);		
+	}
+	
+	";
+	
+	return $html;
+}
+
+
 
 function SaveConf(){
 	$samba=new samba();
@@ -1448,7 +1496,7 @@ function folder_properties(){
 var newshare;
 var x_SambaSaveFolderPropertiesv2=function (obj) {
 	tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue);}
+	if(tempvalue.length>3){alert(tempvalue);}
 	RefreshTab('main_config_folder_properties');
     }
 
@@ -1484,7 +1532,7 @@ function SambaSaveFolderProperties(){
 	
 var x_ChangeShareName=function (obj) {
 	tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue);}
+	if(tempvalue.length>3){alert(tempvalue);}
 	FolderProp(newshare);
 	if(document.getElementById('RefreshSambaTreeFolderHidden_path')){
 		RefreshFolder(document.getElementById('RefreshSambaTreeFolderHidden_path').value,document.getElementById('RefreshSambaTreeFolderHidden_id').value);
@@ -1595,7 +1643,7 @@ function folder_security(){
 	<table style='width:400px'>
 	<tr>
 	<td width=99%>&nbsp;</td>
-	<td><input type='button' value='{add}&nbsp;&raquo;' OnClick=\"javascript:YahooWin5(400,'$page?security=$folder_uri','{security} $folder');\"></td>
+	<td><input type='button' value='{add}&nbsp;&raquo;' OnClick=\"javascript:YahooWin5(600,'$page?security=$folder_uri','{security} $folder');\"></td>
 	<td>
 	<input type='hidden' id='selectuserfirst' value='{selectuserfirst}'>
 	<input type='hidden' value='' id='DeleteUserid'>
@@ -1603,7 +1651,7 @@ function folder_security(){
 	</tr>
 	</table>
 	<br>
-	<div style='padding:5px;margin:5px;border:1px solid #CCCCCC;width:380px;background-color:white' id='UserSecurityInfos'>
+	<div style='padding:5px;margin:5px;width:380px;' id='UserSecurityInfos'>
 	
 	</div>
 	
@@ -1693,11 +1741,17 @@ function folder_UserSecurityInfos(){
 		
 		
 	else{
+		$_GET["UserSecurityInfos"]=base64_decode($_GET["UserSecurityInfos"]);
+		$DisplayName=$_GET["UserSecurityInfos"];
+		$DisplayName=str_replace('"', "", $DisplayName);
+		if(preg_match("#^@(.+)#", $DisplayName,$re)){$DisplayName=$re[1];}
+		$SaveUseridPrivilegesEncoded=urlencode(base64_encode($_GET["UserSecurityInfos"]));
+		
 	$html="
 	
 	
 	<input type='hidden' name='SaveFolderProp' id='SaveFolderProp' value='$folder'>
-	<div style='font-size:14px;font-weight:bold;padding:4px'>{$_GET["UserSecurityInfos"]}:</div>
+	<div style='font-size:14px;font-weight:bold;padding:4px'>$DisplayName:</div>
 	<table style='width:100%'>
 		<tr style='background-color:#CCCCCC;font-weight:bolder;font-size:11px;text-align:center'>
 			<th align='center'>&nbsp;</th>
@@ -1707,7 +1761,7 @@ function folder_UserSecurityInfos(){
 		</tr>";
 	
 		$hash=$smb->hash_privileges($folder);
-		$html=$html ."<input type='hidden' id='SaveUseridPrivileges' name='SaveUseridPrivileges' value='{$_GET["UserSecurityInfos"]}'>";
+		$html=$html ."<input type='hidden' id='SaveUseridPrivileges' name='SaveUseridPrivileges' value='$SaveUseridPrivilegesEncoded'>";
 		$html=$html ."<tr>";
 		$html=$html ."<td align='center'><div id='waitfolderprop'></div></td>";
 		$html=$html ."<td align='center'>" .Field_yesno_checkbox('valid users',$hash[$_GET["UserSecurityInfos"]]["valid users"]) . "</td>";
@@ -1763,7 +1817,7 @@ function folder_UserSecurityInfos_js(){
 			}			
 				
 			document.getElementById('waitfolderprop').innerHTML='<img src=\"img/wait.gif\">';
-			XHR.sendAndLoad('$page', 'GET',x_folder_UserSecurityInfos_save);	
+			XHR.sendAndLoad('$page', 'POST',x_folder_UserSecurityInfos_save);	
 		
 		}
 	
@@ -1824,13 +1878,16 @@ function folder_security_users(){
 	<input type='hidden' id='folder_security_users_ff' value='{$_GET["security"]}'>
 	<input type='hidden' id='IsNFS' value='{$_GET["nfs"]}'>
 	<table style='width:100%'>
-	<td>" . Field_text('query',null,'width:100%',null,null,null,null,"FindUserGroupClick(event);")."</td>
+	<td>" . Field_text('query',null,'width:400px;font-size:14px;padding:5px',null,null,null,null,"FindUserGroupClick(event);")."</td>
 	<td align='right'><input type='button' OnClick=\"javascript:FindUserGroup();\" value='{search}&nbsp;&raquo;'></td>
 	</table>";
 	
-	$form1="<div style='width:350px'>$form1</div><br>";
+	$form1="<center><div style='width:450px'>$form1</div></center><br>";
 	
-	$form2="<div style='padding:5px;border:1px solid #CCCCCC;width:340px;background-color:white;height:250px;overflow:auto' id='finduserandgroupsid'></div>";
+	$form2="<div style='width:100%;background-color:white;height:350px;overflow:auto' id='finduserandgroupsid'></div>
+	<script>
+	FindUserGroup();
+	</script>";
 	
 	
 	$tpl=new templates();
@@ -2040,7 +2097,7 @@ if($users->SAMBA_MYSQL_AUDIT){
 <script>
 var x_SambaSaveVFSModules=function (obj) {
 	tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue);}
+	if(tempvalue.length>3){alert(tempvalue);}
 	RefreshTab('main_config_folder_properties');
     }
 
@@ -2105,6 +2162,7 @@ $html="<table cellspacing='0' cellpadding='0' border='0' class='tableView' style
 <thead class='thead'>
 	<tr>
 	<th colspan=2>{members}</th>
+	<th width=1%>".imgtootltip("delete-24.png","{delete} {all}","DeleteAllFolderSecu()")."</th>
 	</tr>
 </thead>
 <tbody class='tbody'>";	
@@ -2128,8 +2186,11 @@ $html="<table cellspacing='0' cellpadding='0' border='0' class='tableView' style
 			$Displayname=$ligne;
 			$img="winuser.png";
 		}
-			
+			$Displayname=str_replace('"',"", $Displayname);
 			if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
+			$encoded=urlencode(base64_encode($ligne));
+			
+			
 			$html=$html .
 			
 			"<tr class=$classtr>
@@ -2137,17 +2198,35 @@ $html="<table cellspacing='0' cellpadding='0' border='0' class='tableView' style
 		<td width=99%
 		onMouseOver=\"this.style.background='#CCCCCC';this.style.cursor='pointer'\" 
 		OnMouseOut=\"this.style.background='transparent';this.style.cursor='default'\"
-		OnClick=\"javascript:UserSecurityInfos('$ligne');\"
+		OnClick=\"javascript:UserSecurityInfos('$encoded');\"
 		<strong style='font-size:13px'>
 			$Displayname
 			</td>
+			<td width=1%>". imgtootltip("delete-32.png","{delete}","DeleteUserPrivilege('$encoded')")."</td>
+			
+			
 		</tr>";
 			
 		}
 		
 	}
 		
-		$html=$html."</table>";
+		$html=$html."</table>
+		<script>
+		
+		var x_DeleteAllFolderSecu=function (obj) {
+		   RefreshTab('main_config_folder_properties');
+		}		
+		function DeleteAllFolderSecu(){
+			var XHR = new XHRConnection();
+			XHR.appendData('prop','$folder');
+			XHR.appendData('DeleteAllFolderSecu','yes');
+			AnimateDiv('userlists');
+			XHR.sendAndLoad('samba.index.php', 'POST',x_DeleteAllFolderSecu);
+		}
+		
+		</script>
+		";
 		$tpl=new templates();
 		return  $tpl->_ENGINE_parse_body($html);	
 	
@@ -2155,16 +2234,34 @@ $html="<table cellspacing='0' cellpadding='0' border='0' class='tableView' style
 
 function folder_security_adduser(){
 	$samba=new samba();
-	$list=explode(",",$samba->main_array[$_GET["prop"]]["write list"]);
-	$list[]=$_GET["AddUserToFolder"];
+	$_POST["AddUserToFolder"]=trim(utf8_encode($_POST["AddUserToFolder"]));
+	$spacepos=strpos($_POST["AddUserToFolder"], " ");
+	if($spacepos>0){
+		if(preg_match("#^@(.*)#", $_POST["AddUserToFolder"],$re)){$_POST["AddUserToFolder"]="@\"{$re[1]}\"";}else{
+			$_POST["AddUserToFolder"]="\"{$re[1]}\"";
+		}
+		
+	}
+	$list=explode(",",$samba->main_array[$_POST["prop"]]["write list"]);
+	writelogs("Add [{$_POST["AddUserToFolder"]}] (spacepos=$spacepos) into {$_POST["prop"]}",__FUNCTION__,__FILE__,__LINE__);
+	$list[]=$_POST["AddUserToFolder"];
 	while (list ($num, $ligne) = each ($list) ){
 		if($ligne<>null){$a[$ligne]=$ligne;}
 	}
 	
 	
-	$samba->main_array[$_GET["prop"]]["write list"]=implode(',',$a);
+	$samba->main_array[$_POST["prop"]]["write list"]=implode(',',$a);
 	$samba->SaveToLdap();
 	
+}
+
+function folder_security_clean_priv(){
+	$samba=new samba();
+	$folder=$_POST["prop"];
+	unset($samba->main_array[$folder]["write list"]);
+	unset($samba->main_array[$folder]["valid users"]);
+	unset($samba->main_array[$folder]["read list"]);
+	$samba->SaveToLdap();
 }
 
 function folder_security_save_priv(){
@@ -2176,19 +2273,25 @@ write_list	yes
 */
 
 $samba=new samba();
-writelogs("save privileges for {$_GET["SaveFolderProp"]}",__FUNCTION__,__FILE__);
+$_POST["SaveUseridPrivileges"]=base64_decode($_POST["SaveUseridPrivileges"]);
+writelogs("save privileges for {$_POST["SaveFolderProp"]}",__FUNCTION__,__FILE__,__LINE__);
+while (list ($a, $b) = each ($_POST) ){
+	$_POST[$a]=stripslashes($_POST[$a]);
+	writelogs("POST:  '$a' = '{$_POST[$a]}'",__FUNCTION__,__FILE__,__LINE__);
+}
 
-$folder=$_GET["SaveFolderProp"];
+
+$folder=$_POST["SaveFolderProp"];
 $h=$samba->hash_privileges($folder);
-$item=$_GET["SaveUseridPrivileges"];
+$item=$_POST["SaveUseridPrivileges"];
 
-if($_GET["read_list"]=="no"){unset($h[$item]["read list"]);}else{$h[$item]["read list"]='yes';}
+if($_POST["read_list"]=="no"){unset($h[$item]["read list"]);}else{$h[$item]["read list"]='yes';}
 
-if($_GET["valid_users"]=="no"){
+if($_POST["valid_users"]=="no"){
 	unset($h[$item]["valid users"]);}
 	else{$h[$item]["valid users"]='yes';}
 	
-if($_GET["write_list"]=="no"){
+if($_POST["write_list"]=="no"){
 	writelogs("$item= delete write list",__FUNCTION__,__FILE__);
 	unset($h[$item]["write list"]);}
 	else{$h[$item]["write list"]='yes';}
@@ -2236,6 +2339,17 @@ function folder_security_users_find(){
 	$hash=$users->find_samba_items($_GET["query"]);
 	if(!is_array($hash)){return null;}
 	
+$html="<center>
+<table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
+<thead class='thead'>
+	<tr>
+		<th width=1%>&nbsp;</th>
+		<th width=99%>{members}:{$_GET["query"]}</th>
+		<th width=1%>&nbsp;</th>
+	</tr>
+</thead>
+<tbody class='tbody'>";	
+	
 	while (list ($num, $ligne) = each ($hash) ){
 		if($num==null){continue;}
 		$js="AddUserToFolder('$num')";
@@ -2255,22 +2369,21 @@ function folder_security_users_find(){
 			
 		}
 		
+		$hrf="<a href=\"javascript:blur()\" OnClick=\"javascript:$js\" style='font-size:13px;text-decoration:underline;font-weight:bold'>";
 		
-	$html=$html."<table>
-		<tr>
+	if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}	
+	$html=$html."
+		<tr class=$classtr>
 		<td width=1%><img src='img/$img'></td>
-		<td 
-		onMouseOver=\"this.style.background='#CCCCCC';this.style.cursor='pointer'\" 
-		OnMouseOut=\"this.style.background='transparent';this.style.cursor='default'\"
-		OnClick=\"javascript:$js;\"
-		><strong style='font-size:11px' >$Displayname</td>
+		<td>$hrf$Displayname</a></td>
+		<td width=1%>". imgtootltip("plus-24.png","{select}","$js")."</td>
 		</tr>
-		</table>
+
 	
 	";
 	}
 	
-	
+	$html=$html."</tbody></table>";
 	$tpl=new templates();
 	echo $tpl->_ENGINE_parse_body("$html");
 	

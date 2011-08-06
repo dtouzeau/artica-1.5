@@ -1219,11 +1219,21 @@ var
    ApcEnabledInPhp:integer;
    php5DefaultCharset:string;
    zarafa:tzarafa_server;
+   UseSamePHPMysqlCredentials,PHPDefaultMysqlserverPort:integer;
+   PHPDefaultMysqlserver,PHPDefaultMysqlRoot,PHPDefaultMysqlPass:string;
+
 begin
 
 if not TryStrToInt(SYS.GET_INFO('php5DisableMagicQuotesGpc'),php5DisableMagicQuotesGpc) then php5DisableMagicQuotesGpc:=0;
 if not TryStrToInt(SYS.GET_INFO('php5FuncOverloadSeven'),php5FuncOverloadSeven) then php5FuncOverloadSeven:=0;
 if not TryStrToInt(sys.GET_INFO('ApcEnabledInPhp'),ApcEnabledInPhp) then ApcEnabledInPhp:=0;
+if not TryStrToInt(sys.GET_INFO('UseSamePHPMysqlCredentials'),UseSamePHPMysqlCredentials) then UseSamePHPMysqlCredentials:=1;
+if not TryStrToInt(sys.GET_INFO('PHPDefaultMysqlserverPort'),PHPDefaultMysqlserverPort) then PHPDefaultMysqlserverPort:=3306;
+PHPDefaultMysqlRoot:=SYS.GET_INFO('PHPDefaultMysqlRoot');
+PHPDefaultMysqlserver:=SYS.GET_INFO('PHPDefaultMysqlserver');
+if PHPDefaultMysqlserver='localhost' then PHPDefaultMysqlserver:='127.0.0.1';
+if length(PHPDefaultMysqlserver)=0 then PHPDefaultMysqlserver:='127.0.0.1';
+PHPDefaultMysqlPass:=SYS.GET_INFO('PHPDefaultMysqlPass');
 
 php5DefaultCharset:=trim(sys.GET_INFO('php5DefaultCharset'));
 if length(php5DefaultCharset)=0 then php5DefaultCharset:='utf-8';
@@ -1347,15 +1357,25 @@ l.Add('odbc.max_links = -1');
 l.Add('odbc.defaultlrl = 4096');
 l.Add('odbc.defaultbinmode = 1');
 l.Add('');
+
+if UseSamePHPMysqlCredentials=1 then begin
+   if not TryStrToInt(SYS.GET_MYSQL('port'),PHPDefaultMysqlserverPort) then PHPDefaultMysqlserverPort:=3306;
+   PHPDefaultMysqlserver:=SYS.GET_MYSQL('mysql_server');
+   PHPDefaultMysqlRoot:=SYS.GET_MYSQL('database_admin');
+   PHPDefaultMysqlPass:=SYS.GET_MYSQL('database_password');
+end;
+
+logs.Debuglogs('Starting......: lighttpd: Default mysql settings to "'+PHPDefaultMysqlRoot+'@'+PHPDefaultMysqlserver+':'+intToStr(PHPDefaultMysqlserverPort));
+
 l.Add('[MySQL]');
 l.Add('mysql.allow_persistent = On');
 l.Add('mysql.max_persistent = -1');
 l.Add('mysql.max_links = -1');
-l.Add('mysql.default_port =');
-l.Add('mysql.default_socket ='+mysql_socket);
-l.Add('mysql.default_host =');
-l.Add('mysql.default_user =');
-l.Add('mysql.default_password =');
+l.Add('mysql.default_port ='+IntToStr(PHPDefaultMysqlserverPort));
+l.Add('mysql.default_socket ="'+mysql_socket+'"');
+l.Add('mysql.default_host ='+PHPDefaultMysqlserver);
+l.Add('mysql.default_user ='+PHPDefaultMysqlRoot);
+l.Add('mysql.default_password ='+PHPDefaultMysqlPass);
 l.Add('mysql.connect_timeout = 60');
 l.Add('mysql.trace_mode = Off');
 l.Add('[LDAP]');
@@ -1365,11 +1385,11 @@ l.Add('ldap.check_persistent = On');
 l.Add('');
 l.Add('[MySQLi]');
 l.Add('mysqli.max_links = -1');
-l.Add('mysqli.default_port = 3306');
-l.Add('mysqli.default_socket =');
-l.Add('mysqli.default_host =');
-l.Add('mysqli.default_user =');
-l.Add('mysqli.default_pw =');
+l.Add('mysqli.default_port = '+IntToStr(PHPDefaultMysqlserverPort));
+l.Add('mysqli.default_socket ="'+mysql_socket+'"');
+l.Add('mysqli.default_host ='+PHPDefaultMysqlserver);
+l.Add('mysqli.default_user ='+PHPDefaultMysqlRoot);
+l.Add('mysqli.default_pw ='+PHPDefaultMysqlPass);
 l.Add('mysqli.reconnect = Off');
 l.Add('');
 l.Add('[mSQL]');

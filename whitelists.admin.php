@@ -347,7 +347,7 @@ function popup_hosts(){
 	<script>
 	var x_AddHostWhite=function(obj){
     	var tempvalue=obj.responseText;
-      	if(tempvalue.length>0){alert(tempvalue);}
+      	if(tempvalue.length>3){alert(tempvalue);}
  	  	LoadAjax('white-hosts','$page?white-hosts=yes');
       }	
 	
@@ -592,7 +592,7 @@ function popup_domains(){
 	
 	var x_Addwl=function(obj){
     	var tempvalue=obj.responseText;
-      	if(tempvalue.length>0){alert(tempvalue);}
+      	if(tempvalue.length>3){alert(tempvalue);}
  	  	LoadAjax('wblarea_$time','whitelists.admin.php?SelectedDomain='+mem_domain+'&type=$selected_type');
       }	
 	
@@ -1107,7 +1107,7 @@ function blacklist_global_add(){
 	
 	var x_GlobalBlackSave= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)};
+		if(tempvalue.length>3){alert(tempvalue)};
 		YahooWin4Hide();
 		GlobalBlackRefresh();
 	}			
@@ -1140,7 +1140,7 @@ function whitelist_global_add(){
 	
 	var x_GlobalWhiteSave= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)};
+		if(tempvalue.length>3){alert(tempvalue)};
 		YahooWin4Hide();
 		GlobalWhiteRefresh();
 	}			
@@ -1276,13 +1276,13 @@ function whitelist_global_list(){
 	
 	var x_GlobalWhiteDelete= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		GlobalWhiteRefresh();
 	}	
 	
 	var x_GlobalWhiteDisable= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		
 	}		
 	
@@ -1382,13 +1382,13 @@ function blacklist_global_list(){
 	<script>
 	var x_GlobalBlackDelete= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		GlobalBlackRefresh();
 	}	
 	
 	var x_GlobalBlackDisable= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		
 	}		
 	

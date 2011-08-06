@@ -4,6 +4,8 @@ if($argv[1]=="--dirs"){parsedirs($argv[2]);die();}
 if($argv[1]=="www"){www();die();}
 if($argv[1]=="--countries"){countries();die();}
 
+if($argv[1]=="--replace"){replacesex();die();}
+
 
 
 function www(){
@@ -98,6 +100,22 @@ function countries(){
 		echo "\"".strtolower($re[2])."\"=>\"".strtolower($re[1])."\",\n";
 	}
 	}
+	
+}
+
+
+function replacesex(){
+	foreach (glob("/usr/share/artica-postfix/*.php") as $filename) {
+		$content=@file_get_contents($filename);
+		if(strpos($content, 'tempvalue.length>0')>0){
+			$content=str_replace('if(tempvalue.length>3){', 'if(tempvalue.length>3){', $content);
+			echo "Check: $filename\n";
+			@file_put_contents($filename, $content);
+		}
+		
+		
+	}
+	
 	
 }
 

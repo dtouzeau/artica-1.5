@@ -36,8 +36,10 @@ class samba_aliases{
 		$sock=new sockets();
 		$profile_path=$sock->GET_INFO('SambaProfilePath');
 		if(trim($profile_path)==null){$profile_path="/home/export/profile";}
+		$hostname=$this->hostname;
+		if(strlen($hostname)>19){$hostname=substr($hostname, 0,19);}
 		$f[]="[global]";
-		$f[]="\tnetbios name = $this->hostname";
+		$f[]="\tnetbios name = $hostname";
 		$f[]="\tworkgroup = $this->workgroup";
 		if($this->ipaddr<>null){
 			$f[]="\tinterfaces = $this->ipaddr";

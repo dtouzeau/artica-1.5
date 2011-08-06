@@ -638,7 +638,7 @@ If you enable this feature, you will be able to share folders trough the explore
 <APP_SA_BLACKLIST>SpamAssassin BlackList</APP_SA_BLACKLIST>
 <APP_SA_BLACKLIST_AUTOUPDATE>Update more than 300 000 blacklisted domains pattern file for SpamAssassin</APP_SA_BLACKLIST_AUTOUPDATE>
 <APP_SA_BLACKLIST_AUTOUPDATE_WARNING>Be carreful, this feature will consume around 450M of memory.[br]Verify that you have 450M minimum free memory</APP_SA_BLACKLIST_AUTOUPDATE_WARNING>
-<APP_SCANNED_ONLY>ScannedOnly Antivirus ClamAV</APP_SCANNED_ONLY>
+<APP_SCANNED_ONLY>ScannedOnly Antivirus</APP_SCANNED_ONLY>
 <APP_SIMPLE_GROUPEWARE>Simple Groupware</APP_SIMPLE_GROUPEWARE>
 <APP_SMARTMONTOOLS>SMART hard disk monitoring</APP_SMARTMONTOOLS>
 <APP_SMBMOUNT>netshare mount tool</APP_SMBMOUNT>

@@ -172,7 +172,7 @@ function parameters(){
 	<script>
 		var x_EnableCommunityFiltersCheck=function(obj){
      	var tempvalue=obj.responseText;
-      	if(tempvalue.length>0){alert(tempvalue);}
+      	if(tempvalue.length>3){alert(tempvalue);}
      	document.getElementById('ssl-bump-wl-id').innerHTML='';
      	sslBumpList();
      	}	
@@ -611,7 +611,7 @@ function CategorizeAll_popup(){
 		}
 		var x_CategorizeAllPerform=function(obj){
      	var tempvalue=obj.responseText;
-      	if(tempvalue.length>0){alert(tempvalue);}
+      	if(tempvalue.length>3){alert(tempvalue);}
       	if(document.getElementById('not_categorized_sites')){
      		LoadAjax('not_categorized_sites','$page?no-cat-list=yes');
      		}

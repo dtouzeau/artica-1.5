@@ -719,7 +719,7 @@ function backup_js(){
 	
 	var x_ApplyAmavisBackup=function(obj){
       var tempvalue=obj.responseText;
-      if(tempvalue.length>0){alert(tempvalue);}
+      if(tempvalue.length>3){alert(tempvalue);}
       YahooWin(550,'$page?popup=backup','$title');
 	  }
 	
@@ -882,7 +882,7 @@ function spamassassin_js(){
 	
 var x_ParseForm_Spamassassin=function(obj){
       var tempvalue=obj.responseText;
-      if(tempvalue.length>0){alert(tempvalue);}
+      if(tempvalue.length>3){alert(tempvalue);}
       YahooWin(550,'$page?popup=spamassassin','$title');
       }		
 	
@@ -1389,7 +1389,7 @@ $performances="
 <script>
 	var x_SaveAmavisPerformances=function(obj){
       var tempvalue=obj.responseText;
-	  if(tempvalue.length>0){alert(tempvalue);}
+	  if(tempvalue.length>3){alert(tempvalue);}
       LoadAmavisFilterBehavior();
       }	
 	
@@ -1561,7 +1561,7 @@ $page=CurrentPageName();
 	
 var x_AmavisAddExtFilter=function(obj){
       var tempvalue=obj.responseText;
-      if(tempvalue.length>0){alert(tempvalue);}
+      if(tempvalue.length>3){alert(tempvalue);}
       YahooWin(550,'$page?popup=filterextension','$title');
 	  }	
 	

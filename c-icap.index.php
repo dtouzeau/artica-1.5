@@ -228,7 +228,7 @@ function clamav(){
 	
 	var x_SaveICapCLam=function(obj){
      var tempvalue=obj.responseText;
-	  if(tempvalue.length>0){alert(tempvalue);}
+	  if(tempvalue.length>3){alert(tempvalue);}
 	  RefreshTab('main_config_cicap');
 	
 	}	
@@ -428,7 +428,7 @@ function daemons(){
 	<script>
 var x_SaveIcapDaemonSet=function(obj){
      var tempvalue=obj.responseText;
-	  if(tempvalue.length>0){alert(tempvalue);}
+	  if(tempvalue.length>3){alert(tempvalue);}
 	  RefreshTab('main_config_cicap');
 	
 	}	

@@ -124,6 +124,8 @@ function tabs(){
 		}
 		if($GLOBALS["VERBOSE"]){echo "<li>{$ligne["stime"]} -> {$ligne["ttime"]} -> {$ligne["sload"]}</LI>";};
 	}
+	if($c==0){writelogs("Fatal \"$targetedfile\" no items",__FUNCTION__,__FILE__,__LINE__);return;}
+	
 	if(isset($red["START"])){$area[]=array($red["START"],$c);}
 	$targetedfile="ressources/logs/".basename(__FILE__).".png";
 	if(is_file($targetedfile)){@unlink($targetedfile);}
@@ -145,7 +147,7 @@ function tabs(){
 	//$gp->SetFillColor('green'); 
 	
 	$gp->line_green();
-	if(!is_file($targetedfile)){writelogs("$targetedfile no such file!",__FUNCTION__,__FILE__,__LINE__);}
+	if(!is_file($targetedfile)){writelogs("Fatal \"$targetedfile\" no such file! ($c items)",__FUNCTION__,__FILE__,__LINE__);return;}
 	echo "<div onmouseout=\"javascript:this.className='paragraphe';this.style.cursor='default';\" onmouseover=\"javascript:this.className='paragraphe_over';
 	this.style.cursor='pointer';\" id=\"6ce2f4832d82c6ebaf5dfbfa1444ed58\" OnClick=\"javascript:Loadjs('admin.index.loadvg.php?all=yes')\" class=\"paragraphe\" style=\"width: 300px; min-height: 112px; cursor: default;\">
 	<h3 style='text-transform: none;margin-bottom:5px'>$computer_load</h3>
@@ -219,7 +221,7 @@ $sql="SELECT AVG( `load` ) AS sload, DATE_FORMAT( stime, '%i' ) AS ttime FROM `l
 	
 	var x_LoadAvgClean=function(obj){
       var tempvalue=obj.responseText;
-	  if(tempvalue.length>0){alert(tempvalue);}
+	  if(tempvalue.length>3){alert(tempvalue);}
       YahooWin3Hide();
       document.getElementById('loadavggraph').innerHTML='';
       }	

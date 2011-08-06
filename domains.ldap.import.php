@@ -112,7 +112,7 @@ while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
 	$delete=imgtootltip("delete-32.png","{delete}","DeleteConnexion('{$ligne["ID"]}')");
 	$exec=imgtootltip("eclaire-24.png","{execute}","ExecuteConnection('{$ligne["ID"]}')");
 	$html=$html."<tr  class=$classtr>
-	<td style='font-size:14px;font-weight:bold'><img src=img/fw_bold.gif></td>
+	<td style='font-size:14px;font-weight:bold'>{$ligne["ID"]}</td>
 	<td style='font-size:14px;font-weight:bold'>$link{$ligne["connexion_name"]}</a></td>
 	<td style='font-size:14px;font-weight:bold'>$link{$ligne["ScheduleMin"]}</a></td>
 	<td style='font-size:14px;font-weight:bold' width=1%><img src='img/$img'></a></td>

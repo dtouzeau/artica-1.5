@@ -763,6 +763,8 @@ if($usersmenus->EnableManageUsersTroughActiveDirectory){
 	$orgsduplicate=Paragraphe('org-duplicate-64-grey.png','{EXPORT_ORG}','{duplicate_to_remote_server}');
 	$delete=Paragraphe('64-cancel-grey.png','{delete_ou}','{delete_ou_text}');
 	$add_user=Paragraphe('folder-useradd-64-grey.png','{create_user}','{create_user_text}');
+	$orgsettings=Paragraphe('64-org-settings-grey.png','{ORG_SETTINGS}','{ORG_SETTINGS_TEXT}');
+	$ldap_import=Paragraphe('database-restore-64-grey.png','{ldap_importation}','{ldap_importation_text}');
 }
 
 $tr[]=$add_user ;
@@ -1492,7 +1494,11 @@ function organization_users_find_member(){
 		$groups=Paragraphe('folder-group-64.png','{manage_groups}','{manage_groups_text}',"javascript:Loadjs('domains.edit.group.php?ou=$ou_encoded&js=yes')",null,210,100,0,true);
 		$delete_all_users=Paragraphe('member-64-delete.png','{delete_all_users}','{delete_all_users_text}',"javascript:DeleteAllusers()",null,210,100,0,true);
 		
-		
+		if($ldap->EnableManageUsersTroughActiveDirectory){
+			$delete_all_users=Paragraphe('member-64-delete-grey.png','{delete_all_users}','{delete_all_users_text}',"",null,210,100,0,true);
+			
+			
+		}
 		
 		
 		$usermenus=new usersMenus();
@@ -1531,7 +1537,8 @@ function organization_users_find_member(){
 	
 	
 		$img=imgtootltip("contact-48.png","{edit}",$js);
-		
+		if($userARR["telephonenumber"][0]==null){$userARR["telephonenumber"][0]="&nbsp;";}
+		if($userARR["mail"][0]==null){$userARR["mail"][0]="&nbsp;";}
 		$html=$html ."<tr class=$classtr>
 						<td width=1% style='font-size:12px'>$img</td>
 						<td width=50% style='font-size:12px'>{$userARR["sn"][0]} {$userARR["givenname"][0]}<div><i>{$userARR["title"][0]}</i></div></td>

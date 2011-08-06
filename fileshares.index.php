@@ -204,14 +204,7 @@ function main_tabs(){
 	</div>
 		<script>
 				$(document).ready(function(){
-					$('#main_samba_config').tabs({
-				    load: function(event, ui) {
-				        $('a', ui.panel).click(function() {
-				            $(ui.panel).load(this.href);
-				            return false;
-				        });
-				    }
-				});
+					$('#main_samba_config').tabs();
 			
 
 			});

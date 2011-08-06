@@ -161,7 +161,7 @@ if($retrans->RetranslatorEnabled<>1){$execute=null;}
 		
 		var x_UpdateRetransloatorNow= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			RefreshTab('retranslator_main');
 			
 		 }		

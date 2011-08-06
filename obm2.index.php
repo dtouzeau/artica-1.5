@@ -34,7 +34,7 @@ function js(){
 		
 	function x_Obm2Save(obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		Obm2Load();
 		}		
 		

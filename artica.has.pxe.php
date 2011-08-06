@@ -57,7 +57,7 @@ function popup(){
 	<script>
 	var x_SavePXEForm= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}
+		if(tempvalue.length>3){alert(tempvalue);}
 		YahooWin3Hide();
 		if(document.getElementById('thinclient-list')){
 			thinclient_list();

@@ -583,7 +583,7 @@ l.add('libpng12-dev');
 l.add('libpq-dev');
 l.add('libpspell-dev');
 l.add('librecode-dev');
-l.add('libsasl2-dev');
+
 l.add('libsqlite0-dev');
 l.add('libssl-dev');
 l.add('libt1-dev');
@@ -739,6 +739,7 @@ l.add('curl');
 l.add('lm-sensors');
 l.add('bison');
 l.add('e2fsprogs');
+l.add('virt-what');
 
 
 if ArchStruct=64 then begin
@@ -841,6 +842,7 @@ l.Add('ldap-utils');
 
 
 l.Add('sasl2-bin');
+l.add('libsasl2-dev');
 l.Add('sudo');
 l.Add('ntp');
 l.Add('iproute');
@@ -922,6 +924,22 @@ l.add('libiodbc2-dev');
 l.add('libslp-dev');
 l.add('libperl-dev');
 l.add('python-mysqldb');
+
+//msktuitl
+l.Add('libldap2-dev');
+l.Add('libkrb5-dev');
+l.Add('libsasl2-dev');
+l.Add('libsasl2-modules-gssapi-heimdal');
+l.Add('libroken18-heimdal');
+l.Add('libasn1-8-heimdal');
+//l.Add('libx509-4-heimdal'); no exists
+l.Add('libheimntlm0-heimdal');
+l.Add('libgssapi2-heimdal');
+l.Add('krb5-clients');
+l.Add('krb5-config');
+l.Add('krb5-user');
+l.Add('krb5-kdc');
+l.Add('krb5-admin-server');
 
 
 
@@ -1108,7 +1126,7 @@ if distri.DISTRINAME_CODE='DEBIAN' then begin
         l.add('libicu44');
         l.add('libreadline6-dev');
         l.add('libssh2-php');
-        L.add('xtables-addons-modules');
+        L.add('xtables-addons-common');
         L.add('xtables-addons-source');
 
 
@@ -1251,6 +1269,7 @@ if distri.DISTRINAME_CODE='UBUNTU' then begin
       l.add('python-apt');
       l.add('python-pyopenssl');
 
+
    end;
 
    if UbuntuIntVer>8 then begin
@@ -1258,13 +1277,24 @@ if distri.DISTRINAME_CODE='UBUNTU' then begin
        l.add('libjs-mochikit');
        l.add('libapache-mod-security');
        l.add('libssh2-php');
-       L.add('xtables-addons-modules');
        L.add('xtables-addons-source');
 
     end;
 
 
-   if UbuntuIntVer>9 then begin
+   if UbuntuIntVer=10 then begin
+       l.add('libboost-system1.40.0');
+       l.add('libboost-system1.40.0');
+       l.add('libicu42');
+
+   end;
+   if UbuntuIntVer=11 then begin
+        l.add('libboost-filesystem1.42.0');
+        l.add('libboost-system1.42.0');
+        L.add('libicu44');
+   end;
+
+   if  UbuntuIntVer>9  then begin
        l.add('udisks');
        l.add('libmysqlclient-dev');
        l.add('php-apc');
@@ -1274,9 +1304,7 @@ if distri.DISTRINAME_CODE='UBUNTU' then begin
        l.add('update-notifier-common');
        l.add('python-apt');
        l.add('python-openssl');
-       l.add('libboost-filesystem1.40.0');
-       l.add('libboost-system1.40.0');
-       l.add('libicu42');
+       L.add('xtables-addons-common');
 
     end;
 
@@ -1483,13 +1511,17 @@ if not TryStrToInt(distri.DISTRINAME_VERSION,UbuntuIntVer) then UbuntuIntVer:=9;
 
 
 if distri.DISTRINAME_CODE='UBUNTU' then begin
-   writeln('Checking.............: Postfix: Code UBUNTU ('+distri.DISTRINAME_VERSION+') MAJOR='+IntToStr(UbuntuIntVer));
+   writeln('Checking.............: Postfix: Code UBUNTU ('+distri.DISTRINAME_VERSION+') MAJOR='+IntToStr(UbuntuIntVer),' UBUNTU CODE:',UbuntuIntVer);
     if UbuntuIntVer<11 then begin
+         l.add('libcap');
+         l.add('libcap-dev');
          l.add('libmail-spf-query-perl');
     end;
 
     if UbuntuIntVer>10 then begin
         l.add('libmail-spf-perl');
+        l.add('libcap2');
+        l.add('libcap-dev');
     end;
 
 
@@ -1517,9 +1549,7 @@ if distri.DISTRINAME_CODE='UBUNTU' then begin
          l.Add('wv');
          l.add('libmilter-dev');
          l.add('pflogsumm');
-         l.add('mailsync');
-         l.add('libcap');
-         l.add('libcap-dev');
+         l.add('mailsync');;
          l.Add('mhonarc');
          l.Add('p7zip'); // 7zr
          l.Add('p7zip-full'); //7za
@@ -1610,6 +1640,7 @@ l.Add('spamc');
 l.Add('rpm');
 l.add('tnef');
 L.add('php5-pspell');
+L.add('m4');
 
 l.Add('netpbm');
 l.Add('gifsicle');
@@ -1822,6 +1853,19 @@ l.add('attr');
 l.add('catdoc'); //xapian
 l.add('antiword'); //xapian
 l.add('auditd');
+l.Add('libldap2-dev');
+l.Add('libkrb5-dev');
+l.Add('libsasl2-dev');
+l.Add('libsasl2-modules-gssapi-heimdal');
+l.Add('libroken18-heimdal');
+l.Add('libasn1-8-heimdal');
+//l.Add('libx509-4-heimdal'); no exists
+l.Add('libheimntlm0-heimdal');
+l.Add('libgssapi2-heimdal');
+l.Add('krb5-clients');
+l.Add('krb5-config');
+l.Add('krb5-user');
+L.add('libpam-modules');
 fpsystem('touch /etc/artica-postfix/samba.check.time');
 if distri.DISTRINAME_CODE='UBUNTU' then begin
       if UbuntuIntVer>8 then begin
@@ -1870,7 +1914,7 @@ l.add('cryptsetup');
 l.add('libfile-rsyncp-perl');
 l.add('libio-dirent-perl');
 
-l.add('backuppc');
+//l.add('backuppc');
 l.add('par2'); //usr/sbin/par2
 
 for i:=0 to l.Count-1 do begin
@@ -1936,18 +1980,7 @@ f:='';
 l:=TstringList.Create;
 l.Add('squid3');
 l.Add('squidclient');
-l.Add('libldap2-dev');
-l.Add('libkrb5-dev');
-l.Add('libsasl2-dev');
-l.Add('libsasl2-modules-gssapi-heimdal');
-l.Add('libroken18-heimdal');
-l.Add('libasn1-8-heimdal');
-//l.Add('libx509-4-heimdal'); no exists
-l.Add('libheimntlm0-heimdal');
-l.Add('libgssapi2-heimdal');
-l.Add('krb5-clients');
-l.Add('krb5-config');
-l.Add('krb5-user');
+
 
 
 if distri.DISTRINAME_CODE='UBUNTU' then begin

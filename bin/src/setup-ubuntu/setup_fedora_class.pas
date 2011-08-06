@@ -16,6 +16,7 @@ type
 private
        libs:tlibs;
        DEBUG:boolean;
+       ArchStruct:integer;
        function CheckCyrus():string;
        function CheckDevcollectd():string;
        function CheckSelinux():string;
@@ -50,7 +51,7 @@ implementation
 
 constructor tfedora.Create();
 begin
-
+ArchStruct:=libs.ArchStruct();
 libs:=tlibs.Create;
 DEBUG:=libs.COMMANDLINE_PARAMETERS('--verbose');
 end;
@@ -298,6 +299,9 @@ l:=Tstringlist.Create;
 l.add('pdns');
 l.add('pdns-backend-ldap');
 l.add('pdns-recursor');
+l.add('boost-devel');
+l.add('lua');
+L.add('lua-devel');
 
 for i:=0 to l.Count-1 do begin
      if not libs.RPM_is_application_installed(l.Strings[i]) then begin
@@ -335,6 +339,11 @@ l.Add('tcsh');
 l.Add('time');
 l.Add('eject');
 l.add('zlib');
+
+if ArchStruct=64 then begin
+   l.add('glibc.i686');
+end;
+
 
 
 l.Add('pciutils ');
@@ -465,6 +474,8 @@ l.add('kernel-devel');
 l.add('monit');
 l.add('libuuid-devel'); //for zarafa
 l.add('scons');
+l.add('dmidecode');
+l.add('virt-what');
 
 l.Add('ntp');
 l.Add('iproute');

@@ -75,7 +75,7 @@ function add_script(){
  
 function x_AddressBookSave(obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){
+	if(tempvalue.length>3){
                 alert(tempvalue);
 	}
 	AdressBookPopup();
@@ -346,6 +346,8 @@ function main_network(){
 		$gateway=null;
 	}
 	
+	
+	
 	if($user->crossroads_installed){
 		$crossroads=Paragraphe('load-blancing-64.png','{APP_CROSSROADS}','{load_balancing_intro_text}',
 		"javascript:Loadjs('crossroads.index.php')");
@@ -368,7 +370,8 @@ function main_network(){
 		$fw=null;
 		$nmap=null;
 		$openvpn=null;
-		
+		$pdns=null;
+		$crossroads=null;
 	}
 
 	$tr[]=$network;
@@ -504,11 +507,13 @@ function main_services(){
 	
 	
 	if($users->KASPERSKY_WEB_APPLIANCE){
-		
+		$clamav=null;
 		$addressbook=null;
 		$userautofill=null;
 		$massmailing=null;
 		$APP_SABNZBDPLUS=null;
+		$free_web=null;
+		$apache=null;
 	}
 	
 	//ApacheGroupware
@@ -576,9 +581,7 @@ function main_dns(){
 	$rbl_check=Paragraphe('check-64.png','{rbl_check_artica}','{rbl_check_artica_text}',"javascript:Loadjs('system.rbl.check.php')");
 	$dnsmasq=Paragraphe('dns-64.png','{APP_DNSMASQ}','{APP_DNSMASQ_TEXT}',"javascript:Loadjs('dnsmasq.index.php')");
 	
-	if($user->KASPERSKY_SMTP_APPLIANCE){
-		$dyndns=null;
-	}
+
 	
 	if(!$user->BIND9_INSTALLED){
 		$static=null;
@@ -588,7 +591,15 @@ function main_dns(){
 	if(!$user->POWER_DNS_INSTALLED){$pdns=Paragraphe("dns-64-grey.png","{APP_PDNS}","{APP_PDNS_TEXT}");}
 	if(!$user->dnsmasq_installed){$dnsmasq=Paragraphe("dns-64-grey.png","{APP_DNSMASQ}",'{APP_DNSMASQ_TEXT}');}
 		
-	
+	if($user->KASPERSKY_SMTP_APPLIANCE){
+		$dyndns=null;
+	}
+
+	if($user->KASPERSKY_WEB_APPLIANCE){
+		$bind9=null;
+		$pdns=null;
+		$dyndns=null;
+	}
 	
 	$tr[]=$pdns;
 	$tr[]=$dnsmasq;
@@ -629,6 +640,8 @@ function main_update(){
 		$img=$users->LinuxDistriCode."_mirror-64.png";
 		$apt_mirror=Paragraphe($img,'{REPOSITORY_DEB_MIRROR}','{REPOSITORY_DEB_MIRROR_TEXT}',"javascript:Loadjs('apt-mirror.php')",null,210,null,0,false);
 	}
+	
+//Paragraphe('64-dar-index.png','{incremental_backup}','{incremental_backup_text}',"javascript:Loadjs('dar.index.php?js=yes');",'repository_manager_text')	
 
 		$UpdateUtility=Paragraphe('64-retranslator-grey.png',
 		'{APP_KASPERSKY_UPDATE_UTILITY}',
@@ -643,20 +656,43 @@ function main_update(){
 		
 	}
 	
-			
-	$html="<table style='width:100%'>
-	<tr>
-	<td valign='top' >".Paragraphe('64-dar-index.png','{incremental_backup}','{incremental_backup_text}',"javascript:Loadjs('dar.index.php?js=yes');",'repository_manager_text') ."</td>
-	<td valign='top' >".Paragraphe('folder-64-artica-update.png','{artica_autoupdate}','{artica_autoupdate_text}',"javascript:Loadjs('artica.update.php?js=yes')",'artica_autoupdate_text') ."</td>
-	<td valign='top' >".Buildicon64("DEF_ICO_APT") ."</td>
-	</tr>
-	<td valign='top' >".Paragraphe('64-retranslator.png','{APP_KRETRANSLATOR}','{APP_KRETRANSLATOR_TEXT}',"javascript:Loadjs('index.retranslator.php')",'APP_KRETRANSLATOR_TEXT') ."</td>
-	<td valign='top' >$UpdateUtility</td>
-	<td valign='top' >$apt_mirror</td>
-	</tr>
+	$artica=Paragraphe('folder-64-artica-update.png','{artica_autoupdate}','{artica_autoupdate_text}',"javascript:Loadjs('artica.update.php?js=yes')",'artica_autoupdate_text');
+	$apt=Buildicon64("DEF_ICO_APT");
+	$retrans=Paragraphe('64-retranslator.png','{APP_KRETRANSLATOR}','{APP_KRETRANSLATOR_TEXT}',"javascript:Loadjs('index.retranslator.php')",'APP_KRETRANSLATOR_TEXT');
+	
+	if($users->KASPERSKY_WEB_APPLIANCE){
+		$apt_mirror=null;
+		
+	}
 	
 	
-	</table>";
+	$tr[]=$artica;
+	$tr[]=$UpdateUtility;
+	$tr[]=$retrans;
+	$tr[]=$apt_mirror;
+	
+	
+$tables[]="<table style='width:100%'><tr>";
+$t=0;
+while (list ($key, $line) = each ($tr) ){
+		$line=trim($line);
+		if($line==null){continue;}
+		$t=$t+1;
+		$tables[]="<td valign='top'>$line</td>";
+		if($t==3){$t=0;$tables[]="</tr><tr>";}
+		
+}
+if($t<3){
+	for($i=0;$i<=$t;$i++){
+		$tables[]="<td valign='top'>&nbsp;</td>";				
+	}
+}
+				
+$tables[]="</table>";	
+	
+	$html=implode("\n",$tables);	
+	
+	
 	$tpl=new templates();
 	echo $tpl->_ENGINE_parse_body($html);			
 	

@@ -50,7 +50,7 @@ function AddUserToFolder(uid){
     XHR.appendData('AddUserToFolder',uid);
     XHR.appendData('prop',mem_folder_name);
     document.getElementById('finduserandgroupsid').innerHTML='<center><img src="img/wait_verybig.gif"></center>';
-    XHR.sendAndLoad('samba.index.php', 'GET',x_RefreshUserList);
+    XHR.sendAndLoad('samba.index.php', 'POST',x_RefreshUserList);
 }
 
 function UserSecurityInfos(item){
@@ -59,9 +59,9 @@ function UserSecurityInfos(item){
      LoadAjax('UserSecurityInfos','samba.index.php?UserSecurityInfos='+item+'&prop='+mem_folder_name);   
 }
 
-function DeleteUserPrivilege(){
+function DeleteUserPrivilege(item){
     mem_folder_name=document.getElementById('folder_security_users_ff').value;
-   var item=document.getElementById('DeleteUserid').value;
+   if(!item){item=document.getElementById('DeleteUserid').value;}
    if(item.length==0){
         alert(document.getElementById('selectuserfirst').value);
         return false;
@@ -75,7 +75,7 @@ function DeleteUserPrivilege(){
     XHR.appendData('write_list','no');
     document.getElementById('userlists').innerHTML='<center><img src="img/wait_verybig.gif"></center>';
     document.getElementById('UserSecurityInfos').innerHTML='';    
-    XHR.sendAndLoad('samba.index.php', 'GET',x_RefreshUserList);
+    XHR.sendAndLoad('samba.index.php', 'POST',x_RefreshUserList);
 }
 
 var folderTabRefresh=function (obj) {

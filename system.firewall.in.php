@@ -110,7 +110,7 @@ function firewall_rule_form(){
 	
 	var x_SaveIptableRule= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)};
+		if(tempvalue.length>3){alert(tempvalue)};
 		YahooWin5Hide();
 		IptablesSearch();
 	}		
@@ -246,7 +246,7 @@ function firewall_rules(){
 	<script>
 	var x_IptableDelete= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		IptablesSearch();
 	}	
 	
@@ -258,7 +258,7 @@ function firewall_rules(){
 		
 	var x_FirewallDisableRUle= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}
+		if(tempvalue.length>3){alert(tempvalue);}
 	}		
 		
 

@@ -261,7 +261,7 @@ $page=CurrentPageName();
 	
 		var x_BlackListEmailDelete= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}
+			if(tempvalue.length>3){alert(tempvalue);}
 			SearchBLK();
 		}	
 	
@@ -362,14 +362,14 @@ function imap_account_popup(){
 	
 	var x_EmailingAccountImapSave= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}
+			if(tempvalue.length>3){alert(tempvalue);}
 			RefreshTab('emailings_badmail');
 			YahooWin4Hide();
 		}			
 		
 		function EmailingAccountImapSave(){
 			var tempvalue=document.getElementById('account_name').value;
-			if(tempvalue.length>0){
+			if(tempvalue.length>3){
 				var XHR = new XHRConnection();
 				XHR.appendData('imap-account-save','yes');
 				XHR.appendData('account_name',document.getElementById('account_name').value);

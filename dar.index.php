@@ -109,7 +109,7 @@ function run_backup_js(){
 	
 		var x_PerFormRunBackup=function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}
+			if(tempvalue.length>3){alert(tempvalue);}
 		}			
 
 	function PerFormRunBackup(){

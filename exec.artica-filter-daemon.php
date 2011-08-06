@@ -7,7 +7,7 @@ $GLOBALS["VERBOSE"]=false;
 $GLOBALS["DEBUG"]=false;
 $GLOBALS["VERBOSE_MASTER"]=false;
 $GLOBALS["LOGON-PAGE"]=false;
-
+ini_set("bug_compat_42" , "off"); ini_set("session.bug_compat_warn" , "off"); 
 
 define(MSG_QUOTA, "Quota exceed: The user to whom this message was addressed has exceeded " .
     "the allowed account quota. Please resend the message at a later time.");

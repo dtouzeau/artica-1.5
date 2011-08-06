@@ -30,7 +30,7 @@ function js(){
 		
 	var x_postfix_multi_fetchmail_save= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)}
+		if(tempvalue.length>3){alert(tempvalue)}
 		postfix_multi_fetchmail_load();
 		}		
 		

@@ -37,7 +37,7 @@ function js(){
 	
 var x_RecipientToAdd= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue);}
+	if(tempvalue.length>3){alert(tempvalue);}
 	USER_RECIPT_LOAD();
 }
 

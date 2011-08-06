@@ -12,6 +12,7 @@ $mem=round(((memory_get_usage()/1024)/1000),2);events("{$mem}MB after class.os.s
 include_once(dirname(__FILE__)."/framework/class.settings.inc");
 $mem=round(((memory_get_usage()/1024)/1000),2);events("{$mem}MB after class.settings.inc","MAIN",__LINE__);
 $GLOBALS["FORCE"]=false;
+$GLOBALS["EXECUTED_AS_ROOT"]=true;
 $GLOBALS["DISABLE_WATCHDOG"]=false;
 $GLOBALS["MY-POINTER"]="/etc/artica-postfix/pids/". basename(__FILE__).".pointer";
 $GLOBALS["COMMANDLINE"]=implode(" ",$argv);
@@ -162,7 +163,7 @@ if($argv[1]=="--greyhole-watchdog"){greyhole_watchdog();exit;}
 if($argv[1]=="--greensql"){echo greensql();exit;}
 if($argv[1]=="--nscd"){echo nscd();exit;}
 if($argv[1]=="--tomcat"){echo tomcat();exit;}
-if($argv[1]=="--openemm"){echo openemm();exit;}
+if($argv[1]=="--openemm"){echo openemm()."\n".openemm_sendmail();exit;}
 
 if($GLOBALS["VERBOSE"]){echo "cannot understand {$argv[1]} assume perhaps it is a function\n";}
 
@@ -696,7 +697,7 @@ function xLoadAvg(){
 		
 		if(!$GLOBALS["FORCE"]){
 			if($DaemonTime<3){
-				events("End due of time ($timeDaemonFile) = $DaemonTime < 3",__FUNCTION__,__LINE__);
+				events_Loadavg("End due of time ($timeDaemonFile) = $DaemonTime < 3",__FUNCTION__,__LINE__);
 				if($GLOBALS["VERBOSE"]){echo "End due of time\n";}
 				return;
 			}
@@ -704,14 +705,19 @@ function xLoadAvg(){
 		@unlink($timeDaemonFile);
 		@file_put_contents($timeDaemonFile, time());
 		$array_load=sys_getloadavg();
+		$ttt=time();
 		$internal_load=$array_load[0];
 		if($GLOBALS["VERBOSE"]){echo "System load $internal_load\n";}
-		events("System load $internal_load",__FUNCTION__,__LINE__);
+		events_Loadavg("System load $internal_load",__FUNCTION__,__LINE__);
 		if(!is_dir("/var/log/artica-postfix/loadavg")){@mkdir("/var/log/artica-postfix/loadavg",644,true);}
-		if($GLOBALS["VERBOSE"]){echo "saving in /var/log/artica-postfix/loadavg...\n";}
-		@file_put_contents("/var/log/artica-postfix/loadavg/".time(), $internal_load);
+		events_Loadavg("saving in /var/log/artica-postfix/loadavg/$ttt",__FUNCTION__,__LINE__);
+		@file_put_contents("/var/log/artica-postfix/loadavg/$ttt", $internal_load);
+		$cmd="{$GLOBALS["nohup"]} {$GLOBALS["NICE"]} {$GLOBALS["PHP5"]} ".dirname(__FILE__)."/exec.syslog-engine.php --loadavg >/dev/null 2>&1 &";
+		$cmd=trim($cmd);
+		events_Loadavg("$cmd",__FUNCTION__,__LINE__);
+		shell_exec($cmd);
 	}else{
-		events("Fatal: System load \"sys_getloadavg\" no such function ",__FUNCTION__,__LINE__);
+		events_Loadavg("Fatal: System load \"sys_getloadavg\" no such function",__FUNCTION__,__LINE__);
 	}	
 	
 }
@@ -750,7 +756,8 @@ function launch_all_status($force=false){
 	 "pptpd","pptp_clients","apt_mirror","squid_clamav_tail","ddclient","cluebringer","apachesrc","zarafa_web","zarafa_ical","zarafa_dagent","zarafa_indexer",
 	"zarafa_monitor","zarafa_gateway","zarafa_spooler","zarafa_server","assp","openvpn","vboxguest","sabnzbdplus","SwapWatchdog","artica_meta_scheduler",
 	"OpenVPNClientsStatus","stunnel","meta_checks","zarafa_licensed","CheckCurl","ufdbguardd_tail","vnstat","NetAdsWatchdog","munin","autofs","greyhole",
-	"dnsmasq","iscsi","watchdog_yorel","postfwd2","vps_servers","smartd","crossroads_multiple","auth_tail","greyhole_watchdog","greensql","nscd","tomcat"
+	"dnsmasq","iscsi","watchdog_yorel","postfwd2","vps_servers","smartd","crossroads_multiple","auth_tail","greyhole_watchdog","greensql","nscd","tomcat",
+	"openemm","openemm_sendmail"
 	);
 	$data1=$GLOBALS["TIME_CLASS"];
 	$data2 = time();
@@ -1917,14 +1924,23 @@ function mysql_mgmt(){
 	$program=$GLOBALS["CLASS_UNIX"]->find_program("ndb_mgmd");
 	if($program==null){return;}
 	$master_pid=$GLOBALS["CLASS_UNIX"]->PIDOF($program);
-	
+	$EnableMysqlClusterManager=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("EnableMysqlClusterManager");
+	if(!is_numeric($EnableMysqlClusterManager)){$EnableMysqlClusterManager=0;}
+	if($EnableMysqlClusterManager==0){return;}
 	$l[]="[MYSQL_CLUSTER_MGMT]";
 	$l[]="service_name=APP_MYSQL_CLUSTER_MGMT";
 	$l[]="master_version=".GetVersionOf("mysql-ver");
 	$l[]="service_cmd=mysql-cluster";	
-	$l[]="service_disabled=". $GLOBALS["CLASS_SOCKETS"]->GET_INFO("EnableMysqlClusterManager");
+	$l[]="service_disabled=$EnableMysqlClusterManager";
 	$l[]="pid_path=$pid_path";
 	$l[]="family=system";
+	
+	if($EnableMysqlClusterManager==0){
+	 		return implode("\n",$l);
+	 		return;
+	 	}	
+	
+	
 	if(!$GLOBALS["CLASS_UNIX"]->process_exists($master_pid)){$l[]="";return implode("\n",$l);return;}	
 	$l[]="running=1";
 	$l[]=GetMemoriesOf($master_pid);
@@ -1938,12 +1954,17 @@ function mysql_replica(){
 	if(!$GLOBALS["CLASS_USERS"]->mysql_installed ){return;}
 	$program=$GLOBALS["CLASS_UNIX"]->find_program("ndbd");
 	if($program==null){return;}
+	$EnableMysqlClusterReplicat=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("EnableMysqlClusterReplicat");
+	if(!is_numeric($EnableMysqlClusterReplicat)){$EnableMysqlClusterReplicat=0;}	
+	
+	
+	
 	$master_pid=$GLOBALS["CLASS_UNIX"]->PIDOF($program);
 		$l[]="[MYSQL_CLUSTER_REPLICA]";
 		$l[]="service_name=APP_MYSQL_CLUSTER_REPLICA";
 	 	$l[]="master_version=".GetVersionOf("mysql-ver");
 	 	$l[]="service_cmd=mysql-cluster";	
-	 	$l[]="service_disabled=". $GLOBALS["CLASS_SOCKETS"]->GET_INFO("EnableMysqlClusterReplicat");
+	 	$l[]="service_disabled=$EnableMysqlClusterReplicat";
 	 	$l[]="pid_path=$pid_path";
 	 	$l[]="family=system";
 		if(!$GLOBALS["CLASS_UNIX"]->process_exists($master_pid)){$l[]="";return implode("\n",$l);return;}	
@@ -2656,7 +2677,7 @@ function tomcat(){
 	
 	$TomcatEnable=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("TomcatEnable");
 	if(!is_numeric($TomcatEnable)){$TomcatEnable=1;}
-	if(!$GLOBALS["CLASS_USERS"]->OPENEMM_INSTALLED){
+	if($GLOBALS["CLASS_USERS"]->OPENEMM_INSTALLED){
 		$OpenEMMEnable=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("OpenEMMEnable");
 		if(!is_numeric($OpenEMMEnable)){$OpenEMMEnable=1;}
 		if($OpenEMMEnable==1){$TomcatEnable=0;}
@@ -2711,7 +2732,7 @@ function openemm(){
 		$l[]="service_name=APP_OPENEMM";
 	 	$l[]="master_version=".$GLOBALS["CLASS_USERS"]->OPENEMM_VERSION;
 	 	$l[]="service_cmd=spamd";	
-	 	$l[]="service_disabled=$TomcatEnable";
+	 	$l[]="service_disabled=$OpenEMMEnable";
 	 	$l[]="pid_path=$pid_path";
 	 	$l[]="watchdog_features=1";
 	 	$l[]="family=smtp";
@@ -2731,6 +2752,42 @@ function openemm(){
 	return implode("\n",$l);return;		
 	
 }
+function openemm_sendmail(){
+	if(!$GLOBALS["CLASS_USERS"]->OPENEMM_INSTALLED){return;}
+	$OpenEMMEnable=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("OpenEMMEnable");
+	if(!is_numeric($OpenEMMEnable)){$OpenEMMEnable=1;}
+	if(!is_file("/home/openemm/sendmail/sbin/sendmail")){return;}
+	
+		
+		$master_pid=$GLOBALS["CLASS_UNIX"]->get_pid_from_file("/home/openemm/sendmail/run/sendmail.pid");
+		
+		$l[]="[APP_OPENEMM_SENDMAIL]";
+		$l[]="service_name=APP_OPENEMM_SENDMAIL";
+	 	$l[]="master_version=".$GLOBALS["CLASS_USERS"]->OPENEMM_SENDMAIL_VERSION;
+	 	$l[]="service_cmd=smtp";	
+	 	$l[]="service_disabled=$OpenEMMEnable";
+	 	$l[]="pid_path=$pid_path";
+	 	$l[]="watchdog_features=1";
+	 	$l[]="family=smtp";
+	 	
+	 	if($OpenEMMEnable==0){$l[]="";return implode("\n",$l);return;}
+	 	
+	 	
+		if(!$GLOBALS["CLASS_UNIX"]->process_exists($master_pid)){
+			WATCHDOG("APP_OPENEMM_SENDMAIL","openemm-sendmail");
+			$l[]="";
+			return implode("\n",$l);
+			return;
+		}	
+		$l[]=GetMemoriesOf($master_pid);
+		$l[]="";
+	
+	return implode("\n",$l);return;		
+	
+}
+
+
+
 function iscsi_pid_path(){
 	if(is_file("/var/run/ietd.pid")){return "/var/run/ietd.pid";}
 	if(is_file("/var/run/iscsi_trgt.pid")){return "/var/run/iscsi_trgt.pid";}
@@ -4452,7 +4509,40 @@ function xfce(){
 	}		
 //========================================================================================================================================================
 
+		
+
+		
+		
+		
+
+function _zarafa_checkExtension($name, $version=""){
+		$result = true;
+		$help_msg=null;
+		if (extension_loaded($name)){
+			if (version_compare(phpversion($name), $version) == -1){
+				$GLOBALS["ZARAFA_ERROR"]=_zarafa_error_version("PHP ".$name." extension",phpversion($name), $version, $help_msg);
+				$result = false;
+			}
+		}else{
+			
+			$GLOBALS["ZARAFA_ERROR"]=_zarafa_error_notfound("PHP ".$name." extension", $help_msg);
+			$result = false;
+		}
+		return $result;
+	}
+
 	
+function zarafa_mapi(){
+	if(!_zarafa_checkExtension("mapi", "5.0-4688", "Mapi error, please contact Artica support team.")){
+		if($GLOBALS["VERBOSE"]){echo "Warning Zarafa mapi php extension error {$GLOBALS["ZARAFA_ERROR"]}\n";}
+		$GLOBALS["CLASS_UNIX"]->send_email_events("Warning Zarafa mapi php extension error",$GLOBALS["ZARAFA_ERROR"],"mailbox");
+		
+	}
+}
+
+function _zarafa_error_version($name, $needed, $found, $help){return sprintf("Version error: %s %s found, but %s needed.\n",$name, $needed, $found);}
+function _zarafa_error_notfound($name, $help){return sprintf("Not Found: %s not found", $name);}	
+
 
 	
 function zarafa_web(){
@@ -4882,6 +4972,7 @@ function zarafa_server(){
 		events("running $cmd",__FUNCTION__,__LINE__);
 		shell_exec($cmd);
 	}
+	zarafa_mapi();
 	$l[]="running=1";
 	$l[]=$meme;
 	$l[]="";	
@@ -5985,7 +6076,19 @@ function events($text,$function=null,$line=0){
 		$GLOBALS["CLASS_UNIX"]->events("$filename $function:: $text (L.$line)","/usr/share/artica-postfix/ressources/logs/launch.status.task");	
 		}	
 		
+function events_Loadavg($text,$function=null,$line=0){
+		$filename=basename(__FILE__);
+		if(!isset($GLOBALS["CLASS_UNIX"])){
+			include_once(dirname(__FILE__)."/framework/class.unix.inc");
+			$GLOBALS["CLASS_UNIX"]=new unix();
+		}
+		$GLOBALS["CLASS_UNIX"]->events("$filename $function:: $text (L.$line)","/var/log/artica-postfix/xLoadAvg.debug");	
+		}			
+		
 function bandwith(){
+	$EnableBandwithCalculation=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("EnableBandwithCalculation");
+	if(!is_numeric($EnableBandwithCalculation)){$EnableBandwithCalculation=0;}
+	if($EnableBandwithCalculation==0){return;}
 	$cmd="{$GLOBALS["NICE"]} {$GLOBALS["PHP5"]} ".dirname(__FILE__)."/exec.watchdog.php --bandwith >/dev/null 2>&1 &";
 	events($cmd,__FUNCTION__,__LINE__);
 	shell_exec($cmd);

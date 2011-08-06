@@ -98,7 +98,7 @@ function domains_popup(){
 	<script>
 		var x_smtp_domainaddfunc= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			RefreshSMTPDomainList();
 			
 		}	
@@ -152,7 +152,7 @@ function smtp(){
 	<script>
 		var x_smtp_daemon_add= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			RefreshDaemonList();
 			
 		}	
@@ -232,7 +232,7 @@ function smtp_instance_list(){
 	<script>
 		var x_DeleteSMTPSenderInstance= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			RefreshDaemonList();
 			
 		}	
@@ -302,7 +302,7 @@ function domains_list(){
 	<script>
 		var x_DeleteSMTPDomainInstance= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			RefreshSMTPDomainList();
 			
 		}	
@@ -491,7 +491,7 @@ function smtp_instance_edit(){
 	
 		var x_SaveSMTPInstanceParams= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			RefreshTab('main_ecluse_config');
 			YahooWin4Hide();
 			

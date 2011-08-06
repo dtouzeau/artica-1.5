@@ -38,7 +38,7 @@ function JoomlaStartPage(){
 	
 var x_JoomlaInstall= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue)};
+	if(tempvalue.length>3){alert(tempvalue)};
 	JoomlaStartPage();
 	}
 

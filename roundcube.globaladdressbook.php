@@ -155,7 +155,7 @@ function admins(){
 		
 		var x_DelGADBUser=function (obj) {
 			tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}
+			if(tempvalue.length>3){alert(tempvalue);}
 			RefreshAdminsList();
 			
 			
@@ -227,7 +227,7 @@ $html="
 		
 		var x_AddGADBUser2=function (obj) {
 			tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}
+			if(tempvalue.length>3){alert(tempvalue);}
 			RefreshAdminsList();
 			
 			

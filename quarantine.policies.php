@@ -110,7 +110,7 @@ function popup(){
 		
 var x_SaveQuarPolicies= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue);}
+	if(tempvalue.length>3){alert(tempvalue);}
 	YahooWin3Hide();
 }		
 	

@@ -35,7 +35,7 @@ function js(){
 		
 	var x_enable_massmailing_save= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			document.getElementById('enable_massmailing_id').innerHTML='<center style=\"margin:20px;padding:20px\"><img src=\"img/mass-mailing-128.png\"></center>';
 			YahooWin2Hide();	
 		}		

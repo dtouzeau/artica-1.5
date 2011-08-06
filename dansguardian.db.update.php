@@ -55,7 +55,7 @@ $html="
 	
 var x_DANSGUARDIAN_BLACKLISTS_UPDATE_REFRESH= function (obj) {
 	var tempvalue=obj.responseText;
-		if(tempvalue.length>0){
+		if(tempvalue.length>3){
     		document.getElementById('DANSGUARDIAN_BLACKLISTS_UPDATE').innerHTML=tempvalue;
 		}
 	}		

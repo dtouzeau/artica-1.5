@@ -58,7 +58,6 @@ if(isset($_GET["DelDNSEntry"])){DelDNSEntry();exit;}
 if(isset($_GET["EnablePDNS"])){EnablePDNS();exit;}
 if(isset($_GET["PowerDNSLogsQueries"])){SaveLogsSettings();exit;}
 if(isset($_GET["PDNSRestartIfUpToMB"])){PDNSRestartIfUpToMB();exit;}
-
 if(isset($_GET["infos"])){pdns_infos();exit;}
 if(isset($_GET["pdns-infos-query"])){pdns_infos_query();exit;}
 
@@ -466,7 +465,7 @@ function js_common(){
 		
 	var x_SaveDNSEntry=function (obj) {
 			var results=obj.responseText;
-			if (results.length>0){alert(results);return;}
+			if(results.length>3){alert(results);return;}
 			YahooWin4Hide();
 			RefreshDNSList();
 			
@@ -1513,7 +1512,7 @@ function events(){
 		
 	var x_PowerDNSLogsSave= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);return;}	
+		if(tempvalue.length>3){alert(tempvalue);return;}	
 		
 	}		
 	

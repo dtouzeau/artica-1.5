@@ -1154,7 +1154,7 @@ function AJAX_COMPUTER() {
 	var m_userid;
 var x_SaveComputerForm= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){
+	if(tempvalue.length>3){
 		alert(tempvalue);
 		var re = new RegExp(/^ERROR/);
 		m=re.exec(tempvalue);
@@ -1832,7 +1832,7 @@ function USER_SAMBA_PRIVILEGES() {
 	
 var x_SetSambaPrimaryGroupGID=function(obj){
      var tempvalue=obj.responseText;
-	  if(tempvalue.length>0){alert(tempvalue);}
+	  if(tempvalue.length>3){alert(tempvalue);}
 	document.getElementById('dialog4').innerHTML='';
 	YahooWin4Hide();
 	LoadAjax('USER_SAMBA_FORM','$page?USER_SAMBA_FORM=yes&userid=$userid');
@@ -2134,7 +2134,7 @@ function USER_SAMBA_ENABLE_JS() {
 		
 	var x_EnableSharedAccessStart=function(obj){
     	var tempvalue=obj.responseText;
-	  	if(tempvalue.length>0){alert(tempvalue);}
+	  	if(tempvalue.length>3){alert(tempvalue);}
 		RefreshTab('container-users-tabs');
 		}
 	
@@ -3040,6 +3040,7 @@ function USER_ACCOUNT_POPUP($userid) {
 		$button_webdav=$button_webdav_disabled;
 		$HomeBinding=$HomeBinding_grey;
 		$moveorguser=$moveorguser_grey;
+		$PRIVILEGES=$PRIVILEGES_DISABLED;
 	}
 	
 	$tr[] = $PRIVILEGES;
@@ -4045,7 +4046,7 @@ function USER_FTP_JS() {
 	$html = "
 	var x_USER_FTP_JS_START=function(obj){
       var tempvalue=obj.responseText;
-      if(tempvalue.length>0){alert(tempvalue);}
+      if(tempvalue.length>3){alert(tempvalue);}
       //document.getElementById('imgftp').src='img/folder-96-pure-ftpd-share.png';
       RefreshTab('container-users-tabs');
       

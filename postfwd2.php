@@ -181,7 +181,7 @@ function status(){
 	
 	var x_EnablePOSTFWD2Check= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		RefreshTab('main_config_postfwd2');
 		if(document.getElementById('main_multi_config_postfix')){RefreshTab('main_multi_config_postfix');}
 	}		
@@ -318,7 +318,7 @@ $html=$html."</table>
 <script>
 	var x_DeleteRuleMaster= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		RefreshTab('main_config_postfwd2');
 	}		
 	
@@ -567,7 +567,7 @@ function postfwd2_item_list(){
 		<script>
 		var x_Postfwd2DeleteItem= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}	
+			if(tempvalue.length>3){alert(tempvalue);}	
 			RefreshTab('main_config_postfwd2');
 			postfwd2ReloadItemsList();
 		}		
@@ -659,7 +659,7 @@ function postfwd2_action_form(){
 		<script>
 		var x_postfwd2EditAction= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}	
+			if(tempvalue.length>3){alert(tempvalue);}	
 			RefreshTab('main_config_postfwd2');
 			postfwd2ReloadItemsList();
 		}		
@@ -701,7 +701,7 @@ function postfwd2_action_form(){
 		<script>
 		var x_postfwd2EditAction= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}	
+			if(tempvalue.length>3){alert(tempvalue);}	
 			RefreshTab('main_config_postfwd2');
 			postfwd2ReloadItemsList();
 		}		
@@ -744,7 +744,7 @@ function postfwd2_action_form(){
 		<script>
 		var x_postfwd2EditAction= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}	
+			if(tempvalue.length>3){alert(tempvalue);}	
 			RefreshTab('main_config_postfwd2');
 			postfwd2ReloadItemsList();
 		}		
@@ -783,7 +783,7 @@ function postfwd2_action_form(){
 		<script>
 		var x_postfwd2EditAction= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}	
+			if(tempvalue.length>3){alert(tempvalue);}	
 			RefreshTab('main_config_postfwd2');
 			postfwd2ReloadItemsList();
 		}		
@@ -821,7 +821,7 @@ function postfwd2_action_form(){
 		<script>
 		var x_postfwd2EditAction= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}	
+			if(tempvalue.length>3){alert(tempvalue);}	
 			RefreshTab('main_config_postfwd2');
 			postfwd2ReloadItemsList();
 		}		
@@ -964,7 +964,7 @@ function postfwd2_item_form_selected(){
 		<script>
 		var x_postfwd2AddDate= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}	
+			if(tempvalue.length>3){alert(tempvalue);}	
 			RefreshTab('main_config_postfwd2');
 			postfwd2ReloadItemsList();
 		}		
@@ -996,7 +996,7 @@ function postfwd2_item_form_selected(){
 		<script>
 		var x_postfwd2AddDate= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}	
+			if(tempvalue.length>3){alert(tempvalue);}	
 			RefreshTab('main_config_postfwd2');
 			postfwd2ReloadItemsList();
 		}		
@@ -1028,7 +1028,7 @@ function postfwd2_item_form_selected(){
 		<script>
 		var x_postfwd2AddDate= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}	
+			if(tempvalue.length>3){alert(tempvalue);}	
 			RefreshTab('main_config_postfwd2');
 			postfwd2ReloadItemsList();
 		}		
@@ -1059,7 +1059,7 @@ function postfwd2_item_form_selected(){
 		<script>
 		var x_postfwd2AddDate= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}	
+			if(tempvalue.length>3){alert(tempvalue);}	
 			RefreshTab('main_config_postfwd2');
 			postfwd2ReloadItemsList();
 		}		
@@ -1090,7 +1090,7 @@ function postfwd2_item_form_selected(){
 		<script>
 		var x_postfwd2AddDate= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}	
+			if(tempvalue.length>3){alert(tempvalue);}	
 			RefreshTab('main_config_postfwd2');
 			postfwd2ReloadItemsList();
 		}		
@@ -1121,7 +1121,7 @@ function postfwd2_item_form_selected(){
 		<script>
 		var x_postfwd2AddDate= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}	
+			if(tempvalue.length>3){alert(tempvalue);}	
 			RefreshTab('main_config_postfwd2');
 			postfwd2ReloadItemsList();
 		}		
@@ -1153,7 +1153,7 @@ function postfwd2_item_form_selected(){
 		<script>
 		var x_postfwd2AddDate= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}	
+			if(tempvalue.length>3){alert(tempvalue);}	
 			RefreshTab('main_config_postfwd2');
 			postfwd2ReloadItemsList();
 		}		
@@ -1185,7 +1185,7 @@ function postfwd2_item_form_selected(){
 		<script>
 		var x_postfwd2AddDate= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}	
+			if(tempvalue.length>3){alert(tempvalue);}	
 			RefreshTab('main_config_postfwd2');
 			postfwd2ReloadItemsList();
 		}		
@@ -1218,7 +1218,7 @@ function postfwd2_item_form_selected(){
 		<script>
 		var x_postfwd2AddDate= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}	
+			if(tempvalue.length>3){alert(tempvalue);}	
 			RefreshTab('main_config_postfwd2');
 			postfwd2ReloadItemsList();
 		}		
@@ -1250,7 +1250,7 @@ function postfwd2_item_form_selected(){
 		<script>
 		var x_postfwd2AddDate= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}	
+			if(tempvalue.length>3){alert(tempvalue);}	
 			RefreshTab('main_config_postfwd2');
 			postfwd2ReloadItemsList();
 		}		
@@ -1282,7 +1282,7 @@ function postfwd2_item_form_selected(){
 		<script>
 		var x_postfwd2AddDate= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}	
+			if(tempvalue.length>3){alert(tempvalue);}	
 			RefreshTab('main_config_postfwd2');
 			postfwd2ReloadItemsList();
 		}		
@@ -1314,7 +1314,7 @@ function postfwd2_item_form_selected(){
 		<script>
 		var x_postfwd2AddDate= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}	
+			if(tempvalue.length>3){alert(tempvalue);}	
 			RefreshTab('main_config_postfwd2');
 			postfwd2ReloadItemsList();
 		}		
@@ -1346,7 +1346,7 @@ function postfwd2_item_form_selected(){
 		<script>
 		var x_postfwd2AddDate= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}	
+			if(tempvalue.length>3){alert(tempvalue);}	
 			RefreshTab('main_config_postfwd2');
 			postfwd2ReloadItemsList();
 		}		
@@ -1378,7 +1378,7 @@ function postfwd2_item_form_selected(){
 		<script>
 		var x_postfwd2AddDate= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}	
+			if(tempvalue.length>3){alert(tempvalue);}	
 			RefreshTab('main_config_postfwd2');
 			postfwd2ReloadItemsList();
 		}		
@@ -1410,7 +1410,7 @@ function postfwd2_item_form_selected(){
 		<script>
 		var x_postfwd2AddDate= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}	
+			if(tempvalue.length>3){alert(tempvalue);}	
 			RefreshTab('main_config_postfwd2');
 			postfwd2ReloadItemsList();
 		}		
@@ -1442,7 +1442,7 @@ function postfwd2_item_form_selected(){
 		<script>
 		var x_postfwd2AddDate= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}	
+			if(tempvalue.length>3){alert(tempvalue);}	
 			RefreshTab('main_config_postfwd2');
 			postfwd2ReloadItemsList();
 		}		
@@ -1474,7 +1474,7 @@ function postfwd2_item_form_selected(){
 		<script>
 		var x_postfwd2AddDate= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}	
+			if(tempvalue.length>3){alert(tempvalue);}	
 			RefreshTab('main_config_postfwd2');
 			postfwd2ReloadItemsList();
 		}		
@@ -1506,7 +1506,7 @@ if($item=="recipient_count"){
 		<script>
 		var x_postfwd2AddDate= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}	
+			if(tempvalue.length>3){alert(tempvalue);}	
 			RefreshTab('main_config_postfwd2');
 			postfwd2ReloadItemsList();
 		}		
@@ -1538,7 +1538,7 @@ if($item=="size"){
 		<script>
 		var x_postfwd2AddDate= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}	
+			if(tempvalue.length>3){alert(tempvalue);}	
 			RefreshTab('main_config_postfwd2');
 			postfwd2ReloadItemsList();
 		}		
@@ -1570,7 +1570,7 @@ if($item=="score"){
 		<script>
 		var x_postfwd2AddDate= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}	
+			if(tempvalue.length>3){alert(tempvalue);}	
 			RefreshTab('main_config_postfwd2');
 			postfwd2ReloadItemsList();
 		}		

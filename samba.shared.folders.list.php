@@ -208,7 +208,7 @@ function acldisks(){
 	
 	var x_FdiskEnableAcl=function (obj) {
 			tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}
+			if(tempvalue.length>3){alert(tempvalue);}
 			if(document.getElementById('main_samba_shared_folders')){RefreshTab('main_samba_shared_folders');}
 			if(document.getElementById('main_config_samba')){RefreshTab('main_config_samba');}
 			if(document.getElementById('main_config_internal_disks')){RefreshTab('main_config_internal_disks');}			

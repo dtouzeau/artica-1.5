@@ -22,12 +22,63 @@ $user=new usersMenus();
 	if(isset($_GET["KavProxyDeleteLine"])){KavProxyDeleteLine();exit;}
 	if(isset($_GET["icapserver_engine_options"])){icapserver_engine_options();exit;}
 	if(isset($_GET["MaxChildren"])){icapserver_engine_options_save();exit;}
+	if(isset($_GET["inline"])){js();exit;}
+	if(isset($_GET["tabs"])){tabs();exit;}
 
 js();
 
+function tabs(){
+		$tpl=new templates();
+		$page=CurrentPageName();
+		$users=new usersMenus();
+	
+		$array["ExcludeMimeType"]='{exclude}:{ExcludeMimeType}';
+		$array["icapserver_engine_options"]='{icapserver_1}';
+	
+		
+		
+
+	while (list ($num, $ligne) = each ($array) ){
+	
+		$tab[]="<li><a href=\"$page?$num=yes\"><span style='font-size:14px'>$ligne</span></a></li>\n";
+			
+		}
+	
+	
+	
+
+	$html="
+		<div id='main_kav4proxy_config' style='background-color:white;margin-top:10px'>
+		<ul>
+		". implode("\n",$tab). "
+		</ul>
+	</div>
+		<script>
+				$(document).ready(function(){
+					$('#main_kav4proxy_config').tabs();
+			
+
+			});
+		</script>
+	
+	";	
+	
+	echo $tpl->_ENGINE_parse_body($html);
+
+}
+
 
 function js(){
+	$Kav4Proxyload="Kav4Proxyload()";
+if(isset($_GET["inline"])){
+	$Kav4Proxyload="Kav4ProxyloadInLIne()";
+	$prefix="<div id='Kav4Proxy-div'>
+	</div>
+	<script>
 	
+	";
+	$suffix="</script>";
+}	
 $page=CurrentPageName();
 $tpl=new templates();
 $icapserver_1=$tpl->_ENGINE_parse_body("{icapserver_1}","kav4proxy.index.php");
@@ -35,27 +86,26 @@ $title=$tpl->_ENGINE_parse_body("{web_proxy}&nbsp;&nbsp;&raquo;&raquo;&nbsp;{APP
 $title2=$title."&nbsp;&nbsp;&raquo;&raquo;&nbsp;".$tpl->_ENGINE_parse_body("{exclude}:{ExcludeMimeType}");
 
 $html="
-
-function Kav4Proxyload(){
-	YahooWin('550','$page?popup=yes','$title');
+	$prefix
+	function Kav4Proxyload(){
+		YahooWin('550','$page?popup=yes','$title');
 	}	
 	
-function ExcludeMimeTypePopUp(){
-	YahooWin2('600','$page?ExcludeMimeType=yes','$title2');
-}
+	function ExcludeMimeTypePopUp(){
+		YahooWin2('600','$page?ExcludeMimeType=yes','$title2');
+	}
 
-function icapserver_engine_options(){
-YahooWin2('350','$page?icapserver_engine_options=yes','$icapserver_1');
+	function icapserver_engine_options(){
+		YahooWin2('350','$page?icapserver_engine_options=yes','$icapserver_1');
+	}
 
-}
-
-function ExcludeMimeTypeAddEnter(e){
-	if(!checkEnter(e)){return;}
-	ExcludeMimeTypeAdd();
-}
+	function ExcludeMimeTypeAddEnter(e){
+		if(!checkEnter(e)){return;}
+		ExcludeMimeTypeAdd();
+	}
 var x_ExcludeMimeTypeAdd= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue)};
+	if(tempvalue.length>3){alert(tempvalue)};
     ExcludeMimeTypeRefreshList();  
 	}	
 
@@ -68,7 +118,7 @@ function ExcludeMimeTypeAdd(){
 
 var x_icapserver_engine_options_save= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue)};
+	if(tempvalue.length>3){alert(tempvalue)};
     YahooWin2Hide();
 	}	
 
@@ -98,8 +148,13 @@ function ExcludeMimeTypeRefreshList(){
 	LoadAjax('ExcludeMimeTypediv','$page?MimeTypeList=yes');
 }
 
-	Kav4Proxyload();
-	";
+
+function Kav4ProxyloadInLIne(){
+	LoadAjax('Kav4Proxy-div','$page?tabs=yes');
+}
+
+	$Kav4Proxyload;
+	$suffix";
 	
 echo $html;	
 	

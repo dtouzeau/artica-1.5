@@ -36,9 +36,11 @@ class groups{
 	var $SAMBA_INSTALLED=false;
 	var $objectSid=null;
 	var $ldapClass;
+	var $EnableManageUsersTroughActiveDirectory=false;
 	
 	function groups($groupid=null){
 		$users=new usersMenus();
+		$this->EnableManageUsersTroughActiveDirectory=$users->EnableManageUsersTroughActiveDirectory;
 		$this->SAMBA_INSTALLED=$users->SAMBA_INSTALLED;
 		if($users->EnableManageUsersTroughActiveDirectory){
 			if($groupid<>null){
@@ -74,14 +76,31 @@ class groups{
 	private function LoadFromAd($dn){
 		$ldap=new ldapAD();
 		//$this->seems_utf8($dn)
+		ldap_set_option($ldap->ldap_connection, LDAP_OPT_PROTOCOL_VERSION, 3);
 		$sr =@ldap_read($ldap->ldap_connection,utf8_encode($dn),'objectClass=group',array());
+		if(!$sr){
+			$errornumber= ldap_errno($ldap->ldap_connection);
+			$error_text=ldap_err2str($errornumber);
+		
+			writelogs("Error $errornumber:UTF8: $error_text Query failed false query (objectClass=group) in ".utf8_encode($dn),__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+			$sr =@ldap_read($ldap->ldap_connection,$dn,"objectClass=group",array());
+			if(!$sr){
+				$errornumber= ldap_errno($ldap->ldap_connection);
+				$error_text=ldap_err2str($errornumber);	
+				writelogs("Error $errornumber:NORM: $error_text Query failed false query in $dn",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+			}
+		}
+		
+		
 		if ($sr) {
 				$hash=ldap_get_entries($ldap->ldap_connection,$sr);
 				$hash=$hash[0];
+				
 				$this->groupName=$hash["samaccountname"][0];
 				$this->objectSid=$this->bin_to_str_sid($hash["objectsid"][0]);
 				for($i=0;$i<$hash["member"]["count"];$i++){
 					$member=$this->MemberSamAcountFromAd($hash["member"][$i]);
+					if($member==null){continue;}
 					$this->ARRAY_MEMBERS[$member]=$member;
 					$this->members[]=$member;
 					}
@@ -93,7 +112,7 @@ class groups{
 					}
 				}
 			}else{
-				writelogs("Ressource false query (objectClass=group) in $dn",__CLASS__.'/'.__FUNCTION__,__FILE__);
+				writelogs("Ressource false query (objectClass=group) in $dn",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 				return;
 			}
 		
@@ -108,10 +127,12 @@ class groups{
 			$this->ou=$res["ou"];
 			
 			//clean
+			
 			$final_members=$this->members;
 			$this->members=array();
-			while (list ($num, $ligne) = each ($this->ARRAY_MEMBERS)){
+			while (list ($num, $ligne) = each ($final_members)){
 				if($ligne==null){continue;}
+				$this->members_array[$ligne]=true;
 				$this->members[]=$ligne;
 			}
 			
@@ -194,15 +215,20 @@ private function seems_utf8($Str) {
 		$sr =@ldap_read($ldap->ldap_connection,$dn,'objectClass=user',array("sAMAccountName"));
 		if ($sr) {
 			$hash=ldap_get_entries($ldap->ldap_connection,$sr);
+			writelogs($hash["count"]." items in $dn (objectClass=user)",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 			$hash=$hash[0];
 			return $hash["samaccountname"][0];
+		}else{
+			$errornumber= ldap_errno($ldap->ldap_connection);
+			$error_text=ldap_err2str($errornumber);	
+			writelogs("Error:$errornumber  $error_text in $dn (objectClass=user)",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 		}
 		
 	}
 	
 	
 	function LoadDatas(){
-		$ldap=$this->ldapClass;
+		$ldap=new clladp();
 		$ld =$ldap->ldap_connection;
 		$bind =$ldap->ldapbind;
 		$suffix=$ldap->suffix;
@@ -307,7 +333,7 @@ private function seems_utf8($Str) {
 			
 		}
 		$res["ArticaGroupPrivileges"][0]=$conf;
-		$ldap=$this->ldapClass;
+		$ldap=new clladp();
 		if(!$ldap->Ldap_modify($this->dn,$res)){
 			echo "$this->group_id::$this->ou\n".$tpl->_ENGINE_parse_body("{privileges}:\n$ldap->ldap_last_error");
 		}else{
@@ -333,7 +359,7 @@ private function seems_utf8($Str) {
 		
 	function edit_DefaultGroupPassword(){
 		$upd["DefaultGroupPassword"][0]=$this->DefaultGroupPassword;
-		$ldap=$this->ldapClass;
+		$ldap=new clladp();
 		if(!$ldap->Ldap_modify($this->dn,$upd)){
 			$this->ldap_error=$ldap->ldap_last_error;
 			return false;
@@ -371,7 +397,7 @@ private function seems_utf8($Str) {
 		writelogs("Adding \"$group\" in organization \"$ou\" ($generated_id)",
 		__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);	
 		$this->generated_id=$generated_id;
-		$ldap=$this->ldapClass;
+		$ldap=new clladp();
 		
 		if($ou==null){
 			$dn="cn=$group,ou=groups,dc=samba,dc=organizations,$ldap->suffix";
@@ -427,7 +453,7 @@ private function seems_utf8($Str) {
 	}	
 	
   private function _GenerateGUID(){
-  		$ldap=$this->ldapClass;
+  		$ldap=new clladp();
   		$ld =$ldap->ldap_connection;
 		$bind =$ldap->ldapbind;
 		
@@ -454,7 +480,7 @@ private function seems_utf8($Str) {
 	
 	
 	function user_add_to_group($uid){
-		$ldap=$this->ldapClass;
+		$ldap=new clladp();
 		if($this->members_array[$uid]==true){return true;}
 		
 		writelogs("$uid is not a member of $this->group_id ($this->dn)",__CLASS__.'/'.__FUNCTION__,__FILE__);
@@ -503,7 +529,7 @@ private function seems_utf8($Str) {
 		
 		
 	function GroupIDFromName($ou=null,$groupname){
-		$ldap=$this->ldapClass;
+		$ldap=new clladp();
 		$dn="ou=groups,ou=$ou,dc=organizations,$ldap->suffix";
 		if($ou==null){
 			$dn="ou=groups,dc=samba,dc=organizations,$ldap->suffix";
@@ -526,7 +552,7 @@ private function seems_utf8($Str) {
 		$upd["objectClass"][]="sambaGroupMapping";
 		$upd["sambaGroupType"][]=5;
 		$upd["sambaSID"][]=$this->LOCAL_SID. "-$this->group_id";
-		$ldap=$this->ldapClass;
+		$ldap=new clladp();
 		$ldap->Ldap_add_mod($this->dn,$upd);
 		}
 	
@@ -558,7 +584,7 @@ private function seems_utf8($Str) {
 	 }
 	 
 	 function add_sharedfolder($path){
-	 	$ldap=$this->ldapClass;
+	 	$ldap=new clladp();
 	 	if($this->dn==null){$this->dn=$this->main_array["dn"];}
 	 	if($path==null){return false;}
 	 	$res["SharedFolderList"]=$path;
@@ -568,7 +594,7 @@ private function seems_utf8($Str) {
 	 	}
 	 	
 	 function AddUsertoThisGroup($uid){
-	 	$ldap=$this->ldapClass;
+	 	$ldap=new clladp();
 	 	$upd["memberUid"]=$uid;
 	 	if($ldap->Ldap_add_mod($this->dn,$upd)){return true;}
 	 	$this->ldap_error=$ldap->ldap_last_error;
@@ -576,7 +602,7 @@ private function seems_utf8($Str) {
 	 }
 	 
 	 function DeleteUserFromThisGroup($uid){
-	 	$ldap=$this->ldapClass;
+	 	$ldap=new clladp();
 	 	$upd["memberUid"]=$uid;
 	 	writelogs("$this->dn Del memberUid=\"$uid\"",__CLASS__.'/'.__FUNCTION__,__FILE__);
 	 	$this->UpdatePlugins();
@@ -584,7 +610,7 @@ private function seems_utf8($Str) {
 	 }
 	 
 	 public function Delete(){
-	 	$ldap=$this->ldapClass;
+	 	$ldap=new clladp();
 	 	if($ldap->ExistsDN($this->dn)){
 	 		$ldap->ldap_delete($this->dn);
 	 	}
@@ -599,7 +625,7 @@ private function seems_utf8($Str) {
 	 }
 	 	
 	 function del_sharedfolder($index){
-	 	$ldap=$this->ldapClass;
+	 	$ldap=new clladp();
 	 	if($this->dn==null){$this->dn=$this->main_array["dn"];}
 	 	$res["SharedFolderList"]=$this->SharedFolders_list[$index];
 	 	writelogs("$this->dn del \"{$res["SharedFolderList"]}\"",__CLASS__.'/'.__FUNCTION__,__FILE__);
@@ -608,7 +634,7 @@ private function seems_utf8($Str) {
 	 	$autofs->AutofsDeleteDir($this->group_id,$res["SharedFolderList"]);
 	 	}
 	 function edit_SharedFolderPrefix(){
-		$ldap=$this->ldapClass;
+		$ldap=new clladp();
 	 	if($this->dn==null){$this->dn=$this->main_array["dn"];}
 	 	$res["SharedFolderPrefix"][0]=$this->SharedFolderPrefix;
 	 	if(!$ldap->Ldap_modify($this->dn,$res)){echo $ldap->ldap_last_error;}else{
@@ -625,7 +651,7 @@ private function seems_utf8($Str) {
 	 
 	 function BuildSharedFolderConf(){
 	 	
-	 	$ldap=$this->ldapClass;
+	 	$ldap=new clladp();
 	 	$conf="[SHARED]\n";
 	 	$conf=$conf . "key=" . md5(date('Y-m-d H:I:s'))."\n";
 	 	$conf=$conf . "groupid=$this->group_id\n";

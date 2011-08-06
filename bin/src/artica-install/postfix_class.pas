@@ -834,20 +834,23 @@ end else begin
     //fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.postfix.hashtables.php');
 end;
 
-pid:=SYS.PIDOF_PATTERN('sendmail');
-if SYS.PROCESS_EXIST(pid) then begin
-    TryStrToInt(pid,pidnum);
-    if pidnum>5 then begin
-        logs.DebugLogs('Starting......: Postfix, killing old sendmail instance: ' +pid+ ' PID..');
-        fpsystem('kill -9 '+pid);
-    end;
-end;
 
 
-if FIleExists('/etc/init.d/sendmail') then begin
-    logs.Debuglogs('POSTFIX_START:: stopping sendmail.. ');
-    logs.OutputCmd('/etc/init.d/sendmail stop >/dev/null 2>&1');
-end;
+
+     if FileExists('/etc/init.d/sendmail') then begin
+           if not SYS.FileSymbolicExists('/etc/init.d/sendmail') then begin
+              logs.Debuglogs('Starting......: stopping sendmail...');
+              fpsystem('/etc/init.d/sendmail stop');
+              pid:=SYS.PIDOF_PATTERN('sendmail');
+              if SYS.PROCESS_EXIST(pid) then begin
+              TryStrToInt(pid,pidnum);
+                 if pidnum>5 then begin
+                     logs.DebugLogs('Starting......: Postfix, killing old sendmail instance: ' +pid+ ' PID..');
+                     fpsystem('kill -9 '+pid);
+                 end;
+              end;
+           end;
+        end;
 
 SYS.AddShell('postfix');
 

@@ -52,6 +52,47 @@ var x_time_fill= function (obj) {
 	document.getElementById('topemnucurrentdate').innerHTML=results;
 }
 
+function QuickLinks(){
+	var z = $("#middle").css('display');
+	if(z!=="none"){
+		$('#middle').slideUp('normal');
+		$('#middle').html('');
+		$('#quick-links').html('');
+		$('#middle').slideDown({
+			duration:900,
+			easing:"easeOutExpo",
+			complete:function(){
+				QuickLinksLoad();
+				}
+			});
+		}
+	
+}
+
+function QuickLinksLoad(){
+	
+	LoadAjax('middle','quicklinks.php');
+	
+}
+function QuickLinksHide(){
+	$('#middle').slideUp('normal');
+	$('#middle').html('');
+	$('#quick-links').html('');
+	$('#middle').slideDown({
+		duration:900,
+		easing:"easeOutExpo",
+		complete:function(){
+			LoadAjax('middle','quicklinks.php?off=yes')
+			}
+		});
+	}	
+
+
+
+
+
+
+
 
 function compteur_global_actions(){}
 
@@ -2397,7 +2438,15 @@ function ExtractPathName(path){
 }
 
 function ConfigureYourserver(title){
-        Loadjs('/configure.server.php?section=js');
+	if(!document.getElementById('QuickLinksTop')){
+		QuickLinks();
+		
+	}else{
+		QuickLinksHide();
+		
+	}
+	
+       // Loadjs('/configure.server.php?section=js');
         
 }
 function ConfigureYourserver_Cancel(){

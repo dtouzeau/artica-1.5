@@ -82,6 +82,8 @@ function ad_ldap(){
 		
 		if($users->cyrus_imapd_installed){$cyrus_imapd_installed=1;}
 		
+	
+		
 		
 		$html="
 		<div id='StrictADDiv'>
@@ -185,15 +187,18 @@ function popup(){
 	$page=CurrentPageName();
 	$tpl=new templates();
 	$array["winbindd"]="{APP_AD_CONNECT}";
+	//$array["kerberos"]="{APP_SAMBAKERAUTH}";
 	$array["addldap"]="{users_database}";
 	
 	
 	
 	while (list ($num, $ligne) = each ($array) ){
 		
-		
+		if($num=="kerberos"){
+			$html[]=$tpl->_ENGINE_parse_body("<li><a href=\"samba.adker.php\"><span>$ligne</span></a></li>\n");
+			continue;
+		}
 		$html[]=$tpl->_ENGINE_parse_body("<li><a href=\"$page?$num=yes\"><span>$ligne</span></a></li>\n");
-		
 		//$html=$html . "<li><a href=\"javascript:LoadAjax('main_system_settings','$page?tab=$num&hostname=$hostname')\" $class>$ligne</a></li>\n";
 			
 		}
@@ -242,23 +247,12 @@ function winbindd(){
 		$ipnum4=$re[4];
 	}
 	
+	$severtype["WIN_2003"]="Windows 2003";
+	$severtype["WIN_2008AES"]="Windows 2008 with AES";		
+	
+	$form_ip=field_ipv4("ADSERVER_IP", $config["ADSERVER_IP"]);
 	
 	
-	$form_ip="
-	<table style='width:50px'>
-	<tr>
-		<td style='margin:0;padding:0' align='center' width=1%>". Field_text("ipnum1",$ipnum1,"font-size:14px;padding:3px;width:35px;text-align:center")."</td>
-		<td style='margin:0;padding:0' align='center' width=1%><strong style='font-size:16px;'>.</strong></td>
-		<td style='margin:0;padding:0' align='center' width=1%>". Field_text("ipnum2",$ipnum2,"font-size:14px;padding:3px;width:35px;text-align:center")."</td>
-		<td style='margin:0;padding:0' align='center' width=1%><strong style='font-size:16px;'>.</strong></td>
-		<td style='margin:0;padding:0' align='center' width=1%>". Field_text("ipnum3",$ipnum3,"font-size:14px;padding:3px;width:35px;text-align:center")."</td>
-		<td style='margin:0;padding:0' align='center' width=1%><strong style='font-size:16px;'>.</strong></td>
-		<td style='margin:0;padding:0' align='center' width=1%>". Field_text("ipnum4",$ipnum4,"font-size:14px;padding:3px;width:35px;text-align:center")."</td>
-	</tr>						
-		
-	</table>
-	
-	";
 	
 	$html="
 	<div class=explain>{make_samba_ad_text}</div>
@@ -278,6 +272,11 @@ function winbindd(){
 		<td>". Field_text("ADSERVER",$config["ADSERVER"],"font-size:14px;padding:3px;width:165px")."</td>
 		<td>". help_icon("{howto_ad_server}")."</td>
 	</tr>
+	<tr>
+		<td class=legend>{WINDOWS_SERVER_TYPE}:</td>
+		<td>". Field_array_Hash($severtype,"WINDOWS_SERVER_TYPE",$config["WINDOWS_SERVER_TYPE"],"style:font-size:14px;padding:3px")."</td>
+		<td>&nbsp;</td>
+	</tr>		
 	<tr>
 		<td class=legend style='font-size:12px'>{activedirectory_ipaddr}:</td>
 		<td style='margin:0;padding:0'>$form_ip</td>
@@ -348,17 +347,17 @@ function winbindd(){
 		
 		function SaveAdSettings(){
 			var XHR = new XHRConnection();
-			var ipnum1=document.getElementById('ipnum1').value;
-			var ipnum2=document.getElementById('ipnum2').value;
-			var ipnum3=document.getElementById('ipnum3').value;
-			var ipnum4=document.getElementById('ipnum4').value;
-			
 			XHR.appendData('ADSERVER',document.getElementById('ADSERVER').value);
 			XHR.appendData('ADDOMAIN',document.getElementById('ADDOMAIN').value);
 			XHR.appendData('ADADMIN',document.getElementById('ADADMIN').value);
 			XHR.appendData('PASSWORD',document.getElementById('PASSWORD').value);
-			XHR.appendData('ADSERVER_IP',ipnum1+'.'+ipnum2+'.'+ipnum3+'.'+ipnum4);
+			XHR.appendData('ADSERVER_IP',document.getElementById('ADSERVER_IP').value);
 			XHR.appendData('WINBINDPASSWORD',document.getElementById('WINBINDPASSWORD').value);
+			XHR.appendData('WINDOWS_SERVER_TYPE',document.getElementById('WINDOWS_SERVER_TYPE').value);
+			
+			
+			
+			
 			document.getElementById('sambadimg').src='img/wait_verybig.gif';
 			XHR.sendAndLoad('$page', 'GET',X_SaveAdSettings);	
 		}	
@@ -452,6 +451,7 @@ function save(){
 		$arrayCyrus["admin"]=$_GET["ADADMIN"];
 		$arrayCyrus["password"]=$_GET["PASSWORD"];	
 		$arrayCyrus["WINBINDPASSWORD"]=$_GET["WINBINDPASSWORD"];
+		$arrayCyrus["WINDOWS_SERVER_TYPE"]=$_GET["WINDOWS_SERVER_TYPE"];
 		
 	
 	

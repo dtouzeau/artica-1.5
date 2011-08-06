@@ -224,7 +224,7 @@ function mailer_link_popup(){
 		
 	var x_MailerLinkEdit= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			YahooWin4Hide();
 			RefreshTab('emailing_campaigns');	
 		}			
@@ -276,7 +276,7 @@ function mailer_link_popup(){
 		
 	var x_MailerLinkSend= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			RefreshTab('emailing_campaigns');
 			mailerlinkInfos();	
 		}		
@@ -382,7 +382,7 @@ function mailer_settings_js(){
 		
 	var x_mailer_engine_settings_save= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			mailer_engine_settings_list();
 			RefreshTab('emailing_campaigns');
 			YahooWin5Hide();

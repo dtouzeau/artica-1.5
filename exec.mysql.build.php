@@ -43,6 +43,10 @@ $sock=new sockets();
 $q=new mysqlserver();
 $MysqlConfigLevel=$sock->GET_INFO("MysqlConfigLevel");
 if(!is_numeric($MysqlConfigLevel)){$MysqlConfigLevel=0;}
+$EnableZarafaTuning=$sock->GET_INFO("EnableZarafaTuning");
+if(!is_numeric($EnableZarafaTuning)){$EnableZarafaTuning=0;}
+$users=new usersMenus();
+if($users->ZARAFA_INSTALLED){if($EnableZarafaTuning==1){$MysqlConfigLevel=-1;}}
 
 if($MysqlConfigLevel>0){
 	if($MysqlConfigLevel==1){
@@ -74,6 +78,13 @@ if($MysqlConfigLevel==0){
 		$datas=$q->BuildConf();
 	}
 }
+
+if($MysqlConfigLevel==-1){
+	echo "Starting......: Mysql my.cnf........: SWITCH TO PERSONALIZED CONFIG.\n";
+	$datas=$q->BuildConf();
+}
+
+
 
 if(!is_file($argv[1])){echo "\nStarting......:Mysql my.cnf........: unable to stat {$argv[1]}\n";die();}
 

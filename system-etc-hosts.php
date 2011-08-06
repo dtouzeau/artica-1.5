@@ -112,7 +112,7 @@ function popup(){
 	
 	var x_DisableEtcHostsSave=function (obj) {
 			tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}
+			if(tempvalue.length>3){alert(tempvalue);}
 			ParEtcHosts();
 			idhostsList();
 	    }

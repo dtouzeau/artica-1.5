@@ -125,8 +125,11 @@
 		
 		var x_netadd= function (obj) {
 			var results=obj.responseText;
-			if(results.length>0){alert(results);}
+			if(results.length>3){alert(results);}
 			YahooWin2(500,'$page?content=network','$your_network');
+			if(document.getElementById('main_squid_quicklinks_config')){RefreshTab('main_squid_quicklinks_config');}
+			if(document.getElementById('squid_main_config')){RefreshTab('squid_main_config');}
+			
 		}
 		
 		function netadd(){
@@ -1410,9 +1413,11 @@ echo $tpl->_ENGINE_parse_body($html,'squid.index.php');
 }
 
 	function plugins_js(){
+		$tpl=new templates();
+		$title=$tpl->_ENGINE_parse_body("{activate_plugins}");
 		$page=CurrentPageName();
 		echo "
-		YahooWin2(570,'$page?content=plugins','Plugins...','');
+		YahooWin2(570,'$page?content=plugins','$title','');
 		
 		
 		var x_save_plugins= function (obj) {
@@ -1611,6 +1616,8 @@ function plugins_popup(){
 		$dans=null;
 		$cicap=null;
 		$squidclamav=null;
+		$squidguard=null;
+		$adzapper=null;
 	}
 	
 	$tr[]=$squidclamav;
@@ -1650,7 +1657,7 @@ if($t<2){
 		
 
 		
-$html="<H1>{activate_plugins}</H1>$form";
+$html="$form";
 		
 		$tpl=new templates();
 		echo $tpl->_ENGINE_parse_body($html,'squid.index.php');		
@@ -1927,7 +1934,7 @@ function network_popup(){
 		
 		
 		$pattern_form="
-		<table style='width:100%;padding:3px;border:1px solid #CCCCCC'>
+		<table class=form>
 		<tr>
 			<td class=legend style='font-size:14px'>{pattern}:</td>
 			<td>". Field_text("FREE_FIELD",null,"font-size:14px;padding:3px",null,null,null,false,"SquidnetaddSingleCheck(event)")."</td>
@@ -1937,7 +1944,7 @@ function network_popup(){
 		";
 		
 		$netcacl_form="
-		<table style='width:100%;padding:3px;border:1px solid #CCCCCC'>
+		<table class=form>
 		<tr>
 			<td class=legend style='font-size:14px' nowrap>{ip_address}:</td>
 			<td>". Field_text("IP_NET_FIELD",null,"font-size:14px;padding:3px",null,null,null,false,"SquidnetMaskCheck(event)")."</td>
@@ -1980,7 +1987,7 @@ function network_popup(){
 			<div style='padding:2px;border:1px solid #CCCCCC;height:225px;overflow:auto'>$list</div></td>
 			<td valign='top' style='padding:4xp'>
 				<H3>{squid_net_simple}</H3>
-				<table style='width:100%;padding:3px;border:1px solid #CCCCCC'>
+				<table class=form>
 					<tr>
 					<td class=legend nowrap style='font-size:13px'>{from_ip}:</td>
 					<td>" . Field_text('from_ip',null,'width:120px;font-size:13px;padding:3px',null,null,null,false,"SquidnetaddCheck(event)")."</td>
@@ -2010,7 +2017,7 @@ function network_popup(){
 		<script>
 		var x_SquidnetMaskCheck=function(obj){
      		var tempvalue=obj.responseText;
-      		if(tempvalue.length>0){
+      		if(tempvalue.length>3){
      			document.getElementById('IP_NET_CALC_TEXT').innerHTML=tempvalue;
      			document.getElementById('IP_NET_CALC').value=tempvalue;
 			}
@@ -2020,7 +2027,7 @@ function network_popup(){
 		var XHR = new XHRConnection();
 		XHR.appendData('SquidnetMaskCheckIP',document.getElementById('IP_NET_FIELD').value);
 		XHR.appendData('SquidnetMaskCheckMask',document.getElementById('IP_NET_MASK').value);
-		document.getElementById('IP_NET_CALC_TEXT').innerHTML='<center style=\"width:100%\"><img src=img/wait.gif></center>';
+		AnimateDiv('IP_NET_CALC_TEXT');
 		XHR.sendAndLoad('$page', 'GET',x_SquidnetMaskCheck);		
 	
 	}
@@ -2028,7 +2035,7 @@ function network_popup(){
 	function SquidnetMaskAdd(){
 		var XHR = new XHRConnection();
 		XHR.appendData('add-ip-single',document.getElementById('IP_NET_CALC').value);
-		document.getElementById('squid_network_id').innerHTML='<center style=\"width:100%\"><img src=img/wait_verybig.gif></center>';
+		AnimateDiv('squid_network_id');
 		XHR.sendAndLoad('$page', 'GET',x_netadd);
 	}
 	
@@ -2087,7 +2094,7 @@ function auth_whitelist_popup(){
 	
 		var x_WhiteListAuthAdd=function(obj){
      		var tempvalue=obj.responseText;
-      		if(tempvalue.length>0){alert(tempvalue);}
+      		if(tempvalue.length>3){alert(tempvalue);}
 			WhiteListAuthList();
 		}	
 

@@ -31,7 +31,7 @@ function js(){
 	
 	function x_SimpleSearchAddComputerPath(obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){
+		if(tempvalue.length>3){
 			alert(tempvalue);
 			SimpleSharePathList();
 			return;
@@ -113,7 +113,7 @@ function popup(){
 	
 	function x_SimpleSearchAddComputer(obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){
+		if(tempvalue.length>3){
 			alert(tempvalue);
 			SimpleShareAddCompForm();
 			return;

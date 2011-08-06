@@ -117,7 +117,7 @@ if(document.getElementById('$md')){
 
 var x_FetchMailEnable= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue)}
+	if(tempvalue.length>3){alert(tempvalue)}
     LoadFetchIndex();
 	}
 
@@ -131,7 +131,7 @@ function FetchMailEnable(){
 
 var x_ReloadFetchMail= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue)}
+	if(tempvalue.length>3){alert(tempvalue)}
 	}
 
 function ReloadFetchMail(){

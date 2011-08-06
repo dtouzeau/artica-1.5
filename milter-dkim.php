@@ -192,7 +192,7 @@ function config(){
 <script>
 var x_SaveMilterDKIMForm= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue)};
+	if(tempvalue.length>3){alert(tempvalue)};
 	RefreshTab('MILTERDKIM_TABS');
 	DisableFieldFormDKIM();	
 }	
@@ -297,7 +297,7 @@ function config_nokey(){
 	
 	var x_generate_a_signing_key= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			RefreshTab('MILTERDKIM_TABS');	
 		}		
 	

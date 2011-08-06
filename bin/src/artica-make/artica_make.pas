@@ -105,6 +105,8 @@ var
    drupal7:tsetup_drupal7;
    openemm:tsetup_openemm;
    mysqlnd:tsetup_mysqlnd;
+   sexport:Tstringlist;
+
 begin
 
 
@@ -123,6 +125,17 @@ begin
 
   zinstall.INSTALL_PROGRESS(ParamStr(1),'{checking}');
   zinstall.INSTALL_STATUS(ParamStr(1),5);
+
+  sexport:=tstringlist.Create;
+  sexport.Add('#!/bin/sh');
+  sexport.Add('export LD_LIBRARY_PATH="/lib:/lib64:/usr/lib:/usr/lib64"');
+  sexport.Add('export LDFLAGS="-L/lib -L/usr/local/lib -L/usr/lib/libmilter -L/usr/lib"');
+  sexport.Add('export CPPFLAGS="-I/usr/include/ -I/usr/local/include -I/usr/include/libpng12 -I/usr/include/sasl"');
+  sexport.Add('export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/bin/X11');
+  sexport.SaveToFile('/tmp/export.sh');
+  fpsystem('/bin/chmod 777 /tmp/export.sh');
+  fpsystem('/tmp/export.sh');
+
   sys:=Tsystem.Create;
 
    if ParamStr(1)='--db-ver' then begin
@@ -189,6 +202,16 @@ begin
        zinstall.EMPTY_CACHE();
        halt(0);
  end;
+
+
+  if ParamStr(1)='APP_OPENEMM_SENDMAIL' then begin
+       openemm:=tsetup_openemm.Create();
+       openemm.sendmail_install();
+       zinstall.EMPTY_CACHE();
+       halt(0);
+ end;
+
+
 
  if ParamStr(1)='APP_TOMCAT6' then begin
        openemm:=tsetup_openemm.Create();
@@ -593,7 +616,7 @@ begin
    end;
 
     if ParamStr(1)='APP_MSKTUTIL' then begin
-       fpsystem('/usr/share/artica-postfix/bin/setup-ubuntu --check-squid');
+       fpsystem('/usr/share/artica-postfix/bin/setup-ubuntu --check-base-system');
        squid:=tsetup_squid.Create;
        squid.msktutil();
        zinstall.EMPTY_CACHE();

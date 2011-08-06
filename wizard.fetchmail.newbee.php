@@ -53,7 +53,7 @@ function start_js(){
 	
 	var x_FetchmailAddAliase= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)};
+		if(tempvalue.length>3){alert(tempvalue)};
 		LoadAjax('FetchmailAddAliaseDIV','$page?page-fetchmail-aliases-list=$uid');
 	}		
 	
@@ -110,7 +110,7 @@ function start_js(){
 	
 var x_FetchmailSaveAccount= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue)};
+	if(tempvalue.length>3){alert(tempvalue)};
 	YahooWin4Hide();
 	DisplayAccount();
 }		
@@ -143,7 +143,7 @@ var x_FetchmailSaveAccount= function (obj) {
 	
 var x_DeleteFetchAccount= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue)};
+	if(tempvalue.length>3){alert(tempvalue)};
 	DisplayAccount();
 }	
 	

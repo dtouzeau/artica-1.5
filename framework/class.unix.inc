@@ -659,6 +659,7 @@ function RESTART_SYSLOG(){
 function send_email_events($subject,$text,$context,$date=null,$attached_files=array(),$recipient=null){
 	
 	$arr_APP=array(
+		"APP_OPENEMM_SENDMAIL"=>"SendMail for OpenEMM service",
 		"APP_OPENEMM"=>"OpenEMM service",
 		"APP_TOMCAT"=>"Tomcat Web server",
 		"APP_GREENSQL"=>"GreenSQL Firewall",
@@ -2586,6 +2587,19 @@ public function LOCATE_APACHE_CTL(){
 	if(is_file($apachectl)){return $apachectl;}
 	$apachectl=$this->find_program("apache2ctl");
 	if(is_file($apachectl)){return $apachectl;}	
+}
+
+public function SAMBA_GetNetAdsInfos(){
+	$unix=new unix();
+	$net=$this->LOCATE_NET_BIN_PATH();
+	if(!is_file($net)){return array();}
+	exec("$net ads info 2>&1",$results);
+	while (list ($index, $line) = each ($results) ){
+		if(preg_match("#^(.+?):(.+)#",trim($line),$re)){
+			$array[trim($re[1])]=trim($re[2]);
+		}
+	}
+	return $array;
 }
 
 public function LOCATE_STUNNEL_BIN(){

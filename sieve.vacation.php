@@ -35,7 +35,7 @@ function SieveVacantionPop(){
 	
 	function x_SieveVacantionSave(obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		SieveVacantionPop();
 		}		
 	

@@ -276,7 +276,7 @@ $html="
 
 	var x_SaveDNSMASQMainConf= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		RefreshMainForm();
 	}
 
@@ -297,7 +297,7 @@ $html="
 	var x_EnableDNSMASQSaveBack= function (obj) {
 		RefreshTab('main_config_dnsmasq');
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		Loadjs('dnsmasq.index.php');
 		
 	}		

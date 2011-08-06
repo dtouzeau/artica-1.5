@@ -36,7 +36,7 @@ function js(){
 	
 var x_JoomlaSaveUserPriv= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue)};
+	if(tempvalue.length>3){alert(tempvalue)};
 	JoomlaUserLoad();
 	}
 

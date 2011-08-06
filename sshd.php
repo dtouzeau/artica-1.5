@@ -93,7 +93,7 @@ function js(){
 		
 var x_DeleteBackupTask= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)};
+		if(tempvalue.length>3){alert(tempvalue)};
 		BACKUP_TASKS_LOAD();
 		if(document.getElementById('wizard-backup-intro')){
 			WizardBackupLoad();
@@ -102,7 +102,7 @@ var x_DeleteBackupTask= function (obj) {
 
 var x_DELETE_BACKUP_SOURCES= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)};
+		if(tempvalue.length>3){alert(tempvalue)};
 		BACKUP_TASKS_LOAD();
 		YahooWin3Hide();
 	 }		 
@@ -128,7 +128,7 @@ var x_DELETE_BACKUP_SOURCES= function (obj) {
 		
 	var x_BACKUP_SOURCES_SAVE_OPTIONS= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			BACKUP_TASKS_SOURCE(mem_taskid);
 			
 		 }		
@@ -151,7 +151,7 @@ var x_DELETE_BACKUP_SOURCES= function (obj) {
 		
 	var x_BACKUP_TASK_RUN= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			alert('$apply_upgrade_help');
 			BACKUP_TASKS_LOAD();
 		 }		
@@ -381,7 +381,12 @@ function parameters(){
 		<td valign='top' class=legend style='font-size:13px'>{listen_port}:</td>
 		<td style='font-size:13px'>". Field_text("Port",$sshd->main_array["Port"],"font-size:13px;padding:3x;width:60px")."</td>
 		<td width=1%>&nbsp;</td>
-	</tr>	
+	</tr>
+	<tr>
+		<td valign='top' class=legend style='font-size:13px'>{StrictModes}:</td>
+		<td style='font-size:13px'>". Field_checkbox("StrictModes","yes",$sshd->main_array["StrictModes"])."</td>
+		<td width=1%>". help_icon("{StrictModes_text}")."</td>
+	</tr>		
 	<tr>
 		<td valign='top' class=legend style='font-size:13px'>{PermitRootLogin}:</td>
 		<td style='font-size:13px'>". Field_checkbox("PermitRootLogin","yes",$sshd->main_array["PermitRootLogin"])."</td>
@@ -402,6 +407,12 @@ function parameters(){
 		<td style='font-size:13px'>". Field_checkbox("PasswordAuthentication","yes",$sshd->main_array["PasswordAuthentication"])."</td>
 		<td width=1%>". help_icon("{PasswordAuthentication_text}")."</td>
 	</tr>
+	<tr>
+		<td valign='top' class=legend style='font-size:13px'>{PubkeyAuthentication}:</td>
+		<td style='font-size:13px'>". Field_checkbox("PubkeyAuthentication","yes",$sshd->main_array["PubkeyAuthentication"])."</td>
+		<td width=1%>". help_icon("{PubkeyAuthentication_text}")."</td>
+	</tr>
+			
 	
 	
 	
@@ -459,7 +470,7 @@ function parameters(){
 	
 		var x_SaveSSHDConfig= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			RefreshTab('main_config_openssh');
 			
 		 }		
@@ -477,6 +488,9 @@ function parameters(){
 			if(document.getElementById('UsePAM').checked){XHR.appendData('UsePAM','yes');}else{XHR.appendData('UsePAM','no');}
 			if(document.getElementById('ChallengeResponseAuthentication').checked){XHR.appendData('ChallengeResponseAuthentication','yes');}else{XHR.appendData('ChallengeResponseAuthentication','no');}
 			if(document.getElementById('PasswordAuthentication').checked){XHR.appendData('PasswordAuthentication','yes');}else{XHR.appendData('PasswordAuthentication','no');}
+			if(document.getElementById('PubkeyAuthentication').checked){XHR.appendData('PubkeyAuthentication','yes');}else{XHR.appendData('PubkeyAuthentication','no');}
+			if(document.getElementById('StrictModes').checked){XHR.appendData('StrictModes','yes');}else{XHR.appendData('StrictModes','no');}
+			
 			
 			
 			document.getElementById('sshdconfigid').innerHTML='<center><img src=img/wait_verybig.gif></center>';		
@@ -555,7 +569,7 @@ $html=$html."</table></center>
 <script>
 		var x_AddSSHDNet= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			RefreshListenAddress();
 			
 		 }		
@@ -683,7 +697,7 @@ function popup_keys(){
 	<script>
 		var x_GenerateSSHDKeyPair= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			GetSSHDFingerprint();
 			
 		 }		
@@ -691,7 +705,7 @@ function popup_keys(){
 		var x_GetSSHDFingerprint= function (obj) {
 			var tempvalue=obj.responseText;
 			document.getElementById('fingerprint').innerHTML='';
-			if(tempvalue.length>0){
+			if(tempvalue.length>3){
 				document.getElementById('fingerprint').innerHTML=tempvalue;
 			}
 		 }			 

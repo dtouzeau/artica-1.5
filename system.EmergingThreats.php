@@ -140,7 +140,7 @@ function enable_form(){
 	<script>
 	function x_SaveEnableEmergingThreats(obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}
+		if(tempvalue.length>3){alert(tempvalue);}
 		RefreshTab('main_config_EmergingThreats');
 	}	
 	

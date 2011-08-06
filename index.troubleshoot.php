@@ -107,7 +107,7 @@ echo $html;
 
 function troubleshoot_start(){
 	
-	$html="<H1>{troubleshoot}</H1>
+	$html="
 	<table style='width:100%'>
 	<tr>
 		

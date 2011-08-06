@@ -1298,7 +1298,7 @@ function changecache_js(){
 	
 	var x_SaveNewChache= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)};
+		if(tempvalue.length>3){alert(tempvalue)};
 		RefreshTab('squid_main_config');
 		YahooWinHide();
 	}	
@@ -1333,7 +1333,7 @@ $page=CurrentPageName();
 	
 var x_SaveTransparentProxy= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue)};
+	if(tempvalue.length>3){alert(tempvalue)};
 	TransparentIndex();
 }	
 	

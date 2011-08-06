@@ -65,7 +65,7 @@ LocalBinVersion:int64;
 CODE_NAME:string;
 begin
 
- CODE_NAME:='APP_MSKUTIL';
+ CODE_NAME:='APP_MSKTUTIL';
  squid:=tsquid.Create;
  logs:=Tlogs.Create;
  SYS:=Tsystem.Create();
@@ -77,7 +77,11 @@ begin
        install.INSTALL_PROGRESS(CODE_NAME,'{installed}');
        exit;
   end;
- source_folder:=libs.COMPILE_GENERIC_APPS('msktutil');
+  install.INSTALL_PROGRESS(CODE_NAME,'{downloading}');
+  install.INSTALL_STATUS(CODE_NAME,30);
+
+
+  source_folder:=libs.COMPILE_GENERIC_APPS('msktutil');
   if not DirectoryExists(source_folder) then begin
      writeln('Install msktutil failed...');
      install.INSTALL_STATUS(CODE_NAME,110);
@@ -85,7 +89,6 @@ begin
      exit;
   end;
   SetCurrentDir(source_folder);
-
   install.INSTALL_PROGRESS(CODE_NAME,'{compiling}');
   if FileExists(source_folder+'/msktutil_0.3.16-7.diff') then fpsystem('patch < '+source_folder+'/msktutil_0.3.16-7.diff');
 

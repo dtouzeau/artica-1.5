@@ -470,7 +470,7 @@ mysqlbin:=SYS.LOCATE_mysqld_bin();
   if not SYS.PROCESS_EXIST(pid) then begin
      writeln('Stopping mysql...............: success');
   end else begin
-  writeln('Stopping mysql...............: failed');
+      writeln('Stopping mysql...............: failed');
   end;
 
   
@@ -575,6 +575,8 @@ var
    mysql_install_db:string;
    count:integer;
    ChangeMysqlDir:string;
+   bind_address,bind_address2:string;
+   MysqlRemoveidbLogs:integer;
 
 begin
 
@@ -660,6 +662,12 @@ ForceDirectories('/var/log/mysql');
    if length(mysql_user)=0 then mysql_user:='mysql';
    if length(logbin)=0 then logbin:=SERVER_PARAMETERS('log');
 
+   bind_address:='';
+   bind_address2:=SERVER_PARAMETERS('bind-address');
+   if length(trim(bind_address2))=0 then begin
+      bind_address:=' --bind-address=127.0.0.1';
+      bind_address2:='127.0.0.1';
+   end;
 
    datadir:=SERVER_PARAMETERS('datadir');
    logbin:=ExtractFileDir(logbin);
@@ -677,6 +685,7 @@ ForceDirectories('/var/log/mysql');
    logs.DebugLogs('Starting......: pid-file............:' +pid_file);
    logs.DebugLogs('Starting......: LOGS ENABLED........:' +IntTostr(EnableMysqlLog));
    logs.DebugLogs('Starting......: Daemon..............:' +daemon_bin_path);
+   logs.DebugLogs('Starting......: Bind address........:' +bind_address2);
 
    if length(logbin)>0 then logs.OutputCmd('/bin/chown -R '+mysql_user+':'+mysql_user+' '+logbin);
    forcedirectories('/var/run/mysqld');
@@ -693,9 +702,11 @@ ForceDirectories('/var/log/mysql');
    end;
 
 
-
-
-
+     if not TryStrToINt(SYS.GET_INFO('MysqlRemoveidbLogs'),MysqlRemoveidbLogs) then MysqlRemoveidbLogs:=0;
+     if MysqlRemoveidbLogs=1 then begin
+        fpsystem('/bin/mv /var/lib/mysql/ib_logfile* /tmp/');
+        sys.set_INFO('MysqlRemoveidbLogs','0');
+     end;
    if DirectoryExists(datadir) then logs.OutputCmd('/bin/chown -R '+mysql_user+':'+mysql_user+' '+datadir);
    CleanMyCnf();
    if(EnableMysqlLog=1) then logpathstring:=' --log=/var/log/mysql.log --log-slow-queries=/var/log/mysql-slow-queries.log --log-error=/var/log/mysql.error.log --log-warnings';
@@ -728,7 +739,7 @@ ForceDirectories('/var/log/mysql');
        logs.DebugLogs('Starting......: Mysql using innodb file per table feature');
    end;
 
-   cmd:=daemon_bin_path +logpathstring+ ' >/var/log/mysql/mysql.start.log 2>&1 &';
+   cmd:=daemon_bin_path+bind_address+logpathstring+ ' >/var/log/mysql/mysql.start.log 2>&1 &';
    fpsystem(cmd);
    pid:=PID_NUM();
    count:=0;

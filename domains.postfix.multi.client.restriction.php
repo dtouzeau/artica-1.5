@@ -80,7 +80,7 @@ function js(){
 	
 	var x_smtpd_client_restrictions_multi_save= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}
+		if(tempvalue.length>3){alert(tempvalue);}
 		{$prefix}StartPostfixPopup();
 	}		
 	

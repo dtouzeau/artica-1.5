@@ -95,25 +95,25 @@ function js(){
 		
 	var x_WizardRessource= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)};
+		if(tempvalue.length>3){alert(tempvalue)};
 		WizardRessourceShow();
 	 }	
 	 
 	var x_WizardUSBSaveRessource= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)};
+		if(tempvalue.length>3){alert(tempvalue)};
 		WizardScheduleShow();
 	 }	
 
 	var x_WizardBackupScheduleSave= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)};
+		if(tempvalue.length>3){alert(tempvalue)};
 		WizardFinish();
 	 }
 
 	 var x_WizardBackupCompile= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){
+		if(tempvalue.length>3){
 			alert(tempvalue);
 			return;
 			}
@@ -413,7 +413,7 @@ function popup_resource_automount(){
 
 	var x_AutoFSDeleteDN= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		RefreshTab('main_config_autofs');
 	}		
 	

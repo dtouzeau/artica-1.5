@@ -98,7 +98,7 @@ function js(){
 	
 	var x_MilterGreyListConfigGeneSave=function(obj){
 	      var tempvalue=obj.responseText;
-	      if(tempvalue.length>0){alert(tempvalue);}
+	      if(tempvalue.length>3){alert(tempvalue);}
 	      YahooWin2Hide();
 	}
 	
@@ -164,7 +164,7 @@ function explainThisacl(){
 
 var x_ChangeForm=function(obj){
       var tempvalue=obj.responseText;
-      if(tempvalue.length>0){
+      if(tempvalue.length>3){
           document.getElementById('addform').innerHTML=obj.responseText;
       }
 }
@@ -183,7 +183,7 @@ function ChangeForm(){
 
 	var x_SaveMilterGreyListMultiAclID= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			YahooWin2Hide();
 			LoadAjax('acllist','$page?acllist=true&hostname=$hostname&ou={$_GET["ou"]}');
 		}		

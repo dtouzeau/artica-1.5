@@ -39,7 +39,7 @@ $html="
 	
 var x_AddRouteDHCPD= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue);}
+	if(tempvalue.length>3){alert(tempvalue);}
 	LoadAjax('dhcpdroutes','$page?list=yes');
 }		
 	

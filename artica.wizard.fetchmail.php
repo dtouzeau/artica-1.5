@@ -76,7 +76,7 @@ function ssl_fingerprint_js(){
 	
 	var x_ssl_finger_js_start= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)};
+		if(tempvalue.length>3){alert(tempvalue)};
 		UserFetchMailRule($rule,'$uid');
 	}		
 	

@@ -73,7 +73,7 @@ function service_parameters(){
 	<script>
 	var x_SaveGenBackupPC=function(obj){
       var tempvalue=obj.responseText;
-      if(tempvalue.length>0){alert(tempvalue);}
+      if(tempvalue.length>3){alert(tempvalue);}
      
       
       }	
@@ -302,7 +302,7 @@ if(!is_numeric($ligne["maxpromoteday"])){$ligne["maxpromoteday"]=10000;}
 <script>
 	var x_SaveAmandaDumpRule=function(obj){
       var tempvalue=obj.responseText;
-      if(tempvalue.length>0){alert(tempvalue);document.getElementById('formAmandaCheckID').innerHTML='';return;}
+      if(tempvalue.length>3){alert(tempvalue);document.getElementById('formAmandaCheckID').innerHTML='';return;}
       YahooWin3Hide();
       LoadDumpTypes();
       }	

@@ -320,7 +320,7 @@ function database_infos(){
 	
 	var x_DeleteDB= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			YahooWin4Hide();
 			RefreshTab('emailing_campaigns');	
 		}		
@@ -481,7 +481,7 @@ function database_migrate_popup(){
 	<script>
 		var x_MigrateUsersToLdapPerform= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}
+			if(tempvalue.length>3){alert(tempvalue);}
 			YahooWin5Hide();
 			RefreshTab('emailing_campaigns');	
 		}		

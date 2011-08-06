@@ -91,7 +91,7 @@ function js(){
 		
 	var x_impasync_add=function(obj){
       var tempvalue=obj.responseText;
-      if(tempvalue.length>0){alert(tempvalue);}
+      if(tempvalue.length>3){alert(tempvalue);}
       YahooWin6Hide();
       imapsynclist();
       if(mem_ID>0){ImapSyncEdit(mem_ID);}
@@ -531,7 +531,7 @@ function adv_options_form(){
 		
 	var x_ImapSyncSaveAdv=function(obj){
 	     var tempvalue=obj.responseText;
-	     if(tempvalue.length>0){alert(tempvalue);}
+	     if(tempvalue.length>3){alert(tempvalue);}
 	     imapsync_adv($ID);
 	      
 	     }	
@@ -660,7 +660,7 @@ function folders_sync_form(){
 		
 	var x_ImapSyncAddFolder=function(obj){
 	     var tempvalue=obj.responseText;
-	     if(tempvalue.length>0){alert(tempvalue);}
+	     if(tempvalue.length>3){alert(tempvalue);}
 	     imapsync_folders($ID);
 	      
 	     }			

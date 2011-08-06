@@ -116,7 +116,7 @@ function parameters_main(){
 	<script>
 		var x_SaveEnableSSLDump=function(obj){
      	 var tempvalue=obj.responseText;
-      	if(tempvalue.length>0){alert(tempvalue);}
+      	if(tempvalue.length>3){alert(tempvalue);}
      	document.getElementById('EnableSSLBump').innerHTML='';
      	RefreshTab('main_config_sslbump');
      
@@ -171,7 +171,7 @@ function whitelist_popup(){
 	
 	var x_sslBumbAddwl=function(obj){
      	var tempvalue=obj.responseText;
-      	if(tempvalue.length>0){alert(tempvalue);}
+      	if(tempvalue.length>3){alert(tempvalue);}
      	document.getElementById('ssl-bump-wl-id').innerHTML='';
      	sslBumpList();
      	}	
@@ -274,7 +274,7 @@ function whitelist_list(){
 	var row_id=0;
 	var x_sslbumpEnableW=function(obj){
      	var tempvalue=obj.responseText;
-      	if(tempvalue.length>0){alert(tempvalue);}
+      	if(tempvalue.length>3){alert(tempvalue);}
      	}	
 	
 		function sslbumpEnableW(idname){
@@ -295,7 +295,7 @@ function whitelist_list(){
 		
 	var x_sslbumpEnableW=function(obj){
      	var tempvalue=obj.responseText;
-      	if(tempvalue.length>0){alert(tempvalue);return;}
+      	if(tempvalue.length>3){alert(tempvalue);return;}
       	sslBumpList();
       	}			
 

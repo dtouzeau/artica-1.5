@@ -2539,7 +2539,7 @@ function DisableLDAP(){
 
 var X_ChangeGlobalAdminPassword= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue);}
+	if(tempvalue.length>3){alert(tempvalue);}
 	MyHref(\"logoff.php\");
 	}
 	
@@ -2662,7 +2662,7 @@ function EnableDisableProxySetts(){
 
 var X_SaveJsProxyInterface= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue);}
+	if(tempvalue.length>3){alert(tempvalue);}
 	document.getElementById('js-proxy-interface-div').innerHTML='';
 	YahooWin2Hide();
 	}
@@ -3684,7 +3684,7 @@ function LDAP_SYNCPROV(){
 
 		var x_SaveSyncProv= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			RefreshTab('main_config_ldap_adv');
 		}
 				
@@ -3758,7 +3758,7 @@ function js_web_miniadm(){
 	<script>
 		var x_DenyMiniWebFromStandardPortSave= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			
 		}
 				

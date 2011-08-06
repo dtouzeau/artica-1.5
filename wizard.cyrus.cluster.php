@@ -53,13 +53,13 @@ function js(){
 	
 	var x_WizardCyrusReplicaSave= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)};
+		if(tempvalue.length>3){alert(tempvalue)};
 		WizardCyrusClusterInfos();
 	 }	
 	 
 	var x_WizardClusterBuild= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);return;};
+		if(tempvalue.length>3){alert(tempvalue);return;};
 		Loadjs('cyrus.clusters.php');
 		YahooWin2Hide();
 	 }		 

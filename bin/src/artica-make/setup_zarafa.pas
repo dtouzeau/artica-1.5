@@ -848,7 +848,7 @@ if arch=64 then begin
       install.INSTALL_PROGRESS(CODE_NAME,'{success}');
       libs.NOTIFICATION('Success install zarafa','Artica make has successfully installed Zarafa','mailbox');
       fpsystem('/etc/init.d/artica-postfix restart zarafa');
-      fpsystem('/etc/init.d/artica-postfix restart apache');
+      fpsystem('/etc/init.d/artica-postfix restart apachesrc');
       fpsystem('/etc/init.d/artica-postfix restart zarafa-web');
       exit;
 end;
@@ -1017,6 +1017,17 @@ l.add('/usr/lib/libicalmapi.so.1');
 l.add('/usr/lib/libicalvcal.so.0');
 l.add('/usr/lib/libfreebusy.a');
 l.add('/usr/lib/libcommon_mapi.so');
+l.add('/usr/lib/libinetmapi.so.1.0.0');
+l.add('/usr/lib/php5/20090626/mapi.so');
+l.add('/usr/lib/libicalmapi.so');
+l.add('/usr/lib/libicalmapi.so.1');
+l.add('/usr/lib/libicalmapi.so.1.0.0');
+l.add('/usr/lib/libinetmapi.so');
+l.add('/usr/lib/libinetmapi.so.1');
+l.add('/usr/lib/libinetmapi.so.1.0.0');
+l.add('/usr/lib/libmapi.so');
+l.add('/usr/lib/libmapi.so.0');
+l.add('/usr/lib/libmapi.so.0.0.0');
 
 
 

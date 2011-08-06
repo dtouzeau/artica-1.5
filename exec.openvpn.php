@@ -16,7 +16,13 @@ $GLOBALS["CLASS_SOCKETS"]=new sockets();
 
 if(is_array($argv)){if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["VERBOSE"]=true;$GLOBALS["debug"]=true;$GLOBALS["DEBUG"]=true;ini_set('html_errors',0);ini_set('display_errors', 1);ini_set('error_reporting', E_ALL);}}
 if($GLOBALS["VERBOSE"]){echo "Debug mode TRUE for {$argv[1]}\n";}
+$users=new usersMenus();
+if($users->KASPERSKY_WEB_APPLIANCE){die();}
+
 $openvpn=new openvpn();
+
+
+
 if(isset($openvpn->main_array["GLOBAL"]["IPTABLES_ETH"])){$GLOBALS["IPTABLES_ETH"]=$openvpn->main_array["GLOBAL"]["IPTABLES_ETH"];}
 if($GLOBALS["IPTABLES_ETH"]==null){$GLOBALS["IPTABLES_ETH"]=IPTABLES_ETH_FIX();}
 

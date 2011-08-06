@@ -67,19 +67,19 @@ function js(){
 		
 	var x_WizardKasSMTPDomain= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)};
+		if(tempvalue.length>3){alert(tempvalue)};
 		WizardKasSMTPDomainShow();
 	 }	
 
 	var x_WizardNetwork= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)};
+		if(tempvalue.length>3){alert(tempvalue)};
 		WizardNetworkShow();
 	 }	
 
 	var x_WizardFinish= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)};
+		if(tempvalue.length>3){alert(tempvalue)};
 		WizardFinishShow();
 	 }
 
@@ -91,7 +91,7 @@ function CloseTimeOut(){
 
 	var x_WizardCompileNow= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){
+		if(tempvalue.length>3){
 			document.getElementById('wizard_compile_logs').innerHTML=tempvalue;
 		}
 

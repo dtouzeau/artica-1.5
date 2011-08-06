@@ -46,7 +46,7 @@ function popup(){
 	<script>
 		var x_SaveFreeze= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			YahooWin3Hide();
 			if(document.getElementById('postfix-multi-servers-listed')){
 				RefreshPostfixMultiList();

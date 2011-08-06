@@ -580,6 +580,7 @@ $cpulimit=trim($sock->GET_INFO("cpulimit"));
 $cpuLimitEnabled=trim($sock->GET_INFO("cpuLimitEnabled"));
 $SystemV5CacheEnabled=trim($sock->GET_INFO("SystemV5CacheEnabled"));
 $NoDryReboot=$sock->GET_INFO("NoDryReboot");
+$EnableBandwithCalculation=$sock->GET_INFO("EnableBandwithCalculation");
 
 if(strlen(trim($SystemV5CacheEnabled))==0){$SystemV5CacheEnabled=0;}
 if(!is_numeric($NoDryReboot)){$NoDryReboot=0;}
@@ -718,8 +719,11 @@ $html="
 			<td>" . Field_checkbox("NoDryReboot",1,$NoDryReboot,"{enable_disable}")."</td>
 			<td>" . help_icon("{NoDryReboot_explain}")."</td>
 		</tr>
-		
-		
+		<tr>
+			<td nowrap width=1% align='right' class=legend>{EnableBandwithCalculation}:</td>
+			<td>" . Field_checkbox("EnableBandwithCalculation",1,$EnableBandwithCalculation,"{enable_disable}")."</td>
+			<td>" . help_icon("{EnableBandwithCalculation_explain}")."</td>
+		</tr>		
 		$backupmailsize
 		<tr>
 			<td nowrap width=1% align='right' class=legend>{MaxEventsInDatabase} (mail):</td>
@@ -1000,6 +1004,8 @@ if(isset($_GET["NoDryReboot"])){
 	$sock->SET_INFO('NoDryReboot',$_GET["NoDryReboot"]);
 	$sock->getFrameWork("services.php?syslogger=yes");
 }
+
+if(isset($_GET["EnableBandwithCalculation"])){$sock->SET_INFO('EnableBandwithCalculation',$_GET["EnableBandwithCalculation"]);}
 
 
 

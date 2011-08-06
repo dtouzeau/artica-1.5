@@ -122,13 +122,13 @@ function keywords_list(){
 	<script>
 	var x_SimpleKeyWordDelete= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		spamass_keywords_refresh();
 	}	
 	
 	var x_SimpleKeyWordDisable= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		
 	}		
 	
@@ -260,7 +260,7 @@ function keywords_edit(){
 	
 	var x_SaveEditKeyWord= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)};
+		if(tempvalue.length>3){alert(tempvalue)};
 		YahooWin4Hide();
 		spamass_keywords_refresh();
 	}			
@@ -330,7 +330,7 @@ function keywords_add_popup(){
 	
 	var x_KeyWordsSave= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)};
+		if(tempvalue.length>3){alert(tempvalue)};
 		YahooWin4Hide();
 		spamass_keywords_refresh();
 	}			

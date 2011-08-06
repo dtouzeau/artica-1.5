@@ -120,7 +120,7 @@ function tree_js(){
 	$html="
 		var x_AddTreeDedupFolder= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			RefreshFolder('$path','$id');
 			
 		}	
@@ -244,7 +244,7 @@ $page=CurrentPageName();
 
 		var x_SaveLessFSReplicConfig= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			RefreshTab('main_lessfs_config');
 			
 		}	
@@ -386,7 +386,7 @@ function settings(){
 
 		var x_SaveLessFSConfig= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			RefreshTab('main_lessfs_config');
 			
 		}	
@@ -434,7 +434,7 @@ function folders(){
 	
 		var x_AddDedupFolder= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			RefreshDedupFolders();
 			
 		}	

@@ -1412,7 +1412,11 @@ function SQUID_FORCE_UPGRADE(){
 }
 
 function artica_update(){
-	sys_THREAD_COMMAND_SET( "/usr/share/artica-postfix/bin/artica-update --update --force");
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim("$nohup /usr/share/artica-postfix/bin/artica-update --update --force >/dev/null 2>&1 &");
+	writelogs_framework($cmd,__FUNCTION__,__FILE__,__LINE__);
+	shell_exec($cmd);
 }
 
 function SQUID_SARG_SCAN(){

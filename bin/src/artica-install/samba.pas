@@ -23,6 +23,7 @@ private
      verbose:boolean;
      SambaEnableEditPosixExtension:integer;
      EnableSambaActiveDirectory:integer;
+     EnableKerbAuth:integer;
      SambaEnabled:integer;
      DisableWinbindd:integer;
      EnableScannedOnly:integer;
@@ -118,6 +119,7 @@ begin
        SYS:=Tsystem.CReate;
        if not TryStrToInt(SYS.GET_INFO('SambaEnableEditPosixExtension'),SambaEnableEditPosixExtension) then SambaEnableEditPosixExtension:=0;
        if not TryStrToInt(SYS.GET_INFO('SambaEnabled'),SambaEnabled) then SambaEnabled:=1;
+       if not TryStrToInt(SYS.GET_INFO('EnableKerbAuth'),EnableKerbAuth) then EnableKerbAuth:=0;
        if not TryStrToInt(SYS.GET_INFO('EnableScannedOnly'),EnableScannedOnly) then EnableScannedOnly:=1;
        if not TryStrToInt(SYS.GET_INFO('DisableWinbindd'),DisableWinbindd) then DisableWinbindd:=0;
        if not TryStrToInt(SYS.GET_INFO('EnableSambaActiveDirectory'),EnableSambaActiveDirectory) then EnableSambaActiveDirectory:=0;
@@ -136,9 +138,13 @@ begin
 
        if DisableSambaFileSharing=1 then begin
              if EnableSambaActiveDirectory=0 then DisableWinbindd:=1;
+             if EnableKerbAuth=0 then DisableWinbindd:=1;
        end else begin
               if EnableSambaActiveDirectory=1 then DisableWinbindd:=0;
+              if EnableKerbAuth=1 then DisableWinbindd:=0;
        end;
+
+
 
        if not DirectoryExists('/usr/share/artica-postfix') then begin
               artica_path:=ParamStr(0);
@@ -183,16 +189,27 @@ end;
 if not TryStrToInt(SYS.GET_INFO('DisableWinbindd'),DisableWinbindd) then DisableWinbindd:=0;
 
 if FileExists(WINBIND_BIN_PATH()) then begin
+   logs.Debuglogs('Starting......: Samba winbindd is installed');
    if DisableWinbindd=0 then winbind:=' winbind';
    if TypeOfSamba=3 then winbind:=' winbind';
+   if EnableKerbAuth=1 then winbind:=' winbind';
+end else begin
+       logs.Debuglogs('Starting......: Samba winbindd is not installed');
 end;
 time:=logs.DateTimeNowSQL();
 
 
- ldap_string:=' ldap';
-if EnableSambaActiveDirectory=1 then ldap_string:='';
+ldap_string:=' ldap';
 ForceDirectories('/etc/samba/nsswitch.save');
 fpsystem('/bin/cp /etc/nsswitch.conf /etc/samba/nsswitch.save/nsswitch.conf.'+logs.MD5FromString(time)+'.bak');
+
+if FileExists('/lib/libnss_winbind.so.2') then begin
+   if not FileExists('/lib/libnss_winbind.so') then begin
+      logs.Debuglogs('Starting......: Samba winbindd linking libnss_winbind.so.2 -> libnss_winbind.so');
+      fpsystem('/bin/ln -s /lib/libnss_winbind.so.2 /lib/libnss_winbind.so');
+      if FileExists('/lib/libnss_winbind.so') then logs.NOTIFICATION('Reboot required...','Winbindd library has been linked, you should reboot your server to make effects','system');
+   end;
+end;
 l:=TstringList.Create;
 l.Add('# /etc/nsswitch.conf');
 l.Add('#');
@@ -1343,112 +1360,12 @@ end;
 
 
   ldap_conf.free;
+
+  fpsystem(SYS.LOCATE_PHP5_BIN()+'  /usr/share/artica-postfix/exec.pam.php --build');
+
   PAM_LDAP_SECRET();
 
 
-
-
-
-  
-  l.Add('@include common-auth');
-  l.Add('@include common-account');
-  l.Add('@include common-session');
-  logs.Debuglogs('pam_ldap_conf:: saving /etc/pam.d/samba');
-  l.SaveToFile('/etc/pam.d/samba');
-  l.Clear;
-
-
-
-   l.Add('#');
-   l.Add('# /etc/pam.d/common-account - authorization settings common to all services');
-   l.Add('#');
-   l.Add('# This file is included from other service-specific PAM config files,');
-   l.Add('# and should contain a list of the authorization modules that define');
-   l.Add('# the central access policy for use on the system.  The default is to');
-   l.Add('# only deny service to users whose accounts are expired in /etc/shadow.');
-   l.Add('#');
-   l.Add('account sufficient pam_ldap.so');
-   l.Add('account required   pam_unix.so try_first_pass');
-   logs.Debuglogs('pam_ldap_conf:: saving /etc/pam.d/common-account');
-   l.SaveToFile('/etc/pam.d/common-account');
-   l.Clear;
-
-
-
-   l.Add('#');
-   l.Add('# /etc/pam.d/common-auth - authentication settings common to all services');
-   l.Add('#');
-   l.Add('# This file is included from other service-specific PAM config files,');
-   l.Add('# and should contain a list of the authentication modules that define');
-   l.Add('# the central authentication scheme for use on the system');
-   l.Add('# (e.g., /etc/shadow, LDAP, Kerberos, etc.).  The default is to use the');
-   l.Add('# traditional Unix authentication mechanisms.');
-   l.Add('#');
-   l.Add('auth sufficient pam_ldap.so');
-   l.Add('auth	requisite	pam_unix.so nullok_secure try_first_pass');
-   l.Add('auth	optional	pam_smbpass.so migrate');
-   logs.Debuglogs('pam_ldap_conf:: saving /etc/pam.d/common-auth');
-   l.SaveToFile('/etc/pam.d/common-auth');
-   l.Clear;
-
-   l.Add('#%PAM-1.0');
-   l.Add('');
-   l.Add('#@include common-auth');
-   l.Add('#@include common-account');
-   l.Add('auth    sufficient      pam_unix.so ');
-   l.Add('auth    required        pam_unix.so');
-   l.Add('session required pam_permit.so');
-   l.Add('session required pam_limits.so');
-   l.SaveToFile('/etc/pam.d/sudo');
-   l.Clear;
-
-
-   l.Add('#');
-   l.Add('# /etc/pam.d/common-password - password-related modules common to all services');
-   l.Add('#');
-   l.Add('# This file is included from other service-specific PAM config files,');
-   l.Add('# and should contain a list of modules that define the services to be');
-   l.Add('# used to change user passwords.  The default is pam_unix.');
-   l.Add('');
-   l.Add('# Explanation of pam_unix options:');
-   l.Add('#');
-   l.Add('# The "nullok" option allows users to change an empty password, else');
-   l.Add('# empty passwords are treated as locked accounts.');
-   l.Add('#');
-   l.Add('# The "md5" option enables MD5 passwords.  Without this option, the');
-   l.Add('# default is Unix crypt.');
-   l.Add('#');
-   l.Add('# The "obscure" option replaces the old `OBSCURE_CHECKS_ENAB'' option in');
-   l.Add('# login.defs.');
-   l.Add('#');
-   l.Add('# You can also use the "min" option to enforce the length of the new');
-   l.Add('# password.');
-   l.Add('#');
-   l.Add('# See the pam_unix manpage for other options.');
-   l.Add('');
-   l.Add('password   sufficient  pam_ldap.so');
-   l.Add('password   requisite   pam_unix.so nullok obscure md5 try_first_pass');
-   l.Add('');
-   l.Add('# Alternate strength checking for password. Note that this');
-   l.Add('# requires the libpam-cracklib package to be installed.');
-   l.Add('# You will need to comment out the password line above and');
-   l.Add('# uncomment the next two in order to use this.');
-   l.Add('# (Replaces the `OBSCURE_CHECKS_ENAB'', `CRACKLIB_DICTPATH'')');
-   l.Add('#');
-   l.Add('# password required	  pam_cracklib.so retry=3 minlen=6 difok=3');
-   l.Add('# password required	  pam_unix.so use_authtok nullok md5 try_first_pass');
-   l.Add('');
-   l.Add('# minimally-intrusive inclusion of smbpass in the stack for');
-   l.Add('# synchronization.  If the module is absent or the passwords don''t');
-   l.Add('# match, this module will be ignored without prompting; and if the ');
-   l.Add('# passwords do match, the NTLM hash for the user will be updated');
-   l.Add('# automatically.');
-   l.Add('password   optional   pam_smbpass.so nullok use_authtok use_first_pass');
-   l.SaveToFile('/etc/pam.d/common-password');
-   l.Clear;
-
-  l.free;
-  PAM_LDAP_SECRET();
 end;
 //##############################################################################
 procedure Tsamba.StripDiezes(filepath:string);

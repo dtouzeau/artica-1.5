@@ -380,6 +380,7 @@ if(is_array($swapar)){
 
 function html_Memory_usage(){
 	include_once(dirname(__FILE__).'/class.users.menus.inc');
+	
 	$hash_mem=$this->realMemory();
 	$this->html_load_usage();
 	$mem_used_p=$hash_mem["ram"]["percent"];
@@ -393,7 +394,8 @@ function html_Memory_usage(){
 	
 	$sock=new sockets();
 	$hdparms=unserialize(base64_decode($sock->GET_INFO("HdparmInfos")));
-	
+	$EnableBandwithCalculation=$sock->GET_INFO("EnableBandwithCalculation");
+	if(!is_numeric($EnableBandwithCalculation)){$EnableBandwithCalculation=0;}
 	$users=new usersMenus();
 	$Disks=$users->disks_size;
 	$inodes=$users->disks_inodes;
@@ -587,34 +589,34 @@ function html_Memory_usage(){
 				<div style=\"width: {$swapar[0]}px; text-align: center; color: white; padding-top: 3px; padding-bottom: 3px; background-color:$swap_color;\"> </div>
 		</div>";
 	}
-	
-	$bandwith=@file_get_contents(dirname(__FILE__)."/logs/web/bandwith-mon.txt");
-	if($bandwith>0){
-		$this->meta_array["BANDWITH"]=$bandwith;
-		$convert=FormatBytes($bandwith);
-		if($bandwith>10000){$bandwith=10000;}
-		$bandwith_color="#5DD13D";
-		if($bandwith<5000){$bandwith_color="#F59C44";}
-		if($bandwith<2000){$bandwith_color="#D32D2D";}
-		$pourc=$bandwith/100;
-		$this->meta_array["BANDWITH_POURC"]=$pourc;
-		$this->meta_array["BANDWITH_COLOR"]=$bandwith_color;
-		
-		$bandwith_js="Loadjs('bandwith.stats.php')";
-		
-		$bb="<tr ". CellRollOver($bandwith_js).">
-				<td width=1% nowrap class=legend nowrap><strong style='font-size:10px'>{bandwith}:</strong></strong></td>
-				<td align='left'>
-					<div style='width:100px;background-color:white;padding-left:0px;border:1px solid $bandwith_color'>
-						<div style='width:{$pourc}px;text-align:center;color:white;padding-top:3px;padding-bottom:3px;background-color:$bandwith_color'><strong>$convert/s</strong></div>
-					</div>
-				</td>
-				<td width=1% nowrap><strong style='color:$bandwith_color'>$convert/s</strong></td>
-				</tr>";
-		
-		
+	if($EnableBandwithCalculation==1){
+		$bandwith=@file_get_contents(dirname(__FILE__)."/logs/web/bandwith-mon.txt");
+		if($bandwith>0){
+			$this->meta_array["BANDWITH"]=$bandwith;
+			$convert=FormatBytes($bandwith);
+			if($bandwith>10000){$bandwith=10000;}
+			$bandwith_color="#5DD13D";
+			if($bandwith<5000){$bandwith_color="#F59C44";}
+			if($bandwith<2000){$bandwith_color="#D32D2D";}
+			$pourc=$bandwith/100;
+			$this->meta_array["BANDWITH_POURC"]=$pourc;
+			$this->meta_array["BANDWITH_COLOR"]=$bandwith_color;
+			
+			$bandwith_js="Loadjs('bandwith.stats.php')";
+			
+			$bb="<tr ". CellRollOver($bandwith_js).">
+					<td width=1% nowrap class=legend nowrap><strong style='font-size:10px'>{bandwith}:</strong></strong></td>
+					<td align='left'>
+						<div style='width:100px;background-color:white;padding-left:0px;border:1px solid $bandwith_color'>
+							<div style='width:{$pourc}px;text-align:center;color:white;padding-top:3px;padding-bottom:3px;background-color:$bandwith_color'><strong>$convert/s</strong></div>
+						</div>
+					</td>
+					<td width=1% nowrap><strong style='color:$bandwith_color'>$convert/s</strong></td>
+					</tr>";
+			
+			
+		}
 	}
-	
 	
 	
 	$html="<table style='width:100%'>

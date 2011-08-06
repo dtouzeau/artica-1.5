@@ -37,7 +37,7 @@ function {$prefix}StartPage(){
 
 	function x_SaveSambaEnabled(obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		{$prefix}StartPage();
 		if(document.getElementById('main_smb_config')){
 			javascript:LoadAjax('main_smb_config','samba.index.php?main=yes');

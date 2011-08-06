@@ -101,7 +101,7 @@ function popup(){
 	
 	function x_DeleteBandRule(obj){
 				var tempvalue=obj.responseText;
-				if(tempvalue.length>0){alert(tempvalue);}
+				if(tempvalue.length>3){alert(tempvalue);}
 				document.getElementById('SquidBandRight').innerHTML='';
 				RefreshPanel();
 	}	
@@ -337,7 +337,7 @@ function rules_add(){
 	<script>
 		function x_SaveSquidBand(obj){
 				var tempvalue=obj.responseText;
-				if(tempvalue.length>0){alert(tempvalue);}
+				if(tempvalue.length>3){alert(tempvalue);}
 				YahooWinHide();
 				RefreshPanel();
 				}			
@@ -487,7 +487,7 @@ function acl_time(){
 	<script>
 		function x_BandAclTimeSave(obj){
 				var tempvalue=obj.responseText;
-				if(tempvalue.length>0){alert(tempvalue);}
+				if(tempvalue.length>3){alert(tempvalue);}
 				YahooWinHide();
 				RefreshPanel();
 				}			
@@ -578,7 +578,7 @@ function acl_net_popup(){
 		
 		function x_BandAclNetAdd(obj){
 				var tempvalue=obj.responseText;
-				if(tempvalue.length>0){alert(tempvalue);}
+				if(tempvalue.length>3){alert(tempvalue);}
 				if(document.getElementById('BandAclNetDivAdd')){document.getElementById('BandAclNetDivAdd').innerHTML='';}
 				YahooWin2Hide();
 				BandAclNetRefresh();
@@ -772,7 +772,7 @@ function acl_www_popup(){
 		
 		function x_BandAclWWWAdd(obj){
 				var tempvalue=obj.responseText;
-				if(tempvalue.length>0){alert(tempvalue);}
+				if(tempvalue.length>3){alert(tempvalue);}
 				if(document.getElementById('BandAclWWWDiv')){document.getElementById('BandAclWWWDiv').innerHTML='';}
 				BandAclWWWRefresh();
 				RefreshPanel();
@@ -961,7 +961,7 @@ function acl_file_popup(){
 		
 		function x_BandAclFileAdd(obj){
 				var tempvalue=obj.responseText;
-				if(tempvalue.length>0){alert(tempvalue);}
+				if(tempvalue.length>3){alert(tempvalue);}
 				if(document.getElementById('attachmentslist')){document.getElementById('attachmentslist').innerHTML='';}
 				RefreshAttachementsList();
 				RefreshPanel();

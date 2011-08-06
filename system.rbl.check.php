@@ -99,7 +99,7 @@ function parameters(){
 	<script>
 	var x_SaveMyRBLCheck= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);return;};
+		if(tempvalue.length>3){alert(tempvalue);return;};
 		RefreshTab('main_config_rbl_check');
 	}	
 
@@ -195,7 +195,7 @@ function results(){
 	<script>
 	var x_CheckRBLNow= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);return;};
+		if(tempvalue.length>3){alert(tempvalue);return;};
 		RefreshTab('main_config_rbl_check');
 	}	
 
@@ -516,13 +516,13 @@ function rbl_list(){
 	<script>
 	var x_RblCheckDelete= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		RblCheck_refresh();
 	}	
 	
 	var x_RblCheckDisable= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		
 	}		
 	
@@ -715,7 +715,7 @@ function rbl_add_popup(){
 	
 	var x_RBLsSave= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)};
+		if(tempvalue.length>3){alert(tempvalue)};
 		YahooWin4Hide();
 		RblCheck_refresh();
 	}			

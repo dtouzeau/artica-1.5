@@ -32,6 +32,7 @@ class samba{
 	var $SECOND_PART_CONF="";
 	var $WORKGROUP="";
 	var $EnableSambaVirtualsServers=0;
+	var $EnableKerbAuth=0;
 	var $PHP5_BIN;
 	
 	function samba(){
@@ -42,6 +43,7 @@ class samba{
 		$this->SAMBA_VERSION=$this->usersMenus->SAMBA_VERSION;
 		$this->EnableSambaVirtualsServers=$sock->GET_INFO("EnableSambaVirtualsServers");
 		$this->TypeOfSamba=$sock->GET_INFO("TypeOfSamba");
+		$this->EnableKerbAuth=$sock->GET_INFO("EnableKerbAuth");
 		$this->SambaEnableEditPosixExtension=$sock->GET_INFO("SambaEnableEditPosixExtension");		
 		if(isset($GLOBALS["AS_ROOT"])){
 			if($GLOBALS["AS_ROOT"]){$this->posix_getuid=0;}else{$this->posix_getuid=100;}
@@ -610,6 +612,7 @@ function ChangeSID($sid){
 }
 
 	public function GetNetWorks($DOMAIN){
+		$q=new mysql();
 		$sql="SELECT * FROM samba_remote_announce WHERE hostname='master-samba-artica' ORDER BY ID DESC";
 		$results=$q->QUERY_SQL($sql,"artica_backup");
 		$n=array();
@@ -638,8 +641,11 @@ function ChangeSID($sid){
 
 private function WINBINDD_PARAMS(){
 	
-	
+	$sock=new sockets();
 	if(!$this->WINBINDD_INSTALLED){
+		
+		
+		
 		if($this->posix_getuid==0){echo "Starting......: WINBINDD NOT INSTALLED\n";}
 		return "\n#WINBINDD NOT INSTALLED\n";
 	}
@@ -647,16 +653,43 @@ private function WINBINDD_PARAMS(){
 	if($this->posix_getuid==0){echo "Starting......: Enable Active Directory...: $this->EnableSambaActiveDirectory\n";}
 	if($this->posix_getuid==0){echo "Starting......: WINBINDD disabled.........: $this->DisableWinbindd\n";}
 	if($this->posix_getuid==0){echo "Starting......: Type of Samba.............: $this->TypeOfSamba\n";}
+	if($this->posix_getuid==0){echo "Starting......: Kerberos enabled..........: $this->EnableKerbAuth\n";}
+	
+	if($this->EnableKerbAuth==1){
+		$kerbArray=unserialize(base64_decode($sock->GET_INFO("KerbAuthInfos")));
+		$domainUp=strtoupper($kerbArray["WINDOWS_DNS_SUFFIX"]);
+		$conf[]="\tsecurity = ADS";
+		$conf[]="\tpassword server=*";
+		$conf[]="\trealm = $domainUp";
+		$conf[]="\tkerberos method = system keytab";
+		$conf[]="\tidmap config $domainUp : backend = ad";
+		$conf[]="\tidmap config $domainUp : readonly = yes";
+		$conf[]="#\tidmap config $domainUp : schema_mode = rfc2307";
+		$conf[]="\tidmap config $domainUp : range = 1000-4000000000";
+		$conf[]="\tidmap uid = 1000-4000000000";
+		$conf[]="\tidmap gid = 1000-4000000000";
+		$conf[]="\tclient use spnego = yes";
+		$conf[]="\tencrypt passwords = yes";
+		$conf[]="\twinbind separator = +";				
+		$conf[]="\twinbind use default domain = yes";		
+		$conf[]="\twinbind enum users = yes";
+		$conf[]="\twinbind enum groups = yes";		
+		return @implode("\n", $conf);
+	}	
+	
+	
+	
 	$this->WinbinddChoose();
 	
 	if($this->DisableWinbindd==1){
-		$sock=new sockets();
 		if($this->posix_getuid==0){echo "Starting......: WINBINDD is disabled\n";}
 		return "\n#WINBINDD DISABLED\n";
 		$sock->getFrameWork("cmd.php?winbindd-stop=yes");
 		
 	}
 	
+	if($this->EnableKerbAuth==1){$this->EnableSambaActiveDirectory=0;}
+	if($this->EnableKerbAuth==1){$this->DisableWinbindd=0;}
 	
 	
 	
@@ -664,33 +697,60 @@ private function WINBINDD_PARAMS(){
 	
 	if($this->EnableSambaActiveDirectory==1){
 		if($this->posix_getuid==0){echo "Starting......: Samba join domain {$this->config_activedirectory["ADDOMAIN"]}\n";}
-		if($this->posix_getuid==0){echo "Starting......: Samba master server {$this->config_activedirectory["ADSERVER"]}.{$this->config_activedirectory["ADDOMAIN"]}";}	
+		if($this->posix_getuid==0){echo "Starting......: Samba master server {$this->config_activedirectory["ADSERVER"]}.{$this->config_activedirectory["ADDOMAIN"]}\n";}	
 		$WORKGROUP=strtoupper($this->config_activedirectory["WORKGROUP"]);
-		$conf[]="security = ADS\n";
-		$conf[]="realm = ". strtoupper($this->config_activedirectory["ADDOMAIN"])."\n";
-		$conf[]="idmap config $WORKGROUP : backend = ad\n";
-		$conf[]="idmap config $WORKGROUP : readonly = yes\n";
-		$conf[]="#idmap config $WORKGROUP : schema_mode = rfc2307\n";
-		$conf[]="idmap config $WORKGROUP : range = 1000-4000000000\n";
-		$conf[]="idmap uid = 1000-4000000000\n";
-		$conf[]="idmap gid = 1000-4000000000\n";
-		$conf[]="client use spnego = yes\n";	
+		$conf[]="\tsecurity = ADS";
+		//$conf[]="\tpassword server=".strtolower("{$this->config_activedirectory["ADSERVER"]}.{$this->config_activedirectory["ADDOMAIN"]}");
+		$conf[]="\trealm = ". strtoupper($this->config_activedirectory["ADDOMAIN"])."\n";
+		$conf[]="\tidmap config $WORKGROUP:backend = ad";
+		$conf[]="\tidmap config $WORKGROUP:readonly = yes";
+		$conf[]="\tidmap config $WORKGROUP:schema_mode = rfc2307";
+		$conf[]="\tidmap gid = 16777216-33554431";
+		$conf[]="\tidmap uid = 16777216-33554431";
+		$conf[]="\tclient use spnego = Yes";
+		$conf[]="\tencrypt passwords = Yes";
+		$conf[]="\tclient ntlmv2 auth = Yes";
+		$conf[]="\twinbind normalize names = Yes";
+		$conf[]="\twinbind separator = /";				
+		$conf[]="\twinbind use default domain = No";
+		$conf[]="\twinbind enum users = Yes";
+		$conf[]="\twinbind enum groups = Yes";	
+		$conf[]="\twinbind nested groups = Yes";	
+		
+		$conf[]="\twinbind nss info = rfc2307"; 
+		$conf[]="\twinbind offline logon = true";
+  		$conf[]="\twinbind cache time = 5";
+   		$conf[]="\twinbind refresh tickets = true";
+   		$conf[]="\tkerberos method = system keytab";
+		$conf[]="\tallow trusted domains = Yes";	
+		$conf[]="\tserver signing = mandatory";
+		$conf[]="\tclient signing = mandatory";
+		$conf[]="\tntlm auth = Yes";
+		$conf[]="\tlanman auth = No";
+		$conf[]="\tpreferred master = No";
+		
+		
+		
 		$conf[]="";
 		return @implode("\n",$conf);	
 	}
+	
 
 	
-	$conf[]="winbind use default domain = yes";
-	$conf[]="winbind enum users = yes";
-	$conf[]="winbind enum groups = yes";
-	$conf[]="password server=*";
-	$conf[]="encrypt passwords = yes";
-	$conf[]="winbind separator = +";			
-	$conf[]="winbind uid = 10000-20000";
-	$conf[]="winbind gid = 10000-20000";
-	$conf[]="winbind enum users = yes";
-	$conf[]="winbind enum groups = yes";
-	$conf[]="security = user";
+	
+
+	
+	$conf[]="\twinbind use default domain = yes";
+	$conf[]="\twinbind enum users = yes";
+	$conf[]="\twinbind enum groups = yes";
+	$conf[]="\tpassword server=*";
+	$conf[]="\tencrypt passwords = yes";
+	$conf[]="\twinbind separator = /";			
+	$conf[]="\twinbind uid = 10000-20000";
+	$conf[]="\twinbind gid = 10000-20000";
+	$conf[]="\twinbind enum users = yes";
+	$conf[]="\twinbind enum groups = yes";
+	$conf[]="\tsecurity = user";
 	$conf[]="";
 	return @implode("\n",$conf);
 	
@@ -717,6 +777,7 @@ private function netbios_aliases(){
 	$results=$q->QUERY_SQL($sql,"artica_backup");
 	if(!$q->ok){echo "$q->mysql_error\n";}
 	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
+		if(strlen($ligne["hostname"])>19){$ligne["hostname"]=substr($ligne["hostname"], 0,19);}
 		$this->samba_aliases[]=$ligne["hostname"];
 		
 	}
@@ -772,7 +833,7 @@ function BuildConfig(){
 				$this->main_array["global"]["netbios name"]=$re[1];
 			}
 			$this->main_array["global"]["netbios name"]=strtolower($this->main_array["global"]["netbios name"]);
-			
+			if(strlen($this->main_array["global"]["netbios name"]>19)){$this->main_array["global"]["netbios name"]=substr($this->main_array["global"]["netbios name"],0,19);}
 			
 			$conf[]="[global]";
 			
@@ -797,6 +858,13 @@ function BuildConfig(){
 			if($this->EnableSambaActiveDirectory==1){
 				$WORKGROUP=strtoupper($this->config_activedirectory["WORKGROUP"]);
 			}
+			
+			if($this->EnableKerbAuth==1){
+				$arrayKerberos=unserialize(base64_decode($sock->GET_INFO("KerbAuthInfos")));
+				$WORKGROUP=$arrayKerberos["ADNETBIOSDOMAIN"];
+			}
+			
+			
 			
 			$this->WORKGROUP=$WORKGROUP;
 			$conf[]="\tworkgroup = $WORKGROUP";
@@ -901,14 +969,14 @@ private function SECOND_PART(){
 			
 			
 			if($this->EnableSambaActiveDirectory<>1){
-				$conf[]="domain master = {$this->main_array["global"]["domain master"]}";
-				$conf[]="local master = {$this->main_array["global"]["local master"]}";
-				$conf[]="preferred master = {$this->main_array["global"]["preferred master"]}";
-				$conf[]="domain logons = {$this->main_array["global"]["domain logons"]}";
+				$conf[]="\tdomain master = {$this->main_array["global"]["domain master"]}";
+				$conf[]="\tlocal master = {$this->main_array["global"]["local master"]}";
+				$conf[]="\tpreferred master = {$this->main_array["global"]["preferred master"]}";
+				$conf[]="\tdomain logons = {$this->main_array["global"]["domain logons"]}";
 			}
 			
-			$conf[]="os level = {$this->main_array["global"]["os level"]}";
-			$conf[]="ldap passwd sync = no";
+			$conf[]="\tos level = {$this->main_array["global"]["os level"]}";
+			$conf[]="\tldap passwd sync = no";
 			$conf[]="";
 			
 			if($GLOBALS["VERBOSE"]){writelogs("WINBINDD_PARAMS()",__CLASS__,__FUNCTION__,__FILE__);}
@@ -917,22 +985,21 @@ private function SECOND_PART(){
 			
 			
 			if($GLOBALS["VERBOSE"]){writelogs("VISTA/Windows7 compatibility",__CLASS__,__FUNCTION__,__FILE__);}
-			$conf[]="#VISTA/Windows7 compatibility";
-			$conf[]="client lanman auth = yes";
-        	$conf[]="client ntlmv2 auth = yes";
-        	$conf[]="";
+			$conf[]="#\tVISTA/Windows7 compatibility";
+			$conf[]="\tclient lanman auth = yes";
+        	$conf[]="\tclient ntlmv2 auth = yes";
+
         	
 			if($GLOBALS["VERBOSE"]){writelogs("ACLs settings",__CLASS__,__FUNCTION__,__FILE__);}
-        	$conf[]="";
-        	$conf[]="#ACLs settings";
-        	$conf[]="nt acl support={$this->main_array["global"]["nt acl support"]}";
-        	$conf[]="map acl inherit={$this->main_array["global"]["map acl inherit"]}";
-        	$conf[]="acl check permissions={$this->main_array["global"]["acl check permissions"]}";
-        	$conf[]="inherit permissions={$this->main_array["global"]["inherit permissions"]}";
-        	$conf[]="inherit acls={$this->main_array["global"]["inherit acls"]}";      	
-        	$conf[]="acl map full control=yes";
-        	$conf[]="dos filemode=yes";
-        	$conf[]="force unknown acl user = no";
+        	$conf[]="#\tACLs settings";
+        	$conf[]="\tnt acl support={$this->main_array["global"]["nt acl support"]}";
+        	$conf[]="\tmap acl inherit={$this->main_array["global"]["map acl inherit"]}";
+        	$conf[]="\tacl check permissions={$this->main_array["global"]["acl check permissions"]}";
+        	$conf[]="\tinherit permissions={$this->main_array["global"]["inherit permissions"]}";
+        	$conf[]="\tinherit acls={$this->main_array["global"]["inherit acls"]}";      	
+        	$conf[]="\tacl map full control=yes";
+        	$conf[]="\tdos filemode=yes";
+        	$conf[]="\tforce unknown acl user = no";
 			$conf[]="";			
 			if($GLOBALS["VERBOSE"]){writelogs("LDAP_SETTINGS()",__CLASS__,__FUNCTION__,__FILE__);}
 			$conf[]=$this->LDAP_SETTINGS();
@@ -950,19 +1017,19 @@ private function SECOND_PART(){
 			}
 			
 
-			$conf[]="socket options = TCP_NODELAY IPTOS_LOWDELAY IPTOS_THROUGHPUT SO_KEEPALIVE SO_RCVBUF=8192 SO_SNDBUF=8192";
-			$conf[]="case sensitive = No";
-			$conf[]="default case = lower";
-			$conf[]="preserve case = yes";
-			$conf[]="short preserve case = yes";
+			$conf[]="\tsocket options = TCP_NODELAY IPTOS_LOWDELAY IPTOS_THROUGHPUT SO_KEEPALIVE SO_RCVBUF=8192 SO_SNDBUF=8192";
+			$conf[]="\tcase sensitive = No";
+			$conf[]="\tdefault case = lower";
+			$conf[]="\tpreserve case = yes";
+			$conf[]="\tshort preserve case = yes";
 			$conf[]="#character set = iso8859-1";
 			$conf[]="#domain admin group = @admin";
-			$conf[]="wins support = Yes";
+			$conf[]="\twins support = Yes";
 			$conf[]="#hosts allow = 192.168.0. 127.";
-			$conf[]="time server = yes";
+			$conf[]="\ttime server = yes";
 			$conf[]="#MDFS parameters";
-			$conf[]="msdfs root = no";
-			$conf[]="host msdfs = no";
+			$conf[]="\tmsdfs root = no";
+			$conf[]="\thost msdfs = no";
 			
 			$conf[]="";
 			$conf[]="# Shared Folders lists -----------------------------------";
@@ -1020,6 +1087,7 @@ private function SECOND_PART(){
 						while (list ($KEY, $VALS) = each ($ligne) ){
 							if($KEY=="finduser"){continue;}
 							if($VALS==null){continue;}
+							writelogs("Folder............: $FOLDER $KEY = $VALS",__CLASS__,__FUNCTION__,__FILE__);
 							$conf[]="\t$KEY = $VALS";
 						
 						}
@@ -1153,12 +1221,8 @@ private function LDAP_SETTINGS(){
 	$EnableSambaActiveDirectory=$sock->GET_INFO("EnableSambaActiveDirectory");
 	if(!is_numeric($EnableSambaActiveDirectory)){$EnableSambaActiveDirectory=0;}
 	if(!is_numeric($EnableSambaRemoteLDAP)){$EnableSambaRemoteLDAP=0;}
-	if($EnableSambaActiveDirectory==1){
-		$f[]="#LDAP disabled, connection to AD first";
-		$f[]="passdb backend = tdbsam";
-		$f[]="idmap backend = ad\n";
-		return @implode("\n",$f);
-		}
+	
+
 	
 	
 	$ldap_admin_dn="cn={$this->ldap->ldap_admin},{$this->ldap->suffix}";
@@ -1169,6 +1233,22 @@ private function LDAP_SETTINGS(){
 	$idmap_ldap_base_dn="ou=idmap,dc=samba,dc=organizations,{$this->ldap->suffix}";
 	$usessl="off";
 	$ldap_uri="ldap://{$this->ldap->ldap_host}:{$this->ldap->ldap_port}";
+	
+	if($this->EnableKerbAuth==1){
+		$f[]="#LDAP disabled, EnableKerbAuth is enabled,connection to AD first";
+		$f[]="\tidmap backend = ad\n";
+		return @implode("\n",$f);		
+		
+	}
+	
+	if($EnableSambaActiveDirectory==1){
+		$f[]="#connection to AD first";
+		$f[]="\tidmap backend = ad\n";
+		
+
+		
+		}
+	
 	
 	if($EnableSambaRemoteLDAP==1){
 				$SambaRemoteLDAPInfos=unserialize(base64_decode($sock->GET_INFO("SambaRemoteLDAPInfos")));
@@ -1185,52 +1265,51 @@ private function LDAP_SETTINGS(){
 	
 				$conf[]="";	
 				$conf[]="# LDAP settings -----------------------------------";
-				$conf[]="ldap delete dn = no";
-				$conf[]="passdb backend = ldapsam:$ldap_uri";
+				$conf[]="\tldap delete dn = no";
+				$conf[]="\tpassdb backend = ldapsam:$ldap_uri";
 				$conf[]="#scripts -----------------------------------";
-				$conf[]="add machine script = /usr/share/artica-postfix/bin/artica-install --samba-add-computer \"%u\"";				
-				$conf[]="ldap admin dn = $ldap_admin_dn";
-				$conf[]="ldap suffix = $suffix";
-				$conf[]="ldap group suffix = $ldap_group_suffix";
-				$conf[]="ldap user suffix =  $ldap_user_suffix";			
-				$conf[]="ldap machine suffix = $ldap_machine_suffix";
-				$group=new groups(null);
-				$group->BuildOrdinarySambaGroups();
-				//$conf[]="ldap idmap suffix = ou=idmap,dc=samba,dc=organizations";
-				$conf[]="ldap idmap suffix = $idmap_ldap_base_dn";
-				$conf[]="ldap delete dn = yes";
-				$conf[]="encrypt passwords = true";
+				$conf[]="\tadd machine script = /usr/share/artica-postfix/bin/artica-install --samba-add-computer \"%u\"";				
+				$conf[]="\tldap admin dn = $ldap_admin_dn";
+				$conf[]="\tldap suffix = $suffix";
+				$conf[]="\tldap group suffix = $ldap_group_suffix";
+				$conf[]="\tldap user suffix =  $ldap_user_suffix";			
+				$conf[]="\tldap machine suffix = $ldap_machine_suffix";
+				$conf[]="\tldap delete dn = yes";
+				$conf[]="\tldap ssl  = $usessl";	
 				if($this->SambaEnableEditPosixExtension==1){
 					$conf[]="\n\n#Samba and the Editposix/Trusted Ldapsam extension";
-					$conf[]="ldapsam:trusted=yes";
-	  				$conf[]="ldapsam:editposix=yes";
-				}
+					$conf[]="\tldapsam:trusted=yes";
+	  				$conf[]="\tldapsam:editposix=yes";
+				}				
+				$group=new groups(null);
+				$group->BuildOrdinarySambaGroups();
 				
+				$conf[]="\tldap idmap suffix = $idmap_ldap_base_dn";
+		if($EnableSambaActiveDirectory==0){				
+				$conf[]="\tencrypt passwords = true";
 				if($this->posix_getuid==0){echo "Starting......: Samba ID IMAP:$this->DisableWinbindd\n";} 
 				if($this->DisableWinbindd==0){
-		  			$conf[]="idmap backend = ldap:$ldap_uri";
-	                $conf[]="idmap uid = 1000-1999999";
-	                $conf[]="idmap gid = 1000-1999999";
-	 				$conf[]="idmap config {$this->main_array["global"]["workgroup"]}:backend = ldap";
-		  			$conf[]="idmap config {$this->main_array["global"]["workgroup"]}:readonly = no";
-		    		$conf[]="idmap config {$this->main_array["global"]["workgroup"]}:default = yes";
-		    		$conf[]="idmap config {$this->main_array["global"]["workgroup"]}:ldap_base_dn = $idmap_ldap_base_dn";
-		    		$conf[]="idmap config {$this->main_array["global"]["workgroup"]}:ldap_user_dn = $ldap_admin_dn";
-		    		$conf[]="idmap config {$this->main_array["global"]["workgroup"]}:ldap_url = $ldap_uri";
-		    		$conf[]="idmap config {$this->main_array["global"]["workgroup"]}:range = 1000-1999999";
-					$conf[]="idmap alloc backend = ldap";
-		    		$conf[]="idmap alloc config:ldap_base_dn = $idmap_ldap_base_dn";
-		    		$conf[]="idmap alloc config:ldap_user_dn = $ldap_admin_dn";
-		    		$conf[]="idmap alloc config:ldap_url = $ldap_uri";
-		    		$conf[]="idmap alloc config:range = 1000-1999999";
+		  			$conf[]="\tidmap backend = ldap:$ldap_uri";
+	                $conf[]="\tidmap uid = 1000-1999999";
+	                $conf[]="\tidmap gid = 1000-1999999";
+	 				$conf[]="\tidmap config {$this->main_array["global"]["workgroup"]}:backend = ldap";
+		  			$conf[]="\tidmap config {$this->main_array["global"]["workgroup"]}:readonly = no";
+		    		$conf[]="\tidmap config {$this->main_array["global"]["workgroup"]}:default = yes";
+		    		$conf[]="\tidmap config {$this->main_array["global"]["workgroup"]}:ldap_base_dn = $idmap_ldap_base_dn";
+		    		$conf[]="\tidmap config {$this->main_array["global"]["workgroup"]}:ldap_user_dn = $ldap_admin_dn";
+		    		$conf[]="\tidmap config {$this->main_array["global"]["workgroup"]}:ldap_url = $ldap_uri";
+		    		$conf[]="\tidmap config {$this->main_array["global"]["workgroup"]}:range = 1000-1999999";
+					$conf[]="\tidmap alloc backend = ldap";
+		    		$conf[]="\tidmap alloc config:ldap_base_dn = $idmap_ldap_base_dn";
+		    		$conf[]="\tidmap alloc config:ldap_user_dn = $ldap_admin_dn";
+		    		$conf[]="\tidmap alloc config:ldap_url = $ldap_uri";
+		    		$conf[]="\tidmap alloc config:range = 1000-1999999";
 				}
-				//}
 				
-				
-			$conf[]="ldap ssl  = $usessl";				
-			$conf[]="";
-			
-			return @implode("\n",$conf);
+		}	
+						
+	$conf[]="";
+	return @implode("\n",$conf);
 }
 
 function CleanAllDomains($CurrentDomain){

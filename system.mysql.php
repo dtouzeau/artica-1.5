@@ -46,7 +46,9 @@ function tabs(){
 	$page=CurrentPageName();
 	$tpl=new templates();
 	$users=new usersMenus();
-	$array["popup"]='{mysql_settings}';
+	$array["popup"]='{APP_MYSQL}';
+	$array["parameters"]='{mysql_settings}';
+	
 	$array["members"]='{mysql_users}';
 	$array["ssl"]='{ssl}';
 	$array["globals"]='{globals_values}';
@@ -61,6 +63,12 @@ function tabs(){
 		if($num=="greensql"){
 			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"greensql.php\"><span>$ligne</span></a></li>\n");
 			continue;
+		}
+		
+		if($num=="parameters"){
+			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"mysql.settings.php?inline=yes\"><span>$ligne</span></a></li>\n");
+			continue;			
+			
 		}
 		
 		if($num=="ssl"){
@@ -96,7 +104,7 @@ function popup(){
 			$pwd=$re[2];
 		}
 		
-		$p=Paragraphe('folder-64-backup.png','{mysql_database}','{mysql_database_text}',"javascript:Loadjs('mysql.index.php')",null);
+		//$p=Paragraphe('folder-64-backup.png','{mysql_database}','{mysql_database_text}',"javascript:Loadjs('mysql.index.php')",null);
 		$i=Buildicon64('DEF_ICO_MYSQL_PWD');
 		$j=Buildicon64('DEF_ICO_MYSQL_CLUSTER');
 		$browse=Buildicon64("DEF_ICO_MYSQL_BROWSE");
@@ -104,8 +112,9 @@ function popup(){
 		$mysqlrepair=Paragraphe('mysql-repair-64.png','{mysql_repair}','{mysql_repair_text}',"javascript:YahooWin(400,'mysql.index.php?repair-databases=yes')",null);
 		//YahooWin(400,'artica.performances.php?main_config_mysql=yes');
 
-		//$mysqlperformances=Paragraphe('mysql-execute-64.png','{mysql_performance_level}','{mysql_performance_level_text}',"javascript:YahooWin(400,'artica.performances.php?main_config_mysql=yes');",null);
-		$mysqlperformances=Paragraphe('mysql-execute-64.png','{mysql_performance_level}','{mysql_performance_level_text}',"javascript:Loadjs('mysql.settings.php');",null);
+		//$mysqlperformances=Paragraphe('mysql-execute-64.png','{mysql_database}','{mysql_performance_level_text}',"javascript:YahooWin(400,'artica.performances.php?main_config_mysql=yes');",null);
+		$mysqlperformances=Paragraphe('folder-64-backup.png','{mysql_database}',
+		'{mysql_performance_level_text}',"javascript:Loadjs('mysql.settings.php');",null);
 		$mysql_benchmark=Paragraphe('mysql-benchmark-64.png','{mysql_benchmark}','{mysql_benchmark_text}',"javascript:YahooWin3(400,'artica.performances.php?MysqlTestsPerfs=yes','{mysql_benchmark}');",null);
 		$mysql_audit=Paragraphe('mysql-audit-64.png','{mysql_audit}','{mysql_audit_text}',"javascript:YahooWin3(600,'artica.settings.php?mysql-audit=yes');",null);
 		$movefolder=Paragraphe('folder-64.png','{storage_directory}',
@@ -116,7 +125,7 @@ function popup(){
 		
 		$tr[]=$p;
 		$tr[]=$mysqlrepair;
-		$tr[]=$mysqlperformances;
+		//$tr[]=$mysqlperformances;
 		$tr[]=$i;
 		$tr[]=$changep;
 		$tr[]=$browse;
@@ -397,7 +406,7 @@ function mysql_dir_popup(){
 	<script>
 		var x_SaveChangeMysqlDir= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			YahooWin3Hide();
 		}
 				

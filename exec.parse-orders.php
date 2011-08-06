@@ -222,7 +222,15 @@ if(!is_file($pgrep)){return;}
 				events("killing exec.openvpn.php it freeze...",__FUNCTION__,__LINE__);
 				shell_exec("/bin/kill -9 {$re[1]}");
 				}
-			}				
+			}
+
+			if($filename=="exec.watchdog.php"){
+				if($time>5){
+					$GLOBALS["CLASS_UNIX"]->send_email_events("[artica-background] exec.watchdog.php is killed after {$time}Mn live",null,"system");
+					events("killing exec.openvpn.php it freeze...",__FUNCTION__,__LINE__);
+					shell_exec("/bin/kill -9 {$re[1]}");
+				}				
+			}
 			
 			$array[]="[{$re[1]}] $filename ({$time}Mn)";
 		}

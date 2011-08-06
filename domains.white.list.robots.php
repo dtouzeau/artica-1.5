@@ -61,7 +61,7 @@ function js(){
 	
 var x_WhiteListArticaSave= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue)};
+	if(tempvalue.length>3){alert(tempvalue)};
 	LoadAjax('wblrobotslist','$page?wblrobotslist=yes&ou={$_GET["ou"]}');
 }	
 	

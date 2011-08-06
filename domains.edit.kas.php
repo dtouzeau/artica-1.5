@@ -41,7 +41,7 @@ function js(){
 		
 var x_ACTION_SPAM_MODE_SAVE= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue);}
+	if(tempvalue.length>3){alert(tempvalue);}
 	RefreshTab('main_rule_kas3');
 }
 	
@@ -364,7 +364,7 @@ $html="	$tab
 	<script>
 		var x_OPT_SPAM_RATE_LIMIT= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}
+			if(tempvalue.length>3){alert(tempvalue);}
 			RefreshTab('main_rule_kas3');
 		}	
 			function OPT_SPAM_RATE_LIMIT(){
@@ -455,7 +455,7 @@ function main_index(){
 	<script>
 		var x_OPT_FILTRATION_ON= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}
+			if(tempvalue.length>3){alert(tempvalue);}
 			RefreshTab('main_rule_kas3');
 		}	
 			function OPT_FILTRATION_ON(){

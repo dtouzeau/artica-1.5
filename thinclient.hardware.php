@@ -45,7 +45,7 @@ $html="
 		
 	var x_ThinClientHardWare= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}
+		if(tempvalue.length>3){alert(tempvalue);}
 	}		
 	
 	
@@ -65,7 +65,7 @@ $html="
 	
 	var x_RebuildDefaultModules= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}
+		if(tempvalue.length>3){alert(tempvalue);}
 		RefreshTab('main_config_thinclient_hardware');
 	}		
 	

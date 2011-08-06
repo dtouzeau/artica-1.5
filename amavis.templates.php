@@ -56,7 +56,7 @@ function popup(){
 <script>
 	var x_SaveAmavisTemplate= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)};
+		if(tempvalue.length>3){alert(tempvalue)};
 		Loadjs('$page?type={$_GET["popup"]}');
 	}			
 		

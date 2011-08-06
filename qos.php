@@ -122,7 +122,7 @@ function master_service_add_popup(){
 	<script>
 	var x_SaveQosServiceAdd=function(obj){
       var tempvalue=obj.responseText;
-	  if(tempvalue.length>0){alert(tempvalue);}
+	  if(tempvalue.length>3){alert(tempvalue);}
       QOS_START_POINT();
       YahooWin3Hide();
       }	
@@ -241,7 +241,7 @@ function index(){
 	<script>
 	var x_QOSInLeftMenuCheck=function(obj){
       var tempvalue=obj.responseText;
-	  if(tempvalue.length>0){alert(tempvalue);}
+	  if(tempvalue.length>3){alert(tempvalue);}
       CacheOff();
       }	
 	
@@ -300,7 +300,7 @@ function master_service_popup(){
 		
 	var x_DeleteQosMasterService=function(obj){
       var tempvalue=obj.responseText;
-	  if(tempvalue.length>0){alert(tempvalue);}
+	  if(tempvalue.length>3){alert(tempvalue);}
       QOS_START_POINT();
       }	
 	
@@ -315,7 +315,7 @@ function master_service_popup(){
 	
 	var x_master_service_enable=function(obj){
       var tempvalue=obj.responseText;
-	  if(tempvalue.length>0){alert(tempvalue);}
+	  if(tempvalue.length>3){alert(tempvalue);}
       RefreshTab('qostabs');
       }		
 
@@ -431,7 +431,7 @@ function class_popup(){
 	var x_SaveQosClass=function(obj){
       var tempvalue=obj.responseText;
       var class_id='{$_GET["class_id"]}';
-	  if(tempvalue.length>0){alert(tempvalue);}
+	  if(tempvalue.length>3){alert(tempvalue);}
 	  if(class_id==0){YahooWin3Hide();}
 	  if(class_id>0){RefreshTab('qosclass'+class_id);}
       RefreshTab('qostabs');
@@ -610,7 +610,7 @@ function class_list(){
 	<script>
 	var x_QOsClassDelete=function(obj){
       var tempvalue=obj.responseText;
-	  if(tempvalue.length>0){alert(tempvalue);}
+	  if(tempvalue.length>3){alert(tempvalue);}
       RefreshTab('qostabs');
       }	
 	
@@ -733,7 +733,7 @@ function class_rules_popup(){
 	var x_SaveQOSFwRule=function(obj){
       var tempvalue=obj.responseText;
       var class_id='{$_GET["class_id"]}';
-	  if(tempvalue.length>0){alert(tempvalue);}
+	  if(tempvalue.length>3){alert(tempvalue);}
 	  RefreshTab('qosclass'+class_id);
 	  YahooWin4Hide();
       }	
@@ -827,7 +827,7 @@ function class_rules_list(){
 <script>
 	var x_QOsRuleDelete=function(obj){
       var tempvalue=obj.responseText;
-	  if(tempvalue.length>0){alert(tempvalue);}
+	  if(tempvalue.length>3){alert(tempvalue);}
       RefreshTab('qosclass{$_GET["class_id"]}');
       }	
 	

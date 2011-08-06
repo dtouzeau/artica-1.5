@@ -74,7 +74,7 @@ $html="
 		
 	var x_addthinclient= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);return;}
+		if(tempvalue.length>3){alert(tempvalue);return;}
 		thinclient_list();
 	}		
 	

@@ -91,7 +91,7 @@ function popup(){
 		
 	var x_UserAgentAdd=function(obj){
      		var tempvalue=obj.responseText;
-      		if(tempvalue.length>0){alert(tempvalue);}
+      		if(tempvalue.length>3){alert(tempvalue);}
 			RefreshUseragentMasters();
 		}		
 		

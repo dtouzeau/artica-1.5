@@ -2793,6 +2793,11 @@ begin
     except
           logs.Syslogs('FATAL ERROR on CGI_ALL_APPLIS_INSTALLED after openemm.VERSION()');
     end;
+    try
+       ArrayList.Add('[APP_OPENEMM_SENDMAIL] "'+openemm.SENDMAIL_VERSION()+'"');
+    except
+          logs.Syslogs('FATAL ERROR on CGI_ALL_APPLIS_INSTALLED after openemm.SENDMAIL_VERSION()');
+    end;
     openemm.free;
 
     // OpenSSH
@@ -6175,7 +6180,9 @@ begin
 
  if NetWorkAvailable then begin
      if FileExists(postfix.POSFTIX_POSTCONF_PATH()) then begin
-        if FileExists('/etc/init.d/sendmail') then fpsystem('/etc/init.d/sendmail stop');
+        if FileExists('/etc/init.d/sendmail') then begin
+           if not FileSymbolicExists('/etc/init.d/sendmail') then fpsystem('/etc/init.d/sendmail stop');
+        end;
         logs.Debuglogs('Postfix exists... start and verify all daemons');
         if length(SYS.GET_INFO('HtmlsizeQueue'))=0 then SYS.set_INFO('HtmlsizeQueue','/var/spool/artica/htmlsize');
         if length(SYS.GET_INFO('CompressQueue'))=0 then SYS.set_INFO('CompressQueue','/var/spool/artica/compress');
@@ -11208,9 +11215,12 @@ writeln('');
 SYS.set_MYSQL('database_admin',root);
 SYS.set_MYSQL('database_password',password);
 fpsystem(get_ARTICA_PHP_PATH()+'/bin/process1 --force &');
-SYS.THREAD_COMMAND_SET('/etc/init.d/artica-postfix restart apache-groupware &');
-SYS.THREAD_COMMAND_SET('/etc/init.d/artica-postfix restart zarafa &');
-SYS.THREAD_COMMAND_SET('/etc/init.d/artica-postfix restart roundcube &');
+fpsystem('/usr/share/artica-postfix/bin/artica-install --php-ini &');
+SYS.THREAD_COMMAND_SET('/etc/init.d/artica-postfix restart apache-groupware');
+SYS.THREAD_COMMAND_SET('/etc/init.d/artica-postfix restart apachesrc');
+SYS.THREAD_COMMAND_SET('/etc/init.d/artica-postfix restart zarafa');
+SYS.THREAD_COMMAND_SET('/etc/init.d/artica-postfix restart roundcube');
+
 writeln('Done....');
 
 end;

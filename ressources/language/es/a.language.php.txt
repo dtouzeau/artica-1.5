@@ -55,6 +55,9 @@ Choose the main domain and set the subdomain you want to create.[br]
 <add_virtual_server>Add a new Virtual server</add_virtual_server>
 <add_websites>Add websites</add_websites>
 <ADMINISTRATION_THEME>Administration theme</ADMINISTRATION_THEME>
+<ADNETBIOSDOMAIN>Netbios AD Domain</ADNETBIOSDOMAIN>
+<AD_CONNECTION_ERROR>Error linking to Active Directory</AD_CONNECTION_ERROR>
+<AD_CONNECTION_OK>Linked to Active Directory</AD_CONNECTION_OK>
 <affect_vg_to_service>Affect this group to a service (FreeWebs or Virtuals servers)</affect_vg_to_service>
 <affect_vg_to_service_explain>This option define that this LVM group will be used to create container for a given service.[br]For example, if you define this group to FreeWebs, you will be able to define a quotas in FreeWebs.[br]Web directory will be stored in a dedicated Virtual disk
 </affect_vg_to_service_explain>
@@ -204,14 +207,24 @@ The logic is based on evaluation of SQL commands using a risk scoring matrix as 
 <APP_LXC>LXC containers</APP_LXC>
 <APP_LXC_TEXT>Create and manage Virtual Private servers with Linux Containers technology</APP_LXC_TEXT>
 <APP_MSKTUTIL>keytab client for MS Active Directory</APP_MSKTUTIL>
+<APP_MSKTUTIL_NOT_INSTALLED>msktutil is not installed, use the setup center in order to install this tool</APP_MSKTUTIL_NOT_INSTALLED>
 <APP_NSCD>Name Service cache Daemon</APP_NSCD>
 <APP_OPENEMM>OpenEMM service</APP_OPENEMM>
+<APP_OPENEMM_SENDMAIL>SendMail for OpenEMM</APP_OPENEMM_SENDMAIL>
 <APP_PDNS_INSTANCE>PowerDNS (Instance)</APP_PDNS_INSTANCE>
 <APP_POSTFWD2>Policy Delegation</APP_POSTFWD2>
 <APP_POSTFWD2_TEXT>Policy delegation is a kind of Firewall that allow you to define a set of rules to restrict messaging</APP_POSTFWD2_TEXT>
 <APP_POWERADMIN>PowerAdmin</APP_POWERADMIN>
 <APP_POWERADMIN_NO_MCRYPT_ENCRYPT>It seems that the module mcrypt is correctly loaded/installed. Try to reboot the computer or contact Artica support team.</APP_POWERADMIN_NO_MCRYPT_ENCRYPT>
 <APP_POWERADMIN_TEXT>Poweradmin is a friendly web-based DNS administration tool For PowerDNS with MySQL backend[br]Click here to open the Web console</APP_POWERADMIN_TEXT>
+<APP_SAMBAKERAUTH>Samba kerberos Autentication</APP_SAMBAKERAUTH>
+<APP_SAMBAKERAUTH_TEXT>Samba kerberos Autentication allow to integrate Samba authentication with a Microsoft Active Directory server 2003/2008</APP_SAMBAKERAUTH_TEXT>
+<APP_SAMBAKERAUTH_TEXT_REF>
+Both Windows machines should be able to ping the Linux server by name (and vice versa), and you may need to run "ipconfig /flushdns" at 
+times.[br]
+A reboot may help too, if you want to be really sure there's no cruft hanging around.[br]
+For Windows 2008 server you need to install [b]Hotfix 951191[/b].
+</APP_SAMBAKERAUTH_TEXT_REF>
 <APP_SNORT>Network Intrusion Prevention (Snort)</APP_SNORT>
 <APP_SNORT_ABOUT>Snort is an open source network intrusion prevention and detection system (IDS/IPS) developed by Sourcefire.[br]
 Combining the benefits of signature, protocol, and anomaly-based inspection, Snort is the most widely deployed 
@@ -643,6 +656,8 @@ You only need to give the new IP address of the new server in order to create it
 <empty_cache>Empty cache</empty_cache>
 <empty_database>Empty database</empty_database>
 <EnableAuth>Activate authentication method</EnableAuth>
+<EnableBandwithCalculation>Enable bandwith calculation</EnableBandwithCalculation>
+<EnableBandwithCalculation_explain>If enabled, artica will try to determine your Internet bandwith</EnableBandwithCalculation_explain>
 <EnableCyrusImapToAd>Enable Mailboxes authentication trough Active Directory</EnableCyrusImapToAd>
 <EnableDHCPUseHostnameOnFixed>Use hostname on fixed IP addresses</EnableDHCPUseHostnameOnFixed>
 <EnableDHCPUseHostnameOnFixed_explain>If enabled, the DHCP server will query DNS servers in order to obtain the 
@@ -710,6 +725,7 @@ When a user add/delete/modify a file in a Samba folder, greyhole will saved it a
 <enable_syslog_server>Activate System log (server mode)</enable_syslog_server>
 <enable_syslog_server_text>If you turn to green this server will receive system events from remote servers.[br]This server will use UDP on locate port 514 in order to receive datas</enable_syslog_server_text>
 <enable_tomcatjconet>Activate Apache Tomcat Connector</enable_tomcatjconet>
+<enable_tuning_mysql_server>Enable tune MySQL settings</enable_tuning_mysql_server>
 <enable_viptrack>Activate VIPTrack</enable_viptrack>
 <enable_whitelisting>Activate WhiteListing method</enable_whitelisting>
 <eq2>is equal</eq2>
@@ -727,6 +743,7 @@ When a user add/delete/modify a file in a Samba folder, greyhole will saved it a
 <fileio>File I/O</fileio>
 <filename_pxe_explain>can be used to specify the name of the initial boot file which is to be loaded by a client.[br]
 The filename should be a filename recognizable to whatever file transfer protocol the client can be expected to use to load the file</filename_pxe_explain>
+<fileshare_text>Configure your filesharing service (SAMBA) such has share directories,tweak the access service...</fileshare_text>
 <filesystem_type>Filesystem type</filesystem_type>
 <files_and_folders_permissions>Files and folders permissions</files_and_folders_permissions>
 <files_extension>Files extension</files_extension>
@@ -841,6 +858,7 @@ This feature is implemented in most modern Seagate drives and some of Western Di
 <howto_ADDOMAIN>This the domain name used in the hostname of you  Active Directory server 
 If your server is named has pdc01.mtdomain.tld set here mtdomain.tld</howto_ADDOMAIN>
 <howto_ADIPADDR>This server require to resolv the hostname of your Active Directory server.[br]if this server is not able to resolve your Active Directory server it will use this IP address</howto_ADIPADDR>
+<howto_ADNETBIOSDOMAIN>This is your Active directory Workgroup/DOMAIN used when you log into the server like DOMAIN\username</howto_ADNETBIOSDOMAIN>
 <howto_ad_server>This is the hostname of your Active Directory server without domain name.[br]
 If your server is named has pdc01.mtdomain.tld set here pdc01</howto_ad_server>
 <howto_WINBINDPASSWORD>You have to create a "winbind" user on your Active Directory server and define here the winbind password.[br]
@@ -880,6 +898,8 @@ If this feature is disabled, fixed hosts in Artica database will not be added.
 <incompatible_system>Icompatible system</incompatible_system>
 <indexing_interval>Indexing interval</indexing_interval>
 <index_warnings_text>Warnings has been detected, click here in order to see warnings</index_warnings_text>
+<innodb_log_buffer_size>INNODB log buffer size</innodb_log_buffer_size>
+<innodb_log_file_size>INNODB log file size</innodb_log_file_size>
 <instance>Instance</instance>
 <instance_server_name>Instance hostname</instance_server_name>
 <InternetDomainsOrgAsOnlySubdomains>Use only official domains</InternetDomainsOrgAsOnlySubdomains>
@@ -987,6 +1007,8 @@ Per default all values are set to 1024
 <mailss>Message(s)</mailss>
 <maindomains_explain>Here it is the list of officials domains allowed by organizations.[br]
 Organizations can only create subdomains of these domains if the "Use only official domains" option is enabled</maindomains_explain>
+<main_interface>Main interface</main_interface>
+<main_interface_back_interface_text>Back to the main administration interface</main_interface_back_interface_text>
 <major_version>Major version</major_version>
 <manage_this_group>Manage this group</manage_this_group>
 <manage_websites>Manage Your Websites</manage_websites>
@@ -1044,6 +1066,7 @@ Organizations can only create subdomains of these domains if the "Use only offic
 <myaccount>My Account</myaccount>
 <myaccount_text>Modify your account, email address, passwords and system informations</myaccount_text>
 <mymessaging>My Messaging</mymessaging>
+<mysqldefault_php_text>This is the  Mysql default credentials used for PHP applications (include Artica itself).[br]by default PHP applications default credentials use the same values has Artica Mysql credential</mysqldefault_php_text>
 <mysql_error>Mysql Error</mysql_error>
 <mysql_error_popup_credential_text>Artica is unable to connect to mysql server using the default credentials.[br]
 You should create the Mysql username and password in order to fix this issue.[br]
@@ -1053,6 +1076,7 @@ Here it is the error that artica encounter during a Mysql connection: [br]
 <mysql_perso_conf>Personal settings</mysql_perso_conf>
 <mysql_perso_conf_text>Add your own settings in the mysqld section of your server.[br]This settings will be added only under this section</mysql_perso_conf_text>
 <mysql_ssl_explain>This section help you to allow Mysql using secure connection with SSL</mysql_ssl_explain>
+<mysql_tuning>Mysql tuning</mysql_tuning>
 <mysql_users>Mysql users</mysql_users>
 <myWebServices>My Web services</myWebServices>
 <myWebServices_text>Get informations about all web services you can using with your Account</myWebServices_text>
@@ -1090,6 +1114,8 @@ Here it is the error that artica encounter during a Mysql connection: [br]
 <notify_class_software>Software problems</notify_class_software>
 <notify_class_software_text>Inform the postmaster of mail not delivered due to software problems. </notify_class_software_text>
 <not_categoryzed>Not categoryzed</not_categoryzed>
+<NO_AD_CONNECTION>Not a Member</NO_AD_CONNECTION>
+<NO_AD_CONNECTION_TEXT>Currently this server is not set has a Windows Active directory member, this an information, not an error.[br]It is not mandatory to be a Microsoft Active Directory Member</NO_AD_CONNECTION_TEXT>
 <no_backendmailbox_installed_explain>There is no mailbox server (cyrus-imap or Zarafa) installed on this system.
 If you set a local domain on this system and send mails to this domain, the message will not be stored and could be lost.[br]
 Use relayed domain instead until there is no mailbox server installed.[br]
@@ -1105,6 +1131,9 @@ Use relayed domain instead until there is no mailbox server installed.[br]
 <Offline_Uncorrectable>Off-line Scan Uncorrectable Count</Offline_Uncorrectable>
 <Offline_Uncorrectable_text>Quantity of uncorrected errors</Offline_Uncorrectable_text>
 <only_use_this>Only use this</only_use_this>
+<OpenEMMNextMTA>Relayhost to send mails</OpenEMMNextMTA>
+<OpenEMMNextMTAPort>Relayhost port</OpenEMMNextMTAPort>
+<OpenEMMSendMailPort>Local SMTP engine port</OpenEMMSendMailPort>
 <OPENEMM_ABOUT>OpenEMM is a feature-rich web-based enterprise application for email marketing,
  newsletters and service mails (transaction mails and event or time triggered mails).[br]
  OpenEMM offers a great user interface, sophisticated bounce management, link tracking, lots of graphical realtime statistics,
@@ -1273,9 +1302,11 @@ server.domain.tld or matches [\.-_](adsl|dynamic|ppp|)[\.-_]
 <Power_On_Hours>Power-On Hours Count</Power_On_Hours>
 <Power_On_Hours_text>Quantity of elapsed hours in the switched-on state</Power_On_Hours_text>
 <privileges_users_warning>These privileges will erase groups privileges or the organisation privileges.</privileges_users_warning>
+<processors>Processors</processors>
 <product_apache_name>Product name</product_apache_name>
 <program>Program</program>
 <promoting>promoting</promoting>
+<Proxy>Proxy</Proxy>
 <ProxyPass_explain>This directive allows remote servers to be mapped into the space of the local server;[br]
 the local server does not act as a proxy in the conventional sense, but appears to be a mirror of the remote server.[br]
 "request from" is the name of a local virtual path; "redirect to" is a partial URL for the remote server.[br]
@@ -1293,6 +1324,7 @@ request from: /video[br]
 redirect to: http://cam.hometranet.home:5555/cams/sony/stream[br]
 [br]
 </ProxyPass_explain>
+<proxyquicktext>Manage your proxy service, url filtering, antivirus and Internet caching</proxyquicktext>
 <ProxyRequests>As Forward proxy</ProxyRequests>
 <ProxyRequests_explain>This allows or prevents Apache from functioning as a forward proxy server</ProxyRequests_explain>
 <ProxyTimeout_explain>Specifiy a timeout (in seconds) on proxy requests.[br]
@@ -1302,6 +1334,8 @@ return a timeout and fail gracefully instead of waiting however long it takes th
 <ProxyVia>Use Via HTTP header</ProxyVia>
 <ProxyVia_explain>This directive controls the use of the Via: HTTP header by the proxy. Its intended use is to control the flow of of proxy requests along a chain of proxy servers</ProxyVia_explain>
 <proxy_port>Proxy port</proxy_port>
+<PubkeyAuthentication>Use public-key authentication</PubkeyAuthentication>
+<PubkeyAuthentication_text>Public-key authentication lets you prove your identity to a remote host using a cryptographic key instead of a login password.</PubkeyAuthentication_text>
 <put_in_hold_queue>Put in hold queue</put_in_hold_queue>
 <pxe_root-path>PXE root path</pxe_root-path>
 <pxe_root-path_explain>
@@ -1432,6 +1466,7 @@ When define quota for a specific user, wait until this user have saved a file on
 <root_password_not_changed>Modifiy root password</root_password_not_changed>
 <root_password_not_changed_text>It is recommended to change the system root password.[br]The root user allow to access to this server trough SSH and console in order to perform system tasks</root_password_not_changed_text>
 <run_every_day>Run every</run_every_day>
+<SambaActAsWins>Act as WINS server</SambaActAsWins>
 <SambaActAsWins_explain>Samba will act as a WINS server.</SambaActAsWins_explain>
 <SAMBAD_NOT_IP_IN_SRVNAME>Pure ip address format is not supported,
 you need to set the netbios name in the field like
@@ -1454,6 +1489,10 @@ Artica will save this information into hosts file in order to resolve your Windo
 and the resulting UNIX mode.</samba_create_mask_text>
 <samba_directory_mask>Directory mask</samba_directory_mask>
 <samba_directory_mask_text>This parameter controls what UNIX permission bits will be set when a Windows NT client is manipulating the UNIX permission on a directory using the native NT security dialog box</samba_directory_mask_text>
+<samba_info_latest_ad_explain>In order to get correctly connected trough a Windows Active directory server, check that your server have the latest Samba version.You using the </samba_info_latest_ad_explain>
+<SAMBA_MAIN_PARAMS>Samba core parameters</SAMBA_MAIN_PARAMS>
+<SAMBA_MAIN_PARAMS_TEXT>Define Samba main parameters such has worgroup name, netbios name, winbind settings...</SAMBA_MAIN_PARAMS_TEXT>
+<samba_quicklinks_services>Plugins & services</samba_quicklinks_services>
 <SAMBA_REMOTE_ANNOUNCE_EXPLAIN>This section can be used to forcibly ensure that all the NetBIOS names on a network get announced to a remote network</SAMBA_REMOTE_ANNOUNCE_EXPLAIN>
 <SAMBA_REMOTE_ANNOUNCE_EXPLAIN_FIELD>You can add ip addresses like 192.168.12.23 or 192.168.1.255 where 192.168.12.23 is either the LMB IP address or the broadcast address of the remote network That is, the LMB is at 192.168.12.23, or the address could be given as 192.168.1.255 where the netmask is assumed to be 24 bits
 (255.255.255.0).[br]When the remote announcement is made to the broadcast address of the remote network, every host will receive our announcements. This is noisy and therefore undesirable but may be necessary if we do not know the IP address of the remote LMB.
@@ -1591,6 +1630,7 @@ By default, or if the value is set to 0, the minimum region size is used, approx
 The log region is used to store filenames, and so may need to be increased in size if a large number of files will be opened and registered with the specified Berkeley DB environment's log manager
 </set_lg_regionmax_text>
 <share_access>Share access</share_access>
+<sharing_behavior>Sharing behavior</sharing_behavior>
 <SimpleWords_explain>This section helps you to add words and phrases in a simple way.[br]Rules added will force the mail server to check mails in the Subject and the body of each message.[br]
 Messages that matches rules will be automatically rejected by the mail server</SimpleWords_explain>
 <SimpleWords_explain_add>Add you words and phrases in this form.[br]
@@ -1660,6 +1700,8 @@ It should match your MTA's limit for a maximum attachment size</srv_clamav.Strea
 <storagebakcup_softwares>Storage & Backup softwares</storagebakcup_softwares>
 <storage_directory>Storage directory</storage_directory>
 <storage_pool>Storage Pool</storage_pool>
+<StrictModes>Strict modes</StrictModes>
+<StrictModes_text>specifies whether ssh should check user's permissions in their home directory and rhosts files before accepting login. This option must always be set to yes because sometimes users may accidentally leave their directory or files world-writable.</StrictModes_text>
 <subdomain>sub-domain</subdomain>
 <subnet-mask>subnet mask</subnet-mask>
 <suspend>Suspend</suspend>
@@ -1735,6 +1777,7 @@ depends on your bandwith it should take a long time...</UPDATE_LXC_TEMPLATE_PERF
 Greylisting means that when and unknown sender try to send a message to you, the server will reject the connection and explain to the server that want to send the message to resend the mail later.[br]
 If the sender server will resend the mail later, the message will be accepted.
 </user_greylist_explain>
+<UseSamePHPMysqlCredentials>Use same credentials</UseSamePHPMysqlCredentials>
 <UseSSL>Use the SSL encryption</UseSSL>
 <use_another_WINS_server>Use Another WINS Server</use_another_WINS_server>
 <use_another_WINS_server_explain>With this option enabled, 
@@ -1799,6 +1842,7 @@ Do you want to perform this operation ?[br]task will be performed in background 
 <wbl_resolv_mx_explain>If checked when you add an email or a domain, Artica will try to resolv domain MX servers and add them to the IP Whitelist</wbl_resolv_mx_explain>
 <webadministration_console>Web administration console</webadministration_console>
 <websites_number>Websites number</websites_number>
+<web_console>Web Console</web_console>
 <web_user>Web username</web_user>
 <weight>Weight</weight>
 <WELCOME_ARTICA_STATS_SQUID>Welcome on the Web proxy dedicated Area</WELCOME_ARTICA_STATS_SQUID>
@@ -1866,6 +1910,31 @@ The service will periodically index all mails, and optionally their attachments,
 When searching for a particular mail, the required time to find the requested emails will be seriously reduced.[br]
 When attachment indexing is enabled, it is even possible to index the contents of attached files (for common file types).
 </zarafa_indexer_explain>
+<zarafa_innodb_buffer_pool_size>
+the memory buffer that InnoDB uses to cache data and indexes of its tables.[br]
+The larger you set this value, the less disk I/O is needed to access data in tables.[br]
+On a dedicated Zarafa server, you may set this to up to 50% of the machine physical memory size.[br]
+However, do not set it too large because competition for the physical memory might cause paging in the operating system,
+ or even out of memory problems. 
+</zarafa_innodb_buffer_pool_size>
+<zarafa_innodb_log_buffer_size>
+size that InnoDB uses to write to the log files on disk.[br]
+A large log buffer allows large transactions to run without a need to write the log to disk before the transactions commit.[br]
+If you have big transactions, making the log buffer larger will save disk I/O.
+This value should be 32Mb.
+</zarafa_innodb_log_buffer_size>
+<zarafa_innodb_log_file_size>
+Size of the transaction log.[br]
+By default there are two logfiles.[br]
+The preferred value size for the is 25% of the innodb buffer pool size</zarafa_innodb_log_file_size>
+<zarafa_mysql_tuning_text>It is imperative that you correctly configure MySQL to achieve maximum performance on your server;[br]
+Almost all performance bottlenecks are within the database access itself, so getting your SQL queries to run as quickly as 
+possible is very important.[br]
+For large installations, it is also a good idea to tune Zarafa's cache parameters as well;[br]
+These are normally set quite low to make sure that Zarafa can run on relatively low-end servers,
+but in anything but the smallest installations, these defaults needs to be upped.[br]
+Any installation with 50 or more users should definitely tune the cache parameters for maximum performance.
+</zarafa_mysql_tuning_text>
 <ZARAFA_SAFEMODE_EXPLAIN>Zarafa server is turned to Safe Mode, this means that this mode lock any Mailbox operation (eg:mailbox creation) on your backend server</ZARAFA_SAFEMODE_EXPLAIN>
 <zarafa_store_outside_text>This operation will store all attachments outside of the MySQL database.[br]
 The architecture change is made to get a more efficient MySQL caching system and get a smaller database.[br]

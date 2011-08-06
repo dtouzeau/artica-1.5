@@ -64,7 +64,12 @@ var {$prefix}x_max=0;
 var {$prefix}timeout=0;
 
 function ChargeSetupControlCenter(){
-	YahooSetupControl(910,'$page?popup=yes','$title');
+	if(document.getElementById('QuickLinksTop')){
+		LoadAjax('BodyContent','$page?popup=yes&QuickLinksTop=yes');
+	
+	}else{
+		YahooSetupControl(910,'$page?popup=yes','$title');
+	}
 	YahooWinHide();
 	YahooWin2Hide();
 	YahooWin3Hide();
@@ -488,7 +493,7 @@ function mysql_tabs(){
 		unset($array["vdi"]);
 	}
 	
-	
+if(isset($_GET["QuickLinksTop"])){$margin="margin-top:10px";$fontsize="font-size:14px";}
 	
 	while (list ($num, $ligne) = each ($array) ){
 		if($_GET["main"]==$num){$class="id=tab_current";}else{$class=null;}
@@ -503,18 +508,19 @@ function mysql_tabs(){
 		}
 		//$html=$html . "<li><a href=\"javascript:ChangeSetupTab('$num')\" $class>$ligne</a></li>\n";
 		if($num=="vdi"){
-			$html[]= "<li><a href=\"setup.vdi.php\"><span>$ligne_text</span></a></li>\n";
+			$html[]= "<li><a href=\"setup.vdi.php\"><span style='$fontsize'>$ligne_text</span></a></li>\n";
 			continue;
 		}
 			
-		$html[]= "<li><a href=\"$page?main-start=$num\"><span>$ligne_text</span></a></li>\n";
+		$html[]= "<li><a href=\"$page?main-start=$num\"><span style='$fontsize'>$ligne_text</span></a></li>\n";
 		
 			
 		}
 	$tpl=new templates();
 	
+	
 	return "
-	<div id=main_setup_config style='width:100%;height:550px;overflow:auto;background-color:white;'>
+	<div id=main_setup_config style='width:100%;height:550px;overflow:auto;background-color:white;$margin'>
 		<ul>". implode("\n",$html)."</ul>
 	</div>
 		<script>
@@ -680,6 +686,7 @@ if($users->POSTFIX_INSTALLED){
 		$html=$html.BuildRows("APP_Z_PUSH",$GlobalApplicationsStatus,"z-push");
 	}
 	$html=$html.BuildRows("APP_OPENEMM",$GlobalApplicationsStatus,"OpenEMM");
+	$html=$html.BuildRows("APP_OPENEMM_SENDMAIL",$GlobalApplicationsStatus,"sendmail");
 	$html=$html.BuildRows("APP_ALTERMIME",$GlobalApplicationsStatus,"altermime");
 	if(!$users->KASPERSKY_SMTP_APPLIANCE){$html=$html.BuildRows("APP_POMMO",$GlobalApplicationsStatus,"pommo");}
 	$html=$html.BuildRows("APP_MSMTP",$GlobalApplicationsStatus,"msmtp");
@@ -713,6 +720,8 @@ function stat_packages(){
 
 $sock=new sockets();
 $users=new usersMenus();
+if($users->KASPERSKY_SMTP_APPLIANCE){$KASPERSKY_APPLIANCE=TRUE;}
+if($users->KASPERSKY_WEB_APPLIANCE){$KASPERSKY_APPLIANCE=TRUE;}
 $GlobalApplicationsStatus=base64_decode($sock->getFrameWork('cmd.php?Global-Applications-Status=yes'));
 $html="
 
@@ -726,9 +735,9 @@ $html="
 <td style='font-size:13px'>&nbsp;</td>
 <td style='font-size:13px'><strong>{status}</strong></td>
 </tr>";
-$html=$html.BuildRows("APP_AWSTATS",$GlobalApplicationsStatus,"awstats");
-$html=$html.BuildRows("APP_COLLECTD",$GlobalApplicationsStatus,"collectd");
-$html=$html.spacer('&nbsp;');
+if(!$KASPERSKY_APPLIANCE){$html=$html.BuildRows("APP_AWSTATS",$GlobalApplicationsStatus,"awstats");}
+if(!$KASPERSKY_APPLIANCE){$html=$html.BuildRows("APP_COLLECTD",$GlobalApplicationsStatus,"collectd");}
+if(!$KASPERSKY_APPLIANCE){$html=$html.spacer('&nbsp;');}
 $html=$html.BuildRows("APP_GNUPLOT",$GlobalApplicationsStatus,"gnuplot");
 $html=$html.BuildRows("APP_DSTAT",$GlobalApplicationsStatus,"dstat");
 $html=$html.BuildRows("APP_VNSTAT",$GlobalApplicationsStatus,"vnstat");
@@ -788,6 +797,7 @@ $html=$html.BuildRows("APP_PHPMYADMIN",$GlobalApplicationsStatus,"phpMyAdmin");
 		$html=$html.BuildRows("APP_PIWIGO",$GlobalApplicationsStatus,"piwigo");
 		$html=$html.BuildRows("APP_SABNZBDPLUS",$GlobalApplicationsStatus,"sabnzbd");
 		$html=$html.BuildRows("APP_OPENEMM",$GlobalApplicationsStatus,"OpenEMM");
+		$html=$html.BuildRows("APP_OPENEMM_SENDMAIL",$GlobalApplicationsStatus,"sendmail");
 	}
 if($users->cyrus_imapd_installed){
 	$html=$html.spacer('webmails');
@@ -948,6 +958,7 @@ $html="
 </tr>";
 	$html=$html.spacer('{CORE_PRODUCTS}');
 	$html=$html.BuildRows("APP_SAMBA",$GlobalApplicationsStatus,"samba");
+	$html=$html.BuildRows("APP_MSKTUTIL",$GlobalApplicationsStatus,"msktutil");
 	$html=$html.BuildRows("APP_GLUSTER",$GlobalApplicationsStatus,"glusterfs");
 	$html=$html.BuildRows("APP_GREYHOLE",$GlobalApplicationsStatus,"greyhole");
 	
@@ -1034,32 +1045,35 @@ if(($users->LinuxDistriCode=='DEBIAN') or ($users->LinuxDistriCode=='UBUNTU')){
 
 	//if(!$users->AS_VPS_CLIENT){$html=$html.BuildRows("APP_MYSQL",$GlobalApplicationsStatus,"mysql-cluster-gpl");}
 	
-	
+if(!$KASPERSKY_APPLIANCE){	
 	if($MEM_TOTAL_INSTALLEE>700000){
 		if(!$users->AS_VPS_CLIENT){
 		$html=$html.BuildRows("APP_LXC",$GlobalApplicationsStatus,"lxc");	
 		}
 	}
+}
 	$html=$html.BuildRows("APP_PHPLDAPADMIN",$GlobalApplicationsStatus,"phpldapadmin");
 	$html=$html.BuildRows("APP_MYSQL",$GlobalApplicationsStatus,"mysql-server");
 	$html=$html.BuildRows("APP_PHPMYADMIN",$GlobalApplicationsStatus,"phpMyAdmin");
-	$html=$html.BuildRows("APP_GREENSQL",$GlobalApplicationsStatus,"greensql-fw");
-	$html=$html.BuildRows("APP_TOMCAT",$GlobalApplicationsStatus,"apache-tomcat");
+	if(!$KASPERSKY_APPLIANCE){$html=$html.BuildRows("APP_GREENSQL",$GlobalApplicationsStatus,"greensql-fw");}
+	if(!$KASPERSKY_APPLIANCE){$html=$html.BuildRows("APP_TOMCAT",$GlobalApplicationsStatus,"apache-tomcat");}
 		
 	//$html=$html.BuildRows("APP_EACCELERATOR",$GlobalApplicationsStatus,"eaccelerator");
-	$html=$html.spacer('{smtp_packages}');
-	$html=$html.BuildRows("APP_MSMTP",$GlobalApplicationsStatus,"msmtp");
-	if($MEM_TOTAL_INSTALLEE>500000){$html=$html.BuildRows("APP_EMAILRELAY",$GlobalApplicationsStatus,"emailrelay");}
+	if(!$KASPERSKY_APPLIANCE){
+		$html=$html.spacer('{smtp_packages}');
+		$html=$html.BuildRows("APP_MSMTP",$GlobalApplicationsStatus,"msmtp");
+		if($MEM_TOTAL_INSTALLEE>500000){$html=$html.BuildRows("APP_EMAILRELAY",$GlobalApplicationsStatus,"emailrelay");}
+	}
 	
 	
 		
 	$html=$html.spacer('{network_softwares}');
-	$html=$html.BuildRows("APP_DHCP",$GlobalApplicationsStatus,"dhcp");
-	if($MEM_TOTAL_INSTALLEE>700000){$html=$html.BuildRows("APP_PDNS",$GlobalApplicationsStatus,"pdns");}
-	if($MEM_TOTAL_INSTALLEE>700000){$html=$html.BuildRows("APP_POWERADMIN",$GlobalApplicationsStatus,"poweradmin");}
-	$html=$html.BuildRows("APP_OPENVPN",$GlobalApplicationsStatus,"openvpn");
+	if(!$KASPERSKY_APPLIANCE){$html=$html.BuildRows("APP_DHCP",$GlobalApplicationsStatus,"dhcp");}
+	if(!$KASPERSKY_APPLIANCE){if($MEM_TOTAL_INSTALLEE>700000){$html=$html.BuildRows("APP_PDNS",$GlobalApplicationsStatus,"pdns");}}
+	if(!$KASPERSKY_APPLIANCE){if($MEM_TOTAL_INSTALLEE>700000){$html=$html.BuildRows("APP_POWERADMIN",$GlobalApplicationsStatus,"poweradmin");}}
+	if(!$KASPERSKY_APPLIANCE){$html=$html.BuildRows("APP_OPENVPN",$GlobalApplicationsStatus,"openvpn");}
 	$html=$html.BuildRows("APP_IPTACCOUNT",$GlobalApplicationsStatus,"iptaccount");
-	$html=$html.BuildRows("APP_AMACHI",$GlobalApplicationsStatus,"hamachi");
+	if(!$KASPERSKY_APPLIANCE){$html=$html.BuildRows("APP_AMACHI",$GlobalApplicationsStatus,"hamachi");}
 	if(!$KASPERSKY_APPLIANCE){$html=$html.BuildRows("APP_PUREFTPD",$GlobalApplicationsStatus,"pure-ftpd");}
 	if(!$KASPERSKY_APPLIANCE){if(!$OPENVPN_APPLIANCE){$html=$html.BuildRows("APP_MLDONKEY",$GlobalApplicationsStatus,"mldonkey");}}
 	
@@ -1085,9 +1099,9 @@ if(($users->LinuxDistriCode=='DEBIAN') or ($users->LinuxDistriCode=='UBUNTU')){
 	
 	
 
-	
+if(!$KASPERSKY_APPLIANCE){	
 	$html=$html.spacer('{secuirty_softwares}');
- if(!$KASPERSKY_APPLIANCE){
+ 
  		if($MEM_TOTAL_INSTALLEE>700000){$html=$html.BuildRows("APP_CLAMAV",$GlobalApplicationsStatus,"clamav");}
  		$html=$html.BuildRows("APP_SNORT",$GlobalApplicationsStatus,"snort");	
  		$html=$html.BuildRows("APP_NMAP",$GlobalApplicationsStatus,"nmap");

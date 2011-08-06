@@ -83,7 +83,7 @@ function js(){
 	
 	var x_MilterGreyListPrincipalSave= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			YahooWin2Hide();
 			miltergreylist_status();
 	}	
@@ -109,7 +109,7 @@ function js(){
 	
 	var x_SaveMilterGreyListAclID= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			YahooWin3Hide();
 			LoadAjax('acllist','$page?acllist=true');
 		}		

@@ -57,7 +57,7 @@ function FOLDER_BACKUP_JS(){
 
 	var x_BACKUP_FOLDER_ENABLE= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)};
+		if(tempvalue.length>3){alert(tempvalue)};
 	 }			
 		
 	function BACKUP_FOLDER_ENABLE(taskid){
@@ -164,7 +164,7 @@ $html=$html."</table></div>
 <script>
 var x_FOLDER_BACKUP_DELETE= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)};
+		if(tempvalue.length>3){alert(tempvalue)};
 		
 	 }			
 		
@@ -308,7 +308,7 @@ function js(){
 		
 var x_DeleteBackupTask= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)};
+		if(tempvalue.length>3){alert(tempvalue)};
 		BACKUP_TASKS_LISTS();
 		if(document.getElementById('wizard-backup-intro')){
 			WizardBackupLoad();
@@ -317,7 +317,7 @@ var x_DeleteBackupTask= function (obj) {
 
 var x_DELETE_BACKUP_SOURCES= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)};
+		if(tempvalue.length>3){alert(tempvalue)};
 		BACKUP_TASKS_LISTS();
 		YahooWin3Hide();
 	 }		 
@@ -343,7 +343,7 @@ var x_DELETE_BACKUP_SOURCES= function (obj) {
 		
 	var x_BACKUP_SOURCES_SAVE_OPTIONS= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			BACKUP_TASKS_SOURCE(mem_taskid);
 			
 		 }		
@@ -366,7 +366,7 @@ var x_DELETE_BACKUP_SOURCES= function (obj) {
 		
 	var x_BACKUP_TASK_RUN= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			alert('$apply_upgrade_help');
 			BACKUP_TASKS_LISTS();
 		 }		
@@ -713,7 +713,7 @@ function BACKUP_OPTIONS(){
 	<script>
 	var x_SAVE_BACKUP_OPTIONS= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)};
+		if(tempvalue.length>3){alert(tempvalue)};
 		RefreshTab('main_config_backup_tasks');
 	 }	
 	
@@ -892,7 +892,7 @@ function BACKUP_TASK_MODIFY_RESSOURCES(){
 	<script>
 	var x_BACKUP_TASK_MODIFY_RESSOURCES_APPLY= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)};
+		if(tempvalue.length>3){alert(tempvalue)};
 		RefreshTab('main_config_backup_tasks');
 		YahooWin3Hide();
 	 }	

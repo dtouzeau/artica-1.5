@@ -12,7 +12,7 @@
       <MainUnit Value="0"/>
       <TargetFileExt Value=""/>
       <Title Value="Artica make"/>
-      <ActiveEditorIndexAtStart Value="9"/>
+      <ActiveEditorIndexAtStart Value="0"/>
     </General>
     <VersionInfo>
       <ProjectVersion Value=""/>
@@ -34,8 +34,8 @@
         <Filename Value="artica_make.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="artica_make"/>
-        <CursorPos X="44" Y="23"/>
-        <TopLine Value="1"/>
+        <CursorPos X="37" Y="8"/>
+        <TopLine Value="8"/>
         <EditorIndex Value="2"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -61,8 +61,8 @@
         <UnitName Value="global_conf"/>
         <CursorPos X="127" Y="735"/>
         <TopLine Value="698"/>
-        <EditorIndex Value="10"/>
-        <UsageCount Value="19"/>
+        <EditorIndex Value="14"/>
+        <UsageCount Value="24"/>
         <Loaded Value="True"/>
       </Unit3>
       <Unit4>
@@ -103,10 +103,10 @@
       <Unit9>
         <Filename Value="distridetect.pas"/>
         <UnitName Value="distriDetect"/>
-        <CursorPos X="1" Y="85"/>
+        <CursorPos X="110" Y="94"/>
         <TopLine Value="76"/>
-        <EditorIndex Value="9"/>
-        <UsageCount Value="77"/>
+        <EditorIndex Value="13"/>
+        <UsageCount Value="82"/>
         <Loaded Value="True"/>
       </Unit9>
       <Unit10>
@@ -172,8 +172,8 @@
       <Unit18>
         <Filename Value="setup_libs.pas"/>
         <UnitName Value="setup_libs"/>
-        <CursorPos X="22" Y="45"/>
-        <TopLine Value="45"/>
+        <CursorPos X="102" Y="101"/>
+        <TopLine Value="69"/>
         <EditorIndex Value="1"/>
         <UsageCount Value="100"/>
         <Loaded Value="True"/>
@@ -198,9 +198,11 @@
         <Filename Value="setup_amavisdmilter.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="setup_amavisdmilter"/>
-        <CursorPos X="112" Y="275"/>
-        <TopLine Value="242"/>
+        <CursorPos X="1" Y="300"/>
+        <TopLine Value="273"/>
+        <EditorIndex Value="3"/>
         <UsageCount Value="204"/>
+        <Loaded Value="True"/>
       </Unit21>
       <Unit22>
         <Filename Value="setup_imapsync.pas"/>
@@ -288,9 +290,9 @@
         <Filename Value="setup_squid.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="setup_squid"/>
-        <CursorPos X="23" Y="250"/>
-        <TopLine Value="205"/>
-        <EditorIndex Value="5"/>
+        <CursorPos X="26" Y="68"/>
+        <TopLine Value="52"/>
+        <EditorIndex Value="9"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit33>
@@ -328,9 +330,9 @@
         <Filename Value="setup_dar.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="setup_dar"/>
-        <CursorPos X="88" Y="89"/>
+        <CursorPos X="26" Y="94"/>
         <TopLine Value="52"/>
-        <EditorIndex Value="7"/>
+        <EditorIndex Value="11"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
       </Unit38>
@@ -471,17 +473,21 @@
         <Filename Value="setup_samba.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="setup_samba"/>
-        <CursorPos X="67" Y="222"/>
-        <TopLine Value="731"/>
+        <CursorPos X="10" Y="311"/>
+        <TopLine Value="273"/>
+        <EditorIndex Value="5"/>
         <UsageCount Value="201"/>
+        <Loaded Value="True"/>
       </Unit56>
       <Unit57>
         <Filename Value="setup_xapian.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="setup_xapian"/>
-        <CursorPos X="1" Y="574"/>
-        <TopLine Value="533"/>
+        <CursorPos X="47" Y="495"/>
+        <TopLine Value="477"/>
+        <EditorIndex Value="4"/>
         <UsageCount Value="201"/>
+        <Loaded Value="True"/>
       </Unit57>
       <Unit58>
         <Filename Value="../../../../../../../usr/share/fpcsrc/2.2.2/rtl/objpas/sysutils/sysstrh.inc"/>
@@ -495,7 +501,7 @@
         <UnitName Value="setup_opengoo"/>
         <CursorPos X="109" Y="512"/>
         <TopLine Value="470"/>
-        <EditorIndex Value="6"/>
+        <EditorIndex Value="10"/>
         <UsageCount Value="208"/>
         <Loaded Value="True"/>
       </Unit59>
@@ -584,7 +590,7 @@
         <UnitName Value="setup_mysql"/>
         <CursorPos X="1" Y="1"/>
         <TopLine Value="1"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="8"/>
         <UsageCount Value="202"/>
         <Loaded Value="True"/>
       </Unit70>
@@ -656,8 +662,8 @@
         <Filename Value="setup_zarafa.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="setup_zarafa"/>
-        <CursorPos X="1" Y="435"/>
-        <TopLine Value="435"/>
+        <CursorPos X="1" Y="852"/>
+        <TopLine Value="809"/>
         <EditorIndex Value="0"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -744,7 +750,7 @@
         <UnitName Value="setup_opendkim"/>
         <CursorPos X="152" Y="208"/>
         <TopLine Value="1"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="172"/>
       </Unit90>
       <Unit91>
         <Filename Value="setup_ufdbguard.pas"/>
@@ -752,7 +758,7 @@
         <UnitName Value="setup_ufdbguard"/>
         <CursorPos X="1" Y="1"/>
         <TopLine Value="1"/>
-        <UsageCount Value="165"/>
+        <UsageCount Value="172"/>
       </Unit91>
       <Unit92>
         <Filename Value="setup_dkimproxy.pas"/>
@@ -760,7 +766,7 @@
         <UnitName Value="setup_dkimproxy"/>
         <CursorPos X="5" Y="175"/>
         <TopLine Value="104"/>
-        <UsageCount Value="155"/>
+        <UsageCount Value="162"/>
       </Unit92>
       <Unit93>
         <Filename Value="setup_dkimmilter.pas"/>
@@ -768,7 +774,7 @@
         <UnitName Value="setup_dkimmilter"/>
         <CursorPos X="92" Y="81"/>
         <TopLine Value="65"/>
-        <UsageCount Value="154"/>
+        <UsageCount Value="161"/>
       </Unit93>
       <Unit94>
         <Filename Value="setup_dropbox.pas"/>
@@ -776,7 +782,7 @@
         <UnitName Value="setup_dropbox"/>
         <CursorPos X="48" Y="166"/>
         <TopLine Value="113"/>
-        <UsageCount Value="154"/>
+        <UsageCount Value="161"/>
       </Unit94>
       <Unit95>
         <Filename Value="setup_crossroads.pas"/>
@@ -784,7 +790,7 @@
         <UnitName Value="setup_crossroads"/>
         <CursorPos X="96" Y="108"/>
         <TopLine Value="77"/>
-        <UsageCount Value="151"/>
+        <UsageCount Value="158"/>
       </Unit95>
       <Unit96>
         <Filename Value="setup_squidclamav.pas"/>
@@ -792,7 +798,7 @@
         <UnitName Value="setup_squidclamav"/>
         <CursorPos X="1" Y="132"/>
         <TopLine Value="88"/>
-        <UsageCount Value="151"/>
+        <UsageCount Value="158"/>
       </Unit96>
       <Unit97>
         <Filename Value="../artica-install/ufdbguardd.pas"/>
@@ -807,7 +813,7 @@
         <UnitName Value="setup_cluebringer"/>
         <CursorPos X="5" Y="125"/>
         <TopLine Value="78"/>
-        <UsageCount Value="148"/>
+        <UsageCount Value="155"/>
       </Unit98>
       <Unit99>
         <Filename Value="setup_awstats.pas"/>
@@ -822,7 +828,7 @@
         <UnitName Value="setup_sabnzbdplus"/>
         <CursorPos X="1" Y="119"/>
         <TopLine Value="49"/>
-        <UsageCount Value="140"/>
+        <UsageCount Value="147"/>
       </Unit100>
       <Unit101>
         <Filename Value="setup_openldap.pas"/>
@@ -830,7 +836,7 @@
         <UnitName Value="setup_openldap"/>
         <CursorPos X="19" Y="50"/>
         <TopLine Value="1"/>
-        <UsageCount Value="106"/>
+        <UsageCount Value="113"/>
       </Unit101>
       <Unit102>
         <Filename Value="setup_lxc.pas"/>
@@ -838,7 +844,7 @@
         <UnitName Value="setup_lxc"/>
         <CursorPos X="95" Y="86"/>
         <TopLine Value="1"/>
-        <UsageCount Value="76"/>
+        <UsageCount Value="83"/>
       </Unit102>
       <Unit103>
         <Filename Value="../../../../../../../usr/share/fpcsrc/2.4.0/rtl/unix/bunxh.inc"/>
@@ -852,7 +858,7 @@
         <UnitName Value="setup_snort"/>
         <CursorPos X="56" Y="127"/>
         <TopLine Value="81"/>
-        <UsageCount Value="72"/>
+        <UsageCount Value="79"/>
       </Unit104>
       <Unit105>
         <Filename Value="../../../../../../../usr/share/fpcsrc/2.4.0/rtl/objpas/sysutils/finah.inc"/>
@@ -866,7 +872,7 @@
         <UnitName Value="setup_greensql"/>
         <CursorPos X="62" Y="131"/>
         <TopLine Value="78"/>
-        <UsageCount Value="46"/>
+        <UsageCount Value="53"/>
       </Unit106>
       <Unit107>
         <Filename Value="setup_amanda.pas"/>
@@ -874,16 +880,16 @@
         <UnitName Value="setup_amanda"/>
         <CursorPos X="52" Y="110"/>
         <TopLine Value="45"/>
-        <UsageCount Value="42"/>
+        <UsageCount Value="49"/>
       </Unit107>
       <Unit108>
         <Filename Value="setup_mysqlserver.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="setup_mysqlserver"/>
         <CursorPos X="32" Y="93"/>
-        <TopLine Value="1"/>
-        <EditorIndex Value="3"/>
-        <UsageCount Value="41"/>
+        <TopLine Value="22"/>
+        <EditorIndex Value="7"/>
+        <UsageCount Value="48"/>
         <Loaded Value="True"/>
       </Unit108>
       <Unit109>
@@ -892,7 +898,7 @@
         <UnitName Value="setup_dhcpd"/>
         <CursorPos X="12" Y="115"/>
         <TopLine Value="51"/>
-        <UsageCount Value="39"/>
+        <UsageCount Value="46"/>
       </Unit109>
       <Unit110>
         <Filename Value="setup_drupal7.pas"/>
@@ -900,15 +906,17 @@
         <UnitName Value="setup_drupal7"/>
         <CursorPos X="25" Y="236"/>
         <TopLine Value="182"/>
-        <UsageCount Value="38"/>
+        <UsageCount Value="45"/>
       </Unit110>
       <Unit111>
         <Filename Value="setup_openemm.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="setup_openemm"/>
-        <CursorPos X="18" Y="222"/>
-        <TopLine Value="212"/>
-        <UsageCount Value="37"/>
+        <CursorPos X="1" Y="379"/>
+        <TopLine Value="347"/>
+        <EditorIndex Value="6"/>
+        <UsageCount Value="44"/>
+        <Loaded Value="True"/>
       </Unit111>
       <Unit112>
         <Filename Value="../../../../../../../usr/share/fpcsrc/2.4.0/rtl/objpas/strutils.pp"/>
@@ -923,131 +931,131 @@
         <UnitName Value="setup_mysqlnd"/>
         <CursorPos X="35" Y="11"/>
         <TopLine Value="1"/>
-        <EditorIndex Value="8"/>
-        <UsageCount Value="31"/>
+        <EditorIndex Value="12"/>
+        <UsageCount Value="38"/>
         <Loaded Value="True"/>
       </Unit113>
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
-        <Filename Value="setup_libs.pas"/>
-        <Caret Line="42" Column="19" TopLine="8"/>
+        <Filename Value="setup_mysqlnd.pas"/>
+        <Caret Line="11" Column="35" TopLine="1"/>
       </Position1>
       <Position2>
-        <Filename Value="setup_libs.pas"/>
-        <Caret Line="899" Column="11" TopLine="867"/>
+        <Filename Value="artica_make.pas"/>
+        <Caret Line="24" Column="12" TopLine="1"/>
       </Position2>
       <Position3>
-        <Filename Value="setup_libs.pas"/>
-        <Caret Line="1" Column="1" TopLine="1"/>
+        <Filename Value="setup_openemm.pas"/>
+        <Caret Line="265" Column="1" TopLine="225"/>
       </Position3>
       <Position4>
         <Filename Value="artica_make.pas"/>
-        <Caret Line="448" Column="27" TopLine="412"/>
+        <Caret Line="24" Column="16" TopLine="1"/>
       </Position4>
       <Position5>
         <Filename Value="artica_make.pas"/>
-        <Caret Line="149" Column="30" TopLine="103"/>
+        <Caret Line="106" Column="26" TopLine="72"/>
       </Position5>
       <Position6>
-        <Filename Value="setup_mysqlnd.pas"/>
-        <Caret Line="134" Column="53" TopLine="74"/>
+        <Filename Value="setup_openemm.pas"/>
+        <Caret Line="290" Column="23" TopLine="256"/>
       </Position6>
       <Position7>
-        <Filename Value="artica_make.pas"/>
-        <Caret Line="409" Column="27" TopLine="379"/>
+        <Filename Value="setup_openemm.pas"/>
+        <Caret Line="285" Column="53" TopLine="256"/>
       </Position7>
       <Position8>
-        <Filename Value="artica_make.pas"/>
-        <Caret Line="721" Column="26" TopLine="685"/>
+        <Filename Value="setup_openemm.pas"/>
+        <Caret Line="18" Column="61" TopLine="1"/>
       </Position8>
       <Position9>
         <Filename Value="artica_make.pas"/>
-        <Caret Line="730" Column="23" TopLine="685"/>
+        <Caret Line="196" Column="32" TopLine="136"/>
       </Position9>
       <Position10>
         <Filename Value="artica_make.pas"/>
-        <Caret Line="897" Column="28" TopLine="872"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
       </Position10>
       <Position11>
-        <Filename Value="setup_mysqlnd.pas"/>
-        <Caret Line="128" Column="1" TopLine="83"/>
+        <Filename Value="artica_make.pas"/>
+        <Caret Line="608" Column="20" TopLine="571"/>
       </Position11>
       <Position12>
         <Filename Value="artica_make.pas"/>
-        <Caret Line="897" Column="28" TopLine="872"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
       </Position12>
       <Position13>
         <Filename Value="artica_make.pas"/>
-        <Caret Line="1" Column="1" TopLine="1"/>
+        <Caret Line="607" Column="19" TopLine="571"/>
       </Position13>
       <Position14>
-        <Filename Value="artica_make.pas"/>
-        <Caret Line="9" Column="75" TopLine="1"/>
+        <Filename Value="setup_squid.pas"/>
+        <Caret Line="32" Column="25" TopLine="1"/>
       </Position14>
       <Position15>
         <Filename Value="artica_make.pas"/>
-        <Caret Line="170" Column="8" TopLine="137"/>
+        <Caret Line="607" Column="5" TopLine="562"/>
       </Position15>
       <Position16>
         <Filename Value="artica_make.pas"/>
-        <Caret Line="329" Column="29" TopLine="295"/>
+        <Caret Line="24" Column="31" TopLine="1"/>
       </Position16>
       <Position17>
         <Filename Value="artica_make.pas"/>
-        <Caret Line="332" Column="36" TopLine="295"/>
+        <Caret Line="108" Column="1" TopLine="74"/>
       </Position17>
       <Position18>
         <Filename Value="artica_make.pas"/>
-        <Caret Line="333" Column="15" TopLine="295"/>
+        <Caret Line="1249" Column="23" TopLine="1214"/>
       </Position18>
       <Position19>
         <Filename Value="artica_make.pas"/>
-        <Caret Line="595" Column="33" TopLine="542"/>
+        <Caret Line="1261" Column="23" TopLine="1214"/>
       </Position19>
       <Position20>
-        <Filename Value="setup_squid.pas"/>
-        <Caret Line="32" Column="25" TopLine="1"/>
+        <Filename Value="artica_make.pas"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
       </Position20>
       <Position21>
         <Filename Value="artica_make.pas"/>
-        <Caret Line="1735" Column="86" TopLine="1469"/>
+        <Caret Line="13" Column="68" TopLine="1"/>
       </Position21>
       <Position22>
         <Filename Value="artica_make.pas"/>
-        <Caret Line="1" Column="1" TopLine="1"/>
+        <Caret Line="107" Column="52" TopLine="103"/>
       </Position22>
       <Position23>
-        <Filename Value="setup_squid.pas"/>
-        <Caret Line="313" Column="27" TopLine="271"/>
+        <Filename Value="artica_make.pas"/>
+        <Caret Line="1223" Column="21" TopLine="1185"/>
       </Position23>
       <Position24>
-        <Filename Value="setup_squid.pas"/>
-        <Caret Line="364" Column="21" TopLine="328"/>
+        <Filename Value="setup_samba.pas"/>
+        <Caret Line="563" Column="48" TopLine="511"/>
       </Position24>
       <Position25>
-        <Filename Value="artica_make.pas"/>
-        <Caret Line="599" Column="131" TopLine="561"/>
+        <Filename Value="setup_samba.pas"/>
+        <Caret Line="556" Column="37" TopLine="517"/>
       </Position25>
       <Position26>
         <Filename Value="artica_make.pas"/>
-        <Caret Line="1" Column="1" TopLine="1"/>
+        <Caret Line="1223" Column="21" TopLine="1185"/>
       </Position26>
       <Position27>
         <Filename Value="artica_make.pas"/>
-        <Caret Line="16" Column="38" TopLine="1"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
       </Position27>
       <Position28>
         <Filename Value="artica_make.pas"/>
-        <Caret Line="23" Column="44" TopLine="1"/>
+        <Caret Line="8" Column="37" TopLine="1"/>
       </Position28>
       <Position29>
-        <Filename Value="setup_mysqlnd.pas"/>
-        <Caret Line="155" Column="5" TopLine="84"/>
+        <Filename Value="setup_samba.pas"/>
+        <Caret Line="438" Column="43" TopLine="381"/>
       </Position29>
       <Position30>
-        <Filename Value="setup_mysqlnd.pas"/>
-        <Caret Line="11" Column="35" TopLine="1"/>
+        <Filename Value="setup_samba.pas"/>
+        <Caret Line="47" Column="23" TopLine="30"/>
       </Position30>
     </JumpHistory>
   </ProjectOptions>

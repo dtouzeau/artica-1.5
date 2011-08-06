@@ -51,7 +51,7 @@ var x_ChangeFormValues= function (obj) {
 
 var x_SaveAddUser= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){
+	if(tempvalue.length>3){
 		alert(tempvalue);
 		document.getElementById('ffform').innerHTML=\"<div style='width:100%;padding:15px'><center><img src='img/identity-add-96.png'></center></div>\";  
 		return false;

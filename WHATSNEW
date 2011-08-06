@@ -1,3 +1,14 @@
+1.5.080110:
+========================================================================================
+System Changes
+-------------------------------------------------
+1.5.080110: Add function that verify /root permissions before start and stop SSH service.
+fix big error on SSHD, PasswordAuthentication is disabled by default that block the SSHD authentication.
+Fix wrong configuration in /etc/hosts according changing the hostname.
+
+Fix Artica ask the hostname every time...
+
+
 1.5.072718: 
 ========================================================================================
 

@@ -139,7 +139,7 @@ function config_local(){
 	
 		var x_EditLocalDomainNew= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			RefreshTab('main_config_relay_domain');
 		}		
 			
@@ -231,7 +231,7 @@ function duplicate(){
 	<script>
 		var x_SaveDuplicateDomainNew= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			RefreshTab('main_config_relay_domain');
 		}		
 		
@@ -340,7 +340,7 @@ function config(){
 	<script>
 		var x_trusted_smtp_domain_save= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			if (document.getElementById('RelayDomainsList')){
 				LoadAjax('RelayDomainsList','domains.edit.domains.php?RelayDomainsList=yes&ou=$ou');
 			}
@@ -351,7 +351,7 @@ function config(){
 		
 		var x_SaveRelayDomainNew= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			if (document.getElementById('RelayDomainsList')){
 				LoadAjax('RelayDomainsList','domains.edit.domains.php?RelayDomainsList=yes&ou=$ou');
 			}

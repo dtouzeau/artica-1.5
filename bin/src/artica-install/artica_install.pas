@@ -536,6 +536,7 @@ if ParamStr(1)='--php-ini' then
 begin
 zlighttpd:=Tlighttpd.Create(SYS);
 zlighttpd.LIGHTTPD_ADD_INCLUDE_PATH();
+writeln('Writing php.ini done');
 halt(0);
 end;
 if ParamStr(1)='--squid-version-bin' then

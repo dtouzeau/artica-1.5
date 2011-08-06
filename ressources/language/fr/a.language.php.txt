@@ -51,6 +51,9 @@ Choisissez le domaine principale et indiquez le sous-domaine que vous voulez cr&
 <add_virtual_server>Ajouter un nouveau serveur virtuel</add_virtual_server>
 <add_websites>Ajouter des sites</add_websites>
 <ADMINISTRATION_THEME>Th&egrave;me pour l'administration du site</ADMINISTRATION_THEME>
+<ADNETBIOSDOMAIN>Nom de domaine netbios</ADNETBIOSDOMAIN>
+<AD_CONNECTION_ERROR>Erreur de liaison &agrave; l'Active Directory</AD_CONNECTION_ERROR>
+<AD_CONNECTION_OK>Connect&eacute; &agrave; l'Active directory</AD_CONNECTION_OK>
 <affect_vg_to_service>Affecter ce groupe &agrave; un service (FreeWebs ou serveurs virtuels)</affect_vg_to_service>
 <affect_vg_to_service_explain>Cette option indique que ce groupe LVM sera utilis&eacute; afin de construire automatiquement des contenants pour un service particulier.[br]Par exemple afin de d&eacute;finir des quotas par taille sur les espaces FreeWebs.[br]Les r&eacute;pertoires Web seront alors stock&eacute;s dans un disque virtuel d&eacute;di&eacute;.</affect_vg_to_service_explain>
 <Airflow_Temperature_Cel>Temp&eacute;rature de l%u2019air (WDC)</Airflow_Temperature_Cel>
@@ -172,14 +175,20 @@ Patientez quelques secondes et rafra&icirc;chissez cette page.</apply_network_co
 <APP_LXC>Conteneurs LXC</APP_LXC>
 <APP_LXC_TEXT>Cr&eacute;ez et administrez des serveurs virtuels gr&acirc;ce &agrave; l'utilisation de technologie Linux Containers</APP_LXC_TEXT>
 <APP_MSKTUTIL>keytab client for MS Active Directory</APP_MSKTUTIL>
+<APP_MSKTUTIL_NOT_INSTALLED>msktutil n'est pas install&eacute;, utilisez le centre d'installation d'application &agrave; cet effet.</APP_MSKTUTIL_NOT_INSTALLED>
 <APP_NSCD>D&eacute;mon de mise en cache interne</APP_NSCD>
 <APP_OPENEMM>Service OpenEMM</APP_OPENEMM>
+<APP_OPENEMM_SENDMAIL>SendMail pour OpenEMM</APP_OPENEMM_SENDMAIL>
 <APP_PDNS_INSTANCE>PowerDNS (Instance)</APP_PDNS_INSTANCE>
 <APP_POSTFWD2>R&egrave;gles de d&eacute;l&eacute;gation</APP_POSTFWD2>
 <APP_POSTFWD2_TEXT>Policy Delegation est une sorte de pare-feu qui vous autorise &agrave; d&eacute;finir des r&egrave;gles permettant de limiter les flux de messagerie</APP_POSTFWD2_TEXT>
 <APP_POWERADMIN>PowerAdmin</APP_POWERADMIN>
 <APP_POWERADMIN_NO_MCRYPT_ENCRYPT>Il semble que le module &quot;mcrypt&quot; ne soit pas correctement charg&eacute;/install&eacute;. Essayez de red&eacute;marrer l'ordinateur ou bien contactez le support Artica.</APP_POWERADMIN_NO_MCRYPT_ENCRYPT>
 <APP_POWERADMIN_TEXT>PowerAdmin est une console Web d'administration pour le serveur DNS PowerDNS avec comme base de donn&eacute;es le moteur MySQL.[br]Cliquez ici pour ouvrir la console web.</APP_POWERADMIN_TEXT>
+<APP_SAMBAKERAUTH>Authentification Kerberos</APP_SAMBAKERAUTH>
+<APP_SAMBAKERAUTH_TEXT>L'authentification Kerberos assure l'authentification Samba avec un serveur Active Directory 2003/2008</APP_SAMBAKERAUTH_TEXT>
+<APP_SAMBAKERAUTH_TEXT_REF>Les deux machines doivent pouvoir se r&eacute;soudre mutuellement et vous pourriez utiliser  &quot;ipconfig /flushdns&quot; plusieurs fois.[br]
+Un reboot peut aussi aider si vous voulez &ecirc;tre sur que les caches soient effac&eacute;s.[br]Pour Windows 2008, v&eacute;rifiez le Hostfix 951191</APP_SAMBAKERAUTH_TEXT_REF>
 <APP_SNORT>Pr&eacute;vention d'intrusion r&eacute;seau (Snort)</APP_SNORT>
 <APP_SNORT_ABOUT>Snort est un logiciel libre de pr&eacute;vention d'intrusions et de syst&egrave;me de d&eacute;tection  (IDS/IPS) d&eacute;velopp&eacute; par SourceFire.[br]
 En combinant les avantages des signatures, du protocole et des inspection d'anomalies, Snort un des logiciels les plus install&eacute;s dans le mode comme syst&egrave;me IDS/IPS.</APP_SNORT_ABOUT>
@@ -530,6 +539,8 @@ Vous avez simplement besoin d'indiquer la nouvelle adresse IP du nouveau serveur
 <empty_cache>Vider le cache</empty_cache>
 <empty_database>Vider la base de donn&eacute;es</empty_database>
 <EnableAuth>Activer l'authentification</EnableAuth>
+<EnableBandwithCalculation>Activer le calcul de bande passante</EnableBandwithCalculation>
+<EnableBandwithCalculation_explain>Si activ&eacute;, Artica tentera de calculer votre bande passante internet</EnableBandwithCalculation_explain>
 <EnableCyrusImapToAd>Activer la gestion des bo&icirc;tes aux lettres &agrave; travers l'AD</EnableCyrusImapToAd>
 <EnableDHCPUseHostnameOnFixed>Utiliser les noms d'h&ocirc;tes sur les adresses Fix&eacute;es</EnableDHCPUseHostnameOnFixed>
 <EnableDHCPUseHostnameOnFixed_explain>Si activ&eacute;, le serveur DHCP va poser la question aux serveurs DNS afin d'obtenir l'adresse IP de la machine et ainsi fournir l'adresse enregistr&eacute;e dans le DNS en lieu et place de celle fournit dans Artica (sauf si Artica est lui m&ecirc;me le serveur DNS). [br]
@@ -586,6 +597,7 @@ toutes les liens seront remplac&eacute;es par l'url que vous avez d&eacute;finit
 <enable_syslog_server>Activer le mode r&eacute;ception de logs</enable_syslog_server>
 <enable_syslog_server_text>Si vous passez en vert, ce serveur va recevoir les &eacute;v&egrave;nements syst&egrave;mes envoy&eacute;s par des clients.[br]Ce serveur va utiliser UDP et le port distant 514 afin de recevoir les donn&eacute;es.</enable_syslog_server_text>
 <enable_tomcatjconet>Activer le connecteur Tomcat d'Apache</enable_tomcatjconet>
+<enable_tuning_mysql_server>Activer la personnalisation MySQL</enable_tuning_mysql_server>
 <enable_viptrack>Activer VIPTrack</enable_viptrack>
 <enable_whitelisting>Activer la m&eacute;thode liste blanche</enable_whitelisting>
 <eq2>est &eacute;gale</eq2>
@@ -602,6 +614,7 @@ toutes les liens seront remplac&eacute;es par l'url que vous avez d&eacute;finit
 <FEDORA_TEMPLATE>Mod&egrave;le Fedora</FEDORA_TEMPLATE>
 <fileio>I/O fichier</fileio>
 <filename_pxe_explain>Peut &ecirc;tre utilis&eacute; pour sp&eacute;cifier le nom du fichier de d&eacute;marrage initial qui doit &ecirc;tre utilis&eacute; par un client.[br] Le nom de fichier doit &ecirc;tre un nom de fichier reconnaissable par tous les protocoles de transport de fichier que le client utilisera pour charger le fichier.</filename_pxe_explain>
+<fileshare_text>Administrer votre syst&egrave;me de partage de fichiers (SAMBA) tels que les r&eacute;pertoires, affinages de configurations, droits d'acc&egrave;s....</fileshare_text>
 <filesystem_type>Syst&egrave;me de fichiers</filesystem_type>
 <files_and_folders_permissions>Permissions des fichier et dossiers</files_and_folders_permissions>
 <files_extension>Extension de fichiers</files_extension>
@@ -701,6 +714,7 @@ Si le compte est nomm&eacute; &quot;Administrateur&quot;, tapez ici &quot;Admini
 Si votre serveur est nomm&eacute; comme pdc01.mtdomain.tld, indiquez mtdomain.tld</howto_ADDOMAIN>
 <howto_ADIPADDR>Ce serveur doit r&eacute;soudre le nom d'h&ocirc;te du serveur Active Directory.[br]
 Si vous pensez qu'il n'en aura pas la possibilit&eacute;, indiquez ici l'adresse TCP/IP de votre serveur Active Directory</howto_ADIPADDR>
+<howto_ADNETBIOSDOMAIN>C'est votre domaine Active Directory &quot;court&quot; ou le nom du groupe de travail lorsque vous &eacute;tablissez une session de type DOMAINE\utilisateur</howto_ADNETBIOSDOMAIN>
 <howto_ad_server>C'est le nom de la machine Active Directory sans le nom de domaine.[br]
 Si votre serveur est nomm&eacute; pdc01.mtdomain.tld indiquez alors pdc01</howto_ad_server>
 <howto_WINBINDPASSWORD>Vous devez cr&eacute;er un utilisateur &quot;winbind&quot; dans votre serveur Active Directory et indiquez ici le mot de passe de cet utilisateur.[br]
@@ -747,6 +761,8 @@ Ainsi les deux services sont en accord avec les machines clientes.</IncludeDHCPL
 <incompatible_system>Syst&egrave;me incompatible</incompatible_system>
 <indexing_interval>Intervalle d'indexation</indexing_interval>
 <index_warnings_text>Des informations importantes ont &eacute;t&eacute;s relev&eacute;es, cliquez ici pour les visualiser.</index_warnings_text>
+<innodb_log_buffer_size>Taille du tampon m&eacute;moire des &eacute;v&egrave;nements INNODB</innodb_log_buffer_size>
+<innodb_log_file_size>Taille du fichier d'&eacute;v&egrave;nements INNODB</innodb_log_file_size>
 <instance>Instance</instance>
 <instance_server_name>Nom d'h&ocirc;te de l'instance</instance_server_name>
 <InternetDomainsOrgAsOnlySubdomains>Uniquement les domaines officiels</InternetDomainsOrgAsOnlySubdomains>
@@ -842,6 +858,8 @@ Par d&eacute;faut, tous les serveurs virtuels disposent de la valeur 1024</lxc_p
 <mailss>message(s)</mailss>
 <maindomains_explain>Cette section indique les domaines Internet autoris&eacute;s par les organisations.[br]
 Les organisations ne pourront que cr&eacute;er des sous-domaines de ces domaines si l'option &quot;Seulement les domaines officiels&quot; est activ&eacute;e.</maindomains_explain>
+<main_interface>Interface Principale</main_interface>
+<main_interface_back_interface_text>Revenir vers l'interface principale du Super-Admin</main_interface_back_interface_text>
 <major_version>Version majeure</major_version>
 <manage_this_group>Administrer ce groupe</manage_this_group>
 <manage_websites>Administrer vos sites web</manage_websites>
@@ -897,6 +915,7 @@ Si vous mettez 0, alors l'&eacute;metteur sera compl&egrave;tement mis en liste 
 <myaccount>Mon compte</myaccount>
 <myaccount_text>Personnalisez votre compte, modifiez votre adresse de messagerie, votre mot de passe et vos informations syst&egrave;me.</myaccount_text>
 <mymessaging>Ma messagerie</mymessaging>
+<mysqldefault_php_text>Ci-dessous, les param&egrave;tres par d&eacute;faut de connexion au serveur Mysql utilis&eacute;s par les applications PHP (Artica compris).[br]Par d&eacute;faut, les param&egrave;tres d'Artica qui sont ceux indiqu&eacute;s ci-dessus.[br]</mysqldefault_php_text>
 <mysql_error>Erreur du serveur Mysql</mysql_error>
 <mysql_error_popup_credential_text>Artica n'a pas la possibilit&eacute; de se connecter sur le serveur Mysql avec les param&egrave;tres d'acc&egrave;s par d&eacute;faut.[br]
 Vous devriez cr&eacute;er un nouvel utilisateur Mysql et un  mot de passe afin de corriger ce probl&egrave;me.[br]
@@ -905,6 +924,7 @@ Voici l'erreur qui &agrave; &eacute;t&eacute; g&eacute;n&eacute;r&eacute;e penda
 <mysql_perso_conf>Param&egrave;tres sp&eacute;cifiques</mysql_perso_conf>
 <mysql_perso_conf_text>Ajoutez vos propres param&egrave;tres dans la section [mysqld] de votre serveur.[br]Ces param&egrave;tres ne seront ajout&eacute;s que dans cette section.</mysql_perso_conf_text>
 <mysql_ssl_explain>Cette section vous aide &agrave; autoriser Mysql &agrave; utiliser une connexion s&eacute;curis&eacute;e avec SSL.</mysql_ssl_explain>
+<mysql_tuning>R&eacute;glages MySQL</mysql_tuning>
 <mysql_users>Utilisateurs Mysql</mysql_users>
 <myWebServices>Mes services Internet</myWebServices>
 <myWebServices_text>Visualiser les informations sur les services Internet que vous pouvez utiliser avec votre compte</myWebServices_text>
@@ -947,6 +967,8 @@ La notification est envoy&eacute;e &agrave; l'adresse indiqu&eacute;e au param&e
 <notify_class_software>probl&egrave;mes logiciels</notify_class_software>
 <notify_class_software_text>Informe le postmaster des courriers non d&eacute;livr&eacute;s en raison de probl&egrave;mes logiciels. La notification est envoy&eacute;e &agrave; l'adresse indiqu&eacute;e au param&egrave;tre de configuration error_notice_recipient (d&eacute;faut : postmaster).</notify_class_software_text>
 <not_categoryzed>Non cat&eacute;goris&eacute;</not_categoryzed>
+<NO_AD_CONNECTION>N'est pas un Membre</NO_AD_CONNECTION>
+<NO_AD_CONNECTION_TEXT>Ce serveur n'est pas Membre d'un domaine Active Directory.C'est une information, pas une erreur.[br]En effet il n'est pas obligatoire d'&ecirc;tre membre d'un domaine Microsoft.</NO_AD_CONNECTION_TEXT>
 <no_backendmailbox_installed_explain>Il n'y a pas de serveur de bo&icirc;tes aux lettres install&eacute; sur ce syst&egrave;me (Cyrus-imap ou Zarafa).[br]
 SI vous indiquez un domaine local et recevez un email pour ce domaine, le message ne sera pas stock&eacute; et sera perdu.[br]
 Utilisez la seconde option &quot;Domaines relais&quot;.</no_backendmailbox_installed_explain>
@@ -963,6 +985,9 @@ Utilisez l'autre option (domaine local) dans ce contexte.</NO_RELAY_TO_THIS_SERV
 <Offline_Uncorrectable>secteurs non r&eacute;-allouables</Offline_Uncorrectable>
 <Offline_Uncorrectable_text>Nombre de secteurs non r&eacute;-allouables</Offline_Uncorrectable_text>
 <only_use_this>Utiliser seulement ceci</only_use_this>
+<OpenEMMNextMTA>Relais pour l'envoi des messages</OpenEMMNextMTA>
+<OpenEMMNextMTAPort>Port du relais</OpenEMMNextMTAPort>
+<OpenEMMSendMailPort>Port local du moteur SMTP</OpenEMMSendMailPort>
 <OPENEMM_ABOUT>OpenEMM est un application Web riche en fonctionnalit&eacute; pour effecter des t&acirc;ches marketing via eMail tels que des lettres d'informations et autres services.[br]
 OpenEMM offre une interface utilisateur conviviale avec des fonctionnalit&eacute;s &eacute;tendues sur les messages d'erreurs, le tra&ccedil;age des liens,des graphiques en temps r&eacute;el et un module CMS et de scripts afin d'individualiser les diff&eacute;rentes t&acirc;ches de communication.</OPENEMM_ABOUT>
 <OPENEMM_INSTALLED_ENABLED_FEATURE_DISABLED>Le service OpenEMM est install&eacute; et activ&eacute;.[br]Ce n'est pas comptable d'utiliser deux instances Tomcat avec cette configuration.[br]Si vous d&eacute;sirez utiliser cette fonctionnalit&eacute;, d&eacute;sactivez le service OpenEMM.</OPENEMM_INSTALLED_ENABLED_FEATURE_DISABLED>
@@ -1100,9 +1125,11 @@ Vous pouvez sp&eacute;cifier &quot;all&quot; afin d'&eacute;valuer tous les attr
 <Power_On_Hours>Temps de travail</Power_On_Hours>
 <Power_On_Hours_text>Nombre d'heures de fonctionnement</Power_On_Hours_text>
 <privileges_users_warning>Les privil&egrave;ges d&eacute;finis ici vont &quot;&eacute;craser&quot; les droits accord&eacute;s sur le groupe et l'organisation.</privileges_users_warning>
+<processors>Processeurs</processors>
 <product_apache_name>Nom du produit</product_apache_name>
 <program>Programme</program>
 <promoting>Promotions</promoting>
+<Proxy>Proxy</Proxy>
 <ProxyPass_explain>Cette instruction permet de &quot;mapper&quot; des serveurs distants dans l'espace du serveur local ;[br] le serveur local ne fonctionne pas comme un proxy au sens habituel, mais appara&icirc;t comme un miroir du serveur distant ; &quot; requ&ecirc;te source&quot; est le nom d'un chemin local virtuel ; &quot;rediriger vers&quot; est une URL partielle pour le serveur distant.[br][br]Exemples:[br]
 Rediriger toutes les connexions vers 192.168.1.101 sur le port 8088[br]
 Requ&ecirc;te source:/[br]
@@ -1116,12 +1143,16 @@ Rediriger */video connections vers http://cam.hometranet.home:5555/cams/sony/str
 Requ&ecirc;te source: /video[br]
 Rediriger vers: http://cam.hometranet.home:5555/cams/sony/stream[br]
 [br]</ProxyPass_explain>
+<proxyquicktext>Administrer votre service Proxy, de filtrage URL, d'Antivirus et d'acc&eacute;l&eacute;rateur Internet.</proxyquicktext>
 <ProxyRequests>Proxy de transfert</ProxyRequests>
 <ProxyRequests_explain>Permet d'activer/d&eacute;sactiver la fonctionnalit&eacute; de serveur mandataire direct d'Apache</ProxyRequests_explain>
 <ProxyTimeout_explain>sp&eacute;cifie un d&eacute;lai (en secondes) pour les requ&ecirc;tes mandat&eacute;es.[br]Ceci s'av&egrave;re utile dans le cas d'un serveur d'applications lent et bogu&eacute; qui a tendance &agrave; se bloquer, et si vous pr&eacute;f&eacute;rez simplement renvoyer une erreur timeout et abandonner la connexion en douceur plut&ocirc;t que d'attendre jusqu'&agrave; ce que le serveur veuille bien r&eacute;pondre</ProxyTimeout_explain>
 <ProxyVia>Utiliser les ent&ecirc;tes Via</ProxyVia>
 <ProxyVia_explain>permet de contr&ocirc;ler l'utilisation de l'en-t&ecirc;te HTTP Via: par le mandataire. Le but recherch&eacute; est de contr&ocirc;ler le flux des requ&ecirc;tes mandat&eacute;es tout au long d'une cha&icirc;ne de serveurs mandataires.</ProxyVia_explain>
 <proxy_port>Port du proxy</proxy_port>
+<PubkeyAuthentication>authentification par clef publique</PubkeyAuthentication>
+<PubkeyAuthentication_text>l'authentification par clef publique permet de prouver votre identit&eacute; en utilisant une clef cryptographique en lieu et place d'un compte utilisateur et mot de passe.[br]
+Attention, vous devrez au pr&eacute;alable indiquer les clefs autoris&eacute;es &agrave; ce connecter.</PubkeyAuthentication_text>
 <put_in_hold_queue>Placer en file d'attente inactive</put_in_hold_queue>
 <pxe_root-path>nom complet de fichier</pxe_root-path>
 <pxe_root-path_explain>sp&eacute;cifie le nom complet de fichier (avec le chemin) qui contient le disque racine du client (root disk). Le nom de fichier est une cha&icirc;ne de caract&egrave;res NVT ASCII.</pxe_root-path_explain>
@@ -1246,6 +1277,7 @@ Ne vous inqui&eacute;tez pas de ne pas visualiser vos utilisateurs apr&egrave;s 
 <root_password_not_changed>Modifier le mot de passe root</root_password_not_changed>
 <root_password_not_changed_text>il est recommand&eacute; de modifier le mot de passe du compte root.[br]Le compte root permet d'acc&eacute;der au serveur &agrave; travers SSH ou via la console afin d'op&eacute;rer des t&acirc;ches syst&egrave;mes.</root_password_not_changed_text>
 <run_every_day>Ex&eacute;cuter chaque</run_every_day>
+<SambaActAsWins>Agir en tant que serveur WINS</SambaActAsWins>
 <SambaActAsWins_explain>Ce serveur est le serveur WINS</SambaActAsWins_explain>
 <SAMBAD_NOT_IP_IN_SRVNAME>L'utilisation d'une adresse IP n'est pas autoris&eacute;e
 Vous avez besoin de d&eacute;finir le nom netbios du serveur Windows comme ceci: 
@@ -1262,6 +1294,10 @@ Artica sauvegardera cette adresse dans le fichiers h&ocirc;tes afin de le r&eacu
 <samba_directory_mask>Masque de r&eacute;pertoire</samba_directory_mask>
 <samba_directory_mask_text>Ce param&egrave;tre contr&ocirc;le quels sont les permissions UNIX lorsqu'un client Windows va manipuler les permissions du r&eacute;pertoire en utilisant les outils de s&eacute;curit&eacute; Microsoft.[br]
 Indiquez ici le chmod du r&eacute;pertoire</samba_directory_mask_text>
+<samba_info_latest_ad_explain>Afin d'assurer une meilleur connexion avec votre serveur Windows, v&eacute;rifiez que vous utilisez la derni&egrave;re version de Samba. Vous utilisez actuellement la</samba_info_latest_ad_explain>
+<SAMBA_MAIN_PARAMS>Param&egrave;tres principaux</SAMBA_MAIN_PARAMS>
+<SAMBA_MAIN_PARAMS_TEXT>Param&egrave;tres principaux du serveur Samba tels que le nom du domaine Windows, nom netbios, param&egrave;tres Winbind...</SAMBA_MAIN_PARAMS_TEXT>
+<samba_quicklinks_services>Modules et services</samba_quicklinks_services>
 <SAMBA_REMOTE_ANNOUNCE_EXPLAIN>Cette section peut &ecirc;tre utilis&eacute;e afin de s'assurer que tous les noms NetBIOS sur un r&eacute;seau seront annonc&eacute;s &agrave; un r&eacute;seau distant.</SAMBA_REMOTE_ANNOUNCE_EXPLAIN>
 <SAMBA_REMOTE_ANNOUNCE_EXPLAIN_FIELD>Vous pouvez ajouter des adresses IP comme 192.168.12.23 ou 192.168.1.255.[br]192.168.1.255 est soit l'adresse IP, soit  l'adresse de diffusion LMB du r&eacute;seau distant, le LMB est 192.168.12.23, ou l'adresse qui pourrait &ecirc;tre donn&eacute;e comme 192.168.1.255 o&ugrave; le masque est suppos&eacute; &ecirc;tre 255.255.255.0[br] Lorsque l'annonce envoy&eacute;e vers l'adresse de broadcast du r&eacute;seau distant, chaque h&ocirc;te recevra les annonces. C'est une op&eacute;ration bruyante sur le r&eacute;seau, mais peut &ecirc;tre n&eacute;cessaire si l'on ne conna&icirc;t pas l'adresse IP de serveur LMB. la valeur DOMAINE est facultatif (le groupe de travail) et peut &ecirc;tre soit le groupe de travail local ou de celui du r&eacute;seau distant. [br] Si vous utilisez le nom du groupe du r&eacute;seau distant, les noms de machine NetBIOS finiront par ressembler &agrave; leur appartenance au groupe de travail local. [br] Cela peut causer des probl&egrave;mes de r&eacute;solution de nom et doit &ecirc;tre &eacute;vit&eacute;.</SAMBA_REMOTE_ANNOUNCE_EXPLAIN_FIELD>
 <samba_strict_allocate>Comportement de stockage de blocs Windows</samba_strict_allocate>
@@ -1360,6 +1396,7 @@ est plein sans que de  l'espace puisse &ecirc;tre lib&eacute;r&eacute; a cause d
 Par d&eacute;faut, ou si la valeur est d&eacute;finie &agrave; 0, la taille minimum est utilis&eacute; &agrave; environ 128Ko. [br]
 La r&eacute;gion de log est utilis&eacute; pour le stockage des noms de fichiers, il est peut donc n&eacute;cessaire d'augmenter la taille si un grand nombre de fichiers doivent &ecirc;tre ouverts et enregistr&eacute;s avec le gestionnaire de log Berkeley DB</set_lg_regionmax_text>
 <share_access>Acc&egrave;s au partage</share_access>
+<sharing_behavior>services de partage</sharing_behavior>
 <SimpleWords_explain>Cette section vous aide &agrave; simplement ajouter des mots et phrases.[br]Les r&egrave;gles ajout&eacute;es vont forcer le serveur de messagerie &agrave; v&eacute;rifier ces mots dans le corps et le sujet de chaque message qui transite par ce serveur.[br]
 Les messages qui correspondent aux r&egrave;gles vont &ecirc;tre automatiquement rejet&eacute;s (pas de quarantaine)</SimpleWords_explain>
 <SimpleWords_explain_add>Ajoutez des mots et phrases dans ce formulaire[br]Chaque entr&eacute;e devra &ecirc;tre s&eacute;par&eacute;e par un retour chariot.</SimpleWords_explain_add>
@@ -1423,6 +1460,8 @@ Cette taille doit correspondre au minium &agrave; la taille autoris&eacute;e d'u
 <storagebakcup_softwares>Logiciels de stockage et de sauvegarde</storagebakcup_softwares>
 <storage_directory>R&eacute;pertoire de stockage</storage_directory>
 <storage_pool>Pool de stockage</storage_pool>
+<StrictModes>Modes strictes</StrictModes>
+<StrictModes_text>Sp&eacute;cifie si sshd doit v&eacute;rifier les modes et le propri&eacute;taire des fichiers de l'utilisateur et du r&eacute;pertoire de base (home directory) de l'utilisateur avant d'accepter une connexion. [br]C'est normalement souhaitable, parce que quelquefois, les novices laissent accidentellement leur r&eacute;pertoire ou leurs fichiers en acc&egrave;s complet &agrave; tout les monde.</StrictModes_text>
 <subdomain>Sous-domaine</subdomain>
 <subnet-mask>Masque de sous-r&eacute;seau</subnet-mask>
 <suspend>Suspendre</suspend>
@@ -1491,6 +1530,7 @@ Cela peut prendre du temps.. Tout d&eacute;pend de votre bande passante Internet
 Le &quot;greylisting&quot; est une fonctionnalit&eacute; qui refuse les premiers messages des serveurs de messagerie inconnus.[br]
 Si un internaute vous envoi un message alors que son serveur de messagerie est inconnu, il sera convi&eacute; &agrave; renvoyer son message plus tard.[br]
 Si le message en renvoy&eacute; dans un d&eacute;lai fix&eacute; alors le message est transmis et vous serez en mesure de le recevoir.</user_greylist_explain>
+<UseSamePHPMysqlCredentials>Utiliser le m&ecirc;me identifiant</UseSamePHPMysqlCredentials>
 <UseSSL>Utiliser l'encryption SSL</UseSSL>
 <use_another_WINS_server>Utiliser un autre serveur WINS</use_another_WINS_server>
 <use_another_WINS_server_explain>Toutes requ&ecirc;tes WINS seront redirig&eacute;es vers le serveur indiqu&eacute;. [br]Indiquez 0.0.0.0 afin de d&eacute;sactiver cette fonctionnalit&eacute;</use_another_WINS_server_explain>
@@ -1547,6 +1587,7 @@ Voulez-vous effectuer cette op&eacute;ration ?[br]Cette op&eacute;ration sera ex
 <wbl_resolv_mx_explain>Si activ&eacute; les Artica va r&eacute;soudre les MX des domaines ajout&eacute;s dans cette liste et mettre les adresses des MX dans la liste blanche des filtres de connexion.</wbl_resolv_mx_explain>
 <webadministration_console>Console web d'administration</webadministration_console>
 <websites_number>Nombre de sites web</websites_number>
+<web_console>Console Web</web_console>
 <web_user>Utilisateur Web</web_user>
 <weight>Poids</weight>
 <WELCOME_ARTICA_STATS_SQUID>Bienvenue dans l'espace d&eacute;di&eacute; au Proxy Web</WELCOME_ARTICA_STATS_SQUID>
@@ -1603,6 +1644,17 @@ Les utilisateurs peuvent naviguer uniquement sur les sites web dans les cat&eacu
 <zarafa_indexer_explain>Cette fonctionnalit&eacute; permet d'indexer les messages afin d'offrir des capacit&eacute;s de recherche pour le serveur Zarafa.[br]
 Un service va r&eacute;guli&egrave;rement indexer tous les messages et de fa&ccedil;on facultative, les pi&egrave;ces jointes.[br]Lors d'une recherche d'un message, le temps de recherche sera s&eacute;rieusement r&eacute;duit.[br]
 Lorsque l'indexation des pi&egrave;ces jointe est activ&eacute;e, il est aussi possible d'indexer les contenu des fichiers (pour les types les plus communs).</zarafa_indexer_explain>
+<zarafa_innodb_buffer_pool_size>Le tampon m&eacute;moire que InnoDB va utiliser afin de mettre en cache les donn&eacute;es et indexes des tables.[br]Plus la valeur est importante, moins votre serveur va se servir de son disque dur (I/O) afin d'acc&eacute;der aux donn&eacute;es des tables.[br]
+Sur un serveur d&eacute;di&eacute; &agrave; Zarafa vous devriez indiquer au moins 50% de la m&eacute;moire vive que votre serveur dispose.[br]Cependant ne mettez pas une valeur trop importante qui pourrait surcharger la m&eacute;moire et &eacute;toufferai le syst&egrave;me en passant en sur-capacit&eacute; de m&eacute;moire.</zarafa_innodb_buffer_pool_size>
+<zarafa_innodb_log_buffer_size>La taille que InnoDB va utiliser avant d'&eacute;crire les &eacute;v&egrave;nements sur le disque.[br]
+Un tampon assez large va autoriser des transactions importantes sans avoir besoin d'&eacute;crire sur le disque avant leur validation.[br]
+Si vous avez de grosses transactions, mettre un tampon important va &eacute;conomiser des I/O.[br]Cette valeur devrait &ecirc;tre de 32M</zarafa_innodb_log_buffer_size>
+<zarafa_innodb_log_file_size>Taille d'&eacute;v&egrave;nement de transaction.[br]
+La valeur la plus commode serait 25% de la taille du tampon m&eacute;moire de InnoDB</zarafa_innodb_log_file_size>
+<zarafa_mysql_tuning_text>Configurer correctement les performances de MySQL est important afin de disposer du maximum de performances sur votre serveur.[br]
+Presque tous les goulots d'&eacute;tranglements sont d&eacute;termin&eacute;s par les acc&egrave;s &agrave; la base de donn&eacute;es.[br]Acc&eacute;l&eacute;rer les processus du moteur de la base de donn&eacute;es vous assure que les requ&ecirc;tes seront ex&eacute;cut&eacute;es le plus rapidement possible.[br]
+La valeurs par d&eacute;faut sont fix&eacute;es de fa&ccedil;on pessimistes afin d'assurer le fonctionnement de Zarafa sur des serveurs bas de gamme.[br] 
+Toutefois m&ecirc;me pour des petites installations il faut r&eacute;-hausser ces valeurs.</zarafa_mysql_tuning_text>
 <ZARAFA_SAFEMODE_EXPLAIN>Le serveur Zarafa est en mode &quot;Safe&quot;, cela veut dire qu'il est verrouill&eacute; et que toute op&eacute;ration sur les bo&icirc;tes aux lettres sont interdites (ex: cr&eacute;ation des bo&icirc;tes aux lettres).</ZARAFA_SAFEMODE_EXPLAIN>
 <zarafa_store_outside_text>Cette op&eacute;ration &agrave; pour but de stocker toutes les pi&egrave;ces jointes en dehors de la base MySQL.[br]
 Cette architecture permet de disposer d'un meilleur cache Mysql et une base de donn&eacute;es plus petite.[br]

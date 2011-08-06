@@ -75,7 +75,7 @@ function js(){
 		
 	function x_EditSieveRule(obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		SieveEditRule(mem_rulename,mem_rulenumber);
 		if(document.getElementById('SieveResumers')){LoadAjax('SieveResumers','$page?change-resumes='+mem_rulename+'&uid=$uid');}
 		
@@ -83,14 +83,14 @@ function js(){
 		
 	function x_SaveActionRule(obj){
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}
+		if(tempvalue.length>3){alert(tempvalue);}
 		SieveEditAction(mem_rulename,mem_rulenumber);
 		if(document.getElementById('SieveResumers')){LoadAjax('SieveResumers','$page?change-resumes='+mem_rulename+'&uid=$uid');}	
 	}
 	
 	function x_SieveDeleteMasterRule(obj){
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}
+		if(tempvalue.length>3){alert(tempvalue);}
 		if(document.getElementById('SieveResumers')){LoadAjax('SieveResumers','$page?change-resumes='+mem_rulename+'&uid=$uid');}	
 	}
 	
@@ -116,7 +116,7 @@ function js(){
 		
 	function x_SieveEnableRule(obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		SieveLoad();
 		}			
 		

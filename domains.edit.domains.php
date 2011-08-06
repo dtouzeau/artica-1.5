@@ -513,7 +513,7 @@ function remote_domain_js(){
 		
 		var x_AddRelayDomain= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			YahooWinHide();
 			LoadAjax('RelayDomainsList','domains.edit.domains.php?RelayDomainsList=yes&ou=$ou');
 		}
@@ -763,7 +763,7 @@ if(is_array($HashDomains)){
 	
 		var x_DeleteRelayDomain= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			LoadAjax('RelayDomainsList','domains.edit.domains.php?RelayDomainsList=yes&ou=$ou_ser');
 		}	
 	
@@ -889,7 +889,7 @@ if($GLOBALS["VERBOSE"]){echo count($HashDomains)." domains for this ou = $ou\n";
 	<script>
 		var x_DeleteInternetDomainInside= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			if (document.getElementById('LocalDomainsList')){
 				LoadAjax('LocalDomainsList','domains.edit.domains.php?LocalDomainList=yes&ou=$ou');
 				return

@@ -140,6 +140,7 @@ class pagebuilder{
 			$jsTable[]="/js/edit.user.js";
 			$jsTable[]="/js/cookies.js";
 			$jsTable[]="/default.js";
+			
 			//$jsTable[]="/js/jquery-1.4.2.min.js";
 			//$jsTable[]="/js/jquery-ui-1.8.6.custom.min.js";
 			//$jsTable[]="/js/jquery-1.5.1.min.js";
@@ -157,6 +158,7 @@ class pagebuilder{
 			$jsTable[]="/js/jquery.treeview.async.js";
 			$jsTable[]="/js/jquery.tools.min.js";
 			$jsTable[]="/js/jquery.qtip.js";
+			$jsTable[]="/js/jquery.kwicks-1.5.1.pack.js";
 
 
 			if(($this->CurrentPageName()=="logon.php") OR ($this->CurrentPageName()=="logoff.php") OR ($this->CurrentPageName()=="404.php")){

@@ -47,7 +47,7 @@ function template_edit_js(){
 		
 	var x_template_edit_gene= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			YahooWin4Hide();
 			RefreshTab('emailing_campaigns');
 			emailing_template_edit();	
@@ -64,7 +64,7 @@ function template_edit_gene(){
 	
 var x_TemplateeMailingDelete= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue)};
+	if(tempvalue.length>3){alert(tempvalue)};
 	YahooWin4Hide();
 	RefreshTab('emailing_campaigns');
 }		
@@ -81,7 +81,7 @@ function TemplateeMailingDelete(){
 	
 var x_EditCSSTemplateSave= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue)};
+	if(tempvalue.length>3){alert(tempvalue)};
 	YahooWin5Hide();
 }	
 	
@@ -196,7 +196,7 @@ function template_advopts_popup(){
 <script>
 var x_SaveXheadersTemplate= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue)};
+	if(tempvalue.length>3){alert(tempvalue)};
 	LoadAjax('advoptsdisplay','$page?template-advopts-display=$ID&ou={$_GET["ou"]}');
 	YahooWin5Hide();
 }	
@@ -471,7 +471,7 @@ function template_add_popup(){
 	
 	var x_SaveNeweMailingTemplate= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			YahooWin4Hide();
 			RefreshTab('emailing_campaigns');	
 		}	
@@ -837,7 +837,7 @@ function template_attach_iframe($error=null){
 
 	var x_TemplateDeleteAttachedFile= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			LoadAjax('attachedfiles','$page?template-attached-files-show=$template_id&ou=$ou');
 		}	
 	

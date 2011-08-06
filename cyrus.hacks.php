@@ -32,7 +32,7 @@ function ANTI_HACK_CYRUS_SERVICE(){
 
 var x_ANTI_HACK_CYRUS_SAVE=function (obj) {
 	tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue);}
+	if(tempvalue.length>3){alert(tempvalue);}
 	ANTI_HACK_CYRUS_SERVICE();
     }
 

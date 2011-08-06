@@ -691,10 +691,27 @@ function list_users(){
 		
 		$sock=new sockets();
 		if(strpos(" $query","*")==0){$query=$query."*";}
-		$query=str_replace("*",".*?",$query);
-		$groups=unserialize(base64_decode($sock->getFrameWork("cmd.php?unix-groups=yes")));
 		
-		while (list ($gpid, $array) = each ($groups) ){
+		$query=urlencode($query);
+		$systemusers=unserialize(base64_decode($sock->getFrameWork("samba.php?getent=$query")));
+		if(is_array($systemusers)){
+			while (list ($uid, $displayname) = each ($systemusers)){
+				$res[$uid]=$uid;
+			}
+			
+		}
+		$systemgroup=unserialize(base64_decode($sock->getFrameWork("samba.php?getent-group=$query")));
+		writelogs("get ent groups -> ". count($systemgroup)." elements",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+		if(is_array($systemgroup)){
+			while (list ($uid, $displayname) = each ($systemgroup)){
+				$res[$uid]=array("displayname"=>"$uid","members"=>array($uid),"count"=>1);
+			}
+			
+		}		
+		
+		
+		
+		/*while (list ($gpid, $array) = each ($groups) ){
 			
 			if(preg_match("#$query#",$array["NAME"])){
 				if(!is_array($array["MEMBERS"])){$array["MEMBERS"][]=$array["NAME"];}
@@ -705,6 +722,7 @@ function list_users(){
 			}
 			
 		}
+		*/
 		
 		
 		

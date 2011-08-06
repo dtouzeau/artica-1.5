@@ -32,7 +32,7 @@ function js(){
 	
 	var x_emailings_contact_del_start= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			if(document.getElementById('emailing_table_content_bases')){
 				var ss=document.getElementById('emailing-search').value;
 				eMailingSearch(ss);
@@ -161,7 +161,7 @@ function popup_add_contact(){
 		
 	var x_eMailingAddContact= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			YahooWin5Hide();
 			$resfresh_after
 			

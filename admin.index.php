@@ -47,6 +47,7 @@ if(isset($_GET["memcomputer"])){status_computer();exit;}
 if(isset($_GET["mem-dump"])){status_memdump();exit;}
 if(isset($_GET["memory-status"])){status_memdump_js();exit;}
 if(isset($_GET["artica-meta"])){artica_meta();exit;}
+if(isset($_GET["admin-ajax"])){page($users);exit;}
 
 page($users);
 
@@ -157,7 +158,13 @@ function StartStopService_perform(){
 	
 }
 function page($usersmenus){
-if(GET_CACHED(__FILE__,__FUNCTION__,__FUNCTION__)){return null;}
+	$left_menus=null;
+if(isset($_GET["admin-ajax"])){
+	//if(GET_CACHED(__FILE__,__FUNCTION__,__FUNCTION__."-admin-ajax")){return null;}
+	
+}else{	
+	if(GET_CACHED(__FILE__,__FUNCTION__,__FUNCTION__)){return null;}
+}
 $ldap=new clladp();
 $page=CurrentPageName();
 error_log(basename(__FILE__)." ".__FUNCTION__.'() line '. __LINE__);
@@ -179,7 +186,7 @@ if($users->KASPERSKY_SMTP_APPLIANCE){
 		$GLOBALS["JQUERY_UI"]="kavweb";
 	}
 
-
+	if(isset($_GET["admin-ajax"])){$left_menus="LoadAjax('TEMPLATE_LEFT_MENUS','/admin.tabs.php?left-menus=yes');";}
 
 
 
@@ -263,7 +270,7 @@ function CheckDaemon(){
 		LoadCadencee();
 		RTMMailHide();
 		$wizard_kaspersky_mail_appliance
-		
+		$left_menus
 	</script>
 	{$arr[0]}
 	";
@@ -273,7 +280,9 @@ $cfg["JS"][]="js/admin.js";
 
 if(isset($_GET["admin-ajax"])){
 	$tpl=new templates();
-	echo $tpl->_ENGINE_parse_body($html);
+	$html=$tpl->_ENGINE_parse_body($html);
+	SET_CACHED(__FILE__,__FUNCTION__,__FUNCTION__."-admin-ajax",$html);
+	echo $html;
 	exit;
 }
 error_log(basename(__FILE__)." ".__FUNCTION__.'() line '. __LINE__);
@@ -300,6 +309,7 @@ error_log(basename(__FILE__)." ".__FUNCTION__.'() line '. __LINE__);
 $html=$tpl->web_page;
 SET_CACHED(__FILE__,__FUNCTION__,__FUNCTION__,$html);
 echo $html;			
+if($GLOBALS["VERBOSE"]){echo "<H1>Finish</H1>";}
 error_log(basename(__FILE__)." ".__FUNCTION__.'() line '. __LINE__);	
 	
 }
@@ -307,6 +317,7 @@ error_log(basename(__FILE__)." ".__FUNCTION__.'() line '. __LINE__);
 
 
 function main_admin_tabs(){
+	if($GLOBALS["VERBOSE"]){echo "<li>".__FUNCTION__." line:".__LINE__."</li>";}
 	$array["t:frontend"]="{admin}";
 	$users=new usersMenus();
 	$sys=new syslogs();
@@ -511,6 +522,7 @@ function status_right(){
 	
 	
 	$hostname=base64_decode($sock->getFrameWork("network.php?fqdn=yes"));
+	writelogs("network.php?fqdn=yes -> hostname=\"$hostname\"",__FUNCTION__,__FILE__,__LINE__);
 	$mustchangeHostname=false;
 	if(preg_match("#Name or service not known#", $hostname)){$mustchangeHostname=true;}
 	if(preg_match("#locahost\.localdomain#", $hostname)){$mustchangeHostname=true;}

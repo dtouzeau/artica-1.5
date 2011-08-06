@@ -2761,17 +2761,17 @@ function CheckSessions(){
 
 		if($GLOBALS["DEBUG_TEMPLATE"]){error_log("$page:CheckSessions()=>".__FUNCTION__." in " . __FILE__. " line ".__LINE__);}
 		if($page=="exec.squidguard.php"){error_log("$page:CheckSessions()=>".__FUNCTION__." in " . __FILE__. " line ".__LINE__);}
-		
+		if(!isset($_SESSION["uid"])){$_SESSION["uid"]=null;}
 		if($_SESSION["uid"]==null){
-		if(isset($_GET["session"])){
-		if($GLOBALS["DEBUG_INCLUDES"]){echo basename(__FILE__)."::".dirname(__FILE__)."/class.user.inc\n";}
-			include_once(dirname(__FILE__).'/class.user.inc');	
-			$users=new user($_GET["uid"]);
-			if(md5($users->password)==$_GET["session"]){
-				writelogs("Creating new session for uid={$_GET["uid"]}",__CLASS__.'/'.__FUNCTION__,__FILE__);
-				$_SESSION["uid"]=$_GET["uid"];
-				return true;
-			}
+			if(isset($_GET["session"])){
+				if($GLOBALS["DEBUG_INCLUDES"]){echo basename(__FILE__)."::".dirname(__FILE__)."/class.user.inc\n";}
+				include_once(dirname(__FILE__).'/class.user.inc');	
+				$users=new user($_GET["uid"]);
+				if(md5($users->password)==$_GET["session"]){
+					writelogs("Creating new session for uid={$_GET["uid"]}",__CLASS__.'/'.__FUNCTION__,__FILE__);
+					$_SESSION["uid"]=$_GET["uid"];
+					return true;
+				}
 		}}	
 		$noback["cron.obm.synchro.php"]=true;
 		$noback["logon.php"]=true;
@@ -3798,8 +3798,9 @@ function GET_CACHED($file,$function,$token=null,$return=false,$maxmin=0){
 	$dir=dirname(__FILE__)."/logs/web/cache/$uid";
 	$targetFile="$dir/$file.$function.$token.$browser.{$_SESSION["detected_lang"]}.object.cache";
 	if(!is_file($targetFile)){writelogs("$targetFile no such file",__FUNCTION__,__FILE__,__LINE__);return false;}
-	$data=@file_get_contents($targetFile);
+	$data=trim(@file_get_contents($targetFile));
 	if($data<>null){
+		writelogs(strlen($data)." $file $function $token",__FUNCTION__,__FILE__,__LINE__);
 		if($return){return $data;}
 		if($data==null){return false;}
 		echo $data;

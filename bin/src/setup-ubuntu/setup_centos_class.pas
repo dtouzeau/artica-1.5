@@ -669,6 +669,15 @@ l.add('perl-Time-modules');
 L.add('perl-suidperl');
 l.add('perl-Class-Singleton');
 l.add('MySQL-python');
+l.Add('cyrus-sasl-gssapi');
+l.Add('cvs');
+l.Add('autoconf');
+l.Add('automake');
+l.Add('openldap');
+l.Add('openldap-devel');
+l.Add('krb5-workstation');
+l.Add('krb5-devel');
+l.Add('gcc-c++');
 
 //lvm
 if not libs.COMMANDLINE_PARAMETERS('--without-lvm') then begin
@@ -961,6 +970,15 @@ l.add('libjpeg-devel');
 l.add('e2fsprogs-devel');
 l.add('pam-devel');
 L.add('acl');
+l.Add('cyrus-sasl-gssapi');
+l.Add('cvs');
+l.Add('autoconf');
+l.Add('automake');
+l.Add('openldap');
+l.Add('openldap-devel');
+l.Add('krb5-workstation');
+l.Add('krb5-devel');
+l.Add('gcc-c++');
 if IsRPMForgeSelected then  L.add('BackupPC');
 if IsRPMForgeSelected then  l.add('par2cmdline');
 l.add('nmap');
@@ -1023,15 +1041,7 @@ f:='';
 l:=TstringList.Create;
 l.Add('squid');
 l.Add('awstats');
-l.Add('cyrus-sasl-gssapi');
-l.Add('cvs');
-l.Add('autoconf');
-l.Add('automake');
-l.Add('openldap');
-l.Add('openldap-devel');
-l.Add('krb5-workstation');
-l.Add('krb5-devel');
-l.Add('gcc-c++');
+
 
 for i:=0 to l.Count-1 do begin
      if not libs.RPM_is_application_installed(l.Strings[i]) then begin

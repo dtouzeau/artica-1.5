@@ -57,7 +57,7 @@ class SMTP_SOCKETS
      */
     function SMTP() {
         $this->smtp_conn = 0;
-        $this->error = null;
+        $this->error = array();
         $this->helo_rply = null;
 
         $this->do_debug = 0;
@@ -107,7 +107,7 @@ class SMTP_SOCKETS
     
     function Connect($host,$port=0,$tval=30) {
         # set the error val to null so there is no confusion
-        $this->error = null;
+        $this->error = array();
 
         # make sure we are __not__ connected
         if($this->connected()) {
@@ -249,7 +249,7 @@ class SMTP_SOCKETS
      * @return void
      */
     function Close() {
-        $this->error = null; # so there is no confusion
+        $this->error = array(); # so there is no confusion
         $this->helo_rply = null;
         if(!empty($this->smtp_conn)) {
             # close the connection and cleanup
@@ -283,7 +283,7 @@ class SMTP_SOCKETS
      * @return bool
      */
     function Data($msg_data) {
-        $this->error = null; # so no confusion is caused
+        $this->error = array(); # so no confusion is caused
 
         if(!$this->connected()) {
             $this->error[]="Called Data() without being connected";
@@ -301,8 +301,7 @@ class SMTP_SOCKETS
         }
 
         if($code != 354) {
-            $this->error =
-                $this->error[]="DATA command not accepted from server smtp_code => $code smtp_msg => ".substr($rply,4);
+            $this->error[]="DATA command not accepted from server smtp_code => $code smtp_msg => ".substr($rply,4);
             if($this->do_debug >= 1) {
                 echo "SMTP -> ERROR: " . $this->error["error"] .": " . $rply . $this->CRLF;
             }
@@ -418,7 +417,7 @@ class SMTP_SOCKETS
      * @return string array
      */
     function Expand($name) {
-        $this->error = null; # so no confusion is caused
+        $this->error = array(); # so no confusion is caused
 
         if(!$this->connected()) {
             $this->error = array(
@@ -469,7 +468,7 @@ class SMTP_SOCKETS
      * @return bool
      */
     function Hello($host="") {
-        $this->error = null; # so no confusion is caused
+        $this->error = array(); # so no confusion is caused
 
         if(!$this->connected()) {
             $this->error = array("error" => "Called Hello() without being connected");
@@ -540,7 +539,7 @@ class SMTP_SOCKETS
      * @return string
      */
     function Help($keyword="") {
-        $this->error = null; # to avoid confusion
+        $this->error = array(); # to avoid confusion
 
         if(!$this->connected()) {
             $this->error = array(
@@ -592,7 +591,7 @@ class SMTP_SOCKETS
      * @return bool
      */
     function Mail($from) {
-        $this->error = null; # so no confusion is caused
+        $this->error = array(); # so no confusion is caused
 
         if(!$this->connected()) {
             $this->error = array(
@@ -633,7 +632,7 @@ class SMTP_SOCKETS
      * @return bool
      */
     function Noop() {
-        $this->error = null; # so no confusion is caused
+        $this->error = array(); # so no confusion is caused
 
         if(!$this->connected()) {
             $this->error = array(
@@ -676,7 +675,7 @@ class SMTP_SOCKETS
      * @return bool
      */
     function Quit($close_on_error=true) {
-        $this->error = null; # so there is no confusion
+        $this->error = array(); # so there is no confusion
 
         if(!$this->connected()) {
             $this->error = array(
@@ -730,7 +729,7 @@ class SMTP_SOCKETS
      * @return bool
      */
     function Recipient($to) {
-        $this->error = null; # so no confusion is caused
+        $this->error = array(); # so no confusion is caused
 
 
 
@@ -770,7 +769,7 @@ class SMTP_SOCKETS
      * @return bool
      */
     function Reset() {
-        $this->error = null; # so no confusion is caused
+        $this->error = array(); # so no confusion is caused
 
         if(!$this->connected()) {
             $this->error = array(
@@ -819,7 +818,7 @@ class SMTP_SOCKETS
      * @return bool
      */
     function Send($from) {
-        $this->error = null; # so no confusion is caused
+        $this->error = array(); # so no confusion is caused
 
         if(!$this->connected()) {
             $this->error = array(
@@ -867,7 +866,7 @@ class SMTP_SOCKETS
      * @return bool
      */
     function SendAndMail($from) {
-        $this->error = null; # so no confusion is caused
+        $this->error = array(); # so no confusion is caused
 
         if(!$this->connected()) {
             $this->error = array(
@@ -915,7 +914,7 @@ class SMTP_SOCKETS
      * @return bool
      */
     function SendOrMail($from) {
-        $this->error = null; # so no confusion is caused
+        $this->error = array(); # so no confusion is caused
 
         if(!$this->connected()) {
             $this->error = array(
@@ -982,7 +981,7 @@ class SMTP_SOCKETS
      * @return int
      */
     function Verify($name) {
-        $this->error = null; # so no confusion is caused
+        $this->error = array(); # so no confusion is caused
 
         if(!$this->connected()) {
             $this->error = array(

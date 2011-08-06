@@ -123,7 +123,7 @@ function client_popup(){
 	
 	var x_SaveCLientAmandaCOnf=function(obj){
       var tempvalue=obj.responseText;
-      if(tempvalue.length>0){alert(tempvalue);document.getElementById('formAmandaHostCheckID').innerHTML='';return;}
+      if(tempvalue.length>3){alert(tempvalue);document.getElementById('formAmandaHostCheckID').innerHTML='';return;}
       YahooWin3Hide();
       if(document.getElementById('browse-amanda-list')){BrowseAmandaSearch();}
       }	

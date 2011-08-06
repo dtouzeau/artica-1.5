@@ -138,7 +138,7 @@ function local_users(){
 	
 	var x_SargAddMember= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			refresh_remote_users();
 	}		
 		function SargAddMember(uid){
@@ -265,7 +265,7 @@ function remote_users(){
 		
 	var x_RemoteDelMember= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			refresh_remote_users();
 		}
 				
@@ -322,7 +322,7 @@ $tables[]="</table>";
 	<script>
 		var x_RunSarg= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			RefreshTab('sarg_tabs');
 		}
 				
@@ -520,7 +520,7 @@ $html="
 
 		var x_SargSaveConf= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			RefreshTab('sarg_tabs');
 		}
 		
@@ -650,7 +650,7 @@ $html="
 <script>
 		var x_SargAddReport= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			SargReportList();
 		}
 				

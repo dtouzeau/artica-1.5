@@ -221,7 +221,7 @@ $intro="
 
 	function x_StunnelApply(obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}
+		if(tempvalue.length>3){alert(tempvalue);}
 		RefreshTab('main_config_postfix_relayssl');
 	}
 
@@ -308,7 +308,7 @@ preg_match('#(.+?):(.+)#',$sasl->smtp_sasl_password_hash["[127.0.0.1]:$localport
 
 	function x_SSLRelayHostApply(obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}
+		if(tempvalue.length>3){alert(tempvalue);}
 		RefreshTab('main_config_postfix_relayssl');
 	}
 

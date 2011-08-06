@@ -2483,7 +2483,7 @@ function orangefr_popup(){
 	<script>		
 	var x_FFMISPRELAY_SAVE=function(obj){
     	var tempvalue=trim(obj.responseText);
-	  	if(tempvalue.length>0){alert(tempvalue);}
+	  	if(tempvalue.length>3){alert(tempvalue);}
 		document.getElementById('anim').innerHTML='';
 		}
 	

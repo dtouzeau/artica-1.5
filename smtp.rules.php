@@ -42,7 +42,7 @@ var wbl;
 	
 	var x_check_client_access_add=function(obj){
       var tempvalue=obj.responseText;
-      if(tempvalue.length>0){
+      if(tempvalue.length>3){
                 alert(tempvalue);
       }
       LoadAjax('blockips','smtp.rules.php?blockips=yes');
@@ -128,7 +128,7 @@ function Cancel1(){
 	
 	var x_EditPostfixRegexRule=function(obj){
 	      var tempvalue=trim(obj.responseText);
-	      if(tempvalue.length>0){
+	      if(tempvalue.length>3){
 	           alert(tempvalue);
 	           document.getElementById('regexruleform').innerHTML=innerMem;
 	           return;     

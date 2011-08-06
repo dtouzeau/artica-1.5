@@ -1854,12 +1854,24 @@ This option is usefull if you want to switch from PowerDNS to DNSMasq or the opp
 <APP_MSKTUTIL>keytab client for MS Active Directory</APP_MSKTUTIL>
 <clean_datas>Clean datas</clean_datas>
 <APP_SQUIDKERAUTH>Squid kerberos Autentication</APP_SQUIDKERAUTH>
+<APP_SAMBAKERAUTH>Samba kerberos Autentication</APP_SAMBAKERAUTH>
 <APP_SQUIDKERAUTH_TEXT>Squid kerberos Autentication allow to integrate squid authentication with a Microsoft Active Directory server 2003/2008</APP_SQUIDKERAUTH_TEXT>
- <APP_SQUIDKERAUTH_TEXT_REF>Your Windows user must be a member of the "SQUID_USERS" group in Active Directory.[br]
+<APP_SQUIDKERAUTH_TEXT_REF>Your Windows user must be a member of the "SQUID_USERS" group in Active Directory.[br]
 Both Windows machines should be able to ping the Linux server by name (and vice versa), and you may need to run "ipconfig /flushdns" at times.[br]
 A reboot may help too, if you want to be really sure there's no cruft hanging around.[br]
 For Windows 2008 server you need to install [b]Hotfix 951191[/b].
 </APP_SQUIDKERAUTH_TEXT_REF>
+
+<APP_SAMBAKERAUTH_TEXT>Samba kerberos Autentication allow to integrate Samba authentication with a Microsoft Active Directory server 2003/2008</APP_SAMBAKERAUTH_TEXT>
+
+<APP_SAMBAKERAUTH_TEXT_REF>
+Both Windows machines should be able to ping the Linux server by name (and vice versa), and you may need to run "ipconfig /flushdns" at 
+times.[br]
+A reboot may help too, if you want to be really sure there's no cruft hanging around.[br]
+For Windows 2008 server you need to install [b]Hotfix 951191[/b].
+</APP_SAMBAKERAUTH_TEXT_REF>
+
+
 <EnableWindowsAuthentication>Enable authentication via MS Windows</EnableWindowsAuthentication>
 <WINDOWS_DNS_SUFFIX>Windows server DNS suffix</WINDOWS_DNS_SUFFIX>
 <WINDOWS_SERVER_NETBIOSNAME>Windows server netbiosname</WINDOWS_SERVER_NETBIOSNAME>
@@ -1870,6 +1882,7 @@ For Windows 2008 server you need to install [b]Hotfix 951191[/b].
 <smtpd_data_restrictions_explain>Optional access restrictions that the Postfix SMTP server applies in the context of the SMTP DATA command</smtp_data_restrictions_explain>
 <smtpd_data_restrictions>DATA Protocol restrictions</smtpd_data_restrictions>
 <order>order</order>
+<APP_OPENEMM_SENDMAIL>SendMail for OpenEMM</APP_OPENEMM_SENDMAIL>
 <globals_values>Global Values</globals_values>
 <compile_rules_explain>Compile your rules and make them in production mode...</compile_rules_explain>
 <key>Key</key>
@@ -1893,3 +1906,64 @@ This restriction is useful at the end of a restriction list, to make the default
 <reject_rhsbl_reverse_client>reject rhsbl reverse client</reject_rhsbl_reverse_client>
 <reject_rhsbl_reverse_client_text>[b]rbl_domain=d.d.d.d[/b]Reject the request when the unverified reverse client hostname is listed with the A record "d.d.d.d" under rbl_domain</reject_rhsbl_reverse_client_text>
 <require>require</require>
+<OpenEMMSendMailPort>Local SMTP engine port</OpenEMMSendMailPort>
+<OpenEMMNextMTA>Relayhost to send mails</OpenEMMNextMTA>
+<OpenEMMNextMTAPort>Relayhost port</OpenEMMNextMTAPort>
+<APP_OPENEMM_SENDMAIL>SendMail For OpenEMM</APP_OPENEMM_SENDMAIL>
+<web_console>Web Console</web_console>
+<SambaActAsWins>Act as WINS server</SambaActAsWins>
+<PubkeyAuthentication>Use public-key authentication</PubkeyAuthentication>
+<PubkeyAuthentication_text>Public-key authentication lets you prove your identity to a remote host using a cryptographic key instead of a login password.</PubkeyAuthentication_text>
+<StrictModes>Strict modes</StrictModes>
+<StrictModes_text>specifies whether ssh should check user's permissions in their home directory and rhosts files before accepting login. This option must always be set to yes because sometimes users may accidentally leave their directory or files world-writable.</StrictModes_text> 
+<APP_MSKTUTIL_NOT_INSTALLED>msktutil is not installed, use the setup center in order to install this tool</APP_MSKTUTIL_NOT_INSTALLED>
+<ADNETBIOSDOMAIN>Netbios AD Domain</ADNETBIOSDOMAIN>
+<howto_ADNETBIOSDOMAIN>This is your Active directory Workgroup/DOMAIN used when you log into the server like DOMAIN\username</howto_ADNETBIOSDOMAIN>
+<main_interface>Main interface</main_interface>
+<main_interface_back_interface_text>Back to the main administration interface</main_interface_back_interface_text>
+<fileshare_text>Configure your filesharing service (SAMBA) such has share directories,tweak the access service...</fileshare_text>
+<samba_quicklinks_services>Plugins & services</samba_quicklinks_services>
+<processors>Processors</processors>
+<sharing_behavior>Sharing behavior</sharing_behavior>
+<SAMBA_MAIN_PARAMS>Samba core parameters</SAMBA_MAIN_PARAMS>
+<SAMBA_MAIN_PARAMS_TEXT>Define Samba main parameters such has worgroup name, netbios name, winbind settings...</SAMBA_MAIN_PARAMS_TEXT>
+<NO_AD_CONNECTION>Not a Member</NO_AD_CONNECTION>
+<NO_AD_CONNECTION_TEXT>Currently this server is not set has a Windows Active directory member, this an information, not an error.[br]It is not mandatory to be a Microsoft Active Directory Member</NO_AD_CONNECTION_TEXT>
+<AD_CONNECTION_ERROR>Error linking to Active Directory</AD_CONNECTION_ERROR>
+<AD_CONNECTION_OK>Linked to Active Directory</AD_CONNECTION_OK>
+<samba_info_latest_ad_explain>In order to get correctly connected trough a Windows Active directory server, check that your server have the latest Samba version.You using the </samba_info_latest_ad_explain>
+<proxyquicktext>Manage your proxy service, url filtering, antivirus and Internet caching</proxyquicktext>
+<Proxy>Proxy</Proxy>
+<mysqldefault_php_text>This is the  Mysql default credentials used for PHP applications (include Artica itself).[br]by default PHP applications default credentials use the same values has Artica Mysql credential</mysqldefault_php_text>
+<UseSamePHPMysqlCredentials>Use same credentials</UseSamePHPMysqlCredentials>
+<EnableBandwithCalculation>Enable bandwith calculation</EnableBandwithCalculation>
+<EnableBandwithCalculation_explain>If enabled, artica will try to determine your Internet bandwith</EnableBandwithCalculation>
+<zarafa_mysql_tuning_text>It is imperative that you correctly configure MySQL to achieve maximum performance on your server;[br]
+Almost all performance bottlenecks are within the database access itself, so getting your SQL queries to run as quickly as 
+possible is very important.[br]
+For large installations, it is also a good idea to tune Zarafa's cache parameters as well;[br]
+These are normally set quite low to make sure that Zarafa can run on relatively low-end servers,
+but in anything but the smallest installations, these defaults needs to be upped.[br]
+Any installation with 50 or more users should definitely tune the cache parameters for maximum performance.
+</zarafa_mysql_tuning_text>
+<zarafa_innodb_buffer_pool_size>
+the memory buffer that InnoDB uses to cache data and indexes of its tables.[br]
+The larger you set this value, the less disk I/O is needed to access data in tables.[br]
+On a dedicated Zarafa server, you may set this to up to 50% of the machine physical memory size.[br]
+However, do not set it too large because competition for the physical memory might cause paging in the operating system,
+ or even out of memory problems. 
+</zarafa_innodb_buffer_pool_size>
+<zarafa_innodb_log_file_size>
+Size of the transaction log.[br]
+By default there are two logfiles.[br]
+The preferred value size for the is 25% of the innodb buffer pool size</zarafa_innodb_log_file_size>
+<zarafa_innodb_log_buffer_size>
+size that InnoDB uses to write to the log files on disk.[br]
+A large log buffer allows large transactions to run without a need to write the log to disk before the transactions commit.[br]
+If you have big transactions, making the log buffer larger will save disk I/O.
+This value should be 32Mb.
+</zarafa_innodb_log_buffer_size> 
+<mysql_tuning>Mysql tuning</mysql_tuning>
+<innodb_log_file_size>INNODB log file size</innodb_log_file_size>
+<innodb_log_buffer_size>INNODB log buffer size</innodb_log_buffer_size>
+<enable_tuning_mysql_server>Enable tune MySQL settings</enable_tuning_mysql_server>

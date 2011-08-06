@@ -647,7 +647,7 @@ function parameters(){
 	<script>
 	var x_PostFinderLogParamSave= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		RefreshTab('main_config_postfix_search');
 	}		
 	

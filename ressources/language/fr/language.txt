@@ -34,7 +34,7 @@ mais il c'est assez proche de la s&eacute;mantique de Windows pour la plupart de
 <acl_file_type_add_popup>Indiquez les extensions de fichiers s&eacute;par&eacute;es par une virgule (ex: zip,iso,exe,pif,vbs,rar)</acl_file_type_add_popup>
 <acl_group_control>Contr&ocirc;le des ACLs pour les groupes</acl_group_control>
 <acl_group_control_text>Seulement le propri&eacute;taire ou le super-utilisateur  peuvent modifier les permissions ACL d'un fichier ou d'un r&eacute;pertoire.[br]Ce param&egrave;tre &eacute;crase cette r&egrave;gle et peut autoriser le groupe [b]primaire[/b] &agrave; modifier les ACls.Cela permet la d&eacute;l&eacute;gation sur un objet et dans la hi&eacute;rarchie des r&eacute;pertoires contenus dans le m&ecirc;me comportement que sur Windows</acl_group_control_text>
-<acl_samba_not>Votre serveur Samba ne support pas les ACLs, vous pouvez les utilisez mais ils ne seront pas traduits dans les partages Windows.</acl_samba_not>
+<acl_samba_not>Votre serveur Samba ne supporte pas les ACLs, vous pouvez les utiliser mais ils ne seront pas traduits par les partages Windows.</acl_samba_not>
 <action>action</action>
 <actions>actions</actions>
 <ActionsGroup>Actions sur le groupe</ActionsGroup>

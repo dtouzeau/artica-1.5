@@ -318,7 +318,7 @@ function remote_site_edit(){
 	<script>
 	var x_EditOpenVPNSitelocal2= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);return;}
+		if(tempvalue.length>3){alert(tempvalue);return;}
 		YahooWin4Hide();
 		VPNRemoteSiteRefreshList();
 		
@@ -424,7 +424,7 @@ function remote_sitelist(){
 	
 	var x_RemoteVPNDelete2= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);return;}
+		if(tempvalue.length>3){alert(tempvalue);return;}
 		VPNRemoteSiteRefreshList();
 		
 	}	
@@ -605,7 +605,7 @@ function remote_site_routes(){
 	<script>
 	var x_AddOpenVPnRemoteSiteRoute= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);return;}
+		if(tempvalue.length>3){alert(tempvalue);return;}
 		OpenVPNRemoteSiteRefreshRoutes();
 	}			
 	

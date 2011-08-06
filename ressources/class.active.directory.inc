@@ -46,9 +46,11 @@ class ldapAD{
 		$this->ldapbind=@ldap_bind($this->ldap_connection, "$this->ldap_admin,$this->suffix",$this->ldap_password);
 
 			if(!$this->ldapbind){
+					$called=null;
+					if(function_exists("debug_backtrace")){$trace=debug_backtrace();$called=" called by ". basename($trace[1]["file"])." {$trace[1]["function"]}() line {$trace[1]["line"]}";}
 					$errornumber= ldap_errno($this->ldap_connection);
 					$error= "ERROR number : $errornumber\nWarning\n unable to connect with following\n $this->ldap_admin,$this->suffix ($this->ldap_password) \n";
-					writelogs("ERROR unable to connect to ldap server ldap://{$this->ldap_host}:{$this->ldap_port} right username $this->ldap_admin,$this->suffix"
+					writelogs("ERROR unable to connect to ldap server ldap://{$this->ldap_host}:{$this->ldap_port} right username $this->ldap_admin,$this->suffix $called"
 					,__CLASS__."/" .__FUNCTION__,__FILE__);	
 				switch (ldap_errno($this->ldap_connection)) {
 					case 0x31:
@@ -72,6 +74,9 @@ class ldapAD{
 				$this->ldap_last_error=$error;
 				$this->ldapFailed=true;
 				return false;
+			}else{
+
+				//writelogs("Connection success on ldap://{$this->ldap_host}:{$this->ldap_port} $called", __CLASS__ . "/" . __FUNCTION__,__FILE__,__LINE__);
 			}
 			$GLOBALS["LDAP_AD_FAILED"]=false;
 			return true;

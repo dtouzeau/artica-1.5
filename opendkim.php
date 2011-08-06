@@ -198,7 +198,7 @@ function config(){
 <script>
 var x_SaveOpenDKIMForm= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue)};
+	if(tempvalue.length>3){alert(tempvalue)};
 	RefreshTab('OPENDKIM_TABS');	
 }	
 
@@ -271,7 +271,7 @@ function config_nokey(){
 	
 	var x_generate_a_signing_key= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			RefreshTab('OPENDKIM_TABS');	
 		}		
 	

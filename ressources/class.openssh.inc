@@ -67,7 +67,9 @@ class openssh{
 		if($this->main_array["AcceptEnv"]==null){$this->main_array["AcceptEnv"]="LANG LC_*";}
 		if($this->main_array["Subsystem"]==null){$this->main_array["Subsystem"]="sftp /usr/lib/openssh/sftp-server";}											
 		if($this->main_array["AuthorizedKeysFile"]==null){$this->main_array["AuthorizedKeysFile"]="%h/.ssh/authorized_keys";}
+		if($this->main_array["PasswordAuthentication"]==null){$this->main_array["PasswordAuthentication"]="yes";}
 			
+		
 		
 		if(count($this->ListenAddress)==0){$this->ListenAddress[]="0.0.0.0";}
 	}

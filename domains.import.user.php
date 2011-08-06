@@ -41,7 +41,7 @@ function js(){
 		
 	var x_add_already_member_add= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			add_already_member_list_refresh();
 			RefreshTab('main_group_config');	
 		}		

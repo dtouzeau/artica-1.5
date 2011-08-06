@@ -134,7 +134,7 @@ function popup(){
 
 	var x_dkimproxySave=function(obj){
 	      var tempvalue=trim(obj.responseText);
-	      if(tempvalue.length>0){alert(tempvalue);}
+	      if(tempvalue.length>3){alert(tempvalue);}
 		  RefreshTab('main_config_dkimproxy');
 	}	
 	

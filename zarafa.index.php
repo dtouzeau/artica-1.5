@@ -53,6 +53,7 @@ function popup(){
 	$tpl=new templates();
 	$array["popup-status"]="{status}";
 	$array["popup-www"]="{parameters}";
+	$array["popup-mysql"]="{mysql_tuning}";
 	$array["popup-indexer"]="{APP_ZARAFA_INDEXER}";
 	$array["popup-mailbox"]="{mailboxes}";
 	$array["popup-license"]="{zarafa_license}";
@@ -64,6 +65,11 @@ function popup(){
 			continue;
 		}
 		
+		if($num=="popup-mysql"){
+			$html[]="<li><a href=\"zarafa.mysql.php\"><span>$ligne</span></a></li>\n";
+			continue;
+		}		
+		
 		$html[]="<li><a href=\"$page?$num=yes\"><span>$ligne</span></a></li>\n";
 			
 		}	
@@ -73,14 +79,7 @@ function popup(){
 	</div>
 		<script>
 				$(document).ready(function(){
-					$('#main_config_zarafa').tabs({
-				    load: function(event, ui) {
-				        $('a', ui.panel).click(function() {
-				            $(ui.panel).load(this.href);
-				            return false;
-				        });
-				    }
-				});
+					$('#main_config_zarafa').tabs();
 			
 			
 			});
@@ -262,7 +261,7 @@ function popup_license(){
 		
 	var x_ZarafaUpdateLicense= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}
+		if(tempvalue.length>3){alert(tempvalue);}
 		RefreshTab('main_config_zarafa');
 		}
 		

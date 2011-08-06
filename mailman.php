@@ -107,13 +107,13 @@ $html="
 	
 var x_MailManDeleteList= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue);}
+	if(tempvalue.length>3){alert(tempvalue);}
 	{$prefix}load();
 }	
 
 var x_MailManRobots= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){
+	if(tempvalue.length>3){
                 alert(tempvalue);
 	}
 	{$prefix}load();
@@ -162,7 +162,7 @@ var x_MailManRobots= function (obj) {
 	
 var x_EnableMailManList= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue);}
+	if(tempvalue.length>3){alert(tempvalue);}
 	{$prefix}load();
 }	
 	
@@ -175,7 +175,7 @@ function EnableMailManList(){
 	
 var x_SaveAdvancedSettings= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue);}
+	if(tempvalue.length>3){alert(tempvalue);}
 	YahooWin2Hide();
 	{$prefix}load();
 }	

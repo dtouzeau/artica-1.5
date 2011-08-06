@@ -18,6 +18,7 @@ js();
 function js(){
 	$tpl=new templates();
 	$page=CurrentPageName();
+	
 	$users=new usersMenus();
 	$sock=new sockets();
 	$hostname=trim($sock->GET_INFO("myhostname"));

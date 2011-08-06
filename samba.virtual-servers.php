@@ -12,6 +12,9 @@
 	if(isset($_GET["browse-samba-list"])){virtual_servers_list();exit;}
 	if(isset($_POST["delete-hostname"])){virtual_servers_delete();exit;}
 	if(isset($_POST["EnableSambaVirtualsServers"])){EnableSambaVirtualsServersSave();exit;}
+
+	
+	
 function js_inline(){
 	$page=CurrentPageName();
 	echo "$('#BodyContent').load('$page?popup=yes');";	

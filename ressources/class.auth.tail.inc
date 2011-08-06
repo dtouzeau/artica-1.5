@@ -29,6 +29,12 @@ class auth_tail{
 		if(strpos($buffer,"slapcat:")>0){return true;}
 		if(strpos($buffer,"Successful su")>0){return true;}
 		
+		if(preg_match("#pam_ldap: error trying to bind as user \"uid=root,.+?\"\s+\(Invalid credentials\)#", $buffer)){
+			$GLOBALS["CLASS_UNIX"]->send_email_events("Error, root password is not set in LDAP Database", "pam_ldap claim $buffer\nYou should set your root password in the Artica web interface", "security");
+			return true;
+		}
+		
+		
 		if(preg_match("#sshd.+?Accepted keyboard-interactive\/pam for\s+(.+?)\s+from\s+(.+?)\s+port#",$buffer,$re)){
 			$this->events("{$re[2]} [{$re[1]}] connected");
 			@mkdir("/var/log/artica-postfix/sshd-success",644,true);

@@ -707,10 +707,14 @@ begin
       list.Add('$_GLOBAL["OPENEMM_INSTALLED"]=True;');
       openemm:=Topenemm.Create(SYS);
       list.Add('$_GLOBAL["OPENEMM_VERSION"]="'+openemm.VERSION()+'";');
+      list.Add('$_GLOBAL["OPENEMM_SENDMAIL_VERSION"]="'+openemm.SENDMAIL_VERSION()+'";');
+      if FileExists('/home/openemm/sendmail/sbin/sendmail') then  list.Add('$_GLOBAL["OPENEMM_SENDMAIL_INSTALLED"]=True;') else list.Add('$_GLOBAL["OPENEMM_SENDMAIL_INSTALLED"]=False;');
       openemm.Free;
    end else begin
       list.Add('$_GLOBAL["OPENEMM_INSTALLED"]=False;');
       list.add('$_GLOBAL["OPENEMM_VERSION"]="";');
+      list.add('$_GLOBAL["OPENEMM_SENDMAIL_VERSION"]="";');
+      list.Add('$_GLOBAL["OPENEMM_SENDMAIL_INSTALLED"]=False;');
    end;
 
 

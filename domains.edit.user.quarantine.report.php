@@ -32,7 +32,7 @@ function js(){
 	
 	var x_quarantine_report_save= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			quarantine_report_start();
 		}			
 		

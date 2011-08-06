@@ -33,29 +33,41 @@
 	
 	
 function js(){
-
 $page=CurrentPageName();
 $prefix=str_replace(".","_",$page);
 $tpl=new templates();
-$title=$tpl->_ENGINE_parse_body('{mysql_settings}');	
+$title=$tpl->_ENGINE_parse_body('{mysql_settings}');
+$load="{$prefix}Load()";
 
+
+if(isset($_GET["inline"])){
+	$prefix2="<div id='mysql-parameters-div'></div>
+	
+	<script>";
+	$suffix="</script>";
+	$load="{$prefix}Load2()";
+}
 
 
 
 
 $html="
-
+$prefix2
 function {$prefix}Load(){
 		YahooWin(600,'$page?popup=yes','$title');
 	
 	}
-	
+
+function {$prefix}Load2(){
+	LoadAjax('mysql-parameters-div','$page?popup=yes');
+
+}
 
 	
 var x_SaveUMysqlParameters= function (obj) {
 	var results=obj.responseText;
 	if(results.length>0){alert(results);}
-	{$prefix}Load();
+	$load
 	}
 	
 
@@ -93,8 +105,10 @@ function SaveUMysqlParameters(){
 	document.getElementById('mysqlsettings').innerHTML='<center><img src=img/wait_verybig.gif></center>';
 	XHR.sendAndLoad('$page', 'GET',x_SaveUMysqlParameters);	
 }
+$load
 
-{$prefix}Load();";
+$suffix
+";
 	
 echo $html;	
 }
@@ -105,8 +119,13 @@ function popup(){
 	$mysql=new mysqlserver();
 	$net=new networking();
 	$array=$net->ALL_IPS_GET_ARRAY();
+	$sock=new sockets();	
+	$EnableZarafaTuning=$sock->GET_INFO("EnableZarafaTuning");
+	if(!is_numeric($EnableZarafaTuning)){$EnableZarafaTuning=0;}
+	$users=new usersMenus();
+	if(!$users->ZARAFA_INSTALLED){$EnableZarafaTuning=0;}	
 	
-	$array[null]="{all}";
+	$array[null]="{loopback}";
 	
 	$bind=Field_array_Hash($array,"bind-address",$mysql->main_array["bind-address"],null,null,0,"font-size:13px;padding:3px");
 	
@@ -262,7 +281,24 @@ $form="	<table style='width:100%' class=form>
 	</table>";	
 	
 	$html="<div style='font-size:16px'>{mysql_settings} v. $mysql->mysql_version_string ($mysql->mysqlvbin)</H1>
-	<div id='mysqlsettings'>".RoundedLightWhite($form)."</div>";
+	<div id='mysqlsettings'>$form</div>
+	
+	
+	<script>
+function EnableZarafaTuningCheck(){
+	var EnableZarafaTuning=$EnableZarafaTuning;
+	if(EnableZarafaTuning==0){return;}
+	if(document.getElementById('innodb_buffer_pool_size')){document.getElementById('innodb_buffer_pool_size').disabled=true;}
+	if(document.getElementById('query_cache_size')){document.getElementById('query_cache_size').disabled=true;}
+	if(document.getElementById('innodb_log_file_size')){document.getElementById('innodb_log_file_size').disabled=true;}
+	if(document.getElementById('innodb_log_buffer_size')){document.getElementById('innodb_log_buffer_size').disabled=true;}
+	if(document.getElementById('max_allowed_packet')){document.getElementById('max_allowed_packet').disabled=true;}
+	if(document.getElementById('max_connections')){document.getElementById('max_connections').disabled=true;}
+}
+EnableZarafaTuningCheck();
+</script>
+	
+	";
 	
 	$tpl=new templates();
 	echo $tpl->_ENGINE_parse_body($html);

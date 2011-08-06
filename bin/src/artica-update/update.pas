@@ -100,9 +100,9 @@ begin
   xMEM_TOTAL_INSTALLEE:=SYS.MEM_TOTAL_INSTALLEE();
   LinuxDistributionFullName:=SYS.GET_INFO('LinuxDistributionFullName');
   if length(LinuxDistributionFullName)=0 then LinuxDistributionFullName:='Linux default';
+  if not FileExists('/etc/artica-postfix/dmidecode.cache.url') then fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.dmidecode.php --chassis >/dev/null 2>&1');
 
-
-  uriplus:=CheckSYSTEMID()+';'+ IntTostr(xMEM_TOTAL_INSTALLEE)+';'+IntTOstr(SYS.CPU_NUMBER())+';'+LinuxDistributionFullName+';'+trim(SYS.ARTICA_VERSION())+';'+trim(SYS.HOSTNAME_g())+';'+CheckUserCount();
+  uriplus:=CheckSYSTEMID()+';'+ IntTostr(xMEM_TOTAL_INSTALLEE)+';'+IntTOstr(SYS.CPU_NUMBER())+';'+LinuxDistributionFullName+';'+trim(SYS.ARTICA_VERSION())+';'+trim(SYS.HOSTNAME_g())+';'+CheckUserCount()+';'+trim(logs.ReadFromFile('/etc/artica-postfix/dmidecode.cache.url'));
   uriplus:=AnsiReplaceText(uriplus,' ','%20');
 
   if D then writeln(uriplus);
@@ -123,19 +123,31 @@ var
    RegExpr:TRegExpr;
    l:Tstringlist;
    i:integer;
-   tmpstr:string;
+   tmpstr,hostid:string;
 begin
-  result:=SYS.GET_INFO('SYSTEMID');
-  if length(result)>3 then exit();
-  blkid:=SYS.LOCATE_GENERIC_BIN('blkid');
-  result:=SYS.MD5FromString(logs.DateTimeNowSQL());
-  SYS.set_INFO('SYSTEMID',result);
-
-  if length(blkid)=0 then begin
-     result:=logs.MD5FromString(logs.DateTimeNowSQL());
-     SYS.set_INFO('SYSTEMID',result);
-     exit;
+  result:=trim(SYS.GET_INFO('SYSTEMID'));
+  if length(result)>3 then exit(result);
+  blkid:=trim(SYS.LOCATE_GENERIC_BIN('blkid'));
+  hostid:=trim(SYS.LOCATE_GENERIC_BIN('hostid'));
+  if FileExists(hostid) then begin
+      tmpstr:=logs.FILE_TEMP();
+      result:=trim(SYS.MD5FromString(logs.ReadFromFile(hostid)+logs.DateTimeNowSQL()));
+      SYS.set_INFO('SYSTEMID',result);
+      if length(result)>3 then exit(result);
   end;
+
+  if FileExists(blkid) then begin
+     fpsystem(blkid+' >'+tmpstr+' 2>&1');
+     result:=logs.MD5FromString(logs.ReadFromFile(tmpstr));
+     if(length(result)>3) then begin
+         SYS.set_INFO('SYSTEMID',result);
+        exit(result);
+     end;
+  end;
+
+  result:=trim(SYS.MD5FromString(logs.DateTimeNowSQL()));
+  SYS.set_INFO('SYSTEMID',result);
+  if length(result)>3 then exit(result);
 
   tmpstr:=logs.FILE_TEMP();
   fpsystem(blkid+' >'+tmpstr+' 2>&1');
@@ -159,7 +171,7 @@ begin
   end;
   l.free;
   RegExpr.free;
-
+  exit(result);
 
 end;
 //#############################################################################

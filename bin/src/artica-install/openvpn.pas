@@ -108,7 +108,10 @@ begin
   pid:=PID_NUM();
   count:=0;
   articaconfig:='/etc/artica-postfix/settings/Daemons/ArticaOpenVPNSettings';
-
+  if FileExists('/etc/artica-postfix/KASPERSKY_WEB_APPLIANCE') then begin
+      logs.DebugLogs('Starting......: OpenVPN Kaspersky Web Appliance, aborting...');
+      exit;
+  end;
 
    if not FileExists(BIN_PATH()) then begin
       logs.DebugLogs('Starting......: OpenVPN is not installed. expected "/usr/sbin/openvpn"');

@@ -86,7 +86,7 @@ function cyruslogsCheck(){
 
 var x_CyrusMoveToCurrent=function (obj) {
 	tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue);}
+	if(tempvalue.length>3){alert(tempvalue);}
     }
 
 function CyrusMoveToCurrent(){

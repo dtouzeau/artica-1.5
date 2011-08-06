@@ -311,12 +311,21 @@ if(preg_match("#zarafa-dagent.+?Client disconnected#",$buffer)){return null;}
 if(regex_amavis($buffer)){return;}
 
 
-	if(preg_match("#\]:\s+bayes: cannot open bayes databases\s+(.+?)\/bayes_.+?R/O: tie failed#", $buffer,$re)){
+	if(preg_match("#\]:\s+bayes: cannot open bayes databases\s+(.+?)\/bayes_.+?R\/.+?: tie failed.+?Permission denied#", $buffer,$re)){
+		events("cannot open bayes databases , Permission denied' '{$re[1]}/bayes_*'");
+		shell_exec("/bin/chown postfix:postfix {$re[1]}/bayes*");
+		return;
+	}
+
+
+	if(preg_match("#\]:\s+bayes: cannot open bayes databases\s+(.+?)\/bayes_.+?R\/O: tie failed#", $buffer,$re)){
 		events("cannot open bayes databases , unlink '{$re[1]}/bayes_seen' '{$re[1]}/bayes_toks'");
 		if(is_file("{$re[1]}/bayes_seen")){@unlink("{$re[1]}/bayes_seen");}
 		if(is_file("{$re[1]}/bayes_toks")){@unlink("{$re[1]}/bayes_toks");}
 		return;
 	}
+	
+	
 
 
 	if(preg_match("#zarafa-gateway.+?Unable to negotiate SSL connection#", $buffer,$re)){

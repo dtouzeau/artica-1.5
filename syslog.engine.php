@@ -84,7 +84,7 @@ function master_index(){
 	<script>
 		var x_ActAsASyslogServerSave= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			RefreshTab('main_config_syslog');
 		}			
 		
@@ -131,13 +131,13 @@ function client_index(){
 	<script>
 		var x_ActAsASyslogClientSave= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			RefreshTab('main_config_syslog');
 		}	
 
 		var x_AddServerSyslogHost= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			SyslogServerListRefresh();
 		}			
 		
@@ -242,7 +242,7 @@ if(is_array($serversList)){
 
 	var x_SyslogServerDelete= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		SyslogServerListRefresh();
 	}		
 	

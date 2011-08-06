@@ -285,7 +285,7 @@ var x_{$prefix}ChargeLogs  = function (obj) {
 	}
 	
 	
-var x_ScanNetwork      = function (obj) {var tempvalue=obj.responseText;if(tempvalue.length>0){alert(tempvalue);}}
+var x_ScanNetwork      = function (obj) {var tempvalue=obj.responseText;if(tempvalue.length>3){alert(tempvalue);}}
 
 var x_AddNetworkPerform= function (obj) {
 	if(document.getElementById('main_config_snort')){RefreshTab('main_config_snort');}

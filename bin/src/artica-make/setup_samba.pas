@@ -81,6 +81,7 @@ begin
   distri:=tdistriDetect.Create;
   if distri.DISTRINAME_CODE='DEBIAN' then compile:=true;
   if distri.DISTRINAME_CODE='UBUNTU' then compile:=true;
+  if distri.DISTRINAME_CODE='FEDORA' then compile:=true;
   if not compile then begin
      writeln('Upgrading from source for ',distri.DISTRINAME_CODE,' is not yet supported');
      writeln('Please, contact Artica-technology support if need support on ',distri.DISTRINAME_CODE);
@@ -140,6 +141,7 @@ begin
   distri:=tdistriDetect.Create;
   if distri.DISTRINAME_CODE='DEBIAN' then compile:=true;
   if distri.DISTRINAME_CODE='UBUNTU' then compile:=true;
+  if distri.DISTRINAME_CODE='FEDORA' then compile:=true;
   if not compile then begin
      writeln('Upgrading from source for ',distri.DISTRINAME_CODE,' is not yet supported');
      writeln('Please, contact Artica-technology support if need support on ',distri.DISTRINAME_CODE);
@@ -305,6 +307,12 @@ var
    LOCAL_VERSION_INT,REMOTE_VERSION_INT:integer;
 begin
 
+    if FileExists('/etc/artica-postfix/samba-install.lock') then begin
+         writeln('For unlock, please remove the /etc/artica-postfix/samba-install.lock file');
+         install.INSTALL_PROGRESS(CODE_NAME,'Already running');
+         install.INSTALL_STATUS(CODE_NAME,100);
+         exit;
+    end;
     CODE_NAME:='APP_SAMBA';
     SetCurrentDir('/root');
     install.INSTALL_STATUS(CODE_NAME,10);
@@ -377,7 +385,7 @@ end;
   end;
 
 
-
+   fpsystem('/bin/touch /etc/artica-postfix/samba-install.lock');
 
    smbsources:='/usr/local/share/artica/samba/samba-'+REMOTE_VERSION_SOURCE;
 
@@ -439,8 +447,11 @@ cmd:=cmd+' --with-automount';
   fpsystem(cmd);
 
   install.INSTALL_PROGRESS(CODE_NAME,'{installing}');
-  install.INSTALL_STATUS(CODE_NAME,80);
-  fpsystem('make && make install');
+  install.INSTALL_STATUS(CODE_NAME,50);
+  fpsystem('make');
+    install.INSTALL_STATUS(CODE_NAME,80);
+   fpsystem('make install');
+ install.INSTALL_STATUS(CODE_NAME,90);
   fpsystem('/bin/rm -f /etc/artica-postfix/versions.cache');
   SetCurrentDir('/root');
 
@@ -449,12 +460,14 @@ cmd:=cmd+' --with-automount';
      writeln('New local version: '+LOCAL_VERSION);
      install.INSTALL_PROGRESS(CODE_NAME,'{installed}');
      install.INSTALL_STATUS(CODE_NAME,100);
+     fpsystem('/bin/rm /etc/artica-postfix/samba-install.lock');
      if FileExists('/etc/artica-postfix/KASPERSKY_WEB_APPLIANCE') then SYS.THREAD_COMMAND_SET('/usr/share/artica-postfix/bin/artica-make APP_SQUID');
      fpsystem('/usr/share/artica-postfix/bin/process1 --force');
      if FIleExists('/usr/lib/libtalloc.so.1.3.0') then begin
       writeln('Install linking /usr/lib/libtalloc.so.1.3.0 to /usr/lib/libtalloc.so.1');
       fpsystem('/bin/ln -s /usr/lib/libtalloc.so.1.3.0 /usr/lib/libtalloc.so.1');
     end;
+
      SYS.THREAD_COMMAND_SET('/usr/share/artica-postfix/bin/artica-make APP_GREYHOLE');
      SYS.THREAD_COMMAND_SET('/usr/share/artica-postfix/bin/artica-make APP_SCANNED_ONLY');
      exit;
@@ -467,6 +480,7 @@ cmd:=cmd+' --with-automount';
 
      writeln('Install '+CODE_NAME+' failed...');
      install.INSTALL_STATUS(CODE_NAME,110);
+     fpsystem('/bin/rm /etc/artica-postfix/samba-install.lock');
      exit;
 
 
@@ -520,6 +534,7 @@ function install_samba.talloc():boolean;
 var
    l:Tstringlist;
    i:integer;
+   sexport:string;
 begin
 
 if FileExists('/usr/lib/libtalloc.so.1.3.0') then begin
@@ -527,7 +542,10 @@ if FileExists('/usr/lib/libtalloc.so.1.3.0') then begin
    writeln('libtalloc 1.3 ok');
    exit(true);
 end;
-
+  sexport:='LD_LIBRARY_PATH="/lib:/lib64:/usr/lib:/usr/lib64"';
+  sexport:=sexport+' LDFLAGS="-L/lib -L/usr/local/lib -L/usr/lib/libmilter -L/usr/lib"';
+  sexport:=sexport+' CPPFLAGS="-I/usr/include/ -I/usr/local/include -I/usr/include/libpng12 -I/usr/include/sasl"';
+  sexport:=sexport+' PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/bin/X11';
  result:=false;
 
  l:=Tstringlist.Create;
@@ -554,7 +572,8 @@ end;
      exit;
  end;
  SetCurrentDir(source_folder);
- fpsystem('./configure --prefix=/usr');
+ writeln('./configure --prefix=/usr '+sexport);
+ fpsystem('./configure --prefix=/usr '+sexport);
  fpsystem('make && make install');
  if FileExists('/usr/lib/libtalloc.so.1.3.0') then begin
     SetCurrentDir('/root');
@@ -778,7 +797,8 @@ if not FileExists(LIBDIR+'/greyhole.so') then begin
     install.INSTALL_PROGRESS(CODE_NAME,'{failed}');
     install.INSTALL_STATUS(CODE_NAME,110);
 end;
-
+install.INSTALL_STATUS(CODE_NAME,90);
+install.INSTALL_PROGRESS(CODE_NAME,'{installing}');
 forceDirectories('/etc/greyhole');
 fpsystem('/bin/cp '+source_folder+'/schema-mysql.sql /etc/greyhole/schema-mysql.sql');
 fpsystem('/bin/cp '+source_folder+'/greyhole.example.conf /etc/greyhole/greyhole.example.conf');
@@ -789,7 +809,8 @@ fpsystem('/bin/chmod 755 /usr/bin/greyhole');
 fpsystem('/bin/chmod 755 /usr/bin/greyhole-dfree');
 fpsystem('/bin/chmod 755 /usr/bin/greyhole-config-update');
 fpsystem('/ect/init.d/artica-postfix restart greyhole');
-
+install.INSTALL_STATUS(CODE_NAME,100);
+install.INSTALL_PROGRESS(CODE_NAME,'{installed}');
 
 
 end;

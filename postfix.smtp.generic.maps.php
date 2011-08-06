@@ -63,7 +63,7 @@ function popup(){
 		
 		var x_smtp_generic_map_add=function(obj){
      		var tempvalue=obj.responseText;
-      		if(tempvalue.length>0){alert(tempvalue);}
+      		if(tempvalue.length>3){alert(tempvalue);}
 			smtp_generic_map_list();
 		}	
 

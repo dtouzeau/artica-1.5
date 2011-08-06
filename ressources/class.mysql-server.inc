@@ -13,11 +13,20 @@ class mysqlserver{
 	var $VERSION_MAJOR;
 	var $VERSION_MINOR;
 	var $VERSION_REV;
+	var $EnableZarafaTuning=0;
 	
 	function mysqlserver(){
 		$this->load();
 		$users=new usersMenus();
 		$this->mysql_version_string=$users->mysqld_version;
+		$sock=new sockets();
+		$EnableZarafaTuning=$sock->GET_INFO("EnableZarafaTuning");
+		if(!is_numeric($EnableZarafaTuning)){$EnableZarafaTuning=0;}
+		$users=new usersMenus();
+		if(!$users->ZARAFA_INSTALLED){$EnableZarafaTuning=0;}
+		$this->EnableZarafaTuning=$EnableZarafaTuning;
+		
+		
 		
 	if(posix_getuid()==0){
 			$GLOBALS["AS_ROOT"]=true;
@@ -309,6 +318,17 @@ class mysqlserver{
 	}
 	
 	private function TestsParametersToDelete($param){
+		if($this->EnableZarafaTuning==1){
+			$array["innodb_buffer_pool_size"]=true;
+			$array["query_cache_size"]=true;
+			$array["innodb_log_file_size"]=true;
+			$array["innodb_log_buffer_size"]=true;
+			$array["max_allowed_packet"]=true;
+			$array["max_connections"]=true;
+		}
+		
+		
+		
 		if($this->VERSION_MAJOR>4){
 			if($this->VERSION_MAJOR>4){
 				if($this->VERSION_REV>=3){
@@ -379,6 +399,7 @@ class mysqlserver{
 		if(!isset($GLOBALS["AS_ROOT"])){if(posix_getuid()==0){$GLOBALS["AS_ROOT"]=true;}}
 		if($GLOBALS["AS_ROOT"]){echo "\n";}
 		$SpecificConf=$this->GetUsersSpecificConf();
+		$sock=new sockets();
 		
 		$conf="[client]\n";
 		$conf=$conf ."port=3306\n";
@@ -519,6 +540,16 @@ class mysqlserver{
 				if($GLOBALS["VERBOSE"]){echo "mysqld:Personal settings $key = $value\n";}
 				$mysqld[$key]=$value;
 			}
+		}
+		if($this->EnableZarafaTuning==1){
+			$ZarafTuningParameters=unserialize(base64_decode($sock->GET_INFO("ZarafaTuningParameters")));
+			$mysqld["innodb_buffer_pool_size"]=$ZarafTuningParameters["zarafa_innodb_buffer_pool_size"];
+			$mysqld["query_cache_size"]=$ZarafTuningParameters["zarafa_query_cache_size"];
+			$mysqld["innodb_log_file_size"]=$ZarafTuningParameters["zarafa_innodb_log_file_size"];
+			$mysqld["innodb_log_buffer_size"]=$ZarafTuningParameters["zarafa_innodb_log_buffer_size"];
+			$mysqld["max_allowed_packet"]=$ZarafTuningParameters["zarafa_max_allowed_packet"];
+			$mysqld["max_connections"]=$ZarafTuningParameters["zarafa_max_connections"];
+			
 		}
 		
 		unset($mysqld["version-string"]);

@@ -97,7 +97,7 @@ function section_status(){
 
 	var x_EnableISCSICheck= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		iscsi_status();
 	}		
 	

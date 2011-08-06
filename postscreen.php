@@ -145,7 +145,7 @@ function dnsbl(){
 	
 		var x_AddPostScreenDNSBL= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 			RefreshPostScreenDNSBL();
 			
 		}	
@@ -450,7 +450,7 @@ function parameters(){
 			
 		var x_SavePostScreenConfig= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue)};
+			if(tempvalue.length>3){alert(tempvalue)};
 		}	
 		
 		function SavePostScreenConfig(){
@@ -496,7 +496,7 @@ function index(){
 	
 	var x_SaveEnablePostScreen= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}
+		if(tempvalue.length>3){alert(tempvalue);}
 		RefreshTab('main_postscreen_config');
 	}	
 	

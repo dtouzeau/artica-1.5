@@ -37,7 +37,7 @@ function js(){
 	
 	var x_empty_this_mailbox_perform= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}
+		if(tempvalue.length>3){alert(tempvalue);}
 		RefreshTab('container-users-tabs');
 		document.getElementById('empty-div').innerHTML='<img src=img/poubelle-128.png>';
 	}

@@ -10,7 +10,7 @@
 	
 	if(!CheckSambaUniqueRights()){die();}
 	if($_GET["server_host"]){save();exit;}
-	
+	if(isset($_GET["js"])){js();exit;}
 	page();
 	
 	
@@ -19,6 +19,15 @@ function CheckSambaUniqueRights(){
 	$user=new usersMenus();
 	if($user->AsArticaAdministrator){return true;}
 	if($user->AsSambaAdministrator){return true;}	
+}
+
+
+function js(){
+	$page=CurrentPageName();
+	$tpl=new templates();	
+	$title=$tpl->_ENGINE_parse_body("{APP_LDAP}");
+	$html="YahooWin5('550','$page','$title')";
+	echo $html;
 }
 
 
@@ -123,8 +132,8 @@ function page(){
 	
 	function x_SaveSambaLDAP(obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
-		RefreshTab('main_config_samba');
+		if(tempvalue.length>3){alert(tempvalue);}	
+		if(document.getElementById('main_config_samba')){RefreshTab('main_config_samba');}else{Loadjs('$page?js=yes');}
 	}			
 	
 	

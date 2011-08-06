@@ -480,7 +480,7 @@ function delete_tab(){
 	$html="
 	var x_DeleteAdminTab= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		document.location.href='admin.index.php';
 		}
 		
@@ -528,7 +528,7 @@ function main_add_tab(){
 	<script>
 	var x_MainAdminAddTab= function (obj) {
 	var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		document.location.href='admin.index.php';
 	}
 	
@@ -648,7 +648,7 @@ function manage_icons_js(){
 	
 var x_AddWidgetIcon= function (obj) {	
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue);}	
+	if(tempvalue.length>3){alert(tempvalue);}	
 	Loadjs('admin.tabs.php?rebuild-icons={$_GET["manage-icon"]}');
 	}		
 	
@@ -762,7 +762,7 @@ function main_icon_js(){
 	}
 var x_AddWidgetIcon= function (obj) {	
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue);}	
+	if(tempvalue.length>3){alert(tempvalue);}	
 	Loadjs('admin.tabs.php?rebuild-icons={$_GET["add-icon"]}');
 	AddIconChangeClass();
 	}	

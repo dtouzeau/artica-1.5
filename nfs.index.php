@@ -112,7 +112,7 @@ var x_NFSEND=function (obj) {
 	
 
 function NFSSecurity(){
-		YahooWin5(400,'samba.index.php?security={$_GET["share-dir"]}&nfs=yes','$base');
+		YahooWin5(600,'samba.index.php?security={$_GET["share-dir"]}&nfs=yes','$base');
 	}
 	
 	{$prefix}LoadPage();

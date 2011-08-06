@@ -595,7 +595,8 @@ function loadavg_logs(){
 		$date=date('Y-m-d H:i:s',$time);
 		$sql="INSERT IGNORE INTO loadavg (`stime`,`load`) VALUES ('$date','$load');";
 		$q->QUERY_SQL($sql,"artica_events");
-		if(!$q->ok){events("loadavg_logs:: $q->mysql_error line:".__LINE__);continue;}
+		if(!$q->ok){events_Loadavg("loadavg_logs:: $q->mysql_error line:".__LINE__);continue;}
+		events_Loadavg("loadavg_logs:: success $filename".__LINE__);
 		@unlink($filename);
 	}
 	
@@ -609,6 +610,16 @@ function loadavg_logs(){
 	
 	
 }
+
+function events_Loadavg($text,$function=null,$line=0){
+		$filename=basename(__FILE__);
+		if(!isset($GLOBALS["CLASS_UNIX"])){
+			include_once(dirname(__FILE__)."/framework/class.unix.inc");
+			$GLOBALS["CLASS_UNIX"]=new unix();
+		}
+		$GLOBALS["CLASS_UNIX"]->events("$filename $function:: $text (L.$line)","/var/log/artica-postfix/xLoadAvg.debug");	
+		}	
+
 function ipblocks(){
 	if(system_is_overloaded()){return;}
 	include_once(dirname(__FILE__) . '/ressources/class.mysql.inc');

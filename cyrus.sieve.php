@@ -32,7 +32,7 @@ function cyrus_sieve_load(){
 	
 var x_cyrus_sieve_save=function (obj) {
 	tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue);}
+	if(tempvalue.length>3){alert(tempvalue);}
 	YahooWinHide();
     }
 

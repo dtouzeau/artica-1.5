@@ -30,6 +30,7 @@ if($argv[1]=='--loglevel'){set_log_level($argv[2]);die();}
 if($argv[1]=='--quotas-recheck'){quotasrecheck();die();}
 if($argv[1]=='--quotas-recheck'){quotasrecheck();die();}
 if($argv[1]=='--ldap-groups'){ldap_groups();die();}
+if($argv[1]=='--testjoin'){test_join();die();}
 
 
 
@@ -322,7 +323,7 @@ function reconfigure(){
 	FixsambaDomainName();
 	echo "Starting......: Samba building main configuration...\n";
 	@file_put_contents("/etc/samba/smb.conf",$samba->BuildConfig());
-	
+	echo "Starting......: Samba $smbpasswd -w ****\n";
 	shell_exec("$smbpasswd -w $ldap_passwd");
 
 	SambaAudit();
@@ -338,6 +339,9 @@ function reconfigure(){
 	}
 	
 	if($EnableSambaActiveDirectory==1){kinit();}
+	shell_exec($unix->LOCATE_APACHE_BIN_PATH()." /usr/share/artica-postfix/exec.pam.php --build");
+	 
+	
 	$unix->THREAD_COMMAND_SET(LOCATE_PHP5_BIN2()." ".__FILE__." --check-dirs");
 	$unix->THREAD_COMMAND_SET("/usr/share/artica-postfix/bin/artica-install --samba-reconfigure");
 	reload();
@@ -350,19 +354,29 @@ function reload(){
 	
 	$pidof=$unix->find_program("pidof");
 	$smbd=$unix->find_program("smbd");
+	$winbindd=$unix->find_program("winbindd");
 	$kill=$unix->find_program("kill");
 	exec("$pidof $smbd 2>&1",$results);
-	echo "Starting......: samba reloading $smbd...\n";
+	echo "Starting......: samba reloading smbd:$smbd...\n";
 	$tbl=explode(" ",@implode(" ",$results));
 	while (list ($index, $pid) = each ($tbl) ){
 		$pid=trim($pid);
 		if(!is_numeric($pid)){continue;}
 		if($pid<10){continue;}
-		echo "Starting......: samba reloading pid: $pid\n";
+		echo "Starting......: samba reloading smbd pid: $pid\n";
 		shell_exec("/bin/kill -HUP $pid 2>&1 >/dev/null");
 	}
-	
-	
+	$results=array();
+	exec("$pidof winbindd 2>&1",$results);
+	echo "Starting......: samba reloading winbindd:$smbd...\n";
+	$tbl=explode(" ",@implode(" ",$results));
+	while (list ($index, $pid) = each ($tbl) ){
+		$pid=trim($pid);
+		if(!is_numeric($pid)){continue;}
+		if($pid<10){continue;}
+		echo "Starting......: samba reloading winbindd pid: $pid\n";
+		shell_exec("/bin/kill -HUP $pid 2>&1 >/dev/null");
+	}	
 	
 }
 	
@@ -412,56 +426,60 @@ function fixEtcHosts(){
 	$found=false;
 	$foundMyhostanme=false;
 	$domainname=str_replace("localhost.localdomain","localdomain",$domainname);
-	
+	if($domainname==null){$domainname="localdomain";}
 	
 	$mod=false;
 	while (list ($index, $line) = each ($f) ){
 		if(trim($line)==null){continue;}
-		if(preg_match("#127\.0.+?\s+localhost#",$line)){
-			echo "Starting......: localhost entry found in /etc/hosts line $index\n";
-			$found=true;
-		}else{
-			if($GLOBALS["VERBOSE"]){
-				echo "Starting......: $line !== \"127\.0.+?\s+localhost\"\n";
-			}
+		if(preg_match("#127\.0\.0\.1\s+localhost\s+#",$line)){
+			echo "Starting......: bad localhost entry found in /etc/hosts line $index\n";
+			$found=false;
+			$mod=true;
+			continue;
 		}
-		if(preg_match("#127\.0.+?\s+$hostname\.$preg_domainname\s+$hostname#",$line)){
-			echo "Starting......: $hostname entry found in /etc/hosts line $index\n";
-			$foundMyhostanme=true;
 		
-		}else{
-			if($GLOBALS["VERBOSE"]){
-				echo "Starting......: $line !== \"127\.0.+?\s+$hostname\.$preg_domainname\s+$hostname\"\n";
+		if(!$found){
+			if(preg_match("#127\.0\.0\.1\s+$hostname\.$domainname\s+.+?localhost#",$line)){
+				echo "Starting......: $hostname.$domainname + localhost entry found in /etc/hosts line $index\n";
+				if($index>0){
+					echo "Starting......: this is not in the first line..\n";
+					unset($f[$index]);
+					array_unshift($f,$line);
+					echo "Starting......: saving ". count($f)." lines in /etc/hosts\n";
+					@file_put_contents("/etc/hosts",@implode("\n",$f)."\n");
+					return;
+				}
+				
+				$found=true;
+				continue;
 			}
 		}
+		if(preg_match("#127\.0\.0\.1\s+localhost\s+localhost#", $line)){$mode=true;}
+		if(preg_match("#127\.0\.0\.1\s+localhost#", $line)){$mode=true;}
+		
 	}
 	
 	reset($f);
-	if(!$found){
-		echo "Starting......: localhost is not found in /etc/hosts\n";
-		$f[]="127.0.0.1\tlocalhost.$domainname\tlocalhost";
-		$mod=true;
-	}
+
 	
 	$line='';
 	$already=array();
 	while (list ($index, $line) = each ($f) ){
-		if(trim($line)==null){
-			echo "Starting......: skip line \"$line\"\n";
-			continue;
-		}
+		if(preg_match("#127\.0\.0\.1\s+localhost\s+#", $line)){if($GLOBALS["VERBOSE"]){echo "Starting......: skip line \"$line\"\n";}continue;}			
+		if(preg_match("#127\.0\.0\.1\s+$hostname\s+#", $line)){if($GLOBALS["VERBOSE"]){echo "Starting......: skip line \"$line\"\n";}continue;}
+		if(preg_match("#127\.0\.0\.1\s+$hostname\.$domainname$#", $line)){if($GLOBALS["VERBOSE"]){echo "Starting......: skip line \"$line\"\n";}continue;}
+		if(trim($line)==null){if($GLOBALS["VERBOSE"]){echo "Starting......: skip line \"$line\"\n";}continue;}
 		if(isset($already[$line])){continue;}
 		
-		writelogs("/etc/hosts:: add line \"$line\"\n",__FUNCTION__,__FILE__,__LINE__);
+		//writelogs("/etc/hosts:: line \"$line\"\n",__FUNCTION__,__FILE__,__LINE__);
 		$newf[]=$line;
 		$already[$line]=true;
 	}
 	
-	if(!$foundMyhostanme){
+	if(!$found){
+		echo "Starting......: localhost is not found in /etc/hosts\n";
+		array_unshift($newf,"127.0.0.1\t$hostname.$domainname\t$hostname\tlocalhost");
 		$mod=true;
-		echo "Starting......: $hostname is not found in /etc/hosts\n";
-		echo "Starting......: Adding $hostname.$domainname informations\n";
-		$prefix="127.0.0.1\t$hostname.$domainname\t$hostname\n";
 	}
 	
 	
@@ -472,18 +490,7 @@ function fixEtcHosts(){
 	
 }
 
-function GetNetAdsInfos(){
-	$unix=new unix();
-	$net=$unix->LOCATE_NET_BIN_PATH();
-	if(!is_file($net)){return array();}
-	exec("$net ads info 2>&1",$results);
-	while (list ($index, $line) = each ($results) ){
-		if(preg_match("#^(.+?):(.+)#",trim($line),$re)){
-			$array[trim($re[1])]=trim($re[2]);
-		}
-	}
-	return $array;
-}
+
 
 
 function ads_destroy(){
@@ -538,7 +545,7 @@ function kinit(){
 	echo "Starting......: connecting to $ad_server.$domain_lower\n";
 	@unlink($cachefile);
 	
-	$NetADSINFOS=GetNetAdsInfos();
+	$NetADSINFOS=$unix->SAMBA_GetNetAdsInfos();
 	$KDC_SERVER=$NetADSINFOS["KDC server"];
 	$adminpassword=$config["PASSWORD"];
 	
@@ -547,6 +554,8 @@ function kinit(){
 		$WINBINDPASSWORD=$unix->shellEscapeChars($WINBINDPASSWORD);
 		exec("$net setauthuser -U winbind%$WINBINDPASSWORD 2>&1",$results);
 		while (list ($index, $line) = each ($results) ){writelogs("setauthuser [winbind]: $line",__FUNCTION__,__FILE__,__LINE__);}
+	}else{
+		exec("$net setauthuser -U {$config["ADADMIN"]}%$kinitpassword 2>&1",$results);
 	}
 	
 	echo "Starting......: checking winbindd daemon...\n";
@@ -602,7 +611,7 @@ function kinit(){
 }
 
 function activedirectory(){
-	
+	include_once(dirname(__FILE__)."/ressources/class.kdc.inc");
 	$sock=new sockets();
 	$EnableKerbAuth=$sock->GET_INFO("EnableKerbAuth");
 	if(!is_numeric("$EnableKerbAuth")){$EnableKerbAuth=0;}	
@@ -616,55 +625,12 @@ function activedirectory(){
 	
 	}
 	$config=unserialize(base64_decode($sock->GET_INFO("SambaAdInfos")));
-	$domain=strtoupper($config["ADDOMAIN"]);	
-	$server=strtoupper($config["ADSERVER"]);
-	$full_servername=strtolower($config["ADSERVER"].".".$config["ADDOMAIN"]);
-	$full_servernameUpper=strtoupper($full_servername);
-	$conf[]="[libdefaults]";
-	$conf[]="default_realm = $domain";
-	$conf[]="dns_lookup_realm = true";
-	$conf[]="dns_lookup_kdc = true";
-	$conf[]="ticket_lifetime = 24h";
-	$conf[]="forwardable = yes";
-	$conf[]="default_tgs_enctypes = DES-CBC-CRC DES CBC-MD5 RC4-HMAC";
-	$conf[]="default_tkt_enctypes = DES-CBC-CRC DES-CBC-MD5 RC4-HMAC";
-	$conf[]="preferred_enctypes = DES-CBC-CRC DES-CBC-MD5 RC4-HMAC";
-	$conf[]="";
-	$conf[]="[realms]";
-	$conf[]="$domain = {";
-	$conf[]="  kdc = $full_servername";
-	$conf[]="  admin_server = $full_servername";
-	$conf[]="  default_domain = ".strtolower($domain);
-	$conf[]="}";
-	$conf[]="";
-	$conf[]="[domain_realm]";
-	$conf[]=strtolower(".{$config["ADDOMAIN"]}")." =".strtoupper($domain);
-	$conf[]=strtolower("{$config["ADDOMAIN"]}")."=" .strtoupper($domain);
-	$conf[]="";
-	$conf[]="[kdc]";
-	$conf[]="profile = /etc/kdc.conf";
-	$conf[]="";
-	@file_put_contents("/etc/krb5.conf",@implode("\n",$conf));
-	unset($conf);
-	$conf[]="[kdcdefaults]";
-	$conf[]="kdc_ports = 750,88";
-	$conf[]="acl_file = /var/kerberos/krb5kdc/kadm5.acl";
-	$conf[]="dict_file = /usr/share/dict/words";
-	$conf[]="admin_keytab = /var/kerberos/krb5kdc/kadm5.keytab";
-	$conf[]="v4_mode = noreauth";
-	$conf[]="[libdefaults]";
-	$conf[]="        default_realm = $domain";
-	$conf[]="[realms]";
-	$conf[]="$domain = {";
-	$conf[]="	master_key_type = des-cbc-crc";
-	$conf[]="   supported_enctypes = des3-hmac-sha1:normal arcfour-hmac:normal des-hmac-sha1:normal des-cbc-md5:normal des-cbc-crc:normal des-cbc-crc:v4 des-cbc-crc:afs3";
-	$conf[]="}";	
-	$conf[]="";
-	@file_put_contents("/etc/kdc.conf",@implode("\n",$conf));
-	
-	$config="*/{$config["ADADMIN"]}@$domain\n";
-	@file_put_contents("/etc/kadm.acl",$config);
-	
+	$kdc=new kdc();
+	$kdc->suffix_domain=$config["ADDOMAIN"];
+	$kdc->netbios_servername=$config["ADSERVER"];
+	$kdc->administrator=$config["ADADMIN"];
+	$kdc->wintype=$config["WINDOWS_SERVER_TYPE"];
+	$kdc->build();	
 	
 	
 	
@@ -1204,6 +1170,40 @@ function quotasrecheck(){
 	shell_exec("$quotaoff -a");
 	shell_exec("$quotacheck -vagum");
 	shell_exec("$quotaon -a");
+	
+}
+
+function test_join(){
+	$sock=new sockets();
+	$EnableSambaActiveDirectory=$sock->GET_INFO("EnableSambaActiveDirectory");
+	if(!is_numeric($EnableSambaActiveDirectory)){$EnableSambaActiveDirectory=0;}
+	if($EnableSambaActiveDirectory==0){return;}
+	
+	
+	$unix=new unix();
+	$net=$unix->LOCATE_NET_BIN_PATH();
+	exec("$net ads testjoin 2>&1",$results);
+	while (list ($num, $ligne) = each ($results) ){
+		if(preg_match("#Join is OK#", $ligne)){return;}
+		
+	}
+	
+	$adsjoinerror=@implode("\n", $results);
+	$results=array();
+	
+	$config=unserialize(base64_decode($sock->GET_INFO("SambaAdInfos")));
+	$ad_server=strtolower($config["ADSERVER"]);
+	$domain_lower=strtolower($config["ADDOMAIN"]);
+	$adminpassword=$config["PASSWORD"];
+	$adminpassword=$unix->shellEscapeChars($adminpassword);
+	$cmd="$net ads join -W $ad_server.$domain_lower -S $ad_server -U {$config["ADADMIN"]}%$adminpassword 2>&1";
+	exec($cmd,$results1);
+	$cmd="net join -U {$config["ADADMIN"]}%$adminpassword -S $ad_server 2>&1";
+	exec($cmd,$results2);
+	$unix->send_email_events("Join to [$ad_server] Active Directory Domain failed", "NET claim:".@implode("\n", $results)."
+	Artica reconnect the system to the Active Directory report:\n".@implode("\n", $results1)."\n".@implode("\n", $results2), "system");
+	reload();
+	
 	
 }
 	

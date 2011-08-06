@@ -222,7 +222,6 @@ if (is_array($master->array_full[$key]["OPTIONS"])){
 	<form name='FFM1master'>
 	<input type='hidden' id='service_key' name='service_key' value='$key'>
 	
-	<H1>Postfix:&nbsp;$realname</H1>
 	
 	<table style='width:100%'>
 	<tr>

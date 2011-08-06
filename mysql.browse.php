@@ -144,7 +144,7 @@ while (list ($num, $ligne) = each ($array) ){
 
 	var x_MysqlCheck= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);return;}	
+		if(tempvalue.length>3){alert(tempvalue);return;}	
 		
 	}		
 	

@@ -342,13 +342,13 @@ function js(){
 
 		var x_SaveServerSettings= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}
+			if(tempvalue.length>3){alert(tempvalue);}
 			RefreshTab('main_openvpn_config');
 			}	
 
 		var x_SaveClientsSettings= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}
+			if(tempvalue.length>3){alert(tempvalue);}
 			OpenVPNClientsSettings();
 			}				
 		

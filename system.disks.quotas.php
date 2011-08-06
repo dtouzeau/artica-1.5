@@ -150,7 +150,7 @@ function manage_quotas_popup_add(){
 	<script>
 	var x_SaveMembersQuotas= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}
+			if(tempvalue.length>3){alert(tempvalue);}
 			document.getElementById('submit-quota-div').innerHTML='';
 			repquota();
 			YahooWin6Hide();

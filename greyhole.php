@@ -214,7 +214,7 @@ function pools_list(){
 
 	var x_AutoFSUSB= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);return;}	
+		if(tempvalue.length>3){alert(tempvalue);return;}	
 		YahooWin4Hide();
 		RefreshTab('main_config_autofs');
 	}		
@@ -300,7 +300,7 @@ function mounts_events(){
 	<script>
 		var x_EnableGreyHoleDebugSave= function (obj) {
 			var tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);return;}	
+			if(tempvalue.length>3){alert(tempvalue);return;}	
 		
 		}		
 	

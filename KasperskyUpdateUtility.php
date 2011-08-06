@@ -102,7 +102,7 @@ function index(){
 	
 	var x_SaveEnableKUpdte= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}
+		if(tempvalue.length>3){alert(tempvalue);}
 		RefreshTab('main_upateutility_config');
 	}	
 	
@@ -461,7 +461,7 @@ $EnableKUpdateUtility=$sock->GET_INFO("EnableKUpdateUtility");
 			
 	var x_SaveKUpdtProducts= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}
+		if(tempvalue.length>3){alert(tempvalue);}
 		RefreshTab('main_upateutility_config');
 	}				
 			
@@ -597,7 +597,7 @@ function settings(){
 			
 	var x_SaveKUpdtConx= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}
+		if(tempvalue.length>3){alert(tempvalue);}
 		RefreshTab('main_upateutility_config');
 	}				
 			

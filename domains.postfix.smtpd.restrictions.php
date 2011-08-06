@@ -263,7 +263,7 @@ var {$prefix}reste=0;
 	
 var x_smtpd_client_restrictions_save= function (obj) {
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue);}
+	if(tempvalue.length>3){alert(tempvalue);}
 	{$prefix}StartPostfixPopup();
 }		
 	

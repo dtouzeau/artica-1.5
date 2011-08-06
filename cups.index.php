@@ -155,7 +155,7 @@ function StartDrvLogs(){
 	
 	function x_UnistallPrinter(obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		CupsInstalledList();
 	}
 	
@@ -182,7 +182,7 @@ function StartDrvLogs(){
 	
 	function x_AddPrinterToDisk(obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		YahooWin4Hide();
 		CupsInstalled();
 	}	

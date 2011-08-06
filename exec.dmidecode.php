@@ -7,6 +7,16 @@ include_once(dirname(__FILE__) . '/framework/frame.class.inc');
 include_once(dirname(__FILE__) . '/ressources/class.ldap.inc');
 if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["VERBOSE"]=true;}
 
+if($argv[1]=="--chassis"){
+	if(is_file("/etc/artica-postfix/dmidecode.cache")){
+		$datas=@file_get_contents("/etc/artica-postfix/dmidecode.cache");
+		$newdatas=urlencode(base64_encode($datas));
+		@file_put_contents("/etc/artica-postfix/dmidecode.cache.url", $newdatas);
+		die();
+	}
+	
+}
+
 $cache_file="/etc/artica-postfix/dmidecode.cache";
 if(!$GLOBALS["VERBOSE"]){
 	if(is_file($cache_file)){
@@ -17,28 +27,29 @@ if(!$GLOBALS["VERBOSE"]){
 
 $unix=new unix();
 $dmidecode=$unix->find_program("dmidecode");
-if(!is_file($dmidecode)){die();}
-
-
-exec("$dmidecode --type 1 2>&1",$results);
-while (list ($index, $line) = each ($results) ){
-	
-	if(preg_match("#Manufacturer:\s+(.+)#",$line,$re)){
-		$Manufacturer=$re[1];
+$virtwhat=$unix->find_program("virt-what");
+if(is_file($dmidecode)){
+	exec("$dmidecode --type 1 2>&1",$results);
+	while (list ($index, $line) = each ($results) ){
+		
+		if(preg_match("#Manufacturer:\s+(.+)#",$line,$re)){
+			$Manufacturer=$re[1];
+		}
+		
+		if(preg_match("#Product Name:\s+(.+)#",$line,$re)){
+			$ProductName=$re[1];
+		}	
 	}
-	
-	if(preg_match("#Product Name:\s+(.+)#",$line,$re)){
-		$ProductName=$re[1];
-	}	
-}
-unset($results);
-exec("$dmidecode --type 3 2>&1",$results);
-while (list ($index, $line) = each ($results) ){
-	
-	if(preg_match("#Manufacturer:\s+(.+)#",$line,$re)){
-		$chassisManufacturer=$re[1];
+	unset($results);
+	exec("$dmidecode --type 3 2>&1",$results);
+	while (list ($index, $line) = each ($results) ){
+		
+		if(preg_match("#Manufacturer:\s+(.+)#",$line,$re)){
+			$chassisManufacturer=$re[1];
+		}
+		
+		
 	}
-	
 	
 }
 $PROCS=array();
@@ -63,11 +74,32 @@ while (list ($index, $line) = each ($f) ){
 	}
 }
 
+
+
+
 $final_array["MANUFACTURER"]=$Manufacturer;
 $final_array["PRODUCT"]=$ProductName;
 $final_array["CHASSIS"]=$chassisManufacturer;
 $final_array["PROCESSORS"]=count($PROCS);
 $final_array["MHZ"]=$PROCS[0]["MHZ"];
 $final_array["PROC_TYPE"]=$PROCS[0]["MODEL"];
+
+if(is_file($virtwhat)){
+	exec("$virtwhat 2>&1",$virtwhatA);
+	$virtwhatB=trim(@implode("", $virtwhatA));
+	
+	if($virtwhatB<>null){
+		if($GLOBALS["VERBOSE"]){echo "$virtwhat -> $virtwhatB\n";}
+		$final_array["MANUFACTURER"]=$virtwhatB;
+		$final_array["PRODUCT"]=$virtwhatB;
+		$final_array["CHASSIS"]=$virtwhatB;
+	}
+}
+
 if($GLOBALS["VERBOSE"]){print_r($final_array);}
+$newdatas=urlencode(base64_encode($final_array));
 @file_put_contents("$cache_file",serialize($final_array));
+@file_put_contents("/etc/artica-postfix/dmidecode.cache.url",$newdatas);
+
+
+

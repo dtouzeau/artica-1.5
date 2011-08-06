@@ -1544,6 +1544,26 @@ class user{
 			writelogs("Error for sambaGroupMapping",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);		
 		}
 		writelogs("(&(objectClass=sambaSamAccount)(uid=$users)) in $suffix ". count($res)." elements",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+		
+		$sock=new sockets();
+		$users=urlencode($users);
+		
+		$systemusers=unserialize(base64_decode($sock->getFrameWork("samba.php?getent=$users")));
+		if(is_array($systemusers)){
+			while (list ($uid, $displayname) = each ($systemusers)){
+				$res[$uid]=$displayname;
+			}
+			
+		}
+		$systemgroup=unserialize(base64_decode($sock->getFrameWork("samba.php?getent-group=$users")));
+		writelogs("get ent groups -> ". count($systemgroup)." elements",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+		if(is_array($systemgroup)){
+			while (list ($uid, $displayname) = each ($systemgroup)){
+				$res["@$uid"]="@$displayname";
+			}
+			
+		}		
+		writelogs("RETURN ARRAY OF  -> ". count($res)." elements",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 		return $res;
 		
 	}

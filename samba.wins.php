@@ -9,6 +9,7 @@
 	$users=new usersMenus();
 	if(!$users->AsSambaAdministrator){die("<H1>EXIT</H1>");}
 	
+	if(isset($_GET["js"])){js();exit;}
 	if(isset($_GET["tabs"])){tabs();exit;}
 	if(isset($_GET["main-params"])){params();exit;}
 	if(isset($_GET["hosts-table"])){wins_dat();exit;}
@@ -18,6 +19,15 @@
 	if(isset($_GET["browse-wins-list"])){WinsList();exit;}
 	js_inline();
 
+	
+function js(){
+	$page=CurrentPageName();
+	$tpl=new templates();
+	$title=$tpl->_ENGINE_parse_body("{wins_server}");
+	echo "YahooWin5('550','$page?tabs=yes','$title')";	
+	
+}	
+	
 function js_inline(){
 	$page=CurrentPageName();
 	echo "$('#BodyContent').load('$page?tabs=yes');
@@ -106,7 +116,7 @@ function params(){
 	
 	var x_SaveWinsSettings=function (obj) {
 			tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}
+			if(tempvalue.length>3){alert(tempvalue);}
 			RefreshTab('main_config_wins_samba');
 	    }	
 	

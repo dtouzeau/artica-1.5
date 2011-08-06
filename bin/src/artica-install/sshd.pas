@@ -70,6 +70,12 @@ if not FileExists(binpath) then begin
    writeln('Stopping OpenSSH.............: Not installed');
    exit;
 end;
+ writeln('Stopping OpenSSH.............: apply permissions on /root');
+fpsystem('/bin/chown -R root:root /root');
+fpsystem('/bin/chmod go-w /root');
+if not DirectoryExists('/root/.ssh') then ForceDirectories('/root/.ssh');
+fpsystem('/bin/chmod 700 /root/.ssh');
+if FIleExists('/root/.ssh/authorized_keys') then fpsystem('/bin/chmod 600 /root/.ssh/authorized_keys');
 
 if not SYS.PROCESS_EXIST(PID_NUM()) then begin
         writeln('Stopping OpenSSH.............: already Stopped');
@@ -134,6 +140,20 @@ if SYS.PROCESS_EXIST(PID_NUM()) then begin
    START_LOGGER();
    exit;
 end;
+logs.DebugLogs('Starting......: OpenSSH server apply permissions on /root');
+fpsystem('/bin/chown -R root:root /root');
+fpsystem('/bin/chmod go-w /root');
+
+if not DirectoryExists('/root/.ssh') then ForceDirectories('/root/.ssh');
+logs.DebugLogs('Starting......: OpenSSH server apply 700 permissions on /root/.ssh');
+fpsystem('/bin/chmod 700 /root/.ssh');
+
+if FIleExists('/root/.ssh/authorized_keys') then begin
+   logs.DebugLogs('Starting......: OpenSSH server apply 600 permissions on /root/.ssh/authorized_keys');
+   fpsystem('/bin/chmod 600 /root/.ssh/authorized_keys');
+end;
+
+
 
    logs.DebugLogs('Starting......: OpenSSH server...');
    cmd:=INITD_PATH()+' start &';

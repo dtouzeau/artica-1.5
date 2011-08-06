@@ -199,7 +199,7 @@ function usblist(){
 
 	var x_AutoFSUSB= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);return;}	
+		if(tempvalue.length>3){alert(tempvalue);return;}	
 		YahooWin4Hide();
 		if(document.getElementById('main_config_autofs')){RefreshTab('main_config_autofs');}
 		if(document.getElementById('BackupTaskAutoFSMountedList')){RefreshAutoMountsBackup();}
@@ -830,7 +830,7 @@ function mounts_list(){
 
 	var x_AutoFSDeleteDN= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		RefreshTab('main_config_autofs');
 	}		
 	

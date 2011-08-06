@@ -65,7 +65,7 @@ $page=CurrentPageName();
 	
 	var x_UserAddTab= function (obj) {
 		var tempvalue=obj.responseText;
-			if(tempvalue.length>0){
+			if(tempvalue.length>3){
 				alert(tempvalue);
 				return;
 			}	
@@ -76,7 +76,7 @@ $page=CurrentPageName();
 
 	var x_DeleteAllUserInterface= function (obj) {
 		var tempvalue=obj.responseText;
-			if(tempvalue.length>0){
+			if(tempvalue.length>3){
 				alert(tempvalue);
 				return;
 			}	
@@ -222,7 +222,7 @@ $users=new usersMenus();
 	$html="
 	var x_DeleteUserTab= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		Loadjs('$page?tab-js=index&uid=$uid')
 		}
 		
@@ -271,7 +271,7 @@ function main_add_tab(){
 	
 var x_MainAdminAddTab= function (obj) {
 var tempvalue=obj.responseText;
-	if(tempvalue.length>0){
+	if(tempvalue.length>3){
 		alert(tempvalue);
 	}	
 	
@@ -420,7 +420,7 @@ $users=new usersMenus();
 	
 var x_AddWidgetUIcon= function (obj) {	
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue);}	
+	if(tempvalue.length>3){alert(tempvalue);}	
 	Loadjs('users.tabs.php?rebuild-icons={$_GET["manage-icon"]}&uid=$uid');
 	}		
 	
@@ -551,7 +551,7 @@ function main_icon_js(){
 	}
 var x_AddWidgetUIcon= function (obj) {	
 	var tempvalue=obj.responseText;
-	if(tempvalue.length>0){alert(tempvalue);}	
+	if(tempvalue.length>3){alert(tempvalue);}	
 	Loadjs('users.tabs.php?rebuild-icons={$_GET["add-icon"]}&uid=$uid');
 	AddIconUChangeClass();
 	}	

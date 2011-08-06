@@ -68,7 +68,7 @@ var wbl;
 	
 	var x_check_client_access_multi_add=function(obj){
       var tempvalue=trim(obj.responseText);
-      if(tempvalue.length>0){alert(tempvalue);}
+      if(tempvalue.length>3){alert(tempvalue);}
       RefreshTab('main_config_regex');
 	}
 	
@@ -169,7 +169,7 @@ function sLoadAjax(div,page){
 	
 	var x_MultiEditPostfixRegexRule=function(obj){
 	      var tempvalue=trim(obj.responseText);
-	      if(tempvalue.length>0){
+	      if(tempvalue.length>3){
 	           alert(tempvalue);
 	           return;     
 	        }
@@ -758,7 +758,7 @@ function SimpleWords(){
 		
 	var x_SaveEnableBodyChecks= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)};
+		if(tempvalue.length>3){alert(tempvalue)};
 		RefreshTab('main_config_regex');
 	}			
 		
@@ -796,7 +796,7 @@ function SimpleWords_popup(){
 	
 	var x_SimpleWordsSave= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue)};
+		if(tempvalue.length>3){alert(tempvalue)};
 		YahooWin4Hide();
 		SimpleWordsRefresh();
 	}			
@@ -918,13 +918,13 @@ function SimpleWords_list(){
 	<script>
 	var x_SimpleWordsDelete= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		SimpleWordsRefresh();
 	}	
 	
 	var x_SimpleWordsDisable= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		
 	}		
 	

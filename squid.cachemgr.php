@@ -91,13 +91,13 @@ function popup(){
 
 	var x_SaveCacheManagerParams= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		
 	}
 
 	var x_cachemgr_left_menu_save= function (obj) {
 		var tempvalue=obj.responseText;
-		if(tempvalue.length>0){alert(tempvalue);}	
+		if(tempvalue.length>3){alert(tempvalue);}	
 		CacheOff();
 	}	
 	

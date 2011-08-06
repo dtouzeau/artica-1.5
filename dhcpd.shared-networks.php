@@ -67,7 +67,7 @@ function page(){
 	
 	var x_SharedNetsApply= function (obj) {
 		var tempvalue=obj.responseText;	
-		if(tempvalue.length>0){alert(tempvalue);return;}
+		if(tempvalue.length>3){alert(tempvalue);return;}
 		RefreshSharedNet();
 	}
 	
@@ -139,7 +139,7 @@ $html=$html."</table>
 	
 	var x_DelDHCPShared= function (obj) {
 		var tempvalue=obj.responseText;	
-		if(tempvalue.length>0){alert(tempvalue);return;}
+		if(tempvalue.length>3){alert(tempvalue);return;}
 		RefreshSharedNet();
 	}
 	
@@ -299,7 +299,7 @@ function shared_edit(){
 var x_SharedDHCPNetSave= function (obj) {
 	var tempvalue=obj.responseText;
 	var ID='$ID'
-	if(tempvalue.length>0){alert(tempvalue);return;}
+	if(tempvalue.length>3){alert(tempvalue);return;}
 	RefreshSharedNet();
 	if(ID==0){YahooWin5Hide();}
 	}		

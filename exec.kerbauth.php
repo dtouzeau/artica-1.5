@@ -15,6 +15,7 @@ if($argv[1]=="--ping"){ping_kdc();die();}
 
 
 function build(){
+	$sock=new sockets();
 	$EnableKerbAuth=$sock->GET_INFO("EnableKerbAuth");
 	if(!is_numeric("$EnableKerbAuth")){$EnableKerbAuth=0;}
 	if($EnableKerbAuth==0){echo "Starting......: Kerberos, disabled\n";return;}
@@ -23,6 +24,9 @@ function build(){
 	$unix=new unix();
 	$msktutil=$unix->find_program("msktutil");
 	$hostname_bin=$unix->find_program("hostname");
+	$kdb5_util=$unix->find_program("kdb5_util");
+	$kadmin_bin=$unix->find_program("kadmin");
+	$netbin=$unix->LOCATE_NET_BIN_PATH();
 	if(!is_file("$msktutil")){echo "Starting......: Kerberos, msktutil no such binary\n";return;}
 	if(!is_file("$hostname_bin")){echo "Starting......: Kerberos, hostname no such binary\n";return;}
 	exec("$hostname_bin -d 2>&1",$results);
@@ -34,7 +38,7 @@ function build(){
 	unset($results);
 	exec("$hostname_bin -s 2>&1",$results);
 	$myNetBiosName=trim(@implode("", $results));
-		$enctype=null;
+	$enctype=null;
 	$sock=new sockets();
 	$array=unserialize(base64_decode($sock->GET_INFO("KerbAuthInfos")));	
 	
@@ -66,6 +70,9 @@ function build(){
 	
 	$domainUp=strtoupper($array["WINDOWS_DNS_SUFFIX"]);
 	$domaindow=strtolower($array["WINDOWS_DNS_SUFFIX"]);
+	$kinitpassword=$array["WINDOWS_SERVER_PASS"];
+	$kinitpassword=$unix->shellEscapeChars($kinitpassword);
+	
 
 	
 $f[]=" [logging]";
@@ -75,8 +82,8 @@ $f[]=" admin_server = FILE:/var/log/kadmind.log";
 $f[]="";
 $f[]="[libdefaults]";
 $f[]=" default_realm = $domainUp";
-$f[]=" dns_lookup_realm = false";
-$f[]=" dns_lookup_kdc = false";
+$f[]=" dns_lookup_realm = true";
+$f[]=" dns_lookup_kdc = true";
 $f[]=" ticket_lifetime = 24h";
 $f[]=" forwardable = yes";
 $f[]="";
@@ -112,9 +119,47 @@ $f[]="rhs=.$mydomain";
 $f[]="classes=IN,HS";
 @file_put_contents("/etc/hesiod.conf", @implode("\n", $f));
 echo "Starting......: Kerberos, /etc/hesiod.conf done\n";
-$config="*/{$config["WINDOWS_SERVER_ADMIN"]}@$domaindow\n";
-@file_put_contents("/etc/kadm.acl",$config);
+
+
+unset($f);
+$f[]="[libdefaults]";
+$f[]="\t\tdebug = true";
+$f[]="[kdcdefaults]";
+//$f[]="\tv4_mode = nopreauth";	
+$f[]="\tkdc_ports = 88,750";	
+//$f[]="\tkdc_tcp_ports = 88";	
+$f[]="[realms]";	
+$f[]="\t$domainUp = {";	
+$f[]="\t\tdatabase_name = /etc/krb5kdc/principal";
+$f[]="\t\tacl_file = /etc/kadm.acl";	
+$f[]="\t\tdict_file = /usr/share/dict/words";	
+$f[]="\t\tadmin_keytab = FILE:/etc/krb5.keytab";
+$f[]="\t\tkey_stash_file = /etc/krb5kdc/.k5.$domainUp";
+$f[]="\t\tmaster_key_type = des3-hmac-sha1";
+$f[]="\t\tsupported_enctypes = des3-hmac-sha1:normal des-cbc-crc:normal des:normal des:v4 des:norealm des:onlyrealm des:afs3";	
+$f[]="\t\tdefault_principal_flags = +preauth";
+$f[]="\t}";
+$f[]="";
+if(!is_dir("/usr/share/krb5-kdc")){@mkdir("/usr/share/krb5-kdc",644,true);}
+@file_put_contents("/usr/share/krb5-kdc/kdc.conf", @implode("\n", $f));
+@file_put_contents("/etc/kdc.conf", @implode("\n", $f));
+echo "Starting......: Kerberos, /usr/share/krb5-kdc/kdc.conf done\n";
+echo "Starting......: Kerberos, /etc/kdc.conf done\n";
+
+unset($f);
+
+
+
+
+
+
+
+$config="*/admin *\n";
+@file_put_contents("/etc/kadm.acl"," ");
+@file_put_contents("/usr/share/krb5-kdc/kadm.acl"," ");
+@file_put_contents("/etc/krb5kdc/kadm5.acl"," ");
 echo "Starting......: Kerberos, /etc/kadm.acl done\n";
+
 
 RunKinit($array["WINDOWS_SERVER_ADMIN"],$array["WINDOWS_SERVER_PASS"]);
 
@@ -127,12 +172,78 @@ $cmd=$cmd." --computer-name $myNetBiosName --upn HTTP/$myFullHostname --server $
 echo "Starting......: msktutil, $cmd\n";
 exec($cmd,$results);
 
-while (list ($num, $a) = each ($results) ){	
-	echo "Starting......: msktutil, $a\n";
-	}
-	
+while (list ($num, $a) = each ($results) ){echo "Starting......: msktutil, $a\n";}
+
+if(is_file("$kdb5_util")){
+	$cmd="$kdb5_util create -r $domainUp -s -P $kinitpassword";
+	if($GLOBALS["VERBOSE"]){echo "Starting......:  $cmd\n";}
+	unset($results);
+	exec($cmd,$results);
+	while (list ($num, $a) = each ($results) ){echo "Starting......: kdb5_util, $a\n";}
+}
+
+if(is_file("$kadmin_bin")){
 	
 }
+
+ //kadmin -p Administrateur "addprinc -randkey cifs/bdc.touzeau.com" -w DavidTouzeau180872
+
+if(is_file("$netbin")){JOIN_ACTIVEDIRECTORY();}
+	
+	
+	
+
+
+
+}
+
+function JOIN_ACTIVEDIRECTORY(){
+$unix=new unix();	
+$user=new settings_inc();
+$netbin=$unix->LOCATE_NET_BIN_PATH();
+	
+if(!is_file($netbin)){echo "Starting......:  net, no such binary\n";return;}
+if(!$user->SAMBA_INSTALLED){echo "Starting......:  Samba, no such software\n";return;}
+$NetADSINFOS=$unix->SAMBA_GetNetAdsInfos();
+$KDC_SERVER=$NetADSINFOS["KDC server"];
+$sock=new sockets();
+$array=unserialize(base64_decode($sock->GET_INFO("KerbAuthInfos")));
+$domainUp=strtoupper($array["WINDOWS_DNS_SUFFIX"]);
+$domain_lower=strtolower($array["WINDOWS_DNS_SUFFIX"]);
+$adminpassword=$array["WINDOWS_SERVER_PASS"];
+$adminpassword=$unix->shellEscapeChars($adminpassword);
+$adminname=$array["WINDOWS_SERVER_ADMIN"];
+$ad_server=$array["WINDOWS_SERVER_NETBIOSNAME"];
+echo "Starting......:  Samba, [$adminname]: Kdc server ads : $KDC_SERVER\n";
+if($KDC_SERVER==null){
+		$cmd="$netbin ads join -W $ad_server.$domain_lower -S $ad_server -U $adminname%$adminpassword 2>&1";
+		if($GLOBALS["VERBOSE"]){echo "Starting......:  Samba, $cmd\n";}
+		exec("$cmd",$results);
+		while (list ($index, $line) = each ($results) ){echo "Starting......:  Samba,ads join [$adminname]: $line\n";}	
+		$NetADSINFOS=$unix->SAMBA_GetNetAdsInfos();
+		$KDC_SERVER=$NetADSINFOS["KDC server"];
+	}
+	
+echo "Starting......:  Samba, [$adminname]: setauthuser..\n";
+$cmd="$netbin setauthuser -U $adminname%$adminpassword";	
+shell_exec($cmd);	
+
+
+	if($KDC_SERVER==null){
+		echo "Starting......:  Samba, [$adminname]: unable to join the domain $domain_lower\n";
+		
+	}
+
+	echo "Starting......:  Samba, [$adminname]: Kdc server ads : $KDC_SERVER\n";
+	
+	unset($results);
+	$cmd="$netbin ads keytab create -P -U $adminname%$adminpassword 2>&1";
+	if($GLOBALS["VERBOSE"]){echo "Starting......:  Samba, $cmd\n";}
+	exec("$cmd",$results);
+	while (list ($index, $line) = each ($results) ){echo "Starting......:  Samba,ads keytab: [$adminname]: $line\n";}		
+
+}
+
 
 
 function RunKinit($username,$password){

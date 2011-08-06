@@ -31,7 +31,7 @@ function js(){
 		
 	   var x_acls_global_save=function (obj) {
 			tempvalue=obj.responseText;
-			if(tempvalue.length>0){alert(tempvalue);}
+			if(tempvalue.length>3){alert(tempvalue);}
 			acls_settings_start();
 	    }			
 		

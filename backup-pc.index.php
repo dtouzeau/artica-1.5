@@ -193,7 +193,7 @@ if($array["MaxOldLogFiles"]==null){$array["MaxOldLogFiles"]="14";}
 	
 	var x_SaveGenBackupPC=function(obj){
       var tempvalue=obj.responseText;
-      if(tempvalue.length>0){alert(tempvalue);}
+      if(tempvalue.length>3){alert(tempvalue);}
      document.getElementById('imgftp').innerHTML='<center style=\"width:100%\">&nbsp;</center>';
       
       }	
