@@ -1066,6 +1066,27 @@ if(!$this->TABLE_EXISTS('whitelist_uid_greylist','artica_backup')){
 		if(!$this->ok){writelogs("Fatal: $this->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}	
 }		
 
+
+	if(!$this->TABLE_EXISTS('master_cf','artica_backup')){		
+		$sql="CREATE TABLE IF NOT EXISTS `master_cf` (
+			  `SERVICE_NAME` varchar(50) NOT NULL,
+			  `TYPE` varchar(20) NOT NULL,
+			  `hostname` varchar(255) NOT NULL,
+			  `PRIVATE` varchar(50) NOT NULL,
+			  `UNIPRIV` varchar(50) NOT NULL,
+			  `CHROOT` varchar(3) NOT NULL,
+			  `WAKEUP` varchar(50) NOT NULL,
+			  `MAXPROC` varchar(50) NOT NULL,
+			  `COMMAND` text NOT NULL,
+			  `zmd5` varchar(90) NOT NULL,
+			  PRIMARY KEY (`zmd5`),
+			  KEY `SERVICE_NAME` (`SERVICE_NAME`,`PRIVATE`,`UNIPRIV`,`CHROOT`,`WAKEUP`,`MAXPROC`,`TYPE`),
+			  KEY `hostname` (`hostname`)
+			) ";
+			$this->QUERY_SQL($sql,'artica_backup');
+			if(!$this->ok){writelogs("Fatal: $this->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}	
+	}	
+
 	
 	if(!$this->TABLE_EXISTS('nics_vlan','artica_backup')){		
 		$sql="CREATE TABLE IF NOT EXISTS `nics_vlan` (
@@ -4407,10 +4428,74 @@ public function CheckTables_openvpn(){
 			if(!$this->ok){
 				writelogs("$this->mysql_error\n$sql",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 			}
+		}
+
+		
+	if(!$this->TABLE_EXISTS('updates_categories','artica_backup')){		
+			writelogs("Creating 'updates_categories/artica_backup",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+			$sql="CREATE TABLE IF NOT EXISTS `updates_categories` (
+				  `filename` varchar(128) NOT NULL,
+				  `categories` varchar(50) NOT NULL,
+				  `filesize` int(3) NOT NULL,
+				  `progress` int(1) NOT NULL,
+				  `finish` int(1) NOT NULL DEFAULT '0',
+				  `zDate` datetime NOT NULL,
+				  `subject` varchar(255) NOT NULL,
+				  PRIMARY KEY (`filename`),
+				  KEY `categories` (`categories`,`filesize`,`progress`,`finish`),
+				  KEY `zDate` (`zDate`)
+				) ";		
+			$this->QUERY_SQL($sql,"artica_backup");
+			if(!$this->ok){
+				writelogs("$this->mysql_error\n$sql",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+			}			
+		}
+
+		
+if(!$this->TABLE_EXISTS('kav4proxy_av_stats','artica_events')){		
+			writelogs("Creating 'updates_categories/artica_events",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+			$sql="CREATE TABLE IF NOT EXISTS `kav4proxy_av_stats` (
+  			`zDate` datetime NOT NULL,
+			  `total_requests` INT(5) NOT NULL,
+			  `infected_requests` INT(5) NOT NULL,
+			  `protected_requests` INT(5) NOT NULL,
+			  `error_requests` INT(5) NOT NULL,
+			  `requests_per_min` INT(5) NOT NULL,
+			  `processed_traffic` double(100,2) NOT NULL,
+			  `clean_traffic` double(100,2) NOT NULL,
+			  `infected_traffic` double(100,2) NOT NULL,
+			  `traffic_per_min` double(100,2) NOT NULL,
+			  `engine_errors` INT(5) NOT NULL,
+			  `total_connections` INT(5) NOT NULL,
+			  `total_processes` INT(5) NOT NULL,
+			  `idle_processes` INT(5) NOT NULL,
+			   KEY `sindex` (`zDate`,`total_requests`,`infected_requests`,`protected_requests`,`error_requests`),
+			   KEY `sindex2`(`requests_per_min`,`processed_traffic`,`clean_traffic`,`infected_traffic`,`traffic_per_min`),
+			   KEY `sindex3`(`engine_errors`,`total_connections`,`total_processes`,`idle_processes`)
+			  )";	
+	
+			$this->QUERY_SQL($sql,"artica_events");
+			if(!$this->ok){
+				writelogs("$this->mysql_error\n$sql",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+			}			
+		}				
+		
+	if(!$this->TABLE_EXISTS('kav4proxy_updates','artica_events')){		
+			writelogs("Creating 'updates_categories/artica_events",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+			$sql="CREATE TABLE IF NOT EXISTS `kav4proxy_updates` (
+  			`zDate` datetime NOT NULL,
+			  `subject` varchar(255) NOT NULL,
+			  `content` longtext NOT NULL,
+			  PRIMARY KEY (`zDate`),
+			  FULLTEXT KEY `content` (`content`),
+			  FULLTEXT KEY `subject` (`subject`)
+			)";	
+	
+			$this->QUERY_SQL($sql,"artica_events");
+			if(!$this->ok){
+				writelogs("$this->mysql_error\n$sql",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+			}			
 		}		
-		
-		
-		
 
 		$this->squid_events_sites_day();
 						
@@ -4473,6 +4558,11 @@ if(!$this->TABLE_EXISTS('squid_events_hours','artica_events')){
 		}	
 	
 	}
+	
+	
+	
+	
+	
 	public function squid_events_sites_day_patch(){
 	if(!$this->FIELD_EXISTS("squid_events_sites_day","category","artica_events")){
 			$sql="ALTER TABLE `squid_events_sites_day` ADD `category` VARCHAR( 90 ) NOT NULL DEFAULT '1',ADD INDEX ( `category` )";

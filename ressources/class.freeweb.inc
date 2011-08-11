@@ -763,7 +763,9 @@
 			$f[]="\tphp_value  include_path \"". @implode(":", $includes)."\"";
 
 			if(($this->groupware=="ZARAFA") OR ($this->groupware=="ZARAFA_MOBILE")){
-				$f[]="\tphp_value magic_quotes_gpc \"off\"";
+				$f[]="\tphp_value magic_quotes_gpc \"Off\"";
+				$f[]="\tregister_globals \"Off\"";
+				
 			}
 			
 			if($this->groupware=="Z-PUSH"){
@@ -783,7 +785,7 @@
 			
 			if($this->groupware=="GROUPOFFICE"){
 				$f[]="\tphp_value output_buffering \"Off\"\n";
-				$f[]="\tphp_value magic_quotes_gpc \"off\"";
+				$f[]="\tphp_value magic_quotes_gpc \"Off\"";
 				$f[]="\tphp_admin_flag engine \"on\"";
         		$f[]="\tphp_admin_value open_basedir \"none\"";
         		$f[]="UseCanonicalName On";

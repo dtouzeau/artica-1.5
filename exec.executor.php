@@ -382,10 +382,14 @@ function group30(){
 	$GLOBALS["TIME"]["GROUP30"]=time();
 	events("Starting $mins (minutes)",__FUNCTION__,__LINE__);
 	
-	if($GLOBALS["SQUID_INSTALLED"]){$array[]="exec.squid.stats.php --graphs";}
+	if($GLOBALS["SQUID_INSTALLED"]){
+		$array[]="exec.squid.stats.php --graphs";
+		$array[]="exec.squid.blacklists.php --inject";
+	}
 	if($GLOBALS["SAMBA_INSTALLED"]){$array[]="exec.picasa.php";}
 	if($GLOBALS["DRUPAL7_INSTALLED"]){$array[]="exec.freeweb.php --drupal-cron";}
-	
+
+		
 	
 	
 	$array[]="exec.emerging.threats.php";

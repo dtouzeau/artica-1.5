@@ -1230,33 +1230,48 @@ end;
 //#############################################################################
 procedure tupdate.update_Kav4Proxy();
 var
-   tmp,pid:string;
+   tmp,pid,cmd:string;
 begin
      IF kavicapserverEnabled=0 then begin
         logs.Debuglogs('update_Kav4Proxy:: Squid family is disabled');
         exit;
      end;
 
-     if  not FileExists('/opt/kaspersky/kav4proxy/bin/kav4proxy-keepup2date') then exit;
-
+     if  not FileExists('/opt/kaspersky/kav4proxy/bin/kav4proxy-keepup2date') then begin
+         logs.Debuglogs('update_Kav4Proxy:: /opt/kaspersky/kav4proxy/bin/kav4proxy-keepup2date no such file');
+         exit;
+     end;
      if RetranslatorEnabled=1 then begin
-          Logs.Debuglogs('perform_update() -> retranslator is enabled,');
+          Logs.Debuglogs('update_Kav4Proxy() -> retranslator is enabled,');
            tmp:=logs.FileTimeName();
+          logs.Debuglogs('update_Kav4Proxy() /opt/kaspersky/kav4proxy/bin/kav4proxy-keepup2date -g /var/db/kav/databases >/var/log/artica-postfix/kaspersky/kav4proxy/'+tmp+' 2>&1');
+          logs.Debuglogs('Updating configuration');
+          fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.kav4proxy.php');
           fpsystem('/opt/kaspersky/kav4proxy/bin/kav4proxy-keepup2date -g /var/db/kav/databases >/var/log/artica-postfix/kaspersky/kav4proxy/'+tmp+' 2>&1');
           exit;
      end;
+      logs.Debuglogs('update_Kav4Proxy() ->  CleanKasperskyRollBack()');
+      CleanKasperskyRollBack();
 
-     CleanKasperskyRollBack();
-     if  FileExists('/opt/kaspersky/kav4proxy/bin/kav4proxy-keepup2date') then begin
          if not SYS.PROCESS_EXISTS_BY_NAME('kav4proxy-keepup2date') then begin
-          Logs.Debuglogs('perform_update() -> Updating Kav4proxy...');
+          Logs.Debuglogs('update_Kav4Proxy() -> Updating Kav4proxy...');
           ForceDirectories('/var/log/artica-postfix/kaspersky/kav4proxy');
           tmp:=logs.FileTimeName();
-          fpsystem('/opt/kaspersky/kav4proxy/bin/kav4proxy-keepup2date >/var/log/artica-postfix/kaspersky/kav4proxy/'+tmp+' 2>&1 &');
+          cmd:=SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.kav4proxy.php';
+          logs.Debuglogs('update_Kav4Proxy() ->  '+cmd);
+          fpsystem(cmd);
+          cmd:='/opt/kaspersky/kav4proxy/bin/kav4proxy-keepup2date >/var/log/artica-postfix/kaspersky/kav4proxy/'+tmp+' 2>&1 &';
+
+          logs.Debuglogs('update_Kav4Proxy() -> '+cmd);
+          fpsystem(cmd);
+          logs.Debuglogs('update_Kav4Proxy() ->  sleep 500...');
           sleep(500);
           pid:=SYS.PIDOF('/opt/kaspersky/kav4proxy/bin/kav4proxy-keepup2date');
-          if SYS.PROCESS_EXIST(pid) then SYS.cpulimit(pid);
-         end;
+          if SYS.PROCESS_EXIST(pid) then begin
+              logs.Debuglogs('perform_update() ->  running pid: '+pid);
+          end;
+    end else begin
+         logs.Debuglogs('update_Kav4Proxy() SYS.PROCESS_EXISTS_BY_NAME(kav4proxy-keepup2date) return true.. Aborting...');
     end;
 end;
 //#############################################################################
@@ -2166,9 +2181,15 @@ var
    dans:Tdansguardian;
    filetimemin:integer;
    EnableUfdbGuard:integer;
+   squid:Tsquid;
+   nohup:string;
 begin
 checked:=false;
-
+squid:=tsquid.Create;
+if not FileExists(squid.SQUID_BIN_PATH()) then begin
+    logs.Debuglogs('update_webfilterplus:: Squid proxy is not installed');
+    exit;
+end;
  if SQUIDEnable=0 then begin
     logs.Debuglogs('update_webfilterplus:: Proxy family is disabled');
     exit;
@@ -2178,7 +2199,9 @@ if not TryStrToInt(SYS.GET_INFO('squidGuardEnabled'),squidGuardEnabled) then squ
 if not TryStrToInt(SYS.GET_INFO('DansGuardianEnabled'),DansGuardianEnabled) then DansGuardianEnabled:=0;
 if not TryStrToInt(SYS.GET_INFO('EnableUfdbGuard'),EnableUfdbGuard) then EnableUfdbGuard:=0;
 if EnableUfdbGuard=1 then squidGuardEnabled:=1;
-fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.web-community-filter.php');
+nohup:=SYS.LOCATE_GENERIC_BIN('nohup');
+fpsystem(trim(nohup+' '+SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.web-community-filter.php >/dev/null 2>&1 &'));
+fpsystem(trim(nohup+' '+SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.squid.blacklists.php --fullupdate >/dev/null 2>&1'));
 
 if not FileExists('/etc/artica-postfix/settings/Daemons/SYSTEMID') then begin
     logs.Debuglogs('update_webfilterplus:: no SYSTEMID, aborting');

@@ -5,6 +5,7 @@
 	include_once('ressources/class.templates.inc');
 	include_once('ressources/class.ldap.inc');
 	include_once('ressources/class.users.menus.inc');
+	include_once('ressources/class.user.inc');
 
 	$user=new usersMenus();
 	if($user->AsPostfixAdministrator==false){
@@ -55,14 +56,7 @@ function popup(){
 	</div>
 		<script>
 				$(document).ready(function(){
-					$('#main_config_cluebringer').tabs({
-				    load: function(event, ui) {
-				        $('a', ui.panel).click(function() {
-				            $(ui.panel).load(this.href);
-				            return false;
-				        });
-				    }
-				});
+					$('#main_config_cluebringer').tabs();
 			
 			
 			});

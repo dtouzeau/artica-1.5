@@ -102,8 +102,22 @@ function ldap_groups(){
 	$gp->CreateGuestUser();
 }	
 
+function LoadConfs(){
+$sock=new sockets();
+$ArticaSambaAutomAskCreation=$sock->GET_INFO("ArticaSambaAutomAskCreation");
+$HomeDirectoriesMask=$sock->GET_INFO("HomeDirectoriesMask");
+$SharedFoldersDefaultMask=$sock->GET_INFO("SharedFoldersDefaultMask");
+if(!is_numeric($ArticaSambaAutomAskCreation)){$ArticaSambaAutomAskCreation=1;}
+if(!is_numeric($HomeDirectoriesMask)){$HomeDirectoriesMask=0775;}
+if(!is_numeric($SharedFoldersDefaultMask)){$SharedFoldersDefaultMask=0755;}	
+$GLOBALS["HomeDirectoriesMask"]=$HomeDirectoriesMask;
+$GLOBALS["ArticaSambaAutomAskCreation"]=$ArticaSambaAutomAskCreation;
+$GLOBALS["SharedFoldersDefaultMask"]=$SharedFoldersDefaultMask;
+}
+
 
 function ParseHomeDirectories(){
+		if(!isset($GLOBALS["HomeDirectoriesMask"])){LoadConfs();}
 		$ldap=new clladp();
 		$profile_path=null;
 		$attr=array("homeDirectory","uid","dn");
@@ -134,6 +148,7 @@ function ParseHomeDirectories(){
 		}
 		
 function CheckHomeFor($uid,$homeDirectory=null){
+	if(!isset($GLOBALS["HomeDirectoriesMask"])){LoadConfs();}
 	$ct=new user($uid);
 	if($homeDirectory==null){$homeDirectory=$ct->homeDirectory;}
 	
@@ -176,8 +191,11 @@ if($homeDirectory==null){
 	
 	
 	writelogs("Checking home:$homeDirectory",__FUNCTION__,__FILE__,__LINE__);
+
 	@mkdir($homeDirectory);
-	@chmod($homeDirectory,0775);
+	if($GLOBALS["ArticaSambaAutomAskCreation"]==1){
+		shell_exec("/bin/chmod {$GLOBALS["HomeDirectoriesMask"]} $homeDirectory");
+	}
 	@chown($homeDirectory,$uid);
 	
 	if($ct->WebDavUser==1){
@@ -186,13 +204,14 @@ if($homeDirectory==null){
 		$apacheuser=$unix->APACHE_GROUPWARE_ACCOUNT();
 		if(preg_match("#(.+?):#",$apacheuser,$re)){$apacheuser=$re[1];}
 		$internet_folder="$homeDirectory/Internet Folder";
-		@mkdir($internet_folder);
-		@chmod($internet_folder,0775);
+		if(!is_dir($internet_folder)){@mkdir($internet_folder,$GLOBALS["SharedFoldersDefaultMask"],true);}else{
+		@chmod($internet_folder,$GLOBALS["SharedFoldersDefaultMask"]);
+		}
 		$internet_folder=$unix->shellEscapeChars($internet_folder);
 		echo "Starting......: Home $uid checking home: $internet_folder\n";
 		writelogs("Checking $ct->uid:$apacheuser :$internet_folder",__FUNCTION__,__FILE__,__LINE__);
 		shell_exec("/bin/chown -R $ct->uid:$apacheuser $internet_folder >/dev/null 2>&1 &");
-		shell_exec("$find $internet_folder -type d -exec chmod 755 {} \; >/dev/null 2>&1 &");
+		shell_exec("$find $internet_folder -type d -exec chmod {$GLOBALS["SharedFoldersDefaultMask"]} {} \; >/dev/null 2>&1 &");
 	}
 	
 	
@@ -696,8 +715,11 @@ function CheckExistentDirectories(){
 	$sock=new sockets();
 	$ArticaMetaEnabled=$sock->GET_INFO("ArticaMetaEnabled");
 	if($ArticaMetaEnabled==null){$ArticaMetaEnabled=0;}
-	
-	
+	$SharedFoldersDefaultMask=$sock->GET_INFO("SharedFoldersDefaultMask");
+	$ArticaSambaAutomAskCreation=$sock->GET_INFO("ArticaSambaAutomAskCreation");
+	if(!is_numeric($ArticaSambaAutomAskCreation)){$ArticaSambaAutomAskCreation=1;}
+	if(!is_numeric($SharedFoldersDefaultMask)){$SharedFoldersDefaultMask=0755;}
+	if($ArticaSambaAutomAskCreation==0){$ArticaSambaAutomAskCreation=0600;}
 	$ini=new Bs_IniHandler("/etc/artica-postfix/settings/Daemons/SambaSMBConf");
 	if(is_array($ini->_params)){
 		while (list ($index, $array) = each ($ini->_params) ){
@@ -707,7 +729,7 @@ function CheckExistentDirectories(){
 			if($index=="global"){continue;}
 			if($array["path"]==null){continue;}
 			if(is_link($array["path"])){continue;}
-			if(is_dir($array["path"])){continue;}else{if($ArticaMetaEnabled==1){@mkdir($array["path"],0755,true);continue;}}
+			if(is_dir($array["path"])){continue;}else{if($ArticaMetaEnabled==1){@mkdir($array["path"],$SharedFoldersDefaultMask,true);continue;}}
 			unset($ini->_params[$index]);
 			$change=true;
 			continue;

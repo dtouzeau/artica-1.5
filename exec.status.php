@@ -1111,12 +1111,7 @@ function kav4Proxy_status(){
 	}else{
 		$enabled=1;
 	}
-	
-	
-	
-	
-	
-	
+
 	$master_pid=trim(@file_get_contents("/var/run/kav4proxy/kavicapserver.pid"));
 	
 	$l[]="[KAV4PROXY]";
@@ -1128,22 +1123,54 @@ function kav4Proxy_status(){
  	$l[]="explain=enable_kavproxy_text";
  	$l[]="family=squid";
  	
- 	$unix=new unix();
- 	$licenseManager=$unix->PIDOF("/opt/kaspersky/kav4proxy/bin/kav4proxy-licensemanager");
- 	if($unix->process_exists($licenseManager)){
- 		if($unix->PROCCESS_TIME_MIN($licenseManager)>1){
+ 	
+ 	$licenseManager=$GLOBALS["CLASS_UNIX"]->PIDOF("/opt/kaspersky/kav4proxy/bin/kav4proxy-licensemanager");
+ 	if($GLOBALS["CLASS_UNIX"]->process_exists($licenseManager)){
+ 		if($GLOBALS["CLASS_UNIX"]->PROCCESS_TIME_MIN($licenseManager)>1){
  			events("Killing /opt/kaspersky/kav4proxy/bin/kav4proxy-licensemanager $licenseManager",__FUNCTION__,__LINE__);
  			shell_exec("/bin/kill -9 $licenseManager >/dev/null 2>&1");
  		}
  	}
  	
 	
- 	if(!$GLOBALS["CLASS_UNIX"]->process_exists($master_pid)){$l[]="running=0\ninstalled=1";$l[]="";return implode("\n",$l);return;}	
+ 	if(!$GLOBALS["CLASS_UNIX"]->process_exists($master_pid)){
+ 		$l[]="running=0\ninstalled=1";$l[]="";
+ 		return implode("\n",$l).kav4Proxy_keepup2date();
+ 	}	
+ 	
 	$l[]="running=1";
 	$l[]=GetMemoriesOf($master_pid);
 	$l[]="";	
-	return implode("\n",$l);return;	
+	return implode("\n",$l).kav4Proxy_keepup2date();	
 	
+}
+function kav4Proxy_keepup2date(){
+	if(!$GLOBALS["CLASS_USERS"]->KASPERSKY_WEB_APPLIANCE){
+		if(!$GLOBALS["CLASS_USERS"]->SQUID_INSTALLED){return null;}
+		if(!$GLOBALS["CLASS_USERS"]->KAV4PROXY_INSTALLED){return null;}
+		$SQUIDEnable=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("SQUIDEnable");
+		if($SQUIDEnable==null){$SQUIDEnable=1;}
+		$enabled=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("kavicapserverEnabled");
+		if($SQUIDEnable==0){$enabled=0;}		
+	}else{
+		$enabled=1;
+	}
+	
+	$pid=$GLOBALS["CLASS_UNIX"]->PIDOF("/opt/kaspersky/kav4proxy/bin/kav4proxy-keepup2date");
+	if(!$GLOBALS["CLASS_UNIX"]->process_exists($pid)){return;}
+	$l[]="";
+	$l[]="[KAV4PROXY_KEEPUP2DATE]";
+	$l[]="service_name=KAV4PROXY_KEEPUP2DATE";
+ 	$l[]="master_version=".GetVersionOf("kav4proxy");
+ 	$l[]="service_cmd=kav4proxy";	
+ 	$l[]="service_disabled=$enabled";
+ 	$l[]="remove_cmd=--kav4Proxy-remove";
+ 	$l[]="explain=enable_kavproxy_text";
+ 	$l[]="family=squid";	
+	$l[]="running=1";
+	$l[]=GetMemoriesOf($pid);
+	$l[]="";	
+	return implode("\n",$l);return;	
 }
 
 // ========================================================================================================================================================

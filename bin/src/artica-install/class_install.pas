@@ -2935,7 +2935,7 @@ var
    GeoIPASNum_date:integer;
    tempstr,monthz,tempdir:string;
    TMP:TstringList;
-   RegExpr:TRegExpr;
+   zRegExpr:TRegExpr;
    LOGS:TLogs;
    D:Boolean;
    i:Integer;
@@ -2958,21 +2958,20 @@ begin
    download_GeoIPASNum:=false;
    database_path:='/usr/local/share/GeoIP';
    ForceDirectories(database_path);
-   RegExpr:=TRegExpr.Create;
+   zRegExpr:=TRegExpr.Create;
    appname:='APP_GEOIP';
    LOGS:=Tlogs.create;
    D:=LOGS.COMMANDLINE_PARAMETERS('--verbose');
-
+   zRegExpr.expression:='\s+([0-9]+)\s+';
    forcedirectories(tempdir);
    
    if FileExists(database_path + '/GeoIP.dat') then begin
       GeoIP := TGeoIP.Create(database_path + '/GeoIP.dat');
       tempstr:=GeoIP.GetDatabaseInfo;
-      RegExpr.expression:='\s+([0-9]+)\s+';
       try
-      if RegExpr.Exec(tempstr) then begin
-         geoip_date:=StrToInt(RegExpr.Match[1]);
-         geoip_little_date:=StrToInt(Copy(RegExpr.Match[1],0,length(RegExpr.Match[1])-2));
+      if zRegExpr.Exec(tempstr) then begin
+         geoip_date:=StrToInt(zRegExpr.Match[1]);
+         geoip_little_date:=StrToInt(Copy(zRegExpr.Match[1],0,length(zRegExpr.Match[1])-2));
          end;
       finally
       GeoIP.Free;
@@ -2990,7 +2989,7 @@ begin
        GeoIP := TGeoIP.Create(database_path + '/GeoLiteCity.dat');
        tempstr:=GeoIP.GetDatabaseInfo;
        try
-       if RegExpr.Exec(tempstr) then GeoLiteCity_date:=StrToInt(RegExpr.Match[1]);
+       if zRegExpr.Exec(tempstr) then GeoLiteCity_date:=StrToInt(zRegExpr.Match[1]);
       finally
       GeoIP.Free;
       end;
@@ -3007,7 +3006,7 @@ begin
        GeoIP := TGeoIP.Create(database_path + '/GeoIPASNum.dat');
        tempstr:=GeoIP.GetDatabaseInfo;
        try
-       if RegExpr.Exec(tempstr) then GeoIPASNum_date:=StrToInt(RegExpr.Match[1]);
+       if zRegExpr.Exec(tempstr) then GeoIPASNum_date:=StrToInt(zRegExpr.Match[1]);
       finally
       GeoIP.Free;
       end;
@@ -3025,14 +3024,14 @@ begin
             exit;
     end;
 
-    RegExpr.expression:='GeoLiteCity\.dat\.gz.+?([0-9\-a-zA-Z]+)\s+';
+    zRegExpr.expression:='GeoLiteCity\.dat\.gz.+?([0-9\-a-zA-Z]+)\s+';
     TMP:=TstringList.Create;
     TMP.LoadFromFile('/tmp/geo-update.html');
     For i:=0 to TMP.Count-1 do begin
-        if RegExpr.Exec(TMP.Strings[i]) then begin
-           logs.Debuglogs('GeoIP Database version on remote server:'+RegExpr.Match[1]);
+        if zRegExpr.Exec(TMP.Strings[i]) then begin
+           logs.Debuglogs('GeoIP Database version on remote server:'+zRegExpr.Match[1]);
            try
-            tempstr:=LOGS.TRANSFORM_DATE_MONTH(RegExpr.Match[1]);
+            tempstr:=LOGS.TRANSFORM_DATE_MONTH(zRegExpr.Match[1]);
             if D then writeln('Converting...:',tempstr);
             MD:=StrToDate(tempstr);
             DecodeDate(MD, myYear, myMonth, myDay);
@@ -3094,12 +3093,17 @@ begin
      if FileExists(tempdir+'/GeoIP.dat.gz') then gunzip_files:=gunzip_files+' GeoIP.dat.gz' else LOGS.syslogs('GeoIP.dat.gz no such file');
      if FileExists(tempdir+'/GeoLiteCity.dat.gz') then gunzip_files:=gunzip_files+' GeoLiteCity.dat.gz' else LOGS.syslogs('GeoLiteCity.dat.gz no such file');
      gunzip_files:=trim(gunzip_files);
-     LOGS.syslogs('Downloading updates...Finish '+gunzip_files);
-     fpsystem('cd '+tempdir+' && /bin/gunzip -f -q '+gunzip_files);
-     if FileExists(tempdir+'/GeoIP.dat') then fpsystem('/bin/mv '+tempdir+'/GeoIP.dat ' + database_path + '/GeoIP.dat');
-     if FileExists(tempdir+'/GeoIPASNum.dat') then fpsystem('/bin/mv '+tempdir+'/GeoIPASNum.dat ' + database_path + '/GeoIPASNum.dat');
-     if FileExists(tempdir+'/GeoLiteCity.dat') then fpsystem('/bin/mv '+tempdir+'/GeoLiteCity.dat ' + database_path + '/GeoLiteCity.dat');
-
+     LOGS.syslogs('Downloading updates...Finish gunbzip files="'+gunzip_files+'"');
+     if length(trim(gunzip_files))>0 then begin
+        logs.Debuglogs('cd '+tempdir+' && /bin/gunzip -f -q '+gunzip_files);
+        fpsystem('cd '+tempdir+' && /bin/gunzip -f -q '+gunzip_files);
+        logs.Debuglogs('Installing databases...');
+        if FileExists(tempdir+'/GeoIP.dat') then fpsystem('/bin/mv '+tempdir+'/GeoIP.dat ' + database_path + '/GeoIP.dat');
+        if FileExists(tempdir+'/GeoIPASNum.dat') then fpsystem('/bin/mv '+tempdir+'/GeoIPASNum.dat ' + database_path + '/GeoIPASNum.dat');
+        if FileExists(tempdir+'/GeoLiteCity.dat') then fpsystem('/bin/mv '+tempdir+'/GeoLiteCity.dat ' + database_path + '/GeoLiteCity.dat');
+     end else begin
+         LOGS.syslogs('Downloading updates... Failed');
+     end;
      ForceDirectories('/usr/share/GeoIP');
      logs.OutputCmd('/bin/cp -f /usr/local/share/GeoIP/* /usr/share/GeoIP/');
      if FileExists('/usr/local/share/GeoIP/GeoLiteCity.dat') then begin
@@ -3110,9 +3114,9 @@ begin
 
 
      if D then writeln('Updating...Finish');
-     LOGS.syslogs('updates...Finish');
+     LOGS.syslogs('updates...Finish -> Send notifications');
      logs.NOTIFICATION('[ARTICA]:('+sys.HOSTNAME_g()+') success update new GeoIP version ' + IntToStr(geoip_new_date),'your server is now up-to-date with the new GeoIP version ' + IntToStr(geoip_new_date),'update');
-
+     LOGS.syslogs('end...');
 
 end;
 

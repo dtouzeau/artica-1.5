@@ -758,6 +758,17 @@ function status_left(){
 	if(is_file("ressources/logs/web/debian.update.html"));
 	$apt=@file_get_contents("ressources/logs/web/debian.update.html");
 	$html=@file_get_contents("ressources/logs/status.global.html");
+	$sock=new sockets();
+	$DisableWarningCalculation=$sock->GET_INFO("DisableWarningCalculation");
+	$DisableAPTNews=$sock->GET_INFO("DisableAPTNews");
+	
+	if(!is_numeric($DisableWarningCalculation)){$DisableWarningCalculation=0;}
+	if(!is_numeric($DisableAPTNews)){$DisableAPTNews=0;}
+	
+	if($DisableAPTNews==1){$apt=null;}
+	
+	
+	
 	$tpl=new templates();
 	$page=CurrentPageName();
 	echo $tpl->_ENGINE_parse_body("$apt$html")."
@@ -1012,7 +1023,10 @@ function isoqlog(){
 function artica_meta(){
 	
 	$sock=new sockets();
+	$DisableFrontArticaMeta=$sock->GET_INFO("EnableArticaMeta");
+	if(!is_numeric($DisableFrontArticaMeta)){$DisableFrontArticaMeta=0;}
 	$EnableArtica=$sock->GET_INFO("EnableArticaMeta");
+	
 	$ArticaMetaRemoveIndex=$sock->GET_INFO("ArticaMetaRemoveIndex");
 	$DisableArticaMetaAgentInformations=$sock->GET_INFO("DisableArticaMetaAgentInformations");
 	if($EnableArtica==null){$EnableArtica=1;}

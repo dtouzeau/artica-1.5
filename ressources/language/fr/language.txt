@@ -4396,7 +4396,7 @@ Si il est en rouge, vous allez devoir maintenir la base des utilisateurs.[br]Cet
 <UPDATE_ANTIVIRUS_TEXT>effectuer la mise &agrave; jour des bases antivirus</UPDATE_ANTIVIRUS_TEXT>
 <UPDATE_CLAMAV>Mettez &agrave; jour la base antivirus ClamAV</UPDATE_CLAMAV>
 <UPDATE_CLAMAV_EXPLAIN>Lancez la mise &agrave; jour du moteur de scan et des fichiers de signatures ClamAV</UPDATE_CLAMAV_EXPLAIN>
-<update_events>Ev&egrave;nement de mise &agrave; jours</update_events>
+<update_events>&Eacute;v&egrave;nements de mises &agrave; jour</update_events>
 <update_fetchmail_now>Red&eacute;marrer le service fetchmail afin de le forcer &agrave; ex&eacute;cuter ses t&acirc;ches de rapatriement.</update_fetchmail_now>
 <UPDATE_KAS3>Mettre &agrave; jour les bases anti-spam</UPDATE_KAS3>
 <UPDATE_KAS3_TEXT>Mettre &agrave; jour les bases antivirus afin d'accro&icirc;tre le niveau de d&eacute;tection.</UPDATE_KAS3_TEXT>

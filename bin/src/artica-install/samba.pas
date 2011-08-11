@@ -1525,18 +1525,20 @@ end;
 procedure Tsamba.BUILD_PROFILE(username:string);
 var
  path:string;
+ ArticaSambaAutomAskCreation,SharedFoldersDefaultMask:integer;
 begin
      path:=trim(SMB_CONF_GET_VALUE('profile','path'));
      if length(path)=0 then begin
         logs.Debuglogs('BUILD_PROFILE:: ' + username+ ' [profile] & "path" is not set');
         exit;
      end;
-
+    if not TryStrToInt(SYS.GET_INFO('ArticaSambaAutomAskCreation'),ArticaSambaAutomAskCreation) then ArticaSambaAutomAskCreation:=1;
+    if not TryStrToInt(SYS.GET_INFO('SharedFoldersDefaultMask'),SharedFoldersDefaultMask) then ArticaSambaAutomAskCreation:=0777;
      forceDirectories(path+'/'+username);
-     logs.OutputCmd('/bin/chown '+username+' '+path+'/'+username);
-     logs.OutputCmd('/bin/chmod -R 755 '+path);
-     logs.OutputCmd('/bin/chmod 755 '+path);
-
+     if ArticaSambaAutomAskCreation=1 then begin
+          logs.OutputCmd('/bin/chown '+username+' '+path+'/'+username);
+          logs.OutputCmd('/bin/chmod '+IntTOStr(ArticaSambaAutomAskCreation)+' '+path);
+     end;
 
 end;
 //##############################################################################
@@ -1549,9 +1551,12 @@ var
    sections:TstringList;
    path:string;
    i:Integer;
+   ArticaSambaAutomAskCreation,SharedFoldersDefaultMask:integer;
 begin
     forceDirectories('/home/.infected');
     logs.OutputCmd('/bin/chmod 777 /home/.infected');
+    if not TryStrToInt(SYS.GET_INFO('ArticaSambaAutomAskCreation'),ArticaSambaAutomAskCreation) then ArticaSambaAutomAskCreation:=1;
+    if not TryStrToInt(SYS.GET_INFO('SharedFoldersDefaultMask'),SharedFoldersDefaultMask) then ArticaSambaAutomAskCreation:=0777;
 
      path:=smbconf_path();
      sections:=TstringList.Create;
@@ -1563,7 +1568,7 @@ begin
          if length(path)>0 then begin
             logs.Debuglogs('FixDirectoriesChmod:: '+path);
             if not DirectoryExists(path) then ForceDirectories(path);
-            fpsystem('/bin/chmod 0777 ' + path + ' >/dev/null 2>&1');
+            if ArticaSambaAutomAskCreation=1 then fpsystem('/bin/chmod '+IntToStr(SharedFoldersDefaultMask)+' ' + path + ' >/dev/null 2>&1');
          end;
          path:=list.ReadString(sections.Strings[i],'recycle:repository','');
          if length(path)>0 then begin

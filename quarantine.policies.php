@@ -3,6 +3,7 @@ include_once('ressources/class.templates.inc');
 	include_once('ressources/class.ldap.inc');
 	include_once('ressources/class.users.menus.inc');
 	include_once('ressources/class.clamav.inc');
+	include_once('ressources/class.amavis.inc');
 	include_once('ressources/class.kas-filter.inc');
 
 

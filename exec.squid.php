@@ -129,7 +129,8 @@ if($argv[1]=="--build"){
 }
 
 function CheckFilesAndSecurity(){
-	$squid_user=SquidUser();	
+	$squid_user=SquidUser();
+	$unix=new unix();	
 	shell_exec("/bin/chown -R $squid_user /etc/squid3/* >/dev/null 2>&1");
 	if(!is_file("/var/log/squid/squidGuard.log")){@file_put_contents("/var/log/squid/squidGuard.log","#");}
 	@mkdir("/var/log/squid/squid",755,true);
@@ -137,6 +138,14 @@ function CheckFilesAndSecurity(){
 	if(!is_file("/etc/squid3/squid-block.acl")){@file_put_contents("/etc/squid3/squid-block.acl","");}
 	if(!is_file("/etc/squid3/clients_ftp.acl")){@file_put_contents("/etc/squid3/clients_ftp.acl","");}
 	if(!is_file("/etc/squid3/allowed-user-agents.acl")){@file_put_contents("/etc/squid3/allowed-user-agents.acl","");}	
+	if(is_file("/var/lib/samba/winbindd_privileged")){
+		$setfacl=$unix->find_program("setfacl");
+		if(is_file($setfacl)){shell_exec("$setfacl -m u:squid:rx /var/lib/samba/winbindd_privileged >/dev/null 2>&1");}
+	}
+	
+	
+	
+	
 }
 function Reload_Squid(){
 	echo "Starting......: Reloading Squid\n";

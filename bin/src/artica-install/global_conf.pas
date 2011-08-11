@@ -6070,11 +6070,6 @@ begin
 
 
      if NetWorkAvailable then begin
-        logs.Debuglogs('############ dhcp ##################');
-        dhcp3:=tdhcp3.Create(SYS);
-        dhcp3.START();
-        dhcp3.free;
-
         logs.Debuglogs('############ smartd ##################');
         zsmartd:=Tsmartd.Create(SYS);
         zsmartd.START();

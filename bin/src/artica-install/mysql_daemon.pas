@@ -739,6 +739,7 @@ ForceDirectories('/var/log/mysql');
        logs.DebugLogs('Starting......: Mysql using innodb file per table feature');
    end;
 
+   if FileExists('/var/run/mysqld/mysqld.err') then logs.DeleteFile('/var/run/mysqld/mysqld.err');
    cmd:=daemon_bin_path+bind_address+logpathstring+ ' >/var/log/mysql/mysql.start.log 2>&1 &';
    fpsystem(cmd);
    pid:=PID_NUM();

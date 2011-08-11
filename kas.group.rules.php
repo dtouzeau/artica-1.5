@@ -73,7 +73,7 @@ function kas_pop(){
 	"javascript:Loadjs('domains.edit.kas.php?ou=$ou');");
 	
 	$licenses=Paragraphe("64-key.png","{statusandlicense}","{statusandlicense_text}",
-	"javascript:Loadjs('squid.newbee.php?kav-license=yes&license-type=kas');");	
+	"javascript:Loadjs('Kav4Proxy.License.php');");	
 	
 	$pattern_status=Paragraphe('pattern-database-64.png','{antivirus_database}',"{date}:<b>{$kasversion["pattern"]}</b><hr>{size}:<b>{$kasversion["size"]}</b>");
 	

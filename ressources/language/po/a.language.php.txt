@@ -316,6 +316,8 @@ Put in this form ip addresses separated by a carriage return
 <ban_to_domain_ask>Ban users sending to this domain ?</ban_to_domain_ask>
 <basic>Basic</basic>
 <bind-address>Bind address</bind-address>
+<blacklists>Blacklists</blacklists>
+<blacklist_databases>Blacklist databases</blacklist_databases>
 <blacklist_global_add_explain>
 Put here domains or email addresses (separated by a carriage return) you want to deny.[br]
 You can set patterns in this way :[br]
@@ -432,6 +434,7 @@ domain.tld to match hosts width domain domain.tld
 Be sure that you have enabled in FreeWeb an Artica web console before check this.
 Do you want to confirm this operation ?
 </ConfirmDisableArticaWebConsole>
+<confirm_reprosess_category>Reprocess this category? During the database processing the MySQL server should be loaded.</confirm_reprosess_category>
 <connected_has>Connected has</connected_has>
 <connections_filters>Connections filters</connections_filters>
 <connections_for>Connections For</connections_for>
@@ -548,6 +551,7 @@ Name  should  be  the name that will be provided to the client</dhcp-server-name
 <dhcp-subnet-masq_text>Can be used in each subnet declaration to  set the  desired  subnet  mask, since any subnet-mask option statement will override the subnet mask declared in the subnet statement</dhcp-subnet-masq_text>
 <dhcpd_leases_explain>This section display leases acquired by computers.</dhcpd_leases_explain>
 <dhcpd_shared_network_explain>All subnets that share the same physical network can be grouped under a Shared Network object called here has "groups"</dhcpd_shared_network_explain>
+<DisableAPTNews>Disable system package updates notification</DisableAPTNews>
 <DisableArticaExecutorService_explain>
 Artica executor is a daemon that run in memory in order to schedule commands periodically.[br]
 Disable Artica Executor will not remove this task but switch it's process to be executed periodically.[br]
@@ -572,6 +576,7 @@ It means that Artica will not handle PowerDNS process and database.
 It will not be uninstalled and you will be able to manage PowerDNS yourself.</DisablePowerDnsManagement_text>
 <DisableSambaFileSharing>Share Engine did not provide Shared folders</DisableSambaFileSharing>
 <disableSSLv2>Disable SSLv2</disableSSLv2>
+<DisableWarningCalculation>Disable Warnings calculation icon</DisableWarningCalculation>
 <disable_greylisting>Disable the GreyListing</disable_greylisting>
 <disable_help_tooltips>Disable Help tooltips</disable_help_tooltips>
 <disable_openvpn_connection>Disable the VPN connection</disable_openvpn_connection>
@@ -699,6 +704,11 @@ It is useful in providing training to email users about company policies and gen
 <ENABLE_ARTICA_SMTP_STATS>Enable SMTP statistics engine</ENABLE_ARTICA_SMTP_STATS>
 <enable_authentication>Enable authentication</enable_authentication>
 <enable_authentication_vpn_explain>If enabled, the server will ask for username and password in order to allow establishing VPN connections from clients</enable_authentication_vpn_explain>
+<enable_automask_creation>Enable AutoMask checking</enable_automask_creation>
+<enable_automask_creation_explain>AutoMask ensure that when creating a directory or users home folder are set to defined permissions.[br]
+By default Artica create shared directories with 0775 mask.[br]
+If you disable this feature Artica will not change the maks of shared folders and home directories.[br]In other case, you will ba able to change the bit number of the creation mask.
+</enable_automask_creation_explain>
 <enable_body_checks>Enable body checks in messages</enable_body_checks>
 <enable_feature>Enable the feature</enable_feature>
 <enable_grehole>Enable dynamic backup</enable_grehole>
@@ -734,11 +744,13 @@ When a user add/delete/modify a file in a Samba folder, greyhole will saved it a
 <error_field_max_length>Error, the given value execeed</error_field_max_length>
 <error_please_fill_field>Error, please fill the required field</error_please_fill_field>
 <estimate>Estimate</estimate>
+<EVENT>Event</EVENT>
 <ExecBackupDeadAfterH>A backup task is turned has "Dead" after X Hours (minimal 2)</ExecBackupDeadAfterH>
 <execute_reports_each>Execute reports each</execute_reports_each>
 <expand-hosts>expand hostnames</expand-hosts>
 <expand-hosts_text>Set this if you want to have a domain automatically added to simple names in a hosts-file.</expand-hosts_text>
 <external_device>External device</external_device>
+<failed_uncompress>Failed uncompress</failed_uncompress>
 <FEDORA_TEMPLATE>Fedora template</FEDORA_TEMPLATE>
 <fileio>File I/O</fileio>
 <filename_pxe_explain>can be used to specify the name of the initial boot file which is to be loaded by a client.[br]
@@ -791,6 +803,7 @@ A typical usage of a forward proxy is to provide Internet access to internal cli
 <free_catgorized_explain>Put here a text whith some urls inserted in.[br]urls must be formatted like http://domain.tld.com/something or http://domain.tld.com[br]
 The engine will try to find all urls added in your text, sou you did not need to format urls just paste a text that have some urls inserted.</free_catgorized_explain>
 <from_date>From date</from_date>
+<frontend_disables_options_explain>This section allow you to drive the frontend page builder</frontend_disables_options_explain>
 <ftp_directory>FTP directory</ftp_directory>
 <fw_multiples_ports_explain>This is the destination port(s).[br]Set 0 to block all ports, you can define a single port: 22 or multiples port by separate them with a comma :22,25,80,443</fw_multiples_ports_explain>
 <fw_sourceaddr_explain>This is the source Ip address, should be a single IP address 163.248.0.125 or a subnet 163.248.0.0/17</fw_sourceaddr_explain>
@@ -853,6 +866,7 @@ This feature is implemented in most modern Seagate drives and some of Western Di
 <hobby-arts>Websites about Arts, painting, collections,statues or sculptures, galleries</hobby-arts>
 <holdingdisk>Enable holding disk</holdingdisk>
 <holdingdiskExplain>should the holding disk be used for this dump.[br]Useful for dumping the holding disk itself</holdingdiskExplain>
+<HomeDirectoriesMask>Permissions mask for home directories</HomeDirectoriesMask>
 <hosts_table>Hosts table</hosts_table>
 <howto_ADADMIN>This is the administrator account that allow this server to join the Active Directory Domain.[br]If your administrator account is named "administrator", type here administrator</howto_ADADMIN>
 <howto_ADDOMAIN>This the domain name used in the hostname of you  Active Directory server 
@@ -940,6 +954,22 @@ This file will be the shared iSCSI disk.[br]In disk mode, you will have to choos
 <jGrowlNotifsDisabled>Disable tooltips notifications</jGrowlNotifsDisabled>
 <jkMount_explain>Add the JkMount directive for *.do,*.jsp,*.jspx,*.cfm,*.cfc,*.cfchart,*.cfres files</jkMount_explain>
 <jumpto>Jump to</jumpto>
+<kav4proxy_about>
+Kaspersky Anti-Virus for Proxy Server provides anti-virus protection for network traffic routed through proxy servers
+which support the Internet Content Adaptation Protocol (ICAP).[br]
+[b]The program allows:[/b][br]
+Perform anti-virus scans on objects transferred through the proxy server.[br]
+Cure infected objects, or block access to infected objects if disinfection fails.[br]
+Use group settings to define filtration parameters that are applied depending on the address of the user
+requesting an object, and the object's address (URL).[br]
+Log activity statistics, including information about anti-virus scanning and its results, and application errors and
+warnings.[br]
+Notify administrators about detection of malicious software.[br]
+[i]The anti-virus databases are used in the detection and disinfection of infected objects. The application uses
+database records to analyze every object, checking it for virus presence: its content is compared with code
+typical for specific viruses.[/i]
+</kav4proxy_about>
+<KAV4PROXY_KEEPUP2DATE>Update Process</KAV4PROXY_KEEPUP2DATE>
 <KeepAlive_explain>Use it when a firewall between the reverse proxy and the backend-server.</KeepAlive_explain>
 <key>Key</key>
 <last_24h>Last 24H</last_24h>
@@ -1180,6 +1210,7 @@ For example, Avaya phones are hard coded to "read" this scope option and pick up
 <password_no_match_policy>Password did not match policy password</password_no_match_policy>
 <password_policy>Password policy</password_policy>
 <patterns_versions>Patterns versions</patterns_versions>
+<pattern_database_version>Pattern Database version</pattern_database_version>
 <pdns_listen_ip_explain>By default, Artica will try to find your network cards and Ip addresses and set PowerDNS to listen these found IP.[br]
 Usually you did not have to change this section.[br]Sometimes, you need to force PowerDNS to listen specific IPs and not others or add a listen address that Artica cannot detect (OpenVZ, VPS servers).[br]In this case, add IP addresses you want PowerDNS to listen.</pdns_listen_ip_explain>
 <perform_mysql_check>Perform MySQL check on this table ?</perform_mysql_check>
@@ -1434,6 +1465,7 @@ The new server should be your backend server that store mailboxes..</relaydomain
 <reports_generated_check_postmaster_mail>Reports are scheduled in background mode, check you mailbox you have set in the notification parameters</reports_generated_check_postmaster_mail>
 <repquota_explain>This is the list of quota set on your partitions.[br]Note that you only see users and groups is some files onwed by users are stored on your storage media.[br]
 When define quota for a specific user, wait until this user have saved a file on the specified storage</repquota_explain>
+<reprocess>re-process</reprocess>
 <reprocess_queues_text>Flush all the Postfix queues to force postfix to resend stored messages</reprocess_queues_text>
 <request_from>Request from</request_from>
 <require>require</require>
@@ -1500,7 +1532,7 @@ DOMAIN is optional (the workgroup) and can be either our own workgroup or that o
 If you use the workgroup name of the remote network, our NetBIOS machine names will end up looking like they belong to that workgroup.[br]
 This may cause name resolution problems and should be avoided.
 </SAMBA_REMOTE_ANNOUNCE_EXPLAIN_FIELD>
-<samba_strict_allocate>Windows behaviour storage blocks</samba_strict_allocate>
+<samba_strict_allocate>Windows storage blocks</samba_strict_allocate>
 <samba_strict_allocate_text>controls the handling of disk space allocation in the server.[br]
 When this is set the server will change from UNIX behaviour of not committing real disk storage blocks when a file 
 is extended to the Windows behaviour of actually forcing the disk system to allocate real storage blocks when a file
@@ -1536,6 +1568,7 @@ To solve this problem, Microsoft now provides the Windows Internet Naming Servic
  instead of broadcast.
  </samba_wins_explain>
 <sa_debug>Debug Spamassassin</sa_debug>
+<sa_timeout>Spamassassin TimeOut</sa_timeout>
 <search_byous>Search by organization</search_byous>
 <SecFilterCheckUnicodeEncoding>Check if unicode encoding is valid</SecFilterCheckUnicodeEncoding>
 <SecFilterCheckURLEncoding>Check if special characters where encoded</SecFilterCheckURLEncoding>
@@ -1629,6 +1662,7 @@ Sets the size of the underlying logging area of the Berkeley DB environment.[br]
 By default, or if the value is set to 0, the minimum region size is used, approximately 128KB.[br]
 The log region is used to store filenames, and so may need to be increased in size if a large number of files will be opened and registered with the specified Berkeley DB environment's log manager
 </set_lg_regionmax_text>
+<SharedFoldersDefaultMask>Shared folders default mask</SharedFoldersDefaultMask>
 <share_access>Share access</share_access>
 <sharing_behavior>Sharing behavior</sharing_behavior>
 <SimpleWords_explain>This section helps you to add words and phrases in a simple way.[br]Rules added will force the mail server to check mails in the Subject and the body of each message.[br]
@@ -1675,6 +1709,8 @@ Set the sender and recipients (separated by a comma).
 <Spin_Retry_Count_text>Number of attempts to start a spindle of a disk</Spin_Retry_Count_text>
 <Spin_Up_Time>Spin up time</Spin_Up_Time>
 <Spin_Up_Time_text>Time needed by spindle to spin-up</Spin_Up_Time_text>
+<sql_error_retry>SQL Error (retry next)</sql_error_retry>
+<squid_blk_explain>This the update status of Artica community blacklist database[br]These update are important because it will drive statistics and url filtering processes</squid_blk_explain>
 <SQUID_STATS>Squid Proxy Cache web statistics</SQUID_STATS>
 <SQUID_STATS_TEXT>Squid Statistics area is a Web frontend that provides proxy statistics with charts and graphs and categorized websites</SQUID_STATS_TEXT>
 <srv_clamav.MaxFileSize>Max File size</srv_clamav.MaxFileSize>
@@ -1758,12 +1794,14 @@ If the value of this attribute is decreasing there is a high probability that th
 <ufdbguard_simple_intro>ufdbGuard is an extremely fast and free URL filter in public domain.[br]
 ufdbGuard is designed for use with the popular web proxy Squid</ufdbguard_simple_intro>
 <UNABLE_TO_OBTAIN_INFORMATIONS_FROM>Unable to obtain informations from</UNABLE_TO_OBTAIN_INFORMATIONS_FROM>
+<uncompress>Uncompress</uncompress>
 <unfreeze>Unfreeze the system</unfreeze>
 <unix_permissions>UNIX permissions</unix_permissions>
 <unlimited>unlimited</unlimited>
 <UPDATED>updated on</UPDATED>
 <updated_on>Updated on</updated_on>
 <UPDATE_DEBIAN_TEMPLATE_TEXT>Download the pre-configured Debian i386 template, require 350Mo free space.</UPDATE_DEBIAN_TEMPLATE_TEXT>
+<update_events_text>Display events about all update processes.</update_events_text>
 <UPDATE_FEDORA_TEMPLATE_TEXT>Download the pre-configured Fedora i386 template, require 690Mo free space.</UPDATE_FEDORA_TEMPLATE_TEXT>
 <UPDATE_LXC_TEMPLATE_PERFOMED>The install/update task will performed in background mode, 
 depends on your bandwith it should take a long time...</UPDATE_LXC_TEMPLATE_PERFOMED>

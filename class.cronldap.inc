@@ -219,7 +219,13 @@ function cronsql(){
 		$mysql_password=$_GLOBAL["mysql_password"];
 		$mysql_port=$_GLOBAL["mysql_port"];
 		$this->hostname=$_GLOBAL["fqdn_hostname"];
-		$bd=@mysql_connect("$mysql_server:$mysql_port",$mysql_admin,$mysql_password);
+		
+		if(($mysql_server=="localhost") OR ($mysql_server=="127.0.0.1")){
+			$bd=@mysql_connect(":/var/run/mysqld/mysqld.sock",$mysql_admin,$mysql_password);
+		}else{
+			$bd=@mysql_connect("$mysql_server:$mysql_port",$mysql_admin,$mysql_password);
+		}		
+		
 		if(!$bd){
     		$des=mysql_error();
     		write_syslogs(basename(__FILE__),"Unable to connect to mysql server $des");

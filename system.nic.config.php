@@ -630,6 +630,7 @@ function netconfig(){
 function netconfig_popup(){
 	$eth=$_GET["netconfig"];
 	$text_ip=listnicinfos($eth);
+	$NAMESERVERS=null;
 	
 	$ip=new networking();
 	$page=CurrentPageName();
@@ -653,7 +654,12 @@ function netconfig_popup(){
 		</div>";
 	}
 	
+	if(is_array($arrayNic["NAMESERVERS"])){
+		$NAMESERVERS=implode(",",$arrayNic["NAMESERVERS"]);
+	}
+
 	$html="
+	
 	
 	$text_ip
 	
@@ -662,7 +668,7 @@ function netconfig_popup(){
 	</div>
 	<div class=form>
 		<H3>{dns_servers}:</H3>
-			". implode(",",$arrayNic["NAMESERVERS"])."
+			$NAMESERVERS
 			
 		</div>	
 	
@@ -1097,6 +1103,7 @@ function virtuals_add(){
 
 function BuildNetConf(){
 	$sock=new sockets();
+	writelogs("-> cmd.php?virtuals-ip-reconfigure=yes&stay=no",__FUNCTION__,__FILE__,__LINE__);
 	$sock->getFrameWork("cmd.php?virtuals-ip-reconfigure=yes&stay=no");
 	$tpl=new templates();
 	echo $tpl->javascript_parse_text("{operation_launched_in_background}");
@@ -1567,9 +1574,12 @@ $add=Paragraphe("cluster-replica-add.png","{add_forwarder}","{add_forwarder_text
 			var DisableNetworksManagement=$DisableNetworksManagement;
 			if(DisableNetworksManagement==1){alert('$ERROR_NO_PRIVS');return;}
 			var hostname=prompt('$AddDNSServer');
-			var XHR = new XHRConnection();
-			XHR.appendData('AddDNSServer',hostname);
-			XHR.sendAndLoad('$page', 'GET',x_RefreshDNS);	
+			if(hostname){
+				var XHR = new XHRConnection();
+				XHR.appendData('AddDNSServer',hostname);
+				if(document.getElementById('nameserver-list')){AnimateDiv('nameserver-list');}
+				XHR.sendAndLoad('$page', 'GET',x_RefreshDNS);
+			}	
 		}	
 	
 	DNsServerList();
@@ -1635,6 +1645,7 @@ if(is_array($nameserver)){
 		if(confirm('$DeleteDNS\\n'+nameserver)){
 			var XHR = new XHRConnection();
 			XHR.appendData('DeleteDNS',nameserver);
+			if(document.getElementById('nameserver-list')){AnimateDiv('nameserver-list');}
 			XHR.sendAndLoad('$page', 'GET',x_RefreshDNS);	
 		}
 

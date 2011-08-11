@@ -234,6 +234,9 @@ function events_class($text){
 
 function system_is_overloaded($file=null){
 	$d=new debuglogs();
+	
+	$notlog["exec.squid.blacklists.php"]=true;
+	
 	if(!isset($GLOBALS["CPU_NUMBER"])){
 			include_once(dirname(__FILE__).'/class.users.menus.inc');
 			$users=new usersMenus();
@@ -251,7 +254,9 @@ function system_is_overloaded($file=null){
 			if(isset($trace[1])){$called=" called by ". basename($trace[1]["file"])." {$trace[1]["function"]}() line {$trace[1]["line"]}";}
 			} catch (Exception $e) {}
 		}	
-		$d->events("Load: $internal_load max=$cpunum  $called","/var/log/artica-postfix/syslog.log");
+		if(!$notlog[$file]){
+			$d->events("Load: $internal_load max=$cpunum  $called","/var/log/artica-postfix/syslog.log");
+		}
 	}
 
 	if($file==null){$file=basename(__FILE__);}
@@ -261,7 +266,9 @@ function system_is_overloaded($file=null){
 		$GLOBALS["SYSTEM_INTERNAL_LOAD"]=$internal_load;
 		$d->events("Load: OVERLOADED $called","/var/log/artica-postfix/syslog.log");
 		if($GLOBALS["VERBOSE"]){echo "$file system_is_overloaded():: Load: $internal_load max=$cpunum SYSTEM OVERLOADED $called\n";}
-		$d->events("$file system_is_overloaded():: Load: $internal_load max=$cpunum SYSTEM OVERLOADED $called","/var/log/artica-postfix/artica-status.debug");
+		if(!$notlog[$file]){
+			$d->events("$file system_is_overloaded():: Load: $internal_load max=$cpunum SYSTEM OVERLOADED $called","/var/log/artica-postfix/artica-status.debug");
+		}
 		return true;
 		
 	}

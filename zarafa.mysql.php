@@ -40,8 +40,8 @@ function page(){
 	$memory=$users->MEM_TOTAL_INSTALLEE/1000;
 	
 	
-	if(!is_numeric($zarafa_max_connections)){$zarafa_max_connections=500;}
-	if(!is_numeric($zarafa_innodb_buffer_pool_size)){$zarafa_innodb_buffer_pool_size=round($memory/2);}
+	if(!is_numeric($zarafa_max_connections)){$zarafa_max_connections=150;}
+	if(!is_numeric($zarafa_innodb_buffer_pool_size)){$zarafa_innodb_buffer_pool_size=round($memory/2.8);}
 	if(!is_numeric($zarafa_innodb_log_file_size)){$zarafa_innodb_log_file_size=round($zarafa_innodb_buffer_pool_size*0.25);}
 	if(!is_numeric($zarafa_innodb_log_buffer_size)){$zarafa_innodb_log_buffer_size=32;}
 	if(!is_numeric($zarafa_max_allowed_packet)){$zarafa_max_allowed_packet=16;}
@@ -147,8 +147,10 @@ echo $tpl->_ENGINE_parse_body($html);
 
 function Save(){
 	$sock=new sockets();
-	$ZarafTuningParametersSrcMD=md5(unserialize(base64_decode($sock->GET_INFO("ZarafaTuningParameters"))));
-	$newparamas=md5(serialize($_POST));
+	$datas=base64_decode($sock->GET_INFO("ZarafaTuningParameters"));
+	$ZarafTuningParametersSrcMD=md5($datas);
+	$datas=serialize($_POST);
+	$newparamas=md5($datas);
 	if($newparamas<>$ZarafTuningParametersSrcMD){
 		$sock->SET_INFO("MysqlRemoveidbLogs", 1);
 	}

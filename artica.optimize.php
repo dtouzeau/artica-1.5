@@ -41,6 +41,7 @@ function popup2(){
 	$EnableArticaStatus=$sock->GET_INFO("EnableArticaStatus");	
 	$EnableArticaExecutor=$sock->GET_INFO("EnableArticaExecutor");	
 	$EnableArticaBackground=$sock->GET_INFO("EnableArticaBackground");	
+	$EnableClamavDaemon=$sock->GET_INFO("EnableClamavDaemon");
 	$memory=intval($sock->getFrameWork("services.php?total-memory=yes"));
 	$MysqlConfigLevel=$sock->GET_INFO("MysqlConfigLevel");
 	if($memory<550){$disable_mysql=1;}
@@ -49,10 +50,25 @@ function popup2(){
 	if(!is_numeric($EnableArticaStatus)){$EnableArticaStatus=1;}
 	if(!is_numeric($EnableArticaExecutor)){$EnableArticaExecutor=1;}
 	if(!is_numeric($EnableArticaBackground)){$EnableArticaBackground=1;}
+	if(!is_numeric($EnableClamavDaemon)){$EnableClamavDaemon=1;}
+	
+	
 	
 	
 	if(!is_numeric($MysqlConfigLevel)){$MysqlConfigLevel=0;}
 	$users=new usersMenus();
+	
+	if($users->CLAMD_INSTALLED){
+		$clamav="
+		<tr>
+		<td class=legend valign='top'>{APP_CLAMAV}:</td>
+		<td valign='top'>". Field_checkbox("EnableClamavDaemon",1,$EnableClamavDaemon)."</td>
+		<td><div class=explain>{CLAMAV_DISABLE_EXPLAIN}</div></td>
+		</tr>	
+		
+		";
+	}
+	
 	
 	if($users->NSCD_INSTALLED){
 		$nscd="
@@ -115,7 +131,7 @@ function popup2(){
 		<td valign='top'>". Field_checkbox("EnableArticaBackground",1,$EnableArticaBackground)."</td>
 		<td><div class=explain>{DisableEnableArticaBackgroundService_explain}</div></td>
 	</tr>	
-	
+	$clamav
 	$nscd
 	<tr>
 		<td colspan=3 align='right'><hr>". button("{apply}","SaveOptimize()")."</td>
@@ -149,6 +165,7 @@ function popup2(){
 		if(document.getElementById('EnableArticaBackground').checked){XHR.appendData('EnableArticaBackground',1);}else{XHR.appendData('EnableArticaBackground',0);}
 		if(document.getElementById('LighttpdRunAsminimal').checked){XHR.appendData('LighttpdRunAsminimal',1);}else{XHR.appendData('LighttpdRunAsminimal',0);}
 		if(document.getElementById('EnableNSCD')){if(document.getElementById('EnableNSCD').checked){XHR.appendData('EnableNSCD',1);}else{XHR.appendData('EnableNSCD',0);}}
+		if(document.getElementById('EnableClamavDaemon')){if(document.getElementById('EnableClamavDaemon').checked){XHR.appendData('EnableClamavDaemon',1);}else{XHR.appendData('EnableClamavDaemon',0);}}
 		AnimateDiv('arcoptze');
 		XHR.sendAndLoad('$page', 'POST',x_SaveOptimize);
 	
@@ -171,6 +188,7 @@ function Save(){
 	$sock->SET_INFO("EnableArticaBackground", $_POST["EnableArticaBackground"]);
 	if(isset($_POST["MysqlConfigLevel"])){$sock->SET_INFO("MysqlConfigLevel", $_POST["MysqlConfigLevel"]);}	
 	if(isset($_POST["EnableNSCD"])){$sock->SET_INFO("EnableNSCD", $_POST["EnableNSCD"]);}
+	if(isset($_POST["EnableClamavDaemon"])){$sock->SET_INFO("EnableClamavDaemon", $_POST["EnableClamavDaemon"]);}
 	
 	$sock->SET_INFO("SlapdThreads", $_POST["SlapdThreads"]);
 	$sock->getFrameWork("services.php?restart-apache-groupware=yes");
@@ -181,7 +199,12 @@ function Save(){
 
 	if(isset($_POST["EnableNSCD"])){
 		$sock->getFrameWork("services.php?restart-artica-status=yes");
-		if($_POST["EnableNSCD"]==1){$sock->getFrameWork("services.php?stop-nscd=yes");}
+		if($_POST["EnableNSCD"]==0){$sock->getFrameWork("services.php?stop-nscd=yes");}
+	}
+	
+	if(isset($_POST["EnableClamavDaemon"])){
+		$sock->getFrameWork("services.php?restart-artica-status=yes");
+		$sock->getFrameWork("cmd.php?clamd-restart=yes");
 	}
 	
 	if(isset($_POST["MysqlConfigLevel"])){$sock->getFrameWork("services.php?restart-mysql=yes");}

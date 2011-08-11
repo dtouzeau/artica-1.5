@@ -9,12 +9,11 @@ include_once(dirname(__FILE__)."/framework/frame.class.inc");
 
 explode_cmd($argv);
 
-if(!is_dir($GLOBALS["CYR_PATH"])){
-	echo "no path\n";
-}
-if(!is_numeric($GLOBALS["CYR_NUM"])){
-	echo "no numeric\n";
-}
+if(!is_dir($GLOBALS["CYR_PATH"])){echo "no path\n";die();}
+if(!is_numeric($GLOBALS["CYR_NUM"])){$GLOBALS["CYR_NUM"]=10000;}
+
+
+
 $fileList = rglob("*~*", GLOB_MARK, $GLOBALS["CYR_PATH"]);
 
 foreach($fileList as $index => $file) { 

@@ -286,8 +286,13 @@ function mail_redirected($recipients,$sender,$mailpath){
 	if($ArticaFilterRedirectExternalSQL==1){
 		
 		$array=unserialize(base64_decode($sock->GET_INFO("ArticaFilterRedirectExternalSQLDatas")));
+		if(($array["mysql_servername"]=="localhost") OR ($array["mysql_servername"]=="127.0.0.1")){
+			$bd=@mysql_connect(":/var/run/mysqld/mysqld.sock",$array["mysql_username"],$array["password"]);
+		}else{
+			$bd=@mysql_connect($array["mysql_servername"],$array["mysql_servername"],$array["password"]);
+		}		
 		
-		$bd=@mysql_connect($array["mysql_servername"],$array["mysql_username"],$array["password"]);
+		
 		$ok=@mysql_select_db($array["mysql_database"]);
 		if(!$ok){
 			$des=mysql_error();

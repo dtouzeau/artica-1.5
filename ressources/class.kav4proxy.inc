@@ -1,6 +1,7 @@
 <?php
 include_once(dirname(__FILE__). '/class.ini.inc');
 include_once(dirname(__FILE__). '/class.mysql.inc');
+include_once(dirname(__FILE__). '/class.artica.inc');
 class Kav4Proxy{
 	var $q;
 	var $main_array=array();

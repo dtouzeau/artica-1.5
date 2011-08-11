@@ -1402,7 +1402,6 @@ if(preg_match("#httpAccept: FD [0-9]+: accept failure: \([0-9]+\) Invalid argume
 		}	
 }
 
-
 if(preg_match("#NetfilterInterception.+?failed on FD.+?No such file or directory#",$buffer)){
 			events("Squid NetfilterInterception failed");	
 			$file="/etc/artica-postfix/croned.1/NetfilterInterception.FD15";

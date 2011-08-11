@@ -12,7 +12,7 @@
 	}	
 	
 	if(isset($_GET["popup"])){popup();exit;}
-	
+	if(isset($_GET["message_size_limit"])){save();exit;}
 js();	
 	
 function js(){

@@ -143,13 +143,13 @@ $spec",1);
 			
 			$ldap=new clladp();
 			$filters=array("gidNumber","ArticaGroupPrivileges","cn");
-			$dr =ldap_search($ldap->ldap_connection,$ldap->suffix,"(&(objectClass=posixGroup)(memberUid=$this->uid))",$filters);	
+			$dr =@ldap_search($ldap->ldap_connection,$ldap->suffix,"(&(objectClass=posixGroup)(memberUid=$this->uid))",$filters);	
 			if(!$dr){
-				$error=ldap_err2str(ldap_errno($ldap->ldap_connection));
+				$error=@ldap_err2str(ldap_errno($ldap->ldap_connection));
 				writelogs("Fatal Error: $error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 			}
 			
-			$result = ldap_get_entries($ldap->ldap_connection, $dr);
+			$result = @ldap_get_entries($ldap->ldap_connection, $dr);
 			if($result){
 				for($i=0;$i<$result["count"];$i++){
 					$gidnumber=$result[$i]["gidnumber"][0];
@@ -160,7 +160,7 @@ $spec",1);
 					}
 				}
 			}else{
-				$error=ldap_err2str(ldap_errno($ldap->ldap_connection));
+				$error=@ldap_err2str(@ldap_errno($ldap->ldap_connection));
 				if($error<>"Success"){writelogs("Fatal Error: $error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
 			}
 				

@@ -1967,3 +1967,77 @@ This value should be 32Mb.
 <innodb_log_file_size>INNODB log file size</innodb_log_file_size>
 <innodb_log_buffer_size>INNODB log buffer size</innodb_log_buffer_size>
 <enable_tuning_mysql_server>Enable tune MySQL settings</enable_tuning_mysql_server>
+<squid_blk_explain>This the update status of Artica community blacklist database[br]These update are important because it will drive statistics and url filtering processes</squid_blk_explain>
+<pattern_database_version>Pattern Database version</pattern_database_version>
+<blacklist_databases>Blacklist databases</blacklist_databases>
+<uncompress>Uncompress</uncompress>
+<failed_uncompress>Failed uncompress</failed_uncompress>
+<sql_error_retry>SQL Error (retry next)</sql_error_retry>
+<reprocess>re-process</reprocess>
+<confirm_reprosess_category>Reprocess this category? During the database processing the MySQL server should be loaded.</confirm_reprosess_category>
+<DisableAPTNews>Disable system package updates notification</DisableAPTNews>
+<frontend_disables_options_explain>This section allow you to drive the frontend page builder</frontend_disables_options_explain>
+<DisableWarningCalculation>Disable Warnings calculation icon</DisableWarningCalculation>
+<enable_automask_creation>Enable AutoMask checking</enable_automask_creation>
+<enable_automask_creation_explain>AutoMask ensure that when creating a directory or users home folder are set to defined permissions.[br]
+By default Artica create shared directories with 0775 mask.[br]
+If you disable this feature Artica will not change the maks of shared folders and home directories.[br]In other case, you will ba able to change the bit number of the creation mask.
+</enable_automask_creation_explain>
+<HomeDirectoriesMask>Permissions mask for home directories</HomeDirectoriesMask>
+<SharedFoldersDefaultMask>Shared folders default mask</SharedFoldersDefaultMask>
+<blacklists>Blacklists</blacklists>
+<kav4proxy_about>
+Kaspersky Anti-Virus for Proxy Server provides anti-virus protection for network traffic routed through proxy servers
+which support the Internet Content Adaptation Protocol (ICAP).[br]
+[b]The program allows:[/b][br]
+Perform anti-virus scans on objects transferred through the proxy server.[br]
+Cure infected objects, or block access to infected objects if disinfection fails.[br]
+Use group settings to define filtration parameters that are applied depending on the address of the user
+requesting an object, and the object's address (URL).[br]
+Log activity statistics, including information about anti-virus scanning and its results, and application errors and
+warnings.[br]
+Notify administrators about detection of malicious software.[br]
+[i]The anti-virus databases are used in the detection and disinfection of infected objects. The application uses
+database records to analyze every object, checking it for virus presence: its content is compared with code
+typical for specific viruses.[/i]
+</kav4proxy_about>
+<KAV4PROXY_KEEPUP2DATE>Update Process</KAV4PROXY_KEEPUP2DATE>
+<update_events_text>Display events about all update processes.</update_events_text>
+<EVENT>Event</EVENT>
+<sa_timeout>Spamassassin TimeOut</sa_timeout>
+<authoritativeDHCP_explain>
+The DHCP server will normally assume that the configuration information about a given network segment is not known to be correct 
+and is not authoritative.[br]
+This is so that if a naive user installs a DHCP server not fully understanding how to configure it,
+ it does not send spurious DHCPNAK messages to clients that have obtained addresses from a legitimate DHCP server on the network.[br]
+Network administrators setting up authoritative DHCP servers for their networks should always use authoritative to indicate that the DHCP server should 
+send DHCPNAK messages to misconfigured clients.[br]
+If this is not done, clients will be unable to get a correct IP address after changing subnets until their old lease has expired, 
+which could take quite a long time.[br]
+However, if a DHCP server is to be set up so that it is aware of some networks for which it is authoritative and 
+some networks for which it is not, it may be more appropriate to declare authority on a per-network-segment basis.[br]
+Note that the most specific scope for which the concept of authority makes any sense is the physical network segment 
+- either a shared-network statement or a subnet statement that is not contained within a shared-network statement[↓r]
+It is not meaningful to specify that the server is authoritative for some subnets within a shared network, 
+but not authoritative for others, nor is it meaningful to specify that the server is authoritative for some 
+host declarations and not others.
+</authoritativeDHCP_explain>
+<authoritative>authoritative</authoritative>
+<DHCPPing_check>Test if address is already exists</DHCPPing_check>
+<DHCPPing_check_explain>When the DHCP server is considering dynamically allocating an IP address to a client,
+ it first sends an ICMP Echo request (a ping) to the address being assigned.[br]
+ It waits for a second, and if no ICMP Echo response has been heard, it assigns the address.[br]
+ If a response is heard, the lease is abandoned, and the server does not respond to the client.[br]
+This ping check introduces a default one-second delay in responding to DHCPDISCOVER messages,
+which can be a problem for some clients.[br]
+The default delay of one second may be configured using the ping-timeout parameter.[br].
+</DHCPPing_check_explain>
+<samba_default_settings_explain>This section will define default parameters when you add a new shared folder.[br]In this case, when adding a new folder you did not have to change everytime some specific options</samba_default_settings_explain> 
+<mask_lock_options>Lock options and use only defaults values</mask_lock_options>
+<default_settings>Default settings</default_settings>
+<CLAMAV_DISABLE_EXPLAIN>Clamav antivirus daemon is installed and enabled by default, when running it should take from [b]50 to 150Mb memory[/b].[br]If you did not use any software that use the ClamAV daemon eg (DNS server only or Web server only) you should disable this option.</CLAMAV_DISABLE_EXPLAIN>
+<smtp_connection_cache_on_demand_text>Temporarily enable SMTP connection caching while a destination has a high 
+volume of mail in the active queue.[br] With SMTP connection caching, a connection is not closed immediately after completion of a mail transaction.[br]
+Instead, the connection is kept open for up to smtp_connection_cache_time_limit seconds attribute.[br]
+This allows connections to be reused for other deliveries, and can improve mail delivery performance
+</smtp_connection_cache_on_demand_text>

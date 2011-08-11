@@ -115,7 +115,7 @@ function database_list(){
 		</thead>
 		<tbody class='tbody'>";	
 	
-	
+	if(is_array($databases_list)){
 	while (list ($dbindex, $array) = each ($databases_list) ){
 		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
 		
@@ -141,7 +141,7 @@ function database_list(){
 			
 			";
 			}
-			
+	}	
 		$html=$html."</tbody></table>
 		
 		<script>

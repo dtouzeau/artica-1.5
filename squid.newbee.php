@@ -32,11 +32,8 @@
 	
 	
 		
-	if(isset($_GET["kav-license"])){echo kav4proxy_license_js();exit;}
-	if(isset($_GET["Kav4proxy-license-popup"])){echo kav4proxy_license_popup();exit;}
-	if(isset($_GET["Kav4proxy-license-delete"])){echo kav4proxy_license_delete();exit;}
-	if(isset($_GET["kav4proxy-license-iframe"])){echo kav4proxy_license_iframe();exit;}	
-	if( isset($_POST['upload']) ){kav4proxy_license_upload();exit();}
+	
+
 	
 	
 	$user=new usersMenus();
@@ -323,6 +320,7 @@ function main_tabs(){
 	$array["bandwith_limitation"]='{bandwith_limitation}';
 	$array["cache"]='{cache_title}';
 	$array["events"]='{events_stats}';
+	$array["blacklist"]='{blacklists}';
 
 	
 	while (list ($num, $ligne) = each ($array) ){
@@ -338,6 +336,11 @@ function main_tabs(){
 			continue;
 		}
 		
+			if($num=="blacklist"){
+			$html[]="<li><a href=\"squid.blacklist.php\"><span>$ligne</span></a></li>\n";
+			continue;
+		}		
+		
 		$html[]= "<li><a href=\"$page?main=$num&hostname=$hostname\"><span>$ligne</span></a></li>\n";
 		//$html=$html . "<li><a href=\"javascript:LoadAjax('squid_main_config','$page?main=$num&hostname={$_GET["hostname"]}')\" $class>$ligne</a></li>\n";
 			
@@ -348,14 +351,7 @@ function main_tabs(){
 	</div>
 		<script>
 				$(document).ready(function(){
-					$('#squid_main_config').tabs({
-				    load: function(event, ui) {
-				        $('a', ui.panel).click(function() {
-				            $(ui.panel).load(this.href);
-				            return false;
-				        });
-				    }
-				});
+					$('#squid_main_config').tabs();
 			
 			
 			});
@@ -1032,142 +1028,15 @@ return $html;
 
 
 
-function kav4proxy_license_js(){
-	$page=CurrentPageName();
-	$tpl=new templates();
-	$title=$tpl->_ENGINE_parse_body('{APP_KAV4PROXY}','squid.index.php');
-	if($_GET["license-type"]=="milter"){$title=$tpl->_ENGINE_parse_body('{APP_KAVMILTER}','squid.index.php');}
-	if($_GET["license-type"]=="kas"){$title=$tpl->_ENGINE_parse_body('{APP_KAS3}','squid.index.php');}
+
 	
-	$html="
-	function Kav4ProxyLicenseStart(){
-		YahooWin5('700','$page?Kav4proxy-license-popup=yes&license-type={$_GET["license-type"]}','$title');
-	}
-	
-	
-	var x_Kav4ProxyDeleteKey= function (obj) {
-		Kav4ProxyLicenseStart();
-	}
-		
-	function Kav4ProxyDeleteKey(){
-		var XHR = new XHRConnection();
-		document.getElementById('kav4licenseDiv').innerHTML='<center><img src=\"img/wait_verybig.gif\"></center>';
-		XHR.appendData('Kav4proxy-license-delete','yes');
-		XHR.appendData('license-type','{$_GET["license-type"]}');
-		XHR.sendAndLoad('$page', 'GET',x_Kav4ProxyDeleteKey);
-	}
-	
-	Kav4ProxyLicenseStart();
-";
-	echo $html;	
-	}
-	
-function kav4proxy_license_delete(){
-	$sock=new sockets();
-	$datas=base64_decode($sock->getFrameWork('cmd.php?Kav4ProxyLicenseDelete&type='.$_GET["license-type"]));	
-}
 
 
-function kav4proxy_license_popup(){
-	$page=CurrentPageName();
-	$sock=new sockets();
-	$datas=base64_decode($sock->getFrameWork('cmd.php?Kav4ProxyLicense&type='.$_GET["license-type"]));
-	
-	
-	
-	$tp=explode("\n",$datas);
-	$html="<H1>{license_info}</H1>
-	<div style='width:100%;height:200px;overflow:auto' id='kav4licenseDiv'>
-	<div style='text-align:right;padding-right:3px'>
-	". button("{delete}","Kav4ProxyDeleteKey()")."
-	</div>
-	<table style='width:99%' class=table_form>";
-	
-while (list ($num, $val) = each ($tp)){
-		if(trim($val)==null){continue;}
-		$val=htmlspecialchars($val);
-		if(strlen($val)>89){$val=texttooltip(substr($val,0,86).'...',$val,null,null,1);}
-		$html=$html . "<tr><td style='font-size:12px'><code>$val</code></td></tr>";
-			
-}
 
-$html=$html . "</table>
-</div>
-<center>
-<iframe SRC='$page?kav4proxy-license-iframe=yes&license-type={$_GET["license-type"]}' WIDTH=99% FRAMEBORDER=0 MARGINWIDTH=0 MARGINHEIGHT=0 SCROLLING=no></iframe>
-</center>";
 
-$tpl=new templates();
-echo $tpl->_ENGINE_parse_body($html);
-	
-}
 
-function kav4proxy_license_iframe($error=null){
-	$page=CurrentPageName();
-	$html="
-	<span style='color:red;font-weight:bold;font-size:12px;padding-left:5px'>$error</span>
-	<table style='width:90%' class=table_form align='center'>
-	<tr>
-		<td class=legend valign='middle'>{upload_new_license}:</td>
-		<td>
-			<form method=\"post\" enctype=\"multipart/form-data\" action=\"squid.newbee.php\">
-					<p>
-					<input type=\"file\" name=\"fichier\" size=\"30\">
-					<input type=\"hidden\" name=\"license-type\" value='{$_GET["license-type"]}'>
-					<input type='submit' name='upload' value='{upload file}&nbsp;&raquo;' style='width:90px'>
-					</p>
-			</form>
-		</td>
-</tr>
-</table>
-	
-	";
-$tpl=new templates();
-$html=$tpl->_ENGINE_parse_body($html);
-echo iframe($html,0);
-	
-}
-function kav4proxy_license_upload(){
-	$tmp_file = $_FILES['fichier']['tmp_name'];
-	if($_SESSION[$tmp_file]["up"]){
-		writelogs("Uploading license $tmp_file already sended",__FUNCTION__,__FILE__);
-		kav4proxy_license_iframe($_SESSION[$tmp_file]["results"]);
-		exit;
-		}
-	$_SESSION[$tmp_file]["up"]=true;
-	
-	writelogs("Uploading license $tmp_file",__FUNCTION__,__FILE__);
-	$content_dir=dirname(__FILE__)."/ressources/logs";
-	if(!is_dir($content_dir)){mkdir($content_dir);}
-	if( !is_uploaded_file($tmp_file) ){
-		writelogs("not uploaded $tmp_file",__FUNCTION__,__FILE__);
-		kav4proxy_license_iframe('{error_unable_to_upload_file}');exit();
-	}
-	
-	 $type_file = $_FILES['fichier']['type'];
-	 if( !strstr($type_file, 'key')){kav4proxy_license_iframe('{error_file_extension_not_match} :key');	exit();}
-	 $name_file = $_FILES['fichier']['name'];
 
-if(file_exists( $content_dir . "/" .$name_file)){@unlink( $content_dir . "/" .$name_file);}
- if( !move_uploaded_file($tmp_file, $content_dir . "/" .$name_file) ){kav4proxy_license_upload("{error_unable_to_move_file} : ". $content_dir . "/" .$name_file);exit();}
-     
-    $_GET["moved_file"]=$content_dir . "/" .$name_file;
-    $socket=new sockets();
-    writelogs("Kav4ProxyUploadLicense:$content_dir/$name_file",__FUNCTION__,__FILE__);
- 	$res=base64_decode($socket->getFrameWork("cmd.php?Kav4ProxyUploadLicense=$content_dir/$name_file&type={$_POST["license-type"]}"));
-	$tp=explode("\n",$res);
-	$tp[]="ltp:{$_POST["license-type"]}";
-	
-	while (list ($num, $val) = each ($tp)){
-		if(trim($val)==null){continue;}
-		$val=htmlspecialchars($val);
-		
-		$html=$html . "<div><code>$val</code></div>";
-		}
-  	writelogs("$html",__FUNCTION__,__FILE__);
-$_SESSION[$tmp_file]["results"]=$html;    
-kav4proxy_license_upload($html);
-}
+
 
 function Kav4proxy_events_popup(){
 	$page=CurrentPageName();

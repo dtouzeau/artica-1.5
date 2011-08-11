@@ -440,20 +440,34 @@ l:TstringList;
 i:Integer;
 spattern_date:string;
 Retranslator_g:string;
+D:boolean;
+cmd:string;
+
 begin
 result:='';
+D:=false;
+D:=SYS.COMMANDLINE_PARAMETERS('--verbose');
 if not FileExists('/opt/kaspersky/kav4proxy/bin/kav4proxy-keepup2date') then exit;
-if ArticaEnableKav4ProxyInSquid<>1 then exit;;
+if ArticaEnableKav4ProxyInSquid<>1 then begin
+   if D then writeln('KAV4PROXY_PERFORM_UPDATE::  ArticaEnableKav4ProxyInSquid is not enabled, aborting...');
+   exit;;
+end;
 
-tmp:=logs.FILE_TEMP();
+
+tmp:='/var/log/artica-postfix/kaspersky/kav4proxy/'+logs.FileTimeName();
 if RetranslatorEnabled=1 then Retranslator_g:=' -g /var/db/kav/databases';
  logs.OutputCmd('/bin/chown -R kluser:klusers /var/opt/kaspersky/kav4proxy');
-fpsystem('/opt/kaspersky/kav4proxy/bin/kav4proxy-keepup2date'+Retranslator_g+' >' + tmp + ' 2>&1');
-if not FileExists(tmp) then exit;
-RegExpr:=TRegExpr.Create;
-l:=TstringList.Create;
-l.LoadFromFile(tmp);
-logs.DeleteFile(tmp);
+ cmd:=SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.kav4proxy.php';
+ if D then writeln(cmd);
+ fpsystem(cmd);
+ cmd:='/opt/kaspersky/kav4proxy/bin/kav4proxy-keepup2date'+Retranslator_g+' >' + tmp + ' 2>&1';
+ if D then writeln(cmd);
+ fpsystem(cmd);
+ if not FileExists(tmp) then exit;
+ RegExpr:=TRegExpr.Create;
+ l:=TstringList.Create;
+ l.LoadFromFile(tmp);
+
 For i:=0 to l.Count-1 do begin
     RegExpr.Expression:='^Error loading license: The trial license is expired';
     if RegExpr.Exec(l.Strings[i]) then begin

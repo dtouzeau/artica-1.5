@@ -147,6 +147,10 @@ var x_SaveDHCPSettings= function (obj) {
 		
 		if(document.getElementById('IncludeDHCPLdapDatabase').checked){XHR.appendData('IncludeDHCPLdapDatabase',1);}else{XHR.appendData('IncludeDHCPLdapDatabase',0);}
 		if(document.getElementById('EnableDHCPUseHostnameOnFixed').checked){XHR.appendData('EnableDHCPUseHostnameOnFixed',1);}else{XHR.appendData('EnableDHCPUseHostnameOnFixed',0);}
+		
+		if(document.getElementById('DHCPPing_check').checked){XHR.appendData('DHCPPing_check',1);}else{XHR.appendData('DHCPPing_check',0);}
+		if(document.getElementById('DHCPauthoritative').checked){XHR.appendData('DHCPauthoritative',1);}else{XHR.appendData('DHCPauthoritative',0);}
+		
 		XHR.appendData('ddns_domainname',document.getElementById('ddns_domainname').value);
 		document.getElementById('dhscpsettings').innerHTML='<center><img src=\"img/wait_verybig.gif\"></center>';
 		XHR.sendAndLoad('$page', 'GET',x_SaveDHCPSettings);	
@@ -317,7 +321,8 @@ function dhcp_form(){
 	
 	$EnableDHCPUseHostnameOnFixed=Field_checkbox("EnableDHCPUseHostnameOnFixed",1,$EnableDHCPUseHostnameOnFixed);
 	$IncludeDHCPLdapDatabase=Field_checkbox("IncludeDHCPLdapDatabase",1,$IncludeDHCPLdapDatabase,"OnlySetGatewayFCheck()");
-	
+	$authoritative=Field_checkbox("DHCPauthoritative",1,$dhcp->authoritative);
+	$ping_check=Field_checkbox("DHCPPing_check",1,$dhcp->ping_check);
 	$html="
 
 			<div id='dhscpsettings' class=form>
@@ -342,8 +347,19 @@ function dhcp_form(){
 				<td>$EnableDHCPUseHostnameOnFixed</td>
 				<td>&nbsp;</td>
 				<td>". help_icon('{EnableDHCPUseHostnameOnFixed_explain}')."</td>
-			</tr>				
-
+			</tr>
+			<tr>
+				<td class=legend style='font-size:13px'>{authoritative}:</td>
+				<td>$authoritative</td>
+				<td>&nbsp;</td>
+				<td>". help_icon('{authoritativeDHCP_explain}')."</td>
+			</tr>								
+			<tr>
+				<td class=legend style='font-size:13px'>{DHCPPing_check}:</td>
+				<td>$ping_check</td>
+				<td>&nbsp;</td>
+				<td>". help_icon('{DHCPPing_check_explain}')."</td>
+			</tr>
 		
 			
 			<tr>
@@ -722,8 +738,11 @@ function dhcp_save(){
 	$dhcp->subnet=$_GET["subnet"];
 	$dhcp->broadcast=$_GET["broadcast"];
 	$dhcp->WINS=$_GET["WINS"];
+	$dhcp->ping_check=$_GET["DHCPPing_check"];
+	$dhcp->authoritative=$_GET["DHCPauthoritative"];
 	
 	
+	 
 	
 	$tpl=new templates();
 

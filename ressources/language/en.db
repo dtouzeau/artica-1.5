@@ -1,4 +1,4 @@
-a:10134:{s:10:"ADD_WIDGET";s:16:"Add a new widget";s:15:"ADD_WIDGET_TEXT";s:38:"Add a new icon/Widget in this web page";s:15:"artica_settings";s:27:"Artica Global configuration";s:20:"artica_settings_text";s:73:"Define global settings about Proxy used, web interface, mysql settings...";s:14:"choose_section";s:16:"Choose a section";s:15:"CLICK_TO_DELETE";s:15:"Click to delete";s:15:"DELETE_THIS_TAB";s:25:"Delete this personal page";s:20:"DELETE_THIS_TAB_TEXT";s:65:"This operation will delete this page and this tab form your panel";s:10:"FILE_SHARE";s:12:"File Sharing";s:7:"MAILBOX";s:20:"Mailboxes management";s:9:"MAIL_SECU";s:20:"Messaging (security)";s:14:"MANAGE_WIDGETS";s:17:"Configure widgets";s:19:"MANAGE_WIDGETS_TEXT";s:40:"Change the display order, delete widgets";s:3:"MTA";s:30:"Mail transfert Agent (Postfix)";s:7:"NETWORK";s:7:"Network";s:3:"ORG";s:32:"Organizations related operations";s:18:"organizations_text";s:76:"[b]Organizations management:[/b]Display, Create or delete your organizations";s:12:"REBUILD_PAGE";s:17:"Rebuild this area";s:17:"REBUILD_PAGE_TEXT";s:65:"This operation will erase the current cache and rebuild this area";s:6:"SYSTEM";s:32:"System applications and settings";s:12:"WIDGETS_AREA";s:12:"Widgets Area";s:20:"WIDGETS_AREA_EXPLAIN";s:81:"Click on one of these icons in order to add or to [b]delete[/b] icon on your area";s:18:"your_organizations";s:18:"Your Organizations";s:15:"edit_photo_text";s:119:"Put here the user's picture, in order to upload it into database[br]
+a:10164:{s:10:"ADD_WIDGET";s:16:"Add a new widget";s:15:"ADD_WIDGET_TEXT";s:38:"Add a new icon/Widget in this web page";s:15:"artica_settings";s:27:"Artica Global configuration";s:20:"artica_settings_text";s:73:"Define global settings about Proxy used, web interface, mysql settings...";s:14:"choose_section";s:16:"Choose a section";s:15:"CLICK_TO_DELETE";s:15:"Click to delete";s:15:"DELETE_THIS_TAB";s:25:"Delete this personal page";s:20:"DELETE_THIS_TAB_TEXT";s:65:"This operation will delete this page and this tab form your panel";s:10:"FILE_SHARE";s:12:"File Sharing";s:7:"MAILBOX";s:20:"Mailboxes management";s:9:"MAIL_SECU";s:20:"Messaging (security)";s:14:"MANAGE_WIDGETS";s:17:"Configure widgets";s:19:"MANAGE_WIDGETS_TEXT";s:40:"Change the display order, delete widgets";s:3:"MTA";s:30:"Mail transfert Agent (Postfix)";s:7:"NETWORK";s:7:"Network";s:3:"ORG";s:32:"Organizations related operations";s:18:"organizations_text";s:76:"[b]Organizations management:[/b]Display, Create or delete your organizations";s:12:"REBUILD_PAGE";s:17:"Rebuild this area";s:17:"REBUILD_PAGE_TEXT";s:65:"This operation will erase the current cache and rebuild this area";s:6:"SYSTEM";s:32:"System applications and settings";s:12:"WIDGETS_AREA";s:12:"Widgets Area";s:20:"WIDGETS_AREA_EXPLAIN";s:81:"Click on one of these icons in order to add or to [b]delete[/b] icon on your area";s:18:"your_organizations";s:18:"Your Organizations";s:15:"edit_photo_text";s:119:"Put here the user's picture, in order to upload it into database[br]
 [b]Notice: valids formats are png,gif,jpeg[/b][br]";s:16:"edit_photo_title";s:14:"Add user photo";s:5:"about";s:482:"MIMEDefang is a framework for filtering e-mail.[br]
 It uses Sendmail's "Milter" API, some C glue code, and some Perl code to let you write high-performance mail filters in Perl.[br]
 
@@ -1279,7 +1279,7 @@ For the From or To headers, this will take the form of an RFC 2822 comment follo
 For the Subject header, this will be prepended to the original subject.[br]
 Note that you should only use the _REQD_ and _SCORE_ tags when rewriting the Subject header if report_safe is 0.[br]
 Otherwise, you may not be able to remove the SpamAssassin markup via the normal methods.[br]
-Parentheses are not permitted in value if rewriting the From or To headers. (They will be converted to square brackets.)";s:15:"salearnschedule";s:22:"Junk Learning schedule";s:20:"salearnschedule_text";s:46:"Define the schedule of Mailboxes Junk Learning";s:19:"sa_dsn_cutoff_level";s:41:"Spam level beyond which a DSN is not sent";s:19:"sa_kill_level_deflt";s:43:"Scorte that destroy the message (Real spam)";s:26:"sa_quarantine_cutoff_level";s:59:"Spam level beyond the message is not quarantine but destroy";s:19:"sa_tag2_level_deflt";s:57:"Add X-Spam-Flag: YES headers at that level to passed mail";s:19:"sa_tag3_level_deflt";s:62:"Score to add "spam detected" in headers and send to quarantine";s:18:"sa_tag_level_deflt";s:53:"Add X-Spam*** info headers if at, or above that level";s:4:"spam";s:4:"spam";s:2:"To";s:9:"To Header";s:16:"trusted_networks";s:16:"Trusted Networks";s:21:"trusted_networks_text";s:1417:"What networks or hosts are 'trusted' in your setup.[br]
+Parentheses are not permitted in value if rewriting the From or To headers. (They will be converted to square brackets.)";s:15:"salearnschedule";s:22:"Junk Learning schedule";s:20:"salearnschedule_text";s:46:"Define the schedule of Mailboxes Junk Learning";s:19:"sa_dsn_cutoff_level";s:41:"Spam level beyond which a DSN is not sent";s:19:"sa_kill_level_deflt";s:42:"Score that destroy the message (Real spam)";s:26:"sa_quarantine_cutoff_level";s:59:"Spam level beyond the message is not quarantine but destroy";s:19:"sa_tag2_level_deflt";s:57:"Add X-Spam-Flag: YES headers at that level to passed mail";s:19:"sa_tag3_level_deflt";s:62:"Score to add "spam detected" in headers and send to quarantine";s:18:"sa_tag_level_deflt";s:53:"Add X-Spam*** info headers if at, or above that level";s:4:"spam";s:4:"spam";s:2:"To";s:9:"To Header";s:16:"trusted_networks";s:16:"Trusted Networks";s:21:"trusted_networks_text";s:1417:"What networks or hosts are 'trusted' in your setup.[br]
 Trusted in this case means that relay hosts on these networks are considered to not be potentially operated by spammers,
 open relays, or open proxies.
 [br]
@@ -2146,7 +2146,51 @@ size that InnoDB uses to write to the log files on disk.[br]
 A large log buffer allows large transactions to run without a need to write the log to disk before the transactions commit.[br]
 If you have big transactions, making the log buffer larger will save disk I/O.
 This value should be 32Mb.
-";s:12:"mysql_tuning";s:12:"Mysql tuning";s:20:"innodb_log_file_size";s:20:"INNODB log file size";s:22:"innodb_log_buffer_size";s:22:"INNODB log buffer size";s:26:"enable_tuning_mysql_server";s:26:"Enable tune MySQL settings";s:18:"add_pop3_imap_text";s:115:"In order to enable POP3/IMAP access for this user, 
+";s:12:"mysql_tuning";s:12:"Mysql tuning";s:20:"innodb_log_file_size";s:20:"INNODB log file size";s:22:"innodb_log_buffer_size";s:22:"INNODB log buffer size";s:26:"enable_tuning_mysql_server";s:26:"Enable tune MySQL settings";s:17:"squid_blk_explain";s:152:"This the update status of Artica community blacklist database[br]These update are important because it will drive statistics and url filtering processes";s:24:"pattern_database_version";s:24:"Pattern Database version";s:19:"blacklist_databases";s:19:"Blacklist databases";s:10:"uncompress";s:10:"Uncompress";s:17:"failed_uncompress";s:17:"Failed uncompress";s:15:"sql_error_retry";s:22:"SQL Error (retry next)";s:9:"reprocess";s:10:"re-process";s:26:"confirm_reprosess_category";s:90:"Reprocess this category? During the database processing the MySQL server should be loaded.";s:14:"DisableAPTNews";s:43:"Disable system package updates notification";s:33:"frontend_disables_options_explain";s:57:"This section allow you to drive the frontend page builder";s:25:"DisableWarningCalculation";s:33:"Disable Warnings calculation icon";s:24:"enable_automask_creation";s:24:"Enable AutoMask checking";s:32:"enable_automask_creation_explain";s:350:"AutoMask ensure that when creating a directory or users home folder are set to defined permissions.[br]
+By default Artica create shared directories with 0775 mask.[br]
+If you disable this feature Artica will not change the maks of shared folders and home directories.[br]In other case, you will ba able to change the bit number of the creation mask.
+";s:19:"HomeDirectoriesMask";s:37:"Permissions mask for home directories";s:24:"SharedFoldersDefaultMask";s:27:"Shared folders default mask";s:10:"blacklists";s:10:"Blacklists";s:15:"kav4proxy_about";s:995:"
+Kaspersky Anti-Virus for Proxy Server provides anti-virus protection for network traffic routed through proxy servers
+which support the Internet Content Adaptation Protocol (ICAP).[br]
+[b]The program allows:[/b][br]
+Perform anti-virus scans on objects transferred through the proxy server.[br]
+Cure infected objects, or block access to infected objects if disinfection fails.[br]
+Use group settings to define filtration parameters that are applied depending on the address of the user
+requesting an object, and the object's address (URL).[br]
+Log activity statistics, including information about anti-virus scanning and its results, and application errors and
+warnings.[br]
+Notify administrators about detection of malicious software.[br]
+[i]The anti-virus databases are used in the detection and disinfection of infected objects. The application uses
+database records to analyze every object, checking it for virus presence: its content is compared with code
+typical for specific viruses.[/i]
+";s:21:"KAV4PROXY_KEEPUP2DATE";s:14:"Update Process";s:18:"update_events_text";s:42:"Display events about all update processes.";s:5:"EVENT";s:5:"Event";s:10:"sa_timeout";s:20:"Spamassassin TimeOut";s:25:"authoritativeDHCP_explain";s:1493:"
+The DHCP server will normally assume that the configuration information about a given network segment is not known to be correct 
+and is not authoritative.[br]
+This is so that if a naive user installs a DHCP server not fully understanding how to configure it,
+ it does not send spurious DHCPNAK messages to clients that have obtained addresses from a legitimate DHCP server on the network.[br]
+Network administrators setting up authoritative DHCP servers for their networks should always use authoritative to indicate that the DHCP server should 
+send DHCPNAK messages to misconfigured clients.[br]
+If this is not done, clients will be unable to get a correct IP address after changing subnets until their old lease has expired, 
+which could take quite a long time.[br]
+However, if a DHCP server is to be set up so that it is aware of some networks for which it is authoritative and 
+some networks for which it is not, it may be more appropriate to declare authority on a per-network-segment basis.[br]
+Note that the most specific scope for which the concept of authority makes any sense is the physical network segment 
+- either a shared-network statement or a subnet statement that is not contained within a shared-network statement[↓r]
+It is not meaningful to specify that the server is authoritative for some subnets within a shared network, 
+but not authoritative for others, nor is it meaningful to specify that the server is authoritative for some 
+host declarations and not others.
+";s:13:"authoritative";s:13:"authoritative";s:14:"DHCPPing_check";s:33:"Test if address is already exists";s:22:"DHCPPing_check_explain";s:592:"When the DHCP server is considering dynamically allocating an IP address to a client,
+ it first sends an ICMP Echo request (a ping) to the address being assigned.[br]
+ It waits for a second, and if no ICMP Echo response has been heard, it assigns the address.[br]
+ If a response is heard, the lease is abandoned, and the server does not respond to the client.[br]
+This ping check introduces a default one-second delay in responding to DHCPDISCOVER messages,
+which can be a problem for some clients.[br]
+The default delay of one second may be configured using the ping-timeout parameter.[br].
+";s:30:"samba_default_settings_explain";s:178:"This section will define default parameters when you add a new shared folder.[br]In this case, when adding a new folder you did not have to change everytime some specific options";s:17:"mask_lock_options";s:41:"Lock options and use only defaults values";s:16:"default_settings";s:16:"Default settings";s:22:"CLAMAV_DISABLE_EXPLAIN";s:254:"Clamav antivirus daemon is installed and enabled by default, when running it should take from [b]50 to 150Mb memory[/b].[br]If you did not use any software that use the ClamAV daemon eg (DNS server only or Web server only) you should disable this option.";s:36:"smtp_connection_cache_on_demand_text";s:432:"Temporarily enable SMTP connection caching while a destination has a high 
+volume of mail in the active queue.[br] With SMTP connection caching, a connection is not closed immediately after completion of a mail transaction.[br]
+Instead, the connection is kept open for up to smtp_connection_cache_time_limit seconds attribute.[br]
+This allows connections to be reused for other deliveries, and can improve mail delivery performance
+";s:18:"add_pop3_imap_text";s:115:"In order to enable POP3/IMAP access for this user, 
 you must set mailbox password. 
 Give the password for this user";s:11:"ARRAY_TITLE";s:12:"Domains list";s:13:"bt_add_domain";s:16:"Add a new domain";s:19:"edit_pop3_imap_text";s:98:"If you want to edit this user,
 you must set the password for this user

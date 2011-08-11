@@ -435,6 +435,16 @@ function testsMysql(){
 	writelogs("testing {$_GET["mysqlserver"]}:3306 with user {$_GET["mysql_account"]} and password \"{$_GET["mysqlpass"]}\"",__FUNCTION__,__FILE__,__LINE__);
 	
 	$bd=@mysql_connect("{$_GET["mysqlserver"]}:3306",$_GET["mysql_account"],$_GET["mysqlpass"]);
+	
+		if(($_GET["mysqlserver"]=="localhost") OR ($_GET["mysqlserver"]=="127.0.0.1")){
+			$bd=@mysql_connect(":/var/run/mysqld/mysqld.sock",$_GET["mysql_account"],$_GET["mysqlpass"]);
+		}else{
+			$bd=@mysql_connect("{$_GET["mysqlserver"]}:3306",$_GET["mysql_account"],$_GET["mysqlpass"]);
+		}	
+	
+	
+	
+	
 	$database=md5('Y-m-d H:i:s');
 	$tpl=new templates();
 	if(!$bd){

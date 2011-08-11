@@ -48,7 +48,7 @@ Parentheses are not permitted in value if rewriting the From or To headers. (The
 <salearnschedule>Junk Learning schedule</salearnschedule>
 <salearnschedule_text>Define the schedule of Mailboxes Junk Learning</salearnschedule_text>
 <sa_dsn_cutoff_level>Spam level beyond which a DSN is not sent</sa_dsn_cutoff_level>
-<sa_kill_level_deflt>Scorte that destroy the message (Real spam)</sa_kill_level_deflt>
+<sa_kill_level_deflt>Score that destroy the message (Real spam)</sa_kill_level_deflt>
 <sa_quarantine_cutoff_level>Spam level beyond the message is not quarantine but destroy</sa_quarantine_cutoff_level>
 <sa_tag2_level_deflt>Score to tag the "Subject:" with a "***SPAM***" marking</sa_tag2_level_deflt>
 <sa_tag3_level_deflt>Score to add "spam detected" in headers and send to quarantine</sa_tag3_level_deflt>

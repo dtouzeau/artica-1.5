@@ -47,6 +47,7 @@ function tabs(){
 	$tpl=new templates();
 	$users=new usersMenus();
 	$array["popup"]='{APP_MYSQL}';
+	$array["events"]='{events}';
 	$array["parameters"]='{mysql_settings}';
 	
 	$array["members"]='{mysql_users}';
@@ -79,7 +80,12 @@ function tabs(){
 		if($num=="globals"){
 			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"system.mysql.globals.php\"><span>$ligne</span></a></li>\n");
 			continue;
-		}		
+		}
+
+		if($num=="events"){
+			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"system.mysql.events.php\"><span>$ligne</span></a></li>\n");
+			continue;
+		}			
 		
 		$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"$page?$num=yes\"><span>$ligne</span></a></li>\n");
 	}

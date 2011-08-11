@@ -389,6 +389,12 @@ function smtp_instance_edit(){
 	if($conf["transport_destination_concurrency_negative_feedback"]==null){$conf["transport_destination_concurrency_negative_feedback"]="1/5";}
 	if(!is_numeric($conf["default_process_limit"])){$conf["default_process_limit"]=100;}
 	
+	if($conf["smtp_connection_cache_on_demand"]==null){$conf["smtp_connection_cache_on_demand"]="1";}
+	if($conf["smtp_connection_cache_time_limit"]==null){$conf["smtp_connection_cache_time_limit"]="2s";}
+	if($conf["smtp_connection_reuse_time_limit"]==null){$conf["smtp_connection_reuse_time_limit"]="300s";}
+	
+	
+	
 
 	$html="
 	<div class=explain>{domain_throttle_explain_edit}</div>
@@ -410,7 +416,22 @@ function smtp_instance_edit(){
 		<td>". Field_checkbox("ENABLED",1,$conf["ENABLED"],"CheckEnabledInstance()")."</td>
 		<td>&nbsp;</td>
 	<tr>
+	<tr>
+		<td class=legend>{smtp_connection_cache_on_demand}:<td>
+		<td>". Field_checkbox("smtp_connection_cache_on_demand",1,$conf["smtp_connection_cache_on_demand"],"CheckConnexionCache()")."</td>
+		<td>". help_icon("{smtp_connection_cache_on_demand_text}")."</td>
+	<tr>	
 	
+	<tr>
+		<td class=legend>{smtp_connection_cache_time_limit}:<td>
+		<td>". Field_text("smtp_connection_cache_time_limit",$conf["smtp_connection_cache_time_limit"],"width:60px;font-size:13px")."</td>
+		<td>". help_icon("{smtp_connection_cache_time_limit_text}")."</td>
+	<tr>
+	<tr>
+		<td class=legend>{smtp_connection_reuse_time_limit}:<td>
+		<td>". Field_text("smtp_connection_reuse_time_limit",$conf["smtp_connection_reuse_time_limit"],"width:60px;font-size:13px")."</td>
+		<td>". help_icon("{smtp_connection_reuse_time_limit_text}")."</td>
+	<tr>			
 	<tr>
 		<td class=legend>{default_destination_concurrency_limit}:<td>
 		<td>". Field_text("transport_destination_concurrency_limit",$conf["transport_destination_concurrency_limit"],"width:60px;font-size:13px")."</td>
@@ -486,6 +507,18 @@ function smtp_instance_edit(){
 			document.getElementById('INSTANCE_NAME').disabled=false;
 			if(!document.getElementById('ENABLED').checked){return;}
 			EnableFieldsFromId('id-$uuid');
+			
+		}
+		
+		function CheckConnexionCache(){
+			if(!document.getElementById('ENABLED').checked){return;}
+			document.getElementById('smtp_connection_cache_time_limit').disabled=true;
+			document.getElementById('smtp_connection_reuse_time_limit').disabled=true;
+			if(!document.getElementById('smtp_connection_cache_on_demand').checked){return;}
+			document.getElementById('smtp_connection_cache_time_limit').disabled=false;
+			document.getElementById('smtp_connection_reuse_time_limit').disabled=false;			
+			  
+		
 		}
 	
 	
@@ -506,6 +539,7 @@ function smtp_instance_edit(){
 			XHR.sendAndLoad(\"$page\", 'GET',x_SaveSMTPInstanceParams);
 		}	
 	CheckEnabledInstance();
+	CheckConnexionCache();
 	</script>	
 	
 	";

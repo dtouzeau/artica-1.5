@@ -1,12 +1,34 @@
-1.5.080110:
+1.5.081102:
 ========================================================================================
 System Changes
 -------------------------------------------------
 1.5.080110: Add function that verify /root permissions before start and stop SSH service.
-fix big error on SSHD, PasswordAuthentication is disabled by default that block the SSHD authentication.
-Fix wrong configuration in /etc/hosts according changing the hostname.
+1.5.080923: Fix big error on SSHD, PasswordAuthentication is disabled by default that block the SSHD authentication.
+1.5.080923: Fix wrong configuration in /etc/hosts according changing the hostname.
+1.5.080923: Fix Artica ask the hostname every time...
+1.5.081102: Fix minors errors (see http://www.artica.fr/forum/viewtopic.php?f=10&t=4309&start=0)
+1.5.081102: Add "authoritative" and "ping-check" directives in main DHCPD configuration file.
 
-Fix Artica ask the hostname every time...
+File Sharing changes
+-------------------------------------------------
+1.5.080923: Fix issues while connecting Samba to Active Directory.(see http://www.artica.fr/forum/viewtopic.php?f=98&t=4216)
+1.5.080923: Add new Feature called AutoMask (see http://www.artica.fr/forum/viewtopic.php?f=42&t=4289&start=0#p19875)
+1.5.081102: Fix unable to delete a group from shared folder property (see http://www.artica.fr/forum/viewtopic.php?f=42&t=4286&start=0)
+1.5.081102: When adding a group inside ACLs, the group is automatically added in the "write list" Samba section. (see http://www.artica.fr/forum/viewtopic.php?f=42&t=4300&start=0)
+1.5.081102: Add possibility to set/lock default values for Shared folder mask permissions ( see http://www.artica.fr/forum/viewtopic.php?f=42&t=4290&start=10)
+
+Messaging Changes:
+-------------------------------------------------
+1.5.080923: Add sa_timeout token (see http://forum.artica.fr/viewtopic.php?f=26&t=4299&start=0#p19941)
+1.5.080923: Fix unable to change the message size limit when using Postfix multiple instances (see http://forum.artica.fr/viewtopic.php?f=20&t=4306)
+1.5.081102: Fix misconfiguration on postscreen_cache_map main.cf attribute
+1.5.081102: Add smtp_connection_cache_on_demand,smtp_connection_cache_time_limit,smtp_connection_reuse_time_limit in throttle directives (see http://www.artica.fr/forum/viewtopic.php?f=26&t=4312&start=0#p19984)
+
+
+Proxy changes
+-------------------------------------------------
+1.5.080923: improve urls blacklist download and injections processes.
+
 
 
 1.5.072718: 
@@ -71,6 +93,7 @@ File Sharing changes
 1.5.071520: Add possibility to modify the remote announce feature in samba.
 1.5.072600: Fix Artica did not set the /etc/libnss-ldap.conf 
 1.5.072600: Sometimes, rename a computer did not work. The rename computer function has been rebuilded. 
+
 
 
 FreeWebs changes

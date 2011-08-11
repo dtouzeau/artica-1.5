@@ -195,6 +195,31 @@ function SubitemsMode(){
 
 function AddAclGroup(){
 	$uid=base64_decode($_GET["AddAclGroup"]);
+	$PathACL=base64_decode($_GET["path"]);
+	$samba=new samba();
+	$FOLDER=$samba->main_shared_folders[$PathACL];
+
+	
+	writelogs("ACLS:... Add new ACL for group \"$uid\" path=$PathACL Shared name=\"$FOLDER\"",__FUNCTION__,__FILE__,__LINE__);
+	if($FOLDER<>null){
+		$item=$uid;
+		if(strpos($item, " ")>0){$item="@\"$item\"";}else{$item="@$item";}
+		$h=$samba->hash_privileges($FOLDER);
+		
+		$write=$h[$item]["write list"];
+		writelogs("ACLS:...  $item Write list = $write",__FUNCTION__,__FILE__,__LINE__);
+		if($write<>"yes"){
+			$h[$item]["write list"]='yes';
+			reset($h);
+			while (list ($user, $array) = each ($h) ){if(trim($user)==null){continue;}while (list ($priv, $n) = each ($array) ){$a[$priv][]=$user;}}
+			if(is_array($a)){while (list ($c, $d) = each ($a) ){$samba->main_array[$FOLDER][$c]=implode(',',$d);}$samba->SaveToLdap();}
+			
+		}
+	
+	}
+	
+
+	
 	$acls=new aclsdirs(base64_decode($_GET["path"]));
 	if(!isset($acls->acls_array["GROUPS"][$uid])){$acls->acls_array["GROUPS"][$uid]=array();}
 	$acls->SaveAcls();	

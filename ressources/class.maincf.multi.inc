@@ -2355,7 +2355,24 @@ private function DOMAINS_THROTTLE(){
 		$moinso[]="{$uuid}_destination_concurrency_positive_feedback={$conf["transport_destination_concurrency_positive_feedback"]}";
 		$moinso[]="{$uuid}_destination_concurrency_negative_feedback={$conf["transport_destination_concurrency_negative_feedback"]}";
 		
-		$instances[]="\n# THROTTLE {$conf["INSTANCE_NAME"]}\n$uuid\tunix\t-\t-\tn\t-\t{$conf["default_process_limit"]}\tsmtp";
+		
+		$moinsoMasterText=null;
+		if(is_numeric($conf["smtp_connection_cache_on_demand"])){
+			if($conf["smtp_connection_cache_on_demand"]==0){
+				$moinsoMaster[]="smtp_connection_cache_on_demand=no";
+			}else{
+				$moinsoMaster[]="smtp_connection_cache_on_demand=yes";
+				$moinsoMaster[]="smtp_connection_cache_time_limit={$conf["smtp_connection_cache_time_limit"]}";
+				$moinsoMaster[]="smtp_connection_reuse_time_limit={$conf["smtp_connection_reuse_time_limit"]}";
+			}
+			
+		}else{
+			if($GLOBALS["VERBOSE"]){echo "DOMAINS_THROTTLE:: smtp_connection_cache_on_demand \"{$conf["smtp_connection_cache_on_demand"]}\" is not a numeric\n";}
+		}
+		
+		if($GLOBALS["VERBOSE"]){echo "DOMAINS_THROTTLE:: smtp_connection_cache_on_demand \"". count($moinsoMaster)." value(s)";}
+		if(count($moinsoMaster)>0){$moinsoMasterText=" -o ".@implode(" -o ", $moinsoMaster);}
+		$instances[]="\n# THROTTLE {$conf["INSTANCE_NAME"]}\n$uuid\tunix\t-\t-\tn\t-\t{$conf["default_process_limit"]}\tsmtp$moinsoMasterText";
 		while (list ($domain, $null) = each ($conf["DOMAINS"]) ){$maps[$domain]="$uuid:";}
 		while (list ($a, $b) = each ($maps) ){$maps_final[]="$a\t$b";}
 	}

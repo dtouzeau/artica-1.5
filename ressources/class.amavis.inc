@@ -200,7 +200,7 @@ class amavis{
 		if($this->main_array["BEHAVIORS"]["spam_subject_tag2_maps"]==null){$this->main_array["BEHAVIORS"]["spam_subject_tag2_maps"]="***SPAM*** _SCORE_ (_REQD_)";}
 		if($this->main_array["BEHAVIORS"]["sa_quarantine_cutoff_level"]==null){$this->main_array["BEHAVIORS"]["sa_quarantine_cutoff_level"]='25';}
 		if($this->main_array["BEHAVIORS"]["log_level"]==null){$this->main_array["BEHAVIORS"]["log_level"]="1";}
-		
+		if($this->main_array["BEHAVIORS"]["sa_timeout"]==null){$this->main_array["BEHAVIORS"]["sa_timeout"]="30";}
 		
 		
 			
@@ -435,7 +435,9 @@ function buildconf(){
 		if($this->main_array["BEHAVIORS"]["max_requests"]==null){$this->main_array["BEHAVIORS"]["max_requests"]="30";}
 		if($this->main_array["BEHAVIORS"]["max_servers"]==null){$this->main_array["BEHAVIORS"]["max_servers"]="5";}
 		if($this->main_array["BEHAVIORS"]["trust_my_net"]==null){$this->main_array["BEHAVIORS"]["trust_my_net"]="0";}
+		if($this->main_array["BEHAVIORS"]["sa_timeout"]==null){$this->main_array["BEHAVIORS"]["sa_timeout"]="30";}
 		if(!is_numeric($this->main_array["BEHAVIORS"]["enable_db"])){$this->main_array["BEHAVIORS"]["enable_db"]="0";}
+		if(!is_numeric($this->main_array["BEHAVIORS"]["sa_timeout"])){$this->main_array["BEHAVIORS"]["sa_timeout"]="30";}
 		if(!is_numeric($this->main_array["BEHAVIORS"]["enable_global_cache"])){$this->main_array["BEHAVIORS"]["enable_global_cache"]="0";}
 		
 		
@@ -467,8 +469,9 @@ function buildconf(){
 		$conf=$conf."\$log_level = {$this->main_array["BEHAVIORS"]["log_level"]};# verbosity 0..5, -d\n";		
 		$conf=$conf."\$log_recip_templ 	= undef;    # disable by-recipient level-0 log entries\n";
 		$conf=$conf."\$DO_SYSLOG = 1;              # log via syslogd (preferred)\n";
-		$conf=$conf."\$sa_debug = $AmavisDebugSpamassassin\n;";
-		$conf=$conf."\$sa_spawned =1;\n";
+		$conf=$conf."\$sa_debug = $AmavisDebugSpamassassin;\n";
+		$conf=$conf."\$sa_spawned = 1;\n";
+		$conf=$conf."\$sa_timeout = {$this->main_array["BEHAVIORS"]["sa_timeout"]};\n";
 		$conf=$conf."\$syslog_facility 	= 'mail';   # Syslog facility as a string\n";
 		$conf=$conf."\$syslog_priority 	= 'debug';  # Syslog base (minimal) priority as a string,\n";
 		$conf=$conf."#\$LOGFILE 		    = \"/var/log/amavis/amavis.log\";\n";

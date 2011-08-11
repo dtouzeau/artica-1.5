@@ -49,8 +49,15 @@ if(!$q->ok){
 
 }
 
-
 $numberofSites=mysql_num_rows($results);
+
+if(system_is_overloaded(basename(__FILE__))){
+	$unix->send_email_events("Overloaded system: failed generate last $numberofSites Proxy events","","proxy");
+	die();
+}
+
+
+
 	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
 		$count=$count+1;
 		$Country=$ligne["country"];
@@ -94,6 +101,8 @@ $numberofSites=mysql_num_rows($results);
 		$flag_infos="$Country {$ligne["remote_ip"]}";
 		if($ligne["REASON"]==null){$ligne["REASON"]="&nbsp;";}
 		if(strlen(trim($ligne["uid"]))>3){$mailfrom=$ligne["uid"];}
+		usleep(500000);
+		
 		$html=$html. "
 		<tr  $roll>
 		<td width=1%>" . imgtootltip($country_img,$flag_infos)."</td>
@@ -114,9 +123,6 @@ $target_file="/usr/share/artica-postfix/ressources/logs/dansguardian-rtmm.html";
 file_put_contents($target_file,$html);
 chmod($target_file,0755);
 BlockedSites();
-$unix->send_email_events("Success generate last $numberofSites Proxy events","","proxy");
-
-
 die();
 
 

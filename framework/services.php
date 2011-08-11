@@ -34,6 +34,7 @@ if(isset($_GET["reload-pure-ftpd"])){pureftpd_reload();exit;}
 if(isset($_GET["restart-ftp"])){pureftpd_restart();exit;}
 if(isset($_GET["dmicode"])){dmicode();exit;}
 if(isset($_GET["php-ini-set"])){PHP_INI_SET();exit;}
+if(isset($_GET["mysql-events"])){mysql_events();exit;}
 
 
 
@@ -65,8 +66,9 @@ function dmicode(){
 		return;
 	}
 	$unix=new unix();
+	
 	$php5=$unix->LOCATE_PHP5_BIN();
-	$cmd=trim("$nohup /usr/share/artica-postfix/exec.dmidecode.php >/dev/null 2>&1");
+	$cmd=trim("/usr/share/artica-postfix/exec.dmidecode.php >/dev/null 2>&1");
 	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	
 	shell_exec($cmd);
 	echo "<articadatascgi>". @file_get_contents("/etc/artica-postfix/dmidecode.cache")."</articadatascgi>";
@@ -279,6 +281,18 @@ function PHP_INI_SET(){
 	$cmd=trim("$nohup /usr/share/artica-postfix/bin/artica-install --php-ini >/dev/null 2>&1 &");
 	shell_exec($cmd);
 	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);		
+}
+
+function mysql_events(){
+	$unix=new unix();
+	$tail=$unix->find_program("tail");
+	$cmd="$tail -n 300 /var/run/mysqld/mysqld.err 2>&1";
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);
+	exec($cmd,$results);
+	$datas=base64_encode(serialize($results));
+	echo "<articadatascgi>$datas</articadatascgi>";
+	
+	
 }
 
 

@@ -121,6 +121,7 @@ class pagebuilder{
 					}
 				}
 			}
+			//$jquerys[]="jquery-1.6.2.min.js";
 			$jquerys[]="jquery-1.6.1.min.js";
 			$jquerys[]="jquery-1.6.min.js";
 			$jquerys[]="jquery-1.5.1.min.js";

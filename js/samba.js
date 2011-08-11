@@ -83,11 +83,9 @@ var folderTabRefresh=function (obj) {
 	if(document.getElementById('FodPropertiesFrom')){YahooWin4Hide();}
 	if(document.getElementById('main_samba_shared_folders')){RefreshTab('main_samba_shared_folders');}
 	if(document.getElementById('main_config_samba')){RefreshTab('main_config_samba');}	
-	if(document.getElementById('NewusbForm2009')){UUIDINDEXPOPREFRESH();}	
-	
-	
-	
-    
+	if(document.getElementById('NewusbForm2009')){UUIDINDEXPOPREFRESH();}
+	if(document.getElementById('SharedFoldersList')){LoadAjax('SharedFoldersList','samba.index.php?SharedFoldersList=yes');}	
+
 }
 
 function FolderDelete(folder){

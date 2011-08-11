@@ -73,10 +73,7 @@ class ccurl{
 				return false;
 			}			
 			
-
-
-			
-			return true;
+		return true;
 		
 		
 	}
@@ -84,9 +81,13 @@ class ccurl{
 	
 	function GetFile($targetpath){
 		 if (!extension_loaded('curl') or ($ch = curl_init($this->uri)) === false) {echo "No curl extentions can be loaded\n";return;}
-		
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 			curl_setopt($ch, CURLOPT_FILE, $fp = fopen($targetpath,'w'));
 			curl_setopt($ch, CURLOPT_URL, "$this->uri");
+			curl_setopt($ch, CURLINFO_HEADER_OUT,FALSE);
+			
+			//curl_setopt($ch, CURLOPT_NOBODY,true);
+			
 			if(preg_match("#https:#",$this->uri)){
 				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
 				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -111,17 +112,24 @@ class ccurl{
 			
 			
 			if($GLOBALS["VERBOSE"]){echo "Downloading \"$this->uri\"\n";}
-			curl_exec($ch); fclose($fp);
+			$result=curl_exec($ch); 
+			fclose($fp);
+			
 			$error=curl_errno($ch);	
 			curl_close($ch);
-			
+			if(!is_file($targetpath)){
+			if($GLOBALS["VERBOSE"]){echo "path \"$targetpath\" no such file\n";}
+			}
 			
 			
 			if(!$this->ParseError($error)){
 				writelogs("datas: $this->uri (". strlen($this->data)." bytes) error:$error",__CLASS__.'/'.__FUNCTION__,__FILE__);
 				return false;
 			}
-			@file_put_contents($this->data,$targetpath);
+			writelogs("datas: $this->uri (". strlen($result)." bytes) filesize=".filesize($targetpath)." bytes error:$error",__CLASS__.'/'.__FUNCTION__,__FILE__);
+			
+			
+			//@file_put_contents($this->data,$targetpath);
 			return true;
 	}
 	

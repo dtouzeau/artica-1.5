@@ -1,12 +1,11 @@
 <?php
-$GLOBALS["EXECUTED_AS_ROOT"]=false;
+if(!isset($GLOBALS["EXECUTED_AS_ROOT"])){if(function_exists("posix_getuid")){$GLOBALS["posix_getuid"]=posix_getuid();if($GLOBALS["posix_getuid"]==0){$GLOBALS["EXECUTED_AS_ROOT"]=true;}else{$GLOBALS["EXECUTED_AS_ROOT"]=false;}}}
 if(!isset($GLOBALS["DEBUG_MEM"])){$GLOBALS["DEBUG_MEM"]=false;}
 if($GLOBALS["DEBUG_MEM"]){events("Memory: class.templates.inc START -> ".round(((memory_get_usage()/1024)/1000),2) ."M ".__LINE__);}
 if(!isset($GLOBALS["DEBUG_INCLUDES"])){$GLOBALS["DEBUG_INCLUDES"]=false;}
 ini_set("memory_limit","400M");
 if(isset($_GET["debug-page"])){	ini_set('display_errors', 1);ini_set('error_reporting', E_ALL);}
-if(!isset($GLOBALS["EXECUTED_AS_ROOT"])){if(!function_exists("posix_getuid")){if(posix_getuid()==0){$GLOBALS["EXECUTED_AS_ROOT"]=true;}}}
-if(isset($GLOBALS["KAV4PROXY_NOSESSION"])){if(!$GLOBALS["KAV4PROXY_NOSESSION"]){session_start();}}
+if(!$GLOBALS["EXECUTED_AS_ROOT"]){if(isset($GLOBALS["KAV4PROXY_NOSESSION"])){if(!$GLOBALS["KAV4PROXY_NOSESSION"]){session_start();}}}
 if($GLOBALS["DEBUG_INCLUDES"]){echo basename(__FILE__)."::".dirname(__FILE__)."/class.sockets.inc\n";}
 include_once(dirname(__FILE__) . "/class.sockets.inc");
 if($GLOBALS["DEBUG_MEM"]){events("Memory: class.templates.inc -> ".round(((memory_get_usage()/1024)/1000),2) ."M : after class.sockets.inc".__LINE__);}

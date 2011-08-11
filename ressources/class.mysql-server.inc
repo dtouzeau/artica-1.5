@@ -14,6 +14,7 @@ class mysqlserver{
 	var $VERSION_MINOR;
 	var $VERSION_REV;
 	var $EnableZarafaTuning=0;
+	var $ZARAFA_INSTALLED=false;
 	
 	function mysqlserver(){
 		$this->load();
@@ -23,9 +24,9 @@ class mysqlserver{
 		$EnableZarafaTuning=$sock->GET_INFO("EnableZarafaTuning");
 		if(!is_numeric($EnableZarafaTuning)){$EnableZarafaTuning=0;}
 		$users=new usersMenus();
-		if(!$users->ZARAFA_INSTALLED){$EnableZarafaTuning=0;}
+		if(!$users->ZARAFA_INSTALLED){$EnableZarafaTuning=0;$this->innodb_file_per_table=1;}
 		$this->EnableZarafaTuning=$EnableZarafaTuning;
-		
+		$this->ZARAFA_INSTALLED=$users->ZARAFA_INSTALLED;
 		
 		
 	if(posix_getuid()==0){
@@ -52,10 +53,12 @@ class mysqlserver{
 		$sock=new sockets();
 		$datas=$sock->GET_INFO("MysqlParameters");
 		$this->innodb_file_per_table=$sock->GET_INFO("innodb_file_per_table");
+		if($this->ZARAFA_INSTALLED){$this->innodb_file_per_table=1;}
 		$ini->loadString($datas);
 		$this->main_array=$ini->_params["MYSQL"];
 		$this->BuildDefault();
 		$this->LOAD_VARIABLES();
+		
 		
 	}
 	
@@ -156,6 +159,10 @@ class mysqlserver{
 		if($this->main_array["skip-character-set-client-handshake"]=="yes"){
 			$conf=$conf ."skip-character-set-client-handshake\n";
 		}
+		
+	if($this->innodb_file_per_table==1){
+			$conf=$conf ."innodb_file_per_table\n";	
+		}			
 		
 		$conf=$conf ."basedir=/usr\n";
 		$conf=$conf ."datadir=/var/lib/mysql\n";
@@ -543,14 +550,26 @@ class mysqlserver{
 		}
 		if($this->EnableZarafaTuning==1){
 			$ZarafTuningParameters=unserialize(base64_decode($sock->GET_INFO("ZarafaTuningParameters")));
-			$mysqld["innodb_buffer_pool_size"]=$ZarafTuningParameters["zarafa_innodb_buffer_pool_size"];
-			$mysqld["query_cache_size"]=$ZarafTuningParameters["zarafa_query_cache_size"];
-			$mysqld["innodb_log_file_size"]=$ZarafTuningParameters["zarafa_innodb_log_file_size"];
-			$mysqld["innodb_log_buffer_size"]=$ZarafTuningParameters["zarafa_innodb_log_buffer_size"];
-			$mysqld["max_allowed_packet"]=$ZarafTuningParameters["zarafa_max_allowed_packet"];
+			$mysqld["innodb_buffer_pool_size"]=$ZarafTuningParameters["zarafa_innodb_buffer_pool_size"]."M";
+			$mysqld["query_cache_size"]=$ZarafTuningParameters["zarafa_query_cache_size"]."M";
+			$mysqld["innodb_log_file_size"]=$ZarafTuningParameters["zarafa_innodb_log_file_size"]."M";
+			$mysqld["innodb_log_buffer_size"]=$ZarafTuningParameters["zarafa_innodb_log_buffer_size"]."M";
+			$mysqld["max_allowed_packet"]=$ZarafTuningParameters["zarafa_max_allowed_packet"]."M";
 			$mysqld["max_connections"]=$ZarafTuningParameters["zarafa_max_connections"];
 			
 		}
+		
+		if($this->innodb_file_per_table==1){
+			$mysqld["innodb_file_per_table"]=1;
+		}		
+
+		if($this->ZARAFA_INSTALLED){
+			///$mysqld["innodb_force_recovery"]= 4;
+			$mysqld["innodb_data_home_dir"]="./";
+			
+		}
+		
+		
 		
 		unset($mysqld["version-string"]);
 		

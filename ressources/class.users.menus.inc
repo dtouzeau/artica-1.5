@@ -1763,6 +1763,7 @@ private function build_user_left_menus(){
 				if($this->SNORT_INSTALLED){$array["{events}"]["SUB"]["I.D.S"]="javascript:Loadjs('system.nic.snort.php?events-js=yes')";}
 				if($this->OPENVPN_INSTALLED){$array["{events}"]["SUB"]["{APP_OPENVPN}"]="javascript:Loadjs('index.openvpn.php?events-js=yes')";}
 				$array["{events}"]["SUB"]["{artica_events}"]="javascript:Loadjs('artica.events.php?in-front-ajax=yes')";
+				$array["{events}"]["SUB"]["MySQL"]="javascript:Loadjs('system.mysql.events.php?in-front-ajax=yes')";
 				
 				
 			}

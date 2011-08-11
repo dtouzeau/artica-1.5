@@ -2,6 +2,7 @@
 if(!function_exists("posix_getuid")){echo "posix_getuid !! not exists\n";}
 if(posix_getuid()<>0){die("Cannot be used in web server mode\n\n");}
 $GLOBALS["FORCE"]=false;
+$GLOBALS["EXECUTED_AS_ROOT"]=true;
 include_once(dirname(__FILE__).'/ressources/class.templates.inc');
 include_once(dirname(__FILE__).'/ressources/class.mysql.inc');
 include_once(dirname(__FILE__).'/ressources/class.status.inc');
@@ -240,19 +241,24 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 			$nobackup=Paragraphe('danger64.png',"{BACKUP_WARNING_NOT_CONFIGURED}","{BACKUP_WARNING_NOT_CONFIGURED_TEXT}","$js","{BACKUP_WARNING_NOT_CONFIGURED_TEXT}",300,80);
 		}}}
 	
-	
-	
-	$datas=trim(@file_get_contents("/etc/artica-postfix/apt.upgrade.cache"));
-	if(preg_match('#nb:([0-9]+)\s+#is',$datas,$re)){
+	$DisableAPTNews=$sock->GET_INFO('DisableAPTNews');
+	if(!is_numeric($DisableAPTNews)){$DisableAPTNews=0;}
+	if($DisableAPTNews==0){
+		$datas=trim(@file_get_contents("/etc/artica-postfix/apt.upgrade.cache"));
+		if(preg_match('#nb:([0-9]+)\s+#is',$datas,$re)){
 		$check_apt=Paragraphe('i64.png',"{upgrade_your_system}","{$re[1]}&nbsp;{packages_to_upgrade}","javascript:Loadjs('artica.repositories.php?show=update')",null,300,76);
-		
+		}
 	}
 	
-	$ldap=new clladp();
-	$hash=$ldap->hash_get_ou();
-	$ldap->ldap_close();
-	if(count($hash)<1){
+	$DisableNoOrganization=$sock->GET_INFO('DisableNoOrganization');
+	if(!is_numeric($DisableNoOrganization)){$DisableNoOrganization=0;}
+	if($DisableNoOrganization==0){
+		$ldap=new clladp();
+		$hash=$ldap->hash_get_ou();
+		$ldap->ldap_close();
+		if(count($hash)<1){
 		$no_orgs=Paragraphe('org-warning-64.png',"{no_organization}","{no_organization_text_jgrowl}","javascript:TreeAddNewOrganisation()",null,300,76);
+		}
 	}
 	
 	
@@ -285,11 +291,14 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 
 
 		
-		
-	if($ONLY_SAMBA){
+	$DisableFrontBrowseComputers=$sock->GET_INFO('DisableFrontBrowseComputers');
+	if(!is_numeric($DisableFrontBrowseComputers)){$DisableFrontBrowseComputers=0;}
+	if($DisableFrontBrowseComputers==0){	
+		if($ONLY_SAMBA){
 			$computers=Paragraphe("64-win-nic-browse.png",'{browse_computers}','{browse_computers_text}',"javascript:Loadjs('computer-browse.php');","{browse_computers_text}",300,76,1);
 			$samba=Paragraphe("explorer-64.png",'{explorer}','{SHARE_FOLDER_TEXT}',"javascript:Loadjs('tree.php');","{SHARE_FOLDER_TEXT}",300,76,1);
 		}
+	}
 
 		
 	if(!$users->KASPERSKY_WEB_APPLIANCE){
@@ -331,22 +340,29 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 	if($users->KASPERSKY_WEB_APPLIANCE){
 		kavproxyInfos();
 	}
-	$informer=0;
-	if($RootPasswordChangedTXT<>null){$informer++;}
-	if($kernel_mismatch<>null){$informer++;}
-	if($blacklist<>null){$informer++;}
-	if($kavicap_license_error<>null){$informer++;}
-	if($nobackup<>null){$informer++;}
-	if($services<>null){$informer++;}
 	
-	writelogs("Inform: $informer",__FILE__,__FUNCTION__,__LINE__);
+	@unlink("/usr/share/artica-postfix/ressources/logs/status.warnings.html");
+	$DisableWarningCalculation=$sock->GET_INFO("DisableWarningCalculation");
+	if(!is_numeric("DisableWarningCalculation")){$DisableWarningCalculation=0;}
 	
-	if($informer>0){
-		$inform=Paragraphe("warning64.png","$informer {warnings}","$informer {index_warnings_text}","javascript:Loadjs('admin.index.php?warnings=yes&count=$informer')","",300,76,1);
-		file_put_contents('/usr/share/artica-postfix/ressources/logs/status.warnings.html',"$RootPasswordChangedTXT$kernel_mismatch$nobackup$blacklist$kavicap_license_error$services");
-		system('/bin/chmod 755 /usr/share/artica-postfix/ressources/logs/status.warnings.html');	
+	if($DisableWarningCalculation==0){
+		$informer=0;
+		if(strlen($RootPasswordChangedTXT)>20){$informer++;}
+		if(strlen($kernel_mismatch)>20){$informer++;}
+		if(strlen($blacklist)>20){$informer++;}
+		if(strlen($kavicap_license_error)>20){$informer++;}
+		if(strlen($nobackup)>20){$informer++;}
+		if(strlen($service)>20){$informer++;}
+		
+		writelogs("Inform: $informer",__FILE__,__FUNCTION__,__LINE__);
+		
+		if($informer>0){
+			$inform=Paragraphe("warning64.png","$informer {warnings}","$informer {index_warnings_text}","javascript:Loadjs('admin.index.php?warnings=yes&count=$informer')","",300,76,1);
+			file_put_contents('/usr/share/artica-postfix/ressources/logs/status.warnings.html',
+			"$RootPasswordChangedTXT$kernel_mismatch$nobackup$blacklist$kavicap_license_error$services");
+			system('/bin/chmod 755 /usr/share/artica-postfix/ressources/logs/status.warnings.html');	
+		}
 	}
-	
 
 	$final="
 	$inform
@@ -437,7 +453,8 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 	return Paragraphe("license-error-64.png",'{av_pattern_database}',"{APP_KAV4PROXY}:: {av_pattern_database_obsolete_or_missing}","","{APP_KAV4PROXY}",300,76,1);
 	}
 	
-	return Paragraphe("license-error-64.png",'{license_error}',"{APP_KAV4PROXY}:: $users->KAV4PROXY_LICENSE_ERROR_TEXT","javascript:Loadjs('squid.newbee.php?kav-license=yes');","{license}",300,76,1);
+	return Paragraphe("license-error-64.png",'{license_error}',"{APP_KAV4PROXY}:: $users->KAV4PROXY_LICENSE_ERROR_TEXT",
+	"javascript:Loadjs('Kav4Proxy.License.php');","{license}",300,76,1);
 	
 	
 }

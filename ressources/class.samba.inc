@@ -1086,6 +1086,10 @@ private function SECOND_PART(){
 						if(!isset($ligne["browseable"])){$ligne["browseable"]="Yes";$ligne["browsable"]="Yes";}
 						while (list ($KEY, $VALS) = each ($ligne) ){
 							if($KEY=="finduser"){continue;}
+							if($KEY=="SaveUseridPrivileges"){continue;}
+							if($KEY=="write_list"){continue;}
+							if($KEY=="read_list"){continue;}
+							if($KEY=="valid_users"){continue;}
 							if($VALS==null){continue;}
 							writelogs("Folder............: $FOLDER $KEY = $VALS",__CLASS__,__FUNCTION__,__FILE__);
 							$conf[]="\t$KEY = $VALS";

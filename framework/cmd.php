@@ -2,8 +2,9 @@
 include_once(dirname(__FILE__)."/frame.class.inc");
 include_once(dirname(__FILE__)."/class.unix.inc");
 include_once(dirname(__FILE__)."/class.postfix.inc");
-
-
+include_once(dirname(__FILE__)."/class.postfix.inc");
+while (list ($num, $line) = each ($_GET)){$f[]="$num=$line";}
+writelogs_framework("Get query " .@implode(",",$f),"main()",__FILE__,__LINE__);
 if(isset($_GET["CleanCache"])){CleanCache();exit;}
 if(isset($_GET["GetLangagueFile"])){LOAD_LANGUAGE_FILE();exit;}
 if(isset($_GET["SaveConfigFile"])){SaveConfigFile();exit;}
@@ -1176,10 +1177,8 @@ switch ($uri) {
 		;
 	break;
 }
-
-while (list ($num, $line) = each ($_GET)){
-	$f[]="$num=$line";
-}
+reset($_GET);
+while (list ($num, $line) = each ($_GET)){$f[]="$num=$line";}
 
 writelogs_framework("unable to understand query !!!!!!!!!!!..." .@implode(",",$f),"main()",__FILE__,__LINE__);
 die();
@@ -2188,7 +2187,15 @@ function ReloadArticaPolicy(){
 
 
 function RestartMysqlDaemon(){
-	sys_THREAD_COMMAND_SET("/etc/init.d/artica-postfix restart mysql");
+	$php5=$unix->LOCATE_PHP5_BIN();
+	$cmd=trim("$php5 /usr/share/artica-postfix/exec.mysql.build.php \"".$unix->MYSQL_MYCNF_PATH()."\" >/dev/null 2>&1");
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	
+	shell_exec($cmd);
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim("$nohup /etc/init.d/artica-postfix restart mysql >/dev/null 2>&1 &");
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	
+	shell_exec($cmd);
+	
 }
 
 function RestartOpenVPNServer(){
@@ -2685,17 +2692,24 @@ function shellEscapeChars($path){
 		return $unix->shellEscapeChars($path);	
 }
 
+function DefaultDirMask(){
+	$SharedFoldersDefaultMask=trim(@file_get_contents("/etc/artica-postfix/settings/Daemons/SharedFoldersDefaultMask"));
+	if(!is_numeric($SharedFoldersDefaultMask)){$SharedFoldersDefaultMask="0755";}
+	return $SharedFoldersDefaultMask;
+}
+
 
 function directory_create_user(){
+	$SharedFoldersDefaultMask=DefaultDirMask();
 	$path=base64_decode($_GET["create-user-folder"]);
 	$uid=base64_decode($_GET["uid"]);
 	if($uid==null){return;}
 	if($path==null){return;}
 	if($path=="/"){return;}
 	writelogs_framework("Create new folder '$path' for $uid",__FUNCTION__,__FILE__,__LINE__);
-	@mkdir($path,0777,true);
+	@mkdir($path,$SharedFoldersDefaultMask,true);
 	shell_exec("/bin/chown $uid $path");
-	@chmod($path,0777);
+	@chmod($path,$SharedFoldersDefaultMask);
 }
 
 function dirdirEncoded(){
@@ -3440,13 +3454,23 @@ function samba_logon_scripts(){
 }
 
 function TCP_VIRTUALS(){
+	
+	writelogs_framework("initialize",__FUNCTION__,__FILE__,__LINE__);
+	
 	if(isset($_GET["stay"])){
-		shell_exec(LOCATE_PHP5_BIN2()." /usr/share/artica-postfix/exec.virtuals-ip.php");
-		return;
+		if($_GET["stay"]<>"no"){
+			$php5=$unix->LOCATE_PHP5_BIN();
+			writelogs_framework("initialize",__FUNCTION__,__FILE__,__LINE__);
+			shell_exec("$php5 /usr/share/artica-postfix/exec.virtuals-ip.php");
+			return;
+		}
 	}
 	
+	writelogs_framework("initialize class unix",__FUNCTION__,__FILE__,__LINE__);
 	$unix=new unix();
+	
 	$nohup=$unix->find_program("nohup");
+	writelogs_framework("nohup:$nohup",__FUNCTION__,__FILE__,__LINE__);
 	$php5=$unix->LOCATE_PHP5_BIN();
 	$cmd="$nohup $php5 /usr/share/artica-postfix/exec.virtuals-ip.php >/dev/null 2>&1 &";
 	writelogs_framework($cmd,__FUNCTION__,__FILE__,__LINE__);
@@ -5779,19 +5803,35 @@ function IP_CALC_CDIR(){
 	
 }
 
+
+
+
+function kav4ProxyPatternDatePath(){
+$unix=new unix();
+	$base=$unix->KAV4PROXY_GET_VALUE("path","BasesPath");	
+	if(is_file("$base/master.xml")){return "$base/master.xml";}
+	if(is_file("$base/upd-0607g.xml")){return "$base/upd-0607g.xml";}
+	return "$base/master.xml";
+}
+
 function kav4ProxyPatternDate(){
 	$unix=new unix();
-	$base=$unix->KAV4PROXY_GET_CONF_PATH("path","BasesPath");
-	if(!is_file("$base/master.xml")){return;}
-	$f=explode("\n",@file_get_contents("$base/master.xml"));
+	$base=kav4ProxyPatternDatePath();
+	writelogs_framework("Found $base",__FUNCTION__,__FILE__,__LINE__);
+	if(!is_file($base)){
+		writelogs_framework("$base no such file",__FUNCTION__,__FILE__,__LINE__);
+		return;}
+	$f=explode("\n",@file_get_contents($base));
 	$reg='#UpdateDate="([0-9]+)\s+([0-9]+)"#';
-	while (list ($num, $ligne) = each ($results) ){
+	
+	while (list ($num, $ligne) = each ($f) ){
 		if(preg_match($reg,$ligne,$re)){
+			writelogs_framework("Found {$re[1]} {$re[2]}",__FUNCTION__,__FILE__,__LINE__);
 			echo "<articadatascgi>". base64_encode(trim($re[1]).";".trim($re[2]))."</articadatascgi>";
 			return;
 		}
 	}	
-	
+	writelogs_framework("Not found",__FUNCTION__,__FILE__,__LINE__);
 }
 
 function OCSWEB_RESTART(){

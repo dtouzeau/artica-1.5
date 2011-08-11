@@ -24,7 +24,7 @@ include_once('ressources/class.langages.inc');
 include_once('ressources/class.sockets.inc');
 include_once('ressources/class.mysql.inc');
 include_once('ressources/class.privileges.inc');
-
+include_once('ressources/class.browser.detection.inc');
 
 
 if($_GET["script"]=="autoaccount"){autoaccount_js();exit;}
@@ -358,6 +358,16 @@ if(!function_exists('mysql_connect')){
 	</div>";	
 	
 }
+	$browser=browser_detection();
+	
+	if($browser=="ie"){
+		$ldap_error=$ldap_error. "
+		<div style='border:3px solid red;font-size:16px;color:red;padding:5px;width:220px;position:absolute;left:200px;top:50;background-color:white'>
+		{NOIEPLEASE_TEXT}<br>
+		<p style='font-size:12px;text-align:left'>
+		<i>{error_no_ie_text}</i></p></div><br>";
+	}
+
 	
 $html="<div id='loginform'>
 <center>
@@ -893,24 +903,6 @@ $html="<html xmlns='http://www.w3.org/1999/xhtml'>
 
 </head>
 <body>
-		<div id=\"SetupControl\" style='width:0;height:0'></div>
-		<div id=\"dialogS\" style='width:0;height:0'></div> 
-		<div id=\"dialogT\" style='width:0;height:0'></div> 
-		<div id=\"dialog0\" style='width:0;height:0'></div> 
-		<div id=\"dialog1\" style='width:0;height:0'></div>
-		<div id=\"dialog2\" style='width:0;height:0'></div> 
-		<div id=\"dialog3\" style='width:0;height:0'></div>
-		<div id=\"dialog4\" style='width:0;height:0'></div>
-		<div id=\"dialog5\" style='width:0;height:0'></div>
-		<div id=\"dialog6\" style='width:0;height:0'></div>
-		<div id=\"YahooUser\" style='width:0;height:0'></div>
-		<div id=\"logsWatcher\" style='width:0;height:0'></div>
-		<div id=\"WinORG\" style='width:0;height:0'></div>
-		<div id=\"WinORG2\" style='width:0;height:0'></div>
-		<div id=\"RTMMail\" style='width:0;height:0'></div>
-		<div id=\"Browse\" style='width:0;height:0'></div>
-		<div id=\"SearchUser\" style='width:0;height:0'></div>
- 
 <center>
 <div style=\"width:900px;background-image:url(/css/images/$logo_bg);background-repeat:repeat-x;background-position:center top;margin:0px;padding:0px;\">
 	<table style=\"width:100%;margin:0px;padding:0px;border:0px;\">
@@ -1032,6 +1024,23 @@ $('#loginform').modal({onOpen: function (dialog) {
 <script>
 document.getElementById('loginform').innerHTML='<center><img src=\"img/wait_verybig.gif\"></center>';
 Loadjs('logon.php?start=yes');</script>
+		<div id=\"SetupControl\" style='width:0;height:0'></div>
+		<div id=\"dialogS\" style='width:0;height:0'></div> 
+		<div id=\"dialogT\" style='width:0;height:0'></div> 
+		<div id=\"dialog0\" style='width:0;height:0'></div> 
+		<div id=\"dialog1\" style='width:0;height:0'></div>
+		<div id=\"dialog2\" style='width:0;height:0'></div> 
+		<div id=\"dialog3\" style='width:0;height:0'></div>
+		<div id=\"dialog4\" style='width:0;height:0'></div>
+		<div id=\"dialog5\" style='width:0;height:0'></div>
+		<div id=\"dialog6\" style='width:0;height:0'></div>
+		<div id=\"YahooUser\" style='width:0;height:0'></div>
+		<div id=\"logsWatcher\" style='width:0;height:0'></div>
+		<div id=\"WinORG\" style='width:0;height:0'></div>
+		<div id=\"WinORG2\" style='width:0;height:0'></div>
+		<div id=\"RTMMail\" style='width:0;height:0'></div>
+		<div id=\"Browse\" style='width:0;height:0'></div>
+		<div id=\"SearchUser\" style='width:0;height:0'></div>
 </body>
 </html>";	
 

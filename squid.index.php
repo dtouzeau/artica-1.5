@@ -235,7 +235,7 @@ function kavicap_license_error(){
 	if($pattern_date==null){
 			$html="<table style='width:1OO%'>
 				<tr>
-				<td width=1% valign='top'>" . imgtootltip("42-red.png",'{av_pattern_database}',"Loadjs('squid.newbee.php?kav-license=yes')")."</td>
+				<td width=1% valign='top'>" . imgtootltip("42-red.png",'{av_pattern_database}',"Loadjs('Kav4Proxy.License.php')")."</td>
 				<td valign='top'>". RoundedLightWhite("
 						<strong>
 							<span style='font-size:14px;color:red'>{av_pattern_database_obsolete_or_missing}</span><hr>
@@ -251,7 +251,7 @@ function kavicap_license_error(){
 
 	$html="<table style='width:1OO%'>
 <tr>
-<td width=1% valign='top'>" . imgtootltip("42-red.png",'{license}',"Loadjs('squid.newbee.php?kav-license=yes')")."</td>
+<td width=1% valign='top'>" . imgtootltip("42-red.png",'{license}',"Loadjs('Kav4Proxy.License.php')")."</td>
 <td valign='top'>". RoundedLightWhite("
 		<strong>
 			<span style='font-size:14px;color:red'>{license_error} {APP_KAV4PROXY} !!</span><hr>

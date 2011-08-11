@@ -1639,6 +1639,7 @@ class master_cf{
 	var $array_services=array();
 	var $array_full=array();
 	var $PostfixEnableMasterCfSSL;
+	var $hostname;
 	
 	var $array_type=array("fifo"=>"FIFO","inet"=>"INET","unix"=>"UNIX","pass"=>"PASS");
 	
@@ -1669,27 +1670,22 @@ class master_cf{
 	
 	);
 	
-	function master_cf($noload=0){
-		if($noload==0){
-			$ldap=new clladp();
-			$this->dn="cn=PostfixFilesStorage,cn=artica,$ldap->suffix";
-			$this->parse_conf();
-			$this->LoadExplodeConf();
-		}
+	function master_cf($noload=0,$hostname=null){
+		include_once(dirname(__FILE__)."/class.mysql.inc");
+		if($hostname==null){$hostname="master";}
+		$this->hostname=$hostname;
 		$sock=new sockets();
 		$this->PostfixEnableMasterCfSSL=$sock->GET_INFO("PostfixEnableMasterCfSSL");
+		$q=new mysql();
+		if(!$q->TABLE_EXISTS("master_cf", "artica_backup")){$q->BuildTables();}
+		$this->CheckDefaults();
 	}
 	
 	function master_delete_all(){
-		$ldap=new clladp();
-		$dn="cn=master.cf,cn=artica,$ldap->suffix";
-		$ldap->ldap_delete($dn,true);
-		$this->parse_conf();
-		$this->LoadExplodeConf();
-		$this->parse_conf();
-		$this->LoadExplodeConf();	
-		$this->SaveToLdap();	
-		}
+		$q=new mysql();
+		$sql="DELETE FROM master_cf WHERE hostname='$this->hostname'";
+		$q->QUERY_SQL($sql,"artica_backup");
+	}
 		
 	function SaveOptions(){
 		$sock=new sockets();
@@ -1698,122 +1694,20 @@ class master_cf{
 	}
 	
 	
-	function parse_conf(){
-		
-		$ldap=new clladp();
-		$dn=$this->dn;
-		$res=@ldap_read($ldap->ldap_connection,$dn,"(objectClass=PostfixStoreFiles)",array());
-		if($res){
-			$hash=ldap_get_entries($ldap->ldap_connection,$res);
-			$this->PostfixMasterCfFile=$hash[0][strtolower('PostfixMasterCfFile')][0];
-			}
-		
-		if($this->PostfixMasterCfFile==null){$this->PostfixMasterCfFile=$this->LoadMastercfInDisk();}
-		$this->StripLines();
-		$datas=$this->_readfileArray();	
-		if($this->error<>null){return null;}
-		$countbad=0;
-		$array=null;
-		
-	
-		
+	private function CheckDefaults(){
+		$sql="SELECT COUNT(zmd5) as tcount FROM master_cf WHERE hostname='$this->hostname'";
+		$q=new mysql(); 
+		$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"artica_backup"));	
+		if($ligne["tcount"]==0){$this->add_defaults();}
 	}
 	
 	
 
-function Build(){
-	
-$conf=$conf."#\n";
-$conf=$conf."# Postfix master process configuration file.  For details on the format\n";
-$conf=$conf."# of the file, see the master(5) manual page (command: \"man 5 master\").\n";
-$conf=$conf."#\n";
-$conf=$conf."# ==========================================================================\n";
-$conf=$conf."# service type  private unpriv  chroot  wakeup  maxproc command + args\n";
-$conf=$conf."#               (yes)   (yes)   (yes)   (never) (100)\n";
-$conf=$conf."# ==========================================================================\n";
-	
-	
-	while (list ($service, $opt) = each ($this->array_full)){
-		$option=null;
-		$count=0;
-		if(is_array($opt["OPTIONS"])){
-			while (list ($num, $opts) = each ($opt["OPTIONS"])){
-			 if(trim($opts)<>null){
-			 	$count=$count+1;
-			 	$option=$option." $opts\n";
-			 }
-		}}
-		if($count>0){$option="\n$option\n";}else{$option="\n";}
-		$conf=$conf ."{$opt["SERVICE_NAME"]}\t{$opt["TYPE"]}\t{$opt["PRIVATE"]}\t{$opt["UNIPRIV"]}\t{$opt["CHROOT"]}\t{$opt["WAKEUP"]}\t{$opt["MAXPROC"]}\t{$opt["COMMAND"]} $option";
-		
-	}
-	
-	return $conf;
-	
-}	
-	
-	
-	
-	function LoadExplodeConf(){
-		$ldap=new clladp();
-		$dn="cn=master.cf,cn=artica,$ldap->suffix";
-		if(!$ldap->ExistsDN($dn)){
-				$upd["objectClass"][]='top';
-				$upd["objectClass"][]='PostFixStructuralClass';
-				$upd["cn"]="master.cf";
-				if(!$ldap->ldap_add($dn,$upd)){echo __CLASS__.'/'.__FUNCTION__ ." (".__LINE__.") failed\n$ldap->ldap_last_error";}
-				unset($upd);
-				}
-		
-		$pattern="(&(objectClass=PostfixMasterCfParam)(cn=*))";
-		$attr=array();
-		$sr =@ldap_search($ldap->ldap_connection,$dn,$pattern,$attr);
-		if($sr){
-			$hash=ldap_get_entries($ldap->ldap_connection,$sr);
-			if($hash["count"]==0){$this->add_defaults();}
-			
-				$upd["MasterCfPrivate"][0]=$private;
-				$upd["MasterCfUnpriv"][0]=$unpriv;
-				$upd["MasterCfChroot"][0]=$chro;ot;
-				$upd["MasterCfMaxproc"][0]=$maxproc;
-				$upd["MasterCfWakeup"][0]=$wakeup;
-			
-			for($i=0;$i<$hash["count"];$i++){
-				$this->array_services[]=array("KEY"=>$hash[$i]["cn"][0],"SERVICE"=>$hash[$i][strtolower("MasterCfServiceName")][0]);
-				unset($command_options);
-				
-				$COMMAND=$hash[$i][strtolower("MasterCfCommandParams")][0];
-				if($hash[$i][strtolower("MasterCfCommandParams")]["count"]>1){
-					for($t=1;$t<$hash[$i][strtolower("MasterCfCommandParams")]["count"];$t++){
-						$command_options[]=$hash[$i][strtolower("MasterCfCommandParams")][$t];
-					}
-				}
-				
-				$this->array_full[$hash[$i]["cn"][0]]=array(
-					"TYPE"=>$hash[$i][strtolower("MasterCfType")][0],
-					"PRIVATE"=>$hash[$i][strtolower("MasterCfPrivate")][0],
-					"UNIPRIV"=>$hash[$i][strtolower("MasterCfUnpriv")][0],
-					"CHROOT"=>$hash[$i][strtolower("MasterCfChroot")][0],
-					"WAKEUP"=>$hash[$i][strtolower("MasterCfWakeup")][0],
-					"MAXPROC"=>$hash[$i][strtolower("MasterCfMaxproc")][0],
-					"SERVICE_NAME"=>$hash[$i][strtolower("MasterCfServiceName")][0],
-					"COMMAND"=>$COMMAND,
-					"OPTIONS"=>$command_options
-					
-					);
-					
-				
-			}
-			
-			
-			
-		}
-		
-	}
+
+
 	
 	//calibri
 	function add_defaults(){
-		$users=new usersMenus();
 		$this->edit_service("smtp    ","inet","n","-","n","-",   "-",array("smtpd"));
 		$this->edit_service("pickup  ","fifo","n","-","n","60",   "1",array("pickup"));
 		$this->edit_service("cleanup ","unix","n","-","n","-",    "0",array("cleanup"));
@@ -1852,65 +1746,51 @@ $conf=$conf."# =================================================================
 	
 	
 	function edit_service($service_name,$type,$private,$unpriv,$chroot,$wakeup,$maxproc,$command,$key=null){
-		$ldap=new clladp();
-		$service_name=trim($service_name);
-		$dn_suffix="cn=master.cf,cn=artica,$ldap->suffix";
-		if($key==null){$key=md5($service_name.$type);}
 		
-		$dn="cn=$key,$dn_suffix";
+		$service_name=trim(strtolower($service_name));
 		
+		if($key==null){$key=md5($service_name.$type.$this->hostname);}
+		$q=new mysql();
+		$edit=false;
+		$sql="SELECT zmd5,COMMAND FROM master_cf WHERE zmd5='$key'";
+		$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"artica_backup"));	
+		if($ligne["zmd5"]<>null){$edit=true;$commandz=unserialize($ligne["COMMAND"]);$command_text=addslashes(serialize($commandz));}
+		writelogs("edit=$edit $service_name type=$type",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 		
-		
-				writelogs("edit $service_name type=$type");
-				$upd["MasterCfType"][0]=$type;
-				$upd["MasterCfPrivate"][0]=$private;
-				$upd["MasterCfUnpriv"][0]=$unpriv;
-				$upd["MasterCfChroot"][0]=$chroot;
-				$upd["MasterCfMaxproc"][0]=$maxproc;
-				$upd["MasterCfWakeup"][0]=$wakeup;
-				$upd["MasterCfServiceName"]=$service_name;
-				if(is_array($command)){
-					while (list ($num, $val) = each ($command) ){
-						$upd["MasterCfCommandParams"][]=$val;
-					}
-				}		
-		
-		if(!$ldap->ExistsDN($dn)){
-			writelogs("Add new service $dn",__FUNCTION__,__FILE__);
-			$upd["objectClass"][]='top';
-			$upd["objectClass"][]='PostfixMasterCfParam';
-			$upd["cn"]="$key";
-			if(!$ldap->ldap_add($dn,$upd)){
-				$this->ldap_error=$ldap->ldap_last_error;
-				echo __CLASS__.'/'.__FUNCTION__ ." (".__LINE__.") failed\n$ldap->ldap_last_error\n";
-				return false;
-			return true;
-			}
+		if(is_array($command)){
+			$command_text=addslashes(serialize($command));
 		}
-			
-			
-			if(!$ldap->Ldap_modify($dn,$upd)){
-				$this->ldap_error=$ldap->ldap_last_error;
-				echo __CLASS__.'/'.__FUNCTION__ ." (".__LINE__.") failed\n$ldap->ldap_last_error\n";
-				return false;	
-			}
-
-			return true;	
+		
+		$sql="INSERT IGNORE INTO master_cf (`hostname`,`SERVICE_NAME`,`TYPE`,`PRIVATE`,`UNIPRIV`,`CHROOT`,`WAKEUP`,`MAXPROC`,`COMMAND`,`zmd5`)
+		VALUES('$this->hostname','$service_name','$type','$private','$unpriv','$chroot','$wakeup','$maxproc','$command_text','$key')
+		";
+		
+		$sql_upd="UPDATE master_cf SET `PRIVATE`='$private',
+		`TYPE`='$type',
+		`UNIPRIV`='$unpriv',
+		`CHROOT`='$chroot',
+		`WAKEUP`='$wakeup',
+		`MAXPROC`='$maxproc',
+		`COMMAND`='$command_text'
+		WHERE zmd5='$key'
+		";
+		
+		if($edit){$sql=$sql_upd;}
+		$q->QUERY_SQL($sql,"artica_backup");
+		if(!$q->ok){echo __CLASS__.'/'.__FUNCTION__ ." (".__LINE__.") failed\n$q->mysql_error\n<H2>$sql</H2>";return false;}
+		return true;
 		}
 	
-	function add_command_options($service_name,$option){
-		$ldap=new clladp();
-		$service_name=trim($service_name);
-		$dn_suffix="cn=master.cf,cn=artica,$ldap->suffix";
-		$dn="cn=$service_name,$dn_suffix";
-		$upd["MasterCfCommandParams"]=$option;
-		if(!$ldap->Ldap_add_mod($dn,$upd)){
-			$this->ldap_error=$ldap->ldap_last_error;
-			echo __CLASS__.'/'.__FUNCTION__ ." (".__LINE__.") failed\n$ldap->ldap_last_error\n";
-			return false;
-		}
-		$this->PostfixMasterCfFile=$this->Build();
-		$this->SaveToLdap();
+	function add_command_options($zmd5,$option){
+		$q=new mysql();
+		$sql="SELECT zmd5,COMMAND FROM master_cf WHERE zmd5='$zmd5'";
+		$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"artica_backup"));
+		$commandz=unserialize($ligne["COMMAND"]);
+		$commandz[]=$option;
+		$options=addslashes(serialize($commandz));
+		$sql="UPDATE master_cf SET `COMMAND`='$options'";
+		$q->QUERY_SQL($sql,"artica_backup");
+		if(!$q->ok){echo __CLASS__.'/'.__FUNCTION__ ." (".__LINE__.") failed\n$q->mysql_error\n<H2>$sql</H2>";return false;}
 		return true;
 	}
 	function del_command_options($service_name,$index){

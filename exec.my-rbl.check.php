@@ -119,11 +119,14 @@ function GetMyIp(){
 	$req->sendRequest();
 	$code = $req->getResponseCode();
 	$datas= trim($req->getResponseBody());
-	
+	writelogs("http://www.artica.fr/my-ip.php -> ($datas)");
 	if(preg_match("#([0-9\.]+)#",$datas,$re)){
 		$myip=$re[1];
 		writelogs("http://www.artica.fr/my-ip.php -> $code ($datas)");
+	}else{
+		writelogs("Unable to preg_match datas....");
 	}
+	
 	if($myip<>null){
 		@file_put_contents("/usr/share/artica-postfix/ressources/logs/web/myIP.conf",$myip);
 		@chmod("/usr/share/artica-postfix/ressources/logs/web/myIP.conf",775);

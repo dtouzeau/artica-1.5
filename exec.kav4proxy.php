@@ -13,7 +13,8 @@ $kav=new Kav4Proxy();
 $conf=$kav->build_config();
 echo "Starting......: Kav4proxy building configuration done\n";
 @file_put_contents("/etc/opt/kaspersky/kav4proxy.conf",$conf);
-
+shell_exec("/bin/chown -R kluser /etc/opt/kaspersky");
+shell_exec("/bin/chown -R kluser /var/log/kaspersky/kav4proxy");
 
 	
 ?>

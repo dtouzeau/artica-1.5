@@ -23,6 +23,9 @@
 	if(isset($_POST["DeleteAllFolderSecu"])){folder_security_clean_priv();exit;}
 	if(isset($_GET["main"])){main_switch();exit;}
 	if(isset($_POST["ChangeShareNameOrg"])){folder_change_sharename();exit;}
+	if(isset($_POST["ArticaSambaAutomAskCreation"])){main_artica_for_samba_save();exit;}
+	
+	
 	if(isset($_GET["jsaddons"])){echo jsaddons();exit;}
 	if(!CheckSambaUniqueRights()){echo "<H1>$ERROR_NO_PRIVS</H1>";die();}
 	if(isset($_GET["main-params-js"])){main_parameters_js();exit;}
@@ -308,7 +311,7 @@ function main_tabs(){
 	
 	
 	return "
-	<div id=main_config_samba style='width:100%;height:670px;overflow:auto'>
+	<div id=main_config_samba style='width:100%;height:710px;overflow:auto'>
 		<ul>". implode("\n",$html)."</ul>
 	</div>
 		<script>
@@ -595,6 +598,7 @@ function main_smb_config(){
 	."</td>
 	</tr>
 </table>
+
 ";
 	
 	
@@ -652,7 +656,39 @@ $domain_master
 
 	</table>
 	";
+$sock=new sockets();
+$ArticaSambaAutomAskCreation=$sock->GET_INFO("ArticaSambaAutomAskCreation");
+$HomeDirectoriesMask=$sock->GET_INFO("HomeDirectoriesMask");
+$SharedFoldersDefaultMask=$sock->GET_INFO("SharedFoldersDefaultMask");
+if(!is_numeric($ArticaSambaAutomAskCreation)){$ArticaSambaAutomAskCreation=1;}
+if(!is_numeric($HomeDirectoriesMask)){$HomeDirectoriesMask="0775";}
+if(!is_numeric($SharedFoldersDefaultMask)){$SharedFoldersDefaultMask="0755";}
 
+
+$formArtica="
+	<table style='width:98%' class=form>
+<tr>	
+	<td align='right' nowrap valign='top' class=legend>{enable_automask_creation}:</td>
+	<td valign='top'>" . Field_checkbox('ArticaSambaAutomAskCreation','1',$ArticaSambaAutomAskCreation)."</td>
+	<td valign='top'>" . help_icon("{enable_automask_creation_explain}")."</td>
+</tr>	
+<tr>	
+	<td align='right' nowrap valign='top' class=legend>{HomeDirectoriesMask}:</td>
+	<td valign='top'>" . Field_text("HomeDirectoriesMask",$HomeDirectoriesMask,'width:60px;font-size:13px;padding:3px')."</td>
+	<td valign='top'>&nbsp;</td>
+</tr>
+<tr>	
+	<td align='right' nowrap valign='top' class=legend>{SharedFoldersDefaultMask}:</td>
+	<td valign='top'>" . Field_text("SharedFoldersDefaultMask",$SharedFoldersDefaultMask,'width:60px;font-size:13px;padding:3px')."</td>
+	<td valign='top'>&nbsp;</td>
+</tr>
+	<tr>
+	<td colspan=3 align='right' valign='top'>
+	<hr>
+	". button("{apply}","SaveArticaSambaMainConfiguration()")
+	."</td>
+	</tr>
+</table>";
 
 	
 	
@@ -666,6 +702,8 @@ $domain_master
 		$form1
 		<br>
 		$form2
+		<br>
+		$formArtica
 		</td>
 	</tr>
 	</table>
@@ -697,6 +735,18 @@ $domain_master
 		}
 		
 		
+	}
+	
+	
+	function SaveArticaSambaMainConfiguration(){
+		var XHR = new XHRConnection();
+		if(document.getElementById('ArticaSambaAutomAskCreation').checked){
+		XHR.appendData('ArticaSambaAutomAskCreation','1');}else{
+		XHR.appendData('ArticaSambaAutomAskCreation','0');}
+		XHR.appendData('HomeDirectoriesMask',document.getElementById('HomeDirectoriesMask').value);
+		XHR.appendData('SharedFoldersDefaultMask',document.getElementById('SharedFoldersDefaultMask').value);
+		AnimateDiv('MainSambaConfigDiv');	
+		XHR.sendAndLoad('$page', 'POST',x_SaveSambaMainConfiguration);
 	}
 	
 
@@ -741,7 +791,7 @@ $domain_master
 		if(document.getElementById('local master').checked){
 			XHR.appendData('local master','yes');}else{
 			XHR.appendData('local master','no');}			
-			document.getElementById('MainSambaConfigDiv').innerHTML='<center><img src=\"img/wait_verybig.gif\"></center>';			
+			AnimateDiv('MainSambaConfigDiv');			
 			XHR.sendAndLoad('$page', 'GET',x_SaveSambaMainConfiguration);		
 		}
 
@@ -756,6 +806,13 @@ $domain_master
 	
 	echo $tpl->_ENGINE_parse_body($html);
 	
+}
+
+function main_artica_for_samba_save(){
+	$sock=new sockets();
+	$sock->SET_INFO("ArticaSambaAutomAskCreation", $_POST["ArticaSambaAutomAskCreation"]);
+	$sock->SET_INFO("HomeDirectoriesMask", $_POST["HomeDirectoriesMask"]);
+	$sock->SET_INFO("SharedFoldersDefaultMask", $_POST["SharedFoldersDefaultMask"]);
 }
 
 function jsaddons(){
@@ -1036,8 +1093,9 @@ $html="
 	
 <table style='width:100%'>
 <tr>
-	<td valign='top' width=99%><h5>{shared_folders}</H5></td>
-	<td valign='top' style='border-left:1px solid #005447;padding:5px' nowrap>". button("{add_a_shared_folder}","Loadjs('SambaBrowse.php')"). "</td>
+	<td width=99% valign='middle'><span style='font-size:16px'>{shared_folders}</span></td>
+	<td valign='top' nowrap width=1%>". imgtootltip("folder-granted-properties-48.png","{default_settings}","Loadjs('samba.default.settings.php')"). "</td>
+	<td valign='top' nowrap width=1%>". imgtootltip("folder-granted-add-48.png","{add_a_shared_folder}","Loadjs('SambaBrowse.php')"). "</td>
 </tr>
 </table>
 <div style='width:100%;height:578px;overflow:auto' id='SharedFoldersList'></div>
@@ -1060,10 +1118,13 @@ function shared_folders_list(){
 	$tpl=new templates();
 	$samba=new samba();
 	$folders=$samba->main_folders;
-	if(!is_array($folders)){return $tpl->_ENGINE_parse_body(button("{add_a_shared_folder}","Loadjs('SambaBrowse.php')"));}
+	if(!is_array($folders)){$html=$tpl->_ENGINE_parse_body(button("{add_a_shared_folder}","Loadjs('SambaBrowse.php')"));}
 	
 	
 	$html="
+	
+	
+	
 	<input type='hidden' id='del_folder_name' value='{del_folder_name}'>
 	
 <table cellspacing='0' cellpadding='0' border='0' class='tableView'>
@@ -1078,7 +1139,11 @@ function shared_folders_list(){
 <tbody class='tbody'>	
 ";
 	
-	
+	if(!is_array($folders)){
+		$html=$html."</tbody></table>";
+		echo $tpl->_ENGINE_parse_body($html);
+		return;
+	}
 	while (list ($FOLDER, $ligne) = each ($folders) ){
 		$FOLDER_url=urlencode($FOLDER);
 		$propertiesjs="FolderProp('$FOLDER_url')";
@@ -1340,12 +1405,15 @@ function folder_properties(){
 	$tpl=new templates();
 	$smb=new samba();
 	$SimpleShare=false;
+	$sock=new sockets();
+	$SambaDefaultFolderSettings=unserialize(base64_decode($sock->GET_INFO("SambaDefaultFolderSettings")));
 	$path_encoded=base64_encode($smb->main_array[$folder]["path"]);
 	$give_new_sharename=$tpl->javascript_parse_text("{give_new_sharename}");
 	if($smb->main_array["$folder"]["hosts allow"]<>null){
 		$SimpleShare=true;
 	}
-	
+	$mask_lock_options=$SambaDefaultFolderSettings["mask_lock_options"];
+	if(!is_numeric($mask_lock_options)){$mask_lock_options=0;}
 	
 	if($smb->main_array["$folder"]["nt acl support"]==null){$smb->main_array["$folder"]["nt acl support"]=$smb->main_array["global"]["nt acl support"];}
 	if($smb->main_array["$folder"]["acl group control"]==null){$smb->main_array["$folder"]["acl group control"]=$smb->main_array["global"]["acl group control"];}
@@ -1354,11 +1422,23 @@ function folder_properties(){
 	if($smb->main_array["$folder"]["inherit acls"]==null){$smb->main_array["$folder"]["inherit acls"]=$smb->main_array["global"]["inherit acls"];}		
 	if($smb->main_array["$folder"]["dos filemode"]==null){$smb->main_array["$folder"]["dos filemode"]=$smb->main_array["global"]["dos filemode"];}	
 	
+	
+	if($smb->main_array["$folder"]["create mask"]==null){$smb->main_array["$folder"]["create mask"]=$SambaDefaultFolderSettings["create_mask"];}
+	if($smb->main_array["$folder"]["directory mask"]==null){$smb->main_array["$folder"]["directory mask"]=$SambaDefaultFolderSettings["directory_mask"];}
+	if($smb->main_array["$folder"]["force create mode"]==null){$smb->main_array["$folder"]["force create mode"]=$SambaDefaultFolderSettings["force_create_mode"];}
+	
 	if($smb->main_array["$folder"]["create mask"]==null){$smb->main_array["$folder"]["create mask"]= "0775";}
 	if($smb->main_array["$folder"]["directory mask"]==null ){$smb->main_array["$folder"]["directory mask"]= "0777";}
 	if($smb->main_array["$folder"]["force create mode"]==null){$smb->main_array["$folder"]["force create mode"] = "0775";}
 	if($smb->main_array["$folder"]["create mode"]==null){$smb->main_array["$folder"]["create mode"]=$smb->main_array["$folder"]["create mask"];}
 	
+	if($mask_lock_options==1){
+		$smb->main_array["$folder"]["create mask"]=$SambaDefaultFolderSettings["create_mask"];
+		$smb->main_array["$folder"]["directory mask"]=$SambaDefaultFolderSettings["directory_mask"];
+		$smb->main_array["$folder"]["force create mode"]=$SambaDefaultFolderSettings["force_create_mode"];
+	}
+	
+	 
 	
 	if($SimpleShare){$jsToLoad="SimpleShareEnabled();";}
 	
@@ -1542,6 +1622,15 @@ var x_ChangeShareName=function (obj) {
 	
     }	
 	
+    function check_mask_lock_options(){
+    	var mask_lock_options=$mask_lock_options;
+    	if(mask_lock_options==1){
+    		document.getElementById('create_mask').disabled=true;
+    		document.getElementById('directory_mask').disabled=true;
+    		document.getElementById('force_create_mode').disabled=true;
+    	
+    	}
+    }
 	
 	
 	
@@ -1558,7 +1647,7 @@ var x_ChangeShareName=function (obj) {
 	
 	
 	$jsToLoad
-	
+	check_mask_lock_options();
 	
 </script>
 ";
@@ -2188,7 +2277,7 @@ $html="<table cellspacing='0' cellpadding='0' border='0' class='tableView' style
 		}
 			$Displayname=str_replace('"',"", $Displayname);
 			if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
-			$encoded=urlencode(base64_encode($ligne));
+			$encoded=base64_encode($ligne);
 			
 			
 			$html=$html .
@@ -2274,10 +2363,10 @@ write_list	yes
 
 $samba=new samba();
 $_POST["SaveUseridPrivileges"]=base64_decode($_POST["SaveUseridPrivileges"]);
-writelogs("save privileges for {$_POST["SaveFolderProp"]}",__FUNCTION__,__FILE__,__LINE__);
+writelogs("******** Save privileges for {$_POST["SaveFolderProp"]} {$_POST["SaveUseridPrivileges"]} *** ",__FUNCTION__,__FILE__,__LINE__);
 while (list ($a, $b) = each ($_POST) ){
 	$_POST[$a]=stripslashes($_POST[$a]);
-	writelogs("POST:  '$a' = '{$_POST[$a]}'",__FUNCTION__,__FILE__,__LINE__);
+	writelogs("******** POST:  '$a' = '{$_POST[$a]}'",__FUNCTION__,__FILE__,__LINE__);
 }
 
 
@@ -2292,7 +2381,7 @@ if($_POST["valid_users"]=="no"){
 	else{$h[$item]["valid users"]='yes';}
 	
 if($_POST["write_list"]=="no"){
-	writelogs("$item= delete write list",__FUNCTION__,__FILE__);
+	writelogs("******** $item= delete write list",__FUNCTION__,__FILE__);
 	unset($h[$item]["write list"]);}
 	else{$h[$item]["write list"]='yes';}
 
@@ -2307,14 +2396,14 @@ if($_POST["write_list"]=="no"){
 			}
 			
 		}else{
-			writelogs("no privileges array given",__FUNCTION__,__FILE__);
+			writelogs("******** No privileges array given",__FUNCTION__,__FILE__);
 		}
 if(is_array($a)){
 while (list ($c, $d) = each ($a) ){
 	$samba->main_array[$folder][$c]=implode(',',$d);
 	}
 }else{
-	writelogs("no privileges given for folder \"$folder\", delete all list privileges",__FUNCTION__,__FILE__);
+	writelogs("******** No privileges given for folder \"$folder\", delete all list privileges",__FUNCTION__,__FILE__);
 	unset($samba->main_array[$folder]["write list"]);
 	unset($samba->main_array[$folder]["valid users"]);
 	unset($samba->main_array[$folder]["read list"]);

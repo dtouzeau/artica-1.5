@@ -15,6 +15,8 @@ if(preg_match("#--force#",implode(" ",$argv))){$GLOBALS["FORCE"]=true;}
 if($argv[1]=="--patterns"){patterns();die();}
 if($argv[1]=="--sitesinfos"){fillSitesInfos();die();}
 if($argv[1]=="--groupby"){WriteCategoriesStatus();die();}
+if($argv[1]=="--import"){import();die();}
+
 
 
 
@@ -137,101 +139,8 @@ function pushit(){
 }
 
 function import(){
-	echo "Starting......: [DOWNLOAD]:: Artica database community Importing categories\n";
-	$sock=new sockets();
-	$unix=new unix();
-	$FilterCommunityMD5=unserialize(base64_decode($sock->GET_INFO("FilterCommunityMD5")));
-	$TmpfileDataMD5=$unix->FILE_TEMP();
-	$t1=time();
-	$q=new mysql();	
-	$rownum=$q->COUNT_ROWS("dansguardian_community_categories","artica_backup");
-	echo "Starting......: [DOWNLOAD]:: Artica database community (current $rownum rows)\n"; 
-
-	
-	
-		$fp = fopen ($TmpfileDataMD5, 'w+');//This is the file where we save the information
-		$ch = curl_init('http://www.artica.fr/tmp/open-webfilter.gz.md5');//Here is the file we are downloading
-		curl_setopt($ch, CURLOPT_TIMEOUT, 50);
-		curl_setopt($ch, CURLOPT_FILE, $fp);
-		curl_exec($ch);
-		curl_close($ch);
-		fclose($fp);
-		
-		
-		$remotemd5=unserialize(base64_decode(@file_get_contents($TmpfileDataMD5)));
-		
-		
-		for($i=0;$i<count($remotemd5)+1;$i++){
-			
-			$tmpfile=$unix->FILE_TEMP().".$i.gz";
-			$d1=trim($FilterCommunityMD5["open-webfilter2.$i.gz"]);
-			$d2=trim($remotemd5["open-webfilter2.$i.gz"]);
-			if($d2==null){
-				echo "Starting......: [DOWNLOAD]:: [$i] open-webfilter2.$i.gz MD5 is null aborting\n";
-				continue;
-			}
-			if($rownum>0){
-				echo "Starting......: [DOWNLOAD]:: [$i] Artica database open-webfilter2.$i.gz [$d1] [$d2]\n";
-				if($d1==$d2){
-					echo "Starting......: [DOWNLOAD]:: [$i] Artica database open-webfilter2.$i.gz (unchanged)\n";
-					continue;
-				}
-			}
-			
-			
-				
-			$fp = fopen ($tmpfile, 'w+');//This is the file where we save the information
-			echo "Starting......: [DOWNLOAD]:: Artica database downloading file N.$i....\n";
-			$ch = curl_init("http://www.artica.fr/tmp/open-webfilter2.$i.gz");//Here is the file we are downloading
-			
-			WriteMyLogs("http://www.artica.fr/tmp/open-webfilter2.$i.gz d1:$d1 d2:$d2",__FUNCTION__,__FILE__,__LINE__);
-			
-			curl_setopt($ch, CURLOPT_TIMEOUT, 50);
-			curl_setopt($ch, CURLOPT_FILE, $fp);
-			curl_exec($ch);
-			curl_close($ch);
-			fclose($fp);	
-			$size=filesize($tmpfile)/1024;
-			WriteMyLogs("[$i] Artica database community uncompress database ($size)Ko",__FUNCTION__,__FILE__,__LINE__);
-			echo "Starting......: [DOWNLOAD]:: [$i] Artica database community uncompress database ($size)Ko\n";
-			
-			
-			uncompress($tmpfile,"/tmp/FilterCommunity.$i.sql");
-			@unlink($tmpfile);
-			if(!is_file("/tmp/FilterCommunity.$i.sql")){
-				echo "Starting......: [DOWNLOAD]:: [$i] Unable to stat /tmp/FilterCommunity.$i.sql aborting\n";
-				continue;
-			}
-			if(filesize("/tmp/FilterCommunity.$i.sql")<600){
-				WriteMyLogs("FilterCommunity.$i.sql <600 aborting",__FUNCTION__,__FILE__,__LINE__);
-				continue;
-			}
-			
-			
-			$GLOBALS["NEWFILES"][]=basename($tmpfile)." -> ". round($size/1000)." Mo";
-			echo "Starting......: [DOWNLOAD]:: [$i] Artica database community file $i ". filesize("/tmp/FilterCommunity.$i.sql") ." bytes\n";
-			if(ParseGzSqlFile("/tmp/FilterCommunity.$i.sql")){
-				$NewFilterCommunityMD5["open-webfilter2.$i.gz"]=$d2;
-				$sock->SET_INFO("FilterCommunityMD5",base64_encode(serialize($NewFilterCommunityMD5)));
-			}else{
-				WriteMyLogs("/tmp/FilterCommunity.$i.gz failed to extract... ",__FUNCTION__,__FILE__,__LINE__);
-			}
-		}
-	
-	
-	$newrownum=$q->COUNT_ROWS("dansguardian_community_categories","artica_backup");
-
-	echo "Starting......: Artica database community (now is $newrownum rows)\n"; 
-	WriteMyLogs("Artica database community (now is $newrownum rows)",__FUNCTION__,__FILE__,__LINE__);
-	$sock->SET_INFO("FilterCommunityMD5",base64_encode(serialize($NewFilterCommunityMD5)));
-	$t2=time();
-	$final_rows=$newrownum-$rownum;
-	if($final_rows>0){
-		$time_duration=distanceOfTimeInWords($t1,$t2);
-		$unix->send_email_events("Web $final_rows categorized websites $time_duration", @implode("\n",$GLOBALS["NEWFILES"]),"proxy");
-		$q=new mysql();
-		$q->QUERY_SQL("OPTIMIZE table dansguardian_community_categories","artica_backup");		
-	}	
+	include_once(dirname(__FILE__)."/exec.squid.blacklists.php");
+	update();downloads();inject();
 	
 	WriteCategoriesStatus(true);
 	$unix->THREAD_COMMAND_SET("/usr/share/artica-postfix/bin/artica-update --squidguard");

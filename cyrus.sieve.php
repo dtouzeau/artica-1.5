@@ -6,6 +6,7 @@
 	include_once('ressources/class.mysql.inc');	
 	include_once('ressources/class.ini.inc');
 	include_once('ressources/class.cyrus.inc');
+	include_once('ressources/class.system.network.inc');
 
 	$users=new usersMenus();
 	if(!$users->AsPostfixAdministrator){

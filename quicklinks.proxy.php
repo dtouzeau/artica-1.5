@@ -28,6 +28,7 @@ function tabs(){
 		$users=new usersMenus();
 	
 		$array["services"]='{samba_quicklinks_services}';
+		$array["blacklist_databases"]='{blacklist_databases}';
 		if($users->KAV4PROXY_INSTALLED){
 			$array["kav4proxy"]='{APP_KAV4PROXY}';
 			
@@ -35,8 +36,15 @@ function tabs(){
 		
 		
 	while (list ($num, $ligne) = each ($array) ){
+		
 		if($num=="kav4proxy"){
 			$tab[]="<li><a href=\"kav4proxy.php?inline=yes\"><span style='font-size:14px'>$ligne</span></a></li>\n";
+			continue;
+		}
+		
+		
+		if($num=="blacklist_databases"){
+			$tab[]="<li><a href=\"squid.blacklist.php\"><span style='font-size:14px'>$ligne</span></a></li>\n";
 			continue;
 		}
 	

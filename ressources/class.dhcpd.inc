@@ -184,6 +184,8 @@ class dhcpd{
 	var $broadcast=null;
 	var $WINS=null;
 	var $noload=0;
+	var $authoritative=0;
+	var $ping_check=0;
 	
 	function dhcpd($noload=0){
 		if($noload<>0){$this->noload=$noload;return ;}
@@ -213,6 +215,10 @@ class dhcpd{
 		$this->subnet=$ini->_params["SET"]["subnet"];
 		$this->broadcast=$ini->_params["SET"]["broadcast"];
 		$this->WINS=$ini->_params["SET"]["WINS"];
+		$this->authoritative=$ini->_params["SET"]["authoritative"];
+		$this->ping_check=$ini->_params["SET"]["ping_check"];
+		if(!is_numeric($this->authoritative)){$this->authoritative=0;}
+		if(!is_numeric($this->ping_check)){$this->ping_check=1;}
 		$this->OnlySetGateway=$sock->GET_INFO("DHCPOnlySetGateway");
 		if($GLOBALS["VERBOSE"]){echo "Starting......: DHCP server DEBUG: loading OnlySetGateway = [DHCPOnlySetGateway]  $this->OnlySetGateway\n";}
 		$ip=new networking();
@@ -235,6 +241,8 @@ class dhcpd{
 	
 	function Save(){
 		if($this->noload<>0){return;}
+		if(!is_numeric($this->authoritative)){$this->authoritative=0;}
+		if(!is_numeric($this->ping_check)){$this->ping_check=1;}
 		$ini=$ini."[SET]\n";
 		$ini=$ini."ddns_domainname=$this->ddns_domainname\n";
 		$ini=$ini."max_lease_time=$this->max_lease_time\n";
@@ -253,6 +261,8 @@ class dhcpd{
 		$ini=$ini."subnet=$this->subnet\n";
 		$ini=$ini."broadcast=$this->broadcast\n";
 		$ini=$ini."WINS=$this->WINS\n";
+		$ini=$ini."authoritative=$this->authoritative\n";
+		$ini=$ini."ping_check=$this->ping_check\n";
 		
 		$sock=new sockets();
 		$sock->SaveConfigFile($ini,'ArticaDHCPSettings');
@@ -414,10 +424,21 @@ private function GetMyDNS(){
 		}
 		
 		$conf=$conf."allow unknown-clients;\n";
-		$conf=$conf."authoritative;\n";
+		if($this->authoritative==1){
+			$conf=$conf."authoritative;\n";
+		}else{
+			$conf=$conf."not authoritative;\n";
+		}
 		$conf=$conf."max-lease-time $this->max_lease_time;\n";
 		$conf=$conf."default-lease-time $this->max_lease_time;\n";
 		$conf=$conf."get-lease-hostnames true;\n";
+		
+		if($this->ping_check==1){
+			$conf=$conf."ping-check = 1;\n";
+		}else{
+			$conf=$conf."ping-check = 0;\n";
+		}
+		
 		
 
 		

@@ -392,24 +392,30 @@ $tpl=new templates();
 }
 
 function admin_index(){
-if(GET_CACHED(__FILE__,__FUNCTION__,__FUNCTION__)){return null;}
+//if(GET_CACHED(__FILE__,__FUNCTION__,__FUNCTION__)){return null;}
 	
 $page=CurrentPageName();
 	$html="
 	<table style='width:700px'>
+	<tbody>
 	<tr>
-		<td valign='top' width=50%>
+		<td valign='top' width='50%'>
 			<div id='left_status'><center><img src='img/wait_verybig.gif'></center></div>
 		</td>
-		<td valign='top' width=50%>
-			<div id='right_status'><center><img src='img/wait_verybig.gif'></center></div>		
+		<td valign='top' width='50%'>
+			<div id='right_status'><center><img src='img/wait_verybig.gif'></center></div>
+			<script>
+				LoadAjax('right_status','admin.index.php?status=right&counter=1');		
+			</script>
+					
 		</td>
 	</tr>
-</table>
-<div style='text-align:right'>". imgtootltip('32-refresh.png',"{refresh}","RefreshTab('admin_perso_tabs')")."</div>
-<script>
-LoadAjax('right_status','admin.index.php?status=right&counter=1');		
-</script>";
+	</tbody>
+	</table>
+	
+	<div style='text-align:right'>". imgtootltip('32-refresh.png',"{refresh}","RefreshTab('admin_perso_tabs')")."</div>
+
+";
 	$tpl=new templates();
 	$datas=$tpl->_ENGINE_parse_body($html);
 	echo $datas;	

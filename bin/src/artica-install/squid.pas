@@ -155,6 +155,8 @@ begin
 end;
 //##############################################################################
 function tsquid.SQUID_BIN_PATH():string;
+var
+   path:string;
 begin
 
   if FileExists('/usr/sbin/squid3')  then exit('/usr/sbin/squid3');
@@ -163,6 +165,10 @@ begin
   if FileExists('/usr/local/sbin/squid') then exit('/usr/local/sbin/squid');
   if FileExists('/sbin/squid') then exit('/sbin/squid');
   if FileExists('/opt/artica/sbin/squid') then exit('/opt/artica/sbin/squid');
+  path:=SYS.LOCATE_GENERIC_BIN('squid');
+  if FileExists(path) then exit(path);
+  path:=SYS.LOCATE_GENERIC_BIN('squid3');
+  if FileExists(path) then exit(path);
 end;
 //##############################################################################
 function tsquid.SQUIDCLIENT_BIN_PATH():string;

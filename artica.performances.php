@@ -114,7 +114,15 @@ function SaveArticaIndexPage(){
 	if(document.getElementById('DisableJGrowl').checked){XHR.appendData('DisableJGrowl',1);}else{XHR.appendData('DisableJGrowl',0);}
 	if(document.getElementById('DisableFrontEndArticaEvents').checked){XHR.appendData('DisableFrontEndArticaEvents',1);}else{XHR.appendData('DisableFrontEndArticaEvents',0);}
 	if(document.getElementById('AllowShutDownByInterface').checked){XHR.appendData('AllowShutDownByInterface',1);}else{XHR.appendData('AllowShutDownByInterface',0);}	
+	if(document.getElementById('DisableNoOrganization').checked){XHR.appendData('DisableNoOrganization',1);}else{XHR.appendData('DisableNoOrganization',0);}
+	if(document.getElementById('DisableAPTNews').checked){XHR.appendData('DisableAPTNews',1);}else{XHR.appendData('DisableAPTNews',0);}
+	if(document.getElementById('DisableWarningCalculation').checked){XHR.appendData('DisableWarningCalculation',1);}else{XHR.appendData('DisableWarningCalculation',0);}
+	if(document.getElementById('DisableFrontBrowseComputers').checked){XHR.appendData('DisableFrontBrowseComputers',1);}else{XHR.appendData('DisableFrontBrowseComputers',0);}
+	if(document.getElementById('DisableFrontArticaMeta').checked){XHR.appendData('DisableFrontArticaMeta',1);}else{XHR.appendData('DisableFrontArticaMeta',0);}
 
+	
+
+	
 	if(document.getElementById('jgrowl_no_kas_update')){
 		if(document.getElementById('jgrowl_no_kas_update').checked){
 			XHR.appendData('jgrowl_no_kas_update',1);}else{
@@ -150,6 +158,15 @@ function save_index_page(){
 	$sock->SET_INFO("DisableFrontEndArticaEvents",$_GET["DisableFrontEndArticaEvents"]);
 	$sock->SET_INFO("AllowShutDownByInterface",$_GET["AllowShutDownByInterface"]);
 	$sock->SET_INFO("jGrowlMaxEvents",$_GET["jGrowlMaxEvents"]);
+	$sock->SET_INFO("DisableNoOrganization", $_GET["DisableNoOrganization"]);
+	$sock->SET_INFO("DisableAPTNews", $_GET["DisableAPTNews"]);
+	$sock->SET_INFO("DisableWarningCalculation", $_GET["DisableWarningCalculation"]);
+	$sock->SET_INFO("DisableFrontBrowseComputers", $_GET["DisableFrontBrowseComputers"]);
+	$sock->SET_INFO("ArticaMetaRemoveIndex", $_GET["DisableFrontArticaMeta"]);
+	
+	
+	
+	
 	$sock->getFrameWork("cmd.php?refresh-frontend=yes");
 	}
 
@@ -171,6 +188,15 @@ function cron_index(){
 	$jGrowlMaxEvents=$sock->GET_INFO('jGrowlMaxEvents');
 	$DisableToolTips=$_COOKIE["DisableToolTips"];
 	$DisableHelpToolTips=$_COOKIE["DisableHelpToolTips"];
+	$DisableNoOrganization=$sock->GET_INFO('DisableNoOrganization');
+	$DisableAPTNews=$sock->GET_INFO('DisableAPTNews');
+	$DisableWarningCalculation=$sock->GET_INFO('DisableWarningCalculation');
+	$DisableFrontBrowseComputers=$sock->GET_INFO('DisableFrontBrowseComputers');
+	$DisableFrontArticaMeta=$sock->GET_INFO('ArticaMetaRemoveIndex');
+	
+	
+	
+	//no_organization
 	
 	if($DisableWarnNotif==null){$DisableWarnNotif=0;}
 	if($DisableJGrowl==null){$DisableJGrowl=0;}
@@ -185,6 +211,16 @@ function cron_index(){
 	$DisableFrontEndArticaEvents=Field_checkbox("DisableFrontEndArticaEvents",1,$DisableFrontEndArticaEvents);
 	$jgrowl_no_kas_update=Field_checkbox("jgrowl_no_kas_update",1,$jgrowl_no_kas_update);
 	$AllowShutDownByInterface=Field_checkbox("AllowShutDownByInterface",1,$AllowShutDownByInterface);
+	$DisableNoOrganization=Field_checkbox("DisableNoOrganization",1,$DisableNoOrganization);
+	$DisableAPTNews=Field_checkbox("DisableAPTNews",1,$DisableAPTNews);
+	$DisableWarningCalculation=Field_checkbox("DisableWarningCalculation",1,$DisableWarningCalculation);
+	$DisableFrontBrowseComputers=Field_checkbox("DisableFrontBrowseComputers", 1,$DisableFrontBrowseComputers);
+	$DisableFrontArticaMeta=Field_checkbox("DisableFrontArticaMeta", 1,$DisableFrontArticaMeta);
+	
+
+	
+	
+	
 	if($jGrowlMaxEvents==null){$jGrowlMaxEvents=50;}
 
 	$jgrowl_no_kas_update="	<tr>
@@ -210,36 +246,48 @@ function cron_index(){
 	}
 	
 	$html="
-	<table style='width:100%'>
-	<tr>
-	<td valign='top' width=1%><img src='img/global-settings-128.png'></td>
-	<td valign='top'>
+	<div class=explain>{frontend_disables_options_explain}</div>
 	<div id='articaschedulesdiv'>
-<table style='width:100%'>
+<table style='width:100%' class=form>
 	<tr>
 		<td class=legend>{disable}:{smtp_notification_not_saved}:</td>
 		<td valign='top'>$DisableWarnNotif</tD>
 	</tr>
-	<tr><td colspan=2 style='border-top:1px solid #005447'>&nbsp;</td></tr>
 	<tr>
 		<td class=legend>{disable}:{icon_artica_events_front_end}:</td>
 		<td valign='top'>$DisableFrontEndArticaEvents</tD>
 	</tr>
-	<tr><td colspan=2 style='border-top:1px solid #005447'>&nbsp;</td></tr>
 	<tr>
 		<td class=legend>{disable_jgrowl}:</td>
 		<td valign='top'>$DisableJGrowl</tD>
 	</tr>	
-	<tr><td colspan=2 style='border-top:1px solid #005447'>&nbsp;</td></tr>	
+	<tr>
+		<td class=legend>{disable}:{no_organization}:</td>
+		<td valign='top'>$DisableNoOrganization</tD>
+	</tr>	
+	<tr>
+		<td class=legend>{DisableAPTNews}:</td>
+		<td valign='top'>$DisableAPTNews</tD>
+	</tr>
+	<tr>
+		<td class=legend>{DisableWarningCalculation}:</td>
+		<td valign='top'>$DisableWarningCalculation</tD>
+	</tr>	
+	<tr>
+		<td class=legend>{disable}:{browse_computers}:</td>
+		<td valign='top'>$DisableFrontBrowseComputers</tD>
+	</tr>		
+	<tr>
+		<td class=legend>{disable}:{meta-console}:</td>
+		<td valign='top'>$DisableFrontArticaMeta</tD>
+	</tr>		
+		
+		 
 	<tr>
 		<td class=legend>{jGrowlMaxEvents}:</td>
 		<td valign='top'>". Field_text("jGrowlMaxEvents",$jGrowlMaxEvents,"width:30px")."</tD>
 	</tr>	
 	
-	
-	
-
-	<tr><td colspan=2 style='border-top:1px solid #005447'>&nbsp;</td></tr>
 $noclamav
 $jgrowl_no_kas_update	
 	
@@ -264,9 +312,7 @@ $jgrowl_no_kas_update
 	</tr>
 </table>
 </div>	   
-</td>
-</tr>
-</table>
+
 
 <script>
 	function DisableToolTipsSave(){

@@ -265,6 +265,8 @@ Placez dans le champs ci-dessous la liste des adresses s&eacute;par&eacute;es pa
 <ban_to_domain_ask>Interdire les utilisateurs &agrave; envoyer vers ce domaine ?</ban_to_domain_ask>
 <basic>Basique</basic>
 <bind-address>Adresse IP de crochetage</bind-address>
+<blacklists>Listes Noires</blacklists>
+<blacklist_databases>Bases cat&eacute;goris&eacute;es</blacklist_databases>
 <blacklist_global_add_explain>Mettez ici des domaines de messagerie ou des adresses (s&eacute;par&eacute;es par des retours chariots) que vous voulez interdire.[br]
 Vous pouvez indiquer les valeurs suivantes :[br]
 [b]*@domain.tld[/b] afin de bloquer tout le domaine domain.tld.[br]
@@ -369,6 +371,7 @@ domain.tld correspondant &agrave; h&ocirc;tes avec le domaine domain.tld
 <ConfirmDisableArticaWebConsole>Cette op&eacute;ration va d&eacute;sactiver le moteur Web permettant de g&eacute;n&eacute;rer la console Web Artica.
 Soyez sur que vous avez cr&eacute;er une console Web dans FreeWebs avec de valider cette action.
 D&eacute;sirez-vous continuer cette op&eacute;ration ?</ConfirmDisableArticaWebConsole>
+<confirm_reprosess_category>Reprogrammer cette cat&eacute;gorie ? pendant le processus, le serveur MySQL peut &ecirc;tre charg&eacute;</confirm_reprosess_category>
 <connected_has>Connect&eacute; en tant que</connected_has>
 <connections_filters>filtres de connexions</connections_filters>
 <connections_for>Connexions pour</connections_for>
@@ -463,6 +466,7 @@ Le contenu sera d&eacute;truit...</delete_disk_confirm>
 <dhcp-subnet-masq_text>Il est recommand&eacute; dans le cas o&ugrave; on utilise le m&ecirc;me masque de r&eacute;seau pour tout un site, d'utiliser ce param&egrave;tre dans chaque d&eacute;claration de sous-r&eacute;seau, puisqu'elle &eacute;crasera le masque de r&eacute;seau indiqu&eacute; &agrave; la d&eacute;claration du sous-r&eacute;seau.</dhcp-subnet-masq_text>
 <dhcpd_leases_explain>Cette section affiche les concessions acquises par les ordinateurs de votre r&eacute;seau.</dhcpd_leases_explain>
 <dhcpd_shared_network_explain>Cette section permet de d&eacute;finir un groupe de sous r&eacute;seaux afin d%u2019appliquer des caract&eacute;ristiques communes.</dhcpd_shared_network_explain>
+<DisableAPTNews>D&eacute;sactiver la notification de mise &agrave; jour syst&egrave;me</DisableAPTNews>
 <DisableArticaExecutorService_explain>Artica Executor est un service qui tourne en m&eacute;moire afin de programmer l'ex&eacute;cution p&eacute;riodique de certaines t&acirc;ches de maintenance. [br]
 D&eacute;sactiver cette fonctionnalit&eacute; ne va pas arr&ecirc;ter le service mais va l'ex&eacute;cuter p&eacute;riodiquement au lieu de le laisser en m&eacute;moire.[br]
 D&eacute;cocher la case: Lib&egrave;re a peu pr&egrave;s 23Mb de m&eacute;moire vive.</DisableArticaExecutorService_explain>
@@ -480,6 +484,7 @@ Cela veut dire que Artica ne prendra plus en charge les processus PowerDNS et sa
 PowerDNS ne sera pas d&eacute;sinstaller et vous serez en mesure de le maintenir et de le g&eacute;rer vous m&ecirc;me</DisablePowerDnsManagement_text>
 <DisableSambaFileSharing>D&eacute;sactiver le moteur de partage sur le r&eacute;seau</DisableSambaFileSharing>
 <disableSSLv2>D&eacute;sactiver SSLv2</disableSSLv2>
+<DisableWarningCalculation>D&eacute;sactiver le r&eacute;sumer des notifications d'alertes</DisableWarningCalculation>
 <disable_greylisting>D&eacute;sactiver le GreyListing</disable_greylisting>
 <disable_help_tooltips>D&eacute;sactiver les infos bulles d'aide en ligne</disable_help_tooltips>
 <disable_openvpn_connection>D&eacute;sactiver la connexion VPN</disable_openvpn_connection>
@@ -572,6 +577,8 @@ toutes les liens seront remplac&eacute;es par l'url que vous avez d&eacute;finit
 <ENABLE_ARTICA_SMTP_STATS>Activer le moteur de statistiques SMTP</ENABLE_ARTICA_SMTP_STATS>
 <enable_authentication>Activer l'authentification</enable_authentication>
 <enable_authentication_vpn_explain>Si activ&eacute;, le serveur va demander une authentification utilisateur/Mot de passe afin d'autoriser la liaison VPN</enable_authentication_vpn_explain>
+<enable_automask_creation>Activer AutoMask</enable_automask_creation>
+<enable_automask_creation_explain>AutomAsk S'assure que lorsque Artica v&eacute;rifie ou cr&eacute;&eacute; les r&eacute;pertoires (dossiers personnels ou dossiers partag&eacute;s) que les permissions soient affect&eacute;es.[br]Par d&eacute;faut, les permissions sur les r&eacute;pertoires partag&eacute;s sont en 0755.[br]Si vous d&eacute;sactivez cette fonctionnalit&eacute;, Artica ne v&eacute;rifiera pas les permissions dans les dossiers personnels et r&eacute;pertoires.[br]Le cas &eacute;ch&eacute;ant, vous pouvez modifier les masques utilis&eacute;s pour v&eacute;rifier les permissions.</enable_automask_creation_explain>
 <enable_body_checks>Activer la v&eacute;rification dans les messages</enable_body_checks>
 <enable_feature>Activer la fonctionnalit&eacute;</enable_feature>
 <enable_grehole>Activer le backup dynamique</enable_grehole>
@@ -606,11 +613,13 @@ toutes les liens seront remplac&eacute;es par l'url que vous avez d&eacute;finit
 <error_field_max_length>Erreur, la valeur donn&eacute;e exc&egrave;de</error_field_max_length>
 <error_please_fill_field>Erreur: Veuillez remplir le champs requis</error_please_fill_field>
 <estimate>Estimation</estimate>
+<EVENT>&Eacute;v&egrave;nement</EVENT>
 <ExecBackupDeadAfterH>Un t&acirc;che de sauvegarde est consid&eacute;r&eacute;e comme &quot;morte&quot; apr&egrave;s X heures (minimum 2)</ExecBackupDeadAfterH>
 <execute_reports_each>Ex&eacute;cuter les rapports chaque</execute_reports_each>
 <expand-hosts>Ajoute le nom de domaine aux noms simples</expand-hosts>
 <expand-hosts_text>Ajoute  le  nom  de domaine aux noms simples (ne contenant pas de point dans le nom) contenus dans le fichier /etc/hosts, de la m&ecirc;me fa&ccedil;on que pour le service DHCP. Notez que cela ne s'applique pas au nom de domaine dans les CNAME, les enregistrements PTR, TXT, etc...</expand-hosts_text>
 <external_device>Disque externe</external_device>
+<failed_uncompress>&Eacute;chec de d&eacute;compression</failed_uncompress>
 <FEDORA_TEMPLATE>Mod&egrave;le Fedora</FEDORA_TEMPLATE>
 <fileio>I/O fichier</fileio>
 <filename_pxe_explain>Peut &ecirc;tre utilis&eacute; pour sp&eacute;cifier le nom du fichier de d&eacute;marrage initial qui doit &ecirc;tre utilis&eacute; par un client.[br] Le nom de fichier doit &ecirc;tre un nom de fichier reconnaissable par tous les protocoles de transport de fichier que le client utilisera pour charger le fichier.</filename_pxe_explain>
@@ -652,6 +661,7 @@ Un mandataire direct standard est un serveur interm&eacute;diaire qui s'intercal
 <free_catgorized_explain>Placez ici du texte qui contient des liens Web.[br]Les liens doivent format&eacute;s comme ceci : http://domain.tld.com/something ou http://domain.tld.com.[br]
 Le moteur sera en charge de retrouver les liens dans le texte.Vous n'avez donc pas besoin de formater explicitement les adresses. Simplement, collez le texte avec des adresses...</free_catgorized_explain>
 <from_date>Depuis</from_date>
+<frontend_disables_options_explain>Cette section vous permet de piloter l'affichage de la page de garde administrateur</frontend_disables_options_explain>
 <ftp_directory>R&eacute;pertoire FTP</ftp_directory>
 <fw_multiples_ports_explain>C'est le ou les ports de destination.[br]Indiquez 0 pour tous les ports, vous pouvez d&eacute;finir un seul port : 22 ou de multiples ports s&eacute;par&eacute;s par une virgule : 22,25,80,443</fw_multiples_ports_explain>
 <fw_sourceaddr_explain>C'est l'adresse IP source, peut &ecirc;tre une adresse simple : 163.248.0.128 ou un r&eacute;seau de type 163.248.0.0/17</fw_sourceaddr_explain>
@@ -707,6 +717,7 @@ Cette fonctionnalit&eacute; est impl&eacute;ment&eacute;e dans la plupart des di
 <hobby-arts>Sites Web sur l'Art, peintures, collections, statues ou sculptures, galleries...</hobby-arts>
 <holdingdisk>Activer le maintient du disque</holdingdisk>
 <holdingdiskExplain>Est-ce que le maintient du disque doit &ecirc;tre r&eacute;alis&eacute; pour ce d&eacute;pot.[br]Utile pour sauvegarder le disque lui-m&ecirc;me</holdingdiskExplain>
+<HomeDirectoriesMask>Masque pour les dossiers personnels</HomeDirectoriesMask>
 <hosts_table>Table des h&ocirc;tes</hosts_table>
 <howto_ADADMIN>C'est le compte administrateur ou tout autre compte qui dispose de droits pour joindre le domaine Active Directory.[br]
 Si le compte est nomm&eacute; &quot;Administrateur&quot;, tapez ici &quot;Administrateur&quot;</howto_ADADMIN>
@@ -795,6 +806,17 @@ En mode disque, vous devrez choisir une partition qui sera le disque iSCSI parta
 <jGrowlNotifsDisabled>D&eacute;sactiver les info-bulles &agrave; droite de l'&eacute;cran</jGrowlNotifsDisabled>
 <jkMount_explain>Ajoute les directives jkMount pour les fichiers *.do,*.jsp,*.jspx,*.cfm,*.cfc,*.cfchart,*.cfres</jkMount_explain>
 <jumpto>Aller &agrave;</jumpto>
+<kav4proxy_about>Kaspersky Anti-Virus Pour Proxy assure la protection du traffic v&eacute;hicul&eacute; &agrave; travers les serveurs Proxys.[br]
+Il supporte le protocole ICAP et assure les fonctionnalit&eacute;s suivantes:[br]
+[br]
+Analyse le code virual au vol des docuemnts t&eacute;l&eacute;charg&eacute;s &agrave; travers le proxy.[br]
+R&eacute;pare les &eacute;l&eacute;ments infect&eacute;s ou bloque l'acc&egrave;s le cas &eacute;ch&eacute;ant.[br]
+Utilise la notion de groupes pouvant &ecirc;tre d&eacute;finis gr&acirc;ce aux adresses des utilisateurs ou bien aux  requ&ecirc;tes 
+.[br]
+Trace son activit&eacute; incluant les informations des analyses et les erreurs du moteur.
+.[br]
+Notifie les administrateurs des &eacute;ventuelles d&eacute;tections[br]</kav4proxy_about>
+<KAV4PROXY_KEEPUP2DATE>Processus de mise &agrave; jour</KAV4PROXY_KEEPUP2DATE>
 <KeepAlive_explain>Doit &ecirc;tre utilis&eacute; lorsque vous avez un pare-feu entre Apache httpd et le serveur d'arri&egrave;re-plan, et si ce dernier tend &agrave; interrompre les connexions inactives.[br] Cette option va faire en sorte que le syst&egrave;me d'exploitation envoie des messages KEEP_ALIVE sur chacune des connexions inactives et ainsi &eacute;viter la fermeture de la connexion par le pare-feu.</KeepAlive_explain>
 <key>Clef</key>
 <last_24h>Derni&egrave;res 24H</last_24h>
@@ -1031,6 +1053,7 @@ For example, Avaya phones are hard coded to "read" this scope option and pick up
 <password_no_match_policy>Le mot de passe ne correspond pas &agrave; la politique de mots de passe</password_no_match_policy>
 <password_policy>Politique de mot de passe</password_policy>
 <patterns_versions>Versions de signatures</patterns_versions>
+<pattern_database_version>Version des bases de donn&eacute;es</pattern_database_version>
 <pdns_listen_ip_explain>Par d&eacute;faut, Artica va essayer de d&eacute;terminer les adresses r&eacute;seaux utilis&eacute;e par votre serveur et va les transmettre au service PowerDNS.[br]Normalement, vous n'avez pas &agrave; enrichir cette liste.[br]Toutefois dans le cas ou vous d&eacute;sirez forcer le serveur DNS &agrave; n'&eacute;couter qu'une seule adresse ou vous &ecirc;tes dans un environnement VPS (OpenVPZ) o&ugrave; Artica ne peut d&eacute;tecter les adresses r&eacute;seaux, vous allez devoir indiquer quelles sont les adresses que le serveur DNS doit &eacute;couter.</pdns_listen_ip_explain>
 <perform_mysql_check>Lancer une v&eacute;rification MySQL sur cette table ?</perform_mysql_check>
 <permissions>Permissions</permissions>
@@ -1245,6 +1268,7 @@ Ce serveur est en charge de recevoir les messages provenant de ce domaine et de 
 <repquota_explain>Ceci est la liste des quotas d&eacute;finis dans vos partitions.[br]
 Notez que seulement les utilisateurs qui effectu&eacute;s des d&eacute;p&ocirc;ts de fichiers sont visibles.[br]
 Ne vous inqui&eacute;tez pas de ne pas visualiser vos utilisateurs apr&egrave;s avoir d&eacute;fini des quotas.[br]Vous devrez attendre qu'ils d&eacute;posent au moins un fichier dans une des partitions.</repquota_explain>
+<reprocess>R&eacute;-ex&eacute;cuter</reprocess>
 <reprocess_queues_text>Choquer toutes les files d'attentes de Postfix afin de le forcer &agrave; renvoyer tous les messages stock&eacute;s.</reprocess_queues_text>
 <request_from>Requ&ecirc;te source</request_from>
 <require>requi&egrave;re</require>
@@ -1300,7 +1324,7 @@ Indiquez ici le chmod du r&eacute;pertoire</samba_directory_mask_text>
 <samba_quicklinks_services>Modules et services</samba_quicklinks_services>
 <SAMBA_REMOTE_ANNOUNCE_EXPLAIN>Cette section peut &ecirc;tre utilis&eacute;e afin de s'assurer que tous les noms NetBIOS sur un r&eacute;seau seront annonc&eacute;s &agrave; un r&eacute;seau distant.</SAMBA_REMOTE_ANNOUNCE_EXPLAIN>
 <SAMBA_REMOTE_ANNOUNCE_EXPLAIN_FIELD>Vous pouvez ajouter des adresses IP comme 192.168.12.23 ou 192.168.1.255.[br]192.168.1.255 est soit l'adresse IP, soit  l'adresse de diffusion LMB du r&eacute;seau distant, le LMB est 192.168.12.23, ou l'adresse qui pourrait &ecirc;tre donn&eacute;e comme 192.168.1.255 o&ugrave; le masque est suppos&eacute; &ecirc;tre 255.255.255.0[br] Lorsque l'annonce envoy&eacute;e vers l'adresse de broadcast du r&eacute;seau distant, chaque h&ocirc;te recevra les annonces. C'est une op&eacute;ration bruyante sur le r&eacute;seau, mais peut &ecirc;tre n&eacute;cessaire si l'on ne conna&icirc;t pas l'adresse IP de serveur LMB. la valeur DOMAINE est facultatif (le groupe de travail) et peut &ecirc;tre soit le groupe de travail local ou de celui du r&eacute;seau distant. [br] Si vous utilisez le nom du groupe du r&eacute;seau distant, les noms de machine NetBIOS finiront par ressembler &agrave; leur appartenance au groupe de travail local. [br] Cela peut causer des probl&egrave;mes de r&eacute;solution de nom et doit &ecirc;tre &eacute;vit&eacute;.</SAMBA_REMOTE_ANNOUNCE_EXPLAIN_FIELD>
-<samba_strict_allocate>Comportement de stockage de blocs Windows</samba_strict_allocate>
+<samba_strict_allocate>Stockage de blocs Windows</samba_strict_allocate>
 <samba_strict_allocate_text>contr&ocirc;le la gestion de l'allocation d'espace disque sur le serveur. [br]
 Lorsque ce param&egrave;tre est activ&eacute;,le serveur va changer de comportement UNIX afin de ne pas commettre de r&eacute;els blocs de stockage sur disque quand un fichier
 est &eacute;tendu via un comportement Windows. Ce comportement force le disque syst&egrave;me &agrave; allouer des blocs de m&eacute;moire r&eacute;els quand un fichier
@@ -1324,6 +1348,7 @@ Avec WINS, un administrateur peut d&eacute;signer une seule machine agissant com
 En cons&eacute;quence, l'enregistrement de noms et les r&eacute;solutions de machines peuvent &ecirc;tre adress&eacute;es &agrave; une seule machine &agrave; partir de n'importe quel point du r&eacute;seau,
 au lieu d'effectuer un broadcast continuel.</samba_wins_explain>
 <sa_debug>Mode Verbeux: Spamassassin</sa_debug>
+<sa_timeout>Timeout du plugin Spamassassin</sa_timeout>
 <search_byous>Rechercher par organisation</search_byous>
 <SecFilterCheckUnicodeEncoding>Validation de l'encodage unicode</SecFilterCheckUnicodeEncoding>
 <SecFilterCheckURLEncoding>V&eacute;rifie des caract&egrave;res sp&eacute;ciaux encod&eacute;s</SecFilterCheckURLEncoding>
@@ -1395,6 +1420,7 @@ est plein sans que de  l'espace puisse &ecirc;tre lib&eacute;r&eacute; a cause d
 <set_lg_regionmax_text>D&eacute;finit la taille de la zone sous-jacente l'exploitation de log de l'environnement Berkeley DB. [br]
 Par d&eacute;faut, ou si la valeur est d&eacute;finie &agrave; 0, la taille minimum est utilis&eacute; &agrave; environ 128Ko. [br]
 La r&eacute;gion de log est utilis&eacute; pour le stockage des noms de fichiers, il est peut donc n&eacute;cessaire d'augmenter la taille si un grand nombre de fichiers doivent &ecirc;tre ouverts et enregistr&eacute;s avec le gestionnaire de log Berkeley DB</set_lg_regionmax_text>
+<SharedFoldersDefaultMask>Masque pour les dossiers partag&eacute;s</SharedFoldersDefaultMask>
 <share_access>Acc&egrave;s au partage</share_access>
 <sharing_behavior>services de partage</sharing_behavior>
 <SimpleWords_explain>Cette section vous aide &agrave; simplement ajouter des mots et phrases.[br]Les r&egrave;gles ajout&eacute;es vont forcer le serveur de messagerie &agrave; v&eacute;rifier ces mots dans le corps et le sujet de chaque message qui transite par ce serveur.[br]
@@ -1437,6 +1463,8 @@ D&eacute;finissez l'&eacute;metteur et les destinataires (s&eacute;par&eacute;s 
 <Spin_Retry_Count_text>Nombre de mises en rotation forc&eacute;e du disque</Spin_Retry_Count_text>
 <Spin_Up_Time>Temps de rotation</Spin_Up_Time>
 <Spin_Up_Time_text>Temps de mise en rotation du disque</Spin_Up_Time_text>
+<sql_error_retry>Erreur SQL (t&acirc;che reprogramm&eacute;e)</sql_error_retry>
+<squid_blk_explain>Cette section repr&eacute;sente l'&eacute;tat des mises &agrave; jour des bases de donn&eacute;es des sites web cat&eacute;goris&eacute;s.[br]Ces mises &agrave; jour sont importantes car elles vont conditionner les statistiques de navigation et le processus de filtrage web.</squid_blk_explain>
 <SQUID_STATS>Statistiques du proxy cache Squid</SQUID_STATS>
 <SQUID_STATS_TEXT>La Zone de statistiques Squid est une console web permettant de visualiser des graphiques et statistiques sur l'utilisation Web des utilisateurs et les cat&eacute;gories des sites web.</SQUID_STATS_TEXT>
 <srv_clamav.MaxFileSize>Taille MAX d'un fichier</srv_clamav.MaxFileSize>
@@ -1511,12 +1539,14 @@ Lorsque la p&eacute;riode de gr&acirc;ce &agrave; expir&eacute;e, les utilisateu
 [b]Les bases ufdbguard[/b]: Ce sont des bases propri&eacute;taires et payantes (environ 9.000.000 d'entr&eacute;es). Contactez le support Artica si vous d&eacute;sirez les obtenir.[br]</ufdbgdb_explain>
 <ufdbguard_simple_intro>ufdbGuard est filtre web qui utilise des cat&eacute;gories pour filtrer les acc&egrave;s &agrave; Internet.[br]Il est tr&egrave;s rapide avec une performance de 50,000 URL v&eacute;rifi&eacute;es par seconde sur un seul processeur</ufdbguard_simple_intro>
 <UNABLE_TO_OBTAIN_INFORMATIONS_FROM>Incapacit&eacute; d'obtenir des informations avec</UNABLE_TO_OBTAIN_INFORMATIONS_FROM>
+<uncompress>D&eacute;compression</uncompress>
 <unfreeze>D&eacute;geler le syst&egrave;me.</unfreeze>
 <unix_permissions>Permissions Unix</unix_permissions>
 <unlimited>illimit&eacute;</unlimited>
 <UPDATED>Mis &agrave; jour le</UPDATED>
 <updated_on>Mise &agrave; jour &agrave;</updated_on>
 <UPDATE_DEBIAN_TEMPLATE_TEXT>T&eacute;l&eacute;charger le mod&egrave;le Debian i386.[br]Ceci requi&egrave;re 350Mo d'espace disque.</UPDATE_DEBIAN_TEMPLATE_TEXT>
+<update_events_text>Afficher les &eacute;v&egrave;nements li&eacute;s au processus de mise &agrave; jour</update_events_text>
 <UPDATE_FEDORA_TEMPLATE_TEXT>T&eacute;l&eacute;chargement du mod&egrave;le Fedora i386, requi&egrave;re 690Mb d'espace disponible.</UPDATE_FEDORA_TEMPLATE_TEXT>
 <UPDATE_LXC_TEMPLATE_PERFOMED>La t&acirc;che d'installation/Mise &agrave; jour est ex&eacute;cut&eacute;e en t&acirc;che de fond,
 Cela peut prendre du temps.. Tout d&eacute;pend de votre bande passante Internet.</UPDATE_LXC_TEMPLATE_PERFOMED>

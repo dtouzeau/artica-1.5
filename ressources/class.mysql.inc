@@ -122,7 +122,15 @@ class mysql{
 			return false;
 		}
 		if($GLOBALS["VERBOSE"]){echo "mysql_connect($this->mysql_server:$this->mysql_port,$this->mysql_admin,$this->mysql_password)\n";}
-		$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
+		
+		if(($this->mysql_server=="localhost") OR ($this->mysql_server=="127.0.0.1")){
+			$bd=@mysql_connect(":/var/run/mysqld/mysqld.sock",$this->mysql_admin,$this->mysql_password);
+		}else{
+			$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
+		}
+		
+		
+		
 		if(!$bd){
 			if(function_exists("debug_backtrace")){
 					try {
@@ -202,7 +210,11 @@ function writelogs($text=null,$function=null,$line=0){
 	}
 	
 	function REPAIR_TABLES($database){
-		$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
+		if(($this->mysql_server=="localhost") OR ($this->mysql_server=="127.0.0.1")){
+			$bd=@mysql_connect(":/var/run/mysqld/mysqld.sock",$this->mysql_admin,$this->mysql_password);
+		}else{
+			$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
+		}
   	 	$mysql_result = mysql_query("SHOW TABLES;",$bd);
  		while ($ligne = mysql_fetch_row($mysql_result)){
  			$table_name=$ligne[0];
@@ -238,7 +250,11 @@ function writelogs($text=null,$function=null,$line=0){
 	}
 	
 	public function EXECUTE_SQL($sql){
-		$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
+		if(($this->mysql_server=="localhost") OR ($this->mysql_server=="127.0.0.1")){
+			$bd=@mysql_connect(":/var/run/mysqld/mysqld.sock",$this->mysql_admin,$this->mysql_password);
+		}else{
+			$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
+		}
 		if(!$bd){
 			$errnum=mysql_error();
 	    	$this->mysql_error=mysql_error();
@@ -262,7 +278,11 @@ function writelogs($text=null,$function=null,$line=0){
 	
 	
 	public function SET_NAMES_UTF8(){
-		$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
+		if(($this->mysql_server=="localhost") OR ($this->mysql_server=="127.0.0.1")){
+			$bd=@mysql_connect(":/var/run/mysqld/mysqld.sock",$this->mysql_admin,$this->mysql_password);
+		}else{
+			$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
+		}
 		@mysql_query("SET NAMES UTF8");
 		
 		
@@ -361,8 +381,14 @@ function writelogs($text=null,$function=null,$line=0){
 		
 		$MYSQLpassword=$this->mysql_password;
 		if(strlen($MYSQLpassword)==0){writelogs("mysql password is null",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
-
-		$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$MYSQLpassword);
+		
+		if(($this->mysql_server=="localhost") OR ($this->mysql_server=="127.0.0.1")){
+			$bd=@mysql_connect(":/var/run/mysqld/mysqld.sock",$this->mysql_admin,$this->mysql_password);
+		}else{
+			$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
+		}
+		
+		
 			
 		$this->mysql_connection=$bd;
 		if($database<>null){
@@ -663,7 +689,11 @@ function BackupTable($tablename,$database,$addons=array(),$zmd5=false,$endquery=
 	}
 	
 	function DELETE_USER_INMYSQL($user){
-		$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
+		if(($this->mysql_server=="localhost") OR ($this->mysql_server=="127.0.0.1")){
+			$bd=@mysql_connect(":/var/run/mysqld/mysqld.sock",$this->mysql_admin,$this->mysql_password);
+		}else{
+			$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
+		}
 		$this->mysql_connection=$bd;
 		if(!$bd){return;}
 	    $results=@mysql_query("DROP USER '$user'@'localhost';");
@@ -767,7 +797,11 @@ function BackupTable($tablename,$database,$addons=array(),$zmd5=false,$endquery=
 			if($_SESSION["MYSQL_DATABASE_EXISTS"][$database]==true){return true;}
 		}
 		$sql="SHOW DATABASES";
-		$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
+		if(($this->mysql_server=="localhost") OR ($this->mysql_server=="127.0.0.1")){
+			$bd=@mysql_connect(":/var/run/mysqld/mysqld.sock",$this->mysql_admin,$this->mysql_password);
+		}else{
+			$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
+		}
 		$results=@mysql_query($sql);
 		while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
 			if(strtolower($database)==strtolower($ligne["Database"])){
@@ -848,7 +882,11 @@ function BackupTable($tablename,$database,$addons=array(),$zmd5=false,$endquery=
 
 	function SHOW_VARIABLES(){
 		$sql="SHOW VARIABLES;";
-		$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
+			if(($this->mysql_server=="localhost") OR ($this->mysql_server=="127.0.0.1")){
+			$bd=@mysql_connect(":/var/run/mysqld/mysqld.sock",$this->mysql_admin,$this->mysql_password);
+		}else{
+			$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
+		}
 	if(!$bd){
     		$errnum=mysql_error();
     		$des=mysql_error();
@@ -870,7 +908,11 @@ function BackupTable($tablename,$database,$addons=array(),$zmd5=false,$endquery=
 		
 	function SET_VARIABLES($key,$value){
 		
-		$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
+	if(($this->mysql_server=="localhost") OR ($this->mysql_server=="127.0.0.1")){
+			$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
+		}else{
+			$bd=@mysql_connect(":/var/run/mysqld/mysqld.sock",$this->mysql_admin,$this->mysql_password);
+		}
 		if(!$bd){
     		$errnum=mysql_error();
     		$des=mysql_error();
@@ -886,7 +928,11 @@ function BackupTable($tablename,$database,$addons=array(),$zmd5=false,$endquery=
 		
 	function DATABASE_LIST(){
 		$sql="SHOW DATABASES";
-		$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
+		if(($this->mysql_server=="localhost") OR ($this->mysql_server=="127.0.0.1")){
+			$bd=@mysql_connect(":/var/run/mysqld/mysqld.sock",$this->mysql_admin,$this->mysql_password);
+		}else{
+			$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
+		}
 		
 		if(!$bd){
     		$errnum=mysql_error();
@@ -937,7 +983,11 @@ function BackupTable($tablename,$database,$addons=array(),$zmd5=false,$endquery=
 	
 	
 	function mysql_real_escape_string2($query){
-		$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
+	if(($this->mysql_server=="localhost") OR ($this->mysql_server=="127.0.0.1")){
+			$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
+		}else{
+			$bd=@mysql_connect(":/var/run/mysqld/mysqld.sock",$this->mysql_admin,$this->mysql_password);
+		}
 		return mysql_real_escape_string($query,$bd);
 	}
 	
@@ -951,7 +1001,11 @@ function BackupTable($tablename,$database,$addons=array(),$zmd5=false,$endquery=
 			$this->ok=true;
 			return true;
 		}}
-		$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
+		if(($this->mysql_server=="localhost") OR ($this->mysql_server=="127.0.0.1")){
+			$bd=@mysql_connect(":/var/run/mysqld/mysqld.sock",$this->mysql_admin,$this->mysql_password);
+		}else{
+			$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
+		}
 		writelogs("CREATE DATABASE $database",__CLASS__,__FILE__,__FILE__,__LINE__);
 		if(!$bd){
     		$des=mysql_error();
@@ -989,14 +1043,22 @@ function BackupTable($tablename,$database,$addons=array(),$zmd5=false,$endquery=
 	
 	FUNCTION CHECK_PERFORMANCES(){
 		if(!function_exists("mysql_connect")){return 0;}
-		$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
+			if(($this->mysql_server=="localhost") OR ($this->mysql_server=="127.0.0.1")){
+			$bd=@mysql_connect(":/var/run/mysqld/mysqld.sock",$this->mysql_admin,$this->mysql_password);
+		}else{
+			$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
+		}
 		$results=@mysql_query("SELECT benchmark(100000000,1+2);");
 	}
 	
 	FUNCTION DELETE_DATABASE($database){
 		if(!function_exists("mysql_connect")){return 0;}
 		writelogs("DELETE DATABASE $database",__CLASS__,__FILE__,__FILE__,__LINE__);
-		$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
+			if(($this->mysql_server=="localhost") OR ($this->mysql_server=="127.0.0.1")){
+			$bd=@mysql_connect(":/var/run/mysqld/mysqld.sock",$this->mysql_admin,$this->mysql_password);
+		}else{
+			$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
+		}
 		$results=@mysql_query("DROP DATABASE `$database`");	
 	}
 	

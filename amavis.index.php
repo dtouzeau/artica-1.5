@@ -755,7 +755,6 @@ $sock=new sockets();
 $milter=Paragraphe_switch_img('{enable_backup}','{enable_backup_amavis_text}','EnableAmavisBackup',$sock->GET_INFO("EnableAmavisBackup"),'{enable_disable}',290);
 
 	$html="
-	<H1>{backupemail_behavior}</H1>
 	<table style='width:100%'>
 	<tr>
 
@@ -780,8 +779,7 @@ function trustlocal_popup(){
 	$amavis=new amavis();
 	$loopback=Paragraphe_switch_img('{trust_local}','{trust_local_explain}','TrustLocalHost',$amavis->main_array["NETWORK"]["TrustLocalHost"],'{enable_disable}',290);
 	$html="
-	<H1>{trust_local}</H1>
-	<p class=caption>{trust_local_text}</p>
+	<div class=explain>{trust_local_text}</p>
 	<table style='width:100%'>
 	<tr>
 
@@ -964,7 +962,7 @@ $html="
 <div id='amavisspamassassin'>
 	<form name='FFM_filterbehavior_popup'>
 	<input type='hidden' name='INI_SAVE' value='BEHAVIORS' id='INI_SAVE'>
-	<p style='font-size:14px'>{spamassassin_text}</p>
+	<div class=explain>{spamassassin_text}</div>
 	<table style='width:100%'>	
 		<tr>
 			<td class=legend nowrap>{replicate_all_domains}:</td>
@@ -1015,6 +1013,13 @@ $html="
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 		</tr>	
+		<tr>
+			<td class=legend nowrap>{sa_timeout}:</td>
+			<td>&nbsp;</td>
+			<td width=1%>". Field_text('sa_timeout',$amavis->main_array["BEHAVIORS"]["sa_timeout"],'width:60px')."&nbsp;<span style='font-size:13px'>{seconds}</span></td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>		
 		
 	<tr>
 		<td colspan=5 align='right'>
@@ -1056,14 +1061,7 @@ function notification_popup(){
 	</div>
 		<script>
 				$(document).ready(function(){
-					$('#main_amavis_notifications').tabs({
-				    load: function(event, ui) {
-				        $('a', ui.panel).click(function() {
-				            $(ui.panel).load(this.href);
-				            return false;
-				        });
-				    }
-				});
+					$('#main_amavis_notifications').tabs();
 			
 			
 			});

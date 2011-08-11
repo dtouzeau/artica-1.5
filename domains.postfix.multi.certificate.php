@@ -3,6 +3,7 @@
 	include_once('ressources/class.ldap.inc');
 	include_once('ressources/class.users.menus.inc');
 	include_once('ressources/class.maincf.multi.inc');
+	include_once('ressources/class.ssl.certificate.inc');
 	if(isset($_GET["org"])){$_GET["ou"]=$_GET["org"];}
 	
 	if(!PostFixMultiVerifyRights()){
