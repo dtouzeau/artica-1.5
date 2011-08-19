@@ -59,6 +59,7 @@ function start_js(){
 	$sock=new sockets();
 	$logon_parameters=unserialize(base64_decode($sock->GET_INFO("LogonPageSettings")));
 	if($logon_parameters["LANGUAGE_SELECTOR_REMOVE"]==null){$logon_parameters["LANGUAGE_SELECTOR_REMOVE"]="0";}	
+	if(!is_numeric($logon_parameters["LANGUAGE_SELECTOR_REMOVE"])){$logon_parameters["LANGUAGE_SELECTOR_REMOVE"]=0;}
 	if($logon_parameters["DEFAULT_LANGUAGE"]==null){$logon_parameters["DEFAULT_LANGUAGE"]="en";}	
 
 
@@ -101,11 +102,17 @@ var x_SendLogonStart=function(obj){
 	
 	function SendLogonStart(){
 		var XHR = new XHRConnection();
+		var LANGUAGE_SELECTOR_REMOVE={$logon_parameters["LANGUAGE_SELECTOR_REMOVE"]};
 		XHR.appendData('artica_username',document.getElementById('artica_username').value);
 		XHR.appendData('artica_password',escape(document.getElementById('artica_password').value));
 		Set_Cookie('mem-logon-user', document.getElementById('artica_username').value, '3600', '/', '', '');
-		XHR.appendData('lang',document.getElementById('lang').value);
-		document.getElementById('anim').innerHTML='<img src=img/wait.gif>';
+		if(LANGUAGE_SELECTOR_REMOVE==1){
+			XHR.appendData('lang',document.getElementById('lang').value);
+			Set_Cookie('artica-language', '{$logon_parameters["DEFAULT_LANGUAGE"]}', '3600', '/', '', '');
+		}else{
+			XHR.appendData('lang','{$logon_parameters["DEFAULT_LANGUAGE"]}');
+		}
+		AnimateDiv('anim');
 		XHR.sendAndLoad('$page', 'POST',x_SendLogonStart);
 		
 	}
@@ -140,7 +147,7 @@ $user=new usersMenus();
 if($user->SQUID_INSTALLED){
 	$sock=new sockets();
 	$SQUIDEnable=trim($sock->GET_INFO("SQUIDEnable"));
-	if($SQUIDEnable==null){$SQUIDEnable=1;}
+	if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
 	if($SQUIDEnable==0){$user->SQUID_INSTALLED=false;}
 }
 
@@ -173,7 +180,8 @@ if(trim($persologon)<>null){
 }
 	
 if($user->KASPERSKY_SMTP_APPLIANCE){$imglogon="img/logon-k.png";}
-if($user->KASPERSKY_WEB_APPLIANCE){$imglogon="img/logon-squidk.png";}
+//if($user->KASPERSKY_WEB_APPLIANCE){$imglogon="img/logon-squidk.png";}
+if($user->KASPERSKY_WEB_APPLIANCE){$imglogon="img/logo-artica-kav.png";}
 if($user->ZARAFA_APPLIANCE){$imglogon="img/logon-zarafa.png";}
 if($user->OPENVPN_APPLIANCE){$imglogon="img/logo-openvpn.png";}
 $page=CurrentPageName();
@@ -199,19 +207,32 @@ error_log("-> CheckAutousers  ". __FILE__. " line ". __LINE__);
 if(!CheckAutousers()){$newacc=null;}
 
 	if($user->KASPERSKY_WEB_APPLIANCE){
-		$GLOBALS["CHANGE_TEMPLATE"]="squid.kav.html";
-		$imglogon=null;
-		$addedlogo="<div style='float:left;margin-left:-190px;width:537px;height:474px;background-image:url(/img/bg_kavweb-appliance.jpg);background-position:left top;'></div>";
+		//$GLOBALS["CHANGE_TEMPLATE"]="squid.kav.html";
+		//$imglogon=null;
+		//$addedlogo="<div style='float:left;margin-left:-190px;width:537px;height:474px;background-image:url(/img/bg_kavweb-appliance.jpg);background-position:left top;'></div>";
 		//
 	}
 
 if($imglogon<>null){$imglogon="background-image:url($imglogon);";}
 $logonForm=logonForm();
+
+	$sock=new sockets();
+	$logon_parameters=unserialize(base64_decode($sock->GET_INFO("LogonPageSettings")));
+	if($logon_parameters["LANGUAGE_SELECTOR_REMOVE"]==null){$logon_parameters["LANGUAGE_SELECTOR_REMOVE"]="0";}	
+	if(!is_numeric($logon_parameters["LANGUAGE_SELECTOR_REMOVE"])){$logon_parameters["LANGUAGE_SELECTOR_REMOVE"]=0;}
+	if($logon_parameters["DEFAULT_LANGUAGE"]==null){$logon_parameters["DEFAULT_LANGUAGE"]="en";}
+
+
 $html="
 <script>
 function SaveSession(){
+	var LANGUAGE_SELECTOR_REMOVE={$logon_parameters["LANGUAGE_SELECTOR_REMOVE"]};
 	var template=document.getElementById('template').value;
-	var lang=document.getElementById('lang').value;
+	if(LANGUAGE_SELECTOR_REMOVE==0){
+		var lang=document.getElementById('lang').value;
+	}else{
+		var lang='{$logon_parameters["DEFAULT_LANGUAGE"]}';
+	}
 	Set_Cookie('artica-template', template, '3600', '/', '', '');
 	Set_Cookie('artica-language', lang, '3600', '/', '', '');
 	var XHR = new XHRConnection();
@@ -258,12 +279,14 @@ function logonForm(){
 	$_SESSION["DisableSSHControl"]=trim($sock->GET_INFO("DisableSSHControl"));
 	$AllowInternetUsersCreateOrg=$sock->GET_INFO("AllowInternetUsersCreateOrg");
 	$AddInArticaLogonFrontPage=$sock->GET_INFO("AddInArticaLogonFrontPage");
-	
+	$FileCookyKey=md5($_SERVER["REMOTE_ADDR"].$_SERVER["HTTP_USER_AGENT"]);
+	$FileCookyLang=$sock->GET_INFO($FileCookyKey);
 	
 	
 	$html=new htmltools_inc();
 	$lang=$html->LanguageArray();
-	
+	$MEM_LANG=$_COOKIE["artica-language"];
+	if($MEM_LANG==null){$MEM_LANG=$FileCookyLang;}
 	
 	
 	if($_GET["MEM_USERNAME"]==null){
@@ -273,14 +296,14 @@ function logonForm(){
 	}
 	
 	
-	if($_COOKIE["artica-language"]==null){
+	if($MEM_LANG==null){
 		$languageClass=new articaLang();
 		$defaultlanguage=$languageClass->get_languages();
 		if($defaultlanguage=="pt"){$defaultlanguage="po";}
 		if($lang[$defaultlanguage]==null){$defaultlanguage="en";}
 		setcookie("artica-language", $defaultlanguage, time()+172800);
-	
-	}else{$defaultlanguage=$_COOKIE["artica-language"];}
+		$sock->SET_INFO($FileCookyKey, $defaultlanguage);
+	}else{$defaultlanguage=$MEM_LANG;}
 	
 	
 	
@@ -306,14 +329,14 @@ function logonForm(){
 		$_SESSION["detected_lang"]=$_GET["DEFAULT_LANGUAGE"];
 		unset($_SESSION["translation"]);
 		setcookie("artica-language", $_GET["DEFAULT_LANGUAGE"], time()+172800);			
-			
+		$sock->SET_INFO($FileCookyKey, $_GET["DEFAULT_LANGUAGE"]);	
 	}
 		
 
 $contour_color="#005447";
 	if($users->KASPERSKY_WEB_APPLIANCE){
-		$GLOBALS["CHANGE_TEMPLATE"]="squid.kav.html";
-		$contour_color="#EB6947";
+		//$GLOBALS["CHANGE_TEMPLATE"]="squid.kav.html";
+		//$contour_color="#EB6947";
 		//bg_kavweb-appliance.jpg
 	}
 	
@@ -505,19 +528,25 @@ function LDAP_FORM(){
 
 function applyLang(){
 	session_start();
+	$sock=new sockets();
 	$_SESSION["detected_lang"]=$_POST["Changelang"];
 	unset($_SESSION["translation"]);
 	setcookie("artica-language", $_POST["Changelang"], time()+172800);
+	$FileCookyKey=md5($_SERVER["REMOTE_ADDR"].$_SERVER["HTTP_USER_AGENT"]);
+	$sock->SET_INFO($FileCookyKey, $_POST["Changelang"]);
+	
 }
 
 
 function logon(){
 	include("ressources/settings.inc");
-	
+	$sock=new sockets();
 	$_POST["artica_password"]=url_decode_special($_POST["artica_password"]);
 	writelogs("Testing logon....{$_POST["artica_username"]}",__FUNCTION__,__FILE__,__LINE__);
 	writelogs("Testing logon.... password:{$_POST["artica_password"]}",__FUNCTION__,__FILE__,__LINE__);	
 	$_COOKIE["artica-language"]=$_POST["lang"];
+	$FileCookyKey=md5($_SERVER["REMOTE_ADDR"].$_SERVER["HTTP_USER_AGENT"]);
+	$sock->SET_INFO($FileCookyKey, $_POST["Changelang"]);
 	
 	$socks=new sockets();
 	if(!$socks->TestArticaPort()){
@@ -846,10 +875,10 @@ function buildPage(){
 	
 	if($users->KASPERSKY_WEB_APPLIANCE){
 		
-		$GLOBALS["CHANGE_TEMPLATE"]="squid.kav.html";
-		$logo_bg="bg_header_kavweb.gif";
-		$logo="logo-kavweb.gif";
-		$bg_color="#FFB683";
+		//$GLOBALS["CHANGE_TEMPLATE"]="squid.kav.html";
+		//$logo_bg="bg_header_kavweb.gif";
+		$logo="kaspersky-logo.png";
+		//$bg_color="#FFB683";
 	}
 	
 	

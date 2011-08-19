@@ -20,10 +20,13 @@ if(posix_getuid()<>0){die("Cannot be used in web server mode\n\n");}
 		write_syslog("want to change spamassassin settings but not installed",__FILE__);
 		die();
 	}
+	if($argv[1]=='--sa-update'){sa_update();die();}
+	
 	
 	if(!is_file($user->spamassassin_conf_path)){
 		write_syslog("want to change spamassassin settings but could not stat main configuration file",__FILE__);
 	}
+	if($argv[1]=='--sa-update-check'){sa_update_check();die();}
 	
 	x_headers();
 	x_bounce();
@@ -35,6 +38,7 @@ if(posix_getuid()<>0){die("Cannot be used in web server mode\n\n");}
 	if($argv[1]=='--trusted'){TrustedNetworks();amavis_reload();die();}
 	if($argv[1]=='--whitelist'){SaveConf();amavis_reload();die();}
 	if($argv[1]=='--spam-tests'){SpamTests($argv[2]);die();}
+	
 	
 echo "Starting......: spamassassin starting building configuration\n";	
 SaveConf();
@@ -1779,6 +1783,64 @@ function _SpamTestsPerformSpamassassin($ID){
 		if(!$q->ok){echo $q->mysql_error;}
 	}
 
+}
+
+function sa_update_check(){
+	$unix=new unix();
+	$saupdate=$unix->find_program("sa-update");
+	if(!is_file($saupdate)){return null;}
+	$statusFile="/usr/share/artica-postfix/ressources/logs/sa-update-status.html";
+	$statusFileContent="/usr/share/artica-postfix/ressources/logs/sa-update-status.txt";
+	$timefile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".time";
+	if(!$GLOBALS["FORCE"]){if($unix->file_time_min($timefile)<120){return;}}
+	@file_put_contents($timefile, time());
+	@unlink($statusFile);
+	$cmd="$saupdate --checkonly -D 2>&1";
+	exec($cmd,$results);
+	if($GLOBALS["VERBOSE"]){echo "$cmd ". count($results). " rows\n";}
+	while (list ($index, $line) = each ($results)){
+		
+		if(preg_match("#channel:\s+(.+?):\s+update available#", $line,$re)){
+			if($GLOBALS["VERBOSE"]){echo "Spamassassin update available :{$re[1]}\n";}
+			$p=Paragraphe("64-spam-infos.png", "{UPDATE_SA_UPDATE}", "{$re[1]}<br>{SPAMASSASSIN_UPDATE_AVAILABLE_TEXT}",
+			"javascript:Loadjs('sa.update.php')",null,300,80);
+			$unix->send_email_events("Spamassassin update available :{$re[1]}", "There is some SpamAssassin available updates,
+			you need to run the update in order to improve Spamassassin detection rate\n".@implode("\n", $results), "postfix");
+			@file_put_contents($statusFile, $p);
+			@file_put_contents($statusFileContent, @implode("\n", $results));	
+			shell_exec("/bin/chmod 777 $statusFile");
+			shell_exec("/bin/chmod 777 $statusFileContent");	
+			return;
+		}
+		
+		
+		
+		
+	}
+	
+	@file_put_contents($statusFileContent, @implode("\n", $results));
+	shell_exec("/bin/chmod 777 $statusFileContent");	
+	
+	
+}
+
+function sa_update(){
+	$unix=new unix();
+	$saupdate=$unix->find_program("sa-update");
+	if(!is_file($saupdate)){return null;}
+	$statusFileContent="/usr/share/artica-postfix/ressources/logs/sa-update-status.txt";	
+	$statusFile="/usr/share/artica-postfix/ressources/logs/sa-update-status.html";
+	$cmd="$saupdate --nogpg -D >$statusFileContent 2>&1";
+	shell_exec($cmd);
+	shell_exec("/bin/chmod 777 $statusFileContent");
+	$f=explode("\n", $statusFileContent);
+	while (list ($index, $line) = each ($f)){
+		if(preg_match("updates complete, exiting with code 0", $line)){
+			$unix->send_email_events("Spamassassin success update databases", @implode("\n", $f), "postfix");
+			@unlink($statusFile);
+		}
+		
+	}
 }
 
 

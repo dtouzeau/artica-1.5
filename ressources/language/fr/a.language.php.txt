@@ -74,6 +74,7 @@ S&eacute;par&eacute;s les num&eacute;ros de ports par un espace: 465 665 9000</A
 <all_files>Tous les fichiers</all_files>
 <all_informations>Toutes les informations</all_informations>
 <all_messages>Tous les messages</all_messages>
+<already_exists>Existe d&eacute;j&agrave;</already_exists>
 <already_used>D&eacute;j&agrave; utilis&eacute;</already_used>
 <AmandaComprateExplain>Doit &ecirc;tre 1 ou 2 nombres, optionnellement s&eacute;par&eacute;s par une virgule.[br]
 Le premier nombre et le taux compression complet alors que le deuxi&egrave;me est le taux d'incr&eacute;mentation.[br]Si le deuxi&egrave;me nombre n'est pas indiqu&eacute;, il sera alors calcul&eacute; comme &eacute;gale au premier.[br]</AmandaComprateExplain>
@@ -126,11 +127,9 @@ Si un sous-processus prend X% du CPU et que sont temps d'ex&eacute;cution d&eacu
 <ApacheDisableModDavFS>D&eacute;sactiver le service WebDAV</ApacheDisableModDavFS>
 <ApacheKeepAlive>D&eacute;finit si votre serveur autorisera des connexions persistantes (c'est-&agrave;-dire plusieurs demandes par connexion). Cette option peut &ecirc;tre utilis&eacute;e pour emp&ecirc;cher tout client de consommer trop de ressources du serveur.[br]
 Par d&eacute;faut, la valeur est d&eacute;finie sur Off, ce qui signifie que votre serveur n'autorise pas les connexions persistantes.[br] Vous pouvez la d&eacute;finir sur on, ce qui active les connexions persistantes. Dans la plupart des cas, il est pr&eacute;f&eacute;rable de laisser KeepAlive sur Off car Apache ne peut avoir qu'un nombre limit&eacute; de processus fils et ces processus vagabonderaient sans rien faire dans l'attente d'une connexion future possible du m&ecirc;me client.[br] Si vous activez cette option, vous devriez tenir la valeur de Keep Alive Timeout basse et contr&ocirc;ler votre fichier d'erreur du serveur qui vous indique s'il vous manque des processus fils pour traiter les requ&ecirc;tes.</ApacheKeepAlive>
-<ApacheKeepAliveTimeout>The number of seconds Apache will wait for a subsequent request before closing the connection.[br]
-Once a request has been received, the timeout value specified by the Timeout directive applies.[br]
-Setting to a high value may cause performance problems in heavily loaded servers.[br]
-The higher the timeout, the more server processes will be kept occupied waiting on connections with idle clients
-</ApacheKeepAliveTimeout>
+<ApacheKeepAliveTimeout>Le nombre de secondes Apache va attendre une r&eacute;ponse avant de fermer la connexion.[br]
+Le compteur tourne &agrave; la r&eacute;ception de la requ&ecirc;te.[br]Mettre une valeur haute risque de d&eacute;grader les performances.[br]
+Plus le serveur attend, plus il va cr&eacute;er des processus afin de se pr&eacute;parer aux autres requ&ecirc;tes.</ApacheKeepAliveTimeout>
 <ApacheMaxClients>D&eacute;finit une limite au nombre total de processus serveur (c'est-&agrave;-dire le nombre de clients connect&eacute;s simultan&eacute;ment) pouvant s'ex&eacute;cuter en m&ecirc;me temps.[br]Conservez une valeur &eacute;lev&eacute;e  (par d&eacute;faut, la valeur du serveur est r&eacute;gl&eacute;e sur 150) car personne d'autre ne sera autoris&eacute; &agrave; se connecter une fois ce nombre atteint.[br] Vous ne pouvez pas d&eacute;finir une valeur sup&eacute;rieure &agrave; 256 sans recompiler Apache.[br] Sa principale raison d'&ecirc;tre est d'&eacute;viter qu'un serveur Web surcharg&eacute; ne perturbe votre syst&egrave;me d'exploitation.</ApacheMaxClients>
 <ApacheMaxKeepAliveRequests>Cette directive d&eacute;finit le nombre maximum de demandes autoris&eacute;es par connexion persistante. Le groupe Apache recommande d'utiliser un param&eacute;trage &eacute;lev&eacute;, qui am&eacute;liorera les performances de votre serveur. Par d&eacute;faut, elle est param&eacute;tr&eacute;e sur 100, ce qui convient dans la plupart des cas.</ApacheMaxKeepAliveRequests>
 <ApacheMaxRequestsPerChild>D&eacute;finit le nombre total de demandes que chaque processus serveur fils sert avant de dispara&icirc;tre.[br] La principale raison justifiant de d&eacute;finir cette valeur consiste &agrave; &eacute;viter des pertes de m&eacute;moire induites par les processus longs. La valeur par d&eacute;faut pour votre serveur est 1000.</ApacheMaxRequestsPerChild>
@@ -172,6 +171,7 @@ Patientez quelques secondes et rafra&icirc;chissez cette page.</apply_network_co
 <APP_IETD>Service iSCSI</APP_IETD>
 <APP_IPTACCOUNT>Statistiques TCP/IP</APP_IPTACCOUNT>
 <APP_IPTACOUNT_EXPLAIN>les Statistiques TCP/IP vous permet d'obtenir des informations sur le trafique re&ccedil;u, travers&eacute; ou achemin&eacute; en fonction de simples r&egrave;gles .</APP_IPTACOUNT_EXPLAIN>
+<APP_KAV4PROXY_INTRO>Administrer votre moteur antivirus ICAP pour Proxy</APP_KAV4PROXY_INTRO>
 <APP_LXC>Conteneurs LXC</APP_LXC>
 <APP_LXC_TEXT>Cr&eacute;ez et administrez des serveurs virtuels gr&acirc;ce &agrave; l'utilisation de technologie Linux Containers</APP_LXC_TEXT>
 <APP_MSKTUTIL>keytab client for MS Active Directory</APP_MSKTUTIL>
@@ -180,6 +180,8 @@ Patientez quelques secondes et rafra&icirc;chissez cette page.</apply_network_co
 <APP_OPENEMM>Service OpenEMM</APP_OPENEMM>
 <APP_OPENEMM_SENDMAIL>SendMail pour OpenEMM</APP_OPENEMM_SENDMAIL>
 <APP_PDNS_INSTANCE>PowerDNS (Instance)</APP_PDNS_INSTANCE>
+<APP_PIWIK>Piwik</APP_PIWIK>
+<APP_PIWIK_TEXT>Piwik est un logiciel d'analyse Web en temps r&eacute;el . Il vous fournit des rapports d&eacute;taill&eacute;s sur les visiteurs de votre site Web: moteur de recherche et mots cl&eacute;s utilis&eacute;s, leurs langues, vos pages les plus populaires%u2026 et bien plus encore.</APP_PIWIK_TEXT>
 <APP_POSTFWD2>R&egrave;gles de d&eacute;l&eacute;gation</APP_POSTFWD2>
 <APP_POSTFWD2_TEXT>Policy Delegation est une sorte de pare-feu qui vous autorise &agrave; d&eacute;finir des r&egrave;gles permettant de limiter les flux de messagerie</APP_POSTFWD2_TEXT>
 <APP_POWERADMIN>PowerAdmin</APP_POWERADMIN>
@@ -199,6 +201,7 @@ Les deux machines doivent pouvoir se r&eacute;soudre avec leur nom complet.[br]V
 Un reboot peut aussi aider.[br]
 Pour Windows 2008, v&eacute;rifiez que le [b]Hotfix 951191[/b] soit appliqu&eacute;.</APP_SQUIDKERAUTH_TEXT_REF>
 <APP_TOMCAT>Service Web Tomcat</APP_TOMCAT>
+<APP_ZARAFA6>Serveur Zarafa 6.x</APP_ZARAFA6>
 <APP_ZARAFA_INDEXER>Indexation Zarafa</APP_ZARAFA_INDEXER>
 <APP_Z_PUSH>Z-Push</APP_Z_PUSH>
 <APP_Z_PUSH_TEXT>Le logiciel Z-Push autorise les utilisateurs de t&eacute;l&eacute;phones mobiles intelligents &agrave; synchroniser leurs messages, contacts, calendriers et t&acirc;ches avec un serveur Zarafa via une connexion UMTS, GPRS, Wifi ou GSM</APP_Z_PUSH_TEXT>
@@ -219,6 +222,9 @@ Augmenter cette valeur va r&eacute;duire la charge du processeur mais augmenter 
 <ARTICA_MINIADM>Interface Administrateurs/Utilisateurs</ARTICA_MINIADM>
 <ARTICA_MINIADM_TEXT>Interface Web pour les utilisateurs et les Administrateurs des organisations</ARTICA_MINIADM_TEXT>
 <artica_optimize_explain>Cette section va vous permettre d'optimiser votre serveur afin qu'il puisse correspondre au mieux &agrave; vos attentes.[br]par d&eacute;faut, Artica vous offre un maximum de fonctionnalit&eacute;s sur votre serveur.[br]Mais celles-ci consomme de la ressource..[br]Ici, quelques astuces pour lib&eacute;rer de la m&eacute;moire.</artica_optimize_explain>
+<ARTICA_P_SUPPORT>Contrat de support</ARTICA_P_SUPPORT>
+<ARTICA_P_SUPPORT_TEXT>Le contrat de support Artica assure les serveurs Artica utilis&eacute;s en production pour des entreprises.[br]Il inclut un support professionnel par eMail ou par t&eacute;l&eacute;phone en un minimum de temps de r&eacute;ponse. [br]En fonction du contrat de support il vous permet d'influer sur les calendriers de d&eacute;veloppements.[br]
+Cliquez sur le lien ci-dessous afin d'obtenir de plus amples renseignements et d'obtenir un devis personnalis&eacute;.</ARTICA_P_SUPPORT_TEXT>
 <ARTICA_REGISTER_OU>Formulaire d'enregistrement d'organisation</ARTICA_REGISTER_OU>
 <ARTICA_REGISTER_OU_TEXT>C'est un formulaire d'enregistrement qui autorise les clients &agrave; s'enregistrer automatiquement afin de cr&eacute;er une nouvelle organisation.</ARTICA_REGISTER_OU_TEXT>
 <ARTICA_SMTP_STATS_EXPLAIN>Le moteur de statistiques Artica est une fonctionnalit&eacute; qui fournit des graphiques, historiques et analyses sur le flux SMTP Postfix.[br]Des fonctionnalit&eacute;s en d&eacute;pendent comme VIPTrack.[br]
@@ -236,6 +242,10 @@ En effet, si vous utilisez Artica comme un serveur de messagerie uniquement pour
 <at_least_one_special_letter>Au minimum une lettre sp&eacute;ciale</at_least_one_special_letter>
 <at_least_one_upper_case_letter>Au minimum une lettre majuscule</at_least_one_upper_case_letter>
 <authentication_banner>Banni&egrave;re d'authentification</authentication_banner>
+<authoritative>Autorit&eacute;</authoritative>
+<authoritativeDHCP_explain>Normalement le serveur serveur DHCP supposera que les informations de configuration d'un segment de r&eacute;seau donn&eacute; sont correctes et font autorit&eacute;.[br] Aussi si un client demande une adresse IP sur un segment de r&eacute;seau que le serveur sait &ecirc;tre invalide pour ce segment, le serveur r&eacute;pondra par un message DHCPNAK, provoquant chez le client l'abandon de son adresse IP et la demande d'une nouvelle.
+[br]
+Si un serveur DHCP est en train d'&ecirc;tre configur&eacute; par quelqu'un d'autre que l'administrateur r&eacute;seau et qui par cons&eacute;quent ne souhaite pas endosser ce niveau d'autorit&eacute;, alors l'instruction alors cette option devra &ecirc;tre d&eacute;sactiv&eacute;e.</authoritativeDHCP_explain>
 <auth_mechanism>M&eacute;canismes d'authentification</auth_mechanism>
 <autofs_about>Automount ou AutoFS est une solution afin de connecter des r&eacute;pertoires distants automatiquement.[br]
 L'avantage d'utiliser ce service est que les connections s'effectuent uniquement &agrave; la demande.[br]
@@ -352,12 +362,15 @@ domain.tld correspondant &agrave; h&ocirc;tes avec le domaine domain.tld
 <check_size_limit>Limite par taille.</check_size_limit>
 <child_ttl>Dur&eacute;e de vie</child_ttl>
 <chroot>chroot</chroot>
+<CLAMAV_DISABLE_EXPLAIN>Le d&eacute;mon antivirus Clamav est install&eacute; et activ&eacute; par d&eacute;faut.[br]Lorsqu'il fonctionne, il consomme environ [b]50 &agrave; 150 MB de m&eacute;moire.[br]SI vous utilisez ce serveur avec des services qui ne requi&egrave;re pas d'antivirus (comme un serveur Web ou DNS) vous devriez d&eacute;sactiver cette option afin de lib&eacute;rer de la m&eacute;moire.</CLAMAV_DISABLE_EXPLAIN>
 <clean_datas>Nettoyer les donn&eacute;es</clean_datas>
 <click_here>Cliquez ici</click_here>
 <clients>Clients</clients>
 <clients_restrictions>Restrictions sur les h&ocirc;tes clients</clients_restrictions>
 <client_address>Adresse du Client</client_address>
 <client_name>Nom du client</client_name>
+<client_ntlmv2_auth>Utiliser NTLMv2</client_ntlmv2_auth>
+<client_ntlmv2_auth_explain>Indique si le client samba/Winbind doit essayer de s'authentifier en utilisant le syst&egrave;me de r&eacute;ponse par mot de passe chiffr&eacute; NTLMv2.[br]Incompatible avec les syst&egrave;mes Microsoft NT4 ou Win9x</client_ntlmv2_auth_explain>
 <compilation_schedule>Programmation de la compilation</compilation_schedule>
 <compilation_schedule_text>Programmez la re-compilation des bases afin de les mettre &agrave; jour.</compilation_schedule_text>
 <compile_missing_db>Compiler les DB manquantes</compile_missing_db>
@@ -371,6 +384,9 @@ domain.tld correspondant &agrave; h&ocirc;tes avec le domaine domain.tld
 <ConfirmDisableArticaWebConsole>Cette op&eacute;ration va d&eacute;sactiver le moteur Web permettant de g&eacute;n&eacute;rer la console Web Artica.
 Soyez sur que vous avez cr&eacute;er une console Web dans FreeWebs avec de valider cette action.
 D&eacute;sirez-vous continuer cette op&eacute;ration ?</ConfirmDisableArticaWebConsole>
+<confirm_remove_zarafa_db>Cette op&eacute;ration va supprimer la base de donn&eacute;es et en cr&eacute;er une nouvelle.[br]
+Les donn&eacute;es seront d&eacute;finitivement d&eacute;truites.
+Voulez-vous proc&eacute;der &agrave; cette op&eacute;ration ?</confirm_remove_zarafa_db>
 <confirm_reprosess_category>Reprogrammer cette cat&eacute;gorie ? pendant le processus, le serveur MySQL peut &ecirc;tre charg&eacute;</confirm_reprosess_category>
 <connected_has>Connect&eacute; en tant que</connected_has>
 <connections_filters>filtres de connexions</connections_filters>
@@ -435,6 +451,7 @@ Sp&eacute;cifiez l'une des formes suivantes:
 retour continu. La valeur doit &ecirc;tre dans l'intervalle 0 .. 1 inclus. Le r&eacute;glage par d&eacute;faut de &laquo;1 &raquo;.
 [br] [b] Nombre Nombre / [/ b]
 [br] [b] le num&eacute;ro  / nb &eacute;missions [/ b] Le nombre doit &ecirc;tre dans l'intervalle 0 .. 1 inclus. Avec un nombre &eacute;gal &agrave; &quot;1&quot;, la concurrence de livraison d'une destination est incr&eacute;ment&eacute; de 1 apr&egrave;s chaque succ&egrave;s pseudo-cohorte.</default_destination_concurrency_positive_feedback_text>
+<default_settings>Param&egrave;tres par d&eacute;faut</default_settings>
 <DEFAULT_THEME>Th&egrave;me par d&eacute;faut</DEFAULT_THEME>
 <default_website>Site web par d&eacute;faut</default_website>
 <defer_text>Retarde la requ&ecirc;te. [br]Le client est pri&eacute; de r&eacute;essayer plus tard. Cette restriction est pratique en fin de liste de restrictions pour rendre explicite la politique par d&eacute;faut</defer_text>
@@ -466,6 +483,9 @@ Le contenu sera d&eacute;truit...</delete_disk_confirm>
 <dhcp-subnet-masq_text>Il est recommand&eacute; dans le cas o&ugrave; on utilise le m&ecirc;me masque de r&eacute;seau pour tout un site, d'utiliser ce param&egrave;tre dans chaque d&eacute;claration de sous-r&eacute;seau, puisqu'elle &eacute;crasera le masque de r&eacute;seau indiqu&eacute; &agrave; la d&eacute;claration du sous-r&eacute;seau.</dhcp-subnet-masq_text>
 <dhcpd_leases_explain>Cette section affiche les concessions acquises par les ordinateurs de votre r&eacute;seau.</dhcpd_leases_explain>
 <dhcpd_shared_network_explain>Cette section permet de d&eacute;finir un groupe de sous r&eacute;seaux afin d%u2019appliquer des caract&eacute;ristiques communes.</dhcpd_shared_network_explain>
+<DHCPPing_check>Tester si l'adresse existe d&eacute;j&agrave;</DHCPPing_check>
+<DHCPPing_check_explain>Lorsque le serveur DHCP doit allouer une adresse &agrave; un client, il effectue un ping &agrave; l'adresse qui doit &ecirc;tre assign&eacute;e.[br]Il attend une seconde et si aucune r&eacute;ponse n'est donn&eacute;e l'adresse est alors offerte au client.[br]
+Si un &eacute;l&eacute;ment r&eacute;pond au ping, l'adresse est annul&eacute;e et le serveur ne r&eacute;pond pas au client.</DHCPPing_check_explain>
 <DisableAPTNews>D&eacute;sactiver la notification de mise &agrave; jour syst&egrave;me</DisableAPTNews>
 <DisableArticaExecutorService_explain>Artica Executor est un service qui tourne en m&eacute;moire afin de programmer l'ex&eacute;cution p&eacute;riodique de certaines t&acirc;ches de maintenance. [br]
 D&eacute;sactiver cette fonctionnalit&eacute; ne va pas arr&ecirc;ter le service mais va l'ex&eacute;cuter p&eacute;riodiquement au lieu de le laisser en m&eacute;moire.[br]
@@ -555,6 +575,9 @@ Si la r&eacute;solution est un succ&egrave;s, le param&egrave;tre sera chang&eac
 <EnableDNSMASQLDAPDB>Utiliser la base LDAP</EnableDNSMASQLDAPDB>
 <EnableDNSMASQLDAPDB_explain>Par d&eacute;faut, Artica utilise un fichier plat afin de stocker les adresses &agrave; r&eacute;soudre.[br]Vous pouvez utiliser la base LDAP en activant cette option.[[br]Ceci a pour but de r&eacute;unir les deux bases entre elles.[br]Cette option est int&eacute;ressante si vous d&eacute;sirez passer du service DNS PowerDNS (avec LDAP) au service DNSMasq et vis-versa.</EnableDNSMASQLDAPDB_explain>
 <EnableDNSMASQ_explain>Si activ&eacute;, toutes les requ&ecirc;tes syst&egrave;me passeront &agrave; travers DNSMasq en lieu et place des DNS enregistr&eacute;s dans le syst&egrave;me.</EnableDNSMASQ_explain>
+<EnableFreeWebInLeftMenuText>Si vous passez cette fonction en rouge, FreeWebs ne sera pas affich&eacute; dans le menu de gauche.[br]Aussi le centre d'installation n'affichera pas aussi la possibilit&eacute; d'installer des applications web</EnableFreeWebInLeftMenuText>
+<EnableGroupWareScreen>Afficher l'option groupware dans les organisations.</EnableGroupWareScreen>
+<EnableGroupWareScreenText>Vous pouvez cacher ou afficher la section groupware dans chaque organisation.[br]Artica Groupware est une fonctionnalit&eacute; destin&eacute;e &agrave; mourir car elle sera supplant&eacute;e par FreeWebs.[br]Pour des raisons sp&eacute;cifiques, cette fonctionnalit&eacute; est encore maintenue.</EnableGroupWareScreenText>
 <EnableISCSI>Activer le service iSCSI</EnableISCSI>
 <EnableLDAPAmavis>Autoriser des configurations multiples via LDAP</EnableLDAPAmavis>
 <EnableLDAPAmavis_explain>Si activ&eacute;, vous serez en mesure de sp&eacute;cifier des param&egrave;tres du filtre de contenu par domaine ou par utilisateur.[br]
@@ -706,6 +729,7 @@ Nombre maximum d'adresses autoris&eacute;es dans un en-t&ecirc;te de message. Le
 <health>Sant&eacute;</health>
 <HELO_ADDRESS>Adresse dans le HELO</HELO_ADDRESS>
 <HELO_SERVERNAME>Nom de l'&eacute;metteur dans le HELO</HELO_SERVERNAME>
+<hide_this_information>Cacher cette information.</hide_this_information>
 <High_Fly_Writes>&Eacute;critures en vol&eacute;e</High_Fly_Writes>
 <High_Fly_Writes_text>Les fabricants de disques durs mettre en %u0153uvre un contr&ocirc;leur de hauteur de survol (Fly Height Monitor) qui tente de fournir des protections suppl&eacute;mentaires pour
 les op&eacute;rations d'&eacute;criture en d&eacute;tectant si une t&ecirc;te d'enregistrement survole un champ situ&eacute; en dehors de son champ de fonctionnement normal. [br]
@@ -806,6 +830,8 @@ En mode disque, vous devrez choisir une partition qui sera le disque iSCSI parta
 <jGrowlNotifsDisabled>D&eacute;sactiver les info-bulles &agrave; droite de l'&eacute;cran</jGrowlNotifsDisabled>
 <jkMount_explain>Ajoute les directives jkMount pour les fichiers *.do,*.jsp,*.jspx,*.cfm,*.cfc,*.cfchart,*.cfres</jkMount_explain>
 <jumpto>Aller &agrave;</jumpto>
+<kaspersky_antivirus_connector>Connecteur ICAP Kaspersky</kaspersky_antivirus_connector>
+<kaspersky_antivirus_connector_text>Connecter le proxy &agrave; un serveur Kaspersky Anti-Virus distant.</kaspersky_antivirus_connector_text>
 <kav4proxy_about>Kaspersky Anti-Virus Pour Proxy assure la protection du traffic v&eacute;hicul&eacute; &agrave; travers les serveurs Proxys.[br]
 Il supporte le protocole ICAP et assure les fonctionnalit&eacute;s suivantes:[br]
 [br]
@@ -817,6 +843,33 @@ Trace son activit&eacute; incluant les informations des analyses et les erreurs 
 .[br]
 Notifie les administrateurs des &eacute;ventuelles d&eacute;tections[br]</kav4proxy_about>
 <KAV4PROXY_KEEPUP2DATE>Processus de mise &agrave; jour</KAV4PROXY_KEEPUP2DATE>
+<kav4_clean_traffic>Trafic sain MB</kav4_clean_traffic>
+<kav4_clean_traffic_text>Volume total du traffic sain (MB)</kav4_clean_traffic_text>
+<kav4_engine_errors>engine errors</kav4_engine_errors>
+<kav4_engine_errors_text>Number of errors which occurred during the anti-virus kernel operation.</kav4_engine_errors_text>
+<kav4_error_requests>Requ&ecirc;tes en erreur</kav4_error_requests>
+<kav4_error_requests_text>Le nombre de requ&ecirc;tes dont les objets retourn&eacute;s ont caus&eacute;s des erreurs d'analyses.</kav4_error_requests_text>
+<kav4_idle_processes>Processus inactifs</kav4_idle_processes>
+<kav4_idle_processes_text>Le nombre de processus inactifs et en attente de requ&ecirc;tes.</kav4_idle_processes_text>
+<kav4_infected_requests>Requ&ecirc;tes infect&eacute;es</kav4_infected_requests>
+<kav4_infected_requests_text>Le nombre de requ&ecirc;tes infect&eacute;es ou suspectes ou qui ressemblent &agrave; des virus connus.</kav4_infected_requests_text>
+<kav4_infected_traffic>Trafic infect&eacute; MB</kav4_infected_traffic>
+<kav4_infected_traffic_text>Le volume total du trafic infect&eacute; (MB)</kav4_infected_traffic_text>
+<kav4_processed_traffic>Trafic analys&eacute; MB</kav4_processed_traffic>
+<kav4_processed_traffic_text>Volume total du trafic analys&eacute;, incluant aussi le trafic utilis&eacute; pour les communications internes entre processus. (MB)</kav4_processed_traffic_text>
+<kav4_protected_requests>Requ&ecirc;tes chiffr&eacute;es</kav4_protected_requests>
+<kav4_protected_requests_text>Nombre d'objets chiffr&eacute;s ou prot&eacute;g&eacute;s par un mot de passe qui entrainent une annulation de l'analyse.</kav4_protected_requests_text>
+<kav4_requests_per_min>Requ&ecirc;tes ICAP/Mn</kav4_requests_per_min>
+<kav4_requests_per_min_text>Moyenne des connexions ICAP par minute</kav4_requests_per_min_text>
+<kav4_total_connections>Connexions ICAP</kav4_total_connections>
+<kav4_total_connections_text>Le nombre de connexions ICAP actives.</kav4_total_connections_text>
+<kav4_total_processes>Processus</kav4_total_processes>
+<kav4_total_processes_text>Nombre de processus en cours de fonctionnement</kav4_total_processes_text>
+<kav4_total_requests>Requ&ecirc;tes total</kav4_total_requests>
+<kav4_total_requests_text>Nombre total d'objets analys&eacute;s</kav4_total_requests_text>
+<kav4_traffic_per_min>MB/Mn</kav4_traffic_per_min>
+<kav4_traffic_per_min_text>Moyenne MB par minute</kav4_traffic_per_min_text>
+<kavicap_remote_explain>Cette fonctionnalit&eacute; vous permet de lier votre proxy &agrave; un autre serveur qui h&eacute;berge l'application Kaspersky Antivirus For Proxy server afin d'analyser les virus dans le flux web r&eacute;cup&eacute;r&eacute; par vos utilisateurs.[br]Indiquez ici l'adresse IP et le port d'&eacute;coute du service ICAP Kaspersky.</kavicap_remote_explain>
 <KeepAlive_explain>Doit &ecirc;tre utilis&eacute; lorsque vous avez un pare-feu entre Apache httpd et le serveur d'arri&egrave;re-plan, et si ce dernier tend &agrave; interrompre les connexions inactives.[br] Cette option va faire en sorte que le syst&egrave;me d'exploitation envoie des messages KEEP_ALIVE sur chacune des connexions inactives et ainsi &eacute;viter la fermeture de la connexion par le pare-feu.</KeepAlive_explain>
 <key>Clef</key>
 <last_24h>Derni&egrave;res 24H</last_24h>
@@ -832,6 +885,7 @@ Notifie les administrateurs des &eacute;ventuelles d&eacute;tections[br]</kav4pr
 <LimitRequestFields>Nombre d'ent&ecirc;tes (champs)</LimitRequestFields>
 <limit_memory>Limiter la m&eacute;moire &agrave;</limit_memory>
 <limit_swap>Limiter la m&eacute;moire SWAP &agrave;</limit_swap>
+<link>Lien</link>
 <load_balancer>R&eacute;partition de charge</load_balancer>
 <load_balancer_instances_explain>Cette section vous permet d'activer une r&eacute;partition de charger pour vos instances SMTP.[br]
 Dans ce cas, vous devrez faire pointer les clients de messagerie vers ce instance de r&eacute;partition.[br]
@@ -888,6 +942,7 @@ Les organisations ne pourront que cr&eacute;er des sous-domaines de ces domaines
 <manage_your_vpn_client_connection_text>Administrer la connexion VPN cliente vers le serveur OpenVPN.</manage_your_vpn_client_connection_text>
 <mapi_ip>Adresse locale MAPI</mapi_ip>
 <mapi_port>Port d'&eacute;coute MAPI</mapi_port>
+<mask_lock_options>Verrouiller ces options uniquement &agrave; ces valeurs</mask_lock_options>
 <matches>Correspond</matches>
 <matchesnot>Ne correspond pas</matchesnot>
 <MaxClients>Clients connect&eacute;s simultan&eacute;ment MAX</MaxClients>
@@ -967,6 +1022,8 @@ Voici l'erreur qui &agrave; &eacute;t&eacute; g&eacute;n&eacute;r&eacute;e penda
 <NoDryReboot_explain>Si des probl&egrave;mes de disque durs sont d&eacute;tect&eacute;s, Artica va red&eacute;marrer le serveur.[br]Activer cette option interdit &agrave; Artica d'op&eacute;rer de la sorte.</NoDryReboot_explain>
 <NoGatewayForVirtualNetWork>Pas de passerelle pour les adresses virtuelles</NoGatewayForVirtualNetWork>
 <NoGatewayForVirtualNetWorkExplain>La passerelle est d&eacute;sactiv&eacute;e pour les interfaces virtuelles</NoGatewayForVirtualNetWorkExplain>
+<NoOutOfMemoryReboot>Ne pas red&eacute;marrer en cas de surcharge m&eacute;moire</NoOutOfMemoryReboot>
+<NoOutOfMemoryReboot_explain>Lorsque la m&eacute;moire physique est en sur-capacit&eacute;, le noyau essaye de survivre en tuant les processus en surcharge.[br]SI ce comportement est d&eacute;tect&eacute;, Artica red&eacute;marre automatiquement la machine.[br]Activer cette option interdit Artica d'op&eacute;rer &agrave; un red&eacute;marrage syst&egrave;me.</NoOutOfMemoryReboot_explain>
 <noteq>N'est pas &eacute;gale</noteq>
 <notify_class>Quels incidents rapporter au postmaster</notify_class>
 <notify_class_2bounce>non-livraison lui-m&ecirc;me non livrable</notify_class_2bounce>
@@ -996,6 +1053,7 @@ SI vous indiquez un domaine local et recevez un email pour ce domaine, le messag
 Utilisez la seconde option &quot;Domaines relais&quot;.</no_backendmailbox_installed_explain>
 <NO_FEATURE_AMAVIS_NOT_ENABLED>Le filtre de contenu Amavisd-new n'est [b]pas activ&eacute;[/b].[br]Cette fonctionnalit&eacute; n'est pas disponible.[br]Contactez votre administrateur pour l'activer.</NO_FEATURE_AMAVIS_NOT_ENABLED>
 <NO_FEATURE_AMAVIS_NOT_INSTALLED>Le filtre de contenu Amavisd-new n'est [b]pas install&eacute;[/b].[br]Cette fonctionnalit&eacute; n'est pas disponible.[br]Contactez votre administrateur pour l'activer.</NO_FEATURE_AMAVIS_NOT_INSTALLED>
+<no_info>Aucune information ajout&eacute;e</no_info>
 <NO_RELAY_TO_THIS_SERVER_EXPLAIN>Op&eacute;ration non permise.
 Un domaine relay&eacute; ne peut &ecirc;tre achemin&eacute; vers ce serveur (lui-m&ecirc;me).
 Utilisez l'autre option (domaine local) dans ce contexte.</NO_RELAY_TO_THIS_SERVER_EXPLAIN>
@@ -1262,6 +1320,8 @@ Config Tr&egrave;s basse: vous lib&egrave;rera 320Mb.[br]</Reduce_mysql_explain>
 Ce serveur est en charge de recevoir les messages provenant de ce domaine et de les r&eacute;-acheminer vers un nouveau serveur.[br]Le nouveau serveur pourra &ecirc;tre le serveur final de bo&icirc;tes aux lettres</relaydomain_explain>
 <remote_clients>Clients distants</remote_clients>
 <remote_directory>R&eacute;pertoire distant</remote_directory>
+<REMOVE_DATABASE>Supprimer la base de donn&eacute;es</REMOVE_DATABASE>
+<REMOVE_DATABASE_ZARAFA_TEXT>Supprimer la base de donn&eacute;es actuelle, incluant toutes les donn&eacute;es et en reconstruire une autre</REMOVE_DATABASE_ZARAFA_TEXT>
 <Reported_Uncorrect>Erreurs incorrigibles</Reported_Uncorrect>
 <Reported_Uncorrect_text>Nombre des erreurs qui n'ont pu &ecirc;tre r&eacute;cup&eacute;r&eacute;es en utilisant l'ECC mat&eacute;riel</Reported_Uncorrect_text>
 <reports_generated_check_postmaster_mail>Les rapports sont g&eacute;n&eacute;r&eacute;s en t&acirc;che de fond. V&eacute;rifiez votre bo&icirc;te aux lettres d&eacute;finie dans les param&egrave;tres de notification.</reports_generated_check_postmaster_mail>
@@ -1301,6 +1361,7 @@ Ne vous inqui&eacute;tez pas de ne pas visualiser vos utilisateurs apr&egrave;s 
 <root_password_not_changed>Modifier le mot de passe root</root_password_not_changed>
 <root_password_not_changed_text>il est recommand&eacute; de modifier le mot de passe du compte root.[br]Le compte root permet d'acc&eacute;der au serveur &agrave; travers SSH ou via la console afin d'op&eacute;rer des t&acirc;ches syst&egrave;mes.</root_password_not_changed_text>
 <run_every_day>Ex&eacute;cuter chaque</run_every_day>
+<run_update_now>T&eacute;l&eacute;charger les mises &agrave; jour maintenant</run_update_now>
 <SambaActAsWins>Agir en tant que serveur WINS</SambaActAsWins>
 <SambaActAsWins_explain>Ce serveur est le serveur WINS</SambaActAsWins_explain>
 <SAMBAD_NOT_IP_IN_SRVNAME>L'utilisation d'une adresse IP n'est pas autoris&eacute;e
@@ -1315,6 +1376,7 @@ Artica sauvegardera cette adresse dans le fichiers h&ocirc;tes afin de le r&eacu
 <samba_aliases_virtual_ip>Indique au serveur virtuel d'utiliser exclusivement cette adresse IP.[b]Attention si vous utilisez cette fonctionnalit&eacute;, tous les autres serveurs virtuels ainsi que le service principal devront utiliser la m&ecirc;me fonctionnalit&eacute;.[/b]</samba_aliases_virtual_ip>
 <samba_create_mask>Masque de cr&eacute;ation</samba_create_mask>
 <samba_create_mask_text>Lorsqu'un fichier est cr&eacute;&eacute;, les permissions sont calcul&eacute;es en relation avec les droits UNIX, indiquez ici le chmod de cr&eacute;ation.</samba_create_mask_text>
+<samba_default_settings_explain>Cette section propose des param&egrave;tres par d&eacute;faut lorsque vous ajoutez un nouveau r&eacute;pertoire partag&eacute;.[br]Dans ce cas, lorsque vous ajoutez un nouveau dossier partag&eacute;, vous n'avez pas &agrave; revenir sur les &eacute;l&eacute;ments suivants &agrave; chaque fois.</samba_default_settings_explain>
 <samba_directory_mask>Masque de r&eacute;pertoire</samba_directory_mask>
 <samba_directory_mask_text>Ce param&egrave;tre contr&ocirc;le quels sont les permissions UNIX lorsqu'un client Windows va manipuler les permissions du r&eacute;pertoire en utilisant les outils de s&eacute;curit&eacute; Microsoft.[br]
 Indiquez ici le chmod du r&eacute;pertoire</samba_directory_mask_text>
@@ -1349,6 +1411,9 @@ En cons&eacute;quence, l'enregistrement de noms et les r&eacute;solutions de mac
 au lieu d'effectuer un broadcast continuel.</samba_wins_explain>
 <sa_debug>Mode Verbeux: Spamassassin</sa_debug>
 <sa_timeout>Timeout du plugin Spamassassin</sa_timeout>
+<ScanPeriod>P&eacute;riode d'analyse</ScanPeriod>
+<ScanTrashPeriod_text>Analyse les corbeilles virtuelles toutes les X minutes (par d&eacute;faut toutes les 7 heures soit 450 minutes)</ScanTrashPeriod_text>
+<ScanTrashTTL_text>Combien de jours, les fichiers peuvent rest&eacute;s dans la corbeille virtuelle avant d'&ecirc;tre supprim&eacute;s (Par d&eacute;faut 7 jours).</ScanTrashTTL_text>
 <search_byous>Rechercher par organisation</search_byous>
 <SecFilterCheckUnicodeEncoding>Validation de l'encodage unicode</SecFilterCheckUnicodeEncoding>
 <SecFilterCheckURLEncoding>V&eacute;rifie des caract&egrave;res sp&eacute;ciaux encod&eacute;s</SecFilterCheckURLEncoding>
@@ -1439,12 +1504,15 @@ Les messages qui correspondent aux r&egrave;gles vont &ecirc;tre automatiquement
 <SlapdThreads>Nombre de threads utilisables par OpenLDAP</SlapdThreads>
 <SlapdThreads_explain>Artica utilise le service OpenLDAP afin de g&eacute;rer les utilisateurs/mots de passe.[br]Par d&eacute;faut le moteur LDAP peut utiliser 16 threads.[br]Cette configuration est d&eacute;di&eacute;e pour une utilisation intensive des requ&ecirc;tes vers la base LDAP avec des centaines d'utilisateurs telles qu'un serveur de fichiers SAMBA ou un serveur DNS. Si au contraire vous avez des probl&egrave;mes de connexion , augmentez cette valeur.[br]Le minium de 2 threads va vous faire &eacute;conomiser 20Mb de de m&eacute;moire.[br]
 Indiquez 0 afin de retourner &agrave; la valeur par d&eacute;faut.</SlapdThreads_explain>
+<smb2_protocol>Protocole SMB2</smb2_protocol>
+<smb2_protocol_text>Le protocole SMB2 est une nouvelle version du syst&egrave;me de partage Windows.[br]Il est utilis&eacute; sur des syst&egrave;mes Windows modernes et futurs.</smb2_protocol_text>
 <SMBChangeShareName_text>Cliquez sur le lien afin de changer le nom de partage de ce r&eacute;pertoire.</SMBChangeShareName_text>
 <smbconfig>smb.conf</smbconfig>
 <smbservices>Services</smbservices>
 <smb_RootDir_text>Toutes les t&acirc;ches li&eacute;es au dossiers sur les disques devront d&eacute;marrer au r&eacute;pertoire racine.</smb_RootDir_text>
 <smtpd_data_restrictions>Restrictions de protocole DATA</smtpd_data_restrictions>
 <smtpd_data_restrictions_explain>Cette section repr&eacute;sente des r&egrave;gles qui peuvent &ecirc;tre activ&eacute;es lorsque l'&eacute;metteur envoi les donn&eacute;es d'un message (commande DATA)</smtpd_data_restrictions_explain>
+<smtp_connection_cache_on_demand_text>Active temporairement le cache des connexions SMTP tant qu'une destination a un volume important de messages en file d'attente active.[br]Avec le cache de connexions SMTP, une connexion n'est pas ferm&eacute;e imm&eacute;diatement apr&egrave;s la fin d'une transaction de message</smtp_connection_cache_on_demand_text>
 <smtp_notification_not_saved>Les notifications eMail ne sont pas personnalis&eacute;es</smtp_notification_not_saved>
 <smtp_sasl_security_options_mutual_auth>Autoriser seulement les m&eacute;thodes qui fournissent une authentification mutuelle</smtp_sasl_security_options_mutual_auth>
 <smtp_sasl_security_options_noanonymous>Interdit les m&eacute;thodes qui autorisent l'authentification anonyme.</smtp_sasl_security_options_noanonymous>
@@ -1455,6 +1523,7 @@ Indiquez 0 afin de retourner &agrave; la valeur par d&eacute;faut.</SlapdThreads
 <SpamassassinMaxRCPTScore_text>Indiquez le score &agrave; ajouter lorsque le nombre de destinataires atteint la limite.[br]Si le score total est atteint, le message sera mis en quarantaine ou rejet&eacute;.</SpamassassinMaxRCPTScore_text>
 <spamassassin_pkugins_explain>Vous trouverez ici les &quot;modules&quot; qui peuvent &ecirc;tre utilis&eacute;s par le filtre de contenu.[br]Ces modules (ou plugins) contribuent &agrave; augmenter le taux de d&eacute;tection des SPAM mais vont augmenter la charge machine et les requ&ecirc;tes DNS.[br]
 V&eacute;rifiez &agrave; disposer de serveurs DNS corrects et d'une machine suffisamment puissante pour accueillir ces modules.</spamassassin_pkugins_explain>
+<SPAMASSASSIN_UPDATE_AVAILABLE_TEXT>Des mises &agrave; jour de SpamAssassin sont disponibles, il est conseill&eacute; de les mettre &agrave; jour afin d'augmenter le taux de d&eacute;tection anti-spam</SPAMASSASSIN_UPDATE_AVAILABLE_TEXT>
 <spamass_analyze_post_explain>Cette section va analyser un message en utilisant le filtre de contenu SpamAssassin.[br]
 Copiez la source du message (incluant les ent&ecirc;tes et son contenu) et collez-le dans le formulaire afin de l'ajouter dans la base de donn&eacute;es.[br]
 D&eacute;finissez l'&eacute;metteur et les destinataires (s&eacute;par&eacute;s par une virgule).</spamass_analyze_post_explain>
@@ -1530,6 +1599,7 @@ Lorsque la p&eacute;riode de gr&acirc;ce &agrave; expir&eacute;e, les utilisateu
 <tomcat_admin_interface>Console d'administration Tomcat</tomcat_admin_interface>
 <top10>TOP 10</top10>
 <top10_users>TOP 10 utilisateurs</top10_users>
+<total_requests>Requ&ecirc;tes total</total_requests>
 <total_threshold>Seuil total</total_threshold>
 <treshold>Seuil</treshold>
 <UDMA_CRC_Error_Count>erreurs de CRC UltraDMA</UDMA_CRC_Error_Count>
@@ -1550,6 +1620,8 @@ Lorsque la p&eacute;riode de gr&acirc;ce &agrave; expir&eacute;e, les utilisateu
 <UPDATE_FEDORA_TEMPLATE_TEXT>T&eacute;l&eacute;chargement du mod&egrave;le Fedora i386, requi&egrave;re 690Mb d'espace disponible.</UPDATE_FEDORA_TEMPLATE_TEXT>
 <UPDATE_LXC_TEMPLATE_PERFOMED>La t&acirc;che d'installation/Mise &agrave; jour est ex&eacute;cut&eacute;e en t&acirc;che de fond,
 Cela peut prendre du temps.. Tout d&eacute;pend de votre bande passante Internet.</UPDATE_LXC_TEMPLATE_PERFOMED>
+<UPDATE_SA_UPDATE>Mise &agrave; jour de SpamAssassin</UPDATE_SA_UPDATE>
+<UPDATE_SA_UPDATE_TEXT>Lancer la mise &agrave; jour, afficher les &eacute;v&egrave;nements de mise &agrave; jour.</UPDATE_SA_UPDATE_TEXT>
 <usable_mechanisms>M&eacute;canismes disponibles</usable_mechanisms>
 <useGreenSQL>Utiliser le Proxy GreenSQL</useGreenSQL>
 <UseLoopDisk>Utiliser un disque virtuel</UseLoopDisk>
@@ -1648,6 +1720,9 @@ Donc les domaines ici vont autoriser les &eacute;metteurs &agrave; passer &agrav
 <Wthreads>Threads</Wthreads>
 <Wthreads_explain>Le serveur de disques iSCSI utilise plusieurs &quot;threads&quot; afin de fournir les lectures/&eacute;critures sur le mat&eacute;riel.[br]En fonction des performances du serveur et de ce que vous d&eacute;sirez en charge syst&egrave;me, la valeur peut &ecirc;tre ajust&eacute;e avec pr&eacute;cautions.[br]
 La valeur par d&eacute;faut de 8 threads est suffisante pour l'ensemble des besoins.</Wthreads_explain>
+<www_books>Libraires en ligne et sites permettant d'obtenir
+ ou de lire des livres sous format &eacute;lectronique.</www_books>
+<www_celebrity>Sites qui concerne les personnes c&eacute;l&egrave;bres, acteurs et personnes connues dans le monde entier.Excluant les mannequins( voir la cat&eacute;gorie &quot;models&quot;)</www_celebrity>
 <www_forward>Transf&eacute;rer vers un autre site</www_forward>
 <www_ForwardTo>Site web &agrave; transf&eacute;rer</www_ForwardTo>
 <www_humanitarian_associations>Sites web &agrave; propos de des associations humanitaires ou tout ce qui s'en rapproche.</www_humanitarian_associations>

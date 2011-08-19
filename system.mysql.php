@@ -46,7 +46,7 @@ function tabs(){
 	$page=CurrentPageName();
 	$tpl=new templates();
 	$users=new usersMenus();
-	$array["popup"]='{APP_MYSQL}';
+	$array["popup"]='MySQL';
 	$array["events"]='{events}';
 	$array["parameters"]='{mysql_settings}';
 	
@@ -57,7 +57,7 @@ function tabs(){
 	
 	
 	if($users->APP_GREENSQL_INSTALLED){
-		$array["greensql"]='{APP_GREENSQL}';
+		$array["greensql"]='GreenSQL';
 	}
 	
 	while (list ($num, $ligne) = each ($array) ){
@@ -202,13 +202,29 @@ function members(){
 	$tpl=new templates();
 	$add_user=$tpl->_ENGINE_parse_body("{add_user}");
 	$html="
+	<center style='margin-bottom:10px'>
+	<table style='width:90%' class=form>
+	<tr>
+		<td class=legend>{members}:</td>
+		<td>". Field_text("mysql-member-search",null,"font-size:14px;padding:4px",null,null,null,false,"MysqlMemberSearchCheck(event)")."</td>
+		<td width=1%>". button("{search}","LoadMysqlMembers()")."</td>
+	</tr>
+	</table>
+	</center>
+	
 	<div id='mysql-members-id'></div>
 	
 	
 	<script>
 		function LoadMysqlMembers(){
-			LoadAjax('mysql-members-id','$page?members-list=yes');
+			var se=escape(document.getElementById('mysql-member-search').value);
+			LoadAjax('mysql-members-id','$page?members-list=yes&search='+se);
 		
+		}
+		
+		function MysqlMemberSearchCheck(e){
+			if(!checkEnter(e)){return;}
+			LoadMysqlMembers();
 		}
 		
 
@@ -227,8 +243,16 @@ function members(){
 }
 
 function members_list(){
-	
-	$sql="SELECT * FROM user ORDER BY User";
+	$search=$_GET["search"];
+	if($search==null){
+		$sql="SELECT * FROM user ORDER BY User LIMIT 0,50";
+	}else{
+		$search="*$search*";
+		$search=str_replace("**", "*", $search);
+		$search=str_replace("**", "*", $search);
+		$search=str_replace("*", "%", $search);
+		$sql="SELECT * FROM user WHERE `User` LIKE '$search' ORDER BY User LIMIT 0,50";
+	}
 	$page=CurrentPageName();
 	$tpl=new templates();	
 	$delete_alert=$tpl->javascript_parse_text("{delete}");

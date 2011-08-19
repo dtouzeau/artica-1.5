@@ -127,6 +127,10 @@ function params(){
 	$OpenEMMNextMTA=$sock->GET_INFO("OpenEMMNextMTA");
 	$OpenEMMNextMTAPort=$sock->GET_INFO("OpenEMMNextMTAPort");
 	$OpenEMMSendMailPort=$sock->GET_INFO("OpenEMMSendMailPort");
+	$OpenEMMEnable=$sock->GET_INFO("OpenEMMEnable");
+	if(!is_numeric($OpenEMMEnable)){$OpenEMMEnable=1;}
+	
+	
 	if($OpenEMMNextMTA==null){$OpenEMMNextMTA="nextsmtp.domain.tld";}
 	if(!is_numeric($OpenEMMNextMTAPort)){$OpenEMMNextMTAPort="25";}
 	if(!is_numeric($OpenEMMSendMailPort)){$OpenEMMSendMailPort="6880";}
@@ -142,6 +146,10 @@ function params(){
 $html="
 <div id='openemm-params'>
 <table style='width:100%' class=form>
+	<tr>
+		<td class=legend>{enable}:</td>
+		<td>". Field_checkbox("OpenEMMEnable",1,$OpenEMMEnable,"OpenEMMEnableCheck()")."</td>
+	</tr>
 	<tr>
 		<td class=legend>{server_url}:</td>
 		<td>". Field_text("OpenEMMServerURL",$OpenEMMServerURL,"font-size:14px;padding:3px;width:220px")."</td>
@@ -181,6 +189,7 @@ $html="
 		
 	function SaveOpenEMMConfig(){
 		var XHR = new XHRConnection();
+		if(document.getElementById('OpenEMMEnable').checked){XHR.appendData('OpenEMMEnable',1);}else{XHR.appendData('OpenEMMEnable',0);}
 		XHR.appendData('OpenEMMServerURL',document.getElementById('OpenEMMServerURL').value);
 		XHR.appendData('OpenEMMUserAgent',document.getElementById('OpenEMMUserAgent').value);
 		XHR.appendData('OpenEMMMailErrorRecipient',document.getElementById('OpenEMMMailErrorRecipient').value);
@@ -204,7 +213,28 @@ $html="
 		document.getElementById('OpenEMMNextMTA').disabled=false;
 		document.getElementById('OpenEMMNextMTAPort').disabled=false;		
 	}
-	CheckIfsendmail();
+	
+	function OpenEMMEnableCheck(){
+		document.getElementById('OpenEMMServerURL').disabled=true;
+		document.getElementById('OpenEMMUserAgent').disabled=true;
+		document.getElementById('OpenEMMMailErrorRecipient').disabled=true;
+		document.getElementById('OpenEMMSendMailPort').disabled=true;
+		document.getElementById('OpenEMMNextMTA').disabled=true;
+		document.getElementById('OpenEMMNextMTAPort').disabled=true;
+		if(document.getElementById('OpenEMMEnable').checked){
+			document.getElementById('OpenEMMServerURL').disabled=false;
+			document.getElementById('OpenEMMUserAgent').disabled=false;
+			document.getElementById('OpenEMMMailErrorRecipient').disabled=false;
+			document.getElementById('OpenEMMSendMailPort').disabled=false;
+			document.getElementById('OpenEMMNextMTA').disabled=false;
+			document.getElementById('OpenEMMNextMTAPort').disabled=false;
+			CheckIfsendmail();		
+		}
+	
+	}
+	
+	
+	OpenEMMEnableCheck();
 	</script>
 ";	
 	echo $tpl->_ENGINE_parse_body($html);	
@@ -277,6 +307,7 @@ function status(){
 
 function SaveMasterConf(){
 	$sock=new sockets();
+	$sock->SET_INFO("OpenEMMEnable", $_POST["OpenEMMEnable"]);
 	$sock->SET_INFO("OpenEMMServerURL", $_POST["OpenEMMServerURL"]);
 	$sock->SET_INFO("OpenEMMMailErrorRecipient", $_POST["OpenEMMMailErrorRecipient"]);
 	$sock->SET_INFO("OpenEMMUserAgent", $_POST["OpenEMMUserAgent"]);

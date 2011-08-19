@@ -16,6 +16,8 @@ include_once(dirname(__FILE__)."/framework/frame.class.inc");
 
 $GLOBALS["ONLY_TESTS"]=false;
 $GLOBALS["ONNLY_MOUNT"]=false;
+$GLOBALS["NO_UMOUNT"]=false;
+$GLOBALS["NO_STANDARD_BACKUP"]=false;
 $date=date('Y-m-d');
 $GLOBALS["ADDLOG"]="/var/log/artica-postfix/backup-starter-$date.log";
 @mkdir("/var/log/artica-postfix/sql-events-queue");
@@ -302,10 +304,11 @@ if($GLOBALS["DEBUG"]){
 
 if(!$GLOBALS["NO_STANDARD_BACKUP"]){
 	$GLOBALS["MOUNTED_PATH_FINAL"]=$mount_path_final;
+	$WhatToBackup_ar=null;
 	
 	while (list ($num, $WhatToBackup) = each ($ressources) ){
 		if(is_array($WhatToBackup)){$WhatToBackup_ar=implode(",",$WhatToBackup);}
-		backup_events($ID,"initialization","INFO, WhatToBackup ($WhatToBackup) $WhatToBackup_ar");
+		backup_events($ID,"initialization","INFO, WhatToBackup ($WhatToBackup) -> $WhatToBackup_ar");
 		if($WhatToBackup=="all"){
 			backup_events($ID,"initialization","INFO, Backup starting Running macro all cyrus, mysql, LDAP, Artica...");
 			send_email_events("Backup Task $ID:: Backup starting Running macro all ","Backup is running","backup");
@@ -356,9 +359,17 @@ if(!$GLOBALS["NO_STANDARD_BACKUP"]){
 	}
 	
 	if(!$GLOBALS["NO_UMOUNT"]){
+		writelogs(date('m-d H:i:s')." "."[TASK $ID]:umount $mount_path_final",__FUNCTION__,__FILE__,__LINE__);
+		if(preg_match("#^\/opt\/artica\/mounts\/backup\/[0-9]+(.+)#", $mount_path_final,$re)){
+			$mount_path_final=str_replace($re[1], "", $mount_path_final);
+			writelogs(date('m-d H:i:s')." "."[TASK $ID]:translated to $mount_path_final",__FUNCTION__,__FILE__,__LINE__);
+		}
+		
 		backup_events($ID,"initialization","INFO, umount $mount_path_final");
 		writelogs(date('m-d H:i:s')." "."[TASK $ID]:umount $mount_path_final",__FUNCTION__,__FILE__,__LINE__);
-		exec("umount -l $mount_path_final");
+		exec("umount -l $mount_path_final 2>&1",$resultsUmount);
+		if(count($resultsUmount)>0){writelogs(date('m-d H:i:s')." "."[TASK $ID]:umount : ----- \n". @implode("\n", $resultsUmount)."\n",__FUNCTION__,__FILE__,__LINE__);}
+		
 	}
 	
 	$date_end=time();
@@ -1095,20 +1106,25 @@ function backup_copy($source_path,$dest_path,$ID=null){
 		$date_start=time();
 		$cmd=str_replace("{SRC_PATH}",$source_path,$GLOBALS["COMMANDLINECOPY"]);
 		$GLOBALS["MOUNTED_PATH_FINAL"]=trim($GLOBALS["MOUNTED_PATH_FINAL"]);
-		writelogs(date('m-d H:i:s')." "."#########################################",__FUNCTION__,__FILE__,__LINE__);
-		writelogs(date('m-d H:i:s')." "."Starting point {$GLOBALS["MOUNTED_PATH_FINAL"]}",__FUNCTION__,__FILE__,__LINE__);
-		writelogs(date('m-d H:i:s')." "."command line=$cmd",__FUNCTION__,__FILE__,__LINE__);
+		writelogs(date('m-d H:i:s')." "."[TASK $ID] #########################################",__FUNCTION__,__FILE__,__LINE__);
+		writelogs(date('m-d H:i:s')." "."[TASK $ID] Starting point {$GLOBALS["MOUNTED_PATH_FINAL"]}",__FUNCTION__,__FILE__,__LINE__);
+		writelogs(date('m-d H:i:s')." "."[TASK $ID] command line=$cmd",__FUNCTION__,__FILE__,__LINE__);
 		if($GLOBALS["MOUNTED_PATH_FINAL"]<>null){
 			$dest_path=str_replace($GLOBALS["MOUNTED_PATH_FINAL"],"",$dest_path);
+			writelogs(date('m-d H:i:s')." "."[TASK $ID] dest_path=\"$dest_path\"",__FUNCTION__,__FILE__,__LINE__);
 		}
 		
 		$final_path="{$GLOBALS["MOUNTED_PATH_FINAL"]}/$dest_path";
 		$final_path=str_replace('//','/',$final_path);
+		writelogs(date('m-d H:i:s')." "."[TASK $ID] final_path=\"$final_path\"",__FUNCTION__,__FILE__,__LINE__);
 		$cmd=str_replace("{NEXT}",$final_path,$cmd);
-		writelogs(date('m-d H:i:s')." "."Copy directory $source_path to $final_path",__FUNCTION__,__FILE__,__LINE__);
-		writelogs(date('m-d H:i:s')." "."$cmd",__FUNCTION__,__FILE__,__LINE__);
+		writelogs(date('m-d H:i:s')." "."[TASK $ID] Copy directory $source_path to $final_path",__FUNCTION__,__FILE__,__LINE__);
+		writelogs(date('m-d H:i:s')." "."[TASK $ID] FINAL COMMAND WAS \"$cmd\"",__FUNCTION__,__FILE__,__LINE__);
+		writelogs(date('m-d H:i:s')." "."[TASK $ID] EXECUTE....",__FUNCTION__,__FILE__,__LINE__);
 		events("$cmd",__FUNCTION__,__LINE__);
+		
 		exec($cmd. " 2>&1",$results);
+		writelogs(date('m-d H:i:s')." "."[TASK $ID] Returning an array of ".count($results)." rows -> check_rsync_error()",__FUNCTION__,__FILE__,__LINE__);
 		if(!check_rsync_error($ID,$results)){
 			events("check_rsync_error() !",__FUNCTION__,__LINE__);
 			if($ID>0){backup_events($ID,"Copy","ERROR,$cmd");}
@@ -1121,7 +1137,7 @@ function backup_copy($source_path,$dest_path,$ID=null){
 		$calculate=distanceOfTimeInWords($date_start,$date_end);
 		events("INFO, time: $calculate ($source_path)",__FUNCTION__,__LINE__);
 		backup_events($ID,"Copy","INFO, time: $calculate ($source_path)");
-		writelogs(date('m-d H:i:s')." "."#########################################",__FUNCTION__,__FILE__,__LINE__);
+		writelogs(date('m-d H:i:s')." "."[TASK $ID] #########################################",__FUNCTION__,__FILE__,__LINE__);
 		
 		
 		return @implode("\n",$results);
@@ -1131,10 +1147,10 @@ function backup_copy($source_path,$dest_path,$ID=null){
 function check_rsync_error($ID,$results){
 	if(!is_array($results)){return true;}
 		while (list ($num, $line) = each ($results)){
-			writelogs(date('m-d H:i:s')." "."[TASK $ID]: $line ",__FUNCTION__,__FILE__,__LINE__);
 			if(preg_match("#rsync error#",$line)){
-			 if(preg_match("#some files\/attrs were not transferred#")){continue;}
-			 if(preg_match("#some files vanished before they could be transferred#")){continue;}
+			 if(preg_match("#some files\/attrs were not transferred#",$line)){continue;}
+			 if(preg_match("#some files vanished before they could be transferred#",$line)){continue;}
+			 writelogs(date('m-d H:i:s')." "."[TASK $ID]: $line ",__FUNCTION__,__FILE__,__LINE__);
 			 if($ID>0){backup_events($ID,"Copy","ERROR,$line\n$cmd");return false;}
 			}
 		}

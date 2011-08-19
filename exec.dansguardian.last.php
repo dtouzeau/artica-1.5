@@ -21,7 +21,7 @@ $unix=new unix();
 	$sock=new sockets();
 	
 	$SQUIDEnable=$sock->GET_INFO("SQUIDEnable");
-	if($SQUIDEnable==null){$SQUIDEnable=1;}
+	if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
 	if($SQUIDEnable==0){die();}
 	if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["VERBOSE"]=true;}
 	

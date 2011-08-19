@@ -9,18 +9,129 @@ include_once(dirname(__FILE__)."/framework/frame.class.inc");
 if(posix_getuid()<>0){die("Cannot be used in web server mode\n\n");}
 if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["VERBOSE"]=true;}
 if(preg_match("#--force#",implode(" ",$argv))){$GLOBALS["FORCE"]=true;}
+$GLOBALS["NO_PID_CHECKS"]=false;
 
-if(!Build_pid_func(__FILE__,"MAIN")){
-	writelogs(basename(__FILE__).":Already executed.. aborting the process",basename(__FILE__),__FILE__,__LINE__);
+if($argv[1]=="--av-uris"){ParseKav4UriLogs();die();}
+if($argv[1]=="--av-events"){av_events();die();}
+if($argv[1]=="--av-stats"){av_stats();die();}
+
+$unix=new unix();
+$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".pid";
+$pid=$unix->get_pid_from_file($pidfile);
+if($unix->process_exists($pid,basename(__FILE__))){
+	writelogs(basename(__FILE__).":Already executed pid $pid.. aborting the process",basename(__FILE__),__FILE__,__LINE__);
 	die();
 }
+
+@file_put_contents($pidfile, getmypid());
+
 if($argv[1]=="--retrans"){ParseRetranslatorLogs();die();}
 
+
+
+$GLOBALS["NO_PID_CHECKS"]=true;
 ParseKas3Logs();
 ParseKav4ProxyLogs();
+ParseKav4UriLogs();
 av_stats();
 ParseKavmilterLogs();
 ParseRetranslatorLogs();
+
+function stats_pid(){
+	$unix=new unix();
+	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".". __FUNCTION__.".pid";
+	$pid=$unix->get_pid_from_file($pidfile);
+	if($unix->process_exists($pid,basename(__FILE__))){
+		writelogs(basename(__FILE__).":Already executed pid $pid.. aborting the process",basename(__FILE__),__FILE__,__LINE__);
+		die();
+	}
+	
+	@file_put_contents($pidfile, getmypid());
+	
+}
+
+function ParseKav4UriLogs(){
+	$unix=new unix();
+	if(system_is_overloaded(basename(__FILE__))){
+		if($GLOBALS["VERBOSE"]){"System overloaded\n";}
+		return;
+	}
+	if(!$GLOBALS["NO_PID_CHECKS"]){	if(stats_pid()){return;}}	
+	
+	$tablename="Kav4Proxy_".date('Y').date('m');
+	if($GLOBALS["VERBOSE"]){echo "Table $tablename/artica_events...\n";}
+	$q=new mysql();
+	if(!$q->TABLE_EXISTS($tablename, "artica_events")){
+	$sql="CREATE TABLE `artica_events`.`$tablename` (
+		`zmd5` VARCHAR( 90 ) NOT NULL ,
+		`zDate` DATETIME NOT NULL ,
+		`size` INT( 3 ) NOT NULL ,
+		`status` VARCHAR( 40 ) NOT NULL ,
+		`ICAP_SERVER` VARCHAR( 40 ) NOT NULL ,
+		`uid` VARCHAR( 128 ) NOT NULL ,
+		`client` VARCHAR( 40 ) NOT NULL ,
+		`uri` VARCHAR( 255 ) NOT NULL ,
+		`country` VARCHAR( 90 ) NOT NULL ,
+		`sitename` VARCHAR( 128 ) NOT NULL ,
+		`category` VARCHAR( 90 ) NOT NULL ,
+		PRIMARY KEY ( `zmd5` ) ,
+		INDEX ( `zDate` , `size` , `status` , `ICAP_SERVER` , `uid` , `client` , `country` , `sitename` , `category` )
+		)";	
+		$q->QUERY_SQL($sql,"artica_events");
+		if($GLOBALS["VERBOSE"]){echo "Table $tablename/artica_events failed...\n";}
+		if(!$q->ok){$unix->send_email_events("Unable to create $tablename/artica_events" , "Kaspersky statistics has been aborted\n$q->mysql_error", "proxy");return;}
+	
+	}
+	
+	$WorkingDirectory="/var/log/artica-postfix/kav4Server-queue";
+	$WorkingDirectoryError="/var/log/artica-postfix/kav4Server-errors";
+	if(!is_dir($WorkingDirectoryError)){@mkdir($WorkingDirectoryError,0600,true);}
+	
+ 	if (!$handle = @opendir($WorkingDirectory)) {
+ 		if($GLOBALS["VERBOSE"]){echo "$WorkingDirectory no such directory\n";}
+ 		return ;
+ 	}	
+	//$newArray=array("DATE" =>$date,"SIZE"=>$size,"STATUS"=>$status,"ICAP_SERVER"=>$icap_server,"UID"=>$uid,
+		//"CLIENT"=>$clientip,"URI"=>$uri,"COUNTRY"=>$Country,"SITENAME"=>$sitename);	
+	if($GLOBALS["VERBOSE"]){echo "Processing $WorkingDirectory\n";}
+	$prefixsql="INSERT IGNORE INTO $tablename (`zmd5`,`zDate`,`size`,`status`,`ICAP_SERVER`,`uid`,`client`,`uri`,`country`,`sitename`) VALUES ";
+	
+	
+	while (false !== ($filename = readdir($handle))) {
+		$targetFile="$WorkingDirectory/$filename";
+		if($GLOBALS["VERBOSE"]){echo "Processing $targetFile\n";}
+		if(!is_file($targetFile)){
+			if($GLOBALS["VERBOSE"]){echo "Processing $targetFile no such file\n";}
+			continue;
+		}
+		$array=unserialize(@file_get_contents($targetFile));
+		if(!is_array($array)){@unlink($targetFile);if($GLOBALS["VERBOSE"]){echo "Processing $targetFile not an array\n";}continue;}
+		$md5=md5(serialize($array));
+		$suffix[]="('$md5','{$array["DATE"]}','{$array["SIZE"]}','{$array["STATUS"]}','{$array["ICAP_SERVER"]}',
+		'{$array["UID"]}','{$array["CLIENT"]}','{$array["URI"]}','{$array["COUNTRY"]}',
+		'{$array["SITENAME"]}')";
+		
+		@unlink($targetFile);
+		if(count($suffix)>500){
+			$d=$d+count($suffix);
+			$sql="$prefixsql ".@implode(",", $suffix);
+			$q->QUERY_SQL($sql,"artica_events");
+			if(!$q->ok){@file_put_contents($sql,"$WorkingDirectoryError/".md5($sql).".err");$unix->send_email_events("kav4proxy statistics Mysql error", "$q->mysql_error\nProcess has been aborted and saved in $WorkingDirectoryError directory", "proxy");}
+			if(system_is_overloaded(basename(__FILE__))){$unix->send_email_events("kav4proxy statistics aborted du to overload computer", "Will retry in next cycle", "proxy");return;}		
+		}
+	}
+	
+	if(count($suffix)>1){
+		$d=$d+count($suffix);
+		$sql="$prefixsql ".@implode(",", $suffix);
+		$q->QUERY_SQL($sql,"artica_events");
+		if(!$q->ok){@file_put_contents($sql,"$WorkingDirectoryError/".md5($sql)."err");$unix->send_email_events("kav4proxy statistics Mysql error", "$q->mysql_error\nProcess has been aborted and saved in $WorkingDirectoryError directory", "proxy");}	
+	}
+	
+	if($GLOBALS["VERBOSE"]){echo "processed $d files\n";}
+}
+
+
 
 function ParseKas3Logs(){
 	$dir="/var/log/artica-postfix/kaspersky/kas3";
@@ -105,7 +216,9 @@ function ParseKav4ProxyLogs(){
 			continue;
 		}
 		
-		ParseKav4ProxyLogsMysql($date,"Updates launched...","$dir/$file");
+		$size=@filesize("$dir/$file");
+		
+		ParseKav4ProxyLogsMysql($date,"Updates launched...($size bytes)","$dir/$file");
 	}
 }
 
@@ -237,6 +350,9 @@ $dir="/var/log/kretranslator";
 
 
 function av_stats(){
+	
+	$GLOBALS["NO_PID_CHECKS"]=true;
+	
 	$users=new usersMenus();
 	if(!$users->KAV4PROXY_INSTALLED){
 		if($GLOBALS["VERBOSE"]){writelogs("Kav4Proxy is not installed...",__FUNCTION__,__FILE__,__LINE__);}
@@ -267,9 +383,13 @@ function av_stats(){
 	if($GLOBALS["VERBOSE"]){writelogs("$kill -USR2 $pid",__FUNCTION__,__FILE__,__LINE__);}
 	shell_exec("$kill -USR2 $pid");
 	if(!is_file("/var/log/kaspersky/kav4proxy/counter.stats")){
+		if(is_file("/var/log/kaspersky/kav4proxy/av.stats")){av_events();}
 		if($GLOBALS["VERBOSE"]){writelogs("/var/log/kaspersky/kav4proxy/counter.stats no such file",__FUNCTION__,__FILE__,__LINE__);}
 		return;
 	}
+	
+	if(is_file("/var/log/kaspersky/kav4proxy/av.stats")){av_events();}
+	
 	$FileExploded=explode("\n", @file_get_contents("/var/log/kaspersky/kav4proxy/counter.stats"));
 	
 	if($GLOBALS["VERBOSE"]){writelogs("/var/log/kaspersky/kav4proxy/counter.stats ". count($FileExploded) . " items",__FUNCTION__,__FILE__,__LINE__);}
@@ -314,6 +434,94 @@ function av_stats(){
 	
 	
 }
+
+function av_events(){
+	
+	if(!$GLOBALS["NO_PID_CHECKS"]){if(stats_pid()){return;}}		
+	
+	if(!is_dir("/var/log/artica-postfix/kav4Server-queue")){@mkdir("/var/log/artica-postfix/kav4Server-queue",0600,true);}
+	$f=fopen("/var/log/kaspersky/kav4proxy/av.stats",'r');
+	$data='';
+	$c=0;
+	while(!feof($f)){
+    	$data=fgets($f);
+    	$sitename=null;
+    	$Country=null;
+    	$virus=null;
+    	$date=null;
+		if(!preg_match("#([0-9]+)-([0-9]+)-([0-9]+)\s+([0-9\:]+)\s+([0-9]+)\s+(.+?)\s+(RESPMOD|REQMOD)\s+(.+?)\s+(.+?)\s+(.+?)\s+(.+)#", $data, $re)){continue;}
+		$day=$re[1];
+		$month=$re[2];
+		$year=$re[3];
+		$time=$re[4];
+		$size=$re[5];
+		$status=$re[6];
+		$filter=$re[7];
+		$icap_server=$re[8];
+		$uid=$re[9];
+		$clientip=$re[10];
+		$uri=$re[11];
+		$c++;
+		if(preg_match("#INFECTED\s+(.+)#", $status,$ri)){
+			$virus=$ri[1];
+			$status="INFECTED";
+		}
+		
+		if(preg_match("#^(?:[^/]+://)?([^/:]+)#",$uri,$re)){
+			$sitename=$re[1];
+			if(preg_match("#^www\.(.+)#",$sitename,$ri)){$sitename=$ri[1];}
+		}
+		if($sitename==null){continue;}
+ 		$date="$year-$month-$day $time";
+ 		$database="kasperskyav$month";
+		
+		if(trim($GLOBALS["IPs"][$sitename])==null){
+				$site_IP=trim(gethostbyname($sitename));
+				$GLOBALS["IPs"][$sitename]=$site_IP;
+			}else{
+				$site_IP=$GLOBALS["IPs"][$sitename];
+			}
+			
+			if(count($_GET["IPs"])>5000){unset($_GET["IPs"]);}
+			if(count($_GET["COUNTRIES"])>5000){unset($_GET["COUNTRIES"]);}
+	
+		if(trim($GLOBALS["COUNTRIES"][$site_IP])==null){
+			if(function_exists("geoip_record_by_name")){
+				if($site_IP==null){$site_IP=$sitename;}
+				$record = @geoip_record_by_name($site_IP);
+				if ($record) {
+					$Country=$record["country_name"];
+					$GLOBALS["COUNTRIES"][$site_IP]=$Country;
+				}
+			}else{
+				$geoerror="geoip_record_by_name no such function...";
+			}
+		}else{
+			$Country=$GLOBALS["COUNTRIES"][$site_IP];
+		}			
+			
+		$newArray=array();
+		$newArray=array("DATE" =>$date,"SIZE"=>$size,"STATUS"=>$status,"ICAP_SERVER"=>$icap_server,"UID"=>$uid,
+		"CLIENT"=>$clientip,"URI"=>$uri,"COUNTRY"=>$Country,"SITENAME"=>$sitename);	
+		$newline=serialize($newArray);
+		$md5=md5($newline);
+		$nextfile="/var/log/artica-postfix/kav4Server-queue/$md5.sql";
+		file_put_contents($nextfile, $newline);
+		$newline=null;
+		$Country=null;
+		
+	}
+
+	fclose($f); 
+	@unlink("/var/log/kaspersky/kav4proxy/av.stats");
+	echo "$c files processed...\n";
+	$GLOBALS["NO_PID_CHECKS"]=true;
+	ParseKav4UriLogs();
+	
+}
+
+
+
 
 
 

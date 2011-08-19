@@ -235,7 +235,7 @@ Specify an empty value (address_verify_sender =) or <> if you want to use the nu
 <APP_AMAVIS_EXPLAIN>Open filters content checking parameters</APP_AMAVIS_EXPLAIN>
 <APP_AMAVIS_STAT>Amavis statistics daemon</APP_AMAVIS_STAT>
 <APP_ANTIWORD>Word converter</APP_ANTIWORD>
-<APP_APACHE>Apache server for Artica core</APP_APACHE>
+<APP_APACHE>Apache server</APP_APACHE>
 <APP_ARTICA>Artica Core server</APP_ARTICA>
 <APP_ARTICA_DANSGUARDIAN_TAIL>Dansguardian statistics daemon</APP_ARTICA_DANSGUARDIAN_TAIL>
 <APP_ARTICA_FILTER_NOT_ENABLED>artica-filter is not activated, some features will be not available</APP_ARTICA_FILTER_NOT_ENABLED>
@@ -356,7 +356,7 @@ automatically removing malicious and potentially hostile programs from incoming 
 <APP_MSMTP>msmtp (SMTP client)</APP_MSMTP>
 <APP_MSMTP_NOT_INSTALLED>You need to install new SMTP engine version in order to use Authentication feature</APP_MSMTP_NOT_INSTALLED>
 <APP_MYSQL>Mysql database server</APP_MYSQL>
-<APP_MYSQL_ARTICA>Mysql for Artica core</APP_MYSQL_ARTICA>
+<APP_MYSQL_ARTICA>MySQL server</APP_MYSQL_ARTICA>
 <APP_MYSQL_CLUSTER_MGMT>Mysql Cluster management</APP_MYSQL_CLUSTER_MGMT>
 <APP_MYSQL_CLUSTER_REPLICA>Mysql Cluster replica</APP_MYSQL_CLUSTER_REPLICA>
 <APP_NFS>Network File System server</APP_NFS>

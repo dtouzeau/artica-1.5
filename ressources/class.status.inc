@@ -747,6 +747,7 @@ return $design;
 
 
 function Postfix_satus(){
+	$link_quarantine_progress=null;$artica_backup=null;$nb_events=null;$backup=null;$rejected=null;$quarantines=null;$instantIptables=null;$multis=array();$multiples_instances=null;$h5_style=null;$start=null;
 	if(!function_exists("mysql_connect")){ 
 		return "<H2>Unable to stat  function mysql_connect, check php Mysql module or reboot the server</H2>";
 	}
@@ -769,11 +770,11 @@ function Postfix_satus(){
 	$ini_notifs=new Bs_IniHandler();
 	$this->events("cmd.php?SmtpNotificationConfigRead=yes",__FUNCTION__,__LINE__);
 	$ini_notifs->loadString($sock->getFrameWork("cmd.php?SmtpNotificationConfigRead=yes"));	
+	if(!isset($ini_notifs->_params["SMTP"]["PostfixQueueMaxMails"])){$ini_notifs->_params["SMTP"]["PostfixQueueMaxMails"]=null;}
 	$this->events("$stat",__FUNCTION__,__LINE__);
 	$stat=explode(';',$stat);
 	$this->_postfix_status=$stat[0];
 	$textFONTStyle="font-size:11px";
-	
 	
 	
 	$link="Loadjs('postfix.queue.monitoring.php?js')";
@@ -834,6 +835,10 @@ function Postfix_satus(){
 		$size=$ini->_params["artica_backup"]["original_messages"]+$ini->_params["artica_backup"]["attachments"];
 		$size=FormatBytes($size);
 		$link2=CellRollOver("Loadjs('postfix.backup.monitoring.php')");
+		if(!isset($this->array_queue["backup"])){$this->array_queue["backup"]=0;}
+		if(!isset($this->array_queue["quarantine"])){$this->array_queue["quarantine"]=0;}
+		
+		
 		$artica_backup="<tr>
 						<td align='right' $link2 style='$textFONTStyle'>{backup_size}:</a>&nbsp;</td>
 						<td $link2 ><strong style='$textFONTStyle'>$size</td>
@@ -1181,7 +1186,7 @@ function dateadd($per,$n,$d) {
 }
 
 function BuildDesign($img,$title,$text,$letcon=null,$title_js=null){
-	
+	$h5_style=null;
 	if($title_js<>null){
 		$js_h5="OnClick=\"$title_js\" OnMouseOver=\"this.style.cursor='pointer'\"
 		OnMouseOut=\"this.style.cursor='default\"";

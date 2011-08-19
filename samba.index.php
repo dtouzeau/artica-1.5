@@ -24,7 +24,7 @@
 	if(isset($_GET["main"])){main_switch();exit;}
 	if(isset($_POST["ChangeShareNameOrg"])){folder_change_sharename();exit;}
 	if(isset($_POST["ArticaSambaAutomAskCreation"])){main_artica_for_samba_save();exit;}
-	
+	if(isset($_POST["recycle_vfs"])){recycle_vfs_save();exit;}
 	
 	if(isset($_GET["jsaddons"])){echo jsaddons();exit;}
 	if(!CheckSambaUniqueRights()){echo "<H1>$ERROR_NO_PRIVS</H1>";die();}
@@ -219,7 +219,7 @@ function popup_js(){
 	}	
 	
 	function SharedFoldersInLine(){
-		document.getElementById('BodyContent').innerHTML='<center><img src=img/wait_verybig.gif></center>';
+		AnimateDiv('BodyContent');
 		$('#BodyContent').load('$page?main=shared_folders');
 	}	
 	
@@ -445,11 +445,22 @@ function main_smb_config(){
 	$SambaEnabled=$sock->GET_INFO("SambaEnabled");
 	$EnableSambaActiveDirectory=$sock->GET_INFO("EnableSambaActiveDirectory");
 	if($SambaEnabled==null){$SambaEnabled=1;}	
-	
+	$users=new usersMenus();
+	$upTo36=0;
 	
 	$version=$smb->SAMBA_VERSION;
-	if(preg_match("#^([0-9]+)\.([0-9]+)\.([0-9]+)#",$version,$re)){$major=$re[1];$minor=$re[2];$build=$re[3];}	
+	if(preg_match("#^([0-9]+)\.([0-9]+)\.([0-9]+)#",$version,$re)){$major=intval($re[1]);$minor=intval($re[2]);$build=intval($re[3]);}	
 	if($major>2){if($minor>4){if($build>6){$upTo357=1;}}}
+	
+	
+	if(preg_match("#^([0-9]+)\.([0-9]+)#", $version,$re)){
+		$major=intval($re[1]);
+		$minor=intval($re[2]);
+		if($major>=3){if($minor>=6){$upTo36=1;$upTo357=1;}}
+	}
+	
+	
+
 	
 	
 	if($SambaEnabled==0){
@@ -583,6 +594,11 @@ function main_smb_config(){
 	<td valign='top'>" . Field_checkbox('strict allocate','yes',$smb->main_array["global"]["strict allocate"])."</td>
 	<td valign='top'>" . help_icon("{samba_strict_allocate_text}")."</td>
 </tr>	
+<tr>	
+	<td align='right' nowrap valign='top' class=legend>{smb2_protocol}:</td>
+	<td valign='top'>" . Field_checkbox('smb2_protocol','1',$smb->EnableSMB2)."</td>
+	<td valign='top'>" . help_icon("{smb2_protocol_text}")."</td>
+</tr>	
 
 <tr>	
 	<td align='right' nowrap valign='top' class=legend>{log level}:</td>
@@ -626,6 +642,13 @@ $form2="
 	<td valign='top'>" . Field_checkbox('DisableWinbindd','1',$sock->GET_INFO('DisableWinbindd'))."</td>
 	<td valign='top'>&nbsp;</td>
 </tr>
+<tr>	
+	<td align='right' nowrap valign='top' class=legend>{client_ntlmv2_auth}:</td>
+	<td valign='top'>" . Field_checkbox('client_ntlmv2_auth','1',$smb->client_ntlmv2_auth)."</td>
+	<td valign='top'>". help_icon("{client_ntlmv2_auth_text}")."</td>
+</tr>
+
+
 <tr>	
 	<td align='right' nowrap valign='top' class=legend>{EnablePrintersSharing}:</td>
 	<td valign='top'>" . Field_checkbox('EnablePrintersSharing','1',$sock->GET_INFO('EnablePrintersSharing'))."</td>
@@ -715,10 +738,21 @@ $formArtica="
 		var cups_installed=$cups_installed;
 		var TypeOfSamba=$TypeOfSamba;
 		var upTo357=$upTo357;
+		var upTo36=$upTo36;
 		document.getElementById('DisableWinbindd').disabled=true;
 		document.getElementById('EnablePrintersSharing').disabled=true;
 		document.getElementById('strict allocate').disabled=true;
+		document.getElementById('smb2_protocol').disabled=true;
+		document.getElementById('client_ntlmv2_auth').disabled=true;
+		
+		
 		if(upTo357==1){document.getElementById('strict allocate').disabled=false;}
+		if(upTo36==1){
+			document.getElementById('smb2_protocol').disabled=false;
+			document.getElementById('client_ntlmv2_auth').disabled=false;
+		}
+		
+		
 		
 		if(AsWinbindd==1){document.getElementById('DisableWinbindd').disabled=false;}
 		if(cups_installed==1){document.getElementById('EnablePrintersSharing').disabled=false;}
@@ -780,6 +814,10 @@ $formArtica="
 		if(document.getElementById('strict allocate').checked){
 			XHR.appendData('strict allocate','yes');}else{
 			XHR.appendData('strict allocate','no');}				
+		
+		if(document.getElementById('smb2_protocol').checked){XHR.appendData('smb2_protocol','1');}else{XHR.appendData('smb2_protocol','0');}			
+		if(document.getElementById('client_ntlmv2_auth').checked){XHR.appendData('client_ntlmv2_auth','1');}else{XHR.appendData('client_ntlmv2_auth','0');}
+			
 			
 			
 			
@@ -904,7 +942,18 @@ function SaveConf(){
 	if(isset($_GET["EnablePrintersSharing"])){
 		$sock->SET_INFO("EnablePrintersSharing",$_GET["EnablePrintersSharing"]);
 		unset($_GET["EnablePrintersSharing"]);
+	}
+
+	if(isset($_GET["smb2_protocol"])){
+		$samba->EnableSMB2=$_GET["smb2_protocol"];
+		unset($_GET["smb2_protocol"]);
 	}	
+	if(isset($_GET["client_ntlmv2_auth"])){
+		$samba->client_ntlmv2_auth=$_GET["client_ntlmv2_auth"];
+		unset($_GET["client_ntlmv2_auth"]);
+	}	
+	
+	
 	
 	
 	
@@ -931,6 +980,37 @@ while (list ($num, $val) = each ($_GET) ){
 $samba->SaveToLdap();
 $sock=new sockets();
 $sock->getFrameWork("cmd.php?restart-samba=yes");
+	
+}
+
+
+function recycle_vfs_save(){
+	$q=new mysql();
+	$folder=$_POST["folder"];
+	$recycle_vfs=$_POST["recycle_vfs"];
+	if($recycle_vfs==0){
+		$sql="DELETE FROM samba_recycle_bin WHERE `sharename`='$folder'";
+		$q->QUERY_SQL($sql,"artica_backup");
+		if(!$q->ok){echo $q->mysql_error."\n$sql";return;}
+	}
+	
+	$sql="INSERT INTO samba_recycle_bin(`sharename`) VALUES('$folder')";
+	$q->QUERY_SQL($sql,"artica_backup");
+	if(!$q->ok){echo $q->mysql_error."\n$sql";return;}
+	
+	$sock=new sockets();
+	$sock->getFrameWork("cmd.php?restart-samba=yes");	
+	
+/*
+ * recycle:repository=.RecycleBin$/%U
+recycle:keeptree=yes
+recycle:versions=yes
+recycle:touch=no
+recycle:exclude=*.tmp|*.temp|*.obj|~$*
+recycle:exclude_dir=/tmp|/temp|/cache
+recycle:maxsize=1073741824
+recycle:noversions=*.mdb
+ */	
 	
 }
 
@@ -1095,7 +1175,7 @@ $html="
 <tr>
 	<td width=99% valign='middle'><span style='font-size:16px'>{shared_folders}</span></td>
 	<td valign='top' nowrap width=1%>". imgtootltip("folder-granted-properties-48.png","{default_settings}","Loadjs('samba.default.settings.php')"). "</td>
-	<td valign='top' nowrap width=1%>". imgtootltip("folder-granted-add-48.png","{add_a_shared_folder}","Loadjs('SambaBrowse.php')"). "</td>
+	<td valign='top' nowrap width=1%>". imgtootltip("folder-granted-add-48.png","{add_a_shared_folder}","Loadjs('browse-disk.php?with-samba=yes')"). "</td>
 </tr>
 </table>
 <div style='width:100%;height:578px;overflow:auto' id='SharedFoldersList'></div>
@@ -1130,8 +1210,9 @@ function shared_folders_list(){
 <table cellspacing='0' cellpadding='0' border='0' class='tableView'>
 <thead class='thead'>
 	<tr>
-	<th>&nbsp;</th>
+	<th width=1%>&nbsp;</th>
 	<th>{name}</th>
+	<th width=1%>{trash}</th>
 	<th>{path}</th>
 	<th>&nbsp;</th>
 	</tr>
@@ -1144,6 +1225,10 @@ function shared_folders_list(){
 		echo $tpl->_ENGINE_parse_body($html);
 		return;
 	}
+	
+	$dustbins=$samba->LOAD_RECYCLES_BIN();
+	
+	
 	while (list ($FOLDER, $ligne) = each ($folders) ){
 		$FOLDER_url=urlencode($FOLDER);
 		$propertiesjs="FolderProp('$FOLDER_url')";
@@ -1208,11 +1293,16 @@ function shared_folders_list(){
 		
 	
 	if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}	
+	$trash="&nbsp;";
+	if($dustbins[$FOLDER]){
+		$trash=imgtootltip("trash-48.png","{recycle}","Loadjs('samba.recycle.php?sharename=$FOLDER')");
+	}
 		
 	$html=$html . "
 	<tr class=$classtr>
 	<td width=1%>". imgtootltip("$icon","{edit}",$propertiesjs)."</td>
 	<td><strong style='font-size:13px'><code style='font-size:13px'>$FOLDER</a></code></td>
+	<td width=1% align='center'><strong style='font-size:13px'><code style='font-size:13px'>$trash</a></code></td>
 	<td><strong ><code style='font-size:13px'>{$samba->main_array[$FOLDER]["path"]}</a></code></td>
 	<td width=1%>$delete</td>
 	</tr>
@@ -1266,12 +1356,21 @@ function AddShareFolder(){
 		$folder_name="{$folder_name}_$d";
 	}
 	
+	$sock=new sockets();
+	$SambaDefaultFolderSettings=unserialize(base64_decode($sock->GET_INFO("SambaDefaultFolderSettings")));
+	
+	if($SambaDefaultFolderSettings["create_mask"]==null){$SambaDefaultFolderSettings["create_mask"]= "0775";}
+	if($SambaDefaultFolderSettings["directory_mask"]==null ){$SambaDefaultFolderSettings["directory_mask"]= "0777";}
+	if($SambaDefaultFolderSettings["force_create_mode"]==null){$SambaDefaultFolderSettings["force_create_mode"] = "0775";}
+	
+	
 	$samba->main_array["$folder_name"]["path"]=$folder;
-	$samba->main_array["$folder_name"]["create mask"]= "0775";
-	$samba->main_array["$folder_name"]["directory mask"] = "0777";
-	$samba->main_array["$folder_name"]["force create mode"] = "0775";
-	$samba->main_array["$folder_name"]["create mode"]="0700";
-	 
+	$samba->main_array["$folder_name"]["create mask"]=$SambaDefaultFolderSettings["create_mask"];
+	$samba->main_array["$folder_name"]["directory mask"] = $SambaDefaultFolderSettings["directory_mask"];
+	$samba->main_array["$folder_name"]["force create mode"] = $SambaDefaultFolderSettings["force_create_mode"];
+	$samba->main_array["$folder_name"]["create mode"]=$SambaDefaultFolderSettings["force_create_mode"];
+	$sock=new sockets();
+	$sock->getFrameWork("samba.php?apply-chmod={$SambaDefaultFolderSettings["directory_mask"]}&path=".urlencode(base64_encode($folder)));
 	
 	$samba->SaveToLdap();
 	}
@@ -2057,15 +2156,21 @@ function GreyHoleCopySave(){
 function folder_modules(){
 	$users=new usersMenus();
 	$sock=new sockets();
+	$q=new mysql();
+	$page=CurrentPageName();
 	$EnableKav4Samba=$sock->GET_INFO('EnableKav4Samba');
 	$EnableScannedOnly=$sock->GET_INFO('EnableScannedOnly');
 	if($EnableKav4Samba==null){$EnableKav4Samba=1;}
 	if($EnableScannedOnly==null){$EnableScannedOnly=1;}	
-	
+	$recyclebin=0;
 	$folder=$_GET["prop"];
 	$smb=new samba();
 	$kav=false;
-	$page=CurrentPageName();
+	
+	$sql="SELECT `sharename` FROM samba_recycle_bin WHERE `sharename`='$folder'";
+	$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"artica_backup"));
+	if($ligne["sharename"]<>null){$recyclebin=1;}
+	
 	
 	if($users->KAV4SAMBA_INSTALLED){
 		if($EnableKav4Samba==1){
@@ -2132,7 +2237,7 @@ if($users->SAMBA_MYSQL_AUDIT){
 	$recycle_vfs="
 	<tr>
 		<td align='right' nowrap class=legend>{recycle}:</td>
-		<td align='left'>". Field_checkbox('recycle_vfs','yes',$recycle)."</td>
+		<td align='left'>". Field_checkbox('recycle_vfs2','1',$recyclebin,"RecyclebinSave()")."</td>
 	</tr>
 	";	
 	
@@ -2189,8 +2294,26 @@ var x_SambaSaveVFSModules=function (obj) {
 	if(tempvalue.length>3){alert(tempvalue);}
 	RefreshTab('main_config_folder_properties');
     }
+    
+var x_RecyclebinSave=function (obj) {
+	tempvalue=obj.responseText;
+	if(tempvalue.length>3){alert(tempvalue);}
+	RefreshTab('main_config_folder_properties');
+    }    
 
+function RecyclebinSave(){
+	var XHR = new XHRConnection();
+	mem_folder_name='$folder';
+	XHR.appendData('folder','$folder');
+	XHR.appendData('recycle_vfs','$folder');
 
+	if(document.getElementById('recycle_vfs')){
+		if(document.getElementById('recycle_vfs').checked){XHR.appendData('recycle_bin_enable','1');}else{XHR.appendData('recycle_bin_enable','0');}
+	}
+	
+	XHR.sendAndLoad('$page', 'POST',x_RecyclebinSave);	
+
+}
 
 
 function SambaSaveVFSModules(){
@@ -2205,9 +2328,7 @@ function SambaSaveVFSModules(){
 		if(document.getElementById('kav_vfs').checked){XHR.appendData('kav_vfs','yes');}else{XHR.appendData('kav_vfs','no');}
 	}	
 	
-	if(document.getElementById('recycle_vfs')){
-		if(document.getElementById('recycle_vfs').checked){XHR.appendData('recycle_vfs','yes');}else{XHR.appendData('recycle_vfs','no');}
-	}
+
 
 	if(document.getElementById('scannedonly_vfs')){
 		if(document.getElementById('scannedonly_vfs').checked){XHR.appendData('scannedonly_vfs','yes');}else{XHR.appendData('scannedonly_vfs','no');}

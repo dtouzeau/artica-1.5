@@ -1,5 +1,6 @@
 <?php
 if(posix_getuid()<>0){die("Cannot be used in web server mode\n\n");}
+$GLOBALS["AS_ROOT"]=true;
 include_once(dirname(__FILE__).'/ressources/class.templates.inc');
 include_once(dirname(__FILE__).'/ressources/class.ldap.inc');
 include_once(dirname(__FILE__).'/ressources/class.mysql.inc');

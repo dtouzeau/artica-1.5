@@ -46,8 +46,10 @@ $GLOBALS["PHP5_BIN"]=LOCATE_PHP5_BIN2();
 $GLOBALS["PostfixNotifyMessagesRestrictions"]=$sock->GET_INFO("PostfixNotifyMessagesRestrictions");
 $GLOBALS["PopHackEnabled"]=$sock->GET_INFO("PopHackEnabled");
 $GLOBALS["PopHackCount"]=$sock->GET_INFO("PopHackCount");
+$GLOBALS["DisableMailBoxesHack"]=$sock->GET_INFO("DisableMailBoxesHack");
 $GLOBALS["EnableArticaSMTPStatistics"]=$sock->GET_INFO("EnableArticaSMTPStatistics");
 if(!is_numeric($GLOBALS["EnableArticaSMTPStatistics"])){$GLOBALS["EnableArticaSMTPStatistics"]=1;}
+if(!is_numeric($GLOBALS["DisableMailBoxesHack"])){$GLOBALS["DisableMailBoxesHack"]=0;}
 if($GLOBALS["PopHackEnabled"]==null){$GLOBALS["PopHackEnabled"]=1;}
 if($GLOBALS["PopHackCount"]==null){$GLOBALS["PopHackCount"]=10;}
 $GLOBALS["MYPATH"]=dirname(__FILE__);
@@ -201,6 +203,11 @@ if(strpos($buffer,"DecodeShortURLs")>0){return;}
 if(strpos($buffer,"FWD via SMTP: <")>0){return;}
 if(strpos($buffer,"DKIM-Signature header added")>0){return;}
 if(strpos($buffer,"Passed CLEAN, MYNETS LOCAL")>0){return;}
+if(strpos($buffer,") Passed CLEAN, [")>0){return;}
+if(strpos($buffer,") Passed BAD-HEADER, [")>0){return;}
+if(strpos($buffer,") Checking: ")>0){return;}
+if(strpos($buffer,") WARN: MIME::Parser error: unexpected end of header")>0){return;}
+if(strpos($buffer,") Open relay? Nonlocal recips but not originating")>0){return;}
 if(strpos($buffer,": not authenticated")>0){return;}
 if(strpos($buffer,": dk_eom() returned status")>0){return;}
 if(strpos($buffer,"ASN1_D2I_READ_BIO:not enough data")>0){return;}
@@ -217,6 +224,7 @@ if(strpos($buffer,"Message Aborted!")>0){return;}
 if(strpos($buffer,"WHITELISTED [")>0){return;}
 if(strpos($buffer,"COMMAND PIPELINING from")>0){return;}
 if(strpos($buffer,"COMMAND COUNT LIMIT from [")>0){return;}
+if(strpos($buffer,"]: warning: psc_cache_update:")>0){return;}
 if(strpos($buffer,"]: PREGREET")>0){return;}
 if(strpos($buffer,": PASS OLD [")>0){return;}
 if(strpos($buffer,"]: DNSBL rank")>0){return;}
@@ -310,6 +318,37 @@ if(preg_match("#zarafa-dagent.+?Client disconnected#",$buffer)){return null;}
 
 if(regex_amavis($buffer)){return;}
 
+
+if(preg_match("#zarafa-server.+?SQL Failed:(.+)#",$buffer,$re)){
+	$file="/etc/artica-postfix/croned.1/zarafa-server.".md5($re[1]);
+	if($timefile>10){
+		email_events("Zarafa server SQL issue",
+		"zarafa-server claim \n$buffer\nThere is an SQL issue\nplease Check Artica Technology support service.","mailbox");
+		@file_put_contents($file,"#");
+		}else{events("Zarafa-server SQL issue {$re[1]} {$timefile}Mn/5Mn");}
+	return;			
+}
+	
+if(preg_match("#(.+?)\/smtpd\[.+?fatal:\s+config variable inet_interfaces#", $buffer)){
+	$file="/etc/artica-postfix/croned.1/postfix.error.inet_interfaces";
+	events("inet_interfaces issues' '{$re[1]}'");
+	$timefile=file_time_min($file);
+	if($timefile>10){
+		email_events("{$re[1]}: misconfiguration on inet_interfaces",
+		"Postfix claim \n$buffer\n\nIf this event is resended\nplease Check Artica Technology support service.","postfix");
+		@file_put_contents($file,"#");
+		if($re[1]=="postfix"){
+			$cmd=trim("{$GLOBALS["NOHUP_PATH"]} {$GLOBALS["PHP5_BIN"]} /usr/share/artica-postfix/exec.postfix.maincf.php --interfaces >/dev/null 2>&1 &");
+			events("$cmd");
+			shell_exec($cmd);
+		}else{
+			$cmd=trim("{$GLOBALS["NOHUP_PATH"]} {$GLOBALS["PHP5_BIN"]} /usr/share/artica-postfix/exec.postfix-multi.php >/dev/null 2>&1 &");
+			events("$cmd");
+			shell_exec($cmd);
+		}
+	}
+	return;			
+}
 
 	if(preg_match("#\]:\s+bayes: cannot open bayes databases\s+(.+?)\/bayes_.+?R\/.+?: tie failed.+?Permission denied#", $buffer,$re)){
 		events("cannot open bayes databases , Permission denied' '{$re[1]}/bayes_*'");
@@ -1773,6 +1812,8 @@ if(preg_match('#]:\s+(.+?): to=<(.+?)>.+?socket/lmtp\].+?status=deferred.+?lost 
 
 
 if(preg_match('#badlogin: \[(.+?)\] plaintext\s+(.+?)\s+SASL\(-13\): authentication failure: checkpass failed#',$buffer,$re)){
+	if($GLOBALS["DisableMailBoxesHack"]==1){return;}
+	
 	$date=date('Y-m-d H');
 	$_GET["IMAP_HACK"][$re[1]][$date]=$_GET["IMAP_HACK"][$re[1]][$date]+1;
 	events("cyrus Hack:bad login {$re[1]}:{$_GET["IMAP_HACK"][$re[1]][$date]} retries");
@@ -3273,6 +3314,7 @@ function kavmilter_expired($buffer){
 	}
 
 function hackPOP($ip,$logon,$buffer){
+	if($GLOBALS["DisableMailBoxesHack"]==1){return;}
 	if($GLOBALS["PopHackEnabled"]==0){return;}
 	$file="/etc/artica-postfix/croned.1/postfix.hackPop3.error";
 	if($ip=="127.0.0.1"){return;}
@@ -3462,10 +3504,7 @@ while (list ($num, $ligne) = each ($GLOBALS["SMTP_HACK_CONFIG_RATE"]) ){
 
 function smtp_hack_perform($servername,$array,$matches){
 	if($servername=="127.0.0.1"){return;}
-	//email_events("SMTP HACKING !!!!","Build iptables rule \"iptables -I INPUT -s {$re[1]} -j DROP\" for {$re[1]}!\nlast error: $buffer","postfix");
-	//shell_exec("iptables -I INPUT -s {$re[1]} -j DROP");
-	//events("SMTP Hack: -> iptables -I INPUT -s {$re[1]} -j DROP");
-	
+
 	$NAME_SERVICE_NOT_KNOWN=$array["NAME_SERVICE_NOT_KNOWN"];
 	$SASL_LOGIN=$array["SASL_LOGIN"];
 	$USER_UNKNOWN=$array["USER_UNKNOWN"];

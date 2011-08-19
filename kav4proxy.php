@@ -26,8 +26,11 @@ $user=new usersMenus();
 	if(isset($_GET["inline"])){js();exit;}
 	if(isset($_GET["tabs"])){tabs();exit;}
 	if(isset($_GET["kav4proxy-status"])){kav4proxy_status();exit;}
-
+	if(isset($_GET["Kav4EULA"])){Kav4EULA();exit;}
+	if(isset($_POST["AcceptEULA"])){Kav4EULASave();exit;}
 js();
+
+
 
 function kav4proxy_status(){
 	$ini=new Bs_IniHandler();
@@ -37,6 +40,8 @@ function kav4proxy_status(){
 	$ini->loadString(base64_decode($sock->getFrameWork('cmd.php?squid-ini-status=yes')));
 	$kav=DAEMON_STATUS_ROUND("KAV4PROXY",$ini,null,1);
 	$Keep=DAEMON_STATUS_ROUND("KAV4PROXY_KEEPUP2DATE",$ini,null,1);
+	$Kav4ProxyLicenseRead=$sock->GET_INFO("Kav4ProxyLicenseRead");
+	if(!is_numeric($Kav4ProxyLicenseRead)){$Kav4ProxyLicenseRead=0;}
 	
 	$pattern_date=base64_decode($sock->getFrameWork("cmd.php?kav4proxy-pattern-date=yes"));
 	$pattern_date_org=$pattern_date;
@@ -54,6 +59,38 @@ function kav4proxy_status(){
 		
 	}
 	
+	$sql="SELECT * FROM kav4proxy_av_stats ORDER BY zDate DESC LIMIT 0,1";
+	$q=new mysql();
+	$ligne_query=mysql_fetch_array($q->QUERY_SQL($sql,"artica_events"));
+	$fields[]="total_requests";
+	$fields[]="infected_requests";
+	$fields[]="protected_requests";
+	$fields[]="error_requests";
+	$fields[]="requests_per_min";
+	$fields[]="processed_traffic";
+	$fields[]="clean_traffic";
+	$fields[]="infected_traffic";
+	$fields[]="traffic_per_min";
+	$fields[]="engine_errors";
+	$fields[]="total_connections";
+	$fields[]="total_processes";
+	$fields[]="idle_processes";
+	
+	if($ligne_query["zDate"]<>null){
+		
+		while (list ($num, $ligne) = each ($fields) ){
+		$status[]="
+		<tr>
+			<td class=legend>{kav4_$ligne}:</td>
+			<td style='font-size:14px'>{$ligne_query[$ligne]}</td>
+			<td width=1%>". help_icon("{kav4_{$ligne}_text}")."</td>
+		</tr>";	 	 	 	 	 	 	 	 	 	 	 	
+		}
+		
+	}
+	
+	if(is_array($status)){$status_text=@implode("\n", $status);}
+	
 	$html="$kav$Keep
 	<div style='text-align:right'>". imgtootltip("refresh-24.png","{refresh}","Kav4ProxyStatus()")."</div>
 	<br>
@@ -61,11 +98,21 @@ function kav4proxy_status(){
 	<tbody>
 		<tr>
 			<td class=legend>{pattern_date}:</td>
-			<td style='font-size:14px'>$pattern_date</td>
+			<td style='font-size:14px' colspan=2>$pattern_date</td>
 		</tr>
+		$status_text
 	</tbody>
 	</table>
-	
+	<script>
+		function Kav4EULA(){
+			var Kav4ProxyLicenseRead=$Kav4ProxyLicenseRead;
+			if(Kav4ProxyLicenseRead==0){
+				YahooWin(680,'$page?Kav4EULA=yes','License...',true,'top');
+			}
+		
+		}
+	Kav4EULA();
+	</script>
 	";
 	
 	echo $tpl->_ENGINE_parse_body($html);
@@ -109,11 +156,14 @@ function status(){
 
 
 function tabs(){
+		$font_size=$_GET["font-size"];
+		if($font_size==null){$font_size="14px";}
 		$tpl=new templates();
 		$page=CurrentPageName();
 		$users=new usersMenus();
 		$array["status"]='{status}';
 		$array["tasks"]='{tasks}';
+		$array["groups"]='{groups}';
 		$array["ExcludeMimeType"]='{exclude}:{ExcludeMimeType}';
 		$array["icapserver_engine_options"]='{icapserver_1}';
 		
@@ -123,10 +173,16 @@ function tabs(){
 
 	while (list ($num, $ligne) = each ($array) ){
 		if($num=="tasks"){
-			$tab[]="<li><a href=\"Kav4Proxy.Tasks.php\"><span style='font-size:14px'>$ligne</span></a></li>\n";
+			$tab[]="<li><a href=\"Kav4Proxy.Tasks.php\"><span style='font-size:$font_size'>$ligne</span></a></li>\n";
 			continue;
 		}
-		$tab[]="<li><a href=\"$page?$num=yes\"><span style='font-size:14px'>$ligne</span></a></li>\n";
+		
+		if($num=="groups"){
+			$tab[]="<li><a href=\"Kav4Proxy.Groups.php\"><span style='font-size:$font_size'>$ligne</span></a></li>\n";
+			continue;
+		}		
+		
+		$tab[]="<li><a href=\"$page?$num=yes\"><span style='font-size:$font_size'>$ligne</span></a></li>\n";
 			
 		}
 	
@@ -157,7 +213,7 @@ function tabs(){
 function js(){
 	$Kav4Proxyload="Kav4Proxyload()";
 if(isset($_GET["inline"])){
-	$Kav4Proxyload="Kav4ProxyloadInLIne()";
+	$Kav4Proxyload="Kav4ProxyloadInLIne('{$_GET["font-size"]}')";
 	$prefix="<div id='Kav4Proxy-div'>
 	</div>
 	<script>
@@ -202,24 +258,7 @@ function ExcludeMimeTypeAdd(){
 		XHR.sendAndLoad('$page', 'GET',x_ExcludeMimeTypeAdd);
 }
 
-var x_icapserver_engine_options_save= function (obj) {
-	var tempvalue=obj.responseText;
-	if(tempvalue.length>3){alert(tempvalue)};
-    YahooWin2Hide();
-	}	
 
-
-function icapserver_engine_options_save(){
-		var XHR = new XHRConnection();
-		XHR.appendData('MaxChildren',document.getElementById('MaxChildren').value);
-		XHR.appendData('IdleChildren',document.getElementById('IdleChildren').value);
-		XHR.appendData('MaxReqsPerChild',document.getElementById('MaxReqsPerChild').value);
-		XHR.appendData('PreviewSize',document.getElementById('PreviewSize').value);
-		XHR.appendData('MaxReqLength',document.getElementById('MaxReqLength').value);
-		XHR.appendData('MaxEnginesPerChild',document.getElementById('MaxEnginesPerChild').value);
-		document.getElementById('icapserver_engine_options').innerHTML='<center><img src=\"img/wait_verybig.gif\"></center>';
-		XHR.sendAndLoad('$page', 'GET',x_icapserver_engine_options_save);
-}
 
       
 
@@ -235,8 +274,8 @@ function ExcludeMimeTypeRefreshList(){
 }
 
 
-function Kav4ProxyloadInLIne(){
-	LoadAjax('Kav4Proxy-div','$page?tabs=yes');
+function Kav4ProxyloadInLIne(fontsize){
+	LoadAjax('Kav4Proxy-div','$page?tabs=yes&font-size='+fontsize);
 }
 
 	$Kav4Proxyload;
@@ -344,14 +383,29 @@ echo $tpl->_ENGINE_parse_body($html);
 }
 
 function icapserver_engine_options(){
+$page=CurrentPageName();
 $kav4=new Kav4Proxy();
+include_once(dirname(__FILE__)."/ressources/system.network.inc");
+$ip=new networking();
+$ips=$ip->ALL_IPS_GET_ARRAY();
+$ips["0.0.0.0"]="{all}";
+
+
+if(preg_match("#(.+?):[0-9]+#", $kav4->main_array["ListenAddress"],$re)){$kav4->main_array["ListenAddress"]=$re[1];}
+
+
 $html=" 
 <div id='icapserver_engine_options'>
 				<table style='width:100%' class=form>
 				<tr>
-				<td align='right' style='font-size:14px' class=legend><strong>{MaxChildren}:</strong></td>
-				<td align='left'>" . Field_text('MaxChildren',$kav4->main_array["MaxChildren"],'width:50px;font-size:14px')."</td>
-				<td align='left'>" . help_icon('{MaxChildren_text}',false,'milter.index.php') . "</td>
+					<td align='right' style='font-size:14px' class=legend><strong>{ListenAddress}:</strong></td>
+					<td align='left' style='font-size:14px'>" . Field_array_Hash($ips, 'ListenAddress',$kav4->main_array["ListenAddress"],'style:font-size:14px')."&nbsp;:1344</td>
+					<td align='left'>&nbsp;</td>
+				</tr>				
+				<tr>
+					<td align='right' style='font-size:14px' class=legend><strong>{MaxChildren}:</strong></td>
+					<td align='left'>" . Field_text('MaxChildren',$kav4->main_array["MaxChildren"],'width:50px;font-size:14px')."</td>
+					<td align='left'>" . help_icon('{MaxChildren_text}',false,'milter.index.php') . "</td>
 				</tr>
 				<tr>
 				<td align='right' style='font-size:14px' class=legend><strong>{IdleChildren}:</strong></td>
@@ -386,7 +440,33 @@ $html="
 						". button("{save}","icapserver_engine_options_save()")."</td>
 				</tr>
 				</table>
-			</div>";
+			</div>
+		<script>
+var x_icapserver_engine_options_save= function (obj) {
+		var tempvalue=obj.responseText;
+		if(tempvalue.length>3){alert(tempvalue)};
+    	YahooWin2Hide();
+    	if(document.getElementById('main_kav4proxy_config')){RefreshTab('main_kav4proxy_config');}
+	}	
+
+
+function icapserver_engine_options_save(){
+		var XHR = new XHRConnection();
+		XHR.appendData('MaxChildren',document.getElementById('MaxChildren').value);
+		XHR.appendData('IdleChildren',document.getElementById('IdleChildren').value);
+		XHR.appendData('MaxReqsPerChild',document.getElementById('MaxReqsPerChild').value);
+		XHR.appendData('PreviewSize',document.getElementById('PreviewSize').value);
+		XHR.appendData('MaxReqLength',document.getElementById('MaxReqLength').value);
+		XHR.appendData('MaxEnginesPerChild',document.getElementById('MaxEnginesPerChild').value);
+		XHR.appendData('ListenAddress',document.getElementById('ListenAddress').value);
+		AnimateDiv('icapserver_engine_options');
+		XHR.sendAndLoad('$page', 'GET',x_icapserver_engine_options_save);
+}
+</script>
+
+			
+			
+			";
 $tpl=new templates();
 echo $tpl->_ENGINE_parse_body($html);	
 }
@@ -397,9 +477,50 @@ function icapserver_engine_options_save(){
 		$kav->MOD("icapserver.process","MaxChildren",$_GET["MaxChildren"]);
 		$kav->MOD("icapserver.process","IdleChildren",$_GET["IdleChildren"]);
 		$kav->MOD("icapserver.process","MaxReqsPerChild",$_GET["MaxReqsPerChild"]);
-		$kav->MOD("icapserver.process","MaxEnginesPerChild",$_GET["MaxEnginesPerChild"]);		
+		$kav->MOD("icapserver.process","MaxEnginesPerChild",$_GET["MaxEnginesPerChild"]);
+		$kav->MOD("icapserver.network","ListenAddress","{$_GET["ListenAddress"]}:1344");
+		
+		
 		$sock=new sockets();
 		$sock->getFrameWork("cmd.php?kav4proxy-reconfigure=yes");		
+}
+
+function Kav4EULA(){
+	
+	$tpl=new templates();
+	$page=CurrentPageName();
+	$language=$tpl->language;
+	$dataf="ressources/databases/kav4license-$language-license.txt";
+	if(!is_file($dataf)){$dataf="ressources/databases/kav4license-en-license.txt";}
+	
+	$html="<center style='margin:20px' id='kavlogoforanimate'><imf src='img/kaspersky-logo-250.png'></center>
+	
+	<div style='width:100%;text-align:right'>". button("{i_accept}","AcceptEULA()")."</div>
+	<textarea style='width:100%;height:450px;overflow:auto;border:0px;font-size:13px'>".@file_get_contents($dataf)."</textarea>
+	
+	
+	<script>
+	var x_AcceptEULA= function (obj) {
+		var tempvalue=obj.responseText;
+		if(tempvalue.length>3){alert(tempvalue);return;};
+    	YahooWinHide();
+	}		
+	
+	
+	function AcceptEULA(){
+		var XHR = new XHRConnection();
+		XHR.appendData('AcceptEULA','1');
+		AnimateDiv('kavlogoforanimate');
+		XHR.sendAndLoad('$page', 'POST',x_AcceptEULA);
+	}
+	</script>
+	";
+	
+	echo $tpl->_ENGINE_parse_body($html);
+}
+function Kav4EULASave(){
+	$sock=new sockets();
+	$sock->SET_INFO("Kav4ProxyLicenseRead", 1);
 }
 
 

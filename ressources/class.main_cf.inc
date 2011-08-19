@@ -1640,6 +1640,8 @@ class master_cf{
 	var $array_full=array();
 	var $PostfixEnableMasterCfSSL;
 	var $hostname;
+	var $MasterCFUseDefaults=1;
+	var $noService=false;
 	
 	var $array_type=array("fifo"=>"FIFO","inet"=>"INET","unix"=>"UNIX","pass"=>"PASS");
 	
@@ -1676,9 +1678,11 @@ class master_cf{
 		$this->hostname=$hostname;
 		$sock=new sockets();
 		$this->PostfixEnableMasterCfSSL=$sock->GET_INFO("PostfixEnableMasterCfSSL");
+		$this->MasterCFUseDefaults=$sock->GET_INFO("MasterCFUseDefaults$this->hostname");
+		if(!is_numeric($this->MasterCFUseDefaults)){$this->MasterCFUseDefaults=1;}
 		$q=new mysql();
 		if(!$q->TABLE_EXISTS("master_cf", "artica_backup")){$q->BuildTables();}
-		$this->CheckDefaults();
+		if($noload==0){$this->CheckDefaults();}
 	}
 	
 	function master_delete_all(){
@@ -1702,12 +1706,68 @@ class master_cf{
 	}
 	
 	
+	function GetArray(){
+		if($this->MasterCFUseDefaults==1){return array();}
+		$sql="SELECT * FROM master_cf WHERE hostname='$this->hostname'";
+		$q=new mysql();
+		$results=$q->QUERY_SQL($sql,"artica_backup");
+		if(mysql_num_rows($results)==0){return array();}
+		if(!$q->ok){echo "$q->mysql_error\n";}
+	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
+		$KEY=$ligne["zmd5"];
+		$SERVICE=$ligne["SERVICE_NAME"];
+		$TYPE=$ligne["TYPE"];
+		$options=array();
+		$optionsTXT=null;
+		$MAXPROC=$ligne["MAXPROC"];
+		$PRIVATE=$ligne["PRIVATE"];
+		$UNIPRIV=$ligne["UNIPRIV"];
+		$CHROOT=$ligne["CHROOT"];
+		$WAKEUP=$ligne["WAKEUP"];
+		
+		if($MAXPROC==null){$MAXPROC="-";}
+		if($PRIVATE==null){$PRIVATE="-";}
+		if($UNIPRIV==null){$UNIPRIV="-";}
+		if($CHROOT==null){$CHROOT="-";}
+		if($WAKEUP==null){$WAKEUP="-";}
+		
+		$options=unserialize($ligne["COMMAND"]);
+		$optionsF=array();
+		$count=0;
+		if (is_array($options)){
+			while (list ($index, $opt) = each ($options) ){
+				if(trim($opt)==null){continue;}
+				if(trim($opt)=="Array"){continue;}
+				if(is_array($opt)){continue;}
+				$count++;
+				$optionsF[]=$opt;
+			}
+		}else{continue;}	
+		
+		if(count($optionsF)==0){continue;}
+		
+		$array[$SERVICE]=array(
+			"TYPE"=>$TYPE,
+			"MAXPROC"=>$MAXPROC,
+			"PRIVATE"=>$PRIVATE,
+			"UNIPRIV"=>$UNIPRIV,
+			"CHROOT"=>$CHROOT,
+			"WAKEUP"=>$WAKEUP,
+			"COMMAND"=>@implode(" ", $optionsF));
+		
+		
+		
+	}
+	return $array;
+	}
+	
 
 
 
 	
 	//calibri
-	function add_defaults(){
+	private function add_defaults(){
+		$this->noService=true;
 		$this->edit_service("smtp    ","inet","n","-","n","-",   "-",array("smtpd"));
 		$this->edit_service("pickup  ","fifo","n","-","n","60",   "1",array("pickup"));
 		$this->edit_service("cleanup ","unix","n","-","n","-",    "0",array("cleanup"));
@@ -1739,7 +1799,8 @@ class master_cf{
 		$this->edit_service("bsmtp   ","unix","-","n","n",        "-","-",array("pipe",'flags=Fq. user=bsmtp argv=/usr/lib/bsmtp/bsmtp -t$nexthop -f$sender $recipient'));	
 		$this->edit_service("scalemail-backend","unix","-","n","n","-","2",array("pipe",
 		'flags=R user=scalemail argv=/usr/lib/scalemail/bin/scalemail-store ${nexthop} ${user} ${extension}'));		
-
+		$sock=new sockets();
+		$sock->getFrameWork("cmd.php?postfix-throttle=yes&instance=$this->hostname");
 		
 		
 	}
@@ -1778,44 +1839,68 @@ class master_cf{
 		if($edit){$sql=$sql_upd;}
 		$q->QUERY_SQL($sql,"artica_backup");
 		if(!$q->ok){echo __CLASS__.'/'.__FUNCTION__ ." (".__LINE__.") failed\n$q->mysql_error\n<H2>$sql</H2>";return false;}
+		if(!$this->noService){
+			$sock=new sockets();
+			$sock->getFrameWork("cmd.php?postfix-throttle=yes&instance=$this->hostname");
+		}
 		return true;
 		}
 	
 	function add_command_options($zmd5,$option){
 		$q=new mysql();
 		$sql="SELECT zmd5,COMMAND FROM master_cf WHERE zmd5='$zmd5'";
+		
 		$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"artica_backup"));
-		$commandz=unserialize($ligne["COMMAND"]);
-		$commandz[]=$option;
+		writelogs("$sql={$ligne["zmd5"]}",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+		$commandz=array();
+		$array=unserialize($ligne["COMMAND"]);
+		if(is_array($array)){
+			$commandz=$array;
+			$commandz[]=$option;
+		}else{
+			$commandz[]=$option;
+		}
+		$options=addslashes(serialize($commandz));
+		$sql="UPDATE master_cf SET `COMMAND`='$options' WHERE zmd5='$zmd5'";
+		$q->QUERY_SQL($sql,"artica_backup");
+		if(!$q->ok){echo __CLASS__.'/'.__FUNCTION__ ." (".__LINE__.") failed\n$q->mysql_error\n<H2>$sql</H2>";return false;}
+		$sock=new sockets();
+		$sock->getFrameWork("cmd.php?postfix-throttle=yes&instance=$this->hostname");		
+		return true;
+	}
+	function del_command_options($zmd5,$index){
+		$q=new mysql();
+		$sql="SELECT zmd5,COMMAND FROM master_cf WHERE zmd5='$zmd5'";
+		
+		$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"artica_backup"));
+		writelogs("$sql={$ligne["zmd5"]}",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+		$commandz=array();
+		$array=unserialize($ligne["COMMAND"]);
+		if(is_array($array)){
+			unset($array[$index]);
+			$commandz=$array;
+			
+		}else{
+			return;
+		}
 		$options=addslashes(serialize($commandz));
 		$sql="UPDATE master_cf SET `COMMAND`='$options'";
 		$q->QUERY_SQL($sql,"artica_backup");
 		if(!$q->ok){echo __CLASS__.'/'.__FUNCTION__ ." (".__LINE__.") failed\n$q->mysql_error\n<H2>$sql</H2>";return false;}
-		return true;
-	}
-	function del_command_options($service_name,$index){
-		$ldap=new clladp();
-		$service_name=trim($service_name);
-		$dn_suffix="cn=master.cf,cn=artica,$ldap->suffix";
-		$dn="cn=$service_name,$dn_suffix";
-		$upd["MasterCfCommandParams"]=$this->array_full[$service_name]["OPTIONS"][$index];
-		if(!$ldap->Ldap_del_mod($dn,$upd)){
-			$this->ldap_error=$ldap->ldap_last_error;
-			return false;
-		}
-		$this->PostfixMasterCfFile=$this->Build();
-		$this->SaveToLdap();
-		return true;
+		$sock=new sockets();
+		$sock->getFrameWork("cmd.php?postfix-throttle=yes&instance=$this->hostname");			
+		return true;		
 	}
 	
-	function delete_service($service){
-		$ldap=new clladp();
-		$service=trim($service);
-		$dn_suffix="cn=master.cf,cn=artica,$ldap->suffix";
-		$dn="cn=$service,$dn_suffix";
-		$ldap->ldap_delete($dn,true);
-		$this->PostfixMasterCfFile=$this->Build();
-		$this->SaveToLdap();
+	function delete_service($zdm5){
+		$q=new mysql();
+		$sql="DELETE FROM master_cf WHERE zmd5='$zdm5' AND `hostname`='$this->hostname'";
+		writelogs("$sql=$zdm5",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+		$q->QUERY_SQL($sql,"artica_backup");
+		if(!$q->ok){echo __CLASS__.'/'.__FUNCTION__ ." (".__LINE__.") failed\n$q->mysql_error\n<H2>$sql</H2>";return false;}
+		$sock=new sockets();
+		$sock->getFrameWork("cmd.php?postfix-throttle=yes&instance=$this->hostname");			
+		return true;			
 	}
 		
 	
@@ -1823,7 +1908,7 @@ class master_cf{
 
 	function LoadMastercfInDisk(){
 		$sock=new sockets();
-		return $sock->getfile('master.cf');
+		return $sock->getFrameWork('master.cf');
 		}
 		
 	function StripLines(){

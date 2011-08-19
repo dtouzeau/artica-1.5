@@ -55,10 +55,7 @@ Les ordinateurs rapides n'ont pas besoin de cette option.</createlistcachefiles_
 <dans_add_rule_text>Indiquez le nom de votre nouvelle r&egrave;gle</dans_add_rule_text>
 <dating>Sites de rencontres pour c&eacute;libataires</dating>
 <deepurlanalysis>Analyse profonde des URL</deepurlanalysis>
-<deepurlanalysis_text>When enabled, DansGuardian looks for URLs within URLs, checking against the banned site list and
-banned url list.[br]
-This can be used, for example, to block images originating from banned sites from appearing in Google Images search results, as the original URLs are
-embedded in the thumbnail GET requests.</deepurlanalysis_text>
+<deepurlanalysis_text>Si Actif, DansGuardian cherche les URLs dans les URLs et les v&eacute;rifie avec les sites et liens interdits.[br]Ceci peut &ecirc;tre utilis&eacute; par exemple pour bloquer des images provenant des sites interdits ou qui apparaissent dans les r&eacute;sultats des moteurs de recherche comme des ic&ocirc;nes r&eacute;duites.</deepurlanalysis_text>
 <deletedownloadedtempfiles>Supprimer les fichiers temporairement t&eacute;l&eacute;charg&eacute;s</deletedownloadedtempfiles>
 <deletedownloadedtempfiles_text>Supprimer le fichier mise en cache apr&egrave;s que l'utilisateur &agrave; effectu&eacute; le t&eacute;l&eacute;chargement [br]
 Quand un fichier est sauvegard&eacute; dans le r&eacute;pertoire temporaire, il est conserv&eacute; jusqu'&agrave; ce qu'il soit supprim&eacute;. [br]
@@ -153,17 +150,9 @@ set here web sites you want to block example if you want to block http://www.bad
 <malware>Sites web malwares (trojan, virus, spyware) et anti-malwares</malware>
 <marketingware>Sites marketing tr&egrave;s sp&eacute;ciaux</marketingware>
 <maxagechildren>dur&eacute;e de vie maximum des enfants</maxagechildren>
-<maxagechildren_text>
-Sets the maximum age of a child process before it croaks it.[br]
-This is the number of connections they handle before exiting.[br]
-On large sites you might want to try 10000.
-</maxagechildren_text>
+<maxagechildren_text>Indiquer la dur&eacute;e maximale de vie d'un processus fils.[br]C'est le nombre de connexions qu'un processus peut accumuler avant de s'&eacute;teindre.[br]Sur des flux importants, vous devriez essayer  10000</maxagechildren_text>
 <maxchildren>Nombre d'enfants maximum</maxchildren>
-<maxchildren_text>
-sets the maximum number of processes to spawn to handle the incoming connections.[br]
-Max value usually 250 depending on OS.[br]
-On large sites you might want to try 180
-</maxchildren_text>
+<maxchildren_text>Indique le nombre maximal de processus &agrave; pr&eacute;parer afin d'accepter les connexions.[br]La valeur Maximal est habituellement de 250 et cela d&eacute;pend du syst&egrave;me.[br]Sur un gros trafic, vous devrez essayer 180</maxchildren_text>
 <maxcontentfilecachescansize>Taille maximal du cache pour l'analyse des fichiers</maxcontentfilecachescansize>
 <maxcontentfilecachescansize_text>Utilis&eacute; uniquement si vous utilisez un moteur antivirus.[br]C'est la taille maximale du t&eacute;l&eacute;chargement effectu&eacute; pour l'envoi vers un moteur antivirus.[br]Cette valeur doit &ecirc;tre plus grande ou &eacute;gale &agrave; la valeur de &quot;Taille de la m&eacute;moire physique Max du cache de contenu&quot;.[br] la valeur est en KB (10240 = 10Mb).</maxcontentfilecachescansize_text>
 <maxcontentfiltersize>Taille Maximum du Filtre de Contenu</maxcontentfiltersize>

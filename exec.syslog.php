@@ -35,7 +35,8 @@ $GLOBALS["SID"]="";
 $squidbin=$unix->find_program("squid3");
 if(!is_file($squidbin)){$squidbin=$unix->find_program("squid");}
 $GLOBALS["SQUIDBIN"]=$squidbin;
-$GLOBALS["nohup"]=$unix->find_program("nohup");		
+$GLOBALS["nohup"]=$unix->find_program("nohup");
+					
 $GLOBALS["ROUNDCUBE_HACK"]=0;
 $GLOBALS["PDNS_HACK"]=$sock->GET_INFO("EnablePDNSHack");
 $GLOBALS["PDNS_HACK_MAX"]=$sock->GET_INFO("PDNSHackMaxEvents");
@@ -45,6 +46,7 @@ $GLOBALS["PDNS_HACK_DB"]=array();
 
 $unix=new unix();
 $GLOBALS["NODRYREBOOT"]=$sock->GET_INFO("NoDryReboot");
+$GLOBALS["NOOUTOFMEMORYREBOOT"]=$sock->GET_INFO("NoOutOfMemoryReboot");
 $GLOBALS["CLASS_SOCKET"]=$sock;
 $GLOBALS["CLASS_UNIX"]=$unix;
 $sock=null;
@@ -289,6 +291,28 @@ if(IfFileTime($artica_status_pointer,3)){
 }
 	
 	
+if(preg_match("#dnsmasq.+? failed to read\s+(.+?):\s+Permission denied#",$buffer,$re)){
+	if(!isset($GLOBALS["aa-complain"])){$GLOBALS["aa-complain"]=$GLOBALS["CLASS_UNIX"]->find_program("aa-complain");}
+	if(!isset($GLOBALS["dnsmasq_bin"])){$GLOBALS["dnsmasq_bin"]=$GLOBALS["CLASS_UNIX"]->find_program("dnsmasq");}
+	$targetedfile=$re[1];
+	$file="/etc/artica-postfix/croned.1/dnsmasq.". md5($targetedfile).".Permission.denied";
+	events("dnsmasq $targetedfile -> Permission denied");
+	if(IfFileTime($file,10)){
+			events("dnsmasq $targetedfile -> chmod 755");
+			if(is_file($GLOBALS["aa-complain"])){
+				events("dnsmasq {$GLOBALS["aa-complain"]}  -> {$GLOBALS["dnsmasq_bin"]}");
+				shell_exec("{$GLOBALS["aa-complain"]} {$GLOBALS["dnsmasq_bin"]}");
+			}
+			email_events("dnsmasq: Permission denied on $targetedfile","dnmasq claims:\n$buffer\nArtica will change permission of this file to 0755 in order to fix this issue and put it into aa-complain mode",'system');
+			shell_exec("/bin/chmod 755 \"$targetedfile\"");
+			shell_exec(trim("{$GLOBALS["nohup"]} /etc/init.d/artica-postfix restart dnsmasq >/dev/null 2>&1 &"));
+			@unlink($file);	
+			WriteFileCache($file);
+		}
+		return;
+	}	
+
+
 	
 if(preg_match("#pam_ldap: error trying to bind \(Invalid credentials\)#",$buffer,$re)){
 	$file="/etc/artica-postfix/croned.1/pam_ldap.Invalid.credentials";
@@ -756,13 +780,19 @@ if(preg_match("#(.+?)\[.+?segfault at.+?error.+?in.+?\[#",$buffer,$re)){
 
 if(preg_match("#kernel:.+?Out of memory:\s+kill\s+process\s+#",$buffer,$re)){
 	$file="/etc/artica-postfix/croned.1/kernel.Out.of.memory";
+	if(!is_numeric($GLOBALS["NOOUTOFMEMORYREBOOT"])){$GLOBALS["NOOUTOFMEMORYREBOOT"]=0;}
 	if(IfFileTime($file,1)){
-		events("Out of memory -> REBOOT !!!");
-		email_events("Out of memory: reboot action performed","Kernel claim \"$buffer\" the server will be rebooted",'system');
-		WriteFileCache($file);
-		shell_exec("/etc/init.d/artica-postfix stop");
-		shell_exec("reboot");
-		return;	
+		if($GLOBALS["NOOUTOFMEMORYREBOOT"]<>1){
+			events("Out of memory -> REBOOT !!!");
+			email_events("Out of memory: reboot action performed","Kernel claim \"$buffer\" the server will be rebooted",'system');
+			WriteFileCache($file);
+			shell_exec("/etc/init.d/artica-postfix stop");
+			shell_exec("reboot");
+			return;	
+		}else{
+			email_events("Out of memory: your system hang !","Kernel claim \"$buffer\" I suggest rebooting the system",'system');
+			WriteFileCache($file);
+		}
 	}
 }
 

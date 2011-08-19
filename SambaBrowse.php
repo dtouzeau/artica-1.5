@@ -99,9 +99,14 @@ function main_disks_discover(){
 	$html="<tr>";
 	if(is_array($arrayDisks)){
 	$count=0;$tr=null;
-	while (list ($disk, $ARRAY_FINAL) = each ($arrayDisks) ){				
+	while (list ($disk, $ARRAY_FINAL) = each ($arrayDisks) ){
+								
 					$path=$ARRAY_FINAL["MOUNTED"];
+					if(isset($already[$path])){continue;}
+					if($path==null){continue;}
+					$already[$path]=true;
 					$size=$ARRAY_FINAL["SIZE"];
+					if($size==null){continue;}
 					$pourc=$ARRAY_FINAL["POURC"];
 					$js="Loadjs('SambaBrowse.php?jdisk=$disk&mounted=$path&t={$_GET["t"]}&homeDirectory={$_GET["homeDirectory"]}&no-shares={$_GET["no-shares"]}&field={$_GET["field"]}&protocol={$_GET["protocol"]}&no-hidden={$_GET["no-hidden"]}')";
 					$disk_name=$disk;

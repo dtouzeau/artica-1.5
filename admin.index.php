@@ -182,8 +182,8 @@ if($users->KASPERSKY_SMTP_APPLIANCE){
 }
 
 	if($users->KASPERSKY_WEB_APPLIANCE){
-		$GLOBALS["CHANGE_TEMPLATE"]="squid.kav.html";
-		$GLOBALS["JQUERY_UI"]="kavweb";
+		//$GLOBALS["CHANGE_TEMPLATE"]="squid.kav.html";
+		//$GLOBALS["JQUERY_UI"]="kavweb";
 	}
 
 	if(isset($_GET["admin-ajax"])){$left_menus="LoadAjax('TEMPLATE_LEFT_MENUS','/admin.tabs.php?left-menus=yes');";}
@@ -340,7 +340,8 @@ function main_admin_tabs(){
 	$sock=new sockets();
 	if($users->SQUID_INSTALLED){
 		$SQUIDEnable=$sock->GET_INFO("SQUIDEnable");
-		if($SQUIDEnable==null){$SQUIDEnable=1;}
+		
+		if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
 		if($SQUIDEnable==1){
 			$array["t:HTTP_FILTER_STATS"]="{HTTP_FILTER_MONITOR}";
 			$array["t:HTTP_BLOCKED_STATS"]="{blocked_websites}";
@@ -494,6 +495,14 @@ function status_right(){
 	$ldap=new clladp();
 	if($GLOBALS["VERBOSE"]){echo "$page LINE:".__LINE__."\n";}
 	
+	$DisablePurchaseInfo=$sock->GET_INFO("DisablePurchaseInfo");
+	if(!is_numeric($DisablePurchaseInfo)){$DisablePurchaseInfo=0;}
+	if($DisablePurchaseInfo==0){
+		echo $tpl->_ENGINE_parse_body(RoundedLightGrey(Paragraphe("technical-support-64.png",
+		'{ARTICA_P_SUPPORT}','{ARTICA_P_SUPPORT_TEXT}',"javascript:Loadjs('artica.subscription.php');",null,330)))."<br>";
+	}
+	
+	
 	if($ldap->ldap_password=="secret"){
 		echo RoundedLightGrey(Paragraphe("danger64-user-lock.png",'{MANAGER_DEFAULT_PASSWORD}','{MANAGER_DEFAULT_PASSWORD_TEXT}',"javascript:Loadjs('artica.settings.php?js=yes&bigaccount-interface=yes');",null,330))."<br>";
 	}
@@ -539,6 +548,12 @@ function status_right(){
 	
 	if($mustchangeHostname){echo "<script>Loadjs('admin.chHostname.php');</script>";}	
 	
+	$sock=new sockets();
+	$sock->getFrameWork('cmd.php?ForceRefreshRight=yes');
+	$memory="<div id='mem_status_computer'>".$tpl->_ENGINE_parse_body(@file_get_contents("ressources/logs/status.memory.html"))."</div>";
+	
+	
+	if($users->KASPERSKY_WEB_APPLIANCE){echo $memory.status_squid_kav().$script;return;}
 	
 	
 	if($users->POSTFIX_INSTALLED){
@@ -548,9 +563,13 @@ function status_right(){
 		}
 	
 	if($GLOBALS["VERBOSE"]){echo "$page LINE:".__LINE__."\n";}
-	$memory="<div id='mem_status_computer'>".$tpl->_ENGINE_parse_body(@file_get_contents("ressources/logs/status.memory.html"))."</div>";	
+		
 	
 	if($users->SQUID_INSTALLED){
+		if($users->KASPERSKY_WEB_APPLIANCE){
+			
+		}
+		
 		if($GLOBALS["VERBOSE"]){echo "$page LINE:".__LINE__."\n";}
 		echo $memory.status_squid().$script;
 		return null;
@@ -561,8 +580,7 @@ function status_right(){
 		return null;	
 	}
 	echo "$memory$script";
-	$sock=new sockets();
-	$sock->getFrameWork('cmd.php?ForceRefreshRight=yes');
+	
 	}
 	
 	
@@ -590,6 +608,16 @@ function StatusSamba(){
 	return $tpl->_ENGINE_parse_body($html);
 }
 function status_squid(){
+	$page=CurrentPageName();
+	$tpl=new templates();
+	if($GLOBALS["VERBOSE"]){echo "$page LINE:".__LINE__."\n";}
+	$status=new status();
+	if($GLOBALS["VERBOSE"]){echo "$page LINE:".__LINE__."\n";}
+	$html=$status->Squid_status();
+	return $tpl->_ENGINE_parse_body($html);	
+}
+
+function status_squid_kav(){
 	$page=CurrentPageName();
 	$tpl=new templates();
 	if($GLOBALS["VERBOSE"]){echo "$page LINE:".__LINE__."\n";}
@@ -754,16 +782,19 @@ function status_memdump(){
 
 
 function status_left(){
-	
+	$users=new usersMenus();
 	if(is_file("ressources/logs/web/debian.update.html"));
 	$apt=@file_get_contents("ressources/logs/web/debian.update.html");
 	$html=@file_get_contents("ressources/logs/status.global.html");
 	$sock=new sockets();
 	$DisableWarningCalculation=$sock->GET_INFO("DisableWarningCalculation");
 	$DisableAPTNews=$sock->GET_INFO("DisableAPTNews");
-	
+	$kavicapserverEnabled=$sock->GET_INFO("kavicapserverEnabled");
+	if(!is_numeric($kavicapserverEnabled)){$kavicapserverEnabled=0;}
 	if(!is_numeric($DisableWarningCalculation)){$DisableWarningCalculation=0;}
 	if(!is_numeric($DisableAPTNews)){$DisableAPTNews=0;}
+	
+	if($users->KASPERSKY_WEB_APPLIANCE){$kavicapserverEnabled=1;}
 	
 	if($DisableAPTNews==1){$apt=null;}
 	
@@ -776,8 +807,12 @@ function status_left(){
 	
 	<script>
 		function CheckArticaMeta(){
+			var kavicapserverEnabled=$kavicapserverEnabled;
 			LoadAjax('artica-meta','$page?artica-meta=yes');
 			if(document.getElementById('loadavggraph')){LoadAjax('loadavggraph','admin.index.loadvg.php');}
+			if(kavicapserverEnabled==1){
+				if(document.getElementById('kav4proxyGraphs')){LoadAjax('kav4proxyGraphs','admin.index.kav4proxy.php');}
+			}
 		}
 	
 	
@@ -788,9 +823,6 @@ function status_left(){
 		
 		}
 		
-		
-		
-	
 		CheckArticaMeta();
 	</script>
 	

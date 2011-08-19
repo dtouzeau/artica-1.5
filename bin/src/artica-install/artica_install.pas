@@ -463,6 +463,13 @@ if ParamStr(1)='--awstats-version' then begin
    exit;
 end;
 
+
+if ParamStr(1)='--piwik-version' then begin
+   ztoolsversions:=ttoolsversions.Create(SYS);
+   writeln(ztoolsversions.PIWIK_VERSION());
+   exit;
+end;
+
 if ParamStr(1)='--iptaccount-version' then begin
    ztoolsversions:=ttoolsversions.Create(SYS);
    writeln(ztoolsversions.IPTACCOUNT_VERSION());
@@ -1531,8 +1538,7 @@ writeln(zlvm.SCAN_VG());
 halt(0);
 end;
 
-if ParamStr(1)='--usb-scan-write' then
-begin
+if ParamStr(1)='--usb-scan-write' then begin
 zlvm:=tlvm.Create(SYS);
 FileData:=Tstringlist.CReate;
 GLOBAL_INI:=myconf.Create;

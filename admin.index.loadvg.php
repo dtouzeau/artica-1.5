@@ -235,7 +235,7 @@ $sql="SELECT AVG( `load` ) AS sload, DATE_FORMAT( stime, '%i' ) AS ttime FROM `l
 		}	
 	
 	
-	";	
+	</script>";	
 	
 	
 }

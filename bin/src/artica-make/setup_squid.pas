@@ -497,9 +497,11 @@ if not DirectoryExists(source_folder) then begin
 forceDirectories('/opt/kaspersky/kav4proxy/sbin');
 forceDirectories('/etc/opt/kaspersky');
 
+
   install.INSTALL_PROGRESS('APP_KAV4PROXY','{installing}');
   install.INSTALL_STATUS('APP_KAV4PROXY',50);
-
+fpsystem('/bin/rm -rf /var/opt/kaspersky/kav4proxy/bases >/dev/null');
+forceDirectories('/var/opt/kaspersky/kav4proxy/bases');
 fpsystem('cp -rfv ' + source_folder+'/opt /');
 fpsystem('cp -rfv ' + source_folder+'/etc /');
 fpsystem('cp -rfv ' + source_folder+'/var /');
@@ -524,6 +526,7 @@ install.INSTALL_STATUS('APP_KAV4PROXY',70);
  fpsystem('/bin/chown -R kluser:klusers /var/log/kaspersky/kav4proxy');
  fpsystem('/bin/chown -R kluser:klusers /var/opt/kaspersky/kav4proxy');
  fpsystem('/bin/chown -R kluser:klusers /var/run/kav4proxy');
+ fpsystem('/bin/chown -R kluser:klusers /var/opt/kaspersky/kav4proxy');
  fpsystem('/bin/chmod 0755 /var/opt/kaspersky/kav4proxy');
 
 

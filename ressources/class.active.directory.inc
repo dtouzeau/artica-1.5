@@ -1,5 +1,5 @@
 <?php
-
+include_once(dirname(__FILE__).'/class.mysql.inc');
 class ldapAD{
 	
 	var $ldapbind;
@@ -11,6 +11,8 @@ class ldapAD{
 	var $ldap_port=389;
 	var $ldap_last_error="";
 	var $ldapFailed=false;
+	var $members=array();
+	var $ARRAY_MEMBERS=array();
 	
 	function ldapAD(){
 		
@@ -100,12 +102,12 @@ class ldapAD{
 	
 	function UserSearch($ou=null,$tofind){
 			$uid=$_SESSION["uid"];
-			if($tofind==null){$tofind='*';}else{$tofind="*$tofind*";}
+			if($tofind==null){$tofind='*';}else{$tofind="$tofind*";}
 			$filter="(&(objectClass=user)(|(cn=$tofind)(mail=$tofind)(displayName=$tofind)(samaccountname=$tofind) (givenname=$tofind)))";
 			$attrs=array("displayName","samaccountname","mail","givenname","telephoneNumber","title","sn","mozillaSecondEmail","employeeNumber");
 			if($ou==null){$dn=$this->suffix;}else{$dn="ou=$ou,$this->suffix";}
-			writelogs("Ldap_search : $filter in $dn", __CLASS__ . "/" . __FUNCTION__,__FILE__);
-			$hash=$this->Ldap_search($dn,$filter,$attrs,20);
+			//writelogs("Ldap_search : $filter in $dn", __CLASS__ . "/" . __FUNCTION__,__FILE__);
+			$hash=$this->find_users($ou,$tofind);
 			
 			$hash2=array();	
 			return array($hash,$hash2);
@@ -187,7 +189,8 @@ class ldapAD{
 		
 
 function hash_get_ou($has_key=false){
-		
+		$res=$this->hash_get_ou_mysql($has_key);
+		if(count($res)>0){return $res;}
 		$ld =$this->ldap_connection;
 		$bind =$this->ldapbind;
 		$suffix="$this->suffix";
@@ -199,17 +202,184 @@ function hash_get_ou($has_key=false){
 			if(!is_array($hash)){return array();}
 			
 			while (list ($num, $ligne) = each ($hash) ){
-				$ou=$ligne["ou"][0];
-				if($ou<>null){
-					  	if($has_key){$res[$ou]=$ou;}else{$res[]=$ou;}
-						}
-					}
-				}
+				$ou=trim($ligne["ou"][0]);
+				if($ou==null){continue;}
+				if($has_key){$res[$ou]=$ou;}else{$res[]=$ou;}
+			}
+		}
 			
 			
 		
 		return $res;
 		
-		}		
+		}
+		
+	public function find_members($tofind){
+		$hash=$this->find_users(null,$tofind);
+		for($i=0;$i<$hash["count"];$i++){
+			$this->members[]=$hash[$i]["samaccountname"][0];
+			$this->ARRAY_MEMBERS[$hash[$i]["samaccountname"][0]]=$hash[$i]["samaccountname"][0];
+		}
+		
+	}		
+		
+	public function find_users($ou,$tofind){
+			$hash=$this->find_users_mysql($ou,$tofind);
+			writelogs("search $tofind in $dn Mysql return {$hash["count"]} elements ",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+			if($hash["count"]>0){return $hash;}
+		
+			$tofind=str_replace("***", "*", $tofind);
+			$tofind=str_replace("**", "*", $tofind);
+			$cc=new ldapAD();
+			$dn="$cc->suffix";
+			
+			$filter="(&(objectClass=user)(|(cn=$tofind)(mail=$tofind)(displayName=$tofind)(sAMAccountName=$tofind) (givenname=$tofind)))";
+			$attrs=array("displayName","samaccountname","mail","givenname","telephoneNumber","title","sn","mozillaSecondEmail","employeeNumber");
+			if(trim($ou)=="Domain Controllers"){$dn="CN=Users,$cc->suffix";}
+			writelogs("search $tofind in $dn ",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+			$hash=$cc->Ldap_search($dn,$filter,$attrs,150);	
+			if(!is_array($hash)){return array();}
+			return $hash;
+			
+		}
+		
+	private function find_users_mysql($ou,$tofind){
+		if($tofind=="*"){$tofind=null;}
+		$tofind=str_replace("*", "%", $tofind);
+		if($ou<>null){$sql_ou=" AND ou='$ou'";}
+		
+		
+		$sql="SELECT * FROM activedirectory_users WHERE ((samaccountname LIKE '$tofind' $sql_ou) 
+		OR (displayName LIKE '$tofind' $sql_ou)
+		OR (userprincipalname LIKE '$tofind' $sql_ou)
+		OR (displayname LIKE '$tofind' $sql_ou))
+		ORDER BY samaccountname
+		LIMIT 0,150";
+		
+		if($tofind==null){
+			if($ou<>null){
+				$sql="SELECT * FROM activedirectory_users WHERE ou='$ou' LIMIT 0,150";
+			}
+		}
+		
+		$q=new mysql();
+		$results=$q->QUERY_SQL($sql,"artica_backup");	
+		if(!$q->ok){	writelogs("\n\n$sql\n\n$q->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
+		$hash["count"]=mysql_num_rows($results);
+		if(mysql_num_rows($results)==0){
+			writelogs("0 elements for \n\n$sql\n\n",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+		}
+		$c=0;
+		while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+			$hash[$c]["samaccountname"][0]=$ligne["samaccountname"];
+			$hash[$c]["displayname"][0]=$ligne["displayname"];	
+			$hash[$c]["telephonenumber"][0]=$ligne["telephonenumber"];
+			$hash[$c]["mail"][0]=$ligne["mail"];
+			$hash[$c]["givenname"][0]=$ligne["givenname"];	
+			$hash[$c]["title"][0]=$ligne["title"];	
+			$hash[$c]["sn"][0]=$ligne["sn"];			
+			$hash[$c]["dn"]=$ligne["dn"];	
+		
+			
+			$c++;
+			
+		}
+		
+		return $hash;
+	}
+		
+	
+	
+	
+public function hash_get_groups_from_ou_mysql($ou,$pattern){
+	$oupattern=str_replace("**", "*", $pattern);
+	$oupattern=str_replace("*", "%", $oupattern);
+	
+	
+	if($oupattern<>null){$sql_ou="AND activedirectory_groupsNames.groupname LIKE '$oupattern'";}
+		$sql="SELECT activedirectory_groups.groupdn,
+		activedirectory_groupsNames.groupname,
+		activedirectory_users.ou
+		FROM activedirectory_groups,activedirectory_users,activedirectory_groupsNames
+		WHERE
+		activedirectory_users.dn=activedirectory_groups.userdn AND activedirectory_groups.groupdn=activedirectory_groupsNames.dn
+		AND activedirectory_users.ou='$ou'
+		$sql_ou
+		GROUP BY activedirectory_groups.groupdn,
+		activedirectory_groupsNames.groupname,
+		activedirectory_users.ou
+		ORDER BY activedirectory_groupsNames.groupname LIMIT 0,50";
+		
+		
+		
+		$q=new mysql();
+		$results=$q->QUERY_SQL($sql,"artica_backup");
+		if(!$q->ok){writelogs("\n\n$sql\n\n$q->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
+		if(mysql_num_rows($results)==0){writelogs("\n\n$sql\n\n",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}else{
+			writelogs(mysql_num_rows($results)." rows",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+		}
+		
+		
+		while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+			$res[$ligne["groupdn"]]=$ligne["groupname"];
+			
+		}
+
+		return $res;	
+}	
+
+public function find_members_groups($dn,$pattern){
+	$sql="SELECT activedirectory_users.samaccountname FROM activedirectory_users,activedirectory_groups
+	WHERE activedirectory_users.dn=activedirectory_groups.userdn AND activedirectory_groups.groupdn='$dn'
+	";
+	
+		$q=new mysql();
+		$results=$q->QUERY_SQL($sql,"artica_backup");
+		if(!$q->ok){	writelogs("\n\n$sql\n\n$q->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
+		writelogs("$dn -> " .mysql_num_rows($result),__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+		while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+			$this->members[]=$ligne["samaccountname"];
+			$this->ARRAY_MEMBERS[$ligne["samaccountname"]]=$ligne["samaccountname"];
+		}	
+	
+	
+	
+}
+
+public function COUNT_DE_USERS(){
+	$q=new mysql();
+	return $q->COUNT_ROWS("activedirectory_users", "artica_backup");
+}
+
+
+public function CountDeUSerOu($ou){
+		$ou=utf8_encode($ou);
+		$sql="SELECT COUNT(samaccountname) as tcount FROM activedirectory_users WHERE ou='$ou'";
+		$q=new mysql();
+		$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"artica_backup"));
+		if(!$q->ok){writelogs("$sql -> $q->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
+		writelogs("$sql -> {$ligne["tcount"]}",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+		return $ligne["tcount"];
+	
+}
+	
+	
+	
+
+private function hash_get_ou_mysql($has_key=false){		
+		$res=array();
+		$sql="SELECT ou,dn FROM activedirectory_orgs ORDER BY ou";
+		$q=new mysql();
+		$results=$q->QUERY_SQL($sql,"artica_backup");
+		while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+			$ou=utf8_decode($ligne["ou"]);
+			if($has_key){$res[$ou]=$ou;}else{$res[]=$ou;}
+			
+		}
+
+		return $res;
+}
+		
+	
 	
 }

@@ -485,10 +485,13 @@ function main_services(){
 	}	
 	
 	if($users->APACHE_INSTALLED){
-		if($users->PUREFTP_INSTALLED){
-			$free_web=Paragraphe('free-web-64.png','{free_web_servers}','{free_web_servers_text}',"javascript:Loadjs('freeweb.php')",null,210,null,0,false);
-		}
+		$F_IMG="free-web-64.png";
+		$FreeWebLeftMenu=$sock->GET_INFO("FreeWebLeftMenu");
+		if(!is_numeric($FreeWebLeftMenu)){$FreeWebLeftMenu=1;}
+		if($FreeWebLeftMenu==0){$F_IMG="free-web-64-grey.png";}
+		$free_web=Paragraphe($F_IMG,'{free_web_servers}','{free_web_servers_text}',"javascript:Loadjs('system.index.freeweb.php')",null,210,null,0,false);
 	}
+	
 	$APP_SABNZBDPLUS=Paragraphe('sab2_64-grey.png','{APP_SABNZBDPLUS}','{APP_SABNZBDPLUS_TEXT}',"",null,210,null,0,false);
 	if($users->APP_SABNZBDPLUS_INSTALLED){
 		$APP_SABNZBDPLUS=Paragraphe('sab2_64.png','{APP_SABNZBDPLUS}','{APP_SABNZBDPLUS_TEXT}',"javascript:Loadjs('sabnzbdplus.php')",null,210,null,0,false);
@@ -514,6 +517,8 @@ function main_services(){
 		$APP_SABNZBDPLUS=null;
 		$free_web=null;
 		$apache=null;
+		$backuppc=null;
+		$auditd=null;
 	}
 	
 	//ApacheGroupware

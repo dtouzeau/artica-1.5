@@ -11,7 +11,7 @@ if(isset($_GET["zarafa-user-create-store"])){zarafa_user_create_store();exit;}
 if(isset($_GET["DbAttachConverter"])){DbAttachConverter();exit;}
 if(isset($_GET["mbx-infos"])){mbx_infos();exit;}
 if(isset($_GET["csv-export"])){csv_export();exit;}
-
+if(isset($_GET["removeidb"])){removeidb();exit;}
 
 
 while (list ($num, $ligne) = each ($_GET) ){$a[]="$num=$ligne";}
@@ -53,10 +53,10 @@ function zarafa_user_create_store(){
 	$nohup=$unix->find_program("nohup");
 	if(strlen($nohup)>3){$nohup="$nohup ";}
 	$zarafa_admin=$unix->find_program("zarafa-admin");
-	$cmd="$nohup$zarafa_admin --create-store {$_GET["zarafa-user-create-store"]} --lang {$_GET["lang"]} >/dev/null 2>&1 &";
+	$cmd="$nohup $zarafa_admin --create-store {$_GET["zarafa-user-create-store"]} --lang {$_GET["lang"]} >/dev/null 2>&1 &";
 	writelogs_framework($cmd,__FUNCTION__,__FILE__,__LINE__);
 	shell_exec($cmd);
-	$cmd="$nohup$zarafa_admin --lang {$_GET["lang"]} --create-store {$_GET["zarafa-user-create-store"]} >/dev/null 2>&1 &";
+	$cmd="$nohup $zarafa_admin --lang {$_GET["lang"]} --create-store {$_GET["zarafa-user-create-store"]} >/dev/null 2>&1 &";
 	writelogs_framework($cmd,__FUNCTION__,__FILE__,__LINE__);
 	shell_exec($cmd);	
 	
@@ -89,4 +89,15 @@ function csv_export(){
 	$cmd=trim("$nohup $php5 /usr/share/artica-postfix/exec.zarafa.contacts-zarafa.php --export-zarafa {$_GET["uid"]} >/dev/null 2>&1 &");
 	writelogs_framework($cmd,__FUNCTION__,__FILE__,__LINE__);
 	shell_exec($cmd);		
+}
+
+function removeidb(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");	
+	@unlink("/var/lib/mysql/ib_logfile0");
+	@unlink("/var/lib/mysql/ib_logfile1");
+	$cmd="$nohup /etc/init.d/artica-postfix restart mysql >/dev/null 2>&1 &";
+	writelogs_framework($cmd,__FUNCTION__,__FILE__,__LINE__);
+	shell_exec($cmd);	
+	 
 }

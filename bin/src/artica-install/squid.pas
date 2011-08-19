@@ -602,6 +602,11 @@ SYS:=Tsystem.Create;
 
   if SQUIDEnable=0 then begin
       logs.Debuglogs('Starting......: Squid is disabled aborting...');
+       pid:=SQUID_PID();
+        if SYS.PROCESS_EXIST(pid) then begin
+         SQUID_STOP();
+         exit;
+        end;
       exit;
   end;
 
@@ -609,9 +614,7 @@ SYS:=Tsystem.Create;
   pid:=SQUID_PID();
   if SYS.PROCESS_EXIST(pid) then begin
      logs.DebugLogs('Starting......: Squid already running with pid ' + pid+ '...');
-     if SQUIDEnable=0 then SQUID_STOP();
-     SQUID_RELOAD();
-   exit;
+     exit;
   end;
 
 

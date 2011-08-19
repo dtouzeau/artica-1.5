@@ -44,6 +44,8 @@ function parameters(){
 	$sock=new sockets();
 	$TomcatListenPort=$sock->GET_INFO("TomcatListenPort");
 	$TomcatEnable=$sock->GET_INFO("TomcatEnable");
+	$TomcatAdminName=$sock->GET_INFO("TomcatAdminName");
+	$TomcatAdminPass=$sock->GET_INFO("TomcatAdminPass");
 	if(!is_numeric($TomcatListenPort)){$TomcatListenPort=8080;}
 	if(!is_numeric($TomcatEnable)){$TomcatEnable=1;}
 	
@@ -61,7 +63,7 @@ function parameters(){
 	
 	$ldap=new clladp();
 	$ueim="http://{$_SERVER["SERVER_ADDR"]}:$TomcatListenPort/manager/html/";
-	
+	if(($TomcatAdminName==null) OR ($TomcatAdminPass==null)) {$admin_text=$ldap->ldap_admin;}else{$admin_text=$TomcatAdminName;}
 	
 	$html="
 	<div id='tomcatid'>
@@ -74,6 +76,14 @@ function parameters(){
 		<td class=legend>{listen_port}:</td>
 		<td>". Field_text("TomcatListenPort",$TomcatListenPort,"font-size:14px;padding:3px;width:90px")."</td>
 	</tr>
+	<tr>
+		<td class=legend>{admin}:</td>
+		<td>". Field_text("TomcatAdminName",$TomcatAdminName,"font-size:14px;padding:3px;width:110px")."</td>
+	</tr>
+	<tr>
+		<td class=legend>{password}:</td>
+		<td>". Field_password("TomcatAdminPass",$TomcatAdminPass,"font-size:14px;padding:3px;width:110px")."</td>
+	</tr>		
 	<tr>
 		<td class=legend>{tomcat_admin_interface}:</td>
 		<td style='font-size:14px'><a href=\"$ueim\" target=_new>$ueim</a> ({use}:$ldap->ldap_admin)</td>
@@ -94,6 +104,8 @@ function parameters(){
 			var XHR = new XHRConnection();
 			if(document.getElementById('TomcatEnable').checked){XHR.appendData('TomcatEnable',1);}else{XHR.appendData('TomcatEnable',0);}
     		XHR.appendData('TomcatListenPort',document.getElementById('TomcatListenPort').value);
+    		XHR.appendData('TomcatAdminName',document.getElementById('TomcatAdminName').value);
+    		XHR.appendData('TomcatAdminPass',document.getElementById('TomcatAdminPass').value);
     		AnimateDiv('tomcatid');
     		XHR.sendAndLoad('$page', 'POST',x_SaveTomCatParams);
 			
@@ -108,6 +120,9 @@ function parameters_save(){
 	$sock=new sockets();
 	$sock->SET_INFO("TomcatListenPort", $_POST["TomcatListenPort"]);
 	$sock->SET_INFO("TomcatEnable", $_POST["TomcatEnable"]);
+	$sock->SET_INFO("TomcatAdminName", $_POST["TomcatAdminName"]);
+	$sock->SET_INFO("TomcatAdminPass", $_POST["TomcatAdminPass"]);
+	
 	$sock->getFrameWork("services.php?restart-tomcat=yes");
 }
 

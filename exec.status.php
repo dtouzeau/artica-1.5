@@ -893,12 +893,17 @@ function squid_master_status(){
 		
 	
 	$SQUIDEnable=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("SQUIDEnable");
-	if($SQUIDEnable==null){
-		$SQUIDEnable=1;
-		$GLOBALS["CLASS_SOCKETS"]->SET_INFO("SQUIDEnable",1);
-	}
+	if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;$GLOBALS["CLASS_SOCKETS"]->SET_INFO("SQUIDEnable",1);}
 	exec("/usr/share/artica-postfix/bin/artica-install --export-version squid 2>&1",$results);
 	$version=trim(implode("",$results));
+	if($SQUIDEnable==1){
+		if(preg_match("#^2\.#", $version)){
+			$GLOBALS["CLASS_SOCKETS"]->SET_INFO("SQUIDEnable",0);
+			$SQUIDEnable=0;
+		}
+	}
+	
+	
 	$l[]="[SQUID]";
 	$l[]="service_name=APP_SQUID";
  	$l[]="master_version=$version";
@@ -936,10 +941,10 @@ function squid_master_status(){
 function squid_clamav_tail(){
 	if(!$GLOBALS["CLASS_USERS"]->SQUID_INSTALLED){if($GLOBALS["VERBOSE"]){echo __FUNCTION__." squid is not installed\n";}return null;}else{if($GLOBALS["VERBOSE"]){echo __FUNCTION__." squid is installed\n";}}	
 	$SQUIDEnable=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("SQUIDEnable");
-	if($SQUIDEnable==null){$SQUIDEnable=1;$GLOBALS["CLASS_SOCKETS"]->SET_INFO("SQUIDEnable",1);}		
+	if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;$GLOBALS["CLASS_SOCKETS"]->SET_INFO("SQUIDEnable",1);}		
 	$EnableSquidClamav=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("EnableSquidClamav");	
 	if($SQUIDEnable==0){$EnableSquidClamav=0;}
-	
+
 	$master_pid=trim(@file_get_contents("/etc/artica-postfix/exec.squid-clamav-tail.php.pid"));
 	
 	$version=trim(@implode("",$results));
@@ -989,7 +994,7 @@ function c_icap_master_status(){
 	if(!$GLOBALS["CLASS_USERS"]->C_ICAP_INSTALLED){return null;}
 	
 	$SQUIDEnable=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("SQUIDEnable");
-	if($SQUIDEnable==null){$SQUIDEnable=1;$GLOBALS["CLASS_SOCKETS"]->SET_INFO("SQUIDEnable",1);}
+	if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;$GLOBALS["CLASS_SOCKETS"]->SET_INFO("SQUIDEnable",1);}
 	$CicapEnabled=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("CicapEnabled");
 	if($SQUIDEnable==0){$CicapEnabled=0;}
 	
@@ -1040,7 +1045,7 @@ function dansguardian_master_status(){
 	if(!$GLOBALS["CLASS_USERS"]->DANSGUARDIAN_INSTALLED){return null;}
 	
 	$SQUIDEnable=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("SQUIDEnable");
-	if($SQUIDEnable==null){$SQUIDEnable=1;}
+	if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
 	$enabled=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("DansGuardianEnabled");
 	if($SQUIDEnable==0){$enabled=0;}
 	if($enabled==null){$enabled=0;}
@@ -1078,7 +1083,7 @@ function dansguardian_tail_status(){
 	if(!$GLOBALS["CLASS_USERS"]->DANSGUARDIAN_INSTALLED){return null;}
 	
 	$SQUIDEnable=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("SQUIDEnable");
-	if($SQUIDEnable==null){$SQUIDEnable=1;}
+	if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
 	$enabled=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("DansGuardianEnabled");
 	if($SQUIDEnable==0){$enabled=0;}
 	
@@ -1105,7 +1110,7 @@ function kav4Proxy_status(){
 		if(!$GLOBALS["CLASS_USERS"]->SQUID_INSTALLED){return null;}
 		if(!$GLOBALS["CLASS_USERS"]->KAV4PROXY_INSTALLED){return null;}
 		$SQUIDEnable=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("SQUIDEnable");
-		if($SQUIDEnable==null){$SQUIDEnable=1;}
+		if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
 		$enabled=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("kavicapserverEnabled");
 		if($SQUIDEnable==0){$enabled=0;}		
 	}else{
@@ -1149,7 +1154,7 @@ function kav4Proxy_keepup2date(){
 		if(!$GLOBALS["CLASS_USERS"]->SQUID_INSTALLED){return null;}
 		if(!$GLOBALS["CLASS_USERS"]->KAV4PROXY_INSTALLED){return null;}
 		$SQUIDEnable=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("SQUIDEnable");
-		if($SQUIDEnable==null){$SQUIDEnable=1;}
+		if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
 		$enabled=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("kavicapserverEnabled");
 		if($SQUIDEnable==0){$enabled=0;}		
 	}else{
@@ -1182,7 +1187,7 @@ function proxy_pac_status(){
 	
 	
 	$SQUIDEnable=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("SQUIDEnable");
-	if($SQUIDEnable==null){$SQUIDEnable=1;}
+	if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
 	$enabled=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("SquidEnableProxyPac");
 	if($enabled==null){$enabled=0;}
 	if($SQUIDEnable==0){$enabled=0;}
@@ -1462,7 +1467,7 @@ function squidguardweb(){
 		$EnableSquidClamav=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("EnableSquidClamav");
 		if($EnableUfdbGuard==1){$squidGuardEnabled=1;}
 		if($EnableSquidClamav==1){$squidGuardEnabled=1;}
-		if($SQUIDEnable==null){$SQUIDEnable=1;}
+		if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
 		$EnableSquidGuardHTTPService=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("EnableSquidGuardHTTPService");
 		if($EnableSquidGuardHTTPService==null){$EnableSquidGuardHTTPService=1;}
 		if($EnableSquidGuardHTTPService<>1){$squidGuardEnabled=0;}
@@ -1514,7 +1519,7 @@ function ufdbguardd(){
 		if($GLOBALS["VERBOSE"]){echo "EnableUfdbGuard=$EnableUfdbGuard\n";}
 
 		$SQUIDEnable=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("SQUIDEnable");
-		if($SQUIDEnable==null){$SQUIDEnable=1;}	
+		if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}	
 		if($EnableUfdbGuard==null){$EnableUfdbGuard=0;}	
 		if($SQUIDEnable==0){$SQUIDEnable=0;}
 		
@@ -1564,7 +1569,7 @@ function ufdbguardd_tail(){
 		if($GLOBALS["VERBOSE"]){echo "EnableUfdbGuard=$EnableUfdbGuard\n";}
 
 		$SQUIDEnable=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("SQUIDEnable");
-		if($SQUIDEnable==null){$SQUIDEnable=1;}	
+		if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}	
 		if($EnableUfdbGuard==null){$EnableUfdbGuard=0;}	
 		if($SQUIDEnable==0){$SQUIDEnable=0;}
 		
@@ -1624,14 +1629,13 @@ function pdns_server(){
 	if(!is_numeric($EnablePDNS)){$EnablePDNS=1;}
 	if(!is_numeric($PDNSRestartIfUpToMB)){$PDNSRestartIfUpToMB=700;}
 	
-
-	
 	$pdns_server=$GLOBALS["CLASS_UNIX"]->find_program("pdns_server");
 	
 	if($verbose){echo "DisablePowerDnsManagement=$DisablePowerDnsManagement\n";}
 	if($verbose){echo "EnablePDNS=$EnablePDNS\n";}
 	if($verbose){echo "PDNSRestartIfUpToMB=$PDNSRestartIfUpToMB\n";}
 	if($verbose){echo "pdns_server=$pdns_server\n";}
+	if($verbose){echo "Global Enabled=$enabled\n";}
 	
 	if($pdns_server==null){
 		if($verbose){echo "pdns_server no such binary\n";}
@@ -1661,7 +1665,7 @@ function pdns_server(){
 	 	$l[]="watchdog_features=1";
 	 	$l[]="family=network";
 	 	
-	 	if($enabled==0){
+	 	if($enabled==1){
 	 		if($verbose){echo "-> pdns_instance()";}
 	 		$instance=pdns_instance();
 	 		return implode("\n",$l).$instance;
@@ -2123,7 +2127,7 @@ function squid_tail(){
 	$DansGuardianEnabled=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("DansGuardianEnabled");
 	if($DansGuardianEnabled==1){return;}
 	$SQUIDEnable=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("SQUIDEnable");
-	if($SQUIDEnable==null){$SQUIDEnable=1;}
+	if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
 	$RAM=$GLOBALS["MEMORY_INSTALLED"]["ram"]["total"];
 	$service_disabled=1;
 	if($RAM<512000){$SQUIDEnable=0;}		
@@ -3230,7 +3234,7 @@ function ddclient(){
 //========================================================================================================================================================
 function apachesrc(){
 	$EnableFreeWeb=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("EnableFreeWeb");
-	if($EnableFreeWeb==null){$EnableFreeWeb=0;}
+	if(!is_numeric($EnableFreeWeb)){$EnableFreeWeb=0;}
 	$pid_path=$GLOBALS["CLASS_UNIX"]->LOCATE_APACHE_PID_PATH();
 	if(!is_file($pid_path)){$pid_path="/var/run/httpd/httpd.pid";}
 	$master_pid=trim(@file_get_contents($pid_path));

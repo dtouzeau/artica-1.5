@@ -57,6 +57,7 @@ function popup(){
 	$array["popup-indexer"]="{APP_ZARAFA_INDEXER}";
 	$array["popup-mailbox"]="{mailboxes}";
 	$array["popup-license"]="{zarafa_license}";
+	$array["tools"]="{tools}";
 	
 	while (list ($num, $ligne) = each ($array) ){
 		
@@ -68,7 +69,12 @@ function popup(){
 		if($num=="popup-mysql"){
 			$html[]="<li><a href=\"zarafa.mysql.php\"><span>$ligne</span></a></li>\n";
 			continue;
-		}		
+		}
+
+		if($num=="tools"){
+			$html[]="<li><a href=\"zarafa.tools.php\"><span>$ligne</span></a></li>\n";
+			continue;
+		}			
 		
 		$html[]="<li><a href=\"$page?$num=yes\"><span>$ligne</span></a></li>\n";
 			

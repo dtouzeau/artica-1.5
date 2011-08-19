@@ -16,7 +16,7 @@ if(isset($_GET["page-fetchmail-aliases"])){page_fetchmail_aliases_index();exit;}
 if(isset($_GET["page-fetchmail-aliases-list"])){echo page_fetchmail_aliases_list($_GET["page-fetchmail-aliases-list"]);exit;}
 if(isset($_GET["FetchmailAddAliase"])){page_fetchmail_aliases_add();exit;}
 if(isset($_GET["FetchmailDeleteAliase"])){page_fetchmail_aliases_del();exit;}
-
+if(isset($_POST["ExecuteFetchAccount"])){ExecuteFetchAccount();exit;}
 
 if(isset($_GET["enable-js-rule"])){page_list_js_enable();exit;}
 if(isset($_GET["enable-fetch-rule"])){page_list_js_save();exit;}
@@ -24,6 +24,11 @@ if(isset($_GET["enable-fetch-rule"])){page_list_js_save();exit;}
 if(isset($_GET["find-isp-popup"])){find_isp_popup();exit;}
 if(isset($_GET["isp-choose-proto"])){find_isp_proto();exit;}
 if(isset($_GET["isp-end"])){find_isp_end();exit;}
+
+if(isset($_GET["debug-popup"])){debug_popup();exit;}
+if(isset($_GET["debug-popup-tables"])){debug_popup_tables();exit;}
+if(isset($_GET["debug-popup-zoom"])){debug_popup_zom();exit;}
+if(isset($_POST["DebugFetchDelete"])){debug_popup_delete();exit;}
 
 
 function start_js(){
@@ -283,99 +288,114 @@ function page_list_js_save(){
 function page_list(){
 	$fetch=new Fetchmail_settings();
 	$page=CurrentPageName();
+	$tpl=new templates();
+	$fetchmail_execute_debug_warn=$tpl->javascript_parse_text("{fetchmail_execute_debug_warn}");
 	$rules=$fetch->LoadUsersRules($_GET["page-display"]);
 	$user=new user($_GET["page-display"]);
 	$sock=new sockets();
 	$EnablePostfixMultiInstance=$sock->GET_INFO("EnablePostfixMultiInstance");
-	
+	$imgerr="recup-remote-mail-48.png";
+	$imgerr_text="{add_alias}";
 	if(count($rules)>0){
-		if(count($user->FetchMailMatchAddresses)==0){
-			$error=Paragraphe("64-red.png","{no_fetchmail_aliases}","{no_fetchmail_aliases_intro}","javascript:AliasesFetchmail()",null,210,null,1);
-		}else{
-			$error=Paragraphe("recup-remote-mail.png","{fetchmail_aliases}","{no_fetchmail_aliases_intro}","javascript:AliasesFetchmail()",null,210,null,1);
-		}
+		if(count($user->FetchMailMatchAddresses)==0){$imgerr="user-error-48.png";$imgerr_text="{no_fetchmail_aliases}";}
+		
+			$error="<table class=form><tbody><tr>
+			<td width=1%>".imgtootltip($imgerr,"{no_fetchmail_aliases_intro}","AliasesFetchmail()")."</td>
+			<td>
+			<div style='font-size:14px;font-weight:bold'>$imgerr_text</div>
+			<a href=\"javascript:blur();\" OnClick=\"javascript:AliasesFetchmail()\" style='text-decoration:underline;font-size:12px'>{no_fetchmail_aliases_intro}</a>
+			</td>
+			</tr>
+			</table>
+			";
 	}	
 	
-	
+		$tbl="
+		
+<center>
+<table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
+<thead class='thead'>
+	<tr>
+		<th width=1%>".imgtootltip("plus-24.png","{add}","AddFetchAccount()")."</th>
+		<th><strong>{user}</strong></th>
+		<th><strong>{imap_server_name}</th>
+		<th colspan=5><strong>{enabled}</th>
+	</tr>
+</thead>
+<tbody class='tbody'>";	
 	
 	if(is_array($rules)){
-		$tbl="<table style='width:98%'>
-		<tr>
-			
-			<th colspan=2><strong>{user}</strong></th>
-			<th><strong>{imap_server_name}</th>
-			<th colspan=3><strong>{enabled}</th>
-			
-			
-		</tr>";
+	
+		$q=new mysql();
 		while (list ($num, $ligne) = each ($rules) ){
-			
+			if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
 			$enabled=Field_checkbox("{$num}_enabled",1,$ligne["enabled"],"Loadjs('$page?enable-js-rule=$num&uid={$_GET["page-display"]}')");
 			if($ligne["enabled"]==0){$color="#E60B03";}else{$color="black";}
 			
-			$edit=imgtootltip("24-administrative-tools.png","{edit}","ModifyFetchAccount($num)");
-			$delete=imgtootltip("ed_delete.gif","{delete}","DeleteFetchAccount($num,'{$ligne["poll"]}');");
-			$warn="&nbsp;";
+			$edit=imgtootltip("32-administrative-tools.png","{edit}","ModifyFetchAccount($num)");
+			$delete=imgtootltip("delete-32.png","{delete}","DeleteFetchAccount($num,'{$ligne["poll"]}');");
+			$execute=imgtootltip("mailbox-32.png","{execute_in_debug}","ExecuteFetchAccount($num);");
+			$warn="<img src='img/fetchmail-rule-32.png'>";
+			$showdebuglogs="&nbsp;";
 			
+			$sql="SELECT COUNT(ID) as tcount FROM fetchmail_debug_execute WHERE account_id='$num'";
+			$ligneCOUNT=mysql_fetch_array($q->QUERY_SQL($sql,"artica_events"));
+			if(!$q->ok){echo "<H2>$q->mysql_error</H2>";}
+			if($ligneCOUNT["tcount"]>0){
+				$showdebuglogs=imgtootltip("script-32.png","{events}","FetchAccountDebugs($num)");
+			}
 			
 			if($EnablePostfixMultiInstance==1){
 				if(trim($ligne["smtp_host"])==null){
 					$warn=imgtootltip("icon_mini_warning.gif","{smtp_host_not_set}");
+					$execute=imgtootltip("mailbox-32-grey.png","{execute_in_debug}");
 				}
 			}
 			
 			$tbl=$tbl."
-				<tr ". CellRollOver().">
+				<tr class=$classtr>
 				<td>$warn</td>
-				<td style='font-size:11px;color:$color' align='left' nowrap>{$ligne["user"]}</td>
-				<td style='font-size:11px;color:$color' align='left' nowrap>{$ligne["poll"]}:{$ligne["proto"]}</td>
-				<td style='font-size:11px;color:$color' align='right' nowrap>$enabled</td>
-				<td style='font-size:11px;color:$color' align='right' nowrap>$edit</td>
-				<td style='font-size:11px;color:$color' align='right' nowrap>$delete</td>
+				<td style='font-size:14px;color:$color' align='left' nowrap>{$ligne["user"]}</td>
+				<td style='font-size:14px;color:$color' align='left' nowrap>{$ligne["poll"]}:{$ligne["proto"]}</td>
+				<td style='font-size:14px;color:$color' align='right' nowrap>$enabled</td>
+				<td style='font-size:14px;color:$color' align='right' nowrap>$edit</td>
+				<td style='font-size:14px;color:$color' align='right' nowrap>$execute</td>
+				<td style='font-size:14px;color:$color' align='right' nowrap>$showdebuglogs</td>
+				<td style='font-size:14px;color:$color' align='right' nowrap>$delete</td>
 				</tr>";
 		}
 	}else{
 		$tbl="<tr><td colspan=3>{click_on_add}</td></tr>";
 	}
 	
-	$tbl=$tbl."
-	<tr>
-		<td colspan=5><hr></td>
-	</tr>
-	</table>";
+	$tbl=$tbl."</tbody></table>";
 	
 	
 	$html="
-	<div style='margin-bottom:10px'>
-		<table style='width:100%'>
-		<tr>
-		<td valign='top'>
-			<strong style='font-size:18px;margin-top:10px;color:#005447'>{fetchmail_modify_rules}<hr></strong>
-		</td>
-		<td valign='top'>". imgtootltip("plus-24.png","{add}","AddFetchAccount()")."</td>
-		</tr>
-		</table>
-	</div>
-	
-	
-	<table style='width:100%;'>
-	<tr>
-		<td valign='top'>
-			<div>
-				<table style='width:100%'>
-					<tr>
-						<td valign='top'><div id='fetchmail-rules-js' style='height:250px;overflow:auto'>$tbl</div></td>
-						<td valign='top'>$error</td>
-					</tr>
-				</table>
-			</div>
-		</td>
-		<td valign='top'>
-		<div id='rightbutton'></div>
-		</td>
-	</tr>
-	</table>
+	<div id='fetchmail-rules-js' style='height:250px;overflow:auto'>$tbl</div>
+	<div id='rightbutton'></div>
+	$error	
 		
+	
+	<script>
+	var x_ExecuteFetchAccount=function (obj) {
+			var results=obj.responseText;
+			if(results.length>3){alert('results');}
+		}	
+	
+	
+		function ExecuteFetchAccount(ID){
+			var XHR = new XHRConnection();
+			if(confirm('$fetchmail_execute_debug_warn')){
+    			XHR.appendData('ExecuteFetchAccount',ID);
+    			XHR.sendAndLoad('$page', 'POST',x_ExecuteFetchAccount);
+			}
+		}
+		
+		function FetchAccountDebugs(ID){
+			RTMMail('550','$page?debug-popup=yes&ID='+ID,ID);
+		
+		}
 		
 	";
 	
@@ -569,26 +589,18 @@ function page_fetchmail_aliases_index(){
 	$tpl=new templates();
 	$list=page_fetchmail_aliases_list($uid);
 	
-	$add=RoundedLightWhite(Paragraphe("64-alias-add.png","{add_alias}","{add_alias_text}","javascript:FetchmailAddAliase('$uid')",'{add_alias}',220));
 	
-	$form="<table style='width:100%'>
-	<tr>
-		<td valign='top' width=100%>
+	
+	$form="
 			<div id='FetchmailAddAliaseDIV'>
 			$list
 			</div>
-		</td>
-		<td valign='top'>
-		$add
-		</td>
-	</tr>
-	</table>
 	
 	";
 	
 	
-	$html="<H1>{fetchmail_aliases}</H1>
-	<p class=caption>{fetchmail_aliases_text}</p>
+	$html="
+	<div class=explain>{fetchmail_aliases_text}</div>
 	$form
 	";
 	
@@ -599,22 +611,34 @@ function page_fetchmail_aliases_list($uid){
 	$users=new user($uid);
 	if(!is_array($users->FetchMailMatchAddresses)){return null;}
 	
-	$html="<table style='width:99%'>";
+	$html="<center>
+<table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
+<thead class='thead'>
+	<tr>
+		<th width=1%>". imgtootltip("plus-24.png","<b>{add_alias}</b><hr>{add_alias_text}","FetchmailAddAliase('$uid')")."</th>
+		<th >$uid</th>
+		<th>&nbsp;</th>
+	</tr>
+</thead>
+<tbody class='tbody'>";
 	
 	while (list ($num, $ligne) = each ($users->FetchMailMatchAddresses) ){
 		if($ligne==null){continue;}
+		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
 		$html=$html . "
-		<tr ". CellRollOver().">
-			<td><strong style='font-size:13px'>$ligne</td>
-			<td width=1%>" . imgtootltip('ed_delete.gif',"{delete}","FetchmailDeleteAliase('$ligne')")."</td>
+		<tr class=$classtr>
+			<td colspan=2><strong style='font-size:16px'>$ligne</td>
+			<td width=1%>" . imgtootltip('delete-32.png',"{delete}","FetchmailDeleteAliase('$ligne')")."</td>
 		</tr>";	
 		
 		
 	}
 	
-	$html=$html . "</table>";
+	$html=$html . "
+	</tbody>
+	</table>";
 	
-	$html=RoundedLightWhite($html);
+	
 	$tpl=new templates();
 	
 	return $tpl->_ENGINE_parse_body($html); 
@@ -731,6 +755,114 @@ function find_isp_end(){
 	echo $tpl->_ENGINE_parse_body($html);		
 	
 	
+}
+
+function ExecuteFetchAccount(){
+	$ID=$_POST["ExecuteFetchAccount"];
+	if(!is_numeric($ID)){echo "false !";return;}
+	$sock=new sockets();
+	$sock->getFrameWork("cmd.php?debug-rule=$ID");
+	$tpl=new templates();
+	echo $tpl->javascript_parse_text("{install_app}");
+}
+
+function debug_popup(){
+	$page=CurrentPageName();
+	$tpl=new templates();
+	$html="
+	<div id='debug-tables' style='width:100%;height:250px;overflowl:auto'></div>
+	
+	<script>
+		function DebugTablesEvents(){
+			LoadAjax('debug-tables','$page?debug-popup-tables=yes&ID={$_GET["ID"]}');
+		}
+		DebugTablesEvents();
+	</script>
+		";
+	echo $html;
+}
+
+function debug_popup_tables(){
+	$page=CurrentPageName();
+	$tpl=new templates();
+	$sql="SELECT subject,zDate,PID,ID FROM fetchmail_debug_execute WHERE account_id={$_GET["ID"]} ORDER BY PID,zDate DESC";
+	
+		$q=new mysql();
+		
+		$results=$q->QUERY_SQL($sql,"artica_events");
+		if(!$q->ok){echo "<H2>$q->mysql_error</H2>";}
+$html="
+<table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
+<thead class='thead'>
+	<tr>
+		<th width=1%>".imgtootltip("plus-24.png","{add}","AddFetchAccount()")."</th>
+		<th>{date}</th>
+		<th>{subject}</th>
+		<th>&nbsp;</th>
+	</tr>
+</thead>
+<tbody class='tbody'>";			
+		
+		while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
+		$urt="<a href=\"javascript:blur();\" OnClick=\"javascript:DebugFetchZoom({$ligne["ID"]});\" style='font-size:14px;text-decoration:underline'>";
+		$delete=imgtootltip("delete-32.png","{delete}","DebugFetchDelete('{$ligne["ID"]}')");
+		
+		$html= $html."<tr class=$classtr>
+		<td width=1% nowrap style='font-size:14px'>{$ligne["PID"]}</td>
+		<td width=1% nowrap style='font-size:14px'>{$ligne["zDate"]}</td>
+		<td style='font-size:14px'>$urt{$ligne["subject"]}</a></td>
+		<td style='font-size:14px'>$delete</td>
+		</tR>
+		
+		";
+		
+			
+			
+		}	
+		
+$html=$html."</tbody></table>
+<script>
+
+	function DebugFetchZoom(id){
+		YahooWin6('750','$page?debug-popup-zoom=yes&ID='+id,'Zoom:'+id);
+	}
+	
+	var x_DebugFetchDelete=function (obj) {
+			var results=obj.responseText;
+			if(results.length>3){alert('results');}
+			DebugTablesEvents();
+		}	
+	
+	
+		function DebugFetchDelete(ID){
+			var XHR = new XHRConnection();
+   			XHR.appendData('DebugFetchDelete',ID);
+  			XHR.sendAndLoad('$page', 'POST',x_DebugFetchDelete);
+		
+		}
+
+</script>
+";
+echo $tpl->_ENGINE_parse_body($html);
+	
+}
+
+function debug_popup_zom(){
+	$q=new mysql();
+	$ligneCOUNT=mysql_fetch_array($q->QUERY_SQL("SELECT events FROM fetchmail_debug_execute WHERE ID={$_GET["ID"]}","artica_events"));
+	if(!$q->ok){echo "<H2>$q->mysql_error</H2>";}
+	
+	$html="<textarea style='width:100%;height:350px;font-size:13px;overflow:auto;border:1px solid #CCCCCC;padding:5px'>{$ligneCOUNT["events"]}</textarea>";
+	echo $html;
+	
+	
+}
+
+function debug_popup_delete(){
+	$q=new mysql();
+	$q->QUERY_SQL("DELETE FROM fetchmail_debug_execute WHERE ID={$_POST["DebugFetchDelete"]}","artica_events");
+	if(!$q->ok){echo $q->mysql_error;}
 }
 
 

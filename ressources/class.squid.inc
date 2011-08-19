@@ -1526,6 +1526,9 @@ class squidbee{
 	var $allow_squid_localhost=0;
 	var $ignore_expect_100=0;
 	var $EnableKerbAuth=0;
+	var $EnableKavICAPRemote=0;
+	var $KavICAPRemoteAddr=null;
+	var $KavICAPRemotePort=0;
 	
 	function squidbee(){
 		if(posix_getuid()==0){$this->ASROOT=true;}
@@ -1546,8 +1549,14 @@ class squidbee{
 		$this->enable_adzapper=$sock->GET_INFO("EnableAdZapper");
 		$this->enable_squidclamav=$sock->GET_INFO("EnableSquidClamav");
 		$this->EnableKerbAuth=$sock->GET_INFO("EnableKerbAuth");
+		$this->EnableKavICAPRemote=$sock->GET_INFO("EnableKavICAPRemote");
+		$this->KavICAPRemoteAddr=$sock->GET_INFO("KavICAPRemoteAddr");
+		$this->KavICAPRemotePort=$sock->GET_INFO("KavICAPRemotePort");
+		
+		if($this->KavICAPRemoteAddr==null){$this->EnableKavICAPRemote=0;}
+		if(!is_numeric($this->KavICAPRemotePort)){$this->EnableKavICAPRemote=0;}
+		if(!is_numeric($this->EnableKavICAPRemote)){$this->EnableKavICAPRemote=0;}
 		if(!is_numeric($this->EnableKerbAuth)){$this->EnableKerbAuth=0;}
-
 		
 		$this->CheckVersion();
 		$this->hasProxyTransparent=$sock->GET_INFO("hasProxyTransparent");
@@ -1623,6 +1632,8 @@ class squidbee{
 		if(preg_match('#([0-9\.]+)#',$this->SQUID_VERSION,$re)){$this->SQUID_VERSION=$re[1];}
 		if($this->SQUID_VERSION>=3){
 			if($this->SQUID_ICAP_ENABLED){
+				if($this->EnableKavICAPRemote==1){return true;}
+				
 				if($this->KAV4PROXY_INSTALLED){
 					return true;
 				}else{
@@ -1639,6 +1650,13 @@ class squidbee{
 		}
 		
 		writelogs("SQUID:: version=$this->SQUID_VERSION::",__CLASS__.'/'.__FUNCTION__,__FILE__);
+		
+	}
+	
+	
+	private function KavICAPremote(){
+		if($this->EnableKavICAPRemote==0){return false;}
+		
 		
 	}
 	

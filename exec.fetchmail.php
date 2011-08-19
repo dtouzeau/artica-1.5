@@ -10,12 +10,66 @@ include_once(dirname(__FILE__)."/framework/class.unix.inc");
 include_once(dirname(__FILE__)."/ressources/class.fetchmail.inc");
 include_once(dirname(__FILE__)."/framework/frame.class.inc");
 include_once(dirname(__FILE__)."/ressources/class.maincf.multi.inc");
-
+$GLOBALS["SINGLE_DEBUG"]=false;
 if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["DEBUG"]=true;$GLOBALS["VERBOSE"]=true;}
 if(preg_match("#--reload#",implode(" ",$argv))){$GLOBALS["RELOAD"]=true;}
 if($argv[1]=="--multi-start"){BuildRules();die();}
+if($argv[1]=="--single-debug"){SingleDebug($argv[2]);die();}
 
 BuildRules();
+
+function SingleDebugEvents($subject,$text,$ID){
+	$q=new mysql();
+	$pid=getmypid();
+	$CurrentDate=date('Y-m-d H:i:s');
+	if($GLOBALS["VERBOSE"]){echo "$CurrentDate $subject\n$text\n\n";}
+	
+	
+	$text=addslashes($text);
+	$subject=addslashes($subject);
+	$sql="INSERT INTO fetchmail_debug_execute (subject,account_id,zDate,events,PID) 
+	VALUES('$subject','$ID','$CurrentDate','$text','$pid')";
+	$q->QUERY_SQL($sql,"artica_events");
+	if(!$q->ok){echo $q->mysql_error."\n";}
+	return;	
+}
+
+
+function SingleDebug($ID){
+	$q=new mysql();
+	$q->BuildTables();
+	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".$ID.pid";
+	$unix=new unix();
+	$pid=$unix->get_pid_from_file($pidfile);
+	$fetchmail=$unix->find_program("fetchmail");
+	if($unix->process_exists($pid)){
+		SingleDebugEvents("Task aborted","This task is aborted, it already running PID $pid, please wait before executing a new task",$ID);
+		return;
+	}
+	@file_put_contents($pidfile, getmypid());
+	SingleDebugEvents("Task executed","Starting rule number $ID\nThis task is executed please wait before executing a new task",$ID);
+	
+	
+	$fetch=new fetchmail();
+	$output=array();
+	
+		$fetch=new fetchmail();
+		$l[]="set logfile /var/log/fetchmail-rule-$ID.log";
+		$l[]="set daemon $fetch->FetchmailPoolingTime";
+		$l[]="set postmaster \"$fetch->FetchmailDaemonPostmaster\"";
+		$l[]="set idfile \"/var/log/fetchmail.$ID.id\"";	
+		$l[]="";	
+	$GLOBALS["SINGLE_DEBUG"]=true;
+	BuildRules();
+	$pattern=$GLOBALS["FETCHMAIL_RULES_ID"][$ID];
+	$l[]=$pattern;	
+	@file_put_contents("/tmp/fetchmailrc.$ID",@implode("\n", $l));
+	shell_exec("/bin/chmod 600 /tmp/fetchmailrc.$ID");
+	$cmd="$fetchmail -v -N -f /tmp/fetchmailrc.$ID --pidfile /tmp/fetcmailrc.$ID.pid 2>&1";
+	exec($cmd,$output);
+	SingleDebugEvents("Task finish with ". count($output)." event(s)",@implode("\n", $output),$ID);
+	
+}
 
 
 function BuildRules(){
@@ -39,6 +93,7 @@ function BuildRules(){
 		}
 		$array=array();
 		while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+			$ID=$ligne["ID"];
 			$ligne["poll"]=trim($ligne["poll"]);
 			if($ligne["poll"]==null){continue;}
 			if($ligne["proto"]==null){continue;}
@@ -93,6 +148,12 @@ function BuildRules(){
 
 			$multi_smtp[$ligne["smtp_host"]][]=$pattern;
 			$l[]=$pattern;
+			$GLOBALS["FETCHMAIL_RULES_ID"][$ID]=$pattern;
+		}
+		
+		if($GLOBALS["SINGLE_DEBUG"]){
+			echo "Starting......: fetchmail single-debug, aborting nex step\n";
+			return;
 		}
 		
 		if($EnablePostfixMultiInstance==1){
@@ -124,7 +185,7 @@ function BuildRules(){
 		
 		if(is_array($l)){$conf=implode("\n",$l);}else{$conf=null;}
 		@file_put_contents("/etc/fetchmailrc",$conf);
-		@chmod("/etc/fetchmailrc",600);
+		shell_exec("/bin/chmod 600 /etc/fetchmailrc");
 		echo "Starting......: fetchmail saving configuration file done\n";
 			
 }

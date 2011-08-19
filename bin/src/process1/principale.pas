@@ -700,6 +700,8 @@ begin
    if FileExists(SYS.LOCATE_GENERIC_BIN('nscd')) then list.Add('$_GLOBAL["NSCD_INSTALLED"]=True;') else list.Add('$_GLOBAL["NSCD_INSTALLED"]=False;');
    if FileExists(SYS.LOCATE_GENERIC_BIN('msktutil')) then list.Add('$_GLOBAL["MSKTUTIL_INSTALLED"]=True;') else list.Add('$_GLOBAL["MSKTUTIL_INSTALLED"]=False;');
    if FileExists('/usr/share/drupal7/index.php') then list.Add('$_GLOBAL["DRUPAL7_INSTALLED"]=True;') else list.Add('$_GLOBAL["DRUPAL7_INSTALLED"]=False;');
+   if FileExists('/usr/share/piwik/core/Version.php') then list.Add('$_GLOBAL["PIWIK_INSTALLED"]=True;') else list.Add('$_GLOBAL["PIWIK_INSTALLED"]=False;');
+
 
 
 
@@ -944,12 +946,14 @@ begin
    if FileExists(SYS.LOCATE_GENERIC_BIN('fusermount')) then begin
       logs.Debuglogs('DEDUPLICATION: fusermount found');
        if FileExists(SYS.LOCATE_GENERIC_BIN('zfs-fuse')) then begin
-                   logs.Debuglogs('DEDUPLICATION: zfs-fuse found');
-             if FileExists(SYS.LOCATE_GENERIC_BIN('ham_info')) then begin
-                 logs.Debuglogs('DEDUPLICATION: ham_info found');
+             logs.Debuglogs('DEDUPLICATION: zfs-fuse found');
+             if FileExists(SYS.LOCATE_GENERIC_BIN('tcamgr')) then begin
+                 logs.Debuglogs('DEDUPLICATION: tcamgr found');
                 if FileExists(SYS.LOCATE_GENERIC_BIN('lessfs')) then begin
                    logs.Debuglogs('DEDUPLICATION: lessfs found');
                    list.Add('$_GLOBAL["deduplication_installed"]=True;')
+                end else begin
+                    logs.Debuglogs('DEDUPLICATION: lessfs not found');
                 end;
              end;
        end;

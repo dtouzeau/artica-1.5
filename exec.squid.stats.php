@@ -81,28 +81,110 @@ if($argv[1]=='--maintenance'){
 	events("-> ParseDays()");
 	ParseDays();
 	events("-> today_hits()");
+	if(is_overloaded(__FILE__)){
+		$unix->send_email_events("Proxy squid statistics has been canceled", "Computer is overloaded\n"
+		._basename(__FILE__)."\n".__FUNCTION__."\nfunction called:ParseDays()\nLine:".__LINE__, "proxy");
+	}	
 	today_hits();
 	events("-> today_size()");
+	if(is_overloaded(__FILE__)){
+		$unix->send_email_events("Proxy squid statistics has been canceled", "Computer is overloaded\n"
+		._basename(__FILE__)."\n".__FUNCTION__."\nfunction called:today_hits()\nLine:".__LINE__, "proxy");
+		return;
+	}		
 	today_size();
+	
+	if(is_overloaded(__FILE__)){
+		$unix->send_email_events("Proxy squid statistics has been canceled", "Computer is overloaded\n"
+		._basename(__FILE__)."\n".__FUNCTION__."\nfunction called:today_size()\nLine:".__LINE__, "proxy");
+		return;
+	}	
+	
 	events("-> month_size()");
 	month_size();
+	
+	if(is_overloaded(__FILE__)){
+		$unix->send_email_events("Proxy squid statistics has been canceled", "Computer is overloaded\n"
+		._basename(__FILE__)."\n".__FUNCTION__."\nfunction called:month_size()\nLine:".__LINE__, "proxy");
+		return;
+	}		
+	
+	
 	events("-> month_hits()");
 	month_hits();
 	
+	
+	if(is_overloaded(__FILE__)){
+		$unix->send_email_events("Proxy squid statistics has been canceled", "Computer is overloaded\n"
+		._basename(__FILE__)."\n".__FUNCTION__."\nfunction called:month_hits()\nLine:".__LINE__, "proxy");
+		return;
+	}		
+	
 	events("-> ParseDays()");
 	ParseDays();
+	
+	if(is_overloaded(__FILE__)){
+		$unix->send_email_events("Proxy squid statistics has been canceled", "Computer is overloaded\n"
+		._basename(__FILE__)."\n".__FUNCTION__."\nfunction called:ParseDays()\nLine:".__LINE__, "proxy");
+		return;
+	}		
+	
 	events("-> clients_hours()");
 	clients_hours();
+	
+	if(is_overloaded(__FILE__)){
+		$unix->send_email_events("Proxy squid statistics has been canceled", "Computer is overloaded\n"
+		._basename(__FILE__)."\n".__FUNCTION__."\nfunction called:clients_hours()\nLine:".__LINE__, "proxy");
+		return;
+	}		
+	
+	
 	events("-> today_hours_index()");
 	today_hours_index();
+	
+	if(is_overloaded(__FILE__)){
+		$unix->send_email_events("Proxy squid statistics has been canceled", "Computer is overloaded\n"
+		._basename(__FILE__)."\n".__FUNCTION__."\nfunction called:today_hours_index()\nLine:".__LINE__, "proxy");
+		return;
+	}		
+	
 	events("-> tablehitsclients()");
 	tablehitsclients();
+	
+	if(is_overloaded(__FILE__)){
+		$unix->send_email_events("Proxy squid statistics has been canceled", "Computer is overloaded\n"
+		._basename(__FILE__)."\n".__FUNCTION__."\nfunction called:tablehitsclients()\nLine:".__LINE__, "proxy");
+		return;
+	}		
+	
+	
 	events("-> FillCategories()");
 	FillCategories();
+	
+	if(is_overloaded(__FILE__)){
+		$unix->send_email_events("Proxy squid statistics has been canceled", "Computer is overloaded\n"
+		._basename(__FILE__)."\n".__FUNCTION__."\nfunction called:FillCategories()\nLine:".__LINE__, "proxy");
+		return;
+	}		
+	
 	events("-> squid_events_sites()");
 	squid_events_sites();
+	
+	if(is_overloaded(__FILE__)){
+		$unix->send_email_events("Proxy squid statistics has been canceled", "Computer is overloaded\n"
+		._basename(__FILE__)."\n".__FUNCTION__."\nfunction called:squid_events_sites()\nLine:".__LINE__, "proxy");
+		return;
+	}		
+	
+	
 	events("-> FillCategories()");
 	FillCategories();
+	
+	if(is_overloaded(__FILE__)){
+		$unix->send_email_events("Proxy squid statistics has been canceled", "Computer is overloaded\n"
+		._basename(__FILE__)."\n".__FUNCTION__."\nfunction called:FillCategories()\nLine:".__LINE__, "proxy");
+		return;
+	}		
 	
 	$time=$unix->file_time_min($timefileDB);
 	events("Time {$time}Mn/1440Mn");
@@ -114,7 +196,21 @@ if($argv[1]=='--maintenance'){
 	events("REPAIR TABLE / OPTIMIZE TABLE");
 	$q=new mysql();
 	$q->QUERY_SQL("REPAIR TABLE `dansguardian_events`","artica_events");
+	if(is_overloaded(__FILE__)){
+		$unix->send_email_events("Proxy squid maintenance has been canceled", "Computer is overloaded\n"
+		._basename(__FILE__)."\n".__FUNCTION__."\nfunction called:REPAIR TABLE `dansguardian_events`\nLine:".__LINE__, "proxy");
+		return;
+	}		
+	
+	
 	$q->QUERY_SQL("OPTIMIZE TABLE `dansguardian_events`","artica_events");
+	
+	if(is_overloaded(__FILE__)){
+		$unix->send_email_events("Proxy squid maintenance has been canceled", "Computer is overloaded\n"
+		._basename(__FILE__)."\n".__FUNCTION__."\nfunction called:OPTIMIZE TABLE `dansguardian_events`\nLine:".__LINE__, "proxy");
+		return;
+	}		
+	
 }
 
 

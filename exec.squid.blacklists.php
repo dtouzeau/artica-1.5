@@ -1,4 +1,5 @@
 <?php
+$GLOBALS["FULL"]=false;
 if(posix_getuid()<>0){die("Cannot be used in web server mode\n\n");}
 include_once(dirname(__FILE__).'/ressources/class.templates.inc');
 include_once(dirname(__FILE__).'/ressources/class.ldap.inc');
@@ -23,7 +24,7 @@ if($argv[1]=="--fullupdate"){fullupdate();die();}
 writelogs("unable to understand query !!!!!!!!!!!..." .@implode(",",$argv),"main()",__FILE__,__LINE__);
 
 function fullupdate(){
-	
+	$GLOBALS["FULL"]=true;
 	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
 	$unix=new unix();
 	$pid=@file_get_contents($pidfile);
@@ -137,7 +138,6 @@ function downloads(){
 		
 		if(CheckTargetFile($targetfile,$ligne["filesize"])){
 			echo "$filename skipped...\n";
-			UpdateCategories($filename,20,"{downloaded}",0);
 			continue;
 		}
 		
@@ -220,15 +220,19 @@ function inject_category($categories){
 
 function inject(){
 	
+	
 	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
 	$unix=new unix();
-	$pid=@file_get_contents($pidfile);
-	if($unix->process_exists($pid,__FILE__)){
-		writelogs("Warning: Already running pid $pid",__FUNCTION__,__FILE__,__LINE__);
-		return;
+	if(!$GLOBALS["FULL"]){
+		$pid=@file_get_contents($pidfile);
+		if($unix->process_exists($pid,__FILE__)){
+			writelogs("Warning: Already running pid $pid",__FUNCTION__,__FILE__,__LINE__);
+			return;
+		}
 	}
 	
-	@file_put_contents($pidfile, getmypid());	
+	@file_put_contents($pidfile, getmypid());
+		
 	
 	$working_dir=$GLOBALS["working_directory"];
 	$unix=new unix();

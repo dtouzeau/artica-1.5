@@ -6,13 +6,17 @@ $usersmenus=new usersMenus();
 if($usersmenus->AsPostfixAdministrator==true){}else{die("wrong privileges");}	
 
 
+
+
+if(isset($_POST["DELETEALL"])){DELETEALL();exit;}
+if(isset($_POST["COMMAND"])){COMMANDS_SAVE();exit;}
 if(isset($_POST["zmd5"])){save_service();exit;}
 if(isset($_GET["script"])){echo echo_js();exit;}
 if(isset($_GET["main_page"])){echo main_page();exit;}
 if(isset($_GET["service-info"])){echo service_info();exit;}
 if(isset($_GET["add_option_service"])){add_option_service();exit;}
-if(isset($_GET["del_option_service"])){del_option_service();exit;}
-if(isset($_GET["del_service"])){del_service();exit;}
+if(isset($_POST["del_option_service"])){del_option_service();exit;}
+if(isset($_POST["del_service"])){del_service();exit;}
 if(isset($_GET["service-ssl"])){main_ssl();exit;}
 if(isset($_GET["enable_smtps"])){enable_smtps();exit;}
 if(isset($_GET["RebuildMaster"])){rebuild_master();exit;}
@@ -20,7 +24,12 @@ if(isset($_GET["tabs"])){main_tabs();exit;}
 if(isset($_GET["default"])){main_page();exit;}
 if(isset($_GET["config"])){main_conf();exit;}
 if(isset($_GET["commands-list"])){COMMANDS_LIST();exit;}
-if(isset($_POST["COMMAND"])){COMMANDS_SAVE();exit;}
+if(isset($_GET["mastercf-list"])){main_page_list();exit;}
+if(isset($_POST["MasterCFUseDefaults"])){MasterCFUseDefaults();exit;}
+while (list ($index, $opt) = each ($_REQUEST) ){
+	writelogs("UNABLE TO UNSERSTAND $index= $opt","main",__FILE__,__LINE__);
+}
+
 die();
 
 
@@ -97,43 +106,13 @@ function echo_js(){
 	var tmpval='';
 	
 	
-	YahooWin2(875,'$page?tabs=yes&hostname={$_GET["hostname"]}','master.cf (services)',''); 
+	YahooWin2(950,'$page?tabs=yes&hostname={$_GET["hostname"]}','master.cf (services)',''); 
 	
 	function PostfixServiceInfo(key,service_label){
 		YahooWin3(550,'$page?service-info='+key+'&hostname={$_GET["hostname"]}','master.cf ('+service_label+')',''); 
 		}
 		
-		
-	function PostfixServiceInfo2(){
-		YAHOO.example.container.dialog3.hide();
-		
-	
-	}
-	
-	
 
-      
-var x_service=function(obj){
-		PostfixServiceTable();
-      }	      
-		
-
-	
-	function DelOptionService(servname,index){
-			var XHR = new XHRConnection();
-			tmpval=servname;
-    		XHR.appendData('del_option_service',servname);
-    		XHR.appendData('index',index);
-    		XHR.sendAndLoad('$page','GET',x_AddOptionService);
-	}
-	
-	
-	function DeleteMasterService(servname){
-			var XHR = new XHRConnection();
-    		XHR.appendData('del_service',servname);
-    		XHR.sendAndLoad('$page','GET',x_service);
-	
-	}
 	
 	function PostfixServiceTable(){
 		LoadAjax('dialog2_content','$page?main=default&hostname={$_GET["hostname"]}')
@@ -244,7 +223,7 @@ function service_info(){
 		var tempvalue=obj.responseText;
 		if(tempvalue.length>3){alert(tempvalue);}	
 		YahooWin3Hide();	
-		RefreshTab('main_master_cf');	
+		MasterServiceSearch();
 	}	
 
 	function LoadCommands(){
@@ -272,7 +251,7 @@ var x_AddOptionService=function(obj){
 		text=obj.responseText;
 		if(text.length>3){alert(text);}
 		LoadCommands();
-		RefreshTab('main_master_cf');
+		MasterServiceSearch();
       }				
 		
 	function AddOptionService(){
@@ -293,10 +272,19 @@ var x_AddOptionService=function(obj){
 	
 }
 
+function DELETEALL(){
+	$sql="DELETE FROM master_cf WHERE `hostname`='{$_POST["hostname"]}'";
+	$q=new mysql();
+	$q->QUERY_SQL($sql,"artica_backup");
+	if(!$q->ok){echo $q->mysql_error;}
+}
+
 function COMMANDS_SAVE(){
-	$service=$_GET["add_option_service"];
-	$master=new master_cf();
-	if(!$master->add_command_options($service,$_GET["option"])){
+	$key=$_POST["zmd5"];
+	if(trim($_POST["COMMAND"])==null){return;}
+	writelogs("Save new command = $key \"{$_POST["COMMAND"]}\"",__FUNCTION__,__FILE__,__LINE__);
+	$master=new master_cf(0,$_POST["hostname"]);
+	if(!$master->add_command_options($key,$_POST["COMMAND"])){
 		echo $master->ldap_error;
 		
 	}	
@@ -337,7 +325,25 @@ $html="
 	<tbody class='tbody'>
 		$options
 	</tbody>
-</table>";	
+</table>
+<script>
+var x_DelOptionService=function(obj){
+		text=obj.responseText;
+		if(text.length>3){alert(text);}
+		LoadCommands();
+		MasterServiceSearch();
+      }	
+	
+	function DelOptionService(zmd5,index){
+			var XHR = new XHRConnection();
+    		XHR.appendData('del_option_service',zmd5);
+    		XHR.appendData('index',index);
+    		XHR.appendData('hostname','{$_GET["hostname"]}');
+    		XHR.sendAndLoad('$page','POST',x_DelOptionService);
+	}
+</script>
+
+";	
 echo $tpl->_ENGINE_parse_body($html);	
 	
 }
@@ -355,7 +361,7 @@ function main_tabs(){
 	
 	
 	echo "
-	<div id=main_master_cf style='width:100%;height:550px;overflow:auto'>
+	<div id=main_master_cf style='width:100%;height:770px;overflow:auto'>
 		<ul>". implode("\n",$html)."</ul>
 	</div>
 		<script>
@@ -368,31 +374,104 @@ function main_tabs(){
 }
 
 
-
-
-
 function main_page(){
+	$page=CurrentPageName();
+	$tpl=new templates();
+	$sock=new sockets();
+	$UseDefault=$sock->GET_INFO("MasterCFUseDefaults{$_GET["hostname"]}");
+	if(!is_numeric($UseDefault)){$UseDefault=1;}
+	$html="
+	<center style='margin-bottom:10px'>
+	<table style='width:80%' class=form>
+	<tbody>
+		<tr>
+			<td class=legend>{name}:<td>
+			<td>". Field_text("name-search-master",null,"font-size:16px",null,null,null,false,"MasterServiceSearchCheck(event)")."</td>
+			<td>". button("{search}","MasterServiceSearch()")."</td>
+		</tr>
+		<tr>
+			<td class=legend>{back_to_defaults}:<td>
+			<td colspan=2>". Field_checkbox("MasterCFUseDefaults", 1,$UseDefault,'MasterCFUseDefaultsCheck()')."</td>
+		</tr>
+	</tbody>
+	</table>
+	</center>
 	
-	$master=new master_cf(0,$_GET["hostname"]);
+	<div style='width:100%;height:650px;overflow-y:auto' id='mastercf-list'></div>
+	
+	<script>
+		function MasterServiceSearchCheck(e){
+			if(checkEnter(e)){MasterServiceSearch();}
+		}
+	function MasterServiceSearch(){
+		var se=escape(document.getElementById('name-search-master').value);
+		LoadAjax('mastercf-list','$page?mastercf-list=yes&hostname={$_GET["hostname"]}&search='+se);
+	
+	}
+	
+	var x_MasterCFUseDefaultsCheck=function(obj){
+		text=obj.responseText;
+		if(text.length>3){alert(text);}
+		MasterServiceSearch();
+      }				
+		
+	function MasterCFUseDefaultsCheck(){
+			var XHR = new XHRConnection();
+			if(document.getElementById('MasterCFUseDefaults').checked){
+    		XHR.appendData('MasterCFUseDefaults','1');}else{XHR.appendData('MasterCFUseDefaults','0');}
+    		XHR.appendData('hostname','{$_GET["hostname"]}');
+    		AnimateDiv('mastercf-list');
+    		XHR.sendAndLoad('$page','POST',x_MasterCFUseDefaultsCheck);
+		
+	}	
+	
+	MasterServiceSearch();
+	</script>
+	";
+	echo $tpl->_ENGINE_parse_body($html);
+	
+}
 
+function MasterCFUseDefaults(){
+	$sock=new sockets();
+	$sock->SET_INFO("MasterCFUseDefaults{$_POST["hostname"]}", $_POST["MasterCFUseDefaults"]);
+	$sock->getFrameWork("cmd.php?postfix-throttle=yes&instance={$_POST["hostname"]}");
+}
+
+
+function main_page_list(){
 	
+	$search=$_GET["search"];
+	$search="*$search*";
+	$search=str_replace("**", "*", $search);
+	$search=str_replace("**", "*", $search);
+	$search=str_replace("*", "%", $search);
+	$master=new master_cf(0,$_GET["hostname"]);
+	$page=CurrentPageName();
+	$tpl=new templates();
+	$delete_all=$tpl->javascript_parse_text("{delete_all}");
 	$table="
 	<table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
 	<thead class='thead'>
 		<tr>
 		<th nowrap>{name}</th>
-		<th nowrap>{service_name}</th>
 		<th nowrap>&nbsp;</th>
 		<th nowrap>{SERVICE_TYPE}</th>
+		<th>PRIVATE</th>
+		<th>UNIPRIV</th>
+		<th>CHROOT</th>
+		<th>WAKEUP</th>
+		<th>MAXPROC</TH>
+		
 		<th nowrap>{COMMAND}</th>
-		<th nowrap>{OPTIONS}</th>
-		<th>". imgtootltip("add-18.gif",'{add_postfix_service}',"PostfixServiceInfo('')")."</th>
+		<th>". imgtootltip("plus-24.png",'{add_postfix_service}',"PostfixServiceInfo('')")."</th>
+		<th>". imgtootltip("delete-24.png",$delete_all,"MasterCFDeleteAll('')")."</th>
 		</tr>
 	</thead>
 	<tbody class='tbody'>";
 	
 	
-	$sql="SELECT * FROM master_cf WHERE hostname='{$_GET["hostname"]}'";
+	$sql="SELECT * FROM master_cf WHERE hostname='{$_GET["hostname"]}' AND `SERVICE_NAME` LIKE '$search'";
 	writelogs("$sql",__FUNCTION__,__FILE__,__LINE__);
 	$q=new mysql();
 	$results=$q->QUERY_SQL($sql,"artica_backup");
@@ -402,23 +481,35 @@ function main_page(){
 		$SERVICE=$ligne["SERVICE_NAME"];
 		$TYPE=$ligne["TYPE"];
 		$options=array();
+		$optionsTXT=null;
+		$MAXPROC=$ligne["MAXPROC"];
+		$PRIVATE=$ligne["PRIVATE"];
+		$UNIPRIV=$ligne["UNIPRIV"];
+		$CHROOT=$ligne["CHROOT"];
+		$WAKEUP=$ligne["WAKEUP"];
+		$color="black";
+		if($master->MasterCFUseDefaults==1){$color="#CCCCCC";}
 		$delete=imgtootltip('delete-24.png','{delete}',"DeleteMasterService('$KEY')");
 		if($master->standard_services[$SERVICE]){
 			$realname="{service_{$SERVICE}}";
-			$explain=help_icon("{service_{$SERVICE}_text}");
-			$delete=null;
-		}else{$realname="{$SERVICE}";$explain=null;}
+			$explain=help_icon("<b>$realname</b><hr>{service_{$SERVICE}_text}");
+			$delete="&nbsp;";
+		}else{$realname="{$SERVICE}";$explain="&nbsp;";}
 		
-		$options=serialize($ligne["COMMAND"]);
+		$options=unserialize($ligne["COMMAND"]);
 		
 		$count=0;
 		if (is_array($options)){
 			while (list ($index, $opt) = each ($options) ){
 				if(trim($opt)==null){continue;}
+				if(trim($opt)=="Array"){continue;}
+				if(is_array($opt)){continue;}
 				$count++;
 				if(strlen($opt)>27){$opt=substr($opt,0,27)."...";}
-				$options=$options."<div><code>$opt</cod></div>";
+				$optionsTXT=$optionsTXT."<div><code style='font-size:12px;color:$color'>$opt</code></div>";
 			}
+		}else{
+			$optionsTXT="<img src='img/warning-panneau-32.png'>";
 		}
 		
 		
@@ -427,17 +518,21 @@ function main_page(){
 		$js="OnClick=\"javascript:PostfixServiceInfo('$KEY','$SERVICE');\"";
 		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
 		
-		$edit="<a href=\"javascript:blur();\" $js style='text-decoration:underline;font-size:13px'>";
+		$edit="<a href=\"javascript:blur();\" $js style='text-decoration:underline;font-size:13px;color:$color'>";
 		
 		$table=$table."
 			<tr class=$classtr>
-				<td nowrap width=1% nowrap>$edit$realname</a></td>	
-				<td nowrap width=1% nowrap style='font-size:13px'>$edit{$master->array_full[$KEY]["SERVICE_NAME"]}</a></td>
+				<td nowrap width=1%>$edit$SERVICE</a></td>	
 				<td width=1%>$explain</td>
-				<td width=1% style='font-size:14px'><strong>$TYPE</strong></td>
-				<td width=1% nowrap>{$master->array_full[$KEY]["COMMAND"]}</td>
-				<td width=90%>$options</td>
-				<td width=1%>$delete</td>
+				<td width=1% style='font-size:14px;color:$color'><strong>$TYPE</strong></td>
+				<td width=1% style='font-size:14px;color:$color' align='center'><strong>$PRIVATE</strong></td>
+				<td width=1% style='font-size:14px;color:$color' align='center' ><strong>$UNIPRIV</strong></td>
+				<td width=1% style='font-size:14px;color:$color' align='center'><strong>$CHROOT</strong></td>
+				<td width=1% style='font-size:14px;color:$color' align='center'><strong>$WAKEUP</strong></td>
+				<td width=1% style='font-size:14px;color:$color' align='center'><strong>$MAXPROC</strong></td>
+				
+				<td width=90%>$optionsTXT</td>
+				<td width=1% colspan=2>$delete</td>
 		 </tr>";
 		
 		
@@ -447,10 +542,38 @@ function main_page(){
 	$table=$table."</table>";
 	
 	$html="
-	<div style='width:100%;height:450px;overflow-y:auto'>
+	
 	$table
-	</div>
-	";
+	
+	
+	<script>
+	var x_MasterCFDeleteAll=function(obj){
+		text=obj.responseText;
+		if(text.length>3){alert(text);}
+		MasterServiceSearch();
+      }				
+		
+	function MasterCFDeleteAll(){
+		if(confirm('$delete_all')){
+			var XHR = new XHRConnection();
+    		XHR.appendData('DELETEALL','yes');
+    		XHR.appendData('hostname','{$_GET["hostname"]}');
+    		AnimateDiv('mastercf-list');
+    		XHR.sendAndLoad('$page','POST',x_MasterCFDeleteAll);
+		}
+	}
+	
+	function DeleteMasterService(zmd5){
+			var XHR = new XHRConnection();
+    		XHR.appendData('del_service',zmd5);
+    		XHR.appendData('hostname','{$_GET["hostname"]}');
+    		AnimateDiv('mastercf-list');
+    		XHR.sendAndLoad('$page','POST',x_MasterCFDeleteAll);
+	
+	}	
+	
+	
+	</script>";
 	
 	
 	$tpl=new templates();
@@ -465,12 +588,14 @@ function main_page(){
 
 function main_conf(){
 	
-	$master=new master_cf();
-	$datas=$master->Build();
+	
+	$sock=new sockets();
+	$datas=base64_decode($sock->getFrameWork("postfix.php?mastercf=yes&instance={$_GET["hostname"]}"));
+	
 	
 $html="
 	<div style='text-align:right'><input type='button' value='{rebuild_configuration}&nbsp;&raquo;' OnClick=\"javascript:RebuildMaster();\"></div>
-	<textarea style='width:100%;height:350px'>$datas</textarea>
+	<textarea style='width:100%;height:650px;overflow:auto;font-size:13px'>$datas</textarea>
 	";
 	
 $tpl=new templates();
@@ -485,10 +610,10 @@ echo $tpl->_ENGINE_parse_body($html);
 
 
 function del_option_service(){
-	$service=$_GET["del_option_service"];
-	$index=$_GET["index"];
-	$master=new master_cf();
-	if(!$master->del_command_options($service,$index)){
+	$zmd5=$_POST["del_option_service"];
+	$index=$_POST["index"];
+	$master=new master_cf(0,$_POST["hostname"]);
+	if(!$master->del_command_options($zmd5,$index)){
 	echo $master->ldap_error;
 		
 	}	
@@ -497,9 +622,14 @@ function del_option_service(){
 
 
 function save_service(){
-	$master=new master_cf();
+	$_POST["service"]=str_replace(" ", "", $_POST["service"]);
+	$_POST["service"]=strtolower($_POST["service"]);
+	$master=new master_cf(0,$_POST["hostname"]);
+	if($_POST["zmd5"]==null){$_POST["zmd5"]=md5($_POST["service"].$_POST["type"].$_POST["hostname"]);}
 	if($_POST["service"]==null){$_POST["service"]=$_POST["zmd5"];}
-	
+	if($_POST["private"]==null){$_POST["private"]="-";}
+	if($_POST["chroot"]==null){$_POST["chroot"]="-";}
+	if($_POST["maxproc"]==null){$_POST["maxproc"]="-";}
 	$master->edit_service($_POST["service"],$_POST["type"],
 	$_POST["private"],$_POST["unipriv"],
 	$_POST["chroot"],$_POST["wakeup"],
@@ -507,9 +637,9 @@ function save_service(){
 }
 
 function del_service(){
-	$service=$_GET["del_service"];
-	$master=new master_cf();
-	$master->delete_service($service);
+	$zmd5=$_POST["del_service"];
+	$master=new master_cf(0,$_POST["hostname"]);
+	$master->delete_service($zmd5);
 	
 }
 

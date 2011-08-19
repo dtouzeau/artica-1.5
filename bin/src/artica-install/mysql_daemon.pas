@@ -527,6 +527,7 @@ begin
        RegExpr.Expression:='Can''t connect to local MySQL server through socket';
        if RegExpr.Exec(l.Strings[i]) then begin
           l.free;
+          logs.Debuglogs('CHECK_ERRORS_INFILE:: Connect to local MySQL server through socket failed');
           result:=true;
           exit;
        end;

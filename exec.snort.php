@@ -311,9 +311,9 @@ $conf[]='    non_rfc_char { 0x00 0x01 0x02 0x03 0x04 0x05 0x06 0x07 } \ ';
 if($inver>28){
 	$conf[]="    enable_cookie \ ";
 	$conf[]="    extended_response_inspection \ ";
-	$conf[]="    inspect_gzip \ ";
+	//$conf[]="    inspect_gzip \ ";
 	$conf[]="    normalize_utf \ ";
-	$conf[]="    unlimited_decompress \ ";
+	//$conf[]="    unlimited_decompress \ ";
 }
 $conf[]="    apache_whitespace no \ ";
 $conf[]="    ascii no \ ";

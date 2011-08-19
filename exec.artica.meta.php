@@ -397,7 +397,7 @@ function SendStatus(){
 	if($users->SQUID_INSTALLED){
 		$sock=new sockets();
 		$SQUIDEnable=$sock->GET_INFO("SQUIDEnable");
-		if($SQUIDEnable==null){$SQUIDEnable=1;}
+		if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
 		if($SQUIDEnable==1){$SQUID_CACHES=base64_encode(serialize($unix->squid_get_cache_infos()));}
 		if(is_array($SQUID_CACHES)){
 			$squid=new squidbee();

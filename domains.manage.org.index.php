@@ -58,7 +58,7 @@ function js(){
 	$prefix=str_replace(".","_",$page);
 	$js1=file_get_contents("js/artica_organizations.js");
 	$js2=file_get_contents("js/artica_domains.js");
-	$LoadSingleOrg="LoadWinORG2('760','$page?js-pop=yes&ou=$ou_encoded','$title');";
+	$LoadSingleOrg="LoadWinORG2('870','$page?js-pop=yes&ou=$ou_encoded','$title');";
 	
 	if(isset($_GET["in-front-ajax"])){
 		$LoadSingleOrg="
@@ -440,7 +440,8 @@ function popup_tabs(){
 	$_GET["ou"]=base64_decode($_GET["ou"]);
 	if(GET_CACHED(__FILE__,__FUNCTION__,"js:{$_GET["ou"]}")){return null;}
 	$sock=new sockets();
-	
+	$EnableGroupWareScreen=$sock->GET_INFO("EnableGroupWareScreen");
+	if(!is_numeric($EnableGroupWareScreen)){$EnableGroupWareScreen=1;}
 	$page=CurrentPageName();
 	$lvm_g=new lvm_org($_GET["ou"]);
 	$usersmenus=new usersMenus();
@@ -473,7 +474,7 @@ function popup_tabs(){
 	if($usersmenus->AsOrgAdmin){
 		$ShowApacheGroupware=$sock->GET_INFO("ShowApacheGroupware");
 		if($ShowApacheGroupware==null){$ShowApacheGroupware=1;}
-		$array["groupwares"]='{groupwares}';
+		if($EnableGroupWareScreen==1){$array["groupwares"]='{groupwares}';}
 		if(count($lvm_g->disklist)>0){$array["storage"]='{storage}';}
 	}
 	
@@ -551,6 +552,17 @@ function popup_tabs(){
 }
 
 function COUNT_DE_USERS(){
+		$sock=new sockets();
+	$EnableManageUsersTroughActiveDirectory=$sock->GET_INFO("EnableManageUsersTroughActiveDirectory");
+	if(!is_numeric($EnableManageUsersTroughActiveDirectory)){$EnableManageUsersTroughActiveDirectory=0;}	
+	
+	if($EnableManageUsersTroughActiveDirectory==1){
+		$ldap=new ldapAD();
+		echo $ldap->CountDeUSerOu($_GET["count-de-users"]);
+		return;
+		
+	}	
+	
 	$ldap=new clladp();
 	echo $ldap->CountDeUSerOu($_GET["count-de-users"]);
 }
@@ -1439,6 +1451,10 @@ function organization_users_find_member(){
 	$tofind=$_GET["finduser"];
 	$tpl=new templates();
 	$page=CurrentPageName();
+	$EnableManageUsersTroughActiveDirectory=$sock->GET_INFO("EnableManageUsersTroughActiveDirectory");
+	if(!is_numeric($EnableManageUsersTroughActiveDirectory)){$EnableManageUsersTroughActiveDirectory=0;}
+	
+		
 	
 	
 	if(is_base64_encoded($_GET["ou"])){
@@ -1448,23 +1464,22 @@ function organization_users_find_member(){
 			$ou=$_GET["ou"];
 			$ou_encoded=base64_encode($_GET["ou"]);
 		}
-	writelogs("Find users $tofind in $ou (encoded={$_GET["ou"]})",__FUNCTION__,__FILE__,__LINE__);
+	writelogs("Find users $tofind in $ou (encoded={$_GET["ou"]}) EnableManageUsersTroughActiveDirectory:$EnableManageUsersTroughActiveDirectory",__FUNCTION__,__FILE__,__LINE__);
 	
 	if($_SESSION["uid"]<>-100){$ou=$_SESSION["ou"];}
-	$ldap=new clladp();
+	
 	if($tofind==null){$tofind='*';}else{$tofind="*$tofind*";}
 	$filter="(&(objectClass=userAccount)(|(cn=$tofind)(mail=$tofind)(displayName=$tofind)(uid=$tofind) (givenname=$tofind)))";
 	$attrs=array("displayName","uid","mail","givenname","telephoneNumber","title","sn","mozillaSecondEmail","employeeNumber","sAMAccountName");
 	$dn="ou=$ou,dc=organizations,$ldap->suffix";
 	
-	if($ldap->EnableManageUsersTroughActiveDirectory){
+	if($EnableManageUsersTroughActiveDirectory==1){
 		$cc=new ldapAD();
-		$dn="$cc->suffix";
-		$filter="(&(objectClass=user)(|(cn=$tofind)(mail=$tofind)(displayName=$tofind)(sAMAccountName=$tofind) (givenname=$tofind)))";
-		if(trim($ou)=="Domain Controllers"){$dn="CN=Users,$cc->suffix";}
+		$hash=$cc->find_users($ou,$tofind);
+	}else{
+		$ldap=new clladp();
+		$hash=$ldap->Ldap_search($dn,$filter,$attrs,150);
 	}
-	
-	$hash=$ldap->Ldap_search($dn,$filter,$attrs,150);
 	
 	
 	
@@ -1494,7 +1509,7 @@ function organization_users_find_member(){
 		$groups=Paragraphe('folder-group-64.png','{manage_groups}','{manage_groups_text}',"javascript:Loadjs('domains.edit.group.php?ou=$ou_encoded&js=yes')",null,210,100,0,true);
 		$delete_all_users=Paragraphe('member-64-delete.png','{delete_all_users}','{delete_all_users_text}',"javascript:DeleteAllusers()",null,210,100,0,true);
 		
-		if($ldap->EnableManageUsersTroughActiveDirectory){
+		if($EnableManageUsersTroughActiveDirectory==1){
 			$delete_all_users=Paragraphe('member-64-delete-grey.png','{delete_all_users}','{delete_all_users_text}',"",null,210,100,0,true);
 			
 			
@@ -1506,7 +1521,7 @@ function organization_users_find_member(){
 			if($sock->GET_INFO("AllowArticaMetaAddUsers")<>1){$add_user=$add_user_disabled;}
 		}
 		
-		if($usermenus->EnableManageUsersTroughActiveDirectory){
+		if($EnableManageUsersTroughActiveDirectory==1){
 			$add_user=$add_user_disabled;
 		}
 		
@@ -1517,7 +1532,7 @@ function organization_users_find_member(){
 		$userARR=$hash[$i];
 		
 		$uid=$userARR["uid"][0];
-		if($ldap->EnableManageUsersTroughActiveDirectory){
+		if($EnableManageUsersTroughActiveDirectory==1){
 			$uid=$userARR["samaccountname"][0];
 		}
 		

@@ -49,7 +49,7 @@ public
     function     DRUPAL7_VERSION():string;
     function     DRUSH7_VERSION():string;
     function     APP_MSKTUTIL_VERSION():string;
-
+    function     PIWIK_VERSION():string;
 
 END;
 
@@ -780,7 +780,44 @@ begin
 
 end;
 //########################################################################################
+function ttoolsversions.PIWIK_VERSION():string;
+ var
+    RegExpr:TRegExpr;
+    filetemp:string;
+    binpath:string;
+    l:TstringList;
+    i:integer;
+begin
+  SYS:=Tsystem.Create();
+  logs:=Tlogs.Create;
+  binpath:='/usr/share/piwik/core/Version.php';
 
+     if not FileExists(binpath) then begin
+        logs.Debuglogs('ttoolsversions.PIWIK_VERSION():: not installed');
+        exit;
+     end;
+
+  result:=SYS.GET_CACHE_VERSION('APP_PIWIK');
+  if length(result)>2 then exit;
+  RegExpr:=TRegExpr.Create;
+  RegExpr.Expression:='VERSION.+?([0-9\.]+)';
+    l:=TstringList.Create;
+    L.LoadFromFile(binpath);
+  for i:=0 to l.Count-1 do begin
+   if length(trim(l.Strings[i]))=0 then continue;
+   if RegExpr.Exec(l.Strings[i]) then begin
+      result:=RegExpr.Match[1];
+      break;
+   end else begin
+      logs.Debuglogs('ttoolsversions.PIWIK_VERSION():: Not found "'+l.Strings[i]+'"');
+   end;
+  end;
+  RegExpr.free;
+  l.free;
+  SYS.SET_CACHE_VERSION('APP_PIWIK',result);
+
+end;
+//########################################################################################
 
 function ttoolsversions.GREENSQL_VERSION():string;
  var

@@ -123,6 +123,7 @@ public function SET_BIGDATA($key,$value){
 	
 	
 	public function SET_VALUE($key,$value){
+		writelogs("Postfix-multi set $key = $value",__CLASS__."/".__FUNCTION__,__FILE__,__LINE__);
 		$sql="SELECT `ID` FROM postfix_multi WHERE `key`='$key' AND `uuid`='$this->uuid' AND `ip_address`='$this->ip_addr' LIMIT 0,1";
 		$ligne=mysql_fetch_array($this->q->QUERY_SQL($sql,"artica_backup"));	
 		if($ligne["ID"]==null){
@@ -1527,8 +1528,15 @@ private function smtp_sasl_password_map(){
 			
 			$mailbox_transport=$this->getMailBoxTransport();
 			$nets=unserialize($this->GET_BIGDATA("mynetworks"));
-			if(is_array($nets)){$mynetworks=",".@implode(",",$nets);}	
+			if(is_array($nets)){
+				while (list ($d, $z) = each ($nets) ){if(trim($z)==null){continue;}$newnets[$z]=$z;}
+				$nets=array();
+				while (list ($d, $z) = each ($newnets) ){$nets[]=$z;}
+			}
 			
+			
+			if(is_array($nets)){$mynetworks=",".@implode(",",$nets);}	
+			$mynetworks=str_replace(",,", ",", $mynetworks);
 			$myhostname_maincf=$myhostname;
 			
 			$VirtualHostnameToChange=trim($this->GET("VirtualHostNameToChange"));

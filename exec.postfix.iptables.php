@@ -188,7 +188,7 @@ function perso(){
 
 
 function ipdeny(){
-	
+	$unix=new unix();
 	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
 	$pid=@file_get_contents($pidfile);
 	if($unix->process_exists($pid)){echo "Already running pid $pid\n";return;}		

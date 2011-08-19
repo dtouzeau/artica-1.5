@@ -32,6 +32,8 @@ function js(){
 	$tpl=new templates();
 	$title=$tpl->_ENGINE_parse_body("{find_members}");
 	$find=$tpl->_ENGINE_parse_body("{find}");
+	if($_GET["encoded"]=="yes"){$_GET["ou"]=base64_decode($_GET["ou"]);}
+	
 	$ou=$_GET["ou"];
 	$ou_encrypted=base64_encode($ou);
 $html="
@@ -65,6 +67,8 @@ var x_FIndMember= function (obj) {
 }
 
 function popup(){
+	
+	
 	if(is_base64_encoded($_GET["ou"])){$_GET["ou"]=base64_decode($_GET["ou"]);}
 	
 	$form="<table style='width:100%;margin:0px;padding:0px'>
@@ -87,25 +91,33 @@ echo $tpl->_ENGINE_parse_body($html);
 function find_member(){
 	$tofind=$_GET["find-member"];
 	if($_SESSION["uid"]==-100){$ou=$_GET["ou"];}else{$ou=$_SESSION["ou"];}
-	$ldap=new clladp();
+	
+	$sock=new sockets();
 	if(is_base64_encoded($ou)){$ou=base64_decode($ou);}
 	if($tofind==null){$tofind='*';}else{$tofind="*$tofind*";}
 	$tofind=str_replace('***','*',$tofind);
+	$EnableManageUsersTroughActiveDirectory=$sock->GET_INFO("EnableManageUsersTroughActiveDirectory");
+	if(!is_numeric($EnableManageUsersTroughActiveDirectory)){$EnableManageUsersTroughActiveDirectory=0;}	
+	
+	
+	
 	writelogs("FIND $tofind IN OU \"$ou\"",__FUNCTION__,__FILE__,__LINE__);
 	
-	$filter="(&(objectClass=userAccount)(|(cn=$tofind)(mail=$tofind)(displayName=$tofind)(uid=$tofind) (givenname=$tofind) ))";
-	$attrs=array("displayName","uid","mail","givenname","telephoneNumber","title","sn","mozillaSecondEmail","employeeNumber","sAMAccountName");
-	$dn="ou=$ou,dc=organizations,$ldap->suffix";
+
 	
-	if($ldap->EnableManageUsersTroughActiveDirectory){
+	if($EnableManageUsersTroughActiveDirectory==1){
 		$cc=new ldapAD();
-		$filter="(&(objectClass=user)(|(cn=$tofind)(mail=$tofind)(displayName=$tofind)(sAMAccountName=$tofind) (givenname=$tofind) ))";
-		$dn="ou=$ou,$cc->suffix";
-		if(trim($ou)=="Domain Controllers"){$dn="CN=Users,$cc->suffix";}
+		$hash=$cc->find_users($ou,$tofind);
 		
+	}else{
+		$ldap=new clladp();
+		$filter="(&(objectClass=userAccount)(|(cn=$tofind)(mail=$tofind)(displayName=$tofind)(uid=$tofind) (givenname=$tofind) ))";
+		$attrs=array("displayName","uid","mail","givenname","telephoneNumber","title","sn","mozillaSecondEmail","employeeNumber","sAMAccountName");
+		$dn="ou=$ou,dc=organizations,$ldap->suffix";		
+		$hash=$ldap->Ldap_search($dn,$filter,$attrs,20);
 	}
 	
-	$hash=$ldap->Ldap_search($dn,$filter,$attrs,20);
+	
 	
 	$users=new user();
 	

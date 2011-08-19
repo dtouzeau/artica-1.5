@@ -31,6 +31,11 @@ if($argv[1]=='--quotas-recheck'){quotasrecheck();die();}
 if($argv[1]=='--quotas-recheck'){quotasrecheck();die();}
 if($argv[1]=='--ldap-groups'){ldap_groups();die();}
 if($argv[1]=='--testjoin'){test_join();die();}
+if($argv[1]=='--recycles'){recycles();die();}
+if($argv[1]=='--trash-restore'){recycles_restore();die();}
+if($argv[1]=='--trash-delete'){recycles_delete();die();}
+if($argv[1]=='--trash-scan'){ScanTrashs();die();}
+if($argv[1]=='--check-privs'){recycles_privileges($argv[2],$argv[3]);die();}
 
 
 
@@ -343,7 +348,7 @@ function reconfigure(){
 	echo "Starting......: Samba building main configuration...\n";
 	@file_put_contents("/etc/samba/smb.conf",$samba->BuildConfig());
 	echo "Starting......: Samba $smbpasswd -w ****\n";
-	shell_exec("$smbpasswd -w $ldap_passwd");
+	shell_exec("$smbpasswd -w \"$ldap_passwd\"");
 
 	SambaAudit();
 	fixEtcHosts();
@@ -1228,30 +1233,227 @@ function test_join(){
 	
 	
 }
+
+function recycles(){
+	$smb=new samba();
+	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
+	
+	$unix=new unix();
+	$pid=@file_get_contents($pidfile);
+	if($unix->process_exists($pid)){
+		$unix->send_email_events("Virtual trashs: Instance PID $pid already running, task is canceled", "A maintenance task pid $pid is already running... This task pid ".getmypid()." is aborted", "samba");
+		return;
+	}
+	@file_put_contents($pidfile, getmypid());
+	$recycles=$smb->LOAD_RECYCLES_BIN();
 	
 	
+	
+	if(count($recycles)==0){return;}
+	$unix=new unix();
+	while (list ($directory, $none) = each ($recycles) ){
+		$ShareName=$directory;
+		$path=$smb->main_array[$directory]["path"].'/.RecycleBin$';
+		if($path==null){continue;}
+		echo "recycles:: Parsing $directory -> $path\n ";
+		if(!is_dir($path)){continue;}
+		$finalDirectories=$unix->dirdir($path);
+		while (list ($DirUid, $none) = each ($finalDirectories) ){
+			$uid=basename($DirUid);
+			echo "recycles:: Parsing recycles for $uid -> $DirUid\n ";
+			Recycles_inject($DirUid,$uid,$ShareName);
+		}
+		
+		
+		
+		
+	}
+	//DirRecursiveFiles
+	
+	
+	
+}
+
+function Recycles_inject($path,$uid,$ShareName){
+	$unix=new unix();
+	$q=new mysql();
+	$arrays=$unix->DirRecursiveFiles($path);
+	$prefix="INSERT IGNORE INTO samba_recycle_bin_list (path,uid,sharename,filesize) VALUES";
+	while (list ($index, $userpath) = each ($arrays) ){
+		$size=@filesize($userpath);
+		$userpath=addslashes($userpath);
+		$path=addslashes($path);
+		$uid=addslashes($uid);
+		$sql[]="('$userpath','$uid','$ShareName','$size')";
+		if(count($sql)>500){
+				$finalsql="$prefix ".@implode(",", $sql);
+				$sql=array();
+				$q->QUERY_SQL($finalsql,"artica_backup");
+				if(!$q->ok){echo $q->mysql_error;echo "\n$finalsql\n";}
+		}
+			
+		}
+		
+		
+	if($count($sql)>0){
+		$finalsql="$prefix ".@implode(",", $sql);$sql=array();
+		$q->QUERY_SQL($finalsql,"artica_backup");
+		if(!$q->ok){echo $q->mysql_error;echo "\n$finalsql\n";}
+	}
+	
+}
+
+function recycles_delete(){
+	$unix=new unix();
+	$sql="SELECT * FROM samba_recycle_bin_list WHERE delete=1";
+	$q=new mysql();
+	$unix=new unix();
+	$c=0;
+	$mv=$unix->find_program("mv");
+	$results=$q->QUERY_SQL($sql,"artica_backup");
+	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
+		$path=$ligne["path"];
+		$path_org=$path;
+		
+		$sql="DELETE FROM samba_recycle_bin_list WHERE path='$path_org'";
+		$q->QUERY_SQL($sql,"artica_backup");
+		if(!$q->ok){
+			$unix->send_email_events("Virtual trashs: mysql error $q->mysql_error", "File $path \ncannot be deleted from trash", "samba");
+			continue;
+		}
+		if(is_file($path_org)){		
+			@unlink($path_org);
+			$c++;
+		}
+
+	} 	
+	
+	if($c>0){
+		$unix->send_email_events("Virtual trashs: $c file(s) deleted", "$c File(s) has been automatically deleted from virtual trash.\n", "samba");
+	}
+	
+}
+
+function recycles_privileges($SourcePath,$uid){
+	$unix=new unix();
+	$dir=dirname($SourcePath);
+	if(strpos($dir, "RecycleBin$/$uid/")==0){return;}
+	$DestPos=strpos($SourcePath,"/.RecycleBin$");
+	$finalDestination=substr($SourcePath, 0,$DestPos);
+	
+	
+	$suffix=substr($dir, 0,strpos($dir, "RecycleBin$/$uid/")+strlen("RecycleBin$/$uid/"));
+	
+	$dir=substr($dir, strpos($dir, "RecycleBin$/$uid/")+strlen("RecycleBin$/$uid/"),strlen($dir));
+	
+	echo $dir."\n";
+	echo "suffix:$suffix\n";
+	echo "Destination:$finalDestination\n";
+	$tr=explode("/",$dir);
+	
+	while (list ($index, $directory) = each ($tr) ){
+		$dirs[]=$directory;
+		$sourcedir="$suffix/". @implode("/", $dirs);
+		$sourcedir=str_replace('//', "/", $sourcedir);
+		$actualPerms = file_perms($sourcedir,true);
+		$stat=stat($sourcedir);
+		$uid=$stat["uid"];
+		$gid=$stat["gid"];
+		
+		
+		if($GLOBALS["VERBOSE"]){echo "recycles_privileges():: $sourcedir -> $actualPerms ($uid $gid)\n";}
+		$FinalDirectoryDestination="$finalDestination/". @implode("/", $dirs);
+		$FinalDirectoryDestination=str_replace('//', "/", $FinalDirectoryDestination);
+		if(!is_dir($FinalDirectoryDestination)){
+			@mkdir($FinalDirectoryDestination,$actualPerms,true);
+			shell_exec("/bin/chmod $actualPerms ".$unix->shellEscapeChars($FinalDirectoryDestination));
+			shell_exec("/bin/chown $uid:$gid ".$unix->shellEscapeChars($FinalDirectoryDestination));
+		}
+	}
+}
+
+function file_perms($file, $octal = false){
+    if(!file_exists($file)) return false;
+    $perms = fileperms($file);
+    $cut = $octal ? 2 : 3;
+    return substr(decoct($perms), $cut);
+}
+
+
+function recycles_restore(){
+	$sql="SELECT * FROM samba_recycle_bin_list WHERE restore=1";
+	$q=new mysql();
+	$unix=new unix();
+	$mv=$unix->find_program("mv");
+	$results=$q->QUERY_SQL($sql,"artica_backup");
+	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
+		$path=$ligne["path"];
+		$path_org=$path;
+		echo "$path\n";
+		$uid=$ligne["uid"];
+		$pathToRestore=str_replace("/.RecycleBin$/$uid", "", $path);
+		$pathToRestoreorg=$pathToRestore;
+		if(!is_file($path)){
+			echo "FAILED $path no such file\n";
+			$sql="DELETE FROM samba_recycle_bin_list WHERE path='$path_org'";
+			$q->QUERY_SQL($sql,"artica_backup");
+			continue;
+		}
+		
+		
+		$path=$unix->shellEscapeChars($path);
+		$dirname=dirname($pathToRestore);
+		$pathToRestore=$unix->shellEscapeChars($pathToRestore);
+		
+		
+		echo "restore to \"$dirname\"\n";
+		recycles_privileges($path_org,$uid);
+		if(!is_dir($dirname)){
+			echo "FAILED ! $dirname no such directory\n";
+			$sql="UPDATE samba_recycle_bin_list SET restore=0 WHERE path='$path_org'";
+			$q->QUERY_SQL($sql,"artica_backup");			
+			continue;
+		}
+		
+		$cmd="$mv -b $path $pathToRestore";
+		$ras=shell_exec($cmd);
+		if(!is_file($pathToRestoreorg)){
+			echo "FAILED ! mv $path $pathToRestore $ras\n";
+			$sql="UPDATE samba_recycle_bin_list SET restore=0 WHERE path='$path_org'";
+			$q->QUERY_SQL($sql,"artica_backup");
+			continue;
+		}else{
+			$sql="DELETE FROM samba_recycle_bin_list WHERE path='$path_org'";
+			$q->QUERY_SQL($sql,"artica_backup");	
+		}
+		
+	}
+	
+}
+
+function ScanTrashs(){
+	$unix=new unix();
+	$ScanTrashPeriod=$sock->GET_INFO("ScanTrashTime");
+	$ScanTrashTTL=$sock->GET_INFO("ScanTrashTTL");
+	if(system_is_overloaded(basename(__FILE__))){$unix->send_email_events("Scanning virtual trashs aborted (system is overloaded)", "The task was stopped and will restarted in $ScanTrashPeriod minutes", "samba");return;}
+	if(!is_numeric($ScanTrashPeriod)){$ScanTrashPeriod=450;}
+	if(!is_numeric($ScanTrashTTL)){$ScanTrashTTL=7;}	
+	if($ScanTrashPeriod<30){$ScanTrashPeriod=30;}
+	if($ScanTrashTTL<1){$ScanTrashTTL=1;}
+	$filetime="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".time";
+	if($unix->file_time_min($filetime)<$ScanTrashPeriod){return;}
+	@unlink($filetime);
+	@file_put_contents($filetime, time());
+	$sql="UPDATE samba_recycle_bin_list SET delete=1 WHERE zDate<DATE_SUB(NOW(), INTERVAL $ScanTrashTTL DAY)";
+	$q=new mysql();
+	$q->QUERY_SQL($sql,"artica_backup");
+	if(!$q->ok){$unix->send_email_events("Virtual trashs: unable to set files TTL, mysql error", "Artica cannot update the mysql table\n$sql\n", "samba");}
+	recycles_delete();
+	recycles();	
+}
 
 
 
-// #smbd_audit:\s+(.+?)\|(.+?)\|(.+?)\|(.+?)\|(.+?)\|(.+?)\|(.+?)\|(.+?)$#
-/*
- # [0]=>smbd_audit: marie|192.168.1.211|ak8|marie|/home/marie|pwrite|ok|New folder3/Nouveau Document texte.txt
 
-# [1]=>marie
 
-# [2]=>192.168.1.211
-
-# [3]=>ak8
-
-# [4]=>marie
-
-# [5]=>/home/marie
-
-# [6]=>pwrite
-
-# [7]=>ok
-
-# [8]=>New folder3/Nouveau Document texte.txt
-{$re[5]}/{$re[8]}
-*/
 ?>

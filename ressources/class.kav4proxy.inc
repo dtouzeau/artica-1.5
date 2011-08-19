@@ -5,8 +5,10 @@ include_once(dirname(__FILE__). '/class.artica.inc');
 class Kav4Proxy{
 	var $q;
 	var $main_array=array();
-	
+	var $VERSION=0;
 	function Kav4Proxy(){
+		$users=new usersMenus();
+		$this->VERSION=$users->KAV4PROXY_VERSION;
 		$q=new mysql();
 		$this->q=$q;
 		$firstconfig=$this->GET("firstconfig","firstconfig");
@@ -113,7 +115,10 @@ class Kav4Proxy{
 		$this->SET("icapserver.process","IdleChildren","1");
 		$this->SET("icapserver.process","MaxReqsPerChild","15000");
 		$this->SET("icapserver.process","MaxEnginesPerChild","10");
-		$this->SET("firstconfig","firstconfig","1");
+		$this->SET("icapserver.process","MaxEnginesPerChild","10");
+		$this->SET("icapserver.actions","MaxReqLengthAction","skip");
+		$this->SET("icapserver.actions","PartialResponseAction","check");
+		$this->SET("icapserver.actions","PartialRequestAction","check");
 		
 		}
 	
@@ -172,8 +177,11 @@ function Build_defaults(){
 		$this->main_array["IdleChildren"]=$this->GET("icapserver.process","IdleChildren");	
 		$this->main_array["MaxReqsPerChild"]=$this->GET("icapserver.process","MaxReqsPerChild");	
 		$this->main_array["MaxEnginesPerChild"]=$this->GET("icapserver.process","MaxEnginesPerChild");	
-		$this->main_array["PreviewSize"]=$this->GET("icapserver.protocol","PreviewSize");		
+		$this->main_array["PreviewSize"]=$this->GET("icapserver.protocol","PreviewSize");
+		$this->main_array["ListenAddress"]=$this->GET("icapserver.network","ListenAddress");			
 
+		
+		
 		
 		if($this->main_array["Timeout"]==null){$this->main_array["Timeout"]=0;}
 		if($this->main_array["MaxChildren"]==null){$this->main_array["MaxChildren"]=10;}
@@ -199,12 +207,23 @@ function Build_defaults(){
 		if($this->main_array["UseUpdateServerUrlOnly"]==null){$this->main_array["UseUpdateServerUrlOnly"]="no";}
 		if($this->main_array["RegionSettings"]==null){$this->main_array["RegionSettings"]="Europe";}
 		if($this->main_array["UseProxy"]==null){$this->main_array["UseProxy"]="no";}
-		 
+		if($this->main_array["ListenAddress"]==null){$this->main_array["ListenAddress"]="127.0.0.1:1344";}
+		if($this->main_array["MaxReqLengthAction"]==null){$this->main_array["MaxReqLengthAction"]="skip";}
+		if($this->main_array["PartialResponseAction"]==null){$this->main_array["PartialResponseAction"]="check";}
+		if($this->main_array["PartialRequestAction"]==null){$this->main_array["PartialRequestAction"]="check";}    
+		
+
 		
 	}
 	
 	
 	function build_config(){
+				if($GLOBALS["AS_ROOT"]){
+					if(preg_match("#([0-9])\.([0-9]).([0-9]+)#",  $this->VERSION,$re)){
+						$rev=$re[3];
+					}
+					echo "Starting......: Kav4proxy current version is $this->VERSION (revision $rev)\n";
+				}
 				$sock=new sockets();
 				$bases="/var/opt/kaspersky/kav4proxy/bases";
 				
@@ -213,19 +232,21 @@ function Build_defaults(){
 				$conf[]="BasesPath=$bases";
 				$conf[]="LicensePath=/var/opt/kaspersky/kav4proxy/licenses";
 				$conf[]="TempPath=/tmp";
+				if($rev>=67){$conf[]="KLPluginsPath=/opt/kaspersky/kav4proxy/lib/ppl";}
 				
 				$conf[]="";				
 				$conf[]="[options]";
 				$conf[]="User=kluser";
 				$conf[]="Group=klusers";
-				
+				 
 				
 				$conf[]="";
 				$conf[]="[locale]";
 				$conf[]="DateFormat=%d-%m-%Y";
 				$conf[]="TimeFormat=%H:%M:%S";
+				$conf[]="";
 				$conf[]="[icapserver.network]";
-				$conf[]="ListenAddress=127.0.0.1:1344";
+				$conf[]="ListenAddress={$this->main_array["ListenAddress"]}";
 				$conf[]="Timeout={$this->main_array["Timeout"]}";
 				$conf[]="";
 				$conf[]="[icapserver.process]";
@@ -241,6 +262,13 @@ function Build_defaults(){
 				$conf[]="PreviewSize=".$this->GET("icapserver.protocol","PreviewSize");
 				$conf[]="MaxConnections={$this->main_array["MaxConnections"]}";
 				$conf[]="Allow204={$this->main_array["Allow204"]}";
+				if($rev>=67){
+					$conf[]="SendAVScanResult=false";
+					$conf[]="ReqModeServiceUrl=av/reqmod";
+					$conf[]="RespModeServiceUrl=av/respmod";						
+				}
+		
+				
 				
 				$conf[]="SendAVScanResult=no";
 				$conf[]="HTTPClientIpICAPHeader=X-Client-IP";
@@ -260,11 +288,16 @@ function Build_defaults(){
 				$conf[]="ScanArchives={$this->main_array["ScanArchives"]}";
 				$conf[]="ScanMailBases={$this->main_array["ScanMailBases"]}";
 				$conf[]="ScanMailPlain={$this->main_array["ScanMailPlain"]}";
-				$conf[]="UseHeuristic={$this->main_array["UseHeuristic"]}";
 				$conf[]="Cure={$this->main_array["Cure"]}";
-				$conf[]="UseAVbasesSet={$this->main_array["UseAVbasesSet"]}";
+				if($rev<67){
+					$conf[]="UseAVbasesSet={$this->main_array["UseAVbasesSet"]}";
+					$conf[]="UseHeuristic={$this->main_array["UseHeuristic"]}";
+				}
+				if($rev>=67){
+					$conf[]="UseAnalyzer=yes";
+					$conf[]="HeuristicLevel=recommended";
+				}
 				$conf[]="MaxScanTime={$this->main_array["MaxScanTime"]}";
-				
 				$conf[]="";
 				$conf[]="[icapserver.filter]";
 				$conf[]=$this->ExcludeMimeType();
@@ -282,6 +315,13 @@ function Build_defaults(){
 				$conf[]="CuredAction=skip";
 				$conf[]="LicenseErrorAction=skip";
 				$conf[]="BasesErrorAction=skip";
+				if($rev>=67){
+					if($this->main_array["MaxReqLengthAction"]=="check"){$this->main_array["MaxReqLengthAction"]="skip";}
+					$conf[]="MaxReqLengthAction={$this->main_array["MaxReqLengthAction"]}";
+					$conf[]="PartialResponseAction={$this->main_array["PartialResponseAction"]}";
+					$conf[]="PartialRequestAction={$this->main_array["PartialRequestAction"]}";
+				}
+						
 				
 				$conf[]="";
 				$conf[]="[icapserver.notify]";

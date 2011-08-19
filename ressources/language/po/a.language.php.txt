@@ -80,6 +80,7 @@ In this case jhon@alias.domain.tld will be transfered to jhon@domain.tld.[br]
 <all_files>All files</all_files>
 <all_informations>All informations</all_informations>
 <all_messages>All messages</all_messages>
+<already_exists>Already exists</already_exists>
 <already_used>Already used</already_used>
 <AmandaComprateExplain>Should be followed by one or two numbers, optionally separated by a comma.[br]
 The 1st is the full compression rate; the 2nd is the incremental rate.[br]If the second is omitted, it is assumed equal to the first.[br]
@@ -204,6 +205,7 @@ The logic is based on evaluation of SQL commands using a risk scoring matrix as 
 <APP_IETD>iSCSI service</APP_IETD>
 <APP_IPTACCOUNT>TCP/IP Accounting</APP_IPTACCOUNT>
 <APP_IPTACOUNT_EXPLAIN>TCP/IP Accounting allow you to obtain informations about traffic received,passed,transfered according rules</APP_IPTACOUNT_EXPLAIN>
+<APP_KAV4PROXY_INTRO>Manage your antivirus engine for ICAP proxy servers</APP_KAV4PROXY_INTRO>
 <APP_LXC>LXC containers</APP_LXC>
 <APP_LXC_TEXT>Create and manage Virtual Private servers with Linux Containers technology</APP_LXC_TEXT>
 <APP_MSKTUTIL>keytab client for MS Active Directory</APP_MSKTUTIL>
@@ -212,6 +214,10 @@ The logic is based on evaluation of SQL commands using a risk scoring matrix as 
 <APP_OPENEMM>OpenEMM service</APP_OPENEMM>
 <APP_OPENEMM_SENDMAIL>SendMail for OpenEMM</APP_OPENEMM_SENDMAIL>
 <APP_PDNS_INSTANCE>PowerDNS (Instance)</APP_PDNS_INSTANCE>
+<APP_PIWIK>Piwik</APP_PIWIK>
+<APP_PIWIK_TEXT>Piwik is a real time web analytics software program.[br]
+It provides you with detailed reports on your website visitors:[br]
+the search engines and keywords they used, the language they speak, your popular pages...[br] and so much more</APP_PIWIK_TEXT>
 <APP_POSTFWD2>Policy Delegation</APP_POSTFWD2>
 <APP_POSTFWD2_TEXT>Policy delegation is a kind of Firewall that allow you to define a set of rules to restrict messaging</APP_POSTFWD2_TEXT>
 <APP_POWERADMIN>PowerAdmin</APP_POWERADMIN>
@@ -237,6 +243,7 @@ A reboot may help too, if you want to be really sure there's no cruft hanging ar
 For Windows 2008 server you need to install [b]Hotfix 951191[/b].
 </APP_SQUIDKERAUTH_TEXT_REF>
 <APP_TOMCAT>Tomcat Web server</APP_TOMCAT>
+<APP_ZARAFA6>Zarafa server 6.x</APP_ZARAFA6>
 <APP_ZARAFA_INDEXER>Zarafa Indexer</APP_ZARAFA_INDEXER>
 <APP_Z_PUSH>Z-Push</APP_Z_PUSH>
 <APP_Z_PUSH_TEXT>The Z-Push software allows users with PDA's and Smartphones to synchronize their email,
@@ -264,6 +271,12 @@ Increase the value will reduce the processor consumption but increase the time t
 <artica_optimize_explain>This section will help you in order to optimize your server in order to fit your needs.[br]By default artica try to provide the maximum services on your server.[br]
 But these service should handle memory and processes.
 </artica_optimize_explain>
+<ARTICA_P_SUPPORT>Professional Subscription</ARTICA_P_SUPPORT>
+<ARTICA_P_SUPPORT_TEXT>Artica Professional Subscription is intended for use in production environments in small and medium businesses.[br]
+it includes professional support access by eMail or by phone with a minimum response time.[br]
+Depends on the subscription it allows you to define priorities on developpement schedules.[br]
+Click on the link below in order to pruchase or to obtain more informations.
+</ARTICA_P_SUPPORT_TEXT>
 <ARTICA_REGISTER_OU>Organization Register form</ARTICA_REGISTER_OU>
 <ARTICA_REGISTER_OU_TEXT>This a form that allow Internet user to register in order to automatically create a new organization</ARTICA_REGISTER_OU_TEXT>
 <ARTICA_SMTP_STATS_EXPLAIN>Artica SMTP statistics engine is a feature generating graphs, charts, messages history based on the Postfix flow.[br]
@@ -283,6 +296,24 @@ For example, if you using Artica has an SMTP outgoing engine or to perform mass-
 <at_least_one_special_letter>at least one special letter</at_least_one_special_letter>
 <at_least_one_upper_case_letter>at least one upper case letter</at_least_one_upper_case_letter>
 <authentication_banner>Authentication banner</authentication_banner>
+<authoritative>authoritative</authoritative>
+<authoritativeDHCP_explain>
+The DHCP server will normally assume that the configuration information about a given network segment is not known to be correct 
+and is not authoritative.[br]
+This is so that if a naive user installs a DHCP server not fully understanding how to configure it,
+ it does not send spurious DHCPNAK messages to clients that have obtained addresses from a legitimate DHCP server on the network.[br]
+Network administrators setting up authoritative DHCP servers for their networks should always use authoritative to indicate that the DHCP server should 
+send DHCPNAK messages to misconfigured clients.[br]
+If this is not done, clients will be unable to get a correct IP address after changing subnets until their old lease has expired, 
+which could take quite a long time.[br]
+However, if a DHCP server is to be set up so that it is aware of some networks for which it is authoritative and 
+some networks for which it is not, it may be more appropriate to declare authority on a per-network-segment basis.[br]
+Note that the most specific scope for which the concept of authority makes any sense is the physical network segment 
+- either a shared-network statement or a subnet statement that is not contained within a shared-network statement[↓r]
+It is not meaningful to specify that the server is authoritative for some subnets within a shared network, 
+but not authoritative for others, nor is it meaningful to specify that the server is authoritative for some 
+host declarations and not others.
+</authoritativeDHCP_explain>
 <auth_mechanism>Authentication mechanisms</auth_mechanism>
 <autofs_about>Automount (or autofs) is a way to mount directories on an as-needed basis.[br]
 Automounts are mounted only as they are accessed, and they are unmounted after a period of inactivity.[br]
@@ -414,12 +445,15 @@ domain.tld to match hosts width domain domain.tld
 <check_size_limit>check size limit</check_size_limit>
 <child_ttl>Time to live</child_ttl>
 <chroot>chroot</chroot>
+<CLAMAV_DISABLE_EXPLAIN>Clamav antivirus daemon is installed and enabled by default, when running it should take from [b]50 to 150Mb memory[/b].[br]If you did not use any software that use the ClamAV daemon eg (DNS server only or Web server only) you should disable this option.</CLAMAV_DISABLE_EXPLAIN>
 <clean_datas>Clean datas</clean_datas>
 <click_here>Click here</click_here>
 <clients>Clients</clients>
 <clients_restrictions>Clients restrictions</clients_restrictions>
 <client_address>Client Address</client_address>
 <client_name>Client name</client_name>
+<client_ntlmv2_auth>Use NTLMv2</client_ntlmv2_auth>
+<client_ntlmv2_auth_explain>Determines whether or not smbclient/Winbind will attempt to authenticate itself to servers using the NTLMv2 encrypted password response[br]Not compatible with Microsoft NT4 or Win9x </client_ntlmv2_auth_explain>
 <compilation_schedule>Compilation schedule</compilation_schedule>
 <compilation_schedule_text>Schedule the databases re-compilation in order to update changes</compilation_schedule_text>
 <compile_missing_db>Compile missing DBs</compile_missing_db>
@@ -434,6 +468,8 @@ domain.tld to match hosts width domain domain.tld
 Be sure that you have enabled in FreeWeb an Artica web console before check this.
 Do you want to confirm this operation ?
 </ConfirmDisableArticaWebConsole>
+<confirm_remove_zarafa_db>This operation will erase database and create a new one.[br]Datas will be removed defenitively
+Do you want to execute this operation ?</confirm_remove_zarafa_db>
 <confirm_reprosess_category>Reprocess this category? During the database processing the MySQL server should be loaded.</confirm_reprosess_category>
 <connected_has>Connected has</connected_has>
 <connections_filters>Connections filters</connections_filters>
@@ -513,6 +549,7 @@ Constant feedback. The value must be in the range 0..1 inclusive. The default se
 [br][b]number / number[/b]
 [br][b]number / concurrency[/b] The number must be in the range 0..1 inclusive. With number equal to "1", a destination's delivery concurrency is incremented by 1 after each successful pseudo-cohort.
 </default_destination_concurrency_positive_feedback_text>
+<default_settings>Default settings</default_settings>
 <DEFAULT_THEME>Default theme</DEFAULT_THEME>
 <default_website>Default website</default_website>
 <defer_text>Defer the request. The client is told to try again later.[br]
@@ -551,6 +588,15 @@ Name  should  be  the name that will be provided to the client</dhcp-server-name
 <dhcp-subnet-masq_text>Can be used in each subnet declaration to  set the  desired  subnet  mask, since any subnet-mask option statement will override the subnet mask declared in the subnet statement</dhcp-subnet-masq_text>
 <dhcpd_leases_explain>This section display leases acquired by computers.</dhcpd_leases_explain>
 <dhcpd_shared_network_explain>All subnets that share the same physical network can be grouped under a Shared Network object called here has "groups"</dhcpd_shared_network_explain>
+<DHCPPing_check>Test if address is already exists</DHCPPing_check>
+<DHCPPing_check_explain>When the DHCP server is considering dynamically allocating an IP address to a client,
+ it first sends an ICMP Echo request (a ping) to the address being assigned.[br]
+ It waits for a second, and if no ICMP Echo response has been heard, it assigns the address.[br]
+ If a response is heard, the lease is abandoned, and the server does not respond to the client.[br]
+This ping check introduces a default one-second delay in responding to DHCPDISCOVER messages,
+which can be a problem for some clients.[br]
+The default delay of one second may be configured using the ping-timeout parameter.[br].
+</DHCPPing_check_explain>
 <DisableAPTNews>Disable system package updates notification</DisableAPTNews>
 <DisableArticaExecutorService_explain>
 Artica executor is a daemon that run in memory in order to schedule commands periodically.[br]
@@ -677,6 +723,9 @@ This will merge the 2 databases, flat files and the LDAP backend.[br]
 This option is usefull if you want to switch from PowerDNS to DNSMasq or the opposite.
 </EnableDNSMASQLDAPDB_explain>
 <EnableDNSMASQ_explain>If enabled, all system DNS queries will pass trough DNSMasq instead using standard saved DNS</EnableDNSMASQ_explain>
+<EnableFreeWebInLeftMenuText>If you turn this feature to red, the FreeWeb will be not displayed in the left menus.[br]Also, the setup center will not display groupwares installation feature.</EnableFreeWebInLeftMenuText>
+<EnableGroupWareScreen>Display groupwares in organizations</EnableGroupWareScreen>
+<EnableGroupWareScreenText>You can hide or display "groupwares" section in each organization.[br]Artica Groupware is a feature depreciated.[br]It is no longer maintain.But for specific needs it still active in Artica.</EnableGroupWareScreenText>
 <EnableISCSI>Enable ISCSI service</EnableISCSI>
 <EnableLDAPAmavis>Allow multiple configurations from LDAP Database</EnableLDAPAmavis>
 <EnableLDAPAmavis_explain>If enabled, you will be allowed to define anti-spam settings per each domain and/or per each user[br]
@@ -853,6 +902,7 @@ Header text that does not fit in this size bytes is discarded.</header_size_limi
 <health>health</health>
 <HELO_ADDRESS>HELO Address</HELO_ADDRESS>
 <HELO_SERVERNAME>HELO servername</HELO_SERVERNAME>
+<hide_this_information>Hide this information</hide_this_information>
 <High_Fly_Writes>High Fly Writes</High_Fly_Writes>
 <High_Fly_Writes_text>HDD producers implement a Fly Height Monitor that attempts to provide additional protections for 
 write operations by detecting when a recording head is flying outside its normal operating range.[br]
@@ -954,6 +1004,8 @@ This file will be the shared iSCSI disk.[br]In disk mode, you will have to choos
 <jGrowlNotifsDisabled>Disable tooltips notifications</jGrowlNotifsDisabled>
 <jkMount_explain>Add the JkMount directive for *.do,*.jsp,*.jspx,*.cfm,*.cfc,*.cfchart,*.cfres files</jkMount_explain>
 <jumpto>Jump to</jumpto>
+<kaspersky_antivirus_connector>Kaspersky ICAP connector</kaspersky_antivirus_connector>
+<kaspersky_antivirus_connector_text>Connect your Proxy to a remote Kaspersky Anti-Virus for Proxy Server</kaspersky_antivirus_connector_text>
 <kav4proxy_about>
 Kaspersky Anti-Virus for Proxy Server provides anti-virus protection for network traffic routed through proxy servers
 which support the Internet Content Adaptation Protocol (ICAP).[br]
@@ -970,6 +1022,34 @@ database records to analyze every object, checking it for virus presence: its co
 typical for specific viruses.[/i]
 </kav4proxy_about>
 <KAV4PROXY_KEEPUP2DATE>Update Process</KAV4PROXY_KEEPUP2DATE>
+<kav4_clean_traffic>clean MB traffic</kav4_clean_traffic>
+<kav4_clean_traffic_text>The total volume of clean traffic (MB).</kav4_clean_traffic_text>
+<kav4_engine_errors>engine errors</kav4_engine_errors>
+<kav4_engine_errors_text>Number of errors which occurred during the anti-virus kernel operation.</kav4_engine_errors_text>
+<kav4_error_requests>error requests</kav4_error_requests>
+<kav4_error_requests_text>The number of requests which returned objects causing processing errors</kav4_error_requests_text>
+<kav4_idle_processes>idle processes</kav4_idle_processes>
+<kav4_idle_processes_text>The number of idle processes waiting for requests.</kav4_idle_processes_text>
+<kav4_infected_requests>infected requests</kav4_infected_requests>
+<kav4_infected_requests_text>The number of requests which returned infected or suspicious objects, or objects resembling a known virus</kav4_infected_requests_text>
+<kav4_infected_traffic>infected MB traffic</kav4_infected_traffic>
+<kav4_infected_traffic_text>The total volume of infected traffic (MB).</kav4_infected_traffic_text>
+<kav4_processed_traffic>processed MB traffic</kav4_processed_traffic>
+<kav4_processed_traffic_text>The total volume of processed traffic, including service traffic (MB).</kav4_processed_traffic_text>
+<kav4_protected_requests>protected requests</kav4_protected_requests>
+<kav4_protected_requests_text>The number of requests which returned protectedobjects.</kav4_protected_requests_text>
+<kav4_requests_per_min>ICAP requests/Mn</kav4_requests_per_min>
+<kav4_requests_per_min_text>Average number of ICAP requests processed per minute</kav4_requests_per_min_text>
+<kav4_total_connections>ICAP connections</kav4_total_connections>
+<kav4_total_connections_text>The number of active connections to the ICAP server.</kav4_total_connections_text>
+<kav4_total_processes>Processes</kav4_total_processes>
+<kav4_total_processes_text>The total number of running processes working on user requests.</kav4_total_processes_text>
+<kav4_total_requests>total requests</kav4_total_requests>
+<kav4_total_requests_text>Total number of processed scan requests.</kav4_total_requests_text>
+<kav4_traffic_per_min>MB/Mn</kav4_traffic_per_min>
+<kav4_traffic_per_min_text>Average MB per minute.</kav4_traffic_per_min_text>
+<kavicap_remote_explain>This feature allow you to connect your proxy to remote Kaspersky Anti-Virus ICAP server in order to scan webpage content and downloaded files in realtime.[br] 
+Give here the ip address and port number of your Kaspersky ICAP service.</kavicap_remote_explain>
 <KeepAlive_explain>Use it when a firewall between the reverse proxy and the backend-server.</KeepAlive_explain>
 <key>Key</key>
 <last_24h>Last 24H</last_24h>
@@ -985,6 +1065,7 @@ typical for specific viruses.[/i]
 <LimitRequestFields>Request headers (fields)</LimitRequestFields>
 <limit_memory>Limit memory to</limit_memory>
 <limit_swap>Limit memory SWAP to</limit_swap>
+<link>link</link>
 <load_balancer>Load Balancer</load_balancer>
 <load_balancer_instances_explain>This feature allow you to enable a load blancing system for your SMTP instances.[br]
 In this case, point your clients to this instance and the Load balancer will forward connections to the right instance.[br]
@@ -1045,6 +1126,7 @@ Organizations can only create subdomains of these domains if the "Use only offic
 <manage_your_vpn_client_connection_text>Manage your VPN client connection to the remote OpenVPN server</manage_your_vpn_client_connection_text>
 <mapi_ip>Listen IP (MAPI)</mapi_ip>
 <mapi_port>Listen MAPI port</mapi_port>
+<mask_lock_options>Lock options and use only defaults values</mask_lock_options>
 <matches>matches</matches>
 <matchesnot>did not matches</matchesnot>
 <MaxClients>Max clients</MaxClients>
@@ -1127,6 +1209,9 @@ Here it is the error that artica encounter during a Mysql connection: [br]
 <NoDryReboot_explain>If some hard disk problems are detected, Artica will reboot the computer automatically.[br]Enable this feature will ban rebooting operation.</NoDryReboot_explain>
 <NoGatewayForVirtualNetWork>No gateway for virtual addresses</NoGatewayForVirtualNetWork>
 <NoGatewayForVirtualNetWorkExplain>Gateway has been disabled for virtual interfaces</NoGatewayForVirtualNetWorkExplain>
+<NoOutOfMemoryReboot>Do not reboot if memory is over</NoOutOfMemoryReboot>
+<NoOutOfMemoryReboot_explain>When memory is over, kernel claim and try to save the system.[br]If this behavior is detected, Artica will reboot automatically the server.[br]
+Enabling this feature will deny Artica to reboot the system.</NoOutOfMemoryReboot_explain>
 <noteq>is not equal</noteq>
 <notify_class>What trouble to report to the postmaster</notify_class>
 <notify_class_2bounce>Double bounces</notify_class_2bounce>
@@ -1152,6 +1237,7 @@ Use relayed domain instead until there is no mailbox server installed.[br]
 </no_backendmailbox_installed_explain>
 <NO_FEATURE_AMAVIS_NOT_ENABLED>The Amavisd-new anti-spam content filter is [b]not activated[/b].[br]This feature is disabled.[br]if you need this feature, contant your Administrator</NO_FEATURE_AMAVIS_NOT_ENABLED>
 <NO_FEATURE_AMAVIS_NOT_INSTALLED>The Amavisd-new anti-spam content filter is [b]not installed[/b].[br]This feature is disabled.[br]if you need this feature, contant your Administrator</NO_FEATURE_AMAVIS_NOT_INSTALLED>
+<no_info>No information added</no_info>
 <NO_RELAY_TO_THIS_SERVER_EXPLAIN>Operation not permitted, a relayed domain cannot be the server itself, use local domain for this operation</NO_RELAY_TO_THIS_SERVER_EXPLAIN>
 <no_such_interfaces>No such interfaces</no_such_interfaces>
 <no_usersameftpuser>Error: the FTP user cannot be the same has the Website owner username</no_usersameftpuser>
@@ -1460,6 +1546,8 @@ Very lower config will get 320Mb free[br]
 The new server should be your backend server that store mailboxes..</relaydomain_explain>
 <remote_clients>Remote clients</remote_clients>
 <remote_directory>Remote directory</remote_directory>
+<REMOVE_DATABASE>Remove Database</REMOVE_DATABASE>
+<REMOVE_DATABASE_ZARAFA_TEXT>Remove the current database, including datas and rebuild a new one</REMOVE_DATABASE_ZARAFA_TEXT>
 <Reported_Uncorrect>Reported Uncorrectable Errors</Reported_Uncorrect>
 <Reported_Uncorrect_text>The count of errors that could not be recovered using hardware ECC</Reported_Uncorrect_text>
 <reports_generated_check_postmaster_mail>Reports are scheduled in background mode, check you mailbox you have set in the notification parameters</reports_generated_check_postmaster_mail>
@@ -1498,6 +1586,7 @@ When define quota for a specific user, wait until this user have saved a file on
 <root_password_not_changed>Modifiy root password</root_password_not_changed>
 <root_password_not_changed_text>It is recommended to change the system root password.[br]The root user allow to access to this server trough SSH and console in order to perform system tasks</root_password_not_changed_text>
 <run_every_day>Run every</run_every_day>
+<run_update_now>Download updates now</run_update_now>
 <SambaActAsWins>Act as WINS server</SambaActAsWins>
 <SambaActAsWins_explain>Samba will act as a WINS server.</SambaActAsWins_explain>
 <SAMBAD_NOT_IP_IN_SRVNAME>Pure ip address format is not supported,
@@ -1519,6 +1608,7 @@ Artica will save this information into hosts file in order to resolve your Windo
 <samba_create_mask>Create mask</samba_create_mask>
 <samba_create_mask_text>When a file is created, the necessary permissions are calculated according to the mapping from Windows modes to UNIX permissions,
 and the resulting UNIX mode.</samba_create_mask_text>
+<samba_default_settings_explain>This section will define default parameters when you add a new shared folder.[br]In this case, when adding a new folder you did not have to change everytime some specific options</samba_default_settings_explain>
 <samba_directory_mask>Directory mask</samba_directory_mask>
 <samba_directory_mask_text>This parameter controls what UNIX permission bits will be set when a Windows NT client is manipulating the UNIX permission on a directory using the native NT security dialog box</samba_directory_mask_text>
 <samba_info_latest_ad_explain>In order to get correctly connected trough a Windows Active directory server, check that your server have the latest Samba version.You using the </samba_info_latest_ad_explain>
@@ -1569,6 +1659,9 @@ To solve this problem, Microsoft now provides the Windows Internet Naming Servic
  </samba_wins_explain>
 <sa_debug>Debug Spamassassin</sa_debug>
 <sa_timeout>Spamassassin TimeOut</sa_timeout>
+<ScanPeriod>Scan period</ScanPeriod>
+<ScanTrashPeriod_text>Scan virtual trashs every X minutes (default to every 7 Hours (450mn))</ScanTrashPeriod_text>
+<ScanTrashTTL_text>How many days files can be stored on virtual trashs before delete files (default to 7 days)</ScanTrashTTL_text>
 <search_byous>Search by organization</search_byous>
 <SecFilterCheckUnicodeEncoding>Check if unicode encoding is valid</SecFilterCheckUnicodeEncoding>
 <SecFilterCheckURLEncoding>Check if special characters where encoded</SecFilterCheckURLEncoding>
@@ -1684,12 +1777,19 @@ This is used in archive configurations, where only full dumps are done and the t
 <SlapdThreads>number of threads that can be used by OpenLDAP</SlapdThreads>
 <SlapdThreads_explain>Artica use the OpenLDAP server for managing users/passwords by default, the OpenLDAP server can use 16 threads.[br]This is for a general settings for hundred users using for example OpenLDAP has a Samba server or for authenticate many users or for a DNS server using LDAP backend.[br]
 Minimal threads is 2 and will safe minimal 20Mb memory[br]In the opposite, if you have LDAP issues, increase this number[br]Set 0 to turn to default threads</SlapdThreads_explain>
+<smb2_protocol>SMB2 protocol</smb2_protocol>
+<smb2_protocol_text>SMB2 is a new version of the old Windows filesharing protocol SMB and is used for filesharing on modern and future Windows hosts</smb2_protocol_text>
 <SMBChangeShareName_text>Click on the link in order to change the share name</SMBChangeShareName_text>
 <smbconfig>smb.conf</smbconfig>
 <smbservices>Services</smbservices>
 <smb_RootDir_text>All directories tasks will started on the specifed directory</smb_RootDir_text>
 <smtpd_data_restrictions>DATA Protocol restrictions</smtpd_data_restrictions>
 <smtpd_data_restrictions_explain>Optional access restrictions that the Postfix SMTP server applies in the context of the SMTP DATA command</smtpd_data_restrictions_explain>
+<smtp_connection_cache_on_demand_text>Temporarily enable SMTP connection caching while a destination has a high 
+volume of mail in the active queue.[br] With SMTP connection caching, a connection is not closed immediately after completion of a mail transaction.[br]
+Instead, the connection is kept open for up to smtp_connection_cache_time_limit seconds attribute.[br]
+This allows connections to be reused for other deliveries, and can improve mail delivery performance
+</smtp_connection_cache_on_demand_text>
 <smtp_notification_not_saved>eMails notifications are not set</smtp_notification_not_saved>
 <smtp_sasl_security_options_mutual_auth>Only allow methods that provide mutual authentication</smtp_sasl_security_options_mutual_auth>
 <smtp_sasl_security_options_noanonymous>Disallow methods that allow anonymous authentication</smtp_sasl_security_options_noanonymous>
@@ -1699,6 +1799,7 @@ Minimal threads is 2 and will safe minimal 20Mb memory[br]In the opposite, if yo
 <source_address>Source address</source_address>
 <SpamassassinMaxRCPTScore_text>Define the score when the content filter detect the maximal recipients number.After reach the score message will be quarantined or rejected.</SpamassassinMaxRCPTScore_text>
 <spamassassin_pkugins_explain>Here it is plugins you can add into the content filter.[br]These plugins help to increase the detection rate but increase the CPU time and DNS checking.</spamassassin_pkugins_explain>
+<SPAMASSASSIN_UPDATE_AVAILABLE_TEXT>There is some available SpamAssassin updates, you need to run the update in order to improve Spamassassin detection rate</SPAMASSASSIN_UPDATE_AVAILABLE_TEXT>
 <spamass_analyze_post_explain>
 This section will analyze the message using Spamassassin.[br]
 Copy the source message (include headers and content) and paste it in this form in order to add it into the database.
@@ -1783,6 +1884,7 @@ If the value of this attribute is decreasing there is a high probability that th
 <tomcat_admin_interface>Tomcat Admin web interface</tomcat_admin_interface>
 <top10>TOP 10</top10>
 <top10_users>TOP 10 users</top10_users>
+<total_requests>Total requests</total_requests>
 <total_threshold>Total threshold</total_threshold>
 <treshold>Treshold</treshold>
 <UDMA_CRC_Error_Count>UltraDMA CRC Error Rate</UDMA_CRC_Error_Count>
@@ -1805,6 +1907,8 @@ ufdbGuard is designed for use with the popular web proxy Squid</ufdbguard_simple
 <UPDATE_FEDORA_TEMPLATE_TEXT>Download the pre-configured Fedora i386 template, require 690Mo free space.</UPDATE_FEDORA_TEMPLATE_TEXT>
 <UPDATE_LXC_TEMPLATE_PERFOMED>The install/update task will performed in background mode, 
 depends on your bandwith it should take a long time...</UPDATE_LXC_TEMPLATE_PERFOMED>
+<UPDATE_SA_UPDATE>Update SpamAssassin</UPDATE_SA_UPDATE>
+<UPDATE_SA_UPDATE_TEXT>Perform Spamassassin update, see update status</UPDATE_SA_UPDATE_TEXT>
 <usable_mechanisms>Usable mechanisms</usable_mechanisms>
 <useGreenSQL>Use GreenSQL</useGreenSQL>
 <UseLoopDisk>Use a Virtual disk</UseLoopDisk>
@@ -1917,6 +2021,8 @@ So domains here will allow senders to pass trough filters without checking any r
 <Wthreads_explain>The iSCSI target employs several  threads  to  perform the  actual  block I/O to the device.
 [br]Depending on your hardware and your (expected) workload, the number of these threads may be carefully  adjusted.[br]
 The default value of 8 should be sufficient for most purposes</Wthreads_explain>
+<www_books>Online libraries and sites where you can obtain and/or read e-books</www_books>
+<www_celebrity>Sites about celebrities, actors, world known persons and all related, excluding models (see models category)</www_celebrity>
 <www_forward>Forward to other website</www_forward>
 <www_ForwardTo>New website to forward</www_ForwardTo>
 <www_humanitarian_associations>All sites related to humanitarian associations</www_humanitarian_associations>

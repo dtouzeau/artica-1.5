@@ -626,10 +626,14 @@ $cpulimit=trim($sock->GET_INFO("cpulimit"));
 $cpuLimitEnabled=trim($sock->GET_INFO("cpuLimitEnabled"));
 $SystemV5CacheEnabled=trim($sock->GET_INFO("SystemV5CacheEnabled"));
 $NoDryReboot=$sock->GET_INFO("NoDryReboot");
+$NoOutOfMemoryReboot=$sock->GET_INFO("NoOutOfMemoryReboot");
 $EnableBandwithCalculation=$sock->GET_INFO("EnableBandwithCalculation");
 
 if(strlen(trim($SystemV5CacheEnabled))==0){$SystemV5CacheEnabled=0;}
 if(!is_numeric($NoDryReboot)){$NoDryReboot=0;}
+if(!is_numeric($NoOutOfMemoryReboot)){$NoOutOfMemoryReboot=0;}
+
+
 $systemMaxOverloaded=trim($sock->GET_INFO("systemMaxOverloaded"));
 
 
@@ -765,6 +769,12 @@ $html="
 			<td>" . Field_checkbox("NoDryReboot",1,$NoDryReboot,"{enable_disable}")."</td>
 			<td>" . help_icon("{NoDryReboot_explain}")."</td>
 		</tr>
+		<tr>
+			<td nowrap width=1% align='right' class=legend>{NoOutOfMemoryReboot}:</td>
+			<td>" . Field_checkbox("NoOutOfMemoryReboot",1,$NoOutOfMemoryReboot,"{enable_disable}")."</td>
+			<td>" . help_icon("{NoOutOfMemoryReboot_explain}")."</td>
+		</tr>		
+		
 		<tr>
 			<td nowrap width=1% align='right' class=legend>{EnableBandwithCalculation}:</td>
 			<td>" . Field_checkbox("EnableBandwithCalculation",1,$EnableBandwithCalculation,"{enable_disable}")."</td>
@@ -1048,6 +1058,10 @@ if(isset($_GET["SystemV5CacheEnabled"])){$sock->SET_INFO('SystemV5CacheEnabled',
 if(isset($_GET["MaxMailEventsLogs"])){$sock->SET_INFO('MaxMailEventsLogs',$_GET["MaxMailEventsLogs"]);}
 if(isset($_GET["NoDryReboot"])){
 	$sock->SET_INFO('NoDryReboot',$_GET["NoDryReboot"]);
+	$sock->getFrameWork("services.php?syslogger=yes");
+}
+if(isset($_GET["NoOutOfMemoryReboot"])){
+	$sock->SET_INFO('NoOutOfMemoryReboot',$_GET["NoOutOfMemoryReboot"]);
 	$sock->getFrameWork("services.php?syslogger=yes");
 }
 

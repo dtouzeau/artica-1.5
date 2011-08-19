@@ -628,6 +628,8 @@ class user{
 		$this->DotClearUserEnabled=$attrs["DotClearUserEnabled"][0];
 		$this->PostFixUserTransport=$attrs["PostFixUserTransport"][0];
 		$this->EnableUserSpamLearning=$attrs["EnableUserSpamLearning"][0];
+		
+		
 		$this->vacationActive=$attrs["vacationActive"][0];
 		$this->vacationStart=$attrs["vacationStart"][0];
 		$this->vacationEnd=$attrs["vacationEnd"][0];
@@ -678,7 +680,7 @@ class user{
 		
 		$this->JoomlaGroup=$attrs["JoomlaGroup"][0];
 		
-		if($daemon_uid>0){writelogs("($this->uid):: $this->uid = uidNumber:$this->uidNumber ;CryptedHome=\"$this->CryptedHome\",Vacation Enable=\"$this->vacationEnabled\"; vacationActive=\"$this->vacationActive\"",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
+		if($daemon_uid>0){writelogs("($this->uid):: $this->uid = uidNumber:$this->uidNumber ;CryptedHome=\"$this->CryptedHome\",Vacation Enable=\"$this->vacationEnabled\"; vacationActive=\"$this->vacationActive\" EnableUserSpamLearning={$attrs["EnableUserSpamLearning"][0]}",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
 		
 		//uidNumber
 		$newnumber=$this->uidNumberCheck(1);
@@ -1545,24 +1547,40 @@ class user{
 		}
 		writelogs("(&(objectClass=sambaSamAccount)(uid=$users)) in $suffix ". count($res)." elements",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 		
-		$sock=new sockets();
-		$users=urlencode($users);
 		
-		$systemusers=unserialize(base64_decode($sock->getFrameWork("samba.php?getent=$users")));
-		if(is_array($systemusers)){
-			while (list ($uid, $displayname) = each ($systemusers)){
-				$res[$uid]=$displayname;
-			}
+		
+		$query=$users;
+		
+		
+	if($query==null){
+			$sql="SELECT uid FROM getent_users ORDER BY uid LIMIT 0,50 ";
+		}else{
+			$query=str_replace("**", "*", $query);
+			$query=str_replace("*", "%", $query);
+			$sql="SELECT uid FROM getent_users WHERE uid LIKE '$query' ORDER BY uid LIMIT 0,50 ";
+		}
+		
+		$q=new mysql();
+		$results=$q->QUERY_SQL($sql,"artica_backup");
+		while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+			$uid=$ligne["uid"];
+			$res[$uid]=$uid;
 			
 		}
-		$systemgroup=unserialize(base64_decode($sock->getFrameWork("samba.php?getent-group=$users")));
-		writelogs("get ent groups -> ". count($systemgroup)." elements",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
-		if(is_array($systemgroup)){
-			while (list ($uid, $displayname) = each ($systemgroup)){
-				$res["@$uid"]="@$displayname";
-			}
-			
+		
+		if($query==null){
+			$sql="SELECT `group` FROM getent_groups ORDER BY `group` LIMIT 0,50 ";
+		}else{
+			$query=str_replace("**", "*", $query);
+			$query=str_replace("*", "%", $query);
+			$sql="SELECT `group` FROM getent_groups WHERE `group` LIKE '$query' ORDER BY `group` LIMIT 0,50 ";
+		}
+		$results=$q->QUERY_SQL($sql,"artica_backup");
+		while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+			$uid=$ligne["group"];
+			$res["@$uid"]="@$uid";
 		}		
+	
 		writelogs("RETURN ARRAY OF  -> ". count($res)." elements",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 		return $res;
 		
@@ -2193,6 +2211,9 @@ function FTPSettingsEdit(){
 	$upd["FTPStatus"][0]=$this->FTPStatus;
 	$upd["FTPUploadBandwidth"][0]=$this->FTPUploadBandwidth;
 	$upd["FTPUploadRatio"][0]=$this->FTPUploadRatio;
+	if($this->homeDirectory<>null){
+		$upd["homeDirectory"][0]=$this->homeDirectory;
+	}
 	
 	if(!$ldap->Ldap_modify($this->dn,$upd)){
 		echo $ldap->ldap_last_error;	
@@ -2599,6 +2620,23 @@ function FTPSettingsEdit(){
 			}			
 		
 	}
+	
+public function SaveJunkLearning(){
+	$ldap=new clladp();
+	writelogs("EnableUserSpamLearning=$this->EnableUserSpamLearning",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+	if(!is_numeric($this->EnableUserSpamLearning)){$this->EnableUserSpamLearning=0;}
+	$upd["EnableUserSpamLearning"][0]=$this->EnableUserSpamLearning;
+	if(!$ldap->Ldap_modify($this->dn,$upd)){
+			$this->error=$ldap->ldap_last_error;
+			$errortext=$this->error."\nFunction: ".__FUNCTION__."\nFile: ".__FILE__."\nLine:".__LINE__;
+			writelogs($errortext,__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+			echo $errortext;
+			return false;
+		}
+		
+	return true;
+	
+}
 	
 	
 	private function MLDonKey(){

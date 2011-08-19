@@ -2041,3 +2041,97 @@ volume of mail in the active queue.[br] With SMTP connection caching, a connecti
 Instead, the connection is kept open for up to smtp_connection_cache_time_limit seconds attribute.[br]
 This allows connections to be reused for other deliveries, and can improve mail delivery performance
 </smtp_connection_cache_on_demand_text>
+<kav4_total_requests>total requests</kav4_total_requests>
+<kav4_total_requests_text>Total number of processed scan requests.</kav4_total_requests_text>
+<kav4_infected_requests>infected requests</kav4_infected_requests>
+<kav4_infected_requests_text>The number of requests which returned infected or suspicious objects, or objects resembling a known virus</kav4_infected_requests_text>
+<kav4_protected_requests>protected requests</kav4_protected_requests>
+<kav4_protected_requests_text>The number of requests which returned protectedobjects.</kav4_protected_requests_text>
+<kav4_error_requests>error requests</kav4_error_requests>
+<kav4_error_requests_text>The number of requests which returned objects causing processing errors</kav4_error_requests_text>
+<kav4_requests_per_min>ICAP requests/Mn</kav4_requests_per_min>
+<kav4_requests_per_min_text>Average number of ICAP requests processed per minute</kav4_requests_per_min_text>
+<kav4_processed_traffic>processed MB traffic</kav4_processed_traffic>
+<kav4_processed_traffic_text>The total volume of processed traffic, including service traffic (MB).</kav4_processed_traffic_text>
+<kav4_clean_traffic>clean MB traffic</kav4_clean_traffic>
+<kav4_clean_traffic_text>The total volume of clean traffic (MB).</kav4_clean_traffic_text>
+<kav4_infected_traffic>infected MB traffic</kav4_infected_traffic>
+<kav4_infected_traffic_text>The total volume of infected traffic (MB).</kav4_infected_traffic_text>
+<kav4_traffic_per_min>MB/Mn</kav4_traffic_per_min>
+<kav4_traffic_per_min_text>Average MB per minute.</kav4_traffic_per_min_text>
+<kav4_engine_errors>engine errors</kav4_engine_errors>
+<kav4_engine_errors_text>Number of errors which occurred during the anti-virus kernel operation.</kav4_engine_errors_text>
+<kav4_total_connections>ICAP connections</kav4_total_connections>
+<kav4_total_connections_text>The number of active connections to the ICAP server.</kav4_total_connections_text>
+<kav4_total_processes>Processes</kav4_total_processes>
+<kav4_total_processes_text>The total number of running processes working on user requests.</kav4_total_processes_text>
+<kav4_idle_processes>idle processes</kav4_idle_processes>
+<kav4_idle_processes_text>The number of idle processes waiting for requests.</kav4_idle_processes_text>
+<smb2_protocol>SMB2 protocol</smb2_protocol>
+<smb2_protocol_text>SMB2 is a new version of the old Windows filesharing protocol SMB and is used for filesharing on modern and future Windows hosts</smb2_protocol>
+<client_ntlmv2_auth>Use NTLMv2</client_ntlmv2_auth>
+<client_ntlmv2_auth_explain>Determines whether or not smbclient/Winbind will attempt to authenticate itself to servers using the NTLMv2 encrypted password response[br]Not compatible with Microsoft NT4 or Win9x </client_ntlmv2_auth_explain>
+<kaspersky_antivirus_connector>Kaspersky ICAP connector</kaspersky_antivirus_connector>
+<kaspersky_antivirus_connector_text>Connect your Proxy to a remote Kaspersky Anti-Virus for Proxy Server</kaspersky_antivirus_connector_text>
+<kavicap_remote_explain>This feature allow you to connect your proxy to remote Kaspersky Anti-Virus ICAP server in order to scan webpage content and downloaded files in realtime.[br] 
+Give here the ip address and port number of your Kaspersky ICAP service.
+</kavicap_remote_explain>
+<www_celebrity>Sites about celebrities, actors, world known persons and all related, excluding models (see models category)</www_celebrity>
+<www_books>Online libraries and sites where you can obtain and/or read e-books</www_books>
+<APP_ZARAFA6>Zarafa server 6.x</APP_ZARAFA6>
+<REMOVE_DATABASE_ZARAFA_TEXT>Remove the current database, including datas and rebuild a new one</REMOVE_DATABASE_ZARAFA_TEXT>
+<confirm_remove_zarafa_db>This operation will erase database and create a new one.[br]Datas will be removed defenitively
+Do you want to execute this operation ?</confirm_remove_zarafa_db>
+<REMOVE_DATABASE>Remove Database</REMOVE_DATABASE>
+<APP_PIWIK>Piwik</APP_PIWIK>
+<APP_PIWIK_TEXT>Piwik is a real time web analytics software program.[br]
+It provides you with detailed reports on your website visitors:[br]
+the search engines and keywords they used, the language they speak, your popular pages...[br] and so much more</APP_PIWIK_TEXT>
+<UPDATE_SA_UPDATE>Update SpamAssassin</UPDATE_SA_UPDATE>
+<SPAMASSASSIN_UPDATE_AVAILABLE_TEXT>There is some available SpamAssassin updates, you need to run the update in order to improve Spamassassin detection rate</SPAMASSASSIN_UPDATE_AVAILABLE_TEXT>
+<UPDATE_SA_UPDATE_TEXT>Perform Spamassassin update, see update status</UPDATE_SA_UPDATE_TEXT>
+<run_update_now>Download updates now</run_update_now>
+<no_info>No information added</no_info>
+<hide_this_information>Hide this information</hide_this_information>
+<ARTICA_P_SUPPORT>Professional Subscription</ARTICA_P_SUPPORT>
+<ARTICA_P_SUPPORT_TEXT>Artica Professional Subscription is intended for use in production environments in small and medium businesses.[br]
+it includes professional support access by eMail or by phone with a minimum response time.[br]
+Depends on the subscription it allows you to define priorities on developpement schedules.[br]
+Click on the link below in order to purchase or to obtain more informations.
+</ARTICA_P_SUPPORT_TEXT>
+<link>link</link>
+<ScanPeriod>Scan period</ScanPeriod>
+<ScanTrashPeriod_text>Scan virtual trashs every X minutes (default to every 7 Hours (450mn))</ScanTrashPeriod_text>
+<ScanTrashTTL_text>How many days files can be stored on virtual trashs before delete files (default to 7 days)</ScanTrashTTL_text>
+<APP_KAV4PROXY_INTRO>Manage your antivirus engine for ICAP proxy servers</APP_KAV4PROXY_INTRO>
+<total_requests>Total requests</total_requests>
+<NoOutOfMemoryReboot>Do not reboot if memory is over</NoOutOfMemoryReboot>
+<NoOutOfMemoryReboot_explain>When memory is over, kernel claim and try to save the system.[br]If this behavior is detected, Artica will reboot automatically the server.[br]
+Enabling this feature will deny Artica to reboot the system.</NoOutOfMemoryReboot_explain>
+<EnableFreeWebInLeftMenuText>If you turn this feature to red, the FreeWeb will be not displayed in the left menus.[br]Also, the setup center will not display groupwares installation feature.</EnableFreeWebInLeftMenuText>
+<EnableGroupWareScreen>Display groupwares in organizations</EnableGroupWareScreen>
+<EnableGroupWareScreenText>You can hide or display "groupwares" section in each organization.[br]Artica Groupware is a feature depreciated.[br]It is no longer maintain.But for specific needs it still active in Artica.</EnableGroupWareScreenText> 
+<already_exists>Already exists</already_exists>
+<execute_in_debug>Execute for debugging purpose</execute_in_debug>
+<fetchmail_execute_debug_warn>This operation will execute now the retreival process in debug mode for this account.[br]
+The process will be turned in debug mode.
+After executed process you will be able to display events in order to see if your parameters are correctly set.
+</fetchmail_execute_debug_warn>
+<CacheSynchronization>Cache synchronization</CacheSynchronization>
+<i_accept>I accept</i_accept>
+<Kav4ProxyGroupsHowto>The use of groups allows to specify different anti-virus processing for objects being requested or
+transferred through a proxy server by different user groups.[br]A request is associated with a specific group depending on
+the IP address of the client computer requesting the object through a proxy server, and the URL of that object
+</Kav4ProxyGroupsHowto>
+<kav4proxyClientIP> The following information can be used to specify the value for the ClientIP parameter:
+[br]IP addresses: 192.168.12.1
+[br]Network addresses: 192.168.12.0/24 or 192.168.12.1/255.255.255.0
+[br]Regular expressions are also allowed as the values ^192\.168\.12\..*
+</kav4proxyClientIP>
+<kav4proxyURL>URL of a requested object.[br]
+Objects with a specified URL and requested from an IP addresses defined will be processed using the rules of this group
+</kav4proxyURL>
+<baseserror>Bases error<baseserror>
+<corrupted>Corrupted</corrupted>
+<cured>Cured</cured>
+<infected>Infected</infected>

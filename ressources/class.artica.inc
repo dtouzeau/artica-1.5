@@ -161,7 +161,7 @@ class artica_general{
 		if ($sr) {
 			$hash=ldap_get_entries($ldap->ldap_connection,$sr);
 			$this->MaxTempLogFilesDay=$hash[0][strtolower("MaxTempLogFilesDay")][0];
-			$this->ArticaPerformancesSettings=$hash[0][strtolower("ArticaPerformancesSettings")][0];
+			if(isset($hash[0][strtolower("ArticaPerformancesSettings")][0])){$this->ArticaPerformancesSettings=$hash[0][strtolower("ArticaPerformancesSettings")][0];}
 			$ldap->ldap_close();
 		}
 		
@@ -215,22 +215,22 @@ class artica_general{
 			
 			
 			$this->MysqlMaxEventsLogs=$hash[0][strtolower("MysqlMaxEventsLogs")][0];
-			$this->lighttpConfig=$hash[0][strtolower("lighttpConfig")][0];
-			$this->ApacheConfig=$hash[0][strtolower("ApacheConfig")][0];
+			if(isset($hash[0][strtolower("lighttpConfig")][0])){$this->lighttpConfig=$hash[0][strtolower("lighttpConfig")][0];}
+			if(isset($hash[0][strtolower("ApacheConfig")][0])){$this->ApacheConfig=$hash[0][strtolower("ApacheConfig")][0];}
 			$this->ArticaFirstWizard=$hash[0][strtolower("ArticaFirstWizard")][0];
 			
 			
-			$this->spfmilterEnabled=$hash[0][strtolower("spfmilterEnabled")][0];
-			$this->EnableSyslogMysql=$hash[0][strtolower("EnableSyslogMysql")][0];
+			if(isset($hash[0][strtolower("spfmilterEnabled")][0])){$this->spfmilterEnabled=$hash[0][strtolower("spfmilterEnabled")][0];}
+			if(isset($hash[0][strtolower("EnableSyslogMysql")][0])){$this->EnableSyslogMysql=$hash[0][strtolower("EnableSyslogMysql")][0];}
 			$this->DkimFilterEnabled=$hash[0][strtolower("DkimFilterEnabled")][0];
 		
-			$this->EnableMonitorix=$hash[0][strtolower("EnableMonitorix")][0];
-			$this->LighttpdUseLdap=$hash[0][strtolower("LighttpdUseLdap")][0];
-			$this->EnableFDMFetch=$hash[0][strtolower("EnableFDMFetch")][0];
-			$this->P3ScanEnabled=$hash[0][strtolower("P3ScanEnabled")][0];
-			$this->EnableMilterBogom=$hash[0][strtolower("EnableMilterBogom")][0];
-			$this->EnableMysqlFeatures=$hash[0][strtolower("EnableMysqlFeatures")][0];
-			$this->EnableCollectdDaemon=$hash[0][strtolower("EnableCollectdDaemon")][0];
+			if(isset($hash[0][strtolower("EnableMonitorix")][0])){$this->EnableMonitorix=$hash[0][strtolower("EnableMonitorix")][0];}
+			if(isset($hash[0][strtolower("LighttpdUseLdap")][0])){$this->LighttpdUseLdap=$hash[0][strtolower("LighttpdUseLdap")][0];}
+			if(isset($hash[0][strtolower("EnableFDMFetch")][0])){$this->EnableFDMFetch=$hash[0][strtolower("EnableFDMFetch")][0];}
+			if(isset($hash[0][strtolower("P3ScanEnabled")][0])){$this->P3ScanEnabled=$hash[0][strtolower("P3ScanEnabled")][0];}
+			if(isset($hash[0][strtolower("EnableMilterBogom")][0])){$this->EnableMilterBogom=$hash[0][strtolower("EnableMilterBogom")][0];}
+			if(isset($hash[0][strtolower("EnableMysqlFeatures")][0])){$this->EnableMysqlFeatures=$hash[0][strtolower("EnableMysqlFeatures")][0];}
+			if(isset($hash[0][strtolower("EnableCollectdDaemon")][0])){$this->EnableCollectdDaemon=$hash[0][strtolower("EnableCollectdDaemon")][0];}
 			
 			
 			if($this->ClamavMilterEnabled==null){$this->ClamavMilterEnabled=0;}

@@ -4,6 +4,7 @@
 	include_once('ressources/class.users.menus.inc');
 	include_once('ressources/class.samba.inc');
 	include_once('ressources/class.acls.inc');
+	include_once('ressources/class.mysql.inc');
 
 
 	
@@ -716,45 +717,36 @@ function list_users(){
 		
 		$sock=new sockets();
 		if(strpos(" $query","*")==0){$query=$query."*";}
+		if($query=="*"){$query=null;}
 		
-		$query=urlencode($query);
-		$systemusers=unserialize(base64_decode($sock->getFrameWork("samba.php?getent=$query")));
-		if(is_array($systemusers)){
-			while (list ($uid, $displayname) = each ($systemusers)){
-				$res[$uid]=$uid;
-			}
+		if($query==null){
+			$sql="SELECT uid FROM getent_users ORDER BY uid LIMIT 0,50 ";
+		}else{
+			$query=str_replace("**", "*", $query);
+			$query=str_replace("*", "%", $query);
+			$sql="SELECT uid FROM getent_users WHERE uid LIKE '$query' ORDER BY uid LIMIT 0,50 ";
+		}
+		
+		$q=new mysql();
+		$results=$q->QUERY_SQL($sql,"artica_backup");
+		while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+			$uid=$ligne["uid"];
+			$res[$uid]=$uid;
 			
 		}
-		$systemgroup=unserialize(base64_decode($sock->getFrameWork("samba.php?getent-group=$query")));
-		writelogs("get ent groups -> ". count($systemgroup)." elements",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
-		if(is_array($systemgroup)){
-			while (list ($uid, $displayname) = each ($systemgroup)){
-				$res[$uid]=array("displayname"=>"$uid","members"=>array($uid),"count"=>1);
-			}
-			
-		}		
 		
-		
-		
-		/*while (list ($gpid, $array) = each ($groups) ){
-			
-			if(preg_match("#$query#",$array["NAME"])){
-				if(!is_array($array["MEMBERS"])){$array["MEMBERS"][]=$array["NAME"];}
-				$res[$array["NAME"]]=array("displayname"=>$array["NAME"],"members"=>$array["MEMBERS"],"count"=>count($array["MEMBERS"]));
-			}
-			else{
-				//echo "<li>{$array["NAME"]} no match $query</li>";
-			}
-			
+		if($query==null){
+			$sql="SELECT `group` FROM getent_groups ORDER BY `group` LIMIT 0,50 ";
+		}else{
+			$query=str_replace("**", "*", $query);
+			$query=str_replace("*", "%", $query);
+			$sql="SELECT `group` FROM getent_groups WHERE `group` LIKE '$query' ORDER BY `group` LIMIT 0,50 ";
 		}
-		*/
-		
-		
-		
-	
-	
-	
-	
+		$results=$q->QUERY_SQL($sql,"artica_backup");
+		while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+			$uid=$ligne["group"];
+			$res[$uid]=array("displayname"=>"$uid","members"=>array($uid),"count"=>1);
+		}
 	
 if(!is_array($res)){return null;}
 ksort($res);

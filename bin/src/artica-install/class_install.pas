@@ -3088,7 +3088,7 @@ begin
         LOGS.syslogs('Downloading updates...GeoIPASNum.dat.gz');
         GLOBAL_INI.WGET_DOWNLOAD_FILE(GLOBAL_URI+'asnum/GeoIPASNum.dat.gz',tempdir+'/GeoIPASNum.dat.gz');
      end;
-
+     ForceDirectories('/var/lib/GeoIP');
      if FileExists(tempdir+'/GeoIPASNum.dat.gz') then gunzip_files:=gunzip_files+' GeoIPASNum.dat.gz' else LOGS.syslogs('GeoIPASNum.dat.gz no such file');
      if FileExists(tempdir+'/GeoIP.dat.gz') then gunzip_files:=gunzip_files+' GeoIP.dat.gz' else LOGS.syslogs('GeoIP.dat.gz no such file');
      if FileExists(tempdir+'/GeoLiteCity.dat.gz') then gunzip_files:=gunzip_files+' GeoLiteCity.dat.gz' else LOGS.syslogs('GeoLiteCity.dat.gz no such file');
@@ -3109,7 +3109,11 @@ begin
      if FileExists('/usr/local/share/GeoIP/GeoLiteCity.dat') then begin
        logs.OutputCmd('/bin/cp -f /usr/local/share/GeoIP/GeoLiteCity.dat /usr/share/GeoIP/GeoIPCity.dat');
        logs.OutputCmd('/bin/cp -f /usr/local/share/GeoIP/GeoLiteCity.dat /usr/local/share/GeoIP/GeoIPCity.dat');
+       logs.OutputCmd('/bin/cp -f /usr/local/share/GeoIP/GeoLiteCity.dat /var/lib/GeoIP/GeoIPCity.dat');
      end;
+
+
+
 
 
 

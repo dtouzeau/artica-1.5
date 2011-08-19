@@ -83,7 +83,7 @@ if(isset($_GET["DeleteUserGroup"])){DeleteUserGroup ();exit ();}
 if(isset($_GET["section"])){AJAX_USER_STARTER();exit ();}
 if(isset($_GET["DeleteThisUser"])){USER_DELETE();exit ();}
 //FTP
-if(isset($_GET["UserFTPEdit"])){UserFTPEdit();exit ();}
+if(isset($_POST["UserFTPEdit"])){UserFTPEdit();exit ();}
 if(isset($_GET["SambaUid"])){USER_SAMBA_EDIT();exit ();}
 if(isset($_GET["RebuildSambaFields"])){USER_SAMBA_REBUILD_NULL();exit ();}
 if(isset($_GET["smb-section"])){echo USER_SAMBA ($_GET["userid"]);exit ();}
@@ -1253,7 +1253,7 @@ function AJAX_USER_WARNING(){
 		}
 		
 		$datas=base64_decode($sock->getFrameWork("samba.php?idof={$_GET["userid"]}"));
-		if(preg_match("#No such user", $datas)){
+		if(preg_match("#No such user#", $datas)){
 			$html=$html."
 			<tr>
 				<td width=1% valign='top'><img src='img/warning24.png'></td>
@@ -3950,11 +3950,11 @@ function UserFTPEdit() {
 	$usr = new usersMenus ( );
 	
 	$tpl = new templates ( );
-	$userid = $_GET["UserFTPEdit"];
+	$userid = $_POST["UserFTPEdit"];
 	$user = new user ( $userid );
 	
-	unset ($_GET["UserFTPEdit"]);
-	while ( list ( $num, $val ) = each ($_GET ) ) {
+	unset ($_POST["UserFTPEdit"]);
+	while ( list ( $num, $val ) = each ($_POST ) ) {
 		if (trim ( $val ) == null) {continue;}
 		$user->$num = $val;
 	}
@@ -4080,62 +4080,65 @@ function USER_FTP() {
 	$ou = $user->ou;
 	$priv = new usersMenus ( );
 	$page = CurrentPageName ();
-	$button = button ( "{apply}", "Loadjs('$page?pureftpd-js=yes')" );
-	
+	$button = button ( "{apply}", "SaveFTPUserSettings()" );
+	$browse="<input type='button' value='{browse}...' OnClick=\"javascript:Loadjs('browse-disk.php?field=homeDirectoryFTP')\">";
+	$homeLocked=0;
 	if ($priv->AllowAddUsers == false) {
 		$button = null;
 		$delete = null;
+		$browse = null;
+		$homeLocked=1;
 	}
 	
-	$title = "<h5>{$user->DisplayName} {ftp_access}</H5>";
+	$title = "<div style='font-size:16px'>{$user->DisplayName} {ftp_access}</div>";
 	$style_form = "font-size:13px;padding:3px";
-	
-	$form = "<form name='FFTP'>
+	$time=time();
+	$form = "<div id='$time'>
 	 	
       	<input type='hidden' id='UserFTPEdit' name='UserFTPEdit' value='{$_GET["userid"]}'>
-      	<table style='width:100%;'>
+      	<table style='width:100%;' class=form>
       	
       	<tr>
 	      	
-      		<td  align='right' width=1%>" . Field_checkbox ( "FTPStatus", 'enabled',$user->FTPStatus ) . "
+      		<td  align='right' width=1%>" . Field_checkbox ( "FTPStatus", 'enabled',$user->FTPStatus,"CheckUserFTPField()" ) . "
       		
       		</td>
-	      	<td style='font-size:13px'><strong>{FTPStatus}</strong>
+	      	<td style='font-size:14px'><strong>{FTPStatus}</strong>
 	      	
       	</tr>     	
       	<tr>
-	      	<td  align='right' class=legend nowrap  style='font-size:13px'>{FTPQuotaMBytes}:</strong></td>
-	      	<td>" . Field_text ( 'FTPQuotaMBytes', $user->FTPQuotaMBytes, 'width:50px', $style_form, null ) . "&nbsp;MB</td>
+	      	<td  align='right' class=legend nowrap  style='font-size:14px'>{FTPQuotaMBytes}:</strong></td>
+	      	<td style='font-size:14px'>" . Field_text ( 'FTPQuotaMBytes', $user->FTPQuotaMBytes, 'width:60px;font-size:14px', $style_form, null ) . "&nbsp;MB</td>
       	</tr>
       	<tr>
-	      	<td  align='right' class=legend nowrap  style='font-size:13px'>{FTPQuotaFiles}:</strong></td>
-	      	<td>" . Field_text ( 'FTPQuotaFiles', $user->FTPQuotaFiles, 'width:50px', $style_form, null ) . "&nbsp;files</td>
+	      	<td  align='right' class=legend nowrap  style='font-size:14px'>{FTPQuotaFiles}:</strong></td>
+	      	<td style='font-size:14px'>" . Field_text ( 'FTPQuotaFiles', $user->FTPQuotaFiles, 'width:60px;font-size:14px', $style_form, null ) . "&nbsp;files</td>
       	</tr>      	
       	<tr>
-	      	<td  align='right' class=legend nowrap  style='font-size:13px'>{FTPDownloadBandwidth}:</strong></td>
-	      	<td style='font-size:13px'>" . Field_text ( 'FTPDownloadBandwidth', $user->FTPDownloadBandwidth, 'width:50px', $style_form, null ) . "&nbsp;kb/s</td>
+	      	<td  align='right' class=legend nowrap  style='font-size:14px'>{FTPDownloadBandwidth}:</strong></td>
+	      	<td style='font-size:14px'>" . Field_text ( 'FTPDownloadBandwidth', $user->FTPDownloadBandwidth, 'width:60px;font-size:14px', $style_form, null ) . "&nbsp;kb/s</td>
       	</tr>         	
       	<tr>
-	      	<td  align='right' class=legend nowrap  style='font-size:13px'>{FTPUploadBandwidth}:</strong></td>
-	      	<td style='font-size:13px'>" . Field_text ( 'FTPUploadBandwidth', $user->FTPUploadBandwidth, 'width:50px', $style_form, null ) . "&nbsp;kb/s</td>
+	      	<td  align='right' class=legend nowrap  style='font-size:14px'>{FTPUploadBandwidth}:</strong></td>
+	      	<td style='font-size:14px'>" . Field_text ( 'FTPUploadBandwidth', $user->FTPUploadBandwidth, 'width:60px;font-size:14px', $style_form, null ) . "&nbsp;kb/s</td>
       	</tr>     
 
       	<tr>
-	      	<td  align='right' class=legend nowrap  style='font-size:13px'>{FTPUploadRatio}:</strong></td>
-	      	<td style='font-size:13px'>" . Field_text ( 'FTPUploadRatio', $user->FTPUploadRatio, 'width:50px', $style_form, null ) . "&nbsp;</td>
+	      	<td  align='right' class=legend nowrap  style='font-size:14px'>{FTPUploadRatio}:</strong></td>
+	      	<td style='font-size:14px'>" . Field_text ( 'FTPUploadRatio', $user->FTPUploadRatio, 'width:60px;font-size:14px', $style_form, null ) . "&nbsp;</td>
       	</tr> 
       	<tr>
-	      	<td  align='right' class=legend nowrap  style='font-size:13px'>{FTPDownloadRatio}:</strong></td>
-	      	<td style='font-size:13px'>" . Field_text ( 'FTPDownloadRatio', $user->FTPDownloadRatio, 'width:50px', $style_form, null ) . "&nbsp;</td>
+	      	<td  align='right' class=legend nowrap  style='font-size:14px'>{FTPDownloadRatio}:</strong></td>
+	      	<td style='font-size:14px'>" . Field_text ( 'FTPDownloadRatio', $user->FTPDownloadRatio, 'width:60px;font-size:14px', $style_form, null ) . "&nbsp;</td>
       	</tr>
       	<tr>
-	      	<td  align='right' class=legend nowrap  style='font-size:13px'>{homeDirectory}:</strong></td>
+	      	<td  align='right' class=legend nowrap  style='font-size:14px'>{homeDirectory}:</strong></td>
 	      	<td>
 	      		<table>
 	      		<tr>
-	      			<td  style='font-size:13px'>" . Field_text ( 'homeDirectory', $user->homeDirectory, 'width:190px;font-size:13px;paddong:3px', null, null ) . "&nbsp;</td>
+	      			<td  style='font-size:13px'>" . Field_text ( 'homeDirectoryFTP', $user->homeDirectory, 'width:190px;font-size:14px;paddong:3px', null, null ) . "&nbsp;</td>
 	      			<td valign='top'>
-	      			" . button ( "{browse}...", "Loadjs('SambaBrowse.php?homeDirectory=yes')" ) . "
+	      			$browse
 	      			
 	      			</td>
 	      		</tr>
@@ -4145,22 +4148,66 @@ function USER_FTP() {
       		<td colspan=2 align='right'><hr>$button</td>
       	</tr>      	
       	</table>
-      	</FORM>";
+      	<script>
+      	
+	function x_SaveFTPUserSettings(obj) {
+		var tempvalue=obj.responseText;
+		if(tempvalue.length>3){alert(tempvalue);}	
+		RefreshTab('container-users-tabs');	
+	}	
+
+	function LoadCommands(){
+		LoadAjax('options_service','$page?commands-list=yes&hostname={$_GET["hostname"]}&key=$key');
+	
+	}
+	
+	
+	function SaveFTPUserSettings(){
+			var XHR = new XHRConnection();
+			XHR.appendData('UserFTPEdit','{$_GET["userid"]}');
+			if(document.getElementById('FTPStatus').checked){ XHR.appendData('FTPStatus','enabled');}else{ XHR.appendData('FTPStatus','disabled');}
+			XHR.appendData('FTPQuotaMBytes',document.getElementById('FTPQuotaMBytes').value);
+			XHR.appendData('FTPQuotaFiles',document.getElementById('FTPQuotaFiles').value);
+			XHR.appendData('FTPDownloadBandwidth',document.getElementById('FTPDownloadBandwidth').value);
+			XHR.appendData('FTPUploadBandwidth',document.getElementById('FTPUploadBandwidth').value);
+			XHR.appendData('FTPUploadRatio',document.getElementById('FTPUploadRatio').value);
+			XHR.appendData('FTPDownloadRatio',document.getElementById('FTPDownloadRatio').value);
+			XHR.appendData('homeDirectory',document.getElementById('homeDirectoryFTP').value);
+			AnimateDiv('$time');
+			XHR.sendAndLoad('$page', 'POST',x_SaveFTPUserSettings);
+		}    
+
+	function CheckUserFTPField(){
+		var homeLocked=$homeLocked;
+		document.getElementById('FTPQuotaMBytes').disabled=true;
+		document.getElementById('FTPQuotaFiles').disabled=true;
+		document.getElementById('FTPDownloadBandwidth').disabled=true;
+		document.getElementById('FTPUploadBandwidth').disabled=true;
+		document.getElementById('FTPUploadRatio').disabled=true;
+		document.getElementById('FTPDownloadRatio').disabled=true;
+		document.getElementById('homeDirectoryFTP').disabled=true;
+		if(!document.getElementById('FTPStatus').checked){return;}
+		document.getElementById('FTPQuotaMBytes').disabled=false;
+		document.getElementById('FTPQuotaFiles').disabled=false;
+		document.getElementById('FTPDownloadBandwidth').disabled=false;
+		document.getElementById('FTPUploadBandwidth').disabled=false;
+		document.getElementById('FTPUploadRatio').disabled=false;
+		document.getElementById('FTPDownloadRatio').disabled=false;
+		if(homeLocked==0){
+			document.getElementById('homeDirectoryFTP').disabled=false;
+		}		
+	
+	}
+      	
+     CheckUserFTPField();
+    </script> 	
+      	
+      	";
 	$tpl = new templates ( );
 	
 	$apply = USER_FTP_APPLY ();
-	
-	$form = RoundedLightWhite ( $form );
-	$html = "$title<br>
-      	<table style='width=100%'
-      	<tr>
-      		<td valign='top' width=1% align='center'><img src='img/folder-96-pure-ftpd-share.png' id='imgftp'></td>
-      		<td valign='top'>$form<p>&nbsp;</p><p>&nbsp;</p></td>
-      	</tr>
-      	</table>
-      		
-      	
-      	
+	$html = "
+    $form
       	";
 	
 	return $tpl->_ENGINE_parse_body ( $html );

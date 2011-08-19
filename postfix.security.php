@@ -155,6 +155,12 @@ function section_content_filtering(){
 	$tests_eml=Paragraphe("email-info-64.png","{message_analyze}","{message_as_analyze_text}","javascript:Loadjs('spamassassin.analyze.php')",null,210,null,0,true);
 	$tests_eml_disabled=Paragraphe("email-info-64-grey.png","{message_analyze}","{message_as_analyze_text}","",null,210,null,0,true);
 	$message_analyze=$tests_eml;
+	$sa_update_disabled=Paragraphe("64-spam-update-grey.png","{UPDATE_SA_UPDATE}","{UPDATE_SA_UPDATE_TEXT}","",null,210,null,0,true);
+	$sa_update=Paragraphe("64-spam-update.png","{UPDATE_SA_UPDATE}","{UPDATE_SA_UPDATE_TEXT}","javascript:Loadjs('sa.update.php')",null,210,null,0,true);
+	
+	
+	
+	
 	
 	
 	
@@ -164,10 +170,12 @@ function section_content_filtering(){
 				if($SpamAssMilterEnabled<>1){
 					$keywords=$keywords_disabled;
 					$message_analyze=$tests_eml_disabled;
+					$sa_update=$sa_update_disabled;
 				}
 			}else{
 				$keywords=$keywords_disabled;
 				$message_analyze=$tests_eml_disabled;
+				$sa_update=$sa_update_disabled;
 			}
 		}
 		
@@ -177,10 +185,12 @@ function section_content_filtering(){
 					if($SpamAssMilterEnabled<>1){
 						$keywords=$keywords_disabled;
 						$message_analyze=$tests_eml_disabled;
+						$sa_update=$sa_update_disabled;
 						}	
 				}else{
 					$keywords=$keywords_disabled;
 					$message_analyze=$tests_eml_disabled;
+					$sa_update=$sa_update_disabled;
 				}
 			}
 				
@@ -196,6 +206,7 @@ function section_content_filtering(){
 	$tr[]=$global_smtp_rules;
 	$tr[]=$extensions_block;
 	$tr[]=$message_analyze;
+	$tr[]=$sa_update;
 	
 	
 $tables[]="<table style='width:100%'><tr>";

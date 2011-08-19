@@ -982,14 +982,36 @@ function BackupTable($tablename,$database,$addons=array(),$zmd5=false,$endquery=
 	}
 	
 	
-	function mysql_real_escape_string2($query){
-	if(($this->mysql_server=="localhost") OR ($this->mysql_server=="127.0.0.1")){
-			$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
-		}else{
-			$bd=@mysql_connect(":/var/run/mysqld/mysqld.sock",$this->mysql_admin,$this->mysql_password);
-		}
-		return mysql_real_escape_string($query,$bd);
-	}
+function mysql_real_escape_string2($query){
+   $len=strlen($str);
+    $escapeCount=0;
+    $targetString='';
+    for($offset=0;$offset<$len;$offset++) {
+        switch($c=$str{$offset}) {
+            case "'":
+            // Escapes this quote only if its not preceded by an unescaped backslash
+                    if($escapeCount % 2 == 0) $targetString.="\\";
+                    $escapeCount=0;
+                    $targetString.=$c;
+                    break;
+            case '"':
+            // Escapes this quote only if its not preceded by an unescaped backslash
+                    if($escapeCount % 2 == 0) $targetString.="\\";
+                    $escapeCount=0;
+                    $targetString.=$c;
+                    break;
+            case '\\':
+                    $escapeCount++;
+                    $targetString.=$c;
+                    break;
+            default:
+                    $escapeCount=0;
+                    $targetString.=$c;
+        }
+    }
+    return $targetString;
+} 
+	
 	
 	
 	
@@ -1052,14 +1074,46 @@ function BackupTable($tablename,$database,$addons=array(),$zmd5=false,$endquery=
 	}
 	
 	FUNCTION DELETE_DATABASE($database){
+		$this->ok=true;
 		if(!function_exists("mysql_connect")){return 0;}
-		writelogs("DELETE DATABASE $database",__CLASS__,__FILE__,__FILE__,__LINE__);
+			writelogs("DELETE DATABASE $database",__CLASS__,__FILE__,__FILE__,__LINE__);
 			if(($this->mysql_server=="localhost") OR ($this->mysql_server=="127.0.0.1")){
 			$bd=@mysql_connect(":/var/run/mysqld/mysqld.sock",$this->mysql_admin,$this->mysql_password);
 		}else{
 			$bd=@mysql_connect("$this->mysql_server:$this->mysql_port",$this->mysql_admin,$this->mysql_password);
 		}
+		
+		if(!$bd){
+    		$des=mysql_error();
+    		$errnum=mysql_errno();	
+    		$this->mysql_error="($errnum) $des $this->mysql_admin@$this->mysql_server";
+    		$this->ok=false;
+    		return false;
+		}		
+		
+		
 		$results=@mysql_query("DROP DATABASE `$database`");	
+		
+		if(mysql_error($this->mysql_connection)){
+				$time=date('h:i:s');
+				$this->ok=false;
+				$errnum=mysql_errno();
+				$des=mysql_error();
+							
+			if(function_exists("debug_backtrace")){
+					try {
+						$trace=@debug_backtrace();
+						if(isset($trace[1])){$called="\ncalled by ". basename($trace[1]["file"])." {$trace[1]["function"]}() line {$trace[1]["line"]}";}
+					} catch (Exception $e) {$this->writeLogs("QUERY_SQL:: Fatal: ".$e->getMessage(),__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
+				}
+				
+				$this->mysql_error="Error Number ($errnum) ($des)$called";
+				return false;
+
+		}
+		$this->ok=true;
+		return true;
+		
 	}
 	
 	FUNCTION DELETE_TABLE($table,$database){

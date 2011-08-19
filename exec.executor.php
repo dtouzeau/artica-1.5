@@ -139,9 +139,12 @@ function FillMemory(){
 	if(!is_numeric($DisableArticaStatusService)){$DisableArticaStatusService=0;}
 	if(!is_numeric($EnableArticaExecutor)){$EnableArticaExecutor=1;}
 	
+	
+	$GLOBALS["SPAMASSASSIN_INSTALLED"]=$users->spamassassin_installed;
 	$GLOBALS["ARTICA_STATUS_DISABLED"]=$DisableArticaStatusService;
 	$GLOBALS["EXECUTOR_DAEMON_ENABLED"]=$EnableArticaExecutor;
 	$GLOBALS["SQUID_INSTALLED"]=$users->SQUID_INSTALLED;
+	$GLOBALS["KAV4PROXY_INSTALLED"]=$users->KAV4PROXY_INSTALLED;
 	$GLOBALS["POSTFIX_INSTALLED"]=$users->POSTFIX_INSTALLED;
 	$GLOBALS["SAMBA_INSTALLED"]=$users->SAMBA_INSTALLED;
 	$GLOBALS["GREYHOLE_INSTALLED"]=$users->GREYHOLE_INSTALLED;
@@ -293,6 +296,10 @@ function group5(){
 		$array["exec.postfix-logger.php"]="exec.postfix-logger.php --postqueue-clean";
 	}
 	if($GLOBALS["VIRTUALBOX_INSTALLED"]){$array["exec.virtualbox.php --maintenance"]="exec.virtualbox.php --maintenance";}
+	if($GLOBALS["KAV4PROXY_INSTALLED"]){$array["exec.kaspersky-update-logs.php --av-uris"];}
+	 
+	
+	
 	$array["exec.dstat.top.php"]="exec.dstat.top.php";
 	$array["exec.admin.status.postfix.flow.php"]="exec.admin.status.postfix.flow.php";
 	$array["exec.admin.smtp.flow.status.php"]="exec.admin.smtp.flow.status.php";
@@ -382,14 +389,24 @@ function group30(){
 	$GLOBALS["TIME"]["GROUP30"]=time();
 	events("Starting $mins (minutes)",__FUNCTION__,__LINE__);
 	
+	$array["exec.activedirectory-import.php"];
+	
+	
 	if($GLOBALS["SQUID_INSTALLED"]){
 		$array[]="exec.squid.stats.php --graphs";
 		$array[]="exec.squid.blacklists.php --inject";
 	}
-	if($GLOBALS["SAMBA_INSTALLED"]){$array[]="exec.picasa.php";}
-	if($GLOBALS["DRUPAL7_INSTALLED"]){$array[]="exec.freeweb.php --drupal-cron";}
-
+	if($GLOBALS["SAMBA_INSTALLED"]){
+		$array[]="exec.picasa.php";
+		$array[]="exec.samba.php --ScanTrashs";
+	
+	
+	}
 		
+	if($GLOBALS["DRUPAL7_INSTALLED"]){$array[]="exec.freeweb.php --drupal-cron";}
+	if($GLOBALS["SPAMASSASSIN_INSTALLED"]){	$array[]="exec.spamassassin.php --sa-update-check";}
+	
+	
 	
 	
 	$array[]="exec.emerging.threats.php";
@@ -420,6 +437,7 @@ function group10(){
 	$EnablePhileSight=GET_INFO_DAEMON("EnablePhileSight");
 	if($EnablePhileSight==null){$EnablePhileSight=1;}
 	
+	$array[]="exec.getent.php";
 	$array[]="exec.clean.logs.php --clean-tmp";
 	
 	if($GLOBALS["OCS_INSTALLED"]){$array[]="exec.ocsweb.php --injection";	}
@@ -428,6 +446,7 @@ function group10(){
 	if($GLOBALS["EnableArticaWatchDog"]==1){$array2[]="artica-install --startall";}
 	if($GLOBALS["ZARAFA_INSTALLED"]){$array[]="exec.zarafa.adbookldap.php --all";	}
 
+	
 	if($EnablePhileSight==1){$array[]="exec.philesight.php --check";}
 	$array[]="exec.kaspersky-update-logs.php";
 	$array[]="exec.emailrelay.php --notifier-queue";

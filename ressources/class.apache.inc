@@ -34,7 +34,7 @@ class vhosts{
 	"ARTICA_ADM"=>"bg_user-120.png",
 	"ARTICA_ADM"=>"eyeos-128.png",
 	"Z-PUSH"=>"zarafa-logo-128.png",
-	
+	"PIWIK"=>"piwik-logo-128.png",
 	
 	
 	);
@@ -60,7 +60,8 @@ class vhosts{
 	"ARTICA_REGISTER_OU"=>"www_register-64.png",
 	"ARTICA_MINIADM"=>"miniadm-64.png",
 	"EYEOS"=>"eyeos-64.png",
-	"POWERADMIN"=>"poweradmin-64.png"
+	"POWERADMIN"=>"poweradmin-64.png",
+	"PIWIK"=>"piwik-logo-64.png"
 	);
 
 	
@@ -96,6 +97,7 @@ class vhosts{
 	"EYEOS"=>array("TITLE"=>"APP_EYEOS","TEXT"=>"APP_EYEOS_TEXT"),
 	"Z-PUSH"=>array("TITLE"=>"APP_Z_PUSH","TEXT"=>"APP_Z_PUSH_TEXT"),
 	"POWERADMIN"=>array("TITLE"=>"APP_POWERADMIN","TEXT"=>"APP_POWERADMIN_TEXT"),
+	"PIWIK"=>array("TITLE"=>"APP_PIWIK","TEXT"=>"APP_PIWIK_TEXT"),
 	
 	
 	);
@@ -149,6 +151,7 @@ function listOfAvailableServices($freeweb=false){
 		
 		if($user->DRUPAL7_INSTALLED){$array["DRUPAL"]="{APP_DRUPAL}";}
 		if($user->GROUPOFFICE_INSTALLED){$array["GROUPOFFICE"]="{APP_GROUPOFFICE}";}
+		if($user->PIWIK_INSTALLED){$array["PIWIK"]="{APP_PIWIK}";}
 		
 		
 	}
@@ -173,9 +176,6 @@ function listOfAvailableServices($freeweb=false){
 				$LoadVhosts["wwwsslmode"]=$hash[$i]["wwwsslmode"][0];
 				$LoadVhosts["WWWMultiSMTPSender"]=$hash[$i][strtolower("WWWMultiSMTPSender")][0];
 				$LoadVhosts["WWWEnableAddressBook"]=$hash[$i][strtolower("WWWEnableAddressBook")][0];
-				
-				
-				
 				}
 		}
 		

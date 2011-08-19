@@ -22,7 +22,9 @@ page();
 function page(){
 	$page=CurrentPageName();
 	$tpl=new templates();
-	
+	$sock=new sockets();
+	$SQUIDEnable=$sock->GET_INFO("SQUIDEnable");
+	if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
 	$license=Paragraphe("64-kav-license.png", "{license_info}", "{license_info_text}","javascript:Loadjs('Kav4Proxy.License.php')");
 	$update_kaspersky=Paragraphe('kaspersky-update-64.png','{UPDATE_ANTIVIRUS}','{APP_KAV4PROXY}<br>{UPDATE_ANTIVIRUS_TEXT}',
 	"javascript:UpdateKav4Proxy()");
@@ -30,9 +32,7 @@ function page(){
 	$update_events=Paragraphe('events-64.png','{update_events}','{update_events_text}',
 	"javascript:Loadjs('Kav4Proxy.Update.Events.php')");
 	
-	
-	
-	
+	if($SQUIDEnable==0){$tr[]=Paragraphe('bg-server-settings-64.png','{enable_squid_service}','{enable_squid_service_text}',"javascript:Loadjs('squid.newbee.php?reactivate-squid=yes')");}
 	$tr[]=$license;
 	$tr[]=$update_kaspersky;
 	$tr[]=$update_events;

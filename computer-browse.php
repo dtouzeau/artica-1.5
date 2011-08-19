@@ -16,7 +16,7 @@ if(posix_getuid()<>0){
 
 
 if($_GET["mode"]=="selection"){selection_js();exit;}
-
+if(isset($_GET["networkslist"])){networkslist(0);exit;}
 if(isset($_GET["ComputersAllowDHCPLeases"])){ComputersAllowDHCPLeasesSave();exit;}
 if(isset($_GET["ComputersAllowNmap"])){ComputersAllowNmapSave();exit;}
 
@@ -712,7 +712,6 @@ while (list ($num, $line) = each ($tpl)){
 }		
 
 $html="<div style='width:100%;height:230px;overflow:auto'>$html</div>";
-$html=RoundedLightWhite($html);
 	echo $html;
 	
 }
@@ -971,7 +970,7 @@ function artica_importlist_perform(){
 
 	
 function networkslist($noecho=1){
-	
+	$q=new mysql();
 	$net=new networkscanner();
 	if(!is_array($net->networklist)){return null;}
 	$html="
@@ -993,6 +992,15 @@ while (list ($num, $maks) = each ($net->networklist)){
 		if(trim($maks)==null){continue;}
 		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
 		$delete=imgtootltip('delete-32.png','{delete}',"NetworkDelete('" . md5($num)."')");
+		$sql="SELECT netinfos FROM networks_infos WHERE ipaddr='$maks'";
+		$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"artica_backup"));
+		$ligne["netinfos"]=htmlspecialchars($ligne["netinfos"]);
+		$ligne["netinfos"]=nl2br($ligne["netinfos"]);
+		if($ligne["netinfos"]==null){$ligne["netinfos"]="{no_info}";}		
+		$infos="<div><a href=\"javascript:blur();\" 
+		OnClick=\"javascript:GlobalSystemNetInfos('$maks')\" 
+		style='font-size:9px;text-decoration:underline'><i>{$ligne["netinfos"]}</i></a></div>";
+		
 		if($net->DefaultNetworkList[$maks]){
 			if(!$net->Networks_disabled[$maks]){
 				$style=null;
@@ -1008,7 +1016,7 @@ while (list ($num, $maks) = each ($net->networklist)){
 		$html=$html . "
 		<tr class=$classtr>
 			<td width=1%><img src='img/32-network-server.png'></td>
-			<td><strong style='font-size:14px$style' nowrap>$maks</td>
+			<td><strong style='font-size:14px$style' nowrap>$maks$infos</td>
 			<td nowrap>$delete</td>
 		</tr>
 		

@@ -168,7 +168,11 @@ class clladp{
 			$GLOBALS["SETTINGS_INC"]=$_GLOBAL;
 		}
 		$_GLOBAL=$GLOBALS["SETTINGS_INC"];
-		$this->EnableManageUsersTroughActiveDirectory=$_GLOBAL["EnableManageUsersTroughActiveDirectory"];
+		$sock=new sockets();
+		$EnableManageUsersTroughActiveDirectory=$sock->GET_INFO("EnableManageUsersTroughActiveDirectory");
+		if(!is_numeric($EnableManageUsersTroughActiveDirectory)){$EnableManageUsersTroughActiveDirectory=0;}
+		if($EnableManageUsersTroughActiveDirectory==1){$this->EnableManageUsersTroughActiveDirectory=true;}else{$this->EnableManageUsersTroughActiveDirectory=false;}
+		
 		$this->ldap_admin=$_GLOBAL["ldap_admin"];
 		$this->ldap_password=$_GLOBAL["ldap_password"];
 		$this->suffix=$_GLOBAL["ldap_root_database"];

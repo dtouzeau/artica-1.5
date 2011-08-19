@@ -13,21 +13,16 @@ Il est &eacute;crit en PERL et est capable de tenir une zone de quarantaine pour
 [ul]
 [li]Ajout de la gestion de quarantaine d'utilisateur bas&eacute;e sur Kaspersky anti-spam/[/li]
 [li]</APP_ARTICA_FILTER_DEF>
-<APP_BOGOM_DEFS>bogom is a simple milter to interface bogofilter[br]
-Bogofilter is a mail filter that classifies mail as spam or ham (non-spam) by a statistical analysis of the message's header and content (body).
-[br]The program is able to learn from the user's classifications and corrections.
-</APP_BOGOM_DEFS>
+<APP_BOGOM_DEFS>bogom est un milter simple pour interfacer Bogofilter[br]
+Bogofilter est un filtre de courrier &eacute;lectronique qui classifie comme spam ou ham (non-spam) gr&acirc;ce &agrave; une analyse statistique de l'ent&ecirc;te du message et du contenu (corps).
+[br]Le programme est capable d'apprendre &agrave; partir des classifications et des corrections de l'utilisateur.</APP_BOGOM_DEFS>
 <APP_CLAMAV_MILTER_DEFS>Clamav-milter permet de connecter directement  postfix &agrave; Clam antivirus scanner afin de scanner les virus dans le courrier en utilisant libmilter API.</APP_CLAMAV_MILTER_DEFS>
-<APP_DKIM_FILTER_DEF>
-DKIM is a sender authentication protocol developed in order to address the problem of forged email messages.[br]
-Yahoo! released the DomainKeys specification and Cisco released the Internet Identified Mail specification.[br]
-Both methods are based on cryptographic message signing.[br]
-The two efforts have been merged, and the combined specification is known as DomainKeys Identified Mail (DKIM).
-</APP_DKIM_FILTER_DEF>
-<APP_FDM_DEFS>fdm is a program to fetch mail and deliver it in various ways depending on a
-user-supplied ruleset.[br] Mail may be fetched from stdin, IMAP or POP3 servers, or from local maildirs, and filtered based on whether it matches a regexp, its
-size or age, or the output of a shell command. It can be rewritten by an external process, dropped, left on the server or delivered into maildirs, mboxes, to a file or pipe, or any combination.
-</APP_FDM_DEFS>
+<APP_DKIM_FILTER_DEF>DKIM est un protocole d'authentification de l'exp&eacute;diteur d&eacute;velopp&eacute; afin de r&eacute;soudre le probl&egrave;me des messages forg&eacute;s.[br]
+Yahoo! a publi&eacute; la sp&eacute;cification DomainKeys et Cisco a publi&eacute; la sp&eacute;cification Internet Mail identifi&eacute;s.[br]
+Les deux m&eacute;thodes sont bas&eacute;es sur la signature cryptographique du message[br].
+Les deux efforts ont &eacute;t&eacute; fusionn&eacute;s, et la sp&eacute;cification combin&eacute;e est connue comme DomainKeys Identified Mail (DKIM).</APP_DKIM_FILTER_DEF>
+<APP_FDM_DEFS>FDM est un programme pour r&eacute;cup&eacute;rer le courriel et le livrer de diverses mani&egrave;res en fonction d'un jeu de r&egrave;gles fournis par l'utilisateur.[br] Le courrier peut &ecirc;tre r&eacute;cup&eacute;r&eacute;e &agrave; partir d'une entr&eacute;e standard, IMAP ou POP3, ou &agrave; partir de dossiers de couriers locaux et filtr&eacute; en fonction de sa correspondance avec une expression r&eacute;guli&egrave;re, sa
+taille ou son &acirc;ge, ou la sortie d'une commande shell. Il peut &ecirc;tre r&eacute;&eacute;crit par un processus externe, abandonn&eacute;, laiss&eacute; sur le serveur ou livr&eacute; dans des dossiers de courrier, des boites a lettres, dans un fichier ou un tube, ou toute combinaison.</APP_FDM_DEFS>
 <APP_FETCHMAIL_DEFS>
 Fetchmail is a one-stop solution to the remote mail retrieval problem for Unix machines,
 quite useful to anyone with an intermittent or dynamic-IP connection to a remote mailserver, SLIP or PPP dialup, o
@@ -47,12 +42,10 @@ pattern matching, URL filtering and heuristic filtering). j-chkmail detects viru
 files (defined by their filename extensions or by some regular expression).[br]
 An external message scanner such as Clamd (from ClamAV) can also be called during message handling.
 </APP_JCHECKMAIL_DEFS>
-<APP_KAS3_DEF>Kaspersky Anti-spam is a robust and scalable anti-spam solution provided by Kaspersky Lab INC.[br]
-The main feature of this product is the speed and it saves memory consumption[br]Writen in C, It is used in very large companies and provide
-very good detections rate</APP_KAS3_DEF>
-<APP_KAVMILTER_DEF>Kaspersky Antivirus Milter edition is a robust eMail antivirus that hooking Postfix using libmilter way.[br]
-It is a robust and scalable antivirus solution provided by Kaspersky Lab INC.[br]Writen in C, It is used in very large companies and provide
-very good detections rate</APP_KAVMILTER_DEF>
+<APP_KAS3_DEF>Kaspersky Anti-Spam est une  solution anti-spam robuste et extensible fournie par Kaspersky Lab INC[br]
+Les principales caract&eacute;ristiques de ce produit sont sa vitesse et sa fiable consommation de m&eacute;moire.[br] &Eacute;crit en C, il est utilis&eacute; dans de tr&egrave;s grandes entreprises et fournir un excellent taux de d&eacute;tections</APP_KAS3_DEF>
+<APP_KAVMILTER_DEF>Kaspersky Antivirus Milter Edition est un antivirus pour courrier &eacute;lectronique robuste qui se lie &agrave; Postfix &agrave; la fa&ccedil;on libmilter.[br]
+Il s'agit d'une solution antivirus robuste et &eacute;volutive fournies par Kaspersky Lab Inc.[br] &Eacute;crit en C, il est utilis&eacute; dans de tr&egrave;s grandes entreprises et de fournir un excellent taux de d&eacute;tections</APP_KAVMILTER_DEF>
 <APP_MAILARCHIVER_DEFS>Open Mail Archiver est un plugin &eacute;crit par AlexeyPu  qui effectue des sauvegardes des messages &agrave; la vol&eacute;e.[br]Ce module est en charge de stocker les messages dans un r&eacute;pertoire temporaire.[br]Artica scrute ce r&eacute;pertoire afin de les transmettre au serveur Mysql afin de les rendre disponibles.</APP_MAILARCHIVER_DEFS>
 <APP_MAILFROMD_DEF>
  Mailfromd is a general-purpose mail filtering daemon for Sendmail and Postfix.[br]

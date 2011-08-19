@@ -50,6 +50,29 @@ if(!$unix->IS_OPENLDAP_RUNNING()){
 	die();
 }
 
+$ldap=new clladp();
+if($ldap->ldapFailed){
+	echo "Starting......: Postfix openldap error, aborting\n";
+	die();	
+}
+
+if(!$ldap->ExistsDN("dc=organizations,$ldap->suffix")){
+	echo "Starting......: Postfix openldap is not ready, aborting\n";
+	die();		
+}
+
+echo "Starting......: Postfix openldap server success\n";
+
+$q=new mysql();
+if(!$q->test_mysql_connection()){
+	echo "Starting......: Postfix mysql is not ready aborting...\n";
+	die();
+}
+
+echo "Starting......: Postfix mysql server success\n";
+
+
+
 
 $GLOBALS["EnablePostfixMultiInstance"]=$sock->GET_INFO("EnablePostfixMultiInstance");
 $GLOBALS["EnableBlockUsersTroughInternet"]=$sock->GET_INFO("EnableBlockUsersTroughInternet");
@@ -1305,14 +1328,38 @@ function OthersValues(){
 	perso_settings();
 }
 
+function LoadIpAddresses($nic){
+	$unix=new unix();
+	$ifconfig=$unix->find_program("ifconfig");
+	exec("$ifconfig 2>&1",$results);
+	while (list ($index, $line) = each ($results) ){
+		if(preg_match("#inet adr:([0-9\.]+)#", $line,$re)){
+			$array[trim($re[1])]=trim($re[1]);
+		}
+	}
+	
+	return $array;
+}
+
 function inet_interfaces(){
+	include_once(dirname(__FILE__)."/ressources/class.system.network.inc");
 	if(!isset($GLOBALS["CLASS_SOCKET"])){$GLOBALS["CLASS_SOCKET"]=new sockets();$sock=$GLOBALS["CLASS_SOCKET"];}else{$sock=$GLOBALS["CLASS_SOCKET"];}
 	if($sock->GET_INFO("EnablePostfixMultiInstance")==1){return;}
 	$table=explode("\n",$sock->GET_INFO("PostfixBinInterfaces"));	
 	if(!is_array($table)){$table[]="all";}
 	
 	while (list ($num, $val) = each ($table) ){
+		$val=trim($val);
 		if($val==null){continue;}
+		if(preg_match("#[a-zA-Z]+[0-9]+#", $val)){
+			$ipsaddrs=LoadIpAddresses($val);
+			while (list ($a, $b) = each ($ipsaddrs) ){
+				echo "Starting......: Postfix $nic found interface '$b'\n";
+				$newarray[]=$b;
+			}
+		continue;
+		}
+		
 		$newarray[]=$val;
 	}
 	
@@ -1635,7 +1682,7 @@ function postscreen($hostname=null){
 	postconf("postscreen_dnsbl_action",$postscreen_dnsbl_action);
 	postconf("postscreen_dnsbl_ttl",$postscreen_dnsbl_ttl);
 	postconf("postscreen_dnsbl_threshold",$postscreen_dnsbl_threshold);
-	postconf("postscreen_cache_map","btree::\\\$data_directory/postscreen_master_cache");
+	postconf("postscreen_cache_map","btree:\\\$data_directory/postscreen_master_cache");
 	
 	
 	
@@ -1795,8 +1842,9 @@ function MasterCFBuilder($restart_service=false){
 	$re_cleanup_infos=null;
 	$smtp_submission=null;
 	$pre_cleanup_addons=null;
+	$master=new master_cf(1,"master");
 	
-	
+	$MASTER_CF_DEFINED=$master->GetArray();
 	
 	if($EnablePostScreen==null){$EnablePostScreen=0;}	
 	if(!$user->POSTSCREEN_INSTALLED){$EnablePostScreen=0;}
@@ -1846,6 +1894,8 @@ function MasterCFBuilder($restart_service=false){
 		
 		echo "Starting......: Amavis max process: $MasterCFAmavisInstancesCount\n";	
 		
+		if(isset($MASTER_CF_DEFINED["amavis"])){unset($MASTER_CF_DEFINED["amavis"]);}
+		
 		$amavis[]="amavis\tunix\t-\t-\t-\t-\t$MasterCFAmavisInstancesCount\tsmtp";
 		if($amavis_cleanup_infos<>null){$amavis[]=$amavis_cleanup_infos;}
 		$amavis[]=" -o smtp_data_done_timeout=1200";
@@ -1858,6 +1908,7 @@ function MasterCFBuilder($restart_service=false){
 		$amavis[]="";
 		$amavis[]="";
 		
+		if(isset($MASTER_CF_DEFINED["127.0.0.1:10025"])){unset($MASTER_CF_DEFINED["127.0.0.1:10025"]);}
 		$amavis[]="127.0.0.1:10025\tinet\tn\t-\tn\t-\t-\tsmtpd";
 		if($amavis_cleanup_infos<>null){$amavis[]=$amavis_cleanup_infos;}
 		if($artica_filter_amavis_option<>null){$amavis[]=$artica_filter_amavis_option;}
@@ -1904,6 +1955,7 @@ function MasterCFBuilder($restart_service=false){
 		echo "Starting......: Enabling SSL (465 port)\n";
 		SetTLS();
 		$TLSSET=true;
+		if(isset($MASTER_CF_DEFINED["smtps"])){unset($MASTER_CF_DEFINED["smtps"]);}
 		$SSL_INSTANCE[]="smtps\tinet\tn\t-\tn\t-\t-\tsmtpd";
 		if($re_cleanup_infos<>null){$SSL_INSTANCE[]=$re_cleanup_infos;}
 		$SSL_INSTANCE[]=" -o smtpd_tls_wrappermode=yes";
@@ -1919,6 +1971,7 @@ function MasterCFBuilder($restart_service=false){
 
 	if($PostfixEnableSubmission==1){
 		echo "Starting......: Enabling submission (587 port)\n";
+		if(isset($MASTER_CF_DEFINED["submission"])){unset($MASTER_CF_DEFINED["submission"]);}
 		if(!$TLSSET){SetTLS();}
 		$TLSSET=true;
 		$SUBMISSION_INSTANCE[]="submission\tinet\tn\t-\tn\t-\t-\tsmtpd";
@@ -1946,6 +1999,7 @@ function MasterCFBuilder($restart_service=false){
 	$smtp_private="n";
 	
 	
+	
 	if($EnableASSP==1){
 		echo "Starting......: ASSP is enabled change postfix listen port to 127.0.0.1:26\n";
 		$postfix_listen_port="127.0.0.1:6000";
@@ -1954,6 +2008,8 @@ function MasterCFBuilder($restart_service=false){
 	
 	
 	if($EnablePostScreen==1){
+		if(isset($MASTER_CF_DEFINED["tlsproxy"])){unset($MASTER_CF_DEFINED["tlsproxy"]);}
+		if(isset($MASTER_CF_DEFINED["dnsblog"])){unset($MASTER_CF_DEFINED["dnsblog"]);}
 		echo "Starting......: PostScreen is enabled, users should use 587 port to send mails internally\n"; 
 		$smtp_in_proto="pass";
 		$smtp_private="-";
@@ -1977,6 +2033,7 @@ $conf[]="# =====================================================================
 $conf[]="# service type  private unpriv  chroot  wakeup  maxproc command + args";
 $conf[]="#               (yes)   (yes)   (yes)   (never) (100)";
 $conf[]="# ==========================================================================";
+if(isset($MASTER_CF_DEFINED[$postfix_listen_port])){unset($MASTER_CF_DEFINED[$postfix_listen_port]);}
 if($postscreen_line<>null){$conf[]=$postscreen_line;}
 if($tlsproxy<>null){$conf[]=$tlsproxy;}
 if($dnsblog<>null){$conf[]=$dnsblog;}
@@ -1984,37 +2041,48 @@ $conf[]="$postfix_listen_port\t$smtp_in_proto\t$smtp_private\t-\tn\t-\t-\tsmtpd$
 if($smtp_ssl<>null){$conf[]=$smtp_ssl;}
 if($smtp_submission<>null){$conf[]=$smtp_submission;}
 if($smtp_throttle<>null){$conf[]=$smtp_throttle;}
+if(isset($MASTER_CF_DEFINED["pickup"])){unset($MASTER_CF_DEFINED["pickup"]);}
+if(isset($MASTER_CF_DEFINED["cleanup"])){unset($MASTER_CF_DEFINED["cleanup"]);}
+if(isset($MASTER_CF_DEFINED["mailman"])){unset($MASTER_CF_DEFINED["mailman"]);}
+if(count($MASTER_CF_DEFINED)==0){
+	$conf[]="pickup\tfifo\tn\t-\tn\t60\t1\tpickup$re_cleanup_infos";
+	$conf[]="cleanup\tunix\tn\t-\tn\t-\t0\tcleanup";
+	$conf[]="pre-cleanup\tunix\tn\t-\tn\t-\t0\tcleanup$pre_cleanup_addons";
+	$conf[]="qmgr\tfifo\tn\t-\tn\t300\t1\tqmgr";
+	$conf[]="tlsmgr\tunix\t-\t-\tn\t1000?\t1\ttlsmgr";
+	$conf[]="rewrite\tunix\t-\t-\tn\t-\t-\ttrivial-rewrite";
+	$conf[]="bounce\tunix\t-\t-\tn\t-\t0\tbounce";
+	$conf[]="defer\tunix\t-\t-\tn\t-\t0\tbounce";
+	$conf[]="trace\tunix\t-\t-\tn\t-\t0\tbounce";
+	$conf[]="verify\tunix\t-\t-\tn\t-\t1\tverify";
+	$conf[]="flush\tunix\tn\t-\tn\t1000?\t0\tflush";
+	$conf[]="proxymap\tunix\t-\t-\tn\t-\t-\tproxymap";
+	$conf[]="proxywrite\tunix\t-\t-\tn\t-\t1\tproxymap";
+	$conf[]="smtp\tunix\t-\t-\tn\t-\t-\tsmtp";
+	
+	$conf[]="relay\tunix\t-\t-\tn\t-\t-\tsmtp -o fallback_relay=";
+	$conf[]="showq\tunix\tn\t-\tn\t-\t-\tshowq";
+	$conf[]="error\tunix\t-\t-\tn\t-\t-\terror";
+	$conf[]="discard\tunix\t-\t-\tn\t-\t-\tdiscard";
+	$conf[]="local\tunix\t-\tn\tn\t-\t-\tlocal";
+	$conf[]="virtual\tunix\t-\tn\tn\t-\t-\tvirtual";
+	$conf[]="lmtp\tunix\t-\t-\tn\t-\t-\tlmtp";
+	$conf[]="anvil\tunix\t-\t-\tn\t-\t1\tanvil";
+	$conf[]="scache\tunix\t-\t-\tn\t-\t1\tscache";
+	$conf[]="scan\tunix\t-\t-\tn\t\t-\t10\tsm -v";
+	$conf[]="maildrop\tunix\t-\tn\tn\t-\t-\tpipe ";
+	$conf[]="retry\tunix\t-\t-\tn\t-\t-\terror ";
+	$conf[]="uucp\tunix\t-\tn\tn\t-\t-\tpipe flags=Fqhu user=uucp argv=uux -r -n -z -a\$sender - \$nexthop!rmail (\$recipient)";
+	$conf[]="ifmail\tunix\t-\tn\tn\t-\t-\tpipe flags=F user=ftn argv=/usr/lib/ifmail/ifmail -r \$nexthop (\$recipient)";
+	$conf[]="bsmtp\tunix\t-\tn\tn\t-\t-\tpipe flags=Fq. user=bsmtp argv=/usr/lib/bsmtp/bsmtp -t\$nexthop -f\$sender \$recipient";
+}
 
-$conf[]="pickup\tfifo\tn\t-\tn\t60\t1\tpickup$re_cleanup_infos";
-$conf[]="cleanup\tunix\tn\t-\tn\t-\t0\tcleanup";
-$conf[]="pre-cleanup\tunix\tn\t-\tn\t-\t0\tcleanup$pre_cleanup_addons";
-$conf[]="qmgr\tfifo\tn\t-\tn\t300\t1\tqmgr";
-$conf[]="tlsmgr\tunix\t-\t-\tn\t1000?\t1\ttlsmgr";
-$conf[]="rewrite\tunix\t-\t-\tn\t-\t-\ttrivial-rewrite";
-$conf[]="bounce\tunix\t-\t-\tn\t-\t0\tbounce";
-$conf[]="defer\tunix\t-\t-\tn\t-\t0\tbounce";
-$conf[]="trace\tunix\t-\t-\tn\t-\t0\tbounce";
-$conf[]="verify\tunix\t-\t-\tn\t-\t1\tverify";
-$conf[]="flush\tunix\tn\t-\tn\t1000?\t0\tflush";
-$conf[]="proxymap\tunix\t-\t-\tn\t-\t-\tproxymap";
-$conf[]="proxywrite\tunix\t-\t-\tn\t-\t1\tproxymap";
-$conf[]="smtp\tunix\t-\t-\tn\t-\t-\tsmtp";
+while (list ($service, $MFARRY) = each ($MASTER_CF_DEFINED) ){
+	$conf[]="$service\t{$MFARRY["TYPE"]}\t{$MFARRY["PRIVATE"]}\t{$MFARRY["UNIPRIV"]}\t{$MFARRY["CHROOT"]}\t{$MFARRY["WAKEUP"]}\t{$MFARRY["MAXPROC"]}\t{$MFARRY["COMMAND"]}";
+	echo "Starting......: master.cf adding $service ({$MFARRY["TYPE"]})\n";
+	
+}
 
-$conf[]="relay\tunix\t-\t-\tn\t-\t-\tsmtp -o fallback_relay=";
-$conf[]="showq\tunix\tn\t-\tn\t-\t-\tshowq";
-$conf[]="error\tunix\t-\t-\tn\t-\t-\terror";
-$conf[]="discard\tunix\t-\t-\tn\t-\t-\tdiscard";
-$conf[]="local\tunix\t-\tn\tn\t-\t-\tlocal";
-$conf[]="virtual\tunix\t-\tn\tn\t-\t-\tvirtual";
-$conf[]="lmtp\tunix\t-\t-\tn\t-\t-\tlmtp";
-$conf[]="anvil\tunix\t-\t-\tn\t-\t1\tanvil";
-$conf[]="scache\tunix\t-\t-\tn\t-\t1\tscache";
-$conf[]="scan\tunix\t-\t-\tn\t\t-\t10\tsm -v";
-$conf[]="maildrop\tunix\t-\tn\tn\t-\t-\tpipe ";
-$conf[]="retry\tunix\t-\t-\tn\t-\t-\terror ";
-$conf[]="uucp\tunix\t-\tn\tn\t-\t-\tpipe flags=Fqhu user=uucp argv=uux -r -n -z -a\$sender - \$nexthop!rmail (\$recipient)";
-$conf[]="ifmail\tunix\t-\tn\tn\t-\t-\tpipe flags=F user=ftn argv=/usr/lib/ifmail/ifmail -r \$nexthop (\$recipient)";
-$conf[]="bsmtp\tunix\t-\tn\tn\t-\t-\tpipe flags=Fq. user=bsmtp argv=/usr/lib/bsmtp/bsmtp -t\$nexthop -f\$sender \$recipient";
 $conf[]="mailman\tunix\t-\tn\tn\t-\t-\tpipe flags=FR user=mail:mail argv=/etc/mailman/postfix-to-mailman.py \${nexthop} \${mailbox}";
 $conf[]="artica-whitelist\tunix\t-\tn\tn\t-\t-\tpipe flags=F  user=mail argv=/usr/share/artica-postfix/bin/artica-whitelist -a \${nexthop} -s \${sender} --white";
 $conf[]="artica-blacklist\tunix\t-\tn\tn\t-\t-\tpipe flags=F  user=mail argv=/usr/share/artica-postfix/bin/artica-whitelist -a \${nexthop} -s \${sender} --black";

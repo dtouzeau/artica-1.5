@@ -764,7 +764,7 @@
 
 			if(($this->groupware=="ZARAFA") OR ($this->groupware=="ZARAFA_MOBILE")){
 				$f[]="\tphp_value magic_quotes_gpc \"Off\"";
-				$f[]="\tregister_globals \"Off\"";
+				$f[]="\tphp_value register_globals \"Off\"";
 				
 			}
 			

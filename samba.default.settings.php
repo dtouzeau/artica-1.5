@@ -22,7 +22,7 @@ function js(){
 	$page=CurrentPageName();
 	$tpl=new templates();
 	$title=$tpl->_ENGINE_parse_body("{shared_folders}::{default_settings}");
-	$html="YahooWin5('460','$page?popup=yes','$title')";
+	$html="YahooWin5('550','$page?popup=yes','$title')";
 	echo $html;
 }
 
@@ -32,14 +32,19 @@ function popup(){
 	$tpl=new templates();	
 	$sock=new sockets();
 	$SambaDefaultFolderSettings=unserialize(base64_decode($sock->GET_INFO("SambaDefaultFolderSettings")));
+	$ScanTrashPeriod=$sock->GET_INFO("ScanTrashTime");
+	$ScanTrashTTL=$sock->GET_INFO("ScanTrashTTL");
+	if(!is_numeric($ScanTrashPeriod)){$ScanTrashPeriod=450;}
+	if(!is_numeric($ScanTrashTTL)){$ScanTrashTTL=7;}
+	if($ScanTrashPeriod<30){$ScanTrashPeriod=30;}
+	if($ScanTrashTTL<1){$ScanTrashTTL=1;}	
+	
 	$time=time();
 	
 	
 	if($SambaDefaultFolderSettings["create_mask"]==null){$SambaDefaultFolderSettings["create_mask"]= "0775";}
-	if($SambaDefaultFolderSettings["samba_directory_mask"]==null ){$SambaDefaultFolderSettings["samba_directory_mask"]= "0777";}
+	if($SambaDefaultFolderSettings["directory_mask"]==null ){$SambaDefaultFolderSettings["directory_mask"]= "0777";}
 	if($SambaDefaultFolderSettings["force_create_mode"]==null){$SambaDefaultFolderSettings["force_create_mode"] = "0775";}
-	
-	
 	
 	
 	$html="
@@ -65,9 +70,23 @@ function popup(){
 		</tr>			
 		<tr>	
 			<td align='right' nowrap valign='top' class=legend>{samba_directory_mask}:</td>
-			<td valign='top'>" . Field_text('default_samba_directory_mask',$SambaDefaultFolderSettings["samba_directory_mask"],"font-size:13px;width:38px")."</td>
+			<td valign='top'>" . Field_text('default_samba_directory_mask',$SambaDefaultFolderSettings["directory_mask"],"font-size:13px;width:38px")."</td>
 			<td valign='top'>" . help_icon("{samba_directory_mask_text}")."</td>
+		</tr>
+		<tr>
+			<td colspan=3><span style='font-size:16px'>{recycle}</td>
+		</tr>
+		<tr>	
+			<td align='right' nowrap valign='top' class=legend>{ScanPeriod}:</td>
+			<td valign='top' style='font-size:13px'>" . Field_text('ScanTrashPeriod',$ScanTrashPeriod,"font-size:13px;width:60px")."&nbsp;{minutes}</td>
+			<td valign='top'>" . help_icon("{ScanTrashPeriod_text}")."</td>
+		</tr>		
+		<tr>	
+			<td align='right' nowrap valign='top' class=legend>{ttl}:</td>
+			<td valign='top' style='font-size:13px'>" . Field_text('ScanTrashTTL',$ScanTrashTTL,"font-size:13px;width:60px")."&nbsp;{days}</td>
+			<td valign='top'>" . help_icon("{ScanTrashTTL_text}")."</td>
 		</tr>	
+		
 		<tr>
 			<td colspan=3 align=right><hr>". button("{apply}","SaveSambaDefaultSharedSettings()")."</td>
 		</tr>
@@ -90,6 +109,8 @@ function popup(){
 				XHR.appendData('create_mask',document.getElementById('default_create_mask').value);
 				XHR.appendData('force_create_mode',document.getElementById('default_force_create_mode').value);
 				XHR.appendData('directory_mask',document.getElementById('default_samba_directory_mask').value);
+				XHR.appendData('ScanTrashPeriod',document.getElementById('ScanTrashPeriod').value);
+				XHR.appendData('ScanTrashTTL',document.getElementById('ScanTrashTTL').value);
 				AnimateDiv('$time');
 				XHR.sendAndLoad('$page', 'POST',x_SaveSambaDefaultSharedSettings);			
 			
@@ -110,6 +131,9 @@ function Save(){
 	}
 	$data=base64_encode(serialize($SambaDefaultFolderSettings));
 	$sock->SaveConfigFile($data, "SambaDefaultFolderSettings");
+	$sock->SET_INFO("ScanTrashPeriod", $_POST["ScanTrashPeriod"]);
+	$sock->SET_INFO("ScanTrashTTL", $_POST["ScanTrashTTL"]);
+	
 }
 
 

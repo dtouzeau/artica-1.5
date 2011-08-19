@@ -10,14 +10,14 @@ class cluebringer{
 	function local_domain_add($domain){
 		
 		if($this->policy_groups_id($domain)>0){
-			$this-policy_group_members_sync($domain);
+			$this->policy_group_members_sync($domain);
 			return null;
 		}
 		$q=new mysql();
 		$sql="INSERT INTO policy_groups (Name) VALUES('$domain')";
 		$q->QUERY_SQL($sql,"policyd");
 		if(!$q->ok){writelogs("$q->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);return;}
-		$this-policy_group_members_sync($domain);
+		$this->policy_group_members_sync($domain);
 		
 	}
 	

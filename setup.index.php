@@ -430,10 +430,14 @@ function mysql_tabs(){
 	$sock=new sockets();
 	if($users->SQUID_INSTALLED){
 		$SQUIDEnable=trim($sock->GET_INFO("SQUIDEnable"));
-		if($SQUIDEnable==null){$SQUIDEnable=1;}
+		if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
 		if($SQUIDEnable==0){$user->SQUID_INSTALLED=false;}	
 	}
+	$FreeWebLeftMenu=$sock->GET_INFO("FreeWebLeftMenu");
+	$EnableGroupWareScreen=$sock->GET_INFO("EnableGroupWareScreen");
 	
+	
+	if(!is_numeric($FreeWebLeftMenu)){$FreeWebLeftMenu=1;}	
 	$ArticaMetaDisableSetupCenter=$sock->GET_INFO("ArticaMetaDisableSetupCenter");
 	
 	$KASPERSKY_APPLIANCE=FALSE;
@@ -491,6 +495,10 @@ function mysql_tabs(){
 		unset($array["smtp_packages"]);		
 		unset($array["web_packages"]);
 		unset($array["vdi"]);
+	}
+	
+	if($FreeWebLeftMenu==0){
+		unset($array["web_packages"]);
 	}
 	
 if(isset($_GET["QuickLinksTop"])){$margin="margin-top:10px";$fontsize="font-size:14px";}
@@ -644,8 +652,9 @@ if($users->POSTFIX_INSTALLED){
 		$html=$html.BuildRows("APP_CYRUS_IMAP",$GlobalApplicationsStatus,"cyrus-imapd",true);
 		$html=$html.BuildRows("APP_SAMBA",$GlobalApplicationsStatus,"samba");
 	}
-	if($MEM_TOTAL_INSTALLEE>700000){
+	if($MEM_TOTAL_INSTALLEE>500000){
 		$html=$html.BuildRows("APP_ZARAFA",$GlobalApplicationsStatus,"zarafa");
+		$html=$html.BuildRows("APP_ZARAFA6",$GlobalApplicationsStatus,"zarafa6");
 	}
 	
 	
@@ -798,6 +807,7 @@ $html=$html.BuildRows("APP_PHPMYADMIN",$GlobalApplicationsStatus,"phpMyAdmin");
 		$html=$html.BuildRows("APP_SABNZBDPLUS",$GlobalApplicationsStatus,"sabnzbd");
 		$html=$html.BuildRows("APP_OPENEMM",$GlobalApplicationsStatus,"OpenEMM");
 		$html=$html.BuildRows("APP_OPENEMM_SENDMAIL",$GlobalApplicationsStatus,"sendmail");
+		$html=$html.BuildRows("APP_PIWIK",$GlobalApplicationsStatus,"piwik");
 	}
 if($users->cyrus_imapd_installed){
 	$html=$html.spacer('webmails');

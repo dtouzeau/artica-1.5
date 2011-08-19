@@ -32,7 +32,7 @@ if($argv[1]=="--import"){import();die();}
 	
 	
 	$SQUIDEnable=$sock->GET_INFO("SQUIDEnable");
-	if($SQUIDEnable==null){$SQUIDEnable=1;}
+	if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
 	if($SQUIDEnable<>1){
 		WriteMyLogs("Squid is disabled, aborting...",__FUNCTION__,__FILE__,__LINE__);
 		echo "Squid is disabled\n";die();

@@ -43,11 +43,16 @@ function saveAdStrict(){
 	$sock->SET_INFO("EnableManageUsersTroughActiveDirectory",$_GET["EnableManageUsersTroughActiveDirectory"]);
 	$sock->SET_INFO("DisableSambaFileSharing",$_GET["DisableSambaFileSharing"]);
 	$sock->SET_INFO("CyrusToADSyncTime",$_GET["CyrusToADSyncTime"]);
+	$sock->SET_INFO("ActiveDirectoryMysqlSinc",$_GET["ActiveDirectoryMysqlSinc"]);
+	
+	
+	
 	$sock->getFrameWork("cmd.php?samba-save-config=yes");
 	$sock->getFrameWork("cmd.php?saslauthd-restart=yes");
 	$sock->getFrameWork("cmd.php?reconfigure-cyrus=yes");
 	$sock->getFrameWork("cmd.php?cyrus-sync-to-ad=yes");
 	$sock->getFrameWork("services.php?process1=yes");
+	$sock->getFrameWork("services.php?AdCacheMysql=yes");
 
 }
 
@@ -60,14 +65,19 @@ function ad_ldap(){
 		$EnableManageUsersTroughActiveDirectory=$sock->GET_INFO("EnableManageUsersTroughActiveDirectory");
 		$EnableSambaActiveDirectory=$sock->GET_INFO("EnableSambaActiveDirectory");
 		$DisableSambaFileSharing=$sock->GET_INFO("DisableSambaFileSharing");
+		$ActiveDirectoryMysqlSinc=$sock->GET_INFO("ActiveDirectoryMysqlSinc");
 		$CyrusToAD=$sock->GET_INFO("CyrusToAD");
 		$CyrusToADSyncTime=$sock->GET_INFO("CyrusToADSyncTime");
 		if(!is_numeric($EnableManageUsersTroughActiveDirectory)){$EnableManageUsersTroughActiveDirectory=0;}
 		if(!is_numeric($DisableSambaFileSharing)){$DisableSambaFileSharing=0;}
 		if(!is_numeric($CyrusToAD)){$CyrusToAD=0;}
 		if(!is_numeric($CyrusToADSyncTime)){$CyrusToADSyncTime=10;}
+		if(!is_numeric($ActiveDirectoryMysqlSinc)){$ActiveDirectoryMysqlSinc=5;}
 		$ActiveDirectoryCredentials=array();
 		$ActiveDirectoryCredentials=unserialize($sock->GET_INFO("ActiveDirectoryCredentials"));
+		
+		
+		
 		
 		if($EnableSambaActiveDirectory==1){
 				$array=unserialize(base64_decode($sock->getFrameWork("cmd.php?net-ads-info=yes")));
@@ -98,9 +108,12 @@ function ad_ldap(){
 			</tr>			
 			<tr>
 				<td valign='top' class=legend>{TimeSynchronization}:</td>
-				<td style='font-size:13px'>". Field_text("CyrusToADSyncTime",$CyrusToADSyncTime,"width:60px;padding:3px;font-size:13px")."Mn</td>
+				<td style='font-size:13px'>". Field_text("CyrusToADSyncTime",$CyrusToADSyncTime,"width:60px;padding:3px;font-size:13px")."&nbsp;Mn</td>
 			</tr>			
-			
+			<tr>
+				<td valign='top' class=legend>{CacheSynchronization}:</td>
+				<td style='font-size:13px'>". Field_text("ActiveDirectoryMysqlSinc",$ActiveDirectoryMysqlSinc,"width:60px;padding:3px;font-size:13px")."&nbsp;{hours}</td>
+			</tr>				
 			<tr>
 				<td class=legend>{DisableSambaFileSharing}</td>
 				<td>". Field_checkbox('DisableSambaFileSharing',1,$DisableSambaFileSharing)."</td>

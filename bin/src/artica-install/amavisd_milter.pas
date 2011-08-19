@@ -635,7 +635,7 @@ end;
 //##############################################################################
 procedure tamavis.START_MILTER();
 var
-   pid,cmd:string;
+   pid,cmd,cmdRoot:string;
    count:integer;
    AmavisGlobalConfiguration:TiniFile;
    max_conns:string;
@@ -715,7 +715,7 @@ cmd:=cmd + '-S /var/spool/postfix/var/run/amavisd-new/amavisd-new.sock ';
 cmd:=cmd + '-t 300 ';
 cmd:=cmd + '-T 600 ';
 cmd:=cmd + '-w /var/amavis ';
-
+cmdRoot:=SYS.LOCATE_SU() + ' -m postfix -c "'+cmd+'" >/dev/null 2>&1 &';
 cmd:=SYS.LOCATE_SU() + ' postfix -c "'+cmd+'" >/dev/null 2>&1 &';
 if FileExists('/var/spool/postfix/var/run/amavisd-milter/amavisd-milter.pid') then logs.DeleteFile('/var/spool/postfix/var/run/amavisd-milter/amavisd-milter.pid');
 
@@ -727,13 +727,34 @@ logs.NOTIFICATION('starting amavisd-milter daemon','Artica starting the Amavis-m
   while not SYS.PROCESS_EXIST(MILTER_PID()) do begin
               sleep(150);
               inc(count);
-              if count>30 then begin
+              if count>15 then begin
                  writeln('');
                  logs.DebugLogs('Starting......: amavisd-milter (timeout!!!)');
                  break;
               end;
               write('.');
         end;
+
+writeln('');
+count:=0;
+ if not SYS.PROCESS_EXIST(MILTER_PID()) then begin
+        logs.Syslogs('Starting......: amavisd-milter with root environment');
+
+        logs.OutputCmd(cmdRoot);
+        fpsystem(cmdRoot);
+  while not SYS.PROCESS_EXIST(MILTER_PID()) do begin
+              sleep(150);
+              inc(count);
+              if count>15 then begin
+                 writeln('');
+                 logs.DebugLogs('Starting......: amavisd-milter (timeout!!!)');
+                 break;
+              end;
+              write('.');
+        end;
+
+ end;
+
         
         
 if not SYS.PROCESS_EXIST(MILTER_PID()) then begin
@@ -983,6 +1004,13 @@ forceDirectories('/var/virusmails');
 forceDirectories('/var/log/amavis');
 forceDirectories('/var/log/artica-postfix/RTM');
 forceDirectories('/etc/amavis/dkim');
+forceDirectories('/etc/mail/spamassassin');
+if not FileExists('/etc/mail/spamassassin/bayes_journal') then fpsystem('/bin/touch /etc/mail/spamassassin/bayes_journal');
+if not FileExists('/etc/mail/spamassassin/bayes_seen') then fpsystem('/bin/touch /etc/mail/spamassassin/bayes_seen');
+if not FileExists('/etc/mail/spamassassin/bayes_toks') then fpsystem('/bin/touch /etc/mail/spamassassin/bayes_toks');
+fpsystem('/bin/chown postfix:postfix /etc/mail/spamassassin/bayes_*');
+fpsystem('/bin/chmod 600 /etc/mail/spamassassin/bayes_*');
+
 
 forceDirectories('/tmp/savemail');
 fpsystem('/bin/chmod 777 /tmp/savemail');

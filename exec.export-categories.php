@@ -84,6 +84,10 @@ $GLOBALS["CATS"][]="webphone";
 $GLOBALS["CATS"][]="webplugins";
 $GLOBALS["CATS"][]="webradio";
 $GLOBALS["CATS"][]="webtv";
+$GLOBALS["CATS"][]="celebrity";
+$GLOBALS["CATS"][]="books";
+
+
 
 
 	while (list ($index, $category) = each ($GLOBALS["CATS"]) ){

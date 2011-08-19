@@ -3,6 +3,7 @@ if(!is_file(dirname($_SERVER['SCRIPT_FILENAME'])."/ressources/class.templates.in
 if(!is_file(dirname($_SERVER['SCRIPT_FILENAME'])."/ressources/class.ldap.inc")){include_once(dirname(__FILE__) . '/class.ldap.inc');}else{include_once(dirname($_SERVER['SCRIPT_FILENAME'])."/ressources/class.ldap.inc");}
 
 include_once(dirname(__FILE__) . '/class.mysql.inc');
+include_once(dirname(__FILE__) . '/class.active.directory.inc');
 //sambaGroupType: 2 - domain group (global group)
 //sambaGroupType: 5 - local group (built-in group)
  
@@ -37,16 +38,20 @@ class groups{
 	var $objectSid=null;
 	var $ldapClass;
 	var $EnableManageUsersTroughActiveDirectory=false;
-	
-	function groups($groupid=null){
+	var $searchPattern=null;
+	function groups($groupid=null,$searchPattern=null){
+		$this->searchPattern=$searchPattern;
 		$users=new usersMenus();
-		$this->EnableManageUsersTroughActiveDirectory=$users->EnableManageUsersTroughActiveDirectory;
+		$sock=new sockets();
+		$EnableManageUsersTroughActiveDirectory=$sock->GET_INFO("EnableManageUsersTroughActiveDirectory");
+		if(!is_numeric($EnableManageUsersTroughActiveDirectory)){$EnableManageUsersTroughActiveDirectory=0;}
+		if($EnableManageUsersTroughActiveDirectory==1){$this->EnableManageUsersTroughActiveDirectory=true;}
 		$this->SAMBA_INSTALLED=$users->SAMBA_INSTALLED;
 		if($users->EnableManageUsersTroughActiveDirectory){
-			if($groupid<>null){
-				$this->LoadFromAd($groupid);
+				writelogs(" -> LoadFromAd($groupid,$searchPattern)",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+				$this->LoadFromAd($groupid,$searchPattern);
+				writelogs(" -> LoadFromAd END",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 				return;
-			}
 		}
 		
 		
@@ -73,21 +78,65 @@ class groups{
 		
 	}
 	
-	private function LoadFromAd($dn){
+	private function LoadFromAd($dn,$pattern=null){
 		$ldap=new ldapAD();
+		if($dn==null){
+			$ldap->find_members($pattern);
+			$this->ARRAY_MEMBERS=$ldap->ARRAY_MEMBERS;
+			$this->members=$ldap->members;
+			return;
+		}else{
+			$ldap->find_members_groups($dn,$pattern);
+			$this->ARRAY_MEMBERS=$ldap->ARRAY_MEMBERS;
+			$this->members=$ldap->members;			
+		}
+		return;
+		
+		$pattern=trim($pattern);
 		//$this->seems_utf8($dn)
+		$query="objectClass=*";
+		if(trim($pattern)<>null){
+			if(strpos(" $pattern", '*')==0){$pattern="*$pattern*";}
+			$pattern=str_replace("**", "*", $pattern);
+			$pattern=str_replace("**", "*", $pattern);
+			$pattern=str_replace("*", ".*?", $pattern);
+		}
+		
+		if($pattern<>null){
+			$query="(&(objectclass=*)(|(member=$pattern)(cn=$pattern)(mailNickName=$pattern)(samAccountName=$pattern) )";
+			$query="(&(objectClass=*)(|(cn=$pattern)(mail=$pattern)(displayName=$pattern)(samaccountname=$pattern) (givenname=$pattern)))";
+			$query="objectClass=*";
+		}
+		writelogs("$query",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+		
 		ldap_set_option($ldap->ldap_connection, LDAP_OPT_PROTOCOL_VERSION, 3);
-		$sr =@ldap_read($ldap->ldap_connection,utf8_encode($dn),'objectClass=group',array());
+		/*$sr =@ldap_read($ldap->ldap_connection,$dn,"objectclass=*",array(), null, null, 0,0);
+		if(!$sr){
+			$errornumber= ldap_errno($ldap->ldap_connection);
+			$error_text=ldap_err2str($errornumber);
+			echo "<H1>$error_text</H1>";
+			
+		}
+		$hash=ldap_get_entries($ldap->ldap_connection,$sr);
+		print_r($hash);
+		return;
+		*/
+		
+		
+		
+		
+		$sr =@ldap_search($ldap->ldap_connection,utf8_encode($dn),$query,array(), null, null, 100,0);
 		if(!$sr){
 			$errornumber= ldap_errno($ldap->ldap_connection);
 			$error_text=ldap_err2str($errornumber);
 		
-			writelogs("Error $errornumber:UTF8: $error_text Query failed false query (objectClass=group) in ".utf8_encode($dn),__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
-			$sr =@ldap_read($ldap->ldap_connection,$dn,"objectClass=group",array());
+			writelogs("Error $errornumber:UTF8: $error_text Query failed false query $query in ".utf8_encode($dn),__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+			$sr =@ldap_search($ldap->ldap_connection,$dn,$query,array(), null, null, 100,0);
 			if(!$sr){
 				$errornumber= ldap_errno($ldap->ldap_connection);
 				$error_text=ldap_err2str($errornumber);	
-				writelogs("Error $errornumber:NORM: $error_text Query failed false query in $dn",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+				writelogs("Error $errornumber:NORM: $error_text Query $query failed false query in $dn",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+				return array();
 			}
 		}
 		
@@ -96,19 +145,47 @@ class groups{
 				$hash=ldap_get_entries($ldap->ldap_connection,$sr);
 				$hash=$hash[0];
 				
+				while (list ($key, $arrayGost) = each ($hash) ){
+					if(preg_match("#member;range=.+?#", $key)){
+						writelogs("change member key to $key",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+						$hash["member"]=$arrayGost;
+					}	
+				}
+				
+				
+				
+				$cc=0;
 				$this->groupName=$hash["samaccountname"][0];
 				$this->objectSid=$this->bin_to_str_sid($hash["objectsid"][0]);
+				$membersMAX=$hash["member"]["count"];
+				if($membersMAX>50){$membersMAX=50;}
+				
+				
 				for($i=0;$i<$hash["member"]["count"];$i++){
-					$member=$this->MemberSamAcountFromAd($hash["member"][$i]);
+					if(!isset($_SESSION["LDAPUSERS"][$hash["member"][$i]])){
+						$member=$this->MemberSamAcountFromAd($hash["member"][$i]);
+						$_SESSION["LDAPUSERS"][$hash["member"][$i]]=$member;
+					}else{
+						$member=$_SESSION["LDAPUSERS"][$hash["member"][$i]];
+					}
+					
+					
+					
 					if($member==null){continue;}
+					if($pattern<>null){if(!preg_match("#$pattern#", $member)){continue;}}
+					writelogs(count($this->members)."] \"$pattern\" Found {$hash["member"][$i]} = $member",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);					
 					$this->ARRAY_MEMBERS[$member]=$member;
 					$this->members[]=$member;
+					if(count($this->members)>$membersMAX){
+						writelogs("Max reached ".count($this->members)."/".$hash["member"]["count"],__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+						break;}
 					}
 					
 				for($i=0;$i<$hash["memberof"]["count"];$i++){
-					$gp=new groups($hash["memberof"][$i]);
+					writelogs("Search members in {$hash["memberof"][$i]}",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+					$gp=new groups($hash["memberof"][$i],$pattern);
 					if(count($gp->members)>0){
-						while (list ($num, $ligne) = each ($gp->members) ){$this->ARRAY_MEMBERS[$ligne]=$ligne;}
+						while (list ($num, $ligne) = each ($gp->members) ){$this->members[]=$ligne;}
 					}
 				}
 			}else{
@@ -136,7 +213,7 @@ class groups{
 				$this->members[]=$ligne;
 			}
 			
-			
+			writelogs("[".count($this->members)."] FINISH",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 	}
 	
 private function seems_utf8($Str) { 
@@ -212,12 +289,19 @@ private function seems_utf8($Str) {
 	
 	private function MemberSamAcountFromAd($dn){
 		$ldap=new ldapAD();
-		$sr =@ldap_read($ldap->ldap_connection,$dn,'objectClass=user',array("sAMAccountName"));
+				
+		$sr =@ldap_read($ldap->ldap_connection,$dn,'objectClass=*',array("sAMAccountName","name","cn","userprincipalname"));
+		//$sr =@ldap_read($ldap->ldap_connection,$dn,'objectClass=*',array());
 		if ($sr) {
 			$hash=ldap_get_entries($ldap->ldap_connection,$sr);
+			
 			writelogs($hash["count"]." items in $dn (objectClass=user)",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 			$hash=$hash[0];
-			return $hash["samaccountname"][0];
+			if($hash["samaccountname"][0]<>null){return $hash["samaccountname"][0];}
+			if($hash["name"][0]<>null){return $hash["name"][0];}
+			if($hash["cn"][0]<>null){return $hash["cn"][0];}
+			if($hash["userprincipalname"][0]<>null){return $hash["userprincipalname"][0];}
+			
 		}else{
 			$errornumber= ldap_errno($ldap->ldap_connection);
 			$error_text=ldap_err2str($errornumber);	
@@ -499,7 +583,7 @@ private function seems_utf8($Str) {
 		}
 		
 	function user_delete_from_all_groups($uid){
-		$ldap=$this->ldapClass;
+		$ldap=new clladp();
 		$dn="dc=organizations,$ldap->suffix";
 		$pattern="(memberUid=$uid)";
 		$sr =@ldap_search($ldap->ldap_connection,$dn,"$pattern",array('gidNumber'));
@@ -566,7 +650,7 @@ private function seems_utf8($Str) {
 		}
 		
 		if(!$this->objectClass["SharedFolders"]){
-			$ldap=$this->ldapClass;
+			$ldap=new clladp();
 			$res["objectClass"][]="SharedFolders";
 			$res["SharedFolderPrefix"]='shared_';
 			$res["SharedFolerConf"]="NONE";
@@ -679,7 +763,7 @@ private function seems_utf8($Str) {
 	 	}
 	 	
 	 	function SaveCharedConf(){
-	 		$ldap=$this->ldapClass;
+	 		$ldap=new clladp();
 	 		include_once(dirname(__FILE__).'/class.autofs.inc');
 	 		$autofs=new autofs();
 	 		$autofs->AutofsSharedDir($this->group_id);
@@ -690,7 +774,7 @@ private function seems_utf8($Str) {
 	 	
 	 	
 	 	function BuildWhitelistArray(){
-	 		$ldap=$this->ldapClass;
+	 		$ldap=new clladp();
 	 		$domains=$ldap->hash_get_domains_ou($this->ou);
 	 		if(!is_array($domains)){return null;}
 	 		while (list ($num, $line) = each ($domains)){
@@ -711,7 +795,7 @@ private function seems_utf8($Str) {
 	 	}
 	 	
 	 	function BuildBlackListArray(){
-	 		$ldap=$this->ldapClass;
+	 		$ldap=new clladp();
 	 		$domains=$ldap->hash_get_domains_ou($this->ou);
 	 		if(!is_array($domains)){return null;}
 	 		while (list ($num, $line) = each ($domains)){
@@ -734,7 +818,7 @@ private function seems_utf8($Str) {
 	 	function BuildEmailsList(){
 	 		if(!is_array($this->members)){return null;}
 	 		$arr=$this->members;
-	 		$ldap=$this->ldapClass;
+	 		$ldap=new clladp();
 	 		while (list ($num, $line) = each ($arr)){
 	 			$hash=$ldap->UserDatas($line);
 	 			if(is_array($hash["mailAlias"])){
@@ -753,7 +837,8 @@ private function seems_utf8($Str) {
 	 	
 	 	function BuildOrdinarySambaGroups(){
 	 		$users=new usersMenus();
-	 		$ldap=$this->ldapClass;
+	 		
+	 		$ldap=new clladp();
 	 		if(!$this->SAMBA_ENABLED){return false;}
 	 		$this->SambaGroupsBuild();
 	 		$dn="cn=users,ou=groups,dc=samba,dc=organizations,$ldap->suffix";
@@ -780,7 +865,7 @@ private function seems_utf8($Str) {
 function EditSambaGroups(){
 	 		$users=new usersMenus();
 	 		$tpl=new templates();
-	 		$ldap=$this->ldapClass;
+	 		$ldap=new clladp();
 	 		$u=array();
 			if(!$this->SAMBA_ENABLED){return false;}
 			
@@ -839,10 +924,10 @@ function EditSambaGroups(){
  function SambaGroupsBuild(){
  			$u=array();
 	 		$users=new usersMenus();
-	 		$ldap=$this->ldapClass;
+	 		$ldap=new clladp();
 	 		
 	 		$dn="dc=samba,dc=organizations,$ldap->suffix";
-	 		$ldap=$this->ldapClass;
+	 		
 	 		if(!$ldap->ExistsDN($dn)){
 	 			$u["objectClass"][]="top";
 	 			$u["objectClass"][]="organization";
@@ -1119,7 +1204,7 @@ function EditSambaGroups(){
 
 	 	
 	 	function samba_group_list(){
-	 		$ldap=$this->ldapClass;
+	 		$ldap=new clladp();
 	 		$filter=array("gidnumber","cn");
 	 		$dr =@ldap_search($ldap->ldap_connection,$ldap->suffix,"(&(objectClass=sambaGroupMapping))",$filter);	
 			if($dr){
@@ -1136,7 +1221,7 @@ function EditSambaGroups(){
 	 	}
 	 	
 	 	function ChangeSMBGroupsSID(){
-	 		$ldap=$this->ldapClass;
+	 		$ldap=new clladp();
 	 		
 	 		$u=array();
 	 		if(!$this->SAMBA_ENABLED){return false;}
@@ -1163,7 +1248,7 @@ function EditSambaGroups(){
 	 		unset($u);	
 
 	 		
-			$ldap=$this->ldapClass;
+			$ldap=new clladp();
 			$filter_search="(&(objectClass=sambaGroupMapping)((cn=*))";
 			$attrs=array("gidNumber","dn");
 			$dn="dc=organizations,$ldap->suffix";
@@ -1184,7 +1269,7 @@ function EditSambaGroups(){
 	 	
 	 	
 	 	function samba_standard_groups(){
-	 		$ldap=$this->ldapClass;
+	 		$ldap=new clladp();
 	 		$filter=array("gidnumber","cn");
 	 		$dr =ldap_search($ldap->ldap_connection,"dc=samba,dc=organizations,$ldap->suffix","(objectClass=sambaGroupMapping)",$filter);	
 			if($dr){
@@ -1202,7 +1287,7 @@ function EditSambaGroups(){
 	 	}
 	 	
 	 	function samba_group_id_from_sid($sid){
-	 		$ldap=$this->ldapClass;
+	 		$ldap=new clladp();
 	 		//writelogs("Search samba SID $sid",__CLASS__.'/'.__FUNCTION__,__FILE__);
 	 		$filter=array("gidNumber");
 	 		$dr =ldap_search($ldap->ldap_connection,"dc=organizations,$ldap->suffix","(&(objectClass=sambaGroupMapping)(sambaSID=$sid))",$filter);
@@ -1217,7 +1302,7 @@ function EditSambaGroups(){
 	 	}
 	 	
 	 	function samba_group_sid_from_gid($gid){
-	 		$ldap=$this->ldapClass;
+	 		$ldap=new clladp();
 	 		$filter=array("sambaSID");
 	 		$dr =ldap_search($ldap->ldap_connection,"dc=organizations,$ldap->suffix","(&(objectClass=sambaGroupMapping)(gidNumber=$gid))",$filter);
 	 		if($dr){
@@ -1249,7 +1334,7 @@ function EditSambaGroups(){
 	 	}
 	 	
 	 	function load_MailingList($ou){
-			$ldap=$this->ldapClass;
+			$ldap=new clladp();
 	 		$filter=array();
 	 		$res=array();
 	 		$dr =ldap_search($ldap->ldap_connection,"ou=$ou,dc=organizations,$ldap->suffix","(&(objectClass=MailingAliasesTable)(mailinglistaddress=*))",$filter);
@@ -1265,7 +1350,7 @@ function EditSambaGroups(){
 	 	
 	 	
 		function list_of_groups($ou,$fieldlist=0){
-		$ldap=$this->ldapClass;
+		$ldap=new clladp();
 		$pos=strpos($ou,',');
 		if($pos>0){$ou=substr($ou,0,$pos);}
 		$ld =$ldap->ldap_connection;

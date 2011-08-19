@@ -921,6 +921,7 @@ function buildHost($uid=null,$hostname,$ssl=null,$d_path=null,$Params=array()){
 	
 	if($freeweb->groupware=="EYEOS"){install_EYEOS($hostname);}
 	if($freeweb->groupware=="GROUPOFFICE"){group_office_install($hostname,true);}
+	if($freeweb->groupware=="PIWIK"){install_PIWIK($hostname,true);}
 	if($freeweb->groupware=="DRUPAL"){
 		$unix=new unix();
 		$nohup=$unix->find_program("nohup");
@@ -1555,6 +1556,35 @@ function group_office_install($servername,$nobuildHost=false,$rebuild=false){
 	
 	if(!$nobuildHost){buildHost(null,$servername);}
 	
+	
+}
+
+
+function install_PIWIK($servername){
+	$sources="/usr/share/piwik";
+	$unix=new unix();
+	$cp=$unix->find_program("cp");
+	$freeweb=new freeweb($servername);	
+	if(!is_dir($sources)){writelogs("[$servername] $sources no such directory",__FUNCTION__,__FILE__,__LINE__);return;}
+	if(!is_dir($freeweb->WORKING_DIRECTORY)){writelogs("[$servername] $freeweb->WORKING_DIRECTORY no such directory",__FUNCTION__,__FILE__,__LINE__);return;}
+	include_once(dirname(__FILE__)."/ressources/class.piwik.inc");
+	$piwik=new piwik();
+	if($piwik->checkWebsite($freeweb->WORKING_DIRECTORY)){return;}
+	writelogs("[$servername] copy sources...",__FUNCTION__,__FILE__,__LINE__);
+	shell_exec("/bin/cp -rf $sources/* $freeweb->WORKING_DIRECTORY/");
+	@unlink("$freeweb->WORKING_DIRECTORY/config/config.ini.php");
+	@mkdir('/usr/share/piwik/tmp/assets',0777,true);
+    @mkdir('/usr/share/piwik/tmp/templates_c',0777,true);
+    @mkdir('/usr/share/piwik/tmp/cache',0777,true);
+    @mkdir('/usr/share/piwik/tmp/assets',0777,true);
+    shell_exec('/bin/chmod 0777 /usr/share/piwik/tmp');
+    shell_exec('/bin/chmod 0777 /usr/share/piwik/tmp/templates_c/');
+    shell_exec('/bin/chmod 0777 /usr/share/piwik/tmp/cache/');
+    shell_exec('/bin/chmod 0777 /usr/share/piwik/tmp/assets/');
+    shell_exec('/bin/chmod a+w /usr/share/piwik/config'); 	
+	$apacheusername=$unix->APACHE_SRC_ACCOUNT();
+	$apachegroup=$unix->APACHE_SRC_GROUP();	
+	shell_exec("/bin/chown -R $apacheusername:$apachegroup $freeweb->WORKING_DIRECTORY");
 	
 }
 

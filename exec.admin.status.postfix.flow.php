@@ -38,7 +38,7 @@ if(systemMaxOverloaded()){
 
 
 if($GLOBALS["VERBOSE"]){
-	writelogs(basename(__FILE__).":Executed",basename(__FILE__),__FILE__,__LINE__);
+	writelogs(basename(__FILE__).":DEBUG:Executed",basename(__FILE__),__FILE__,__LINE__);
 }
 
 if($argv[1]=="--setup-center"){setup_center();die();}
@@ -67,17 +67,18 @@ if(!$GLOBALS["FORCE"]){
 		$PoolCoverPageSchedule=intval($sock->GET_INFO('PoolCoverPageSchedule'));
 		if($PoolCoverPageSchedule<1){$PoolCoverPageSchedule=10;}
 		$timef=file_get_time_min("/etc/artica-postfix/croned.2/".md5(__FILE__));
-		if($GLOBALS["VERBOSE"]){echo "$timef <> $PoolCoverPageSchedule\n";}
+		if($GLOBALS["VERBOSE"]){echo "DEBUG:$timef <> $PoolCoverPageSchedule\n";}
 		if($timef<$PoolCoverPageSchedule){
 			if(!is_file("/usr/share/artica-postfix/ressources/logs/status.right.1.html")){status_right();}
 			die();
 		}
 	}
-	
-@unlink("/etc/artica-postfix/croned.2/".md5(__FILE__));
-@file_put_contents("/etc/artica-postfix/croned.2/".md5(__FILE__),date('Y-m-d H:i:s'));
+$timef="/etc/artica-postfix/croned.2/".md5(__FILE__);	
+@unlink($timef);
+@file_put_contents($timef,date('Y-m-d H:i:s'));
 include_once("ressources/class.os.system.tools.inc");
 $os=new os_system();
+$status=new status();
 $_GET["CURRENT_MEMORY"]=RoundedLightGrey($os->html_Memory_usage())."<br>";
 @file_put_contents('/usr/share/artica-postfix/ressources/logs/status.memory.html',$_GET["CURRENT_MEMORY"]);
 @file_put_contents('/usr/share/artica-postfix/ressources/logs/status.memory.hash',serialize($os->meta_array));
@@ -96,7 +97,7 @@ BuildingExecStatus("Right Postfix pan...",40);
 
 
 BuildingExecStatus("New versions...",55);
-BuildJgrowlVersions($status);
+if(isset($status)){BuildJgrowlVersions($status);}
 events("BuildVersions(); OK");
 
 BuildingExecStatus("Setup Center...",60);
@@ -107,9 +108,9 @@ samba_status();
 events("samba_status(); OK");
 BuildingExecStatus("Done...",100);
 
-@unlink("/etc/artica-postfix/croned.2/".md5(__FILE__));
-$restults=file_put_contents("/etc/artica-postfix/croned.2/".md5(__FILE__),'#');
-events(basename(__FILE__).":: stamp $timef ($restults) done...");
+@unlink($timef);
+$restults=file_put_contents($timef,'#');
+events(basename(__FILE__).":: stamp \"$timef\" ($restults) done...");
 
 function services(){
 	events(basename(__FILE__).":: running daemons_status()");
@@ -159,13 +160,11 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 	$tpl=new templates();
 	$sock=new sockets();
 	$ONLY_SAMBA=false;
-	if($GLOBALS["VERBOSE"]){echo "daemons_status:: -> Stating...\n";}
+	if($GLOBALS["VERBOSE"]){echo "DEBUG:daemons_status:: -> Stating...\n";}
 	$EnableArticaSMTPStatistics=$sock->GET_INFO("EnableArticaSMTPStatistics");
 	if(!is_numeric($EnableArticaSMTPStatistics)){$EnableArticaSMTPStatistics=1;}
-	$nobackup=null;
-	
-	
-	
+	$statusSpamassassinUpdateFile="/usr/share/artica-postfix/ressources/logs/sa-update-status.html";
+	$statusSpamassassinUpdateText=null;$service=null;$blacklist=null;$no_orgs=null;$zabbix=null;$samba=null;$computers=null;$nobackup=null;$check_apt=null;$services=null;
 	
 	if(!$users->SQUID_INSTALLED){
 		if(!$users->POSTFIX_INSTALLED){
@@ -329,7 +328,7 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 	$newversion=null;
 	$kavicap_license_error=kavicap_license_error();
 	$cicap_bad=CicapBadParams();
-	if($GLOBALS["VERBOSE"]){echo "daemons_status:: -> squid_filters_infos()\n";}
+	if($GLOBALS["VERBOSE"]){echo "DEBUG:daemons_status:: -> squid_filters_infos()\n";}
 	$squidfilters=squid_filters_infos();
 	if($users->POSTFIX_INSTALLED){
 		if(is_file("ressources/logs/web/blacklisted.html")){
@@ -341,25 +340,37 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 		kavproxyInfos();
 	}
 	
+	if(is_file($statusSpamassassinUpdateFile)){
+		if($GLOBALS["VERBOSE"]){echo "DEBUG:$statusSpamassassinUpdateFile file exists...\n";}
+		$statusSpamassassinUpdateText=@file_get_contents($statusSpamassassinUpdateFile);
+	}else{
+		if($GLOBALS["VERBOSE"]){echo "DEBUG:$statusSpamassassinUpdateFile no such file...\n";}
+	}
+	
+	
+	
 	@unlink("/usr/share/artica-postfix/ressources/logs/status.warnings.html");
 	$DisableWarningCalculation=$sock->GET_INFO("DisableWarningCalculation");
 	if(!is_numeric("DisableWarningCalculation")){$DisableWarningCalculation=0;}
 	
 	if($DisableWarningCalculation==0){
 		$informer=0;
-		if(strlen($RootPasswordChangedTXT)>20){$informer++;}
-		if(strlen($kernel_mismatch)>20){$informer++;}
-		if(strlen($blacklist)>20){$informer++;}
-		if(strlen($kavicap_license_error)>20){$informer++;}
-		if(strlen($nobackup)>20){$informer++;}
-		if(strlen($service)>20){$informer++;}
+		if(strlen($RootPasswordChangedTXT)>20){$informer++;}else{if($GLOBALS["VERBOSE"]){echo "DEBUG:RootPasswordChangedTXT:".strlen($RootPasswordChangedTXT)." bytes, disabled\n";}}
+		if(strlen($kernel_mismatch)>20){$informer++;}else{if($GLOBALS["VERBOSE"]){echo "DEBUG:kernel_mismatch:".strlen($kernel_mismatch)." bytes, disabled\n";}}
+		if(strlen($blacklist)>20){$informer++;if($GLOBALS["VERBOSE"]){echo "DEBUG:blacklist Add\n";}}else{if($GLOBALS["VERBOSE"]){echo "DEBUG:blacklist:".strlen($blacklist)." bytes, disabled\n";}}
+		if(strlen($kavicap_license_error)>20){$informer++;}else{if($GLOBALS["VERBOSE"]){echo "DEBUG:kavicap_license_error:".strlen($kavicap_license_error)." bytes, disabled\n";}}
+		if(strlen($nobackup)>20){$informer++;if($GLOBALS["VERBOSE"]){echo "DEBUG:nobackup Add\n";}}else{if($GLOBALS["VERBOSE"]){echo "DEBUG:nobackup:".strlen($nobackup)." bytes, disabled\n";}}
+		if(strlen($service)>20){$informer++;}else{if($GLOBALS["VERBOSE"]){echo "DEBUG:service:".strlen($service)." bytes, disabled\n";}}
+		if(strlen($statusSpamassassinUpdateText)>20){$informer++;}else{if($GLOBALS["VERBOSE"]){echo "DEBUG:statusSpamassassinUpdateText:".strlen($statusSpamassassinUpdateText)." bytes, disabled\n";}}
+		if(strlen($services)>20){$informer++;if($GLOBALS["VERBOSE"]){echo "DEBUG:services Add\n";}}else{if($GLOBALS["VERBOSE"]){echo "DEBUG:services:".strlen($services)." bytes, disabled\n";}}
 		
-		writelogs("Inform: $informer",__FILE__,__FUNCTION__,__LINE__);
+		if($GLOBALS["VERBOSE"]){echo "DEBUG: Inform $informer events\n";}
+		
 		
 		if($informer>0){
 			$inform=Paragraphe("warning64.png","$informer {warnings}","$informer {index_warnings_text}","javascript:Loadjs('admin.index.php?warnings=yes&count=$informer')","",300,76,1);
 			file_put_contents('/usr/share/artica-postfix/ressources/logs/status.warnings.html',
-			"$RootPasswordChangedTXT$kernel_mismatch$nobackup$blacklist$kavicap_license_error$services");
+			"$RootPasswordChangedTXT$kernel_mismatch$nobackup$blacklist$kavicap_license_error$services$statusSpamassassinUpdateText");
 			system('/bin/chmod 755 /usr/share/artica-postfix/ressources/logs/status.warnings.html');	
 		}
 	}
@@ -367,7 +378,8 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 	$final="
 	$inform
 	$no_orgs
-	<span id='loadavggraph'></span>	
+	<span id='loadavggraph'></span>
+	<span id='kav4proxyGraphs'></span>		
 	$squidfilters
 	$cicap_bad
 	$events_paragraphe
@@ -400,10 +412,10 @@ function squid_filters_infos(){
 if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLASS_USERS_MENUS"]=$users;}else{$users=$GLOBALS["CLASS_USERS_MENUS"];}
 	if(!$users->SQUID_INSTALLED){return null;}
 	$SQUIDEnable=$sock->GET_INFO("SQUIDEnable");
-	if($SQUIDEnable==null){$SQUIDEnable=1;}
+	if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
 	
 	if($SQUIDEnable==0){
-		if($GLOBALS["VERBOSE"]){echo "squid_filters_infos():: SQUIDEnable is not enabled... Aborting\n";}
+		if($GLOBALS["VERBOSE"]){echo "DEBUG:squid_filters_infos():: SQUIDEnable is not enabled... Aborting\n";}
 		return;
 	}	
 	$filtered=false;
@@ -415,19 +427,19 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 	if($DansGuardianEnabled==1){$filtered=true;}
 	if($users->SQUID_ICAP_ENABLED){$filtered=true;}
 	if(!$filtered){
-		if($GLOBALS["VERBOSE"]){echo "squid_filters_infos():: Not filtered\n";}
+		if($GLOBALS["VERBOSE"]){echo "DEBUG:squid_filters_infos():: Not filtered\n";}
 		return null;}
 	
 	$EnableCommunityFilters=$sock->GET_INFO("EnableCommunityFilters");
 	if($EnableCommunityFilters==null){$EnableCommunityFilters=1;}
 	if($EnableCommunityFilters<>1){
-		if($GLOBALS["VERBOSE"]){echo "squid_filters_infos():: EnableCommunityFilters is not enabled... Aborting\n";}
+		if($GLOBALS["VERBOSE"]){echo "DEBUG:squid_filters_infos():: EnableCommunityFilters is not enabled... Aborting\n";}
 		return;}
 	
 	$sql="SELECT count(*) as tcount FROM `dansguardian_sitesinfos` WHERE `dbpath` = ''";	
 	$q=new mysql();
 	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));
-	if($GLOBALS["VERBOSE"]){echo "squid_filters_infos():: EnableCommunityFilters {$ligne["tcount"]}\n";}
+	if($GLOBALS["VERBOSE"]){echo "DEBUG:squid_filters_infos():: EnableCommunityFilters {$ligne["tcount"]}\n";}
 	if($ligne["tcount"]==0){return null;}
 	
 	return Paragraphe("64-categories.png",$ligne["tcount"]." {websites_not_categorized}",
@@ -464,7 +476,7 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 	$sock=new sockets();
 	if(!$users->SQUID_INSTALLED){return null;}
 	$SQUIDEnable=$sock->GET_INFO("SQUIDEnable");
-	if($SQUIDEnable==null){$SQUIDEnable=1;}
+	if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
 	
 	if($SQUIDEnable==0){return;}
 	$squid=new squidbee();
@@ -674,7 +686,10 @@ function samba_status(){
 	if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$user=new usersMenus();$GLOBALS["CLASS_USERS_MENUS"]=$user;}else{$user=$GLOBALS["CLASS_USERS_MENUS"];}
 	$sock=new sockets();
 	$tpl=new templates();
-	$ini->loadString($sock->getfile('daemons_status',$_GET["hostname"]));	
+	$unix=new unix();
+	$php5=$unix->LOCATE_PHP5_BIN();
+	shell_exec("$php5 /usr/share/artica-postfix/exec.status.php --samba --nowachdog >/tmp/samba.status.ini 2>&1");
+	$ini->loadFile("/tmp/samba.status.ini");
 	if($user->SAMBA_INSTALLED){
 		$samba_status=DAEMON_STATUS_ROUND("SAMBA_SMBD",$ini);
 		$nmmbd=DAEMON_STATUS_ROUND("SAMBA_NMBD",$ini);

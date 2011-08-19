@@ -448,6 +448,7 @@ class settings_inc {
 	var $OPENEMM_VERSION="";
 	var $MSKTUTIL_INSTALLED=false;
 	var $OPENEMM_SENDMAIL_VERSION="";
+	var $PIWIK_INSTALLED=false;
 	private function CheckIndexDefaults($_GLOBAL){
 		return $_GLOBAL;
 		foreach($this as $key => $value) {
@@ -846,6 +847,7 @@ class settings_inc {
 			$this->OPENEMM_VERSION=$_GLOBAL["OPENEMM_VERSION"];
 			$this->MSKTUTIL_INSTALLED=$_GLOBAL["MSKTUTIL_INSTALLED"];
 			$this->OPENEMM_SENDMAIL_VERSION=$_GLOBAL["OPENEMM_SENDMAIL_VERSION"];
+			$this->PIWIK_INSTALLED=$_GLOBAL["PIWIK_INSTALLED"];
 			
 			if(isset($_GLOBAL["deduplication_installed"])){$this->deduplication_installed=$_GLOBAL["deduplication_installed"];}
 			$this->EnableManageUsersTroughActiveDirectory=$_GLOBAL["EnableManageUsersTroughActiveDirectory"];
@@ -878,7 +880,12 @@ class settings_inc {
 				$this->nmap_installed=false;
 			}			
 			
-			
+			if($users->KASPERSKY_WEB_APPLIANCE){
+				$this->POSTFIX_INSTALLED=false;
+				$this->APP_AUDITD_INSTALLED=false;
+				$this->BACKUPPC_INSTALLED=false;
+				
+			}			
 			
 		}
 		

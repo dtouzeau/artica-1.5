@@ -47,6 +47,7 @@ public
       procedure archiver();
    procedure COMPILE_TAR();
    procedure xcompile();
+   procedure xinstall6();
    function zpush():boolean;
 END;
 
@@ -511,6 +512,8 @@ if arch=32 then begin
       install.INSTALL_PROGRESS(CODE_NAME,'{installing}');
       forceDirectories('/usr/share/php/mapi');
       forceDirectories('/etc/php5/apache2/conf.d');
+      fpsystem('/etc/init.d/artica-postfix stop zarafa');
+      REMOVE();
       fpsystem('/bin/cp -rfd '+source_folder+'* /');
       install.INSTALL_STATUS(CODE_NAME,100);
       install.INSTALL_PROGRESS(CODE_NAME,'{success}');
@@ -582,6 +585,8 @@ if arch=64 then begin
       writeln('source.................: ',source_folder);
       install.INSTALL_STATUS(CODE_NAME,50);
       install.INSTALL_PROGRESS(CODE_NAME,'{installing}');
+      fpsystem('/etc/init.d/artica-postfix stop zarafa');
+      REMOVE();
       fpsystem('/bin/cp -rfd '+source_folder+'* /');
       install.INSTALL_STATUS(CODE_NAME,100);
       install.INSTALL_PROGRESS(CODE_NAME,'{success}');
@@ -611,6 +616,258 @@ end;
 
 
 end;
+//#########################################################################################
+procedure tzarafa.xinstall6();
+var
+   CODE_NAME:string;
+   cmd:string;
+   PERL_MODULES:string;
+   configure_scripts:string;
+   LOCAL_INTEGER:integer;
+   REMOTE_INTEGER:integer;
+   t:tstringlist;
+   l:Tstringlist;
+   i:integer;
+   Arch:Integer;
+   pkg:string;
+begin
+LOCAL_INTEGER:=0;
+REMOTE_INTEGER:=0;
+CODE_NAME:='APP_ZARAFA6';
+
+
+
+ if libs.COMMANDLINE_PARAMETERS('--uninstall') then begin
+     writeln('Uninstall process is enabled');
+     REMOVE();
+ end;
+
+
+ distri:=tdistriDetect.Create;
+Arch:=libs.ArchStruct();
+writeln('RESULT.................: Architecture : ',Arch);
+writeln('RESULT.................: Distribution : ',distri.DISTRINAME,' (DISTRINAME)');
+writeln('RESULT.................: Major version: ',distri.DISTRI_MAJOR,' (DISTRI_MAJOR)');
+writeln('RESULT.................: Artica Code  : ',distri.DISTRINAME_CODE,' (DISTRINAME_CODE)');
+fpsystem('/usr/share/artica-postfix/bin/setup-ubuntu --check-base-system');
+if arch=32 then begin
+
+      SetCurrentDir('/root');
+      install.INSTALL_STATUS(CODE_NAME,50);
+      install.INSTALL_PROGRESS(CODE_NAME,'{downloading}');
+
+
+
+
+      if distri.DISTRINAME_CODE='SUSE' then begin
+           if distri.DISTRI_MAJOR=11 then begin
+              pkg:='zarafa6-i386-opensuse';
+           end;
+
+      end;
+
+      if distri.DISTRINAME_CODE='CENTOS' then begin
+           if distri.DISTRI_MAJOR=5 then begin
+               pkg:='zarafa6-i386-centos';
+           end;
+
+      end;
+
+      if distri.DISTRINAME_CODE='DEBIAN' then begin
+           if distri.DISTRI_MAJOR=4  then begin
+               install.INSTALL_STATUS(CODE_NAME,110);
+               install.INSTALL_PROGRESS(CODE_NAME,'{failed} debian 5-6 only');
+               exit;
+           end;
+           if distri.DISTRI_MAJOR=5  then pkg:='zarafa6-debian50-i386';
+           if distri.DISTRI_MAJOR=6  then pkg:='zarafa6-debian60-i386';
+
+
+       end;
+
+
+       if distri.DISTRINAME_CODE='UBUNTU' then begin
+            if distri.DISTRI_MAJOR=9  then begin
+               install.INSTALL_STATUS(CODE_NAME,110);
+               install.INSTALL_PROGRESS(CODE_NAME,'{failed} ubuntu 10.04 only');
+               exit;
+            end;
+
+            if distri.DISTRI_MAJOR=11  then begin
+               install.INSTALL_STATUS(CODE_NAME,110);
+               install.INSTALL_PROGRESS(CODE_NAME,'{failed} ubuntu 10.04 only');
+               exit;
+            end;
+
+            if distri.DISTRI_MAJOR=10 then pkg:='zarafa6-ubuntu100-i386';
+            if distri.DISTRI_MAJOR=8 then pkg:='zarafa6-ubuntu80-i386';
+       end;
+
+
+       if length(pkg)=0 then begin
+         install.INSTALL_STATUS(CODE_NAME,110);
+         install.INSTALL_PROGRESS(CODE_NAME,'{failed}');
+         writeln(distri.DISTRINAME,' ',distri.DISTRINAME_CODE,' ',distri.DISTRI_MAJOR,' not supported');
+         exit;
+       end;
+      source_folder:=libs.COMPILE_GENERIC_APPS(pkg);
+
+      if not DirectoryExists(source_folder) then begin
+         install.INSTALL_STATUS(CODE_NAME,110);
+         install.INSTALL_PROGRESS(CODE_NAME,'{failed}');
+         exit;
+      end;
+      source_folder:=extractFilePath(source_folder);
+      writeln('source.................: ',source_folder);
+      install.INSTALL_STATUS(CODE_NAME,50);
+      install.INSTALL_PROGRESS(CODE_NAME,'{installing}');
+
+
+      l:=Tstringlist.Create;
+      l.Add('/usr/lib/libinetmapi.so.1.0.0');
+      l.Add('/usr/lib/libinetmapi.so.1');
+      l.Add('/usr/lib/libinetmapi.so');
+      l.Add('/usr/lib/libmapi.la');
+      l.Add('/usr/lib/libmapi.so');
+      l.Add('/usr/lib/libmapi.so.0');
+      l.Add('/usr/lib/libmapi.so.0.0.0');
+      l.add('/usr/lib/php5/20090626/mapi.so');
+      for i:=0 to l.Count-1 do begin
+          if FileExists(l.Strings[i]) then begin
+             writeln('removing '+l.Strings[i]);
+             fpsystem('/bin/rm -f '+l.Strings[i]);
+          end;
+      end;
+
+
+
+      forceDirectories('/usr/share/php/mapi');
+      forceDirectories('/etc/php5/apache2/conf.d');
+      fpsystem('/etc/init.d/artica-postfix stop zarafa');
+      REMOVE();
+      fpsystem('/bin/cp -rfd '+source_folder+'* /');
+      install.INSTALL_STATUS(CODE_NAME,100);
+      install.INSTALL_PROGRESS(CODE_NAME,'{success}');
+      libs.NOTIFICATION('Success install zarafa','Artica make has successfully installed Zarafa','mailbox');
+      fpsystem('/etc/init.d/artica-postfix restart zarafa');
+      fpsystem('/etc/init.d/artica-postfix restart apache');
+      fpsystem('/etc/init.d/artica-postfix restart zarafa-web');
+      exit;
+end;
+
+if arch=64 then begin
+
+      SetCurrentDir('/root');
+      install.INSTALL_STATUS(CODE_NAME,50);
+      install.INSTALL_PROGRESS(CODE_NAME,'{downloading}');
+
+      if distri.DISTRINAME_CODE='CENTOS' then begin
+           if distri.DISTRI_MAJOR=5 then begin
+               pkg:='zarafa-x64-centos';
+           end;
+
+      end;
+
+       if distri.DISTRINAME_CODE='DEBIAN' then begin
+           if distri.DISTRI_MAJOR=4  then begin
+               install.INSTALL_STATUS(CODE_NAME,110);
+               install.INSTALL_PROGRESS(CODE_NAME,'{failed} debian 5-6 only');
+               exit;
+           end;
+           if distri.DISTRI_MAJOR=5  then pkg:='zarafa6-debian50-x64';
+           if distri.DISTRI_MAJOR=6  then pkg:='zarafa6-debian60-x64';
+
+
+       end;
+       if distri.DISTRINAME_CODE='UBUNTU' then begin
+            if distri.DISTRI_MAJOR=9  then begin
+               install.INSTALL_STATUS(CODE_NAME,110);
+               install.INSTALL_PROGRESS(CODE_NAME,'{failed} ubuntu 10.04 only');
+               exit;
+            end;
+
+            if distri.DISTRI_MAJOR=11  then begin
+               install.INSTALL_STATUS(CODE_NAME,110);
+               install.INSTALL_PROGRESS(CODE_NAME,'{failed} ubuntu 10.04 only');
+               exit;
+            end;
+
+            if distri.DISTRI_MAJOR=10 then pkg:='zarafa6-ubuntu100-x64';
+            if distri.DISTRI_MAJOR=8 then pkg:='zarafa6-ubuntu80-x64';
+       end;
+
+
+       if length(pkg)=0 then begin
+         install.INSTALL_STATUS(CODE_NAME,110);
+         install.INSTALL_PROGRESS(CODE_NAME,'{failed}');
+         writeln(distri.DISTRINAME,' ',distri.DISTRINAME_CODE,' ',distri.DISTRI_MAJOR,' not supported');
+         exit;
+       end;
+
+
+      writeln('checking source................: ',pkg);
+
+      source_folder:=libs.COMPILE_GENERIC_APPS(pkg);
+
+      if not DirectoryExists(source_folder) then begin
+         install.INSTALL_STATUS(CODE_NAME,110);
+         install.INSTALL_PROGRESS(CODE_NAME,'{failed}');
+         exit;
+      end;
+
+      l:=Tstringlist.Create;
+      l.Add('/usr/lib/libinetmapi.so.1.0.0');
+      l.Add('/usr/lib/libinetmapi.so.1');
+      l.Add('/usr/lib/libinetmapi.so');
+      l.Add('/usr/lib/libinetmapi.so.1');
+
+
+      for i:=0 to l.Count-1 do begin
+          if FileExists(l.Strings[i]) then begin
+             writeln('removing '+l.Strings[i]);
+             fpsystem('/bin/rm -f '+l.Strings[i]);
+          end;
+      end;
+      source_folder:=extractFilePath(source_folder);
+      writeln('source.................: ',source_folder);
+      install.INSTALL_STATUS(CODE_NAME,50);
+      install.INSTALL_PROGRESS(CODE_NAME,'{installing}');
+      fpsystem('/etc/init.d/artica-postfix stop zarafa');
+      REMOVE();
+      fpsystem('/bin/cp -rfd '+source_folder+'* /');
+      install.INSTALL_STATUS(CODE_NAME,100);
+      install.INSTALL_PROGRESS(CODE_NAME,'{success}');
+      libs.NOTIFICATION('Success install zarafa','Artica make has successfully installed Zarafa','mailbox');
+      fpsystem('/etc/init.d/artica-postfix restart zarafa');
+      fpsystem('/etc/init.d/artica-postfix restart apachesrc');
+      fpsystem('/etc/init.d/artica-postfix restart zarafa-web');
+      exit;
+end;
+
+
+
+
+  if distri.DISTRINAME_CODE='FEDORA' then begin
+     install.INSTALL_STATUS(CODE_NAME,110);
+     install.INSTALL_PROGRESS(CODE_NAME,'{failed}');
+     writeln(distri.DISTRINAME,' ',distri.DISTRINAME_CODE,' ',distri.DISTRI_MAJOR,' not supported');
+     exit;
+  end;
+
+  if distri.DISTRINAME_CODE='MANDRAKE' then begin
+     install.INSTALL_STATUS(CODE_NAME,110);
+     install.INSTALL_PROGRESS(CODE_NAME,'{failed}');
+     writeln(distri.DISTRINAME,' ',distri.DISTRINAME_CODE,' ',distri.DISTRI_MAJOR,' not supported');
+     exit;
+  end;
+
+
+
+
+end;
+//#########################################################################################
+
+
 //#########################################################################################
 procedure tzarafa.xinstall();
 var
@@ -755,6 +1012,8 @@ if arch=32 then begin
 
       forceDirectories('/usr/share/php/mapi');
       forceDirectories('/etc/php5/apache2/conf.d');
+      fpsystem('/etc/init.d/artica-postfix stop zarafa');
+      REMOVE();
       fpsystem('/bin/cp -rfd '+source_folder+'* /');
       install.INSTALL_STATUS(CODE_NAME,100);
       install.INSTALL_PROGRESS(CODE_NAME,'{success}');
@@ -843,6 +1102,8 @@ if arch=64 then begin
       writeln('source.................: ',source_folder);
       install.INSTALL_STATUS(CODE_NAME,50);
       install.INSTALL_PROGRESS(CODE_NAME,'{installing}');
+      fpsystem('/etc/init.d/artica-postfix stop zarafa');
+      REMOVE();
       fpsystem('/bin/cp -rfd '+source_folder+'* /');
       install.INSTALL_STATUS(CODE_NAME,100);
       install.INSTALL_PROGRESS(CODE_NAME,'{success}');
@@ -1028,6 +1289,8 @@ l.add('/usr/lib/libinetmapi.so.1.0.0');
 l.add('/usr/lib/libmapi.so');
 l.add('/usr/lib/libmapi.so.0');
 l.add('/usr/lib/libmapi.so.0.0.0');
+fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.zarafa.remove.php');
+
 
 
 

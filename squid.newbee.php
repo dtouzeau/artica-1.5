@@ -40,6 +40,8 @@
 	if($user->SQUID_INSTALLED==false){header('location:users.index.php');exit();}
 	if($user->AsSquidAdministrator==false){header('location:users.index.php');exit();}
 	
+	if(isset($_GET["js_enable_disable_squid"])){js_enable_disable_squid(true);}
+	
 	if(isset($_GET["reactivate-squid"])){reactivate_squid();exit;}
 	
 	if(isset($_GET["ajaxmenu"])){main_switch();exit;}
@@ -317,10 +319,12 @@ function main_tabs(){
 	$array["index"]='{index}';
 	$array["yes"]='{squid_net_settings}';
 	$array["filters"]='{filters}';
+	if($users->KAV4PROXY_INSTALLED){$array["kav4proxy"]='{antivirus}';}
 	$array["bandwith_limitation"]='{bandwith_limitation}';
 	$array["cache"]='{cache_title}';
 	$array["events"]='{events_stats}';
 	$array["blacklist"]='{blacklists}';
+	
 
 	
 	while (list ($num, $ligne) = each ($array) ){
@@ -336,8 +340,13 @@ function main_tabs(){
 			continue;
 		}
 		
-			if($num=="blacklist"){
+		if($num=="blacklist"){
 			$html[]="<li><a href=\"squid.blacklist.php\"><span>$ligne</span></a></li>\n";
+			continue;
+		}
+		
+		if($num=="kav4proxy"){
+			$html[]="<li><a href=\"kav4proxy.php?inline=yes&font-size=100%\"><span>$ligne</span></a></li>\n";
 			continue;
 		}		
 		
@@ -463,19 +472,25 @@ echo $html;
 
 
 
-function js_enable_disable_squid(){
+function js_enable_disable_squid($echo=false){
 	$page=CurrentPageName();
 	$tpl=new templates();
 	$title=$tpl->_ENGINE_parse_body('{enable_squid_service}');
 	
 	$html="
 	function EnableDisableSQUID(){
-		YahooWin('300','$page?EnableDisableMain=yes');
+		YahooWin('500','$page?EnableDisableMain=yes','$title');
 	}
 	
 var x_SaveEnableSquidGLobal=function (obj) {
 		RTMMailHide();
 		YahooWinHide();
+		if(document.getElementById('main_squid_quicklinks_config')){
+			ConfigureYourserver();
+			ConfigureYourserver();
+			return;
+		}
+		
 		Loadjs('squid.newbee.php');
 	}		
 	
@@ -486,6 +501,7 @@ var x_SaveEnableSquidGLobal=function (obj) {
     	XHR.sendAndLoad('$page', 'GET',x_SaveEnableSquidGLobal);
 	}
 ";
+	if($echo){echo $html;}
 	return $html;
 }
 
@@ -595,12 +611,18 @@ if($users->APP_SQUIDCLAMAV_INSTALLED){
 	$templates_error=Paragraphe('squid-templates-64.png','{squid_templates_error}','{squid_templates_error_text}',"javascript:Loadjs('squid.templates.php')");	
 	$messengers=Paragraphe('messengers-64.png','{instant_messengers}','{squid_instant_messengers_text}',"javascript:Loadjs('squid.messengers.php')");
 	
+	if($users->SQUID_ICAP_ENABLED){
+		$kasperskyCOnnector=Paragraphe('bigkav-64.png','{kaspersky_antivirus_connector}','{kaspersky_antivirus_connector_text}',"javascript:Loadjs('squid.kavicap.php')");
+	}else{
+		$kasperskyCOnnector=Paragraphe('bigkav-64-grey.png','{kaspersky_antivirus_connector}','{kaspersky_antivirus_connector_text}',"");
+	}
 	
 	//http://www.faqs.org/docs/Linux-HOWTO/Bandwidth-Limiting-HOWTO.html#AEN60
 	
 	
 	$tr[]=$plugins;
 	$tr[]=$authenticate_users;
+	$tr[]=$kasperskyCOnnector;
 	$tr[]=$useragent_db;
 	$tr[]=$messengers;
 	$tr[]=$ftp_user;
@@ -640,17 +662,17 @@ function main_enableETDisable(){
 	
 	$sock=new sockets();
 	$SQUIDEnable=trim($sock->GET_INFO("SQUIDEnable"));
-	if($SQUIDEnable==null){$SQUIDEnable=1;}
+	if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
 	
-	$field=Paragraphe_switch_img("{enable_squid_service}","{enable_squid_service_explain}","SQUIDEnable",$SQUIDEnable);
+	$field=Paragraphe_switch_img("{enable_squid_service}","{enable_squid_service_explain}","SQUIDEnable",$SQUIDEnable,null,350);
 	
 	
 	$html="
 	<div id='EnableETDisableSquidDiv'>
-	<p class=caption>{enable_squid_service_text}</p>
+	<div class=explain>{enable_squid_service_text}</div>
 	$field
 	<hr>
-	<div style='text-align:right'><input type='button' OnClick=\"javascript:SaveEnableSquidGLobal()\" value='{edit}&nbsp;&raquo;'></div>
+	<div style='text-align:right'>". button("{apply}", "SaveEnableSquidGLobal()")."</div>
 	</div>
 	
 	";

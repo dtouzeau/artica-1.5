@@ -730,7 +730,7 @@ function postfix_network_delete(){
 	}
 
 function postfix_network_table(){
-	
+	$q=new mysql();
 	$main=new maincf_multi($_GET["hostname"],$_GET["ou"]);
 	$nets=unserialize($main->GET_BIGDATA("mynetworks"));
 	
@@ -738,7 +738,7 @@ function postfix_network_table(){
 <table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
 <thead class='thead'>
 	<tr>
-	<th colspan=3>{networks}</th>
+	<th colspan=4>{networks}</th>
 	</tr>
 </thead>
 <tbody class='tbody'>";		
@@ -747,10 +747,17 @@ function postfix_network_table(){
 			while (list ($num, $val) = each ($nets) ){
 				if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
 				if(trim($val)==null){continue;}
+				$sql="SELECT netinfos FROM networks_infos WHERE ipaddr='$val'";
+				$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"artica_backup"));
+				$ligne["netinfos"]=htmlspecialchars($ligne["netinfos"]);
+				$ligne["netinfos"]=nl2br($ligne["netinfos"]);
+				if($ligne["netinfos"]==null){$ligne["netinfos"]="{no_info}";}
+				
 				$html=$html . "
 				<tr class=$classtr>
 					<td width=1%><img src='img/folder-network-32.png'></td>
 					<td style='font-size:16px'>$val</td>
+					<td style='font-size:16px'><a href=\"javascript:blur();\" OnClick=\"javascript:GlobalSystemNetInfos('$val')\" style='font-size:12px;text-decoration:underline'><i>{$ligne["netinfos"]}</i></a></td>
 					<td  width=1%>" . imgtootltip('delete-32.png','{delete} {network}',"PostFixDeleteMyNetwork($num)") ."</td>
 				</tr>";
 			}

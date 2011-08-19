@@ -19,6 +19,9 @@ class icap{
 	var $EnableClamavInCiCap=1;
 	var $icap_final_string;
 	var $EnableSquidGuardInCiCAP=1;
+	var $EnableKavICAPRemote=0;
+	var $KavICAPRemoteAddr=null;
+	var $KavICAPRemotePort=0;	
 	
 	function icap(){
 		$users=new usersMenus();
@@ -35,12 +38,21 @@ class icap{
 		
 		$this->EnableClamavInCiCap=$sock->GET_INFO("EnableClamavInCiCap");
 		$this->EnableSquidGuardInCiCAP=$sock->GET_INFO("EnableSquidGuardInCiCAP");
+		$this->EnableKavICAPRemote=$sock->GET_INFO("EnableKavICAPRemote");
+		$this->KavICAPRemoteAddr=$sock->GET_INFO("KavICAPRemoteAddr");
+		$this->KavICAPRemotePort=$sock->GET_INFO("KavICAPRemotePort");
+		
+		if($this->KavICAPRemoteAddr==null){$this->EnableKavICAPRemote=0;}
+		if(!is_numeric($this->KavICAPRemotePort)){$this->EnableKavICAPRemote=0;}
+		if(!is_numeric($this->EnableKavICAPRemote)){$this->EnableKavICAPRemote=0;}		
+		
 		
 		if($this->EnableClamavInCiCap==null){$this->EnableClamavInCiCap=1;$sock->SET_INFO("EnableClamavInCiCap","1");}
 		if($this->EnableSquidGuardInCiCAP==null){$this->EnableSquidGuardInCiCAP=1;$sock->SET_INFO("EnableSquidGuardInCiCAP","1");}
 		
 		echo "Starting......: Squid ClamAV in ICAP:$this->EnableClamavInCiCap\n";
-		echo "Starting......: Squid squidGuard in ICAP:$this->EnableSquidGuardInCiCAP\n";  
+		echo "Starting......: Squid squidGuard in ICAP:$this->EnableSquidGuardInCiCAP\n";
+		echo "Starting......: Squid Remote Kaspersky ICAP Server:$this->EnableKavICAPRemote ($this->KavICAPRemoteAddr:$this->KavICAPRemotePort)\n";  
 		
 		if(posix_getuid()==0){$this->ASROOT=true;}
 		if(preg_match('#^([0-9]+)\.([0-9]+)#',$users->SQUID_VERSION,$re)){
@@ -54,6 +66,8 @@ class icap{
 		if(!$users->KAV4PROXY_INSTALLED){$this->enable_kavproxy=0;}
 		if(!$users->C_ICAP_INSTALLED){$this->enable_cicap=0;}
 		if(!$users->SQUIDGUARD_INSTALLED){$this->EnableSquidGuardInCiCAP=0;}
+		if($this->EnableKavICAPRemote==1){$this->enable_kavproxy=1;}
+		
 		$this->buildCicapConfig();
 		
 		
@@ -131,12 +145,17 @@ class icap{
 				if($this->ASROOT){echo "Starting......: Squid Kaspersky ICAP is disabled\n";}
 				return;
 			}
+		
+		$IpAddrr="127.0.0.1";$port=1344;
+		if($this->EnableKavICAPRemote==1){$IpAddrr=$this->KavICAPRemoteAddr;$port=$this->KavICAPRemotePort;}
+		if($this->EnableKavICAPRemote==0){$kav=new Kav4Proxy();if(preg_match("#(.+?):([0-9]+)#", $kav4->main_array["ListenAddress"],$re)){$IpAddrr=$re[1];$port=$re[2];}}
+		
 		$this->ICAP_SERVICES_COUNT=$this->ICAP_SERVICES_COUNT+1;			
 		if($this->ASROOT){echo "Starting......: Squid activating Kaspersky ICAP Mode\n";}
 		$kav_rules[]="# --------- icap_service KASPERSKY mode 3.0.x";
 		$kav_rules[]="";
-		$kav_rules[]="icap_service\tis_kav_resp respmod_precache 0 icap://127.0.0.1:1344/av/respmod";
-		$kav_rules[]="icap_service\tis_kav_req reqmod_precache 0 icap://127.0.0.1:1344/av/reqmod";
+		$kav_rules[]="icap_service\tis_kav_resp respmod_precache 0 icap://$IpAddrr:$port/av/respmod";
+		$kav_rules[]="icap_service\tis_kav_req reqmod_precache 0 icap://$IpAddrr:$port/av/reqmod";
 		$kav_rules[]="";
 		$kav_rules[]="# --------- icap_class";
 		$kav_rules[]="icap_class\tic_kav_resp is_kav_resp";
@@ -256,10 +275,15 @@ class icap{
 			}		
 		$this->ICAP_SERVICES_COUNT=$this->ICAP_SERVICES_COUNT+1;
 		if($this->ASROOT){echo "Starting......: Squid adaptation enabled\n";}
+		
+		$IpAddrr="127.0.0.1";$port=1344;
+		if($this->EnableKavICAPRemote==1){$IpAddrr=$this->KavICAPRemoteAddr;$port=$this->KavICAPRemotePort;}
+		if($this->EnableKavICAPRemote==0){$kav=new Kav4Proxy();if(preg_match("#(.+?):([0-9]+)#", $kav4->main_array["ListenAddress"],$re)){$IpAddrr=$re[1];$port=$re[2];}}
+		
 		$kav_rules[]="# --------- icap_service KASPERSKY mode 3.1.1";
 		$kav_rules[]="";
-		$kav_rules[]="icap_service\tis_kav_resp respmod_precache routing=on bypass=on icap://127.0.0.1:1344/av/respmod";
-		$kav_rules[]="icap_service\tis_kav_req reqmod_precache routing=on bypass=on icap://127.0.0.1:1344/av/reqmod";
+		$kav_rules[]="icap_service\tis_kav_resp respmod_precache routing=on bypass=on icap://$IpAddrr:$port/av/respmod";
+		$kav_rules[]="icap_service\tis_kav_req reqmod_precache routing=on bypass=on icap://$IpAddrr:$port/av/reqmod";
 
 		return implode("\n",$kav_rules);	
 	}		

@@ -568,7 +568,7 @@ if(count($routess)==0){
  	$sql="SELECT sitename,IP_START,netmask,remote_site_routes,FixedIPAddr FROM vpnclient WHERE connexion_type=1";
  	$q=new mysql();
 	$results=$q->QUERY_SQL($sql,"artica_backup");
-	if(!$q->ok){echo2("Starting......: OpenVPN : $q->mysql_error");}
+	if(!$q->ok){echo "Starting......: OpenVPN : $q->mysql_error\n";}
  	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
  		$iroute=array();
  		$sitename=$ligne["sitename"];
@@ -1481,8 +1481,6 @@ function wakeup_client_mode_getWakeup($path){
 	}
 	if($GLOBALS["VERBOSE"]){echo "Starting......: $path no wakeup ip addr\n";}
 }
-
-
 
 
 ?>

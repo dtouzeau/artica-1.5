@@ -148,7 +148,7 @@ class templates{
 	}
 	
 	function headers($array=array()){
-		
+		if(!isset($array["TITLE"])){$array["TITLE"]=null;}
 		if($this->language==null){$this->language="en";}
 		if($array["TITLE"]<>null){$array["TITLE"]=$this->_ENGINE_parse_body($array["TITLE"]);}
 		include_once(dirname(__FILE__)."/class.page.builder.inc");
@@ -205,7 +205,20 @@ class templates{
 	private function get_cached_text($text){
 		if($this->language<>null){$lang=$this->language;}else{$lang=$this->_detect_lang();$this->language=$lang;}
 		if($this->language=="undefined"){
-			$this->language="en";
+			$FileCookyKey=md5($_SERVER["REMOTE_ADDR"].$_SERVER["HTTP_USER_AGENT"]);
+			$sock=new sockets();
+			$FileCookyLang=$sock->GET_INFO($FileCookyKey);
+			if($FileCookyLang==="undefined"){$FileCookyLang=null;}
+			$logon_parameters=unserialize(base64_decode($sock->GET_INFO("LogonPageSettings")));
+			if($logon_parameters["LANGUAGE_SELECTOR_REMOVE"]==null){$logon_parameters["LANGUAGE_SELECTOR_REMOVE"]="0";}	
+			if(!is_numeric($logon_parameters["LANGUAGE_SELECTOR_REMOVE"])){$logon_parameters["LANGUAGE_SELECTOR_REMOVE"]=0;}
+			if($logon_parameters["DEFAULT_LANGUAGE"]==null){$logon_parameters["DEFAULT_LANGUAGE"]="en";}
+			if($FileCookyLang==null){
+				if($logon_parameters["LANGUAGE_SELECTOR_REMOVE"]==1){$FileCookyLang=$logon_parameters["DEFAULT_LANGUAGE"];}
+			}
+			
+			if($FileCookyLang==null){$this->language="en";}else{$this->language=$FileCookyLang;}
+			$_SESSION["detected_lang"]=$this->language;
 			writelogs("undefined language, language will be en",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 		}
 		if(count($_SESSION["translation"])<100){
@@ -866,9 +879,11 @@ function Field_password($name,$value=null,$style=null,$class=null,$OnChange=null
 
 
 function imgtootltip($img,$tooltip=null,$js=null,$align=null,$imgid=null){
-	
+	$DisableToolTips=0;
+	$float=null;
 	$n = rand(10e16, 10e20);
-	$rand=base_convert($n, 10, 36);	
+	$rand=base_convert($n, 10, 36);
+	if(!isset($_SESSION["uid"])){if($GLOBALS["EXECUTED_AS_ROOT"]){$_SESSION["uid"]=-100;}}	
 	$uid=$_SESSION["uid"];
 	if($uid==-100){$uid="RootMaster";}
 	
@@ -888,7 +903,7 @@ function imgtootltip($img,$tooltip=null,$js=null,$align=null,$imgid=null){
 	
 	
 	//$tooltip=ParseTooltip($tooltip);
-	if($imgid<>null){$id=$imgid;}
+	if($imgid<>null){$id=$imgid;}else{$id=null;}
 	if($align<>null){$align=' align=\''.$align.'\' ';}
 
 	$image_path="img/$img";
@@ -920,7 +935,7 @@ function imgtootltip($img,$tooltip=null,$js=null,$align=null,$imgid=null){
 	if($textToolTip==null){$textToolTip=".";}	
 	$textToolTip=str_replace("'","`",$textToolTip);
 	if($id==null){$id=$md5;}
-	$DisableToolTips=$_COOKIE["DisableToolTips"];
+	if(isset($_COOKIE["DisableToolTips"])){$DisableToolTips=$_COOKIE["DisableToolTips"];}
 	
 	$jsTool="<script>
 	function qtyp_{$id}(){
@@ -1049,7 +1064,10 @@ function CellRollOver($jsOnClick=null,$tooltips=null){
 		$mtips_1="AffBulle('$tooltips');";
 		$mtips_2="HideBulle();";
 		}
-	
+	if(!isset($mtips_1)){$mtips_1=null;}
+	if(!isset($mtips_2)){$mtips_2=null;}
+	if(!isset($cursor)){$cursor=null;}
+	if(!isset($java)){$java=null;}
 	return "OnMouseOver=\"this.style.background='#D1D1D1';$cursor;$mtips_1\" OnMouseOut=\"this.style.background='transparent';this.style.cursor='default';$mtips_2\" $java ";
 	}
 function CellRollOver_jaune($jsOnClick=null,$tooltips=null){
@@ -1135,7 +1153,8 @@ function icon_help($help,$nofloat=0){
 }
 
 function texttooltip($text,$tooltip=null,$js=null,$dbclk=null,$NOHREF=0,$style=null,$forcejs=0){
-	
+	$js_dblclik=null;
+	$jshref=null;
 	if($js==null){$js='void(0)';}
 	if($dbclk<>null){$js_dblclik="ondblclick=\"javascript:$dbclk\"";}
 	
@@ -2352,6 +2371,7 @@ function Paragraphe($img,$title,$text,$link=null,$tips="go_to_section",$width="2
 	if(!isset($_COOKIE["artica-language"])){$_COOKIE["artica-language"]=$tpl->language;}
 	$uid=$_SESSION["uid"];
 	if($uid==-100){$uid="RootMaster";}
+	if(!isset($_COOKIE["DisableToolTips"])){$_COOKIE["DisableToolTips"]=0;}
 	
 	if(!$GLOBALS["EXECUTED_AS_ROOT"]){
 		$lang=$_COOKIE["artica-language"];
@@ -3896,7 +3916,8 @@ return $html;
 }
 function is_base64_encoded($encodedString) {
 	if($encodedString==null){return false;}
-	writelogs("\"$encodedString\"",__FUNCTION__,__FILE__,__LINE__);
+	$fincaracts=substr($encodedString,strlen($encodedString)-2,2);
+	writelogs("\"$encodedString\" fin = \"$fincaracts\"",__FUNCTION__,__FILE__,__LINE__);
  	//writelogs("$encodedString =\"".substr($encodedString,strlen($encodedString)-2,2)."\"",__FUNCTION__,__FILE__,__LINE__);
  	if(substr($encodedString,strlen($encodedString)-2,2)=="=="){return true;}
  	$arr["1"]=true;
@@ -4092,10 +4113,10 @@ function is_base64_encoded($encodedString) {
 	for($i=0;$i<strlen($datas);$i++){
 		$chr=getChr($datas[$i]);
 		if($arr[$chr]){
-			writelogs("{$datas[$i]}==NOT ENCODED",__FUNCTION__,__FILE__,__LINE__);
+			writelogs("{$datas[$i]} == NOT ENCODED",__FUNCTION__,__FILE__,__LINE__);
 			return false;
 		}
-		writelogs("{$datas[$i]}==".getChr($datas[$i]),__FUNCTION__,__FILE__,__LINE__);
+		writelogs("{$datas[$i]}  -> \"".getChr($datas[$i])."\"",__FUNCTION__,__FILE__,__LINE__);
 	}
 	return true;  
   }	

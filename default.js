@@ -159,6 +159,12 @@ function Ipv4FieldEnable(id){
 	
 }
 
+function GlobalSystemNetInfos(ipaddr){
+	ipaddr=escape(ipaddr);
+	RTMMail('550','system.netinfos.php?ipaddr='+ipaddr,ipaddr);
+	
+}
+
 function IndexStartPostfix(){LoadAjax('servinfos','users.index.php?StartPostfix=yes');}
 
 function LoadAjax(ID,uri,concatene) {

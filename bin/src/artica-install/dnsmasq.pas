@@ -239,6 +239,7 @@ var
    DnsMasqConfigurationFile:string;
    DnsMasqConfigurationFileLength:integer;
    user:string;
+   aa_complain:string;
 begin
 
     bin_path:=DNSMASQ_BIN_PATH();
@@ -263,7 +264,7 @@ begin
            exit;
         end;
         if EnableDNSMASQ=0 then begin
-           logs.DebugLogs('Starting......: dnsmasq is disabled, shutdown');
+           logs.DebugLogs('Starting......: dnsmasq is disabled, (EnableDNSMASQ = 0)  shutdown');
            DNSMASQ_STOP_DAEMON();
            exit;
         end;
@@ -279,7 +280,11 @@ begin
          exit;
       end;
 
-
+     aa_complain:=SYS.LOCATE_GENERIC_BIN('aa-complain');
+     if FileExists(aa_complain) then begin
+         logs.DebugLogs('Starting......: dnsmasq put DNSMasq in aa-complain mode...');
+         fpsystem(aa_complain+' '+ bin_path+' >/dev/null 2>&1');
+     end;
      DnsMasqConfigurationFile:=SYS.GET_INFO('DnsMasqConfigurationFile');
      DnsMasqConfigurationFileLength:=length(DnsMasqConfigurationFile);
      if length(DnsMasqConfigurationFile)>50 then begin

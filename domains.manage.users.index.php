@@ -628,6 +628,9 @@ function finduser(){
 	$GLOBALS["OUTPUT_DEBUG"]=false;
 	$stringtofind=trim($_GET["finduser"]);
 	$users=new usersMenus();
+	$sock=new sockets();
+	$EnableManageUsersTroughActiveDirectory=$sock->GET_INFO("EnableManageUsersTroughActiveDirectory");
+	if(!is_numeric($EnableManageUsersTroughActiveDirectory)){$EnableManageUsersTroughActiveDirectory=0;}	
 	
 	if(preg_match("#debug:(.+)#",$stringtofind,$re)){
 		$GLOBALS["OUTPUT_DEBUG"]=true;
@@ -641,6 +644,7 @@ function finduser(){
 	if($usermenu->AsAnAdministratorGeneric==true){
 		if($GLOBALS["OUTPUT_DEBUG"]){echo "It is an administrator search in the entire tree<br>";}
 		$hash_full=$ldap->UserSearch(null,$stringtofind);
+		
 	}else{
 		$us=$ldap->UserDatas($_SESSION["uid"]);
 		if($GLOBALS["OUTPUT_DEBUG"]){echo "It is an user search in the {$us["ou"]} tree<br>";}
@@ -654,14 +658,15 @@ function finduser(){
 	
 	$hash=array();
 	$count=0;
-	
+
 	if(is_array($hash1)){
 	while (list ($num, $ligne) = each ($hash1) ){
-		if(!$ldap->EnableManageUsersTroughActiveDirectory){	if(($ligne["uid"][0]==null) && ($ligne["employeenumber"][0]==null)){continue;}}
+		
+		if($EnableManageUsersTroughActiveDirectory==0){	if(($ligne["uid"][0]==null) && ($ligne["employeenumber"][0]==null)){continue;}}
 		if(strpos($ligne["dn"],"dc=pureftpd,dc=organizations")>0){continue;}
 		$hash[$count]["displayname"][0]=trim($ligne["displayname"][0]);
 		$hash[$count]["givenname"][0]=$ligne["givenname"][0];
-		if($ldap->EnableManageUsersTroughActiveDirectory){
+		if($EnableManageUsersTroughActiveDirectory==1){
 			$hash[$count]["uid"][0]=$ligne["samaccountname"][0];
 		}else{
 			$hash[$count]["uid"][0]=$ligne["uid"][0];

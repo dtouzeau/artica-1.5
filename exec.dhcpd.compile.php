@@ -21,6 +21,10 @@ if(is_array($argv)){
 BuildDHCP();
 
 function BuildDHCP(){
+	$ldap=new clladp();
+	if($ldap->ldapFailed){echo "Starting......: DHCP SERVER ldap connection failed,aborting\n";return;}
+	if(!$ldap->ExistsDN("dc=organizations,$ldap->suffix")){echo "Starting......: DHCP SERVER dc=organizations,$ldap->suffix no such branch, aborting\n";return;	}
+	echo "Starting......: DHCP SERVER ldap connection success\n";
 	$dhcpd=new dhcpd();
 	$conf=$dhcpd->BuildConf();
 	$confpath=dhcp3Config();

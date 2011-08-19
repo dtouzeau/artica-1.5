@@ -253,6 +253,20 @@ function free_catgorized(){
 	
 }
 
+function already_Cats($www){
+	$array[]="addthis.com";
+	$array[]="google.";
+	$array[]="w3.org";
+	$array[]="icra.org";
+	$array[]="facebook.";
+	while (list ($num, $wwws) = each ($array)){
+		$pattern=str_replace(".", "\.", $wwws);
+		if(preg_match("#$pattern#", $www)){return true;}
+		
+	}
+	return false;
+}
+
 function free_catgorized_save(){
 	
 	$sock=new sockets();
@@ -263,8 +277,15 @@ function free_catgorized_save(){
 		while (list ($num, $www) = each ($re[1]) ){
 			$www=strtolower($www);
 			$www=replace_accents($www);
+			if($www=="www"){continue;}
+			if($www=="ssl"){continue;}
 			if(preg_match("#^www\.(.+?)$#i",$www,$ri)){$www=$ri[1];}
-			
+			if(already_Cats($www)){continue;}
+			if(strpos($www, '"')>0){$www=substr($www, 0,strpos($www, '"'));}
+			if(strpos($www, "'")>0){$www=substr($www, 0,strpos($www, "'"));}
+			if(strpos($www, ">")>0){$www=substr($www, 0,strpos($www, ">"));}
+			if(strpos($www, "?")>0){$www=substr($www, 0,strpos($www, "?"));}
+			if(strpos($www, "\\")>0){$www=substr($www, 0,strpos($www, "\\"));}
 			$sites[$www]=$www;
 		}
 		

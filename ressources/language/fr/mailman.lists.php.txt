@@ -18,7 +18,7 @@
 <mailman_bounces>Cette adresse re&ccedil;oit les notifications syst&egrave;me et les messages des membres temporairement ou d&eacute;finitivement inactifs.[br]
 C'est un robot qui d&eacute;sactive automatiquement les membres suivant les param&egrave;tres d&eacute;finis dans l'interface d'administration.[br]
 Chaque message envoy&eacute;s &agrave; ce robot sont envoy&eacute;s aussi aux mod&eacute;rateurs et administrateurs</mailman_bounces>
-<mailman_confirm>This address is another email robot, which processes confirmation messages for subscription and unsubscription requests.</mailman_confirm>
+<mailman_confirm>Cette adresse est un autre robot de courrier qui proc&egrave;de aux confirmations de souscriptions et de d&eacute;sabonnements</mailman_confirm>
 <mailman_global_options>Param&egrave;tres globaux Mailman</mailman_global_options>
 <mailman_join>Par l'envoi d'un message &agrave; cette adresse, un nouveau membre peut effectuer la demande d'inscription &agrave; la liste (le sujet et le corps de texte sont ignor&eacute;s).[br]
 A savoir que c'est un alias de  -join</mailman_join>

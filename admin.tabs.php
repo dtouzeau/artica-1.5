@@ -107,7 +107,7 @@ function admin_system(){
 	if($users->SQUID_INSTALLED){
 		$sock=new sockets();
 		$SQUIDEnable=trim($sock->GET_INFO("SQUIDEnable"));
-		if($SQUIDEnable==null){$SQUIDEnable=1;}
+		if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
 		if($SQUIDEnable==0){
 			$reactivate_squid=Paragraphe('warning64.png','{SQUID_DISABLED}','{SQUID_DISABLED_TEXT}',"javascript:Loadjs('squid.newbee.php?reactivate-squid=yes')","{SQUID_DISABLED_TEXT}");
 		}
@@ -252,18 +252,20 @@ $style="style='border:1px dotted #CCCCCC;padding:3px;margin:3px;text-align:cente
 	
 	}
 	
-	if($users->SQUID_INSTALLED==true){$g_squid="
-	<div id='g_squid' $style>
-		<H3>Squid</H3>
-			<img src='images.listener.php?uri=squid/rrd/connections.day.1.png&md=$md'>
-		
-			<img src='ressources/logs/hours-squid-hits.png' style='margin-top:5px'>
-			<br>
-			<img src='ressources/logs/hours-squid-size.png' style='margin-top:5px'>
-	</div>";
-	
-	
-	
+	if($users->SQUID_INSTALLED==true){
+		$SQUIDEnable=$sock->GET_INFO("SQUIDEnable");
+		if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
+		if($SQUIDEnable==1){
+		$g_squid="
+			<div id='g_squid' $style>
+				<H3>Squid</H3>
+					<img src='images.listener.php?uri=squid/rrd/connections.day.1.png&md=$md'>
+				
+					<img src='ressources/logs/hours-squid-hits.png' style='margin-top:5px'>
+					<br>
+					<img src='ressources/logs/hours-squid-size.png' style='margin-top:5px'>
+			</div>";
+		}
 	}
 	
 	

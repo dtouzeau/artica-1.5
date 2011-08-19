@@ -1133,6 +1133,9 @@ begin
             break;
          end;
      end;
+
+     if length(result)=0 then result:='Array()';
+
      RegExpr.free;
      l.free;
 
@@ -2852,7 +2855,11 @@ begin
           logs.Syslogs('FATAL ERROR on CGI_ALL_APPLIS_INSTALLED after toolsversions.IPTACCOUNT_VERSION()');
     end;
 
-
+    try
+       ArrayList.Add('[APP_PIWIK] "'+toolsversions.PIWIK_VERSION()+'"');
+    except
+          logs.Syslogs('FATAL ERROR on CGI_ALL_APPLIS_INSTALLED after toolsversions.PIWIK_VERSION()');
+    end;
 
 
     // SNORT_VERSION
@@ -10882,7 +10889,7 @@ var
    socket:string;
    password_cmdline:string;
 begin
-
+  logs:=Tlogs.Create;
   if not FileExists(zmysql.daemon_bin_path()) then begin
      writeln('Mysql is not installed here...');
      exit;
@@ -10893,16 +10900,22 @@ begin
   if ParamStr(2)='--inline' then begin
        root:=ParamStr(3);
        password:=Paramstr(4);
-       SYS.set_MYSQL('database_admin',root);
-       SYS.set_MYSQL('database_password',password);
        password:=AnsiReplaceText(password,'\&','&');
+       logs.Debuglogs('Save password has "'+password+'"');
+       SYS.set_MYSQL('database_admin',root);
+       logs.WriteToFile(root,'/etc/artica-postfix/settings/Mysql/database_admin');
+       logs.WriteToFile(password,'/etc/artica-postfix/settings/Mysql/database_password');
+       logs.WriteToFile(password,'/etc/artica-postfix/settings/Mysql/database_password2');
+
+
        password:=AnsiReplaceText(password,'\<','<');
        password:=AnsiReplaceText(password,'\>','>');
        password:=AnsiReplaceText(password,'\$','$');
        password:=AnsiReplaceText(password,'\!','!');
+       password:=AnsiReplaceText(password,'\\','\');
   end else begin
-      root    :=SYS.MYSQL_INFOS('database_admin');
-      password:=SYS.MYSQL_INFOS('database_password');
+       logs.WriteToFile(root,'/etc/artica-postfix/settings/Mysql/database_admin');
+       logs.WriteToFile(password,'/etc/artica-postfix/settings/Mysql/database_password');
 
   end;
 
@@ -10919,7 +10932,7 @@ begin
         exit;
    end;
 
-     logs:=Tlogs.Create;
+
      tempfile:=logs.FILE_TEMP();
 
 
@@ -10961,10 +10974,14 @@ begin
    incTimeout:=0;
    WHILE zmysql.CHECK_ERRORS_INFILE(tempfile) do begin
            writeln('Verify if ' + root + ' exists error detected, retry...');
-           sleep(5);
+           sleep(200);
            fpsystem(commandline);
            inc(incTimeout);
-           if incTimeout>20 then break;
+           if incTimeout>20 then begin
+                 writeln('Verify if ' + root + ' exists error detected, timeout, aborting the loop');
+                 break;
+           end;
+
    end;
 
    writeln('Verify if ' + root + ' exists');
@@ -10995,11 +11012,12 @@ begin
       writeln(sqlstring);
       commandline:=SYS.LOCATE_mysql_bin() + ' -N -S '+socket+' -s -X -e '''+sqlstring+''' mysql';
       fpsystem(commandline);
+      sqlstring:='GRANT ALL PRIVILEGES ON *.* TO '''+root+'''@''127.0.0.1''  WITH GRANT OPTION MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0';
+      writeln(sqlstring);
+      commandline:=SYS.LOCATE_mysql_bin() + ' -N -S '+socket+' -s -X -e '''+sqlstring+''' mysql';
+      fpsystem(commandline);
 
-
-      sqlstring:='UPDATE user SET password=PASSWORD("' + password+'"), ';
-      sqlstring:=sqlstring+'`Event_priv` = "Y", ';
-      sqlstring:=sqlstring+'`Trigger_priv` = "Y" ';
+      sqlstring:='UPDATE user SET password=PASSWORD("' + password+'")  ';
       sqlstring:=sqlstring+'WHERE user="'+root+'"';
       sqlstring:=AnsiReplaceText(sqlstring,'!','\!');
       writeln(sqlstring);
@@ -11188,10 +11206,12 @@ fpsystem('/bin/kill ' + pid_grant);
             end;
      end;
 
-
+logs.WriteToFile(root,'/etc/artica-postfix/settings/Mysql/database_admin');
+logs.WriteToFile(password,'/etc/artica-postfix/settings/Mysql/database_password');
 writeln('Run mysql in normal mode...');
    writeln('');
    writeln('');
+fpsystem('/usr/share/artica-postfix/bin/process1 --force mysql-ok');
 fpsystem('/etc/init.d/artica-postfix restart mysql');
 obm:=tobm.Create(SYS);
 obm.MYSQL_SETTING();
@@ -11207,8 +11227,6 @@ fpsystem('/etc/init.d/artica-postfix start daemon');
    writeln('');
    writeln('');
 writeln('');
-SYS.set_MYSQL('database_admin',root);
-SYS.set_MYSQL('database_password',password);
 fpsystem(get_ARTICA_PHP_PATH()+'/bin/process1 --force &');
 fpsystem('/usr/share/artica-postfix/bin/artica-install --php-ini &');
 SYS.THREAD_COMMAND_SET('/etc/init.d/artica-postfix restart apache-groupware');

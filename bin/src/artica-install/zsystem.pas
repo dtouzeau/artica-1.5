@@ -4578,6 +4578,7 @@ end;
 function Tsystem.GET_MYSQL(key:string):string;
 var
    str:string;
+   str2:string;
    ini:TIniFile;
 begin
 
@@ -4592,6 +4593,15 @@ str:='';
           if length(result)=0 then result:='3306';
       end;
 
+      if key='database_password' then begin
+        if FileExists('/etc/artica-postfix/settings/Mysql/database_password2') then begin
+           str2:=trim(ReadFileIntoString('/etc/artica-postfix/settings/Mysql/database_password2'));
+           if str2<>result then begin
+              result:=str2;
+              set_MYSQL('database_password',str2);
+           end;
+         end;
+        end;
       exit;
    end;
 

@@ -619,6 +619,7 @@ class dansguardian_rules{
 									
 									"blog"=>"{blog}",
 									"news"=>"{www_news}",
+									"books"=>"{www_books}",
 									"phishing"=>"{phishing}",
 									
 									"redirector"=>"{redirector}",
@@ -656,6 +657,7 @@ class dansguardian_rules{
 									"shopping"=>"{www_shopping}",
 									"clothing"=>"{www_clothing}",
 									"models"=>"{models}",
+									"celebrity"=>"{www_celebrity}",
 									
 									"science/chemistry"=>"{science_chemistry}",
 									"astrology"=>"{astrology}",
@@ -772,7 +774,9 @@ class dansguardian_rules{
 			"recreation/nightout"=>"icon_nightclub.png",	
 			"imagehosting"=>"picasa_icon.png",
 		  	"pictures"=>"cat_pictures.png",
-		  	"malware"=>"icon_malwares.png"
+		  	"malware"=>"icon_malwares.png",
+		  	"celebrity"=>"celebrity-20.png",
+		  	"books"=>"books_20.png",
 		  	
 		  	);
 									

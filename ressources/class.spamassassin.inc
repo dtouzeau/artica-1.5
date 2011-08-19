@@ -256,9 +256,13 @@ function SaveRelayCountry(){
 				$conf=$conf ."#   Bayesian classifier auto-learning (default: 1)\n";
 				$conf=$conf ."#\n";
 				$conf=$conf ."bayes_auto_learn {$this->main_array["bayes_auto_learn"]}\n";
+				$conf=$conf ."# DNS TUNNING\n";
 				
 				if($this->EnableSpamassassinDnsEval==0){
 				$conf=$conf ."skip_rbl_checks 1\n";
+				$conf=$conf ."dns_available no\n";
+				}else{
+					$conf=$conf ."dns_available yes\n";
 				}
 				
 				$conf=$conf ."\n";

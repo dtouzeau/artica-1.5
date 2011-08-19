@@ -18,8 +18,9 @@ js();
 function js(){
 	$page=CurrentPageName();
 	$tpl=new templates();
-	$title=$tpl->_ENGINE_parse_body("{EnableUserSpamLearning}");
 	$uid=$_GET["uid"];
+	$title=$tpl->_ENGINE_parse_body("$uid::{EnableUserSpamLearning}");
+	
 	$html="
 	
 	function USER_JUNK_LEARNING_JS(){
@@ -27,9 +28,11 @@ function js(){
 	
 	}
 	
-var x_USER_JUNK_LEARNING_SAVE= function (obj) {
+var x_USER_JUNK_LEARNING_SAVE=function (obj) {
+	tempvalue=obj.responseText;
+	if(tempvalue.length>3){alert(tempvalue);}
 	USER_JUNK_LEARNING_JS();
-}	
+    }	 	
 	
 	function USER_JUNK_LEARNING_SAVE(){
 		var XHR = new XHRConnection();
@@ -55,8 +58,8 @@ $page=CurrentPageName();
 	$field=Paragraphe_switch_img('{EnableUserSpamLearning}',
 	'{EnableUserSpamLearning_text}','EnableUserSpamLearning',$users->EnableUserSpamLearning,null,350);
 	$html="
-	<H1>{EnableUserSpamLearning}</H1>
-	<p class=caption style='font-size:13px'>{EnableUserSpamLearning_explain}</p>
+	
+	<div class=explain style='font-size:13px'>{EnableUserSpamLearning_explain}</div>
 	<table style='width:100%'>
 	<tr>
 	<td valign='top'><img src='img/bg_spam-assassin-250.png'></td>
@@ -82,7 +85,7 @@ function USER_JUNK_LEARNING_SAVE(){
 $uid=$_GET["uid"];	
 $users=new user($uid);
 $users->EnableUserSpamLearning=$_GET["EnableUserSpamLearning"];
-$users->add_user();
+$users->SaveJunkLearning();
 }
 function CheckRights(){
 	if(!$_GET["uid"]){return false;}	

@@ -10,6 +10,7 @@ include_once('ressources/charts.php');
 include_once('ressources/class.syslogs.inc');
 include_once('ressources/class.system.network.inc');
 include_once('ressources/class.os.system.inc');
+include_once('ressources/class.mysql.inc');
 
 //ini_set('display_errors', 1);
 //ini_set('error_reporting', E_ALL);
@@ -38,6 +39,7 @@ function popup(){
 	$page=CurrentPageName();
 	$tpl=new templates();	
 	$error=base64_decode($_GET["error"]);
+	$q=new mysql();
 	$html="<div class=explain>
 		{mysql_error_popup_credential_text}
 		<br><code style='font-size:13px'>$error</div>
@@ -45,11 +47,11 @@ function popup(){
 			<table style='width:80%' class=form>
 				<tr>
 					<td valign='top' class=legend nowrap>{username}:</td>
-					<td valign='top'>". Field_text('username',null,"font-size:14px;padding:3px")."</td>
+					<td valign='top'>". Field_text('username',$q->mysql_admin,"font-size:14px;padding:3px")."</td>
 				</tr>
 				<tr>
 					<td valign='top' class=legend>{password}:</td>
-					<td valign='top'>". Field_password('password',null,"font-size:14px;padding:3px;width:120px")."</td>
+					<td valign='top'>". Field_password('password',$q->mysql_password,"font-size:14px;padding:3px;width:120px")."</td>
 				</tr>
 				<tr>
 					<td colspan=2 align='right'>
@@ -93,6 +95,8 @@ function popup(){
 function ChangeMysqlRoot(){
 	$page=CurrentPageName();
 	$tpl=new templates();		
+	unset($_SESSION["MYSQL_PARAMETERS"]);
+	unset($GLOBALS["MYSQL_PARAMETERS"]);	
 	if(isset($_POST["username"])){
 		$username=urlencode(base64_encode($_POST["username"]));
 		$password=urlencode(base64_encode($_POST["password"]));
@@ -100,9 +104,31 @@ function ChangeMysqlRoot(){
 		$sock->getFrameWork("cmd.php?ChangeMysqlLocalRoot2=yes&username=$username&password=$password");
 		$sock->SET_INFO("ChangeMysqlRootPerformed", 1);
 	}
+	
+	$q=new mysql();
+	$img="ok42.png";
+	$error_text="{success}";
+	$sql="SELECT count(*) FROM admin_cnx";
+	$q->QUERY_SQL($sql,"artica_events");
+	if(!$q->ok){
+		$img="42-red.png";
+		$error_text="<code style='font-size:13px'>$q->mysql_error</code><p><code style='font-size:13px'>{username}:$q->mysql_admin<br>Password:$q->mysql_password</code></p>";
+	}		
+			
+			
+		
+	
+	
 		
 	$html="
-	
+	<center style='margin:10px'>
+	<table style='width:80%' class=form>
+	<tr>
+		<td width=1%><img src='img/$img'></td>
+		<td width=99%><code style='font-size:13px'>$error_text</code></td>
+	</tr>
+	</table>
+	</center>
 	<div style='width:100%;height:250px;overflow:auto'>
 	<table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
 <thead class='thead'>

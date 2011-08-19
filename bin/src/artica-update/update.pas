@@ -1681,11 +1681,7 @@ if spamassassin.SpamdEnabled=0 then begin
    exit;
 end;
 
-if not FileExists('/usr/share/artica-postfix/ressources/logs/sa.update.dbg') then begin
-   fpsystem(spamassassin.SA_UPDATE_PATH()+ ' --checkonly -D >/usr/share/artica-postfix/ressources/logs/sa.update.dbg 2>&1');
-   fpsystem('/bin/chmod 777 /usr/share/artica-postfix/ressources/logs/sa.update.dbg');
-end;
-
+fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.spamassassin.php --sa-update-check');
 
 if not SYS.COMMANDLINE_PARAMETERS('--force') then begin
    timemin:=SYS.FILE_TIME_BETWEEN_MIN('/etc/artica-postfix/cron.1/sa_compile');
@@ -1695,19 +1691,23 @@ if not SYS.COMMANDLINE_PARAMETERS('--force') then begin
    end;
 end;
 
+fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.spamassassin.php --sa-update');
+
 if FileExists('/usr/share/artica-postfix/bin/install/amavis/SA-GPG.KEY') then begin
   logs.OutputCmd(spamassassin.SA_UPDATE_PATH()+' --import /usr/share/artica-postfix/bin/install/amavis/SA-GPG.KEY');
+  logs.OutputCmd(spamassassin.SA_UPDATE_PATH()+' --channelfile /usr/share/artica-postfix/bin/install/amavis/sa-channels.conf --gpgkey 856AA88A -D -v --channel updates.spamassassin.org >'+tmpstr +' 2>&1');
+  test_sa_update(tmpstr);
+  logs.DeleteFile(tmpstr)
 end;
 
-if FileExists('/usr/share/artica-postfix/bin/install/amavis/sa-channels.conf') then begin
-   logs.OutputCmd(spamassassin.SA_UPDATE_PATH()+' --channelfile /usr/share/artica-postfix/bin/install/amavis/sa-channels.conf --gpgkey 856AA88A -D -v --channel updates.spamassassin.org >'+tmpstr +' 2>&1');
-end else begin
-     logs.OutputCmd(spamassassin.SA_UPDATE_PATH()+' -D -v --channel updates.spamassassin.org --nogpg >'+tmpstr +' 2>&1');
-end;
+logs.Debuglogs('update_spamassasin:: Downloading malwarepatrol database...');
+SYS.WGET_DOWNLOAD_FILE('http://www.malwarepatrol.net/cgi/submit?action=list_sa','/etc/mail/spamassassin/malwarepatrol.cf');
 
 
-test_sa_update(tmpstr);
-logs.DeleteFile(tmpstr);
+
+
+
+
 update_spamassasin_saupdates_openprotect_com();
 update_spamassasin_sought_rules_yerp_org();
 fpsystem(spamassassin.SA_UPDATE_PATH()+ ' --checkonly -D >/usr/share/artica-postfix/ressources/logs/sa.update.dbg 2>&1');

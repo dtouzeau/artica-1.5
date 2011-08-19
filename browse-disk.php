@@ -11,16 +11,30 @@
 	if(isset($_GET["startpath"])){browseFolder();exit;}
 	if(isset($_GET["browser-infos"])){brower_infos();exit;}
 	if(isset($_POST["create-folder"])){folder_create();exit;}
+	if(isset($_POST["delete-folder"])){folder_delete();exit;}
 	
 	
 	js();
 
 function js(){
 	if($_GET["replace-start-root"]=="yes"){$_GET["replace-start-root"]=1;}
+	if($_GET["with-samba"]=="yes"){$_GET["with-samba"]=1;}
 	$page=CurrentPageName();
-	echo "YahooWinBrowse(550,'$page?popup=yes&root={$_GET["start-root"]}&field={$_GET["field"]}&replace-start-root={$_GET["replace-start-root"]}','Browse')";
+	echo "
+	function BrowsDiskNewStart(){
+		YahooWinBrowse(550,'$page?popup=yes&root={$_GET["start-root"]}&with-samba={$_GET["with-samba"]}&field={$_GET["field"]}&replace-start-root={$_GET["replace-start-root"]}','Browse');
+	}
+	BrowsDiskNewStart();
+		";
 	echo $html;
 	
+	
+}
+
+function folder_delete(){
+	$sock=new sockets();
+	$tpl=new templates();
+	echo $tpl->javascript_parse_text(base64_decode($sock->getFrameWork("cmd.php?folder-remove={$_POST["root"]}")));
 	
 }
 
@@ -49,14 +63,19 @@ function popup(){
 	function LoadTree(){
 		$(document).ready(function(){
 			$('#browser').treeview({
-			url: '$page?startpath={$_GET["root"]}&field={$_GET["field"]}&org-root={$_GET["root"]}&replace-start-root={$_GET["replace-start-root"]}'
+			url: '$page?startpath={$_GET["root"]}&field={$_GET["field"]}&org-root={$_GET["root"]}&replace-start-root={$_GET["replace-start-root"]}&with-samba={$_GET["with-samba"]}'
+			
 			})
 		});
 	
 	}
 	
+	function ReloadTree(){
+		BrowsDiskNewStart();
+	}
+	
 	function BrowserExpand(encpath){
-		LoadAjax('browser-infos','$page?browser-infos='+encpath+'&field={$_GET["field"]}&org-root={$_GET["root"]}&replace-start-root={$_GET["replace-start-root"]}');
+		LoadAjax('browser-infos','$page?browser-infos='+encpath+'&field={$_GET["field"]}&org-root={$_GET["root"]}&replace-start-root={$_GET["replace-start-root"]}&with-samba={$_GET["with-samba"]}');
 	
 	}
 	
@@ -76,10 +95,12 @@ function brower_infos(){
 	$RootTile=basename($root);
 	$give_folder_name=$tpl->javascript_parse_text("{give_folder_name}");
 	if(!is_numeric($_GET["replace-start-root"])){$_GET["replace-start-root"]=0;}
+	if(!is_numeric($_GET["with-samba"])){$_GET["with-samba"]=0;}
 	$orginal_root=base64_decode($_GET["org-root"]);
 	$strippedroot=str_replace($orginal_root, "",$root);
-	
-	
+	$share_this=$tpl->javascript_parse_text("{share_this}: $RootTile ?");
+	$delete_text=$tpl->javascript_parse_text("{delete} ?: $root ?");
+	//$root_url=urlencode($root);
 	if($_GET["field"]<>null){
 		$select="
 		<tr>
@@ -91,27 +112,60 @@ function brower_infos(){
 		
 	}
 	
-	$html="<div style='font-size:16px'>{directory}:&nbsp;&laquo;&nbsp;$RootTile&nbsp;&raquo;</div>
-	<table style='width:100%' class=form>$select
+	if($_GET["with-samba"]==1){
+		include_once(dirname(__FILE__)."/ressources/class.samba.inc");
+		$smb=new samba();
+		if($smb->main_shared_folders[$root]==null){
+			$samba="
+			<tr>
+				<td width=1% valign='top'>
+			" . imgtootltip('folder-granted-48.png','{share_this}',"SmbShare2()")."</td>
+				<td><a href=\"javascript:blur();\" OnClick=\"javascript:SmbShare2()\"  style='font-size:14px;text-decoration:underline'>{share_this}</td>
+			</tr>
+			";		
+		}else{
+			$samba="
+			<tr>
+				<td width=1% valign='top'>
+			" . imgtootltip('folder-granted-48-grey.png','{share_this}')."</td>
+				<td><a href=\"javascript:blur();\" OnClick=\"blur()\"  style='font-size:14px;text-decoration:underline'>{share_this}</td>
+			</tr>
+			";				
+		}
+		
+	}
+	
+	$delete="<tr>
+		<td width=1% valign='top'>
+		" . imgtootltip('folder-delete-48.png','{del_sub_folder}',"DelSubFolder2()")."</td>
+		<td><a href=\"javascript:blur();\" OnClick=\"javascript:DelSubFolder2()\"  style='font-size:14px;text-decoration:underline'>{del_sub_folder}</a></td>
+		</tr>";
+	
+	
+	if($root==null){
+		$delete=null;$samba=null;
+	}
+	
+	$html="<div style='font-size:16px' id='root-infos-title'>{directory}:&nbsp;&laquo;&nbsp;$RootTile&nbsp;&raquo;</div>
+	<div id='BrowserDiskDiv'>
+	<table style='width:100%' class=form>$select$samba
 		<tr>
 			<td width=1% valign='top'>
 		" . imgtootltip('folder-48-add.png','{add_sub_folder}',"AddSubFolder()")."</td>
 			<td><a href=\"javascript:blur();\" OnClick=\"javascript:AddSubFolder()\"  style='font-size:14px;text-decoration:underline'>{add_sub_folder}</td>
 		</tr>
-		<tr>
-		<td width=1% valign='top'>
-		" . imgtootltip('folder-delete-48.png','{del_sub_folder}',"DelSubFolder()")."</td>
-		<td><a href=\"javascript:blur();\" OnClick=\"javascript:DelSubFolder()\"  style='font-size:14px;text-decoration:underline'>{del_sub_folder}</a></td>
-		</tr>
+	$delete
 	</table>	
-	
+	</div>
 	
 	<script>
 	
 		var x_AddSubFolder=function (obj) {
 		 	text=obj.responseText;
-		 	if(text.length>2){alert(text);return;}
-			LoadTree();
+		 	if(text.length>2){alert(text);}else{
+		 		document.getElementById('browser-infos').innerHTML='';
+		 	}
+			ReloadTree();
 			}
 
 			
@@ -133,10 +187,40 @@ function brower_infos(){
         		var XHR = new XHRConnection();
         		XHR.appendData('root','{$_GET["browser-infos"]}');
         		XHR.appendData('create-folder',newfolder);
+        		AnimateDiv('browser');
         		XHR.sendAndLoad('$page', 'POST',x_AddSubFolder);
         		}   
 		
 		}
+		
+		function DelSubFolder2(){
+			if(confirm('$delete_text')){
+      			var XHR = new XHRConnection();
+        		XHR.appendData('root','{$_GET["browser-infos"]}');
+        		XHR.appendData('delete-folder','yes');
+        		AnimateDiv('browser');
+        		XHR.sendAndLoad('$page', 'POST',x_AddSubFolder);			
+			}
+		}
+		
+		
+	var x_SmbShare2= function (obj) {
+	 	text=obj.responseText;
+	 	if(text.length>3){alert(text);}
+	 	YahooWinBrowseHide();
+	 	if(document.getElementById('SharedFoldersList')){LoadAjax('SharedFoldersList','samba.index.php?SharedFoldersList=yes');}
+		}
+	
+		
+	function SmbShare2(){
+	 	if(confirm('$share_this')){
+		 		AnimateDiv('BrowserDiskDiv');
+		        var XHR = new XHRConnection();
+		        XHR.appendData('AddTreeFolders','$root');
+		        XHR.sendAndLoad('samba.index.php', 'GET',x_SmbShare2);
+	        }          
+	 	}		
+		
 	</script>	
 	
 	";
@@ -165,7 +249,7 @@ function folder_create(){
 
 function browseFolder(){
 	$root=base64_decode($_GET["startpath"]);
-	
+	writelogs("Checking: $root \"{$_GET["root"]}\"",__FUNCTION__,__FILE__,__LINE__);
 	$tpl=new templates();
 	$used=$tpl->javascript_parse_text("{used}");
 	$f[]="[";
@@ -205,9 +289,11 @@ function browseFolder(){
 	$_GET["root"]=base64_decode($_GET["root"]);
 	$_GET["root"]=str_replace("//", "/", $_GET["root"]);
 	$mount_point=$_GET["root"];
+	writelogs("Checking: \"{$_GET["root"]}\"",__FUNCTION__,__FILE__,__LINE__);
+	
 	
 	$start_root=urlencode($_GET["root"]);
-	$datas=unserialize($sock->getFrameWork("cmd.php?dirdir=$start_root"));
+	$datas=unserialize(base64_decode($sock->getFrameWork("cmd.php?dirdirEncoded=$start_root")));
 	if(is_array($datas)){
 			ksort($datas);
 			while (list ($num, $val) = each ($datas) ){
@@ -232,6 +318,8 @@ function browseFolder(){
 		$f[]="]";
 		echo @implode("\n", $f);
 		return;			
+	}else{
+		writelogs("Checking: dirdir=$start_root not an array",__FUNCTION__,__FILE__,__LINE__);
 	}
 	
 	echo "[]";

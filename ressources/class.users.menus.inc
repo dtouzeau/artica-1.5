@@ -471,6 +471,7 @@ class usersMenus {
 	var $MSKTUTIL_INSTALLED=false;
 	var $OPENEMM_SENDMAIL_INSTALLED=false;
 	var $OPENEMM_SENDMAIL_VERSION=false;
+	var $PIWIK_INSTALLED=false;
 	
 	private function CheckIndexDefaults($_GLOBAL){
 		return $_GLOBAL;
@@ -877,6 +878,7 @@ class usersMenus {
 			$this->APACHE_MOD_TOMCAT=$_GLOBAL["APACHE_MOD_TOMCAT"];
 			$this->OPENEMM_INSTALLED=$_GLOBAL["OPENEMM_INSTALLED"];
 			$this->MSKTUTIL_INSTALLED=$_GLOBAL["MSKTUTIL_INSTALLED"];
+			$this->PIWIK_INSTALLED=$_GLOBAL["PIWIK_INSTALLED"];
 			if(isset($_GLOBAL["squid_kerb_auth_path"])){$this->squid_kerb_auth_path=$_GLOBAL["squid_kerb_auth_path"];}
 			
 			if(isset($_GLOBAL["ISCSI_CLIENT_INSTALLED"])){$this->ISCSI_CLIENT_INSTALLED=$_GLOBAL["ISCSI_CLIENT_INSTALLED"];}
@@ -922,6 +924,13 @@ class usersMenus {
 				$this->APP_AUDITD_INSTALLED=false;
 				$this->BACKUPPC_INSTALLED=false;
 				$this->nmap_installed=false;
+			}
+			
+			if($this->KASPERSKY_WEB_APPLIANCE){
+				$this->POSTFIX_INSTALLED=false;
+				$this->APP_AUDITD_INSTALLED=false;
+				$this->BACKUPPC_INSTALLED=false;
+				
 			}
 			
 			$page=$this->CurrentPageName();
@@ -1194,17 +1203,16 @@ private function build_user_left_menus(){
 		$EnableLXCINLeftMenus=$sock->GET_INFO("EnableLXCINLeftMenus");
 		if(!is_numeric($EnableArticaSMTPStatistics)){$EnableArticaSMTPStatistics=1;}
 		$FreeWebListenPort=$sock->GET_INFO("FreeWebListenPort");
-		$FreeWebListenSSLPort=$sock->GET_INFO("FreeWebListenSSLPort");
+		$FreeWebListenSSLPort=$sock->GET_INFO("FreeWebListenSSLPort");	
+		$EnableGroupWareScreen=$sock->GET_INFO("EnableGroupWareScreen");
 		if(!is_numeric($FreeWebListenPort)){$FreeWebListenPort=80;}
 		if(!is_numeric($FreeWebListenSSLPort)){$FreeWebListenSSLPort=443;}
 		if(!is_numeric($EnablePDNS)){$EnablePDNS=1;}
 		if(!is_numeric($EnableDNSMASQ)){$EnableDNSMASQ=1;}
 		if(!is_numeric($EnablePostfixMultiInstance)){$EnablePostfixMultiInstance=1;}
 		if(!is_numeric($EnableLXCINLeftMenus)){$EnableLXCINLeftMenus=1;}
-		
-		
-		
-		
+		if(!is_numeric($EnableGroupWareScreen)){$EnableGroupWareScreen=1;}
+
 		$ASDEBIAN=false;
 		if($this->LinuxDistriCode=="DEBIAN"){$ASDEBIAN=true;}
 		if($this->LinuxDistriCode=="UBUNTU"){$ASDEBIAN=true;}	
@@ -1402,7 +1410,9 @@ private function build_user_left_menus(){
 				$array[$OU_TEXT]["SUB"]["{groups}"]="javascript:Loadjs('domains.edit.group.php?ou=$OU_encoded&js=yes&encoded=yes&in-front-ajax=yes');";
 				$array[$OU_TEXT]["SUB"]["{search}"]="javascript:Loadjs('domains.find.user.php?ou=$OU_encoded&encoded=yes');";
 				if(!$this->EnableManageUsersTroughActiveDirectory){
-					$array[$OU_TEXT]["SUB"]["{groupwares}"]="javascript:Loadjs('domains.manage.org.index.php?ou=$OU_encoded&encoded=yes&groupwares-in-front-ajax=yes');";
+					if($EnableGroupWareScreen==1){
+						$array[$OU_TEXT]["SUB"]["{groupwares}"]="javascript:Loadjs('domains.manage.org.index.php?ou=$OU_encoded&encoded=yes&groupwares-in-front-ajax=yes');";
+					}
 				}
 				
 
@@ -1541,12 +1551,12 @@ private function build_user_left_menus(){
 				if($this->SAMBA_INSTALLED){
 					$array["{fileshare}"]["MAIN"]="javascript:Loadjs('fileshares.index.php?js=yes')";
 					$array["{fileshare}"]["SUB"]["{main_parameters}"]="javascript:Loadjs('fileshares.index.php?js=yes');";
-					$array["{fileshare}"]["SUB"]["{wins_server}"]="javascript:Loadjs('samba.wins.php');";
-					$array["{fileshare}"]["SUB"]["{shared_folders}"]="javascript:Loadjs('samba.index.php?script=yes&js-shared_folders=yes');";
+					$array["{fileshare}"]["SUB"]["{wins_server}"]="javascript:AnimateDiv('BodyContent');Loadjs('samba.wins.php');";
+					$array["{fileshare}"]["SUB"]["{shared_folders}"]="javascript:AnimateDiv('BodyContent');Loadjs('samba.index.php?script=yes&js-shared_folders=yes');";
 					$array["{fileshare}"]["SUB"]["{virtual_servers}"]="javascript:Loadjs('samba.virtual-servers.php?js-inline=yes');";
 					$array["{fileshare}"]["SUB"]["SSLBridge"]="javascript:s_PopUpFull('sslbridge/index.php',900,900,'SSLBridge For Artica')";
 					$array["{fileshare}"]["SUB"]["{explorer}"]="javascript:Loadjs('tree.php');";
-					$array["{fileshare}"]["SUB"]["{SHARE_FOLDER}"]="javascript:Loadjs('SambaBrowse.php?in-front-ajax=yes');";
+					$array["{fileshare}"]["SUB"]["{SHARE_FOLDER}"]="javascript:Loadjs('browse-disk.php?with-samba=yes');";
 					if($this->CUPS_INSTALLED){
 						$array["{fileshare}"]["SUB"]["{printers}"]="javascript:Loadjs('cups.index.php?in-front-ajax=yes');";
 					}
@@ -1594,7 +1604,7 @@ private function build_user_left_menus(){
 		if($this->SQUID_INSTALLED==true){if($this->AsSquidAdministrator==true){
 			$sock=new sockets();
 			$SQUIDEnable=trim($sock->GET_INFO("SQUIDEnable"));
-			if($SQUIDEnable==null){$SQUIDEnable=1;}
+			if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
 			if($SQUIDEnable==1){
 					$array["{web_proxy}"]["MAIN"]="javascript:Loadjs('squid.newbee.php?yes')";
 					$array["{web_proxy}"]["SUB"]["{main_parameters}"]="javascript:Loadjs('squid.newbee.php?yes')";
@@ -1802,7 +1812,9 @@ private function build_user_left_menus(){
 		}
 		
 		if($this->KASPERSKY_WEB_APPLIANCE){
+			unset($array["{virtual_machines}"]);
 			unset($array["{fileshare}"]);
+			unset($array["{messaging}"]);
 			unset($array["{APP_OPENVPN}"]);
 			unset($array["{events}"]["SUB"]["{APP_OPENVPN}"]);
 			unset($array["system"]["SUB"]["FreeWebs"]);
@@ -1811,6 +1823,9 @@ private function build_user_left_menus(){
 			unset($array["system"]["SUB"]["VPN PPTP"]);
 			unset($array["system"]["SUB"]["{APP_DHCP}"]);
 			unset($array["system"]["SUB"]["{APP_PDNS}"]);
+			unset($array["{statistics}"]["SUB"]["SMTP (con.)"]);
+			unset($array["{events}"]["SUB"]["{APP_AUDITD}"]);
+			unset($array["system"]["SUB"]["{APP_AUDITD}"]);
 		}			
 		
 		$menus=$this->BuildArticaMenus($array,$sub_array_pages);

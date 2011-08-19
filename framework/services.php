@@ -35,6 +35,8 @@ if(isset($_GET["restart-ftp"])){pureftpd_restart();exit;}
 if(isset($_GET["dmicode"])){dmicode();exit;}
 if(isset($_GET["php-ini-set"])){PHP_INI_SET();exit;}
 if(isset($_GET["mysql-events"])){mysql_events();exit;}
+if(isset($_GET["AdCacheMysql"])){AdCacheMysql();exit;}
+
 
 
 
@@ -281,6 +283,15 @@ function PHP_INI_SET(){
 	$cmd=trim("$nohup /usr/share/artica-postfix/bin/artica-install --php-ini >/dev/null 2>&1 &");
 	shell_exec($cmd);
 	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);		
+}
+
+function AdCacheMysql(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim("$nohup ".$unix->LOCATE_PHP5_BIN(). " /usr/share/artica-postfix/exec.activedirectory-import.php >/dev/null 2>&1");
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	
+	shell_exec($cmd);
+	
 }
 
 function mysql_events(){

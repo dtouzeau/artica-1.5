@@ -22,6 +22,7 @@ public
       procedure Free;
       procedure xinstall();
       procedure xinstall_phpmyadmin();
+      procedure xinstall_piwik();
 END;
 
 implementation
@@ -78,6 +79,63 @@ if FileExists('/usr/share/phpldapadmin/index.php') then begin
         install.INSTALL_PROGRESS(CODE_NAME,'{installed}');
         install.INSTALL_STATUS(CODE_NAME,100);
         fpsystem('/etc/init.d/artica-postfix restart apache');
+        exit;
+   end;
+
+  install.INSTALL_PROGRESS(CODE_NAME,'{failed}');
+  install.INSTALL_STATUS(CODE_NAME,110);
+  exit;
+
+end;
+//#########################################################################################
+procedure tsetup_phpldapadmin.xinstall_piwik();
+var
+
+   source_folder,cmd:string;
+   l:Tstringlist;
+   CODE_NAME:string;
+
+begin
+install.INSTALL_STATUS('APP_PIWIK',10);
+install.INSTALL_PROGRESS('APP_PIWIK','{downloading}');
+CODE_NAME:='APP_PIWIK';
+if FileExists(packageSource) then begin
+   writeln('Extracting from local file ' +packageSource);
+   source_folder:=libs.ExtractLocalPackage(packageSource);
+   writeln('source folder:',source_folder);
+end;
+
+
+if not DirectoryExists(source_folder) then source_folder:=libs.COMPILE_GENERIC_APPS('piwik');
+
+if length(trim(source_folder))=0 then begin
+     writeln('Install piwik failed...');
+     install.INSTALL_STATUS('APP_PIWIK',110);
+     exit;
+end;
+    install.INSTALL_PROGRESS('APP_PIWIK','{installing}');
+    install.INSTALL_STATUS('APP_PIWIK',70);
+writeln('Installing piwik from "',source_folder,'"');
+forceDirectories('/usr/share/piwik');
+fpsystem('/bin/cp -rf '+source_folder+'/* /usr/share/piwik/');
+fpsystem('/bin/rm -rf '+source_folder);
+
+if FileExists('/usr/share/piwik/index.php') then begin
+        install.INSTALL_STATUS(CODE_NAME,100);
+        writeln('installed');
+        install.INSTALL_PROGRESS(CODE_NAME,'{installed}');
+        install.INSTALL_STATUS(CODE_NAME,100);
+        ForceDirectories('/usr/share/piwik/tmp/assets');
+        ForceDirectories('/usr/share/piwik/tmp/templates_c');
+        ForceDirectories('/usr/share/piwik/tmp/cache');
+        ForceDirectories('/usr/share/piwik/tmp/assets');
+        fpsystem('/bin/chmod 0777 /usr/share/piwik/tmp');
+        fpsystem('/bin/chmod 0777 /usr/share/piwik/tmp/templates_c/');
+        fpsystem('/bin/chmod 0777 /usr/share/piwik/tmp/cache/');
+        fpsystem('/bin/chmod 0777 /usr/share/piwik/tmp/assets/');
+        fpsystem('/bin/chmod a+w /usr/share/piwik/config');
+
+        fpsystem('/etc/init.d/artica-postfix restart apachesrc');
         exit;
    end;
 

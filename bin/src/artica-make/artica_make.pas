@@ -556,6 +556,25 @@ begin
          halt(0);
    end;
 
+   if ParamStr(1)='APP_ZARAFA6' then begin
+
+       if ParamStr(2)='--remove' then begin
+            fpsystem('/etc/init.d/artica-postfix stop zarafa');
+            zarafa.REMOVE();
+            zinstall.INSTALL_PROGRESS(ParamStr(1),'{removed}');
+            zinstall.INSTALL_STATUS(ParamStr(1),100);
+            halt(0);
+         end;
+
+    zarafa:=tzarafa.Create;
+    zarafa.xinstall6();
+    zinstall.EMPTY_CACHE();
+    fpsystem('/etc/init.d/artica-postfix restart zarafa');
+    halt(0);
+   end;
+
+
+
    if ParamStr(1)='APP_ZARAFA' then begin
          zarafa:=tzarafa.Create;
 
@@ -583,6 +602,13 @@ begin
    if ParamStr(1)='APP_PHPLDAPADMIN' then begin
          phpldapadmin:=tsetup_phpldapadmin.Create;
          phpldapadmin.xinstall();
+         zinstall.EMPTY_CACHE();
+         halt(0);
+   end;
+
+   if ParamStr(1)='APP_PIWIK' then begin
+         phpldapadmin:=tsetup_phpldapadmin.Create;
+         phpldapadmin.xinstall_piwik();
          zinstall.EMPTY_CACHE();
          halt(0);
    end;

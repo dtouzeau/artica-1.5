@@ -2336,7 +2336,10 @@ public function IsProtectedDirectory($folder){
 	while (list ($num, $ligne) = each ($l) ){
 		$p=str_replace("/","\/",$num);
 		$p=str_replace(".","\.",$p);
-		if(preg_match("#$p#",$folder)){return true;}
+		if(preg_match("#$p#",$folder)){
+			writelogs("$folder match $p -> protected directory...",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+			writelogs_framework("$folder match $p -> protected directory...",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+			return true;}
 	}
 }
 
@@ -2882,10 +2885,11 @@ function DirRecursiveFiles($dir){
     $file_tmp= glob($dir.'*',GLOB_MARK | GLOB_NOSORT);
 
     foreach($file_tmp as $item){
-        if(substr($item,-1)!=DIRECTORY_SEPARATOR)
+        if(substr($item,-1)!=DIRECTORY_SEPARATOR){
             $files[] = $item;
-        else
+        }else{
             $files = array_merge($files,$this->DirRecursiveFiles($item));
+        }
     }
 
     return $files;
@@ -3300,7 +3304,6 @@ function BuildingExecStatus($text,$pourc){
 	$ini=new iniFrameWork("/usr/share/artica-postfix/ressources/logs/exec.status.ini");
 	$ini->set("status","text","$text");
 	$ini->set("status","pourc","$pourc");
-	$ini->set("status","gpourc","$magor_pourc");
 	$ini->saveFile("/usr/share/artica-postfix/ressources/logs/exec.status.ini");
 	@chmod("/usr/share/artica-postfix/ressources/logs/exec.status.ini",0755);
 	error_log(__FUNCTION__.":: status $pourc% $text");

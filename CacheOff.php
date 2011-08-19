@@ -22,7 +22,7 @@ if(function_exists("apc_clear_cache")){
 	apc_clear_cache("user");
 	apc_clear_cache();
 }
-			
+		if(!isset($_SESSION["detected_lang"])){$_SESSION["detected_lang"]=$_COOKIE["artica-language"];}			
 		$sock=new sockets();
 	echo "\n";
 	
@@ -51,10 +51,11 @@ if(function_exists("apc_clear_cache")){
 			
 			
 			$text=$text."\n\n{cache_cleaned}\n";
+			$text=$text."language : {$_SESSION["detected_lang"]}\n";
 			$sock->DATA_CACHE_EMPTY();			
 			
 		
-	
+writelogs("Clean cache, language was {$_SESSION["detected_lang"]}",__FUNCTION__,__FILE__,__LINE__);	
 unset($_SESSION["CACHE_PAGE"]);			
 unset($_SESSION["APC"]);
 unset($_SESSION["cached-pages"]);

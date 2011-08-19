@@ -362,6 +362,7 @@ private function GetMyDNS(){
 		if(is_array($ip->arrayNameServers)){
 			while (list ($index, $ipaddr) = each ($ip->arrayNameServers) ){
 				if($ipaddr=="0.0.0.0"){continue;}
+				if($ipaddr=="127.0.0.1"){continue;}
 				$arrayNameServers_tmp[$ipaddr]=$ipaddr;
 				if($GLOBALS["VERBOSE"]){echo "DEBUG: DNS: $ipaddr\n";}
 			}
@@ -370,6 +371,8 @@ private function GetMyDNS(){
 			$arrayNameServers=array();
 			while (list ($index, $ipaddr) = each ($arrayNameServers_tmp) ){
 				if($ipaddr=="0.0.0.0"){continue;}
+				if($ipaddr=="127.0.0.1"){continue;}
+				echo "Starting......: DHCP server name server: \"$ipaddr\"\n";
 				$arrayNameServers[]=$ipaddr;
 			}			
 		if($GLOBALS["VERBOSE"]){echo "DEBUG: DNS server return array of ". count($arrayNameServers_tmp)." element(s)\n";}	
@@ -544,7 +547,7 @@ private function GetMyDNS(){
 							$g=trim($re[1]);
 							if($g=="127.0.0.1"){continue;}
 							$arrayNameServers[]=$g;
-							echo "Starting......: DHCP SERVER no name server: $g\n";
+							echo "Starting......: DHCP SERVER name server: $g\n";
 						}
 					}
 				}

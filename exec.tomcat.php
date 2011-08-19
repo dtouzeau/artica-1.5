@@ -21,14 +21,23 @@ function build(){
 	$ldap=new clladp();
 	$sock=new sockets();
 	$TomcatListenPort=$sock->GET_INFO($TomcatListenPort);
+	$TomcatAdminName=$sock->GET_INFO("TomcatAdminName");
+	$TomcatAdminPass=$sock->GET_INFO("TomcatAdminPass");	
 	$unix=new unix();
 	if(!is_numeric($TomcatListenPort)){$TomcatListenPort=8080;}
+	
+	if(($TomcatAdminName==null) OR ($TomcatAdminPass==null)) {
+		$TomcatAdminName=$ldap->ldap_admin;
+		$TomcatAdminPass=$ldap->ldap_password;
+	}
+	
+	
 	@mkdir('/opt/openemm/tomcat/conf',644,true);
 	$f[]="<?xml version='1.0' encoding='utf-8'?>";
 	$f[]="<tomcat-users>";
 	$f[]="<role rolename=\"manager\"/>";
 	$f[]="<role rolename=\"admin\"/>";
-	$f[]="<user username=\"$ldap->ldap_admin\" password=\"$ldap->ldap_password\" roles=\"manager-gui,manager-script,manager-jmx,manager-status\"/>";
+	$f[]="<user username=\"$TomcatAdminName\" password=\"$TomcatAdminPass\" roles=\"manager-gui,manager-script,manager-jmx,manager-status\"/>";
 	$f[]="</tomcat-users>";
 	$f[]="";
 	@file_put_contents("/opt/openemm/tomcat/conf/tomcat-users.xml", @implode("\n", $f));

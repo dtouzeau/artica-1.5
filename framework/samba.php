@@ -12,7 +12,10 @@ if(isset($_GET["test-ads-join"])){testadsjoin();exit;}
 if(isset($_GET["adsinfos"])){adsinfos();exit;}
 if(isset($_GET["getent"])){getent();exit;}
 if(isset($_GET["getent-group"])){getent_group();exit;}
-
+if(isset($_GET["apply-chmod"])){apply_chmod();exit;}
+if(isset($_GET["trash-restore"])){trash_restore();exit;}
+if(isset($_GET["trash-scan"])){trash_scan();exit;}
+if(isset($_GET["trash-delete"])){trash_delete();exit;}
 
 
 
@@ -21,6 +24,33 @@ while (list ($num, $line) = each ($_GET)){$f[]="$num=$line";}
 
 writelogs_framework("unable to understand query !!!!!!!!!!!..." .@implode(",",$f),"main()",__FILE__,__LINE__);
 die();
+
+
+function trash_restore(){
+	$unix=new unix();
+	$php=$unix->LOCATE_PHP5_BIN();
+	$nohup=$unix->find_program("nohup");
+	$cmd="$nohup $php /usr/share/artica-postfix/exec.samba.php --trash-restore >/dev/null 2>&1 &";
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);
+	shell_exec($cmd);
+}
+
+function trash_scan(){
+	$unix=new unix();
+	$php=$unix->LOCATE_PHP5_BIN();
+	$nohup=$unix->find_program("nohup");
+	$cmd="$nohup $php /usr/share/artica-postfix/exec.samba.php --recycles >/dev/null 2>&1 &";
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);
+	shell_exec($cmd);	
+}
+function trash_delete(){
+	$unix=new unix();
+	$php=$unix->LOCATE_PHP5_BIN();
+	$nohup=$unix->find_program("nohup");
+	$cmd="$nohup $php /usr/share/artica-postfix/exec.samba.php --trash-delete >/dev/null 2>&1 &";
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);
+	shell_exec($cmd);	
+}
 
 
 
@@ -37,6 +67,17 @@ $unix=new unix();
 	exec($cmd,$results);
 	writelogs_framework("$cmd = " . count($results)." rows",__FUNCTION__,__FILE__,__LINE__);	
 	echo "<articadatascgi>". base64_encode(implode(" ",$results))."</articadatascgi>";	
+	
+}
+
+function apply_chmod(){
+	$chmodbin=$_GET["apply-chmod"];
+	$path=base64_decode($_GET["path"]);
+	$unix=new unix();
+	$chmod=$unix->find_program("chmod");
+	$cmd="$chmod $chmodbin \"$path\"";
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	
+	shell_exec($cmd);
 	
 }
 

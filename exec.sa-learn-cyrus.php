@@ -26,7 +26,7 @@ function execute(){
 	build_conf();
 	if(is_file("/etc/spamassassin/sa-learn-cyrus.conf")){
 		exec("/usr/share/artica-postfix/bin/sa-learn-cyrus",$results);
-		
+		$unix->send_email_events("Junk learning successfully executed for {$GLOBALS["USERS_LIST_COUNT"]} user(s)", @implode("\n", $results), 'mailbox');
 	}
 }
 
@@ -45,6 +45,7 @@ function build_conf(){
 	$salearn=$unix->find_program("sa-learn");
 	$ipurge=$unix->LOCATE_CYRUS_IPURGE();
 	$users_list=@implode(" ",$usersList);
+	$GLOBALS["USERS_LIST_COUNT"]=count($usersList);
 	
 	$sock=new sockets();
 	$EnableVirtualDomainsInMailBoxes=$sock->GET_INFO("EnableVirtualDomainsInMailBoxes");

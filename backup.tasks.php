@@ -38,6 +38,8 @@ $user=new usersMenus();
 	if(isset($_GET["TASK_EVENTS_DETAILS_INFOS"])){TASK_EVENTS_DETAILS_INFOS();exit;}
 	if(isset($_GET["BACKUP_TASK_MODIFY_RESSOURCES"])){BACKUP_TASK_MODIFY_RESSOURCES();exit;}
 	if(isset($_POST["BACKUP_TASK_MODIFY_RESSOURCES_APPLY"])){BACKUP_TASK_MODIFY_RESSOURCES_SAVE();exit;}
+	if(isset($_POST["DeleteAllBackTaskEvents"])){DeleteAllBackTaskEvents();exit;}
+	
 	
 	if(isset($_GET["events"])){BACKUP_EVENTS();exit;}
 js();
@@ -800,24 +802,40 @@ function TASK_EVENTS_DETAILS_INFOS(){
 	echo $html;
 	
 }
-
+function DeleteAllBackTaskEvents(){
+	$ID=$_POST["DeleteAllBackTaskEvents"];
+	if(!is_numeric($ID)){return;}
+	$sql="DELETE  FROM `backup_events` WHERE `task_id`='$ID'";
+	$q=new mysql();
+	$q->QUERY_SQL($sql,"artica_events");
+	if(!$q->ok){echo $q->mysql_error;}	
+	
+	
+}
 
 function TASK_EVENTS_DETAILS(){
 	$ID=$_GET["TASK_EVENTS_DETAILS"];
-	
-$html="<div style='height:300px;overflow:auto'>
-<table style='width:99%'>
-	<th>&nbsp;</th>
+	$tpl=new templates();
+	$page=CurrentPageName();
+	$delete_all_items=$tpl->javascript_parse_text("{delete_all_items}");	
+$html="<div style='height:300px;overflow:auto' id='TASK_EVENTS_DETAILS_LIST_DIV'>
+<table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
+<thead class='thead'>
+	<tr>
+	<th>{status}</th>
 	<th>{date}</th>
 	<th>{resource}</th>
-	<th>{status}</th>
-	<th>{events}</th>
-	</tr>";	
+	<th width=99%>{events}</th>
+	<th width=1%>". imgtootltip("delete-24.png","{delete_all}","DeleteAllBackTaskEvents()")."</td>
+	</tr>
+</thead>
+<tbody>";	
 	
 $sql="SELECT *,DATE_FORMAT(zdate,'%W') as explainday,DATE_FORMAT(zdate,'%p') as tmorn,DATE_FORMAT(zdate,'%Hh%i') as ttime  FROM `backup_events` WHERE `task_id`='$ID' ORDER BY `backup_events`.`zdate` DESC LIMIT 0 , 200";
 $q=new mysql();
 	$results=$q->QUERY_SQL($sql,"artica_events");	
 	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+	if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
 		$img="info-18.png";
 		$status=null;
 		if(strlen($ligne["event"])>60){$ligne["event"]=substr($ligne["event"],0,57)."...";}
@@ -840,15 +858,15 @@ $q=new mysql();
 		}
 		
 		$display="TASK_EVENTS_DETAILS_INFOS({$ligne["ID"]})";
+		$disblayUri="<a href=\"javascript:blur();\" OnClick=\"javascript:$display;\" style='font-size:12px;text-decoration:underline'>";
 		
 $html=$html.
 		"
-		<tr ". CellRollOver($display,"{display}").">
-		<td width=1% valign='top'><img src='img/fw_bold.gif'></td>
-		<td width=1%  style='font-size:12px' nowrap><strong>$date</strong></td>
-		<td   style='font-size:12px' nowrap width=1%><strong>{$ligne["backup_source"]}</strong></td>
-		<td width=1%  align='center' valign='middle'><img src='img/$img'></td>
-		<td style='font-size:12px' width=99% nowrap><strong>{$ligne["event"]}</strong></td>		
+		<tr class=$classtr>
+			<td width=1%  align='center' valign='middle'><img src='img/$img'></td>
+			<td width=1%  style='font-size:12px' nowrap><strong>$disblayUri$date</a></strong></td>
+			<td  style='font-size:12px' nowrap width=1%><strong>{$ligne["backup_source"]}</strong></td>
+			<td style='font-size:12px' width=99% nowrap colspan=2><strong>{$ligne["event"]}</strong></td>		
 		</tr>
 		";
 		
@@ -856,9 +874,30 @@ $html=$html.
 	}
 	
 $html=$html."
+		</tbody>
 	</table>
-	</div>";
-	$tpl=new templates();
+	</div>
+<script>
+	var x_DeleteAllBackTaskEvents= function (obj) {
+		var tempvalue=obj.responseText;
+		if(tempvalue.length>3){alert(tempvalue)};
+		YahooWin3Hide();
+	 }	
+	
+	function DeleteAllBackTaskEvents(){
+		if(confirm('$delete_all_items ?')){
+			AnimateDiv('TASK_EVENTS_DETAILS_LIST_DIV');
+			var XHR = new XHRConnection();
+			XHR.appendData('DeleteAllBackTaskEvents',$ID);
+			XHR.sendAndLoad('$page', 'POST',x_DeleteAllBackTaskEvents);
+		}
+		
+	}
+</script>	
+	
+	
+	";
+	
 	echo $tpl->_ENGINE_parse_body($html);		
 }
 
@@ -924,6 +963,8 @@ function BACKUP_TASK_MODIFY_RESSOURCES_SAVE(){
 		echo $q->mysql_error;
 	}
 }
+
+
 
 
 

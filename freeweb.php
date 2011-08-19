@@ -415,7 +415,7 @@ function index(){
 	$FreeWebLeftMenu=$sock->GET_INFO("FreeWebLeftMenu");
 	
 	if($FreeWebListen==null){$FreeWebListen="*";}
-	if($EnableFreeWeb==null){$EnableFreeWeb=0;}
+	if(!is_numeric($EnableFreeWeb)){$EnableFreeWeb=0;}
 	if($FreeWebListenPort==null){$FreeWebListenPort=80;}
 	if($FreeWebListenSSLPort==null){$FreeWebListenSSLPort=443;}
 	if($FreeWebLeftMenu==null){$FreeWebLeftMenu=1;}

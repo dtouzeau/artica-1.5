@@ -11,8 +11,9 @@
 		die();exit();
 	}	
 	
-	if(isset($_GET["popup"])){popup();exit;}
 	if(isset($_GET["message_size_limit"])){save();exit;}
+	if(isset($_GET["popup"])){popup();exit;}
+	
 js();	
 	
 function js(){
@@ -90,12 +91,12 @@ function popup(){
 		$mime_nesting_limit=$maincf->GET("mime_nesting_limit");
 		$header_address_token_limit=$maincf->GET("header_address_token_limit");
 		$virtual_mailbox_limit=$maincf->GET("virtual_mailbox_limit");
-		$message_size_limit=$maincf->GET($message_size_limit/1024)/1000;
-		$virtual_mailbox_limit=$maincf->GET($virtual_mailbox_limit/1024)/1000;
+		$message_size_limit=($maincf->GET("message_size_limit")/1024)/1000;
+		$virtual_mailbox_limit=($maincf->GET("virtual_mailbox_limit")/1024)/1000;
 		$max_rcpt_to=$maincf->GET("max_rcpt_to");
 		
-		if($message_size_limit==null){$message_size_limit=(102400000/1024)/1000;}
-		if($virtual_mailbox_limit==null){$virtual_mailbox_limit=(102400000/1024)/1000;}
+		if($message_size_limit==null){$message_size_limit=(10240000/1024)/1000;}
+		if($virtual_mailbox_limit==null){$virtual_mailbox_limit=(10240000/1024)/1000;}
 		if($default_destination_recipient_limit==null){$default_destination_recipient_limit=50;}
 		if($smtpd_recipient_limit==null){$smtpd_recipient_limit=1000;}
 		if($mime_nesting_limit==null){$mime_nesting_limit=100;}

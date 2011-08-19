@@ -4,7 +4,7 @@
 	include_once('ressources/class.users.menus.inc');
 	include_once('ressources/class.main_cf.inc');
 	include_once('ressources/class.mysql.inc');
-	
+	include_once('ressources/class.active.directory.inc');
 	
 	
 
@@ -31,17 +31,6 @@ function js(){
 		//setTimeout('Orgfillpage()',900);
 	}
 	
-	function Orgfillpage(){
-		timeout=timeout+1;
-		if(timeout>10){return;}
-		if(!document.getElementById('orgs')){
-			setTimeout('Orgfillpage()',900);
-			return;
-		}
-		LoadAjax('orgs','$page?ShowOrganizations=yes');
-		OrgfillpageButton();
-	}
-	
 	function OrgfillpageButton(){
 	var content=document.getElementById('orgs').innerHTML;
 	if(content.length<90){
@@ -65,22 +54,59 @@ function popup(){
 	
 //if(GET_CACHED(__FILE__,__FUNCTION__,__FUNCTION__)){return;}
 
-	$ldap=new clladp();
-	$usersnumber=$ldap->COUNT_DE_USERS();
-	$ldap->ldap_close();
+	$sock=new sockets();
+	$EnableManageUsersTroughActiveDirectory=$sock->GET_INFO("EnableManageUsersTroughActiveDirectory");
+	if(!is_numeric($EnableManageUsersTroughActiveDirectory)){$EnableManageUsersTroughActiveDirectory=0;}	
+
+	
+	if($EnableManageUsersTroughActiveDirectory==1){
+		$ldap=new ldapAD();
+		$usersnumber=$ldap->COUNT_DE_USERS();
+	}else{
+		$ldap=new clladp();	
+		$usersnumber=$ldap->COUNT_DE_USERS();
+		$ldap->ldap_close();
+	}
+	
+	
+	
 	$tpl=new templates();
 	$users=$tpl->_ENGINE_parse_body("<i>{this_server_store}:&nbsp;<strong>$usersnumber</strong>&nbsp;{users}</i>");
 
 $page=CurrentPageName();	
-$html="<div style='background-image:url(/img/home-bg-256.png);background-repeat:no-repeat;background-position:top right'><div style='font-size:18px'>{my_organizations}</div>
-<input type='hidden' name='add_new_organisation_text' id='add_new_organisation_text' value='{add_new_organisation_text}'>
-<div class=explain>
-{about_organization}
-<div style='font-size:14px;text-align:right;padding-top:5px;padding-right:40px'><span id='countdeusers'>$users</span></div>
-</div>
-
-<div id='orgs' style='width:720px;height:350px;overflow:auto'></div>
-</div>
+$html="
+	<div style='background-image:url(/img/home-bg-256.png);background-repeat:no-repeat;background-position:top right'><div style='font-size:18px'>{my_organizations}</div>
+		<input type='hidden' name='add_new_organisation_text' id='add_new_organisation_text' value='{add_new_organisation_text}'>
+		<div class=explain>
+				{about_organization}
+				<div style='font-size:14px;text-align:right;padding-top:5px;padding-right:40px'><span id='countdeusers'>$users</span></div>
+		</div>
+		<center>
+		<table style='width:80%' class=form>
+		<tbody>
+		<tr>
+			<td class=legend>{organization}:</td>
+			<td>". Field_text("organization-find",$_COOKIE["FINDMYOU"],"font-size:16px",null,null,null,false,"SearchOrgsCheck(event)")."</td>
+			<td width=1%>". button("{search}","SearchOrgs()")."</td>
+		</tr>
+		</tbody>
+		</table>
+		</center>
+		<div id='orgs' style='width:750px;height:450px;overflow:auto;margin-top:10px'></div>
+	</div>
+	
+	<script>
+		function SearchOrgs(){
+			var se=escape(document.getElementById('organization-find').value);
+			Set_Cookie('FINDMYOU', document.getElementById('organization-find').value, '3600', '/', '', '');
+			LoadAjax('orgs','$page?ShowOrganizations=yes&search='+se);
+			}
+			
+		function SearchOrgsCheck(e){
+			if(checkEnter(e)){SearchOrgs();}
+		}
+		SearchOrgs();
+	</script>
 ";	
 
 $tpl=new templates();
@@ -132,23 +158,40 @@ function ORGANISTATION_FROM_USER(){
 	$hash=$ldap->Hash_Get_ou_from_users($_SESSION["uid"],1);
 	$ldap->ldap_close();
 	if(!is_array($hash)){return null;}
-	return Paragraphe('folder-org-64.jpg',"{manage} &laquo;{$hash[0]}&raquo;","<strong>{$hash[0]}:<br></strong>{manage_organisations_text}",'domains.manage.org.index.php?ou='.$hash[0]);
+	return Paragraphe('folder-org-64.jpg',"{manage} &laquo;{$hash[0]}&raquo;","<strong>{$hash[0]}:<br></strong>{manage_organisations_text}",'domains.manage.org.index.php?ou='.$hash[0])."	
+	<script>
+	OrgfillpageButton();
+	</script>";
 	
 	
 }
 
 function ORGANISATIONS_LIST(){
-	$ldap=new clladp();
+	
 	$page=CurrentPageName();
-	$hash=$ldap->hash_get_ou(true);
+	$search=$_GET["search"];
+	if($search==null){$search="*";}
+	if(strpos("  $search", "*")==0){$search=$search."*";}
 	$users=new usersMenus();
 	$sock=new sockets();
+	$EnableManageUsersTroughActiveDirectory=$sock->GET_INFO("EnableManageUsersTroughActiveDirectory");
+	if(!is_numeric($EnableManageUsersTroughActiveDirectory)){$EnableManageUsersTroughActiveDirectory=0;}	
 	$AllowInternetUsersCreateOrg=$sock->GET_INFO("AllowInternetUsersCreateOrg");
+	if($EnableManageUsersTroughActiveDirectory==1){
+		$ldap = new ldapAD();
+		$hash=$ldap->hash_get_ou(true);
+		
+	}else{
+		$ldap=new clladp();
+		$hash=$ldap->hash_get_ou(true);
+	}
 	if(!is_array($hash)){return null;}
 	ksort($hash);
 	
-	if(!$ldap->BuildOrganizationBranch()){
-		$error="<div style='float:left'>".Paragraphe("danger64.png","{GENERIC_LDAP_ERROR}",$ldap->ldap_last_error)."</div>";
+	if($EnableManageUsersTroughActiveDirectory==0){
+		if(!$ldap->BuildOrganizationBranch()){
+			$error="<div style='float:left'>".Paragraphe("danger64.png","{GENERIC_LDAP_ERROR}",$ldap->ldap_last_error)."</div>";
+		}
 	}
 
 	
@@ -170,18 +213,31 @@ if(isset($_GET["ajaxmenu"])){$header="
 	
 	$html=$html."<div style='float:left'>".butadm()."</div>";
 	
+	$search=str_replace(".", "\.", $search);
+	$search=str_replace("*", ".*?", $search);
+	
+	
 	while (list ($num, $ligne) = each ($hash) ){
+		if(!preg_match("#$search#i", $ligne)){
+			writelogs("'$ligne' NO MATCH $search",__FUNCTION__,__FILE__,__LINE__);
+			continue;}
 		$md=md5($ligne);
 		$uri="javascript:Loadjs('domains.manage.org.index.php?js=yes&ou=$ligne');";
 		if($ajax){
 			$uri="javascript:Loadjs('$page?LoadOrgPopup=$ligne');";
 		}
 		
-		$img=$ldap->get_organization_picture($ligne,64);
+		if($EnableManageUsersTroughActiveDirectory==0){
+			$img=$ldap->get_organization_picture($ligne,64);
+		}else{
+			$img="folder-org-64.png";
+			$usersNB=$ldap->CountDeUSerOu($ligne);
+			$usersNB="$usersNB {users}";
+		}
 		
 
 		$html=$html . "<div style='float:left'>" . Paragraphe($img,"{manage} $ligne","
-		<strong>$ligne:<br></strong>{manage_organisations_text}",$uri,null,220,100) . "</div>
+		<strong>$ligne:$usersNB<br></strong>{manage_organisations_text}",$uri,null,220,100) . "</div>
 		";
 		
 	}
@@ -224,8 +280,13 @@ if(isset($_GET["ajaxmenu"])){$header="
 	
 	}
 	
-	$ldap->ldap_close();
-	return "$parameters".$html."$sendmail</div>";
+	if($EnableManageUsersTroughActiveDirectory==0){$ldap->ldap_close();}
+	return "$parameters".$html."$sendmail</div>
+	<script>
+	OrgfillpageButton();
+	</script>
+	
+	";
 }
 
 function LoadOrgPopup(){

@@ -933,6 +933,9 @@ if(isset($_GET["artica-policy-reload"])){ReloadArticaPolicy();exit;}
 
 
 if(isset($_GET["dirdir"])){dirdir();exit;}
+if(isset($_GET["dirdirEncoded"])){dirdir_Encoded();exit;}
+
+
 if(isset($_GET["du-dir-size"])){du_dir_size();exit;}
 
 
@@ -1750,11 +1753,20 @@ function cyrus_mailboxdelete(){
 }
 
 function cyrus_check_cyraccounts(){
-	sys_THREAD_COMMAND_SET("/usr/share/artica-postfix/bin/artica-install --reload-cyrus");
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$cmd="$nohup /usr/share/artica-postfix/bin/artica-install --reload-cyrus >/dev/null 2>&1 &";
+	writelogs_framework($cmd,__FUNCTION__,__FILE__,__LINE__);
+	shell_exec($cmd);	
+	
 }
 function cyrus_reconfigure(){
-	sys_THREAD_COMMAND_SET("/usr/share/artica-postfix/bin/artica-install --cyrus-checkconfig --force");
-	sys_THREAD_COMMAND_SET("/etc/init.d/artica-postfix restart imap");
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$cmd="$nohup /usr/share/artica-postfix/bin/artica-install --cyrus-checkconfig --force && /etc/init.d/artica-postfix restart imap >/dev/null 2>&1 &";
+	writelogs_framework($cmd,__FUNCTION__,__FILE__,__LINE__);
+	shell_exec($cmd);
+	
 	}
 function cyrus_paritition_default_path(){
 	$unix=new unix();
@@ -1765,9 +1777,13 @@ function cyrus_paritition_default_path(){
 
 function CyrusRepairMailBox(){
 	$uid=$_GET["repair-mailbox"];
-	sys_THREAD_COMMAND_SET(LOCATE_PHP5_BIN2()." /usr/share/artica-postfix/exec.cyrus-repair-mailbox.php $uid");
-//cmd:=GLOBAL_INI.get_ARTICA_PHP_PATH() + '/bin/artica-ldap --repair-mailbox '+RegExpr.Match[1]+' '+GLOBAL_INI.get_ARTICA_PHP_PATH()+'/ressources/logs/cyr.repair.'+RegExpr.Match[1];
-	}
+	$unix=new unix();
+	$php5=LOCATE_PHP5_BIN2();
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim("$nohup $php5 /usr/share/artica-postfix/exec.cyrus-repair-mailbox.php $uid >/dev/null 2>&1 &");
+	writelogs_framework($cmd,__FUNCTION__,__FILE__,__LINE__);
+	shell_exec($cmd);	
+}
 
 
 function InstallWebServices(){
@@ -1775,7 +1791,13 @@ function InstallWebServices(){
 }
 
 function InstallWebServiceUnique(){
-	sys_THREAD_COMMAND_SET( LOCATE_PHP5_BIN2()." /usr/share/artica-postfix/exec.www.install.php --single-install \"{$_GET["install-web-service-unique"]}\"");
+	
+	$unix=new unix();
+	$php5=LOCATE_PHP5_BIN2();
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim("$nohup $php5 /usr/share/artica-postfix/exec.www.install.php --single-install \"{$_GET["install-web-service-unique"]}\" >/dev/null 2>&1 &");
+	writelogs_framework($cmd,__FUNCTION__,__FILE__,__LINE__);
+	shell_exec($cmd);	
 }
 
 function AptGetUpgrade(){
@@ -1791,7 +1813,12 @@ function RefreshStatus(){
 }
 
 function ForceRefreshLeft(){
-	sys_THREAD_COMMAND_SET( LOCATE_PHP5_BIN2()." /usr/share/artica-postfix/exec.admin.status.postfix.flow.php --services");	
+	$unix=new unix();
+	$php5=LOCATE_PHP5_BIN2();
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim("$nohup $php5 /usr/share/artica-postfix/exec.admin.status.postfix.flow.php --services >/dev/null 2>&1 &");
+	writelogs_framework($cmd,__FUNCTION__,__FILE__,__LINE__);
+	shell_exec($cmd);	
 }
 function ForceRefreshRight(){
 	sys_THREAD_COMMAND_SET( LOCATE_PHP5_BIN2()." /usr/share/artica-postfix/exec.admin.smtp.flow.status.php --services");	
@@ -2661,7 +2688,13 @@ function dirdir(){
 	writelogs_framework("$path=".count($array)." directories",__FUNCTION__,__FILE__,__LINE__);
 	echo "<articadatascgi>". serialize($array)."</articadatascgi>";
 }
-
+function dirdir_Encoded(){
+	$path=$_GET["dirdirEncoded"];
+	$unix=new unix();
+	$array=$unix->dirdir($path);
+	writelogs_framework("$path=".count($array)." directories",__FUNCTION__,__FILE__,__LINE__);
+	echo "<articadatascgi>". base64_encode(serialize($array))."</articadatascgi>";
+}
 
 function directory_delete_user(){
 	$path=base64_decode($_GET["delete-user-folder"]);
@@ -2743,6 +2776,13 @@ $path=utf8_decode(base64_decode($_GET["create-folder"]));
 $perms=base64_decode($_GET["perms"]);
 $unix=new unix();
 writelogs_framework("path=$path (".base64_decode($_GET["perms"]).")",__FUNCTION__,__FILE__,__LINE__);
+if(is_dir($path)){
+	echo "<articadatascgi>". base64_encode($path." -> {already_exists}")."</articadatascgi>";
+	exit;
+	
+}
+
+
 	if(!mkdir(utf8_encode($path),0666,true)){
 		writelogs_framework("FATAL ERROR while creating folder $path (".base64_decode($_GET["perms"]).")",__FUNCTION__,__FILE__,__LINE__);
 		echo "<articadatascgi>". base64_encode($path." -> {failed}")."</articadatascgi>";
@@ -3478,17 +3518,32 @@ function TCP_VIRTUALS(){
 }
 
 function TCP_VLANS(){
+	
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$php5=LOCATE_PHP5_BIN2();
+	$cmd="$nohup $php5 /usr/share/artica-postfix/exec.virtuals-ip.php --bridges >/dev/null 2>&1 &";
+	writelogs_framework($cmd,__FUNCTION__,__FILE__,__LINE__);
+	shell_exec($cmd);	
+	
 	if(isset($_GET["stay"])){
 
 		shell_exec(LOCATE_PHP5_BIN2()." /usr/share/artica-postfix/exec.virtuals-ip.php --vlans");
 		return;
 	}
-	sys_THREAD_COMMAND_SET(LOCATE_PHP5_BIN2()." /usr/share/artica-postfix/exec.virtuals-ip.php --vlans");
+	$cmd="$nohup $php5 /usr/share/artica-postfix/exec.virtuals-ip.php --vlans >/dev/null 2>&1 &";
+	writelogs_framework($cmd,__FUNCTION__,__FILE__,__LINE__);
+	shell_exec($cmd);
 	
 }
 
 function TCP_VIRTUALS_BUILD_BRIDGES(){
-	sys_THREAD_COMMAND_SET(LOCATE_PHP5_BIN2()." /usr/share/artica-postfix/exec.virtuals-ip.php --bridges");
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$php5=LOCATE_PHP5_BIN2();
+	$cmd="$nohup $php5 /usr/share/artica-postfix/exec.virtuals-ip.php --bridges >/dev/null 2>&1 &";
+	writelogs_framework($cmd,__FUNCTION__,__FILE__,__LINE__);
+	shell_exec($cmd);
 }
 
 

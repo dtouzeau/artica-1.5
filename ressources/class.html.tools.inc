@@ -1,17 +1,27 @@
 <?php
 function DAEMON_STATUS_ROUND($key,$bsini,$textoadd=null,$noenable=0){
-if($bsini->_params["$key"]["service_name"]==null){return null;}
-if($bsini->_params["$key"]["service_disabled"]==null){$bsini->_params["$key"]["service_disabled"]=-1;}
-$app=$bsini->_params["$key"]["service_name"];
-$monit=$bsini->_params["$key"]["monit"];
-$change_name=$bsini->_params["$key"]["change-name"];
-
-	if(trim($bsini->_params[$key]["queue_num"])>0){	
-		$emailqueue="
-				<tr>
-					<td align='right' colspan=2 style='background-color:#D5EED9;font-size:11px'><strong>".$bsini->_params[$key]["queue_num"]." {emails}</td>
-				</tr>	
-			";	
+	$version=null;$license_error=null;$icap=null;$pattern=null;$textoadd2=null;$disabled=null;
+	if(!isset($bsini->_params["$key"]["service_name"])){return null;}
+	if($bsini->_params["$key"]["service_name"]==null){return null;}
+	if($bsini->_params["$key"]["service_disabled"]==null){$bsini->_params["$key"]["service_disabled"]=-1;}
+	$app=$bsini->_params["$key"]["service_name"];
+	if(isset($bsini->_params["$key"]["monit"])){$monit=$bsini->_params["$key"]["monit"];}else{$monit=0;}
+	if(isset($bsini->_params["$key"]["change-name"])){$change_name=$bsini->_params["$key"]["change-name"];}else{$change_name=null;}
+	if(!isset($bsini->_params[$key]["service_croned"])){$bsini->_params[$key]["service_croned"]=0;}
+	if(!isset($bsini->_params[$key]["master_pid"])){$bsini->_params[$key]["master_pid"]=null;}
+	if(!isset($bsini->_params[$key]["uptime"])){$bsini->_params[$key]["uptime"]=null;}
+	if(!isset($bsini->_params[$key]["processes_number"])){$bsini->_params[$key]["processes_number"]=0;}
+	$pid=null;
+	$pid_text=null;
+	$emailqueue=null;
+	if(isset($bsini->_params[$key]["queue_num"])){
+		if(trim($bsini->_params[$key]["queue_num"])>0){	
+			$emailqueue="
+					<tr>
+						<td align='right' colspan=2 style='background-color:#D5EED9;font-size:11px'><strong>".$bsini->_params[$key]["queue_num"]." {emails}</td>
+					</tr>	
+				";	
+		}
 	}
 
 if($monit==1){
@@ -67,6 +77,13 @@ if($bsini->_params[$key]["running"]==0){
 	$js_service="StartStopService('".$bsini->_params["$key"]["service_cmd"]."','1','$title');";	
 	$button="<input type='button' OnClick=\"$js_service\" value='{start}&nbsp;&raquo;'>";
 	}
+	
+	if(!isset($bsini->_params[$key]["pattern_version"])){$bsini->_params[$key]["pattern_version"]=null;}
+	if(!isset($bsini->_params[$key]["pattern_date"])){$bsini->_params[$key]["pattern_date"]=null;}
+	if(!isset($bsini->_params[$key]["license_error"])){$bsini->_params[$key]["license_error"]=null;}
+	if(!isset($bsini->_params[$key]["why"])){$bsini->_params[$key]["why"]=null;}
+	if(!isset($bsini->_params[$key]["other"])){$bsini->_params[$key]["other"]=null;}
+
 	
 	
 if($bsini->_params[$key]["pattern_version"]<>null && $bsini->_params[$key]["pattern_date"]==null){

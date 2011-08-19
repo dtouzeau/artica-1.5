@@ -460,19 +460,36 @@ $html="
 
 function LIST_GROUPS_FROM_OU_search(){
 	$search=$_GET["search"];
+	$GLOBALS["NOUSERSCOUNT"]=false;
 	$ou=base64_decode($_GET["ou"]);
+	$sock=new sockets();
 	$page=CurrentPageName();
-	$ldap=new clladp();
-	$hash=$ldap->hash_groups($ou,1);
+	$EnableManageUsersTroughActiveDirectory=$sock->GET_INFO("EnableManageUsersTroughActiveDirectory");
+	if(!is_numeric($EnableManageUsersTroughActiveDirectory)){$EnableManageUsersTroughActiveDirectory=0;}	
+	
+	writelogs("[$search]: EnableManageUsersTroughActiveDirectory = $EnableManageUsersTroughActiveDirectory ",__FUNCTION__,__FILE__);
+	
+	$addgroup=Paragraphe("64-folder-group-add.png","{add_group}","{add_a_new_group_in_this_org}",
+	"javascript:Loadjs('$page?popup-add-group=yes&ou={$_GET["ou"]}')");
+	if($EnableManageUsersTroughActiveDirectory==1){
+			$GLOBALS["NOUSERSCOUNT"]=true;
+			$addgroup=Paragraphe("64-folder-group-add-grey.png","{add_group}","{add_a_new_group_in_this_org}","");
+			$ldap=new ldapAD();
+			writelogs("[$search]: ->hash_get_groups_from_ou_mysql($ou,$search) ",__FUNCTION__,__FILE__);
+			$hash=$ldap->hash_get_groups_from_ou_mysql($ou,$search);
+	}else{
+		$ldap=new clladp();
+		$hash=$ldap->hash_groups($ou,1);
+		
+	}	
+	
+	
+	
 	$tr=array();
 	$search=str_replace(".",'\.',$search);
 	$search=str_replace("*",'.*?',$search);
 	
-	$addgroup=Paragraphe("64-folder-group-add.png","{add_group}","{add_a_new_group_in_this_org}",
-	"javascript:Loadjs('$page?popup-add-group=yes&ou={$_GET["ou"]}')");
-	if($ldap->EnableManageUsersTroughActiveDirectory){
-			$addgroup=Paragraphe("64-folder-group-add-grey.png","{add_group}","{add_a_new_group_in_this_org}","");
-	}
+
 	
 	
 	$tr[]=$addgroup;
@@ -482,9 +499,13 @@ if(is_array($hash)){
 				if(strtolower($line)=='default_group'){continue;}
 				if(strlen($search)>2){if(!preg_match("#$search#",$line)){continue;}}
 				$js="javascript:LoadAjax('GroupSettings','domains.edit.group.php?LoadGroupSettings=$num&ou={$_GET["ou"]}&encoded=yes')";
-				$gp=new groups($num);
-				$members=count($gp->members_array);				
-				$tr[]=Paragraphe("group-64.png",$line,"{manage_this_group}<br>$members {members}",$js);
+				if(!$GLOBALS["NOUSERSCOUNT"]){
+					$gp=new groups($num);
+					$members=count($gp->members_array);				
+					$tr[]=Paragraphe("group-64.png",$line,"{manage_this_group}<br>$members {members}",$js);
+				}else{
+					$tr[]=Paragraphe("group-64.png",$line,"{manage_this_group}",$js);
+				}
 			}
 		}
 
@@ -1233,16 +1254,24 @@ $sr =@ldap_search($ldap->ldap_connection,$ldap->suffix,"(gidnumber=$gid)",array(
 
 
 function MEMBERS_LIST_LIST($gid){
-	
+	$sock=new sockets();
+	$tpl=new templates();
+	$page=CurrentPageName();
+	$EnableManageUsersTroughActiveDirectory=$sock->GET_INFO("EnableManageUsersTroughActiveDirectory");
+	if(!is_numeric($EnableManageUsersTroughActiveDirectory)){$EnableManageUsersTroughActiveDirectory=0;}	
+
 	if($gid=="undefined"){$gid=0;}
 	if(isset($_GET["gpid"])){$gid=$_GET["gpid"];}
-	$group=new groups($gid);
+	
 	$priv=new usersMenus();
-	$members=$group->members;
-	$page=CurrentPageName();
 	$search=$_GET["search"];
+	writelogs("-> groups($gid,$search)",__FUNCTION__,__FILE__,__LINE__);
+	$group=new groups($gid,$search);
+	writelogs("-> groups($gid,$search) END",__FUNCTION__,__FILE__,__LINE__);	
+	$members=$group->members;
 	$search=str_replace(".",'\.',$search);
 	$search=str_replace("*",".*?",$search);
+	
 	$count=count($members);
 	$number_of_users=$count;
 	$tpl=new templates();
@@ -1266,7 +1295,7 @@ function MEMBERS_LIST_LIST($gid){
 	$classtr=null;
 	$img=null;
 	$already=array();
-	
+	writelogs("groups: starting table ",__FUNCTION__,__FILE__,__LINE__);
 	for($i=0;$i<=$number_of_users;$i++){
 		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
 		$uid=$members[$i];

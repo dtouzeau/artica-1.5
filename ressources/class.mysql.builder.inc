@@ -331,6 +331,138 @@ public function check_storage_table(){
 			$this->QUERY_SQL($sql,"artica_backup");
 	}
 	
+	if(!$this->TABLE_EXISTS('samba_recycle_bin','artica_backup')){		
+			$sql="CREATE TABLE `artica_backup`.`samba_recycle_bin` (
+				`sharename` VARCHAR( 90 ) NOT NULL ,
+				`path` VARCHAR( 255 ) NOT NULL ,
+				`MaxFilesDay` INT( 2 ) NOT NULL ,
+				PRIMARY KEY ( `sharename` ) ,
+				INDEX ( `MaxFilesDay` )
+				) ";
+			$this->QUERY_SQL($sql,"artica_backup");
+	}	
+	
+	
+	if(!$this->TABLE_EXISTS('samba_recycle_bin_list','artica_backup')){		
+				$sql="CREATE TABLE IF NOT EXISTS `fetchmail_debug_execute` (
+				  `ID` int(5) NOT NULL AUTO_INCREMENT,
+				  `account_id` int(5) NOT NULL,
+				  `zDate` datetime NOT NULL,
+				  `events` longtext COLLATE utf8_unicode_ci NOT NULL,
+				  `PID` int(11) NOT NULL,
+				  `subject` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+				  PRIMARY KEY (`ID`),
+				  KEY `account_id` (`account_id`,`zDate`),
+				  KEY `PID` (`PID`)
+				) ";
+			$this->QUERY_SQL($sql,"artica_backup");
+	}	
+	
+	if(!$this->FIELD_EXISTS("samba_recycle_bin_list","restore","artica_backup")){
+		$sql="ALTER TABLE `samba_recycle_bin_list` ADD `restore` INT(1) NOT NULL ,ADD INDEX ( `restore` )";
+		$this->QUERY_SQL($sql,"artica_backup");
+	}	
+	
+	if(!$this->FIELD_EXISTS("samba_recycle_bin_list","delete","artica_backup")){
+		$sql="ALTER TABLE `samba_recycle_bin_list` ADD `delete` INT(1) NOT NULL,ADD INDEX ( `delete` )";
+		$this->QUERY_SQL($sql,"artica_backup");
+	}		
+	
+	
+	if(!$this->TABLE_EXISTS('getent_users','artica_backup')){		
+			$sql="CREATE TABLE `artica_backup`.`getent_users` (
+		`uid` VARCHAR( 128 ) NOT NULL ,
+		PRIMARY KEY ( `uid` )
+		)";
+		$this->QUERY_SQL($sql,"artica_backup");
+	}
+
+	if(!$this->TABLE_EXISTS('getent_groups','artica_backup')){		
+			$sql="CREATE TABLE `artica_backup`.`getent_groups` (
+			`group` VARCHAR( 128 ) NOT NULL ,
+			PRIMARY KEY ( `group` )
+			)";
+		$this->QUERY_SQL($sql,"artica_backup");
+	}
+
+	
+	if(!$this->TABLE_EXISTS('activedirectory_users','artica_backup')){		
+			$sql="CREATE TABLE IF NOT EXISTS `activedirectory_users` (
+			  `dn` varchar(255) NOT NULL,
+			  `samaccountname` varchar(128) NOT NULL,
+			  `mail` varchar(255) NOT NULL,
+			  `userprincipalname` varchar(128) NOT NULL,
+			  `displayname` varchar(128) NOT NULL,
+			  `ou` varchar(90) NOT NULL,
+			  `telephonenumber` varchar(30) NOT NULL,
+			  `mobile` varchar(30) NOT NULL,
+			  `givenname` varchar(60) NOT NULL,
+			  `title` varchar(120) NOT NULL,
+			  `sn` varchar(128) NOT NULL,
+			  PRIMARY KEY (`dn`),
+			  KEY `samaccountname` (`samaccountname`),
+			  KEY `mail` (`mail`),
+			  KEY `userprincipalname` (`userprincipalname`),
+			  KEY `displayname` (`displayname`),
+			  KEY `ou` (`ou`),
+			  KEY `givenname` (`givenname`,`title`,`sn`)
+			) ";
+		$this->QUERY_SQL($sql,"artica_backup");
+	}	
+	
+	
+
+	if(!$this->TABLE_EXISTS('activedirectory_groups','artica_backup')){		
+			$sql="CREATE TABLE IF NOT EXISTS `activedirectory_groups` (
+			  `groupdn` varchar(255) NOT NULL,
+			  `userdn` varchar(255) NOT NULL,
+			  `mdkey` varchar(90) NOT NULL,
+			  PRIMARY KEY (`mdkey`),
+			  KEY `userdn` (`userdn`),
+			  KEY `groupdn` (`groupdn`)
+			) ";
+			$this->QUERY_SQL($sql,"artica_backup");
+	} 	
+	
+	
+	
+	if(!$this->TABLE_EXISTS('activedirectory_groupsNames','artica_backup')){		
+			$sql="CREATE TABLE IF NOT EXISTS `activedirectory_groupsNames` (
+				  `dn` varchar(255) NOT NULL,
+				  `groupname` varchar(128) NOT NULL,
+				  `UsersCount` int(5) NOT NULL,
+				  PRIMARY KEY (`dn`),
+				  KEY `groupname` (`groupname`,`UsersCount`)
+				) ";
+			$this->QUERY_SQL($sql,"artica_backup");
+	} 
+
+	
+	if(!$this->TABLE_EXISTS('activedirectory_orgs','artica_backup')){		
+			$sql="CREATE TABLE IF NOT EXISTS `activedirectory_orgs` (
+			  `ou` varchar(80) NOT NULL,
+			  `dn` varchar(255) NOT NULL,
+			  UNIQUE KEY `dn` (`dn`),
+			  KEY `ou` (`ou`)
+			) ";
+			$this->QUERY_SQL($sql,"artica_backup");
+	} 	
+	
+	
+	if(!$this->TABLE_EXISTS('fetchmail_debug_execute','artica_events')){		
+			$sql="CREATE TABLE IF NOT EXISTS `fetchmail_debug_execute` (
+			  `ID` int(5) NOT NULL AUTO_INCREMENT,
+			  `account_id` int(5) NOT NULL,
+			  `zDate` datetime NOT NULL,
+			  `events` longtext COLLATE utf8_unicode_ci NOT NULL,
+			  `PID` int(5) NOT NULL,
+			  PRIMARY KEY (`ID`),
+			  KEY `account_id` (`account_id`,`zDate`),
+			  KEY `PID` (`PID`)
+			)";
+			$this->QUERY_SQL($sql,"artica_backup");
+	} 
+	
 	
 	if(!$this->TABLE_EXISTS('computers_deploy_tasks','artica_backup')){		
 			$sql="CREATE TABLE `artica_backup`.`computers_deploy_tasks` (
@@ -344,7 +476,8 @@ public function check_storage_table(){
 			`events_computers` LONGTEXT NOT NULL,
 			INDEX ( `storage_id` , `task_type` , `group_id` ))";
 			$this->QUERY_SQL($sql,"artica_backup");
-	} 
+	} 	
+	
 
 	if(!$this->FIELD_EXISTS("computers_deploy_tasks","events_computers","artica_backup")){
 		$sql="ALTER TABLE `computers_deploy_tasks` ADD `events_computers` LONGTEXT NOT NULL";
@@ -465,6 +598,16 @@ public function check_storage_table(){
 		$sql="ALTER TABLE `kavmilter` ADD `configlms` TEXT NOT NULL ";
 		$this->QUERY_SQL($sql,"artica_backup");
 	}
+	
+	
+if(!$this->TABLE_EXISTS('networks_infos','artica_backup')){	
+			$sql="CREATE TABLE `artica_backup`.`networks_infos` (
+			`ipaddr` VARCHAR( 128 ) NOT NULL ,
+			`netinfos` VARCHAR( 255 ) NOT NULL ,
+			PRIMARY KEY ( `ipaddr` )
+			)";
+			$this->QUERY_SQL($sql,"artica_backup");
+		} 	
 	
 	
 		if(!$this->TABLE_EXISTS('kas3','artica_backup')){	
@@ -4270,8 +4413,7 @@ public function CheckTables_openvpn(){
 		}
 		
 		if(!$this->TABLE_EXISTS('kav4Proxy','artica_backup')){		
-			$sql="
-				CREATE TABLE IF NOT EXISTS `kav4Proxy` (
+			$sql="CREATE TABLE IF NOT EXISTS `kav4Proxy` (
 				  `ID` int(11) NOT NULL AUTO_INCREMENT,
 				  `key` varchar(50) NOT NULL,
 				  `value` varchar(50) NOT NULL,
@@ -4283,6 +4425,22 @@ public function CheckTables_openvpn(){
 				) "; 		
 			$this->QUERY_SQL($sql,"artica_backup");
 		}
+		
+		
+		if(!$this->TABLE_EXISTS('Kav4Proxy_groups','artica_backup')){		
+			$sql="CREATE TABLE `artica_backup`.`Kav4Proxy_groups` (
+				`groupname` VARCHAR( 128 ) NOT NULL ,
+				`priority` INT( 2 ) NOT NULL ,
+				`ClientIP` LONGTEXT NOT NULL ,
+				`URL` LONGTEXT NOT NULL ,
+				`EngineOption` TEXT NOT NULL ,
+				`EngineAction` TEXT NOT NULL ,
+				`enabled` INT( 1 ) NOT NULL DEFAULT '1',
+				PRIMARY KEY ( `groupname` ) ,
+				INDEX ( `priority` , `enabled` )
+				)"; 		
+			$this->QUERY_SQL($sql,"artica_backup");
+		}		
 		
 			if(!$this->TABLE_EXISTS('squid_parents','artica_backup')){		
 			$sql="
@@ -4453,7 +4611,7 @@ public function CheckTables_openvpn(){
 
 		
 if(!$this->TABLE_EXISTS('kav4proxy_av_stats','artica_events')){		
-			writelogs("Creating 'updates_categories/artica_events",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+			writelogs("Creating 'kav4proxy_av_stats/artica_events",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 			$sql="CREATE TABLE IF NOT EXISTS `kav4proxy_av_stats` (
   			`zDate` datetime NOT NULL,
 			  `total_requests` INT(5) NOT NULL,
@@ -4481,7 +4639,7 @@ if(!$this->TABLE_EXISTS('kav4proxy_av_stats','artica_events')){
 		}				
 		
 	if(!$this->TABLE_EXISTS('kav4proxy_updates','artica_events')){		
-			writelogs("Creating 'updates_categories/artica_events",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+			writelogs("Creating 'kav4proxy_updates/artica_events",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 			$sql="CREATE TABLE IF NOT EXISTS `kav4proxy_updates` (
   			`zDate` datetime NOT NULL,
 			  `subject` varchar(255) NOT NULL,
@@ -4495,7 +4653,30 @@ if(!$this->TABLE_EXISTS('kav4proxy_av_stats','artica_events')){
 			if(!$this->ok){
 				writelogs("$this->mysql_error\n$sql",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 			}			
-		}		
+		}	
+
+		
+	if(!$this->TABLE_EXISTS('kav4proxyDays','artica_events')){		
+			writelogs("Creating 'kav4proxyDays/artica_events",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+			$sql="CREATE TABLE IF NOT EXISTS `kav4proxyDays` (
+				  `days` date NOT NULL,
+				  `size` int(10) NOT NULL,
+				  `websites` varchar(255) NOT NULL,
+				  `category` varchar(128) NOT NULL,
+				  `hits` int(10) NOT NULL,
+				  `Country` varchar(50) NOT NULL,
+				  `zmd5` varchar(90) NOT NULL,
+				  PRIMARY KEY (`zmd5`),
+				  KEY `size` (`size`,`category`,`hits`),
+				  KEY `websites` (`websites`),
+				  KEY `Country` (`Country`)
+				) ";	
+	
+			$this->QUERY_SQL($sql,"artica_events");
+			if(!$this->ok){
+				writelogs("$this->mysql_error\n$sql",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+			}			
+		}	 		
 
 		$this->squid_events_sites_day();
 						

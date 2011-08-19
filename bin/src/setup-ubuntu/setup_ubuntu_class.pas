@@ -715,7 +715,8 @@ libs:=tlibs.Create;
 if not TryStrToInt(distri.DISTRINAME_VERSION,UbuntuIntVer) then UbuntuIntVer:=9;
 non_free:=libs.IS_DEBIAN_NON_FREE_IN_SOURCE_LIST();
 KERNEL_VERSION:=libs.KERNEL_VERSION();
-
+if Not DirectoryExists('/var/lib/nfs') then forceDirectories('/var/lib/nfs');
+if Not DirectoryExists('/lib/init/rw/sendsigs.omit.d') then forceDirectories('/lib/init/rw/sendsigs.omit.d');
 
 //l.Add('dhcp3-client');
 l.Add('cron');
@@ -940,6 +941,7 @@ l.Add('krb5-config');
 l.Add('krb5-user');
 l.Add('krb5-kdc');
 l.Add('krb5-admin-server');
+l.add('libfuse-dev');
 
 
 
@@ -1077,6 +1079,7 @@ if distri.DISTRINAME_CODE='DEBIAN' then begin
 
 
      if FileExists('/sbin/udevsettle')  then begin
+
          l.add('open-iscsi');
      end;
 
@@ -1223,8 +1226,6 @@ if distri.DISTRINAME_CODE='UBUNTU' then begin
       l.add('monit');
       l.add('stunnel4');
       l.add('libwbxml2-utils');
-      l.Add('unrar');
-      l.Add('lha');
       l.add('pike7.6');
       l.add('libtidy-0.99-0');
       l.add('par2');
@@ -1239,7 +1240,7 @@ if distri.DISTRINAME_CODE='UBUNTU' then begin
       l.Add('bridge-utils');
       l.Add('python-software-properties');
       l.Add('screen');
-      l.add('open-iscsi');
+
 
    end;
 
@@ -1255,6 +1256,8 @@ if distri.DISTRINAME_CODE='UBUNTU' then begin
       l.add('python-apt');
       l.add('python-pyopenssl');
       l.add('libicu38');
+      l.add('open-iscsi');
+      l.Add('lha');
 
 
    end;
@@ -1268,7 +1271,8 @@ if distri.DISTRINAME_CODE='UBUNTU' then begin
       l.add('update-notifier-common');
       l.add('python-apt');
       l.add('python-pyopenssl');
-
+      l.add('open-iscsi');
+      l.Add('lha');
 
    end;
 
@@ -1279,6 +1283,7 @@ if distri.DISTRINAME_CODE='UBUNTU' then begin
        l.add('libssh2-php');
        L.add('xtables-addons-source');
 
+
     end;
 
 
@@ -1286,6 +1291,8 @@ if distri.DISTRINAME_CODE='UBUNTU' then begin
        l.add('libboost-system1.40.0');
        l.add('libboost-system1.40.0');
        l.add('libicu42');
+       l.add('open-iscsi');
+       l.Add('lha');
 
    end;
    if UbuntuIntVer=11 then begin
