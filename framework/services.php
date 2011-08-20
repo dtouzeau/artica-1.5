@@ -36,6 +36,7 @@ if(isset($_GET["dmicode"])){dmicode();exit;}
 if(isset($_GET["php-ini-set"])){PHP_INI_SET();exit;}
 if(isset($_GET["mysql-events"])){mysql_events();exit;}
 if(isset($_GET["AdCacheMysql"])){AdCacheMysql();exit;}
+if(isset($_GET["kav4Proxy-reload"])){kav4proxy_reload();exit;}
 
 
 
@@ -292,6 +293,14 @@ function AdCacheMysql(){
 	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	
 	shell_exec($cmd);
 	
+}
+
+function kav4proxy_reload(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim("$nohup ".$unix->LOCATE_PHP5_BIN(). " /usr/share/artica-postfix/exec.kav4proxy.php --reload >/dev/null 2>&1");
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	
+	shell_exec($cmd);	
 }
 
 function mysql_events(){

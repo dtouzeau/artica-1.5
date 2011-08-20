@@ -273,6 +273,7 @@ Placez dans le champs ci-dessous la liste des adresses s&eacute;par&eacute;es pa
 <ban_this_destination>Bannir cette destination</ban_this_destination>
 <ban_this_server>Bannir cet h&ocirc;te</ban_this_server>
 <ban_to_domain_ask>Interdire les utilisateurs &agrave; envoyer vers ce domaine ?</ban_to_domain_ask>
+<baseserror>Erreur signatures AV</baseserror>
 <basic>Basique</basic>
 <bind-address>Adresse IP de crochetage</bind-address>
 <blacklists>Listes Noires</blacklists>
@@ -317,6 +318,7 @@ C'est une mani&egrave;re d'&ecirc;tre inform&eacute; de l'&eacute;tat du Proxy s
 <CacheMinFileSize>Taille minimale du contenu &agrave; mettre en cache</CacheMinFileSize>
 <CacheMinFileSize_explain>SI le contenu est trop petit, il n'y aura pas r&eacute;ellement de gain de performances.[br]Si au contraire, il est trop gros, vous allez consommer tout espace de mise en cache rapidement</CacheMinFileSize_explain>
 <caches>Caches</caches>
+<CacheSynchronization>Synchronisation du cache</CacheSynchronization>
 <caches_squid>Cache(s) Proxy</caches_squid>
 <cache_control>Contr&ocirc;le du cache</cache_control>
 <cache_engine>Moteur de cache</cache_engine>
@@ -412,6 +414,7 @@ Artica se charge de la cr&eacute;ation de l'adresse IP virtuelle et de la cr&eac
 Le champs NB MAX Connexions indique combien de connexions le r&eacute;partiteur va utiliser pour le serveur cible.[br]Au del&agrave; de ce nombre, le serveur cible ne sera plus utilis&eacute;.[br]
 Utilisez 0 pour un nombre illimit&eacute;.[br]
 Le champs &quot;Poids&quot; vous permet de privil&eacute;gier des serveurs lors de la rotation.[br]Par exemple un poids de 3 indiquera au r&eacute;partiteur que il faut attendre 3 connexions avant de passer au serveur suivant.</crossroads_multiple_weight_roundrobbinexplain>
+<cured>Nettoy&eacute;</cured>
 <current>Actuellement</current>
 <Current_Pending_Sector>Secteurs en attente de r&eacute;allocation</Current_Pending_Sector>
 <Current_Pending_Sector_text>Nombre de secteurs en attente de r&eacute;-allocation</Current_Pending_Sector_text>
@@ -638,12 +641,15 @@ toutes les liens seront remplac&eacute;es par l'url que vous avez d&eacute;finit
 <estimate>Estimation</estimate>
 <EVENT>&Eacute;v&egrave;nement</EVENT>
 <ExecBackupDeadAfterH>Un t&acirc;che de sauvegarde est consid&eacute;r&eacute;e comme &quot;morte&quot; apr&egrave;s X heures (minimum 2)</ExecBackupDeadAfterH>
+<execute_in_debug>Ex&eacute;cuter en mode verbeux afin de v&eacute;rifier la coh&eacute;rence de la r&egrave;gle</execute_in_debug>
 <execute_reports_each>Ex&eacute;cuter les rapports chaque</execute_reports_each>
 <expand-hosts>Ajoute le nom de domaine aux noms simples</expand-hosts>
 <expand-hosts_text>Ajoute  le  nom  de domaine aux noms simples (ne contenant pas de point dans le nom) contenus dans le fichier /etc/hosts, de la m&ecirc;me fa&ccedil;on que pour le service DHCP. Notez que cela ne s'applique pas au nom de domaine dans les CNAME, les enregistrements PTR, TXT, etc...</expand-hosts_text>
 <external_device>Disque externe</external_device>
 <failed_uncompress>&Eacute;chec de d&eacute;compression</failed_uncompress>
 <FEDORA_TEMPLATE>Mod&egrave;le Fedora</FEDORA_TEMPLATE>
+<fetchmail_execute_debug_warn>Cette op&eacute;ration va ex&eacute;cuter le processus de rapatriement en mode verbeux pour cette r&egrave;gle.[br]
+Apr&egrave;s son ex&eacute;cution, vous serez en mesure de visualiser les &eacute;v&egrave;nements afin de confirmer si les param&egrave;tres sauvegard&eacute;s sont corrects.</fetchmail_execute_debug_warn>
 <fileio>I/O fichier</fileio>
 <filename_pxe_explain>Peut &ecirc;tre utilis&eacute; pour sp&eacute;cifier le nom du fichier de d&eacute;marrage initial qui doit &ecirc;tre utilis&eacute; par un client.[br] Le nom de fichier doit &ecirc;tre un nom de fichier reconnaissable par tous les protocoles de transport de fichier que le client utilisera pour charger le fichier.</filename_pxe_explain>
 <fileshare_text>Administrer votre syst&egrave;me de partage de fichiers (SAMBA) tels que les r&eacute;pertoires, affinages de configurations, droits d'acc&egrave;s....</fileshare_text>
@@ -796,6 +802,7 @@ Ainsi les deux services sont en accord avec les machines clientes.</IncludeDHCPL
 <incompatible_system>Syst&egrave;me incompatible</incompatible_system>
 <indexing_interval>Intervalle d'indexation</indexing_interval>
 <index_warnings_text>Des informations importantes ont &eacute;t&eacute;s relev&eacute;es, cliquez ici pour les visualiser.</index_warnings_text>
+<infected>Infect&eacute;</infected>
 <innodb_log_buffer_size>Taille du tampon m&eacute;moire des &eacute;v&egrave;nements INNODB</innodb_log_buffer_size>
 <innodb_log_file_size>Taille du fichier d'&eacute;v&egrave;nements INNODB</innodb_log_file_size>
 <instance>Instance</instance>
@@ -827,11 +834,18 @@ Ce mode fonctionne id&eacute;alement avec un stockage haut de gamme HBA et pour 
 <iscsi_type_edit_explain>En utilisant le mode fichier, Artica va cr&eacute;er un fichier conteneur sp&eacute;cifi&eacute; par le chemin dans le formulaire.[br]
 Ce fichier sera le disque iSCSI partag&eacute;.[br]
 En mode disque, vous devrez choisir une partition qui sera le disque iSCSI partag&eacute;</iscsi_type_edit_explain>
+<i_accept>J'accepte</i_accept>
 <jGrowlNotifsDisabled>D&eacute;sactiver les info-bulles &agrave; droite de l'&eacute;cran</jGrowlNotifsDisabled>
 <jkMount_explain>Ajoute les directives jkMount pour les fichiers *.do,*.jsp,*.jspx,*.cfm,*.cfc,*.cfchart,*.cfres</jkMount_explain>
 <jumpto>Aller &agrave;</jumpto>
 <kaspersky_antivirus_connector>Connecteur ICAP Kaspersky</kaspersky_antivirus_connector>
 <kaspersky_antivirus_connector_text>Connecter le proxy &agrave; un serveur Kaspersky Anti-Virus distant.</kaspersky_antivirus_connector_text>
+<kav4proxyClientIP>Les informations peuvent enregistr&eacute;es de la sorte afin de sp&eacute;cifier une adresse r&eacute;seau:[br]IP Simple: 192.168.12.1
+[br]R&eacute;seau CDIR: 192.168.12.0/24 or 192.168.12.1/255.255.255.0
+[br]Expressions r&eacute;guli&egrave;res autoris&eacute;es comme ^192\.168\.12\..*</kav4proxyClientIP>
+<Kav4ProxyGroupsHowto>L'utilisation des groupes assure un comportement sp&eacute;cifique de l'antivirus en fonction des adresses internes et des sites web visit&eacute;s.[br]
+Une r&egrave;gle de groupe d&eacute;pend donc d'une liste d'adresses IP et d'une liste de sites web (expressions r&eacute;guli&egrave;res comprises) de destination.</Kav4ProxyGroupsHowto>
+<kav4proxyURL>URL cible.[br]Les urls demand&eacute;es par les adresses IP pr&eacute;d&eacute;finies subiront alors le comportement du moteur modifi&eacute; dans ce groupe.</kav4proxyURL>
 <kav4proxy_about>Kaspersky Anti-Virus Pour Proxy assure la protection du traffic v&eacute;hicul&eacute; &agrave; travers les serveurs Proxys.[br]
 Il supporte le protocole ICAP et assure les fonctionnalit&eacute;s suivantes:[br]
 [br]
@@ -1102,6 +1116,9 @@ For example, Avaya phones are hard coded to "read" this scope option and pick up
 <organizations_parameters_text>Indiquez le comportement global des organisations et des param&egrave;tres du serveur autour des organisations</organizations_parameters_text>
 <organization_administrator>Administrateur d'organisation</organization_administrator>
 <original_mail>Adresse de messagerie actuelle</original_mail>
+<ORPHANED_STORES>Boites orphelines</ORPHANED_STORES>
+<ORPHANED_STORES_TEXT>Les banques d'informations orphelines prennent de la place sur le disque dur.[br]Vous devez &ecirc;tre en mesure de les relier ou bien de les supprimer d&eacute;finitivement</ORPHANED_STORES_TEXT>
+<orphans>Orphelins</orphans>
 <outgoing>Sortant</outgoing>
 <OverWriteRestrictedDomains>Surpasser la restriction de domaines</OverWriteRestrictedDomains>
 <OverWriteRestrictedDomains_allow_text>Vous pouvez surpasser la politique de restriction aux sous-domaines.[br]Si vous d&eacute;sirez ajouter votre propre domaine, indiquez ici le domaine complet</OverWriteRestrictedDomains_allow_text>
@@ -1557,6 +1574,7 @@ Cette taille doit correspondre au minium &agrave; la taille autoris&eacute;e d'u
 <storagebakcup_softwares>Logiciels de stockage et de sauvegarde</storagebakcup_softwares>
 <storage_directory>R&eacute;pertoire de stockage</storage_directory>
 <storage_pool>Pool de stockage</storage_pool>
+<store>Banque d'information</store>
 <StrictModes>Modes strictes</StrictModes>
 <StrictModes_text>Sp&eacute;cifie si sshd doit v&eacute;rifier les modes et le propri&eacute;taire des fichiers de l'utilisateur et du r&eacute;pertoire de base (home directory) de l'utilisateur avant d'accepter une connexion. [br]C'est normalement souhaitable, parce que quelquefois, les novices laissent accidentellement leur r&eacute;pertoire ou leurs fichiers en acc&egrave;s complet &agrave; tout les monde.</StrictModes_text>
 <subdomain>Sous-domaine</subdomain>
@@ -1760,6 +1778,8 @@ La valeur la plus commode serait 25% de la taille du tampon m&eacute;moire de In
 Presque tous les goulots d'&eacute;tranglements sont d&eacute;termin&eacute;s par les acc&egrave;s &agrave; la base de donn&eacute;es.[br]Acc&eacute;l&eacute;rer les processus du moteur de la base de donn&eacute;es vous assure que les requ&ecirc;tes seront ex&eacute;cut&eacute;es le plus rapidement possible.[br]
 La valeurs par d&eacute;faut sont fix&eacute;es de fa&ccedil;on pessimistes afin d'assurer le fonctionnement de Zarafa sur des serveurs bas de gamme.[br] 
 Toutefois m&ecirc;me pour des petites installations il faut r&eacute;-hausser ces valeurs.</zarafa_mysql_tuning_text>
+<zarafa_orphans_explain>Lorsqu'un utilisateur est supprim&eacute;, sa banque d'information est conserv&eacute;e.[br]Elle devient alors orpheline car personne n'est propri&eacute;taire.[br]
+Cette section vous permet de les raccrocher ou de les supprimer d&eacute;finitivement.[br]Lorsqu'une banque d'information est raccroch&eacute;e, la pr&eacute;c&eacute;dente devient &agrave; son tour orpheline.</zarafa_orphans_explain>
 <ZARAFA_SAFEMODE_EXPLAIN>Le serveur Zarafa est en mode &quot;Safe&quot;, cela veut dire qu'il est verrouill&eacute; et que toute op&eacute;ration sur les bo&icirc;tes aux lettres sont interdites (ex: cr&eacute;ation des bo&icirc;tes aux lettres).</ZARAFA_SAFEMODE_EXPLAIN>
 <zarafa_store_outside_text>Cette op&eacute;ration &agrave; pour but de stocker toutes les pi&egrave;ces jointes en dehors de la base MySQL.[br]
 Cette architecture permet de disposer d'un meilleur cache Mysql et une base de donn&eacute;es plus petite.[br]

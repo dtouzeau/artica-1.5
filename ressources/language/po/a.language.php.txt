@@ -345,6 +345,7 @@ Put in this form ip addresses separated by a carriage return
 <ban_this_destination>Ban this destination</ban_this_destination>
 <ban_this_server>Ban this Host</ban_this_server>
 <ban_to_domain_ask>Ban users sending to this domain ?</ban_to_domain_ask>
+<baseserror>Bases error</baseserror>
 <basic>Basic</basic>
 <bind-address>Bind address</bind-address>
 <blacklists>Blacklists</blacklists>
@@ -396,6 +397,7 @@ without logging into the server</cachemgr_text>
 <CacheMinFileSize>Minimum file size to cache</CacheMinFileSize>
 <CacheMinFileSize_explain>If a file is too small, there's no performance benefit to caching it. If it's too large, you'll consume your cache space too quickly</CacheMinFileSize_explain>
 <caches>Caches</caches>
+<CacheSynchronization>Cache synchronization</CacheSynchronization>
 <caches_squid>Proxy cache(s)</caches_squid>
 <cache_control>Cache control</cache_control>
 <cache_engine>Cache Engine</cache_engine>
@@ -499,6 +501,7 @@ Use 0 in order to unlimit the connexions number.[br]
 The weight number let you to define privileged server that will handle more connexions before switching to the next backend server.[br]
 For example is you define a server to 3 it will handle 3 connexions more before rotate to the next.
 </crossroads_multiple_weight_roundrobbinexplain>
+<cured>Cured</cured>
 <current>Current</current>
 <Current_Pending_Sector>Current Pending Sector Count</Current_Pending_Sector>
 <Current_Pending_Sector_text>Current quantity of unstable sectors (waiting for remapping)</Current_Pending_Sector_text>
@@ -795,12 +798,17 @@ When a user add/delete/modify a file in a Samba folder, greyhole will saved it a
 <estimate>Estimate</estimate>
 <EVENT>Event</EVENT>
 <ExecBackupDeadAfterH>A backup task is turned has "Dead" after X Hours (minimal 2)</ExecBackupDeadAfterH>
+<execute_in_debug>Execute for debugging purpose</execute_in_debug>
 <execute_reports_each>Execute reports each</execute_reports_each>
 <expand-hosts>expand hostnames</expand-hosts>
 <expand-hosts_text>Set this if you want to have a domain automatically added to simple names in a hosts-file.</expand-hosts_text>
 <external_device>External device</external_device>
 <failed_uncompress>Failed uncompress</failed_uncompress>
 <FEDORA_TEMPLATE>Fedora template</FEDORA_TEMPLATE>
+<fetchmail_execute_debug_warn>This operation will execute now the retreival process in debug mode for this account.[br]
+The process will be turned in debug mode.
+After executed process you will be able to display events in order to see if your parameters are correctly set.
+</fetchmail_execute_debug_warn>
 <fileio>File I/O</fileio>
 <filename_pxe_explain>can be used to specify the name of the initial boot file which is to be loaded by a client.[br]
 The filename should be a filename recognizable to whatever file transfer protocol the client can be expected to use to load the file</filename_pxe_explain>
@@ -962,6 +970,7 @@ If this feature is disabled, fixed hosts in Artica database will not be added.
 <incompatible_system>Icompatible system</incompatible_system>
 <indexing_interval>Indexing interval</indexing_interval>
 <index_warnings_text>Warnings has been detected, click here in order to see warnings</index_warnings_text>
+<infected>Infected</infected>
 <innodb_log_buffer_size>INNODB log buffer size</innodb_log_buffer_size>
 <innodb_log_file_size>INNODB log file size</innodb_log_file_size>
 <instance>Instance</instance>
@@ -1001,11 +1010,24 @@ This mode works ideally with high-end storage HBAs and for applications that  ei
 </iscsi_IoType_explain>
 <iscsi_type_edit_explain>Using the File mode, Artica will create a file container specified by the path field
 This file will be the shared iSCSI disk.[br]In disk mode, you will have to choose the disk partition that will be the iSCSI disk</iscsi_type_edit_explain>
+<i_accept>I accept</i_accept>
 <jGrowlNotifsDisabled>Disable tooltips notifications</jGrowlNotifsDisabled>
 <jkMount_explain>Add the JkMount directive for *.do,*.jsp,*.jspx,*.cfm,*.cfc,*.cfchart,*.cfres files</jkMount_explain>
 <jumpto>Jump to</jumpto>
 <kaspersky_antivirus_connector>Kaspersky ICAP connector</kaspersky_antivirus_connector>
 <kaspersky_antivirus_connector_text>Connect your Proxy to a remote Kaspersky Anti-Virus for Proxy Server</kaspersky_antivirus_connector_text>
+<kav4proxyClientIP> The following information can be used to specify the value for the ClientIP parameter:
+[br]IP addresses: 192.168.12.1
+[br]Network addresses: 192.168.12.0/24 or 192.168.12.1/255.255.255.0
+[br]Regular expressions are also allowed as the values ^192\.168\.12\..*
+</kav4proxyClientIP>
+<Kav4ProxyGroupsHowto>The use of groups allows to specify different anti-virus processing for objects being requested or
+transferred through a proxy server by different user groups.[br]A request is associated with a specific group depending on
+the IP address of the client computer requesting the object through a proxy server, and the URL of that object
+</Kav4ProxyGroupsHowto>
+<kav4proxyURL>URL of a requested object.[br]
+Objects with a specified URL and requested from an IP addresses defined will be processed using the rules of this group
+</kav4proxyURL>
 <kav4proxy_about>
 Kaspersky Anti-Virus for Proxy Server provides anti-virus protection for network traffic routed through proxy servers
 which support the Internet Content Adaptation Protocol (ICAP).[br]
@@ -1287,6 +1309,9 @@ For example, Avaya phones are hard coded to "read" this scope option and pick up
 <organizations_parameters_text>Define global behavior of all organizations and server parameters according organizations</organizations_parameters_text>
 <organization_administrator>Organization's administrator</organization_administrator>
 <original_mail>Original mail address</original_mail>
+<ORPHANED_STORES>Orphaned Store(s)</ORPHANED_STORES>
+<ORPHANED_STORES_TEXT>Orphaned stores increase disk size, you need to judge if these stores should be relinked or permanently deleted</ORPHANED_STORES_TEXT>
+<orphans>orphans</orphans>
 <outgoing>outgoing</outgoing>
 <OverWriteRestrictedDomains>OverWrite domains restrictions</OverWriteRestrictedDomains>
 <OverWriteRestrictedDomains_allow_text>You can overwrite the restricted subdomains policy.[br]If you want to add your own domain, give here the full domain name</OverWriteRestrictedDomains_allow_text>
@@ -1837,6 +1862,7 @@ It should match your MTA's limit for a maximum attachment size</srv_clamav.Strea
 <storagebakcup_softwares>Storage & Backup softwares</storagebakcup_softwares>
 <storage_directory>Storage directory</storage_directory>
 <storage_pool>Storage Pool</storage_pool>
+<store>Store</store>
 <StrictModes>Strict modes</StrictModes>
 <StrictModes_text>specifies whether ssh should check user's permissions in their home directory and rhosts files before accepting login. This option must always be set to yes because sometimes users may accidentally leave their directory or files world-writable.</StrictModes_text>
 <subdomain>sub-domain</subdomain>
@@ -2079,6 +2105,13 @@ These are normally set quite low to make sure that Zarafa can run on relatively 
 but in anything but the smallest installations, these defaults needs to be upped.[br]
 Any installation with 50 or more users should definitely tune the cache parameters for maximum performance.
 </zarafa_mysql_tuning_text>
+<zarafa_orphans_explain>
+When a user is deleted the mailbox of the user will be still kept in the database.
+This store is "orphaned" because nobody can access to it but data kept stored.[br]
+In this section you can re-link a store to the current user.[br]
+When a store is hooked to a user that already has a store attached to it,
+ the original store will be orphaned
+</zarafa_orphans_explain>
 <ZARAFA_SAFEMODE_EXPLAIN>Zarafa server is turned to Safe Mode, this means that this mode lock any Mailbox operation (eg:mailbox creation) on your backend server</ZARAFA_SAFEMODE_EXPLAIN>
 <zarafa_store_outside_text>This operation will store all attachments outside of the MySQL database.[br]
 The architecture change is made to get a more efficient MySQL caching system and get a smaller database.[br]

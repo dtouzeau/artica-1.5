@@ -4484,6 +4484,19 @@ public function CheckTables_openvpn(){
 		$this->QUERY_SQL($sql,"artica_backup");
 	}
 	
+	if(!$this->TABLE_EXISTS('zarafa_orphaned','artica_backup')){		
+			$sql="CREATE TABLE `artica_backup`.`zarafa_orphaned` (
+			`storeid` VARCHAR( 128 ) NOT NULL ,
+			`size` INT( 10 ) NOT NULL ,
+			`zDate` TIMESTAMP NOT NULL ,
+			`uid` VARCHAR( 256 ) NOT NULL ,
+			PRIMARY KEY ( `storeid` ) ,
+			INDEX ( `size` , `zDate` , `uid` )
+			)";
+				
+ 		$this->QUERY_SQL($sql,"artica_backup");
+		} 
+	
 	if(!$this->TABLE_EXISTS('squid_pools','artica_backup')){		
 			$sql="CREATE TABLE `artica_backup`.`squid_pools` (
 			`ID` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,

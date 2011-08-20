@@ -26,6 +26,21 @@ $user=new usersMenus();
 	if(isset($_POST["group-ExcludeMimeType-DEL"])){ExcludeMimeType_del();exit;}
 	if(isset($_GET["group-ExcludeMimeType-LIST"])){ExcludeMimeType_list();exit;}
 	
+	if(isset($_GET["group-ExcludeURL"])){ExcludeURL();exit;}
+	if(isset($_GET["group-ExcludeURL-LIST"])){ExcludeURL_list();exit;}
+	if(isset($_POST["group-ExcludeURL-ADD"])){ExcludeURL_add();exit;}
+	if(isset($_POST["group-ExcludeURL-DEL"])){ExcludeURL_del();exit;}
+	
+	if(isset($_GET["group-ClientIP"])){ClientIP();exit;}
+	if(isset($_GET["group-ClientIP-LIST"])){ClientIP_list();exit;}
+	if(isset($_POST["group-ClientIP-ADD"])){ClientIP_add();exit;}
+	if(isset($_POST["group-ClientIP-DEL"])){ClientIP_del();exit;}	
+	
+	if(isset($_GET["group-ClientURI"])){ClientURI();exit;}
+	if(isset($_GET["group-ClientURI-LIST"])){ClientURI_list();exit;}
+	if(isset($_POST["group-ClientURI-ADD"])){ClientURI_add();exit;}
+	if(isset($_POST["group-ClientURI-DEL"])){ClientURI_del();exit;}		
+	
 	
 	
 popup();	
@@ -44,7 +59,7 @@ function popup(){
 		<td width=1%>". button("{search}","Kav4ProxyGroupsSearch()")."</td>
 	</tr>
 	</table>
-	
+	</center>
 	<div id='kav4proxy-groups-list' style='width:100%;height:350px;overflow:auto'></div>
 	
 	<script>
@@ -139,6 +154,7 @@ function group_delete(){
 	$gpname=$_POST["gpname"];
 	$q->QUERY_SQL("DELETE FROM Kav4Proxy_groups WHERE groupname='$gpname'","artica_backup");
 	if(!$q->ok){echo $q->mysq_error;return;}
+	$sock=new sockets();$sock->getFrameWork("services.php?kav4Proxy-reload=yes");
 	
 }
 
@@ -189,11 +205,6 @@ function group_settings(){
 		<td>". Field_text("priority",$ligne["priority"],"font-size:14px;width:30px")."</td>
 		<td>&nbsp;</td>
 	</tr>	
-	<tr>
-		<td class=legend>{url}:</td>
-		<td>". Field_text("URL",$URLs[0],"font-size:14px;width:190px")."</td>
-		<td>". help_icon("{kav4proxyURL}")."</td>
-	</tr>
 	<tr>
 		<td class=legend>{MaxReqLength}:</td>
 		<td>". Field_text("MaxReqLength",$hash["MaxReqLength"],"font-size:14px;width:90px")."</td>
@@ -285,7 +296,6 @@ function group_settings(){
 			var XHR = new XHRConnection();
 			$scriptgpname
 			XHR.appendData('group-main-settings-save','yes');
-			XHR.appendData('URL',document.getElementById('URL').value);
 			XHR.appendData('BasesErrorAction',document.getElementById('BasesErrorAction').value);
 			XHR.appendData('CorruptedAction',document.getElementById('CorruptedAction').value);
 			XHR.appendData('CuredAction',document.getElementById('CuredAction').value);
@@ -358,7 +368,7 @@ function group_settings_save(){
 	$q=new mysql();
 	$q->QUERY_SQL($sql,"artica_backup");
 	if(!$q->ok){echo $q->mysql_error;return;}
-	
+	$sock=new sockets();$sock->getFrameWork("services.php?kav4Proxy-reload=yes");
 	
 }
 
@@ -383,17 +393,20 @@ function group_popup(){
 		$page=CurrentPageName();
 		$users=new usersMenus();
 		$array["group-main-settings"]='{main_settings}';
+		$array["group-ClientIP"]='{ClientIP}';
+		$array["group-ClientURI"]='{ClientURI}';
 		$array["group-ExcludeMimeType"]='{exclude}:{ExcludeMimeType}';
+		$array["group-ExcludeURL"]='{exclude}:{ExcludeURL}';
 		if($gpname==null){
-			unset($array["actions"]);
-			unset($array["groups"]);
-			unset($array["ExcludeMimeType"]);
-			
+			unset($array["group-ExcludeMimeType"]);
+			unset($array["group-ExcludeURL"]);
+			unset($array["group-ClientIP"]);
+			unset($array["group-ClientURI"]);
 		}
 		
 	while (list ($num, $ligne) = each ($array) ){
 		
-		$tab[]="<li><a href=\"$page?$num=yes&gpname=$gpname\"><span style='font-size:14px'>$ligne</span></a></li>\n";
+		$tab[]="<li><a href=\"$page?$num=yes&gpname=$gpname\"><span>$ligne</span></a></li>\n";
 			
 		}
 	
@@ -415,6 +428,220 @@ function group_popup(){
 	
 	echo $tpl->_ENGINE_parse_body($html);
 }
+
+function ClientURI_list(){
+$tpl=new templates();
+	$page=CurrentPageName();	
+	$gpname=$_GET["gpname"];
+	$sql="SELECT EngineOption FROM Kav4Proxy_groups WHERE groupname='$gpname'";
+	$q=new mysql();
+	$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"artica_backup"));
+	$EngineOption=unserialize(base64_decode($ligne["EngineOption"]));
+	$ExcludeMimeTypeArray=$EngineOption["ClientURI"];
+	$ExcludeMimeType=$tpl->javascript_parse_text("{ClientURI}");
+	
+	
+	
+	$html="
+	
+<table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
+<thead class='thead'>
+	<tr>
+		<th width=1%>". imgtootltip("plus-24.png","{add_clienturl}","ClientURIGroupAdd()")."</th>
+		<th width=99%>{ClientURI}</th>
+		<th>&nbsp;</th>
+	</tr>
+</thead>
+<tbody class='tbody'>";
+
+	while (list ($num, $ligne) = each ($ExcludeMimeTypeArray) ){
+		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
+			$html=$html."
+			<tr class=$classtr>
+				<td colspan=2><strong style='font-size:14px' colspan=2>$ligne</strong></td>
+				<td width=1%>". imgtootltip("delete-32.png","{delete}","ClientURIGroupDel($num)")."</td>
+			</tr>
+			";
+		}
+	
+	$html=$html."
+	</tbody>
+	</table>
+	
+	<script>
+		function ClientURIGroupAdd(){
+			var type=prompt('$ExcludeMimeType (.*,^domain\.org$,.*domain.*...');
+			if(!type){return;}
+			var XHR = new XHRConnection();
+			XHR.appendData('group-ClientURI-ADD',type);
+			XHR.appendData('gpname','$gpname');
+			AnimateDiv('ClientURIGroupdiv');
+			XHR.sendAndLoad('$page', 'POST',x_ClientIPGroupAdd);			
+		}
+		
+		function ClientURIGroupDel(num){
+			var XHR = new XHRConnection();
+			XHR.appendData('group-ClientURI-DEL',num);
+			XHR.appendData('gpname','$gpname');
+			AnimateDiv('ClientURIGroupdiv');
+			XHR.sendAndLoad('$page', 'POST',x_ClientURIGroupAdd);			
+		}		
+	
+	var x_ClientIPGroupAdd= function (obj) {
+			var tempvalue=obj.responseText;
+			if(tempvalue.length>3){alert(tempvalue)};
+	    	ClientURIRefreshGroupList();
+		}	
+
+</script>		
+	
+	";
+$tpl=new templates();
+echo $tpl->_ENGINE_parse_body($html);		
+}
+
+    
+function ClientIP_list(){
+$tpl=new templates();
+	$page=CurrentPageName();	
+	$gpname=$_GET["gpname"];
+	$sql="SELECT EngineOption FROM Kav4Proxy_groups WHERE groupname='$gpname'";
+	$q=new mysql();
+	$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"artica_backup"));
+	$EngineOption=unserialize(base64_decode($ligne["EngineOption"]));
+	$ExcludeMimeTypeArray=$EngineOption["ClientIP"];
+	$ExcludeMimeType=$tpl->javascript_parse_text("{ClientIP}");
+	$kav4proxyClientIP=$tpl->javascript_parse_text("{kav4proxyClientIP}");
+	
+	
+	$html="
+	
+<table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
+<thead class='thead'>
+	<tr>
+		<th width=1%>". imgtootltip("plus-24.png","{add_clientip}","ClientIPGroupAdd()")."</th>
+		<th width=99%>{ClientIP}</th>
+		<th>&nbsp;</th>
+	</tr>
+</thead>
+<tbody class='tbody'>";
+
+	while (list ($num, $ligne) = each ($ExcludeMimeTypeArray) ){
+		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
+			$html=$html."
+			<tr class=$classtr>
+				<td colspan=2><strong style='font-size:14px' colspan=2>$ligne</strong></td>
+				<td width=1%>". imgtootltip("delete-32.png","{delete}","ClientIPGroupDel($num)")."</td>
+			</tr>
+			";
+		}
+	
+	$html=$html."
+	</tbody>
+	</table>
+	
+	<script>
+		function ClientIPGroupAdd(){
+			var type=prompt('$ExcludeMimeType $kav4proxyClientIP');
+			if(!type){return;}
+			var XHR = new XHRConnection();
+			XHR.appendData('group-ClientIP-ADD',type);
+			XHR.appendData('gpname','$gpname');
+			AnimateDiv('ClientIPGroupdiv');
+			XHR.sendAndLoad('$page', 'POST',x_ClientIPGroupAdd);			
+		}
+		
+		function ClientIPGroupDel(num){
+			var XHR = new XHRConnection();
+			XHR.appendData('group-ClientIP-DEL',num);
+			XHR.appendData('gpname','$gpname');
+			AnimateDiv('ClientIPGroupdiv');
+			XHR.sendAndLoad('$page', 'POST',x_ClientIPGroupAdd);			
+		}		
+	
+	var x_ClientIPGroupAdd= function (obj) {
+			var tempvalue=obj.responseText;
+			if(tempvalue.length>3){alert(tempvalue)};
+	    	ClientIPRefreshGroupList();
+		}	
+
+</script>		
+	
+	";
+$tpl=new templates();
+echo $tpl->_ENGINE_parse_body($html);		
+}
+function ExcludeURL_list(){
+$tpl=new templates();
+	$page=CurrentPageName();	
+	$gpname=$_GET["gpname"];
+	$sql="SELECT EngineOption FROM Kav4Proxy_groups WHERE groupname='$gpname'";
+	$q=new mysql();
+	$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"artica_backup"));
+	$EngineOption=unserialize(base64_decode($ligne["EngineOption"]));
+	$ExcludeMimeTypeArray=$EngineOption["ExcludeURL"];
+	$ExcludeMimeType=$tpl->javascript_parse_text("{ExcludeURL}");
+	
+	
+	
+	$html="
+	
+<table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
+<thead class='thead'>
+	<tr>
+		<th width=1%>". imgtootltip("plus-24.png","{add_clienturl}","ExcludeURLGroupAdd()")."</th>
+		<th width=99%>{ExcludeURL}</th>
+		<th>&nbsp;</th>
+	</tr>
+</thead>
+<tbody class='tbody'>";
+
+	while (list ($num, $ligne) = each ($ExcludeMimeTypeArray) ){
+		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
+			$html=$html."
+			<tr class=$classtr>
+				<td colspan=2><strong style='font-size:14px' colspan=2>$ligne</strong></td>
+				<td width=1%>". imgtootltip("delete-32.png","{delete}","ExcludeMimeTypeGroupDel($num)")."</td>
+			</tr>
+			";
+		}
+	
+	$html=$html."
+	</tbody>
+	</table>
+	
+	<script>
+		function ExcludeURLGroupAdd(){
+			var type=prompt('$ExcludeMimeType (^.*?\.png$,^http://domain.com/uri.*$,.*?domain\.org...');
+			if(!type){return;}
+			var XHR = new XHRConnection();
+			XHR.appendData('group-ExcludeURL-ADD',type);
+			XHR.appendData('gpname','$gpname');
+			AnimateDiv('ExcludeURLTypeGroupdiv');
+			XHR.sendAndLoad('$page', 'POST',x_ExcludeURLGroupAdd);			
+		}
+		
+		function ExcludeMimeTypeGroupDel(num){
+			var XHR = new XHRConnection();
+			XHR.appendData('group-ExcludeURL-DEL',num);
+			XHR.appendData('gpname','$gpname');
+			AnimateDiv('ExcludeURLTypeGroupdiv');
+			XHR.sendAndLoad('$page', 'POST',x_ExcludeURLGroupAdd);			
+		}		
+	
+	var x_ExcludeURLGroupAdd= function (obj) {
+			var tempvalue=obj.responseText;
+			if(tempvalue.length>3){alert(tempvalue)};
+	    	ExcludeURLTypeRefreshGroupList();
+		}	
+
+</script>		
+	
+	";
+$tpl=new templates();
+echo $tpl->_ENGINE_parse_body($html);		
+}
+
 function ExcludeMimeType_list(){
 	$tpl=new templates();
 	$page=CurrentPageName();	
@@ -486,6 +713,125 @@ $tpl=new templates();
 echo $tpl->_ENGINE_parse_body($html);		
 }
 
+	
+function ClientIP_del(){
+	$tpl=new templates();
+	$page=CurrentPageName();	
+	$gpname=$_POST["gpname"];
+	$sql="SELECT EngineOption FROM Kav4Proxy_groups WHERE groupname='$gpname'";
+	$q=new mysql();
+	$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"artica_backup"));
+	$EngineOption=unserialize(base64_decode($ligne["EngineOption"]));
+	unset($EngineOption["ClientIP"][$_POST["group-ClientIP-DEL"]]);
+	$EngineOption_NEW=addslashes(base64_encode(serialize($EngineOption)));
+	$sql="UPDATE Kav4Proxy_groups SET EngineOption='$EngineOption_NEW' WHERE groupname='$gpname'";
+	$q->QUERY_SQL($sql,"artica_backup");
+	if(!$q->ok){echo $q->mysql_error;return;}
+	$sock=new sockets();$sock->getFrameWork("services.php?kav4Proxy-reload=yes");
+}	
+function ClientURI_del(){
+	$tpl=new templates();
+	$page=CurrentPageName();	
+	$gpname=$_POST["gpname"];
+	$sql="SELECT EngineOption FROM Kav4Proxy_groups WHERE groupname='$gpname'";
+	$q=new mysql();
+	$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"artica_backup"));
+	$EngineOption=unserialize(base64_decode($ligne["EngineOption"]));
+	unset($EngineOption["ClientURI"][$_POST["group-ClientURI-DEL"]]);
+	$EngineOption_NEW=addslashes(base64_encode(serialize($EngineOption)));
+	$sql="UPDATE Kav4Proxy_groups SET EngineOption='$EngineOption_NEW' WHERE groupname='$gpname'";
+	$q->QUERY_SQL($sql,"artica_backup");
+	if(!$q->ok){echo $q->mysql_error;return;}
+	$sock=new sockets();$sock->getFrameWork("services.php?kav4Proxy-reload=yes");
+}
+
+function ClientURI_add(){
+	$tpl=new templates();
+	$page=CurrentPageName();	
+	$gpname=$_POST["gpname"];
+	if(trim($_POST["group-ClientURI-ADD"])==null){return;}
+	$sql="SELECT EngineOption FROM Kav4Proxy_groups WHERE groupname='$gpname'";
+	$q=new mysql();
+	$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"artica_backup"));
+	$EngineOption=unserialize(base64_decode($ligne["EngineOption"]));
+	if(strpos($_POST["group-ClientURI-ADD"], ',')>0){
+		$tbl=explode(",", $_POST["group-ClientURI-ADD"]);
+		while (list ($num, $sligne) = each ($tbl) ){
+			if(trim($sligne)==null){continue;}
+			$EngineOption["ClientURI"][]=$sligne;
+		}
+	}else{
+		$EngineOption["ClientURI"][]=$_POST["group-ClientURI-ADD"];
+	}
+	$EngineOption_NEW=addslashes(base64_encode(serialize($EngineOption)));
+	$sql="UPDATE Kav4Proxy_groups SET EngineOption='$EngineOption_NEW' WHERE groupname='$gpname'";
+	$q->QUERY_SQL($sql,"artica_backup");
+	if(!$q->ok){echo $q->mysql_error;return;}	
+	$sock=new sockets();$sock->getFrameWork("services.php?kav4Proxy-reload=yes");
+}
+function ClientIP_add(){
+	$tpl=new templates();
+	$page=CurrentPageName();	
+	$gpname=$_POST["gpname"];
+	if(trim($_POST["group-ClientIP-ADD"])==null){return;}
+	$sql="SELECT EngineOption FROM Kav4Proxy_groups WHERE groupname='$gpname'";
+	$q=new mysql();
+	$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"artica_backup"));
+	$EngineOption=unserialize(base64_decode($ligne["EngineOption"]));
+	if(strpos($_POST["group-ClientIP-ADD"], ',')>0){
+		$tbl=explode(",", $_POST["group-ClientIP-ADD"]);
+		while (list ($num, $sligne) = each ($tbl) ){
+			if(trim($sligne)==null){continue;}
+			$EngineOption["ClientIP"][]=$sligne;
+		}
+	}else{
+		$EngineOption["ClientIP"][]=$_POST["group-ClientIP-ADD"];
+	}
+	$EngineOption_NEW=addslashes(base64_encode(serialize($EngineOption)));
+	$sql="UPDATE Kav4Proxy_groups SET EngineOption='$EngineOption_NEW' WHERE groupname='$gpname'";
+	$q->QUERY_SQL($sql,"artica_backup");
+	if(!$q->ok){echo $q->mysql_error;return;}	
+	$sock=new sockets();$sock->getFrameWork("services.php?kav4Proxy-reload=yes");
+}
+function ExcludeURL_add(){
+	$tpl=new templates();
+	$page=CurrentPageName();	
+	$gpname=$_POST["gpname"];
+	if(trim($_POST["group-ExcludeURL-ADD"])==null){return;}
+	$sql="SELECT EngineOption FROM Kav4Proxy_groups WHERE groupname='$gpname'";
+	$q=new mysql();
+	$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"artica_backup"));
+	$EngineOption=unserialize(base64_decode($ligne["EngineOption"]));
+	if(strpos($_POST["group-ExcludeURL-ADD"], ',')>0){
+		$tbl=explode(",", $_POST["group-ExcludeURL-ADD"]);
+		while (list ($num, $sligne) = each ($tbl) ){
+			if(trim($sligne)==null){continue;}
+			$EngineOption["ExcludeURL"][]=$sligne;
+		}
+	}else{
+		$EngineOption["ExcludeURL"][]=$_POST["group-ExcludeURL-ADD"];
+	}
+	$EngineOption_NEW=addslashes(base64_encode(serialize($EngineOption)));
+	$sql="UPDATE Kav4Proxy_groups SET EngineOption='$EngineOption_NEW' WHERE groupname='$gpname'";
+	$q->QUERY_SQL($sql,"artica_backup");
+	if(!$q->ok){echo $q->mysql_error;return;}	
+	$sock=new sockets();$sock->getFrameWork("services.php?kav4Proxy-reload=yes");
+}
+function ExcludeURL_del(){
+	$tpl=new templates();
+	$page=CurrentPageName();	
+	$gpname=$_POST["gpname"];
+	$sql="SELECT EngineOption FROM Kav4Proxy_groups WHERE groupname='$gpname'";
+	$q=new mysql();
+	$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"artica_backup"));
+	$EngineOption=unserialize(base64_decode($ligne["EngineOption"]));
+	unset($EngineOption["ExcludeURL"][$_POST["group-ExcludeURL-DEL"]]);
+	$EngineOption_NEW=addslashes(base64_encode(serialize($EngineOption)));
+	$sql="UPDATE Kav4Proxy_groups SET EngineOption='$EngineOption_NEW' WHERE groupname='$gpname'";
+	$q->QUERY_SQL($sql,"artica_backup");
+	if(!$q->ok){echo $q->mysql_error;return;}
+	$sock=new sockets();$sock->getFrameWork("services.php?kav4Proxy-reload=yes");
+}
 function ExcludeMimeType_add(){
 	$tpl=new templates();
 	$page=CurrentPageName();	
@@ -508,6 +854,7 @@ function ExcludeMimeType_add(){
 	$sql="UPDATE Kav4Proxy_groups SET EngineOption='$EngineOption_NEW' WHERE groupname='$gpname'";
 	$q->QUERY_SQL($sql,"artica_backup");
 	if(!$q->ok){echo $q->mysql_error;return;}
+	$sock=new sockets();$sock->getFrameWork("services.php?kav4Proxy-reload=yes");
 }
 function ExcludeMimeType_del(){
 	$tpl=new templates();
@@ -522,6 +869,7 @@ function ExcludeMimeType_del(){
 	$sql="UPDATE Kav4Proxy_groups SET EngineOption='$EngineOption_NEW' WHERE groupname='$gpname'";
 	$q->QUERY_SQL($sql,"artica_backup");
 	if(!$q->ok){echo $q->mysql_error;return;}
+	$sock=new sockets();$sock->getFrameWork("services.php?kav4Proxy-reload=yes");
 }
 function ExcludeMimeType(){
 		$gpname=$_GET["gpname"];
@@ -547,3 +895,75 @@ $tpl=new templates();
 echo $tpl->_ENGINE_parse_body($html);	
 }
 
+function ExcludeURL(){
+		$gpname=$_GET["gpname"];
+		$tpl=new templates();
+		$page=CurrentPageName();	
+	
+	$html="
+	<div class=explain>{ExcludeURLExplain}</div>
+	
+	<div id='ExcludeURLTypeGroupdiv' style='height:350px;overflow:auto'></div>
+	
+	<script>
+		function ExcludeURLTypeRefreshGroupList(){
+			LoadAjax('ExcludeURLTypeGroupdiv','$page?group-ExcludeURL-LIST=yes&gpname=$gpname');
+		
+		}
+	
+	
+		ExcludeURLTypeRefreshGroupList();
+	</script>
+	";	
+$tpl=new templates();
+echo $tpl->_ENGINE_parse_body($html);	
+}
+
+function ClientURI(){
+		$gpname=$_GET["gpname"];
+		$tpl=new templates();
+		$page=CurrentPageName();	
+	
+	$html="
+	<div class=explain>{ClientURI_text}</div>
+	
+	<div id='ClientURIGroupdiv' style='height:350px;overflow:auto'></div>
+	
+	<script>
+		function ClientURIRefreshGroupList(){
+			LoadAjax('ClientURIGroupdiv','$page?group-ClientURI-LIST=yes&gpname=$gpname');
+		
+		}
+	
+	
+		ClientURIRefreshGroupList();
+	</script>
+	";	
+$tpl=new templates();
+echo $tpl->_ENGINE_parse_body($html);		
+	
+}
+
+function ClientIP(){
+		$gpname=$_GET["gpname"];
+		$tpl=new templates();
+		$page=CurrentPageName();	
+	
+	$html="
+	<div class=explain>{ClientIP_text}</div>
+	
+	<div id='ClientIPGroupdiv' style='height:350px;overflow:auto'></div>
+	
+	<script>
+		function ClientIPRefreshGroupList(){
+			LoadAjax('ClientIPGroupdiv','$page?group-ClientIP-LIST=yes&gpname=$gpname');
+		
+		}
+	
+	
+		ClientIPRefreshGroupList();
+	</script>
+	";	
+$tpl=new templates();
+echo $tpl->_ENGINE_parse_body($html);	
+}

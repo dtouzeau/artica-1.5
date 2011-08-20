@@ -13,7 +13,7 @@
 <error_relayhost>The master relay you have set for postfix is not available, change it or check your &quot;internet server relay&quot;</error_relayhost>
 <error_routing_postfix>Postifx was denied routing, please check your transports tables...</error_routing_postfix>
 <error_routing_to>Postfix is unable to route this email to the next destination server, please check your routing tables</error_routing_to>
-<graphs>Charts &amp; Statistics</graphs>
+<graphs>Grafici e statistiche</graphs>
 <lines_number>Max Linee</lines_number>
 <monitorix>Monitorix</monitorix>
 <mysql_not_root_configured>Impossibile accedere a Mysql</mysql_not_root_configured>

@@ -9,15 +9,15 @@ Procmail is also a complete drop-in replacement for your MDA. (If this doesn't m
 ...is a browser-based multilingual IMAP client with an application-like user interface.[br]
  It provides full functionality you expect from an e-mail client, including MIME support, address book, folder manipulation, message searching and spell checking.
  </about_roundcube>
-<accept message>accept message</accept message>
-<acceptmessage>Accept this message</acceptmessage>
+<accept message>accetta messaggio</accept message>
+<acceptmessage>Accetta questo messaggio</acceptmessage>
 <access>Access</access>
 <accessed>accessed</accessed>
 <account>Account</account>
-<accountID>Account identifier</accountID>
+<accountID>Identificatore Account</accountID>
 <AccountLess3Carac>Accounts less than 4 caracters</AccountLess3Carac>
-<account_already_exists>Account already exists</account_already_exists>
-<account_name>Account settings</account_name>
+<account_already_exists>Account esistente</account_already_exists>
+<account_name>Impostazioni dell'account</account_name>
 <ACLS>Access Control Lists</ACLS>
 <acls_directory>Manage Access Control list of this directory</acls_directory>
 <acls_get_error>Unable to obtain ACL information, check that your disk have ACLs enabled or getfacl/setfacl tools are correctly installed on your system</acls_get_error>
@@ -48,14 +48,14 @@ If this parameter is set, then Samba overrides this restriction, and also allows
 to modify the permissions and ACLs on that file.[br] 
 This parameter allows Samba to permit delegation of the control over a point in the exported directory hierarchy in much the same way as Windows.</acl_group_control_text>
 <acl_samba_not>Your samba server did not support ACLs, you can use them on your system but Samba will no translate on shares</acl_samba_not>
-<action>action</action>
-<actions>Action</actions>
-<ActionsGroup>Actions - Group</ActionsGroup>
+<action>azione</action>
+<actions>Azione</actions>
+<ActionsGroup>Azioni - Gruppo</ActionsGroup>
 <ActionsGroupDESC>Actions to be performed on incoming messages</ActionsGroupDESC>
 <action_auditd_suspend>Suspend write events</action_auditd_suspend>
 <action_email>Send email notification</action_email>
 <action_halt>Shutdown the system</action_halt>
-<action_ignore>Ignore</action_ignore>
+<action_ignore>ignorare</action_ignore>
 <action_keepup2date>Update database now</action_keepup2date>
 <action_mail_acct>
 This option should contain a valid email address or alias.[br]
@@ -63,12 +63,12 @@ The default address is root.[br]
 If the email address is not local to the machine,
  you must make sure you have email properly configured on your machine and network.[br]
  Also, this option requires that /usr/lib/sendmail exists on the machine</action_mail_acct>
-<action_start_service>Start the service</action_start_service>
-<action_stop_service>Stop the service</action_stop_service>
-<action_syslog>Write to system events</action_syslog>
-<activate>activate</activate>
+<action_start_service>Avvia il servizio</action_start_service>
+<action_stop_service>Arresta il servizio</action_stop_service>
+<action_syslog>Scrivere gli eventi di sistema</action_syslog>
+<activate>attivare</activate>
 <ACTIVATE_APP_GROUPWARE_APACHE>Activate the groupware web service</ACTIVATE_APP_GROUPWARE_APACHE>
-<ACTIVATE_BACKUP_AGENT>Activate remote backup</ACTIVATE_BACKUP_AGENT>
+<ACTIVATE_BACKUP_AGENT>Attivare backup remoto</ACTIVATE_BACKUP_AGENT>
 <ACTIVATE_BACKUP_AGENT_EXPLAIN>This feature enable Artica Network Agent to store backup on your ressource disk[br]
 select your ressource[br]
 This operation will activate service and enable remote backup trough Artica Network Agent feature</ACTIVATE_BACKUP_AGENT_EXPLAIN>
@@ -77,12 +77,12 @@ This operation will activate service and enable remote backup trough Artica Netw
 <ACTIVATE_MLDONKEY>Activate MLDonkey service</ACTIVATE_MLDONKEY>
 <ACTIVATE_MLDONKEY_TEXT>If you turn on this feature, administators will be able to activate some users has MLDonkey users in organizations.[br]
 IN this case, users can retreive peer-to-peer files trough their Artica End-user interfaces.</ACTIVATE_MLDONKEY_TEXT>
-<activate_rule>Activate the rule</activate_rule>
+<activate_rule>Attiva la regola</activate_rule>
 <ACTIVATE_SPF>Activate Sender Policy Framework checking</ACTIVATE_SPF>
 <ACTIVATE_SPF_TEXT>If this feature is enabled, anti-spam scores will be modified with sender verification SPF method</ACTIVATE_SPF_TEXT>
-<activate_ssl_bump>Activate SSL interception</activate_ssl_bump>
+<activate_ssl_bump>Attivare intercettazioni SSL</activate_ssl_bump>
 <activate_ssl_bump_text>If you turn on this feature, the proxy will able to intercept the SSL traffic in order to send it trough antivirus.[br]It means that you have already enabled Kaspersky Antivirus or ClamAV antivirus in your web traffic inspection</activate_ssl_bump_text>
-<ACTIVATE_THIS_MLDONKEY_USER>Activate this user</ACTIVATE_THIS_MLDONKEY_USER>
+<ACTIVATE_THIS_MLDONKEY_USER>Attiva l'utente</ACTIVATE_THIS_MLDONKEY_USER>
 <ACTIVATE_THIS_MLDONKEY_USER_TEXT>If you turn on, this user will be able to download shared files from peer-to-peer networks using the end-user Artica Interface</ACTIVATE_THIS_MLDONKEY_USER_TEXT>
 <ACTIVATE_THIS_USER_WEBDAV>Activate HTTP remote access</ACTIVATE_THIS_USER_WEBDAV>
 <ACTIVATE_THIS_USER_WEBDAV_TEXT>If you turn on user will be have access to it's Home directory using WebDav protocol using Linux,Windows XP or Vista/Windows 7.[br]
@@ -94,7 +94,7 @@ In the end-user fronted user can read documentation howto connect to it's shared
 <activedirectory_domain>Active Directory domain</activedirectory_domain>
 <activedirectory_server>Active Directory server name</activedirectory_server>
 <active_queue>Active</active_queue>
-<add>add</add>
+<add>aggiungere</add>
 <add aliase>Add new aliase</add aliase>
 <add domain explain>Add a new Internet SMTP domain in your organisation</add domain explain>
 <add email>Add eMail address</add email>
@@ -106,7 +106,7 @@ In the end-user fronted user can read documentation howto connect to it's shared
 <add user explain>Add a new user in your organisation</add user explain>
 <added>Added</added>
 <addremoveprog>Add/Remove/Update Programs</addremoveprog>
-<address>Address</address>
+<address>Indirizzo</address>
 <address_text>Define the member address,phone number,street and others informations</address_text>
 <address_user_text>Modify user informations (telephone,Postal address...)</address_user_text>
 <address_verify_map>Address verification database</address_verify_map>

@@ -2131,7 +2131,18 @@ the IP address of the client computer requesting the object through a proxy serv
 <kav4proxyURL>URL of a requested object.[br]
 Objects with a specified URL and requested from an IP addresses defined will be processed using the rules of this group
 </kav4proxyURL>
-<baseserror>Bases error<baseserror>
+<baseserror>Bases error</baseserror>
 <corrupted>Corrupted</corrupted>
 <cured>Cured</cured>
 <infected>Infected</infected>
+<store>Store</store>
+<zarafa_orphans_explain>
+When a user is deleted the mailbox of the user will be still kept in the database.
+This store is "orphaned" because nobody can access to it but data kept stored.[br]
+In this section you can re-link a store to the current user.[br]
+When a store is hooked to a user that already has a store attached to it,
+ the original store will be orphaned
+</zarafa_orphans_explain>
+<orphans>orphans</orphans>
+<ORPHANED_STORES>Orphaned Store(s)</ORPHANED_STORES>
+<ORPHANED_STORES_TEXT>Orphaned stores increase disk size, you need to judge if these stores should be relinked or permanently deleted</ORPHANED_STORES_TEXT>

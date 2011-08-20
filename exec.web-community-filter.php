@@ -19,14 +19,15 @@ if($argv[1]=="--import"){import();die();}
 
 
 
-
+	$t=time();
 	$sock=new sockets();
 	$users=new usersMenus();
 	if(!$users->SQUID_INSTALLED){die();}
 	$system_is_overloaded=system_is_overloaded();
 	if($system_is_overloaded){
 		$unix=new unix();
-		$unix->send_email_events("Overloaded system, Web filtering maintenance databases tasks aborted", "Artica will wait a new better time...", "proxy");
+		$unix->send_email_events("Overloaded system, Web filtering maintenance databases tasks aborted (general)",
+		 "Artica will wait a new better time...", "proxy");
 		die();
 	}
 	
@@ -68,6 +69,11 @@ if($argv[1]=="--import"){import();die();}
 	patterns();
 	WriteMyLogs("-> fillSitesInfos()","MAIN",null,__LINE__);
 	fillSitesInfos();
+	$distanceOfTimeInWords=$unix->distanceOfTimeInWords($t,time());
+	$unix->send_email_events("Web filtering maintenance databases tasks success",
+		 "Exporting websites, importing websites calculate categories took $distanceOfTimeInWords", "proxy");
+	
+	
 function Export(){
 	
 	

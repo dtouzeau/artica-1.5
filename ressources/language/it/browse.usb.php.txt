@@ -1,1 +1,1 @@
-<refresh_text_usb>Refresh the external devices list</refresh_text_usb>
+<refresh_text_usb>Aggiorna l'elenco dei dispositivi esterni</refresh_text_usb>
