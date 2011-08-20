@@ -48,11 +48,15 @@ function popup_www(){
 }
 
 function popup(){
-	
+	$q=new mysql();
 	$page=CurrentPageName();
 	$tpl=new templates();
 	$array["popup-status"]="{status}";
 	$array["popup-www"]="{parameters}";
+	if($q->COUNT_ROWS("zarafa_orphaned", "artica_backup")>0){
+		$array["popup-orphans"]="{orphans}";
+	}
+	
 	$array["popup-mysql"]="{mysql_tuning}";
 	$array["popup-indexer"]="{APP_ZARAFA_INDEXER}";
 	$array["popup-mailbox"]="{mailboxes}";
@@ -73,6 +77,11 @@ function popup(){
 
 		if($num=="tools"){
 			$html[]="<li><a href=\"zarafa.tools.php\"><span>$ligne</span></a></li>\n";
+			continue;
+		}	
+
+		if($num=="popup-orphans"){
+			$html[]="<li><a href=\"zarafa.orphans.php\"><span>$ligne</span></a></li>\n";
 			continue;
 		}			
 		

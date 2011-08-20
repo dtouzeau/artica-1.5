@@ -529,6 +529,18 @@ function status_right(){
 		}
 	}
 	
+	if($users->ZARAFA_INSTALLED){
+		$q=new mysql();
+		$ctc=$q->COUNT_ROWS("zarafa_orphaned","artica_backup");
+		if($ctc>0){
+			echo RoundedLightGrey(Paragraphe("inbox-error-64.png","$ctc {ORPHANED_STORES}",'{ORPHANED_STORES_TEXT}',
+			"javascript:Loadjs('zarafa.orphans.php?js=yes');",null,330))."<br>";	
+			}
+	}
+	
+		
+	
+	
 	
 	$hostname=base64_decode($sock->getFrameWork("network.php?fqdn=yes"));
 	writelogs("network.php?fqdn=yes -> hostname=\"$hostname\"",__FUNCTION__,__FILE__,__LINE__);

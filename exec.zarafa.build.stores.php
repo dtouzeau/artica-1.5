@@ -6,14 +6,16 @@ include_once(dirname(__FILE__).'/ressources/class.ini.inc');
 include_once(dirname(__FILE__).'/ressources/class.mysql.inc');
 include_once(dirname(__FILE__).'/framework/class.unix.inc');
 include_once(dirname(__FILE__).'/framework/frame.class.inc');
+$GLOBALS["NOMAIL"]=false;
 if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["DEBUG"]=true;$GLOBALS["VERBOSE"]=true;ini_set('display_errors', 1);ini_set('error_reporting', E_ALL);ini_set('error_prepend_string',null);ini_set('error_append_string',null);}
-
+if(preg_match("#--nomail#",implode(" ",$argv))){$GLOBALS["NOMAIL"]=true;}
 if($argv[1]=="--orphans"){orphans();die();}
 if($argv[1]=="--emergency"){emergency_user($argv[2]);die();}
 if($argv[1]=="--export-hash"){export_hash();die();}
 if($argv[1]=="--view-hash"){view_hash();die();}
 if($argv[1]=="--config"){config();die();}
 if($argv[1]=="--ldap-config"){ldap_config();die();}
+if($argv[1]=="--exoprhs"){export_orphans();die();}
 
 
 
@@ -45,6 +47,91 @@ while (list ($index, $user) = each ($usernames) ){
 }
 
 }
+
+function export_orphans(){
+$unix=new unix();
+$q=new mysql();
+$q->BuildTables();
+$q->QUERY_SQL("TRUNCATE TABLE `zarafa_orphaned`","artica_backup");
+$zarafaadmin=$unix->find_program("zarafa-admin");
+exec("$zarafaadmin --list-orphans 2>&1",$array);
+while (list ($index, $line) = each ($array) ){
+	$store=null;
+	
+	
+	if(preg_match("#([A-Z0-9]+)\s+(.+)\s+([0-9\/]+)\s+([0-9:]+)\s+([A-Z]+)\s+([0-9]+)\s+([A-Z]+)#", $line,$re)){
+		$store=$re[1];
+		$user=$re[2];
+		
+		$date=strtotime("{$re[3]} {$re[4]} {$re[5]}");
+		$distanceOfTimeInWords=$unix->distanceOfTimeInWords($date,time());
+		$size=$re[6];
+		$unit=$re[7];		
+	}
+
+	if($store==null){
+		if(preg_match("#([A-Z0-9]+)\s+(.+?)\s+([0-9\/]+)\s+([0-9:]+)\s+([0-9]+)\s+([A-Z]+)#", $line,$re)){
+			$store=$re[1];
+			$user=$re[2];
+			$date=strtotime("{$re[3]} {$re[4]}");	
+			$size=$re[5];
+			$unit=$re[6];	
+		}			
+		
+	}
+	
+	if($store==null){
+		if(preg_match("#([A-Z0-9]+)\s+(.+?)\s+([0-9\/]+)\s+([0-9:]+)\s+unlimited#", $line,$re)){
+			$store=$re[1];
+			$user=$re[2];
+			$date=strtotime("{$re[3]} {$re[4]}");	
+			$size="10240000000000";
+			$unit="B";
+		}
+	}
+	
+	if($store==null){
+		$arraylo[]="No match $line";
+		continue;
+	}
+	
+		$distanceOfTimeInWords=$unix->distanceOfTimeInWords($date,time());
+		if($unit=="MB"){$size=$size*1000;$size=$size*1024;$unit="B";}
+		if($unit=="KB"){$size=$size*1024;$unit="B";}
+		if($unit=="GB"){$size=$size*1000;$size=$size*1000;$size=$size*1024;}
+		$date=date("Y-m-d H:i:s",$date);
+		$textsize=FormatBytes($size/1024);
+		$textsize=str_replace("&nbsp;", "", $textsize);
+		$f[]="Store $store ($textsize) for user $user is unlinked since $date ($distanceOfTimeInWords)";
+		$sql="INSERT IGNORE INTO zarafa_orphaned (storeid,size,zDate,uid) VALUES ('$store','$size','$date','$user')";
+		$arraylo[]=$sql;
+		$q->QUERY_SQL($sql,"artica_backup");
+		if(!$q->ok){
+			$unix->send_email_events("Zarafa orphaned status mysql error", $q->mysql_error." will wait a new cycle", "mailbox");
+			echo $q->mysql_error."\n";
+			return;
+		}
+		
+
+	
+	@file_put_contents("/tmp/zarafa.scan.txt", @implode("\n", $array)."\n".@implode("\n", $arraylo));
+}
+
+
+
+if(!$GLOBALS["NOMAIL"]){
+	if(count($f)>0){
+		$timefile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".time";
+		if($unix->file_time_min($timefile)<300){return;}
+		@unlink($timefile);
+		@file_put_contents($timefile, time());		
+		$unix->send_email_events(count($f)." orphaned store(s)", @implode("\n", $f), "mailbox");
+	}
+}
+	
+}
+
+
 
 function orphans(){
 $unix=new unix();

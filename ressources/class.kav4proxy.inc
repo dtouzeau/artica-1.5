@@ -365,12 +365,103 @@ function Build_defaults(){
 				$conf[]="Append=true";
 				$conf[]="";
 				
+				$conf=$this->Kav4Groups();
+				
 				$sock=new sockets();
 				$config=implode("\n",$conf);
 				$sock->SaveConfigFile($config,"Kav4ProxyMainConf");
 				return $config;
 		
-	}	
+	}
+
+	private function Kav4Groups(){
+		$sql="SELECT * FROM Kav4Proxy_groups WHERE enabled=1 ORDER BY priority DESC";
+		$q=new mysql();
+		$results=$q->QUERY_SQL($sql,"artica_backup");	
+		if(!$q->ok){die();}
+		if(mysql_num_rows($results)==0){
+			echo "Starting......: Kav4proxy no groups...\n";
+		}
+		while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+			$EngineOption=unserialize(base64_decode($ligne["EngineOption"]));
+			$ClientIP=$EngineOption["ClientIP"];
+			$ClientURI=$EngineOption["ClientURI"];
+			$ExcludeMimeType=$EngineOption["ExcludeMimeType"];
+			$ExcludeURL=$EngineOption["ExcludeURL"];
+			$hash=unserialize(base64_decode($ligne["EngineAction"]));
+			if(!is_array($ExcludeMimeType)){$ExcludeMimeType=array();}
+			if(!is_array($ExcludeURL)){$ExcludeURL=array();}
+			if(count($ClientIP)==0){$ClientIP[]=".*";}
+			if(count($ClientURI)==0){$ClientURI[]=".*";}
+	
+			if(!is_numeric($hash["Cure"])){$hash["Cure"]=1;}
+			if(!is_numeric($hash["ScanArchives"])){$hash["ScanArchives"]=1;} 
+			if(!is_numeric($hash["ScanPacked"])){$hash["ScanPacked"]=1;} 
+			if(!is_numeric($hash["ScanMailBases"])){$hash["ScanMailBases"]=1;} 
+			if(!is_numeric($hash["ScanMailPlain"])){$hash["ScanMailPlain"]=1;}
+			if(!is_numeric($hash["MaxScanTime"])){$hash["MaxScanTime"]=300;}
+			if(!is_numeric($hash["MaxReqLength"])){$hash["MaxReqLength"]=512000;}		
+			
+			$groupname=$ligne["groupname"];
+			echo "Starting......: Kav4proxy check group \"$groupname\"...\n";
+			$f[]="\n[icapserver.groups:$groupname]";
+			$f[]="Priority=$Priority";
+			while (list ($num, $ligne) = each ($ClientIP) ){
+				if(trim($ligne)==null){continue;}
+				$f[]="ClientIP=$ligne";
+			}
+			while (list ($num, $ligne) = each ($ClientURI) ){
+				if(trim($ligne)==null){continue;}
+				$f[]="URL=$ligne";
+			}
+
+			$f[]="\n[icapserver.notify:$groupname]";
+			$f[]="NotifyScript=/opt/kaspersky/kav4proxy/share/examples/artica.sh";
+			$f[]="NotifyTemplateDir=/opt/kaspersky/kav4proxy/share/notify";		
+			$f[]="\n[icapserver.filter:$groupname]";
+			$f[]="MaxReqLength={$hash["MaxReqLength"]}";
+			while (list ($num, $ligne) = each ($ExcludeMimeType) ){
+				if(trim($ligne)==null){continue;}
+				$f[]="ExcludeMimeType=$ligne";
+			}	
+			while (list ($num, $ligne) = each ($ExcludeURL) ){
+				if(trim($ligne)==null){continue;}
+				$f[]="ExcludeURL=$ligne";
+			}
+			
+			if($hash["Cure"]==1){$hash["Cure"]="yes";}else{$hash["Cure"]="no";}
+			if($hash["ScanArchives"]==1){$hash["ScanArchives"]="yes";}else{$hash["ScanArchives"]="no";}
+			if($hash["ScanMailBases"]==1){$hash["ScanMailBases"]="yes";}else{$hash["ScanMailBases"]="no";}
+			if($hash["ScanMailPlain"]==1){$hash["ScanMailPlain"]="yes";}else{$hash["ScanMailPlain"]="no";}
+			if($hash["ScanPacked"]==1){$hash["ScanPacked"]="yes";}else{$hash["ScanPacked"]="no";}
+			if($hash["UseAVbasesSet"]==null){$hash["UseAVbasesSet"]="extended";}
+			
+			    
+			
+			$f[]="\n[icapserver.engine.options:$groupname]";
+			$f[]="Cure={$hash["Cure"]}";
+			$f[]="MaxScanTime={$hash["MaxScanTime"]}";
+			$f[]="ScanArchives={$hash["ScanArchives"]}";
+			$f[]="ScanMailBases={$hash["ScanMailBases"]}";
+			$f[]="ScanMailPlain={$hash["ScanMailPlain"]}";
+			$f[]="ScanPacked={$hash["ScanPacked"]}";
+			$f[]="UseAVbasesSet={$hash["UseAVbasesSet"]}";
+			$f[]="UseHeuristic=yes";
+			$f[]="\n[icapserver.actions:$groupname]";
+			$f[]="BasesErrorAction={$hash["BasesErrorAction"]}";
+			$f[]="CorruptedAction={$hash["CorruptedAction"]}";
+			$f[]="CuredAction={$hash["CuredAction"]}";
+			$f[]="ErrorAction={$hash["ErrorAction"]}";
+			$f[]="InfectedAction={$hash["InfectedAction"]}";
+			$f[]="LicenseErrorAction=skip";
+			$f[]="ProtectedAction=skip";
+			$f[]="SuspiciousAction=deny";
+			$f[]="WarningAction=deny";			
+		}
+
+		return @implode("\n",$f);
+		
+	}
 	
 	
 }

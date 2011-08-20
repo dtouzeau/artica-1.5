@@ -12,12 +12,34 @@ if(isset($_GET["DbAttachConverter"])){DbAttachConverter();exit;}
 if(isset($_GET["mbx-infos"])){mbx_infos();exit;}
 if(isset($_GET["csv-export"])){csv_export();exit;}
 if(isset($_GET["removeidb"])){removeidb();exit;}
+if(isset($_GET["zarafa-orphan-kill"])){orphan_delete();exit();}
+if(isset($_GET["zarafa-orphan-link"])){orphan_link();exit();}
+if(isset($_GET["zarafa-orphan-scan"])){orphan_scan();exit();}
+
+
 
 
 while (list ($num, $ligne) = each ($_GET) ){$a[]="$num=$ligne";}
 writelogs_framework("unable to unserstand ".@implode("&",$a),__FUNCTION__,__FILE__,__LINE__);
 
-
+function orphan_link(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$zarafa_admin=$unix->find_program("zarafa-admin");
+	$cmd="$zarafa_admin --hook-store {$_GET["zarafa-orphan-link"]} -u {$_GET["uid"]}";
+	writelogs_framework($cmd,__FUNCTION__,__FILE__,__LINE__);
+	shell_exec($cmd);	
+	$php5=$unix->LOCATE_PHP5_BIN();
+	$cmd="$php5 /usr/share/artica-postfix/exec.zarafa.build.stores.php --exoprhs --nomail";
+	$unix->THREAD_COMMAND_SET($cmd);
+}
+function orphan_scan(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$php5=$unix->LOCATE_PHP5_BIN();
+	$cmd="$php5 /usr/share/artica-postfix/exec.zarafa.build.stores.php --exoprhs --nomail";
+	$unix->THREAD_COMMAND_SET($cmd);
+}
 function locales(){
 	$unix=new unix();
 	$locale=$unix->find_program("locale");
@@ -82,6 +104,18 @@ function mbx_infos(){
 	exec("$zarafa_admin --details {$_GET["mbx-infos"]} 2>&1",$results);
 	echo "<articadatascgi>". base64_encode(serialize($results))."</articadatascgi>";
 }
+function orphan_delete(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$zarafa_admin=$unix->find_program("zarafa-admin");
+	$cmd="$zarafa_admin --remove-store {$_GET["zarafa-orphan-kill"]}";
+	writelogs_framework($cmd,__FUNCTION__,__FILE__,__LINE__);
+	shell_exec($cmd);	
+	$php5=$unix->LOCATE_PHP5_BIN();
+	$cmd="$php5 /usr/share/artica-postfix/exec.zarafa.build.stores.php --exoprhs --nomail";
+	$unix->THREAD_COMMAND_SET($cmd);
+}
+
 function csv_export(){
 	$unix=new unix();
 	$nohup=$unix->find_program("nohup");	

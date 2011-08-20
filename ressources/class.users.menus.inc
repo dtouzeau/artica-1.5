@@ -1347,15 +1347,15 @@ private function build_user_left_menus(){
 
 			
 		if($this->AsArticaAdministrator==true){
-			$array["{organizations}"]["MAIN"]="javascript:Loadjs('domains.index.php?js=yes')";
-			$array["{organizations}"]["SUB"]["{main_parameters}"]="javascript:Loadjs('domains.index.php?js=yes')";
+			$array["{organizations}"]["MAIN"]="javascript:AnimateDiv('BodyContent');Loadjs('domains.index.php?js=yes')";
+			$array["{organizations}"]["SUB"]["{main_parameters}"]="javascript:AnimateDiv('BodyContent');Loadjs('domains.index.php?js=yes')";
 			
 			if($GLOBALS["VERBOSE"]){echo "<li>Starting this->ldapClass->hash_get_ou(true)</li>";}
 			$ous=$this->ldapClass->hash_get_ou(true);
 			if(is_array($ous)){
 				while (list ($num, $ligne) = each ($ous) ){
 					$OU_encoded=base64_encode($OU);
-					$array["{organizations}"]["SUB"][$num]="javascript:Loadjs('domains.manage.org.index.php?js=yes&ou=$num&in-front-ajax=yes');";
+					$array["{organizations}"]["SUB"][$num]="javascript:AnimateDiv('BodyContent');Loadjs('domains.manage.org.index.php?js=yes&ou=$num&in-front-ajax=yes');";
 				}
 			}
 			if(!$this->ARTICA_META_ENABLED){
@@ -1375,23 +1375,23 @@ private function build_user_left_menus(){
 			if($OU<>null){
 				if(strlen($OU)>13){$OU_TEXT=substr($OU,0,10).'...';}else{$OU_TEXT=$OU;}
 				$OU_encoded=base64_encode($OU);
-				$array[$OU_TEXT]["MAIN"]="javascript:Loadjs('domains.manage.org.index.php?js=yes&ou=$OU_encoded&encoded=yes');";
-				$array[$OU_TEXT]["SUB"]["{main_parameters}"]="javascript:Loadjs('domains.manage.org.index.php?js=yes&ou=$OU_encoded&encoded=yes&in-front-ajax=yes');";
+				$array[$OU_TEXT]["MAIN"]="javascript:AnimateDiv('BodyContent');Loadjs('domains.manage.org.index.php?js=yes&ou=$OU_encoded&encoded=yes');";
+				$array[$OU_TEXT]["SUB"]["{main_parameters}"]="javascript:AnimateDiv('BodyContent');Loadjs('domains.manage.org.index.php?js=yes&ou=$OU_encoded&encoded=yes&in-front-ajax=yes');";
 				
 				if($this->AsOrgPostfixAdministrator){
 					if($this->POSTFIX_INSTALLED){
 						if($EnablePostfixMultiInstance==1){
-							$array[$OU_TEXT]["SUB"]["{smtp_relays}"]="javascript:Loadjs('domains.postfix.multi.php?ou=$OU_encoded&encoded=yes&in-front-ajax=yes');";
+							$array[$OU_TEXT]["SUB"]["{smtp_relays}"]="javascript:AnimateDiv('BodyContent');Loadjs('domains.postfix.multi.php?ou=$OU_encoded&encoded=yes&in-front-ajax=yes');";
 						}
 					}
 				}
 								
-				$array[$OU_TEXT]["SUB"]["{domains}"]="javascript:Loadjs('domains.edit.domains.php?js=yes&ou=$OU_encoded&encoded=yes&in-front-ajax=yes');";
+				$array[$OU_TEXT]["SUB"]["{domains}"]="javascript:AnimateDiv('BodyContent');Loadjs('domains.edit.domains.php?js=yes&ou=$OU_encoded&encoded=yes&in-front-ajax=yes');";
 
 				if($EnableInterfaceMailCampaigns==1){
 					if($this->EMAILRELAY_INSTALLED){
 					if($this->AseMailCampaignsAdmin){
-					$array[$OU_TEXT]["SUB"]["{email_campaigns}"]="javascript:Loadjs('domains.emailings.php?popup-js=yes&ou=$OU_encoded');";
+					$array[$OU_TEXT]["SUB"]["{email_campaigns}"]="javascript:AnimateDiv('BodyContent');Loadjs('domains.emailings.php?popup-js=yes&ou=$OU_encoded');";
 				}}}				
 				
 				
@@ -1406,12 +1406,12 @@ private function build_user_left_menus(){
 				}
 				
 				
-				$array[$OU_TEXT]["SUB"]["{members}"]="javascript:Loadjs('domains.manage.org.index.php?finduser-js=yes&ou=$OU_encoded&encoded=yes&in-front-ajax=yes');";
-				$array[$OU_TEXT]["SUB"]["{groups}"]="javascript:Loadjs('domains.edit.group.php?ou=$OU_encoded&js=yes&encoded=yes&in-front-ajax=yes');";
-				$array[$OU_TEXT]["SUB"]["{search}"]="javascript:Loadjs('domains.find.user.php?ou=$OU_encoded&encoded=yes');";
+				$array[$OU_TEXT]["SUB"]["{members}"]="javascript:AnimateDiv('BodyContent');Loadjs('domains.manage.org.index.php?finduser-js=yes&ou=$OU_encoded&encoded=yes&in-front-ajax=yes');";
+				$array[$OU_TEXT]["SUB"]["{groups}"]="javascript:AnimateDiv('BodyContent');Loadjs('domains.edit.group.php?ou=$OU_encoded&js=yes&encoded=yes&in-front-ajax=yes');";
+				$array[$OU_TEXT]["SUB"]["{search}"]="javascript:AnimateDiv('BodyContent');Loadjs('domains.find.user.php?ou=$OU_encoded&encoded=yes');";
 				if(!$this->EnableManageUsersTroughActiveDirectory){
 					if($EnableGroupWareScreen==1){
-						$array[$OU_TEXT]["SUB"]["{groupwares}"]="javascript:Loadjs('domains.manage.org.index.php?ou=$OU_encoded&encoded=yes&groupwares-in-front-ajax=yes');";
+						$array[$OU_TEXT]["SUB"]["{groupwares}"]="javascript:AnimateDiv('BodyContent');Loadjs('domains.manage.org.index.php?ou=$OU_encoded&encoded=yes&groupwares-in-front-ajax=yes');";
 					}
 				}
 				
@@ -1420,89 +1420,89 @@ private function build_user_left_menus(){
 		}
 		
 		if($this->AsArticaAdministrator==true){
-			$array["system"]["MAIN"]="javascript:Loadjs('system.index.php?js=yes')";
-			$array["system"]["SUB"]["{main_parameters}"]="javascript:Loadjs('system.index.php?js=yes')";
+			$array["system"]["MAIN"]="javascript:AnimateDiv('BodyContent');Loadjs('system.index.php?js=yes')";
+			$array["system"]["SUB"]["{main_parameters}"]="javascript:AnimateDiv('BodyContent');Loadjs('system.index.php?js=yes')";
 			if(!$this->AS_VPS_CLIENT){
-				$array["system"]["SUB"]["{left_menu_internal_hard_drives}"]="javascript:Loadjs('system.internal.disks.php?in-front-ajax=yes')";
+				$array["system"]["SUB"]["{left_menu_internal_hard_drives}"]="javascript:AnimateDiv('BodyContent');Loadjs('system.internal.disks.php?in-front-ajax=yes')";
 			}
 			
 			if($this->autofs_installed){
-				$array["system"]["SUB"]["{automount}"]="javascript:Loadjs('autofs.php')";
+				$array["system"]["SUB"]["{automount}"]="javascript:AnimateDiv('BodyContent');Loadjs('autofs.php')";
 			}
 			
-			$array["system"]["SUB"]["{left_menu_net_settings}"]="javascript:Loadjs('system.nic.config.php?js=yes&in-front-ajax=yes')";
-			$array["system"]["SUB"]["{mysql_settings}"]="javascript:Loadjs('system.mysql.php')";
+			$array["system"]["SUB"]["{left_menu_net_settings}"]="javascript:AnimateDiv('BodyContent');Loadjs('system.nic.config.php?js=yes&in-front-ajax=yes')";
+			$array["system"]["SUB"]["{mysql_settings}"]="javascript:AnimateDiv('BodyContent');Loadjs('system.mysql.php')";
 			
 			
 			
-			if($sock->GET_INFO("WifiCardOk")==1){$array["system"]["SUB"]["WIFI"]="javascript:Loadjs('system.wifi.php')";}
+			if($sock->GET_INFO("WifiCardOk")==1){$array["system"]["SUB"]["WIFI"]="javascript:AnimateDiv('BodyContent');Loadjs('system.wifi.php')";}
 			if($this->dhcp_installed){
-					$array["system"]["SUB"]["{APP_DHCP}"]="javascript:Loadjs('index.gateway.php?index_dhcp=yes&in-front-ajax=yes')";
+					$array["system"]["SUB"]["{APP_DHCP}"]="javascript:AnimateDiv('BodyContent');Loadjs('index.gateway.php?index_dhcp=yes&in-front-ajax=yes')";
 			}
 			
 			if($sock->GET_INFO("QOSInLeftMenu")==1){
-				$array["system"]["SUB"]["{Q.O.S}"]="javascript:Loadjs('qos.php?in-front-ajax=yes')";
+				$array["system"]["SUB"]["{Q.O.S}"]="javascript:AnimateDiv('BodyContent');Loadjs('qos.php?in-front-ajax=yes')";
 				
 			}
 			
 
 			
 			if($this->PPTPD_INSTALLED){
-				$array["system"]["SUB"]["VPN PPTP"]="javascript:Loadjs('pptpd.php?infront=yes')";
+				$array["system"]["SUB"]["VPN PPTP"]="javascript:AnimateDiv('BodyContent');Loadjs('pptpd.php?infront=yes')";
 			}
 			
 			if($this->PPTP_INSTALLED){
-				$array["system"]["SUB"]["VPN PPTP"]="javascript:Loadjs('pptpd.php?infront=yes')";
+				$array["system"]["SUB"]["VPN PPTP"]="javascript:AnimateDiv('BodyContent');Loadjs('pptpd.php?infront=yes')";
 			}	
 
 			
 			if($this->IPSEC_INSTALLED){
-				$array["system"]["SUB"]["VPN IPSEC"]="javascript:Loadjs('ipsec.php?infront=yes')";
+				$array["system"]["SUB"]["VPN IPSEC"]="javascript:AnimateDiv('BodyContent');Loadjs('ipsec.php?infront=yes')";
 				
 			}
 			
 			if($this->AsDnsAdministrator){
-				if($this->POWER_DNS_INSTALLED){$array["system"]["SUB"]["{APP_PDNS}"]="javascript:Loadjs('pdns.php?in-front-ajax=yes')";}
-				if($this->dnsmasq_installed){$array["system"]["SUB"]["DNSMasq"]="javascript:Loadjs('dnsmasq.index.php')";}
+				if($this->POWER_DNS_INSTALLED){$array["system"]["SUB"]["{APP_PDNS}"]="javascript:AnimateDiv('BodyContent');Loadjs('pdns.php?in-front-ajax=yes')";}
+				if($this->dnsmasq_installed){$array["system"]["SUB"]["DNSMasq"]="javascript:AnimateDiv('BodyContent');Loadjs('dnsmasq.index.php')";}
 				
 			}
 			
 			if($this->APACHE_INSTALLED){
 					if($FreeWebLeftMenu==1){
-						$array["system"]["SUB"]["FreeWebs"]="javascript:Loadjs('freeweb.php?in-front-ajax=yes')";
+						$array["system"]["SUB"]["FreeWebs"]="javascript:AnimateDiv('BodyContent');Loadjs('freeweb.php?in-front-ajax=yes')";
 					}
 				}
 			
 			
 			if($this->crossroads_installed){
-					$array["system"]["SUB"]["{load_balancing}"]="javascript:Loadjs('crossroads.index.php')";
+					$array["system"]["SUB"]["{load_balancing}"]="javascript:AnimateDiv('BodyContent');Loadjs('crossroads.index.php')";
 				}
 
 			if($this->IPTABLES_ACCOUNTING_EXISTS){
-				$array["system"]["SUB"]["{APP_IPTACCOUNT}"]="javascript:Loadjs('iptaccount.php')";
+				$array["system"]["SUB"]["{APP_IPTACCOUNT}"]="javascript:AnimateDiv('BodyContent');Loadjs('iptaccount.php')";
 			}
 
 			if($this->APT_MIRROR_INSTALLED){
 				if($sock->GET_INFO("EnableAptMirror")==1){
-					$array["system"]["SUB"]["{REPOSITORY_DEB_MIRROR}"]="javascript:Loadjs('apt-mirror.php?in-front-ajax=yes')";
+					$array["system"]["SUB"]["{REPOSITORY_DEB_MIRROR}"]="javascript:AnimateDiv('BodyContent');Loadjs('apt-mirror.php?in-front-ajax=yes')";
 				}
 			}
 			
 			
 			$array["system"]["SUB"]["{APP_OPENSSH}"]="javascript:Loadjs('sshd.php?in-front-ajax=yes')";
 			
-			if($this->OPENEMM_INSTALLED){$array["system"]["SUB"]["{APP_OPENEMM}"]="javascript:Loadjs('openemm.php')";}			
-			if($this->APP_SABNZBDPLUS_INSTALLED){$array["system"]["SUB"]["{APP_SABNZBDPLUS}"]="javascript:Loadjs('sabnzbdplus.php?in-front-ajax=yes')";}
+			if($this->OPENEMM_INSTALLED){$array["system"]["SUB"]["{APP_OPENEMM}"]="javascript:AnimateDiv('BodyContent');Loadjs('openemm.php')";}			
+			if($this->APP_SABNZBDPLUS_INSTALLED){$array["system"]["SUB"]["{APP_SABNZBDPLUS}"]="javascript:AnimateDiv('BodyContent');Loadjs('sabnzbdplus.php?in-front-ajax=yes')";}
 			
 			if($this->OPENVPN_INSTALLED){
 				$array["{APP_OPENVPN}"]["MAIN"]="javascript:Loadjs('index.openvpn.php?infront=yes')";
-				$array["{APP_OPENVPN}"]["SUB"]["{main_parameters}"]="javascript:Loadjs('index.openvpn.php?infront=yes');";
-				$array["{APP_OPENVPN}"]["SUB"]["{server}"]="javascript:Loadjs('index.openvpn.php?server-settings-js=yes')";
-				$array["{APP_OPENVPN}"]["SUB"]["{client}"]="javascript:Loadjs('openvpn.servers-connect.php?inline-js=yes')";
+				$array["{APP_OPENVPN}"]["SUB"]["{main_parameters}"]="javascript:AnimateDiv('BodyContent');Loadjs('index.openvpn.php?infront=yes');";
+				$array["{APP_OPENVPN}"]["SUB"]["{server}"]="javascript:AnimateDiv('BodyContent');Loadjs('index.openvpn.php?server-settings-js=yes')";
+				$array["{APP_OPENVPN}"]["SUB"]["{client}"]="javascript:AnimateDiv('BodyContent');Loadjs('openvpn.servers-connect.php?inline-js=yes')";
 				
-				$array["{APP_OPENVPN}"]["SUB"]["{sessions}"]="javascript:Loadjs('index.openvpn.php?session-js=yes')";
-				$array["{APP_OPENVPN}"]["SUB"]["{REMOTE_SITES_VPN}"]="javascript:Loadjs('openvpn.remotesites.php?js-inline=yes')";
-				$array["{APP_OPENVPN}"]["SUB"]["{events}"]="javascript:Loadjs('index.openvpn.php?events-js=yes')";
+				$array["{APP_OPENVPN}"]["SUB"]["{sessions}"]="javascript:AnimateDiv('BodyContent');Loadjs('index.openvpn.php?session-js=yes')";
+				$array["{APP_OPENVPN}"]["SUB"]["{REMOTE_SITES_VPN}"]="javascript:AnimateDiv('BodyContent');Loadjs('openvpn.remotesites.php?js-inline=yes')";
+				$array["{APP_OPENVPN}"]["SUB"]["{events}"]="javascript:AnimateDiv('BodyContent');Loadjs('index.openvpn.php?events-js=yes')";
 				
 				
 			}			
@@ -1513,21 +1513,21 @@ private function build_user_left_menus(){
 		
 		if($this->AsVirtualBoxManager){
 			if($this->VIRTUALBOX_INSTALLED){
-				$array["{virtual_machines}"]["MAIN"]="javascript:Loadjs('virtualbox.php')";
-				$array["{virtual_machines}"]["SUB"]["{main_parameters}"]="javascript:Loadjs('virtualbox.php');";
+				$array["{virtual_machines}"]["MAIN"]="javascript:AnimateDiv('BodyContent');Loadjs('virtualbox.php')";
+				$array["{virtual_machines}"]["SUB"]["{main_parameters}"]="javascript:AnimateDiv('BodyContent');Loadjs('virtualbox.php');";
 				$array["{virtual_machines}"]["SUB"]["{virtualbox_manager}"]="javascript:s_PopUp('virtualbox/index.html','1024','768')";
 			}
 			
 			if($this->THINSTATION_INSTALLED){
-				$array["{virtual_machines}"]["MAIN"]="javascript:Loadjs('virtualbox.php')";
-				$array["{virtual_machines}"]["SUB"]["{thinclients}"]="javascript:Loadjs('virtualbox.php?by-thinclients=yes');";
+				$array["{virtual_machines}"]["MAIN"]="javascript:AnimateDiv('BodyContent');Loadjs('virtualbox.php')";
+				$array["{virtual_machines}"]["SUB"]["{thinclients}"]="javascript:AnimateDiv('BodyContent');Loadjs('virtualbox.php?by-thinclients=yes');";
 			}
 			
 			
 			if($this->LXC_INSTALLED){
 				if($EnableLXCINLeftMenus==1){
-					$array["{virtual_machines}"]["MAIN"]="javascript:Loadjs('virtualbox.php')";
-					$array["{virtual_machines}"]["SUB"]["{VPS_SERVERS}"]="javascript:Loadjs('lxc.index.php')";
+					$array["{virtual_machines}"]["MAIN"]="javascript:AnimateDiv('BodyContent');Loadjs('virtualbox.php')";
+					$array["{virtual_machines}"]["SUB"]["{VPS_SERVERS}"]="javascript:AnimateDiv('BodyContent');Loadjs('lxc.index.php')";
 				}
 			}
 			
@@ -1539,7 +1539,7 @@ private function build_user_left_menus(){
 				$EnableAuditd=$sock->GET_INFO("EnableAuditd");
 				if($EnableAuditd==null){$EnableAuditd=1;}
 				if($EnableAuditd==1){
-					$array["system"]["SUB"]["{APP_AUDITD}"]="javascript:Loadjs('auditd.php?in-front-ajax=yes')";
+					$array["system"]["SUB"]["{APP_AUDITD}"]="javascript:AnimateDiv('BodyContent');Loadjs('auditd.php?in-front-ajax=yes')";
 				}
 			}
 		}
@@ -1553,29 +1553,29 @@ private function build_user_left_menus(){
 					$array["{fileshare}"]["SUB"]["{main_parameters}"]="javascript:Loadjs('fileshares.index.php?js=yes');";
 					$array["{fileshare}"]["SUB"]["{wins_server}"]="javascript:AnimateDiv('BodyContent');Loadjs('samba.wins.php');";
 					$array["{fileshare}"]["SUB"]["{shared_folders}"]="javascript:AnimateDiv('BodyContent');Loadjs('samba.index.php?script=yes&js-shared_folders=yes');";
-					$array["{fileshare}"]["SUB"]["{virtual_servers}"]="javascript:Loadjs('samba.virtual-servers.php?js-inline=yes');";
+					$array["{fileshare}"]["SUB"]["{virtual_servers}"]="javascript:AnimateDiv('BodyContent');Loadjs('samba.virtual-servers.php?js-inline=yes');";
 					$array["{fileshare}"]["SUB"]["SSLBridge"]="javascript:s_PopUpFull('sslbridge/index.php',900,900,'SSLBridge For Artica')";
 					$array["{fileshare}"]["SUB"]["{explorer}"]="javascript:Loadjs('tree.php');";
 					$array["{fileshare}"]["SUB"]["{SHARE_FOLDER}"]="javascript:Loadjs('browse-disk.php?with-samba=yes');";
 					if($this->CUPS_INSTALLED){
-						$array["{fileshare}"]["SUB"]["{printers}"]="javascript:Loadjs('cups.index.php?in-front-ajax=yes');";
+						$array["{fileshare}"]["SUB"]["{printers}"]="javascript:AnimateDiv('BodyContent');Loadjs('cups.index.php?in-front-ajax=yes');";
 					}
-					$array["{fileshare}"]["SUB"]["{computers}"]="javascript:Loadjs('computer-browse.php?in-front-ajax=yes');";
+					$array["{fileshare}"]["SUB"]["{computers}"]="javascript:AnimateDiv('BodyContent');Loadjs('computer-browse.php?in-front-ajax=yes');";
 					}
 			}
 			
 			
 			if($this->AsSystemAdministrator){
 				if($this->PUREFTP_INSTALLED){
-					$array["{fileshare}"]["MAIN"]="javascript:Loadjs('fileshares.index.php?js=yes')";
-					$array["{fileshare}"]["SUB"]["{main_parameters}"]="javascript:Loadjs('fileshares.index.php?js=yes');";
+					$array["{fileshare}"]["MAIN"]="javascript:AnimateDiv('BodyContent');Loadjs('fileshares.index.php?js=yes')";
+					$array["{fileshare}"]["SUB"]["{main_parameters}"]="javascript:AnimateDiv('BodyContent');Loadjs('fileshares.index.php?js=yes');";
 				}
 			}
 				
 			if($this->AsSystemAdministrator){
 				if($this->RSYNC_INSTALLED){
-					$array["{fileshare}"]["MAIN"]="javascript:Loadjs('fileshares.index.php?js=yes')";
-					$array["{fileshare}"]["SUB"]["{main_parameters}"]="javascript:Loadjs('fileshares.index.php?js=yes');";
+					$array["{fileshare}"]["MAIN"]="javascript:AnimateDiv('BodyContent');Loadjs('fileshares.index.php?js=yes')";
+					$array["{fileshare}"]["SUB"]["{main_parameters}"]="javascript:AnimateDiv('BodyContent');Loadjs('fileshares.index.php?js=yes');";
 					$array["{fileshare}"]["SUB"]["{explorer}"]="javascript:Loadjs('tree.php');";
 				}	
 			}
@@ -1583,16 +1583,16 @@ private function build_user_left_menus(){
 			
 			if($this->AsSystemAdministrator){
 				if($this->MLDONKEY_INSTALLED){
-					$array["{fileshare}"]["MAIN"]="javascript:Loadjs('fileshares.index.php?js=yes')";
-					$array["{fileshare}"]["SUB"]["{APP_MLDONKEY}"]="javascript:Loadjs('mldonkey.php?in-front-ajax=yes');";
+					$array["{fileshare}"]["MAIN"]="javascript:AnimateDiv('BodyContent');Loadjs('fileshares.index.php?js=yes')";
+					$array["{fileshare}"]["SUB"]["{APP_MLDONKEY}"]="javascript:AnimateDiv('BodyContent');Loadjs('mldonkey.php?in-front-ajax=yes');";
 					$array["{fileshare}"]["SUB"]["{explorer}"]="javascript:Loadjs('tree.php');";
 				}	
 			}
 	
 			if($this->AsSystemAdministrator){
 				if($this->GLUSTER_INSTALLED){
-					$array["{fileshare}"]["MAIN"]="javascript:Loadjs('fileshares.index.php?js=yes')";
-					$array["{fileshare}"]["SUB"]["{APP_CLUSTER}"]="javascript:Loadjs('gluster.samba.php?in-front-ajax=yes');";
+					$array["{fileshare}"]["MAIN"]="javascript:AnimateDiv('BodyContent');Loadjs('fileshares.index.php?js=yes')";
+					$array["{fileshare}"]["SUB"]["{APP_CLUSTER}"]="javascript:AnimateDiv('BodyContent');Loadjs('gluster.samba.php?in-front-ajax=yes');";
 					$array["{fileshare}"]["SUB"]["{explorer}"]="javascript:Loadjs('tree.php');";
 				}	
 			}
@@ -1607,7 +1607,7 @@ private function build_user_left_menus(){
 			if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
 			if($SQUIDEnable==1){
 					$array["{web_proxy}"]["MAIN"]="javascript:Loadjs('squid.newbee.php?yes')";
-					$array["{web_proxy}"]["SUB"]["{main_parameters}"]="javascript:Loadjs('squid.newbee.php?yes')";
+					$array["{web_proxy}"]["SUB"]["{main_parameters}"]="javascript:AnimateDiv('BodyContent');Loadjs('squid.newbee.php?yes')";
 					$array["{web_proxy}"]["SUB"]["{add_websites}"]="javascript:Loadjs('squid.visited.php?add-www=yes')";
 					$array["{web_proxy}"]["SUB"]["{visited_websites}"]="javascript:Loadjs('squid.visited.php')";
 					
@@ -1615,33 +1615,33 @@ private function build_user_left_menus(){
 					
 					if($SquidActHasReverse<>1){
 						if($this->DANSGUARDIAN_INSTALLED){
-							$array["{web_proxy}"]["SUB"]["{DANSGUARDIAN_RULES}"]="javascript:Loadjs('dansguardian.index.php?js=yes')";
+							$array["{web_proxy}"]["SUB"]["{DANSGUARDIAN_RULES}"]="javascript:AnimateDiv('BodyContent');Loadjs('dansguardian.index.php?js=yes')";
 		
 						}
 					}
 					
 					if($SquidActHasReverse<>1){
 						if($this->SQUIDGUARD_INSTALLED){
-							$array["{web_proxy}"]["SUB"]["{DANSGUARDIAN_RULES}"]="javascript:Loadjs('dansguardian.index.php?js=yes')";
+							$array["{web_proxy}"]["SUB"]["{DANSGUARDIAN_RULES}"]="javascript:AnimateDiv('BodyContent');Loadjs('dansguardian.index.php?js=yes')";
 						}
 					}
 					
 					
 					if($SquidActHasReverse<>1){
 						if($this->APP_UFDBGUARD_INSTALLED){
-							$array["{web_proxy}"]["SUB"]["{DANSGUARDIAN_RULES}"]="javascript:Loadjs('dansguardian.index.php?js=yes')";
+							$array["{web_proxy}"]["SUB"]["{DANSGUARDIAN_RULES}"]="javascript:AnimateDiv('BodyContent');Loadjs('dansguardian.index.php?js=yes')";
 						}
 					}					
 
 					if($SquidActHasReverse<>1){
 						if($this->C_ICAP_INSTALLED){
-							$array["{web_proxy}"]["SUB"]["{DANSGUARDIAN_RULES}"]="javascript:Loadjs('dansguardian.index.php?js=yes')";
+							$array["{web_proxy}"]["SUB"]["{DANSGUARDIAN_RULES}"]="javascript:AnimateDiv('BodyContent');Loadjs('dansguardian.index.php?js=yes')";
 						}
 					}
 		
 					
 					
-					$array["{web_proxy}"]["SUB"]["{bandwith_limitation}"]="javascript:Loadjs('squid.bandwith.php?js=yes')";
+					$array["{web_proxy}"]["SUB"]["{bandwith_limitation}"]="javascript:AnimateDiv('BodyContent');Loadjs('squid.bandwith.php?js=yes')";
 					$cachemgr_left_menu=$sock->GET_INFO("cachemgr_left_menu");
 					
 					if($cachemgr_left_menu==1){
@@ -1665,25 +1665,25 @@ private function build_user_left_menus(){
 		if($this->POSTFIX_INSTALLED){
 			if($this->AsPostfixAdministrator==true){
 				$array["{messaging}"]["MAIN"]="javascript:Loadjs('postfix.index.php')";
-				$array["{messaging}"]["SUB"]["{main_parameters}"]="javascript:Loadjs('postfix.index.php')";
+				$array["{messaging}"]["SUB"]["{main_parameters}"]="javascript:AnimateDiv('BodyContent');Loadjs('postfix.index.php')";
 				
 				if($EnablePostfixMultiInstance==1){
 					$array["{messaging}"]["SUB"]["{multiple_instances}"]="javascript:Loadjs('postfix.multiples.php')";
 				}
 				
-				$array["{messaging}"]["SUB"]["{queue_management}"]="javascript:Loadjs('postfix.queue.monitoring.php?inline-js=yes')";
+				$array["{messaging}"]["SUB"]["{queue_management}"]="javascript:AnimateDiv('BodyContent');Loadjs('postfix.queue.monitoring.php?inline-js=yes')";
 				
 				
 				
-				$array["{messaging}"]["SUB"]["{security}"]="javascript:Loadjs('postfix.security.php')";
-				$array["{messaging}"]["SUB"]["{APP_POSTFWD2}"]="javascript:Loadjs('postfwd2.php?instance=master')";
+				$array["{messaging}"]["SUB"]["{security}"]="javascript:AnimateDiv('BodyContent');Loadjs('postfix.security.php')";
+				$array["{messaging}"]["SUB"]["{APP_POSTFWD2}"]="javascript:AnimateDiv('BodyContent');Loadjs('postfwd2.php?instance=master')";
 				
 				
 				
-				$array["{messaging}"]["SUB"]["{postfix_finder}"]="javascript:Loadjs('postfix.finder.php?js=yes')";
-				$array["{messaging}"]["SUB"]["{search}"]="javascript:Loadjs('postfix.search.php')";
+				$array["{messaging}"]["SUB"]["{postfix_finder}"]="javascript:AnimateDiv('BodyContent');Loadjs('postfix.finder.php?js=yes')";
+				$array["{messaging}"]["SUB"]["{search}"]="javascript:AnimateDiv('BodyContent');Loadjs('postfix.search.php')";
 				if($InstantIpTablesInLeftMenu==1){
-					$array["{messaging}"]["SUB"]["Instant Iptables"]="javascript:Loadjs('postfix.iptables.php?in-front-ajax=yes')";
+					$array["{messaging}"]["SUB"]["Instant Iptables"]="javascript:AnimateDiv('BodyContent');Loadjs('postfix.iptables.php?in-front-ajax=yes')";
 				}
 				
 				if($this->CLUEBRINGER_INSTALLED){
@@ -1693,7 +1693,7 @@ private function build_user_left_menus(){
 				}
 				
 				if($this->OPENEMM_INSTALLED){
-					$array["{messaging}"]["SUB"]["{APP_OPENEMM}"]="javascript:Loadjs('openemm.php')";
+					$array["{messaging}"]["SUB"]["{APP_OPENEMM}"]="javascript:AnimateDiv('BodyContent');Loadjs('openemm.php')";
 				}
 				
 				$array=$this->MAILBOXES_MENUS($array);
@@ -1710,12 +1710,12 @@ private function build_user_left_menus(){
 				
 				if($this->AMAVIS_INSTALLED){
 					if($sock->GET_INFO("EnableAmavisDaemon")==1){
-						$array["{messaging}"]["SUB"]["{APP_AMAVIS}"]="javascript:Loadjs('amavis.index.php?ajax=yes&in-front-ajax=yes')";
+						$array["{messaging}"]["SUB"]["{APP_AMAVIS}"]="javascript:AnimateDiv('BodyContent');Loadjs('amavis.index.php?ajax=yes&in-front-ajax=yes')";
 					}
 				}
 				
 				if($this->AsPostfixAdministrator){	
-					$array["{messaging}"]["SUB"]["{white list}"]="javascript:Loadjs('whitelists.admin.php?js=yes&js-in-line=yes')";
+					$array["{messaging}"]["SUB"]["{white list}"]="javascript:AnimateDiv('BodyContent');Loadjs('whitelists.admin.php?js=yes&js-in-line=yes')";
 				}
 			
 				
@@ -1736,12 +1736,12 @@ private function build_user_left_menus(){
 		if($this->POSTFIX_INSTALLED){if($this->AsPostfixAdministrator==true && $this->mailgraph_installed==true){$array["Mailman"]="mailman.index.php";}}
 		if($this->AllowViewStatistics==true){
 			$array["{statistics}"]["MAIN"]="javascript:Loadjs('statistics.index.php')";
-			$array["{statistics}"]["SUB"]["{master_panel}"]="javascript:Loadjs('statistics.index.php')";
+			$array["{statistics}"]["SUB"]["{master_panel}"]="javascript:AnimateDiv('BodyContent');Loadjs('statistics.index.php')";
 			
 			if($this->POSTFIX_INSTALLED){
 				if($this->AsPostfixAdministrator){
 					if($EnableArticaSMTPStatistics==1){
-						$array["{statistics}"]["SUB"]["SMTP (con.)"]="javascript:Loadjs('postfix.stats.cnx.php')";
+						$array["{statistics}"]["SUB"]["SMTP (con.)"]="javascript:AnimateDiv('BodyContent');Loadjs('postfix.stats.cnx.php')";
 					}
 					
 				}
@@ -1749,14 +1749,14 @@ private function build_user_left_menus(){
 			
 
 			if($this->SQUID_INSTALLED){
-				$array["{statistics}"]["SUB"]["{web_proxy}"]="javascript:Loadjs('squid.statistics.php')";
+				$array["{statistics}"]["SUB"]["{web_proxy}"]="javascript:AnimateDiv('BodyContent');Loadjs('squid.statistics.php')";
 				if($this->SARG_INSTALLED){
 						$array["{statistics}"]["SUB"]["{web_proxy}:SARG"]="javascript:s_PopUpFull('squid/index.html',900,900,'SARG')";
 					}
 			}
 			
 			if($this->APP_VNSTAT_INSTALLED){
-				$array["{statistics}"]["SUB"]["{network_stats}"]="javascript:Loadjs('statistics.vnstat.php')";
+				$array["{statistics}"]["SUB"]["{network_stats}"]="javascript:AnimateDiv('BodyContent');Loadjs('statistics.vnstat.php')";
 			}
 		
 		}	
@@ -1768,12 +1768,12 @@ private function build_user_left_menus(){
 			$array["{events}"]["MAIN"]="";
 			
 			if($this->AsSystemAdministrator){
-				$array["{events}"]["SUB"]["{syslog}"]="javascript:Loadjs('syslog.php')";
-				$array["{events}"]["SUB"]["{APP_OPENSSH}"]="javascript:Loadjs('sshd.php?events-js=yes')";
-				if($this->SNORT_INSTALLED){$array["{events}"]["SUB"]["I.D.S"]="javascript:Loadjs('system.nic.snort.php?events-js=yes')";}
-				if($this->OPENVPN_INSTALLED){$array["{events}"]["SUB"]["{APP_OPENVPN}"]="javascript:Loadjs('index.openvpn.php?events-js=yes')";}
-				$array["{events}"]["SUB"]["{artica_events}"]="javascript:Loadjs('artica.events.php?in-front-ajax=yes')";
-				$array["{events}"]["SUB"]["MySQL"]="javascript:Loadjs('system.mysql.events.php?in-front-ajax=yes')";
+				$array["{events}"]["SUB"]["{syslog}"]="javascript:AnimateDiv('BodyContent');Loadjs('syslog.php')";
+				$array["{events}"]["SUB"]["{APP_OPENSSH}"]="javascript:AnimateDiv('BodyContent');Loadjs('sshd.php?events-js=yes')";
+				if($this->SNORT_INSTALLED){$array["{events}"]["SUB"]["I.D.S"]="javascript:AnimateDiv('BodyContent');Loadjs('system.nic.snort.php?events-js=yes')";}
+				if($this->OPENVPN_INSTALLED){$array["{events}"]["SUB"]["{APP_OPENVPN}"]="javascript:AnimateDiv('BodyContent');Loadjs('index.openvpn.php?events-js=yes')";}
+				$array["{events}"]["SUB"]["{artica_events}"]="javascript:AnimateDiv('BodyContent');Loadjs('artica.events.php?in-front-ajax=yes')";
+				$array["{events}"]["SUB"]["MySQL"]="javascript:AnimateDiv('BodyContent');Loadjs('system.mysql.events.php?in-front-ajax=yes')";
 				
 				
 			}
@@ -1782,13 +1782,13 @@ private function build_user_left_menus(){
 				$array["{events}"]["SUB"]["{messaging}"]="javascript:s_PopUp('postfix.events.php?pop=true',450,400)";
 			}
 			if($this->fetchmail_installed){
-				$array["{events}"]["SUB"]["fetchmail"]="javascript:Loadjs('fetchmail.events.php');";
+				$array["{events}"]["SUB"]["fetchmail"]="javascript:AnimateDiv('BodyContent');Loadjs('fetchmail.events.php');";
 			}
 			
 			if($this->SAMBA_INSTALLED){
 			if($this->AsSambaAdministrator){
-				$array["{events}"]["SUB"]["samba watch"]="javascript:Loadjs('samba.watch.php?ajax=yes&in-line=yes');";
-				$array["{events}"]["SUB"]["samba"]="javascript:Loadjs('samba.events.php?ajax=yes&in-line=yes');";
+				$array["{events}"]["SUB"]["samba watch"]="javascript:AnimateDiv('BodyContent');Loadjs('samba.watch.php?ajax=yes&in-line=yes');";
+				$array["{events}"]["SUB"]["samba"]="javascript:AnimateDiv('BodyContent');Loadjs('samba.events.php?ajax=yes&in-line=yes');";
 				
 				}
 			}
@@ -1800,7 +1800,7 @@ private function build_user_left_menus(){
 				$EnableAuditd=$sock->GET_INFO("EnableAuditd");
 				if($EnableAuditd==null){$EnableAuditd=1;}
 				if($EnableAuditd==1){
-					$array["{events}"]["SUB"]["{APP_AUDITD}"]="javascript:Loadjs('auditd.php?in-front-ajax=yes&js-folder=yes')";
+					$array["{events}"]["SUB"]["{APP_AUDITD}"]="javascript:AnimateDiv('BodyContent');Loadjs('auditd.php?in-front-ajax=yes&js-folder=yes')";
 				}
 			}
 		}		
@@ -1872,20 +1872,20 @@ private function build_user_left_menus(){
 private function MAILBOXES_MENUS($array=array()){
 	
   if($this->ZARAFA_APPLIANCE){
-			  	$array["{messaging}"]["SUB"]["{APP_ZARAFA}"]="javascript:Loadjs('zarafa.index.php')";
+			  	$array["{messaging}"]["SUB"]["{APP_ZARAFA}"]="javascript:AnimateDiv('BodyContent');Loadjs('zarafa.index.php')";
 			  	return $array;
 			  }
 			  
    if($this->ZARAFA_INSTALLED){		  
-			$array["{messaging}"]["SUB"]["{mailboxes}"]="javascript:Loadjs('zarafa.index.php')";
+			$array["{messaging}"]["SUB"]["{mailboxes}"]="javascript:AnimateDiv('BodyContent');Loadjs('zarafa.index.php')";
 			return $array;
    	
    }
 	
    if($this->cyrus_imapd_installed){
-		$array["{messaging}"]["SUB"]["{mailboxes}"]="javascript:Loadjs('cyrus.index.php?in-front-ajax=yes')";
+		$array["{messaging}"]["SUB"]["{mailboxes}"]="javascript:AnimateDiv('BodyContent');Loadjs('cyrus.index.php?in-front-ajax=yes')";
 		if($this->roundcube_installed){
-			$array["{messaging}"]["SUB"]["{APP_WEBMAIL}"]="javascript:Loadjs('roundcube.index.php?script=yes&in-front-ajax=yes')";
+			$array["{messaging}"]["SUB"]["{APP_WEBMAIL}"]="javascript:AnimateDiv('BodyContent');Loadjs('roundcube.index.php?script=yes&in-front-ajax=yes')";
 		}
 	}
 	return $array;		

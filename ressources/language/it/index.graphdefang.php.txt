@@ -1,2 +1,2 @@
-<hourly>hourly</hourly>
-<statistics>Statistics</statistics>
+<hourly>orario</hourly>
+<statistics>Statistiche</statistics>

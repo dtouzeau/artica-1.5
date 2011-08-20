@@ -1,4 +1,4 @@
-1.5.081800:
+1.5.082013: 
 ========================================================================================
 Messaging Changes:
 -------------------------------------------------
@@ -6,7 +6,8 @@ Messaging Changes:
 1.5.081800: Fix unable to activate Junk Learning (see http://forum.artica.fr/viewtopic.php?f=25&t=4366&start=0)
 1.5.081800: Artica downloading now malwarepatrol database automatically for SpamAssassin.
 1.5.081800: Add --nogpg when update spamassassin in order to fix error: gpg required but not found! (see http://forum.artica.fr/viewtopic.php?f=10&t=4379)
-Add possibility to run a fetchmail rule in debug mode 
+1.5.082013: Add possibility to run a fetchmail rule in debug mode.
+1.5.082013: Add new feature that able to notify, manage, Zarafa orphaned stores.
 
 File Sharing changes
 -------------------------------------------------
@@ -18,14 +19,18 @@ System Changes
 1.5.081800: Fix unable to change the Mysql administrator password trough Artica.
 1.5.081800: Adding a new option that deny Artica to reboot the system if the kernel claim out of memory error.
 1.5.081800: Add a new function that ensure that LDAP server is available before re-writing dhcpd.conf (see http://forum.artica.fr/viewtopic.php?f=120&t=4377&start=0)
-Enabling Active Directory strict connexion will enable a new engine that able to cache all Active Directory items into the local Mysql Artica Database. This to handle database more than 1500 users and accelerate users browsing.
-The getent users and groups exportation is now cached every 2 hours in mysql instead running the command by the framework each time in order to speed the web interface and handle many users when using an Active Directory connexion.
-Fix corrupted disks discover php "usb.scan.inc" file when Artica cannot external external devices inodes informations.  
+1.5.082013: Enabling Active Directory strict connexion will enable a new engine that able to cache all Active Directory items into the local Mysql Artica Database. This to handle database more than 1500 users and accelerate users browsing.
+1.5.082013: The getent users and groups exportation is now cached every 2 hours in mysql instead running the command by the framework each time in order to speed the web interface and handle many users when using an Active Directory connexion.
+1.5.082013: Fix corrupted disks discover php "usb.scan.inc" file when Artica cannot external external devices inodes informations.  
 
 FreeWebs changes
 -------------------------------------------------
 1.5.081800: Add possibility to hide completely FreeWebs Feature (see http://forum.artica.fr/viewtopic.php?f=119&t=4370&start=0)
 
+Proxy Changes:
+-------------------------------------------------
+1.5.082013: Display Kaspersky Anti-Virus For proxy Server license.
+1.5.082013: Add possibility to manage groups for Kaspersky Anti-Virus For proxy Server
 
 
 // http://khopesh.com/wiki/Anti-spam#SA_utility_scripts ??

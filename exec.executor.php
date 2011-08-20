@@ -762,7 +762,7 @@ function group60mn(){
 	
 	
 	if($GLOBALS["CLASS_SOCKETS"]->GET_INFO("EnableInterfaceMailCampaigns")==1){$array[]="exec.emailing.badmails.php";}
-
+	if($GLOBALS["ZARAFA_INSTALLED"]){$array[]="exec.zarafa.build.stores.php --exoprhs";}
 	$array[]="exec.my-rbl.check.php --myip";
 	$array[]="exec.my-rbl.check.php --checks";
 	while (list ($index, $file) = each ($array) ){
