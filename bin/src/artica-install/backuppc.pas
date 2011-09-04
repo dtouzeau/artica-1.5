@@ -40,7 +40,7 @@ begin
        LOGS:=tlogs.Create();
        SYS:=zSYS;
        binpath:=BIN_PATH();
-       if not TryStrToInt(SYS.GET_INFO('EnableBackupPc'),EnableBackupPc) then EnableBackupPc:=1;
+       if not TryStrToInt(SYS.GET_INFO('EnableBackupPc'),EnableBackupPc) then EnableBackupPc:=0;
        if Fileexists('/etc/artica-postfix/KASPERSKY_WEB_APPLIANCE') then EnableBackupPc:=0;
 end;
 //##############################################################################

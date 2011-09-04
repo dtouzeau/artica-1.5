@@ -7,7 +7,10 @@ class samba_aliases{
 	var $workgroup="";
 	var $RootDir="";
 	var $ipaddr=null;
-	
+	var $main_array=array();
+	var $SAMBA_VERSION=0;
+	var $upTo36=0;
+	var $upTo357=0;
 	public function samba_aliases($hostname=null){
 		if($hostname<>null){
 			$this->hostname=$hostname;
@@ -18,6 +21,8 @@ class samba_aliases{
 	}
 	
 	private function load(){
+		$users=new usersMenus();
+		$this->SAMBA_VERSION=$users->SAMBA_VERSION;
 		$sql="SELECT * FROM samba_hosts WHERE hostname='$this->hostname'";
 		$q=new mysql();
 		if(!$q->ok){
@@ -28,7 +33,61 @@ class samba_aliases{
 		$this->workgroup=$ligne["workgroup"];
 		$this->RootDir=$ligne["RootDir"];
 		$this->ipaddr=$ligne["ipaddr"];
-		if($GLOBALS["VERBOSE"]){writelogs("Starting......: Samba [$this->hostname] loading settings done...",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
+		$this->main_array=unserialize(base64_decode($ligne["global_settings"]));
+		
+		$version=$users->SAMBA_VERSION;
+		if(preg_match("#^([0-9]+)\.([0-9]+)\.([0-9]+)#",$version,$re)){$major=intval($re[1]);$minor=intval($re[2]);$build=intval($re[3]);}	
+		if($major>2){if($minor>4){if($build>6){$this->upTo357=1;}}}
+	
+	
+		if(preg_match("#^([0-9]+)\.([0-9]+)#", $version,$re)){
+			$major=intval($re[1]);
+			$minor=intval($re[2]);
+			if($major>=3){if($minor>=6){$this->upTo36=1;$this->upTo357=1;}}
+	}		
+		
+		$this->buildGlobalDefault();
+		if($GLOBALS["VERBOSE"]){writelogs("Starting......: Samba [$this->hostname] v.$users->SAMBA_VERSION loading settings done...",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
+	}
+	
+	private function buildGlobalDefault(){
+		if(!isset($this->main_array["global"]["strict_allocate"])){$this->main_array["global"]["strict_allocate"]=0;}
+		if(!isset($this->main_array["global"]["strict_locking"])){$this->main_array["global"]["strict_locking"]=1;}
+		if(!isset($this->main_array["global"]["sync_always"])){$this->main_array["global"]["sync_always"]=0;}
+		if(!isset($this->main_array["global"]["getwd_cache"])){$this->main_array["global"]["getwd_cache"]=1;}
+		if(!isset($this->main_array["global"]["smb2_protocol"])){$this->main_array["global"]["smb2_protocol"]=1;}
+		
+		
+		
+		if(!is_numeric($this->main_array["global"]["strict_allocate"])){$this->main_array["global"]["strict_allocate"]=0;}
+		if(!is_numeric($this->main_array["global"]["strict_locking"])){$this->main_array["global"]["strict_locking"]=0;}
+		if(!is_numeric($this->main_array["global"]["sync_always"])){$this->main_array["global"]["sync_always"]=0;}
+		if(!is_numeric($this->main_array["global"]["getwd_cache"])){$this->main_array["global"]["getwd_cache"]=1;}
+		if(!is_numeric($this->main_array["global"]["smb2_protocol"])){$this->main_array["global"]["smb2_protocol"]=1;}
+		
+		
+		if($this->upTo36==0){$this->main_array["global"]["smb2_protocol"]=0;}
+		
+	}
+	
+	public function SaveGlobals(){
+		$sql="SELECT hostname FROM samba_hosts WHERE hostname='$this->hostname'";
+		$q=new mysql();
+		if(!$q->ok){if($GLOBALS["VERBOSE"]){writelogs("$q->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);return;}}
+		$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));
+		
+		$global_settings=base64_encode(serialize($this->main_array));
+		$global_settings=addslashes($global_settings);
+		if($ligne["hostname"]==null){
+			$sql="INSERT IGNORE INTO samba_hosts (hostname,global_settings) VALUES ('$this->hostname','$global_settings')";
+		}else{
+			$sql="UPDATE samba_hosts SET global_settings='$global_settings' WHERE hostname='$this->hostname'";
+		}		
+		
+		$q->QUERY_SQL($sql,"artica_backup");
+		if(!$q->ok){echo $q->mysql_error;return;}
+		$sock=new sockets();
+		$sock->getFrameWork("cmd.php?restart-samba=yes");
 	}
 	
 	
@@ -41,6 +100,18 @@ class samba_aliases{
 		$f[]="[global]";
 		$f[]="\tnetbios name = $hostname";
 		$f[]="\tworkgroup = $this->workgroup";
+		if($this->upTo357==0){
+			if($this->main_array["global"]["strict_allocate"]==1){$f[]="\tstrict allocate = Yes";}else{$f[]="\tstrict allocate = No";}
+		}
+		if($this->main_array["global"]["strict_locking"]==1){$f[]="\tstrict locking = Auto";}else{$f[]="\tstrict locking = No";}
+		if($this->main_array["global"]["sync_always"]==1){$f[]="\tsync always = Yes";}else{$f[]="\tsync always = No";}
+		if($this->main_array["global"]["getwd_cache"]==1){$f[]="\tgetwd cache = Yes";}else{$f[]="\tgetwd cache = No";}
+		if($this->main_array["global"]["smb2_protocol"]==1){$f[]="\tmax protocol = SMB2";}else{$f[]="\tmax protocol = NT1";}
+		
+		
+		
+		
+		
 		if($this->ipaddr<>null){
 			$f[]="\tinterfaces = $this->ipaddr";
 			$f[]="\tsocket address = $this->ipaddr";

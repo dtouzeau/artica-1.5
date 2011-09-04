@@ -287,11 +287,13 @@ $html="
 		
 		$affiche_text=texttooltip($affiche_text,$tooltip,$js,null,0,"font-size:13px;font-weight:bolder;color:#$color");
 		if($cl=="oddRow"){$cl=null;}else{$cl="oddRow";}
+		$time=strtotime($original_date);
+		$distanceOfTimeInWords=distanceOfTimeInWords($time,time());
 		
 		$html=$html . "<tr class=$cl>
 		<td width=1%><img src='img/fw_bold.gif'></td>
 		<td valign='middle' nowrap style='font-size:13px' width=1% nowrap>{$ligne["zDate"]}</td>
-		<td valign='top' width=99%><div style='font-size:13px'>$affiche_text</div><div style='font-size:11px'><i>$content</i></div></td>
+		<td valign='top' width=99%><div style='font-size:13px'>$affiche_text</div><div style='font-size:11px'><i>$distanceOfTimeInWords</i><br><i>$content</i></div></td>
 		</tR>
 		
 		";

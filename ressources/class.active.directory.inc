@@ -98,7 +98,22 @@ class ldapAD{
 		}else{
 			$this->ldap_last_error='Error LDAP search number ' . ldap_errno($this->ldap_connection) . "\nAction:LDAP search\ndn:$dn\n$filter\n" . ldap_err2str(ldap_errno($this->ldap_connection));
    			writelogs("ERROR Ldap_search : $filter in $dn" . ldap_err2str(ldap_errno($this->ldap_connection)),__CLASS__ . "/" . __FUNCTION__,__FILE__);return false;}
-		return array();}	
+		return array();}
+
+	function Ldap_list($dn,$filter,$attrs,$maxRow=0){
+		if(!$this->ldap_connection){
+			writelogs("Could not search without proper ldap connection", __CLASS__ . "/" . __FUNCTION__,__FILE__);
+			return ;
+			}
+		if(!is_array($attrs)){
+			$sr =@ldap_list($this->ldap_connection,$dn,$filter,array(),0,$maxRow);
+			}else{$sr =@ldap_list($this->ldap_connection,$dn,$filter,$attrs,0,$maxRow);}
+		if ($sr) {
+			return ldap_get_entries($this->ldap_connection,$sr);
+		}else{
+			$this->ldap_last_error='Error LDAP search number ' . ldap_errno($this->ldap_connection) . "\nAction:LDAP search\ndn:$dn\n$filter\n" . ldap_err2str(ldap_errno($this->ldap_connection));
+   			writelogs("ERROR Ldap_search : $filter in $dn" . ldap_err2str(ldap_errno($this->ldap_connection)),__CLASS__ . "/" . __FUNCTION__,__FILE__);return false;}
+		return array();}		
 	
 	function UserSearch($ou=null,$tofind){
 			$uid=$_SESSION["uid"];
@@ -360,7 +375,6 @@ public function CountDeUSerOu($ou){
 		if(!$q->ok){writelogs("$sql -> $q->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
 		writelogs("$sql -> {$ligne["tcount"]}",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 		return $ligne["tcount"];
-	
 }
 	
 	
@@ -368,7 +382,7 @@ public function CountDeUSerOu($ou){
 
 private function hash_get_ou_mysql($has_key=false){		
 		$res=array();
-		$sql="SELECT ou,dn FROM activedirectory_orgs ORDER BY ou";
+		$sql="SELECT ou,dn FROM activedirectory_orgs WHERE enabled=1 ORDER BY ou";
 		$q=new mysql();
 		$results=$q->QUERY_SQL($sql,"artica_backup");
 		while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){

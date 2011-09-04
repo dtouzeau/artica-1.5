@@ -100,6 +100,9 @@ class system_nic{
 		
 		$q->QUERY_SQL($sql,"artica_backup");
 		if(!$q->ok){echo $q->mysql_error."\n\nsql command:\n\n$sql\n\n";return false;}
+		$sock=new sockets();
+		$sock->getFrameWork("network.php?reconstruct-interface=$this->eth");
+		
 		return true;
 		
 		
@@ -363,7 +366,12 @@ class system_nic{
 	public function root_build_debian_config(){
 		$sock=new sockets();
 		$NetWorkBroadCastAsIpAddr=$sock->GET_INFO("NetWorkBroadCastAsIpAddr");
-		$sql="SELECT * FROM `nics` WHERE enabled=1";
+		$OVHNetConfig=$sock->GET_INFO("OVHNetConfig");
+		if(!is_numeric($OVHNetConfig)){$OVHNetConfig=0;}
+		$REMOVE_GATEWAY=false;
+		if($OVHNetConfig==1){$NetWorkBroadCastAsIpAddr;}
+		
+		$sql="SELECT * FROM `nics` WHERE enabled=1 ORDER BY Interface";
 		$q=new mysql();
 		$results=$q->QUERY_SQL($sql,"artica_backup");
 		if(!$q->ok){echo "Starting......: Mysql error : $q->mysql_error\n";return;}
@@ -386,6 +394,17 @@ class system_nic{
 			if($ligne["Bridged"]==1){$f[]="iface $eth inet manual\n";continue;}	
 			if($ligne["dhcp"]==1){$f[]="iface $eth inet dhcp";continue;}
 			$f[]="iface $eth inet static";
+			if($eth=="eth0"){
+				if($OVHNetConfig==1){
+					$REMOVE_GATEWAY=true;
+					$f[]="\tpost-up route add {$ligne["GATEWAY"]} dev eth0";
+					$f[]="\tpost-up route add default gw {$ligne["GATEWAY"]}";
+					$f[]="\tpost-down route del {$ligne["GATEWAY"]} dev eth0";
+					$f[]="\tpost-down route del default gw {$ligne["GATEWAY"]}";
+				}
+			}
+			
+			if($REMOVE_GATEWAY==true){$ligne["GATEWAY"]="0.0.0.0";}
 			$f[]="\taddress {$ligne["IPADDR"]}";
 			$f[]="\tnetmask {$ligne["NETMASK"]}";
 			if($NetWorkBroadCastAsIpAddr==1){$ligne["BROADCAST"]=$ligne["IPADDR"];}
@@ -398,12 +417,13 @@ class system_nic{
 				}
 			}
 							
-			
+		if(!$REMOVE_GATEWAY){
 			if($ligne["GATEWAY"]<>null){
 				if($ligne["GATEWAY"]<>"0.0.0.0"){
 					$f[]="\tgateway {$ligne["GATEWAY"]}";
 				}
 			}			
+		}
 			
 			if($ligne["DNS1"]<>null){$dns[]=$ligne["DNS1"];}
 			if($ligne["DNS2"]<>null){$dns[]=$ligne["DNS2"];}
@@ -426,6 +446,7 @@ class system_nic{
 			}
 
 			$routes=unserialize($ligne["ROUTES"]);
+			if($OVHNetConfig==0){
 			if(is_array($routes)){
 				if(count($routes)>0){
 	         		while (list ($ip, $ip_array) = each ($routes) ){
@@ -449,14 +470,16 @@ class system_nic{
 	   				}	
 	        	}
 			}
-
+		}
 	        $f[]="";
 	        $f[]="";
 		
 		}
 		
 		$NoGatewayForVirtualNetWork=$sock->GET_INFO("NoGatewayForVirtualNetWork");	
-		if(!is_numeric($NoGatewayForVirtualNetWork)){$NoGatewayForVirtualNetWork=0;}		
+		if(!is_numeric($NoGatewayForVirtualNetWork)){$NoGatewayForVirtualNetWork=0;}	
+		if($REMOVE_GATEWAY){$NoGatewayForVirtualNetWork=1;}
+		
 		$sql="SELECT * FROM nics_virtuals ORDER BY ID DESC";
 		$q=new mysql();
 		$results=$q->QUERY_SQL($sql,"artica_backup");	
@@ -507,8 +530,10 @@ class system_nic{
 			$f[]="\tnetmask {$ligne["netmask"]}";
 			if($NetWorkBroadCastAsIpAddr==1){$brd=$ligne["ipaddr"];}
 			$f[]="\tbroadcast $brd";
-			if($ligne["gateway"]<>"0.0.0.0"){
+			if(!$REMOVE_GATEWAY){
+				if($ligne["gateway"]<>"0.0.0.0"){
 				$f[]="\tgateway {$ligne["gateway"]}";
+				}
 			}
 			$f[]="\tmtu 1500";
 			$f[]="\tvlan_raw_device {$ligne["nic"]}";

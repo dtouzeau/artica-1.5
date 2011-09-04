@@ -154,9 +154,24 @@ function CleanLogs(){
 	@file_put_contents($timeOfFile,"#");
 	
 	CleanOldInstall();
+	if(system_is_overloaded(dirname(__FILE__))){
+		$unix->send_email_events("logs cleaner task aborting, system is overloaded", "stopped after CleanOldInstall()\nWill restart in next cycle...", "system");
+		return;
+	}
+	
 	CleanBindLogs();
+	if(system_is_overloaded(dirname(__FILE__))){
+		$unix->send_email_events("logs cleaner task aborting, system is overloaded", "stopped after CleanBindLogs()\nWill restart in next cycle...", "system");
+		return;
+	}
+	
 	$unix->events(basename(__FILE__).":: ".__FUNCTION__." Cleaning Clamav bases");
 	CleanClamav();
+	if(system_is_overloaded(dirname(__FILE__))){
+		$unix->send_email_events("logs cleaner task aborting, system is overloaded", "stopped after CleanClamav()\nWill restart in next cycle...", "system");
+		return;
+	}	
+	
 	$size=str_replace("&nbsp;"," ",FormatBytes($GLOBALS["DELETED_SIZE"]));
 	echo "$size cleaned :  {$GLOBALS["DELETED_FILES"]} files\n";
 	if($GLOBALS["DELETED_SIZE"]>500){
@@ -171,14 +186,28 @@ function CleanLogs(){
 	init();
 	$unix->events(basename(__FILE__).":: ".__FUNCTION__." cleanTmplogs()");
 	cleanTmplogs();
+	if(system_is_overloaded(dirname(__FILE__))){$unix->send_email_events("logs cleaner task aborting, system is overloaded",
+	 "stopped after cleanTmplogs()\nWill restart in next cycle...", "system");return;}	
+	
 	$unix->events(basename(__FILE__).":: ".__FUNCTION__." Cleaning /var/log");
 	CleanDirLogs('/var/log');
+	if(system_is_overloaded(dirname(__FILE__))){$unix->send_email_events("logs cleaner task aborting, system is overloaded",
+	 "stopped after CleanDirLogs(/var/log)\nWill restart in next cycle...", "system");return;}		
+	
 	$unix->events(basename(__FILE__).":: ".__FUNCTION__." Cleaning /opt/artica/tmp");
 	CleanDirLogs('/opt/artica/tmp');
+	if(system_is_overloaded(dirname(__FILE__))){$unix->send_email_events("logs cleaner task aborting, system is overloaded",
+	 "stopped after CleanDirLogs(/opt/artica/tmp)\nWill restart in next cycle...", "system");return;}		
+	
 	$unix->events(basename(__FILE__).":: ".__FUNCTION__." Cleaning /opt/artica/install");
 	CleanDirLogs('/opt/artica/install');
+	if(system_is_overloaded(dirname(__FILE__))){$unix->send_email_events("logs cleaner task aborting, system is overloaded",
+	 "stopped after CleanDirLogs(/opt/artica/install)\nWill restart in next cycle...", "system");return;}		
 	$unix->events(basename(__FILE__).":: ".__FUNCTION__." Cleaning phplogs");
 	phplogs();
+	if(system_is_overloaded(dirname(__FILE__))){$unix->send_email_events("logs cleaner task aborting, system is overloaded",
+	 "stopped after phplogs()\nWill restart in next cycle...", "system");return;}		
+	
 	$unix->events(basename(__FILE__).":: ".__FUNCTION__." Cleaning /opt/openemm/tomcat/logs");
 	CleanDirLogs('/opt/openemm/tomcat/logs');
 	

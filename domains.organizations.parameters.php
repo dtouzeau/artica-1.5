@@ -29,8 +29,215 @@
 	if(isset($_GET["ou-sql-popup"])){ou_sql_popup();exit;}
 	
 	
+	if(isset($_GET["adbranches"])){adbranches();exit;}
+	if(isset($_GET["adbranches-list"])){adbranches_list();exit;}
+	if(isset($_POST["adbranches-enabled"])){adbranches_enable();exit;}
+	if(isset($_POST["adbranches-scope"])){adbranches_scope();exit;}
+	if(isset($_POST["adbranches-add"])){adbranches_add();exit;}
+	
+	
+	
 	
 	js();
+	
+	
+function adbranches(){
+	$page=CurrentPageName();
+	$tpl=new templates();	
+	$html="
+	
+			<center>
+		<table style='width:80%' class=form>
+		<tbody>
+		<tr>
+			<td class=legend>{organization}:</td>
+			<td>". Field_text("organization-adbranches-find",$_COOKIE["FINDMYOU"],"font-size:16px",null,null,null,false,"SearchOrgsStCheck(event)")."</td>
+			<td width=1%>". button("{search}","SearchOrgsST()")."</td>
+		</tr>
+		<tr>
+		<td class=legend>{only_selected}</td>
+		<td colspan=2>". Field_checkbox("ADOUOnlySelected", 1,$_COOKIE["ADOUOnlySelected"],"SearchOrgsST()")."</td>
+	</tr>		
+		</tbody>
+		</table>
+		</center>
+	
+	<div id='adbranches' style='height:490px;width:100%;overflow:auto'></div>
+	
+	<script>
+	
+			function SearchOrgsST(){
+			var ADOUOnlySelected=0;
+			if(document.getElementById('ADOUOnlySelected').checked){ADOUOnlySelected=1;}
+			var se=escape(document.getElementById('organization-adbranches-find').value);
+			Set_Cookie('FINDMYOU', document.getElementById('organization-adbranches-find').value, '3600', '/', '', '');
+			Set_Cookie('ADOUOnlySelected', ADOUOnlySelected, '3600', '/', '', '');
+			LoadAjax('adbranches','$page?adbranches-list=yes&search='+se+'&ADOUOnlySelected='+ADOUOnlySelected);
+			}
+			
+		function SearchOrgsStCheck(e){
+			if(checkEnter(e)){SearchOrgsST();}
+		}
+		SearchOrgsST();
+	
+		
+	</script>
+	
+	
+	
+	";
+	echo $tpl->_ENGINE_parse_body($html);
+	
+}	
+
+
+function adbranches_list(){
+	$page=CurrentPageName();
+	$tpl=new templates();	
+	if($_GET["ADOUOnlySelected"]==1){$ADOUOnlySelected="AND enabled=1";}	
+	if(trim($_GET["search"])<>null){
+		$_GET["search"]=str_replace( "*", "%",$_GET["search"]);
+		$sqlsearch=" AND (ou LIKE '{$_GET["search"]}' $ADOUOnlySelected) OR (dn LIKE '{$_GET["search"]}' $ADOUOnlySelected) ";
+	}else{
+		$sqlsearch=$ADOUOnlySelected;
+	}
+	
+	$sql="SELECT ou,dn,enabled,OnlyBranch FROM activedirectory_orgs WHERE 1 $sqlsearch ORDER BY ou";
+	$q=new mysql();
+	$results=$q->QUERY_SQL($sql,"artica_backup");	
+	if(!$q->ok){	echo "<H2>$sql<hr>$q->mysql_error</H2>";}
+	
+	$html="
+<table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
+<thead class='thead'>
+<tr>
+	<th>". imgtootltip("plus-24.png","{add}:{ou}","Loadjs('browse-ad.php?function=AddADBranches')")."</th>
+	<th>{ou}</th>
+	<th>{enabled}</th>
+	<th>{OnlyBranch}</th>
+</tr>
+</thead>
+<tbody class='tbody'>";	
+	
+	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
+		
+		$md=md5($ligne["ou"]);
+		$dn=$ligne["dn"];
+		$textdn=$ligne["dn"];
+		$textdnSize=strlen($textdn);
+		if($textdnSize>85){$textdn=texttooltip(substr($textdn,0,82)."...",$textdn,null,null,1,"font-size:10px;font-weight:bold");}
+		$html=$html."<tr class=$classtr>
+		<td colspan=2 style='width:100%;font-size:14px'>". utf8_encode($ligne["ou"])."<div style='font-size:10px'><strong>$textdn</div></td>
+		<td width=1%>". Field_checkbox("AD_$md", 1,$ligne["enabled"],"ActiveDirectoryDisableEnableBranch('$dn','AD_$md')")."</td>
+		<td width=1%>". Field_checkbox("ADSCOPE_$md", 1,$ligne["OnlyBranch"],"ActiveDirectoryDisableEnableScope('$dn','ADSCOPE_$md')")."</td>
+		</tr>
+		
+		";
+		
+		
+	}
+	
+$html=$html."
+</tbody>
+</table>
+
+<script>
+	var x_ActiveDirectoryDisableEnableBranch= function (obj) {
+		var results=obj.responseText;
+		if(results.length>3){alert(results);}
+		if(document.getElementById('orgs')){SearchOrgs();}
+	}
+
+
+	function ActiveDirectoryDisableEnableBranch(ou,id){
+		var XHR = new XHRConnection();
+		XHR.appendData('adbranches-enabled',ou);
+		if(document.getElementById(id).checked){XHR.appendData('value',1);}else{XHR.appendData('value',0);}		
+		XHR.sendAndLoad('$page', 'POST',x_ActiveDirectoryDisableEnableBranch);
+	}
+	function ActiveDirectoryDisableEnableScope(ou,id){
+		var XHR = new XHRConnection();
+		XHR.appendData('adbranches-scope',ou);
+		if(document.getElementById(id).checked){XHR.appendData('value',1);}else{XHR.appendData('value',0);}		
+		XHR.sendAndLoad('$page', 'POST',x_ActiveDirectoryDisableEnableBranch);
+	}
+	
+	var x_AddADBranches= function (obj) {
+		var results=obj.responseText;
+		if(results.length>3){alert(results);}
+		if(document.getElementById('orgs')){SearchOrgs();}
+		SearchOrgsST();
+	}	
+	
+	function AddADBranches(dn){
+		var XHR = new XHRConnection();
+		XHR.appendData('adbranches-add',dn);
+		AnimateDiv('adbranches');
+		XHR.sendAndLoad('$page', 'POST',x_AddADBranches);
+	}
+
+";
+
+echo $tpl->_ENGINE_parse_body($html);
+	
+}
+
+function adbranches_enable(){
+	$_POST["adbranches-enabled"]=utf8_encode($_POST["adbranches-enabled"]);
+	$q=new mysql();
+	$sql="SELECT dn FROM activedirectory_orgs WHERE dn='{$_POST["adbranches-enabled"]}'";
+	$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"artica_backup"));
+	if($ligne["dn"]==null){
+		echo "{$_POST["adbranches-enabled"]} no such DN";
+		return;
+	}
+	
+	$sql="UPDATE activedirectory_orgs SET enabled='{$_POST["value"]}' WHERE dn='{$_POST["adbranches-enabled"]}'";
+	
+	$q->QUERY_SQL($sql,"artica_backup");
+	if(!$q->ok){echo $q->mysql_error;return;}
+}
+
+function adbranches_scope(){
+	$_POST["adbranches-scope"]=utf8_encode($_POST["adbranches-scope"]);
+	$q=new mysql();
+	$sql="SELECT dn FROM activedirectory_orgs WHERE dn='{$_POST["adbranches-scope"]}'";
+	$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"artica_backup"));
+	if($ligne["dn"]==null){
+		echo "{$_POST["adbranches-scope"]} no such DN";
+		return;
+	}	
+	
+	
+	$sql="UPDATE activedirectory_orgs SET OnlyBranch='{$_POST["value"]}' WHERE dn='{$_POST["adbranches-scope"]}'";
+	$q=new mysql();
+	$q->QUERY_SQL($sql,"artica_backup");	
+	if(!$q->ok){echo $q->mysql_error;return;}
+}
+
+function adbranches_add(){
+	$_POST["adbranches-add"]=utf8_encode(base64_decode($_POST["adbranches-add"]));
+	$q=new mysql();
+	$tpl=new templates();
+	$sql="SELECT dn FROM activedirectory_orgs WHERE dn='{$_POST["adbranches-add"]}'";
+	$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"artica_backup"));
+	if($ligne["dn"]<>null){
+		echo $tpl->javascript_parse_text("{$_POST["adbranches-add"]} {already_exists}");
+		return;
+	}	
+	$RootTileS=explode(",", $_POST["adbranches-add"]);
+	$titleOU=$RootTileS[0];	
+	$titleOU=addslashes($titleOU);
+	$_POST["adbranches-add"]=addslashes($_POST["adbranches-add"]);
+	$sql="INSERT INTO activedirectory_orgs (dn,ou) VALUES('{$_POST["adbranches-add"]}','$titleOU')";
+	$q=new mysql();
+	$q->QUERY_SQL($sql,"artica_backup");	
+	if(!$q->ok){echo $q->mysql_error;return;}	
+	
+}
+
+
 
 function ou_sql_js(){
 	$page=CurrentPageName();
@@ -92,21 +299,32 @@ function js(){
 	$page=CurrentPageName();
 	$tpl=new templates();
 	$title=$tpl->_ENGINE_parse_body("{organizations_parameters}");
-	echo "YahooWin2('670','$page?tabs=yes','$title')";
+	echo "YahooWin2('750','$page?tabs=yes','$title')";
 }
 
 function tabs(){
 	$page=CurrentPageName();
 	$tpl=new templates();	
+	$sock=new sockets();
+	
+	$EnableSambaActiveDirectory=$sock->GET_INFO("EnableSambaActiveDirectory");
+	if(!is_numeric($EnableSambaActiveDirectory)){$EnableSambaActiveDirectory=0;}	
 	$array["params"]="{parameters}";
 	$array["domains"]="{domains}";
+	if($EnableSambaActiveDirectory==1){
+		$array["adbranches"]="{ActiveDirectory_branches}";	
+	}
 		while (list ($num, $ligne) = each ($array) ){
 			$html[]= "<li><a href=\"$page?$num=yes\"><span>$ligne</span></a></li>\n";
 	}
 	
 	
+
+	
+	
+	
 	echo $tpl->_ENGINE_parse_body("
-	<div id=main_config_allorgs style='width:100%;height:550px;overflow:auto'>
+	<div id=main_config_allorgs style='width:100%;height:650px;overflow:auto'>
 		<ul>". implode("\n",$html)."</ul>
 	</div>
 		<script>

@@ -307,8 +307,8 @@ var
    attachment_storage:string;
    ZarafaStoreCompressionLevel:integer;
    ZarafaServerSMTPPORT,EnableZarafaIndexer,ZarafaIndexerInterval,ZarafaIndexerThreads,ZarafaPop3Enable,ZarafaPop3sEnable,ZarafaIMAPEnable:integer;
-   ZarafaIMAPsEnable,ZarafaPop3Port,ZarafaIMAPPort,ZarafaPop3sPort,ZarafaIMAPsPort:integer;
-   ZarafaServerSMTPIP:string;
+   ZarafaIMAPsEnable,ZarafaPop3Port,ZarafaIMAPPort,ZarafaPop3sPort,ZarafaIMAPsPort,ZarafaWebNTLM:integer;
+   ZarafaServerSMTPIP,APACHE_SRC_ACCOUNT:string;
    CyrusToAD:integer;
 
 begin
@@ -332,6 +332,10 @@ if not TryStrToInt(SYS.GET_INFO('ZarafaPop3Port'),ZarafaPop3Port) then ZarafaPop
 if not TryStrToInt(SYS.GET_INFO('ZarafaIMAPPort'),ZarafaIMAPPort) then ZarafaIMAPPort:=143;
 if not TryStrToInt(SYS.GET_INFO('ZarafaPop3sPort'),ZarafaPop3sPort) then ZarafaPop3sPort:=995;
 if not TryStrToInt(SYS.GET_INFO('ZarafaIMAPsPort'),ZarafaIMAPsPort) then ZarafaIMAPsPort:=993;
+if not TryStrToInt(SYS.GET_INFO('ZarafaWebNTLM'),ZarafaWebNTLM) then ZarafaWebNTLM:=0;
+
+
+
 
 ZarafaServerSMTPIP:=trim(SYS.GET_INFO('ZarafaServerSMTPIP'));
 if length(ZarafaServerSMTPIP)=0 then ZarafaServerSMTPIP:='127.0.0.1';
@@ -362,10 +366,12 @@ if(ZarafaStoreOutside=1) then begin
   logs.DebugLogs('Starting zarafa..............: Zarafa-server store attachments in "'+ZarafaStoreOutsidePath+'"');
   try ForceDirectories('ZarafaStoreOutsidePath') except logs.DebugLogs('Starting zarafa..............: Fatal error while creating Zarafa attachments path') end;
 end;
-
+   fpsystem(SYS.LOCATE_PHP5_BIN()+ ' /usr/share/artica-postfix/exec.freeweb.php --apache-user');
+   APACHE_SRC_ACCOUNT:=SYS.GET_INFO('APACHE_SRC_ACCOUNT');
 
 l:=Tstringlist.Create;
 l.add('server_bind		= '+ZarafaServerListenIP);
+l.add('server_hostname          = '+SYS.HOSTNAME_g());
 l.add('server_tcp_enabled	= yes');
 l.add('server_tcp_port		= 236');
 l.add('server_pipe_enabled	= yes');
@@ -373,7 +379,7 @@ l.add('server_pipe_name	= /var/run/zarafa');
 l.add('server_name = Zarafa');
 l.add('database_engine		= mysql');
 l.add('allow_local_users	= yes');
-l.add('local_admin_users	= root vmail mail');
+l.add('local_admin_users	= root vmail mail '+APACHE_SRC_ACCOUNT);
 l.add('system_email_address	= postmaster@localhost');
 l.add('run_as_user		= ');
 l.add('run_as_group		= ');
@@ -396,6 +402,11 @@ l.add('attachment_compression	= '+IntTOStr(ZarafaStoreCompressionLevel));
 if EnableZarafaIndexer=1 then begin
    l.add('index_services_enabled = yes');
    l.add('index_services_path = file://var/run/zarafa-indexer');
+end;
+
+if ZarafaWebNTLM=1 then begin
+   logs.DebugLogs('Starting zarafa..............: Zarafa-server NTLM enabled, Apache user: '+APACHE_SRC_ACCOUNT);
+   l.add('enable_sso_ntlmauth      = yes');
 end;
 l.add('server_ssl_enabled	= no');
 l.add('server_ssl_port		= 237');
@@ -1687,7 +1698,7 @@ var
    apache_bin_path:string;
    modules:string;
    l:TStringlist;
-   ZarafaApachePort,ZarafaApacheSSL,LighttpdArticaDisableSSLv2:integer;
+   ZarafaApachePort,ZarafaApacheSSL,LighttpdArticaDisableSSLv2,ZarafaWebNTLM:integer;
    LighttpdUserAndGroup,username,group,ZarafaApacheServerName:string;
    RegExpr:TRegExpr;
 begin
@@ -1696,11 +1707,13 @@ modules:=apache.SET_MODULES();
 LighttpdUserAndGroup:=SYS.LIGHTTPD_GET_USER();
 ZarafaApacheSSL:=0;
 LighttpdArticaDisableSSLv2:=0;
+ZarafaWebNTLM:=0;
 
 
 if not TryStrToInt(SYS.GET_INFO('ZarafaApachePort'),ZarafaApachePort) then ZarafaApachePort:=9010;
 if not TryStrToInt(SYS.GET_INFO('ZarafaApacheSSL'),ZarafaApacheSSL) then ZarafaApacheSSL:=0;
 if not TryStrToInt(SYS.GET_INFO('LighttpdArticaDisableSSLv2'),LighttpdArticaDisableSSLv2) then LighttpdArticaDisableSSLv2:=0;
+if not TryStrToInt(SYS.GET_INFO('ZarafaWebNTLM'),ZarafaWebNTLM) then ZarafaWebNTLM:=0;
 
 ZarafaApacheServerName:=SYS.GET_INFO('ZarafaApacheServerName');
 if length(trim(ZarafaApacheServerName))=0 then ZarafaApacheServerName:=SYS.HOSTNAME_g();
@@ -1766,6 +1779,17 @@ l.add('ServerAdmin you@example.com');
 l.add('ServerName '+ ZarafaApacheServerName);
 l.add('DocumentRoot "/usr/share/zarafa-webaccess"');
 l.add('<Directory /usr/share/zarafa-webaccess/>');
+if ZarafaWebNTLM=1 then begin
+l.add('    AuthName "Zarafa logon.."');
+l.add('    AuthType Basic');
+l.add('    AuthLDAPURL ldap://'+ldap.ldap_settings.servername+':'+ldap.ldap_settings.Port+'/dc=organizations,'+ldap.ldap_settings.suffix+'?uid');
+l.add('    AuthLDAPBindDN cn='+ldap.ldap_settings.admin+','+ldap.ldap_settings.suffix);
+l.add('    AuthLDAPBindPassword '+ldap.ldap_settings.password);
+l.add('    AuthLDAPGroupAttribute memberUid');
+l.add('    AuthBasicProvider ldap');
+l.add('    AuthzLDAPAuthoritative off');
+l.add('    require valid-user');
+end;
 l.add('    php_value magic_quotes_gpc off');
 l.add('    php_flag register_globals off');
 l.add('    php_flag magic_quotes_gpc off');

@@ -455,8 +455,8 @@ class squidguard{
 			$this->CategoriesDefinitions["W-1"][]="\tdomainlist personal-categories/W-1/domains";
 			if($this->EnableUfdbGuard<>1){$this->CategoriesDefinitions["W-1"][]="\turllist personal-categories/W-1/urls";}
 			$this->CategoriesDefinitions["W-1"][]="\texpressionlist personal-categories/W-1/expressions";
-			@file_put_contents("$main_path/urls"," ");
-			@file_put_contents("$main_path/expressions","\n");
+			@file_put_contents("$main_path/urls","www. ".md5(time()).".tg\n");
+			@file_put_contents("$main_path/expressions","www. ".md5(time()).".tg\n");
 			$this->dump_exceptionSites(1);
 			
 			$this->DefaultRules["rule"][]="!F-1";
@@ -474,7 +474,7 @@ class squidguard{
 			
 			if($this->EnableUfdbGuard<>1){ $this->CategoriesDefinitions["F-1"][]="\turllist personal-categories/filesblock-{$this->rules[$RuleID]}/urls";}
 			$this->CategoriesDefinitions["F-1"][]="\tdomainlist personal-categories/filesblock-{$this->rules[$RuleID]}/domains";
-			@file_put_contents("$main_path/urls"," ");
+			@file_put_contents("$main_path/urls","www. ".md5(time()).".tg");
 			@file_put_contents("$main_path/domains","nowebsite.com");
 			
 			
@@ -504,7 +504,7 @@ class squidguard{
 			if($this->EnableUfdbGuard<>1){ $this->CategoriesDefinitions[$categoryName][]="\turllist {$ligne["pattern"]}/urls";}
 			$this->CategoriesDefinitions[$categoryName][]="\texpressionlist {$ligne["pattern"]}/expressions";					
 			$this->DefaultRules["rule"][]="!$categoryName";	
-			file_put_contents("{$GLOBALS["guarddb"]}/{$ligne["pattern"]}/urls"," ");
+			file_put_contents("{$GLOBALS["guarddb"]}/{$ligne["pattern"]}/urls","www. ".md5(time()).".tg");
 			file_put_contents("{$GLOBALS["guarddb"]}/{$ligne["pattern"]}/expressions","\n");
 			
 			$this->CategoriesDefinitions[$addplus][]="\tdomainlist web-filter-plus/BL/{$ligne["pattern"]}/domains";
@@ -512,7 +512,7 @@ class squidguard{
 			$this->CategoriesDefinitions[$addplus][]="\texpressionlist web-filter-plus/BL/{$ligne["pattern"]}/expressions";
 			$this->DefaultRules["rule"][]="{$commutator}$addplus";
 			
-			file_put_contents("{$GLOBALS["guarddb"]}/web-filter-plus/BL/{$ligne["pattern"]}/urls"," ");
+			file_put_contents("{$GLOBALS["guarddb"]}/web-filter-plus/BL/{$ligne["pattern"]}/urls","www. ".md5(time()).".tg");
 			file_put_contents("{$GLOBALS["guarddb"]}/web-filter-plus/BL/{$ligne["pattern"]}/expressions","\n");
 
 			$main_path="{$GLOBALS["guarddb"]}/blacklist-artica/{$ligne["pattern"]}";
@@ -522,7 +522,7 @@ class squidguard{
 			if($this->EnableUfdbGuard<>1){ $this->CategoriesDefinitions[$addplus_com][]="\turllist blacklist-artica/{$ligne["pattern"]}/urls";}
 			$this->CategoriesDefinitions[$addplus_com][]="\texpressionlist blacklist-artica/{$ligne["pattern"]}/expressions";
 			$this->DefaultRules["rule"][]="{$commutator}$addplus_com";
-			file_put_contents("$main_path/urls"," ");
+			file_put_contents("$main_path/urls","www. ".md5(time()).".tg");
 			@file_put_contents("$main_path/expressions","\n");		
 
 		}
@@ -547,7 +547,7 @@ class squidguard{
 			if($this->EnableUfdbGuard<>1){ $this->CategoriesDefinitions["P-$categoryPrint"][]="\turllist personal-categories/$categoryPrint/urls";}
 			$this->CategoriesDefinitions["P-$categoryPrint"][]="\texpressionlist personal-categories/$categoryPrint/expressions";
 			$this->DefaultRules["rule"][]="{$commutator}P-$categoryPrint";
-			@file_put_contents("$main_path/urls"," ");
+			@file_put_contents("$main_path/urls","www. ".md5(time()).".tg");
 			@file_put_contents("$main_path/expressions","\n");					
 		}		
 		
@@ -572,7 +572,7 @@ class squidguard{
 		$this->CategoriesDefinitions["W-$RuleID"][]="\texpressionlist personal-categories/W-$RuleID/expressions";
 		
 		
-		@file_put_contents("$main_path/urls"," ");
+		@file_put_contents("$main_path/urls","www. ".md5(time()).".tg");
 		@file_put_contents("$main_path/expressions","\n");				
 		
 		
@@ -582,7 +582,7 @@ class squidguard{
 		$this->CategoriesDefinitions["F-$RuleID"][]="\texpressionlist personal-categories/filesblock-{$this->rules[$RuleID]}/expressions";
 		$this->CategoriesDefinitions["F-$RuleID"][]="\turllist personal-categories/filesblock-{$this->rules[$RuleID]}/urls";
 		$this->CategoriesDefinitions["F-$RuleID"][]="\tdomainlist personal-categories/filesblock-{$this->rules[$RuleID]}/domains";
-		@file_put_contents("$main_path/urls"," ");
+		@file_put_contents("$main_path/urls","www. ".md5(time()).".tg");
 		if(!is_file("$main_path/domains")){@file_put_contents("$main_path/domains","\n");}			
 		
 		
@@ -606,7 +606,7 @@ class squidguard{
 				$this->CategoriesDefinitions[$categoryName][]="\turllist {$ligne["pattern"]}/urls";
 				$this->CategoriesDefinitions[$categoryName][]="\texpressionlist {$ligne["pattern"]}/expressions";
 				$this->DestOfRules[$RuleID][$categoryName]="$commutator$categoryName";	
-				file_put_contents("$main_path/urls"," ");
+				file_put_contents("$main_path/urls","www. ".md5(time()).".tg");
 				file_put_contents("$main_path/expressions","\n");				
 					
 				$main_path="{$GLOBALS["guarddb"]}/web-filter-plus/BL/{$ligne["pattern"]}";
@@ -616,7 +616,7 @@ class squidguard{
 				$this->CategoriesDefinitions[$addplus][]="\turllist web-filter-plus/BL/{$ligne["pattern"]}/urls";
 				$this->CategoriesDefinitions[$addplus][]="\texpressionlist web-filter-plus/BL/{$ligne["pattern"]}/expressions";
 				$this->DestOfRules[$RuleID][$addplus]="$commutator$addplus";
-				@file_put_contents("$main_path/urls"," ");
+				@file_put_contents("$main_path/urls","www. ".md5(time()).".tg");
 				@file_put_contents("$main_path/expressions","\n");	
 				if($GLOBALS["VERBOSE"]){echo "Adding professional category [$addplus] => {$ligne["pattern"]}\n";}
 				
@@ -630,7 +630,7 @@ class squidguard{
 				$this->CategoriesDefinitions[$addplus_com][]="\turllist blacklist-artica/{$ligne["pattern"]}/urls";
 				$this->CategoriesDefinitions[$addplus_com][]="\texpressionlist blacklist-artica/{$ligne["pattern"]}/expressions";
 				$this->DestOfRules[$RuleID][$addplus_com]="$commutator$addplus_com";
-				@file_put_contents("$main_path/urls"," ");
+				@file_put_contents("$main_path/urls","www. ".md5(time()).".tg");
 				@file_put_contents("$main_path/expressions","\n");				
 			}
 			
@@ -649,7 +649,7 @@ class squidguard{
 				$this->CategoriesDefinitions["P-$categoryPrint"][]="\tdomainlist personal-categories/$categoryPrint/domains";
 				$this->CategoriesDefinitions["P-$categoryPrint"][]="\turllist personal-categories/$categoryPrint/urls";
 				$this->CategoriesDefinitions["P-$categoryPrint"][]="\texpressionlist personal-categories/$categoryPrint/expressions";
-				@file_put_contents("$main_path/urls"," ");
+				@file_put_contents("$main_path/urls","www. ".md5(time()).".tg");
 				@file_put_contents("$main_path/expressions","\n");						
 				$this->DestOfRules[$RuleID]["P-$categoryPrint"]="{$commutator}P-$categoryPrint";
 			}
@@ -788,6 +788,13 @@ class squidguard{
 		//$this->ufdbGenTable($RuleID,$main_path,$categoryPrint);
 		$GLOBALS["compile_artica_category"]["$RuleID$main_path"]=true;
 		//ufdbGenTable		
+	}
+	
+	
+	function categoryToDatabase($category){
+		
+		
+		
 	}
 	
 	

@@ -258,7 +258,7 @@ function Build_lighthttp(){
 				$conf=$conf."\n";
 				$conf=$conf."fastcgi.server = ( \".php\" =>((\n";
 				$conf=$conf."\t\t\"bin-path\" => \"$users->phpcgi\",\n";
-				$conf=$conf."\t\t\"socket\" => \"/var/run/lighttpd/php.socket\",\n";
+				$conf=$conf."\t\t\"host\" => \"127.0.0.1\",\"port\" =>1809,\n";
 				$conf=$conf."\t\t\"min-procs\" => 1,\n";
 				$conf=$conf."\t\t\"max-procs\" => $this->lighttp_max_proc,\n";
 				$conf=$conf."\t\t\"max-load-per-proc\" => $this->lighttp_max_load_per_proc,\n";
@@ -448,7 +448,6 @@ function Build_lighthttp(){
 			
 			if($this->AsRoot){
 				if(!is_file("$users->roundcube_web_folder/plugins/msglistcols/msglistcols.php")){$this->plugin_install($users->roundcube_web_folder,"msglistcols");}
-				if(!is_file("$users->roundcube_web_folder/plugins/remember_me/remember_me.php")){$this->plugin_install($users->roundcube_web_folder,"remember_me");}
 				if(!is_file("$users->roundcube_web_folder/plugins/sticky_notes/sticky_notes.php")){$this->plugin_install($users->roundcube_web_folder,"sticky_notes");}
 				if(!is_file("$users->roundcube_web_folder/plugins/jqueryui/jqueryui.php")){$this->plugin_install($users->roundcube_web_folder,"jqueryui");}
 				if(!is_file("$users->roundcube_web_folder/plugins/dkimstatus/dkimstatus.php")){$this->plugin_install($users->roundcube_web_folder,"dkimstatus");}
@@ -462,10 +461,6 @@ function Build_lighthttp(){
 					$arr[]="'msglistcols'";
 				}
 				
-				if(is_file("$users->roundcube_web_folder/plugins/remember_me/remember_me.php")){
-					echo "Starting......: Roundcube remember_me Enabled\n";
-					$arr[]="'remember_me'";
-				}
 				
 				if(is_file("$users->roundcube_web_folder/plugins/dkimstatus/dkimstatus.php")){
 					echo "Starting......: Roundcube dkimstatus Enabled\n";
@@ -501,319 +496,158 @@ function Build_lighthttp(){
 				
 			}
 				
-			//if($this->AsRoot){echo "Starting......: Roundcube contextmenu Enabled\n";}
-			//$arr[]="'contextmenu'";
-			//$sock->getFrameWork("cmd.php?roundcube-install-contextmenu=yes");
-			
-				if(is_array($arr)){$plugins="\$rcmail_config['plugins'] = array(".implode(',',$arr).");\n";}
-				
-				//- 'skin_path' was replaced by 'skin'
-				//- 'locale_string' was replaced by 'language'
-				
+	
+				if(is_array($arr)){$plugins="\$rcmail_config['plugins'] = array(".implode(',',$arr).");";}
 				$version_bin=$users->roundcube_intversion;
-				
-				$conf=$conf."<?php\n";
-				$conf=$conf."\n";
-				$conf=$conf."/*\n";
-				$conf=$conf." +-----------------------------------------------------------------------+\n";
-				$conf=$conf." | Main configuration file                                               |\n";
-				$conf=$conf." | Saved by artica On ".date('Y-m-d H:i:s')."                     |\n";
-				$conf=$conf." | This file is part of the RoundCube Webmail client                     |\n";
-				$conf=$conf." | Copyright (C) 2005-2007, RoundCube Dev. - Switzerland                 |\n";
-				$conf=$conf." | Licensed under the GNU GPL                                            |\n";
-				$conf=$conf." |                                                                       |\n";
-				$conf=$conf." +-----------------------------------------------------------------------+\n";
-				$conf=$conf."\n";
-				$conf=$conf."*/\n";
-				$conf=$conf."\n";
-				$conf=$conf."\$rcmail_config = array();\n";
-				$conf=$conf."\n";
-				$conf=$conf."\n";
-				$conf=$conf."// system error reporting: 1 = log; 2 = report (not implemented yet), 4 = show, 8 = trace\n";
-				$conf=$conf."\$rcmail_config['debug_level'] ={$this->roundCubeArray["debug_level"]};\n";
-				$conf=$conf."\$rcmail_config['log_driver'] ='syslog';\n";
-				$conf=$conf."\$rcmail_config['syslog_id'] = 'roundcube-master';\n";
-				$conf=$conf."\n";
-				$conf=$conf."// enable caching of messages and mailbox data in the local database.\n";
-				$conf=$conf."// this is recommended if the IMAP server does not run on the same machine\n";
-				$conf=$conf."\$rcmail_config['enable_caching'] = {$this->roundCubeArray["enable_caching"]};\n";
-				$conf=$conf."\n";
-				$conf=$conf."// lifetime of message cache\n";
-				$conf=$conf."// possible units: s, m, h, d, w\n";
-				$conf=$conf."\$rcmail_config['message_cache_lifetime'] = '10d';\n";
-				$conf=$conf."\n";
-				$conf=$conf."// automatically create a new RoundCube user when log-in the first time.\n";
-				$conf=$conf."// a new user will be created once the IMAP login succeeds.\n";
-				$conf=$conf."// set to false if only registered users can use this service\n";
-				$conf=$conf."\$rcmail_config['auto_create_user'] = {$this->roundCubeArray["enable_caching"]};\n";
-				$conf=$conf."\n";
-				$conf=$conf."// the mail host chosen to perform the log-in\n";
-				$conf=$conf."// leave blank to show a textbox at login, give a list of hosts\n";
-				$conf=$conf."// to display a pulldown menu or set one host as string.\n";
-				$conf=$conf."// To use SSL connection, enter ssl://hostname:993\n";
-				$conf=$conf."\$rcmail_config['default_host'] = '{$this->roundCubeArray["default_host"]}';\n";
-				$conf=$conf."\n";
-				$conf=$conf."// TCP port used for IMAP connections\n";
-				$conf=$conf."\$rcmail_config['default_port'] = 143;\n";
-				$conf=$conf."\n";
-				$conf=$conf."// Automatically add this domain to user names for login\n";
-				$conf=$conf."// Only for IMAP servers that require full e-mail addresses for login\n";
-				$conf=$conf."// Specify an array with 'host' => 'domain' values to support multiple hosts\n";
-				$conf=$conf."\$rcmail_config['username_domain'] = '';\n";
-				$conf=$conf."\n";
-				$conf=$conf."// This domain will be used to form e-mail addresses of new users\n";
-				$conf=$conf."// Specify an array with 'host' => 'domain' values to support multiple hosts\n";
-				$conf=$conf."\$rcmail_config['mail_domain'] = '';\n";
-				$conf=$conf."\n";
-				$conf=$conf."// Path to a virtuser table file to resolve user names and e-mail addresses\n";
-				$conf=$conf."\$rcmail_config['virtuser_file'] = '';\n";
-				$conf=$conf."\n";
-				$conf=$conf."// Query to resolve user names and e-mail addresses from the database\n";
-				$conf=$conf."// %u will be replaced with the current username for login.\n";
-				$conf=$conf."// The query should select the user's e-mail address as first col\n";
-				$conf=$conf."\$rcmail_config['virtuser_query'] = '';\n";
-				$conf=$conf."\n";
-				$conf=$conf."// use this host for sending mails.\n";
-				$conf=$conf."// to use SSL connection, set ssl://smtp.host.com\n";
-				$conf=$conf."// if left blank, the PHP mail() function is used\n";
-				$conf=$conf."\$rcmail_config['smtp_server'] = '127.0.0.1';\n";
-				$conf=$conf."\n";
-				$conf=$conf."// SMTP port (default is 25; 465 for SSL)\n";
-				$conf=$conf."\$rcmail_config['smtp_port'] = 25;\n";
-				$conf=$conf."\n";
-				$conf=$conf."// SMTP username (if required) if you use %u as the username RoundCube\n";
-				$conf=$conf."// will use the current username for login\n";
-				$conf=$conf."\$rcmail_config['smtp_user'] = '';\n";
-				$conf=$conf."\n";
-				$conf=$conf."// SMTP password (if required) if you use %p as the password RoundCube\n";
-				$conf=$conf."// will use the current user's password for login\n";
-				$conf=$conf."\$rcmail_config['smtp_pass'] = '';\n";
-				$conf=$conf."\n";
-				$conf=$conf."// SMTP AUTH type (DIGEST-MD5, CRAM-MD5, LOGIN, PLAIN or empty to use\n";
-				$conf=$conf."// best server supported one)\n";
-				$conf=$conf."\$rcmail_config['smtp_auth_type'] = '';\n";
-				$conf=$conf."\n";
-				$conf=$conf."// SMTP HELO host \n";
-				$conf=$conf."// Hostname to give to the remote server for SMTP 'HELO' or 'EHLO' messages \n";
-				$conf=$conf."// Leave this blank and you will get the server variable 'server_name' or \n";
-				$conf=$conf."// localhost if that isn't defined. \n";
-				$conf=$conf."\$rcmail_config['smtp_helo_host'] = '';\n";
-				$conf=$conf."\n";
-				$conf=$conf."// Log sent messages\n";
-				$conf=$conf."\$rcmail_config['smtp_log'] = TRUE;\n";
-				$conf=$conf."\n";
-				$conf=$conf."// these cols are shown in the message list\n";
-				$conf=$conf."// available cols are: subject, from, to, cc, replyto, date, size, encoding\n";
-				$conf=$conf."\$rcmail_config['list_cols'] = array('subject', 'from', 'date', 'size');\n";
-				$conf=$conf."\n";
 
-				$conf=$conf."\n";
-				
-				if($version_bin>=40){
-					$conf=$conf."// relative path to the skin folder\n";
-					$conf=$conf."\$rcmail_config['skin'] = 'skins/default/';\n";
-				}else{
-					$conf=$conf."// relative path to the skin folder\n";
-					$conf=$conf."\$rcmail_config['skin_path'] = 'skins/default/';\n";
-				}				
-				
-				
-				$conf=$conf."// includes should be interpreted as PHP files\n";
-				$conf=$conf."\$rcmail_config['skin_include_php'] = FALSE;\n";
-				$conf=$conf."\n";
-				$conf=$conf."// use this folder to store temp files (must be writebale for apache user)\n";
-				$conf=$conf."\$rcmail_config['temp_dir'] = 'temp/';\n";
-				$conf=$conf."\n";
-				$conf=$conf."// use this folder to store log files (must be writebale for apache user)\n";
-				$conf=$conf."\$rcmail_config['log_dir'] = 'logs/';\n";
-				$conf=$conf."\n";
-				$conf=$conf."// session lifetime in minutes\n";
-				$conf=$conf."\$rcmail_config['session_lifetime'] = 10;\n";
-				$conf=$conf."\n";
-				$conf=$conf."// check client IP in session athorization\n";
-				$conf=$conf."\$rcmail_config['ip_check'] = false;\n";
-				$conf=$conf."\n";
-				$conf=$conf."// Use an additional frequently changing cookie to athenticate user sessions.\n";
-				$conf=$conf."// There have been problems reported with this feature.\n";
-				$conf=$conf."\$rcmail_config['double_auth'] = false;\n";
-				$conf=$conf."\n";
-				$conf=$conf."// this key is used to encrypt the users imap password which is stored\n";
-				$conf=$conf."// in the session record (and the client cookie if remember password is enabled).\n";
-				$conf=$conf."// please provide a string of exactly 24 chars.\n";
-				$conf=$conf."\$rcmail_config['des_key'] = 'NIbXC7RaFsZvQTV5NWBbQd9H';\n";
-				$conf=$conf."\n";
-				
-				if($version_bin>=40){
-					$conf=$conf."// the default locale setting\n";
-					$conf=$conf."\$rcmail_config['language'] = '{$this->roundCubeArray["locale_string"]}';\n";					
-				}else{
-					$conf=$conf."// the default locale setting\n";
-					$conf=$conf."\$rcmail_config['locale_string'] = '{$this->roundCubeArray["locale_string"]}';\n";	
-				}
-				$conf=$conf."\n";
-				$conf=$conf."// use this format for short date display\n";
-				$conf=$conf."\$rcmail_config['date_short'] = 'D H:i';\n";
-				$conf=$conf."\n";
-				$conf=$conf."// use this format for detailed date/time formatting\n";
-				$conf=$conf."\$rcmail_config['date_long'] = 'd.m.Y H:i';\n";
-				$conf=$conf."\n";
-				$conf=$conf."// use this format for today's date display\n";
-				$conf=$conf."\$rcmail_config['date_today'] = 'H:i';\n";
-				$conf=$conf."\n";
-				$conf=$conf."// add this user-agent to message headers when sending\n";
-				$conf=$conf."\$rcmail_config['useragent'] = 'RoundCube Webmail/0.1-rc2';\n";
-				$conf=$conf."\n";
-				$conf=$conf."// use this name to compose page titles\n";
-				$conf=$conf."\$rcmail_config['product_name'] = '{$this->roundCubeArray["product_name"]}';\n";
-				$conf=$conf."\n";
-				$conf=$conf."// only list folders within this path\n";
-				$conf=$conf."\$rcmail_config['imap_root'] = null;\n";
-				$conf=$conf."\n";
-				$conf=$conf."// store draft message is this mailbox\n";
-				$conf=$conf."// leave blank if draft messages should not be stored\n";
-				$conf=$conf."\$rcmail_config['drafts_mbox'] = 'Drafts';\n";
-				$conf=$conf."\n";
-				$conf=$conf."// store spam messages in this mailbox\n";
-				$conf=$conf."\$rcmail_config['junk_mbox'] = 'Junk';\n";
-				$conf=$conf."\n";
-				$conf=$conf."// store sent message is this mailbox\n";
-				$conf=$conf."// leave blank if sent messages should not be stored\n";
-				$conf=$conf."\$rcmail_config['sent_mbox'] = 'Sent';\n";
-				$conf=$conf."\n";
-				$conf=$conf."// move messages to this folder when deleting them\n";
-				$conf=$conf."// leave blank if they should be deleted directly\n";
-				$conf=$conf."\$rcmail_config['trash_mbox'] = 'Trash';\n";
-				$conf=$conf."\n";
-				$conf=$conf."// display these folders separately in the mailbox list.\n";
-				$conf=$conf."// these folders will automatically be created if they do not exist\n";
-				$conf=$conf."\$rcmail_config['default_imap_folders'] = array('INBOX', 'Drafts', 'Sent', 'Junk', 'Trash');\n";
-				$conf=$conf."\n";
-				$conf=$conf."// protect the default folders from renames, deletes, and subscription changes\n";
-				$conf=$conf."\$rcmail_config['protect_default_folders'] = TRUE;\n";
-				$conf=$conf."\n";
-				$conf=$conf."// Set TRUE if deleted messages should not be displayed\n";
-				$conf=$conf."// This will make the application run slower\n";
-				$conf=$conf."\$rcmail_config['skip_deleted'] = {$this->roundCubeArray["skip_deleted"]};\n";
-				$conf=$conf."\n";
-				$conf=$conf."// Set true to Mark deleted messages as read as well as deleted\n";
-				$conf=$conf."// False means that a message's read status is not affected by marking it as deleted\n";
-				$conf=$conf."\$rcmail_config['read_when_deleted'] = TRUE;\n";
-				$conf=$conf."\n";
-				$conf=$conf."// When a Trash folder is not present and a message is deleted, flag \n";
-				$conf=$conf."// the message for deletion rather than deleting it immediately.  Setting this to \n";
-				$conf=$conf."// false causes deleted messages to be permanantly removed if there is no Trash folder\n";
-				$conf=$conf."\$rcmail_config['flag_for_deletion'] = {$this->roundCubeArray["flag_for_deletion"]};\n";
-				$conf=$conf."\n";
-				$conf=$conf."// Make use of the built-in spell checker. It is based on GoogieSpell.\n";
-				$conf=$conf."// Since Google only accepts connections over https your PHP installatation\n";
-				$conf=$conf."// requires to be compiled with Open SSL support\n";
-				$conf=$conf."\$rcmail_config['enable_spellcheck'] = TRUE;\n";
-				$conf=$conf."\n";
-				$conf=$conf."// For a locally installed Nox Spell Server, please specify the URI to call it.\n";
-				$conf=$conf."// Get Nox Spell Server from http://orangoo.com/labs/?page_id=72\n";
-				$conf=$conf."// Leave empty to use the Google spell checking service, what means\n";
-				$conf=$conf."// that the message content will be sent to Google in order to check spelling\n";
-				$conf=$conf."\$rcmail_config['spellcheck_uri'] = '';\n";
-				$conf=$conf."\n";
-				$conf=$conf."// These languages can be selected for spell checking.\n";
-				$conf=$conf."// Configure as a PHP style hash array: array('en'=>'English', 'de'=>'Deutsch');\n";
-				$conf=$conf."// Leave empty for default set of Google spell check languages\n";
-				$conf=$conf."\$rcmail_config['spellcheck_languages'] = NULL;\n";
-				$conf=$conf."\n";
-				$conf=$conf."// path to a text file which will be added to each sent message\n";
-				$conf=$conf."// paths are relative to the RoundCube root folder\n";
-				$conf=$conf."\$rcmail_config['generic_message_footer'] = '';\n";
-				$conf=$conf."\n";
-				$conf=$conf."// this string is used as a delimiter for message headers when sending\n";
-				$conf=$conf."// leave empty for auto-detection\n";
-				$conf=$conf."\$rcmail_config['mail_header_delimiter'] = NULL;\n";
-				$conf=$conf."\n";
-				$conf=$conf . $this->enable_ldap()."\n";
-				$conf=$conf."// in order to enable public ldap search, create a config array\n";
-				$conf=$conf."// like the Verisign example below. if you would like to test, \n";
-				$conf=$conf."// simply uncomment the Verisign example.\n";
-				$conf=$conf."/** \n";
-				$conf=$conf." * example config for Verisign directory\n";
-				$conf=$conf." *\n";
-				$conf=$conf." * \$rcmail_config['ldap_public']['Verisign'] = array(\n";
-				$conf=$conf." *  'name'          => 'Verisign.com',\n";
-				$conf=$conf." *  'hosts'         => array('directory.verisign.com'),\n";
-				$conf=$conf." *  'port'          => 389,\n";
-				$conf=$conf." *  'base_dn'       => '',\n";
-				$conf=$conf." *  'bind_dn'       => '',\n";
-				$conf=$conf." *  'bind_pass'     => '',\n";
-				$conf=$conf." *  'ldap_version'  => 3,       // using LDAPv3\n";
-				$conf=$conf." *  'search_fields' => array('mail', 'cn'),  // fields to search in\n";
-				$conf=$conf." *  'name_field'    => 'cn',    // this field represents the contact's name\n";
-				$conf=$conf." *  'email_field'   => 'mail',  // this field represents the contact's e-mail\n";
-				$conf=$conf." *  'surname_field' => 'sn',    // this field represents the contact's last name\n";
-				$conf=$conf." *  'firstname_field' => 'gn',  // this field represents the contact's first name\n";
-				$conf=$conf." *  'scope'         => 'sub',   // search mode: sub|base|list\n";
-				$conf=$conf." *  'filter'        => '',      // used for basic listing (if not empty) and will be &'d with search queries. ex: (status=act)\n";
-				$conf=$conf." *  'fuzzy_search'  => true);   // server allows wildcard search\n";
-				$conf=$conf." */\n";
-				$conf=$conf."\n";
-				$conf=$conf."// enable composing html formatted messages (experimental)\n";
-				$conf=$conf."\$rcmail_config['enable_htmleditor'] = TRUE;\n";
-				$conf=$conf."\n";
-				$conf=$conf."// don't allow these settings to be overriden by the user\n";
-				$conf=$conf."\$rcmail_config['dont_override'] =array('index_sort','trash_mbox','sent_mbox','junk_mbox','drafts_mbox','use_subscriptions');\n";
-				
-				
-				
+				$conf[]="<?php";
+				$conf[]="\$rcmail_config = array();";
+				$conf[]="\$rcmail_config['debug_level'] = {$this->roundCubeArray["debug_level"]};";
+				$conf[]="\$rcmail_config['log_driver'] = 'file';";
+				$conf[]="\$rcmail_config['log_date_format'] = 'd-M-Y H:i:s O';";
+				$conf[]="\$rcmail_config['syslog_id'] = 'roundcube';";
+				$conf[]="\$rcmail_config['syslog_facility'] = LOG_USER;";
+				$conf[]="\$rcmail_config['smtp_log'] = true;";
+				$conf[]="\$rcmail_config['log_logins'] = false;";
+				$conf[]="\$rcmail_config['sql_debug'] = false;";
+				$conf[]="\$rcmail_config['imap_debug'] = false;";
+				$conf[]="\$rcmail_config['ldap_debug'] = false;";
+				$conf[]="\$rcmail_config['smtp_debug'] = false;";
+				$conf[]="\$rcmail_config['default_host'] = '{$this->roundCubeArray["default_host"]}';";
+				$conf[]="\$rcmail_config['default_port'] = 143;";
+				$conf[]="\$rcmail_config['imap_auth_type'] = null;";
+				$conf[]="\$rcmail_config['imap_delimiter'] = null;";
+				$conf[]="\$rcmail_config['imap_ns_personal'] = null;";
+				$conf[]="\$rcmail_config['imap_ns_other']    = null;";
+				$conf[]="\$rcmail_config['imap_ns_shared']   = null;";
+				$conf[]="\$rcmail_config['imap_force_caps'] = false;";
+				$conf[]="\$rcmail_config['imap_force_lsub'] = false;";
+				$conf[]="\$rcmail_config['imap_timeout'] = 0;";
+				$conf[]="\$rcmail_config['imap_auth_cid'] = null;";
+				$conf[]="\$rcmail_config['imap_auth_pw'] = null;";
+				$conf[]="\$rcmail_config['smtp_server'] = '';";
+				$conf[]="\$rcmail_config['smtp_port'] = 25;";
+				$conf[]="\$rcmail_config['smtp_user'] = '';";
+				$conf[]="\$rcmail_config['smtp_pass'] = '';";
+				$conf[]="\$rcmail_config['smtp_auth_type'] = '';";
+				$conf[]="\$rcmail_config['smtp_auth_cid'] = null;";
+				$conf[]="\$rcmail_config['smtp_auth_pw'] = null;";
+				$conf[]="\$rcmail_config['smtp_helo_host'] = '';";
+				$conf[]="\$rcmail_config['smtp_timeout'] = 0;";
+				$conf[]="\$rcmail_config['enable_installer'] = false;";
+				$conf[]="\$rcmail_config['log_dir'] = 'logs/';";
+				$conf[]="\$rcmail_config['temp_dir'] = 'temp/';";
+				$conf[]="\$rcmail_config['enable_caching'] = {$this->roundCubeArray["enable_caching"]};";
+				$conf[]="\$rcmail_config['message_cache_lifetime'] = '10d';";
+				$conf[]="\$rcmail_config['force_https'] = false;";
+				$conf[]="\$rcmail_config['use_https'] = false;";
+				$conf[]="\$rcmail_config['login_autocomplete'] = 0;";
+				$conf[]="\$rcmail_config['login_lc'] = false;";
+				$conf[]="\$rcmail_config['auto_create_user'] = {$this->roundCubeArray["auto_create_user"]};";
+				$conf[]="\$rcmail_config['skin_include_php'] = false;";
+				$conf[]="\$rcmail_config['session_lifetime'] = 10;";
+				$conf[]="\$rcmail_config['ip_check'] = false;";
+				$conf[]="\$rcmail_config['double_auth'] = false;";
+				$conf[]="\$rcmail_config['referer_check'] = false;";
+				$conf[]="\$rcmail_config['des_key'] = 'rcmail-!24ByteDESkey*Str';";
+				$conf[]="\$rcmail_config['username_domain'] = '';";
+				$conf[]="\$rcmail_config['mail_domain'] = '';";
+				$conf[]="\$rcmail_config['password_charset'] = 'ISO-8859-1';";
+				$conf[]="\$rcmail_config['sendmail_delay'] = 0;";
+				$conf[]="\$rcmail_config['max_recipients'] = 0; ";
+				$conf[]="\$rcmail_config['max_group_members'] = 0; ";
+				$conf[]="\$rcmail_config['useragent'] = 'Roundcube Webmail/'.RCMAIL_VERSION;";
+				$conf[]="\$rcmail_config['product_name'] = '{$this->roundCubeArray["product_name"]}';";
+				$conf[]="\$rcmail_config['include_host_config'] = false;";
+				$conf[]="\$rcmail_config['generic_message_footer'] = '';";
+				$conf[]="\$rcmail_config['generic_message_footer_html'] = '';";
+				$conf[]="\$rcmail_config['http_received_header'] = false;";
+				$conf[]="\$rcmail_config['http_received_header_encrypt'] = false;";
+				$conf[]="\$rcmail_config['mail_header_delimiter'] = NULL;";
+				$conf[]="\$rcmail_config['line_length'] = 72;";
+				$conf[]="\$rcmail_config['send_format_flowed'] = true;";
+				$conf[]="\$rcmail_config['session_domain'] = '';";
+				$conf[]="\$rcmail_config['dont_override'] = array();";
+				$conf[]="\$rcmail_config['identities_level'] = 0;";
+				$conf[]="\$rcmail_config['mime_magic'] = '/usr/share/misc/magic';";
+				$conf[]="\$rcmail_config['email_dns_check'] = false;";
 				if($this->roundCubeArray["plugin_subscriptions_option"]==1){
-					$conf=$conf."\$rcmail_config['use_subscriptions'] = true;\n";
+									$conf[]="\$rcmail_config['use_subscriptions'] = true;";
+								}
+				$conf[]="\$rcmail_config['plugins'] = array();";
+				$conf[]="$plugins";
+				
+				$conf[]="\$rcmail_config['message_sort_col'] = '';";
+				$conf[]="\$rcmail_config['message_sort_order'] = 'DESC';";
+				$conf[]="\$rcmail_config['list_cols'] = array('subject', 'status', 'from', 'date', 'size', 'flag', 'attachment');";
+				if($version_bin>=40){
+					$conf[]="\$rcmail_config['language'] = '{$this->roundCubeArray["locale_string"]}';";					
+				}else{
+					$conf[]="\$rcmail_config['locale_string'] = '{$this->roundCubeArray["locale_string"]}';";	
 				}
-				
-				$conf=$conf."\n";
-				$conf=$conf."// list of configuration option names that need to be available in Javascript.\n";
-				$conf=$conf."\$rcmail_config['javascript_config'] = array('read_when_deleted', 'flag_for_deletion');\n";
-				$conf=$conf."\n";
-				$conf=$conf."// try to load host-specific configuration\n";
-				$conf=$conf."\$rcmail_config['include_host_config'] = FALSE;\n";
-				$conf=$conf."\n";
-				$conf=$conf."\n";
-				$conf=$conf."/***** these settings can be overwritten by user's preferences *****/\n";
-				$conf=$conf."\n";
-				$conf=$conf."// show up to X items in list view\n";
-				$conf=$conf."\$rcmail_config['pagesize'] = 40;\n";
-				$conf=$conf."\n";
-				$conf=$conf."// use this timezone to display date/time\n";
-				$conf=$conf."\$rcmail_config['timezone'] = intval(date('O'))/100 - date('I');\n";
-				$conf=$conf."\n";
-				$conf=$conf."// is daylight saving On?\n";
-				$conf=$conf."\$rcmail_config['dst_active'] = (bool)date('I');\n";
-				$conf=$conf."\n";
-				$conf=$conf."// prefer displaying HTML messages\n";
-				$conf=$conf."\$rcmail_config['prefer_html'] = TRUE;\n";
-				$conf=$conf."\n";
-				$conf=$conf."// show pretty dates as standard\n";
-				$conf=$conf."\$rcmail_config['prettydate'] = TRUE;\n";
-				$conf=$conf."\n";
-				$conf=$conf."// default sort col\n";
-				$conf=$conf."\$rcmail_config['message_sort_col'] = 'date';\n";
-				$conf=$conf."\n";
-				$conf=$conf."// default sort order\n";
-				$conf=$conf."\$rcmail_config['message_sort_order'] = 'DESC';\n";
-				$conf=$conf."\n";
-				$conf=$conf."// save compose message every 300 seconds (5min)\n";
-				$conf=$conf."\$rcmail_config['draft_autosave'] = 300;\n";
-				$conf=$conf."\n";
-				
-				$conf=$conf."/***** PLUGINS for Roundcube V3 *****/\n";
-				$conf=$conf."\$rcmail_config['plugins'] = array();\n";
-				$conf=$conf.$plugins."\n\n";
-				
-				
-				$conf=$conf."// don't let users set pagesize to more than this value if set\n";
-				$conf=$conf."\$rcmail_config['max_pagesize'] = 200;\n";
-				$conf=$conf."\$rcmail_config['create_default_folders'] = TRUE;\n";
-				$conf=$conf."\n";
-				$conf=$conf."\n";				
-				$conf=$conf."// end of config file\n";
-				$conf=$conf."?>";	
-				return $conf;	
-	}
+				$conf[]="\$rcmail_config['date_short'] = 'D H:i';";
+				$conf[]="\$rcmail_config['date_long'] = 'd.m.Y H:i';";
+				$conf[]="\$rcmail_config['date_today'] = 'H:i';";
+				$conf[]="\$rcmail_config['drafts_mbox'] = 'Drafts';";
+				$conf[]="\$rcmail_config['junk_mbox'] = 'Junk';";
+				$conf[]="\$rcmail_config['sent_mbox'] = 'Sent';";
+				$conf[]="\$rcmail_config['trash_mbox'] = 'Trash';";
+				$conf[]="\$rcmail_config['default_imap_folders'] = array('INBOX', 'Drafts', 'Sent', 'Junk', 'Trash');";
+				$conf[]="\$rcmail_config['create_default_folders'] = false;";
+				$conf[]="\$rcmail_config['protect_default_folders'] = true;";
+				$conf[]="\$rcmail_config['quota_zero_as_unlimited'] = false;";
+				$conf[]="\$rcmail_config['enable_spellcheck'] = true;";
+				$conf[]="\$rcmail_config['spellcheck_engine'] = 'googie';";
+				$conf[]="\$rcmail_config['spellcheck_uri'] = '';";
+				$conf[]="\$rcmail_config['spellcheck_languages'] = NULL;";
+				$conf[]="\$rcmail_config['max_pagesize'] = 200;";
+				$conf[]="\$rcmail_config['min_keep_alive'] = 60;";
+				$conf[]="\$rcmail_config['address_book_type'] = 'sql';";
+				$conf[]="\$rcmail_config['ldap_public'] = array();";
+				$conf[]=$this->enable_ldap();
+				$conf[]="\$rcmail_config['autocomplete_addressbooks'] = array('sql');";
+				$conf[]="\$rcmail_config['autocomplete_min_length'] = 1;";
+				$conf[]="\$rcmail_config['default_charset'] = 'ISO-8859-1';";
+				if($version_bin>=40){
+					$conf[]="\$rcmail_config['skin'] = 'skins/default/';";
+				}else{
+					$conf[]="\$rcmail_config['skin_path'] = 'skins/default/';\n";
+				}	
+				$conf[]="\$rcmail_config['pagesize'] = 40;";
+				$conf[]="\$rcmail_config['timezone'] = 'auto';";
+				$conf[]="\$rcmail_config['dst_active'] = (bool)date('I');";
+				$conf[]="\$rcmail_config['prefer_html'] = true;";
+				$conf[]="\$rcmail_config['show_images'] = 0;";
+				$conf[]="\$rcmail_config['htmleditor'] = 0;";
+				$conf[]="\$rcmail_config['prettydate'] = true;";
+				$conf[]="\$rcmail_config['draft_autosave'] = 300;";
+				$conf[]="\$rcmail_config['preview_pane'] = false;";
+				$conf[]="\$rcmail_config['preview_pane_mark_read'] = 0;";
+				$conf[]="\$rcmail_config['focus_on_new_message'] = true;";
+				$conf[]="\$rcmail_config['logout_purge'] = false;";
+				$conf[]="\$rcmail_config['logout_expunge'] = false;";
+				$conf[]="\$rcmail_config['inline_images'] = true;";
+				$conf[]="\$rcmail_config['mime_param_folding'] = 1;";
+				$conf[]="\$rcmail_config['skip_deleted'] = {$this->roundCubeArray["skip_deleted"]};";
+				$conf[]="\$rcmail_config['read_when_deleted'] = true;";
+				$conf[]="\$rcmail_config['flag_for_deletion'] = {$this->roundCubeArray["flag_for_deletion"]};";
+				$conf[]="\$rcmail_config['keep_alive'] = 60;";
+				$conf[]="\$rcmail_config['check_all_folders'] = false;";
+				$conf[]="\$rcmail_config['display_next'] = false;";
+				$conf[]="\$rcmail_config['autoexpand_threads'] = 0;";
+				$conf[]="\$rcmail_config['top_posting'] = false;";
+				$conf[]="\$rcmail_config['strip_existing_sig'] = true;";
+				$conf[]="\$rcmail_config['show_sig'] = 1;";
+				$conf[]="\$rcmail_config['sig_above'] = false;";
+				$conf[]="\$rcmail_config['force_7bit'] = false;";
+				$conf[]="\$rcmail_config['search_mods'] = null;  ";
+				$conf[]="\$rcmail_config['delete_always'] = false;";
+				$conf[]="\$rcmail_config['mdn_requests'] = 0;";
+				$conf[]="\$rcmail_config['mdn_default'] = 0;";
+				$conf[]="\$rcmail_config['dsn_default'] = 0;";
+				$conf[]="\$rcmail_config['reply_same_folder'] = false;\n";	
+				return @implode("\n", $conf);			
+		}
 	
 	
 	function enable_ldap(){

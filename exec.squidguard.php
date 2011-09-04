@@ -33,6 +33,7 @@ if(count($argv)>0){
 	if($argv[1]=="--list-missdbs"){BuildMissingUfdBguardDBS(false,true);exit;}				
 	if($argv[1]=="--cron-compile"){cron_compile();exit;}
 	if($argv[1]=="--ufdbguard-status"){print_r(UFDBGUARD_STATUS());exit;}
+	if($argv[1]=="--persos"){PersonalCategoriesRepair();exit;}
 	
 	
 	
@@ -82,6 +83,7 @@ function conf(){
 	@mkdir("/etc/ufdbguard",null,true);
 	@file_put_contents("/etc/ufdbguard/ufdbGuard.conf",$datas);
 	if($users->APP_UFDBGUARD_INSTALLED){shell_exec("/etc/init.d/ufdb reconfig");}
+	PersonalCategoriesRepair();
 	
 }
 
@@ -127,11 +129,30 @@ function build(){
 	shell_exec("$chmod -R ug+x /var/lib/squidguard/*");
 	if(is_file("/var/log/ufdbguard/ufdbguardd.log")){@chmod("/var/log/ufdbguard/ufdbguardd.log",777);}
 	if(is_file("/etc/init.d/ufdb")){shell_exec("/etc/init.d/ufdb reconfig >/dev/null 2>&1");}
+	PersonalCategoriesRepair();
 	shell_exec("{$GLOBALS["SQUIDBIN"]} -k reconfigure");
 	send_email_events("SquidGuard/ufdbGuard rules was rebuilded","This is new configuration file of the squidGuard/ufdbGuard:\n-------------------------------------\n$datas","system");
 	shell_exec(LOCATE_PHP5_BIN2()." ".dirname(__FILE__)."/exec.c-icap.php --maint-schedule");
 	
 	}
+	
+function PersonalCategoriesRepair(){
+	$unix=new unix();
+	$user=GetSquidUser();
+	$reload=false;
+	$dirs=$unix->dirdir("/var/lib/squidguard/personal-categories");
+	while (list ($a, $dir) = each ($dirs)){
+		if(!is_file("$dir/expressions")){
+			events_ufdb_tail("exec.squidguard.php: creating $dir/expressions",__LINE__);
+			@file_put_contents("$dir/expressions"," ");
+			$reload=true;
+		}
+		
+	}
+	
+	shell_exec("/bin/chown -R $user:$user /var/lib/squidguard >/dev/null 2>&1 &");
+	if($reload){shell_exec("{$GLOBALS["SQUIDBIN"]} -k reconfigure");}
+}
 	
 function FileMD5($path){
 if(strlen(trim($GLOBALS["md5sum"]))==0){
@@ -241,8 +262,9 @@ function UFDBGUARD_COMPILE_SINGLE_DB($path){
 		shell_exec("$chown -R $user /var/lib/squidguard/*");
 		shell_exec("$chown -R $user /var/log/squid/*");
 	}		
-	
+	PersonalCategoriesRepair();
 	events_ufdb_tail("/etc/init.d/ufdb reconfig");
+	
 	shell_exec("/etc/init.d/ufdb reconfig");
 	
 }

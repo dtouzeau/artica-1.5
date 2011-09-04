@@ -22,9 +22,13 @@ $tpl=new templates();
 $uid=$_GET["uid"];
 $title=$tpl->_ENGINE_parse_body('{SET_SCHEDULE}');
 $function=$_GET["function"];
+$function2=$_GET["function2"];
 if($function<>null){$add_func="$function(results);";}else{
 	$add_func="document.getElementById('{$_GET["field"]}').value=results";	
 }
+if($function2<>null){$function2="$function2()";}
+
+
 $html="
 
 function {$prefix}Loadpage(){
@@ -38,6 +42,7 @@ var x_save_cron= function (obj) {
 	var results=obj.responseText;
 	if(results.length>0){
 	$add_func
+	$function2
 	YahooWinBrowseHide();
 	}
 }
@@ -139,7 +144,7 @@ for($i=0;$i<24;$i++){$def1[]=$i;}
 	
 $array_days=array("sunday","monday","tuesday","wednesday","thursday","friday","saturday");
 
-$mins="<table style='width:100%;' class=table_form>";
+$mins="<table style='width:100%;' class=form>";
 
 $group_min="<table style='width:100%;'>
 <tr><td valign='top'>";
@@ -150,7 +155,7 @@ for($i=0;$i<60;$i++){
 	if($count>10){
 		$mins=$mins."</table>";
 		$group_min=$group_min."$mins</td><td valign='top'>";
-		$mins="<table style='width:100%' class=table_form>";
+		$mins="<table style='width:100%' class=form>";
 		$count=0;
 	}
 	$mins=$mins."
@@ -171,7 +176,7 @@ $group_min=$group_min."</td>
 $group_hours="<table style='width:100%;'>
 <tr>
 	<td valign='top'>
-	<table style='width:100%' class=table_form>";
+	<table style='width:100%' class=form>";
 $count=0;
 for($i=0;$i<24;$i++){
 	if($i<10){$hour_text="0$i";}else{$hour_text=$i;}
@@ -183,7 +188,7 @@ for($i=0;$i<24;$i++){
 </td>
 <td valign='top'>";
 		$hours="
-			<table style='width:100%' class=table_form>";
+			<table style='width:100%' class=form>";
 		$count=0;
 	}
 	$hours=$hours."
@@ -220,7 +225,7 @@ $group_hours=$group_hours."
 	}
 	
 	$days_html="
-<table style='width:100%' class=table_form>
+<table style='width:100%' class=form>
 		$days_html
 </table>";
 	
@@ -250,8 +255,8 @@ $html="
 	</tr>
 	<tr>
 	<td colspan=2 align='right'><hr>
+	". button("{apply}", "ParseForm('FFM_CRON','$page',false,false,false,'','',x_save_cron)")."
 	
-	<input type='button' OnClick=\"javascript:ParseForm('FFM_CRON','$page',false,false,false,'','',x_save_cron)\" value='{edit}&nbsp;&raquo;'>
 	</td>
 	</tr>
 	</table>

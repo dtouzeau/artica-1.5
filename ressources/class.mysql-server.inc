@@ -541,11 +541,12 @@ class mysqlserver{
 		$mysqld["query_cache_type"]="1";
 		$mysqld["default-storage-engine"]="MyISAM";
 		$mysqld["log-error"]="";
-		
+		if(is_array($SpecificConf)){
 		if(count($SpecificConf)>0){
 			while (list ($key, $value) = each ($SpecificConf) ){
 				if($GLOBALS["VERBOSE"]){echo "mysqld:Personal settings $key = $value\n";}
 				$mysqld[$key]=$value;
+				}
 			}
 		}
 		if($this->EnableZarafaTuning==1){

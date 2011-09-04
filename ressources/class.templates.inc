@@ -466,6 +466,7 @@ function _get_env_var($Var){
 	}
 
 function _detect_lang(){
+		if($GLOBALS["EXECUTED_AS_ROOT"]){return;}
 		if(isset($_COOKIE["artica-language"])){return $_COOKIE["artica-language"];}
 		$GLOBALS["CURRENT_PAGE"]=CurrentPageName();
 		if($GLOBALS["DEBUG_TEMPLATE"]){error_log("{$GLOBALS["CURRENT_PAGE"]} => language: _COOKIE={$_COOKIE["artica-language"]} ".__FUNCTION__." in " . __FILE__. " line ".__LINE__);}
@@ -708,6 +709,12 @@ return "
 
 function field_ipv4($field_name,$defaultvalue,$style=null,$netwrok=false,$jsAdd=null){
 	if($style==null){$style="font-size:13px";}
+	
+	$withPX=35;
+	if(preg_match("#font-size:([0-9]+)#", $style,$re)){
+		if($re[1]>16){$withPX=40;}
+	}
+	
 	preg_match('#([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)#',$defaultvalue,$re);
 	$locknet=0;	
 	if($netwrok){$locknet=1;}	
@@ -716,13 +723,13 @@ function field_ipv4($field_name,$defaultvalue,$style=null,$netwrok=false,$jsAdd=
 $html="
 <table width=10%>
 <tr>
-	<td width=1% nowrap>" . Field_text($field_name.'_0',$re[1],"width:35px;$style;padding:3px;text-align:center")."</td>
+	<td width=1% nowrap>" . Field_text($field_name.'_0',$re[1],"width:{$withPX}px;$style;padding:3px;text-align:center")."</td>
 	<td style='font-size:13px;padding:0px;margin:0px;height:auto;width:auto' width=1% nowrap>.</td>
-	<td width=1% nowrap>" . Field_text($field_name.'_1',$re[2],"width:35px;$style;padding:3px;text-align:center")."</td>
+	<td width=1% nowrap>" . Field_text($field_name.'_1',$re[2],"width:{$withPX}px;$style;padding:3px;text-align:center")."</td>
 	<td style='font-size:13px;padding:0px;margin:0px;height:auto;width:auto' width=1% nowrap>.</td>
-	<td width=1% nowrap>" . Field_text($field_name.'_2',$re[3],"width:35px;$style;padding:3px;text-align:center")."</td>
+	<td width=1% nowrap>" . Field_text($field_name.'_2',$re[3],"width:{$withPX}px;$style;padding:3px;text-align:center")."</td>
 	<td style='font-size:13px;padding:0px;margin:0px;height:auto;width:auto' width=1% nowrap>.</td>
-	<td width=1% nowrap>" . Field_text($field_name.'_3',$re[4],"width:35px;$style;padding:3px;text-align:center")."</td>
+	<td width=1% nowrap>" . Field_text($field_name.'_3',$re[4],"width:{$withPX}px;$style;padding:3px;text-align:center")."</td>
 	<td width=1% nowrap><span id='ico-ipv4-$field_name'><img src=img/icon_ok.gif></span></td>
 	
 </tr>
@@ -2190,9 +2197,9 @@ function Paragraphe_switch_img($title,$text,$field_name=null,$value=null,$tips=n
 	$html="<div style='width:{$width}px;' >
 	<table style='width:100%;'>
 	<tr>
-	<td width=1% valign='top' style='background-image:url(img/bg_pic-2.png);background-position:top center;background-repeat:no-repeat'><div style='min-height: 120px;'>$img</a></div></td>
-	<td valign='top' id='$id'><h3 style='font-size:16px;'>$title</h3>
-	<div style='text-align:left;font-size:13px;font-family:Verdana;letter-spacing:-1px' id='text_$id'>$field$text</div>
+	<td width=1% valign='top'><div style='min-height: 120px;'>$img</a></div></td>
+	<td valign='top' id='$id'><h3 style='font-size:14px;color:black'>$title</h3>
+	<div style='text-align:left;font-size:11px;font-family:\"Lucida Grande\",\"Lucida Sans Unicode\",Helvetica,Arial,Verdana,sans-serif;' id='text_$id'>$field$text</div>
 	</td>
 	</tr>
 	</table>
@@ -2358,6 +2365,58 @@ function hide_ressources($pattern){
 }
 
 
+function ParagrapheTEXT($img,$title,$text,$link=null){
+	$max_text_caracts=130;
+	if(!$GLOBALS["EXECUTED_AS_ROOT"]){
+		$tpl=new templates();
+		$title=$tpl->_ENGINE_parse_body($title);
+		$text=$tpl->_ENGINE_parse_body($text);
+		$len_text_caracts=strlen($text);
+		if($len_text_caracts>$max_text_caracts){$text=substr($text, 0,$max_text_caracts-3)."...";}
+	}
+	
+	$link="<a href=\"javascript:blur();\" 
+	style='cursor: pointer;text-align: left;color:#005447;font-size:12px;font-weight:normal;text-decoration:underline;text-transform:capitalize;' 
+	OnClick=\"$link\">$title</a>";
+	
+	
+	$html="
+	\n	
+	<div style='margin-bottom:10px;' class=explainNoPic>
+		<img src='img/$img' style='float:left;margin-right:9px;clear:right;'>
+		<div style='padding-left:10px'>$link</div>
+		<p style='margin-top:1px;margin-bottom:0px;font-size:11px;margin-left:40px'>$text
+		</p>
+	</div>\n";
+	return $html;
+	
+	
+}
+
+function ParagrapheTEXT_disabled($img,$title,$text,$link=null){
+	$max_text_caracts=130;
+	if(!$GLOBALS["EXECUTED_AS_ROOT"]){
+		$tpl=new templates();
+		$text=$tpl->_ENGINE_parse_body($text);
+		$len_text_caracts=strlen($text);
+		if($len_text_caracts>$max_text_caracts){$text=substr($text, 0,$max_text_caracts-3)."...";}
+	}
+	$html="
+	\n	
+	<div style='margin-bottom:10px;' class=explainNoPic>
+		<img src='img/$img' style='float:left;margin-right:9px;clear:right;opacity:0.4;filter:alpha(opacity=40)'>
+		<H3 style='padding-left:10px;padding-right:0px;padding-bottom:0px;padding-top:0px;font-size:12px;color:#CCCCCC;font-weight:bold;line-height:17px;margin:0'>$title</H3>
+		<p style='margin-top:-2px;margin-bottom:0px;font-size:11px;margin-left:40px;color:#CCCCCC'>
+			$text
+		</p>
+		
+	</div>\n";
+	return $html;	
+	
+	
+}
+
+
 	
 function Paragraphe($img,$title,$text,$link=null,$tips="go_to_section",$width="210",$height=null,$nowrap=0,$float=false,$nojs=false){
 	$styleFloat='';
@@ -2366,12 +2425,17 @@ function Paragraphe($img,$title,$text,$link=null,$tips="go_to_section",$width="2
 	$hrf=null;
 	$img_add_1=null;
 	$img_add_2=null;
+	$H3_STYLE_FONT_COLOR=null;
+	$H3_STYLE_TITLE_FONT_COLOR=null;
 	$textOrg=$text;
 	$tpl=new templates();
 	if(!isset($_COOKIE["artica-language"])){$_COOKIE["artica-language"]=$tpl->language;}
 	$uid=$_SESSION["uid"];
 	if($uid==-100){$uid="RootMaster";}
 	if(!isset($_COOKIE["DisableToolTips"])){$_COOKIE["DisableToolTips"]=0;}
+	
+	
+	
 	
 	if(!$GLOBALS["EXECUTED_AS_ROOT"]){
 		$lang=$_COOKIE["artica-language"];
@@ -2381,6 +2445,11 @@ function Paragraphe($img,$title,$text,$link=null,$tips="go_to_section",$width="2
 		if(is_file($cachefile)){return @file_get_contents($cachefile);}
 	}
 	
+	if(strpos($title, ":error_notinstalled")){
+		$title=str_replace(":error_notinstalled", "", $title);
+		$H3_STYLE_FONT_COLOR="style='color:#CCCCCC'";
+		$H3_STYLE_TITLE_FONT_COLOR="color:#CCCCCC";
+	}
 	
 	if(is_array($img)){
 		$img_add_1=$img[1];
@@ -2452,7 +2521,7 @@ function Paragraphe($img,$title,$text,$link=null,$tips="go_to_section",$width="2
 		";
 	
 	$img_pid=md5("$img$jslink");	
-	$h3style="OnClick=\"javascript:Paragraphe_{$img_pid}_Switch()\"";
+	$h3style="OnClick=\"javascript:Paragraphe_{$img_pid}_Switch()\" $H3_STYLE_FONT_COLOR";
 	
 
 		
@@ -2487,7 +2556,7 @@ function Paragraphe($img,$title,$text,$link=null,$tips="go_to_section",$width="2
 		}
 		if($link==null){
 			$hrf=null;
-			$h3style=null;
+			$h3style=$H3_STYLE_FONT_COLOR;
 			$jsaddon=null;
 		}
 
@@ -2530,7 +2599,7 @@ function Paragraphe($img,$title,$text,$link=null,$tips="go_to_section",$width="2
 		
 		$title_lenght=strlen($title);
 		if($title_lenght<25){$min_height_title=null;}
-		$title="<h3 style='$min_height_title;text-transform:none'>$title</h3>";
+		$title="<h3 style='$min_height_title;text-transform:none;$H3_STYLE_TITLE_FONT_COLOR'>$title</h3>";
 
 		if($nowrap==0){
 			if(strlen($text)>$max_text_caracts){
@@ -3874,6 +3943,12 @@ function finduser_format($array){
 	}	
 	
 	if($array["JS"]<>null){
+		if(isset($array["employeenumber"])){
+			$array["JS"]="javascript:Loadjs('contact.php?employeeNumber={$array["employeenumber"]}')";
+			if($array["img"]=="img/contact-unknown-user.png"){$array["img"]="img/contact-unknown-user-ident.png";}
+				
+			
+		}
 		$style_plus="
 		OnMouseOver=\";this.style.cursor='pointer';\" 
 		OnMouseOut=\";this.style.cursor='default';\"
@@ -3898,6 +3973,8 @@ function finduser_format($array){
 	if($array["title"]<>null){
 		$title="<div style='text-align:right;font-size:12px'>{$array["title"]}</div>";
 	}
+	
+	
 		
 	
 	$html="
@@ -3907,6 +3984,7 @@ function finduser_format($array){
 		$title
 		$mail
 		$phone
+		
 	</div>
 	
 	";

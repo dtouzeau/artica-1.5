@@ -14,13 +14,31 @@
 		echo "alert('". $tpl->javascript_parse_text("{ERROR_NO_PRIVS}")."');";
 		die();exit();
 	}	
-	
+	if(isset($_GET["caches-control"])){cache_control();exit;}
 	if(isset($_GET["AddCachedSitelist-js"])){AddCachedSitelist_js();exit;}
 	if(isset($_GET["AddCachedSitelist-popup"])){AddCachedSitelist_popup();exit;}
 	if(isset($_GET["refresh_pattern_site"])){AddCachedSitelist_save();exit;}
 	if(isset($_GET["AddCachedSitelist-delete"])){AddCachedSitelist_js_delete();exit;}
 	if(isset($_GET["sites-list"])){WEBSITES_LIST();exit;}
 	if(isset($_GET["delete-id"])){AddCachedSitelist_delete();exit;}
+	if(isset($_GET["js"])){js();exit;}
+	
+	
+function js(){
+	$page=CurrentPageName();
+	$tpl=new templates();	
+	$title=$tpl->_ENGINE_parse_body("{cache}::{cache_control}");
+	$html="YahooWin5('700','$page?caches-control=yes&byjs=yes','$title');";
+	echo $html;
+	
+}
+
+function cache_control(){
+	$page=CurrentPageName();
+	echo "<div id='cached_sites_infos' style='width:100%;height:650px;overflow:auto'><center><img src=\"img/wait_verybig.gif\"></center></div>
+<script>LoadAjax('cached_sites_infos','$page?sites-list=yes');</script>";
+	
+}
 
 	
 function AddCachedSitelist_js(){
@@ -127,7 +145,7 @@ if($_GET["refresh_pattern_min"]<5){$_GET["refresh_pattern_min"]=5;}
 		$sql="UPDATE squid_speed SET 
 			domain='{$_GET["refresh_pattern_site"]}',
 			refresh_pattern_min='{$_GET["refresh_pattern_min"]}',
-			refresh_pattern_perc='{$_GET["refresh_pattern_min"]}',
+			refresh_pattern_perc='{$_GET["refresh_pattern_pourc"]}',
 			refresh_pattern_max='{$_GET["refresh_pattern_max"]}',
 			refresh_pattern_options='{$_GET["refresh_pattern_option"]}'
 			WHERE ID='{$_GET["id"]}'
@@ -224,12 +242,17 @@ function AddCachedSitelist_popup(){
 	
 	
 function WEBSITES_LIST(){
+	$q=new mysql();
+	if(isset($_GET["remove-all"])){
+		$sql="TRUNCATE TABLE `squid_speed`";
+		$q->QUERY_SQL($sql,"artica_backup");
+	}
 	
 	if(isset($_GET["defaults"])){WEBSITES_DEFAULTS();}
 	
     $page=CurrentPageName();
 	$sql="SELECT * FROM `squid_speed` WHERE `domain` IS NOT NULL";
-	$q=new mysql();
+	
 	$results=$q->QUERY_SQL($sql,"artica_backup");
 	if(!$q->ok){echo "$q->mysql_error";}
 	$html="
@@ -240,6 +263,8 @@ function WEBSITES_LIST(){
 	<table style='width:99%'>
 	<tr>
 	<td width=99%>&nbsp;</td>
+	
+	<td align='right' width=1%>". imgtootltip("proxy-delete-32.png","{delete_all} & {add_default_settings}","LoadAjax('cached_sites_infos','squid.cached.sitesinfos.php?sites-list=yes&defaults=yes&remove-all=yes');")."</td>
 	<td align='right' width=1%>". imgtootltip("filter-add-32.png","{add_default_settings}","LoadAjax('cached_sites_infos','squid.cached.sitesinfos.php?sites-list=yes&defaults=yes');")."</td>
 	<td align='right' width=1%>". imgtootltip("website-add-32.png","{add_new_cached_web_site}","Loadjs('$page?AddCachedSitelist-js=yes')")."</td>
 	</tr>
@@ -268,8 +293,8 @@ function WEBSITES_LIST(){
 		$ligne["refresh_pattern_max"]=$ligne["refresh_pattern_max"];
 		$ligne["refresh_pattern_max"]=distanceOfTimeInWords(0,$ligne["refresh_pattern_max"],true);
 		$ligne["refresh_pattern_max"]=str_replace("about","",$ligne["refresh_pattern_max"]);		
-		$link="<a href=\"javascript:blur();\" OnClick=\"javascript:$select\" style='font-size:14px;font-weight:bold;text-decoration:underline'>";
-		
+		$link="<a href=\"javascript:blur();\" OnClick=\"javascript:$select\" style='font-size:12px;font-weight:bold;text-decoration:underline'>";
+		if(trim($ligne["domain"])=='.'){$ligne["domain"]="{all}";}
 			$html=$html. "
 			<tr class=$classtr>
 				<td align='left' >$link{$ligne["domain"]}</a></td>
@@ -293,36 +318,96 @@ function WEBSITES_LIST(){
 }
 
 function WEBSITES_DEFAULTS(){
+	
+
 $t[]="INSERT INTO squid_speed (domain,refresh_pattern_min,refresh_pattern_perc,refresh_pattern_max,refresh_pattern_options)
-	VALUES('.(gif|png|jpg|jpeg|ico)$','10080',90,43200,'override-expire ignore-no-cache ignore-no-store ignore-private');";
+	VALUES('-i .(gif|png|jpg|jpeg|ico)$','10080',90,43200,'override-expire ignore-no-cache ignore-no-store ignore-private');";
 
 
 $t[]="INSERT INTO squid_speed (domain,refresh_pattern_min,refresh_pattern_perc,refresh_pattern_max,refresh_pattern_options)
-	VALUES('.(iso|avi|wav|mp3|mp4|mpeg|swf|flv|x-flv)$', 43200, 90, 432000, 'override-expire ignore-no-cache ignore-no-store ignore-private');";
+	VALUES('-i .(iso|avi|wav|mp3|mp4|mpeg|swf|flv|x-flv)$', 0, 90, 260009, 'override-expire ignore-no-cache ignore-no-store ignore-private');";
 
 $t[]="INSERT INTO squid_speed (domain,refresh_pattern_min,refresh_pattern_perc,refresh_pattern_max,refresh_pattern_options)
-	VALUES('.(deb|rpm|exe|zip|tar|tgz|ram|rar|bin|ppt|doc|tiff)$', 10080, 90, ,43200, 'override-expire ignore-no-cache ignore-no-store ignore-private');";
+	VALUES('-i .(deb|rpm|exe|zip|tar|tgz|ram|rar|bin|ppt|doc|tiff|bz2|gz)$',0, 90, 260009, 'override-expire ignore-no-cache ignore-no-store ignore-private');";
 
 $t[]="INSERT INTO squid_speed (domain,refresh_pattern_min,refresh_pattern_perc,refresh_pattern_max,refresh_pattern_options)
-	VALUES('.(html|htm|css|js)$', 1440, 40, 40320,'');";
+	VALUES('-i .(html|htm|css|js|xml)$', 1440, 40, 40320,'');";
 
 $t[]="INSERT INTO squid_speed (domain,refresh_pattern_min,refresh_pattern_perc,refresh_pattern_max,refresh_pattern_options)
-	VALUES('.kaspersky-labs.com/*.(diff|exe|klz|zip)$',2880,100,28800,'reload-into-ims ignore-no-cache');";
+	VALUES('-i .kaspersky-labs.com/*.(diff|exe|klz|zip)$',1440,100,28800,'reload-into-ims ignore-no-cache');";
 
 $t[]="INSERT INTO squid_speed (domain,refresh_pattern_min,refresh_pattern_perc,refresh_pattern_max,refresh_pattern_options)
-	VALUES('.avast.com/*.(exe|vpu)$',2880, 100, 28800, 'reload-into-ims ignore-no-cache');";
+	VALUES('-i .avast.com/*.(exe|vpu)$',1440, 100, 28800, 'reload-into-ims ignore-no-cache');";
 
 $t[]="INSERT INTO squid_speed (domain,refresh_pattern_min,refresh_pattern_perc,refresh_pattern_max,refresh_pattern_options)
-	VALUES('.avira-update.com/*.gz$', 2880, 100, 28800, 'reload-into-ims ignore-no-cache');";
+	VALUES('-i .avira-update.com/*.gz$', 1440, 100, 28800, 'reload-into-ims ignore-no-cache');";
 
 $t[]="INSERT INTO squid_speed (domain,refresh_pattern_min,refresh_pattern_perc,refresh_pattern_max,refresh_pattern_options)
-	VALUES('global-download.acer.com/*/Driver/*zip', 2880, 100, 28800,'reload-into-ims ignore-no-cache');";
+	VALUES('-i global-download.acer.com/*/Driver/*zip', 1440, 100, 260009,'reload-into-ims ignore-no-cache');";
 
 $t[]="INSERT INTO squid_speed (domain,refresh_pattern_min,refresh_pattern_perc,refresh_pattern_max,refresh_pattern_options)
-	VALUES('.windowsupdate.com/*.(cab|exe|dll|msi|psf)' ,10080 ,100, 43200, 'reload-into-ims ignore-no-cache');";
+	VALUES('-i .windowsupdate.com/*.(cab|exe|dll|msi|psf)' ,0 ,80, 43200, 'reload-into-ims ignore-no-cache');";
 
 $t[]="INSERT INTO squid_speed (domain,refresh_pattern_min,refresh_pattern_perc,refresh_pattern_max,refresh_pattern_options)
-	VALUES('.microsoft.com/*.(cab|exe|dll|msi)',10080,100,43200,'reload-into-ims ignore-no-cache');";
+	VALUES('http://*.windowsupdate.microsoft.com/' , 1440 ,80,20160,'reload-into-ims');";
+$t[]="INSERT INTO squid_speed (domain,refresh_pattern_min,refresh_pattern_perc,refresh_pattern_max,refresh_pattern_options)
+	VALUES('http://*.update.microsoft.com/' , 1440 ,80, 20160,' reload-into-ims');";
+
+$t[]="INSERT INTO squid_speed (domain,refresh_pattern_min,refresh_pattern_perc,refresh_pattern_max,refresh_pattern_options)
+	VALUES('http://download.microsoft.com/' , 1440 ,80, 20160,' reload-into-ims');";
+
+$t[]="INSERT INTO squid_speed (domain,refresh_pattern_min,refresh_pattern_perc,refresh_pattern_max,refresh_pattern_options)
+	VALUES('http://windowsupdate.microsoft.com/' , 1440 ,80, 20160,' reload-into-ims');";
+
+$t[]="INSERT INTO squid_speed (domain,refresh_pattern_min,refresh_pattern_perc,refresh_pattern_max,refresh_pattern_options)
+	VALUES('http://office.microsoft.com/' , 1440 ,80, 20160,' reload-into-ims');";
+
+$t[]="INSERT INTO squid_speed (domain,refresh_pattern_min,refresh_pattern_perc,refresh_pattern_max,refresh_pattern_options)
+	VALUES('http://w?xpsp[0-9].microsoft.com/' , 1440, 80, 20160,' reload-into-ims');";
+
+$t[]="INSERT INTO squid_speed (domain,refresh_pattern_min,refresh_pattern_perc,refresh_pattern_max,refresh_pattern_options)
+	VALUES('http://w2ksp[0-9].microsoft.com/' , 1440 ,80, 20160,' reload-into-ims');";
+
+$t[]="INSERT INTO squid_speed (domain,refresh_pattern_min,refresh_pattern_perc,refresh_pattern_max,refresh_pattern_options)
+	VALUES('http://*.archive.ubuntu.com/' , 1440 ,80, 20160,' reload-into-ims');";
+
+$t[]="INSERT INTO squid_speed (domain,refresh_pattern_min,refresh_pattern_perc,refresh_pattern_max,refresh_pattern_options)
+	VALUES('*.debian.org/' 1440, 80, 20160' , reload-into-ims');";
+
+$t[]="INSERT INTO squid_speed (domain,refresh_pattern_min,refresh_pattern_perc,refresh_pattern_max,refresh_pattern_options)
+	VALUES('-i .microsoft.com/*.(cab|exe|dll|msi)',10080,100,43200,'reload-into-ims ignore-no-cache');";
+
+$t[]="INSERT INTO squid_speed (domain,refresh_pattern_min,refresh_pattern_perc,refresh_pattern_max,refresh_pattern_options)
+VALUES('-i ^http://*.gmail*/*',720 ,100,4320,'')";
+
+$t[]="INSERT INTO squid_speed (domain,refresh_pattern_min,refresh_pattern_perc,refresh_pattern_max,refresh_pattern_options)
+VALUES('-i ^http://*.googlesyndication*/*',1440 ,100,4320,'')";
+
+$t[]="INSERT INTO squid_speed (domain,refresh_pattern_min,refresh_pattern_perc,refresh_pattern_max,refresh_pattern_options)
+VALUES('-i ^http://notify*dropbox.com',1440 ,100,2880,'reload-into-ims ignore-no-cache')";
+
+$t[]="INSERT INTO squid_speed (domain,refresh_pattern_min,refresh_pattern_perc,refresh_pattern_max,refresh_pattern_options)
+VALUES('-i ^http://safebrowsing-cache.google.com/*',1440 ,100,2880,'reload-into-ims ignore-no-cache')";
+
+$t[]="INSERT INTO squid_speed (domain,refresh_pattern_min,refresh_pattern_perc,refresh_pattern_max,refresh_pattern_options)
+VALUES('-i ^http://*gmodules.com/*',1440 ,100,2880,'reload-into-ims ignore-no-cache')";
+
+
+
+http://safebrowsing-cache.google.com/
+
+
+$t[]="INSERT INTO squid_speed (domain,refresh_pattern_min,refresh_pattern_perc,refresh_pattern_max,refresh_pattern_options)
+VALUES('-i ^http://*google.*/*',2880 ,100,4320,'')";
+
+$t[]="INSERT INTO squid_speed (domain,refresh_pattern_min,refresh_pattern_perc,refresh_pattern_max,refresh_pattern_options)
+VALUES('-i ^http://*.ubuntu.*/*',2880 ,100,4320,'')";
+
+$t[]="INSERT INTO squid_speed (domain,refresh_pattern_min,refresh_pattern_perc,refresh_pattern_max,refresh_pattern_options)
+	VALUES('.','0',100,43200,'reload-into-ims override-lastmod');";
+
+
+
 
 $q=new mysql();
 while (list ($num, $val) = each ($t)){

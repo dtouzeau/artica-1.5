@@ -78,7 +78,7 @@ Vous devez entrer les symboles  ^ . [ $ () | *   ? { \
 entre les les caract&egrave;res d'&eacute;chappement \..</ExcludeURLExplain>
 <flow>Flux</flow>
 <globalsettings>Param&egrave;tres globaux</globalsettings>
-<icapserver_1>Parametres des processus</icapserver_1>
+<icapserver_1>Param&egrave;tres du service</icapserver_1>
 <icapserver_2>Param&egrave;tres de protocole icapserver</icapserver_2>
 <IdleChildren>processus fils inactifs</IdleChildren>
 <IdleChildren_text>Nombre de processus enfants qui ne sont pas des processus utilis&eacute;s dans le traitement des connexions</IdleChildren_text>

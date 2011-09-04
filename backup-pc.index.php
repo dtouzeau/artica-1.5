@@ -122,7 +122,8 @@ function popup_settings(){
 	
 	$sock=new sockets();
 	$EnableBackupPc=$sock->GET_INFO("EnableBackupPc");
-	if($EnableBackupPc==null){$EnableBackupPc=1;}
+	if(!is_numeric($EnableBackupPc)){$EnableBackupPc=0;}
+	
 	$lang["en"]="English";
 	$lang["fr"]="Francais";
 	$lang["pt_br"]="Portugues";

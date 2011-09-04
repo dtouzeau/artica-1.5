@@ -30,19 +30,12 @@ function tabs(){
 	$array["hour"]='{last_hour}';
 	$array["today"]='{last_24h}';
 	$array["week"]='{last_7_days}';
-	
-	
-	
-	
-	
 	$page=CurrentPageName();
 
 	$t=time();
 	while (list ($num, $ligne) = each ($array) ){
 		$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"$page?$num=yes&t=$time\"><span>$ligne</span></a></li>\n");
 	}
-	
-	
 	echo "
 	<div id=main_loadavgtabs style='width:100%;height:450px;overflow:auto'>
 		<ul>". implode("\n",$html)."</ul>
@@ -54,17 +47,17 @@ function tabs(){
 			
 			});
 		</script>";	
-	
-	
 }	
-	
 
 
-
-
+		writelogs("Generate graphs for index page",__FUNCTION__,__FILE__,__LINE__);
 		$page=CurrentPageName();
+		$tpl=new templates();
 		$GLOBALS["CPU_NUMBER"]=intval($users->CPU_NUMBER);
 		$cpunum=$GLOBALS["CPU_NUMBER"]+1;
+		writelogs("Checking load avg CPU:$cpunum",__FUNCTION__,__FILE__,__LINE__);
+		
+		
 		$q=new mysql();
 		$sql="SELECT AVG( `load` ) AS sload, DATE_FORMAT( stime, '%i' ) AS ttime FROM `loadavg` WHERE `stime` > DATE_SUB( NOW( ) , INTERVAL 15 MINUTE ) GROUP BY ttime ORDER BY `ttime` ASC";
 		$results=$q->QUERY_SQL($sql,"artica_events");
@@ -73,6 +66,13 @@ function tabs(){
 	
 	
 	if(!$q->ok){
+		if(preg_match("#Unknown database#", $q->mysql_error)){
+			writelogs("Unknown database detected, -> q->BuildTables();",__FUNCTION__,__FILE__,__LINE__);
+			$q->BuildTables();
+			return;
+		}
+		
+		
 		if(preg_match("#Access denied for user#", $q->mysql_error)){
 			$error=urlencode(base64_encode($q->mysql_error));
 			echo "
@@ -88,71 +88,170 @@ function tabs(){
 	
 	}		
 	$count=mysql_num_rows($results);
+	echo "<center style='margin-bottom:10px'>";
+	if(!$q->TABLE_EXISTS("loadavg", "artica_events")){$q->BuildTables();}
 	
-	
+// --------------------------------------------------------------------------------------	
 	if(mysql_num_rows($results)==0){
-		$allrows=$q->COUNT_ROWS('loadavg', "artica_events");
+		$mysql_num_rows=$q->COUNT_ROWS('loadavg', "artica_events");
 		writelogs("mysql return no rows from a table of $allrows rows ",__FUNCTION__,__FILE__,__LINE__);
-		if($allrows>10){
+		if($mysql_num_rows>10){
 			$sql="SELECT AVG( `load` ) AS sload, DATE_FORMAT( stime, '%h:%i' ) AS ttime FROM `loadavg` WHERE `stime` > DATE_SUB( NOW( ) , INTERVAL 200 MINUTE ) GROUP BY ttime ORDER BY `ttime` ASC";
 			$results=$q->QUERY_SQL($sql,"artica_events");
-			if(mysql_num_rows($results)==0){
-				writelogs("mysql return no rows from a table of $allrows rows (200mns)",__FUNCTION__,__FILE__,__LINE__);
-				return;
-			}
+			$mysql_num_rows=mysql_num_rows($results);
+			
 		}
-		
-		
 	}	
 	
 	if(!$q->ok){echo $q->mysql_error;}
-	$c=0;
-	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
-		$size=$ligne["tsize"]/1024;
-		$size=$size/1000;
-		$xdata[]=$ligne["ttime"];
-		$ydata[]=$ligne["sload"];
-		$c++;
-		if($ligne["sload"]>$cpunum){
-			if($GLOBALS["VERBOSE"]){echo "<li>!!!! {$ligne["stime"]} -> $c</LI>";};
-			if(!isset($red["START"])){$red["START"]=$c;}
-		}else{
-			if(isset($red["START"])){
-				$area[]=array($red["START"],$c);
-				unset($red);
+	if($mysql_num_rows>0){
+			$c=0;
+			while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+				$size=$ligne["tsize"]/1024;
+				$size=$size/1000;
+				$xdata[]=$ligne["ttime"];
+				$ydata[]=$ligne["sload"];
+				$c++;
+				if($ligne["sload"]>$cpunum){
+					if($GLOBALS["VERBOSE"]){echo "<li>!!!! {$ligne["stime"]} -> $c</LI>";};
+					if(!isset($red["START"])){$red["START"]=$c;}
+				}else{
+					if(isset($red["START"])){
+						$area[]=array($red["START"],$c);
+						unset($red);
+					}
+				}
+				if($GLOBALS["VERBOSE"]){echo "<li>{$ligne["stime"]} -> {$ligne["ttime"]} -> {$ligne["sload"]}</LI>";};
+			}
+			if($c==0){writelogs("Fatal \"$targetedfile\" no items",__FUNCTION__,__FILE__,__LINE__);return;}
+			
+			if(isset($red["START"])){$area[]=array($red["START"],$c);}
+			$targetedfile="ressources/logs/".basename(__FILE__).".png";
+			if(is_file($targetedfile)){@unlink($targetedfile);}
+			$gp=new artica_graphs();
+			$gp->RedAreas=$area;
+			$gp->width=300;
+			$gp->height=120;
+			$gp->filename="$targetedfile";
+			$gp->xdata=$xdata;
+			$gp->ydata=$ydata;
+			$gp->y_title=null;
+			$gp->x_title="Mn";
+			$gp->title=null;
+			$gp->margin0=true;
+			$gp->Fillcolor="blue@0.9";
+			$gp->color="146497";
+			$tpl=new templates();
+			$computer_load=$tpl->_ENGINE_parse_body("{computer_load}");
+			//$gp->SetFillColor('green'); 
+			
+			$gp->line_green();
+			if(!is_file($targetedfile)){writelogs("Fatal \"$targetedfile\" no such file! ($c items)",__FUNCTION__,__FILE__,__LINE__);return;}
+			echo "<div onmouseout=\"javascript:this.className='paragraphe';this.style.cursor='default';\" onmouseover=\"javascript:this.className='paragraphe_over';
+			this.style.cursor='pointer';\" id=\"6ce2f4832d82c6ebaf5dfbfa1444ed58\" OnClick=\"javascript:Loadjs('admin.index.loadvg.php?all=yes')\" class=\"paragraphe\" style=\"width: 300px; min-height: 112px; cursor: default;\">
+			<h3 style='text-transform: none;margin-bottom:5px'>$computer_load</h3>
+			<img src='$targetedfile'>
+			</div>";
+	}
+// --------------------------------------------------------------------------------------	
+	$sock=new sockets();
+	$users=new usersMenus();
+	
+	
+writelogs("Checking milter-greylist",__FUNCTION__,__FILE__,__LINE__);	
+// --------------------------------------------------------------------------------------
+	if($users->MILTERGREYLIST_INSTALLED){
+		$EnablePostfixMultiInstance=$sock->GET_INFO("EnablePostfixMultiInstance");
+		if(!is_numeric($EnablePostfixMultiInstance)){$EnablePostfixMultiInstance=0;}
+		if($EnablePostfixMultiInstance==0){
+			$APP_MILTERGREYLIST=$tpl->_ENGINE_parse_body("{APP_MILTERGREYLIST}");
+			if(is_file("ressources/logs/greylist-count-master.tot")){
+			$datas=unserialize(@file_get_contents("ressources/logs/greylist-count-master.tot"));
+			if(is_array($datas)){
+				@unlink("ressources/logs/web/mgreylist.master1.db.png");
+				$gp=new artica_graphs(dirname(__FILE__)."/ressources/logs/web/mgreylist.admin.index.db.png",0);
+				$gp->xdata[]=$datas["GREYLISTED"];
+				$gp->ydata[]="greylisted";	
+				$gp->xdata[]=$datas["WHITELISTED"];
+				$gp->ydata[]="whitelisted";				
+				$gp->width=300;
+				$gp->height=120;
+				$gp->PieExplode=5;
+				
+				$gp->ViewValues=false;
+				$gp->x_title=null;
+				$gp->pie();	
+				
+				if(is_file("ressources/logs/web/mgreylist.admin.index.db.png")){	
+				echo "<div onmouseout=\"javascript:this.className='paragraphe';this.style.cursor='default';\" onmouseover=\"javascript:this.className='paragraphe_over';
+				this.style.cursor='pointer';\" id=\"6ce2f4832d82c6ebaf5dfbfa1444ed5898\" OnClick=\"javascript:Loadjs('milter.greylist.index.php?js=yes&in-front-ajax=yes')\" class=\"paragraphe\" style=\"width: 300px; min-height: 112px; cursor: default;\">
+				<h3 style='text-transform: none;margin-bottom:5px'>$APP_MILTERGREYLIST</h3>
+				<img src='ressources/logs/web/mgreylist.admin.index.db.png'>
+				</div>";
+				}
+				
+				
+			}
 			}
 		}
-		if($GLOBALS["VERBOSE"]){echo "<li>{$ligne["stime"]} -> {$ligne["ttime"]} -> {$ligne["sload"]}</LI>";};
+		
 	}
-	if($c==0){writelogs("Fatal \"$targetedfile\" no items",__FUNCTION__,__FILE__,__LINE__);return;}
 	
-	if(isset($red["START"])){$area[]=array($red["START"],$c);}
-	$targetedfile="ressources/logs/".basename(__FILE__).".png";
-	if(is_file($targetedfile)){@unlink($targetedfile);}
-	$gp=new artica_graphs();
-	$gp->RedAreas=$area;
-	$gp->width=300;
-	$gp->height=120;
-	$gp->filename="$targetedfile";
-	$gp->xdata=$xdata;
-	$gp->ydata=$ydata;
-	$gp->y_title=null;
-	$gp->x_title="Mn";
-	$gp->title=null;
-	$gp->margin0=true;
-	$gp->Fillcolor="blue@0.9";
-	$gp->color="146497";
-	$tpl=new templates();
-	$computer_load=$tpl->_ENGINE_parse_body("{computer_load}");
-	//$gp->SetFillColor('green'); 
-	
-	$gp->line_green();
-	if(!is_file($targetedfile)){writelogs("Fatal \"$targetedfile\" no such file! ($c items)",__FUNCTION__,__FILE__,__LINE__);return;}
-	echo "<div onmouseout=\"javascript:this.className='paragraphe';this.style.cursor='default';\" onmouseover=\"javascript:this.className='paragraphe_over';
-	this.style.cursor='pointer';\" id=\"6ce2f4832d82c6ebaf5dfbfa1444ed58\" OnClick=\"javascript:Loadjs('admin.index.loadvg.php?all=yes')\" class=\"paragraphe\" style=\"width: 300px; min-height: 112px; cursor: default;\">
-	<h3 style='text-transform: none;margin-bottom:5px'>$computer_load</h3>
-	<img src='$targetedfile'></div>";
+writelogs("Checking squid perf",__FUNCTION__,__FILE__,__LINE__);		
+// --------------------------------------------------------------------------------------	
 
+	if($users->SQUID_INSTALLED){
+		$SQUIDEnable=trim($sock->GET_INFO("SQUIDEnable"));
+		if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
+		if($SQUIDEnable==1){
+			$cachedTXT=$tpl->_ENGINE_parse_body("{cached}");
+			$NOTcachedTXT=$tpl->_ENGINE_parse_body("{not_cached}");
+			$today=$tpl->_ENGINE_parse_body("{today}");
+			$sql="SELECT SUM( size ) as tsize, cached FROM squid_cache_perfs WHERE DATE_FORMAT( zDate, '%Y-%m-%d' ) = DATE_FORMAT( NOW( ) , '%Y-%m-%d' ) GROUP BY cached LIMIT 0 , 30";
+			$results=$q->QUERY_SQL($sql,"artica_events");
+			while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+				
+				if($ligne["cached"]==1){$cached_size=$ligne["tsize"];}
+				if($ligne["cached"]==0){$not_cached_size=$ligne["tsize"];}
+			}
+			if(($cached_size>0) &&  ($not_cached_size>0)){
+				writelogs("Cached: $cached_size not cached: $not_cached_size bytes",__FUNCTION__,__FILE__,__LINE__);
+				
+				$sum=$cached_size+$not_cached_size;
+				$pourcent=round(($cached_size/$sum)*100);
+				$title=$tpl->_ENGINE_parse_body("{cache_performance} $pourcent%");
+				$gp=new artica_graphs(dirname(__FILE__)."/ressources/logs/web/squid.cache.perf.today.png",0);
+				$gp->xdata[]=$cached_size;
+				$gp->ydata[]="$cachedTXT ".FormatBytes($cached_size/1024);	
+				$gp->xdata[]=$not_cached_size;
+				$gp->ydata[]="$NOTcachedTXT ".FormatBytes($not_cached_size/1024);					
+				$gp->width=300;
+				$gp->height=120;
+				$gp->PieExplode=5;
+				$gp->PieLegendHide=true;
+				$gp->ViewValues=false;
+				$gp->x_title=null;
+				$gp->pie();	
+				
+				if(is_file("ressources/logs/web/squid.cache.perf.today.png")){	
+					echo "<div onmouseout=\"javascript:this.className='paragraphe';this.style.cursor='default';\" onmouseover=\"javascript:this.className='paragraphe_over';
+					this.style.cursor='pointer';\" id=\"6ce2f4832d82c6ebaf5dfbfa1444ed58910\" OnClick=\"javascript:Loadjs('squid.cache.perf.stats.php')\" class=\"paragraphe\" style=\"width: 300px; min-height: 112px; cursor: default;\">
+					<h3 style='text-transform: none;margin-bottom:5px'>$title</h3>
+					<div style='font-size:11px;margin-top:-8px'>$today: $cachedTXT: ".FormatBytes($cached_size/1024)." - $NOTcachedTXT ".FormatBytes($not_cached_size/1024)."</div>
+					<img src='ressources/logs/web/squid.cache.perf.today.png'>
+					</div>";
+				}			
+			
+			}
+			
+		}
+	}
+	
+// --------------------------------------------------------------------------------------	
+
+	
+echo "</center>";
+	
 	
 function hour(){
 

@@ -8,6 +8,8 @@
 	$user=new usersMenus();
 	if(!$user->AsSystemAdministrator){echo "alert('no privileges');";die();}
 	
+	
+	if(isset($_GET["partinfos-js"])){js();exit;}
 	if(isset($_GET["display2"])){hd_index();exit;}
 	if(isset($_GET["display"])){tabs();exit;}
 	if(isset($_GET["hd-index-list"])){hd_index_list();exit;}
@@ -135,6 +137,10 @@ function js(){
 	$start="hdload()";
 	if(isset($_GET["in-front-ajax"])){
 		$start="hdload2()";
+	}
+	
+	if(isset($_GET["partinfos-js"])){
+		$start="PartInfos('{$_GET["partinfos-js"]}')";
 	}
 	
 	

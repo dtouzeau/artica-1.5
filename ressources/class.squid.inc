@@ -2409,6 +2409,15 @@ public function SquidGuardDatabasesStatus($all=0){
 			if(strlen($binary)<2){
 				return "#No squid_kerb_auth in compilation !\n";
 			}
+			
+			echo "Starting......: Kerberos Authentification enabled\n";
+			if(is_file("/etc/krb5.keytab")){
+				$chown=$unix->find_program("chown");
+				$chmod=$unix->find_program("chmod");
+				shell_exec("$chown squid:squid /etc/krb5.keytab");
+				shell_exec("$chmod 666 /etc/krb5.keytab");
+			}
+	
 			$conf[]= "#--------- kerberos AUTH settings myhostname $myFullHostname\n";
 			$conf[]= "auth_param negotiate program $users->squid_kerb_auth_path -d -s HTTP/$myFullHostname";
 			$conf[]= "auth_param negotiate children 10";
@@ -2943,6 +2952,15 @@ function BuildSquidConf(){
 			}
 		}
 		
+		if(preg_match("#([0-9+])#",$this->global_conf_array["minimum_object_size"],$re)){
+			$minimum_object_size=$re[1];
+			if(preg_match("#([A-Z]+)#",$this->global_conf_array["minimum_object_size"],$re)){$minimum_object_size_unit=$re[1];}
+			if($minimum_object_size_unit==null){$minimum_object_size_unit="KB";}
+			if(!is_numeric($minimum_object_size)){$minimum_object_size=0;}
+		}		
+		
+		
+		
 		if(preg_match("#([0-9+])#",$this->global_conf_array["maximum_object_size"],$re)){
 			$maximum_object_size=$re[1];
 			if(preg_match("#([A-Z]+)#",$this->global_conf_array["maximum_object_size"],$re)){$maximum_object_size_unit=$re[1];}
@@ -3011,7 +3029,7 @@ function BuildSquidConf(){
 		}
 		
 		$conf=$conf."maximum_object_size {$this->global_conf_array["maximum_object_size"]}\n";
-		$conf=$conf."minimum_object_size $maximum_object_size $maximum_object_size_unit\n";
+		$conf=$conf."minimum_object_size $minimum_object_size $minimum_object_size_unit\n";
 		$conf=$conf."maximum_object_size_in_memory $maximum_object_size_in_memory $maximum_object_size_in_memory_unit\n";
 
 		
@@ -3353,10 +3371,17 @@ private function refresh_pattern_list(){
 	$q=new mysql();
 	$results=$q->QUERY_SQL($sql,"artica_backup");
 	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
-		$pattern=$ligne["domain"];
+		$pattern=trim($ligne["domain"]);
+		if($pattern=='.'){
+			$conf[]="refresh_pattern $pattern  {$ligne["refresh_pattern_min"]}    {$ligne["refresh_pattern_perc"]}%     {$ligne["refresh_pattern_max"]} {$ligne["refresh_pattern_options"]}";
+			continue;
+		}
+		
+		
+		
 		$pattern=str_replace(".","\.",$pattern);
-		$pattern=str_replace("*",".*?",$pattern);
-		$conf[]="refresh_pattern $pattern  {$ligne["refresh_pattern_min"]}    {$ligne["refresh_pattern_perc"]}%     {$ligne["refresh_pattern_max"]}";
+		$pattern=str_replace("*",".*",$pattern);
+		$conf[]="refresh_pattern $pattern  {$ligne["refresh_pattern_min"]}    {$ligne["refresh_pattern_perc"]}%     {$ligne["refresh_pattern_max"]}  {$ligne["refresh_pattern_options"]}";
 		
 	}
 	if(is_array($conf)){return implode("\n",$conf)."\n";}

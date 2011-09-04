@@ -185,7 +185,7 @@ It should be as succinct as you can get it, while still identifying what the lis
 <digest_header_text>Header added to every digest</digest_header_text>
 <digest_is_default>Default digest mode</digest_is_default>
 <digest_is_default_text>Quel est le mode de d&eacute;livrance par d&eacute;faut pour les nouveaux inscrits ?[ul][li]Digest=Activ&eacute;[/li][li]Regular=D&eacute;sactiv&eacute;[/li][/ul]</digest_is_default_text>
-<digest_send_periodic>Send periodic</digest_send_periodic>
+<digest_send_periodic>P&eacute;riode d'envoi</digest_send_periodic>
 <digest_send_periodic_text>Should a digest be dispatched daily when the size threshold isn't reached?</digest_send_periodic_text>
 <digest_size_threshhold>taille du seuil</digest_size_threshhold>
 <digest_size_threshhold_text>How big in Kb should a digest be before it gets sent out? </digest_size_threshhold_text>
@@ -203,9 +203,7 @@ Add member addresses one per line; start the line with a ^ character to designat
 <d_send_digest_now>Send Digest now</d_send_digest_now>
 <d_send_digest_now_text>Should Mailman send the next digest right now, if it is not empty ?</d_send_digest_now_text>
 <emergency>emergency moderated</emergency>
-<emergency_text># When this option is enabled, all list traffic is emergency moderated,[br]
-i.e. held for moderation.  Turn this option on when your list is[br]
-experiencing a flamewar and you want a cooling off period.[br]</emergency_text>
+<emergency_text>Lorsque cette option est activ&eacute;e, toute la liste du trafic est mod&eacute;r&eacute; d'urgence.[br]Activez cette option lorsque votre liste est bombard&eacute;e ou que vous voulez un d&eacute;lai de r&eacute;tractation</emergency_text>
 <encode_ascii_prefixes>Pr&eacute;fixes d'encodage ASCII</encode_ascii_prefixes>
 <encode_ascii_prefixes_text>
 If your mailing list's default language uses a non-ASCII character set[br]

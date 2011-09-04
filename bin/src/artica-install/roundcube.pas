@@ -392,6 +392,7 @@ var
 begin
 
 sieve_port:=SYS.ETC_SERVICES_PORT('sieve');
+if sieve_port=0 then sieve_port:=2000;
 l:=Tstringlist.Create;
 folder:=web_folder();
 l.Add('<?php');

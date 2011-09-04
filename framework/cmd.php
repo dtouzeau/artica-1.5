@@ -1541,8 +1541,11 @@ function CLUSTER_CLIENT_RESTART_NOTIFY(){
 }
 
 function RoundCube_restart(){
-	sys_THREAD_COMMAND_SET("/etc/init.d/artica-postfix restart roundcube");
-}
+	
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");	
+	shell_exec("$nohup /etc/init.d/artica-postfix restart roundcube >/dev/null 2>&1");
+} 
 function RoundCube_sieverules(){
 	sys_THREAD_COMMAND_SET( LOCATE_PHP5_BIN2()." /usr/share/artica-postfix/exec.roundcube.php --sieverules");
 }
@@ -1896,9 +1899,25 @@ function SmtpNotificationConfig(){
 	@copy("/etc/artica-postfix/settings/Daemons/SmtpNotificationConfig","/etc/artica-postfix/smtpnotif.conf");
 }
 function SaveMaincf(){
+
 	$php=LOCATE_PHP5_BIN2();
 	shell_exec("/etc/init.d/artica-postfix start daemon &");
-	sys_THREAD_COMMAND_SET("$php /usr/share/artica-postfix/exec.postfix.maincf.php --reconfigure");	
+	EXEC_INTERNAL("$php /usr/share/artica-postfix/exec.postfix.maincf.php --reconfigure");	
+}
+
+
+function EXEC_INTERNAL($zcommands){
+	if(!isset($GLOBALS["NOHUPBIN"])){
+	 	$unix=new unix();
+	 	$nohup=$unix->find_program("nohup");
+	 	$GLOBALS["NOHUPBIN"]=$nohup;
+	}else{
+		$nohup=$GLOBALS["NOHUPBIN"];
+	}
+	 $cmd=trim("$nohup $zcommands >/dev/null 2>&1 &");
+	 writelogs_framework("EXEC: \"$cmd\""); 	
+	 shell_exec($cmd);
+	
 }
 
 function SaveConfigFile(){
@@ -5865,7 +5884,7 @@ function kav4ProxyPatternDatePath(){
 $unix=new unix();
 	$base=$unix->KAV4PROXY_GET_VALUE("path","BasesPath");	
 	if(is_file("$base/master.xml")){return "$base/master.xml";}
-	if(is_file("$base/upd-0607g.xml")){return "$base/upd-0607g.xml";}
+	if(is_file("$base/av-i386-0607g.xml")){return "$base/av-i386-0607g.xml";}
 	return "$base/master.xml";
 }
 
@@ -7164,8 +7183,9 @@ function artica_meta_export_openvpn_sites(){
 
 function RestartApacheSrc(){
 	$unix=new unix();
-	$nohup=$unix->find_program("nohup");	
-	$cmd=LOCATE_PHP5_BIN2()." /usr/share/artica-postfix/exec.freeweb.php --build >/dev/null 2>&1 &";
+	$nohup=$unix->find_program("nohup");
+	$php5=$unix->LOCATE_PHP5_BIN();	
+	$cmd="$php5 /usr/share/artica-postfix/exec.freeweb.php --build >/dev/null 2>&1 &";
 	writelogs_framework($cmd,__FUNCTION__,__FILE__,__LINE__);
 	shell_exec($cmd);	
 	$cmd="$nohup /etc/init.d/artica-postfix restart apachesrc >/dev/null 2>&1 &";
@@ -7225,9 +7245,12 @@ function postscreen(){
 }
 
 function postfix_single_ssl(){
-		$cmd=LOCATE_PHP5_BIN2()." /usr/share/artica-postfix/exec.postfix.maincf.php --ssl";
+		$unix=new unix();
+		$nohup=$unix->find_program("nohup");
+		$php5=$unix->find_program("php5");
+		$cmd=trim("$nohup $php5 /usr/share/artica-postfix/exec.postfix.maincf.php --ssl >/dev/null 2>&1 &");
 		writelogs_framework($cmd,__FUNCTION__,__FILE__,__LINE__);
-		sys_THREAD_COMMAND_SET($cmd);
+		shell_exec($cmd);
 }
 
 function postfix_single_sasl_mech(){
@@ -7486,14 +7509,18 @@ function right_status(){
 
 function freeweb_rebuild(){
 	$unix=new unix();
-	$cmd=LOCATE_PHP5_BIN2()." /usr/share/artica-postfix/exec.freeweb.php --build";	
-	$unix->THREAD_COMMAND_SET($cmd);
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim($nohup." ".LOCATE_PHP5_BIN2()." /usr/share/artica-postfix/exec.freeweb.php --build >/dev/null 2>&1 &");	
+	writelogs_framework($cmd,__FUNCTION__,__FILE__,__LINE__);	
+	shell_exec($cmd);
 }
 
 function postfix_iptables_compile(){
 	$unix=new unix();
-	$cmd=LOCATE_PHP5_BIN2()." /usr/share/artica-postfix/exec.postfix.iptables.php --compile";	
-	$unix->THREAD_COMMAND_SET($cmd);	
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim($nohup." ".LOCATE_PHP5_BIN2()." /usr/share/artica-postfix/exec.postfix.iptables.php --compile >/dev/null 2>&1 &");	
+	writelogs_framework($cmd,__FUNCTION__,__FILE__,__LINE__);	
+	shell_exec($cmd);
 	
 }
 

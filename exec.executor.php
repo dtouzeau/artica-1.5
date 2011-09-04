@@ -138,13 +138,14 @@ function FillMemory(){
 	$EnableArticaExecutor=$sock->GET_INFO("EnableArticaExecutor");
 	if(!is_numeric($DisableArticaStatusService)){$DisableArticaStatusService=0;}
 	if(!is_numeric($EnableArticaExecutor)){$EnableArticaExecutor=1;}
-	
+	$GLOBALS["KAV4PROXY_INSTALLED"]=false;
 	
 	$GLOBALS["SPAMASSASSIN_INSTALLED"]=$users->spamassassin_installed;
 	$GLOBALS["ARTICA_STATUS_DISABLED"]=$DisableArticaStatusService;
 	$GLOBALS["EXECUTOR_DAEMON_ENABLED"]=$EnableArticaExecutor;
 	$GLOBALS["SQUID_INSTALLED"]=$users->SQUID_INSTALLED;
 	$GLOBALS["KAV4PROXY_INSTALLED"]=$users->KAV4PROXY_INSTALLED;
+	$GLOBALS["MILTER_GREYLIST_INSTALLED"]=$users->MILTERGREYLIST_INSTALLED;
 	$GLOBALS["POSTFIX_INSTALLED"]=$users->POSTFIX_INSTALLED;
 	$GLOBALS["SAMBA_INSTALLED"]=$users->SAMBA_INSTALLED;
 	$GLOBALS["GREYHOLE_INSTALLED"]=$users->GREYHOLE_INSTALLED;
@@ -168,6 +169,9 @@ function FillMemory(){
 	$GLOBALS["EnableInterfaceMailCampaigns"]=$sock->GET_INFO("EnableInterfaceMailCampaigns");
 	$GLOBALS["CLASS_SOCKETS"]=$sock;
 	$GLOBALS["TOTAL_MEMORY_MB"]=$unix->TOTAL_MEMORY_MB();
+	
+	if(!$GLOBALS["KAV4PROXY_INSTALLED"]){if(is_file("/etc/artica-postfix/KASPERSKY_WEB_APPLIANCE")){$GLOBALS["KAV4PROXY_INSTALLED"]=true;}}
+	
 	$sock=null;
 	$unix=null;
 	$users=null;
@@ -294,10 +298,13 @@ function group5(){
 		$array["exec.postfix.iptables.php"]="exec.postfix.iptables.php --parse-queue";
 		$array["exec.postfix.iptables.php --export-drop"]="exec.postfix.iptables.php --export-drop";
 		$array["exec.postfix-logger.php"]="exec.postfix-logger.php --postqueue-clean";
+		if($GLOBALS["MILTER_GREYLIST_INSTALLED"]){
+			$array["exec.milter-greylist.php --database"]="exec.milter-greylist.php --database";
+		}
 	}
 	if($GLOBALS["VIRTUALBOX_INSTALLED"]){$array["exec.virtualbox.php --maintenance"]="exec.virtualbox.php --maintenance";}
 	if($GLOBALS["KAV4PROXY_INSTALLED"]){$array["exec.kaspersky-update-logs.php --av-uris"];}
-	 
+	
 	
 	
 	$array["exec.dstat.top.php"]="exec.dstat.top.php";
@@ -325,10 +332,10 @@ function group5(){
 	}
 
 	if($GLOBALS["SAMBA_INSTALLED"]){
-		if($GLOBALS["XAPIAN_PHP_INSTALLED"]){
-			$array["exec.xapian.index.php"]="exec.xapian.index.php";
-		}
+		if($GLOBALS["XAPIAN_PHP_INSTALLED"]){$array["exec.xapian.index.php"]="exec.xapian.index.php";}
 		$array["exec.samba.php --smbtree"]="exec.samba.php --smbtree";
+		$array["exec.samba.php --smbstatus"]="exec.samba.php --smbstatus";
+			
 	}
 	
 	
@@ -395,6 +402,8 @@ function group30(){
 	if($GLOBALS["SQUID_INSTALLED"]){
 		$array[]="exec.squid.stats.php --graphs";
 		$array[]="exec.squid.blacklists.php --inject";
+	}else{
+		if($GLOBALS["KAV4PROXY_INSTALLED"]){$array[]="exec.squid.blacklists.php --inject";}
 	}
 	if($GLOBALS["SAMBA_INSTALLED"]){
 		$array[]="exec.picasa.php";
@@ -525,6 +534,8 @@ if(!is_numeric($GLOBALS["TIME"]["GROUP2"])){$GLOBALS["TIME"]["GROUP2"]=time();re
 	events("Starting {$GLOBALS["TIME"]["GROUP2"]} 2mn",__FUNCTION__,__LINE__);
 	$GLOBALS["TIME"]["GROUP2"]=time();
 	
+	if(!is_file("/usr/share/artica-postfix/ressources/usb.scan.inc")){$array2[]="artica-install --usb-scan-write";}
+	
 	
 	$array[]="exec.dhcpd-leases.php";
 	$array[]="exec.mailbackup.php";
@@ -537,7 +548,13 @@ if(!is_numeric($GLOBALS["TIME"]["GROUP2"])){$GLOBALS["TIME"]["GROUP2"]=time();re
 	if($GLOBALS["OCSI_INSTALLED"]){$array[]="exec.remote-agent-install.php";}
 	if(!function_exists("pcntl_fork")){$array[]="exec.status.php";}
 	if(!system_is_overloaded()){
-		if($GLOBALS["SQUID_INSTALLED"]){$array[]="exec.dansguardian.injector.php";}
+		if($GLOBALS["SQUID_INSTALLED"]){
+			$array[]="exec.dansguardian.injector.php";
+			$array[]="exec.squid.blacklists.php --schedule-maintenance";
+		}else{
+			if($GLOBALS["KAV4PROXY_INSTALLED"]){$array[]="exec.squid.blacklists.php --schedule-maintenance";}
+			if($GLOBALS["KAV4PROXY_INSTALLED"]){$array[]="exec.dansguardian.injector.php";}
+		}
 	}
 	if($GLOBALS["CYRUS_IMAP_INSTALLED"]){$array[]="exec.cyrus-restore.php --ad-sync";}
 	if($GLOBALS["ARTICA_STATUS_DISABLED"]==1){$array[]="exec.status.php --all";}
@@ -808,15 +825,14 @@ function group120(){
 		$array["exec.cyrus.php --DirectorySize"]="exec.cyrus.php --DirectorySize";
 	}
 	
+	
+	if($GLOBALS["KAV4PROXY_INSTALLED"]){$array["exec.kav4proxy.buildstats.php --days"];}
+	
 	while (list ($index, $file) = each ($array) ){
 		$cmd="{$GLOBALS["PHP5"]} /usr/share/artica-postfix/$file";
 		events("schedule $cmd",__FUNCTION__,__LINE__);
 		$GLOBALS["CMDS"][]=$cmd;
 	}	
-	
-	
-	
-	
 	
 	$array2[]="artica-install --awstats-generate";
 	$array2[]="artica-update";
@@ -824,10 +840,8 @@ function group120(){
 	$array2[]="artica-update --spamassassin-bl";
 	$array2[]="artica-install -watchdog daemon";
 	$array2[]="artica-make APP_MOD_QOS";
-	
-	if($GLOBALS["EnableArticaWatchDog"]==1){
-		$array2[]="artica-install --urgency-start";
-	}
+	$array2[]="artica-install --usb-scan-write";
+	if($GLOBALS["EnableArticaWatchDog"]==1){$array2[]="artica-install --urgency-start";}
 	
 	
 

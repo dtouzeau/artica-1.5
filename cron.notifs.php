@@ -11,23 +11,28 @@ if($argv[1]=='--sendmail'){SendMailNotification(null,null,true);die();}
 if(preg_match("#--verbose#",implode(" ",$argv))){$_GET["DEBUG"]=true;}
 if($argv[1]=='--tests'){send_email_events($argv[2],"system","test");die();}
 
-$pid=getmypid();
 
-if(file_exists('/etc/artica-postfix/croned.1/cron.notifs.php.pid')){
-	$currentpid=trim(file_get_contents('/etc/artica-postfix/croned.1/cron.notifs.php.pid'));
-	if($currentpid<>$pid){
-		if(is_dir('/proc/'.$currentpid)){
-			die(date('Y-m-d h:i:s')." Already instance executed $currentpid");
+$unix=new unix();
+$pidfile="/etc/artica-postfix/croned.1/cron.notifs.php.pid";
+$pid=@file_get_contents($pidfile);
+if($unix->process_exists($pid,basename(__FILE__))){
+	$time=$unix->PROCCESS_TIME_MIN($pid);
+	if($time>50){
+		$status[]=@file_get_contents("/proc/$pid/status");
+		$status[]=@file_get_contents("/proc/$pid/cmdline");
+		$unix->send_email_events("cron.notif has been killed (ghost process)", "$pid: running since $time minutes\n". @implode("\n", $status), "system");
+		$kill=$unix->find_program("kill");
+		shell_exec("/bin/kill -9 $pid");
 	}else{
-		echo date('Y-m-d h:i:s')." $currentpid is not executed continue...\n";
-	}
-		
+		writelogs("Already instance executed $pid since $time minutes","MAIN",__FILE__,__LINE__);
+		die();
 	}
 }
 
 
+$pid=getmypid();
 @mkdir("/etc/artica-postfix/croned.1");
-file_put_contents('/etc/artica-postfix/croned.1/cron.notifs.php.pid',$pid);
+file_put_contents($pidfile,$pid);
 events("new pid $pid");
 echo events("Starting parsing events...");
 ParseEvents();
@@ -150,13 +155,13 @@ $mysql=new mysql();
         
         $event_id=time();
         //$text=addslashes($text);
-        $text=$mysql->mysql_real_escape_string2($text);
-        
+        $text=addslashes($text);
         $subject=addslashes($subject);
+        if(strlen($text)<5){writelogs("Warning New notification: $subject content seems to be empty ! \"$text\"",__FUNCTION__,__FILE__,__LINE__);}
         $sql="INSERT IGNORE INTO events (zDate,hostname,
         	process,text,context,content,attached_files,recipient,event_id) VALUES(
         	'$date',
-        	'$mysql->hostname',
+        	'$users->hostname',
         	'$processname',
         	'$subject',
         	'$context','$text','$files_text','$recipient','$event_id')";        

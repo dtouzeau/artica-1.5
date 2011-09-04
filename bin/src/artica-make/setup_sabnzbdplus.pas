@@ -36,7 +36,7 @@ public
       constructor Create();
       procedure Free;
       procedure xinstall();
-
+      procedure xinstall_fuppes();
 END;
 
 implementation
@@ -116,5 +116,61 @@ begin
 
 end;
 //#########################################################################################
+procedure install_sabnzbdplus.xinstall_fuppes();
+var
+   CODE_NAME:string;
+   cmd:string;
+   zdate:string;
+   smbsources:string;
+   l:Tstringlist;
+   i:integer;
+   CC:string;
+   configurelcc:string;
+begin
 
+  CODE_NAME:='APP_FUPPES';
+
+
+  SetCurrentDir('/root');
+  install.INSTALL_STATUS(CODE_NAME,10);
+  install.INSTALL_STATUS(CODE_NAME,30);
+  install.INSTALL_PROGRESS(CODE_NAME,'{downloading}');
+  install.INSTALL_STATUS(CODE_NAME,40);
+  if length(source_folder)=0 then source_folder:=libs.COMPILE_GENERIC_APPS('fuppes');
+
+
+
+  if not DirectoryExists(source_folder) then begin
+     writeln('Install '+CODE_NAME+' failed...');
+     install.INSTALL_STATUS(CODE_NAME,110);
+     exit;
+  end;
+  install.INSTALL_STATUS(CODE_NAME,50);
+  install.INSTALL_PROGRESS(CODE_NAME,'{compiling}');
+  SetCurrentDir(source_folder);
+  cmd:='./configure --prefix=/usr --enable-transcoder-ffmpeg --enable-lame --enable-twolame --enable-vorbis  --enable-magickwand --enable-mad --enable-faad --disable-ffmpegthumbnailer';
+  fpsystem(cmd);
+  install.INSTALL_STATUS(CODE_NAME,70);
+  install.INSTALL_PROGRESS(CODE_NAME,'{compiling}');
+  fpsystem('make');
+  install.INSTALL_STATUS(CODE_NAME,80);
+  install.INSTALL_PROGRESS(CODE_NAME,'{installing}');
+  fpsystem('make install');
+
+
+   SetCurrentDir('/root');
+
+
+
+  if not FileExists(SYS.LOCATE_GENERIC_BIN('fuppesd')) then begin
+     writeln('Install '+CODE_NAME+' failed... fuppesd no such file');
+     install.INSTALL_STATUS(CODE_NAME,110);
+     exit;
+  end;
+     SYS.set_INFO('EnableFuppes','1');
+     install.INSTALL_PROGRESS(CODE_NAME,'{installed}');
+     install.INSTALL_STATUS(CODE_NAME,100);
+
+end;
+//#########################################################################################
 end.

@@ -43,6 +43,8 @@ public
       procedure SugarCRM_INSTALL();
       procedure piwigo_install();
       procedure eyeOS_install();
+      procedure xinstall17();
+      procedure xinstall_wordpress();
 END;
 
 implementation
@@ -195,6 +197,68 @@ end;
 
 end;
 //#########################################################################################
+procedure tsetup_joomla.xinstall17();
+var
+   CODE_NAME:string;
+   cmd:string;
+   RegExpr:TRegExpr;
+begin
+
+    CODE_NAME:='APP_JOOMLA17';
+    SetCurrentDir('/root');
+
+   install.INSTALL_STATUS(CODE_NAME,10);
+  install.INSTALL_STATUS(CODE_NAME,30);
+
+  if not FileExists(SYS.LOCATE_APACHE_BIN_PATH()) then begin
+     writeln('Install '+CODE_NAME+' failed...');
+     install.INSTALL_PROGRESS(CODE_NAME,'{failed} (apache)');
+     install.INSTALL_STATUS(CODE_NAME,110);
+     exit;
+  end;
+
+  if not FileExists(SYS.LOCATE_PHP5_BIN()) then begin
+     writeln('Install '+CODE_NAME+' failed...');
+     install.INSTALL_PROGRESS(CODE_NAME,'{failed} (php)');
+     install.INSTALL_STATUS(CODE_NAME,110);
+     exit;
+  end;
+
+  if directoryExists('/usr/local/share/artica/joomla17_src') then begin
+     fpsystem('/bin/rm -rf /usr/local/share/artica/joomla17_src');
+  end;
+
+
+
+ install.INSTALL_PROGRESS(CODE_NAME,'{downloading}');
+ if length(source_folder)=0 then source_folder:=libs.COMPILE_GENERIC_APPS('joomla17');
+    if not DirectoryExists(source_folder) then begin
+        writeln('Install '+CODE_NAME+' failed...');
+        install.INSTALL_STATUS(CODE_NAME,110);
+        exit;
+     end;
+
+     writeln('Install '+CODE_NAME+' extracted on "'+source_folder+'"');
+     install.INSTALL_STATUS(CODE_NAME,50);
+     install.INSTALL_PROGRESS(CODE_NAME,'{installing}');
+
+     forceDirectories('/usr/local/share/artica/joomla17_src');
+     cmd:='/bin/cp -rf ' + source_folder+'/* /usr/local/share/artica/joomla17_src/';
+     fpsystem(cmd);
+     install.INSTALL_PROGRESS(CODE_NAME,'{checking}');
+     if not fileExists('/usr/local/share/artica/joomla17_src/index.php') then begin
+         writeln('Install '+CODE_NAME+' failed...');
+        install.INSTALL_STATUS(CODE_NAME,110);
+        exit;
+     end else begin
+         writeln('Install '+CODE_NAME+' success...');
+        install.INSTALL_STATUS(CODE_NAME,100);
+        install.INSTALL_PROGRESS(CODE_NAME,'{installed}');
+        exit;
+     end;
+
+end;
+//#########################################################################################
 procedure tsetup_joomla.piwigo_install();
 var
    CODE_NAME:string;
@@ -266,6 +330,70 @@ end;
 
 
 
+
+end;
+//#########################################################################################
+procedure tsetup_joomla.xinstall_wordpress();
+var
+   CODE_NAME:string;
+   cmd:string;
+   RegExpr:TRegExpr;
+   DirectoryDest:string;
+begin
+
+    CODE_NAME:='APP_WORDPRESS';
+    DirectoryDest:='/usr/local/share/artica/wordpress_src';
+    SetCurrentDir('/root');
+
+
+
+
+  install.INSTALL_STATUS(CODE_NAME,10);
+  install.INSTALL_STATUS(CODE_NAME,30);
+
+  if not FileExists(SYS.LOCATE_APACHE_BIN_PATH()) then begin
+     writeln('Install '+CODE_NAME+' failed...');
+     install.INSTALL_PROGRESS(CODE_NAME,'{failed} (apache)');
+     install.INSTALL_STATUS(CODE_NAME,110);
+     exit;
+  end;
+
+  if not FileExists(SYS.LOCATE_PHP5_BIN()) then begin
+     writeln('Install '+CODE_NAME+' failed...');
+     install.INSTALL_PROGRESS(CODE_NAME,'{failed} (php)');
+     install.INSTALL_STATUS(CODE_NAME,110);
+     exit;
+  end;
+
+
+
+     install.INSTALL_PROGRESS(CODE_NAME,'{downloading}');
+     if length(source_folder)=0 then source_folder:=libs.COMPILE_GENERIC_APPS('wordpress');
+     if not DirectoryExists(source_folder) then begin
+        writeln('Install '+CODE_NAME+' failed...');
+        install.INSTALL_STATUS(CODE_NAME,110);
+        exit;
+     end;
+
+
+     writeln('Install '+CODE_NAME+' extracted on "'+source_folder+'"');
+     install.INSTALL_STATUS(CODE_NAME,50);
+     install.INSTALL_PROGRESS(CODE_NAME,'{installing}');
+
+     forceDirectories(DirectoryDest);
+     cmd:='/bin/cp -rf ' + source_folder+'/* '+DirectoryDest+'/';
+     fpsystem(cmd);
+     install.INSTALL_PROGRESS(CODE_NAME,'{checking}');
+     if not FileExists(DirectoryDest+'/index.php') then begin
+         writeln('Install '+CODE_NAME+' failed...');
+        install.INSTALL_STATUS(CODE_NAME,110);
+        exit;
+     end else begin
+         writeln('Install '+CODE_NAME+' success...');
+        install.INSTALL_STATUS(CODE_NAME,100);
+        install.INSTALL_PROGRESS(CODE_NAME,'{installed}');
+        exit;
+     end;
 
 end;
 //#########################################################################################

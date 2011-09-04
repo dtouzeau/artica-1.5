@@ -425,6 +425,7 @@ function html_Memory_usage(){
 				if(is_array($values)){
 					$dc=$dc+1;
 					$disk=$values[0];
+					
 					$disk=str_replace("mapper/","",$disk);
 					$disk_name=$disk;
 					$size=$values[1];
@@ -516,9 +517,19 @@ function html_Memory_usage(){
 					$disk_text=$disk;
 					if($label<>null){$disk_text="$label ($disk)";}
 					$this->meta_array["DISKS"]["$disk_name"]["COLOR"]=$color;
+					$jsview="Loadjs('system.internal.disks.php?partinfos-js=/dev/$disk_name')";
 					$dd=$dd."
 					<tr>
-						<td nowrap align=right width=90px valign='top'><strong>$disk_text:</strong></td>
+						<td nowrap align=right width=90px valign='middle'>
+						<table style='width:5%'>
+						<tbody>
+						<tr>
+						<td width=1%>" . imgtootltip("mailbox_hd.gif","{view} /dev/$disk_name","")."</td>
+						<td width=99 align='right'%><a href=\"javascript:blur();\" OnClick=\"javascript:$jsview\" style='font-weight:bold;text-decoration:underline'>$disk_text:</a></td>
+						</tr>
+						</tbody>
+						</table>
+						</td>
 						
 						<td>
 							<div style='width:100px;background-color:white;padding-left:0px;border:1px solid $color'>

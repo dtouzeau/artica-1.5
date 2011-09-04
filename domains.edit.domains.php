@@ -685,7 +685,7 @@ function RELAY_DOMAINS_LIST($ou){
 $ldap=new clladp();	
 $tpl=new templates();
 $amavis_oui=false;
-writelogs("----------------> Hash_relay_domains",__FUNCTION__,__FILE__);	
+writelogs("----------------> Hash_relay_domains",__FUNCTION__,__FILE__,__LINE__);	
 $HashDomains=$ldap->Hash_relay_domains($ou);
 $aliases=new AutoAliases($ou);
 
@@ -697,7 +697,7 @@ if(!is_array($HashDomains)){
 
 $users=new usersMenus();
 $users->LoadModulesEnabled();
-if(!$users->POSTFIX_INSTALLED){return null;}
+if(!$users->POSTFIX_INSTALLED){writelogs("POSTFIX IS NOT INSTALLED",__FUNCTION__,__FILE__,__LINE__);return null;}
 if($users->AMAVIS_INSTALLED){if($users->EnableAmavisDaemon==1){$amavis_oui=true;}}
 $disclaimer=IS_DISCLAIMER();
 
@@ -717,6 +717,9 @@ $tools=new DomainsTools();
 	</tr>
 </thead>
 <tbody class='tbody'>";
+		
+		
+		
 if(is_array($HashDomains)){		
 		while (list ($num, $ligne) = each ($HashDomains) ){
 			writelogs("add in row $ligne ",__FUNCTION__,__FILE__);
@@ -746,13 +749,36 @@ if(is_array($HashDomains)){
 
 			$html=$html."<tr class=$classtr>
 						<td width=1% valign='top'>". imgtootltip("domain-32.png","{edit}",$js)."</td>
-						<td><div style='font-size:16px;font-weight:bold'>". texttooltip("$num","{parameters}",$js,null,0,"font-size:18px")."</div>						</td>
-						<td><div style='font-size:16px;font-weight:bold'>". texttooltip("$relay","{parameters}",$js,null,0,"font-size:18px")."</div>						</td>
-						<td>".imgtootltip("delete-24.png",'{label_delete_transport}',"DeleteRelayDomain('$num')")."</td>
+						<td><div style='font-size:16px;font-weight:bold'>". texttooltip("$num","{parameters}",$js,null,0,"font-size:18px")."</div></td>
+						<td><div style='font-size:16px;font-weight:bold'>". texttooltip("$relay","{parameters}",$js,null,0,"font-size:18px")."</div></td>
+						<td width=1%>".imgtootltip("delete-24.png",'{label_delete_transport}',"DeleteRelayDomain('$num')")."</td>
 					</tr>";			
 			
 		}
 	}
+	
+	
+	$dn="cn=transport_map,ou=$ou,dc=organizations,$ldap->suffix";
+	$hash=$ldap->Ldap_search($dn,'(objectclass=transportTable)',array());
+	for($i=0;$i<$hash["count"];$i++){
+			$transport=$hash[$i]["transport"][0];
+			$domain=$hash[$i]["cn"][0];
+			$arr=$tools->transport_maps_explode($transport);
+			$relay="{$arr[1]}:{$arr[2]}";
+			$js="PostfixAddRoutingTable('$domain')";
+			if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
+			$html=$html."<tr class=$classtr>
+						<td width=1% valign='top'>". imgtootltip("domain-32.png","{edit}",$js)."</td>
+						<td><div style='font-size:16px;font-weight:bold'>". texttooltip("$domain","{parameters}",$js,null,0,"font-size:18px")."</div>						</td>
+						<td><div style='font-size:16px;font-weight:bold'>". texttooltip("$relay","{parameters}",$js,null,0,"font-size:18px")."</div>						</td>
+						<td width=1%>&nbsp;</td>
+					</tr>";			
+	}
+	
+	
+	
+				
+	
 	
 	$ou_ser=urlencode($ou);
 	$html=$html."
@@ -777,6 +803,7 @@ if(is_array($HashDomains)){
 		
 		}
 	
+		Loadjs('js/postfix-transport.js');
 	</script>
 	";
 	

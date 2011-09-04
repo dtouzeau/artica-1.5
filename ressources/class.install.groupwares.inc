@@ -272,14 +272,14 @@ private function ROUNDCUBE_INSTALL(){
 		}
 	}
 	$roundcube_class=new roundcube();
-	if(!is_file("$this->root/plugins/remember_me/remember_me.php")){$roundcube_class->plugin_install($this->root,"remember_me");}
+	
 	if(!is_file("$this->root/plugins/msglistcols/msglistcols.php")){$roundcube_class->plugin_install($this->root,"msglistcols");}
 	if(!is_file("$this->root/plugins/sticky_notes/sticky_notes.php")){$roundcube_class->plugin_install($this->root,"sticky_notes");}
 	if(!is_file("$this->root/plugins/jqueryui/jqueryui.php")){$roundcube_class->plugin_install($this->root,"jqueryui");}
 	if(!is_file("$this->root/plugins/dkimstatus/dkimstatus.php")){$roundcube_class->plugin_install($this->root,"dkimstatus");}
 	if(!is_file("$this->root/plugins/fail2ban/fail2ban.php")){$roundcube_class->plugin_install($this->root,"fail2ban");}
 	
-	if(is_file("$this->root/plugins/remember_me/remember_me.php")){$conf[]="\$rcmail_config['plugins'][] = 'remember_me';";}
+	
 	if(is_file("$this->root/plugins/msglistcols/msglistcols.php")){$conf[]="\$rcmail_config['plugins'][] = 'msglistcols';";}
 	if(is_file("$this->root/plugins/dkimstatus/dkimstatus.php")){$conf[]="\$rcmail_config['plugins'][] = 'dkimstatus';";}
 	if(is_file("$this->root/plugins/fail2ban/fail2ban.php")){$conf[]="\$rcmail_config['plugins'][] = 'fail2ban';";}

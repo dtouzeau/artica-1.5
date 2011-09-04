@@ -67,7 +67,7 @@ end;
 
 if SYS.MEM_TOTAL_INSTALLEE()<400000 then begin
        writeln('Stopping Artica-status.......: No engouh memory');
-        exit;
+       exit;
 end;
 
 if not SYS.PROCESS_EXIST(PID_NUM()) then begin

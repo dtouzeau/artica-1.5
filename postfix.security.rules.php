@@ -3,7 +3,7 @@
 	include_once('ressources/class.ldap.inc');
 	include_once('ressources/class.users.menus.inc');
 	include_once('ressources/class.main_cf.inc');
-	
+	include_once('ressources/class.html.pages.inc');
 	
 $usersmenus=new usersMenus();
 if($usersmenus->AsMailBoxAdministrator==false){header('location:users.index.php');exit;}

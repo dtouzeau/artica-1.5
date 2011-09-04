@@ -32,6 +32,12 @@ if($apt_cache==null){
 	echo "Could not find apt-cache\n";
 	die();
 }
+
+if(system_is_overloaded(basename(__FILE__))){
+	$unix->send_email_events("apt-cache aborted, system is overloaded..", "will restart analyzis in next cycle", "system");
+	die();
+}
+
 echo "$apt_cache search linux-image\n";
 exec("$apt_cache search linux-image",$results);
 

@@ -5,7 +5,7 @@ include_once(dirname(__FILE__) . '/framework/class.unix.inc');
 include_once(dirname(__FILE__) . '/framework/frame.class.inc');
 include_once(dirname(__FILE__) . '/ressources/class.system.network.inc');
 include_once(dirname(__FILE__) . '/ressources/class.system.nics.inc');
-
+$GLOBALS["NO_GLOBAL_RELOAD"]=false;
 if(posix_getuid()<>0){die("Cannot be used in web server mode\n\n");}
 if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["VERBOSE"]=true;ini_set_verbosed();}
 if($argv[1]=="--interfaces"){interfaces_show();die();}
@@ -19,6 +19,8 @@ if($argv[1]=="--vlans"){build();exit;}
 if($argv[1]=="--postfix-instances"){postfix_multiples_instances();exit;}
 if($argv[1]=="--ping"){ping($argv[2]);exit;}
 if($argv[1]=="--ipv6"){Checkipv6();exit;}
+if($argv[1]=="--ifupifdown"){ifupifdown($argv[2]);exit;}
+if($argv[1]=="--reconstruct-interface"){reconstruct_interface($argv[2]);exit;}
 
 
 
@@ -50,7 +52,11 @@ function interfaces_show(){
 	echo $datas;
 }
 
-
+function reconstruct_interface($eth){
+	$GLOBALS["NO_GLOBAL_RELOAD"]=true;
+	build();
+	ifupifdown($eth);
+}
 
 function build(){
 $users=new usersMenus();	
@@ -65,10 +71,9 @@ if($unix->process_exists($oldpid)){
 
 	if($users->AS_DEBIAN_FAMILY){
 		BuildNetWorksDebian();
-		return;
+	}else{
+		BuildNetWorksRedhat();
 	}
-	
-	BuildNetWorksRedhat();
 	bridges_build();
 	Checkipv6();
 	
@@ -90,7 +95,7 @@ function BuildNetWorksDebian(){
 	bridges_build();
 	$unix=new unix();
 	$unix->THREAD_COMMAND_SET($unix->LOCATE_PHP5_BIN()." /usr/share/artica-postfix/exec.ip-rotator.php --build");
-	$unix->NETWORK_DEBIAN_RESTART();
+	if(!$GLOBALS["NO_GLOBAL_RELOAD"]){$unix->NETWORK_DEBIAN_RESTART();}
 	}
 
 function BuildNetWorksRedhat(){
@@ -101,7 +106,7 @@ function BuildNetWorksRedhat(){
 	bridges_build();
 	$unix=new unix();
 	$unix->THREAD_COMMAND_SET($unix->LOCATE_PHP5_BIN()." /usr/share/artica-postfix/exec.ip-rotator.php --build");
-	$unix->NETWORK_REDHAT_RESTART();
+	if(!$GLOBALS["NO_GLOBAL_RELOAD"]){$unix->NETWORK_REDHAT_RESTART();}
 	}
 
 
@@ -291,6 +296,28 @@ function Checkipv6(){
 	@file_put_contents("/proc/sys/net/ipv6/conf/lo/disable_ipv6",$EnableipV6);
 	@file_put_contents("/proc/sys/net/ipv6/conf/all/disable_ipv6",$EnableipV6);
 	@file_put_contents("/proc/sys/net/ipv6/conf/default/disable_ipv6",$EnableipV6);
+}
+
+function ifupifdown($eth){
+	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".$eth.pid";
+	$pid=@file_get_contents($pidfile);
+	
+	$unix=new unix();
+	
+	if($unix->process_exists($pid,basename(__FILE__))){
+		$unix->send_email_events("Unable to reload $eth", "Already process $pid exists", "network");
+		echo "Process $pid already exists\n";
+		return;
+	}
+	
+	$ifup=$unix->find_program("ifup");
+	$ifdown=$unix->find_program("ifdown");
+	exec("$ifdown $eth",$results);
+	$unix->send_email_events("$eth Interface was stopped", @implode("\n", $results), "network");
+	
+	exec("$ifup $eth",$results2);
+	$unix->send_email_events("$eth Interface was started", @implode("\n", $results2), "network");
+	
 }
 
 ?>

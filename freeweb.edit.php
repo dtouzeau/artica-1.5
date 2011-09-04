@@ -22,7 +22,7 @@
 	if(isset($_GET["enable_ldap_authentication"])){params_enable_ldap_authentication();exit;}
 	if(isset($_POST["AddDefaultCharset"])){OthersValuesSave();exit;}
 	
-	if(isset($_GET["groupwares"])){groupwares_index();}
+	if(isset($_GET["groupwares"])){groupwares_index();exit();}
 	if(isset($_POST["FreeWebToGroupWare"])){groupwares_save();exit;}
 	
 	
@@ -171,7 +171,7 @@ function js(){
 	$q=new mysql();
 	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));		
 	$title=$tpl->_ENGINE_parse_body("{free_web_servers}::{$ligne["ou"]}&nbsp;&raquo;&nbsp;{$_GET["hostname"]}");
-	echo "YahooWin5('735','$page?popup-tabs=yes&servername={$_GET["hostname"]}','$title');";
+	echo "YahooWin5('775','$page?popup-tabs=yes&servername={$_GET["hostname"]}','$title');";
 	}
 	
 function groupwares_save(){
@@ -277,6 +277,8 @@ function popup_tabs(){
 	$page=CurrentPageName();
 	$sock=new sockets();
 	$ApacheDisableModDavFS=$sock->GET_INFO("ApacheDisableModDavFS");
+	$FreeWebEnableModFcgid=$sock->GET_INFO("FreeWebEnableModFcgid");
+	if(!is_numeric($FreeWebEnableModFcgid)){$FreeWebEnableModFcgid=0;}
 	if(!is_numeric($ApacheDisableModDavFS)){$ApacheDisableModDavFS=0;}
 	
 	$array["popup"]='{website}';
@@ -284,6 +286,14 @@ function popup_tabs(){
 
 	
 	if($_GET["servername"]<>null){
+		$users=new usersMenus();
+		if($users->APACHE_MOD_FCGID && $users->APACHE_MOD_SUEXEC){
+			if($FreeWebEnableModFcgid==1){
+				$array["ModFcgid"]='{APP_PHPFCGI}';
+			}
+		}
+		
+		
 		$apache=new freeweb($_GET["servername"]);
 		
 		if($apache->groupware=="DRUPAL"){
@@ -299,7 +309,7 @@ function popup_tabs(){
 		
 		
 		
-		$users=new usersMenus();
+		
 		if($users->APACHE_MODE_WEBDAV){
 			if($ApacheDisableModDavFS==0){
 				$array["webdav"]='{TAB_WEBDAV}';
@@ -337,6 +347,13 @@ function popup_tabs(){
 	}
 	
 	while (list ($num, $ligne) = each ($array) ){
+		
+		
+		if($num=="ModFcgid"){
+			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"freeweb.edit.fcgid.php?servername={$_GET["servername"]}&freewebs=1&group_id={$_REQUEST["group_id"]}\"><span>$ligne</span></a></li>\n");
+			continue;
+		}
+		
 		if($num=="awstats"){
 				$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"awstats.php?servername={$_GET["servername"]}&freewebs=1&group_id={$_REQUEST["group_id"]}\"><span>$ligne</span></a></li>\n");
 				continue;
@@ -383,7 +400,7 @@ function popup_tabs(){
 	
 	
 	echo "
-	<div id=main_config_freewebedit style='width:100%;height:650px;overflow:auto'>
+	<div id=main_config_freewebedit style='width:100%;height:680px;overflow:auto'>
 		<ul>". implode("\n",$html)."</ul>
 	</div>
 		<script>
@@ -424,20 +441,45 @@ function params2(){
 	$tpl=new templates();
 	$q=new mysql();
 	$sock=new sockets();
+	$users=new usersMenus();
 	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));	
 	$Params=unserialize(base64_decode($ligne["Params"]));
 	
 	if(!isset($Params["JkMount"])){$Params["JkMount"]=0;}
-	$users=new usersMenus();
+	
 	$APACHE_MOD_TOMCAT=0;
 	if($users->TOMCAT_INSTALLED){if($user->APACHE_MOD_TOMCAT){$APACHE_MOD_TOMCAT=1;}}
 	
-	$users=new usersMenus();
+	
 	if($users->OPENEMM_INSTALLED){
 		$OpenEMMEnable=$sock->GET_INFO("OpenEMMEnable");
 		if(!is_numeric($OpenEMMEnable)){$OpenEMMEnable=1;}
 		if($OpenEMMEnable==1){$APACHE_MOD_TOMCAT=0;}
-	}	
+	}
+	
+	$mod_pagespeedEnable=1;
+	$mod_pagespeed="
+		<tr>
+			<td class=legend>{enable_mod_pagespeed}:</td>
+			<td>". Field_checkbox("PageSpeed",1,$Params["PageSpeed"])."</td>
+			<td><a href=\"javascript:blur();\" OnClick=\"javascript:Loadjs('freeweb.mod.pagespeed.php?servername={$_GET["servername"]}')\" style='font-size:13px;text-decoration:underline'>{edit}</a></td>
+			<td width=1%>". help_icon("{enable_mod_pagespeed_explain}")."</td>
+		</tr>
+	";
+
+	if(!$users->APACHE_MOD_PAGESPEED){
+		$mod_pagespeedEnable=0;
+	$mod_pagespeed="
+		<tr>
+			<td class=legend>{enable_mod_pagespeed}:</td>
+			<td>". Field_checkbox("PageSpeed",1,$Params["PageSpeed"])."</td>
+			<td><span style='font-size:13px;text-decoration:underline;color:#CCCCCC'>{edit}</a></td>
+			<td width=1%>". help_icon("{enable_mod_pagespeed_explain}")."</td>
+		</tr>
+	";		
+		
+	}
+	
 	
 	
 $html="
@@ -447,15 +489,18 @@ $html="
 	<tr>
 		<td class=legend>Default Charset:</td>
 		<td>". Field_text("AddDefaultCharset",$Params["AddDefaultCharset"],"font-size:13px;padding:3px;width:220px")."</td>
+		<td>&nbsp;</td>
 		<td width=1%>". help_icon("{AddDefaultCharset_explain}")."</td>
 	</tr>
 	<tr>
 		<td class=legend>{enable_tomcatjconet}:</td>
 		<td>". Field_checkbox("JkMount",1,$Params["JkMount"])."</td>
+		<td>&nbsp;</td>
 		<td width=1%>". help_icon("{jkMount_explain}")."</td>
 	</tr>	
+	$mod_pagespeed
 	<tr>
-		<td colspan=2 align='right'><hr>". button("{apply}","ApacheOthersValuesSave()")."</td>
+		<td colspan=4 align='right'><hr>". button("{apply}","ApacheOthersValuesSave()")."</td>
 	</tr>
 	</table>
 	<br>
@@ -473,13 +518,16 @@ $html="
 			var XHR = new XHRConnection();
 			XHR.appendData('AddDefaultCharset',document.getElementById('AddDefaultCharset').value);
 			if(document.getElementById('JkMount').checked){XHR.appendData('JkMount',1);}else{XHR.appendData('JkMount',0);}
+			if(document.getElementById('PageSpeed').checked){XHR.appendData('PageSpeed',1);}else{XHR.appendData('PageSpeed',0);}
 			XHR.appendData('servername','{$_GET["servername"]}');
     		XHR.sendAndLoad('$page', 'POST',x_ApacheOthersValuesSave);
 		} 
 		
 		function Checkjkmount(){
 			var APACHE_MOD_TOMCAT=$APACHE_MOD_TOMCAT;
+			var mod_pagespeedEnable=$mod_pagespeedEnable;
 			if(APACHE_MOD_TOMCAT==0){document.getElementById('JkMount').disabled=true;document.getElementById('JkMount').checked=false;}
+			if(mod_pagespeedEnable==0){document.getElementById('PageSpeed').disabled=true;document.getElementById('PageSpeed').checked=false;}
 		}
 		Checkjkmount();
 	</script>";	
@@ -498,7 +546,7 @@ function OthersValuesSave(){
 	$Params=unserialize(base64_decode($ligne["Params"]));
 	$Params["AddDefaultCharset"]=$_POST["AddDefaultCharset"];
 	$Params["JkMount"]=$_POST["JkMount"];
-	
+	$Params["PageSpeed"]=$_POST["PageSpeed"];
 	$data=addslashes(base64_encode(serialize($Params)));
 	$sql="UPDATE freeweb SET `Params`='$data' WHERE servername='{$_POST["servername"]}'";
 	$q->QUERY_SQL($sql,"artica_backup");
@@ -523,11 +571,19 @@ function params(){
 	$apache_auth_ip_explain=$tpl->javascript_parse_text("{apache_auth_ip_explain}");
 	$users=new usersMenus();
 	$APACHE_MOD_AUTHNZ_LDAP=0;
+	$APACHE_MOD_GEOIP=0;
 	if($users->APACHE_MOD_AUTHNZ_LDAP){$APACHE_MOD_AUTHNZ_LDAP=1;}
+	if($users->APACHE_MOD_GEOIP){$APACHE_MOD_GEOIP=1;}
 	$ServerSignature=$sock->GET_INFO("ApacheServerSignature");
 	if(!is_numeric($ServerSignature)){$ServerSignature=1;}	
 	if(!is_numeric($FreeWebsEnableModSecurity)){$FreeWebsEnableModSecurity=0;}
 	if(!is_numeric($FreeWebsEnableModEvasive)){$FreeWebsEnableModEvasive=0;}
+	$ZarafaWebNTLM=0;
+	if($ligne["groupware"]=="ZARAFA"){
+		$ZarafaWebNTLM=$sock->GET_INFO("ZarafaWebNTLM");
+		if(!is_numeric($ZarafaWebNTLM)){$ZarafaWebNTLM=0;}
+		
+	}
 	
 	
 	
@@ -549,6 +605,15 @@ $mod_security="
 		style='font-size:13px;text-decoration:underline'>{edit}<a></td>
 	</tr>
 ";
+
+$mod_geoip="	<tr>
+		<td class=legend style='color:#CCCCCC'>{country_block}:</td>
+		<td><span style='font-size:13px;text-decoration:underline;color:#CCCCCC'>{edit}</span></td>
+	</tr>
+";
+
+
+
 
 $mod_evasive="
 	<tr>
@@ -573,6 +638,16 @@ if($FreeWebsEnableModEvasive==0){
 		<td class=legend style='color:#CCCCCC'>{DDOS_prevention}:</td>
 		<td><a href=\"javascript:blur();\"
 		style='font-size:13px;color:#CCCCCC'>{edit}<a></td>
+	</tr>
+";
+}
+
+if($APACHE_MOD_GEOIP==1){
+
+$mod_geoip="	<tr>
+		<td class=legend>{country_block}:</td>
+		<td><a href=\"javascript:blur();\" OnClick=\"Loadjs('freeweb.mode.geoip.php?servername={$_GET["servername"]}');\"
+		style='font-size:13px;text-decoration:underline'>{edit}<a></td>
 	</tr>
 ";
 }
@@ -624,6 +699,7 @@ if($FreeWebsEnableModEvasive==0){
 	</tr>		
 	$mod_security	
 	$mod_evasive	
+	$mod_geoip
 	</table>
 	<div style='text-align:right;width:100%'><hr>". button("{apply}","CheckApacheLdapButt()")."</div>
 
@@ -659,7 +735,7 @@ if($FreeWebsEnableModEvasive==0){
 			document.getElementById('EnableLDAPAllSubDirectories').disabled=true;
 			
 			
-			
+			var ZarafaWebNTLM=$ZarafaWebNTLM;
 			var APACHE_MOD_AUTHNZ_LDAP=$APACHE_MOD_AUTHNZ_LDAP;
 			if(APACHE_MOD_AUTHNZ_LDAP==1){
 				document.getElementById('enable_ldap_authentication').disabled=false;
@@ -668,6 +744,13 @@ if($FreeWebsEnableModEvasive==0){
 					document.getElementById('EnableLDAPAllSubDirectories').disabled=false;
 				}
 			}
+			
+			if(ZarafaWebNTLM==1){
+				document.getElementById('enable_ldap_authentication').disabled=true;
+				document.getElementById('enable_ldap_authentication').checked=true;
+			
+			}
+			
 		}
 		
 		function CheckApacheLdapButt(){
@@ -739,6 +822,7 @@ if($FreeWebsEnableModEvasive==0){
 				XHR.sendAndLoad('$page', 'GET',x_AuthIpAdd);
 			}
 		}
+	CheckApacheForm();
 	RefreshAuthIp();
 	</script>
 	
@@ -769,6 +853,7 @@ function popup(){
 	$q=new mysql();
 	$sock=new sockets();
 	$APACHE_PROXY_MODE=0;
+	$DNS_INSTALLED=false;
 	$countloops=countloops();
 	$no_usersameftpuser=$tpl->javascript_parse_text("{no_usersameftpuser}");
 	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));
@@ -791,7 +876,8 @@ function popup(){
 	if($ServerPort==0){$UseDefaultPort=1;}
 	if($users->APACHE_PROXY_MODE){$APACHE_PROXY_MODE=1;}
 	$parcourir_domaines="<input type='button' OnClick=\"javascript:Loadjs('browse.domains.php?field=domainname')\" value='{browse}...'>";
-		
+	if($users->dnsmasq_installed){$DNS_INSTALLED=true;}
+	if($users->POWER_DNS_INSTALLED){$DNS_INSTALLED=true;}		
 	
 	if($vgservices["freewebs"]<>null){
 		if(!is_numeric($ligne["lvm_size"])){$ligne["lvm_size"]=5000;}
@@ -804,6 +890,20 @@ function popup(){
 		</tr>";
 		
 	}
+	$freeweb=new freeweb($_GET["servername"]);
+	$groupwarelink=$freeweb->groupwares_InstallLink();
+	$groupwares_textintro=$freeweb->groupwares_textintro();
+	if($groupwarelink<>null){
+		
+		$explain="
+		<div class=explain>$groupwares_textintro:<br><strong style='font-size:14px'>
+			<a href=\"javascript:blur()\" OnClick=\"javascript:s_PopUpFull('$groupwarelink',1024,768)\" style='text-decoration:underline;font-weight:bold;color:#969696'>$groupwarelink</a></strong></div>		
+		";
+		
+	}
+	
+	$freeweb=new freeweb($_GET["servername"]);
+	
 	
 		if($ligne["domainname"]==null){
 			$dda=explode(".",$ligne["servername"]);
@@ -822,6 +922,46 @@ function popup(){
 		}
 		
 	if($hostname=="_default_"){$parcourir_domaines=null;}
+	
+	if($DNS_INSTALLED){
+		include_once(dirname(__FILE__)."/ressources/class.system.network.inc");
+		include_once(dirname(__FILE__)."/ressources/class.pdns.inc");
+		$pdns=new pdns();
+		if($ligne["servername"]==null){
+			$ip=new networking();
+			$ips=$ip->ALL_IPS_GET_ARRAY();
+			$ips[null]="{none}";
+			$dns_field="<tr>
+				<td class=legend nowrap>{dns_entry}:</td>
+				<td>". Field_array_Hash($ips, "ADD_DNS_ENTRY",null,"style:font-size:14px")."</td>
+				<td>". help_icon("freeweb_add_dns_entry_explain")."</td>
+			</tr>";
+		}else{
+		
+		$hostip=$pdns->GetIp($ligne["servername"]);
+		if($hostip<>null){
+		$dns_field="<tr>
+				<td class=legend nowrap>{dns_entry}:</td>
+				<td style='font-size:14px'>$hostip</td>
+				<td>&nbsp;</td>
+			</tr>";	
+			
+		}else{
+			$ip=new networking();
+			$ips=$ip->ALL_IPS_GET_ARRAY();
+			$ips[null]="{none}";
+			$dns_field="<tr>
+				<td class=legend nowrap>{dns_entry}:</td>
+				<td>". Field_array_Hash($ips, "ADD_DNS_ENTRY",null,"style:font-size:14px")."</td>
+				<td>". help_icon("freeweb_add_dns_entry_explain")."</td>
+			</tr>";			
+			
+		}
+		
+		}
+		
+		
+	}
 	
 	
 	$domain="<table style='width:100%'>
@@ -873,12 +1013,18 @@ function popup(){
 			<input type='hidden' value='{$ligne["domainname"]}' id='domainname'>";
 	}
 	
+	$img="website-64.png";
+	if($ligne["groupware"]<>null){
+		$apache=new vhosts();
+		$img=$apache->IMG_ARRAY_64[$ligne["groupware"]];
+	}
+	
 	$html="
 	<table style='width:100%'>
 	<tr>
-		<td valign='top'><img src='img/website-64.png'></td>
+		<td valign='top'><img src='img/$img'></td>
 		<td valign='top'>
-	
+	$explain
 	<div id='freewebdiv'>
 	<table style='width:100%' class=form>
 	<tr> 
@@ -896,6 +1042,7 @@ function popup(){
 			</tr>
 			</table>
 	</tr>
+	$dns_field
 	<tr> 
 		<td class=legend nowrap>{www_forward}:</td>
 		<td width=1%>". Field_checkbox("Forwarder", 1,$ligne["Forwarder"],"CheckForwarder()")."</td>
@@ -1107,7 +1254,12 @@ function popup(){
 				}else{
 					document.getElementById('domainname').value='';
 				}
-			}		
+			}
+			if(document.getElementById('ADD_DNS_ENTRY')){
+				XHR.appendData('ADD_DNS_ENTRY',document.getElementById('ADD_DNS_ENTRY').value);
+			
+			}
+			
 			
 			
 			if(document.getElementById('useMysql').checked){
@@ -1391,6 +1543,8 @@ function Save(){
 		'{$_GET["Forwarder"]}','{$_GET["ForwardTo"]}'
 		)";
 	}
+	
+	writelogs("$sql",__FUNCTION__,__FILE__,__LINE__);
 	$q=new mysql();
 	$q->BuildTables();
 	$q->QUERY_SQL($sql,"artica_backup");
@@ -1417,6 +1571,16 @@ function Save(){
 		if(!$q->PRIVILEGES($mysql_username,$mysql_password,$mysql_database)){
 			echo "GRANT $mysql_database FAILED FOR $mysql_username\n$q->mysql_error";
 		}
+	}
+	
+	if(isset($_GET["ADD_DNS_ENTRY"])){
+		$dnsDOM=explode(".", $_GET["servername"]);
+		$netbiosname=$dnsDOM[0];
+		unset($dnsDOM[0]);
+		$domainname=implode(".", $dnsDOM);
+		include_once(dirname(__FILE__)."/ressources/class.pdns.inc");
+		$pdns=new pdns($domainname);
+		$pdns->EditIPName($netbiosname, $_GET["ADD_DNS_ENTRY"], "A");
 	}
 	
 

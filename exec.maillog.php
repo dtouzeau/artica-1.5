@@ -319,6 +319,22 @@ if(preg_match("#zarafa-dagent.+?Client disconnected#",$buffer)){return null;}
 if(regex_amavis($buffer)){return;}
 
 
+
+
+
+
+
+
+if(preg_match("#zarafa-server.+?SQL Failed: Can't create table '\./zarafa/(.+?)\.frm'#",$buffer,$re)){
+	$file="/etc/artica-postfix/croned.1/zarafa-server.tablefailed".md5($re[1]);
+	if($timefile>10){
+		email_events("Zarafa server SQL issue unable to create [{$re[1]}] table",
+		"zarafa-server claim \n$buffer\nThere is an SQL issue\nplease Check Artica Technology support service.","mailbox");
+		@file_put_contents($file,"#");
+		}else{events("Zarafa-server SQL issue {$re[1]} {$timefile}Mn/5Mn");}
+	return;	
+}
+
 if(preg_match("#zarafa-server.+?SQL Failed:(.+)#",$buffer,$re)){
 	$file="/etc/artica-postfix/croned.1/zarafa-server.".md5($re[1]);
 	if($timefile>10){

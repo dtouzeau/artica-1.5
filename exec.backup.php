@@ -17,6 +17,7 @@ include_once(dirname(__FILE__)."/framework/frame.class.inc");
 $GLOBALS["ONLY_TESTS"]=false;
 $GLOBALS["ONNLY_MOUNT"]=false;
 $GLOBALS["NO_UMOUNT"]=false;
+$GLOBALS["PCOPY"]=false;
 $GLOBALS["NO_STANDARD_BACKUP"]=false;
 $date=date('Y-m-d');
 $GLOBALS["ADDLOG"]="/var/log/artica-postfix/backup-starter-$date.log";
@@ -206,21 +207,26 @@ function backup($ID){
 	if($resource_type=="smb"){
 		$mounted_path_sep="/";
 		if(!mount_smb($pattern,$ID,true)){
-			backup_events($ID,"initialization","ERROR,$first_ressource unable to mount");
+			backup_events($ID,"initialization","ERROR,$first_ressource unable to mount mount_smb()",__LINE__);
 			send_email_events("Backup Task $ID::  resource: $first_ressource unable to mount","Aborting backup","backup");
 			
 			return false;
 		}
+		$GLOBALS["PCOPY"]=true;
 	}
 	
 	
 	if($resource_type=="usb"){
 		$mounted_path_sep="/";
 		if(!mount_usb($pattern,$ID,true)){
-			backup_events($ID,"initialization","ERROR,$first_ressource unable to mount");
+			backup_events($ID,"initialization","ERROR,$first_ressource unable to mount mount_usb()",__LINE__);
 			send_email_events("Backup Task $ID::  resource: $first_ressource unable to mount","Aborting backup","backup");
 			return false;
 		}
+		
+		backup_events($ID,"initialization","INFO, using external device trough USB",__LINE__);
+		$GLOBALS["PCOPY"]=true;
+		
 	}	
 	
 	if($resource_type=="rsync"){
@@ -256,6 +262,7 @@ function backup($ID){
 			return false;
 		}
 		backup_events($ID,"initialization","INFO,$first_ressource connect success");
+		$GLOBALS["PCOPY"]=true;
 	}
 
 	if($resource_type=="local"){
@@ -273,6 +280,7 @@ function backup($ID){
 			return false;
 		}
 		backup_events($ID,"initialization","INFO,$first_ressource success");
+		$GLOBALS["PCOPY"]=true;
 	}		
 	
 	if($GLOBALS["ONLY_TESTS"]){
@@ -288,10 +296,10 @@ function backup($ID){
 	
 	
 	if($container=="daily"){
-		backup_events($ID,"initialization","INFO, Daily container");
+		backup_events($ID,"initialization","INFO, Daily container",__LINE__);
 		$mount_path_final=$mount_path.$mounted_path_sep."backup.".date('Y-m-d')."/$servername";
 	}else{
-		backup_events($ID,"initialization","INFO, Weekly container");
+		backup_events($ID,"initialization","INFO, Weekly container",__LINE__);
 		$mount_path_final=$mount_path.$mounted_path_sep."backup.".date('Y-W')."/$servername";
 	}
 	
@@ -310,7 +318,7 @@ if(!$GLOBALS["NO_STANDARD_BACKUP"]){
 		if(is_array($WhatToBackup)){$WhatToBackup_ar=implode(",",$WhatToBackup);}
 		backup_events($ID,"initialization","INFO, WhatToBackup ($WhatToBackup) -> $WhatToBackup_ar");
 		if($WhatToBackup=="all"){
-			backup_events($ID,"initialization","INFO, Backup starting Running macro all cyrus, mysql, LDAP, Artica...");
+			backup_events($ID,"initialization","INFO, Backup starting Running macro all cyrus, mysql, LDAP, Artica...",__LINE__);
 			send_email_events("Backup Task $ID:: Backup starting Running macro all ","Backup is running","backup");
 			if($users->cyrus_imapd_installed){
 				backup_events($ID,"initialization","INFO, cyrus-imapd mailboxes processing");
@@ -350,7 +358,7 @@ if(!$GLOBALS["NO_STANDARD_BACKUP"]){
 				
 			}
 			
-			backup_events($ID,"personal","INFO, Backup starting for $path");
+			backup_events($ID,"personal","INFO, Backup starting for $path",__LINE__);
 			send_email_events("Backup Task $ID:: Backup starting $path","Backup is running for path $path","backup");
 			backup_mkdir($path);
 			$results=backup_copy($path,$path,$ID);
@@ -374,10 +382,10 @@ if(!$GLOBALS["NO_STANDARD_BACKUP"]){
 	
 	$date_end=time();
 	$calculate=distanceOfTimeInWords($date_start,$date_end);
-	backup_events($ID,"TIME","INFO, Time: $calculate ($mount_path_final)");	
+	backup_events($ID,"TIME","INFO, Time: $calculate ($mount_path_final)",__LINE__);	
 	
 	
-	backup_events($ID,"initialization","INFO, Backup task terminated");
+	backup_events($ID,"initialization","INFO, Backup task terminated",__LINE__);
 	send_email_events("Backup Task $ID:: Backup stopping","Backup is stopped","backup");
 	
 	
@@ -432,7 +440,7 @@ function mount_usb($pattern,$ID,$testwrite=true){
 	
 	
 	if($uuid==null){
-		backup_events($ID,"initialization","ERROR, (usb) usb protocol error $pattern");
+		backup_events($ID,"initialization","ERROR, (usb) usb protocol error $pattern",__LINE__);
 		writelogs(date('m-d H:i:s')." "."[TASK $ID]: usb protocol error $pattern",__FUNCTION__,__FILE__,__LINE__);
 		return false;
 	}
@@ -441,12 +449,12 @@ function mount_usb($pattern,$ID,$testwrite=true){
 	writelogs(date('m-d H:i:s')." "."[TASK $ID]: $uuid $usb->path FS_TYPE: $usb->ID_FS_TYPE",__FUNCTION__,__FILE__,__LINE__);	
 	
 	if($usb->ID_FS_TYPE==null){
-		backup_events($ID,"initialization","ERROR, (usb) usb type error $pattern");
+		backup_events($ID,"initialization","ERROR, (usb) usb type error $pattern",__LINE__);
 		return false;
 	}
 	
 	if($usb->path==null){
-		backup_events($ID,"initialization","ERROR, (usb) usb dev error $pattern");
+		backup_events($ID,"initialization","ERROR, (usb) usb dev error $pattern",__LINE__);
 		return false;
 	}	
 	
@@ -464,10 +472,22 @@ function mount_usb($pattern,$ID,$testwrite=true){
 		
 	}
 	
-	if(!$testwrite){return true;}
+	if(!$testwrite){
+		
+		writelogs(date('m-d H:i:s')." "."[TASK $ID]: Test write has been cancelled",__FUNCTION__,__FILE__,__LINE__);	
+		return true;
+	}
+	
+	
 	
 	$md5=md5(date('Y-m-d H:i:s'));
-	@file_put_contents("$mount_path/$md5","#");
+	writelogs(date('m-d H:i:s')." "."[TASK $ID]: Test write Creating file \"$mount_path/$md5\"",__FUNCTION__,__FILE__,__LINE__);
+	
+	try {file_put_contents("$mount_path/$md5",time());}catch(Exception $e){$IOERROR=$e->getMessage();} 
+	
+	
+	
+	
 	if(is_file("$mount_path/$md5")){
 		@unlink("$mount_path/$md5");
 		if(is_file($rsync)){
@@ -481,8 +501,14 @@ function mount_usb($pattern,$ID,$testwrite=true){
 		if($GLOBALS["ONLY_TESTS"]){writelogs(date('m-d H:i:s')." "."<H2>{success}</H2>",__FUNCTION__,__FILE__,__LINE__);}
 		return true;
 	}else{
-		backup_events($ID,"initialization","ERROR, (usb) $mount_path/$md5 permission denied");
-		exec("umount -l $mount_path");
+		backup_events($ID,"initialization","ERROR, (usb) $mount_path/$md5 $IOERROR");
+		backup_events($ID,"initialization","ERROR, (usb) $mount_path/$md5 should be a permission denied (I/O error)");
+		$unix=new unix();
+		$unix->send_email_events("Backup: task id $ID aborted, unable to write into the device $usb->path FS_TYPE: $usb->ID_FS_TYPE",
+		"Artica has tried to write $mount_path/$md5 into this mounted device but it seems that it is impossible\n$IOERROR","backup");
+		writelogs(date('m-d H:i:s')." "."[TASK $ID]: Failed !!!, umounting...$mount_path",__FUNCTION__,__FILE__,__LINE__);
+		$umount=$unix->find_program("umount");
+		exec("$umount -l $mount_path");
 	}	
 	
 	
@@ -863,7 +889,7 @@ function backup_mysql($ID){
 	if(!is_array($array)){
 		events("ERROR, unable to get databases list",__FUNCTION__,__LINE__);
 		send_email_events("Backup Task $ID:: Unable to backup mysql datas ","ERROR, unable to get databases list","backup");
-		backup_events($ID,"mysql","ERROR, unable to get databases list");
+		backup_events($ID,"mysql","ERROR, unable to get databases list",__LINE__);
 		return false;		
 	}
 	
@@ -894,13 +920,13 @@ function backup_mysql($ID){
 		
 		if(strtolower($database_name)=="log"){
 			events("skipping database \"$database_name\"",__FUNCTION__,__LINE__);
-			backup_events($ID,"mysql","INFO, mysqlhotcopy skip log database");
+			backup_events($ID,"mysql","INFO, mysqlhotcopy skip log database",__LINE__);
 			continue;
 		}
 		
 		if(strtolower($database_name)=="mysql"){
 			events("skipping database \"$database_name\"",__FUNCTION__,__LINE__);
-			backup_events($ID,"mysql","INFO, mysqlhotcopy skip mysql database");
+			backup_events($ID,"mysql","INFO, mysqlhotcopy skip mysql database",__LINE__);
 			continue;
 		}
 				
@@ -930,7 +956,7 @@ function backup_mysql($ID){
 			}		
 		}
 		
-		backup_events($ID,"mysql","INFO, backup $database_name\n". implode("\n",$results));
+		backup_events($ID,"mysql","INFO, backup $database_name\n". implode("\n",$results),__LINE__);
 		
 		if(strtolower($database_name)=="zarafa"){
 			events("zarafa database -> backup_mysql_database_mysqldump($ID,zarafa,$temporarySourceDir)",__FUNCTION__,__LINE__);
@@ -1107,6 +1133,11 @@ function backup_copy($source_path,$dest_path,$ID=null){
 		$cmd=str_replace("{SRC_PATH}",$source_path,$GLOBALS["COMMANDLINECOPY"]);
 		$GLOBALS["MOUNTED_PATH_FINAL"]=trim($GLOBALS["MOUNTED_PATH_FINAL"]);
 		writelogs(date('m-d H:i:s')." "."[TASK $ID] #########################################",__FUNCTION__,__FILE__,__LINE__);
+		
+		if($GLOBALS["PCOPY"]){
+			writelogs(date('m-d H:i:s')." "."[TASK $ID] Protocol used is a local copy (PCOPY = TRUE) ",__FUNCTION__,__FILE__,__LINE__);
+		}
+		
 		writelogs(date('m-d H:i:s')." "."[TASK $ID] Starting point {$GLOBALS["MOUNTED_PATH_FINAL"]}",__FUNCTION__,__FILE__,__LINE__);
 		writelogs(date('m-d H:i:s')." "."[TASK $ID] command line=$cmd",__FUNCTION__,__FILE__,__LINE__);
 		if($GLOBALS["MOUNTED_PATH_FINAL"]<>null){
@@ -1118,25 +1149,46 @@ function backup_copy($source_path,$dest_path,$ID=null){
 		$final_path=str_replace('//','/',$final_path);
 		writelogs(date('m-d H:i:s')." "."[TASK $ID] final_path=\"$final_path\"",__FUNCTION__,__FILE__,__LINE__);
 		$cmd=str_replace("{NEXT}",$final_path,$cmd);
-		writelogs(date('m-d H:i:s')." "."[TASK $ID] Copy directory $source_path to $final_path",__FUNCTION__,__FILE__,__LINE__);
+		writelogs(date('m-d H:i:s')." "."[TASK $ID] Copy directory $source_path to \"$final_path\"",__FUNCTION__,__FILE__,__LINE__);
+		
+		if($GLOBALS["PCOPY"]){
+			if(is_dir($source_path)){
+				writelogs(date('m-d H:i:s')." "."[TASK $ID] $source_path is a directory...",__FUNCTION__,__FILE__,__LINE__);
+				if(!is_dir($final_path)){
+					writelogs(date('m-d H:i:s')." "."[TASK $ID] testing $final_path no such directory create it",__FUNCTION__,__FILE__,__LINE__);
+					try {mkdir($final_path,644,true);}catch(Exception $e){$IOERROR=$e->getMessage();} 
+					if(!is_dir($final_path)){
+						backup_events($ID,"Copy","ERROR,Dir $final_path $IOERROR",__LINE__);
+						return false;
+					}
+				}
+			}
+			
+			if(is_file($source_path)){
+				writelogs(date('m-d H:i:s')." "."[TASK $ID] $source_path is a file...",__FUNCTION__,__FILE__,__LINE__);
+			}
+		}
+		
+		
+		
 		writelogs(date('m-d H:i:s')." "."[TASK $ID] FINAL COMMAND WAS \"$cmd\"",__FUNCTION__,__FILE__,__LINE__);
 		writelogs(date('m-d H:i:s')." "."[TASK $ID] EXECUTE....",__FUNCTION__,__FILE__,__LINE__);
 		events("$cmd",__FUNCTION__,__LINE__);
 		
 		exec($cmd. " 2>&1",$results);
-		writelogs(date('m-d H:i:s')." "."[TASK $ID] Returning an array of ".count($results)." rows -> check_rsync_error()",__FUNCTION__,__FILE__,__LINE__);
+		writelogs(date('m-d H:i:s')." "."[TASK $ID] Returning an array of ".count($results)." rows",__FUNCTION__,__FILE__,__LINE__);
 		if(!check_rsync_error($ID,$results)){
 			events("check_rsync_error() !",__FUNCTION__,__LINE__);
-			if($ID>0){backup_events($ID,"Copy","ERROR,$cmd");}
+			if($ID>0){backup_events($ID,"Copy","ERROR,$cmd",__LINE__);}
 		}else{
-			if($ID>0){backup_events($ID,"Copy","INFO,$cmd");}
+			if($ID>0){backup_events($ID,"Copy","INFO,$cmd",__LINE__);}
 		}
 		
 		
 		$date_end=time();
 		$calculate=distanceOfTimeInWords($date_start,$date_end);
 		events("INFO, time: $calculate ($source_path)",__FUNCTION__,__LINE__);
-		backup_events($ID,"Copy","INFO, time: $calculate ($source_path)");
+		backup_events($ID,"Copy","INFO, time: $calculate ($source_path)",__LINE__);
 		writelogs(date('m-d H:i:s')." "."[TASK $ID] #########################################",__FUNCTION__,__FILE__,__LINE__);
 		
 		
@@ -1151,7 +1203,7 @@ function check_rsync_error($ID,$results){
 			 if(preg_match("#some files\/attrs were not transferred#",$line)){continue;}
 			 if(preg_match("#some files vanished before they could be transferred#",$line)){continue;}
 			 writelogs(date('m-d H:i:s')." "."[TASK $ID]: $line ",__FUNCTION__,__FILE__,__LINE__);
-			 if($ID>0){backup_events($ID,"Copy","ERROR,$line\n$cmd");return false;}
+			 if($ID>0){backup_events($ID,"Copy","ERROR,$line\n$cmd",__LINE__);return false;}
 			}
 		}
 	return true;	
@@ -1194,10 +1246,11 @@ function backup_mkdir($path){
 }
 
 
-function backup_events($task_id,$source_type,$text){
+function backup_events($task_id,$source_type,$text,$line){
+	if(!isset($line)){$line="not defined";}
 	$text=addslashes($text);
 	$date=date('Y-m-d H:i:s');
-	writelogs(date('m-d H:i:s')." "."[TASK $task_id]: $text",__FUNCTION__,__FILE__,__LINE__);
+	writelogs(date('m-d H:i:s')." "."[TASK $task_id]: $text L.$line",__FUNCTION__,__FILE__,__LINE__);
 	$sql="INSERT INTO `backup_events`(task_id,zdate,backup_source,event) VALUES('$task_id','$date','$source_type','$text');";
 	$md5=md5($sql);
 	if(!$GLOBALS["ONLY_TESTS"]){

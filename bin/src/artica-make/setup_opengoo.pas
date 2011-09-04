@@ -47,6 +47,7 @@ public
       procedure GROUPOFFICE_INSTALL();
       function APP_AMACHI_INSTALL():boolean;
       procedure MOD_QOS();
+      procedure MOD_PAGESPEED();
 END;
 
 implementation
@@ -456,6 +457,79 @@ begin
 
    end;
 end;
+//##############################################################################
+procedure setupopengoo.MOD_PAGESPEED();
+var
+   CODE_NAME:string;
+   cmd:string;
+   Arch:integer;
+   indexDownmload,filepath:string;
+   l:Tstringlist;
+   i:integer;
+   distri:tdistriDetect;
+begin
+
+ distri:=tdistriDetect.Create;
+ writeln('RESULT.................: Installing/Upgrading');
+
+Arch:=libs.ArchStruct();
+writeln('RESULT.................: Architecture : ',Arch);
+writeln('RESULT.................: Distribution : ',distri.DISTRINAME,' (DISTRINAME)');
+writeln('RESULT.................: Major version: ',distri.DISTRI_MAJOR,' (DISTRI_MAJOR)');
+writeln('RESULT.................: Artica Code  : ',distri.DISTRINAME_CODE,' (DISTRINAME_CODE)');
+
+CODE_NAME:='APP_MOD_PAGESPEED';
+  install.INSTALL_STATUS(CODE_NAME,40);
+  install.INSTALL_PROGRESS(CODE_NAME,'{compiling}');
+
+if Arch=32 then begin
+   if distri.DISTRINAME_CODE='UBUNTU' then indexDownmload:='mod-pagespeedDEBi386';
+   if distri.DISTRINAME_CODE='DEBIAN' then indexDownmload:='mod-pagespeedDEBi386';
+   if distri.DISTRINAME_CODE='CENTOS' then indexDownmload:='mod-pagespeedRPMi386';
+   if distri.DISTRINAME_CODE='SUSE' then indexDownmload:='mod-pagespeedRPMi386';
+   if distri.DISTRINAME_CODE='FEDORA' then indexDownmload:='mod-pagespeedRPMi386';
+   if distri.DISTRINAME_CODE='MANDRAKE' then indexDownmload:='mod-pagespeedRPMi386';
+end;
+
+if Arch=64 then begin
+   if distri.DISTRINAME_CODE='UBUNTU' then indexDownmload:='mod-pagespeedDEB64';
+   if distri.DISTRINAME_CODE='DEBIAN' then indexDownmload:='mod-pagespeedDEB64';
+   if distri.DISTRINAME_CODE='CENTOS' then indexDownmload:='mod-pagespeedRPMi386';
+   if distri.DISTRINAME_CODE='SUSE' then indexDownmload:='mod-pagespeedRPM64';
+   if distri.DISTRINAME_CODE='FEDORA' then indexDownmload:='mod-pagespeedRPM64';
+   if distri.DISTRINAME_CODE='MANDRAKE' then indexDownmload:='mod-pagespeedRPM64';
+
+end;
+    if length(indexDownmload)=0 then begin
+      install.INSTALL_STATUS(CODE_NAME,110);
+      install.INSTALL_PROGRESS(CODE_NAME,'{failed} system not suppored');
+      exit;
+   end;
+      install.INSTALL_STATUS(CODE_NAME,50);
+      install.INSTALL_PROGRESS(CODE_NAME,'{downloading}');
+      filepath:=libs.COMPILE_GENERIC_APPS(indexDownmload);
+
+if not FileExists(filepath) then begin
+     install.INSTALL_STATUS(CODE_NAME,110);
+     install.INSTALL_PROGRESS(CODE_NAME,'{failed}');
+     writeln('installation failed');
+end;
+
+     if distri.DISTRINAME_CODE='UBUNTU' then cmd:=SYS.LOCATE_GENERIC_BIN('dpkg')+' -i '+filepath;
+   if distri.DISTRINAME_CODE='DEBIAN' then cmd:=SYS.LOCATE_GENERIC_BIN('dpkg')+' -i '+filepath;
+   if distri.DISTRINAME_CODE='CENTOS' then cmd:=SYS.LOCATE_GENERIC_BIN('rpm')+' -i '+filepath;
+   if distri.DISTRINAME_CODE='SUSE' then cmd:=SYS.LOCATE_GENERIC_BIN('rpm')+' -i '+filepath;
+   if distri.DISTRINAME_CODE='FEDORA' then cmd:=SYS.LOCATE_GENERIC_BIN('rpm')+' -i '+filepath;
+   if distri.DISTRINAME_CODE='MANDRAKE' then cmd:=SYS.LOCATE_GENERIC_BIN('rpm')+' -i '+filepath;
+
+    install.INSTALL_STATUS(CODE_NAME,80);
+    install.INSTALL_PROGRESS(CODE_NAME,'{installing}');
+
+    fpsystem(cmd);
+
+
+end;
+//##############################################################################
 
 
 

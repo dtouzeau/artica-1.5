@@ -10,17 +10,17 @@ include_once(dirname(__FILE__).'/framework/frame.class.inc');
 
 $_GET["APT-GET"]="/usr/bin/apt-get";
 
-
+if(systemMaxOverloaded()){
+	writelogs("This system is too many overloaded, die()",__FUNCTION__,__FILE__,__LINE__);
+	die();
+}
 
 if(!is_file($_GET["APT-GET"])){
 	if(is_file("/usr/bin/yum")){CheckYum();die();exit;}
 	die();
 }
 
-if(systemMaxOverloaded()){
-	writelogs("This system is too many overloaded, die()",__FUNCTION__,__FILE__,__LINE__);
-	die();
-}
+
 
 include_once(dirname(__FILE__).'/framework/class.unix.inc');
 if(!Build_pid_func(__FILE__,"MAIN")){
@@ -80,7 +80,7 @@ writelogs("Found ". strlen($datas)." bytes for apt",__FUNCTION__,__FILE__,__LINE
 		$text="You can perform upgrade of linux packages for\n".@file_get_contents("/etc/artica-postfix/apt.upgrade.cache");
 		send_email_events("new upgrade $count packages(s) ready",$text,"system");
 		
-		$paragraph=Paragraphe('64-infos.png',"$count {system_packages}",
+		$paragraph=ParagrapheTEXT('32-infos.png',"$count {system_packages}",
 		"$count {system_packages_can_be_upgraded}","javascript:Loadjs('artica.repositories.php');
 		","{system_packages_can_be_upgraded}",300,80);
 		@file_put_contents("/usr/share/artica-postfix/ressources/logs/web/debian.update.html", $paragraph);

@@ -128,10 +128,10 @@ function csv_export(){
 function removeidb(){
 	$unix=new unix();
 	$nohup=$unix->find_program("nohup");	
-	@unlink("/var/lib/mysql/ib_logfile0");
-	@unlink("/var/lib/mysql/ib_logfile1");
-	$cmd="$nohup /etc/init.d/artica-postfix restart mysql >/dev/null 2>&1 &";
+	$php5=$unix->LOCATE_PHP5_BIN();
+	$cmd=trim("$nohup $php5 /usr/share/artica-postfix/exec.zarafa.build.stores.php --remove-database >/dev/null 2>&1 &");
 	writelogs_framework($cmd,__FUNCTION__,__FILE__,__LINE__);
 	shell_exec($cmd);	
-	 
+
+	
 }

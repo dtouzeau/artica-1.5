@@ -162,7 +162,10 @@ function StopServer(){
 
 
 function iptables_delete_rules(){
-shell_exec("/sbin/iptables-save > /etc/artica-postfix/iptables.conf");
+$unix=new unix();
+$iptables_save=$unix->find_program("iptables-save");
+$iptables_restore=$unix->find_program("iptables-restore");	
+shell_exec("$iptables_save > /etc/artica-postfix/iptables.conf");
 $data=file_get_contents("/etc/artica-postfix/iptables.conf");
 $datas=explode("\n",$data);
 $pattern="#.+?ArticaOpenVPN#";	
@@ -174,15 +177,18 @@ while (list ($num, $ligne) = each ($datas) ){
 		}
 
 file_put_contents("/etc/artica-postfix/iptables.new.conf",$conf);
-shell_exec("/sbin/iptables-restore < /etc/artica-postfix/iptables.new.conf");
+shell_exec("$iptables_restore < /etc/artica-postfix/iptables.new.conf");
 echo "Starting......: OpenVPN cleaning iptables $count rules\n";
 
 }
 
 function iptables_delete_client_rules($ID=0){
-	echo "Starting......: OpenVPN cleaning iptables rules for ID $ID\n";
+$unix=new unix();
+$iptables_save=$unix->find_program("iptables-save");
+$iptables_restore=$unix->find_program("iptables-restore");		
+echo "Starting......: OpenVPN cleaning iptables rules for ID $ID\n";
 $conf=null;
-shell_exec("/sbin/iptables-save > /etc/artica-postfix/iptables.conf");
+shell_exec("$iptables_save > /etc/artica-postfix/iptables.conf");
 $data=file_get_contents("/etc/artica-postfix/iptables.conf");
 $datas=explode("\n",$data);
 if($ID==0){
@@ -198,7 +204,7 @@ while (list ($num, $ligne) = each ($datas) ){
 		}
 
 file_put_contents("/etc/artica-postfix/iptables.new.conf",$conf);
-shell_exec("/sbin/iptables-restore < /etc/artica-postfix/iptables.new.conf");
+shell_exec("$iptables_restore < /etc/artica-postfix/iptables.new.conf");
 echo "Starting......: OpenVPN cleaning iptables $count rules\n";	
 }
 

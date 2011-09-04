@@ -113,7 +113,7 @@ but for better performances you need to define a maximum number of rows stored i
 <mysql_settings_text>Change the Mysql password, define the behavior of mysql database storage & max events</mysql_settings_text>
 <nothing_to_change>Ningun cambio</nothing_to_change>
 <notification_context>Define here which notification you want to be receive</notification_context>
-<PHP_FCGI_CHILDREN>The number of php-cgi processes per lightppd processes</PHP_FCGI_CHILDREN>
+<PHP_FCGI_CHILDREN>The number of php-cgi processes per daemon processes</PHP_FCGI_CHILDREN>
 <PHP_FCGI_MAX_REQUESTS>Maximal requests before restarting php-cgi process</PHP_FCGI_MAX_REQUESTS>
 <PostfixQueueEnabled>Enable notifications when SMTP queues reach limit</PostfixQueueEnabled>
 <PostfixQueueMaxMails>Maximo numero de correos en la cola de Postfix</PostfixQueueMaxMails>

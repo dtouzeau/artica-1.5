@@ -257,7 +257,7 @@ class pdns{
 		}
 		
 	public function GetIp($servername){
-			if($this->DisablePowerDnsManagement==1){return null;}
+			//if($this->DisablePowerDnsManagement==1){return null;}
 			$ldap=new clladp();
 			$user=new usersMenus();
 			$filter="(&(Objectclass=dNSDomain2)(associatedDomain=$servername))";
@@ -267,6 +267,29 @@ class pdns{
 			return $hash[0]["arecord"][0];
 			
 		}
+		
+	public function DelHostname($hostname_full){
+		if(trim($hostname_full)==null){return;}
+		$dn=$this->GetIp($hostname_full);
+		if(strlen($dn)<10){return null;}
+		$ldap=new clladp();
+		if(!$ldap->ldap_delete($dn,true)){
+			echo $ldap->ldap_last_error;
+		}
+		
+	}
+		
+	public function GetIpDN($servername){
+			$ldap=new clladp();
+			$user=new usersMenus();
+			$filter="(&(Objectclass=dNSDomain2)(associatedDomain=$servername))";
+			$sr = @ldap_search($ldap->ldap_connection,"ou=dns,$ldap->suffix",$filter,array("dn"));
+			if(!$sr){return null;}
+			$hash=ldap_get_entries($ldap->ldap_connection,$sr);
+			return $hash[0]["dn"];		
+		
+	}
+	
 		
 	public function IpToHosts($ip){
 		if($this->DisablePowerDnsManagement==1){return null;}

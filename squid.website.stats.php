@@ -52,7 +52,8 @@ function js(){
 
 
 function top_hits(){
-$sql="SELECT COUNT( ID ) AS tcount, uri FROM dansguardian_events WHERE 
+$dansguardian_events="dansguardian_events_".date('Ym');		
+$sql="SELECT COUNT( ID ) AS tcount, uri FROM $dansguardian_events WHERE 
 sitename = '{$_GET["top-hits"]}' GROUP BY uri ORDER BY tcount DESC LIMIT 0 , 50";
 
 $html="
@@ -134,8 +135,8 @@ function popup(){
 
 function top_users(){
 	
-	
-$sql="SELECT COUNT( ID ) AS tcount, CLIENT FROM dansguardian_events WHERE 
+$dansguardian_events="dansguardian_events_".date('Ym');		
+$sql="SELECT COUNT( ID ) AS tcount, CLIENT FROM $dansguardian_event WHERE 
 sitename = '{$_GET["top-users"]}' GROUP BY CLIENT ORDER BY tcount DESC LIMIT 0 , 50";
 
 $html="
@@ -220,21 +221,21 @@ function today(){
 
 function users_table(){
 	$domain=$_GET["users-table"];
-	
+	$dansguardian_events="dansguardian_events_".date('Ym');	
 	switch ($_GET["t"]) {
 		case "today":
 		$sql="SELECT SUM(QuerySize) as tsize,CLIENT
-		FROM dansguardian_events WHERE sitename='$domain' AND DATE_FORMAT( zdate, '%Y-%m-%d' )=DATE_FORMAT( NOW(), '%Y-%m-%d' ) GROUP BY CLIENT ";
+		FROM $dansguardian_events WHERE sitename='$domain' AND DATE_FORMAT( zdate, '%Y-%m-%d' )=DATE_FORMAT( NOW(), '%Y-%m-%d' ) GROUP BY CLIENT ";
 		break;
 		
 		case "week":
 		$sql="SELECT SUM(QuerySize) as tsize,CLIENT 
-		FROM dansguardian_events WHERE sitename='$domain' AND WEEK( zdate)=WEEK( NOW()) AND YEAR(zdate)=YEAR(NOW()) GROUP BY CLIENT";
+		FROM $dansguardian_events WHERE sitename='$domain' AND WEEK( zdate)=WEEK( NOW()) AND YEAR(zdate)=YEAR(NOW()) GROUP BY CLIENT";
 		break;	
 
 		case "month":
 		$sql="SELECT SUM(QuerySize) as tsize,CLIENT,MONTH(zdate) AS tmonth,YEAR(zdate) AS tyear
-		FROM dansguardian_events WHERE sitename='$domain' AND MONTH(zdate)=MONTH( NOW()) AND YEAR(zdate)=YEAR(NOW()) GROUP BY CLIENT";
+		FROM $dansguardian_events WHERE sitename='$domain' AND MONTH(zdate)=MONTH( NOW()) AND YEAR(zdate)=YEAR(NOW()) GROUP BY CLIENT";
 		break;			
 		
 	}
@@ -267,10 +268,11 @@ while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
 function courbe_month($domain){
 $tpl=new templates();	
 
-$q=new mysql();		
+$q=new mysql();	
+$dansguardian_events="dansguardian_events_".date('Ym');		
 $sql="SELECT COUNT( ID ) AS tcount, sitename, MONTH(zdate) AS tmonth,YEAR(zdate) as tyear,
 DATE_FORMAT( zdate, '%d' ) as tday
-FROM dansguardian_events
+FROM $dansguardian_events
 WHERE sitename = '$domain'
 GROUP BY tmonth,tyear,tday
 HAVING tmonth = MONTH(NOW( )) AND tyear=YEAR(NOW())
@@ -348,9 +350,10 @@ return $fileName;
 function courbe_week($domain){
 $tpl=new templates();	
 
-$q=new mysql();		
+$q=new mysql();	
+$dansguardian_events="dansguardian_events_".date('Ym');	
 $sql="SELECT COUNT( ID ) AS tcount, sitename, DATE_FORMAT( zdate, '%d' ) AS tday,DATE_FORMAT( zdate, '%W' ) AS wday,WEEK(zdate) as tweek
-FROM dansguardian_events
+FROM $dansguardian_events
 WHERE sitename = '$domain'
 GROUP BY tday,tweek
 HAVING tweek = WEEK( NOW( ))
@@ -421,8 +424,9 @@ function courbe_today($domain){
 $tpl=new templates();	
 
 $q=new mysql();		
+$dansguardian_events="dansguardian_events_".date('Ym');	
 $sql="SELECT COUNT( ID ) AS tcount, sitename, DATE_FORMAT( zdate, '%H' ) AS thour , DATE_FORMAT( zdate, '%Y-%m-%d' ) AS tday
-FROM dansguardian_events
+FROM $dansguardian_events
 WHERE sitename = '$domain'
 GROUP BY thour , tday
 HAVING tday = DATE_FORMAT( NOW( ) , '%Y-%m-%d' )

@@ -138,6 +138,9 @@ return $html;
 
 function compile_amavis(){
 	$tpl=new templates();
+	$sock=new sockets();
+	$sock->getFrameWork("cmd.php?SaveMaincf=yes");
+	
 	$users=new usersMenus();
 	$users->LoadModulesEnabled();
 	$page=CurrentPageName();

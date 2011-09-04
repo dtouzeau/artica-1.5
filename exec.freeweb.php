@@ -41,7 +41,7 @@ if($GLOBALS["VERBOSE"]){
 
 if($argv[1]=="--httpd"){CheckHttpdConf();reload_apache();die();}
 if($argv[1]=="--build"){build();reload_apache();die();}
-if($argv[1]=="--apache-user"){apache_user();die();reload_apache();}
+if($argv[1]=="--apache-user"){apache_user();die();}
 if($argv[1]=="--sitename"){buildHost(null,$argv[2]);CheckHttpdConf();reload_apache();die();}
 if($argv[1]=="--remove-host"){remove_host($argv[2]);reload_apache();die();}
 if($argv[1]=="--perms"){FDpermissions($argv[2]);die();}
@@ -59,6 +59,7 @@ if($argv[1]=="--drupal-modules"){drupal_dump_modules($argv[2]);die();exit;}
 if($argv[1]=="--drupal-modules-install"){drupal_install_modules($argv[2]);die();exit;}
 if($argv[1]=="--drupal-reinstall"){drupal_reinstall($argv[2]);die();exit;}
 if($argv[1]=="--drupal-schedules"){drupal_schedules();die();exit;}
+if($argv[1]=="--status"){mod_status($argv[2]);die();exit;}
 
 
 
@@ -258,14 +259,20 @@ function CheckHttpdConf(){
 	apache_user();
 	$sock=$GLOBALS["CLASS_SOCKETS"];
 	$unix=new unix();
+	$users=new usersMenus();
+	$freeweb=new freeweb();
 	$httpdconf=$unix->LOCATE_APACHE_CONF_PATH();
-	if(!is_file($httpdconf)){
-		echo "Starting......: Apache unable to stat configuration file\n";return;
-	}
+	if(!is_file($httpdconf)){echo "Starting......: Apache unable to stat configuration file\n";return;}
 	$d_path=$unix->APACHE_DIR_SITES_ENABLED();
 	$DAEMON_PATH=$unix->getmodpathfromconf($httpdconf);
+	$APACHE_SRC_ACCOUNT=$unix->APACHE_SRC_ACCOUNT();
+	$APACHE_SRC_GROUP=$unix->APACHE_SRC_GROUP();	
+	
 	if(is_file("/etc/apache2/sites-available/default-ssl")){@unlink("/etc/apache2/sites-available/default-ssl");}
-	echo "Starting......: Apache daemon path: \"$DAEMON_PATH\"\n";
+	echo "Starting......: Apache daemon path: \"$DAEMON_PATH\" run has \"$APACHE_SRC_ACCOUNT:$APACHE_SRC_GROUP\"\n";
+	if($APACHE_SRC_ACCOUNT==null){echo "Starting......: Apache daemon unable to determine user that will run apache\n";die();}
+	if(!is_dir("/var/log/apache2")){@mkdir("/var/log/apache2",755,true);}
+	
 	$ApacheDisableModDavFS=$sock->GET_INFO("ApacheDisableModDavFS");
 	$FreeWebListen=trim($sock->GET_INFO("FreeWebListen"));
 	$FreeWebListenPort=$sock->GET_INFO("FreeWebListenPort");
@@ -293,20 +300,34 @@ function CheckHttpdConf(){
 	$users=new usersMenus();
 	$APACHE_MODULES_PATH=$users->APACHE_MODULES_PATH;	
 	
+	$toremove[]="mod-status.init";
+	$toremove[]="status.conf";
+	$toremove[]="fcgid.load";
+	$toremove[]="fcgid.conf";
+
 	
 	if(is_file("/etc/apache2/sites-enabled/000-default")){@unlink("/etc/apache2/sites-enabled/000-default");}
 	if(is_file("/etc/apache2/sites-available/default")){@unlink("/etc/apache2/sites-available/default");}
 	if(is_file("/etc/apache2/conf.d/zarafa-webaccess.conf")){@unlink("/etc/apache2/conf.d/zarafa-webaccess.conf");}
 	if(is_file("/etc/apache2/conf.d/zarafa-webaccess-mobile.conf")){@unlink("/etc/apache2/conf.d/zarafa-webaccess-mobile.conf");}
+	if(is_file("/etc/httpd/conf/extra/httpd-info.conf")){@unlink("/etc/httpd/conf/extra/httpd-info.conf");}
+	while (list ($num, $file) = each ($toremove) ){
+		shell_exec("/bin/rm -f $DAEMON_PATH/mods-enabled/$file >/dev/null 2>&1");
+		shell_exec("/bin/rm -f $DAEMON_PATH/mods-available/$file >/dev/null 2>&1");
+		
+	}
+	
+	
+	
+	
+	
 	
 	$sql="SELECT ServerPort FROM freeweb WHERE ServerPort>0 GROUP BY ServerPort";
 	$q=new mysql();
 	$conf[]="NameVirtualHost {$FreeWebListenApache}:$FreeWebListenPort";
 	$results=$q->QUERY_SQL($sql,'artica_backup');
 	if(!$q->ok){if($GLOBALS["VERBOSE"]){echo $q->mysql_error."\n";return;}}
-	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
-		$conf[]="NameVirtualHost {$FreeWebListenApache}:{$ligne["ServerPort"]}";
-	}	
+	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){$conf[]="NameVirtualHost {$FreeWebListenApache}:{$ligne["ServerPort"]}";}	
 	
 	$conf[]="Listen $FreeWebListenPort";
 	$conf[]="<IfModule mod_ssl.c>";
@@ -370,14 +391,14 @@ function CheckHttpdConf(){
 	
 	
 	apache_security($DAEMON_PATH);
+	$httpdconf_data=@file_get_contents($httpdconf);
+	if(preg_match("#<Location \/server-status>(.+?)<\/Location>#is",$httpdconf_data,$re)){$httpdconf_data=str_replace($re[0], "", $httpdconf_data);}
 	
 	
 	
-	
-	
-	$f=explode("\n",@file_get_contents($httpdconf));
+	$f=explode("\n",$httpdconf_data);
 	while (list ($num, $ligne) = each ($f) ){
-		if(preg_match("#^Include\s+#",$ligne)){$f[$num]=null;}
+		if(preg_match("#^Include\s+#",$ligne)){echo "Starting......: Apache removing {$f[$num]}\n";$f[$num]=null;}
 		if(preg_match("#\#.*?Include\s+#",$ligne)){$f[$num]=null;}
 		if(preg_match("#Listen\s+#",$ligne)){$f[$num]=null;}
 		if(preg_match("#ProxyRequests#",$ligne)){$f[$num]=null;}
@@ -393,12 +414,14 @@ function CheckHttpdConf(){
 		if(preg_match("#MaxClients\s+#",$ligne)){$f[$num]=null;}
 		if(preg_match("#MaxRequestsPerChild\s+#",$ligne)){$f[$num]=null;}
 		if(preg_match("#LoadModule\s+#",$ligne)){$f[$num]=null;}
+		if(preg_match("#ErrorLog\s+#",$ligne)){$f[$num]=null;}
+		if(preg_match("#LogFormat\s+#",$ligne)){$f[$num]=null;}
+		if(preg_match("#User\s+#",$ligne)){$f[$num]=null;}
+		if(preg_match("#Group\s+#",$ligne)){$f[$num]=null;}
+		
 	}
 	
-	
 	$FreeWebPerformances=unserialize(base64_decode($sock->GET_INFO("FreeWebPerformances")));
-	
-	
 	if(!isset($FreeWebPerformances["Timeout"])){$FreeWebPerformances["Timeout"]=300;}
 	if(!isset($FreeWebPerformances["KeepAlive"])){$FreeWebPerformances["KeepAlive"]=0;}
 	if(!isset($FreeWebPerformances["MaxKeepAliveRequests"])){$FreeWebPerformances["MaxKeepAliveRequests"]=100;}
@@ -429,7 +452,8 @@ function CheckHttpdConf(){
 	}
 	
 	if($FreeWebPerformances["KeepAlive"]==1){$FreeWebPerformances["KeepAlive"]="On";}else{$FreeWebPerformances["KeepAlive"]="Off";}
-	
+	$httpd[]="User				   {$APACHE_SRC_ACCOUNT}";
+	$httpd[]="Group				   {$APACHE_SRC_GROUP}";
 	$httpd[]="Timeout              {$FreeWebPerformances["Timeout"]}";
 	$httpd[]="KeepAlive            {$FreeWebPerformances["KeepAlive"]}";
 	$httpd[]="KeepAliveTimeout     {$FreeWebPerformances["KeepAliveTimeout"]}";
@@ -453,27 +477,50 @@ function CheckHttpdConf(){
 	$httpd[]="Include $DAEMON_PATH/mods-enabled/*.load";
 	$httpd[]="Include $DAEMON_PATH/mods-enabled/*.conf";
 	$httpd[]="Include $DAEMON_PATH/mods-enabled/*.init";
-	if(basename($httpdconf)<>"httpd.conf"){$httpd[]="Include httpd.conf";}
+	if(basename($httpdconf)<>"httpd.conf"){$httpd[]="Include $DAEMON_PATH/httpd.conf";}
 	$httpd[]="Include $DAEMON_PATH/ports.conf";
-	if($FreeWebsEnableModSecurity==1){$httpd[]="Include mod_security.conf";}
-	if($FreeWebsEnableModEvasive==1){$httpd[]="Include mod_evasive.conf";}
+	if($FreeWebsEnableModSecurity==1){$httpd[]="Include $DAEMON_PATH/mod_security.conf";}
+	if($FreeWebsEnableModEvasive==1){$httpd[]="Include $DAEMON_PATH/mod_evasive.conf";}
 	
-	$status[]="<IfModule mod_status.c>";
-	$status[]="\tExtendedStatus On";
-	$status[]="\t<Location /server-status>";
-	$status[]="\t\tSetHandler server-status";
-	$status[]="\t\tOrder deny,allow";
-	$status[]="\t\tDeny from all";
-	$status[]="\t\tAllow from 127.0.0.1";
-	$status[]="\t</Location>";
-	$status[]="</IfModule>";
-	@file_put_contents("$DAEMON_PATH/mods-enabled/mod-status.init", @implode("\n", $status));
+	$httpd[]='ErrorLog /var/log/apache2/error.log';
+	$httpd[]='LogFormat "%v:%p %h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" vhost_combined';
+	$httpd[]='LogFormat "%h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" combined';
+	$httpd[]='LogFormat "%h %l %u %t \"%r\" %>s %O" common';
+	$httpd[]='LogFormat "%{Referer}i -> %U" referer';
+	$httpd[]='LogFormat "%{User-agent}i" agent';	
+	
+	
+	$mod_status=$freeweb->mod_status();
+	if($mod_status<>null){
+		$status[]="<IfModule mod_status.c>";
+		$status[]="\tExtendedStatus On";
+		$status[]="$mod_status";
+		$status[]="</IfModule>";
+		@file_put_contents("$DAEMON_PATH/mods-enabled/mod-status.init", @implode("\n", $status));
+	}
+	
+	
+	@unlink("$DAEMON_PATH/mods-enabled/pagespeed.conf");
+	
+	if($users->APACHE_MOD_PAGESPEED){
+		if(!is_dir("/var/cache/apache2/mod_pagespeed/default/files")){@mkdir("/var/cache/apache2/mod_pagespeed/default/files",644,true);}
+		$pspedd[]="<IfModule pagespeed_module>";
+ 		$pspedd[]="\tModPagespeedFileCachePath            \"/var/cache/apache2/mod_pagespeed/default\"";
+		$pspedd[]="\tModPagespeedGeneratedFilePrefix      \"/var/cache/apache2/mod_pagespeed/files/\"";
+		$pspedd[]="\tSetOutputFilter MOD_PAGESPEED_OUTPUT_FILTER";
+    	$pspedd[]="\tAddOutputFilterByType MOD_PAGESPEED_OUTPUT_FILTER text/html";
+    	$pspedd[]="</IfModule>";
+    	@file_put_contents("$DAEMON_PATH/mods-enabled/pagespeed.conf", @implode("\n", $pspedd));
+	}
+	
+	
+	
 	
 	if(is_file("/etc/apache2/sysconfig.d/loadmodule.conf")){$httpd[]="Include /etc/apache2/sysconfig.d/loadmodule.conf";}
 	if(is_file("/etc/apache2/uid.conf")){$httpd[]="Include /etc/apache2/uid.conf";}
 	if(is_file("/etc/apache2/default-server.conf")){patch_suse_default_server();$httpd[]="Include /etc/apache2/default-server.conf";}
 	$httpd[]="Include $DAEMON_PATH/conf.d/";
-	$httpd[]="Include $DAEMON_PATH/sites-enabled";
+	$httpd[]="Include $DAEMON_PATH/sites-enabled/";
 	if(is_file("$APACHE_MODULES_PATH/mod_php5.so")){$httpd[]="LoadModule php5_module $APACHE_MODULES_PATH/mod_php5.so";}
 	if(is_file("$APACHE_MODULES_PATH/mod_ldap.so")){$httpd[]="LoadModule ldap_module $APACHE_MODULES_PATH/mod_ldap.so";}
 	
@@ -481,9 +528,9 @@ function CheckHttpdConf(){
 	
 	
 	if($ApacheDisableModDavFS==0){
-			if(is_file("$APACHE_MODULES_PATH/mod_dav.so")){echo "Starting......: Apache dav_module is enabled\n";$httpd[]="LoadModule dav_module $APACHE_MODULES_PATH/mod_dav.so";}		
-			if(is_file("$APACHE_MODULES_PATH/mod_dav_lock.so")){echo "Starting......: Apache dav_lock_module is enabled\n";$httpd[]="LoadModule dav_lock_module $APACHE_MODULES_PATH/mod_dav_lock.so";}
-			if(is_file("$APACHE_MODULES_PATH/mod_dav_fs.so")){echo "Starting......: Apache dav_fs_module is enabled\n";$httpd[]="LoadModule dav_fs_module $APACHE_MODULES_PATH/mod_dav_fs.so";}			
+			if(is_file("$APACHE_MODULES_PATH/mod_dav.so")){echo "Starting......: Apache module 'dav_module' enabled\n";$httpd[]="LoadModule dav_module $APACHE_MODULES_PATH/mod_dav.so";}		
+			if(is_file("$APACHE_MODULES_PATH/mod_dav_lock.so")){echo "Starting......: Apache module 'dav_lock_module' enabled\n";$httpd[]="LoadModule dav_lock_module $APACHE_MODULES_PATH/mod_dav_lock.so";}
+			if(is_file("$APACHE_MODULES_PATH/mod_dav_fs.so")){echo "Starting......: Apache module 'dav_fs_module' enabled\n";$httpd[]="LoadModule dav_fs_module $APACHE_MODULES_PATH/mod_dav_fs.so";}			
 	}		
 	
 	$httpd[]="";
@@ -497,6 +544,8 @@ function CheckHttpdConf(){
 	
 	
 	if(!is_dir("$DAEMON_PATH/mods-enabled")){@mkdir("$DAEMON_PATH/mods-enabled",666,true);}
+	if(!is_file("$DAEMON_PATH/httpd.conf")){@file_put_contents("$DAEMON_PATH/httpd.conf", "#");}
+	
 	
 	@unlink("/etc/libapache2-mod-jk/workers.properties");
 	@unlink("/etc/apache2/workers.properties");	
@@ -512,9 +561,43 @@ function CheckHttpdConf(){
 	$array["mem_cache_module"]="mod_mem_cache.so";
 	$array["expires_module"]="mod_expires.so";
 	$array["status_module"]="mod_status.so";
-	//$array["mime_module"]="mod_mime.so";
+	$array["geoip_module"]="mod_geoip.so";
+	$array["info_module"]="mod_info.so";
+	$array["suexec_module"]="mod_suexec.so";
+	$array["fcgid_module"]="mod_fcgid.so";
+	$array["authz_host_module"]="mod_authz_host.so";
+	$array["dir_module"]="mod_dir.so";
+	$array["mime_module"]="mod_mime.so";
+	$array["log_config_module"]="mod_log_config.so";
+	$array["alias_module"]="mod_alias.so";
+	$array["autoindex_module"]="mod_autoindex.so";
+	$array["negotiation_module"]="mod_negotiation.so";
+	$array["setenvif_module"]="mod_setenvif.so";
+	$array["logio_module"]="mod_logio.so";
+	$array["auth_basic_module"]="mod_auth_basic.so";
+	$array["authn_file_module"]="mod_authn_file.so";
+	$array["vhost_alias_module"]="mod_vhost_alias.so";
+	$array["ssl_module"]="mod_ssl.so";
+	
+	 
 	
 	
+	
+	 
+	
+	if(is_file("$APACHE_MODULES_PATH/mod_pagespeed.so")){
+		echo "Starting......: Apache module 'mod_pagespeed' enabled\n";
+		$ppsped[]="LoadModule pagespeed_module $APACHE_MODULES_PATH/mod_pagespeed.so";
+		if(is_file("$APACHE_MODULES_PATH/mod_deflate.so")){
+			$ppsped[]="# Only attempt to load mod_deflate if it hasn't been loaded already.";
+			$ppsped[]="<IfModule !mod_deflate.c>";
+			$ppsped[]="\tLoadModule deflate_module $APACHE_MODULES_PATH/mod_deflate.so";
+			$ppsped[]="</IfModule>";
+		}
+		@file_put_contents("$DAEMON_PATH/mods-enabled/mod_pagespeed.load",@implode("\n", $ppsped));
+	}else{
+		echo "Starting......: Apache module 'mod_pagespeed' $APACHE_MODULES_PATH/mod_pagespeed.so no such file\n";
+	}
 	
 	if($users->TOMCAT_INSTALLED){
 		if($TomcatEnable==1){
@@ -546,21 +629,20 @@ function CheckHttpdConf(){
 		}
 		
 	}
-	 
-
-
 
 	@unlink("$DAEMON_PATH/mods-enabled/mod-security.load");
 	@unlink("$DAEMON_PATH/mods-enabled/mod_security.load");
 	@unlink("$DAEMON_PATH/mods-enabled/mod-evasive.load");
 	@unlink("$DAEMON_PATH/mods-enabled/mod_evasive.load");
+	@unlink("$DAEMON_PATH/mods-enabled/geoip.load");
 	@unlink("$DAEMON_PATH/mods-enabled/status.conf");
 	@unlink("$DAEMON_PATH/mods-enabled/status.load");
 	@unlink("$DAEMON_PATH/mods-enabled/php5.load");
 	@unlink("$DAEMON_PATH/mods-enabled/jk.load");
 	@unlink("$DAEMON_PATH/mods-enabled/dav_lock_module.load");
 	@unlink("$DAEMON_PATH/mods-enabled/dav_module.load");
-	@unlink("$DAEMON_PATH/mods-enabled/dav_fs_module.load");	
+	@unlink("$DAEMON_PATH/mods-enabled/dav_fs_module.load");
+	@unlink("$DAEMON_PATH/mods-enabled/pagespeed.load");	
 	
 	$sock=new sockets();
 	$FreeWebsDisableMOdQOS=$sock->GET_INFO("FreeWebsDisableMOdQOS");
@@ -577,30 +659,25 @@ if($FreeWebsEnableModSecurity==1){
 		if(is_file("$APACHE_MODULES_PATH/mod_security2.so")){
 			$a[]="LoadFile /usr/lib/libxml2.so.2";
 			$a[]="LoadModule security2_module $APACHE_MODULES_PATH/mod_security2.so";
-			echo "Starting......: Apache mod_security2 is enabled\n";
+			echo "Starting......: Apache module 'mod_security2' enabled\n";
 			@file_put_contents("$DAEMON_PATH/mods-enabled/mod_security.load",@implode("\n",$a));
 			unset($a);
 		}else{
 			echo "Starting......: Apache $APACHE_MODULES_PATH/mod_security2.so no such file\n";
 		}
-	}else{echo "Starting......: Apache mod_security2 is not enabled\n";}
+	}else{echo "Starting......: Apache module 'mod_security2' disabled\n";}
 	
 if($FreeWebsEnableModEvasive==1){
 		if(is_file("$APACHE_MODULES_PATH/mod_evasive20.so")){
 			$a[]="LoadModule evasive20_module $APACHE_MODULES_PATH/mod_evasive20.so";
-			echo "Starting......: Apache mod_evasive2 is enabled\n";
+			echo "Starting......: Apache module 'mod_evasive2' enabled\n";
 			@file_put_contents("$DAEMON_PATH/mods-enabled/mod_evasive.load",@implode("\n",$a));
 		}else{
 			echo "Starting......: Apache $APACHE_MODULES_PATH/mod_evasive20.so no such file\n";
 		}
-	}else{echo "Starting......: Apache mod_evasive2 is not enabled\n";}
+	}else{echo "Starting......: Apache module 'mod_evasive2' disabled\n";}
 
-	
-	
-	
-	
 
-	
 	$sql="SELECT COUNT(servername) as tcount FROM freeweb WHERE UseReverseProxy=1";
 	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));
 	
@@ -624,6 +701,8 @@ if($FreeWebsEnableModEvasive==1){
 		$proxys_orgs[]="proxy.load";   
 		$proxys_orgs[]="proxy_scgi.load"; 
 		
+		if(is_file("/etc/httpd/conf.d/proxy_ajp.conf")){@unlink("/etc/httpd/conf.d/proxy_ajp.conf");}
+		
 		while (list ($module, $lib) = each ($proxys_orgs) ){if(is_file("$DAEMON_PATH/mods-enabled/$lib")){@unlink("$DAEMON_PATH/mods-enabled/$lib");}}
 		while (list ($module, $lib) = each ($proxys_mods) ){if(is_file("$DAEMON_PATH/mods-enabled/$module.load")){@unlink("$DAEMON_PATH/mods-enabled/$module.load");}}
 			
@@ -632,8 +711,8 @@ if($FreeWebsEnableModEvasive==1){
 		
 		reset($proxys_mods);
 		while (list ($module, $lib) = each ($proxys_mods) ){
-			if(!is_file("$APACHE_MODULES_PATH/$lib")){echo "Starting......: Apache $module $lib no such file\n";continue;}
-			echo "Starting......: Apache $module enabled\n";
+			if(!is_file("$APACHE_MODULES_PATH/$lib")){echo "Starting......: Apache module '$module' '$lib' no such file\n";continue;}
+			echo "Starting......: Apache module '$module' enabled\n";
 			$final_proxys[]="LoadModule $module $APACHE_MODULES_PATH/$lib";
 		}
 		
@@ -642,8 +721,8 @@ if($FreeWebsEnableModEvasive==1){
 	
 	
 	while (list ($module, $lib) = each ($array) ){
-		if(!is_file("$APACHE_MODULES_PATH/$lib")){echo "Starting......: Apache modules '$module' '$lib' no such file\n";continue;}
-		echo "Starting......: Apache modules '$module' enabled\n";
+		if(!is_file("$APACHE_MODULES_PATH/$lib")){echo "Starting......: Apache module '$module' '$lib' no such file\n";continue;}
+		echo "Starting......: Apache module '$module' enabled\n";
 		@file_put_contents("$DAEMON_PATH/mods-enabled/$module.load","LoadModule $module $APACHE_MODULES_PATH/$lib");
 		
 	}
@@ -655,8 +734,15 @@ if($FreeWebsEnableModEvasive==1){
 function apache_security($DAEMON_PATH){
 	$sock=new sockets();
 	$unix=new unix();
-	shell_exec("/bin/chown ". $unix->APACHE_SRC_ACCOUNT().':'.$unix->APACHE_SRC_GROUP()." /var/www");
+	if(!is_dir("/var/cache/apache2/mod_pagespeed")){@mkdir("/var/cache/apache2/mod_pagespeed",0755,true);}
+	
+	$APACHE_SRC_ACCOUNT=$unix->APACHE_SRC_ACCOUNT();
+	$APACHE_SRC_GROUP=$unix->APACHE_SRC_GROUP();
+	shell_exec("/bin/chown $APACHE_SRC_ACCOUNT:$APACHE_SRC_GROUP /var/www");
+	shell_exec("/bin/chown -R $APACHE_SRC_ACCOUNT:$APACHE_SRC_GROUP /var/cache/apache2");
+	
 	shell_exec("/bin/chmod 755 /var/www");
+	shell_exec("/bin/chmod 755 /var/cache/apache2");
 	
 	$ApacheServerTokens=$sock->GET_INFO("ApacheServerTokens");
 	$ApacheServerSignature=$sock->GET_INFO("ApacheServerSignature");
@@ -698,6 +784,7 @@ function buildHost($uid=null,$hostname,$ssl=null,$d_path=null,$Params=array()){
 	$AuthLDAP=0;
 	$EnableLDAPAllSubDirectories=0;
 	$APACHE_MOD_AUTHNZ_LDAP=$users->APACHE_MOD_AUTHNZ_LDAP;
+	$APACHE_MOD_PAGESPEED=$users->APACHE_MOD_PAGESPEED;
 	$freeweb=new freeweb($hostname);
 	$Params=$freeweb->Params;
 	if($freeweb->servername==null){
@@ -792,18 +879,36 @@ function buildHost($uid=null,$hostname,$ssl=null,$d_path=null,$Params=array()){
 	
 	if($hostname<>"_default_"){$conf[]="\tServerName $hostname";}
 	$php_open_base_dir=$freeweb->open_basedir();
-	$conf[]="\tServerAdmin $ServerAdmin";
-	$conf[]="\tServerSignature $ServerSignature";
-	$conf[]="\tDocumentRoot $freeweb->WORKING_DIRECTORY";
-		$conf[]=$freeweb->mod_evasive();
-		$conf[]=$freeweb->Charsets();
-		$conf[]="\tphp_value  error_log  \"$freeweb->WORKING_DIRECTORY/php_logs/php.log\"";
-		if($php_open_base_dir<>null){$conf[]="\tphp_value open_basedir \"$php_open_base_dir\"";}
-		$conf[]=$freeweb->php_values();
-		$conf[]=$freeweb->WebdavHeader();
-		$conf[]=$freeweb->QUOS();
-		$conf[]=$freeweb->Aliases();
-		$conf[]=$freeweb->mod_cache();
+	$geoip=$freeweb->mod_geoip();
+	$mod_status=$freeweb->mod_status();
+	$mod_evasive=$freeweb->mod_evasive();
+	$Charsets=$freeweb->Charsets();
+	$php_values=$freeweb->php_values();
+	$WebdavHeader=$freeweb->WebdavHeader();
+	$QUOS=$freeweb->QUOS();
+	$Aliases=$freeweb->Aliases();
+	$mod_cache=$freeweb->mod_cache();
+	$mod_fcgid=$freeweb->mod_fcgid();
+	
+		if($APACHE_MOD_PAGESPEED){$mod_pagespedd=$freeweb->mod_pagespeed();}
+		$conf[]="\tServerAdmin $ServerAdmin";
+		$conf[]="\tServerSignature $ServerSignature";
+		$conf[]="\tDocumentRoot $freeweb->WORKING_DIRECTORY";
+		
+		if($mod_evasive<>null){  $conf[]=$mod_evasive;}
+		if($Charsets<>null){     $conf[]=$Charsets;}
+		if($php_values<>null){   $conf[]=$php_values;}
+		if($WebdavHeader<>null){ $conf[]=$WebdavHeader;}
+		if($QUOS<>null){	     $conf[]=$QUOS;}
+		if($QUOS<>null){	     $conf[]=$QUOS;}
+		if($Aliases<>null){	     $conf[]=$Aliases;}
+		if($mod_cache<>null){	 $conf[]=$mod_cache;}
+		if($geoip<>null){	     $conf[]=$geoip;}
+		if($mod_pagespedd<>null){$conf[]=$mod_pagespedd;shell_exec("/bin/chown -R $apache_usr:$apache_group /var/cache/apache2/mod_pagespeed/$hostname");}
+		if($mod_status<>null){   $conf[]=$mod_status;}
+		
+		
+		
 		
 		if($GLOBALS["VERBOSE"]){echo "Starting......: Apache \"$hostname\" is forwarder ? ($freeweb->Forwarder)\n";}
 		
@@ -814,6 +919,14 @@ function buildHost($uid=null,$hostname,$ssl=null,$d_path=null,$Params=array()){
 		}
 		
 		$ldapRule=null;
+		
+			if($freeweb->groupware=="ZARAFA"){
+				$ZarafaWebNTLM=$sock->GET_INFO("ZarafaWebNTLM");	
+				if(!is_numeric($ZarafaWebNTLM)){$ZarafaWebNTLM=0;}
+				if($ZarafaWebNTLM==1){$AuthLDAP=1;}
+			}		
+		
+		
 		if($AuthLDAP==1){
 			echo "Starting......: Apache \"$hostname\" ldap authentication enabled\n";
 			$ldap=$GLOBALS["CLASS_LDAP"];
@@ -842,19 +955,22 @@ function buildHost($uid=null,$hostname,$ssl=null,$d_path=null,$Params=array()){
 	$allowFrom=$freeweb->AllowFrom();
 	$JkMount=$freeweb->JkMount();	
 	if($JkMount<>null){$conf[]=$JkMount;}
+	$WebDav=$freeweb->WebDav();
+	$AllowOverride=$freeweb->AllowOverride();
+	$mod_rewrite=$freeweb->mod_rewrite();
 	
-	
-	$conf[]="\t<Directory \"$freeweb->WORKING_DIRECTORY/\">\n";
+	$conf[]="\n\t<Directory \"$freeweb->WORKING_DIRECTORY/\">";
 		$conf[]="\t\tDirectoryIndex $DirectoryIndex";
     	$conf[]="\t\tOptions Indexes +FollowSymLinks MultiViews";
-		$conf[]=$freeweb->WebDav();
-		$conf[]=$freeweb->AllowOverride();
+    	if($WebDav<>null){$conf[]=$WebDav;}
+		if($AllowOverride<>null){$conf[]=$AllowOverride;}
 		$conf[]="\t\tOrder allow,deny";
 		if($allowFrom<>null){$conf[]=$allowFrom;}
-		$conf[]=$freeweb->mod_rewrite();
+		if($geoip<>null){$conf[]="\t\tDeny from env=BlockCountry";}
+		if($mod_rewrite<>null){$conf[]=$mod_rewrite;}
 		if($ldapRule<>null){$conf[]=$ldapRule;}
-	$conf[]="\t</Directory>";
-
+	$conf[]="\t</Directory>\n";
+	
 	
 	
 	
@@ -891,7 +1007,7 @@ function buildHost($uid=null,$hostname,$ssl=null,$d_path=null,$Params=array()){
 	}
 	$conf[]=$freeweb->FilesRestrictions();	
 	$conf[]=$freeweb->mod_security();
-
+	if($mod_fcgid<>null){    $conf[]=$mod_fcgid;}
 	
 	if(!is_dir("/var/log/apache2/$hostname")){@mkdir("/var/log/apache2/$hostname",755,true);}
 	$conf[]=$freeweb->ScriptAliases();
@@ -1198,6 +1314,19 @@ function install_groupware($servername,$rebuild=false){
 			writelogs("group_office_install($servername,false,$rebuild)",__FUNCTION__,__FILE__,__LINE__);
 			if($rebuild){buildHost(null,$servername);};
 			group_office_install($servername,false,$rebuild);
+		break;
+		
+		case "JOOMLA17":
+			writelogs("install_JOOMLA17($servername)",__FUNCTION__,__FILE__,__LINE__);
+			install_JOOMLA17($servername);
+		break;
+
+		case "WORDPRESS":
+			writelogs("install_wordpress($servername)",__FUNCTION__,__FILE__,__LINE__);
+			install_wordpress($servername);
+		break;		
+		
+		
 		
 		default:
 			;
@@ -1537,7 +1666,7 @@ function group_office_install($servername,$nobuildHost=false,$rebuild=false){
 	
 	$apacheusername=$unix->APACHE_SRC_ACCOUNT();
 	$apachegroup=$unix->APACHE_SRC_GROUP();
-	shell_exec("/bin/chown -R $apacheusername:$apachegroup $freeweb->WORKING_DIRECTORY");
+	$freeweb->chown($freeweb->WORKING_DIRECTORY);
 	if(!is_dir("/home/$servername")){@mkdir("/home/$servername");}
 	include_once(dirname(__FILE__)."/ressources/class.group-office.php");
 	$gpoffice=new group_office($servername);
@@ -1546,9 +1675,8 @@ function group_office_install($servername,$nobuildHost=false,$rebuild=false){
 	writelogs("[$servername] gpoffice->writeconfigfile() $freeweb->WORKING_DIRECTORY",__FUNCTION__,__FILE__,__LINE__);
 	$gpoffice->writeconfigfile();
 	
-	
-	shell_exec("/bin/chown  $apacheusername:$apachegroup /home/$servername");
-	shell_exec("/bin/chown  -R $apacheusername:$apachegroup /home/$servername");	
+	$freeweb->chown("/home/$servername");
+
 	
 	
 	
@@ -1557,6 +1685,19 @@ function group_office_install($servername,$nobuildHost=false,$rebuild=false){
 	if(!$nobuildHost){buildHost(null,$servername);}
 	
 	
+}
+
+function install_JOOMLA17($servername){
+	include_once(dirname(__FILE__)."/ressources/class.joomla17.inc");
+	$joom=new joomla17($servername);
+	$joom->installsite();
+	
+}
+
+function install_wordpress($servername){
+	include_once(dirname(__FILE__)."/ressources/class.wordpress.inc");
+	$word=new wordpress($servername);
+	$word->CheckInstall();
 }
 
 
@@ -1571,7 +1712,7 @@ function install_PIWIK($servername){
 	$piwik=new piwik();
 	if($piwik->checkWebsite($freeweb->WORKING_DIRECTORY)){return;}
 	writelogs("[$servername] copy sources...",__FUNCTION__,__FILE__,__LINE__);
-	shell_exec("/bin/cp -rf $sources/* $freeweb->WORKING_DIRECTORY/");
+	shell_exec("$cp -rf $sources/* $freeweb->WORKING_DIRECTORY/");
 	@unlink("$freeweb->WORKING_DIRECTORY/config/config.ini.php");
 	@mkdir('/usr/share/piwik/tmp/assets',0777,true);
     @mkdir('/usr/share/piwik/tmp/templates_c',0777,true);
@@ -1584,7 +1725,44 @@ function install_PIWIK($servername){
     shell_exec('/bin/chmod a+w /usr/share/piwik/config'); 	
 	$apacheusername=$unix->APACHE_SRC_ACCOUNT();
 	$apachegroup=$unix->APACHE_SRC_GROUP();	
-	shell_exec("/bin/chown -R $apacheusername:$apachegroup $freeweb->WORKING_DIRECTORY");
+	$freeweb->chown($freeweb->WORKING_DIRECTORY);
+	
+	
+}
+
+
+function mod_status($servername){
+	$freeweb=new freeweb($servername);
+	
+	$curl=new ccurl("http://$servername/server-status/index.html",true);
+	
+	
+	$datas=$curl->GetFile("/tmp/$servername.html");
+	$datas=explode("\n",@file_get_contents("/tmp/$servername.html"));
+	while (list ($num, $ligne) = each ($users) ){
+		if(preg_match("#Server uptime:\s+(.+?)#",$ligne,$re)){
+			$array_status["UPTIME"]=$re[1];
+			continue;
+		}
+		if(preg_match("#Total accesses:\s+([0-9]+)\s+-\s+Total Traffic:\s+([0-9]+)\s+([a-zA-Z]+)#")){
+			$access=$re[1];
+			$total_traffic=$re[2];
+			$total_traffic_unit=strtoupper($re[3]);
+			if($total_traffic_unit=="KB"){$total_traffic=$total_traffic*1024;}
+			if($total_traffic_unit=="MB"){$total_traffic=$total_traffic*1024000;}
+			if($total_traffic_unit=="GB"){$total_traffic=$total_traffic*1024000000;}
+			if($total_traffic_unit=="TB"){$total_traffic=$total_traffic*10240000000000;}
+		}
+		
+	}
+	
+		// voir //http://www.apache.org/server-status
+		
+		//if(preg_match("#([\.0-9]+)\s+requests\/sec\s+-\s+([0-9\.]+)\s+([A-Z]+)\/second\s+-\s+([0-9\.]+)\s+([a-zA-Z]+)#, $subject))
+		
+	echo $datas;
+	
+	
 	
 }
 

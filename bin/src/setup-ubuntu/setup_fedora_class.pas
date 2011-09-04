@@ -400,6 +400,7 @@ l.add('nfs-utils');
 l.add('nfs-utils-lib');
 l.add('nfswatch');
 l.add('udisks');
+l.add('libcgroup');
 
 
 

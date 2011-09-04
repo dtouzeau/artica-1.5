@@ -417,7 +417,8 @@ function browsed_websites_popup(){
 function showhits(){
 	$www=$_GET["show-hits"];
 	$tpl=new templates();
-	$sql="SELECT COUNT(ID) as tcount,uri FROM dansguardian_events WHERE sitename='$www' GROUP BY uri ORDER BY tcount DESC LIMIT 0,200";
+	$dansguardian_events="dansguardian_events_".date('Ym');	
+	$sql="SELECT COUNT(ID) as tcount,uri FROM $dansguardian_events WHERE sitename='$www' GROUP BY uri ORDER BY tcount DESC LIMIT 0,200";
 	$q=new mysql();
 	$results=$q->QUERY_SQL($sql,"artica_events");	
 

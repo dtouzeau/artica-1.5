@@ -695,13 +695,25 @@ begin
    if FIleExists(LOCATE_APACHE_MODULES_PATH+'/mod_security2.so') then list.Add('$_GLOBAL["APACHE_MOD_SECURITY"]=True;') else list.Add('$_GLOBAL["APACHE_MOD_SECURITY"]=False;');
    if FIleExists(LOCATE_APACHE_MODULES_PATH+'/mod_evasive20.so') then list.Add('$_GLOBAL["APACHE_MOD_EVASIVE"]=True;') else list.Add('$_GLOBAL["APACHE_MOD_EVASIVE"]=False;');
    if FIleExists(LOCATE_APACHE_MODULES_PATH+'/mod_cache.so') then list.Add('$_GLOBAL["APACHE_MOD_CACHE"]=True;') else list.Add('$_GLOBAL["APACHE_MOD_CACHE"]=False;');
+   if FIleExists(LOCATE_APACHE_MODULES_PATH+'/mod_geoip.so') then list.Add('$_GLOBAL["APACHE_MOD_GEOIP"]=True;') else list.Add('$_GLOBAL["APACHE_MOD_GEOIP"]=False;');
+   if FIleExists(LOCATE_APACHE_MODULES_PATH+'/mod_pagespeed.so') then list.Add('$_GLOBAL["APACHE_MOD_PAGESPEED"]=True;') else list.Add('$_GLOBAL["APACHE_MOD_PAGESPEED"]=False;');
+   if FIleExists(LOCATE_APACHE_MODULES_PATH+'/mod_info.so') then list.Add('$_GLOBAL["APACHE_MOD_INFO"]=True;') else list.Add('$_GLOBAL["APACHE_MOD_INFO"]=False;');
+   if FIleExists(LOCATE_APACHE_MODULES_PATH+'/mod_status.so') then list.Add('$_GLOBAL["APACHE_MOD_STATUS"]=True;') else list.Add('$_GLOBAL["APACHE_MOD_STATUS"]=False;');
+   if FIleExists(LOCATE_APACHE_MODULES_PATH+'/mod_suexec.so') then list.Add('$_GLOBAL["APACHE_MOD_SUEXEC"]=True;') else list.Add('$_GLOBAL["APACHE_MOD_SUEXEC"]=False;');
+   if FIleExists(LOCATE_APACHE_MODULES_PATH+'/mod_fcgid.so') then list.Add('$_GLOBAL["APACHE_MOD_FCGID"]=True;') else list.Add('$_GLOBAL["APACHE_MOD_FCGID"]=False;');
+   if FIleExists(SYS.LOCATE_GENERIC_BIN('cgrulesengd')) then list.Add('$_GLOBAL["CGROUPS_INSTALLED"]=True;') else list.Add('$_GLOBAL["CGROUPS_INSTALLED"]=False;');
+
+   if FileExists('/etc/artica-postfix/FROM_ISO') then list.Add('$_GLOBAL["FROM_ISO"]=True;') else list.Add('$_GLOBAL["FROM_ISO"]=False;');
+   if FileExists('/etc/artica-postfix/APACHE_APPLIANCE') then list.Add('$_GLOBAL["APACHE_APPLIANCE"]=True;') else list.Add('$_GLOBAL["APACHE_APPLIANCE"]=False;');
+
+
    if FileExists(SYS.LOCATE_GENERIC_BIN('iptaccount')) then list.Add('$_GLOBAL["IPTABLES_ACCOUNTING_EXISTS"]=True;') else list.Add('$_GLOBAL["IPTABLES_ACCOUNTING_EXISTS"]=False;');
    if FileExists(SYS.LOCATE_GENERIC_BIN('pdnssec')) then list.Add('$_GLOBAL["PDNSSEC_INSTALLED"]=True;') else list.Add('$_GLOBAL["PDNSSEC_INSTALLED"]=False;');
    if FileExists(SYS.LOCATE_GENERIC_BIN('nscd')) then list.Add('$_GLOBAL["NSCD_INSTALLED"]=True;') else list.Add('$_GLOBAL["NSCD_INSTALLED"]=False;');
    if FileExists(SYS.LOCATE_GENERIC_BIN('msktutil')) then list.Add('$_GLOBAL["MSKTUTIL_INSTALLED"]=True;') else list.Add('$_GLOBAL["MSKTUTIL_INSTALLED"]=False;');
    if FileExists('/usr/share/drupal7/index.php') then list.Add('$_GLOBAL["DRUPAL7_INSTALLED"]=True;') else list.Add('$_GLOBAL["DRUPAL7_INSTALLED"]=False;');
    if FileExists('/usr/share/piwik/core/Version.php') then list.Add('$_GLOBAL["PIWIK_INSTALLED"]=True;') else list.Add('$_GLOBAL["PIWIK_INSTALLED"]=False;');
-
+   if FileExists('/usr/local/share/artica/joomla17_src/includes/version.php') then list.Add('$_GLOBAL["JOOMLA17_INSTALLED"]=True;') else list.Add('$_GLOBAL["JOOMLA17_INSTALLED"]=False;');
 
 
 
@@ -1041,6 +1053,8 @@ begin
    if FIleExists('/usr/local/share/artica/lmb_src/__install_lmb_files/bdd/bdd_liste_files.txt') then list.Add('$_GLOBAL["LMB_LUNDIMATIN_INSTALLED"]=True;') else list.Add('$_GLOBAL["LMB_LUNDIMATIN_INSTALLED"]=False;');
    if FIleExists('/usr/local/share/artica/group-office/classes/base/config.class.inc.php') then  list.Add('$_GLOBAL["GROUPOFFICE_INSTALLED"]=True;') else list.Add('$_GLOBAL["GROUPOFFICE_INSTALLED"]=False;');
    if FIleExists('/usr/local/share/artica/piwigo_src/include/constants.php') then  list.Add('$_GLOBAL["PIWIGO_INSTALLED"]=True;') else list.Add('$_GLOBAL["PIWIGO_INSTALLED"]=False;');
+   if FIleExists('/usr/local/share/artica/wordpress_src/wp-includes/version.php') then  list.Add('$_GLOBAL["WORDPRESS_INSTALLED"]=True;') else list.Add('$_GLOBAL["WORDPRESS_INSTALLED"]=False;');
+
    if FIleExists(SYS.LOCATE_GENERIC_BIN('sabnzbdplus')) then  list.Add('$_GLOBAL["APP_SABNZBDPLUS_INSTALLED"]=True;') else list.Add('$_GLOBAL["APP_SABNZBDPLUS_INSTALLED"]=False;');
 
 
@@ -1117,10 +1131,16 @@ begin
     openldap_server:=trim(GLOBAL_INI.get_LDAP('server'));
 
     if length(openldap_admin)=0 then begin
+       writeln('Warning openldap admin length = 0');
        if openldap_server='127.0.0.1' then begin
           if not FileExists(SYS.LOCATE_SLAPD()) then begin
                openldap_admin:='Manager';
                if length(trim(openldap_password))=0 then openldap_password:='secret';
+          end else begin
+               if not FileExists(mldap.SLAPD_CONF_PATH()) then begin
+                    writeln('Warning slpad.conf, no such file, restarting LDAP server');
+                    fpsystem('/etc/init.d/artica-postfix restart ldap');
+               end;
           end;
        end;
     end;

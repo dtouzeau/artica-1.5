@@ -4904,12 +4904,19 @@ var
    t:TstringList;
    i:integer;
 begin
-    if not FileExists(LOCATE_IP_TOOL()) then exit;
+    verbosed:=COMMANDLINE_PARAMETERS('--verbose');
 
-
-
+    if not FileExists(LOCATE_IP_TOOL()) then begin
+       if verbosed then writeln('ifconfig(): no ip tool found');
+       exit;
+    end;
+    forceDirectories('/opt/artica');
+    if verbosed then writeln(LOCATE_IP_TOOL()+' addr show >/opt/artica/tmp/ip.txt 2>&1');
     fpsystem(LOCATE_IP_TOOL()+' addr show >/opt/artica/tmp/ip.txt 2>&1');
-    if not FileExists('/opt/artica/tmp/ip.txt') then exit;
+    if not FileExists('/opt/artica/tmp/ip.txt') then begin
+        if verbosed then writeln('ifconfig(): /opt/artica/tmp/ip.txt no such file');
+       exit;
+    end;
     s:=TstringList.Create;
     t:=TstringList.Create;
     s.LoadFromFile('/opt/artica/tmp/ip.txt');
@@ -4917,18 +4924,21 @@ begin
     for i:=0 to s.Count-1 do begin
       RegExpr.Expression:='^[0-9]:\s+([a-z0-9]+):';
       if RegExpr.exec(s.Strings[i]) then begin
+         if verbosed then writeln('ifconfig():: Found nic ',RegExpr.Match[1]);
          t.Add('['+RegExpr.Match[1]+']');
       end;
       RegExpr.Expression:='inet\s+([0-9\.]+)';
       if RegExpr.exec(s.Strings[i]) then begin
+            if verbosed then writeln('ifconfig():: Found ip ',RegExpr.Match[1]);
          t.Add('ip='+RegExpr.Match[1]);
       end;
     end;
-
+    if verbosed then writeln('ifconfig():: Saving to '+path);
     t.SaveToFile(path);
     t.free;
     s.free;
     RegExpr.free;
+    if verbosed then writeln('ifconfig():: End...');
 end;
  //#############################################################################
 function Tsystem.ifconfig_text():string;
@@ -4939,15 +4949,26 @@ var
    ini:TiniFile;
    i:integer;
 begin
+    verbosed:=COMMANDLINE_PARAMETERS('--verbose');
     if not FileExists('/etc/artica-postfix/ifconfig.conf') then ifconfig('/etc/artica-postfix/ifconfig.conf');
-    if FILE_TIME_BETWEEN_MIN('/etc/artica-postfix/ifconfig.conf')>1 then ifconfig('/etc/artica-postfix/ifconfig.conf');
+    if FILE_TIME_BETWEEN_MIN('/etc/artica-postfix/ifconfig.conf')>1 then begin
+        if verbosed then writeln('ifconfig_text():: FILE_TIME_BETWEEN_MIN: ',FILE_TIME_BETWEEN_MIN('/etc/artica-postfix/ifconfig.conf'),'Mn -> ifconfig()');
+       ifconfig('/etc/artica-postfix/ifconfig.conf');
+    end;
+
+    if not FileExists('/etc/artica-postfix/ifconfig.conf') then begin
+        if verbosed then writeln('/etc/artica-postfix/ifconfig.conf no such file');
+        exit;
+    end;
 
 
-    if not FileExists('/etc/artica-postfix/ifconfig.conf') then exit;
     s:=TstringList.Create;
     t:=TstringList.Create;
     ini:=TiniFile.Create('/etc/artica-postfix/ifconfig.conf');
     ini.ReadSections(t);
+    if verbosed then writeln('ifconfig_text():: ReadSections: ',t.Count-1);
+
+
     for i:=0 to t.Count-1 do begin
         s.Add(t.Strings[i] + ': ' + ini.ReadString(t.Strings[i],'ip','0.0.0.0'));
     end;
@@ -5050,11 +5071,27 @@ var
    i:integer;
    ip:string;
 begin
-    if not FileExists('/etc/artica-postfix/ifconfig.conf') then ifconfig('/etc/artica-postfix/ifconfig.conf');
-    if FILE_TIME_BETWEEN_MIN('/etc/artica-postfix/ifconfig.conf')>1 then ifconfig('/etc/artica-postfix/ifconfig.conf');
+
+     verbosed:=COMMANDLINE_PARAMETERS('--verbose');
+     forceDirectories('/etc/artica-postfix');
+    if not FileExists('/etc/artica-postfix/ifconfig.conf') then begin
+       if verbosed then writeln('txt_uris():: -> ifconfig()');
+       ifconfig('/etc/artica-postfix/ifconfig.conf');
+    end;
+
+    if verbosed then writeln('txt_uris():: -> File time=',FILE_TIME_BETWEEN_MIN('/etc/artica-postfix/ifconfig.conf'),'mn');
+
+    if FILE_TIME_BETWEEN_MIN('/etc/artica-postfix/ifconfig.conf')>1 then begin
+        if verbosed then writeln('txt_uris():: -> ifconfig()');
+       ifconfig('/etc/artica-postfix/ifconfig.conf');
+    end;
+
+    if not FileExists('/etc/artica-postfix/ifconfig.conf') then begin
+                if verbosed then writeln('txt_uris():: /etc/artica-postfix/ifconfig.conf  no such file');
+                 exit;
+end;
 
 
-    if not FileExists('/etc/artica-postfix/ifconfig.conf') then exit;
     s:=TstringList.Create;
     t:=TstringList.Create;
     ini:=TiniFile.Create('/etc/artica-postfix/ifconfig.conf');
@@ -5064,8 +5101,15 @@ begin
     for i:=0 to t.Count-1 do begin
         ip:=ini.ReadString(t.Strings[i],'ip','0.0.0.0');
         if ip<>'0.0.0.0' then begin
-           s.Add('https://'+ip + ':' + artica_port);
-        end;
+          if ip<>'127.0.0.1' then begin
+             s.Add('https://'+ip + ':' + artica_port);
+          end;
+       end;
+    end;
+    if s.Count=0 then begin
+       s.free;
+       t.free;
+       exit;
     end;
     result:=s.Text;
     s.free;

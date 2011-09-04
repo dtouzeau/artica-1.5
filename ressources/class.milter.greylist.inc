@@ -15,6 +15,8 @@ class milter_greylist{
 	var $MilterGreyListEnabled;
 	var $__noparse;
 	var $mynetworks=array();
+	var $MultipleInstance=false;
+	var $ip_addr=null;
 	var $actionlist=array(
 							null=>"{select}",
 							"addr"=>"{addr}",
@@ -28,8 +30,12 @@ class milter_greylist{
 	
 	
 function milter_greylist($noparse=false,$hostname=null,$ou=null){
-	$this->__noparse=$noparse;
 	$this->hostname=$hostname;
+	$this->__noparse=$noparse;
+	if($hostname=="master"){$this->hostname=null;$this->ou=null;}
+	
+	
+	
 	$this->ou=$ou;
 	if($noparse){
 		$this->loadConfig();
@@ -59,7 +65,10 @@ function LoadConfig(){
 	$ldap=new clladp();
 	if(!$ldap->ldapFailed){
 		$this->mynetworks=$ldap->load_mynetworks();
+	}else{
+		WriteLogs("LDAP failed !!!",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 	}
+	WriteLogs("Loading GreyListConf",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 	$this->global_conf=base64_decode($sock->GET_INFO("GreyListConf"));
 	$this->MilterGreyListEnabled=$sock->GET_INFO('MilterGreyListEnabled');
 	
@@ -71,6 +80,8 @@ function SaveToLdap(){
 	if(($this->hostname<>null) && ($this->ou<>null)){
 		WriteLogs("Multi-postfix instance: $this->hostname, $this->ou",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 		$main=new maincf_multi($this->hostname,$this->ou);
+		$this->ip_addr=$main->ip_addr;
+		$this->MultipleInstance=true;
 		$main->SET_BIGDATA("milter-greylist-config",base64_encode($this->BuildConfig()));
 		$sock->getFrameWork("cmd.php?milter-greylist-reconfigure=yes");		
 		return ;
@@ -95,7 +106,7 @@ function ParseConfig(){
 		$this->main_array["greylist_TIME"]=$re[2];
 	}
 	
-	
+	$this->main_array["lazyaw"]=$this->regconfBool("lazyaw");
 	
 	$this->main_array["autowhite"]=$this->regconf("autowhite");
 	if(preg_match('#([0-9]+)(h|m|d)#',$this->main_array["autowhite"],$re)){
@@ -109,14 +120,23 @@ function ParseConfig(){
 		$this->main_array["timeout_TIME"]=$re[2];
 		}	
 
-	
-
+	$this->main_array["activate_sync_port"]=$this->regconfBool("syncaddr");
+	$this->Parsepeer();
 	$this->Parse_Acls();
 	if(!is_array($this->dnsrbl_array)){$this->defaultDnsrbl();}
 	if(!is_array($this->acl)){$this->DefaultAcls();}
 	
 	$this->BuildDefault();
 	WriteLogs("Parsing end",__CLASS__.'/'.__FUNCTION__,__FILE__);
+}
+
+function Parsepeer(){
+	$t=explode("\n",$this->global_conf);
+		while (list ($num, $ligne) = each ($t) ){
+			if(preg_match("#^peer\s+(.+)#",$ligne,$re)){
+				$this->main_array["peer"][trim($re[1])]=trim($re[1]);
+			}
+		}
 }
 
 
@@ -169,7 +189,14 @@ function Parse_Acls(){
 		$this->__Parse_DNSBL();
 	}
 
-
+function Parse_syncserver(){
+	$t=explode("\n",$this->global_conf);
+		while (list ($num, $ligne) = each ($t) ){
+			if(preg_match("#^(racl|dacl|acl)#",$ligne)){$this->acl[]=$ligne;}
+			if(preg_match("#^dnsrbl\s+#",$ligne)){$this->dnsrbl[]=$ligne;}
+			}
+		$this->__Parse_DNSBL();
+	}
 
 function regconf($value){
 	
@@ -182,7 +209,19 @@ function regconf($value){
 		}
 	
 }
-
+function regconfBool($value){
+	
+	$t=explode("\n",$this->global_conf);
+		while (list ($num, $ligne) = each ($t) ){
+			if(preg_match("#^$value#",$ligne,$re)){
+				writelogs("Found $ligne for $value return 1",__CLASS__.'/'.__FUNCTION__,__FILE__);
+				return 1;
+				
+			}
+		}
+	writelogs("return 0 for $value",__CLASS__.'/'.__FUNCTION__,__FILE__);
+	return 0;
+}
 
 
 	
@@ -262,6 +301,13 @@ function BuildConfig(){
 			$conf=$conf ."# peer entries to enable greylist sync among the MXs.\n";
 			$conf=$conf ."#peer 192.0.2.17\n";
 			$conf=$conf ."#peer 192.0.2.18\n";
+			if(is_array($this->main_array["peer"])){
+				while (list ($num, $ligne) = each ($this->main_array["peer"]) ){
+					if(trim($num)==null){continue;}
+					$conf=$conf ."peer $num\n";
+				}
+				
+			}
 			$conf=$conf ."\n";
 			$conf=$conf ."\n";
 			$conf=$conf ."# You may wish to use a specific local address or port for\n";
@@ -274,6 +320,19 @@ function BuildConfig(){
 			$conf=$conf ."#syncaddr 192.0.2.2 port 9785\n";
 			$conf=$conf ."#syncaddr 2001:db8::1:c3b5:123\n";
 			$conf=$conf ."#syncaddr 2001:db8::1:c3b5:123 port 1234\n";
+			if(count($this->main_array["peer"])>0){$this->main_array["activate_sync_port"]=1;}
+			if($this->main_array["activate_sync_port"]==1){
+				if($GLOBALS["ROOT"]){echo "Starting......: milter-greylist sync port is enabled\n";}
+				if($this->ip_addr==null){
+					$conf=$conf ."syncaddr * port 5252\n";
+				}else{
+					$conf=$conf ."syncaddr $this->ip_addr port 5252\n";
+				}
+			}else{
+				if($GLOBALS["ROOT"]){echo "Starting......: milter-greylist sync port is not enabled\n";}	
+			}
+			
+			
 			$conf=$conf ."\n";
 			$conf=$conf ."# Specific IP-Address for outbound sync-connections\n";
 			$conf=$conf ."# between MXs. If blank, system selects an ip.\n";
@@ -328,7 +387,11 @@ function BuildConfig(){
 			$conf=$conf ."# Uncomment if you want auto-whitelist to work for\n";
 			$conf=$conf ."# the IP rather than for the (IP, sender, receiver)\n";
 			$conf=$conf ."# tuple.\n";
-			$conf=$conf ."#lazyaw\n";
+			if($this->main_array["lazyaw"]==1){
+				$conf=$conf ."lazyaw\n";
+			}else{
+				$conf=$conf ."#lazyaw\n";
+			}
 			$conf=$conf ."\n";
 			$conf=$conf ."# How often should we dump to the dumpfile (0: on each change, -1: never).\n";
 			$conf=$conf ."#dumpfreq 10m\n";

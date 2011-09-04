@@ -46,14 +46,36 @@ if(strpos($buffer,"init domainlist")>0){return ;}
 		
 		
 	if(preg_match("#FATAL: Error db_open: Unknown error#",$buffer,$re)){
-	  	events("ERROR ON {$GLOBALS[__FILE__]["DBFILE"]}");
+	  	events("ERROR ON {$GLOBALS[__FILE__]["DBFILE"]} : $buffer");
+	  	if(basename($GLOBALS[__FILE__]["DBFILE"])=="urls.db"){
+	  		events("urls.db -> create ".dirname($GLOBALS[__FILE__]["DBFILE"])."/urls it and recompile it");
+	  		@file_put_contents(dirname($GLOBALS[__FILE__]["DBFILE"])."/urls","www.". md5(time()).".bv");
+	  	}
 	  	$file="/etc/artica-postfix/croned.1/squidguard.". md5($GLOBALS[__FILE__]["DBFILE"]).".error";
 		if(IfFileTime($file)){
-	  		shell_exec(LOCATE_PHP5_BIN2()." /usr/share/artica-postfix/exec.squidguard.php --compile-single \"{$GLOBALS[__FILE__]["DBFILE"]}\" &");
+			$cmd=LOCATE_PHP5_BIN2()." /usr/share/artica-postfix/exec.squidguard.php --compile-single \"{$GLOBALS[__FILE__]["DBFILE"]}\" &";
+			events("$cmd");
+	  		shell_exec($cmd);
 	  		WriteFileCache($file);
 		}
 		return null;
 		}
+		
+		
+		
+if(preg_match("#\]\s+(.+?):\s+Cannot allocate memory#",$buffer,$re)){
+	  	events("ERROR ON {$re[1]} : Cannot allocate memory -> create it");
+	  	@file_put_contents($re[1],"www.". md5(time()).".bv");
+		shell_exec("squid -k reconfigure");
+		return null;
+		}			
+		
+if(preg_match("#\]\s+(.+?):\s+No such file or directory#",$buffer,$re)){
+	  	events("ERROR ON {$re[1]} : No such file or directory -> create it");
+	  	@file_put_contents($re[1],"www.nodomain.bv");
+		shell_exec("squid -k reconfigure");
+		return null;
+		}		
 
 	if(strpos($buffer,"ERROR: Going into emergency mode")>0){
 		events("ERROR: Going into emergency mode");

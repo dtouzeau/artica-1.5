@@ -113,54 +113,17 @@ if(isset($_GET["LaunchExportOperation"])){
 	TOOL_SYNC_LAUNCH ();
 	exit ();
 }
-if(isset($_GET["SaveAllowedSMTP"])){
-	SaveAllowedSMTP ();
-	exit ();
-}
-
-if(isset($_GET["user_transport"])){
-	USER_TRANSPORT ();
-	exit ();
-}
-if(isset($_GET["relay_address"])){
-	USER_TRANSPORT_SAVE ();
-	exit ();
-}
-if(isset($_GET["DeleteAlternateSmtpRelay"])){
-	USER_TRANSPORT_DELTE ();
-	exit ();
-}
-if(isset($_GET["remote_imap_server"])){
-	TOOLS_IMPORT_SAVE ();
-	exit ();
-}
-
-if(isset($_GET["smtp-sasl"])){
-	USER_TRANSPORT_SALS_JS ();
-	exit ();
-}
-if(isset($_GET["smtp-sasl-popup"])){
-	USER_TRANSPORT_SALS_POPUP ();
-	exit ();
-}
-if(isset($_GET["sasl_username"])){
-	USER_TRANSPORT_SALS_SAVE ();
-	exit ();
-}
-
-if(isset($_GET["sender-email-js"])){
-	USER_CANONICAL_JS ();
-	exit ();
-}
-if(isset($_GET["sender-email-popup"])){
-	USER_CANONICAL_POPUP ();
-	exit ();
-}
-
-if(isset($_GET["ImportMbxTestConnection"])){
-	TOOLS_IMPORT_TESTS ();
-	exit ();
-}
+if(isset($_GET["SaveAllowedSMTP"])){SaveAllowedSMTP ();exit ();}
+if(isset($_GET["user_transport"])){USER_TRANSPORT ();exit ();}
+if(isset($_GET["relay_address"])){USER_TRANSPORT_SAVE ();exit ();}
+if(isset($_GET["DeleteAlternateSmtpRelay"])){USER_TRANSPORT_DELTE ();exit ();}
+if(isset($_GET["remote_imap_server"])){TOOLS_IMPORT_SAVE ();exit ();}
+if(isset($_GET["smtp-sasl"])){USER_TRANSPORT_SALS_JS ();exit ();}
+if(isset($_GET["smtp-sasl-popup"])){USER_TRANSPORT_SALS_POPUP ();exit ();}
+if(isset($_GET["sasl_username"])){USER_TRANSPORT_SALS_SAVE ();	exit ();}
+if(isset($_GET["sender-email-js"])){	USER_CANONICAL_JS ();exit ();}
+if(isset($_GET["sender-email-popup"])){USER_CANONICAL_POPUP ();exit ();}
+if(isset($_GET["ImportMbxTestConnection"])){TOOLS_IMPORT_TESTS ();exit ();}
 if(isset($_GET["TOOLS_IMPORT_LOGS"])){
 	TOOLS_IMPORT_LOGS ();
 	exit ();
@@ -1966,12 +1929,19 @@ function USER_SAMBA($userid) {
 	}
 	
 	$error = USER_SAMBA_DISPLAY_STATUS ( $userid );
+	
+	$WHATHESEE=Paragraphe("user-folder-64.png", "{WHAT_USER_SEE}", "{WHAT_USER_SEE_SMB_TEXT}","javascript:Loadjs('domains.edit.user.smbsee.php?uid=$userid')");
+	
+	
+	
+	
 	$html = "<div id='samba_div'>
 		<table style='width:100%'>
 		<tr>
 			<td valign='top' width=200px>
 				" . Paragraphe ( '64-Folder-privileges.png', '{SAMBA_GROUP_PRIVILEGES}', '{SAMBA_GROUP_PRIVILEGES_TEXT}', "javascript:Loadjs('$page?SAMBA_PRIVILEGES=$userid')", '{SAMBA_GROUP_PRIVILEGES}', "" ) . "
 				$error
+				$WHATHESEE
 				</td>
 			<td valign='top' ><h5>$userid:{file_share}</H5>
 			<div id='USER_SAMBA_FORM'>
@@ -2175,13 +2145,8 @@ function USER_SAMBA_ENABLE_PERFORM() {
 function USER_SAMBA_FORM($userid) {
 	writelogs ( $userid, __FUNCTION__, __FILE__, __LINE__ );
 	$user = new user ( $userid );
-	if ($user->DoesNotExists) {
-		return USER_NOTEXISTS ( $userid );
-	}
-	
-	if ($user->NotASambaUser) {
-		return USER_NOT_SAMBA ( $userid );
-	}
+	if ($user->DoesNotExists) {return USER_NOTEXISTS ( $userid );}
+	if ($user->NotASambaUser) {return USER_NOT_SAMBA ( $userid );}
 	
 	$page = CurrentPageName ();
 	$priv = new usersMenus ( );
@@ -2220,9 +2185,7 @@ function USER_SAMBA_FORM($userid) {
 	}
 	
 	$dn = $user->dn;
-	if (strlen ( $dn ) > 70) {
-		$dn = texttooltip ( substr ( $dn, 0, 67 ) . "...", $dn, null, null, 0, null );
-	}
+	if (strlen ( $dn ) > 70) {$dn = texttooltip ( substr ( $dn, 0, 67 ) . "...", $dn, null, null, 0, null );}
 	
 	$html = "
 	<form name='userLdapform'>

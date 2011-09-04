@@ -36,6 +36,7 @@ class groups{
 	var $SAMBA_ENABLED=true;
 	var $SAMBA_INSTALLED=false;
 	var $objectSid=null;
+	var $description=null;
 	var $ldapClass;
 	var $EnableManageUsersTroughActiveDirectory=false;
 	var $searchPattern=null;
@@ -399,6 +400,7 @@ private function seems_utf8($Str) {
 			$this->ou=$res["ou"];
 			$this->sambaSID=$attrs["sambaSID"][0];
 			$this->sambaGroupType=$attrs["sambaGroupType"][0];
+			$this->description=$attrs["description"][0];
 			$this->main_array=$res;
 			$this->ARRAY_MEMBERS=$res["ARRAY_MEMBERS"];
 			$this->KavMilterSettings=$this->LoadKavMilterGroup();
@@ -657,6 +659,17 @@ private function seems_utf8($Str) {
 			$ldap->Ldap_add_mod($this->dn,$res);
 			unset($res);
 		}
+	 }
+	 
+	 function saveDescription($content){
+	 	$content=utf8_encode($content);
+	 	$upd["description"][0]=$content;
+	 	$ldap=new clladp();
+	 	if(!$ldap->Ldap_modify($this->dn, $upd)){
+	 		$this->ldap_error=$ldap->ldap_last_error;
+	 		return false;
+	 	}
+	 	return true;
 	 }
 	 
 	 function ParseSharedFolders(){

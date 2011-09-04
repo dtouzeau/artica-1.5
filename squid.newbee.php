@@ -372,7 +372,13 @@ function main_config(){
 
 $page=CurrentPageName();
 $sock=new sockets();
-
+	$compilefile="ressources/logs/squid.compilation.params";
+	if(!is_file($compilefile)){
+		$sock->getFrameWork("squid.php?compil-params=yes");
+	}
+	
+	$COMPILATION_PARAMS=unserialize(base64_decode(file_get_contents($compilefile)));
+	
 	$users=new usersMenus();
 	$your_network=Paragraphe('folder-realyrules-64.png','{your_network}','{your_network_text}',"javascript:Loadjs('squid.popups.php?script=network')");
 	$APP_SQUIDKERAUTH=Paragraphe('wink3_bg.png','{APP_SQUIDKERAUTH}','{APP_SQUIDKERAUTH_TEXT}',"javascript:Loadjs('squid.adker.php')");
@@ -395,11 +401,15 @@ $sock=new sockets();
     $proxy_pac_rules=Paragraphe('proxy-pac-rules-64.png','{proxy_pac_rules}','{proxy_pac_text}',"javascript:Loadjs('squid.proxy.pac.rules.php')");
     
     
+    
+    
+    
    
-    $sslbump=Paragraphe('web-ssl-64.png','{squid_sslbump}','{squid_sslbump_text}',
-    			"javascript:Loadjs('squid.sslbump.php')");
+    $sslbump=Paragraphe('web-ssl-64.png','{squid_sslbump}','{squid_sslbump_text}',"javascript:Loadjs('squid.sslbump.php')");
     
-    
+    if(!isset($COMPILATION_PARAMS["enable-ssl"])){
+    	$sslbump=Paragraphe('web-ssl-64-grey.png','{squid_sslbump}','{squid_sslbump_text}',"");
+    }
     $performances_tuning=Paragraphe('performance-tuning-64.png','{tune_squid_performances}','{tune_squid_performances_text}',"javascript:Loadjs('squid.perfs.php')");
     $squid_conf=Paragraphe('script-view-64.png','{configuration_file}','{display_generated_configuration_file}',"javascript:Loadjs('squid.conf.php')");
     
@@ -485,6 +495,7 @@ function js_enable_disable_squid($echo=false){
 var x_SaveEnableSquidGLobal=function (obj) {
 		RTMMailHide();
 		YahooWinHide();
+		CacheOff();
 		if(document.getElementById('main_squid_quicklinks_config')){
 			ConfigureYourserver();
 			ConfigureYourserver();
@@ -496,7 +507,7 @@ var x_SaveEnableSquidGLobal=function (obj) {
 	
 	function SaveEnableSquidGLobal(){
 		var XHR = new XHRConnection();
-    	XHR.appendData('SaveEnableSquidGLobal',document.getElementById('SQUIDEnable').value);
+    	XHR.appendData('SaveEnableSquidGLobal',document.getElementById('MAINSQUIDEnableSAVE').value);
  		document.getElementById('EnableETDisableSquidDiv').innerHTML='<center><img src=\"img/wait_verybig.gif\"></center>';
     	XHR.sendAndLoad('$page', 'GET',x_SaveEnableSquidGLobal);
 	}
@@ -664,7 +675,7 @@ function main_enableETDisable(){
 	$SQUIDEnable=trim($sock->GET_INFO("SQUIDEnable"));
 	if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
 	
-	$field=Paragraphe_switch_img("{enable_squid_service}","{enable_squid_service_explain}","SQUIDEnable",$SQUIDEnable,null,350);
+	$field=Paragraphe_switch_img("{enable_squid_service}","{enable_squid_service_explain}","MAINSQUIDEnableSAVE",$SQUIDEnable,null,350);
 	
 	
 	$html="
@@ -684,8 +695,10 @@ function main_enableETDisable(){
 
 function main_enableETDisable_save(){
 	$sock=new sockets();
+	writelogs("SQUID:SaveEnableSquidGLobal:: -> {$_GET["SaveEnableSquidGLobal"]}",__FUNCTION__,__FILE__,__LINE__);
 	$sock->SET_INFO('SQUIDEnable',$_GET["SaveEnableSquidGLobal"]);
 	$sock->getFrameWork('cmd.php?squid-reconfigure=yes');
+	$sock->getFrameWork("services.php?restart-artica-status=yes");
 }
 
 

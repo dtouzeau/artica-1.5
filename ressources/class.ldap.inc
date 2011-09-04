@@ -247,7 +247,7 @@ class clladp{
 							
 							break;
 						default:
-							$error=$error . "\nCould not bind to the LDAP server." ."\n". ldap_err2str($this->ldap_connection);
+							$error=$error . "\nCould not bind to the LDAP server." ."\n". @ldap_err2str($this->ldap_connection);
 	 				}					
 						
 						//echo $error;
@@ -311,6 +311,7 @@ private function ldap_perform_connection($ldapport=null){
 			}
 		}
 	if(!function_exists("ldap_connect")){
+		
 		if(function_exists("debug_backtrace")){$trace=debug_backtrace();if(isset($trace[1])){$called=" called by ". basename($trace[1]["file"])." {$trace[1]["function"]}() line {$trace[1]["line"]}";writeLogs("-> Call to undefined function ldap_connect() $called".__LINE__,__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}}		
 		return false;
 	}				
@@ -2363,6 +2364,7 @@ function Hash_GetALLUsers(){
 			$hash=ldap_get_entries($ld,$sr);
 			if(!is_array($hash)){return array();}
 			while (list ($num, $ligne) = each ($hash) ){
+				
 				if($ligne["cn"][0]<>null){
 					switch ($fieldlist) {
 						case 1:$res[$ligne["gidnumber"][0]]=$ligne["cn"][0];break;
@@ -2933,8 +2935,8 @@ function GroupForbiddenAttachment($attach_group,$gid,$add=false){
 //-------------------------------------------------------------------------------------------------------------------------------------		      
 	function AddDomainEntity($ou=null,$domain){
 		$sock=new sockets();
-
-		
+		$upd=array();
+		$update_array=array();
 		
 			
 		$hashdoms=$this->hash_get_all_domains();
@@ -2946,7 +2948,7 @@ function GroupForbiddenAttachment($attach_group,$gid,$add=false){
 			return false;
 		}
 		
-		$update_array=array();
+		
 		$domain=trim($domain);
 		include_once(dirname(__FILE__) . "/class.artica.inc");
 		$artica=new artica_general();
@@ -2954,6 +2956,7 @@ function GroupForbiddenAttachment($attach_group,$gid,$add=false){
 		if($artica->RelayType=="single"){$this->AddDomainTransport($ou,$domain,"127.0.0.1",25,'smtp');return null;}
 		
 		$suffix=$this->suffix;
+		$GLOBALS["DEBUGLOGS"][]="DN: ou=$ou,dc=organizations,$this->suffix";
 		$cn="ou=$ou,dc=organizations,$this->suffix";
 		if(!$this->ExistsDN($cn)){
 			writelogs("$cn does not exists, create the domain",__CLASS__."/".__FUNCTION__,__FILE__);
@@ -2961,11 +2964,17 @@ function GroupForbiddenAttachment($attach_group,$gid,$add=false){
 		}
 		
 		
-		$object=$this->getobjectClass($ou);
+		$object=$this->getobjectClass($ou,$cn);
 
 		if(!isset($object["domainRelatedObject"])){
+			$GLOBALS["DEBUGLOGS"][]="[domainRelatedObject] does not exists, add it";
 			writelogs( "[domainRelatedObject] does not exists, add it",__FUNCTION__,__FILE__);
-			$upd=$this->getobjectClass($ou,null,true);
+			$upd=array();
+			$upd=$this->getobjectClass($ou,$cn,true);
+			
+			$GLOBALS["DEBUGLOGS"][]="[\"objectClass\"][]=\"domainRelatedObject\"";
+			$GLOBALS["DEBUGLOGS"][]="[\"associatedDomain\"]=\"$domain\"";
+			
 			$upd["objectClass"][]="domainRelatedObject";
 			$upd["associatedDomain"]=$domain;
 			if(!$this->Ldap_modify($cn,$upd)){
@@ -2983,13 +2992,16 @@ function GroupForbiddenAttachment($attach_group,$gid,$add=false){
 		
 		$hash=$this->Hash_associated_domains($ou);
 		writelogs( "associatedDomain=". count($hash) . " entries",__FUNCTION__,__FILE__);
-		
+		$update_array=array();
 		while (list ($a, $b) = each ($hash)){
 			writelogs( "associatedDomain=$a entries",__FUNCTION__,__FILE__);
 			$update_array["associatedDomain"][]=$a;
+			$GLOBALS["DEBUGLOGS"][]="[\"associatedDomain\"][]=\"$a\"";
+			
 		}
 		
 		writelogs( "associatedDomain=$domain entries",__FUNCTION__,__FILE__);
+		$GLOBALS["DEBUGLOGS"][]="[\"associatedDomain\"][]=\"$domain\"";
 		$update_array["associatedDomain"][]=$domain;
 		writelogs( "[associatedDomain]=$domain",__FUNCTION__,__FILE__);
 		
@@ -3644,6 +3656,7 @@ function getobjectDNClass($dn,$fulldn=0){
 		$ld =$this->ldap_connection;
 		$bind =$this->ldapbind;
 		if($dn<>null){$suffix=$dn;}else{$suffix="ou=$ou,dc=organizations,$this->suffix";}
+		$GLOBALS["DEBUGLOGS"][]="Get ObjectClass in $suffix";
 		writelogs("Get ObjectClass in $suffix",__FUNCTION__.'/'.__CLASS__,__FILE__);
 		$arr=array("objectClass");
 		$sr = @ldap_search($ld,$suffix,'(&(objectclass=*))',$arr);
@@ -3745,22 +3758,33 @@ function getobjectDNClass($dn,$fulldn=0){
    			
    			if($nolog==false){
    				$this->ldap_last_error_num=$ldap_errno;
-   				$this->ldap_last_error="Error number $ldap_errno $ldap_err2str\nAction:LDAP Modify\ndn:$dn\n" . 
-   				ldap_err2str(ldap_errno($this->ldap_connection).$add_error);
+   				
+   				
    				$error_string="ERROR Number: $ldap_errno $ldap_err2str\nLdap_modify  \"dn=$dn\" :  " . ldap_err2str(ldap_errno($this->ldap_connection));
    				writelogs($ldap_err2str . "($ldap_errno)",__CLASS__ . "/" . __FUNCTION__,__FILE__);
 				error_log($ldap_err2str . "($ldap_errno)");
    					while (list ($num, $ligne) = each ($update_array) ){
 	   					if(is_array($ligne)){
 	   						while (list ($a, $b) = each ($ligne) ){
+	   							$infos[]="$a = $b";
 	   							writelogs("ERROR $num($a)=$b",__CLASS__ . "/" . __FUNCTION__,__FILE__);
 	   						}
 	   					}else{
+	   						$infos[]="$a = $b";
 	   						writelogs("ERROR $num=$ligne",__CLASS__ . "/" . __FUNCTION__,__FILE__);
 	   					}
 	   					
 	   				
 	   			}
+	   			
+   				$trace=debug_backtrace();
+				if(isset($trace[1])){$called=" called by ". basename($trace[1]["file"])." {$trace[1]["function"]}() line {$trace[1]["line"]}";}
+	   			if(count($GLOBALS["DEBUGLOGS"])>0){$add_error=$add_error."\n".@implode("\n", $GLOBALS["DEBUGLOGS"]);}
+	   			$this->ldap_last_error="Error number $ldap_errno $ldap_err2str\nAction:LDAP Modify\ndn:$dn\n" . 
+	   			ldap_err2str(ldap_errno($this->ldap_connection)).$add_error."\nTrace:$called\nInformations\n".@implode("\n", $infos);
+	   			
+	   			
+	   			
 	   			return false;}
    			
    			return true;}

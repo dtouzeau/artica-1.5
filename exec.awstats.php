@@ -259,11 +259,11 @@ function awstats_mail(){
 	}
 	$filecount=0;
 	foreach (glob("/var/log/artica-mail/*.aws") as $filename) {
-		artica_parse($filename);$filecount++;}
+		artica_parse($filename);$filecount++;$filecountl[]=$filename;}
 	
 	$distanceOfTimeInWords=distanceOfTimeInWords($tt1,time());	
 	if($filecount>0){
-		$unix->send_email_events("Success generating $filecount stats files ($distanceOfTimeInWords)",$q->mysql_error,"postfix");
+		$unix->send_email_events("AWSTATS:: Success generating $filecount stats files ($distanceOfTimeInWords)",@implode("\n",$filename),"postfix");
 		$cmd="{$GLOBALS["nice"]}".LOCATE_PHP5_BIN()." ".dirname(__FILE__)."/exec.artica.meta.users.php --export-postfix-events >/dev/null 2>&1 &";
 		shell_exec($cmd);
 	}	

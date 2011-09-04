@@ -23,7 +23,8 @@ function js(){
 	$page=CurrentPageName();
 	$tpl=new templates();
 	$title=$tpl->javascript_parse_text("{recycle}");
-	$html="RTMMail('950','$page?popup=yes&sharename={$_GET["sharename"]}','$title::{$_GET["sharename"]}');";
+	$urlencoded=urlencode($_GET["sharename"]);
+	$html="RTMMail('950','$page?popup=yes&sharename=$urlencoded','$title::{$_GET["sharename"]}');";
 	echo $html;
 }
 
@@ -108,7 +109,19 @@ function search(){
 <tbody class='tbody'>";	
 	$q=new mysql();
 	$results=$q->QUERY_SQL($sql,"artica_backup");
-	if(!$q->ok){echo "<H2>$q->mysql_error</H2>";}
+	if(!$q->ok){
+		if(preg_match("#Table.+?doesn.+?exist#", $q->mysql_error)){
+			$q->BuildTables();
+			$results=$q->QUERY_SQL($sql,"artica_backup");
+			if(!$q->ok){
+				echo "<H2>$q->mysql_error (after building tables)</H2>";
+			}
+		}else{
+			echo "<H2>$q->mysql_error</H2>";}
+	}
+	
+	
+	
 	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
 		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
 		$size=$ligne["filesize"]/1024;

@@ -19,7 +19,9 @@ class vhosts{
 	var $apacheIPAddress;
 	var $WWWSSLMode="FALSE";
 	var $IMG_ARRAY_128=array("LMB"=>"logo_lmb-200.png",
-	"JOOMLA"=>"128.joomla.png","SUGAR"=>"98-sugarcrm.png","ARTICA_USR"=>"bg_user-120.png",
+	"JOOMLA"=>"128.joomla.png",
+	"JOOMLA17"=>"128.joomla.png",
+	"SUGAR"=>"98-sugarcrm.png","ARTICA_USR"=>"bg_user-120.png",
 	"OBM2"=>"obm-128.png",
 	"OPENGOO"=>"opengoo-128.png",
 	"ROUNDCUBE"=>"roundcube3logo.png",
@@ -35,13 +37,14 @@ class vhosts{
 	"ARTICA_ADM"=>"eyeos-128.png",
 	"Z-PUSH"=>"zarafa-logo-128.png",
 	"PIWIK"=>"piwik-logo-128.png",
-	
+	"WORDPRESS"=>"wordpress-128.png"
 	
 	);
 	
 	var $IMG_ARRAY_64=array(
 	"LMB"=>"logo_lmb-64.png",
 	"JOOMLA"=>"64.joomla.png",
+	"JOOMLA17"=>"64.joomla.png",
 	"SUGAR"=>"64-sugarcrm.png",
 	"ARTICA_USR"=>"64-bg_user.png",
 	"OBM2"=>"64-obm2.png",
@@ -61,7 +64,8 @@ class vhosts{
 	"ARTICA_MINIADM"=>"miniadm-64.png",
 	"EYEOS"=>"eyeos-64.png",
 	"POWERADMIN"=>"poweradmin-64.png",
-	"PIWIK"=>"piwik-logo-64.png"
+	"PIWIK"=>"piwik-logo-64.png",
+	"WORDPRESS"=>"wordpress-64.png"
 	);
 
 	
@@ -78,6 +82,7 @@ class vhosts{
 	var $TEXT_ARRAY=array(
 	"LMB"=>array("TITLE"=>"APP_LMB","TEXT"=>"APP_LMB_TEXT"),
 	"JOOMLA"=>array("TITLE"=>"APP_JOOMLA","TEXT"=>"APP_JOOMLA_TEXT"),
+	"JOOMLA17"=>array("TITLE"=>"APP_JOOMLA","TEXT"=>"APP_JOOMLA_TEXT"),
 	"ROUNDCUBE"=>array("TITLE"=>"APP_ROUNDCUBE","TEXT"=>"APP_ROUNDCUBE_TEXT"),
 	"SUGAR"=>array("TITLE"=>"APP_SUGARCRM","TEXT"=>"APP_SUGARCRM_TEXT"),
 	"ARTICA_USR"=>array("TITLE"=>"APP_ARTICA_USR","TEXT"=>"APP_ARTICA_USR_TEXT"),
@@ -98,6 +103,7 @@ class vhosts{
 	"Z-PUSH"=>array("TITLE"=>"APP_Z_PUSH","TEXT"=>"APP_Z_PUSH_TEXT"),
 	"POWERADMIN"=>array("TITLE"=>"APP_POWERADMIN","TEXT"=>"APP_POWERADMIN_TEXT"),
 	"PIWIK"=>array("TITLE"=>"APP_PIWIK","TEXT"=>"APP_PIWIK_TEXT"),
+	"WORDPRESS"=>array("TITLE"=>"APP_WORDPRESS","TEXT"=>"APP_WORDPRESS_TEXT"),
 	
 	
 	);
@@ -148,10 +154,12 @@ function listOfAvailableServices($freeweb=false){
 			if($user->AsSystemAdministrator){$array["ARTICA_REGISTER_OU"]="{ARTICA_REGISTER_OU}";}
 		}
 		$array["ARTICA_MINIADM"]="{ARTICA_MINIADM}";
-		
+		if($user->JOOMLA17_INSTALLED){$array["JOOMLA17"]="{APP_JOOMLA17}";}
 		if($user->DRUPAL7_INSTALLED){$array["DRUPAL"]="{APP_DRUPAL}";}
 		if($user->GROUPOFFICE_INSTALLED){$array["GROUPOFFICE"]="{APP_GROUPOFFICE}";}
 		if($user->PIWIK_INSTALLED){$array["PIWIK"]="{APP_PIWIK}";}
+		if($user->LMB_LUNDIMATIN_INSTALLED){ $array["LMB"]="{APP_LMB}";}
+		if($user->WORDPRESS_INSTALLED){ $array["WORDPRESS"]="{APP_WORDPRESS}";}
 		
 		
 	}

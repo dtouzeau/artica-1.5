@@ -9,9 +9,14 @@ class ccurl{
 	var $ArticaProxyServerPort=3128;
 	var $ArticaProxyServerUsername=null;
 	var $ArticaProxyServerUserPassword=null;
-	function ccurl($uri,$noproxyload=false){
+	var $interface=null;
+	var $noproxyload=false;
+	var $authname=null;
+	var $authpass=null;
+	function ccurl($uri,$noproxyload=false,$interface=null){
 			$this->uri=$uri;
-			if(!$noproxyload){
+			$this->interface=$interface;
+			if($noproxyload){
 				$ini=new Bs_IniHandler();
 				$sock=new sockets();
 				$datas=$sock->GET_INFO("ArticaProxySettings");
@@ -33,6 +38,7 @@ class ccurl{
 			}	
 				
 			$ch = curl_init();
+			if($this->interface<>null){curl_setopt($ch, CURLOPT_INTERFACE,$interface);}
 			curl_setopt($ch, CURLOPT_URL, "$this->uri");
 			curl_setopt($ch, CURLOPT_HEADER, 0);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -40,6 +46,12 @@ class ccurl{
 			curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible;)");
 			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+			if($this->authname<>null){
+				if($GLOBALS["VERBOSE"]){writelogs("Enable website authentication has $this->authname",__CLASS__.'/'.__FUNCTION__,__FILE__);}
+				curl_setopt($ch, CURLOPT_USERPWD, "$this->authname:$this->authpass");
+			}else{
+				if($GLOBALS["VERBOSE"]){writelogs("no website authentication has enabled",__CLASS__.'/'.__FUNCTION__,__FILE__);}
+			}
 			if($curlPost<>null){curl_setopt($ch, CURLOPT_POSTFIELDS, $curlPost);}	
 			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Expect:'));
 			$this->data=curl_exec($ch);
@@ -97,6 +109,7 @@ class ccurl{
 			//$this->ArticaProxyServerEnabled=null;
 			
 			if($this->ArticaProxyServerEnabled=="yes"){
+				if($GLOBALS["VERBOSE"]){echo "Loading proxy configuration...\n";}
 				//curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
 				curl_setopt($ch,CURLOPT_HTTPPROXYTUNNEL,FALSE); 
 				curl_setopt ($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
@@ -108,6 +121,8 @@ class ccurl{
 					curl_setopt($ch, CURLOPT_PROXYAUTH, CURLAUTH_BASIC);
 					curl_setopt($ch, CURLOPT_PROXYUSERPWD, $this->ArticaProxyServerUsername.':'.$this->ArticaProxyServerUserPassword);
 				}
+			}else{
+				if($GLOBALS["VERBOSE"]){echo "Proxy disabled....\n";}
 			}
 			
 			

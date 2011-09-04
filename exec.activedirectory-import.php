@@ -55,29 +55,48 @@ $hash=$ldap->Ldap_search($ldap->suffix,"(objectClass=organizationalUnit)",array(
 if(!is_numeric($hash["count"])){$hash["count"]=0;}
 if($hash["count"]==0){return;}
 $q=new mysql();
-$q->QUERY_SQL("TRUNCATE TABLE `activedirectory_orgs`","artica_backup");
+
+$q->QUERY_SQL("TRUNCATE TABLE `activedirectory_users`","artica_backup");
+
 if(!$q->ok){
 	$unix->send_email_events("ActiveDirectory: mysql error $q->mysql_error", "process aborted. Will restart in next cycle", "system");
 	return;
 }
 
-$q->QUERY_SQL("TRUNCATE TABLE `activedirectory_users`","artica_backup");
+
 $q->QUERY_SQL("TRUNCATE TABLE `activedirectory_groups`","artica_backup");
 $q->QUERY_SQL("TRUNCATE TABLE `activedirectory_groupsNames`","artica_backup");
 
+$sql="SELECT ou,dn,enabled,OnlyBranch FROM activedirectory_orgs ORDER BY ou";
+$results=$q->QUERY_SQL($sql,"artica_backup");	
 
+while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+	$OUCONFIG[$ligne["dn"]]["PARAMS"]["ENABLED"]=$ligne["enabled"];
+	$OUCONFIG[$ligne["dn"]]["PARAMS"]["OnlyBranch"]=$ligne["OnlyBranch"];
+	
+}
 
 $GLOBALS["MEMORY_COUNT_USERS"]=0;
 $GLOBALS["MEMORY_COUNT_GROUPS"]=0;
 for($i=0;$i<$hash["count"];$i++){
+	
+	if(isset($OUCONFIG[$hash[$i]["dn"]])){
+		if($OUCONFIG[$hash[$i]["dn"]]["PARAMS"]["ENABLED"]==0){
+			echo "Importing users from {$hash[$i]["ou"][0]} {$hash[$i]["dn"]} aborted (disabled)\n";
+			continue;
+		}
+	}
+	
+	$OnlyBranch=$OUCONFIG[$hash[$i]["dn"]]["PARAMS"]["OnlyBranch"];
+	
 	$dn=utf8_encode($hash[$i]["dn"]);
 	$ou=utf8_encode($hash[$i]["ou"][0]);
 	$dn=addslashes($dn);
 	$ou=addslashes($ou);
 	$sql="INSERT IGNORE INTO activedirectory_orgs (ou,dn) VALUES('$ou','$dn')";
 	$q->QUERY_SQL($sql,"artica_backup");
-	echo "Importing users from {$hash[$i]["ou"][0]} {$hash[$i]["dn"]}\n";
-	importuser($hash[$i]["dn"],$ou);
+	echo "Importing users from {$hash[$i]["ou"][0]} {$hash[$i]["dn"]} OnlyBranch=$OnlyBranch\n";
+	importuser($hash[$i]["dn"],$ou,$OnlyBranch);
 	
 	
 }
@@ -92,13 +111,16 @@ $unix->send_email_events("ActiveDirectory: {$GLOBALS["MEMORY_COUNT_USERS"]} memb
 }
 
 
-function importuser($suffix,$ou){
+function importuser($suffix,$ou,$OnlyBranch=0){
 
 
 $ldap=new ldapAD();
 
-
-$hash=$ldap->Ldap_search($suffix,"(objectClass=user)",array(),5000);
+if($OnlyBranch==1){
+	$hash=$ldap->Ldap_list($suffix,"(objectClass=user)",array(),5000);}
+else{
+	$hash=$ldap->Ldap_search($suffix,"(objectClass=user)",array(),5000);
+}
 echo " {$hash["count"]} users\n";
 
 $prefix="INSERT IGNORE INTO activedirectory_users 

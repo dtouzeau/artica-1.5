@@ -1519,8 +1519,8 @@ private function CleanMyNetworks(){
 		$sock->SaveConfigFile($conf,"PostfixMainCfFile");
 		$master=new master_cf();
 
-		$master->PostfixMasterCfFile=$master->Build();
-		$master->SaveToLdap(1);
+		//$master->PostfixMasterCfFile=$master->Build();
+		//$master->SaveToLdap(1);
 
 		if($NoRestartDaemon==0){
 			$datas=$sock->getFrameWork('cmd.php?SaveMaincf=yes');
@@ -2115,7 +2115,7 @@ class systeminfos{
 	function environements(){
 		$sock=new sockets();
 		$tpl=new templates();
-		$datas=$sock->getFrameWork('cmd.php?printenv=yes');
+		$datas= unserialize(base64_decode($sock->getFrameWork('cmd.php?printenv=yes')));
 		return $datas;
 		
 	}

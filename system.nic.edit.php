@@ -28,7 +28,7 @@
 function js(){
 	$page=CurrentPageName();
 	
-	$html="YahooWin2('410','$page?tabs=yes&netconfig={$_GET["nic"]}','{$_GET["nic"]}');";
+	$html="YahooWin2('480','$page?tabs=yes&netconfig={$_GET["nic"]}','{$_GET["nic"]}');";
 	echo $html;
 	
 	
@@ -101,6 +101,7 @@ function ipconfig_nic(){
 	
 	
 	$html="
+	<div id='edit-config-$eth'>
 	<form name='ffm$eth'>
 	<table style='width:100%'>
 	<input type='hidden' name='save_nic' id='save_nic' id='save_nic' value='$eth'>
@@ -127,19 +128,19 @@ function ipconfig_nic(){
 		
 		<tr>
 			<td class=legend style='font-size:14px'>{tcp_address}:</td>
-			<td>" . Field_text("IPADDR",$nic->IPADDR,'width:160px;padding:3px;font-size:18px',null,null,null,false,null,$DISABLED)."</td>
+			<td>" . field_ipv4("IPADDR",$nic->IPADDR,'padding:3px;font-size:18px',null,null,null,false,null,$DISABLED)."</td>
 		</tr>
 		<tr>
 			<td class=legend style='font-size:14px'>{netmask}:</td>
-			<td>" . Field_text("NETMASK",$nic->NETMASK,'width:160px;padding:3px;font-size:18px',null,null,null,false,null,$DISABLED)."</td>
+			<td>" . field_ipv4("NETMASK",$nic->NETMASK,'padding:3px;font-size:18px',null,null,null,false,null,$DISABLED)."</td>
 		</tr>	
 		<tr>
 			<td class=legend style='font-size:14px'>{gateway}:</td>
-			<td>" . Field_text("GATEWAY",$nic->GATEWAY,'width:160px;padding:3px;font-size:18px',null,null,null,false,null,$DISABLED)."</td>
+			<td>" . field_ipv4("GATEWAY",$nic->GATEWAY,'padding:3px;font-size:18px',null,null,null,false,null,$DISABLED)."</td>
 		</tr>
 		<tr>
 			<td class=legend style='font-size:14px'>{broadcast}:</td>
-			<td>" . Field_text("BROADCAST",$nic->BROADCAST,'width:160px;padding:3px;font-size:18px',null,null,null,false,null,$DISABLED)."</td>
+			<td>" . field_ipv4("BROADCAST",$nic->BROADCAST,'padding:3px;font-size:18px',null,null,null,false,null,$DISABLED)."</td>
 		</tr>		
 	</table>
 	
@@ -148,11 +149,11 @@ function ipconfig_nic(){
 	<table style='width:99.5%' class=form>
 	<tr>
 		<td class=legend style='font-size:14px'>{primary_dns}:</td>
-		<td>" . Field_text("DNS_1",$nic->DNS1,'width:160px;padding:3px;font-size:18px',null,null,null,false,null)."</td>
+		<td>" . field_ipv4("DNS_1",$nic->DNS1,'padding:3px;font-size:18px',null,null,null,false,null)."</td>
 	</tr>
 	<tr>
 		<td class=legend style='font-size:14px'>{secondary_dns}:</td>
-		<td>" . Field_text("DNS_2",$nic->DNS2,'width:160px;padding:3px;font-size:18px',null,null,null,false,null)."</td>
+		<td>" . field_ipv4("DNS_2",$nic->DNS2,'padding:3px;font-size:18px',null,null,null,false,null)."</td>
 	</tr>	
 	</table>
 		
@@ -165,13 +166,13 @@ function ipconfig_nic(){
 	</td>
 	</tr>
 	</table>
+	</div>
 	<script>
 	
 		var X_SaveNicSettings= function (obj) {
 			var results=obj.responseText;
-			var ipaddr=document.getElementById('IPADDR').value;
-			if(document.getElementById('tabs_listnics2')){RefreshTab('tabs_listnics2');}		
-
+			if(document.getElementById('main_config_$eth')){RefreshTab('main_config_$eth');}
+				
 			}
 
 		function logofff(){
@@ -192,6 +193,8 @@ function ipconfig_nic(){
 			XHR.appendData('DNS_2',document.getElementById('DNS_2').value);
 			XHR.appendData('BROADCAST',document.getElementById('BROADCAST').value);
 			XHR.appendData('save_nic',document.getElementById('save_nic').value);
+			if(document.getElementById('zlistnic-info-$eth')){AnimateDiv('zlistnic-info-$eth');}
+			if(document.getElementById('edit-config-$eth')){AnimateDiv('edit-config-$eth');}
 			XHR.sendAndLoad('$page', 'GET',X_SaveNicSettings);
 			
 		}
@@ -229,6 +232,7 @@ function ipconfig_nic(){
 			document.getElementById('DNS_1').disabled=false;
 			document.getElementById('DNS_2').disabled=false;
 			document.getElementById('save_nic').disabled=false;	
+			if(document.getElementById('zlistnic-info-$eth')){LoadAjax('zlistnic-info-$eth','system.nic.config.php?nic-builder=$eth');}
 			SwitchDHCP();		
 		
 		}

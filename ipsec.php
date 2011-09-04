@@ -43,6 +43,11 @@ $html="
 echo $html;	
 }
 
+function status(){
+	echo "<H1>In progress...</H1>";
+	
+}
+
 function popup(){
 	$tpl=new templates();
 	$page=CurrentPageName();

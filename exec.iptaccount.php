@@ -44,7 +44,10 @@ function compile_rule($ID){
 }
 
 function iptables_delete_rule($ID){
-system("/sbin/iptables-save > /etc/artica-postfix/iptables.conf");
+$unix=new unix();
+$iptables_save=$unix->find_program("iptables-save");
+$iptables_restore=$unix->find_program("iptables-restore");	
+system("$iptables_save > /etc/artica-postfix/iptables.conf");
 $data=file_get_contents("/etc/artica-postfix/iptables.conf");
 $datas=explode("\n",$data);
 $pattern="#.+?ArticaIptAccountRule_$ID#";
@@ -57,7 +60,7 @@ while (list ($num, $ligne) = each ($datas) ){
 
 
 file_put_contents("/etc/artica-postfix/iptables.new.conf",$conf);
-system("/sbin/iptables-restore < /etc/artica-postfix/iptables.new.conf");
+system("$iptables_restore < /etc/artica-postfix/iptables.new.conf");
 }
 
 function export_rules(){

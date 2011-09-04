@@ -1,5 +1,7 @@
 <?php
 
+phpToArray();
+
 die();
 apc_compile();
 
@@ -59,7 +61,39 @@ function compile_files($dir){
 }
 
 
-
+function phpToArray(){
+	$f=explode("\n", @file_get_contents("/etc/php5/cli/php.ini"));
+	 while(list($index,$v) = each($f)){
+	 	
+	 	if(strpos($v,"]")>0){
+	 		$p[]="\$f[]=\"$v\";";
+	 		continue;
+	 	}
+	 	
+	 	if(preg_match("#(.+)=(.+)#", $v,$re)){
+	 		$key=trim($re[1]);
+	 		$value=trim($re[2]);
+	 		$value=str_replace('"', '', $value);
+	 		$t[]= "if(!isset(\$this->Params[\"PHP_VALUES\"][\"$key\"])){\$this->Params[\"PHP_VALUES\"][\"$key\"]=null;}";
+	 		$s[]= "if(\$this->Params[\"PHP_VALUES\"][\"$key\"]==null){\$this->Params[\"PHP_VALUES\"][\"$key\"]=\"$value\";}";
+	 		$p[]="\$f[]=\"$key = \\\"{\$this->Params[\"PHP_VALUES\"][\"$key\"]}\\\"\";";
+	 		
+	 		
+	 	}
+	 	
+	 	if(preg_match("#extension.*?=(.+)#", $v,$re)){
+	 		$w[]=trim($re[1]);
+	 		
+	 	}
+	 	
+	 	
+	 }
+	 echo @implode("\n", $t);
+	 echo @implode("\n", $s);
+	 echo @implode("\n", $p);
+	echo @implode("\n", $w);
+	
+}
 
  
 

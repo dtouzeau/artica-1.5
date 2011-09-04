@@ -50,7 +50,7 @@ class samba{
 		$this->EnableSMB2=$sock->GET_INFO("EnableSMB2");	
 		$this->client_ntlmv2_auth=$sock->GET_INFO("client_ntlmv2_auth");	
 		
-		$this->check36Spects();
+		
 		
 		if(isset($GLOBALS["AS_ROOT"])){
 			if($GLOBALS["AS_ROOT"]){$this->posix_getuid=0;}else{$this->posix_getuid=100;}
@@ -165,7 +165,7 @@ function BuildDefaults(){
 	$SambaNetBiosName=trim($sock->GET_INFO("SambaNetBiosName"));
 	if($SambaNetBiosName<>null){$this->main_array["global"]["netbios name"]=$SambaNetBiosName;}	
 	if($GLOBALS["VERBOSE"]){writelogs("Building default settings done...",__CLASS__."/".__FUNCTION__,__FILE__,__LINE__);}
-	$this->check36Spects();
+	
 }
 
 function SaveUSB(){
@@ -631,7 +631,7 @@ function ChangeSID($sid){
 		while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
 			if($ligne["domain"]<>null){$n[]="{$ligne["ipaddr"]}/$DOMAIN";}else{$n[]=$ligne["ipaddr"];}
 		}
-		if(count($n)>0){return "remote announce = ". @implode(" ",$n)."\n";}
+		if(count($n)>0){return "\tremote announce = ". @implode(" ",$n)."\n";}
 		
 		$nets=$this->ldap->load_mynetworks();
 		if(!is_array($nets)){return;}
@@ -646,7 +646,7 @@ function ChangeSID($sid){
 			
 			
 		}
-		if(is_array($n)){return "remote announce = ". @implode(" ",$n)."\n";}
+		if(is_array($n)){return "\tremote announce = ". @implode(" ",$n)."\n";}
 		
 	}
 
@@ -726,24 +726,23 @@ private function WINBINDD_PARAMS(){
 		$conf[]="\tsecurity = ADS";
 		//$conf[]="\tpassword server=".strtolower("{$this->config_activedirectory["ADSERVER"]}.{$this->config_activedirectory["ADDOMAIN"]}");
 		$conf[]="\trealm = ". strtoupper($this->config_activedirectory["ADDOMAIN"])."\n";
-		$conf[]="\tidmap config $WORKGROUP:backend = rid";
-		$conf[]="\tidmap config $WORKGROUP:read only = yes";
-		//$conf[]="\tidmap config $WORKGROUP:schema_mode = rfc2307";
-		$conf[]="\tidmap config $WORKGROUP:range = 60000-50000000";
-		$conf[]="\tidmap config $WORKGROUP:base_rid = 0";
+		$conf[]="\tidmap config $WORKGROUP:backend	= rid";
+		$conf[]="\tidmap config $WORKGROUP:read only= yes";
+		$conf[]="\tidmap config $WORKGROUP:range	= 100000 - 199999";
+		$conf[]="\tidmap config $WORKGROUP:base_rid	= 0";
 
  
 		
 		if($upTo36==1){
-			$conf[]="\tidmap config * : backend = tdb";
-			//$conf[]="\tidmap config * : range = 16777216-33554431";
-			$conf[]="\tidmap config * : range =  1000000-1999999";
-			$conf[]="\tclient use spnego = No";
-        	$conf[]="\tclient use spnego principal = No";
+			$conf[]="\tidmap config * : backend	= rid";
+			$conf[]="\tidmap config * : range	=  70000 - 99999";
+			$conf[]="\tidmap config * : base_rid= 0";
+			$conf[]="\tclient use spnego	= No";
+        	$conf[]="\tclient use spnego principal	= No";
 		}else{
-			$conf[]="\tidmap gid = 16777216-33554431";
-			$conf[]="\tidmap uid = 16777216-33554431";
-			$conf[]="\tclient use spnego = Yes";
+			$conf[]="\tidmap gid = 70000 - 99999";
+			$conf[]="\tidmap uid = 70000 - 99999";
+			//$conf[]="\tclient use spnego = Yes";
 		}
 		$conf[]="\tencrypt passwords = Yes";
 		if($this->client_ntlmv2_auth==1){$conf[]="\tclient ntlmv2 auth = Yes";$conf[]="\tclient lanman auth = No";}
@@ -817,6 +816,7 @@ private function netbios_aliases(){
 	$results=$q->QUERY_SQL($sql,"artica_backup");
 	if(!$q->ok){echo "$q->mysql_error\n";}
 	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
+		if($ligne["hostname"]=="master"){continue;}
 		if(strlen($ligne["hostname"])>19){$ligne["hostname"]=substr($ligne["hostname"], 0,19);}
 		$this->samba_aliases[]=$ligne["hostname"];
 		
@@ -827,25 +827,7 @@ private function netbios_aliases(){
 	
 }
 
-private function check36Spects(){
-	$version=$this->SAMBA_VERSION;
-	$upTo36=0;
-	if(preg_match("#^([0-9]+)\.([0-9]+)#", $version,$re)){
-		$major=intval($re[1]);
-		$minor=intval($re[2]);
-		if($major>=3){if($minor>=6){$upTo36=1;$upTo357=1;}}
-	}
-	
-	if($upTo36==0){$this->EnableSMB2=0;return;}
-	if(!is_numeric($this->EnableSMB2)){$this->EnableSMB2=1;}
-	if(!is_numeric($this->client_ntlmv2_auth)){$this->client_ntlmv2_auth=1;}
-	writelogs("Samba 3.6.x detected EnableSMB2 = $this->EnableSMB2 client_ntlmv2_auth=$this->client_ntlmv2_auth",__CLASS__."/".__FUNCTION__,__FILE__,__LINE__);
-	
-	
-	if($this->EnableSMB2==1){$conf[]="\tmax protocol = SMB2";}
-	return @implode("\n", $conf);
-	
-}
+
 
 
 function BuildConfig(){
@@ -859,7 +841,10 @@ function BuildConfig(){
 			$SambaNetBiosName=trim($sock->GET_INFO("SambaNetBiosName"));
 			$SambaActAsWins=$sock->GET_INFO("SambaActAsWins");
 			$SambaWinsServer=$sock->GET_INFO("SambaWinsServer");
-			$SambaUsDNS=$sock->GET_INFO("SambaUsDNS");		
+			$SambaUsDNS=$sock->GET_INFO("SambaUsDNS");	
+			$SambaRoamingEnabled=$sock->GET_INFO('SambaRoamingEnabled');
+			
+			if(!is_numeric($SambaRoamingEnabled)){$SambaRoamingEnabled=0;}		
 			if(!preg_match('#([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)#',$SambaWinsServer)){$SambaWinsServer="0.0.0.0";}
 			if(!is_numeric($SambaUsDNS)){$SambaUsDNS=0;}
 			if(!is_numeric($SambaActAsWins)){$SambaActAsWins=0;}
@@ -876,6 +861,7 @@ function BuildConfig(){
 				$sock->SET_INFO("SambaNetBiosName", $hostname);
 			}
 			$netbiosname=$this->main_array["global"]["netbios name"];
+			if($SambaRoamingEnabled==1){$this->main_array["global"]["domain logons"]="yes";}
 			
 
 			if($GLOBALS["VERBOSE"]){writelogs("[$netbiosname]: Checking aliases...",__CLASS__."/".__FUNCTION__,__FILE__,__LINE__);}
@@ -931,7 +917,18 @@ function BuildConfig(){
 			$conf[]="\tnetbios name = {$this->main_array["global"]["netbios name"]}";
 			$conf[]="\tserver string = {$this->main_array["global"]["server string"]}";
 			$conf[]="\tdisable netbios ={$this->main_array["global"]["disable netbios"]}";
-			$conf[]=$this->check36Spects();
+			
+			$mySamba=new samba_aliases("master");
+			if($mySamba->upTo357==0){
+				if($mySamba->main_array["global"]["strict_allocate"]==1){$conf[]="\tstrict allocate = Yes";}else{$conf[]="\tstrict allocate = No";}
+			}
+			if($mySamba->main_array["global"]["strict_locking"]==1){$conf[]="\tstrict locking = Auto";}else{$conf[]="\tstrict locking = No";}
+			if($mySamba->main_array["global"]["sync_always"]==1){$conf[]="\tsync always = Yes";}else{$conf[]="\tsync always = No";}
+			if($mySamba->main_array["global"]["getwd_cache"]==1){$conf[]="\tgetwd cache = Yes";}else{$conf[]="\tgetwd cache = No";}
+			if($mySamba->main_array["global"]["smb2_protocol"]==1){$conf[]="\tmax protocol = SMB2";}else{$conf[]="\tmax protocol = NT1";}			
+			
+			
+			
 			$this->main_array["global"]["name resolve order"]=str_replace("dns","",$this->main_array["global"]["name resolve order"]);
 			if($GLOBALS["VERBOSE"]){writelogs("[$netbiosname]: name resolve order ={$this->main_array["global"]["name resolve order"]}",__CLASS__,__FUNCTION__,__FILE__);}
 			
@@ -980,14 +977,15 @@ private function SECOND_PART(){
 
 			
 				
-			if($GLOBALS["VERBOSE"]){writelogs("DisableSambaFileSharing.: [$netbiosname]: $DisableSambaFileSharing",__CLASS__."/".__FUNCTION__,__FILE__,__LINE__);}
-			if($GLOBALS["VERBOSE"]){writelogs("SambaRoamingEnabled.....: [$netbiosname]: $SambaRoamingEnabled",__CLASS__.'/'.__FUNCTION__,__FILE__);}
+			if($GLOBALS["VERBOSE"]){writelogs("[$netbiosname]: DisableSambaFileSharing.: $DisableSambaFileSharing",__CLASS__."/".__FUNCTION__,__FILE__,__LINE__);}
+			if($GLOBALS["VERBOSE"]){writelogs("[$netbiosname]: SambaRoamingEnabled.....: $SambaRoamingEnabled",__CLASS__.'/'.__FUNCTION__,__FILE__);}
 			
 			
 			if($DisableSambaFileSharing==1){$this->EnablePrintersSharing=0;}
 
 			if($SambaRoamingEnabled==1){
 				$this->main_array["global"]["domain logons"]="yes";
+				
 			}
 			
 			if($SambaEnableRemoteAnnounce==1){
@@ -1178,6 +1176,10 @@ private function SECOND_PART(){
 							if($KEY=="write_list"){continue;}
 							if($KEY=="read_list"){continue;}
 							if($KEY=="valid_users"){continue;}
+							if($this->KEY_NOT_DIR_COMPATIBLE($KEY)){
+								writelogs("Folder............: $KEY No compatible, aborting",__CLASS__,__FUNCTION__,__FILE__);
+								continue;
+							}
 							if($VALS==null){continue;}
 							writelogs("Folder............: $FOLDER $KEY = $VALS",__CLASS__,__FUNCTION__,__FILE__);
 							$conf[]="\t$KEY = $VALS";
@@ -1187,20 +1189,33 @@ private function SECOND_PART(){
 			}
 			
 			
-				$conf[]="[netlogon]";
-				$conf[]="\tpath = /home/netlogon/";
-				$conf[]="\twritable = No";
-				$conf[]="\tbrowseable = No";
-				$conf[]="\twrite list = root";
+
 				
 				
 			
 			$domain_logon=$this->main_array["global"]["domain logons"];
+			if($SambaRoamingEnabled==1){
+				$conf[]="[netlogon]";
+				$conf[]="\tpath = /home/netlogon/";
+				$conf[]="\twritable = No";
+				$conf[]="\tbrowseable = No";
+				$conf[]="\twrite list = root";				
+				$domain_logon="yes";
+			}
+			
+			
 			if($GLOBALS["VERBOSE"]){writelogs("[$netbiosname]: Domain logon......: $domain_logon",__CLASS__,__FUNCTION__,__FILE__);}
 			if(strtolower($domain_logon)=='yes'){
 				if($SambaRoamingEnabled==1){
 					$profile_path=$sock->GET_INFO('SambaProfilePath');
 					if(trim($profile_path)==null){$profile_path="/home/export/profile";}
+					if($GLOBALS["AS_ROOT"]){
+						if(!is_dir($profile_path)){
+							@mkdir($profile_path,644,true);
+							shell_exec("/bin/chmod 700 $profile_path >/dev/null 2>&1");
+						}
+					}
+										
 					$conf[]="[profiles]";
 					$conf[]="\t#see USERENV.LOG in c:\windows\debug\UserMod on Windows XP for troubleshooting";
 					$conf[]="\tpath = $profile_path";
@@ -1215,6 +1230,17 @@ private function SECOND_PART(){
 					$conf[]="\tdirectory mask = 0700";
 					$conf[]="\tcomment = Roaming user profile storage";
 					$conf[]="\thide files=/Desktop.ini/Thumbs.db/lost+found";
+					if($GLOBALS["AS_ROOT"]){
+						$unix=new unix();
+						$mkdir=$unix->find_program("mkdir");
+						$chown=$unix->find_program("chown");
+					}else{
+						$mkdir="mkdir";
+						$chown="chown";
+					}
+					$conf[]="\troot preexec = $mkdir -p -m 770 $profile_path/\"%U\" && $mkdir -p -m 770 $profile_path/\"%U\".V2";
+					$conf[]="\troot postexec = $chown -R \"%u\" $profile_path/\"%u\"/";
+					
 					$conf[]="";
 					$conf[]="[profiles.V2]";
 	        		$conf[]="\tcopy = profiles";
@@ -1296,6 +1322,69 @@ public function LOAD_RECYCLES_BIN(){
 	}	
 	
 	return $f;
+}
+
+private function KEY_NOT_DIR_COMPATIBLE($key){
+		if(preg_match("#idmap alloc#", $key)){return true;}
+		$array["syslog"]=true;// 3
+		$array["log level"]=true;// 1
+		$array["log file"]=true;// /var/log/samba/log.%m
+		$array["debug timestamp"]=true;// yes
+		$array["usershare allow guests"]=true;// no
+		$array["usershare max shares"]=true;// 100
+		$array["usershare owner only"]=true;// true
+		$array["usershare path"]=true;// /var/lib/samba/usershares/data
+		$array["guest account"]=true;// nobody
+		$array["map to guest"]=true;// Bad Password
+		$array["template homedir"]=true;// /home/%U
+		$array["template shell"]=true;// /bin/false
+		$array["enable privileges"]=true;// yes
+		$array["domain master"]=true;// yes
+		$array["local master"]=true;// yes
+		$array["preferred master"]=true;// yes
+		$array["domain logons"]=true;// yes
+		$array["os level"]=true;// 34
+		$array["ldap passwd sync"]=true;// no
+		$array["winbind use default domain"]=true;// yes
+		$array["winbind enum users"]=true;// yes
+		$array["winbind enum groups"]=true;// yes
+		$array["password server"]=true;// *
+		$array["encrypt passwords"]=true;// true
+		$array["winbind separator"]=true;// /
+		$array["winbind uid"]=true;// 10000-20000
+		$array["winbind gid"]=true;// 10000-20000
+		$array["security"]=true;// user
+		$array["printing"]=true;// bsd
+		$array["client lanman auth"]=true;// yes
+		$array["client ntlmv2 auth"]=true;// yes
+		$array["ldap delete dn"]=true;// yes
+		$array["passdb backend"]=true;
+		$array["add machine script"]=true;
+		$array["ldap admin dn"]=true;
+		$array["ldap suffix"]=true;
+		$array["ldap group suffix"]=true;
+		$array["ldap user suffix"]=true;
+		$array["ldap machine suffix"]=true;
+		$array["ldap ssl"]=true;// off
+		$array["ldapsam:trusted"]=true;// yes
+		$array["ldapsam:editposix"]=true;// yes
+		$array["ldap idmap suffix"]=true;
+		$array["idmap backend"]=true;
+		$array["idmap uid"]=true;
+		$array["idmap gid"]=true;
+		$array["idmap alloc backend"]=true;
+		$array["idmap alloc config:ldap_base_dn"]=true;
+		$array["idmap alloc config:ldap_user_dn"]=true;
+		$array["idmap alloc config:ldap_url"]=true;
+		$array["idmap alloc config:range"]=true;
+		$array["socket options"]=true;
+		$array["wins support"]=true;
+		$array["time server"]=true;
+		$array["msdfs root"]=true;
+		$array["host msdfs"]=true;
+		if($array[$key]){return true;}
+		return false;	
+	
 }
 
 

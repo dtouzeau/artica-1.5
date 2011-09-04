@@ -561,7 +561,71 @@ function BuildLittleTemplate($title,$status=false,$onfailed=null){
 	return $this->BuildDesign_infos($img,'{srv_artica}',$text,$color);
 	
 	}
+
+function kav4proxy_status(){
+	if(!function_exists("mysql_connect")){
+		return "<H2>Unable to stat  function mysql_connect, check php Mysql module or reboot the server</H2>";
+	}
+
+	$q=new mysql();
+	$ini=new Bs_IniHandler();
+	$sock=new sockets();
+	$ini->loadString(base64_decode($sock->getFrameWork("cmd.php?squid-ini-status=yes")));
+	$master_version=$ini->_params["KAV4PROXY"]["master_version"];
+	$master_pid=$ini->_params["KAV4PROXY"]["master_pid"];	
+	$img="status_kas_bg_ok.png";
 	
+	$table="Kav4Proxy_".date("Ym");
+	if($ini->_params["KAV4PROXY"]["running"]==0){
+		
+		$img="status_kas_bg_failed.png";
+		$text="{stopped}<br>{using_version} $master_version";
+		
+	
+	}else{
+		$text="{service_running}<br>{using_version} $master_version {pid} $master_pid";
+		
+	}
+	$requests=$q->COUNT_ROWS("$table","artica_events");
+	$requests=numberFormat($requests,0,""," ");	
+	
+	$sql="SELECT COUNT( zmd5 ) AS tcount FROM kav4proxyVirus WHERE MONTH( days ) = MONTH( NOW( ) ) ";
+	$ligneW=@mysql_fetch_array($q->QUERY_SQL($sql,"artica_events"));
+	$blocked_today=numberFormat($ligneW["tcount"],0,""," ")." {infected_websites} {this_month}";	
+	
+	$categories=$q->COUNT_ROWS("dansguardian_community_categories","artica_backup");
+	$categories=numberFormat($categories,0,""," ");		
+
+	$websitesnums=$q->COUNT_ROWS("dansguardian_sitesinfos","artica_backup");
+	$websitesnums=numberFormat($websitesnums,0,""," ");		
+	
+	
+	
+	$design="
+	<div style='background-image:url(img/$img);background-repeat:no-repeat;width:350px;height:270px'>
+		<div style='padding-left:155px'>
+			<h3 style='font-size:16px;font-weight:bold;'>{APP_KAV4PROXY}</h3>
+			<div style='font-size:12px;font-weight:bold'>$text</div>
+			<br>
+			<div style='font-size:12px;margin-top:4px;border-top:1px solid #CCCCCC;text-align:right;width:220px'><i><strong>$requests {requests}</strong></i></div>
+			<div style='font-size:12px;text-align:right;width:220px' $pointers OnClick=\"javascript:Loadjs('squid.visited.php')\"><i><strong style='text-decoration:none'>$categories {websites_categorized}</strong></i></div>
+			<div style='font-size:12px;text-align:right;width:220px' $pointers OnClick=\"javascript:Loadjs('squid.visited.php')\"><i><strong style='text-decoration:none'>$websitesnums {visited_websites}</strong></i></div>
+			<div style='font-size:10px;text-align:right;width:220px' $pointers OnClick=\"javascript:Loadjs('squid.visited.php')\"><i><strong style='text-decoration:none'>$blocked_today</strong></i></div>
+			
+		</div>
+	</div>
+	
+	";
+	
+		$cache_file=dirname(__FILE__)."/logs/web/kav4proxy.status.html";
+		writelogs("Writing $cache_file",__CLASS__."/".__FUNCTION__,__FILE__,__LINE__);
+		@file_put_contents($cache_file,$design);
+		@chmod($cache_file,777);
+	
+	return $design;		
+	
+	
+}
 	
 function Squid_status(){
 	if(!function_exists("mysql_connect")){
@@ -573,6 +637,11 @@ function Squid_status(){
 	$ini->loadString(base64_decode($sock->getFrameWork("cmd.php?squid-ini-status=yes")));
 	$master_version=$ini->_params["SQUID"]["master_version"];
 	$master_pid=$ini->_params["SQUID"]["master_pid"];
+
+
+	
+	
+	
 	
 if($ini->_params["SQUID"]["running"]==0){
 		$img="status_postfix_bg_failed.png";

@@ -71,7 +71,7 @@ function HTTP_BLOCKED_STATS(){
 function admin_system(){
 	
 	
-	
+	$users=new usersMenus();
 	$browse=Buildicon64("DEF_ICO_BROWSE_COMP");
 	$disks=Paragraphe("64-hd.png",'{internal_hard_drives}','{internal_hard_drives_text}',"javascript:Loadjs('system.internal.disks.php');","{internal_hard_drives_text}");
 	$net=Paragraphe('network-connection2.png','{net_settings}','{net_settings_text}',"javascript:Loadjs('system.nic.config.php?js=yes')",'net_settings_text');
@@ -113,10 +113,16 @@ function admin_system(){
 		}
 	}
 	
+	if($users->FROM_ISO){
+		$FROMISO=Paragraphe('64-CD.png','{MENU_CONSOLE}','{MENU_CONSOLE_TEXT}',"javascript:Loadjs('artica.iso.php')","{MENU_CONSOLE_TEXT}");
+		
+	}
+	
 	
 	
 	$massmailing=Paragraphe('mass-mailing-64.png','{email_campaigns}','{APP_MASSMAILING_ENABLE_TEXT}',"javascript:Loadjs('system.enable.massmailing.php');","{APP_MASSMAILING_ENABLE_TEXT}");
 	$tr[]=$frontend_settings;
+	$tr[]=$FROMISO;
 	$tr[]=$memdump;
 	$tr[]=$artica_events;
 	$tr[]=$ActiveDirectoryConnection;

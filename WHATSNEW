@@ -1,5 +1,38 @@
-1.5.082013: 
+1.5.090420:
+========================================================================================
+Messaging Changes:
+-------------------------------------------------
+1.5.090117: Remove /usr/share/roundcube/plugins/remember_me plugin has an incompatible plugin for the latest roundcube version.
+1.5.090117: Add possibility to turn InstantIptables to the Whitelist model.
+1.5.090120: Adding automatically in whitelist load balancer configuration in iptables when turning InstantIptables to the Whitelist model
+1.5.090215: Fix misconfigurations on milter-greylist.
+1.5.090215: Add graphs in milter-greylist section and admin section when using single-instance.
 
+File Sharing changes
+-------------------------------------------------
+1.5.090217: Fix artica did not create V2 profile for Windows 7 (see http://www.artica.fr/forum/viewtopic.php?f=32&t=4527&start=0#p20818)
+1.5.090301: Add a new feature in order to see Samba connections and opened files in shares.
+1.5.090301: Add a new feature that display what should the user see when browsing the server.
+1.5.090301: Fix disabling roaming mode are not accepted by Windows Workstations... They still want to replicate profiles when using Samba has PDC mode.
+
+
+System Changes:
+------------------------------------------------
+1.5.090217: Add switch to enable specific network settings for OVH servers.(see http://www.artica.fr/forum/viewtopic.php?f=25&t=4526&start=0#p20892)
+1.5.090218: Fix unable to enable schedule feature on Artica update (see http://forum.artica.fr/viewtopic.php?f=10&t=4539&start=0#p20903)
+1.5.090218: Add possibility to change and display the group description (see http://forum.artica.fr/viewtopic.php?f=25&t=4535&start=0#p20915).
+1.5.090420: Fix Artica error web page (no output) on CentOS when Artica cannot retreive the Apache account.
+
+Proxy changes:
+------------------------------------------------
+1.5.090316: Add a feature that display cache storage engine performance (see http://www.artica.fr/forum/viewtopic.php?f=38&t=4540)
+
+FreeWebs changes:
+------------------------------------------------
+1.5.090412: Add mod_fcgid Support (see http://forum.artica.fr/viewtopic.php?f=123&t=4547)
+1.5.090420: Unable to make FreeWebs working under Fedora or CentOS.
+
+1.5.083101: 
 ========================================================================================
 Messaging Changes:
 -------------------------------------------------
@@ -9,10 +42,21 @@ Messaging Changes:
 1.5.081800: Add --nogpg when update spamassassin in order to fix error: gpg required but not found! (see http://forum.artica.fr/viewtopic.php?f=10&t=4379)
 1.5.082013: Add possibility to run a fetchmail rule in debug mode.
 1.5.082013: Add new feature that able to notify, manage, Zarafa orphaned stores.
+1.5.082118: Remove the netmask calculation when adding network in postfix single instance(see http://www.artica.fr/forum/viewtopic.php?f=20&t=4399)
+1.5.082118: Fix artica set the sieve port to 0 when it cannot found it in /etc/services. In this case, the sieve port will be set to 2000 
+1.5.082118: Fix missing class in IntsantIptables (see http://www.artica.fr/forum/viewtopic.php?f=10&t=4408)
+1.5.082223: Fix milter-greylist unable to update it's database when using postfix multiple-instances (see http://www.artica.fr/forum/viewtopic.php?f=20&t=4405&start=0)
+1.5.082301: Add possibility to switch Zarafa authentication mode from Zarafa php logon screen page to Apache LDAP authentication method (see http://www.artica.fr/forum/viewtopic.php?f=108&t=4416)
+1.5.082517: Fix Network Error for Zarafa 6.x in setup Center.
+1.5.082517: Add possibility to change the local listen SMTP port (see http://forum.artica.fr/viewtopic.php?f=26&t=4444&start=0#p20578)
+1.5.083101: Fix Amavis Can't connect to TCP port 10024 on 127.0.0.1 [Address already in use] (see http://forum.artica.fr/viewtopic.php?f=55&t=4482) 
+1.5.083101: Fix unable to upgrade to last RoundCube version (see http://forum.artica.fr/viewtopic.php?f=40&t=4505).
 
 File Sharing changes
 -------------------------------------------------
 1.5.081619: Add possibility to maintain the recycle-bin like in order to restore, delete stored files. (see http://www.artica.fr/forum/viewtopic.php?f=42&t=4323&start=0)
+1.5.082713: Fix Artica did not create profile directory ( see http://www.artica.fr/forum/viewtopic.php?f=32&t=4438&start=10#p20668) 
+1.5.082713: New support of strict locking,sync always,getwd cache Samba options.(see http://www.artica.fr/forum/viewtopic.php?f=32&t=4462&start=0)
 
 System Changes
 -------------------------------------------------
@@ -23,19 +67,36 @@ System Changes
 1.5.082013: Enabling Active Directory strict connexion will enable a new engine that able to cache all Active Directory items into the local Mysql Artica Database. This to handle database more than 1500 users and accelerate users browsing.
 1.5.082013: The getent users and groups exportation is now cached every 2 hours in mysql instead running the command by the framework each time in order to speed the web interface and handle many users when using an Active Directory connexion.
 1.5.082013: Fix corrupted disks discover php "usb.scan.inc" file when Artica cannot external external devices inodes informations.  
+1.5.082223: Automatically remove /etc/cron.d/awstats that generate too much SPAM.(see http://www.artica.fr/forum/viewtopic.php?f=20&t=4400&start=0)
+1.5.082223: Fix wrong PowerDNS status (see http://www.artica.fr/forum/viewtopic.php?f=10&t=4409&start=0)
+1.5.082517: Fix unable to search members since last nightly (see http://forum.artica.fr/viewtopic.php?f=10&t=4443)
+1.5.083101: Now BackupPC is disabled by default.
+1.5.083120: Artica can be updated by a schedule instead a period. (see http://forum.artica.fr/viewtopic.php?f=12&t=4504&start=0)
+
 
 FreeWebs changes
 -------------------------------------------------
 1.5.081800: Add possibility to hide completely FreeWebs Feature (see http://forum.artica.fr/viewtopic.php?f=119&t=4370&start=0)
+1.5.082223: When DNSMasq or PowerDNS is installed on the server, the FreeWebs section allow to play with local DNS entries When adding or removing a website.
+1.5.082223: Add Joomla 1.7x support (see http://www.artica.fr/forum/viewtopic.php?f=10&t=4378&p=20428#p20428)
+1.5.082315: Add possibility to block internet users by country. (see http://www.artica.fr/forum/viewtopic.php?f=123&t=4431&start=0)
+1.5.082517: Fix loosing saved previous settings when affect a groupware to FreeWeb website.
+1.5.082702: Add mod_pagespeed module support (see http://www.artica.fr/forum/viewtopic.php?f=12&t=4463&start=0) 
+1.5.082813: Add WordPress support.(see http://forum.artica.fr/viewtopic.php?f=12&t=4424)
 
 Proxy Changes:
 -------------------------------------------------
 1.5.082013: Display Kaspersky Anti-Virus For proxy Server license.
-1.5.082013: Add possibility to manage groups for Kaspersky Anti-Virus For proxy Server
+1.5.082013: Add possibility to manage groups for Kaspersky Anti-Virus For proxy Server.
+1.5.082118: Add a new filtering category called Internal used for storing intranet websites.
+1.5.082118: improve web interface for Kaspersky For Proxy server.
+1.5.082223: Add a new category called "maps" in web filtering.
+1.5.082702: Fix unable to upload the Kav For Proxy license file.
+1.5.082702: Fix unable to update blacklist databases
 
 
 // http://khopesh.com/wiki/Anti-spam#SA_utility_scripts ??
-
+// git diff master 2011-08 --name-only
 
 1.5.081415:
 ========================================================================================

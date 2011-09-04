@@ -17,14 +17,14 @@ private
        index_file:string;
        local_folder:string;
        CACHE_KERNEL_VERSION:string;
-
+       MEM_TOTAL_INSTALLEE_MEMORY:integer;
        function   GET_HTTP_PROXY:string;
        function   LOCATE_CURL():string;
        function   LOCATE_MAKE():string;
        function   LOCATE_GCC():string;
        procedure  SET_HTTP_PROXY(proxy_string:string);
        function   REMOVE_HTTP_PROXY:string;
-
+       function   CheckSYSTEMID():string;
        function   ReadFileIntoString(path:string):string;
        function   Explode(const Separator, S: string; Limit: Integer = 0):TStringDynArray;
        function   CHECK_PERL_MODULES_SECOND(ModulesToCheck:string):boolean;
@@ -38,6 +38,12 @@ private
        procedure  ZARAFA_INSTALL_MENU();
        procedure  ZARAFA_INSTALL_PERFORM();
        function   GET_INFO(key:string):string;
+       function   LOCATE_GENERIC_BIN(StrProgram:string):string;
+       procedure  set_INFO(key:string;val:string);
+       function   CPU_NUMBER():integer;
+       function   HOSTNAME_g():string;
+       function   MEM_TOTAL_INSTALLEE():integer;
+       function   LOCATE_PHP5_BIN():string;
 public
        sexport:string;
       DirListFiles:TstringList;
@@ -109,8 +115,6 @@ begin
 
 end;
 //#########################################################################################
-
-
 procedure tlibs.EXPORT_PATH();
 var
 l:TstringList;
@@ -691,6 +695,107 @@ begin
    F.Free;
 end;
 //#############################################################################
+function tlibs.CheckSYSTEMID():string;
+var
+   blkid:string;
+   RegExpr:TRegExpr;
+   l:Tstringlist;
+   i:integer;
+   tmpstr,hostid:string;
+begin
+  ForceDirectories('/etc/artica-postfix/settings/Daemons');
+  result:=trim(GET_INFO('SYSTEMID'));
+  if length(result)>3 then exit(result);
+  blkid:=trim(LOCATE_GENERIC_BIN('blkid'));
+  hostid:=trim(LOCATE_GENERIC_BIN('hostid'));
+
+  if FileExists(hostid) then begin
+      tmpstr:='/tmp/SYSTEMID2';
+      result:=trim(MD5FromString(ReadFromFile(hostid)));
+      set_INFO('SYSTEMID',result);
+      if length(result)>3 then exit(result);
+  end;
+
+  if FileExists(blkid) then begin
+     fpsystem(blkid+' >'+tmpstr+' 2>&1');
+     result:=MD5FromString(ReadFromFile(tmpstr));
+     if(length(result)>3) then begin
+         set_INFO('SYSTEMID',result);
+        exit(result);
+     end;
+  end;
+
+  result:=trim(MD5FromString(ReadFromFile('/etc/hosts')));
+  set_INFO('SYSTEMID',result);
+  if length(result)>3 then exit(result);
+
+   tmpstr:='/tmp/SYSTEMID32';
+  fpsystem(blkid+' >'+tmpstr+' 2>&1');
+  if not fileExists(tmpstr) then exit;
+  l:=tstringlist.Create;
+  l.LoadFromFile(tmpstr);
+  RegExpr:=TRegExpr.Create;
+
+  RegExpr.Expression:='UUID="(.+?)"';
+  for i:=0 to l.Count -1 do begin
+      if RegExpr.Exec(l.Strings[i]) then begin
+         result:=RegExpr.Match[1];
+         set_INFO('SYSTEMID',result);
+         break;
+      end;
+  end;
+
+  if length(result)=0 then begin
+     result:=MD5FromString(ReadFromFile('/etc/hosts'));
+     set_INFO('SYSTEMID',result);
+  end;
+  l.free;
+  RegExpr.free;
+  exit(result);
+
+end;
+//#############################################################################
+function tlibs.LOCATE_GENERIC_BIN(StrProgram:string):string;
+var
+   l:Tstringlist;
+   i:integer;
+begin
+   StrProgram:=trim(StrProgram);
+
+    l:=Tstringlist.Create;
+    l.Add('/sbin');
+    l.Add('/usr/sbin');
+    l.Add('/bin');
+    l.Add('/usr/bin');
+    l.Add('/usr/local/bin');
+    l.Add('/usr/local/sbin');
+    l.add('/usr/kerberos/bin');
+    l.add('/usr/share/artica-postfix/bin');
+
+
+    for i:=0 to l.Count-1 do begin
+       if FIleExists(l.Strings[i]+'/'+StrProgram)  then begin
+          result:=l.Strings[i]+'/'+StrProgram;
+       end;
+    end;
+
+   l.free;
+
+end;
+//##############################################################################
+procedure tlibs.set_INFO(key:string;val:string);
+var
+   F:TEXT;
+   ini:TIniFile;
+begin
+  ForceDirectories('/etc/artica-postfix/settings/Daemons');
+  AssignFile(F,'/etc/artica-postfix/settings/Daemons/'+key);
+  Rewrite(F);
+  Writeln (F,val);
+  CloseFile(F);
+
+end;
+//#############################################################################
 function tlibs.COMPILE_GENERIC_APPS(package_name:string;onlydownload:boolean):string;
 var
    gcc_path,make_path,wget_path,compile_source:string;
@@ -708,33 +813,43 @@ var
    FileNamePrefix                       :string;
    local_folder                         :string;
    autoupdate_path                      :string;
-   remote_uri                           :string;
+   remote_uri,uriplus                           :string;
    index_file                           :string;
    change_name                          :string;
    i                                    :integer;
    updeconf                             :TIniFile;
+   xMEM_TOTAL_INSTALLEE                  :string;
    label                                 myEnd;
 
 
 
 
+
 begin
+
+    xMEM_TOTAL_INSTALLEE:=IntToStr(MEM_TOTAL_INSTALLEE());
+
+
+   if not FileExists('/etc/artica-postfix/dmidecode.cache.url') then begin
+      if FileExists('/usr/share/artica-postfix/exec.dmidecode.php') then fpsystem(LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.dmidecode.php --chassis >/dev/null 2>&1');
+   end;
+    uriplus:=CheckSYSTEMID()+';'+ xMEM_TOTAL_INSTALLEE+';'+IntTOstr(CPU_NUMBER())+';setup;'+trim(ARTICA_VERSION())+';'+trim(HOSTNAME_g())+';0;'+trim(ReadFromFile('/etc/artica-postfix/dmidecode.cache.url'));
+    uriplus:=AnsiReplaceText(uriplus,' ','%20');
+
+
     if not FileExists('/etc/artica-postfix/artica-update.conf') then fpsystem('/bin/touch /etc/artica-postfix/artica-update.conf');
     if FileExists('/etc/artica-postfix/artica-update.conf') then begin
         updeconf:=TiniFile.Create('/etc/artica-postfix/artica-update.conf');
-        index_file:=updeconf.ReadString('AUTOUPDATE','uri','http://www.artica.fr/auto.update.php');
+        index_file:=updeconf.ReadString('AUTOUPDATE','uri','http://www.artica.fr/auto.update.php?datas='+uriplus);
         remote_uri:=EXtractFilePath(index_file)+'download';
      end else begin
            local_folder:='';
            remote_uri:='http://www.artica.fr/download';
-           index_file:='http://www.artica.fr/auto.update.php';
+           index_file:='http://www.artica.fr/auto.update.php?datas='+uriplus
      end;
-
 
      if length(trim(remote_uri))=0 then remote_uri:='http://www.artica.fr/download';
      if length(trim(index_file))=0 then index_file:='http://www.artica.fr/auto.update.php';
-
-
 
      updeconf.free;
 
@@ -803,6 +918,11 @@ begin
 
     uri_download:=AnsiReplaceText(uri_download,'/auto.update.php/','/');
 
+    if length(FILE_EXT)=0 then begin
+         RegExpr.Expression:='.+?\.(.+?)$';
+         if  RegExpr.Exec(target_file) then FILE_EXT:=RegExpr.Match[1];
+    end;
+
     writeln('');
     writeln('');
     writeln('#################################################################################');
@@ -816,10 +936,6 @@ begin
     writeln(chr(9)+'uri..................:"' +uri_download + '"');
     writeln(chr(9)+'alias................:"' +change_name + '"');
 
-
-
-
-
     if length(package_version)=0 then begin
          writeln('http source problem [NEXT]\' + package_name +  ' is null...aborting');
          writeln('try to remove ',autoupdate_path);
@@ -830,6 +946,8 @@ begin
     writeln('#################################################################################');
     writeln('');
     writeln('');
+
+
 
     if FILE_EXT='tar.bz2' then DECOMPRESS_OPT:='xjpf' else DECOMPRESS_OPT:='xzpf';
     if FILE_EXT='tar' then DECOMPRESS_OPT:='xpf';
@@ -1981,18 +2099,10 @@ admin:string;
 begin
      admin:=get_LDAP('admin');
      if length(admin)=0 then exit;
-     writeln('');
-     writeln('#################################################################################');
-     writeln('##                                                                             ##');
-     writeln('## You can access to artica by typing https://yourserver:9000                  ##');
-     writeln('## Use on logon section the username "' + get_LDAP('admin') + '"                                 ##');
-     writeln('## Use on logon section the password "' + get_LDAP('password') + '"                                  ##');
-     writeln('## You have to logon to artica web site, set yours domains and apply policies  ##');
-     writeln('##                                                                             ##');
-     writeln('## You can install others package by executing artica-make                     ##');
-     writeln('## /usr/share/artica-postfix/bin/artica-make --help                            ##');
-     writeln('##                                                                             ##');
-     writeln('#################################################################################');
+     writeln('You can access to artica by typing https://yourserver:9000');
+     writeln('Use on logon page the username "' + get_LDAP('admin') + '"  and the password "' + get_LDAP('password')+'"');
+     writeln('You can install others package by executing artica-make');
+     writeln('/usr/share/artica-postfix/bin/artica-make --help');
      writeln('');
 end;
 
@@ -2058,15 +2168,11 @@ end;
 
 
      writeln('');
-     writeln('###########################################');
-     writeln('##                                       ##');
-     writeln('##  Artica-postfix modules installation  ##');
-     writeln('##                                       ##');
-     writeln('###########################################');
-     writeln('');
-     writeln('"Be sure to not install Artica on a production server already set');
+     writeln('Artica-postfix modules installation: ');
+     writeln('---------------------------------------');
+     writeln('** Be sure to not install Artica on a production server already set !');
      writeln('Artica will transform this system to fit it`s needs that should not encounter');
-     writeln('your same parameters strategy. Use a free system before installing it!"');
+     writeln('your own parameters. Use a free system before installing it! **');
 
 
   if FileExists('/usr/share/artica-postfix/bin/artica-install') then begin
@@ -2080,18 +2186,17 @@ end;
     squid:=trim(squid);
     if length(trim(base))=0 then begin
     if length(postfix+cyrus+samba+squid)=0 then begin
-       writeln('Install all modules.......:................................installed');
+         writeln('Install all modules...................................:Installed');
     end else begin
-       writeln('Install all modules.......:................................[A]');
+         writeln('Install all modules...................................:[A]');
     end;
-    writeln('');
+
     if length(base)=0 then begin
        if length(postfix)>0 then begin
         plist:=explode(',', postfix);
-        writeln('Postfix MTA (and securities modules):.....................[1]');
-        writeln(IntToStr(length(plist)-1)+' package(s) are not installed');
+         writeln('Postfix MTA (and securities modules):.................:[1] ('+IntToStr(length(plist)-1)+' package(s))');
        end else begin
-        writeln('Postfix MTA.........................:.....Installed');
+        writeln('Postfix MTA............................................:Installed');
     end;
 
   if length(trim(base))=0 then begin
@@ -2099,70 +2204,59 @@ end;
          ZARAFA_INSTALL_MENU();
       if length(cyrus)>0 then begin
          plistCyrus:=explode(',', cyrus);
-         writeln('Mail server (include postfix and Cyrus-imap):..........[2]');
-         writeln(IntToStr(length(plistCyrus))+'  package(s) are not installed');
+         writeln('Mail server (include postfix and Cyrus-imap):.........:[2] ('+IntToStr(length(plistCyrus)-1)+' package(s))');
       end else begin
-          writeln('Mail server (include postfix and Cyrus-imap):..........Installed');
+         writeln('Mail server (include postfix and Cyrus-imap):.........:Installed');
       end;
    end;
   end;
 
 if length(trim(base))=0 then begin
-    writeln('**********************************************************');
+
     if length(Samba)>0 then begin
-     plistSamba:=explode(',', Samba);
-    writeln('Files Sharing (include Samba and Pure-ftpd):...........[3]');
-    writeln(IntToStr(length(plistSamba)-1)+' package(s) are not installed');
+         plistSamba:=explode(',', Samba);
+         writeln('Files Sharing (include Samba and Pure-ftpd):..........:[3] ('+IntToStr(length(plistSamba)-1)+' package(s))');
     end else begin
-    writeln('Files Sharing (include Samba and Pure-ftpd):...........Installed');
+         writeln('Files Sharing (include Samba and Pure-ftpd):..........:Installed');
     end;
 end;
 
 if length(trim(base))=0 then begin
-    writeln('**********************************************************');
-   writeln('');
+
     if length(squid)>0 then begin
-       writeln('Squid Proxy:............................................[4]');
-       plistSquid:=explode(',', squid);
-       writeln(IntToStr(length(plistSquid))+' package(s) are not installed');
+         plistSquid:=explode(',', squid);
+         writeln('Squid Proxy:..........................................:[4] ('+IntToStr(length(plistSquid)-1)+' package(s))');
     end else begin
-        writeln('Squid Proxy:............................................Installed');
+        writeln('Squid Proxy:...........................................:Installed');
     end;
  end;
 
 if length(trim(base))=0 then begin
-      writeln('**********************************************************');
-      writeln('');
+
     if length(nfs)>0 then begin
-       writeln('NFS System :...........................................[6]');
-       plistSquid:=explode(',', nfs);
-       writeln(IntToStr(length(plistSquid)-1)+' package(s) are not installed');
+         plistSquid:=explode(',', nfs);
+         writeln('NFS System :..........................................:[6] ('+IntToStr(length(plistSquid)-1)+' package(s))');
     end else begin
-        writeln('NFS System :...........................................Installed');
+        writeln('NFS System :...........................................:Installed');
     end;
  end;
 
 if length(trim(base))=0 then begin
-       writeln('**********************************************************');
-       writeln('');
+
     if length(pdns)>0 then begin
-       writeln('PowerDNS System :......................................[7]');
-       plistSquid:=explode(',', pdns);
-       writeln(IntToStr(length(plistSquid)-1)+' package(s) are not installed');
+         plistSquid:=explode(',', pdns);
+         writeln('PowerDNS System :.....................................:[7] ('+IntToStr(length(plistSquid)-1)+' package(s))');
     end else begin
-         writeln('PowerDNS System :......................................Installed');
+         writeln('PowerDNS System :.....................................:Installed');
     end;
  end;
 
 if length(trim(base))=0 then begin
-       writeln('**********************************************************');
-   writeln('');
     if length(openvpn)>0 then begin
-       writeln('OpenVPN System :.......................................[9]');
-       plistSquid:=explode(',', openvpn);
-       writeln(IntToStr(length(plistSquid)-1)+' package(s) are not installed');
+         plistSquid:=explode(',', openvpn);
+         writeln('OpenVPN System :......................................:[9] ('+IntToStr(length(plistSquid)-1)+' package(s))');
     end else begin
-         writeln('OpenVPN System :.......................................Installed');
+         writeln('OpenVPN System :......................................:Installed');
     end;
  end;
 end;
@@ -2178,22 +2272,16 @@ writeln('');
 plistBase:=explode(',', base);
 writeln('Install '+IntToStr(length(plistBase)-1)+' package(s): [Yes]');
 end else begin
-    writeln('');
-    writeln('----------------------------');
-    writeln('Install/upgrade Artica-postfix:........................[5] ('+ARTICA_VERSION()+')');
+         writeln('Install/upgrade Artica-postfix:.......................:[5] ('+ARTICA_VERSION()+')');
 
     if length(ARTICA_VERSION())>0 then begin
-       writeln('Restart Artica      :................................[R]');
-       writeln('Get SuperAdmin Infos:..................................[I]');
-       writeln('');
+         writeln('Restart Artica      :.................................:[R]');
+         writeln('Get SuperAdmin Infos:.................................:[I]');
     end;
 
-writeln('Quit the installation program.........................:[Q]');
-writeln('');
-writeln('');
-writeln('');
-writeln('Type the option.......................................:');
-writeln('');
+         writeln('Quit the installation program.........................:[Q]');
+         writeln('');
+         writeln('Type the option:');
 
 end;
 
@@ -2347,6 +2435,119 @@ str:='';
    end;
 
 end;
-//#############################################################################
+//#########################################################################################
+function tlibs.CPU_NUMBER():integer;
+var
+   cpunum:integer;
+   fileconf:string;
+   cutbin:string;
+begin
+    result:=0;
+    cpunum:=0;
+    cutbin:=LOCATE_GENERIC_BIN('cut');
+    fileconf:='/etc/artica-postfix/settings/Daemons/SystemCpuNumber';
+    if FileExists(fileconf) then begin
+       if FILE_TIME_BETWEEN_MIN(fileconf)>500 then fpsystem('/bin/rm -f '+ fileconf);
+    end;
 
+    if not TryStrToInt(GET_INFO('SystemCpuNumber'),cpunum) then begin
+         fpsystem('/bin/cat /proc/cpuinfo |/bin/grep "model name" | '+cutbin+' -d: -f2|/usr/bin/wc -l >'+fileconf+' 2>&1');
+         if not TryStrToInt(GET_INFO('SystemCpuNumber'),cpunum) then begin
+             exit(0);
+         end;
+    end;
+
+    result:=cpunum;
+
+end;
+
+ //#############################################################################
+function tlibs.HOSTNAME_g():string;
+var datas:string;
+begin
+ datas:=GET_INFO('myhostname');
+ if length(datas)>1 then begin
+    result:=datas;
+    exit;
+ end;
+ forcedirectories('/opt/artica/tmp');
+ fpsystem('/bin/hostname -f >/opt/artica/tmp/hostname.txt');
+ datas:=ReadFileIntoString('/opt/artica/tmp/hostname.txt');
+ result:=Trim(datas);
+end;
+//#############################################################################
+function tlibs.MEM_TOTAL_INSTALLEE():integer;
+var
+   l:TstringList;
+   RegExpr:TRegExpr;
+   filetmp:string;
+   i:integer;
+   mem:integer;
+   FileCache:string;
+   MEM_TOTAL_INSTALLEE_TEMP:string;
+   D:Boolean;
+   FileTimeMin:integer;
+begin
+result:=0;
+
+if MEM_TOTAL_INSTALLEE_MEMORY>500 then exit(MEM_TOTAL_INSTALLEE_MEMORY);
+
+   FileCache:='/etc/artica-postfix/MEMORY_INSTALLED';
+    FileTimeMin:=FILE_TIME_BETWEEN_MIN(FileCache);
+    if FileTimeMin<380 then begin
+       MEM_TOTAL_INSTALLEE_TEMP:=trim(ReadFromFile(FileCache));
+       if TryStrToInt(MEM_TOTAL_INSTALLEE_TEMP,i) then begin
+          if i>10 then begin
+             MEM_TOTAL_INSTALLEE_MEMORY:=i;
+             exit(i);
+             end;
+          end;
+       end;
+
+
+    result:=1012029;
+    if not FileExists('/proc/meminfo') then begin
+       MEM_TOTAL_INSTALLEE_MEMORY:=result;
+        exit(result);
+    end;
+
+    l:=Tstringlist.Create;
+    try
+       l.LoadFromFile('/proc/meminfo');
+    except
+          exit();
+    end;
+
+
+    RegExpr:=TRegExpr.Create;
+    RegExpr.Expression:='MemTotal:\s+([0-9]+)';
+    for i:=0 to l.Count-1 do begin
+        if RegExpr.Exec(l.Strings[i]) then begin
+              if not TryStrToInt(RegExpr.Match[1],mem) then begin
+                  result:=1012029;
+                  MEM_TOTAL_INSTALLEE_MEMORY:=result;
+                  l.free;
+                  RegExpr.free;
+                  exit;
+              end;
+              result:=mem;
+              MEM_TOTAL_INSTALLEE_MEMORY:=result;
+              break;
+        end;
+    end;
+
+    l.free;
+    RegExpr.free;
+
+
+end;
+//#########################################################################################
+function tlibs.LOCATE_PHP5_BIN():string;
+begin
+  if FileExists('/usr/bin/php5') then exit('/usr/bin/php5');
+  if FIleExists('/usr/bin/php') then exit('/usr/bin/php');
+  if FIleExists('/usr/local/apache-groupware/php5/bin/php') then exit('/usr/local/apache-groupware/php5/bin/php');
+
+end;
+//##############################################################################
 end.

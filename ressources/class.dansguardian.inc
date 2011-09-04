@@ -664,12 +664,14 @@ class dansguardian_rules{
 									"science/astronomy"=>"{science_astronomy}",
 									"science/weather"=>"{science_weather}",
 									"webplugins"=>"{webplugins}",
+									"maps"=>"{www_maps}",
 									"science/computing"=>"{cat_computing}",
 									"remote-control"=>"{cat_remote-control}",
 									"hospitals"=>"{cat_hospitals}",
 									"medical"=>"{cat_medical}",
 									"sslsites"=>"{cat_sslsites}",
 									"updatesites"=>"{updatesites}",
+									"internal"=>"{www_internal}",
 									
 									"searchengines"=>"{searchengines}",
 									"translators"=>"{www_translators}",
@@ -777,6 +779,8 @@ class dansguardian_rules{
 		  	"malware"=>"icon_malwares.png",
 		  	"celebrity"=>"celebrity-20.png",
 		  	"books"=>"books_20.png",
+		  	"internal"=>"network-1-20.gif",
+		  	"maps"=>"20-maps.png"
 		  	
 		  	);
 									

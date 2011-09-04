@@ -86,7 +86,7 @@ $GLOBALS["CATS"][]="webradio";
 $GLOBALS["CATS"][]="webtv";
 $GLOBALS["CATS"][]="celebrity";
 $GLOBALS["CATS"][]="books";
-
+$GLOBALS["CATS"][]="maps";
 
 
 

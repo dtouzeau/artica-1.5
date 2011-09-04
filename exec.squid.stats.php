@@ -8,10 +8,14 @@ include_once(dirname(__FILE__).'/framework/class.unix.inc');
 include_once(dirname(__FILE__).'/ressources/class.squid.inc');
 include_once(dirname(__FILE__).'/ressources/class.artica.graphs.inc');
 include_once(dirname(__FILE__)."/framework/frame.class.inc");
+$GLOBALS["OLD"]=false;
+$GLOBALS["FORCE"]=false;
 if(is_array($argv)){
 	if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["VERBOSE"]=true;}
+	if(preg_match("#--old#",implode(" ",$argv))){$GLOBALS["OLD"]=true;}
+	if(preg_match("#--force#",implode(" ",$argv))){$GLOBALS["FORCE"]=true;}
 }
-
+if($GLOBALS["VERBOSE"]){ini_set('display_errors', 1);	ini_set('html_errors',0);ini_set('display_errors', 1);ini_set('error_reporting', E_ALL);}
 $unix=new unix();
 $GLOBALS["CLASS_UNIX"]=$unix;
 events("Executed " .@implode(" ",$argv));
@@ -24,6 +28,8 @@ if($argv[1]=='--fill-categories'){FillCategories();die();}
 if($argv[1]=='--hits-clients'){tablehitsclients();die();}
 if($argv[1]=='--squid_events_sites'){squid_events_sites();die();}
 if($argv[1]=='--parse-days'){ParseDays();die();}
+if($argv[1]=='--parse-hours'){squid_events_uris_hours();die();}
+if($argv[1]=='--parse-cacheperfs'){squid_cache_perfs();die();}
 
 
 
@@ -40,7 +46,12 @@ if($argv[1]=='--graphs'){
 	$unix=new unix();
 	if($unix->process_exists($oldpid)){die();}
 	$mypid=getmygid();
-	@file_put_contents($pidfile,$mypid);	
+	@file_put_contents($pidfile,$mypid);
+	events("-> squid_events_uris_hours()");
+	
+	squid_events_uris_hours();
+	events("-> squid_cache_perfs()");
+	squid_cache_perfs();
 	events("-> today_hits()");
 	today_hits();
 	events("-> today_size()");
@@ -69,32 +80,49 @@ if($argv[1]=='--maintenance'){
 	}
 	$mypid=getmygid();
 	@file_put_contents($pidfile,$mypid);
-	
-	$time=$unix->file_time_min($timefile);
-	events("Time {$time}Mn/120Mn");
-	if($time<120){
-		events("Need to wait 120Mn");
-		die();
+	if(!$GLOBALS["FORCE"]){
+		$time=$unix->file_time_min($timefile);
+		events("Time {$time}Mn/120Mn");
+		if($time<120){
+			events("Need to wait 120Mn");
+			die();
+		}
+		@unlink($timefile);
+		@file_put_contents($timefile,"#");
 	}
-	@unlink($timefile);
-	@file_put_contents($timefile,"#");
+	
+	events("-> squid_events_uris_hours()");
+	squid_events_uris_hours();	
+	if(system_is_overloaded(__FILE__)){
+		event("OVERLOADED !!!");
+		$unix->send_email_events("Proxy squid statistics has been canceled", "Computer is overloaded\n"
+		._basename(__FILE__)."\n".__FUNCTION__."\nfunction called:squid_events_uris_hours()\nLine:".__LINE__, "proxy");
+	}
+
+	events("-> squid_cache_perfs()");
+	squid_cache_perfs();
+	
+	
 	events("-> ParseDays()");
 	ParseDays();
 	events("-> today_hits()");
-	if(is_overloaded(__FILE__)){
+	if(system_is_overloaded(__FILE__)){
+		event("OVERLOADED !!!");
 		$unix->send_email_events("Proxy squid statistics has been canceled", "Computer is overloaded\n"
 		._basename(__FILE__)."\n".__FUNCTION__."\nfunction called:ParseDays()\nLine:".__LINE__, "proxy");
 	}	
 	today_hits();
 	events("-> today_size()");
-	if(is_overloaded(__FILE__)){
+	if(system_is_overloaded(__FILE__)){
+		event("OVERLOADED !!!");
 		$unix->send_email_events("Proxy squid statistics has been canceled", "Computer is overloaded\n"
 		._basename(__FILE__)."\n".__FUNCTION__."\nfunction called:today_hits()\nLine:".__LINE__, "proxy");
 		return;
 	}		
 	today_size();
 	
-	if(is_overloaded(__FILE__)){
+	if(system_is_overloaded(__FILE__)){
+		event("OVERLOADED !!!");
 		$unix->send_email_events("Proxy squid statistics has been canceled", "Computer is overloaded\n"
 		._basename(__FILE__)."\n".__FUNCTION__."\nfunction called:today_size()\nLine:".__LINE__, "proxy");
 		return;
@@ -103,7 +131,8 @@ if($argv[1]=='--maintenance'){
 	events("-> month_size()");
 	month_size();
 	
-	if(is_overloaded(__FILE__)){
+	if(system_is_overloaded(__FILE__)){
+		event("OVERLOADED !!!");
 		$unix->send_email_events("Proxy squid statistics has been canceled", "Computer is overloaded\n"
 		._basename(__FILE__)."\n".__FUNCTION__."\nfunction called:month_size()\nLine:".__LINE__, "proxy");
 		return;
@@ -114,7 +143,8 @@ if($argv[1]=='--maintenance'){
 	month_hits();
 	
 	
-	if(is_overloaded(__FILE__)){
+	if(system_is_overloaded(__FILE__)){
+		event("OVERLOADED !!!");
 		$unix->send_email_events("Proxy squid statistics has been canceled", "Computer is overloaded\n"
 		._basename(__FILE__)."\n".__FUNCTION__."\nfunction called:month_hits()\nLine:".__LINE__, "proxy");
 		return;
@@ -123,7 +153,8 @@ if($argv[1]=='--maintenance'){
 	events("-> ParseDays()");
 	ParseDays();
 	
-	if(is_overloaded(__FILE__)){
+	if(system_is_overloaded(__FILE__)){
+		event("OVERLOADED !!!");
 		$unix->send_email_events("Proxy squid statistics has been canceled", "Computer is overloaded\n"
 		._basename(__FILE__)."\n".__FUNCTION__."\nfunction called:ParseDays()\nLine:".__LINE__, "proxy");
 		return;
@@ -132,7 +163,8 @@ if($argv[1]=='--maintenance'){
 	events("-> clients_hours()");
 	clients_hours();
 	
-	if(is_overloaded(__FILE__)){
+	if(system_is_overloaded(__FILE__)){
+		event("OVERLOADED !!!");
 		$unix->send_email_events("Proxy squid statistics has been canceled", "Computer is overloaded\n"
 		._basename(__FILE__)."\n".__FUNCTION__."\nfunction called:clients_hours()\nLine:".__LINE__, "proxy");
 		return;
@@ -142,7 +174,8 @@ if($argv[1]=='--maintenance'){
 	events("-> today_hours_index()");
 	today_hours_index();
 	
-	if(is_overloaded(__FILE__)){
+	if(system_is_overloaded(__FILE__)){
+		event("OVERLOADED !!!");
 		$unix->send_email_events("Proxy squid statistics has been canceled", "Computer is overloaded\n"
 		._basename(__FILE__)."\n".__FUNCTION__."\nfunction called:today_hours_index()\nLine:".__LINE__, "proxy");
 		return;
@@ -151,7 +184,8 @@ if($argv[1]=='--maintenance'){
 	events("-> tablehitsclients()");
 	tablehitsclients();
 	
-	if(is_overloaded(__FILE__)){
+	if(system_is_overloaded(__FILE__)){
+		event("OVERLOADED !!!");
 		$unix->send_email_events("Proxy squid statistics has been canceled", "Computer is overloaded\n"
 		._basename(__FILE__)."\n".__FUNCTION__."\nfunction called:tablehitsclients()\nLine:".__LINE__, "proxy");
 		return;
@@ -161,7 +195,8 @@ if($argv[1]=='--maintenance'){
 	events("-> FillCategories()");
 	FillCategories();
 	
-	if(is_overloaded(__FILE__)){
+	if(system_is_overloaded(__FILE__)){
+		event("OVERLOADED !!!");
 		$unix->send_email_events("Proxy squid statistics has been canceled", "Computer is overloaded\n"
 		._basename(__FILE__)."\n".__FUNCTION__."\nfunction called:FillCategories()\nLine:".__LINE__, "proxy");
 		return;
@@ -170,7 +205,8 @@ if($argv[1]=='--maintenance'){
 	events("-> squid_events_sites()");
 	squid_events_sites();
 	
-	if(is_overloaded(__FILE__)){
+	if(system_is_overloaded(__FILE__)){
+		event("OVERLOADED !!!");
 		$unix->send_email_events("Proxy squid statistics has been canceled", "Computer is overloaded\n"
 		._basename(__FILE__)."\n".__FUNCTION__."\nfunction called:squid_events_sites()\nLine:".__LINE__, "proxy");
 		return;
@@ -180,7 +216,8 @@ if($argv[1]=='--maintenance'){
 	events("-> FillCategories()");
 	FillCategories();
 	
-	if(is_overloaded(__FILE__)){
+	if(system_is_overloaded(__FILE__)){
+		event("OVERLOADED !!!");
 		$unix->send_email_events("Proxy squid statistics has been canceled", "Computer is overloaded\n"
 		._basename(__FILE__)."\n".__FUNCTION__."\nfunction called:FillCategories()\nLine:".__LINE__, "proxy");
 		return;
@@ -196,7 +233,8 @@ if($argv[1]=='--maintenance'){
 	events("REPAIR TABLE / OPTIMIZE TABLE");
 	$q=new mysql();
 	$q->QUERY_SQL("REPAIR TABLE `dansguardian_events`","artica_events");
-	if(is_overloaded(__FILE__)){
+	if(system_is_overloaded(__FILE__)){
+		event("OVERLOADED !!!");
 		$unix->send_email_events("Proxy squid maintenance has been canceled", "Computer is overloaded\n"
 		._basename(__FILE__)."\n".__FUNCTION__."\nfunction called:REPAIR TABLE `dansguardian_events`\nLine:".__LINE__, "proxy");
 		return;
@@ -205,7 +243,7 @@ if($argv[1]=='--maintenance'){
 	
 	$q->QUERY_SQL("OPTIMIZE TABLE `dansguardian_events`","artica_events");
 	
-	if(is_overloaded(__FILE__)){
+	if(system_is_overloaded(__FILE__)){
 		$unix->send_email_events("Proxy squid maintenance has been canceled", "Computer is overloaded\n"
 		._basename(__FILE__)."\n".__FUNCTION__."\nfunction called:OPTIMIZE TABLE `dansguardian_events`\nLine:".__LINE__, "proxy");
 		return;
@@ -234,12 +272,15 @@ $sql="SELECT days, hours FROM squid_events_clients_sites ORDER BY days, hours DE
 $day=date('Y-m-d');
 $hour=date('H');	
 	
-$sql="SELECT COUNT( ID ) AS thits, sitename,country, CLIENT, DATE_FORMAT( zDate, '%Y-%m-%d' ) AS tday, DATE_FORMAT( zDate, '%H' ) AS thour, SUM( QuerySize ) AS tsize
-FROM dansguardian_events
+$currentmonth=date('Ym');
+$source_table="squid_events_uris_hours_$currentmonth";
+
+$sql="SELECT SUM( hits ) AS thits, sitename,country, client,category, DATE_FORMAT( zDate, '%Y-%m-%d' ) AS tday, DATE_FORMAT( zDate, '%H' ) AS thour, SUM( size ) AS tsize
+FROM $source_table
 WHERE DATE_FORMAT( zDate, '%Y-%m-%d' )<='$day' 
 AND DATE_FORMAT( zDate, '%H' )<$hour 
 $fromsql
-GROUP BY sitename, CLIENT,country ORDER BY UNIX_TIMESTAMP(zDate)";
+GROUP BY sitename, client,country ORDER BY UNIX_TIMESTAMP(zDate)";
 
 echo $sql."\n";
 
@@ -251,7 +292,7 @@ echo $sql."\n";
 	$unix=new unix();
 	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
 		if(preg_match("#^www\.(.+?)$#i",trim($ligne["sitename"]),$re)){$ligne["sitename"]=$re[1];}
-			$category=GetCategory($ligne['sitename']);
+			if($ligne["category"]==null){$category=GetCategory($ligne['sitename']);}else{$category=$ligne["category"];}
 			if(trim($ligne["country"])==null){
 				$country_array=GeoIP($ligne["websites"]);$country=$country_array[0];
 				if($country<>null){
@@ -395,12 +436,13 @@ function FillCategories(){
 			
 		}
 	}	
-	
-	
 }
 
 function GetCategory($www){
+	
 	if(preg_match("#^www\.(.+)#",$www,$re)){$www=$re[1];}
+	
+	if(isset($GLOBALS["CATEGORY_MEMORY"][$www])){return $GLOBALS["CATEGORY_MEMORY"][$www];}
 	$sql="SELECT category FROM dansguardian_community_categories WHERE pattern='$www' and enabled=1";
 	$q=new mysql();
 	$results=$q->QUERY_SQL($sql,"artica_backup");
@@ -408,7 +450,12 @@ function GetCategory($www){
 		$f[]=$ligne["category"];
 	}
 	
-	if(is_array($f)){return @implode(",",$f);}
+	if(isset($f)){
+		if(is_array($f)){
+			$GLOBALS["CATEGORY_MEMORY"][$www]=@implode(",",$f);
+			return @implode(",",$f);
+		}
+	}
 }
 
 
@@ -470,8 +517,11 @@ function clients_hours(){
 	
 	$today=date('Y-m-d');
 	$hour=date('H');
-	$sql="SELECT COUNT(uri) as tcount, SUM(QuerySize) as tsize,DATE_FORMAT(zDate,'%Y-%m-%d %H') as tdate 
-	FROM dansguardian_events WHERE zDate >DATE_ADD(zDate,INTERVAL -24 HOUR) GROUP BY tdate";
+	
+	$source_table="squid_events_uris_hours_".date('Ym');
+	
+	$sql="SELECT SUM(hits) as tcount, SUM(size) as tsize,DATE_FORMAT(zDate,'%Y-%m-%d %H') as tdate 
+	FROM $source_table WHERE zDate >DATE_ADD(zDate,INTERVAL -24 HOUR) GROUP BY tdate";
 	
 	$q=new mysql();
 	$results=$q->QUERY_SQL($sql,"artica_events");
@@ -508,7 +558,8 @@ function clients_hours_md($md5){
 }
 
 function getDays(){
-$sql="SELECT DATE_FORMAT( zDate, '%Y-%m-%d' ) AS tday FROM dansguardian_events GROUP BY tday ORDER BY tday";	
+$dansguardian_events="dansguardian_events_".date('Ym');	
+$sql="SELECT DATE_FORMAT( zDate, '%Y-%m-%d' ) AS tday FROM $dansguardian_events GROUP BY tday ORDER BY tday";	
 $q=new mysql();
 $results=$q->QUERY_SQL($sql,"artica_events");
 
@@ -555,8 +606,8 @@ function ParseDays(){
 		$sqlday="WHERE zDate>'$lastday' AND zDate < DATE_SUB( NOW( ) , INTERVAL 1 DAY )";
 	}
 	
-	
-	$sql="SELECT DATE_FORMAT(zDate,'%Y-%m-%d') as tday FROM dansguardian_events $sqlday GROUP BY tday order by tday";
+	$dansguardian_events="dansguardian_events_".date('Ym');	
+	$sql="SELECT DATE_FORMAT(zDate,'%Y-%m-%d') as tday FROM $dansguardian_events $sqlday GROUP BY tday order by tday";
 	if($GLOBALS["VERBOSE"]){echo $sql." ". __FUNCTION__." ".__LINE__."\n";}
 
 	
@@ -595,9 +646,9 @@ function ParseDays(){
 function ParseSingleDay($day){
 	clients_days($day);
 	events(__FUNCTION__." (".__LINE__."):: Parsing day $day");
-	
+	$dansguardian_events="dansguardian_events_".date('Ym');	
 	$sql="SELECT COUNT(sitename) as hits,sitename,SUM(QuerySize) as tsize
-	FROM dansguardian_events WHERE DATE_FORMAT(zDate,'%Y-%m-%d')='$day' GROUP BY sitename ";
+	FROM $dansguardian_events WHERE DATE_FORMAT(zDate,'%Y-%m-%d')='$day' GROUP BY sitename ";
 	
 	$sqlintro="INSERT IGNORE INTO squid_events_sites_day (`days`,`websites`,`website_size`,`website_hits`) VALUES ";
 	
@@ -654,9 +705,9 @@ function ParseSingleDay($day){
 
 function clients_days($day){
 	events(__FUNCTION__." (".__LINE__."):: Parsing day $day");
-	
+	$dansguardian_events="dansguardian_events_".date('Ym');	
 	$sql="SELECT COUNT(sitename) as hits,CLIENT,SUM(QuerySize) as tsize
-	FROM dansguardian_events WHERE DATE_FORMAT(zDate,'%Y-%m-%d')='$day' GROUP BY CLIENT ";
+	FROM $dansguardian_events WHERE DATE_FORMAT(zDate,'%Y-%m-%d')='$day' GROUP BY CLIENT ";
 	$sqlintro="INSERT INTO squid_events_clients_day (`days`,`CLIENT`,`size`,`hits`) VALUES ";
 		
 	$q=new mysql();
@@ -805,9 +856,9 @@ function today_hits(){
 	$g=new artica_graphs($fileName,60);
 	
 	
-	
+	$dansguardian_events="dansguardian_events_".date('Ym');	
 	$sql="SELECT COUNT( ID ) as tcount, DATE_FORMAT( zDate, '%h' ) AS tdate
-		FROM dansguardian_events
+		FROM $dansguardian_events
 		WHERE DATE_FORMAT( zDate, '%Y-%m-%d' ) = DATE_FORMAT( NOW( ) , '%Y-%m-%d' )
 		GROUP BY tdate";
 	
@@ -841,9 +892,9 @@ function today_size(){
 
 $g=new artica_graphs($fileName,60);
 if(!$g->checkfile()){return $fileName;}
-	
+	$dansguardian_events="dansguardian_events_".date('Ym');	
 	$sql="SELECT SUM(QuerySize) as tcount, DATE_FORMAT( zDate, '%h' ) AS tdate
-		FROM dansguardian_events
+		FROM $dansguardian_events
 		WHERE DATE_FORMAT( zDate, '%Y-%m-%d' ) = DATE_FORMAT( NOW( ) , '%Y-%m-%d' )
 		GROUP BY tdate";
 	
@@ -877,9 +928,9 @@ $fileName = dirname(__FILE__)."/ressources/logs/month-squid-size.png";
 	$g=new artica_graphs($fileName,3600);
 	if(!$g->checkfile()){
 	writelogs("return $fileName",__FUNCTION__,__FILE__,__LINE__);return $fileName;}
-	
+	$dansguardian_events="dansguardian_events_".date('Ym');	
 	$sql="SELECT SUM(QuerySize) as tcount,DATE_FORMAT(zDate,'%d') as tdate
-		FROM dansguardian_events
+		FROM $dansguardian_events
 		WHERE MONTH(zDate) = MONTH(NOW()) AND YEAR(zDate)=YEAR(NOW())
 		GROUP BY tdate";
 	
@@ -911,9 +962,9 @@ $g=new artica_graphs($fileName,3600);
 if(!$g->checkfile()){
 	writelogs("return $fileName",__FUNCTION__,__FILE__,__LINE__);
 	return $fileName;}
-	
+	$dansguardian_events="dansguardian_events_".date('Ym');	
 	$sql="SELECT COUNT(ID) as tcount,DATE_FORMAT(zDate,'%d') as tdate
-		FROM dansguardian_events
+		FROM $dansguardian_events
 		WHERE MONTH(zDate) = MONTH(NOW()) AND YEAR(zDate)=YEAR(NOW())
 		GROUP BY tdate";
 	
@@ -937,6 +988,152 @@ $g->line_green();
 @chmod($fileName,0777);
 
 }
+
+function squid_events_uris_hours(){
+	$dansguardian_events="dansguardian_events_".date('Ym');	
+	$q=new mysql();
+	$q->BuildTables();	
+	if($GLOBALS["OLD"]){$dansguardian_events="dansguardian_events";}
+	$currentmonth=date('Ym');
+	$table="squid_events_uris_hours_$currentmonth";
+	if(!$GLOBALS["OLD"]){
+		$sql="SELECT DATE_FORMAT(zDate,'%Y-%m-%d %H:00:00') as tdate FROM $table WHERE zDate<DATE_SUB(NOW(),INTERVAL 1 HOUR) ORDER BY zDate DESC LIMIT 0,1";
+		$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"artica_events"));
+		if(!$q->ok){
+			echo "$sql\n$q->mysql_error\n";
+		}
+		$lastDate=$ligne["tdate"];
+		if($lastDate==null){$lastDate="DATE_SUB(NOW(),INTERVAL 7 DAY)";}else{$lastDate="'$lastDate'";}
+		if($GLOBALS["VERBOSE"]){echo "lastDate=$lastDate\n";} 
+	}
+	
+	
+	
+	$sql="SELECT DATE_FORMAT(zDate,'%Y-%m-%d %H:00:00') as tdate, SUM(QuerySize) as size,COUNT(ID) as hits,sitename,CLIENT,remote_ip,country,uid FROM $dansguardian_events GROUP BY sitename,CLIENT,remote_ip,country,uid 
+	HAVING  tdate>$lastDate AND tdate<DATE_SUB(NOW(),INTERVAL 1 HOUR) ORDER BY tdate";
+	
+
+	writelogs("$sql" . mysql_num_rows($results),__FUNCTION__,__FILE__,__LINE__);
+	$q=new mysql();
+	$results=$q->QUERY_SQL($sql,"artica_events");
+	if(!$q->ok){
+		writelogs("$sql\n$q->mysql_error",__FUNCTION__,__FILE__,__LINE__);
+		return;
+	}
+	
+	
+
+	writelogs("Table: $table rows " . mysql_num_rows($results),__FUNCTION__,__FILE__,__LINE__);
+	
+		
+	$prefix="INSERT IGNORE INTO $table (zMD5,sitename,client,zDate,remote_ip,country,size,hits,uid,category) VALUES ";
+	$i=0;
+	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+		$tdate=$ligne["tdate"];
+		$size=$ligne["size"];
+		$sitename=$ligne["sitename"];
+		$CLIENT=$ligne["CLIENT"];
+		$remote_ip=$ligne["remote_ip"];
+		$country=$ligne["country"];
+		$uid=$ligne["uid"];
+		$hits=$ligne["hits"];
+		$md5=md5("$tdate$size$sitename$CLIENT$remote_ip$country$uid");
+		
+		$f[]="('$md5','$sitename','$CLIENT','$tdate','$remote_ip','$country','$size','$hits','$uid','$cat')";
+		$i++;
+		if(count($f)>500){
+			if($GLOBALS["VERBOSE"]){echo "$i - > Continue\n";}
+			$sqlfinal=$prefix.@implode(",", $f);
+			$f=array();
+			$q->QUERY_SQL($sqlfinal,"artica_events");
+			if(!$q->ok){
+				echo $q->mysql_error."\n";
+				$unix->send_email_events("Error: Web Proxy hours statistics ($table)","Errors: 
+				$sql\n$q->mysql_error\nTable $table, database artica_events
+				server:$q->mysql_server:$q->mysql_port
+				user:$q->mysql_admin
+				","proxy");
+				return;
+			}
+		}
+		
+		
+	}
+	
+	if(count($f)>0){
+		$sqlfinal=$prefix.@implode(",", $f);
+		$q->QUERY_SQL($sqlfinal,"artica_events");	
+		$f=array();
+	}
+	
+$sql="SELECT sitename
+FROM $table
+WHERE LENGTH( category ) =0
+GROUP BY sitename";
+$results=$q->QUERY_SQL($sql,"artica_events");
+if(mysql_num_rows($results)==0){
+	writelogs("Table: $sql no websites to categorize !!!",__FUNCTION__,__FILE__,__LINE__);
+}
+
+writelogs("Table: To categorize= " . mysql_num_rows($results) ." websites",__FUNCTION__,__FILE__,__LINE__);
+
+
+	if(!$q->ok){
+		writelogs("$q->mysql_error",__FUNCTION__,__FILE__,__LINE__);
+		return;
+	}	
+	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+		$cat=GetCategory($ligne["sitename"]);
+		if($GLOBALS["VERBOSE"]){writelogs("{$ligne["sitename"]} = $cat",__FUNCTION__,__FILE__,__LINE__);} 
+		if($cat<>null){
+			$q->QUERY_SQL("UPDATE $table set category='$cat' WHERE sitename='{$ligne["sitename"]}'","artica_events");
+		}
+		
+	}
+	
+}
+
+function squid_cache_perfs(){
+	
+$q=new mysql();
+$sql="SELECT DATE_FORMAT(zDate,'%Y-%m-%d %H:00:00') as tdate FROM squid_cache_perfs
+		WHERE zDate<DATE_SUB(NOW(),INTERVAL 1 HOUR) ORDER BY zDate DESC LIMIT 0,1";
+		$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"artica_events"));
+		if(!$q->ok){echo "$sql\n$q->mysql_error\n";}
+		$lastDate=$ligne["tdate"];
+		if($lastDate<>null){$lastDate=" AND DATE_FORMAT( zDate, '%Y-%m-%d %H:00:00' )>'$lastDate' ";}
+		if($GLOBALS["VERBOSE"]){echo "lastDate=$lastDate\n";} 	
+	
+	$dansguardian_events="dansguardian_events_".date('Ym');
+	
+	$sql="SELECT SUM( QuerySize ) AS tsize, cached, DATE_FORMAT( zDate, '%Y-%m-%d %H:00:00' ) AS tdate
+		FROM $dansguardian_events
+		WHERE zDate < DATE_SUB( NOW( ) , INTERVAL 1 HOUR ) $lastDate
+		GROUP BY cached, tdate";
+	
+	$results=$q->QUERY_SQL($sql,"artica_events");
+	if(!$q->ok){echo "$sql\n$q->mysql_error\n";}
+	if(mysql_num_rows($results)==0){return;}
+
+	$prefix="INSERT IGNORE INTO squid_cache_perfs(zmd5,zDate,size,cached) VALUES ";
+	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+		$zmd5=md5("{$ligne["tdate"]}{$ligne["cached"]}");
+		$sqltext="('$zmd5','{$ligne["tdate"]}',{$ligne["tsize"]},{$ligne["cached"]})";
+		
+		$sqlT[]=$sqltext;
+		if(count($sqlT)>100){
+			$q->QUERY_SQL("$prefix".@implode(",", $sqlT),"artica_events");
+			$sqlT=array();
+		}
+		
+	}	
+	
+		if(count($sqlT)>0){
+			$q->QUERY_SQL("$prefix".@implode(",", $sqlT),"artica_events");
+			$sqlT=array();
+		}
+}
+
 
 function GeoIP($servername){
 	

@@ -1412,7 +1412,7 @@ begin
       if SYS.verbosed then writeln('SQUID_VERSION():',result,' from memory');
       exit;
    end;
-
+   fpsystem(SYS.LOCATE_PHP5_BIN() +' /usr/share/artica-postfix/exec.squid.php --compilation-params');
    squidbin:=SQUID_BIN_PATH();
    if SYS.verbosed then writeln('SQUID_VERSION():',squidbin);
    if not FileExists(SQUID_BIN_PATH()) then exit;

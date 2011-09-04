@@ -379,8 +379,24 @@ function writelogs($text=null,$function=null,$line=0){
 			return null;
 		}
 		
+		if(($this->mysql_admin==null) && ($this->mysql_password==null)){$this->mysql_admin="root";if(!isset($GLOBALS["ERROR_MYSQL_NOADMIN"])){writelogs("mysql administrator is null Assume root has mysql account",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}$GLOBALS["ERROR_MYSQL_NOADMIN"]=true;}
+		
 		$MYSQLpassword=$this->mysql_password;
-		if(strlen($MYSQLpassword)==0){writelogs("mysql password is null",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
+		if(strlen($MYSQLpassword)==0){
+			if(!isset($GLOBALS["ERROR_MYSQL_NOPASSWD"])){
+			if(function_exists("debug_backtrace")){
+					try {
+						$trace=@debug_backtrace();
+						if(isset($trace[1])){$called="called by ". basename($trace[1]["file"])." {$trace[1]["function"]}() line {$trace[1]["line"]}";}
+					} catch (Exception $e) {writelogs("QUERY_SQL:: Fatal: ".$e->getMessage(),__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
+				}			
+			writelogs("mysql password is null but continue to query... $called",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+			$GLOBALS["ERROR_MYSQL_NOPASSWD"]=true;
+			}
+			
+		}
+		
+		
 		
 		if(($this->mysql_server=="localhost") OR ($this->mysql_server=="127.0.0.1")){
 			$bd=@mysql_connect(":/var/run/mysqld/mysqld.sock",$this->mysql_admin,$this->mysql_password);

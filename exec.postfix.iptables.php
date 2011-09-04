@@ -37,7 +37,10 @@ if($GLOBALS["VERBOSE"]){echo "Parsing ".@implode(" ", $argv)."\n";}
 if(!Build_pid_func(__FILE__,"MAIN")){writelogs(basename(__FILE__).":Already executed.. aborting the process",basename(__FILE__),__FILE__,__LINE__);die();}
 
 parsequeue();
-if($GLOBALS["EnablePostfixAutoBlock"]<>1){events("This feature is currently disabled ({$GLOBALS["EnablePostfixAutoBlock"]})");die();}
+if($GLOBALS["EnablePostfixAutoBlock"]<>1){
+	iptables_delete_all();
+	events("This feature is currently disabled ({$GLOBALS["EnablePostfixAutoBlock"]})");die();
+}
 die();
 		
 //iptables -L OUTPUT --line-numbers		
@@ -79,8 +82,11 @@ return $array;
 }
 
 function iptables_delete_all(){
+$unix=new unix();
+$iptables_save=$unix->find_program("iptables-save");
+$iptables_restore=$unix->find_program("iptables-restore");
 events("Exporting datas iptables-save > /etc/artica-postfix/iptables.conf");
-system("/sbin/iptables-save > /etc/artica-postfix/iptables.conf");
+system("$iptables_save > /etc/artica-postfix/iptables.conf");
 $data=file_get_contents("/etc/artica-postfix/iptables.conf");
 $datas=explode("\n",$data);
 $pattern="#.+?ArticaInstantPostfix#";	
@@ -93,11 +99,14 @@ while (list ($num, $ligne) = each ($datas) ){
 
 events("restoring datas iptables-restore < /etc/artica-postfix/iptables.new.conf");
 file_put_contents("/etc/artica-postfix/iptables.new.conf",$conf);
-system("/sbin/iptables-restore < /etc/artica-postfix/iptables.new.conf");
+system("$iptables_restore < /etc/artica-postfix/iptables.new.conf");
 }
 function iptables_ipdeny_delete_all(){
+$unix=new unix();
+$iptables_save=$unix->find_program("iptables-save");
+$iptables_restore=$unix->find_program("iptables-restore");	
 events("Exporting datas iptables-save > /etc/artica-postfix/iptables.conf");
-system("/sbin/iptables-save > /etc/artica-postfix/iptables.conf");
+system("$iptables_save > /etc/artica-postfix/iptables.conf");
 $data=file_get_contents("/etc/artica-postfix/iptables.conf");
 $datas=explode("\n",$data);
 $pattern="#.+?ArticaIpDeny#";
@@ -111,11 +120,14 @@ while (list ($num, $ligne) = each ($datas) ){
 echo "Ban country $c removed rules...\n";
 events("restoring datas iptables-restore < /etc/artica-postfix/iptables.new.conf");
 file_put_contents("/etc/artica-postfix/iptables.new.conf",$conf);
-system("/sbin/iptables-restore < /etc/artica-postfix/iptables.new.conf");
+system("$iptables_restore < /etc/artica-postfix/iptables.new.conf");
 }
 function iptables_perso_delete_all(){
+$unix=new unix();
+$iptables_save=$unix->find_program("iptables-save");
+$iptables_restore=$unix->find_program("iptables-restore");		
 events("Exporting datas iptables-save > /etc/artica-postfix/iptables.conf");
-system("/sbin/iptables-save > /etc/artica-postfix/iptables.conf");
+system("$iptables_save > /etc/artica-postfix/iptables.conf");
 $data=file_get_contents("/etc/artica-postfix/iptables.conf");
 $datas=explode("\n",$data);
 $pattern="#.+?ArticaPersoRules#";
@@ -129,7 +141,7 @@ while (list ($num, $ligne) = each ($datas) ){
 echo "Ban country $c removed rules...\n";
 events("restoring datas iptables-restore < /etc/artica-postfix/iptables.new.conf");
 file_put_contents("/etc/artica-postfix/iptables.new.conf",$conf);
-system("/sbin/iptables-restore < /etc/artica-postfix/iptables.new.conf");
+system("$iptables_restore < /etc/artica-postfix/iptables.new.conf");
 }
 
 function perso(){
@@ -239,12 +251,84 @@ function ipdeny_perform($country){
 
 
 
-
+function Compile_rules_whitelist(){
+	$sock=new sockets();
+	$q=new mysql();
+	$sql="SELECT * FROM postfix_whitelist_con";
+	progress(10,"Query rules");
+	$results=$q->QUERY_SQL($sql,"artica_backup");
+	if(!$q->ok){writelogs("mysql error $q->mysql_error [$q->mysql_admin/$q->mysql_password]",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);return array();}
+	$unix=new unix();
+	$iptables=$unix->find_program("iptables");
+	$InstantIptablesEventAll=$sock->GET_INFO("InstantIptablesEventAll");
+	if(!is_numeric($InstantIptablesEventAll)){$InstantIptablesEventAll=1;}
+	if($GLOBALS["VERBOSE"]){echo "InstantIptablesEventAll=$InstantIptablesEventAll\n";}
+		
+	$log="-j LOG --log-prefix \"SMTP DROP: \" ";
+	$c=0;
+	progress(25,"Building logging rules");	
+	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
+		$ip=$ligne["ipaddr"];
+		$c++;
+		if(trim($ip)==null){continue;}
+		$cmd[]="$iptables -A INPUT -s $ip -p tcp --destination-port 25 -j ACCEPT -m comment --comment \"ArticaInstantPostfix\"";
+		$cmd[]="$iptables -A INPUT -s $ip -p tcp --destination-port 587 -j ACCEPT -m comment --comment \"ArticaInstantPostfix\"";
+		$cmd[]="$iptables -A INPUT -s $ip -p tcp --destination-port 465 -j ACCEPT -m comment --comment \"ArticaInstantPostfix\"";
+		
+	}	
+	
+	$sql="SELECT * FROM crossroads_smtp";
+	$results=$q->QUERY_SQL($sql,"artica_backup");
+	if(!$q->ok){writelogs("mysql error $q->mysql_error [$q->mysql_admin/$q->mysql_password]",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);return array();}
+	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
+		$ipaddrSource=$ligne["ipaddr"];
+		$arrayConf=unserialize($ligne["parameters"]);
+		$instancesParams=$arrayConf["INSTANCES_PARAMS"];	
+		while (list ($ip, $none) = each ($arrayConf["INSTANCES"]) ){
+			$cmd[]="$iptables -A INPUT -s $ipaddrSource -p tcp --destination-port 25 -d $ip -j ACCEPT -m comment --comment \"ArticaInstantPostfix\"";
+			$cmd[]="$iptables -A INPUT -s $ipaddrSource -p tcp --destination-port 587 -d $ip -j ACCEPT -m comment --comment \"ArticaInstantPostfix\"";
+			$cmd[]="$iptables -A INPUT -s $ipaddrSource -p tcp --destination-port 465 -d $ip -j ACCEPT -m comment --comment \"ArticaInstantPostfix\"";
+			
+		}
+	}
+	
+	if($InstantIptablesEventAll==1){
+		$cmd[]="$iptables -A INPUT -p tcp --destination-port 25 -j LOG --log-prefix \"SMTP DROP: \" -m comment --comment \"ArticaInstantPostfix\"";
+		$cmd[]="$iptables -A INPUT -p tcp --destination-port 587 -j LOG --log-prefix \"SMTP DROP: \" -m comment --comment \"ArticaInstantPostfix\"";
+		$cmd[]="$iptables -A INPUT -p tcp --destination-port 465 -j LOG --log-prefix \"SMTP DROP: \" -m comment --comment \"ArticaInstantPostfix\"";
+		
+	}
+	$cmd[]="$iptables -A INPUT -p tcp --destination-port 587 -j DROP -m comment --comment \"ArticaInstantPostfix\"";
+	$cmd[]="$iptables -A INPUT -p tcp --destination-port 25 -j DROP -m comment --comment \"ArticaInstantPostfix\"";
+	$cmd[]="$iptables -A INPUT -p tcp --destination-port 465 -j DROP -m comment --comment \"ArticaInstantPostfix\"";
+	
+	
+	if(is_array($cmd)){
+		while (list ($index, $line) = each ($cmd) ){
+			if($GLOBALS["VERBOSE"]){echo $line."\n";}
+			shell_exec($line);
+		}
+	}
+	
+	$unix->send_email_events("$c whitelisted addresses compiled in the SMTP Firewall",
+	 "$c items has been accepted to pass trough 25,587,465 ports", "postfix");
+	progress(90,"Building rules done...");
+	progress(100,"Building rules done...");	
+	
+}
 
 
 function Compile_rules(){
 	progress(5,"Cleaning rules");
 	iptables_delete_all();
+	$sock=new sockets();
+	$EnablePostfixAutoBlockWhiteListed=$sock->GET_INFO("EnablePostfixAutoBlockWhiteListed");
+	if(!is_numeric($EnablePostfixAutoBlockWhiteListed)){$EnablePostfixAutoBlockWhiteListed=0;}	
+	if($EnablePostfixAutoBlockWhiteListed==1){
+		Compile_rules_whitelist();
+		return;
+	}
+	
 	$unix=new unix();
 	$iptables=$unix->find_program("iptables");
 	$sock=new sockets();
@@ -279,12 +363,14 @@ function Compile_rules(){
 
 	
 	progress(40,"Building rules...");
+	$c=0;
 	$sql="SELECT * FROM iptables WHERE disable=0 AND flux='INPUT' AND local_port=25";
 	$results=$q->QUERY_SQL($sql,"artica_backup");
 	progress(55,"Building rules...");
 	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
 		$ip=$ligne["serverip"];
 		if($iptablesClass->isWhiteListed($ip)){continue;}
+		$c++;
 		events("ADD REJECT {$ligne["serverip"]} INBOUND PORT 25");
 		progress(60,"Building rules for $ip...");
 		if($InstantIptablesEventAll==1){
@@ -308,7 +394,8 @@ function Compile_rules(){
 		}
 	}
 	
-	
+	$unix->send_email_events("$c banned addresses compiled in the SMTP Firewall",
+	 "$c items has been banned from 25,587,465 ports", "postfix");	
 	progress(90,"Building rules done...");
 	progress(100,"Building rules done...");
 	
@@ -516,7 +603,9 @@ function ParseLastEvents(){
 }
 
 function ExportDrop(){
-	if($GLOBALS["EnablePostfixAutoBlock"]<>1){return;}
+	if($GLOBALS["EnablePostfixAutoBlock"]<>1){
+		if($GLOBALS["VERBOSE"]){echo "EnablePostfixAutoBlock={$GLOBALS["EnablePostfixAutoBlock"]}, aborting..\n";}
+		return;}
 	$pidpath="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
 	$oldpid=@file_get_contents($pidpath);
 	$unix=new unix();
@@ -524,11 +613,13 @@ function ExportDrop(){
 		if($GLOBALS["VERBOSE"]){echo "Already executed $oldpid\n";}
 		return;
 	}
-	@file_get_contents($pidpath,getmypid());
+	@file_put_contents($pidpath,getmypid());
 	
 	$grep=$unix->find_program("grep");
+	$tail=$unix->find_program("tail");
 	$syslog=$unix->LOCATE_SYSLOG_PATH();
-	$cmd="$grep -E \"smtp kernel.*?SMTP DROP\" $syslog >/usr/share/artica-postfix/ressources/logs/iptables-smtp-drop.log";
+	$cmd="$grep -E \"kernel.*?SMTP DROP\" $syslog |$tail -n 2000 >/usr/share/artica-postfix/ressources/logs/iptables-smtp-drop.log";
+	if($GLOBALS["VERBOSE"]){echo "$cmd\n";}
 	shell_exec($cmd);
 	@chmod("/usr/share/artica-postfix/ressources/logs/iptables-smtp-drop.log",0777);
 	

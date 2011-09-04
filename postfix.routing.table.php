@@ -726,6 +726,10 @@ function LoadLDAPDBs(){
 function PostfixAddRoutingRuleTable(){
 	$page=CurrentPageName();
 	$main=new main_cf();
+	$users=new usersMenus();
+	$tpl=new templates();
+	if(!$users->AsPostfixAdministrator){echo "<script>alert('".$tpl->javascript_parse_text("{ERROR_NO_PRIVS}")."');</script>";die();}
+	
 	$service=$main->HashGetMasterCfServices();
 	$service["smtp"]="smtp";
 	$ldap=new clladp();
@@ -748,48 +752,48 @@ function PostfixAddRoutingRuleTable(){
 		$orgfound=$ldap->organization_name_from_transporttable($domainName);
 	}
 	
-	$organization=Field_array_Hash($ORG,'org',$orgfound);
+	$organization=Field_array_Hash($ORG,'org',$orgfound,"style:font-size:14px;padding:3px");
 	
 	
 	if($relay_service==null){$relay_service="smtp";}
 	
 $html="
-	<h1>{routing_rule}</H1>
+	<div style='font-size:16px'>{routing_rule}::$domainName</div>
 	";
 $form="
-	<br>" . RoundedLightWhite("
+	
 	<form name='FFM3'>
 	<input type='hidden' name='PostfixAddRoutingRuleTableSave' value='yes'>
-	<table style='width:100%'>
+	<table style='width:100%' class=form>
 	<tr>
 	<td align='right' class=legend>{organization}:</strong></td>
-	<td style='font-size:12px'>$organization</td>
+	<td style='font-size:14px'>$organization</td>
 	</tr>	
 	<tr>
 	<td align='right' class=legend>{pattern}:</strong></td>
-	<td style='font-size:12px'>" . Field_text('domain',$domainName,'width:50%',null,null,'{transport_maps_pattern_explain}') . "</td>
+	<td style='font-size:14px'>" . Field_text('domain',$domainName,'font-size:14px;width:50%',null,null,'{transport_maps_pattern_explain}') . "</td>
 	</tr>
 	<tr>
 	<td align='right' class=legend>{service}:</strong></td>
-	<td style='font-size:12px'>" . Field_array_Hash($service,'service',$relay_service) . "</td>
+	<td style='font-size:14px'>" . Field_array_Hash($service,'service',$relay_service,"style:font-size:14px") . "</td>
 	</tr>	
 	<td align='right' nowrap class=legend>{address}:</strong></td>
-	<td style='font-size:12px'>" . Field_text('relay_address',$relay_address) . "</td>	
+	<td style='font-size:14px'>" . Field_text('relay_address',$relay_address,"font-size:16px;width:120px") . "</td>	
 	</tr>
 	</tr>
 	<td align='right' nowrap class=legend>{port}:</strong></td>
-	<td style='font-size:12px'>" . Field_text('relay_port',$smtp_port) . "</td>	
+	<td style='font-size:14px'>" . Field_text('relay_port',$smtp_port,"font-size:16px;width:55px") . "</td>	
 	</tr>	
 	<tr>
 	<td align='right' nowrap>" . Field_yesno_checkbox_img('MX_lookups',$MX_lookups,'{enable_disable}')."</td>
-	<td style='font-size:12px'>{MX_lookups}</td>	
+	<td style='font-size:14px'>{MX_lookups}</td>	
 	</tr>
 	$sasl
 	<tr>
 	<td align='right' colspan=2>". button("{apply}","PostfixAddNewRoutingTable()")."</td>
 	</tr>		
 	<tr>
-	<td align='left' colspan=2><hr><p class=caption{MX_lookups}</strong><br>{MX_lookups_text}</p></td>
+	<td align='left' colspan=2><hr><div class=explain><strong>{MX_lookups}</strong><br>{MX_lookups_text}</div></td>
 	</tr>			
 		
 	</table>
@@ -817,9 +821,9 @@ function PostfixAddNewRoutingTable(){
 	
 </script>	
 	
-	");
+	";
 	
-	$tpl=new templates();
+	
 	echo $tpl->_ENGINE_parse_body("$html$form");		
 	
 	

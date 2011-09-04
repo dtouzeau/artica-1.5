@@ -69,6 +69,7 @@ function APP_ZARAFA_WEB_SAVE(){
 	if(document.getElementById('ZarafaIMAPEnable').checked){XHR.appendData('ZarafaIMAPEnable',1);}else{XHR.appendData('ZarafaIMAPEnable',0);}
 	if(document.getElementById('ZarafaIMAPsEnable').checked){XHR.appendData('ZarafaIMAPsEnable',1);}else{XHR.appendData('ZarafaIMAPsEnable',0);}
 	if(document.getElementById('ZarafaAllowToReinstall').checked){XHR.appendData('ZarafaAllowToReinstall',1);}else{XHR.appendData('ZarafaAllowToReinstall',0);}
+	if(document.getElementById('ZarafaWebNTLM').checked){XHR.appendData('ZarafaWebNTLM',1);}else{XHR.appendData('ZarafaWebNTLM',0);}
 
 	
 	
@@ -142,8 +143,10 @@ function SAVE(){
 	$sock->SET_INFO("ZarafaIMAPEnable",trim($_GET["ZarafaIMAPEnable"]));
 	$sock->SET_INFO("ZarafaIMAPsEnable",trim($_GET["ZarafaIMAPsEnable"]));
 	$sock->SET_INFO("ZarafaAllowToReinstall",trim($_GET["ZarafaAllowToReinstall"]));
+	$sock->SET_INFO("ZarafaWebNTLM",trim($_GET["ZarafaWebNTLM"]));
 	
-
+	
+	
 	 
 	
 	$sock->getFrameWork("cmd.php?zarafa-restart-web=yes");
@@ -210,6 +213,8 @@ $ZarafaIMAPPort=$sock->GET_INFO("ZarafaIMAPPort");
 $ZarafaPop3sPort=$sock->GET_INFO("ZarafaPop3sPort");
 $ZarafaIMAPsPort=$sock->GET_INFO("ZarafaIMAPsPort");
 $ZarafaAllowToReinstall=$sock->GET_INFO("ZarafaAllowToReinstall");
+
+$ZarafaWebNTLM=$sock->GET_INFO("ZarafaWebNTLM");
 
 if(!is_numeric($ZarafaPop3Enable)){$ZarafaPop3Enable=1;}
 if(!is_numeric($ZarafaIMAPEnable)){$ZarafaIMAPEnable=1;}
@@ -296,6 +301,12 @@ $html="
 				<td>". Field_checkbox("ZarafaApacheSSL",1,$enable_ssl)."</td>
 			</tr>
 			<tr>
+				<td class=legend style='font-size:12px'>{ZarafaWebNTLM}:</td>
+				<td>". Field_checkbox("ZarafaWebNTLM",1,$ZarafaWebNTLM)."</td>
+			</tr>			
+			
+			
+			<tr>
 				<td class=legend style='font-size:12px'>{spell_checker}&nbsp;$ZarafaAspellInstalled_text&nbsp;:</td>
 				<td>". Field_checkbox("ZarafaAspellEnabled",1,$ZarafaAspellEnabled)."</td>
 			</tr>
@@ -303,7 +314,7 @@ $html="
 				<td class=legend style='font-size:12px'>{ZarafaAllowToReinstall}:</td>
 				<td>". Field_checkbox("ZarafaAllowToReinstall",1,$ZarafaAllowToReinstall)."</td>
 			</tr>
-								
+			<tr><td colspan=2 align='right'><hr>". button("{apply}","APP_ZARAFA_WEB_SAVE()")."</td></tr>							
 		</table>
 		
 		<p>&nbsp;</p>
@@ -379,7 +390,8 @@ $html="
 			<tr>
 				<td colspan=2 align='right'><a href=\"javascript:blur();\" OnClick=\"DbAttachConverter()\" 
 				style='font-size:13px;text-decoration:underline'>{convert_current_attachments}</a></td>
-			</tr>																
+			</tr>
+			<tr><td colspan=2 align='right'><hr>". button("{apply}","APP_ZARAFA_WEB_SAVE()")."</td></tr>																	
 		</table>		
 
 		<p>&nbsp;</p>
@@ -446,6 +458,7 @@ $html="
 		if(document.getElementById('ZarafaPop3sEnable').checked){document.getElementById('ZarafaPop3sPort').disabled=false;}
 		if(document.getElementById('ZarafaIMAPEnable').checked){document.getElementById('ZarafaIMAPPort').disabled=false;}
 		if(document.getElementById('ZarafaIMAPsEnable').checked){document.getElementById('ZarafaIMAPsPort').disabled=false;}
+		
 		
 		
 		

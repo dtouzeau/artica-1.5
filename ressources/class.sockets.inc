@@ -243,6 +243,21 @@ function downloadFile($url,$hostname)  {
    	}   	
    	
    function SET_INFO($key,$value){
+   	$trace=debug_backtrace();
+	if(isset($trace[1])){$called=" called by ". basename($trace[1]["file"])." {$trace[1]["function"]}() line {$trace[1]["line"]}";}
+   	
+   		if($key=="SQUIDEnable"){
+   			if($value==1){
+   				
+					writelogs("SET SQUID $key $value $called",__CLASS__ . "/" . __FUNCTION__,__FILE__);				
+					if(class_exists("unix")){
+						$unix=new unix();
+						$unix->send_email_events("SQUID was re-activated", $called, "squid");
+					}
+				}
+   		}
+   	
+   	
    	    if(!isset($GLOBALS["posix_getuid"])){$GLOBALS["posix_getuid"]=1000;if(function_exists("posix_getuid")){$GLOBALS["posix_getuid"]=posix_getuid();}}
    		if($GLOBALS["posix_getuid"]==0){
    			@file_put_contents("/etc/artica-postfix/settings/Daemons/$key",$value);
@@ -251,7 +266,13 @@ function downloadFile($url,$hostname)  {
    			return true;
    		}
    		
-   	   	writelogs("SET $key=".strlen($value)." bytes",__CLASS__ . "=>" . __FUNCTION__,__FILE__);
+   		if(strlen($value)<10){
+   			writelogs("SET \"$key\"=\"$value\" $called",__CLASS__ . "=>" . __FUNCTION__,__FILE__,__LINE__);
+   			
+   		}else{
+   			writelogs("SET $key=".strlen($value)." bytes $called",__CLASS__ . "=>" . __FUNCTION__,__FILE__,__LINE__);
+   		}
+   	   	
    	   	$file=md5($value);
    	   	@mkdir(dirname(__FILE__)."/logs");
    	   	$targetedFile=dirname(__FILE__)."/logs/$key";
@@ -427,7 +448,6 @@ function GET_MYSQL_ROOT($key){
 			
 			}
 			if($GLOBALS["VERBOSE_MASTER"]){echo "->SYSTEMV5_ENABLED() FALSE posix={$GLOBALS["posix_getuid"]} ". basename(__FILE__). " line \n";}
-			if($GLOBALS["LOGON-PAGE"]){error_log("->SYSTEMV5_ENABLED() FALSE ". basename(__FILE__). " line ". __LINE__);}
 			return false;
 		}
 		

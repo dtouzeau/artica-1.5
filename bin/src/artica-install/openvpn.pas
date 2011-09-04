@@ -213,6 +213,7 @@ end;
   if SYS.PROCESS_EXIST(pid) then begin
       logs.DebugLogs('Starting......: OpenVPN Success with PID number '+ pid);
       logs.NOTIFICATION('OpenVPN server was successfully started PID '+pid,'','VPN');
+
       fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.openvpn.php --iptables-server');
   end else begin
       if not noinvestigate then begin
@@ -247,6 +248,15 @@ begin
            fpsystem('/bin/rm /etc/artica-postfix/openvpn/keys/*');
            BuildCertificate();
            exit(true);
+        end;
+
+        RegExpr.Expression:='Note: Cannot open TUN.+?TAP dev.+?';
+        if RegExpr.Exec(l.Strings[i]) then begin
+           logs.DebugLogs('Starting......: OpenVPN fatal error !!');
+           logs.DebugLogs('Starting......: OpenVPN "'+ l.Strings[i]+'"');
+           logs.DebugLogs('Starting......: Disable OpenVPN service...');
+           logs.NOTIFICATION('Fatal Error: Could not start OpenVPN service',l.Strings[i]+' the service was disabled','VPN');
+           SYS.set_INFO('EnableOPenVPNServerMode','0');
         end;
     end;
 

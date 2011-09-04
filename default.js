@@ -1627,7 +1627,14 @@ var x_CacheOff= function (obj) {
 	RefreshLeftMenu();
 	if(document.getElementById('squid_main_config')){RefreshTab('squid_main_config');}
 	if(document.getElementById('main_system_settings')){RefreshTab('main_system_settings');}
-	 
+	if(document.getElementById('main_config_postfix_security')){RefreshTab('main_config_postfix_security');}
+	if(document.getElementById('org_main')){RefreshTab('org_main');}
+	if(document.getElementById('main_config_samba')){RefreshTab('main_config_samba');}
+	if(document.getElementById('main_squidcachperfs')){RefreshTab('main_squidcachperfs');}
+	if(document.getElementById('main_group_config')){RefreshTab('main_group_config');}
+	
+	
+	
 }
 
 function CacheOff(){

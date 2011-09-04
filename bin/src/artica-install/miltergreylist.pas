@@ -657,8 +657,9 @@ begin
 
              if length(trim(FullSocketPath))=0 then FullSocketPath:='/var/run/milter-greylist/milter-greylist.sock';
              if length(trim(pid_path))=0 then pid_path:='/var/run/milter-greylist/milter-greylist.pid';
-
-             if FileExists('/var/milter-greylist/greylist.db') then SYS.FILE_CHOWN(user,user,'/var/milter-greylist/greylist.db');
+             if not FileExists('/var/milter-greylist/greylist.db') then logs.WriteToFile(' ','/var/milter-greylist/greylist.db');
+             fpsystem('/bin/chown '+user+':'+user +' /var/milter-greylist/greylist.db');
+             fpsystem('/bin/chmod 644 /var/milter-greylist/greylist.db');
 
              logs.DebugLogs('Starting......: milter-greylist PidPath..: ' +pid_path);
              logs.DebugLogs('Starting......: milter-greylist dump file: ' +'/var/milter-greylist/greylist.db');

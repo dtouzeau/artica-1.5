@@ -9,7 +9,7 @@
       <MainUnit Value="0"/>
       <TargetFileExt Value=""/>
       <Title Value="artica-update"/>
-      <ActiveEditorIndexAtStart Value="7"/>
+      <ActiveEditorIndexAtStart Value="0"/>
     </General>
     <VersionInfo>
       <ProjectVersion Value=""/>
@@ -31,8 +31,8 @@
         <Filename Value="artica_update.lpr"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="artica_update"/>
-        <CursorPos X="19" Y="171"/>
-        <TopLine Value="154"/>
+        <CursorPos X="123" Y="261"/>
+        <TopLine Value="223"/>
         <EditorIndex Value="0"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
@@ -58,9 +58,11 @@
       <Unit3>
         <Filename Value="logs.pas"/>
         <UnitName Value="logs"/>
-        <CursorPos X="1" Y="1"/>
-        <TopLine Value="1"/>
+        <CursorPos X="1" Y="1499"/>
+        <TopLine Value="1465"/>
+        <EditorIndex Value="8"/>
         <UsageCount Value="97"/>
+        <Loaded Value="True"/>
       </Unit3>
       <Unit4>
         <Filename Value="mailinfos.pas"/>
@@ -213,8 +215,8 @@
         <Filename Value="update.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="update"/>
-        <CursorPos X="75" Y="1703"/>
-        <TopLine Value="1667"/>
+        <CursorPos X="43" Y="141"/>
+        <TopLine Value="127"/>
         <EditorIndex Value="7"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -289,7 +291,7 @@
         <UnitName Value="squid"/>
         <CursorPos X="31" Y="157"/>
         <TopLine Value="120"/>
-        <EditorIndex Value="8"/>
+        <EditorIndex Value="9"/>
         <UsageCount Value="10"/>
         <Loaded Value="True"/>
       </Unit35>
@@ -361,7 +363,7 @@
         <UnitName Value="kavmilter"/>
         <CursorPos X="1" Y="1"/>
         <TopLine Value="1"/>
-        <EditorIndex Value="9"/>
+        <EditorIndex Value="10"/>
         <UsageCount Value="15"/>
         <Loaded Value="True"/>
       </Unit45>
@@ -386,7 +388,7 @@
         <UnitName Value="clamav"/>
         <CursorPos X="1" Y="1663"/>
         <TopLine Value="1596"/>
-        <EditorIndex Value="10"/>
+        <EditorIndex Value="11"/>
         <UsageCount Value="11"/>
         <Loaded Value="True"/>
       </Unit48>
@@ -481,7 +483,7 @@
         <UnitName Value="ssfpc"/>
         <CursorPos X="6" Y="515"/>
         <TopLine Value="481"/>
-        <EditorIndex Value="12"/>
+        <EditorIndex Value="13"/>
         <UsageCount Value="28"/>
         <Loaded Value="True"/>
       </Unit61>
@@ -550,7 +552,7 @@
         <UnitName Value="autofs"/>
         <CursorPos X="41" Y="9"/>
         <TopLine Value="9"/>
-        <EditorIndex Value="11"/>
+        <EditorIndex Value="12"/>
         <UsageCount Value="16"/>
         <Loaded Value="True"/>
       </Unit70>
@@ -567,55 +569,55 @@
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="update.pas"/>
-        <Caret Line="1" Column="1" TopLine="1"/>
+        <Caret Line="966" Column="22" TopLine="927"/>
       </Position1>
       <Position2>
         <Filename Value="update.pas"/>
-        <Caret Line="9" Column="179" TopLine="1"/>
+        <Caret Line="967" Column="49" TopLine="927"/>
       </Position2>
       <Position3>
         <Filename Value="update.pas"/>
-        <Caret Line="26" Column="13" TopLine="1"/>
+        <Caret Line="969" Column="51" TopLine="927"/>
       </Position3>
       <Position4>
         <Filename Value="update.pas"/>
-        <Caret Line="71" Column="29" TopLine="37"/>
+        <Caret Line="1703" Column="75" TopLine="1667"/>
       </Position4>
       <Position5>
         <Filename Value="update.pas"/>
-        <Caret Line="93" Column="74" TopLine="37"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
       </Position5>
       <Position6>
         <Filename Value="update.pas"/>
-        <Caret Line="111" Column="12" TopLine="77"/>
+        <Caret Line="26" Column="19" TopLine="1"/>
       </Position6>
       <Position7>
         <Filename Value="update.pas"/>
-        <Caret Line="752" Column="7" TopLine="718"/>
+        <Caret Line="93" Column="80" TopLine="59"/>
       </Position7>
       <Position8>
         <Filename Value="update.pas"/>
-        <Caret Line="753" Column="19" TopLine="718"/>
+        <Caret Line="111" Column="18" TopLine="59"/>
       </Position8>
       <Position9>
         <Filename Value="update.pas"/>
-        <Caret Line="765" Column="8" TopLine="718"/>
+        <Caret Line="1073" Column="19" TopLine="1039"/>
       </Position9>
       <Position10>
         <Filename Value="update.pas"/>
-        <Caret Line="767" Column="85" TopLine="718"/>
+        <Caret Line="1074" Column="52" TopLine="1039"/>
       </Position10>
       <Position11>
         <Filename Value="update.pas"/>
-        <Caret Line="825" Column="24" TopLine="766"/>
+        <Caret Line="1968" Column="16" TopLine="1934"/>
       </Position11>
       <Position12>
         <Filename Value="update.pas"/>
-        <Caret Line="2187" Column="18" TopLine="2166"/>
+        <Caret Line="2071" Column="16" TopLine="2037"/>
       </Position12>
       <Position13>
         <Filename Value="update.pas"/>
-        <Caret Line="2195" Column="88" TopLine="2166"/>
+        <Caret Line="2193" Column="16" TopLine="2159"/>
       </Position13>
       <Position14>
         <Filename Value="update.pas"/>
@@ -623,67 +625,67 @@
       </Position14>
       <Position15>
         <Filename Value="update.pas"/>
-        <Caret Line="9" Column="117" TopLine="1"/>
+        <Caret Line="26" Column="19" TopLine="1"/>
       </Position15>
       <Position16>
         <Filename Value="update.pas"/>
-        <Caret Line="23" Column="29" TopLine="1"/>
+        <Caret Line="93" Column="80" TopLine="59"/>
       </Position16>
       <Position17>
         <Filename Value="update.pas"/>
-        <Caret Line="59" Column="31" TopLine="1"/>
+        <Caret Line="111" Column="18" TopLine="59"/>
       </Position17>
       <Position18>
         <Filename Value="update.pas"/>
-        <Caret Line="66" Column="31" TopLine="1"/>
+        <Caret Line="1073" Column="19" TopLine="1039"/>
       </Position18>
       <Position19>
         <Filename Value="update.pas"/>
-        <Caret Line="67" Column="31" TopLine="1"/>
+        <Caret Line="2317" Column="5" TopLine="2249"/>
       </Position19>
       <Position20>
         <Filename Value="update.pas"/>
-        <Caret Line="68" Column="31" TopLine="1"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
       </Position20>
       <Position21>
         <Filename Value="update.pas"/>
-        <Caret Line="69" Column="31" TopLine="35"/>
+        <Caret Line="26" Column="19" TopLine="1"/>
       </Position21>
       <Position22>
         <Filename Value="update.pas"/>
-        <Caret Line="91" Column="25" TopLine="35"/>
+        <Caret Line="93" Column="48" TopLine="59"/>
       </Position22>
       <Position23>
         <Filename Value="update.pas"/>
-        <Caret Line="961" Column="49" TopLine="927"/>
+        <Caret Line="111" Column="67" TopLine="59"/>
       </Position23>
       <Position24>
         <Filename Value="update.pas"/>
-        <Caret Line="962" Column="22" TopLine="927"/>
+        <Caret Line="29" Column="79" TopLine="1"/>
       </Position24>
       <Position25>
         <Filename Value="update.pas"/>
-        <Caret Line="963" Column="22" TopLine="927"/>
+        <Caret Line="93" Column="48" TopLine="59"/>
       </Position25>
       <Position26>
         <Filename Value="update.pas"/>
-        <Caret Line="964" Column="22" TopLine="927"/>
+        <Caret Line="141" Column="43" TopLine="127"/>
       </Position26>
       <Position27>
-        <Filename Value="update.pas"/>
-        <Caret Line="965" Column="22" TopLine="927"/>
+        <Filename Value="logs.pas"/>
+        <Caret Line="79" Column="26" TopLine="45"/>
       </Position27>
       <Position28>
-        <Filename Value="update.pas"/>
-        <Caret Line="966" Column="22" TopLine="927"/>
+        <Filename Value="logs.pas"/>
+        <Caret Line="1284" Column="27" TopLine="1250"/>
       </Position28>
       <Position29>
-        <Filename Value="update.pas"/>
-        <Caret Line="967" Column="49" TopLine="927"/>
+        <Filename Value="artica_update.lpr"/>
+        <Caret Line="264" Column="1" TopLine="214"/>
       </Position29>
       <Position30>
-        <Filename Value="update.pas"/>
-        <Caret Line="969" Column="51" TopLine="927"/>
+        <Filename Value="artica_update.lpr"/>
+        <Caret Line="13" Column="22" TopLine="1"/>
       </Position30>
     </JumpHistory>
   </ProjectOptions>

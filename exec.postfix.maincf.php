@@ -80,7 +80,7 @@ $GLOBALS["postconf"]=$unix->find_program("postconf");
 $GLOBALS["postmap"]=$unix->find_program("postmap");
 $GLOBALS["postfix"]=$unix->find_program("postfix");
 
-if($argv[1]=='--networks'){mynetworks();ReloadPostfix(true);die();}
+if($argv[1]=='--networks'){mynetworks();MailBoxTransport();ReloadPostfix(true);die();}
 if($argv[1]=='--headers-check'){headers_check();die();}
 if($argv[1]=='--headers-checks'){headers_check();die();}
 if($argv[1]=='--assp'){ASSP_LOCALDOMAINS();die();}
@@ -89,12 +89,12 @@ if($argv[1]=='--ldap-branch'){BuildDefaultBranchs();die();}
 if($argv[1]=='--ssl'){MasterCFBuilder(true);die();}
 if($argv[1]=='--ssl-on'){MasterCFBuilder(true);die();}
 if($argv[1]=='--ssl-off'){MasterCFBuilder(true);die();}
-if($argv[1]=='--imap-sockets'){imap_sockets();die();}
+if($argv[1]=='--imap-sockets'){imap_sockets();MailBoxTransport();die();}
 if($argv[1]=='--policyd-reconfigure'){policyd_weight_reconfigure();die();}
 if($argv[1]=='--restricted'){RestrictedForInternet(true);die();}
 if($argv[1]=='--others-values'){OthersValues();CleanMyHostname();ReloadPostfix(true);die();}
 if($argv[1]=='--mime-header-checks'){mime_header_checks();ReloadPostfix(true);die();}
-if($argv[1]=='--interfaces'){inet_interfaces();exec("{$GLOBALS["postfix"]} stop");exec("{$GLOBALS["postfix"]} start");ReloadPostfix(true);die();}
+if($argv[1]=='--interfaces'){inet_interfaces();MailBoxTransport();exec("{$GLOBALS["postfix"]} stop");exec("{$GLOBALS["postfix"]} start");ReloadPostfix(true);die();}
 if($argv[1]=='--mailbox-transport'){MailBoxTransport();ReloadPostfix(true);die();}
 if($argv[1]=='--disable-smtp-sasl'){disable_smtp_sasl();ReloadPostfix(true);die();}
 if($argv[1]=='--perso-settings'){perso_settings();die();}
@@ -103,7 +103,7 @@ if($argv[1]=='--smtp-sender-restrictions'){smtp_cmdline_restrictions();ReloadPos
 if($argv[1]=='--postdrop-perms'){fix_postdrop_perms();exit;}
 if($argv[1]=='--smtpd-restrictions'){smtp_cmdline_restrictions();die();}
 if($argv[1]=='--repair-locks'){repair_locks();exit;}
-if($argv[1]=='--smtp-sasl'){SetSALS();SetTLS();smtpd_recipient_restrictions();smtp_sasl_security_options();MasterCFBuilder();ReloadPostfix(true);exit;}
+if($argv[1]=='--smtp-sasl'){SetSALS();SetTLS();smtpd_recipient_restrictions();smtp_sasl_security_options();MasterCFBuilder();MailBoxTransport();ReloadPostfix(true);exit;}
 if($argv[1]=='--memory'){memory();exit;}
 if($argv[1]=='--postscreen'){postscreen($argv[2]);ReloadPostfix(true);exit;}
 if($argv[1]=='--freeze'){ReloadPostfix(true);exit;}
@@ -119,6 +119,7 @@ if($argv[1]=='--reconfigure'){
 	if($GLOBALS["EnablePostfixMultiInstance"]==1){
 		shell_exec(LOCATE_PHP5_BIN2()." ".dirname(__FILE__)."/exec.postfix-multi.php --from-main-reconfigure");
 	}
+	$t1=time();
 	$main=new main_cf();
 	$main->save_conf_to_server(1);
 	if(!is_file("/etc/postfix/hash_files/header_checks.cf")){@file_put_contents("/etc/postfix/hash_files/header_checks.cf","#");}
@@ -126,8 +127,16 @@ if($argv[1]=='--reconfigure'){
 	echo "Starting......: Postfix Building main.cf ". strlen($main->main_cf_datas). " bytes done line ". __LINE__."\n";
 	_DefaultSettings();
 	perso_settings();
+	$unix=new unix();
+	$unix->send_email_events("Postfix: postfix compilation done. Took :".$unix->distanceOfTimeInWords($t1,time()), "No content yet...\nShould be an added feature :=)", "postfix");
 	die();
 }
+
+
+
+
+_DefaultSettings();
+
 
 
 function smtp_cmdline_restrictions(){
@@ -178,6 +187,9 @@ if($GLOBALS["EnablePostfixMultiInstance"]==1){shell_exec(LOCATE_PHP5_BIN2()." ".
 	SetSALS();
 	SetTLS();
 	inet_interfaces();
+	imap_sockets();
+	MailBoxTransport();
+	mynetworks();	
 	headers_check(1);
 	MasterCFBuilder();
 	mime_header_checks();
@@ -189,8 +201,6 @@ if($GLOBALS["EnablePostfixMultiInstance"]==1){shell_exec(LOCATE_PHP5_BIN2()." ".
 	sender_bcc_maps();
 	CleanMyHostname();
 	OthersValues();
-	MailBoxTransport();
-	mynetworks();
 	luser_relay();
 	smtpd_sender_restrictions();
 	smtpd_end_of_data_restrictions();
@@ -523,7 +533,7 @@ function imap_sockets(){
 	shell_exec("/usr/share/artica-postfix/bin/artica-install --reconfigure-cyrus");
 	
 	
-	
+	echo "Starting......: cyrus analyze /etc/imapd.conf\n";
 	$f=explode("\n",@file_get_contents("/etc/imapd.conf"));
 	while (list ($num, $ligne) = each ($f) ){
 		if(preg_match("#lmtpsocket:(.+)#",$ligne,$re)){
@@ -935,15 +945,7 @@ function smtpd_recipient_restrictions(){
 	
 	
 	
-	if($GLOBALS["EnableBlockUsersTroughInternet"]==1){
-		echo "Starting......: Restricted users are enabled\n"; 	
-		if(RestrictedForInternet()){
- 			postconf("auth_relay","check_recipient_access hash:/etc/postfix/local_domains, reject");
-			 array_unshift($smtpd_recipient_restrictions,"check_sender_access hash:/etc/postfix/unrestricted_senders");
-			__ADD_smtpd_restriction_classes("auth_relay");
-		}else{__REMOVE_smtpd_restriction_classes("auth_relay");}
-	}
-	else{__REMOVE_smtpd_restriction_classes("auth_relay");}
+
 		
 		
 	if(!isset($GLOBALS["CLASS_SOCKET"])){$GLOBALS["CLASS_SOCKET"]=new sockets();$sock=$GLOBALS["CLASS_SOCKET"];}else{$sock=$GLOBALS["CLASS_SOCKET"];}
@@ -980,7 +982,15 @@ function smtpd_recipient_restrictions(){
 	
 
 
-	
+	if($GLOBALS["EnableBlockUsersTroughInternet"]==1){
+		echo "Starting......: Restricted users are enabled\n"; 	
+		if(RestrictedForInternet()){
+ 			postconf("auth_relay","check_recipient_access hash:/etc/postfix/local_domains, reject");
+			 array_unshift($smtpd_recipient_restrictions,"check_sender_access hash:/etc/postfix/unrestricted_senders");
+			__ADD_smtpd_restriction_classes("auth_relay");
+		}else{__REMOVE_smtpd_restriction_classes("auth_relay");}
+	}
+	else{__REMOVE_smtpd_restriction_classes("auth_relay");}	
 	
 	
 	
@@ -1363,7 +1373,23 @@ function inet_interfaces(){
 		$newarray[]=$val;
 	}
 	
-	if(!is_array($newarray)){$newarray[]="all";}
+	if(!is_array($newarray)){
+		$newarray[]="all";
+	}else{
+		while (list ($a, $b) = each ($newarray) ){$testinets[$b]=$b;}
+		$users=new usersMenus();
+		if(($users->roundcube_installed) OR ($users->ZARAFA_INSTALLED)){
+			if(!isset($testinets["127.0.0.1"])){
+				echo "Starting......: Postfix Listen interface Roundcube or Zarafa installed, force to listen 127.0.0.1\n";
+				$newarray[]="127.0.0.1";
+			}
+		}		
+		
+		
+	}
+	
+
+	
 	$finale=implode(",",$newarray);
 	$finale=str_replace(',,',',',$finale);
 	echo "Starting......: Postfix Listen interface(s) \"$finale\"\n";
@@ -1399,6 +1425,7 @@ function MailBoxTransport(){
 
 	$default=$main->getMailBoxTransport();
 	postconf("zarafa_destination_recipient_limit",1);
+	echo "Starting......: Postfix mailbox_transport $default\n";
 	postconf("mailbox_transport",$default);
 	system("{$GLOBALS["postconf"]} -e \"zarafa_destination_recipient_limit = 1\" >/dev/null 2>&1");
 
@@ -1406,10 +1433,11 @@ function MailBoxTransport(){
 	if(preg_match("#lmtp:(.+?):[0-9]+#",$default)){
 		if(!$users->ZARAFA_INSTALLED){
 			if(!$users->cyrus_imapd_installed){
+				echo "Starting......: Postfix None of Zarafa or cyrus imap installed on this server\n";
 				disable_lmtp_sasl();
 				return null;
 			}
-			echo "Starting......: Postfix LMTP is enabled $default\n";
+			echo "Starting......: Postfix \"LMTP\" is enabled ($default)\n";
 			$ldap=new clladp();
 			$CyrusLMTPListen=trim($sock->GET_INFO("CyrusLMTPListen"));
 			$cyruspass=$ldap->CyrusPassword();
@@ -1832,6 +1860,8 @@ function MasterCFBuilder($restart_service=false){
 	$ArticaFilterMaxProc=$sock->GET_INFO("ArticaFilterMaxProc");
 	$PostfixEnableSubmission=$sock->GET_INFO("PostfixEnableSubmission");
 	$EnableASSP=$sock->GET_INFO('EnableASSP');
+	$PostfixBindInterfacePort=$sock->GET_INFO("PostfixBindInterfacePort");
+	
 	
 	$user=new usersMenus();
 	$main=new maincf_multi("master","master");
@@ -1860,11 +1890,12 @@ function MasterCFBuilder($restart_service=false){
 		$PostfixEnableMasterCfSSL=0;
 	}
 	
-	if($EnableAmavisInMasterCF==null){$EnableAmavisInMasterCF=0;}
-	if($PostfixEnableSubmission==null){$PostfixEnableSubmission=0;}
-	if($EnableAmavisDaemon==0){$EnableAmavisInMasterCF=0;}
-	if($ArticaFilterMaxProc==null){$ArticaFilterMaxProc=20;}
-	if($EnableASSP==null){$EnableASSP=0;}
+	if(!is_numeric($PostfixBindInterfacePort)){	$PostfixBindInterfacePort=25;}
+	if(!is_numeric($EnableAmavisInMasterCF)){$EnableAmavisInMasterCF=0;}
+	if(!is_numeric($PostfixEnableSubmission)){$PostfixEnableSubmission=0;}
+	if(!is_numeric($EnableAmavisInMasterCF)){$EnableAmavisInMasterCF=0;}
+	if(!is_numeric($ArticaFilterMaxProc)){$ArticaFilterMaxProc=20;}
+	if(!is_numeric($EnableASSP)){$EnableASSP=0;}
 	
 	
 	shell_exec("{$GLOBALS["postconf"]} -e \"artica-filter_destination_recipient_limit = 1\" >/dev/null 2>&1");
@@ -1992,9 +2023,16 @@ function MasterCFBuilder($restart_service=false){
 		echo "Starting......: submission (587 port) Disabled\n";
 	}
 	
+	if($PostfixBindInterfacePort==25){
+		$postfix_listen_port="smtp";
+		$postscreen_listen_port="smtp";		
+	}else{
+		$postfix_listen_port=$PostfixBindInterfacePort;
+		$postscreen_listen_port=$PostfixBindInterfacePort;		
+	}
 	
-	$postfix_listen_port="smtp";
-	$postscreen_listen_port="smtp";
+	
+	echo "Starting......: Postfix intended to listen SMTP Port $postfix_listen_port\n";
 	$smtp_in_proto="inet";
 	$smtp_private="n";
 	

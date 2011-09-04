@@ -308,19 +308,26 @@ function BindInterfaceForm($noecho=0){
 	$array_IP=$ip->ALL_IPS_GET_ARRAY();
 	$array_IP["all"]="{all}";
 	$array_IP[null]="{select}";
-	$fieldIP=Field_array_Hash($array_IP,"inet_interface_select",null,null,null,0,"padding:3px;font-size:13px");
-	$BindInterfaceTable=BindInterfaceTable();	
+	$fieldIP=Field_array_Hash($array_IP,"inet_interface_select",null,null,null,0,"padding:3px;font-size:14px");
+	$BindInterfaceTable=BindInterfaceTable();
+	$sock=new sockets();
+	$PostfixBindInterfacePort=$sock->GET_INFO("PostfixBindInterfacePort");
+	if(!is_numeric($PostfixBindInterfacePort)){	$PostfixBindInterfacePort=25;}
 		
 $html="<div id='BindInterfaceForm'>
-	<table style='width:90%' align='center'>
+	<table style='width:90%' align='center' class=form>
 	<tr>
 		<td align='right' valign='top' nowrap class=legend>{give the new interface}&nbsp;:</strong></td>
-		<td align='left'>" . Field_text('inet_interface_add',null,'width:80%;padding:3px;font-size:13px',null,null,'{inet_interfaces_text}') ."</td>
+		<td align='left'>" . Field_text('inet_interface_add',null,'width:80%;padding:3px;font-size:14px',null,null,'{inet_interfaces_text}') ."</td>
 	</tr>
 	<tr>
 		<td align='right' valign='top' nowrap class=legend>{or} {select_ip_address}&nbsp;:</strong></td>
 		<td align='left'>$fieldIP</td>
-	</tr>	
+	</tr>
+	<tr>
+		<td align='right' valign='top' nowrap class=legend>{listen_port}&nbsp;:</strong></td>
+		<td align='left'>" . Field_text('PostfixBindInterfacePort',$PostfixBindInterfacePort,'width:60px;padding:3px;font-size:14px',null,null) ."</td>
+	</tr>		
 	<tr><td colspan=2 align='right'>&nbsp;
 	<hr>". button("{add}","PostfixAddInterface()")."
 	</td>
@@ -337,15 +344,18 @@ $html="<div id='BindInterfaceForm'>
 			var ip_selected=document.getElementById('inet_interface_select').value;
 			var inet_interface_add=document.getElementById('inet_interface_add').value;
 			if (inet_interface_add.length==0){
-			if(ip_selected.length>0){
-				inet_interface_add=ip_selected;
+				if(ip_selected.length>0){
+					inet_interface_add=ip_selected;
+				}
 			}
-			}
+			
 			document.getElementById('inet_interface_add').value='';
 			document.getElementById('inet_interface_select').value='';
 			var XHR = new XHRConnection();
-			document.getElementById('BindInterfaceForm').innerHTML=\"<center style='width:100%'><img src='img/wait_verybig.gif'></center>\";
 			XHR.appendData('inet_interface_add',inet_interface_add);
+			if(!document.getElementById('PostfixBindInterfacePort')){alert('PostfixBindInterfacePort no such field');return;}
+			XHR.appendData('PostfixBindInterfacePort',document.getElementById('PostfixBindInterfacePort').value);
+			AnimateDiv('BindInterfaceForm');
 			XHR.sendAndLoad('$page', 'GET',x_ReloadInterface);	
 			
 		}
@@ -638,18 +648,33 @@ function CalculCDR(){
 function inet_interface_add(){
 	$main=new main_cf();
 	$sock=new sockets();
-	$table=explode("\n",$sock->GET_INFO("PostfixBinInterfaces"));	
-	if(!is_array($table)){$table[]="all";}
-	$table[]=$_GET["inet_interface_add"];
 	
-while (list ($num, $val) = each ($table) ){
-		if($val==null){continue;}
-		$newarray[]=$val;
+	
+	if($_GET["inet_interface_add"]<>null){
+		$table=explode("\n",$sock->GET_INFO("PostfixBinInterfaces"));	
+		if(!is_array($table)){$table[]="all";}
+		$table[]=$_GET["inet_interface_add"];
+	
+		while (list ($num, $val) = each ($table) ){
+			if($val==null){continue;}
+			$newarray[]=$val;
+		}
+	
+		if(!is_array($newarray)){$newarray[]="all";}
+		$sock->SaveConfigFile(implode("\n",$newarray),"PostfixBinInterfaces");
+		$sock->getFrameWork("cmd.php?postfix-interfaces=yes");
+	}
+
+	if(is_numeric($_GET["PostfixBindInterfacePort"])){
+		if($_GET["PostfixBindInterfacePort"]<>25){
+			$PostfixBindInterfacePort=$sock->GET_INFO("PostfixBindInterfacePort");
+			if($_GET["PostfixBindInterfacePort"]<>$PostfixBindInterfacePort){
+				$sock->SET_INFO("PostfixBindInterfacePort", trim($_GET["PostfixBindInterfacePort"]));
+				$sock->getFrameWork("cmd.php?postfix-ssl=yes");
+			}
+		}
 	}
 	
-	if(!is_array($newarray)){$newarray[]="all";}
-	$sock->SaveConfigFile(implode("\n",$newarray),"PostfixBinInterfaces");
-	$sock->getFrameWork("cmd.php?postfix-interfaces=yes");	
 	
 
 }
@@ -657,7 +682,7 @@ function PostfixAddMyNetwork(){
 	$main=new main_cf();
 	
 	if(preg_match("#([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)\/([0-9]+)#",$_GET["PostfixAddMyNetwork"],$re)){
-		$_GET["PostfixAddMyNetwork"]="{$re[1]}.{$re[2]}.{$re[3]}.0/{$re[5]}";
+		$_GET["PostfixAddMyNetwork"]="{$re[1]}.{$re[2]}.{$re[3]}.{$re[4]}/{$re[5]}";
 	}
 	
 	$main->add_my_networks($_GET["PostfixAddMyNetwork"]);

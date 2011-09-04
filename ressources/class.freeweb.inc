@@ -6,6 +6,7 @@
 	include_once(dirname(__FILE__).'/class.groups.inc');
 	include_once(dirname(__FILE__).'/class.lvm.root.inc');
 	include_once(dirname(__FILE__).'/class.drupal.inc');
+	include_once(dirname(__FILE__).'/class.ccurl.inc');
 	
 	
 	
@@ -44,18 +45,21 @@
 		var $Forwarder=0;
 		var $ForwardTo=0;
 		var $APACHE_MOD_TOMCAT=false;
-		
+		var $COUNTRIES_ISO=array("AALAND ISLANDS"=>"AX","AFGHANISTAN"=>"AF","ALBANIA"=>"AL","ALGERIA"=>"DZ","AMERICAN SAMOA"=>"AS","ANDORRA"=>"AD","ANGOLA"=>"AO","ANGUILLA"=>"AI","ANTARCTICA"=>"AQ","ANTIGUA AND BARBUDA"=>"AG","ARGENTINA"=>"AR","ARMENIA"=>"AM","ARUBA"=>"AW","AUSTRALIA"=>"AU","AUSTRIA"=>"AT","AZERBAIJAN"=>"AZ","BAHAMAS"=>"BS","BAHRAIN"=>"BH","BANGLADESH"=>"BD","BARBADOS"=>"BB","BELARUS"=>"BY","BELGIUM"=>"BE","BELIZE"=>"BZ","BENIN"=>"BJ","BERMUDA"=>"BM","BHUTAN"=>"BT","BOLIVIA"=>"BO","BOSNIA AND HERZEGOWINA"=>"BA","BOTSWANA"=>"BW","BOUVET ISLAND"=>"BV","BRAZIL"=>"BR","BRITISH INDIAN OCEAN TERRITORY"=>"IO","BRUNEI DARUSSALAM"=>"BN","BULGARIA"=>"BG","BURKINA FASO"=>"BF","BURUNDI"=>"BI","CAMBODIA"=>"KH","CAMEROON"=>"CM","CANADA"=>"CA","CAPE VERDE"=>"CV","CAYMAN ISLANDS"=>"KY","CENTRAL AFRICAN REPUBLIC"=>"CF","CHAD"=>"TD","CHILE"=>"CL","CHINA"=>"CN","CHRISTMAS ISLAND"=>"CX","COCOS (KEELING) ISLANDS"=>"CC","COLOMBIA"=>"CO","COMOROS"=>"KM","CONGO, Democratic Republic of (was Zaire)"=>"CD","CONGO, Republic of"=>"CG","COOK ISLANDS"=>"CK","COSTA RICA"=>"CR","COTE D'IVOIRE"=>"CI","CROATIA"=>"HR","CUBA"=>"CU","CYPRUS"=>"CY","CZECH REPUBLIC"=>"CZ","DENMARK"=>"DK","DJIBOUTI"=>"DJ","DOMINICA"=>"DM","DOMINICAN REPUBLIC"=>"DO","ECUADOR"=>"EC","EGYPT"=>"EG","EL SALVADOR"=>"SV","EQUATORIAL GUINEA"=>"GQ","ERITREA"=>"ER","ESTONIA"=>"EE","ETHIOPIA"=>"ET","FALKLAND ISLANDS"=>"FK","FAROE ISLANDS"=>"FO","FIJI"=>"FJ","FINLAND"=>"FI","FRANCE"=>"FR","FRENCH GUIANA"=>"GF","FRENCH POLYNESIA"=>"PF","FRENCH SOUTHERN TERRITORIES"=>"TF","GABON"=>"GA","GAMBIA"=>"GM","GEORGIA"=>"GE","GERMANY"=>"DE","GHANA"=>"GH","GIBRALTAR"=>"GI","GREECE"=>"GR","GREENLAND"=>"GL","GRENADA"=>"GD","GUADELOUPE"=>"GP","GUAM"=>"GU","GUATEMALA"=>"GT","GUINEA"=>"GN","GUINEA-BISSAU"=>"GW","GUYANA"=>"GY","HAITI"=>"HT","HEARD AND MC DONALD ISLANDS"=>"HM","HONDURAS"=>"HN","HONG KONG"=>"HK","HUNGARY"=>"HU","ICELAND"=>"IS","INDIA"=>"IN","INDONESIA"=>"ID","IRAN (ISLAMIC REPUBLIC OF)"=>"IR","IRAQ"=>"IQ","IRELAND"=>"IE","ISRAEL"=>"IL","ITALY"=>"IT","JAMAICA"=>"JM","JAPAN"=>"JP","JORDAN"=>"JO","KAZAKHSTAN"=>"KZ","KENYA"=>"KE","KIRIBATI"=>"KI","KOREA, DEMOCRATIC PEOPLE'S REPUBLIC OF"=>"KP","KOREA, REPUBLIC OF"=>"KR","KUWAIT"=>"KW","KYRGYZSTAN"=>"KG","LAO PEOPLE'S DEMOCRATIC REPUBLIC"=>"LA","LATVIA"=>"LV","LEBANON"=>"LB","LESOTHO"=>"LS","LIBERIA"=>"LR","LIBYAN ARAB JAMAHIRIYA"=>"LY","LIECHTENSTEIN"=>"LI","LITHUANIA"=>"LT","LUXEMBOURG"=>"LU","MACAU"=>"MO","MACEDONIA, THE FORMER YUGOSLAV REPUBLIC OF"=>"MK","MADAGASCAR"=>"MG","MALAWI"=>"MW","MALAYSIA"=>"MY","MALDIVES"=>"MV","MALI"=>"ML","MALTA"=>"MT","MARSHALL ISLANDS"=>"MH","MARTINIQUE"=>"MQ","MAURITANIA"=>"MR","MAURITIUS"=>"MU","MAYOTTE"=>"YT","MEXICO"=>"MX","MICRONESIA, FEDERATED STATES OF"=>"FM","MOLDOVA, REPUBLIC OF"=>"MD","MONACO"=>"MC","MONGOLIA"=>"MN","MONTSERRAT"=>"MS","MOROCCO"=>"MA","MOZAMBIQUE"=>"MZ","MYANMAR"=>"MM","NAMIBIA"=>"NA","NAURU"=>"NR","NEPAL"=>"NP","NETHERLANDS"=>"NL","NETHERLANDS ANTILLES"=>"AN","NEW CALEDONIA"=>"NC","NEW ZEALAND"=>"NZ","NICARAGUA"=>"NI","NIGER"=>"NE","NIGERIA"=>"NG","NIUE"=>"NU","NORFOLK ISLAND"=>"NF","NORTHERN MARIANA ISLANDS"=>"MP","NORWAY"=>"NO","OMAN"=>"OM","PAKISTAN"=>"PK","PALAU"=>"PW","PALESTINIAN TERRITORY, Occupied"=>"PS","PANAMA"=>"PA","PAPUA NEW GUINEA"=>"PG","PARAGUAY"=>"PY","PERU"=>"PE","PHILIPPINES"=>"PH","PITCAIRN"=>"PN","POLAND"=>"PL","PORTUGAL"=>"PT","PUERTO RICO"=>"PR","QATAR"=>"QA","REUNION"=>"RE","ROMANIA"=>"RO","RUSSIAN FEDERATION"=>"RU","RWANDA"=>"RW","SAINT HELENA"=>"SH","SAINT KITTS AND NEVIS"=>"KN","SAINT LUCIA"=>"LC","SAINT PIERRE AND MIQUELON"=>"PM","SAINT VINCENT AND THE GRENADINES"=>"VC","SAMOA"=>"WS","SAN MARINO"=>"SM","SAO TOME AND PRINCIPE"=>"ST","SAUDI ARABIA"=>"SA","SENEGAL"=>"SN","SERBIA AND MONTENEGRO"=>"CS","SEYCHELLES"=>"SC","SIERRA LEONE"=>"SL","SINGAPORE"=>"SG","SLOVAKIA"=>"SK","SLOVENIA"=>"SI","SOLOMON ISLANDS"=>"SB","SOMALIA"=>"SO","SOUTH AFRICA"=>"ZA","SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS"=>"GS","SPAIN"=>"ES","SRI LANKA"=>"LK","SUDAN"=>"SD","SURINAME"=>"SR","SVALBARD AND JAN MAYEN ISLANDS"=>"SJ","SWAZILAND"=>"SZ","SWEDEN"=>"SE","SWITZERLAND"=>"CH","SYRIAN ARAB REPUBLIC"=>"SY","TAIWAN"=>"TW","TAJIKISTAN"=>"TJ","TANZANIA, UNITED REPUBLIC OF"=>"TZ","THAILAND"=>"TH","TIMOR-LESTE"=>"TL","TOGO"=>"TG","TOKELAU"=>"TK","TONGA"=>"TO","TRINIDAD AND TOBAGO"=>"TT","TUNISIA"=>"TN","TURKEY"=>"TR","TURKMENISTAN"=>"TM","TURKS AND CAICOS ISLANDS"=>"TC","TUVALU"=>"TV","UGANDA"=>"UG","UKRAINE"=>"UA","UNITED ARAB EMIRATES"=>"AE","UNITED KINGDOM"=>"GB","UNITED STATES"=>"US","UNITED STATES MINOR OUTLYING ISLANDS"=>"UM","URUGUAY"=>"UY","UZBEKISTAN"=>"UZ","VANUATU"=>"VU","VATICAN CITY STATE (HOLY SEE)"=>"VA","VENEZUELA"=>"VE","VIET NAM"=>"VN","VIRGIN ISLANDS (BRITISH)"=>"VG","VIRGIN ISLANDS (U.S.)"=>"VI","WALLIS AND FUTUNA ISLANDS"=>"WF","WESTERN SAHARA"=>"EH","YEMEN"=>"YE","ZAMBIA"=>"ZM","ZIMBABWE"=>"ZW");
+		var $APACHE_MOD_INFO=false;
+		var $APACHE_MOD_STATUS=false;
+		var $phpcgi=null;
 		
 		function freeweb($servername=null){
 			$users=new usersMenus();
 			if($GLOBALS["posix_getuid"]==0){$this->AS_ROOT=true;}
 			$this->APACHE_DIR_SITES_ENABLED=$users->APACHE_DIR_SITES_ENABLED;
+			$users=new usersMenus();
+			$this->APACHE_MOD_INFO=$users->APACHE_MOD_INFO;
+			$this->APACHE_MOD_STATUS=$users->APACHE_MOD_STATUS;
 			$this->SQUID_CACHMGR=$users->SQUID_CACHMGR;
-			if($this->AS_ROOT){
-				$unix=new unix();
-				$this->APACHE_RUN_USER=$unix->APACHE_SRC_ACCOUNT();
-				$this->APACHE_RUN_GROUP=$unix->APACHE_SRC_GROUP();
-			}
+			$this->phpcgi=$users->phpcgi;
+			
 			
 			
 			$this->APACHE_MOD_TOMCAT=$users->APACHE_MOD_TOMCAT;
@@ -65,6 +69,19 @@
 				$this->servername=$servername;
 				$this->load();
 			}
+		}
+		
+		private function ApacheAccount(){
+			if(!$this->AS_ROOT){return;}
+				$unix=new unix();
+				$this->APACHE_RUN_USER=$unix->APACHE_SRC_ACCOUNT();
+				$this->APACHE_RUN_GROUP=$unix->APACHE_SRC_GROUP();
+			
+
+			if($this->APACHE_RUN_USER==null){
+				if($this->AS_ROOT){writelogs("Starting......: Apache \"$this->servername\" WARNING unable to stat Apache Account !",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
+			}
+			
 		}
 		
 		private function load(){
@@ -101,6 +118,60 @@
 			$this->ProxyPass=$ligne["ProxyPass"];
 			$this->Forwarder=$ligne["Forwarder"];
 			$this->ForwardTo=$ligne["ForwardTo"];
+			$this->HasDefaults();
+			$this->ApacheAccount();
+			
+			
+		}
+		
+		private function HasDefaults(){
+			if(!is_numeric($this->Params["MOD_FCGID"]["enabled"])){$this->Params["MOD_FCGID"]["enabled"]=0;}
+			if(!is_numeric($this->Params["MOD_FCGID"]["PHP_FCGI_MAX_REQUESTS"])){$this->Params["MOD_FCGID"]["PHP_FCGI_MAX_REQUESTS"]=5000;}
+			if(!is_numeric($this->Params["MOD_FCGID"]["PHP_FCGI_CHILDREN"])){$this->Params["MOD_FCGID"]["PHP_FCGI_CHILDREN"]=8;}
+			if(!is_numeric($this->Params["MOD_FCGID"]["FcgidBusyTimeout"])){$this->Params["MOD_FCGID"]["FcgidBusyTimeout"]=300;}
+			if(!is_numeric($this->Params["MOD_FCGID"]["FcgidIdleTimeout"])){$this->Params["MOD_FCGID"]["FcgidIdleTimeout"]=300;}
+			if(!is_numeric($this->Params["MOD_FCGID"]["FcgidMaxRequestInMem"])){$this->Params["MOD_FCGID"]["FcgidMaxRequestInMem"]=65536;}
+			if(!is_numeric($this->Params["MOD_FCGID"]["FcgidMaxProcessesPerClass"])){$this->Params["MOD_FCGID"]["FcgidMaxProcessesPerClass"]=100;}
+			if(!is_numeric($this->Params["MOD_FCGID"]["FcgidMaxRequestLen"])){$this->Params["MOD_FCGID"]["FcgidMaxRequestLen"]=131072;}
+			if(!is_numeric($this->Params["MOD_FCGID"]["FcgidOutputBufferSize"])){$this->Params["MOD_FCGID"]["FcgidOutputBufferSize"]=65536;}
+						
+			
+		}
+		
+		
+		public function groupwares_InstallLink(){
+			$prefix="http";
+			if(!is_numeric($this->ServerPort)){$this->ServerPort=80;}
+			if($this->ServerPort==0){$this->ServerPort=80;}
+			if($this->useSSL==1){$prefix="https";}
+			
+			$prefix="$prefix://$this->servername:$this->ServerPort";
+			
+			switch ($this->groupware) {
+			case "WORDPRESS":
+				return "$prefix/wp-admin/install.php";
+			break;
+			
+			case "JOOMLA17":
+				return "$prefix/administrator";
+			break;				
+			
+			}
+			
+		}
+		
+		
+		public function groupwares_textintro(){
+		switch ($this->groupware) {
+			case "WORDPRESS":
+				return "{howto_wordpress_text}";
+			break;
+			
+			case "JOOMLA17":
+				return "{howto_joomla_text}";
+			break;				
+			
+			}
 			
 		}
 		
@@ -188,6 +259,80 @@
 
 		}
 		
+		private function locate_geoip_db(){
+			$f[]="/usr/share/GeoIP/GeoIP.dat";
+			$f[]="/usr/local/share/GeoIP/GeoIP.dat";
+			$f[]="/root/.mldonkey/web_infos/GeoIP.dat";
+			while (list ($key, $path) = each ($f) ){
+				if(is_file($path)){return $path;}
+			}
+
+			
+			
+		}
+		
+		public function mod_pagespeed(){
+			if(!isset($this->Params["PageSpeed"])){return null;}
+			if(count($this->Params["PageSpeed"])==0){return null;}
+			echo "Starting......: Apache \"$this->servername\" mod_pagespeed Enabled\n";
+
+			$f[]="\t<IfModule pagespeed_module>";
+  			$f[]="\t\tModPagespeed On";
+  			$f[]="\t\tModPagespeedStatistics Off";
+  			
+  			
+  			if(!isset($this->Params["PageSpeedParams"]["ModPagespeedFileCacheSizeKb"])){$this->Params["PageSpeedParams"]["ModPagespeedFileCacheSizeKb"]=null;}
+			if(!isset($this->Params["PageSpeedParams"]["ModPagespeedFileCacheCleanIntervalMs"])){$this->Params["PageSpeedParams"]["ModPagespeedFileCacheCleanIntervalMs"]=null;}
+			if(!isset($this->Params["PageSpeedParams"]["ModPagespeedLRUCacheKbPerProcess"])){$this->Params["PageSpeedParams"]["ModPagespeedLRUCacheKbPerProcess"]=null;}
+			if(!isset($this->Params["PageSpeedParams"]["ModPagespeedLRUCacheByteLimit"])){$this->Params["PageSpeedParams"]["ModPagespeedLRUCacheByteLimit"]=null;}
+  			$CONF=$this->Params["PageSpeedParams"];
+			$ModPagespeedFileCacheSizeKb=$CONF["ModPagespeedFileCacheSizeKb"];
+			$ModPagespeedFileCacheCleanIntervalMs=$CONF["ModPagespeedFileCacheCleanIntervalMs"];
+			$ModPagespeedLRUCacheKbPerProcess=$CONF["ModPagespeedLRUCacheKbPerProcess"];
+			$ModPagespeedLRUCacheByteLimit=$CONF["ModPagespeedLRUCacheByteLimit"];
+	
+			if(!is_numeric($ModPagespeedFileCacheSizeKb)){$ModPagespeedFileCacheSizeKb=102400;}
+			if(!is_numeric($ModPagespeedFileCacheCleanIntervalMs)){$ModPagespeedFileCacheCleanIntervalMs=3600000;}
+			if(!is_numeric($ModPagespeedLRUCacheKbPerProcess)){$ModPagespeedLRUCacheKbPerProcess=1024;}
+			if(!is_numeric($ModPagespeedLRUCacheByteLimit)){$ModPagespeedLRUCacheByteLimit=16384;}			
+  			$f[]="\t\tModPagespeedFileCacheSizeKb $ModPagespeedFileCacheSizeKb";
+  			$f[]="\t\tModPagespeedFileCacheCleanIntervalMs $ModPagespeedFileCacheCleanIntervalMs";
+  			$f[]="\t\tModPagespeedLRUCacheKbPerProcess $ModPagespeedLRUCacheKbPerProcess";
+  			$f[]="\t\tModPagespeedLRUCacheByteLimit $ModPagespeedLRUCacheByteLimit";
+			
+			if(!is_dir("/var/cache/apache2/mod_pagespeed")){@mkdir("/var/cache/apache2/mod_pagespeed",0755,true);}
+  			if(!is_dir("/var/cache/apache2/mod_pagespeed/$this->servername")){@mkdir("/var/cache/apache2/mod_pagespeed/$this->servername",0755,true);}
+  			if(!is_dir("/var/cache/apache2/mod_pagespeed/$this->servername/files")){@mkdir("/var/cache/apache2/mod_pagespeed/$this->servername/files",0755,true);}
+    		$f[]="\t\tModPagespeedFileCachePath            \"/var/cache/apache2/mod_pagespeed/$this->servername\"";
+		    $f[]="\t\tModPagespeedGeneratedFilePrefix      \"/var/cache/apache2/mod_pagespeed/$this->servername/files/\"";
+			$f[]="\t</IfModule>";
+			return @implode("\n", $f);
+		}		
+		
+		public function mod_geoip(){
+			if(!isset($this->Params["GEOIP"])){return null;}
+			if(count($this->Params["GEOIP"])==0){return null;}
+			echo "Starting......: Apache \"$this->servername\" GeoIP Enabled\n";
+			$goip=$this->locate_geoip_db();
+			if(!is_file($goip)){
+				echo "Starting......: WARNING Apache \"$this->servername\" GeoIP unable to locate GeoIP.dat !!!\n";
+				return null;
+			}
+			echo "Starting......: Apache \"$this->servername\" GeoIP ". count($this->Params["GEOIP"]). " countries to block\n";
+			$f[]="\t<IfModule mod_geoip.c>";
+  			$f[]="\t\tGeoIPEnable On";
+  			$f[]="\t\tGeoIPDBFile $goip MemoryCache";
+			
+  			while (list ($country, $none) = each ($this->Params["GEOIP"]) ){
+  				$f[]="\t\tSetEnvIf GEOIP_COUNTRY_CODE $country BlockCountry";
+  			}
+  			
+  			
+			$f[]="\t</IfModule>";
+			return @implode("\n", $f);
+		}
+		
+		
 		public function QUOS(){
 			if(!isset($this->Params["QOS"])){$this->Params["QOS"]["EnableQOS"]=0;}
 			$EnableQOS=$this->Params["QOS"]["EnableQOS"];
@@ -201,12 +346,12 @@
 			if(isset($this->Params["QOS"]["QS_LimitRequestBody"])){$QS_LimitRequestBody=$this->Params["QOS"]["QS_LimitRequestBody"];}
 			
 			if($EnableQOS==0){
-				$f[]="\t<IfModule mod_qos.c>";
+				//$f[]="\t<IfModule mod_qos.c>";
 				//$f[]="\t\tQS_InvalidUrlEncoding off";
 				//$f[]="\t\tQS_ResponseHeaderFilter off";
 				//$f[]="\t\tQS_DenyQueryBody off";
 				//$f[]="\t\tQS_PermitUriBody off";
-				$f[]="\t</IfModule>";
+				//$f[]="\t</IfModule>";
 				return @implode("\n",$f);
 			}
 			
@@ -280,7 +425,7 @@
 				return null;
 			}
 			$users=$this->Params["LDAP"]["members"];
-			echo "Starting......: Apache \"$this->servername\" AUTH: ".count($users)." members set\n";
+			echo "Starting......: Apache \"$this->servername\" AUTH: ".count($users)." member(s)\n";
 			if(count($users)==0){return null;}
 			while (list ($num, $ligne) = each ($users) ){
 				if($num==null){continue;}
@@ -294,9 +439,47 @@
 					$f[]="\t\tRequire ldap-user {$re[1]}";
 				}				
 			}
-			echo "Starting......: Apache \"$this->servername\" AUTH: ".count($f)." compiled\n";
-			if(count($f)==0){return null;}
+			echo "Starting......: Apache \"$this->servername\" AUTH: ".count($f)." member(s) compiled\n";
+			if(count($f)==0){
+				echo "Starting......: Apache \"$this->servername\" AUTH: No user defined\n";
+				return null;
+			}
+			
+			if(!isset($GLOBALS["MAANAGER_NAME"])){
+				$ldap=new clladp();
+				$GLOBALS["MAANAGER_NAME"]=$ldap->ldap_admin;
+			}
+			echo "Starting......: Apache \"$this->servername\" AUTH:{$GLOBALS["MAANAGER_NAME"]}\n";
+			$f[]="\t\tRequire ldap-user {$GLOBALS["MAANAGER_NAME"]}";
 			return @implode("\n", $f);
+			
+		}
+		public function mod_status(){
+			if(!$this->APACHE_MOD_INFO){echo "Starting......: Apache \"$this->servername\" mod_info, no such module\n";return;}
+			if(!$this->APACHE_MOD_STATUS){echo "Starting......: Apache \"$this->servername\" mod_status, no such module\n";return;}
+			if(isset($GLOBALS["HTTPD_CONF_MOD_STATUS"])){return $GLOBALS["HTTPD_CONF_MOD_STATUS"];}
+			
+			if(!isset($GLOBALS["MYINTERFACESAllowFROM"])){
+				include_once(dirname(__FILE__)."/class.system.network.inc");
+				$tcp=new networking();
+				$sock=new sockets();
+				$ips=$tcp->ALL_IPS_GET_ARRAY();
+				while (list ($ip, $line) = each ($ips) ){$GLOBALS["MYINTERFACESAllowFROM"][]="\t\tAllow from $ip";}
+				$hash=unserialize(base64_decode($sock->GET_INFO("FreeWedMoStatusAllowFrom")));
+				if(isset($hash)){if(is_array($hash)){while (list ($ip, $line) = each ($hash) ){$GLOBALS["MYINTERFACESAllowFROM"][]="\t\tAllow from $ip";}}}
+			}
+			
+
+			$f[]="\t<Location /server-status>";
+			$f[]="\t\tSetHandler server-status";
+			$f[]="\t\tOrder deny,allow";
+			$f[]="\t\tDeny from all";
+			$f[]=@implode("\n", $GLOBALS["MYINTERFACESAllowFROM"]);
+			$f[]="\t\tSatisfy Any";
+			$f[]="\t</Location>";
+			$mod_status=@implode("\n",$f);
+			$GLOBALS["HTTPD_CONF_MOD_STATUS"]=$mod_status;
+			return $mod_status;
 			
 		}
 		
@@ -568,9 +751,9 @@
 			
 			if(!is_dir("/var/log/apache2")){@mkdir("/var/log/apache2",666,true);}
 			
+			$this->chown($this->WORKING_DIRECTORY);
+			
 			if(strlen($this->APACHE_RUN_USER)>3){
-				shell_exec("/bin/chown -R $this->APACHE_RUN_USER:$this->APACHE_RUN_GROUP $this->WORKING_DIRECTORY 2>&1 &");
-				shell_exec("/bin/chown -R $this->APACHE_RUN_USER:$this->APACHE_RUN_GROUP $this->WORKING_DIRECTORY/* 2>&1 &");
 				shell_exec("/bin/chown -R $this->APACHE_RUN_USER:$this->APACHE_RUN_GROUP /var/log/apache2 2>&1 &");
 			}
 			
@@ -588,7 +771,7 @@
 		$wel[]="echo \"<H1>It Works!</H1>\";";
 		$wel[]="while (list(\$index,\$line)=each(\$_SERVER)){";
 		$wel[]="echo \"<H2 style='font-size:16px'>\$index:<span style='color:red'>\$line</span></H2>\";";
-		$wel[]="}";
+		$wel[]=";}";
 		$wel[]="?>";			
 		$index_php=@implode("\n",$wel);	
 		if($this->groupware=="cachemgr"){$index_php="<?php echo header('location:cgi-bin/cachemgr.cgi');die();?>";}
@@ -662,19 +845,19 @@
 					if($ligne==null){continue;}
 					if(is_array($ligne)){continue;}
 					if($GLOBALS["VERBOSE"]){echo "DEBUG::AllowFrom:: allow from $ligne\n";}
-					$fc[]="\tallow from $ligne";
+					$fc[]="\t\tallow from $ligne";
 				}
 			}
 			
 			
 			if($GLOBALS["VERBOSE"]){echo "DEBUG::AllowFrom::  ".count($fc)." items\n";}
-			if(count($fc)==0){return "\tallow from all";}else{ return @implode("\n",$fc)."\n";}
+			if(count($fc)==0){return "\t\tallow from all";}else{ return @implode("\n",$fc)."\n";}
 			return @implode("\n",$fc)."\n";
 		}
 		
 		public function WebdavHeader(){
 				if(!isset($this->Params["WEBDAV"]["ENABLED"])){$this->Params["WEBDAV"]["ENABLED"]=0;}
-				if($this->Params["WEBDAV"]["ENABLED"]==0){return "#\tWebDav headers not enabled";}
+				if($this->Params["WEBDAV"]["ENABLED"]==0){return null;}
 				$conf[]="\tDavLockDB \"$this->WORKING_DIRECTORY/DavLock\"";
 				$conf[]="\tBrowserMatch \"Microsoft Data Access Internet Publishing Provider\" redirect-carefully";
 				$conf[]="\tBrowserMatch \"MS FrontPage\" redirect-carefully";
@@ -751,8 +934,98 @@
 		}
 		
 		
+		public function chown($directory){
+			if(!is_dir($directory)){echo "Starting......: Apache \"$this->servername\" chown \"$directory\" no such directory\n";return;}
+			
+			if(!isset($GLOBALS["CHOWNCOMMANDSFREEWBS"])){
+				$apacheusername=$this->APACHE_RUN_USER;
+				$apachegroup=$this->APACHE_RUN_GROUP;
+				if($apacheusername==null){
+					
+				}
+				
+				
+				if($this->Params["MOD_FCGID"]["enabled"]==1){
+					if($this->uid<>null){
+						$user=new user($this->uid);
+						$apacheusername=$user->uidNumber;
+						$apachegroup=$user->group_id;
+					}
+				}
+				
+				$unix=new unix();
+				$chown=$unix->find_program("chown");
+				$GLOBALS["CHOWNCOMMANDSFREEWBS"]["CHOWN"]="$chown";
+				$GLOBALS["CHOWNCOMMANDSFREEWBS"]["USER"]="$apacheusername";
+				$GLOBALS["CHOWNCOMMANDSFREEWBS"]["GROUP"]="$apachegroup";
+			}
+
+			if($GLOBALS["CHOWNCOMMANDSFREEWBS"]["USER"]==null){
+				echo "Starting......: Apache \"$this->servername\" chown \"$directory\" no such user\n";
+				return;
+			}
+			
+			echo "Starting......: Apache \"$this->servername\" set permissions for {$GLOBALS["CHOWNCOMMANDSFREEWBS"]["USER"]} on \"$directory\"\n"; 
+			shell_exec("{$GLOBALS["CHOWNCOMMANDSFREEWBS"]["CHOWN"]}  {$GLOBALS["CHOWNCOMMANDSFREEWBS"]["USER"]}:{$GLOBALS["CHOWNCOMMANDSFREEWBS"]["GROUP"]} \"$directory\"");
+			shell_exec("{$GLOBALS["CHOWNCOMMANDSFREEWBS"]["CHOWN"]} -R {$GLOBALS["CHOWNCOMMANDSFREEWBS"]["USER"]}:{$GLOBALS["CHOWNCOMMANDSFREEWBS"]["GROUP"]} \"$directory\" &");	
+			
+			
+		}
+		
+		public function mod_fcgid(){
+				if($this->Params["MOD_FCGID"]["enabled"]==0){return null;}
+				$unix=new unix();
+				$target_fcgi_path="/var/www/php-fcgi-scripts/$this->servername/php-fcgi-starter";
+				$php_ini_path="/var/www/php-fcgi-scripts/$this->servername/php.ini";
+				$fa[]="\t<IfModule mod_fcgid.c>";
+				if($this->uid<>null){
+					$user=$this->uid;$group=$this->uid;
+					$fa[]="\t\tSuexecUserGroup $user $group";
+				}
+				$fa[]="\t\tFcgidBusyTimeout {$this->Params["MOD_FCGID"]["FcgidBusyTimeout"]}";
+				$fa[]="\t\tFcgidIdleTimeout {$this->Params["MOD_FCGID"]["FcgidIdleTimeout"]}";
+				$fa[]="\t\tFcgidMaxRequestInMem {$this->Params["MOD_FCGID"]["FcgidMaxRequestInMem"]}";
+				$fa[]="\t\tFcgidMaxProcessesPerClass {$this->Params["MOD_FCGID"]["FcgidMaxProcessesPerClass"]}";
+				$fa[]="\t\tFcgidMaxRequestLen {$this->Params["MOD_FCGID"]["FcgidMaxRequestLen"]}";
+				$fa[]="\t\tFcgidOutputBufferSize {$this->Params["MOD_FCGID"]["FcgidOutputBufferSize"]}";
+				
+				$fa[]="\t\t<IfModule mod_php5.c>";
+				$fa[]="\t\t\tphp_admin_flag engine off";
+				$fa[]="\t\t</IfModule>";		
+				$fa[]="\t\t<Directory $this->WORKING_DIRECTORY/>";
+				$fa[]="\t\t\tOptions +ExecCGI";
+				$fa[]="\t\t\tAllowOverride All";
+				$fa[]="\t\t\tAddHandler fcgid-script .php";
+				$fa[]="\t\t\tFCGIWrapper $target_fcgi_path .php";
+				$fa[]="\t\t\tOrder allow,deny";
+				$fa[]="\t\t\tAllow from all";
+				$fa[]="\t\t</Directory>";
+				$fa[]="\t</IfModule>";
+				
+				if(!is_dir("/var/www/php-fcgi-scripts/$this->servername")){
+					@mkdir("/var/www/php-fcgi-scripts/$this->servername",755,true);
+				}
+				
+				$phpini=$this->build_php_ini();
+				@file_put_contents($php_ini_path, $phpini);
+				
+				$f[]="#!/bin/sh";
+				$f[]="PHPRC=$php_ini_path";
+				$f[]="export PHPRC";
+				$f[]="export PHP_FCGI_MAX_REQUESTS={$this->Params["MOD_FCGID"]["PHP_FCGI_MAX_REQUESTS"]}";
+				$f[]="export PHP_FCGI_CHILDREN={$this->Params["MOD_FCGID"]["PHP_FCGI_CHILDREN"]}";
+				$f[]="exec $this->phpcgi";
+				@file_put_contents($target_fcgi_path, @implode("\n", $f));
+				$chmod=$unix->find_program("chmod");
+				shell_exec("$chmod 755 $target_fcgi_path");
+				return @implode("\n", $fa);
+			
+			
+		}
+		
 		public function php_values(){
 			
+			$php_open_base_dir=$this->open_basedir();
 			$includes[]=".";
 			$includes[]="/usr/share/php";
 			$includes[]="$this->WORKING_DIRECTORY";
@@ -760,39 +1033,61 @@
 			$includes[]="/usr/local/share/php";
 			$includes[]="/usr/share/php5/PEAR";
 			$includes[]="/usr/share/pear";
-			$f[]="\tphp_value  include_path \"". @implode(":", $includes)."\"";
+			
+			$this->Params["PHP_VALUES"]["include_path"]=@implode(":", $includes);
+			$this->Params["PHP_VALUES"]["error_log"]="$this->WORKING_DIRECTORY/php_logs/php.log";
+			
+
+			if($php_open_base_dir<>null){$this->Params["PHP_VALUES"]["open_basedir"]=$php_open_base_dir;}
+			
 
 			if(($this->groupware=="ZARAFA") OR ($this->groupware=="ZARAFA_MOBILE")){
-				$f[]="\tphp_value magic_quotes_gpc \"Off\"";
-				$f[]="\tphp_value register_globals \"Off\"";
-				
+				$this->Params["PHP_VALUES"]["magic_quotes_gpc"]="Off";
+				$this->Params["PHP_VALUES"]["register_globals"]="Off";	
 			}
 			
 			if($this->groupware=="Z-PUSH"){
-				$f[]="\tphp_value magic_quotes_gpc \"off\"";
-				$f[]="\tphp_value register_globals \"off\"";
-				$f[]="\tphp_value magic_quotes_runtime \"off\"";
-				$f[]="\tphp_value short_open_tag \"off\"";
+				$this->Params["PHP_VALUES"]["magic_quotes_gpc"]="Off";
+				$this->Params["PHP_VALUES"]["register_globals"]="Off";
+				$this->Params["PHP_VALUES"]["magic_quotes_runtime"]="Off";
+				$this->Params["PHP_VALUES"]["short_open_tag"]="Off";
 			}
 			
 			if($this->groupware=="DRUPAL"){
-				$f[]="\tphp_value session.auto_start 0";
-				$f[]="\tphp_value xdebug.show_exception_trace  0";
-				$f[]="\tphp_value session.cache_limiter \"nocache\"";
-				$f[]="\tphp_value magic_quotes_gpc \"Off\"";
-				$f[]="\tphp_value allow_url_fopen  \"On\"";	
+				$this->Params["PHP_VALUES"]["session.auto_start"]="0";
+				$this->Params["PHP_VALUES"]["xdebug.show_exception_trace"]="0";
+				$this->Params["PHP_VALUES"]["session.cache_limiter"]="nocache";
+				$this->Params["PHP_VALUES"]["magic_quotes_gpc"]="Off";
+				$this->Params["PHP_VALUES"]["allow_url_fopen"]="On";
+
 			}
 			
 			if($this->groupware=="GROUPOFFICE"){
-				$f[]="\tphp_value output_buffering \"Off\"\n";
-				$f[]="\tphp_value magic_quotes_gpc \"Off\"";
+				$this->Params["PHP_VALUES"]["output_buffering"]="Off";
+				$this->Params["PHP_VALUES"]["magic_quotes_gpc"]="Off";
+				$this->Params["PHP_VALUES"]["session.cache_limiter"]="nocache";
+				$this->Params["PHP_VALUES"]["magic_quotes_gpc"]="Off";
+				$this->Params["PHP_VALUES"]["allow_url_fopen"]="On";				
 				$f[]="\tphp_admin_flag engine \"on\"";
         		$f[]="\tphp_admin_value open_basedir \"none\"";
         		$f[]="UseCanonicalName On";
 				
 			}
 			
+		if($this->groupware=="JOOMLA17"){
+			$this->Params["PHP_VALUES"]["register_globals"]="Off";
+			$this->Params["PHP_VALUES"]["magic_quotes_gpc"]="On";
+			$this->Params["PHP_VALUES"]["upload_max_filesize"]="100M";
+			$this->Params["PHP_VALUES"]["post_max_size"]="100M";
+		}
 		
+		if($this->groupware=="LMB"){
+			$this->Params["PHP_VALUES"]["error_reporting"]="0";
+			$this->Params["PHP_VALUES"]["allow_url_fopen"]="On";
+			$this->Params["PHP_VALUES"]["allow_url_include"]="On";
+			$this->Params["PHP_VALUES"]["allow_url_ftp_get"]="On";
+			$this->Params["PHP_VALUES"]["magic_quotes_gpc"]="Off";
+		}
 			
 			
 			if($this->groupware=="EYEOS"){
@@ -811,6 +1106,14 @@
 				
 			}
 			
+		if(is_array($this->Params["PHP_VALUES"])){
+			$array=$this->Params["PHP_VALUES"];
+			while (list ($key, $val) = each ($array) ){
+				$f[]="\tphp_value $key \"$val\"";
+			}
+		
+		}
+			if($this->Params["MOD_FCGID"]["enabled"]==1){return null;}
 			return @implode("\n",$f);
 		}
 		
@@ -889,6 +1192,25 @@
 				
 			}
 			
+			if($this->groupware=="JOOMLA17"){
+				$f[]="\t<IfModule mod_rewrite.c>";
+				$f[]="\t\tRewriteEngine On";
+				$f[]="\t\tRewriteCond %{QUERY_STRING} base64_encode[^(]*\([^)]*\) [OR]";
+				$f[]="\t\tRewriteCond %{QUERY_STRING} (<|%3C)([^s]*s)+cript.*(>|%3E) [NC,OR]";
+				$f[]="\t\tRewriteCond %{QUERY_STRING} GLOBALS(=|\[|\%[0-9A-Z]{0,2}) [OR]";
+				$f[]="\t\tRewriteCond %{QUERY_STRING} _REQUEST(=|\[|\%[0-9A-Z]{0,2})";
+				$f[]="\t\tRewriteRule .* index.php [F]";
+				$f[]="\t\tRewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]";
+				$f[]="\t\tRewriteCond %{REQUEST_URI} !^/index\.php";
+				$f[]="\t\tRewriteCond %{REQUEST_URI} /component/|(/[^.]*|\.(php|html?|feed|pdf|vcf|raw))$ [NC]";
+				$f[]="\t\tRewriteCond %{REQUEST_FILENAME} !-f";
+				$f[]="\t\tRewriteCond %{REQUEST_FILENAME} !-d";
+				$f[]="\t\tRewriteRule .* index.php [L]";
+				$f[]=$this->mod_rewrite;				
+				$f[]="</IfModule>";
+			   	return @implode("\n",$f);
+			}
+			
 			if(trim($this->mod_rewrite)==null){return;}
 			$f[]="\t<IfModule mod_rewrite.c>";
 			$f[]=$this->mod_rewrite;
@@ -903,7 +1225,7 @@
 			if(!isset($this->Params["MOD_CACHE"]["Modenabled"])){$this->Params["MOD_CACHE"]["Modenabled"]=0;}
 			if($this->Params["MOD_CACHE"]["Modenabled"]==0){
 				if($this->AS_ROOT){echo "Starting......: Apache \"$this->servername\" Cache is not enabled\n";}
-				return "#\t\tmode_cache not enabled";
+				return null;
 			}
 			if(!is_numeric($this->Params["MOD_CACHE"]["CacheDefaultExpire"])){$this->Params["MOD_CACHE"]["CacheDefaultExpire"]=3600;}
 			if(!is_numeric($this->Params["MOD_CACHE"]["CacheMinExpire"])){$this->Params["MOD_CACHE"]["CacheMinExpire"]=3600;}
@@ -985,7 +1307,7 @@
 			if(!isset($this->Params["WEBDAV"]["ENABLED"])){$this->Params["WEBDAV"]["ENABLED"]=0;}
 			if($this->Params["WEBDAV"]["ENABLED"]==0){
 				if($this->AS_ROOT){echo "Starting......: Apache \"$this->servername\" WebDAV is not enabled\n";}
-				return "#\t\tWebDav not enabled";
+				return null;
 			}
 			if($GLOBALS["VERBOSE"]){echo "DEBUG::WebDav:: WebDav enabled\n";}
 			$users=new usersMenus();
@@ -1165,6 +1487,14 @@
 		
 		
 		private function InstallZarafaConfigPHP($Otherdirectory=null){
+				$sock=new sockets();
+				$ZarafaAspellEnabled=$sock->GET_INFO("ZarafaAspellEnabled");
+				$ZarafaWebNTLM=$sock->GET_INFO("ZarafaWebNTLM");	
+				if(!is_numeric($ZarafaAspellEnabled)){$ZarafaAspellEnabled=0;}
+				if(!is_numeric($ZarafaWebNTLM)){$ZarafaWebNTLM=0;}
+				$users=new usersMenus();
+				if(!$users->ASPELL_INSTALLED){$ZarafaAspellEnabled=0;}
+			
 				$conf[]="<?php";
 				$conf[]="ini_set(\"zend.ze1_compatibility_mode\", false);";
 				$conf[]="ini_set(\"max_execution_time\", 300); // 5 minutes";
@@ -1173,7 +1503,11 @@
 				$conf[]="define(\"DEFAULT_SERVER\",\"file:///var/run/zarafa\");";
 				$conf[]="define(\"SSLCERT_FILE\", NULL);";
 				$conf[]="define(\"SSLCERT_PASS\", NULL);";
-				$conf[]="define(\"LOGINNAME_STRIP_DOMAIN\", false);";
+				if($ZarafaWebNTLM==1){
+					$conf[]="define(\"LOGINNAME_STRIP_DOMAIN\", true);";
+				}else{
+					$conf[]="define(\"LOGINNAME_STRIP_DOMAIN\", false);";
+				}
 				$conf[]="if (isset(\$_GET[\"external\"]) && preg_match(\"/[a-z][a-z0-9_]+/i\",\$_GET[\"external\"])){define(\"COOKIE_NAME\",\$_GET[\"external\"]);}else{define(\"COOKIE_NAME\",\"ZARAFA_WEBACCESS\");}";
 				$conf[]="define(\"THEME_COLOR\", \"default\");\$base_url = dirname(\$_SERVER[\"PHP_SELF\"]);if(substr(\$base_url,-1)!=\"/\") \$base_url .=\"/\";";
 				$conf[]="define(\"BASE_URL\", \$base_url);";
@@ -1197,8 +1531,20 @@
 				$conf[]="define(\"UPLOADED_ATTACHMENT_MAX_LIFETIME\", 6*60*60);";
 				$conf[]="define(\"FCKEDITOR_PATH\",dirname(\$_SERVER[\"SCRIPT_FILENAME\"]).\"/client/widgets/fckeditor\");";
 				$conf[]="define(\"FCKEDITOR_JS_PATH\",\"client/widgets/fckeditor\");";
-				$conf[]="define(\"FCKEDITOR_SPELLCHECKER_ENABLED\", false);";
-				$conf[]="define(\"FCKEDITOR_SPELLCHECKER_PATH\", \"/usr/bin/aspell\");";
+				
+				if($ZarafaAspellEnabled==1){
+					$asspellbin=$unix->find_program("aspell");
+					$f[]="define(\"FCKEDITOR_SPELLCHECKER_ENABLED\", true);";
+					$f[]="define(\"FCKEDITOR_SPELLCHECKER_PATH\", \"$asspellbin\");";	
+					echo "Starting zarafa..............: Aspell checker is enabled\n";		
+					
+				}else{
+					$f[]="define(\"FCKEDITOR_SPELLCHECKER_ENABLED\", false);";	
+					$f[]="define(\"FCKEDITOR_SPELLCHECKER_PATH\", \"/usr/bin/aspell\");";
+					echo "Starting zarafa..............: Aspell checker is disabled\n";
+				}				
+				
+
 				$conf[]="define(\"FCKEDITOR_SPELLCHECKER_LANGUAGE\", FALSE); // set FALSE to use the language chosen by the user, but make sure that these languages are installed with aspell!";
 				$conf[]="define(\"LANGUAGE_DIR\", \"server/language/\");";
 				$conf[]="if (isset(\$_ENV[\"LANG\"]) && \$_ENV[\"LANG\"]!=\"C\"){";
@@ -1300,9 +1646,457 @@
 				shell_exec("/bin/chmod -R 777 $phpmyadmin_dir/upload");
 			}else{
 				shell_exec("/bin/chmod $varWwwPerms /var/www &");
-				shell_exec("/bin/chown $apacheusername:$apacheusername $phpmyadmin_dir/upload");
+				$this->chown($phpmyadmin_dir/upload);
+				
 			}
 			unset($f);
 		}			
+	
+	
+	private function build_php_ini(){
+			if(!$this->AS_ROOT){return;}
+			$this->php_defaults();
+			$this->php_values();
+			
+			$f=explode("\n",@file_get_contents($this->locate_php_ini()));
+				while(list($index,$v) = each($f)){
+		 			if(preg_match("#extension_dir.*?=(.+)#", $v,$re)){
+		 				$this->Params["PHP_VALUES"]["extension_dir"]=trim($re[1]);
+		 				break;
+		 			}
+	 			}			
+			
+			
+			$f[]="[PHP]";
+			$f[]="safe_mode = \"{$this->Params["PHP_VALUES"]["safe_mode"]}\"";
+			$f[]="safe_mode_gid = \"{$this->Params["PHP_VALUES"]["safe_mode_gid"]}\"";
+			$f[]="engine = \"{$this->Params["PHP_VALUES"]["engine"]}\"";
+			$f[]="precision = \"{$this->Params["PHP_VALUES"]["precision"]}\"";
+			$f[]="y2k_compliance = \"{$this->Params["PHP_VALUES"]["y2k_compliance"]}\"";
+			$f[]="output_buffering = \"{$this->Params["PHP_VALUES"]["output_buffering"]}\"";
+			$f[]="serialize_precision = \"{$this->Params["PHP_VALUES"]["serialize_precision"]}\"";
+			$f[]="expose_php = \"{$this->Params["PHP_VALUES"]["expose_php"]}\"";
+			$f[]="max_execution_time = \"{$this->Params["PHP_VALUES"]["max_execution_time"]}\"";
+			$f[]="max_input_time = \"{$this->Params["PHP_VALUES"]["max_input_time"]}\"";
+			$f[]="memory_limit = \"{$this->Params["PHP_VALUES"]["memory_limit"]}\"";
+			$f[]="error_reporting = \"{$this->Params["PHP_VALUES"]["error_reporting"]}\"";
+			$f[]="display_errors = \"{$this->Params["PHP_VALUES"]["display_errors"]}\"";
+			$f[]="display_startup_errors = \"{$this->Params["PHP_VALUES"]["display_startup_errors"]}\"";
+			$f[]="log_errors = \"{$this->Params["PHP_VALUES"]["log_errors"]}\"";
+			$f[]="log_errors_max_len = \"{$this->Params["PHP_VALUES"]["log_errors_max_len"]}\"";
+			$f[]="ignore_repeated_errors = \"{$this->Params["PHP_VALUES"]["ignore_repeated_errors"]}\"";
+			$f[]="ignore_repeated_source = \"{$this->Params["PHP_VALUES"]["ignore_repeated_source"]}\"";
+			$f[]="report_memleaks = \"{$this->Params["PHP_VALUES"]["report_memleaks"]}\"";
+			$f[]="track_errors = \"{$this->Params["PHP_VALUES"]["track_errors"]}\"";
+			$f[]="error_append_string = \"{$this->Params["PHP_VALUES"]["error_append_string"]}\"";
+			$f[]="html_errors = \"{$this->Params["PHP_VALUES"]["html_errors"]}\"";
+			$f[]="error_log = \"{$this->Params["PHP_VALUES"]["error_log"]}\"";
+			$f[]="variables_order = \"{$this->Params["PHP_VALUES"]["variables_order"]}\"";
+			$f[]="register_argc_argv = \"{$this->Params["PHP_VALUES"]["register_argc_argv"]}\"";
+			$f[]="auto_globals_jit = \"{$this->Params["PHP_VALUES"]["auto_globals_jit"]}\"";
+			$f[]="post_max_size = \"{$this->Params["PHP_VALUES"]["post_max_size"]}\"";
+			$f[]="default_mimetype = \"{$this->Params["PHP_VALUES"]["default_mimetype"]}\"";
+			$f[]="default_charset = \"{$this->Params["PHP_VALUES"]["default_charset"]}\"";
+			$f[]="unicode.semantics = \"{$this->Params["PHP_VALUES"]["unicode.semantics"]}\"";
+			$f[]="unicode.runtime_encoding = \"{$this->Params["PHP_VALUES"]["unicode.runtime_encoding"]}\"";
+			$f[]="unicode.script_encoding = \"{$this->Params["PHP_VALUES"]["unicode.script_encoding"]}\"";
+			$f[]="unicode.output_encoding = \"{$this->Params["PHP_VALUES"]["unicode.output_encoding"]}\"";
+			$f[]="unicode.from_error_mode = \"{$this->Params["PHP_VALUES"]["unicode.from_error_mode"]}\"";
+			$f[]="unicode.from_error_subst_char = \"{$this->Params["PHP_VALUES"]["unicode.from_error_subst_char"]}\"";
+			$f[]="include_path = \"{$this->Params["PHP_VALUES"]["include_path"]}\"";
+			$f[]="extension_dir = \"{$this->Params["PHP_VALUES"]["extension_dir"]}\"";
+			$f[]="cgi.force_redirect = \"{$this->Params["PHP_VALUES"]["cgi.force_redirect"]}\"";
+			$f[]="cgi.fix_pathinfo = \"{$this->Params["PHP_VALUES"]["cgi.fix_pathinfo"]}\"";
+			$f[]="file_uploads = \"{$this->Params["PHP_VALUES"]["file_uploads"]}\"";
+			$f[]="upload_tmp_dir = \"{$this->Params["PHP_VALUES"]["upload_tmp_dir"]}\"";
+			$f[]="upload_max_filesize = \"{$this->Params["PHP_VALUES"]["upload_max_filesize"]}\"";
+			$f[]="allow_url_fopen = \"{$this->Params["PHP_VALUES"]["allow_url_fopen"]}\"";
+			$f[]="allow_url_include = \"{$this->Params["PHP_VALUES"]["allow_url_include"]}\"";
+			$f[]="from = \"{$this->Params["PHP_VALUES"]["from"]}\"";
+			$f[]="default_socket_timeout = \"{$this->Params["PHP_VALUES"]["default_socket_timeout"]}\"";
+			$f[]="safe_mode = \"{$this->Params["PHP_VALUES"]["safe_mode"]}\"";
+			$f[]="[Date]";
+			$f[]="date.timezone = \"{$this->Params["PHP_VALUES"]["date.timezone"]}\"";
+			$f[]="[filter]";
+			$f[]="[iconv]";
+			$f[]="iconv.input_encoding = \"{$this->Params["PHP_VALUES"]["iconv.input_encoding"]}\"";
+			$f[]="iconv.internal_encoding = \"{$this->Params["PHP_VALUES"]["iconv.internal_encoding"]}\"";
+			$f[]="iconv.output_encoding = \"{$this->Params["PHP_VALUES"]["iconv.output_encoding"]}\"";
+			$f[]="[Syslog]";
+			$f[]="define_syslog_variables = \"{$this->Params["PHP_VALUES"]["define_syslog_variables"]}\"";
+			$f[]="[mail function]";
+			$f[]="[SQL]";
+			$f[]="sql.safe_mode = \"{$this->Params["PHP_VALUES"]["sql.safe_mode"]}\"";
+			$f[]="[ODBC]";
+			$f[]="odbc.allow_persistent = \"{$this->Params["PHP_VALUES"]["odbc.allow_persistent"]}\"";
+			$f[]="odbc.check_persistent = \"{$this->Params["PHP_VALUES"]["odbc.check_persistent"]}\"";
+			$f[]="odbc.max_persistent = \"{$this->Params["PHP_VALUES"]["odbc.max_persistent"]}\"";
+			$f[]="odbc.max_links = \"{$this->Params["PHP_VALUES"]["odbc.max_links"]}\"";
+			$f[]="odbc.defaultlrl = \"{$this->Params["PHP_VALUES"]["odbc.defaultlrl"]}\"";
+			$f[]="odbc.defaultbinmode = \"{$this->Params["PHP_VALUES"]["odbc.defaultbinmode"]}\"";
+			$f[]="[MySQL]";
+			$f[]="mysql.allow_persistent = \"{$this->Params["PHP_VALUES"]["mysql.allow_persistent"]}\"";
+			$f[]="mysql.max_persistent = \"{$this->Params["PHP_VALUES"]["mysql.max_persistent"]}\"";
+			$f[]="mysql.max_links = \"{$this->Params["PHP_VALUES"]["mysql.max_links"]}\"";
+			$q=new mysql();
+			if($this->mysql_username==null){$mysql_username=$q->mysql_admin;$mysql_password=$q->mysql_password;}
+			if($this->mysql_username<>null){$mysql_username=$this->mysql_username;$mysql_password=$this->mysql_password;}
+			
+			$f[]="mysql.default_port = \"$q->mysql_port\"";
+			$f[]="mysql.default_socket = \"/var/run/mysqld/mysqld.sock\"";
+			$f[]="mysql.default_host = \"$q->mysql_server\"";
+			$f[]="mysql.default_user = \"$mysql_username\"";
+			$f[]="mysql.default_password = \"$mysql_password\"";
+			$f[]="mysql.connect_timeout = \"{$this->Params["PHP_VALUES"]["mysql.connect_timeout"]}\"";
+			$f[]="mysql.trace_mode = \"{$this->Params["PHP_VALUES"]["mysql.trace_mode"]}\"";
+			$f[]="[LDAP]";
+			$f[]="ldap.max_links = \"{$this->Params["PHP_VALUES"]["ldap.max_links"]}\"";
+			$f[]="ldap.allow_persistent = \"{$this->Params["PHP_VALUES"]["ldap.allow_persistent"]}\"";
+			$f[]="ldap.check_persistent = \"{$this->Params["PHP_VALUES"]["ldap.check_persistent"]}\"";
+			$f[]="[MySQLi]";
+			$f[]="mysqli.max_links = \"{$this->Params["PHP_VALUES"]["mysqli.max_links"]}\"";
+			$f[]="mysqli.default_port = \"$q->mysql_port\"";
+			$f[]="mysqli.default_socket = \"/var/run/mysqld/mysqld.sock\"";
+			$f[]="mysqli.default_host = \"$q->mysql_server\"";
+			$f[]="mysqli.default_user = \"$mysql_username\"";
+			$f[]="mysqli.default_pw = \"$mysql_password\"";
+			$f[]="mysqli.reconnect = \"{$this->Params["PHP_VALUES"]["mysqli.reconnect"]}\"";
+			$f[]="[mSQL]";
+			$f[]="msql.allow_persistent = \"{$this->Params["PHP_VALUES"]["msql.allow_persistent"]}\"";
+			$f[]="msql.max_persistent = \"{$this->Params["PHP_VALUES"]["msql.max_persistent"]}\"";
+			$f[]="msql.max_links = \"{$this->Params["PHP_VALUES"]["msql.max_links"]}\"";
+			$f[]="[OCI8]";
+			$f[]="[PostgresSQL]";
+			$f[]="[Sybase]";
+			$f[]="[Sybase-CT]";
+			$f[]="[bcmath]";
+			$f[]="[browscap]";
+			$f[]="[Informix]";
+			$f[]="[Session]";
+			$f[]="session.save_handler = \"{$this->Params["PHP_VALUES"]["session.save_handler"]}\"";
+			$f[]="session.save_path = \"{$this->Params["PHP_VALUES"]["session.save_path"]}\"";
+			$f[]="session.use_cookies = \"{$this->Params["PHP_VALUES"]["session.use_cookies"]}\"";
+			$f[]="session.use_only_cookies = \"{$this->Params["PHP_VALUES"]["session.use_only_cookies"]}\"";
+			$f[]="session.name = \"{$this->Params["PHP_VALUES"]["session.name"]}\"";
+			$f[]="session.auto_start = \"{$this->Params["PHP_VALUES"]["session.auto_start"]}\"";
+			$f[]="session.cookie_lifetime = \"{$this->Params["PHP_VALUES"]["session.cookie_lifetime"]}\"";
+			$f[]="session.cookie_path = \"{$this->Params["PHP_VALUES"]["session.cookie_path"]}\"";
+			$f[]="session.serialize_handler = \"{$this->Params["PHP_VALUES"]["session.serialize_handler"]}\"";
+			$f[]="session.gc_probability = \"{$this->Params["PHP_VALUES"]["session.gc_probability"]}\"";
+			$f[]="session.gc_divisor = \"{$this->Params["PHP_VALUES"]["session.gc_divisor"]}\"";
+			$f[]="session.gc_maxlifetime = \"{$this->Params["PHP_VALUES"]["session.gc_maxlifetime"]}\"";
+			$f[]="session.entropy_length = \"{$this->Params["PHP_VALUES"]["session.entropy_length"]}\"";
+			$f[]="session.cache_limiter = \"{$this->Params["PHP_VALUES"]["session.cache_limiter"]}\"";
+			$f[]="session.cache_expire = \"{$this->Params["PHP_VALUES"]["session.cache_expire"]}\"";
+			$f[]="session.use_trans_sid = \"{$this->Params["PHP_VALUES"]["session.use_trans_sid"]}\"";
+			$f[]="session.hash_function = \"{$this->Params["PHP_VALUES"]["session.hash_function"]}\"";
+			$f[]="session.bug_compat_warn = \"{$this->Params["PHP_VALUES"]["session.bug_compat_warn"]}\"";
+			$f[]="session.hash_bits_per_character = \"{$this->Params["PHP_VALUES"]["session.hash_bits_per_character"]}\"";
+			$f[]="[MSSQL]";
+			$f[]="mssql.allow_persistent = \"{$this->Params["PHP_VALUES"]["mssql.allow_persistent"]}\"";
+			$f[]="mssql.max_persistent = \"{$this->Params["PHP_VALUES"]["mssql.max_persistent"]}\"";
+			$f[]="mssql.max_links = \"{$this->Params["PHP_VALUES"]["mssql.max_links"]}\"";
+			$f[]="mssql.min_error_severity = \"{$this->Params["PHP_VALUES"]["mssql.min_error_severity"]}\"";
+			$f[]="mssql.min_message_severity = \"{$this->Params["PHP_VALUES"]["mssql.min_message_severity"]}\"";
+			$f[]="mssql.compatability_mode = \"{$this->Params["PHP_VALUES"]["mssql.compatability_mode"]}\"";
+			$f[]="mssql.connect_timeout = \"{$this->Params["PHP_VALUES"]["mssql.connect_timeout"]}\"";
+			$f[]="mssql.timeout = \"{$this->Params["PHP_VALUES"]["mssql.timeout"]}\"";
+			$f[]="mssql.textlimit = \"{$this->Params["PHP_VALUES"]["mssql.textlimit"]}\"";
+			$f[]="mssql.textsize = \"{$this->Params["PHP_VALUES"]["mssql.textsize"]}\"";
+			$f[]="mssql.batchsize = \"{$this->Params["PHP_VALUES"]["mssql.batchsize"]}\"";
+			$f[]="mssql.datetimeconvert = \"{$this->Params["PHP_VALUES"]["mssql.datetimeconvert"]}\"";
+			$f[]="mssql.secure_connection = \"{$this->Params["PHP_VALUES"]["mssql.secure_connection"]}\"";
+			$f[]="mssql.max_procs = \"{$this->Params["PHP_VALUES"]["mssql.max_procs"]}\"";
+			$f[]="mssql.charset = \"{$this->Params["PHP_VALUES"]["mssql.charset"]}\"";
+			$f[]="[Assertion]";
+			$f[]="[COM]";
+			$f[]="[mbstring]";
+			$f[]="[FrontBase]";
+			$f[]="[gd]";
+			$f[]="[exif]";
+			$f[]="[Tidy]";
+			$f[]="tidy.clean_output = \"{$this->Params["PHP_VALUES"]["tidy.clean_output"]}\"";
+			$f[]="[soap]";
+			$f[]="soap.wsdl_cache_ttl = \"{$this->Params["PHP_VALUES"]["soap.wsdl_cache_ttl"]}\"";
+			
+			if(!isset($GLOBALS["PHP_EXTENTIONS"])){
+				$t=explode("\n",@file_get_contents($this->locate_php_ini()));
+				while(list($index,$v) = each($t)){
+					if(trim($v)==null){continue;}
+		 			if(preg_match("#extension.*?=(.+?).so#", $v,$rie)){
+		 				$GLOBALS["PHP_EXTENTIONS"][trim($rie[1])]="extension=".trim($rie[1]).".so";
+		 			}
+	 			}
+			}
+			
+			
+			print_r($GLOBALS["PHP_EXTENTIONS"]);
+			
+	 		$f[]=@implode("\n", $GLOBALS["PHP_EXTENTIONS"]);
+	 		return @implode("\n", $f);
+			
+			
 	}
+
+	private function locate_php_ini(){
+	  $f[]="/etc/php.ini";
+	  $f[]="/etc/php5/cli/php.ini";
+	  $f[]="/etc/php5/cgi/php.ini";
+	  $f[]="/etc/php5/apache2/php.ini";
+	  $f[]="/etc/php/php.ini";
+	  $f[]="/etc/php-cgi-fcgi.ini";
+	  $f[]="/etc/php5/fastcgi/php.ini"; 
+	  while (list ($num, $filename) = each ($f) ){if(is_file($filename)){return $filename;}}
+	}
+	
+	
+public function php_defaults(){
+		if(!isset($this->Params["PHP_VALUES"]["safe_mode"])){$this->Params["PHP_VALUES"]["safe_mode"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["safe_mode_gid"])){$this->Params["PHP_VALUES"]["safe_mode_gid"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["engine"])){$this->Params["PHP_VALUES"]["engine"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["precision"])){$this->Params["PHP_VALUES"]["precision"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["y2k_compliance"])){$this->Params["PHP_VALUES"]["y2k_compliance"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["output_buffering"])){$this->Params["PHP_VALUES"]["output_buffering"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["serialize_precision"])){$this->Params["PHP_VALUES"]["serialize_precision"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["expose_php"])){$this->Params["PHP_VALUES"]["expose_php"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["max_execution_time"])){$this->Params["PHP_VALUES"]["max_execution_time"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["max_input_time"])){$this->Params["PHP_VALUES"]["max_input_time"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["memory_limit"])){$this->Params["PHP_VALUES"]["memory_limit"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["error_reporting"])){$this->Params["PHP_VALUES"]["error_reporting"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["display_errors"])){$this->Params["PHP_VALUES"]["display_errors"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["display_startup_errors"])){$this->Params["PHP_VALUES"]["display_startup_errors"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["log_errors"])){$this->Params["PHP_VALUES"]["log_errors"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["log_errors_max_len"])){$this->Params["PHP_VALUES"]["log_errors_max_len"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["ignore_repeated_errors"])){$this->Params["PHP_VALUES"]["ignore_repeated_errors"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["ignore_repeated_source"])){$this->Params["PHP_VALUES"]["ignore_repeated_source"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["report_memleaks"])){$this->Params["PHP_VALUES"]["report_memleaks"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["track_errors"])){$this->Params["PHP_VALUES"]["track_errors"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["error_append_string"])){$this->Params["PHP_VALUES"]["error_append_string"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["html_errors"])){$this->Params["PHP_VALUES"]["html_errors"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["error_log"])){$this->Params["PHP_VALUES"]["error_log"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["variables_order"])){$this->Params["PHP_VALUES"]["variables_order"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["register_argc_argv"])){$this->Params["PHP_VALUES"]["register_argc_argv"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["auto_globals_jit"])){$this->Params["PHP_VALUES"]["auto_globals_jit"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["post_max_size"])){$this->Params["PHP_VALUES"]["post_max_size"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["default_mimetype"])){$this->Params["PHP_VALUES"]["default_mimetype"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["default_charset"])){$this->Params["PHP_VALUES"]["default_charset"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["unicode.semantics"])){$this->Params["PHP_VALUES"]["unicode.semantics"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["unicode.runtime_encoding"])){$this->Params["PHP_VALUES"]["unicode.runtime_encoding"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["unicode.script_encoding"])){$this->Params["PHP_VALUES"]["unicode.script_encoding"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["unicode.output_encoding"])){$this->Params["PHP_VALUES"]["unicode.output_encoding"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["unicode.from_error_mode"])){$this->Params["PHP_VALUES"]["unicode.from_error_mode"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["unicode.from_error_subst_char"])){$this->Params["PHP_VALUES"]["unicode.from_error_subst_char"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["include_path"])){$this->Params["PHP_VALUES"]["include_path"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["extension_dir"])){$this->Params["PHP_VALUES"]["extension_dir"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["cgi.force_redirect"])){$this->Params["PHP_VALUES"]["cgi.force_redirect"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["cgi.fix_pathinfo"])){$this->Params["PHP_VALUES"]["cgi.fix_pathinfo"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["file_uploads"])){$this->Params["PHP_VALUES"]["file_uploads"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["upload_tmp_dir"])){$this->Params["PHP_VALUES"]["upload_tmp_dir"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["upload_max_filesize"])){$this->Params["PHP_VALUES"]["upload_max_filesize"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["allow_url_fopen"])){$this->Params["PHP_VALUES"]["allow_url_fopen"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["allow_url_include"])){$this->Params["PHP_VALUES"]["allow_url_include"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["from"])){$this->Params["PHP_VALUES"]["from"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["default_socket_timeout"])){$this->Params["PHP_VALUES"]["default_socket_timeout"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["safe_mode"])){$this->Params["PHP_VALUES"]["safe_mode"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["date.timezone"])){$this->Params["PHP_VALUES"]["date.timezone"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["iconv.input_encoding"])){$this->Params["PHP_VALUES"]["iconv.input_encoding"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["iconv.internal_encoding"])){$this->Params["PHP_VALUES"]["iconv.internal_encoding"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["iconv.output_encoding"])){$this->Params["PHP_VALUES"]["iconv.output_encoding"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["define_syslog_variables"])){$this->Params["PHP_VALUES"]["define_syslog_variables"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["sql.safe_mode"])){$this->Params["PHP_VALUES"]["sql.safe_mode"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["odbc.allow_persistent"])){$this->Params["PHP_VALUES"]["odbc.allow_persistent"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["odbc.check_persistent"])){$this->Params["PHP_VALUES"]["odbc.check_persistent"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["odbc.max_persistent"])){$this->Params["PHP_VALUES"]["odbc.max_persistent"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["odbc.max_links"])){$this->Params["PHP_VALUES"]["odbc.max_links"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["odbc.defaultlrl"])){$this->Params["PHP_VALUES"]["odbc.defaultlrl"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["odbc.defaultbinmode"])){$this->Params["PHP_VALUES"]["odbc.defaultbinmode"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["mysql.allow_persistent"])){$this->Params["PHP_VALUES"]["mysql.allow_persistent"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["mysql.max_persistent"])){$this->Params["PHP_VALUES"]["mysql.max_persistent"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["mysql.max_links"])){$this->Params["PHP_VALUES"]["mysql.max_links"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["mysql.default_port"])){$this->Params["PHP_VALUES"]["mysql.default_port"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["mysql.default_socket"])){$this->Params["PHP_VALUES"]["mysql.default_socket"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["mysql.default_host"])){$this->Params["PHP_VALUES"]["mysql.default_host"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["mysql.default_user"])){$this->Params["PHP_VALUES"]["mysql.default_user"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["mysql.default_password"])){$this->Params["PHP_VALUES"]["mysql.default_password"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["mysql.connect_timeout"])){$this->Params["PHP_VALUES"]["mysql.connect_timeout"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["mysql.trace_mode"])){$this->Params["PHP_VALUES"]["mysql.trace_mode"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["ldap.max_links"])){$this->Params["PHP_VALUES"]["ldap.max_links"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["ldap.allow_persistent"])){$this->Params["PHP_VALUES"]["ldap.allow_persistent"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["ldap.check_persistent"])){$this->Params["PHP_VALUES"]["ldap.check_persistent"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["mysqli.max_links"])){$this->Params["PHP_VALUES"]["mysqli.max_links"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["mysqli.default_port"])){$this->Params["PHP_VALUES"]["mysqli.default_port"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["mysqli.default_socket"])){$this->Params["PHP_VALUES"]["mysqli.default_socket"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["mysqli.default_host"])){$this->Params["PHP_VALUES"]["mysqli.default_host"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["mysqli.default_user"])){$this->Params["PHP_VALUES"]["mysqli.default_user"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["mysqli.default_pw"])){$this->Params["PHP_VALUES"]["mysqli.default_pw"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["mysqli.reconnect"])){$this->Params["PHP_VALUES"]["mysqli.reconnect"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["msql.allow_persistent"])){$this->Params["PHP_VALUES"]["msql.allow_persistent"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["msql.max_persistent"])){$this->Params["PHP_VALUES"]["msql.max_persistent"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["msql.max_links"])){$this->Params["PHP_VALUES"]["msql.max_links"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["session.save_handler"])){$this->Params["PHP_VALUES"]["session.save_handler"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["session.save_path"])){$this->Params["PHP_VALUES"]["session.save_path"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["session.use_cookies"])){$this->Params["PHP_VALUES"]["session.use_cookies"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["session.use_only_cookies"])){$this->Params["PHP_VALUES"]["session.use_only_cookies"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["session.name"])){$this->Params["PHP_VALUES"]["session.name"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["session.auto_start"])){$this->Params["PHP_VALUES"]["session.auto_start"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["session.cookie_lifetime"])){$this->Params["PHP_VALUES"]["session.cookie_lifetime"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["session.cookie_path"])){$this->Params["PHP_VALUES"]["session.cookie_path"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["session.serialize_handler"])){$this->Params["PHP_VALUES"]["session.serialize_handler"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["session.gc_probability"])){$this->Params["PHP_VALUES"]["session.gc_probability"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["session.gc_divisor"])){$this->Params["PHP_VALUES"]["session.gc_divisor"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["session.gc_maxlifetime"])){$this->Params["PHP_VALUES"]["session.gc_maxlifetime"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["session.entropy_length"])){$this->Params["PHP_VALUES"]["session.entropy_length"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["session.cache_limiter"])){$this->Params["PHP_VALUES"]["session.cache_limiter"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["session.cache_expire"])){$this->Params["PHP_VALUES"]["session.cache_expire"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["session.use_trans_sid"])){$this->Params["PHP_VALUES"]["session.use_trans_sid"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["session.hash_function"])){$this->Params["PHP_VALUES"]["session.hash_function"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["session.bug_compat_warn"])){$this->Params["PHP_VALUES"]["session.bug_compat_warn"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["session.hash_bits_per_character"])){$this->Params["PHP_VALUES"]["session.hash_bits_per_character"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["mssql.allow_persistent"])){$this->Params["PHP_VALUES"]["mssql.allow_persistent"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["mssql.max_persistent"])){$this->Params["PHP_VALUES"]["mssql.max_persistent"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["mssql.max_links"])){$this->Params["PHP_VALUES"]["mssql.max_links"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["mssql.min_error_severity"])){$this->Params["PHP_VALUES"]["mssql.min_error_severity"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["mssql.min_message_severity"])){$this->Params["PHP_VALUES"]["mssql.min_message_severity"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["mssql.compatability_mode"])){$this->Params["PHP_VALUES"]["mssql.compatability_mode"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["mssql.connect_timeout"])){$this->Params["PHP_VALUES"]["mssql.connect_timeout"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["mssql.timeout"])){$this->Params["PHP_VALUES"]["mssql.timeout"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["mssql.textlimit"])){$this->Params["PHP_VALUES"]["mssql.textlimit"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["mssql.textsize"])){$this->Params["PHP_VALUES"]["mssql.textsize"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["mssql.batchsize"])){$this->Params["PHP_VALUES"]["mssql.batchsize"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["mssql.datetimeconvert"])){$this->Params["PHP_VALUES"]["mssql.datetimeconvert"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["mssql.secure_connection"])){$this->Params["PHP_VALUES"]["mssql.secure_connection"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["mssql.max_procs"])){$this->Params["PHP_VALUES"]["mssql.max_procs"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["mssql.charset"])){$this->Params["PHP_VALUES"]["mssql.charset"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["tidy.clean_output"])){$this->Params["PHP_VALUES"]["tidy.clean_output"]=null;}
+		if(!isset($this->Params["PHP_VALUES"]["soap.wsdl_cache_ttl"])){$this->Params["PHP_VALUES"]["soap.wsdl_cache_ttl"]=null;}
+		if($this->Params["PHP_VALUES"]["safe_mode_gid"]==null){$this->Params["PHP_VALUES"]["safe_mode_gid"]="Off";}
+		if($this->Params["PHP_VALUES"]["engine"]==null){$this->Params["PHP_VALUES"]["engine"]="On";}
+		if($this->Params["PHP_VALUES"]["precision"]==null){$this->Params["PHP_VALUES"]["precision"]="12";}
+		if($this->Params["PHP_VALUES"]["y2k_compliance"]==null){$this->Params["PHP_VALUES"]["y2k_compliance"]="On";}
+		if($this->Params["PHP_VALUES"]["output_buffering"]==null){$this->Params["PHP_VALUES"]["output_buffering"]="On";}
+		if($this->Params["PHP_VALUES"]["serialize_precision"]==null){$this->Params["PHP_VALUES"]["serialize_precision"]="100";}
+		if($this->Params["PHP_VALUES"]["expose_php"]==null){$this->Params["PHP_VALUES"]["expose_php"]="Off";}
+		if($this->Params["PHP_VALUES"]["max_execution_time"]==null){$this->Params["PHP_VALUES"]["max_execution_time"]="3600";}
+		if($this->Params["PHP_VALUES"]["max_input_time"]==null){$this->Params["PHP_VALUES"]["max_input_time"]="3600";}
+		if($this->Params["PHP_VALUES"]["memory_limit"]==null){$this->Params["PHP_VALUES"]["memory_limit"]="500M";}
+		if($this->Params["PHP_VALUES"]["error_reporting"]==null){$this->Params["PHP_VALUES"]["error_reporting"]="E_ALL & ~E_NOTICE";}
+		if($this->Params["PHP_VALUES"]["display_errors"]==null){$this->Params["PHP_VALUES"]["display_errors"]="Off";}
+		if($this->Params["PHP_VALUES"]["display_startup_errors"]==null){$this->Params["PHP_VALUES"]["display_startup_errors"]="Off";}
+		if($this->Params["PHP_VALUES"]["log_errors"]==null){$this->Params["PHP_VALUES"]["log_errors"]="On";}
+		if($this->Params["PHP_VALUES"]["log_errors_max_len"]==null){$this->Params["PHP_VALUES"]["log_errors_max_len"]="2048";}
+		if($this->Params["PHP_VALUES"]["ignore_repeated_errors"]==null){$this->Params["PHP_VALUES"]["ignore_repeated_errors"]="Off";}
+		if($this->Params["PHP_VALUES"]["ignore_repeated_source"]==null){$this->Params["PHP_VALUES"]["ignore_repeated_source"]="Off";}
+		if($this->Params["PHP_VALUES"]["report_memleaks"]==null){$this->Params["PHP_VALUES"]["report_memleaks"]="On";}
+		if($this->Params["PHP_VALUES"]["track_errors"]==null){$this->Params["PHP_VALUES"]["track_errors"]="Off";}
+		if($this->Params["PHP_VALUES"]["error_append_string"]==null){$this->Params["PHP_VALUES"]["error_append_string"]="</code></font><br>";}
+		if($this->Params["PHP_VALUES"]["html_errors"]==null){$this->Params["PHP_VALUES"]["html_errors"]="false";}
+		if($this->Params["PHP_VALUES"]["error_log"]==null){$this->Params["PHP_VALUES"]["error_log"]="/usr/share/artica-postfix/ressources/logs/php.log";}
+		if($this->Params["PHP_VALUES"]["variables_order"]==null){$this->Params["PHP_VALUES"]["variables_order"]="EGPCS";}
+		if($this->Params["PHP_VALUES"]["register_argc_argv"]==null){$this->Params["PHP_VALUES"]["register_argc_argv"]="On";}
+		if($this->Params["PHP_VALUES"]["auto_globals_jit"]==null){$this->Params["PHP_VALUES"]["auto_globals_jit"]="On";}
+		if($this->Params["PHP_VALUES"]["post_max_size"]==null){$this->Params["PHP_VALUES"]["post_max_size"]="128M";}
+		if($this->Params["PHP_VALUES"]["default_mimetype"]==null){$this->Params["PHP_VALUES"]["default_mimetype"]="text/html";}
+		if($this->Params["PHP_VALUES"]["default_charset"]==null){$this->Params["PHP_VALUES"]["default_charset"]="utf-8";}
+		if($this->Params["PHP_VALUES"]["unicode.semantics"]==null){$this->Params["PHP_VALUES"]["unicode.semantics"]="off";}
+		if($this->Params["PHP_VALUES"]["unicode.runtime_encoding"]==null){$this->Params["PHP_VALUES"]["unicode.runtime_encoding"]="utf-8";}
+		if($this->Params["PHP_VALUES"]["unicode.script_encoding"]==null){$this->Params["PHP_VALUES"]["unicode.script_encoding"]="utf-8";}
+		if($this->Params["PHP_VALUES"]["unicode.output_encoding"]==null){$this->Params["PHP_VALUES"]["unicode.output_encoding"]="utf-8";}
+		if($this->Params["PHP_VALUES"]["unicode.from_error_mode"]==null){$this->Params["PHP_VALUES"]["unicode.from_error_mode"]="U_INVALID_SUBSTITUTE";}
+		if($this->Params["PHP_VALUES"]["unicode.from_error_subst_char"]==null){$this->Params["PHP_VALUES"]["unicode.from_error_subst_char"]="3f";}
+		if($this->Params["PHP_VALUES"]["include_path"]==null){$this->Params["PHP_VALUES"]["include_path"]=".:/usr/share/php:/usr/share/obm:/usr/share/php5:/usr/share/obm2:/usr/local/share/php:/usr/share/artica-postfix/ressources/externals:/usr/share/artica-postfix/ressources/externals/Gdata:/usr/share/php5/PEAR:/usr/share/pear";}
+		if($this->Params["PHP_VALUES"]["extension_dir"]==null){$this->Params["PHP_VALUES"]["extension_dir"]="/usr/lib/php5/20090626+lfs";}
+		if($this->Params["PHP_VALUES"]["cgi.force_redirect"]==null){$this->Params["PHP_VALUES"]["cgi.force_redirect"]="1";}
+		if($this->Params["PHP_VALUES"]["cgi.fix_pathinfo"]==null){$this->Params["PHP_VALUES"]["cgi.fix_pathinfo"]="1";}
+		if($this->Params["PHP_VALUES"]["file_uploads"]==null){$this->Params["PHP_VALUES"]["file_uploads"]="On";}
+		if($this->Params["PHP_VALUES"]["upload_tmp_dir"]==null){$this->Params["PHP_VALUES"]["upload_tmp_dir"]="/var/lighttpd/upload";}
+		if($this->Params["PHP_VALUES"]["upload_max_filesize"]==null){$this->Params["PHP_VALUES"]["upload_max_filesize"]="256M";}
+		if($this->Params["PHP_VALUES"]["allow_url_fopen"]==null){$this->Params["PHP_VALUES"]["allow_url_fopen"]="On";}
+		if($this->Params["PHP_VALUES"]["allow_url_include"]==null){$this->Params["PHP_VALUES"]["allow_url_include"]="Off";}
+		if($this->Params["PHP_VALUES"]["from"]==null){$this->Params["PHP_VALUES"]["from"]="anonymous@anonymous.com";}
+		if($this->Params["PHP_VALUES"]["default_socket_timeout"]==null){$this->Params["PHP_VALUES"]["default_socket_timeout"]="60";}
+		if($this->Params["PHP_VALUES"]["safe_mode"]==null){$this->Params["PHP_VALUES"]["safe_mode"]="Off";}
+		if($this->Params["PHP_VALUES"]["date.timezone"]==null){$this->Params["PHP_VALUES"]["date.timezone"]="Europe/Belgrade";}
+		if($this->Params["PHP_VALUES"]["iconv.input_encoding"]==null){$this->Params["PHP_VALUES"]["iconv.input_encoding"]="utf-8";}
+		if($this->Params["PHP_VALUES"]["iconv.internal_encoding"]==null){$this->Params["PHP_VALUES"]["iconv.internal_encoding"]="utf-8";}
+		if($this->Params["PHP_VALUES"]["iconv.output_encoding"]==null){$this->Params["PHP_VALUES"]["iconv.output_encoding"]="utf-8";}
+		if($this->Params["PHP_VALUES"]["define_syslog_variables"]==null){$this->Params["PHP_VALUES"]["define_syslog_variables"]="Off";}
+		if($this->Params["PHP_VALUES"]["sql.safe_mode"]==null){$this->Params["PHP_VALUES"]["sql.safe_mode"]="Off";}
+		if($this->Params["PHP_VALUES"]["odbc.allow_persistent"]==null){$this->Params["PHP_VALUES"]["odbc.allow_persistent"]="On";}
+		if($this->Params["PHP_VALUES"]["odbc.check_persistent"]==null){$this->Params["PHP_VALUES"]["odbc.check_persistent"]="On";}
+		if($this->Params["PHP_VALUES"]["odbc.max_persistent"]==null){$this->Params["PHP_VALUES"]["odbc.max_persistent"]="-1";}
+		if($this->Params["PHP_VALUES"]["odbc.max_links"]==null){$this->Params["PHP_VALUES"]["odbc.max_links"]="-1";}
+		if($this->Params["PHP_VALUES"]["odbc.defaultlrl"]==null){$this->Params["PHP_VALUES"]["odbc.defaultlrl"]="4096";}
+		if($this->Params["PHP_VALUES"]["odbc.defaultbinmode"]==null){$this->Params["PHP_VALUES"]["odbc.defaultbinmode"]="1";}
+		if($this->Params["PHP_VALUES"]["mysql.allow_persistent"]==null){$this->Params["PHP_VALUES"]["mysql.allow_persistent"]="On";}
+		if($this->Params["PHP_VALUES"]["mysql.max_persistent"]==null){$this->Params["PHP_VALUES"]["mysql.max_persistent"]="-1";}
+		if($this->Params["PHP_VALUES"]["mysql.max_links"]==null){$this->Params["PHP_VALUES"]["mysql.max_links"]="-1";}
+		if($this->Params["PHP_VALUES"]["mysql.default_port"]==null){$this->Params["PHP_VALUES"]["mysql.default_port"]="3306";}
+		if($this->Params["PHP_VALUES"]["mysql.default_socket"]==null){$this->Params["PHP_VALUES"]["mysql.default_socket"]="/var/run/mysqld/mysqld.sock";}
+		if($this->Params["PHP_VALUES"]["mysql.default_host"]==null){$this->Params["PHP_VALUES"]["mysql.default_host"]="127.0.0.1";}
+		if($this->Params["PHP_VALUES"]["mysql.default_user"]==null){$this->Params["PHP_VALUES"]["mysql.default_user"]="admin";}
+		if($this->Params["PHP_VALUES"]["mysql.default_password"]==null){$this->Params["PHP_VALUES"]["mysql.default_password"]="180872";}
+		if($this->Params["PHP_VALUES"]["mysql.connect_timeout"]==null){$this->Params["PHP_VALUES"]["mysql.connect_timeout"]="60";}
+		if($this->Params["PHP_VALUES"]["mysql.trace_mode"]==null){$this->Params["PHP_VALUES"]["mysql.trace_mode"]="Off";}
+		if($this->Params["PHP_VALUES"]["ldap.max_links"]==null){$this->Params["PHP_VALUES"]["ldap.max_links"]="-1";}
+		if($this->Params["PHP_VALUES"]["ldap.allow_persistent"]==null){$this->Params["PHP_VALUES"]["ldap.allow_persistent"]="On";}
+		if($this->Params["PHP_VALUES"]["ldap.check_persistent"]==null){$this->Params["PHP_VALUES"]["ldap.check_persistent"]="On";}
+		if($this->Params["PHP_VALUES"]["mysqli.max_links"]==null){$this->Params["PHP_VALUES"]["mysqli.max_links"]="-1";}
+		if($this->Params["PHP_VALUES"]["mysqli.default_port"]==null){$this->Params["PHP_VALUES"]["mysqli.default_port"]="3306";}
+		if($this->Params["PHP_VALUES"]["mysqli.default_socket"]==null){$this->Params["PHP_VALUES"]["mysqli.default_socket"]="/var/run/mysqld/mysqld.sock";}
+		if($this->Params["PHP_VALUES"]["mysqli.default_host"]==null){$this->Params["PHP_VALUES"]["mysqli.default_host"]="127.0.0.1";}
+		if($this->Params["PHP_VALUES"]["mysqli.default_user"]==null){$this->Params["PHP_VALUES"]["mysqli.default_user"]="admin";}
+		if($this->Params["PHP_VALUES"]["mysqli.default_pw"]==null){$this->Params["PHP_VALUES"]["mysqli.default_pw"]="180872";}
+		if($this->Params["PHP_VALUES"]["mysqli.reconnect"]==null){$this->Params["PHP_VALUES"]["mysqli.reconnect"]="Off";}
+		if($this->Params["PHP_VALUES"]["msql.allow_persistent"]==null){$this->Params["PHP_VALUES"]["msql.allow_persistent"]="On";}
+		if($this->Params["PHP_VALUES"]["msql.max_persistent"]==null){$this->Params["PHP_VALUES"]["msql.max_persistent"]="-1";}
+		if($this->Params["PHP_VALUES"]["msql.max_links"]==null){$this->Params["PHP_VALUES"]["msql.max_links"]="-1";}
+		if($this->Params["PHP_VALUES"]["session.save_handler"]==null){$this->Params["PHP_VALUES"]["session.save_handler"]="files";}
+		if($this->Params["PHP_VALUES"]["session.save_path"]==null){$this->Params["PHP_VALUES"]["session.save_path"]="/var/lib/php5";}
+		if($this->Params["PHP_VALUES"]["session.use_cookies"]==null){$this->Params["PHP_VALUES"]["session.use_cookies"]="1";}
+		if($this->Params["PHP_VALUES"]["session.use_only_cookies"]==null){$this->Params["PHP_VALUES"]["session.use_only_cookies"]="1";}
+		if($this->Params["PHP_VALUES"]["session.name"]==null){$this->Params["PHP_VALUES"]["session.name"]="PHPSESSID";}
+		if($this->Params["PHP_VALUES"]["session.auto_start"]==null){$this->Params["PHP_VALUES"]["session.auto_start"]="0";}
+		if($this->Params["PHP_VALUES"]["session.cookie_lifetime"]==null){$this->Params["PHP_VALUES"]["session.cookie_lifetime"]="0";}
+		if($this->Params["PHP_VALUES"]["session.cookie_path"]==null){$this->Params["PHP_VALUES"]["session.cookie_path"]="/";}
+		if($this->Params["PHP_VALUES"]["session.serialize_handler"]==null){$this->Params["PHP_VALUES"]["session.serialize_handler"]="php";}
+		if($this->Params["PHP_VALUES"]["session.gc_probability"]==null){$this->Params["PHP_VALUES"]["session.gc_probability"]="1";}
+		if($this->Params["PHP_VALUES"]["session.gc_divisor"]==null){$this->Params["PHP_VALUES"]["session.gc_divisor"]="100";}
+		if($this->Params["PHP_VALUES"]["session.gc_maxlifetime"]==null){$this->Params["PHP_VALUES"]["session.gc_maxlifetime"]="1440";}
+		if($this->Params["PHP_VALUES"]["session.entropy_length"]==null){$this->Params["PHP_VALUES"]["session.entropy_length"]="0";}
+		if($this->Params["PHP_VALUES"]["session.cache_limiter"]==null){$this->Params["PHP_VALUES"]["session.cache_limiter"]="nocache";}
+		if($this->Params["PHP_VALUES"]["session.cache_expire"]==null){$this->Params["PHP_VALUES"]["session.cache_expire"]="420";}
+		if($this->Params["PHP_VALUES"]["session.use_trans_sid"]==null){$this->Params["PHP_VALUES"]["session.use_trans_sid"]="0";}
+		if($this->Params["PHP_VALUES"]["session.hash_function"]==null){$this->Params["PHP_VALUES"]["session.hash_function"]="0";}
+		if($this->Params["PHP_VALUES"]["session.bug_compat_warn"]==null){$this->Params["PHP_VALUES"]["session.bug_compat_warn"]="Off";}
+		if($this->Params["PHP_VALUES"]["session.hash_bits_per_character"]==null){$this->Params["PHP_VALUES"]["session.hash_bits_per_character"]="4";}
+		if($this->Params["PHP_VALUES"]["mssql.allow_persistent"]==null){$this->Params["PHP_VALUES"]["mssql.allow_persistent"]="On";}
+		if($this->Params["PHP_VALUES"]["mssql.max_persistent"]==null){$this->Params["PHP_VALUES"]["mssql.max_persistent"]="-1";}
+		if($this->Params["PHP_VALUES"]["mssql.max_links"]==null){$this->Params["PHP_VALUES"]["mssql.max_links"]="-1";}
+		if($this->Params["PHP_VALUES"]["mssql.min_error_severity"]==null){$this->Params["PHP_VALUES"]["mssql.min_error_severity"]="10";}
+		if($this->Params["PHP_VALUES"]["mssql.min_message_severity"]==null){$this->Params["PHP_VALUES"]["mssql.min_message_severity"]="10";}
+		if($this->Params["PHP_VALUES"]["mssql.compatability_mode"]==null){$this->Params["PHP_VALUES"]["mssql.compatability_mode"]="Off";}
+		if($this->Params["PHP_VALUES"]["mssql.connect_timeout"]==null){$this->Params["PHP_VALUES"]["mssql.connect_timeout"]="5";}
+		if($this->Params["PHP_VALUES"]["mssql.timeout"]==null){$this->Params["PHP_VALUES"]["mssql.timeout"]="60";}
+		if($this->Params["PHP_VALUES"]["mssql.textlimit"]==null){$this->Params["PHP_VALUES"]["mssql.textlimit"]="4096";}
+		if($this->Params["PHP_VALUES"]["mssql.textsize"]==null){$this->Params["PHP_VALUES"]["mssql.textsize"]="4096";}
+		if($this->Params["PHP_VALUES"]["mssql.batchsize"]==null){$this->Params["PHP_VALUES"]["mssql.batchsize"]="0";}
+		if($this->Params["PHP_VALUES"]["mssql.datetimeconvert"]==null){$this->Params["PHP_VALUES"]["mssql.datetimeconvert"]="On";}
+		if($this->Params["PHP_VALUES"]["mssql.secure_connection"]==null){$this->Params["PHP_VALUES"]["mssql.secure_connection"]="Off";}
+		if($this->Params["PHP_VALUES"]["mssql.max_procs"]==null){$this->Params["PHP_VALUES"]["mssql.max_procs"]="-1";}
+		if($this->Params["PHP_VALUES"]["mssql.charset"]==null){$this->Params["PHP_VALUES"]["mssql.charset"]="ISO-8859-1";}
+		if($this->Params["PHP_VALUES"]["tidy.clean_output"]==null){$this->Params["PHP_VALUES"]["tidy.clean_output"]="Off";}
+		if($this->Params["PHP_VALUES"]["soap.wsdl_cache_ttl"]==null){$this->Params["PHP_VALUES"]["soap.wsdl_cache_ttl"]="86400";}
+		
+		
+		
+		}	
+		
+	
+	
+	}
+	
+	
+	
+	
+	
 ?>

@@ -4,7 +4,7 @@
 	include_once('ressources/class.users.menus.inc');
 	include_once('ressources/class.maincf.multi.inc');
 	include_once('ressources/class.status.inc');
-
+	include_once('ressources/class.artica.graphs.inc');
 	include_once('ressources/class.ini.inc');
 	include_once('ressources/class.milter.greylist.inc');	
 	
@@ -16,7 +16,7 @@
 		echo "alert('". $tpl->javascript_parse_text("{ERROR_NO_PRIVS}")."');";
 		die();exit();
 	}
-	
+	if(isset($_GET["greylist-config"])){popup_settings_tab_params();exit;}
 	if(isset($_GET["ChangeFormType"])){GetNewForm();exit;}	
 	if(isset($_GET["popup"])){main_tabs();exit;}
 	if(isset($_GET["index"])){popup();exit;}
@@ -46,6 +46,8 @@
 	if(isset($_GET["popup-acl"])){popup_acl();exit;}
 	if(isset($_GET["popup-save"])){popup_save();exit;}
 	if(isset($_GET["popup-logs"])){popup_logs();exit;}	
+	if(isset($_GET["popup-dumpdb"])){popup_db();exit;}
+	if(isset($_GET["browse-mgrey-list"])){popup_db_list();exit;}	
 	
 js();	
 	
@@ -113,6 +115,9 @@ function js(){
 		 XHR.appendData('greylist_TIME',document.getElementById('greylist_TIME').value);
 		 XHR.appendData('autowhite',document.getElementById('autowhite').value);
 		 XHR.appendData('autowhite_TIME',document.getElementById('autowhite_TIME').value);
+		 if(document.getElementById('lazyaw').checked){XHR.appendData('lazyaw',1);}else{XHR.appendData('lazyaw',0);}	
+		 
+		 
 		 document.getElementById('MilterGreyListConfigGeneSaveID').innerHTML='<center style=\"margin:20px;padding:20px\"><img src=\"img/wait_verybig.gif\"></center>';
 		 XHR.sendAndLoad('$page', 'GET',x_MilterGreyListConfigGeneSave);
 	}
@@ -221,6 +226,7 @@ function main_tabs(){
 	$tpl=new templates();
 	$array["index"]='{index}';
 	$array["popup-acl"]='{acls}';
+	$array["popup-dumpdb"]='{MILTERGREYLIST_STATUSDUMP}';
 
 	while (list ($num, $ligne) = each ($array) ){
 		$html[]=$tpl->_ENGINE_parse_body("<li><a href=\"$page?$num=yes&hostname={$_GET["hostname"]}&ou={$_GET["ou"]}\"><span>$ligne</span></a></li>\n");
@@ -228,19 +234,12 @@ function main_tabs(){
 	
 	
 	echo "
-	<div id=main_config_mgreylist_multi style='width:100%;height:550px;overflow:auto'>
+	<div id=main_config_mgreylist_multi style='width:100%;height:590px;overflow:auto'>
 		<ul>". implode("\n",$html)."</ul>
 	</div>
 		<script>
 				$(document).ready(function(){
-					$('#main_config_mgreylist_multi').tabs({
-				    load: function(event, ui) {
-				        $('a', ui.panel).click(function() {
-				            $(ui.panel).load(this.href);
-				            return false;
-				        });
-				    }
-				});
+					$('#main_config_mgreylist_multi').tabs();
 			
 			
 			});
@@ -253,23 +252,36 @@ function popup(){
 	$page=CurrentPageName();
 	$mg=Paragraphe('folder-mailbox-64.png','{main_settings}','{main_settings_text}',"javascript:PostfixMultiMilterGreymain_settings_greylist()",null,210,100,0,true);
 	$mg1=Paragraphe('folder-logs-643.png','{events}','{events_text}',"javascript:PostfixMultiMilterGreymain_events_greylist()",null,210,100,0,true);
-	$mg2=Paragraphe('folder-rules2-64-info.png','{MILTERGREYLIST_STATUSDUMP}','{MILTERGREYLIST_STATUSDUMP_TEXT}',
-	"javascript:Loadjs('$page?dumpfile-js=yes&hostname={$_GET["hostname"]}&ou={$_GET["ou"]}')",null,210,100,0,true);
-	
+		
 
+	if(is_file("ressources/logs/greylist-count-{$_GET["hostname"]}.tot")){
+	$datas=unserialize(@file_get_contents("ressources/logs/greylist-count-{$_GET["hostname"]}.tot"));
+	
+	if(is_array($datas)){
+		@unlink("ressources/logs/web/mgreylist.master1.db.png");
+		$gp=new artica_graphs(dirname(__FILE__)."/ressources/logs/web/mgreylist.{$_GET["hostname"]}1.db.png",0);
+		$gp->xdata[]=$datas["GREYLISTED"];
+		$gp->ydata[]="greylisted";	
+		$gp->xdata[]=$datas["WHITELISTED"];
+		$gp->ydata[]="whitelisted";				
+		$gp->width=310;
+		$gp->height=310;
+		$gp->ViewValues=false;
+		$gp->x_title="{status}";
+		$gp->pie();			
+		$imgG="<img src='ressources/logs/web/mgreylist.{$_GET["hostname"]}1.db.png'>";
+		
+	}
+	}	
+	
 	$content="
 	<H2>{smtp_server}::{$_GET["hostname"]}</H2>
 	<table style='width:100'>
 	<tr>
 		<td valign='top'>$mg</td>
 		<td valign='top'>$mg1</td>
-	</tr>
-	<tr>
-		<td valign='top'>$mg2</td>
-		<td valign='top'>$mg3</td>
-	</tr>
-	
 	</table>
+	<center>$imgG</center>
 	";
 	
 	
@@ -375,9 +387,18 @@ function popup_save(){
 
 function popup_settings(){
 	
-	$content="<div id='greylist_config'>".greylist_config(1)."</div>";
+	$content="<div id='greylist_config'>".greylist_config_tab()."</div>";
+	$html=$content;
 	$tpl=new templates();
-	echo $tpl->_ENGINE_parse_body($content);	
+	echo $tpl->_ENGINE_parse_body($html);	
+	
+}
+function popup_settings_tab_params(){
+	
+	$content=greylist_config(1);
+	$html=$content;
+	$tpl=new templates();
+	echo $tpl->_ENGINE_parse_body($html);	
 	
 }
 function popup_acl(){
@@ -386,6 +407,36 @@ function popup_acl(){
 	echo $tpl->_ENGINE_parse_body($content);	
 	
 }
+function greylist_config_tab(){
+	$tpl=new templates();	
+	$page=CurrentPageName();
+	$users=new usersMenus();
+	$array["greylist-config"]='{parameters}';
+	$array["multiples-mx"]='{multiples_mx}';
+	
+	
+	while (list ($num, $ligne) = each ($array) ){
+			if($num=="multiples-mx"){
+			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"domains.postfix.multi.milter-greylist.mxs.php?hostname=$hostname&ou={$_GET["ou"]}\"><span>$ligne</span></a></li>\n");
+			continue;
+		}
+		$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"$page?$num=yes&hostname=$hostname&ou={$_GET["ou"]}\"><span>$ligne</span></a></li>\n");
+
+		
+	}
+	
+	
+	echo "
+	<div id=main_config_mgreylistMConfig style='width:100%;height:500x;overflow:auto'>
+		<ul>". implode("\n",$html)."</ul>
+	</div>
+		<script>
+		  $(document).ready(function() {
+			$(\"#main_config_mgreylistMConfig\").tabs();});
+		</script>";	
+	
+}
+
 
 
 
@@ -414,7 +465,7 @@ function main_status(){
 
 
 function greylist_config($noecho=0){
-	$style="style='padding:3px;border-bottom:1px dotted #CCCCCC'";
+	
 	$users=new usersMenus();
 
 	$pure=new milter_greylist(false,$_GET["hostname"],base64_decode($_GET["ou"]));
@@ -423,38 +474,39 @@ function greylist_config($noecho=0){
 	$arraytime=array(
 		"m"=>"{minutes}","h"=>"{hour}","d"=>"{day}"
 	);
-	$tabs="
-	<h5>{main_settings}</H5>";
+
 	$html="
 	<div id='MilterGreyListConfigGeneSaveID'>
 	<input type='hidden' name='SaveGeneralSettings' value='yes'>
-	<table style='width:100%' class=table_form>	
+	<table style='width:100%' class=form>	
+<tr>
+	<td $style align='right' nowrap valign='top' class=legend>{remove_tuple}:</strong></td>
+	<td $style valign='top'>" . Field_checkbox('lazyaw',1,$pure->main_array["lazyaw"])."</td>
+	<td $style valign='top'>". help_icon("{remove_tuple_text}")."</td>
+</tr>	
 	<tr>
-	<td $style align='right' nowrap valign='top' class=legend>{timeout}:</strong></td>
-	<td $style valign='top' colspan=2>" . Field_text('timeout',$pure->main_array["timeout"],'width:30px',null,null,'{timeout_text}')."&nbsp;".
+	<td  align='right' nowrap valign='top' class=legend>{timeout}:</strong></td>
+	<td  valign='top' colspan=2>" . Field_text('timeout',$pure->main_array["timeout"],'width:30px;font-size:14px',null,null,'{mgreylisttimeout_text}')."&nbsp;".
 		Field_array_Hash($arraytime,'timeout_TIME',$pure->main_array["timeout_TIME"])."</td>
 	</tr>
+		
 
 	<tr>
-	<td $style align='right' nowrap valign='top' class=legend>{greylist}:</strong></td>
-	<td $style valign='top' colspan=2>
+	<td  align='right' nowrap valign='top' class=legend>{greylist}:</strong></td>
+	<td  valign='top' colspan=2>
 	
-	" . Field_text('greylist',$pure->main_array["greylist"],'width:30px',null,null,'{greylist_text}')."&nbsp;".
+	" . Field_text('greylist',$pure->main_array["greylist"],'width:30px;font-size:14px',null,null,'{greylist_text}')."&nbsp;".
 		Field_array_Hash($arraytime,'greylist_TIME',$pure->main_array["greylist_TIME"])."
 	
 	</td>
 	</tr>
 	
 	<tr>
-	<td $style align='right' nowrap valign='top' class=legend>{autowhite}:</strong></td>
-	<td $style valign='top' colspan=2>" . Field_text('autowhite',$pure->main_array["autowhite"],'width:30px',null,null,'{autowhite_text}')."&nbsp;".
+	<td  align='right' nowrap valign='top' class=legend>{autowhite}:</strong></td>
+	<td  valign='top' colspan=2>" . Field_text('autowhite',$pure->main_array["autowhite"],'width:30px;font-size:14px',null,null,'{autowhite_text}')."&nbsp;".
 		Field_array_Hash($arraytime,'autowhite_TIME',$pure->main_array["autowhite_TIME"])."</td>
-	</tr>	
-
-	<tr>
-	<tr><td colspan=3 style='border-top:1px solid #005447'>&nbsp;</td></tr>
-	<tr>
-	<td $style colspan=3 align='right' valign='top'>
+	</tr>
+	<td  colspan=3 align='right' valign='top'>
 	<hr>". button("{apply}","MilterGreyListConfigGeneSave()")."
 	</td>
 	</tr>
@@ -904,82 +956,120 @@ function main_logs(){
 	}
 	
 	
-function dumpfile_popup(){
-
-	$sock=new sockets();
-	$path=base64_encode("/var/milter-greylist/{$_GET["hostname"]}/greylist.db");
-	$sock->getFrameWork("milter-greylist.php?dump-database=yes&db_path=$path&hostname={$_GET["hostname"]}");
-	include("ressources/logs/mgrelist-{$_GET["hostname"]}.inc");
-	
-	$html="
-	<p style='font-size:13px'>{MILTERGREYLIST_STATUSDUMP_TEXT}</p>";
-	
-	if(is_array($MGREYLIST_DB["GREY"])){
-		$grey="
-		<table style='width:99%'>
+function popup_db(){
+	$page=CurrentPageName();
+	$tpl=new templates();	
+	if(is_file("ressources/logs/greylist-count-{$_GET["hostname"]}.tot")){
+	$datas=unserialize(@file_get_contents("ressources/logs/greylist-count-{$_GET["hostname"]}.tot"));
+	if(is_array($datas)){
+		$table="
+		<div class=explain>
+		<p>{MILTERGREYLIST_STATUSDUMP_TEXT}</p>
+		<table>
 		<tr>
-			<th>&nbsp;</th>
-			<th>{hostname}</th>
-			<th>{sender}</th>
-			<th>{recipient}</th>
+			<td style='font-size:16px'>{records}:</td>
+			<td style='font-size:16px'>{$datas["RECORDS"]}</td>
+			<td style='font-size:16px'>{greylisted}:</td>
+			<td style='font-size:16px'>{$datas["GREYLISTED"]}</td>
+			<td style='font-size:16px'>{whitelisted}:</td>
+			<td style='font-size:16px'>{$datas["WHITELISTED"]}</td>	
 		</tr>
+		</table>	
+		</div>				
 		";
-		while (list ($index, $line) = each ($MGREYLIST_DB["GREY"]) ){
-		$grey=$grey."
-		
-			<tr>
-				<td valign='top'><img src='img/fw_bold.gif'></td>
-				<td valign='top'>{$line[0]}</td>
-				<td valign='top'>{$line[1]}</td>
-				<td valign='top'>{$line[2]}</td>
-			</tr>
-		
-		";
-			
-		}
-
-		$grey=$grey."</table>";
 		
 	}
+	}
 	
-	$grey=RoundedLightWhite("<H3>{greylistedtuples}</h3><br><div style='width:100%;height:200px;overflow:auto'>$grey</div>");
+	$html="$table
+	<center>
+			<table style='width:100%' class=form>
+			<tr>
+				<td class=legend>{pattern}:</td>
+				<td>". Field_text("browse-mgreydb-search",null,"font-size:14px;padding:3px",null,null,null,false,"BrowseMiltergreySearchCheck(event)")."</td>
+				<td>". button("{search}","BrowseMgreySearch()")."</td>
+			</tr>
+			</table>
+	</center>		
+	<div id='browse-mgrey-list' style='width:100%;height:430px;overflow:auto;text-align:center'></div>
+	
+<script>
+		function BrowseMiltergreySearchCheck(e){
+			if(checkEnter(e)){BrowseMgreySearch();}
+		}
+		
+		function BrowseMgreySearch(){
+			var se=escape(document.getElementById('browse-mgreydb-search').value);
+			LoadAjax('browse-mgrey-list','$page?browse-mgrey-list=yes&search='+se+'&hostname={$_GET["hostname"]}&ou={$_GET["ou"]}');
+		}
+		
+		
+	BrowseMgreySearch();
+</script>	
+	
+	";
 	
 	
-	if(is_array($MGREYLIST_DB["WHITE"])){
-		$white="
-		<table style='width:99%'>
-		<tr>
-			<th width=1%>&nbsp;</th>
-			<th width=1% nowrap>{hostname}</th>
-			<th>{sender}</th>
-			<th>{recipient}</th>
+echo $tpl->_ENGINE_parse_body($html);
+	
+	
+	
+	
+	
+}	
+function popup_db_list(){
+	$page=CurrentPageName();
+	$tpl=new templates();	
+	if($_GET["search"]<>null){
+		$_GET["search"]=str_replace("*", "%", $_GET["search"]);
+		$filter="AND ((mailfrom LIKE '{$_GET["search"]}') OR (mailto LIKE '{$_GET["search"]}') OR (ip_addr LIKE '{$_GET["search"]}'))";
+	}
+	
+	$html="<center>
+<table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
+<thead class='thead'>
+	<tr>
+		<th width=1%>{time}</th>
+		<th width=25%>{ipaddr}</th>
+		<th width=25%>{from}</th>
+		<th width=25%>{to}</th>
+	</tr>
+</thead>
+<tbody class='tbody'>";	
+	
+	$maxlen=30;
+		$sql="SELECT * FROM greylist_turples WHERE hostname='{$_GET["hostname"]}' $filter LIMIT 0,150";
+		$q=new mysql();
+		writelogs("$sql",__FUNCTION__,__FILE__,__LINE__);
+		$results=$q->QUERY_SQL($sql,"artica_events");
+		
+		if(!$q->ok){if(preg_match("#doesn.+?t exist#", $q->mysql_error)){$q->BuildTables();$q->ok=true;$results=$q->QUERY_SQL($sql,"artica_events");}}
+		if(!$q->ok){echo "<H2>$q->mysql_error</H2>";}
+		while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
+		if($ligne["mailfrom"]=="Summary:"){continue;}
+		if(trim($ligne["ip_addr"])=="#"){continue;}	
+		$time=date("Y-m-d H:i:s",$ligne["stime"]);
+		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
+		$len=strlen($ligne["mailfrom"]);
+		if($len>$maxlen){$ligne["mailfrom"]=substr($ligne["mailfrom"],0,$maxlen-3)."...";}
+			
+		$len=strlen($ligne["mailto"]);
+		if($len>$maxlen){$ligne["mailto"]=substr($ligne["mailto"],0,$maxlen-3)."...";}		
+		
+		
+	$color="black";
+		$html=$html."
+		<tr class=$classtr>
+			<td style='font-size:12px;font-weight:bold;color:$color' nowrap>$time</td>
+			<td style='font-size:12px;font-weight:bold;color:$color' width=1% nowrap>{$ligne["ip_addr"]}</a></td>
+			<td style='font-size:12px;font-weight:bold;color:$color' width=50%>{$ligne["mailfrom"]}</a></td>
+			<td style='font-size:12px;font-weight:bold;color:$color' width=50>{$ligne["mailto"]}</a></td>
 		</tr>
 		";
-		while (list ($index, $line) = each ($MGREYLIST_DB["WHITE"]) ){
-		$white=$white."
-		
-			<tr>
-				<td valign='top' width=1%><img src='img/fw_bold.gif'></td>
-				<td valign='top' width=1% nowrap>{$line[0]}</td>
-				<td valign='top'>{$line[1]}</td>
-				<td valign='top'>{$line[2]}</td>
-			</tr>
-		
-		";
-			
-		}
-
-		$white=$white."</table>";
-		
-	}	
+	}
 	
-	$white=RoundedLightWhite("<H3>{Autowhitelistedtuples}</h3><br><div style='width:100%;height:200px;overflow:auto'>$white</div>");
-	$html=$html."$grey<br>$white";
-	$tpl=new templates();
-		echo $tpl->_ENGINE_parse_body($html);
-	
-	
-	
+	$html=$html."</table></center>";
+	echo $tpl->_ENGINE_parse_body($html);
 }
 	
 ?>

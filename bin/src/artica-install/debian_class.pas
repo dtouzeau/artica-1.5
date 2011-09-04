@@ -6,7 +6,7 @@ unit debian_class;
 interface
 
 uses
-    Classes, SysUtils,variants,strutils, Process,logs,unix,RegExpr in 'RegExpr.pas',zsystem,artica_tcp,squid;
+    Classes, SysUtils,variants,strutils, Process,logs,unix,RegExpr in 'RegExpr.pas',zsystem,artica_tcp,squid,DATEUTILS;
 
 type
 
@@ -41,6 +41,7 @@ public
     procedure KeyboardTofr();
     procedure sensors();
     function  ISDebian():boolean;
+    function  FILE_TIME_BETWEEN_MIN(filepath:string):LongInt;
 END;
 
 implementation
@@ -93,6 +94,23 @@ remove_bip();
 //fpsystem('DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o Dpkg::Options::="--force-confnew" install awstats --yes --force-yes');
 
 
+end;
+//##############################################################################
+function tdebian.FILE_TIME_BETWEEN_MIN(filepath:string):LongInt;
+var
+   fa   : Longint;
+   S    : TDateTime;
+   maint:TDateTime;
+begin
+result:=0;
+if not FileExists(filepath) then exit(0);
+    try
+       fa:=FileAge(filepath);
+       maint:=Now;
+       S:=FileDateTodateTime(fa);
+       result:=MinutesBetween(maint,S);
+    finally
+    end;
 end;
 //##############################################################################
 function tdebian.LOAD_INTERFACES():networks_settings;

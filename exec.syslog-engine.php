@@ -588,6 +588,15 @@ function loadavg_logs(){
 	$pid=@file_get_contents($pidfile);
 	if($unix->process_exists($pid)){echo "Already running pid $pid\n";return;}	
 	$q=new mysql();
+	if(!$q->DATABASE_EXISTS("artica_events")){
+		events_Loadavg("loadavg_logs:: artica_events database does not exists... try to build one".__LINE__);
+		$q->BuildTables();
+	}
+	
+	if(!$q->DATABASE_EXISTS("artica_events")){
+		events_Loadavg("loadavg_logs:: artica_events database cannot continue".__LINE__);
+		return;
+	}	
 	
 	foreach (glob("/var/log/artica-postfix/loadavg/*") as $filename) {
 		$time=basename($filename);

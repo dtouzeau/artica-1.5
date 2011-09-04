@@ -65,8 +65,8 @@ function popup(){
 	
 	if($next==100){$back=null;}
 	
-	
-	$sql="SELECT zdate,uri FROM dansguardian_events WHERE sitename='{$_GET["domain"]}'{$_GET["user"]}{$_GET["t"]} ORDER BY zDate DESC LIMIT $next,$nextnext ";
+	$dansguardian_events="dansguardian_events_".date('Ym');	
+	$sql="SELECT zdate,uri FROM $dansguardian_events WHERE sitename='{$_GET["domain"]}'{$_GET["user"]}{$_GET["t"]} ORDER BY zDate DESC LIMIT $next,$nextnext ";
 	
 	
 	$html=$tpl->_ENGINE_parse_body("<center style='height:500px;overflow:auto'>

@@ -27,6 +27,8 @@ function popup_js(){
 	$tpl=new templates();
 	$title=$tpl->_ENGINE_parse_body('{artica_autoupdate}');
 	$events=$tpl->_ENGINE_parse_body('{events}');
+	$cannot_schedule_update_without_schedule=$tpl->javascript_parse_text("{cannot_schedule_update_without_schedule}");
+	
 	$page=CurrentPageName();
 	$datas=file_get_contents('js/artica_settings.js');
 	$html="
@@ -51,9 +53,13 @@ var x_SaveArticaUpdateForm= function (obj) {
 		if(document.getElementById('nightlybuild').checked){XHR.appendData('nightlybuild','yes');}else{XHR.appendData('nightlybuild','no');}		
 		if(document.getElementById('front_page_notify').checked){XHR.appendData('front_page_notify','yes');}else{XHR.appendData('front_page_notify','no');}
 		if(document.getElementById('EnableNightlyInFrontEnd').checked){XHR.appendData('EnableNightlyInFrontEnd','1');}else{XHR.appendData('EnableNightlyInFrontEnd','0');}
-		
-		
-		
+		if(document.getElementById('EnableScheduleUpdates').checked){
+			var ArticaScheduleUpdates=document.getElementById('ArticaScheduleUpdates').value;
+			if(ArticaScheduleUpdates.length==0){
+				alert('$cannot_schedule_update_without_schedule');
+			}
+			XHR.appendData('EnableScheduleUpdates','1');}
+		else{XHR.appendData('EnableScheduleUpdates','0');}
 		
 		if(document.getElementById('samba_notify')){
 			if(document.getElementById('samba_notify').checked){XHR.appendData('samba_notify','yes');}else{XHR.appendData('samba_notify','no');}
@@ -68,7 +74,7 @@ var x_SaveArticaUpdateForm= function (obj) {
 
 		
 		
-		
+		XHR.appendData('ArticaScheduleUpdates',document.getElementById('ArticaScheduleUpdates').value);
 		XHR.appendData('WgetBindIpAddress',document.getElementById('WgetBindIpAddress').value);
     	XHR.appendData('CheckEveryMinutes',document.getElementById('CheckEveryMinutes').value);
     	XHR.appendData('uri',document.getElementById('uri').value);
@@ -133,10 +139,13 @@ $ini->loadString($configDisk);
 $AUTOUPDATE=$ini->_params["AUTOUPDATE"];	
 $EnableNightlyInFrontEnd=$sock->GET_INFO("EnableNightlyInFrontEnd");
 $EnableRebootAfterUpgrade=$sock->GET_INFO("EnableRebootAfterUpgrade");
-if($EnableNightlyInFrontEnd==null){$EnableNightlyInFrontEnd=1;}
+$EnableScheduleUpdates=$sock->GET_INFO("EnableScheduleUpdates");
+$ArticaScheduleUpdates=$sock->GET_INFO("ArticaScheduleUpdates");
 
+if(!is_numeric($EnableNightlyInFrontEnd)){$EnableNightlyInFrontEnd=1;}
+if(!is_numeric($EnableScheduleUpdates)){$EnableScheduleUpdates=0;}
 if(!is_numeric($EnableRebootAfterUpgrade)){$EnableRebootAfterUpgrade=0;}
-
+writelogs("EnableScheduleUpdates = $EnableScheduleUpdates",__FUNCTION__,__FILE__,__LINE__);
 
 	if(trim($AUTOUPDATE["uri"])==null){$AUTOUPDATE["uri"]="http://www.artica.fr/auto.update.php";}
 	if(trim($AUTOUPDATE["enabled"])==null){$AUTOUPDATE["enabled"]="yes";}
@@ -226,8 +235,15 @@ if(!is_numeric($EnableRebootAfterUpgrade)){$EnableRebootAfterUpgrade=0;}
 	</tr>			
 	<tr>
 	<td width=1% nowrap align='right' class=legend>{CheckEveryMinutes}:</strong></td>
-	<td align='left'>" . Field_text('CheckEveryMinutes',$AUTOUPDATE["CheckEveryMinutes"],'ont-size:13px;padding:3px;width:90px' )."</td>
+	<td align='left'>" . Field_text('CheckEveryMinutes',$AUTOUPDATE["CheckEveryMinutes"],'font-size:13px;padding:3px;width:90px' )."</td>
 	</tr>
+	<tr>
+	<td width=1% nowrap align='right' class=legend>{EnableScheduleUpdates}:</strong></td>
+	<td align='left'>" . Field_checkbox('EnableScheduleUpdates',1,$EnableScheduleUpdates,"CheckSchedules()" )."&nbsp;
+	<a href=\"javascript:blur()\" OnClick=\"javascript:Loadjs('cron.php?field=ArticaScheduleUpdates&function2=SaveArticaUpdateForm')\" style='font-size:13px;text-decoration:underline;color:black' id='scheduleAID'>{schedule}</a>
+	</td>
+	</tr>	
+
 	<tr>
 	<td width=1% nowrap align='right' class=legend>{uri}:</strong></td>
 	<td align='left'>" . Field_text('uri',$AUTOUPDATE["uri"],'ont-size:13px;padding:3px;width:100%' )."</td>
@@ -240,9 +256,22 @@ if(!is_numeric($EnableRebootAfterUpgrade)){$EnableRebootAfterUpgrade=0;}
 	</table>
 	</form>
 	</div>
-	
+	<input type='hidden' id='ArticaScheduleUpdates' value='$ArticaScheduleUpdates'>
 	<script>
+		function CheckSchedules(){
+			document.getElementById('CheckEveryMinutes').disabled=true;
+			if(!document.getElementById('EnableScheduleUpdates').checked){
+				document.getElementById('CheckEveryMinutes').disabled=false;
+				document.getElementById('scheduleAID').style.color='#CCCCCC';
+			}else{
+				document.getElementById('scheduleAID').style.color='black';
+			}
+		
+		}
+	
+	
 		function CheckAutoApt(){
+			if(!document.getElementById('EnableRebootAfterUpgrade')){return;}
 			document.getElementById('EnableRebootAfterUpgrade').disabled=true;
 			if(document.getElementById('auto_apt').checked){
 				document.getElementById('EnableRebootAfterUpgrade').disabled=false;
@@ -250,6 +279,7 @@ if(!is_numeric($EnableRebootAfterUpgrade)){$EnableRebootAfterUpgrade=0;}
 		}
 	
 	CheckAutoApt();
+	CheckSchedules();
 	</script>
 	";
 	
@@ -287,7 +317,7 @@ function main_artica_update_tabs(){
 	
 	
 	$html= "
-	<div id=main_config_artica_update style='width:100%;height:460px;overflow:auto'>
+	<div id=main_config_artica_update style='width:100%;height:490px;overflow:auto'>
 		<ul>". implode("\n",$html)."</ul>
 	</div>
 		<script>
@@ -316,9 +346,20 @@ $ini->loadString($configDisk);
 	$data=$ini->toString();
 	$sock->SET_INFO("WgetBindIpAddress",$_GET["WgetBindIpAddress"]);
 	$sock->SET_INFO("EnableNightlyInFrontEnd",$_GET["EnableNightlyInFrontEnd"]);
+	$sock->SET_INFO("ArticaScheduleUpdates",$_GET["ArticaScheduleUpdates"]);
+	writelogs("EnableScheduleUpdates = {$_GET["EnableScheduleUpdates"]}",__FUNCTION__,__FILE__,__LINE__);
+	$sock->SET_INFO("EnableScheduleUpdates",$_GET["EnableScheduleUpdates"]);
+	
+	 
+	
 	$sock->SaveConfigFile($data,"ArticaAutoUpdateConfig");
+	
+	
+	
+	
 	if(isset($_GET["EnableRebootAfterUpgrade"])){$sock->SET_INFO("EnableRebootAfterUpgrade", $_GET["EnableRebootAfterUpgrade"]);}
 	$sock->getFrameWork("cmd.php?ForceRefreshLeft=yes");
+	$sock->getFrameWork("services.php?artica-update-cron=yes");
 	$tpl=new templates();
 		
 }

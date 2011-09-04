@@ -104,8 +104,8 @@ function today(){
 		$user=$_GET["month"];
 		$Q1=" AND MONTH( zdate)=MONTH( NOW()) AND YEAR(zdate)=YEAR(NOW())";
 	}		
-	
-	$sql="SELECT SUM(QuerySize) as tsize, sitename FROM dansguardian_events WHERE CLIENT='$user'{$Q1} GROUP BY sitename ORDER BY SUM(QuerySize) DESC";
+	$dansguardian_events="dansguardian_events_".date('Ym');	
+	$sql="SELECT SUM(QuerySize) as tsize, sitename FROM $dansguardian_events WHERE CLIENT='$user'{$Q1} GROUP BY sitename ORDER BY SUM(QuerySize) DESC";
 	
 	$html="
 	<br>

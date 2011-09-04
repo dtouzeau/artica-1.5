@@ -63,8 +63,15 @@ function kav4proxy_license_popup(){
 	
 	
 	$html="
+	<table style='width:100%' class=form>
+	<tr>
+	<td width=100%>".imgtootltip("refresh-32.png","{refresh}","LicenseInfos()")."</td>
+	<td width=1%>".imgtootltip("delete-32.png","{delete}","Kav4ProxyDeleteKey()")."</td>
+	</tr>
+	</table>
+	
+	
 	<div style='width:100%;height:240px;overflow:auto' id='kav4licenseDiv'>
-		<div style='text-align:right;padding-right:3px;float:right'>". imgtootltip("delete-32.png","{delete}","Kav4ProxyDeleteKey()")."</div>
 		<div id='Kav4ProxyLicenseInfos'></div>
 	</div>
 <center>
@@ -113,7 +120,8 @@ function kav4proxy_license_iframe($error=null){
 	$page=CurrentPageName();
 	$html="
 	<span style='color:red;font-weight:bold;font-size:12px;padding-left:5px'>$error</span>
-	<form method=\"post\" enctype=\"multipart/form-data\" action=\"squid.newbee.php\">
+	<input type=\"hidden\" name=\"upload\" value=\"1\">
+	<form method=\"post\" enctype=\"multipart/form-data\" action=\"$page\">
 	<table style='width:99%' class=form align='center'>
 	<tr>
 		<td class=legend valign='middle'>{upload_new_license}:</td>

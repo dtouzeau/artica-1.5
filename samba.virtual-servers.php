@@ -129,7 +129,7 @@ function virtual_servers_list(){
 		
 		if(!$q->ok){echo "<H2>$q->mysql_error</H2>";}
 		while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
-	
+		if($ligne["hostname"]=="master"){continue;}
 
 		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
 		$select=imgtootltip("32-parameters.png","{edit}","SambaVirtalServer('{$ligne["hostname"]}')");

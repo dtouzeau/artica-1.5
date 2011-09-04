@@ -9,6 +9,8 @@ if(isset($_GET["access-logs"])){access_logs();exit;}
 if(isset($_GET["reprocess-database"])){community_reprocess_category();exit();}
 if(isset($_GET["kav4proxy-update-now"])){kav4proxy_update();exit();}
 
+if(isset($_GET["update-database-blacklist"])){blacklist_update();exit();}
+if(isset($_GET["compil-params"])){compile_params();exit();}
 
 
 
@@ -48,11 +50,29 @@ function community_reprocess_category(){
 	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);
 }
 
+function compile_params(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$php5=$unix->LOCATE_PHP5_BIN();
+	$cmd=trim("$php5 /usr/share/artica-postfix/exec.squid.php --compilation-params");
+	shell_exec($cmd);
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	
+}
+
+function blacklist_update(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$php5=$unix->LOCATE_PHP5_BIN();
+	$cmd=trim("$nohup $php5 /usr/share/artica-postfix/exec.squid.blacklists.php --update >/dev/null 2>&1 &");
+	shell_exec($cmd);
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	
+}
+
 function kav4proxy_update(){
 	$unix=new unix();
 	$nohup=$unix->find_program("nohup");
 	$php5=$unix->LOCATE_PHP5_BIN();
-	$cmd=trim("$nohup /usr/share/artica-postfix/bin/atica-update --kav4proxy >/dev/null 2>&1 &");
+	$cmd=trim("$nohup /usr/share/artica-postfix/bin/artica-update --kav4proxy >/dev/null 2>&1 &");
 	shell_exec($cmd);
 	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	
 	

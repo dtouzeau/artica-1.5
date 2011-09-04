@@ -7,6 +7,7 @@
 	include_once('ressources/class.os.system.inc');
 	include_once(dirname(__FILE__).'/ressources/class.mount.inc');
 	include_once(dirname(__FILE__).'/framework/frame.class.inc');
+	include_once(dirname(__FILE__).'/framework/class.unix.inc');
 	
 if($argv[1]=="--schedules"){set_computer_schedules();exit;}
 if($argv[1]=="--import-list"){importcomputersFromList();exit;}		
@@ -143,6 +144,15 @@ function BuildOptionCommandLine($ini,$computername){
 	
 	
 function set_computer_schedules(){
+	if(is_file("/etc/artica-postfix/KASPERSKY_WEB_APPLIANCE")){die();}
+	$unix=new unix();
+	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
+	$pid=@file_get_contents($pidfile);
+	if($unix->process_exists($pid,basename(__FILE__))){
+		writelogs("set_computer_schedules:: already $pid running, die",__FUNCTION__,__FILE__,__LINE__);
+		die();
+	}
+	
 	writelogs("set_computer_schedules:: starting",__FUNCTION__,__FILE__,__LINE__);
 	$ldap=new clladp();
 	$pattern="(&(objectClass=ArticaComputerInfos)(ComputerScanSchedule=*))";

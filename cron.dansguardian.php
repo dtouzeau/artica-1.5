@@ -24,7 +24,7 @@ while (list ($num, $val) = each ($datas) ){
 		
 		if(trim($val==null)){continue;}
 		if($_GET["DEBUG"]){echo "Parsing line number $num/".Count($datas)."\n";}
-		parseDansLine($val);
+		if(!parseDansLine($val)){return;}
 		}
 		
 @unlink($file);
@@ -52,7 +52,7 @@ function parseDansLine($line){
 		$domain=$re[1];
 	}else{
 			echo "ERROR: unable to found the domain in \"$uri\"\n";
-			return null;
+			return false;
 		}
 	
 	
@@ -74,12 +74,15 @@ function parseDansLine($line){
 	if($_GET["DEBUG"]){echo "Adding new $uri ($TYPE) [$raison] $client\n";}
 	$md5a=md5("$domainMD5$uri$TYPE$raison$client$date");
 	$q=new mysql();
-	$sql="INSERT INGNORE INTO dansguardian_events(sitename,URI,`TYPE`,REASON,CLIENT,zDate,zMD5) 
+	$dansguardian_events="dansguardian_events_".date('Ym');
+	
+	
+	$sql="INSERT IGNORE INTO $dansguardian_events(sitename,URI,`TYPE`,REASON,CLIENT,zDate,zMD5) 
 	VALUES('$domainMD5','$uri','$TYPE','$raison','$client','$date','$md5a');";
 	$q->QUERY_SQL($sql,"artica_events");
-	if(!$q->ok){write_syslog("Failed : \"$sql\" ($q->mysql_error)",__FILE__);}
+	if(!$q->ok){write_syslog("Failed : \"$sql\" ($q->mysql_error)",__FILE__);return false;}
 	
-	
+	return true;
 	
 	
 }
@@ -104,7 +107,8 @@ if(!$_GET["DD"][$domainMD5]){
 
 function rebuildsites(){
 	$q=new mysql();
-	$sql="SELECT uri FROM dansguardian_events";
+	$dansguardian_events="dansguardian_events_".date('Ym');
+	$sql="SELECT uri FROM $dansguardian_events";
 	$results=$q->QUERY_SQL($sql,'artica_events');
 	while ($ligne = mysql_fetch_array($results)) {
 		if(preg_match('#^.+?:\/\/(.+?)[\/:\s]#',$ligne["uri"],$re)){

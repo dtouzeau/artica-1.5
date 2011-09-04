@@ -194,7 +194,7 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 	if($EnableArticaSMTPStatistics==1){
 		if(!$users->KASPERSKY_WEB_APPLIANCE){
 			if($users->POSTFIX_INSTALLED){
-			$monthly_stats=Paragraphe("statistics-network-64.png","{monthly_statistics}","{monthly_statistics_text}","javascript:Loadjs('smtp.daily.statistics.php')","{monthly_statistics_text}",300,76,1);
+			$monthly_stats=ParagrapheTEXT("statistics-network-32.png","{monthly_statistics}","{monthly_statistics_text}","javascript:Loadjs('smtp.daily.statistics.php')","{monthly_statistics_text}",300,76,1);
 			}
 	}}
 	
@@ -245,7 +245,7 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 	if($DisableAPTNews==0){
 		$datas=trim(@file_get_contents("/etc/artica-postfix/apt.upgrade.cache"));
 		if(preg_match('#nb:([0-9]+)\s+#is',$datas,$re)){
-		$check_apt=Paragraphe('i64.png',"{upgrade_your_system}","{$re[1]}&nbsp;{packages_to_upgrade}","javascript:Loadjs('artica.repositories.php?show=update')",null,300,76);
+		$check_apt=ParagrapheTEXT('32-infos.png',"{upgrade_your_system}","{$re[1]}&nbsp;{packages_to_upgrade}","javascript:Loadjs('artica.repositories.php?show=update')",null,300,76);
 		}
 	}
 	
@@ -256,7 +256,7 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 		$hash=$ldap->hash_get_ou();
 		$ldap->ldap_close();
 		if(count($hash)<1){
-		$no_orgs=Paragraphe('org-warning-64.png',"{no_organization}","{no_organization_text_jgrowl}","javascript:TreeAddNewOrganisation()",null,300,76);
+		$no_orgs=ParagrapheTEXT('warning-panneau-32.png',"{no_organization}","{no_organization_text_jgrowl}","javascript:TreeAddNewOrganisation()",null,300,76);
 		}
 	}
 	
@@ -294,8 +294,8 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 	if(!is_numeric($DisableFrontBrowseComputers)){$DisableFrontBrowseComputers=0;}
 	if($DisableFrontBrowseComputers==0){	
 		if($ONLY_SAMBA){
-			$computers=Paragraphe("64-win-nic-browse.png",'{browse_computers}','{browse_computers_text}',"javascript:Loadjs('computer-browse.php');","{browse_computers_text}",300,76,1);
-			$samba=Paragraphe("explorer-64.png",'{explorer}','{SHARE_FOLDER_TEXT}',"javascript:Loadjs('tree.php');","{SHARE_FOLDER_TEXT}",300,76,1);
+			$computers=ParagrapheTEXT("32-win-nic-browse.png",'{browse_computers}','{browse_computers_text}',"javascript:Loadjs('computer-browse.php');","{browse_computers_text}",300,76,1);
+			$samba=ParagrapheTEXT("explorer-32.png",'{explorer}','{SHARE_FOLDER_TEXT}',"javascript:Loadjs('tree.php');","{SHARE_FOLDER_TEXT}",300,76,1);
 		}
 	}
 
@@ -319,7 +319,7 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 		$events_sql=@mysql_fetch_array($q->QUERY_SQL($sql,"artica_events"));
 		
 		if($events_sql["tcount"]>0){
-			$events_paragraphe=Paragraphe("events-64.png",'{artica_events}',"{artica_events_text}",
+			$events_paragraphe=ParagrapheTEXT("events-32.png",'{artica_events}',"{artica_events_text}",
 			"javascript:Loadjs('artica.events.php')","{$events_sql["tcount"]} {events}",300,76,1);
 		}
 	}
@@ -350,6 +350,7 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 	
 	
 	@unlink("/usr/share/artica-postfix/ressources/logs/status.warnings.html");
+	@unlink("/usr/share/artica-postfix/ressources/logs/status.inform.html");
 	$DisableWarningCalculation=$sock->GET_INFO("DisableWarningCalculation");
 	if(!is_numeric("DisableWarningCalculation")){$DisableWarningCalculation=0;}
 	
@@ -363,20 +364,28 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 		if(strlen($service)>20){$informer++;}else{if($GLOBALS["VERBOSE"]){echo "DEBUG:service:".strlen($service)." bytes, disabled\n";}}
 		if(strlen($statusSpamassassinUpdateText)>20){$informer++;}else{if($GLOBALS["VERBOSE"]){echo "DEBUG:statusSpamassassinUpdateText:".strlen($statusSpamassassinUpdateText)." bytes, disabled\n";}}
 		if(strlen($services)>20){$informer++;if($GLOBALS["VERBOSE"]){echo "DEBUG:services Add\n";}}else{if($GLOBALS["VERBOSE"]){echo "DEBUG:services:".strlen($services)." bytes, disabled\n";}}
+		if(strlen($check_apt)>20){$informer++;if($GLOBALS["VERBOSE"]){echo "DEBUG:services Add\n";}}else{if($GLOBALS["VERBOSE"]){echo "DEBUG:services:".strlen($services)." bytes, disabled\n";}}
+		
+		
+		
 		
 		if($GLOBALS["VERBOSE"]){echo "DEBUG: Inform $informer events\n";}
 		
 		
 		if($informer>0){
-			$inform=Paragraphe("warning64.png","$informer {warnings}","$informer {index_warnings_text}","javascript:Loadjs('admin.index.php?warnings=yes&count=$informer')","",300,76,1);
+			
+			$inform=ParagrapheTEXT("warning-panneau-32.png","$informer {events}","$informer {index_warnings_text}","javascript:Loadjs('admin.index.php?warnings=yes&count=$informer');");
+			file_put_contents('/usr/share/artica-postfix/ressources/logs/status.inform.html',$inform);
+			//$inform=Paragraphe("warning64.png","$informer {events}","$informer {index_warnings_text}","javascript:Loadjs('admin.index.php?warnings=yes&count=$informer')","",300,76,1);
 			file_put_contents('/usr/share/artica-postfix/ressources/logs/status.warnings.html',
-			"$RootPasswordChangedTXT$kernel_mismatch$nobackup$blacklist$kavicap_license_error$services$statusSpamassassinUpdateText");
-			system('/bin/chmod 755 /usr/share/artica-postfix/ressources/logs/status.warnings.html');	
+			"$check_apt$RootPasswordChangedTXT$kernel_mismatch$nobackup$blacklist$kavicap_license_error$services$statusSpamassassinUpdateText");
+			system('/bin/chmod 755 /usr/share/artica-postfix/ressources/logs/status.warnings.html');
+			system('/bin/chmod 755 /usr/share/artica-postfix/ressources/logs/status.inform.html');	
 		}
 	}
 
 	$final="
-	$inform
+	
 	$no_orgs
 	<span id='loadavggraph'></span>
 	<span id='kav4proxyGraphs'></span>		
@@ -387,8 +396,7 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 	$monthly_stats
 	$newversion
 	$samba
-	$computers
-	$check_apt";
+	$computers";
 
 events(__FUNCTION__."/usr/share/artica-postfix/ressources/logs/status.global.html ok");	
 file_put_contents('/usr/share/artica-postfix/ressources/logs/status.global.html',$final);
@@ -442,12 +450,9 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 	if($GLOBALS["VERBOSE"]){echo "DEBUG:squid_filters_infos():: EnableCommunityFilters {$ligne["tcount"]}\n";}
 	if($ligne["tcount"]==0){return null;}
 	
-	return Paragraphe("64-categories.png",$ligne["tcount"]." {websites_not_categorized}",
+	return ParagrapheTEXT("32-categories.png",$ligne["tcount"]." {websites_not_categorized}",
 	"{websites_not_categorized_text}","javascript:Loadjs('squid.visited.php')",null,300,76,1);
-	
-	
-	
-	
+
 }
 
 function kavicap_license_error(){

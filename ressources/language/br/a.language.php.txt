@@ -6,6 +6,11 @@
 <ActHasMaster>Act has Master</ActHasMaster>
 <ActHasSlave>Act has slave</ActHasSlave>
 <activate_openvpn_connection>Activate the VPN connection and connect to the VPN server</activate_openvpn_connection>
+<activate_sync_port>Activate the synchronize port</activate_sync_port>
+<activate_sync_port_mgreylist_text>If you enable this feature, remote MX server are able to connect in order to retreive the greylisting database trough the 5252 port.[br]
+If you have firewalls between your MXs, you should enable TCP connections in both directions between random unprivileged source ports and destination port 5252.
+</activate_sync_port_mgreylist_text>
+<ActiveDirectory_branches>Active Directory branches</ActiveDirectory_branches>
 <activedirectory_ipaddr>Adicionar endere&ccedil;o IP (opcional)</activedirectory_ipaddr>
 <AddDefaultCharset_explain>This directive specifies a default value for the media type charset parameter (the name of a character encoding) to be added to a response if and only if the response's content-type is either text/plain or text/html.[br]
 This should override any charset specified in the body of the response via a META element,
@@ -179,6 +184,19 @@ If you will use only FreeWeb has the main web service, disable this feature.
 [b]You will free 67Mb memory[/b]
 </APACHE_GROUPWARE_DISABLE_EXPLAIN>
 <apache_mod_cache_explain>This section implement disk caching in order to speed up you web server</apache_mod_cache_explain>
+<apache_mod_fcgid_explain>
+mod_fcgid is a high performance alternative to mod_cgi or mod_cgid, 
+which starts a sufficient number instances of the CGI program to handle concurrent requests,
+and these programs remain running to handle further incoming requests.[br]
+It is favored by the PHP developers, for example, as a preferred alternative to running mod_php in-process,
+delivering very similar performance.
+</apache_mod_fcgid_explain>
+<apache_mod_status_add_explain>Set here the authorized address of the remote client (192.168.1.245 or host1.*..)</apache_mod_status_add_explain>
+<apache_mod_status_allow_explain>This section define ip addresses that are allowed to get web servers status.[br]It can be used if you want to get damon status of a web server.[br]
+Artica is in charge to get status of all websites periodically.[br]In some cases when requesting the the webserver, the local HTTP agent must pass trough a proxy in order to retreive the web page.[br]
+In this case you need to allow the proxy IP adress.
+each website can be requested trough this uri : http://servername/server-status.
+</apache_mod_status_allow_explain>
 <apply_config>Apply settings</apply_config>
 <apply_config_postfix>Stop Postfix main system, recompile all parameters and start postfix in order to make parameters in production mode</apply_config_postfix>
 <apply_network_configuration>Apply network configuration</apply_network_configuration>
@@ -204,15 +222,18 @@ The logic is based on evaluation of SQL commands using a risk scoring matrix as 
 <APP_IETD>iSCSI service</APP_IETD>
 <APP_IPTACCOUNT>TCP/IP Accounting</APP_IPTACCOUNT>
 <APP_IPTACOUNT_EXPLAIN>TCP/IP Accounting allow you to obtain informations about traffic received,passed,transfered according rules</APP_IPTACOUNT_EXPLAIN>
+<APP_JOOMLA17>Joomla 1.7x</APP_JOOMLA17>
 <APP_KAV4PROXY_INTRO>Manage your antivirus engine for ICAP proxy servers</APP_KAV4PROXY_INTRO>
 <APP_LXC>LXC containers</APP_LXC>
 <APP_LXC_TEXT>Create and manage Virtual Private servers with Linux Containers technology</APP_LXC_TEXT>
+<APP_MOD_PAGESPEED>optimizing web pages module</APP_MOD_PAGESPEED>
 <APP_MSKTUTIL>keytab client for MS Active Directory</APP_MSKTUTIL>
 <APP_MSKTUTIL_NOT_INSTALLED>msktutil is not installed, use the setup center in order to install this tool</APP_MSKTUTIL_NOT_INSTALLED>
 <APP_NSCD>Name Service cache Daemon</APP_NSCD>
 <APP_OPENEMM>OpenEMM service</APP_OPENEMM>
 <APP_OPENEMM_SENDMAIL>SendMail for OpenEMM</APP_OPENEMM_SENDMAIL>
 <APP_PDNS_INSTANCE>PowerDNS (Instance)</APP_PDNS_INSTANCE>
+<APP_PHPFCGI>FastCGI module</APP_PHPFCGI>
 <APP_PIWIK>Piwik</APP_PIWIK>
 <APP_PIWIK_TEXT>Piwik is a real time web analytics software program.[br]
 It provides you with detailed reports on your website visitors:[br]
@@ -242,6 +263,8 @@ A reboot may help too, if you want to be really sure there's no cruft hanging ar
 For Windows 2008 server you need to install [b]Hotfix 951191[/b].
 </APP_SQUIDKERAUTH_TEXT_REF>
 <APP_TOMCAT>Tomcat Web server</APP_TOMCAT>
+<APP_WORDPRESS>WordPress</APP_WORDPRESS>
+<APP_WORDPRESS_TEXT>WordPress is web software you can use to create a beautiful website or blog. We like to say that WordPress is both free and priceless at the same time</APP_WORDPRESS_TEXT>
 <APP_ZARAFA6>Zarafa server 6.x</APP_ZARAFA6>
 <APP_ZARAFA_INDEXER>Zarafa Indexer</APP_ZARAFA_INDEXER>
 <APP_Z_PUSH>Z-Push</APP_Z_PUSH>
@@ -355,6 +378,7 @@ Voc&ecirc; pode definir padr&otilde;es desta maneira:[br]
 [b]user@domain.tld[/b] para bloquear todo o remetente user@domain.tld.[br]</blacklist_global_add_explain>
 <blacklist_global_explain>Esta sess&atilde;o ir&aacute; bloquear dom&iacute;nios ou endere&ccedil;os listados diretamente na sess&atilde;o SMTP. [br] &Eacute; mais restritivo do que outras possibilidades que usam filtros suplementares. [br]
 mensagens que as regras do remetente corresponde ao endere&ccedil;o ser&atilde;o rejeitados diretamente, sem verifica&ccedil;&atilde;o do conte&uacute;do</blacklist_global_explain>
+<blklist_update_now_text>Launch blacklist databases update now</blklist_update_now_text>
 <blocked_ips>IPs bloqueados</blocked_ips>
 <blocked_websites>Websites bloqueados</blocked_websites>
 <Blocking_period>Blocking period</Blocking_period>
@@ -394,14 +418,23 @@ without logging into the server</cachemgr_text>
 <caches>Caches</caches>
 <CacheSynchronization>Cache synchronization</CacheSynchronization>
 <caches_squid>Cache (mem&oacute;ria) do proxy</caches_squid>
+<caches_storage_resources>Cache storage resources</caches_storage_resources>
+<caches_storage_resources_howto>Your server store objects into databases with a pre-defined size.[br]
+These databases are important because if the proxy server have not enough spaces, it cannot store objects and try to get them directly from Internet.[br]
+So you need to ensure that you have some storages to save objects in your server.
+</caches_storage_resources_howto>
 <cache_control>Cache control</cache_control>
 <cache_engine>Cache Engine</cache_engine>
+<cache_performance>Cache performance</cache_performance>
+<cache_storage_rules>Cache storage rules</cache_storage_rules>
+<cache_storage_rules_explain>Cache storage rules can drive the cache algorythm behavior.[br]In this case, you can force the Proxy service to cache objects by type or targeted websites.[br]These rules can force the proxy service to cache objects even if the Web server request to refresh cache browsers</cache_storage_rules_explain>
 <calculate_since>Calcular desde</calculate_since>
 <Calibration_Retry_Count>Calibration Retry Count</Calibration_Retry_Count>
 <Calibration_Retry_Count_text>Number of attempts to calibrate a drive</Calibration_Retry_Count_text>
 <cannot_delete_address_postfix_instance>Cannot delete this virtual IP, a postfix instance currently using it</cannot_delete_address_postfix_instance>
 <cannot_delete_address_samba_instance>Cannot delete this Virtual address, it is used by a Samba instance</cannot_delete_address_samba_instance>
 <cannot_delete_computers_use_it>Cannot delete this item, some computers use it...</cannot_delete_computers_use_it>
+<cannot_schedule_update_without_schedule>Cannot enable Scheduling updates if you did not set the schedule!</cannot_schedule_update_without_schedule>
 <categories_white_explain>Set categories you want to allow, this is the whitelist.</categories_white_explain>
 <cat_hospitals>Sites de hospitais e cl&iacute;nicas m&eacute;dicas.</cat_hospitals>
 <cat_medical>Medical websites</cat_medical>
@@ -476,7 +509,9 @@ Do you want to execute this operation ?</confirm_remove_zarafa_db>
 <content_filtering>Filtro de conte&uacute;do</content_filtering>
 <content_filters>Filtros de conte&uacute;do</content_filters>
 <convert_current_attachments>Convert current attachents</convert_current_attachments>
+<corrupted>Corrupted</corrupted>
 <COULD_NOT_PERF_OP_SOFT_ENABLED>Could not perform this operation until this software is enabled:</COULD_NOT_PERF_OP_SOFT_ENABLED>
+<country_block>Countries block</country_block>
 <CPU_ASSIGN>assign CPU(s)</CPU_ASSIGN>
 <create_filesystem>Create filesystem</create_filesystem>
 <create_filesystem_text>Create the necessary filesystem on this disk in order to create partition</create_filesystem_text>
@@ -565,6 +600,7 @@ Do you want to perform this operation ?
 Remove this disk from the system ?
 Content will be erased...
 </delete_disk_confirm>
+<delete_freeweb_dnstext>Also, Do you want to delete Local DNS pointer ?</delete_freeweb_dnstext>
 <delete_openvpn_connection>Delete the VPN connection and disconnect to the VPN server</delete_openvpn_connection>
 <delete_permissions>Delete permissions</delete_permissions>
 <delete_this_query>Delete this query ?</delete_this_query>
@@ -644,6 +680,7 @@ Set the domain for dnsmasq. this is optional, but if it is set, it:[br]
 3) Provides the domain part for expand hostnames feature[br]
 </dnsmasq_domain_explain>
 <dns_entries>DNS Entries</dns_entries>
+<dns_entry>DNS entry</dns_entry>
 <DOMAIN_ALIASES_IMPORT_TEXT>
 This form will import domains aliases into a database.[br]
 Paste here messaging domains separated by a carriage return.
@@ -740,6 +777,7 @@ It is useful in providing training to email users about company policies and gen
 <EnablePublicOrganizations>Public user registration</EnablePublicOrganizations>
 <EnablePublicOrganizations_text>If checked, organization's administrator is able to allow public internet users to create accounts with a register form</EnablePublicOrganizations_text>
 <EnableRebootAfterUpgrade>Reboot system after system upgrade task</EnableRebootAfterUpgrade>
+<EnableScheduleUpdates>Update only on specified schedule</EnableScheduleUpdates>
 <EnableSpamAssassinFreeMail_explain>detect email addresses using free webmail services</EnableSpamAssassinFreeMail_explain>
 <EnableWindowsAuthentication>Enable authentication via MS Windows</EnableWindowsAuthentication>
 <enable_amavis_watchdog>Enable watchdog</enable_amavis_watchdog>
@@ -766,6 +804,9 @@ When a user add/delete/modify a file in a Samba folder, greyhole will saved it a
 <enable_kill_proc>Kill processes</enable_kill_proc>
 <enable_ldap_authentication>Enable LDAP Authentication</enable_ldap_authentication>
 <enable_limit_by_addresses>Enable client address limitation</enable_limit_by_addresses>
+<enable_memory_scanning>Enable scan objects in memory</enable_memory_scanning>
+<enable_mod_fcgid>Activate FastCGI interface module</enable_mod_fcgid>
+<enable_mod_pagespeed>Enable optimizes web pages</enable_mod_pagespeed>
 <enable_pop3>Enable POP3 service</enable_pop3>
 <enable_pop3s>Enable POP3 SSL service</enable_pop3s>
 <enable_remote_announce_explain>If turn to green the announce network will be enabled in the file sharing engine.</enable_remote_announce_explain>
@@ -780,6 +821,7 @@ When a user add/delete/modify a file in a Samba folder, greyhole will saved it a
 <enable_tuning_mysql_server>Enable tune MySQL settings</enable_tuning_mysql_server>
 <enable_viptrack>Activate VIPTrack</enable_viptrack>
 <enable_whitelisting>Activate WhiteListing method</enable_whitelisting>
+<enable_white_listed_mode_text>It is designed if your SMTP server is stored on Internet and used only for outgoing mails.[br]In other case if you dedicate this server to only a part of your network</enable_white_listed_mode_text>
 <eq2>is equal</eq2>
 <errors>Errors</errors>
 <error_choose_organization>Error you need to choose at least an organization</error_choose_organization>
@@ -794,6 +836,20 @@ When a user add/delete/modify a file in a Samba folder, greyhole will saved it a
 <expand-hosts_text>Set this if you want to have a domain automatically added to simple names in a hosts-file.</expand-hosts_text>
 <external_device>External device</external_device>
 <failed_uncompress>Failed uncompress</failed_uncompress>
+<FcgidBusyTimeout>Kill running process after</FcgidBusyTimeout>
+<FcgidBusyTimeout_explain>A FastCGI application will be killed after handling a request over than x seconds</FcgidBusyTimeout_explain>
+<FcgidIdleTimeout>killed idle process after</FcgidIdleTimeout>
+<FcgidIdleTimeout_explain>Application processes which have not handled a request for this period of time will be terminated</FcgidIdleTimeout_explain>
+<FcgidMaxProcessesPerClass>Max processes per class</FcgidMaxProcessesPerClass>
+<FcgidMaxProcessesPerClass_explain>This directive sets the maximum number of processes that can be started for each process class</FcgidMaxProcessesPerClass_explain>
+<FcgidMaxRequestInMem>maximum memory size of a request</FcgidMaxRequestInMem>
+<FcgidMaxRequestInMem_explain>This module reads the entire request body from the client before sending it to the application. Normally the request body will be stored in memory.[br]
+Once the amount of request body read from the client exceeds x bytes, the remainder of the request body will be stored in a temporary file.
+</FcgidMaxRequestInMem_explain>
+<FcgidMaxRequestLen>Max request length</FcgidMaxRequestLen>
+<FcgidMaxRequestLen_explain>If the size of the request body exceeds this amount, the request will fail with 500 Server Error</FcgidMaxRequestLen_explain>
+<FcgidOutputBufferSize>Output buffer size</FcgidOutputBufferSize>
+<FcgidOutputBufferSize_explain>This is the maximum amount of response data the module will read from the FastCGI application before flushing the data to the client</FcgidOutputBufferSize_explain>
 <FEDORA_TEMPLATE>Fedora template</FEDORA_TEMPLATE>
 <fetchmail_execute_debug_warn>This operation will execute now the retreival process in debug mode for this account.[br]
 The process will be turned in debug mode.
@@ -807,6 +863,7 @@ The filename should be a filename recognizable to whatever file transfer protoco
 <files_and_folders_permissions>Files and folders permissions</files_and_folders_permissions>
 <files_extension>Files extension</files_extension>
 <FILE_DIRECTORY_PATH>File directory path</FILE_DIRECTORY_PATH>
+<file_sharing_behavior>File sharing behavior</file_sharing_behavior>
 <filterwin2k_text>Makes dnsmasq ignore certain DNS requests which are made by Windows boxen every few minutes</filterwin2k_text>
 <firewall>Firewall</firewall>
 <fixed_ip_addr>Fixed IP address</fixed_ip_addr>
@@ -819,6 +876,9 @@ The filename should be a filename recognizable to whatever file transfer protoco
 <FreeWebsEnableOpenVPNProxy>Activate Mod proxy For OpenVPN service</FreeWebsEnableOpenVPNProxy>
 <FreewebsStorageDirectory>Websites storage directory</FreewebsStorageDirectory>
 <FreewebsStorageDirectory_text>It is the default path used when creating websites with FreeWebs</FreewebsStorageDirectory_text>
+<freeweb_add_dns_entry_explain>If this field is displayed, that means you have a DNS engine installed on your computer.[br]
+If you define an IP address here, the hostname will automatically added to the local DNS server.[br]
+This usually used when you build an Intranet website and if Artica handle DNS workstations queries.</freeweb_add_dns_entry_explain>
 <freeweb_alias_explain>
 Aliases are used to map between URLs and filesystem paths.[br]
 This allows for content which is not directly under the website root served as part of the web document tree.
@@ -884,6 +944,8 @@ The engine will try to find all urls added in your text, sou you did not need to
 in low warning level and then to acknowledge all valid queries and then to lower the block level</GREENSQL_warn_level>
 <greyhole_dirs_explain>Number of copies of each file you want Greyhole to keep, set 0 to disable the feature on this directory.[br]
 be carrefull 2 copies = 1 duplicate</greyhole_dirs_explain>
+<greylisted>greylisted</greylisted>
+<group_description>Group description</group_description>
 <Hardware_ECC_Recovered>Hardware ECC Recovered</Hardware_ECC_Recovered>
 <Hardware_ECC_Recovered_text>Frequency of the on the fly errors (Fujitsu: ECC On The Fly Count)</Hardware_ECC_Recovered_text>
 <header_address_token_limit_explain>(default: 10240 tokens)[br]
@@ -923,10 +985,14 @@ If your server is named has pdc01.mtdomain.tld set here mtdomain.tld</howto_ADDO
 <howto_ADNETBIOSDOMAIN>This is your Active directory Workgroup/DOMAIN used when you log into the server like DOMAIN\username</howto_ADNETBIOSDOMAIN>
 <howto_ad_server>This is the hostname of your Active Directory server without domain name.[br]
 If your server is named has pdc01.mtdomain.tld set here pdc01</howto_ad_server>
+<howto_joomla_text>Artica has installed your joomla web sites with default values.[br]For the first connection, use [b]admin[/b] has username and [b]admin[/b] has password.[br]
+don't forget that opening the administration page is with the follwing URL</howto_joomla_text>
 <howto_WINBINDPASSWORD>You have to create a "winbind" user on your Active Directory server and define here the winbind password.[br]
 If you using Windows 2003 Active Directory server, the Active Directory service did not accept winbind anonymous call.[br]
 In this case, the winbindd daemon will use the user winbind user and the password set to authenticate.
 </howto_WINBINDPASSWORD>
+<howto_wordpress_text>Your WordPress web site has been installed.[br]
+You can finish the setup or access to the Web Administration interface by clicking on this link</howto_wordpress_text>
 <ID_ATA_COMPAT>ATA name</ID_ATA_COMPAT>
 <ID_BUS>Bus</ID_BUS>
 <ID_EDD>EDD</ID_EDD>
@@ -961,10 +1027,12 @@ If this feature is disabled, fixed hosts in Artica database will not be added.
 <indexing_interval>Indexing interval</indexing_interval>
 <index_warnings_text>Warnings has been detected, click here in order to see warnings</index_warnings_text>
 <infected>Infected</infected>
+<infected_websites>Infected website(s)</infected_websites>
 <innodb_log_buffer_size>INNODB log buffer size</innodb_log_buffer_size>
 <innodb_log_file_size>INNODB log file size</innodb_log_file_size>
 <instance>Instance</instance>
 <instance_server_name>Instance hostname</instance_server_name>
+<instant_iptables_whitelisted_explain>The whitelist mode only accept SMTP connections from whitelisted list.[br]No unknown servers are able connect to your server</instant_iptables_whitelisted_explain>
 <InternetDomainsOrgAsOnlySubdomains>Use only official domains</InternetDomainsOrgAsOnlySubdomains>
 <InternetDomainsOrgAsOnlySubdomains_text>If checked only subdomains of available domains will be allowed to use when playing with domains inside the organization</InternetDomainsOrgAsOnlySubdomains_text>
 <IoType>I/O Type</IoType>
@@ -1000,24 +1068,37 @@ This mode works ideally with high-end storage HBAs and for applications that  ei
 </iscsi_IoType_explain>
 <iscsi_type_edit_explain>Using the File mode, Artica will create a file container specified by the path field
 This file will be the shared iSCSI disk.[br]In disk mode, you will have to choose the disk partition that will be the iSCSI disk</iscsi_type_edit_explain>
+<ISOCanChangeIP>Can change network settings</ISOCanChangeIP>
+<ISOCanChangeLanguage>Can change the system language</ISOCanChangeLanguage>
+<ISOCanChangeRootPWD>Can modify root password</ISOCanChangeRootPWD>
+<ISOCanDisplayUserNamePassword>Can display SuperAdmin credentials</ISOCanDisplayUserNamePassword>
+<ISOCanReboot>Can reboot the system</ISOCanReboot>
+<ISOCanShutDown>Can shutdown the system</ISOCanShutDown>
 <i_accept>I accept</i_accept>
 <jGrowlNotifsDisabled>Desabilitar notifica&ccedil;&otilde;es de dicas &uacute;teis</jGrowlNotifsDisabled>
 <jkMount_explain>Add the JkMount directive for *.do,*.jsp,*.jspx,*.cfm,*.cfc,*.cfchart,*.cfres files</jkMount_explain>
 <jumpto>Jump to</jumpto>
 <kaspersky_antivirus_connector>Kaspersky ICAP connector</kaspersky_antivirus_connector>
 <kaspersky_antivirus_connector_text>Connect your Proxy to a remote Kaspersky Anti-Virus for Proxy Server</kaspersky_antivirus_connector_text>
+<kav4proxycat_month_stats_explain>Here it is the most visited websites of the current month</kav4proxycat_month_stats_explain>
 <kav4proxyClientIP> The following information can be used to specify the value for the ClientIP parameter:
 [br]IP addresses: 192.168.12.1
 [br]Network addresses: 192.168.12.0/24 or 192.168.12.1/255.255.255.0
 [br]Regular expressions are also allowed as the values ^192\.168\.12\..*
 </kav4proxyClientIP>
+<kav4proxycountry_month_stats_explain>Here it is the most countries requested of the current month.[br]Countries are the country that store the webserver.</kav4proxycountry_month_stats_explain>
 <Kav4ProxyGroupsHowto>The use of groups allows to specify different anti-virus processing for objects being requested or
 transferred through a proxy server by different user groups.[br]A request is associated with a specific group depending on
 the IP address of the client computer requesting the object through a proxy server, and the URL of that object
 </Kav4ProxyGroupsHowto>
+<Kav4ProxyTMPFS_explain>By default Kaspersky For Proxy server use the system disk in order to scan objects.[br]This feature turn the working directory directly into the memory in order to speed the speed rate[br]
+Set here the memory you want to allocate for this task.[br]
+Warning don't set a value more than your server memory in order to not overload your server.
+</Kav4ProxyTMPFS_explain>
 <kav4proxyURL>URL of a requested object.[br]
 Objects with a specified URL and requested from an IP addresses defined will be processed using the rules of this group
 </kav4proxyURL>
+<kav4proxyvirus_month_stats_explain>Here it is the infected websites of the current month</kav4proxyvirus_month_stats_explain>
 <kav4proxy_about>
 Kaspersky Anti-Virus for Proxy Server provides anti-virus protection for network traffic routed through proxy servers
 which support the Internet Content Adaptation Protocol (ICAP).[br]
@@ -1065,6 +1146,8 @@ Give here the ip address and port number of your Kaspersky ICAP service.</kavica
 <KeepAlive_explain>Use it when a firewall between the reverse proxy and the backend-server.</KeepAlive_explain>
 <key>Key</key>
 <last_24h>Last 24H</last_24h>
+<last_30_days>Last 30 days</last_30_days>
+<last_6_months>Last 6 months</last_6_months>
 <last_7days>&Uacute;ltimos 7 dias</last_7days>
 <last_7_days>Last 7 days</last_7_days>
 <last_hour>Last hour</last_hour>
@@ -1160,25 +1243,46 @@ Organizations can only create subdomains of these domains if the "Use only offic
 <max_score_white_text>Define here the Content filter score that you want to subtract to the globale score.
 [br]If you set 0, the sender will be whitelisted and pass trough the content filter</max_score_white_text>
 <max_size>MAX size</max_size>
+<members_connected>Connected members</members_connected>
+<members_connected_samba_text>members currently connected to your file sharing service.[br]Click here to display details</members_connected_samba_text>
+<memory_scanning>Scan objects in Memory</memory_scanning>
+<memory_size>Memory size</memory_size>
+<MENU_CONSOLE>Console Menus</MENU_CONSOLE>
+<MENU_CONSOLE_TEXT>You have installed Artica From an ISO, Artica-ISO display a menu on the system console.[br]This section will tweaks this menu</MENU_CONSOLE_TEXT>
 <messages_list>Messages list</messages_list>
 <message_analyze>Message analyze</message_analyze>
 <message_as_analyze_text>Test messages and see what is the Content filter behavior when analyzing message</message_as_analyze_text>
 <messaging_events>Messaging events</messaging_events>
 <messaging_events_text>Display and query messages passed trough the server</messaging_events_text>
 <messaging_org>Organization messaging</messaging_org>
+<mgreylisttimeout_text>How long will the greylist database retain tuples[br]
+After reach this time, the remote server will be greylisted again</mgreylisttimeout_text>
+<milter_multimx_explain>This section is designed if you use multiple MX on your SMTP architecture, in this case, you can synchronize the greylisting database between severals servers or Postfix instances.</milter_multimx_explain>
 <minimal_infos>Minimal informations</minimal_infos>
 <minimum_length>Minimum length</minimum_length>
+<minimum_object_size_squid_howto>These directives define which objects can be stored on caches.[br]
+If you define a higher minimal value, web pages or little images will be not be cached.[br]
+In the opposite if you define a lower value for maximal size some big images and files that should never be modified will be not cached.[br]For example, updates repositories servers.
+</minimum_object_size_squid_howto>
 <minor_version>Minor version</minor_version>
 <MinSpareServers>Min Spare servers</MinSpareServers>
 <MISSING_PARAMETER>Missing parameters</MISSING_PARAMETER>
 <MISSING_PARAMETER_TEXT>A parameter is missing, the service should not running proprely</MISSING_PARAMETER_TEXT>
+<ModPagespeedFileCacheCleanIntervalMs>Interval (in ms) for cleaning the file cache</ModPagespeedFileCacheCleanIntervalMs>
+<ModPagespeedFileCacheSizeKb>Target size (in kilobytes) for file cache</ModPagespeedFileCacheSizeKb>
+<ModPagespeedLRUCacheKbPerProcess>Maximum byte size entry to store in the per-process in-memory LRU cache</ModPagespeedLRUCacheKbPerProcess>
 <modules>Modules</modules>
 <mod_evasive_explain>This feature detects when a single client is making multiple requests in a short period of time,
  and denies further requests from that client.[br]
  The period for which the ban is in place can be very short, because it just gets renewed the next time a request is detected from that same host.
  </mod_evasive_explain>
+<mod_pagespeed_about>It is a feature that automatically optimizes web pages and resources on them.[br]
+It does this by rewriting the resources using filters that implement web performance best practices.[br]
+Webmasters and web developers can use thsi feature to improve the performance of their web pages when serving content.
+</mod_pagespeed_about>
 <mod_qos_explain>QOS gives some fine-grained opportunities to scale the number of used connections and to defend an attack according to bandwidth limits</mod_qos_explain>
 <mounts_list>Mounts list</mounts_list>
+<multiples_mx>Multiples MX</multiples_mx>
 <multiples_ports>Port(s)</multiples_ports>
 <multiple_instances>Multiples instances</multiple_instances>
 <Multi_Zone_Error_Rate>Write Error Rate</Multi_Zone_Error_Rate>
@@ -1240,6 +1344,7 @@ Enabling this feature will deny Artica to reboot the system.</NoOutOfMemoryReboo
 <notify_class_resource_text>Inform the postmaster of mail not delivered due to resource problems (for example, queue file write errors).</notify_class_resource_text>
 <notify_class_software>Software problems</notify_class_software>
 <notify_class_software_text>Inform the postmaster of mail not delivered due to software problems. </notify_class_software_text>
+<not_cached>Not cached</not_cached>
 <not_categoryzed>Sem categoria</not_categoryzed>
 <NO_AD_CONNECTION>Not a Member</NO_AD_CONNECTION>
 <NO_AD_CONNECTION_TEXT>Currently this server is not set has a Windows Active directory member, this an information, not an error.[br]It is not mandatory to be a Microsoft Active Directory Member</NO_AD_CONNECTION_TEXT>
@@ -1258,6 +1363,8 @@ Use relayed domain instead until there is no mailbox server installed.[br]
 <ntp_server>NTP server</ntp_server>
 <Offline_Uncorrectable>Off-line Scan Uncorrectable Count</Offline_Uncorrectable>
 <Offline_Uncorrectable_text>Quantity of uncorrected errors</Offline_Uncorrectable_text>
+<OnlyBranch>Only branch</OnlyBranch>
+<only_selected>Only selected</only_selected>
 <only_use_this>Only use this</only_use_this>
 <OpenEMMNextMTA>Relayhost to send mails</OpenEMMNextMTA>
 <OpenEMMNextMTAPort>Relayhost port</OpenEMMNextMTAPort>
@@ -1305,6 +1412,7 @@ For example, Avaya phones are hard coded to "read" this scope option and pick up
 <outgoing>outgoing</outgoing>
 <OverWriteRestrictedDomains>OverWrite domains restrictions</OverWriteRestrictedDomains>
 <OverWriteRestrictedDomains_allow_text>You can overwrite the restricted subdomains policy.[br]If you want to add your own domain, give here the full domain name</OverWriteRestrictedDomains_allow_text>
+<ovh_specific_config>OVH specifig ISP settings</ovh_specific_config>
 <page_interval>Page interval</page_interval>
 <partition>Partition</partition>
 <partition_automount_center_text>Mount this partition using the Auto-mount service</partition_automount_center_text>
@@ -1315,18 +1423,22 @@ For example, Avaya phones are hard coded to "read" this scope option and pick up
 <pdns_listen_ip_explain>By default, Artica will try to find your network cards and Ip addresses and set PowerDNS to listen these found IP.[br]
 Usually you did not have to change this section.[br]Sometimes, you need to force PowerDNS to listen specific IPs and not others or add a listen address that Artica cannot detect (OpenVZ, VPS servers).[br]In this case, add IP addresses you want PowerDNS to listen.</pdns_listen_ip_explain>
 <perform_mysql_check>Perform MySQL check on this table ?</perform_mysql_check>
+<period>period</period>
 <permissions>Permissions</permissions>
 <permit_dnswl_client>Permit reversed client under the dnswl_domain</permit_dnswl_client>
 <permit_dnswl_client_text>[b]dnswl_domain=d.d.d.d[/b][br]Accept the request when the reversed client network address is listed with the A record "d.d.d.d" under dns white list domain.</permit_dnswl_client_text>
 <permit_rhswl_client>[b]rhswl_domain=d.d.d.d[/b][br]Accept the request when the client hostname is listed with the A record "d.d.d.d" under rhswl_domain.</permit_rhswl_client>
 <persistante_connection>Persistante connection</persistante_connection>
 <PHP_CONFIGURATION>PHP configuration path</PHP_CONFIGURATION>
+<php_values>PHP Values</php_values>
 <picture>Picture</picture>
 <please_choose_an_official_domain>Please, select an official domain</please_choose_an_official_domain>
 <please_register_first>Please register first</please_register_first>
 <please_while_creating_your_organization>Please waiting while creating your organization</please_while_creating_your_organization>
 <pop3s_port>Listen POP3 SSL port </pop3s_port>
 <pop3_port>Listen POP3 port</pop3_port>
+<ports_conflicts_with_local_postfix>Your local SMTP server listen the same port has your balancer, you should change the listen port of your local SMTP service..</ports_conflicts_with_local_postfix>
+<port_conflicts>Port conflicts</port_conflicts>
 <postalCode>Postal code</postalCode>
 <postfinder_parameters_explain>Here you can find parameters that drive the maillog storage.[br]
 It is mandatory to keep logs in order to find events or to get mail history sources in a dedicated area.[br]
@@ -1535,6 +1647,7 @@ In this case,you will loose all cached websites and Squid Cache must refill them
 Do you want to perform this operation ?</reconstruct_caches_explain>
 <reconstruct_vlans>Reconstruct VLANs</reconstruct_vlans>
 <record>Record</record>
+<records>records</records>
 <recreation_nightout>All sites about how to have a night out including restaurants, pubs, night clubs...</recreation_nightout>
 <redirect_to>Redirect to</redirect_to>
 <redirect_to_email>Redirect to address</redirect_to_email>
@@ -1563,6 +1676,8 @@ The new server should be your backend server that store mailboxes..</relaydomain
 <remote_directory>Remote directory</remote_directory>
 <REMOVE_DATABASE>Remove Database</REMOVE_DATABASE>
 <REMOVE_DATABASE_ZARAFA_TEXT>Remove the current database, including datas and rebuild a new one</REMOVE_DATABASE_ZARAFA_TEXT>
+<remove_tuple>Remove tuple</remove_tuple>
+<remove_tuple_text>check it if you want auto-whitelist to work for the IP rather than for the (IP, sender, receiver) tuple.</remove_tuple_text>
 <Reported_Uncorrect>Reported Uncorrectable Errors</Reported_Uncorrect>
 <Reported_Uncorrect_text>The count of errors that could not be recovered using hardware ECC</Reported_Uncorrect_text>
 <reports_generated_check_postmaster_mail>Reports are scheduled in background mode, check you mailbox you have set in the notification parameters</reports_generated_check_postmaster_mail>
@@ -1626,6 +1741,8 @@ and the resulting UNIX mode.</samba_create_mask_text>
 <samba_default_settings_explain>This section will define default parameters when you add a new shared folder.[br]In this case, when adding a new folder you did not have to change everytime some specific options</samba_default_settings_explain>
 <samba_directory_mask>Directory mask</samba_directory_mask>
 <samba_directory_mask_text>This parameter controls what UNIX permission bits will be set when a Windows NT client is manipulating the UNIX permission on a directory using the native NT security dialog box</samba_directory_mask_text>
+<samba_getwd_cache>use a cache for getwd( ) calls</samba_getwd_cache>
+<samba_getwd_cache_text>caches the path to the current directory, avoiding long tree-walks to discover it. It's a nice performance improvement on a printer server</samba_getwd_cache_text>
 <samba_info_latest_ad_explain>In order to get correctly connected trough a Windows Active directory server, check that your server have the latest Samba version.You using the </samba_info_latest_ad_explain>
 <SAMBA_MAIN_PARAMS>Samba core parameters</SAMBA_MAIN_PARAMS>
 <SAMBA_MAIN_PARAMS_TEXT>Define Samba main parameters such has worgroup name, netbios name, winbind settings...</SAMBA_MAIN_PARAMS_TEXT>
@@ -1654,6 +1771,15 @@ On Filesystems that do not support it, preallocation is probably an expensive op
 see reduced performance and risk to let clients run into timeouts when creating large files.[br]
 Examples are ext3, ZFS, HFS+ and most others, so be aware if you activate this setting on those filesystems
 </samba_strict_allocate_text>
+<samba_strict_locking>handling of file locking</samba_strict_locking>
+<samba_strict_locking_text>Sets the strict locking option and causes Samba to check for locks on every access,
+ not just when asked to by the client. The option is primarily a bug-avoidance feature, and can prevent ill-behaved DOS and 
+ Windows applications from corrupting shared files.[br]However, it is slow and should typically be avoided</samba_strict_locking_text>
+<samba_sync_always>Always synchronize</samba_sync_always>
+<samba_sync_always_text>used to "sync always" and causes Samba to flush every write to disk.[br]
+This is good if your server crashes constantly, but the performance costs are immense.[br]
+SMB servers normally use oplocks and automatic reconnection to avoid the ill effects of crashes,
+ so setting this option is not normally necessary</samba_sync_always_text>
 <samba_virtual_explain>Virtual servers are a technique for creating the illusion of multiple NetBIOS servers on the network,
 when in reality there is only one.[br]
 The technique is simple to implement: a machine simply registers more than one NetBIOS name in association with its IP address.[br]
@@ -1691,6 +1817,7 @@ To solve this problem, Microsoft now provides the Windows Internet Naming Servic
 <Seek_Time_Performance_text>Average performance of seek operations of the magnetic heads.[br]
 If this attribute is decreasing, it is a sign of problems in the mechanical subsystem</Seek_Time_Performance_text>
 <select_messages>Select messages</select_messages>
+<select_this_ou>Select this organization</select_this_ou>
 <sender_ns_addrs>sender nameserver address</sender_ns_addrs>
 <sendmail_request_form>Thank for your registration, 
 to complete your registration and enter to the system
@@ -1701,6 +1828,7 @@ click on the link below
 <server_url>Server URL</server_url>
 <service_informations>Service informations</service_informations>
 <service_parameters>Service Parameters</service_parameters>
+<settings_after_reboot>Settings will take effect after reboot the computer</settings_after_reboot>
 <set_a_score>Set a score</set_a_score>
 <set_cachesize>size of the shared memory buffer pool</set_cachesize>
 <set_cachesize_text>
@@ -1797,6 +1925,7 @@ Minimal threads is 2 and will safe minimal 20Mb memory[br]In the opposite, if yo
 <SMBChangeShareName_text>Click on the link in order to change the share name</SMBChangeShareName_text>
 <smbconfig>smb.conf</smbconfig>
 <smbservices>Services</smbservices>
+<smb_perf_explain>The following Samba options will affect performance if they are not set correctly.</smb_perf_explain>
 <smb_RootDir_text>All directories tasks will started on the specifed directory</smb_RootDir_text>
 <smtpd_data_restrictions>DATA Protocol restrictions</smtpd_data_restrictions>
 <smtpd_data_restrictions_explain>Optional access restrictions that the Postfix SMTP server applies in the context of the SMTP DATA command</smtpd_data_restrictions_explain>
@@ -1826,6 +1955,14 @@ Set the sender and recipients (separated by a comma).
 <Spin_Up_Time>Spin up time</Spin_Up_Time>
 <Spin_Up_Time_text>Time needed by spindle to spin-up</Spin_Up_Time_text>
 <sql_error_retry>SQL Error (retry next)</sql_error_retry>
+<squidcacheperf_howto>Your proxy service is intended to store internet objects into the server local disks.[br]
+In this case, when users requesting objects, objects should be downloaded directly from the proxy and not from Internet.[br]
+This to safe your Internet bandwith and to speed the retreival object trough the local network (10Mb/100Mb/1Gb).[br]
+If your cache is under 50% performance ratio, this means your server is misconfigured and you have to change some parameters.[br]
+It depends on what kind of objects your users downloading from Internet.[br]
+For example streaming videos cannot be cached by your server but their filesize are calculated in statistics.[br]
+So if you using a lot of websites that provides streaming, it is normal that you have a lower performance.[br]
+You have several ways to increase the caching performance:</squidcacheperf_howto>
 <squid_blk_explain>This the update status of Artica community blacklist database[br]These update are important because it will drive statistics and url filtering processes</squid_blk_explain>
 <SQUID_STATS>Squid Proxy Cache web statistics</SQUID_STATS>
 <SQUID_STATS_TEXT>Squid Statistics area is a Web frontend that provides proxy statistics with charts and graphs and categorized websites</SQUID_STATS_TEXT>
@@ -1896,6 +2033,7 @@ BOOTP clients are unlikely to support this option.[br]Some DHCP clients will sup
 If the value of this attribute is decreasing there is a high probability that there is a problem with the disk</Throughput_Performance_text>
 <TimeSynchronization>Time synchronization</TimeSynchronization>
 <time_in_seconds>Number of seconds</time_in_seconds>
+<today>Today</today>
 <today_downloaded_flow>Today: Downloaded flow</today_downloaded_flow>
 <tomcat_admin_interface>Tomcat Admin web interface</tomcat_admin_interface>
 <top10>TOP 10</top10>
@@ -1999,6 +2137,7 @@ Do you want to perform this operation ?[br]task will be performed in background 
 <wbl_resolv_mx>Resolv MX</wbl_resolv_mx>
 <wbl_resolv_mx_explain>If checked when you add an email or a domain, Artica will try to resolv domain MX servers and add them to the IP Whitelist</wbl_resolv_mx_explain>
 <webadministration_console>Web administration console</webadministration_console>
+<webservers_status>Webservers status</webservers_status>
 <websites_number>Websites number</websites_number>
 <web_console>Web Console</web_console>
 <web_user>Web username</web_user>
@@ -2013,6 +2152,9 @@ a shared calendar, a virtual office ...
 </welcome_organization_register>
 <welcome_registration_text>Welcome registration text</welcome_registration_text>
 <what_users_do>What your users doing ?</what_users_do>
+<WHAT_USER_SEE>What user see ?</WHAT_USER_SEE>
+<WHAT_USER_SEE_SMB_TEXT>Display what this user see when browsing this server</WHAT_USER_SEE_SMB_TEXT>
+<whitelisted>whitelisted</whitelisted>
 <whitelist_global_add_explain>
 Put here domains or email addresses (separated by a carriage return) you want to allow.[br]
 You can set patterns in this way :[br]
@@ -2023,6 +2165,7 @@ You can set patterns in this way :[br]
 </whitelist_global_add_explain>
 <whitelist_global_explain>This section disbale content filters about domains listed here.[br]This is a global white list that did not perform recipient checks.[br]
 So domains here will allow senders to pass trough filters without checking any recipient</whitelist_global_explain>
+<white_listed_mode>Whitelist mode</white_listed_mode>
 <winbind_user_password>winbind user password</winbind_user_password>
 <WINDOWS_DNS_SUFFIX>Windows server DNS suffix</WINDOWS_DNS_SUFFIX>
 <WINDOWS_NAME_SERVICE_NOT_KNOWN>Unable to resolve Windows server hostname</WINDOWS_NAME_SERVICE_NOT_KNOWN>
@@ -2043,7 +2186,9 @@ The default value of 8 should be sufficient for most purposes</Wthreads_explain>
 <www_ForwardTo>New website to forward</www_ForwardTo>
 <www_humanitarian_associations>All sites related to humanitarian associations</www_humanitarian_associations>
 <www_imagehosting>All images/pitures storages web sites</www_imagehosting>
+<www_internal>Internal/Intranet websites ip or hostnames should used in your LAN</www_internal>
 <www_malware>infected web sites or allow to download/store malwares, virus...</www_malware>
+<www_maps>All websites helping find streets or objects position in a map, including driving directions, transport maps...</www_maps>
 <www_reale_state_office>Sites about all types of realestate, bying and selling homes, finding appartments for rent and selling</www_reale_state_office>
 <www_translators>All sites offer language translations</www_translators>
 <www_whitelisting>WhiteListing method</www_whitelisting>
@@ -2065,6 +2210,7 @@ When user perform this categorize operation, you can receive a notification and 
 <ZarafaAllowToReinstall>Allow daemon to re-install to fix issues</ZarafaAllowToReinstall>
 <zarafaMbxLang>Mailbox folders language</zarafaMbxLang>
 <ZarafaStoreOutside>Store attachments outside database</ZarafaStoreOutside>
+<ZarafaWebNTLM>Use apache authentication method</ZarafaWebNTLM>
 <zarafa_indexer_explain>This feature offers full text searching capabilities for the Zarafa Server.[br]
 The service will periodically index all mails, and optionally their attachments, from the server.[br]
 When searching for a particular mail, the required time to find the requested emails will be seriously reduced.[br]

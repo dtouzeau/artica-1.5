@@ -98,7 +98,7 @@ between the \. escape characters.
 </ExcludeURLExplain>
 <flow>Flow</flow>
 <globalsettings>Global Settings</globalsettings>
-<icapserver_1>process management settings</icapserver_1>
+<icapserver_1>Service parameters</icapserver_1>
 <icapserver_2>icapserver protocol settings</icapserver_2>
 <IdleChildren>Idle children</IdleChildren>
 <IdleChildren_text>The number of child processes are not used in the connections processing</IdleChildren_text>

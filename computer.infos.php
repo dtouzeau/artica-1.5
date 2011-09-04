@@ -1033,7 +1033,7 @@ function popup_services(){
 	
 	if($users->BACKUPPC_INSTALLED){
 		$EnableBackupPc=$sock->GET_INFO("EnableBackupPc");
-		if($EnableBackupPc==null){$EnableBackupPc=1;}
+		if(!is_numeric($EnableBackupPc)){$EnableBackupPc=0;}
 		if($EnableBackupPc==1){
 			$backuppc=Paragraphe("64-backup.png","{APP_BACKUPPC}","{BACKUP_COMPUTER_TEXT}","javascript:Loadjs('domains.computer.backuppc.php?uid=". base64_encode($uid)."')");
 		}

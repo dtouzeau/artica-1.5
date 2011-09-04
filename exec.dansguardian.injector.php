@@ -104,7 +104,9 @@ if (!$handle = opendir("/var/log/artica-postfix/dansguardian-stats2")) {
 	$c=0;
 	$t=0;
 	$q=new mysql();
-	$prefixsql="INSERT IGNORE INTO dansguardian_events (`sitename`,`uri`,`TYPE`,`REASON`,`CLIENT`,`zDate`,`zMD5`,`remote_ip`,`country`,`QuerySize`,`uid`) VALUES ";
+	$q->BuildTables();
+	$dansguardian_events="dansguardian_events_".date('Ym');
+	$prefixsql="INSERT IGNORE INTO $dansguardian_events (`sitename`,`uri`,`TYPE`,`REASON`,`CLIENT`,`zDate`,`zMD5`,`remote_ip`,`country`,`QuerySize`,`uid`,`cached`) VALUES ";
 	while (false !== ($filename = readdir($handle))) {
 		$targetFile="/var/log/artica-postfix/dansguardian-stats2/$filename";
 		if(!is_file($targetFile)){
@@ -117,6 +119,10 @@ if (!$handle = opendir("/var/log/artica-postfix/dansguardian-stats2")) {
 		}
 		
 		$datas=@file_get_contents($targetFile);
+		if(trim($datas)==null){
+			events_tail("dansguardian-stats2:: $filename is empty ! " .__LINE__);
+			continue;
+		}
 		$datas=str_replace("Lao People's Democratic Republic","Lao People\'s Democratic Republic",$datas);
 		$sql="$prefixsql $datas";
 		$c++;
@@ -138,11 +144,6 @@ if (!$handle = opendir("/var/log/artica-postfix/dansguardian-stats2")) {
 		}
 	}
 
-	
-	
-	
-	
-	
 }
 
 function PaseUdfdbGuard(){

@@ -18,14 +18,69 @@ if(isset($_GET["category-details"])){categories_details();exit;}
 if(isset($_GET["category-details-md"])){categories_details_list();exit;}
 if(isset($_GET["category-details-md-title"])){categories_details_title();exit;}
 if(isset($_GET["pattern-database-title"])){blacklist_title();exit;}
+if(isset($_GET["events"])){blacklist_events();exit;}
 
 
 
 if(isset($_POST["reprocess"])){reprocess();exit;}
+if(isset($_POST["update-now"])){update_now();exit;}
+
+
 tabs();
 
 
 function tools(){
+	$page=CurrentPageName();
+	$users=new usersMenus();
+	$tpl=new templates();	
+	$update=Paragraphe("folder-update.png", "{update_now}", "{blklist_update_now_text}","javascript:UpdateBLKNOW()");
+	$tr[]=$update;
+
+
+	
+	$tables[]="<table style='width:100%'><tr>";
+	$t=0;
+	while (list ($key, $line) = each ($tr) ){
+			$line=trim($line);
+			if($line==null){continue;}
+			$t=$t+1;
+			$tables[]="<td valign='top'>$line</td>";
+			if($t==2){$t=0;$tables[]="</tr><tr>";}
+			}
+	
+	if($t<2){
+		for($i=0;$i<=$t;$i++){
+			$tables[]="<td valign='top'>&nbsp;</td>";				
+		}
+	}	
+	
+	$tables[]="</table>";	
+	
+	
+	$scripts="
+	<div id='animateBlcklist'></div>
+	". @implode("\n", $tables)."
+	<script>
+		var x_UpdateBLKNOW= function (obj) {
+		var results=obj.responseText;
+		if(results.length>3){alert(results);}
+		 RefreshTab('squid_main_blacklists');
+		}	
+	
+		function UpdateBLKNOW(){
+				var XHR = new XHRConnection();
+				XHR.appendData('update-now','yes');
+				AnimateDiv('animateBlcklist');
+				XHR.sendAndLoad('$page', 'POST',x_UpdateBLKNOW);		
+			
+			}
+		
+		
+	</script>
+	
+	";
+	
+	echo $tpl->_ENGINE_parse_body($scripts);
 	
 	
 	
@@ -40,6 +95,7 @@ function tabs(){
 	$tpl=new templates();
 	$array["status"]='{status}';
 	$array["tools"]='{tools}';
+	$array["events"]='{events}';
 	
 	
 	while (list ($num, $ligne) = each ($array) ){
@@ -115,7 +171,21 @@ function blacklist_title(){
 	$date=GetLastUpdateDate();
 	$rows=$q->COUNT_ROWS("dansguardian_community_categories", "artica_backup");
 	$rows=FormatNumber($rows);	
-	$html="<div style='float:right'>".imgtootltip("refresh-24.png","{refresh}","refreshDatabasesTitle()")."</div>{pattern_database_version}:&nbsp;$date&nbsp;|&nbsp;$rows&nbsp;{rows}";
+	$sql="SELECT avg(progress) as pourcent FROM updates_categories  WHERE filesize>0";
+	$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"artica_backup"));
+	$pourcent=intval($pourcent);
+	$purc=pourcentage($pourcent);
+	$html="<div style='float:right'>".imgtootltip("refresh-24.png","{refresh}","refreshDatabasesTitle()")."</div>
+	<table><tbody>
+	<tr>
+	<td width=100% style='font-size:16px'>
+	{pattern_database_version}:&nbsp;$date&nbsp;|&nbsp;$rows&nbsp;{rows}
+	</td>
+	<td width=1%>$purc</td>
+	</tr>
+	</tbody>
+	</table>
+	";
 	$tpl=new templates();
 	$page=CurrentPageName();	
 	echo $tpl->_ENGINE_parse_body($html);
@@ -320,3 +390,61 @@ function reprocess(){
 	$sock->getFrameWork("squid.php?reprocess-database=$category");
 	
 }
+
+function update_now(){
+$sock=new sockets();
+	$sock->getFrameWork("squid.php?update-database-blacklist=yes");	
+}
+
+function blacklist_events(){
+	$tpl=new templates();
+	$page=CurrentPageName();	
+	$html="<center style='width:100%;height:450px;overflow:auto'>
+<table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
+<thead class='thead'>
+	<tr>
+		<th width=1%>". imgtootltip("refresh-24.png","{refresh}","RefreshTab('squid_main_blacklists')")."</th>
+		<th>{date}</th>
+		<th>{events}</th>
+	</tr>
+</thead>
+<tbody class='tbody'>";		
+	$sql="SELECT ID,zDate,`text` FROM events WHERE `text` LIKE '%BlacklistsDB%' ORDER BY zDate DESC LIMIT 0,100";
+	$q=new mysql();
+	$results=$q->QUERY_SQL($sql,"artica_events");
+	if(!$q->ok){
+		echo "<H2>Fatal error $sql $q->mysql_error</H2>";
+	}
+	$num=mysql_num_rows($results);	
+	
+	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}	
+		$color="black";
+		if(preg_match("#BlacklistsDB\]\s+(.+)#", $ligne["text"],$re)){$ligne["text"]=$re[1];}
+		$time=strtotime($ligne["zDate"]);
+		
+		$distanceOfTimeInWord=distanceOfTimeInWords($time,time());
+		$html=$html."
+		<tr class=$classtr>
+			<td width=1% colspan=2 nowrap style='font-size:14px;font-weight:bold;color:$color'>	<a href=\"javascript:blur();\" OnClick=\"javascript:articaShowEvent({$ligne["ID"]});\"
+				style='text-decoration:underline'>{$ligne["zDate"]}</a></td>
+			<td style='font-size:13px;font-normal;color:$color'>
+				<a href=\"javascript:blur();\" OnClick=\"javascript:articaShowEvent({$ligne["ID"]});\">{$ligne["text"]}</A><div><i style='font-size:11px'>$distanceOfTimeInWord</i></div></td>	
+		</tr>";	
+	}
+	$html=$html."</table>
+	<script>
+	function articaShowEvent(ID){
+		 YahooWin6('750','artica.events.php?ShowID='+ID,'EV::'+ID);
+	}
+
+	</script>
+	
+	
+	";
+
+echo $tpl->_ENGINE_parse_body($html);	
+	
+	
+}
+

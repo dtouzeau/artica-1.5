@@ -1471,14 +1471,16 @@ function organization_users_find_member(){
 	if($tofind==null){$tofind='*';}else{$tofind="*$tofind*";}
 	$filter="(&(objectClass=userAccount)(|(cn=$tofind)(mail=$tofind)(displayName=$tofind)(uid=$tofind) (givenname=$tofind)))";
 	$attrs=array("displayName","uid","mail","givenname","telephoneNumber","title","sn","mozillaSecondEmail","employeeNumber","sAMAccountName");
-	$dn="ou=$ou,dc=organizations,$ldap->suffix";
+	
 	
 	if($EnableManageUsersTroughActiveDirectory==1){
 		$cc=new ldapAD();
 		$hash=$cc->find_users($ou,$tofind);
 	}else{
 		$ldap=new clladp();
+		$dn="ou=$ou,dc=organizations,$ldap->suffix";
 		$hash=$ldap->Ldap_search($dn,$filter,$attrs,150);
+		
 	}
 	
 	
@@ -1486,8 +1488,9 @@ function organization_users_find_member(){
 	$users=new user();
 	
 	$number=$hash["count"];
+	if(!is_numeric($number)){$number=0;}
 	$bg="#FFFFFF";
-	writelogs("Find users $tofind in ou $ou DN:$dn (encoded={$_GET["ou"]}) $number items",__FUNCTION__,__FILE__,__LINE__);
+	writelogs("Find users $tofind in ou $ou DN:\"$dn\" (encoded={$_GET["ou"]}) $number items",__FUNCTION__,__FILE__,__LINE__);
 	$html="
 	
 	

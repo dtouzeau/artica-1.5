@@ -661,7 +661,11 @@ if(!$ldap->ExistsDN($dn)){
 
 
 function js(){
+		$jsstart="AutofsConfigLoad()";
+		if(isset($_GET["windows"])){$jsstart="AutofsConfigLoadPopup()";}
 		$page=CurrentPageName();
+		$tpl=new templates();
+		$title=$tpl->_ENGINE_parse_body("{system_log}");
 		$html="
 		
 		
@@ -669,7 +673,11 @@ function js(){
 			$('#BodyContent').load('$page?tabs=yes');
 			}
 			
-		AutofsConfigLoad();
+		function AutofsConfigLoadPopup(){
+			YahooWin4(600,'$page?tabs=yes','$title');
+			}					
+			
+		$jsstart;
 		";
 		echo $html;
 		
@@ -765,7 +773,7 @@ function tabs(){
 	
 	
 	echo "
-	<div id=main_config_autofs style='width:100%;height:750px;overflow:auto'>
+	<div id=main_config_autofs style='width:100%;height:550px;overflow:auto'>
 		<ul>". implode("\n",$html)."</ul>
 	</div>
 		<script>

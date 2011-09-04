@@ -623,17 +623,6 @@ if processname<>'artica-backup' then begin
    end;
 end;
 
-
-if length(SYS.GET_MYSQL('database_password'))=0 then begin
-   logs.Syslogs('Starting......: Mysql account is not set, create a default one');
-   ldap:=topenldap.Create;
-   SYS.set_MYSQL('database_password',ldap.ldap_settings.password );
-   SYS.set_MYSQL('database_admin',ldap.ldap_settings.admin );
-   fpsystem(paramStr(0)+' --change-mysqlroot');
-end;
-
-
-
 if SYS.PROCESS_EXIST(PID_NUM()) then begin
      if SYS.GET_INFO('EnableMysqlFeatures')='0' then begin
         logs.Syslogs('Starting......: Mysql is disabled by "EnableMysqlFeatures" stop it...');

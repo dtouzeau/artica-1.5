@@ -15,7 +15,12 @@
 
 if(isset($_GET["listnics"])){zlistnics_tabs();exit;}
 if(isset($_GET["listnics2"])){zlistnics();exit;}
+if(isset($_GET["nic-builder"])){zlistnics_builder();exit;}
 if(isset($_GET["js-virtual-add"])){virtual_js_add();exit;}
+if(isset($_POST["RebuildMyNic"])){RebuildMyNic();exit;}
+if(isset($_POST["OVHNetConfig"])){OVHNetConfig();exit;}
+
+
 
 if(isset($_GET["BuildNetConf"])){BuildNetConf();exit;}
 if($_GET["main"]=="listnics"){zlistnics_tabs();exit;}
@@ -400,13 +405,18 @@ function zlistnics_tabs(){
 
 function zlistnics(){
 	$sock=new sockets();
+	$users=new usersMenus();
 	$snortInterfaces=array();
 	$LXCEthLocked=$sock->GET_INFO("LXCEthLocked");
-	
+	$ASDEBIAN=0;
+	if($users->AS_DEBIAN_FAMILY){$ASDEBIAN=1;}
 	if(!is_numeric($LXCEthLocked)){$LXCEthLocked=0;}
 	
 	$LXCInterface=$sock->GET_INFO("LXCInterface");
 	$DisableNetworksManagement=$sock->GET_INFO("DisableNetworksManagement");
+	$OVHNetConfig=$sock->GET_INFO("OVHNetConfig");
+	if(!is_numeric($OVHNetConfig)){$OVHNetConfig=0;}
+	
 	if(!is_numeric($DisableNetworksManagement)){$DisableNetworksManagement=0;}
 	$page=CurrentPageName();
 	$tpl=new templates();
@@ -490,25 +500,8 @@ function zlistnics(){
 			if($snortInterfaces[trim($val)]==1){$img_on="64-win-nic-snort.png";}
 		}
 		
-		$tr[]="
-		<table style='width:320px;margin:3px;padding:3px; 
-		OnMouseOver=\";this.style.cursor='pointer';this.style.background='#F5F5F5';\"
-		OnMouseOut=\";this.style.cursor='default';this.style.background='#FFFFFF';\"
-		class=form>
-		<tr>
-			<td valign='top' width=1%><img src='img/$img_on'></td>
-			<td valign='top' style='padding:4px'>
-				<div OnClick=\"$js\">$text</div>
-				<table style='width:100%'>
-				<tr>
-					<td width=1% nowrap><i>$val</td>
-					<td width=99%><div style='text-align:right'>". imgtootltip("plus-16.png","{add_virtual_ip_addr_explain_js}","Loadjs('$page?js-add-nic=$val')")."</div></td>
-				</tr>
-				</table>
-			</td>
-		</tr>
-		</table>
-		";
+		$tr[]="<div id='zlistnic-info-$val'></div>";
+		$jsnics[]="LoadAjax('zlistnic-info-$val','$page?nic-builder=$val');";
 
 		}
 		
@@ -529,14 +522,20 @@ if($t<2){
 }	
 
 	$html=@implode("\n", $tables);
-		
+	$ovh_specific_config=$tpl->_ENGINE_parse_body("{ovh_specific_config}");	
 	echo "
 	<div style='text-align:right'>". button("$apply_network_configuration","BuildNetConf()")."</div>
 	<div id='NetworkManager-status'></div>
 	$html
 	
 	
-
+	<table style='width:100%' class=form>
+	<tr>
+	<td width=99%>&nbsp;</td>
+	<td widh=1% nowrap class=legend>$ovh_specific_config:</td>
+	<td>". Field_checkbox("OVHNetConfig", 1,$OVHNetConfig,"OVHNetConfigSave()")."</td>
+	</tr>
+	</table>
 	
 	<script>
 		LoadAjax('main_config_hostname','$page?popup-hostname=yes');
@@ -546,7 +545,23 @@ if($t<2){
 			var results=obj.responseText;
 			if(results.length>0){alert(results);}
 			
+		}	
+
+		function OVHNetConfigSave(){
+			var DisableNetworksManagement=$DisableNetworksManagement;
+			if(DisableNetworksManagement==1){alert('$ERROR_NO_PRIVS');return;}	
+			var XHR = new XHRConnection();
+			if(document.getElementById('OVHNetConfig').checked){XHR.appendData('OVHNetConfig',1);}else{XHR.appendData('OVHNetConfig',0);}
+			XHR.sendAndLoad('$page', 'POST',X_BuildNetConf);
+		}
+		
+		function CheckDEB(){
+			var ASDEBIAN=$ASDEBIAN;
+			document.getElementById('OVHNetConfig').disabled=true;
+			if(ASDEBIAN==1){document.getElementById('OVHNetConfig').disabled=false;}
+		
 		}		
+		
 
 		function BuildNetConf(){
 			var DisableNetworksManagement=$DisableNetworksManagement;
@@ -557,15 +572,132 @@ if($t<2){
 				XHR.sendAndLoad('$page', 'GET',X_BuildNetConf);
 			}
 		}
+	". @implode("\n", $jsnics)."
 
-
-		
+		CheckDEB();
 	</script>
 	
 	";
 	}
 	
+function zlistnics_builder(){
+	$sock=new sockets();
+	$snortInterfaces=array();
+	$LXCEthLocked=$sock->GET_INFO("LXCEthLocked");
+	
+	if(!is_numeric($LXCEthLocked)){$LXCEthLocked=0;}
+	
+	$LXCInterface=$sock->GET_INFO("LXCInterface");
+	$DisableNetworksManagement=$sock->GET_INFO("DisableNetworksManagement");
+	if(!is_numeric($DisableNetworksManagement)){$DisableNetworksManagement=0;}
+	$page=CurrentPageName();
+	$tpl=new templates();
+	$apply_network_configuration=$tpl->_ENGINE_parse_body("{apply_network_configuration}");
+	$ERROR_NO_PRIVS=$tpl->javascript_parse_text("{ERROR_NO_PRIVS}");
+	$apply_network_configuration_warn=$tpl->javascript_parse_text("{apply_network_configuration_warn}");
+	
+	$users=new usersMenus();
+	if($users->SNORT_INSTALLED){
+		$EnableSnort=$sock->GET_INFO("EnableSnort");
+		if($EnableSnort==1){
+			$snortInterfaces=unserialize(base64_decode($sock->GET_INFO("SnortNics")));
+		}
+	}	
+	
+	$tcp=new networking();
+	
 
+	
+	
+		$val=$_GET["nic-builder"];
+		writelogs("Found: $val",__FUNCTION__,__FILE__,__LINE__);
+		$val=trim($val);
+		if(preg_match('#master#',$val)){continue;}
+		if(preg_match("#^veth.+?#",$val)){continue;}
+		if(preg_match("#^tunl[0-9]+#",$val)){continue;}
+		if(preg_match("#^dummy[0-9]+#",$val)){continue;}
+		if(preg_match("#^gre[0-9]+#",$val)){continue;}
+		if(preg_match("#^ip6tnl[0-9]+#",$val)){continue;}
+		if(preg_match("#^sit[0-9]+#",$val)){continue;}
+		if(preg_match("#^vlan[0-9]+#",$val)){continue;}
+		
+		
+		$nic=new system_nic();
+		if(!$nic->unconfigured){		
+			if($LXCEthLocked==1){if($val==$LXCInterface){
+				writelogs("LXCEthLocked:$LXCEthLocked; $val==$LXCInterface -> abort",__FUNCTION__,__FILE__,__LINE__);
+				continue;
+				}
+			}
+		}
+		
+		if(trim($val)==null){continue;}
+		$tcp->ifconfig(trim($val));
+		$text=listnicinfos(trim($val),"Loadjs('$page?script=netconfig&nic=$val')");
+		$js="javascript:Loadjs('system.nic.edit.php?nic=$val')";
+		if(!$tcp->linkup){
+			$img_on="64-win-nic-off.png";
+			
+		}else{
+			$img_on="64-win-nic.png";
+			if($snortInterfaces[trim($val)]==1){$img_on="64-win-nic-snort.png";}
+		}
+		
+		$html="
+		<table style='width:320px;margin:3px;padding:3px; 
+		OnMouseOver=\";this.style.cursor='pointer';this.style.background='#F5F5F5';\"
+		OnMouseOut=\";this.style.cursor='default';this.style.background='#FFFFFF';\"
+		class=form>
+		<tr>
+			<td valign='top' width=1%><img src='img/$img_on'></td>
+			<td valign='top' style='padding:4px'>
+				<div OnClick=\"$js\">$text</div>
+				<table style='width:100%'>
+				<tr>
+					<td width=1% nowrap><i>$val</td>
+					
+					<td width=99%><div style='text-align:right'>". imgtootltip("service-restart-16.png","{rebuild}","RebuildMyNic$val()")."</div></td>
+					<td width=99%><div style='text-align:right'>". imgtootltip("16-refresh.png","{refresh}","RefreshMyNic$val()")."</div></td>
+					<td width=99%><div style='text-align:right'>". imgtootltip("plus-16.png","{add_virtual_ip_addr_explain_js}","Loadjs('$page?js-add-nic=$val')")."</div></td>
+				</tr>
+				</table>
+			</td>
+		</tr>
+		</table>
+		
+		<script>
+			function RefreshMyNic$val(){
+				LoadAjax('zlistnic-info-$val','$page?nic-builder=$val');
+			}
+
+		var X_RebuildMyNic$val= function (obj) {
+			var results=obj.responseText;
+			if(results.length>3){alert(results);}
+			RefreshMyNic$val();
+		}		
+
+		function  RebuildMyNic$val(){
+			var DisableNetworksManagement=$DisableNetworksManagement;
+			if(DisableNetworksManagement==1){alert('$ERROR_NO_PRIVS');return;}	
+			if(confirm('$apply_network_configuration_warn')){	
+				var XHR = new XHRConnection();
+				XHR.appendData('RebuildMyNic','$val');
+				AnimateDiv('zlistnic-info-$val');
+				XHR.sendAndLoad('$page', 'POST',X_RebuildMyNic$val);
+			}
+		}
+		
+
+		
+		</script>
+		
+		
+		";
+
+		echo $tpl->_ENGINE_parse_body($html);
+
+	}
+	
 
 function listnicinfos($nicname,$js=null){
 	$sock=new sockets();
@@ -1672,7 +1804,17 @@ function NetworkManager_check(){
 	
 }
 
+function RebuildMyNic(){
+	$eth=$_POST["RebuildMyNic"];
+	$sock=new sockets();
+	$sock->getFrameWork("network.php?ifup-ifdown=$eth");
+	
+}
 
+function OVHNetConfig(){
+	$sock=new sockets();
+	$sock->SET_INFO("OVHNetConfig", $_POST["OVHNetConfig"]);
+}
 
 //if(isset($_GET["cdir-ipaddr"])){virtual_cdir();exit;}
 	

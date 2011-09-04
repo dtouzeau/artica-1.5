@@ -1526,6 +1526,24 @@ begin
     pid:=AMAVISD_PID();
     if not SYS.PROCESS_EXIST(pid) then begin
        writeln('Stopping amavisd-new.....: Already stopped');
+       pid:=SYS.PIDOF(AMAVISD_BIN_PATH());
+       writeln('Stopping amavisd-new.....: check ghost processes result: '+pid);
+       if sys.PROCESS_EXIST(pid) then begin
+          writeln('Stopping amavisd-new.....: force stopping childs '+ sys.PROCESSES_LIST(AMAVISD_BIN_PATH()));
+          logs.OutputCmd('/bin/kill -9 '+sys.PROCESSES_LIST(AMAVISD_BIN_PATH()));
+          count:=0;
+
+       while SYS.PROCESS_NUMBER(AMAVISD_BIN_PATH())>0 do begin
+             sleep(500);
+             write('.');
+             inc(count);
+             if count>10 then begin
+                writeln('Stopping amavisd-new.....: Timeout while force stopping childs ');
+                break;
+             end;
+       end;
+
+      end;
        exit;
     end;
 
@@ -1563,8 +1581,9 @@ if SYS.PROCESS_EXIST(pid) then begin
 end;
 
 
-
+  writeln('Stopping amavisd-new.....: check processes for '+AMAVISD_BIN_PATH());
   pid:=SYS.PIDOF(AMAVISD_BIN_PATH());
+   writeln('Stopping amavisd-new.....: check processes result '+pid);
   if sys.PROCESS_EXIST(pid) then begin
        writeln('Stopping amavisd-new.....: force stopping childs '+ sys.PROCESSES_LIST(AMAVISD_BIN_PATH()));
        logs.OutputCmd('/bin/kill -9 '+sys.PROCESSES_LIST(AMAVISD_BIN_PATH()));

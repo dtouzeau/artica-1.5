@@ -9,6 +9,7 @@ include_once(dirname(__FILE__).'/ressources/class.kav4proxy.inc');
 include_once(dirname(__FILE__).'/framework/class.unix.inc');
 
 if($argv[1]=="--reload"){BuilAndReload();die();}
+if($argv[1]=="--umount"){umountfs();die();}
 
 build();
 function build(){
@@ -25,6 +26,18 @@ function BuilAndReload(){
 	build();
 	shell_exec("/etc/init.d/kav4proxy reload");
 	
+}
+
+function umountfs(){
+	$unix=new unix();
+	$mount=$unix->find_program("mount");
+	$umount=$unix->find_program("umount");	
+	$kav=new Kav4Proxy();
+	if($kav->is_tmpfs_mounted()){
+		echo "Starting......: Kav4proxy unmounting filesystem\n";
+		shell_exec("$umount -f /tmp/Kav4proxy");
+		shell_exec("/bin/rm -rf /tmp/Kav4proxy");
+	}
 }
 
 ?>

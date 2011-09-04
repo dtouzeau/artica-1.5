@@ -50,7 +50,9 @@ public
     function     DRUSH7_VERSION():string;
     function     APP_MSKTUTIL_VERSION():string;
     function     PIWIK_VERSION():string;
-
+    function     JOOMLA17_VERSION():string;
+    function     APP_MOD_PAGESPEED():string;
+    function     APP_WORDPRESS():string;
 END;
 
 implementation
@@ -1085,9 +1087,109 @@ end;
     RegExpr.free;
 end;
 //#####################################################################################
+function ttoolsversions.JOOMLA17_VERSION():string;
+var
+   l:Tstringlist;
+   tmpstr,binpath:string;
+   RegExpr:TRegExpr;
+   i:integer;
+   D:boolean;
+begin
+if not FileExists('/usr/local/share/artica/joomla17_src/includes/version.php') then exit;
+result:=SYS.GET_CACHE_VERSION('APP_JOOMLA17');
+if length(result)>2 then exit;
+l:=Tstringlist.Create;
+l.LoadFromFile('/usr/local/share/artica/joomla17_src/includes/version.php');
+RegExpr:=TRegExpr.Create;
+if D then writeln('Lines:',l.Count);
+RegExpr.Expression:='public.+?RELEASE.+?([0-9\.]+)';
+for i:=0 to l.Count-1 do begin
+    if RegExpr.Exec(l.Strings[i]) then begin
+       result:=RegExpr.Match[1];
+       break;
+    end;
+end;
+     SYS.SET_CACHE_VERSION('APP_JOOMLA17',result);
+    l.free;
+    RegExpr.free;
+SYS.SET_CACHE_VERSION('APP_JOOMLA17',result);
+logs.Debuglogs('APP_JOOMLA17:: -> ' + result);
+end;
+//##############################################################################
+function ttoolsversions.APP_MOD_PAGESPEED():string;
+var
+   l:Tstringlist;
+   tmpstr,binpath:string;
+   RegExpr:TRegExpr;
+   i:integer;
+   D:boolean;
+begin
+if not FileExists(SYS.LOCATE_APACHE_MODULES_PATH()+'/mod_pagespeed.so') then exit;
+result:=SYS.GET_CACHE_VERSION('APP_MOD_PAGESPEED');
+if length(result)>2 then exit;
+tmpstr:=logs.FILE_TEMP();
+RegExpr:=TRegExpr.Create;
+if FileExists('/usr/bin/dpkg') then begin
+   fpsystem('/usr/bin/dpkg -l >'+tmpstr+' 2>&1');
+   RegExpr.Expression:='mod-pagespeed.*?\s+([0-9\.a-z\-]+)';
 
+end else begin
+    if FileExists('/bin/rpm') then begin
+       fpsystem('/bin/rpm -qa >'+tmpstr+' 2>&1');
+       RegExpr.Expression:='mod-pagespeed.*?-([0-9\.a-z\-]+)';
+    end;
+end;
+if not FileExists(tmpstr) then exit;
 
+l:=Tstringlist.Create;
+l.LoadFromFile(tmpstr);
 
+if D then writeln('Lines:',l.Count);
+
+for i:=0 to l.Count-1 do begin
+    if RegExpr.Exec(l.Strings[i]) then begin
+       result:=RegExpr.Match[1];
+       break;
+    end;
+end;
+     SYS.SET_CACHE_VERSION('APP_MOD_PAGESPEED',result);
+    l.free;
+    RegExpr.free;
+SYS.SET_CACHE_VERSION('APP_MOD_PAGESPEED',result);
+logs.Debuglogs('APP_MOD_PAGESPEED:: -> ' + result);
+end;
+//##############################################################################
+function ttoolsversions.APP_WORDPRESS():string;
+var
+   l:Tstringlist;
+   tmpstr,binpath:string;
+   RegExpr:TRegExpr;
+   i:integer;
+   D:boolean;
+   fileToCheck:string;
+begin
+fileToCheck:='/usr/local/share/artica/wordpress_src/wp-includes/version.php';
+if not FileExists(fileToCheck) then exit;
+result:=SYS.GET_CACHE_VERSION('APP_WORDPRESS');
+if length(result)>2 then exit;
+l:=Tstringlist.Create;
+l.LoadFromFile(fileToCheck);
+RegExpr:=TRegExpr.Create;
+if D then writeln('Lines:',l.Count);
+RegExpr.Expression:='wp_version.+?([0-9\.]+)';
+for i:=0 to l.Count-1 do begin
+    if RegExpr.Exec(l.Strings[i]) then begin
+       result:=RegExpr.Match[1];
+       break;
+    end;
+end;
+     SYS.SET_CACHE_VERSION('APP_WORDPRESS',result);
+    l.free;
+    RegExpr.free;
+SYS.SET_CACHE_VERSION('APP_WORDPRESS',result);
+logs.Debuglogs('APP_WORDPRESS:: -> ' + result);
+end;
+//##############################################################################
 
 
 end.

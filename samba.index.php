@@ -435,7 +435,7 @@ function main_status(){
 
 
 function main_smb_config(){
-	$upTo357=0;
+	
 	$style="style='padding:3px;border-bottom:1px dotted #CCCCCC'";
 	$sock=new sockets();
 	$tpl=new templates();
@@ -447,6 +447,7 @@ function main_smb_config(){
 	if($SambaEnabled==null){$SambaEnabled=1;}	
 	$users=new usersMenus();
 	$upTo36=0;
+	$upTo357=0;
 	
 	$version=$smb->SAMBA_VERSION;
 	if(preg_match("#^([0-9]+)\.([0-9]+)\.([0-9]+)#",$version,$re)){$major=intval($re[1]);$minor=intval($re[2]);$build=intval($re[3]);}	
@@ -589,21 +590,17 @@ function main_smb_config(){
 	<td valign='top'>" . Field_checkbox('enable_Editposix','yes',$smb->SambaEnableEditPosixExtension)."</td>
 	<td valign='top'>" . help_icon("{enable_Editposix_text}")."</td>
 </tr>
-<tr>	
-	<td align='right' nowrap valign='top' class=legend>{samba_strict_allocate}:</td>
-	<td valign='top'>" . Field_checkbox('strict allocate','yes',$smb->main_array["global"]["strict allocate"])."</td>
-	<td valign='top'>" . help_icon("{samba_strict_allocate_text}")."</td>
-</tr>	
-<tr>	
-	<td align='right' nowrap valign='top' class=legend>{smb2_protocol}:</td>
-	<td valign='top'>" . Field_checkbox('smb2_protocol','1',$smb->EnableSMB2)."</td>
-	<td valign='top'>" . help_icon("{smb2_protocol_text}")."</td>
-</tr>	
+
 
 <tr>	
 	<td align='right' nowrap valign='top' class=legend>{log level}:</td>
 	<td valign='top'>$log_level</td>
 	<td valign='top'>" . help_icon("{log level_text}")."</td>
+</tr>
+<tr>
+	<td align='right' nowrap valign='top' class=legend>&nbsp;</td>
+	<td colspan=2><a href=\"javascript:blur();\" OnClick=\"javascript:Loadjs('samba.options.php?hostname=master');\"
+	style='font-size:13px;text-decoration:underline;font-style:italic'>{file_sharing_behavior}</a></td>
 </tr>
 
 
@@ -741,17 +738,14 @@ $formArtica="
 		var upTo36=$upTo36;
 		document.getElementById('DisableWinbindd').disabled=true;
 		document.getElementById('EnablePrintersSharing').disabled=true;
-		document.getElementById('strict allocate').disabled=true;
-		document.getElementById('smb2_protocol').disabled=true;
+
 		document.getElementById('client_ntlmv2_auth').disabled=true;
 		
 		
-		if(upTo357==1){document.getElementById('strict allocate').disabled=false;}
+
 		if(upTo36==1){
-			document.getElementById('smb2_protocol').disabled=false;
 			document.getElementById('client_ntlmv2_auth').disabled=false;
-		}
-		
+		}		
 		
 		
 		if(AsWinbindd==1){document.getElementById('DisableWinbindd').disabled=false;}
@@ -811,11 +805,7 @@ $formArtica="
 			XHR.appendData('domain logons','yes');}else{
 			XHR.appendData('domain logons','no');}	
 
-		if(document.getElementById('strict allocate').checked){
-			XHR.appendData('strict allocate','yes');}else{
-			XHR.appendData('strict allocate','no');}				
-		
-		if(document.getElementById('smb2_protocol').checked){XHR.appendData('smb2_protocol','1');}else{XHR.appendData('smb2_protocol','0');}			
+					
 		if(document.getElementById('client_ntlmv2_auth').checked){XHR.appendData('client_ntlmv2_auth','1');}else{XHR.appendData('client_ntlmv2_auth','0');}
 			
 			
@@ -944,10 +934,7 @@ function SaveConf(){
 		unset($_GET["EnablePrintersSharing"]);
 	}
 
-	if(isset($_GET["smb2_protocol"])){
-		$samba->EnableSMB2=$_GET["smb2_protocol"];
-		unset($_GET["smb2_protocol"]);
-	}	
+
 	if(isset($_GET["client_ntlmv2_auth"])){
 		$samba->client_ntlmv2_auth=$_GET["client_ntlmv2_auth"];
 		unset($_GET["client_ntlmv2_auth"]);
@@ -972,7 +959,7 @@ while (list ($num, $val) = each ($_GET) ){
 	   $num=str_replace("log_level","log level",$num);
 	   $num=str_replace("disable_netbios","disable netbios",$num);
 	   $num=str_replace("server_string","server string",$num);
-	   $num=str_replace("strict_allocate","strict allocate",$num);
+	   
 		writelogs("$num = $val",__FUNCTION__,__FILE__);
 		$samba->main_array["global"][$num]=$val;
 		
@@ -1311,7 +1298,13 @@ function shared_folders_list(){
 	
 	$html=$html ."</table>";
 	
-	$html="<div style='width:99%;'>$html</div>";
+	$html="<div style='width:99%;'>$html</div>
+	<script>
+		Loadjs('js/samba.js');
+	</script>
+	
+	
+	";
 	
 	
 	return $tpl->_ENGINE_parse_body($html);
@@ -1898,6 +1891,7 @@ function folder_security_js(){
 
 function folder_UserSecurityInfos(){
 	$folder=$_GET["prop"];
+	$folder_enc=base64_encode($folder);
 	$smb=new samba();
 	$page=CurrentPageName();
 
@@ -1949,7 +1943,6 @@ function folder_UserSecurityInfos(){
 		</tr>";
 	
 		$hash=$smb->hash_privileges($folder);
-		$html=$html ."<input type='hidden' id='SaveUseridPrivileges' name='SaveUseridPrivileges' value='$SaveUseridPrivilegesEncoded'>";
 		$html=$html ."<tr>";
 		$html=$html ."<td align='center'><div id='waitfolderprop'></div></td>";
 		$html=$html ."<td align='center'>" .Field_yesno_checkbox('valid users',$hash[$_GET["UserSecurityInfos"]]["valid users"]) . "</td>";
@@ -1957,7 +1950,7 @@ function folder_UserSecurityInfos(){
 		$html=$html ."<td align='center'>" .Field_yesno_checkbox('read list',$hash[$_GET["UserSecurityInfos"]]["read list"]) . "</td>";
 		$html=$html ."</tr><tr>
 		<td $style colspan=4 align='right' valign='top'>
-			<input type='button' value='{apply}&nbsp;&raquo;' OnClick=\"javascript:Loadjs('$page?js-security-infos=yes');\"></td>
+			<input type='button' value='{apply}&nbsp;&raquo;' OnClick=\"javascript:Loadjs('$page?js-security-infos=yes&folder=$folder_enc&uidpriv=$SaveUseridPrivilegesEncoded');\"></td>
 		</tr>";
 		
 		$tpl=new templates();
@@ -1968,6 +1961,7 @@ function folder_UserSecurityInfos(){
 
 function folder_UserSecurityInfos_js(){
 	$page=CurrentPageName();
+	$folder=base64_decode($_GET["folder"]);
 	$html="
 	
 	
@@ -1981,10 +1975,10 @@ function folder_UserSecurityInfos_js(){
 	function folder_UserSecurityInfos_save(){
 			var XHR = new XHRConnection();
 			
-			XHR.appendData('SaveFolderProp',document.getElementById('SaveFolderProp').value);
+			XHR.appendData('SaveFolderProp','$folder');
 			
-			if(!document.getElementById('SaveUseridPrivileges')){alert('SaveUseridPrivileges!');}
-			XHR.appendData('SaveUseridPrivileges',document.getElementById('SaveUseridPrivileges').value);
+			
+			XHR.appendData('SaveUseridPrivileges','{$_GET["uidpriv"]}');
 			
 			if(document.getElementById('valid users').checked){
 				XHR.appendData('valid users','yes');
@@ -2475,12 +2469,7 @@ function folder_security_clean_priv(){
 }
 
 function folder_security_save_priv(){
-/*	SaveFolderProp	180872
-SaveUseridPrivileges	david.touzeau
-read_list	no
-valid_users	no
-write_list	yes
-*/
+
 
 $samba=new samba();
 $_POST["SaveUseridPrivileges"]=base64_decode($_POST["SaveUseridPrivileges"]);
@@ -2495,14 +2484,17 @@ $folder=$_POST["SaveFolderProp"];
 $h=$samba->hash_privileges($folder);
 $item=$_POST["SaveUseridPrivileges"];
 
-if($_POST["read_list"]=="no"){unset($h[$item]["read list"]);}else{$h[$item]["read list"]='yes';}
+if($_POST["read_list"]=="no"){
+	writelogs("******** POST: $item unset read list {$h[$item]["valid users"]}...",__FUNCTION__,__FILE__,__LINE__);
+	unset($h[$item]["read list"]);}else{$h[$item]["read list"]='yes';}
 
 if($_POST["valid_users"]=="no"){
+	writelogs("******** POST: $item unset valid users {$h[$item]["valid users"]}...",__FUNCTION__,__FILE__,__LINE__);
 	unset($h[$item]["valid users"]);}
 	else{$h[$item]["valid users"]='yes';}
 	
 if($_POST["write_list"]=="no"){
-	writelogs("******** $item= delete write list",__FUNCTION__,__FILE__);
+	writelogs("******** POST: $item  unset write list",__FUNCTION__,__FILE__);
 	unset($h[$item]["write list"]);}
 	else{$h[$item]["write list"]='yes';}
 
@@ -2519,16 +2511,17 @@ if($_POST["write_list"]=="no"){
 		}else{
 			writelogs("******** No privileges array given",__FUNCTION__,__FILE__);
 		}
-if(is_array($a)){
-while (list ($c, $d) = each ($a) ){
-	$samba->main_array[$folder][$c]=implode(',',$d);
-	}
-}else{
-	writelogs("******** No privileges given for folder \"$folder\", delete all list privileges",__FUNCTION__,__FILE__);
+		
 	unset($samba->main_array[$folder]["write list"]);
 	unset($samba->main_array[$folder]["valid users"]);
-	unset($samba->main_array[$folder]["read list"]);
-}
+	unset($samba->main_array[$folder]["read list"]);		
+		
+if(is_array($a)){
+	while (list ($c, $d) = each ($a) ){
+		writelogs("******** POST: Final: $folder [$c] = ".implode(',',$d),__FUNCTION__,__FILE__,__LINE__);
+		$samba->main_array[$folder][$c]=implode(',',$d);
+		}
+	}
 
 $samba->SaveToLdap();
 

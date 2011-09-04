@@ -84,7 +84,7 @@ function popup(){
 		}
 		
 		function AddPostfixMulti(){
-			YahooWin3('475','$page?add-server=yes&ou={$_GET["ou"]}','$add_mail_server');
+			YahooWin3('650','$page?add-server=yes&ou={$_GET["ou"]}','$add_mail_server');
 		}
 		
 		function PostfixMultiServerParamsSection(name){
@@ -108,7 +108,7 @@ function popup(){
 			XHR.appendData('inet_interfaces',document.getElementById('inet_interfaces').value);
 			XHR.appendData('hostname',document.getElementById('hostname').value+'.'+document.getElementById('domain').value);
 			XHR.appendData('ou','{$_GET["ou"]}');
-			document.getElementById('AddPostfixMultiSave').innerHTML=\"<center style='width:100%'><img src='img/wait_verybig.gif'></center>\";
+			AnimateDiv('AddPostfixMultiSave');
 			XHR.sendAndLoad('$page', 'GET',x_AddPostfixMultiSave);
 			}
 		
@@ -139,13 +139,22 @@ function GetFreeIps(){
 	}
 	
 	
-	$sql="SELECT ipaddr FROM nics_virtuals WHERE org='{$_GET["ou"]}'";
+	$sql="SELECT nic,ID,ipaddr FROM nics_virtuals WHERE org='{$_GET["ou"]}'";
 	$results=$q->QUERY_SQL($sql,"artica_backup");
 	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
 		$ligne["ipaddr"]=trim($ligne["ipaddr"]);
 		if($already[trim($ligne["ipaddr"])]){continue;}
-		$nics_virtuals[trim($ligne["ipaddr"])]=$ligne["ipaddr"];
+		$nics_virtuals[trim($ligne["ipaddr"])]="{$ligne["ipaddr"]} ({$ligne["nic"]}{$ligne["ID"]})";
 	}
+	
+	$sql="SELECT Interface,IPADDR FROM nics";
+	$results=$q->QUERY_SQL($sql,"artica_backup");
+	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+		$ligne["IPADDR"]=trim($ligne["IPADDR"]);
+		if($already[trim($ligne["IPADDR"])]){continue;}
+		$nics_virtuals[trim($ligne["IPADDR"])]="{$ligne["IPADDR"]} ({$ligne["Interface"]})";
+	}	
+	
 	
 	return 	$nics_virtuals;
 }
@@ -404,12 +413,12 @@ function add_server_popup(){
 		return; 
 	}
 	
-	$ips_field=Field_array_Hash($ips,"inet_interfaces",null,null,null,0,"font-size:13px;padding:3px");
-	$domains_field=Field_array_Hash($hashsoms,"domain",null,null,null,0,"font-size:13px;padding:3px");
+	$ips_field=Field_array_Hash($ips,"inet_interfaces",null,null,null,0,"font-size:16px;padding:3px");
+	$domains_field=Field_array_Hash($hashsoms,"domain",null,null,null,0,"font-size:16px;padding:3px");
 	
 	$html="
 	<div id='AddPostfixMultiSave'>
-	<table style='width:100%'>
+	<table style='width:100%' class=form>
 	<tr>
 		<td class=legend style='font-size:13px'>{listen_ip}:</td>
 		<td class=legend style='font-size:13px'>$ips_field</td>
@@ -418,7 +427,7 @@ function add_server_popup(){
 	<tr>
 		<td class=legend style='font-size:13px'>{servername}:</td>
 		<td class=legend style='font-size:13px'>". Field_text("hostname",null,
-		"font-size:13px;padding:3px","script:AddPostfixMultiSaveCheck(event)")."</td>
+		"font-size:16px;padding:3px","script:AddPostfixMultiSaveCheck(event)")."</td>
 		<td><span style='font-size:13px'>.</span>$domains_field</td>
 	<tr>
 	<td colspan=3 align='right'>

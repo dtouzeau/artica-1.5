@@ -100,8 +100,15 @@ function GetidFromUser($bd,$uid){
 }
 
 function build(){
+	$unix=new unix();
+	$rm=$unix->find_program("rm");
+	if(is_dir("/usr/share/roundcube/plugins/remember_me")){shell_exec("$rm -rf /usr/share/roundcube/plugins/remember_me");}
+	
+	
 	$r=new roundcube();
 	$conf=$r->RoundCubeConfig();
+	if(is_file("/var/log/lighttpd/roundcube-access.log")){@unlink("/var/log/lighttpd/roundcube-access.log");}
+	if(is_file("/var/log/lighttpd/roundcube-error.log")){@unlink("/var/log/lighttpd/roundcube-error.log");}
 	$users=new usersMenus();
 	$roundcube_folder=$users->roundcube_folder;
 	if(!@file_put_contents("$roundcube_folder/config/main.inc.php",$conf)){

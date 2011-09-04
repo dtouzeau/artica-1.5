@@ -740,7 +740,7 @@ l.add('curl');
 l.add('lm-sensors');
 l.add('bison');
 l.add('e2fsprogs');
-l.add('virt-what');
+
 
 
 if ArchStruct=64 then begin
@@ -919,6 +919,10 @@ l.add('libapache2-mod-php5');
 l.add('libapache2-mod-evasive');
 L.add('libapache2-mod-proxy-html');
 L.add('libapache2-mod-jk');
+L.add('libapache2-mod-geoip');
+L.add('apache2-suexec');
+L.add('libapache2-mod-fcgid');
+
 l.add('libiodbc2-dev');
 
 //openLdap compilation
@@ -1131,6 +1135,7 @@ if distri.DISTRINAME_CODE='DEBIAN' then begin
         l.add('libssh2-php');
         L.add('xtables-addons-common');
         L.add('xtables-addons-source');
+        l.add('virt-what');
 
 
 
@@ -1273,6 +1278,8 @@ if distri.DISTRINAME_CODE='UBUNTU' then begin
       l.add('python-pyopenssl');
       l.add('open-iscsi');
       l.Add('lha');
+      L.add('cgroup-bin');
+
 
    end;
 
@@ -1282,7 +1289,7 @@ if distri.DISTRINAME_CODE='UBUNTU' then begin
        l.add('libapache-mod-security');
        l.add('libssh2-php');
        L.add('xtables-addons-source');
-
+       l.add('virt-what');
 
     end;
 
@@ -1293,12 +1300,14 @@ if distri.DISTRINAME_CODE='UBUNTU' then begin
        l.add('libicu42');
        l.add('open-iscsi');
        l.Add('lha');
+       L.add('cgroup-bin');
 
    end;
    if UbuntuIntVer=11 then begin
         l.add('libboost-filesystem1.42.0');
         l.add('libboost-system1.42.0');
         L.add('libicu44');
+        L.add('cgroup-bin');
    end;
 
    if  UbuntuIntVer>9  then begin
@@ -1391,6 +1400,9 @@ end;
 end;
 
 //#########################################################################################
+
+
+
 function tubuntu.CheckFuppes():string;
 var
    l:TstringList;
@@ -1429,6 +1441,52 @@ if not TryStrToInt(distri.DISTRINAME_VERSION,UbuntuIntVer) then UbuntuIntVer:=9;
    l.add('libavformat-extra-52');
    l.add('libsimage-dev');
    l.add('exiv2');
+   l.add('build-essential');
+   l.add('libpcre3-dev');
+   l.add('libpcre++-dev');
+   l.add('libpcre-ocaml');
+   l.add('libpcre-ocaml-dev');
+   l.add('libxml2-dev');
+   l.add('sqlite3');
+   l.add('libuuid-perl');
+   l.add('libuuidm-ocaml-dev');
+   l.add('libuuidm-ocaml-dev');
+   l.add('libtaglib-ocaml-dev');
+   l.add('libiconv-hook-dev');
+   l.add('imagemagick');
+   l.add('libavutil-dev');
+   l.add('libavformat-dev');
+   l.add('libavcodec-dev');
+   l.add('libfaad-dev');
+   l.add('libgsm1-dev');
+   l.add('libogg-dev');
+   l.add('libschroedinger-dev');
+   l.add('libspeex-dev');
+   l.add('libtheora-dev');
+   l.add('libvorbis-dev');
+   l.add('libx11-dev');
+   l.add('libxext-dev');
+   l.add('libraw1394-dev');
+   l.add('libdc1394-22-dev');
+   l.add('libmpeg4ip-dev');
+   l.add('libmp3lame-dev');
+   l.add('libtwolame-dev');
+   l.add('libmpcdec-dev');
+   l.add('libflac-dev');
+   l.add('libmp4v2-dev');
+   l.add('libmad0-dev');
+   l.add('libmad-ocaml-dev');
+   l.add('ffmpeg');
+   l.add('libffmpegthumbnailer-dev');
+   l.add('libsqlite3-dev');
+   l.add('uuid-dev');
+   l.add('libpanel-applet2-dev');
+   l.add('libpanelappletmm-2.6-dev');
+   l.add('libnotify-dev');
+   l.add('libmagick++-dev');
+   l.add('libtool');
+
+
 fpsystem('/bin/rm -rf /tmp/packages.list');
 
 for i:=0 to l.Count-1 do begin

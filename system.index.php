@@ -216,8 +216,8 @@ function main_system(){
 	$zabix=Buildicon64("DEF_ICO_ZABBIX");
 	$kernel=Paragraphe("linux-inside-64.png","{system_kernel}","{system_kernel_text}","javascript:Loadjs('system.kernel.debian.php')");
 	$clock=Paragraphe("clock-gold-64.png","{server_time2}","{server_time2_text}","javascript:Loadjs('index.time.php?settings=yes');");
-	$syslog=Paragraphe("syslog-64.png","{system_log}","{system_log_text}","javascript:Loadjs('syslog.engine.php');");
-	$automount=Paragraphe("magneto-64.png","{automount_center}","{automount_center_text}","javascript:Loadjs('autofs.php');");
+	$syslog=Paragraphe("syslog-64.png","{system_log}","{system_log_text}","javascript:Loadjs('syslog.engine.php?windows=yes');");
+	$automount=Paragraphe("magneto-64.png","{automount_center}","{automount_center_text}","javascript:Loadjs('autofs.php?windows=yes');");
 	
 	$RootPasswordChangedTXT=Paragraphe('cop-lock-64.png',
 		"{root_password_not_changed}",
@@ -519,6 +519,7 @@ function main_services(){
 		$apache=null;
 		$backuppc=null;
 		$auditd=null;
+		$LXC=null;
 	}
 	
 	//ApacheGroupware

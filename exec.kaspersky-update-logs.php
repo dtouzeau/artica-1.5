@@ -11,6 +11,8 @@ if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["VERBOSE"]=true;}
 if(preg_match("#--force#",implode(" ",$argv))){$GLOBALS["FORCE"]=true;}
 $GLOBALS["NO_PID_CHECKS"]=false;
 
+
+
 if($argv[1]=="--av-uris"){ParseKav4UriLogs();die();}
 if($argv[1]=="--av-events"){av_events();die();}
 if($argv[1]=="--av-stats"){av_stats();die();}
@@ -51,6 +53,10 @@ function stats_pid(){
 }
 
 function ParseKav4UriLogs(){
+	
+	$users=new usersMenus();
+	if(!$users->KAV4PROXY_INSTALLED){die();}	
+	
 	$unix=new unix();
 	if(system_is_overloaded(basename(__FILE__))){
 		if($GLOBALS["VERBOSE"]){"System overloaded\n";}
@@ -75,7 +81,15 @@ function ParseKav4UriLogs(){
 		`sitename` VARCHAR( 128 ) NOT NULL ,
 		`category` VARCHAR( 90 ) NOT NULL ,
 		PRIMARY KEY ( `zmd5` ) ,
-		INDEX ( `zDate` , `size` , `status` , `ICAP_SERVER` , `uid` , `client` , `country` , `sitename` , `category` )
+		KEY `zDate` (`zDate`),
+		KEY `size` (`size`),
+		KEY `status` (`status`),
+		KEY `ICAP_SERVER` (`ICAP_SERVER`),
+		KEY `uid` (`uid`),
+		KEY `client` (`client`),
+		KEY `country` (`country`),
+		KEY `sitename` (`sitename`),
+		INDEX ( `category` )
 		)";	
 		$q->QUERY_SQL($sql,"artica_events");
 		if($GLOBALS["VERBOSE"]){echo "Table $tablename/artica_events failed...\n";}
@@ -180,6 +194,9 @@ function ParseKavmilterLogs(){
 }
 
 function ParseKav4ProxyLogs(){
+	$users=new usersMenus();
+	if(!$users->KAV4PROXY_INSTALLED){die();}	
+		
 	$dir="/var/log/artica-postfix/kaspersky/kav4proxy";
 	if(!is_dir($dir)){return null;}
 	$unix=new unix();

@@ -437,7 +437,6 @@ function hosts_WhiteList(){
 		<td class=legend>{host}</td>
 		<td>". Field_text("PostfixAutoBlockWhiteList-search",null,"font-size:14px;padding:3px;width:220px",null,null,null,false,"PostfixAutoBlockWhiteListSearchCheck(event)")."</td>
 		<td width=1%>". button("{search}","PostfixAutoBlockWhiteListSearch()")."</td>
-		<td width=1%>". imgtootltip("plus-24.png","{add}","AddHostWhite()")."</td>
 	</tr>
 	</table>
 	<div id='PostfixAutoBlockWhiteList-list' style='width:100%;height:298px;overflow:auto'></div>
@@ -477,7 +476,8 @@ function hosts_WhiteList_list(){
 	<table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:80%'>
 	<thead class='thead'>
 		<tr>
-			<th colspan=3></th>
+			<th>".imgtootltip("plus-24.png","{add}","AddHostWhite()")."</th>
+			<th colspan=2></th>
 		</tr>
 	</thead>
 	<tbody class='tbody'>";	
@@ -488,7 +488,6 @@ function hosts_WhiteList_list(){
 		if($ligne["hostname"]==null){$ligne["hostname"]=gethostbyname($ligne["ipaddr"]);}
 		
 		$html=$html . "<tr class=$classtr>
-		<td width=1%><img src='img/fw_bold.gif'></td>
 		<td><strong style='font-size:13px'><code>{$ligne["ipaddr"]} ({$ligne["hostname"]})</code></td>
 		<td width=1%>" . imgtootltip("delete-32.png","{delete}","DelHostWhite('{$ligne["ipaddr"]}')")."</td>
 	</tr>";

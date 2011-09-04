@@ -37,8 +37,9 @@ if(isset($_GET["php-ini-set"])){PHP_INI_SET();exit;}
 if(isset($_GET["mysql-events"])){mysql_events();exit;}
 if(isset($_GET["AdCacheMysql"])){AdCacheMysql();exit;}
 if(isset($_GET["kav4Proxy-reload"])){kav4proxy_reload();exit;}
+if(isset($_GET["clock"])){GETclock();exit;}
 
-
+if(isset($_GET["artica-update-cron"])){artica_schedule_cron();exit;}
 
 
 
@@ -304,6 +305,13 @@ function kav4proxy_reload(){
 }
 
 function mysql_events(){
+	
+	if(!is_file("/var/run/mysqld/mysqld.err")){
+		$datas=base64_encode(serialize(array("{error_no_datas}")));
+		echo "<articadatascgi>$datas</articadatascgi>";
+		return;
+	}
+	
 	$unix=new unix();
 	$tail=$unix->find_program("tail");
 	$cmd="$tail -n 300 /var/run/mysqld/mysqld.err 2>&1";
@@ -312,6 +320,37 @@ function mysql_events(){
 	$datas=base64_encode(serialize($results));
 	echo "<articadatascgi>$datas</articadatascgi>";
 	
+	
+}
+
+function artica_schedule_cron(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim("$nohup ".$unix->LOCATE_PHP5_BIN(). " /usr/share/artica-postfix/exec.fcron.php --artica-schedule >/dev/null 2>&1");
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	
+	shell_exec($cmd);		
+	
+}
+
+function GETclock(){
+	$unix=new unix();
+	$date=$unix->find_program("date");
+	$hwclock=$unix->find_program("hwclock");
+	exec("$date +\"%Y-%m-%d;%H:%M:%S\" 2>&1",$results);
+	$dateTEXT=@implode("",$results);
+	if(is_file($hwclock)){
+		exec("$hwclock --show 2>&1",$results2);
+		writelogs_framework("$hwclock --show ". count($results2)." rows",__FUNCTION__,__FILE__,__LINE__);
+		$hwclockTEXT=@implode("",$results2);
+	}else{
+		writelogs_framework("hwclock no such binary",__FUNCTION__,__FILE__,__LINE__);
+	}
+	writelogs_framework("$dateTEXT|$hwclockTEXT",__FUNCTION__,__FILE__,__LINE__);
+	$array[0]=$dateTEXT;
+	$array[1]=$hwclockTEXT;
+	$finale=base64_encode(serialize($array));
+	
+	echo "<articadatascgi>$finale</articadatascgi>";
 	
 }
 

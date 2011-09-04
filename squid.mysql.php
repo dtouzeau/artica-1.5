@@ -89,19 +89,19 @@ function maintenance_settings(){
 	
 	$requests=$q->COUNT_ROWS("dansguardian_events","artica_events");
 	$requests=numberFormat($requests,0,""," ");
-	
-	$sql="SELECT max( ID ) as tid FROM dansguardian_events";
+	$dansguardian_events="dansguardian_events_".date('Ym');	
+	$sql="SELECT max( ID ) as tid FROM $dansguardian_events";
 	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_events'));
-	$sql="SELECT zDate, DATE_FORMAT(zDate,'%M %W %Y %H:%i') as tdate FROM dansguardian_events WHERE ID ={$ligne["tid"]}";
+	$sql="SELECT zDate, DATE_FORMAT(zDate,'%M %W %Y %H:%i') as tdate FROM $dansguardian_events WHERE ID ={$ligne["tid"]}";
 	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_events'));
 	
 	$lastevents=$ligne["zDate"];
 	$lastevents_text=$ligne["tdate"];
 	$t2=strtotime($lastevents);
 	
-	$sql="SELECT min( ID ) as tid FROM dansguardian_events";
+	$sql="SELECT min( ID ) as tid FROM $dansguardian_events";
 	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_events'));
-	$sql="SELECT zDate,DATE_FORMAT(zDate,'%M %W %Y') as tdate FROM dansguardian_events WHERE ID ={$ligne["tid"]}";
+	$sql="SELECT zDate,DATE_FORMAT(zDate,'%M %W %Y') as tdate FROM $dansguardian_events WHERE ID ={$ligne["tid"]}";
 	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_events'));	
 	
 	$first_events=$ligne["zDate"];

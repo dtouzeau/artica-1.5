@@ -216,8 +216,59 @@ function Build_defaults(){
 		
 	}
 	
+	public function is_tmpfs_mounted(){
+		$unix=new unix();
+		$mount=$unix->find_program("mount");
+		exec("$mount 2>&1",$results);
+		while (list ($num, $ligne) = each ($results) ){if(preg_match("#^tmpfs.+?Kav4proxy.+?tmpfs#", $ligne)){return true;}}
+		return false;
+		
+	}
+	
 	
 	function build_config(){
+		$sock=new sockets();
+		$TempPath="/tmp";
+		if($GLOBALS["AS_ROOT"]){
+			$unix=new unix();
+			$mount=$unix->find_program("mount");
+			$umount=$unix->find_program("umount");
+			$Kav4ProxyTMPFS=$sock->GET_INFO("Kav4ProxyTMPFS");
+			if(!is_numeric($Kav4ProxyTMPFS)){$Kav4ProxyTMPFS=0;}
+			$Kav4ProxyTMPFSMB=$sock->GET_INFO("Kav4ProxyTMPFSMB");
+			if(!is_numeric($Kav4ProxyTMPFSMB)){$Kav4ProxyTMPFSMB=512;}	
+			if($Kav4ProxyTMPFS==1){
+				echo "Starting......: Kav4proxy tmpfs is enabled for {$Kav4ProxyTMPFSMB}MB\n";
+				if(!$this->is_tmpfs_mounted()){
+					if(!is_dir("/tmp/Kav4proxy")){@mkdir("/tmp/Kav4proxy",0755,true);}
+					$cmd="$mount -t tmpfs -o size={$Kav4ProxyTMPFSMB}M tmpfs /tmp/Kav4proxy";
+					if($GLOBALS["VERBOSE"]){echo $cmd."\n";}
+					shell_exec($cmd);
+					
+					if($this->is_tmpfs_mounted()){
+						echo "Starting......: Kav4proxy tmpfs mounted...\n";
+						$TempPath="/tmp/Kav4proxy";
+					}else{
+						echo "Starting......: Kav4proxy tmpfs failed to mount return back to disk\n";
+					}
+					
+				}else{
+					echo "Starting......: Kav4proxy tmpfs mounted...\n";
+					$TempPath="/tmp/Kav4proxy";	
+					
+				}
+			
+			}else{
+				echo "Starting......: Kav4proxy tmpfs is disabled\n";
+				if($this->is_tmpfs_mounted()){
+					echo "Starting......: Kav4proxy unmounting filesystem\n";
+					shell_exec("$umount -f /tmp/Kav4proxy");
+				}
+			}
+			
+		}
+		
+		
 				if($GLOBALS["AS_ROOT"]){
 					if(preg_match("#([0-9])\.([0-9]).([0-9]+)#",  $this->VERSION,$re)){
 						$rev=$re[3];
@@ -231,7 +282,7 @@ function Build_defaults(){
 				$conf[]="[path]\n";
 				$conf[]="BasesPath=$bases";
 				$conf[]="LicensePath=/var/opt/kaspersky/kav4proxy/licenses";
-				$conf[]="TempPath=/tmp";
+				$conf[]="TempPath=$TempPath";
 				if($rev>=67){$conf[]="KLPluginsPath=/opt/kaspersky/kav4proxy/lib/ppl";}
 				
 				$conf[]="";				
@@ -365,7 +416,7 @@ function Build_defaults(){
 				$conf[]="Append=true";
 				$conf[]="";
 				
-				$conf=$this->Kav4Groups();
+				$conf[]=$this->Kav4Groups();
 				
 				$sock=new sockets();
 				$config=implode("\n",$conf);
@@ -437,6 +488,13 @@ function Build_defaults(){
 			if($hash["UseAVbasesSet"]==null){$hash["UseAVbasesSet"]="extended";}
 			
 			    
+			if($hash["InfectedAction"]=="no"){$hash["InfectedAction"]="deny";}
+			if($hash["ErrorAction"]=="no"){$hash["ErrorAction"]="deny";}
+			if($hash["CuredAction"]=="no"){$hash["CuredAction"]="deny";}
+			if($hash["CorruptedAction"]=="no"){$hash["CorruptedAction"]="deny";}
+			if($hash["BasesErrorAction"]=="no"){$hash["BasesErrorAction"]="deny";}
+			if($hash["ErrorAction"]==null){$hash["ErrorAction"]="skip";}
+			
 			
 			$f[]="\n[icapserver.engine.options:$groupname]";
 			$f[]="Cure={$hash["Cure"]}";

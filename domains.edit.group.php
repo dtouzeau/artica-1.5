@@ -35,6 +35,9 @@ if(isset($_GET["verbose"])){
 	if($_GET["tab"]=="groups"){LIST_GROUPS_FROM_OU();exit;}
 	if(isset($_GET["groups-area-search"])){LIST_GROUPS_FROM_OU_search();exit;}
 	
+	if(isset($_GET["ChangeGroupDescription"])){ChangeGroupDescription();exit;}
+	if(isset($_POST["SaveGrouPdescript"])){ChangeGroupDescription_save();exit;}
+	
 	
 	if(isset($_GET["FindInGroup"])){MEMBERS_SEARCH_USERS();exit;}
 	if(isset($_POST["groupid"])){MEMBERS_UPLOAD_FILE();exit();}
@@ -498,13 +501,18 @@ if(is_array($hash)){
 			while (list ($num, $line) = each ($hash)){
 				if(strtolower($line)=='default_group'){continue;}
 				if(strlen($search)>2){if(!preg_match("#$search#",$line)){continue;}}
+				
+				
 				$js="javascript:LoadAjax('GroupSettings','domains.edit.group.php?LoadGroupSettings=$num&ou={$_GET["ou"]}&encoded=yes')";
 				if(!$GLOBALS["NOUSERSCOUNT"]){
 					$gp=new groups($num);
-					$members=count($gp->members_array);				
-					$tr[]=Paragraphe("group-64.png",$line,"{manage_this_group}<br>$members {members}",$js);
+					$members=count($gp->members_array);	
+					$text="{manage_this_group}<br>($members {members})";	
+					if($gp->description<>null){$text=$gp->description."<br>($members {members})";}
+					$tr[]=Paragraphe("group-64.png",$line,$text,$js);
 				}else{
-					$tr[]=Paragraphe("group-64.png",$line,"{manage_this_group}",$js);
+					$text="{manage_this_group}";
+					$tr[]=Paragraphe("group-64.png",$line,$text,$js);
 				}
 			}
 		}
@@ -790,6 +798,7 @@ function GROUP_SETTINGS_PAGE_CONTENT(){
 	$ldap=new clladp();
 	$page=CurrentPageName();
 	$num=$_GET["LoadGroupSettings"];
+	$groupID=$num;
 	writelogs("Loading group $num",__FUNCTION__,__FILE__,__LINE__);
 	if(is_base64_encoded($_GET["ou"])){$_GET["ou"]=base64_decode($_GET["ou"]);}
 	$ou_conn=$_GET["ou"];
@@ -968,18 +977,28 @@ function GROUP_SETTINGS_PAGE_CONTENT(){
 	$html=$html_tab1;
 	
 	$tpl=new templates();
-	
+	$group_description=$tpl->_ENGINE_parse_body("{group_description}");
 	$barre_principale="
 	<input type='hidden' id='group_delete_text' value='{group_delete_text}'>
 	<table style='width:100%'>
 	<tr>
 		<td width=3%><div style='height:1px;border-bottom:1px solid #CCCCCC;width:100%;float:right'>&nbsp;</div></td>
-		<td width=1% nowrap><H5>{group}&nbsp;&nbsp;&laquo;&nbsp;{$group->groupName}&nbsp;&raquo;</td>
+		<td width=1% nowrap><H5 style='border-bottom:0px'>{group}&nbsp;&nbsp;&laquo;&nbsp;{$group->groupName}&nbsp;&raquo;</h5></td>
 		<td><div style='height:1px;border-bottom:1px solid #CCCCCC;width:100%;float:right'>&nbsp;</div></td>
 		<td width=1%>$delete_group</td>
 	</tr>
+	<tr>
+		<td colspan=4 align='right'><div style='margin-top:-5px;padding-right:50px'><a href=\"javascript:blur();\" OnClick=\"ChangeGroupDescription()\" style='font-size:11px;text-decoration:underline;font-style:italic'>{$group->description}</a></div></td>
+	</tr>
 	</table>
 	
+	<script>
+		function ChangeGroupDescription(){
+			YahooWin5('360','$page?ChangeGroupDescription=yes&gpid=$groupID&ou=$ou_conn','{$group->groupName}::$group_description');
+		
+		}
+		
+	</script>
 	";
 	
 	echo $tpl->_ENGINE_parse_body("$barre_principale$tab$html");
@@ -2505,6 +2524,48 @@ function MEMBERS_DELETE(){
 	$user=new user($uid);
 	$user->DeleteUser();
 	}
+	
+function ChangeGroupDescription(){
+	$gpid=$_GET["gpid"];
+	$group=new groups($gpid);
+	$page=CurrentPageName();
+	$tpl=new templates();
+	$html="
+	<div id='animatGPDIV'></div>
+	<textarea id='GROUP_DESc' style='font-size:14px;font-family: Courrier New;border:1px solid;width:100%;height:90px;overflow:auto'>$group->description</textarea>
+	<div style='text-align:right'><hr>". button("{apply}","SaveGrouPdescript()")."</div>
+	
+<script>
+	var x_SaveGrouPdescript= function (obj) {
+		var results=obj.responseText;
+		if(results.length>3){alert(results);document.getElementById('animatGPDIV').innerHTML='';return;}
+		YahooWin5Hide();
+		if(document.getElementById('main_group_config')){RefreshTab('main_group_config');}
+	}
+	
+	function SaveGrouPdescript(){
+		var XHR = new XHRConnection();
+		XHR.appendData('gpid','{$_GET["gpid"]}');
+		XHR.appendData('ou','{$_GET["ou"]}');
+		XHR.appendData('SaveGrouPdescript',document.getElementById('GROUP_DESc').value);
+		AnimateDiv('animatGPDIV');
+		XHR.sendAndLoad('$page', 'POST',x_SaveGrouPdescript);
+	}	
+</script>	
+	
+	";
+	
+	echo $tpl->_ENGINE_parse_body($html);
+	
+	
+}
+
+function ChangeGroupDescription_save(){
+	$group=new groups($_POST["gpid"]);
+	if(!$group->SaveDescription($_POST["SaveGrouPdescript"])){
+		echo $group->ldap_error;
+	}
+}
 	
 	
 

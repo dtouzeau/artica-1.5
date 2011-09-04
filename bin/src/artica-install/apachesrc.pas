@@ -174,15 +174,23 @@ begin
 
        result:=SYS.GET_CACHE_VERSION('APACHE_SRC_ACCOUNT');
        if length(trim(result))>3 then begin
+
           APACHE_SRC_ACCOUNT_MEM:=trim(result);
-          exit(result);
+          RegExpr:=TRegExpr.Create;
+          RegExpr.Expression:='"';
+          if not RegExpr.exec(APACHE_SRC_ACCOUNT_MEM) then exit(result);
        end;
    end;
+
+
    binpath:=SYS.LOCATE_APACHE_BIN_PATH();
     if not FileExists(binpath) then begin
       if sys.verbosed then writeln('APACHE_SRC_ACCOUNT():: Unable to stat apache bin path');
        exit;
    end;
+
+
+
    if sys.verbosed then writeln('APACHE_DIR_SITES_ENABLED():: binary ',binpath);
    httpd_conf:=LOCATE_APACHE_CONF_PATH();
    envars:=ExtractFilePath(httpd_conf)+'/envvars';
@@ -207,21 +215,44 @@ begin
    end;
 
        l:=Tstringlist.Create;
-        if sys.verbosed then writeln('Open:',httpd_conf);
+       if sys.verbosed then writeln('Open:',httpd_conf);
        l.LoadFromFile(httpd_conf);
 
        RegExpr:=TRegExpr.Create;
        RegExpr.Expression:='^User\s+(.+)';
  for i:=0 to l.Count-1 do begin
            if RegExpr.Exec(l.Strings[i]) then begin
-              result:=trim(RegExpr.Match[1]);
-              APACHE_SRC_ACCOUNT_MEM:=result;
-              SYS.SET_CACHE_VERSION('APACHE_SRC_ACCOUNT',result);
-              l.free;
-              RegExpr.free;
-              exit(result);
+               result:=trim(RegExpr.Match[1]);
+               if length(result)>0 then begin
+                 APACHE_SRC_ACCOUNT_MEM:=result;
+                 RegExpr.Expression:='"';
+                 if not RegExpr.exec(APACHE_SRC_ACCOUNT_MEM) then begin
+                      SYS.SET_CACHE_VERSION('APACHE_SRC_ACCOUNT',result);
+                      l.free;
+                      RegExpr.free;
+                      exit(result);
+                 end;
+              end;
            end;
        end;
+
+
+l:=Tstringlist.Create;
+if sys.verbosed then writeln('Open:','/etc/passwd');
+l.LoadFromFile('/etc/passwd');
+RegExpr.Expression:='^(.+?):x:[0-9]+:[0-9]+:(.+?):\/var\/www:';
+ for i:=0 to l.Count-1 do begin
+   if RegExpr.Exec(l.Strings[i]) then begin
+    result:=trim(RegExpr.Match[1]);
+    APACHE_SRC_ACCOUNT_MEM:=result;
+    SYS.SET_CACHE_VERSION('APACHE_SRC_ACCOUNT',result);
+    l.free;
+    RegExpr.free;
+    exit(result);
+  end;
+ end;
+
+
 
  l.free;
  RegExpr.free;

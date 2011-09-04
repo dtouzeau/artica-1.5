@@ -383,6 +383,7 @@ l.Add('sudo');
 l.Add('gcc ');
 l.Add('make');
 L.add('cmake');
+l.add('flex');
 
 l.Add('libexpat-devel'); //for squid;
 l.Add('libxml2-devel');  //for squid

@@ -1,10 +1,15 @@
 <?php
+if(is_file("/etc/artica-postfix/KASPERSKY_WEB_APPLIANCE")){die();}
 include_once(dirname(__FILE__).'/ressources/class.templates.inc');
 include_once(dirname(__FILE__).'/ressources/class.ldap.inc');
 include_once(dirname(__FILE__).'/ressources/class.demime.inc');
 include_once(dirname(__FILE__).'/ressources/class.mysql.inc');
 include_once(dirname(__FILE__).'/ressources/class.computers.inc');
 include_once(dirname(__FILE__).'/framework/frame.class.inc');
+
+
+
+
 if($argv[1]=="--computers-schedule"){
 	ScheduleComputers();
 	die();

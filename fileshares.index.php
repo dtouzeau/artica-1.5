@@ -2,6 +2,7 @@
 	include_once('ressources/class.templates.inc');
 	include_once('ressources/class.ldap.inc');
 	include_once('ressources/class.users.menus.inc');
+	include_once('ressources/class.mysql.inc');
 	
 	
 $usersmenus=new usersMenus();
@@ -436,11 +437,17 @@ cookies_main();
 		$plugins=Paragraphe("folder-lego.png","{plugins}","{enable_plugins_text}","javascript:Loadjs('samba.plugins.php')");
 		$activedirectory=Paragraphe("folder-import-ad-64.png","{ad_samba_member}","{ad_samba_member_text}","javascript:Loadjs('ad.connect.php')");
 		if($users->GREYHOLE_INSTALLED){$greyhole=Paragraphe('folder-64-artica-backup.png',"{APP_GREYHOLE}",'{enable_grehole_text}',"javascript:Loadjs('greyhole.php')");}
+		$q=new mysql();
+		$count=$q->COUNT_ROWS("smbstatus_users", "artica_events");
+		if($count>0){
+			$members_connected=Paragraphe("user-group-64.png", "$count {members_connected}", "{members_connected_samba_text}","javascript:Loadjs('samba.smbstatus.php')",null,210,null,0,false);
+		}
+		
 	}
 		
 
 		
-	
+		$tr[]=$members_connected;
 		$tr[]=$share;
 		$tr[]=$greyhole;
 		$tr[]=$usb;

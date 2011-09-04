@@ -484,7 +484,7 @@ $tpl=new templates();
 			XHR.appendData('group-ClientURI-DEL',num);
 			XHR.appendData('gpname','$gpname');
 			AnimateDiv('ClientURIGroupdiv');
-			XHR.sendAndLoad('$page', 'POST',x_ClientURIGroupAdd);			
+			XHR.sendAndLoad('$page', 'POST',x_ClientIPGroupAdd);			
 		}		
 	
 	var x_ClientIPGroupAdd= function (obj) {

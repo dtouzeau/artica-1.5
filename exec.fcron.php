@@ -9,17 +9,31 @@ include_once(dirname(__FILE__)."/framework/frame.class.inc");
 if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["VERBOSE"]=true;$GLOBALS["debug"]=true;}
 
 
-if($argv[1]=="--schedules-mldonkey"){
-	schedules_mldonkey();
-	die();
+if($argv[1]=="--schedules-mldonkey"){schedules_mldonkey();die();}
+if($argv[1]=="--postmaster-cron"){postmaster_cron();die();}
+if($argv[1]=="--artica-schedule"){artica_schedule();die();}
+
+
+
+function artica_schedule(){
+		@unlink("/etc/crond.d/arscheduler");
+		$sock=new sockets();
+		$unix=new unix();
+		$EnableScheduleUpdates=$sock->GET_INFO("EnableScheduleUpdates");
+		if(!is_numeric($EnableScheduleUpdates)){$EnableScheduleUpdates=0;}
+		if($EnableScheduleUpdates==0){return;}
+		$ArticaScheduleUpdates=$sock->GET_INFO("ArticaScheduleUpdates");
+		if($ArticaScheduleUpdates==null){$sock->SET_INFO("EnableScheduleUpdates", 0);return;}
+ 		
+ 		$f[]="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/X11R6/bin:/usr/share/artica-postfix/bin";
+		$f[]="MAILTO=\"\"";
+		$f[]="$ArticaScheduleUpdates  root /usr/share/artica-postfix/bin/artica-update --bycron";
+		$f[]="";	
+		@file_put_contents("/etc/crond.d/arscheduler",implode("\n",$f));
+		$chmod=$unix->find_program("chmod");
+		shell_exec("$chmod 640 /etc/crond.d/arscheduler");
+		unset($f);	
 }
-
-if($argv[1]=="--postmaster-cron"){
-	postmaster_cron();
-	die();
-}
-
-
 
 
 function schedules_mldonkey(){

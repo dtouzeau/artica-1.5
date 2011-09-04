@@ -15,6 +15,16 @@ $user=new usersMenus();
 		die();exit();
 	}
 	
+	if(isset($_GET["frontend-status"])){frontend_status_js();exit;}
+	if(isset($_GET["frontend-params"])){frontend_params_js();exit;}
+	if(isset($_GET["frontend-groups"])){frontend_groups_js();exit;}
+	if(isset($_GET["frontend-stats"])){frontend_stats_js();exit;}
+	if(isset($_GET["frontend-tasks"])){frontend_tasks_js();exit;}
+	if(isset($_GET["frontend-blacklists"])){frontend_blacklists_js();exit;}
+	
+	
+	
+	if(isset($_GET["frontend-excludemime"])){frontend_excludemime_js();exit;}
 	if(isset($_GET["status"])){status();exit;}
 	if(isset($_GET["popup"])){popup();exit;}
 	if(isset($_GET["ExcludeMimeType"])){ExcludeMimeType();exit;}
@@ -29,6 +39,15 @@ $user=new usersMenus();
 	if(isset($_GET["Kav4EULA"])){Kav4EULA();exit;}
 	if(isset($_POST["AcceptEULA"])){Kav4EULASave();exit;}
 js();
+
+
+function frontend_status_js(){$page=CurrentPageName();echo "$('#BodyContent').load('$page?status=yes');";}
+function frontend_params_js(){$page=CurrentPageName();echo "$('#BodyContent').load('$page?icapserver_engine_options=yes');";}
+function frontend_groups_js(){$page=CurrentPageName();echo "$('#BodyContent').load('Kav4Proxy.Groups.php');";}
+function frontend_stats_js(){$page=CurrentPageName();echo "$('#BodyContent').load('Kav4Proxy.statistics.php');";}
+function frontend_tasks_js(){$page=CurrentPageName();echo "$('#BodyContent').load('Kav4Proxy.Tasks.php');";}
+function frontend_excludemime_js(){$page=CurrentPageName();echo "$('#BodyContent').load('$page?ExcludeMimeType=yes');";}
+function frontend_blacklists_js(){$page=CurrentPageName();echo "$('#BodyContent').load('squid.blacklist.php');";}
 
 
 
@@ -161,17 +180,28 @@ function tabs(){
 		$tpl=new templates();
 		$page=CurrentPageName();
 		$users=new usersMenus();
+		$sock=new sockets();
+		$SQUIDEnable=trim($sock->GET_INFO("SQUIDEnable"));
+		if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}		
+		
 		$array["status"]='{status}';
+		$array["statistics"]='{statistics}';
 		$array["tasks"]='{tasks}';
 		$array["groups"]='{groups}';
 		$array["ExcludeMimeType"]='{exclude}:{ExcludeMimeType}';
 		$array["icapserver_engine_options"]='{icapserver_1}';
-		
-	
+		if($SQUIDEnable==0){	
+			$array["blacklist_databases"]='{blacklist_databases}';
+		}
 		
 		
 
 	while (list ($num, $ligne) = each ($array) ){
+		if($num=="blacklist_databases"){
+			$tab[]="<li><a href=\"squid.blacklist.php\"><span style='font-size:14px'>$ligne</span></a></li>\n";
+			continue;
+		}		
+		
 		if($num=="tasks"){
 			$tab[]="<li><a href=\"Kav4Proxy.Tasks.php\"><span style='font-size:$font_size'>$ligne</span></a></li>\n";
 			continue;
@@ -179,6 +209,11 @@ function tabs(){
 		
 		if($num=="groups"){
 			$tab[]="<li><a href=\"Kav4Proxy.Groups.php\"><span style='font-size:$font_size'>$ligne</span></a></li>\n";
+			continue;
+		}	
+
+		if($num=="statistics"){
+			$tab[]="<li><a href=\"Kav4Proxy.statistics.php\"><span style='font-size:$font_size'>$ligne</span></a></li>\n";
 			continue;
 		}		
 		
@@ -305,7 +340,7 @@ echo $tpl->_ENGINE_parse_body($html,"kav4proxy.index.php");
 function ExcludeMimeType(){
 	
 	$html="
-	<p style='font-size:13px'>{ExcludeMimeTypeKavExplain}</p>
+	<div class=explain>{ExcludeMimeTypeKavExplain}</div>
 	
 	<table style='width:100%'>
 	<tbody>
@@ -389,14 +424,20 @@ include_once(dirname(__FILE__)."/ressources/system.network.inc");
 $ip=new networking();
 $ips=$ip->ALL_IPS_GET_ARRAY();
 $ips["0.0.0.0"]="{all}";
-
+$sock=new sockets();
+$Kav4ProxyTMPFS=$sock->GET_INFO("Kav4ProxyTMPFS");
+if(!is_numeric($Kav4ProxyTMPFS)){$Kav4ProxyTMPFS=0;}
+$Kav4ProxyTMPFSMB=$sock->GET_INFO("Kav4ProxyTMPFSMB");
+if(!is_numeric($Kav4ProxyTMPFSMB)){$Kav4ProxyTMPFSMB=512;}
 
 if(preg_match("#(.+?):[0-9]+#", $kav4->main_array["ListenAddress"],$re)){$kav4->main_array["ListenAddress"]=$re[1];}
 
 
 $html=" 
 <div id='icapserver_engine_options'>
-				<table style='width:100%' class=form>
+<center>
+				<table style='width:70%' class=form>
+				<tbody>
 				<tr>
 					<td align='right' style='font-size:14px' class=legend><strong>{ListenAddress}:</strong></td>
 					<td align='left' style='font-size:14px'>" . Field_array_Hash($ips, 'ListenAddress',$kav4->main_array["ListenAddress"],'style:font-size:14px')."&nbsp;:1344</td>
@@ -431,15 +472,30 @@ $html="
 				<td align='right' style='font-size:14px' class=legend><strong>{MaxReqLength}:</strong></td>
 				<td align='left'>" . Field_text('MaxReqLength',$kav4->main_array["MaxReqLength"],'width:50px;font-size:14px')."</td>
 				<td align='left'>" . help_icon('{MaxReqLength_text}',false,'milter.index.php') . "</td>
-				<tr>						
+				<tr>	
+				<tr>
+					<td colspan=3 style='font-size:16px'>{memory_scanning}</td>
+				</tr>
+				<tr>
+					<td align='right' style='font-size:14px' class=legend><strong>{enable_memory_scanning}:</strong></td>
+					<td>". Field_checkbox("Kav4ProxyTMPFS", 1,$Kav4ProxyTMPFS,"Kav4ProxyTMPFSMBCheck()")."</td>
+					<td>" . help_icon('{Kav4ProxyTMPFS_explain}') . "
+				</tr>
+				<tr>
+				<td align='right' style='font-size:14px' class=legend><strong>{memory_size}:</strong></td>
+				<td align='left' style='font-size:14px'>" . Field_text('Kav4ProxyTMPFSMB',$Kav4ProxyTMPFSMB,'width:50px;font-size:14px')."&nbsp;MB</td>
+				<td align='left'>" . help_icon('{Kav4ProxyTMPFS_explain}') . "</td>
+				<tr>				
 
 				
 				
 					<td colspan=3 align='right'>
 						<hr>
-						". button("{save}","icapserver_engine_options_save()")."</td>
+						". button("{apply}","icapserver_engine_options_save()")."</td>
 				</tr>
+				</tbody>
 				</table>
+				</center>
 			</div>
 		<script>
 var x_icapserver_engine_options_save= function (obj) {
@@ -447,7 +503,15 @@ var x_icapserver_engine_options_save= function (obj) {
 		if(tempvalue.length>3){alert(tempvalue)};
     	YahooWin2Hide();
     	if(document.getElementById('main_kav4proxy_config')){RefreshTab('main_kav4proxy_config');}
-	}	
+	}
+
+	function Kav4ProxyTMPFSMBCheck(){
+		document.getElementById('Kav4ProxyTMPFSMB').disabled=true;
+		if(document.getElementById('Kav4ProxyTMPFS').checked){
+			document.getElementById('Kav4ProxyTMPFSMB').disabled=false;
+		}
+	
+	}
 
 
 function icapserver_engine_options_save(){
@@ -459,9 +523,13 @@ function icapserver_engine_options_save(){
 		XHR.appendData('MaxReqLength',document.getElementById('MaxReqLength').value);
 		XHR.appendData('MaxEnginesPerChild',document.getElementById('MaxEnginesPerChild').value);
 		XHR.appendData('ListenAddress',document.getElementById('ListenAddress').value);
+		XHR.appendData('Kav4ProxyTMPFSMB',document.getElementById('Kav4ProxyTMPFSMB').value);
+		if(document.getElementById('Kav4ProxyTMPFS').checked){XHR.appendData('Kav4ProxyTMPFS',1);}else{XHR.appendData('Kav4ProxyTMPFS',0);}
 		AnimateDiv('icapserver_engine_options');
 		XHR.sendAndLoad('$page', 'GET',x_icapserver_engine_options_save);
 }
+
+Kav4ProxyTMPFSMBCheck();
 </script>
 
 			
@@ -472,6 +540,11 @@ echo $tpl->_ENGINE_parse_body($html);
 }
 function icapserver_engine_options_save(){
 		$kav=new Kav4Proxy();
+		$sock=new sockets();
+		$sock->SET_INFO("Kav4ProxyTMPFS", $_GET["Kav4ProxyTMPFS"]);
+		$sock->SET_INFO("Kav4ProxyTMPFSMB", $_GET["Kav4ProxyTMPFSMB"]);
+		
+		
 		$kav->MOD("icapserver.filter","MaxReqLength",$_GET["MaxReqLength"]);		
 		$kav->MOD("icapserver.protocol","PreviewSize",$_GET["PreviewSize"]);
 		$kav->MOD("icapserver.process","MaxChildren",$_GET["MaxChildren"]);

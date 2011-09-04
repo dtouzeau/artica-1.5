@@ -10,7 +10,7 @@ include_once(dirname(__FILE__).'/ressources/class.artica.inc');
 include_once(dirname(__FILE__).'/framework/class.unix.inc');
 include_once(dirname(__FILE__)."/framework/frame.class.inc");
 //server-syncronize-64.png
-
+$GLOBALS["FORCE"]=false;
 if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["VERBOSE"]=true;}
 if(preg_match("#--force#",implode(" ",$argv))){$GLOBALS["FORCE"]=true;}
 
@@ -235,7 +235,9 @@ function loadavg(){
 	$pid=getmypid();
 	@file_put_contents($pidfile,$pid);
 	$timefile="/etc/artica-postfix/croned.1/".basename(__FILE__).__FUNCTION__;
-	if(!$GLOBALS["FORCE"]){if(file_time_min($timefile)<5){return null;}}
+	$timeMin=file_time_min($timefile);
+	if(!$GLOBALS["FORCE"]){if($timeMin<5){
+		writelogs("{$timeMin}Mn, aborting",__FUNCTION__,__FILE__,__LINE__);return null;}}
 	@unlink($timefile);
 	@file_put_contents($timefile,"#");	
 	

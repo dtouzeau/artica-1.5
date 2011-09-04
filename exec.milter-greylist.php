@@ -26,9 +26,13 @@ if($EnablePostfixMultiInstance==1){
 	if($GLOBALS["START_ONLY"]==1){	MultiplesInstances_start($GLOBALS["hostname"],$GLOBALS["ou"]);die();}
 	if($GLOBALS["STOP_ONLY"]==1){	MultiplesInstances_stop($GLOBALS["hostname"],$GLOBALS["ou"]);die();}
 	
-	
+	if($argv[1]=="--database"){parse_multi_databases();die();}
 	MultiplesInstances($GLOBALS["hostname"],$GLOBALS["ou"]);exit;
 }
+
+
+if($argv[1]=="--database"){parse_database("/var/milter-greylist/greylist.db","master");die();}
+
 
 SingleInstance();
 
@@ -40,6 +44,7 @@ function parsecmdlines($argv){
 		if(preg_match("#--verbose#",$ligne)){
 			$GLOBALS["DEBUG"]=true;
 			$GLOBALS["VERBOSE"]=true;
+			ini_set('display_errors', 1);ini_set('error_reporting', E_ALL);ini_set('error_prepend_string',null);ini_set('error_append_string',null);
 		}
 		
 	if(preg_match("#--norestart#",$ligne)){
@@ -85,7 +90,7 @@ function SingleInstance(){
 		return;
 	}
 	
-	$mg=new milter_greylist();
+	$mg=new milter_greylist(false,"master","master");
 	$datas=$mg->BuildConfig();
 	if($datas<>null){
 		$conf_path=SingleInstanceConfPath();
@@ -118,6 +123,30 @@ if(is_file('/opt/artica/etc/milter-greylist/greylist.conf')){return '/opt/artica
 return '/etc/mail/greylist.conf';
 }
 
+function parse_multi_databases(){
+		$sock=new sockets();
+		$uuid=base64_decode($sock->getFrameWork("cmd.php?system-unique-id=yes"));	
+	
+	$sql="SELECT ValueTEXT,ip_address,ou FROM postfix_multi WHERE `key`='PluginsEnabled' AND uuid='$uuid'";
+	if($GLOBALS["DEBUG"]){echo "$sql\n";}
+	$q=new mysql();
+	$results=$q->QUERY_SQL($sql,"artica_backup");
+	if(!$q->ok){echo __FUNCTION__. " $q->mysql_error\n";}
+	
+	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+		$array_filters=unserialize(base64_decode($ligne["ValueTEXT"]));
+		if($GLOBALS["DEBUG"]){echo "{$ligne["ip_address"]} APP_MILTERGREYLIST ->{$array_filters["APP_MILTERGREYLIST"]}  \n";}
+		if($array_filters["APP_MILTERGREYLIST"]==null){continue;}
+		if($array_filters["APP_MILTERGREYLIST"]==0){continue;}
+		$hostname=MultiplesInstancesGetmyhostname($ligne["ip_address"]);
+		$ou=$ligne["ou"];
+		if($GLOBALS["DEBUG"]){echo "$hostname -> $ou\n";}
+		$GLOBALS["hostnames"][$hostname]=$ou;
+		$file="/var/milter-greylist/$hostname/greylist.db";
+		parse_database($file,$hostname);
+	}	
+	
+}
 
 function MultiplesInstances($hostname=null,$ou=null){
 	
@@ -170,10 +199,7 @@ function MultiplesInstancesFound(){
 	if($GLOBALS["DEBUG"]){echo "$sql\n";}
 	$q=new mysql();
 	$results=$q->QUERY_SQL($sql,"artica_backup");
-	
-	if(!$q->ok){
-		echo __FUNCTION__. " $q->mysql_error\n";
-	}
+	if(!$q->ok){echo __FUNCTION__. " $q->mysql_error\n";}
 	
 	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
 		$array_filters=unserialize(base64_decode($ligne["ValueTEXT"]));
@@ -210,6 +236,9 @@ function MultiplesInstances_start($hostname,$ou){
 	@mkdir("/var/spool/postfix/var/run/milter-greylist/$hostname",666,true);
 	@mkdir("/var/milter-greylist/$hostname",666,true);
 	if(!is_file("/var/milter-greylist/$hostname/greylist.db")){@file_put_contents("/var/milter-greylist/$hostname/greylist.db"," ");}
+	shell_exec("/bin/chmod 644 /var/milter-greylist/$hostname/greylist.db");
+	
+	
 	if(!is_file("/etc/milter-greylist/$hostname/greylist.conf")){
 		echo "Starting......: milter-greylist $hostname /etc/milter-greylist/$hostname/greylist.conf does not exists\n";
 		MultiplesInstances($hostname,$ou);return ;
@@ -337,6 +366,74 @@ function GetMemoriesOf($pid){
 	return implode("\n",$l);
 	
 }
+
+function parse_database($filename,$hostname){
+	if(!is_file($filename)){writelogs("Failed to open $filename no such file",__FUNCTION__,__FILE__,__LINE__);return ;}
+	$users=new usersMenus();
+	$handle = @fopen($filename, "r"); // Open file form read.
+	if (!$handle) {writelogs("Fatal errror while open $filename",__FUNCTION__,__FILE__,__LINE__);return ;}
+	$sqlA="DELETE FROM greylist_turples WHERE hostname='$hostname'";
+	$prefix="INSERT IGNORE INTO greylist_turples(zmd5,ip_addr,mailfrom,mailto,stime,hostname) VALUES ";
+	$q=new mysql();
+	$q->QUERY_SQL($sqlA,"artica_events");
+	$sql=array();
+	while (!feof($handle)){
+		$buffer = fgets($handle, 4096);
+		if(trim($buffer)==null){continue;}
+		if(preg_match("#(.+?)\s+(.*?)\s+(.+?)\s+([0-9]+)#", $buffer,$re)){
+			$ip=$re[1];
+			$from=$re[2];
+			$from=str_replace("<", "", $from);
+			$from=str_replace(">", "", $from);
+			$to=$re[3];
+			$to=str_replace("<", "", $to);
+			$to=str_replace(">", "", $to);			
+			$time=$re[4];
+			$md5=md5("$ip$from$to$time$hostname");
+			$sql[]="('$md5','$ip','$from','$to','$time','$hostname')";
+			if(count($sql)>500){
+				if($GLOBALS["VERBOSE"]){echo "Finally save ".count($sql)." events\n";}
+				$newsql=$prefix." ".@implode(",", $sql);
+				$q->QUERY_SQL($newsql,"artica_events");
+				if(!$q->ok){echo $q->mysql_error."\n";return ;}
+				$sql=array();
+			}
+			
+			continue;
+		}else{
+			if($GLOBALS["VERBOSE"]){echo "no match $buffer\n";}
+		}
+		
+
+		
+		
+	}
+		
+if(count($sql)>0){
+	if($GLOBALS["VERBOSE"]){echo "Finally save ".count($sql)." events\n";}
+	$newsql=$prefix." ".@implode(",", $sql);$q->QUERY_SQL($newsql,"artica_events");$sql=array();}
+if(!$q->ok){echo $q->mysql_error."\n";return ;}	
+$unix=new unix();
+$tail=$unix->find_program("tail");
+$chmod=$unix->find_program("chmod");
+exec("$tail -n 2 $filename 2>&1",$tails);
+
+while (list ($num, $ligne) = each ($tails) ){
+		if(preg_match("#Summary:\s+([0-9]+)\s+records,\s+([0-9]+)\s+greylisted,\s+([0-9]+)\s+whitelisted,\s+([0-9]+)\s+tarpitted#", $ligne,$re)){
+			$array["RECORDS"]=$re[1];
+			$array["GREYLISTED"]=$re[2];
+			$array["WHITELISTED"]=$re[3];
+			$array["TARPITED"]=$re[4];
+			if($GLOBALS["VERBOSE"]){print_r($array);}
+			@file_put_contents("/usr/share/artica-postfix/ressources/logs/greylist-count-$hostname.tot", serialize($array));
+			shell_exec("$chmod 755 /usr/share/artica-postfix/ressources/logs/greylist-count-$hostname.tot");
+		}else{
+			if($GLOBALS["VERBOSE"]){echo "no match $ligne\n";}
+		}
+}
+			
+}
+
 // -P pidfile
 
 

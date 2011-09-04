@@ -449,6 +449,11 @@ class settings_inc {
 	var $MSKTUTIL_INSTALLED=false;
 	var $OPENEMM_SENDMAIL_VERSION="";
 	var $PIWIK_INSTALLED=false;
+	var $APACHE_MOD_INFO=false;
+	var $APACHE_MOD_STATUS=false;
+	var $APACHE_APPLIANCE=false;
+	var $APACHE_MOD_SUEXEC=false;
+	var $APACHE_MOD_FCGID=false;	
 	private function CheckIndexDefaults($_GLOBAL){
 		return $_GLOBAL;
 		foreach($this as $key => $value) {
@@ -848,6 +853,12 @@ class settings_inc {
 			$this->MSKTUTIL_INSTALLED=$_GLOBAL["MSKTUTIL_INSTALLED"];
 			$this->OPENEMM_SENDMAIL_VERSION=$_GLOBAL["OPENEMM_SENDMAIL_VERSION"];
 			$this->PIWIK_INSTALLED=$_GLOBAL["PIWIK_INSTALLED"];
+			$this->APACHE_MOD_INFO=$_GLOBAL["APACHE_MOD_INFO"];
+			$this->APACHE_MOD_STATUS=$_GLOBAL["APACHE_MOD_STATUS"];
+			$this->APACHE_APPLIANCE=$_GLOBAL["APACHE_APPLIANCE"];
+			$this->APACHE_MOD_SUEXEC=$_GLOBAL["APACHE_MOD_SUEXEC"];
+			$this->APACHE_MOD_FCGID=$_GLOBAL["APACHE_MOD_FCGID"];			
+
 			
 			if(isset($_GLOBAL["deduplication_installed"])){$this->deduplication_installed=$_GLOBAL["deduplication_installed"];}
 			$this->EnableManageUsersTroughActiveDirectory=$_GLOBAL["EnableManageUsersTroughActiveDirectory"];
@@ -880,10 +891,11 @@ class settings_inc {
 				$this->nmap_installed=false;
 			}			
 			
-			if($users->KASPERSKY_WEB_APPLIANCE){
+			if($this->KASPERSKY_WEB_APPLIANCE){
 				$this->POSTFIX_INSTALLED=false;
 				$this->APP_AUDITD_INSTALLED=false;
 				$this->BACKUPPC_INSTALLED=false;
+				$this->KAV4PROXY_INSTALLED=true;
 				
 			}			
 			

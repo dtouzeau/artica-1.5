@@ -740,6 +740,7 @@ function finduser(){
 			if($mail==null){$mail='{unknown}';}
 
 			if($ligne["employeenumber"][0]<>null){
+				$array["employeenumber"]=$ligne["employeenumber"][0];
 				$user=new contacts($_SESSION["uid"],$ligne["employeenumber"][0]);
 				$array["title"]=$user->displayName;
 				$uri="javascript:Loadjs('contact.php?employeeNumber={$ligne["employeenumber"][0]}')";			

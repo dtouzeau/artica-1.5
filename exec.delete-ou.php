@@ -3,13 +3,14 @@ if(posix_getuid()<>0){die("Cannot be used in web server mode\n\n");}
 include_once(dirname(__FILE__).'/ressources/class.templates.inc');
 include_once(dirname(__FILE__).'/ressources/class.ldap.inc');
 include_once(dirname(__FILE__).'/ressources/class.user.inc');
+include_once(dirname(__FILE__).'/ressources/logs.inc');
 
 
 	
 $ou=$argv[1];
 $delete_mailbox=$argv[2];
 echo ini_get('error_log')."\n";
-error_log("PHP Infos: Starting to delete $ou",0);
+phpxlog("PHP Infos: Starting to delete $ou",0);
 
 if($delete_mailbox==1){
 	DeleteMailboxesOU($ou);
@@ -169,7 +170,7 @@ $ldap=new clladp();
 	while (list ($num, $ligne) = each ($hash) ){
 		if(trim($num)==null){continue;}
 		$users=new user($num);
-		error_log("PHP Infos: Delete $num user",0);
+		phpxlog("PHP Infos: Delete $num user",0);
 		$users->DeleteUser();
 		}
 	
@@ -182,7 +183,7 @@ function DeleteMailboxesOU($ou){
 	if(!is_array($hash)){return true;}
 	while (list ($num, $ligne) = each ($hash) ){
 		if(trim($num)==null){continue;}
-		error_log("PHP Infos: Delete $num mailbox",0);
+		phpxlog("PHP Infos: Delete $num mailbox",0);
 		system("/usr/share/artica-postfix/bin/artica-install --delete-mailbox \"$num\"");
 	}
 	

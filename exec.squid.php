@@ -34,6 +34,7 @@ if($argv[1]=="--retrans"){retrans();die();}
 if($argv[1]=="--certificate"){certificate_generate();die();}
 if($argv[1]=="--caches"){BuildCaches();die();}
 if($argv[1]=="--caches-reconstruct"){ReconstructCaches();die();}
+if($argv[1]=="--compilation-params"){compilation_params();die();}
 
 
 
@@ -89,8 +90,12 @@ if($argv[1]=="--build"){
 			die();
 		}
 	$childpid=posix_getpid();
+	$sock=new sockets();
 	@file_put_contents($EXEC_PID_FILE,$childpid);
 	if(is_file("/etc/squid3/mime.conf")){shell_exec("/bin/chown squid:squid /etc/squid3/mime.conf");}
+	$EnableKerbAuth=$sock->GET_INFO("EnableKerbAuth");
+	if(!is_numeric("$EnableKerbAuth")){$EnableKerbAuth=0;}	
+	echo "Starting......: Checking squid kerberos authentification is set to $EnableKerbAuth\n";
 	
 	echo "Starting......: Checking squid certificate\n";
 	certificate_generate();
@@ -932,6 +937,33 @@ function SQUID_TEMPLATES_COMPILING_CSS(){
 	}
 	return @implode("\n",$datas);
 	
+}
+
+function compilation_params(){
+	
+	exec($GLOBALS["SQUIDBIN"]." -v",$results);
+	$text=@implode("\n", $results);
+	if(preg_match("#configure options:\s+(.+)#is", $text,$re)){$text=$re[1];}
+	if(preg_match_all("#'(.+?)'#is", $text, $re)){
+		while (list ($index, $line) = each ($re[1])){
+			if(preg_match("#(.+?)=(.+)#", $line,$ri)){
+				$key=$ri[1];
+				$value=$ri[2];
+				$key=str_replace("--", "", $key);
+				$array[$key]=$value;
+				continue;
+			}
+			$key=$line;
+			$value=1;
+			$key=str_replace("--", "", $key);
+			$array[$key]=$value;
+					
+			
+		}
+
+		@file_put_contents("/usr/share/artica-postfix/ressources/logs/squid.compilation.params", base64_encode(serialize($array)));
+		shell_exec("/bin/chmod 755 /usr/share/artica-postfix/ressources/logs/squid.compilation.params");
+	}
 }
 
 

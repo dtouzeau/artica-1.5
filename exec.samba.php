@@ -15,7 +15,7 @@ include_once(dirname(__FILE__).'/ressources/class.mount.inc');
 include_once(dirname(__FILE__).'/framework/class.unix.inc');
 include_once(dirname(__FILE__)."/framework/frame.class.inc");
 
-if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["VERBOSE"]=true;}
+if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["VERBOSE"]=true;ini_set('display_errors', 1);ini_set('error_reporting', E_ALL);ini_set('error_prepend_string',null);ini_set('error_append_string',null);}
 if(preg_match("#--force#",implode(" ",$argv))){$GLOBALS["FORCE"]=true;}
 
 if($argv[1]=='--users'){CountDeUsers();die();}
@@ -36,6 +36,7 @@ if($argv[1]=='--trash-restore'){recycles_restore();die();}
 if($argv[1]=='--trash-delete'){recycles_delete();die();}
 if($argv[1]=='--trash-scan'){ScanTrashs();die();}
 if($argv[1]=='--check-privs'){recycles_privileges($argv[2],$argv[3]);die();}
+if($argv[1]=='--smbstatus'){smbstatus_injector();die();}
 
 
 
@@ -1295,7 +1296,8 @@ function Recycles_inject($path,$uid,$ShareName){
 		}
 		
 		
-	if($count($sql)>0){
+	if(count($sql)>0){
+		if($GLOBALS["VERBOSE"]){echo "Inserting ".count($sql)." events\n";}
 		$finalsql="$prefix ".@implode(",", $sql);$sql=array();
 		$q->QUERY_SQL($finalsql,"artica_backup");
 		if(!$q->ok){echo $q->mysql_error;echo "\n$finalsql\n";}
@@ -1450,6 +1452,87 @@ function ScanTrashs(){
 	if(!$q->ok){$unix->send_email_events("Virtual trashs: unable to set files TTL, mysql error", "Artica cannot update the mysql table\n$sql\n", "samba");}
 	recycles_delete();
 	recycles();	
+}
+
+function smbstatus_injector(){
+	$unix=new unix();
+	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
+	$pid=@file_get_contents($pidfile);
+	if($unix->process_exists($pid,basename(__FILE__))){
+		writelogs("$pid already exists in memory, aborting",__FUNCTION__,__FILE__,__LINE__);
+		return;
+	}
+	@file_put_contents($pidfile, getmypid());
+	
+	$q=new mysql();
+	$q->QUERY_SQL("TRUNCATE TABLE smbstatus_users","artica_events");
+	$smbstatus=$unix->find_program("smbstatus");
+	if(!is_file($smbstatus)){return;}
+	exec("$smbstatus -p 2>&1",$results);
+
+	$prefix="INSERT IGNORE INTO smbstatus_users ( `pid`,`username`,`usersgroup`,`computer`,`ip_addr`) VALUES ";
+	while (list ($index, $line) = each ($results) ){
+		if(trim($line)==null){continue;}
+		if(!preg_match("#([0-9]+)\s+(.+?)\s+(.+?)\s+\s+(.+?)\s+\((.+?)\)#", $line,$re)){continue;}
+		$sql[]="('{$re[1]}','{$re[2]}','{$re[3]}','{$re[4]}','{$re[5]}')";		
+		if(count($sql)>500){
+			$injectsql=$prefix.@implode(",", $sql);
+			$sql=array();
+			$q->QUERY_SQL($injectsql,"artica_events");
+		}	
+	}
+	
+	if(count($sql)>0){
+		$injectsql=$prefix.@implode(",", $sql);
+		$sql=array();
+		$q->QUERY_SQL($injectsql,"artica_events");
+	}		
+	
+	$results=array();
+	exec("$smbstatus -p 2>&1",$results);
+	
+	while (list ($index, $line) = each ($results) ){
+		if(trim($line)==null){continue;}
+		if(!preg_match("#^(.+?)\s+([0-9]+)\s+(.+?)\s+(.+)$#", $line,$re)){if($GLOBALS["VERBOSE"]){echo "$line -> no match\n";}continue;}
+			$share=addslashes($re[1]);
+			$pid=$re[2];
+			$time=strtotime($re[4]);
+			$date=date('Y-m-d H:i:s',$time);
+			if($GLOBALS["VERBOSE"]){echo "SHARE='$share' {$re[4]} = $date pid=$pid\n ";}
+			
+			$q->QUERY_SQL("UPDATE smbstatus_users SET `sharename`='$share',`zDate`='$date' WHERE `pid`='$pid'","artica_events");
+			if(!$q->ok){if($GLOBALS["VERBOSE"]){echo "$q->mysql_error\n";}}
+			
+	}	
+	
+	$results=array();
+	exec("$smbstatus -L 2>&1",$results);
+		
+	$q->QUERY_SQL("TRUNCATE TABLE smbstatus_users_dirs","artica_events");
+	$prefix="INSERT IGNORE INTO smbstatus_users_dirs (`zmd5`, `pid`,`directory`,`filepath`,`zDate`) VALUES ";
+	while (list ($index, $line) = each ($results) ){
+	if(trim($line)==null){continue;}
+	if(!preg_match("#^([0-9]+)\s+[0-9]+\s+[A-Z\_]+\s+[a-z0-9]+\s+[A-Z\_\+]+\s+[A-Z\_\+]+\s+(.+?)\s+\s+(.+?)\s+\s+(.+?)$#", $line,$re)){if($GLOBALS["VERBOSE"]){echo "$line -> no match\n";}continue;}
+		$pid=$re[1];
+		$dir=addslashes($re[2]);
+		$path=addslashes($re[3]);
+		$time=strtotime($re[4]);
+		$date=date('Y-m-d H:i:s',$time);
+		$md5=md5("$pid$dir$path$date");
+		$sql[]="('$md5','$pid','$dir','$path','$date')";		
+		if(count($sql)>500){
+			$injectsql=$prefix.@implode(",", $sql);
+			$sql=array();
+			$q->QUERY_SQL($injectsql,"artica_events");
+		}			
+	}
+	
+	if(count($sql)>0){
+		$injectsql=$prefix.@implode(",", $sql);
+		$sql=array();
+		$q->QUERY_SQL($injectsql,"artica_events");
+	}		
+
 }
 
 

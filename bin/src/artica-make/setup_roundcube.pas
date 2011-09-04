@@ -176,7 +176,7 @@ begin
         install.INSTALL_PROGRESS(CODE_NAME,'{installed}');
         install.INSTALL_STATUS(CODE_NAME,100);
         SieveRules();
-        SYS.THREAD_COMMAND_SET('/etc/init.d/artica-postfix restart roundcube');
+        fpsystem('/etc/init.d/artica-postfix restart roundcube');
         exit;
      end else begin
       writeln('unable to stat '+web_folder+'/SQL/mysql.update.sql');
@@ -191,7 +191,7 @@ begin
   install.INSTALL_STATUS(CODE_NAME,100);
   fpsystem('/bin/rm /etc/artica-postfix/versions.cache');
 
-  SYS.THREAD_COMMAND_SET('/etc/init.d/artica-postfix restart roundcube');
+  fpsystem('/etc/init.d/artica-postfix restart roundcube');
   fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.www.install.php');
 
 end;

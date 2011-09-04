@@ -472,6 +472,17 @@ class usersMenus {
 	var $OPENEMM_SENDMAIL_INSTALLED=false;
 	var $OPENEMM_SENDMAIL_VERSION=false;
 	var $PIWIK_INSTALLED=false;
+	var $JOOMLA17_INSTALLED=false;
+	var $APACHE_MOD_GEOIP=false;
+	var $FROM_ISO=false;
+	var $APACHE_MOD_PAGESPEED=false;
+	var $WORDPRESS_INSTALLED=false;
+	var $APACHE_MOD_INFO=false;
+	var $APACHE_MOD_STATUS=false;
+	var $APACHE_APPLIANCE=false;
+	var $APACHE_MOD_SUEXEC=false;
+	var $APACHE_MOD_FCGID=false;
+	var $CGROUPS_INSTALLED=false;	
 	
 	private function CheckIndexDefaults($_GLOBAL){
 		return $_GLOBAL;
@@ -604,7 +615,7 @@ class usersMenus {
 			if(isset($_GLOBAL["ARTICA_FILTER_MAXSUBQUEUE"])){$this->ARTICA_FILTER_MAXSUBQUEUE=$_GLOBAL["ARTICA_FILTER_MAXSUBQUEUE"];}
 			$this->IPTABLES_INSTALLED=$_GLOBAL["IPTABLES_INSTALLED"];
 			if(isset($_GLOBAL["GeoIPDat_Path"])){$this->GeoIPDat_Path=$_GLOBAL["GeoIPDat_Path"];}
-			$this->lighttpd_installed=$_GLOBAL["lighttpd_installed"];
+			if(isset($_GLOBAL["lighttpd_installed"])){$this->lighttpd_installed=$_GLOBAL["lighttpd_installed"];}
 			if($this->ChartLicence==null){$this->ChartLicence='D1XFWGMEW9L.HSK5T4Q79KLYCK07EK';}
 			$this->SAMBA_INSTALLED=$_GLOBAL["SAMBA_INSTALLED"];
 			$this->LOCAL_SID=$_GLOBAL["LOCAL_SID"];
@@ -659,7 +670,8 @@ class usersMenus {
 			if(isset($_GLOBAL["DRUPAL7_INSTALLED"])){$this->DRUPAL7_INSTALLED=$_GLOBAL["DRUPAL7_INSTALLED"];}
 			if(isset($_GLOBAL["OPENEMM_SENDMAIL_INSTALLED"])){$this->OPENEMM_SENDMAIL_INSTALLED=$_GLOBAL["OPENEMM_SENDMAIL_INSTALLED"];}
 			if(isset($_GLOBAL["OPENEMM_SENDMAIL_VERSION"])){$this->OPENEMM_SENDMAIL_VERSION=$_GLOBAL["OPENEMM_SENDMAIL_VERSION"];}
-			
+			$this->FROM_ISO=$_GLOBAL["FROM_ISO"];
+		
 			
 			
 			
@@ -692,8 +704,8 @@ class usersMenus {
 			if(isset($_GLOBAL["JCHECKMAIL_SOCKET"])){$this->JCHECKMAIL_SOCKET=$_GLOBAL["JCHECKMAIL_SOCKET"];}
 			$this->zip_installed=$_GLOBAL["zip_installed"];
 			$this->BIND9_INSTALLED=$_GLOBAL["BIND9_INSTALLED"];
-			$this->OPENLDAP_DYNLIST=$_GLOBAL["OPENLDAP_DYNLIST"];
-			$this->SLPAD_LOCKED=$_GLOBAL["SLPAD_LOCKED"];
+			if(isset($_GLOBAL["OPENLDAP_DYNLIST"])){$this->OPENLDAP_DYNLIST=$_GLOBAL["OPENLDAP_DYNLIST"];}
+			if(isset($_GLOBAL["SLPAD_LOCKED"])){$this->SLPAD_LOCKED=$_GLOBAL["SLPAD_LOCKED"];}
 			$this->dhcp_installed=$_GLOBAL["dhcp_installed"];
 			if(isset($_GLOBAL["ALTERMIME_INSTALLED"])){$this->ALTERMIME_INSTALLED=$_GLOBAL["ALTERMIME_INSTALLED"];}
 			if(isset($_GLOBAL["POMMO_INSTALLED"])){$this->POMMO_INSTALLED=$_GLOBAL["POMMO_INSTALLED"];}
@@ -722,9 +734,7 @@ class usersMenus {
 			$this->SUGARCRM_INSTALLED=$_GLOBAL["SUGARCRM_INSTALLED"];
 			if(isset($_GLOBAL["GNUPLOT_PNG"])){$this->GNUPLOT_PNG=$_GLOBAL["GNUPLOT_PNG"];}
 			$this->IOSTAT_INSTALLED=$_GLOBAL["IOSTAT_INSTALLED"];
-			if(is_array($_GLOBAL["IOSTAT_ARRAY"])){
-				$this->IOSTAT_ARRAY=$_GLOBAL["IOSTAT_ARRAY"];
-			}
+			if(isset($_GLOBAL["IOSTAT_ARRAY"])){if(is_array($_GLOBAL["IOSTAT_ARRAY"])){$this->IOSTAT_ARRAY=$_GLOBAL["IOSTAT_ARRAY"];}}
 			if(isset($_GLOBAL["POSTFIX_QUEUE"])){$this->POSTFIX_QUEUE=$_GLOBAL["POSTFIX_QUEUE"];}
 			$this->PHP_BIN_PATH=$_GLOBAL["PHP_BIN_PATH"];
 			$this->EXEC_NICE=$_GLOBAL["EXEC_NICE"];
@@ -879,6 +889,16 @@ class usersMenus {
 			$this->OPENEMM_INSTALLED=$_GLOBAL["OPENEMM_INSTALLED"];
 			$this->MSKTUTIL_INSTALLED=$_GLOBAL["MSKTUTIL_INSTALLED"];
 			$this->PIWIK_INSTALLED=$_GLOBAL["PIWIK_INSTALLED"];
+			$this->JOOMLA17_INSTALLED=$_GLOBAL["JOOMLA17_INSTALLED"];
+			$this->APACHE_MOD_GEOIP=$_GLOBAL["APACHE_MOD_GEOIP"];
+			$this->APACHE_MOD_PAGESPEED=$_GLOBAL["APACHE_MOD_PAGESPEED"];
+			$this->WORDPRESS_INSTALLED=$_GLOBAL["WORDPRESS_INSTALLED"];
+			$this->APACHE_MOD_INFO=$_GLOBAL["APACHE_MOD_INFO"];
+			$this->APACHE_MOD_STATUS=$_GLOBAL["APACHE_MOD_STATUS"];
+			$this->APACHE_APPLIANCE=$_GLOBAL["APACHE_APPLIANCE"];
+			$this->APACHE_MOD_SUEXEC=$_GLOBAL["APACHE_MOD_SUEXEC"];
+			$this->APACHE_MOD_FCGID=$_GLOBAL["APACHE_MOD_FCGID"];
+			$this->CGROUPS_INSTALLED=$_GLOBAL["CGROUPS_INSTALLED"];
 			if(isset($_GLOBAL["squid_kerb_auth_path"])){$this->squid_kerb_auth_path=$_GLOBAL["squid_kerb_auth_path"];}
 			
 			if(isset($_GLOBAL["ISCSI_CLIENT_INSTALLED"])){$this->ISCSI_CLIENT_INSTALLED=$_GLOBAL["ISCSI_CLIENT_INSTALLED"];}
@@ -927,6 +947,7 @@ class usersMenus {
 			}
 			
 			if($this->KASPERSKY_WEB_APPLIANCE){
+				$this->KAV4PROXY_INSTALLED=true;
 				$this->POSTFIX_INSTALLED=false;
 				$this->APP_AUDITD_INSTALLED=false;
 				$this->BACKUPPC_INSTALLED=false;
@@ -1409,7 +1430,7 @@ private function build_user_left_menus(){
 				
 				$array[$OU_TEXT]["SUB"]["{members}"]="javascript:AnimateDiv('BodyContent');Loadjs('domains.manage.org.index.php?finduser-js=yes&ou=$OU_encoded&encoded=yes&in-front-ajax=yes');";
 				$array[$OU_TEXT]["SUB"]["{groups}"]="javascript:AnimateDiv('BodyContent');Loadjs('domains.edit.group.php?ou=$OU_encoded&js=yes&encoded=yes&in-front-ajax=yes');";
-				$array[$OU_TEXT]["SUB"]["{search}"]="javascript:AnimateDiv('BodyContent');Loadjs('domains.find.user.php?ou=$OU_encoded&encoded=yes');";
+				$array[$OU_TEXT]["SUB"]["{search}"]="Loadjs('domains.find.user.php?ou=$OU_encoded&encoded=yes');";
 				if(!$this->EnableManageUsersTroughActiveDirectory){
 					if($EnableGroupWareScreen==1){
 						$array[$OU_TEXT]["SUB"]["{groupwares}"]="javascript:AnimateDiv('BodyContent');Loadjs('domains.manage.org.index.php?ou=$OU_encoded&encoded=yes&groupwares-in-front-ajax=yes');";
@@ -1458,7 +1479,7 @@ private function build_user_left_menus(){
 
 			
 			if($this->IPSEC_INSTALLED){
-				$array["system"]["SUB"]["VPN IPSEC"]="javascript:AnimateDiv('BodyContent');Loadjs('ipsec.php?infront=yes')";
+				//$array["system"]["SUB"]["VPN IPSEC"]="javascript:AnimateDiv('BodyContent');Loadjs('ipsec.php?infront=yes')";
 				
 			}
 			
@@ -1601,8 +1622,11 @@ private function build_user_left_menus(){
 		
 		
 		
+	
 		
-		if($this->SQUID_INSTALLED==true){if($this->AsSquidAdministrator==true){
+		
+		if($this->SQUID_INSTALLED==true){
+			if($this->AsSquidAdministrator==true){
 			$sock=new sockets();
 			$SQUIDEnable=trim($sock->GET_INFO("SQUIDEnable"));
 			if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
@@ -1655,12 +1679,25 @@ private function build_user_left_menus(){
 						
 					}
 					$array["{web_proxy}"]["SUB"]["{statistics}"]="javascript:s_PopUpFull('squid.logon.php',900,900,'Proxy statistics')";
+					$array["{web_proxy}"]["SUB"]["{performance}"]="javascript:AnimateDiv('BodyContent');Loadjs('squid.cached.sitesinfos.php?js=yes');";
+					
+					
+					
 					if($this->SARG_INSTALLED){
 						$array["{web_proxy}"]["SUB"]["SARG stats."]="javascript:s_PopUpFull('squid/index.html',900,900,'SARG')";
 					}
 					
+				}else{
+					if($this->KAV4PROXY_INSTALLED){$array=$this->KAV4_PROXY_MENUS($array);}
 				}
 			}
+		}else{
+			
+			if(($this->KAV4PROXY_INSTALLED) OR ($this->KASPERSKY_WEB_APPLIANCE)){
+				if($this->AsSquidAdministrator==true){$array=$this->KAV4_PROXY_MENUS($array);}
+			}
+			
+			
 		}
 		
 		if($this->POSTFIX_INSTALLED){
@@ -1867,6 +1904,18 @@ private function build_user_left_menus(){
 		$_SESSION["MainLeftSubPagesHTML"]=$html;
 		return $html;
 		
+	}
+	
+	private function KAV4_PROXY_MENUS($array){
+		$array["{APP_KAV4PROXY}"]["MAIN"]="javascript:Loadjs('squid.newbee.php?yes')";
+		$array["{APP_KAV4PROXY}"]["SUB"]["{status}"]="javascript:AnimateDiv('BodyContent');Loadjs('kav4proxy.php?frontend-status=yes')";
+		$array["{APP_KAV4PROXY}"]["SUB"]["{tasks}"]="javascript:AnimateDiv('BodyContent');Loadjs('kav4proxy.php?frontend-tasks=yes')";
+		$array["{APP_KAV4PROXY}"]["SUB"]["{main_parameters}"]="javascript:AnimateDiv('BodyContent');Loadjs('kav4proxy.php?frontend-params=yes')";
+		$array["{APP_KAV4PROXY}"]["SUB"]["{groups}"]="javascript:AnimateDiv('BodyContent');Loadjs('kav4proxy.php?frontend-groups=yes')";
+		$array["{APP_KAV4PROXY}"]["SUB"]["{statistics}"]="javascript:AnimateDiv('BodyContent');Loadjs('kav4proxy.php?frontend-stats=yes')";
+		$array["{APP_KAV4PROXY}"]["SUB"]["{ExcludeMimeType}"]="javascript:AnimateDiv('BodyContent');Loadjs('kav4proxy.php?frontend-excludemime=yes')";
+		$array["{APP_KAV4PROXY}"]["SUB"]["{blacklist_databases}"]="javascript:AnimateDiv('BodyContent');Loadjs('kav4proxy.php?frontend-blacklists=yes')";		
+		return $array;
 	}
 	
 	

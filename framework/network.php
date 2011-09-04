@@ -15,6 +15,9 @@ if(isset($_GET["ipdeny"])){ipdeny();exit;}
 if(isset($_GET["fw-inbound-rules"])){iptables_inbound();exit;}
 if(isset($_GET["fqdn"])){fqdn();exit;}
 if(isset($_GET["iptaccount-installed"])){iptaccount_check();exit;}
+if(isset($_GET["ifup-ifdown"])){ifup_ifdown();exit;}
+if(isset($_GET["reconstruct-interface"])){reconstruct_interface();exit;}
+
 
 
 
@@ -71,6 +74,18 @@ function pinghost(){
 	}
 }
 
+
+	
+function ifup_ifdown(){
+	$eth=$_GET["ifup-ifdown"];
+	$unix=new unix();
+	$php=$unix->LOCATE_PHP5_BIN();
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim("$nohup $php /usr/share/artica-postfix/exec.virtuals-ip.php --ifupifdown $eth >/dev/null 2>&1 &");
+	writelogs_framework($cmd,__FUNCTION__,__FILE__,__LINE__);
+	shell_exec($cmd);		
+}
+
 function crossroads_restart(){
 	$unix=new unix();
 	$php=$unix->LOCATE_PHP5_BIN();
@@ -116,6 +131,18 @@ function iptables_inbound(){
 	$cmd=trim("$nohup $php /usr/share/artica-postfix/exec.postfix.iptables.php --perso >/dev/null 2>&1 &");
 	writelogs_framework($cmd,__FUNCTION__,__FILE__,__LINE__);
 	shell_exec($cmd);	
+	
+}
+
+function reconstruct_interface(){
+	$eth=$_GET["reconstruct-interface"];
+	$unix=new unix();
+	$php=$unix->LOCATE_PHP5_BIN();
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim("$nohup $php /usr/share/artica-postfix/exec.virtuals-ip.php --reconstruct-interface $eth >/dev/null 2>&1 &");
+	writelogs_framework($cmd,__FUNCTION__,__FILE__,__LINE__);
+	shell_exec($cmd);	
+	
 	
 }
 

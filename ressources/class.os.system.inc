@@ -236,6 +236,7 @@ function system_is_overloaded($file=null){
 	$d=new debuglogs();
 	
 	$notlog["exec.squid.blacklists.php"]=true;
+	if(!isset($notlog[$file])){$notlog[$file]=false;}
 	
 	if(!isset($GLOBALS["CPU_NUMBER"])){
 			include_once(dirname(__FILE__).'/class.users.menus.inc');
@@ -263,6 +264,8 @@ function system_is_overloaded($file=null){
 	
 
 	if($internal_load>$cpunum){
+		if(function_exists("debug_backtrace")){try {$trace=@debug_backtrace();if(isset($trace[1])){$called=" called by ". basename($trace[1]["file"])." {$trace[1]["function"]}() line {$trace[1]["line"]}";}} catch (Exception $e) {}}		
+		
 		$GLOBALS["SYSTEM_INTERNAL_LOAD"]=$internal_load;
 		$d->events("Load: OVERLOADED $called","/var/log/artica-postfix/syslog.log");
 		if($GLOBALS["VERBOSE"]){echo "$file system_is_overloaded():: Load: $internal_load max=$cpunum SYSTEM OVERLOADED $called\n";}

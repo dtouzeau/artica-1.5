@@ -12,7 +12,7 @@
       <MainUnit Value="0"/>
       <TargetFileExt Value=""/>
       <Title Value="artica-iso"/>
-      <ActiveEditorIndexAtStart Value="1"/>
+      <ActiveEditorIndexAtStart Value="2"/>
     </General>
     <VersionInfo>
       <ProjectVersion Value=""/>
@@ -29,33 +29,33 @@
         <LaunchingApplication PathPlusParams="/usr/X11R6/bin/xterm -T 'Lazarus Run Output' -e $(LazarusDir)/tools/runwait.sh $(TargetCmdLine)"/>
       </local>
     </RunParams>
-    <Units Count="4">
+    <Units Count="5">
       <Unit0>
         <Filename Value="artica_iso.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="artica_iso"/>
-        <CursorPos X="20" Y="16"/>
-        <TopLine Value="1"/>
+        <CursorPos X="97" Y="82"/>
+        <TopLine Value="52"/>
         <EditorIndex Value="0"/>
-        <UsageCount Value="27"/>
+        <UsageCount Value="29"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
         <Filename Value="debian_class.pas"/>
         <UnitName Value="debian_class"/>
-        <CursorPos X="1" Y="88"/>
-        <TopLine Value="52"/>
-        <EditorIndex Value="1"/>
-        <UsageCount Value="12"/>
+        <CursorPos X="119" Y="9"/>
+        <TopLine Value="1"/>
+        <EditorIndex Value="2"/>
+        <UsageCount Value="13"/>
         <Loaded Value="True"/>
       </Unit1>
       <Unit2>
         <Filename Value="../artica-install/xfce.pas"/>
         <UnitName Value="xfce"/>
         <CursorPos X="104" Y="159"/>
-        <TopLine Value="89"/>
-        <EditorIndex Value="2"/>
-        <UsageCount Value="12"/>
+        <TopLine Value="143"/>
+        <EditorIndex Value="3"/>
+        <UsageCount Value="13"/>
         <Loaded Value="True"/>
       </Unit2>
       <Unit3>
@@ -65,8 +65,17 @@
         <TopLine Value="1"/>
         <UsageCount Value="10"/>
       </Unit3>
+      <Unit4>
+        <Filename Value="../artica-install/global_conf.pas"/>
+        <UnitName Value="global_conf"/>
+        <CursorPos X="1" Y="5876"/>
+        <TopLine Value="5842"/>
+        <EditorIndex Value="1"/>
+        <UsageCount Value="11"/>
+        <Loaded Value="True"/>
+      </Unit4>
     </Units>
-    <JumpHistory Count="2" HistoryIndex="1">
+    <JumpHistory Count="7" HistoryIndex="6">
       <Position1>
         <Filename Value="artica_iso.pas"/>
         <Caret Line="9" Column="15" TopLine="1"/>
@@ -75,6 +84,26 @@
         <Filename Value="artica_iso.pas"/>
         <Caret Line="16" Column="20" TopLine="1"/>
       </Position2>
+      <Position3>
+        <Filename Value="../artica-install/global_conf.pas"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
+      </Position3>
+      <Position4>
+        <Filename Value="artica_iso.pas"/>
+        <Caret Line="17" Column="25" TopLine="1"/>
+      </Position4>
+      <Position5>
+        <Filename Value="debian_class.pas"/>
+        <Caret Line="35" Column="37" TopLine="18"/>
+      </Position5>
+      <Position6>
+        <Filename Value="artica_iso.pas"/>
+        <Caret Line="100" Column="74" TopLine="46"/>
+      </Position6>
+      <Position7>
+        <Filename Value="debian_class.pas"/>
+        <Caret Line="98" Column="1" TopLine="52"/>
+      </Position7>
     </JumpHistory>
   </ProjectOptions>
   <CompilerOptions>

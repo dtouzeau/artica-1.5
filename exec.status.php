@@ -222,6 +222,7 @@ if(isset($argv[1])){
 }
 
 if($DisableArticaStatusService==1){
+	if(systemMaxOverloaded(basename(__FILE__))){events("OVERLOADED !! aborting","MAIN",__LINE__);die();}
 	events("-> launch_all_status()","MAIN",__LINE__);
 	launch_all_status();
 	die();	
@@ -243,7 +244,7 @@ if($DisableArticaStatusService==1){$nofork=true;}
 
 
 if($nofork){
-	
+	if(systemMaxOverloaded(basename(__FILE__))){events("OVERLOADED !! aborting","MAIN",__LINE__);die();}
 	print "Starting......: artica-status pcntl_fork module not loaded !\n";
 	$pidfile="/etc/artica-postfix/".basename(__FILE__).".pid";
 	$childpid=posix_getpid();
@@ -898,6 +899,7 @@ function squid_master_status(){
 	$version=trim(implode("",$results));
 	if($SQUIDEnable==1){
 		if(preg_match("#^2\.#", $version)){
+			if($GLOBALS["VERBOSE"]){echo "#^2\.# detected in $version, squid is disabled...\n";}
 			$GLOBALS["CLASS_SOCKETS"]->SET_INFO("SQUIDEnable",0);
 			$SQUIDEnable=0;
 		}
@@ -914,14 +916,18 @@ function squid_master_status(){
 	$l[]="remove_cmd=--squid-remove";
 	$l[]="family=squid";
 	if($GLOBALS["CLASS_USERS"]->SQUID_ICAP_ENABLED){
+		if($GLOBALS["VERBOSE"]){echo "SQUID_ICAP_ENABLED OK\n";}
 		$l[]="icap_enabled=1";
 	}
 	
 	if(!is_file("/var/log/squid/cache.log")){shell_exec("/etc/init/d/artica-postfix restart squid-cache >/dev/null 2>&1 &");}
 	
-	if($SQUIDEnable==0){$l[]="running=0\ninstalled=1";return implode("\n",$l);return;}
 	
-	$pid=trim(@file_get_contents("/var/run/squid.pid"));
+	$pidpath=squid_pid_path();
+	if($SQUIDEnable==0){$l[]="running=0\ninstalled=1";return implode("\n",$l);return;}
+	if($GLOBALS["VERBOSE"]){echo "Check $pidpath\n";}
+	
+	$pid=trim(@file_get_contents($pidpath));
 	if(!$GLOBALS["CLASS_UNIX"]->process_exists($pid)){
 		WATCHDOG("APP_SQUID","squid-cache");
 		$l[]="running=0\ninstalled=1";
@@ -936,6 +942,21 @@ function squid_master_status(){
 }
 // ========================================================================================================================================================
 
+function squid_pid_path(){
+	if(is_file("/var/run/squid3.pid")){
+		if($GLOBALS["VERBOSE"]){echo "squid_pid_path:: /var/run/squid3.pid exists...\n";}
+		$pid=trim(@file_get_contents("/var/run/squid3.pid"));
+		if($GLOBALS["VERBOSE"]){echo "squid_pid_path:: /var/run/squid3.pid -> $pid...\n";}
+		if($GLOBALS["CLASS_UNIX"]->process_exists($pid)){return "/var/run/squid3.pid";}
+	}
+	if(is_file("/var/run/squid.pid")){
+		$pid=trim(@file_get_contents("/var/run/squid.pid"));
+		if($GLOBALS["CLASS_UNIX"]->process_exists($pid)){return "/var/run/squid.pid";}
+	}
+	
+	return "/var/run/squid.pid";
+	
+}
 
 
 function squid_clamav_tail(){
@@ -977,7 +998,16 @@ function WATCHDOG($APP_NAME,$cmd){
 		if($GLOBALS["DISABLE_WATCHDOG"]){return null;}
 		if(!isset($GLOBALS["ArticaWatchDogList"][$APP_NAME])){$GLOBALS["ArticaWatchDogList"][$APP_NAME]=1;}
 		if($GLOBALS["ArticaWatchDogList"][$APP_NAME]==null){$GLOBALS["ArticaWatchDogList"][$APP_NAME]=1;}
+		
+		if(systemMaxOverloaded(basename(__FILE__))){
+			$array_load=sys_getloadavg();
+			$internal_load=$array_load[0];
+			$GLOBALS["CLASS_UNIX"]->send_email_events("Artica Watchdog start $APP_NAME is not performed (load $internal_load)","System is very overloaded ($internal_load) all watchdog tasks are stopped and waiting a better time!","system");
+			return;
+		}
+		
 		if($GLOBALS["ArticaWatchDogList"][$APP_NAME]==1){
+			
 			$cmd="{$GLOBALS["NICE"]} {$GLOBALS["PHP5"]} ".dirname(__FILE__)."/exec.watchdog.php --start-process \"$APP_NAME\" \"$cmd\" >/dev/null 2>&1 &";
 			events("WATCHDOG: running $APP_NAME ($cmd)",basename(__FILE__));
 			shell_exec($cmd);
@@ -1665,19 +1695,20 @@ function pdns_server(){
 	 	$l[]="watchdog_features=1";
 	 	$l[]="family=network";
 	 	
-	 	if($enabled==1){
-	 		if($verbose){echo "-> pdns_instance()";}
+	 	if($enabled==0){
+	 		if($verbose){echo "PNS is not enabled running next function -> pdns_instance()\n";}
 	 		$instance=pdns_instance();
 	 		return implode("\n",$l).$instance;
 	 	}		 	
 	 	
-	 	
+		if($verbose){echo "Detected PID: $master_pid ->  check it...\n";}
 		if(!$GLOBALS["CLASS_UNIX"]->process_exists($master_pid)){
 			if($verbose){echo "-> pid: [$master_pid] failed -> watchdog";}
 			WATCHDOG("APP_PDNS","pdns");
 			$l[]="running=0\ninstalled=1";$l[]="";return implode("\n",$l);
 			return;
 		}	
+		if($verbose){echo "Detected PID: $master_pid ->  Seems to be running\n";}
 		$l[]="running=1";
 		$l[]=GetMemoriesOf($master_pid);
 		$l[]="";
@@ -2112,7 +2143,7 @@ function syslogger(){
 		
 	if(!$GLOBALS["DISABLE_WATCHDOG"]){
 		$time=file_time_min("/var/log/artica-postfix/syslogger.debug");
-		writelogs("LOG TIME: $time",__FUNCTION__,__FILE__,__LINE__);
+		//writelogs("LOG TIME: $time",__FUNCTION__,__FILE__,__LINE__);
 		if($time>5){
 			$GLOBALS["CLASS_UNIX"]->THREAD_COMMAND_SET("/etc/init.d/artica-postfix restart sysloger");
 		}
@@ -2905,6 +2936,9 @@ function smartd(){
 }
 
 function postfwd2(){
+	
+	if(!$GLOBALS["CLASS_USERS"]->POSTFIX_INSTALLED){return;}
+	if(is_file("/etc/artica-postfix/KASPERSKY_WEB_APPLIANCE")){return;}
 	exec($GLOBALS["CLASS_UNIX"]->LOCATE_PHP5_BIN()." /usr/share/artica-postfix/exec.postfwd2.php --all-status",$results);
 	return @implode("\n",$results);
 }
@@ -3697,8 +3731,10 @@ function postfix(){
 			}	
 		$l[]=GetMemoriesOf($master_pid);
 		$l[]="";
-		unset($GLOBALS["DEBUG_LOGS"]);
-		
+
+		$cmd="{$GLOBALS["nohup"]} {$GLOBALS["PHP5"]} /usr/share/artica-postfix/exec.postfix.iptables.php --export-drop >/dev/null 2>&1 &";
+		shell_exec($cmd);
+	
 	
 	return implode("\n",$l);return;		
 	
@@ -4201,7 +4237,17 @@ function roundcube(){
 	if($enabled==null){$enabled=0;}
 	$pid_path="/var/run/lighttpd/lighttpd-roundcube.pid";
 	$master_pid=trim(@file_get_contents($pid_path));
-
+	if(!$GLOBALS["CLASS_UNIX"]->process_exists($master_pid)){
+		$pgrep=$GLOBALS["CLASS_UNIX"]->find_program("pgrep");
+		exec("$pgrep -l -f \"lighttpd -f /etc/artica-postfix/lighttpd-roundcube.conf\"",$results);
+		while (list ($num, $line) = each ($results)){
+			if(preg_match("#^([0-9]+).+?lighttpd#", $line,$re)){
+				if(!preg_match("#pgrep#", $line)){$master_pid=$re[1];if($GLOBALS["VERBOSE"]){echo "found PID '$master_pid' $line \n";};break;}
+			}
+		}
+	}
+		
+	
 	$l[]="[ROUNDCUBE]";
 	$l[]="service_name=APP_ROUNDCUBE";
 	$l[]="master_version=".GetVersionOf("roundcube");
@@ -4210,7 +4256,9 @@ function roundcube(){
 	$l[]="pid_path=$pid_path";
 	$l[]="family=mailbox";
 	//$l[]="remove_cmd=--samba-remove";
-	if(!$GLOBALS["CLASS_UNIX"]->process_exists($master_pid)){$l[]="running=0\ninstalled=1";$l[]="";return implode("\n",$l);return;}	
+	if(!$GLOBALS["CLASS_UNIX"]->process_exists($master_pid)){
+		if($GLOBALS["VERBOSE"]){echo "PID {$re[1]} Not exists\n";}
+		$l[]="running=0\ninstalled=1";$l[]="";return implode("\n",$l);return;}	
 	$l[]="running=1";
 	$l[]=GetMemoriesOf($master_pid);
 	$l[]="";
@@ -4661,6 +4709,7 @@ function zarafa_ical(){
 	}
 //========================================================================================================================================================
 function vps_servers(){
+	if(is_file("/etc/artica-postfix/KASPERSKY_WEB_APPLIANCE")){return;}
 	$enabled=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("LXCEnabled");
 	if(!is_numeric($enabled)){$enabled=0;}
 	if($enabled==0){return;}
@@ -5937,9 +5986,10 @@ function backuppc(){
 	
 	$binpath="/usr/share/backuppc/bin/BackupPC";
 	if(!is_file("/usr/share/backuppc/bin/BackupPC")){return;}
-	
+	if(is_file("/etc/artica-postfix/KASPERSKY_WEB_APPLIANCE")){return;}
 	$EnableBackupPc=trim($GLOBALS["CLASS_SOCKETS"]->GET_INFO("EnableBackupPc"));
-	if($EnableBackupPc==null){$EnableBackupPc=1;}
+	if(!is_numeric($EnableBackupPc)){$EnableBackupPc=0;}
+	
 	
 	$l[]="[APP_BACKUPPC]";
 	$l[]="service_name=APP_BACKUPPC";

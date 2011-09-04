@@ -554,7 +554,8 @@ begin
   if not FileExists('/etc/artica-postfix/start-ldap.sh') then begin
      fpsystem(SYS.LOCATE_GENERIC_BIN('ifconfig')+' lo 127.0.0.1 netmask 255.0.0.0 up >/dev/null 2>&1');
      cmd:=SLAPD_BIN_PATH() + ' -4 -u root -g root -f ' + SLAPD_CONF_PATH() + ' -h "'+ldapl+ldaps+'"';
-     logs.DebugLogs('Starting......: '+cmd);
+     logs.DebugLogs('Starting......: OpenLDAP with command line :'+cmd);
+     logs.DebugLogs('Starting......: OpenLDAP executing Daemon and wait....');
      fpsystem(cmd);
   end;
   
@@ -567,6 +568,13 @@ begin
            pid:=LDAP_PID();
            sleep(100);
            inc(ck);
+           if ck=2  then logs.DebugLogs('Starting......: OpenLDAP 5%');
+           if ck=4  then logs.DebugLogs('Starting......: OpenLDAP 8%');
+           if ck=5  then logs.DebugLogs('Starting......: OpenLDAP 10%');
+           if ck=10 then logs.DebugLogs('Starting......: OpenLDAP 50%');
+           if ck=15 then logs.DebugLogs('Starting......: OpenLDAP 70%');
+           if ck=18 then logs.DebugLogs('Starting......: OpenLDAP 80%');
+           if ck=19 then logs.DebugLogs('Starting......: OpenLDAP 90%');
            if ck>20 then begin
                 logs.DebugLogs('Starting......: OpenLDAP server timeout...');
                 break;

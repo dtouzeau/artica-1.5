@@ -393,7 +393,7 @@ function smtp_instance_edit(){
 	if($conf["smtp_connection_cache_time_limit"]==null){$conf["smtp_connection_cache_time_limit"]="2s";}
 	if($conf["smtp_connection_reuse_time_limit"]==null){$conf["smtp_connection_reuse_time_limit"]="300s";}
 	
-	
+	//smtp_connection_cache_destinations
 	
 
 	$html="

@@ -456,6 +456,15 @@ function mysql_tabs(){
 	
 	if($users->SQUID_INSTALLED){
 		$array["proxy_packages"]='{proxy_packages}';
+	}else{
+		if($users->KAV4PROXY_INSTALLED){
+			$array["proxy_packages"]='{proxy_packages}';
+		}else{
+			if($users->KASPERSKY_WEB_APPLIANCE){
+				$array["proxy_packages"]='{proxy_packages}';
+			}
+		}
+		
 	}
 	$array["system_packages"]='{setup_center_system}';
 	
@@ -654,7 +663,7 @@ if($users->POSTFIX_INSTALLED){
 	}
 	if($MEM_TOTAL_INSTALLEE>500000){
 		$html=$html.BuildRows("APP_ZARAFA",$GlobalApplicationsStatus,"zarafa");
-		$html=$html.BuildRows("APP_ZARAFA6",$GlobalApplicationsStatus,"zarafa6");
+		$html=$html.BuildRows("APP_ZARAFA6",$GlobalApplicationsStatus,"zarafa6-i386");
 	}
 	
 	
@@ -794,6 +803,9 @@ $html="
 
 $html=$html.BuildRows("APP_PUREFTPD",$GlobalApplicationsStatus,"pure-ftpd");
 $html=$html.BuildRows("APP_PHPMYADMIN",$GlobalApplicationsStatus,"phpMyAdmin");
+$html=$html.BuildRows("APP_MOD_PAGESPEED",$GlobalApplicationsStatus,"mod-pagespeedDEBi386");
+
+
 	$html=$html.spacer('Groupwares');
   if(!$users->KASPERSKY_SMTP_APPLIANCE){
 		$html=$html.BuildRows("APP_DOTCLEAR",$GlobalApplicationsStatus,"dotclear");
@@ -804,6 +816,7 @@ $html=$html.BuildRows("APP_PHPMYADMIN",$GlobalApplicationsStatus,"phpMyAdmin");
 		$html=$html.BuildRows("APP_DRUPAL7",$GlobalApplicationsStatus,"drupal7");
 		$html=$html.BuildRows("APP_DRUSH7",$GlobalApplicationsStatus,"drush7");
 		$html=$html.BuildRows("APP_PIWIGO",$GlobalApplicationsStatus,"piwigo");
+		$html=$html.BuildRows("APP_WORDPRESS",$GlobalApplicationsStatus,"wordpress");
 		$html=$html.BuildRows("APP_SABNZBDPLUS",$GlobalApplicationsStatus,"sabnzbd");
 		$html=$html.BuildRows("APP_OPENEMM",$GlobalApplicationsStatus,"OpenEMM");
 		$html=$html.BuildRows("APP_OPENEMM_SENDMAIL",$GlobalApplicationsStatus,"sendmail");
@@ -823,6 +836,7 @@ if(!$users->KASPERSKY_SMTP_APPLIANCE){
 
 	$html=$html.spacer('{APP_JOOMLA}');
 	$html=$html.BuildRows("APP_JOOMLA",$GlobalApplicationsStatus,"joomla");
+	$html=$html.BuildRows("APP_JOOMLA17",$GlobalApplicationsStatus,"joomla17");
 }
 	//$html=$html.spacer('{optional}');
 	//$html=$html.BuildRows("APP_GROUPWARE_APACHE",$GlobalApplicationsStatus,"httpd");

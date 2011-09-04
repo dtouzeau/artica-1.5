@@ -108,7 +108,7 @@ begin
   if D then writeln(uriplus);
   //logs.Debuglogs('indexini() ->"'+uriplus+'"');
    if SambaEnabled=0 then  EnableKav4Samba:=0;
-   if SQUIDEnable=0 then kavicapserverEnabled:=0;
+
 
 
 end;

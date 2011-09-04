@@ -310,6 +310,14 @@ begin
          halt(0);
    end;
 
+   if ParamStr(1)='APP_FUPPES' then begin
+         fpsystem('/usr/share/artica-postfix/bin/setup-ubuntu --check-fuppes');
+         sabnzbdplus:=install_sabnzbdplus.Create;
+         sabnzbdplus.xinstall_fuppes();
+         zinstall.EMPTY_CACHE();
+         halt(0);
+   end;
+
    if ParamStr(1)='APP_BACKUPPC' then begin
          fpsystem('/usr/share/artica-postfix/bin/setup-ubuntu --check-base-system');
          fpsystem('/usr/share/artica-postfix/bin/setup-ubuntu --check-samba');
@@ -888,6 +896,13 @@ begin
          halt(0);
   end;
 
+  if ParamStr(1)='APP_MOD_PAGESPEED' then begin
+         opengoo:=setupopengoo.Create;
+         opengoo.MOD_PAGESPEED();
+         zinstall.EMPTY_CACHE();
+         halt(0);
+  end;
+
 
   if ParamStr(1)='APP_GROUPOFFICE' then begin
          opengoo:=setupopengoo.Create;
@@ -1001,7 +1016,12 @@ begin
          halt(0);
    end;
 
-
+  if ParamStr(1)='APP_WORDPRESS' then begin
+         joomla:=tsetup_joomla.Create;
+         joomla.xinstall_wordpress();
+         zinstall.EMPTY_CACHE();
+         halt(0);
+   end;
 
   if ParamStr(1)='APP_JOOMLA' then begin
          joomla:=tsetup_joomla.Create;
@@ -1009,6 +1029,16 @@ begin
          zinstall.EMPTY_CACHE();
          halt(0);
    end;
+
+  if ParamStr(1)='APP_JOOMLA17' then begin
+         joomla:=tsetup_joomla.Create;
+         joomla.xinstall17();
+         zinstall.EMPTY_CACHE();
+         halt(0);
+   end;
+
+
+
   if ParamStr(1)='APP_EYEOS' then begin
          joomla:=tsetup_joomla.Create;
          joomla.eyeOS_install();
@@ -1736,8 +1766,13 @@ begin
    writeln('APP_KUPDATE_UTILITY......: install Kaspersky Update Utility 2.0');
    writeln('APP_KASPERSKY_UPDATE_UTILITY: install Kaspersky Update Utility 2.0');
 
-
-
+   writeln('');
+   writeln('');
+   writeln('Apache/php modules');
+   writeln('___________________________________________________________');
+   writeln('APP_MOD_PAGESPEED........: install mod_pagespeed');
+   writeln('APP_MOD_QOS..............: install mod_qos');
+   writeln('APP_UPLOADPROGRESS.......: install UploadProgress php extension');
 
 
 
@@ -1745,7 +1780,9 @@ begin
    writeln('');
    writeln('Groupwares applications');
    writeln('___________________________________________________________');
-   writeln('APP_JOOMLA...............: install Joomla sources');
+   writeln('APP_JOOMLA...............: install Joomla sources 1.5.x');
+   writeln('APP_JOOMLA17.............: install Joomla sources 1.7.x');
+   writeln('APP_WORDPRESS............: install WordPress');
    writeln('APP_SUGARCRM.............: install SugarCRM sources');
    writeln('APP_SIMPLE_GROUPEWARE....: install SimpleGroupware from sources');
    writeln('APP_DOTCLEAR.............: install DotClear (blog interface)');
@@ -1761,12 +1798,10 @@ begin
    writeln('APP_OBM2.................: install OBM v2.2 groupware calendar');
    writeln('APP_PIWIGO...............: install PIWIGO sources');
    writeln('APP_EYEOS................: install EyeOS sources');
-   writeln('APP_MOD_QOS..............: install mod_qos for apache');
    writeln('APP_DRUPAL...............: install drupal 6.x version');
    writeln('APP_DRUPAL7..............: install drupal 7.x version');
    writeln('APP_DRUSH7...............: install drush 7.x version');
    writeln('APP_DRUPAL7_LANGS........: install drupal 7.x language pack');
-   writeln('APP_UPLOADPROGRESS.......: install UploadProgress php extension');
    writeln('APP_OPENEMM..............: install OpenEMM application');
    writeln('APP_TOMCAT...............: install Tomcat web server');
 
@@ -1812,6 +1847,9 @@ begin
    writeln('APP_HPINLINUX............: install/reconfigure HP Printers');
    writeln('APP_PUREFTPD.............: install/reconfigure pure-ftpd');
    writeln('APP_SABNZBDPLUS..........: install/reconfigure SABnzbd');
+   writeln('APP_FUPPES...............: install/reconfigure Fuppes has the main UPNP server');
+
+
 
 
 

@@ -3222,6 +3222,9 @@ begin
     sugarcrm:=tsugarcrm.Create(SYS);
     ArrayList.Add('[APP_OPENGOO] "' + opengoo.OPENGOO_VERSION() + '"');
     ArrayList.Add('[APP_JOOMLA] "' + opengoo.JOOMLA_VERSION() + '"');
+
+
+
     ArrayList.Add('[APP_EACCELERATOR] "' + opengoo.EACCELERATOR_VERSION() + '"');
     logs.Debuglogs('-> sugarcrm.VERSION()');
     ArrayList.Add('[APP_SUGARCRM] "' + sugarcrm.VERSION('/usr/local/share/artica/sugarcrm_src') + '"');
@@ -3253,7 +3256,16 @@ begin
     ArrayList.Add('[APP_SARG] "' + squid.SARG_VERSION() + '"');
     ArrayList.Add('[APP_GNUPLOT] "' + toolsversions.GNUPLOT_VERSION() + '"');
     ArrayList.Add('[APP_DSTAT] "' + toolsversions.DSTAT_VERSION() + '"');
+    ArrayList.Add('[APP_JOOMLA17] "' + toolsversions.JOOMLA17_VERSION() + '"');
+    ArrayList.Add('[APP_WORDPRESS] "' + toolsversions.APP_WORDPRESS() + '"');
 
+
+
+    try
+    ArrayList.Add('[APP_MOD_PAGESPEED] "' + toolsversions.APP_MOD_PAGESPEED() + '"');
+    except
+          logs.Debuglogs('FATAL ERROR on toolsversions.APP_MOD_PAGESPEED()');
+    end;
 
 
 
@@ -5681,6 +5693,18 @@ begin
      if length(hostname)=0 then SYSTEM_NETWORKS_SET_HOSTNAME();
 
 
+     if FileExists('/etc/cron.d/awstats') then begin
+          writeln('Starting......: removing /etc/cron.d/awstats');
+          logs.DeleteFile('/etc/cron.d/awstats');
+     end;
+
+
+     if FileExists('/etc/cron.d/sendmail') then begin
+          writeln('Starting......: removing /etc/cron.d/sendmail');
+          logs.DeleteFile('/etc/cron.d/sendmail');
+     end;
+
+
     if not FileExists('/bin/pidof') then begin
        pidof_path:=SYS.LOCATE_GENERIC_BIN('pidof');
        if FileExists(pidof_path) then logs.OutputCmd('/bin/ln -s '+pidof_path+' /bin/pidof');
@@ -5779,23 +5803,27 @@ begin
         fpsystem(nohup+' '+php5bin+' /usr/share/artica-postfix/exec.amavis.php --cron >/dev/null 2>&1 &');
         fpsystem(nohup+' '+php5bin+' /usr/share/artica-postfix/exec.ldap.rebuild.php >/dev/null 2>&1 &');
      end;
-
+     writeln('Starting......: Starting artica-status');
      articastatus:=tarticastatus.Create(SYS);
      articastatus.START();
      articastatus.free;
 
+     writeln('Starting......: Starting artica-executor');
      articaexecutor:=tarticaexecutor.Create(SYS);
      articaexecutor.START();
      articaexecutor.Free;
 
+     writeln('Starting......: Starting artica-background');
      articabackground:=tarticabackground.Create(SYS);
      articabackground.START();
      articabackground.Free;
 
 
-
+     writeln('Starting......: Starting artica-sysloger');
      SYSLOGER_START();
+     writeln('Starting......: Starting MySQL server');
      START_MYSQL();
+     writeln('Starting......: Starting apache web interface');
      APACHE_ARTICA_START();
      writeln('Starting......: Starting Boa.... (global start)');
      BOA_START();
@@ -6554,7 +6582,7 @@ var
 
  if SYSTEM_PROCESS_EXIST(BOA_DAEMON_GET_PID()) then begin
         writeln('Stopping BOA.................: ' + BOA_DAEMON_GET_PID() + ' PID..');
-        fpsystem('/bin/kill '+BOA_DAEMON_GET_PID());
+        fpsystem('/bin/kill -9 '+BOA_DAEMON_GET_PID());
 
         while SYSTEM_PROCESS_EXIST(BOA_DAEMON_GET_PID()) do begin
               sleep(100);
@@ -6568,7 +6596,7 @@ var
            writeln('Stopping BOA.................: Failed to stop PID ' + BOA_DAEMON_GET_PID());
         end;
   end else begin
-
+     writeln('Stopping BOA.................: checking process for ',Rootpath);
      pids:=SYS.PidAllByProcessPath(Rootpath);
      if length(pids)>0 then begin
          writeln('Stopping BOA.................: '+pids);
@@ -6612,15 +6640,20 @@ procedure myconf.APACHE_ARTICA_START();
     ApacheEnabled:integer;
     framework:tframework;
     zphpldapadmin:tphpldapadmin;
+    pid:string;
 begin
      ApacheEnabled:=0;
   if not TryStrToInt(APACHE_ARTICA_ENABLED(),ApacheEnabled) then ApacheEnabled:=0;
+
+   if fileExists('/etc/artica-postfix/FROM_ISO') then fpsystem('/usr/share/artica-postfix/bin/artica-iso &');
+
+   logs.WriteToFile('0','/proc/sys/kernel/hung_task_timeout_secs');
    ForceDirectories('/usr/share/artica-postfix/ressources/sessions');
    ForceDirectories('/usr/share/artica-postfix/computers/ressources/logs');
 
    fpsystem('/bin/chmod 755 /usr/share/artica-postfix/ressources/sessions');
    fpsystem('/bin/chmod 755 /usr/share/artica-postfix/computers/ressources/logs');
-    logs.Debuglogs('myconf.APACHE_ARTICA_START:: starting....');
+   logs.Debuglogs('myconf.APACHE_ARTICA_START:: starting....');
 
 
 
@@ -6631,14 +6664,18 @@ begin
   finally
   end;
 
-
+    logs.Debuglogs('myconf.APACHE_ARTICA_START:: ApacheEnabled: '+IntTOstr(ApacheEnabled));
     if ApacheEnabled=0 then begin
-        if not SYS.PROCESS_EXIST(lighttpd.LIGHTTPD_PID()) then begin
+    pid:=lighttpd.LIGHTTPD_PID();
+        if not SYS.PROCESS_EXIST(pid) then begin
            logs.Debuglogs('Starting Apache..............: Apache bin: '+SYS.LOCATE_APACHE_BIN_PATH());
            logs.Debuglogs('Starting Apache..............: LibPhp5...: '+SYS.LOCATE_APACHE_LIBPHP5());
            logs.Debuglogs('Starting Apache..............: ModSSL....: '+SYS.LOCATE_APACHE_MODSSLSO());
            logs.Debuglogs('Starting Apache..............: lighttpd..: '+lighttpd.LIGHTTPD_BIN_PATH());
            logs.Debuglogs('APACHE_ARTICA_START::ApacheEnabled=0 -> lighttpd.LIGHTTPD_START();');
+
+
+
            lighttpd.LIGHTTPD_START();
 
            try
@@ -6647,8 +6684,9 @@ begin
            finally
            end;
 
+        end else begin
+            logs.Debuglogs('Starting......: lighttpd already running pid:'+pid);
         end;
-
         logs.Debuglogs('APACHE_ARTICA_START::End...');
         exit;
      end;

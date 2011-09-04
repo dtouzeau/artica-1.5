@@ -794,7 +794,7 @@ function send_email_events($subject,$text,$context,$date=null,$attached_files=ar
 	$datas=$datas."\n<attachedfiles>". base64_encode(serialize($attached_files))."</attachedfiles>\n";
 	
 	
-if($GLOBALS["VERBOSE"]){echo strlen($datas)." bytes file $filename text\n";}
+	if($GLOBALS["VERBOSE"]){echo strlen($datas)." bytes file $filename text\n";}
 	
 	@file_put_contents($filename,$datas);
 	@mkdir("/usr/share/artica-postfix/ressources/logs/jGrowl",0775,true);
@@ -926,13 +926,21 @@ public function shellEscapeChars($path){
 		}
 		if(is_file($httpd_conf)){
 			$tbl=explode("\n",@file_get_contents($httpd_conf));
-			while (list ($num, $line) = each ($tbl)){if(preg_match("#User\s+(.+)#",$line,$re)){return trim("{$re[1]}");}}
+			while (list ($num, $line) = each ($tbl)){if(preg_match("#^User\s+(.+)#",$line,$re)){
+				if(strpos($re[1], '"')==0){return trim("{$re[1]}");}
+				}
+			}
 		}
 		
 		if(is_file("/etc/apache2/uid.conf")){
 			$tbl=explode("\n",@file_get_contents("/etc/apache2/uid.conf"));
-			while (list ($num, $line) = each ($tbl)){if(preg_match("#User\s+(.+)#",$line,$re)){return trim("{$re[1]}");}}	
+			while (list ($num, $line) = each ($tbl)){if(preg_match("#^User\s+(.+)#",$line,$re)){return trim("{$re[1]}");}}	
 		}
+		
+		$tbl=explode("\n",@file_get_contents("/etc/passwd"));
+		while (list ($num, $line) = each ($tbl)){if(preg_match("#^(.+?):x:[0-9]+:[0-9]+:(.+?):\/var\/www:#",$line,$re)){return trim("{$re[1]}");}}
+		
+		
 		
 	}	
 	
@@ -940,13 +948,20 @@ public function shellEscapeChars($path){
 		$httpd_conf=$this->LOCATE_APACHE_CONF_PATH();
 		if(is_file($httpd_conf)){
 			$tbl=explode("\n",@file_get_contents($httpd_conf));
-			while (list ($num, $line) = each ($tbl)){if(preg_match("#Group\s+(.+)#",$line,$re)){return trim("{$re[1]}");}}
+			while (list ($num, $line) = each ($tbl)){if(preg_match("#^Group\s+(.+)#",$line,$re)){
+				if(strpos($re[1], '"')==0){return trim("{$re[1]}");}
+			}
+			}
 		}
 		
 		if(is_file("/etc/apache2/uid.conf")){
 			$tbl=explode("\n",@file_get_contents("/etc/apache2/uid.conf"));
-			while (list ($num, $line) = each ($tbl)){if(preg_match("#Group\s+(.+)#",$line,$re)){return trim("{$re[1]}");}}	
+			while (list ($num, $line) = each ($tbl)){if(preg_match("#^Group\s+(.+)#",$line,$re)){return trim("{$re[1]}");}}	
 		}
+		
+		$tbl=explode("\n",@file_get_contents("/etc/passwd"));
+		while (list ($num, $line) = each ($tbl)){if(preg_match("#^(.+?):x:[0-9]+:[0-9]+:(.+?):\/var\/www:#",$line,$re)){return trim("{$re[1]}");}}
+				
 
 		return $this->APACHE_SRC_ACCOUNT();
 		
@@ -2855,7 +2870,8 @@ public	function getDirectories($directory){
 	$GLOBALS["RECURSVIVE_INC"]=$GLOBALS["RECURSVIVE_INC"]+1;
 	
 	if($GLOBALS["RECURSVIVE_INC"]>$GLOBALS["MAX_RECUSIVE_DIRS"]){
-		error_log("PHP Fatal: cannot parse directory [instance {$GLOBALS["RECURSVIVE_INC"]}], maximum recursive of {$GLOBALS["MAX_RECUSIVE_DIRS"]} has been reached ");
+		$trace=debug_backtrace();if(isset($trace[1])){$called=" called by ". basename($trace[1]["file"])." {$trace[1]["function"]}() line {$trace[1]["line"]}";}	
+		error_log("PHP Fatal: cannot parse directory [instance {$GLOBALS["RECURSVIVE_INC"]}], maximum recursive of {$GLOBALS["MAX_RECUSIVE_DIRS"]} has been reached $called");
 		return;
 	}
 	$array_items = array();

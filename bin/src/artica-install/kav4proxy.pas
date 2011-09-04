@@ -71,13 +71,18 @@ begin
 
 
 
-       if SQUIDEnable=0 then kavicapserverEnabled:=0;
+
 
        if FileExists('/etc/artica-postfix/KASPERSKY_WEB_APPLIANCE') then begin
           if kavicapserverEnabled=0 then SYS.set_INFO('kavicapserverEnabled','1');
-          if ArticaEnableKav4ProxyInSquid=0 then SYS.set_INFO('ArticaEnableKav4ProxyInSquid','1');
+          if SQUIDEnable=1 then begin
+             if ArticaEnableKav4ProxyInSquid=0 then begin
+                SYS.set_INFO('ArticaEnableKav4ProxyInSquid','1');
+                ArticaEnableKav4ProxyInSquid:=1;
+             end;
+          end;
           kavicapserverEnabled:=1;
-          ArticaEnableKav4ProxyInSquid:=1;
+
        end;
 
        if not DirectoryExists('/usr/share/artica-postfix') then begin
@@ -530,6 +535,7 @@ end;
      logs.OutputCmd(INITD_PATH() + ' stop');
   end else begin
      writeln('Stopping Kav4Proxy...........: stopped');
+      fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.kav4proxy.php --umount');
      SYS.MONIT_DELETE('APP_KAV4PROXY');
   end;
 

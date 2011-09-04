@@ -16,9 +16,9 @@ if($argv[1]=="--view-hash"){view_hash();die();}
 if($argv[1]=="--config"){config();die();}
 if($argv[1]=="--ldap-config"){ldap_config();die();}
 if($argv[1]=="--exoprhs"){export_orphans();die();}
+if($argv[1]=="--remove-database"){remove_database();exit;}
 
-
-
+die();
 sync_users();
 function sync_users(){
 $unix=new unix();
@@ -279,8 +279,10 @@ function export_hash_users($company){
 function config(){
 	$unix=new unix();
 	$sock=new sockets();
-	$ZarafaAspellEnabled=$sock->GET_INFO("ZarafaAspellEnabled");	
+	$ZarafaAspellEnabled=$sock->GET_INFO("ZarafaAspellEnabled");
+	$ZarafaWebNTLM=$sock->GET_INFO("ZarafaWebNTLM");	
 	if(!is_numeric($ZarafaAspellEnabled)){$ZarafaAspellEnabled=0;}
+	if(!is_numeric($ZarafaWebNTLM)){$ZarafaWebNTLM=0;}
 	$users=new usersMenus();
 	
 	if(!$users->ASPELL_INSTALLED){$ZarafaAspellEnabled=0;}
@@ -297,7 +299,11 @@ $f[]="define(\"CONFIG_CHECK\", TRUE);";
 $f[]="define(\"DEFAULT_SERVER\",\"file:///var/run/zarafa\");";
 $f[]="define(\"SSLCERT_FILE\", NULL);";
 $f[]="define(\"SSLCERT_PASS\", NULL);";
-$f[]="define(\"LOGINNAME_STRIP_DOMAIN\", false);";
+if($ZarafaWebNTLM==1){
+	$f[]="define(\"LOGINNAME_STRIP_DOMAIN\", true);";
+}else{
+	$f[]="define(\"LOGINNAME_STRIP_DOMAIN\", false);";
+}
 $f[]="if (isset(\$_GET[\"external\"]) && preg_match(\"/[a-z][a-z0-9_]+/i\",\$_GET[\"external\"])){define(\"COOKIE_NAME\",\$_GET[\"external\"]);}else{define(\"COOKIE_NAME\",\"ZARAFA_WEBACCESS\");}";
 $f[]="define(\"THEME_COLOR\", \"default\");\$base_url = dirname(\$_SERVER[\"PHP_SELF\"]);if(substr(\$base_url,-1)!=\"/\") \$base_url .=\"/\";";
 $f[]="define(\"BASE_URL\", \$base_url);";
@@ -527,4 +533,17 @@ echo "Starting zarafa..............: LDAP config done\n";
 
 	
 }
+function remove_database(){
+	shell_exec("/bin/rm -f /var/lib/mysql/ib_logfile*");
+	shell_exec("/bin/rm -f /var/lib/mysql/ibdata*");
+	shell_exec("/bin/rm -rf /var/lib/mysql/zarafa");
+	shell_exec("/etc/init.d/artica-postfix restart mysql >/tmp/zarafa_removedb 2>&1");
+	shell_exec("/etc/init.d/artica-postfix restart zarafa-server >>/tmp/zarafa_removedb 2>&1");
+	$unix=new unix();
+	$unix->send_email_events("Success removing zarafa databases", 
+	"removed /var/lib/mysql/ib_logfile*\nremoved /var/lib/mysql/ibdata*\nremoved /var/lib/mysql/zarafa\n\n".@file_get_contents("/tmp/zarafa_removedb"), "mailbox");
+}
+
+
+
 ?>

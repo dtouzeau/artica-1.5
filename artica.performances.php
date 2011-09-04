@@ -535,10 +535,12 @@ function main_tabs(){
 	$array["index"]='{index}';
 	$array["artica_process"]='{artica_process}';
 	$array["optimize"]='{optimization}';
+	$array["cgroups"]='{APP_CGROUPS}';
 	
 	
 	while (list ($num, $ligne) = each ($array) ){
 		if($num=="optimize"){$html[]= "<li><a href=\"artica.optimize.php\"><span>$ligne</span></a></li>\n";continue;}
+		if($num=="cgroups"){$html[]= "<li><a href=\"cgroups.php\"><span>$ligne</span></a></li>\n";continue;}
 		$html[]= "<li><a href=\"$page?main=$num&hostname=$hostname\"><span>$ligne</span></a></li>\n";
 		
 		}

@@ -23,7 +23,11 @@
 js();
 
 function js(){
+		$jsstart="syslogConfigLoad()";
+		if(isset($_GET["windows"])){$jsstart="syslogConfigLoadPopup()";}
 		$page=CurrentPageName();
+		$tpl=new templates();
+		$title=$tpl->_ENGINE_parse_body("{system_log}");
 		$html="
 		
 		
@@ -31,7 +35,11 @@ function js(){
 			$('#BodyContent').load('$page?tabs=yes');
 			}
 			
-		syslogConfigLoad();
+		function syslogConfigLoadPopup(){
+			YahooWin4(700,'$page?tabs=yes','$title');
+			}			
+			
+		$jsstart;
 		";
 		echo $html;
 		
@@ -56,7 +64,7 @@ function tabs(){
 	
 	
 	echo "
-	<div id=main_config_syslog style='width:100%;height:750px;overflow:auto'>
+	<div id=main_config_syslog style='width:100%;height:570px;overflow:auto'>
 		<ul>". implode("\n",$html)."</ul>
 	</div>
 		<script>

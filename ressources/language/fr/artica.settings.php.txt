@@ -102,7 +102,7 @@ L'authentification par pop-up permet au lighttpd d'utiliser la base de donn&eacu
 <mysql_settings_text>Changer le mot de passe Mysql, d&eacute;finir le comportement de stockage et des &eacute;venements max de la base de donn&eacute;es Mysql</mysql_settings_text>
 <nothing_to_change>Rien &agrave; changer</nothing_to_change>
 <notification_context>D&eacute;finissez ici, quelle notification d&eacute;sirez vous recevoir</notification_context>
-<PHP_FCGI_CHILDREN>Le nombre de processus de php-cgi trait&eacute; par les processus de lightppd</PHP_FCGI_CHILDREN>
+<PHP_FCGI_CHILDREN>Le nombre de processus de php-cgi trait&eacute; par les processus du d&eacute;mon</PHP_FCGI_CHILDREN>
 <PHP_FCGI_MAX_REQUESTS>Requetes maximun avant le red&eacute;marrage de processus php-cgi</PHP_FCGI_MAX_REQUESTS>
 <PostfixQueueEnabled>Activer la notification lorsque les files d'attente atteignent la limite</PostfixQueueEnabled>
 <PostfixQueueMaxMails>Nombre maximal de messages dans les files d'attente</PostfixQueueMaxMails>

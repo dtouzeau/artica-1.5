@@ -135,8 +135,8 @@ if(preg_match("#^(?:[^/]+://)?([^/:]+)#",$uri,$re)){
 	$filewebsite_array=array("sitename"=>$sitename,"country"=>$Country,"ipaddr"=>$site_IP);
 	$filecontent=serialize($filewebsite_array);
 	if(!is_file($filewebsite)){@file_put_contents($filewebsite,$filecontent);}	
-	
-	$sql="INSERT IGNORE INTO dansguardian_events (`sitename`,`uri`,`TYPE`,`REASON`,`CLIENT`,`zDate`,`zMD5`,`remote_ip`,`country`,`QuerySize`,`uid`) 
+	$table="dansguardian_events_".date('Ym');
+	$sql="INSERT IGNORE INTO $table (`sitename`,`uri`,`TYPE`,`REASON`,`CLIENT`,`zDate`,`zMD5`,`remote_ip`,`country`,`QuerySize`,`uid`) 
 	VALUES('$sitename','$uri','$TYPE','$REASON','$CLIENT','$date','$zMD5','$site_IP','$Country','$size','$user');";
 	@file_put_contents("/var/log/artica-postfix/dansguardian-stats/$zMD5.sql",$sql);	
   

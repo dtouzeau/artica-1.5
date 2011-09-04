@@ -6,17 +6,17 @@
 
 function PostfixAddRoutingTable(Routingdomain){
 	if(!Routingdomain){Routingdomain='';}
-	LoadWindows(552,330,"postfix.routing.table.php",'PostfixAddRoutingTable=yes&domainName='+Routingdomain)
+	YahooWin(552,'postfix.routing.table.php?PostfixAddRoutingTable=yes&domainName='+Routingdomain,Routingdomain)
 	}
 	
 function PostfixAddRelayTable(Routingdomain){
 	if(!Routingdomain){Routingdomain='';}
-	LoadWindows(552,400,"postfix.routing.table.php",'PostfixAddRelayTable=yes&domainName='+Routingdomain)
+	YahooWin(552,'postfix.routing.table.php?PostfixAddRelayTable=yes&domainName='+Routingdomain,Routingdomain)
 	}
 	
 function PostfixAddRelayRecipientTable(Routingdomain){
 	if(!Routingdomain){Routingdomain='';}
-	LoadWindows(552,330,"postfix.routing.table.php",'PostfixAddRelayRecipientTable=yes&domainName='+Routingdomain)
+	YahooWin(552,'postfix.routing.table.php?PostfixAddRelayRecipientTable=yes&domainName='+Routingdomain,Routingdomain)
 	}	
 		
 	
@@ -25,12 +25,12 @@ function PostfixAddRelayRecipientTable(Routingdomain){
 	
 function PostfixAddRoutingRuleTable(Routingdomain){
 if(!Routingdomain){Routingdomain='';}
-	LoadWindows(552,330,"postfix.routing.table.php",'PostfixAddRoutingTable=yes&domainName='+Routingdomain + '&rule=yes')	
+	YahooWin(552,'postfix.routing.table.php?PostfixAddRoutingTable=yes&domainName='+Routingdomain + '&rule=yes',Routingdomain)	
 	}	
 	
 function PostfixAddRoutingTable(Routingdomain){
 	if(!Routingdomain){Routingdomain='';}
-	LoadWindows(552,330,"postfix.routing.table.php",'PostfixAddRoutingTable=yes&domainName='+Routingdomain)
+	YahooWin(552,'postfix.routing.table.php?PostfixAddRoutingTable=yes&domainName='+Routingdomain,Routingdomain)
 	}
 	
 	

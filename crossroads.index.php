@@ -245,7 +245,7 @@ function settings(){
 	
 	if($MAIN["PARAMS"]["checkup-interval"]==null){$MAIN["PARAMS"]["checkup-interval"]=10;}
 	if($MAIN["PARAMS"]["wakeup-interval"]==null){$MAIN["PARAMS"]["wakeup-interval"]=5;}
-	if($MAIN["PARAMS"]["listen_port"]==null){$MAIN["PARAMS"]["listen_port"]=25;}
+	if(!is_numeric($MAIN["PARAMS"]["listen_port"])){$MAIN["PARAMS"]["listen_port"]=25;}
 	if($MAIN["PARAMS"]["dispatch-mode"]==null){$MAIN["PARAMS"]["dispatch-mode"]="least-connections";}
 	
 	$algo["first-available"]="{first_available}";
@@ -463,11 +463,30 @@ function events_details(){
 
 function cross_notify(){
 	$sock=new sockets();
+	$users=new usersMenus();
 	$tpl=new templates();
 	$MAIN=unserialize(base64_decode($sock->GET_INFO("CrossRoadsParams")));
+	if(!is_numeric($MAIN["PARAMS"]["listen_port"])){$MAIN["PARAMS"]["listen_port"]=25;}
 	if(count($MAIN["BACKENDS"])==0){
 		echo $tpl->_ENGINE_parse_body(Paragraphe("server-warning-64.png","{no_backend_server}","{no_backend_server_service_disabled}","javascript:AddBackend()"));
-	}	
+	}
+
+	if($users->POSTFIX_INSTALLED){
+		$PostfixBindInterfacePort=$sock->GET_INFO("PostfixBindInterfacePort");
+		$EnablePostfixMultiInstance=$sock->GET_INFO("EnablePostfixMultiInstance");
+		if(!is_numeric($EnablePostfixMultiInstance)){	$EnablePostfixMultiInstance=0;}
+		if(!is_numeric($PostfixBindInterfacePort)){	$PostfixBindInterfacePort=25;}
+		if($EnablePostfixMultiInstance==0){
+		if($MAIN["PARAMS"]["listen_port"]==$PostfixBindInterfacePort){
+			echo "<p>&nbsp;</p>";
+			echo $tpl->_ENGINE_parse_body(Paragraphe("server_network_error-64.png","{port_conflicts}","{ports_conflicts_with_local_postfix}"));
+			}	
+		}	
+		
+	}
+	
+	
+	
 }
 
 

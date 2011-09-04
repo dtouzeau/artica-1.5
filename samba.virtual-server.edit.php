@@ -29,12 +29,21 @@ function tabs(){
 		$array["settings"]='{main_settings}';
 		if($_GET["hostname"]<>null){
 			$array["shares"]='{shared_folders}';
+			$array["fsopt"]='{file_sharing_behavior}';
+			
+		
+		
 		}
 		while (list ($num, $ligne) = each ($array) ){
 			if($num=="shares"){
 				$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"samba.virtual-server.folders.php?hostname={$_GET["hostname"]}\"><span>$ligne</span></a></li>\n");
 				continue;
 			}
+			
+			if($num=="fsopt"){
+				$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"samba.options.php?tabs=yes&hostname={$_GET["hostname"]}\"><span>$ligne</span></a></li>\n");
+				continue;
+			}			
 			
 			
 			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"$page?$num=yes&hostname={$_GET["hostname"]}\"><span>$ligne</span></a></li>\n");
@@ -182,6 +191,7 @@ function field_ipaddr(){
 }
 
 function main_settings_save(){
+	if($_POST["hostname"]=="master"){$_POST["hostname"]="master1";}
 	$smb=new samba_aliases($_POST["hostname"]);
 	$smb->ipaddr=$_POST["ipaddr"];
 	$smb->RootDir=$_POST["RootDir"];

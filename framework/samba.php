@@ -16,7 +16,7 @@ if(isset($_GET["apply-chmod"])){apply_chmod();exit;}
 if(isset($_GET["trash-restore"])){trash_restore();exit;}
 if(isset($_GET["trash-scan"])){trash_scan();exit;}
 if(isset($_GET["trash-delete"])){trash_delete();exit;}
-
+if(isset($_GET["SmblientBrowse"])){SmblientBrowse();exit;}
 
 
 
@@ -217,6 +217,29 @@ function getent(){
 	
 	
 }
+
+
+function SmblientBrowse(){
+	$datas=unserialize(base64_decode($_GET["SmblientBrowse"]));
+	$username=$datas[0];
+	$password=$datas[1];
+	$unix=new unix();
+	$smbclient=$unix->find_program("smbclient");
+	$cmd="$smbclient -g -L //localhost -U {$username}%{$password} 2>&1";
+	exec($cmd,$results);
+	writelogs_framework("$cmd = " . count($results)." rows",__FUNCTION__,__FILE__,__LINE__);
+	while (list ($num, $line) = each ($results)){
+		if(strpos($line, "|")==0){
+			writelogs_framework("$line = skipped",__FUNCTION__,__FILE__,__LINE__);
+			continue;}
+		writelogs_framework("$line = OK",__FUNCTION__,__FILE__,__LINE__);	
+		$tr=explode("|", $line);
+		$return[]=$tr;
+		
+	}
+	echo "<articadatascgi>". base64_encode(serialize($return))."</articadatascgi>";	
+}
+
 function getent_group(){
 	$pattern=trim($_GET["getent-group"]);
 	$pattern=str_replace(".","\.", $pattern);
@@ -241,6 +264,4 @@ function getent_group(){
 	
 	writelogs_framework("$cmd = " . count($results)." rows $false bad lines return ". count($return)." rows",__FUNCTION__,__FILE__,__LINE__);
 	echo "<articadatascgi>". base64_encode(serialize($return))."</articadatascgi>";	
-	
-	
 }

@@ -41,12 +41,12 @@ function js(){
 	
 	$html="
 	function CategorizeLoad(){
-		YahooWinBrowse(650,'$page?popup=yes&www={$_GET["www"]}','{$_GET["www"]}');
+		YahooWinBrowse(650,'$page?popup=yes&www={$_GET["www"]}&bykav={$_GET["bykav"]}','{$_GET["www"]}');
 	
 	}
 	
 	function CategorizeLoadAjax(){
-		LoadAjax('popup_other_squid_category_webpage','$page?popup=yes&www={$_GET["www"]}');
+		LoadAjax('popup_other_squid_category_webpage','$page?popup=yes&www={$_GET["www"]}&bykav={$_GET["bykav"]}');
 	}
 	
 	
@@ -173,7 +173,7 @@ function popup_top10(){
 	$page=CurrentPageName();
 	$html="<div id='popup_top10_div' style='height:490px;overflow:auto'></div>
 	<script>
-		LoadAjax('popup_top10_div','$page?top10-list=yes&www={$_GET["www"]}');
+		LoadAjax('popup_top10_div','$page?top10-list=yes&www={$_GET["www"]}&bykav={$_GET["bykav"]}');
 	</script>
 	
 	";
@@ -192,6 +192,12 @@ function popup_top10_users(){
 	
 	$sql="SELECT SUM(size) as tsize, client FROM squid_events_clients_sites WHERE websites='{$_GET["www"]}' GROUP BY client ORDER BY tsize DESC LIMIT 0,10";
 	
+	if($_GET["bykav"]=="yes"){
+		$table="Kav4Proxy_".date('Ym');
+		$sql="SELECT SUM(size) as tsize, client FROM `$table` WHERE sitename='{$_GET["www"]}' 
+		GROUP BY client ORDER BY tsize DESC LIMIT 0,10";
+	}
+	
 		$html="
 		<H2>{$_GET["www"]}</H2>
 		
@@ -205,7 +211,8 @@ function popup_top10_users(){
 		<tbody class='tbody'>";	
 		
 	$q=new mysql();
-	$results=$q->QUERY_SQL($sql,"artica_events");		
+	$results=$q->QUERY_SQL($sql,"artica_events");	
+	if(!$q->ok){echo "<H2>$q->mysql_error</H2>";}	
 	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
 
 		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
@@ -239,7 +246,7 @@ function popup(){
 	
 	
 	while (list ($num, $ligne) = each ($array) ){
-		$html[]=$tpl->_ENGINE_parse_body("<li><a href=\"$page?$num=yes&www={$_GET["www"]}\"><span>$ligne</span></a></li>\n");
+		$html[]=$tpl->_ENGINE_parse_body("<li><a href=\"$page?$num=yes&www={$_GET["www"]}&bykav={$_GET["bykav"]}\"><span>$ligne</span></a></li>\n");
 	}
 	
 	
@@ -323,8 +330,17 @@ function popup_categories(){
 
 function popup_top10_list(){
 	
+	
+	
 	$sql="SELECT count( uri ) AS tcount, uri, CLIENT
 	FROM `dansguardian_events` WHERE `sitename` = '{$_GET["www"]}' GROUP BY uri, CLIENT ORDER BY tcount DESC LIMIT 0 , 10";
+	
+	if($_GET["bykav"]=="yes"){
+		$table="Kav4Proxy_".date('Ym');
+		$sql="SELECT count( uri ) AS tcount, uri, client as CLIENT
+		FROM `$table` WHERE `sitename` = '{$_GET["www"]}' GROUP BY uri, client ORDER BY tcount DESC LIMIT 0 , 10";
+	}
+	
 	
 	$html="
 <table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>

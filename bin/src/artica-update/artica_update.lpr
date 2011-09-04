@@ -10,6 +10,7 @@ uses
 var
 tempfile:TstringList;
 s:string;
+EnableScheduleUpdates   :integer;
 XSETS                   :tupdate;
 zlogs                   :Tlogs;
 D                       :boolean;
@@ -29,6 +30,14 @@ begin
   SYS:=Tsystem.Create();
   zlogs:=Tlogs.Create;
   D:=SYS.COMMANDLINE_PARAMETERS('--verbose');
+
+  if ParamStr(1)='-V' then begin
+    writeln('Revision 01/09/2011');
+     halt(0);
+  end;
+
+
+
 
   if ParamStr(1)='-refresh-index' then begin
      zlogs.Debuglogs('Refresh index...');
@@ -238,7 +247,8 @@ if ParamStr(1)='--help' then begin
    halt(0);
 end;
 
-  
+
+
   s:='';
 
  if ParamCount>0 then begin
@@ -251,6 +261,16 @@ end;
  s:=trim(AnsiReplaceText(s,mypid,''));
 
 if not SYS.BuildPids() then halt(0);
+
+if not TryStrToInt(SYS.GET_INFO('EnableScheduleUpdates'),EnableScheduleUpdates) then EnableScheduleUpdates:=0;
+ if EnableScheduleUpdates=1 then begin
+    if not SYS.COMMANDLINE_PARAMETERS('--force') then begin
+       if not SYS.COMMANDLINE_PARAMETERS('--bycron') then begin
+          writeln('Artica-update is scheduled: add --force token to force die()');
+          halt(0);
+       end;
+    end;
+ end;
 
   if ParamStr(1)='--patchs' then begin
      XSETS.ApplyPatchs();

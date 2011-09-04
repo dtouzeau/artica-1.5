@@ -272,7 +272,9 @@ function popup(){
 	$users=new usersMenus();
 	$tpl=new templates();
 	$page=CurrentPageName();
-	
+	$sock=new sockets();
+	$EnablePostfixAutoBlockWhiteListed=$sock->GET_INFO("EnablePostfixAutoBlockWhiteListed");
+	if(!is_numeric($EnablePostfixAutoBlockWhiteListed)){$EnablePostfixAutoBlockWhiteListed=0;}
 	
 	if(!$users->AsPostfixAdministrator){
 		$error=$tpl->_ENGINE_parse_body("{ERROR_NO_PRIVS}");
@@ -281,12 +283,16 @@ function popup(){
 	}
 	
 	$array["status"]='{status}';
-	$array["tab-parameters"]='{PostfixAutoBlockParameters}';
-	$array["tab-iptables-rules"]='{PostfixAutoBlockManageFW}';
+	if($EnablePostfixAutoBlockWhiteListed==0){
+		$array["tab-parameters"]='{PostfixAutoBlockParameters}';
+		$array["tab-iptables-rules"]='{PostfixAutoBlockManageFW}';
+	}
 	$array["tab-iptables-whlhosts"]='{hosts}:{white list}';
-	$array["tab-iptables-stats"]='{statistics}';
-	$array["tab-iptables-events"]='{events}';
-
+	if($EnablePostfixAutoBlockWhiteListed==0){
+		$array["tab-iptables-stats"]='{statistics}';
+		
+	}
+$array["tab-iptables-events"]='{events}';
 	
 
 	while (list ($num, $ligne) = each ($array) ){
@@ -300,7 +306,7 @@ function popup(){
 	
 	
 	echo "
-	<div id=instant_iptables_tabs style='width:100%;height:650px;overflow:auto'>
+	<div id=instant_iptables_tabs style='width:100%;height:700px;overflow:auto'>
 		<ul>". implode("\n",$html)."</ul>
 	</div>
 		<script>
@@ -369,6 +375,8 @@ function status(){
 	if($InstantIpTablesInLeftMenu==null){$InstantIpTablesInLeftMenu=1;}	
 	$InstantIptablesEventAll=$sock->GET_INFO("InstantIptablesEventAll");
 	if(!is_numeric($InstantIptablesEventAll)){$InstantIptablesEventAll=1;}
+$EnablePostfixAutoBlockWhiteListed=$sock->GET_INFO("EnablePostfixAutoBlockWhiteListed");
+	if(!is_numeric($EnablePostfixAutoBlockWhiteListed)){$EnablePostfixAutoBlockWhiteListed=0;}	
 			
 	$form=Paragraphe_switch_img("{enable_postfix_autoblock}",
 	"{enable_postfix_autoblock_text}",'EnablePostfixAutoBlock',$EnablePostfixAutoBlock,"{enable_disable}",330);
@@ -395,24 +403,33 @@ function status(){
 	
 
 	$PostfixAutoBlockDenyAddWhiteList=$tpl->_ENGINE_parse_body("{PostfixAutoBlockDenyAddWhiteList}","postfix.index.php");
-	$add_whitelist=Paragraphe("64-bind9-add-zone.png","$PostfixAutoBlockDenyAddWhiteList","{PostfixAutoBlockDenyAddWhiteList_explain}",
+	$add_whitelist=ParagrapheTEXT("32-bind9-add-zone.png","$PostfixAutoBlockDenyAddWhiteList","{PostfixAutoBlockDenyAddWhiteList_explain}",
 	"javascript:PostfixAutoBlockDenyAddWhiteList();",null,337);
 	
-	$manage_fw=Paragraphe("folder-64-firewall.png","{PostfixAutoBlockManageFW}","{PostfixAutoBlockManageFW_text}",
+	$manage_fw=ParagrapheTEXT("folder-64-firewall.png","{PostfixAutoBlockManageFW}","{PostfixAutoBlockManageFW_text}",
 	"javascript:PostfixAutoBlockLoadFW();");
 	
-	$compile=Paragraphe("system-64.png","{PostfixAutoBlockCompileFW}","{PostfixAutoBlockCompileFW_text}",
+	$compile=ParagrapheTEXT("system-32.png","{PostfixAutoBlockCompileFW}","{PostfixAutoBlockCompileFW_text}",
 	"javascript:PostfixAutoBlockCompileFW();",null,337);
 	
-	$parameters=Paragraphe("64-parameters.png","{PostfixAutoBlockParameters}","{PostfixAutoBlockParameters_text}",
+	$parameters=ParagrapheTEXT("32-parameters.png","{PostfixAutoBlockParameters}","{PostfixAutoBlockParameters_text}",
 	"javascript:PostfixAutoBlockParameters();");	
 	
-	$addbann=Paragraphe("64-bann-server.png","{bann_smtp_servers}","{bann_smtp_servers_text}",
+	$addbann=ParagrapheTEXT("32-bann-server-auto.png","{bann_smtp_servers}","{bann_smtp_servers_text}",
 	"javascript:Loadjs('postfix.iptables.php?ban-servers=yes')",null,337);		
 	
 	
-	$deletallrules=Paragraphe("firewall-delete-64.png","{delete_all_rules}","{delete_all_rules_iptables_text}",
+	$deletallrules=ParagrapheTEXT("firewall-delete-32.png","{delete_all_rules}","{delete_all_rules_iptables_text}",
 "javascript:DeleteAllRules()",null,337);		
+	
+	
+	$whiteListedMode=ParagrapheTEXT("Firewall-Secure-32.png", "{white_listed_mode}", 
+	"{instant_iptables_whitelisted_explain}","javascript:Loadjs('postfix.iptables.whitelistedmode.php')");
+	
+	if($EnablePostfixAutoBlockWhiteListed==1){
+		$addbann=ParagrapheTEXT_disabled("32-bann-server-auto.png","{bann_smtp_servers}","{bann_smtp_servers_text}");
+		
+	}
 	
 	
 	
@@ -420,23 +437,17 @@ function status(){
 	//$manage_fw
 	
 	$html="
-		<table style='width:100%'>
+		<table style='width:100%;'>
 	<tr>
-		<td valign='top'><img src='img/bg_firewall.jpg'>
-		<table style='width:100%'>
-			<tr>
-				<td>$compile</td>
-			</tr>
-			<tr>
-				<td>$add_whitelist</td>
-			</tr>
-			<tr>
-				<td>$addbann</td>
-			</tr>
-			<tr>
-				<td>$deletallrules</td>
-			</tr>
-			</table></td>
+		<td valign='top'>
+		<img src='img/bg_firewall.jpg'>
+		<div style='width:100%;clear:left'>
+			<div style='float:left;width:50%'>$compile</div>
+			<div style='float:left;width:50%'>$add_whitelist</div>
+			<div style='float:left;width:50%'>$addbann</div>
+			<div style='float:left;width:50%'>$whiteListedMode</div>
+		</div>				
+		</td>
 		<td valign='top'>
 	
 	<table style='width:100%'>
@@ -1056,6 +1067,9 @@ function DeleteAllIpTablesRules(){
 }
 
 function firewall_events(){
+	$sock=new sockets();
+	$EnablePostfixAutoBlockWhiteListed=$sock->GET_INFO("EnablePostfixAutoBlockWhiteListed");
+	if(!is_numeric($EnablePostfixAutoBlockWhiteListed)){$EnablePostfixAutoBlockWhiteListed=0;}	
 	exec("tail -n 300 ". dirname(__FILE__)."/ressources/logs/iptables-smtp-drop.log 2>&1",$f);
 	$tpl=new templates();
 	$page=CurrentPageName();
@@ -1068,7 +1082,7 @@ function firewall_events(){
 		<th>{date}</th>
 		<th>{from}</th>
 		<th>{to}</th>
-		<th>&nbsp;<th>
+		<th>&nbsp;</th>
 	</tr>
 </thead>
 <tbody class='tbody'>";	
@@ -1082,12 +1096,15 @@ function firewall_events(){
 			if(preg_match("#^(.+?)\s+([0-9]+)\s+([0-9:]+).+?kernel:.+?SMTP DROP:.+?SRC=(.+?)\s+DST=(.+?)\s+#",$line,$re)){
 			if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}	
 			$c++;
+			$disabled="<a href=\"javascript:blur();\" OnClick=\"javascript:EventDisableIpTables('{$re[4]}');\" style='font-size:14px;text-decoration:underline'>{disable}</a>";
+			if($EnablePostfixAutoBlockWhiteListed==1){$disabled="&nbsp;";}
+			
 			$html=$html . "
 			<tr  class=$classtr>
 			<td width=1% style='font-size:14px;' nowrap>{$re[1]} {$re[2]} {$re[3]}</td>
 			<td width=1% style='font-size:14px;' nowrap>{$re[4]}<br><i>". ipName($re[4])."</i></td>
 			<td width=1% style='font-size:14px;' nowrap>{$re[5]}</td>
-			<td width=1% style='font-size:14px;' nowrap><a href=\"javascript:blur();\" OnClick=\"javascript:EventDisableIpTables('{$re[4]}');\" style='font-size:14px;text-decoration:underline'>{disable}</a></td>
+			<td width=1% style='font-size:14px;' nowrap>$disabled</td>
 			</tr>";
 			if($c>300){break;}	
 			}

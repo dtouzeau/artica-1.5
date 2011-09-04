@@ -1316,7 +1316,7 @@ function filters_connect_section(){
 			if($users->MAIL_DKIM_VERSION<>null){
 				$dkim=Paragraphe('folder-64-certified.png','{APP_DKIM_FILTER}','{dkim_filter}',"javascript:Loadjs('amavis.dkim.php?ou=". base64_encode("postfix-master")."&hostname=". $sock->GET_INFO("myhostname")."')",null,210,null,0,true);
 			}else{
-				$dkim=Paragraphe('folder-64-certified-grey.png','{APP_DKIM_FILTER}','{not_enabled_in_amavis}<br>MAIL_DKIM_VERSION = null',null,210,null,0,true);
+				$dkim=Paragraphe('folder-64-certified-grey.png','{APP_DKIM_FILTER}:error_notinstalled','{not_enabled_in_amavis}<br>MAIL_DKIM_VERSION = null',null,210,null,0,true);
 				
 			}
 			
@@ -1324,11 +1324,11 @@ function filters_connect_section(){
 			"javascript:Loadjs('spamassassin.dnsbl.php?ou=". base64_encode("postfix-master")."&hostname=". $sock->GET_INFO("myhostname")."')",null,210,null,0,true);
 			
 		}else{
-			$dkim=Paragraphe('folder-64-certified-grey.png','{APP_DKIM_FILTER}','{not_enabled_in_amavis}',null,null,210,null,0,true);
+			$dkim=Paragraphe('folder-64-certified-grey.png','{APP_DKIM_FILTER}:error_notinstalled','{not_enabled_in_amavis}',null,null,210,null,0,true);
 		}
 	}
 	
-	$postscreen=Paragraphe("postscreen-64-grey.png","PostScreen","{POSTSCREEN_MINI_TEXT}");
+	$postscreen=Paragraphe("postscreen-64-grey.png","PostScreen:error_notinstalled","{POSTSCREEN_MINI_TEXT}");
 	
 	if($users->POSTSCREEN_INSTALLED){
 		$postscreen=Paragraphe("postscreen-64.png","PostScreen","{POSTSCREEN_MINI_TEXT}","javascript:Loadjs('postscreen.php?hostname=master&ou=master')");	
@@ -1338,7 +1338,20 @@ function filters_connect_section(){
 	$smtpd_client_restrictions=Paragraphe('64-sender-check.png','{smtpd_client_restrictions_icon}','{smtpd_client_restrictions_icon_text}',
 	"javascript:Loadjs('postfix.smtpd_client_restrictions.php')",null,210,null,0,true);
 	
-	$miltergreylist=Buildicon64("DEF_ICO_MAIL_MGLIST");
+	
+
+	
+		
+	$miltergreylist=Paragraphe('64-milter-greylist.png','{APP_MILTERGREYLIST}','{APP_MILTERGREYLIST_TEXT}',
+	"javascript:Loadjs('milter.greylist.index.php?js=yes')",null,210,null,0,true);	
+
+	if(!$users->MILTERGREYLIST_INSTALLED){
+		$miltergreylist=Paragraphe('64-milter-greylist-grey.png','{APP_MILTERGREYLIST}:error_notinstalled','{APP_MILTERGREYLIST_TEXT}',null,null,210,null,0,true);		
+		
+	}
+	
+		
+	
 	$policydweight=Buildicon64("DEF_ICO_MAIL_POLICYDWEIGHT");
 	$block_domain=Buildicon64('DEF_ICO_MAIL_BLOCKDOM');	
 	$whitelist=Buildicon64("DEF_ICO_POSTFIX_WHITELIST");

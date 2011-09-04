@@ -7,6 +7,7 @@
 	include_once('ressources/class.system.network.inc');
 	include_once('ressources/class.freeweb.inc');
 	include_once('ressources/class.awstats.inc');
+	include_once('ressources/class.pdns.inc');
 	
 	
 
@@ -79,6 +80,8 @@ function parameters(){
 	$FreeWebsDisableSSLv2=$sock->GET_INFO("FreeWebsDisableSSLv2");
 	$ApacheDisableModDavFS=$sock->GET_INFO("ApacheDisableModDavFS");
 	$FreeWebPerformances=unserialize(base64_decode($sock->GET_INFO("FreeWebPerformances")));
+	$FreeWebEnableModFcgid=$sock->GET_INFO("FreeWebEnableModFcgid");
+	
 	
 	
 	$JSFreeWebsEnableModSecurity=1;
@@ -92,6 +95,10 @@ function parameters(){
 	if(!is_numeric($FreeWebsEnableOpenVPNProxy)){$FreeWebsEnableOpenVPNProxy=0;}
 	if(!is_numeric($FreeWebsDisableSSLv2)){$FreeWebsDisableSSLv2=0;}
 	if(!is_numeric($ApacheDisableModDavFS)){$ApacheDisableModDavFS=0;}
+	if(!is_numeric($FreeWebEnableModFcgid)){$FreeWebEnableModFcgid=0;}
+	
+	
+	
 	if($ApacheServerTokens==null){$ApacheServerTokens="Full";}
 	$varWwwPerms=$sock->GET_INFO("varWwwPerms");
 	if($varWwwPerms==null){$varWwwPerms=755;}
@@ -126,7 +133,8 @@ function parameters(){
 	if(!is_numeric($FreeWebPerformances["MaxRequestsPerChild"])){$FreeWebPerformances["MaxRequestsPerChild"]=10000;}
 	
 	
-	
+	$JSFreeWebEnableModFcgid=0;
+	if($users->APACHE_MOD_FCGID && $users->APACHE_MOD_SUEXEC){$JSFreeWebEnableModFcgid=1;}
 	
 	
 	
@@ -167,6 +175,11 @@ function parameters(){
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
+		<td class=legend>{enable_mod_fcgid}:</td>
+		<td>". Field_checkbox("FreeWebEnableModFcgid",1,$FreeWebEnableModFcgid)."</td>
+		<td>&nbsp;</td>
+	</tr>	
+	<tr>
 		<td class=legend>{ApacheDisableModDavFS}:</td>
 		<td>". Field_checkbox("ApacheDisableModDavFS",1,$ApacheDisableModDavFS)."</td>
 		<td>&nbsp;</td>
@@ -181,6 +194,11 @@ function parameters(){
 		<td>". Field_text("FreeWebsOpenVPNRemotPort",$FreeWebsOpenVPNRemotPort,"font-size:13px;width:90px;padding:3px")."</td>
 		<td>&nbsp;</td>
 	</tr>
+	<tr>
+		<td class=legend>{webservers_status}:</td>
+		<td><a href=\"javascript:blur();\" OnClick=\"javascript:Loadjs('freeweb.mod.status.php')\" style='font-size:13px;text-decoration:underline'>{parameters}</a></td>
+		<td>&nbsp;</td>
+	</tr>	
 </table>
 <br>
 <table style='width:100%' class=form>
@@ -261,6 +279,8 @@ function parameters(){
 			if(document.getElementById('FreeWebsEnableOpenVPNProxy').checked){XHR.appendData('FreeWebsEnableOpenVPNProxy',1);}else{XHR.appendData('FreeWebsEnableOpenVPNProxy',0);}
 			if(document.getElementById('FreeWebsDisableSSLv2').checked){XHR.appendData('FreeWebsDisableSSLv2',1);}else{XHR.appendData('FreeWebsDisableSSLv2',0);}
 			if(document.getElementById('ApacheDisableModDavFS').checked){XHR.appendData('ApacheDisableModDavFS',1);}else{XHR.appendData('ApacheDisableModDavFS',0);}
+			if(document.getElementById('FreeWebEnableModFcgid').checked){XHR.appendData('FreeWebEnableModFcgid',1);}else{XHR.appendData('FreeWebEnableModFcgid',0);}
+			
 			
 			
 			
@@ -285,6 +305,7 @@ function parameters(){
 			var JSFreeWebsEnableModQOS=$JSFreeWebsEnableModQOS;
 			var JSFreeWebsEnableOpenVPNProxy=$JSFreeWebsEnableOpenVPNProxy;
 			var JSFreeWebsEnableWebDav=$JSFreeWebsEnableWebDav;
+			var JSFreeWebEnableModFcgid=$JSFreeWebEnableModFcgid;
 			if(JSFreeWebsEnableModSecurity==0){
 				document.getElementById('FreeWebsEnableModSecurity').checked=false;
 				document.getElementById('FreeWebsEnableModSecurity').disabled=true;
@@ -307,10 +328,12 @@ function parameters(){
 				document.getElementById('ApacheDisableModDavFS').checked=false;
 				document.getElementById('ApacheDisableModDavFS').disabled=true;
 				
-			}			
-			
-			 
-			
+			}	
+
+			if(JSFreeWebEnableModFcgid==0){
+				document.getElementById('FreeWebEnableModFcgid').checked=false;
+				document.getElementById('FreeWebEnableModFcgid').disabled=true;			
+			}
 		}
 		
 		function FreeWebsEnableOpenVPNProxyCheck(){
@@ -345,10 +368,8 @@ function SaveMacterConfig(){
 	$sock->SET_INFO("FreeWebsDisableSSLv2",$_GET["FreeWebsDisableSSLv2"]);
 	$sock->SET_INFO("ApacheDisableModDavFS" ,$_GET["ApacheDisableModDavFS"]);
 	$sock->SET_INFO("varWwwPerms",$_GET["varWwwPerms"]);
+	$sock->SET_INFO("FreeWebEnableModFcgid",$_GET["FreeWebEnableModFcgid"]);
 	$sock->SaveConfigFile(base64_encode(serialize($_GET)), "FreeWebPerformances");
-	
-	
-	
 	$sock->getFrameWork("cmd.php?restart-apache-src=yes");
 }
 
@@ -598,6 +619,7 @@ function listwebs_search(){
 	$search=$_GET["search"];
 	$page=CurrentPageName();
 	$users=new usersMenus();
+	$DNS_INSTALLED=false;
 	$where=null;
 	if(!$users->AsSystemAdministrator){
 		$whereOU="  AND ou='{$_SESSION["ou"]}'";$ou="&nbsp;&raquo;&nbsp;{$_SESSION["ou"]}";
@@ -610,6 +632,10 @@ function listwebs_search(){
 		$whereOU="AND (servername LIKE '$search' $whereOU) OR (domainname LIKE '$search' $whereOU)";
 	}
 	
+	if($users->dnsmasq_installed){$DNS_INSTALLED=true;}
+	if($users->POWER_DNS_INSTALLED){$DNS_INSTALLED=true;}
+	
+	
 	
 	
 	
@@ -617,6 +643,7 @@ function listwebs_search(){
 	$sock=new sockets();	
 	
 	$delete_freeweb_text=$tpl->javascript_parse_text("{delete_freeweb_text}");
+	$delete_freeweb_dnstext=$tpl->javascript_parse_text("{delete_freeweb_dnstext}");
 	$sql="SELECT * FROM freeweb WHERE 1 $whereOU ORDER BY servername";
 	$q=new mysql();
 	if(!isset($_SESSION["CheckTableWebsites"])){$q->BuildTables();$_SESSION["CheckTableWebsites"]=true;}
@@ -629,22 +656,45 @@ function listwebs_search(){
 <thead class='thead'>
 	<tr>
 	<th colspan=2>{joomlaservername}:$ou</th>
-	<th>{ssl}</th>
-	<th>&nbsp;</th>
-	<th>&nbsp;</th>
+	<th>SSL</th>
+	<th>RESOLV</th>
+	<th>DNS</th>
 	<th>{member}</th>
+	<th>&nbsp;</th>
+	<th>&nbsp;</th>
+	
 	<th>&nbsp;</th>
 	</tr>
 </thead>
-<tbody class='tbody'>";			
+<tbody class='tbody'>";	
+
+	$pdns=new pdns();
 	
 	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
 		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
-		if($ligne["useSSL"]==1){$ssl="check2.gif";}else{$ssl="check1.gif";}
+		if($ligne["useSSL"]==1){$ssl="20-check.png";}else{$ssl="none-20.png";}
 		$statistics="&nbsp;";
 		$exec_statistics="&nbsp;";
 		$groupware=null;
 		$forward_text=null;
+		$checkDNS="&nbsp;";
+		$checkMember="&nbsp;";
+		$JSDNS=0;
+		if($DNS_INSTALLED){
+			$ip=$pdns->GetIpDN($ligne["servername"]);
+			if($ip<>null){
+				$checkDNS=imgtootltip("20-check.png","<span style=font-size:16px>{$ligne["servername"]}<hr>{dns}: $ip</span>");
+				$JSDNS=1;
+			}
+		}
+		
+		
+		
+		
+		
+		if($ligne["uid"]<>null){
+			$checkMember=imgtootltip("20-check.png","<span style=font-size:16px>{$ligne["servername"]}<hr>{member}: {$ligne["uid"]}</span>");
+		}
 		
 		$added_port=null;
 		$icon="free-web-32.png";
@@ -681,16 +731,20 @@ function listwebs_search(){
 			$servername_text="{all}";
 			$groupware="<span style='text-align:right;font-size:11px;font-weight:bold;font-style:italic;color:#B64B13;float:right'>&nbsp;({default_website})</span><br>";
 		}else{
-			if(trim($ligne["resolved_ipaddr"])==null){
-				$edit=imgtootltip("warning-panneau-32.png","{could_not_find_iphost}<br>{click_to_edit}","Loadjs('freeweb.edit.php?hostname={$ligne["servername"]}')");
-			}
+			$checkResolv=imgtootltip("20-check.png","<span style=font-size:16px>{$ligne["servername"]}<hr>{dns}: {$ligne["resolved_ipaddr"]}</span>");
 				
-		}
+			if(trim($ligne["resolved_ipaddr"])==null){
+					$edit=imgtootltip("warning-panneau-32.png","{could_not_find_iphost}<br>{click_to_edit}","Loadjs('freeweb.edit.php?hostname={$ligne["servername"]}')");
+					$checkResolv="&nbsp;";
+			}
+		
+			
+	}
 		
 		$href="<a href=\"javascript:blur();\" OnClick=\"javascript:Loadjs('freeweb.edit.php?hostname={$ligne["servername"]}')\"
 		style='font-size:13px;text-decoration:underline;font-weight:bold'>";
 		$color="black";
-		$delete=imgtootltip("delete-24.png","{delete}","FreeWebDelete('{$ligne["servername"]}')");
+		$delete=imgtootltip("delete-24.png","{delete}","FreeWebDelete('{$ligne["servername"]}',$JSDNS)");
 		$sql="SELECT ID FROM drupal_queue_orders WHERE `ORDER`='DELETE_FREEWEB' AND `servername`='{$ligne["servername"]}'";
 		$ligneDrup=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));	
 		if($ligne["ID"]>0){
@@ -713,9 +767,12 @@ function listwebs_search(){
 			<td width=1%>$edit</td>
 			<td nowrap style='color:$color'>$groupware$forward_text<span style='float:left'><strong style='font-size:13px;style='color:$color'>$href$servername_text</a>$added_port$sizevg</strong></span></td>
 			<td width=1%><img src='img/$ssl'></td>
+			<td width=1% align='center'>$checkResolv</td>
+			<td width=1%>$checkDNS</td>
+			<td width=1%>$checkMember</td>
 			<td width=1%>$statistics</td>
 			<td width=1%>$exec_statistics</td>
-			<td nowrap><strong style='font-size:13px'>{$ligne["uid"]}$ipDetect</strong></td>
+			
 			<td width=1%>$delete</td>
 			</tr>
 			";
@@ -733,9 +790,10 @@ function listwebs_search(){
 			if(document.getElementById('container-www-tabs')){	RefreshTab('container-www-tabs');}
 		}	
 		
-		function FreeWebDelete(server){
+		function FreeWebDelete(server,dns){
 			if(confirm('$delete_freeweb_text')){
 				var XHR = new XHRConnection();
+				if(dns==1){if(confirm('$delete_freeweb_dnstext')){XHR.appendData('delete-dns',1);}else{XHR.appendData('delete-dns',0);}}
 				XHR.appendData('delete-servername',server);
 				AnimateDiv('freewebs_list');
     			XHR.sendAndLoad('$page', 'GET',x_FreeWebDelete);
@@ -772,7 +830,16 @@ function FreeWebLeftMenuSave(){
 }
 
 function delete(){
-	writelogs("Delete server \"{$_GET["delete-servername"]}\"",__FUNCTION__,__FILE__,__LINE__);
+	writelogs("Delete server \"{$_GET["delete-servername"]}\" delete dns={$_GET["delete-dns"]}",__FUNCTION__,__FILE__,__LINE__);
+	
+	if(isset($_GET["delete-dns"])){
+		if($_GET["delete-dns"]==1){
+			$dns=new pdns();
+			$dns->DelHostname($_GET["delete-servername"]);
+		}
+		
+	}
+	
 	$sql="INSERT INTO drupal_queue_orders(`ORDER`,`servername`) VALUES('DELETE_FREEWEB','{$_GET["delete-servername"]}')";
 	writelogs($sql,__FUNCTION__,__FILE__,__LINE__);
 	$q=new mysql();

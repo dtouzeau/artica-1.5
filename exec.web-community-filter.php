@@ -22,7 +22,10 @@ if($argv[1]=="--import"){import();die();}
 	$t=time();
 	$sock=new sockets();
 	$users=new usersMenus();
-	if(!$users->SQUID_INSTALLED){die();}
+	if(!$users->SQUID_INSTALLED){
+		if($users->KAV4PROXY_INSTALLED){Export(true);}
+		die();
+	}
 	$system_is_overloaded=system_is_overloaded();
 	if($system_is_overloaded){
 		$unix=new unix();
@@ -34,7 +37,7 @@ if($argv[1]=="--import"){import();die();}
 	
 	$SQUIDEnable=$sock->GET_INFO("SQUIDEnable");
 	if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
-	if($SQUIDEnable<>1){
+	if($SQUIDEnable==0){
 		WriteMyLogs("Squid is disabled, aborting...",__FUNCTION__,__FILE__,__LINE__);
 		echo "Squid is disabled\n";die();
 	}
@@ -74,10 +77,21 @@ if($argv[1]=="--import"){import();die();}
 		 "Exporting websites, importing websites calculate categories took $distanceOfTimeInWords", "proxy");
 	
 	
-function Export(){
-	
-	
-$unix=new unix();
+function Export($asPid=false){
+	$unix=new unix();
+
+
+	if($asPid){
+		$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
+		$cachetime="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".time";
+		$unix=new unix();	
+		$pid=@file_get_contents($pidfile);
+		if($unix->process_exists($pid)){
+			WriteMyLogs("Already executed PID:$pid, die()",__FUNCTION__,__FILE__,__LINE__);
+			die();
+		}	
+	}
+
 $sql="SELECT * FROM dansguardian_community_categories WHERE enabled=1 and sended=0 ORDER BY zDate DESC LIMIT 0,4000";
 $q=new mysql();
 $results=$q->QUERY_SQL($sql,"artica_backup");

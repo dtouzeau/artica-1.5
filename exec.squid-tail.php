@@ -36,15 +36,17 @@ if($buffer==null){return null;}
 
 if(preg_match("#GET cache_object#",$buffer)){return null;}
 
-if(preg_match('#(.+?)\s+.+?\s+(.*?)\s+\[.+?:(.+?)\s+.+?\]\s+"(GET|POST|CONNECT)\s+(.+?)\s+.+?"\s+([0-9]+)\s+([0-9]+)#',$buffer,$re)){
-	    $ip=$re[1];
+if(preg_match('#(.+?)\s+.+?\s+(.*?)\s+\[.+?:(.+?)\s+.+?\]\s+"(GET|POST|CONNECT)\s+(.+?)\s+.+?"\s+([0-9]+)\s+([0-9]+)\s+([A-Z_]+)#',$buffer,$re)){
+	    $cached=0;
+		$ip=$re[1];
 		$user=$re[2];
 		$time=$re[3];
 		$uri=$re[5];
 		$code_error=$re[6];
 		$size=$re[7];
-		
-		Builsql($ip,$user,$uri,$code_error,$size,$time);
+		$SquidCode=$re[8];
+		if(CACHEDORNOT($SquidCode)){$cached=1;}
+		Builsql($ip,$user,$uri,$code_error,$size,$time,$cached);
 		return null;
 			
 }	
@@ -54,8 +56,58 @@ events("Not filtered: $buffer");
 
 }
 
+function CACHEDORNOT($SquidCode){
+	
+                switch ($SquidCode) {
 
-function Builsql($CLIENT,$username=null,$uri,$code_error,$size=0,$time){
+                               case "TCP_HIT":
+
+                               case "TCP_REFRESH_UNMODIFIED":
+
+                               case "TCP_REFRESH_HIT":
+
+                               case "TCP_REFRESH_FAIL_HIT":
+
+                               case "TCP_REFRESH_MISS":
+
+                               case "TCP_IMS_HIT":
+
+                               case "TCP_MEM_HIT":
+
+                               case "TCP_DENIED":
+                               	
+                               case "TCP_IMS_MISS":
+
+                               case "TCP_OFFLINE_HIT":
+
+                               case "TCP_STALE_HIT":
+
+                               case "TCP_ASYNC_HIT":
+
+                               case "UDP_HIT":
+
+                               case "UDP_DENIED":
+
+                               case "UDP_INVALID":
+
+                                               return TRUE;
+
+                                               break;
+
+                               default:
+
+                                               return FALSE;
+
+                                               break;
+
+                }
+
+}	
+	
+
+
+
+function Builsql($CLIENT,$username=null,$uri,$code_error,$size=0,$time,$cached){
 	
 $squid_error["100"]="Continue";
 $squid_error["101"]="Switching Protocols";
@@ -176,7 +228,7 @@ if(preg_match("#^(?:[^/]+://)?([^/:]+)#",$uri,$re)){
 	events("$date dansguardian-stats2:: $REASON:: $CLIENT ($username) -> $sitename ($site_IP) Country=$Country ($geoerror) REASON:\"$REASON\" TYPE::\"$TYPE\" size=$size (".__LINE__.")" ); 
 	$uri=addslashes($uri);
 	$Country=addslashes($Country);
-	$sql="('$sitename','$uri','$TYPE','$REASON','$CLIENT','$date','$zMD5','$site_IP','$Country','$size','$username')";
+	$sql="('$sitename','$uri','$TYPE','$REASON','$CLIENT','$date','$zMD5','$site_IP','$Country','$size','$username','$cached')";
 	@file_put_contents("/var/log/artica-postfix/dansguardian-stats2/$zMD5.sql",$sql);	
 	if(count($GLOBALS["RTIME"])>500){unset($GLOBALS["RTIME"]);}
 	$GLOBALS["RTIME"][]=array($sitename,$uri,$TYPE,$REASON,$CLIENT,$date,$zMD5,$site_IP,$Country,$size,$username);

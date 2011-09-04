@@ -498,19 +498,25 @@ function status_right(){
 	$DisablePurchaseInfo=$sock->GET_INFO("DisablePurchaseInfo");
 	if(!is_numeric($DisablePurchaseInfo)){$DisablePurchaseInfo=0;}
 	if($DisablePurchaseInfo==0){
-		echo $tpl->_ENGINE_parse_body(RoundedLightGrey(Paragraphe("technical-support-64.png",
-		'{ARTICA_P_SUPPORT}','{ARTICA_P_SUPPORT_TEXT}',"javascript:Loadjs('artica.subscription.php');",null,330)))."<br>";
+		echo $tpl->_ENGINE_parse_body(ParagrapheTEXT("technical-support-32.png",'{ARTICA_P_SUPPORT}','{ARTICA_P_SUPPORT_TEXT}',"javascript:Loadjs('artica.subscription.php');"));
+		
+		
+		
+	}
+	
+	if(is_file("ressources/logs/status.inform.html")){
+		echo $tpl->_ENGINE_parse_body(@file_get_contents("ressources/logs/status.inform.html"));
 	}
 	
 	
 	if($ldap->ldap_password=="secret"){
-		echo RoundedLightGrey(Paragraphe("danger64-user-lock.png",'{MANAGER_DEFAULT_PASSWORD}','{MANAGER_DEFAULT_PASSWORD_TEXT}',"javascript:Loadjs('artica.settings.php?js=yes&bigaccount-interface=yes');",null,330))."<br>";
+		echo RoundedLightGrey(ParagrapheTEXT("danger32-user-lock.png",'{MANAGER_DEFAULT_PASSWORD}','{MANAGER_DEFAULT_PASSWORD_TEXT}',"javascript:Loadjs('artica.settings.php?js=yes&bigaccount-interface=yes');",null,330))."<br>";
 	}
 	if(!function_exists("browser_detection")){include(dirname(__FILE__).'/ressources/class.browser.detection.inc');}
 	$browser=browser_detection();
 	
 	if($browser=="ie"){
-		echo Paragraphe("no-ie-64.png",'{NOIEPLEASE} !!','{NOIEPLEASE_TEXT}',"javascript:s_PopUp('http://www.mozilla-europe.org/en/firefox/','800',800);",null,330)."<br>";
+		echo ParagrapheTEXT("no-ie-32.png",'{NOIEPLEASE} !!','{NOIEPLEASE_TEXT}',"javascript:s_PopUp('http://www.mozilla-europe.org/en/firefox/','800',800);",null,330)."<br>";
 	}
 	
 	if($sock->GET_INFO("EnableNightlyInFrontEnd")==1){NightlyNotifs();}
@@ -565,7 +571,7 @@ function status_right(){
 	$memory="<div id='mem_status_computer'>".$tpl->_ENGINE_parse_body(@file_get_contents("ressources/logs/status.memory.html"))."</div>";
 	
 	
-	if($users->KASPERSKY_WEB_APPLIANCE){echo $memory.status_squid_kav().$script;return;}
+	
 	
 	
 	if($users->POSTFIX_INSTALLED){
@@ -578,13 +584,25 @@ function status_right(){
 		
 	
 	if($users->SQUID_INSTALLED){
-		if($users->KASPERSKY_WEB_APPLIANCE){
+		$SQUIDEnable=trim($sock->GET_INFO("SQUIDEnable"));
+		if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
+		if($SQUIDEnable==0){
+			if($users->KASPERSKY_WEB_APPLIANCE){
+				echo $memory.status_kav4proxy().$script;
+				return null;
+			}
 			
 		}
+		
+		if($users->KASPERSKY_WEB_APPLIANCE){echo $memory.status_squid_kav().$script;return;}
 		
 		if($GLOBALS["VERBOSE"]){echo "$page LINE:".__LINE__."\n";}
 		echo $memory.status_squid().$script;
 		return null;
+	}else{
+		if($users->KASPERSKY_WEB_APPLIANCE){echo $memory.status_kav4proxy().$script;return;}
+		
+		
 	}
 	
 	if($users->SAMBA_INSTALLED){
@@ -619,6 +637,17 @@ function StatusSamba(){
 	
 	return $tpl->_ENGINE_parse_body($html);
 }
+
+function status_kav4proxy(){
+	$page=CurrentPageName();
+	$tpl=new templates();
+	if($GLOBALS["VERBOSE"]){echo "$page LINE:".__LINE__."\n";}
+	$status=new status();
+	if($GLOBALS["VERBOSE"]){echo "$page LINE:".__LINE__."\n";}
+	$html=$status->kav4proxy_status();
+	return $tpl->_ENGINE_parse_body($html);		
+}
+
 function status_squid(){
 	$page=CurrentPageName();
 	$tpl=new templates();
@@ -651,8 +680,8 @@ function NightlyNotifs(){
 	if($nightlybin==0){return;}
 	
 	if($nightlybin>$versionbin){
-		echo RoundedLightGrey(Paragraphe("64-info.png","{NEW_NIGHTLYBUILD}: $nightly",'{NEW_NIGHTLYBUILD_TEXT}',
-			"javascript:Loadjs('artica.update.php?js=yes');",null,330))."<br>";
+		echo ParagrapheTEXT("32-infos.png","{NEW_NIGHTLYBUILD}: $nightly",'{NEW_NIGHTLYBUILD_TEXT}',
+			"javascript:Loadjs('artica.update.php?js=yes');",null,330);
 		
 	}
 }
@@ -1065,8 +1094,9 @@ function isoqlog(){
 }
 
 function artica_meta(){
-	
+	$users=new usersMenus();
 	$sock=new sockets();
+	$q=new mysql();
 	$DisableFrontArticaMeta=$sock->GET_INFO("EnableArticaMeta");
 	if(!is_numeric($DisableFrontArticaMeta)){$DisableFrontArticaMeta=0;}
 	$EnableArtica=$sock->GET_INFO("EnableArticaMeta");
@@ -1076,13 +1106,22 @@ function artica_meta(){
 	if($EnableArtica==null){$EnableArtica=1;}
 	if($EnableArtica==1){
 		if($ArticaMetaRemoveIndex<>1){
-			$p=Paragraphe("artica-meta-64.png","{meta-console}","{meta-console-text}","javascript:Loadjs('artica.meta.php')",null,300);
+			$p=ParagrapheTEXT("artica-meta-32.png","{meta-console}","{meta-console-text}","javascript:Loadjs('artica.meta.php')",null,300);
 		}
 	}
 	
 	if($DisableArticaMetaAgentInformations==1){$p=null;}
+	if($users->SAMBA_INSTALLED){
+		$count=$q->COUNT_ROWS("smbstatus_users", "artica_events");
+		if($count>0){
+			$p1=ParagrapheTEXT("user-group-32.png", "$count {members_connected}", "{members_connected_samba_text}","javascript:Loadjs('samba.smbstatus.php')",null,300);
+		}
+	}
 	
-	$html="$p
+	
+	
+	
+	$html="$p1$p
 	<script>
 		CheckSquid();
 	</script>

@@ -474,14 +474,14 @@ function form1(){
 $html="
 	<form name='FFM1'>
 			<div id='wait'></div>
-			<table style='width:100%' class=table_form>
+			<table style='width:100%' class=form>
 			<tr>
 				<td valign='top' nowrap align='right' class=legend>{RoundCubePath}:</strong></td>
-				<td valign='top' nowrap align='left'><strong>$user->roundcube_folder</td>
+				<td valign='top' nowrap align='left'><strong style='font-size:14px'>$user->roundcube_folder</td>
 			</tr>
 			<tr>
 				<td valign='top' nowrap align='right' class=legend>{roundcube_web_folder}:</strong></td>
-				<td valign='top' nowrap align='left'><strong>$user->roundcube_web_folder</td>
+				<td valign='top' nowrap align='left'><strong style='font-size:14px'>$user->roundcube_web_folder</td>
 			</tr>			
 
 					
@@ -492,34 +492,34 @@ $html="
 			</tr>
 			<tr>
 				<td valign='top' nowrap align='right' class=legend>{listen_port}:</strong></td>
-				<td valign='top' nowrap align='left'>" . Field_text('https_port',$round->https_port,'{enable_disable}','width:30px')."</td>
+				<td valign='top' nowrap align='left'>" . Field_text('https_port',$round->https_port,'width:50px;font-size:14px')."</td>
 			</tr>
 			<tr>
 				<td valign='top' nowrap align='right' class=legend>HTTPS:</strong></td>
-				<td valign='top' nowrap align='left'>" . Field_checkbox('ssl_enabled',1,$round->roundCubeArray["ssl_enabled"],'{enable_disable}')."</td>
+				<td valign='top' nowrap align='left'>" . Field_checkbox('ssl_enabled',1,$round->roundCubeArray["ssl_enabled"])."</td>
 			</tr>			
 			
 					
 			<tr>
 				<td align='right' class=legend>{lighttp_max_proc}:</strong></td>
-				<td>" . Field_text('lighttp_max_proc',trim($round->lighttp_max_proc),'width:30px')."</td>
+				<td>" . Field_text('lighttp_max_proc',trim($round->lighttp_max_proc),'width:50px;font-size:14px')."</td>
 			</tr>
 			<tr>
 				<td align='right' class=legend>{lighttp_min_proc}:</strong></td>
-				<td>" . Field_text('lighttp_min_proc',trim($round->lighttp_min_proc),'width:30px')."</td>
+				<td>" . Field_text('lighttp_min_proc',trim($round->lighttp_min_proc),'width:50px;font-size:14px')."</td>
 			</tr>
 			<tr>
 				<td align='right' class=legend>$lighttp_max_load_per_proc:</strong></td>
-				<td>" . Field_text('lighttp_max_load_per_proc',trim($round->lighttp_max_load_per_proc),'width:30px')."</td>
+				<td>" . Field_text('lighttp_max_load_per_proc',trim($round->lighttp_max_load_per_proc),'width:50px;font-size:14px')."</td>
 			</tr>		
 		
 			<tr>
 				<td align='right' class=legend>{PHP_FCGI_CHILDREN}:</strong></td>
-				<td>" . Field_text('PHP_FCGI_CHILDREN',trim($round->PHP_FCGI_CHILDREN),'width:30px')."</td>
+				<td>" . Field_text('PHP_FCGI_CHILDREN',trim($round->PHP_FCGI_CHILDREN),'width:50px;font-size:14px')."</td>
 			</tr>	
 			<tr>
 				<td align='right' class=legend>{PHP_FCGI_MAX_REQUESTS}:</strong></td>
-				<td>" . Field_text('PHP_FCGI_MAX_REQUESTS',trim($round->PHP_FCGI_MAX_REQUESTS),'width:30px')."</td>
+				<td>" . Field_text('PHP_FCGI_MAX_REQUESTS',trim($round->PHP_FCGI_MAX_REQUESTS),'width:50px;font-size:14px')."</td>
 			</tr>				
 			<tr>
 			<td colspan=2 align='right'>

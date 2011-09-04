@@ -47,13 +47,21 @@ function writelogs($text=null,$function=null,$file_source=null,$line=null){
 	$text="[$pid] $prefix::$name:$function:: $text in $file_source$line";
 	writeOtherlogs(dirname(__FILE__)."/logs/web/interface.debug",$text2);
 	if(isset($GLOBALS["ADDLOG"])){writeOtherlogs($GLOBALS["ADDLOG"],$text2);}
-	error_log("$text");
+	phpxlog("$text");
 	if(basename($file_source)=="exec.backup.php"){writeOtherlogs("/var/log/artica-postfix/exec.backup.".date("Y-m-d").".log",$text);}
 	$arr=explode("/",$function);
 	if(is_array($arr)){if(count($arr)>0){if(isset($arr[0])){$class=$arr[0];if(isset($arr[1])){$function=$arr[1];}}}}
 	writeClasslogs($text,$function,$class);
 
-}function writeOtherlogs($file,$text=null){
+}
+function phpxlog($text){
+	$f = @fopen("/var/log/php.log", 'a');
+	@fwrite($f, "$text\n");
+	@fclose($f);	
+	
+}
+
+function writeOtherlogs($file,$text=null){
 	@mkdir(dirname($file));
 	$logFile=$file;
 	if(!is_dir(dirname($logFile))){mkdir(dirname($logFile));}
