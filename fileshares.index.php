@@ -3,7 +3,7 @@
 	include_once('ressources/class.ldap.inc');
 	include_once('ressources/class.users.menus.inc');
 	include_once('ressources/class.mysql.inc');
-	
+$GLOBALS["ICON_FAMILY"]="samba";	
 	
 $usersmenus=new usersMenus();
 if(!$usersmenus->AsAnAdministratorGeneric){

@@ -11,14 +11,15 @@ include_once(dirname(__FILE__) . '/ressources/class.computers.inc');
 include_once(dirname(__FILE__)."/framework/frame.class.inc");
 include_once(dirname(__FILE__).'/framework/class.unix.inc');
 
+$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".pid";
+$unix=new unix();
 
-
-if(!Build_pid_func(__FILE__,"MAIN")){
-	if($GLOBALS["VERBOSE"]){echo " --> Already executed.. aborting the process\n";}
+if($unix->process_exists(@file_get_contents($pidfile))){
+	if($GLOBALS["VERBOSE"]){echo " --> Already executed.. ". @file_get_contents($pidfile). " aborting the process\n";}
 	writelogs(basename(__FILE__).":Already executed.. aborting the process",basename(__FILE__),__FILE__,__LINE__);
 	die();
 }
-$unix=new unix();
+@file_put_contents($pidfile, getmypid());
 $GLOBALS["nmblookup"]=$unix->find_program("nmblookup");
 
 if($argv[1]=="lookup"){echo "{$argv[2]}:".nmblookup($argv[2],$argv[3])."\n";die();}
@@ -49,27 +50,14 @@ if($ComputersAllowDHCPLeases==0){
 	die();
 }
 
-if(!$GLOBALS["FORCE"]){
-	if($GLOBALS["VERBOSE"]){echo " -->Changed()\n";}
-	if(!Changed()){
-		die();
-	}
-}
+if(!$GLOBALS["FORCE"]){if($GLOBALS["VERBOSE"]){echo " -->Changed()\n";}if(!Changed()){die();}}
 
 $cache_file="/etc/artica-postfix/dhcpd.leases.dmp";
 $datas=@file_get_contents("/var/lib/dhcp3/dhcpd.leases");
 $md5Tampon=md5($datas);
 $md5Local=md5(trim(@file_get_contents("/etc/artica-postfix/dhcpd.leases.dmp")));
-	if($GLOBALS["VERBOSE"]){echo " -->$md5Local / $md5Tampon\n";}
-
-	if(!$GLOBALS["FORCE"]){
-		if($md5Local==$md5Tampon){
-			if($GLOBALS["VERBOSE"]){echo " -->$md5Local == $md5Tampon, abort\n";}
-			die();
-		}
-	}
-
-
+if($GLOBALS["VERBOSE"]){echo " -->$md5Local / $md5Tampon\n";}
+if(!$GLOBALS["FORCE"]){if($md5Local==$md5Tampon){if($GLOBALS["VERBOSE"]){echo " -->$md5Local == $md5Tampon, abort\n";}die();}}
 if(!$GLOBALS["FORCE"]){if(file_time_min($cache_file)<10){die();}}
 @unlink($cache_file);
 @file_put_contents($cache_file,$md5Tampon);
@@ -151,15 +139,16 @@ while (list ($num, $ligne) = each ($re[1]) ){
 	$q->QUERY_SQL($sql,"artica_backup");
 	
 	
+	$sock=new sockets();
 	
-	
+	$ping=$unix->PingHost($ip);
 	
 	if($uid==null){
 		if($HOST==null){$uid=$ip.'$';}else{$uid=$HOST.'$';}
 		$comp=new computers();
 		$comp->ComputerRealName=$HOST;
 		$comp->ComputerMacAddress=$MAC;
-		$comp->ComputerIP=$ip;
+		if($ping){$comp->ComputerIP=$ip;}
 		$comp->DnsZoneName=$GLOBALS["domain"];
 		$comp->uid=$uid;
 		$ComputerRealName=$HOST;
@@ -167,7 +156,7 @@ while (list ($num, $ligne) = each ($re[1]) ){
 	}else{
 		
 		$comp=new computers($uid);
-		$comp->ComputerIP=$ip;
+		if($ping){$comp->ComputerIP=$ip;}
 		$comp->DnsZoneName=$GLOBALS["domain"];
 		$comp->Edit();
 		
@@ -181,13 +170,16 @@ while (list ($num, $ligne) = each ($re[1]) ){
 		
 		
 	}
-	$unix=new unix();
-	if($GLOBALS["VERBOSE"]){echo " --> /etc/hosts $ComputerRealName -> $ip\n";}
-	$unix->del_EtcHosts($ip);
 	
-	$dns=new pdns($GLOBALS["domain"]);
-	$dns->EditIPName(strtolower($ComputerRealName),$ip,'A',$MAC);
-	shell_exec(LOCATE_PHP5_BIN2()." ". dirname(__FILE__)."/exec.samba.php --fix-etc-hosts");
+	if($ping){
+		$unix=new unix();
+		if($GLOBALS["VERBOSE"]){echo " --> /etc/hosts $ComputerRealName -> $ip\n";}
+		$unix->del_EtcHosts($ip);
+		
+		$dns=new pdns($GLOBALS["domain"]);
+		$dns->EditIPName(strtolower($ComputerRealName),$ip,'A',$MAC);
+		shell_exec(LOCATE_PHP5_BIN2()." ". dirname(__FILE__)."/exec.samba.php --fix-etc-hosts");
+	}
 	
 }
 

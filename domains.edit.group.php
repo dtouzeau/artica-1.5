@@ -479,7 +479,7 @@ function LIST_GROUPS_FROM_OU_search(){
 			$addgroup=Paragraphe("64-folder-group-add-grey.png","{add_group}","{add_a_new_group_in_this_org}","");
 			$ldap=new ldapAD();
 			writelogs("[$search]: ->hash_get_groups_from_ou_mysql($ou,$search) ",__FUNCTION__,__FILE__);
-			$hash=$ldap->hash_get_groups_from_ou_mysql($ou,$search);
+			$hash=$ldap->hash_get_groups_from_ou_mysql($ou,$search,true);
 	}else{
 		$ldap=new clladp();
 		$hash=$ldap->hash_groups($ou,1);
@@ -512,7 +512,14 @@ if(is_array($hash)){
 					$tr[]=Paragraphe("group-64.png",$line,$text,$js);
 				}else{
 					$text="{manage_this_group}";
-					$tr[]=Paragraphe("group-64.png",$line,$text,$js);
+					
+					if(is_array($line)){
+						$text="{manage_this_group}<br>({$line["UsersCount"]} {members})";
+						if($line["description"]<>null){$text=$line["description"]."<br>({$line["UsersCount"]} {members})";}	
+						$tr[]=Paragraphe("group-64.png",$line["groupname"],$text,$js);
+					}else{
+						$tr[]=Paragraphe("group-64.png",$line,$text,$js);
+					}
 				}
 			}
 		}
@@ -1328,11 +1335,12 @@ function MEMBERS_LIST_LIST($gid){
 		$already[$uid]=true;
 		
 		if(strlen($search)>0){if(!preg_match("#$search#",$uid)){continue;}}
-		
-		$html=$html . "<tr class=$classtr>
-		<td width=1%><img src='img/$img'></td>
-		<td style='font-size:14px'>$uid</td>
-		<td width=1%>$delete</td>
+		$link=MEMBER_JS($uid,1,1);
+		$html=$html . "
+		<tr class=$classtr>
+			<td width=1%><img src='img/$img'></td>
+			<td style='font-size:14px'><a href=\"javascript:blur();\" OnClick=\"javascript:$link\" style='font-size:14px;text-decoration:underline'>$uid</a></td>
+			<td width=1%>$delete</td>
 		</tr>
 		";
 		
@@ -1855,6 +1863,10 @@ function GROUP_PRIVILEGES($gid){
     	$AsComplexPassword=Field_yesno_checkbox('AsComplexPassword',$HashPrivieleges["AsComplexPassword"]);
     	$AllowAddGroup=Field_yesno_checkbox('AllowAddGroup',$HashPrivieleges["AllowAddGroup"]);
     	$RestrictNabToGroups=Field_yesno_checkbox('RestrictNabToGroups',$HashPrivieleges["RestrictNabToGroups"]);
+    	$AsDansGuardianAdministrator=Field_yesno_checkbox('AsDansGuardianAdministrator',$HashPrivieleges["AsDansGuardianAdministrator"]);
+    	$AsWebFilterRepository=Field_yesno_checkbox('AsWebFilterRepository',$HashPrivieleges["AsWebFilterRepository"]);
+    	
+    	
     	
     	
     	if($priv->AllowAddUsers==false){
@@ -1866,6 +1878,7 @@ function GROUP_PRIVILEGES($gid){
     		$AsVirtualBoxManager="<img src='img/status_critical.gif'>".Field_hidden('AsVirtualBoxManager',$HashPrivieleges["AsVirtualBoxManager"]);
     		$AsComplexPassword="<img src='img/status_critical.gif'>".Field_hidden('AsComplexPassword',$HashPrivieleges["AsComplexPassword"]);
     		$RestrictNabToGroups="<img src='img/status_critical.gif'>".Field_hidden('RestrictNabToGroups',$HashPrivieleges["RestrictNabToGroups"]);
+    		$AsWebFilterRepository="<img src='img/status_critical.gif'>".Field_hidden('AsWebFilterRepository',$HashPrivieleges["AsWebFilterRepository"]);
     	}
     	if($priv->AsArticaAdministrator==false){
     		$AsArticaAdministrator="<img src='img/status_critical.gif'>".Field_hidden('AsArticaAdministrator',$HashPrivieleges["AsArticaAdministrator"]);
@@ -1880,7 +1893,9 @@ function GROUP_PRIVILEGES($gid){
     		$AsInventoryAdmin="<img src='img/status_critical.gif'>".Field_hidden('AsInventoryAdmin',$HashPrivieleges["AsInventoryAdmin"]);
     		$AsVirtualBoxManager="<img src='img/status_critical.gif'>".Field_hidden('AsVirtualBoxManager',$HashPrivieleges["AsVirtualBoxManager"]);
 			$OverWriteRestrictedDomains="<img src='img/status_critical.gif'>".Field_hidden('OverWriteRestrictedDomains',$HashPrivieleges["OverWriteRestrictedDomains"]);
-    		
+			$AsDansGuardianAdministrator="<img src='img/status_critical.gif'>".Field_hidden('AsDansGuardianAdministrator',$HashPrivieleges["AsDansGuardianAdministrator"]);
+    		$AsWebFilterRepository="<img src='img/status_critical.gif'>".Field_hidden('AsWebFilterRepository',$HashPrivieleges["AsWebFilterRepository"]);
+			
     		
 		}
 		
@@ -1897,6 +1912,8 @@ function GROUP_PRIVILEGES($gid){
     		$AsInventoryAdmin="<img src='img/status_critical.gif'>".Field_hidden('AsInventoryAdmin',$HashPrivieleges["AsInventoryAdmin"]);
     		$AsJoomlaWebMaster="<img src='img/status_critical.gif'>".Field_hidden('AsJoomlaWebMaster',$HashPrivieleges["AsJoomlaWebMaster"]);
     		$AsVirtualBoxManager="<img src='img/status_critical.gif'>".Field_hidden('AsVirtualBoxManager',$HashPrivieleges["AsVirtualBoxManager"]);
+    		$AsDansGuardianAdministrator="<img src='img/status_critical.gif'>".Field_hidden('AsDansGuardianAdministrator',$HashPrivieleges["AsDansGuardianAdministrator"]);
+    		$AsWebFilterRepository="<img src='img/status_critical.gif'>".Field_hidden('AsWebFilterRepository',$HashPrivieleges["AsWebFilterRepository"]);
     		
     	
     	}
@@ -1911,7 +1928,9 @@ function GROUP_PRIVILEGES($gid){
 		if($priv->AsInventoryAdmin==false){$AsInventoryAdmin="<img src='img/status_critical.gif'>".Field_hidden('AsInventoryAdmin',$HashPrivieleges["AsInventoryAdmin"]);}
 		if($priv->AsJoomlaWebMaster==false){$AsJoomlaWebMaster="<img src='img/status_critical.gif'>".Field_hidden('AsJoomlaWebMaster',$HashPrivieleges["AsJoomlaWebMaster"]);}
 		if($priv->AsVirtualBoxManager==false){$AsVirtualBoxManager="<img src='img/status_critical.gif'>".Field_hidden('AsVirtualBoxManager',$HashPrivieleges["AsVirtualBoxManager"]);}
-		
+		if($priv->AsDansGuardianAdministrator==false){$AsVirtualBoxManager="<img src='img/status_critical.gif'>".Field_hidden('AsDansGuardianAdministrator',$HashPrivieleges["AsDansGuardianAdministrator"]);}
+		if($priv->AsWebFilterRepository==false){$AsWebFilterRepository="<img src='img/status_critical.gif'>".Field_hidden('AsWebFilterRepository',$HashPrivieleges["AsWebFilterRepository"]);}
+
 		
 		
 		
@@ -2070,7 +2089,18 @@ $admin_allow="&nbsp;{administrators_allow}</H3><br>
 						<tr>
 							<td align='right' nowrap><strong>{AsVirtualBoxManager}:</td>
 							<td>$AsVirtualBoxManager</td>
-						</tr>																		
+						</tr>
+						<tr>
+							<td align='right' nowrap><strong>{AsDansGuardianAdministrator}:</td>
+							<td>$AsDansGuardianAdministrator</td>
+						</tr>
+						<tr>
+							<td align='right' nowrap><strong>{AsWebFilterRepository}:</td>
+							<td>$AsWebFilterRepository</td>
+						</tr>						
+						
+						
+						
 						<tr>
 							<td align='right' nowrap><strong>{AsMailBoxAdministrator}:</td>
 							<td>" . Field_yesno_checkbox('AsMailBoxAdministrator',$HashPrivieleges["AsMailBoxAdministrator"]) ."</td>

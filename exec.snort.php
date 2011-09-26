@@ -653,9 +653,9 @@ function getcdir($ip,$netmask){
 	if(!preg_match("#^([0-9]+)\.([0-9]+)\.([0-9]+)#",$ip,$re)){return;}
 
 	exec("/usr/share/artica-postfix/bin/ipcalc {$re[1]}.{$re[2]}.{$re[3]}.0/$netmask 2>&1",$result);
-	while (list ($index, $ligne) = each ($results) ){
-		if(preg_match("#Network:\s+(.+?)\s+#",$ligne,$re)){
-			return trim($re[1]);
+	if(is_array($results)){
+		while (list ($index, $ligne) = each ($results) ){
+			if(preg_match("#Network:\s+(.+?)\s+#",$ligne,$re)){return trim($re[1]);}
 		}
 	}
 	

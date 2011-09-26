@@ -124,7 +124,18 @@
 			
 		}
 		
+
+		
 		private function HasDefaults(){
+			if(!isset($this->Params["MOD_FCGID"]["enabled"])){$this->Params["MOD_FCGID"]["enabled"]=0;}
+			if(!isset($this->Params["MOD_FCGID"]["PHP_FCGI_MAX_REQUESTS"])){$this->Params["MOD_FCGID"]["PHP_FCGI_MAX_REQUESTS"]=5000;}
+			if(!isset($this->Params["MOD_FCGID"]["PHP_FCGI_CHILDREN"])){$this->Params["MOD_FCGID"]["PHP_FCGI_CHILDREN"]=8;}
+			if(!isset($this->Params["MOD_FCGID"]["FcgidBusyTimeout"])){$this->Params["MOD_FCGID"]["FcgidBusyTimeout"]=300;}
+			if(!isset($this->Params["MOD_FCGID"]["FcgidIdleTimeout"])){$this->Params["MOD_FCGID"]["FcgidIdleTimeout"]=300;}
+			if(!isset($this->Params["MOD_FCGID"]["FcgidMaxRequestInMem"])){$this->Params["MOD_FCGID"]["FcgidMaxRequestInMem"]=65536;}
+			if(!isset($this->Params["MOD_FCGID"]["FcgidMaxProcessesPerClass"])){$this->Params["MOD_FCGID"]["FcgidMaxProcessesPerClass"]=100;}
+			if(!isset($this->Params["MOD_FCGID"]["FcgidMaxRequestLen"])){$this->Params["MOD_FCGID"]["FcgidMaxRequestLen"]=131072;}
+			if(!isset($this->Params["MOD_FCGID"]["FcgidOutputBufferSize"])){$this->Params["MOD_FCGID"]["FcgidOutputBufferSize"]=65536;}			
 			if(!is_numeric($this->Params["MOD_FCGID"]["enabled"])){$this->Params["MOD_FCGID"]["enabled"]=0;}
 			if(!is_numeric($this->Params["MOD_FCGID"]["PHP_FCGI_MAX_REQUESTS"])){$this->Params["MOD_FCGID"]["PHP_FCGI_MAX_REQUESTS"]=5000;}
 			if(!is_numeric($this->Params["MOD_FCGID"]["PHP_FCGI_CHILDREN"])){$this->Params["MOD_FCGID"]["PHP_FCGI_CHILDREN"]=8;}
@@ -469,8 +480,8 @@
 				if(isset($hash)){if(is_array($hash)){while (list ($ip, $line) = each ($hash) ){$GLOBALS["MYINTERFACESAllowFROM"][]="\t\tAllow from $ip";}}}
 			}
 			
-
-			$f[]="\t<Location /server-status>";
+			$dirMD=md5($this->servername);
+			$f[]="\t<Location /$dirMD/$dirMD-status>";
 			$f[]="\t\tSetHandler server-status";
 			$f[]="\t\tOrder deny,allow";
 			$f[]="\t\tDeny from all";
@@ -480,6 +491,26 @@
 			$mod_status=@implode("\n",$f);
 			$GLOBALS["HTTPD_CONF_MOD_STATUS"]=$mod_status;
 			return $mod_status;
+			
+		}
+		
+		public function RewriteEngine(){
+			if($GLOBALS["VERBOSE"]){echo "Starting......: Apache \"$this->servername\" is forwarder ? ($this->Forwarder) groupware=$this->groupware\n";}
+			if($this->Forwarder==1){
+				echo "Starting......: Apache \"$this->servername\" is forwared to $this->ForwardTo\n";
+				$conf[]="\tRewriteEngine On";
+				$conf[]="\tRewriteRule (.*) $this->ForwardTo";
+				return @implode("\n", $conf);
+			}
+			
+			if($this->groupware=="WORDPRESS"){
+				$f[]="\t<IfModule mod_rewrite.c>";
+				$f[]="\t\tRewriteEngine On";
+				$f[]="\t\tRewriteCond %{REQUEST_URI} !". md5($this->servername);				
+				$f[]="\t</IfModule>";
+				return @implode("\n", $f);
+			}
+			
 			
 		}
 		
@@ -894,6 +925,7 @@
 			
 			
 			$f[]=$this->WORKING_DIRECTORY;
+			return @implode(":",$f);
 			include_once("/usr/share/artica-postfix/framework/class.unix.inc");
 			$unix=new unix();
 			$GLOBALS["MAX_RECUSIVE_DIRS"]=40;
@@ -933,6 +965,23 @@
 			
 		}
 		
+		private function UserInSystem($uid){
+			if(!isset($GLOBALS["UserInSystem"][$uid])){
+				$unix=new unix();
+				$id=$unix->find_program("id");
+				exec("$id \"$uid\" 2>&1",$results);
+				writelogs("$id \"$uid\" 2>&1 ". count($results)." rows",__FUNCTION__,__FILE__,__LINE__);
+				$datas=trim(@implode("", $results));
+				if(!preg_match("#uid=([0-9]+).+?#", $datas)){
+					$GLOBALS["UserInSystem"][$uid]=false;
+					return false;}
+				$GLOBALS["UserInSystem"][$uid]=true;
+				return true;
+			}else{
+				return $GLOBALS["UserInSystem"][$uid];
+			}
+		}
+		
 		
 		public function chown($directory){
 			if(!is_dir($directory)){echo "Starting......: Apache \"$this->servername\" chown \"$directory\" no such directory\n";return;}
@@ -940,16 +989,15 @@
 			if(!isset($GLOBALS["CHOWNCOMMANDSFREEWBS"])){
 				$apacheusername=$this->APACHE_RUN_USER;
 				$apachegroup=$this->APACHE_RUN_GROUP;
-				if($apacheusername==null){
-					
-				}
 				
 				
 				if($this->Params["MOD_FCGID"]["enabled"]==1){
 					if($this->uid<>null){
-						$user=new user($this->uid);
-						$apacheusername=$user->uidNumber;
-						$apachegroup=$user->group_id;
+						if($this->UserInSystem($this->uid)){
+							$user=new user($this->uid);
+							$apacheusername=$user->uidNumber;
+							$apachegroup=$user->group_id;
+						}
 					}
 				}
 				
@@ -973,15 +1021,23 @@
 		}
 		
 		public function mod_fcgid(){
+				$apacheusername=$this->APACHE_RUN_USER;
+				$apachegroup=$this->APACHE_RUN_GROUP;			
+			
 				if($this->Params["MOD_FCGID"]["enabled"]==0){return null;}
 				$unix=new unix();
 				$target_fcgi_path="/var/www/php-fcgi-scripts/$this->servername/php-fcgi-starter";
 				$php_ini_path="/var/www/php-fcgi-scripts/$this->servername/php.ini";
 				$fa[]="\t<IfModule mod_fcgid.c>";
 				if($this->uid<>null){
-					$user=$this->uid;$group=$this->uid;
-					$fa[]="\t\tSuexecUserGroup $user $group";
+					if($this->UserInSystem($this->uid)){
+						$apacheusername=$user;
+						$apachegroup=$user;
+						$user=$this->uid;$group=$this->uid;
+						$fa[]="\t\tSuexecUserGroup $user $group";
+					}
 				}
+				
 				$fa[]="\t\tFcgidBusyTimeout {$this->Params["MOD_FCGID"]["FcgidBusyTimeout"]}";
 				$fa[]="\t\tFcgidIdleTimeout {$this->Params["MOD_FCGID"]["FcgidIdleTimeout"]}";
 				$fa[]="\t\tFcgidMaxRequestInMem {$this->Params["MOD_FCGID"]["FcgidMaxRequestInMem"]}";
@@ -991,20 +1047,41 @@
 				
 				$fa[]="\t\t<IfModule mod_php5.c>";
 				$fa[]="\t\t\tphp_admin_flag engine off";
-				$fa[]="\t\t</IfModule>";		
-				$fa[]="\t\t<Directory $this->WORKING_DIRECTORY/>";
-				$fa[]="\t\t\tOptions +ExecCGI";
-				$fa[]="\t\t\tAllowOverride All";
-				$fa[]="\t\t\tAddHandler fcgid-script .php";
+				$fa[]="\t\t</IfModule>";
+
+	
+				$fa[]="\t\t\tAddHandler fcgid-script .fcgi .php .phtml .php3 .php4 .php5 .php6";
 				$fa[]="\t\t\tFCGIWrapper $target_fcgi_path .php";
-				$fa[]="\t\t\tOrder allow,deny";
-				$fa[]="\t\t\tAllow from all";
-				$fa[]="\t\t</Directory>";
+				$fa[]="\t\t\tFCGIWrapper $target_fcgi_path .phtml";
+				$fa[]="\t\t\tFCGIWrapper $target_fcgi_path .php3";
+				$fa[]="\t\t\tFCGIWrapper $target_fcgi_path .php4";
+				$fa[]="\t\t\tFCGIWrapper $target_fcgi_path .php5";
+				$fa[]="\t\t\tFCGIWrapper $target_fcgi_path .php6";
+
+				$phpfiles[]="php";
+				$phpfiles[]="phtml";
+				$phpfiles[]="inc";
+				$phpfiles[]="php3";
+				$phpfiles[]="php4";
+				$phpfiles[]="php5";
+				$phpfiles[]="php6";
+				
+				
+				while (list ($num, $ext) = each ($phpfiles) ){				
+						$fa[]="\t\t<Files *.$ext>";
+						$fa[]="\t\t\tSetHandler fcgid-script";
+						$fa[]="\t\t</Files>";
+				}			
+				
 				$fa[]="\t</IfModule>";
 				
 				if(!is_dir("/var/www/php-fcgi-scripts/$this->servername")){
 					@mkdir("/var/www/php-fcgi-scripts/$this->servername",755,true);
 				}
+				
+				
+				
+				
 				
 				$phpini=$this->build_php_ini();
 				@file_put_contents($php_ini_path, $phpini);
@@ -1014,10 +1091,12 @@
 				$f[]="export PHPRC";
 				$f[]="export PHP_FCGI_MAX_REQUESTS={$this->Params["MOD_FCGID"]["PHP_FCGI_MAX_REQUESTS"]}";
 				$f[]="export PHP_FCGI_CHILDREN={$this->Params["MOD_FCGID"]["PHP_FCGI_CHILDREN"]}";
-				$f[]="exec $this->phpcgi";
+				$f[]="exec $this->phpcgi\n";
 				@file_put_contents($target_fcgi_path, @implode("\n", $f));
 				$chmod=$unix->find_program("chmod");
-				shell_exec("$chmod 755 $target_fcgi_path");
+				$chown=$unix->find_program("chown");
+				shell_exec("$chown -R $apacheusername /var/www/php-fcgi-scripts/$this->servername >/dev/null");
+				shell_exec("$chmod -R 755 /var/www/php-fcgi-scripts >/dev/null");
 				return @implode("\n", $fa);
 			
 			
@@ -1042,15 +1121,23 @@
 			
 
 			if(($this->groupware=="ZARAFA") OR ($this->groupware=="ZARAFA_MOBILE")){
+				$sock=new sockets();
+				$ZarafaSessionTime=$sock->GET_INFO("ZarafaSessionTime");
+				if(!is_numeric($ZarafaSessionTime)){$ZarafaSessionTime=1440;}
 				$this->Params["PHP_VALUES"]["magic_quotes_gpc"]="Off";
-				$this->Params["PHP_VALUES"]["register_globals"]="Off";	
+				$this->Params["PHP_VALUES"]["register_globals"]="Off";
+				$this->Params["PHP_VALUES"]["session.gc_maxlifetime"]=$ZarafaSessionTime;	
 			}
 			
 			if($this->groupware=="Z-PUSH"){
+				$sock=new sockets();
+				$ZarafaSessionTime=$sock->GET_INFO("ZarafaSessionTime");
+				if(!is_numeric($ZarafaSessionTime)){$ZarafaSessionTime=1440;}				
 				$this->Params["PHP_VALUES"]["magic_quotes_gpc"]="Off";
 				$this->Params["PHP_VALUES"]["register_globals"]="Off";
 				$this->Params["PHP_VALUES"]["magic_quotes_runtime"]="Off";
 				$this->Params["PHP_VALUES"]["short_open_tag"]="Off";
+				$this->Params["PHP_VALUES"]["session.gc_maxlifetime"]=$ZarafaSessionTime;	
 			}
 			
 			if($this->groupware=="DRUPAL"){
@@ -1183,6 +1270,7 @@
 				$f[]="\t<IfModule mod_rewrite.c>";
 				$f[]="\t\tRewriteEngine on";
    			 	$f[]="\t\tRewriteBase /";
+   			 	$f[]="\t\tRewriteCond %{REQUEST_URI} !=/". md5($this->servername);
 			   	$f[]="\t\tRewriteCond %{REQUEST_FILENAME} !-f";
 			   	$f[]="\t\tRewriteCond %{REQUEST_FILENAME} !-d";
 			   	$f[]="\t\tRewriteRule ^(.*)$ index.php?q=$1 [L,QSA]";
@@ -1195,6 +1283,7 @@
 			if($this->groupware=="JOOMLA17"){
 				$f[]="\t<IfModule mod_rewrite.c>";
 				$f[]="\t\tRewriteEngine On";
+				$f[]="\t\tRewriteCond %{REQUEST_URI} !=/". md5($this->servername);
 				$f[]="\t\tRewriteCond %{QUERY_STRING} base64_encode[^(]*\([^)]*\) [OR]";
 				$f[]="\t\tRewriteCond %{QUERY_STRING} (<|%3C)([^s]*s)+cript.*(>|%3E) [NC,OR]";
 				$f[]="\t\tRewriteCond %{QUERY_STRING} GLOBALS(=|\[|\%[0-9A-Z]{0,2}) [OR]";
@@ -1213,6 +1302,8 @@
 			
 			if(trim($this->mod_rewrite)==null){return;}
 			$f[]="\t<IfModule mod_rewrite.c>";
+			$f[]="\t\tRewriteEngine On";
+			$f[]="\t\tRewriteCond %{REQUEST_URI} !=/". md5($this->servername);			
 			$f[]=$this->mod_rewrite;
 			$f[]="</IfModule>";
 			return @implode("\n",$f);

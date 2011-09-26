@@ -16,11 +16,21 @@ if(!PostFixVerifyRights()){
 
 	if(isset($_GET["popup"])){popup();exit;}
 	if(isset($_GET["smtp"])){smtp();exit;}
+	if(isset($_GET["smtp-instance-tab"])){smtp_instance_tab();exit;}
 	if(isset($_GET["smtp-instance-list"])){smtp_instance_list();exit;}
 	if(isset($_GET["smtp-instance-add"])){smtp_instance_add();exit;}
 	if(isset($_GET["smtp-instance-delete"])){smtp_instance_delete();exit;}
 	if(isset($_GET["smtp-instance-edit"])){smtp_instance_edit();exit;}
 	if(isset($_GET["smtp-instance-save"])){smtp_instance_save();exit;}
+	
+	if(isset($_GET["smtp-instance-cache-destinations"])){smtp_instance_cache_destinations();exit;}
+	if(isset($_GET["smtp-instance-cache-destinations-list"])){smtp_instance_cache_destinations_list();exit;}
+	if(isset($_GET["smtp-instance-cache-destinations-add"])){smtp_instance_cache_destinations_add();exit;}
+	if(isset($_POST["smtp-instance-cache-destinations-new"])){smtp_instance_cache_destinations_save();exit;}
+	if(isset($_POST["smtp-instance-cache-destinations-delete"])){smtp_instance_cache_destinations_del();exit;}
+	
+	
+	
 	
 	if(isset($_GET["domains"])){domains_popup();exit;}
 	if(isset($_GET["domains-add"])){domains_add();exit;}
@@ -209,7 +219,7 @@ function smtp_instance_list(){
 		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
 		$color="#909090";
 		if($array_conf["ENABLED"]==1){$color="black";}
-		$js="<a href=\"javascript:blur();\" style='font-size:14px;text-decoration:underline;color:$color' OnClick=\"javascript:YahooWin4(650,'$page?smtp-instance-edit=$uuid&hostname={$_GET["hostname"]}&ou={$_GET["ou"]}','{$array_conf["INSTANCE_NAME"]}')\">";
+		$js="<a href=\"javascript:blur();\" style='font-size:14px;text-decoration:underline;color:$color' OnClick=\"javascript:YahooWin4(650,'$page?smtp-instance-tab=$uuid&hostname={$_GET["hostname"]}&ou={$_GET["ou"]}','{$array_conf["INSTANCE_NAME"]}')\">";
 		
 		
 		
@@ -526,7 +536,8 @@ function smtp_instance_edit(){
 			var tempvalue=obj.responseText;
 			if(tempvalue.length>3){alert(tempvalue)};
 			RefreshTab('main_ecluse_config');
-			YahooWin4Hide();
+			RefreshTab('main_smtp_instance_edit_tab');
+			
 			
 		}	
 		
@@ -544,6 +555,216 @@ function smtp_instance_edit(){
 	
 	";
 	echo $tpl->_ENGINE_parse_body($html);
+	
+}
+
+function smtp_instance_cache_destinations(){
+	$page=CurrentPageName();
+	$tpl=new templates();		
+	$uuid=$_GET["smtp-instance-cache-destinations"];
+	$add_server_domain=$tpl->_ENGINE_parse_body("{add_server_domain}");	
+	
+	$html="
+	
+	<div id='ServerCacheList-$uuid'></div>
+	
+	<script>
+		function CacheReloadList(){
+			LoadAjax('ServerCacheList-$uuid','$page?smtp-instance-cache-destinations-list=yes&hostname={$_GET["hostname"]}&uuid=$uuid&ou={$_GET["ou"]}');
+	}	
+	CacheReloadList();
+	
+	function PostFixAddServerCache(){
+		YahooWin6(550,'$page?smtp-instance-cache-destinations-add=yes&hostname={$_GET["hostname"]}&uuid=$uuid&ou={$_GET["ou"]}','$add_server_domain');
+	}	
+	
+	</script>
+	";
+	echo $tpl->_ENGINE_parse_body($html);
+}
+
+function smtp_instance_cache_destinations_list(){
+	$page=CurrentPageName();
+	$tpl=new templates();		
+	$uuid=$_GET["uuid"];
+	$main=new maincf_multi($_GET["hostname"],$_GET["ou"]);	
+	$array=unserialize(base64_decode($main->GET_BIGDATA("domain_throttle_daemons_list")));
+	$smtp_connection_cache_destinations=$array[$uuid]["smtp-instance-cache-destinations"];
+		
+	$add=imgtootltip("plus-24.png","{add_server_domain}","PostFixAddServerCache()");
+	$html="<center>
+<table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
+<thead class='thead'>
+	<tr>
+		<th width=1%>$add</th>
+		<th>{hostname}</th>
+		<th>". help_icon("{smtp_connection_cache_destinations_text}")."</th>
+	</tr>
+</thead>
+<tbody class='tbody'>";
+	while (list ($num, $ligne) = each ($smtp_connection_cache_destinations) ){
+	if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
+		$html=$html . "<tr class=$classtr>
+			<td colspan=2><strong style='font-size:14px'>$num</strong></td>
+			<td width=1%>" . imgtootltip('delete-32.png','{delete}',"PostFixDeleteServerCache('$num')") . "</td>
+			</tr>
+			";
+		
+	}
+	
+	echo $tpl->_ENGINE_parse_body($html . "</tbody></table>
+	<script>
+	var x_PostFixDeleteServerCache=function(obj){
+    	var tempvalue=trim(obj.responseText);
+	  	if(tempvalue.length>3){alert(tempvalue);}
+		CacheReloadList();
+		}	
+	
+		function PostFixDeleteServerCache(value){
+			var XHR = new XHRConnection();	
+			XHR.appendData('smtp-instance-cache-destinations-delete',value);
+			XHR.appendData('hostname','{$_GET["hostname"]}');
+			XHR.appendData('uuid','$uuid');
+			XHR.appendData('ou','{$_GET["ou"]}');
+			AnimateDiv('ServerCacheList-$uuid');
+			XHR.sendAndLoad('$page', 'POST',x_PostFixDeleteServerCache);				
+		
+		}
+	
+	</script>
+	");
+	
+	
+
+}
+
+function smtp_instance_cache_destinations_add(){
+	$tpl=new templates();
+	$page=CurrentPageName();
+	
+	$html="<div id='PostFixAddServerCacheDiv'></div>
+	<input type='hidden' name='PostFixAddServerCacheSave' value='yes'>
+	<table style='width:100%' class=form>
+	<tr>
+	<td class=legend nowrap><strong>{domain}:</strong></td>
+	<td>" . Field_text('domain',$domainName,"font-size:14px;padding:3px;width:220px") . "</td>
+	</tr>
+	<td class=legend nowrap nowrap><strong>{or} {relay_address}:</strong></td>
+	<td>" . Field_text('relay_address',$relay_address,"font-size:14px;padding:3px;width:220px") . "</td>	
+	</tr>
+	</tr>
+	<td class=legend nowrap nowrap><strong>{smtp_port}:</strong></td>
+	<td>" . Field_text('relay_port',25,"font-size:14px;padding:3px;width:40px") . "</td>	
+	</tr>	
+	<tr>
+	<td class=legend>{MX_lookups}</td>	
+	<td>" . Field_checkbox('MX_lookups','1',0)."</td>
+	</tr>
+
+	<tr>
+	<td colspan=2 align='right'><hr>". button("{add}","PostFixSaveServerCache()")."</td>
+	</tr>		
+	<tr>
+	<td align='left' colspan=2><strong{MX_lookups}</strong><br><div class=explain>{MX_lookups_text}</div></td>
+	</tr>			
+		
+	</table>
+	<script>
+	
+	var x_PostFixSaveServerCache=function(obj){
+    	var tempvalue=trim(obj.responseText);
+	  	if(tempvalue.length>3){alert(tempvalue);}
+		document.getElementById('PostFixAddServerCacheDiv').innerHTML='';
+		CacheReloadList();
+		}	
+	
+		function PostFixSaveServerCache(){
+		var XHR = new XHRConnection();	
+			if(document.getElementById('MX_lookups').checked){XHR.appendData('MX_lookups','yes');}else{XHR.appendData('MX_lookups','no');}
+			XHR.appendData('domain',document.getElementById('domain').value);
+			XHR.appendData('relay_address',document.getElementById('relay_address').value);
+			XHR.appendData('relay_port',document.getElementById('relay_port').value);
+			XHR.appendData('smtp-instance-cache-destinations-new','yes');
+			XHR.appendData('hostname','{$_GET["hostname"]}');
+			XHR.appendData('uuid','{$_GET["uuid"]}');
+			XHR.appendData('ou','{$_GET["ou"]}');
+			AnimateDiv('PostFixAddServerCacheDiv');
+			XHR.sendAndLoad('$page', 'POST',x_PostFixSaveServerCache);				
+		
+		}
+	</script>
+	";
+	
+	
+	echo $tpl->_ENGINE_parse_body($html);	
+	
+}
+
+function smtp_instance_cache_destinations_save(){
+	$tool=new DomainsTools();
+	$tpl=new templates();
+	$relay_address=$_POST["relay_address"];
+	$relay_port=$_POST["relay_port"];
+	$MX_lookups=$_GET["MX_lookups"];
+	$domain=$_POST["domain"];
+	$uuid=$_POST["uuid"];
+	
+	if($domain<>null && $relay_address<>null){echo $tpl->javascript_parse_text('{error_give_server_or_domain}');exit();}
+	
+	
+	if($relay_address<>null){
+		$line=$tool->transport_maps_implode($relay_address,$relay_port,null,$MX_lookups);
+		$line=str_replace('smtp:','',$line);
+	}else{$line=$domain;}
+	
+	$main=new maincf_multi($_POST["hostname"],$_POST["ou"]);	
+	$array=unserialize(base64_decode($main->GET_BIGDATA("domain_throttle_daemons_list")));
+	$array[$uuid]["smtp-instance-cache-destinations"][$line]="OK";
+	$smtp_connection_cache_destinations_new=base64_encode(serialize($array));
+	if(!$main->SET_BIGDATA("domain_throttle_daemons_list", addslashes($smtp_connection_cache_destinations_new))){echo $main->$q->mysql_error;return;}
+	$sock=new sockets();
+	$sock->getFrameWork("cmd.php?postfix-throttle=yes&instance={$_GET["hostname"]}");
+}
+
+function smtp_instance_cache_destinations_del(){
+	$uuid=$_POST["uuid"];
+	$main=new maincf_multi($_POST["hostname"],$_POST["ou"]);	
+	$array=unserialize(base64_decode($main->GET_BIGDATA("domain_throttle_daemons_list")));
+	unset($array[$uuid]["smtp-instance-cache-destinations"][$_POST["smtp-instance-cache-destinations-delete"]]);
+	$smtp_connection_cache_destinations_new=base64_encode(serialize($array));
+	if(!$main->SET_BIGDATA("domain_throttle_daemons_list", addslashes($smtp_connection_cache_destinations_new))){echo $main->$q->mysql_error;return;}
+	$sock=new sockets();
+	$sock->getFrameWork("cmd.php?postfix-throttle=yes&instance={$_GET["hostname"]}");	
+}
+
+function smtp_instance_tab(){
+	$page=CurrentPageName();
+	$tpl=new templates();
+	$array["smtp-instance-edit"]='{parameters}';
+	$array["smtp-instance-cache-destinations"]="{smtp_connection_cache_destinations_field}";
+
+	
+	while (list ($num, $ligne) = each ($array) ){
+		$tab[]="<li><a href=\"$page?$num={$_GET["smtp-instance-tab"]}&hostname={$_GET["hostname"]}&ou={$_GET["ou"]}\"><span>$ligne</span></a></li>\n";
+			
+	}
+
+	$html="
+		<div id='main_smtp_instance_edit_tab' style='background-color:white'>
+		<ul>
+		". implode("\n",$tab). "
+		</ul>
+	</div>
+		<script>
+				$(document).ready(function(){
+					$('#main_smtp_instance_edit_tab').tabs();
+				});
+		</script>
+	
+	";
+		
+	
+	echo $tpl->_ENGINE_parse_body($html);	
 	
 }
 	

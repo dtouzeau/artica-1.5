@@ -1852,15 +1852,6 @@ return $tpl->_ENGINE_parse_body($html,'squid.index.php');
 }
 
 
-
-
-
-
-
-
-
-
-
 function time_global(){
 	
 	$ldap=new clladp();
@@ -1886,8 +1877,18 @@ function time_global(){
 	";
 	
 	if($squid->LDAP_AUTH<>1){
-		$html="<H1>{error}&nbsp;{connection_time}</h1>
-		<p class=caption style='font-size:14px'>{error_no_auth_squid}</p>
+		$html="
+		<table style='width:100%' class=form>
+		<tbody>
+		<tr>
+			<td width=1% valign='top'><img src='img/error-64.png'></td>
+			<td width=99% valign='top'>
+			<div style='font-size:18px'>{connection_time}</div>
+			<p style='font-size:14px'>{error_no_auth_squid}</p>
+			</td>
+		</tr>
+		</tbody>
+		</table>
 		";
 		
 	}

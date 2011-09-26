@@ -1830,17 +1830,23 @@ function sa_update(){
 	if(!is_file($saupdate)){return null;}
 	$statusFileContent="/usr/share/artica-postfix/ressources/logs/sa-update-status.txt";	
 	$statusFile="/usr/share/artica-postfix/ressources/logs/sa-update-status.html";
+	
 	$cmd="$saupdate --nogpg -D >$statusFileContent 2>&1";
+	if($GLOBALS["VERBOSE"]){echo "sa-update:: $cmd\n";}
 	shell_exec($cmd);
 	shell_exec("/bin/chmod 777 $statusFileContent");
 	$f=explode("\n", $statusFileContent);
 	while (list ($index, $line) = each ($f)){
-		if(preg_match("updates complete, exiting with code 0", $line)){
+		if(preg_match("updates complete, exiting with code [0-9]+", $line)){
+			if($GLOBALS["VERBOSE"]){echo "sa-update:: $line\n";}
 			$unix->send_email_events("Spamassassin success update databases", @implode("\n", $f), "postfix");
 			@unlink($statusFile);
+			return;
 		}
 		
 	}
+	
+if($GLOBALS["VERBOSE"]){echo "sa-update:: FAILED\n";}
 }
 
 

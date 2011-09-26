@@ -12,26 +12,73 @@ if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["VERBOSE"]=true;$GLOBA
 if($argv[1]=="--schedules-mldonkey"){schedules_mldonkey();die();}
 if($argv[1]=="--postmaster-cron"){postmaster_cron();die();}
 if($argv[1]=="--artica-schedule"){artica_schedule();die();}
+if($argv[1]=="--artica-reboot-schedule"){artica_reboot_schedule();die();}
+if($argv[1]=="--reboot-task"){artica_reboot_task();die();}
 
+function artica_reboot_schedule(){
+		$targetfile="/etc/cron.d/RebootScheduler";
+		@unlink($targetfile);
+		$sock=new sockets();
+		$unix=new unix();
+		$AutoRebootSchedule=$sock->GET_INFO("AutoRebootSchedule");
+		if(!is_numeric($AutoRebootSchedule)){$AutoRebootSchedule=0;}
+		if($GLOBALS["VERBOSE"]){echo "AutoRebootSchedule = $AutoRebootSchedule\n";}
+		if($AutoRebootSchedule==0){return;}
+		$AutoRebootScheduleText=$sock->GET_INFO("AutoRebootScheduleText");
+		if($GLOBALS["VERBOSE"]){echo "AutoRebootScheduleText = $AutoRebootScheduleText\n";}
+		if($AutoRebootScheduleText==null){$sock->SET_INFO("AutoRebootSchedule", 0);return;}
+		$php5=$unix->LOCATE_PHP5_BIN();
+ 		
+ 		$f[]="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/X11R6/bin:/usr/share/artica-postfix/bin";
+		$f[]="MAILTO=\"\"";
+		$f[]="$AutoRebootScheduleText  root $php5 ".__FILE__." --reboot-task >/dev/null 2>&1";
+		$f[]="";	
+		if($GLOBALS["VERBOSE"]){echo " -> $targetfile\n";}
+		@file_put_contents($targetfile,implode("\n",$f));
+		if(!is_file($targetfile)){if($GLOBALS["VERBOSE"]){echo " -> $targetfile No such file\n";}}
+		
+		$chmod=$unix->find_program("chmod");
+		shell_exec("$chmod 640 $targetfile");
+		unset($f);	
+}
+
+function artica_reboot_task(){
+		$sock=new sockets();
+		$unix=new unix();
+		$AutoRebootSchedule=$sock->GET_INFO("AutoRebootSchedule");
+		if(!is_numeric($AutoRebootSchedule)){$AutoRebootSchedule=0;}
+		if($GLOBALS["VERBOSE"]){echo "AutoRebootSchedule = $AutoRebootSchedule\n";}
+		if($AutoRebootSchedule==0){die();}	
+		$reboot_bin=$unix->find_program("reboot");
+		if(!is_file($reboot_bin)){$unix->send_email_events("Unable to reboot computer !", "reboot, no such binary", "system");die();}
+		$unix->send_email_events("Reboot computer performed", "This computer has been rebooted with the reboot scheduled task set in artica performances section", "system");
+		shell_exec($reboot_bin);
+}
 
 
 function artica_schedule(){
-		@unlink("/etc/crond.d/arscheduler");
+		@unlink("/etc/cron.d/arscheduler");
 		$sock=new sockets();
 		$unix=new unix();
 		$EnableScheduleUpdates=$sock->GET_INFO("EnableScheduleUpdates");
 		if(!is_numeric($EnableScheduleUpdates)){$EnableScheduleUpdates=0;}
+		if($GLOBALS["VERBOSE"]){echo "EnableScheduleUpdates = $EnableScheduleUpdates\n";}
 		if($EnableScheduleUpdates==0){return;}
 		$ArticaScheduleUpdates=$sock->GET_INFO("ArticaScheduleUpdates");
+		if($GLOBALS["VERBOSE"]){echo "EnableScheduleUpdates = $ArticaScheduleUpdates\n";}
 		if($ArticaScheduleUpdates==null){$sock->SET_INFO("EnableScheduleUpdates", 0);return;}
+		$targetfile="/etc/cron.d/arscheduler";
  		
  		$f[]="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/X11R6/bin:/usr/share/artica-postfix/bin";
 		$f[]="MAILTO=\"\"";
 		$f[]="$ArticaScheduleUpdates  root /usr/share/artica-postfix/bin/artica-update --bycron";
 		$f[]="";	
-		@file_put_contents("/etc/crond.d/arscheduler",implode("\n",$f));
+		if($GLOBALS["VERBOSE"]){echo " -> $targetfile\n";}
+		@file_put_contents($targetfile,implode("\n",$f));
+		if(!is_file($targetfile)){if($GLOBALS["VERBOSE"]){echo " -> $targetfile No such file\n";}}
+		
 		$chmod=$unix->find_program("chmod");
-		shell_exec("$chmod 640 /etc/crond.d/arscheduler");
+		shell_exec("$chmod 640 /etc/cron.d/arscheduler");
 		unset($f);	
 }
 

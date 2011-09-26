@@ -507,8 +507,9 @@ function popup_dansguardian_main(){
 	
 	$table=true;
 	$mysql=new mysql();
+	$mysqlSquid=new mysql_squid_builder();
 	$users=new usersMenus();
-	if(!$mysql->TABLE_EXISTS("dansguardian_categories","artica_backup")){
+	if(!$mysqlSquid->TABLE_EXISTS("dansguardian_categories","artica_backup")){
 		$table=false;
 	}
 	if(!$mysql->TABLE_EXISTS("dansguardian_files","artica_backup")){
@@ -2439,9 +2440,9 @@ function main_rules_category_user_del(){
 
 function main_rules_category_user_edit(){
 	$categoryname=$_GET["category-user-edit"];
-	$q=new mysql();
+	$mysqlSquid=new mysql_squid_builder();
 	$sql="SELECT ID,pattern FROM dansguardian_categories WHERE category_name='$categoryname' ORDER BY ID DESC";
-	$results=$q->QUERY_SQL($sql,"artica_backup");
+	$results=$mysqlSquid->QUERY_SQL($sql,"artica_backup");
 	$table="<table style='width:100%'>";
 	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){	
 		$num=$ligne["ID"];

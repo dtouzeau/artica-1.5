@@ -154,6 +154,7 @@ $html="
 	
 		function SaveSMTPSMTPAuthMech(){
 			var XHR=XHRParseElements('sasl-auth-smtp-div');
+			
 			document.getElementById('sasl-auth-smtp-div').innerHTML='<center style=\"margin:20px;padding:20px\"><img src=\"img/wait_verybig.gif\"></center>';
 			XHR.sendAndLoad('$page', 'GET',x_SaveSMTPSMTPAuthMech);
 		}
@@ -283,7 +284,7 @@ preg_match('#(.+?):(.+)#',$sasl->smtp_sasl_password_hash["[127.0.0.1]:$localport
 		<table style='width:100%' class=form>
 			<tr>
 				<td align='right' nowrap style='font-size:14px'><strong>{yserver}:&nbsp;</strong></td>
-				<td><input type='text' id='ssl_relay_server' value='{$h[1]}' style='font-size:14px'></td>
+				<td><input type='text' id='ssl_relay_server' value='$relay_host' style='font-size:14px'></td>
 			</tr>
 			<tr>
 				<td align='right' nowrap style='font-size:14px'><strong>{yport}:&nbsp;</strong></td>
@@ -322,7 +323,9 @@ preg_match('#(.+?):(.+)#',$sasl->smtp_sasl_password_hash["[127.0.0.1]:$localport
 			XHR.appendData('password',document.getElementById('ssl_relay_password').value);
 			document.getElementById('sslRelayHostid').innerHTML=\"<center style='width:400px'><img src='img/wait_verybig.gif'></center>\";
 			XHR.sendAndLoad('$page', 'GET',x_SSLRelayHostApply);
-		}	
+		}else{
+			alert('Failed, local stunnel port [$localport] is a wrong value...');
+		}
 	}
 	
 	function SSLRelayHostApplyDis(){
@@ -349,6 +352,9 @@ function relayhost_save(){
 	$main->smtp_sasl_password_maps_enable_2();
 	$localport=$stunnel->main_array["postfix_relayhost"]["accept"];
 	
+	$stunnel->main_array["postfix_relayhost"]["connect"]=$_GET["server"];
+	$stunnel->SaveConf();
+	$stunnel->SaveToserver();
 	writelogs("Saving [127.0.0.1]:$localport -> {$_GET["username"]}",__FUNCTION__,__FILE__,__LINE__);
 	
 	$main->main_array["relayhost"]="[127.0.0.1]:$localport";

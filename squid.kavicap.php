@@ -61,6 +61,7 @@ function popup(){
 	var x_SaveKavICAPSet= function (obj) {
 		var tempvalue=obj.responseText;
 		if(tempvalue.length>3){alert(tempvalue)};
+		if(document.getElementById('admin_perso_tabs')){RefreshTab('admin_perso_tabs');}
 		YahooWin5Hide();
 	}	
 	

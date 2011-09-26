@@ -561,6 +561,129 @@ function BuildLittleTemplate($title,$status=false,$onfailed=null){
 	return $this->BuildDesign_infos($img,'{srv_artica}',$text,$color);
 	
 	}
+	
+function Samba_status(){
+	if(!function_exists("mysql_connect")){
+		return "<H2>Unable to stat  function mysql_connect, check php Mysql module or reboot the server</H2>";
+	}
+	include_once(dirname(__FILE__)."/class.samba.inc");
+	
+	
+	$q=new mysql();
+	$ini=new Bs_IniHandler();
+	$sock=new sockets();
+	$ini=new Bs_IniHandler();
+	$sock=new sockets();
+	$ini->loadString($sock->getFrameWork("cmd.php?samba-status=yes"));
+	$master_pid=$ini->_params["SAMBA_SMBD"]["master_pid"];
+	
+	
+	$params=unserialize(base64_decode($sock->getFrameWork("samba.php?testparm=yes")));
+	
+	while (list ($index, $line) = each ($params) ){
+		if(preg_match("#^Server role:\s+(.+)#",$line,$re)){$SERVER_ROLE=trim($re[1]);}
+		if(preg_match("#workgroup.+?([A-Za-z\_\-]+)#",$line,$re)){$WORKGROUP=trim($re[1]);break;}
+	}
+
+	$services[]="SAMBA_SMBD";
+	$services[]="SAMBA_NMBD";
+	$services[]="SAMBA_WINBIND";
+	$services[]="SAMBA_SCANNEDONLY";
+	$allServicesOK=true;
+	$ServiceNotOK=array();
+	$error="<table style='width:100%'><tbody>";
+	while (list ($index, $serviceToCheck) = each ($services) ){
+		if(!DAEMON_STATUS_IS_OK($serviceToCheck, $ini)){
+			$ServiceNotOK[]=$serviceToCheck;
+			$allServicesOK=false;
+		}else{
+			$allServicesOKPID=$ini->_params[$serviceToCheck]["master_pid"];
+			$error=$error."<tr>
+			<td width=1%><img src='img/ok16.png'></td>
+			<td colspan=2><strong style='font-size:10px'>{{$ini->_params[$serviceToCheck]["service_name"]}}</strong></td>
+			</tr>";			
+		}
+	}
+	
+	$master_version=$ini->_params["SAMBA_NMBD"]["master_version"];
+	if(preg_match("#2\.3.*#",$master_version)){$img='status_postfix_bg_ok23.png';}
+	if(preg_match("#2\.5.*#",$master_version)){$img='status_postfix_bg_ok25.png';}
+	if(preg_match("#2\.7.*#",$master_version)){$img='status_postfix_bg_ok27.png';}
+	if(preg_match("#2\.6.*#",$master_version)){$img='status_postfix_bg_ok26.png';}			
+	if(preg_match("#2\.8.*#",$master_version)){$img='status_postfix_bg_ok28.png';}
+	if(preg_match("#2\.9.*#",$master_version)){$img='status_postfix_bg_ok29.png';}
+	if(preg_match("#3\.0.*#",$master_version)){$img='status_postfix_bg_ok30.png';}
+	if(preg_match("#3\.1.*#",$master_version)){$img='status_postfix_bg_ok31.png';}
+	if(preg_match("#3\.2.*#",$master_version)){$img='status_postfix_bg_ok32.png';}
+	if(preg_match("#3\.3.*#",$master_version)){$img='status_postfix_bg_ok33.png';}
+	if(preg_match("#3\.4.*#",$master_version)){$img='status_postfix_bg_ok34.png';}
+	if(preg_match("#3\.5.*#",$master_version)){$img='status_postfix_bg_ok35.png';}
+	if(preg_match("#3\.6.*#",$master_version)){$img='status_postfix_bg_ok36.png';}
+	if(preg_match("#3\.7.*#",$master_version)){$img='status_postfix_bg_ok37.png';}
+	$text="{service_running}<br>{using_version} $master_version {pid} $master_pid";
+	if($img==null){$img="status_postfix_bg_ok.png";}
+	
+	if(!$allServicesOK){
+		$img="status_postfix_bg_failed.png";
+		
+		while (list ($index, $ServiceNotOKName) = each ($ServiceNotOK) ){
+			$error=$error."<tr>
+			<td width=1%><img src='img/error-16.png'></td>
+			<td><strong style='font-size:10px'>{{$ini->_params[$ServiceNotOKName]["service_name"]}}</strong></td><td width=1%><strong style='font-size:10px'>{failed}</td>
+			</tr>";
+		
+		}
+		
+	}
+	$error=$error."</tbody></table>";
+	$smb=new samba();
+	$q=new mysql();
+	$pointers="OnMouseOver=\";this.style.cursor='pointer';\" OnMouseOut=\";this.style.cursor='default';\" ";
+	$CountDeFolders=count($smb->main_folders);
+	$CountDeConnected=$q->COUNT_ROWS("smbstatus_users", "artica_events");
+	$CountDeDomains=$q->COUNT_ROWS("samba_domains_info", "artica_backup");
+	
+	
+	$jsSharedFolder="<a href=\"javascript:blur();\" OnClick=\"Loadjs('samba.index.php?SharedFolderListJS=yes');\"
+	style='text-decoration:underline;font-size:12px;font-weight:bold'>";
+	
+	$ROLEJS="Loadjs('samba.index.php?script=yes&behavior=yes')";
+	if($SERVER_ROLE=="ROLE_DOMAIN_MEMBER"){$ROLEJS="Loadjs('ad.connect.php')";}
+	
+	$serverType="<div style='font-size:11px;text-align:right;width:220px;font-weight:bold;text-decoration:underline;margin-top:8px;margin-bottom:3px' $pointers OnClick=\"javascript:$ROLEJS\">{{$SERVER_ROLE}}/$WORKGROUP</div>";
+	
+	if($smb->main_array["global"]["log level"]>1){
+		$ROLEJS="Loadjs('samba.index.php?main-js=yes');";
+		$serverType="<div style='font-size:11px;text-align:right;width:220px;font-weight:bold;color:#E01313;text-decoration:underline;margin-top:8px;margin-bottom:3px' 
+		$pointers OnClick=\"javascript:$ROLEJS\">{running_in_debug_mode}</div>";
+	}
+	
+	
+	$design="
+	<div style='background-image:url(img/$img);background-repeat:no-repeat;width:350px;height:270px'>
+		<div style='padding-left:155px'>
+			<h3 style='font-size:16px;font-weight:bold;'>{APP_SAMBA}</h3>
+			<div style='font-size:11px;font-weight:bold'>$text</div>
+			$error
+			$serverType
+			<div style='font-size:11px;margin-top:4px;border-top:1px solid #CCCCCC;text-align:right;width:220px'>$jsSharedFolder<i>$CountDeFolders {shared_folders}</i></a></div>
+			<div style='font-size:11px;text-align:right;width:220px' $pointers OnClick=\"javascript:Loadjs('samba.wbinfo.domains.php')\"><i><strong style='text-decoration:underline'>$CountDeDomains {domains}</strong></i></div>
+			<div style='font-size:11px;text-align:right;width:220px' $pointers OnClick=\"javascript:Loadjs('samba.smbstatus.php')\"><i><strong style='text-decoration:underline'>$CountDeConnected {members_connected}</strong></i></div>
+			
+		</div>
+	</div>
+	
+	";
+	
+		$cache_file=dirname(__FILE__)."/logs/web/Samba.status.html";
+		writelogs("Writing $cache_file",__CLASS__."/".__FUNCTION__,__FILE__,__LINE__);
+		@file_put_contents($cache_file,$design);
+		@chmod($cache_file,777);
+	
+	return $design;		
+	
+	
+}	
 
 function kav4proxy_status(){
 	if(!function_exists("mysql_connect")){
@@ -570,6 +693,7 @@ function kav4proxy_status(){
 	$q=new mysql();
 	$ini=new Bs_IniHandler();
 	$sock=new sockets();
+	$users=new usersMenus();
 	$ini->loadString(base64_decode($sock->getFrameWork("cmd.php?squid-ini-status=yes")));
 	$master_version=$ini->_params["KAV4PROXY"]["master_version"];
 	$master_pid=$ini->_params["KAV4PROXY"]["master_pid"];	
@@ -593,13 +717,25 @@ function kav4proxy_status(){
 	$ligneW=@mysql_fetch_array($q->QUERY_SQL($sql,"artica_events"));
 	$blocked_today=numberFormat($ligneW["tcount"],0,""," ")." {infected_websites} {this_month}";	
 	
-	$categories=$q->COUNT_ROWS("dansguardian_community_categories","artica_backup");
+	$qSquid=new mysql_squid_builder();
+	$categories=$qSquid->COUNT_ROWS("dansguardian_community_categories","artica_backup");
 	$categories=numberFormat($categories,0,""," ");		
 
-	$websitesnums=$q->COUNT_ROWS("dansguardian_sitesinfos","artica_backup");
-	$websitesnums=numberFormat($websitesnums,0,""," ");		
+	$websitesnums=$qSquid->COUNT_ROWS("dansguardian_sitesinfos","artica_backup");
+	$websitesnums=numberFormat($websitesnums,0,""," ");
+
+	$kav4license_error=trim(base64_decode($sock->getFrameWork("squid.php?kav4proxy-license-error=yes")));	
+	$pattern_date=trim(base64_decode($sock->getFrameWork("squid.php?kav4proxy-pattern-date=yes")));	
+	if($pattern_date==null){$pattern_date="0000-00-00 00:00";}
+	$pattern_date=$pattern_date . ' (moscow GMT)';
+
+	if($kav4license_error<>null){
+		$img="status_kas_bg_failed.png";
+		$text="<a href=\"javascript:blur();\" OnClick=\"javascript:Loadjs('Kav4Proxy.License.php');\"
+		style='font-size:14px;color:#B30E0E;text-decoration:underline'><strong>{license_error}:</strong><br><i style='font-size:12px'>$kav4license_error</i></a>";
+	}
 	
-	
+	$text=$text."<div><i style='font-size:11px'>{pattern_ver}:$pattern_date</i></div>";
 	
 	$design="
 	<div style='background-image:url(img/$img);background-repeat:no-repeat;width:350px;height:270px'>
@@ -674,27 +810,54 @@ if($ini->_params["SQUID"]["icap_enabled"]<>'1'){
 	
 }
 
+	$EnableKavICAPRemote=$sock->GET_INFO("EnableKavICAPRemote");
+	$KavICAPRemoteAddr=$sock->GET_INFO("KavICAPRemoteAddr");
+	$KavICAPRemotePort=$sock->GET_INFO("KavICAPRemotePort");	
+	if(!is_numeric($EnableKavICAPRemote)){$EnableKavICAPRemote=0;}
 	
+	if($EnableKavICAPRemote==1){
+		$fp=@fsockopen($KavICAPRemoteAddr, $KavICAPRemotePort, $errno, $errstr, 1);
+			if(!$fp){
+				$img="status_postfix_bg_failed.png";
+				$text="{kavicap_unavailable_text}<br><strong>
+				<a href=\"javascript:blur();\" OnClick=\"javascript:Loadjs('squid.kavicap.php');\" style='font-size:12px;color:#D70707;text-decoration:underline'>$KavICAPRemoteAddr:$KavICAPRemotePort</a><br>$errstr";				
+			}
+		
+		@fclose($fp);			
+	}
+	
+	$q=new mysql_squid_builder();
+	
+	if(!$q->TestingConnection()){
+		$img="status_postfix_bg_failed.png";
+		$title="{MYSQL_ERROR}";
+		$text="<a href=\"javascript:blur();\" OnClick=\"javascript:Loadjs('squid.mysql.php');\" style='font-size:12px;color:#D70707;text-decoration:underline'>$text<br>$q->mysql_error</a>";
+	}	
+
+	//function DAEMON_STATUS_LINE($key,$bsini,$textoadd=null,$noenable=0,$width=null,$nostartandstop=false,$newInterface=0,$js=null){
 	$status_dansguardian=DAEMON_STATUS_LINE("DANSGUARDIAN",$ini,null,1,"220px");
-	$status_kav4proxy=DAEMON_STATUS_LINE("KAV4PROXY",$ini,null,1,"220px");
+	$status_kav4proxy=DAEMON_STATUS_LINE("KAV4PROXY",$ini,null,1,"220px",true,1,"Loadjs('kav4proxy.php?js-popup=yes')");
 	$cicap=DAEMON_STATUS_LINE("C-ICAP",$ini,null,1,"220px");
-	$APP_SQUIDGUARD_HTTP=DAEMON_STATUS_LINE("APP_SQUIDGUARD_HTTP",$ini,null,1,"220px");
-	$APP_UFDBGUARD=DAEMON_STATUS_LINE("APP_UFDBGUARD",$ini,null,1,"220px");
+	$APP_SQUIDGUARD_HTTP=DAEMON_STATUS_LINE("APP_SQUIDGUARD_HTTP",$ini,null,1,"220px",true,1,"Loadjs('squidguardweb.php')");
+	$APP_UFDBGUARD=DAEMON_STATUS_LINE("APP_UFDBGUARD",$ini,null,1,"220px",true,1,"Loadjs('dansguardian2.php?js-ufdbguard=yes')");
 
 
 	$pointers="OnMouseOver=\";this.style.cursor='pointer';\" OnMouseOut=\";this.style.cursor='default';\" ";
-	$requests=$q->COUNT_ROWS("dansguardian_events","artica_events");
+	$q=new mysql_squid_builder();
+	$requests=$q->EVENTS_SUM();
 	$requests=numberFormat($requests,0,""," ");
 	
+	$q=new mysql();
 	$sql="SELECT COUNT( ID ) as tcount FROM blocked_websites WHERE WEEK( zDate ) = WEEK( NOW( ) )";
 	$ligneW=@mysql_fetch_array($q->QUERY_SQL($sql,"artica_events"));
 	$blocked_today=numberFormat($ligneW["tcount"],0,""," ")." {blocked_websites} {this_week}";
 	
-	
-	$websitesnums=$q->COUNT_ROWS("dansguardian_sitesinfos","artica_backup");
+	$q=new mysql_squid_builder();
+	$websitesnums=$q->COUNT_ROWS("visited_sites");
 	$websitesnums=numberFormat($websitesnums,0,""," ");	
 	
-	$categories=$q->COUNT_ROWS("dansguardian_community_categories","artica_backup");
+	$q=new mysql_squid_builder();
+	$categories=$q->COUNT_CATEGORIES();
 	$categories=numberFormat($categories,0,""," ");		
 	
 	$sock=new sockets();
@@ -702,11 +865,18 @@ if($ini->_params["SQUID"]["icap_enabled"]<>'1'){
 	$sock->SET_INFO("squidStatsWebSitesNum",$websitesnums);
 	$sock->SET_INFO("squidStatsBlockedToday",$blocked_today);
 	$sock->SET_INFO("squidStatsRequestNumber",$requests);
-
+	
+	$migration_pid=unserialize(base64_decode($sock->getFrameWork("squid.php?migration-stats=yes")));
+	
+	
+	
+	if(is_array($migration_pid)){
+		$text="<span style='color:#B80000;font-size:13px'>{migration_script_run_text} PID:{$migration_pid[0]} {since}:{$migration_pid[1]}Mn</span>";
+	}
 	$design="
 	<div style='background-image:url(img/$img);background-repeat:no-repeat;width:350px;height:270px'>
 		<div style='padding-left:155px'>
-			<h3 style='font-size:16px;font-weight:bold;'>{APP_SQUID}</h3>
+			<h3 style='font-size:16px;font-weight:bold;'>{APP_SQUID} <img src='img/32-parameters.png' align='right' $pointers OnClick=\"javascript:SquidMainQuickLinks()\"></h3>
 			<br><span style='font-size:11px;font-weight:bold'><i style='color:black'>$text</i>$start$icap
 			$status_dansguardian$status_kav4proxy$cicap$APP_SQUIDGUARD_HTTP$APP_UFDBGUARD</span>
 			<div style='font-size:12px;margin-top:4px;border-top:1px solid #CCCCCC;text-align:right;width:220px'><i><strong>$requests {requests}</strong></i></div>

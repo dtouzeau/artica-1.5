@@ -402,6 +402,7 @@ begin
       if not TryStrToInt(tmp,Nice) then Nice:=19;
       Nicet:='nice('+IntToStr(Nice)+'),mail(false)';
       cmdnice:=SYS.EXEC_NICE();
+       logs.DebugLogs('Starting......: Daemon (fcron) nice command is "'+cmdnice+'"');
       logs.DeleteFile('/etc/cron.d/artica.cron.backups');
       logs.DeleteFile('/etc/cron.d/artica.cron.backup');
       logs.DeleteFile('/etc/cron.d/artica-cron-backup');

@@ -240,6 +240,10 @@ if ParamStr(1)='--change-initd' then  begin
    zpostfix:=Tpostfix.Create(SYS);
    zpostfix.POSTFIX_INI_TD();
 
+   writeln('Modify init.d [artica-status]');
+   zarticastatus:=tarticastatus.Create(SYS);
+   zarticastatus.INSTALL_INIT_D();
+
    writeln('Modify init.d [saslauthd]');
    zsaslauthd:=tsaslauthd.Create(SYS);
    zsaslauthd.CHANGE_INITD();

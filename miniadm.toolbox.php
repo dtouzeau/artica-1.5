@@ -31,9 +31,13 @@ function toolbox(){
 
 	if($_GET["script"]=="my.addressbook.php"){
 		$array["{my_address_book}"]="LoadAjax('BodyContent','my.addressbook.php')";
-	}	
+	}
+
+	if($_GET["script"]=="miniadm.webfiltering.index.php"){
+		$array["{APP_PROXY_CATS}"]="Loadjs('miniadm.webfiltering.index.php')";
+	}		
 		
-	
+
 	
 	
 	compiletool($array);

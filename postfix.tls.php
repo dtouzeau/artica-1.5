@@ -17,7 +17,7 @@ if(isset($_GET["edit_certificate"])){
 	exit;
 }
 
-if(isset($_GET["TreePostfixTLSCertificateInfosSubmit"])){
+if(isset($_POST["TreePostfixTLSCertificateInfosSubmit"])){
 	if(!$user->AsAnAdministratorGeneric){header('location:users.index.php');die();}
 	postfix_tls_certificate_save();exit;
 	}
@@ -215,7 +215,7 @@ $title=$tpl->_ENGINE_parse_body('{ssl_certificate}&raquo;{certificate infos}','c
 	
 $html="	
 	function LoadCertificatePage(){
-		YahooWin3('550','$page?edit_certificate=yes','$title');
+		YahooWin3('720','$page?edit_certificate=yes','$title');
 	}
 
 
@@ -471,7 +471,7 @@ function postfix_tls_certificate(){
 	$array=$ssl->array_ssl;
 	
 	$cc=$array["artica"]["country"]."_".$array["default_ca"]["countryName_value"];
-	$country_name=Field_array_Hash($ssl->array_country_codes,'country_code',$cc);
+	$country_name=Field_array_Hash($ssl->array_country_codes,'country_code',$cc,"style:font-size:14px;padding:3px");
 	$page=CurrentPageName();
 	$users=new usersMenus();
 	$sock=new sockets();
@@ -492,66 +492,90 @@ function postfix_tls_certificate(){
 	
 		
 	$html="
-	<form name='ffm_certificate'>
+	<div id='PostFixTLSCertificateInfos'>
 	<input type='hidden' id='TreePostfixTLSCertificateInfosSubmit' name='TreePostfixTLSCertificateInfosSubmit' value='yes'>
-	<table>
+	<table style='width:100%' class=form>
+	<tbody>
 		<tr><td align='right' colspan=2>$download_cert&nbsp;&nbsp;$hosts&nbsp;&nbsp;$CertificateInfos</tr>
-		<tr><td align='left' colspan=2><strong>{countryName}</strong>:</td></tr>
-		<tr><td colspan=2>$country_name</td></tr>
+		<tr><td colspan=2>&nbsp;</td></tr>
+		<tr>
+			<td align='left' class=legend><strong>{countryName}</strong>:</td>
+			<td colspan=2>$country_name</td>
+		</tr>
 		<tr>
 		<td class=legend>{stateOrProvinceName}:</strong></td>
-		<td align='left'>" . Field_text("stateOrProvinceName",$array["default_ca"]["stateOrProvinceName_value"])  . "</td>
+		<td align='left'>" . Field_text("stateOrProvinceName",$array["default_ca"]["stateOrProvinceName_value"],"font-size:14px;width:150px;padding:3px")  . "</td>
 		</tr>
 		<tr>
 		<td class=legend>{localityName}:</strong></td>
-		<td align='left'>" . Field_text("localityName",$array["default_ca"]["localityName_value"])  . "</td>
+		<td align='left'>" . Field_text("localityName",$array["default_ca"]["localityName_value"],"font-size:14px;width:150px;padding:3px")  . "</td>
 		</tr>	
 		<tr>
 		<td class=legend>{CertificateMaxDays}:</strong></td>
-		<td align='left'>" . Field_text("CertificateMaxDays",$CertificateMaxDays,'width:40px')  . "&nbsp;{days}</td>
+		<td align='left' style='font-size:14px;width:40px;padding:3px'>" . Field_text("CertificateMaxDays",$CertificateMaxDays,"font-size:14px;width:40px;padding:3px")  . "&nbsp;{days}</td>
 		</tr>	
 		<tr>
 		<td class=legend>{organizationName}:</strong></td>
-		<td align='left'>" . Field_text("organizationName",$array["default_ca"]["organizationName_value"])  . "</td>
+		<td align='left'>" . Field_text("organizationName",$array["default_ca"]["organizationName_value"],"font-size:14px;width:210px;padding:3px")  . "</td>
 		</tr>				
 		<tr>
 		<td class=legend>{organizationalUnitName}:</strong></td>
-		<td align='left'>" . Field_text("organizationalUnitName",$array["default_ca"]["organizationalUnitName_value"])  . "</td>
+		<td align='left'>" . Field_text("organizationalUnitName",$array["default_ca"]["organizationalUnitName_value"],"font-size:14px;width:150px;padding:3px")  . "</td>
 		</tr>	
 		<tr>
 		<td class=legend>{commonName}:</strong></td>
-		<td align='left'>" . Field_text("commonName",$array["default_ca"]["commonName_value"])  . "</td>
+		<td align='left'>" . Field_text("commonName",$array["default_ca"]["commonName_value"],"font-size:14px;width:150px;padding:3px")  . "</td>
 		</tr>
 		<tr>
 		<td class=legend>{emailAddress}:</strong></td>
-		<td align='left'>" . Field_text("emailAddress",$array["default_ca"]["emailAddress_value"])  . "</td>
+		<td align='left'>" . Field_text("emailAddress",$array["default_ca"]["emailAddress_value"],"font-size:14px;width:210px;padding:3px")  . "</td>
 		</tr>
 		<tr>
 		<tr><td colspan=2>&nbsp;</td></tr>
 		<td class=legend>{smtpd_tls_key_file}:</strong></td>
-		<td align='left'>" . Field_text("smtpd_tls_key_file",$array["postfix"]["smtpd_tls_key_file"])  . "</td>
+		<td align='left'>" . Field_text("smtpd_tls_key_file",$array["postfix"]["smtpd_tls_key_file"],"font-size:14px;width:90px;padding:3px")  . "</td>
 		</tr>
 		<tr>
 		<td class=legend>{smtpd_tls_cert_file}:</strong></td>
-		<td align='left'>" . Field_text("smtpd_tls_cert_file",$array["postfix"]["smtpd_tls_cert_file"])  . "</td>
+		<td align='left'>" . Field_text("smtpd_tls_cert_file",$array["postfix"]["smtpd_tls_cert_file"],"font-size:14px;width:90px;padding:3px")  . "</td>
 		</tr>		
 		<tr>
 		<td class=legend>{smtpd_tls_CAfile}:</strong></td>
-		<td align='left'>" . Field_text("smtpd_tls_CAfile",$array["postfix"]["smtpd_tls_CAfile"])  . "</td>
+		<td align='left'>" . Field_text("smtpd_tls_CAfile",$array["postfix"]["smtpd_tls_CAfile"],"font-size:14px;width:90px;padding:3px")  . "</td>
 		</tr>		
 
 			
 		<tr>
 		<td class=legend>{certificate password}:</strong></td>
-		<td align='left'><input type='password' name='input_password' id='input_password' value=\"{$array["req"]["input_password"]}\"></td>
+		<td align='left'><input type='password' name='input_password' id='input_password' style='font-size:14px;width:150px;padding:3px', value=\"{$array["req"]["input_password"]}\"></td>
 		</tr>									
 		<tr><td colspan=2 align='right'>
 		<hr>
-			". button("{submit}","ParseForm('ffm_certificate','$page',true)"). "
+			". button("{submit}","SavePostfixTlsInfos()"). "
 		
-		
+		</td>
+		</tr>
+		</tbody>
 	</table>
-	</form>
+	
+	<script>
+		var x_SavePostfixTlsInfos=function (obj) {
+			var results=obj.responseText;
+			if (results.length>0){alert(results);
+				Loadjs('$page?js-certificate=yes');
+				return;
+			}
+			window.location.href ='logoff.php'; 
+		}	
+	
+	
+		function SavePostfixTlsInfos(){
+			var XHR=XHRParseElements('PostFixTLSCertificateInfos');
+			AnimateDiv('PostFixTLSCertificateInfos');
+			XHR.sendAndLoad('$page', 'POST',x_SavePostfixTlsInfos);
+		}
+	
+	</script>
 	";
 	$tpl=new templates();
 	return $tpl->_ENGINE_parse_body($html);
@@ -563,18 +587,18 @@ function postfix_tls_certificate_save(){
 	$mny=new usersMenus();
 	if($mny->AsPostfixAdministrator==false){return null;}
 	include_once("ressources/class.ssl.certificate.inc");
-	while (list ($num, $val) = each ($_GET) ){
-		$_GET[$num]=replace_accents($_GET[$num]);		
+	while (list ($num, $val) = each ($_POST) ){
+		$_POST[$num]=replace_accents($_POST[$num]);		
 	}
 	
-	reset($_GET);
-	if(preg_match('#(.+?)_(.+)#',$_GET["country_code"],$re)){
+	reset($_POST);
+	if(preg_match('#(.+?)_(.+)#',$_POST["country_code"],$re)){
 		$countryName=$re[1];
 		$country_code=$re[2];
 	}
 	
 	
-	$CertificateMaxDays=$_GET["CertificateMaxDays"];
+	$CertificateMaxDays=$_POST["CertificateMaxDays"];
 	unset($_GET["CertificateMaxDays"]);
 	$sock=new sockets();
 	$sock->SET_INFO('CertificateMaxDays',$CertificateMaxDays);
@@ -592,17 +616,17 @@ function postfix_tls_certificate_save(){
 	$cert->array_ssl["default_ca"]["countryName_value"]=$country_code;
 	
 	$cert->array_ssl["default_ca"]["stateOrProvinceName"]="State Name";
-	$cert->array_ssl["default_ca"]["stateOrProvinceName_value"]=$_GET["stateOrProvinceName"];
+	$cert->array_ssl["default_ca"]["stateOrProvinceName_value"]=$_POST["stateOrProvinceName"];
 	$cert->array_ssl["default_ca"]["localityName"]="Locality Name";
-	$cert->array_ssl["default_ca"]["localityName_value"]=$_GET["localityName"];
+	$cert->array_ssl["default_ca"]["localityName_value"]=$_POST["localityName"];
 	$cert->array_ssl["default_ca"]["organizationName"]="Organization Name";
-	$cert->array_ssl["default_ca"]["organizationName_value"]=$_GET["organizationName"];
+	$cert->array_ssl["default_ca"]["organizationName_value"]=$_POST["organizationName"];
 	$cert->array_ssl["default_ca"]["organizationalUnitName"]="Organizational Unit Name";
-	$cert->array_ssl["default_ca"]["organizationalUnitName_value"]=$_GET["organizationalUnitName"];
+	$cert->array_ssl["default_ca"]["organizationalUnitName_value"]=$_POST["organizationalUnitName"];
 	$cert->array_ssl["default_ca"]["commonName"]="Common Name";
-	$cert->array_ssl["default_ca"]["commonName_value"]=$_GET["commonName"];
+	$cert->array_ssl["default_ca"]["commonName_value"]=$_POST["commonName"];
 	$cert->array_ssl["default_ca"]["emailAddress"]="Email Address";
-	$cert->array_ssl["default_ca"]["emailAddress_value"]=$_GET["emailAddress"];
+	$cert->array_ssl["default_ca"]["emailAddress_value"]=$_POST["emailAddress"];
 	$cert->array_ssl["artica"]["country"]=$countryName;
 	
 	$cert->array_ssl["policy_anything"]["countryName"]="optional";
@@ -617,19 +641,19 @@ function postfix_tls_certificate_save(){
 	$cert->array_ssl["user_policy"]["commonName"]="supplied";
 	$cert->array_ssl["user_policy"]["emailAddress"]="supplied";
 	
-	$cert->array_ssl["req"]["input_password"]=$_GET["input_password"];
-	$cert->array_ssl["req"]["output_password"]=$_GET["input_password"];
+	$cert->array_ssl["req"]["input_password"]=$_POST["input_password"];
+	$cert->array_ssl["req"]["output_password"]=$_POST["input_password"];
 	
-	$cert->array_ssl["v3_req"]["input_password"]=$_GET["input_password"];
-	$cert->array_ssl["v3_req"]["output_password"]=$_GET["input_password"];
+	$cert->array_ssl["v3_req"]["input_password"]=$_POST["input_password"];
+	$cert->array_ssl["v3_req"]["output_password"]=$_POST["input_password"];
 	
 	$cert->array_ssl["v3_ca"]["subjectKeyIdentifier"]="hash";
 	$cert->array_ssl["v3_ca"]["authorityKeyIdentifier"]="keyid:always,issuer:always";
 	$cert->array_ssl["v3_ca"]["basicConstraints"]="CA:true";
 	
-	$cert->array_ssl["postfix"]["smtpd_tls_CAfile"]=$_GET["smtpd_tls_CAfile"];
-	$cert->array_ssl["postfix"]["smtpd_tls_key_file"]=$_GET["smtpd_tls_key_file"];
-	$cert->array_ssl["postfix"]["smtpd_tls_cert_file"]=$_GET["smtpd_tls_cert_file"];
+	$cert->array_ssl["postfix"]["smtpd_tls_CAfile"]=$_POST["smtpd_tls_CAfile"];
+	$cert->array_ssl["postfix"]["smtpd_tls_key_file"]=$_POST["smtpd_tls_key_file"];
+	$cert->array_ssl["postfix"]["smtpd_tls_cert_file"]=$_POST["smtpd_tls_cert_file"];
 	
 	$tpl=new templates();
 	echo $tpl->javascript_parse_text("{interface_restarted}");
@@ -1120,8 +1144,8 @@ function view_certificate_popup(){
 		$t=$t."<div><code>$val</code></div>";
 	}
 	$t=RoundedLightWhite($t);
-	$html="<H1>{certificate_infos}</H1>
-	<div style='width:99%;height:350px;overflow:auto'>$t</div>
+	$html="<div style='font-size:16px'>{certificate_infos}</div>
+	<div style='width:99%;height:350px;overflow:auto' class=form>$t</div>
 	
 	
 	";

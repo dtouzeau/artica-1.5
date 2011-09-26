@@ -125,6 +125,7 @@ class Fetchmail_settings{
 				if(preg_match('#disabled#',$line,$re)){$arr[$i]["disabled"]=true;}
 				if(preg_match('#multidrop#',$line,$re)){$arr[$i]["multidrop"]=true;}
 				if(preg_match('#sslcertck#',$line,$re)){$arr[$i]["sslcertck"]=true;}
+				if(preg_match('#dropdelivered#',$line,$re)){$arr[$i]["dropdelivered"]=true;}
 				
 				
 				if(preg_match('#sslfingerprint\s+\'(.+?)\'\s+#',$line,$re)){$arr[$i]["sslfingerprint"]=$re[1];}		
@@ -139,9 +140,20 @@ class Fetchmail_settings{
 	
 		
 	function compile($array){
+		if(!isset($GLOBALS["FetchMailGLobalDropDelivered"])){
+			$sock=new sockets();
+			$GLOBALS["FetchMailGLobalDropDelivered"]=$sock->GET_INFO("FetchMailGLobalDropDelivered");
+			if(!is_numeric($GLOBALS["FetchMailGLobalDropDelivered"])){$GLOBALS["FetchMailGLobalDropDelivered"]=0;}
+			
+		}
+		
+		
 		if(!is_array($array)){return false;}
 		if($array["poll"]==null){return false;}
 		if($array["proto"]==null){return false;}
+		
+		if($GLOBALS["FetchMailGLobalDropDelivered"]==1){$array["dropdelivered"]=1;}
+		
 		if($array["fetchall"]<>null){
 			$fetchall="\n\tfetchall";
 		}
@@ -188,13 +200,16 @@ class Fetchmail_settings{
 		if($array["sslfingerprint"]<>null){
 			$sslfingerprint="\n\tsslfingerprint '{$array["sslfingerprint"]}'";
 		}
-			if($array["sslfingerprint"]<>null){
-			$sslcertck="\n\sslcertck";
+		if($array["sslfingerprint"]<>null){
+			$sslcertck="\n\tsslcertck";
 		}		
 		
+		if($array["dropdelivered"]==1){
+			$dropdelivered="\n\tdropdelivered is {$array["is"]} here";
+		}
 		
 		
-		$line="poll {$array["poll"]} \n\t$tracepolls\n\tproto {$array["proto"]} $port\n\tuser {$array["user"]}\n\t pass {$array["pass"]}\n\tis {$array["is"]}$aka$folder$ssl$fetchall$interval$timeout$keep$disabled$multidrop$sslfingerprint$sslcertck";
+		$line="poll {$array["poll"]} \n\t$tracepolls\n\tproto {$array["proto"]} $port\n\tuser {$array["user"]}\n\t pass {$array["pass"]}\n\tis {$array["is"]}$dropdelivered$aka$folder$ssl$fetchall$interval$timeout$keep$disabled$multidrop$sslfingerprint$sslcertck";
 		return $line;
 	}
 	
@@ -235,7 +250,9 @@ class Fetchmail_settings{
 		if(isset($POSTED_ARRAY["smtp_host"])){$sqa["`smtp_host`"]=$POSTED_ARRAY["smtp_host"];$sq[]=" `smtp_host`='{$POSTED_ARRAY["smtp_host"]}'";}
 		if(isset($POSTED_ARRAY["sslfingerprint"])){$sqa["`sslfingerprint`"]=$POSTED_ARRAY["sslfingerprint"];$sq[]=" `sslfingerprint`='{$POSTED_ARRAY["sslfingerprint"]}'";}
 		if(isset($POSTED_ARRAY["sslcertck"])){$sqa["`sslcertck`"]=$POSTED_ARRAY["sslcertck"];$sq[]=" `sslcertck`='{$POSTED_ARRAY["sslcertck"]}'";}
+		if(isset($POSTED_ARRAY["dropdelivered"])){$sqa["`dropdelivered`"]=$POSTED_ARRAY["dropdelivered"];$sq[]=" `dropdelivered`='{$POSTED_ARRAY["dropdelivered"]}'";}
 
+		
 		
 		
 		$sqa["`md5`"]=$md5;
@@ -322,7 +339,8 @@ class Fetchmail_settings{
 				"nokeep"=>$ligne["nokeep"],
 				"smtp_host"=>$ligne["smtp_host"],
 				"sslfingerprint"=>$ligne["sslfingerprint"],
-				"sslcertck"=>$ligne["sslcertck"]
+				"sslcertck"=>$ligne["sslcertck"],
+				"dropdelivered"=>$ligne["dropdelivered"]
 			);
 		}
 		
@@ -355,7 +373,8 @@ class Fetchmail_settings{
 				"nokeep"=>$ligne["nokeep"],
 				"smtp_host"=>$ligne["smtp_host"],
 				"sslfingerprint"=>$ligne["sslfingerprint"],
-				"sslcertck"=>$ligne["sslcertck"]
+				"sslcertck"=>$ligne["sslcertck"],
+				"dropdelivered"=>$ligne["dropdelivered"]
 			);
 		}
 		
@@ -386,6 +405,7 @@ class Fetchmail_settings{
 				"nokeep"=>$ligne["nokeep"],
 				"smtp_host"=>$ligne["smtp_host"],
 				"sslfingerprint"=>$ligne["sslfingerprint"],
+				"dropdelivered"=>$ligne["dropdelivered"]
 			);
 		
 		

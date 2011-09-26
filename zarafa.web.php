@@ -58,7 +58,7 @@ function APP_ZARAFA_WEB_SAVE(){
 	XHR.appendData('ZarafaStoreCompressionLevel',document.getElementById('ZarafaStoreCompressionLevel').value);
 	XHR.appendData('ZarafaServerSMTPIP',document.getElementById('ZarafaServerSMTPIP').value);
 	XHR.appendData('ZarafaServerSMTPPORT',document.getElementById('ZarafaServerSMTPPORT').value);
-	
+	XHR.appendData('ZarafaSessionTime',document.getElementById('ZarafaSessionTime').value);
 	XHR.appendData('ZarafaPop3Port',document.getElementById('ZarafaPop3Port').value);
 	XHR.appendData('ZarafaIMAPPort',document.getElementById('ZarafaIMAPPort').value);
 	XHR.appendData('ZarafaPop3sPort',document.getElementById('ZarafaPop3sPort').value);
@@ -144,8 +144,7 @@ function SAVE(){
 	$sock->SET_INFO("ZarafaIMAPsEnable",trim($_GET["ZarafaIMAPsEnable"]));
 	$sock->SET_INFO("ZarafaAllowToReinstall",trim($_GET["ZarafaAllowToReinstall"]));
 	$sock->SET_INFO("ZarafaWebNTLM",trim($_GET["ZarafaWebNTLM"]));
-	
-	
+	$sock->SET_INFO("ZarafaSessionTime",$_GET["ZarafaSessionTime"]*60);
 	
 	 
 	
@@ -213,7 +212,7 @@ $ZarafaIMAPPort=$sock->GET_INFO("ZarafaIMAPPort");
 $ZarafaPop3sPort=$sock->GET_INFO("ZarafaPop3sPort");
 $ZarafaIMAPsPort=$sock->GET_INFO("ZarafaIMAPsPort");
 $ZarafaAllowToReinstall=$sock->GET_INFO("ZarafaAllowToReinstall");
-
+$ZarafaSessionTime=$sock->GET_INFO("ZarafaSessionTime");
 $ZarafaWebNTLM=$sock->GET_INFO("ZarafaWebNTLM");
 
 if(!is_numeric($ZarafaPop3Enable)){$ZarafaPop3Enable=1;}
@@ -224,7 +223,8 @@ if(!is_numeric($ZarafaPop3sPort)){$ZarafaPop3sPort=995;}
 if(!is_numeric($ZarafaIMAPPort)){$ZarafaIMAPPort=143;}
 if(!is_numeric($ZarafaIMAPsPort)){$ZarafaIMAPsPort=993;}
 if(!is_numeric($ZarafaAllowToReinstall)){$ZarafaAllowToReinstall=1;}
-
+if(!is_numeric($ZarafaSessionTime)){$ZarafaSessionTime=1440;}
+$ZarafaSessionTime_field=$ZarafaSessionTime/60;
 
 
 
@@ -300,6 +300,10 @@ $html="
 				<td class=legend style='font-size:12px'>{enable_ssl}:</td>
 				<td>". Field_checkbox("ZarafaApacheSSL",1,$enable_ssl)."</td>
 			</tr>
+			<tr>
+				<td class=legend style='font-size:12px'>{SessionTime}:</td>
+				<td style='font-size:13px;padding:3px;'>". Field_text("ZarafaSessionTime",$ZarafaSessionTime_field,"font-size:13px;padding:3px;width:60px")."&nbsp;{minutes}</td>
+			</tr>			
 			<tr>
 				<td class=legend style='font-size:12px'>{ZarafaWebNTLM}:</td>
 				<td>". Field_checkbox("ZarafaWebNTLM",1,$ZarafaWebNTLM)."</td>

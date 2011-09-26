@@ -3179,7 +3179,47 @@ class bounces_templates{
 	
 }
 
-
+function array_postfix_status(){
+	$array[]="POSTFIX";
+	$array[]="APP_POSTFWD2:master";
+	$array[]="FETCHMAIL";
+	$array[]="ASSP";
+	$array[]="AMAVISD";
+	$array[]="AMAVISD_MILTER";
+	$array[]="SPAMASSASSIN";
+	$array[]="SPAMASS_MILTER";
+	$array[]="DNSMASQ";
+	$array[]="APP_CLUEBRINGER";
+	$array[]="MIMEDEFANG";
+	$array[]="MIMEDEFANGX";
+	$array[]="DKIM_FILTER";
+	$array[]="SPFMILTER";
+	$array[]="CLAMAV";
+	$array[]="FRESHCLAM";
+	$array[]="MAILSPY";	
+	$array[]="KAVMILTER";
+	$array[]="KAS_MILTER";
+	$array[]="KAS3";
+	$array[]="MAILARCHIVER";
+	$array[]="BOGOM";
+	$array[]="MILTER_GREYLIST";
+	$array[]="POLICYD_WEIGHT";
+	$array[]="MAILMAN";
+	$array[]="APP_CYRUS_IMAP";	
+	$array[]="MAILARCHIVER";
+	$array[]="APP_OPENDKIM";
+	$array[]="APP_MILTER_DKIM";
+	$array[]="APP_ARTICA_POLICY";
+	$array[]="APP_ZARAFA";
+	$array[]="APP_ZARAFA_SPOOLER";
+	$array[]="APP_ZARAFA_GATEWAY";
+	$array[]="APP_ZARAFA_MONITOR";
+	$array[]="APP_ZARAFA_DAGENT";
+	$array[]="APP_ZARAFA_ICAL";
+	$array[]="APP_ZARAFA_LICENSED";	
+	return $array;
+	
+}
 
 
 

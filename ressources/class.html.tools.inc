@@ -1,5 +1,5 @@
 <?php
-function DAEMON_STATUS_ROUND($key,$bsini,$textoadd=null,$noenable=0){
+function DAEMON_STATUS_ROUND($key,$bsini,$textoadd=null,$noenable=0,$newInterface=0){
 	$version=null;$license_error=null;$icap=null;$pattern=null;$textoadd2=null;$disabled=null;
 	if(!isset($bsini->_params["$key"]["service_name"])){return null;}
 	if($bsini->_params["$key"]["service_name"]==null){return null;}
@@ -108,6 +108,7 @@ if($bsini->_params["$key"]["service_disabled"]=="0"){
 	$img="warning42.png";
 	$js_service="StartStopService('".$bsini->_params["$key"]["service_cmd"]."','1','$title');";
 	$disabled="<tr><td colspan=2 align='right'><strong style='font-size:11px;line-height:auto'><i>{service_disabled}</i></strong></td></tr>";
+	$disabled_mini="<i>{service_disabled}</i>";
 }
 
 if($bsini->_params["$key"]["master_pid"]<>null){
@@ -197,6 +198,11 @@ $version="
 	$master_title="{{$bsini->_params["$key"]["service_name"]}}";
 	if($change_name<>null){$master_title=$change_name;}
 
+	if($newInterface==1){
+		return ParagrapheTEXT($img, $master_title, "$status<br>$disabled_mini");
+	}
+	
+	
 $html="<table style='width:100%;background-color:#D5EED9;font-size:11px;line-height:auto' class=TableRemove>
 <tr>
 <td width=1% valign='top' style='background-color:#D5EED9;font-size:11px;line-height:auto'>" . imgtootltip($img,'{start_stop}',$js_service)."</td>

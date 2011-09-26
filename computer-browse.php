@@ -1,4 +1,5 @@
 <?php
+$GLOBALS["ICON_FAMILY"]="COMPUTERS";
 include_once(dirname(__FILE__).'/ressources/class.templates.inc');
 include_once(dirname(__FILE__).'/ressources/class.tcpip.inc');
 include_once(dirname(__FILE__).'/ressources/class.system.network.inc');
@@ -13,8 +14,8 @@ if(posix_getuid()<>0){
 		die();
 	}
 }
-
-
+if(isset($_GET["tabs"])){tabs();exit;}
+if(isset($_GET["scan-nets-js"])){scan_net_js();exit;}
 if($_GET["mode"]=="selection"){selection_js();exit;}
 if(isset($_GET["networkslist"])){networkslist(0);exit;}
 if(isset($_GET["ComputersAllowDHCPLeases"])){ComputersAllowDHCPLeasesSave();exit;}
@@ -63,6 +64,52 @@ function ComputersAllowDHCPLeasesSave(){
 function ComputersAllowNmapSave(){
 	$sock=new sockets();
 	$sock->SET_INFO("ComputersAllowNmap",$_GET["ComputersAllowNmap"]);
+	
+}
+
+function scan_net_js(){
+	$page=CurrentPageName();
+	echo "var x_ScanNetwork = function (obj) {var tempvalue=obj.responseText;if(tempvalue.length>3){alert(tempvalue);}}
+
+	function ScanNetwork(){
+		var XHR = new XHRConnection();
+		XHR.appendData('network-scanner-execute','yes');
+        XHR.sendAndLoad('$page', 'GET',x_ScanNetwork);        
+	
+	}
+	
+	ScanNetwork();";
+	
+}
+
+function tabs(){
+	$page=CurrentPageName();
+	$array["browse-computers"]='{parameters}';
+	$array["search-computers"]='{search_computers}';
+	
+	
+	
+	$tpl=new templates();
+
+	while (list ($num, $ligne) = each ($array) ){
+		if($num=="search-computers"){
+			$html[]=$tpl->_ENGINE_parse_body("<li><a href=\"ocs.search.php?start=yes&mode={$_GET["mode"]}&value={$_GET["value"]}&callback={$_GET["callback"]}\"><span>$ligne</span></a></li>\n");
+			continue;
+		}
+		$html[]=$tpl->_ENGINE_parse_body("<li><a href=\"$page?$num=yes&mode={$_GET["mode"]}&value={$_GET["value"]}&callback={$_GET["callback"]}\"><span>$ligne</span></a></li>\n");
+	}
+	
+	
+	echo "
+	<div id=main_config_browse_computers style='width:100%;height:650px;overflow:auto'>
+		<ul>". implode("\n",$html)."</ul>
+	</div>
+		<script>
+				$(document).ready(function(){
+					$('#main_config_browse_computers').tabs();
+				});
+		</script>";		
+
 	
 }
 
@@ -248,13 +295,13 @@ function js(){
 	var {$prefix}reste=0;	
 	
 	function browse_computers_start(){
-		YahooLogWatcher(750,'$page?browse-computers=yes&mode={$_GET["mode"]}&value={$_GET["value"]}&callback={$_GET["callback"]}','$title');
+		YahooLogWatcher(750,'$page?tabs=yes&mode={$_GET["mode"]}&value={$_GET["value"]}&callback={$_GET["callback"]}','$title');
 		{$prefix}demarre();
 	
 	}
 	
 	function browse_computers_start_infront(){
-	   $('#BodyContent').load('$page?browse-computers=yes&mode={$_GET["mode"]}&value={$_GET["value"]}&callback={$_GET["callback"]}&show-title=yes');
+	   $('#BodyContent').load('$page?tabs=yes&mode={$_GET["mode"]}&value={$_GET["value"]}&callback={$_GET["callback"]}&show-title=yes');
 	   {$prefix}demarre();
 	
 	}	
@@ -285,36 +332,23 @@ var x_{$prefix}ChargeLogs  = function (obj) {
 	}
 	
 	
-var x_ScanNetwork      = function (obj) {var tempvalue=obj.responseText;if(tempvalue.length>3){alert(tempvalue);}}
 
-var x_AddNetworkPerform= function (obj) {
-	if(document.getElementById('main_config_snort')){RefreshTab('main_config_snort');}
-	YahooWin3Hide();ViewNetwork();
-}
-
-var x_ClacNetmaskcdir  = function (obj) {
-		document.getElementById('netmaskcdir').value=obj.responseText;
-	}
 	
 	function ViewNetwork(){
 		YahooWin2(550,'$page?browse-networks=yes','$networks');
 	}
 	
-	function AddNetwork(){
-		YahooWin3(450,'$page?browse-networks-add=yes','$networks');
-	}
+
 	
 	function ViewComputerScanLogs(){
 		YahooWin3(550,'$page?view-scan-logs=yes','$networks');
 	}
 	
-	function NetworkDelete(md){
-		var XHR = new XHRConnection();
-		XHR.appendData('NetworkDelete',md);
-		document.getElementById('networks').innerHTML='<div style=\"width:100%\"><center style=\"margin:20px;padding:20px\"><img src=\"img/wait_verybig.gif\"></center></div>';
-		XHR.sendAndLoad('$page', 'GET',x_AddNetworkPerform);  	
+
 	
-	}
+var x_ClacNetmaskcdir  = function (obj) {
+		document.getElementById('netmaskcdir').value=obj.responseText;
+	}	
 	
 	function ClacNetmaskcdir(){
 		var XHR = new XHRConnection();
@@ -324,24 +358,10 @@ var x_ClacNetmaskcdir  = function (obj) {
 	}
 	
 	
-	function AddNetworkPerform(){
-		var XHR = new XHRConnection();
-		var cdir=document.getElementById('netmaskcdir').value;
-		if(cdir.length>0){
-			XHR.appendData('calc-cdir-ip-add',document.getElementById('netmaskcdir').value);
-		 	document.getElementById('networks_add').innerHTML='<div style=\"width:100%\"><center style=\"margin:20px;padding:20px\"><img src=\"img/wait_verybig.gif\"></center></div>';
-			XHR.sendAndLoad('$page', 'GET',x_AddNetworkPerform); 
-		}  
-	
-	}
+
 	
 	
-	function ScanNetwork(){
-		var XHR = new XHRConnection();
-		XHR.appendData('network-scanner-execute','yes');
-        XHR.sendAndLoad('$page', 'GET',x_ScanNetwork);        
-	
-	}
+
 	
 	function BrowsComputersRefresh(){
 		var mode='';
@@ -382,7 +402,7 @@ var x_ClacNetmaskcdir  = function (obj) {
 		if(confirm('$delete_all_computers_warn')){
 			var XHR = new XHRConnection();
 			XHR.appendData('DeleteAllcomputers','yes');
-			document.getElementById('computerlist').innerHTML='<center><img src=img/wait_verybig.gif></center>';
+			AnimateDiv('computerlist');
 			XHR.sendAndLoad('$page', 'GET',x_DeleteAllComputers);  
 		}
 	}
@@ -406,51 +426,12 @@ var x_NetWorksDisable= function (obj) {
 			XHR.sendAndLoad('$page', 'GET',x_NetWorksDisable); 
 	} 	
 	
-	
-	function ImportComputers(ip){
-		YahooWin3('450','$page?artica-import-popup=yes&ip='+ip,'$import_artica_computers');
-	
-	}
-	
-	function ImportListComputers(){
-		YahooWin3('450','$page?artica-importlist-popup=yes','$import_artica_computers');
-	
-	}
 
-var x_ImportListComputersPerform= function (obj) {
-		var results=obj.responseText;
-		alert(results);
-		YahooWin3Hide();
-		BrowsComputersRefresh();
-		if(document.getElementById('main_config_snort')){RefreshTab('main_config_snort');}
-	}		
-	
-	function ImportListComputersPerform(){
-			var XHR = new XHRConnection();
-			XHR.appendData('popup_import_list',document.getElementById('popup_import_list').value);
-		 	document.getElementById('popup_import_div').innerHTML='<div style=\"width:100%\"><center style=\"margin:20px;padding:20px\"><img src=\"img/wait_verybig.gif\"></center></div>';
-			XHR.sendAndLoad('$page', 'POST',x_ImportListComputersPerform); 
-	}
 	
 	
   	
 		
-	var x_SaveImportComputers= function (obj) {
-			YahooWin3Hide();
-			ViewNetwork();
-			if(document.getElementById('main_config_snort')){RefreshTab('main_config_snort');}
-		}	
-		
 	
-	function SaveImportComputers(){
-				var XHR = new XHRConnection();
-				XHR.appendData('artica_ip_addr',document.getElementById('artica_ip_addr').value);
-				XHR.appendData('port',document.getElementById('port').value);
-				XHR.appendData('artica_user',document.getElementById('artica_user').value);
-				XHR.appendData('password',document.getElementById('password').value);
-			 	document.getElementById('import_artica_computers').innerHTML='<div style=\"width:100%\"><center style=\"margin:20px;padding:20px\"><img src=\"img/wait_verybig.gif\"></center></div>';
-				XHR.sendAndLoad('$page', 'GET',x_SaveImportComputers); 
-		} 	
 	
 	function DeleteImportComputers(ip){
 				var XHR = new XHRConnection();
@@ -463,6 +444,8 @@ $start
 	
 	echo $html;
 }
+
+
 
 
 function index(){
@@ -644,7 +627,7 @@ return  $tpl->_ENGINE_parse_body($html);
 
 
 function menus_right(){
-	$findcomputer=Paragraphe("64-samba-find.png","{scan_your_network}",'{scan_your_network_text}',"javascript:ScanNetwork()","scan_your_network",210);
+	$findcomputer=Paragraphe("64-samba-find.png","{scan_your_network}",'{scan_your_network_text}',"javascript:Loadjs('computer-browse.php?scan-nets-js=yes')","scan_your_network",210);
 	$networs=Paragraphe("64-win-nic-loupe.png","{edit_networks}",'{edit_networks_text}',"javascript:ViewNetwork()","edit_networks",210);
 	$add_computer_js="javascript:YahooUser(670,'domains.edit.user.php?userid=newcomputer$&ajaxmode=yes','New computer');";
 	$add_computer=Paragraphe("64-add-computer.png","{ADD_COMPUTER}","{ADD_COMPUTER_TEXT}",$add_computer_js);
@@ -718,21 +701,24 @@ $html="<div style='width:100%;height:230px;overflow:auto'>$html</div>";
 
 function networks(){
 	$page=CurrentPageName();
+	$tpl=new templates();
 	$networsplus=Paragraphe("64-win-nic-plus.png","{add_network}",'{add_network_text}',"javascript:AddNetwork()","add_network",210);
 	$importArtica=Paragraphe("64-samba-get.png","{import_artica_computers}",'{import_artica_computers_text}',"javascript:ImportComputers('')","import_artica_computers",210);
 	$importList=Paragraphe("64-samba-get.png","{import_artica_computers}",'{import_artica_computers_list_text}',"javascript:ImportListComputers()","import_artica_computers_list_text",210);
+	$networks=$tpl->_ENGINE_parse_body("{networks}");
+	$import_artica_computers=$tpl->_ENGINE_parse_body("{import_artica_computers}");
 	
 	$sock=new sockets();
 	$ComputersAllowNmap=$sock->GET_INFO("ComputersAllowNmap");
 	$ComputersAllowDHCPLeases=$sock->GET_INFO("ComputersAllowDHCPLeases");
 	
-	if($ComputersAllowNmap==null){$ComputersAllowNmap=1;}
-	if($ComputersAllowDHCPLeases==null){$ComputersAllowDHCPLeases=1;}
+	if(!is_numeric($ComputersAllowNmap)){$ComputersAllowNmap=1;}
+	if(!is_numeric(ComputersAllowDHCPLeases)){$ComputersAllowDHCPLeases=1;}
 	
 	$autoscan_form="
 	<table style='width:100%'>
 	<tr>
-		<td valign='top' class=legend>{allow_nmap_scanner}</td>
+		<td valign='top' class=legend><a href=\"javascript:blur();\" OnClick=\"javascript:Loadjs('nmap.index.php');\" class=legend style='text-decoration:underline'>{allow_nmap_scanner}</a></td>
 		<td valign='top'>". Field_checkbox("ComputersAllowNmap",1,$ComputersAllowNmap,"ComputersAllowNmapCheck()")."</td>
 	</tr>
 	<tr>
@@ -743,19 +729,20 @@ function networks(){
 	
 	";
 	
-	
+	$users=new usersMenus();
 	$articas=artica_import_list();
 	$height_artica=200;
 	if(strlen($articas)<5){$height_artica=0;}
+	$NMAP_INSTALLED=1;
+	if(!$users->nmap_installed){$NMAP_INSTALLED=0;}
 	
-	$nets=networkslist(1);
 	$html="
 	<div id='networks'>
 	<table style='width:100%'>
 	<tr>
 		<td valign='top' width=70%>
 			<div style='width:100%;height:265px;overflow:auto'>
-				<div id='netlist'>$nets</div>
+				<div id='netlist'></div>
 				
 			</div>
 			$autoscan_form
@@ -774,6 +761,21 @@ function networks(){
 	</div>
 	
 	<script>
+		function AddNetwork(){
+			YahooWin3(450,'$page?browse-networks-add=yes','$networks');
+		}
+		
+		function ImportComputers(ip){
+			YahooWin3('450','$page?artica-import-popup=yes&ip='+ip,'$import_artica_computers');
+		
+		}		
+		
+	function ImportListComputers(){
+		YahooWin3('450','$page?artica-importlist-popup=yes','$import_artica_computers');
+	
+	}		
+	
+	
 		function ComputersAllowDHCPLeasesCheck(){
 			var XHR = new XHRConnection();
 			if(document.getElementById('ComputersAllowDHCPLeases').checked){
@@ -787,13 +789,37 @@ function networks(){
 			XHR.appendData('ComputersAllowNmap',1);}else{XHR.appendData('ComputersAllowNmap',0);}
 			XHR.sendAndLoad('$page', 'GET')		
 		}
+		
+		function RefreshNetworklist(){
+			LoadAjax('netlist','$page?networkslist=yes');
+		}
+		
+	function BrowsComputersRefresh(){
+		var mode='';
+		var val='';
+		if(document.getElementById('mode')){mode=document.getElementById('mode').value;}
+		if(document.getElementById('value')){val=document.getElementById('value').value;}
+		if(document.getElementById('callback')){callback=document.getElementById('callback').value;}
+		LoadAjax('computerlist','$page?computer-refresh=yes&tofind='+document.getElementById('query_computer').value+'&mode={$_GET["mode"]}&{$_GET["value"]}&callback={$_GET["callback"]}');
 	
+	}		
+	
+	function CheckNmap(){
+		var NMAP_INSTALLED=$NMAP_INSTALLED;
+		document.getElementById('ComputersAllowNmap').disabled=true;
+		if(NMAP_INSTALLED==1){document.getElementById('ComputersAllowNmap').disabled=false;}
+	
+	}
+	CheckNmap();
+	RefreshNetworklist();
 	</script>
 	";
 	
 	$tpl=new templates();
 	echo $tpl->_ENGINE_parse_body($html);
 	}
+	
+
 	
 	
 function networks_disable(){
@@ -807,15 +833,17 @@ function networks_enable(){
 }
 	
 function networks_add(){
-	$html="<span style='font-size:14px'>{add_network}</span>
+	$page=CurrentPageName();
+	$tpl=new templates();
+	$html="<span style='font-size:16px;margin:10px'>{add_network}</span>
 	<div id='networks_add'>
-		<table style='width:100%'>
+		<table style='width:100%' class=form>
 			<tr>
 				<td class=legend>{ip_address}:</td>
-				<td valign='top'>".Field_text("ip_addr",null,'width:120px;padding:3px;font-size:13px',null,'ClacNetmaskcdir()',null,false,"ClacNetmaskcdir()")."</td>
+				<td valign='top'>".field_ipv4("ip_addr",null,'font-size:14px',null,'ClacNetmaskcdir()',null,false,"ClacNetmaskcdir()")."</td>
 			</tr>
 				<td class=legend>{netmask}:</td>
-				<td valign='top'>".Field_text("netmask","255.255.255.0",'width:120px;padding:3px;font-size:13px',null,'ClacNetmaskcdir()',null,false,"ClacNetmaskcdir()")."</td>				
+				<td valign='top'>".field_ipv4("netmask","255.255.255.0",'font-size:14px',null,'ClacNetmaskcdir()',null,false,"ClacNetmaskcdir()")."</td>				
 			</tr>
 			
 			
@@ -831,13 +859,38 @@ function networks_add(){
 				<td colspan=2 align='right'><hr>". button("{add}","AddNetworkPerform()")."</td>
 			</tr>
 		</table>
-		</div>";
+		</div>
 		
-		
+<script>
+var x_ClacNetmaskcdir  = function (obj) {
+		document.getElementById('netmaskcdir').value=obj.responseText;
+	}	
 	
+	function ClacNetmaskcdir(){
+		var XHR = new XHRConnection();
+		XHR.appendData('calc-cdir-ip',document.getElementById('ip_addr').value);
+		XHR.appendData('calc-cdir-netmask',document.getElementById('netmask').value);
+		XHR.sendAndLoad('$page', 'GET',x_ClacNetmaskcdir);        
+	}
 	
-	$tpl=new templates();
-	echo $tpl->_ENGINE_parse_body($html);	
+	var x_AddNetworkPerform= function (obj) {
+		if(document.getElementById('main_config_snort')){RefreshTab('main_config_snort');}
+		YahooWin3Hide();RefreshNetworklist();
+	}	
+	
+	function AddNetworkPerform(){
+		var XHR = new XHRConnection();
+		var cdir=document.getElementById('netmaskcdir').value;
+		if(cdir.length>0){
+			XHR.appendData('calc-cdir-ip-add',document.getElementById('netmaskcdir').value);
+		 	AnimateDiv('networks_add');
+			XHR.sendAndLoad('$page', 'GET',x_AddNetworkPerform); 
+		}  
+	
+	}	
+
+</script>";
+		echo $tpl->_ENGINE_parse_body($html);	
 }
 
 function artica_import_delete(){
@@ -851,40 +904,58 @@ function artica_import_delete(){
 
 
 function artica_import_popup(){
-	
+	$page=CurrentPageName();
 	//cyrus.murder.php
 	$sock=new sockets();
 	$ini=new Bs_IniHandler();
 	$ini->loadString($sock->GET_INFO("ComputersImportArtica"));	
 	$array=$ini->_params[$_GET["ip"]];
-	$html="<H1>{import_artica_computers}</H1>
-	<p class=caption>{import_artica_computers_explain}</p>
+	$html="
+	<div class=explain>{import_artica_computers_explain}</div>
 	<div id='import_artica_computers'>
-		" . RoundedLightWhite("
-		<table style='width:100%'>
+		<table style='width:100%' class=form>
 			<tr>
 				<td valign='top' class=legend>{REMOTE_ARTICA_SERVER}:</td>
-				<td valign='top'>".Field_text("artica_ip_addr",$array["artica_ip_addr"],'width:120px',null)."</td>
+				<td valign='top'>".Field_text("artica_ip_addr",$array["artica_ip_addr"],'width:120px;font-size:14px',null)."</td>
 			</tr>
 			<tr>
 				<td valign='top' class=legend>{REMOTE_ARTICA_SERVER_PORT}:</td>
-				<td valign='top'>".Field_text("port",$array["port"],'width:120px',null)."</td>			
+				<td valign='top'>".Field_text("port",$array["port"],'width:120px;font-size:14px',null)."</td>			
 			</tr>
 			<tr>
 				<td valign='top' class=legend>{username}:</td>
-				<td valign='top'>".Field_text("artica_user",$array["artica_user"],'width:120px',null)."</td>
+				<td valign='top'>".Field_text("artica_user",$array["artica_user"],'width:120px;font-size:14px',null)."</td>
 			</tr>
 			<tr>				
 				<td valign='top' class=legend>{password}:</td>
-				<td valign='top'>".Field_password("password",$array["password"],'width:120px',null)."</td>			
+				<td valign='top'>".Field_password("password",$array["password"],'width:120px;font-size:14px',null)."</td>			
 			</tr>			
 			<TR>
 				<td colspan=2 align='right'>
-					<hr>
-					<input type='button' OnClick=\"javascript:SaveImportComputers();\" value='{edit}&nbsp;&raquo;'>
+					<hr>". button("{apply}","SaveImportComputers()")."
+					
 				</td>
 			</tr>
-		</table>")."</div>";
+		</table>
+		</div>
+<script>
+	var x_SaveImportComputers= function (obj) {
+			YahooWin3Hide();
+			if(document.getElementById('main_config_snort')){RefreshTab('main_config_snort');}
+		}	
+		
+	
+	function SaveImportComputers(){
+				var XHR = new XHRConnection();
+				XHR.appendData('artica_ip_addr',document.getElementById('artica_ip_addr').value);
+				XHR.appendData('port',document.getElementById('port').value);
+				XHR.appendData('artica_user',document.getElementById('artica_user').value);
+				XHR.appendData('password',document.getElementById('password').value);
+				AnimateDiv('import_artica_computers');
+				XHR.sendAndLoad('$page', 'GET',x_SaveImportComputers); 
+		} 		
+		
+</script>		";
 		
 		
 	
@@ -943,14 +1014,33 @@ function artica_import_save(){
 }
 
 function artica_importlist_popup(){
-	$html="<p style='font-size:13px'>{computer_popup_import_explain}</p>
-	<div id='popup_import_div'>
+	$page=CurrentPageName();
+	$html="<div class=explain>{computer_popup_import_explain}</div>
+	<div id='popup_import_div' class=form>
 	<textarea id='popup_import_list' style='width:99%;height:450px;overflow:auto'></textarea>
 	<div style='text-align:right'>
 		<hr>
 			". button("{import}","ImportListComputersPerform()")."
 	</div>
-	</div>";
+	</div>
+<script>
+	var x_ImportListComputersPerform= function (obj) {
+		var results=obj.responseText;
+		alert(results);
+		YahooWin3Hide();
+		BrowsComputersRefresh();
+		if(document.getElementById('main_config_snort')){RefreshTab('main_config_snort');}
+	}		
+	
+	function ImportListComputersPerform(){
+			var XHR = new XHRConnection();
+			XHR.appendData('popup_import_list',document.getElementById('popup_import_list').value);
+		 	document.getElementById('popup_import_div').innerHTML='<div style=\"width:100%\"><center style=\"margin:20px;padding:20px\"><img src=\"img/wait_verybig.gif\"></center></div>';
+			XHR.sendAndLoad('$page', 'POST',x_ImportListComputersPerform); 
+	}
+</script>		
+	
+	";
 	
 	$tpl=new templates();
 	echo $tpl->_ENGINE_parse_body($html);	
@@ -972,13 +1062,16 @@ function artica_importlist_perform(){
 function networkslist($noecho=1){
 	$q=new mysql();
 	$net=new networkscanner();
+	$page=CurrentPageName();
 	if(!is_array($net->networklist)){return null;}
 	$html="
 <div style='height:250px;overflow:auto'>
 <table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
 <thead class='thead'>
 	<tr>
-	<th colspan=3>{networks}</th>
+	<th>". imgtootltip("plus-24.png","{add}","AddNetwork()")."</td>
+	<th colspan=2>{networks}</th>
+	<th width=1%>". imgtootltip("refresh-24.png","{refresh}","RefreshNetworklist()")."</th>
 	</tr>
 </thead>
 <tbody class='tbody'>";
@@ -1017,12 +1110,30 @@ while (list ($num, $maks) = each ($net->networklist)){
 		<tr class=$classtr>
 			<td width=1%><img src='img/32-network-server.png'></td>
 			<td><strong style='font-size:14px$style' nowrap>$maks$infos</td>
-			<td nowrap>$delete</td>
+			<td nowrap colspan=2 align='center'>$delete</td>
 		</tr>
 		
 		";}
 		
-	$html=$html . "</tbody></table></div>";		
+	$html=$html . "</tbody>
+	</table>
+	</div>
+	
+	<script>
+	var x_NetworkDelete= function (obj) {
+		if(document.getElementById('main_config_snort')){RefreshTab('main_config_snort');}
+		RefreshNetworklist();
+	}	
+	
+	function NetworkDelete(md){
+		var XHR = new XHRConnection();
+		XHR.appendData('NetworkDelete',md);
+		AnimateDiv('netlist');
+		XHR.sendAndLoad('$page', 'GET',x_NetworkDelete);  	
+	
+	}	
+	</script>
+	";		
 			
 	$tpl=new templates();
 	if($noecho==1){return $tpl->_ENGINE_parse_body("$html");}
@@ -1083,126 +1194,7 @@ echo $tpl->_ENGINE_parse_body($html);
 }
 
 
-class networkscanner{
-	var $networklist=array();
-	var $DefaultNetworkList=array();
-	var $Networks_disabled=array();
-	
-	
-	function networkscanner(){
-		$sock=new sockets();
-		$datas=$sock->GET_INFO('NetworkScannerMasks');
-		$tbl=explode("\n",$datas);
-		
-		$disabled=$sock->GET_INFO('NetworkScannerMasksDisabled');
-		
-		
-		while (list ($num, $maks) = each ($tbl) ){
-		if(trim($maks)==null){continue;}
-			$arr[trim($maks)]=trim($maks);
-		}
-		
-	if(is_array($arr)){
-			while (list ($num, $net) = each ($arr)){
-				$this->networklist[]=$net;
-			}
-		}
 
-	
-	$tbl=explode("\n",$disabled);	
-	if(is_array($tbl)){
-		while (list ($num, $maks) = each ($tbl) ){
-			if(trim($maks)==null){continue;}
-			$this->Networks_disabled[$maks]=true;
-		}
-	}
-		
-		
-		$this->builddefault();
-		
-	}
-	
-	function disable_net($net){
-		$sock=new sockets();
-		$disabled=$sock->GET_INFO('NetworkScannerMasksDisabled');
-		$disabled=$disabled."\n".$net;
-		$sock=new sockets();
-		$sock->SaveConfigFile($disabled,"NetworkScannerMasksDisabled");
-	}
-	
-	function enable_net($net){
-		$sock=new sockets();
-		$disabled=$sock->GET_INFO('NetworkScannerMasksDisabled');
-		$tbl=explode("\n",$disabled);	
-		if(is_array($tbl)){
-			while (list ($num, $maks) = each ($tbl) ){
-				if(trim($maks)==null){continue;}
-				$Networks_disabled[$maks]=$maks;
-			}
-		}
-
-		unset($Networks_disabled[$net]);
-		if(is_array($Networks_disabled)){
-			while (list ($num, $maks) = each ($Networks_disabled) ){
-				if(trim($maks)==null){continue;}
-				$conf=$conf.$maks."\n";
-			}
-		}
-		
-		$sock->SaveConfigFile($conf,"NetworkScannerMasksDisabled");
-		
-		
-		
-	}
-	
-	
-	function save(){
-		if(is_array($this->networklist)){
-			reset($this->networklist);
-			while (list ($num, $maks) = each ($this->networklist)){
-				if(trim($maks)==null){continue;}
-				$arr[trim($maks)]=trim($maks);
-				}
-			}
-		
-		if(is_array($arr)){
-			
-			while (list ($num, $net) = each ($arr)){
-				$conf=$conf . "$net\n";
-			}
-		}
-		echo $conf;
-		$sock=new sockets();
-		$sock->SaveConfigFile($conf,"NetworkScannerMasks");
-		$sock->DeleteCache();
-		
-	}
-	
-	function builddefault(){
-		
-		$net=new networking();
-		$cip=new IP();
-		while (list ($num, $ip) = each ($net->array_TCP)){
-			if(preg_match('#([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)#',$ip,$re)){
-				$ip_start="{$re[1]}.{$re[2]}.{$re[3]}.0";
-				$ip_end="{$re[1]}.{$re[2]}.{$re[3]}.255";
-				$cdir=$cip->ip2cidr($ip_start,$ip_end);
-				if(trim($cdir)<>null){
-					$this->DefaultNetworkList[trim($cdir)]=true;
-					$this->networklist[]=$cdir;
-				}
-			}
-			
-		}
-		
-		
-		
-	}
-	
-	
-		
-	
-}
 
 
 

@@ -129,10 +129,11 @@ class clladp{
 	var $EnableManageUsersTroughActiveDirectory=false;
 	
 	function clladp(){
+		if(!isset($GLOBALS["VERBOSE++"])){$GLOBALS["VERBOSE++"]=false;}
 		include_once(dirname(__FILE__) . '/class.active.directory.inc');
 		if(isset($_GET["debug-page"])){$GLOBALS["VERBOSE"]=true;}
 		
-		if($GLOBALS["VERBOSE"]){
+		if($GLOBALS["VERBOSE++"]){
 			$trace=debug_backtrace();
 			$called=" called by ". basename($trace[1]["file"])." {$trace[1]["function"]}() line {$trace[1]["line"]}";			
 			writelogs("Instanciate ".__CLASS__ ." $called",__CLASS__."/" .__FUNCTION__,__FILE__);
@@ -208,7 +209,7 @@ class clladp{
 		}
 		
 		$GLOBALS["LDAP_COUNT_FAILED"]=0;
-		if($GLOBALS["VERBOSE"]){writelogs("->ldap_perform_connection($ldapport)",__CLASS__.'/'.__FUNCTION__,__FILE__);}	
+		
 		if(!$this->ldap_perform_connection($ldapport)){
 			if(!function_exists("ldap_err2str")){return false;}
 			writelogs(PHP_VERSION." php version) Unable to connect to ldap server {$this->ldap_host}:$ldapport ".ldap_err2str($this->ldap_connection),__CLASS__.'/'.__FUNCTION__,__FILE__);
@@ -252,6 +253,7 @@ class clladp{
 						
 						//echo $error;
 						$this->ldap_last_error=$error;$this->ldapFailed=true;
+						if($GLOBALS["VERBOSE"]){writelogs("return False... !!!!",__CLASS__.'/'.__FUNCTION__,__FILE__);}
 						return false;
 				}else{
 					$GLOBALS["LDAP_BIN_ID"]=$this->ldapbind;
@@ -266,7 +268,7 @@ class clladp{
 				$this->ArticaCreate();
 				$GLOBALS["LDAPCHECKMASTERTREE"]=true;
 			}
-			if($GLOBALS["VERBOSE"]){writelogs("return True...",__CLASS__.'/'.__FUNCTION__,__FILE__);}	
+				
 			return true;	
 	
 		}
@@ -3008,6 +3010,9 @@ function GroupForbiddenAttachment($attach_group,$gid,$add=false){
 		
 		writelogs("Add domain \"$domain\" in $cn",__FUNCTION__,__FILE__);	
 		if(!$this->Ldap_modify($cn,$update_array)){return false;}
+		
+		
+		
 		return true;
 		}
 //-------------------------------------------------------------------------------------------------------------------------------------
@@ -3732,12 +3737,59 @@ function getobjectDNClass($dn,$fulldn=0){
    	}
    	
    	
+   	
+   	function ExplodeError(){
+		$ldap_errno=ldap_errno($this->ldap_connection);
+   		$ldap_err2str=ldap_err2str($ldap_errno);
+   		$nolog=false;
+   				
+   			switch ($ldap_errno) {
+   					case 12:$add_error="\nPlease index your LDAP server\n";break;
+   					case 20:$nolog=true;break;
+   					case 0:$nolog=true;break;
+   					case 0:$nolog=true;break;
+   					default:$nolog=false;break;
+   				}
+   			
+   			if($nolog==false){
+   				$this->ldap_last_error_num=$ldap_errno;
+   				
+   				
+   				$error_string="ERROR Number: $ldap_errno $ldap_err2str\nLdap_modify  \"dn=$dn\" :  " . ldap_err2str(ldap_errno($this->ldap_connection));
+   				writelogs($ldap_err2str . "($ldap_errno)",__CLASS__ . "/" . __FUNCTION__,__FILE__);
+				error_log($ldap_err2str . "($ldap_errno)");
+   					while (list ($num, $ligne) = each ($update_array) ){
+	   					if(is_array($ligne)){
+	   						while (list ($a, $b) = each ($ligne) ){
+	   							$infos[]="$a = $b";
+	   							writelogs("ERROR $num($a)=$b",__CLASS__ . "/" . __FUNCTION__,__FILE__);
+	   						}
+	   					}else{
+	   						$infos[]="$a = $b";
+	   						writelogs("ERROR $num=$ligne",__CLASS__ . "/" . __FUNCTION__,__FILE__);
+	   					}
+	   					
+	   				
+	   			}
+	   			
+   				$trace=debug_backtrace();
+				if(isset($trace[1])){$called=" called by ". basename($trace[1]["file"])." {$trace[1]["function"]}() line {$trace[1]["line"]}";}
+	   			if(count($GLOBALS["DEBUGLOGS"])>0){$add_error=$add_error."\n".@implode("\n", $GLOBALS["DEBUGLOGS"]);}
+	   			return "Error number $ldap_errno $ldap_err2str\nAction:LDAP Modify\ndn:$dn\n" . 
+	   			ldap_err2str(ldap_errno($this->ldap_connection)).$add_error."\nTrace:$called\nInformations\n".@implode("\n", $infos);   		
+   		
+   		}
+   	
+   	}
+   	
+   	
+   	
    	function Ldap_modify($dn,$update_array){
    		$this->ldap_perform_connection();
    		if(!is_array($update_array)){
    			$GLOBALS["INJECT_COMPUTER_TOLDAP"][]="LDAP:: Ldap_modify= No datas in this command !";
    			//$this->ldap_last_error="No datas in this command ! on line " . __LINE__ . " in file " .__FILE__;
-   			error_log("No datas in this command !",__CLASS__ . "/" . __FUNCTION__,__FILE__);
+   			writelogs("No datas in this command !",__CLASS__ . "/" . __FUNCTION__,__FILE__);
    			return false;
    		}
    		$this->ldap_perform_connection();
@@ -4338,11 +4390,28 @@ function GET_PERFS($value){
 }
 
 function EXEC_NICE(){
+	
+	if(class_exists("unix")){$unix=new unix();return $unix->EXEC_NICE();}
 	include_once(dirname(__FILE__).'/class.os.system.inc');
 	$useIonice=trim(@file_get_contents("/etc/artica-postfix/settings/Daemons/useIonice"));
 	$useNice=trim(@file_get_contents("/etc/artica-postfix/settings/Daemons/useNice"));
-	if($useIonice==null){$useIonice=1;}
-	if($useNice==null){$useNice=1;}
+	$ArticaInCgroups=trim(@file_get_contents("/etc/artica-postfix/settings/Daemons/ArticaInCgroups"));
+	$ArticaCgroup=trim(@file_get_contents("/etc/artica-postfix/settings/Daemons/ArticaCgroup"));
+	$cgroupsEnabled=trim(@file_get_contents("/etc/artica-postfix/settings/Daemons/cgroupsEnabled"));
+
+	if(!is_numeric($ArticaInCgroups)){$ArticaInCgroups=0;}
+	if(!is_numeric($useIonice)){$useIonice=1;}
+	if(!is_numeric($useNice)){$useNice=1;}
+	if(!is_numeric($cgroupsEnabled)){$cgroupsEnabled=0;}	
+	
+	if($ArticaCgroup==null){$ArticaInCgroups=0;}
+	if($cgroupsEnabled==0){$ArticaInCgroups=0;}
+	if($ArticaInCgroups==1){
+		if(is_dir("/cgroups/cpuacct/$ArticaCgroup")){
+			$cgexec=LOCATE_PROGRAM("cgexec");
+			if(!is_file($cgexec)){return "$cgexec -g *:$ArticaCgroup ";}
+		}
+	}
 	
 	$tmp=GET_PERFS('ProcessNice');
 	if($tmp==null){$tmp=19;}

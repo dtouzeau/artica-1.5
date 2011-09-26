@@ -69,6 +69,44 @@ function QuickLinks(){
 	
 }
 
+function SquidQuickLinks(){
+	var z = $("#middle").css('display');
+	if(z!=="none"){
+		$('#middle').slideUp('normal');
+		$('#middle').html('');
+		$('#quick-links').html('');
+		$('#middle').slideDown({
+			duration:900,
+			easing:"easeOutExpo",
+			complete:function(){
+				QuickLinksSquidLoad();
+				}
+			});
+		}
+	
+}
+function SquidMainQuickLinks(){
+	var z = $("#middle").css('display');
+	if(z!=="none"){
+		$('#middle').slideUp('normal');
+		$('#middle').html('');
+		$('#quick-links').html('');
+		$('#middle').slideDown({
+			duration:900,
+			easing:"easeOutExpo",
+			complete:function(){
+				QuickLinksSquidMainLoad();
+				}
+			});
+		}
+	
+}
+function QuickLinksSquidLoad(){
+	LoadAjax('middle','squid-quicklinks.php?stats=yes');
+}
+function QuickLinksSquidMainLoad(){
+	LoadAjax('middle','squid.main.quicklinks.php');
+}
 function QuickLinksLoad(){
 	
 	LoadAjax('middle','quicklinks.php');
@@ -210,6 +248,22 @@ function LoadAjaxSilent(ID,uri,concatene) {
 	}
 
 }
+
+function LoadAjaxTiny(ID,uri,concatene) {
+	var uri_add='';
+	var datas='';
+	var xurl='';
+	if(concatene){uri_add='&datas='+concatene;}
+	uri=uri+uri_add;
+	if(document.getElementById(ID)){ 
+		 	document.getElementById(ID).innerHTML='<img src=ajax-menus-loader.gif>';
+	        $('#'+ID).load(uri);
+	}else{
+		alert(ID+' no such id');
+	}
+
+}
+
 
 function ValidateIPAddress(ipaddr) {
     ipaddr = ipaddr.replace( /\s/g, "");
@@ -466,7 +520,7 @@ function Help(field){
 	html=html + "</div>";
 	html=html + "</div>";
 	document.onmousemove = pointeurDeplace
-	document.getElementById('windows').style.visibilitpostfix.restrictions.classes.phpy="visible";
+	document.getElementById('windows').style.visibility="visible";
 	document.getElementById('windows').style.border ="none";
 	document.getElementById('windows').style.width ="550px";
 	document.getElementById('windows').style.padding ="0";
@@ -1012,6 +1066,7 @@ function FetchMailPostForm(edit_mode){
     XHR.appendData('aka',document.getElementById('_aka').value);
     
     
+    if(document.getElementById('_dropdelivered').checked){XHR.appendData('dropdelivered',1);}else{XHR.appendData('dropdelivered',0);}	
     if(document.getElementById('_multidrop').checked){XHR.appendData('multidrop',1);}else{XHR.appendData('multidrop',0);}	
 	if(document.getElementById('_tracepolls').checked){XHR.appendData('tracepolls',1);}else{XHR.appendData('tracepolls',0);}	
 	if(document.getElementById('_ssl').checked){XHR.appendData('ssl',1);}else{XHR.appendData('ssl',0);}
@@ -1318,6 +1373,16 @@ function YahooWin(width,uri,title,waitfor,pos){
 
 
 	}
+
+function HideTips(md5,uid){
+	var XHR = new XHRConnection();
+	XHR.appendData('HideTips',md5+'-'+uid);
+	XHR.sendAndLoad('admin.index.php', 'GET');	
+	document.getElementById(md5+'-id').innerHTML='';
+	document.getElementById(md5+'-id').style.width='0px';
+	document.getElementById(md5+'-id').style.heigth='0px';
+	document.getElementById(md5+'-id').className='';
+}
         
 function YahooWin2(width,uri,title,waitfor){
         if(!width){width='300';}
@@ -1632,6 +1697,10 @@ var x_CacheOff= function (obj) {
 	if(document.getElementById('main_config_samba')){RefreshTab('main_config_samba');}
 	if(document.getElementById('main_squidcachperfs')){RefreshTab('main_squidcachperfs');}
 	if(document.getElementById('main_group_config')){RefreshTab('main_group_config');}
+	if(document.getElementById('main_config_postfix')){RefreshTab('main_config_postfix');}
+	if(document.getElementById('main_post_perfs_tabs')){RefreshTab('main_post_perfs_tabs');}
+	if(document.getElementById('main_config_dhcpd')){RefreshTab('main_config_dhcpd');}
+	
 	
 	
 	
@@ -2451,17 +2520,14 @@ function ExtractPathName(path){
 }
 
 function ConfigureYourserver(title){
-	if(!document.getElementById('QuickLinksTop')){
-		QuickLinks();
-		
-	}else{
-		QuickLinksHide();
-		
-	}
-	
-       // Loadjs('/configure.server.php?section=js');
-        
+	if(!document.getElementById('QuickLinksTop')){QuickLinks();}else{QuickLinksHide();}
 }
+
+function SquidStatsInterface(){
+	if(!document.getElementById('QuickLinksTop')){SquidQuickLinks();}else{QuickLinksHide();}
+	}
+
+
 function ConfigureYourserver_Cancel(){
         var X;
    if(document.getElementById('ConfigureYourserverStart')){

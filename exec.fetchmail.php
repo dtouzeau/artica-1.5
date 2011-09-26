@@ -75,6 +75,12 @@ function SingleDebug($ID){
 function BuildRules(){
 		$unix=new unix();
 		$sock=new sockets();
+		if(!isset($GLOBALS["FetchMailGLobalDropDelivered"])){
+			$sock=new sockets();
+			$GLOBALS["FetchMailGLobalDropDelivered"]=$sock->GET_INFO("FetchMailGLobalDropDelivered");
+			if(!is_numeric($GLOBALS["FetchMailGLobalDropDelivered"])){$GLOBALS["FetchMailGLobalDropDelivered"]=0;}
+			
+		}		
 		$EnablePostfixMultiInstance=$sock->GET_INFO("EnablePostfixMultiInstance");
 		$fetch=new fetchmail();
 		$l[]="set logfile /var/log/fetchmail.log";
@@ -132,7 +138,14 @@ function BuildRules(){
 			if($ligne["multidrop"]==1){$ligne["is"]="*";}
 			if($ligne["fetchall"]==1){$fetchall="\n\tfetchall";}
 			if(strlen(trim($ligne["sslfingerprint"]))>10){$sslfingerprint="\n\tsslfingerprint '{$ligne["sslfingerprint"]}'";}
-			if($ligne["sslcertck"]==1){$sslcertck="\n\tsslcertck";}					
+			if($ligne["sslcertck"]==1){$sslcertck="\n\tsslcertck";}		
+			if($GLOBALS["FetchMailGLobalDropDelivered"]==1){$ligne["dropdelivered"]=1;}
+			
+			
+			if($ligne["dropdelivered"]==1){
+				$dropdelivered="\n\tdropdelivered is {$ligne["is"]} here";
+			}
+			
 			
 			
 			if($EnablePostfixMultiInstance==1){
@@ -143,7 +156,7 @@ function BuildRules(){
 			
 			
 			if(trim($ssl)==null){$ssl="\n\tsslproto ssl23\n\tno ssl";}
-			$pattern="poll {$ligne["poll"]}$tracepolls\n\tproto {$ligne["proto"]} $port$interval$timeout\n\tuser \"{$ligne["user"]}\"\n\tpass {$ligne["pass"]}\n\tis {$ligne["is"]}$aka$folder$ssl$fetchall$keep$multidrop$sslfingerprint$sslcertck$smtphost\n\n";
+			$pattern="poll {$ligne["poll"]}$tracepolls\n\tproto {$ligne["proto"]} $port$interval$timeout\n\tuser \"{$ligne["user"]}\"\n\tpass {$ligne["pass"]}\n\tis {$ligne["is"]}$dropdelivered$aka$folder$ssl$fetchall$keep$multidrop$sslfingerprint$sslcertck$smtphost\n\n";
 			if($GLOBALS["DEBUG"]){echo "$pattern\n";}
 
 			$multi_smtp[$ligne["smtp_host"]][]=$pattern;

@@ -55,7 +55,7 @@ function ParseLogs(){
 	$count=0;
 	events_tail("dansguardian-stats:: parsing /var/log/artica-postfix/dansguardian-stats");
 	foreach (glob("/var/log/artica-postfix/dansguardian-stats/*.sql") as $file) {
-		$q=new mysql();
+		$q=new mysql_squid_builder();
 		usleep(20000);
 		$count=$count+1;
 		$sql=@file_get_contents($file);
@@ -103,10 +103,13 @@ if (!$handle = opendir("/var/log/artica-postfix/dansguardian-stats2")) {
 	
 	$c=0;
 	$t=0;
-	$q=new mysql();
-	$q->BuildTables();
-	$dansguardian_events="dansguardian_events_".date('Ym');
-	$prefixsql="INSERT IGNORE INTO $dansguardian_events (`sitename`,`uri`,`TYPE`,`REASON`,`CLIENT`,`zDate`,`zMD5`,`remote_ip`,`country`,`QuerySize`,`uid`,`cached`) VALUES ";
+	$q=new mysql_squid_builder();
+	if($q->MysqlFailed){
+		events_tail("dansguardian-stats2:: Mysql connection failed, aborting....".__LINE__);
+		return;
+	}
+	$dansguardian_events="dansguardian_events_".date('Ymd');
+	$prefixsql="INSERT IGNORE INTO $dansguardian_events (`sitename`,`uri`,`TYPE`,`REASON`,`CLIENT`,`zDate`,`zMD5`,`remote_ip`,`country`,`QuerySize`,`uid`,`cached`,`MAC`) VALUES ";
 	while (false !== ($filename = readdir($handle))) {
 		$targetFile="/var/log/artica-postfix/dansguardian-stats2/$filename";
 		if(!is_file($targetFile)){
@@ -224,7 +227,7 @@ function ParseSitesInfos_inject($array){
 	$sitename=str_replace("www.","",$sitename);
 	$country=strtolower($array["country"]);
 	$ipaddr=strtolower($array["ipaddr"]);
-	$q=new mysql();
+	$q=new mysql_squid_builder();
 	$sql="SELECT website FROM dansguardian_sitesinfos WHERE website='$sitename'";
 	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));
 	
@@ -279,7 +282,7 @@ function ParseSitesInfos_inject($array){
 }
 
 function ParseSitesInfos_artica_category($sitename){
-	$q=new mysql();
+	$q=new mysql_squid_builder();
 	$sql="SELECT category FROM dansguardian_community_categories WHERE pattern='$sitename'";
 	$results=$q->QUERY_SQL($sql,"artica_backup");
 	if(!$q->ok){
@@ -309,7 +312,7 @@ function include_tpl_file($path,$category){
 		return;
 	}
 	
-	$q=new mysql();
+	$q=new mysql_squid_builder();
 	$array=array();
 	$f=@explode("\n",@file_get_contents($path));
 	$count_websites=count($f);

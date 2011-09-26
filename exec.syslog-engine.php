@@ -19,12 +19,12 @@ if(preg_match("#--force#",implode(" ",$argv))){$GLOBALS["FORCE"]=true;}
 
 if($argv[1]=='--build-server'){build_server_mode();die();}
 if($argv[1]=='--build-client'){build_client_mode();die();}
-if($argv[1]=='--auth-logs'){authlogs();sessions_logs();die();ipblocks();}
+if($argv[1]=='--auth-logs'){authlogs();sessions_logs();ipblocks();clamd_mem();die();}
 if($argv[1]=='--authfw'){authfw();sessions_logs();die();ipblocks();}
 if($argv[1]=='--authfw-compile'){compile_sshd_rules();sessions_logs();ipblocks();die();}
-if($argv[1]=='--snort'){snort_logs();sessions_logs();ipblocks();die();}
+if($argv[1]=='--snort'){snort_logs();sessions_logs();ipblocks();clamd_mem();die();}
 if($argv[1]=='--sessions'){sessions_logs();die();}
-if($argv[1]=='--loadavg'){loadavg_logs();die();}
+if($argv[1]=='--loadavg'){loadavg_logs();clamd_mem();die();}
 if($argv[1]=='--ipblocks'){ipblocks();die();}
 
 
@@ -395,6 +395,49 @@ function authlogs(){
 		authfw();
 		snort_logs();
 		loadavg_logs();
+		clamd_mem();
+}
+
+function clamd_mem(){
+	include_once(dirname(__FILE__) . '/ressources/class.mysql.inc');
+	$f=array();
+	$unix=new unix();
+	$q=new mysql();
+	if(!$q->TABLE_EXISTS("clamd_mem", "artica_events")){
+		$q->QUERY_SQL("CREATE TABLE `artica_events`.`clamd_mem` (`zDate` TIMESTAMP NOT NULL ,`rss` INT( 10 ) NOT NULL ,`vm` INT( 10 ) NOT NULL ,PRIMARY KEY ( `zDate` ))","artica_events");
+	}
+	$prefix="INSERT IGNORE INTO clamd_mem (zDate,rss,vm) VALUES ";
+	
+	
+	foreach (glob("/var/log/artica-postfix/clamd-mem/*") as $filename) {
+		events("Open $filename",__FUNCTION__,__FILE__,__LINE__);
+		$content=trim(@file_get_contents($filename));
+		@unlink($filename);
+		if($content==null){continue;}
+		$f[]=$content;
+		if(count($f)>100){
+			$sql=$prefix.@implode(",", $f);
+			$f=array();
+			$q->QUERY_SQL($sql,"artica_events");
+		}
+		
+	}
+	
+		if(count($f)>0){
+			$sql=$prefix.@implode(",", $f);
+			$f=array();
+			$q->QUERY_SQL($sql,"artica_events");
+		}	
+	
+	$timefile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".time";
+	$time=$unix->file_time_min($timefile);
+	if($time>380){
+		@unlink($time);
+		@file_put_contents($timefile, time());
+		$sql="DELETE FROM clamd_mem WHERE zDate<DATE_SUB(NOW(),INTERVAL 7 DAY) ORDER BY zDate LIMIT 4000";
+		$q->QUERY_SQL($sql,"artica_events");
+	}
+	
 }
 
 function sessions_logs(){

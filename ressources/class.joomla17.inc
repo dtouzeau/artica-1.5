@@ -46,7 +46,7 @@ class joomla17{
 			$cp=$unix->find_program("cp");
 			
 			if(!is_dir($sources)){writelogs("[$servername] $sources no such directory",__FUNCTION__,__FILE__,__LINE__);return;}
-			if(!is_dir($this->www_dir)){writelogs("[$servername] $freeweb->WORKING_DIRECTORY no such directory",__FUNCTION__,__FILE__,__LINE__);return;}
+			if(!is_dir($this->www_dir)){writelogs("[$servername] $this->www_dir no such directory",__FUNCTION__,__FILE__,__LINE__);return;}
 	
 			writelogs("[$servername] copy sources...",__FUNCTION__,__FILE__,__LINE__);
 			$cmd="$cp -rf $sources/* $this->www_dir/";

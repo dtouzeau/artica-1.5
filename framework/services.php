@@ -22,6 +22,7 @@ if(isset($_GET["restart-lighttpd"])){restart_lighttpd();exit;}
 if(isset($_GET["restart-ldap"])){restart_ldap();exit;}
 if(isset($_GET["restart-mysql"])){restart_mysql();exit;}
 if(isset($_GET["restart-cron"])){restart_cron();exit;}
+if(isset($_GET["restart-dhcpd"])){restart_dhcpd();exit;}
 if(isset($_GET["total-memory"])){total_memory();exit;}
 if(isset($_GET["mysql-ssl-keys"])){mysql_ssl_key();exit;}
 if(isset($_GET["restart-tomcat"])){retart_tomcat();exit;}
@@ -38,8 +39,10 @@ if(isset($_GET["mysql-events"])){mysql_events();exit;}
 if(isset($_GET["AdCacheMysql"])){AdCacheMysql();exit;}
 if(isset($_GET["kav4Proxy-reload"])){kav4proxy_reload();exit;}
 if(isset($_GET["clock"])){GETclock();exit;}
-
+if(isset($_GET["phpldapadmin"])){phpldapadmin();exit;}
+if(isset($_GET["ntpd-status"])){ntpd_status();exit;}
 if(isset($_GET["artica-update-cron"])){artica_schedule_cron();exit;}
+if(isset($_GET["AutoRebootSchedule"])){artica_schedule_reboot();exit;}
 
 
 
@@ -98,6 +101,16 @@ function restart_cron(){
 	shell_exec($cmd);
 	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);
 }
+
+function restart_dhcpd(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim("$nohup /etc/init.d/artica-postfix restart dhcp >/dev/null 2>&1 &");
+	shell_exec($cmd);
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);
+	
+}
+
 function restart_tomcat(){
 	$unix=new unix();
 	$nohup=$unix->find_program("nohup");
@@ -242,6 +255,12 @@ function openemm_status(){
 	exec(LOCATE_PHP5_BIN2()." /usr/share/artica-postfix/exec.status.php --openemm --nowachdog",$results);
 	echo "<articadatascgi>". base64_encode(@implode("\n",$results))."</articadatascgi>";		
 }
+
+function ntpd_status(){
+	exec(LOCATE_PHP5_BIN2()." /usr/share/artica-postfix/exec.status.php --ntpd --nowachdog",$results);
+	echo "<articadatascgi>". base64_encode(@implode("\n",$results))."</articadatascgi>";		
+}
+
 function openemm_restart(){
 	$unix=new unix();
 	$nohup=$unix->find_program("nohup");
@@ -330,6 +349,22 @@ function artica_schedule_cron(){
 	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	
 	shell_exec($cmd);		
 	
+}
+function artica_schedule_reboot(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim("$nohup ".$unix->LOCATE_PHP5_BIN(). " /usr/share/artica-postfix/exec.fcron.php --artica-reboot-schedule >/dev/null 2>&1");
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	
+	shell_exec($cmd);	
+}
+
+
+function phpldapadmin(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim("$nohup ".$unix->LOCATE_PHP5_BIN(). " /usr/share/exec.phpldapadmin.php --build >/dev/null 2>&1");
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	
+	shell_exec($cmd);		
 }
 
 function GETclock(){

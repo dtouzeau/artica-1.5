@@ -16,7 +16,7 @@ if(system_is_overloaded(__FILE__)){
 	die();
 }
 
-
+if($argv[1]=='--clean-tmp2'){Clean_tmp_path(true);die();}
 if($argv[1]=='--clean-tmp'){CleanLogs();die();}
 if($argv[1]=='--clean-sessions'){sessions_clean();die();}
 if($argv[1]=='--clean-install'){CleanOldInstall();die();}
@@ -129,6 +129,60 @@ function maillog(){
 	$unix->events(basename(__FILE__).":: ".__FUNCTION__." DONE");
 }
 
+function Clean_tmp_path($aspid=false){
+	$unix=new unix();
+	if($aspid){
+		$pidpath="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
+		$oldpid=@file_get_contents($pidpath);
+		if($unix->process_exists($oldpid)){
+			$unix->events(basename(__FILE__).":: ".__FUNCTION__." Already process $oldpid running.. Aborting");
+			return;
+		}
+	}
+	@file_put_contents($pidpath,getmypid());
+	
+	if ($handle = opendir("/tmp")) {
+		while (false !== ($file = readdir($handle))) {
+			if ($file != "." && $file != "..") {
+				$path="/tmp/$file";
+				if($GLOBALS["VERBOSE"]){echo "$path ?\n";} 
+				if(is_dir($path)){if($GLOBALS["VERBOSE"]){echo "$path is a directory\n";} continue;}
+				if(preg_match("#^artica-.+?\.tmp#", $file)){
+					$time=$unix->file_time_min($path);
+					if($GLOBALS["VERBOSE"]){echo "$path - > {$time}Mn\n";}
+					if($time>10){
+						$size=@filesize($filename)/1024;
+    					$GLOBALS["DELETED_SIZE"]=$GLOBALS["DELETED_SIZE"]+$size;
+    					$GLOBALS["DELETED_FILES"]=$GLOBALS["DELETED_FILES"]+1;						
+						if($GLOBALS["VERBOSE"]){echo "$path - > DELETE\n";}
+						@unlink($path);
+					}
+				}else{
+					if($GLOBALS["VERBOSE"]){echo "$file -> NO MATCH ^artica-.+?\.tmp \n";} 
+				}
+				
+			if(preg_match("#^artica-php#", $file)){
+					$time=$unix->file_time_min($path);
+					if($GLOBALS["VERBOSE"]){echo "$path - > {$time}Mn\n";}
+					if($time>10){
+						$size=@filesize($filename)/1024;
+    					$GLOBALS["DELETED_SIZE"]=$GLOBALS["DELETED_SIZE"]+$size;
+    					$GLOBALS["DELETED_FILES"]=$GLOBALS["DELETED_FILES"]+1;						
+						if($GLOBALS["VERBOSE"]){echo "$path - > DELETE\n";}
+						@unlink($path);
+					}
+				}else{
+					if($GLOBALS["VERBOSE"]){echo "$file -> NO MATCH ^artica-php \n";} 
+				}				
+			}
+		}
+		
+	}else{
+		if($GLOBALS["VERBOSE"]){echo "/tmp failed...\n";} 
+	}
+	if($GLOBALS["VERBOSE"]){echo "/tmp done..\n";}
+}
+
 
 function CleanLogs(){
 	maillog();
@@ -152,7 +206,7 @@ function CleanLogs(){
 	}
 	@unlink($timeOfFile);
 	@file_put_contents($timeOfFile,"#");
-	
+	Clean_tmp_path();
 	CleanOldInstall();
 	if(system_is_overloaded(dirname(__FILE__))){
 		$unix->send_email_events("logs cleaner task aborting, system is overloaded", "stopped after CleanOldInstall()\nWill restart in next cycle...", "system");
@@ -211,6 +265,9 @@ function CleanLogs(){
 	$unix->events(basename(__FILE__).":: ".__FUNCTION__." Cleaning /opt/openemm/tomcat/logs");
 	CleanDirLogs('/opt/openemm/tomcat/logs');
 	
+	if(system_is_overloaded(dirname(__FILE__))){$unix->send_email_events("logs cleaner task aborting, system is overloaded",
+	 "stopped after phplogs()\nWill restart in next cycle...", "system");return;}	
+	CleanDirLogs("/var/log/samba");
 
 	$unix->events(basename(__FILE__).":: ".__FUNCTION__." Cleaning PHP Sessions");
 	sessions_clean();

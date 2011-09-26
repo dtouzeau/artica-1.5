@@ -1,4 +1,5 @@
 <?php
+$GLOBALS["ICON_FAMILY"]="SYSTEM";
 	include_once('ressources/class.templates.inc');
 	include_once('ressources/class.ldap.inc');
 	include_once('ressources/class.users.menus.inc');
@@ -308,7 +309,7 @@ function main_network(){
 	
 			
 	if($users->nmap_installed){
-			$nmap=Paragraphe('folder-64-nmap.png','{APP_NMAP}','{APP_NMAP_TEXT}','nmap.index.php');
+			$nmap=Paragraphe('folder-64-nmap.png','{APP_NMAP}','{APP_NMAP_TEXT}',"javascript:Loadjs('nmap.index.php')");
 			}
 
 	$gateway=Paragraphe('relayhost.png','{APP_ARTICA_GAYTEWAY}','{APP_ARTICA_GAYTEWAY_TEXT}',"javascript:Loadjs('index.gateway.php?script=yes')");	

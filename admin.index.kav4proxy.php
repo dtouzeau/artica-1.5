@@ -1,5 +1,6 @@
 <?php
 if(isset($_GET["verbose"])){$GLOBALS["VERBOSE"]=true;ini_set('display_errors', 1);ini_set('error_reporting', E_ALL);ini_set('error_prepend_string',null);ini_set('error_append_string',null);}
+$GLOBALS["ICON_FAMILY"]="KAV4PROXY";
 include_once('ressources/class.templates.inc');
 session_start();
 include_once('ressources/class.html.pages.inc');
@@ -58,10 +59,11 @@ while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
 	
 	$gp->line_green();
 	if(!is_file($targetedfile)){writelogs("Fatal \"$targetedfile\" no such file! ($c items)",__FUNCTION__,__FILE__,__LINE__);return;}
-	echo "<div onmouseout=\"javascript:this.className='paragraphe';this.style.cursor='default';\" onmouseover=\"javascript:this.className='paragraphe_over';
+	echo "
+	<center><div onmouseout=\"javascript:this.className='paragraphe';this.style.cursor='default';\" onmouseover=\"javascript:this.className='paragraphe_over';
 	this.style.cursor='pointer';\" id=\"6ce2f4832d82c6ebaf5dfbfa1444ed58\" OnClick=\"javascript:Loadjs('$page?js=yes')\" class=\"paragraphe\" style=\"width: 300px; min-height: 112px; cursor: default;margin-top:5px\">
 	<h3 style='text-transform: none;margin-bottom:5px'>$title</h3>
-	<img src='$targetedfile'></div>";
+	<img src='$targetedfile'></div></center>";
 	
 	$title=$tpl->_ENGINE_parse_body("{APP_KAV4PROXY}:: {kav4_total_requests}");
 	$sql="SELECT DATE_FORMAT(zDate,'%h:%i') as tdate, total_requests FROM kav4proxy_av_stats WHERE zDate>=DATE_SUB(NOW(),INTERVAL 2 HOUR) ORDER BY zDate";
@@ -98,10 +100,10 @@ while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
 	
 	$gp->line_green();
 	if(!is_file($targetedfile)){writelogs("Fatal \"$targetedfile\" no such file! ($c items)",__FUNCTION__,__FILE__,__LINE__);return;}
-	echo "<div onmouseout=\"javascript:this.className='paragraphe';this.style.cursor='default';\" onmouseover=\"javascript:this.className='paragraphe_over';
+	echo "<center><div onmouseout=\"javascript:this.className='paragraphe';this.style.cursor='default';\" onmouseover=\"javascript:this.className='paragraphe_over';
 	this.style.cursor='pointer';\" id=\"6ce2f4832d82c6ebaf5dfbfa1444ed58\" OnClick=\"javascript:Loadjs('$page?js=yes')\" class=\"paragraphe\" style=\"width: 300px; min-height: 112px; cursor: default;margin-top:5px\">
 	<h3 style='text-transform: none;margin-bottom:5px'>$title</h3>
-	<img src='$targetedfile'></div>";	
+	<img src='$targetedfile'></div></center>";	
 	
 	
 	

@@ -12,20 +12,20 @@ include_once(dirname(__FILE__).'/ressources/class.squidguard.inc');
 if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["VERBOSE"]=true;}
 if(preg_match("#--force#",implode(" ",$argv))){$GLOBALS["FORCE"]=true;}
 
-if($argv[1]=="--patterns"){patterns();die();}
-if($argv[1]=="--sitesinfos"){fillSitesInfos();die();}
-if($argv[1]=="--groupby"){WriteCategoriesStatus();die();}
+if(!ifMustBeExecuted()){die();}
+
+if($argv[1]=="--patterns"){die();}
+if($argv[1]=="--sitesinfos"){die();}
+if($argv[1]=="--groupby"){die();}
 if($argv[1]=="--import"){import();die();}
+if($argv[1]=="--export"){export(true);die();}
 
 
 
 	$t=time();
 	$sock=new sockets();
 	$users=new usersMenus();
-	if(!$users->SQUID_INSTALLED){
-		if($users->KAV4PROXY_INSTALLED){Export(true);}
-		die();
-	}
+	
 	$system_is_overloaded=system_is_overloaded();
 	if($system_is_overloaded){
 		$unix=new unix();
@@ -34,13 +34,7 @@ if($argv[1]=="--import"){import();die();}
 		die();
 	}
 	
-	
-	$SQUIDEnable=$sock->GET_INFO("SQUIDEnable");
-	if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
-	if($SQUIDEnable==0){
-		WriteMyLogs("Squid is disabled, aborting...",__FUNCTION__,__FILE__,__LINE__);
-		echo "Squid is disabled\n";die();
-	}
+
 	$WebCommunityUpdatePool=$sock->GET_INFO("WebCommunityUpdatePool");
 	if(!is_numeric($WebCommunityUpdatePool)){$WebCommunityUpdatePool=360;$sock->SET_INFO("WebCommunityUpdatePool",360);}
 	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
@@ -68,10 +62,8 @@ if($argv[1]=="--import"){import();die();}
 	Export();
 	WriteMyLogs("-> Import()","MAIN",null,__LINE__);
 	import();
-	WriteMyLogs("-> patterns()","MAIN",null,__LINE__);
-	patterns();
-	WriteMyLogs("-> fillSitesInfos()","MAIN",null,__LINE__);
-	fillSitesInfos();
+	
+
 	$distanceOfTimeInWords=$unix->distanceOfTimeInWords($t,time());
 	$unix->send_email_events("Web filtering maintenance databases tasks success",
 		 "Exporting websites, importing websites calculate categories took $distanceOfTimeInWords", "proxy");
@@ -79,56 +71,79 @@ if($argv[1]=="--import"){import();die();}
 	
 function Export($asPid=false){
 	$unix=new unix();
-
-
+	$restartProcess=false;
+	$nohup=$unix->find_program("nohup");
+	$php5=$unix->LOCATE_PHP5_BIN();
+	$restart_cmd=trim("$nohup $php5 ".__FILE__." --export >/dev/null 2>&1 &");
+	
+	
 	if($asPid){
 		$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
 		$cachetime="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".time";
 		$unix=new unix();	
 		$pid=@file_get_contents($pidfile);
-		if($unix->process_exists($pid)){
-			WriteMyLogs("Already executed PID:$pid, die()",__FUNCTION__,__FILE__,__LINE__);
-			die();
-		}	
+		if($unix->process_exists($pid)){WriteMyLogs("Already executed PID:$pid, die()",__FUNCTION__,__FILE__,__LINE__);die();}	
+		@file_put_contents($pidfile,getmypid());
+	}
+	
+	
+	$q=new mysql_squid_builder();
+	$tables=$q->LIST_TABLES_CATEGORIES();
+	while (list ($table, $www) = each ($tables)){
+		$sql="SELECT COUNT(zmd5) as tcount FROM $table WHERE sended=0 and enabled=1";
+		$ligne=mysql_fetch_array($q->QUERY_SQL($sql));
+		$prefix="INSERT IGNORE INTO categorize (zmd5 ,pattern,zDate,uuid,category) VALUES";
+		if($ligne["tcount"]>0){
+			echo "$table {$ligne["tcount"]} items to export\n";
+			$results=$q->QUERY_SQL("SELECT * FROM $table WHERE sended=0 and enabled=1");
+			while($ligne2=mysql_fetch_array($results,MYSQL_ASSOC)){
+				$f[]="('{$ligne2["zmd5"]}','{$ligne2["pattern"]}','{$ligne2["zDate"]}','$uuid','{$ligne2["category"]}')";
+				$c++;
+				if(count($f)>1000){
+					$q->QUERY_SQL($prefix.@implode(",",$f));
+					if(!$q->ok){echo $q->mysql_error."\n";return;}
+					$f=array();
+				}
+				
+			}
+		$q->QUERY_SQL("UPDATE $table SET sended=1 WHERE sended=0");
+		}
+		
+	}	
+	
+	if(count($f)>0){$q->QUERY_SQL($prefix.@implode(",",$f));$f=array();	}
+			
+	
+	$ALLCOUNT=$q->COUNT_ROWS("categorize");
+	if($ALLCOUNT>4000){$restartProcess=true;}
+	$sql="SELECT * FROM categorize ORDER BY zDate DESC LIMIT 0,4000";
+
+	$results=$q->QUERY_SQL($sql,"artica_backup");
+	if(!$q->ok){echo $q->mysql_error."\n$sql\n";return;}
+	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+		if($ligne["category"]==null){continue;}
+		if($ligne["pattern"]==null){continue;}
+		if($ligne["zmd5"]==null){continue;}
+		
+		$array[$ligne["zmd5"]]=array(
+				"category"=>$ligne["category"],
+				"pattern"=>$ligne["pattern"],
+			    "uuid"=>$ligne["uuid"]
+		);
 	}
 
-$sql="SELECT * FROM dansguardian_community_categories WHERE enabled=1 and sended=0 ORDER BY zDate DESC LIMIT 0,4000";
-$q=new mysql();
-$results=$q->QUERY_SQL($sql,"artica_backup");
-if(!$q->ok){echo $q->mysql_error."\n$sql\n";return;}
-while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
-	if($ligne["category"]==null){continue;}
-	if($ligne["pattern"]==null){continue;}
-	if($ligne["zmd5"]==null){continue;}
-	$array[$ligne["zmd5"]]=array(
-			"category"=>$ligne["category"],
-			"pattern"=>$ligne["pattern"],
-		    "uuid"=>$ligne["uuid"]
-	);
-	
-	
-}
-
-if(!is_array($array)){
-	WriteMyLogs("Nothing to export",__FUNCTION__,__FILE__,__LINE__);
-	pushit();
-	return;
-}
-
-if(count($array)==0){
-	WriteMyLogs("Nothing to export",__FUNCTION__,__FILE__,__LINE__);
-	pushit();
-	return;	
-}
+if(!is_array($array)){WriteMyLogs("Nothing to export",__FUNCTION__,__FILE__,__LINE__);return;}
+if(count($array)==0){WriteMyLogs("Nothing to export",__FUNCTION__,__FILE__,__LINE__);return;}
 
 	WriteMyLogs("Exporting ". count($array)." websites",__FUNCTION__,__FILE__,__LINE__);
 	$f=base64_encode(serialize($array));
 	$curl=new ccurl("http://www.artica.fr/shalla-orders.php");
 	$curl->parms["COMMUNITY_POST"]=$f;
+	
 	if(!$curl->get()){
+		writelogs("Failed exporting ".count($array)." categorized websites to Artica cloud repository servers",__FUNCTION__,__FILE__,__LINE__);
 		$unix->send_email_events("Failed exporting ".count($array)." categorized websites to Artica cloud repository servers",null,"proxy");
 		WriteMyLogs("Exporting failed". count($array)." websites",__FUNCTION__,__FILE__,__LINE__);
-		pushit();
 		return null;
 	}
 	
@@ -136,16 +151,27 @@ if(count($array)==0){
 		WriteMyLogs("Exporting success ". count($array)." websites",__FUNCTION__,__FILE__,__LINE__);
 		$unix->send_email_events("Success exporting ".count($array)." categorized websites to Artica cloud repository servers",null,"proxy");
 		
+		writelogs("Deleting websites...",__FUNCTION__,__FILE__,__LINE__);
 		while (list ($md5, $datas) = each ($array) ){
-			$sql="UPDATE dansguardian_community_categories SET sended=1 WHERE zmd5='$md5'";
+			$sql="DELETE FROM categorize WHERE zmd5='$md5'";
 			$q->QUERY_SQL($sql,"artica_backup");
 		}
+		
+		if($restartProcess){
+			writelogs("$restart_cmd",__FUNCTION__,__FILE__,__LINE__);
+			shell_exec($restart_cmd);
+		}else{
+			$q->QUERY_SQL("OPTIMIZE TABLE categorize","artica_backup");
+		}
+	}else{
+		writelogs("Failed exporting ".count($array)." categorized websites to Artica cloud repository servers \"$curl->data\"",__FUNCTION__,__FILE__,__LINE__);
 	}
 	
-
-	pushit();
-
+	
+	
 }
+
+
 
 function pushit(){
 	$curl=new ccurl("http://www.artica.fr/shalla-orders.php");
@@ -161,13 +187,7 @@ function pushit(){
 function import(){
 	include_once(dirname(__FILE__)."/exec.squid.blacklists.php");
 	update();downloads();inject();
-	
 	WriteCategoriesStatus(true);
-	$unix->THREAD_COMMAND_SET("/usr/share/artica-postfix/bin/artica-update --squidguard");
-	
-	
-	
-	
 }
 
 function ParseGzSqlFile($filepath){
@@ -222,28 +242,7 @@ function uncompress($srcName, $dstName) {
 } 
 	
 
-function patterns(){
-	
-	$system_is_overloaded=system_is_overloaded();
-	if($system_is_overloaded){
-		$unix=new unix();
-		$unix->send_email_events("Overloaded system, Web filtering maintenance databases tasks aborted [writing categories]", "Artica will wait a new better time...", "proxy");
-		die();
-	}	
-	
-	echo "Starting......: Artica database community please wait writing categories\n";
-	$sql="SELECT category FROM dansguardian_community_categories WHERE enabled=1 GROUP by category";
-	$q=new mysql();
-	$results=$q->QUERY_SQL($sql,"artica_backup");
-	
-	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
-		if($ligne["category"]==null){continue;}
-		echo "Starting......: Artica database community please wait updating category {$ligne["category"]}\n";
-		WriteCategory($ligne["category"]);
-		
-	}
-	
-}
+
 
 function WriteCategory($category){
 	$squidguard=new squidguard();
@@ -257,7 +256,7 @@ function WriteCategory($category){
 	if(!is_file("/var/lib/squidguard/blacklist-artica/$category/urls")){@file_put_contents("/var/lib/squidguard/blacklist-artica/$category/urls","#");}
 		
 	$sql="SELECT pattern FROM dansguardian_community_categories WHERE enabled=1 and category='$category'";
-	$q=new mysql();
+	$q=new mysql_squid_builder();
 	$results=$q->QUERY_SQL($sql,"artica_backup");
 	if(!$q->ok){
 		echo "Starting......: Artica database $q->mysql_error\n";
@@ -285,38 +284,12 @@ function WriteCategory($category){
 		
 }
 
-function fillSitesInfos(){
-	
-	$system_is_overloaded=system_is_overloaded();
-	if($system_is_overloaded){
-		$unix=new unix();
-		$unix->send_email_events("Overloaded system, Web filtering maintenance databases tasks aborted [writing Sites informations]", "Artica will wait a new better time...", "proxy");
-		die();
-	}	
-	
-	$sql="SELECT website FROM dansguardian_sitesinfos WHERE LENGTH(dbpath)=0";
-	$q=new mysql();
-	$results=$q->QUERY_SQL($sql,"artica_backup");	
-	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
-		$ligne["website"]=trim($ligne["website"]);
-		if($ligne["website"]==null){continue;}
-		
-		$cat=trim(GetCategory($ligne["website"]));
-		if($GLOBALS["VERBOSE"]){echo "{$ligne["website"]} = \"$cat\"\n";}
-		if($cat<>null){
-			echo "Starting......: Artica database update {$ligne["website"]} to $cat\n";
-			$sql="UPDATE dansguardian_sitesinfos SET dbpath='$cat' WHERE website='{$ligne["website"]}'";
-			$q->QUERY_SQL($sql,"artica_backup");
-		}
-	}
-	
-	
-}
+
 
 function GetCategory($www){
 	if(preg_match("#^www\.(.+)#",$www,$re)){$www=$re[1];}
 	$sql="SELECT category FROM dansguardian_community_categories WHERE pattern='$www' and enabled=1";
-	$q=new mysql();
+	$q=new mysql_squid_builder();
 	$results=$q->QUERY_SQL($sql,"artica_backup");
 	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
 		$f[]=$ligne["category"];
@@ -359,38 +332,7 @@ function mycnf_change_value($key,$value_to_modify){
 	
 	}
 	
-function WriteCategoriesStatus($force=false){
-	$unix=new unix();
-	$cache_file="/usr/share/artica-postfix/ressources/logs/web.community.db.status.txt";
-	$time=$unix->file_time_min($cache_file);
-	if($GLOBALS["VERBOSE"]){echo "Cache file : $cache_file ({$time}Mn)\n";}
-	if(!$force){
-		
-		if($time<300){return;}
-	}
-	
-	$system_is_overloaded=system_is_overloaded();
-	if($system_is_overloaded){
-		$unix=new unix();
-		$unix->send_email_events("Overloaded system, Web filtering maintenance databases tasks aborted [writing categories status]", "Artica will wait a new better time...", "proxy");
-		die();
-	}		
-	
-	
-	
-	$sql="SELECT COUNT( zmd5 ) AS tcount, category FROM dansguardian_community_categories WHERE enabled =1 GROUP BY category ORDER BY tcount desc";	
-	$q=new mysql();
-	$results=$q->QUERY_SQL($sql,"artica_backup");	
-	if(!$q->ok){@unlink($cache_file);return;}
-	if(mysql_numrows($results)==0){@unlink($cache_file);return;}
-	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){	
-		WriteMyLogs("{$ligne["category"]} = {$ligne["tcount"]}",__FUNCTION__,__FILE__,__LINE__);
-		$array[$ligne["category"]]=$ligne["tcount"];
-	}
-	
-	@file_put_contents($cache_file,serialize($array));
-	@chmod($cache_file,"777");
-}
+
 function WriteMyLogs($text,$function,$file,$line){
 	$mem=round(((memory_get_usage()/1024)/1000),2);
 	writelogs($text,$function,__FILE__,$line);
@@ -406,7 +348,19 @@ function WriteMyLogs($text,$function,$file,$line){
 	@fwrite($f, "$date [{$GLOBALS["MYPID"]}][{$mem}MB]: [$function::$line] $text\n");
 	@fclose($f);
 }
-	
+function ifMustBeExecuted(){
+	$users=new usersMenus();
+	$sock=new sockets();
+	$update=true;
+	if(!$users->SQUID_INSTALLED){$update=false;}
+	$CategoriesRepositoryEnable=$sock->GET_INFO("CategoriesRepositoryEnable");
+	$EnableWebProxyStatsAppliance=$sock->GET_INFO("EnableWebProxyStatsAppliance");
+	if(!is_numeric($CategoriesRepositoryEnable)){$CategoriesRepositoryEnable=0;}
+	if(!is_numeric($EnableWebProxyStatsAppliance)){$EnableWebProxyStatsAppliance=0;}
+	if($CategoriesRepositoryEnable==1){$update=true;}
+	if($EnableWebProxyStatsAppliance==1){$update=true;}
+	return $update;
+}	
 	
 
 

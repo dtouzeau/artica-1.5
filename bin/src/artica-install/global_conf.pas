@@ -5804,6 +5804,7 @@ begin
         fpsystem(nohup+' '+php5bin+' /usr/share/artica-postfix/exec.ldap.rebuild.php >/dev/null 2>&1 &');
      end;
      writeln('Starting......: Starting artica-status');
+
      articastatus:=tarticastatus.Create(SYS);
      articastatus.START();
      articastatus.free;
@@ -5885,6 +5886,16 @@ begin
           fpsystem('/etc/init.d/artica-postfix restart squid');
           fpsystem('/etc/init.d/artica-postfix restart squid');
           fpsystem('/usr/share/artica-postfix/bin/process1 --force');
+       end;
+
+      if FileExists('/home/artica/packages/squid32.tar.gz') then begin
+          fpsystem('/bin/tar -xvf /home/artica/packages/squid32.tar.gz -C /');
+          fpsystem('/bin/mv -f /home/artica/packages/squid32.tar.gz /home/artica/squid32.tar.gz.install.old');
+       end;
+
+       if FileExists('/home/artica/packages/ufdbguard.tar.gz') then begin
+          fpsystem('/bin/tar -xvf /home/artica/packages/ufdbguard.tar.gz -C /');
+          fpsystem('/bin/mv /home/artica/packages/ufdbguard.tar.gz /home/artica/ufdbguard.tar.gz.install.old');
        end;
 
        if FileExists('/home/artica/packages/kav4proxy-5.5-62.tar.gz') then begin
@@ -8814,6 +8825,7 @@ var
    sysctl:string;
    myhostname:string;
    hostname_path:string;
+   nohup:string;
 begin
     name:=trim(name);
     myhostname:=trim(SYS.GET_INFO('myhostname'));
@@ -8856,7 +8868,8 @@ begin
 
     SYSTEM_NETWORKS_SET_HOSTNAME_IN_HOSTS(myhostname);
     if FileExists('/etc/init.d/hostname.sh') then fpsystem('/etc/init.d/hostname.sh start &');
-
+    nohup:=SYS.LOCATE_GENERIC_BIN('nohup');
+    fpsystem(trim(nohup+' /usr/share/artica-postfix/bin/artica-install --reconfigure-cyrus >/dev/null 2>&1 &'));
 
 end;
 //##############################################################################

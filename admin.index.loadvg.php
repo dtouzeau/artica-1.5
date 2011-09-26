@@ -92,7 +92,8 @@ function tabs(){
 	if(!$q->TABLE_EXISTS("loadavg", "artica_events")){$q->BuildTables();}
 	
 // --------------------------------------------------------------------------------------	
-	if(mysql_num_rows($results)==0){
+	$mysql_num_rows=mysql_num_rows($results);
+	if($mysql_num_rows==0){
 		$mysql_num_rows=$q->COUNT_ROWS('loadavg', "artica_events");
 		writelogs("mysql return no rows from a table of $allrows rows ",__FUNCTION__,__FILE__,__LINE__);
 		if($mysql_num_rows>10){
@@ -104,6 +105,7 @@ function tabs(){
 	}	
 	
 	if(!$q->ok){echo $q->mysql_error;}
+	writelogs("Checking load avg Rows:$mysql_num_rows",__FUNCTION__,__FILE__,__LINE__);
 	if($mysql_num_rows>0){
 			$c=0;
 			while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
@@ -147,6 +149,7 @@ function tabs(){
 			
 			$gp->line_green();
 			if(!is_file($targetedfile)){writelogs("Fatal \"$targetedfile\" no such file! ($c items)",__FUNCTION__,__FILE__,__LINE__);return;}
+			writelogs("Checking load avg -> $targetedfile",__FUNCTION__,__FILE__,__LINE__);
 			echo "<div onmouseout=\"javascript:this.className='paragraphe';this.style.cursor='default';\" onmouseover=\"javascript:this.className='paragraphe_over';
 			this.style.cursor='pointer';\" id=\"6ce2f4832d82c6ebaf5dfbfa1444ed58\" OnClick=\"javascript:Loadjs('admin.index.loadvg.php?all=yes')\" class=\"paragraphe\" style=\"width: 300px; min-height: 112px; cursor: default;\">
 			<h3 style='text-transform: none;margin-bottom:5px'>$computer_load</h3>
@@ -197,25 +200,29 @@ writelogs("Checking milter-greylist",__FUNCTION__,__FILE__,__LINE__);
 		
 	}
 	
-writelogs("Checking squid perf",__FUNCTION__,__FILE__,__LINE__);		
+	
 // --------------------------------------------------------------------------------------	
 
 	if($users->SQUID_INSTALLED){
 		$SQUIDEnable=trim($sock->GET_INFO("SQUIDEnable"));
 		if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
 		if($SQUIDEnable==1){
+			writelogs("Checking squid perf",__FUNCTION__,__FILE__,__LINE__);	
 			$cachedTXT=$tpl->_ENGINE_parse_body("{cached}");
 			$NOTcachedTXT=$tpl->_ENGINE_parse_body("{not_cached}");
 			$today=$tpl->_ENGINE_parse_body("{today}");
 			$sql="SELECT SUM( size ) as tsize, cached FROM squid_cache_perfs WHERE DATE_FORMAT( zDate, '%Y-%m-%d' ) = DATE_FORMAT( NOW( ) , '%Y-%m-%d' ) GROUP BY cached LIMIT 0 , 30";
 			$results=$q->QUERY_SQL($sql,"artica_events");
+			if(!$q->ok){writelogs("$q->mysql_error",__FUNCTION__,__FILE__,__LINE__);}
 			while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
 				
 				if($ligne["cached"]==1){$cached_size=$ligne["tsize"];}
 				if($ligne["cached"]==0){$not_cached_size=$ligne["tsize"];}
 			}
-			if(($cached_size>0) &&  ($not_cached_size>0)){
 				writelogs("Cached: $cached_size not cached: $not_cached_size bytes",__FUNCTION__,__FILE__,__LINE__);
+			
+			if(($cached_size>0) &&  ($not_cached_size>0)){
+				
 				
 				$sum=$cached_size+$not_cached_size;
 				$pourcent=round(($cached_size/$sum)*100);
@@ -240,6 +247,8 @@ writelogs("Checking squid perf",__FUNCTION__,__FILE__,__LINE__);
 					<div style='font-size:11px;margin-top:-8px'>$today: $cachedTXT: ".FormatBytes($cached_size/1024)." - $NOTcachedTXT ".FormatBytes($not_cached_size/1024)."</div>
 					<img src='ressources/logs/web/squid.cache.perf.today.png'>
 					</div>";
+				}else{
+					writelogs("ressources/logs/web/squid.cache.perf.today.png no such file",__FUNCTION__,__FILE__,__LINE__);
 				}			
 			
 			}

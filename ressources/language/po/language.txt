@@ -2695,7 +2695,7 @@ You can also use your ISP SMTP servers of your ISP by set the appropriate authen
 <manage_your_mailbox_rules_text>Here you can manage rules that help you to automatically order your mailbox when mails is saved into.</manage_your_mailbox_rules_text>
 <manage_your_org>Manage your organization</manage_your_org>
 <manage_your_quarantine>Manage your quarantine</manage_your_quarantine>
-<manage_your_server>Manage your server</manage_your_server>
+<manage_your_server>Your server</manage_your_server>
 <Mandatory_TLS_encryption>Mandatory TLS encryption</Mandatory_TLS_encryption>
 <Mandatory_TLS_verification>Mandatory TLS verification</Mandatory_TLS_verification>
 <manufacturer>manufacturer</manufacturer>
@@ -4182,7 +4182,7 @@ If this feature is enabled and a server offers STARTTLS while TLS is not already
 <smtp_virtual_hostname_text>Define the hostname that this server will provide in SMTP messages transactions</smtp_virtual_hostname_text>
 <sn>Last Name</sn>
 <socialnet>Sites bringing people together (social networking) be it for friendship or for business</socialnet>
-<softwares_install>Softwares install</softwares_install>
+<softwares_install>Softwares</softwares_install>
 <softwares_list>Softwares list</softwares_list>
 <softwares_list_text>Display softwares installed on your entire network.</softwares_list_text>
 <softwares_storage>Softwares Storage</softwares_storage>

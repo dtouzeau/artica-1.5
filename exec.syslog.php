@@ -80,6 +80,7 @@ if(preg_match("#monitor action done#",$buffer)){return true;}
 if(preg_match("#monitor service.+?on user request#",$buffer)){return true;}
 if(preg_match("#CRON\[.+?\(root\).+CMD#",$buffer)){return true;}
 if(preg_match("#winbindd\[.+?winbindd_listen_fde_handler#",$buffer)){return true;}
+
 if(preg_match("#slapd.+?conn=[0-9]+\s+fd=.+?closed#",$buffer)){return;}
 if(strpos($buffer,"*system*awstats#")>0){return true;}
 if(strpos($buffer,"extra modules loaded after daemonizing/chrooting")>0){return;}
@@ -172,6 +173,7 @@ if(strpos($buffer,"artica-ldap[")>0){return;}
  
 //SAMBA DUSTBIN
 if(strpos($buffer,"winbindd/winbindd_group.c")>0){return;}
+if(strpos($buffer,"winbindd/winbindd_util.c")>0){return;}
 if(strpos($buffer,"smb_register_idmap_alloc")>0){return;}
 if(strpos($buffer,"Idmap module passdb already registered")>0){return;}
 if(strpos($buffer,"Cleaning up brl and lock database after unclean shutdown")>0){return;}
@@ -422,6 +424,8 @@ if(preg_match("#net:\s+failed to bind to server.+?Error: Invalid credentials#",$
 		
 		$file="/etc/artica-postfix/croned.1/samba-ldap-credentials";
 		if(IfFileTime($file,5)){
+			if(is_file("/var/lib/samba/winbindd_idmap.tdb")){@unlink("/var/lib/samba/winbindd_idmap.tdb");}
+			if(is_file("/var/lib/samba/group_mapping.ldb")){@unlink("/var/lib/samba/group_mapping.ldb");}
 			email_events("Samba: could not connect to ldap Invalid credentials","samba claims:\n$buffer\nArtica will try to reconfigure password and restart Samba",'system');
 			shell_exec("{$GLOBALS["nohup"]} {$GLOBALS["LOCATE_PHP5_BIN"]} /usr/share/artica-postfix/exec.samba.php --fix-etc-hosts >/dev/null 2>&1 &");
 			@unlink($file);
@@ -429,6 +433,25 @@ if(preg_match("#net:\s+failed to bind to server.+?Error: Invalid credentials#",$
 			WriteFileCache($file);
 		return;	
 		}	
+	}
+	
+	if(preg_match("#winbindd.+?Could not receive trustdoms#",$buffer)){
+		events("WINBIND: Could not receive trustdoms");
+		
+		$file="/etc/artica-postfix/croned.1/Could.not.receive.trustdoms";
+		if(IfFileTime($file,5)){
+			events("WINBIND: Could not receive trustdoms -> restart Winbind");
+			email_events("Samba: Could not receive trustdoms","samba claims:\n$buffer\nArtica will try to restart winbindd service",'system');
+			if(is_file("/etc/init.d/winbind")){
+				shell_exec("{$GLOBALS["nohup"]} /etc/init.d/winbind >/dev/null 2>&1 &");
+			}else{
+			shell_exec("{$GLOBALS["nohup"]} /etc/init.d/artica-postfix restart winbindd >/dev/null 2>&1 &");
+			@unlink($file);
+			}
+			WriteFileCache($file);
+		return;	
+		}			
+		
 	}
 	
 	if(preg_match("#winbindd\[.+?ADS uninitialized: No logon servers#",$buffer)){

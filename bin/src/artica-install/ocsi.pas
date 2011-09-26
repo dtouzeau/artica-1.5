@@ -123,8 +123,9 @@ begin
      exit;
    end;
 
-   if not FileExists('/usr/share/ocsinventory-reports/ocsreports/header.php') then begin
+   if not FileExists('/usr/share/ocsinventory-reports/ocsreports/index.php') then begin
           logs.DebugLogs('Starting......: OCS web Engine OCS is not installed');
+          logs.DebugLogs('Starting......: /usr/share/ocsinventory-reports/ocsreports/index.php no such file');
           exit;
    end;
 
@@ -193,12 +194,12 @@ var
 begin
 
    if not FileExists(apachebinary_path) then begin
-     logs.DebugLogs('Starting......: Apache (ocs web Engine) is not installed');
+     logs.DebugLogs('Starting......: Apache (ocs web Engine) is not installed (apache not such binary)');
      exit;
    end;
 
-   if not FileExists('/usr/share/ocsinventory-reports/ocsreports/header.php') then begin
-          logs.DebugLogs('Starting......: OCS web Engine OCS is not installed');
+   if not FileExists('/usr/share/ocsinventory-reports/ocsreports/index.php') then begin
+          logs.DebugLogs('Starting......: OCS web Engine OCS is not installed (index.php not such file)');
           exit;
    end;
 
@@ -236,6 +237,7 @@ end;
 
 
     fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.ocsweb.php --mysql');
+    fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.ocsweb.php --builddbinc');
     fpsystem(apachebinary_path+' -f /etc/artica-postfix/apache-ocsweb.conf');
 
  count:=0;

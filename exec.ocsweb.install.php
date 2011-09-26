@@ -9,6 +9,16 @@ if($argv[1]=="--install-client"){
 	die();
 }
 
+if($argv[1]=="--remove-database"){
+	removedatbase();
+	die();
+}
+
+function removedatabase(){
+	$q=new mysql();
+	if(!$q->DATABASE_EXISTS("ocsweb")){$q->DELETE_DATABASE("ocsweb");}
+}
+
 
 MysqlCheck();
 

@@ -1,4 +1,10 @@
-1.5.090420:
+// http://os.tekco.com/mod_choke/README
+http://sourceforge.net/projects/modcidrlookup/
+http://www.outoforder.cc/projects/apache/mod_ftpd
+
+
+
+1.5.091617:
 ========================================================================================
 Messaging Changes:
 -------------------------------------------------
@@ -7,6 +13,14 @@ Messaging Changes:
 1.5.090120: Adding automatically in whitelist load balancer configuration in iptables when turning InstantIptables to the Whitelist model
 1.5.090215: Fix misconfigurations on milter-greylist.
 1.5.090215: Add graphs in milter-greylist section and admin section when using single-instance.
+1.5.090619: Add "dropdelivered" fetchmail attribute support.
+1.5.090619: Fix and improve Postfix tuning section (see http://www.artica.fr/forum/viewtopic.php?f=26&t=4531&start=10#p20993)
+1.5.091002: Add smtp_connection_cache_destinations support for SMTP throttle instances in both single instance and multiple Postfix instances. (see http://forum.artica.fr/viewtopic.php?f=26&t=4452&start=0)
+1.5.091400: Add possibility to display Postfix instances really enabled and active on the system instead in Artica Database, this to find Postfix orphans instances. (see http://www.artica.fr/forum/viewtopic.php?f=63&t=4575&start=0)
+1.5.091519: Add a new function that ensure that the target LDAP server is available before starting Zarafa server. This in order to avoid orphans after starting Zarafa server.
+1.5.091519: Add a new function that automatically stop Zarafa server before stopping LDAP server.This in order to avoid orphans after starting Zarafa server.
+1.5.091519: Add possibility to define Session time in Zarafa web server parameters (this option change values in Zarafa website stored by FreeWebs too).
+1.5.091617: Fix Artica did not change hostname in cyrus configuration file after change the hostname trough the interface.
 
 File Sharing changes
 -------------------------------------------------
@@ -14,7 +28,8 @@ File Sharing changes
 1.5.090301: Add a new feature in order to see Samba connections and opened files in shares.
 1.5.090301: Add a new feature that display what should the user see when browsing the server.
 1.5.090301: Fix disabling roaming mode are not accepted by Windows Workstations... They still want to replicate profiles when using Samba has PDC mode.
-
+1.5.091120: Add a kind of "Unity" in order to search features directly from the main interface.
+1.5.091122: Fix Workstations wants to push profiles on Samba has the Roaming mode is not enabled
 
 System Changes:
 ------------------------------------------------
@@ -22,6 +37,24 @@ System Changes:
 1.5.090218: Fix unable to enable schedule feature on Artica update (see http://forum.artica.fr/viewtopic.php?f=10&t=4539&start=0#p20903)
 1.5.090218: Add possibility to change and display the group description (see http://forum.artica.fr/viewtopic.php?f=25&t=4535&start=0#p20915).
 1.5.090420: Fix Artica error web page (no output) on CentOS when Artica cannot retreive the Apache account.
+1.5.091002: Add CentOS 6.x support on setup-centos ( see http://www.artica.fr/forum/viewtopic.php?f=16&t=4556&start=0)
+1.5.091002: Remove libtool-ltdl-devel when installing CentOS 6 (see http://www.artica.fr/forum/viewtopic.php?f=16&t=4564&start=0)
+1.5.091519: Fix unable to set schedule for Artica-update (see http://www.artica.fr/forum/viewtopic.php?f=10&t=4550)
+1.5.091519: Fix wrong NTP servers status (http://forum.artica.fr/viewtopic.php?f=16&t=4572&start=0#p21033)
+1.5.091617: Add possibility to limit backup containers when using Artica backup tasks.
+1.5.091802: Improve compters search, discover and management (add better relationship between OCS Inventory and Artica).
+
+Interface Changes:
+------------------------------------------------
+1.5.091519: Add possibility to switch language in the main interface.
+1.5.091519: Fix unable to switch language from the main logon page.
+1.5.091617: Fix unable to change password in the end-user interface
+
+OpenVPN changes
+------------------------------------------------
+1.5.091400: Add possibility to force OpenVPN server to listen loopback Interface (for use it whith apache proxy)
+1.5.091400: Add possibility to display certificate informations.
+1.5.091400: Fix creating client certificate configuration did not use the main certificate information.
 
 Proxy changes:
 ------------------------------------------------
@@ -31,6 +64,10 @@ FreeWebs changes:
 ------------------------------------------------
 1.5.090412: Add mod_fcgid Support (see http://forum.artica.fr/viewtopic.php?f=123&t=4547)
 1.5.090420: Unable to make FreeWebs working under Fedora or CentOS.
+1.5.091400: Allow to globally disable SSL protocol in FreeWebs.
+1.5.091519: Fix unable to apply mod_rewrite when using Wordpress.
+Fix error: "RewriteRule: bad argument line '(.*)'" (see http://www.artica.fr/forum/viewtopic.php?f=10&t=4604&start=0)
+1.5.091617: Introduce statistics per VirtualHosts using the mod_log_sql
 
 1.5.083101: 
 ========================================================================================

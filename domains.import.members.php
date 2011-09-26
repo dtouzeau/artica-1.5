@@ -53,7 +53,7 @@ function js(){
 	function x_PerformImport(obj) {
 		var tempvalue=obj.responseText;
 		document.getElementById('form_response').innerHTML = tempvalue;
-		LoadMembers($gid)
+		RefreshTab('main_group_config');
 	}		
 		
 		function PerformImport(){
@@ -61,7 +61,7 @@ function js(){
 			var XHR = new XHRConnection();
 			XHR.appendData('ImportMembersFile',ImportMembersFile);
 			XHR.appendData('groupid',$gid);
-			document.getElementById('form_response').innerHTML='<center><img src=\"img/wait_verybig.gif\"></center>';
+			AnimateDiv('form_response')';
 			XHR.sendAndLoad('$page', 'GET',x_PerformImport);			 
 		
 		}
@@ -232,9 +232,8 @@ function START_PAGE($gpid){
 	
 	
 	
-	$html="<H1>{importing_form_text_file}</H1>
-	<p class=caption>{importuser_text}</p>
-	<p class=caption>{importuser_aliases_text}</p>
+	$html="<div style='font-size:16px'>{importing_form_text_file}</div>
+	<p class=explain>{importuser_text}<br>{importuser_aliases_text}</div>
 		<input type='hidden' name='groupid' value='$gpid'>
     	<form action=\"$page\" method=\"post\" onsubmit=\"return AIM.submit(this, {'onStart' : startCallback, 'onComplete' : completeCallback})\">
 			<div><label>File:</label> <input type=\"file\" name=\"form[file]\" />&nbsp;&nbsp;<input type=\"submit\" value=\"{upload}&nbsp;&raquo;\" /></div>

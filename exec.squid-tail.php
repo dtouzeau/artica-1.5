@@ -36,6 +36,24 @@ if($buffer==null){return null;}
 
 if(preg_match("#GET cache_object#",$buffer)){return null;}
 
+if(preg_match('#MAC:(.+?)\s+(.+?)\s+.+?\s+(.*?)\s+\[.+?:(.+?)\s+.+?\]\s+"(GET|POST|CONNECT)\s+(.+?)\s+.+?"\s+([0-9]+)\s+([0-9]+)\s+([A-Z_]+)#',$buffer,$re)){
+	    $cached=0;
+	    $mac=$re[1];
+		$ip=$re[2];
+		$user=$re[3];
+		$time=$re[4];
+		$uri=$re[6];
+		$code_error=$re[7];
+		$size=$re[8];
+		$SquidCode=$re[9];
+		if($ip=="127.0.0.1"){return;}
+		if(CACHEDORNOT($SquidCode)){$cached=1;}
+		Builsql($ip,$user,$uri,$code_error,$size,$time,$cached,$mac);
+		return null;
+			
+}	
+
+
 if(preg_match('#(.+?)\s+.+?\s+(.*?)\s+\[.+?:(.+?)\s+.+?\]\s+"(GET|POST|CONNECT)\s+(.+?)\s+.+?"\s+([0-9]+)\s+([0-9]+)\s+([A-Z_]+)#',$buffer,$re)){
 	    $cached=0;
 		$ip=$re[1];
@@ -45,8 +63,9 @@ if(preg_match('#(.+?)\s+.+?\s+(.*?)\s+\[.+?:(.+?)\s+.+?\]\s+"(GET|POST|CONNECT)\
 		$code_error=$re[6];
 		$size=$re[7];
 		$SquidCode=$re[8];
+		if($ip=="127.0.0.1"){return;}
 		if(CACHEDORNOT($SquidCode)){$cached=1;}
-		Builsql($ip,$user,$uri,$code_error,$size,$time,$cached);
+		Builsql($ip,$user,$uri,$code_error,$size,$time,$cached,null);
 		return null;
 			
 }	
@@ -107,7 +126,7 @@ function CACHEDORNOT($SquidCode){
 
 
 
-function Builsql($CLIENT,$username=null,$uri,$code_error,$size=0,$time,$cached){
+function Builsql($CLIENT,$username=null,$uri,$code_error,$size=0,$time,$cached,$mac=null){
 	
 $squid_error["100"]="Continue";
 $squid_error["101"]="Switching Protocols";
@@ -225,13 +244,13 @@ if(preg_match("#^(?:[^/]+://)?([^/:]+)#",$uri,$re)){
 	}
 	
 	if(count($GLOBALS["SINGLE_SITE"])>1500){unset($GLOBALS["SINGLE_SITE"]);}
-	events("$date dansguardian-stats2:: $REASON:: $CLIENT ($username) -> $sitename ($site_IP) Country=$Country ($geoerror) REASON:\"$REASON\" TYPE::\"$TYPE\" size=$size (".__LINE__.")" ); 
+	events("$date dansguardian-stats2:: $REASON:: [$mac]$CLIENT ($username) -> $sitename ($site_IP) Country=$Country ($geoerror) REASON:\"$REASON\" TYPE::\"$TYPE\" size=$size (".__LINE__.")" ); 
 	$uri=addslashes($uri);
 	$Country=addslashes($Country);
-	$sql="('$sitename','$uri','$TYPE','$REASON','$CLIENT','$date','$zMD5','$site_IP','$Country','$size','$username','$cached')";
+	$sql="('$sitename','$uri','$TYPE','$REASON','$CLIENT','$date','$zMD5','$site_IP','$Country','$size','$username','$cached','$mac')";
 	@file_put_contents("/var/log/artica-postfix/dansguardian-stats2/$zMD5.sql",$sql);	
 	if(count($GLOBALS["RTIME"])>500){unset($GLOBALS["RTIME"]);}
-	$GLOBALS["RTIME"][]=array($sitename,$uri,$TYPE,$REASON,$CLIENT,$date,$zMD5,$site_IP,$Country,$size,$username);
+	$GLOBALS["RTIME"][]=array($sitename,$uri,$TYPE,$REASON,$CLIENT,$date,$zMD5,$site_IP,$Country,$size,$username,$mac);
 	@file_put_contents("/etc/artica-postfix/squid-realtime.cache",base64_encode(serialize($GLOBALS["RTIME"])));
 	
 	

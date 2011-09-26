@@ -1473,7 +1473,10 @@ function smbstatus_injector(){
 	$prefix="INSERT IGNORE INTO smbstatus_users ( `pid`,`username`,`usersgroup`,`computer`,`ip_addr`) VALUES ";
 	while (list ($index, $line) = each ($results) ){
 		if(trim($line)==null){continue;}
-		if(!preg_match("#([0-9]+)\s+(.+?)\s+(.+?)\s+\s+(.+?)\s+\((.+?)\)#", $line,$re)){continue;}
+		if(!preg_match("#([0-9]+)\s+(.+?)\s+(.+?)\s+\s+(.+?)\s+\((.+?)\)#", $line,$re)){
+			if($GLOBALS["VERBOSE"]){echo "[P]:'$line' -> no match #([0-9]+)\s+(.+?)\s+(.+?)\s+\s+(.+?)\s+\((.+?)\)#\n";}
+			
+			continue;}
 		$sql[]="('{$re[1]}','{$re[2]}','{$re[3]}','{$re[4]}','{$re[5]}')";		
 		if(count($sql)>500){
 			$injectsql=$prefix.@implode(",", $sql);
@@ -1489,11 +1492,11 @@ function smbstatus_injector(){
 	}		
 	
 	$results=array();
-	exec("$smbstatus -p 2>&1",$results);
+	exec("$smbstatus -S 2>&1",$results);
 	
 	while (list ($index, $line) = each ($results) ){
 		if(trim($line)==null){continue;}
-		if(!preg_match("#^(.+?)\s+([0-9]+)\s+(.+?)\s+(.+)$#", $line,$re)){if($GLOBALS["VERBOSE"]){echo "$line -> no match\n";}continue;}
+		if(!preg_match("#^(.+?)\s+([0-9]+)\s+(.+?)\s+(.+)$#", $line,$re)){if($GLOBALS["VERBOSE"]){echo "[S]:'$line' -> no match ^(.+?)\s+([0-9]+)\s+(.+?)\s+(.+)$\n";}continue;}
 			$share=addslashes($re[1]);
 			$pid=$re[2];
 			$time=strtotime($re[4]);
@@ -1519,6 +1522,8 @@ function smbstatus_injector(){
 		$time=strtotime($re[4]);
 		$date=date('Y-m-d H:i:s',$time);
 		$md5=md5("$pid$dir$path$date");
+		if($GLOBALS["VERBOSE"]){echo "$pid -> $dir\n";}
+		
 		$sql[]="('$md5','$pid','$dir','$path','$date')";		
 		if(count($sql)>500){
 			$injectsql=$prefix.@implode(",", $sql);

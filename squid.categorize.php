@@ -26,11 +26,12 @@
 	
 	
 	if(isset($_GET["category"])){save_category();exit;}
-	if(isset($_GET["categories-of"])){get_categories();exit;}
+	if(isset($_GET["categories-of"])){exit();}
 	js();
 	
 function js(){
 	$page=CurrentPageName();
+	$tpl=new templates();
 	$start="CategorizeLoad()";
 	
 	if(isset($_GET["load-js"])){
@@ -38,6 +39,12 @@ function js(){
 		$start="CategorizeLoadAjax()";
 		
 	}
+	
+	if(trim($_GET["www"])==null){
+			$error_no_website_selected=$tpl->javascript_parse_text("{error_no_website_selected}");
+			echo "alert('$error_no_website_selected');";
+			return;
+	}	
 	
 	$html="
 	function CategorizeLoad(){
@@ -86,88 +93,60 @@ function save_category(){
 	$category=$_GET["category"];
 	$md5=md5($www.$category);
 	$sock=new sockets();
+	$q=new mysql_squid_builder();
 	$uuid=base64_decode($sock->getFrameWork("cmd.php?system-unique-id=yes"));
 	$enabled=$_GET["enabled"];
-	$sql="SELECT zmd5 FROM dansguardian_community_categories WHERE pattern='$www' AND category='$category'";
 	
+	$q->CreateCategoryTable($category);
+	$category_table=$q->category_transform_name($category);
+	$sql="SELECT zmd5 FROM category_$category_table WHERE pattern='$www'";
+	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql));
 	
-	
-	$q=new mysql();
-	$q->CheckTable_dansguardian();
-	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,"artica_backup"));
-	$sql_add="INSERT INTO dansguardian_community_categories (zmd5,zDate,category,pattern,uuid) VALUES('$md5',NOW(),'$category','$www','$uuid')";
-	$sql_edit="UPDATE dansguardian_community_categories SET enabled='$enabled' WHERE category='$category' AND pattern='$www'";
+	$sql_add="INSERT IGNORE INTO categorize (zmd5,zDate,category,pattern,uuid) VALUES('$md5',NOW(),'$category','$www','$uuid')";
+	$sql_add2="INSERT IGNORE INTO category_$category_table (zmd5,zDate,category,pattern,uuid) VALUES('$md5',NOW(),'$category','$www','$uuid')";
+	$sql_edit="UPDATE category_$category_table SET enabled='$enabled' WHERE zmd5='{$ligne["zmd5"]}'";
 	
 	writelogs("$www/$category = {$ligne["zmd5"]}",__FUNCTION__,__FILE__,__LINE__);
 	
-	if($ligne["zmd5"]==null){$q->QUERY_SQL($sql_add,"artica_backup");}
+	if($ligne["zmd5"]==null){
+		$q->QUERY_SQL($sql_add2);
+		$q->QUERY_SQL($sql_add);
+	}
 	else{
 		writelogs("$sql_edit",__FUNCTION__,__FILE__,__LINE__);
-		$q->QUERY_SQL($sql_edit,"artica_backup");
-	}
-	if(!$q->ok){
-		echo $q->mysql_error;
-		return;
-	}
+		$q->QUERY_SQL($sql_edit);
 	
-	$cats=GetCategory($www);
-	
-	$sql="UPDATE dansguardian_sitesinfos SET category='$cats', dbpath='$cats' WHERE website='$www'";
-	writelogs("$sql",__FUNCTION__,__FILE__,__LINE__);
-	$q->QUERY_SQL($sql,"artica_backup");
-	if(!$q->ok){
-		echo $q->mysql_error."\n";
-		echo $sql;
-		
 	}
+	if(!$q->ok){echo $q->mysql_error;return;}
+	
+	
+	$q->QUERY_SQL("UPDATE visited_sites SET category='' WHERE sitename='$www'");
+	if(!$q->ok){echo $q->mysql_error."\n";echo $sql."\n";}
 
+	$cats=addslashes($q->GET_CATEGORIES($www,true));
 	
-	$sql="UPDATE squid_events_sites SET category='$cats' WHERE website='$www'";
-	writelogs("$sql",__FUNCTION__,__FILE__,__LINE__);
-	$q->QUERY_SQL($sql,"artica_events");
-	if(!$q->ok){
-		echo $q->mysql_error."\n";
-		echo $sql;
-		
-	}	
+	$q->QUERY_SQL("UPDATE visited_sites SET category='$cats' WHERE sitename='$www'");
+	if(!$q->ok){echo $q->mysql_error."\n";echo $sql."\n";}
 	
+	
+	$newmd5=md5("$cats$www");
+	$q->QUERY_SQL("INSERT IGNORE INTO categorize_changes (zmd5,sitename,category) VALUES('$newmd5','$www','$cats')");
+	if(!$q->ok){echo $q->mysql_error."\n";echo $sql."\n";}
+	if($enabled==1){
+		$q->QUERY_SQL("DELETE FROM categorize_delete WHERE zmd5='$md5'");
+	}else{
+		$q->QUERY_SQL("INSERT IGNORE INTO categorize_delete(zmd5,sitename,category) VALUES('$md5','$www','$category')");
+	}
 	
 	
 	$sock=new sockets();
 	$sock->getFrameWork("cmd.php?export-community-categories=yes");
+	$sock->getFrameWork("squid.php?re-categorize=yes");
 	
 }
 
-function GetCategory($www){
-	if(preg_match("#^www\.(.+)#",$www,$re)){$www=$re[1];}
-	$sql="SELECT category FROM dansguardian_community_categories WHERE pattern='$www' and enabled=1";
-	$q=new mysql();
-	$results=$q->QUERY_SQL($sql,"artica_backup");
-	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
-		$f[]=$ligne["category"];
-	}
-	
-	if(is_array($f)){return @implode(",",$f);}
-	
-}
 
-function get_categories(){
-	$www=base64_decode($_GET["categories-of"]);
-	$www=trim(strtolower($www));
-	$sock=new sockets();
-	$hash=unserialize(base64_decode($sock->getFrameWork("cmd.php?searchww-cat=".base64_encode($www))));	
-	$q=new mysql();
-	$sql="SELECT category FROM dansguardian_community_categories WHERE pattern='$www'";
-	$results=$q->QUERY_SQL($sql,"artica_backup");
-	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){if($ligne["category"]==null){continue;}$hash[$ligne["category"]]=true;}	
-	if(!is_array($hash)){return null;}
-	while (list ($num, $val) = each ($hash) ){
-		$re[]="<li>$num</li>";
-	}
-	
-	echo implode("\n",$re);
-	
-}
+
 
 function popup_top10(){
 	$page=CurrentPageName();
@@ -272,19 +251,26 @@ function popup(){
 }
 
 function popup_categories(){
+	$tpl=new templates();
 	
 	
+	if(trim($_GET["www"])==null){
+			$error_no_website_selected=$tpl->javascript_parse_text("{error_no_website_selected}");
+		echo "
+		<script>
+			alert('$error_no_website_selected');
+			YahooWinBrowseHide();
+		</script>
+		";
+		
+		return;
+	}
 
 	$www=trim(strtolower($_GET["www"]));
 	if(preg_match("#www\.(.+?)$#i",$www,$re)){$www=$re[1];}
-	$dans=new dansguardian_rules();
-	$sock=new sockets();
-	$hash=unserialize(base64_decode($sock->getFrameWork("cmd.php?searchww-cat=".base64_encode($www))));
-	
-	$sql="SELECT category FROM dansguardian_community_categories WHERE pattern='$www'";
-	$q=new mysql();
-	$results=$q->QUERY_SQL($sql,"artica_backup");
-	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){if($ligne["category"]==null){continue;}$hash_community[$ligne["category"]]=true;}	
+	$q=new mysql_squid_builder();
+	$cats=explode(",", $q->GET_CATEGORIES($www));
+	if(is_array($cats)){while (list ($num, $ligne) = each ($cats) ){$ligne=trim($ligne);if($ligne==null){continue;}$hash_community[$ligne]=true;}}
 	
 	
 	$www_encoded=base64_encode($_GET["www"]);
@@ -293,13 +279,13 @@ function popup_categories(){
 	$html="
 	<div style='font-size:13px'>{dansguardian_categorize_explain}</div>
 	<hr>
-	<div style='font-size:13px;color:red'>$count {categoryies} - $count_community {categoryies_community}</div>
+	<div style='font-size:13px;color:red'>$count_community {categoryies_community}</div>
 	<hr>
 	<div style='height:490px;overflow:auto;margin:9px'>
 	<table style='width:100%'>
 	";
 	
-	
+	$dans=new dansguardian_rules();
 	while (list ($num, $val) = each ($dans->array_blacksites) ){
 		$md=md5($num);
 		$field_enabled=0;

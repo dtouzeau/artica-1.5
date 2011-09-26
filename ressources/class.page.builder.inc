@@ -132,6 +132,17 @@ class pagebuilder{
 				if(is_file("/usr/share/artica-postfix/js/$val")){$jqueryok=$val;break;}
 			}
 			
+			$lqueryCustom[]="jquery-ui-1.8.16.custom.min.js";
+			$lqueryCustom[]="jquery-ui-1.8.13.custom.min.js";
+			$lqueryCustom[]="jquery-ui-1.8.10.custom.min.js";
+			$lqueryCustom[]="jquery-ui-1.8.6.custom.min.js";
+			$lqueryCustom[]="jquery-ui-1.8.custom.min.js";
+			$lqueryCustom[]="jquery-ui-1.7.2.custom.js";
+			
+			while (list ($num, $val) = each ($lqueryCustom) ){
+				if(is_file("/usr/share/artica-postfix/js/$val")){$jquery_custom=$val;break;}
+			}			
+			
 			
 			$jsTable[]="/mouse.js";
 			$jsTable[]="/XHRConnection.js";
@@ -141,13 +152,8 @@ class pagebuilder{
 			$jsTable[]="/js/edit.user.js";
 			$jsTable[]="/js/cookies.js";
 			$jsTable[]="/default.js";
-			
-			//$jsTable[]="/js/jquery-1.4.2.min.js";
-			//$jsTable[]="/js/jquery-ui-1.8.6.custom.min.js";
-			//$jsTable[]="/js/jquery-1.5.1.min.js";
 			$jsTable[]="/js/$jqueryok";
-			//$jsTable[]="/js/jquery-ui-1.8.10.custom.min.js";
-			$jsTable[]="/js/jquery-ui-1.8.13.custom.min.js";
+			$jsTable[]="/js/$jquery_custom";
 			$jsTable[]="/js/jqueryFileTree.js";
 			$jsTable[]="/js/jquery.easing.1.3.js";
 			$jsTable[]="/js/thickbox-compressed.js";
@@ -241,12 +247,12 @@ class pagebuilder{
 			
 			
 			if($GLOBALS["JQUERY_UI"]<>null){
-				unset($css_files["styles_forms.css"]);
+				//unset($css_files["styles_forms.css"]);
 				unset($css_files["style.css"]);
 				unset($css_files["styles_tabs.css"]);
-				unset($css_files["styles_rounded.css"]);
-				unset($css_files["menus_top.css"]);
-				unset($css_files["styles_tables.css"]);	
+				//unset($css_files["styles_rounded.css"]);
+				//unset($css_files["menus_top.css"]);
+				//unset($css_files["styles_tables.css"]);	
 			
 			}
 			
@@ -292,6 +298,8 @@ class pagebuilder{
 			if(is_file("/usr/share/artica-postfix/css/$theme/jquery-ui-1.8.10.custom.css")){return "/css/$theme/jquery-ui-1.8.10.custom.css";}
 			if(is_file("/usr/share/artica-postfix/css/$theme/jquery-ui-1.8.6.custom.css")){return "/css/$theme/jquery-ui-1.8.6.custom.css";}
 			if(is_file("/usr/share/artica-postfix/css/$theme/jquery-ui-1.7.2.custom.css")){return "/css/$theme/jquery-ui-1.7.2.custom.css";}
+			if(is_file("/usr/share/artica-postfix/css/$theme/jquery-ui-1.8.16.custom.css")){return "/css/$theme/jquery-ui-1.8.16.custom.css";}
+			
 			}
 
 	function YahooBody(){
@@ -313,7 +321,8 @@ class pagebuilder{
 			$conf=$conf ."<div id=\"WinORG2\" style='width:0;height:0'></div>\n";						
 			$conf=$conf ."<div id=\"RTMMail\" style='width:0;height:0'></div>\n";			
 			$conf=$conf ."<div id=\"Browse\" style='width:0;height:0'></div>\n";
-			$conf=$conf ."<div id=\"SearchUser\" style='width:0;height:0'></div>\n";									
+			$conf=$conf ."<div id=\"SearchUser\" style='width:0;height:0'></div>\n";
+			$conf=$conf ."<div id=\"UnityDiv\" style='width:0;height:0'></div>\n";										
 			return $conf;		
 	}
 

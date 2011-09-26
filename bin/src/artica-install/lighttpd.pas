@@ -491,14 +491,6 @@ logs.Debuglogs('###################### LIGHTTPD #####################');
           logs.Debuglogs('Starting......: lighttpd: php ext conf.:' + SYS.LOCATE_PHP5_EXTCONF_DIR());
           logs.Debuglogs('Starting......: lighttpd: php session.:' + SYS.LOCATE_PHP5_SESSION_PATH());
 
-          if IS_IPTABLES_INPUT_RULES() then begin
-              logs.Debuglogs('Starting......: lighttpd: this just an information that you have some');
-              logs.Debuglogs('Starting......: lighttpd: Firewall rules activated (iptables)');
-              logs.Debuglogs('Starting......: lighttpd: If you want to access to web page');
-              logs.Debuglogs('Starting......: lighttpd: Be sure that you have enabled '+LIGHTTPD_LISTEN_PORT() + ' port');
-              logs.Debuglogs('Starting......: lighttpd: In your firwall....');
-          end;
-
 
           logs.OutputCmd(LIGHTTPD_BIN_PATH()+ ' -f /etc/lighttpd/lighttpd.conf');
           logs.Debuglogs('Starting......: lighttpd: Deleting SystemV5 Shared memory');
@@ -1219,7 +1211,7 @@ var
    ApcEnabledInPhp:integer;
    php5DefaultCharset:string;
    zarafa:tzarafa_server;
-   UseSamePHPMysqlCredentials,PHPDefaultMysqlserverPort:integer;
+   UseSamePHPMysqlCredentials,PHPDefaultMysqlserverPort,ZarafaSessionTime:integer;
    PHPDefaultMysqlserver,PHPDefaultMysqlRoot,PHPDefaultMysqlPass:string;
 
 begin
@@ -1229,6 +1221,9 @@ if not TryStrToInt(SYS.GET_INFO('php5FuncOverloadSeven'),php5FuncOverloadSeven) 
 if not TryStrToInt(sys.GET_INFO('ApcEnabledInPhp'),ApcEnabledInPhp) then ApcEnabledInPhp:=0;
 if not TryStrToInt(sys.GET_INFO('UseSamePHPMysqlCredentials'),UseSamePHPMysqlCredentials) then UseSamePHPMysqlCredentials:=1;
 if not TryStrToInt(sys.GET_INFO('PHPDefaultMysqlserverPort'),PHPDefaultMysqlserverPort) then PHPDefaultMysqlserverPort:=3306;
+if not TryStrToInt(sys.GET_INFO('ZarafaSessionTime'),ZarafaSessionTime) then ZarafaSessionTime:=1440;
+
+
 PHPDefaultMysqlRoot:=SYS.GET_INFO('PHPDefaultMysqlRoot');
 PHPDefaultMysqlserver:=SYS.GET_INFO('PHPDefaultMysqlserver');
 if PHPDefaultMysqlserver='localhost' then PHPDefaultMysqlserver:='127.0.0.1';
@@ -1243,7 +1238,7 @@ if length(php5DefaultCharset)=0 then php5DefaultCharset:='utf-8';
   mysql_socket:=mysql.SERVER_PARAMETERS('socket');
   l:=Tstringlist.Create;
   timezone:=SYS.GET_INFO('timezones');
-  if length(trim(timezone))=0 then timezone:='Europe/Paris';
+  if length(trim(timezone))=0 then timezone:='Europe/Berlin';
 l.Add('[PHP]');
 l.Add('safe_mode = Off');
 l.Add('safe_mode_gid = Off');
@@ -1418,7 +1413,8 @@ l.Add('session.cookie_httponly =');
 l.Add('session.serialize_handler = php');
 l.Add('session.gc_probability = 1');
 l.Add('session.gc_divisor     = 100');
-l.Add('session.gc_maxlifetime = 1440');
+
+l.Add('session.gc_maxlifetime = '+IntToStr(ZarafaSessionTime));
 l.Add('session.referer_check =');
 l.Add('session.entropy_length = 0');
 l.Add('session.entropy_file =');

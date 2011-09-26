@@ -221,8 +221,6 @@ if length(kernelversion)=0 then begin
    writeln('KERNEL_VERSION:: Unable to get kernel version');
    exit;
 end;
-
-writeln('Checking.............: Kernel version is '+kernelversion);
 result:=kernelversion;
 CACHE_KERNEL_VERSION:=kernelversion;
 
@@ -2227,7 +2225,7 @@ if length(trim(base))=0 then begin
          plistSquid:=explode(',', squid);
          writeln('Squid Proxy:..........................................:[4] ('+IntToStr(length(plistSquid)-1)+' package(s))');
     end else begin
-        writeln('Squid Proxy:...........................................:Installed');
+        writeln('Squid Proxy:..........................................:Installed');
     end;
  end;
 

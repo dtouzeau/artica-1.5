@@ -24,6 +24,7 @@ private
      mem_mysql_password:string;
      MEM_TOTAL_INSTALLEE_MEMORY:integer;
      MEM_PHP5_EXTENSION_DIR:string;
+     MEM_CGEXEC:string;
      mem_mysql_user:string;
      mem_mysql_server:string;
      mem_mysql_port:string;
@@ -37,6 +38,7 @@ private
      mem_ldap_server:string;
      mem_ldap_suffix:string;
      ISMemoryHiger1G_STR:string;
+     cgconfigparser_mem:string;
      DisableEtcHosts:integer;
      DisableCgroups:integer;
      LXC_INSTALLED:integer;
@@ -1512,6 +1514,10 @@ begin
    StrProgram:=trim(StrProgram);
    if StrProgram='ps' then if length(mem_ps_path)>0 then exit(mem_ps_path);
    if StrProgram='monit' then if length(mem_monit_bin_path)>0 then exit(mem_monit_bin_path);
+   if StrProgram='cgconfigparser' then if length(cgconfigparser_mem)>0 then exit(cgconfigparser_mem);
+   if StrProgram='cgexec' then if length(MEM_CGEXEC)>0 then exit(MEM_CGEXEC);
+
+
 
     l:=Tstringlist.Create;
     l.Add('/sbin');
@@ -1531,6 +1537,8 @@ begin
     end;
 
    if StrProgram='ps' then mem_ps_path:=result;
+   if StrProgram='cgconfigparser' then cgconfigparser_mem:=result;
+   if StrProgram='cgexec' then MEM_CGEXEC:=result;
     l.free;
 
 end;
@@ -3361,11 +3369,19 @@ try
          exit;
       end;
 
+      if FileExists(LOCATE_GENERIC_BIN('cgconfigparser')) then begin
+        result:=pid;
+        RegExpr.Free;
+        exit;
+      end;
+
       if not FileExists('/proc/'+pid+'/cgroup') then  begin
         result:=pid;
         RegExpr.Free;
         exit;
       end;
+
+
 
       RegExpr.Expression:='[0-9]+.+?:/.+?$';
       if RegExpr.Exec(ReadFromFile('/proc/'+pid+'/cgroup')) then begin
@@ -7266,9 +7282,29 @@ ionice:string;
 cmd_nice:string;
 Nice:integer;
 useIonice:integer;
+ArticaInCgroups:integer;
+ArticaCgroup:string;
+cgroupsEnabled:integer;
+cgexec:string;
 begin
 Nice:=0;
 if not TryStrToInt(GET_INFO('useIonice'),useIonice) then useIonice:=1;
+if not TryStrToInt(GET_INFO('ArticaInCgroups'),ArticaInCgroups) then ArticaInCgroups:=0;
+if not TryStrToInt(GET_INFO('cgroupsEnabled'),cgroupsEnabled) then cgroupsEnabled:=0;
+ArticaCgroup:=GET_INFO('ArticaCgroup');
+if cgroupsEnabled=1 then begin
+   if ArticaInCgroups=1 then begin
+     if length(ArticaCgroup)>0 then begin
+        if DirectoryExists('/cgroups/cpuacct/'+ArticaCgroup) then begin
+              cgexec:=LOCATE_GENERIC_BIN('cgexec');
+              if FileExists(cgexec) then begin
+                 result:=cgexec+' -g *:'+ArticaCgroup+' ';
+                 exit(result);
+              end;
+        end;
+     end;
+   end;
+end;
 
 tmp:=GET_PERFS('ProcessNice');
 if length(trim(tmp))=0 then begin

@@ -28,6 +28,7 @@ private
      artica_path:string;
      schemas:TstringList;
      OpenLDAPDisableSSL:integer;
+     local_server:boolean;
      function COMMANDLINE_PARAMETERS(FoundWhatPattern:string):boolean;
      function get_INFOS(key:string):string;
      function get_LDAP_ADMIN():string;
@@ -127,6 +128,9 @@ begin
       if length(ldap_settings.servername)=0 then ldap_settings.servername:='127.0.0.1';
       if ldap_settings.servername='*' then ldap_settings.servername:='127.0.0.1';
       if length(ldap_settings.Port)=0 then ldap_settings.Port:='389';
+      local_server:=false;
+      if ldap_settings.servername='127.0.0.1' then local_server:=true;
+      if ldap_settings.servername='localhost' then local_server:=true;
 
       if length(trim(ldap_settings.admin))=0 then begin
              ldap_settings.admin:=get_LDAP_ADMIN();
@@ -261,6 +265,13 @@ begin
        if length(top)>0 then fpsystem(top+' -b -n 1 >'+tmp+' 2>&1');
        logs.NOTIFICATION('[ARTICA]: ' + SYS.HOSTNAME_g()+': Stopping LDAP PID '+pid+' from Process Monitor','Process Monitor has decided to start OpenLDAP because it found a CPU overload or slpad was not running...'+LOGS.ReadFromFile(tmp),'system');
        LOGS.DeleteFile(tmp);
+  end;
+
+  if FileExists(SYS.LOCATE_GENERIC_BIN('zarafa-server')) then begin
+      if local_server then begin
+         logs.Syslogs('Stopping openLdap server.....: Zarafa is installed, stopping Zarafa server before...');
+         fpsystem('/etc/init.d/artica-postfix stop zarafa');
+      end;
   end;
 
   if SYS.PROCESS_EXIST(pid) then begin
@@ -924,6 +935,9 @@ back_hdb:=FindModulepath('back_hdb.la');
 dynlist_path:=FindModulepath('dynlist.la');
 back_monitor:=FindModulepath('back_monitor.so');
 syncprov:=FindModulepath('syncprov.so');
+if not FIleExists(syncprov) then syncprov:=FindModulepath('syncprov-2.4.so.2');
+
+
 if(NoLDAPBackMonitor=1) then back_monitor:='';
 
 if FileExists(back_hdb) then begin
@@ -1154,6 +1168,8 @@ begin
  l.Add('/usr/lib/ldap');
  l.Add('/usr/lib/openldap/modules');
  l.Add('/usr/lib/openldap');
+ l.Add('/usr/lib64/openldap');
+
  for i:=0 to l.COunt-1 do begin
      if FileExists(l.Strings[i]+'/'+modulelib) then begin
         result:=l.Strings[i]+'/'+modulelib;

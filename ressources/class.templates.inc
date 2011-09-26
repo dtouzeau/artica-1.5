@@ -142,6 +142,9 @@ class templates{
 		<input type='text' value='{$_GET["finduser"]}' id='finduser' style='border:1px solid #000000;width:120px' OnKeyPress=\"javascript:Findusr(event);\">
 		&nbsp;<input type='submit' value='{search}&nbsp;&raquo' style='margin-bottom:0px;font-size:12px' OnClick=\"javascript:FindUser();\">
 		</div>";
+		if(is_file("ressources/templates/{$_COOKIE["artica-template"]}/SEARCH_MENU")){$html=@file_get_contents("ressources/templates/{$_COOKIE["artica-template"]}/SEARCH_MENU");}
+		
+		
 		return $this->_ENGINE_parse_body($html);
 		}
 		
@@ -301,13 +304,17 @@ class templates{
 								while (list ($a, $b) = each ($r[1]) ){
 								$text=str_replace($r[0][$a],"<a href=\"$b\">",$text);}
 							}
+							if(isset($_COOKIE["change-artica-name"])){
+								$text=str_ireplace("Artica",$_COOKIE["change-artica-name"],$text);
+								$text=str_ireplace("artica",$_COOKIE["change-artica-name"],$text);
+							}
 													
 							$content=str_replace("{{$val}}",$text,$content);
 						}
 					}}
 		
 		$content=str_replace("<input type='button'","<input type='button' class='button'",$content);
-		
+
 		
 		
 		return $content;
@@ -360,12 +367,9 @@ class templates{
 	}
 	
 	function BuildMenusBarr($menus){
-		if(!isset($_SESSION["uid"])){
-			unset($_SESSION["TEMPLATE_TOP_MENUS"]);
-			return null;
-		}
-		
+		if(!isset($_SESSION["uid"])){unset($_SESSION["TEMPLATE_TOP_MENUS"]);return null;}
 		if(isset($_SESSION["TEMPLATE_TOP_MENUS"])){return $_SESSION["TEMPLATE_TOP_MENUS"];}
+		if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLASS_USERS_MENUS"]=$users;}else{$users=$GLOBALS["CLASS_USERS_MENUS"];}
 		$tpl=new templates(null,null,null,1);
 		while (list ($num, $ligne) = each ($menus)){
 			$text=$this->_ENGINE_parse_body($num);
@@ -386,7 +390,10 @@ class templates{
 		}
 		
 		
-		$html="<div id=menu_top>
+		
+		$html="
+		
+		<div id=menu_top>
 		<ul>";
 		while (list ($num, $ligne) = each ($newarray) ){
 			if($page==$ligne){
@@ -405,6 +412,13 @@ class templates{
 	
 	function Build_high_menus(){
 		if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLASS_USERS_MENUS"]=$users;}else{$users=$GLOBALS["CLASS_USERS_MENUS"];}
+		
+		if(is_file("ressources/templates/{$_COOKIE["artica-template"]}/HEAD_MENUS")){
+			$html=@file_get_contents("ressources/templates/{$_COOKIE["artica-template"]}/HEAD_MENUS");
+			$html=str_replace("%articaver%", $users->ARTICA_VERSION, $html);
+			return $this->_ENGINE_parse_body($html);
+		}
+		
 		
 		$community="<td class=HeadMenus><a href='http://www.artica.fr/forum/viewforum.php?f=3'>{community}</a></td>";
 		if($users->KASPERSKY_SMTP_APPLIANCE){
@@ -621,7 +635,12 @@ $html="
 <input type=\"checkbox\" id='$name' name=\"$name\" value=\"$enabledatas\" $value style='padding:0px;margin:0px;border:0px' $help $js $disabled_infos>";
 return $html;}
 
-
+function texthref($text,$js,$style=null){
+	if($style==null){$style="font-size:14px;text-decoration:underline;font-weight:bold'";}
+	if($js<>null){$js="OnClick=\"javascript:$js\"";}
+	return "<a href=\"javascript:blur();\"  $js style='$style'>$text</a>";
+	
+}
 
 function Field_yesno_checkbox($name,$value,$js=null){
 	$value=strtolower(trim($value));
@@ -800,6 +819,168 @@ $('input[id^={$field_name}_]').change(function () {
 return $html;	
 	
 }
+function field_ipv4_cdir($field_name,$defaultvalue,$style=null,$netwrok=false,$jsAdd=null){
+	if($style==null){$style="font-size:13px";}
+	$fontsize="13";
+	$withPX=35;
+	if(preg_match("#font-size:([0-9]+)#", $style,$re)){
+		$fontsize=$re[1];
+		if($re[1]>16){$withPX=40;}
+	}
+	
+	preg_match('#([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)\/([0-9]+)#',$defaultvalue,$re);
+	$locknet=0;	
+	if($netwrok){$locknet=1;}	
+	if(!preg_match("#.+?\(.*?\)#", $jsAdd)){$jsAdd=null;}
+		
+$html="
+<table width=10%>
+<tr>
+	<td width=1% nowrap>" . Field_text($field_name.'_0',$re[1],"width:{$withPX}px;$style;padding:3px;text-align:center")."</td>
+	<td style='font-size:{$fontsize}px;padding:0px;margin:0px;height:auto;width:auto' width=1% nowrap>.</td>
+	<td width=1% nowrap>" . Field_text($field_name.'_1',$re[2],"width:{$withPX}px;$style;padding:3px;text-align:center")."</td>
+	<td style='font-size:{$fontsize}px;padding:0px;margin:0px;height:auto;width:auto' width=1% nowrap>.</td>
+	<td width=1% nowrap>" . Field_text($field_name.'_2',$re[3],"width:{$withPX}px;$style;padding:3px;text-align:center")."</td>
+	<td style='font-size:{$fontsize}px;padding:0px;margin:0px;height:auto;width:auto' width=1% nowrap>.</td>
+	<td width=1% nowrap>" . Field_text($field_name.'_3',$re[4],"width:{$withPX}px;$style;padding:3px;text-align:center")."</td>
+	<td width=1% nowrap><span id='ico-ipv4-$field_name'><img src=img/icon_ok.gif></span></td>
+	<td width=1% style='font-size:{$fontsize}px;padding:0px;margin:0px;height:auto;width:auto' width=1% nowrap>/</td>
+	<td width=1% nowrap>" . Field_text($field_name.'_cdir',$re[5],"width:{$withPX}px;$style;padding:3px;text-align:center")."</td>
+</tr>
+</table>
+<input type='hidden' value='$defaultvalue' id='$field_name' name='$field_name'>
+<script>
+
+
+
+$(document).ready(function(){
+	var locknet=$locknet;
+	if(locknet==1){
+		document.getElementById('{$field_name}_3').disabled=true;
+		document.getElementById('{$field_name}_3').value=0;
+	}
+	
+$('input[id^={$field_name}_]').keypress(function(event){
+    var key;
+    if($.browser.mozilla) {key = event.which;} else {key = event.keyCode;}
+    //$('#dnshosts_ip_p0').focus();
+    var myid=$(this).attr('id');
+    var re = new RegExp(/{$field_name}_([0-9]+)/);
+    var m = re.exec(myid);
+    var number=Math.floor(m[1]);
+	var next=number+1
+	var cdir=document.getElementById('{$field_name}_cdir').value
+	document.getElementById('$field_name').value=document.getElementById('{$field_name}_0').value+'.'+document.getElementById('{$field_name}_1').value+'.'+document.getElementById('{$field_name}_2').value+'.'+document.getElementById('{$field_name}_3').value;
+	
+    if(key == 190 || key == 46) {
+    	if(document.getElementById('{$field_name}_'+next)){ $('#{$field_name}_'+next).focus();}
+   	 	document.getElementById('$field_name').value=document.getElementById('{$field_name}_0').value+'.'+document.getElementById('{$field_name}_1').value+'.'+document.getElementById('{$field_name}_2').value+'.'+document.getElementById('{$field_name}_3').value;
+    	$jsAdd;
+    	document.getElementById('ico-ipv4-$field_name').innerHTML='<img src=img/icon_ok.gif>';
+   	 	if(!ValidateIPAddress(document.getElementById('$field_name').value)){
+   	 		document.getElementById('$field_name').value='';
+			document.getElementById('ico-ipv4-$field_name').innerHTML='<img src=img/icon_mini_warning.gif>';
+		}
+		if(cdir.length()==0){
+   	 		document.getElementById('$field_name').value='';
+			document.getElementById('ico-ipv4-$field_name').innerHTML='<img src=img/icon_mini_warning.gif>';		
+		}
+		
+    	return false;
+    } 
+    else if(key == 8) {
+      if($(this).val() == '') {
+        $(this).prev().focus();
+        return false;
+      }
+    }
+
+    return true;
+  });
+  
+  
+$('input[id^={$field_name}_]').change(function () {
+	document.getElementById('ico-ipv4-$field_name').innerHTML='<img src=img/icon_ok.gif>';
+	document.getElementById('$field_name').value=document.getElementById('{$field_name}_0').value+'.'+document.getElementById('{$field_name}_1').value+'.'+document.getElementById('{$field_name}_2').value+'.'+document.getElementById('{$field_name}_3').value;
+	document.getElementById('$field_name').value=document.getElementById('$field_name').value+'/'+cdir;
+	$jsAdd;
+	if(!ValidateIPAddress(document.getElementById('$field_name').value)){
+		document.getElementById('$field_name').value='';
+		document.getElementById('ico-ipv4-$field_name').innerHTML='<img src=img/icon_mini_warning.gif>';
+	}
+	
+	if(cdir.length()==0){
+   		document.getElementById('$field_name').value='';
+		document.getElementById('ico-ipv4-$field_name').innerHTML='<img src=img/icon_mini_warning.gif>';		
+	}	
+   
+})
+  
+  
+
+});
+
+</script>
+
+";
+return $html;	
+	
+}
+function field_date($name,$value=null,$style=null,$class=null,$OnChange=null,$help=null,$helpInside=false,$jsPressKey=null,$DISABLED=false,$OnClick=null){
+	$value=trim($value);
+	if($class<>null){
+		if(preg_match("#script:(.+)#",$class,$re)){$class=null;$jsPressKey=$re[1];}
+	}	
+	
+	if(preg_match("#mindate:([0-9\-]+);maxdate:([0-9\-]+)#", $class,$re)){
+		$mindate=",minDate: \"{$re[1]}\"";
+		$maxdate=",maxDate: \"{$re[2]}\"";
+		$class=null;
+	}
+	
+	if($style==null){$style='width:98%;font-size:12px';$size="size=50";}
+	if($class<>null){$class="class='$class'";}
+	if($OnChange<>null){$OnChange="\nOnChange=\"javascript:$OnChange\"";}
+	if($jsPressKey<>null){$jsPressKey="\nonkeypress=\"javascript:$jsPressKey;\"";}
+	if($OnClick<>null){$OnClick="OnClick=\"javascript:$OnClick;\"";}
+	
+
+	
+	if(!preg_match("#font-size#",$style)){$style=$style.";font-size:12px";}
+	
+	if($help<>null){
+		$tpl=new templates();
+		$help_source=$help;
+		$help_source=str_replace('{','',$help_source);
+		$help_source=str_replace('}','',$help_source);
+		$help=$tpl->_ENGINE_parse_body($help);
+		$help=str_replace("\n","",$help);
+		$help=str_replace("\r\n","",$help);
+		$help=str_replace("\r","",$help);
+		$help=str_replace('"',"`",$help);	
+	
+		if($helpInside==false){
+		$help=help_icon($help);
+		}
+		else{
+		$OnMouseOver="OnMouseOver=\"javascript:AffBulle('$help');lightup(this, 100);\" ";
+		$OnMouseOut="OnMouseOut=\"javascript:HideBulle();lightup(this, 50);\"";
+		$help=null;
+		}
+	}
+	
+	if($DISABLED){$disa=" DISABLED";}
+	return "$help
+	<input type='text' id='$name' name='$name' value=\"$value\" $OnChange $jsPressKey $OnClick style='$style' $class $size $OnMouseOver $OnMouseOut$disa>
+	<script>
+		$(document).ready(function(){
+		$( \"#$name\").datepicker({ dateFormat: \"yy-mm-dd\" $mindate$maxdate});
+	});
+	</script>
+	";	
+	
+	
+}
 
 
 function Field_text($name,$value=null,$style=null,$class=null,$OnChange=null,$help=null,$helpInside=false,$jsPressKey=null,$DISABLED=false,$OnClick=null){
@@ -887,12 +1068,18 @@ function Field_password($name,$value=null,$style=null,$class=null,$OnChange=null
 
 function imgtootltip($img,$tooltip=null,$js=null,$align=null,$imgid=null){
 	$DisableToolTips=0;
+	$tooltip=str_replace("\n", "", $tooltip);
+	$tooltip=str_replace("\r", "", $tooltip);
+	$tooltip=str_replace("		"," ",$tooltip);
+	$tooltip=str_replace(" 	"," ",$tooltip);
+	$tooltip=str_replace(" <table","<table",$tooltip);
 	$float=null;
 	$n = rand(10e16, 10e20);
 	$rand=base_convert($n, 10, 36);
 	if(!isset($_SESSION["uid"])){if($GLOBALS["EXECUTED_AS_ROOT"]){$_SESSION["uid"]=-100;}}	
 	$uid=$_SESSION["uid"];
 	if($uid==-100){$uid="RootMaster";}
+	if(preg_match("#javascript:(.+)#", $js,$re)){$js=$re[1];}
 	
 	
 	
@@ -963,7 +1150,8 @@ function imgtootltip($img,$tooltip=null,$js=null,$align=null,$imgid=null){
 	if($DisableToolTips==1){$jsTool=null;}
 	
 	$IMAGE="
-	<input type='hidden' id='Text_$id' value='$textToolTip<br><hr><div style=text-align:right><a href=\"javascript:blur();\" OnClick=javascript($(\"$id\").qtip(\"toggle\", false); style=\"font-size:11px\">{close}</a></div>'
+	<input type='hidden' id='Text_$id' 
+	value='$textToolTip<br><hr><div style=text-align:right><a href=\"javascript:blur();\" OnClick=javascript($(\"$id\").qtip(\"toggle\", false); style=\"font-size:11px\">{close}</a></div>'>
 	<div OnMouseOver=\";this.style.cursor='pointer';\" OnMouseOut=\";this.style.cursor='default';\" style='$float'>
 		<img src='/$image_path' $align id='$id' $js>
 	</div>
@@ -2365,16 +2553,41 @@ function hide_ressources($pattern){
 }
 
 
-function ParagrapheTEXT($img,$title,$text,$link=null){
-	$max_text_caracts=130;
+function ParagrapheTEXT($img,$title,$text,$link=null,$minheight=0){
+	$max_text_caracts=85;
+	$nomysql=false;
+	if(is_numeric($link)){$link=null;$minheight=$link;$nomysql=true;}
+	if($minheight>100){$minheight=0;}
 	if(!$GLOBALS["EXECUTED_AS_ROOT"]){
 		$tpl=new templates();
 		$title=$tpl->_ENGINE_parse_body($title);
 		$text=$tpl->_ENGINE_parse_body($text);
 		$len_text_caracts=strlen($text);
+		$lang=$_COOKIE["artica-language"];
+		if($lang==null){$lang="en";}
+		$uid=$_SESSION["uid"];
+		if($uid==-100){$uid="RootMaster";}
+		$len_text_caracts=strlen($text);
+			
+			if(!$nomysql){
+			if(!$GLOBALS["EXECUTED_AS_ROOT"]){
+				$md5=md5("$title$text$link$img$lang{$GLOBALS["ICON_FAMILY"]}");
+				if(!isset($_SESSION["ICON_MYSQL_CACHE"][$md5])){
+					$title_sql=addslashes(strtolower($title));
+					$text_sql=addslashes(strtolower($text));
+					$link_sql=addslashes(base64_encode($link));
+					$sql="INSERT IGNORE INTO icons_db (zmd5,title,text,icon,js,lang,family,uid) VALUES ('$md5','$title_sql','$text_sql','$img','$link_sql','$lang','{$GLOBALS["ICON_FAMILY"]}','$uid')";
+					$q=new mysql();
+					$q->QUERY_SQL($sql,"artica_backup");
+					$_SESSION["ICON_MYSQL_CACHE"][$md5]=true;
+				}
+			}
+		}		
+		
+		
 		if($len_text_caracts>$max_text_caracts){$text=substr($text, 0,$max_text_caracts-3)."...";}
 	}
-	
+	if($minheight>0){$minheight_css="min-height:{$minheight}px;";}
 	$link="<a href=\"javascript:blur();\" 
 	style='cursor: pointer;text-align: left;color:#005447;font-size:12px;font-weight:normal;text-decoration:underline;text-transform:capitalize;' 
 	OnClick=\"$link\">$title</a>";
@@ -2382,7 +2595,7 @@ function ParagrapheTEXT($img,$title,$text,$link=null){
 	
 	$html="
 	\n	
-	<div style='margin-bottom:10px;' class=explainNoPic>
+	<div style='margin-bottom:10px;$minheight_css' class=explainNoPic>
 		<img src='img/$img' style='float:left;margin-right:9px;clear:right;'>
 		<div style='padding-left:10px'>$link</div>
 		<p style='margin-top:1px;margin-bottom:0px;font-size:11px;margin-left:40px'>$text
@@ -2393,17 +2606,27 @@ function ParagrapheTEXT($img,$title,$text,$link=null){
 	
 }
 
-function ParagrapheTEXT_disabled($img,$title,$text,$link=null){
-	$max_text_caracts=130;
+function ParagrapheTEXT_disabled($img,$title,$text,$link=null,$minheight=0){
+	$max_text_caracts=85;
+	$nomysql=false;
+	
+	if(is_numeric($link)){$link=null;$minheight=$link;$nomysql=true;}
+	if($minheight>100){$minheight=0;}	
 	if(!$GLOBALS["EXECUTED_AS_ROOT"]){
-		$tpl=new templates();
-		$text=$tpl->_ENGINE_parse_body($text);
-		$len_text_caracts=strlen($text);
-		if($len_text_caracts>$max_text_caracts){$text=substr($text, 0,$max_text_caracts-3)."...";}
+			$lang=$_COOKIE["artica-language"];
+			if($lang==null){$lang="en";}
+			$uid=$_SESSION["uid"];
+			if($uid==-100){$uid="RootMaster";}
+			$tpl=new templates();
+			$text=$tpl->_ENGINE_parse_body($text);
+			$title=$tpl->_ENGINE_parse_body($title);
+			$len_text_caracts=strlen($text);
+			if($len_text_caracts>$max_text_caracts){$text=substr($text, 0,$max_text_caracts-3)."...";}
 	}
+if($minheight>0){$minheight_css="min-height:{$minheight}px;";}
 	$html="
 	\n	
-	<div style='margin-bottom:10px;' class=explainNoPic>
+	<div style='margin-bottom:10px;$minheight_css' class=explainNoPic>
 		<img src='img/$img' style='float:left;margin-right:9px;clear:right;opacity:0.4;filter:alpha(opacity=40)'>
 		<H3 style='padding-left:10px;padding-right:0px;padding-bottom:0px;padding-top:0px;font-size:12px;color:#CCCCCC;font-weight:bold;line-height:17px;margin:0'>$title</H3>
 		<p style='margin-top:-2px;margin-bottom:0px;font-size:11px;margin-left:40px;color:#CCCCCC'>
@@ -2415,10 +2638,7 @@ function ParagrapheTEXT_disabled($img,$title,$text,$link=null){
 	
 	
 }
-
-
-	
-function Paragraphe($img,$title,$text,$link=null,$tips="go_to_section",$width="210",$height=null,$nowrap=0,$float=false,$nojs=false){
+function Paragraphe_tips($img,$title,$text,$link=null,$width=210){
 	$styleFloat='';
 	if($link==null){$link="javascript:blur()";}
 	$bigA=null;
@@ -2433,8 +2653,10 @@ function Paragraphe($img,$title,$text,$link=null,$tips="go_to_section",$width="2
 	$uid=$_SESSION["uid"];
 	if($uid==-100){$uid="RootMaster";}
 	if(!isset($_COOKIE["DisableToolTips"])){$_COOKIE["DisableToolTips"]=0;}
-	
-	
+	$fieldMD5=md5("$title$text");
+	$sock=new sockets();
+	$enabled=$sock->GET_INFO("$fieldMD5-$uid");
+	if(is_numeric($enabled)){if($enabled==1){return null;}}
 	
 	
 	if(!$GLOBALS["EXECUTED_AS_ROOT"]){
@@ -2495,6 +2717,290 @@ function Paragraphe($img,$title,$text,$link=null,$tips="go_to_section",$width="2
 	}else{$jslink="MyHref('$link');";}
 	
 	$jslink=str_replace('"',"'",$jslink);
+	if(!$GLOBALS["EXECUTED_AS_ROOT"]){$textOrg=$tpl->_ENGINE_parse_body($textOrg);}
+	
+	$jsjstip="		
+	<script>
+			function qtyp_{$id}(){
+					$(document).ready(function(){		
+						$('#text_$id').qtip({
+				  			content: $('#p-text-$id').val(),
+				  			show: 'mouseover',
+				   			hide: 'mouseout',
+				   			style: 'cream',
+				   			hide: {event: 'click mouseleave',inactive: 3000},
+				   			tip: true
+							});	
+				});
+			}
+			qtyp_{$id}();
+		</script>";
+	if($_COOKIE["DisableToolTips"]==1){$jsjstip=null;}
+
+		$js_tips="
+		<input type='hidden' id='p-text-$id' value='<strong style=font-size:13px>$title</strong><hr>$textOrg<br><hr><div style=text-align:right><a href=\"javascript:blur();\" OnClick=javascript($(\"$id\").qtip(\"toggle\", false); style=\"font-size:11px\">{close}</a></div>'>
+		$jsjstip
+		";
+	
+	$img_pid=md5("$img$jslink");	
+	$h3style="OnClick=\"javascript:Paragraphe_{$img_pid}_Switch()\" $H3_STYLE_FONT_COLOR";
+	
+
+		
+		if($img<>null){
+			if(preg_match("#\/#",$img)){
+				$imgsrc=$img;
+				$img_p="<img src='$img' id='$img_pid'>";
+			}else{
+				$imgsrc="img/$img";
+				$img_p="<img src='img/$img' id='$img_pid'>";
+			}
+		
+		
+					$jsaddon="
+					<script>
+					function Paragraphe_reverse_{$img_pid}_Switch(){
+						if(document.getElementById('$img_pid')){
+							document.getElementById('$img_pid').src='$imgsrc';
+						}
+					}
+					
+					function Paragraphe_{$img_pid}_Switch(){
+						if(document.getElementById('$img_pid')){
+							document.getElementById('$img_pid').src='img/wait_64.gif';
+							}
+						$jslink;
+						setTimeout('Paragraphe_reverse_{$img_pid}_Switch()',1500);
+					}
+					</script>
+					";		
+		
+		}
+		if($link==null){
+			$hrf=null;
+			$h3style=$H3_STYLE_FONT_COLOR;
+			$jsaddon=null;
+		}
+
+	
+	$min_height="height:70px";
+	$min_height_title="height:36px;";
+	
+	$tbl=explode("\n",$text);
+	if(is_array($tbl)){
+		$text=null;
+	while (list ($num, $ligne) = each ($tbl) ){
+		$ligne=str_replace("  "," ",$ligne);
+		$ligne=str_replace("\r","",$ligne);
+		if(trim($ligne)==null){continue;}
+		
+		$text=$text.$ligne."<br>";
+	}
+	
+	}
+		
+	$max_caracts=30;
+	$max_text_caracts=83;
+	if($width>290){
+		$max_caracts=40;
+		$max_text_caracts=130;
+	}	
+	
+	$title_entity_decode=html_entity_decode($title);
+
+	if(trim($title)<>null){
+			if(strlen($title_entity_decode)>$max_caracts){
+			if(!$GLOBALS["EXECUTED_AS_ROOT"]){
+				if($nowrap==0){$title_entity_decode=substr($title_entity_decode,0,($max_caracts-3))."...";}
+				$title=htmlentities($title_entity_decode);
+			}
+			
+			
+		}		
+		
+		
+		$title_lenght=strlen($title);
+		if($title_lenght<25){$min_height_title=null;}
+		$title="<h3 style='$min_height_title;text-transform:none;$H3_STYLE_TITLE_FONT_COLOR'>$title</h3>";
+
+		$nowrap=1;
+		if($nowrap==0){
+			if(strlen($text)>$max_text_caracts){
+				$text=substr($text,0,($max_text_caracts-3))."...";
+				$img_p=imgtootltip($img,$textOrg,null,null,"img_$id");
+				
+			
+			}else{
+				$js_tips=null;
+			}
+		}
+		
+		$text="
+		<div id='text_$id' style='$min_height;font-size:11px;font-family:Verdana;letter-spacing:-1px'>
+			$text
+		</div>";
+		}else{
+			$text="<span id='text_$id' style='font-family:Verdana;letter-spacing:-1p'>$text</span>";
+		}
+	
+	$height=null;
+	if(trim($height)<>null){$height=";height:{$height}px";}
+	
+	if($float){$styleFloat=";float:left;";}
+	
+
+	
+	$text=trim($text);
+	if($nojs){
+		$bigA="<a href=\"$link\" target=_new>";
+		$bigZ="</a>";
+	}
+	
+	//$text=$text.strlen($text);
+	
+	
+	$text=str_replace("<br/>"," ",$text);
+	$text=str_replace("<br />"," ",$text);
+	$text=str_replace("<br>"," ",$text);
+
+	$OnMouseOver="OnMouseOver=\"javascript:this.className='paragraphe_over';this.style.cursor='pointer';\"";
+	$OnMouseOut="OnMouseOut=\"javascript:this.className='paragraphe';this.style.cursor='default';\"";
+	
+	//$OnMouseOverToolTip="OnMouseOver=\"$tooltip_over\"";
+	//$OnMouseOutToolTip="OnMouseOut=\"$tooltip_out\"";
+	
+	$html="
+	<div style='width:{$width}px$height$styleFloat;min-height:112px' class='paragraphe' id='$fieldMD5-id' $OnMouseOver $OnMouseOut>
+		<table style='width:100%'>
+			<tr>
+				<td width=1% valign='top'>
+					<div $h3style  >
+					$bigA$hrf$img_p</a>
+					</div>$img_add_1$img_add_2</td>
+				<td valign='top' >
+					<div $h3style >
+						$title
+						$text
+					</div>
+					<div style='text-align:right'>
+					<table class=form style='width:99.9%'>
+					<tbody>
+					<tr>
+						<td class=legend>{hide}:</td>
+						<td>". Field_checkbox("$fieldMD5",1,0,"HideTips('$fieldMD5','$uid')")."</td>
+						</tr>
+					</tbody>
+					</table>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	$jsaddon
+	$js_tips
+	";
+	
+	return $html;
+	
+	
+}
+
+
+	
+function Paragraphe($img,$title,$text,$link=null,$tips="go_to_section",$width="210",$height=null,$nowrap=0,$float=false,$nojs=false){
+	$styleFloat='';
+	$nomysql=false;
+	if($link==null){$link="javascript:blur()";$nomysql=true;}
+	$bigA=null;
+	$hrf=null;
+	$img_add_1=null;
+	$img_add_2=null;
+	$H3_STYLE_FONT_COLOR=null;
+	$H3_STYLE_TITLE_FONT_COLOR=null;
+	$textOrg=str_replace("'", "`", $text);;
+	$tpl=new templates();
+	if(!isset($_COOKIE["artica-language"])){$_COOKIE["artica-language"]=$tpl->language;}
+	$uid=$_SESSION["uid"];
+	if($uid==-100){$uid="RootMaster";}
+	if(!isset($_COOKIE["DisableToolTips"])){$_COOKIE["DisableToolTips"]=0;}
+	$text=str_replace("'", "`", $text);
+	
+	
+	
+	if(!$GLOBALS["EXECUTED_AS_ROOT"]){
+		$lang=$_COOKIE["artica-language"];
+		if($lang==null){$lang="en";}
+		$md5=md5("$img$title$text$link$width");
+		$cachefile="ressources/logs/web/cache/$uid/icons-$md5.object.$lang.cache";
+		if(is_file($cachefile)){return @file_get_contents($cachefile);}
+	}
+	
+	if(strpos($title, ":error_notinstalled")){
+		$title=str_replace(":error_notinstalled", "", $title);
+		$H3_STYLE_FONT_COLOR="style='color:#CCCCCC'";
+		$H3_STYLE_TITLE_FONT_COLOR="color:#CCCCCC";
+	}
+	
+	if(is_array($img)){
+		$img_add_1=$img[1];
+		$img_add_2=$img[2];
+		$img=$img[0];
+	}
+	
+	
+	$tips=$text;
+	
+	if(!$GLOBALS["EXECUTED_AS_ROOT"]){
+		$title=$tpl->_ENGINE_parse_body($title);
+		$text=$tpl->_ENGINE_parse_body($text);	
+	}
+	$tips=str_replace("'","",$tips);
+	$tips=str_replace("	","",$tips);
+	$height=null;
+	if($height==null){$height="min-height:70px;";}
+	
+	
+	if(preg_match('#new:#',$link)){
+		$link=str_replace('new:','',$link);
+		$link="s_PopUpFull('$link',800,600);";
+	}	
+	
+	if (strpos($link,'script:')){
+		$jslink="$link";
+		$jslink=str_replace("javascript:",'',$jslink);
+	}else{$jslink="MyHref('$link');";}
+	
+	$jslink=str_replace('"',"'",$jslink);	
+	if(!$nomysql){
+	if(!$GLOBALS["EXECUTED_AS_ROOT"]){
+		$md5=md5("$title$text$link$img$lang{$GLOBALS["ICON_FAMILY"]}");
+		if(!isset($_SESSION["ICON_MYSQL_CACHE"][$md5])){
+			$title_sql=addslashes(strtolower(html_entity_decode($title)));
+			$text_sql=addslashes(strtolower(html_entity_decode($text)));
+			$link_sql=addslashes(base64_encode($link));
+			$sql="INSERT IGNORE INTO icons_db (zmd5,title,text,icon,js,lang,family,uid) VALUES ('$md5','$title_sql','$text_sql','$img','$link_sql','$lang','{$GLOBALS["ICON_FAMILY"]}','$uid')";
+			$q=new mysql();
+			$q->QUERY_SQL($sql,"artica_backup");
+			$_SESSION["ICON_MYSQL_CACHE"][$md5]=true;
+		}
+	}}
+	
+	
+	
+	if(!$GLOBALS["EXECUTED_AS_ROOT"]){
+		if(strpos($title," ")==0){
+		if(strlen($title)>20){$title=wordwrap($title,19," ",true);}
+		}}
+	
+	$n = rand(10e16, 10e20);
+	$rand=base_convert($n, 10, 36);				
+	$id=md5($img.$text.$title.$link.$rand);
+	
+	if(!$GLOBALS["EXECUTED_AS_ROOT"]){$tips=$tpl->_ENGINE_parse_body($tips);}
+		
+	if(strlen($title)>30){$tips="<b>$title</b><br>$tips";}
+	
+
 	if(!$GLOBALS["EXECUTED_AS_ROOT"]){$textOrg=$tpl->_ENGINE_parse_body($textOrg);}
 	
 	$jsjstip="		
@@ -3036,7 +3542,19 @@ function browserTree($target_field){
 	
 }
 
-function DAEMON_STATUS_LINE($key,$bsini,$textoadd=null,$noenable=0,$width=null,$nostartandstop=false){
+function DAEMON_STATUS_IS_OK($key,$bsini){
+	if($bsini->_params["$key"]["service_name"]==null){return true;}
+	if($bsini->_params["$key"]["service_disabled"]==null){$bsini->_params["$key"]["service_disabled"]=-1;}
+	if($bsini->_params["$key"]["service_disabled"]==0){return true;}
+	if($bsini->_params[$key]["running"]==0){return false;}
+	return true;
+}
+
+function DAEMON_STATUS_TEXT($key,$bsini){
+	return DAEMON_STATUS_ROUND($key,$bsini,null,0,1);
+}
+
+function DAEMON_STATUS_LINE($key,$bsini,$textoadd=null,$noenable=0,$width=null,$nostartandstop=false,$newInterface=0,$jsReplace=null){
 if($bsini->_params["$key"]["service_name"]==null){return null;}
 if($bsini->_params["$key"]["service_disabled"]==null){$bsini->_params["$key"]["service_disabled"]=-1;}
 if($noenable==1){if($bsini->_params["$key"]["service_disabled"]==0){return null;}}
@@ -3091,6 +3609,7 @@ if($bsini->_params[$key]["running"]==0){
 		
 	}	
 if($nostartandstop){$js_service=null;}
+if($jsReplace<>null) {$js_service=$jsReplace;}
 $title="{{$bsini->_params["$key"]["service_name"]}}";
 if($textoadd=="noaccoloade"){$title=$bsini->_params["$key"]["service_name"];$textoadd=null;}	
 return "<table style='width:$width;margin:0px;' " .CellRollOver($js_service).">
@@ -3101,6 +3620,11 @@ return "<table style='width:$width;margin:0px;' " .CellRollOver($js_service).">
 		</tr>
 	</table>";	
 	
+}
+
+function icon_mysql_error($error){
+	
+	return imgtootltip("status_warning.gif",$error);
 }
 
 
@@ -4420,4 +4944,25 @@ function file_time_min_Web($path){
 	$difference = ($data2 - $data1); 	 
 	return round($difference/60);	 
 }
+function CompileTr2($array){
+$tables[]="<table style='width:100%'><tr>";
+$t=0;
+while (list ($key, $line) = each ($array) ){
+		$line=trim($line);
+		if($line==null){continue;}
+		$t=$t+1;
+		$tables[]="<td valign='top'>$line</td>";
+		if($t==2){$t=0;$tables[]="</tr><tr>";}
+		
+}
+if($t<2){
+	for($i=0;$i<=$t;$i++){
+		$tables[]="<td valign='top'>&nbsp;</td>";				
+	}
+}
+				
+	$tables[]="</tr></table>";	
+	return implode("\n",$tables);
+}
+
 ?>

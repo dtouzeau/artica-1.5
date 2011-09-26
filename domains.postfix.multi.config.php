@@ -419,7 +419,7 @@ function popup_transport(){
 	
 	$tr[]=LocalParagraphe("title_postfix_tuning",
 	"title_postfix_tuning_text",
-	"javascript:Loadjs('domains.postfix.performances.php?ou={$_GET["ou"]}&hostname={$_GET["hostname"]}')",
+	"javascript:Loadjs('postfix.performances.php?ou={$_GET["ou"]}&hostname={$_GET["hostname"]}')",
 	"32-settings.png");	
 
 	

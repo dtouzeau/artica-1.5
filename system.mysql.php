@@ -126,6 +126,7 @@ function popup(){
 		$movefolder=Paragraphe('folder-64.png','{storage_directory}',
 		'{change_mysql_directory_text}',"javascript:YahooWin3(405,'$page?mysql-dir=yes','{storage_directory}');",null);
 		
+		$mysql_appliance=Paragraphe("www-web-search-64.png","{statistics_appliance}","{statistics_appliance_text}","javascript:Loadjs('statistics.appliance.php')");
 		
 		
 		
@@ -139,8 +140,9 @@ function popup(){
 		$tr[]=$j;
 		$tr[]=$mysql_benchmark;
 		$tr[]=$mysql_audit;
+		$tr[]=$mysql_appliance;
 
-	$tables[]="<table style='width:500px'><tr>";
+	$tables[]="<table style='width:470px'><tr>";
 	$t=0;
 	while (list ($key, $line) = each ($tr) ){
 			$line=trim($line);

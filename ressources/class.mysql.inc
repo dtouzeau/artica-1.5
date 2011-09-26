@@ -1,5 +1,6 @@
 <?php
 set_time_limit(0);
+include_once(dirname(__FILE__)."/class.mysql.squid.builder.php");
 function QUERY_SQL($sql,$logfile=null,$notLog=0,$Database='artica_filter'){$s=new mysql();return $s->QUERY_SQL($sql,$Database);}
 		
 class mysql{
@@ -420,9 +421,16 @@ function writelogs($text=null,$function=null,$line=0){
 							echo "Error Number ($errnum) ($des) config:$this->mysql_server:$this->mysql_port@$this->mysql_admin:****\n";
 							echo "Database selected=$database\n";
 						}
+						
+	    		if(preg_match("#Access denied for user#", $des)){
+					unset($GLOBALS["ERROR_MYSQL_NOPASSWD"]);
+					unset($GLOBALS["MYSQL_PARAMETERS"]);
+					unset($_SESSION["MYSQL_PARAMETERS"]);
+					$des=" please retry again...\n".$des;
+				}						
 	    		
 	    		$this->writeLogs("QUERY_SQL:: DB:\"$database\" Error Number ($errnum) ($des) config:$this->mysql_server:$this->mysql_port@$this->mysql_admin:$MYSQLpassword",__CLASS__.'/'.__FUNCTION__,__LINE__);
-	    		$this->mysql_error="QUERY_SQL:: mysql_installed={$_GLOBAL["mysql_installed"]}; [UseMysql:$this->UseMysql]: Error Number ($errnum) ($des) config:$this->mysql_server:$this->mysql_port@$this->mysql_admin:" .strlen($MYSQLpassword)." password length";
+	    		$this->mysql_error="QUERY_SQL:: mysql_select_db:: Error  ($des) config:$this->mysql_server:$this->mysql_port@$this->mysql_admin:" .strlen($MYSQLpassword)." password length line:".__LINE__;
 	    		
 	    		$this->ok=false;
 	    		return null;
@@ -432,7 +440,7 @@ function writelogs($text=null,$function=null,$line=0){
 	
 		if(mysql_error($this->mysql_connection)){
 				$time=date('h:i:s');
-				$errnum=mysql_errno();
+				$errnum=mysql_errno($this->mysql_connection);
 				$des=mysql_error();
 							
 			if(function_exists("debug_backtrace")){
@@ -442,7 +450,7 @@ function writelogs($text=null,$function=null,$line=0){
 					} catch (Exception $e) {$this->writeLogs("QUERY_SQL:: Fatal: ".$e->getMessage(),__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
 				}
 				
-				$this->mysql_error="Error Number ($errnum) ($des)$called";
+				$this->mysql_error="Error $des $called line ".__LINE__;
 							
 				if(preg_match("#Table '(.+?)' is marked as crashed and should be repaired#",$des,$re)){
 					echo "<H2>DB:$database Error table {$re[1]} is crashed $errnum : i will try to repair it</H2>";
@@ -454,6 +462,13 @@ function writelogs($text=null,$function=null,$line=0){
 					echo "<H2>DB:$database Error table {$re[2]} is crashed $errnum : i will try to repair it</H2>";
 					$this->REPAIR_TABLE($re[1],$re[2]);
 					$this->writeLogs("QUERY_SQL:: DB:\"$database\" Error table {$re[1]} is crashed $errnum -> i will try to repair it",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+				}
+				
+				if(preg_match("#Access denied for user#", $des)){
+					unset($GLOBALS["ERROR_MYSQL_NOPASSWD"]);
+					unset($GLOBALS["MYSQL_PARAMETERS"]);
+					unset($_SESSION["MYSQL_PARAMETERS"]);
+					$this->mysql_error=$this->mysql_error." please retry...";
 				}
 				
 				if(preg_match("#Table\s+'\.\/(.+?)\/(.+?)'\s+is marked as crashed#",$des,$re)){
@@ -775,7 +790,10 @@ function BackupTable($tablename,$database,$addons=array(),$zmd5=false,$endquery=
 		
 	}
 	
-		
+	function APACHE_TABLE_NAME($servername){
+		$table_name="access_".str_replace(".", "_", $servername);
+		return $table_name;
+	}	
 	
 	
 	function TABLE_EXISTS($table,$database,$nocache=false){
@@ -1089,6 +1107,7 @@ function mysql_real_escape_string2($query){
 		$results=@mysql_query("SELECT benchmark(100000000,1+2);");
 	}
 	
+	
 	FUNCTION DELETE_DATABASE($database){
 		$this->ok=true;
 		if(!function_exists("mysql_connect")){return 0;}
@@ -1166,6 +1185,8 @@ function mysql_real_escape_string2($query){
 		
 	}
 	
+	
+	
 	FUNCTION INDEX_EXISTS($table,$index,$database){
 		
 		if(isset($_SESSION["MYSQL_INDEX_EXISTS"])){
@@ -1186,6 +1207,7 @@ function mysql_real_escape_string2($query){
 	
 	
 	FUNCTION FIELD_EXISTS($table,$field,$database){
+		$field=trim($field);
 		if(isset($GLOBALS["__FIELD_EXISTS"])){
 				if(isset($GLOBALS["__FIELD_EXISTS"][$database][$table])){
 					if(isset($GLOBALS["__FIELD_EXISTS"][$database][$table][$field])){
@@ -1194,16 +1216,16 @@ function mysql_real_escape_string2($query){
 				}
 		}
 		$sql="SHOW FULL FIELDS FROM $table WHERE Field='$field';";
-		///writelogs($sql,__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 		$ligne=@mysql_fetch_array($this->QUERY_SQL($sql,$database));
 		
-		if($ligne["Field"]<>null){
-			$GLOBALS["__FIELD_EXISTS"][$database][$table][$field]=true;
+		if(trim($ligne["Field"])<>null){
+			$GLOBALS["__FIELD_EXISTS"][$database][$table][trim($field)]=true;
 			return true;
 		}else{
-			$this->writelogs("$field/$table does not exists in $database",__FUNCTION__,__LINE__);
+			$this->writelogs("\"$field\" does not exists in table $table  in $database",__FUNCTION__,__LINE__);
+			$this->writelogs("$sql",__FUNCTION__,__LINE__);
 			return false;
-		}		
+		}
 		
 		
 	}

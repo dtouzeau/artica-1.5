@@ -21,7 +21,7 @@
 <remote_addressbook_text>Activer/d&eacute;sactiver le carnet d'adresses global</remote_addressbook_text>
 <repository_manager>gestionnaire de d&eacute;p&ocirc;ts</repository_manager>
 <repository_manager_text>Mise &agrave; jour et installation de modules &agrave; l'aide de votre gestionnaire de d&eacute;p&ocirc;ts</repository_manager_text>
-<services>Services &amp; Applications</services>
+<services>Services</services>
 <system>Syst&egrave;me et Mat&eacute;riel</system>
 <update>Mise &agrave; jour &amp; Maintenance</update>
 <usb_section>G&eacute;rer les p&eacute;riph&eacute;riques USB</usb_section>

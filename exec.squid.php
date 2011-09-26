@@ -1,4 +1,5 @@
 <?php
+$GLOBALS["DEBUG_INCLUDES"]=false;
 if(posix_getuid()<>0){die("Cannot be used in web server mode\n\n");}
 if(preg_match("#--includes#",implode(" ",$argv))){$GLOBALS["DEBUG_INCLUDES"]=true;}
 if($GLOBALS["DEBUG_INCLUDES"]){echo basename(__FILE__)."::class.templates.inc\n";}
@@ -12,8 +13,8 @@ include_once(dirname(__FILE__).'/framework/class.unix.inc');
 if($GLOBALS["DEBUG_INCLUDES"]){echo basename(__FILE__)."::frame.class.inc\n";}
 include_once(dirname(__FILE__).'/framework/frame.class.inc');
 include_once(dirname(__FILE__).'/ressources/class.mysql.inc');
-
-
+$GLOBALS["RELOAD"]=false;
+$GLOBALS["VERBOSE"]=false;
 
 if(!is_file("/usr/share/artica-postfix/ressources/settings.inc")){shell_exec("/usr/share/artica-postfix/bin/process1 --force --verbose");}
 if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["VERBOSE"]=true;}
@@ -125,6 +126,7 @@ if($argv[1]=="--build"){
 	CheckFilesAndSecurity();
 	echo "Starting......: Check SquidClamAV\n";
 	squidclamav();
+	errors_details_txt();
 	Reload_Squid();
 		
 	echo "Starting......: scheduling Building templates\n";
@@ -135,11 +137,21 @@ if($argv[1]=="--build"){
 
 function CheckFilesAndSecurity(){
 	$squid_user=SquidUser();
-	$unix=new unix();	
-	shell_exec("/bin/chown -R $squid_user /etc/squid3/* >/dev/null 2>&1");
+	$unix=new unix();
+	$chown=$unix->find_program("chown");
+	$squid_user=SquidUser();
+	
+	if(!is_dir("/var/cache/squid/00")){
+			@mkdir("/var/cache/squid",644,true);
+			shell_exec("$chown $squid_user /var/cache/squid >/dev/null 2>&1");
+			exec("{$GLOBALS["SQUIDBIN"]} -z 2>&1",$results);
+	}
+	
+	shell_exec("$chown -R $squid_user /etc/squid3/* >/dev/null 2>&1");
+	if(is_dir("/usr/share/squid-langpack")){shell_exec("$chown -R $squid_user /usr/share/squid-langpack");}
 	if(!is_file("/var/log/squid/squidGuard.log")){@file_put_contents("/var/log/squid/squidGuard.log","#");}
 	@mkdir("/var/log/squid/squid",755,true);
-	shell_exec("/bin/chown -R $squid_user /var/log/squid/* >/dev/null 2>&1");	
+	shell_exec("$chown -R $squid_user /var/log/squid/* >/dev/null 2>&1");	
 	if(!is_file("/etc/squid3/squid-block.acl")){@file_put_contents("/etc/squid3/squid-block.acl","");}
 	if(!is_file("/etc/squid3/clients_ftp.acl")){@file_put_contents("/etc/squid3/clients_ftp.acl","");}
 	if(!is_file("/etc/squid3/allowed-user-agents.acl")){@file_put_contents("/etc/squid3/allowed-user-agents.acl","");}	
@@ -283,6 +295,7 @@ function BuildCaches(){
 	@file_put_contents($SQUID_CONFIG_PATH,$conf);
 	$unix=new unix();
 	$su_bin=$unix->find_program("su");
+	$chown=$unix->find_program("chown");
 	
 	writelogs("Reconfigure squid",__FUNCTION__,__FILE__,__LINE__);
 	shell_exec("{$GLOBALS["SQUIDBIN"]} -k reconfigure");
@@ -291,8 +304,10 @@ function BuildCaches(){
 	
 	$squid_user=SquidUser();
 	writelogs("Using squid user: \"$squid_user\"",__FUNCTION__,__FILE__,__LINE__);
-	writelogs("chown cache directories...",__FUNCTION__,__FILE__,__LINE__);
-	shell_exec("/bin/chown -R $squid_user /etc/squid3/* >/dev/null 2>&1");
+	writelogs("$chown cache directories...",__FUNCTION__,__FILE__,__LINE__);
+	shell_exec("$chown -R $squid_user /etc/squid3/* >/dev/null 2>&1");
+	if(is_dir("/usr/share/squid-langpack")){shell_exec("$chown -R $squid_user /usr/share/squid-langpack");}
+	
 	
 	$main_cache=$squid->CACHE_PATH;
 	writelogs("Main cache: \"$main_cache\"",__FUNCTION__,__FILE__,__LINE__);
@@ -313,7 +328,7 @@ function BuildCaches(){
 		if(trim($num)==null){continue;}
 		if(!is_dir($num)){@mkdir($num,755,true);}
 		writelogs("chown cache directory \"$num\"...",__FUNCTION__,__FILE__,__LINE__);
-		shell_exec("/bin/chown -R $squid_user $num");
+		shell_exec("$chown -R $squid_user $num");
 		shell_exec("/bin/chmod -R 0755 $num");
 	}
 	
@@ -434,28 +449,34 @@ function acl_whitelisted_browsers(){
 	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
 		$arrayUserAgents[$ligne["uri"]]=1;
 	}
+	
+	if(!isset($arrayUserAgents)){
+		echo "Starting......: Whitelisted User-Agents: 0\n";
+		@file_put_contents("/etc/squid3/white-listed-user-agents.acl","");
+		return;
+	}
+		
 	if(!is_array($arrayUserAgents)){
 		echo "Starting......: Whitelisted User-Agents: 0\n";
 		@file_put_contents("/etc/squid3/white-listed-user-agents.acl","");
 		return;
-		
 	}
 		
 
-		while (list ($agent, $val) = each ($arrayUserAgents) ){
-		    		$sql="SELECT unique_key,`string` FROM `UserAgents` WHERE browser='$agent' ORDER BY string";
-		    		$q=new mysql();
-					$results=$q->QUERY_SQL($sql,"artica_backup");
-					while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
-						$string=trim($ligne["string"]);
-						if($string==null){continue;}
-						$string=str_replace(".","\.",$string);
-						$string=str_replace("(","\(",$string);
-						$string=str_replace(")","\)",$string);
-						$string=str_replace("/","\/",$string);
-						$f[]=$string;
-					}
-				}
+	while (list ($agent, $val) = each ($arrayUserAgents) ){
+		$sql="SELECT unique_key,`string` FROM `UserAgents` WHERE browser='$agent' ORDER BY string";
+		$q=new mysql();
+		$results=$q->QUERY_SQL($sql,"artica_backup");
+		while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
+			$string=trim($ligne["string"]);
+			if($string==null){continue;}
+			$string=str_replace(".","\.",$string);
+			$string=str_replace("(","\(",$string);
+			$string=str_replace(")","\)",$string);
+			$string=str_replace("/","\/",$string);
+			$f[]=$string;
+		}
+	}
 	echo "Starting......: Whitelisted User-Agents: ". count($arrayUserAgents)." (". count($f)." patterns)\n";		
 	@file_put_contents("/etc/squid3/white-listed-user-agents.acl",@implode("\n",$f));		
 		
@@ -681,6 +702,7 @@ function is_certificate(){
 function wrapzap_compile(){
 	$sql="SELECT * FROM squid_adzapper WHERE enabled=1";
 	$q=new mysql();
+	$f=array();
 	$tpl=new templates();
 	$results=$q->QUERY_SQL($sql,"artica_backup");
 	if(!$q->ok){writelogs($q->mysql_error,__FUNCTION__,__FILE__,__LINE__);return;}
@@ -914,13 +936,14 @@ function SQUID_TEMPLATES(){
 		reset($TEMPLATES_NEW);
 		@mkdir("$document_root/errors/$subdir",0755,true);
 			while (list ($template_name, $template_data) = each ($TEMPLATES_NEW)){
+				if($template_name=="error-details.txt"){continue;}
 				if(!@file_put_contents("$document_root/errors/$subdir/$template_name",$template_data)){
 					echo "Starting......: squid $document_root/errors/$subdir/$template_name permission denied\n";
 				}
 			}
 	}
 	
-	
+	errors_details_txt();
 	echo "Starting......: squid replace ". count($TEMPLATES). " templates in ". count($langsDirs)." languages done..\n";
 	
 }
@@ -964,6 +987,12 @@ function compilation_params(){
 		@file_put_contents("/usr/share/artica-postfix/ressources/logs/squid.compilation.params", base64_encode(serialize($array)));
 		shell_exec("/bin/chmod 755 /usr/share/artica-postfix/ressources/logs/squid.compilation.params");
 	}
+}
+
+function errors_details_txt(){
+@copy("/usr/share/artica-postfix/bin/install/squid/error-details.txt", "/usr/share/squid3/errors/templates/error-details.txt");
+shell_exec("/bin/chown -R squid:squid /usr/share/squid3");
+	
 }
 
 

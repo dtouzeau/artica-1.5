@@ -12,7 +12,7 @@
       <MainUnit Value="0"/>
       <TargetFileExt Value=""/>
       <Title Value="artica-iso"/>
-      <ActiveEditorIndexAtStart Value="2"/>
+      <ActiveEditorIndexAtStart Value="0"/>
     </General>
     <VersionInfo>
       <ProjectVersion Value=""/>
@@ -34,8 +34,8 @@
         <Filename Value="artica_iso.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="artica_iso"/>
-        <CursorPos X="97" Y="82"/>
-        <TopLine Value="52"/>
+        <CursorPos X="77" Y="29"/>
+        <TopLine Value="5"/>
         <EditorIndex Value="0"/>
         <UsageCount Value="29"/>
         <Loaded Value="True"/>
@@ -44,7 +44,7 @@
         <Filename Value="debian_class.pas"/>
         <UnitName Value="debian_class"/>
         <CursorPos X="119" Y="9"/>
-        <TopLine Value="1"/>
+        <TopLine Value="9"/>
         <EditorIndex Value="2"/>
         <UsageCount Value="13"/>
         <Loaded Value="True"/>
@@ -69,7 +69,7 @@
         <Filename Value="../artica-install/global_conf.pas"/>
         <UnitName Value="global_conf"/>
         <CursorPos X="1" Y="5876"/>
-        <TopLine Value="5842"/>
+        <TopLine Value="5860"/>
         <EditorIndex Value="1"/>
         <UsageCount Value="11"/>
         <Loaded Value="True"/>

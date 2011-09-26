@@ -920,9 +920,11 @@ l.add('libapache2-mod-evasive');
 L.add('libapache2-mod-proxy-html');
 L.add('libapache2-mod-jk');
 L.add('libapache2-mod-geoip');
-L.add('apache2-suexec');
 L.add('libapache2-mod-fcgid');
-
+l.Add('libapache2-mod-perl2');
+l.add('libapache2-mod-log-sql-mysql');
+l.Add('libapache2-mod-log-sql');
+L.add('apache2-suexec');
 l.add('libiodbc2-dev');
 
 //openLdap compilation
@@ -1136,6 +1138,7 @@ if distri.DISTRINAME_CODE='DEBIAN' then begin
         L.add('xtables-addons-common');
         L.add('xtables-addons-source');
         l.add('virt-what');
+        l.add('cgroup-bin');
 
 
 
@@ -1331,7 +1334,7 @@ end;
 
 
 //OCS
-l.Add('libapache2-mod-perl2');
+
 l.Add('libxml-simple-perl');
 l.Add('libcompress-zlib-perl');
 l.Add('libdbi-perl');

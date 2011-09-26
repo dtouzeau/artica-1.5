@@ -27,6 +27,7 @@
 	if(isset($_GET["crossroads-delete"])){crossroads_delete();exit;}
 	
 	
+	if(isset($_POST["delete-system-instance"])){instance_system_delete();exit;}
 	if(isset($_GET["instance-duplicate-form"])){instances_duplicate_form();exit;}
 	if(isset($_GET["add-new-instance"])){instances_duplicate_perform();exit;}
 	if(isset($_GET["status-instance"])){instance_status();exit;}
@@ -77,9 +78,12 @@ function instances_list(){
 		<table style='width:450px' class=form>
 		<tr>
 			<td class=legend valign='middle'>{search}:</td>
-			<td valign='middle'>". Field_text("instances-search",null,"font-size:14px;padding:3px;width:100%",null,null,null,false,
-			"PostfixInstancesSearchCheck(event)")."</td>
+			<td valign='middle'>". Field_text("instances-search",null,"font-size:14px;padding:3px;width:100%",null,null,null,false,"PostfixInstancesSearchCheck(event)")."</td>
 			<td width=1% valign='middle'>". button("{search}","PostfixInstancesSearch()")."</td>
+		</tr>
+		<tr>
+			<td class=legend valign='middle'>{on_system}:</td>
+			<td colspan=2 align='left'>". Field_checkbox("System", 1,0,'PostfixInstancesSearch()')."</td>
 		</tr>
 		</table>
 	</center>
@@ -92,8 +96,10 @@ function instances_list(){
 		
 		
 		function PostfixInstancesSearch(){
+			System=0;
 			var se=escape(document.getElementById('instances-search').value);
-			LoadAjax('instances-list-table','$page?instances-search=yes&search='+se);
+			if(document.getElementById('System').checked){System=1;}else{System=0;}
+			LoadAjax('instances-list-table','$page?instances-search=yes&search='+se+'&System='+System);
 		
 		}
 		
@@ -262,23 +268,13 @@ function instances_search(){
 	$page=CurrentPageName();
 	$ask_perform_operation_delete_item=$tpl->_ENGINE_parse_body("{ask_perform_operation_delete_item}");
 	$duplicate_instance=$tpl->_ENGINE_parse_body("{duplicate_instance}");
-	$sock=new sockets();
-	$search=$_GET["search"];
-	$search="*".$_GET["search"]."*";
-	$search=str_replace("**","*",$search);
-	$search=str_replace("*","%",$search);
+	
 	$sock=new sockets();
 	$DisableNetworksManagement=$sock->GET_INFO("DisableNetworksManagement");
 	if(!is_numeric($DisableNetworksManagement)){$DisableNetworksManagement=0;}
 	$apply_network_configuration_warn=$tpl->javascript_parse_text("{apply_network_configuration_warn}");
 	$ERROR_NO_PRIVS=$tpl->javascript_parse_text("{ERROR_NO_PRIVS}");
-	
-	$sql="SELECT ou, ip_address, `key` , `value` FROM postfix_multi 
-	WHERE (`key` = 'myhostname' AND value LIKE '$search') OR (`key` = 'myhostname' AND ip_address LIKE '$search') ORDER BY value LIMIT 0,50";
-	$q=new mysql();
-	$results=$q->QUERY_SQL($sql,"artica_backup");
-	if(!$q->ok){echo "<H2>$q->mysql_error</H2>";}
-	
+
 	$html="
 	
 	<div style='margin:8px;text-align:right'>". button("{apply_network_configuration}","POSTFIX_MULTI_INSTANCE_APPLY()")."</div>
@@ -292,43 +288,82 @@ function instances_search(){
 		<th colspan=4>&nbsp;</th>
 	</tr>
 </thead>
-<tbody class='tbody'>	
-	";
+<tbody class='tbody'>";	
+	
 	$c=0;
-	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){	
-	if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
-	if($ligne["ou"]==null){$textou="&nbsp;";}else{$textou=$ligne["ou"];}
-	
-	
-	
-	$instances[$c]=$ligne["value"];
-	
-	$strlen=strlen($ligne["value"]);
-	if($strlen>33){$hostname_text=substr($ligne["value"],0,33)."...";}else{$hostname_text=$ligne["value"];}
-	
-	$href="<a href=\"javascript:blur();\" OnClick=\"javascript:YahooWin('650','domains.postfix.multi.config.php?ou={$ligne["ou"]}&hostname={$ligne["value"]}','{$ligne["value"]}');\" style='font-size:14px;text-decoration:underline'>";
-	
-	$html=$html."
-	
-	
-	<tr  class=$classtr>
-	<td style='font-size:14px;font-weight:bold'><img src=img/fw_bold.gif></td>
-	<td style='font-size:14px;font-weight:bold'>$href$hostname_text</a></td>
-	<td style='font-size:14px;font-weight:bold'>$href$textou</a></td>
-	<td style='font-size:14px;font-weight:bold'>$href{$ligne["ip_address"]}</a></td>
-	<td style='font-size:14px;font-weight:bold'><span id='status-instance-$c'><img src='img/ok32-grey.png'><span></td>
-	<td width=1%>". imgtootltip("32-plus.png","{create_new_instance_based_on_this_instance}","DuplicateInstance('{$ligne["value"]}')")."</td>
-	<td width=1%>". imgtootltip("delete-24.png","{delete}","POSTFIX_MULTI_INSTANCE_INFOS_DEL('{$ligne["ou"]}','{$ligne["ip_address"]}')")."</td>
-	</tR>";
-	$c++;
+	if($_GET["System"]==0){
+			$search=$_GET["search"];
+			$search="*".$_GET["search"]."*";
+			$search=str_replace("**","*",$search);
+			$search=str_replace("*","%",$search);
+		
+			$sql="SELECT ou, ip_address, `key` , `value` FROM postfix_multi 
+			WHERE (`key` = 'myhostname' AND value LIKE '$search') OR (`key` = 'myhostname' AND ip_address LIKE '$search') ORDER BY value LIMIT 0,50";
+			$q=new mysql();
+		$results=$q->QUERY_SQL($sql,"artica_backup");
+			if(!$q->ok){echo "<H2>$q->mysql_error</H2>";}
+		
+		
+		
+		
+		while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){	
+		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
+		if($ligne["ou"]==null){$textou="&nbsp;";}else{$textou=$ligne["ou"];}
+		$instances[$c]=$ligne["value"];
+		$strlen=strlen($ligne["value"]);
+		if($strlen>33){$hostname_text=substr($ligne["value"],0,33)."...";}else{$hostname_text=$ligne["value"];}
+		
+		$href="<a href=\"javascript:blur();\" OnClick=\"javascript:YahooWin('650','domains.postfix.multi.config.php?ou={$ligne["ou"]}&hostname={$ligne["value"]}','{$ligne["value"]}');\" style='font-size:14px;text-decoration:underline'>";
+		
+		$html=$html."
+		
+		
+		<tr  class=$classtr>
+		<td style='font-size:14px;font-weight:bold'><img src=img/fw_bold.gif></td>
+		<td style='font-size:14px;font-weight:bold'>$href$hostname_text</a></td>
+		<td style='font-size:14px;font-weight:bold'>$href$textou</a></td>
+		<td style='font-size:14px;font-weight:bold'>$href{$ligne["ip_address"]}</a></td>
+		<td style='font-size:14px;font-weight:bold'><span id='status-instance-$c'><img src='img/ok32-grey.png'><span></td>
+		<td width=1%>". imgtootltip("32-plus.png","{create_new_instance_based_on_this_instance}","DuplicateInstance('{$ligne["value"]}')")."</td>
+		<td width=1%>". imgtootltip("delete-24.png","{delete}","POSTFIX_MULTI_INSTANCE_INFOS_DEL('{$ligne["ou"]}','{$ligne["ip_address"]}')")."</td>
+		</tR>";
+		$c++;
+		}
+		
+		
+	}else{
+		$sock=new sockets();
+		$search=$_GET["search"];
+		$Datas=unserialize(base64_decode($sock->getFrameWork("postfix.php?postfix-instances-list=yes&search=".urlencode($search))));
+		while (list ($num, $ligne2) = each ($Datas) ){
+			if(!preg_match("#^postfix-(.+?)\s+-#", trim($ligne2),$re)){continue;}
+			$ligne["value"]=trim($re[1]);
+			if($ligne["value"]=="-"){continue;}
+			$instances[$c]=$ligne["value"];
+			$strlen=strlen($ligne["value"]);
+			if($strlen>33){$hostname_text=substr($ligne["value"],0,33)."...";}else{$hostname_text=$ligne["value"];}
+			if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
+			$html=$html."
+			<tr  class=$classtr>
+				<td style='font-size:14px;font-weight:bold'><img src=img/fw_bold.gif></td>
+				<td style='font-size:14px;font-weight:bold'>$href$hostname_text</a></td>
+				<td style='font-size:14px;font-weight:bold'>-</a></td>
+				<td style='font-size:14px;font-weight:bold'>-</a></td>
+				<td style='font-size:14px;font-weight:bold'><span id='status-instance-$c'><img src='img/ok32-grey.png'><span></td>
+				<td width=1%>-</td>
+				<td width=1%>". imgtootltip("delete-24.png","{delete}","POSTFIX_MULTI_INSTANCE_SYSTEM_DEL('{$ligne["value"]}')")."</td>
+			</tR>";
+		$c++;			
+			
+			
+			
+		}
+		
+		
 	}
 	
 	$instances=urlencode(base64_encode(serialize($instances)));
-	$html=$html."
-	
-	
-	</table>
-	
+	$html=$html."</table>
 	<script>
 	var X_POSTFIX_MULTI_INSTANCE_INFOS_DEL= function (obj) {
 	 var results=obj.responseText;
@@ -345,6 +380,16 @@ function instances_search(){
 				document.getElementById('instances-list-table').innerHTML='<center><img src=img/wait_verybig.gif></center>';
 				XHR.sendAndLoad('$page', 'GET',X_POSTFIX_MULTI_INSTANCE_INFOS_DEL);	
 		}
+	
+	}
+	
+	function POSTFIX_MULTI_INSTANCE_SYSTEM_DEL(hostname){
+		if(confirm('$ask_perform_operation_delete_item\\n'+hostname)){
+				var XHR = new XHRConnection();
+				XHR.appendData('delete-system-instance',hostname);
+				document.getElementById('instances-list-table').innerHTML='<center><img src=img/wait_verybig.gif></center>';
+				XHR.sendAndLoad('$page', 'POST',X_POSTFIX_MULTI_INSTANCE_INFOS_DEL);	
+		}	
 	
 	}
 	
@@ -382,6 +427,22 @@ function instances_search(){
 	$tpl=new templates();
 	echo $tpl->_ENGINE_parse_body($html);		
 }
+
+function instance_system_delete(){
+	$instance=$_POST["delete-system-instance"];
+	$main=new maincf_multi($instance);
+	$ip=$main->ip_addr;
+	if($ip<>null){
+		$sql="DELETE FROM postfix_multi WHERE ip_address='$ip'";
+		$q=new mysql();
+		$results=$q->QUERY_SQL($sql,"artica_backup");		
+	}
+	$sock=new sockets();
+	$sock->getFrameWork("postfix.php?instance-delete=$instance");
+	
+}
+
+
 	
 function instance_delete(){
 	$sql="DELETE FROM postfix_multi WHERE ou='{$_GET["ou"]}' AND ip_address='{$_GET["ip"]}'";
@@ -400,9 +461,12 @@ $page=CurrentPageName();
 if($hostnames[$int]==null){die();}
 $sock=new sockets();
 $stat=unserialize(base64_decode($sock->getFrameWork("cmd.php?postfix-mutli-stat={$hostnames[$int]}")));
+$log="<!-- $int: {$hostnames[$int]} stat:{$stat[0]} -->";
 $int=$int+1;
 if($stat[0]==1){$img="ok32.png";}else{$img="okdanger32.png";}
 $nextjs="
+$log
+
 <script>
 	function StatusInstance$int(){
 		LoadAjaxHidden('status-instance-$int','$page?status-instance=$int&hostnames=". urlencode($_GET["hostnames"])."');

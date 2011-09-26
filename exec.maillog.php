@@ -94,6 +94,10 @@ $buffer=trim($buffer);
 if($buffer==null){return null;}
 
 if(is_file("/var/log/artica-postfix/smtp-hack-reconfigure")){smtp_hack_reconfigure();}
+
+if(strpos($buffer,"Do you need to run 'sa-update'?")>0){amavis_sa_update($buffer);return;}
+if(strpos($buffer,"Passed CLEAN {AcceptedOpenRelay}")>0){return;} 
+if(strpos($buffer,"Valid PID file (")>0){return;} 
 if(strpos($buffer,"]: SA dbg:")>0){return;} 
 if(strpos($buffer,") SA dbg:")>0){return;} 
 if(strpos($buffer,"enabling PIX workarounds: disable_esmtp delay_dotcrlf")>0){return;} 
@@ -125,6 +129,10 @@ if(strpos($buffer,") policy protocol:")>0){return;}
 if(strpos($buffer,"]: policy protocol:")>0){return;} 
 if(strpos($buffer,") run_av (ClamAV-clamd)")>0){return;}
 if(strpos($buffer,"Net::Server: Process Backgrounded")>0){return;}
+if(strpos($buffer,"Net::Server:")>0){return;}
+if(strpos($buffer,"user=postfix, EUID:")>0){return;}
+if(strpos($buffer,"No \$altermime,")>0){return;}
+if(strpos($buffer,"starting. /usr/local/sbin/amavisd")>0){return;}
 if(strpos($buffer,"initializing Mail::SpamAssassin")>0){return;}
 if(strpos($buffer,"Net::Server: Binding to UNIX socket file")>0){return;}
 if(strpos($buffer,"SpamControl: init_pre_chroot on SpamAssassin done")>0){return;}
@@ -3644,6 +3652,22 @@ function postfix_is_amavis_port($portToCheck){
 	}
 	
 	return false;
+}
+
+function amavis_sa_update($buffer){
+	$unix=new unix();
+	$php=$unix->LOCATE_PHP5_BIN();
+	$nohup=$unix->find_program("nohup");
+	$cmd="$nohup $php /usr/share/artica-postfix/exec.spamassassin.php --sa-update >/dev/null 2>&1 &";
+	
+	$file="/etc/artica-postfix/pids/".__FUNCTION__.".error.time";
+	if(file_time_min($file)<15){events("-> detected $buffer, need to wait 15mn");return null;}	
+	@unlink($file);
+	@file_put_contents($file,"#");	
+	shell_exec(trim($cmd));
+	events("$cmd");
+	return;			
+	
 }
 
  

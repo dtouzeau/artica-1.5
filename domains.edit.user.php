@@ -40,12 +40,14 @@ if(isset($_GET["userid-warning"])){AJAX_USER_WARNING();exit;}
 
 if(isset($_GET["ComputerMacAddressFindUid"])){COMPUTER_CHECK_MAC();exit;}
 
+if(isset($_REQUEST["ChangeUserPasswordSave"])){USER_CHANGE_PASSWORD_SAVE();exit ();}
+
 if ($modify_user == 0) {
 	die ( 'No permissions ' . $_SESSION ["uid"] . "\nchange_aliases=$usersprivs->AllowEditAliases\n" );
 }
 
 if(isset($_GET["ChangeUserPassword"])){USER_CHANGE_PASSWORD();exit ();}
-if(isset($_REQUEST["ChangeUserPasswordSave"])){USER_CHANGE_PASSWORD_SAVE();exit ();}
+
 if(isset($_GET["UserChangeEmailAddr"])){USER_CHANGE_EMAIL ();exit ();}
 if(isset($_GET["UserChangeEmailAddrSave"])){USER_CHANGE_EMAIL_SAVE ();exit ();}
 if(isset($_GET["zarafa-mailbox-edit"])){ZARAFA_MAILBOX_EDIT_JS ();exit ();}
@@ -2393,9 +2395,15 @@ function USER_SENDER_PARAM($userid) {
 }
 
 function USER_CHANGE_PASSWORD_SAVE() {
-	
 	$priv = new usersMenus ( );
-	if (! $priv->AllowChangeUserPassword && ! $priv->AllowAddUsers) {
+	$allowed=false;
+	if($priv->AllowChangeUserPassword){$allowed=true;}
+	if($priv->AllowAddUsers){$allowed=true;}
+	if(!$priv->AllowAddUsers){if($_REQUEST["uid"]<>$_SESSION["uid"]){$allowed=false;}}
+	
+	
+	
+	if (!$allowed) {
 		$tpl = new templates ( );
 		echo $tpl->javascript_parse_text('{ERROR_NO_PRIVS}' );
 		die ();
@@ -4226,18 +4234,21 @@ function USER_GROUP($userid) {
 }
 
 function USER_GROUP_LIST($userid) {
-	if (substr ( $userid, strlen ( $userid ) - 1, 1 ) == '$') {
-		$users = new computers ( $userid );
-	} else {
-		$users = new user ( $userid );
-	}
+	if (substr ( $userid, strlen ( $userid ) - 1, 1 ) == '$') {$users = new computers ( $userid );} else {$users = new user ( $userid );}
 	$ou = $users->ou;
 	$groups = $users->Groups_list();
 	$priv = new usersMenus ( );
 	$sambagroups = array ("515" => true, "548" => true, "544" => true, "551" => true, "512" => true, "514" => true, "513" => true, 550 => true, 552 => true );
 	if (is_array ( $groups )) {
-		$gp = "
-		<table style='width:300px' class=table_form>";
+	$gp="<center>
+<table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
+<thead class='thead'>
+	<tr>
+		<th width=1%>&nbsp;</th>
+		<th colspan=3>{groups}</th>
+	</tr>
+</thead>
+<tbody class='tbody'>";	
 		while ( list ( $num, $ligne ) = each ( $groups ) ) {
 			$delete = imgtootltip ( '32-group-delete-icon.png', '{DISCONNECT_FROM_GROUP} ' . $ligne, "DeleteUserGroup($num,'$userid')" );
 			$privileges = imgtootltip ( "members-priv-32.png", '{privileges}', "Loadjs('domains.edit.group.php?GroupPrivilegesjs=$num')" );
@@ -4248,30 +4259,26 @@ function USER_GROUP_LIST($userid) {
 			}
 			
 			if(!is_numeric($num)){$num=urlencode($num);}
-			
-			
 			$groupjs = "Loadjs('domains.edit.group.php?ou=$ou&js=yes&group-id=$num')";
 			
-			if ($sambagroups [$ligne]) {
-				$privileges = null;
-				$groupjs = null;
-			}
+			if ($sambagroups [$ligne]) {$privileges = null;$groupjs = null;}
 			
-			if ($priv->AllowAddUsers == false) {
-				$delete = "&nbsp;";
-				$groupjs = null;
-			}
+			if ($priv->AllowAddUsers == false) {$delete = "&nbsp;";$groupjs = null;}
+			
+			if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
 			$gp = $gp . "
-			<tr " . CellRollOver () . ">
+			<tr class=$classtr>
 			<td width=1%><img src='img/32-group-icon.png'></td>
-			<td valign='middle' style='font-size:15px;font-weight:bold' " . CellRollOver ( $groupjs ) . ">$ligne</a></td>
+			<td valign='middle' style='font-size:15px;font-weight:bold'><a href=\"javascript:blur();\" OnClick=\"javascript:$groupjs\" style='font-size:15px;font-weight:bold;text-decoration:underline'>$ligne</a></td>
 			<td valign='middle' width=1%>$privileges</td>
 			<td width=1% valign='top'>$delete</td>
 			</tr>";
 		
 		}
 		
-		$gp = $gp . "</table>";
+		$gp = $gp . "
+		</tbody>
+		</table>";
 	}
 	$tpl = new templates ( );
 	return $tpl->_ENGINE_parse_body ( $gp );

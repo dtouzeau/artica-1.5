@@ -24,6 +24,9 @@ private
      function PID_NUM():string;
      function BuildCommandLIneTUN():string;
      function INVESTIGATE():boolean;
+     procedure CHANGE_CERTIFICATE_CONFIG(CertificatePath:string;key:string;value:string);
+     procedure CHANGE_ADD_CERTIFICATE_CONFIG(CertificatePath:string;key:string;value:string;master_key:string);
+     function  GET_CERTIFICATE_INFO(key:string):string;
 public
     procedure   Free;
     constructor Create(const zSYS:Tsystem);
@@ -289,15 +292,17 @@ end;
 //##############################################################################
 procedure topenvpn.BuildCertificate();
 var
-ini:TiniFile;
 l:TstringList;
 server_name,cmd:string;
 RegExpr:TRegExpr;
 i:integer;
 pass:string;
+OpenVPNConfigFile:String;
+KEY_COUNTRY:string;
+KEY_PROVINCE,KEY_CITY,KEY_ORG,KEY_EMAIL:string;
 begin
   VerifConfig();
-  ini:=TiniFile.Create('/etc/artica-postfix/settings/Daemons/ArticaOpenVPNSettings');
+
   l:=TstringList.Create;
   server_name:=UpperCase(SYS.HOSTNAME_g());
   RegExpr:=TRegExpr.Create;
@@ -310,10 +315,23 @@ begin
      exit;
   end;
 
-  if SYS.COMMANDLINE_PARAMETERS('--rebuild') then begin
-     fpsystem('/bin/rm /etc/artica-postfix/openvpn/keys/*');
-  end;
+  if SYS.COMMANDLINE_PARAMETERS('--rebuild') then fpsystem('/bin/rm /etc/artica-postfix/openvpn/keys/*');
+
 SetCurrentDir('/etc/artica-postfix/openvpn');
+KEY_COUNTRY:=GET_CERTIFICATE_INFO('countryName_value');
+KEY_PROVINCE:=GET_CERTIFICATE_INFO('stateOrProvinceName_value');
+KEY_CITY:=GET_CERTIFICATE_INFO('localityName_value');
+KEY_ORG:=GET_CERTIFICATE_INFO('organizationName_value');
+KEY_EMAIL:=GET_CERTIFICATE_INFO('emailAddress_value');
+
+
+
+if length(KEY_PROVINCE)=0 then KEY_PROVINCE:='CA';
+if length(KEY_COUNTRY)=0 then KEY_COUNTRY:='US';
+if length(KEY_CITY)=0 then KEY_CITY:='SanFrancisco';
+if length(KEY_ORG)=0 then KEY_ORG:='Fort-fuston';
+if length(KEY_EMAIL)=0 then KEY_EMAIL:='me@localhost.localdomain';
+
 l.add('export EASY_RSA="/etc/artica-postfix/openvpn"');
 l.add('export OPENSSL="openssl"');
 l.add('export PKCS11TOOL="pkcs11-tool"');
@@ -325,11 +343,11 @@ l.add('export PKCS11_PIN="dummy"');
 l.add('export KEY_SIZE=1024');
 l.add('export CA_EXPIRE=3650');
 l.add('export KEY_EXPIRE=3650');
-l.add('export KEY_COUNTRY="'+ ini.ReadString('GLOBAL','KEY_COUNTRY','US')+'"');
-l.add('export KEY_PROVINCE="'+ ini.ReadString('GLOBAL','KEY_PROVINCE','CA')+'"');
-l.add('export KEY_CITY="'+ ini.ReadString('GLOBAL','KEY_CITY','SanFrancisco')+'"');
-l.add('export KEY_ORG="'+ ini.ReadString('GLOBAL','KEY_ORG','Fort-fuston')+'"');
-l.add('export KEY_EMAIL="'+ ini.ReadString('GLOBAL','KEY_EMAIL','me@localhost.localdomain')+'"');
+l.add('export KEY_COUNTRY="'+ KEY_COUNTRY+'"');
+l.add('export KEY_PROVINCE="'+ KEY_PROVINCE+'"');
+l.add('export KEY_CITY="'+KEY_CITY+'"');
+l.add('export KEY_ORG="'+KEY_ORG+'"');
+l.add('export KEY_EMAIL="'+ KEY_EMAIL+'"');
 try
 l.SaveToFile('/etc/artica-postfix/openvpn/vars');
 except
@@ -342,6 +360,9 @@ for i:=0 to l.Count-1 do begin
 end;
 
 forceDirectories('/etc/artica-postfix/openvpn/keys');
+
+
+
 
 l.Clear;
 l.add('# For use with easy-rsa version 2.0');
@@ -404,23 +425,23 @@ l.add('string_mask='+chr(9)+'nombstr');
 l.add('');
 l.add('[ req_distinguished_name ]');
 l.add('countryName='+chr(9)+'Country Name (2 letter code)');
-l.add('countryName_default='+chr(9)+ini.ReadString('GLOBAL','KEY_COUNTRY','US'));
+l.add('countryName_default='+chr(9)+KEY_COUNTRY);
 l.add('countryName_min='+chr(9)+'2');
 l.add('countryName_max='+chr(9)+'2');
 l.add('stateOrProvinceName='+chr(9)+'State or Province Name (full name)');
-l.add('stateOrProvinceName_default='+chr(9)+ini.ReadString('GLOBAL','KEY_PROVINCE','CA'));
+l.add('stateOrProvinceName_default='+chr(9)+KEY_PROVINCE);
 l.add('localityName='+chr(9)+'Locality Name (eg, city)');
-l.add('localityName_default='+chr(9)+ini.ReadString('GLOBAL','KEY_CITY','SanFrancisco'));
+l.add('localityName_default='+chr(9)+KEY_CITY);
 l.add('0.organizationName='+chr(9)+'Organization Name (eg, company)');
-l.add('0.organizationName_default='+chr(9)+ini.ReadString('GLOBAL','KEY_ORG','Fort-fuston'));
+l.add('0.organizationName_default='+chr(9)+KEY_ORG);
 l.add('organizationalUnitName='+chr(9)+'Organizational Unit Name (eg, section)');
 l.add('commonName='+chr(9)+'Common Name (eg, your name or your server\''s hostname)');
 l.add('commonName_max='+chr(9)+'64');
 l.add('emailAddress='+chr(9)+'Email Address');
-l.add('emailAddress_default='+chr(9)+ini.ReadString('GLOBAL','KEY_EMAIL','me@localhost.localdomain'));
+l.add('emailAddress_default='+chr(9)+KEY_EMAIL);
 l.add('emailAddress_max='+chr(9)+'40');
-l.add('organizationalUnitName_default='+chr(9)+ini.ReadString('GLOBAL','KEY_ORG','Fort-fuston'));
-l.add('commonName_default='+chr(9)+ini.ReadString('GLOBAL','KEY_ORG','Fort-fuston')+' CA');
+l.add('organizationalUnitName_default='+chr(9)+KEY_ORG);
+l.add('commonName_default='+chr(9)+KEY_ORG);
 l.add('[ req_attributes ]');
 l.add('challengePassword='+chr(9)+'A challenge password');
 l.add('challengePassword_min='+chr(9)+'4');
@@ -490,13 +511,18 @@ end else begin
     logs.DebugLogs('Starting......: OpenVPN serial OK');
 end;
 
+OpenVPNConfigFile:='/etc/artica-postfix/openvpn/openssl.cnf';
+
+
+
+
 
 if not FileExists('/etc/artica-postfix/openvpn/keys/ca.key') then begin
    //openssl req -new -x509 -keyout ca.key -out ca.crt -config /etc/artica-postfix/openvpn/openssl.cnf
    //old 1:openssl req -batch -days 3650 -nodes -new -newkey rsa:1024 -sha1 -x509 -keyout "/etc/artica-postfix/openvpn/keys/ca.key" -out "/etc/artica-postfix/openvpn/keys/ca.crt" -config /etc/artica-postfix/openvpn/openssl.cnf
    // example :openssl req -days 3650 -nodes -new -keyout $1.key -out $1.csr -extensions server -config
 
-   cmd:='openssl req -new -x509 -keyout /etc/artica-postfix/openvpn/keys/ca.key -out /etc/artica-postfix/openvpn/keys/ca.crt -config /etc/artica-postfix/openvpn/openssl.cnf -passout pass:'+pass+' -batch -days 3650';
+   cmd:='openssl req -new -x509 -keyout /etc/artica-postfix/openvpn/keys/ca.key -out /etc/artica-postfix/openvpn/keys/ca.crt -config '+OpenVPNConfigFile+' -passout pass:'+pass+' -batch -days 3650';
    fpsystem(cmd);
    logs.Debuglogs(cmd);
 end else begin
@@ -504,7 +530,7 @@ end else begin
 end;
 
 if not FileExists('/etc/artica-postfix/openvpn/keys/openvpn-ca.key') then begin
-   cmd:='openssl req -new -batch -keyout /etc/artica-postfix/openvpn/keys/openvpn-ca.key -out /etc/artica-postfix/openvpn/keys/openvpn-ca.csr -config /etc/artica-postfix/openvpn/openssl.cnf -passout pass:'+pass;
+   cmd:='openssl req -new -batch -keyout /etc/artica-postfix/openvpn/keys/openvpn-ca.key -out /etc/artica-postfix/openvpn/keys/openvpn-ca.csr -config '+OpenVPNConfigFile+' -passout pass:'+pass;
    logs.Debuglogs(cmd);
    fpsystem(cmd);
 
@@ -514,7 +540,7 @@ end else begin
 end;
 
 if not FileExists('/etc/artica-postfix/openvpn/keys/openvpn-ca.crt') then begin
-   cmd:='openssl ca -extensions v3_ca -days 3650 -out /etc/artica-postfix/openvpn/keys/openvpn-ca.crt -in /etc/artica-postfix/openvpn/keys/openvpn-ca.csr -batch -config /etc/artica-postfix/openvpn/openssl.cnf -passin pass:'+pass;
+   cmd:='openssl ca -extensions v3_ca -days 3650 -out /etc/artica-postfix/openvpn/keys/openvpn-ca.crt -in /etc/artica-postfix/openvpn/keys/openvpn-ca.csr -batch -config '+OpenVPNConfigFile+' -passin pass:'+pass;
    logs.Debuglogs(cmd);
    fpsystem(cmd);
 
@@ -525,7 +551,7 @@ end;
 fpsystem('/bin/cat /etc/artica-postfix/openvpn/keys/ca.crt /etc/artica-postfix/openvpn/keys/openvpn-ca.crt > /etc/artica-postfix/openvpn/keys/allca.crt');
 
 if not FileExists('/etc/artica-postfix/openvpn/keys/vpn-server.key') then begin
-   cmd:='openssl req -nodes -new -keyout /etc/artica-postfix/openvpn/keys/vpn-server.key -out /etc/artica-postfix/openvpn/keys/vpn-server.csr -batch -config /etc/artica-postfix/openvpn/openssl.cnf';
+   cmd:='openssl req -nodes -new -keyout /etc/artica-postfix/openvpn/keys/vpn-server.key -out /etc/artica-postfix/openvpn/keys/vpn-server.csr -batch -config '+OpenVPNConfigFile;
    logs.Debuglogs(cmd);
    fpsystem(cmd);
 
@@ -537,7 +563,7 @@ if not FileExists('/etc/artica-postfix/openvpn/keys/vpn-server.crt') then begin
    fpsystem('/bin/rm /etc/artica-postfix/openvpn/keys/index.txt');
    fpsystem('/bin/touch /etc/artica-postfix/openvpn/keys/index.txt');
    cmd:='openssl ca -keyfile /etc/artica-postfix/openvpn/keys/openvpn-ca.key -cert /etc/artica-postfix/openvpn/keys/openvpn-ca.crt -out /etc/artica-postfix/openvpn/keys/vpn-server.crt';
-   cmd:=cmd+' -in /etc/artica-postfix/openvpn/keys/vpn-server.csr -extensions server -batch -config /etc/artica-postfix/openvpn/openssl.cnf -passin pass:'+pass;
+   cmd:=cmd+' -in /etc/artica-postfix/openvpn/keys/vpn-server.csr -extensions server -batch -config '+OpenVPNConfigFile+' -passin pass:'+pass;
    logs.Debuglogs(cmd);
    fpsystem(cmd);
 
@@ -616,6 +642,111 @@ end;
 end;
 
 //#########################################################################################
+function topenvpn.GET_CERTIFICATE_INFO(key:string):string;
+var
+   l:TstringList;
+   RegExpr:TRegExpr;
+   i:integer;
+   chg:boolean;
+begin
+    if not FileExists('/etc/artica-postfix/ssl.certificate.conf') then exit;
+    l:=Tstringlist.Create;
+    l.LoadFromFile('/etc/artica-postfix/ssl.certificate.conf');
+    chg:=false;
+    RegExpr:=TRegExpr.Create;
+    RegExpr.Expression:='^'+key+'.*?=(.+)';
+    for i:=0 to l.Count-1 do begin
+         if RegExpr.Exec(l.Strings[i]) then begin
+             logs.DebugLogs('Starting......: OpenVPN '+key+' '+RegExpr.Match[1]+' in line '+IntTostr(i));
+             result:=trim(RegExpr.Match[1]);
+             break;
+         end;
+
+    end;
+
+
+    l.free;
+    RegExpr.free;
+end;
+//#########################################################################################
+procedure topenvpn.CHANGE_CERTIFICATE_CONFIG(CertificatePath:string;key:string;value:string);
+var
+   l:TstringList;
+   RegExpr:TRegExpr;
+   i:integer;
+   chg:boolean;
+begin
+    l:=Tstringlist.Create;
+    l.LoadFromFile(CertificatePath);
+    chg:=false;
+    RegExpr:=TRegExpr.Create;
+    RegExpr.Expression:='^'+key+'=';
+    for i:=0 to l.Count-1 do begin
+         if RegExpr.Exec(l.Strings[i]) then begin
+              l.Strings[i]:=key+'='+value;
+             logs.DebugLogs('Starting......: OpenVPN change value '+key+' in line '+IntTostr(i));
+             chg:=true;
+         end;
+
+    end;
+
+    if chg then logs.WriteToFile(l.Text,CertificatePath);
+    l.free;
+    RegExpr.free;
+
+end;
+//#########################################################################################
+procedure topenvpn.CHANGE_ADD_CERTIFICATE_CONFIG(CertificatePath:string;key:string;value:string;master_key:string);
+var
+   l:TstringList;
+   RegExpr:TRegExpr;
+   i:integer;
+   mKeyF:boolean;
+   chg:boolean;
+begin
+    l:=Tstringlist.Create;
+    l.LoadFromFile(CertificatePath);
+    chg:=false;
+    RegExpr:=TRegExpr.Create;
+    mKeyF:=false;
+    for i:=0 to l.Count-1 do begin
+         RegExpr.Expression:='\[.*?'+master_key;
+
+         if RegExpr.Exec(l.Strings[i]) then begin
+           mKeyF:=true;
+           continue;
+         end;
+
+          if mKeyF then begin
+              RegExpr.Expression:='\[';
+              if RegExpr.Exec(l.Strings[i]) then begin
+                 logs.DebugLogs('Starting......: OpenVPN add value '+key+' in line '+IntTostr(i-1));
+                 l.Insert(i-1,key+'='+value);
+                 chg:=true;
+                 break;
+              end;
+          end;
+
+         if mKeyF then begin
+            RegExpr.Expression:='^'+key+'=';
+            if RegExpr.Exec(l.Strings[i]) then begin
+              l.Strings[i]:=key+'='+value;
+              logs.DebugLogs('Starting......: OpenVPN change value '+key+' in line '+IntTostr(i));
+              chg:=true;
+              break;
+            end;
+         end;
+    end;
+
+    if chg then logs.WriteToFile(l.Text,CertificatePath);
+    l.free;
+    RegExpr.free;
+
+end;
+//#########################################################################################
+
+
+
 procedure topenvpn.CREATE_BRIDGE();
 var
 brctl:string;

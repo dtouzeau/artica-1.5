@@ -10,7 +10,22 @@ if(isset($_GET["is-client-running"])){vpn_client_running();exit;}
 if(isset($_GET["client-events"])){vpn_client_events();exit;}
 if(isset($_GET["client-reconnect"])){vpn_client_hup();exit;}
 if(isset($_GET["client-reconfigure"])){vpn_client_reconfigure();exit;}
+if(isset($_GET["certificate-infos"])){certificate_infos();}
 
+function certificate_infos(){
+	$unix=new unix();
+	$openssl=$unix->find_program("openssl");
+	$l=$unix->FILE_TEMP();
+	$cmd="$openssl x509 -in /etc/artica-postfix/openvpn/keys/vpn-server.key -text -noout >$l 2>&1";
+	
+	if($cmd<>null){
+		shell_exec($cmd);
+		$datas=explode("\n",@file_get_contents($l));
+		writelogs_framework($cmd." =".count($datas)." rows",__FUNCTION__,__FILE__,__LINE__);
+		@unlink($l);
+	}
+	echo "<articadatascgi>". base64_encode(serialize($datas))."</articadatascgi>";
+}
 
 
 function RestartClients(){
@@ -93,6 +108,10 @@ function BuildWindowsClient(){
 	
 	if(!ChangeCommonName($commonname)){exit;}
 	if(is_file($zipfile)){@unlink($zipfile);}
+	
+	$config_path="/etc/artica-postfix/openvpn/openssl.cnf";
+	//if(is_file("/etc/artica-postfix/ssl.certificate.conf")){$config_path="/etc/artica-postfix/ssl.certificate.conf";}
+	
        
     chdir('/etc/artica-postfix/openvpn');
     $filetemp=$unix->FILE_TEMP();
@@ -107,20 +126,27 @@ function BuildWindowsClient(){
     	echo "keyout: $workingDir/$commonname.key\n";
     	echo "Keyfile: /etc/artica-postfix/openvpn/keys/openvpn-ca.key\n";
     	echo "/etc/artica-postfix/openvpn/keys/openvpn-ca.crt\n";
-    	echo "config: /etc/artica-postfix/openvpn/openssl.cnf\n";
+    	echo "config: $ssl_config_path\n";
     	echo "$workingDir/$commonname.csr\n";
     	
     }
     
+    $cmd="echo 01 > /etc/artica-postfix/openvpn/keys/serial";
+    $CMDLOGS[]=$cmd;
+	shell_exec("$cmd");       
+	echo @file_get_contents($filetemp);
     
-    $config_path="/etc/artica-postfix/openvpn/openssl.cnf";
-    
-    $cmd="openssl req -batch -days 3650 -nodes -new -newkey rsa:1024 -keyout \"$workingDir/$commonname.key\" -out \"$workingDir/$commonname.csr\" -config \"/etc/artica-postfix/openvpn/openssl.cnf\"";   
+    $cmd="openssl req -batch -days 3650 -nodes -new -newkey rsa:1024 -keyout \"$workingDir/$commonname.key\" -out \"$workingDir/$commonname.csr\" -config \"$ssl_config_path\"";   
     $cmd="openssl req -nodes -new -keyout \"$workingDir/$commonname.key\" -out \"$workingDir/$commonname.csr\" -batch -config $config_path";
     
+    
+    
     if($GLOBALS["VERBOSE"]){echo "$cmd\n";}else{echo substr($cmd,0,60)."...\n";}
-	shell_exec("$cmd >$filetemp 2>&1");       
-	echo @file_get_contents($filetemp);
+    $CMDLOGS[]=$cmd;
+	exec("$cmd 2>&1",$results);
+	while (list ($num, $ligne) = each ($results) ){echo $ligne."\n";$CMDLOGS[]=$ligne;}
+	       
+	
 	
 	$server_ca="/etc/artica-postfix/openvpn/keys/openvpn-ca.key";
 	//$server_ca="/etc/artica-postfix/openvpn/keys/vpn-server.key";
@@ -128,12 +154,15 @@ function BuildWindowsClient(){
 	//$servercert="/etc/artica-postfix/openvpn/keys/vpn-server.crt";
 	
 	
-	$cmd="openssl ca -batch -days 3650 -out \"$workingDir/$commonname.crt\" -in \"$workingDir/$commonname.csr\" -md sha1 -config \"/etc/artica-postfix/openvpn/openssl.cnf\"";
+	$cmd="openssl ca -batch -days 3650 -out \"$workingDir/$commonname.crt\" -in \"$workingDir/$commonname.csr\" -md sha1 -config \"$config_path\"";
 	$cmd="openssl ca -keyfile $server_ca -cert $servercert";
 	$cmd=$cmd." -out \"$workingDir/$commonname.crt\" -in \"$workingDir/$commonname.csr\" -batch -config $config_path  -passin pass:$password";
 	
 	if($GLOBALS["VERBOSE"]){echo "$cmd\n";}else{echo substr($cmd,0,60)."...\n";}
-	shell_exec("$cmd >$filetemp 2>&1");   
+	$CMDLOGS[]=$cmd;$results=array();
+	exec("$cmd 2>&1",$results);
+	while (list ($num, $ligne) = each ($results) ){echo $ligne."\n";$CMDLOGS[]=$ligne;}
+	   
 	echo @file_get_contents($filetemp);
 	  $mycurrentdir=getcwd();
 	  chdir($workingDir);
@@ -143,6 +172,7 @@ function BuildWindowsClient(){
       
       $cmd=$cmd. " $commonname.crt $commonname.csr $commonname.key $commonname.ovpn $commonname-ca.crt password >$filetemp 2>&1";;
 	  if($GLOBALS["VERBOSE"]){echo "$cmd\n";}else{echo substr($cmd,0,60)."...\n";}
+	  $CMDLOGS[]=$cmd;
       shell_exec($cmd);
       chdir($mycurrentdir);
       echo @file_get_contents($filetemp);
@@ -159,6 +189,7 @@ function BuildWindowsClient(){
     echo "{success} !!!\n";
     echo "----------------------------------\n";
 	echo "</articadatascgi>";
+	@file_put_contents("/root/openss.cmds", @implode("\n", $CMDLOGS));
 }
 
 

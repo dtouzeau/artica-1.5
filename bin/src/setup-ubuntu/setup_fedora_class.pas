@@ -77,6 +77,14 @@ begin
     end;
 
 
+    if not FileExists('/tmp/iptables_stopped') then begin
+       if FileExists('/etc/init.d/iptables') then begin
+          fpsystem('/etc/init.d/iptables stop');
+          fpsystem('chkconfig iptables off');
+          fpsystem('touch /tmp/iptables_stopped');
+       end;
+    end;
+
 
     writeln('Checking.............: system...');
     writeln('Checking.............: SeLinux...');

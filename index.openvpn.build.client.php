@@ -34,6 +34,7 @@ function popup(){
 	$os["windows2003"]="Windows 2003/7";
 	$os["linux"]="Linux";
 	$os["mac"]="OS X 10.4, 10.5, 10.6";
+	$os["Windows7"]="Windows 7 (Seven)";
 	$os[null]="{select}";
 	
 	$os=Field_array_Hash($os,"ComputerOS",null,"style:font-size:16px;padding:3px");

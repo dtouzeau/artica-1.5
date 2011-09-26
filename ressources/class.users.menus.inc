@@ -33,6 +33,8 @@ class usersMenus {
 	var $dhcp_installed=false;
 	var $AllowChangeDomains=false;
 	var $AsSystemAdministrator=false;
+	var $AsDansGuardianAdministrator=false;
+	var $AsWebFilterRepository=false;	
 	var $AsOrgStorageAdministrator=false;
 	var $AllowXapianDownload=false;
 	var $AllowAddGroup=false;
@@ -483,6 +485,8 @@ class usersMenus {
 	var $APACHE_MOD_SUEXEC=false;
 	var $APACHE_MOD_FCGID=false;
 	var $CGROUPS_INSTALLED=false;	
+	var $APACHE_MOD_LOGSSQL=false;
+	var $MYCOSI_APPLIANCE=false;
 	
 	private function CheckIndexDefaults($_GLOBAL){
 		return $_GLOBAL;
@@ -581,6 +585,7 @@ class usersMenus {
 			if(isset($_GLOBAL["SQUID_CACHMGR"])){$this->SQUID_CACHMGR=$_GLOBAL["SQUID_CACHMGR"];;}
 			if(isset($_GLOBAL["APACHE_DIR_SITES_ENABLED"])){$this->APACHE_DIR_SITES_ENABLED=$_GLOBAL["APACHE_DIR_SITES_ENABLED"];;}
 			if(isset($_GLOBAL["APACHE_MODULES_PATH"])){$this->APACHE_MODULES_PATH=$_GLOBAL["APACHE_MODULES_PATH"];;}
+			if(isset($_GLOBAL["MYCOSI_APPLIANCE"])){$this->MYCOSI_APPLIANCE=$_GLOBAL["MYCOSI_APPLIANCE"];;}
 			
 			
 			if(isset($_GLOBAL["APACHE_RUN_USER"])){$this->APACHE_RUN_USER=$_GLOBAL["APACHE_RUN_USER"];;}
@@ -899,6 +904,7 @@ class usersMenus {
 			$this->APACHE_MOD_SUEXEC=$_GLOBAL["APACHE_MOD_SUEXEC"];
 			$this->APACHE_MOD_FCGID=$_GLOBAL["APACHE_MOD_FCGID"];
 			$this->CGROUPS_INSTALLED=$_GLOBAL["CGROUPS_INSTALLED"];
+			$this->APACHE_MOD_LOGSSQL=$_GLOBAL["APACHE_MOD_LOGSSQL"];
 			if(isset($_GLOBAL["squid_kerb_auth_path"])){$this->squid_kerb_auth_path=$_GLOBAL["squid_kerb_auth_path"];}
 			
 			if(isset($_GLOBAL["ISCSI_CLIENT_INSTALLED"])){$this->ISCSI_CLIENT_INSTALLED=$_GLOBAL["ISCSI_CLIENT_INSTALLED"];}
@@ -976,6 +982,7 @@ class usersMenus {
 				
 				
 				if($this->AsSystemAdministrator){
+					$menus["Unity"]="javascript:Loadjs(\"unity.php\")";
 					$menus["{manage_your_server}"]="javascript:ConfigureYourserver()";
 					$menus["{global settings}"]="javascript:Loadjs(\"artica.settings.php?js=yes\")";
 					$menus["{softwares_install}"]="javascript:Loadjs(\"setup.index.php?js=yes\");";
@@ -1318,6 +1325,7 @@ private function build_user_left_menus(){
 		
 		$array["{index page}"]["MAIN"]="javascript:document.location.href='users.index.php'";
 		$array["{index page}"]["SUB"]["{master_panel}"]="javascript:document.location.href='users.index.php';";
+		$array["{index page}"]["SUB"]["{language}"]="javascript:Loadjs('chg.language.php');";
 		if($this->AsSystemAdministrator){
 			$array["{index page}"]["SUB"]["{backup}"]="javascript:Loadjs('backup.tasks.php?in-front-ajax=yes');";
 
@@ -1629,40 +1637,30 @@ private function build_user_left_menus(){
 			if($this->AsSquidAdministrator==true){
 			$sock=new sockets();
 			$SQUIDEnable=trim($sock->GET_INFO("SQUIDEnable"));
+			$EnableOldSquidMenus=trim($sock->GET_INFO("EnableOldSquidMenus"));
+			if(!is_numeric($EnableOldSquidMenus)){$EnableOldSquidMenus=0;}
+			
 			if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
 			if($SQUIDEnable==1){
+				$array["{web_proxy}"]["MAIN"]="javascript:AnimateDiv('BodyContent');SquidMainQuickLinks()";
+				$array["{web_proxy}"]["SUB"]["{main_parameters}"]="javascript:AnimateDiv('BodyContent');SquidMainQuickLinks()";
+				
+				if($EnableOldSquidMenus==1){
 					$array["{web_proxy}"]["MAIN"]="javascript:Loadjs('squid.newbee.php?yes')";
+					$array["{web_proxy}"]["SUB"]["New menu"]="javascript:AnimateDiv('BodyContent');SquidMainQuickLinks()";
 					$array["{web_proxy}"]["SUB"]["{main_parameters}"]="javascript:AnimateDiv('BodyContent');Loadjs('squid.newbee.php?yes')";
+					$array["{web_proxy}"]["SUB"]["main beta"]="javascript:AnimateDiv('BodyContent');SquidMainQuickLinks()";
+					
+					
 					$array["{web_proxy}"]["SUB"]["{add_websites}"]="javascript:Loadjs('squid.visited.php?add-www=yes')";
 					$array["{web_proxy}"]["SUB"]["{visited_websites}"]="javascript:Loadjs('squid.visited.php')";
 					
 					
 					
-					if($SquidActHasReverse<>1){
-						if($this->DANSGUARDIAN_INSTALLED){
-							$array["{web_proxy}"]["SUB"]["{DANSGUARDIAN_RULES}"]="javascript:AnimateDiv('BodyContent');Loadjs('dansguardian.index.php?js=yes')";
-		
-						}
-					}
-					
-					if($SquidActHasReverse<>1){
-						if($this->SQUIDGUARD_INSTALLED){
-							$array["{web_proxy}"]["SUB"]["{DANSGUARDIAN_RULES}"]="javascript:AnimateDiv('BodyContent');Loadjs('dansguardian.index.php?js=yes')";
-						}
-					}
-					
-					
-					if($SquidActHasReverse<>1){
-						if($this->APP_UFDBGUARD_INSTALLED){
-							$array["{web_proxy}"]["SUB"]["{DANSGUARDIAN_RULES}"]="javascript:AnimateDiv('BodyContent');Loadjs('dansguardian.index.php?js=yes')";
-						}
-					}					
-
-					if($SquidActHasReverse<>1){
-						if($this->C_ICAP_INSTALLED){
-							$array["{web_proxy}"]["SUB"]["{DANSGUARDIAN_RULES}"]="javascript:AnimateDiv('BodyContent');Loadjs('dansguardian.index.php?js=yes')";
-						}
-					}
+					if($SquidActHasReverse<>1){if($this->DANSGUARDIAN_INSTALLED){$array["{web_proxy}"]["SUB"]["{DANSGUARDIAN_RULES}"]="javascript:AnimateDiv('BodyContent');Loadjs('dansguardian.index.php?js=yes')";}}
+					if($SquidActHasReverse<>1){if($this->SQUIDGUARD_INSTALLED){$array["{web_proxy}"]["SUB"]["{DANSGUARDIAN_RULES}"]="javascript:AnimateDiv('BodyContent');Loadjs('dansguardian.index.php?js=yes')";}}
+					if($SquidActHasReverse<>1){if($this->APP_UFDBGUARD_INSTALLED){$array["{web_proxy}"]["SUB"]["{DANSGUARDIAN_RULES}"]="javascript:AnimateDiv('BodyContent');Loadjs('dansguardian.index.php?js=yes')";}}					
+					if($SquidActHasReverse<>1){if($this->C_ICAP_INSTALLED){$array["{web_proxy}"]["SUB"]["{DANSGUARDIAN_RULES}"]="javascript:AnimateDiv('BodyContent');Loadjs('dansguardian.index.php?js=yes')";}}
 		
 					
 					
@@ -1680,13 +1678,8 @@ private function build_user_left_menus(){
 					}
 					$array["{web_proxy}"]["SUB"]["{statistics}"]="javascript:s_PopUpFull('squid.logon.php',900,900,'Proxy statistics')";
 					$array["{web_proxy}"]["SUB"]["{performance}"]="javascript:AnimateDiv('BodyContent');Loadjs('squid.cached.sitesinfos.php?js=yes');";
-					
-					
-					
-					if($this->SARG_INSTALLED){
-						$array["{web_proxy}"]["SUB"]["SARG stats."]="javascript:s_PopUpFull('squid/index.html',900,900,'SARG')";
-					}
-					
+					if($this->SARG_INSTALLED){$array["{web_proxy}"]["SUB"]["SARG stats."]="javascript:s_PopUpFull('squid/index.html',900,900,'SARG')";}
+					}	
 				}else{
 					if($this->KAV4PROXY_INSTALLED){$array=$this->KAV4_PROXY_MENUS($array);}
 				}
@@ -1785,9 +1778,12 @@ private function build_user_left_menus(){
 				}
 			}
 			
-
-			if($this->SQUID_INSTALLED){
-				$array["{statistics}"]["SUB"]["{web_proxy}"]="javascript:AnimateDiv('BodyContent');Loadjs('squid.statistics.php')";
+			if(!class_exists("mysql_squid_builder")){include_once(dirname(__FILE__)."/class.mysql.squid.builder.php");}
+			$q=new mysql_squid_builder();
+			$events=$q->EVENTS_SUM();
+			writelogs("SQUID EVENTS: $events",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+			if($q->EVENTS_SUM()>0){
+				$array["{statistics}"]["SUB"]["{web_proxy}"]="javascript:AnimateDiv('BodyContent');SquidQuickLinks()";
 				if($this->SARG_INSTALLED){
 						$array["{statistics}"]["SUB"]["{web_proxy}:SARG"]="javascript:s_PopUpFull('squid/index.html',900,900,'SARG')";
 					}
@@ -2246,6 +2242,8 @@ private function MAILBOXES_MENUS($array=array()){
 		if(!isset($priv["AsArticaAdministrator"])){$priv["AsArticaAdministrator"]="no";}
 		if(!isset($priv["AsWebMaster"])){$priv["AsWebMaster"]="no";}
 		if(!isset($priv["RestrictNabToGroups"])){$priv["RestrictNabToGroups"]="no";}
+		if(!isset($priv["AsDansGuardianAdministrator"])){$priv["AsDansGuardianAdministrator"]="no";}
+		if(!isset($priv["AsWebFilterRepository"])){$priv["AsWebFilterRepository"]="no";}
 		
 		
 		
@@ -2290,6 +2288,11 @@ private function MAILBOXES_MENUS($array=array()){
 		if($priv["OverWriteRestrictedDomains"]=='yes'){$this->OverWriteRestrictedDomains=true;}
 		if($priv["AsWebMaster"]=='yes'){$this->AsWebMaster=true;}
 		if($priv["RestrictNabToGroups"]=='yes'){$this->RestrictNabToGroups=true;}
+		if($priv["AsDansGuardianAdministrator"]=='yes'){$this->AsDansGuardianAdministrator=true;}
+		if($priv["AsWebFilterRepository"]=='yes'){$this->AsWebFilterRepository=true;}
+		
+	
+		
 		
 		
 		if($priv["PasswdPolicy"]<>null){$this->PasswdPolicy=unserialize(base64_decode($priv["PasswdPolicy"]));}
@@ -2367,6 +2370,7 @@ private function MAILBOXES_MENUS($array=array()){
 			$this->AsSambaAdministrator=true;
 			$this->AsDnsAdministrator=true;
 			$this->AsQuarantineAdministrator=true;
+			$this->AsDansGuardianAdministrator=true;
 			$this->AllowDansGuardianBanned=true;
 			$this->AllowFetchMails=true;
 			$this->AllowChangeAntiSpamSettings=true;
@@ -2394,7 +2398,18 @@ private function MAILBOXES_MENUS($array=array()){
 			$this->AllowDansGuardianBanned=true;
 			$this->AllowXapianDownload=true;
 			$this->AllowManageOwnComputers=true;
-			$this->AllowEditAliases=true;				
+			$this->AllowEditAliases=true;	
+			$this->AsWebFilterRepository=true;			
+			}
+			
+			if($this->AsSquidAdministrator){
+				$this->AsWebFilterRepository=true;
+				$this->AsDansGuardianGroupRule=true;
+				$this->AsDansGuardianAdministrator=true;
+			}
+			
+			if($this->AsDansGuardianAdministrator){
+				$this->AsDansGuardianGroupRule=true;
 			}
 			
 		if($this->AsPostfixAdministrator){
@@ -2408,6 +2423,7 @@ private function MAILBOXES_MENUS($array=array()){
 			$this->OverWriteRestrictedDomains=true;
 			$this->AsWebMaster=true;
 			$this->AllowEditAliases=true;
+			
 			
 		}
 		if($this->AsMessagingOrg){

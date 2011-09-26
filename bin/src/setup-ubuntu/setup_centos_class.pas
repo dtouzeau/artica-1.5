@@ -17,6 +17,8 @@ private
        libs:tlibs;
        ARCH:Integer;
        without_clamav:boolean;
+       SCIENTIFICLINUX:boolean;
+       DISTRINAME:string;
        function CheckCyrus():string;
        function CheckDevcollectd():string;
        function CheckSelinux():string;
@@ -60,7 +62,8 @@ begin
 libs:=tlibs.Create;
 libs.COMMANDLINE_PARAMETERS('--without-clamav');
 ARCH:=libs.ArchStruct();
-
+distri:=tdistriDetect.Create;
+SCIENTIFICLINUX:=false;
 end;
 //#########################################################################################
 procedure tcentos.Free();
@@ -71,6 +74,7 @@ end;
 procedure tcentos.Show_Welcome;
 var
    base,postfix,u,cyrus,samba,squid,selinux,pdns,zabbix,openvpn:string;
+   RegExpr:TRegExpr;
 begin
 
    if not FileExists('/usr/bin/yum') then begin
@@ -82,9 +86,22 @@ begin
        fpsystem('/usr/bin/yum check-update');
     end;
 
+    if not FileExists('/tmp/iptables_stopped') then begin
+       if FileExists('/etc/init.d/iptables') then begin
+          fpsystem('/etc/init.d/iptables stop');
+          fpsystem('chkconfig iptables off');
+          fpsystem('touch /tmp/iptables_stopped');
+       end;
+    end;
 
 
-    writeln('Checking.............: system...');
+    writeln('Checking.............: system..."',distri.DISTRINAME+'"');
+    RegExpr:=TRegExpr.Create;
+    RegExpr.Expression:='Scientific Linux';
+    if RegExpr.Exec(distri.DISTRINAME) then begin
+        SCIENTIFICLINUX:=true;
+        writeln('Checking.............: Scientific Linux detected assuming Centos compatibilites');
+    end;
     writeln('Checking.............: SeLinux...');
 
     selinux:=trim(CheckSelinux());
@@ -172,6 +189,12 @@ begin
 
    if u='4' then begin
           InstallPackageLists(squid);
+          Show_Welcome;
+          exit;
+    end;
+
+   if u='6' then begin
+          writeln('Not supported on CentOS...');
           Show_Welcome;
           exit;
     end;
@@ -389,6 +412,7 @@ RegExpr.Expression:='SELINUX=(.+)';
 for i:=0 to l.Count-1 do begin
      if RegExpr.Exec(l.Strings[i]) then begin
          if trim(RegExpr.Match[1])<>'disabled' then begin
+            writeln('Checking.............: SeLinux...:'+trim(RegExpr.Match[1]));
             result:='y';
             break;
          end;
@@ -421,12 +445,26 @@ var
    c:integer;
    distri:tdistriDetect;
    MinorVersion:Integer;
+   MAJOR:integer;
 begin
 f:='';
 distri:=tdistriDetect.Create();
+MAJOR:=distri.DISTRI_MAJOR;
 l:=TstringList.Create;
+
+
+if MAJOR<6 then begin
+   l.Add('vixie-cron');
+   l.add('scons');
+end;
+
+if MAJOR=6 then begin
+    l.Add('cronie');
+end;
+
+
 l.Add('hal');
-l.Add('vixie-cron');
+
 l.Add('file');
 l.Add('hdparm');
 l.Add('less');
@@ -443,7 +481,7 @@ l.Add('eject');
 l.Add('pciutils ');
 l.Add('usbutils');
 l.add('lshw');
-l.add('scons');
+
 l.add('quota');
 
 //LDAP
@@ -478,15 +516,55 @@ l.Add('php-imap ');
 l.Add('php-pear');
 l.Add('php-gd');
 l.add('php-xml');
-l.Add('php-pear-Log');
+
 l.Add('php-pecl-mailparse');
-l.add('php-pear-Mail-Mime');
-l.add('php-pear-Net-Sieve');
+
 l.Add('php-mbstring');
-l.Add('php-mcrypt');
+
+
+if MAJOR<6 then begin
+ l.Add('php-pear-Log');
+ l.add('php-pear-Mail-Mime');
+ l.add('php-pear-Net-Sieve');
+ l.add('php-pecl-Fileinfo');
+ l.Add('php-mcrypt');
+ l.add('fuse-davfs2');
+ l.add('OpenIPMI-tools');
+ l.add('xpdf');
+ l.add('curl-devel');
+ l.add('libgssapi-devel');
+ l.add('libmhash-devel');
+ l.Add('arj');
+ l.add('libtool-ltdl-devel');
+end;
+if MAJOR>5 then begin
+ l.add('libfixbuf');
+ l.add('davfs2');
+ l.add('libcurl-devel');
+ l.add('mhash-devel');
+ l.add('unarj');
+ l.add('php-process');
+ l.add('php-cli');
+ l.add('php-zts');
+ l.add('mlocate');
+ l.add('rrdtool-perl');
+ l.add('geoip');
+ l.add('perl-Geo-IP');
+ l.add('libcgroup');
+
+
+
+ if ARCH=64 then begin
+    fpsystem('yum install ld-linux.so.2 -y');
+    l.add('glibc');
+    L.Add('nss-softokn-freebl');
+ end;
+end;
+
+
 if IsRPMForgeSelected then  l.add('php-pecl-apc');
 if IsRPMForgeSelected then  l.add('php-pecl-json'); //lighttpd
-l.add('php-pecl-Fileinfo');
+
 l.Add('lighttpd');
 
 //Apache
@@ -514,9 +592,8 @@ l.add('perl-IO-Compress-Zlib');
 //l.add('perl-LWP');
 //l.add('perl-Digest-MD5');
 l.add('perl-Net-SSLeay');
-l.add('OpenIPMI-tools');
 l.add('dnsmasq');
-l.add('fuse-davfs2');
+
 
 
 //l.add('perl-Compress-Zlib');
@@ -550,7 +627,7 @@ l.add('catdoc');
 l.add('antiword');
 l.add('libwpd-tools');
 l.add('unrtf');
-l.add('xpdf');
+
 
 //zabix
 l.add('upx');
@@ -573,7 +650,7 @@ l.add('gdbm-devel');
 l.add('cyrus-sasl-devel');
 l.add('db4-devel');
 l.add('krb5-devel');
-l.add('libgssapi-devel');
+
 l.add('imake');  //makedepend
 l.add('unixODBC-devel');
 l.add('unixODBC');
@@ -589,7 +666,7 @@ if IsRPMForgeSelected then l.add('GeoIP-devel');
 
 l.add('kernel-devel');
 l.add('aspell-devel');
-l.add('curl-devel');
+
 l.add('ncurses-devel');
 l.add('e2fsprogs-devel');
 l.add('freetype-devel');
@@ -612,10 +689,8 @@ l.add('openssl-devel');
 l.add('tcp_wrappers');
 l.add('zlib-devel');
 l.add('gd-devel');
-l.add('libtool-ltdl-devel');
 l.add('libaio-devel');
 l.add('libattr-devel');
-l.add('libmhash-devel');
 l.add('readline-devel');
 l.add('libpcap-devel');
 l.add('libcap-devel');
@@ -630,7 +705,7 @@ l.add('libicu');
 //l.add('java-1.6.0-openjdk');
 
 //clamav
-l.add('libtool-ltdl-devel');
+
 //l.add('libtommath-devel');
 
 //dhcp gateway
@@ -652,7 +727,6 @@ l.add('sysstat');
 
 //compression
 l.Add('bzip2');
-l.Add('arj');
 l.add('zip');
 l.add('unzip');
 
@@ -765,9 +839,11 @@ var
    l:TstringList;
    f:string;
    i:integer;
-
+   MAJOR:integer;
 begin
 f:='';
+distri:=tdistriDetect.Create();
+MAJOR:=distri.DISTRI_MAJOR;
 l:=TstringList.Create;
 l.Add('razor-agents');
 l.add('sendmail-devel');
@@ -779,23 +855,37 @@ l.Add('perl-Archive-Zip');
 l.Add('perl-Font-TTF');
 l.Add('perl-BerkeleyDB');
 l.add('gd');
-l.Add('wv');
+if MAJOR<6 then begin
+ l.Add('wv');
+ l.add('milter-greylist');
+ l.add('perl-Mail-SPF');// Mail/SPF.pm
+ l.add('ocrad');
+ l.add('tesseract');
+ l.add('aspell-nl');
+ l.add('postfix-pflogsumm');
+end;
+
+if MAJOR>5 then begin
+   l.add('postfix-perl-scripts');
+   L.add('perl-Mail-SPF-Query');
+   l.add('aspell');
+end;
 l.Add('postfix');
 //l.add('dkim-milter');
 l.add('spamass-milter');
 l.add('sendmail-devel');
-l.add('milter-greylist');
+
 //l.add('mimedefang');
 l.Add('spamassassin');
 l.Add('mailman');
-l.add('postfix-pflogsumm');
+
 
 //ASSP
 
 l.add('perl-IO-Compress');//Bzip2.pm
 l.add('perl-Email-Valid');// */Email/Valid.pm
 l.add('perl-File-ReadBackwards'); // **/File/ReadBackwards.pm
-l.add('perl-Mail-SPF');// Mail/SPF.pm
+
 l.add('perl-Email-MIME'); // MIME/Modifier.pm
 l.add('perl-Mail-SRS'); // Mail/SRS.pm
 l.add('perl-Net-DNS'); // Net/DNS.pm
@@ -813,13 +903,13 @@ l.add('gifsicle');
 l.add('giflib');
 l.add('giflib-utils');
 l.add('gocr');
-l.add('ocrad');
+
 l.add('ImageMagick');
-l.add('tesseract');
+
 l.add('perl-String-Approx');
 l.add('perl-MLDBM');
 l.add('aspell');
-l.add('aspell-nl');
+
 
 fpsystem('/bin/rm -rf /tmp/packages.list');
 
@@ -862,12 +952,16 @@ var
    l:TstringList;
    f:string;
    i:integer;
-
+   MAJOR:integer;
 begin
+distri:=tdistriDetect.Create();
+MAJOR:=distri.DISTRI_MAJOR;
 f:='';
 l:=TstringList.Create;
+
 l.Add('cyrus-imapd');
-l.Add('cyrus-imapd-perl');
+if MAJOR<6 then l.Add('cyrus-imapd-perl');
+if MAJOR>5 then l.Add('cyrus-imapd-utils');
 l.add('net-snmp-devel');
 
 
@@ -952,18 +1046,33 @@ var
    l:TstringList;
    f:string;
    i:integer;
-
+   MAJOR:integer;
 begin
 f:='';
+distri:=tdistriDetect.Create();
+MAJOR:=distri.DISTRI_MAJOR;
 fpsystem('touch /etc/artica-postfix/samba.check.time');
 l:=TstringList.Create;
-l.Add('nss_ldap');
+
+if MAJOR<6 then begin
+ l.Add('nss_ldap');
+ l.Add('pam_smb');
+ l.add('gimp-print-cups');
+end;
+
+if MAJOR > 6 then begin
+ l.Add('openldap-clients');
+ l.add('nss-pam-ldapd');
+ L.add('pam_ldap');
+ l.add('gutenprint-cups');
+
+end;
 l.Add('samba');
 l.Add('samba-client');
-l.Add('pam_smb');
+
 l.Add('nscd');
 l.add('cups-devel');
-l.add('gimp-print-cups');
+
 l.add('gtk2-devel');
 l.add('libtiff-devel');
 l.add('libjpeg-devel');
@@ -1154,18 +1263,29 @@ begin
 
    writeln('Checking.............: retrieve rpmforge-release');
    if ARCH=64 then begin
+    if MAJOR<6 then begin
       if MINOR>3 then begin
          link:='http://rpmforge.sw.be/redhat/el5/en/x86_64/rpmforge/RPMS/rpmforge-release-0.5.1-1.el5.rf.x86_64.rpm';
          filename:='rpmforge-release-0.5.1-1.el5.rf.x86_64.rpm';
       end;
-//      if MINOR>5 then link:='http://tree.repoforge.org/redhat/el6/en/x86_64/rpmforge/RPMS/rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm';
+    end;
+      if MAJOR>5 then begin
+         link:='http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm';
+         filename:='rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm';
+      end;
    end;
    if ARCH=32 then begin
+    if MAJOR<6 then begin
        if MINOR>3 then begin
           link:='http://rpmforge.sw.be/redhat/el5/en/i386/rpmforge/RPMS/rpmforge-release-0.5.1-1.el5.rf.i386.rpm';
           filename:='rpmforge-release-0.5.1-1.el5.rf.i386.rpm';
        end;
-       //if MINOR>5 then link:='http://tree.repoforge.org/redhat/el6/en/i386/rpmforge/RPMS/rpmforge-release-0.5.2-2.el6.rf.i686.rpm';
+    end;
+       if MAJOR>5 then begin
+          link:='http://packages.sw.be/rpmforge-release/rpmforge-release-0.5.2-2.el6.rf.i686.rpm';
+          filename:='rpmforge-release-0.5.2-2.el6.rf.i686.rpm';
+       end;
+
    end;
    fpsystem('wget '+link);
    fpsystem('rpm -iv '+filename);
@@ -1180,7 +1300,7 @@ begin
    end;
 
 
-
+if not SCIENTIFICLINUX then begin
    if not IsRPMForgeAsked() then begin
        writeln('Some required packages need to turn you distribution into:');
        writeln('          ****************       ');
@@ -1200,7 +1320,7 @@ begin
         ELREPO();
         ATRPMS();
    end;
-
+end;
    
 
 end;

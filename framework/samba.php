@@ -83,7 +83,10 @@ function apply_chmod(){
 
 function testparm(){
 	$hostname=$_GET["testparm"];
-	if($hostname<>null){$L=" -L $hostname ";}
+	if($hostname=="yes"){$hostname=null;}
+	if($hostname<>null){$L=" -L $hostname ";}else{
+		$L="/etc/samba/smb.conf";
+	}
 	$unix=new unix();
 	$testparm=$unix->find_program("testparm");
 	if(!is_file($testparm)){

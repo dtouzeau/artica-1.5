@@ -1,4 +1,5 @@
 <?php
+	$GLOBALS["ICON_FAMILY"]="POSTFIX";
 	if(posix_getuid()==0){die();}
 	session_start();
 	if($_SESSION["uid"]==null){echo "window.location.href ='logoff.php';";die();}
@@ -1969,26 +1970,24 @@ function tweaks(){
 	$page=CurrentPageName();
 	$tpl=new templates();
 	
-	$massmailing=Paragraphe('mass-mailing-postfix-64-grey.png','{emailings}','{ENABLE_MASSMAILING_TEXT}');
-	
 	if($users->ALTERMIME_INSTALLED){
-		$altermime=Paragraphe('icon_settings-64.png','{disclaimer}','{disclaimer_text}',"javascript:Loadjs('amavis.index.php?altermime-js=yes')");
+		$altermime=ParagrapheTEXT('icon_settings-48.png','{disclaimer}','{disclaimer_text}',"javascript:Loadjs('amavis.index.php?altermime-js=yes')",90);
 	}else{
-		$altermime=Paragraphe('icon_settings-64-grey.png','{disclaimer}','{disclaimer_text}');
+		$altermime=ParagrapheTEXT_disabled('icon_settings-48.png','{disclaimer}','{disclaimer_text}',null,90);
 	}
 
 	
 	if($users->POMMO_INSTALLED){
-		$pommo=Paragraphe('64-pommo.png','{APP_POMMO}','{APP_POMMO_TEXT}',"javascript:Loadjs('pommo.index.php?pommo-js=yes')");	
+		$pommo=ParagrapheTEXT('48-pommo.png','{APP_POMMO}','{APP_POMMO_TEXT}',"javascript:Loadjs('pommo.index.php?pommo-js=yes')",90);	
 	}else{
-		$pommo=Paragraphe('64-pommo-grey.png','{APP_POMMO}','{APP_POMMO_TEXT}');
+		$pommo=ParagrapheTEXT_disabled('48-pommo.png','{APP_POMMO}','{APP_POMMO_TEXT}',null,90);
 	}
 	
 	
 	if($users->zip_installed){
 		if($users->AMAVIS_INSTALLED){
 			if($users->EnableAmavisDaemon==1){
-				$winzip=Paragraphe('64-winzip.png','{auto-compress}','{auto-compress_text}',"javascript:Loadjs('auto-compress.php?script=winzip')");	
+				$winzip=ParagrapheTEXT('48-winzip.png','{auto-compress}','{auto-compress_text}',"javascript:Loadjs('auto-compress.php?script=winzip')",90);	
 			}
 		}
 	}
@@ -1996,75 +1995,75 @@ function tweaks(){
 	
 	if($users->POSTMULTI){
 		
-		$multi=Paragraphe('postfix-multi-64.png','{POSTFIX_MULTI_INSTANCE}','{POSTFIX_MULTI_INSTANCE_TINY_TEXT}',"javascript:Loadjs('postfix.network.php?POSTFIX_MULTI_INSTANCE_JS=yes')");
+		$multi=ParagrapheTEXT('postfix-multi-48.png','{POSTFIX_MULTI_INSTANCE}','{POSTFIX_MULTI_INSTANCE_TINY_TEXT}',"javascript:Loadjs('postfix.network.php?POSTFIX_MULTI_INSTANCE_JS=yes')",90);
 	}else{
-		$multi=Paragraphe('postfix-multi-64-grey.png','{POSTFIX_MULTI_INSTANCE}','{POSTFIX_MULTI_INSTANCE_TINY_TEXT}');	
+		$multi=ParagrapheTEXT_disabled('postfix-multi-48.png','{POSTFIX_MULTI_INSTANCE}','{POSTFIX_MULTI_INSTANCE_TINY_TEXT}',null,90);	
 	}
 	
 	if($users->MEM_TOTAL_INSTALLEE<700000){
-		$multi=Paragraphe('postfix-multi-64-grey.png','{POSTFIX_MULTI_INSTANCE}','{POSTFIX_MULTI_INSTANCE_TINY_TEXT}');
+		$multi=ParagrapheTEXT_disabled('postfix-multi-48.png','{POSTFIX_MULTI_INSTANCE}','{POSTFIX_MULTI_INSTANCE_TINY_TEXT}',null,90);
 	}
 		
 
-	$artica_stats=Paragraphe('graphs-64.png','{ARTICA_STATS}','{ARTICA_SMTP_STATS_TEXT}',"javascript:Loadjs('postfix.artica-stats.php')");
+	$artica_stats=ParagrapheTEXT('graphs-48.png','{ARTICA_STATS}','{ARTICA_SMTP_STATS_TEXT}',"javascript:Loadjs('postfix.artica-stats.php')",90);
 	
-	$postfix_restrictions_classes=Paragraphe('folder-64-restrictions-classes.png',
-	'{postfix_restrictions_classes}','{restriction_classes_minitext}',"javascript:Loadjs('postfix.restrictions.classes.php?js=yes')");
-	
-	$events=Buildicon64("DEF_ICO_EVENTS_POSTFIX");
-	$performances=Paragraphe('folder-performances-64.png','{performances_settings}','{performances_settings_text}',"javascript:Loadjs('postfix.performances.php')");
-	$maincf=Paragraphe('folder-script-64.png','{main.cf}','{main.cf_explain}',"javascript:Loadjs('postfix.main.cf.php')");
-	$storage=Paragraphe('folder-storage2-64.png','{storage_rules}','{storage_rules_text}',"javascript:Loadjs('postfix.storage.rules.php')");
-	$maincfedit=Paragraphe('folder-maincf-64.png','{main.cf_edit}','{main.cfedit_explain}',"javascript:Loadjs('postfix.main.cf.edit.php?js=yes')");
-	$mastercf=Paragraphe('folder-script-64-master.png','{master.cf}','{mastercf_explain}',"javascript:Loadjs('postfix.master.cf.php?script=yes')") ;
-	$other=Paragraphe('folder-tools2-64.png','{other_settings}','{other_settings_text}',"javascript:Loadjs('postfix.other.php')");
-	$main_src=Paragraphe('folder-script-database-64.png','{main_ldap}','{main_ldap_explain}',"javascript:s_PopUp(\"postfix.report.php\",500,500,true)");
-	$postmaster=Paragraphe('postmaster-64.png','{postmaster}','{postmaster_text}',"javascript:Loadjs('postfix.postmaster.php')");
-	$postmaster_identity=Paragraphe('postmaster-identity.png','{postmaster_identity}','{postmaster_identity_text}',"javascript:Loadjs('postfix.postmaster-ident.php')");
-	$UnknownUsers=Paragraphe('unknown-user-64.png','{unknown_users}','{postfix_unknown_users_tinytext}',"javascript:Loadjs('postfix.luser_relay.php')");
+	$postfix_restrictions_classes=ParagrapheTEXT('folder-48-restrictions-classes.png','{postfix_restrictions_classes}','{restriction_classes_minitext}',"javascript:Loadjs('postfix.restrictions.classes.php?js=yes')",90);
+	$events=ParagrapheTEXT('48-mailevents.png','{postfix_events}','{logs_viewer_text}',"javascript:s_PopUp('postfix.events.php?pop=true',450,400)",90);
+	$performances=ParagrapheTEXT('folder-performances-48.png','{performances_settings}','{performances_settings_text}',"javascript:Loadjs('postfix.performances.php')",90);
+	$maincf=ParagrapheTEXT('folder-script-48.png','{main.cf}','{main.cf_explain}',"javascript:Loadjs('postfix.main.cf.php')",90);
+	$storage=ParagrapheTEXT('folder-storage2-48.png','{storage_rules}','{storage_rules_text}',"javascript:Loadjs('postfix.storage.rules.php')",90);
+	$maincfedit=ParagrapheTEXT('folder-maincf-48.png','{main.cf_edit}','{main.cfedit_explain}',"javascript:Loadjs('postfix.main.cf.edit.php?js=yes')",90);
+	$mastercf=ParagrapheTEXT('folder-script-48-master.png','{master.cf}','{mastercf_explain}',"javascript:Loadjs('postfix.master.cf.php?script=yes')",90) ;
+	$other=ParagrapheTEXT('folder-tools2-48.png','{other_settings}','{other_settings_text}',"javascript:Loadjs('postfix.other.php')",90);
+	$main_src=ParagrapheTEXT('folder-script-database-48.png','{main_ldap}','{main_ldap_explain}',"javascript:s_PopUp(\"postfix.report.php\",500,500,true)",90);
+	$postmaster=ParagrapheTEXT('postmaster-48.png','{postmaster}','{postmaster_text}',"javascript:Loadjs('postfix.postmaster.php')",90);
+	$postmaster_identity=ParagrapheTEXT('postmaster-identity-48.png','{postmaster_identity}','{postmaster_identity_text}',"javascript:Loadjs('postfix.postmaster-ident.php')",90);
+	$UnknownUsers=ParagrapheTEXT('unknown-user-48.png','{unknown_users}','{postfix_unknown_users_tinytext}',"javascript:Loadjs('postfix.luser_relay.php')",90);
 	
 	
+	$massmailing=ParagrapheTEXT_disabled('mass-mailing-postfix-48.png','{emailings}','{ENABLE_MASSMAILING_TEXT}',null,90);
 	if($users->EMAILRELAY_INSTALLED){
-		$massmailing=Paragraphe('mass-mailing-postfix-64.png','{emailings}','{ENABLE_MASSMAILING_TEXT}',"javascript:Loadjs('postfix.massmailing.php')");
+		$massmailing=ParagrapheTEXT('mass-mailing-postfix-48.png','{emailings}','{ENABLE_MASSMAILING_TEXT}',"javascript:Loadjs('postfix.massmailing.php')",90);
 	}		
-	
+	$multi_infos=ParagrapheTEXT_disabled('postfix-multi-48-info.png','{POSTFIX_MULTI_INSTANCE_INFOS}',
+	'{POSTFIX_MULTI_INSTANCE_INFOS_TEXT}',null,90);
 	
 	if($EnablePostfixMultiInstance==1){
 		$main_src=null;
-		$performances=null;
+		$performances=ParagrapheTEXT_disabled('folder-performances-48.png','{performances_settings}','{performances_settings_text}',null,90);;
 		$mastercf=null;
 		$maincfedit=null;
 		$maincf=null;
 		$postfix_restrictions_classes=null;
 		$storage=null;
 		$other=null;
-		$multi_infos=Paragraphe('postfix-multi-64-info.png','{POSTFIX_MULTI_INSTANCE_INFOS}','{POSTFIX_MULTI_INSTANCE_INFOS_TEXT}',"javascript:Loadjs('postfix.multiple.instances.infos.php')");
+		$multi_infos=ParagrapheTEXT('postfix-multi-48-info.png','{POSTFIX_MULTI_INSTANCE_INFOS}','{POSTFIX_MULTI_INSTANCE_INFOS_TEXT}',"javascript:Loadjs('postfix.multiple.instances.infos.php')");
 		
+	
 		if($users->MAILMAN_INSTALLED){
-			$mailman=Buildicon64('DEF_ICO_POSTFIX_MAILMAN');
+			
+			$mailman=ParagrapheTEXT('folder-group2-48.png','{APP_MAILMAN}','{manage_distribution_lists}',"javascript:Loadjs('mailman.php?script=yes')");
 		}
 	}
 	
 	$q=new mysql();
 	$table_storage=$q->TABLE_STATUS("storage","artica_backup");
 	if($table_storage["Rows"]>0){
-		$backup_query=Paragraphe('64-backup.png',"{$table_storage["Rows"]} {backuped_mails}",'{all_mailbackup_text}',"javascript:Loadjs('domains.backup.php?js=yes&Master=yes')");
+		$backup_query=ParagrapheTEXT('48-backup.png',"{$table_storage["Rows"]} {backuped_mails}",'{all_mailbackup_text}',"javascript:Loadjs('domains.backup.php?js=yes&Master=yes')");
 		
 	}
 	
 	
 
 	
-		$serv[]=$multi;
-		$serv[]=$multi_infos;
-		$serv[]=$altermime;
-		$serv[]=$massmailing;
-		$serv[]=$pommo;
-		$serv[]=$artica_stats;
+		$tr[]=$performances;
+		$tr[]=$massmailing;
+		$tr[]=$pommo;
+		$tr[]=$artica_stats;
 		
-		$post[]=$postmaster;
-		$post[]=$postmaster_identity;
-		$post[]=$UnknownUsers;
+		$tr[]=$postmaster;
+		$tr[]=$postmaster_identity;
+		$tr[]=$UnknownUsers;
 		
 		
 		$tr[]=$backup_query;
@@ -2072,7 +2071,7 @@ function tweaks(){
 		
 		
 		$tr[]=$events;
-		$tr[]=$performances;
+		$tr[]=$altermime;
 		$tr[]=$maincf;
 		$tr[]=$main_src;
 		$tr[]=$maincfedit;
@@ -2083,49 +2082,8 @@ function tweaks(){
 		
 		
 
-$tables[]="<table style='width:100%'><tr>";
+
 $t=0;
-while (list ($key, $line) = each ($serv) ){
-		$line=trim($line);
-		if($line==null){continue;}
-		$t=$t+1;
-		$tables[]="<td valign='top'>$line</td>";
-		if($t==3){$t=0;$tables[]="</tr><tr>";}
-		}
-
-if($t<3){
-	for($i=0;$i<=$t;$i++){
-		$tables[]="<td valign='top'>&nbsp;</td>";				
-	}
-}
-				
-$tables[]="</table>";	
-
-	$html="<h3><a href=\"#\">{services}</a></h3><div>".@implode("\n",$tables)."</div>";
-
-$tables=array();	
-$tables[]="<table style='width:100%'><tr>";
-$t=0;
-while (list ($key, $line) = each ($post) ){
-		$line=trim($line);
-		if($line==null){continue;}
-		$t=$t+1;
-		$tables[]="<td valign='top'>$line</td>";
-		if($t==3){$t=0;$tables[]="</tr><tr>";}
-		}
-
-if($t<3){
-	for($i=0;$i<=$t;$i++){
-		$tables[]="<td valign='top'>&nbsp;</td>";				
-	}
-}
-
-$tables[]="</table>";	
-$html=$html."<h3><a href=\"#\">{postmaster}</a></h3><div>".@implode("\n",$tables)."</div>";
-
-
-
-$tables=array();
 $tables[]="<table style='width:100%'><tr>";
 $t=0;
 while (list ($key, $line) = each ($tr) ){
@@ -2142,52 +2100,37 @@ if($t<3){
 	}
 }
 				
-$tables[]="</table>";	
-
-$html=$html."<h3><a href=\"#\">{other}</a></h3><div>".@implode("\n",$tables)."</div>";
+$tables[]="</table>";
 
 
-	$main=new main_cf();
-	
-	$count=0;
-	while (list ($num, $ligne) = each ($main->array_mynetworks) ){
-		if($ligne=="127.0.0.0/8"){continue;}
-		if($ligne=="127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128"){continue;}
-		$count=$count+1;
-	}
-	
-	if($count==0){
-		$nonet=Paragraphe('server_network_error-64.png',"{NO_POSTFIX_NETWORK_SET}",'{NO_POSTFIX_NETWORK_SET_EXPLAIN}',"javascript:Loadjs('postfix.network.php?ajax=yes')");
-	}
+$icons=@implode("\n",$tables);
+
+
+
 	
 	
-	
-$main="
-<h3><a href=\"#\">{status}</a></h3>
-<div>
-	<input type='hidden' id='monitor_page' value='1' name='monitor_page'>
-	<table style='width:650px' align=center>
-		<tr>
-			<td valign='top'>
-				<div id='barstatus' style='width:300px;overflow:auto'>
-					<img src='img/postfix2.jpg'>
-				</div>
-				<hr>
-				$nonet
-			</td>
-			<td valign='top'>
-				<div id='Postfixservinfos' style='width:350px'></div>
-			</td>
-		</tr>
-	</table>
-</div>";
+	$refresh="<div style='width:100%;text-align:right'>". imgtootltip("refresh-24.png","{refresh}","RefreshIndexPostfixAjax()")."</div>";
+$main="<input type='hidden' id='monitor_page' value='1' name='monitor_page'>
+$refresh
+<div style='width:100%'>
+	<div id='Postfixservinfos' style='width:350px;float:right;padding-right:50px;padding-left:50px;padding-top:70px'></div>
+	<div style='float:right;width:160px;margin:8px' id='barstatus'>$multi</div>
+	<div style='float:right;width:160px;margin:8px'>$multi</div>
+	<div style='float:right;width:160px;margin:8px'>$multi_infos</div>
 	
 	
-$html="<div id='NavigationForms2'>$main$html</div>
+</div>
+
+	<div style='clear:both;width:100%'>
+	$icons
+	</div>
+	";
+	
+	
+$html="$main
 
 <script>
-		$(function() {
-			$( \"#NavigationForms2\" ).accordion({autoHeight: false,navigation: true});});
+		
 </script>
 ";	
 $datas=$tpl->_ENGINE_parse_body($html);	
@@ -2550,10 +2493,12 @@ function SaveISPAddress(){
 }
 
 
+
+
 function bar_status(){
-	
-	$refresh="<div style='width:100%;text-align:right'>". imgtootltip("refresh-24.png","{refresh}","RefreshIndexPostfixAjax()")."</div>";
+	$page=CurrentPageName();
 	$tpl=new templates();
+	
 	if(is_file("ressources/logs/global.status.ini")){
 		
 		$ini=new Bs_IniHandler("ressources/logs/global.status.ini");
@@ -2563,77 +2508,46 @@ function bar_status(){
 		$datas=base64_decode($sock->getFrameWork('cmd.php?Global-Applications-Status=yes'));
 		$ini=new Bs_IniHandler($datas);
 	}
-	
-	$sock=new sockets();
-	$datas=$sock->getFrameWork('cmd.php?refresh-status=yes');
-	
-	$array[]="POSTFIX";
-	$array[]="APP_POSTFWD2:master";
-	$array[]="FETCHMAIL";
-	$array[]="ASSP";
-	$array[]="AMAVISD";
-	$array[]="AMAVISD_MILTER";
-	$array[]="SPAMASSASSIN";
-	$array[]="SPAMASS_MILTER";
-	$array[]="DNSMASQ";
-	$array[]="APP_CLUEBRINGER";
-	$array[]="MIMEDEFANG";
-	$array[]="MIMEDEFANGX";
-	$array[]="DKIM_FILTER";
-	$array[]="SPFMILTER";
-	$array[]="CLAMAV";
-	$array[]="FRESHCLAM";
-	$array[]="MAILSPY";	
-	$array[]="KAVMILTER";
-	$array[]="KAS_MILTER";
-	$array[]="KAS3";
-	$array[]="MAILARCHIVER";
-	$array[]="BOGOM";
-	$array[]="MILTER_GREYLIST";
-	$array[]="POLICYD_WEIGHT";
-	$array[]="MAILMAN";
-	$array[]="APP_CYRUS_IMAP";	
-	$array[]="MAILARCHIVER";
-	$array[]="APP_OPENDKIM";
-	$array[]="APP_MILTER_DKIM";
-	$array[]="APP_ARTICA_POLICY";
-	
-	
-	$array[]="APP_ZARAFA";
-	$array[]="APP_ZARAFA_SPOOLER";
-	$array[]="APP_ZARAFA_GATEWAY";
-	$array[]="APP_ZARAFA_MONITOR";
-	$array[]="APP_ZARAFA_DAGENT";
-	$array[]="APP_ZARAFA_ICAL";
-	$array[]="APP_ZARAFA_LICENSED";
-	
 
-	
-	$status="<input type='hidden' id='monitor_page_switch' value='1' name='monitor_page_switch'>";
-	while (list ($num, $ligne) = each ($array) ){
-		$st=DAEMON_STATUS_LINE($ligne,$ini,null,1);
-		if($st==null){continue;}
-		$status=$status .$st."\n";
+	$c=0;
+	$array=$array=array_postfix_status();
+	while (list ($num, $DAEMON_NAME) = each ($array) ){
+		if(!DAEMON_STATUS_IS_OK($DAEMON_NAME,$ini)){$c++;}
 	}
 	
+	if($c>0){
+		$status=ParagrapheTEXT("warn-red-48.png", "$c {SERVICESS_STOPPED}", "$c {SERVICESS_STOPPED_TEXT}","javascript:Loadjs('postfix.status.allservices.php')",90);
+	}else{
+		$status=ParagrapheTEXT("ok42.png", "{SERVICESS_OK}", "{SERVICESS_OK_TEXT}","javascript:Loadjs('postfix.status.allservices.php')",90);
+	}
 	
 	$main=new maincf_multi("master","master");
 	$freeze_delivery_queue=$main->GET('freeze_delivery_queue');
 	if($freeze_delivery_queue==1){
-		$warn1="<center>
-		<table style='width:80%' class=form>
-		<tr>
-		<td width=1%><img src='img/warn-red-48.png'></td>
-		<td><strong style='font-size:14px;color:#C52626'>{WARN_QUEUE_FREEZE}</strong></td>
-		</tr>
-		</table></center>";
+		$warn1=ParagrapheTEXT("warn-red-48.png","{WARN_QUEUE_FREEZE}","{WARN_QUEUE_FREEZE}");
+		
 	}
 	
+	$main=new main_cf();
+	
+	$count=0;
+	while (list ($num, $ligne) = each ($main->array_mynetworks) ){
+		if($ligne=="127.0.0.0/8"){continue;}
+		if($ligne=="127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128"){continue;}
+		$count++;
+	}
+	
+	if($count==0){
+		$nonet=ParagrapheTEXT('warn-red-48.png',"{NO_POSTFIX_NETWORK_SET}",'{NO_POSTFIX_NETWORK_SET_EXPLAIN}',"javascript:Loadjs('postfix.network.php?ajax=yes')",90);
+	}	
 	
 	
-	return  $tpl->_ENGINE_parse_body($status.$refresh.$warn1);
 	
+	return  $tpl->_ENGINE_parse_body($status.$nonet.$refresh.$warn1);	
 }
+
+
+
 
 function emptycache(){
 	$sock=new sockets();
@@ -2644,7 +2558,7 @@ function emptycache(){
 function status_section(){
 	$page=CurrentPageName();
 
-$html="<div id='tweaks'></div>
+$html="<div id='tweaks' style='width:100%'></div>
 <script>
 	LoadAjax('tweaks','$page?main=tweaks&hostname=');
 </script>

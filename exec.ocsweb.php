@@ -24,6 +24,7 @@ if($argv[1]=='--certificate-self'){CreateSelfSignedCertificate();}
 if($argv[1]=='--certificate'){CreateCertificate();}
 if($argv[1]=='--final-cert'){CreateFinalCertificate();exit;}
 if($argv[1]=='--injection'){AutomaticInjection();exit;}
+if($argv[1]=='--builddbinc'){builddbinc();exit;}
 
 
 function build_certificate($hostname){
@@ -481,6 +482,22 @@ function AutomaticInjectionAdd($MAC){
 		send_email_events("Failed to inject computer $f->ComputerRealName ($MAC)",$infos,"system");
 	}
 	
+}
+
+function builddbinc(){
+	if(!is_dir("/usr/share/ocsinventory-reports/ocsreports")){
+		echo "Starting......: OCS web Engine /usr/share/ocsinventory-reports/ocsreports no such directory\n";
+		return;
+	}
+	$q=new mysql();
+	$f[]="<?php";
+	$f[]="\$_SESSION[\"SERVEUR_SQL\"]=\"$q->mysql_server:$q->mysql_port\";";
+	$f[]="\$_SESSION[\"COMPTE_BASE\"]=\"$q->mysql_admin\";";
+	$f[]="\$_SESSION[\"PSWD_BASE\"]=\"$q->mysql_password\";";
+	$f[]="?>";
+	@file_put_contents("/usr/share/ocsinventory-reports/ocsreports/dbconfig.inc.php", @implode("\n", $f));
+	echo "Starting......: OCS web Engine dbconfig.inc.php done\n"; 	
+
 }
 
 

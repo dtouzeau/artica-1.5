@@ -14,6 +14,12 @@ $GLOBALS["MAILLOG"]=array();
 if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["VERBOSE"]=true;}
 if(preg_match("#--force#",implode(" ",$argv))){$GLOBALS["FORCE"]=true;}
 
+
+
+if($argv[1]=="--export"){export_table($argv[2]);die();}
+if($argv[1]=="--export-all"){export_all_tables();die();}
+if($argv[1]=="--merge-table"){merge_table($argv[2],$argv[3]);die();}
+if(!ifMustBeExecuted()){die("Not a squid service....") ;}
 if($argv[1]=="--update"){update();die();}
 if($argv[1]=="--downloads"){downloads();die();}
 if($argv[1]=="--inject"){inject();die();}
@@ -23,7 +29,8 @@ if($argv[1]=="--schedule-maintenance"){schedulemaintenance();die();}
 
 
 
-writelogs("unable to understand query !!!!!!!!!!!..." .@implode(",",$argv),"main()",__FILE__,__LINE__);
+
+writelogsBLKS("unable to understand query !!!!!!!!!!!..." .@implode(",",$argv),"main()",__FILE__,__LINE__);
 
 function fullupdate(){
 	$GLOBALS["FULL"]=true;
@@ -31,7 +38,7 @@ function fullupdate(){
 	$unix=new unix();
 	$pid=@file_get_contents($pidfile);
 	if($unix->process_exists($pid,__FILE__)){
-		writelogs("Warning: Already running pid $pid",__FUNCTION__,__FILE__,__LINE__);
+		writelogsBLKS("Warning: Already running pid $pid",__FUNCTION__,__FILE__,__LINE__);
 		return;
 	}
 	
@@ -47,7 +54,7 @@ function schedulemaintenance(){
 	$unix=new unix();
 	$pid=@file_get_contents($pidfile);
 	if($unix->process_exists($pid,__FILE__)){
-		writelogs("Warning: Already running pid $pid",__FUNCTION__,__FILE__,__LINE__);
+		writelogsBLKS("Warning: Already running pid $pid",__FUNCTION__,__FILE__,__LINE__);
 		return;
 	}	
 	$t1=time();
@@ -146,8 +153,24 @@ function UpdateCategories($filename,$progress,$subject,$finish=0){
 	$q->QUERY_SQL($sql,"artica_backup");
 }
 
+function ifMustBeExecuted(){
+	$users=new usersMenus();
+	$sock=new sockets();
+	$update=true;
+	if(!$users->SQUID_INSTALLED){$update=false;}
+	$CategoriesRepositoryEnable=$sock->GET_INFO("CategoriesRepositoryEnable");
+	$EnableWebProxyStatsAppliance=$sock->GET_INFO("EnableWebProxyStatsAppliance");
+	if(!is_numeric($CategoriesRepositoryEnable)){$CategoriesRepositoryEnable=0;}
+	if(!is_numeric($EnableWebProxyStatsAppliance)){$EnableWebProxyStatsAppliance=0;}
+	if($CategoriesRepositoryEnable==1){$update=true;}
+	if($EnableWebProxyStatsAppliance==1){$update=true;}
+	return $update;
+}
+
 
 function downloads(){
+	if(!ifMustBeExecuted()){return;}
+
 	$working_dir=$GLOBALS["working_directory"];
 	$unix=new unix();
 	$sql="SELECT * FROM updates_categories WHERE filesize>0";
@@ -206,6 +229,16 @@ function CheckTargetFile($filename,$requiredsize){
 	return true;
 }
 
+function writelogsBLKS($text,$function,$file,$line){
+	$pid=getmypid();
+	writelogs($text,$function,$file,$line);
+	$text=addslashes($text)." in line $line";
+	$sql="('".date('Y-m-d H:i:s')."','$pid','$function','$text')";
+	if(!is_dir("/var/log/artica-postfix/update-categories")){@mkdir("/var/log/artica-postfix/update-categories",644,true);}
+	@file_put_contents("/var/log/artica-postfix/update-categories/".md5($sql),$sql);
+	}
+
+
 function inject_category($categories){
 	
 	
@@ -213,7 +246,7 @@ function inject_category($categories){
 	$unix=new unix();
 	$pid=@file_get_contents($pidfile);
 	if($unix->process_exists($pid,__FILE__)){
-		writelogs("Warning: Already running pid $pid for $categories",__FUNCTION__,__FILE__,__LINE__);
+		writelogsBLKS("Warning: Already running pid $pid for $categories",__FUNCTION__,__FILE__,__LINE__);
 		return;
 	}
 	
@@ -233,8 +266,8 @@ function inject_category($categories){
 	$num=mysql_num_rows($results);
 	$GLOBALS["MAILLOG"][]=__LINE__.")  Pid number ".getmypid();
 	
-	writelogs("$sql",__FUNCTION__,__FILE__,__LINE__);
-	writelogs("$num files to check for $categories",__FUNCTION__,__FILE__,__LINE__);
+	writelogsBLKS("$sql",__FUNCTION__,__FILE__,__LINE__);
+	writelogsBLKS("$num files to check for $categories",__FUNCTION__,__FILE__,__LINE__);
 	$GLOBALS["MAILLOG"][]=__LINE__.")  $num files to check for $categories";
 	$c=0;
 	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){	
@@ -249,7 +282,7 @@ function inject_category($categories){
 		}
 		$c++;
 		$GLOBALS["MAILLOG"][]=__LINE__.")  $filename done (system load ".getSystemLoad().")";
-		inject_sql($filename,$targetfileUncompress);
+		inject_sql($filename,$targetfileUncompress,$categories);
 
 	}
 	$distanceOfTimeInWords=$unix->distanceOfTimeInWords($t1,time());
@@ -270,7 +303,7 @@ function inject(){
 	if(!$GLOBALS["FULL"]){
 		$pid=@file_get_contents($pidfile);
 		if($unix->process_exists($pid,__FILE__)){
-			writelogs("Warning: Already running pid $pid",__FUNCTION__,__FILE__,__LINE__);
+			writelogsBLKS("Warning: Already running pid $pid",__FUNCTION__,__FILE__,__LINE__);
 			return;
 		}
 	}
@@ -330,7 +363,7 @@ function getSystemLoad(){
 	
 }
 
-function inject_sql($srcfilename,$filename){
+function inject_sql($srcfilename,$filename,$categoriesTable){
 	
 	$datas=explode("\n",@file_get_contents($filename));
 	echo "Processing $filename ". count($datas)." rows\n";
@@ -344,8 +377,11 @@ function inject_sql($srcfilename,$filename){
 	$t1=time();
 	$unix=new unix();
 	$count=count($datas);
-	$q=new mysql();
-	$prefix="INSERT IGNORE INTO dansguardian_community_categories (zmd5,zDate,category,pattern,uuid,sended) VALUES";
+	$q=new mysql_squid_builder();
+	$q->CreateCategoryTable($categoriesTable);
+	$categoriesTable=$q->category_transform_name($categoriesTable);
+	
+	$prefix="INSERT IGNORE INTO category_$categoriesTable (zmd5,zDate,category,pattern,uuid,sended) VALUES";
 	$suffixR=array();
 	while (list ($index, $row) = each ($datas) ){
 		if(trim($row)==null){continue;}
@@ -381,8 +417,8 @@ function inject_sql($srcfilename,$filename){
 			$suffix=@implode(",", $suffixR);
 			$sql="$prefix $suffix";
 			$suffixR=array();
-			$q=new mysql();
-			$q->QUERY_SQL($sql,"artica_backup");
+			$q=new mysql_squid_builder();
+			$q->QUERY_SQL($sql);
 			if(!$q->ok){
 				UpdateCategories($srcfilename,30,"{sql_error}",0);
 				return;
@@ -395,8 +431,8 @@ function inject_sql($srcfilename,$filename){
 	if(count($suffixR)>0){
 		$suffix=@implode(",", $suffixR);
 		$sql="$prefix $suffix";
-		$q=new mysql();
-		$q->QUERY_SQL($sql,"artica_backup");		
+		$q=new mysql_squid_builder();
+		$q->QUERY_SQL($sql);		
 	}
 	
 	$GLOBALS["MAILLOG"][]=__LINE__.") Success importing $c elements in" .$unix->distanceOfTimeInWords($t1,time());
@@ -405,7 +441,7 @@ function inject_sql($srcfilename,$filename){
 }
 
 function CategoriesCountCache(){
-	$q=new mysql();
+	$q=new mysql_squid_builder();
 	$sql="SELECT count(zmd5) as tcount,category FROM dansguardian_community_categories group by category";
 	$results=$q->QUERY_SQL($sql,"artica_backup");
 	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){	
@@ -414,6 +450,73 @@ function CategoriesCountCache(){
 	
 	@file_put_contents("/usr/share/artica-postfix/ressources/squid.categories.count.cache", serialize($array));
 	shell_exec("/bin/chmod 777 /usr/share/artica-postfix/ressources/squid.categories.count.cache");
+}
+
+function export_table($tablename){
+	if($GLOBALS["VERBOSE"]){echo "Exporting $tablename\n";}
+	$q=new mysql_squid_builder();
+	$sql="SELECT * FROM $tablename";
+	$results=$q->QUERY_SQL($sql);
+	
+	$fh = fopen("/tmp/$tablename.sql", 'w+');
+	
+	$c=0;
+	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+			if($ligne["category"]==null){continue;}
+			if($ligne["pattern"]==null){continue;}
+			if($ligne["zmd5"]==null){continue;}
+			$c++;
+			$line="('{$ligne["zmd5"]}','{$ligne["zDate"]}','{$ligne["category"]}','{$ligne["pattern"]}','{$ligne["uuid"]}',1,1)";
+			fwrite($fh, $line."\n");
+		}
+		
+		echo "close /tmp/$tablename.sql $c rows\n";
+		fwrite($fh, @implode(",",$f));
+		fclose($fh);	
+	
+	
+}
+
+function export_all_tables(){
+	$q=new mysql_squid_builder();
+	$tables=$q->LIST_TABLES_CATEGORIES();
+	while (list ($table, $row) = each ($tables) ){
+		export_table($table);
+	}
+}
+
+function merge_table($fromtable,$totable){
+	$prefix="INSERT IGNORE INTO $totable (zmd5,zDate,category,pattern,uuid,sended,enabled) VALUES ";	
+	$q=new mysql_squid_builder();
+	$sql="SELECT * FROM $fromtable";
+	$results=$q->QUERY_SQL($sql);
+	$c=0;
+	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+		$line="('{$ligne["zmd5"]}','{$ligne["zDate"]}','{$ligne["category"]}','{$ligne["pattern"]}','{$ligne["uuid"]}',1,1)";
+		$f[]=$line;
+		if(count($f)>500){
+			$c=$c+count($f);
+			echo "Inserted $c elements\n";
+			$sql="$prefix".@implode(",",$f);
+			$f=array();
+			$q->QUERY_SQL($sql);
+			if(!$q->ok){echo $q->mysql_error."\n";return;}
+		}
+	}
+	
+		if(count($f)>0){
+			$c=$c+count($f);
+			echo "Inserted $c elements\n";
+			$sql="$prefix".@implode(",",$f);
+			$f=array();
+			$q->QUERY_SQL($sql);
+			if(!$q->ok){echo $q->mysql_error."\n";return;}
+		}	
+		
+	echo "Finish\n";
+	$sql="DROP TABLE $fromtable";
+	$q->QUERY_SQL($sql);
+	
 }
 
 

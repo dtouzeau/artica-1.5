@@ -82,6 +82,7 @@ function parameters(){
 	$FreeWebPerformances=unserialize(base64_decode($sock->GET_INFO("FreeWebPerformances")));
 	$FreeWebEnableModFcgid=$sock->GET_INFO("FreeWebEnableModFcgid");
 	
+
 	
 	
 	$JSFreeWebsEnableModSecurity=1;
@@ -136,11 +137,23 @@ function parameters(){
 	$JSFreeWebEnableModFcgid=0;
 	if($users->APACHE_MOD_FCGID && $users->APACHE_MOD_SUEXEC){$JSFreeWebEnableModFcgid=1;}
 	
+	$account=unserialize(base64_decode($sock->getFrameWork("freeweb.php?ApacheAccount=yes")));
+	$ApacheSRCAccount=$account[0];
+	$ApacheSRCGroups=$account[1];
 	
 	
 	$html="
 	<div id='apacheMasterconfig'>
 	<table style='width:100%' class=form>
+	
+	<tr>
+		<td class=legend>{account}:</td>
+		<td>". Field_text("ApacheSRCAccount",$ApacheSRCAccount,"font-size:14px;padding:3px")."</td>
+	</tr>	
+	<tr>
+		<td class=legend>{group}:</td>
+		<td>". Field_text("ApacheSRCGroup",$ApacheSRCGroups,"font-size:14px;padding:3px")."</td>
+	</tr>		
 	<tr>
 		<td class=legend>{ApacheServerTokens}:</td>
 		<td>". Field_array_Hash($ApacheServerTokens_array,"ApacheServerTokens",$ApacheServerTokens,"style:font-size:14px;padding:3px")."</td>
@@ -281,9 +294,6 @@ function parameters(){
 			if(document.getElementById('ApacheDisableModDavFS').checked){XHR.appendData('ApacheDisableModDavFS',1);}else{XHR.appendData('ApacheDisableModDavFS',0);}
 			if(document.getElementById('FreeWebEnableModFcgid').checked){XHR.appendData('FreeWebEnableModFcgid',1);}else{XHR.appendData('FreeWebEnableModFcgid',0);}
 			
-			
-			
-			
 			if(document.getElementById('KeepAlive').checked){XHR.appendData('KeepAlive',1);}else{XHR.appendData('KeepAlive',0);}
 			XHR.appendData('Timeout',document.getElementById('Timeout').value);
 			XHR.appendData('MaxKeepAliveRequests',document.getElementById('MaxKeepAliveRequests').value);
@@ -293,6 +303,8 @@ function parameters(){
 			XHR.appendData('StartServers',document.getElementById('StartServers').value);
 			XHR.appendData('MaxClients',document.getElementById('MaxClients').value);
 			XHR.appendData('MaxRequestsPerChild',document.getElementById('MaxRequestsPerChild').value);
+			XHR.appendData('ApacheSRCAccount',document.getElementById('ApacheSRCAccount').value);
+			XHR.appendData('ApacheSRCGroup',document.getElementById('ApacheSRCGroup').value);
 
  			AnimateDiv('apacheMasterconfig');
     		XHR.sendAndLoad('$page', 'GET',x_SaveApacheCentralSettings);
@@ -369,6 +381,10 @@ function SaveMacterConfig(){
 	$sock->SET_INFO("ApacheDisableModDavFS" ,$_GET["ApacheDisableModDavFS"]);
 	$sock->SET_INFO("varWwwPerms",$_GET["varWwwPerms"]);
 	$sock->SET_INFO("FreeWebEnableModFcgid",$_GET["FreeWebEnableModFcgid"]);
+	
+	if(isset($_GET["ApacheSRCAccount"])){$sock->SET_INFO("ApacheSRCAccount",$_GET["ApacheSRCAccount"]);}
+	if(isset($_GET["ApacheSRCGroup"])){$sock->SET_INFO("ApacheSRCGroup",$_GET["ApacheSRCGroup"]);}
+	
 	$sock->SaveConfigFile(base64_encode(serialize($_GET)), "FreeWebPerformances");
 	$sock->getFrameWork("cmd.php?restart-apache-src=yes");
 }
@@ -434,9 +450,10 @@ function index(){
 	$FreeWebListenSSLPort=$sock->GET_INFO("FreeWebListenSSLPort");
 	$FreeWebListen=$sock->GET_INFO("FreeWebListen");
 	$FreeWebLeftMenu=$sock->GET_INFO("FreeWebLeftMenu");
-	
+	$FreeWebDisableSSL=$sock->GET_INFO("FreeWebDisableSSL");
 	if($FreeWebListen==null){$FreeWebListen="*";}
 	if(!is_numeric($EnableFreeWeb)){$EnableFreeWeb=0;}
+	if(!is_numeric($FreeWebDisableSSL)){$FreeWebDisableSSL=0;}
 	if($FreeWebListenPort==null){$FreeWebListenPort=80;}
 	if($FreeWebListenSSLPort==null){$FreeWebListenSSLPort=443;}
 	if($FreeWebLeftMenu==null){$FreeWebLeftMenu=1;}
@@ -460,7 +477,8 @@ function index(){
 			
 		</td>
 		<td valign='top'>$p
-		<table style='width:100%;margin:5px;padding:5px;border:1px solid #CCCCCC'>
+		<table class=form>
+		<tr>
 			<td class=legend>{add_to_left_menu}:</td>
 			<td>". Field_checkbox("FreeWebLeftMenu",1,$FreeWebLeftMenu,"FreeWebLeftMenuCheck()")."</td>
 		</tr>		
@@ -475,11 +493,15 @@ function index(){
 		<tr>
 			<td class=legend>{listen_port} SSL:</td>
 			<td>". Field_text("FreeWebListenSSLPort",$FreeWebListenSSLPort,"font-size:13px;padding:3px;width:60px")."</td>
-		</tr>					
+		</tr>	
+		<tr>
+			<td class=legend>{disable_SSL_port}:</td>
+			<td>". Field_checkbox("FreeWebDisableSSL",1,$FreeWebDisableSSL,"FreeWebDisableSSLCheck()")."</td>
+		</tr>						
 		</table>
 		
 		<hr>
-		<div style='width:100%;text-align:right'>". button("{apply}","EnableFreeWebSave()")."</div>
+			<div style='width:100%;text-align:right'>". button("{apply}","EnableFreeWebSave()")."</div>
 		</td>
 	</tr>
 	</table>
@@ -500,6 +522,7 @@ function index(){
     		XHR.appendData('FreeWebListen',document.getElementById('FreeWebListen').value);
     		XHR.appendData('FreeWebListenPort',document.getElementById('FreeWebListenPort').value);
     		XHR.appendData('FreeWebListenSSLPort',document.getElementById('FreeWebListenSSLPort').value);
+    		if(document.getElementById('FreeWebDisableSSL').checked){XHR.appendData('FreeWebDisableSSL',1);}else{XHR.appendData('FreeWebDisableSSL',0);}
  			document.getElementById('img_EnableFreeWeb').src='img/wait_verybig.gif';
     		XHR.sendAndLoad('$page', 'GET',x_EnableFreeWebSave);
 			
@@ -509,7 +532,16 @@ function index(){
 			var results=obj.responseText;
 			if(results.length>0){alert(results);}			
 			CacheOff();
-		}		
+		}	
+
+		function FreeWebDisableSSLCheck(){
+			
+			if(document.getElementById('FreeWebDisableSSL').checked){
+				document.getElementById('FreeWebListenSSLPort').disabled=true;
+				return;
+			}
+			document.getElementById('FreeWebListenSSLPort').disabled=false;
+		}
 		
 		function FreeWebLeftMenuCheck(){
 			var XHR = new XHRConnection();
@@ -521,6 +553,7 @@ function index(){
 				XHR.sendAndLoad('$page', 'GET',x_FreeWebLeftMenuCheck);
 		}
 	statusRefresh();
+	FreeWebDisableSSLCheck();
 	</script>";
 	
 	echo $tpl->_ENGINE_parse_body($html);
@@ -537,7 +570,7 @@ function saveEnableFreeWeb(){
 	$sock->SET_INFO("FreeWebListen",$_GET["FreeWebListen"]);
 	$sock->SET_INFO("FreeWebListenPort",$_GET["FreeWebListenPort"]);
 	$sock->SET_INFO("FreeWebListenSSLPort",$_GET["FreeWebListenSSLPort"]);
-	
+	$sock->SET_INFO("FreeWebDisableSSL", $_GET["FreeWebDisableSSL"]);
 	
 	$sock->getFrameWork("cmd.php?freeweb-restart=yes");
 	$sock->getFrameWork("cmd.php?pure-ftpd-restart=yes");
@@ -768,11 +801,10 @@ function listwebs_search(){
 			<td nowrap style='color:$color'>$groupware$forward_text<span style='float:left'><strong style='font-size:13px;style='color:$color'>$href$servername_text</a>$added_port$sizevg</strong></span></td>
 			<td width=1%><img src='img/$ssl'></td>
 			<td width=1% align='center'>$checkResolv</td>
-			<td width=1%>$checkDNS</td>
-			<td width=1%>$checkMember</td>
-			<td width=1%>$statistics</td>
-			<td width=1%>$exec_statistics</td>
-			
+			<td width=1% align='center'>$checkDNS</td>
+			<td width=1% align='center'>$checkMember</td>
+			<td width=1% align='center'>$statistics</td>
+			<td width=1% align='center'>$exec_statistics</td>
 			<td width=1%>$delete</td>
 			</tr>
 			";
@@ -858,8 +890,16 @@ function apache_src_status(){
 	$datas=$sock->getFrameWork("cmd.php?apachesrc-ini-status=yes");
 	writelogs(strlen($datas)." bytes for apache status",__CLASS__,__FUNCTION__,__FILE__,__LINE__);
 	$ini->loadString(base64_decode($datas));
-	$status=DAEMON_STATUS_ROUND("APP_APACHE_SRC",$ini,null,0)."<br>".DAEMON_STATUS_ROUND("PUREFTPD",$ini,null,0)."<br>".DAEMON_STATUS_ROUND("APP_TOMCAT",$ini,null,0).$refresh;
-	echo $tpl->_ENGINE_parse_body($status);	
+	$status=DAEMON_STATUS_ROUND("APP_APACHE_SRC",$ini,null,0)."<br>".DAEMON_STATUS_ROUND("PUREFTPD",$ini,null,0)."<br>".DAEMON_STATUS_ROUND("APP_TOMCAT",$ini,null,0);
+	
+	$users=new usersMenus();
+	if(!$users->PUREFTP_INSTALLED){
+		$tips=Paragraphe_tips("64-infos.png", "{TIPS_PUREFTPD_TITLE}", "{TIPS_PUREFTPD_TITLE_TEXT}","javascript:Loadjs('setup.index.progress.php?product=APP_PUREFTPD&start-install=yes');",265);
+	}
+		
+	
+	
+	echo $tpl->_ENGINE_parse_body($status.$tips.$refresh);	
 	
 }
 

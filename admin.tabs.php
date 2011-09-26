@@ -53,9 +53,63 @@ function switch_main(){
 	}
 
 function HTTP_FILTER_STATS(){
-	$html=@file_get_contents("ressources/logs/dansguardian-rtmm.html");
+	$sock=new sockets();
 	$tpl=new templates();
-	echo "<input type='hidden' id='switch' value='{$_GET["main"]}'>";
+	$datas=base64_decode($sock->getFrameWork("squid.php?squid-realtime-cache=yes"));
+	$EVENTS=unserialize($datas);
+	if(!is_array($EVENTS)){
+		echo $tpl->_ENGINE_parse_body("<center><H2>{error_miss_datas}</H2></center>");
+		return;
+		
+	}
+	
+	$html="<center>
+<table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
+<thead class='thead'>
+	<tr>
+		<th width=1%>{date}</th>
+		<th width=1%>{member}</th>
+		<th width=99%>{website}</th>
+	</tr>
+</thead>
+<tbody class='tbody'>";
+$GLOBALS["RTIME"][]=array($sitename,$uri,$TYPE,$REASON,$CLIENT,$date,$zMD5,$site_IP,$Country,$size,$username,$mac);
+	
+	while (list ($num, $rows) = each ($EVENTS) ){
+
+		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
+		$sitename=$rows[0];
+		$uri=$rows[1];
+		$TYPE=$rows[2];
+		$REASON=$rows[3];
+		$CLIENT=$rows[4];
+		$date=$rows[5];
+		$zMD5=$rows[6];
+		$site_IP=$rows[7];
+		$Country=$rows[8];
+		$size=$rows[9];
+		$username=$rows[10];
+		$mac=$rows[11];
+		
+		$ipaddr=$CLIENT;
+		
+		if(strlen(trim($username))>1){
+			$ipaddr=$username;
+		}
+		$today=date('Y-m-d');
+		$date=str_replace($today, "", $date);
+
+		$html=$html."
+		<tr class=$classtr>
+			<td style='font-size:14px;font-weight:bold;color:$color' nowrap>$date</td>
+			<td style='font-size:14px;font-weight:bold;color:$color'>$ipaddr<div style='font-size:9px'>$mac</div></td>
+			<td style='font-size:14px;font-weight:bold;color:$color'>$sitename</a><div style='font-size:9px'>($Country): $uri</div></td>
+		</tr>
+		";
+	}	
+	
+	$html=$html."</tbody></table>";
+	
 	echo $tpl->_ENGINE_parse_body("$html");
 	
 }

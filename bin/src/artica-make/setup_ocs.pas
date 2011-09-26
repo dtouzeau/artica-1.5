@@ -33,6 +33,7 @@ public
       procedure xclient_linux_install();
       procedure xfusionclient_install();
       procedure xwpkg_server_install();
+      procedure xinstall_v2();
 END;
 
 implementation
@@ -111,18 +112,21 @@ install.INSTALL_STATUS(CODE_NAME,20);
  if not libs.PERL_GENERIC_INSTALL('XML-Entities','XML::Entities') then begin
      install.INSTALL_STATUS(CODE_NAME,110);
      install.INSTALL_PROGRESS(CODE_NAME,'{failed}');
+      writeln('XML-Entities failed, aborting');
      exit;
  end;
 
 
-    install.INSTALL_PROGRESS(CODE_NAME,'{checking}');
-if DirectoryExists(ParamStr(2)) then source_folder:=ParamStr(2);
-  install.INSTALL_STATUS(CODE_NAME,30);
-  install.INSTALL_PROGRESS(CODE_NAME,'{downloading}');
+ install.INSTALL_PROGRESS(CODE_NAME,'{checking}');
+ if DirectoryExists(ParamStr(2)) then source_folder:=ParamStr(2);
+ install.INSTALL_STATUS(CODE_NAME,30);
+ install.INSTALL_PROGRESS(CODE_NAME,'{downloading}');
 
+  writeln(' *** Downloading OCSNG_UNIX_SERVER ***');
+  source_folder:='';
   if length(source_folder)=0 then source_folder:=libs.COMPILE_GENERIC_APPS('OCSNG_UNIX_SERVER');
   if not DirectoryExists(source_folder) then begin
-     writeln('Install ocs failed...');
+     writeln('Install ocs failed... No source folder ???');
      install.INSTALL_STATUS(CODE_NAME,110);
      install.INSTALL_PROGRESS(CODE_NAME,'{failed}');
      exit;
@@ -130,7 +134,7 @@ if DirectoryExists(ParamStr(2)) then source_folder:=ParamStr(2);
 
   writeln('Working directory was "'+source_folder+'"');
   if not FileExists(source_folder+'/setup.sh')  then begin
-     writeln('Install ocs failed...');
+     writeln('Install ocs failed...'+source_folder+'/setup.sh no such file');
      install.INSTALL_STATUS(CODE_NAME,110);
      install.INSTALL_PROGRESS(CODE_NAME,'{failed}');
      exit;
@@ -153,7 +157,75 @@ if DirectoryExists(ParamStr(2)) then source_folder:=ParamStr(2);
   install.INSTALL_PROGRESS(CODE_NAME,'{installed}');
 
   end;
+
 //#########################################################################################
+procedure tsetup_ocs.xinstall_v2();
+var
+   CODE_NAME:string;
+   cmd:string;
+begin
+
+CODE_NAME:='APP_OCSI2';
+SetCurrentDir('/root');
+install.INSTALL_STATUS(CODE_NAME,20);
+
+ if not libs.PERL_GENERIC_INSTALL('XML-Entities','XML::Entities') then begin
+     install.INSTALL_STATUS(CODE_NAME,110);
+     install.INSTALL_PROGRESS(CODE_NAME,'{failed}');
+      writeln('XML-Entities failed, aborting');
+     exit;
+ end;
+
+
+ install.INSTALL_PROGRESS(CODE_NAME,'{checking}');
+ if DirectoryExists(ParamStr(2)) then source_folder:=ParamStr(2);
+ install.INSTALL_STATUS(CODE_NAME,30);
+ install.INSTALL_PROGRESS(CODE_NAME,'{downloading}');
+
+  writeln(' *** Downloading OCSNG_UNIX_SERVER ***');
+  source_folder:='';
+  if length(source_folder)=0 then source_folder:=libs.COMPILE_GENERIC_APPS('OCSNG_UNIX_SERVER2');
+  if not DirectoryExists(source_folder) then begin
+     writeln('Install ocs failed... No source folder ???');
+     install.INSTALL_STATUS(CODE_NAME,110);
+     install.INSTALL_PROGRESS(CODE_NAME,'{failed}');
+     exit;
+  end;
+
+  writeln('Working directory was "'+source_folder+'"');
+  if not FileExists(source_folder+'/setup.sh')  then begin
+     writeln('Install ocs failed...'+source_folder+'/setup.sh no such file');
+     install.INSTALL_STATUS(CODE_NAME,110);
+     install.INSTALL_PROGRESS(CODE_NAME,'{failed}');
+     exit;
+  end;
+
+  SetCurrentDir(source_folder+'/Apache');
+  fpsystem('perl Makefile.PL');
+  fpsystem('make');
+  fpsystem('make install');
+  SetCurrentDir(source_folder);
+
+  fpsystem('/bin/rm -rf /usr/share/ocsinventory-reports/ocsreports >/dev/null');
+  fpsystem('/bin/rm -rf /var/lib/ocsinventory-reports >/dev/null');
+  forceDirectories('/usr/share/ocsinventory-reports/ocsreports');
+  forceDirectories('/var/lib/ocsinventory-reports/ipd');
+  ForceDirectories('/var/lib/ocsinventory-reports/download');
+  fpsystem('/bin/cp -rf '+source_folder+'/ocsreports/* /usr/share/ocsinventory-reports/ocsreports/');
+  fpsystem('/bin/chmod -R go-w /usr/share/ocsinventory-reports');
+  fpsystem('/bin/cp '+ source_folder+'/binutils/ipdiscover-util.pl /usr/share/ocsinventory-reports/ocsreports/ipdiscover-util.pl');
+  writeln('Removing old database');
+  fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.ocsweb.install.php --remove-database');
+
+  fpsystem('/etc/init.d/artica-postfix restart ocsweb');
+  install.INSTALL_STATUS(CODE_NAME,100);
+  install.INSTALL_PROGRESS(CODE_NAME,'{installed}');
+
+  end;
+//#########################################################################################
+
+
+
 procedure tsetup_ocs.xclient_linux_install();
 var
    CODE_NAME:string;
@@ -193,7 +265,7 @@ if DirectoryExists(ParamStr(2)) then source_folder:=ParamStr(2);
 
   if length(source_folder)=0 then source_folder:=libs.COMPILE_GENERIC_APPS('OCSNG_LINUX_AGENT');
   if not DirectoryExists(source_folder) then begin
-     writeln('Install ocs failed...');
+     writeln('Install ocs client failed...');
      install.INSTALL_STATUS(CODE_NAME,110);
      install.INSTALL_PROGRESS(CODE_NAME,'{failed}');
      exit;

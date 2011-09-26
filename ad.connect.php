@@ -18,6 +18,7 @@
 	if(isset($_GET["netadsleave-icon"])){netadsleave_icon();exit;}
 	if(isset($_GET["netads-leave-perform"])){netadsleave_perform();exit;}
 	if(isset($_GET["EnableManageUsersTroughActiveDirectory"])){saveAdStrict();exit;}
+	if(isset($_POST["EnableParamsInPhpldapAdmin"])){EnableParamsInPhpldapAdminSave();exit;}
 js();
 
 function js(){
@@ -35,6 +36,13 @@ function js(){
 	echo $html;
 	
 }
+
+function EnableParamsInPhpldapAdminSave(){
+	$sock=new sockets();
+	$sock->SET_INFO("EnableParamsInPhpldapAdmin",$_POST["EnableParamsInPhpldapAdmin"]);
+	
+}
+
 
 function saveAdStrict(){
 	$sock=new sockets();
@@ -66,6 +74,7 @@ function ad_ldap(){
 		$EnableSambaActiveDirectory=$sock->GET_INFO("EnableSambaActiveDirectory");
 		$DisableSambaFileSharing=$sock->GET_INFO("DisableSambaFileSharing");
 		$ActiveDirectoryMysqlSinc=$sock->GET_INFO("ActiveDirectoryMysqlSinc");
+		$EnableParamsInPhpldapAdmin=$sock->GET_INFO("EnableParamsInPhpldapAdmin");
 		$CyrusToAD=$sock->GET_INFO("CyrusToAD");
 		$CyrusToADSyncTime=$sock->GET_INFO("CyrusToADSyncTime");
 		if(!is_numeric($EnableManageUsersTroughActiveDirectory)){$EnableManageUsersTroughActiveDirectory=0;}
@@ -73,6 +82,7 @@ function ad_ldap(){
 		if(!is_numeric($CyrusToAD)){$CyrusToAD=0;}
 		if(!is_numeric($CyrusToADSyncTime)){$CyrusToADSyncTime=10;}
 		if(!is_numeric($ActiveDirectoryMysqlSinc)){$ActiveDirectoryMysqlSinc=5;}
+		if(!is_numeric($EnableParamsInPhpldapAdmin)){$EnableParamsInPhpldapAdmin=0;}
 		$ActiveDirectoryCredentials=array();
 		$ActiveDirectoryCredentials=unserialize($sock->GET_INFO("ActiveDirectoryCredentials"));
 		
@@ -105,7 +115,11 @@ function ad_ldap(){
 			<tr>
 				<td class=legend>{EnableCyrusImapToAd}</td>
 				<td>". Field_checkbox('CyrusToAD2',1,$CyrusToAD,"EnableFormCredAd()")."</td>
-			</tr>			
+			</tr>	
+			<tr>
+				<td class=legend>{EnableParamsInPhpldapAdmin}</td>
+				<td>". Field_checkbox('EnableParamsInPhpldapAdmin',1,$EnableParamsInPhpldapAdmin,"EnableParamsInPhpldapAdminCheck()")."</td>
+			</tr>					
 			<tr>
 				<td valign='top' class=legend>{TimeSynchronization}:</td>
 				<td style='font-size:13px'>". Field_text("CyrusToADSyncTime",$CyrusToADSyncTime,"width:60px;padding:3px;font-size:13px")."&nbsp;Mn</td>
@@ -155,6 +169,17 @@ var X_SaveStrictAd= function (obj) {
 		var XHR=XHRParseElements('StrictADDiv');
 		document.getElementById('StrictADDiv').innerHTML='<center><img src=img/wait_verybig.gif></center>';   
 		XHR.sendAndLoad('$page', 'GET',X_SaveStrictAd);
+	
+	}
+	
+	function EnableParamsInPhpldapAdminCheck(){
+		var XHR = new XHRConnection();
+		if(document.getElementById('EnableParamsInPhpldapAdmin').checked){			
+			XHR.appendData('EnableParamsInPhpldapAdmin',1);
+		}else{
+			XHR.appendData('EnableParamsInPhpldapAdmin',0);
+		}
+		XHR.sendAndLoad('$page', 'POST');
 	
 	}
 	
@@ -354,6 +379,10 @@ function winbindd(){
 
 			}
 		 RefreshTab('main_ad_connect_popup');
+		 if(document.getElementById('admin_perso_tabs')){RefreshTab('admin_perso_tabs');}
+		 if(document.getElementById('main_samba_quicklinks_config')){RefreshTab('main_samba_quicklinks_config');}
+		 
+		 
 		}		
 
 		
@@ -524,6 +553,7 @@ function netadsleave_perform(){
 	$sock=new sockets();
 	$sock->getFrameWork("cmd.php?net-ads-leave=yes");
 	$sock->SET_INFO("EnableSambaActiveDirectory",0);
+	$sock->SET_INFO("EnableManageUsersTroughActiveDirectory",0);
 	$sock->getFrameWork("cmd.php?samba-save-config=yes");
 	
 }

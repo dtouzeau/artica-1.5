@@ -216,8 +216,8 @@ div .form{
 /* example 1 */
 #QuickLinksTop .kwicks li{
 	float: left;
-	width: 125px;
-	height: 100px;
+	width: 123px;
+	height: 60px;
 	margin-right: 5px;
 }
 #QuickLinksTop #kwick1 { 

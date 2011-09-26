@@ -306,7 +306,7 @@ function hash_get_ou($has_key=false){
 	
 	
 	
-public function hash_get_groups_from_ou_mysql($ou,$pattern){
+public function hash_get_groups_from_ou_mysql($ou,$pattern,$return_array=false){
 	$oupattern=str_replace("**", "*", $pattern);
 	$oupattern=str_replace("*", "%", $oupattern);
 	
@@ -314,6 +314,8 @@ public function hash_get_groups_from_ou_mysql($ou,$pattern){
 	if($oupattern<>null){$sql_ou="AND activedirectory_groupsNames.groupname LIKE '$oupattern'";}
 		$sql="SELECT activedirectory_groups.groupdn,
 		activedirectory_groupsNames.groupname,
+		activedirectory_groupsNames.description,
+		activedirectory_groupsNames.UsersCount,
 		activedirectory_users.ou
 		FROM activedirectory_groups,activedirectory_users,activedirectory_groupsNames
 		WHERE
@@ -337,7 +339,11 @@ public function hash_get_groups_from_ou_mysql($ou,$pattern){
 		
 		while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
 			$res[$ligne["groupdn"]]=$ligne["groupname"];
-			
+			if($return_array){
+				$res[$ligne["groupdn"]]=array("groupname"=>$ligne["groupname"],"description"=>$ligne["description"],"UsersCount"=>$ligne["UsersCount"]);
+			}else{
+				$res[$ligne["groupdn"]]=$ligne["groupname"];
+			}
 		}
 
 		return $res;	

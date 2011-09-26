@@ -464,6 +464,8 @@ LoadArgvs();
    $NETMASK=$ini->_params["GLOBAL"]["NETMASK"];
    $bind_addr=$ini->_params["GLOBAL"]["LOCAL_BIND"];
    $LISTEN_PROTO=$ini->_params["GLOBAL"]["LISTEN_PROTO"];
+   $REMOVE_SERVER_DEFAULT_ROUTE=$ini->_params["GLOBAL"]["REMOVE_SERVER_DEFAULT_ROUTE"];
+   if(!is_numeric($REMOVE_SERVER_DEFAULT_ROUTE)){$REMOVE_SERVER_DEFAULT_ROUTE=0;}
    if($LISTEN_PROTO==null){$LISTEN_PROTO="udp";}
    if($LISTEN_PROTO=="udp"){$proto="--proto udp";}else{$proto="--proto tcp-server";}
    
@@ -482,7 +484,9 @@ while (list ($num, $ligne) = each ($nic->array_TCP) ){
 
 if($IPTABLES_ETH<>null){
 		echo "Starting......: OpenVPN linked to $IPTABLES_ETH ({$ethi[$IPTABLES_ETH]})...\n";
-		$IPTABLES_ETH_ROUTE=IpCalcRoute($ethi[$IPTABLES_ETH]);
+		if($IPTABLES_ETH<>"127.0.0.1"){
+			$IPTABLES_ETH_ROUTE=IpCalcRoute($ethi[$IPTABLES_ETH]);
+		}
 }else{
 	echo "Starting......: OpenVPN no local NIC linked...\n";
 }
@@ -509,8 +513,12 @@ $routess=$routess+$GetRoutes;
 
 if(count($routess)==0){
 	if($IPTABLES_ETH_ROUTE<>null){
-		echo "Starting......: OpenVPN IP adding default route \"$IPTABLES_ETH_ROUTE\"\n";
-		$routess[]="--push \"route $IPTABLES_ETH_ROUTE\"";
+		if($IPTABLES_ETH<>"127.0.0.1"){
+			if($REMOVE_SERVER_DEFAULT_ROUTE==0){
+				echo "Starting......: OpenVPN IP adding default route \"$IPTABLES_ETH_ROUTE\"\n";
+				$routess[]="--push \"route $IPTABLES_ETH_ROUTE\"";
+			}
+		}
 	}
   }else{
   	echo "Starting......: OpenVPN IP adding ".count($routess)." routes\n";

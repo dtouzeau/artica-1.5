@@ -801,6 +801,14 @@ begin
                exit();
             end;
 
+            if ParamStr(2)='cgroups' then begin
+               fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.cgroups.php --stop');
+               fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.cgroups.php --cgred-stop');
+               exit();
+            end;
+
+
+
              if ParamStr(2)='openemm-sendmail' then begin
                openemm:=topenemm.Create(GLOBAL_INI.SYS);
                openemm.SENDMAIL_STOP();
@@ -1643,7 +1651,7 @@ begin
                writeln('|openssh|auditd|squidguard-http|fetchmail-logger|dkfilter|ufdb|ufdb-tail|squidguard-tail|framework|dkim-milter|dropbox|artica-policy|virtualbox-web');
                writeln('|tftpd|crossroads|artica-status|artica-exec|artica-back|pptpd|pptpd-clients|apt-mirror|squidclamav-tail|ddclient|cluebringer|apachesrc');
                writeln('|sabnzbdplus|fcron|fuse|vnstat|winbindd|munin|greyhole|amavis-milter|iscsi|auth-logger|snort|greensql|amanda|zarafa-lmtp|tomcat|openemm');
-               writeln('|sendmail-openemm|fuppes');
+               writeln('|sendmail-openemm|fuppes|cgroups');
                exit();
             end;
 
@@ -2146,7 +2154,11 @@ begin
                exit();
             end;
 
-
+          if ParamStr(2)='cgroups' then begin
+               fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.cgroups.php --start');
+               fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.cgroups.php --cgred-start');
+               exit();
+            end;
 
 
 
@@ -2823,7 +2835,7 @@ begin
                writeln('|openssh|auditd|squidguard-http|fetchmail-logger|dkfilter|ufdb|ufdb-tail|squidguard-tail|framework|dkim-milter|dropbox|artica-policy|virtualbox-web');
                writeln('|tftpd|crossroads|artica-status|artica-exec|artica-back|pptpd|pptpd-clients|apt-mirror|squidclamav-tail|ddclient|cluebringer|apachesrc');
                writeln('|sabnzbdplus|fcron|fuse|vnstat|winbindd|munin|greyhole|amavis-milter|iscsi|auth-logger|snort|greensql|amanda|zarafa-lmtp|tomcat|openemm');
-               writeln('|sendmail-openemm|fuppes');
+               writeln('|sendmail-openemm|fuppes|cgroups');
                exit();
             end;
 

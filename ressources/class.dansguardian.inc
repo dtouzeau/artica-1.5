@@ -1043,7 +1043,7 @@ class dansguardian_rules{
 	function AddPersonalWebSiteOnCategory($WebsiteToAdd,$category,$ruleindex){
 	$sql="INSERT INTO dansguardian_personal_categories(RuleID,category,category_type,pattern) 
 		VALUES('$ruleindex','$category','data','$WebsiteToAdd');";
-		$q=new mysql();
+		$q=new mysql_squid_builder();
 		$q->QUERY_SQL($sql,"artica_backup");	
 			
 		if(!$q->ok){
@@ -1059,7 +1059,7 @@ class dansguardian_rules{
 		$md5=md5($www.$category);
 		$uuid=base64_decode($sock->getFrameWork("cmd.php?system-unique-id=yes"));
 		$sql="INSERT INTO dansguardian_community_categories (zmd5,zDate,category,pattern,uuid) VALUES('$md5',NOW(),'$category','$www','$uuid')";
-		$q=new mysql();
+		$q=new mysql_squid_builder();
 		$q->QUERY_SQL($sql,"artica_backup");
 		if(!$q->ok){writelogs("$q->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__);return;}
 		$sock=new sockets();

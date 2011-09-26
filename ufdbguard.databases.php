@@ -16,6 +16,7 @@
 		
 	}
 	
+	if(isset($_GET["scripts"])){echo scripts();exit;}
 	if(isset($_GET["tabs"])){tabs();exit;}
 	if(isset($_GET["databases"])){databases_status();exit;}
 	if(isset($_GET["ufdbg-community"])){community_status();exit;}
@@ -79,7 +80,7 @@ function databases_status(){
 function community_status(){
 	$page=CurrentPageName();
 	$tpl=new templates();	
-	$q=new mysql();
+	$q=new mysql_squid_builder();
 	$all_count=FormatNumber($q->COUNT_ROWS("dansguardian_community_categories","artica_backup"),0,'.',' ',3);
 	$artica_community=Paragraphe('webfilter-community-64.png','{community}','{webfilter_community_text}',"javascript:Loadjs('webfilter.community.php')");
 	if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
@@ -182,17 +183,41 @@ $tables[]="</table>";
 	 
 $tpl=new templates();
 $THINCLIENT_REBUILDED_TEXT=$tpl->javascript_parse_text("{THINCLIENT_REBUILDED_TEXT}");
-$compilation_schedule=$tpl->javascript_parse_text("{compilation_schedule}");
+
 $page=CurrentPageName();
 $script="
 <div id='dbguard-list-size' style='height:250px;overflow:auto'></div>
 
 <script>
 	
-	var x_CompileMissingdb= function (obj) {
+". scripts()."
+		
+	maintenance_status_list();	
+	
+
+</script>";
+
+$html=$tpl->_ENGINE_parse_body("$html$script","squid.newbee.php,squid.index.php");
+
+echo $html;		
+	
+	
+}
+
+function scripts(){
+$page=CurrentPageName();
+$tpl=new templates();	
+$compilation_schedule=$tpl->javascript_parse_text("{compilation_schedule}");
+$WARNING_UFDBGUARD_COMPILES_RULES_ASK=$tpl->javascript_parse_text("WARNING_UFDBGUARD_COMPILES_RULES_ASK");
+if($_GET["scripts"]=="recompile"){$start="ReCompiledb()";}
+if($_GET["scripts"]=="compile-schedule"){$start="ReCompileScheduleudbg()";}
+
+
+	
+return "var x_CompileMissingdb= function (obj) {
 			var results=obj.responseText;
 			if(results.length>0){alert(results);}
-			RefreshTab('ufdbguard-tabs-all');
+			if(document.getElementById('ufdbguard-tabs-all')){RefreshTab('ufdbguard-tabs-all');}
 		}	
 		
 	function ReCompileScheduleudbg(){
@@ -206,25 +231,20 @@ $script="
 			XHR.sendAndLoad('$page', 'GET',x_CompileMissingdb);	
 		}	
 	function ReCompiledb(){
-			var XHR = new XHRConnection();
-			XHR.appendData('CompileAlldbs','yes');
-			document.getElementById('action-div').innerHTML='<center style=\"width:100%\"><img src=img/wait_verybig.gif></center>';
-			XHR.sendAndLoad('$page', 'GET',x_CompileMissingdb);	
+			if(confirm('$WARNING_UFDBGUARD_COMPILES_RULES_ASK')){
+				var XHR = new XHRConnection();
+				XHR.appendData('CompileAlldbs','yes');
+				if(document.getElementById('action-div')){AnimateDiv('action-div');}
+				XHR.sendAndLoad('$page', 'GET',x_CompileMissingdb);	
+			}
 		}
 
 	function maintenance_status_list(){
 		LoadAjax('dbguard-list-size','$page?maintenance-status-list=yes');
 	
 	}
-		
-	maintenance_status_list();	
 	
-
-</script>";
-
-$html=$tpl->_ENGINE_parse_body("$html$script","squid.newbee.php,squid.index.php");
-
-echo $html;		
+	$start;";	
 	
 	
 }
@@ -306,7 +326,7 @@ function CompileAlldbs(){
 	$THINCLIENT_REBUILDED_TEXT=$tpl->javascript_parse_text("{THINCLIENT_REBUILDED_TEXT}");
 	echo $THINCLIENT_REBUILDED_TEXT;	
 	$sock=new sockets();
-	$sock->getFrameWork("cmd.php?ufdbguard-recompile-dbs=yes");
+	$sock->getFrameWork("ufdbguard.php?recompile-dbs=yes");
 }
 
 

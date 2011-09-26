@@ -102,6 +102,9 @@ var x_SendLogonStart=function(obj){
 	
 	function SendLogonStart(){
 		var XHR = new XHRConnection();
+		if(document.getElementById('template')){Set_Cookie('artica-template', document.getElementById('template').value, '3600', '/', '', '');}
+		if(document.getElementById('change-artica-name')){Set_Cookie('change-artica-name', document.getElementById('change-artica-name').value, '3600', '/', '', '');}
+		
 		var LANGUAGE_SELECTOR_REMOVE={$logon_parameters["LANGUAGE_SELECTOR_REMOVE"]};
 		XHR.appendData('artica_username',document.getElementById('artica_username').value);
 		XHR.appendData('artica_password',escape(document.getElementById('artica_password').value));
@@ -185,6 +188,7 @@ if($user->KASPERSKY_WEB_APPLIANCE){$imglogon="img/logo-artica-kav.png";}
 if($user->ZARAFA_APPLIANCE){$imglogon="img/logon-zarafa.png";}
 if($user->OPENVPN_APPLIANCE){$imglogon="img/logo-openvpn.png";}
 if($user->APACHE_APPLIANCE){$imglogon="img/artica-apache.png";}
+if($user->MYCOSI_APPLIANCE){$imglogon="img/my-cosi-3d.png";}
 
 
 
@@ -285,7 +289,7 @@ function logonForm(){
 	$AddInArticaLogonFrontPage=$sock->GET_INFO("AddInArticaLogonFrontPage");
 	$FileCookyKey=md5($_SERVER["REMOTE_ADDR"].$_SERVER["HTTP_USER_AGENT"]);
 	$FileCookyLang=$sock->GET_INFO($FileCookyKey);
-	
+	$template=null;
 	
 	$html=new htmltools_inc();
 	$lang=$html->LanguageArray();
@@ -339,9 +343,16 @@ function logonForm(){
 
 $contour_color="#005447";
 	if($users->KASPERSKY_WEB_APPLIANCE){
-		//$GLOBALS["CHANGE_TEMPLATE"]="squid.kav.html";
+		$template="<input type='hidden' id='template' value='Kav4Proxy'>";
 		//$contour_color="#EB6947";
 		//bg_kavweb-appliance.jpg
+	}
+	
+	if($users->MYCOSI_APPLIANCE){
+		$contour_color="#FFB683";
+		$template="<input type='hidden' id='template' value='myCosi'>";
+		$changename="<input type='hidden' id='change-artica-name' value='MyCosi'>";
+	
 	}
 	
 if($AllowInternetUsersCreateOrg==1){
@@ -428,7 +439,7 @@ font-family:Helvetica,Tahoma,Verdana,sans-serif'>{$_GET["ERROR"]}</div>
 				</tr>
 				</table>	
 	
-</div>
+</div>$template$changename
 $ldap_error
 	
 $script
@@ -532,6 +543,7 @@ function LDAP_FORM(){
 
 function applyLang(){
 	session_start();
+	include_once(dirname(__FILE__).'/ressources/class.sockets.inc');
 	$sock=new sockets();
 	$_SESSION["detected_lang"]=$_POST["Changelang"];
 	unset($_SESSION["translation"]);
@@ -875,15 +887,24 @@ function buildPage(){
 	$logo="logo.gif";
 	$logo_bg="bg_header.gif";
 	$bg_color="#005447";
-	
+	$ProductName="Artica";
 	
 	if($users->KASPERSKY_WEB_APPLIANCE){
 		
 		//$GLOBALS["CHANGE_TEMPLATE"]="squid.kav.html";
 		//$logo_bg="bg_header_kavweb.gif";
-		$logo="kaspersky-logo.png";
+		$logo="logo-kav.gif";
 		//$bg_color="#FFB683";
 	}
+	
+	if($users->MYCOSI_APPLIANCE){
+		
+		//$GLOBALS["CHANGE_TEMPLATE"]="squid.kav.html";
+		$logo_bg="bg_header_kavweb.gif";
+		$logo="logo-mycosi.gif";
+		$bg_color="#FFB683";
+		$ProductName="MyCosi";
+	}	
 	
 	
 $html="<html xmlns='http://www.w3.org/1999/xhtml'>
@@ -1047,7 +1068,7 @@ $('#loginform').modal({onOpen: function (dialog) {
 <td valign='top' align=left colspan=2 >
 <div style='background-color:#736e6c;font-size:13px;color:white;height:25px;padding:0px;margin:0px;padding-top:5px;width:900px;text-align:center;margin-left:-5px;margin-bottom:-3px'>
 
-<strong>Artica for postfix. Copyright 2006-". date('Y')."</strong>
+<strong>$ProductName Copyright 2006-". date('Y')."</strong>
 </div>
 </td>
 </tr>

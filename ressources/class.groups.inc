@@ -399,7 +399,7 @@ private function seems_utf8($Str) {
 			
 			$this->ou=$res["ou"];
 			$this->sambaSID=$attrs["sambaSID"][0];
-			$this->sambaGroupType=$attrs["sambaGroupType"][0];
+			if(isset($attrs["sambaGroupType"][0])){$this->sambaGroupType=$attrs["sambaGroupType"][0];}
 			$this->description=$attrs["description"][0];
 			$this->main_array=$res;
 			$this->ARRAY_MEMBERS=$res["ARRAY_MEMBERS"];

@@ -83,7 +83,7 @@ public
     function  BIN_PATH():string;
     procedure SERVER_START();
     procedure SERVER_STOP();
-
+    function IS_LDAP_ACTIVE():boolean;
 END;
 
 implementation
@@ -683,6 +683,42 @@ begin
 
 end;
 //#############################################################################
+function tzarafa_server.IS_LDAP_ACTIVE():boolean;
+var
+   pid:string;
+   local:boolean;
+   server:string;
+begin
+   result:=false;
+   pid:=ldap.LDAP_PID();
+   server:=ldap.ldap_settings.servername;
+   if server='127.0.0.1' then local:=true;
+   if server='localhost' then local:=true;
+   logs.DebugLogs('Starting zarafa..............: LDAP server: '+server);
+
+
+
+   if local then begin
+      if not SYS.PROCESS_EXIST(pid) then begin
+         logs.DebugLogs('Starting zarafa..............: LDAP server is not available');
+         exit(false);
+      end;
+   end;
+
+   fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.ldap.rebuild.php --test-connexion');
+   if trim(logs.ReadFromFile('/etc/artica-postfix/LDAP_TESTS'))='TRUE' then begin
+        result:=true;
+        exit(true);
+   end else begin
+       result:=false;
+       exit(false);
+   end;
+
+
+end;
+//#############################################################################
+
+
 procedure tzarafa_server.START();
 var zbin:string;
 begin
@@ -700,7 +736,11 @@ begin
     end;
 
 
-
+if not IS_LDAP_ACTIVE() then begin
+      logs.DebugLogs('Starting zarafa..............: LDAP server is not up, aborting');
+      logs.NOTIFICATION('Unable to start Zarafa services (ldap is not active)','It seems that the LDAP server is not ready, trying to start zarafa in next cycle','mailbox');
+      exit;
+end;
   server_cfg();
   WEB_ACCESS_CONFIG();
   SERVER_START();
@@ -766,6 +806,16 @@ if sys.PROCESS_EXIST(pid) then begin
       logs.DebugLogs('Starting zarafa..............: Zarafa-server already running PID '+ pid);
       exit;
 end;
+
+
+if not IS_LDAP_ACTIVE() then begin
+      logs.DebugLogs('Starting zarafa..............: LDAP server is not up, aborting');
+      logs.NOTIFICATION('Unable to start Zarafa server (ldap is not active)','It seems that the LDAP server is not ready, trying to start zarafa server in next cycle','mailbox');
+      exit;
+end;
+
+
+
     if not FileExists('/usr/lib/libicui18n.so.40') then begin
        if FileExists('/usr/lib/libicui18n.so.44') then fpsystem('/bin/ln -s  /usr/lib/libicui18n.so.44 /usr/lib/libicui18n.so.40');
     end;

@@ -70,10 +70,6 @@ if($argv[1]=='--instance-start'){_start_instance($argv[2]);die();}
 if($argv[1]=='--instance-aiguilleuse'){aiguilleuse($argv[2]);die();}
 if($argv[1]=='--reload-all'){CheckInstances();die();}
 if($argv[1]=='--postscreen'){postscreen($argv[2]);die();}
-
-
-
-
 reconfigure();
 
 

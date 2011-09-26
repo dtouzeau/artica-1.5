@@ -136,6 +136,9 @@ private function LoadDatas(){
 		$this->uidNumber=$attrs["uidNumber"][0];
 		$this->sambaSID=$attrs["sambaSID"][0];
 		$this->ComputerIP=$attrs["ComputerIP"][0];
+		writelogs( "ComputerIP: $this->ComputerIP ($this->ComputerMacAddress)",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+		writelogs( "UID: $this->uid ($this->ComputerIP)",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+		
 		$this->ComputerOpenPorts=$attrs["ComputerOpenPorts"][0];								
 		$this->ComputerOS=$attrs["ComputerOS"][0];			
 		$this->ComputerUpTime=$attrs["ComputerUpTime"][0];			
@@ -144,17 +147,17 @@ private function LoadDatas(){
 		$this->ComputerMacAddress=$attrs["ComputerMacAddress"][0];
 		$this->ComputerHopCount=$attrs["ComputerHopCount"][0];
 		$this->ComputerCPU=$attrs["ComputerCPU"][0];
-		$this->DnsMXLength=$attrs["DnsMXLength"][0];
-		$this->ComputerCryptedInfos=$attrs["ComputerCryptedInfos"][0];
-		$this->KasperkyAVScanningDatas=$attrs["KasperkyAVScanningDatas"][0];
-		$this->VolatileIPAddress=$attrs['VolatileIPAddress'][0];
-		$this->ComputerScanSchedule=$attrs['ComputerScanSchedule'][0];
+		if(isset($attrs['DnsMXLength'][0])){$this->DnsMXLength=$attrs["DnsMXLength"][0];}
+		if(isset($attrs['ComputerCryptedInfos'][0])){$this->ComputerCryptedInfos=$attrs["ComputerCryptedInfos"][0];}
+		if(isset($attrs['KasperkyAVScanningDatas'][0])){$this->KasperkyAVScanningDatas=$attrs["KasperkyAVScanningDatas"][0];}
+		if(isset($attrs['VolatileIPAddress'][0])){$this->VolatileIPAddress=$attrs['VolatileIPAddress'][0];}
+		if(isset($attrs['ComputerScanSchedule'][0])){$this->ComputerScanSchedule=$attrs['ComputerScanSchedule'][0];}
 		if($this->VolatileIPAddress==null){$this->VolatileIPAddress=1;}
 		
 		
-		$this->userPassword=$attrs['userPassword'][0];
-		$this->sambaLMPassword=$attrs['sambaLMPassword'][0];
-		$this->sambaNTPassword=$attrs['sambaNTPassword'][0];
+		if(isset($attrs['userPassword'][0])){$this->userPassword=$attrs['userPassword'][0];}
+		if(isset($attrs['sambaLMPassword'][0])){$this->sambaLMPassword=$attrs['sambaLMPassword'][0];;}
+		if(isset($attrs['sambaNTPassword'][0])){$this->sambaNTPassword=$attrs['sambaNTPassword'][0];;}
 		
 		
 		$dhcp=new dhcpd_hosts($this->uid);
@@ -174,35 +177,49 @@ private function LoadDatas(){
 		if(substr($this->uid,strlen($this->uid)-1,1)=='$'){$this->ComputerRealName=substr($this->uid,0,strlen($this->uid)-1);}
 		else{$this->ComputerRealName=$this->uid;}		
 		
+		
 		if($this->VolatileIPAddress==1){
-			$ip=gethostbyname($this->ComputerRealName);
-			if($ip<>null){
-				if(preg_match("#[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+#",$ip)){$this->ComputerIP=$ip;}
+			if($this->ComputerIP==null){
+				$ip=gethostbyname($this->ComputerRealName);
+				if($ip<>null){
+					if(preg_match("#[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+#",$ip)){
+						$sock=new sockets();
+						$ping=$sock->getFrameWork("network.php?ping=$ip");
+						if($ping=="TRUE"){
+							writelogs("Ping is OK",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+							writelogs( "$this->ComputerRealName resolved to $ip",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+							$this->ComputerIP=$ip;
+						}
+					}
+				}
 			
 			}
 		}		
 		
 		
 		$this->DecryptCryptedInfos();
-		$this->EnableBackupAccount=$attrs["EnableBackupAccount"][0];
+		if(isset($attrs['EnableBackupAccount'][0])){$this->EnableBackupAccount=$attrs["EnableBackupAccount"][0];}
 		$this->ou="Computer";
-
+		
 		
 		if($this->ComputerIP==null){
+			writelogs( "->fixed_gethostbyname($this->ComputerRealName)",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 			$this->ComputerIP=$this->fixed_gethostbyname($this->ComputerRealName);
 		}		
 		
 		//DNS
 		$this->DnsType=$attrs["DnsType"][0];
 		$this->DnsZoneName=$attrs["DnsZoneName"][0];
-		
-		for($i=0;$i<$attrs["DnsCname"]["count"];$i++){
-			$this->DNSCname[$attrs["DnsCname"]["$i"]]=$attrs["DnsCname"]["$i"];
+		if(isset($attrs['DnsCname']["count"])){
+			for($i=0;$i<$attrs["DnsCname"]["count"];$i++){
+				
+				$this->DNSCname[$attrs["DnsCname"]["$i"]]=$attrs["DnsCname"]["$i"];
+			}
 		}
 		
 		
 		$this->OcsPasserelle();
-		
+		writelogs( "ComputerIP (final): $this->ComputerIP ($this->ComputerMacAddress) $this->uid",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 		}
 		
 private function SambaLoadpasswd(){
@@ -243,7 +260,7 @@ function OcsPasserelle(){
 	if($this->ComputerMacAddress==null){return null;}
 	$ocs=new ocs($this->ComputerMacAddress);
 	if($ocs->HARDWARE_ID==0){return null;}
-	writelogs("OcsPasserelle: HARDWARE_ID=$ocs->HARDWARE_ID",__CLASS__.'/'.__FUNCTION__,__FILE__);
+	writelogs("OcsPasserelle: HARDWARE_ID=$ocs->HARDWARE_ID",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 	$ocs->LoadParams();
 	$COmputerName=$this->uid;
 	$COmputerName=str_replace('$','',$COmputerName);
@@ -251,14 +268,24 @@ function OcsPasserelle(){
 	$update=false;
 	if($this->VolatileIPAddress==0){
 		if($ocs->ComputerIP<>null){
-			if($ocs->ComputerIP<>$this->ComputerIP){$this->ComputerIP=$ocs->ComputerIP;$update=true;}
+			if($ocs->ComputerIP<>$this->ComputerIP){
+				writelogs("OcsPasserelle: Change $this->ComputerIP to OCS IP: $ocs->ComputerIP",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+				$this->ComputerIP=$ocs->ComputerIP;
+				$update=true;
+			}
 		}
 	}
 
 	if($ocs->ComputerName<>null){
 	if($COmputerName<>$ocs->ComputerName){
-		//writelogs("OcsPasserelle: $COmputerName <>$ocs->ComputerName",__CLASS__.'/'.__FUNCTION__,__FILE__);
-		$this->uid=$ocs->ComputerName.'$';$update=true;}
+		if(preg_match("#[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+#", $ocs->ComputerName)){
+			if(!preg_match("#[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+#", $this->uid)){
+				$ocs->ComputerName=$this->ComputerRealName;
+				$ocs->EditComputer();
+			}
+		}else{
+			$this->ComputerRealName=$ocs->ComputerName;}
+		}
 	}
 	
 	if($update){$this->Edit();}
@@ -486,6 +513,7 @@ function ComputerIDFromMAC($mac){
 	$sr =@ldap_search($ldap->ldap_connection,$ldap->suffix,$pattern,$attr);
 	if(!$sr){return null;}
 	$hash=ldap_get_entries($ldap->ldap_connection,$sr);
+	if(!isset($hash[0]["uid"][0])){return;}
 	if($hash[0]["uid"][0]<>null){return $hash[0]["uid"][0];}
 	
 	$mac=str_replace(':',"-",$mac);
@@ -507,6 +535,54 @@ function ComputerIDFromMAC($mac){
 	
 	
 }
+
+	function update_uid($uid){
+		$upd["uid"][0]=$uid;
+		$ldap=new clladp();
+		if($ldap->Ldap_modify($this->dn, $upd)){$this->uid=$uid;}
+		
+	}
+	
+	function update_ipaddr($ipaddr){
+		$upd["ComputerIP"][0]=$ipaddr;
+		$ldap=new clladp();
+		writelogs("Update ComputerIP = $ipaddr for $this->dn",__CLASS__.'/'.__FUNCTION__,__FILE__);
+		
+		$r=ldap_modify($ldap->ldap_connection,$ldap->dn_escape($this->dn),$upd);
+		
+		if($r){
+			if($this->ComputerMacAddress<>null){
+				$ocs=new ocs($this->ComputerMacAddress);
+				$ocs->ComputerName=$this->ComputerRealName;
+				$ocs->ComputerIP=$ipaddr;
+				$ocs->ComputerOS=$this->ComputerOS;
+				$ocs->EditComputer();
+				return true;
+			}
+		}else{
+			writelogs("Update ComputerIP FAILED ".$ldap->ExplodeError(),__CLASS__.'/'.__FUNCTION__,__FILE__);
+			$this->ldap_error=$ldap->ldap_last_error;
+			return false;
+		}
+		
+	}
+	
+	function update_OS($OS){
+		$upd["ComputerOS"][0]=$OS;
+		$ldap=new clladp();
+		if($ldap->Ldap_modify($this->dn, $upd)){
+			if($this->ComputerMacAddress<>null){
+				$ocs=new ocs($this->ComputerMacAddress);
+				$ocs->ComputerName=$this->ComputerRealName;
+				$ocs->ComputerIP=$ipaddr;
+				$ocs->ComputerOS=$this->ComputerOS;
+				$ocs->EditComputer();
+			}
+			$this->ComputerIP=$ipaddr;
+			$this->SaveDHCPMode();
+		}		
+		
+	}
 
 function Edit_ScanSchedule($cron){
 	writelogs("Set Antivirus scanner AT \"$cron\" for computer in $this->dn",__CLASS__.'/'.__FUNCTION__,__FILE__);
@@ -619,6 +695,7 @@ function Add(){
 				
 		}else{
 			$this->SaveDHCPMode();
+			$this->UpdateOCSDB();
 			if($this->ComputerIP<>'0.0.0.0'){
 				$sock=new sockets();
 				$sock->getFrameWork('cmd.php?apply-bind=yes');
@@ -637,7 +714,18 @@ function Add(){
 			$uid_am=str_replace("$","",$this->uid);
 			$sock->getFrameWork("cmd.php?artica-meta-computer=$uid_am");
 		}
-	}		
+	}
+
+	private function UpdateOCSDB(){
+		if($this->ComputerMacAddress==null){return;}
+		$ocs=new ocs($this->ComputerMacAddress);
+		$ocs->ComputerMacAddress=$this->ComputerMacAddress;
+		$ocs->ComputerIP=$this->ComputerIP;
+		$ocs->ComputerOS=$this->ComputerOS;
+		$ocs->ComputerName=$this->ComputerRealName;
+		$ocs->EditComputer();
+	}
+	
 		
 function UpdateComputerSID(){
 		$group=new  groups(null);

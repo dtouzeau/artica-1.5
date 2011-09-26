@@ -12,6 +12,7 @@ include_once(dirname(__FILE__).'/class.mysql.inc');
 		var $PROLOG_FREQ=0;
 		
 		function ocs($mac=null){
+			if($mac=="unknown"){$mac=null;}
 			if($mac<>null){
 				$this->mac=trim($mac);
 				$this->Loadinfos();
@@ -41,8 +42,69 @@ include_once(dirname(__FILE__).'/class.mysql.inc');
 			$this->ComputerName=$ligne["NAME"];
 			$this->ComputerOS=$ligne["OSNAME"];
 			$this->ComputerIP=$ligne["IPADDR"];
+		}
+		
+		
+		private function COMPUTER_ID_FROM_IP_INTERNAL($IPADDR){
+			$q=new mysql();
+			$sql="SELECT ID FROM hardware WHERE IPADDR='$IPADDR'";
+			$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"ocsweb"));
+			if(!is_numeric($ligne["ID"])){$ligne["ID"]=0;}	
+			return $ligne["ID"];
+		}
+		
+		
+		public function EditComputer(){
+			if($this->ComputerName==null){return;}
+			if($this->mac==null){return;}
+			$MAC=strtolower($this->mac);
+			$NAME=strtolower($this->ComputerName);
+			$IPADDR=$this->ComputerIP;
+			$ComputerOS_edit=null;$ComputerOS_add_field=null;$ComputerOS_add_datd=null;
 			
+			$date=date('Y-m-d H:i:s');
+			$q=new mysql();
+			$sql="SELECT ID FROM networks WHERE UPPER(MACADDR)='$this->mac'";
+			$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"ocsweb"));
+			if(!$q->ok){if($GLOBALS["VERBOSE"]){writelogs($q->mysql_error,__CLASS__."/".__FILE__,__FILE__,__LINE__);}return false;}	
+			if(!is_numeric($ligne["ID"])){$ligne["ID"]=0;}
 			
+			if($this->ComputerOS<>null){
+				$this->ComputerOS=addslashes($this->ComputerOS);
+				$ComputerOS_add_field=",OSNAME";
+				$ComputerOS_add_data=",'$this->ComputerOS'";
+				$ComputerOS_edit=",OSNAME='$this->ComputerOS'";
+			}
+			
+			if($ligne["ID"]==0){
+				$HARDWARE_ID=$this->COMPUTER_ID_FROM_IP_INTERNAL($IPADDR);
+				if($HARDWARE_ID==0){
+					$sql="INSERT INTO hardware (NAME,IPADDR,LASTDATE$ComputerOS_add_field) VALUES('$NAME','$IPADDR','$date'$ComputerOS_add_data)";
+					$q->QUERY_SQL($sql,"ocsweb");
+					if(!$q->ok){if($GLOBALS["VERBOSE"]){writelogs($q->mysql_error,__CLASS__."/".__FILE__,__FILE__,__LINE__);}return false;}
+					$HARDWARE_ID=$this->COMPUTER_ID_FROM_IP_INTERNAL($IPADDR);
+					if($HARDWARE_ID==0){return false;}
+				}
+				
+				$sql="INSERT INTO networks (HARDWARE_ID,IPADDRESS,MACADDR) VALUES('$HARDWARE_ID','$IPADDR','$MAC')";
+				$q->QUERY_SQL($sql,"ocsweb");
+				if(!$q->ok){if($GLOBALS["VERBOSE"]){writelogs($q->mysql_error,__CLASS__."/".__FILE__,__FILE__,__LINE__);}return false;}
+			}else{
+				$NET_ID=$ligne["ID"];
+				$sql="SELECT HARDWARE_ID FROM networks WHERE ID='{$ligne["ID"]}'";
+				$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"ocsweb"));
+				$HARDWARE_ID=$ligne["HARDWARE_ID"];
+				
+				
+				$sql="UPDATE networks SET IPADDRESS='$IPADDR' WHERE ID='$NET_ID'";
+				$q->QUERY_SQL($sql,"ocsweb");
+				if(!$q->ok){if($GLOBALS["VERBOSE"]){writelogs($q->mysql_error,__CLASS__."/".__FILE__,__FILE__,__LINE__);}return false;}
+
+				$sql="UPDATE hardware SET NAME='$NAME',LASTDATE='$date',IPADDR='$IPADDR'$ComputerOS_edit WHERE ID='$HARDWARE_ID'";
+				$q->QUERY_SQL($sql,"ocsweb");
+				if(!$q->ok){if($GLOBALS["VERBOSE"]){writelogs($q->mysql_error,__CLASS__."/".__FILE__,__FILE__,__LINE__);}return false;}			
+			}
+		
 		}
 		
 		public function GET_SERVER_SETTINGS(){

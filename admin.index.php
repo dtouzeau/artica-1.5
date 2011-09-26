@@ -1,4 +1,5 @@
 <?php
+$GLOBALS["ICON_FAMILY"]="SYSTEM";
 if(isset($_GET["verbose"])){$GLOBALS["VERBOSE"]=true;ini_set('display_errors', 1);ini_set('error_reporting', E_ALL);ini_set('error_prepend_string',null);ini_set('error_append_string',null);}
 include_once('ressources/class.templates.inc');
 session_start();
@@ -12,6 +13,8 @@ include_once('ressources/class.os.system.inc');
 
 //ini_set('display_errors', 1);
 //ini_set('error_reporting', E_ALL);
+
+if(isset($_GET["HideTips"])){HideTips();exit;}
 
 $users=new usersMenus();
 if(!$users->AsAnAdministratorGeneric){
@@ -50,6 +53,12 @@ if(isset($_GET["artica-meta"])){artica_meta();exit;}
 if(isset($_GET["admin-ajax"])){page($users);exit;}
 
 page($users);
+
+
+function HideTips(){
+	$sock=new sockets();
+	$sock->SET_INFO($_GET["HideTips"],1);
+}
 
 function warnings_js(){
 	$page=CurrentPageName();
@@ -175,6 +184,13 @@ $sock=new sockets();
 $ou=$hash["ou"];
 $users=new usersMenus();
 error_log(basename(__FILE__)." ".__FUNCTION__.'() line '. __LINE__);
+
+if(isset($_COOKIE["artica-template"])){
+	if(is_file("ressources/templates/{$_COOKIE["artica-template"]}/JQUERY_UI")){
+		$GLOBALS["JQUERY_UI"]=trim(@file_get_contents("ressources/templates/{$_COOKIE["artica-template"]}/JQUERY_UI"));
+	}
+}
+
 if($users->KASPERSKY_SMTP_APPLIANCE){
 	if($sock->GET_INFO("KasperskyMailApplianceWizardFinish")<>1){
 		$wizard_kaspersky_mail_appliance="Loadjs('wizard.kaspersky.appliance.php');";
@@ -343,7 +359,7 @@ function main_admin_tabs(){
 		
 		if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
 		if($SQUIDEnable==1){
-			$array["t:HTTP_FILTER_STATS"]="{HTTP_FILTER_MONITOR}";
+			$array["t:HTTP_FILTER_STATS"]="{MONITOR}";
 			$array["t:HTTP_BLOCKED_STATS"]="{blocked_websites}";
 			
 			
@@ -510,28 +526,29 @@ function status_right(){
 	
 	
 	if($ldap->ldap_password=="secret"){
-		echo RoundedLightGrey(ParagrapheTEXT("danger32-user-lock.png",'{MANAGER_DEFAULT_PASSWORD}','{MANAGER_DEFAULT_PASSWORD_TEXT}',"javascript:Loadjs('artica.settings.php?js=yes&bigaccount-interface=yes');",null,330))."<br>";
+		echo ParagrapheTEXT("danger32-user-lock.png",'{MANAGER_DEFAULT_PASSWORD}',
+		'{MANAGER_DEFAULT_PASSWORD_TEXT}',"javascript:Loadjs('artica.settings.php?js=yes&bigaccount-interface=yes');",null,330);
 	}
 	if(!function_exists("browser_detection")){include(dirname(__FILE__).'/ressources/class.browser.detection.inc');}
 	$browser=browser_detection();
 	
 	if($browser=="ie"){
-		echo ParagrapheTEXT("no-ie-32.png",'{NOIEPLEASE} !!','{NOIEPLEASE_TEXT}',"javascript:s_PopUp('http://www.mozilla-europe.org/en/firefox/','800',800);",null,330)."<br>";
+		echo ParagrapheTEXT("no-ie-32.png",'{NOIEPLEASE} !!','{NOIEPLEASE_TEXT}',"javascript:s_PopUp('http://www.mozilla-europe.org/en/firefox/','800',800);",null,330);
 	}
 	
 	if($sock->GET_INFO("EnableNightlyInFrontEnd")==1){NightlyNotifs();}
 	
 	if($users->VMWARE_HOST){
 		if(!$users->VMWARE_TOOLS_INSTALLED){
-			echo RoundedLightGrey(Paragraphe("vmware-logo.png",'{INSTALL_VMWARE_TOOLS}','{INSTALL_VMWARE_TOOLS_TEXT}',
-			"javascript:Loadjs('setup.index.progress.php?product=APP_VMTOOLS&start-install=yes');",null,330))."<br>";
+			echo ParagrapheTEXT("vmware-logo-48.png",'{INSTALL_VMWARE_TOOLS}','{INSTALL_VMWARE_TOOLS_TEXT}',
+			"javascript:Loadjs('setup.index.progress.php?product=APP_VMTOOLS&start-install=yes');",null,330);
 		}
 	}
 	if($GLOBALS["VERBOSE"]){echo "$page LINE:".__LINE__."\n";}
 	if($users->VIRTUALBOX_HOST){
 		if(!$users->APP_VBOXADDINTION_INSTALLED){
-			echo RoundedLightGrey(Paragraphe("virtualbox-64.png",'{INSTALL_VBOX_TOOLS}','{INSTALL_VBOX_TOOLS_TEXT}',
-			"javascript:Loadjs('setup.index.progress.php?product=APP_VBOXADDITIONS&start-install=yes');",null,330))."<br>";	
+			echo ParagrapheTEXT("virtualbox-48.png",'{INSTALL_VBOX_TOOLS}','{INSTALL_VBOX_TOOLS_TEXT}',
+			"javascript:Loadjs('setup.index.progress.php?product=APP_VBOXADDITIONS&start-install=yes');",null,330);
 		}
 	}
 	
@@ -539,8 +556,8 @@ function status_right(){
 		$q=new mysql();
 		$ctc=$q->COUNT_ROWS("zarafa_orphaned","artica_backup");
 		if($ctc>0){
-			echo RoundedLightGrey(Paragraphe("inbox-error-64.png","$ctc {ORPHANED_STORES}",'{ORPHANED_STORES_TEXT}',
-			"javascript:Loadjs('zarafa.orphans.php?js=yes');",null,330))."<br>";	
+			echo Paragraphe("inbox-error-48.png","$ctc {ORPHANED_STORES}",'{ORPHANED_STORES_TEXT}',
+			"javascript:Loadjs('zarafa.orphans.php?js=yes');",null,330);
 			}
 	}
 	
@@ -615,27 +632,14 @@ function status_right(){
 	
 	
 function StatusSamba(){
+	$page=CurrentPageName();
 	$tpl=new templates();
-	$ini=new Bs_IniHandler();
-	$sock=new sockets();
-	$ini->loadString($sock->getFrameWork("cmd.php?samba-status=yes"));
-	$status_smbd=DAEMON_STATUS_ROUND("SAMBA_SMBD",$ini);
-	$status_nmbd=DAEMON_STATUS_ROUND("SAMBA_NMBD",$ini);
-	$html="
-		<table style='width:100%'>
-			<tr>
-				<td valign='top'>
-					<table style='width:100%'>
-						<tr>
-							<td valign='top' width=1%>" . imgtootltip('64-samba.png','{APP_SAMBA}',"javascript:Loadjs('fileshares.index.php?js=yes')")."</td>
-							<td valign='top' ><br>$status_smbd<br>$status_nmbd</td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-		</table>";	
+	if($GLOBALS["VERBOSE"]){echo "$page LINE:".__LINE__."\n";}
+	$status=new status();
+	if($GLOBALS["VERBOSE"]){echo "$page LINE:".__LINE__."\n";}
+	$html=$status->Samba_status();
+	return $tpl->_ENGINE_parse_body($html);		
 	
-	return $tpl->_ENGINE_parse_body($html);
 }
 
 function status_kav4proxy(){
@@ -864,6 +868,14 @@ function status_left(){
 		
 		}
 		
+		function LoadUnityIcon(){
+				LoadAjaxTiny('unity-icon','unity.php?icon=yes');
+			}
+		
+				
+		
+		
+		LoadUnityIcon();
 		CheckArticaMeta();
 	</script>
 	

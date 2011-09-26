@@ -167,7 +167,7 @@ function GetLastUpdateDate(){
 }
 
 function blacklist_title(){
-	$q=new mysql();
+	$q=new mysql_squid_builder();
 	$date=GetLastUpdateDate();
 	$rows=$q->COUNT_ROWS("dansguardian_community_categories", "artica_backup");
 	$rows=FormatNumber($rows);	

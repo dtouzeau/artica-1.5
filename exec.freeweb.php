@@ -1,9 +1,13 @@
 <?php
 $GLOBALS["FORCE"]=false;$GLOBALS["REINSTALL"]=false;
+$GLOBALS["NO_HTTPD_CONF"]=false;
+$GLOBALS["NO_HTTPD_RELOAD"]=false;
 if(is_array($argv)){
 	if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["VERBOSE"]=true;}
 	if(preg_match("#--force#",implode(" ",$argv))){$GLOBALS["FORCE"]=true;}
 	if(preg_match("#--reinstall#",implode(" ",$argv))){$GLOBALS["REINSTALL"]=true;}
+	if(preg_match("#--no-httpd-conf#",implode(" ",$argv))){$GLOBALS["NO_HTTPD_CONF"]=true;}
+	if(preg_match("#--noreload#",implode(" ",$argv))){$GLOBALS["NO_HTTPD_RELOAD"]=true;}
 	if($GLOBALS["VERBOSE"]){ini_set('html_errors',0);ini_set('display_errors', 1);ini_set('error_reporting', E_ALL);}
 }
 if(posix_getuid()<>0){die("Cannot be used in web server mode\n\n");}
@@ -39,10 +43,17 @@ if($GLOBALS["VERBOSE"]){
 	ini_set('html_errors',0);ini_set('display_errors', 1);ini_set('error_reporting', E_ALL);
 }
 
+
+if($argv[1]=="--all-status"){mod_status_all();die();}
 if($argv[1]=="--httpd"){CheckHttpdConf();reload_apache();die();}
 if($argv[1]=="--build"){build();reload_apache();die();}
 if($argv[1]=="--apache-user"){apache_user();die();}
-if($argv[1]=="--sitename"){buildHost(null,$argv[2]);CheckHttpdConf();reload_apache();die();}
+if($argv[1]=="--sitename"){
+		buildHost(null,$argv[2]);
+		if(!$GLOBALS["NO_HTTPD_CONF"]){CheckHttpdConf();}
+		if(!$GLOBALS["NO_HTTPD_RELOAD"]){reload_apache();}
+		die();
+}
 if($argv[1]=="--remove-host"){remove_host($argv[2]);reload_apache();die();}
 if($argv[1]=="--perms"){FDpermissions($argv[2]);die();}
 if($argv[1]=="--failed-start"){CheckFailedStart();die();exit;}
@@ -60,6 +71,7 @@ if($argv[1]=="--drupal-modules-install"){drupal_install_modules($argv[2]);die();
 if($argv[1]=="--drupal-reinstall"){drupal_reinstall($argv[2]);die();exit;}
 if($argv[1]=="--drupal-schedules"){drupal_schedules();die();exit;}
 if($argv[1]=="--status"){mod_status($argv[2]);die();exit;}
+if($argv[1]=="--listwebs"){listwebs();die();exit;}
 
 
 
@@ -94,6 +106,7 @@ function help(){
 	echo "--drupal-modules...................: dump drupal modules for [servername]\n";
 	echo "--drupal-modules-install...........: install pre-defined modules [servername]\n";
 	echo "--drupal-schedules.................: Run artica orders on the servers\n";
+	echo "--listwebs.........................: List websites currently sets\n";
 }
 
 function create_cron_task(){
@@ -108,6 +121,37 @@ function create_cron_task(){
 	
 	@file_put_contents("/etc/cron.d/iptaccount", @implode("\n", $f));
 	shell_exec("/bin/chmod 640 /etc/cron.d/freeweb_resolv >/dev/null 2>&1");	
+	
+}
+
+function listwebs(){
+	$unix=new unix();
+	$sql="SELECT * FROM freeweb ORDER BY servername";
+	$httpdconf=$unix->LOCATE_APACHE_CONF_PATH();
+	$apacheusername=$unix->APACHE_SRC_ACCOUNT();
+	$GLOBALS["apacheusername"]=$apacheusername;
+	$DAEMON_PATH=$unix->getmodpathfromconf($httpdconf);
+	$q=new mysql();
+	$results=$q->QUERY_SQL($sql,'artica_backup');
+	if(!$q->ok){if($GLOBALS["VERBOSE"]){echo $q->mysql_error."\n";return;}}
+	$d_path=$unix->APACHE_DIR_SITES_ENABLED();
+	$mods_enabled=$DAEMON_PATH."/mods-enabled";
+	
+	
+	echo "Starting......: Apache daemon path: $d_path\n";
+	echo "Starting......: Apache mods path..: $mods_enabled\n";
+	
+	if(!is_dir($d_path)){@mkdir($d_path,666,true);}
+	if(!is_dir($mods_enabled)){@mkdir($mods_enabled,666,true);}
+	
+	$count=mysql_num_rows($results);
+	echo "Starting......: Apache checking virtual web sites count:$count\n";
+	
+	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
+		$hostname=$ligne["servername"];
+		echo "Starting......: available $hostname\n";
+		
+	}
 	
 }
 
@@ -179,7 +223,7 @@ function build(){
 	RemoveAllSites();
 	create_cron_task();
 	$sock=new sockets();
-	
+	$php5=$unix->LOCATE_PHP5_BIN();
 	$varWwwPerms=$sock->GET_INFO("varWwwPerms");
 	if($varWwwPerms==null){$varWwwPerms=755;}
 	
@@ -207,18 +251,21 @@ function build(){
 	if($count==0){
 		$users=new usersMenus();
 		echo "Starting......: Apache building default $users->hostname...\n";
+		
 		buildHost($unix->LIGHTTPD_USER(),$users->hostname,0,$d_path);
 	}
 	
-	
+	if($GLOBALS["VERBOSE"]){$add_plus=" --verbose";}
 	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
 		$uid=$ligne["uid"];
 		$hostname=$ligne["servername"];
 		$ssl=$ligne["useSSL"];	
-		echo "Starting......: Apache \"$hostname\" starting
-		\n";
-		buildHost($uid,$hostname,$ssl,$d_path);
-
+		
+		echo "Starting......: Apache \"$hostname\" starting\n";
+		
+		$cmd="$php5 ".__FILE__." --sitename \"$hostname\" --no-httpd-conf --noreload$add_plus";
+		if($GLOBALS["VERBOSE"]){echo "Starting......: Apache \"$cmd\"\n";}
+		shell_exec($cmd);
 	}
 	
 	$users=$GLOBALS["CLASS_USERS_MENUS"];
@@ -283,11 +330,13 @@ function CheckHttpdConf(){
 	$FreeWebsEnableModQOS=$sock->GET_INFO("FreeWebsEnableModQOS");
 	$FreeWebsEnableOpenVPNProxy=$sock->GET_INFO("FreeWebsEnableOpenVPNProxy");
 	$FreeWebsOpenVPNRemotPort=trim($sock->GET_INFO("FreeWebsOpenVPNRemotPort"));
+	$FreeWebDisableSSL=trim($sock->GET_INFO("FreeWebDisableSSL"));
+	
 	$TomcatEnable=$sock->GET_INFO("TomcatEnable");
 	if($FreeWebListen==null){$FreeWebListen="*";}
 	if($FreeWebListen<>"*"){$FreeWebListenApache="$FreeWebListen";}
 	if(!isset($FreeWebListenApache)){$FreeWebListenApache="*";}
-	
+	if(!is_numeric($FreeWebDisableSSL)){$FreeWebDisableSSL=0;}
 	if(!is_numeric($FreeWebListenSSLPort)){$FreeWebListenSSLPort=443;}
 	if(!is_numeric($FreeWebListenPort)){$FreeWebListenPort=80;}
 	if(!is_numeric($ApacheDisableModDavFS)){$ApacheDisableModDavFS=0;}
@@ -304,6 +353,8 @@ function CheckHttpdConf(){
 	$toremove[]="status.conf";
 	$toremove[]="fcgid.load";
 	$toremove[]="fcgid.conf";
+	$toremove[]="log_sql.load";
+	$toremove[]="log_sql_mysql.load";
 
 	
 	if(is_file("/etc/apache2/sites-enabled/000-default")){@unlink("/etc/apache2/sites-enabled/000-default");}
@@ -317,11 +368,6 @@ function CheckHttpdConf(){
 		
 	}
 	
-	
-	
-	
-	
-	
 	$sql="SELECT ServerPort FROM freeweb WHERE ServerPort>0 GROUP BY ServerPort";
 	$q=new mysql();
 	$conf[]="NameVirtualHost {$FreeWebListenApache}:$FreeWebListenPort";
@@ -330,15 +376,20 @@ function CheckHttpdConf(){
 	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){$conf[]="NameVirtualHost {$FreeWebListenApache}:{$ligne["ServerPort"]}";}	
 	
 	$conf[]="Listen $FreeWebListenPort";
-	$conf[]="<IfModule mod_ssl.c>";
-	$conf[]="\tListen $FreeWebListenSSLPort";
-	$conf[]="\tNameVirtualHost $FreeWebListen:$FreeWebListenSSLPort";
-	$conf[]="</IfModule>";
-	$conf[]="";
-	$conf[]="<IfModule mod_gnutls.c>";
-	$conf[]="\tNameVirtualHost $FreeWebListen:$FreeWebListenSSLPort";
-	$conf[]="\tListen $FreeWebListenSSLPort";
-	$conf[]="</IfModule>";
+	if($FreeWebDisableSSL==0){
+		$conf[]="<IfModule mod_ssl.c>";
+		$conf[]="\tListen $FreeWebListenSSLPort";
+		$conf[]="\tNameVirtualHost $FreeWebListen:$FreeWebListenSSLPort";
+		$conf[]="</IfModule>";
+		$conf[]="";
+		$conf[]="<IfModule mod_gnutls.c>";
+		$conf[]="\tNameVirtualHost $FreeWebListen:$FreeWebListenSSLPort";
+		$conf[]="\tListen $FreeWebListenSSLPort";
+		$conf[]="</IfModule>";
+		$conf[]="<IfModule mod_fcgid.c>";
+	}
+	$conf[]="\tPHP_Fix_Pathinfo_Enable 1";
+	
 	$conf[]="";
 	if(!is_dir("$DAEMON_PATH/sites-available")){@mkdir("$DAEMON_PATH/sites-available",666,true);}
 	@file_put_contents("$DAEMON_PATH/ports.conf",@implode("\n",$conf));
@@ -418,6 +469,10 @@ function CheckHttpdConf(){
 		if(preg_match("#LogFormat\s+#",$ligne)){$f[$num]=null;}
 		if(preg_match("#User\s+#",$ligne)){$f[$num]=null;}
 		if(preg_match("#Group\s+#",$ligne)){$f[$num]=null;}
+		if(preg_match("#CustomLog\s+#",$ligne)){$f[$num]=null;}
+		if(preg_match("#LogLevel\s+#",$ligne)){$f[$num]=null;}
+		
+		 
 		
 	}
 	
@@ -482,12 +537,10 @@ function CheckHttpdConf(){
 	if($FreeWebsEnableModSecurity==1){$httpd[]="Include $DAEMON_PATH/mod_security.conf";}
 	if($FreeWebsEnableModEvasive==1){$httpd[]="Include $DAEMON_PATH/mod_evasive.conf";}
 	
+	$httpd[]='Loglevel info';
 	$httpd[]='ErrorLog /var/log/apache2/error.log';
-	$httpd[]='LogFormat "%v:%p %h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" vhost_combined';
-	$httpd[]='LogFormat "%h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" combined';
-	$httpd[]='LogFormat "%h %l %u %t \"%r\" %>s %O" common';
-	$httpd[]='LogFormat "%{Referer}i -> %U" referer';
-	$httpd[]='LogFormat "%{User-agent}i" agent';	
+	$httpd[]='LogFormat "%h %l %u %t \"%r\" %<s %b" common';
+	$httpd[]='CustomLog /var/log/apache2/access.log common';  	
 	
 	
 	$mod_status=$freeweb->mod_status();
@@ -511,6 +564,18 @@ function CheckHttpdConf(){
     	$pspedd[]="\tAddOutputFilterByType MOD_PAGESPEED_OUTPUT_FILTER text/html";
     	$pspedd[]="</IfModule>";
     	@file_put_contents("$DAEMON_PATH/mods-enabled/pagespeed.conf", @implode("\n", $pspedd));
+	}
+	
+	if($users->APACHE_MOD_LOGSSQL){
+			$q=new mysql();
+			if(!$q->DATABASE_EXISTS("apachelogs")){$q->CREATE_DATABASE("apachelogs");}
+			$APACHE_MOD_LOGSSQL[]="<IfModule log_sql_mysql_module>";
+			$APACHE_MOD_LOGSSQL[]="\tLogSQLLoginInfo mysql://$q->mysql_admin:$q->mysql_password@$q->mysql_server:$q->mysql_port/apachelogs";
+			$APACHE_MOD_LOGSSQL[]="\tLogSQLMassVirtualHosting On";
+			$APACHE_MOD_LOGSSQL[]="\tLogSQLmachineID $users->hostname";
+			$APACHE_MOD_LOGSSQL[]="\tLogSQLTransferLogFormat AbcHhmMpRSstTUuvz";
+			$APACHE_MOD_LOGSSQL[]="</IfModule>";	
+			@file_put_contents("$DAEMON_PATH/mods-enabled/log_sql_module.conf", @implode("\n", $APACHE_MOD_LOGSSQL));
 	}
 	
 	
@@ -578,6 +643,9 @@ function CheckHttpdConf(){
 	$array["authn_file_module"]="mod_authn_file.so";
 	$array["vhost_alias_module"]="mod_vhost_alias.so";
 	$array["ssl_module"]="mod_ssl.so";
+	$array["log_sql_module"]="mod_log_sql.so";
+	$array["log_sql_mysql_module"]="mod_log_sql_mysql.so";
+	
 	
 	 
 	
@@ -707,8 +775,11 @@ if($FreeWebsEnableModEvasive==1){
 		while (list ($module, $lib) = each ($proxys_mods) ){if(is_file("$DAEMON_PATH/mods-enabled/$module.load")){@unlink("$DAEMON_PATH/mods-enabled/$module.load");}}
 			
 	echo "Starting......: Apache {$ligne["tcount"]} reverse proxy(s)\n";
-	if($ligne["tcount"]>0){
-		
+	$countDeProxy=$ligne["tcount"];
+	if($FreeWebsEnableOpenVPNProxy==1){if($FreeWebsOpenVPNRemotPort<>null){$countDeProxy=$countDeProxy+1;}}
+	
+	
+	if($countDeProxy>0){
 		reset($proxys_mods);
 		while (list ($module, $lib) = each ($proxys_mods) ){
 			if(!is_file("$APACHE_MODULES_PATH/$lib")){echo "Starting......: Apache module '$module' '$lib' no such file\n";continue;}
@@ -781,7 +852,7 @@ function buildHost($uid=null,$hostname,$ssl=null,$d_path=null,$Params=array()){
 	$unix=$GLOBALS["CLASS_UNIX"];
 	$sock=$GLOBALS["CLASS_SOCKETS"];
 	$users=$GLOBALS["CLASS_USERS_MENUS"];
-	$AuthLDAP=0;
+	$AuthLDAP=0;$mod_pagespedd=null;
 	$EnableLDAPAllSubDirectories=0;
 	$APACHE_MOD_AUTHNZ_LDAP=$users->APACHE_MOD_AUTHNZ_LDAP;
 	$APACHE_MOD_PAGESPEED=$users->APACHE_MOD_PAGESPEED;
@@ -792,6 +863,19 @@ function buildHost($uid=null,$hostname,$ssl=null,$d_path=null,$Params=array()){
 		return;
 	
 	}
+	
+	$FreeWebsEnableOpenVPNProxy=$sock->GET_INFO("FreeWebsEnableOpenVPNProxy");
+	$FreeWebsOpenVPNRemotPort=trim($sock->GET_INFO("FreeWebsOpenVPNRemotPort"));
+	$FreeWebDisableSSL=trim($sock->GET_INFO("FreeWebDisableSSL"));
+
+	if(!is_numeric($FreeWebsEnableOpenVPNProxy)){$FreeWebsEnableOpenVPNProxy=0;}
+	if(!is_numeric($FreeWebDisableSSL)){$FreeWebDisableSSL=0;}
+	if($FreeWebDisableSSL==1){
+		if($freeweb->SSL_enabled){echo "Starting......: Apache \"$hostname\" SSL is globally disabled \n";}
+		$freeweb->SSL_enabled=false;
+	}
+
+	
 	$d_path=$freeweb->APACHE_DIR_SITES_ENABLED;
 	
 	
@@ -877,19 +961,35 @@ function buildHost($uid=null,$hostname,$ssl=null,$d_path=null,$Params=array()){
 	
 	
 	
-	if($hostname<>"_default_"){$conf[]="\tServerName $hostname";}
-	$php_open_base_dir=$freeweb->open_basedir();
-	$geoip=$freeweb->mod_geoip();
-	$mod_status=$freeweb->mod_status();
-	$mod_evasive=$freeweb->mod_evasive();
-	$Charsets=$freeweb->Charsets();
-	$php_values=$freeweb->php_values();
-	$WebdavHeader=$freeweb->WebdavHeader();
-	$QUOS=$freeweb->QUOS();
-	$Aliases=$freeweb->Aliases();
-	$mod_cache=$freeweb->mod_cache();
-	$mod_fcgid=$freeweb->mod_fcgid();
-	
+	if($hostname<>"_default_"){
+		$conf[]="\tServerName $hostname";
+		$sock=new sockets();
+		$FreeWebsEnableOpenVPNProxy=$sock->GET_INFO("FreeWebsEnableOpenVPNProxy");
+		$FreeWebsOpenVPNRemotPort=trim($sock->GET_INFO("FreeWebsOpenVPNRemotPort"));
+		if(!is_numeric($FreeWebsEnableOpenVPNProxy)){$FreeWebsEnableOpenVPNProxy=0;}
+		if(!is_numeric($FreeWebsOpenVPNRemotPort)){$FreeWebsOpenVPNRemotPort=0;}
+		if($FreeWebsEnableOpenVPNProxy==1){
+			if($FreeWebsOpenVPNRemotPort>0){
+				$conf[]="\tProxyRequests On";
+				$conf[]="\tProxyVia On";
+				$conf[]="\tAllowCONNECT 1194";
+				$conf[]="\tKeepAlive On";
+			}
+		}
+	}
+		$php_open_base_dir=$freeweb->open_basedir();
+		$geoip=$freeweb->mod_geoip();
+		$mod_status=$freeweb->mod_status();
+		$mod_evasive=$freeweb->mod_evasive();
+		$Charsets=$freeweb->Charsets();
+		$php_values=$freeweb->php_values();
+		$WebdavHeader=$freeweb->WebdavHeader();
+		$QUOS=$freeweb->QUOS();
+		$Aliases=$freeweb->Aliases();
+		$mod_cache=$freeweb->mod_cache();
+		$mod_fcgid=$freeweb->mod_fcgid();
+		$RewriteEngine=$freeweb->RewriteEngine();
+		
 		if($APACHE_MOD_PAGESPEED){$mod_pagespedd=$freeweb->mod_pagespeed();}
 		$conf[]="\tServerAdmin $ServerAdmin";
 		$conf[]="\tServerSignature $ServerSignature";
@@ -909,14 +1009,7 @@ function buildHost($uid=null,$hostname,$ssl=null,$d_path=null,$Params=array()){
 		
 		
 		
-		
-		if($GLOBALS["VERBOSE"]){echo "Starting......: Apache \"$hostname\" is forwarder ? ($freeweb->Forwarder)\n";}
-		
-		if($freeweb->Forwarder==1){
-			echo "Starting......: Apache \"$hostname\" is forwared to $freeweb->ForwardTo\n";
-			$conf[]="\tRewriteEngine On";
-			$conf[]="\tRewriteRule (.*) $freeweb->ForwardTo";
-		}
+		if($RewriteEngine<>null){$conf[]=$RewriteEngine;}
 		
 		$ldapRule=null;
 		
@@ -952,26 +1045,30 @@ function buildHost($uid=null,$hostname,$ssl=null,$d_path=null,$Params=array()){
 	
 	
 	//DIRECTORY
+	$OptionExecCGI=null;
 	$allowFrom=$freeweb->AllowFrom();
 	$JkMount=$freeweb->JkMount();	
 	if($JkMount<>null){$conf[]=$JkMount;}
 	$WebDav=$freeweb->WebDav();
 	$AllowOverride=$freeweb->AllowOverride();
 	$mod_rewrite=$freeweb->mod_rewrite();
-	
-	$conf[]="\n\t<Directory \"$freeweb->WORKING_DIRECTORY/\">";
-		$conf[]="\t\tDirectoryIndex $DirectoryIndex";
-    	$conf[]="\t\tOptions Indexes +FollowSymLinks MultiViews";
-    	if($WebDav<>null){$conf[]=$WebDav;}
-		if($AllowOverride<>null){$conf[]=$AllowOverride;}
-		$conf[]="\t\tOrder allow,deny";
-		if($allowFrom<>null){$conf[]=$allowFrom;}
-		if($geoip<>null){$conf[]="\t\tDeny from env=BlockCountry";}
-		if($mod_rewrite<>null){$conf[]=$mod_rewrite;}
-		if($ldapRule<>null){$conf[]=$ldapRule;}
-	$conf[]="\t</Directory>\n";
+	if($mod_fcgid<>null){$OptionExecCGI=" +ExecCGI";}
 	
 	
+		$conf[]="\n\t<Directory \"$freeweb->WORKING_DIRECTORY/\">";
+			$conf[]="\t\tDirectoryIndex $DirectoryIndex";
+	    	$conf[]="\t\tOptions Indexes +FollowSymLinks MultiViews$OptionExecCGI";
+	    	$conf[]="\t\tAllowOverride All";
+	    	if($WebDav<>null){$conf[]=$WebDav;}
+			if($AllowOverride<>null){$conf[]=$AllowOverride;}
+			$conf[]="\t\tOrder allow,deny";
+			if($allowFrom<>null){$conf[]=$allowFrom;}
+			if($geoip<>null){$conf[]="\t\tDeny from env=BlockCountry";}
+			if($mod_rewrite<>null){$conf[]=$mod_rewrite;}
+			if($ldapRule<>null){$conf[]=$ldapRule;}
+		$conf[]="\t</Directory>\n";
+	
+ if($mod_fcgid<>null){    $conf[]=$mod_fcgid;}
 	
 	
 	if($freeweb->UseReverseProxy==1){
@@ -1007,7 +1104,7 @@ function buildHost($uid=null,$hostname,$ssl=null,$d_path=null,$Params=array()){
 	}
 	$conf[]=$freeweb->FilesRestrictions();	
 	$conf[]=$freeweb->mod_security();
-	if($mod_fcgid<>null){    $conf[]=$mod_fcgid;}
+	
 	
 	if(!is_dir("/var/log/apache2/$hostname")){@mkdir("/var/log/apache2/$hostname",755,true);}
 	$conf[]=$freeweb->ScriptAliases();
@@ -1048,10 +1145,17 @@ function buildHost($uid=null,$hostname,$ssl=null,$d_path=null,$Params=array()){
 
 function remove_host($hostname){
 	$freeweb=new freeweb($hostname);
+	if(is_dir("/var/www/$hostname")){shell_exec("/bin/rm -rf /var/www/$hostname");}
 	if($freeweb->IsGroupWareFromArtica()){
 		$freeweb->delete();
 		return;
 	}
+	
+	$mysql_database=$freeweb->mysql_database;
+	$q=new mysql();
+	if($q->DATABASE_EXISTS($mysql_database)){$q->DELETE_DATABASE($mysql_database);}
+	
+	
 	
 	if($freeweb->groupware=="Z-PUSH"){$freeweb->delete();return;}
 	if($freeweb->groupware=="POWERADMIN"){$freeweb->delete();return;}
@@ -1730,21 +1834,111 @@ function install_PIWIK($servername){
 	
 }
 
+function mod_status_htaccess($filename,$pattern){
+	$exp=explode("\n", @file_get_contents("$filename"));
+	while (list ($num, $ligne) = each ($exp) ){if(preg_match("#$pattern#",$ligne)){return;}}
+
+	reset($exp);
+	while (list ($num, $ligne) = each ($exp) ){	
+		if(preg_match("#^RewriteRule#",$ligne)){
+			if($GLOBALS["VERBOSE"]){echo "RewriteRule -> {$exp[$num]}\n";}
+			$exp[$num]="RewriteCond %{REQUEST_URI} !$pattern\n".$exp[$num];
+			@file_put_contents($filename, @implode("\n", $exp));
+			return;
+		}
+	}	
+	
+}
+
+function mod_status_all(){
+	$unix=new unix();
+	if(!$GLOBALS["VERBOSE"]){
+		
+		$pidfile="/etc/artica-postfix/".basename(__FILE__).".".__FUNCTION__.".pid";
+		$pidtime="/etc/artica-postfix/".basename(__FILE__).".".__FUNCTION__.".time";
+		if($unix->file_time_min($pidtime)<15){die();}
+		$oldpid=@file_get_contents($pidfile);
+		if($unix->process_exists($oldpid,basename(__FILE__))){return;}
+		@unlink($pidtime);
+		@file_put_contents($pidtime, time());
+		@file_put_contents($pidfile, getmypid());
+	}
+	
+	$table_name="apache_stats_".date('Ym');
+	$q=new mysql();
+	
+	
+	$sql="CREATE TABLE  IF NOT EXISTS `artica_events`.`$table_name` (
+	`zDate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+	`servername` VARCHAR( 255 ) NOT NULL ,
+	`UPTIME` VARCHAR( 255 ) NOT NULL ,
+	`total_traffic` INT( 100 ) NOT NULL ,
+	`total_memory` INT( 100 ) NOT NULL ,
+	`requests_second` DOUBLE( 100, 2 ) NOT NULL ,
+	`traffic_second` INT( 100 ) NOT NULL ,
+	`traffic_request` INT( 100 ) NOT NULL ,
+	 INDEX ( `zDate` , `total_traffic` , `total_memory` , `requests_second` , `traffic_second` , `traffic_request`),
+	 KEY `servername` (`servername`))
+	";
+	$q->QUERY_SQL($sql,"artica_events");
+	
+	
+	
+	$sql="SELECT * FROM freeweb ORDER BY servername";
+	$results=$q->QUERY_SQL($sql,'artica_backup');
+	if(!$q->ok){if($GLOBALS["VERBOSE"]){echo $q->mysql_error."\n";return;}}
+	
+	$prefix="INSERT INTO $table_name (servername,total_traffic,total_memory,requests_second,traffic_second,traffic_request,`UPTIME` ) VALUES";
+	
+	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
+		$hostname=$ligne["servername"];
+		if(trim($hostname)==null){continue;}
+		mod_status($hostname);
+	}
+
+	if(count($GLOBALS["MODSTATUSQ"])==0){if($GLOBALS["VERBOSE"]){echo "No rows\n";}return;}
+	$sql=$prefix.@implode(",", $GLOBALS["MODSTATUSQ"]);
+	$q->QUERY_SQL($sql,"artica_events");
+	if(!$q->ok){echo $q->mysql_error;}
+}
+
 
 function mod_status($servername){
+	$servername=trim($servername);
+	if($servername=="_default_"){return;}
 	$freeweb=new freeweb($servername);
+	$dir_www=$freeweb->WORKING_DIRECTORY;
+	$unix=new unix();
+	$q=new mysql();
+	$pid=array();
 	
-	$curl=new ccurl("http://$servername/server-status/index.html",true);
 	
 	
+	
+	$dirMD=md5($servername);
+	if($GLOBALS["VERBOSE"]){echo "Testing $dir_www/.htaccess\n";}
+	if(is_file("$dir_www/.htaccess")){
+	if($GLOBALS["VERBOSE"]){echo "mod_status_htaccess($dir_www/.htaccess,$dirMD)\n";}
+		mod_status_htaccess("$dir_www/.htaccess",$dirMD);
+		
+	}
+
+	
+	
+	$curl=new ccurl("http://$servername/$dirMD/$dirMD-status",true);
+	$access=null;
+	$total_traffic=null;
+	$total_traffic_unit=null;
+	$traffic_sec=0;
+	$traffic_request=0;
+	$request_s=0;
+	$UPTIME=null;
+	$total_mem=0;
 	$datas=$curl->GetFile("/tmp/$servername.html");
 	$datas=explode("\n",@file_get_contents("/tmp/$servername.html"));
-	while (list ($num, $ligne) = each ($users) ){
-		if(preg_match("#Server uptime:\s+(.+?)#",$ligne,$re)){
-			$array_status["UPTIME"]=$re[1];
-			continue;
-		}
-		if(preg_match("#Total accesses:\s+([0-9]+)\s+-\s+Total Traffic:\s+([0-9]+)\s+([a-zA-Z]+)#")){
+	while (list ($num, $ligne) = each ($datas) ){
+		if(preg_match("#Server uptime:\s+(.+)#",$ligne,$re)){$UPTIME=trim($re[1]);continue;}
+		if(preg_match("#Total accesses:\s+([0-9]+)\s+-\s+Total Traffic:\s+([0-9]+)\s+([a-zA-Z]+)#",$ligne,$re)){
 			$access=$re[1];
 			$total_traffic=$re[2];
 			$total_traffic_unit=strtoupper($re[3]);
@@ -1752,18 +1946,66 @@ function mod_status($servername){
 			if($total_traffic_unit=="MB"){$total_traffic=$total_traffic*1024000;}
 			if($total_traffic_unit=="GB"){$total_traffic=$total_traffic*1024000000;}
 			if($total_traffic_unit=="TB"){$total_traffic=$total_traffic*10240000000000;}
+			continue;		
+			
+			
 		}
+		
+		if(preg_match("#([0-9\.]+)\s+requests\/sec\s+-\s+([0-9]+)\s+(.+)\/second\s+-\s+([0-9]+)\s+(.+?)\/request#", $ligne,$re)){
+			$request_s=$re[1];
+			if(substr($request_s,0,1)=="."){$request_s="0$request_s";}
+			$traffic_sec=$re[2];
+			$traffic_sec_unit=strtoupper($re[3]);
+			if($traffic_sec_unit=="KB"){$traffic_sec=$traffic_sec*1024;}
+			if($traffic_sec_unit=="MB"){$traffic_sec=$traffic_sec*1024000;}
+			if($traffic_sec_unit=="GB"){$traffic_sec=$traffic_sec*1024000000;}
+			if($traffic_sec_unit=="TB"){$traffic_sec=$traffic_sec*10240000000000;}			
+			
+			
+			$traffic_request=$re[4];
+			$traffic_request_unit=strtoupper($re[5]);
+			if($traffic_request_unit=="KB"){$traffic_request=$traffic_request*1024;}
+			if($traffic_request_unit=="MB"){$traffic_request=$traffic_request*1024000;}
+			if($traffic_request_unit=="GB"){$traffic_request=$traffic_request*1024000000;}
+			if($traffic_request_unit=="TB"){$traffic_request=$traffic_request*10240000000000;}			
+			continue;
+		}
+		
+		if(preg_match("#<td><b>[0-9]+-[0-9]+</b></td><td>([0-9]+)</td><td>#", $ligne,$re)){
+			$pid[$re[1]]=$re[1];
+		}
+		
+		
+		
+	
 		
 	}
 	
-		// voir //http://www.apache.org/server-status
+	if(count($pid)>0){
+		while (list ($num, $ligne) = each ($pid) ){
+		$mem=$unix->PROCESS_MEMORY($num,true)+$unix->PROCESS_CACHE_MEMORY($num,true);
+		$total_mem=$total_mem+$mem;
+		}	
+	}
+	
+	if($GLOBALS["VERBOSE"]){
+			echo "Access: $access total-traffic:$total_traffic bytes UPTIME=$UPTIME Total memory used: $total_mem Bytes\n";
+			echo "Access: requests/seconds: $request_s traffic/sec:$traffic_sec trafic per request:$traffic_request bytes:\n";			
+
+	}
+
+	if(!is_numeric($total_traffic)){
+		if($GLOBALS["VERBOSE"]){echo "No traffic return null\n";}
+		return;}
 		
-		//if(preg_match("#([\.0-9]+)\s+requests\/sec\s+-\s+([0-9\.]+)\s+([A-Z]+)\/second\s+-\s+([0-9\.]+)\s+([a-zA-Z]+)#, $subject))
-		
-	echo $datas;
+	$UPTIME=str_replace("</td>", "", $UPTIME);
+	$UPTIME=str_replace("</dt>", "", $UPTIME);
 	
-	
-	
+	$query="('$servername','$total_traffic','$total_mem','$request_s','$traffic_sec','$traffic_request','$UPTIME')";
+	if($GLOBALS["VERBOSE"]){echo "$query\n";}
+	$GLOBALS["MODSTATUSQ"][]=$query;
+	// voir //http://www.apache.org/server-status
+
 }
 
 

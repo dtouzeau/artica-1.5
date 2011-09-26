@@ -16,9 +16,9 @@
 	if(!$users->AsArticaAdministrator){die();}
 	
 	if(isset($_GET["popup"])){popup();exit;}
-	if(isset($_GET["ProcessNice"])){save_process();exit;}
-	if(isset($_GET["SyslogNgPref"])){save_process();exit;}
-	if(isset($_GET["MysqlNice"])){save_process();exit;}
+	if(isset($_POST["ProcessNice"])){save_process();exit;}
+	if(isset($_POST["SyslogNgPref"])){save_process();exit;}
+	if(isset($_POST["MysqlNice"])){save_process();exit;}
 	if(isset($_GET["js"])){echo js_slider();exit;}
 	if(isset($_GET["main"])){main_switch();exit;}
 	if(isset($_GET["status"])){main_status();exit;}
@@ -193,6 +193,8 @@ function cron_index(){
 	$DisableWarningCalculation=$sock->GET_INFO('DisableWarningCalculation');
 	$DisableFrontBrowseComputers=$sock->GET_INFO('DisableFrontBrowseComputers');
 	$DisableFrontArticaMeta=$sock->GET_INFO('ArticaMetaRemoveIndex');
+
+	
 	
 	
 	
@@ -203,6 +205,7 @@ function cron_index(){
 	if($jgrowl_no_clamav_update==null){$jgrowl_no_clamav_update=0;}
 	if($DisableFrontEndArticaEvents==null){$DisableFrontEndArticaEvents=0;}
 	if($AllowShutDownByInterface==null){$AllowShutDownByInterface=0;}
+	if($ArticaInCgroups==null){$ArticaInCgroups=0;}
 	
 	
 	$DisableWarnNotif=Field_checkbox("DisableWarnNotif",1,$DisableWarnNotif);
@@ -216,7 +219,6 @@ function cron_index(){
 	$DisableWarningCalculation=Field_checkbox("DisableWarningCalculation",1,$DisableWarningCalculation);
 	$DisableFrontBrowseComputers=Field_checkbox("DisableFrontBrowseComputers", 1,$DisableFrontBrowseComputers);
 	$DisableFrontArticaMeta=Field_checkbox("DisableFrontArticaMeta", 1,$DisableFrontArticaMeta);
-	
 
 	
 	
@@ -620,30 +622,48 @@ function main_config($return=0){
 	
 function main_config_artica(){
 	//ArticaPerformancesSettings
-$sock=new sockets();
-$users=new usersMenus();
-$MaxtimeBackupMailSizeCalculate=trim($sock->GET_INFO("MaxtimeBackupMailSizeCalculate"));
-$systemForkProcessesNumber=trim($sock->GET_INFO("systemForkProcessesNumber"));
-$cpulimit=trim($sock->GET_INFO("cpulimit"));
-$cpuLimitEnabled=trim($sock->GET_INFO("cpuLimitEnabled"));
-$SystemV5CacheEnabled=trim($sock->GET_INFO("SystemV5CacheEnabled"));
-$NoDryReboot=$sock->GET_INFO("NoDryReboot");
-$NoOutOfMemoryReboot=$sock->GET_INFO("NoOutOfMemoryReboot");
-$EnableBandwithCalculation=$sock->GET_INFO("EnableBandwithCalculation");
+	$sock=new sockets();
+	$users=new usersMenus();
+	$page=CurrentPageName();
+	
+	$MaxtimeBackupMailSizeCalculate=trim($sock->GET_INFO("MaxtimeBackupMailSizeCalculate"));
+	$systemForkProcessesNumber=trim($sock->GET_INFO("systemForkProcessesNumber"));
+	$cpulimit=trim($sock->GET_INFO("cpulimit"));
+	$cpuLimitEnabled=trim($sock->GET_INFO("cpuLimitEnabled"));
+	$SystemV5CacheEnabled=trim($sock->GET_INFO("SystemV5CacheEnabled"));
+	$NoDryReboot=$sock->GET_INFO("NoDryReboot");
+	$NoOutOfMemoryReboot=$sock->GET_INFO("NoOutOfMemoryReboot");
+	$AutoRebootSchedule=$sock->GET_INFO("AutoRebootSchedule");
+	$EnableBandwithCalculation=$sock->GET_INFO("EnableBandwithCalculation");
+	$ArticaInCgroups=$sock->GET_INFO('ArticaInCgroups');
+	$ArticaCgroup=$sock->GET_INFO('ArticaCgroup');
+	$systemMaxOverloaded=trim($sock->GET_INFO("systemMaxOverloaded"));
+	$AutoRebootScheduleText=trim($sock->GET_INFO("AutoRebootScheduleText"));
+	
+	$cgroupsEnabled=$sock->GET_INFO("cgroupsEnabled");
+	$CGROUPS_INSTALLED=0;
+	if($users->CGROUPS_INSTALLED){$CGROUPS_INSTALLED=1;}
+	
 
-if(strlen(trim($SystemV5CacheEnabled))==0){$SystemV5CacheEnabled=0;}
-if(!is_numeric($NoDryReboot)){$NoDryReboot=0;}
-if(!is_numeric($NoOutOfMemoryReboot)){$NoOutOfMemoryReboot=0;}
-
-
-$systemMaxOverloaded=trim($sock->GET_INFO("systemMaxOverloaded"));
-
-
-if($cpuLimitEnabled==null){$sock->SET_INFO("cpuLimitEnabled",0);$cpuLimitEnabled=0;}
-
-
-if($MaxtimeBackupMailSizeCalculate==null){$MaxtimeBackupMailSizeCalculate=300;}
-if($cpulimit==null){$cpulimit=0;}
+	if(strlen(trim($SystemV5CacheEnabled))==0){$SystemV5CacheEnabled=0;}
+	if(!is_numeric($NoDryReboot)){$NoDryReboot=0;}
+	if(!is_numeric($NoOutOfMemoryReboot)){$NoOutOfMemoryReboot=0;}
+	if(!is_numeric($cpuLimitEnabled)){$sock->SET_INFO("cpuLimitEnabled",0);$cpuLimitEnabled=0;}
+	if(!is_numeric($MaxtimeBackupMailSizeCalculate)){$MaxtimeBackupMailSizeCalculate=300;}
+	if(!is_numeric($cpulimit)){$cpulimit=0;}
+	if(!is_numeric($cgroupsEnabled)){$cgroupsEnabled=0;}
+	if(!is_numeric($AutoRebootSchedule)){$AutoRebootSchedule=0;}
+	
+	
+	
+	$q=new mysql();
+	$sql="SELECT groupname  FROM cgroups_groups ORDER BY groupname";
+	$results=$q->QUERY_SQL($sql,"artica_backup");
+	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
+		$cgroups[$ligne["groupname"]]=	$ligne["groupname"];	
+		
+	}
+	$CountDeCgroups=count($cgroups);
 
 
 if($users->POSTFIX_INSTALLED){
@@ -699,19 +719,32 @@ $MaxMailEventsLogs=$sock->GET_INFO("MaxMailEventsLogs");
 if($MaxMailEventsLogs==null){$MaxMailEventsLogs=400000;}
 if($MaxMailEventsLogs<100){$MaxMailEventsLogs=4000;}
 $html="
+<div id=ffm1>
 <table style='width:100%'>
+<tbody>
 <tr>
 	<td valign='top'>
-		<form name=ffm1>
+		
 		<table style='width:100%' class=form>
+		<tbody>
 		<tr>
 			<td nowrap width=1% align='right' class=legend>{artica_process}:</td>
 			<td>$arrp</td>
 			<td>" . help_icon("{artica_process_explain}")."</td>
 		</tr>
 		<tr>
+			<td nowrap width=1% align='right' class=legend>{ArticaInCgroups}:</td>
+			<td>" . Field_checkbox("ArticaInCgroups",1,$ArticaInCgroups,"ArticaCgroupCheck()")."</td>
+			<td>" . help_icon("{ArticaInCgroups_explain}")."</td>
+		</tr>
+		<tr>
+			<td nowrap width=1% align='right' class=legend>{APP_CGROUPS}:</td>
+			<td>" . Field_array_Hash($cgroups,"ArticaCgroup",null,$ArticaCgroup)."</td>
+			<td>&nbsp;</td>
+		</tr>					
+		<tr>
 			<td nowrap width=1% align='right' class=legend>{cpuLimitEnabled}:</td>
-			<td>" . Field_checkbox("cpuLimitEnabled",1,$cpuLimitEnabled,"{enable_disable}")."</td>
+			<td>" . Field_checkbox("cpuLimitEnabled",1,$cpuLimitEnabled,"CheckCPULimit()")."</td>
 			<td>" . help_icon("{cpuLimitEnabled_explain}")."</td>
 		</tr>			
 		
@@ -740,46 +773,35 @@ $html="
 		
 		<tr>
 			<td nowrap width=1% align='right' class=legend>{SystemV5CacheEnabled}:</td>
-			<td>" . Field_checkbox("SystemV5CacheEnabled",1,$SystemV5CacheEnabled,"{enable_disable}")."</td>
+			<td>" . Field_checkbox("SystemV5CacheEnabled",1,$SystemV5CacheEnabled)."</td>
 			<td>" . help_icon("{SystemV5CacheEnabled_explain}")."</td>
 		</tr>	
 		
 				
 		<tr>
 			<td nowrap width=1% align='right' class=legend>{useIonice}:</td>
-			<td>" . Field_checkbox("useIonice",1,$ini->_params["PERFORMANCES"]["useIonice"],"{enable_disable}")."</td>
+			<td>" . Field_checkbox("useIonice",1,$ini->_params["PERFORMANCES"]["useIonice"])."</td>
 			<td>" . help_icon("{useIonice_explain}")."</td>
 		</tr>
 		
 		<tr>
 			<td nowrap width=1% align='right' class=legend>{NoBootWithoutIP}:</td>
-			<td>" . Field_checkbox("NoBootWithoutIP",1,$ini->_params["PERFORMANCES"]["NoBootWithoutIP"],"{enable_disable}")."</td>
+			<td>" . Field_checkbox("NoBootWithoutIP",1,$ini->_params["PERFORMANCES"]["NoBootWithoutIP"])."</td>
 			<td>" . help_icon("{NoBootWithoutIP_explain}")."</td>
 		</tr>
 		<tr>
 			<td nowrap width=1% align='right' class=legend>{DisableFollowServiceHigerThan1G}:</td>
-			<td>" . Field_checkbox("DisableFollowServiceHigerThan1G",1,$ini->_params["PERFORMANCES"]["DisableFollowServiceHigerThan1G"],"{enable_disable}")."</td>
+			<td>" . Field_checkbox("DisableFollowServiceHigerThan1G",1,$ini->_params["PERFORMANCES"]["DisableFollowServiceHigerThan1G"])."</td>
 			<td>" . help_icon("{DisableFollowServiceHigerThan1G_explain}")."</td>
 		</tr>
 		<tr>
 			<td nowrap width=1% align='right' class=legend>{EnableArticaWatchDog}:</td>
-			<td>" . Field_checkbox("EnableArticaWatchDog",1,$sock->GET_INFO('EnableArticaWatchDog'),"{enable_disable}")."</td>
+			<td>" . Field_checkbox("EnableArticaWatchDog",1,$sock->GET_INFO('EnableArticaWatchDog'))."</td>
 			<td>" . help_icon("{EnableArticaWatchDog_explain}")."</td>
 		</tr>
 		<tr>
-			<td nowrap width=1% align='right' class=legend>{NoDryReboot}:</td>
-			<td>" . Field_checkbox("NoDryReboot",1,$NoDryReboot,"{enable_disable}")."</td>
-			<td>" . help_icon("{NoDryReboot_explain}")."</td>
-		</tr>
-		<tr>
-			<td nowrap width=1% align='right' class=legend>{NoOutOfMemoryReboot}:</td>
-			<td>" . Field_checkbox("NoOutOfMemoryReboot",1,$NoOutOfMemoryReboot,"{enable_disable}")."</td>
-			<td>" . help_icon("{NoOutOfMemoryReboot_explain}")."</td>
-		</tr>		
-		
-		<tr>
 			<td nowrap width=1% align='right' class=legend>{EnableBandwithCalculation}:</td>
-			<td>" . Field_checkbox("EnableBandwithCalculation",1,$EnableBandwithCalculation,"{enable_disable}")."</td>
+			<td>" . Field_checkbox("EnableBandwithCalculation",1,$EnableBandwithCalculation)."</td>
 			<td>" . help_icon("{EnableBandwithCalculation_explain}")."</td>
 		</tr>		
 		$backupmailsize
@@ -788,18 +810,116 @@ $html="
 			<td nowrap>". Field_text("MaxMailEventsLogs",$MaxMailEventsLogs,"width:90px;font-size:13px;padding:3px")."</td>
 			<td></td>
 		</tr>		
-			<td colspan=3 align='right'>
-			<hr>". button("{edit}","ParseForm('ffm1','$page',true)")."
-			
+			<td colspan=3 align='right'><hr>". button("{edit}","SavePerformancesMasterForm()")."</td>
 		</tr>
+		</tbody>
 		</table>
+		<input type='hidden' id='AutoRebootScheduleText' value='$AutoRebootScheduleText'>		
+		<table style='width:100%' class=form>
+		<tbody>
+			<tr>
+				<td colspan=3><div style='font-size:16px'>{reboot}</td>
+			</tr>
+			<tr>
+				<td nowrap width=1% align='right' class=legend>{NoDryReboot}:</td>
+				<td>" . Field_checkbox("NoDryReboot",1,$NoDryReboot)."</td>
+				<td>" . help_icon("{NoDryReboot_explain}")."</td>
+			</tr>
+			<tr>
+				<td nowrap width=1% align='right' class=legend>{NoOutOfMemoryReboot}:</td>
+				<td>" . Field_checkbox("NoOutOfMemoryReboot",1,$NoOutOfMemoryReboot)."</td>
+				<td>" . help_icon("{NoOutOfMemoryReboot_explain}")."</td>
+			</tr>
+			<tr>
+				<td nowrap width=1% align='right' class=legend>{scheduled_reboot}:</td>
+				<td>" . Field_checkbox("AutoRebootSchedule",1,$AutoRebootSchedule,'CheckRebootSchedule()')."</td>
+				<td align=left><a href=\"javascript:blur();\" OnClick=\"javascript:Loadjs('cron.php?field=AutoRebootScheduleText')\" style='font-size:13px;text-decoration:underline;color:black' id='scheduleAID2'>{schedule}</a></td>
+			</tr>
+		</tr>		
+			<td colspan=3 align='right'><hr>". button("{edit}","SavePerformancesMasterForm()")."</td>
+		</tr>			
+		</tbody>							
+		</table>
+		
 </form>
 </td>
 <td valign='top'>
 	$icon_schedule$icon_phlisight
 </td>
 </tr>
+</tbody>
 </table>
+</div>
+<script>
+	var x_SavePerformancesMasterForm= function (obj) {
+		var results=obj.responseText;
+		if(results.length>3){alert(results);}
+		RefreshTab('main_config_articaproc');
+	}
+
+
+	function SavePerformancesMasterForm(){
+		var XHR=XHRParseElements('ffm1');
+		AnimateDiv('ffm1');
+		XHR.sendAndLoad('$page', 'POST',x_SavePerformancesMasterForm);
+	
+	}
+
+
+
+	function ArticaCgroupCheck(){
+		
+		var CGROUPS_INSTALLED=$CGROUPS_INSTALLED;
+		var cgroupsEnabled=$cgroupsEnabled;
+		var CountDeCgroups=$CountDeCgroups;
+		document.getElementById('ArticaCgroup').disabled=true;
+		document.getElementById('ArticaInCgroups').disabled=true;
+		
+		if(CGROUPS_INSTALLED==0){return;}
+		if(cgroupsEnabled==0){return;}
+		if(CountDeCgroups==0){return;}
+		document.getElementById('ArticaCgroup').disabled=false;
+		document.getElementById('ArticaInCgroups').disabled=false;	
+			 
+		if(document.getElementById('ArticaInCgroups').checked){
+			document.getElementById('cpuLimitEnabled').disabled=true;
+			document.getElementById('ProcessNice').disabled=true;
+			document.getElementById('cpulimit').disabled=true;
+			document.getElementById('useIonice').disabled=true;
+			
+		}else{
+			document.getElementById('cpuLimitEnabled').disabled=false;
+			document.getElementById('useIonice').disabled=false;
+			document.getElementById('ProcessNice').false=true;
+			CheckCPULimit();		
+		}
+		
+	}
+	
+	
+	function CheckCPULimit(){
+		document.getElementById('cpulimit').disabled=true;
+		if(document.getElementById('cpuLimitEnabled').disabled){return;}
+		if(document.getElementById('cpuLimitEnabled').checked){
+			document.getElementById('cpulimit').disabled=false;
+		}
+	}
+	
+		function CheckRebootSchedule(){
+			if(!document.getElementById('AutoRebootSchedule').checked){
+				document.getElementById('scheduleAID2').style.color='#CCCCCC';
+			}else{
+				document.getElementById('scheduleAID2').style.color='black';
+			}
+		
+		}
+		
+	
+
+ArticaCgroupCheck();
+CheckCPULimit();
+CheckRebootSchedule();
+</script>
 
 ";
 $tpl=new templates();
@@ -1053,26 +1173,38 @@ function save_process(){
 $sock=new sockets();	
 $ini=new Bs_IniHandler();
 $ini->loadString($sock->GET_INFO("ArticaPerformancesSettings"));
-if(isset($_GET["cpuLimitEnabled"])){$sock->SET_INFO('cpuLimitEnabled',$_GET["cpuLimitEnabled"]);}
-if(isset($_GET["systemMaxOverloaded"])){$sock->SET_INFO('systemMaxOverloaded',$_GET["systemMaxOverloaded"]);}
-if(isset($_GET["systemForkProcessesNumber"])){$sock->SET_INFO('systemForkProcessesNumber',$_GET["systemForkProcessesNumber"]);}
-if(isset($_GET["SystemV5CacheEnabled"])){$sock->SET_INFO('SystemV5CacheEnabled',$_GET["SystemV5CacheEnabled"]);}
-if(isset($_GET["MaxMailEventsLogs"])){$sock->SET_INFO('MaxMailEventsLogs',$_GET["MaxMailEventsLogs"]);}
-if(isset($_GET["NoDryReboot"])){
-	$sock->SET_INFO('NoDryReboot',$_GET["NoDryReboot"]);
+if(isset($_POST["cpuLimitEnabled"])){$sock->SET_INFO('cpuLimitEnabled',$_POST["cpuLimitEnabled"]);}
+if(isset($_POST["systemMaxOverloaded"])){$sock->SET_INFO('systemMaxOverloaded',$_POST["systemMaxOverloaded"]);}
+if(isset($_POST["systemForkProcessesNumber"])){$sock->SET_INFO('systemForkProcessesNumber',$_POST["systemForkProcessesNumber"]);}
+if(isset($_POST["SystemV5CacheEnabled"])){$sock->SET_INFO('SystemV5CacheEnabled',$_POST["SystemV5CacheEnabled"]);}
+if(isset($_POST["MaxMailEventsLogs"])){$sock->SET_INFO('MaxMailEventsLogs',$_POST["MaxMailEventsLogs"]);}
+if(isset($_POST["ArticaCgroup"])){$sock->SET_INFO('ArticaCgroup',$_POST["ArticaCgroup"]);}
+if(isset($_POST["ArticaInCgroups"])){$sock->SET_INFO('ArticaInCgroups',$_POST["ArticaInCgroups"]);}
+
+if(isset($_POST["AutoRebootScheduleText"])){$sock->SET_INFO('AutoRebootScheduleText',$_POST["AutoRebootScheduleText"]);}
+if(isset($_POST["AutoRebootSchedule"])){$sock->SET_INFO('AutoRebootSchedule',$_POST["AutoRebootSchedule"]);}
+if(isset($_POST["AutoRebootSchedule"])){$sock->getFrameWork("services.php?AutoRebootSchedule=yes");}
+
+ 
+
+
+if(isset($_POST["NoDryReboot"])){
+	$sock->SET_INFO('NoDryReboot',$_POST["NoDryReboot"]);
 	$sock->getFrameWork("services.php?syslogger=yes");
 }
-if(isset($_GET["NoOutOfMemoryReboot"])){
-	$sock->SET_INFO('NoOutOfMemoryReboot',$_GET["NoOutOfMemoryReboot"]);
+if(isset($_POST["NoOutOfMemoryReboot"])){
+	$sock->SET_INFO('NoOutOfMemoryReboot',$_POST["NoOutOfMemoryReboot"]);
 	$sock->getFrameWork("services.php?syslogger=yes");
 }
 
-if(isset($_GET["EnableBandwithCalculation"])){$sock->SET_INFO('EnableBandwithCalculation',$_GET["EnableBandwithCalculation"]);}
+if(isset($_GET["EnableBandwithCalculation"])){$sock->SET_INFO('EnableBandwithCalculation',$_POST["EnableBandwithCalculation"]);}
 
 
 
 	
-	while (list ($num, $val) = each ($_GET) ){
+	while (list ($num, $val) = each ($_POST) ){
+		if(strpos($val, "javascript")>0){continue;}
+		writelogs("Save $num == '$val'",__FUNCTION__,__FILE__,__LINE__);
 		$ini->_params["PERFORMANCES"][$num]=$val;
 		
 	}
@@ -1083,7 +1215,7 @@ $sock->getFrameWork('cmd.php?replicate-performances-config=yes');
 $sock->getFrameWork('cmd.php?RestartDaemon=yes');
 
 
-if(isset($_GET["MysqlNice"])){
+if(isset($_POST["MysqlNice"])){
 	$sock=new sockets();
 	$sock->getFrameWork('cmd.php?restart-mysql=yes');
 	
@@ -1094,16 +1226,16 @@ syslogng_log_fifo_size	2048
 syslogng_sync	0
 */
 
-if(isset($_GET["SyslogNgPref"])){
+if(isset($_POST["SyslogNgPref"])){
 	$sock=new sockets();
 	$sock->getfile('restartsyslogng');	
 	$sock->getfile("restartmysqldependencies");
 }
 
-if(isset($_GET["MaxtimeBackupMailSizeCalculate"])){
+if(isset($_POST["MaxtimeBackupMailSizeCalculate"])){
 	$sock=new sockets();
-	if($_GET["MaxtimeBackupMailSizeCalculate"]<20){$_GET["MaxtimeBackupMailSizeCalculate"]=20;}
-	$sock->SET_INFO("MaxtimeBackupMailSizeCalculate",$_GET["MaxtimeBackupMailSizeCalculate"]);
+	if($_GET["MaxtimeBackupMailSizeCalculate"]<20){$_POST["MaxtimeBackupMailSizeCalculate"]=20;}
+	$sock->SET_INFO("MaxtimeBackupMailSizeCalculate",$_POST["MaxtimeBackupMailSizeCalculate"]);
 }
 	
 }
@@ -1134,7 +1266,7 @@ function mysql_test_perfs(){
 	$html="
 	
 	
-	<H1>{service_performances}</H1>
+	<div style='font-size:18px'>{service_performances}</div>
 	<span style='font-size:14px;font-weight:bold;color:red'>{benchmark_result}: <code>$time seconds</code></span>
 	<H2>{others_benchmarks}</H2>
 	<table style='width:100%' class=table_form>

@@ -250,7 +250,7 @@ WebSitesNums();
 function GetCategory($www){
 	if(preg_match("#^www\.(.+)#",$www,$re)){$www=$re[1];}
 	$sql="SELECT category FROM dansguardian_community_categories WHERE pattern='$www' and enabled=1";
-	$q=new mysql();
+	$q=new mysql_squid_builder();
 	$f=array();
 	$results=$q->QUERY_SQL($sql,"artica_backup");
 	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){

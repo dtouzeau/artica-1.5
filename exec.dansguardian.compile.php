@@ -319,7 +319,7 @@ while (list ($num, $line) = each ($f) ){
 
 function bannedsitelist_userdefined(){
 	$sql="SELECT category_name,	pattern FROM dansguardian_categories";
-	$q=new mysql();
+	$mysqlSquid=new mysql_squid_builder();
 	$results=$q->QUERY_SQL($sql,"artica_backup");
 		while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
 			$array[$ligne["category_name"]][]=$ligne["pattern"];
@@ -737,10 +737,12 @@ $datas=explode("\n",@file_get_contents($file));
 }
 
 function CleanDB(){
+	$mysqlSquid=new mysql_squid_builder();
 	$sql="TRUNCATE TABLE `dansguardian_categories`";
-	$q=new mysql();
-	$q->QUERY_SQL($sql,"artica_backup");
 	
+	$mysqlSquid->QUERY_SQL($sql,"artica_backup");
+	
+	$q=new mysql();
 	$sql="TRUNCATE TABLE `dansguardian_files`";
 	$q->QUERY_SQL($sql,"artica_backup");	
 	

@@ -89,6 +89,9 @@ class openvpn{
 		if($this->main_array["GLOBAL"]["DEV_TYPE"]==null){$this->main_array["GLOBAL"]["DEV_TYPE"]="tun";} //or tap0
 		if($this->main_array["GLOBAL"]["ENABLE_BRIDGE"]==null){$this->main_array["GLOBAL"]["ENABLE_BRIDGE"]="0";}
 		if($this->main_array["GLOBAL"]["LDAP_AUTH"]==null){$this->main_array["GLOBAL"]["LDAP_AUTH"]="0";}
+		if($this->main_array["GLOBAL"]["REMOVE_SERVER_DEFAULT_ROUTE"]==null){$this->main_array["GLOBAL"]["REMOVE_SERVER_DEFAULT_ROUTE"]="0";}
+		
+		
 		
 		
 		
@@ -207,6 +210,7 @@ class openvpn{
 	}
 	
 	function BuildClientconf($uid){
+				$script_secu=null;
 				$SITE_IP=null;
 				if(isset($GLOBALS["CLASS_SOCKETS"])){$sock=$GLOBALS["CLASS_SOCKETS"];}else{$GLOBALS["CLASS_SOCKETS"]=new sockets();$sock=$GLOBALS["CLASS_SOCKETS"];}
 				$ini=new Bs_IniHandler();
@@ -270,15 +274,24 @@ class openvpn{
 					$conf=$conf ."auth-user-pass\r\n";
 				}
 				
+				
+				
+				
 				$ipwin32="ip-win32 netsh";
 				$conf=$conf .";System OS: $this->ComputerOS\r\n";
 				if($this->ComputerOS<>null){
 					if($this->ComputerOS=="windows2003"){$ipwin32=null;}
 					if($this->ComputerOS=="linux"){$ipwin32=null;}
 					if($this->ComputerOS=="mac"){$ipwin32=null;}
+					if($this->ComputerOS=="Windows7"){
+						$ipwin32=null;$script_secu="script-security 2 system";
+					}
+					
+					
 				}
 				
 				$conf=$conf ."$ipwin32\r\n";
+				if($script_secu<>null){$conf=$conf ."$script_secu\r\n";}
 				
 				if($this->site_id>0){
 					$q=new mysql();

@@ -39,7 +39,7 @@ $user=new usersMenus();
 	if(isset($_GET["BACKUP_TASK_MODIFY_RESSOURCES"])){BACKUP_TASK_MODIFY_RESSOURCES();exit;}
 	if(isset($_POST["BACKUP_TASK_MODIFY_RESSOURCES_APPLY"])){BACKUP_TASK_MODIFY_RESSOURCES_SAVE();exit;}
 	if(isset($_POST["DeleteAllBackTaskEvents"])){DeleteAllBackTaskEvents();exit;}
-	
+	if(isset($_GET["BACKUP_TASK_SHOW_CONTAINERS"])){BACKUP_TASK_SHOW_CONTAINERS();exit;}
 	
 	if(isset($_GET["events"])){BACKUP_EVENTS();exit;}
 js();
@@ -269,7 +269,7 @@ function js(){
 	$apply_upgrade_help=$tpl->javascript_parse_text("{apply_upgrade_help}");
 	$events=$tpl->_ENGINE_parse_body("{events}");
 	$resources=$tpl->_ENGINE_parse_body("{resources}");
-	
+	$containers=$tpl->_ENGINE_parse_body("{containers}");
 	$start="BACKUP_TASKS_LOAD();";
 	
 	if(isset($_GET["in-front-ajax"])){
@@ -305,6 +305,10 @@ function js(){
 		
 		function BACKUP_TASK_MODIFY_RESSOURCES(ID){
 			YahooWin3('500','$page?BACKUP_TASK_MODIFY_RESSOURCES='+ID,ID+'::$resources');
+		}
+		
+		function BACKUP_TASK_SHOW_CONTAINERS(ID){
+			YahooWin4('700','$page?BACKUP_TASK_SHOW_CONTAINERS='+ID,ID+'::$containers');
 		}
 		
 		
@@ -489,6 +493,10 @@ function tasks_list(){
 			}
 		}
 		
+		$sql="SELECT SUM(size) as tsize FROM backup_storages WHERE taskid={$ligne["ID"]}";
+		$ligneSize=mysql_fetch_array($q->QUERY_SQL($sql,"artica_backup"));
+		$sizeStorages=FormatBytes($ligneSize["tsize"]);
+		
 		
 		$html=$html.
 		"<tr class=$classtr>
@@ -497,7 +505,7 @@ function tasks_list(){
 		<td width=1%>$run</td>
 		<td width=1%>". imgtootltip("eclaire-24.png","{BACKUP_TASK_TEST}","BACKUP_TASK_TEST({$ligne["ID"]})")."</td>
 		<td style='font-size:12px' nowrap><a href=\"javascript:BACKUP_TASK_MODIFY_RESSOURCES('{$ligne["ID"]}')\" style='text-decoration:underline'>[{$storages[$ligne["resource_type"]]}]</a></td>
-		<td style='font-size:12px'>". $backup->extractFirsRessource($ligne["pattern"])."</td>
+		<td style='font-size:12px'><a href=\"javascript:BACKUP_TASK_SHOW_CONTAINERS('{$ligne["ID"]}')\" style='text-decoration:underline'>". $backup->extractFirsRessource($ligne["pattern"])."</a> ($sizeStorages)</td>
 		<td style='font-size:12px' nowrap>". $cron->cron_human($ligne["schedule"])."</td>
 		<td style='font-size:12px'>$sources</td>
 		<td style='font-size:12px'>". imgtootltip("delete-24.png","{delete}","DeleteBackupTask({$ligne["ID"]})")."</td>
@@ -527,20 +535,28 @@ function BACKUP_SOURCES(){
 	$ressources=unserialize(base64_decode($ligne["datasbackup"]));
 	$html="
 	<div style='width:100%;height:150px;overflow:auto;'>
-	<table style='width:99%'>";
+	<table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
+<thead class='thead'>
+	<th colspan=2>{source}</th>
+	<th>&nbsp;</th>
+</thead>
+<tbody class='tbody'>";
+			
+	
+	
 	if(is_array($ressources)){
 		while (list ($num, $val) = each ($ressources) ){
 			if(is_array($val)){continue;}
+			if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
 			$val=str_replace("all","{BACKUP_ALL_MEANS}",$val);
 			$html=$html.
 			
 			"
-			<tr><td colspan=4 style='border-top:1px solid #005447'>&nbsp;</td></tr>
-			<tr ". CellRollOver().">
-				<td widh=1% valign='top'><img src='img/fw_bold.gif'></td>
-				<td widh=1% valign='top' style='font-size:12px'><STRONG>{source}&nbsp;$num</STRONG></td>
-				<td width=99%><code style='font-size:12px;font-weight:bold'>$val</td>
-				<td widh=1% valign='top'>". imgtootltip("ed_delete.gif","{delete}","DELETE_BACKUP_SOURCES({$_GET["ID"]},$num)")."</td>
+			
+			<tr class=$classtr>
+				<td widh=1% valign='top' style='font-size:14px'><STRONG>$num</STRONG></td>
+				<td width=99%><code style='font-size:14px;font-weight:bold'>$val</td>
+				<td widh=1% valign='top'>". imgtootltip("delete-32.png","{delete}","DELETE_BACKUP_SOURCES({$_GET["ID"]},$num)")."</td>
 			</tr>
 			";
 			
@@ -569,8 +585,8 @@ function BACKUP_SOURCES(){
 	</div>
 	<BR>
 	<div id='BACKUP_SOURCES_OPTIONS'>
-	<H3>{options}</H3>
-	<table style='width:100%'>
+	<div id='font-size:16px'>{options}</div>>
+	<table style='width:100%' class=form>
 	<tr>
 		<td valign='top' class=legend>{backup_stop_imap}:</td>
 		<td valign='top'>". Field_checkbox("backup_stop_imap",1,$ressources["OPTIONS"]["STOP_IMAP"])."</td>
@@ -676,6 +692,8 @@ function BACKUP_OPTIONS_SAVE(){
 	$sock->SET_INFO("ExecBackupTemporaryPath",$_GET["ExecBackupTemporaryPath"]);
 	$sock->SET_INFO("NoBzipForBackupDatabasesDump",$_GET["NoBzipForBackupDatabasesDump"]);
 	$sock->SET_INFO("ExecBackupDeadAfterH",$_GET["ExecBackupDeadAfterH"]);
+	$sock->SET_INFO("ExecBackupMaxContainers",$_GET["ExecBackupMaxContainers"]);
+	
 }
 
 
@@ -684,7 +702,8 @@ function BACKUP_OPTIONS(){
 	$page=CurrentPageName();
 	$temporarySourceDir=$sock->GET_INFO("ExecBackupTemporaryPath");
 	$ExecBackupDeadAfterH=$sock->GET_INFO("ExecBackupDeadAfterH");
-	
+	$ExecBackupMaxContainers=$sock->GET_INFO("ExecBackupMaxContainers");
+	if(!is_numeric($ExecBackupMaxContainers)){$ExecBackupMaxContainers=6;}	
 	
 	if($temporarySourceDir==null){$temporarySourceDir="/home/mysqlhotcopy";}
 	$NoBzipForBackupDatabasesDump=$sock->GET_INFO("NoBzipForBackupDatabasesDump");
@@ -693,15 +712,19 @@ function BACKUP_OPTIONS(){
 	
 	$html="
 	<div id='backup-adv-options'>
-	<table style='width:100%'>
+	<table style='width:100%' class=form>
 	<tr>
 		<td class=legend style='font-size:13px'>{ExecBackupTemporaryPath}:</td>
 		<td>". Field_text("ExecBackupTemporaryPath",$temporarySourceDir,"font-size:13px;width:220px")."</td>
 	</tr>
 	<tr>
 		<td class=legend style='font-size:13px'>{ExecBackupDeadAfterH}:</td>
-		<td style='font-size:13px'>". Field_text("ExecBackupDeadAfterH",$ExecBackupDeadAfterH,"font-size:13px;width:90px")."&nbsp;{hours}</td>
-	</tr>	
+		<td style='font-size:13px'>". Field_text("ExecBackupDeadAfterH",$ExecBackupDeadAfterH,"font-size:13px;width:40px")."&nbsp;{hours}</td>
+	</tr>
+	<tr>
+		<td class=legend style='font-size:13px'>{ExecBackupMaxContainers}:</td>
+		<td style='font-size:13px'>". Field_text("ExecBackupMaxContainers",$ExecBackupMaxContainers,"font-size:13px;width:40px")."&nbsp;{containers}</td>
+	</tr>			
 	<tr>
 		<td class=legend style='font-size:13px'>{NoBzipForDatabasesDump}:</td>
 		<td>". Field_checkbox("NoBzipForBackupDatabasesDump",1,$NoBzipForBackupDatabasesDump)."</td>
@@ -723,6 +746,9 @@ function BACKUP_OPTIONS(){
 			var XHR = new XHRConnection();
 			XHR.appendData('ExecBackupTemporaryPath',document.getElementById('ExecBackupTemporaryPath').value);
 			XHR.appendData('ExecBackupDeadAfterH',document.getElementById('ExecBackupDeadAfterH').value);
+			XHR.appendData('ExecBackupMaxContainers',document.getElementById('ExecBackupMaxContainers').value);
+			
+			
 			if(document.getElementById('NoBzipForBackupDatabasesDump').checked){
 				XHR.appendData('NoBzipForBackupDatabasesDump',1);
 			}else{
@@ -782,6 +808,53 @@ $html=$html."
 	
 }
 
+
+function BACKUP_TASK_SHOW_CONTAINERS(){
+	$page=CurrentPageName();
+	$tpl=new templates();
+	$ID=$_GET["BACKUP_TASK_SHOW_CONTAINERS"];
+	$sql="SELECT *  FROM backup_storages WHERE taskid=$ID ORDER BY zDate";
+$html="<div style='height:300px;overflow:auto' id='TASK_EVENTS_DETAILS_LIST_DIV'>
+<table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
+<thead class='thead'>
+	<tr>
+	<th>{date}</th>
+	<th>{size}</th>
+	<th width=99%>{directory}</th>
+	</tr>
+</thead>
+<tbody>";		
+
+	$q=new mysql();
+	$results=$q->QUERY_SQL($sql,"artica_backup");	
+	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+	if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
+	$size=FormatBytes($ligne["size"]);
+	$cnx_params=unserialize(base64_decode($ligne["cnx_params"]));
+	$container=$cnx_params["CONTAINER"];	
+	$mount_path_final=$cnx_params["mount_path_final"];	
+	$html=$html.
+		"
+		<tr class=$classtr>
+			<td width=1%  style='font-size:14px' nowrap>{$ligne["zDate"]}</td>
+			<td  style='font-size:14px' nowrap width=1%><strong>$size</strong></td>
+			<td style='font-size:14px' width=99% nowrap colspan=2><strong>$container</strong><br><span style='font-size:10px'>$mount_path_final</span></td>		
+		</tr>
+		";		
+	
+	
+	}
+	
+	$html=$html."
+		</tbody>
+	</table>
+	</div>";
+	
+echo $tpl->_ENGINE_parse_body($html);	
+	
+}
+
+
 function TASK_EVENTS_DETAILS_INFOS(){
 	$ID=$_GET["TASK_EVENTS_DETAILS_INFOS"];
 	$sql="SELECT *  FROM backup_events WHERE ID=$ID";
@@ -835,7 +908,7 @@ $sql="SELECT *,DATE_FORMAT(zdate,'%W') as explainday,DATE_FORMAT(zdate,'%p') as 
 $q=new mysql();
 	$results=$q->QUERY_SQL($sql,"artica_events");	
 	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
-	if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
+	
 		$img="info-18.png";
 		$status=null;
 		if(strlen($ligne["event"])>60){$ligne["event"]=substr($ligne["event"],0,57)."...";}
@@ -859,7 +932,7 @@ $q=new mysql();
 		
 		$display="TASK_EVENTS_DETAILS_INFOS({$ligne["ID"]})";
 		$disblayUri="<a href=\"javascript:blur();\" OnClick=\"javascript:$display;\" style='font-size:12px;text-decoration:underline'>";
-		
+	if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
 $html=$html.
 		"
 		<tr class=$classtr>

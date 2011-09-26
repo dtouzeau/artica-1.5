@@ -1,6 +1,6 @@
 <?php
 include_once(dirname(__FILE__).'/ressources/class.templates.inc');
-include_once(dirname(__FILE__).'/ressources/class.mysql.inc');
+include_once(dirname(__FILE__).'/ressources/class.mysql.squid.builder.php');
 $file=$argv[1];
 $_GET["DEBUG"]=false;
 if(trim(strtolower($argv[2]))=="--debug"){$_GET["DEBUG"]=true;}
@@ -13,8 +13,8 @@ if($argv[1]=='--rebuild-sites'){
 
 die("depreciated");
 if(!file_exists($file)){write_syslog(" Unable to stat $file",__FILE__);}
-$q=new mysql();
-$q->BuildTables();
+$q=new mysql_squid_builder();
+
 if(!$q->TestingConnection()){write_syslog("Unable to logon to mysql",__FILE__);}
 $datas_file=file_get_contents($file);
 $datas=explode("\n",$datas_file);
@@ -74,12 +74,12 @@ function parseDansLine($line){
 	if($_GET["DEBUG"]){echo "Adding new $uri ($TYPE) [$raison] $client\n";}
 	$md5a=md5("$domainMD5$uri$TYPE$raison$client$date");
 	$q=new mysql();
-	$dansguardian_events="dansguardian_events_".date('Ym');
+	$dansguardian_events="dansguardian_events_".date('Ymd');
 	
 	
 	$sql="INSERT IGNORE INTO $dansguardian_events(sitename,URI,`TYPE`,REASON,CLIENT,zDate,zMD5) 
 	VALUES('$domainMD5','$uri','$TYPE','$raison','$client','$date','$md5a');";
-	$q->QUERY_SQL($sql,"artica_events");
+	$q->QUERY_SQL($sql,"squidlogs");
 	if(!$q->ok){write_syslog("Failed : \"$sql\" ($q->mysql_error)",__FILE__);return false;}
 	
 	return true;
@@ -96,7 +96,7 @@ if(!$_GET["DD"][$domainMD5]){
 		$q=new mysql();
 		$sql="INSERT INTO dansguardian_sites(website_md5,website) VALUES('$domainMD5','$domain');";
 		echo "Adding domain index $domain\n";
-		$q->QUERY_SQL($sql,"artica_events");
+		$q->QUERY_SQL($sql,"squidlogs");
 		if(!$q->ok){write_syslog("AddSite():: Failed : \"$sql\" ($q->mysql_error)",__FILE__);}
 		$_GET["DD"][$domainMD5]=TRUE;
 	}else{
@@ -109,7 +109,7 @@ function rebuildsites(){
 	$q=new mysql();
 	$dansguardian_events="dansguardian_events_".date('Ym');
 	$sql="SELECT uri FROM $dansguardian_events";
-	$results=$q->QUERY_SQL($sql,'artica_events');
+	$results=$q->QUERY_SQL($sql,'squidlogs');
 	while ($ligne = mysql_fetch_array($results)) {
 		if(preg_match('#^.+?:\/\/(.+?)[\/:\s]#',$ligne["uri"],$re)){
 			$domain=$re[1];

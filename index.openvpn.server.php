@@ -1,4 +1,5 @@
 <?php
+$GLOBALS["ICON_FAMILY"]="SYSTEM";
 session_start();
 include_once('ressources/class.templates.inc');
 include_once('ressources/class.users.menus.inc');
@@ -112,11 +113,12 @@ function server(){
 	
 while (list ($num, $ligne) = each ($nic->array_TCP) ){
 	if($ligne==null){continue;}
+	if(preg_match("#^tun[0-9]+#", $num)){continue;}
 	$ips[$ligne]="$ligne ($num)";
 	$arr[$num]=$num;
 	$ipeth[$num]="$num ($ligne)"; 
 	}
-	
+	$ips["127.0.0.1"]="{loopback}";
 $ips[null]="{all}";	
 $ipeth[null]="{none}";	
 $nics=Field_array_Hash($arr,'BRIDGE_ETH',$vpn->main_array["GLOBAL"]["BRIDGE_ETH"],'OpenVPNChangeNIC()');
@@ -283,11 +285,13 @@ function clients(){
 
 while (list ($num, $ligne) = each ($nic->array_TCP) ){
 	if($ligne==null){continue;}
+	if(preg_match("#^tun[0-9]+#", $num)){continue;}
 	$ips[$ligne]="$ligne ($num)";
 	$arr[$num]=$num;
 	$ipeth[$num]="$num ($ligne)"; 
 	}
 	$ipeth[null]="{none}";
+	
 	$IPTABLES_ETH=Field_array_Hash($ipeth,'IPTABLES_ETH',$vpn->main_array["GLOBAL"]["IPTABLES_ETH"],null,null,0,'font-size:14px;padding:3px');
 	
 	$html="
@@ -312,6 +316,11 @@ while (list ($num, $ligne) = each ($nic->array_TCP) ){
 	<td class=legend style='font-size:14px'>{netmask}:</td>
 	<td>" . Field_text('NETMASK',$vpn->main_array["GLOBAL"]["NETMASK"],'width:120px;font-size:14px;padding:3px')."</td>
 	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td class=legend style='font-size:14px'>{remove_server_route}:</td>
+	<td>" . Field_checkbox('REMOVE_SERVER_DEFAULT_ROUTE',1,$vpn->main_array["GLOBAL"]["REMOVE_SERVER_DEFAULT_ROUTE"])."</td>
+	<td>". help_icon("{remove_server_route_vpn_explain}")."</td>
 </tr>
 <tr>
 	<td class=legend style='font-size:14px'>{openvpn_access_interface}:</td>
@@ -348,6 +357,7 @@ while (list ($num, $ligne) = each ($nic->array_TCP) ){
 	function SaveOpenVpnClientsParams(){
 		var XHR = new XHRConnection();
 		if(document.getElementById('LDAP_AUTH').checked){XHR.appendData('LDAP_AUTH','1');}else{XHR.appendData('LDAP_AUTH','0');}
+		if(document.getElementById('REMOVE_SERVER_DEFAULT_ROUTE').checked){XHR.appendData('REMOVE_SERVER_DEFAULT_ROUTE','1');}else{XHR.appendData('REMOVE_SERVER_DEFAULT_ROUTE','0');}
 		XHR.appendData('IP_START',document.getElementById('IP_START').value);	
 		XHR.appendData('NETMASK',document.getElementById('NETMASK').value);	
 		XHR.appendData('IPTABLES_ETH',document.getElementById('IPTABLES_ETH').value);
@@ -355,6 +365,14 @@ while (list ($num, $ligne) = each ($nic->array_TCP) ){
 		AnimateDiv('openvpnserverform2');
 		XHR.sendAndLoad('$page', 'POST',x_SaveOpenVpnClientsParams);				
 	}
+	
+	function CheckFields(){
+		var IPTABLES_ETH='{$vpn->main_array["GLOBAL"]["LOCAL_BIND"]}';
+		if(IPTABLES_ETH=='127.0.0.1'){document.getElementById('REMOVE_SERVER_DEFAULT_ROUTE').disabled=true;}
+	}
+	
+	CheckFields();
+</script>	
 
 ";
 	

@@ -20,12 +20,14 @@ class ccurl{
 				$ini=new Bs_IniHandler();
 				$sock=new sockets();
 				$datas=$sock->GET_INFO("ArticaProxySettings");
-				$ini->loadString($datas);
-				$this->ArticaProxyServerEnabled=$ini->_params["PROXY"]["ArticaProxyServerEnabled"];
-				$this->ArticaProxyServerName=$ini->_params["PROXY"]["ArticaProxyServerName"];
-				$this->ArticaProxyServerPort=$ini->_params["PROXY"]["ArticaProxyServerPort"];
-				$this->ArticaProxyServerUsername=trim($ini->_params["PROXY"]["ArticaProxyServerUsername"]);
-				$this->ArticaProxyServerUserPassword=$ini->_params["PROXY"]["ArticaProxyServerUserPassword"];
+				if(trim($datas)<>null){
+					$ini->loadString($datas);
+					$this->ArticaProxyServerEnabled=$ini->_params["PROXY"]["ArticaProxyServerEnabled"];
+					$this->ArticaProxyServerName=$ini->_params["PROXY"]["ArticaProxyServerName"];
+					$this->ArticaProxyServerPort=$ini->_params["PROXY"]["ArticaProxyServerPort"];
+					$this->ArticaProxyServerUsername=trim($ini->_params["PROXY"]["ArticaProxyServerUsername"]);
+					$this->ArticaProxyServerUserPassword=$ini->_params["PROXY"]["ArticaProxyServerUserPassword"];
+				}
 			}			
 	}
 	

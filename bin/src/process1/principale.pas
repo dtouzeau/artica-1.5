@@ -559,7 +559,7 @@ PROCEDURE Tprocess1.web_settings();
 var
 
    application_postgrey:string;
-   courier_authdaemon,courier_imap,courier_imap_ssl,courier_pop,courier_pop_ssl,kav_mail,KAV_MILTER_PID:string;
+   courier_authdaemon,courier_imap,courier_imap_ssl,courier_pop,courier_pop_ssl,kav_mail,KAV_MILTER_PID,LinuxDistributionCodeName:string;
    authmodulelist,mysql_init_path,LOCATE_APACHE_MODULES_PATH:string;
    verbosed              :boolean;
    hostname              :string;
@@ -686,7 +686,7 @@ begin
        
    if verbosed then writeln('web_settings:: 5%');
    if not FileExists('/etc/artica-postfix/settings/Daemons/LinuxDistributionCodeName') then logs.OutputCmd('/usr/share/artica-postfix/setup-ubuntu --kill');
-
+    if FIleExists('/etc/artica-postfix/MYCOSI_APPLIANCE') then list.Add('$_GLOBAL["MYCOSI_APPLIANCE"]=True;');
    if FIleExists(SYS.LOCATE_SMBCLIENT()) then list.Add('$_GLOBAL["smbclient_installed"]=True;') else list.Add('$_GLOBAL["smbclient_installed"]=False;');
    if FIleExists(SYS.LOCATE_ZABBIX_SERVER()) then list.Add('$_GLOBAL["ZABBIX_INSTALLED"]=True;') else list.Add('$_GLOBAL["ZABBIX_INSTALLED"]=False;');
    if FIleExists(SYS.LOCATE_GENERIC_BIN('kinit')) then list.Add('$_GLOBAL["KINIT_INSTALLED"]=True;') else list.Add('$_GLOBAL["KINIT_INSTALLED"]=False;');
@@ -701,6 +701,7 @@ begin
    if FIleExists(LOCATE_APACHE_MODULES_PATH+'/mod_status.so') then list.Add('$_GLOBAL["APACHE_MOD_STATUS"]=True;') else list.Add('$_GLOBAL["APACHE_MOD_STATUS"]=False;');
    if FIleExists(LOCATE_APACHE_MODULES_PATH+'/mod_suexec.so') then list.Add('$_GLOBAL["APACHE_MOD_SUEXEC"]=True;') else list.Add('$_GLOBAL["APACHE_MOD_SUEXEC"]=False;');
    if FIleExists(LOCATE_APACHE_MODULES_PATH+'/mod_fcgid.so') then list.Add('$_GLOBAL["APACHE_MOD_FCGID"]=True;') else list.Add('$_GLOBAL["APACHE_MOD_FCGID"]=False;');
+   if FIleExists(LOCATE_APACHE_MODULES_PATH+'/mod_log_sql_mysql.so') then list.Add('$_GLOBAL["APACHE_MOD_LOGSSQL"]=True;') else list.Add('$_GLOBAL["APACHE_MOD_LOGSSQL"]=False;');
    if FIleExists(SYS.LOCATE_GENERIC_BIN('cgrulesengd')) then list.Add('$_GLOBAL["CGROUPS_INSTALLED"]=True;') else list.Add('$_GLOBAL["CGROUPS_INSTALLED"]=False;');
 
    if FileExists('/etc/artica-postfix/FROM_ISO') then list.Add('$_GLOBAL["FROM_ISO"]=True;') else list.Add('$_GLOBAL["FROM_ISO"]=False;');
@@ -805,6 +806,13 @@ begin
    SYS.set_INFO('syslog_path',SYS.LOCATE_SYSLOG_PATH());
 
    if not TryStrToInt(SYS.GET_INFO('EnableMysqlFeatures'),EnableMysqlFeatures) then EnableMysqlFeatures:=1;
+
+
+   LinuxDistributionCodeName:=SYS.GET_INFO('LinuxDistributionCodeName');
+   if length(LinuxDistributionCodeName)=0 then begin
+      fpsystem('/usr/share/artica-postfix/bin/setup-ubuntu --distri >/dev/null');
+      LinuxDistributionCodeName:=SYS.GET_INFO('LinuxDistributionCodeName');
+   end;
    list.Add('$_GLOBAL["LinuxDistriCode"]="'+SYS.GET_INFO('LinuxDistributionCodeName')+'";');
    list.Add('$_GLOBAL["LinuxDistriFullName"]="'+SYS.GET_INFO('LinuxDistributionFullName')+'";');
    list.Add('$_GLOBAL["ArchStruct"]="'+IntToStr(SYS.ArchStruct())+'";');
@@ -816,8 +824,15 @@ begin
 
    openldap:=topenldap.Create;
    list.Add('$_GLOBAL["SLAPD_CONF_PATH"]="'+openldap.SLAPD_CONF_PATH()+'";');
-   if FileExists(openldap.FindModulepath('syncprov.so')) then list.Add('$_GLOBAL["LDAP_SYNCPROV"]=True;') else list.Add('$_GLOBAL["LDAP_SYNCPROV"]=False;');
-
+   if FileExists(openldap.FindModulepath('syncprov.so')) then begin
+      list.Add('$_GLOBAL["LDAP_SYNCPROV"]=True;');
+   end else begin
+       if FileExists(openldap.FindModulepath('syncprov-2.4.so.2')) then begin
+         list.Add('$_GLOBAL["LDAP_SYNCPROV"]=True;');
+       end else begin
+         list.Add('$_GLOBAL["LDAP_SYNCPROV"]=False;');
+       end;
+   end;
 
 
 

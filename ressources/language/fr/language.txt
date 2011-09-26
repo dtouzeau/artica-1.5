@@ -2480,7 +2480,7 @@ Artica pour construire des serveurs &quot;virtuels&quot; multiples sur la m&ecir
 <manage_your_mailbox_rules_text>Ici, vous pouvez administrer les r&egrave;gles qui vont vous aider &agrave; automatiquement ordonner votre bo&icirc;te aux lettres lorsque des messages y sont sauvegard&eacute;s.</manage_your_mailbox_rules_text>
 <manage_your_org>G&eacute;rer votre organisation</manage_your_org>
 <manage_your_quarantine>G&eacute;rer votre Quarantaine</manage_your_quarantine>
-<manage_your_server>G&eacute;rer votre serveur</manage_your_server>
+<manage_your_server>Votre serveur</manage_your_server>
 <Mandatory_TLS_encryption>Cryptage obligatoire TLS</Mandatory_TLS_encryption>
 <Mandatory_TLS_verification>V&eacute;rification TLS obligatoire</Mandatory_TLS_verification>
 <manufacturer>fabricant</manufacturer>
@@ -3837,7 +3837,7 @@ Si cette fonction est activ&eacute;e et qu'un serveur offre STARTTLS alors que T
 <smtp_virtual_hostname_text>Indiquer le nom de machine qui va &ecirc;tre utilis&eacute; pendant les transactions entre ce serveur et les serveurs de destination.</smtp_virtual_hostname_text>
 <sn>Nom</sn>
 <socialnet>Sites permettant de rassembler les internautes (sociales) pour des relations amicales ou professionnelles</socialnet>
-<softwares_install>Installation logiciels</softwares_install>
+<softwares_install>Installation</softwares_install>
 <softwares_list>Liste des logiciels</softwares_list>
 <softwares_list_text>Afficher les logiciels install&eacute;s dans votre parc</softwares_list_text>
 <softwares_storage>Stockage des logiciels</softwares_storage>

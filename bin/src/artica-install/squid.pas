@@ -48,6 +48,8 @@ private
      function    is31Ver():boolean;
      procedure   zapper_install();
      function    SQUID_OLD_PROCESS():integer;
+     procedure   SQUID_STOP_GHOST();
+     procedure   SQUID_STOP_LISTEN_PROCESSES();
 public
     Caches      :TstringList;
     DansGuardianEnabled:integer;
@@ -1089,9 +1091,11 @@ end;
 function tsquid.SQUID_PID():string;
 var
    pidpath:string;
+   binpath:string;
 begin
     result:='';
-    if not FileExists(SQUID_BIN_PATH()) then exit;
+    binpath:=SQUID_BIN_PATH();
+    if not FileExists(binpath) then exit;
     pidpath:=SQUID_GET_CONFIG('pid_filename');
 
      if length(pidpath)=0 then begin
@@ -1101,10 +1105,11 @@ begin
        pidpath:=SQUID_GET_CONFIG('pid_filename');
     end;
 
-    if Not FileExists(pidpath) then begin
-       exit(SYS.PidByProcessPath(SQUID_BIN_PATH()));
-    end;
+    if Not FileExists(pidpath) then exit(SYS.PIDOF(binpath));
+
     result:=SYS.GET_PID_FROM_PATH(pidpath);
+    if not SYS.PROCESS_EXIST(result) then result:=SYS.PIDOF(binpath);
+
     
 
 
@@ -1244,6 +1249,70 @@ begin
 
 end;
 //##############################################################################
+procedure tsquid.SQUID_STOP_LISTEN_PROCESSES();
+ var
+    port:string;
+    count:integer;
+    i:integer;
+    binpath:string;
+    FileTemp:string;
+    l:Tstringlist;
+    RegExpr:TRegExpr;
+begin
+binpath:=SYS.LOCATE_GENERIC_BIN('lsof');
+port:=GET_LOCAL_PORT();
+writeln('Stopping Squid...............: checking ghost processes listen on port '+Port);
+FileTemp:=logs.FILE_TEMP();
+fpsystem(binpath+' -i TCP:'+port+' >'+FileTemp +' 2>&1');
+l:=Tstringlist.Create;
+l.LoadFromFile(FileTemp);
+logs.DeleteFile(FileTemp);
+RegExpr:=TRegExpr.Create;
+RegExpr.Expression:='.+?\s+([0-9]+)\s+.+?TCP\s+(.+?):'+port+'\s+';
+for i:=0 to l.Count-1 do begin
+     if RegExpr.Exec(l.Strings[i]) then begin
+          writeln('Stopping Squid...............: stop process PID '+RegExpr.Match[1]+' listen on '+RegExpr.Match[2]+':'+port);
+          fpsystem('/bin/kill -9 '+RegExpr.Match[1]);
+     end;
+end;
+
+
+
+end;
+//##############################################################################
+procedure tsquid.SQUID_STOP_GHOST();
+ var
+    pid:string;
+    count:integer;
+    i:integer;
+    binpath:string;
+    FileTemp:string;
+    configpath:string;
+    oldproc:integer;
+begin
+binpath:=SQUID_BIN_PATH();
+writeln('Stopping Squid...............: checking ghost processes');
+writeln('Stopping Squid...............: binary is '+binpath);
+pid:=SYS.PIDOF(binpath);
+if not SYS.PROCESS_EXIST(pid) then begin
+   SQUID_STOP_LISTEN_PROCESSES();
+   exit;
+end;
+ while SYS.PROCESS_EXIST(pid) do begin
+        if length(trim(pid))>0 then begin
+           writeln('Stopping Squid...............: stopping other process "' + pid + '" PID');
+           fpsystem('/bin/kill -9 '+pid);
+        end;
+        sleep(200);
+        inc(count);
+        if count>30 then break;
+        pid:=SYS.PIDOF(binpath);
+   end;
+   SQUID_STOP_LISTEN_PROCESSES();
+
+
+end;
+//##############################################################################
 procedure tsquid.SQUID_STOP();
  var
     pid:string;
@@ -1262,7 +1331,7 @@ SYS.MONIT_DELETE('APP_SQUID');
   pid:=SQUID_PID();
 
   if not SYS.PROCESS_EXIST(pid) then begin
-      writeln('Stopping Squid...............: Already stopped');
+      writeln('Stopping Squid...............: Already stopped');SQUID_STOP_GHOST();
       exit;
   end;
 
@@ -1344,6 +1413,8 @@ end else begin
     break;
 end;
 end;
+
+SQUID_STOP_GHOST();
 
 
 if not SYS.PROCESS_EXIST(pid) then begin

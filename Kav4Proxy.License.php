@@ -75,7 +75,7 @@ function kav4proxy_license_popup(){
 		<div id='Kav4ProxyLicenseInfos'></div>
 	</div>
 <center>
-	<iframe SRC='$page?kav4proxy-license-iframe=yes&license-type={$_GET["license-type"]}' WIDTH=99% FRAMEBORDER=0 MARGINWIDTH=0 MARGINHEIGHT=0 SCROLLING=no></iframe>
+	<iframe SRC='$page?kav4proxy-license-iframe=yes&license-type={$_GET["license-type"]}' WIDTH=99% FRAMEBORDER=0 MARGINWIDTH=0 MARGINHEIGHT=0 SCROLLING=yes></iframe>
 </center>
 
 <script>

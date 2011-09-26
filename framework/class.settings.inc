@@ -454,6 +454,8 @@ class settings_inc {
 	var $APACHE_APPLIANCE=false;
 	var $APACHE_MOD_SUEXEC=false;
 	var $APACHE_MOD_FCGID=false;	
+	var $CGROUPS_INSTALLED=false;
+	var $APACHE_MOD_LOGSSQL=false;
 	private function CheckIndexDefaults($_GLOBAL){
 		return $_GLOBAL;
 		foreach($this as $key => $value) {
@@ -560,7 +562,7 @@ class settings_inc {
 			
 			$this->hostname=$_GLOBAL["fixed_hostname"];
 			$this->fqdn=$_GLOBAL["fqdn_hostname"];
-			if(isset($_GLOBAL["DANSGUARDIAN_INSTALLED"])){$this->DANSGUARDIAN_INSTALLED=$_GLOBAL["DANSGUARDIAN_INSTALLED"];;}
+			if(isset($_GLOBAL["DANSGUARDIAN_INSTALLED"])){$this->DANSGUARDIAN_INSTALLED=$_GLOBAL["DANSGUARDIAN_INSTALLED"];}
 			if(isset($_GLOBAL["KAV4PROXY_PID"])){$this->KAV4PROXY_PID=$_GLOBAL["KAV4PROXY_PID"];;}
 			if(isset($_GLOBAL["dnsmasq_installed"])){$this->dnsmasq_installed=$_GLOBAL["dnsmasq_installed"];;}
 			if(isset($_GLOBAL["PUREFTP_INSTALLED"])){$this->PUREFTP_INSTALLED=$_GLOBAL["PUREFTP_INSTALLED"];;}
@@ -836,6 +838,7 @@ class settings_inc {
 			$this->POWER_DNS_MYSQL=$_GLOBAL["POWER_DNS_MYSQL"];
 			$this->POWERADMIN_INSTALLED=$_GLOBAL["POWERADMIN_INSTALLED"];
 			$this->OPENEMM_INSTALLED=$_GLOBAL["OPENEMM_INSTALLED"];
+			$this->APACHE_MOD_LOGSSQL=$_GLOBAL["APACHE_MOD_LOGSSQL"];
 			
 			if(isset($_GLOBAL["ISCSI_CLIENT_INSTALLED"])){$this->ISCSI_CLIENT_INSTALLED=$_GLOBAL["ISCSI_CLIENT_INSTALLED"];}
 			if($this->LinuxDistriCode=="DEBIAN"){$this->AS_DEBIAN_FAMILY=true;}
@@ -857,7 +860,8 @@ class settings_inc {
 			$this->APACHE_MOD_STATUS=$_GLOBAL["APACHE_MOD_STATUS"];
 			$this->APACHE_APPLIANCE=$_GLOBAL["APACHE_APPLIANCE"];
 			$this->APACHE_MOD_SUEXEC=$_GLOBAL["APACHE_MOD_SUEXEC"];
-			$this->APACHE_MOD_FCGID=$_GLOBAL["APACHE_MOD_FCGID"];			
+			$this->APACHE_MOD_FCGID=$_GLOBAL["APACHE_MOD_FCGID"];		
+			$this->CGROUPS_INSTALLED=$_GLOBAL["CGROUPS_INSTALLED"];
 
 			
 			if(isset($_GLOBAL["deduplication_installed"])){$this->deduplication_installed=$_GLOBAL["deduplication_installed"];}

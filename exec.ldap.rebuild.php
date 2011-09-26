@@ -3,7 +3,15 @@ if(posix_getuid()<>0){die("Cannot be used in web server mode\n\n");}
 include_once(dirname(__FILE__).'/ressources/class.ldap.inc');
 include_once(dirname(__FILE__)."/framework/frame.class.inc");
 
+
+if($argv[1]=="--test-connexion"){test_connexion();die();}
+
+
 $ldap=new clladp();
+
+
+
+
 if($ldap->suffix==null){die();}
 
 $sock=new sockets();
@@ -215,6 +223,11 @@ function CreateNAB(){
 	}
 
 }
-
+function test_connexion(){
+	$ldap=new clladp();
+	if($ldap->ldapFailed){$result="FALSE";}else{$result="TRUE";}
+	@file_put_contents("/etc/artica-postfix/LDAP_TESTS", $result);
+	
+}
 
 ?>

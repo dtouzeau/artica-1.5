@@ -21,7 +21,7 @@
 <remote_addressbook_text>Enable or disable this system has a global address book</remote_addressbook_text>
 <repository_manager>repository manager</repository_manager>
 <repository_manager_text>Update and install packages according your system repositories manager</repository_manager_text>
-<services>Services & Applications</services>
+<services>Services</services>
 <system>System & Hardware</system>
 <update>Update & Maintain</update>
 <usb_section>Manage USB devices</usb_section>

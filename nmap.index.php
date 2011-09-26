@@ -9,165 +9,197 @@
 	$user=new usersMenus();
 	if($user->AsSystemAdministrator==false){header('location:users.index.php');exit();}
 	
-	if(isset($_GET["NmapScanEnabled"])){main_settings_edit();exit;}
-	if(isset($_GET["nmap_delete_ip"])){main_delete_network();exit;}
-	if(isset($_GET["main"])){main_switch();exit;}
-	if(isset($_GET["AddNmapNetwork"])){main_add_nework();exit;}
+	if(isset($_POST["NmapScanEnabled"])){main_settings_edit();exit;}
+	
+	if(isset($_GET["tabs"])){tabs();exit;}
+	if(isset($_GET["parameters"])){parameters();exit;}
+	if(isset($_GET["events"])){events();exit;}
+	if(isset($_GET["NMAP_EVENTS"])){NMAP_EVENTS();exit;}
+	if(isset($_POST["DeleteAllNMAPEV"])){events_delete_all();exit;}
+	
+	
 	if(isset($_GET["ScanNow"])){main_scan();exit;}
 
-	
-	
-		main_page();
-	
-function main_page(){
-	
-$page=CurrentPageName();
-	if($_GET["hostname"]==null){
-		$user=new usersMenus();
-		$_GET["hostname"]=$user->hostname;}
-	
-	$html=
-"
-<script language=\"JavaScript\">       
-var timerID  = null;
-var timerID1  = null;
-var tant=0;
-var reste=0;
-
-function demarre(){
-   tant = tant+1;
-   reste=5-tant;
-	if (tant < 5 ) {                           
-      timerID = setTimeout(\"demarre()\",2000);
-      } else {
-               tant = 0;
-               ChargeLogs();
-               demarre();                                //la boucle demarre !
-   }
-}
-
-
-function ChargeLogs(){
-	if(document.getElementById('nmap_events')){
-	LoadAjax('nmap_events','$page?main=nmap-evdetails');
-	}
-	LoadAjax('status','$page?main=status');
-	}
-</script>		
-	
-	<table style='width:100%'>
-	<tr>
-	<td width=1% valign='top'><img src='img/bg_nmap.png'></td>
-	<td valign='top'>
-	<div id='status'></div></td>
-	</tr>
-	<tr>
-		<td colspan=2 valign='top'>
-			<div id='main_config'></div>
-		</td>
-	</tr>
-	</table>
-	<script>demarre();ChargeLogs();LoadAjax('main_config','$page?main=default');</script>
-	
-	";
-	
-	
-	
-	
-	
-	
-	$cfg["JS"][]="js/nmap.js";
-	$tpl=new template_users('{APP_NMAP}',$html,0,0,0,0,$cfg);
-	
-	echo $tpl->web_page;
-	
-	
-	
-}
-
-
-
-function main_switch(){
-	
-	switch ($_GET["main"]) {
+	js();
 		
-		case "nmap-list":echo main_network_list();exit;break;
-		case "nmap-add":echo main_form_add();exit;break;
-		case "nmap-log":echo main_events();exit;break;
-		case "status":echo main_status();exit;break;
-		case "nmap-evdetails":echo main_events_fill();break;
-		default:main_settings();break;
+function js(){
+	$page=CurrentPageName();
+	$tpl=new templates();
+	$title=$tpl->_ENGINE_parse_body("{APP_NMAP}");
+	$html="YahooWin3('650','$page?tabs=yes','$title')";
+	echo $html;
+}
+
+function tabs(){
+	$page=CurrentPageName();
+	$array["parameters"]='{parameters}';
+	$array["events"]='{events}';
+	
+	
+	
+	$tpl=new templates();
+
+	while (list ($num, $ligne) = each ($array) ){
+		$html[]=$tpl->_ENGINE_parse_body("<li><a href=\"$page?$num=yes&ID={$_GET["ID"]}\"><span>$ligne</span></a></li>\n");
 	}
 	
 	
+	echo "
+	<div id=main_config_nmap style='width:100%;height:550px;overflow:auto'>
+		<ul>". implode("\n",$html)."</ul>
+	</div>
+		<script>
+				$(document).ready(function(){
+					$('#main_config_nmap').tabs();
+				});
+		</script>";			
+	
 	
 }
 
+function NMAP_EVENTS(){
+	$ID=$_GET["NMAP_EVENTS"];
+	if(!is_numeric($ID)){echo "NOT A NUMERIC";die();exit;}
+	$page=CurrentPageName();
+	$tpl=new templates();	
+	$q=new mysql();
 
-function main_form_add(){
-		$tmp=md5(date('YmdHis'));
-$html="	<H5>{add_network}&nbsp;</H5>
-	<p class=caption>{add_network_text}</p>
-	<input type='hidden' name='tmp' id='tmp' value='$tmp'>
-	" . RoundedLightGrey("
-	<table style='width:100%'>
-	<tr>
-		<td valign='top' nowrap align='right'><strong>{ip}:</strong></td>
-		<td valign='top' nowrap align='left'>" . Field_text('nmap_ip','','width:120px')."</td>
-	</tr>
-	<tr>
-		<td valign='top' nowrap align='right'><strong>{mask}:</strong></td>
-		<td valign='top' nowrap align='left'>" . Field_text('nmap_mask','','width:120px')."</td>
-	</tr>	
-	<tr>
-	<td colspan=2 align='right'><input type='button' OnClick=\"javascript:AddNmapNetwork();\" value='{add}&nbsp;&raquo;'></td>
-	</tr>
-	</table>");	
-
-$tpl=new templates();
-echo $tpl->_ENGINE_parse_body($html);
+	$sql="SELECT * FROM nmap_events WHERE ID='$ID'";
+	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_events'));
+	$ligne["text"]=htmlspecialchars($ligne["text"]);
+	$ligne["text"]=str_replace("\n", "<br>", $ligne["text"]);
+	$html="<div style='font-size:16px'>{$ligne["subject"]}</div><div style='font-size:13px;height:550px;overflow:auto' class=form>{$ligne["text"]}</div>";
+	echo $html;
+	
 	
 }
 
+function events(){
+	$sock=new sockets();
+	$page=CurrentPageName();
+	$tpl=new templates();	
+	$q=new mysql();
+	$html="
+<table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
+<thead class='thead'>
+	<tr>
+	<th width=1%>". imgtootltip("refresh-24.png","{refresh}","RefreshTab('main_config_nmap')")."</th>
+	<th width=1%>{date}</th>
+	<th width=1%>&nbsp;</th>
+	<th width=99%>events</th>
+	<th width=1%>". imgtootltip("delete-32.png","{delete_all}","DeleteAllNMAPEV()")."</th>
+	</tr>
+</thead>
+<tbody class='tbody'>";	
 
-function main_settings(){
+	$sql="SELECT subject,zDate,ID,uid FROM nmap_events ORDER BY zDate DESC LIMIT 0,300";
+	$results=$q->QUERY_SQL($sql,"artica_events");
+		
+	if(!$q->ok){echo "<H2>$q->mysql_error</H2>";}
+	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
+		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
+		$view="&nbsp;";
+		if($ligne["uid"]<>null){$view=imgtootltip("computer-32.png","{view}",MEMBER_JS($ligne["uid"],1,1));}
+		$color="black";
+		$link="<a href=\"javascript:blur();\" OnClick=\"javascript:NMAP_EVENTS({$ligne["ID"]})\" style='font-size:12px;text-decoration:underline'>";
+		$html=$html."
+		<tr class=$classtr>
+			<td style='font-size:12px;font-weight:bold;color:$color' width=1% nowrap colspan=2>{$ligne["zDate"]}</a></td>
+			<td style='font-size:12px;font-weight:bold;color:$color' width=1% nowrap>$view</a></td>
+			<td style='font-size:12px;font-weight:bold;color:$color' width=99% nowrap colspan=2>$link{$ligne["subject"]}</a></td>
+		</tr>
+		";
+	}
+
+	$html=$html."
+	</tbody>
+	</table>
 	
-	$nmap=new nmap();
-	$artica=new artica_general();
+	<script>
+		function NMAP_EVENTS(ID){
+			YahooWin4('650','$page?NMAP_EVENTS='+ID,ID);
+		}
+		
+	var x_DeleteAllNMAPEV= function (obj) {
+		var results=obj.responseText;
+		RefreshTab('main_config_nmap');
+	}
+	
+	function DeleteAllNMAPEV(){
+		var XHR = new XHRConnection();
+		XHR.appendData('DeleteAllNMAPEV','yes');
+		XHR.sendAndLoad('$page', 'POST',x_DeleteAllNMAPEV);
+	}
+	
+	</script>";
+	
+	echo $tpl->_ENGINE_parse_body($html);
+	
+}
+	
+
+function parameters(){
+	
+	$sock=new sockets();
+	$page=CurrentPageName();
+	$tpl=new templates();	
+	
+	$NmapRotateMinutes=$sock->GET_INFO("NmapRotateMinutes");
+	$NmapScanEnabled=$sock->GET_INFO("NmapScanEnabled");
+	if(!is_numeric($NmapScanEnabled)){$NmapScanEnabled=1;}
+	if(!is_numeric($NmapRotateMinutes)){$NmapRotateMinutes=60;}
+	if($NmapRotateMinutes<5){$NmapRotateMinutes=5;}
+	$findcomputer=Paragraphe("64-samba-find.png","{scan_your_network}",'{scan_your_network_text}',"javascript:Loadjs('computer-browse.php?scan-nets-js=yes')","scan_your_network",210);
+	
 	$html="
 	<table style='width:100%'>
+	<tbody>
 	<tr>
-	<td valign='top'>
-	<H5>{APP_NMAP}&nbsp;{settings}</H5>
-	<p class=caption>{about}</p>
-	" . RoundedLightGrey("
+	<td valign='top'>$findcomputer</td>
+	<td valign='top' width=100%>
+	<div id='nmapidset'>
 	<table style='width:100%'>
+	<tbody>
 	<tr>
-		<td valign='top' nowrap align='right'><strong>{NmapScanEnabled}:</strong></td>
-		<td valign='top' nowrap align='left'>" . Field_numeric_checkbox_img('NmapScanEnabled',$artica->NmapScanEnabled,'{enable_disable}')."</td>
+		<td valign='top' nowrap align='right' class=legend><strong>{NmapScanEnabled}:</strong></td>
+		<td valign='top' nowrap align='left'>" . Field_checkbox('NmapScanEnabled',1,$NmapScanEnabled,'{enable_disable}')."</td>
 	</tr>
 	<tr>
-		<td valign='top' nowrap align='right'><strong>{NmapRotateMinutes}:</strong></td>
-		<td valign='top' nowrap align='left'>" . Field_text('NmapRotateMinutes',$nmap->NmapRotateMinutes,'width:90px')."</td>
+		<td valign='top' nowrap align='right' class=legend><strong>{NmapRotateMinutes}:</strong></td>
+		<td valign='top' nowrap align='left' style='font-size:14px;'>" . Field_text('NmapRotateMinutes',$NmapRotateMinutes,'font-size:14px;width:60px')."&nbsp;{minutes}</td>
 	</tr>	
 	<tr>
-	<td colspan=2 align='right'><input type='button' OnClick=\"javascript:SaveNmapSettings();\" value='{edit}&nbsp;&raquo;'></td>
+	<td colspan=2 align='right'><hr>". button("{apply}","SaveNMAPSettings()")."</td>
+	
+
 	</tr>
-	</table>")."
-	<br><div id='nmap_list'>".main_network_list()."</div>
-	</td>
-	<td valign='top'>
-	" . RoundedLightGrey(Paragraphe("acl-add-64.png",'{add_network}','{add_network_text}',"javascript:nmap_add_network()"))."<br>
-	" . RoundedLightGrey(Paragraphe("folder-logs-64.png",'{nmap_logs}','{nmap_logs_text}',"javascript:nmap_logs()"))."<br>
-	" . RoundedLightGrey(Paragraphe("global-settings.png",'{perform_scan}','{perform_scan_text}',"javascript:nmap_scan()"))."<br>
-	
-	
-	
-	
+	</tbody>
+	</table>
+	</div>
 	</td>
 	</tr>
+	</tbody>
 	</table>
 	
+<script>
+	var x_AddComputerToDansGuardian= function (obj) {
+		var mid='ip_group_rule_list_'+rule_mem;
+		LoadAjax(mid,'dansguardian.index.php?ip-group_list-rule='+rule_mem);
+	}
+
+	var x_SaveNMAPSettings= function (obj) {
+		var results=obj.responseText;
+		RefreshTab('main_config_nmap');
+	}
+	
+	function SaveNMAPSettings(){
+		var XHR = new XHRConnection();
+		XHR.appendData('NmapRotateMinutes',document.getElementById('NmapRotateMinutes').value);
+		if(document.getElementById('NmapScanEnabled').checked){XHR.appendData('NmapScanEnabled',1);}else{XHR.appendData('NmapScanEnabled',0);}
+		AnimateDiv('nmapidset');
+		XHR.sendAndLoad('$page', 'POST',x_SaveNMAPSettings);
+	}
+</script>	
 	";
 	
 $tpl=new templates();
@@ -175,112 +207,14 @@ echo $tpl->_ENGINE_parse_body($html);
 }
 
 function main_settings_edit(){
-	$nmap=new nmap();
-	$nmap->NmapRotateMinutes=$_GET["NmapRotateMinutes"];
-	$nmap->SaveConf();
-	$artica=new artica_general();
-	$artica->NmapScanEnabled=$_GET["NmapScanEnabled"];	
-	
-	$artica->Save();
-	
-}
-
-
-function main_network_list(){
-	$nmap=new nmap();
-	
-	$html="
-	
-	<table style='with:350px'>";
-	
-	while (list ($num, $ligne) = each ($nmap->NmapNetworkIP) ){
-		
-		$tmp=md5(date('YmdHis').$ligne);
-		$html=$html . "
-		<tr " . CellRollOver().">
-			<td width=1% valign='top'><img src='img/fw_bold.gif'></td>
-			<td><strong>$ligne</td>
-			<td width=1% valign='top'>" . imgtootltip('x.gif','{delete}',"nmap_delete_ip('$num','$tmp')")."</td>
-		</tr>
-		
-		
-		";
-		
-		
-		
-		
-	}
-	
-	$html=$html . "</table>";
-	$tpl=new templates();
-	return $tpl->_ENGINE_parse_body("<H3>{networks_list}</h3>".RoundedLightGrey($html));
-	
-}
-
-function main_delete_network(){
-	$nmap=new nmap();
-	$net=$nmap->NmapNetworkIP[$_GET["nmap_delete_ip"]];
-	$tpl=new templates();
-	
-	if($nmap->delIpToscan($_GET["nmap_delete_ip"])){
-		echo $tpl->_ENGINE_parse_body("$net\n{success}");
-	}else{
-		echo $tpl->_ENGINE_parse_body("$net\n{failed}\n$nmap->ldap_error");
-	}
-	
-}
-
-function main_add_nework(){
-	$nmap=new nmap();
-	$sip=new SecondIP($_GET["AddNmapNetwork"],$_GET["mask"]);
-	$tpl=new templates();
-	
-	if($nmap->addIpToscan($sip->CDR)){
-		echo $tpl->_ENGINE_parse_body("$sip->CDR\n{success}");
-	}else{
-		echo $tpl->_ENGINE_parse_body("$sip->CDR\n{failed}\n$nmap->ldap_error");
-	}
-	
-}
-
-function  main_status(){
 	$sock=new sockets();
-	$datas=$sock->getfile('nmapmem');
-	
-	if(strlen($datas)>2){
-		$img="warning24.png";
-		$status="{stopped}";
-	}else{
-		$img="ok32.png";
-		$status="running";
-	}
-	
-$status="<table style='width:100%'>
-	<tr>
-	<td valign='top'>
-		<img src='img/$img'>
-	</td>
-	<td valign='top'>
-		<table style='width:100%'>
-		<tr>
-		<td align='right' nowrap><strong>{APP_NMAP}:</strong></td>
-		<td><strong>$status</strong></td>
-		</tr>		
-		<tr>
-		<td align='right'><strong>{pid}:</strong></td>
-		<td><strong>$datas</strong></td>
-		</tr>	
-	</table>
-	</td>
-	</tr>
-	</table>";
-	
-	$status=RoundedLightGreen($status);
-	
-	$tpl=new templates();
-	return $tpl->_ENGINE_parse_body($status);	
+	$sock->SET_INFO("NmapRotateMinutes", $_POST["NmapRotateMinutes"]);
+	$sock->SET_INFO("NmapScanEnabled", $_POST["NmapScanEnabled"]);
 	
 }
+
+
+
 
 function main_events(){
 	
@@ -304,6 +238,12 @@ function main_events_fill(){
 	}
 	
 	return "<textarea style='border:0px;font-size:10px;width:100%' rows=50>".@implode("\n",$ev)."</textarea>";
+	
+}
+
+function events_delete_all(){
+	$q=new mysql();
+	$q->QUERY_SQL("TRUNCATE TABLE nmap_events","artica_events");
 	
 }
 

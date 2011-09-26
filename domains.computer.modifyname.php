@@ -44,6 +44,10 @@ var x_ChangeComputerName= function (obj) {
 	if(results.length>0){alert(results);return;}
 	if(document.getElementById('computerlist')){BrowsComputersRefresh();}
 	if(document.getElementById('YahooUser')){YahooUserHide();}
+	if(document.getElementById('main_config_browse_computers')){RefreshTab('main_config_browse_computers');}
+	
+	
+	
 	Loadjs('$page?show-config=yes&userid='+x_$t);
 	
 	}		
@@ -69,6 +73,7 @@ var x_ChangeComputerName= function (obj) {
 
 
 function changecomputername(){
+	if(substr($_POST["userid"], strlen($_POST["userid"])-1,1)<>"$"){$_POST["userid"]=$_POST["userid"]."$";}
 	$comp=new computers($_POST["userid"]);
 	$_POST["NewHostname"]=trim(strtolower($_POST["NewHostname"]));
 	$_POST["NewHostname"]=str_replace('$', '', $_POST["NewHostname"]);

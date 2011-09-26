@@ -4,7 +4,7 @@ include_once(dirname(__FILE__).'/class.ini-frame.inc');
 include_once("/usr/share/artica-postfix/ressources/class.sockets.inc");
 include_once("/usr/share/artica-postfix/ressources/class.ini.inc");
 $GLOBALS["SSLKEY_PATH"]="/etc/ssl/certs/apache";
-$GLOBALS["MAX_RECUSIVE_DIRS"]=200;
+$GLOBALS["MAX_RECUSIVE_DIRS"]=400;
 $GLOBALS["RECURSVIVE_INC"]=0;
 class unix {
 	
@@ -344,6 +344,11 @@ public function PingHost($cible){
 		if(is_file("/var/db/kav/5.6/kavmilter/bases/kavset.xml")){return "/var/db/kav/5.6/kavmilter/bases/kavset.xmll";}
 		if(is_file("/var/db/kav/5.6/kavmilter/bases/av-i386-0607g.xml")){return "/var/db/kav/5.6/kavmilter/bases/av-i386-0607g.xml";}
 	}
+	
+	public function KAV4PROXY_PATTERN_FILE(){
+		return $this->KAV4PROXY_GET_VALUE("path","BasesPath");
+	}
+	
 	
 	
 	public function LOCATE_SMBD_PID(){
@@ -914,6 +919,12 @@ public function shellEscapeChars($path){
 	}
 	
 	public function APACHE_SRC_ACCOUNT(){
+		if(is_file("/etc/artica-postfix/settings/Daemons/ApacheSRCAccount")){
+			$data=trim(@file_get_contents("/etc/artica-postfix/settings/Daemons/ApacheSRCAccount"));
+			if(strlen($data)>3){return $data;}
+		}
+		
+		
 		$httpd_conf=$this->LOCATE_APACHE_CONF_PATH();
 		$envars=dirname($httpd_conf)."/envvars";
 		if(is_file($envars)){
@@ -945,6 +956,11 @@ public function shellEscapeChars($path){
 	}	
 	
 	public function APACHE_SRC_GROUP(){
+		if(is_file("/etc/artica-postfix/settings/Daemons/ApacheSRCGroup")){
+			$data=trim(@file_get_contents("/etc/artica-postfix/settings/Daemons/ApacheSRCGroup"));
+			if(strlen($data)>3){return $data;}
+		}		
+		
 		$httpd_conf=$this->LOCATE_APACHE_CONF_PATH();
 		if(is_file($httpd_conf)){
 			$tbl=explode("\n",@file_get_contents($httpd_conf));
@@ -972,8 +988,29 @@ public function EXEC_NICE(){
 	$tmp=null;
 	$useIonice=trim(@file_get_contents("/etc/artica-postfix/settings/Daemons/useIonice"));
 	$useNice=trim(@file_get_contents("/etc/artica-postfix/settings/Daemons/useNice"));
-	if($useIonice==null){$useIonice=1;}
-	if($useNice==null){$useNice=1;}
+	$ArticaInCgroups=trim(@file_get_contents("/etc/artica-postfix/settings/Daemons/ArticaInCgroups"));
+	$ArticaCgroup=trim(@file_get_contents("/etc/artica-postfix/settings/Daemons/ArticaCgroup"));
+	$cgroupsEnabled=trim(@file_get_contents("/etc/artica-postfix/settings/Daemons/cgroupsEnabled"));
+	
+	if(!is_numeric($ArticaInCgroups)){$ArticaInCgroups=0;}
+	if(!is_numeric($useIonice)){$useIonice=1;}
+	if(!is_numeric($useNice)){$useNice=1;}
+	if(!is_numeric($cgroupsEnabled)){$cgroupsEnabled=0;}	
+	
+	if($GLOBALS["VERBOSE"]){echo "EXEC_NICE: cgroupsEnabled=$cgroupsEnabled, ArticaInCgroups=$ArticaInCgroups ArticaCgroup=$ArticaCgroup\n";}
+	
+	if($ArticaCgroup==null){$ArticaInCgroups=0;}
+	if($cgroupsEnabled==0){$ArticaInCgroups=0;}
+	if($ArticaInCgroups==1){
+		if(is_dir("/cgroups/cpuacct/$ArticaCgroup")){
+			$cgexec=$this->find_program("cgexec");
+			if(is_file($cgexec)){
+				return "$cgexec -g *:$ArticaCgroup ";
+			}
+		}else{
+			if($GLOBALS["VERBOSE"]){echo "EXEC_NICE: /cgroups/cpuacct/$ArticaCgroup no such directory...\n";}
+		}
+	}
 	
 	if(!class_exists("Bs_IniHandler")){
 		$ini=new iniFrameWork("/etc/artica-postfix/performances.conf");
@@ -2039,7 +2076,10 @@ public function alt_stat($file) {
 		if($pid<50){return false;}
 		if(is_file("/proc/$pid/exe")){
 			if(is_file("/proc/$pid/status")){$this->proc_status=@file_get_contents("/proc/$pid/status");}
-			if($GLOBALS["VERBOSE"]){echo "filename: $filename\n";}
+			
+			$status=$this->PROCESS_STATUS($pid);
+			if($GLOBALS["VERBOSE"]){echo "filename: $filename, $status '{$status[0]}'\n";}
+			if($status[0]=="Z"){return false;}
 			if($filename<>null){
 				$filename=str_replace(".", "\.", $filename);
 				$cmdline=@file_get_contents("/proc/$pid/cmdline");
@@ -2051,11 +2091,14 @@ public function alt_stat($file) {
 			if($GLOBALS["VERBOSE"]){echo "/proc/$pid/exe no such file\n";}
 		}
 		if(is_file("/proc/$pid/cmdline")){
+			if(is_file("/proc/$pid/status")){$this->proc_status=@file_get_contents("/proc/$pid/status");}
+			$status=$this->PROCESS_STATUS($pid);
+			if($status[0]=="Z"){return false;}			
+			
 			if($GLOBALS["VERBOSE"]){echo "filename: $filename\n";}	
 			$cmdline=@file_get_contents("/proc/$pid/cmdline");
 			if($GLOBALS["VERBOSE"]){echo "cmdline: $cmdline\n";}
 			if(preg_match("#$filename#",$cmdline)){return true;}else{return false;}
-			if(is_file("/proc/$pid/status")){$this->proc_status=@file_get_contents("/proc/$pid/status");}
 			return true;
 		}
 		return false;
@@ -2712,9 +2755,11 @@ public function LOCATE_STUNNEL_BIN(){
 		if($GLOBALS["MEM_postmulti"]<>null){$postmulti=$GLOBALS["MEM_postmulti"];}else{$postmulti=$this->find_program("postmulti");$GLOBALS["MEM_postmulti"]=$postmulti;}
 		
 		if($GLOBALS["DEBUG"]){echo "POSTCONF_MULTI_GET:: postmulti=$postmulti\n";}
-		exec("$postmulti -i postfix-$instance -x postconf -h $value",$results);
-		return trim(implode("\n",$results));
-		
+		$cmd="$postmulti -i postfix-$instance -x postconf -h $value";
+		exec($cmd,$results);
+		$value=trim(implode("\n",$results));
+		if($GLOBALS["DEBUG"]){writelogs_framework("$cmd -> $value",__CLASS__."/".__FUNCTION__,__FILE__,__LINE__);}
+		return $value;
 	}
 
 	public function POSTCONF_MULTI_SET($instance,$key,$value){
@@ -2868,7 +2913,7 @@ public function LOCATE_STUNNEL_BIN(){
 	
 public	function getDirectories($directory){
 	$GLOBALS["RECURSVIVE_INC"]=$GLOBALS["RECURSVIVE_INC"]+1;
-	
+	if($GLOBALS["MAX_RECUSIVE_DIRS"]<50){$GLOBALS["MAX_RECUSIVE_DIRS"]=400;}
 	if($GLOBALS["RECURSVIVE_INC"]>$GLOBALS["MAX_RECUSIVE_DIRS"]){
 		$trace=debug_backtrace();if(isset($trace[1])){$called=" called by ". basename($trace[1]["file"])." {$trace[1]["function"]}() line {$trace[1]["line"]}";}	
 		error_log("PHP Fatal: cannot parse directory [instance {$GLOBALS["RECURSVIVE_INC"]}], maximum recursive of {$GLOBALS["MAX_RECUSIVE_DIRS"]} has been reached $called");
@@ -2986,6 +3031,7 @@ function DirFiles($path){
 	}
 	
 	public function PID_IS_CHROOTED($pid){
+		if($this->find_program("cgconfigparser")){return false;}
 		$pid=trim($pid);
 		if(!is_numeric($pid)){return;}
 		if(is_file("/etc/artica-postfix/AS_VPS_CLIENT")){return false;}

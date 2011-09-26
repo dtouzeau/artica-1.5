@@ -56,7 +56,7 @@ $count=1;
 
 while (list ($key, $line) = each ($tr) ){
 	if($line==null){continue;}
-	$f[]="<li id='kwick$count'>$line</li>";
+	$f[]="<li id='kwick1'>$line</li>";
 	$count++;
 	
 }
@@ -139,14 +139,16 @@ echo $tpl->_ENGINE_parse_body($html);
 function quicklinks_paragraphe($img,$title,$text,$link){
 	
 	$html="
-	<table style='width:205px;margin-top:10px' OnClick=\"javascript:$link\">
+	<table style='width:205px;margin-top:2px' OnClick=\"javascript:$link\">
+	<tbody>
 	<tr>
-		<td width=1% valign='top'>". imgtootltip($img,"{{$title}}",$link)."<td>
-		<td style='color:white;padding-left:5px;border-left:1px solid white' valign='top'>
-		<div style='font-size:14px;font-weight:bold;letter-spacing:-1px;padding-bottom:3px;border-bottom:1px solid white;margin-bottom:3px'>{{$title}}</div>
-		<div style='font-size:11px;font-weight:bold'>{{$text}}</div></td>
-		
+		<td width=1% valign='top'>". imgtootltip($img,"{{$text}}",$link)."</td>
+		<td style='color:white;padding-left:2px;' valign='top' width=99%>
+		<div style='font-size:14px;font-weight:bold;letter-spacing:-1px;padding-bottom:3px;border-bottom:1px solid white;margin-bottom:3px'  
+		OnClick=\"javascript:$link\">{{$title}}
+		</div>
 	</tr>
+	</tbody>
 	</table>
 	";
 	return $html;
@@ -417,9 +419,11 @@ echo $html;
 }
 
 function LocalParagraphe($title,$text,$js,$img){
+	
 		$js=str_replace("javascript:","",$js);
 		$id=md5($js);
 		$img_id="{$id}_img";
+		Paragraphe($img, $title, $text,$js);
 	$html="
 	<table style='width:198px;'>
 	<tr>
@@ -538,6 +542,7 @@ function main_kaspersky(){
 
 
 function main_kaspersky_level(){
+	
 		include_once('ressources/class.kas-filter.inc');
 		$kas=new kas_single();
 		$OPT_SPAM_RATE_LIMIT_TABLE=array(4=>"{maximum}",3=>"{high}",2=>"{normal}",1=>"{minimum}");
@@ -560,7 +565,7 @@ function main_kaspersky_level(){
 
 function kaspersky(){
 	if(!isset($GLOBALS["CLASS_USERS"])){$GLOBALS["CLASS_USERS"]=new usersMenus();$users=$GLOBALS["CLASS_USERS"];}else{$users=$GLOBALS["CLASS_USERS"];}
-	
+	$GLOBALS["ICON_FAMILY"]="ANTIVIRUS";
 	if(!$users->POSTFIX_INSTALLED){return false;}
 	$users->LoadModulesEnabled();
 	$page=CurrentPageName();
@@ -573,6 +578,7 @@ function kaspersky(){
 	
 }
 function icon_update_clamav(){
+	$GLOBALS["ICON_FAMILY"]="ANTIVIRUS";
 	if(!isset($GLOBALS["CLASS_USERS"])){$GLOBALS["CLASS_USERS"]=new usersMenus();$users=$GLOBALS["CLASS_USERS"];}else{$users=$GLOBALS["CLASS_USERS"];}
 	if(!$users->CLAMAV_INSTALLED){return null;}
 	if(!$users->KASPERSKY_WEB_APPLIANCE){return null;}
@@ -584,6 +590,7 @@ function icon_update_clamav(){
 	return LocalParagraphe("UPDATE_CLAMAV","UPDATE_CLAMAV_EXPLAIN",$js,$img);				
 }	
 function icon_troubleshoot(){
+	$GLOBALS["ICON_FAMILY"]="REPAIR";
 	$users=new usersMenus();
 	if(!$users->AsArticaAdministrator){return null;}
 	$js="Loadjs('index.troubleshoot.php');";
@@ -593,6 +600,7 @@ function icon_troubleshoot(){
 		
 }
 function icon_externalports(){
+	$GLOBALS["ICON_FAMILY"]="SECURITY";
 	if(!isset($GLOBALS["CLASS_USERS"])){$GLOBALS["CLASS_USERS"]=new usersMenus();$users=$GLOBALS["CLASS_USERS"];}else{$users=$GLOBALS["CLASS_USERS"];}
 	if(!$users->AsArticaAdministrator){return null;}
 	if($users->KASPERSKY_WEB_APPLIANCE){return null;}
@@ -603,6 +611,7 @@ function icon_externalports(){
 	return LocalParagraphe("EXTERNAL_PORTS","EXTERNAL_PORTS_TEXT",$js,$img);	
 	}	
 function postmaster(){
+	$GLOBALS["ICON_FAMILY"]="SMTP";
 $sock=new sockets();
 if($sock->GET_INFO("EnablePostfixMultiInstance")==1){return null;}	
 if(!isset($GLOBALS["CLASS_USERS"])){$GLOBALS["CLASS_USERS"]=new usersMenus();$users=$GLOBALS["CLASS_USERS"];}else{$users=$GLOBALS["CLASS_USERS"];}
@@ -615,6 +624,7 @@ function Firstwizard(){
 }
 
 function wizard_kaspersky_appliance_smtp(){
+	$GLOBALS["ICON_FAMILY"]="ANTIVIRUS";
 	if(!isset($GLOBALS["CLASS_USERS"])){$GLOBALS["CLASS_USERS"]=new usersMenus();$users=$GLOBALS["CLASS_USERS"];}else{$users=$GLOBALS["CLASS_USERS"];}
 	if(!$users->KASPERSKY_SMTP_APPLIANCE){return null;}
 	return LocalParagraphe("wizard_kaspersky_smtp_appliance","wizard_kaspersky_smtp_appliance_text_wizard","Loadjs('wizard.kaspersky.appliance.php')","kaspersky-wizard-48.png");
@@ -622,6 +632,7 @@ function wizard_kaspersky_appliance_smtp(){
 
 
 function clamav(){
+	$GLOBALS["ICON_FAMILY"]="ANTIVIRUS";
 	$page=CurrentPageName();
 	if(!isset($GLOBALS["CLASS_USERS"])){$GLOBALS["CLASS_USERS"]=new usersMenus();$users=$GLOBALS["CLASS_USERS"];}else{$users=$GLOBALS["CLASS_USERS"];}
 	if($users->KASPERSKY_WEB_APPLIANCE){return null;}
@@ -635,6 +646,7 @@ function clamav(){
 
 
 function nic_settings(){
+	$GLOBALS["ICON_FAMILY"]="NETWORK";
 	$page=CurrentPageName();
 	$js="Loadjs('system.nic.config.php?js=yes')";
 	$img="64-win-nic.png";
@@ -643,6 +655,7 @@ function nic_settings(){
 	}
 	
 function wizard_backup(){
+	$GLOBALS["ICON_FAMILY"]="BACKUP";
 $page=CurrentPageName();
 	$js="Loadjs('wizard.backup-all.php')";
 	$img="48-dar-index.png";
@@ -653,6 +666,7 @@ $page=CurrentPageName();
 }
 
 function scancomputers(){
+	$GLOBALS["ICON_FAMILY"]="NETWORK";
 	$js="Loadjs('computer-browse.php')";
 	$img="64-win-nic-browse.png";
 	return Paragraphe($img,"{browse_computers}","{browse_computers_text}","javascript:$js");
@@ -660,6 +674,7 @@ function scancomputers(){
 	}
 	
 	function sharenfs(){
+		$GLOBALS["ICON_FAMILY"]="SYSTEM";
 	if(!isset($GLOBALS["CLASS_USERS"])){$GLOBALS["CLASS_USERS"]=new usersMenus();$users=$GLOBALS["CLASS_USERS"];}else{$users=$GLOBALS["CLASS_USERS"];}
 	if(!$users->NFS_SERVER_INSTALLED){return null;}
 	$js="Loadjs('SambaBrowse.php')";
@@ -670,6 +685,7 @@ function scancomputers(){
 	}
 
 function clientnfs(){
+	$GLOBALS["ICON_FAMILY"]="SYSTEM";
 	if(!isset($GLOBALS["CLASS_USERS"])){$GLOBALS["CLASS_USERS"]=new usersMenus();$users=$GLOBALS["CLASS_USERS"];}else{$users=$GLOBALS["CLASS_USERS"];}
 	if(!$users->autofs_installed){return null;}
 	$js="Loadjs('nfs-client.php')";
@@ -679,6 +695,7 @@ function clientnfs(){
 }		
 	
 function postfix_events(){
+	$GLOBALS["ICON_FAMILY"]="SMTP";
 	$js="Loadjs('postfix-realtime-events.php')";
 	$img="folder-logs-643.png";
 	return Paragraphe($img,"{postfix_realtime_events}","{postfix_realtime_events_text}","javascript:$js");
@@ -686,6 +703,7 @@ function postfix_events(){
 	}
 
 function dmidecode(){
+	$GLOBALS["ICON_FAMILY"]="SYSTEM";
 	$js="Loadjs('dmidecode.php')";
 	$img="system-64.org.png";
 	return Paragraphe($img,"{dmidecode}","{dmidecode_text}","javascript:$js");
@@ -694,6 +712,7 @@ function dmidecode(){
 function icon_update_artica(){
 	if(!isset($GLOBALS["CLASS_USERS"])){$GLOBALS["CLASS_USERS"]=new usersMenus();$users=$GLOBALS["CLASS_USERS"];}else{$users=$GLOBALS["CLASS_USERS"];}
 	if(!$users->AsArticaAdministrator){return null;}
+	$GLOBALS["ICON_FAMILY"]="UPDATE";
 	$js="Loadjs('artica.update.php?js=yes')";
 	$img="folder-64-artica-update.png";
 	$tpl=new templates();
@@ -713,15 +732,18 @@ function icon_update_spamassassin_blacklist(){
 	}	
 	
 function statkaspersky(){
+	$GLOBALS["ICON_FAMILY"]="ANTIVIRUS";
 	$js="YahooWin(580,'kaspersky.index.php','Kaspersky');";
 	$img="bigkav-64.png";		
 	return Paragraphe($img,"{Kaspersky}","{kaspersky_av_text}","javascript:$js");
 	return LocalParagraphe("Kaspersky","kaspersky_av_text","YahooWin(580,'kaspersky.index.php','Kaspersky');","bigkav-48.png");
 }
 function sysinfos(){
+	$GLOBALS["ICON_FAMILY"]="SYSTEM";
 	return Paragraphe("scan-64.png", "{sysinfos}", "{sysinfos_text}","javascript:s_PopUp('phpsysinfo/index.php',1000,600,1);");
 }
 function certificate(){
+	$GLOBALS["ICON_FAMILY"]="SECURITY";
 	$js="Loadjs('postfix.tls.php?js-certificate=yes')";
 	$img="certificate-download-64.png";	
 	return Paragraphe($img,"{ssl_certificate}","{ssl_certificate_text}","javascript:$js");
@@ -729,6 +751,7 @@ function certificate(){
 
 }
 function apt(){
+	$GLOBALS["ICON_FAMILY"]="UPDATE";
 	$js="Loadjs('artica.repositories.php')";
 	$img="DEBIAN_mirror-64.png";	
 	if(!isset($GLOBALS["CLASS_USERS"])){$GLOBALS["CLASS_USERS"]=new usersMenus();$users=$GLOBALS["CLASS_USERS"];}else{$users=$GLOBALS["CLASS_USERS"];}
@@ -737,12 +760,14 @@ function apt(){
 	return LocalParagraphe("repository_manager","repository_manager_text","Loadjs('artica.repositories.php')","folder-lock-48.png");
 }
 function incremental_backup(){
+	$GLOBALS["ICON_FAMILY"]="BACKUP";
 	$js="Loadjs('wizard.backup-all.php')";
 	$img="64-dar-index.png";
 	return Paragraphe($img,"{manage_backups}","{manage_backups}","javascript:$js");
 	return LocalParagraphe("manage_backups","manage_backups",$js,"48-dar-index.png");
 }
 function atica_perf(){
+	$GLOBALS["ICON_FAMILY"]="SYSTEM";
 	$img="perfs-64.png";	
 	$js="Loadjs('artica.performances.php')";
 	
@@ -750,12 +775,14 @@ function atica_perf(){
 	
 }
 function applis(){
+	$GLOBALS["ICON_FAMILY"]="SOFTWARES";
 	$js="Loadjs('setup.index.php?js=yes')";
 	$img="bg-applis-64.png";
 	return Paragraphe($img,"{install_applis}","{install_applis_text}","javascript:$js");
 		
 		}
 function icon_system(){
+	$GLOBALS["ICON_FAMILY"]="SYSTEM";
 	if(!isset($GLOBALS["CLASS_USERS"])){$GLOBALS["CLASS_USERS"]=new usersMenus();$users=$GLOBALS["CLASS_USERS"];}else{$users=$GLOBALS["CLASS_USERS"];}
 	if(!$users->AsAnAdministratorGeneric){return null;}
 	$js="Loadjs('admin.index.services.status.php?js=yes')";
@@ -765,6 +792,7 @@ function icon_system(){
 
 
 function icon_memory(){
+	$GLOBALS["ICON_FAMILY"]="SYSTEM";
 	if(!isset($GLOBALS["CLASS_USERS"])){$GLOBALS["CLASS_USERS"]=new usersMenus();$users=$GLOBALS["CLASS_USERS"];}else{$users=$GLOBALS["CLASS_USERS"];}
 	if(!$users->AsAnAdministratorGeneric){return null;}
 	$js="Loadjs('system.memory.php?js=yes')";
@@ -773,6 +801,7 @@ function icon_memory(){
 	
 	}
 function icon_harddrive(){
+	$GLOBALS["ICON_FAMILY"]="SYSTEM";
 	if(!isset($GLOBALS["CLASS_USERS"])){$GLOBALS["CLASS_USERS"]=new usersMenus();$users=$GLOBALS["CLASS_USERS"];}else{$users=$GLOBALS["CLASS_USERS"];}
 	if(!$users->AsAnAdministratorGeneric){return null;}
 	$js="Loadjs('system.internal.disks.php')";
@@ -781,6 +810,7 @@ function icon_harddrive(){
 		
 	}	
 function icon_adduser(){
+	$GLOBALS["ICON_FAMILY"]="USER";
 	if(!isset($GLOBALS["CLASS_USERS"])){$GLOBALS["CLASS_USERS"]=new usersMenus();$users=$GLOBALS["CLASS_USERS"];}else{$users=$GLOBALS["CLASS_USERS"];}
 	$sock=new sockets();
 	if(!$users->AllowAddUsers){return null;}

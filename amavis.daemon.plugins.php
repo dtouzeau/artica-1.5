@@ -66,8 +66,15 @@ function popup(){
 	if(!$users->pyzor_installed){$DisablePyzor=1;$pyzor_not_installed=$error_module_not_installed."<br>";}
 	
 	
+	if($AmavisNoInternetTests==1){
+		$AmavisNoInternetTests_text="<div class=explain >{explain_AmavisNoInternetTests_plug_disbaled}</div>";
+		
+	}
+	
+	
 	$html="
 	<div class=explain >{spamassassin_pkugins_explain}</div>
+	
 	<table style='width:100%' class=form>
 	<tr>
 		<td class=legend>{EnableLDAPAmavis}:</td>

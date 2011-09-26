@@ -30,7 +30,7 @@ if(!Build_pid_func(__FILE__,"MAIN")){
 	die();
 }
 
-if($argv[1]=='--tables'){$mysql=new mysql();$mysql->BuildTables();die();}
+if($argv[1]=='--tables'){checks();die();}
 if($argv[1]=='--imapsync'){rebuild_imapsync();die();}
 if($argv[1]=='--rebuild-zarafa'){rebuild_zarafa();die();}
 if($argv[1]=='--squid-events-purge'){squid_events_purge();die();}
@@ -96,6 +96,40 @@ function checks(){
 	$GLOBALS["DEBUG"]=true;$GLOBALS["VERBOSE"]=true;ini_set('display_errors', 1);ini_set('error_reporting', E_ALL);ini_set('error_prepend_string',null);ini_set('error_append_string',null);
 	$q=new mysql();
 	$q->BuildTables();	
+	$execute=false;
+	
+$tableEngines = array("hardware"=>"InnoDB","accesslog"=>"InnoDB","bios"=>"InnoDB","memories"=>"InnoDB","slots"=>"InnoDB",
+"registry"=>"InnoDB","monitors"=>"InnoDB","ports"=>"InnoDB","storages"=>"InnoDB","drives"=>"InnoDB","inputs"=>"InnoDB",
+"modems"=>"InnoDB","networks"=>"InnoDB","printers"=>"InnoDB","sounds"=>"InnoDB","videos"=>"InnoDB","softwares"=>"InnoDB",
+"accountinfo"=>"InnoDB","netmap"=>"InnoDB","devices"=>"InnoDB", "locks"=>"HEAP");	
+	
+	if(is_file("/usr/share/artica-postfix/bin/install/ocsbase_new.sql")){
+		if(!$q->DATABASE_EXISTS("ocsweb")){$execute=true;}
+		if(!$execute){
+			while (list ($table, $ligne) = each ($tableEngines) ){
+				if(!$q->TABLE_EXISTS($table,"ocsweb")){$execute=true;break;}
+			}
+		}
+		
+	}
+	
+	
+	reset($tableEngines);
+	if($execute){
+		$unix=new unix();
+		$q->CREATE_DATABASE("ocsweb");
+		$mysql=$unix->find_program("mysql");
+		$password=$q->mysql_password;
+		if(strlen($password)>0){$password=" -p$password";}
+		$cmd="$mysql -u $q->mysql_admin$password --batch -h $q->mysql_server -P $q->mysql_port -D ocsweb < /usr/share/artica-postfix/bin/install/ocsbase_new.sql";
+		exec($cmd,$results);
+		while (list ($table, $ligne) = each ($tableEngines) ){
+			if(!$q->TABLE_EXISTS($table,"ocsweb")){$unix->send_email_events("Unable to create OCS table (missing $table) table" , "$cmd\nmysql results\n".@implode("\n", $results),"system");break;}
+		}
+	}
+	
+	
+	
 }
 
 function rebuild_imapsync(){

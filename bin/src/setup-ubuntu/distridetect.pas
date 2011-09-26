@@ -163,6 +163,14 @@ begin
      DISTRINAME_CODE:='CENTOS';
      exit;
   end;
+
+  RegExpr.Expression:='Scientific Linux release';
+  if RegExpr.Exec(distri) then begin
+     DISTRINAME_CODE:='CENTOS';
+     exit;
+  end;
+
+
   
   RegExpr.Expression:='Mandriva';
   if RegExpr.Exec(distri) then begin
@@ -274,6 +282,19 @@ begin
          exit();
       end;
 
+      RegExpr.Expression:='Scientific Linux release\s+([0-9\.]+)';
+      if RegExpr.Exec(Filedatas.Strings[0]) then begin
+         result:='Scientific Linux release ' + RegExpr.Match[1];
+         RegExpr.Expression:='release\s+([0-9]+)\.([0-9]+)';
+          if RegExpr.Exec(Filedatas.Strings[0]) then begin
+              TryStrtoInt(RegExpr.Match[1],DISTRI_MAJOR);
+              TryStrtoInt(RegExpr.Match[2],DISTRI_MINOR);
+         end;
+         RegExpr.Free;
+         Filedatas.Free;
+         exit();
+      end;
+
       //Mandriva
       RegExpr.Expression:='Mandriva Linux release\s+([0-9\.]+)';
       if RegExpr.Exec(Filedatas.Strings[0]) then begin
@@ -300,6 +321,19 @@ begin
          Filedatas.Free;
          exit();
       end;
+      RegExpr.Expression:='CentOS Linux release\s+([0-9]+)';
+       if RegExpr.Exec(Filedatas.Strings[0]) then begin
+         result:='CentOS release ' + RegExpr.Match[1];
+         RegExpr.Expression:='release\s+([0-9]+)\.([0-9]+)';
+         if RegExpr.Exec(Filedatas.Strings[0]) then begin
+              TryStrtoInt(RegExpr.Match[1],DISTRI_MAJOR);
+              TryStrtoInt(RegExpr.Match[2],DISTRI_MINOR);
+         end;
+         RegExpr.Free;
+         Filedatas.Free;
+         exit();
+      end;
+
 
     end;
 

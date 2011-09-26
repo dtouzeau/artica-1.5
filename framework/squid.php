@@ -11,6 +11,13 @@ if(isset($_GET["kav4proxy-update-now"])){kav4proxy_update();exit();}
 
 if(isset($_GET["update-database-blacklist"])){blacklist_update();exit();}
 if(isset($_GET["compil-params"])){compile_params();exit();}
+if(isset($_GET["migration-stats"])){migration_stats();exit();}
+if(isset($_GET["re-categorize"])){re_categorize();exit();}
+if(isset($_GET["kav4proxy-license-error"])){kav4proxy_license_error();exit();}
+if(isset($_GET["kav4proxy-pattern-date"])){kav4proxy_pattern_date();exit();}
+if(isset($_GET["kav4proxy-configure"])){kav4proxy_configure();exit();}
+if(isset($_GET["squid-realtime-cache"])){squid_realtime_cache();exit();}
+
 
 
 
@@ -50,6 +57,30 @@ function community_reprocess_category(){
 	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);
 }
 
+function migration_stats(){
+	$unix=new unix();
+	if(is_file("/etc/artica-postfix/exec.squid.logs.migrate.php.pid")){
+		$pid=$unix->get_pid_from_file("/etc/artica-postfix/exec.squid.logs.migrate.php.pid");
+		if(is_numeric($pid)){
+			if($unix->process_exists($pid)){
+				$time=$unix->PROCCESS_TIME_MIN($pid);
+				writelogs_framework("/etc/artica-postfix/exec.squid.logs.migrate.php.pid ->$pid $time mn",__FUNCTION__,__FILE__,__LINE__);
+				echo "<articadatascgi>". base64_encode(serialize( array($pid,$time)))."</articadatascgi>";
+				return;
+			}
+		}
+	}
+	if(is_file("/etc/artica-postfix/pids/exec.squid.logs.migrate.php.pid")){
+		$pid=$unix->get_pid_from_file("/etc/artica-postfix/pids/exec.squid.logs.migrate.php.pid");
+		if(is_numeric($pid)){
+			if($unix->process_exists($pid)){
+				$time=$unix->PROCCESS_TIME_MIN($pid);
+				echo "<articadatascgi>". base64_encode(serialize(array($pid,$time)))."</articadatascgi>";
+			}
+		}
+	}		
+}
+
 function compile_params(){
 	$unix=new unix();
 	$nohup=$unix->find_program("nohup");
@@ -59,6 +90,14 @@ function compile_params(){
 	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	
 }
 
+function kav4proxy_configure(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$php5=$unix->LOCATE_PHP5_BIN();
+	$cmd=trim("$nohup $php5 /usr/share/artica-postfix/exec.kav4proxy.php >/dev/null 2>&1 &");
+	shell_exec($cmd);
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	
+}
 function blacklist_update(){
 	$unix=new unix();
 	$nohup=$unix->find_program("nohup");
@@ -67,7 +106,6 @@ function blacklist_update(){
 	shell_exec($cmd);
 	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	
 }
-
 function kav4proxy_update(){
 	$unix=new unix();
 	$nohup=$unix->find_program("nohup");
@@ -75,5 +113,71 @@ function kav4proxy_update(){
 	$cmd=trim("$nohup /usr/share/artica-postfix/bin/artica-update --kav4proxy >/dev/null 2>&1 &");
 	shell_exec($cmd);
 	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	
+	
+}
+function kav4ProxyPatternDatePath(){
+$unix=new unix();
+	$base=$unix->KAV4PROXY_GET_VALUE("path","BasesPath");
+	if(is_file("$base/u0607g.xml")){return "$base/u0607g.xml";}	
+	if(is_file("$base/master.xml")){return "$base/master.xml";}
+	if(is_file("$base/av-i386-0607g.xml")){return "$base/av-i386-0607g.xml";}
+	return "$base/master.xml";
+}
+
+
+function kav4proxy_pattern_date(){
+	$unix=new unix();
+	$base=kav4ProxyPatternDatePath();
+	writelogs_framework("Found $base",__FUNCTION__,__FILE__,__LINE__);
+	if(!is_file($base)){
+		writelogs_framework("$base no such file",__FUNCTION__,__FILE__,__LINE__);
+		return;}
+	$f=explode("\n",@file_get_contents($base));
+	$reg='#UpdateDate="([0-9]+)\s+([0-9]+)"#';
+	
+	while (list ($num, $ligne) = each ($f) ){
+		if(preg_match($reg,$ligne,$re)){
+			writelogs_framework("Found {$re[1]} {$re[2]}",__FUNCTION__,__FILE__,__LINE__);
+			if(preg_match('#([0-9]{1,2})([0-9]{1,2})([0-9]{1,4});([0-9]{1,2})([0-9]{1,2})#',trim($re[1]).";".trim($re[2]),$regs)){
+				echo "<articadatascgi>". base64_encode($regs[3]. "/" .$regs[2]. "/" .$regs[1] . " " . $regs[4] . ":" . $regs[5])."</articadatascgi>";
+				return;
+			}
+		}
+	}	
+	writelogs_framework("Not found in $base",__FUNCTION__,__FILE__,__LINE__);
+}
+
+
+
+function kav4proxy_license_error(){
+	$unix=new unix();
+	
+	$cmd=trim("/opt/kaspersky/kav4proxy/bin/kav4proxy-licensemanager -i 2>&1");
+	writelogs_framework("$cmd = ".count($results)." lines",__FUNCTION__,__FILE__,__LINE__);	
+	exec($cmd,$results);
+	while (list ($num, $ligne) = each ($results) ){
+		if(preg_match("#Error loading license :(.+)#", $ligne,$re)){
+			writelogs_framework("{$re[1]}",__FUNCTION__,__FILE__,__LINE__);
+			echo "<articadatascgi>". base64_encode(trim($re[1]))."</articadatascgi>";
+			return;
+		}
+		
+	}
+	
+	
+}
+
+function squid_realtime_cache(){
+	echo "<articadatascgi>".@file_get_contents("/etc/artica-postfix/squid-realtime.cache")."</articadatascgi>";
+}
+
+
+function re_categorize(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$php5=$unix->LOCATE_PHP5_BIN();
+	$cmd=trim("$nohup $php5 /usr/share/artica-postfix/exec.re-categorize.php >/dev/null 2>&1 &");
+	shell_exec($cmd);
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);		
 	
 }

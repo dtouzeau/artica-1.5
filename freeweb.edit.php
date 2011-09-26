@@ -15,15 +15,20 @@
 		die();exit();
 	}
 	
+	
 	if(isset($_GET["popup"])){popup();exit;}
 	if(isset($_GET["popup-tabs"])){popup_tabs();exit;}
 	if(isset($_GET["params"])){params();exit;}
 	if(isset($_GET["params2"])){params2();exit;}
 	if(isset($_GET["enable_ldap_authentication"])){params_enable_ldap_authentication();exit;}
 	if(isset($_POST["AddDefaultCharset"])){OthersValuesSave();exit;}
-	
+	if(isset($_GET["uid-check"])){uid_check();exit;}
 	if(isset($_GET["groupwares"])){groupwares_index();exit();}
 	if(isset($_POST["FreeWebToGroupWare"])){groupwares_save();exit;}
+	if(isset($_POST["FreeWebsRebuildvHosts"])){FreeWebsRebuildvHosts();exit;}
+	if(isset($_POST["FreeWebsRebuildGroupware"])){FreeWebsRebuildGroupware();exit;}
+	
+	
 	
 	
 	if(isset($_GET["authip-add"])){authip_add();exit;}
@@ -171,7 +176,7 @@ function js(){
 	$q=new mysql();
 	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));		
 	$title=$tpl->_ENGINE_parse_body("{free_web_servers}::{$ligne["ou"]}&nbsp;&raquo;&nbsp;{$_GET["hostname"]}");
-	echo "YahooWin5('775','$page?popup-tabs=yes&servername={$_GET["hostname"]}','$title');";
+	echo "YahooWin5('890','$page?popup-tabs=yes&servername={$_GET["hostname"]}','$title');";
 	}
 	
 function groupwares_save(){
@@ -276,10 +281,27 @@ function popup_tabs(){
 	$tpl=new templates();	
 	$page=CurrentPageName();
 	$sock=new sockets();
+	$q=new mysql();
 	$ApacheDisableModDavFS=$sock->GET_INFO("ApacheDisableModDavFS");
 	$FreeWebEnableModFcgid=$sock->GET_INFO("FreeWebEnableModFcgid");
 	if(!is_numeric($FreeWebEnableModFcgid)){$FreeWebEnableModFcgid=0;}
 	if(!is_numeric($ApacheDisableModDavFS)){$ApacheDisableModDavFS=0;}
+	
+	
+	
+	
+	
+	
+	if($_GET["servername"]<>null){
+		$table_name=$q->APACHE_TABLE_NAME($_GET["servername"]);
+		if($q->TABLE_EXISTS($table_name, "apachelogs")){$array["statistics"]='{statistics}';}
+		$table_name="apache_stats_".date('Ym');
+		$sql="SELECT COUNT(servername) as tcount FROM $table_name WHERE servername='{$_GET["servername"]}'";
+		if($q->mysql_error){if(!preg_match("#doesn.+?t exist#", $q->mysql_error)){echo "<H2>$q->mysql_error</H2>";}}else{$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"artica_events"));}
+		if($ligne["tcount"]>0){$array["status"]='{status}';}
+	}
+	
+	//http://jmatrix.net/dao/case/case.jsp?case=7F000001-1C888D9-111189408B9-80
 	
 	$array["popup"]='{website}';
 	
@@ -347,7 +369,15 @@ function popup_tabs(){
 	}
 	
 	while (list ($num, $ligne) = each ($array) ){
+		if($num=="statistics"){
+			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"freeweb.edit.statistics.php?servername={$_GET["servername"]}&freewebs=1&group_id={$_REQUEST["group_id"]}\"><span>$ligne</span></a></li>\n");
+			continue;
+		}		
 		
+		if($num=="status"){
+			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"freeweb.edit.status.php?servername={$_GET["servername"]}&freewebs=1&group_id={$_REQUEST["group_id"]}\"><span>$ligne</span></a></li>\n");
+			continue;
+		}		
 		
 		if($num=="ModFcgid"){
 			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"freeweb.edit.fcgid.php?servername={$_GET["servername"]}&freewebs=1&group_id={$_REQUEST["group_id"]}\"><span>$ligne</span></a></li>\n");
@@ -400,7 +430,7 @@ function popup_tabs(){
 	
 	
 	echo "
-	<div id=main_config_freewebedit style='width:100%;height:680px;overflow:auto'>
+	<div id=main_config_freewebedit style='width:100%;height:690px;overflow:auto'>
 		<ul>". implode("\n",$html)."</ul>
 	</div>
 		<script>
@@ -877,7 +907,9 @@ function popup(){
 	if($users->APACHE_PROXY_MODE){$APACHE_PROXY_MODE=1;}
 	$parcourir_domaines="<input type='button' OnClick=\"javascript:Loadjs('browse.domains.php?field=domainname')\" value='{browse}...'>";
 	if($users->dnsmasq_installed){$DNS_INSTALLED=true;}
-	if($users->POWER_DNS_INSTALLED){$DNS_INSTALLED=true;}		
+	if($users->POWER_DNS_INSTALLED){$DNS_INSTALLED=true;}
+	$FreeWebDisableSSL=trim($sock->GET_INFO("FreeWebDisableSSL"));
+	if(!is_numeric($FreeWebDisableSSL)){$FreeWebDisableSSL=0;}			
 	
 	if($vgservices["freewebs"]<>null){
 		if(!is_numeric($ligne["lvm_size"])){$ligne["lvm_size"]=5000;}
@@ -966,7 +998,7 @@ function popup(){
 	
 	$domain="<table style='width:100%'>
 		<tr>
-			<td>".Field_text("servername",$hostname,"font-size:15px;padding:3px;font-weight:bold")."</td>
+			<td>".Field_text("servername",$hostname,"font-size:15px;padding:3px;font-weight:bold;width:60px")."</td>
 			<td style='font-size:14px' align='center' width=1%>&nbsp;.&nbsp;</td>
 			<td>".Field_text("domainname",$domainname,"font-size:15px;padding:3px;width:220px;font-weight:bold")."</td>
 			<td>$parcourir_domaines</td>
@@ -1005,7 +1037,10 @@ function popup(){
 		
 	}
 	$NewServer=0;
-	if(trim($ligne["servername"]==null)){$NewServer=1;}
+	$reconfigure=ParagrapheTEXT("48-settings-refresh.png", "{rebuild}", "{rebuild_apache_text}","javascript:FreeWebsRebuildvHosts()");
+	if(trim($ligne["servername"]==null)){
+		$reconfigure=ParagrapheTEXT_disabled("48-settings-refresh.png", "{rebuild}", "{rebuild_apache_text}");
+		$NewServer=1;}
 	
 	if($NewServer==0){
 		$domain="<div style='font-size:16px'>{$ligne["servername"]}</div>
@@ -1017,13 +1052,29 @@ function popup(){
 	if($ligne["groupware"]<>null){
 		$apache=new vhosts();
 		$img=$apache->IMG_ARRAY_64[$ligne["groupware"]];
+		$rebuild_groupware=ParagrapheTEXT("setup-icon-48.png", "{software}", "{rebuild_apache_groupware_text}","javascript:FreeWebsRebuildGroupware()");
+		$sql="SELECT ID FROM drupal_queue_orders WHERE `ORDER`='REBUILD_GROUPWARE' AND `servername`='$servername'";
+		$ligneDrup=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));	
+		if(!is_numeric($ligneDrup["ID"])){$ligneDrup["ID"]=0;}	
+		if($ligneDrup["ID"]>0){
+			$rebuild_groupware=ParagrapheTEXT_disabled("setup-icon-48.png", "{software}", "{rebuild_apache_groupware_text}");
+		}
 	}
+	
+	$uid_uri=urlencode(base64_encode($ligne["uid"]));
 	
 	$html="
 	<table style='width:100%'>
 	<tr>
-		<td valign='top'><img src='img/$img'></td>
-		<td valign='top'>
+		<td valign='top' width=1%>
+			<center>
+				<img src='img/$img'>
+			</center><br>
+			<div style='width:190px'>
+			$reconfigure$rebuild_groupware
+			</div>
+		</td>
+		<td valign='top' width=99%>
 	$explain
 	<div id='freewebdiv'>
 	<table style='width:100%' class=form>
@@ -1064,7 +1115,8 @@ function popup(){
 	<tr>
 		<td class=legend>{member}:</td>
 		<td>". Field_text("www_uid",$ligne["uid"],"font-size:13px;padding:3px;")."</td>
-		<td><span id='bb_button'><input type='button' OnClick=\"javascript:Loadjs('user.browse.php?field=www_uid&YahooWin=6')\" value='{browse}...'></span></td>
+		<td><span id='bb_button'><input type='button' OnClick=\"javascript:Loadjs('user.browse.php?field=www_uid&YahooWin=6')\" value='{browse}...'></span>
+		<span id='status-uid-www' style='float:right'></span></td>
 	</tr>	
 	<tr>
 		<td class=legend>{ssl}:</td>
@@ -1146,6 +1198,9 @@ function popup(){
 
 	function CheckDatas(){
 		var APACHE_PROXY_MODE=$APACHE_PROXY_MODE;
+		var FreeWebDisableSSL=$FreeWebDisableSSL;
+		 
+		
 		if(APACHE_PROXY_MODE==0){
 			document.getElementById('UseReverseProxy').checked=false;
 			document.getElementById('UseReverseProxy').disabled=true;
@@ -1159,7 +1214,11 @@ function popup(){
 			document.getElementById('domainname').disabled=true;
 			}
 		var x=document.getElementById('mysql_database').value;
-		if(x.length>0){document.getElementById('mysql_database').disabled=true;}		
+		if(x.length>0){document.getElementById('mysql_database').disabled=true;}	
+
+		if(FreeWebDisableSSL==1){
+			document.getElementById('useSSL').disabled=true;
+		}
 		
 	}
 	
@@ -1223,6 +1282,20 @@ function popup(){
 		}
 	
 	}
+		
+	function FreeWebsRebuildvHosts(){
+		var XHR = new XHRConnection();
+		XHR.appendData('FreeWebsRebuildvHosts','{$_GET["servername"]}');
+		AnimateDiv('freewebdiv');
+		XHR.sendAndLoad('$page', 'POST',x_SaveFreeWebMain);
+	}
+	
+	function FreeWebsRebuildGroupware(){
+		var XHR = new XHRConnection();
+		XHR.appendData('FreeWebsRebuildGroupware','{$_GET["servername"]}');
+		AnimateDiv('freewebdiv');
+		XHR.sendAndLoad('$page', 'POST',x_SaveFreeWebMain);
+	}			
 
 
 	var x_SaveFreeWebMain=function (obj) {
@@ -1376,12 +1449,17 @@ function popup(){
 		useMysqlCheck();
 		CheckLoops();
 	}
+	
+	function CheckUId(){
+		LoadAjaxTiny('status-uid-www','$page?uid-check=$uid_uri');
+	}
 
 	CheckUseDefaultPort();
 	CheckDatas();
 	useMysqlCheck();
 	CheckLoops();
 	CheckForwarder();
+	CheckUId();
 	</script>		
 	";
 	
@@ -1607,6 +1685,42 @@ function loops_list(){
 	$LoopMounts=$ligne["LoopMounts"];
 	$tpl=new templates();
 	echo $tpl->_ENGINE_parse_body(Field_array_Hash($hash,"LoopMounts",$LoopMounts,"style:font-size:13px;padding:3px"));
+}
+
+function FreeWebsRebuildvHosts(){
+	$sock=new sockets();
+	$sock->getFrameWork("freeweb.php?rebuild-vhost=yes&servername={$_POST["FreeWebsRebuildvHosts"]}");
+}
+
+function FreeWebsRebuildGroupware(){
+	$servername=$_POST["FreeWebsRebuildGroupware"];
+	$q=new mysql();
+	$sql="SELECT ID FROM drupal_queue_orders WHERE `ORDER`='REBUILD_GROUPWARE' AND `servername`='$servername'";
+	$ligneDrup=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));	
+	if(!is_numeric($ligneDrup["ID"])){$ligneDrup["ID"]=0;}
+	if($ligneDrup["ID"]==0){
+		$sql="INSERT INTO drupal_queue_orders(`ORDER`,`servername`) VALUES('REBUILD_GROUPWARE','$servername')";
+		$q=new mysql();
+		$q->QUERY_SQL($sql,"artica_backup");
+		if(!$q->ok){echo $q->mysql_error;return;}
+	}
+	
+	$sock=new sockets();
+	$sock->getFrameWork("drupal.php?perform-orders=yes");	
+}
+
+function uid_check(){
+	
+	$uid=urlencode($_GET["uid-check"]);
+	$sock=new sockets();
+	$datas=trim($sock->getFrameWork("freeweb.php?getidof=$uid"));
+	if($datas=="FALSE"){
+		$html=imgtootltip("status_warning.gif","{FREEWEB_WRONG_USER_SYSTEM_TEXT}");
+		$tpl=new templates();
+		echo $tpl->_ENGINE_parse_body($html);
+	}
+	
+	
 }
 
 

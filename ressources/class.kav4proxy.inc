@@ -8,7 +8,11 @@ class Kav4Proxy{
 	var $VERSION=0;
 	function Kav4Proxy(){
 		$users=new usersMenus();
-		$this->VERSION=$users->KAV4PROXY_VERSION;
+		if(!$GLOBALS["AS_ROOT"]){
+			$this->VERSION=$users->KAV4PROXY_VERSION;
+		}else{
+			$this->VERSION=$this->GET_ROOT_VERSION();
+		}
 		$q=new mysql();
 		$this->q=$q;
 		$firstconfig=$this->GET("firstconfig","firstconfig");
@@ -124,7 +128,7 @@ class Kav4Proxy{
 	
 	public function SET($key,$value,$data){
 		$md5=md5($key.$value.$data);
-		$sql="INSERT INTO kav4Proxy (`key`,`value`,`data`,`zMD5`) VALUES('$key','$value','$data','$md5');";
+		$sql="INSERT IGNORE INTO kav4Proxy (`key`,`value`,`data`,`zMD5`) VALUES('$key','$value','$data','$md5');";
 		$this->q->QUERY_SQL($sql,"artica_backup");
 	}
 	public function MOD($key,$value,$data){
@@ -162,6 +166,14 @@ class Kav4Proxy{
 		return implode("\n",$f);
 		
 	}	
+	
+	private function GET_ROOT_VERSION(){
+		exec("/opt/kaspersky/kav4proxy/sbin/kav4proxy-kavicapserver -v 2>&1",$results);
+		while (list ($num, $ligne) = each ($results) ){
+		if(preg_match("#version ([0-9\.]+)\/RELEASE build#", $ligne,$re)){return $re[1];}
+		}
+		
+	}
 	
 	
 function Build_defaults(){
@@ -432,7 +444,15 @@ function Build_defaults(){
 		if(!$q->ok){die();}
 		if(mysql_num_rows($results)==0){
 			echo "Starting......: Kav4proxy no groups...\n";
+			return;
 		}
+		
+		if($GLOBALS["AS_ROOT"]){
+			if(preg_match("#([0-9])\.([0-9]).([0-9]+)#",  $this->VERSION,$re)){
+				$rev=$re[3];
+			}
+		}		
+		
 		while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
 			$EngineOption=unserialize(base64_decode($ligne["EngineOption"]));
 			$ClientIP=$EngineOption["ClientIP"];
@@ -503,8 +523,11 @@ function Build_defaults(){
 			$f[]="ScanMailBases={$hash["ScanMailBases"]}";
 			$f[]="ScanMailPlain={$hash["ScanMailPlain"]}";
 			$f[]="ScanPacked={$hash["ScanPacked"]}";
-			$f[]="UseAVbasesSet={$hash["UseAVbasesSet"]}";
-			$f[]="UseHeuristic=yes";
+			if($rev<67){
+				$f[]="UseAVbasesSet={$hash["UseAVbasesSet"]}";
+				$f[]="UseHeuristic=yes";
+			}
+			
 			$f[]="\n[icapserver.actions:$groupname]";
 			$f[]="BasesErrorAction={$hash["BasesErrorAction"]}";
 			$f[]="CorruptedAction={$hash["CorruptedAction"]}";

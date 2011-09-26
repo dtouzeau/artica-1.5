@@ -22,10 +22,10 @@ if($argv[1]=='--all'){
 	$pidfile="/etc/artica-postfix/".basename(__FILE__).".pid";
 	$pidtime="/etc/artica-postfix/".basename(__FILE__).".time";
 	if($unix->file_time_min($pidtime)<3){die();}
-	@unlink($pidtime);
-	@file_put_contents($pidtime, time());
 	$oldpid=@file_get_contents($pidfile);
 	if($unix->process_exists($oldpid,basename(__FILE__))){events("Process $oldpid  already in memory","MAIN");die();}
+	@unlink($pidtime);
+	@file_put_contents($pidtime, time());
 	@file_put_contents($pidfile, getmypid());
 	launch_all_status();die();
 }
@@ -129,6 +129,7 @@ function FillMemory(){
 	
 	if(GET_INFO_DAEMON("cpuLimitEnabled")==1){$GLOBALS["cpuLimitEnabled"]=true;}else{$GLOBALS["cpuLimitEnabled"]=false;}
 	$_GET["NICE"]=$unix->EXEC_NICE();
+	$GLOBALS["EXEC_NICE"]=$_GET["NICE"];
 	$GLOBALS["PHP5"]=$unix->LOCATE_PHP5_BIN();
 	$GLOBALS["SU"]=$unix->find_program("su");
 	
@@ -162,6 +163,13 @@ function FillMemory(){
 	$GLOBALS["AUDITD_INSTALLED"]=$users->APP_AUDITD_INSTALLED;
 	$GLOBALS["VIRTUALBOX_INSTALLED"]=$users->VIRTUALBOX_INSTALLED;
 	$GLOBALS["DRUPAL7_INSTALLED"]=$users->DRUPAL7_INSTALLED;
+	$GLOBALS["CGROUPS_INSTALLED"]=$users->CGROUPS_INSTALLED;
+	
+
+
+	
+	
+	
 	if($GLOBALS["VERBOSE"]){writelogs("DANSGUARDIAN_INSTALLED={$GLOBALS["DANSGUARDIAN_INSTALLED"]}","MAIN",__FILE__,__LINE__);}
 	$GLOBALS["EnableArticaWatchDog"]=GET_INFO_DAEMON("EnableArticaWatchDog");
 	if($GLOBALS["VERBOSE"]){if($GLOBALS["POSTFIX_INSTALLED"]){events("Postfix is installed...");}}
@@ -270,7 +278,7 @@ function launch_all_status(){
 		events("{$mem}MB consumed in memory",__FUNCTION__,__LINE__);
 		if($GLOBALS["TOTAL_MEMORY_MB"]<400){
 			$unix=new unix();
-			$cmd=trim($nohup." ".$unix->LOCATE_PHP5_BIN()." ".dirname(__FILE__)."/exec.parse-orders.php >/dev/null 2>&1 &");
+			$cmd=trim($nohup." {$GLOBALS["EXEC_NICE"]}".$unix->LOCATE_PHP5_BIN()." ".dirname(__FILE__)."/exec.parse-orders.php >/dev/null 2>&1 &");
 			
 			shell_exec($cmd);	
 		}		
@@ -305,6 +313,11 @@ function group5(){
 	if($GLOBALS["VIRTUALBOX_INSTALLED"]){$array["exec.virtualbox.php --maintenance"]="exec.virtualbox.php --maintenance";}
 	if($GLOBALS["KAV4PROXY_INSTALLED"]){$array["exec.kaspersky-update-logs.php --av-uris"];}
 	
+	if($GLOBALS["CGROUPS_INSTALLED"]){
+		$cgroupsEnabled=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("cgroupsEnabled");
+		if(!is_numeric($cgroupsEnabled)){$cgroupsEnabled=0;}
+		if($cgroupsEnabled==1){$array["exec.cgroups.php --stats"];}
+	}
 	
 	
 	$array["exec.dstat.top.php"]="exec.dstat.top.php";
@@ -315,6 +328,7 @@ function group5(){
 	$array["exec.import-networks.php"]="exec.import-networks.php";
 	$array["cron.notifs.php"]="cron.notifs.php";
 	$array["exec.watchdog.php"]="exec.watchdog.php";
+	$array["exec.nmapscan.php --scan-nets"]="exec.nmapscan.php --scan-nets";
 	
 	
 	if($GLOBALS["OPENVPN_INSTALLED"]){
@@ -328,6 +342,9 @@ function group5(){
 				$array["exec.dansguardian.compile.php --patterns"]="exec.dansguardian.compile.php --patterns";
 			}
 		}
+		
+		$array["exec.squid.logs.migrate.php"]="exec.squid.logs.migrate.php";
+		
 	
 	}
 
@@ -397,10 +414,9 @@ function group30(){
 	events("Starting $mins (minutes)",__FUNCTION__,__LINE__);
 	
 	$array["exec.activedirectory-import.php"];
-	
+	$array[]="exec.squid.stats.php --scan-hours";
 	
 	if($GLOBALS["SQUID_INSTALLED"]){
-		$array[]="exec.squid.stats.php --graphs";
 		$array[]="exec.squid.blacklists.php --inject";
 	}else{
 		if($GLOBALS["KAV4PROXY_INSTALLED"]){$array[]="exec.squid.blacklists.php --inject";}
@@ -420,6 +436,7 @@ function group30(){
 	
 	$array[]="exec.emerging.threats.php";
 	$array[]="exec.my-rbl.check.php --checks";
+	
 	
 	while (list ($index, $file) = each ($array) ){
 		$cmd="{$GLOBALS["PHP5"]} /usr/share/artica-postfix/$file";
@@ -461,6 +478,8 @@ function group10(){
 	$array[]="exec.emailrelay.php --notifier-queue";
 	$array[]="exec.watchdog.php --queues";
 	$array[]="exec.freeweb.php --perms";
+	$array[]="exec.freeweb.php --all-status";
+	$array[]="exec.clean.logs.php --clean-tmp2";
 	
 	if($GLOBALS["UFDBGUARD_INSTALLED"]){$array[]="exec.web-community-filter.php --groupby";}
 
@@ -669,6 +688,7 @@ function group5h(){
 
 	
 	$array[]="exec.awstats.php";
+	$array[]="exec.squid.stats.php --scan-months";
 	if($GLOBALS["POSTFIX_INSTALLED"]){$array[]="exec.postfix.iptables.php --parse-sql";}
 	
 	while (list ($index, $file) = each ($array) ){
@@ -711,9 +731,8 @@ function group300(){
 		
 	}
 	
-	if($GLOBALS["SQUID_INSTALLED"]){$array[]="exec.squid.stats.php --maintenance";}	
-	
-	
+		
+	$array[]="exec.squid.stats.php --visited-sites";
 	$array2[]="artica-install -geoip-updates";
 	  
 	while (list ($index, $file) = each ($array) ){
@@ -824,6 +843,8 @@ function group120(){
 	if($GLOBALS["CYRUS_IMAP_INSTALLED"]){
 		$array["exec.cyrus.php --DirectorySize"]="exec.cyrus.php --DirectorySize";
 	}
+	
+	$array["exec.web-community-filter.php --export"]="exec.web-community-filter.php --export";
 	
 	
 	if($GLOBALS["KAV4PROXY_INSTALLED"]){$array["exec.kav4proxy.buildstats.php --days"];}

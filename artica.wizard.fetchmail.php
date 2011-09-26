@@ -239,7 +239,10 @@ function LdapRules(){
 
 function FormRules($array,$editmode=0,$rulenumber=0){
 	$page=CurrentPageName();
-	$title="<h1>{$array["poll"]}</H1>";
+	$title="<div style='font-size:16px;text-align:right'>{$array["poll"]}</div>";
+	$sock=new sockets();
+	$FetchMailGLobalDropDelivered=$sock->GET_INFO("FetchMailGLobalDropDelivered");
+	if(!is_numeric($FetchMailGLobalDropDelivered)){$FetchMailGLobalDropDelivered=0;}
 	
 	$proto=array(""=>"{select}",
 					"auto"=>"AUTO IMAP, POP3,POP2",
@@ -268,7 +271,7 @@ function FormRules($array,$editmode=0,$rulenumber=0){
 	$keep=Field_checkbox('_keep',1,$array["keep"]);
 	$nokeep=Field_checkbox('_nokeep',1,$array["nokeep"]);
 	$sslcertck=Field_checkbox('_sslcertck',1,$array["sslcertck"]);
-
+	$dropdelivered=Field_checkbox('_dropdelivered',1,$array["dropdelivered"],null,"{dropdelivered_explain}");
 			
 if($array["is"]==null){
 	if($_SESSION["uid"]==-100){
@@ -307,9 +310,17 @@ if($array["is"]==null){
 		<td align='left'>" . Field_text('_port',$array["port"],'width:20%')."</td>
 	</tr>	
 	<tr>
-		<td align='right' class=legend>{timeout}</strong>:&nbsp;</td>
-		<td align='left'>" . Field_text('_timeout',$array["timeout"],'width:20%',null,null,'{timeout_text}')."</td>
+		<td align='right' class=legend>{ssl_fingerprint}</strong>:&nbsp;</td>
+		<td align='left'>" . Field_text('_fingerprint',$array["sslfingerprint"],'width:220px',null,null)."</td>
 	</tr>	
+	<tr>
+		<td align='right' class=legend>{dropdelivered}</strong>:&nbsp;</td>
+		<td align='left'>$dropdelivered</td>
+	</tr>
+	<tr>
+		<td align='right' class=legend>{timeout}</strong>:&nbsp;</td>
+		<td align='left'>" . Field_text('_timeout',$array["timeout"],'width:20%')."</td>
+	</tr>			
 	<tr>
 		<td align='right' class=legend>{interval}</strong>:&nbsp;</td>
 		<td align='left'>" . Field_text('_interval',$array["interval"],'width:20%',null,null,'{interval_text}')."</td>
@@ -318,6 +329,7 @@ if($array["is"]==null){
 		<td align='right' class=legend>{ssl_fingerprint}</strong>:&nbsp;</td>
 		<td align='left'>" . Field_text('_fingerprint',$array["sslfingerprint"],'width:220px',null,null)."</td>
 	</tr>
+	
 	<tr>
 		<td colspan=2 align='right'>". texttooltip("{import_fingerprint}","{import_fingerprint}","Loadjs('$page?ssl-fingerprint=yes&LdapRules=$rulenumber&uid={$_GET["uid"]}')")."</td>	
 	<tr>
@@ -449,7 +461,16 @@ $form2="
 	</div>
 	</form>
 	</div>
-	
+	<script>
+		function CheckForms(){
+			var FetchMailGLobalDropDelivered=$FetchMailGLobalDropDelivered;
+			if(FetchMailGLobalDropDelivered==1){
+				document.getElementById('_dropdelivered').checked=true;
+				document.getElementById('_dropdelivered').disabled=true;
+			}
+		}
+	CheckForms();
+	</script>
 	
 	";
 	$tpl=new templates();

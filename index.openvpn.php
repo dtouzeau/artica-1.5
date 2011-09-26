@@ -1,4 +1,5 @@
 <?php
+$GLOBALS["ICON_FAMILY"]="VPN";
 session_start();
 include_once('ressources/class.templates.inc');
 include_once('ressources/class.users.menus.inc');
@@ -586,6 +587,11 @@ function index_page(){
 	$clients_settings=Paragraphe('global-settings.png','{OPENVPN_CLIENT_SETTINGS}',
 	'{OPENVPN_CLIENT_SETTINGS_TEXT}',"javascript:OpenVPNClientsSettings()",null,210,null,0,false);
 	
+	$clientscript=Paragraphe('script-64.png','{BUILD_OPENVPN_CLIENT_CONFIG}',
+	'{BUILD_OPENVPN_CLIENT_CONFIG_TEXT}',"javascript:Loadjs('index.openvpn.build.client.php')",null,210,null,0,false);	
+	
+	
+	
 	
 	$ncc=Paragraphe('64-win-nic-loupe.png','{NETWORK_CONTROL_CENTER}',
 	'{NETWORK_CONTROL_CENTER_TEXT}',"javascript:OpenVPNNCC()",null,210,null,0,false);
@@ -602,14 +608,25 @@ function index_page(){
 	$rebuild_certificates=Paragraphe("vpn-rebuild.png","{rebuild_openvpn_certificate}",
 	"{rebuild_openvpn_certificate_text}","javascript:Loadjs('$page?rebuild-certificate=yes')",null,210,null,0,false);
 	
+	$certificate=Paragraphe("certificate-download-64.png","{ssl_certificate}",
+	"{ssl_certificate_text}","javascript:Loadjs('postfix.tls.php?js-certificate=yes');",null,210,null,0,false);
+	
+	
+	$certificate_info=Paragraphe("64-ssl-key-loupe.png","{certificate_infos}",
+	"{certificate_infos_text}","javascript:Loadjs('index.openvpn.certificate.php');",null,210,null,0,false);
+
+	
 	
 	$artica=Buildicon64("DEF_ICO_OPENVPN_ARTICA_CLIENTS");
 	
 	$f[]=$remote_add;
 	$f[]=$server_connect;
+	$f[]=$clientscript;
 	$f[]=$routes;
 	$f[]=$ncc;
 	$f[]=$rebuild_certificates;
+	$f[]=$certificate;
+	$f[]=$certificate_info;
 	//$f[]=$artica;
 	$q=new mysql();
 	$sql="SELECT ID,enabled,servername,serverport,connexion_name,connexion_type,routes FROM vpnclient WHERE connexion_type=2 and enabled=1 ORDER BY ID DESC";
@@ -658,7 +675,10 @@ if($t<2){
 	</tr>
 	</table>
 	<script>
-		LoadAjax('openvpn-status','$page?openvpn-status=yes');
+		function RefreshOpenVPNStatus(){
+			LoadAjax('openvpn-status','$page?openvpn-status=yes');
+		}
+		RefreshOpenVPNStatus();
 	</script>
 	
 	";
@@ -1253,6 +1273,7 @@ function status($noecho=0){
 	$sock=new sockets();
 	$ini->loadString(base64_decode($sock->getFrameWork("cmd.php?openvpn-status=yes")));
 	$status=DAEMON_STATUS_ROUND("OPENVPN_SERVER",$ini);
+	$refresh="<div style='width:100%;text-align:right'>".imgtootltip("refresh-24.png","{refresh}","RefreshOpenVPNStatus()")."</div>";
 	
 	$ini=new Bs_IniHandler();
 	$ini->loadString(base64_decode($sock->getFrameWork("cmd.php?openvpn-clients-status=yes")));
@@ -1265,9 +1286,9 @@ function status($noecho=0){
 	
 	
 	
-	if($noecho==1){return $status;}else{
+	if($noecho==1){return $status.$refresh;}else{
 		$tpl=new templates();
-		echo $tpl->_ENGINE_parse_body($status);
+		echo $tpl->_ENGINE_parse_body($status.$refresh);
 	}
 		
 }

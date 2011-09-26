@@ -142,7 +142,7 @@ function main_tabs(){
 		}
 	
 	return "
-	<div id=ntpd_main_config style='width:100%;height:430px;overflow:auto'>
+	<div id=ntpd_main_config style='width:100%;overflow:auto'>
 		<ul>". implode("\n",$html)."</ul>
 	</div>
 		<script>
@@ -170,14 +170,15 @@ function index(){
 	<table style='width:100%'>
 	<tr>
 	<td valign='top'>
-		<p style='font-size:13px'>{ntp_about}</p>
+		<div class=explain>{ntp_about}</p>
 	</td>
 	<td valign='top'>
-		$status
+		<div id='ntpd-status'></div>
+		<div id='enable-ntpd'></div>
 	</td>
 	</tr>
 	</table>
-	<div id='enable-ntpd'></div>
+	
 	
 	<script>
 		LoadAjax('enable-ntpd','$page?enable-ntpd-switch=yes');
@@ -187,6 +188,7 @@ function index(){
 			var results=obj.responseText;
 			if(results.length>0){alert(results);}
 			LoadAjax('enable-ntpd','$page?enable-ntpd-switch=yes');
+			NTPD_STATUS();
 			}		
 		
 		function SaveEnableNTPDSwitch(){
@@ -197,6 +199,12 @@ function index(){
 		
 		}
 		
+		
+		function NTPD_STATUS(){
+			LoadAjax('ntpd-status','$page?status=yes');
+		
+		}
+		NTPD_STATUS();
 	</script>
 	";
 	
@@ -249,10 +257,13 @@ function main_status(){
 	$users=new usersMenus();
 	$ini=new Bs_IniHandler();
 	$sock=new sockets();
-	$ini->loadString($sock->getfile('ntpdstatus'));	
+	$ini->loadString(base64_decode($sock->getFrameWork('services.php?ntpd-status=yes')));	
 	$status=DAEMON_STATUS_ROUND("NTPD",$ini,null);
 	$tpl=new templates();
-	return $tpl->_ENGINE_parse_body($status);		
+	
+	$refresh="<div style='text-align:right'>".imgtootltip("refresh-24.png","{refresh}","NTPD_STATUS()")."</div>";
+	
+	return $tpl->_ENGINE_parse_body($status.$refresh);		
 	
 	
 }
@@ -277,7 +288,7 @@ $choose=Field_array_Hash($i,'ntpd_servers_choosen',null,null,null,0,'font-size:1
 	 	<td style='width:100%' align='left' valign='top'>". button('{apply}',"ntpd_choose_server()")."</td>
 	 </tr>
 	 </table>
-	 <div style='font-size:11px'>{how_to_find_timeserver}</div><hr>
+	 <div class=explain>{how_to_find_timeserver}</div><hr>
 
 	 
 	
@@ -316,15 +327,23 @@ function main_server_list(){
 	$ntp=new ntpd();
 	if(!is_array($ntp->servers)){return null;}
 	
-	$html="<table style='width:99%' class=table_form>";
+	$html="
+<table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%;margin-top:10px'>
+<thead class='thead'>
+	<tr>
+	<th colspan=3>&nbsp;</th>
+	<th>&nbsp;</th>
+	</tr>
+</thead>
+<tbody class='tbody'>";	
 	
 	while (list ($num, $val) = each ($ntp->servers) ){
-		$html=$html . "<tr>
-		<td width=1%><img src='img/fw_bold.gif'></td>
-		<td nowrap><strong><code style='font-size:13px'>$val</code></strong></td>
-		<td width=1% valign='top'>" . imgtootltip('arrow_down.gif','{down}',"ntpdservermove('$num','down')")."</TD>
-		<td width=1% valign='top'>" . imgtootltip('arrow_up.gif','{up}',"ntpdservermove('$num','up')")."</TD>
-		<td width=1% valign='top'>" . imgtootltip('x.gif','{delete}',"ntpdserverdelete('$num')")."</TD>		
+	if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
+		$html=$html . "<tr class=$classtr>
+		<td nowrap><strong><code style='font-size:14px'>$val</code></strong></td>
+		<td width=1% valign='middle'>" . imgtootltip('arrow-down-32.png','{down}',"ntpdservermove('$num','down')")."</TD>
+		<td width=1% valign='middle'>" . imgtootltip('arrow-up-32.png','{up}',"ntpdservermove('$num','up')")."</TD>
+		<td width=1% valign='middle'>" . imgtootltip('delete-32.png','{delete}',"ntpdserverdelete('$num')")."</TD>		
 		</tr>
 		";
 		

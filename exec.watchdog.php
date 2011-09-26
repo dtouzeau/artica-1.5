@@ -29,6 +29,7 @@ if($argv[1]=="--loadavg"){loadavg();exit;}
 if($argv[1]=="--mem"){loadmem();exit;}
 if($argv[1]=="--cpu"){loadcpu();exit;}
 if($argv[1]=="--queues"){ParseLoadQeues();exit;}
+if($argv[1]=="--zombies"){zombies();exit;}
 
 
 
@@ -36,6 +37,13 @@ checkProcess1();
 
 function startprocess($APP_NAME,$cmd){
 	$unix=new unix();
+	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__)."/pids/".__FUNCTION__.".".$APP_NAME.".pid";
+	$pid=@file_get_contents($pidfile);
+	if($unix->process_exists($pid,basename(__FILE__))){
+		writelogs("Already process $pid exists",__FUNCTION__,__FILE__,__LINE__);
+		return;
+	}
+	@file_put_contents($pidfile, getmypid());
 	exec("/etc/init.d/artica-postfix start $cmd 2>&1",$results);
 	if($GLOBALS["VERBOSE"]){echo "\n".@implode("\n",$results)."\n";return;}
 	$unix->send_email_events("$APP_NAME stopped","Artica tried to start it:\n".@implode("\n",$results),"system");

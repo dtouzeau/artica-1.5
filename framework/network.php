@@ -17,7 +17,8 @@ if(isset($_GET["fqdn"])){fqdn();exit;}
 if(isset($_GET["iptaccount-installed"])){iptaccount_check();exit;}
 if(isset($_GET["ifup-ifdown"])){ifup_ifdown();exit;}
 if(isset($_GET["reconstruct-interface"])){reconstruct_interface();exit;}
-
+if(isset($_GET["dhcpd-leases"])){dhcpd_leases_force();exit;}
+if(isset($_GET["dhcpd-leases-script"])){dhcpd_leases_script();exit;}
 
 
 
@@ -92,6 +93,24 @@ function crossroads_restart(){
 	$nohup=$unix->find_program("nohup");
 	shell_exec(trim("$nohup $php /usr/share/artica-postfix/exec.crossroads.php --multiples-restart >/dev/null 2>&1 &"));	
 	
+}
+function dhcpd_leases_force(){
+	$unix=new unix();
+	$php=$unix->LOCATE_PHP5_BIN();
+	$nohup=$unix->find_program("nohup");
+	shell_exec(trim("$nohup $php /usr/share/artica-postfix/exec.dhcpd-leases.php --force >/dev/null 2>&1 &"));		
+
+}
+
+function dhcpd_leases_script(){
+	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".pid";
+	$unix=new unix();
+	$pid=@file_get_contents($pidfile);
+	if($unix->process_exists($pid)){
+		$time=$unix->PROCCESS_TIME_MIN($pid);
+		echo "<articadatascgi>". base64_encode(serialize(array($pid,$time)))."</articadatascgi>";
+	}
+
 }
 
 function ipv6(){

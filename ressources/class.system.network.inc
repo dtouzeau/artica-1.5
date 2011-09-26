@@ -552,7 +552,125 @@ class MACAddress {
      }
 } 
 
+class networkscanner{
+	var $networklist=array();
+	var $DefaultNetworkList=array();
+	var $Networks_disabled=array();
+	
+	
+	function networkscanner(){
+		$sock=new sockets();
+		$datas=$sock->GET_INFO('NetworkScannerMasks');
+		$tbl=explode("\n",$datas);
+		$disabled=$sock->GET_INFO('NetworkScannerMasksDisabled');
+		
+		
+		while (list ($num, $maks) = each ($tbl) ){
+		if(trim($maks)==null){continue;}
+			$arr[trim($maks)]=trim($maks);
+		}
+		
+	if(is_array($arr)){
+			while (list ($num, $net) = each ($arr)){
+				$this->networklist[]=$net;
+			}
+		}
 
+	
+	$tbl=explode("\n",$disabled);	
+	if(is_array($tbl)){
+		while (list ($num, $maks) = each ($tbl) ){
+			if(trim($maks)==null){continue;}
+			$this->Networks_disabled[$maks]=true;
+		}
+	}
+		
+		
+		$this->builddefault();
+		
+	}
+	
+	function disable_net($net){
+		$sock=new sockets();
+		$disabled=$sock->GET_INFO('NetworkScannerMasksDisabled');
+		$disabled=$disabled."\n".$net;
+		$sock=new sockets();
+		$sock->SaveConfigFile($disabled,"NetworkScannerMasksDisabled");
+	}
+	
+	function enable_net($net){
+		$sock=new sockets();
+		$disabled=$sock->GET_INFO('NetworkScannerMasksDisabled');
+		$tbl=explode("\n",$disabled);	
+		if(is_array($tbl)){
+			while (list ($num, $maks) = each ($tbl) ){
+				if(trim($maks)==null){continue;}
+				$Networks_disabled[$maks]=$maks;
+			}
+		}
+
+		unset($Networks_disabled[$net]);
+		if(is_array($Networks_disabled)){
+			while (list ($num, $maks) = each ($Networks_disabled) ){
+				if(trim($maks)==null){continue;}
+				$conf=$conf.$maks."\n";
+			}
+		}
+		
+		$sock->SaveConfigFile($conf,"NetworkScannerMasksDisabled");
+		
+		
+		
+	}
+	
+	
+	function save(){
+		if(is_array($this->networklist)){
+			reset($this->networklist);
+			while (list ($num, $maks) = each ($this->networklist)){
+				if(trim($maks)==null){continue;}
+				$arr[trim($maks)]=trim($maks);
+				}
+			}
+		
+		if(is_array($arr)){
+			
+			while (list ($num, $net) = each ($arr)){
+				$conf=$conf . "$net\n";
+			}
+		}
+		echo $conf;
+		$sock=new sockets();
+		$sock->SaveConfigFile($conf,"NetworkScannerMasks");
+		$sock->DeleteCache();
+		
+	}
+	
+	function builddefault(){
+		
+		$net=new networking();
+		$cip=new IP();
+		while (list ($num, $ip) = each ($net->array_TCP)){
+			if(preg_match('#([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)#',$ip,$re)){
+				$ip_start="{$re[1]}.{$re[2]}.{$re[3]}.0";
+				$ip_end="{$re[1]}.{$re[2]}.{$re[3]}.255";
+				$cdir=$cip->ip2cidr($ip_start,$ip_end);
+				if(trim($cdir)<>null){
+					$this->DefaultNetworkList[trim($cdir)]=true;
+					$this->networklist[]=$cdir;
+				}
+			}
+			
+		}
+		
+		
+		
+	}
+	
+	
+		
+	
+}
 
 
 ?>

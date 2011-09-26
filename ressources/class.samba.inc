@@ -722,16 +722,30 @@ private function WINBINDD_PARAMS(){
 	if($this->EnableSambaActiveDirectory==1){
 		if($this->posix_getuid==0){echo "Starting......: Samba join domain {$this->config_activedirectory["ADDOMAIN"]}\n";}
 		if($this->posix_getuid==0){echo "Starting......: Samba master server {$this->config_activedirectory["ADSERVER"]}.{$this->config_activedirectory["ADDOMAIN"]}\n";}	
+		$sock=new sockets();
 		$WORKGROUP=strtoupper($this->config_activedirectory["WORKGROUP"]);
+		$SambaUseBackendAD=$sock->GET_INFO("SambaUseBackendAD");
+		if(!is_numeric($SambaUseBackendAD)){$SambaUseBackendAD=0;}
 		$conf[]="\tsecurity = ADS";
-		//$conf[]="\tpassword server=".strtolower("{$this->config_activedirectory["ADSERVER"]}.{$this->config_activedirectory["ADDOMAIN"]}");
 		$conf[]="\trealm = ". strtoupper($this->config_activedirectory["ADDOMAIN"])."\n";
-		$conf[]="\tidmap config $WORKGROUP:backend	= rid";
-		$conf[]="\tidmap config $WORKGROUP:read only= yes";
-		$conf[]="\tidmap config $WORKGROUP:range	= 100000 - 199999";
-		$conf[]="\tidmap config $WORKGROUP:base_rid	= 0";
-
- 
+		if($upTo36==0){
+			if($SambaUseBackendAD==0){
+				if($this->posix_getuid==0){echo "Starting......: Samba use RID has backend\n";}
+				$conf[]="\tidmap config $WORKGROUP:backend	= rid";
+				$conf[]="\tidmap config $WORKGROUP:base_rid	= 0";
+				$conf[]="\tidmap config $WORKGROUP:read only= yes";
+				$conf[]="\tidmap config $WORKGROUP:range	= 100000 - 199999";		
+				$conf[]="\tallow trusted domains = No";			
+			}else{
+				if($this->posix_getuid==0){echo "Starting......: Samba use default backend\n";}
+				$conf[]="\tpassdb backend = tdbsam";
+				//$conf[]="\tidmap backend = ad";
+				$conf[]="\tidmap uid = 100000-20000000";
+				$conf[]="\tidmap gid = 100000-20000000";
+				$conf[]="\tallow trusted domains = Yes";	
+			}
+		
+		}
 		
 		if($upTo36==1){
 			$conf[]="\tidmap config * : backend	= rid";
@@ -739,11 +753,9 @@ private function WINBINDD_PARAMS(){
 			$conf[]="\tidmap config * : base_rid= 0";
 			$conf[]="\tclient use spnego	= No";
         	$conf[]="\tclient use spnego principal	= No";
-		}else{
-			$conf[]="\tidmap gid = 70000 - 99999";
-			$conf[]="\tidmap uid = 70000 - 99999";
-			//$conf[]="\tclient use spnego = Yes";
 		}
+		
+		
 		$conf[]="\tencrypt passwords = Yes";
 		if($this->client_ntlmv2_auth==1){$conf[]="\tclient ntlmv2 auth = Yes";$conf[]="\tclient lanman auth = No";}
 		if($this->client_ntlmv2_auth==0){$conf[]="\tclient ntlmv2 auth = No";$conf[]="\tclient lanman auth = Yes";}
@@ -756,13 +768,14 @@ private function WINBINDD_PARAMS(){
 		
 		
 		$conf[]="\twinbind nss info = rfc2307"; 
+		$conf[]="\twinbind reconnect delay = 30";  
 		$conf[]="\twinbind offline logon = true";
-  		$conf[]="\twinbind cache time = 5";
+  		$conf[]="\twinbind cache time = 1800";
    		$conf[]="\twinbind refresh tickets = true";
    		$conf[]="\tkerberos method = system keytab";
-		$conf[]="\tallow trusted domains = Yes";	
-		$conf[]="\tserver signing = mandatory";
-		$conf[]="\tclient signing = mandatory";	
+		
+		$conf[]="\tserver signing = auto";
+		$conf[]="\tclient signing = auto";	
 		$conf[]="\tlm announce = No";
 		$conf[]="\tntlm auth = No";
 		$conf[]="\tlanman auth = No";
@@ -797,13 +810,12 @@ private function WINBINDD_PARAMS(){
 
 function CUPS(){
 	if($this->posix_getuid==0){if(!is_file("/etc/printcap")){shell_exec("/bin/touch /etc/printcap");}}
-	if(!$this->CUPS_INSTALLED){return "\nprinting = bsd\n";}
-	if($this->EnablePrintersSharing==0){return "\nprinting = bsd\n";}
+	if(!$this->CUPS_INSTALLED){return "\n\tprinting = bsd\n";}
+	if($this->EnablePrintersSharing==0){return "\n\tprinting = bsd\n";}
 	$conf[]="\n";
-	$conf[]="# printer  -----------------------------------\n";
-	$conf[]="load printers = yes\n";
-	$conf[]="printing = cups\n";
-	$conf[]="printcap name = cups\n";
+	$conf[]="\tprinters = yes\n";
+	$conf[]="\tprinting = cups\n";
+	$conf[]="\tprintcap name = cups\n";
 	$conf[]="\n";
 	return @implode("\n",$conf);
 	
@@ -1069,13 +1081,13 @@ private function SECOND_PART(){
 			
 
 			if($SambaRoamingEnabled==1){
-				$conf[]="logon path = \\\\{$this->main_array["global"]["netbios name"]}\profile\%U";
-				$conf[]="logon drive = P:";
-				$conf[]="logon home = \\\\{$this->main_array["global"]["netbios name"]}\%U";
+				$conf[]="\tlogon path = \\\\{$this->main_array["global"]["netbios name"]}\profile\%U";
+				$conf[]="\tlogon drive = P:";
+				$conf[]="\tlogon home = \\\\{$this->main_array["global"]["netbios name"]}\%U";
 			}else{
-				$conf[]="logon path =\"\"";
-				$conf[]="logon home =\"\"";
-				$conf[]="logon drive = \"\"";
+				$conf[]="\tlogon path =";
+				$conf[]="\tlogon home =";
+				$conf[]="\tlogon drive =";
 			}
 			
 
@@ -1084,12 +1096,8 @@ private function SECOND_PART(){
 			$conf[]="\tdefault case = lower";
 			$conf[]="\tpreserve case = yes";
 			$conf[]="\tshort preserve case = yes";
-			$conf[]="#character set = iso8859-1";
-			$conf[]="#domain admin group = @admin";
 			$conf[]="\twins support = Yes";
-			$conf[]="#hosts allow = 192.168.0. 127.";
 			$conf[]="\ttime server = yes";
-			$conf[]="#MDFS parameters";
 			$conf[]="\tmsdfs root = no";
 			$conf[]="\thost msdfs = no";
 			
@@ -1414,6 +1422,13 @@ private function LDAP_SETTINGS(){
 	$EnableSambaActiveDirectory=$sock->GET_INFO("EnableSambaActiveDirectory");
 	if(!is_numeric($EnableSambaActiveDirectory)){$EnableSambaActiveDirectory=0;}
 	if(!is_numeric($EnableSambaRemoteLDAP)){$EnableSambaRemoteLDAP=0;}
+	
+	if($EnableSambaActiveDirectory==1){
+		$DisableSambaLocalLDAP=$sock->GET_INFO("DisableSambaLocalLDAP");
+		if(!is_numeric($DisableSambaLocalLDAP)){$DisableSambaLocalLDAP=0;}
+		if($DisableSambaLocalLDAP==1){return;}
+		
+	}
 	
 	$version=$this->SAMBA_VERSION;
 	$upTo36=0;

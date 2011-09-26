@@ -1,4 +1,5 @@
 <?php
+$GLOBALS["EnablePostfixMultiInstance"]=0;
 include_once(dirname(__FILE__) . '/ressources/class.ldap.inc');
 include_once(dirname(__FILE__) . '/ressources/class.user.inc');
 include_once(dirname(__FILE__) . '/ressources/class.mysql.inc');
@@ -12,6 +13,7 @@ if(preg_match("#--reload#",implode(" ",$argv))){$GLOBALS["RELOAD"]=true;}
 $sock=new sockets();
 $unix=new unix();
 $GLOBALS["EnablePostfixMultiInstance"]=$sock->GET_INFO("EnablePostfixMultiInstance");
+if(!is_numeric($GLOBALS["EnablePostfixMultiInstance"])){$GLOBALS["EnablePostfixMultiInstance"]=0;}
 $GLOBALS["EnableBlockUsersTroughInternet"]=$sock->GET_INFO("EnableBlockUsersTroughInternet");
 $GLOBALS["postconf"]=$unix->find_program("postconf");
 $GLOBALS["postmap"]=$unix->find_program("postmap");
@@ -29,30 +31,26 @@ $GLOBALS["PHP5_BIN"]=$unix->LOCATE_PHP5_BIN();
 
 if(!is_file($GLOBALS["postfix"])){die();}
 
-if(!Build_pid_func(__FILE__,$argv[1])){
-	echo "Starting......: Already executed\n"; 
+$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".pid";
+$pid=$unix->get_pid_from_file($pidfile);
+if($unix->process_exists($pid,basename(__FILE__))){
+	echo "Starting......: Already executed pid:$pid\n";
+	$unix->send_email_events("Postfix user databases aborted (instance executed)", "Already instance pid $pid is executed", "postfix");
+	die();
 }
+
+@file_put_contents($pidfile, getmypid());
+
 $ldap=new clladp();
 if($ldap->ldapFailed){
-	echo "Starting......: failed connecting to ldap server $ldap->ldap_host\n"; 
+	echo "Starting......: failed connecting to ldap server $ldap->ldap_host\n";
+	$unix->send_email_events("Postfix user databases aborted (ldap failed)", "The process has been scheduled to start in few seconds.", "postfix"); 
+	$unix->THREAD_COMMAND_SET(trim($unix->LOCATE_PHP5_BIN()." ".__FILE__. " {$argv[1]}"));
 	die();
 }
 
 
-if($GLOBALS["EnablePostfixMultiInstance"]==1){
-	
-	if($argv[1]=="--aliases"){
-		system(LOCATE_PHP5_BIN2()." ". dirname(__FILE__)."/exec.postfix-multi.php --aliases");
-		die();
-	}
-	
-	system(LOCATE_PHP5_BIN2()." ". dirname(__FILE__)."/exec.postfix-multi.php");
-	die();
-}
-
-
-
-
+if($GLOBALS["EnablePostfixMultiInstance"]==1){if($argv[1]=="--aliases"){system(LOCATE_PHP5_BIN2()." ". dirname(__FILE__)."/exec.postfix-multi.php --aliases");die();}system(LOCATE_PHP5_BIN2()." ". dirname(__FILE__)."/exec.postfix-multi.php");die();}
 if($argv[1]=="--postmaster"){postmaster();die();}	
 
 

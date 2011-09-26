@@ -69,7 +69,7 @@ $q->QUERY_SQL("TRUNCATE TABLE `activedirectory_groupsNames`","artica_backup");
 
 $sql="SELECT ou,dn,enabled,OnlyBranch FROM activedirectory_orgs ORDER BY ou";
 $results=$q->QUERY_SQL($sql,"artica_backup");	
-
+$BranchsInMyql=mysql_num_rows($results);
 while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
 	$OUCONFIG[$ligne["dn"]]["PARAMS"]["ENABLED"]=$ligne["enabled"];
 	$OUCONFIG[$ligne["dn"]]["PARAMS"]["OnlyBranch"]=$ligne["OnlyBranch"];
@@ -79,15 +79,23 @@ while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
 $GLOBALS["MEMORY_COUNT_USERS"]=0;
 $GLOBALS["MEMORY_COUNT_GROUPS"]=0;
 for($i=0;$i<$hash["count"];$i++){
-	
-	if(isset($OUCONFIG[$hash[$i]["dn"]])){
-		if($OUCONFIG[$hash[$i]["dn"]]["PARAMS"]["ENABLED"]==0){
-			echo "Importing users from {$hash[$i]["ou"][0]} {$hash[$i]["dn"]} aborted (disabled)\n";
+	$OrganizationDN=utf8_encode($hash[$i]["dn"]);
+	if(isset($OUCONFIG[$OrganizationDN])){
+		if($OUCONFIG[$OrganizationDN]["PARAMS"]["ENABLED"]==0){
+			echo "Importing users from {$hash[$i]["ou"][0]} {$OrganizationDN} aborted (disabled)\n";
 			continue;
 		}
 	}
 	
-	$OnlyBranch=$OUCONFIG[$hash[$i]["dn"]]["PARAMS"]["OnlyBranch"];
+	if($BranchsInMyql>0){
+		if(!isset($OUCONFIG[$OrganizationDN])){
+			echo "Importing users from {$hash[$i]["ou"][0]} {$OrganizationDN} is not in mysql database (disabled)\n";
+			continue;
+		}
+		
+	}
+	
+	$OnlyBranch=$OUCONFIG[$OrganizationDN]["PARAMS"]["OnlyBranch"];
 	
 	$dn=utf8_encode($hash[$i]["dn"]);
 	$ou=utf8_encode($hash[$i]["ou"][0]);
@@ -195,7 +203,7 @@ function checksGroups(){
 	$q=new mysql();
 	$results=$q->QUERY_SQL($sql,"artica_backup");
 	echo mysql_num_rows($results)." groups to parse\n";
-	$prefix="INSERT IGNORE INTO activedirectory_groupsNames (dn,groupname,UsersCount) VALUES";
+	$prefix="INSERT IGNORE INTO activedirectory_groupsNames (dn,groupname,UsersCount,description) VALUES";
 	
 	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
 		//echo $ligne["groupdn"]."\n";
@@ -209,10 +217,12 @@ function checksGroups(){
 			$dn=utf8_encode($hash[$i]["dn"]);
 			$cn=utf8_encode($cn);
 			$UsersCount=$hash[$i]["member"]["count"];
+			$description=utf8_encode($hash[$i]["description"][0]);
 			$dn=addslashes($dn);
 			$cn=addslashes($cn);
+			$description=addslashes($description);
 			$GLOBALS["MEMORY_COUNT_GROUPS"]=$GLOBALS["MEMORY_COUNT_GROUPS"]+1;
-			$sqli[]="('$dn','$cn',$UsersCount)";	
+			$sqli[]="('$dn','$cn',$UsersCount,'$description')";	
 			if(count($sqli)>500){
 				$sqlfinal=$prefix." ".@implode(",", $sqli);
 				$q->QUERY_SQL($sqlfinal,"artica_backup");

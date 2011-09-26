@@ -2302,3 +2302,151 @@ In this section, you can limit how much CPU/memory applications is going to use 
 When you are consolidating many workloads in a single server, it's extremely important to guarantee how much resources they are using.[br]
 Something that is inherently done when you have many physical servers because each box is a resource limit on itself.
 </howto_cgroups>
+<memory_soft_limit>Memory soft limit</memory_soft_limit>
+<memory_memsw_limit>Memory and swap limit</memory_memsw_limit>
+<memory_memsw_limit_text>sets the maximum amount for the sum of memory and swap usage</memory_memsw_limit_text>
+<memory_soft_limit_text>
+Soft limits allow for greater sharing of memory.[br]
+The idea behind soft limits is to allow control groups to use as much of the memory as needed, provided
+[br]
+a. There is no memory contention[br]
+b. They do not exceed their hard limit[br]
+[br]
+When the system detects memory contention or low memory, control groups
+are pushed back to their soft limits.[br]If the soft limit of each control
+group is very high, they are pushed back as much as possible to make
+sure that one control group does not starve the others of memory.[br]
+Please note that soft limits is a best effort feature, it comes with
+no guarantees, but it does its best to make sure that when memory is
+heavily contended for, memory is allocated based on the soft limit
+hints/setup.
+</memory_soft_limit_text>
+<swappiness>% of Swap utilization</swappiness>
+<swappiness_text>sets the tendency of the kernel to swap out process memory used by tasks in this cgroup instead 
+of reclaiming pages from the page cache.[br]
+This is the same tendency, calculated the same way.[br]
+The default value is 60. Values lower than 60 decrease the kernel's tendency to swap out process memory, 
+values greater than 60 increase the kernel's tendency to swap out process memory, 
+and values greater than 100 permit the kernel to swap out pages that are part of the address space of the processes in this cgroup. 
+</swappiness_text>
+<memory_limit>Memory limit</memory_limit>
+<cpu_shares>CPU shares</cpu_shares>
+<cpu_shares_text>contains an integer value that specifies a relative share of CPU time available to the tasks in a cgroup.[br]
+For example, tasks in two cgroups that have shares set to 1 will receive equal CPU time, 
+but tasks in a cgroup that has shares set to 2 receive twice the CPU time of tasks in a cgroup where shares is set to 1.
+</cpu_shares_text>
+<cpu_rt_runtime_us>Runtime</cpu_rt_runtime_us>
+<cpu_rt_runtime_us_text>specifies a period of time in microseconds for the longest continuous period in which the tasks 
+in a cgroup have access to CPU resources.[br]
+Establishing this limit prevents tasks in one cgroup from monopolizing CPU time.[br]
+If the tasks in a cgroup should be able to access CPU resources for 4 seconds out of every 5 seconds,
+ set  to 4000000 and runtime period to 5000000. 
+ </cpu_rt_runtime_us_text>
+<cpu_rt_period_us>Runtime period</cpu_rt_period_us>
+<dropdelivered>Discard Delivered-To headers</dropdelivered> 
+<dropdelivered_explain>This addresses a problem with using fetchmail and postfix as a relay inside a domain; when postfix sees incoming messages with delivered-to headers looking exactly the same as the ones it adds himself, it bounces the message</dropdelivered_explain>
+<all_out_of_groups>All processes out of groups</all_out_of_groups>
+<POSTFIX_ALL_SERVICES>All messaging services</POSTFIX_ALL_SERVICES>
+<SERVICESS_STOPPED>stopped service(s)</SERVICESS_STOPPED>
+<SERVICESS_STOPPED_TEXT>stopped service(s), you should click here in order to dispaly which services are not running correctly.</SERVICESS_STOPPED_TEXT>
+<SERVICESS_OK>All services is running</SERVICESS_OK>
+<SERVICESS_OK_TEXT>All services are running correctly, you can click here in order to see details</SERVICESS_OK_TEXT>
+<EnableParamsInPhpldapAdmin>Enable AD connection in PHPLdapAdmin</EnableParamsInPhpldapAdmin>
+<shares>Shares</shares>
+<give_process_or_full_command>Give the process or the full command</give_process_or_full_command>
+<restart_service>Restart service</restart_service>
+<restart_service_text>Stop and start the s>ervice</restart_service>
+<running_processes>Running processes</running_processes>
+<explain_AmavisNoInternetTests_plug_disbaled>[b]Internet tests and DNS checking are disabled[/b] this is the reason that whay some plugins cannot be enabled</explain_AmavisNoInternetTests_plug_disbaled>
+<kill_ask>Kill this task</kill_ask>
+<move_task_default_ask>Move this task to the default system group</move_task_default_ask>
+<move_task>Move task</move_task>
+<move_all_process_to_default>Move all processes to default</move_all_process_to_default>
+<rebuild_apache_text>Rebuild this main website parameters in the web service.</rebuild_apache_text>
+<rebuild_apache_groupware_text>check and rebuild your the application</rebuild_apache_groupware_text>
+<ArticaInCgroups>Artica processes in Processes groups</ArticaInCgroups>
+<ArticaInCgroups_explain>Execute artica scripts and processes in a defined process group</ArticaInCgroups_explain>
+<APP_OCSI2>OCS Engine server 2</APP_OCSI2>
+<TIPS_PUREFTPD_TITLE>Provide FTP access</TIPS_PUREFTPD_TITLE>
+<TIPS_PUREFTPD_TITLE_TEXT>If you install pure-ftpd trough the setup center, you will be able to provide FTP accounts to your users...</TIPS_PUREFTPD_TITLE_TEXT>
+<find_features_and_options>Search features and options</find_features_and_options>
+<UNITY_NO_DATAS_TEXT>There is no datas saved in Unity Database, browse on some web administration pages in order to fill the database</UNITY_NO_DATAS_TEXT>
+<running_in_debug_mode>Running in debug mode!</running_in_debug_mode>
+<FREEWEB_WRONG_USER_SYSTEM_TEXT>It seems that this user is not a part of the system.[br]The webserver will not be able to run the webservice has this user if you enable any module
+thar require a system user (example: FastCGI module).</FREEWEB_WRONG_USER_SYSTEM_TEXT> 
+<remove_server_route>Remove the server route</remove_server_route>
+<remove_server_route_vpn_explain>By default the OpenVPN server add it's route of the defined IP address.[br]So if the server is located inside a LAN Remote VPN clients will receive automatically the route of the server.[br]
+For example, if address of the server is 192.168.1.x the route will be automatically added.[br]
+You should remove this feature is the server is located on Internet with a public IP address.[br]
+There is no sense to add the public IP adress and netmask has inside the VPN route connexion.</remove_server_route_vpn_explain>
+<certificate_infos_text>Open the certificate and display SSL key informations</certificate_infos_text>
+<disable_SSL_port>Disable SSL port</disable_SSL_port>
+<on_system>On system</on_system>
+<SessionTime>Session time</SessionTime>
+<total_traffic>Total traffic</total_traffic>
+<requests_second>Requests/second</requests_second>
+<traffic_second>Traffic/second</traffic_second>
+<traffic_request>Traffic/Request</traffic_request>
+<request>Request</request>
+<second>Second</second>
+<total_memory>Total memory</total_memory>
+<ExecBackupMaxContainers>Max containers to store</ExecBackupMaxContainers>
+<search_computers>Search computers</search_computers>
+<kavicap_unavailable_text>Connection with Kaspersky For Proxy server is broken, check the connection:</kavicap_unavailable_text>
+<external_artica_mysql_statistics_generator>Use an external Artica Mysql server for statistics</external_artica_mysql_statistics_generator>
+<external_artica_mysql_statistics_generator_explain>The statistics generation tasks consume performances, you can use an external server in order to perform MySQL tables maintenance.[br]
+In this case, this server will not perform any statistics operations locally.[br]The remote server must be an Artica server.[br]
+It will be in charge of calculate all necessaries statistics.
+</external_artica_mysql_statistics_generator_explain>
+<use_external_mysql_server>Use external MySQL server</use_external_mysql_server>
+<MYSQL_ERROR>MySQL Error</MYSQL_ERROR>
+<MYSQL_CONNECTION>MySQL Connection</MYSQL_CONNECTION>
+<traffic_statistics>Traffic Statistics</traffic_statistics>
+<squid_traffic_statistics_text>Display flows passed trough your Proxy, get cache performances and display websites/categories by size</squid_traffic_statistics_text>
+<downloaded_flow>Downloaded flow</downloaded_flow>
+<daysOfStatistics>Days of statistics</daysOfStatistics>
+<to_date>To Date</to_date>
+<last_30days>Last 30 days</last_30days>
+<migration_script_run_text>An upgrade script is currently running... During this execution your system should be overloaded...[br]Please wait few times</migration_script_run_text>
+<rescan>Rescan</rescan>
+<rescan_dhcpleases_text>Force Artica to analyze the dchp service lease file in order to refresh the lease status.</rescan_dhcpleases_text>
+<squid_architecture_explain>This section is designed to modify the Proxy behavior including listen port, allowed networks...</squid_architecture_explain>
+<squid_members_explain>This section is designed to manage access trough internet from your users, include authentication mode, whitelisting and blacklisting</squid_members_explain>
+<architecture>Architecture</architecture>
+<september>September</september>
+<december>December</december>
+<error_no_website_selected>Error no selected website</error_no_website_selected>
+<categorize_this_website>Categorize this website</categorize_this_website> 
+<basic_filters>Basic filters</basic_filters>
+<squid_basic_filters_explain>This section is designed to add filters including directly in the Proxy features.[br]For antivirus filters or Web filtering, see other menus</squid_basic_filters_explain>
+<scheduled_reboot>Scheduled reboot</scheduled_reboot>
+<srv_clamav.ClamavRefreshDaemonMemory>Restart service if memory exceed</srv_clamav.ClamavRefreshDaemonMemory>
+<srv_clamav.ClamavRefreshDaemonMemory>Artica scan the service each 2mn, if the service memory execeed this value, the service will be automatically rebooted[br]Set 0 to disable this feature</srv_clamav.ClamavRefreshDaemonMemory>
+<WEB_FILTERING>Web filtering</WEB_FILTERING>
+<dansguardian2_blacklist_explain>This section ban users browsing websites stored in selected categories.</dansguardian2_blacklist_explain>
+<dansguardian2_whitelist_explain>This section allow users browsing websites stored in selected categories</dansguardian2_whitelist_explain>
+<dansguardian2_members_groups_explain>Members groups allow you to group members groups stored in ldap or create virtual groups that will be used by your filtering rules.</dansguardian2_members_groups_explain>
+<ldap_group>LDAP Group</ldap_group>
+<virtual_group>Virtual group</virtual_group>
+<dansguardian2_rules_groups_explain>Groups listed here will use this filtering rule when browsing Internet trough the proxy</dansguardian2_rules_groups_explain>
+<dansguardian2_addedit_members_explain>You can add here items that will represent your users, it should be IP addresses or Ip ranges or accounts.</dansguardian2_addedit_members_explain>
+<member_type>Member type</member_type>
+<APP_PROXY_CATS>Proxy categories repository</APP_PROXY_CATS>
+<APP_PROXY_CATS_TEXT>Proxy categories repository is an application that allow to distribute and manage  Web filters categories for multiple Artica servers For Squid.[br]
+It is designed to automatically add added categories to an "official databases" and provide categories update patterns in order to update newest added categorized websites
+</APP_PROXY_CATS_TEXT>
+<AsDansGuardianAdministrator>Can Manage Web filtering categories and categories repository</AsDansGuardianAdministrator>
+<miniadm_web_filtering_text>Manage your organization web filtering services</miniadm_web_filtering_text>
+<AsWebFilterRepository>Can manage Proxy categories repository service</AsWebFilterRepository>
+<update_url>Update URL</update_url>
+<proxy_main_settings>Proxy Main settings</proxy_main_settings>
+<statistics_appliance>Statistics Appliance</statistics_appliance>
+<statistics_appliance_text>Transform this server on an Appliance that will calculate and display services statistics such has Proxy or SMTP</statistics_appliance_text>
+<webproxy_statistics_appliance>Internet Proxy statistics Appliance</webproxy_statistics_appliance>
+<webproxy_statistics_appliance_text>If you enable this feature, this server will be able to receive events from an another Artica proxy or a Squid 3.2 proxy.[br]
+This server will execute specifics calculation tasks in order to serve Internet usage charts and graphs statistics</webproxy_statistics_appliance_text>
+<websites_to_export>Websites to export</websites_to_export>
+<MONITOR>Monitor</MONITOR>
+<banned>Banned</banned>
+<groupid>Group ID</groupid>
+<visited>visited</visited>

@@ -649,6 +649,7 @@ private function aliases_users(){
 	private function BuildMasterCF(){
 		$ASSP=new assp_multi($this->ou);
 		
+		
 		$MASTER[]="# Postfix master process configuration file.  For details on the format";
 		$MASTER[]="# of the file, see the master(5) manual page (command: \"man 5 master\").";
 		$MASTER[]="#";
@@ -690,7 +691,7 @@ private function aliases_users(){
 		$MASTER[]="proxywrite unix -       -       n       -       1       proxymap";
 		$MASTER[]="smtp      unix  -       -       n       -       -       smtp";
 		$MASTER[]="relay     unix  -       -       n       -       -       smtp";
-		$MASTER[]="	-o smtp_fallback_relay=";
+		$MASTER[]="	-o smtp_fallback_relay=$smtp_fallback_relay";
 		$MASTER[]="        -o smtp_helo_timeout=5 -o smtp_connect_timeout=5";
 		$MASTER[]="showq     unix  n       -       n       -       -       showq";
 		$MASTER[]="error     unix  -       -       n       -       -       error";

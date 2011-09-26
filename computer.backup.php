@@ -1,4 +1,5 @@
 <?php
+$GLOBALS["ICON_FAMILY"]="COMPUTERS";
 	include_once('ressources/class.templates.inc');
 	include_once('ressources/class.ldap.inc');
 	include_once('ressources/class.users.menus.inc');

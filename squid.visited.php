@@ -71,7 +71,7 @@ function js(){
 	$tpl=new templates();
 	$title=$tpl->_ENGINE_parse_body("{visited_websites}");
 	$categorize_this_query=$tpl->_ENGINE_parse_body("{categorize_this_query}");
-	$start="YahooWin3('720','$page?popup=yes','$title');";
+	$start="YahooWin3('720','$page?popup=yes&day={$_GET["day"]}','$title');";
 	if(isset($_GET["add-www"])){
 		$title=$tpl->_ENGINE_parse_body("{add_websites}");
 		$start="YahooWin3('420','$page?free-cat=yes','$title');";
@@ -104,7 +104,7 @@ function popup(){
 
 	
 	while (list ($num, $ligne) = each ($array) ){
-		$html[]=$tpl->_ENGINE_parse_body("<li><a href=\"$page?$num=yes\"><span>$ligne</span></a></li>\n");
+		$html[]=$tpl->_ENGINE_parse_body("<li><a href=\"$page?$num=yes&day={$_GET["day"]}\"><span>$ligne</span></a></li>\n");
 	}
 	
 	
@@ -146,9 +146,9 @@ $html="
 		if(!checkEnter(e)){return;}
 		var value=document.getElementById('visited-search').value;
 		Set_Cookie('SQUID_NOT_CAT_SEARCH',value, '3600', '/', '', '');
-		LoadAjax('visited_web_sites','$page?visited-list=yes');
+		LoadAjax('visited_web_sites','$page?visited-list=yes&day={$_GET["day"]}');
 	}
-	LoadAjax('visited_web_sites','$page?visited-list=yes');
+	LoadAjax('visited_web_sites','$page?visited-list=yes&day={$_GET["day"]}');
 	
 </script>
 ";
@@ -290,7 +290,7 @@ function free_catgorized_save(){
 		}
 		
 	
-	$q=new mysql();
+	$q=new mysql_squid_builder();
 	$q->CheckTable_dansguardian();
 	
 	if(count($sites)==0){echo "NO websites\n";return;}
@@ -298,42 +298,27 @@ function free_catgorized_save(){
 	echo "analyze ".count($sites)." websites into $category\n";
 	while (list ($num, $www) = each ($sites) ){
 		$md5=md5($www.$category);
-		$sql="SELECT zmd5 FROM dansguardian_community_categories WHERE pattern='$www' AND category='$category'";
-		$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,"artica_backup"));
-		$sql_add="INSERT INTO dansguardian_community_categories (zmd5,zDate,category,pattern,uuid) VALUES('$md5',NOW(),'$category','$www','$uuid')";
-		if($ligne["zmd5"]<>null){continue;}		
+		$cats=$q->GET_CATEGORIES($www);
+		
+		
+		
+		if($cats<>null){echo "$www already added in $cats\n";continue;}		
 		echo "Added $www\n";
 		$q->QUERY_SQL($sql_add,"artica_backup");
 		if(!$q->ok){echo $q->mysql_error;return;}
-		$cats=GetCategory($www);
-		$sql="UPDATE dansguardian_sitesinfos SET category='$cats', dbpath='$cats' WHERE website='$www'";
-		writelogs("$sql",__FUNCTION__,__FILE__,__LINE__);
-		$q->QUERY_SQL($sql,"artica_backup");
+		$category_table="category_".$q->category_transform_name($category);
+		$q->QUERY_SQL("INSERT IGNORE INTO $category_table (zmd5,zDate,category,pattern,uuid) VALUES('$md5',NOW(),'$category','$www','$uuid')");
+		if(!$q->ok){echo "categorize $www failed $q->mysql_error\n";continue;}
+		$q->QUERY_SQL("INSERT IGNORE INTO categorize (zmd5,zDate,category,pattern,uuid) VALUES('$md5',NOW(),'$category','$www','$uuid')");
 		if(!$q->ok){echo $q->mysql_error."\n";echo $sql;}
-		$sql="UPDATE squid_events_sites SET category='$cats' WHERE website='$www'";
-		writelogs("$sql",__FUNCTION__,__FILE__,__LINE__);
-		$q->QUERY_SQL($sql,"artica_events");
-		if(!$q->ok){echo $q->mysql_error."\n";echo $sql;}
-		
 	}		
-		
-	$sock=new sockets();
-	$sock->getFrameWork("cmd.php?export-community-categories=yes");
+			
+		$sock=new sockets();
+		$sock->getFrameWork("cmd.php?export-community-categories=yes");
 	
 	
 }
-function GetCategory($www){
-	if(preg_match("#^www\.(.+)#",$www,$re)){$www=$re[1];}
-	$sql="SELECT category FROM dansguardian_community_categories WHERE pattern='$www' and enabled=1";
-	$q=new mysql();
-	$results=$q->QUERY_SQL($sql,"artica_backup");
-	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
-		$f[]=$ligne["category"];
-	}
-	
-	if(is_array($f)){return @implode(",",$f);}
-	
-}
+
 
 
 function not_categorized(){
@@ -352,9 +337,9 @@ $html="
 		if(!checkEnter(e)){return;}
 		var value=document.getElementById('not-cat-search').value;
 		Set_Cookie('SQUID_NOT_CAT_SEARCH',value, '3600', '/', '', '');
-		LoadAjax('not_categorized_sites','$page?no-cat-list=yes');
+		LoadAjax('not_categorized_sites','$page?no-cat-list=yes&day={$_GET["day"]}');
 	}
-	LoadAjax('not_categorized_sites','$page?no-cat-list=yes');
+	LoadAjax('not_categorized_sites','$page?no-cat-list=yes&day={$_GET["day"]}');
 	
 </script>
 ";
@@ -380,9 +365,9 @@ $html="
 		if(!checkEnter(e)){return;}
 		var value=document.getElementById('cat-search').value;
 		Set_Cookie('SQUID_NOT_CAT_SEARCH',value, '3600', '/', '', '');
-		LoadAjax('categorized_sites','$page?yes-cat-list=yes');
+		LoadAjax('categorized_sites','$page?yes-cat-list=yes&day={$_GET["day"]}');
 	}
-	LoadAjax('categorized_sites','$page?yes-cat-list=yes');
+	LoadAjax('categorized_sites','$page?yes-cat-list=yes&day={$_GET["day"]}');
 	
 </script>
 ";
@@ -393,26 +378,33 @@ echo $tpl->_ENGINE_parse_body($html);
 
 function visited_list(){
 	
-	if($_COOKIE["SQUID_NOT_CAT_SEARCH"]<>null){
-		$pattern=" WHERE website LIKE '%{$_COOKIE["SQUID_NOT_CAT_SEARCH"]}%' ";
-		$pattern=str_replace("*","%",$pattern);
-	}
+	$sql="SELECT sitename as website,visited_sites.*  FROM visited_sites $pattern ORDER BY HitsNumber DESC LIMIT 0,300";
+	if($_COOKIE["SQUID_NOT_CAT_SEARCH"]<>null){$pattern=" WHERE sitename LIKE '%{$_COOKIE["SQUID_NOT_CAT_SEARCH"]}%' ";$pattern=str_replace("*","%",$pattern);}
 	
-	$sql="SELECT *  FROM squid_events_sites $pattern ORDER BY hits DESC LIMIT 0,300";
+	$day=trim($_GET["day"]);
+	if($day<>null){
+		$time=strtotime("$day 00:00:00");
+		$table=date("Ymd",$time)."_hour";
+		
+		if($_COOKIE["SQUID_NOT_CAT_SEARCH"]<>null){$pattern=" HAVING website LIKE '%{$_COOKIE["SQUID_NOT_CAT_SEARCH"]}%' ";$pattern=str_replace("*","%",$pattern);}
+		$sql="SELECT SUM(hits) as HitsNumber, sitename as website,category,country FROM $table 
+		GROUP BY sitename,category,country $pattern ORDER BY HitsNumber DESC LIMIT 0,150";
+	}	
+
 	
 	$html="
 <table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
 <thead class='thead'>
 	<tr>
 	<th>{country}</th>
-	<th colspan=2>{website}</th>
+	<th colspan=2>{website}&nbsp;$day</th>
 	<th>{hits}</th>
 	</tr>
 </thead>
 <tbody class='tbody'>";
 
-	$q=new mysql();
-	$results=$q->QUERY_SQL($sql,"artica_events");
+	$q=new mysql_squid_builder();
+	$results=$q->QUERY_SQL($sql);
 	if(!$q->ok){echo $q->mysql_error;}
 	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
 		
@@ -460,23 +452,34 @@ function categorized_list(){
 	}	
 	
 	$sql="SELECT * FROM `squid_events_sites` WHERE `category` != '' $pattern ORDER by hits DESC LIMIT 0 , 100";
+	$sql="SELECT sitename ,visited_sites.*  FROM visited_sites WHERE 1 $pattern AND LENGTH(category)>1 ORDER BY HitsNumber DESC LIMIT 0,300";
 	$page=CurrentPageName();
 
 	
+	$day=trim($_GET["day"]);
+	if($day<>null){
+		$time=strtotime("$day 00:00:00");
+		$table=date("Ymd",$time)."_hour";
+		
+		if($_COOKIE["SQUID_NOT_CAT_SEARCH"]<>null){$pattern=" HAVING sitename LIKE '%{$_COOKIE["SQUID_NOT_CAT_SEARCH"]}%' ";$pattern=str_replace("*","%",$pattern);}
+		if($pattern==null){$pattern="HAVING LENGTH(category)>2";}else{$pattern=$pattern ." AND LENGTH(category)>2";}
+		$sql="SELECT SUM(hits) as HitsNumber, sitename,category,country FROM $table 
+		GROUP BY sitename,category,country $pattern ORDER BY HitsNumber DESC LIMIT 0,100";
+	}		
 	
-	$html="
+	$html="$sql
 <table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
 <thead class='thead'>
 	<tr>
 	<th>{country}</th>
-	<th>{website}</th>
+	<th>{website}&nbsp;$day</th>
 	<th>{hits}</th>
 	<th>&nbsp;</th>
 	</tr>
 </thead>
 <tbody class='tbody'>";
 
-	$q=new mysql();
+	$q=new mysql_squid_builder();
 	$results=$q->QUERY_SQL($sql,"artica_events");
 	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
 		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
@@ -493,9 +496,9 @@ function categorized_list(){
 			$html=$html."
 			<tr class=$classtr>
 			<td width=1% valign='middle' aling='center'>$country</td>
-			<td width=99%><strong style='font-size:14px'>{$ligne["website"]}<br><i style='font-size:11px;color:#970909'>{$ligne["category"]}</i></td>
-			<td width=1%><strong style='font-size:14px'>{$ligne["hits"]}</td>
-			<td width=1%>". imgtootltip("add-database-32.png","{categorize}","Loadjs('squid.categorize.php?www={$ligne["website"]}')")."</td>
+			<td width=99%><strong style='font-size:14px'>{$ligne["sitename"]}<br><i style='font-size:11px;color:#970909'>{$ligne["category"]}</i></td>
+			<td width=1%><strong style='font-size:14px'>{$ligne["HitsNumber"]}</td>
+			<td width=1%>". imgtootltip("add-database-32.png","{categorize}","Loadjs('squid.categorize.php?www={$ligne["sitename"]}')")."</td>
 			</tr>
 			";
 			
@@ -514,7 +517,7 @@ function not_categorized_list(){
 	$page=CurrentPageName();
 	
 	if($_COOKIE["SQUID_NOT_CAT_SEARCH"]<>null){
-		$pattern=" AND website LIKE '%{$_COOKIE["SQUID_NOT_CAT_SEARCH"]}%' ";
+		$pattern=" AND sitename LIKE '%{$_COOKIE["SQUID_NOT_CAT_SEARCH"]}%' ";
 		$pattern=str_replace("*","%",$pattern);
 		$categorize_all="<div style='font-size:14px;text-align:right;margin-bottom:5px'>
 		<a href='javascript:blur();' style='font-size:14px;text-decoration:underline' OnClick=\"javascript:CategorizeAll('{$_COOKIE["SQUID_NOT_CAT_SEARCH"]}');\">{categorize_this_query}</a></div>
@@ -524,7 +527,19 @@ function not_categorized_list(){
 		
 	}	
 	
-	$sql="SELECT * FROM `squid_events_sites` WHERE  `category`='' $pattern ORDER BY hits DESC LIMIT 0 , 100";
+	$sql="SELECT * FROM `visited_sites` WHERE  `category`='' $pattern ORDER BY 	HitsNumber DESC LIMIT 0 , 100";
+	
+	
+	$day=trim($_GET["day"]);
+	if($day<>null){
+		$time=strtotime("$day 00:00:00");
+		$table=date("Ymd",$time)."_hour";
+		
+		if($_COOKIE["SQUID_NOT_CAT_SEARCH"]<>null){$pattern=" HAVING sitename LIKE '%{$_COOKIE["SQUID_NOT_CAT_SEARCH"]}%' ";$pattern=str_replace("*","%",$pattern);}
+		if($pattern==null){$pattern="HAVING LENGTH(category)=0";}else{$pattern=$pattern ." AND LENGTH(category)=0";}
+		$sql="SELECT SUM(hits) as HitsNumber, sitename,category,country FROM $table 
+		GROUP BY sitename,category,country $pattern ORDER BY HitsNumber DESC LIMIT 0,100";
+	}		
 	
 
 	
@@ -535,18 +550,19 @@ $categorize_all
 <thead class='thead'>
 	<tr>
 	<th>{country}</th>
-	<th>{website}</th>
+	<th>{website}&nbsp;$day</th>
 	<th>{hits}</th>
 	<th>&nbsp;</th>	
 	</tr>
 </thead>
 <tbody class='tbody'>";
 
-	$q=new mysql();
+	$q=new mysql_squid_builder();
 	$results=$q->QUERY_SQL($sql,"artica_events");
 	if(!$q->ok){echo "<H2>$q->mysql_error</H2>";}
 	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
 		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
+		$ligne["website"]=$ligne["sitename"];
 		if($ligne["country"]<>null){
 			if($_SESSION["COUNTRIES_FLAGS"][$ligne["country"]]==null){
 				$_SESSION["COUNTRIES_FLAGS"][$ligne["country"]]=GetFlags($ligne["country"]);
@@ -562,7 +578,7 @@ $categorize_all
 			<tr class=$classtr>
 			<td width=1% valign='middle' aling='center'>$country</td>
 			<td width=99%><strong style='font-size:14px'>{$ligne["website"]}</td>
-			<td width=19%><strong style='font-size:14px'>{$ligne["hits"]}</td>
+			<td width=19%><strong style='font-size:14px'>{$ligne["HitsNumber"]}</td>
 			<td width=1%>". imgtootltip("add-database-32.png","{categorize}","Loadjs('squid.categorize.php?www={$ligne["website"]}')")."</td>
 			</tr>
 			";
@@ -582,16 +598,16 @@ $categorize_all
 
 function CategorizeAll_popup(){
 	
-	$pattern=" AND website LIKE '%{$_GET["CategorizeAll"]}%' ";
+	$pattern=" AND sitename LIKE '%{$_GET["CategorizeAll"]}%' ";
 	$pattern=str_replace("*","%",$pattern);
-	$sql="SELECT COUNT( website ) AS tcount
-	FROM `squid_events_sites`
+	$sql="SELECT COUNT( sitename ) AS tcount
+	FROM `visited_sites`
 	WHERE LENGTH( `category` )=0
 	$pattern";
 	
 	$tpl=new templates();
 	$page=CurrentPageName();
-	$q=new mysql();
+	$q=new mysql_squid_builder();
 	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,"artica_events"));
 	$websites=$tpl->_ENGINE_parse_body("{websites}");
 	if(!$q->ok){echo "<H3>$q->mysql_error</H3>";}
@@ -678,13 +694,13 @@ function CategorizeAll_perform(){
 	$sock=new sockets();
 	$uuid=base64_decode($sock->getFrameWork("cmd.php?system-unique-id=yes"));
 	if($uuid==null){echo "UUID=NULL; Aborting";return;}	
-	$pattern=" AND website LIKE '%{$_GET["pattern"]}%' ";
+	$pattern=" AND sitename LIKE '%{$_GET["pattern"]}%' ";
 	$pattern=str_replace("*","%",$pattern);
-	$sql="SELECT website FROM `squid_events_sites` WHERE  LENGTH( `category` )=0 $pattern";
+	$sql="SELECT sitename FROM `visited_sites` WHERE  LENGTH( `category` )=0 $pattern";
 	$category=$_GET["CategorizeAll_category"];
 	if($category==null){return;}
 
-	$q=new mysql();
+	$q=new mysql_squid_builder();
 	$results=$q->QUERY_SQL($sql,"artica_events");
 	
 	if(!$q->ok){
@@ -693,38 +709,32 @@ function CategorizeAll_perform(){
 	}
 	
 	
+	$category_table="category_".$q->category_transform_name($category);
+	
+	if(!$q->TABLE_EXISTS($category_table)){$q->CreateCategoryTable($category);}
+	
 	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
-		$website=$ligne["website"];
+		$website=$ligne["sitename"];
 		if($website==null){return;}
 		$www=trim(strtolower($website));
 		if(preg_match("#^www\.(.+?)$#i",trim($www),$re)){$www=$re[1];}
 		$md5=md5($www.$category);
 		$enabled=1;
-		$sql_add="INSERT INTO dansguardian_community_categories (zmd5,zDate,category,pattern,uuid) VALUES('$md5',NOW(),'$category','$www','$uuid')";
-		$q->QUERY_SQL($sql_add,'artica_backup');
-			if(!$q->ok){
-			echo $q->mysql_error."\n".basename(__FILE__)."\nLine".__LINE__."\n";
-			echo $sql;
-			return;
-			}	
-	}
-	$sql="UPDATE `dansguardian_sitesinfos` SET dbpath='$category' WHERE LENGTH( `dbpath` )=0 $pattern";
-	$q->QUERY_SQL($sql,'artica_backup');
-	
-	if(!$q->ok){
-		echo $q->mysql_error."\n".basename(__FILE__)."\nLine".__LINE__;
-		return;
-	}	
-	
-	$sql="UPDATE `squid_events_sites` SET `category`='$category' WHERE LENGTH( `category` )=0 $pattern";
-	$q->QUERY_SQL($sql,'artica_events');
-
-	if(!$q->ok){
-		echo $q->mysql_error."\n".basename(__FILE__)."\nLine".__LINE__;
-		return;
+		$sql_add="INSERT INTO $category_table (zmd5,zDate,category,pattern,uuid,enabled) VALUES('$md5',NOW(),'$category','$www','$uuid',1)";
+		$q->QUERY_SQL($sql_add);
+		if(!$q->ok){echo $q->mysql_error."\n".basename(__FILE__)."\nLine".__LINE__."\n";echo $sql;return;}
+		$sql="INSERT IGNORE INTO categorize (zmd5,zDate,category,pattern,uuid) VALUES('$md5',NOW(),'$category','$www','$uuid')";
+		$q->QUERY_SQL($sql);
+		if(!$q->ok){echo $q->mysql_error."\n".basename(__FILE__)."\nLine".__LINE__."\n";echo $sql;return;}	
+			
+		
 	}
 	
+	$sql="UPDATE `visited_sites` SET `category`='$category' WHERE LENGTH( `category` )=0 $pattern";
+	$q->QUERY_SQL($sql);
+	if(!$q->ok){echo $q->mysql_error."\n".basename(__FILE__)."\nLine".__LINE__."\n";echo $sql;return;}		
 	$sock=new sockets();
 	$sock->getFrameWork("cmd.php?export-community-categories=yes");	
-	}
+	
+}
 

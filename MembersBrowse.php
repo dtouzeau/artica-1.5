@@ -25,8 +25,10 @@ function js(){
 	$page=CurrentPageName();
 	$tpl=new templates();	
 	if(!isset($_GET["OnlyUsers"])){$_GET["OnlyUsers"]=0;}
+	if(!isset($_GET["OnlyGroups"])){$_GET["OnlyGroups"]=0;}
+	if(!isset($_GET["OnlyGUID"])){$_GET["OnlyGUID"]=0;}
 	$title=$tpl->_ENGINE_parse_body("{browse}::{members}::");
-	echo "LoadWinORG('350','$page?popup=yes&field-user={$_GET["field-user"]}&prepend={$_GET["prepend"]}&prepend-guid={$_GET["prepend-guid"]}&OnlyUsers={$_GET["OnlyUsers"]}&organization={$_GET["organization"]}','$title');";	
+	echo "LoadWinORG('350','$page?popup=yes&field-user={$_GET["field-user"]}&prepend={$_GET["prepend"]}&prepend-guid={$_GET["prepend-guid"]}&OnlyUsers={$_GET["OnlyUsers"]}&organization={$_GET["organization"]}&OnlyGroups={$_GET["OnlyGroups"]}&OnlyGUID={$_GET["OnlyGUID"]}','$title');";	
 	
 	
 	
@@ -39,7 +41,8 @@ function popup(){
 	$tpl=new templates();		
 	if($_GET["prepend"]==null){$_GET["prepend"]=0;}
 	if($_GET["prepend-guid"]==null){$_GET["prepend-guid"]=0;}
-
+	$OnlyGUID=$_GET["OnlyGUID"];
+	if(!is_numeric($OnlyGUID)){$OnlyGUID=0;}
 	
 	$html="
 	<center>
@@ -64,7 +67,7 @@ function popup(){
 
 
 	function BrowseFindUserGroup(){
-		LoadAjax('finduserandgroupsidBrwse','$page?query='+escape(document.getElementById('BrowseUserQuery').value)+'&prepend={$_GET["prepend"]}&field-user={$_GET["field-user"]}&prepend-guid={$_GET["prepend-guid"]}&OnlyUsers={$_GET["OnlyUsers"]}&organization={$_GET["organization"]}');
+		LoadAjax('finduserandgroupsidBrwse','$page?query='+escape(document.getElementById('BrowseUserQuery').value)+'&prepend={$_GET["prepend"]}&field-user={$_GET["field-user"]}&prepend-guid={$_GET["prepend-guid"]}&OnlyUsers={$_GET["OnlyUsers"]}&OnlyGUID={$_GET["OnlyGUID"]}&organization={$_GET["organization"]}&OnlyGroups={$_GET["OnlyGroups"]}');
 	
 	}	
 	
@@ -72,8 +75,15 @@ function popup(){
 	function SambaBrowseSelect(id,prependText,guid){
 			var prepend={$_GET["prepend"]};
 			var prepend_gid={$_GET["prepend-guid"]};
+			var OnlyGUID=$OnlyGUID;
 			if(document.getElementById('{$_GET["field-user"]}')){
 				var selected=id;
+				if(OnlyGUID==1){
+					document.getElementById('{$_GET["field-user"]}').value=guid;
+					WinORGHide();
+					return;
+				}
+				
 				if(prepend==1){selected=prependText+id;}
 				if(prepend_gid==1){
 					if(guid>1){
@@ -103,6 +113,9 @@ function query(){
 	$hash=$users->find_ldap_items($_GET["query"],$_GET["organization"]);	
 	if($_GET["OnlyUsers"]=="yes"){$_GET["OnlyUsers"]=1;}
 	$OnlyUsers=$_GET["OnlyUsers"];
+	$OnlyGroups=$_GET["OnlyGroups"];
+	$OnlyGUID=$_GET["OnlyGUID"];
+
 	if(!isset($_GET["prepend"])){$_GET["prepend"]=0;}else{
 		if($_GET["prepend"]=='yes'){$_GET["prepend"]=1;}
 		if($_GET["prepend"]=='no'){$_GET["prepend"]=0;}
@@ -132,6 +145,7 @@ while (list ($num, $ligne) = each ($hash) ){
 			$prepend="group:";
 			$gid=$re[2];
 		}else{
+			if($OnlyGroups==1){continue;}
 			$Displayname=$ligne;
 			$img="winuser.png";
 			$prepend="user:";

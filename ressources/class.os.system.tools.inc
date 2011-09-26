@@ -518,6 +518,8 @@ function html_Memory_usage(){
 					if($label<>null){$disk_text="$label ($disk)";}
 					$this->meta_array["DISKS"]["$disk_name"]["COLOR"]=$color;
 					$jsview="Loadjs('system.internal.disks.php?partinfos-js=/dev/$disk_name')";
+					$length=strlen($disk_text);
+					if($length>16){$disk_text=substr($disk_text,0, 16);}
 					$dd=$dd."
 					<tr>
 						<td nowrap align=right width=90px valign='middle'>
@@ -525,7 +527,11 @@ function html_Memory_usage(){
 						<tbody>
 						<tr>
 						<td width=1%>" . imgtootltip("mailbox_hd.gif","{view} /dev/$disk_name","")."</td>
-						<td width=99 align='right'%><a href=\"javascript:blur();\" OnClick=\"javascript:$jsview\" style='font-weight:bold;text-decoration:underline'>$disk_text:</a></td>
+						<td width=99 align='right'%>
+						<a href=\"javascript:blur();\" OnClick=\"javascript:$jsview\" style='font-weight:bold;text-decoration:underline'>
+							$disk_text:
+						</a>
+						</td>
 						</tr>
 						</tbody>
 						</table>

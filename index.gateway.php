@@ -33,6 +33,7 @@ if(isset($_GET["gayteway_enable"])){echo gateway_enable();exit;}
 if(isset($_GET["EnableArticaAsGateway"])){gateway_save();exit;}
 if(isset($_GET["popup-network-masks"])){popup_networks_masks();exit;}
 if(isset($_GET["show-script"])){dhcp_scripts();exit;}
+if(isset($_POST["RestartDHCPService"])){RestartDHCPService();exit;}
 
 if(isset($_POST["OnlySetGateway"])){OnlySetGateway_save();exit;}
 
@@ -157,6 +158,20 @@ var x_SaveDHCPSettings= function (obj) {
 
 	}
 	
+	var x_RestartDHCPService= function (obj) {
+		var tempvalue=obj.responseText;
+		if(tempvalue.length>3){alert(tempvalue);}
+		LoadAjax('dhcp-status','$page?dhcp-status=yes');
+		}		
+	
+	
+	function RestartDHCPService(){
+		var XHR = new XHRConnection();
+		XHR.appendData('RestartDHCPService','yes');
+		AnimateDiv('dhcp-status');
+		XHR.sendAndLoad('$page', 'POST',x_RestartDHCPService);	
+	}
+	
 		
 var x_SavePXESettings= function (obj) {
 	var tempvalue=obj.responseText;
@@ -238,7 +253,7 @@ function dhcp_pxe_form(){
 	$dhcp=new dhcpd();
 	$enable=Paragraphe_switch_img('{enable}','{EnablePXEDHCP}',"pxe_enable",$dhcp->pxe_enable);
 	
-	$form=RoundedLightWhite("<div id='dhcppxeform'>
+	$form="<div id='dhcppxeform'>
 	<table style='width:100%'>
 			<tr>
 				<td valign='top'>$enable</td>
@@ -265,7 +280,7 @@ function dhcp_pxe_form(){
 			</table>
 			</td>
 		</tr>
-		</table>");
+		</table>";
 	$html="
 	<div class=explain>{PXE_DHCP_MINI_TEXT}</div>
 	$form
@@ -566,11 +581,19 @@ function dhcp_switch(){
 
 function dhcp_status(){
 	$ini=new Bs_IniHandler();
+	$page=CurrentPageName();
 	$sock=new sockets();
 	$ini->loadString(base64_decode($sock->getFrameWork("cmd.php?dhcpd-status=yes")));
 	$status=DAEMON_STATUS_ROUND("DHCPD",$ini);
+	$restart="<div style='margin-top:15px'><center>". button("{restart_service}","RestartDHCPService()")."</center></div>";
+	if($ini->_params["DHCPD"]["running"]==0){$restart=null;}
+	
 	$tpl=new templates();
-	echo $tpl->_ENGINE_parse_body($status);
+	echo $tpl->_ENGINE_parse_body(
+	"$status
+	<div style='text-align:right'>". imgtootltip("refresh-24.png","{refresh}","LoadAjax('dhcp-status','$page?dhcp-status=yes');")."
+	$restart
+	");
 }
 
 function dhcp_tabs(){
@@ -859,7 +882,11 @@ function popup_networks_masks(){
 	$tpl=new templates();
 	echo $tpl->_ENGINE_parse_body($html);
 	}
-
+function RestartDHCPService(){
+	$sock=new sockets();
+	$sock->getFrameWork("services.php?restart-dhcpd=yes");
+	
+}
 
 
 ?>

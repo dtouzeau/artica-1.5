@@ -10,9 +10,14 @@
 	
 	if(isset($_GET["debug-page"])){ini_set('display_errors', 1);ini_set('error_reporting', E_ALL);$GLOBALS["VERBOSE"]=true;}
 
-	$tpl=new templates();
-	$ERROR_NO_PRIVS=$tpl->_ENGINE_parse_body("{ERROR_NO_PRIVS}");
-	if(!CheckSambaRights()){echo "<H1>$ERROR_NO_PRIVS</H1>";die();}
+	
+	if(!CheckSambaRights()){
+		$tpl=new templates();
+		$ERROR_NO_PRIVS=$tpl->_ENGINE_parse_body("{ERROR_NO_PRIVS}");
+		echo "<H1>$ERROR_NO_PRIVS</H1>";die();
+	}
+	
+	if(isset($_GET["main-js"])){main_smb_config_js();exit();};
 	if( isset($_POST['upload']) ){main_kav4samba_LicenceUploaded();exit();}
 	if(isset($_GET["FolderDelete"])){folder_delete();exit;}
 	if(isset($_GET["mkdirp"])){mkdirp();exit;}
@@ -27,7 +32,13 @@
 	if(isset($_POST["recycle_vfs"])){recycle_vfs_save();exit;}
 	
 	if(isset($_GET["jsaddons"])){echo jsaddons();exit;}
-	if(!CheckSambaUniqueRights()){echo "<H1>$ERROR_NO_PRIVS</H1>";die();}
+	if(!CheckSambaUniqueRights()){
+		$tpl=new templates();
+		$ERROR_NO_PRIVS=$tpl->_ENGINE_parse_body("{ERROR_NO_PRIVS}");
+		echo "<H1>$ERROR_NO_PRIVS</H1>";die();		
+	}
+	
+	if(isset($_GET["SharedFolderListJS"])){echo SharedFolderListJS();exit;}
 	if(isset($_GET["main-params-js"])){main_parameters_js();exit;}
 	if(isset($_GET["RestartServices"])){restart_services();exit;}
 	if(isset($_GET["script"])){popup_js();exit;}
@@ -71,7 +82,14 @@ function main_parameters_js(){
 	$title=$tpl->_ENGINE_parse_body("{SAMBA_MAIN_PARAMS}");
 	echo "YahooWin5('550','$page?main=yes&remove-icons=yes','$title')";
 	
-}	
+}
+
+function SharedFolderListJS(){
+	$page=CurrentPageName();
+	$tpl=new templates();	
+	$title=$tpl->_ENGINE_parse_body("{shared_folders}");
+	echo "YahooWin2('750','$page?main=shared_folders','$title')";
+}
 
 	
 function ChekGlobalRights(){
@@ -252,6 +270,22 @@ $tpl=new templates();
 if($user->AsSambaAdministrator==false){$html=$tpl->_ENGINE_parse_body("alert('{ERROR_NO_PRIVS}');");}		
 	
 	echo $html;
+}
+
+function main_smb_config_js(){
+	$tpl=new templates();
+	$page=CurrentPageName();
+	$samba=file_get_contents("js/samba.js");
+	$jsaddon=jsaddons();
+	$title=$tpl->_ENGINE_parse_body("{APP_SAMBA}:{main_parameters}");
+	$html="
+	$samba
+	$jsaddon
+	YahooWin('820','$page?main=yes','$title');
+	";
+	echo $html;
+
+	
 }
 
 function popup_page(){echo main_tabs();}

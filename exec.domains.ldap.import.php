@@ -25,6 +25,7 @@ if(is_array($argv)){
 
 if($argv[1]=="--import"){import($argv[2]);die();}
 if($argv[1]=="--schedules"){schedules();die();}
+if($argv[1]=="--clear-all"){clear_all();die();}
 
 
 
@@ -40,6 +41,32 @@ function import($ID){
 	
 	for($i=0;$i<$hash["count"];$i++){
 		importZimbra($hash[$i],$ou);
+	}
+	
+}
+
+function clear_all(){
+$unix=new unix();
+	$files=$unix->DirFiles("/etc/cron.d");
+	$cron=new cron_macros();
+	$php5=$unix->LOCATE_PHP5_BIN();
+	
+	
+	while (list ($index, $line) = each ($files) ){
+		if($index==null){continue;}
+		if(preg_match("#^LdapImport-#",$index)){
+			echo "Deleting /etc/cron.d/$index\n";
+			@unlink("/etc/cron.d/$index");
+		}
+	}
+
+	$sql="TRUNCATE TABLE ldap_ou_import";
+	$q=new mysql();
+	$q->QUERY_SQL($sql,"artica_backup");
+	if($q->ok){
+		echo "Empty table done...\n";
+	}else{
+		echo $q->mysql_error."\n";
 	}
 	
 }
@@ -69,7 +96,7 @@ function schedules(){
  		$schedule=$cron->cron_defined_macros[$ligne["ScheduleMin"]];
  		$f[]="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/X11R6/bin:/usr/share/artica-postfix/bin";
 		$f[]="MAILTO=\"\"";
-		$f[]="$schedule  root $php5 ".__FILE__." --import {$ligne["ID"]}";
+		$f[]="$schedule  root $php5 ".__FILE__." --import {$ligne["ID"]} >/dev/null 2>&1";
 		$f[]="";
 		@file_put_contents("/etc/cron.d/LdapImport-{$ligne["ID"]}",implode("\n",$f));
 		@chmod("/etc/cron.d/LdapImport-{$ligne["ID"]}",600);

@@ -13,10 +13,16 @@ if($argv[1]=='--build'){build();exit;}
 
 
 function build(){
+	if(!is_dir("/usr/share/phpldapadmin/config")){
+		writelogs("/usr/share/phpldapadmin/config no such directory",__FUNCTION__,__FILE__,__LINE__);
+		return;
+	}
 	writelogs("Starting building phpldapadmin",__FUNCTION__,__FILE__,__LINE__);
 	$ldap=new clladp();	
 	$sock=new sockets();
 	$EnableSambaActiveDirectory=$sock->GET_INFO("EnableSambaActiveDirectory");
+	$EnableParamsInPhpldapAdmin=$sock->GET_INFO("EnableParamsInPhpldapAdmin");
+	if(!is_numeric($EnableParamsInPhpldapAdmin)){$EnableParamsInPhpldapAdmin=0;}
 
 
 $f[]="<?php";
@@ -48,16 +54,19 @@ if($EnableSambaActiveDirectory==1){
 	$ActiveDirectoryCredentials["suffix"]=$array["Bind Path"];
 	$ActiveDirectoryCredentials["host"]=$array["LDAP server"];	
 	if($ActiveDirectoryCredentials["host"]<>null){
-		$f[]="\$servers->newServer(\"ldap_pla\");";
-		$f[]="\$servers->setValue(\"server\",\"name\",\"ActiveDirectory {$ActiveDirectoryCredentials["host"]}\");";
-		$f[]="\$servers->setValue(\"server\",\"host\",\"{$ActiveDirectoryCredentials["host"]}\");";
-		$f[]="\$servers->setValue(\"server\",\"port\",389);";
-		$f[]="\$servers->setValue(\"server\",\"base\",array(\"{$ActiveDirectoryCredentials["suffix"]}\"));";
-		$f[]="\$servers->setValue(\"login\",\"auth_type\",\"session\");";
-		$f[]="\$servers->setValue(\"login\",\"bind_id\",\"\");";
-		$f[]="\$servers->setValue(\"login\",\"bind_pass\",\"\");";
-		$f[]="\$servers->setValue(\"server\",\"tls\",false);";
-		$f[]="";
+		if($EnableParamsInPhpldapAdmin==1){
+			$bind_id="{$ActiveDirectoryCredentials["bind_dn"]},{$ActiveDirectoryCredentials["suffix"]}";
+				$f[]="\$servers->newServer(\"ldap_pla\");";
+				$f[]="\$servers->setValue(\"server\",\"name\",\"ActiveDirectory {$ActiveDirectoryCredentials["host"]}\");";
+				$f[]="\$servers->setValue(\"server\",\"host\",\"{$ActiveDirectoryCredentials["host"]}\");";
+				$f[]="\$servers->setValue(\"server\",\"port\",389);";
+				$f[]="\$servers->setValue(\"server\",\"base\",array(\"{$ActiveDirectoryCredentials["suffix"]}\"));";
+				$f[]="\$servers->setValue(\"login\",\"auth_type\",\"session\");";
+				$f[]="\$servers->setValue(\"login\",\"bind_id\",\"$bind_id\");";
+				$f[]="\$servers->setValue(\"login\",\"bind_pass\",\"\");";
+				$f[]="\$servers->setValue(\"server\",\"tls\",false);";
+				$f[]="";
+		}
 	}
 }
 $pattern="(objectClass=AdLinker)";

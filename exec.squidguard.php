@@ -12,8 +12,11 @@ include_once(dirname(__FILE__)."/ressources/class.dansguardian.inc");
 include_once(dirname(__FILE__)."/ressources/class.squid.inc");
 include_once(dirname(__FILE__)."/ressources/class.squidguard.inc");
 include_once(dirname(__FILE__)."/ressources/class.mysql.inc");
+include_once(dirname(__FILE__)."/ressources/class.compile.ufdbguard.inc");
 include_once(dirname(__FILE__).'/framework/class.unix.inc');
 include_once(dirname(__FILE__)."/framework/frame.class.inc");
+
+
 
 
 if(posix_getuid()<>0){die("Cannot be used in web server mode\n\n");}
@@ -23,6 +26,9 @@ if(count($argv)>0){
 	if(preg_match("#--reload#",$imploded)){$GLOBALS["RELOAD"]=true;}
 	if(preg_match("#--shalla#",$imploded)){$GLOBALS["SHALLA"]=true;}
 	if(preg_match("#--catto=(.+?)\s+#",$imploded,$re)){$GLOBALS["CATTO"]=$re[1];}
+	
+	if($GLOBALS["VERBOSE"]){echo "Execute ".@implode(" ", $argv)."\n";}
+	
 	if($argv[1]=="--inject"){echo inject($argv[2],$argv[3]);exit;}
 	if($argv[1]=="--conf"){echo conf();exit;}
 	if($argv[1]=="--ufdbguard-compile"){echo UFDBGUARD_COMPILE_SINGLE_DB($argv[2]);exit;}	
@@ -34,6 +40,9 @@ if(count($argv)>0){
 	if($argv[1]=="--cron-compile"){cron_compile();exit;}
 	if($argv[1]=="--ufdbguard-status"){print_r(UFDBGUARD_STATUS());exit;}
 	if($argv[1]=="--persos"){PersonalCategoriesRepair();exit;}
+	if($argv[1]=="--databases-status"){databases_status();exit;}
+	if($argv[1]=="--parsedir"){ParseDirectory($argv[2]);exit;}
+	
 	
 	
 	
@@ -41,14 +50,15 @@ if(count($argv)>0){
 	
 
 
-
-
-
-include_once(dirname(__FILE__).'/framework/class.unix.inc');
-if(!Build_pid_func(__FILE__,"MAIN")){
+$unix=new unix();
+$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".MAIN.pid";
+$pid=@file_get_contents($pidfile);
+if($unix->process_exists($pid,basename(__FILE__))){
 	writelogs(basename(__FILE__).":Already executed.. aborting the process",basename(__FILE__),__FILE__,__LINE__);
 	die();
 }
+@file_put_contents($pidfile, getmypid());
+
 
 if($argv[1]=="--categories"){build_categories();exit;}
 if($argv[2]=="--reload"){$GLOBALS["RELOAD"]=true;}
@@ -67,9 +77,12 @@ if($argv[1]=="--conf"){echo conf();exit;}
 
 
 function build_categories(){
+$q=new mysql_squid_builder();
+
+$sql="SELECT LOWER(pattern) FROM category_porn WHERE enabled=1 AND pattern REGEXP '[a-zA-Z0-9\_\-]+\.[a-zA-Z0-9\_\-]+' INTO OUTFILE 'porn.txt' FIELDS OPTIONALLY ENCLOSED BY 'n'";
+$q->QUERY_SQL($sql);	
+if(!$q->ok){echo $q->mysql_error."\n";}
 	
-	$unix=new unix();
-	$unix->DANSGUARDIAN_CATEGORIES();
 	
 }
 
@@ -79,6 +92,8 @@ function conf(){
 	$datas=$s->BuildConf();
 	if($GLOBALS["VERBOSE"]){echo $datas;}
 	@file_put_contents("/etc/squid/squidGuard.conf",$datas);
+	if(is_file("/usr/sbin/ufdbguardd")){if(!is_file("/usr/bin/ufdbguardd")){$unix=new unix();$ln=$unix->find_program("ln");shell_exec("$ln -s /usr/sbin/ufdbguardd /usr/bin/ufdbguardd");}}
+	
 	
 	@mkdir("/etc/ufdbguard",null,true);
 	@file_put_contents("/etc/ufdbguard/ufdbGuard.conf",$datas);
@@ -104,16 +119,12 @@ function build(){
 	if(!$installed){return false;}
 	
 
-	$s=new squidguard();
-	$datas=$s->BuildConf();
-	@file_put_contents("/etc/squid/squidGuard.conf",$datas);
-	
+	$ufdb=new compile_ufdbguard();
+	$datas=$ufdb->buildConfig();
 	@mkdir("/etc/ufdbguard",null,true);
 	@file_put_contents("/etc/ufdbguard/ufdbGuard.conf",$datas);
-	if($users->APP_UFDBGUARD_INSTALLED){
-		BuildMissingUfdBguardDBS();
-		ufdbguard_schedule();
-	}
+	if(is_file("/usr/sbin/ufdbguardd")){if(!is_file("/usr/bin/ufdbguardd")){$unix=new unix();$ln=$unix->find_program("ln");shell_exec("$ln -s /usr/sbin/ufdbguardd /usr/bin/ufdbguardd");}}
+	if($users->APP_UFDBGUARD_INSTALLED){ufdbguard_schedule();}
 
 	
 	
@@ -523,7 +534,222 @@ return "$user:$group";
 	
 }
 
-function inject($category,$file=null){
+function ParseDirectory($path){
+	if(!is_dir($path)){echo "$path No such directory\n";return;}
+	$sock=new sockets();
+	$uuid=base64_decode($sock->getFrameWork("cmd.php?system-unique-id=yes"));
+	if($uuid==null){echo "No uuid\n";return;}	
+	$handle=opendir($path);
+	$q=new mysql_squid_builder();
+	$f=false;
+	while (false !== ($dir = readdir($handle))) {
+		if($dir=="."){continue;}
+		if($dir==".."){continue;}	
+		if(!is_file("$path/$dir/domains")){echo "$path/$dir/domains no such file\n";continue;}
+		$category=sourceCategoryToArticaCategory($dir);
+		if($category==null){echo "$path/$dir/domains no such category\n";continue;}
+		$table="category_".$q->category_transform_name($category);
+		if(!$q->TABLE_EXISTS($table)){echo "$category -> no such table $table\n";continue;}
+		inject($category,$table,"$path/$dir/domains");
+		
+		
+	}
+	
+	
+	$tables=$q->LIST_TABLES_CATEGORIES();
+	while (list ($table, $www) = each ($tables)){
+		$sql="SELECT COUNT(zmd5) as tcount FROM $table WHERE sended=0 and enabled=1";
+		$ligne=mysql_fetch_array($q->QUERY_SQL($sql));
+		$prefix="INSERT IGNORE INTO categorize (zmd5 ,pattern,zDate,uuid,category) VALUES";
+		if($ligne["tcount"]>0){
+			echo "$table {$ligne["tcount"]} items to export\n";
+			$results=$q->QUERY_SQL("SELECT * FROM $table WHERE sended=0 and enabled=1");
+			while($ligne2=mysql_fetch_array($results,MYSQL_ASSOC)){
+				$f[]="('{$ligne2["zmd5"]}','{$ligne2["pattern"]}','{$ligne2["zDate"]}','$uuid','{$ligne2["category"]}')";
+				$c++;
+				if(count($f)>3000){
+					$q->QUERY_SQL($prefix.@implode(",",$f));
+					if(!$q->ok){echo $q->mysql_error."\n";return;}
+					$f=array();
+				}
+				
+			}
+		$q->QUERY_SQL("UPDATE $table SET sended=1 WHERE sended=0");
+		}
+		
+	}
+	
+if(count($f)>0){
+	$q->QUERY_SQL($prefix.@implode(",",$f));
+	$f=array();	
+}	
+	
+	
+	
+}
+
+function sourceCategoryToArticaCategory($category){
+	$array["gambling"]="gamble";
+	$array["gamble"]="gamble";
+	$array["hacking"]="hacking";
+	$array["malware"]="malware";
+	$array["phishing"]="phishing";
+	$array["porn"]="porn";
+	$array["sect"]="sect";
+	$array["socialnetwork"]="socialnet";
+	$array["violence"]="violence";
+	$array["adult"]="porn";
+	$array["ads"]="publicite";
+	$array["warez"]="warez";
+	$array["drugs"]="drogue";
+	$array["forums"]="forums";
+	$array["filehosting"]="filehosting";
+	$array["games"]="games";
+	$array["astrology"]="astrology";
+	$array["publicite"]="publicite";
+	$array["radio"]="webradio";
+	$array["sports"]="recreation/sports";
+	$array["press"]="press";
+	$array["audio-video"]="audio-video";
+	$array["webmail"]="webmail";
+	$array["chat"]="chat";
+	$array["social_networks"]="socialnet";
+	$array["ads"]="publicite";
+	$array["adult"]="porn";
+	$array["aggressive"]="aggressive";
+	$array["astrology"]="astrology";
+	$array["audio-video"]="audio-video";
+	$array["bank"]="finance/banking";
+	$array["blog"]="blog";
+	$array["celebrity"]="celebrity";
+	$array["chat"]="chat";
+	$array["cleaning"]="cleaning";
+	$array["dangerous_material"]="dangerous_material";
+	$array["dating"]="dating";
+	$array["drugs"]="porn";
+	$array["filehosting"]="filehosting";
+	$array["financial"]="financial";
+	$array["forums"]="forums";
+	$array["gambling"]="gamble";
+	$array["games"]="games";
+	$array["hacking"]="hacking";
+	$array["jobsearch"]="jobsearch";
+	$array["liste_bu"]="liste_bu";
+	$array["malware"]="malware";
+	$array["marketingware"]="marketingware";
+	$array["mixed_adult"]="mixed_adult";
+	$array["mobile-phone"]="mobile-phone";
+	$array["phishing"]="phishing";
+	$array["press"]="press";
+	$array["radio"]="webradio";
+	$array["reaffected"]="reaffected";
+	$array["redirector"]="redirector";
+	$array["remote-control"]="remote-control";
+	$array["sect"]="sect";
+	$array["sexual_education"]="sexual_education";
+	$array["shopping"]="shopping";
+	$array["social_networks"]="socialnet";
+	$array["sports"]="recreation/sports";
+	$array["strict_redirector"]="strict_redirector";
+	$array["strong_redirector"]="strong_redirector";
+	$array["tricheur"]="tricheur";
+	$array["violence"]="violence";
+	$array["warez"]="warez";
+	$array["webmail"]="webmail";
+	$array["ads"]="publicite";
+	$array["adult"]="porn";
+	$array["aggressive"]="aggressive";
+	$array["astrology"]="astrology";
+	$array["audio-video"]="audio-video";
+	$array["bank"]="finance/banking";
+	$array["blog"]="blog";
+	$array["celebrity"]="celebrity";
+	$array["chat"]="chat";
+	$array["cleaning"]="cleaning";
+	$array["dangerous_material"]="dangerous_material";
+	$array["dating"]="dating";
+	$array["drugs"]="porn";
+	$array["filehosting"]="filehosting";
+	$array["financial"]="financial";
+	$array["forums"]="forums";
+	$array["gambling"]="gamble";
+	$array["games"]="games";
+	$array["hacking"]="hacking";
+	$array["jobsearch"]="jobsearch";
+	$array["liste_bu"]="liste_bu";
+	$array["malware"]="malware";
+	$array["marketingware"]="marketingware";
+	$array["mixed_adult"]="mixed_adult";
+	$array["mobile-phone"]="mobile-phone";
+	$array["phishing"]="phishing";
+	$array["press"]="press";
+	$array["radio"]="webradio";
+	$array["reaffected"]="reaffected";
+	$array["redirector"]="redirector";
+	$array["remote-control"]="remote-control";
+	$array["sect"]="sect";
+	$array["sexual_education"]="sexual_education";
+	$array["shopping"]="shopping";
+	$array["social_networks"]="socialnet";
+	$array["sports"]="recreation/sports";
+	$array["strict_redirector"]="strict_redirector";
+	$array["strong_redirector"]="strong_redirector";
+	$array["tricheur"]="tricheur";
+	$array["violence"]="violence";
+	$array["warez"]="warez";
+	$array["webmail"]="webmail";	
+	$array["adv"]="publicite";
+	$array["aggressive"]="aggressive";
+	$array["automobile"]="automobile/cars";
+	$array["chat"]="chat";
+	$array["dating"]="dating";
+	$array["downloads"]="downloads";
+	$array["drugs"]="drugs";
+	$array["education"]="recreation/schools";
+	$array["finance"]="financial";
+	$array["forum"]="forums";
+	$array["gamble"]="gamble";
+	$array["government"]="governments";
+	$array["hacking"]="hacking";
+	$array["hospitals"]="hospitals";
+	$array["imagehosting"]="imagehosting";
+	$array["isp"]="isp";
+	$array["jobsearch"]="jobsearch";
+	$array["library"]="books";
+	$array["models"]="models";
+	$array["movies"]="movies";
+	$array["music"]="music";
+	$array["news"]="news";
+	$array["porn"]="porn";
+	$array["redirector"]="redirector";
+	$array["religion"]="religion";
+	$array["remotecontrol"]="remote-control";
+	$array["ringtones"]="ringtones";
+	$array["searchengines"]="searchengines";
+	$array["shopping"]="shopping";
+	$array["socialnet"]="socialnet";
+	$array["spyware"]="spyware";
+	$array["tracker"]="tracker";
+	$array["updatesites"]="updatesites";
+	$array["violence"]="violence";
+	$array["warez"]="warez";
+	$array["weapons"]="weapons";
+	$array["webmail"]="webmail";
+	$array["webphone"]="webphone";
+	$array["webradio"]="webradio";
+	$array["webtv"]="webtv";		
+	if(!isset($array[$category])){return null;}
+	return $array[$category];
+	
+	
+}
+
+function inject($category,$table=null,$file=null){
+	if($table==null){echo "Table is null\n";}
+	$q=new mysql_squid_builder();
+	if(!$q->TABLE_EXISTS($table)){echo "$category -> no such table $table\n";return;}
+		
+		
 	if($file==null){
 		$dir="/var/lib/squidguard";
 		if($GLOBALS["SHALLA"]){$dir="/root/shalla/BL";}
@@ -535,10 +761,7 @@ function inject($category,$file=null){
 		$file="$dir/$category/domains";
 	}
 		
-	if(!is_file("$file")){
-			echo "$file no such file";
-			return;
-	}
+	if(!is_file("$file")){echo "$file no such file";return;}
 		
 	$sock=new sockets();
 	$uuid=base64_decode($sock->getFrameWork("cmd.php?system-unique-id=yes"));
@@ -546,24 +769,26 @@ function inject($category,$file=null){
 	echo "open $file\n";
 	$f=explode("\n",@file_get_contents("$file"));
 	krsort($f);
-	$q=new mysql();
+	$q=new mysql_squid_builder();
 	if($GLOBALS["CATTO"]<>null){$category=$GLOBALS["CATTO"];}
 	
-	$prefix="INSERT IGNORE INTO dansguardian_community_categories (zmd5,zDate,category,pattern,uuid) VALUES ";
-	
+	$prefix="INSERT IGNORE INTO $table (zmd5,zDate,category,pattern,uuid) VALUES ";
+	$c=0;
 	while (list ($index, $www) = each ($f)){
+		if($www==null){continue;}
 		if(preg_match("#^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$#", $www)){continue;}
 		$www=trim(strtolower($www));
 		if($www=="thisisarandomentrythatdoesnotexist.com"){continue;}
 		if($www==null){continue;}
 		$md5=md5($www.$category);
 		$n[]="('$md5',NOW(),'$category','$www','$uuid')";
-		echo $www." - $category\n";
+		$c++;
 		
-		if(count($n)>1000){
+		if(count($n)>3000){
 			$sql=$prefix.@implode(",",$n);
 			$q->QUERY_SQL($sql,"artica_backup");
 			if(!$q->ok){echo $q->mysql_error."\n";die();}
+			echo "$c items\n";
 			$n=array();
 			
 		}
@@ -571,11 +796,16 @@ function inject($category,$file=null){
 	}
 	
 		if(count($f)>0){
-			$sql=$prefix.@implode(",",$n);
-			$q->QUERY_SQL($sql,"artica_backup");
-			if(!$q->ok){echo $q->mysql_error."\n$sql";continue;}
-			$n=array();
+			if($c>0){
+				echo "$c items line:". __LINE__."\n";
+				$sql=$prefix.@implode(",",$n);
+				$q->QUERY_SQL($sql,"artica_backup");
+				if(!$q->ok){echo $q->mysql_error."\n$sql";continue;}
+				$n=array();
+			}
 		}	
+		
+	@unlink($file);
 	
 	
 }
@@ -713,15 +943,72 @@ function UFDBGUARD_STATUS(){
 }
 
 
+function databases_status(){
+	if($GLOBALS["VERBOSE"]){echo "databases_status() line:".__LINE__."\n";}
+	$unix=new unix();
+	$chmod=$unix->find_program("chmod");
+	@mkdir("/var/lib/squidguard",755,true);
+	$q=new mysql_squid_builder();
+	$sql="SELECT table_name as c FROM information_schema.tables WHERE table_schema = 'squidlogs' AND table_name LIKE 'category_%'";
+	$results=$q->QUERY_SQL($sql);
+	if($GLOBALS["VERBOSE"]){echo $sql."\n";}	
+	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
+		$table=$ligne["c"];
+		if(!preg_match("#^category_(.+)#", $table,$re)){continue;}
+		$categoryname=$re[1];
+		if($GLOBALS["VERBOSE"]){echo "Checks $categoryname\n";}
+		if(is_file("/var/lib/squidguard/$categoryname/domains.ufdb")){
+			if($GLOBALS["VERBOSE"]){echo "Checks $categoryname/domains.ufdb\n";}
+			$size=@filesize("/var/lib/squidguard/$categoryname/domains.ufdb");
+			if($GLOBALS["VERBOSE"]){echo "Checks $categoryname/domains\n";}
+			$textsize=@filesize("/var/lib/squidguard/$categoryname/domains");
+			
+		}
+		if(!is_numeric($textsize)){$textsize=0;}
+		if(!is_numeric($size)){$size=0;}
+		$array[$table]=array("DBSIZE"=>$size,"TXTSIZE"=>$textsize);
+	}
 
+	if($GLOBALS["VERBOSE"]){print_r($array);}
+	@file_put_contents("/usr/share/artica-postfix/ressources/logs/web/ufdbguard_db_status", serialize($array));
+	shell_exec("$chmod 777 /usr/share/artica-postfix/ressources/logs/web/ufdbguard_db_status");
+	
+}
 
 function ufdbguard_recompile_missing_dbs(){
-	$array=BuildMissingUfdBguardDBS();
-	while (list ($filename, $size) = each ($array) ){
-	 events_ufdb_tail("#STRONG# check $filename #!STRONG#",__LINE__);
-	 UFDBGUARD_COMPILE_SINGLE_DB($filename);
+	$unix=new unix();
+	$touch=$unix->find_program("touch");
+	@mkdir("/var/lib/squidguard",755,true);
+	$q=new mysql_squid_builder();
+	$sql="SELECT table_name as c FROM information_schema.tables WHERE table_schema = 'squidlogs' AND table_name LIKE 'category_%'";
+	$results=$q->QUERY_SQL($sql);
+	
+	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
+		$table=$ligne["c"];
+		if(!preg_match("#^category_(.+)#", $table,$re)){continue;}
+		$categoryname=$re[1];
+		echo "Starting......: ufdbGuard $table -> $categoryname\n";
+		if(!is_file("/var/lib/squidguard/$categoryname/domains")){
+			@mkdir("/var/lib/squidguard/$categoryname",755,true);
+			$sql="SELECT LOWER(pattern) FROM {$ligne["c"]} WHERE enabled=1 AND pattern REGEXP '[a-zA-Z0-9\_\-]+\.[a-zA-Z0-9\_\-]+' INTO OUTFILE '$table.temp' FIELDS OPTIONALLY ENCLOSED BY 'n'";
+			$q->QUERY_SQL($sql);
+			if(!is_file("/var/lib/mysql/squidlogs/$table.temp")){
+				echo "Starting......: ufdbGuard /var/lib/mysql/squidlogs/$table.temp no such file\n";
+				continue;
+			}
+			echo "Starting......: ufdbGuard /var/lib/mysql/squidlogs/$table.temp done...\n";
+			@copy("/var/lib/mysql/squidlogs/$table.temp", "/var/lib/squidguard/$categoryname/domains");	
+			@unlink("/var/lib/mysql/squidlogs/$table.temp");
+			echo "Starting......: ufdbGuard UFDBGUARD_COMPILE_SINGLE_DB(/var/lib/squidguard/$categoryname/domains)\n";
+			UFDBGUARD_COMPILE_SINGLE_DB("/var/lib/squidguard/$categoryname/domains");					
+		}else{
+			echo "Starting......: ufdbGuard /var/lib/squidguard/$categoryname/domains OK\n";
+			
+		}
+		
+		if(!is_file("/var/lib/squidguard/$categoryname/expressions")){shell_exec("$touch /var/lib/squidguard/$categoryname/expressions");}
+		
 	}
-	$array=BuildMissingUfdBguardDBS();
 	build();
 	if(is_file("/etc/init.d/ufdb")){shell_exec("/etc/init.d/ufdb reconfig >/dev/null 2>&1");}
 	
@@ -730,14 +1017,10 @@ function ufdbguard_recompile_missing_dbs(){
 function ufdbguard_recompile_dbs(){
 	@unlink("/var/log/artica-postfix/ufdbguard-compilator.debug");
 	build();
-	$array=BuildMissingUfdBguardDBS(true);
-	while (list ($filename, $size) = each ($array) ){
-	 events_ufdb_tail("#STRONG# check $filename #!STRONG#",__LINE__);
-	 UFDBGUARD_COMPILE_SINGLE_DB($filename);
-	}
-	$array=BuildMissingUfdBguardDBS();
-	build();
-	if(is_file("/etc/init.d/ufdb")){shell_exec("/etc/init.d/ufdb reconfig >/dev/null 2>&1");}	
+	$unix=new unix();
+	$rm=$unix->find_program("rm");
+	shell_exec("$rm -rf /var/lib/squidguard/*");
+	ufdbguard_recompile_missing_dbs();	
 	
 }
 function ufdbguard_schedule(){
@@ -833,6 +1116,8 @@ function events_ufdb_tail($text,$line=0){
 		@fclose($f);	
 		events_ufdb_exec($textnew);
 		}
+		
+	
 
 
 ?>

@@ -690,11 +690,6 @@ begin
          halt(0);
    end;
 
-
-
-
-
-
    if ParamStr(1)='APP_WINEXE' then begin
          winexe:=tsetup_winexe.Create;
          winexe.xinstall();
@@ -702,11 +697,18 @@ begin
          halt(0);
    end;
 
+   if ParamStr(1)='APP_OCS_SERVER' then begin
+         ocsi:=tsetup_ocs.Create;
+         ocsi.xinstall_v2();
+         zinstall.EMPTY_CACHE();
+         halt(0);
+   end;
+
    if ParamStr(1)='APP_OCSI' then begin
          fpsystem('/usr/share/artica-postfix/bin/setup-ubuntu --check-base-system');
          ocsi:=tsetup_ocs.Create;
+         ocsi.xinstall_v2();
          ocsi.xwpkg_server_install();
-         ocsi.xinstall();
          fpsystem('/usr/share/artica-postfix/bin/artica-make APP_OCSI_CLIENT &');
          ocsi.xclient_install();
          winexe:=tsetup_winexe.Create;

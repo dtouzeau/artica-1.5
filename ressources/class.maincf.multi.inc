@@ -1596,32 +1596,140 @@ private function smtp_sasl_password_map(){
 			$conf[]="bounce_notice_recipient=postmaster";
 			$conf[]="double_bounce_sender=double-bounce";
 			
+			$smtp_connection_cache_on_demand=$this->GET("smtp_connection_cache_on_demand");
+			$smtp_connection_cache_time_limit=$this->GET("smtp_connection_cache_time_limit");
+			$smtp_connection_reuse_time_limit=$this->GET("smtp_connection_reuse_time_limit");
+			$connection_cache_ttl_limit=$this->GET("connection_cache_ttl_limit");
+			$connection_cache_status_update_time=$this->GET("connection_cache_status_update_time");
+			$smtp_connection_cache_destinations=unserialize(base64_decode($this->GET_BIGDATA("smtp_connection_cache_destinations")));	
+			
+			$address_verify_map=$this->GET("address_verify_map");
+			$address_verify_negative_cache=$this->GET("address_verify_negative_cache");
+			$address_verify_poll_count=$this->GET("address_verify_poll_count");
+			$address_verify_poll_delay=$this->GET("address_verify_poll_delay");
+			$address_verify_sender=$this->GET("address_verify_sender");
+			$address_verify_negative_expire_time=$this->GET("address_verify_negative_expire_time");
+			$address_verify_negative_refresh_time=$this->GET("address_verify_negative_refresh_time");
+			$address_verify_positive_expire_time=$this->GET("address_verify_positive_expire_time");
+			$address_verify_positive_refresh_time=$this->GET("address_verify_positive_refresh_time");
+			if($address_verify_map==null){$address_verify_map="btree:/var/lib/postfix-$this->myhostname/verify";}	
+
+			$smtpd_error_sleep_time=$this->GET("smtpd_error_sleep_time");
+			$smtpd_soft_error_limit=$this->GET("smtpd_soft_error_limit");
+			$smtpd_hard_error_limit=$this->GET("smtpd_hard_error_limit");
+			$smtpd_client_connection_count_limit=$this->GET("smtpd_client_connection_count_limit");
+			$smtpd_client_connection_rate_limit=$this->GET("smtpd_client_connection_rate_limit");
+			$smtpd_client_message_rate_limit=$this->GET("smtpd_client_message_rate_limit");
+			$smtpd_client_recipient_rate_limit=$this->GET("smtpd_client_recipient_rate_limit");
+			$smtpd_client_new_tls_session_rate_limit=$this->GET("smtpd_client_new_tls_session_rate_limit");
+			$smtpd_client_event_limit_exceptions=$this->GET("smtpd_client_event_limit_exceptions");
+			$in_flow_delay=$this->GET("in_flow_delay");
+			$smtp_connect_timeout=$this->GET("smtp_connect_timeout");
+			$smtp_helo_timeout=$this->GET("smtp_helo_timeout");
+			$initial_destination_concurrency=$this->GET("initial_destination_concurrency");
+			$default_destination_concurrency_limit=$this->GET("default_destination_concurrency_limit");
+			$local_destination_concurrency_limit=$this->GET("local_destination_concurrency_limit");
+			$smtp_destination_concurrency_limit=$this->GET("smtp_destination_concurrency_limit");
+			$default_destination_recipient_limit=$this->GET("default_destination_recipient_limit");
+			$smtpd_recipient_limit=$this->GET("smtpd_recipient_limit");
+			$queue_run_delay=$this->GET("queue_run_delay");  
+			$minimal_backoff_time =$this->GET("minimal_backoff_time");
+			$maximal_backoff_time =$this->GET("maximal_backoff_time");
+			$maximal_queue_lifetime=$this->GET("maximal_queue_lifetime"); 
+			$bounce_queue_lifetime =$this->GET("bounce_queue_lifetime");
+			$qmgr_message_recipient_limit =$this->GET("qmgr_message_recipient_limit");
+			$default_process_limit=$this->GET("default_process_limit");	
+			$qmgr_message_active_limit=$this->GET("qmgr_message_active_limit");
+			$qmgr_message_recipient_minimum=$this->GET("qmgr_message_recipient_minimum");		
+			$smtp_fallback_relay=$this->GET("smtp_fallback_relay");
+	
+			
+			if(!is_numeric($qmgr_message_active_limit)){$qmgr_message_active_limit=20000;}
+			if(!is_numeric($qmgr_message_recipient_limit)){$qmgr_message_recipient_limit=20000;}
+			if(!is_numeric($qmgr_message_recipient_minimum)){$qmgr_message_recipient_minimum=10;}				
+			if(!is_numeric($smtp_connection_cache_on_demand)){$smtp_connection_cache_on_demand=1;}
+			if($smtp_connection_cache_time_limit==null){$smtp_connection_cache_time_limit="2s";}
+			if($smtp_connection_reuse_time_limit==null){$smtp_connection_reuse_time_limit="300s";}
+			if($connection_cache_ttl_limit==null){$connection_cache_ttl_limit="2s";}
+			if($connection_cache_status_update_time==null){$connection_cache_status_update_time="600s";}	
+			if($smtp_connection_cache_on_demand==1){$smtp_connection_cache_on_demand="yes";}else{$smtp_connection_cache_on_demand="no";}	
+			
+			if(!is_numeric($address_verify_negative_cache)){$address_verify_negative_cache=1;}
+			if(!is_numeric($address_verify_poll_count)){$address_verify_poll_count=3;}
+			if($address_verify_poll_delay==null){$address_verify_poll_delay="3s";}
+			if($address_verify_sender==null){$address_verify_sender="double-bounce";}
+			if($address_verify_negative_expire_time==null){$address_verify_negative_expire_time="3d";}
+			if($address_verify_negative_refresh_time==null){$address_verify_negative_refresh_time="3h";}
+			if($address_verify_positive_expire_time==null){$address_verify_positive_expire_time="31d";}
+			if($address_verify_positive_refresh_time==null){$address_verify_positive_refresh_time="7d";}
+			if($address_verify_negative_cache==1){$address_verify_negative_cache="yes";}else{$address_verify_negative_cache="no";}	
+
+			if($smtpd_error_sleep_time==null){$smtpd_error_sleep_time="1s";}
+			if(!is_numeric($smtpd_soft_error_limit)){$smtpd_soft_error_limit=10;}
+			if(!is_numeric($smtpd_hard_error_limit)){$smtpd_hard_error_limit=20;}
+			if(!is_numeric($smtpd_client_connection_count_limit)){$smtpd_client_connection_count_limit=50;}
+			if(!is_numeric($smtpd_client_connection_rate_limit)){$smtpd_client_connection_rate_limit=0;}
+			if(!is_numeric($smtpd_client_message_rate_limit)){$smtpd_client_message_rate_limit=0;}
+			if(!is_numeric($smtpd_client_recipient_rate_limit)){$smtpd_client_recipient_rate_limit=0;}
+			if(!is_numeric($smtpd_client_new_tls_session_rate_limit)){$smtpd_client_new_tls_session_rate_limit=0;}
+			if(!is_numeric($initial_destination_concurrency)){$initial_destination_concurrency=5;}
+			if(!is_numeric($default_destination_concurrency_limit)){$default_destination_concurrency_limit=20;}
+			if(!is_numeric($smtp_destination_concurrency_limit)){$smtp_destination_concurrency_limit=20;}
+			if(!is_numeric($local_destination_concurrency_limit)){$local_destination_concurrency_limit=2;}
+			if(!is_numeric($default_destination_recipient_limit)){$default_destination_recipient_limit=50;}
+			if(!is_numeric($smtpd_recipient_limit)){$smtpd_recipient_limit=1000;}
+			if(!is_numeric($default_process_limit)){$default_process_limit=100;}
+			if(!is_numeric($qmgr_message_recipient_limit)){$qmgr_message_recipient_limit=20000;}
+			if($smtpd_client_event_limit_exceptions==null){$smtpd_client_event_limit_exceptions="\$mynetworks";}
+			if($in_flow_delay==null){$in_flow_delay="1s";}
+			if($smtp_connect_timeout==null){$smtp_connect_timeout="30s";}
+			if($smtp_helo_timeout==null){$smtp_helo_timeout="300s";}
+			if($bounce_queue_lifetime==null){$bounce_queue_lifetime="5d";}
+			if($maximal_queue_lifetime==null){$maximal_queue_lifetime="5d";}
+			if($maximal_backoff_time==null){$maximal_backoff_time="4000s";}
+			if($minimal_backoff_time==null){$minimal_backoff_time="300s";}
+			if($queue_run_delay==null){$queue_run_delay="300s";}			
+
+			if(is_array($smtp_connection_cache_destinations)){
+				if(count($smtp_connection_cache_destinations)>0){
+					while (list ($host, $none) = each ($smtp_connection_cache_destinations) ){$smtp_connection_cache_destinationsR[]=$host;}
+					$smtp_connection_cache_destinationsF=@implode(",", $smtp_connection_cache_destinationsR);
+				}
+			}			
+			
 			
 
 			$conf[]="smtpd_reject_unlisted_recipient=yes";
-			$conf[]="smtp_connection_cache_on_demand=yes";
-			$conf[]="smtp_connection_cache_time_limit=2s";
-			$conf[]="smtp_connection_reuse_time_limit=300s";
-			$conf[]="connection_cache_ttl_limit=2s";
-			$conf[]="connection_cache_status_update_time=600s";
-			$conf[]="address_verify_sender=double-bounce";
-			$conf[]="address_verify_negative_cache=yes";
-			$conf[]="address_verify_negative_expire_time=3d";
-			$conf[]="address_verify_negative_refresh_time=3h";
-			$conf[]="address_verify_poll_count=3";
-			$conf[]="address_verify_poll_delay=3s";
-			$conf[]="address_verify_positive_expire_time=31d";
-			$conf[]="address_verify_positive_refresh_time=7d";
+			$conf[]="smtp_connection_cache_on_demand=$smtp_connection_cache_on_demand";
+			$conf[]="smtp_connection_cache_time_limit=$smtp_connection_cache_time_limit";
+			$conf[]="smtp_connection_reuse_time_limit=$smtp_connection_reuse_time_limit";
+			$conf[]="connection_cache_ttl_limit=$connection_cache_ttl_limit";
+			$conf[]="connection_cache_status_update_time=$connection_cache_status_update_time";
+			$conf[]="smtp_connection_cache_destinations=$smtp_connection_cache_destinationsF";
+			$conf[]="address_verify_map=$address_verify_map";
+			$conf[]="address_verify_sender=$address_verify_sender";
+			$conf[]="address_verify_negative_cache=$address_verify_negative_cache";
+			$conf[]="address_verify_negative_expire_time=$address_verify_negative_expire_time";
+			$conf[]="address_verify_negative_refresh_time=$address_verify_negative_refresh_time";
+			$conf[]="address_verify_poll_count=$address_verify_poll_count";
+			$conf[]="address_verify_poll_delay=$address_verify_poll_delay";
+			
+			$conf[]="address_verify_positive_expire_time=$address_verify_positive_expire_time";
+			$conf[]="address_verify_positive_refresh_time=$address_verify_positive_refresh_time";
 			
 			
 
-			$conf[]="smtpd_error_sleep_time=1s";
-			$conf[]="smtpd_soft_error_limit=10";
-			$conf[]="smtpd_hard_error_limit=20";
-			$conf[]="smtpd_client_connection_count_limit=50";
-			$conf[]="smtpd_client_connection_rate_limit=0";
-			$conf[]="smtpd_client_message_rate_limit=0";
-			$conf[]="smtpd_client_recipient_rate_limit=0";
+			$conf[]="smtpd_error_sleep_time=$smtpd_error_sleep_time";
+			$conf[]="smtpd_hard_error_limit=$smtpd_hard_error_limit";
+			$conf[]="smtpd_soft_error_limit=$smtpd_soft_error_limit";
+			$conf[]="smtpd_client_connection_count_limit=$smtpd_client_connection_count_limit";
+			$conf[]="smtpd_client_connection_rate_limit=$smtpd_client_connection_rate_limit";
+			$conf[]="smtpd_client_message_rate_limit=$smtpd_client_message_rate_limit";
+			$conf[]="smtpd_client_recipient_rate_limit=$smtpd_client_recipient_rate_limit";
+			$conf[]="smtpd_client_event_limit_exceptions=$smtpd_client_event_limit_exceptions";
+			
+			
+			
 			
 			$in_flow_delay=$this->GET("in_flow_delay");
 			$freeze_delivery_queue=$this->GET("freeze_delivery_queue");
@@ -1631,12 +1739,7 @@ private function smtp_sasl_password_map(){
 				$conf[]="master_service_disable=qmgr.fifo";
 			}	
 			
-			$minimal_backoff_time=$this->GET("minimal_backoff_time");
-			$maximal_backoff_time=$this->GET("maximal_backoff_time");
-			$bounce_queue_lifetime=$this->GET("bounce_queue_lifetime");
-			$default_process_limit=$this->GET("default_process_limit");
-			$maximal_queue_lifetime=$this->GET("maximal_queue_lifetime");
-			$queue_run_delay=$this->GET("queue_run_delay");
+
 			if($in_flow_delay<>null){$conf[]="in_flow_delay=$in_flow_delay";}
 			if($minimal_backoff_time<>null){$conf[]="minimal_backoff_time=$minimal_backoff_time";}
 			if($maximal_backoff_time<>null){$conf[]="maximal_backoff_time=$maximal_backoff_time";}
@@ -1645,19 +1748,11 @@ private function smtp_sasl_password_map(){
 			if($maximal_queue_lifetime<>null){$conf[]="maximal_queue_lifetime=$maximal_queue_lifetime";}
 			if($queue_run_delay==null){$queue_run_delay="5m";}
 			
-			
-		$qmgr_message_active_limit=$this->GET("qmgr_message_active_limit");
-		$qmgr_message_recipient_limit=$this->GET("qmgr_message_recipient_limit");
-		$qmgr_message_recipient_minimum=$this->GET("qmgr_message_recipient_minimum");
-		
-		if(!is_numeric($qmgr_message_active_limit)){$qmgr_message_active_limit=20000;}
-		if(!is_numeric($qmgr_message_recipient_limit)){$qmgr_message_recipient_limit=20000;}
-		if(!is_numeric($qmgr_message_recipient_minimum)){$qmgr_message_recipient_minimum=10;}			
-			
-			
-			
-			$conf[]="smtp_helo_timeout=300s";
-			$conf[]="smtp_connect_timeout=30s";
+			$conf[]="smtp_helo_timeout=$smtp_helo_timeout";
+			$conf[]="smtp_connect_timeout=$smtp_connect_timeout";
+			if($smtp_fallback_relay<>null){
+				$conf[]="smtp_fallback_relay=$smtp_fallback_relay";	
+			}
 			$conf[]="queue_run_delay=$queue_run_delay";
 			$conf[]="qmgr_message_active_limit=$qmgr_message_active_limit";
 			$conf[]="qmgr_message_recipient_limit=$qmgr_message_recipient_limit";
@@ -1671,10 +1766,10 @@ private function smtp_sasl_password_map(){
 
 			$conf[]="smtp_sender_dependent_authentication = yes";
 			$conf[]="undisclosed_recipients_header=To: undisclosed-recipients:;";
-			$conf[]="initial_destination_concurrency=5";
-			$conf[]="default_destination_concurrency_limit=20";
-			$conf[]="local_destination_concurrency_limit=2";
-			$conf[]="smtp_destination_concurrency_limit=\$default_destination_concurrency_limit";
+			$conf[]="initial_destination_concurrency=$initial_destination_concurrency";
+			$conf[]="default_destination_concurrency_limit=$default_destination_concurrency_limit";
+			$conf[]="local_destination_concurrency_limit=$local_destination_concurrency_limit";
+			$conf[]="smtp_destination_concurrency_limit=$smtp_destination_concurrency_limit";
 			$conf[]="";
 			$conf[]="# Templates and notifications ---------------------------------";
 			$conf[]=$this->notifications_templates();
@@ -1706,7 +1801,7 @@ private function smtp_sasl_password_map(){
 			$conf[]="smtpd_use_tls=yes";
 			$conf[]="smtpd_tls_session_cache_database=btree:\${data_directory}/smtpd_scache";
 			$conf[]="smtp_tls_session_cache_database=btree:\${data_directory}/smtpd_tls_session_cache";						
-			$conf[]="smtpd_client_new_tls_session_rate_limit=0";
+			$conf[]="smtpd_client_new_tls_session_rate_limit=$smtpd_client_new_tls_session_rate_limit";
 			$conf[]="";
 			$conf[]="#  SMTP CLIENT SASL ---------------------------------";
 			$conf[]=$this->smtp_sasl_password_map();
@@ -2316,10 +2411,23 @@ private function smtp_sasl_password_map(){
 			echo "Starting......: Postfix \"$this->myhostname\" master.cf done\n";	
 		
 	}
+
+private function DOMAINS_THROTTLE_SMTP_CONNECTION_CACHE_DESTINATIONS($uuid){	
+	$array=unserialize(base64_decode($this->GET_BIGDATA("domain_throttle_daemons_list")));
+	$caches=$array[$uuid]["smtp-instance-cache-destinations"];
+	if(count($caches)==0){return null;}
+	while (list ($domain, $none) = each ($caches) ){
+		$f[]="$domain\tOK";
+		
+	}
 	
+	@file_put_contents("/etc/postfix-$this->myhostname/{$uuid}_CONNECTION_CACHE_DESTINATIONS", implode("\n", $f));
+	shell_exec("{$GLOBALS["postmap"]} hash:/etc/postfix-$this->myhostname/{$uuid}_CONNECTION_CACHE_DESTINATIONS >/dev/null 2>&1");
+	return "smtp_connection_cache_destinations=hash:/etc/postfix-$this->myhostname/{$uuid}_CONNECTION_CACHE_DESTINATIONS";
+}
 	
 private function DOMAINS_THROTTLE(){
-	
+	if($GLOBALS["VERBOSE"]){echo __FUNCTION__.":: START\n";}
 	$array=unserialize(base64_decode($this->GET_BIGDATA("domain_throttle_daemons_list")));
 
 	$f=explode("\n",@file_get_contents("/etc/postfix-$this->myhostname/main.cf"));
@@ -2333,11 +2441,19 @@ private function DOMAINS_THROTTLE(){
 	unset($new);	
 	
 	
-	if(!is_array($array)){return null;}
+	if(!is_array($array)){
+		if($GLOBALS["VERBOSE"]){echo __FUNCTION__.":: NOT AN ARRAY\n";}
+		return null;}
 	
 	while (list ($uuid, $conf) = each ($array) ){
-		if($conf["ENABLED"]<>1){continue;}
-		if(count($conf["DOMAINS"])==0){continue;}
+		if($conf["ENABLED"]<>1){
+			if($GLOBALS["VERBOSE"]){echo __FUNCTION__.":: $uuid DISABLED\n";}
+			continue;
+		}
+		if(count($conf["DOMAINS"])==0){
+			if($GLOBALS["VERBOSE"]){echo __FUNCTION__.":: $uuid NO TARGETED DOMAINS\n";}
+			continue;
+		}
 		$maps=array();
 		if($conf["transport_destination_concurrency_failed_cohort_limit"]==null){$conf["transport_destination_concurrency_failed_cohort_limit"]=1;}
 		if($conf["transport_delivery_slot_loan"]==null){$conf["transport_delivery_slot_loan"]=3;}
@@ -2372,6 +2488,8 @@ private function DOMAINS_THROTTLE(){
 				$moinsoMaster[]="smtp_connection_cache_on_demand=yes";
 				$moinsoMaster[]="smtp_connection_cache_time_limit={$conf["smtp_connection_cache_time_limit"]}";
 				$moinsoMaster[]="smtp_connection_reuse_time_limit={$conf["smtp_connection_reuse_time_limit"]}";
+				$cache_destinations=$this->DOMAINS_THROTTLE_SMTP_CONNECTION_CACHE_DESTINATIONS($uuid);
+				if($cache_destinations<>null){$moinsoMaster[]=$cache_destinations;}
 			}
 			
 		}else{

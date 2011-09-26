@@ -28,7 +28,7 @@ js();
 
 function status(){
 	
-	$q=new mysql();
+	$q=new mysql_squid_builder();
 	$page=CurrentPageName();
 	$tpl=new templates();
 	$total=FormatNumber($q->COUNT_ROWS("dansguardian_community_categories","artica_backup"),0,'.',' ',3);
@@ -69,7 +69,7 @@ function FormatNumber($number, $decimals = 0, $thousand_separator = '&nbsp;', $d
 
 function pattern_delete(){
 	$sql="DELETE FROM dansguardian_community_categories WHERE pattern='{$_POST["pattern"]}' AND category='{$_POST["category"]}'";
-	$q=new mysql();
+	$q=new mysql_squid_builder();
 	$q->QUERY_SQL($sql,"artica_backup");
 	if(!$q->ok){echo $q->mysql_error;}
 	
@@ -135,7 +135,7 @@ function categories_list(){
 	
 	if(count($_SESSION["ARC-CAT-LIST"])>1){return $_SESSION["ARC-CAT-LIST"];}
 	$sql="SELECT category,COUNT(pattern) as tcount FROM dansguardian_community_categories GROUP BY category";
-	$q=new mysql();
+	$q=new mysql_squid_builder();
 	$results=$q->QUERY_SQL($sql,"artica_backup");
 	if(!$q->ok){echo("$q->mysql_error");}
 	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
@@ -148,7 +148,7 @@ function categories_list(){
 }
 
 function categories_search(){
-	$q=new mysql();
+	$q=new mysql_squid_builder();
 	$page=CurrentPageName();
 	$tpl=new templates();	
 	$pattern=$_GET["search"];

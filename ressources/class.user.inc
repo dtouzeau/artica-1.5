@@ -3192,6 +3192,20 @@ function UsersInterfaceDatasDelete(){
 		function Groups_list(){
 			
 			if($this->EnableManageUsersTroughActiveDirectory){
+				include_once(dirname(__FILE__)."/class.mysql.inc");
+				$dn=utf8_encode($this->dn);
+				$sql="select activedirectory_groups.groupdn,activedirectory_groupsNames.groupname from activedirectory_groups,activedirectory_groupsNames
+				where activedirectory_groups.userdn='$dn' AND activedirectory_groups.groupdn=activedirectory_groupsNames.dn ORDER BY activedirectory_groupsNames.groupname";
+				$q=new mysql();
+				$results=$q->QUERY_SQL($sql,"artica_backup");
+				$BranchsInMyql=mysql_num_rows($results);
+				while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+					$res[$ligne["groupdn"]]=$ligne["groupname"];
+					
+				}
+				if(count($res)>0){return $res;}
+				
+				
 				$ldap=new ldapAD();
 				$attrs=array("sAMAccountName");
 				$sr =@ldap_search($ldap->ldap_connection,$ldap->suffix,"(&(objectClass=group)(member=$this->dn))",$attrs);

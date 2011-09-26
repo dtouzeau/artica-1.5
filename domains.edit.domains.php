@@ -997,12 +997,19 @@ function AddNewInternetDomain(){
 	}
 			
 	$sock->getFrameWork("cmd.php?postfix-transport-maps=yes");
-	if($usr->AMAVIS_INSTALLED){
-		$sock->getFrameWork("cmd.php?amavis-restart=yes");
-	}
+	if($usr->AMAVIS_INSTALLED){$sock->getFrameWork("cmd.php?amavis-restart=yes");}
 	
-	
-			
+	include_once(dirname(__FILE__)."/ressources/class.user.inc");
+	$user=new user("postmaster");
+	$user->domainname=$domain;
+	$user->ou=$ou;
+	$user->mail="postmaster@$domain";
+	$user->password=time();
+	if(!$user->add_user()){echo "Failed to add Postmaster\n$user->ldap_error";return;}
+	$user=new user("postmaster");
+	$user->add_alias("hostmaster@$domain");
+	$user->add_alias("webmaster@$domain");
+	$user->add_alias("abuse@$domain");
 }
 	
 function DeleteInternetDomain(){

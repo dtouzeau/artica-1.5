@@ -21,7 +21,7 @@ $user=new usersMenus();
 	if(isset($_GET["frontend-stats"])){frontend_stats_js();exit;}
 	if(isset($_GET["frontend-tasks"])){frontend_tasks_js();exit;}
 	if(isset($_GET["frontend-blacklists"])){frontend_blacklists_js();exit;}
-	
+	if(isset($_GET["popup-big"])){tabs();exit;}
 	
 	
 	if(isset($_GET["frontend-excludemime"])){frontend_excludemime_js();exit;}
@@ -245,8 +245,12 @@ function tabs(){
 }
 
 
+
+
 function js(){
 	$Kav4Proxyload="Kav4Proxyload()";
+	
+if(isset($_GET["js-popup"])){$Kav4Proxyload="LoadBigSettings()";}
 if(isset($_GET["inline"])){
 	$Kav4Proxyload="Kav4ProxyloadInLIne('{$_GET["font-size"]}')";
 	$prefix="<div id='Kav4Proxy-div'>
@@ -264,6 +268,12 @@ $title2=$title."&nbsp;&nbsp;&raquo;&raquo;&nbsp;".$tpl->_ENGINE_parse_body("{exc
 
 $html="
 	$prefix
+	
+	function LoadBigSettings(){
+		YahooWin('750','$page?popup-big=yes','$title');
+	
+	}
+	
 	function Kav4Proxyload(){
 		YahooWin('550','$page?popup=yes','$title');
 	}	

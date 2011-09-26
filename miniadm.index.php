@@ -371,6 +371,11 @@ function center_panel(){
 		$info_right[]=info_messaging();
 	}
 	
+	if(($users->AsDansGuardianAdministrator) OR ($users->AsWebFilterRepository)){
+		$info_left[]=info_Dansguardian();
+		
+	}
+	
 	
 	
 	
@@ -399,7 +404,7 @@ function info_messaging(){
 return "
 	<table style='width:98%' class=form>
 	<tr>
-		<td valign='top' width=1%><img src='img/128-catch-all.png'></td>
+		<td valign='top' width=1%><img src='img/128-catch-all.png' OnClick=\"javascript:Loadjs('domains.edit.domains.php?js=yes&ou=$ouencoded&encoded=yes&in-front-ajax=yes');></td>
 		<td valign='top'><H3 style='font-weight:bold'>{messaging}: $usersNB {domains}</H3>
 			<ul>
 			<li><a href=\"javascript:blur()\" 
@@ -417,6 +422,28 @@ return "
 	
 }
 
+function info_Dansguardian(){
+
+return "
+	<table style='width:98%' class=form>
+	<tr>
+		<td valign='top' width=1%><img src='img/www-web-secure-128.png' OnClick=\"javascript:Loadjs('miniadm.webfiltering.index.php');\" ></td>
+		<td valign='top'><H3 style='font-weight:bold'>{WEB_FILTERING}</H3>
+			<ul>
+			<li><a href=\"javascript:blur()\" 
+				OnClick=\"javascript:Loadjs('miniadm.webfiltering.index.php');\" 
+				style='font-size:13px;font-weight:normal'>{miniadm_web_filtering_text}</a>
+			</li>
+			</ul>	
+			
+		
+		</td>
+	</tr>
+	</table>
+	";		
+	
+}
+
 function info_organization(){
 	$ldap=new clladp();
 	$usersNB=$ldap->CountDeUSerOu($_SESSION["ou"]);
@@ -424,7 +451,7 @@ function info_organization(){
 	return "
 	<table style='width:98%' class=form>
 	<tr>
-		<td valign='top' width=1%><img src='img/users-info-128.png'></td>
+		<td valign='top' width=1%><img src='img/users-info-128.png' OnClick=\"javascript:Loadjs('domains.add.user.php?ou={$_SESSION["ou"]}');\" ></td>
 		<td valign='top'><H3 style='font-weight:bold'>{$_SESSION["ou"]}: $usersNB {members}</H3>
 			<ul>
 			<li><a href=\"javascript:blur()\" 

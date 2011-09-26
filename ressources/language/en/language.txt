@@ -1758,7 +1758,7 @@ The message delivery transport name is the first field in the entry in the maste
 <manage_your_mailbox_rules_text>Here you can manage rules that help you to automatically order your mailbox when mails is saved into.</manage_your_mailbox_rules_text>
 <manage_your_org>Manage your organization</manage_your_org>
 <manage_your_quarantine>Manage your quarantine</manage_your_quarantine>
-<manage_your_server>Manage your server</manage_your_server>
+<manage_your_server>Your server</manage_your_server>
 <Mandatory_TLS_encryption>Mandatory TLS encryption</Mandatory_TLS_encryption>
 <Mandatory_TLS_verification>Mandatory TLS verification</Mandatory_TLS_verification>
 <manufacturer>manufacturer</manufacturer>
@@ -2739,7 +2739,7 @@ it would be good to have a list of sites that offered "STARTTLS".[br] We can col
 If this feature is enabled and a server offers STARTTLS while TLS is not already enabled for that server, the Postfix SMTP client logs a line as follows:
 [code]postfix/smtp[pid]: Host offered STARTTLS: [hostname.example.com][/code]</smtp_tls_note_starttls_offer_text>
 <sn>Last Name</sn>
-<softwares_install>Softwares install</softwares_install>
+<softwares_install>Install</softwares_install>
 <soft_bounce>disables locally-generated bounces</soft_bounce>
 <soft_bounce_text>Safety net to keep mail queued that would otherwise be returned to the sender.[br] This parameter disables locally-generated bounces,[br] and prevents the Postfix SMTP server from rejecting mail permanently,[br]
 by changing 5xx reply codes into 4xx. However, this option is no cure for address rewriting mistakes or mail routing mistakes</soft_bounce_text>

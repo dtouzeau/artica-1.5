@@ -815,7 +815,7 @@ function url_regex_popup1(){
 		
 		
 		$html="
-			<p class=caption>{deny_websites_explain}</p>
+			<div class=explain>{deny_websites_explain}</div>
 				$form
 			<br>
 			<div id='squid-block-list' style='with:100%;height:300px;overflow:auto'></div>
@@ -1425,8 +1425,11 @@ echo $tpl->_ENGINE_parse_body($html,'squid.index.php');
 			if(results.length>0){alert(results);}
 			Loadjs('div-poubelle','CacheOff.php?cache=yes');
 			YahooWin2Hide();
-			RefreshTab('squid_main_config');
-			RefreshLeftMenu();
+			 if(document.getElementById('squid_main_config')){RefreshTab('squid_main_config');}
+			 if(document.getElementById('main_dansguardian_tabs')){RefreshTab('main_dansguardian_tabs');}
+			 if(document.getElementById('TEMPLATE_LEFT_MENUS')){ RefreshLeftMenu();}
+			 if(document.getElementById('squid-status')){LoadAjax('squid-status','squid.main.quicklinks.php?status=yes');}
+			 
 			}		
 		
 		function save_plugins(){
@@ -1561,11 +1564,15 @@ function plugins_save(){
 	
 	if($squid->enable_kavproxy==1){
 		echo $tpl->javascript_parse_text("{KAVPROXY_WILLBEENABLED}");
+		$sock->getFrameWork("squid.php?kav4proxy-configure=yes");
 	}
 	
 	if($squid->enable_cicap==1){
 		echo $tpl->javascript_parse_text("{CICAP_WILLBEENABLED}");
 	}
+	
+	$sock=new sockets();
+	$sock->getFrameWork("cmd.php?restart-artica-status=yes");
 	
 }
 
@@ -1714,18 +1721,18 @@ function visible_hostname_popup(){
 		<table style='width:100%'>
 			<tr>
 			<td class=legend nowrap>{visible_hostname}:</td>
-			<td>" . Field_text('visible_hostname_to_save',$squid->visible_hostname,'width:195px')."</td>
+			<td>" . Field_text('visible_hostname_to_save',$squid->visible_hostname,'width:195px;font-size:16px')."</td>
 			</tr>
 			<tr>
-			<td colspan=2 align='right'><input type='button' OnClick=\"javascript:visible_hostname();\" value='{edit}&nbsp;&raquo;'></td>
+			<td colspan=2 align='right'><hr>". button("{apply}","visible_hostname();")."</td>
 			</tr>
 		</table>			
 		";
 		
-		$form=RoundedLightWhite($form);
+		
 		
 $html="
-			<div class=explain>{visible_hostname_text}</p>
+			<div class=explain>{visible_hostname_text}</div>
 				$form
 			<br>
 		";
@@ -1893,7 +1900,7 @@ function network_popup(){
 	$page=CurrentPageName();
 	$sock=new sockets();
 	$AllowAllNetworksInSquid=$sock->GET_INFO("AllowAllNetworksInSquid");
-	if(!is_numeric($AllowAllNetworksInSquid)){$AllowAllNetworksInSquid=0;}
+	if(!is_numeric($AllowAllNetworksInSquid)){$AllowAllNetworksInSquid=1;}
 	
 	
 		$color="color:black";

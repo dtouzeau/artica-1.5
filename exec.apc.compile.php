@@ -1,6 +1,6 @@
 <?php
 
-phpToArray();
+//phpToArray();
 
 die();
 apc_compile();

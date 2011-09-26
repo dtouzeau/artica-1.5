@@ -43,6 +43,8 @@ begin
             writeln('VERSION:'+distri.DISTRINAME_VERSION);
             writeln('MAJOR:',distri.DISTRI_MAJOR);
             writeln('MINOR:',distri.DISTRI_MINOR);
+            fpsystem('/bin/echo "'+distri.DISTRINAME_CODE+'" >/etc/artica-postfix/settings/Daemons/LinuxDistributionCodeName');
+            fpsystem('/bin/echo "'+distri.DISTRINAME+'" >/etc/artica-postfix/settings/Daemons/LinuxDistributionFullName');
             halt(0);
      end;
 

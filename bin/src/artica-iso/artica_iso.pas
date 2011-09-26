@@ -38,9 +38,21 @@ if FileExists('/etc/artica-postfix/KASPER_INSTALL') then begin
      fpsystem('/bin/rm -f /etc/artica-postfix/KASPER_INSTALL');
 end;
 
+       if FileExists('/home/artica/packages/squid32.tar.gz') then begin
+          fpsystem('/bin/tar -xvf /home/artica/packages/squid32.tar.gz -C /');
+          fpsystem('/bin/mv -f /home/artica/packages/squid32.tar.gz /home/artica/squid32.tar.gz.old');
+       end;
+
+       if FileExists('/home/artica/packages/ufdbguard.tar.gz') then begin
+          fpsystem('/bin/tar -xvf /home/artica/packages/ufdbguard.tar.gz -C /');
+          fpsystem('/bin/mv /home/artica/packages/ufdbguard.tar.gz /home/artica/ufdbguard.tar.gz.old');
+       end;
+
        if FileExists('/home/artica/packages/kav4proxy-5.5-62.tar.gz') then begin
           fpsystem('/usr/share/artica-postfix/bin/artica-make APP_KAV4PROXY');
        end;
+
+
 
  // TextColor(White);
  // TextBackground(Black);

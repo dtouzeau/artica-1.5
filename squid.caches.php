@@ -58,17 +58,25 @@ function tabs(){
 	$array["cache_control"]='{cache_control}';
 	$array["main_parameters"]='{main_parameters}';
 	
+	$width="700px";
+	
+	if(isset($_GET["byQuicklinks"])){
+		$fontsize="style='font-size:14px'";
+		$width="100%";
+		unset($array["main_parameters"]);
+	}
+	
 	$page=CurrentPageName();
 	$tpl=new templates();	
 
 	
 	while (list ($num, $ligne) = each ($array) ){
-		$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"$page?$num=yes\"><span>$ligne</span></a></li>\n");
+		$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"$page?$num=yes\" $fontsize><span>$ligne</span></a></li>\n");
 		
 			
 		}
 	echo "
-	<div id=squid_main_caches_new style='width:700px;heigth:750px;overflow:auto'>
+	<div id=squid_main_caches_new style='width:$width;heigth:750px;overflow:auto'>
 		<ul>". implode("\n",$html)."</ul>
 	</div>
 		<script>

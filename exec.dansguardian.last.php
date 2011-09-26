@@ -26,12 +26,12 @@ $unix=new unix();
 	if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["VERBOSE"]=true;}
 	
 writelogs("Start running statistics for proxy",basename(__FILE__),__FILE__,__LINE__);	
-$dansguardian_events="dansguardian_events_".date('Ym');
+$dansguardian_events="dansguardian_events_".date('Ymd');
 $sql="SELECT sitename,country,uri,uid,remote_ip,CLIENT,TYPE,REASON,DATE_FORMAT(zDate,'%H:%i:%s') as tdate,
 QuerySize FROM $dansguardian_events ORDER BY zDate DESC LIMIT 0,100";
 
 $q=new mysql();
-$lignetotal=numberFormat($q->COUNT_ROWS("dansguardian_events","artica_events"),0,""," ");
+$lignetotal=numberFormat($q->COUNT_ROWS("dansguardian_events","squidlogs"),0,""," ");
 
 $html="
 <div style='float:right;margin:5px'>". imgtootltip("refresh-24.png","{refresh}","RefreshTab('admin_perso_tabs')")."</div><div style='font-size:14px;font-weight:bold;margin-bottom:5px'>$lignetotal {events}</div>
@@ -172,15 +172,15 @@ chmod($target_file,0755);
 
 function GetToday(){
 	$q=new mysql();
-	$dansguardian_events="dansguardian_events_".date('Ym');
+	$dansguardian_events="dansguardian_events_".date('Ymd');
 	$sql="SELECT COUNT( ID ) as tcount, DATE_FORMAT( zDate, '%h' ) FROM $dansguardian_events WHERE DATE_FORMAT( zDate, '%Y-%m-%d' ) = DATE_FORMAT( NOW( ) , '%Y-%m-%d')";
-	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_events'));
+	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'squidlogs'));
 	$hits=$ligne["tcount"];	
 	writelogs("hits=$hits",__FUNCTION__,__FILE__,__LINE__);
 	
 	$sql="SELECT COUNT( ID ) as tcount, DATE_FORMAT( zDate, '%h' ) FROM $dansguardian_events WHERE DATE_FORMAT( zDate, '%Y-%m-%d' ) = DATE_FORMAT( NOW( ) , '%Y-%m-%d') 
 	AND TYPE='DENIED'";
-	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_events'));
+	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'squidlogs'));
 	$denied=$ligne["tcount"];	
 	
 	$hits=texttooltip($hits,'{dansguardian_statistics}',"Loadjs('dansguardian.stats.php')",null,0,"font-weight:bold");

@@ -361,6 +361,8 @@ function zlistnics_tabs(){
 	$tpl=new templates();
 	$page=CurrentPageName();
 	$users=new usersMenus();	
+	$array["networks"]="{edit_networks}";
+	
 	if($users->SNORT_INSTALLED){$array["snort"]='{APP_SNORT}';}
 	$array["firewall"]='{incoming_firewall}';
 	$array["firewall-white"]='{whitelist}';
@@ -369,6 +371,12 @@ function zlistnics_tabs(){
 	
 	
 		while (list ($num, $ligne) = each ($array) ){
+			
+		if($num=="networks"){
+			$html[]= "<li><a href=\"computer-browse.php?browse-networks=yes\"><span>". $tpl->_ENGINE_parse_body($ligne)."</span></a></li>\n";
+			continue;
+		}			
+			
 		if($num=="snort"){
 			$html[]= "<li><a href=\"system.nic.snort.php\"><span>". $tpl->_ENGINE_parse_body($ligne)."</span></a></li>\n";
 			continue;

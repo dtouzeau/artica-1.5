@@ -52,6 +52,7 @@ if(function_exists("apc_clear_cache")){
 			
 			$text=$text."\n\n{cache_cleaned}\n";
 			$text=$text."language : {$_SESSION["detected_lang"]}\n";
+			$text=$text."icons cache : ".count($_SESSION["ICON_MYSQL_CACHE"])."\n";
 			$sock->DATA_CACHE_EMPTY();			
 			
 		
@@ -71,7 +72,7 @@ unset($_SESSION["LANG_FILES"]);
 unset($_SESSION["TRANSLATE"]);
 unset($_SESSION["__CLASS-USER-MENUS"]);
 unset($_SESSION["translation"]);
-
+unset($_SESSION["ICON_MYSQL_CACHE"]);
 $sock->getFrameWork("cmd.php?CleanCache=yes");
 
 

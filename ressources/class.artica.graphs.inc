@@ -213,7 +213,7 @@ function pie(){
 	
 	$graph->title->SetFont(FF_FONT1,FS_BOLD);
 	$title= $tpl->_ENGINE_parse_body($this->title);
-	writelogs("$title:  ".count($this->xdata)." lines",__CLASS__.'/'.__FUNCTION__,__FILE__);
+	writelogs("$title:  ".count($this->xdata)." lines ".@implode(";", $this->xdata),__CLASS__.'/'.__FUNCTION__,__FILE__);
 	krsort($this->xdata);
 	krsort($this->ydata);
 	

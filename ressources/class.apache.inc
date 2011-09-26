@@ -65,7 +65,8 @@ class vhosts{
 	"EYEOS"=>"eyeos-64.png",
 	"POWERADMIN"=>"poweradmin-64.png",
 	"PIWIK"=>"piwik-logo-64.png",
-	"WORDPRESS"=>"wordpress-64.png"
+	"WORDPRESS"=>"wordpress-64.png",
+	"PROXY_CATS"=>"database-64.png"
 	);
 
 	
@@ -104,6 +105,7 @@ class vhosts{
 	"POWERADMIN"=>array("TITLE"=>"APP_POWERADMIN","TEXT"=>"APP_POWERADMIN_TEXT"),
 	"PIWIK"=>array("TITLE"=>"APP_PIWIK","TEXT"=>"APP_PIWIK_TEXT"),
 	"WORDPRESS"=>array("TITLE"=>"APP_WORDPRESS","TEXT"=>"APP_WORDPRESS_TEXT"),
+	"PROXY_CATS"=>array("TITLE"=>"APP_PROXY_CATS","TEXT"=>"APP_PROXY_CATS_TEXT"),
 	
 	
 	);

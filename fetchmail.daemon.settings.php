@@ -19,6 +19,9 @@ section_Fetchmail_Daemon();
 function popup(){
 	
 	$page=CurrentPageName();
+	$sock=new sockets();
+	$FetchMailGLobalDropDelivered=$sock->GET_INFO("FetchMailGLobalDropDelivered");
+	if(!is_numeric($FetchMailGLobalDropDelivered)){$FetchMailGLobalDropDelivered=0;}
 	$yum=new usersMenus();
 	for($i=1;$i<60;$i++){
 		$hash[$i*60]=$i;
@@ -30,15 +33,25 @@ function popup(){
 	
 $fetchmail_daemon="
 					<div id='fetchdaemondiv'>
-					<table style='width:80%' class=table_form>
+					<center>
+					<table style='width:80%' class=form>
+					<tbody>
 					<tr>
-						<td align='right' nowrap class=legend><strong style='font-size:14px' nowrap>{daemon} {pool} </strong></td>
-						<td align='left'>$list  (minutes)</td>
+						<td align='right' nowrap class=legend nowrap><strong style='font-size:14px' >{daemon} {pool} </strong></td>
+						<td align='left' style='font-size:14px'>$list&nbsp;(minutes)</td>
+						<td>&nbsp;</td>
 					</tr>
 					<tr>
 						<td align='right' class=legend><strong style='font-size:14px' nowrap>{postmaster}</strong></td>
 						<td align='left'>" . Field_text('FetchmailDaemonPostmaster',$fetch->FetchmailDaemonPostmaster,"font-size:14px;padding:3px") . "</td>
+						<td>&nbsp;</td>
 					</tr>	
+					<tr>
+						<td class=legend><strong style='font-size:14px' >{dropdelivered}:</strong></td>
+						<td>". Field_checkbox("FetchMailGLobalDropDelivered", 1,$FetchMailGLobalDropDelivered)."</td>
+						<td>". help_icon("{dropdelivered_explain}")."</td>
+					</tr>
+					
 					<tr>
 					<td colspan=2 align='right'>
 					<hr>
@@ -47,7 +60,10 @@ $fetchmail_daemon="
 
 					</td>
 					</tr>	
-				</table></div>";
+				</tbody>
+				</table>
+				</center>
+				</div>";
 		
 
 		$title="{fetchmail}";
@@ -69,7 +85,8 @@ $fetchmail_daemon="
 			var XHR = new XHRConnection();		
 			XHR.appendData('FetchmailDaemonPostmaster',document.getElementById('FetchmailDaemonPostmaster').value);
 			XHR.appendData('FetchmailPoolingTime',document.getElementById('FetchmailPoolingTime').value);
-			document.getElementById('fetchdaemondiv').innerHTML='<center><img src=\"img/wait_verybig.gif\"></center>';	
+			if(document.getElementById('FetchMailGLobalDropDelivered').checked){XHR.appendData('FetchMailGLobalDropDelivered',1);}else{XHR.appendData('FetchMailGLobalDropDelivered',0);}
+			AnimateDiv('fetchdaemondiv');
 			XHR.sendAndLoad('$page', 'GET',x_SaveFetchMailDaemon);			
 			
 			}
@@ -156,9 +173,11 @@ function fetchmail_status(){
 }
 	
 function section_fetchmail_daemon_save(){
+	$sock=new sockets();
 	$fetch=new fetchmail();
 	$fetch->FetchmailDaemonPostmaster=$_GET["FetchmailDaemonPostmaster"];
 	$fetch->FetchmailPoolingTime=$_GET["FetchmailPoolingTime"];
+	$sock->SET_INFO("FetchMailGLobalDropDelivered", $_GET["FetchMailGLobalDropDelivered"]);
 	echo $fetch->Save();
 	
 }

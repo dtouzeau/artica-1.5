@@ -1,4 +1,5 @@
 <?php
+
 include_once(dirname(__FILE__).'/class.users.menus.inc');
 include_once(dirname(__FILE__).'/class.system.network.inc');
 include_once(dirname(__FILE__).'/class.ldap.inc');
@@ -18,7 +19,7 @@ class dhcpd_hosts{
 	var $MAC;
 	
 	function dhcpd_hosts($uid=null){
-		
+		if(!isset($GLOBALS["ASROOT"])){$GLOBALS["ASROOT"]=false;}
 		if($uid==null){
 			writelogs("DHCP:: Resquest an uid null, aborting",__CLASS__.'/'.__FUNCTION__,__FILE__);
 			return null;
@@ -372,7 +373,7 @@ private function GetMyDNS(){
 			while (list ($index, $ipaddr) = each ($arrayNameServers_tmp) ){
 				if($ipaddr=="0.0.0.0"){continue;}
 				if($ipaddr=="127.0.0.1"){continue;}
-				echo "Starting......: DHCP server name server: \"$ipaddr\"\n";
+				if($GLOBALS["ASROOT"]){echo "Starting......: DHCP server name server: \"$ipaddr\"\n";}
 				$arrayNameServers[]=$ipaddr;
 			}			
 		if($GLOBALS["VERBOSE"]){echo "DEBUG: DNS server return array of ". count($arrayNameServers_tmp)." element(s)\n";}	
@@ -547,7 +548,7 @@ private function GetMyDNS(){
 							$g=trim($re[1]);
 							if($g=="127.0.0.1"){continue;}
 							$arrayNameServers[]=$g;
-							echo "Starting......: DHCP SERVER name server: $g\n";
+							if($GLOBALS["ASROOT"]){echo "Starting......: DHCP SERVER name server: $g\n";}
 						}
 					}
 				}
@@ -652,7 +653,7 @@ private function GetMyDNS(){
 		if($address=="UNKNOWN"){return null;}
 		$address=str_replace(":","-",$address);
 		If(strlen($address) > 18){
-			writelogs("$address too many caracters, exceed 18 ",__CLASS__."/".__FUNCTION__,__FILE__,__LINE__);
+			writelogs("$address too many caracters, exceed 18 receive ".strlen($address),__CLASS__."/".__FUNCTION__,__FILE__,__LINE__);
 			return false;
 		}
 		If($address == ""){
@@ -688,7 +689,7 @@ private function GetMyDNS(){
 			writelogs("$address:array 5 did not match 2",__CLASS__."/".__FUNCTION__,__FILE__,__LINE__);
 			return false;
 		}
-		writelogs("$address ok",__CLASS__."/".__FUNCTION__,__FILE__,__LINE__);
+		
 		return true;
 	}	
 	

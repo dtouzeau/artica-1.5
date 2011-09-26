@@ -760,7 +760,7 @@ class squidguard{
 		$sql="SELECT pattern FROM `dansguardian_community_categories` WHERE enabled=1 and category='$category'";
 		if($GLOBALS["VERBOSE"]){echo $sql."\n";}
 		
-		$q=new mysql();
+		$q=new mysql_squid_builder();
 		$unix=new unix();
 		$results=$q->QUERY_SQL($sql,"artica_backup");
 		if(!$q->ok){echo $q->mysql_error."\n";}

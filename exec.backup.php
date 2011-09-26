@@ -148,6 +148,7 @@ function backup($ID){
 	$servername=str_replace('.(none)',"",$servername);
 	$servername=str_replace(')',"",$servername);
 	$servername=str_replace('(',"",$servername);
+	$GLOBALS["MYSERVERNAME"]=$servername;
 	$ExecBackupDeadAfterH=$sock->GET_INFO("ExecBackupDeadAfterH");
 	if(!is_numeric($ExecBackupDeadAfterH)){$ExecBackupDeadAfterH=2;}
 	if($ExecBackupDeadAfterH<2){$ExecBackupDeadAfterH=2;}
@@ -205,6 +206,7 @@ function backup($ID){
 	
 	
 	if($resource_type=="smb"){
+		$GLOBALS["CAN_CLEAN_CONTAINERS"]=true;
 		$mounted_path_sep="/";
 		if(!mount_smb($pattern,$ID,true)){
 			backup_events($ID,"initialization","ERROR,$first_ressource unable to mount mount_smb()",__LINE__);
@@ -217,6 +219,7 @@ function backup($ID){
 	
 	
 	if($resource_type=="usb"){
+		$GLOBALS["CAN_CLEAN_CONTAINERS"]=true;
 		$mounted_path_sep="/";
 		if(!mount_usb($pattern,$ID,true)){
 			backup_events($ID,"initialization","ERROR,$first_ressource unable to mount mount_usb()",__LINE__);
@@ -235,7 +238,7 @@ function backup($ID){
 		$GLOBALS["RESOURCE_MOUNTED"]=false;
 		$GLOBALS["USE_RSYNC"]=true;
 		$GLOBALS["NO_UMOUNT"]=true;
-		
+		$GLOBALS["CAN_CLEAN_CONTAINERS"]=false;
 		if(!mount_rsync($pattern,$ID,true)){
 			backup_events($ID,"initialization","ERROR,$first_ressource unable to connect");
 			send_email_events("Backup Task $ID::  resource: $first_ressource unable to connect","Aborting backup","backup");
@@ -253,6 +256,7 @@ function backup($ID){
 		$GLOBALS["RESOURCE_MOUNTED"]=false;
 		$GLOBALS["USE_RSYNC"]=true;
 		$GLOBALS["NO_UMOUNT"]=true;
+		$GLOBALS["CAN_CLEAN_CONTAINERS"]=true;
 		$GLOBALS["MOUNTED_PATH_FINAL"]=$first_ressource;
 		CheckCommandLineCopy();
 		
@@ -269,6 +273,7 @@ function backup($ID){
 		$mounted_path_sep="/";
 		$mount_path=$first_ressource;
 		$GLOBALS["RESOURCE_MOUNTED"]=false;
+		$GLOBALS["CAN_CLEAN_CONTAINERS"]=true;
 		$GLOBALS["USE_RSYNC"]=true;
 		$GLOBALS["NO_UMOUNT"]=true;
 		$GLOBALS["MOUNTED_PATH_FINAL"]=$first_ressource;
@@ -297,10 +302,14 @@ function backup($ID){
 	
 	if($container=="daily"){
 		backup_events($ID,"initialization","INFO, Daily container",__LINE__);
-		$mount_path_final=$mount_path.$mounted_path_sep."backup.".date('Y-m-d')."/$servername";
+		$DirectoryContainer="backup.".date('Y-m-d')."/$servername";
+		$GLOBAL["BACKUP_MEMORY_SQL"]["CONTAINER"]=$DirectoryContainer;
+		$mount_path_final=$mount_path.$mounted_path_sep.$DirectoryContainer;
 	}else{
 		backup_events($ID,"initialization","INFO, Weekly container",__LINE__);
-		$mount_path_final=$mount_path.$mounted_path_sep."backup.".date('Y-W')."/$servername";
+		$DirectoryContainer="backup.".date('Y-W')."/$servername";
+		$GLOBAL["BACKUP_MEMORY_SQL"]["CONTAINER"]=$DirectoryContainer;
+		$mount_path_final=$mount_path.$mounted_path_sep.$DirectoryContainer;
 	}
 	
 if($GLOBALS["DEBUG"]){
@@ -316,7 +325,7 @@ if(!$GLOBALS["NO_STANDARD_BACKUP"]){
 	
 	while (list ($num, $WhatToBackup) = each ($ressources) ){
 		if(is_array($WhatToBackup)){$WhatToBackup_ar=implode(",",$WhatToBackup);}
-		backup_events($ID,"initialization","INFO, WhatToBackup ($WhatToBackup) -> $WhatToBackup_ar");
+		backup_events($ID,"initialization","INFO, WhatToBackup ($WhatToBackup) -> $WhatToBackup_ar",__LINE__);
 		if($WhatToBackup=="all"){
 			backup_events($ID,"initialization","INFO, Backup starting Running macro all cyrus, mysql, LDAP, Artica...",__LINE__);
 			send_email_events("Backup Task $ID:: Backup starting Running macro all ","Backup is running","backup");
@@ -324,26 +333,26 @@ if(!$GLOBALS["NO_STANDARD_BACKUP"]){
 				backup_events($ID,"initialization","INFO, cyrus-imapd mailboxes processing");
 				backup_cyrus($ID);
 			}
-			backup_events($ID,"initialization","INFO, LDAP Database processing");
+			backup_events($ID,"initialization","INFO, LDAP Database processing",__LINE__);
 			backup_ldap($ID);
-			backup_events($ID,"initialization","INFO, Mysql Database processing");
+			backup_events($ID,"initialization","INFO, Mysql Database processing",__LINE__);
 			backup_mysql($ID);
-			backup_events($ID,"initialization","INFO, Artica settings processing");
+			backup_events($ID,"initialization","INFO, Artica settings processing",__LINE__);
 			backup_artica($ID);
 			if($users->ZARAFA_INSTALLED){if($sock->GET_INFO("ZarafaStoreOutside")==1){backup_events($ID,"initialization","INFO, Zarafa external attachments processing...");backup_ZarafaOutside($ID);}}
-			backup_events($ID,"initialization","continue to next process");
+			backup_events($ID,"initialization","continue to next process",__LINE__);
 			continue;				
 		}
 	}
 }else{
-	backup_events($ID,"initialization","INFO, Skipping standard macros");
+	backup_events($ID,"initialization","INFO, Skipping standard macros",__LINE__);
 	
 }
 	
 	$sql="SELECT * FROM backup_folders WHERE taskid=$ID";
 	$results=$q->QUERY_SQL($sql,"artica_backup");	
 	if(!$q->ok){
-		backup_events($ID,"personal","ERROR, mysql $q->mysql_error");
+		backup_events($ID,"personal","ERROR, mysql $q->mysql_error",__LINE__);
 		return;
 	}
 	
@@ -353,7 +362,7 @@ if(!$GLOBALS["NO_STANDARD_BACKUP"]){
 			if($ligne["recursive"]==1){$recursive=" --recursive";}else{$recursive=null;}
 			$path=trim(base64_decode($ligne["path"]));
 			if(!is_dir($path)){
-				backup_events($ID,"personal","ERROR, [$path] no such file or directory");
+				backup_events($ID,"personal","ERROR, [$path] no such file or directory",__LINE__);
 				continue;
 				
 			}
@@ -363,8 +372,39 @@ if(!$GLOBALS["NO_STANDARD_BACKUP"]){
 			backup_mkdir($path);
 			$results=backup_copy($path,$path,$ID);
 			$calculate=distanceOfTimeInWords($dd1,time());
-			backup_events($ID,"personal","INFO, Backup finish for $path\n$results $calculate");
+			backup_events($ID,"personal","INFO, Backup finish for $path\n$results $calculate",__LINE__);
 	}
+	
+	writelogs(date('m-d H:i:s')." "."[TASK $ID]: Calculate directory size on $mount_path_final",__FUNCTION__,__FILE__,__LINE__);
+	$du=$unix->find_program("du");
+	$dut1=time();
+	$cmd="$du -s $mount_path_final";
+	exec($cmd,$du_results);
+	$calculate=distanceOfTimeInWords($dut1,time());
+	$BackupSize=0;
+	if(preg_match("#^([0-9]+)\s+#", @implode("", $du_results),$re)){
+		$BackupSize=$re[1];
+		backup_events($ID,"initialization","INFO, backup size $BackupSize bytes time:$calculate",__LINE__);
+	}
+	
+	if($GLOBALS["CAN_CLEAN_CONTAINERS"]){
+		backup_events($ID,"initialization","INFO, cleaning containers....",__LINE__);
+		CleanContainers($ID,$mount_path_final);
+	}else{
+		backup_events($ID,"initialization","INFO, cannot clean containers, check protocols....",__LINE__);
+	}
+	
+	
+	
+	$GLOBAL["BACKUP_MEMORY_SQL"]["mount_path_final"]=$mount_path_final;
+	$zmd5=md5("{$GLOBAL["BACKUP_MEMORY_SQL"]["CONTAINER"]}{$GLOBALS["MYSERVERNAME"]}");
+	$cnx_params=addslashes(base64_encode(serialize($GLOBAL["BACKUP_MEMORY_SQL"])));
+	$sql="INSERT IGNORE INTO backup_storages (`taskid`,`size`,`cnx_params`,`zmd5`) VALUES('$ID','$BackupSize','$cnx_params','$zmd5')";
+	$q->QUERY_SQL($sql,"artica_backup");
+	$sql="UPDATE backup_storages SET `size`='$BackupSize' WHERE `zmd5`='$zmd5'";
+	$q->QUERY_SQL($sql,"artica_backup");
+	if(!$q->ok){backup_events($ID,"initialization","ERROR, $q->mysql_error",__LINE__);}
+	
 	
 	if(!$GLOBALS["NO_UMOUNT"]){
 		writelogs(date('m-d H:i:s')." "."[TASK $ID]:umount $mount_path_final",__FUNCTION__,__FILE__,__LINE__);
@@ -373,7 +413,9 @@ if(!$GLOBALS["NO_STANDARD_BACKUP"]){
 			writelogs(date('m-d H:i:s')." "."[TASK $ID]:translated to $mount_path_final",__FUNCTION__,__FILE__,__LINE__);
 		}
 		
-		backup_events($ID,"initialization","INFO, umount $mount_path_final");
+		
+		
+		backup_events($ID,"initialization","INFO, umount $mount_path_final",__LINE__);
 		writelogs(date('m-d H:i:s')." "."[TASK $ID]:umount $mount_path_final",__FUNCTION__,__FILE__,__LINE__);
 		exec("umount -l $mount_path_final 2>&1",$resultsUmount);
 		if(count($resultsUmount)>0){writelogs(date('m-d H:i:s')." "."[TASK $ID]:umount : ----- \n". @implode("\n", $resultsUmount)."\n",__FUNCTION__,__FILE__,__LINE__);}
@@ -383,8 +425,6 @@ if(!$GLOBALS["NO_STANDARD_BACKUP"]){
 	$date_end=time();
 	$calculate=distanceOfTimeInWords($date_start,$date_end);
 	backup_events($ID,"TIME","INFO, Time: $calculate ($mount_path_final)",__LINE__);	
-	
-	
 	backup_events($ID,"initialization","INFO, Backup task terminated",__LINE__);
 	send_email_events("Backup Task $ID:: Backup stopping","Backup is stopped","backup");
 	
@@ -472,14 +512,7 @@ function mount_usb($pattern,$ID,$testwrite=true){
 		
 	}
 	
-	if(!$testwrite){
-		
-		writelogs(date('m-d H:i:s')." "."[TASK $ID]: Test write has been cancelled",__FUNCTION__,__FILE__,__LINE__);	
-		return true;
-	}
-	
-	
-	
+	if(!$testwrite){writelogs(date('m-d H:i:s')." "."[TASK $ID]: Test write has been cancelled",__FUNCTION__,__FILE__,__LINE__);	return true;}
 	$md5=md5(date('Y-m-d H:i:s'));
 	writelogs(date('m-d H:i:s')." "."[TASK $ID]: Test write Creating file \"$mount_path/$md5\"",__FUNCTION__,__FILE__,__LINE__);
 	
@@ -516,6 +549,52 @@ function mount_usb($pattern,$ID,$testwrite=true){
 }
 
 
+		
+function CleanContainers($ID,$mount_path_final){
+	$sock=new sockets();
+	$unix=new unix();
+	$ExecBackupMaxContainers=$sock->GET_INFO("ExecBackupMaxContainers");
+	if(!is_numeric($ExecBackupMaxContainers)){$ExecBackupMaxContainers=6;}
+	backup_events($ID,"CLEANING","INFO,$ExecBackupMaxContainers Max containers",__LINE__);
+	if($ExecBackupMaxContainers==0){backup_events($ID,"initialization","CLEANING, cleaning containers stopped....");return;}
+	
+	$q=new mysql();
+	$ligne=mysql_fetch_array($q->QUERY_SQL("SELECT COUNT(ID) as tcount FROM backup_storages WHERE taskid=$ID","artica_backup"));
+	if(!$q->ok){backup_events($ID,"CLEANING","ERROR, mysql $q->mysql_error",__LINE__);return;}	
+	
+	backup_events($ID,"CLEANING","INFO, {$ligne["tcount"]} Containers....",__LINE__);
+	if($ligne["tcount"]<$ExecBackupMaxContainers){backup_events($ID,"initialization","CLEANING, cleaning containers stopped....",__LINE__);return;}
+	
+	$sql="SELECT * FROM backup_storages WHERE taskid=$ID ORDER BY zDate DESC";
+	
+	$results=$q->QUERY_SQL($sql,"artica_backup");	
+	if(!$q->ok){backup_events($ID,"CLEANING","ERROR, mysql $q->mysql_error",__LINE__);return;}
+	
+	if(preg_match("#backup\.([0-9\-]+)\/(.+?)$#", $mount_path_final,$re)){$mount_path_final=str_replace("backup.{$re[1]}/{$re[2]}", "", $mount_path_final);}
+	backup_events($ID,"CLEANING","INFO, Clean containers in $mount_path_final",__LINE__);
+	
+	
+	$unix=new unix();
+	$rm=$unix->find_program("rm");
+	
+	$c=0;
+	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+	if($c>$ExecBackupMaxContainers){
+		$cnx_params=unserialize(base64_decode($ligne["cnx_params"]));
+		$container=$cnx_params["CONTAINER"];
+		if(trim($container)==null){backup_events($ID,"CLEANING","ERROR, {$ligne["ID"]} Container name is null....",__LINE__);continue;}
+		if(!is_dir("$mount_path_final/$container")){backup_events($ID,"CLEANING","ERROR, {$ligne["ID"]} $mount_path_final/$container no such directory",__LINE__);continue;}
+		shell_exec("$rm -rf $mount_path_final/$container");
+		if(is_dir("$mount_path_final/$container")){backup_events($ID,"CLEANING","ERROR, {$ligne["ID"]} $mount_path_final/$container permission denied",__LINE__);continue;}
+		$q->QUERY_SQL("DELETE FROM backup_storages WHERE ID={$ligne["ID"]}","artica_backup");
+	}	
+		
+	$c++;	
+		
+	}		
+}
+
+
 
 function mount_smb($pattern,$ID,$testwrite=true){
 	$backup=new backup_protocols();
@@ -545,6 +624,8 @@ function mount_smb($pattern,$ID,$testwrite=true){
 		backup_events($ID,"initialization","ERROR, unable to mount target server (mount_smb())");
 		return false;
 	}
+	
+	
 	
 	if(!$testwrite){return true;}
 	
@@ -870,6 +951,55 @@ function backup_ldap($ID){
 }
 
 
+function backup_mysql_oldway($ID){
+	
+	$sock=new sockets();	
+	$unix=new unix();
+	$date_start=time();
+
+	
+	$array=backup_mysql_databases_list($ID);
+	if(!is_array($array)){
+		events("ERROR, unable to get databases list",__FUNCTION__,__LINE__);
+		send_email_events("Backup Task $ID:: Unable to backup mysql datas ","ERROR, unable to get databases list","backup");
+		backup_events($ID,"mysql","ERROR, unable to get databases list",__LINE__);
+		return false;		
+	}	
+	
+	$q=new mysql();
+	if($q->mysql_password<>null){$password=" --password=$q->mysql_password";}
+	if($q->mysql_admin<>null){$user=" --user=$q->mysql_admin";}
+	$temporarySourceDir=$sock->GET_INFO("ExecBackupTemporaryPath");
+	if($temporarySourceDir==null){$temporarySourceDir="/home/mysqlhotcopy";}
+	$temporarySourceDir="$temporarySourceDir/mysql";
+	events("temporarySourceDir has ExecBackupTemporaryPath token was \"$temporarySourceDir\"",__FUNCTION__,__LINE__);
+	events("Creating $temporarySourceDir",__FUNCTION__,__LINE__);	
+	while (list ($num, $line) = each ($array)){
+		if(trim($line)==null){continue;}
+		$database_name=trim(basename($line));
+		backup_events($ID,"mysql","INFO, dumping $database_name database",__LINE__);
+		backup_mysql_database_mysqldump($ID,$database_name,$temporarySourceDir);
+	}
+	
+	events("Create directory \"{$GLOBALS["MOUNTED_PATH_FINAL"]}/mysql\"",__FUNCTION__,__LINE__);
+	backup_mkdir("{$GLOBALS["MOUNTED_PATH_FINAL"]}/mysql");
+	backup_copy("$temporarySourceDir/*","mysql",$ID);
+	backup_events($ID,"mysql","INFO, backup remove content of $temporarySourceDir/*",__LINE__);
+	events("INFO, backup remove content of $temporarySourceDir/*",__FUNCTION__,__LINE__);
+	if(is_dir($temporarySourceDir)){
+		events("/bin/rm -rf $temporarySourceDir/*",__FUNCTION__,__LINE__);
+		shell_exec("/bin/rm -rf $temporarySourceDir/*");
+	}
+	backup_events($ID,"mysql","INFO, backup END without known error");
+	
+	$date_end=time();
+	$calculate=distanceOfTimeInWords($date_start,$date_end);
+	events("INFO, time: $calculate",__FUNCTION__,__LINE__);
+	backup_events($ID,"mysql","INFO, time: $calculate");	
+	
+}
+
+
 function backup_mysql($ID){
 	$sock=new sockets();	
 	$unix=new unix();
@@ -880,6 +1010,10 @@ function backup_mysql($ID){
 	
 	if($mysqlhotcopy==null){
 		backup_events($ID,"mysql","ERROR, unable to stat mysqlhotcopy");
+		if(is_file($unix->find_program("mysqldump"))){
+			backup_events($ID,"mysql","INFO, switch to mysqldump processing");
+			return backup_mysql_oldway($ID);
+		}
 		events("ERROR, unable to stat mysqlhotcopy",__FUNCTION__,__LINE__);
 		send_email_events("Backup Task $ID:: Unable to backup mysql datas ","ERROR, unable to stat mysqlhotcopy","backup");
 		return false;
@@ -930,9 +1064,6 @@ function backup_mysql($ID){
 			continue;
 		}
 				
-		
-		
-		
 		backup_events($ID,"mysql","INFO, mysqlhotcopy database ($database_name) stored in $line -> $temporarySourceDir");
 		
 		$mysqlhotcopy_command="$mysqlhotcopy --addtodest$user$password $database_name $temporarySourceDir 2>&1";
@@ -967,7 +1098,7 @@ function backup_mysql($ID){
 	backup_events($ID,"mysql","INFO, Send mysql backup to the \n". implode("\n",$results));
 	
 	
-	events("Creating directory \"{$GLOBALS["MOUNTED_PATH_FINAL"]}/mysql\"",__FUNCTION__,__LINE__);
+	events("Create directory \"{$GLOBALS["MOUNTED_PATH_FINAL"]}/mysql\"",__FUNCTION__,__LINE__);
 	backup_mkdir("{$GLOBALS["MOUNTED_PATH_FINAL"]}/mysql");
 	backup_copy("$temporarySourceDir/*","mysql",$ID);
 	backup_events($ID,"mysql","INFO, backup remove content of $temporarySourceDir/*");
@@ -991,19 +1122,19 @@ function backup_mysql_database_mysqldump($ID,$database,$temporarySourceDir){
 	$sock=new sockets();
 	$NoBzipForBackupDatabasesDump=$sock->GET_INFO("NoBzipForBackupDatabasesDump");
 	if($NoBzipForBackupDatabasesDump==null){$NoBzipForBackupDatabasesDump=1;}
+	if($temporarySourceDir==null){$temporarySourceDir="/home/mysqlhotcopy";}
 	if($q->mysql_password<>null){$password=" -p$q->mysql_password";}
 	if($q->mysql_admin<>null){$user=" -u $q->mysql_admin";}
 	
+	if(!is_dir($temporarySourceDir)){@mkdir($temporarySourceDir,755,true);}
 	
 	
 	$unix=new unix();
 	$mysqldump=$unix->find_program("mysqldump");
 	$bzip2=$unix->find_program("bzip2");
-	if($mysqldump==null){
-		backup_events($ID,"mysql","ERROR, Unable to find mysqldump");
-		return;
-	}
+	if($mysqldump==null){backup_events($ID,"mysql","ERROR, Unable to find mysqldump",__LINE__);return;}
 	
+	if(!is_dir(dirname($target_file))){@mkdir(dirname($target_file),755,true);}
 	$target_file="$temporarySourceDir/$database.tar.bz2";
 	$bzip2_cmd="| $bzip2 ";
 	
@@ -1013,29 +1144,28 @@ function backup_mysql_database_mysqldump($ID,$database,$temporarySourceDir){
 	}
 	
 	$cmd="$mysqldump$user$password --single-transaction --skip-add-locks --skip-lock-tables $database $bzip2_cmd> $target_file 2>&1";
-	backup_events($ID,"mysql","INFO, Dumping $database mysql database");
+	if($GLOBALS["VERBOSE"]){writelogs($cmd,__FUNCTION__,__FILE__,__LINE__);}
+	backup_events($ID,"mysql","INFO, Dumping $database mysql database",__LINE__);
 	exec($cmd,$results);
 	$date_end=time();
 	
 	$calculate=distanceOfTimeInWords($date_start,$date_end);
 	
-	backup_events($ID,"mysql","INFO, $database $calculate");
+	backup_events($ID,"mysql","INFO, $database $calculate",__LINE__);
 	
 	while (list ($num_line, $evenement) = each ($results)){
+			if($GLOBALS["VERBOSE"]){writelogs($evenement,__FUNCTION__,__FILE__,__LINE__);}
 			if(preg_match("#Error\s+([0-9]+)#",$evenement)){
-				backup_events($ID,"mysql","ERROR, $evenement");
+				backup_events($ID,"mysql","ERROR, $evenement",__LINE__);
 				return;
 			}
 		}	
 	
 	
-	if(!is_file("$target_file")){
-		backup_events($ID,"mysql","ERROR, Dumping $database mysql database failed, $target_file no such file or directory");
-		return;
-	}
-		$size=$unix->file_size_human("$target_file");
-		backup_events($ID,"mysql","INFO, END dumping $database mysql database ($size)");
-	}
+	if(!is_file("$target_file")){backup_events($ID,"mysql","ERROR, Dumping $database mysql database failed, $target_file no such file or directory",__LINE__);return;}
+	$size=$unix->file_size_human("$target_file");
+	backup_events($ID,"mysql","INFO, END dumping $database mysql database ($size)",__LINE__);
+}
 
 function backup_mysql_databases_list($ID){
 	$users=new usersMenus();
@@ -1056,7 +1186,7 @@ function backup_mysql_databases_list($ID){
 function backup_artica($ID){
 	backup_mkdir("{$GLOBALS["MOUNTED_PATH_FINAL"]}/etc-artica-postfix");
 	backup_copy("/etc/artica-postfix","etc-artica-postfix",$ID);
-	backup_events($ID,"mysql","INFO, backup Artica done");
+	backup_events($ID,"mysql","INFO, backup Artica done",__LINE__);
 }
 
 function backup_ZarafaOutside($ID){
