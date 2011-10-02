@@ -329,6 +329,8 @@ function group5(){
 	$array["cron.notifs.php"]="cron.notifs.php";
 	$array["exec.watchdog.php"]="exec.watchdog.php";
 	$array["exec.nmapscan.php --scan-nets"]="exec.nmapscan.php --scan-nets";
+	$array["exec.syslog-engine.php --adminlogs"]="exec.syslog-engine.php --adminlogs";
+	
 	
 	
 	if($GLOBALS["OPENVPN_INSTALLED"]){
@@ -480,6 +482,7 @@ function group10(){
 	$array[]="exec.freeweb.php --perms";
 	$array[]="exec.freeweb.php --all-status";
 	$array[]="exec.clean.logs.php --clean-tmp2";
+	$array[]="exec.syslog-engine.php --psmem";
 	
 	if($GLOBALS["UFDBGUARD_INSTALLED"]){$array[]="exec.web-community-filter.php --groupby";}
 

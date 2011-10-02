@@ -70,38 +70,13 @@ function APP_ZARAFA_WEB_SAVE(){
 	if(document.getElementById('ZarafaIMAPsEnable').checked){XHR.appendData('ZarafaIMAPsEnable',1);}else{XHR.appendData('ZarafaIMAPsEnable',0);}
 	if(document.getElementById('ZarafaAllowToReinstall').checked){XHR.appendData('ZarafaAllowToReinstall',1);}else{XHR.appendData('ZarafaAllowToReinstall',0);}
 	if(document.getElementById('ZarafaWebNTLM').checked){XHR.appendData('ZarafaWebNTLM',1);}else{XHR.appendData('ZarafaWebNTLM',0);}
-
-	
-	
-	if(document.getElementById('ZarafaApacheSSL').checked){
-		XHR.appendData('ZarafaApacheSSL',1);
-	}else{
-		XHR.appendData('ZarafaApacheSSL',0);
-	}
-
-	if(document.getElementById('ZarafaiCalEnable').checked){
-		XHR.appendData('ZarafaiCalEnable',1);
-	}else{
-		XHR.appendData('ZarafaiCalEnable',0);
-	}		
-	
-	if(document.getElementById('ZarafaUserSafeMode').checked){
-		XHR.appendData('ZarafaUserSafeMode',1);
-	}else{
-		XHR.appendData('ZarafaUserSafeMode',0);
-	}	
-
-	if(document.getElementById('ZarafaStoreOutside').checked){
-		XHR.appendData('ZarafaStoreOutside',1);
-	}else{
-		XHR.appendData('ZarafaStoreOutside',0);
-	}
-
-	if(document.getElementById('ZarafaAspellEnabled').checked){
-		XHR.appendData('ZarafaAspellEnabled',1);
-	}else{
-		XHR.appendData('ZarafaAspellEnabled',0);
-	}		
+	if(document.getElementById('Zarafa7IMAPDisable').checked){XHR.appendData('Zarafa7IMAPDisable',1);}else{XHR.appendData('Zarafa7IMAPDisable',0);}
+	if(document.getElementById('Zarafa7Pop3Disable').checked){XHR.appendData('Zarafa7Pop3Disable',1);}else{XHR.appendData('Zarafa7Pop3Disable',0);}
+	if(document.getElementById('ZarafaApacheSSL').checked){XHR.appendData('ZarafaApacheSSL',1);}else{XHR.appendData('ZarafaApacheSSL',0);}
+	if(document.getElementById('ZarafaiCalEnable').checked){XHR.appendData('ZarafaiCalEnable',1);}else{XHR.appendData('ZarafaiCalEnable',0);}		
+	if(document.getElementById('ZarafaUserSafeMode').checked){XHR.appendData('ZarafaUserSafeMode',1);}else{XHR.appendData('ZarafaUserSafeMode',0);}	
+	if(document.getElementById('ZarafaStoreOutside').checked){XHR.appendData('ZarafaStoreOutside',1);}else{XHR.appendData('ZarafaStoreOutside',0);}
+	if(document.getElementById('ZarafaAspellEnabled').checked){XHR.appendData('ZarafaAspellEnabled',1);}else{XHR.appendData('ZarafaAspellEnabled',0);}		
 	
 	XHR.appendData('ou','$ou_decrypted');
 	document.getElementById('zrfa-logo').src='img/wait_verybig.gif';
@@ -138,6 +113,9 @@ function SAVE(){
 	$sock->SET_INFO("ZarafaIMAPPort",trim($_GET["ZarafaIMAPPort"]));
 	$sock->SET_INFO("ZarafaPop3Port",trim($_GET["ZarafaPop3Port"]));
 	
+	$sock->SET_INFO("Zarafa7IMAPDisable",trim($_GET["Zarafa7IMAPDisable"]));
+	$sock->SET_INFO("Zarafa7Pop3Disable",trim($_GET["Zarafa7Pop3Disable"]));
+	
 	$sock->SET_INFO("ZarafaPop3Enable",trim($_GET["ZarafaPop3Enable"]));
 	$sock->SET_INFO("ZarafaPop3sEnable",trim($_GET["ZarafaPop3sEnable"]));
 	$sock->SET_INFO("ZarafaIMAPEnable",trim($_GET["ZarafaIMAPEnable"]));
@@ -145,11 +123,9 @@ function SAVE(){
 	$sock->SET_INFO("ZarafaAllowToReinstall",trim($_GET["ZarafaAllowToReinstall"]));
 	$sock->SET_INFO("ZarafaWebNTLM",trim($_GET["ZarafaWebNTLM"]));
 	$sock->SET_INFO("ZarafaSessionTime",$_GET["ZarafaSessionTime"]*60);
-	
-	 
-	
+		
 	$sock->getFrameWork("cmd.php?zarafa-restart-web=yes");
-	$sock->getFrameWork("cmd.php?zarafa-restart-server=yes");
+	$sock->getFrameWork("zarafa.php?restart=yes");
 }
 
 function popup(){
@@ -182,6 +158,10 @@ $html="
 
 $sock=new sockets();
 $users=new usersMenus();
+$zarafa_version=$sock->getFrameWork("zarafa.php?getversion=yes");
+preg_match("#^([0-9]+)\.#", $zarafa_version,$re);
+$major_version=$re[1];
+if(!is_numeric($major_version)){$major_version=6;}
 
 $ZarafaApachePort=$sock->GET_INFO("ZarafaApachePort");
 $ZarafaUserSafeMode=$sock->GET_INFO("ZarafaUserSafeMode");
@@ -214,9 +194,14 @@ $ZarafaIMAPsPort=$sock->GET_INFO("ZarafaIMAPsPort");
 $ZarafaAllowToReinstall=$sock->GET_INFO("ZarafaAllowToReinstall");
 $ZarafaSessionTime=$sock->GET_INFO("ZarafaSessionTime");
 $ZarafaWebNTLM=$sock->GET_INFO("ZarafaWebNTLM");
+$Zarafa7IMAPDisable=$sock->GET_INFO("Zarafa7IMAPDisable");
+$Zarafa7Pop3Disable=$sock->GET_INFO("Zarafa7Pop3Disable");
 
 if(!is_numeric($ZarafaPop3Enable)){$ZarafaPop3Enable=1;}
 if(!is_numeric($ZarafaIMAPEnable)){$ZarafaIMAPEnable=1;}
+
+if(!is_numeric($Zarafa7IMAPDisable)){$Zarafa7IMAPDisable=0;}
+if(!is_numeric($Zarafa7Pop3Disable)){$Zarafa7Pop3Disable=0;}
 
 if(!is_numeric($ZarafaPop3Port)){$ZarafaPop3Port=110;}
 if(!is_numeric($ZarafaPop3sPort)){$ZarafaPop3sPort=995;}
@@ -280,10 +265,14 @@ $netfield=Field_array_Hash($nets,"ZarafaServerListenIP",$ZarafaServerListenIP,"f
 $SMTPfield=Field_array_Hash($nets,"ZarafaServerSMTPIP",$ZarafaServerSMTPIP,"font-size:13px;padding:3px");
 $convert_current_attachments_text=$tpl->javascript_parse_text("{convert_current_attachments}");
 
+
+	
+
+
 $html="
 <table style='width:100%'>
 <tr>
-	<td valign='top'><img id='zrfa-logo' src='img/zarafa-web-128.png'>$ZarafaUserSafeMode_warn</td>
+	<td valign='top'><img id='zrfa-logo' src='img/zarafa-web-128.png'><center style='font-size:13px'>v.$zarafa_version</center>$ZarafaUserSafeMode_warn</td>
 	<td valign='top'>
 	
 		<table style='width:100%' class=form>
@@ -336,7 +325,11 @@ $html="
 			<tr>
 				<td class=legend style='font-size:12px'>{enable_pop3}:</td>
 				<td><strong style='font-size:13px'>". Field_checkbox("ZarafaPop3Enable", 1,$ZarafaPop3Enable,"CheckZarafaFields()")."</td>
-			</tr>			
+			</tr>
+			<tr>
+				<td class=legend style='font-size:12px'>{disable_pop3}:</td>
+				<td><strong style='font-size:13px'>". Field_checkbox("Zarafa7Pop3Disable", 1,$Zarafa7Pop3Disable,"CheckZarafaFields()")."</td>
+			</tr>						
 			<tr>
 				<td class=legend style='font-size:12px'>{pop3_port}:</td>
 				<td>". Field_text("ZarafaPop3Port",$ZarafaPop3Port,"width:90px;font-size:13px;padding:3px")."</td>
@@ -354,7 +347,11 @@ $html="
 			<tr>
 				<td class=legend style='font-size:12px'>{enable_imap}:</td>
 				<td><strong style='font-size:13px'>". Field_checkbox("ZarafaIMAPEnable", 1,$ZarafaIMAPEnable,"CheckZarafaFields()")."</td>
-			</tr>	
+			</tr>
+			<tr>
+				<td class=legend style='font-size:12px'>{disable_imap}:</td>
+				<td><strong style='font-size:13px'>". Field_checkbox("Zarafa7IMAPDisable", 1,$Zarafa7IMAPDisable,"CheckZarafaFields()")."</td>
+			</tr>				
 			<tr>
 				<td class=legend style='font-size:12px'>{imap_port}:</td>
 				<td>". Field_text("ZarafaIMAPPort",$ZarafaIMAPPort,"width:90px;font-size:13px;padding:3px")."</td>
@@ -449,6 +446,7 @@ $html="
 	function CheckZarafaFields(){
 		var ZarafaAspellInstalled=$ZarafaAspellInstalled;
 		var ZarafaStoreOutside=$ZarafaStoreOutside;	
+		var major_version=$major_version;
 		document.getElementById('ZarafaStoreOutsidePath').disabled=true;
 		document.getElementById('ZarafaStoreCompressionLevel').disabled=true;
 		document.getElementById('ZarafaAspellEnabled').disabled=true;
@@ -458,15 +456,34 @@ $html="
 		document.getElementById('ZarafaPop3sPort').disabled=true;
 		document.getElementById('ZarafaIMAPsPort').disabled=true;
 		
+		document.getElementById('Zarafa7IMAPDisable').disabled=true;
+		document.getElementById('Zarafa7Pop3Disable').disabled=true;
+		if(major_version>6){
+			document.getElementById('Zarafa7IMAPDisable').disabled=false;
+			document.getElementById('Zarafa7Pop3Disable').disabled=false;
+		}
+
+		
 		if(document.getElementById('ZarafaPop3Enable').checked){document.getElementById('ZarafaPop3Port').disabled=false;}
 		if(document.getElementById('ZarafaPop3sEnable').checked){document.getElementById('ZarafaPop3sPort').disabled=false;}
 		if(document.getElementById('ZarafaIMAPEnable').checked){document.getElementById('ZarafaIMAPPort').disabled=false;}
 		if(document.getElementById('ZarafaIMAPsEnable').checked){document.getElementById('ZarafaIMAPsPort').disabled=false;}
 		
+		if(!document.getElementById('ZarafaPop3Enable').checked){
+			if(major_version>6){
+				document.getElementById('Zarafa7Pop3Disable').disabled=true;
+			}else{
+				document.getElementById('Zarafa7Pop3Disable').disabled=false;
+			}
+		}
 		
-		
-		
-		
+		if(!document.getElementById('ZarafaIMAPEnable').checked){
+			if(major_version>6){
+				document.getElementById('Zarafa7IMAPDisable').disabled=true;
+			}else{
+				document.getElementById('Zarafa7IMAPDisable').disabled=false;
+			}
+		}		
 		
 		if(document.getElementById('ZarafaStoreOutside').checked){
 			document.getElementById('ZarafaStoreOutsidePath').disabled=false;

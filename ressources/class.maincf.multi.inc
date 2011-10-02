@@ -447,6 +447,7 @@ private function restrict_relay_domains(){
 	
 	
 	public function header_checks(){
+		$conf=array();
 		$target_file="/etc/postfix-$this->myhostname/header_checks";
 		$sock=new sockets();
 		$users=new usersMenus();
@@ -510,7 +511,7 @@ private function restrict_relay_domains(){
 		
 		
 		$GLOBALS["POSTFIX_HEADERS_CHECK_BUILDED"]=true;
-		if(!is_array($conf)){return null;}
+		if(count($conf)==0){return null;}
 		@file_put_contents("$target_file",@implode("\n",$conf));
 		echo "Starting......: Postfix \"$this->myhostname\" ". count($conf)." checks headers rules\n";
 		return "header_checks = regexp:$target_file";

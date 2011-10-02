@@ -142,6 +142,8 @@ class user{
 	var $zarafaQuotaOverride=0;
 	var $zarafaMbxLang;
 	var $WebDavUser=0;
+	var $zarafaEnabledFeatures=null;
+	var $zarafaDisabledFeatures=null;
 	var $EnableManageUsersTroughActiveDirectory=false;
 	var $ldapClass;
 
@@ -333,6 +335,40 @@ class user{
 		$this->UserExists=true;
 		
 		
+		
+	}
+	
+	public function AnalyzeZarafaFeatures(){
+		$bl=array();
+		$bl1=array();
+		$bl=explode(" ",$this->zarafaEnabledFeatures." ");
+		while (list ($index, $val) = each ($bl) ){
+			$val=trim($val);
+			if(trim($val)==null){continue;}
+			$newarray[strtolower($val)]=1;
+		}
+		
+		$bl1=explode(" ",$this->zarafaDisabledFeatures." ");
+		while (list ($index, $val) = each ($bl1) ){
+			$val=trim($val);
+			if(trim($val)==null){continue;}
+			$newarray[strtolower($val)]=0;
+		}
+		$sock=new sockets();		
+		$Zarafa7IMAPDisable=$sock->GET_INFO("Zarafa7IMAPDisable");
+		$Zarafa7Pop3Disable=$sock->GET_INFO("Zarafa7Pop3Disable");	
+		if(!is_numeric($Zarafa7Pop3Disable)){$Zarafa7Pop3Disable=0;}
+		if(!is_numeric($Zarafa7IMAPDisable)){$Zarafa7IMAPDisable=0;}	
+		if(!isset($newarray["imap"])){
+			if($Zarafa7IMAPDisable==0){$newarray["imap"]=1;}
+			if($Zarafa7IMAPDisable==1){$newarray["imap"]=0;}
+		}
+		if(!isset($newarray["pop3"])){
+			if($Zarafa7Pop3Disable==0){$newarray["pop3"]=1;}
+			if($Zarafa7Pop3Disable==1){$newarray["pop3"]=0;}
+		}	
+
+		return $newarray;
 		
 	}
 	
@@ -648,6 +684,11 @@ class user{
 		if(isset($attrs["zarafaQuotaHard"][0])){$this->zarafaQuotaHard=$attrs["zarafaQuotaHard"][0];}
 		if(isset($attrs["zarafaQuotaHard"][0])){$this->zarafaQuotaOverride=$attrs["zarafaQuotaHard"][0];}
 		if(isset($attrs["zarafaMbxLang"][0])){$this->zarafaMbxLang=$attrs["zarafaMbxLang"][0];}
+		
+		
+		if(isset($attrs["zarafaEnabledFeatures"][0])){$this->zarafaEnabledFeatures=$attrs["zarafaEnabledFeatures"][0];}
+		if(isset($attrs["zarafaDisabledFeatures"][0])){$this->zarafaDisabledFeatures=$attrs["zarafaDisabledFeatures"][0];}
+		
 		
 		
 		

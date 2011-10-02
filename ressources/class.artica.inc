@@ -69,6 +69,7 @@ class artica_general{
 	
 	function artica_general($ldapClass=null){
 		$CurrentPageName=CurrentPageName();
+		$file=null;
 		if(!is_a($ldapClass,"clladp")){$this->ldapClass=new clladp();}else{$this->ldapClass=$ldapClass;}
 		$this->sock=new sockets();
 		$this->LoadOnDisk();
@@ -82,7 +83,7 @@ class artica_general{
 		if($CurrentPageName=="logon.php"){error_log("$CurrentPageName:: ->__loadArticaSettings() done.. ".__FUNCTION__.' in '.__FILE__. " in line ". __LINE__);}
 		$this->__loadArticaSettings2();
 		if($CurrentPageName=="logon.php"){error_log("$CurrentPageName:: ->__loadArticaSettings2() done.. ".__FUNCTION__.' in '.__FILE__. " in line ". __LINE__);}
-		$file=$hash["ArticaGlobalSettings"];
+		if(isset($hash["ArticaGlobalSettings"])){$file=$hash["ArticaGlobalSettings"];}
 		$this->ArticaFilterEnabled=$hash["ArticaFilterEnabled"];
 		if(isset($hash["OBMEnabled"])){$this->OBMEnabled=$hash["OBMEnabled"];}
 		

@@ -25,26 +25,15 @@ $SQUIDEnable=trim($sock->GET_INFO("SQUIDEnable"));
 if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
 
 $samba=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("folder-granted-48.png", "fileshare","fileshare_text", "QuickLinksSamba()"));
-
 $squid=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("squid-reverse-48.png", "Proxy","proxyquicktext", "QuickLinksProxy()"));
-if($users->KASPERSKY_WEB_APPLIANCE){
-	$kav4Proxy=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("bigkav-48.png", "APP_KAV4PROXY","APP_KAV4PROXY_INTRO", "QuickLinksKav4Proxy()"));
-}
-
-
-if($SQUIDEnable==0){
-	if($users->KASPERSKY_WEB_APPLIANCE){
-		$kav4Proxy=null;
-		$squid=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("bigkav-48.png", "APP_KAV4PROXY","APP_KAV4PROXY_INTRO", "QuickLinksKav4Proxy()"));		
-	}	
-}
 if(!$users->SAMBA_INSTALLED){$samba=null;}
 if(!$users->SQUID_INSTALLED){$squid=null;}
 if($users->KASPERSKY_WEB_APPLIANCE){$samba=null;}
 
+$tr[]=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("server-48.png", "your_server","system_information_text", "QuickLinkSystems('section_start')"));
+
 
 $tr[]=$samba;
-$tr[]=$kav4Proxy;
 $tr[]=$squid;
 $tr[]=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("48-computer.png", "system_information","system_information_text", "QuickLinkSystems('section_computers_infos')"));
 $tr[]=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("48-bouclier.png", "security","section_security_text", "QuickLinkSystems('section_security')"));
@@ -156,6 +145,30 @@ function quicklinks_paragraphe($img,$title,$text,$link){
 	
 	
 }
+function section_start(){
+	
+	$html="
+	<table style='width:100%'>
+	<tbody>
+	<tr>
+		<td valign='top'><span id='admin-left-infos'></span></td>
+		<td valign='top'><div id='admin-start_page'></div></td>
+	</tr>
+	</tbody>
+	</center>
+	
+	<script>
+		LoadAjax('admin-start_page','admin.index.php?main_admin_tabs=yes&tab-font-size=14px&tab-width=100%&newfrontend=yes');	
+	
+	</script>";
+	
+	echo $html;
+	
+	
+	
+}
+
+
 function section_security(){
 	
 	$tr[]=kaspersky();

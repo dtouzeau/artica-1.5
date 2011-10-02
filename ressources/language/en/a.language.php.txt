@@ -2450,3 +2450,5 @@ This server will execute specifics calculation tasks in order to serve Internet 
 <banned>Banned</banned>
 <groupid>Group ID</groupid>
 <visited>visited</visited>
+<disable_pop3>Disable POP3</disable_pop3>
+<disable_imap>Disable IMAP</disable_imap>

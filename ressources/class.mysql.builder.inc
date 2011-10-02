@@ -382,7 +382,36 @@ public function check_storage_table(){
 				) ";	
 	
 			$this->QUERY_SQL($sql,"artica_events");
-	}		
+	}	
+	if(!$this->TABLE_EXISTS('ps_mem_tot','artica_events')){		
+			$sql="CREATE TABLE `artica_events`.`ps_mem_tot` (
+			`zDate` TIMESTAMP NOT NULL ,
+			`mem` BIGINT( 100 ) NOT NULL ,
+			PRIMARY KEY ( `zDate` ) ,
+			INDEX ( `mem` )
+			)";	
+	
+			$this->QUERY_SQL($sql,"artica_events");
+	}	
+	
+	
+
+	
+	if(!$this->TABLE_EXISTS('ps_mem','artica_events')){		
+			$sql="CREATE TABLE IF NOT EXISTS `ps_mem` (
+			  `zDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+			  `process` varchar(90) NOT NULL,
+			  `memory` BIGINT(100) NOT NULL,
+			  `zmd5` varchar(90) NOT NULL,
+			  `process_num` INT(5) NOT NULL,
+			  PRIMARY KEY (`zmd5`),
+			  KEY `zDate` (`zDate`,`process`),
+			  KEY `process_num` (`process_num`)
+			)";	
+	
+			$this->QUERY_SQL($sql,"artica_events");
+	}	
+	
 	
 
 	
@@ -1569,7 +1598,6 @@ if(!$this->TABLE_EXISTS('smtp_logs_day_users','artica_events')){
 	
 	
 	if(!$this->TABLE_EXISTS('snort','artica_events')){	
-		
 		$sql="CREATE TABLE IF NOT EXISTS `snort` (
 			  `zDate` datetime NOT NULL,
 			  `hostname` varchar(255) NOT NULL,
@@ -1589,6 +1617,28 @@ if(!$this->TABLE_EXISTS('smtp_logs_day_users','artica_events')){
 			$this->QUERY_SQL($sql,'artica_events');
 		if(!$this->ok){writelogs("Fatal: $this->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
 	} 	
+	
+	if(!$this->TABLE_EXISTS('adminevents','artica_events')){	
+		$sql="CREATE TABLE IF NOT EXISTS `adminevents` (
+			  `zDate` datetime NOT NULL,
+			  `zmd5` varchar(90) NOT NULL,
+			  `subject` varchar(255) NOT NULL,
+			  `text` varchar(255) NOT NULL,
+			  `jslink` varchar(255) NOT NULL,
+			  `icon` varchar(90) NOT NULL,
+			  `critical` int(1) NOT NULL,
+			  `enabled` int(1) NOT NULL,
+			  PRIMARY KEY ( `zmd5` ) ,
+			  KEY `zDate` (`zDate`),
+			  KEY `subject` (`subject`),
+			  KEY `critical` (`critical`),
+			  KEY `enabled` (`enabled`)
+			)"; 	
+		$this->QUERY_SQL($sql,'artica_events');
+		if(!$this->ok){writelogs("Fatal: $this->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
+	} 
+
+	
 	
 	if(!$this->TABLE_EXISTS('postfinder','artica_events')){	
 		

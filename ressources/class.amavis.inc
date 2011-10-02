@@ -376,11 +376,9 @@ function buildconf(){
 	$enable_dkim_verification=$sock->GET_INFO("enable_dkim_verification");
 	$AmavisDebugSpamassassin=$sock->GET_INFO("AmavisDebugSpamassassin");
 	if(!is_numeric($AmavisByPassOutgoingMessages)){$AmavisByPassOutgoingMessages=1;}
-	if(!is_numeric($AmavisDebugSpamassassin)){$AmavisDebugSpamassassin=1;}
+	if(!is_numeric($AmavisDebugSpamassassin)){$AmavisDebugSpamassassin==0;}
 	$myhostname=$sock->GET_INFO("myhostname");
-	if($myhostname==null){
-		$myhostname=$users->fqdn;
-	}
+	if($myhostname==null){$myhostname=$users->fqdn;}
 	
 	if(posix_getuid()==0){echo "Starting......: amavisd-new buildconf() EnablePostfixMultiInstance=$EnablePostfixMultiInstance\n";} 
 	

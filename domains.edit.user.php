@@ -15,6 +15,7 @@ include_once ('ressources/class.ini.inc');
 include_once ('ressources/class.ocs.inc');
 include_once (dirname ( __FILE__ ) . "/ressources/class.cyrus.inc");
 
+if ((!isset ($_GET["uid"] )) && (isset($_POST["uid"]))){$_GET["uid"]=$_POST["uid"];}
 if ((isset ($_GET["uid"] )) && (! isset ($_GET["userid"] ))) {$_GET["userid"] = $_GET["uid"];}
 
 //permissions	
@@ -37,21 +38,16 @@ if ($change_aliases == 1) {
 if(isset ($_GET["pureftpd-js"])){USER_FTP_JS ();exit ();}
 if(isset ($_GET["UserAddressSubmitedForm"])){AddressInfosSave();exit();}
 if(isset($_GET["userid-warning"])){AJAX_USER_WARNING();exit;}
-
 if(isset($_GET["ComputerMacAddressFindUid"])){COMPUTER_CHECK_MAC();exit;}
-
 if(isset($_REQUEST["ChangeUserPasswordSave"])){USER_CHANGE_PASSWORD_SAVE();exit ();}
-
-if ($modify_user == 0) {
-	die ( 'No permissions ' . $_SESSION ["uid"] . "\nchange_aliases=$usersprivs->AllowEditAliases\n" );
-}
+if ($modify_user == 0) {die ( 'No permissions ' . $_SESSION ["uid"] . "\nchange_aliases=$usersprivs->AllowEditAliases\n" );}
 
 if(isset($_GET["ChangeUserPassword"])){USER_CHANGE_PASSWORD();exit ();}
-
 if(isset($_GET["UserChangeEmailAddr"])){USER_CHANGE_EMAIL ();exit ();}
 if(isset($_GET["UserChangeEmailAddrSave"])){USER_CHANGE_EMAIL_SAVE ();exit ();}
 if(isset($_GET["zarafa-mailbox-edit"])){ZARAFA_MAILBOX_EDIT_JS ();exit ();}
 if(isset($_GET["zarafaQuotaWarn"])){ZARAFA_MAILBOX_SAVE ();exit ();}
+if(isset($_POST["user_zarafa_enable_pop3"])){ZARAFA_DISABLE_FEATURES_SAVE();exit;}
 if(isset($_GET["UserEndOfLIfe"])){USER_ENDOFLIFE ();exit ();}
 
 // inbound parameters
@@ -3198,7 +3194,7 @@ function ZARAFA_MAILBOX_EDIT_JS() {
 	$html = "
 var X_SAVE_ZARAFA_MAILBOX= function (obj) {
 	var results=obj.responseText;
-	if(results.length>0){alert(results);}
+	if(results.length>3){alert(results);}
 	RefreshTab('container-users-tabs');
 	}	
 	
@@ -3242,13 +3238,16 @@ function ZARAFA_MAILBOX_SAVE() {
 function ZARAFA_MAILBOX($uid) {
 	
 	$u = new user ( $uid );
-	$page = CurrentPageName ();
-	$sock = new sockets ( );
-	$status = unserialize ( base64_decode ( $sock->getFrameWork ( "cmd.php?zarafa-user-details=$uid" ) ) );
+	$page = CurrentPageName();
+	$sock = new sockets();
+	$status = unserialize(base64_decode ( $sock->getFrameWork("cmd.php?zarafa-user-details=$uid")));
 	$languages=unserialize(base64_decode($sock->getFrameWork("zarafa.php?locales=yes")));
 	while (list ($index, $data) = each ($languages) ){$langbox[$data]=$data;}
 	$langbox[null]="{select}";
-	
+	$zarafa_version=$sock->getFrameWork("zarafa.php?getversion=yes");
+	preg_match("#^([0-9]+)\.#", $zarafa_version,$re);
+	$major_version=$re[1];	
+	if(!is_numeric($major_version)){$major_version=6;}
 	
 	$mailbox_language=Field_array_Hash($langbox,"zarafaMbxLang",$u->zarafaMbxLang,"style:font-size:13px;padding:3px");
 	
@@ -3263,7 +3262,7 @@ function ZARAFA_MAILBOX($uid) {
 	}
 	
 	$mailboxinfos=Paragraphe32("mailbox_infos","mailbox_zarafa_infos_text","Loadjs('$page?ZARAFA_MAILBOX_INFOS=yes&uid=$uid&userid=$uid')","32-infos.png");
-
+	$ZarafaFeatures=$u->AnalyzeZarafaFeatures();
 	
 	
 	$html = "<table style='width:100%'>
@@ -3286,7 +3285,15 @@ function ZARAFA_MAILBOX($uid) {
 					<tr>
 						<td class=legend style='font-size:13px'>{zarafaAdmin}:</td>
 						<td style='font-size:13px'>" . Field_checkbox ( "zarafaAdmin", 1, $u->zarafaAdmin ) . "</td>
-					</tr>					
+					</tr>
+					<tr>
+						<td class=legend style='font-size:13px'>{enable_imap}:</td>
+						<td style='font-size:13px'>" . Field_checkbox ( "user_zarafa_enable_imap", 1, $ZarafaFeatures["imap"],"UserZarafaFeatures()" ) . "</td>
+					</tr>	
+					<tr>
+						<td class=legend style='font-size:13px'>{enable_pop3}:</td>
+						<td style='font-size:13px'>" . Field_checkbox ( "user_zarafa_enable_pop3", 1, $ZarafaFeatures["pop3"],"UserZarafaFeatures()" ) . "</td>
+					</tr>																
 					<tr>
 						<td class=legend style='font-size:13px'>{zarafaMbxLang}:</td>
 						<td style='font-size:13px'>$mailbox_language</td>
@@ -3316,7 +3323,36 @@ function ZARAFA_MAILBOX($uid) {
 				</table>
 		</td>
 	</tr>
-	</table>";
+	</table>
+	
+	<script>
+		function CheckFields(){
+			var major_version=$major_version;
+			document.getElementById('user_zarafa_enable_imap').disabled=true;
+			document.getElementById('user_zarafa_enable_pop3').disabled=true;
+			if(major_version>6){
+				document.getElementById('user_zarafa_enable_imap').disabled=false;
+				document.getElementById('user_zarafa_enable_pop3').disabled=false;			
+			}
+		}
+		
+		var X_UserZarafaFeatures= function (obj) {
+			var results=obj.responseText;
+			if(results.length>3){alert(results);}
+		}			
+	
+	function UserZarafaFeatures(){
+		var XHR = new XHRConnection();
+		if(document.getElementById('user_zarafa_enable_imap').checked){XHR.appendData('user_zarafa_enable_imap','1');}else{XHR.appendData('user_zarafa_enable_imap','0');}
+		if(document.getElementById('user_zarafa_enable_pop3').checked){XHR.appendData('user_zarafa_enable_pop3','1');}else{XHR.appendData('user_zarafa_enable_pop3','0');}		
+		XHR.appendData('uid','$uid');
+		XHR.sendAndLoad('$page', 'POST',X_UserZarafaFeatures);		
+	
+	}
+	
+	
+	CheckFields();
+	</script>";
 	
 	$tpl = new templates ( );
 	return $tpl->_ENGINE_parse_body ( $html );
@@ -5580,6 +5616,38 @@ function ZARAFA_MAILBOX_INFOS_POPUP(){
 	echo @implode("\n",$html);
 }
 
+function ZARAFA_DISABLE_FEATURES_SAVE(){
+	$zarafaEnabledFeatures=null;
+	$zarafaDisabledFeatures=null;
+	if($_POST["user_zarafa_enable_imap"]==1){$zarafaEnabledFeatures="imap";}
+	if($_POST["user_zarafa_enable_pop3"]==1){$zarafaEnabledFeatures=$zarafaEnabledFeatures." pop3";}
+
+	if($_POST["user_zarafa_enable_imap"]==0){$zarafaDisabledFeatures="imap";}
+	if($_POST["user_zarafa_enable_pop3"]==0){$zarafaDisabledFeatures=$zarafaDisabledFeatures." pop3";}	
+	
+	$u=new user($_POST["uid"]);
+	$ldap=new clladp();
+	if($zarafaEnabledFeatures==null){
+		if(!$ldap->Ldap_del_mod($u->dn, $array["zarafaEnabledFeatures"])){
+			echo "zarafaEnabledFeatures = '$zarafaEnabledFeatures'\nzarafaDisabledFeatures = '$zarafaDisabledFeatures'\nLDAP ERROR :\nFunction: ".__FUNCTION__."\nPage: ".basename(__FILE__)."\nLine:".__LINE__."\nError:\n".$ldap->ldap_last_error;
+		}
+	}
+	
+	if($zarafaDisabledFeatures==null){
+		if(!$ldap->Ldap_del_mod($u->dn, $array["zarafaDisabledFeatures"])){
+			echo "zarafaEnabledFeatures = '$zarafaEnabledFeatures'\nzarafaDisabledFeatures = '$zarafaDisabledFeatures'\nLDAP ERROR :\nFunction: ".__FUNCTION__."\nPage: ".basename(__FILE__)."\nLine:".__LINE__."\nError:\n".$ldap->ldap_last_error;
+		}
+	}	
+	
+	if($zarafaEnabledFeatures<>null){$upd["zarafaEnabledFeatures"][0]=$zarafaEnabledFeatures;}
+	if($zarafaDisabledFeatures<>null){$upd["zarafaDisabledFeatures"][0]=$zarafaDisabledFeatures;}
+	if(!$ldap->Ldap_modify($u->dn, $upd)){
+		echo "zarafaEnabledFeatures = '$zarafaEnabledFeatures'\nzarafaDisabledFeatures = '$zarafaDisabledFeatures'\nLDAP ERROR :\nFunction: ".__FUNCTION__."\nPage: ".basename(__FILE__)."\nLine:".__LINE__."\nError:\n".$ldap->ldap_last_error;
+		return;
+	}
+	
+	
+}
 
 
 ?>

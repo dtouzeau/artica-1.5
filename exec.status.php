@@ -162,7 +162,7 @@ if($argv[1]=="--cgroups"){echo cgroups();exit;}
 if($argv[1]=="--openemm"){echo openemm()."\n".openemm_sendmail();exit;}
 if($argv[1]=="--exec-nice"){$GLOBALS["VERBOSE"]=true;echo "\"{$GLOBALS["CLASS_UNIX"]->EXEC_NICE()}\"\n";die();}
 if($argv[1]=="--ntpd"){echo ntpd_server();die();}
-
+if($argv[1]=="--ps-mem"){echo ps_mem();die();}
 
 
 
@@ -775,7 +775,7 @@ function launch_all_status($force=false){
 	"zarafa_monitor","zarafa_gateway","zarafa_spooler","zarafa_server","assp","openvpn","vboxguest","sabnzbdplus","SwapWatchdog","artica_meta_scheduler",
 	"OpenVPNClientsStatus","stunnel","meta_checks","zarafa_licensed","CheckCurl","ufdbguardd_tail","vnstat","NetAdsWatchdog","munin","autofs","greyhole",
 	"dnsmasq","iscsi","watchdog_yorel","postfwd2","vps_servers","smartd","crossroads_multiple","auth_tail","greyhole_watchdog","greensql","nscd","tomcat",
-	"openemm","openemm_sendmail","cgroups","ntpd_server"
+	"openemm","openemm_sendmail","cgroups","ntpd_server","ps_mem"
 	);
 	$data1=$GLOBALS["TIME_CLASS"];
 	$data2 = time();
@@ -6344,10 +6344,7 @@ function events($text,$function=null,$line=0){
 
 function events_Loadavg($text,$function=null,$line=0){
 	$filename=basename(__FILE__);
-	if(!isset($GLOBALS["CLASS_UNIX"])){
-		include_once(dirname(__FILE__)."/framework/class.unix.inc");
-		$GLOBALS["CLASS_UNIX"]=new unix();
-	}
+	if(!isset($GLOBALS["CLASS_UNIX"])){include_once(dirname(__FILE__)."/framework/class.unix.inc");$GLOBALS["CLASS_UNIX"]=new unix();}
 	$GLOBALS["CLASS_UNIX"]->events("$filename $function:: $text (L.$line)","/var/log/artica-postfix/xLoadAvg.debug");
 }
 
@@ -6361,8 +6358,14 @@ function bandwith(){
 }
 
 function phpmyadmin_perms(){
-
 	if(is_file("/usr/share/artica-postfix/mysql/config.inc.php")){@chmod("/usr/share/artica-postfix/mysql/config.inc.php",0600);}
+}
+
+function ps_mem(){
+	include_once(dirname(__FILE__)."/ressources/class.artica.status.bin.inc");
+	$s=new periodics_status();
+	$s->ps_mem();
+	
 }
 
 

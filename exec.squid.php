@@ -26,6 +26,7 @@ if($GLOBALS["VERBOSE"]){echo " commands= ".implode(" ",$argv)."\n";}
 	$squidbin=$unix->find_program("squid3");
 	if(!is_file($squidbin)){$squidbin=$unix->find_program("squid");}
 	$GLOBALS["SQUIDBIN"]=$squidbin;
+	$GLOBALS["CLASS_USERS"]=new usersMenus();
 	if($GLOBALS["VERBOSE"]){echo "squid binary=$squidbin\n";}
 	
 	
@@ -203,7 +204,8 @@ function squidclamav(){
 	$squid=new squidbee();
 	$sock=new sockets();
 	$unix=new unix();
-	$users=new usersMenus();
+	if(!isset($GLOBALS["CLASS_USERS"])){$GLOBALS["CLASS_USERS"]=new usersMenus();}
+	$users=$GLOBALS["CLASS_USERS"];
 	$SquidGuardIPWeb=$sock->GET_INFO("SquidGuardIPWeb");
 	if($SquidGuardIPWeb==null){$SquidGuardIPWeb="http://$users->hostname:9020/exec.squidguard.php";}
 	
@@ -511,7 +513,8 @@ function certificate_conf(){
 	include_once('ressources/class.ssl.certificate.inc');
 	$ssl=new ssl_certificate();
 	$array=$ssl->array_ssl;
-	$users=new usersMenus();
+	if(!isset($GLOBALS["CLASS_USERS"])){$GLOBALS["CLASS_USERS"]=new usersMenus();}
+	$users=$GLOBALS["CLASS_USERS"];
 	$sock=new sockets();	
 	$cc=$array["artica"]["country"]."_".$array["default_ca"]["countryName_value"];
 	
@@ -725,7 +728,8 @@ function wrapzap_compile(){
 
 
 function wrapzap(){
-	$usrs=new usersMenus();
+	if(!isset($GLOBALS["CLASS_USERS"])){$GLOBALS["CLASS_USERS"]=new usersMenus();}
+	$users=$GLOBALS["CLASS_USERS"];
 	$sock=new sockets();
 	$SquidGuardIPWeb=$sock->GET_INFO("SquidGuardIPWeb");
 	if($SquidGuardIPWeb==null){$SquidGuardIPWeb="http://$usrs->hostname:9020/zaps";}

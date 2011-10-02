@@ -39,10 +39,7 @@ function startprocess($APP_NAME,$cmd){
 	$unix=new unix();
 	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__)."/pids/".__FUNCTION__.".".$APP_NAME.".pid";
 	$pid=@file_get_contents($pidfile);
-	if($unix->process_exists($pid,basename(__FILE__))){
-		writelogs("Already process $pid exists",__FUNCTION__,__FILE__,__LINE__);
-		return;
-	}
+	if($unix->process_exists($pid,basename(__FILE__))){writelogs("Already process $pid exists",__FUNCTION__,__FILE__,__LINE__);return;}
 	@file_put_contents($pidfile, getmypid());
 	exec("/etc/init.d/artica-postfix start $cmd 2>&1",$results);
 	if($GLOBALS["VERBOSE"]){echo "\n".@implode("\n",$results)."\n";return;}
@@ -202,6 +199,11 @@ while (list ($prc, $count) = each ($array) ){
 
 function loadcpu(){
 	$unix=new unix();
+	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__)."/pids/".__FUNCTION__.".pid";
+	$pid=@file_get_contents($pidfile);
+	if($unix->process_exists($pid,basename(__FILE__))){writelogs("Already process $pid exists",__FUNCTION__,__FILE__,__LINE__);return;}		
+	@file_put_contents($pidfile, getmypid());
+	
 	$timefile="/etc/artica-postfix/croned.1/".basename(__FILE__).__FUNCTION__;
 	if(file_time_min($timefile)<15){return null;}
 	@unlink($timefile);
@@ -212,6 +214,12 @@ function loadcpu(){
 	checkProcess1();
 }
 function loadmem(){
+	$unix=new unix();
+	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__)."/pids/".__FUNCTION__.".pid";
+	$pid=@file_get_contents($pidfile);
+	if($unix->process_exists($pid,basename(__FILE__))){writelogs("Already process $pid exists",__FUNCTION__,__FILE__,__LINE__);return;}	
+	@file_put_contents($pidfile, getmypid());
+		
 	include_once("ressources/class.os.system.tools.inc");
 	$unix=new unix();
 	$timefile="/etc/artica-postfix/croned.1/".basename(__FILE__).__FUNCTION__;
@@ -235,6 +243,11 @@ function loadmem(){
 function loadavg(){
 	
 	$unix=new unix();
+	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__)."/pids/".__FUNCTION__.".pid";
+	$pid=@file_get_contents($pidfile);
+	if($unix->process_exists($pid,basename(__FILE__))){writelogs("Already process $pid exists",__FUNCTION__,__FILE__,__LINE__);return;}	
+	@file_put_contents($pidfile, getmypid());
+	
 	@mkdir("/etc/artica-postfix/croned.1",0666,true);
 	$pidfile="/etc/artica-postfix/".basename(__FILE__).".".__FUNCTION__.".pid";
 	$pid=trim(@file_get_contents($pidfile));
@@ -262,7 +275,14 @@ function loadavg(){
 }
 
 function loadavg_old(){
+	
 	$unix=new unix();
+	$unix=new unix();
+	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__)."/pids/".__FUNCTION__.".pid";
+	$pid=@file_get_contents($pidfile);
+	if($unix->process_exists($pid,basename(__FILE__))){writelogs("Already process $pid exists",__FUNCTION__,__FILE__,__LINE__);return;}	
+
+	
 	@mkdir("/etc/artica-postfix/croned.1",0666,true);
 	$unix=new unix();
 	$pidfile="/etc/artica-postfix/".basename(__FILE__).".".__FUNCTION__.".pid";

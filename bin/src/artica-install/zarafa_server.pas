@@ -296,6 +296,7 @@ end;
 procedure tzarafa_server.server_cfg();
 var
    l:TStringList;
+   RegExpr:TRegExpr;
    ZarafaiCalPort:Integer;
    ZarafaUserSafeMode:integer;
    user_safe_mode:string;
@@ -307,9 +308,10 @@ var
    attachment_storage:string;
    ZarafaStoreCompressionLevel:integer;
    ZarafaServerSMTPPORT,EnableZarafaIndexer,ZarafaIndexerInterval,ZarafaIndexerThreads,ZarafaPop3Enable,ZarafaPop3sEnable,ZarafaIMAPEnable:integer;
-   ZarafaIMAPsEnable,ZarafaPop3Port,ZarafaIMAPPort,ZarafaPop3sPort,ZarafaIMAPsPort,ZarafaWebNTLM:integer;
-   ZarafaServerSMTPIP,APACHE_SRC_ACCOUNT:string;
+   ZarafaIMAPsEnable,ZarafaPop3Port,ZarafaIMAPPort,ZarafaPop3sPort,ZarafaIMAPsPort,ZarafaWebNTLM,Zarafa7Pop3Disable,Zarafa7IMAPDisable:integer;
+   ZarafaServerSMTPIP,APACHE_SRC_ACCOUNT,disabled_features:string;
    CyrusToAD:integer;
+   ZarafaMajorVersion:Integer;
 
 begin
 attachment_storage:='database';
@@ -335,7 +337,20 @@ if not TryStrToInt(SYS.GET_INFO('ZarafaIMAPsPort'),ZarafaIMAPsPort) then ZarafaI
 if not TryStrToInt(SYS.GET_INFO('ZarafaWebNTLM'),ZarafaWebNTLM) then ZarafaWebNTLM:=0;
 
 
+RegExpr:=TRegExpr.Create;
+RegExpr.Expression:='^([0-9]+)\.';
+if RegExpr.Exec(VERSION(true)) then begin
+   if not TryStrToInt(RegExpr.Match[1], ZarafaMajorVersion) then ZarafaMajorVersion:=6;
+end;
 
+logs.DebugLogs('Starting zarafa..............: Zarafa-server major version :'+INtTOstr(ZarafaMajorVersion));
+
+if ZarafaMajorVersion>6 then begin
+   if not TryStrToInt(SYS.GET_INFO('Zarafa7Pop3Disable'),Zarafa7Pop3Disable) then Zarafa7Pop3Disable:=0;
+   if not TryStrToInt(SYS.GET_INFO('Zarafa7IMAPDisable'),Zarafa7IMAPDisable) then Zarafa7IMAPDisable:=0;
+   if Zarafa7Pop3Disable=1 then disabled_features:='pop3';
+   if Zarafa7IMAPDisable=1 then disabled_features:=disabled_features+' imap';
+end;
 
 ZarafaServerSMTPIP:=trim(SYS.GET_INFO('ZarafaServerSMTPIP'));
 if length(ZarafaServerSMTPIP)=0 then ZarafaServerSMTPIP:='127.0.0.1';
@@ -458,6 +473,7 @@ l.add('client_update_path = /var/lib/zarafa/client');
 l.add('hide_everyone = no');
 l.add('plugin_path		= '+pluginpath);
 l.add('user_safe_mode = '+user_safe_mode);
+if ZarafaMajorVersion>6 then l.add('disabled_features = '+disabled_features);
 forceDirectories('/etc/zarafa');
 logs.WriteToFile(l.Text,'/etc/zarafa/server.cfg');
 l.clear;

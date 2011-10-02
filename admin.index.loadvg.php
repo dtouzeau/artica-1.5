@@ -156,7 +156,76 @@ function tabs(){
 			<img src='$targetedfile'>
 			</div>";
 	}
+// --------------------------------------------------------------------------------------
+	$gp=new artica_graphs();
+	$memory_average=$tpl->_ENGINE_parse_body("{memory_use} {today} (GB)");
+	if($GLOBALS["VERBOSE"]){echo "<hr>";}
+	$sql="SELECT DATE_FORMAT(zDate,'%Y-%m-%d') as tday,HOUR(zDate) as thour,AVG(mem) as tmem FROM ps_mem_tot GROUP BY tday,thour HAVING tday=DATE_FORMAT(NOW(),'%Y-%m-%d') ORDER BY thour";
+	if($GLOBALS["VERBOSE"]){echo "<code>$sql</code><br>";}
+	$results=$q->QUERY_SQL($sql,"artica_events");
+	$mysql_num_rows=mysql_num_rows($results);
+	$xtitle=$tpl->javascript_parse_text("{hours}");
+	
+	if($mysql_num_rows<2){
+		$sql="SELECT DATE_FORMAT(zDate,'%h') as thour2,DATE_FORMAT(zDate,'%i') as thour, AVG(mem) as tmem FROM ps_mem_tot GROUP BY DATE_FORMAT(zDate,'%H-%i')
+		HAVING thour2=DATE_FORMAT(NOW(),'%h') ORDER BY DATE_FORMAT(zDate,'%H-%i') ";
+		if($GLOBALS["VERBOSE"]){echo "<code>$sql</code><br>";}
+		$results=$q->QUERY_SQL($sql,"artica_events");
+		$memory_average=$tpl->_ENGINE_parse_body("{memory_use} {this_hour} (GB)");
+		$mysql_num_rows=mysql_num_rows($results);
+		$xtitle=$tpl->javascript_parse_text("{minutes}");		
+	}
+	
+	$targetedfile="ressources/logs/".basename(__FILE__).".ps-mem.png";
+	$xdata=array();
+	$ydata[]=array();
+	writelogs("mysql return no rows from a table of $mysql_num_rows rows ",__FUNCTION__,__FILE__,__LINE__);
+	if($mysql_num_rows>0){
+		while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+				$size=$ligne["tmem"];
+				$size=$size/1024;
+				$size=$size/1000;
+				$size=$size/1000;
+				$size=round($size/1000,0);
+				$gp->xdata[]=$ligne["thour"];
+				$gp->ydata[]=$size;
+				$c++;
+				if($GLOBALS["VERBOSE"]){echo "<li>ps_mem $hour -> $size</li>";};
+			}
+			if($c==0){writelogs("Fatal \"$targetedfile\" no items",__FUNCTION__,__FILE__,__LINE__);return;}
+			if(is_file($targetedfile)){@unlink($targetedfile);}
+			
+			$gp->width=300;
+			$gp->height=120;
+			$gp->filename="$targetedfile";
+			$gp->y_title=null;
+			$gp->x_title=$xtitle;
+			$gp->title=null;
+			$gp->margin0=true;
+			$gp->Fillcolor="blue@0.9";
+			$gp->color="146497";
+			$tpl=new templates();
+			
+			//$gp->SetFillColor('green'); 
+			
+			$gp->line_green();
+			if(!is_file($targetedfile)){writelogs("Fatal \"$targetedfile\" no such file! ($c items)",__FUNCTION__,__FILE__,__LINE__);return;}
+			writelogs("Checking ps_mem -> $targetedfile",__FUNCTION__,__FILE__,__LINE__);
+			echo "<center><div onmouseout=\"javascript:this.className='paragraphe';this.style.cursor='default';\" onmouseover=\"javascript:this.className='paragraphe_over';
+			this.style.cursor='pointer';\" id=\"6ce2f4832d82c6ebaf5dfbfa1444ed58\" OnClick=\"javascript:Loadjs('admin.index.psmem.php?all=yes')\" class=\"paragraphe\" style=\"width: 300px; min-height: 112px; cursor: default;\">
+			<h3 style='text-transform: none;margin-bottom:5px'>$memory_average</h3>
+			<img src='$targetedfile'>
+			</div></center>";		
+		
+	}
+	
 // --------------------------------------------------------------------------------------	
+	
+	
+	
+	
+	
+	
 	$sock=new sockets();
 	$users=new usersMenus();
 	

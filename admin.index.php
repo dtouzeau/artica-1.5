@@ -17,15 +17,12 @@ include_once('ressources/class.os.system.inc');
 if(isset($_GET["HideTips"])){HideTips();exit;}
 
 $users=new usersMenus();
-if(!$users->AsAnAdministratorGeneric){
-		writelogs("Redirect to users.index.php",__FUNCTION__,__FILE__,__LINE__);
-		header('location:users.index.php');exit;
-}
+if(!$users->AsAnAdministratorGeneric){writelogs("Redirect to users.index.php",__FUNCTION__,__FILE__,__LINE__);header('location:miniadm.php');exit;}
 
 
 if(isset($_GET["warnings"])){warnings_js();exit;}
 if(isset($_GET["warnings-popup"])){warnings_popup();exit;}
-
+if(isset($_GET["main_admin_tabs"])){echo main_admin_tabs();exit;}
 
 
 if(isset($_GET["StartStopService-js"])){StartStopService_js();exit;}
@@ -172,7 +169,7 @@ if(isset($_GET["admin-ajax"])){
 	//if(GET_CACHED(__FILE__,__FUNCTION__,__FUNCTION__."-admin-ajax")){return null;}
 	
 }else{	
-	if(GET_CACHED(__FILE__,__FUNCTION__,__FUNCTION__)){return null;}
+	//if(GET_CACHED(__FILE__,__FUNCTION__,__FUNCTION__)){return null;}
 }
 $ldap=new clladp();
 $page=CurrentPageName();
@@ -205,6 +202,22 @@ if($users->KASPERSKY_SMTP_APPLIANCE){
 	if(isset($_GET["admin-ajax"])){$left_menus="LoadAjax('TEMPLATE_LEFT_MENUS','/admin.tabs.php?left-menus=yes');";}
 
 
+$html="
+<script>
+	LoadAjax('middle','quicklinks.php');
+</script>
+
+
+";	
+	
+	
+$tpl=new template_users($title,$html,$_SESSION,0,0,0,$cfg);
+error_log(basename(__FILE__)." ".__FUNCTION__.'() line '. __LINE__);
+$html=$tpl->web_page;
+SET_CACHED(__FILE__,__FUNCTION__,__FUNCTION__,$html);
+echo $html;	
+return;	
+	
 
 $html="	
 <script language=\"JavaScript\">       
@@ -334,7 +347,7 @@ error_log(basename(__FILE__)." ".__FUNCTION__.'() line '. __LINE__);
 
 function main_admin_tabs(){
 	if($GLOBALS["VERBOSE"]){echo "<li>".__FUNCTION__." line:".__LINE__."</li>";}
-	$array["t:frontend"]="{admin}";
+	$array["t:frontend"]="{status}";
 	$users=new usersMenus();
 	$sys=new syslogs();
 	$artica=new artica_general();
@@ -345,24 +358,21 @@ function main_admin_tabs(){
 	if($artica->EnableMonitorix==1){$array["t:monitorix"]='{monitorix}';}
 	
 	if($users->POSTFIX_INSTALLED){
-			$EnableArticaSMTPStatistics=$sock->GET_INFO("EnableArticaSMTPStatistics");
-			if(!is_numeric($EnableArticaSMTPStatistics)){$EnableArticaSMTPStatistics=1;}
-			if($EnableArticaSMTPStatistics==1){	
-				$array["t:emails_received"]="{emails_received}";
-			}
+		$EnableArticaSMTPStatistics=$sock->GET_INFO("EnableArticaSMTPStatistics");
+		if(!is_numeric($EnableArticaSMTPStatistics)){$EnableArticaSMTPStatistics=1;}
+		if($EnableArticaSMTPStatistics==1){	
+		$array["t:emails_received"]="{emails_received}";
+		}
 	}
 
 	
 	$sock=new sockets();
 	if($users->SQUID_INSTALLED){
 		$SQUIDEnable=$sock->GET_INFO("SQUIDEnable");
-		
 		if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
 		if($SQUIDEnable==1){
 			$array["t:HTTP_FILTER_STATS"]="{MONITOR}";
 			$array["t:HTTP_BLOCKED_STATS"]="{blocked_websites}";
-			
-			
 		}
 	}
 	
@@ -370,21 +380,19 @@ function main_admin_tabs(){
 if($users->KASPERSKY_SMTP_APPLIANCE){
 	$array["t:kaspersky"]="Kaspersky";	
 }else{
-	$array["t:system"]="{system_settings}";
+	$array["t:system"]="{webinterface}";
 }	
 
-if($users->AsSystemAdministrator){
-	$array["t:cnx"]="{connections}";
-}
-
+if($users->AsSystemAdministrator){$array["t:cnx"]="{connections}";}
 $array=$array+main_admin_tabs_perso_tabs();
 $count=count($array);
-if($count<7){
-	$array["add-tab"]="{add}&nbsp;&raquo;";
-}
+if($count<7){$array["add-tab"]="{add}&nbsp;&raquo;";}
 $page=CurrentPageName();
-if($_GET["tab_current"]==null){$_GET["tab_current"]="frontend";}
 $tpl=new templates();
+$width="758px";
+if(isset($_GET["tab-font-size"])){$style="style=font-size:{$_GET["tab-font-size"]}";}
+if(isset($_GET["tab-width"])){$width=$_GET["tab-width"];}
+if(isset($_GET["newfrontend"])){$newfrontend="&newfrontend=yes";}
 
 
 	while (list ($num, $ligne) = each ($array) ){
@@ -393,20 +401,20 @@ $tpl=new templates();
 			if(strlen($ligne)>15){$ligne=substr($ligne,0,12)."...";}
 			
 			if($re[1]=="cnx"){
-				$html[]= "<li><a href=\"admin.cnx.php\"><span>$ligne</span></a></li>\n";
+				$html[]= "<li ><a href=\"admin.cnx.php$newfrontend\"><span $style>$ligne</span></a></li>\n";
 				continue;
 			}
 			
-			$html[]= "<li><a href=\"admin.tabs.php?main={$re[1]}\"><span>$ligne</span></a></li>\n";
+			$html[]= "<li><a href=\"admin.tabs.php?main={$re[1]}$newfrontend\"><span $style>$ligne</span></a></li>\n";
 			continue;
 		}
-		$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"admin.tabs.php?tab=$num\"><span>$ligne</span></a></li>\n");
+		$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"admin.tabs.php?tab=$num$newfrontend\"><span $style>$ligne</span></a></li>\n");
 		}
 	
 	
 return "
-	<div id='mainlevel' style='width:758px;height:auto;'>
-		<div id=admin_perso_tabs style='width:755px;height:auto;'>
+	<div id='mainlevel' style='width:$width;height:auto;'>
+		<div id=admin_perso_tabs style='width:$width;height:auto;'>
 			<ul>". implode("\n",$html)."</ul>
 		</div>
 	</div>
@@ -505,66 +513,15 @@ function status_right(){
 	$users=new usersMenus();
 	$sock=new sockets();
 	$tpl=new templates();
+	$newfrontend=false;
+	if(isset($_GET["newfrontend"])){$newfrontend=true;}
 	if(!$users->AsArticaAdministrator){die("<H2 style='color:red'>permission denied</H2>");}
 	$page=CurrentPageName();
-	$script="\n<script>LoadAjax('left_status','$page?status=left');</script>\n";
+	
 	$ldap=new clladp();
 	if($GLOBALS["VERBOSE"]){echo "$page LINE:".__LINE__."\n";}
 	
-	$DisablePurchaseInfo=$sock->GET_INFO("DisablePurchaseInfo");
-	if(!is_numeric($DisablePurchaseInfo)){$DisablePurchaseInfo=0;}
-	if($DisablePurchaseInfo==0){
-		echo $tpl->_ENGINE_parse_body(ParagrapheTEXT("technical-support-32.png",'{ARTICA_P_SUPPORT}','{ARTICA_P_SUPPORT_TEXT}',"javascript:Loadjs('artica.subscription.php');"));
 		
-		
-		
-	}
-	
-	if(is_file("ressources/logs/status.inform.html")){
-		echo $tpl->_ENGINE_parse_body(@file_get_contents("ressources/logs/status.inform.html"));
-	}
-	
-	
-	if($ldap->ldap_password=="secret"){
-		echo ParagrapheTEXT("danger32-user-lock.png",'{MANAGER_DEFAULT_PASSWORD}',
-		'{MANAGER_DEFAULT_PASSWORD_TEXT}',"javascript:Loadjs('artica.settings.php?js=yes&bigaccount-interface=yes');",null,330);
-	}
-	if(!function_exists("browser_detection")){include(dirname(__FILE__).'/ressources/class.browser.detection.inc');}
-	$browser=browser_detection();
-	
-	if($browser=="ie"){
-		echo ParagrapheTEXT("no-ie-32.png",'{NOIEPLEASE} !!','{NOIEPLEASE_TEXT}',"javascript:s_PopUp('http://www.mozilla-europe.org/en/firefox/','800',800);",null,330);
-	}
-	
-	if($sock->GET_INFO("EnableNightlyInFrontEnd")==1){NightlyNotifs();}
-	
-	if($users->VMWARE_HOST){
-		if(!$users->VMWARE_TOOLS_INSTALLED){
-			echo ParagrapheTEXT("vmware-logo-48.png",'{INSTALL_VMWARE_TOOLS}','{INSTALL_VMWARE_TOOLS_TEXT}',
-			"javascript:Loadjs('setup.index.progress.php?product=APP_VMTOOLS&start-install=yes');",null,330);
-		}
-	}
-	if($GLOBALS["VERBOSE"]){echo "$page LINE:".__LINE__."\n";}
-	if($users->VIRTUALBOX_HOST){
-		if(!$users->APP_VBOXADDINTION_INSTALLED){
-			echo ParagrapheTEXT("virtualbox-48.png",'{INSTALL_VBOX_TOOLS}','{INSTALL_VBOX_TOOLS_TEXT}',
-			"javascript:Loadjs('setup.index.progress.php?product=APP_VBOXADDITIONS&start-install=yes');",null,330);
-		}
-	}
-	
-	if($users->ZARAFA_INSTALLED){
-		$q=new mysql();
-		$ctc=$q->COUNT_ROWS("zarafa_orphaned","artica_backup");
-		if($ctc>0){
-			echo Paragraphe("inbox-error-48.png","$ctc {ORPHANED_STORES}",'{ORPHANED_STORES_TEXT}',
-			"javascript:Loadjs('zarafa.orphans.php?js=yes');",null,330);
-			}
-	}
-	
-		
-	
-	
-	
 	$hostname=base64_decode($sock->getFrameWork("network.php?fqdn=yes"));
 	writelogs("network.php?fqdn=yes -> hostname=\"$hostname\"",__FUNCTION__,__FILE__,__LINE__);
 	$mustchangeHostname=false;
@@ -585,9 +542,21 @@ function status_right(){
 	
 	$sock=new sockets();
 	$sock->getFrameWork('cmd.php?ForceRefreshRight=yes');
-	$memory="<div id='mem_status_computer'>".$tpl->_ENGINE_parse_body(@file_get_contents("ressources/logs/status.memory.html"))."</div>";
 	
+	if(!$newfrontend){
+		$infos="LoadAjaxTiny('right-status-infos','admin.left.php?part1=yes');";
+	}else{
+		$ajaxadd="&newfrontend=yes";
+	}
 	
+	$script="
+	<div id='mem_status_computer'>".$tpl->_ENGINE_parse_body(@file_get_contents("ressources/logs/status.memory.html"))."</div>
+	\n
+	<div id='right-status-infos'></div>
+	<script>
+		LoadAjax('left_status','$page?status=left&$ajaxadd');
+		$infos
+	</script>\n";
 	
 	
 	
@@ -622,11 +591,8 @@ function status_right(){
 		
 	}
 	
-	if($users->SAMBA_INSTALLED){
-		echo $memory.StatusSamba().$script;
-		return null;	
-	}
-	echo "$memory$script";
+	if($users->SAMBA_INSTALLED){echo $memory.StatusSamba().$script;return null;}
+	echo "$script";
 	
 	}
 	
@@ -672,23 +638,7 @@ function status_squid_kav(){
 	return $tpl->_ENGINE_parse_body($html);	
 }
 	
-function NightlyNotifs(){
-	$sock=new sockets();
-	$ini=new Bs_IniHandler("ressources/index.ini");
-	$nightly=$ini->get("NEXT","artica-nightly");
-	$version=$sock->getFrameWork("cmd.php?uri=artica_version");
-	
-	$nightlybin=str_replace('.','',$nightly);
-	$versionbin=str_replace('.','',$version);
-	if($versionbin==0){return;}
-	if($nightlybin==0){return;}
-	
-	if($nightlybin>$versionbin){
-		echo ParagrapheTEXT("32-infos.png","{NEW_NIGHTLYBUILD}: $nightly",'{NEW_NIGHTLYBUILD_TEXT}',
-			"javascript:Loadjs('artica.update.php?js=yes');",null,330);
-		
-	}
-}
+
 
 
 function status_postfix(){
@@ -827,139 +777,20 @@ function status_memdump(){
 
 
 function status_left(){
-	$users=new usersMenus();
-	if(is_file("ressources/logs/web/debian.update.html"));
-	$apt=@file_get_contents("ressources/logs/web/debian.update.html");
-	$html=@file_get_contents("ressources/logs/status.global.html");
-	$sock=new sockets();
-	$DisableWarningCalculation=$sock->GET_INFO("DisableWarningCalculation");
-	$DisableAPTNews=$sock->GET_INFO("DisableAPTNews");
-	$kavicapserverEnabled=$sock->GET_INFO("kavicapserverEnabled");
-	if(!is_numeric($kavicapserverEnabled)){$kavicapserverEnabled=0;}
-	if(!is_numeric($DisableWarningCalculation)){$DisableWarningCalculation=0;}
-	if(!is_numeric($DisableAPTNews)){$DisableAPTNews=0;}
+	$newfrontend=false;
+	if(isset($_GET["newfrontend"])){$newfrontend=true;}
 	
-	if($users->KASPERSKY_WEB_APPLIANCE){$kavicapserverEnabled=1;}
+	"<div id='status-left'>
 	
-	if($DisableAPTNews==1){$apt=null;}
+	</div>
 	
-	
-	
-	$tpl=new templates();
-	$page=CurrentPageName();
-	echo $tpl->_ENGINE_parse_body("$apt$html")."
-	<div id='artica-meta'></div>
-	
-	<script>
-		function CheckArticaMeta(){
-			var kavicapserverEnabled=$kavicapserverEnabled;
-			LoadAjax('artica-meta','$page?artica-meta=yes');
-			if(document.getElementById('loadavggraph')){LoadAjax('loadavggraph','admin.index.loadvg.php');}
-			if(kavicapserverEnabled==1){
-				if(document.getElementById('kav4proxyGraphs')){LoadAjax('kav4proxyGraphs','admin.index.kav4proxy.php');}
-			}
-		}
-	
-	
-		function CheckSquid(){
-			if(document.getElementById('page-index-squid-status')){
-				LoadAjax('page-index-squid-status','squid.index.php?page-index-squid-status=yes');
-			}
-		
-		}
-		
-		function LoadUnityIcon(){
-				LoadAjaxTiny('unity-icon','unity.php?icon=yes');
-			}
-		
-				
-		
-		
-		LoadUnityIcon();
-		CheckArticaMeta();
-	</script>
 	
 	";
-	$sock=new sockets();
-	$sock->getFrameWork('cmd.php?ForceRefreshLeft=yes');	
+	$newfrontend;
+	
 	}
 
 
-function syslogs(){
-	if($_GET["lines"]==null){$_GET["lines"]=50;}
-	$users->syslogng_installed=false;
-	$users=new usersMenus();
-	if(!$users->syslogng_installed){
-		if($users->EnableMysqlFeatures==0){
-			echo graph();
-			exit;
-		}
-	}
-	
-	$q=new syslogs();
-	$q->BuildNecessaryTables();
-	$q->q_daemons=$_GET["q_daemons"];
-	$q->limit_end=$_GET["q_lines"];
-	$q->q_search=$_GET["q_search"];
-	$daemon=Field_array_Hash($q->GetDaemons(),'q_daemons',$_GET["q_daemons"],'sysevents_query()');
-	
-	
-	$form="<table style=\"width:100%\">
-	<tr>
-	<td align='right'><strong>Daemon:</strong></td>
-	<td>$daemon</td>
-	<td align='right'><strong>{search}:</strong></td>
-	<td>".Field_text('q_search',$_GET["q_search"],'width:150px',null,'sysevents_query()')."</td>	
-	<td align='right'><strong>{lines_number}:</strong></td>
-	<td>".Field_text('q_lines',$_GET["q_lines"],'width:40px',null,'sysevents_query()')."</td>
-	<td>" . imgtootltip('icon_refresh-20.gif','{refresh}','sysevents_query()')."</td>
-		
-	</tr>
-	</table>";
-	$form="<br>" . RoundedLightGrey($form);
-	
-	$html="
-	<input type='hidden' id='switch' value='{$_GET["main"]}'>
-	
-	
-	<table style=\"width:100%\">
-	
-	";
-	$tpl=new templates();
-	$r=$q->build_query();
-	$count=0;
-	$style="style='border-bottom:1px dotted #CCCCCC'";
-	while($ligne=@mysql_fetch_array($r,MYSQL_ASSOC)){
-		$ligne["msg"]=htmlentities($ligne["msg"]);
-		$html=$html . 
-		"<tr " . CellRollOver_jaune() . ">
-		<td width=1% valign='top' $style><img src='img/fw_bold.gif'></td>
-		<td width=1% nowrap valign='top' $style>{$ligne["date"]}</td>
-		<td $style>{$ligne["msg"]}</td>
-		<td width=1% nowrap valign='top' $style>{$ligne["program"]}</td>
-		</tr>";
-		$count=$count+1;
-		if($count>500){
-			$error="
-			<tr>
-				<td width=1% valign='top' styme='border-bottom:1px dotted red'><img src='img/fw_bold.gif'></td>
-				<td colspan=3 style='color:red;font-weight:bold;border-bottom:1px dotted red'>{too_many_lines_exceed}:500</td>
-			</tr>";
-			$html=$tpl->_ENGINE_parse_body($error).$html;
-			break;
-		}
-			
-			
-		}
-	
-	$html=$html . "</table>";
-		
-	$html=$tpl->_ENGINE_parse_body($form)."<br>$html";
-
-	echo $html;
-	
-	
-}
 
 
 function warnings_delete_all(){
@@ -974,57 +805,6 @@ function warnings_delete_all(){
 
 
 
-
-function graph_defang(){
-	
-	$style="style='border:1px dotted #CCCCCC;padding:3px;margin:3px;text-align:center'";
-	$md=md5(date('Ymdhis'));	
-	
-$defgraph[]="daily_spam_9recipient_stacked_bar_Heartlight_Traffic.png";
-$defgraph[]="daily_spam_9sender_stacked_bar.png";
-$defgraph[]="daily_spam_9value2_stacked_bar.png";
-$defgraph[]="daily_spamprobable_spamvirusmail_in_summary_line.png";
-$defgraph[]="daily_spamvirus_9recipient_stacked_bar.png";
-$defgraph[]="daily_virus_9value2_stacked_bar.png";
-$defgraph[]="daily_virus_value1_stacked_bar.png";
-$defgraph[]="hourly_spam_9recipient_stacked_bar_Heartlight_Traffic.png";
-$defgraph[]="hourly_spam_9sender_stacked_bar.png";
-$defgraph[]="hourly_spam_9value2_stacked_bar.png";
-$defgraph[]="hourly_spamprobable_spamvirusmail_in_summary_line.png";
-$defgraph[]="hourly_spamvirus_9recipient_stacked_bar.png";
-$defgraph[]="hourly_virus_9value2_stacked_bar.png";
-$defgraph[]="hourly_virus_value1_stacked_bar.png";
-$defgraph[]="monthly_spam_9recipient_stacked_bar_Heartlight_Traffic.png";
-$defgraph[]="monthly_spam_9sender_stacked_bar.png";
-$defgraph[]="monthly_spam_9value2_stacked_bar.png";
-$defgraph[]="monthly_spamprobable_spamvirusmail_in_summary_line.png";
-$defgraph[]="monthly_spamvirus_9recipient_stacked_bar.png";
-$defgraph[]="monthly_virus_9value2_stacked_bar.png";
-$defgraph[]="monthly_virus_value1_stacked_bar.png";
-
-$index=rand(0,count($defgraph));
-	
-	$g_system="
-<div id='g_sys2' $style>
-		<H3>GraphDefang</H3>
-			<a href='index.graphdefang.php'><img src='images.listener.php?uri=graphdefang/{$defgraph[$index]}&md=$md'></a>
-	</div>
-<div id='g_sys' $style>
-		<H3>system</H3>
-			<img src='images.listener.php?uri=system/rrd/01cpu-1day.png&md=$md'>
-	</div>
-	
-";	
-	
-	$p="
-	<input type='hidden' id='switch' value='{$_GET["main"]}'>
-	$g_system.$g_postfix.$g_squid";
-	
-	$tpl=new templates();
-	echo $tpl->_ENGINE_parse_body($p);	
-
-	
-}
 
 
 

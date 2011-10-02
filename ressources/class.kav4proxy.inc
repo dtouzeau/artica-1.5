@@ -190,9 +190,13 @@ function Build_defaults(){
 		$this->main_array["MaxReqsPerChild"]=$this->GET("icapserver.process","MaxReqsPerChild");	
 		$this->main_array["MaxEnginesPerChild"]=$this->GET("icapserver.process","MaxEnginesPerChild");	
 		$this->main_array["PreviewSize"]=$this->GET("icapserver.protocol","PreviewSize");
-		$this->main_array["ListenAddress"]=$this->GET("icapserver.network","ListenAddress");			
-
-		
+		$this->main_array["ListenAddress"]=$this->GET("icapserver.network","ListenAddress");
+					
+		if(!isset($this->main_array["Timeout"])){$this->main_array["Timeout"]=null;}
+		if(!isset($this->main_array["AnswerMode"])){$this->main_array["AnswerMode"]=null;}
+		if(!isset($this->main_array["MaxSendDelayTime"])){$this->main_array["MaxSendDelayTime"]=null;}
+		if(!isset($this->main_array["MaxConnections"])){$this->main_array["MaxConnections"]=null;}
+		if(!isset($this->main_array["Allow204"])){$this->main_array["Allow204"]=null;}
 		
 		
 		if($this->main_array["Timeout"]==null){$this->main_array["Timeout"]=0;}
@@ -205,6 +209,24 @@ function Build_defaults(){
 		if($this->main_array["PreviewSize"]==null){$this->main_array["PreviewSize"]="128";}
 		if($this->main_array["MaxConnections"]==null){$this->main_array["MaxConnections"]="5000";}
 		if($this->main_array["Allow204"]==null){$this->main_array["Allow204"]="yes";}
+		
+		if(!isset($this->main_array["ScanMailBases"])){$this->main_array["ScanMailBases"]=null;}
+		if(!isset($this->main_array["ScanMailPlain"])){$this->main_array["ScanMailPlain"]=null;}
+		if(!isset($this->main_array["UseHeuristic"])){$this->main_array["UseHeuristic"]=null;}
+		if(!isset($this->main_array["Cure"])){$this->main_array["Cure"]=null;}
+		if(!isset($this->main_array["UseAVbasesSet"])){$this->main_array["UseAVbasesSet"]=null;}
+		if(!isset($this->main_array["MaxScanTime"])){$this->main_array["MaxScanTime"]=null;}
+		if(!isset($this->main_array["UseUpdateServerUrl"])){$this->main_array["UseUpdateServerUrl"]=null;}
+		if(!isset($this->main_array["UseUpdateServerUrlOnly"])){$this->main_array["UseUpdateServerUrlOnly"]=null;}
+		if(!isset($this->main_array["RegionSettings"])){$this->main_array["RegionSettings"]=null;}
+		if(!isset($this->main_array["UseProxy"])){$this->main_array["UseProxy"]=null;}
+		if(!isset($this->main_array["ListenAddress"])){$this->main_array["ListenAddress"]=null;}
+		if(!isset($this->main_array["ScanPacked"])){$this->main_array["ScanPacked"]=null;}
+		if(!isset($this->main_array["ScanArchives"])){$this->main_array["ScanArchives"]=null;}
+		if(!isset($this->main_array["UpdateServerUrl"])){$this->main_array["UpdateServerUrl"]=null;}
+		if(!isset($this->main_array["MaxReqLengthAction"])){$this->main_array["MaxReqLengthAction"]=null;}
+		if(!isset($this->main_array["PartialResponseAction"])){$this->main_array["PartialResponseAction"]=null;}
+		if(!isset($this->main_array["PartialRequestAction"])){$this->main_array["PartialRequestAction"]=null;}								
 		
 		if($this->main_array["ScanPacked"]==null){$this->main_array["ScanPacked"]="yes";}
 		if($this->main_array["ScanArchives"]==null){$this->main_array["ScanArchives"]="yes";}

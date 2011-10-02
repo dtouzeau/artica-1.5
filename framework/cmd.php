@@ -2243,6 +2243,7 @@ function ReloadArticaPolicy(){
 
 
 function RestartMysqlDaemon(){
+	$unix=new unix();
 	$php5=$unix->LOCATE_PHP5_BIN();
 	$cmd=trim("$php5 /usr/share/artica-postfix/exec.mysql.build.php \"".$unix->MYSQL_MYCNF_PATH()."\" >/dev/null 2>&1");
 	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	

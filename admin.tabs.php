@@ -455,7 +455,12 @@ $tpl=new templates();
 
 function admin_index(){
 //if(GET_CACHED(__FILE__,__FUNCTION__,__FUNCTION__)){return null;}
-	
+$newfrontend=false;
+$ajaxadd=null;
+if(isset($_GET["newfrontend"])){$newfrontend=true;}	
+
+if($newfrontend){$ajaxadd="&newfrontend=yes";}
+
 $page=CurrentPageName();
 	$html="
 	<table style='width:700px'>
@@ -467,7 +472,7 @@ $page=CurrentPageName();
 		<td valign='top' width='50%'>
 			<div id='right_status'><center><img src='img/wait_verybig.gif'></center></div>
 			<script>
-				LoadAjax('right_status','admin.index.php?status=right&counter=1');		
+				LoadAjax('right_status','admin.index.php?status=right&counter=1$ajaxadd');		
 			</script>
 					
 		</td>

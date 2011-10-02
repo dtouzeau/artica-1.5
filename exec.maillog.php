@@ -494,8 +494,10 @@ if(preg_match("#fatal: dict_open: unsupported dictionary type: pcre:  Is the pos
 }
 
 if(preg_match("#zarafa-server.+?The recommended upgrade procedure is to use the zarafa7-upgrade commandline tool#",$buffer,$re)){
-	events("zarafa-server, need to upgrade...");
-	shell_exec(trim("{$GLOBALS["NOHUP_PATH"]} {$GLOBALS["PHP5_BIN"]} /usr/share/artica-postfix/exec.zarafa-migrate.php --upgrade-7 >/dev/null 2>&1 &"));
+	
+	$cmd=trim("{$GLOBALS["NOHUP_PATH"]} {$GLOBALS["PHP5_BIN"]} /usr/share/artica-postfix/exec.zarafa-migrate.php --upgrade-7 >/dev/null 2>&1 &");
+	events("zarafa-server, need to upgrade... -> $cmd");
+	shell_exec($cmd);
 }
 
 

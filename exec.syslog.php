@@ -1373,6 +1373,7 @@ if(preg_match("#dhcpd: DHCPREQUEST for (.+?)\s+from\s+(.+?)\s+\((.+?)\)\s+via#",
 	if(!$GLOBALS["DHCPREQUEST"]["$md"]){
 		$GLOBALS["DHCPREQUEST"]["$md"]=true;
 		events("DHCPD: IP:{$re[1]} MAC:({$re[2]}) computer name={$re[3]}-> exec.dhcpd-leases.php");
+		if(preg_match("#([0-9\.]+)\s+\(#", $re[1],$ri)){$re[1]=$ri[1];}
 		$GLOBALS["CLASS_UNIX"]->THREAD_COMMAND_SET("{$GLOBALS["LOCATE_PHP5_BIN"]} /usr/share/artica-postfix/exec.dhcpd-leases.php --single-computer {$re[1]} {$re[2]} {$re[3]}");
 	}
 	return true;

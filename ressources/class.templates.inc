@@ -100,7 +100,7 @@ class templates{
 		if($GLOBALS["VERBOSE"]){
 			$trace=debug_backtrace();
 			$called=" called by ". basename($trace[1]["file"])." {$trace[1]["function"]}() line {$trace[1]["line"]}";			
-			writelogs("Instanciate ".__CLASS__ ." $called",__CLASS__."/" .__FUNCTION__,__FILE__);
+			//writelogs("Instanciate ".__CLASS__ ." $called",__CLASS__."/" .__FUNCTION__,__FILE__);
 		}	
 		
 		
@@ -4964,5 +4964,18 @@ if($t<2){
 	$tables[]="</tr></table>";	
 	return implode("\n",$tables);
 }
+
+function NotifyAdmin($img,$title,$text,$js,$critical=0){
+	$zmd5=md5("$img,$title,$text,$js");
+	$date=date('Y-m-d H:i:s');
+	$js=addslashes($js);
+	$title=addslashes($title);
+	if(!is_numeric($critical)){$critical=0;}
+	$sql="INSERT IGNORE INTO adminevents(zmd5,zDate,subject,text,jslink,icon,critical,enabled)
+	VALUES ('$zmd5','$date','$title','$text','$js','$img','$critical',1);";
+	if(!is_dir("/var/log/artica-postfix/adminevents")){@mkdir("/var/log/artica-postfix/adminevents",644,true);}
+	@file_put_contents("/var/log/artica-postfix/adminevents/$zmd5",$sql);
+}
+
 
 ?>

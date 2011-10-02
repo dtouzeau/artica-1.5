@@ -5704,6 +5704,9 @@ begin
           logs.DeleteFile('/etc/cron.d/sendmail');
      end;
 
+      if FileExists('/usr/share/sendmail/sendmail') then begin
+            if Not FileExists('/usr/sbin/sendmail-msp') then fpsystem(SYS.LOCATE_GENERIC_BIN('touch')+' /usr/sbin/sendmail-msp');
+      end;
 
     if not FileExists('/bin/pidof') then begin
        pidof_path:=SYS.LOCATE_GENERIC_BIN('pidof');

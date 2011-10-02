@@ -516,7 +516,7 @@ private function loadLdapConfig(){
 	
 		$this->_load_ldap_main();
 		$hash=$ldap->ArticaDatas();
-		$this->smtp_sasl_password_datas=$hash["PostfixHashSmtpSaslAuth"];
+		if(isset($hash["PostfixHashSmtpSaslAuth"])){$this->smtp_sasl_password_datas=$hash["PostfixHashSmtpSaslAuth"];}
 		$sock=new sockets();
 		$this->PostFixBounceTemplate=$sock->GET_INFO("PostfixBounceTemplateFile");
 		$this->ParseBounceTemplates();
@@ -795,8 +795,8 @@ private function build_default_my_networks(){
 		
 		if($this->main_array["mailbox_size_limit"]<$this->main_array["message_size_limit"]){$this->main_array["mailbox_size_limit"]=$this->main_array["message_size_limit"];}
 		
-		if($this->main_array["virtual_transport_maps"]==null){$this->main_array["virtual_transport_maps"]='ldap:/etc/postfix/ldap-virtual_transport_maps.cf';}
-		if($this->main_array["transport_maps"]==null){$this->main_array["transport_maps"]='ldap:/etc/postfix/ldap-virtual_transport_maps.cf';}
+		
+		
 		$this->main_array["virtual_mailbox_limit"]=$this->main_array["message_size_limit"];
 		
 		if($this->main_array["double_bounce_sender"]==null){$this->main_array["double_bounce_sender"]='double-bounce';}
@@ -3008,7 +3008,7 @@ class main_perso{
 	
 	
 	function load_array(){
-		
+		$res=array();
 		$sql="SELECT * FROM postfix_perso_settings ORDER BY postfix_key";
 		$q=new mysql();
 		$results=$q->QUERY_SQL($sql,"artica_backup");

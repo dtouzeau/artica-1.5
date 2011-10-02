@@ -12,7 +12,7 @@
       <MainUnit Value="0"/>
       <TargetFileExt Value=""/>
       <Title Value="artica-install"/>
-      <ActiveEditorIndexAtStart Value="7"/>
+      <ActiveEditorIndexAtStart Value="6"/>
     </General>
     <VersionInfo>
       <ProjectVersion Value=""/>
@@ -55,12 +55,12 @@
       <Unit2>
         <Filename Value="global_conf.pas"/>
         <UnitName Value="global_conf"/>
-        <CursorPos X="1" Y="5900"/>
-        <TopLine Value="5857"/>
+        <CursorPos X="124" Y="5736"/>
+        <TopLine Value="5691"/>
         <EditorIndex Value="7"/>
         <UsageCount Value="100"/>
         <Bookmarks Count="1">
-          <Item0 X="1" Y="6861" ID="2"/>
+          <Item0 X="1" Y="6864" ID="2"/>
         </Bookmarks>
         <Loaded Value="True"/>
       </Unit2>
@@ -674,7 +674,7 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="framework"/>
         <CursorPos X="49" Y="735"/>
-        <TopLine Value="699"/>
+        <TopLine Value="718"/>
         <EditorIndex Value="11"/>
         <UsageCount Value="206"/>
         <Loaded Value="True"/>
@@ -765,8 +765,8 @@
         <Filename Value="zarafa_server.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="zarafa_server"/>
-        <CursorPos X="131" Y="717"/>
-        <TopLine Value="700"/>
+        <CursorPos X="32" Y="663"/>
+        <TopLine Value="629"/>
         <EditorIndex Value="6"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -1184,123 +1184,123 @@
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="squid.pas"/>
-        <Caret Line="61" Column="28" TopLine="1"/>
+        <Caret Line="669" Column="39" TopLine="635"/>
       </Position1>
       <Position2>
         <Filename Value="squid.pas"/>
-        <Caret Line="322" Column="17" TopLine="288"/>
+        <Caret Line="707" Column="16" TopLine="673"/>
       </Position2>
       <Position3>
         <Filename Value="squid.pas"/>
-        <Caret Line="798" Column="21" TopLine="740"/>
+        <Caret Line="765" Column="17" TopLine="731"/>
       </Position3>
       <Position4>
         <Filename Value="squid.pas"/>
-        <Caret Line="1" Column="1" TopLine="1"/>
+        <Caret Line="1091" Column="26" TopLine="1057"/>
       </Position4>
       <Position5>
         <Filename Value="squid.pas"/>
-        <Caret Line="93" Column="29" TopLine="59"/>
+        <Caret Line="1328" Column="17" TopLine="1294"/>
       </Position5>
       <Position6>
         <Filename Value="squid.pas"/>
-        <Caret Line="616" Column="17" TopLine="579"/>
+        <Caret Line="1342" Column="20" TopLine="1294"/>
       </Position6>
       <Position7>
         <Filename Value="squid.pas"/>
-        <Caret Line="1" Column="1" TopLine="1"/>
+        <Caret Line="1352" Column="23" TopLine="1294"/>
       </Position7>
       <Position8>
         <Filename Value="squid.pas"/>
-        <Caret Line="62" Column="26" TopLine="1"/>
+        <Caret Line="1361" Column="18" TopLine="1294"/>
       </Position8>
       <Position9>
         <Filename Value="squid.pas"/>
-        <Caret Line="312" Column="17" TopLine="278"/>
+        <Caret Line="1367" Column="23" TopLine="1333"/>
       </Position9>
       <Position10>
         <Filename Value="squid.pas"/>
-        <Caret Line="607" Column="22" TopLine="573"/>
+        <Caret Line="1372" Column="18" TopLine="1333"/>
       </Position10>
       <Position11>
         <Filename Value="squid.pas"/>
-        <Caret Line="616" Column="17" TopLine="573"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
       </Position11>
       <Position12>
         <Filename Value="squid.pas"/>
-        <Caret Line="669" Column="39" TopLine="635"/>
+        <Caret Line="1111" Column="5" TopLine="1074"/>
       </Position12>
       <Position13>
-        <Filename Value="squid.pas"/>
-        <Caret Line="707" Column="16" TopLine="673"/>
+        <Filename Value="global_conf.pas"/>
+        <Caret Line="36" Column="4" TopLine="19"/>
       </Position13>
       <Position14>
-        <Filename Value="squid.pas"/>
-        <Caret Line="765" Column="17" TopLine="731"/>
+        <Filename Value="global_conf.pas"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
       </Position14>
       <Position15>
-        <Filename Value="squid.pas"/>
-        <Caret Line="1091" Column="26" TopLine="1057"/>
+        <Filename Value="global_conf.pas"/>
+        <Caret Line="17" Column="92" TopLine="1"/>
       </Position15>
       <Position16>
-        <Filename Value="squid.pas"/>
-        <Caret Line="1328" Column="17" TopLine="1294"/>
+        <Filename Value="global_conf.pas"/>
+        <Caret Line="98" Column="26" TopLine="64"/>
       </Position16>
       <Position17>
-        <Filename Value="squid.pas"/>
-        <Caret Line="1342" Column="20" TopLine="1294"/>
+        <Filename Value="global_conf.pas"/>
+        <Caret Line="664" Column="27" TopLine="630"/>
       </Position17>
       <Position18>
-        <Filename Value="squid.pas"/>
-        <Caret Line="1352" Column="23" TopLine="1294"/>
+        <Filename Value="global_conf.pas"/>
+        <Caret Line="3134" Column="49" TopLine="3100"/>
       </Position18>
       <Position19>
-        <Filename Value="squid.pas"/>
-        <Caret Line="1361" Column="18" TopLine="1294"/>
+        <Filename Value="global_conf.pas"/>
+        <Caret Line="5891" Column="52" TopLine="5857"/>
       </Position19>
       <Position20>
-        <Filename Value="squid.pas"/>
-        <Caret Line="1367" Column="23" TopLine="1333"/>
+        <Filename Value="global_conf.pas"/>
+        <Caret Line="5900" Column="1" TopLine="4140"/>
       </Position20>
       <Position21>
-        <Filename Value="squid.pas"/>
-        <Caret Line="1372" Column="18" TopLine="1333"/>
+        <Filename Value="global_conf.pas"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
       </Position21>
       <Position22>
-        <Filename Value="squid.pas"/>
-        <Caret Line="1" Column="1" TopLine="1"/>
+        <Filename Value="global_conf.pas"/>
+        <Caret Line="2800" Column="65" TopLine="2766"/>
       </Position22>
       <Position23>
-        <Filename Value="squid.pas"/>
-        <Caret Line="1111" Column="5" TopLine="1074"/>
+        <Filename Value="global_conf.pas"/>
+        <Caret Line="2802" Column="87" TopLine="2766"/>
       </Position23>
       <Position24>
         <Filename Value="global_conf.pas"/>
-        <Caret Line="36" Column="4" TopLine="19"/>
+        <Caret Line="5702" Column="41" TopLine="5668"/>
       </Position24>
       <Position25>
-        <Filename Value="global_conf.pas"/>
-        <Caret Line="1" Column="1" TopLine="1"/>
+        <Filename Value="zarafa_server.pas"/>
+        <Caret Line="337" Column="23" TopLine="284"/>
       </Position25>
       <Position26>
-        <Filename Value="global_conf.pas"/>
-        <Caret Line="17" Column="92" TopLine="1"/>
+        <Filename Value="zarafa_server.pas"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
       </Position26>
       <Position27>
-        <Filename Value="global_conf.pas"/>
-        <Caret Line="98" Column="26" TopLine="64"/>
+        <Filename Value="zarafa_server.pas"/>
+        <Caret Line="73" Column="22" TopLine="39"/>
       </Position27>
       <Position28>
-        <Filename Value="global_conf.pas"/>
-        <Caret Line="664" Column="27" TopLine="630"/>
+        <Filename Value="zarafa_server.pas"/>
+        <Caret Line="357" Column="1" TopLine="324"/>
       </Position28>
       <Position29>
-        <Filename Value="global_conf.pas"/>
-        <Caret Line="3134" Column="49" TopLine="3100"/>
+        <Filename Value="zarafa_server.pas"/>
+        <Caret Line="342" Column="29" TopLine="287"/>
       </Position29>
       <Position30>
-        <Filename Value="global_conf.pas"/>
-        <Caret Line="5891" Column="52" TopLine="5857"/>
+        <Filename Value="zarafa_server.pas"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
       </Position30>
     </JumpHistory>
   </ProjectOptions>
@@ -1333,11 +1333,11 @@
       </Item1>
       <Item2>
         <Source Value="global_conf.pas"/>
-        <Line Value="12451"/>
+        <Line Value="12454"/>
       </Item2>
       <Item3>
         <Source Value="global_conf.pas"/>
-        <Line Value="6991"/>
+        <Line Value="6994"/>
       </Item3>
       <Item4>
         <Source Value="mimedefang.pas"/>
@@ -1361,7 +1361,7 @@
       </Item8>
       <Item9>
         <Source Value="global_conf.pas"/>
-        <Line Value="8555"/>
+        <Line Value="8558"/>
       </Item9>
       <Item10>
         <Source Value="collectd.pas"/>
@@ -1381,7 +1381,7 @@
       </Item13>
       <Item14>
         <Source Value="global_conf.pas"/>
-        <Line Value="10985"/>
+        <Line Value="10988"/>
       </Item14>
     </BreakPoints>
     <Exceptions Count="2">

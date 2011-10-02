@@ -268,6 +268,8 @@ if not TryStrToInt(SYS.GET_INFO('EnableScheduleUpdates'),EnableScheduleUpdates) 
        if not SYS.COMMANDLINE_PARAMETERS('--bycron') then begin
           writeln('Artica-update is scheduled: add --force token to force die()');
           halt(0);
+       end else begin
+           zlogs.EVENTS('Artica update scheduled task starting','The scheduled update task has been executed....','system','');
        end;
     end;
  end;

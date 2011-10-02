@@ -5,6 +5,7 @@ include_once(dirname(__FILE__) . '/ressources/class.user.inc');
 include_once(dirname(__FILE__) . '/ressources/class.mysql.inc');
 include_once(dirname(__FILE__) . '/ressources/class.maincf.multi.inc');
 include_once(dirname(__FILE__) . '/ressources/class.main_cf.inc');
+include_once(dirname(__FILE__) . '/ressources/class.main.hashtables.inc');
 include_once(dirname(__FILE__).'/framework/class.unix.inc');
 include_once(dirname(__FILE__)."/framework/frame.class.inc");
 if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["DEBUG"]=true;$GLOBALS["VERBOSE"]=true;}
@@ -95,8 +96,8 @@ if($argv[1]=="--transport"){
 	build_relay_domains();
 	restrict_relay_domains();
 	build_cyrus_lmtp_auth();	
-	mydestination_search();
-	mydestination();	
+	$hashT=new main_hash_table();
+	$hashT->mydestination();	
 	relayhost();
 	perso_settings();
 	echo "Starting......: Postfix reloading\n";
@@ -177,8 +178,9 @@ sender_bcc_maps_build();
 
 build_local_recipient_maps();
 
-mydestination_search();
-mydestination();
+
+$hashT=new main_hash_table();
+$hashT->mydestination();
 
 transport_maps_search();
 build_transport_maps();
@@ -411,21 +413,7 @@ function build_relay_domains(){
 		
 }
 
-function mydestination_search(){
-$ldap=new clladp();
-	$filter="(&(objectClass=organizationalUnit)(associatedDomain=*))";
-	$attrs=array("associatedDomain");
-	$dn="$ldap->suffix";
-	$hash=$ldap->Ldap_search($dn,$filter,$attrs);
 
-	for($i=0;$i<$hash["count"];$i++){
-		for($t=0;$t<$hash[$i]["associateddomain"]["count"];$t++){
-			$GLOBALS["mydestination"][]=$hash[$i][strtolower("associatedDomain")][$t]."\tOK";
-		}
-		
-	}
-	echo "Starting......: Postfix ".count($GLOBALS["mydestination"])." Local domain(s)\n"; 	
-}
 
 function LoadLDAPDBs(){
 	$main=new maincf_multi("master","master");
@@ -456,19 +444,7 @@ function LoadLDAPDBs(){
 
 
 
-function mydestination(){
-	if(!is_array($GLOBALS["mydestination"])){
-		shell_exec("{$GLOBALS["postconf"]} -e \"mydestination = \" >/dev/null 2>&1");
-		shell_exec("{$GLOBALS["virtual_mailbox_domains"]} -e \"virtual_mailbox_domains = \" >/dev/null 2>&1");
-		return null;
-		}
-	
-		shell_exec("{$GLOBALS["postconf"]} -e \"mydestination =hash:/etc/postfix/mydestination\" >/dev/null 2>&1");
-		shell_exec("{$GLOBALS["postconf"]} -e \"virtual_mailbox_domains =\" >/dev/null 2>&1");
-		@file_put_contents("/etc/postfix/mydestination",implode("\n",$GLOBALS["mydestination"]));
-		
-		shell_exec("{$GLOBALS["postmap"]} hash:/etc/postfix/mydestination >/dev/null 2>&1");
-}	
+
 
 function aliases_users(){
 	$ldap=new clladp();

@@ -68,6 +68,7 @@ class artica_graphs{
 		$XNAME=$tpl->_ENGINE_parse_body($this->x_title);
 		$xdata=$this->xdata;
 		$ydata=$this->ydata;
+		if($GLOBALS["VERBOSE"]){print_r($ydata);}
 		writelogs("$title: Y DATA: ".count($this->ydata)." rows",__CLASS__.'/'.__FUNCTION__,__FILE__);	
 		writelogs("$title: X DATA: ".count($this->xdata)." rows",__CLASS__.'/'.__FUNCTION__,__FILE__);
 		$graph = new Graph($this->width,$this->height);
@@ -82,9 +83,9 @@ class artica_graphs{
 		$graph->yaxis->title->Set($YNAME);
 		$graph->yaxis->scale->SetGrace(10);
 		if(!$this->margin0){
-			$graph->SetMargin(55,20,60,20);
+			$graph->SetMargin(55,20,60,40);
 		}else{
-			$graph->SetMargin(34,0,0,0);
+			$graph->SetMargin(50,15,0,40);
 		}
 		$graph->xaxis->SetColor('black');
 		$graph->yaxis->SetColor('black');

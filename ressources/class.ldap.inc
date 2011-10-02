@@ -7,8 +7,6 @@ if(dirname($_SERVER['PHP_SELF'])<>"/smartsieve"){
 	if($GLOBALS["DEBUG_MEM"]){events("Memory: class.ldap.inc -> ".round(((memory_get_usage()/1024)/1000),2) ."M : after class.sockets.inc".__LINE__);}
 }
 
-
-
 include_once(dirname(__FILE__) . '/logs.inc');
 if($GLOBALS["DEBUG_MEM"]){events("Memory: class.ldap.inc -> ".round(((memory_get_usage()/1024)/1000),2) ."M after logs :".__LINE__);}
 include_once(dirname(__FILE__) . '/class.templates.inc');
@@ -198,13 +196,14 @@ class clladp{
 		if(!$GLOBALS["VERIFLDAPTRUE"]){
 			$fp=@fsockopen($this->ldap_host, $this->ldap_port, $errno, $errstr, 2);
 			if(!$fp){
-				writelogs("ERROR unable to connect to ldap server in line ". __LINE__." $this->ldap_host, $this->ldap_port \"$errstr\"",
+				if($GLOBALS["VERBOSE"]){writelogs("Fatal: fsockopen -> $this->ldap_host:$this->ldap_port OK",__CLASS__.'/'.__FUNCTION__,__FILE__);}
+				writelogs("Fatal: ERROR unable to connect to ldap server in line ". __LINE__." $this->ldap_host, $this->ldap_port \"$errstr\"",
 				__CLASS__."/" .__FUNCTION__,__FILE__);
 				$this->ldap_last_error=$errstr;$this->ldapFailed=true;
 				@fclose($fp);
 				return false;
 			}
-			if($GLOBALS["VERBOSE"]){writelogs("fsockopen -> $this->ldap_host:$this->ldap_port OK",__CLASS__.'/'.__FUNCTION__,__FILE__);}
+			
 			@fclose($fp);
 		}
 		
@@ -220,14 +219,14 @@ class clladp{
 		$GLOBALS["VERIFLDAPTRUE"]=true;
 		
 		if(!$this->ldapbind){
-				if($GLOBALS["VERBOSE"]){writelogs("ldapbind -> cn=$this->ldap_admin,$this->suffix",__CLASS__.'/'.__FUNCTION__,__FILE__);}
+				
 				ldap_set_option($this->ldap_connection, LDAP_OPT_PROTOCOL_VERSION, 3); // on passe le LDAP en version 3, necessaire pour travailler avec le AD
 				ldap_set_option($this->ldap_connection, LDAP_OPT_REFERRALS, 0); 		 
 				$this->ldapbind=@ldap_bind($this->ldap_connection, "cn=$this->ldap_admin,$this->suffix", $this->ldap_password);
 			
 			
 				if(!$this->ldapbind){
-						
+						if($GLOBALS["VERBOSE"]){writelogs("Fatal: ldapbind -> cn=$this->ldap_admin,$this->suffix",__CLASS__.'/'.__FUNCTION__,__FILE__);}
 						$errornumber= ldap_errno($this->ldap_connection);
 						$error= "ERROR number : $errornumber\nWarning\n unable to connect with following\n cn=$this->ldap_admin,$this->suffix ($this->ldap_password) \n";
 						writelogs("ERROR unable to connect to ldap server ldap://{$this->ldap_host}:{$this->ldap_port} right username cn=$this->ldap_admin,$this->suffix"
@@ -290,11 +289,13 @@ private function ldap_perform_connection($ldapport=null){
 		}
 		ldap_set_option($this->ldap_connection, LDAP_OPT_PROTOCOL_VERSION, 3);
 		ldap_set_option($this->ldap_connection, LDAP_OPT_REFERRALS, 0); 
-		if($GLOBALS["VERBOSE"]){writelogs("ldapbind -> cn=$this->ldap_admin,$this->suffix",__CLASS__.'/'.__FUNCTION__,__FILE__);}		
+		
 		$this->ldapbind=@ldap_bind($this->ldap_connection, "cn=$this->ldap_admin,$this->suffix", $this->ldap_password);
 		if($this->ldapbind){
 			$GLOBALS["LDAP_BIN_ID"]=$this->ldapbind;
 			return true;
+		}else{
+			if($GLOBALS["VERBOSE"]){writelogs("Fatal: ldapbind -> cn=$this->ldap_admin,$this->suffix",__CLASS__.'/'.__FUNCTION__,__FILE__);}		
 		}
 	}
 	
@@ -318,11 +319,11 @@ private function ldap_perform_connection($ldapport=null){
 		return false;
 	}				
 		
-	if($GLOBALS["VERBOSE"]){writelogs("-> ldap_connect($this->ldap_host, $ldapport ) $called",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
+	
 	$this->ldap_connection=ldap_connect($this->ldap_host, $ldapport ) ;
 	$GLOBALS["LDAP_CONNECT_ID"]=$this->ldap_connection;
 	 if(!$this->ldap_connection){
-	 	if($GLOBALS["VERBOSE"]){writelogs("-> ldap_connect FAILED ",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);} 
+	 	if($GLOBALS["VERBOSE"]){writelogs("Fatal: FAILED -> ldap_connect($this->ldap_host, $ldapport ) $called",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
 	 	@ldap_close();
 	 	$GLOBALS["LDAP_COUNT_FAILED"]=$GLOBALS["LDAP_COUNT_FAILED"]+1;
 	 	if($GLOBALS["LDAP_COUNT_FAILED"]>4){
@@ -332,9 +333,11 @@ private function ldap_perform_connection($ldapport=null){
 	 }
 	 ldap_set_option($this->ldap_connection, LDAP_OPT_PROTOCOL_VERSION, 3);
 	 ldap_set_option($this->ldap_connection, LDAP_OPT_REFERRALS, 0); 	
-	 if($GLOBALS["VERBOSE"]){writelogs("ldapbind -> cn=$this->ldap_admin,$this->suffix",__CLASS__.'/'.__FUNCTION__,__FILE__);}
+	
 	 $this->ldapbind=@ldap_bind($this->ldap_connection, "cn=$this->ldap_admin,$this->suffix", $this->ldap_password);
-	 if($this->ldapbind){$GLOBALS["LDAP_BIN_ID"]=$this->ldapbind;}
+	 if($this->ldapbind){$GLOBALS["LDAP_BIN_ID"]=$this->ldapbind;}else{
+	  if($GLOBALS["VERBOSE"]){writelogs("Fatal: ldapbind -> cn=$this->ldap_admin,$this->suffix",__CLASS__.'/'.__FUNCTION__,__FILE__);}
+	 }
 	 return true;
 	 
 }
@@ -502,6 +505,7 @@ function ErrorConnection(){
 	}
 	
 	function set_organization_picture($ou,$picture_data){
+		$update_array=array();
 		$dn="ou=$ou,dc=organizations,$this->suffix";
 		$update_array["jpegLogo"][0]=$picture_data;
 		if(!$this->Ldap_modify($dn,$update_array)){return false;}
@@ -3788,7 +3792,6 @@ function getobjectDNClass($dn,$fulldn=0){
    		$this->ldap_perform_connection();
    		if(!is_array($update_array)){
    			$GLOBALS["INJECT_COMPUTER_TOLDAP"][]="LDAP:: Ldap_modify= No datas in this command !";
-   			//$this->ldap_last_error="No datas in this command ! on line " . __LINE__ . " in file " .__FILE__;
    			writelogs("No datas in this command !",__CLASS__ . "/" . __FUNCTION__,__FILE__);
    			return false;
    		}

@@ -127,11 +127,10 @@ function upgradeTo7(){
 	$cmd="$python /usr/share/artica-postfix/bin/zarafa7-upgrade 2>&1";
 	exec($cmd,$results);
 	writelogs("$cmd -> " . count($results)."rows",__FUNCTION__,__FILE__,__LINE__);
-	while (list ($index, $line) = each ($results) ){
-		writelogs("$line",__FUNCTION__,__FILE__,__LINE__);
-	}
-	
-	
+	while (list ($index, $line) = each ($results) ){writelogs("$line",__FUNCTION__,__FILE__,__LINE__);}
+	$unix->send_email_events("Zarafa upgraded to 7 (see details)", $cmd."\n".@implode("\n", $results), "mailbox");
+	$nohup=$unix->find_program("nohup");
+	shell_exec("$nohup /etc/init.d/artica-postfix restart zarafa >/dev/null 2>&1 &");
 }
 
 

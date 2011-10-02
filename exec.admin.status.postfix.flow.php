@@ -144,7 +144,7 @@ function kernel_mismatch(){
 if(!$must_change){return null;}
 	
 	
-	return 	Paragraphe('warning64.png',
+	return 	NotifyAdmin('warning64.png',
 		"{kernel_mismatch}",
 		"{kernel_mismatch_text}",
 		"javascript:Loadjs('system.kernel.debian.php')",
@@ -176,7 +176,7 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 	
 	if($users->collectd_installed){
 		if($artica->EnableCollectdDaemon==1){
-			$collectd=Paragraphe("64-charts.png","{collectd_statistics}","{collectd_statistics_text}","javascript:YahooWin(790,'collectd.index.php?PopUp=yes')","services_status_text",300,76);
+			$collectd=NotifyAdmin("64-charts.png","{collectd_statistics}","{collectd_statistics_text}","javascript:YahooWin(790,'collectd.index.php?PopUp=yes')","services_status_text",300,76);
 		}
 	}
 	
@@ -194,7 +194,7 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 	if($EnableArticaSMTPStatistics==1){
 		if(!$users->KASPERSKY_WEB_APPLIANCE){
 			if($users->POSTFIX_INSTALLED){
-			$monthly_stats=ParagrapheTEXT("statistics-network-32.png","{monthly_statistics}","{monthly_statistics_text}","javascript:Loadjs('smtp.daily.statistics.php')","{monthly_statistics_text}",300,76,1);
+			$monthly_stats=NotifyAdmin("statistics-network-32.png","{monthly_statistics}","{monthly_statistics_text}","javascript:Loadjs('smtp.daily.statistics.php')","{monthly_statistics_text}",300,76,1);
 			}
 	}}
 	
@@ -211,7 +211,7 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 	
 	$RootPasswordChanged=$sock->GET_INFO("RootPasswordChanged");
 	if($RootPasswordChanged<>1){
-		$RootPasswordChangedTXT=Paragraphe('warning64.png',
+		$RootPasswordChangedTXT=NotifyAdmin('warning64.png',
 		"{root_password_not_changed}",
 		"{root_password_not_changed_text}",
 		"javascript:Loadjs('system.root.pwd.php')",
@@ -224,7 +224,7 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 	if($sock->GET_INFO("DisableWarnNotif")<>1){
 		if(trim($ini->_params["SMTP"]["enabled"]==null)){
 		$js="javascript:Loadjs('artica.settings.php?ajax-notif=yes')";
-		$services=Paragraphe('danger64.png',
+		$services=NotifyAdmin('danger64.png',
 		"{smtp_notification_not_saved}",
 		"{smtp_notification_not_saved_text}",
 		"$js",
@@ -237,7 +237,7 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 		if($ArticaMetaEnabled<>1){
 		if($sock->GET_INFO("WizardBackupSeen")<>1){
 			$js="javascript:Loadjs('wizard.backup-all.php')";
-			$nobackup=Paragraphe('danger64.png',"{BACKUP_WARNING_NOT_CONFIGURED}","{BACKUP_WARNING_NOT_CONFIGURED_TEXT}","$js","{BACKUP_WARNING_NOT_CONFIGURED_TEXT}",300,80);
+			$nobackup=NotifyAdmin('danger64.png',"{BACKUP_WARNING_NOT_CONFIGURED}","{BACKUP_WARNING_NOT_CONFIGURED_TEXT}","$js","{BACKUP_WARNING_NOT_CONFIGURED_TEXT}",300,80);
 		}}}
 	
 	$DisableAPTNews=$sock->GET_INFO('DisableAPTNews');
@@ -245,7 +245,7 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 	if($DisableAPTNews==0){
 		$datas=trim(@file_get_contents("/etc/artica-postfix/apt.upgrade.cache"));
 		if(preg_match('#nb:([0-9]+)\s+#is',$datas,$re)){
-		$check_apt=ParagrapheTEXT('32-infos.png',"{upgrade_your_system}","{$re[1]}&nbsp;{packages_to_upgrade}","javascript:Loadjs('artica.repositories.php?show=update')",null,300,76);
+		$check_apt=NotifyAdmin('32-infos.png',"{upgrade_your_system}","{$re[1]}&nbsp;{packages_to_upgrade}","javascript:Loadjs('artica.repositories.php?show=update')",null,300,76);
 		}
 	}
 	
@@ -256,7 +256,7 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 		$hash=$ldap->hash_get_ou();
 		$ldap->ldap_close();
 		if(count($hash)<1){
-		$no_orgs=ParagrapheTEXT('warning-panneau-32.png',"{no_organization}","{no_organization_text_jgrowl}","javascript:TreeAddNewOrganisation()",null,300,76);
+		$no_orgs=NotifyAdmin('warning-panneau-32.png',"{no_organization}","{no_organization_text_jgrowl}","javascript:TreeAddNewOrganisation()",null,300,76);
 		}
 	}
 	
@@ -266,10 +266,7 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 				$ok=true;
 				$main=new main_cf();
 				if(!$main->CheckMyNetwork()){		
-					$services="
-					<div id='servinfos'>
-						".	Paragraphe('pluswarning64.png','{postfix_mynet_not_conf}','{postfix_mynet_not_conf_text}',"javascript:Loadjs('postfix.network.php?ajax=yes');","{postfix_mynet_not_conf}",300,73)."
-					</div>";
+					NotifyAdmin('pluswarning64.png','{postfix_mynet_not_conf}','{postfix_mynet_not_conf_text}',"javascript:Loadjs('postfix.network.php?ajax=yes');","{postfix_mynet_not_conf}",300,73);
 					}
 				}
 	}
@@ -294,8 +291,8 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 	if(!is_numeric($DisableFrontBrowseComputers)){$DisableFrontBrowseComputers=0;}
 	if($DisableFrontBrowseComputers==0){	
 		if($ONLY_SAMBA){
-			$computers=ParagrapheTEXT("32-win-nic-browse.png",'{browse_computers}','{browse_computers_text}',"javascript:Loadjs('computer-browse.php');","{browse_computers_text}",300,76,1);
-			$samba=ParagrapheTEXT("explorer-32.png",'{explorer}','{SHARE_FOLDER_TEXT}',"javascript:Loadjs('tree.php');","{SHARE_FOLDER_TEXT}",300,76,1);
+			$computers=NotifyAdmin("32-win-nic-browse.png",'{browse_computers}','{browse_computers_text}',"javascript:Loadjs('computer-browse.php');","{browse_computers_text}",300,76,1);
+			$samba=NotifyAdmin("explorer-32.png",'{explorer}','{SHARE_FOLDER_TEXT}',"javascript:Loadjs('tree.php');","{SHARE_FOLDER_TEXT}",300,76,1);
 		}
 	}
 
@@ -306,7 +303,7 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 				$EnableZabbixServer=$sock->GET_INFO("EnableZabbixServer");
 				if($EnableZabbixServer==null){$EnableZabbixServer=1;}
 				if($EnableZabbixServer==1){
-					$zabbix=Paragraphe("zabbix_med.gif",'{APP_ZABIX_SERVER}','{APP_ZABIX_SERVER_TEXT}',
+					$zabbix=NotifyAdmin("zabbix_med.gif",'{APP_ZABIX_SERVER}','{APP_ZABIX_SERVER_TEXT}',
 					"javascript:Loadjs('zabbix.php')","{APP_ZABIX_SERVER_TEXT}",300,76,1);
 					}
 				}
@@ -319,7 +316,7 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 		$events_sql=@mysql_fetch_array($q->QUERY_SQL($sql,"artica_events"));
 		
 		if($events_sql["tcount"]>0){
-			$events_paragraphe=ParagrapheTEXT("events-32.png",'{artica_events}',"{artica_events_text}",
+			$events_NotifyAdmin=NotifyAdmin("events-32.png",'{artica_events}',"{artica_events_text}",
 			"javascript:Loadjs('artica.events.php')","{$events_sql["tcount"]} {events}",300,76,1);
 		}
 	}
@@ -374,9 +371,9 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 		
 		if($informer>0){
 			
-			$inform=ParagrapheTEXT("warning-panneau-32.png","$informer {events}","$informer {index_warnings_text}","javascript:Loadjs('admin.index.php?warnings=yes&count=$informer');");
+			$inform=NotifyAdmin("warning-panneau-32.png","$informer {events}","$informer {index_warnings_text}","javascript:Loadjs('admin.index.php?warnings=yes&count=$informer');");
 			file_put_contents('/usr/share/artica-postfix/ressources/logs/status.inform.html',$inform);
-			//$inform=Paragraphe("warning64.png","$informer {events}","$informer {index_warnings_text}","javascript:Loadjs('admin.index.php?warnings=yes&count=$informer')","",300,76,1);
+			//$inform=NotifyAdmin("warning64.png","$informer {events}","$informer {index_warnings_text}","javascript:Loadjs('admin.index.php?warnings=yes&count=$informer')","",300,76,1);
 			file_put_contents('/usr/share/artica-postfix/ressources/logs/status.warnings.html',
 			"$check_apt$RootPasswordChangedTXT$kernel_mismatch$nobackup$blacklist$kavicap_license_error$services$statusSpamassassinUpdateText");
 			system('/bin/chmod 755 /usr/share/artica-postfix/ressources/logs/status.warnings.html');
@@ -391,7 +388,7 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 	<span id='kav4proxyGraphs'></span>		
 	$squidfilters
 	$cicap_bad
-	$events_paragraphe
+	$events_NotifyAdmin
 	$zabbix
 	$monthly_stats
 	$newversion
@@ -450,7 +447,7 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 	if($GLOBALS["VERBOSE"]){echo "DEBUG:squid_filters_infos():: EnableCommunityFilters {$ligne["tcount"]}\n";}
 	if($ligne["tcount"]==0){return null;}
 	
-	return ParagrapheTEXT("32-categories.png",$ligne["tcount"]." {websites_not_categorized}",
+	return NotifyAdmin("32-categories.png",$ligne["tcount"]." {websites_not_categorized}",
 	"{websites_not_categorized_text}","javascript:Loadjs('squid.visited.php')",null,300,76,1);
 
 }
@@ -467,10 +464,10 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 	$pattern_date=trim(base64_decode($sock->getFrameWork("cmd.php?kav4proxy-pattern-date=yes")));
 
 	if($pattern_date==null){
-	return Paragraphe("license-error-64.png",'{av_pattern_database}',"{APP_KAV4PROXY}:: {av_pattern_database_obsolete_or_missing}","","{APP_KAV4PROXY}",300,76,1);
+	return NotifyAdmin("license-error-64.png",'{av_pattern_database}',"{APP_KAV4PROXY}:: {av_pattern_database_obsolete_or_missing}","","{APP_KAV4PROXY}",300,76,1);
 	}
 	
-	return Paragraphe("license-error-64.png",'{license_error}',"{APP_KAV4PROXY}:: $users->KAV4PROXY_LICENSE_ERROR_TEXT",
+	return NotifyAdmin("license-error-64.png",'{license_error}',"{APP_KAV4PROXY}:: $users->KAV4PROXY_LICENSE_ERROR_TEXT",
 	"javascript:Loadjs('Kav4Proxy.License.php');","{license}",300,76,1);
 	
 	
@@ -489,7 +486,7 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 	if($ver>316){return;}
 
 	
-	return Paragraphe("software-back-64.png",'{GET_LAST_SQUID_VER}',"{GET_LAST_SQUID_VER_TEXT}"
+	return NotifyAdmin("software-back-64.png",'{GET_LAST_SQUID_VER}',"{GET_LAST_SQUID_VER_TEXT}"
 	,"javascript:Loadjs('setup.index.php?js=yes');","{GET_LAST_SQUID_VER_TEXT}",300,76,1);
 	
 	
@@ -519,7 +516,7 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 	}
 	
 	if(!$notify){return;}	
-	return Paragraphe("bad-parameter-64.png",'{BAD_CONFIGURATION_CICAP}',
+	return NotifyAdmin("bad-parameter-64.png",'{BAD_CONFIGURATION_CICAP}',
 	"{BAD_CONFIGURATION_CICAP_BAD_PARAM}: {VirHTTPServer}",
 	"javascript:Loadjs('c-icap.index.php?runthis=cicap_daemons');","{VirHTTPServer}",300,76,1);
 	
@@ -722,7 +719,7 @@ function interface_error(){
 	
 	while (list ($num, $ligne) = each ($ini->_params) ){
 		if($ini->_params[$num]["error"]==null){continue;}
-		$html=$html . Paragraphe("warning64.png","{error} {$num}",$ini->_params[$num]["error"],"javascript:StopInterfaceError('$num')");
+		$html=$html . NotifyAdmin("warning64.png","{error} {$num}",$ini->_params[$num]["error"],"javascript:StopInterfaceError('$num')");
 		
 	}
 	events(__FUNCTION__."() done..");	

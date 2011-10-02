@@ -8,6 +8,7 @@ include_once(dirname(__FILE__).'/ressources/class.main_cf.inc');
 include_once(dirname(__FILE__).'/ressources/class.maincf.multi.inc');
 include_once(dirname(__FILE__).'/ressources/class.main_cf_filtering.inc');
 include_once(dirname(__FILE__).'/ressources/class.policyd-weight.inc');
+include_once(dirname(__FILE__).'/ressources/class.main.hashtables.inc');
 include_once(dirname(__FILE__).'/framework/class.unix.inc');
 include_once(dirname(__FILE__).'/framework/frame.class.inc');
 $GLOBALS["RELOAD"]=false;
@@ -16,7 +17,6 @@ if(!is_file("/usr/share/artica-postfix/ressources/settings.inc")){shell_exec("/u
 if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["DEBUG"]=true;$GLOBALS["VERBOSE"]=true;ini_set('display_errors', 1);ini_set('error_reporting', E_ALL);ini_set('error_prepend_string',null);ini_set('error_append_string',null);}
 if(preg_match("#--reload#",implode(" ",$argv))){$GLOBALS["RELOAD"]=true;}
 
-if(posix_getuid()<>0){die("Cannot be used in web server mode\n\n");}
 if(!isset($GLOBALS["CLASS_SOCKET"])){$GLOBALS["CLASS_SOCKET"]=new sockets();$sock=$GLOBALS["CLASS_SOCKET"];}else{$sock=$GLOBALS["CLASS_SOCKET"];}
 $unix=new unix();
 
@@ -126,7 +126,6 @@ if($argv[1]=='--reconfigure'){
 	file_put_contents('/etc/postfix/main.cf',$main->main_cf_datas);
 	echo "Starting......: Postfix Building main.cf ". strlen($main->main_cf_datas). " bytes done line ". __LINE__."\n";
 	_DefaultSettings();
-	perso_settings();
 	$unix=new unix();
 	$unix->send_email_events("Postfix: postfix compilation done. Took :".$unix->distanceOfTimeInWords($t1,time()), "No content yet...\nShould be an added feature :=)", "postfix");
 	die();
@@ -309,6 +308,7 @@ function BodyChecks(){
 }
 
 function smtp_sasl_security_options(){
+	$f=array();
 	$main=new maincf_multi("master","master");
 	$datas=unserialize($main->GET_BIGDATA("smtp_sasl_security_options"));
 	if(!isset($GLOBALS["CLASS_SOCKET"])){$GLOBALS["CLASS_SOCKET"]=new sockets();$sock=$GLOBALS["CLASS_SOCKET"];}else{$sock=$GLOBALS["CLASS_SOCKET"];}
@@ -586,7 +586,7 @@ function policyd_weight_reconfigure(){
 }
 
 function mime_header_checks(){
-	
+	$f=array();
 	$main=new maincf_multi("master","master");
 	$enable_attachment_blocking_postfix=$main->GET("enable_attachment_blocking_postfix");
 	if(!is_numeric($enable_attachment_blocking_postfix)){$enable_attachment_blocking_postfix=0;}	
@@ -614,7 +614,7 @@ function mime_header_checks(){
 	}
 	
 	
-	if(!is_array($f)){
+	if(count($f)==0){
 		echo "Starting......: No extensions blocked\n";
 		postconf("mime_header_checks",null);
 		return;
@@ -1226,12 +1226,11 @@ function CleanMyHostname(){
 }
 
 function smtpd_sasl_exceptions_networks(){
+	$nets=array();
 	if(!isset($GLOBALS["CLASS_SOCKET"])){$GLOBALS["CLASS_SOCKET"]=new sockets();$sock=$GLOBALS["CLASS_SOCKET"];}else{$sock=$GLOBALS["CLASS_SOCKET"];}
 	$smtpd_sasl_exceptions_networks_list=unserialize(base64_decode($sock->GET_INFO("smtpd_sasl_exceptions_networks")));
 	$smtpd_sasl_exceptions_mynet=$sock->GET_INFO("smtpd_sasl_exceptions_mynet");	
-	if($smtpd_sasl_exceptions_mynet==1){
-		$nets[]="\\\$mynetworks";
-	}
+	if($smtpd_sasl_exceptions_mynet==1){$nets[]="\\\$mynetworks";}
 	
 	if(is_array($smtpd_sasl_exceptions_networks_list)){
 		while (list ($num, $val) = each ($smtpd_sasl_exceptions_networks_list) ){
@@ -1240,7 +1239,8 @@ function smtpd_sasl_exceptions_networks(){
 		}
 	}
 	
-	if(is_array($nets)){
+	
+	if(count($nets)>0){
 		$final_nets=implode(",",$nets);
 		echo "Starting......: SASL exceptions enabled\n";
 		postconf("smtpd_sasl_exceptions_networks",$final_nets);
@@ -1284,50 +1284,50 @@ function OthersValues(){
 	$bounce_queue_lifetime=$mainmulti->GET("bounce_queue_lifetime");
 	$maximal_queue_lifetime=$mainmulti->GET("maximal_queue_lifetime");
 	
-	$smtp_connection_cache_on_demand=$main->GET("smtp_connection_cache_on_demand");
-	$smtp_connection_cache_time_limit=$main->GET("smtp_connection_cache_time_limit");
-	$smtp_connection_reuse_time_limit=$main->GET("smtp_connection_reuse_time_limit");
-	$connection_cache_ttl_limit=$main->GET("connection_cache_ttl_limit");
-	$connection_cache_status_update_time=$main->GET("connection_cache_status_update_time");
-	$smtp_connection_cache_destinations=unserialize(base64_decode($main->GET_BIGDATA("smtp_connection_cache_destinations")));	
+	$smtp_connection_cache_on_demand=$mainmulti->GET("smtp_connection_cache_on_demand");
+	$smtp_connection_cache_time_limit=$mainmulti->GET("smtp_connection_cache_time_limit");
+	$smtp_connection_reuse_time_limit=$mainmulti->GET("smtp_connection_reuse_time_limit");
+	$connection_cache_ttl_limit=$mainmulti->GET("connection_cache_ttl_limit");
+	$connection_cache_status_update_time=$mainmulti->GET("connection_cache_status_update_time");
+	$smtp_connection_cache_destinations=unserialize(base64_decode($mainmulti->GET_BIGDATA("smtp_connection_cache_destinations")));	
 	
-	$address_verify_map=$main->GET("address_verify_map");
-	$address_verify_negative_cache=$main->GET("address_verify_negative_cache");
-	$address_verify_poll_count=$main->GET("address_verify_poll_count");
-	$address_verify_poll_delay=$main->GET("address_verify_poll_delay");
-	$address_verify_sender=$main->GET("address_verify_sender");
-	$address_verify_negative_expire_time=$main->GET("address_verify_negative_expire_time");
-	$address_verify_negative_refresh_time=$main->GET("address_verify_negative_refresh_time");
-	$address_verify_positive_expire_time=$main->GET("address_verify_positive_expire_time");
-	$address_verify_positive_refresh_time=$main->GET("address_verify_positive_refresh_time");
+	$address_verify_map=$mainmulti->GET("address_verify_map");
+	$address_verify_negative_cache=$mainmulti->GET("address_verify_negative_cache");
+	$address_verify_poll_count=$mainmulti->GET("address_verify_poll_count");
+	$address_verify_poll_delay=$mainmulti->GET("address_verify_poll_delay");
+	$address_verify_sender=$mainmulti->GET("address_verify_sender");
+	$address_verify_negative_expire_time=$mainmulti->GET("address_verify_negative_expire_time");
+	$address_verify_negative_refresh_time=$mainmulti->GET("address_verify_negative_refresh_time");
+	$address_verify_positive_expire_time=$mainmulti->GET("address_verify_positive_expire_time");
+	$address_verify_positive_refresh_time=$mainmulti->GET("address_verify_positive_refresh_time");
 	if($address_verify_map==null){$address_verify_map="btree:/var/lib/postfix/verify";}
 	
-	$smtpd_error_sleep_time=$main->GET("smtpd_error_sleep_time");
-	$smtpd_soft_error_limit=$main->GET("smtpd_soft_error_limit");
-	$smtpd_hard_error_limit=$main->GET("smtpd_hard_error_limit");
-	$smtpd_client_connection_count_limit=$main->GET("smtpd_client_connection_count_limit");
-	$smtpd_client_connection_rate_limit=$main->GET("smtpd_client_connection_rate_limit");
-	$smtpd_client_message_rate_limit=$main->GET("smtpd_client_message_rate_limit");
-	$smtpd_client_recipient_rate_limit=$main->GET("smtpd_client_recipient_rate_limit");
-	$smtpd_client_new_tls_session_rate_limit=$main->GET("smtpd_client_new_tls_session_rate_limit");
-	$smtpd_client_event_limit_exceptions=$main->GET("smtpd_client_event_limit_exceptions");
-	$in_flow_delay=$main->GET("in_flow_delay");
-	$smtp_connect_timeout=$main->GET("smtp_connect_timeout");
-	$smtp_helo_timeout=$main->GET("smtp_helo_timeout");
-	$initial_destination_concurrency=$main->GET("initial_destination_concurrency");
-	$default_destination_concurrency_limit=$main->GET("default_destination_concurrency_limit");
-	$local_destination_concurrency_limit=$main->GET("local_destination_concurrency_limit");
-	$smtp_destination_concurrency_limit=$main->GET("smtp_destination_concurrency_limit");
-	$default_destination_recipient_limit=$main->GET("default_destination_recipient_limit");
-	$smtpd_recipient_limit=$main->GET("smtpd_recipient_limit");
-	$queue_run_delay=$main->GET("queue_run_delay");  
-	$minimal_backoff_time =$main->GET("minimal_backoff_time");
-	$maximal_backoff_time =$main->GET("maximal_backoff_time");
-	$maximal_queue_lifetime=$main->GET("maximal_queue_lifetime"); 
-	$bounce_queue_lifetime =$main->GET("bounce_queue_lifetime");
-	$qmgr_message_recipient_limit =$main->GET("qmgr_message_recipient_limit");
-	$default_process_limit=$main->GET("default_process_limit");	
-	$smtp_fallback_relay=$main->GET("smtp_fallback_relay");
+	$smtpd_error_sleep_time=$mainmulti->GET("smtpd_error_sleep_time");
+	$smtpd_soft_error_limit=$mainmulti->GET("smtpd_soft_error_limit");
+	$smtpd_hard_error_limit=$mainmulti->GET("smtpd_hard_error_limit");
+	$smtpd_client_connection_count_limit=$mainmulti->GET("smtpd_client_connection_count_limit");
+	$smtpd_client_connection_rate_limit=$mainmulti->GET("smtpd_client_connection_rate_limit");
+	$smtpd_client_message_rate_limit=$mainmulti->GET("smtpd_client_message_rate_limit");
+	$smtpd_client_recipient_rate_limit=$mainmulti->GET("smtpd_client_recipient_rate_limit");
+	$smtpd_client_new_tls_session_rate_limit=$mainmulti->GET("smtpd_client_new_tls_session_rate_limit");
+	$smtpd_client_event_limit_exceptions=$mainmulti->GET("smtpd_client_event_limit_exceptions");
+	$in_flow_delay=$mainmulti->GET("in_flow_delay");
+	$smtp_connect_timeout=$mainmulti->GET("smtp_connect_timeout");
+	$smtp_helo_timeout=$mainmulti->GET("smtp_helo_timeout");
+	$initial_destination_concurrency=$mainmulti->GET("initial_destination_concurrency");
+	$default_destination_concurrency_limit=$mainmulti->GET("default_destination_concurrency_limit");
+	$local_destination_concurrency_limit=$mainmulti->GET("local_destination_concurrency_limit");
+	$smtp_destination_concurrency_limit=$mainmulti->GET("smtp_destination_concurrency_limit");
+	$default_destination_recipient_limit=$mainmulti->GET("default_destination_recipient_limit");
+	$smtpd_recipient_limit=$mainmulti->GET("smtpd_recipient_limit");
+	$queue_run_delay=$mainmulti->GET("queue_run_delay");  
+	$minimal_backoff_time =$mainmulti->GET("minimal_backoff_time");
+	$maximal_backoff_time =$mainmulti->GET("maximal_backoff_time");
+	$maximal_queue_lifetime=$mainmulti->GET("maximal_queue_lifetime"); 
+	$bounce_queue_lifetime =$mainmulti->GET("bounce_queue_lifetime");
+	$qmgr_message_recipient_limit =$mainmulti->GET("qmgr_message_recipient_limit");
+	$default_process_limit=$mainmulti->GET("default_process_limit");	
+	$smtp_fallback_relay=$mainmulti->GET("smtp_fallback_relay");
 
 
 
@@ -1379,7 +1379,9 @@ function OthersValues(){
 	if($maximal_queue_lifetime==null){$maximal_queue_lifetime="5d";}
 	if($maximal_backoff_time==null){$maximal_backoff_time="4000s";}
 	if($minimal_backoff_time==null){$minimal_backoff_time="300s";}
-	if($queue_run_delay==null){$queue_run_delay="300s";}		
+	if($queue_run_delay==null){$queue_run_delay="300s";}	
+
+	if($address_verify_negative_cache==1){$address_verify_negative_cache="yes";}else{$address_verify_negative_cache="no";}
 	
 	$main->main_array["default_destination_recipient_limit"]=$sock->GET_INFO("default_destination_recipient_limit");
 	$main->main_array["smtpd_recipient_limit"]=$sock->GET_INFO("smtpd_recipient_limit");
@@ -1474,6 +1476,8 @@ function OthersValues(){
 		}
 	}
 	
+	$hashT=new main_hash_table();
+	$hashT->mydestination();	
 	
 	perso_settings();
 }
@@ -1492,6 +1496,7 @@ function LoadIpAddresses($nic){
 }
 
 function inet_interfaces(){
+	$newarray=array();
 	include_once(dirname(__FILE__)."/ressources/class.system.network.inc");
 	if(!isset($GLOBALS["CLASS_SOCKET"])){$GLOBALS["CLASS_SOCKET"]=new sockets();$sock=$GLOBALS["CLASS_SOCKET"];}else{$sock=$GLOBALS["CLASS_SOCKET"];}
 	if($sock->GET_INFO("EnablePostfixMultiInstance")==1){return;}
@@ -1513,7 +1518,7 @@ function inet_interfaces(){
 		$newarray[]=$val;
 	}
 	
-	if(!is_array($newarray)){
+	if(count($newarray)==0){
 		$newarray[]="all";
 	}else{
 		while (list ($a, $b) = each ($newarray) ){$testinets[$b]=$b;}
@@ -1892,8 +1897,9 @@ function postscreen($hostname=null){
 		}
 	}
 	
-	if(is_array($hostsname)){@file_put_contents("/etc/postfix/postscreen_access.hosts",@implode("\n",$hostsname));
+	if(isset($hostsname)){if(is_array($hostsname)){@file_put_contents("/etc/postfix/postscreen_access.hosts",@implode("\n",$hostsname));}
 	$postscreen_access=",hash:/etc/postfix/postscreen_access.hosts";}
+	if(!is_file("/etc/postfix/postscreen_access.hosts")){@file_put_contents("/etc/postfix/postscreen_access.hosts", "\n");}
 	
 	shell_exec("{$GLOBALS["postmap"]} hash:/etc/postfix/postscreen_access.hosts >/dev/null 2>&1");
 	
@@ -2330,6 +2336,7 @@ if($restart_service){
 function postfix_templates(){
 	$mainTPL=new bounces_templates();
 	$main=new maincf_multi("master");
+	$mainTemplates=new bounces_templates();
 	$conf=null;
 	
 	$double_bounce_sender=$main->GET("double_bounce_sender");
@@ -2349,10 +2356,10 @@ function postfix_templates(){
 	if($error_notice_recipient==null){$error_notice_recipient=$PostfixPostmaster;}
 	if($delay_notice_recipient==null){$delay_notice_recipient=$PostfixPostmaster;}
 	if($empty_address_recipient==null){$empty_address_recipient=$PostfixPostmaster;}	
-	if(is_array($main->templates_array)){
-		while (list ($template, $nothing) = each ($main->templates_array) ){
+	if(is_array($mainTemplates->templates_array)){
+		while (list ($template, $nothing) = each ($mainTemplates->templates_array) ){
 			$array=unserialize(base64_decode($main->GET_BIGDATA($template)));
-			if(!is_array($array)){$array=$mainTPL->templates_array[$template];}
+			if(!is_array($array)){$array=$mainTemplates->templates_array[$template];}
 				$tp=explode("\n",$array["Body"]);
 				$Body=null;
 				while (list ($a, $line) = each ($tp) ){if(trim($line)==null){continue;}$Body=$Body.$line."\n";}

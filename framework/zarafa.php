@@ -15,6 +15,8 @@ if(isset($_GET["removeidb"])){removeidb();exit;}
 if(isset($_GET["zarafa-orphan-kill"])){orphan_delete();exit();}
 if(isset($_GET["zarafa-orphan-link"])){orphan_link();exit();}
 if(isset($_GET["zarafa-orphan-scan"])){orphan_scan();exit();}
+if(isset($_GET["getversion"])){getversion();exit();}
+if(isset($_GET["restart"])){restart();exit();}
 
 
 
@@ -125,6 +127,14 @@ function csv_export(){
 	shell_exec($cmd);		
 }
 
+function restart(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");	
+	$cmd=trim("$nohup /etc/init.d/artica-postfix restart zarafa >/dev/null 2>&1 &");
+	writelogs_framework($cmd,__FUNCTION__,__FILE__,__LINE__);
+	shell_exec($cmd);		
+}
+
 function removeidb(){
 	$unix=new unix();
 	$nohup=$unix->find_program("nohup");	
@@ -132,6 +142,19 @@ function removeidb(){
 	$cmd=trim("$nohup $php5 /usr/share/artica-postfix/exec.zarafa.build.stores.php --remove-database >/dev/null 2>&1 &");
 	writelogs_framework($cmd,__FUNCTION__,__FILE__,__LINE__);
 	shell_exec($cmd);	
-
-	
 }
+function getversion(){
+	$unix=new unix();
+	$zarafa_server=$unix->find_program("zarafa-server");
+	if(strlen($zarafa_server)<5){return null;}
+	exec("$zarafa_server -V 2>&1",$results);
+	while (list ($num, $ligne) = each ($results) ){
+		if(preg_match("#Product version:\s+([0-9,]+)#", $ligne,$re)){
+			$version=trim($re[1]);
+			$version=str_replace(",", ".", $version);
+			echo "<articadatascgi>$version</articadatascgi>";
+			return;
+		}
+	}
+}
+

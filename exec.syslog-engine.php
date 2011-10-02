@@ -19,13 +19,16 @@ if(preg_match("#--force#",implode(" ",$argv))){$GLOBALS["FORCE"]=true;}
 
 if($argv[1]=='--build-server'){build_server_mode();die();}
 if($argv[1]=='--build-client'){build_client_mode();die();}
-if($argv[1]=='--auth-logs'){authlogs();sessions_logs();ipblocks();clamd_mem();die();}
+if($argv[1]=='--auth-logs'){authlogs();sessions_logs();ipblocks();clamd_mem();admin_logs();die();}
 if($argv[1]=='--authfw'){authfw();sessions_logs();die();ipblocks();}
 if($argv[1]=='--authfw-compile'){compile_sshd_rules();sessions_logs();ipblocks();die();}
 if($argv[1]=='--snort'){snort_logs();sessions_logs();ipblocks();clamd_mem();die();}
 if($argv[1]=='--sessions'){sessions_logs();die();}
 if($argv[1]=='--loadavg'){loadavg_logs();clamd_mem();die();}
 if($argv[1]=='--ipblocks'){ipblocks();die();}
+if($argv[1]=='--adminlogs'){admin_logs();die();}
+if($argv[1]=='--psmem'){ps_mem(true);die();}
+
 
 
 
@@ -250,6 +253,99 @@ function locate_rsyslog_lib(){
 	
 }
 
+
+function admin_logs(){
+	
+	if(system_is_overloaded()){return;}
+	
+	
+	$unix=new unix();
+	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
+	$pid=@file_get_contents($pidfile);
+	if($unix->process_exists($pid)){writelogs("Already running pid $pid",__FUNCTION__,__FILE__,__LINE__);return;}	
+	$t=0;
+	include_once(dirname(__FILE__) . '/ressources/class.mysql.inc');
+	$q=new mysql();
+	foreach (glob("/var/log/artica-postfix/adminevents/*") as $filename) {
+		$sql=@file_get_contents($filename);
+		if(trim($sql)==null){@unlink($filename);}
+		$q->QUERY_SQL($sql,"artica_events");
+		if(!$q->ok){writelogs("Fatal, $q->mysql_error",__FUNCTION__,__FILE__,__LINE__);
+			if(strpos($q->mysql_error,"Column count doesn't match value count")>0){@unlink($filename);}
+			if(strpos($q->mysql_error,"nknown column")>0){writelogs("Fatal -> DROP TABLE ",__FUNCTION__,__FILE__,__LINE__);$q->QUERY_SQL("DROP TABLE adminevents","artica_events");$q->BuildTables();}
+		continue;}
+		@unlink($filename);
+	}
+	
+	ps_mem();
+		
+}
+
+function ps_mem($nopid=false){
+	
+	if($nopid){
+		$unix=new unix();
+		$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
+		$pid=@file_get_contents($pidfile);
+		if($unix->process_exists($pid)){writelogs("Already running pid $pid",__FUNCTION__,__FILE__,__LINE__);return;}	
+		$t=0;		
+		
+	}
+	
+	$q=new mysql();
+	$prefix="INSERT IGNORE INTO ps_mem (zmd5,zDate,process,memory) VALUES ";
+	if($GLOBALS["VERBOSE"]){writelogs("Starting glob()...",__FUNCTION__,__FILE__,__LINE__);}
+	foreach (glob("/var/log/artica-postfix/ps-mem/*") as $filename) {
+		$array=unserialize(@file_get_contents($filename));
+		if(!is_array($array)){@unlink($filename);continue;}
+		$md5=md5(serialize($array));
+		$f[]="('$md5','{$array["time"]}','{$array["process"]}','{$array["mem"]}')";
+		if(count($f)>500){
+			$sql=$prefix.@implode(",", $f);
+			$f=array();
+			$q->QUERY_SQL($sql,"artica_events");
+			if(!$q->ok){writelogs("Fatal, $q->mysql_error",__FUNCTION__,__FILE__,__LINE__);}
+		}
+		@unlink($filename);
+		
+	}
+	
+	if(count($f)>0){
+			$sql=$prefix.@implode(",", $f);
+			$f=array();
+			$q->QUERY_SQL($sql,"artica_events");
+			if(!$q->ok){writelogs("Fatal, $q->mysql_error",__FUNCTION__,__FILE__,__LINE__);}
+		}	
+		
+// -------------------------------------------------------------------------
+
+		
+	$prefix="INSERT IGNORE INTO ps_mem_tot (zDate,mem) VALUES ";
+	foreach (glob("/var/log/artica-postfix/ps-mem-tot/*") as $filename) {	
+		$array=unserialize(@file_get_contents($filename));
+		if(!is_array($array)){@unlink($filename);continue;}
+		$md5=md5(serialize($array));
+		$f[]="('{$array["time"]}','{$array["mem"]}')";
+		if(count($f)>500){
+			$sql=$prefix.@implode(",", $f);
+			$f=array();
+			$q->QUERY_SQL($sql,"artica_events");
+			if(!$q->ok){writelogs("Fatal, $q->mysql_error",__FUNCTION__,__FILE__,__LINE__);}
+		}
+		@unlink($filename);
+		
+	}
+	
+	if(count($f)>0){
+			$sql=$prefix.@implode(",", $f);
+			$f=array();
+			$q->QUERY_SQL($sql,"artica_events");
+			if(!$q->ok){writelogs("Fatal, $q->mysql_error",__FUNCTION__,__FILE__,__LINE__);}
+		}		
+	
+}
+
+		
 function snort_logs(){
 	
 	if(system_is_overloaded()){return;}

@@ -59,7 +59,7 @@ class icap{
 		if($re[1]==3){
 			$this->IS_30=true;
 			if($re[2]==1){$this->IS_31=true;}
-			if($re[2]>=2){$this->IS_32=true;}
+			if($re[2]>=2){$this->IS_32=true;$this->IS_31=true;}
 			}
 		}
 		
@@ -76,7 +76,7 @@ class icap{
 	private function buildCicapConfig(){
 		if(!$this->IS_30){return null;}
 		if(!$this->IS_31){
-			
+			writelogs("building for 3.0.x - > IS_31 = FALSE",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 			$icap[]=$this->C_ICAP_30();
 			$icap[]=$this->KAV_ICAP_30();
 			$icap[]=$this->ICAP_HEADERS();
@@ -85,7 +85,7 @@ class icap{
 			$this->icap_final_string=@implode("\n\n",$icap);
 			return;
 			}
-		
+		writelogs("building for 3.1.x",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 		$icap[]=$this->C_ICAP_31();
 		$icap[]=$this->KAV_ICAP_31();
 		$icap[]=$this->ADAPTATION_31();	
@@ -148,7 +148,7 @@ class icap{
 		
 		$IpAddrr="127.0.0.1";$port=1344;
 		if($this->EnableKavICAPRemote==1){$IpAddrr=$this->KavICAPRemoteAddr;$port=$this->KavICAPRemotePort;}
-		if($this->EnableKavICAPRemote==0){$kav=new Kav4Proxy();if(preg_match("#(.+?):([0-9]+)#", $kav4->main_array["ListenAddress"],$re)){$IpAddrr=$re[1];$port=$re[2];}}
+		if($this->EnableKavICAPRemote==0){$kav=new Kav4Proxy();if(preg_match("#(.+?):([0-9]+)#", $kav->main_array["ListenAddress"],$re)){$IpAddrr=$re[1];$port=$re[2];}}
 		
 		$this->ICAP_SERVICES_COUNT=$this->ICAP_SERVICES_COUNT+1;			
 		if($this->ASROOT){echo "Starting......: Squid activating Kaspersky ICAP Mode\n";}
@@ -278,7 +278,7 @@ class icap{
 		
 		$IpAddrr="127.0.0.1";$port=1344;
 		if($this->EnableKavICAPRemote==1){$IpAddrr=$this->KavICAPRemoteAddr;$port=$this->KavICAPRemotePort;}
-		if($this->EnableKavICAPRemote==0){$kav=new Kav4Proxy();if(preg_match("#(.+?):([0-9]+)#", $kav4->main_array["ListenAddress"],$re)){$IpAddrr=$re[1];$port=$re[2];}}
+		if($this->EnableKavICAPRemote==0){$kav=new Kav4Proxy();if(preg_match("#(.+?):([0-9]+)#", $kav->main_array["ListenAddress"],$re)){$IpAddrr=$re[1];$port=$re[2];}}
 		
 		$kav_rules[]="# --------- icap_service KASPERSKY mode 3.1.1";
 		$kav_rules[]="";
