@@ -18,7 +18,7 @@ if($GLOBALS["VERBOSE"]){ini_set('display_errors', 1);	ini_set('html_errors',0);i
 	$oldpid=@file_get_contents($pidfile);
 	$unix=new unix();
 	if($unix->process_exists($oldpid)){events("Already process exists $oldpid aborting");die();}
-	$mypid=getmygid();
+	$mypid=getmypid();
 	@file_put_contents($pidfile,$mypid);
 	
 	
@@ -43,19 +43,21 @@ if($GLOBALS["VERBOSE"]){ini_set('display_errors', 1);	ini_set('html_errors',0);i
 			reset($table_hours);
 			reset($table_days);
 			$categories=addslashes($categories);
+			$t=time();
 			while (list ($num, $table) = each ($table_hours) ){
 				if($GLOBALS["VERBOSE"]){echo "Update $table\n";}
-				$q->QUERY_SQL("UPDATE $table SET category='$categories' WHERE sitename LIKE '%$website'");
+				$q->QUERY_SQL("UPDATE $table SET category='$categories' WHERE sitename='$website'");
 				if(!$q->ok){writelogs($q->mysql_error,__FUNCTION__,__FILE__,__LINE__);}
 			}
 			while (list ($num, $table) = each ($table_days) ){
 				if($GLOBALS["VERBOSE"]){echo "Update $table\n";}
-				$q->QUERY_SQL("UPDATE $table SET category='$categories' WHERE sitename LIKE '%$website'");
+				$q->QUERY_SQL("UPDATE $table SET category='$categories' WHERE sitename='$website'");
 				if(!$q->ok){writelogs($q->mysql_error,__FUNCTION__,__FILE__,__LINE__);}
 			}			
 			
+			$took=$unix->distanceOfTimeInWords($t,time());
 			$q->QUERY_SQL("DELETE FROM categorize_changes WHERE `zmd5`='{$ligne["zmd5"]}'");
-			
+			writelogs_squid("$website/$categories has been re-categorized in ". count($table_days)." days tables and ". count($table_hours)." hours tables ($took)" , __FUNCTION__, __FILE__,__LINE__,"categorize");
 		}	
 	
 	

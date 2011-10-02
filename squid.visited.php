@@ -378,8 +378,10 @@ echo $tpl->_ENGINE_parse_body($html);
 
 function visited_list(){
 	
-	$sql="SELECT sitename as website,visited_sites.*  FROM visited_sites $pattern ORDER BY HitsNumber DESC LIMIT 0,300";
+	
 	if($_COOKIE["SQUID_NOT_CAT_SEARCH"]<>null){$pattern=" WHERE sitename LIKE '%{$_COOKIE["SQUID_NOT_CAT_SEARCH"]}%' ";$pattern=str_replace("*","%",$pattern);}
+	$sql="SELECT sitename as website,visited_sites.*  FROM visited_sites $pattern ORDER BY HitsNumber DESC LIMIT 0,300";
+	
 	
 	$day=trim($_GET["day"]);
 	if($day<>null){
@@ -447,7 +449,7 @@ function visited_list(){
 function categorized_list(){
 	
 	if($_COOKIE["SQUID_NOT_CAT_SEARCH"]<>null){
-		$pattern=" AND website LIKE '%{$_COOKIE["SQUID_NOT_CAT_SEARCH"]}%' ";
+		$pattern=" AND sitename LIKE '%{$_COOKIE["SQUID_NOT_CAT_SEARCH"]}%' ";
 		$pattern=str_replace("*","%",$pattern);
 	}	
 	
@@ -465,22 +467,26 @@ function categorized_list(){
 		if($pattern==null){$pattern="HAVING LENGTH(category)>2";}else{$pattern=$pattern ." AND LENGTH(category)>2";}
 		$sql="SELECT SUM(hits) as HitsNumber, sitename,category,country FROM $table 
 		GROUP BY sitename,category,country $pattern ORDER BY HitsNumber DESC LIMIT 0,100";
-	}		
+	}	
+
+	$q=new mysql_squid_builder();
+	$results=$q->QUERY_SQL($sql);
+	if(!$q->ok){echo "<H2>$q->mysql_error</H2>";}
+	$maxrow=mysql_num_rows($results);	
 	
-	$html="$sql
+	$html="
 <table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
 <thead class='thead'>
 	<tr>
 	<th>{country}</th>
-	<th>{website}&nbsp;$day</th>
+	<th>{website}&nbsp;($maxrow {items}) $day</th>
 	<th>{hits}</th>
 	<th>&nbsp;</th>
 	</tr>
 </thead>
 <tbody class='tbody'>";
 
-	$q=new mysql_squid_builder();
-	$results=$q->QUERY_SQL($sql,"artica_events");
+
 	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
 		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
 		if($ligne["country"]<>null){
@@ -527,14 +533,13 @@ function not_categorized_list(){
 		
 	}	
 	
-	$sql="SELECT * FROM `visited_sites` WHERE  `category`='' $pattern ORDER BY 	HitsNumber DESC LIMIT 0 , 100";
+	$sql="SELECT * FROM `visited_sites` WHERE LENGTH(category)=0 $pattern ORDER BY HitsNumber DESC LIMIT 0 , 100";
 	
 	
 	$day=trim($_GET["day"]);
 	if($day<>null){
 		$time=strtotime("$day 00:00:00");
 		$table=date("Ymd",$time)."_hour";
-		
 		if($_COOKIE["SQUID_NOT_CAT_SEARCH"]<>null){$pattern=" HAVING sitename LIKE '%{$_COOKIE["SQUID_NOT_CAT_SEARCH"]}%' ";$pattern=str_replace("*","%",$pattern);}
 		if($pattern==null){$pattern="HAVING LENGTH(category)=0";}else{$pattern=$pattern ." AND LENGTH(category)=0";}
 		$sql="SELECT SUM(hits) as HitsNumber, sitename,category,country FROM $table 

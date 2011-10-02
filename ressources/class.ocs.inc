@@ -95,12 +95,13 @@ include_once(dirname(__FILE__).'/class.mysql.inc');
 				$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"ocsweb"));
 				$HARDWARE_ID=$ligne["HARDWARE_ID"];
 				
-				
-				$sql="UPDATE networks SET IPADDRESS='$IPADDR' WHERE ID='$NET_ID'";
-				$q->QUERY_SQL($sql,"ocsweb");
-				if(!$q->ok){if($GLOBALS["VERBOSE"]){writelogs($q->mysql_error,__CLASS__."/".__FILE__,__FILE__,__LINE__);}return false;}
-
-				$sql="UPDATE hardware SET NAME='$NAME',LASTDATE='$date',IPADDR='$IPADDR'$ComputerOS_edit WHERE ID='$HARDWARE_ID'";
+				if($IPADDR<>null){
+					$sql="UPDATE networks SET IPADDRESS='$IPADDR' WHERE ID='$NET_ID'";
+					$q->QUERY_SQL($sql,"ocsweb");
+					if(!$q->ok){if($GLOBALS["VERBOSE"]){writelogs($q->mysql_error,__CLASS__."/".__FILE__,__FILE__,__LINE__);}return false;}
+				}
+				if($IPADDR<>null){$IPADDR_SQL=",IPADDR='$IPADDR'";}
+				$sql="UPDATE hardware SET NAME='$NAME',LASTDATE='$date'$IPADDR_SQL$ComputerOS_edit WHERE ID='$HARDWARE_ID'";
 				$q->QUERY_SQL($sql,"ocsweb");
 				if(!$q->ok){if($GLOBALS["VERBOSE"]){writelogs($q->mysql_error,__CLASS__."/".__FILE__,__FILE__,__LINE__);}return false;}			
 			}

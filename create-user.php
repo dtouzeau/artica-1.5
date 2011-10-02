@@ -180,7 +180,7 @@ function formulaire(){
 	$form="
 	
 	<input type='hidden' id='EnableVirtualDomainsInMailBoxes' value='$EnableVirtualDomainsInMailBoxes'>
-	<table style='width:100%'>
+	<table style='width:100%' class=form>
 		<tr>
 			<td class=legend style='font-size:14px'>{organization}:</td>
 			<td>$ou</td>

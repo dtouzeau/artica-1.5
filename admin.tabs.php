@@ -463,14 +463,14 @@ if($newfrontend){$ajaxadd="&newfrontend=yes";}
 
 $page=CurrentPageName();
 	$html="
-	<table style='width:700px'>
+	<table style='width:630px;padding:0px;margin:0px'>
 	<tbody>
 	<tr>
 		<td valign='top' width='50%'>
-			<div id='left_status'><center><img src='img/wait_verybig.gif'></center></div>
+			<div id='left_status' style='margin-left:-15px'><center><img src='img/wait_verybig.gif'></center></div>
 		</td>
 		<td valign='top' width='50%'>
-			<div id='right_status'><center><img src='img/wait_verybig.gif'></center></div>
+			<div id='right_status' style='margin-left:-5px'><center><img src='img/wait_verybig.gif'></center></div>
 			<script>
 				LoadAjax('right_status','admin.index.php?status=right&counter=1$ajaxadd');		
 			</script>

@@ -2446,9 +2446,13 @@ It is designed to automatically add added categories to an "official databases" 
 <webproxy_statistics_appliance_text>If you enable this feature, this server will be able to receive events from an another Artica proxy or a Squid 3.2 proxy.[br]
 This server will execute specifics calculation tasks in order to serve Internet usage charts and graphs statistics</webproxy_statistics_appliance_text>
 <websites_to_export>Websites to export</websites_to_export>
+<number_of_users>Number of users</number_of_users>
 <MONITOR>Monitor</MONITOR>
 <banned>Banned</banned>
 <groupid>Group ID</groupid>
 <visited>visited</visited>
 <disable_pop3>Disable POP3</disable_pop3>
 <disable_imap>Disable IMAP</disable_imap>
+<goto>Go to</goto>
+<ihavereaditremove>I have read it, remove this information from the panel</ihavereaditremove>
+<network_services>Network services</network_services>

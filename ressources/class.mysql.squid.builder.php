@@ -132,7 +132,10 @@ class mysql_squid_builder{
 		
 	}	
 	
+
+	
 	public function LIST_TABLES_HOURS(){
+		if(isset($GLOBALS["SQUID_LIST_TABLES_HOURS"])){return $GLOBALS["SQUID_LIST_TABLES_HOURS"];}
 		$array=array();
 		$sql="SELECT table_name as c FROM information_schema.tables WHERE table_schema = 'squidlogs' AND table_name LIKE '%_hour'";
 		$results=$this->QUERY_SQL($sql);
@@ -140,26 +143,34 @@ class mysql_squid_builder{
 		if($GLOBALS["VERBOSE"]){echo $sql." => ". mysql_num_rows($results)."\n";}
 		
 		while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
-			if(preg_match("#[0-9]+_hour#", $ligne["c"])){$array[$ligne["c"]]=$ligne["c"];}
+			if(preg_match("#[0-9]+_hour#", $ligne["c"])){
+				$GLOBALS["SQUID_LIST_TABLES_HOURS"][$ligne["c"]]=$ligne["c"];
+				$array[$ligne["c"]]=$ligne["c"];
+			}
 		}
 		return $array;		
 	}
 	public function LIST_TABLES_DAYS(){
+		if(isset($GLOBALS["SQUID_LIST_TABLES_DAYS"])){return $GLOBALS["SQUID_LIST_TABLES_DAYS"];}
 		$array=array();
-		$sql="SELECT table_name as c FROM information_schema.tables WHERE table_schema = 'squidlogs' AND table_name LIKE '%_day'";
+		$sql="SELECT table_name as c FROM information_schema.tables WHERE table_schema = 'squidlogs' AND table_name LIKE '%_day' ORDER BY table_name";
 		$results=$this->QUERY_SQL($sql);
 		if(!$this->ok){writelogs("Fatal Error: $this->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);return array();}
-		if($GLOBALS["VERBOSE"]){echo $sql." => ". mysql_num_rows($results)."\n";}
+		if($GLOBALS["VERBOSE"]){echo $sql." => ". mysql_num_rows($results)." memory count:". count($GLOBALS["SQUID_LIST_TABLES_DAYS"])."\n";}
 		
 		while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
-			if(preg_match("#[0-9]+_hour#", $ligne["c"])){$array[$ligne["c"]]=$ligne["c"];}
+			if(preg_match("#[0-9]+_day#", $ligne["c"])){
+					$array[$ligne["c"]]=$ligne["c"];
+					$GLOBALS["SQUID_LIST_TABLES_DAYS"][$ligne["c"]]=$ligne["c"];
+			}
 		}
+		if($GLOBALS["VERBOSE"]){echo "LIST_TABLES_DAYS count:". count($GLOBALS["SQUID_LIST_TABLES_DAYS"])."\n";}
 		return $array;		
 	}	
 	
 	public function LIST_TABLES_MEMBERS(){
 		$array=array();
-		$sql="SELECT table_name as c FROM information_schema.tables WHERE table_schema = 'squidlogs' AND table_name LIKE '%_members'";
+		$sql="SELECT table_name as c FROM information_schema.tables WHERE table_schema = 'squidlogs' AND table_name LIKE '%_members' ORDER BY table_name";
 		$results=$this->QUERY_SQL($sql);
 		if(!$this->ok){writelogs("Fatal Error: $this->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);return array();}
 		if($GLOBALS["VERBOSE"]){echo $sql." => ". mysql_num_rows($results)."\n";}
@@ -190,6 +201,24 @@ class mysql_squid_builder{
 		$GLOBALS["LIST_TABLES_CATEGORIES"]=$array;
 		return $array;
 		
+	}	
+	
+	public function UPDATE_CATEGORIES_TABLES($sitename,$category){
+		if(trim($sitename)==null){return;}
+		if(trim($category)==null){return;}
+		$array=$this->LIST_TABLES_HOURS();
+		while (list ($num, $tablename) = each ($array) ){$this->QUERY_SQL("UPDATE $tablename SET category='$category' WHERE sitename='$sitename'");}
+		$array=$this->LIST_TABLES_DAYS();
+		while (list ($num, $tablename) = each ($array) ){$this->QUERY_SQL("UPDATE $tablename SET category='$category' WHERE sitename='$sitename'");}		
+	}
+	
+	public function UPDATE_WEBSITES_TABLES($sitename,$newsitename){
+		if(trim($sitename)==null){return;}
+		if(trim($newsitename)==null){return;}
+		$array=$this->LIST_TABLES_HOURS();
+		while (list ($num, $tablename) = each ($array) ){$this->QUERY_SQL("UPDATE $tablename SET sitename='$newsitename' WHERE sitename='$sitename'");}
+		$array=$this->LIST_TABLES_DAYS();
+		while (list ($num, $tablename) = each ($array) ){$this->QUERY_SQL("UPDATE $tablename SET sitename='$newsitename' WHERE sitename='$sitename'");}		
 	}	
 	
 	
@@ -350,11 +379,14 @@ class mysql_squid_builder{
 			`zDate` TIMESTAMP NOT NULL ,
 			`PID` INT( 5 ) NOT NULL ,
 			`function` VARCHAR( 50 ) NOT NULL ,
+			`category` VARCHAR( 50 ) NOT NULL ,
 			`text` TEXT NOT NULL ,
-			INDEX ( `zDate` , `PID` , `function` )
+			INDEX ( `zDate` , `PID` , `function` ),
+			KEY `category` (`category`)
 			)";
 			$this->QUERY_SQL($sql,$this->database);
-		} 		
+		}
+		if(!$this->FIELD_EXISTS("updateblks_events", "category")){$this->QUERY_SQL("ALTER TABLE `updateblks_events` ADD `category` VARCHAR( 50 ) NOT NULL ,ADD KEY `category` (`category`)");} 		
 		
 		if(!$this->TABLE_EXISTS('visited_sites',$this->database)){	
 		$sql="CREATE TABLE IF NOT EXISTS `visited_sites` (
@@ -425,7 +457,9 @@ class mysql_squid_builder{
 	
 	function GET_CATEGORIES($sitename,$nocache=false){
 		$cat=array();
+		if(trim($sitename)==null){return;}
 		$sitename=strtolower(trim($sitename));
+		if(preg_match("#^www\.(.+)#", $sitename,$re)){$sitename=$re[1];}
 		
 		if(!$nocache){
 			$sql="SELECT category FROM visited_sites WHERE sitename='$sitename'";
@@ -438,7 +472,11 @@ class mysql_squid_builder{
 		while (list ($table, $none) = each ($tablescat) ){
 			$sql="SELECT category FROM $table WHERE pattern='$sitename' AND enabled=1";
 			$ligne=mysql_fetch_array($this->QUERY_SQL($sql));
-			if($ligne["category"]<>null){$cat[]=$ligne["category"];}
+			
+			if($ligne["category"]<>null){
+				if($GLOBALS["VERBOSE"]){echo "Found {$ligne["category"]} FOR \"$sitename\n";}
+				$cat[]=$ligne["category"];
+			}
 		}
 		
 		if(count($cat)>0){
@@ -637,3 +675,17 @@ class mysql_squid_builder{
 	}
 	
 }
+function writelogs_squid($text,$function,$file,$line=0,$category=null){
+		writelogs($text,$function,$file,$line);
+		$date=date('Y-m-d H:i:s');
+		$array["date"]=$date;
+		$pid=getmypid();
+		$array["category"]=$category;
+		$array["text"]=$text;
+		$array["function"]=$function;
+		$array["pid"]=$pid;
+		$serial=serialize($array);
+		$md5=md5($serial);
+		@file_put_contents("/var/log/artica-postfix/artica-squid-events/$md5", $serial);
+		
+	}

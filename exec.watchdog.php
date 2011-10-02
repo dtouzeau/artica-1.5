@@ -112,7 +112,7 @@ function checkProcess1(){
 }
 
 function Myevents($text=null,$function=null){
-			$pid=getmygid();
+			$pid=getmypid();
 			$file="/var/log/artica-postfix/watchdog.debug";
 			@mkdir(dirname($file));
 		    $logFile=$file;

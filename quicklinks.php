@@ -25,20 +25,25 @@ $SQUIDEnable=trim($sock->GET_INFO("SQUIDEnable"));
 if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
 
 $samba=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("folder-granted-48.png", "fileshare","fileshare_text", "QuickLinksSamba()"));
-$squid=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("squid-reverse-48.png", "Proxy","proxyquicktext", "QuickLinksProxy()"));
+$squid=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("squid-reverse-48.png", "Proxy","proxyquicktext", "SquidMainQuickLinks()"));
+$network=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("network-connection2-48.png", "network",null, "QuickLinksNetwork()"));
+
 if(!$users->SAMBA_INSTALLED){$samba=null;}
 if(!$users->SQUID_INSTALLED){$squid=null;}
 if($users->KASPERSKY_WEB_APPLIANCE){$samba=null;}
+if(!$users->AsSquidAdministrator){$squid=null;}
+if(!$users->AsSystemAdministrator){$network=null;}
 
-$tr[]=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("server-48.png", "your_server","system_information_text", "QuickLinkSystems('section_start')"));
 
-
+$tr[]=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("server-48.png", "manage_your_server","system_information_text", "QuickLinkSystems('section_start')"));
+$tr[]=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("48-computer.png", "system_information","system_information_text", "QuickLinkSystems('section_computers_infos')"));
+$tr[]=$network;
 $tr[]=$samba;
 $tr[]=$squid;
-$tr[]=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("48-computer.png", "system_information","system_information_text", "QuickLinkSystems('section_computers_infos')"));
+
 $tr[]=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("48-bouclier.png", "security","section_security_text", "QuickLinkSystems('section_security')"));
 $tr[]=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("48-apps.png", "softwares","softwares_mangement_text", "QuickLinkSystems('section_softwares')"));
-$tr[]=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("web-site-48.png", "main_interface","main_interface_back_interface_text", "QuickLinksHide()"));
+
 
 $count=1;
 
@@ -73,37 +78,34 @@ while (list ($key, $line) = each ($tr) ){
 		}
 		
 		function QuickLinksSamba(){
-			Set_Cookie('QuickLinkCache', 'quicklinks.fileshare.php', '3600', '/', '', '');
+			Set_Cookie('QuickLinkCacheIndex', 'quicklinks.fileshare.php', '3600', '/', '', '');
 			LoadAjax('BodyContent','quicklinks.fileshare.php');
 		}
 		
 		function QuickLinksProxy(){
-			Set_Cookie('QuickLinkCache', 'quicklinks.proxy.php', '3600', '/', '', '');
+			Set_Cookie('QuickLinkCacheIndex', 'quicklinks.proxy.php', '3600', '/', '', '');
 			LoadAjax('BodyContent','quicklinks.proxy.php');		
 		
 		}
 		
-		function QuickLinksKav4Proxy(){
-			Set_Cookie('QuickLinksKav4Proxy', 'kav4proxy.php?inline=yes', '3600', '/', '', '');
-			LoadAjax('BodyContent','kav4proxy.php?inline=yes');		
-		
-		}		
-		
-		
+		function QuickLinksNetwork(){
+			LoadAjax('BodyContent','quicklinks.network.php?newinterface=yes');			
+		}
 		
 		function QuickLinkSystems(sfunction){
-			Set_Cookie('QuickLinkCache', '$page?function='+sfunction, '3600', '/', '', '');
+			Set_Cookie('QuickLinkCacheIndex', '$page?function='+sfunction, '3600', '/', '', '');
 			LoadAjax('BodyContent','$page?function='+sfunction);
 		}
 		
 		function QuickLinkMemory(){
-			var memorized=Get_Cookie('QuickLinkCache');
+			var memorized=Get_Cookie('QuickLinkCacheIndex');
 			if(!memorized){
-				QuickLinkSystems('section_computers_infos');
+				QuickLinkSystems('section_start');
 				return;
 			}
 			
 			if(memorized.length>0){
+				if(memorized=='quicklinks.network.php'){QuickLinkSystems('section_start');return;}
 				LoadAjax('BodyContent',memorized);
 			}else{
 				QuickLinkSystems('section_computers_infos');
@@ -148,10 +150,10 @@ function quicklinks_paragraphe($img,$title,$text,$link){
 function section_start(){
 	
 	$html="
-	<table style='width:100%'>
+	<table style='width:100%;margin:0px;padding:0px;'>
 	<tbody>
 	<tr>
-		<td valign='top'><span id='admin-left-infos'></span></td>
+		<td valign='top' style='margin:-1px;padding:-1px;'><div id='admin-left-infos' style='margin-left:-12px'></div></td>
 		<td valign='top'><div id='admin-start_page'></div></td>
 	</tr>
 	</tbody>

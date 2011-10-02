@@ -202,9 +202,6 @@ echo $tpl->_ENGINE_parse_body($html);
 function general_status_graphs(){
 	$page=CurrentPageName();
 	$tpl=new templates();		
-	
-	
-	
 	$q=new mysql_squid_builder();	
 	$selected_date="{last_30days}";
 	$filter="zDate>DATE_SUB(NOW(),INTERVAL 30 DAY) AND zDate<DATE_SUB(NOW(),INTERVAL 1 DAY)";
@@ -257,7 +254,7 @@ function general_status_graphs(){
 	$gp->color="146497";
 
 	$gp->line_green();
-	if(!is_file($targetedfile)){writelogs("Fatal \"$targetedfile\" no such file!",__FUNCTION__,__FILE__,__LINE__);return;}
+	if(!is_file($targetedfile)){writelogs("Fatal \"$targetedfile\" no such file!",__FUNCTION__,__FILE__,__LINE__);$targetedfile="img/kas-graph-no-datas.png";}
 	
 	if($default_from_date==null){
 		$sql="SELECT DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 30 DAY),'%Y-%m-%d') as tdate";

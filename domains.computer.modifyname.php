@@ -9,6 +9,7 @@ include_once ('ressources/class.artica.inc');
 include_once ('ressources/class.user.inc');
 include_once ('ressources/class.computers.inc');
 include_once ('ressources/class.ini.inc');
+include_once ('ressources/class.ocs.inc');
 
 
 $usersprivs = new usersMenus ( );
@@ -75,6 +76,7 @@ var x_ChangeComputerName= function (obj) {
 function changecomputername(){
 	if(substr($_POST["userid"], strlen($_POST["userid"])-1,1)<>"$"){$_POST["userid"]=$_POST["userid"]."$";}
 	$comp=new computers($_POST["userid"]);
+	$MAC=$comp->ComputerMacAddress;
 	$_POST["NewHostname"]=trim(strtolower($_POST["NewHostname"]));
 	$_POST["NewHostname"]=str_replace('$', '', $_POST["NewHostname"]);
 	$actualdn=$comp->dn;
@@ -98,7 +100,13 @@ function changecomputername(){
 	$upd["uid"][0]=$_POST["NewHostname"].'$';
 	if(!$ldap->Ldap_modify($newDN, $upd)){
 		echo "Update UID {$upd["uid"][0]} failed:\n$ldap->ldap_last_error\nFunction:".__FUNCTION__."\nFile:".__FILE__."\nLine".__LINE__."\nExpected DN:$newDN\nExpected value:{$_POST["NewHostname"]}";
+		return;
 	}
+	
+	$ocs=new ocs($MAC);
+	$ocs->ComputerName=$_POST["NewHostname"];
+	$ocs->ComputerIP=$comp->ComputerIP;
+	$ocs->EditComputer();
 	
 	
 	

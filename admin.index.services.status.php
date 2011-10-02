@@ -44,12 +44,6 @@ function popup(){
 	$html="
 	<input type='hidden' id='filterby' value='{$_GET["filterby"]}'>
 	<div id='myfilter' style='width:370px;padding:3px;border:0px dotted #CCCCCC;text-align:right;margin-left:350px'>".filter(true)."</div>
-
-	
-	
-</td>
-</tr>
-</table>	
 	". main_tabs()."
 	<br>
 	<div id=events></div>";
@@ -542,20 +536,16 @@ while (list ($num, $ligne) = each ($array) ){
 function INDEX(){
 	$page=CurrentPageName();
 	$html="
-	<table style='width:100%;background-image:url(img/bg_eye.png);background-repeat:no-repeat;background-color:transparent'>
-	<tr>
-		<td valign='top'>
-		<H1>{services_status}</H1>
-		<div style='font-size:16px;background-color:transparent;'>
-		{services_status_text}
-		<br>
-		{services_status_text_explain}
-		</div>
-	</td>
-	<td valign='top'>
-	<div id='mymem'></div>
-	</td>
+	<table style='width:100%'>
+	<tbody>
+		<tr>
+			<td valign='top'>
+			<div style='font-size:18px;background-color:transparent;font-weight:bold'>{services_status_text}</div>
+			<div class=explain style='font-size:14px'>{services_status_text_explain}</div>
+		</td>
+		<td valign='top'><div id='mymem'></div></td>
 	</tr>
+	</tbody>
 	</table>
 	<hr>
 	<div id='system-events' style='width:100%;height:520px;overflow:auto;margin-top:5px'></div>

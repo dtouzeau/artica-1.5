@@ -25,7 +25,7 @@ $sock=new sockets();
 if($_GET["stats"]){
 	$tr[]=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("perf-stats-48.png", "traffic_statistics","squid_traffic_statistics_text", "QuickLinkSystems('traffic_statistics')"));
 	$tr[]=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("members-48.png", "members","section_security_text", "QuickLinkSystems('members_statistics')"));
-	$tr[]=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("48-apps.png", "softwares","softwares_mangement_text", "QuickLinkSystems('section_softwares')"));
+	$tr[]=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("48-tasks.png", "tasks","", "QuickLinkSystems('section_tasks')"));
 	
 	if(($users->AsSquidAdministrator) OR ($users->AsDansGuardianAdministrator)){
 		if($users->SQUID_INSTALLED){
@@ -163,6 +163,12 @@ function members_statistics(){
 	
 	";
 	echo $html;	
+	
+}
+
+function section_tasks(){
+	
+	echo "<script>LoadAjax('BodyContent','squid.statistics.tasks.php');</script>";
 	
 }
 

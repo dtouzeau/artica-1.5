@@ -1,19 +1,31 @@
 <?php
 $GLOBALS["ICON_FAMILY"]="SYSTEM";
-	include_once('ressources/class.templates.inc');
-	include_once('ressources/class.ldap.inc');
-	include_once('ressources/class.users.menus.inc');
+if(isset($_GET["verbose"])){$GLOBALS["VERBOSE"]=true;ini_set('display_errors', 1);ini_set('error_reporting', E_ALL);ini_set('error_prepend_string',null);ini_set('error_append_string',null);}
+include_once('ressources/class.templates.inc');
+include_once('ressources/class.ldap.inc');
+include_once('ressources/class.users.menus.inc');
 	
 $usersmenus=new usersMenus();
 if($usersmenus->AsArticaAdministrator==true){}else{header('location:users.index.php');exit;}		
 	
+	if($_GET["newtab"]=="network"){network_js();exit;}
 	if(isset($_GET["tab"])){main_switch();exit;}
 	if(isset($_GET["ajaxmenu"])){echo popup();exit;}
 	if(isset($_GET["js"])){main_ajax();exit;}
 	if(isset($_GET["AdressBookPopup"])){echo AdressBookPopup();exit;}
 	if(isset($_GET["EnableRemoteAddressBook"])){AdressBookPopup_save();exit;}
 
-page();	
+	
+	
+	
+page();
+
+function network_js(){
+	$page=CurrentPageName();
+	$html="LoadAjax('BodyContent','$page?tab=network&newinterface=yes');";
+	echo $html;
+}
+
 function page(){
 $page=CurrentPageName();	
 $usersmenus=new usersMenus();
@@ -241,6 +253,9 @@ function main_system(){
 		$zabix=null;
 	}
 	
+	if(isset($_GET["newinterface"])){
+		
+	}
 		
 	if(!$users->ZABBIX_INSTALLED){$zabix=null;}
 	$tr[]=$ntp;
@@ -260,7 +275,7 @@ function main_system(){
 	$tr[]=$RootPasswordChangedTXT;
 
 	
-$tables[]="<table style='width:100%'><tr>";
+$tables[]="<table style='width:100%;margin-top:10px'><tbody><tr>";
 $t=0;
 while (list ($key, $line) = each ($tr) ){
 		$line=trim($line);
@@ -276,7 +291,7 @@ if($t<3){
 	}
 }
 				
-$tables[]="</table>";	
+$tables[]="</tbody></table>";	
 	
 	$html=implode("\n",$tables);
 
@@ -374,7 +389,10 @@ function main_network(){
 		$pdns=null;
 		$crossroads=null;
 	}
-
+	
+	if(isset($_GET["newinterface"])){$network=null;$openvpn=null;}	
+	
+	
 	$tr[]=$network;
 	$tr[]=$gateway;
 	$tr[]=$dhcp;
@@ -385,9 +403,40 @@ function main_network(){
 	$tr[]=$crossroads;
 	$tr[]=$fw;
 	$tr[]=$EmergingThreats;
-	$tr[]=$IpBlocksA;
+	$tr[]=$IpBlocksA;	
 	
-	$tables[]="<table style='width:100%'><tr>";
+	
+	if(isset($_GET["newinterface"])){
+		$network=null;$openvpn=null;
+		$static=Paragraphe('folder-64-dns-grey.png','{nic_static_dns}','{nic_static_dns_text}','');
+		$bind9=ICON_BIND9();
+		$etc_hosts=Buildicon64("DEF_ICO_ETC_HOSTS");
+		$pdns=Buildicon64('DEF_ICO_PDNS');
+		$dyndns=Paragraphe('folder-64-dyndns.png','{nic_dynamic_dns}','{nic_dynamic_dns_text}','system.nic.dynamicdns.php');
+		$rbl_check=Paragraphe('check-64.png','{rbl_check_artica}','{rbl_check_artica_text}',"javascript:Loadjs('system.rbl.check.php')");
+		$dnsmasq=Paragraphe('dns-64.png','{APP_DNSMASQ}','{APP_DNSMASQ_TEXT}',"javascript:Loadjs('dnsmasq.index.php')");
+		
+	
+		
+		if(!$user->BIND9_INSTALLED){$static=null;$bind9=null;}	
+		if(!$user->POWER_DNS_INSTALLED){$pdns=Paragraphe("dns-64-grey.png","{APP_PDNS}","{APP_PDNS_TEXT}");}
+		if(!$user->dnsmasq_installed){$dnsmasq=Paragraphe("dns-64-grey.png","{APP_DNSMASQ}",'{APP_DNSMASQ_TEXT}');}
+		if($user->KASPERSKY_SMTP_APPLIANCE){$dyndns=null;}
+		if($user->KASPERSKY_WEB_APPLIANCE){$bind9=null;$pdns=null;$dyndns=null;}
+	
+		$tr[]=$pdns;
+		$tr[]=$dnsmasq;
+		$tr[]=$bind9;
+		$tr[]=$static;
+		$tr[]=$dyndns;
+		$tr[]=$etc_hosts;
+		$tr[]=$rbl_check;		
+		
+	}	
+
+
+	
+	$tables[]="<center><table style='width:70%;margin-top:10px'><tbody><tr>";
 	$t=0;
 	while (list ($key, $line) = each ($tr) ){
 			$line=trim($line);
@@ -403,7 +452,7 @@ function main_network(){
 		}
 	}
 					
-	$tables[]="</table>";	
+	$tables[]="</tbody></table></center>";	
 	
 	$html=implode("\n",$tables);	
 	$tpl=new templates();

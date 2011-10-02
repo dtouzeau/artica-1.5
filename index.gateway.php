@@ -63,6 +63,7 @@ function dhcp_index_js(){
 	$DisableNetworksManagement=$sock->GET_INFO("DisableNetworksManagement");
 	if($DisableNetworksManagement==null){$DisableNetworksManagement=0;}		
 		
+	if(isset($_GET["newinterface"])){$newinterface="&newinterface=yes";}
 	
 	$start="DHCPDGBCONF();";
 	if(isset($_GET["in-front-ajax"])){
@@ -76,7 +77,7 @@ function dhcp_index_js(){
 		}
 		
 		function DHCPDGBCONF2(){
-		$('#BodyContent').load('$page?index_dhcp_popup=yes');
+		$('#BodyContent').load('$page?index_dhcp_popup=yes$newinterface');
 		setTimeout(\"DHCPCOmputers()\",800);
 		}		
 
@@ -605,20 +606,22 @@ function dhcp_tabs(){
 	$array["hosts"]='{hosts}';
 	$array["leases"]='{leases}';
 	
+	$fontsize=null;
+	if(isset($_GET["newinterface"])){$newinterface="&newinterface=yes";$fontsize="font-size:14px;";}
 	
 	while (list ($num, $ligne) = each ($array) ){
 		
 		if($num=="shared-network"){
-			$html[]= "<li><a href=\"dhcpd.shared-networks.php\"><span>$ligne</span></a></li>\n";
+			$html[]= "<li><a href=\"dhcpd.shared-networks.php$newinterface\"><span style='$fontsize'>$ligne</span></a></li>\n";
 			continue;
 		}
 		
 		if($num=="leases"){
-			$html[]= "<li><a href=\"dhcpd.leases.php\"><span>$ligne</span></a></li>\n";
+			$html[]= "<li><a href=\"dhcpd.leases.php$newinterface\"><span style='$fontsize'>$ligne</span></a></li>\n";
 			continue;
 		}		
 		
-		$html[]= "<li><a href=\"$page?dhcp-tab=$num\"><span>$ligne</span></a></li>\n";
+		$html[]= "<li><a href=\"$page?dhcp-tab=$num$newinterface\"><span style='$fontsize'>$ligne</span></a></li>\n";
 	}
 	
 	

@@ -26,6 +26,7 @@ function page(){
 	$page=CurrentPageName();
 	
 	$html="
+	<input type='hidden' id='FilterByDate' value=''>
 	<table style='width:100%' class=form>
 	<tbody>
 	<tr>
@@ -43,9 +44,22 @@ function page(){
 		}
 		
 		function SearchComputers(){
+			var u_f_FilterByDate='';
+			var f_FilterByDate=document.getElementById('FilterByDate').value;
 			var se=escape(document.getElementById('SearchComputers').value);
-			LoadAjax('SearchComputers-list','$page?SearchComputers='+se);
+			if(f_FilterByDate.length>2){u_f_FilterByDate='&orderBydate='+f_FilterByDate;}
+			LoadAjax('SearchComputers-list','$page?SearchComputers='+se+u_f_FilterByDate);
 		}
+		
+		function OcsFilterBYDate(){
+			var f=document.getElementById('FilterByDate').value;
+			if(f.length<2){f='DESC';}
+			if(f=='ASC'){f='DESC';}else{f='ASC';}
+			document.getElementById('FilterByDate').value=f;
+			SearchComputers();
+		}
+		
+		
 		SearchComputers();
 	</script>
 	";
@@ -60,12 +74,13 @@ function SearchComputers(){
 	$search=str_replace("**", "*", $search);
 	$search=str_replace("**", "*", $search);
 	$search=str_replace("*", "%", $search);
-	
+	$order="ORDER BY hardware.LASTDATE DESC";
+	if(trim($_GET["orderBydate"])<>null){$order="ORDER BY hardware.LASTDATE {$_GET["orderBydate"]} ";}
 	
 	$sql="SELECT networks.*,hardware.* FROM networks,hardware WHERE
 	networks.HARDWARE_ID=hardware.ID
 	AND ( (hardware.NAME LIKE '$search') OR (networks.MACADDR LIKE '$search') OR (networks.IPADDRESS LIKE '$search') OR (hardware.OSNAME LIKE '$search'))
-	ORDER BY hardware.LASTDATE DESC LIMIT 0,30
+	$order LIMIT 0,30
 	";
 	
 	$html="<center>
@@ -73,7 +88,7 @@ function SearchComputers(){
 <thead class='thead'>
 	<tr>
 		<th width=1%>$add</th>
-		<th>{date}</th>
+		<th><a href=\"javascript:blur();\" OnClick=\"OcsFilterBYDate()\" style='font-weight:bold;text-decoration:underline'>{date}</a></th>
 		<th>{hostname}</th>
 		<th>{ipaddr}</th>
 		<th>MAC</th>

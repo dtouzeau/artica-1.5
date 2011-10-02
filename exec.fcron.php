@@ -51,7 +51,7 @@ function artica_reboot_task(){
 		if($AutoRebootSchedule==0){die();}	
 		$reboot_bin=$unix->find_program("reboot");
 		if(!is_file($reboot_bin)){$unix->send_email_events("Unable to reboot computer !", "reboot, no such binary", "system");die();}
-		$unix->send_email_events("Reboot computer performed", "This computer has been rebooted with the reboot scheduled task set in artica performances section", "system");
+		$unix->send_email_events("Reboot computer performed", "This computer has been rebooted with the reboot scheduled task ($reboot_bin) set in artica performances section", "system");
 		shell_exec($reboot_bin);
 }
 

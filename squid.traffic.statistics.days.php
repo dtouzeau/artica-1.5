@@ -182,7 +182,11 @@ function left(){
 	
 <script>
 		function SquidFlowDaySizeQuery(type){
-			if(!type){type=document.getElementById('squid-stats-day-hide-type').value;}
+			if(!type){
+				if(document.getElementById('squid-stats-day-hide-type')){type=document.getElementById('squid-stats-day-hide-type').value;}
+			}
+			if(!type){type='size';}
+			
 			var sdate=document.getElementById('sdate').value;
 			LoadAjax('days-right-infos','$page?day-right-infos=yes&day='+sdate+'&type='+type);
 		}
@@ -230,7 +234,7 @@ function right(){
 	
 	$hour_table=date('Ymd',strtotime($_GET["day"]))."_hour";
 	$title="<div style='font-size:16px;width:100%;font-weight:bold'>{statistics}:&nbsp;". strtolower(date('{l} d {F} Y',strtotime($_GET["day"])))." ({$GLOBALS["title_array"][$type]})</div>";
-	if(!$q->TABLE_EXISTS($hour_table)){echo $tpl->_ENGINE_parse_body("$title<center style='margin:50px'><H2>{error_no_datas}</H2></center>");return;}
+	if(!$q->TABLE_EXISTS($hour_table)){echo $tpl->_ENGINE_parse_body("<input type='hidden' id='squid-stats-day-hide-type' value='{$_GET["type"]}'>$title<center style='margin:50px'><H2>{error_no_datas}</H2></center>");return;}
 	
 	
 	if($type=="req"){
@@ -271,7 +275,9 @@ function right(){
 	if(!$q->ok){echo "<H2>$q->mysql_error</H2><center style='font-size:11px'><code>$sql</code></center>";}	
 	if(mysql_num_rows($results)==0){echo $tpl->_ENGINE_parse_body("$title<center style='margin:50px'><H2>{error_no_datas}</H2></center>");return;}	
 	
-	$table="<center>
+	$table="
+	<input type='hidden' id='squid-stats-day-hide-type' value='{$_GET["type"]}'>
+	<center>
 <table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:350px'>
 <thead class='thead'>
 	<tr>

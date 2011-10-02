@@ -74,11 +74,12 @@ if(isset($_GET["NetWorkBroadCastAsIpAddr"])){NetWorkBroadCastAsIpAddr();exit;}
 
 
 function popup(){
+	if(isset($_GET["newinterface"])){$fontsize="font-size:14px";$linkadd="&newinterface=yes";}	
 	$page=CurrentPageName();
 	$html="<div id='MasterNetworkSection'></div>
 	
 	<script>
-		LoadAjax('MasterNetworkSection','$page?popup2=yes');
+		LoadAjax('MasterNetworkSection','$page?popup2=yes$linkadd');
 	</script>
 	";
 
@@ -87,6 +88,7 @@ function popup(){
 }
 
 function popup2(){
+if(isset($_GET["newinterface"])){$fontsize="font-size:14px";$linkadd="&newinterface=yes";}		
 $page=CurrentPageName();	
 $html="
 	<div class=explain >{network_about}</div>
@@ -94,7 +96,7 @@ $html="
 	<div id='nic_status'></div>
 	<div id='nic_tabs'></div>
 <script>
-	LoadAjax('nic_tabs','$page?popup-tabs=yes');
+	LoadAjax('nic_tabs','$page?popup-tabs=yes$linkadd');
 </script>
 	
 	";
@@ -120,38 +122,39 @@ function tabs(){
 	$array["bridges"]='{bridges}';
 	$array["routes"]='{routes}';
 	$array["hard"]='{hardware}';
-	
-	
+	$tabwith="750px";
+	if(isset($_GET["newinterface"])){$fontsize="font-size:14px";$linkadd="&newinterface=yes";$tabwith="100%";}	
 	
 	while (list ($num, $ligne) = each ($array) ){
 		
 		if($num=="hard"){
-			$html[]= "<li><a href=\"system.nic.infos.php?popup=yes\"><span>". $tpl->_ENGINE_parse_body($ligne)."</span></a></li>\n";
+			$html[]= "<li><a href=\"system.nic.infos.php?popup=yes$linkadd\"><span style='$fontsize'>". $tpl->_ENGINE_parse_body($ligne)."</span></a></li>\n";
 			continue;
 		}
 		
 		if($num=="routes"){
-			$html[]= "<li><a href=\"system.nic.routes.php\"><span>". $tpl->_ENGINE_parse_body($ligne)."</span></a></li>\n";
+			$html[]= "<li><a href=\"system.nic.routes.php$linkadd\"><span style='$fontsize'>". $tpl->_ENGINE_parse_body($ligne)."</span></a></li>\n";
 			continue;
 		}	
 
 		if($num=="vlan"){
-			$html[]= "<li><a href=\"system.nic.vlan.php\"><span>". $tpl->_ENGINE_parse_body($ligne)."</span></a></li>\n";
+			$html[]= "<li><a href=\"system.nic.vlan.php$linkadd\"><span style='$fontsize'>". $tpl->_ENGINE_parse_body($ligne)."</span></a></li>\n";
 			continue;
 		}
 
 		if($num=="snort"){
-			$html[]= "<li><a href=\"system.nic.snort.php\"><span>". $tpl->_ENGINE_parse_body($ligne)."</span></a></li>\n";
+			$html[]= "<li><a href=\"system.nic.snort.php$linkadd\"><span style='$fontsize'>". $tpl->_ENGINE_parse_body($ligne)."</span></a></li>\n";
 			continue;
 		}			
 		
-		$html[]= "<li><a href=\"$page?main=$num\"><span>". $tpl->_ENGINE_parse_body($ligne)."</span></a></li>\n";
+		$html[]= "<li><a href=\"$page?main=$num$linkadd\"><span style='$fontsize'>". $tpl->_ENGINE_parse_body($ligne)."</span></a></li>\n";
 	}
 	
+
 	
 	echo "
 	<div id='main_config_hostname'></div>
-	<div id='main_config_nics' style='width:750px;height:600px;overflow:auto'>
+	<div id='main_config_nics' style='width:$tabwith;overflow:auto'>
 		<ul>". implode("\n",$html)."</ul>
 	</div>
 
@@ -185,6 +188,7 @@ function tabs_hostname(){
 
 
 function js(){
+	if(isset($_GET["newinterface"])){$fontsize="font-size:14px";$linkadd="&newinterface=yes";}	
 	$add=js_addon()."\n".file_get_contents("js/system-network.js");
 	$tpl=new templates();
 	$title=$tpl->_ENGINE_parse_body('{net_settings}');
@@ -192,7 +196,7 @@ function js(){
 	$prefix=md5($page);
 	$openjs="YahooWin(700,'$page?popup=yes','$title');";
 	IF(isset($_GET["in-front-ajax"])){
-		$openjs="$('#BodyContent').load('$page?popup=yes');";
+		$openjs="$('#BodyContent').load('$page?popup=yes$linkadd');";
 	}
 	
 	$html="
@@ -362,42 +366,43 @@ function zlistnics_tabs(){
 	$page=CurrentPageName();
 	$users=new usersMenus();	
 	$array["networks"]="{edit_networks}";
-	
+		
 	if($users->SNORT_INSTALLED){$array["snort"]='{APP_SNORT}';}
 	$array["firewall"]='{incoming_firewall}';
 	$array["firewall-white"]='{whitelist}';
 	
-
+	$tabwidth="730px";
+	if(isset($_GET["newinterface"])){$fontsize="font-size:14px;";$linkadd="&newinterface=yes";$tabwidth="100%";}
 	
 	
 		while (list ($num, $ligne) = each ($array) ){
 			
 		if($num=="networks"){
-			$html[]= "<li><a href=\"computer-browse.php?browse-networks=yes\"><span>". $tpl->_ENGINE_parse_body($ligne)."</span></a></li>\n";
+			$html[]= "<li><a href=\"computer-browse.php?browse-networks=yes$linkadd\"><span style='$fontsize'>". $tpl->_ENGINE_parse_body($ligne)."</span></a></li>\n";
 			continue;
 		}			
 			
 		if($num=="snort"){
-			$html[]= "<li><a href=\"system.nic.snort.php\"><span>". $tpl->_ENGINE_parse_body($ligne)."</span></a></li>\n";
+			$html[]= "<li><a href=\"system.nic.snort.php$linkadd\"><span style='$fontsize'>". $tpl->_ENGINE_parse_body($ligne)."</span></a></li>\n";
 			continue;
 		}
 		
 		if($num=="firewall"){
-			$html[]= "<li><a href=\"system.firewall.in.php\"><span>". $tpl->_ENGINE_parse_body($ligne)."</span></a></li>\n";
+			$html[]= "<li><a href=\"system.firewall.in.php$linkadd\"><span style='$fontsize'>". $tpl->_ENGINE_parse_body($ligne)."</span></a></li>\n";
 			continue;
 		}	
 
 		if($num=="firewall-white"){
-			$html[]= "<li><a href=\"whitelists.admin.php?popup-hosts=yes\"><span>". $tpl->_ENGINE_parse_body($ligne)."</span></a></li>\n";
+			$html[]= "<li><a href=\"whitelists.admin.php?popup-hosts=yes$linkadd\"><span style='$fontsize'>". $tpl->_ENGINE_parse_body($ligne)."</span></a></li>\n";
 			continue;
 		}			
 		
-		$html[]= "<li><a href=\"$page?main=$num\"><span>". $tpl->_ENGINE_parse_body($ligne)."</span></a></li>\n";
+		$html[]= "<li><a href=\"$page?main=$num\"><span style='$fontsize'>". $tpl->_ENGINE_parse_body($ligne)."</span></a></li>\n";
 	}
 	
 	$tab=time();
 	echo "
-	<div id='tabs_listnics2' style='margin:-8px;margin-right:-25px;width: 730px;height:555px;overflow:auto'>
+	<div id='tabs_listnics2' style='margin:-8px;margin-right:-25px;width:$tabwidth;height:555px;overflow:auto'>
 		<ul>". implode("\n",$html)."</ul>
 	</div>
 

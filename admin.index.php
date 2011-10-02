@@ -166,7 +166,8 @@ function StartStopService_perform(){
 function page($usersmenus){
 	$left_menus=null;
 if(isset($_GET["admin-ajax"])){
-	//if(GET_CACHED(__FILE__,__FUNCTION__,__FUNCTION__."-admin-ajax")){return null;}
+	echo "<script>LoadAjax('middle','quicklinks.php');</script>";
+	return;
 	
 }else{	
 	//if(GET_CACHED(__FILE__,__FUNCTION__,__FUNCTION__)){return null;}
@@ -550,11 +551,11 @@ function status_right(){
 	}
 	
 	$script="
-	<div id='mem_status_computer'>".$tpl->_ENGINE_parse_body(@file_get_contents("ressources/logs/status.memory.html"))."</div>
+	<div id='mem_status_computer' style='text-align:center'>".$tpl->_ENGINE_parse_body(@file_get_contents("ressources/logs/status.memory.html"))."</div>
 	\n
 	<div id='right-status-infos'></div>
 	<script>
-		LoadAjax('left_status','$page?status=left&$ajaxadd');
+		LoadAjax('left_status','$page?status=left$ajaxadd');
 		$infos
 	</script>\n";
 	
@@ -649,7 +650,7 @@ function status_postfix(){
 	$counter=Field_hidden('counter',$newcounter);
 	$cachefile="/usr/share/artica-postfix/ressources/logs/status.right.1.html";
 	$cachemem="/usr/share/artica-postfix/ressources/logs/status.memory.html";
-	$memory="<div id='mem_status_computer'>". @file_get_contents("$cachemem")."</div>";
+	$memory="<div id='mem_status_computer' style='text-align:center'>". @file_get_contents("$cachemem")."</div>";
 	
 	
 	
@@ -780,13 +781,15 @@ function status_left(){
 	$newfrontend=false;
 	if(isset($_GET["newfrontend"])){$newfrontend=true;}
 	
-	"<div id='status-left'>
-	
-	</div>
-	
+	$html="
+	<div id='status-left'></div>
+	<script>
+		LoadAjax('status-left','admin.index.loadvg.php');
+		LoadAjax('admin-left-infos','admin.index.status-infos.php');
+	</script>
 	
 	";
-	$newfrontend;
+	echo $html;
 	
 	}
 

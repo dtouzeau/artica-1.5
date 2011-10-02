@@ -55,7 +55,7 @@ if($argv[1]=="--export"){export(true);die();}
 	@mkdir(dirname($cachetime),0755,true);
 	@unlink($cachetime);
 	@file_put_contents($cachetime,"#");
-	$GLOBALS["MYPID"]=getmygid();
+	$GLOBALS["MYPID"]=getmypid();
 	@file_put_contents($pidfile,$GLOBALS["MYPID"]);
 	
 	WriteMyLogs("-> Export()","MAIN",null,__LINE__);

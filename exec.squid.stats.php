@@ -21,10 +21,16 @@ $unix=new unix();
 $GLOBALS["CLASS_UNIX"]=$unix;
 events("Executed " .@implode(" ",$argv));
 $sock=new sockets();
+if(!is_dir("/var/log/artica-postfix/artica-squid-events")){@mkdir("/var/log/artica-postfix/artica-squid-events",644,true);}
 $squidEnableRemoteStatistics=$sock->GET_INFO("squidEnableRemoteStatistics");
 if(!is_numeric($squidEnableRemoteStatistics)){$squidEnableRemoteStatistics=0;}
 if($squidEnableRemoteStatistics==1){events("this server is not in charge of statistics...");die();}
-if(!ifMustBeExecuted()){events("this server is not in charge of statistics (categories repositories or Statistics Appliance) ...");die();}
+if(!ifMustBeExecuted()){
+	if($GLOBALS["VERBOSE"]){echo "this server is not in charge of statistics (categories repositories or Statistics Appliance) ...\n";}
+	events("this server is not in charge of statistics (categories repositories or Statistics Appliance) ...");die();
+}
+
+if($GLOBALS["VERBOSE"]){echo "LAUNCH: '{$argv[1]}'\n";}
 
 
 if($argv[1]=='--scan-hours'){scan_hours();die();}
@@ -40,16 +46,79 @@ if($argv[1]=='--tables'){$q=new mysql();$q->CheckTablesSquid();die();}
 if($argv[1]=='--members-month-kill'){members_month_delete();exit;}
 if($argv[1]=='--fix-tables'){$GLOBALS["Q"]->FixTables();exit;}
 if($argv[1]=='--visited-sites'){visited_sites();exit;}
+if($argv[1]=='--sync-categories'){sync_categories();exit;}
 
-
+//visited_sites
+if($GLOBALS["VERBOSE"]){echo "UNABLE TO UNDERSTAND: '{$argv[1]}'\n";}
 
 $pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".pid";
 $oldpid=@file_get_contents($pidfile);
 if($oldpid<100){$oldpid=null;}
 $unix=new unix();
 if($unix->process_exists($oldpid)){if($GLOBALS["VERBOSE"]){echo "Already executed pid $oldpid\n";}die();}
-$mypid=getmygid();
+$mypid=getmypid();
 @file_put_contents($pidfile,$mypid);
+
+function sync_categories(){
+	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
+	$oldpid=@file_get_contents($pidfile);
+	if($oldpid<100){$oldpid=null;}
+	$unix=new unix();
+	if($unix->process_exists($oldpid)){if($GLOBALS["VERBOSE"]){echo "Already executed pid $oldpid\n";}die();}
+	$mypid=getmypid();
+	@file_put_contents($pidfile,$mypid);	
+	
+	$sql="SELECT * FROM visited_sites WHERE sitename LIKE 'www.%'";
+	$results=$GLOBALS["Q"]->QUERY_SQL($sql);
+	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+		$website=trim($ligne["sitename"]);
+		if(preg_match("#^www\.(.+)#", $website,$re)){
+			$ligne2=mysql_fetch_array($GLOBALS["Q"]->QUERY_SQL("SELECT sitename FROM visited_sites WHERE sitename='{$re[1]}'"));
+			if($ligne2["sitename"]<>null){
+				$GLOBALS["Q"]->QUERY_SQL("DELETE FROM visited_sites WHERE sitename='$website'");
+			}else{
+				$GLOBALS["Q"]->QUERY_SQL("UPDATE visited_sites SET sitename='{$re[1]}' WHERE sitename='{$ligne["sitename"]}'");
+			}
+			$GLOBALS["Q"]->UPDATE_WEBSITES_TABLES($ligne["sitename"],$re[1]);
+		}
+	}	
+	
+	
+	$sql="SELECT * FROM visited_sites WHERE LENGTH(category)=0";
+	if($GLOBALS["VERBOSE"]){echo "$sql\n";}
+	
+	$results=$GLOBALS["Q"]->QUERY_SQL($sql);
+	if(!$GLOBALS["Q"]->ok){writelogs_squid("Starting analyzing not categorized websites Failed ".$GLOBALS["Q"]->mysql_error,__FUNCTION__,__FILE__,__LINE__,"stats");return;}
+	$num_rows = mysql_num_rows($results);
+	$t=time();
+	if($num_rows==0){if($GLOBALS["VERBOSE"]){echo "No datas ". __FUNCTION__." ".__LINE__."\n";}return;}
+	writelogs_squid("Starting analyzing $num_rows not categorized websites",__FUNCTION__,__FILE__,__LINE__,"stats");
+	$c=0;$d=0;
+	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+		$website=trim($ligne["sitename"]);
+		$category=null;
+		if($website==null){continue;}
+		$t2=time();
+		$c++;
+		$d++;
+		if($d>1000){if($GLOBALS["VERBOSE"]){echo "Analyzed $c websites\n";$d=0;}}
+		$category=$GLOBALS["Q"]->GET_CATEGORIES($website,true);
+		if(trim($category)<>null){
+			$took=$unix->distanceOfTimeInWords($t2,time());
+			writelogs_squid("$website = $category $took",__FUNCTION__,__FILE__,__LINE__,"stats");
+			$GLOBALS["Q"]->UPDATE_CATEGORIES_TABLES($website,$category);
+			if($GLOBALS["VERBOSE"]){echo "UPDATE_CATEGORIES_TABLES DONE..\n";}
+			$GLOBALS["Q"]->QUERY_SQL("UPDATE visited_sites SET category='$category' WHERE sitename='$website'");
+			if(!$GLOBALS["Q"]->ok){writelogs_squid("Fatal error while update visited_sites {$GLOBALS["Q"]->mysql_error}",__FUNCTION__,__FILE__,__LINE__,"stats");}
+			return;
+		}
+	}
+	$took=$unix->distanceOfTimeInWords($t,time());
+	writelogs_squid("Analyze not categorized websites finish ($took)",__FUNCTION__,__FILE__,__LINE__,"stats");
+	
+
+	
+}
 
 
 function scan_hours(){
@@ -57,7 +126,7 @@ function scan_hours(){
 	$oldpid=@file_get_contents($pidfile);
 	$unix=new unix();
 	if($unix->process_exists($oldpid)){if($GLOBALS["VERBOSE"]){echo "Already executed pid $oldpid\n";}die();}
-	$mypid=getmygid();
+	$mypid=getmypid();
 	@file_put_contents($pidfile,$mypid);
 	$GLOBALS["Q"]->FixTables();
 	table_days();
@@ -70,7 +139,7 @@ function scan_months(){
 	$oldpid=@file_get_contents($pidfile);
 	$unix=new unix();
 	if($unix->process_exists($oldpid)){if($GLOBALS["VERBOSE"]){echo "Already executed pid $oldpid\n";}die();}
-	$mypid=getmygid();
+	$mypid=getmypid();
 	@file_put_contents($pidfile,$mypid);
 	table_days();
 	members_month(true);
@@ -88,7 +157,7 @@ function flow_month($nopid=false){
 	}
 	
 	
-	$mypid=getmygid();
+	$mypid=getmypid();
 	@file_put_contents($pidfile,$mypid);
 	
 $sql="SELECT MONTH(zDate) AS smonth,YEAR(zDate) AS syear FROM tables_day WHERE zDate<DATE_SUB(NOW(),INTERVAL 1 DAY) AND month_flow=0 ORDER BY zDate";
@@ -202,7 +271,7 @@ function members_month($nopid=false){
 		$oldpid=@file_get_contents($pidfile);
 		$unix=new unix();
 		if($unix->process_exists($oldpid)){die();}
-		$mypid=getmygid();
+		$mypid=getmypid();
 		@file_put_contents($pidfile,$mypid);		
 	}
 	
@@ -238,7 +307,7 @@ function members_month_query($month,$year){
 	$oldpid=@file_get_contents($pidfile);
 	$unix=new unix();
 	if($unix->process_exists($oldpid)){die();}
-	$mypid=getmygid();
+	$mypid=getmypid();
 	@file_put_contents($pidfile,$mypid);
 	table_days();
 	$q=new mysql_squid_builder();
@@ -276,9 +345,9 @@ function _members_month_perfom($sourcetable,$destinationtable,$day){
 
 	
 	
-	$sql="SELECT SUM( size ) AS QuerySize, SUM(hits) as hits,cached, client, uid
+	$sql="SELECT SUM( size ) AS QuerySize, SUM(hits) as hits,cached, client, uid,MAC
 	FROM $sourcetable
-	GROUP BY cached, client, uid
+	GROUP BY cached, client, uid,MAC
 	HAVING QuerySize>0 ";	
 	
 	$results=$GLOBALS["Q"]->QUERY_SQL($sql);
@@ -286,7 +355,7 @@ function _members_month_perfom($sourcetable,$destinationtable,$day){
 	$num_rows=mysql_num_rows($results);
 	events_tail("Processing $sourcetable -> $destinationtable for day $day $num_rows  rows in line ".__LINE__);
 	
-	$prefix="INSERT IGNORE INTO $destinationtable (`zMD5`,`client`,`day`,`size`,`hits`,`uid`,`cached`) VALUES ";
+	$prefix="INSERT IGNORE INTO $destinationtable (`zMD5`,`client`,`day`,`size`,`hits`,`uid`,`cached`,`MAC`) VALUES ";
 	
 	$f=array();
 	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
@@ -294,7 +363,7 @@ function _members_month_perfom($sourcetable,$destinationtable,$day){
 		$uid=addslashes(trim(strtolower($ligne["uid"])));
 	
 		$md5=md5("$client$day$uid{$ligne["QuerySize"]}{$ligne["hits"]}");
-		$sql_line="('$md5','$client','$day','{$ligne["QuerySize"]}','{$ligne["hits"]}','$uid','{$ligne["cached"]}')";
+		$sql_line="('$md5','$client','$day','{$ligne["QuerySize"]}','{$ligne["hits"]}','$uid','{$ligne["cached"]}','{$ligne["MAC"]}')";
 		$f[]=$sql_line;
 		
 		if($output_rows){if($GLOBALS["VERBOSE"]){echo "$sql_line\n";}}	
@@ -326,7 +395,7 @@ function members_hours($nopid=false){
 		$oldpid=@file_get_contents($pidfile);
 		$unix=new unix();
 		if($unix->process_exists($oldpid)){die();}
-		$mypid=getmygid();
+		$mypid=getmypid();
 		@file_put_contents($pidfile,$mypid);
 	}
 	
@@ -373,9 +442,9 @@ function _members_hours_perfom($tabledata,$nexttable){
 	$filter_hour_2=" AND HOUR>{$ligne["hour"]}";
 	
 	
-	$sql="SELECT SUM( QuerySize ) AS QuerySize, COUNT(zmd5) as hits,cached, HOUR( zDate ) AS HOUR , CLIENT, uid
+	$sql="SELECT SUM( QuerySize ) AS QuerySize, COUNT(zmd5) as hits,cached, HOUR( zDate ) AS HOUR , CLIENT, uid,MAC
 	FROM $tabledata
-	GROUP BY cached, HOUR( zDate ) , CLIENT, uid
+	GROUP BY cached, HOUR( zDate ) , CLIENT, uid,MAC
 	HAVING QuerySize>0  $filter_hour_1$filter_hour_2";
 	
 	
@@ -394,7 +463,7 @@ function _members_hours_perfom($tabledata,$nexttable){
 		return true;
 	}
 
-	$prefix="INSERT IGNORE INTO $nexttable (zMD5,client,hour,size,hits,uid,cached) VALUES ";
+	$prefix="INSERT IGNORE INTO $nexttable (zMD5,client,hour,size,hits,uid,cached,MAC) VALUES ";
 	
 	$f=array();
 	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
@@ -402,7 +471,7 @@ function _members_hours_perfom($tabledata,$nexttable){
 		$uid=addslashes(trim(strtolower($ligne["uid"])));
 	
 		$md5=md5("{$ligne["CLIENT"]}{$ligne["HOUR"]}{$ligne["uid"]}{$ligne["QuerySize"]}{$ligne["hits"]}");
-		$sql_line="('$md5','$client','{$ligne["HOUR"]}','{$ligne["QuerySize"]}','{$ligne["hits"]}','$uid','{$ligne["cached"]}')";
+		$sql_line="('$md5','$client','{$ligne["HOUR"]}','{$ligne["QuerySize"]}','{$ligne["hits"]}','$uid','{$ligne["cached"]}','{$ligne["MAC"]}')";
 		$f[]=$sql_line;
 		
 		if($output_rows){if($GLOBALS["VERBOSE"]){echo "$sql_line\n";}}	
@@ -432,7 +501,7 @@ function clients_hours($nopid=false){
 		$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
 		$oldpid=@file_get_contents($pidfile);
 		if($unix->process_exists($oldpid)){die();}
-		$mypid=getmygid();
+		$mypid=getmypid();
 		@file_put_contents($pidfile,$mypid);		
 	}
 	
@@ -485,9 +554,9 @@ $filter_hour_2=" AND HOUR>{$ligne["hour"]}";
 
 events_tail("Processing $tabledata -> $nexttable  (today is $todaytable) filter:'$filter_hour_2' in line ".__LINE__);
 
-$sql="SELECT SUM( QuerySize ) AS QuerySize, COUNT(zmd5) as hits,cached, HOUR( zDate ) AS HOUR , CLIENT, Country, uid, sitename
+$sql="SELECT SUM( QuerySize ) AS QuerySize, COUNT(zmd5) as hits,cached, HOUR( zDate ) AS HOUR , CLIENT, Country, uid, sitename,MAC
 FROM $tabledata
-GROUP BY cached, HOUR( zDate ) , CLIENT, Country, uid, sitename
+GROUP BY cached, HOUR( zDate ) , CLIENT, Country, uid, sitename,MAC
 HAVING QuerySize>0  $filter_hour_1$filter_hour_2";
 
 $results=$GLOBALS["Q"]->QUERY_SQL($sql);
@@ -505,7 +574,7 @@ if($num_rows==0){
 	return true;
 }
 
-$prefix="INSERT IGNORE INTO $nexttable (zMD5,sitename,client,hour,remote_ip,country,size,hits,uid,category,cached,familysite) VALUES ";
+$prefix="INSERT IGNORE INTO $nexttable (zMD5,sitename,client,hour,remote_ip,country,size,hits,uid,category,cached,familysite,MAC) VALUES ";
 $prefix_visited="INSERT IGNORE INTO visited_sites (sitename,category,country,familysite) VALUES ";
 $f=array();
 while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
@@ -531,8 +600,9 @@ while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
 	
 	
 	
-	$md5=md5("{$ligne["sitename"]}{$ligne["CLIENT"]}{$ligne["HOUR"]}{$ligne["Country"]}{$ligne["uid"]}{$ligne["QuerySize"]}{$ligne["hits"]}{$ligne["cached"]}$category$Country");
-	$sql_line="('$md5','$sitename','$client','{$ligne["HOUR"]}','$client','$Country','{$ligne["QuerySize"]}','{$ligne["hits"]}','$uid','$category','{$ligne["cached"]}','$familysite')";
+	$md5=md5("{$ligne["sitename"]}{$ligne["CLIENT"]}{$ligne["HOUR"]}{$ligne["MAC"]}{$ligne["Country"]}{$ligne["uid"]}{$ligne["QuerySize"]}{$ligne["hits"]}{$ligne["cached"]}$category$Country");
+	$sql_line="('$md5','$sitename','$client','{$ligne["HOUR"]}','$client','$Country','{$ligne["QuerySize"]}','{$ligne["hits"]}','$uid','$category','{$ligne["cached"]}',
+	'$familysite','{$ligne["MAC"]}')";
 	$f[]=$sql_line;
 	
 	if($output_rows){if($GLOBALS["VERBOSE"]){echo "$sql_line\n";}}	
@@ -755,7 +825,7 @@ function visited_sites(){
 	if($oldpid<100){$oldpid=null;}
 	$unix=new unix();
 	if($unix->process_exists($oldpid)){if($GLOBALS["VERBOSE"]){echo "Already executed pid $oldpid\n";}return;}
-	$mypid=getmygid();
+	$mypid=getmypid();
 	@file_put_contents($pidfile,$mypid);	
 	
 	$sql="SELECT sitename,country FROM visited_sites";
