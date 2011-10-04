@@ -1742,7 +1742,6 @@ function BuildSquidConf(){
 		$conf=$conf."cache_log	/var/log/squid/cache.log\n";
 		$conf=$conf."pid_filename	/var/run/squid.pid\n";
 		
-		
 		if(($this->IS_30) && (!$this->IS_32)){
 			$conf=$conf."cache_store_log	/var/log/squid/store.log\n";
 			$conf=$conf."access_log	none manager\n";

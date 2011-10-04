@@ -1353,7 +1353,8 @@ function popup(){
 				}
 				
 				if(mysql_database.length>16){
-					alert('$error_field_max_length: 16');
+					alert('mysql_database:$error_field_max_length: 16');
+					document.getElementById('mysql_database').disabled=false;
 					return;
 				}
 			}

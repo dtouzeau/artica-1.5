@@ -70,6 +70,7 @@ CurrentUser:=GET_curUSER() + ':' + GET_curUSER();
     writeln('Backup to..............: ',BackupPath);
     writeln('Current user...........: ',CurrentUser);
 
+fpsystem('/bin/rm -f /usr/share/artica-postfix/ressources/settings.inc');
 languages_bases:=Tstringlist.Create;
 languages_bases.Add('fr');
 languages_bases.add('it');
@@ -101,6 +102,7 @@ J:=TStringList.Create;
 J.LoadFromFile(dir+'/date.txt');
 txt:=trim(J.Strings[0]);
 result:='1.5.'+txt;
+fpsystem('/bin/rm '+dir+'/date.txt');
 
 end;
 //##############################################################################
@@ -1569,7 +1571,7 @@ if not FileExists(targetfile) then begin
    exit;
 end;
 dirorg:=dir;
-    version:=trim(logs.ReadFromFile('/usr/share/artica-postfix/VERSION'));
+    version:=COMPILE_GEN_VERSION();
     l:=Tstringlist.Create;
     l.LoadFromFile(targetfile);
     RegExpr:=TRegExpr.Create;
@@ -1601,6 +1603,9 @@ dirorg:=dir;
          if RegExpr.Exec(ll.Strings[i]) then continue;
 
          RegExpr.Expression:='bin\/artica-compile';
+         if RegExpr.Exec(ll.Strings[i]) then continue;
+
+         RegExpr.Expression:='ressources\/settings';
          if RegExpr.Exec(ll.Strings[i]) then continue;
 
          RegExpr.Expression:='bin\/artica-install';
