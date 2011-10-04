@@ -14,6 +14,7 @@ events("Memory: ".round(((memory_get_usage()/1024)/1000),2) ." after includes cl
 include_once(dirname(__FILE__).'/framework/class.settings.inc');
 events("Memory: ".round(((memory_get_usage()/1024)/1000),2) ." after includes class.settings.inc line: ".__LINE__);
 include_once(dirname(__FILE__).'/ressources/class.sockets.inc');
+include_once(dirname(__FILE__).'/ressources/class.postfix.maillog.inc');
 
 events("Memory: FINISH ".round(((memory_get_usage()/1024)/1000),2) ." after includes line: ".__LINE__);
 
@@ -43,6 +44,7 @@ $GLOBALS["AMAVIS_INSTALLED"]=$users->AMAVIS_INSTALLED;
 $GLOBALS["POP_HACK"]=array();
 $GLOBALS["SMTP_HACK"]=array();
 $GLOBALS["PHP5_BIN"]=LOCATE_PHP5_BIN2();
+$GLOBALS["LN_BIN"]=$unix->find_program("ln");
 $GLOBALS["PostfixNotifyMessagesRestrictions"]=$sock->GET_INFO("PostfixNotifyMessagesRestrictions");
 $GLOBALS["PopHackEnabled"]=$sock->GET_INFO("PopHackEnabled");
 $GLOBALS["PopHackCount"]=$sock->GET_INFO("PopHackCount");
@@ -325,16 +327,12 @@ if(preg_match("#zarafa-dagent.+?Client disconnected#",$buffer)){return null;}
 
 
 if(regex_amavis($buffer)){return;}
-
-
-
-
-
-
+$p=new postfix_maillog_buffer($buffer);if($p->parse()){$p=null;return;}
 
 
 if(preg_match("#zarafa-server.+?SQL Failed: Can't create table '\./zarafa/(.+?)\.frm'#",$buffer,$re)){
 	$file="/etc/artica-postfix/croned.1/zarafa-server.tablefailed".md5($re[1]);
+	$timefile=file_time_min($file);
 	if($timefile>10){
 		email_events("Zarafa server SQL issue unable to create [{$re[1]}] table",
 		"zarafa-server claim \n$buffer\nThere is an SQL issue\nplease Check Artica Technology support service.","mailbox");
@@ -345,6 +343,7 @@ if(preg_match("#zarafa-server.+?SQL Failed: Can't create table '\./zarafa/(.+?)\
 
 if(preg_match("#zarafa-server.+?SQL Failed:(.+)#",$buffer,$re)){
 	$file="/etc/artica-postfix/croned.1/zarafa-server.".md5($re[1]);
+	$timefile=file_time_min($file);
 	if($timefile>10){
 		email_events("Zarafa server SQL issue",
 		"zarafa-server claim \n$buffer\nThere is an SQL issue\nplease Check Artica Technology support service.","mailbox");

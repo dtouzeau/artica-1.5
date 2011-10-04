@@ -2818,6 +2818,7 @@ public function LOCATE_STUNNEL_BIN(){
 	
 	private function LOCATE_POSTFIX_DAEMON_DIRECTORY_1(){
 		if(is_file('/usr/lib/postfix/master')){return ('/usr/lib/postfix');}
+		if(is_file('/usr/lib64/postfix/master')){return ('/usr/lib64/postfix');}
 		if(is_file('/usr/libexec/postfix/master')){return ('/usr/libexec/postfix');}
 		if(is_file('/usr/local/libexec/postfix/master')){return ('/usr/local/libexec/postfix');}
 		
@@ -2834,6 +2835,15 @@ public function LOCATE_STUNNEL_BIN(){
 		if(is_file('/usr/lib/postfix/postmulti-script')){return ('/usr/lib/postfix');}
 		if(is_file('/usr/libexec/postfix/postmulti-script')){return ('/usr/libexec/postfix');}
 		if(is_file('/usr/local/libexec/postfix/postmulti-script')){return ('/usr/local/libexec/postfix');}
+	}
+
+	public function LOCATE_POSTFIX_POSTSCREEN(){
+		$f=$this->LOCATE_POSTFIX_DAEMON_DIRECTORY_2();
+		if(is_file($f)){return $f;}
+		if(is_file('/usr/lib/postfix/postscreen')){return ('/usr/lib/postfix/postscreen');}
+		if(is_file('/usr/lib64/postfix/postscreen')){return ('/usr/lib64/postfix/postscreen');}
+		if(is_file('/usr/libexec/postfix/postscreen')){return ('/usr/libexec/postscreen');}
+		if(is_file('/usr/local/libexec/postfix/postscreen')){return ('/usr/local/libexec/postfix/postscreen');}
 	}	
 	
 	

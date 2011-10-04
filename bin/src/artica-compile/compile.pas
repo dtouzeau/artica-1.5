@@ -6,7 +6,7 @@ interface
 
 uses
 //depreciated oldlinux -> baseunix
-Classes, SysUtils,variants, Process,IniFiles,unix,RegExpr in 'RegExpr.pas',global_conf,Zsystem,logs;
+Classes, SysUtils,variants, Process,IniFiles,unix,RegExpr in 'RegExpr.pas',global_conf,Zsystem,logs,strutils;
 
   type
   TCompile=class
@@ -47,6 +47,7 @@ public
     procedure SyncUSerBackup();
     procedure langues();
     procedure git();
+    procedure createPatch();
 end;
 
 implementation
@@ -1542,21 +1543,98 @@ if CurrentUser='root' then dir:='/root' else dir:='/home/'+CurrentUser;
     fpsystem('git commit -m "'+version+'"');
     fpsystem('git push origin master');
 
-    forcedirectories(dir+'/Bureau/artica-patchs/'+version+'/artica-postfix');
-    for i:=0 to ll.Count-1 do begin
-         RegExpr.Expression:='ressources\/language\/[a-z]+\/.+';
-         if RegExpr.Exec(ll.Strings[0]) then continue;
-         RegExpr.Expression:='bin\/src\/.+';
-         if RegExpr.Exec(ll.Strings[0]) then continue;
-         if pos('/',ll.Strings[0])>0 then forcedirectories(dir+'/Bureau/artica-patchs/'+version+'/artica-postfix/'+ExtractFilePath(ll.Strings[0]));
-         writeln('-> '+dir+'/Bureau/artica-patchs/'+version+'/artica-postfix/'+ExtractFilePath(ll.Strings[0]));
-         fpsystem('/bin/cp /usr/share/artica-postfix/'+ll.strings[i]+' '+dir+'/Bureau/artica-patchs/'+version+'/artica-postfix/'+ll.Strings[0]);
-    end;
+    createPatch();
 
 
 
 end;
 //##############################################################################
+procedure TCompile.createPatch();
+var
+l:TstringList;
+RegExpr:TRegExpr;
+i:integer;
+
+   dir,newdir,cmd,targetfile:string;
+   ll:TstringList;
+   patchname:string;
+   dirorg:string;
+begin
+CurrentUser:=GET_curUSER();
+if CurrentUser='root' then dir:='/root' else dir:='/home/'+CurrentUser;
+if not FileExists('/usr/bin/git') then exit;
+targetfile:=dir+'/git';
+if not FileExists(targetfile) then begin
+   writeln(targetfile,' no such file..');
+   exit;
+end;
+dirorg:=dir;
+    version:=trim(logs.ReadFromFile('/usr/share/artica-postfix/VERSION'));
+    l:=Tstringlist.Create;
+    l.LoadFromFile(targetfile);
+    RegExpr:=TRegExpr.Create;
+    ll:=Tstringlist.Create;
+    SetCurrentDir('/usr/share/artica-postfix');
+    for i:=0 to l.Count-1 do begin
+         RegExpr.Expression:='\s+modified:\s+(.+)';
+         if RegExpr.Exec(l.Strings[i]) then begin
+            fpsystem('git add '+trim(RegExpr.Match[1]));
+            writeln('GIT -> ',trim(RegExpr.Match[1]));
+            ll.Add(trim(RegExpr.Match[1]));
+         end;
+
+         RegExpr.Expression:='\s+new file:\s+(.+)';
+         if RegExpr.Exec(l.Strings[i]) then begin
+              writeln('GIT -> ',trim(RegExpr.Match[1]));
+              ll.Add(trim(RegExpr.Match[1]));
+         end;
+    end;
+
+    dir:=dir+'/Bureau/artica-patchs/'+version+'/artica-postfix';
+    writeln('path will be stored in ',dir) ;
+    if DirectoryExists(dir) then fpsystem('/bin/rm -rf '+dir);
+    forcedirectories(dir);
+    for i:=0 to ll.Count-1 do begin
+         RegExpr.Expression:='ressources\/language\/[a-z]+\/.+';
+         if RegExpr.Exec(ll.Strings[i]) then continue;
+         RegExpr.Expression:='bin\/src\/.+';
+         if RegExpr.Exec(ll.Strings[i]) then continue;
+
+         RegExpr.Expression:='bin\/artica-compile';
+         if RegExpr.Exec(ll.Strings[i]) then continue;
+
+         RegExpr.Expression:='bin\/artica-install';
+         if RegExpr.Exec(ll.Strings[i]) then fpsystem('strip -s /usr/share/artica-postfix/bin/artica-install');
+
+         RegExpr.Expression:='bin\/process1';
+         if RegExpr.Exec(ll.Strings[i]) then fpsystem('strip -s /usr/share/artica-postfix/bin/process1');
+
+         RegExpr.Expression:='bin\/artica-update';
+         if RegExpr.Exec(ll.Strings[i]) then fpsystem('strip -s /usr/share/artica-postfix/bin/artica-update');
+
+         RegExpr.Expression:='bin\/artica-make';
+         if RegExpr.Exec(ll.Strings[i]) then fpsystem('strip -s /usr/share/artica-postfix/bin/artica-make');
+
+         if pos('/',ll.Strings[i])>0 then begin
+            newdir:=dir+'/'+ExtractFilePath(ll.Strings[i]);
+            writeln('Create directory ',newdir);
+            forcedirectories(newdir);
+         end;
+
+         cmd:='/bin/cp /usr/share/artica-postfix/'+ll.strings[i]+' '+dir+'/'+ll.strings[i];
+         writeln(cmd);
+         fpsystem(cmd);
+    end;
+
+
+    patchname:=AnsiReplaceText(version,'.','');
+    fpsystem('/bin/touch '+dirorg+'/Bureau/artica-patchs/'+patchname+'.txt');
+    SetCurrentDir(dir);
+    if FileExists(dirorg+'/Bureau/artica-patchs/'+patchname+'.tar.gz') then fpsystem('/bin/rm -f '+dirorg+'/Bureau/artica-patchs/'+patchname+'.tar.gz');
+    fpsystem('/bin/tar -czf '+dirorg+'/Bureau/artica-patchs/'+patchname+'.tar.gz *');
+
+end;
+
 procedure TCompile.langues();
 var
 l:Tstringlist;
