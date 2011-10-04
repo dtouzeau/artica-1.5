@@ -806,14 +806,16 @@ function apache_security($DAEMON_PATH){
 	$sock=new sockets();
 	$unix=new unix();
 	if(!is_dir("/var/cache/apache2/mod_pagespeed")){@mkdir("/var/cache/apache2/mod_pagespeed",0755,true);}
-	
+	if(!is_dir("/etc/apache2/logs")){@mkdir("/etc/apache2/logs",0755,true);}
 	$APACHE_SRC_ACCOUNT=$unix->APACHE_SRC_ACCOUNT();
 	$APACHE_SRC_GROUP=$unix->APACHE_SRC_GROUP();
 	shell_exec("/bin/chown $APACHE_SRC_ACCOUNT:$APACHE_SRC_GROUP /var/www");
+	shell_exec("/bin/chown -R $APACHE_SRC_ACCOUNT:$APACHE_SRC_GROUP /etc/apache2");
 	shell_exec("/bin/chown -R $APACHE_SRC_ACCOUNT:$APACHE_SRC_GROUP /var/cache/apache2");
 	
 	shell_exec("/bin/chmod 755 /var/www");
 	shell_exec("/bin/chmod 755 /var/cache/apache2");
+	shell_exec("/bin/chmod 755 /etc/apache2");
 	
 	$ApacheServerTokens=$sock->GET_INFO("ApacheServerTokens");
 	$ApacheServerSignature=$sock->GET_INFO("ApacheServerSignature");

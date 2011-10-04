@@ -182,7 +182,7 @@ $html="
 		<td valign='top' style='font-size:14px'><b>$tablescatNUM</b> {categories}</td>
 	</tr>	
 	<tr>
-		<td valign='top' style='font-size:14px'><b>$export</b> {websites_to_export}</td>
+		<td valign='top' $mouse style='font-size:14px;text-decoration:underline' OnClick=\"javascript:Loadjs('squid.categories.toexport.php')\"><b>$export</b> {websites_to_export}</td>
 	</tr>	
 	
 	<tr>

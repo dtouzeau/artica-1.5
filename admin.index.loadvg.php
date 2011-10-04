@@ -328,7 +328,11 @@ writelogs("Checking milter-greylist",__FUNCTION__,__FILE__,__LINE__);
 // --------------------------------------------------------------------------------------	
 
 	
-echo "</center>";
+echo "</center>
+<div id='notifs-part'></div>
+<script>LoadAjax('notifs-part','admin.left.php?partall=yes');</script>
+
+";
 	
 	
 function hour(){

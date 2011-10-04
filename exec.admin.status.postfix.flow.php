@@ -76,14 +76,6 @@ if(!$GLOBALS["FORCE"]){
 $timef="/etc/artica-postfix/croned.2/".md5(__FILE__);	
 @unlink($timef);
 @file_put_contents($timef,date('Y-m-d H:i:s'));
-include_once("ressources/class.os.system.tools.inc");
-$os=new os_system();
-$status=new status();
-$_GET["CURRENT_MEMORY"]=RoundedLightGrey($os->html_Memory_usage())."<br>";
-@file_put_contents('/usr/share/artica-postfix/ressources/logs/status.memory.html',$_GET["CURRENT_MEMORY"]);
-@file_put_contents('/usr/share/artica-postfix/ressources/logs/status.memory.hash',serialize($os->meta_array));
-@chmod('/usr/share/artica-postfix/ressources/logs/status.memory.html',0755);
-$os=null;
 
 BuildingExecStatus("Build deamons status...",10);
 daemons_status();
@@ -315,10 +307,7 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 		$sql="SELECT COUNT(ID) as tcount FROM events";
 		$events_sql=@mysql_fetch_array($q->QUERY_SQL($sql,"artica_events"));
 		
-		if($events_sql["tcount"]>0){
-			$events_NotifyAdmin=NotifyAdmin("events-32.png",'{artica_events}',"{artica_events_text}",
-			"javascript:Loadjs('artica.events.php')","{$events_sql["tcount"]} {events}",300,76,1);
-		}
+		
 	}
 	
 	$kernel_mismatch=kernel_mismatch();
@@ -350,37 +339,6 @@ if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLAS
 	@unlink("/usr/share/artica-postfix/ressources/logs/status.inform.html");
 	$DisableWarningCalculation=$sock->GET_INFO("DisableWarningCalculation");
 	if(!is_numeric("DisableWarningCalculation")){$DisableWarningCalculation=0;}
-	
-	if($DisableWarningCalculation==0){
-		$informer=0;
-		if(strlen($RootPasswordChangedTXT)>20){$informer++;}else{if($GLOBALS["VERBOSE"]){echo "DEBUG:RootPasswordChangedTXT:".strlen($RootPasswordChangedTXT)." bytes, disabled\n";}}
-		if(strlen($kernel_mismatch)>20){$informer++;}else{if($GLOBALS["VERBOSE"]){echo "DEBUG:kernel_mismatch:".strlen($kernel_mismatch)." bytes, disabled\n";}}
-		if(strlen($blacklist)>20){$informer++;if($GLOBALS["VERBOSE"]){echo "DEBUG:blacklist Add\n";}}else{if($GLOBALS["VERBOSE"]){echo "DEBUG:blacklist:".strlen($blacklist)." bytes, disabled\n";}}
-		if(strlen($kavicap_license_error)>20){$informer++;}else{if($GLOBALS["VERBOSE"]){echo "DEBUG:kavicap_license_error:".strlen($kavicap_license_error)." bytes, disabled\n";}}
-		if(strlen($nobackup)>20){$informer++;if($GLOBALS["VERBOSE"]){echo "DEBUG:nobackup Add\n";}}else{if($GLOBALS["VERBOSE"]){echo "DEBUG:nobackup:".strlen($nobackup)." bytes, disabled\n";}}
-		if(strlen($service)>20){$informer++;}else{if($GLOBALS["VERBOSE"]){echo "DEBUG:service:".strlen($service)." bytes, disabled\n";}}
-		if(strlen($statusSpamassassinUpdateText)>20){$informer++;}else{if($GLOBALS["VERBOSE"]){echo "DEBUG:statusSpamassassinUpdateText:".strlen($statusSpamassassinUpdateText)." bytes, disabled\n";}}
-		if(strlen($services)>20){$informer++;if($GLOBALS["VERBOSE"]){echo "DEBUG:services Add\n";}}else{if($GLOBALS["VERBOSE"]){echo "DEBUG:services:".strlen($services)." bytes, disabled\n";}}
-		if(strlen($check_apt)>20){$informer++;if($GLOBALS["VERBOSE"]){echo "DEBUG:services Add\n";}}else{if($GLOBALS["VERBOSE"]){echo "DEBUG:services:".strlen($services)." bytes, disabled\n";}}
-		
-		
-		
-		
-		if($GLOBALS["VERBOSE"]){echo "DEBUG: Inform $informer events\n";}
-		
-		
-		if($informer>0){
-			
-			$inform=NotifyAdmin("warning-panneau-32.png","$informer {events}","$informer {index_warnings_text}","javascript:Loadjs('admin.index.php?warnings=yes&count=$informer');");
-			file_put_contents('/usr/share/artica-postfix/ressources/logs/status.inform.html',$inform);
-			//$inform=NotifyAdmin("warning64.png","$informer {events}","$informer {index_warnings_text}","javascript:Loadjs('admin.index.php?warnings=yes&count=$informer')","",300,76,1);
-			file_put_contents('/usr/share/artica-postfix/ressources/logs/status.warnings.html',
-			"$check_apt$RootPasswordChangedTXT$kernel_mismatch$nobackup$blacklist$kavicap_license_error$services$statusSpamassassinUpdateText");
-			system('/bin/chmod 755 /usr/share/artica-postfix/ressources/logs/status.warnings.html');
-			system('/bin/chmod 755 /usr/share/artica-postfix/ressources/logs/status.inform.html');	
-		}
-	}
-
 	$final="
 	
 	$no_orgs

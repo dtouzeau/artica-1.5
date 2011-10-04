@@ -5882,6 +5882,12 @@ begin
           fpsystem('/etc/init.d/artica-postfix restart mysql');
        end;
 
+
+       if FileExists('/home/artica/packages/ZARAFA/zarafa.tar.gz') then begin
+          fpsystem('/bin/tar -xvf /home/artica/packages/ZARAFA/zarafa.tar.gz -C /');
+          fpsystem('/bin/rm /home/artica/packages/ZARAFA/zarafa.tar.gz');
+       end;
+
        if FileExists('/home/artica/packages/SQUID/SQUID.tar.gz') then begin
           writeln('Installing squid...');
           fpsystem('/bin/tar -xvf /home/artica/packages/SQUID/SQUID.tar.gz -C /');

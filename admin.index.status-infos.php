@@ -30,6 +30,8 @@ $html="<table style='width:100%' class=form><tbody>";
 while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
 	if($ligne["icon"]=="danger64.png"){$ligne["icon"]="danger32.png";}
 	if($ligne["icon"]=="warning64.png"){$ligne["icon"]="warning-panneau-32.png";}
+	if($ligne["icon"]=="pluswarning64.png"){$ligne["icon"]="warning-panneau-32.png";}
+	if($ligne["icon"]=="danger32.png"){$ligne["icon"]="warning-panneau-32.png";}
 	
 	$ligne["subject"]=$tpl->_ENGINE_parse_body($ligne["subject"]);
 	$strlen=strlen($ligne["subject"]);

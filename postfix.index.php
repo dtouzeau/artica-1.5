@@ -112,12 +112,12 @@ if($users->KASPERSKY_SMTP_APPLIANCE){
 	$title=$tpl->_ENGINE_parse_body('Artica For Kaspersky Appliance');
 }
 $addons=js_addons();
-
+if(isset($_GET["font-size"])){$fontsize="&font-size={$_GET["font-size"]}";}
 $html="
 
 function PostfixIndexLoadpage(){
 		AnimateDiv('BodyContent');
-		$('#BodyContent').load('$page?popup-index=yes');
+		$('#BodyContent').load('$page?popup-index=yes$fontsize');
 	}
 	
  function RefreshIndexPostfixAjax(){
@@ -335,6 +335,8 @@ function main_tabs(){
 	if(strlen($filters_settings)>25){$filters_settings=texttooltip(substr($filters_settings,0,22).'...',$filters_settings,null,null,1);}
 	if($hostname==null){$hostname="master";}
 	$page=CurrentPageName();
+	$height="850px";
+	if(isset($_GET["font-size"])){$fontsize="font-size:{$_GET["font-size"]}px;";$height="100%";}
 	$array["status"]='{status}';
 	$array["mailbox"]='{mailbox_settings}';
 	$array["transport_settings"]='{transport_settings}';
@@ -363,7 +365,7 @@ function main_tabs(){
 	
 	
 	return "
-	<div id=main_config_postfix style='width:100%;height:850px;overflow:auto'>
+	<div id=main_config_postfix style='width:100%;height:$height;overflow:auto;$fontsize'>
 		<ul>". implode("\n",$html)."</ul>
 	</div>
 		<script>

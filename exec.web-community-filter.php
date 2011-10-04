@@ -143,13 +143,14 @@ if(count($array)==0){WriteMyLogs("Nothing to export",__FUNCTION__,__FILE__,__LIN
 	if(!$curl->get()){
 		writelogs("Failed exporting ".count($array)." categorized websites to Artica cloud repository servers",__FUNCTION__,__FILE__,__LINE__);
 		$unix->send_email_events("Failed exporting ".count($array)." categorized websites to Artica cloud repository servers",null,"proxy");
-		WriteMyLogs("Exporting failed". count($array)." websites",__FUNCTION__,__FILE__,__LINE__);
+		writelogs_squid("Failed exporting ".count($array)." categorized websites to Artica cloud repository servers \"$curl->error\"",__FUNCTION__,__FILE__,__LINE__,"export");
 		return null;
 	}
 	
 	if(preg_match("#<ANSWER>OK</ANSWER>#is",$curl->data)){
 		WriteMyLogs("Exporting success ". count($array)." websites",__FUNCTION__,__FILE__,__LINE__);
-		$unix->send_email_events("Success exporting ".count($array)." categorized websites to Artica cloud repository servers",null,"proxy");
+		writelogs_squid("Success exporting ".count($array)." categorized websites to Artica cloud repository servers",__FUNCTION__,__FILE__,__LINE__,"export");
+		
 		
 		writelogs("Deleting websites...",__FUNCTION__,__FILE__,__LINE__);
 		while (list ($md5, $datas) = each ($array) ){
@@ -164,7 +165,7 @@ if(count($array)==0){WriteMyLogs("Nothing to export",__FUNCTION__,__FILE__,__LIN
 			$q->QUERY_SQL("OPTIMIZE TABLE categorize","artica_backup");
 		}
 	}else{
-		writelogs("Failed exporting ".count($array)." categorized websites to Artica cloud repository servers \"$curl->data\"",__FUNCTION__,__FILE__,__LINE__);
+		writelogs_squid("Failed exporting ".count($array)." categorized websites to Artica cloud repository servers \"$curl->data\"",__FUNCTION__,__FILE__,__LINE__,"export");
 	}
 	
 	

@@ -487,9 +487,7 @@ function mysql_tabs(){
 		unset($array["smtp_packages"]);
 	}
 	
-	if($users->ZARAFA_APPLIANCE){
-		unset($array["web_packages"]);
-	}
+
 	if($ArticaMetaDisableSetupCenter<>1){
 		if(!$KASPERSKY_APPLIANCE){
 			$array["vdi"]="{virtual_desktop_infr}";
@@ -506,9 +504,13 @@ function mysql_tabs(){
 		unset($array["vdi"]);
 	}
 	
-	if($FreeWebLeftMenu==0){
+	if($users->ZARAFA_APPLIANCE){
 		unset($array["web_packages"]);
-	}
+		unset($array["vdi"]);
+		unset($array["service_family"]);
+	}	
+	
+	if($FreeWebLeftMenu==0){unset($array["web_packages"]);}
 	
 if(isset($_GET["QuickLinksTop"])){$margin="margin-top:10px";$fontsize="font-size:14px";}
 	

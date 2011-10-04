@@ -276,6 +276,7 @@ For Windows 2008 server you need to install [b]Hotfix 951191[/b].
 <APP_Z_PUSH>Z-Push</APP_Z_PUSH>
 <APP_Z_PUSH_TEXT>The Z-Push software allows users with PDA's and Smartphones to synchronize their email,
 contacts, calendar items and tasks directly with a Zarafa server over UMTS, GPRS, WiFi or GSM data connections</APP_Z_PUSH_TEXT>
+<April>April</April>
 <architecture>Architecture</architecture>
 <ArticaInCgroups>Artica processes in Processes groups</ArticaInCgroups>
 <ArticaInCgroups_explain>Execute artica scripts and processes in a defined process group</ArticaInCgroups_explain>
@@ -328,6 +329,7 @@ For example, if you using Artica has an SMTP outgoing engine or to perform mass-
 <at_least_one_lower_case_letter>at least one lower case letter</at_least_one_lower_case_letter>
 <at_least_one_special_letter>at least one special letter</at_least_one_special_letter>
 <at_least_one_upper_case_letter>at least one upper case letter</at_least_one_upper_case_letter>
+<August>August</August>
 <authentication_banner>Authentication banner</authentication_banner>
 <authoritative>authoritative</authoritative>
 <authoritativeDHCP_explain>
@@ -365,6 +367,7 @@ The directory will be stored on /automount.
 <available_modules>Available modules</available_modules>
 <backup_server>Backup server</backup_server>
 <ban>Ban</ban>
+<banned>Banned</banned>
 <banned_domains>Banned domains</banned_domains>
 <banned_host>Banned Host</banned_host>
 <bann_smtp_servers>Deny SMTP servers</bann_smtp_servers>
@@ -697,7 +700,9 @@ It will not be uninstalled and you will be able to manage PowerDNS yourself.</Di
 <DisableWarningCalculation>Disable Warnings calculation icon</DisableWarningCalculation>
 <disable_greylisting>Disable the GreyListing</disable_greylisting>
 <disable_help_tooltips>Disable Help tooltips</disable_help_tooltips>
+<disable_imap>Disable IMAP</disable_imap>
 <disable_openvpn_connection>Disable the VPN connection</disable_openvpn_connection>
+<disable_pop3>Disable POP3</disable_pop3>
 <disable_SSL_port>Disable SSL port</disable_SSL_port>
 <disable_tooltips>Disable tooltips</disable_tooltips>
 <disable_vrfy_command>Disable VRFY command</disable_vrfy_command>
@@ -906,6 +911,7 @@ Once the amount of request body read from the client exceeds x bytes, the remain
 <FcgidMaxRequestLen_explain>If the size of the request body exceeds this amount, the request will fail with 500 Server Error</FcgidMaxRequestLen_explain>
 <FcgidOutputBufferSize>Output buffer size</FcgidOutputBufferSize>
 <FcgidOutputBufferSize_explain>This is the maximum amount of response data the module will read from the FastCGI application before flushing the data to the client</FcgidOutputBufferSize_explain>
+<February>February</February>
 <FEDORA_TEMPLATE>Fedora template</FEDORA_TEMPLATE>
 <fetchmail_execute_debug_warn>This operation will execute now the retreival process in debug mode for this account.[br]
 The process will be turned in debug mode.
@@ -968,9 +974,11 @@ A typical usage of a forward proxy is to provide Internet access to internal cli
 thar require a system user (example: FastCGI module).</FREEWEB_WRONG_USER_SYSTEM_TEXT>
 <free_catgorized_explain>Put here a text whith some urls inserted in.[br]urls must be formatted like http://domain.tld.com/something or http://domain.tld.com[br]
 The engine will try to find all urls added in your text, sou you did not need to format urls just paste a text that have some urls inserted.</free_catgorized_explain>
+<Friday>Friday</Friday>
 <from_date>From date</from_date>
 <frontend_disables_options_explain>This section allow you to drive the frontend page builder</frontend_disables_options_explain>
 <ftp_directory>FTP directory</ftp_directory>
+<function>function</function>
 <fw_multiples_ports_explain>This is the destination port(s).[br]Set 0 to block all ports, you can define a single port: 22 or multiples port by separate them with a comma :22,25,80,443</fw_multiples_ports_explain>
 <fw_sourceaddr_explain>This is the source Ip address, should be a single IP address 163.248.0.125 or a subnet 163.248.0.0/17</fw_sourceaddr_explain>
 <generate_parameters>Generate parameters</generate_parameters>
@@ -984,6 +992,7 @@ The engine will try to find all urls added in your text, sou you did not need to
 <give_servername_or_ipaddr>Give the servername or the ip address</give_servername_or_ipaddr>
 <global>global</global>
 <globals_values>Global Values</globals_values>
+<goto>Go to</goto>
 <grace_period>Grace period</grace_period>
 <GRAPH_POSTFIX_REJECTED_CONNEXIONS>Rejected SMTP connexions</GRAPH_POSTFIX_REJECTED_CONNEXIONS>
 <GREENSQL_block_level>If query risk is bigger then specified value, query will be blocked</GREENSQL_block_level>
@@ -1005,6 +1014,7 @@ in low warning level and then to acknowledge all valid queries and then to lower
 <greyhole_dirs_explain>Number of copies of each file you want Greyhole to keep, set 0 to disable the feature on this directory.[br]
 be carrefull 2 copies = 1 duplicate</greyhole_dirs_explain>
 <greylisted>greylisted</greylisted>
+<groupid>Group ID</groupid>
 <group_description>Group description</group_description>
 <Hardware_ECC_Recovered>Hardware ECC Recovered</Hardware_ECC_Recovered>
 <Hardware_ECC_Recovered_text>Frequency of the on the fly errors (Fujitsu: ECC On The Fly Count)</Hardware_ECC_Recovered_text>
@@ -1081,6 +1091,7 @@ You can finish the setup or access to the Web Administration interface by clicki
 <ID_SERIAL_SHORT>Serial</ID_SERIAL_SHORT>
 <ID_TYPE>Disk type</ID_TYPE>
 <ID_VENDOR>Vendor</ID_VENDOR>
+<ihavereaditremove>I have read it, remove this information from the panel</ihavereaditremove>
 <imaps_port>Listen IMAP SSL port</imaps_port>
 <imap_port>Listen IMAP port</imap_port>
 <ImmediateData>Immediate Data</ImmediateData>
@@ -1145,7 +1156,9 @@ This file will be the shared iSCSI disk.[br]In disk mode, you will have to choos
 <i_accept>I accept</i_accept>
 <jGrowlNotifsDisabled>Disable tooltips notifications</jGrowlNotifsDisabled>
 <jkMount_explain>Add the JkMount directive for *.do,*.jsp,*.jspx,*.cfm,*.cfc,*.cfchart,*.cfres files</jkMount_explain>
+<July>July</July>
 <jumpto>Jump to</jumpto>
+<June>June</June>
 <kaspersky_antivirus_connector>Kaspersky ICAP connector</kaspersky_antivirus_connector>
 <kaspersky_antivirus_connector_text>Connect your Proxy to a remote Kaspersky Anti-Virus for Proxy Server</kaspersky_antivirus_connector_text>
 <kav4proxycat_month_stats_explain>Here it is the most visited websites of the current month</kav4proxycat_month_stats_explain>
@@ -1293,6 +1306,7 @@ Organizations can only create subdomains of these domains if the "Use only offic
 <manage_your_vpn_client_connection_text>Manage your VPN client connection to the remote OpenVPN server</manage_your_vpn_client_connection_text>
 <mapi_ip>Listen IP (MAPI)</mapi_ip>
 <mapi_port>Listen MAPI port</mapi_port>
+<March>March</March>
 <mask_lock_options>Lock options and use only defaults values</mask_lock_options>
 <matches>matches</matches>
 <matchesnot>did not matches</matchesnot>
@@ -1315,6 +1329,7 @@ Organizations can only create subdomains of these domains if the "Use only offic
 <max_score_white_text>Define here the Content filter score that you want to subtract to the globale score.
 [br]If you set 0, the sender will be whitelisted and pass trough the content filter</max_score_white_text>
 <max_size>MAX size</max_size>
+<May>May</May>
 <members_connected>Connected members</members_connected>
 <members_connected_samba_text>members currently connected to your file sharing service.[br]Click here to display details</members_connected_samba_text>
 <member_type>Member type</member_type>
@@ -1376,6 +1391,7 @@ It does this by rewriting the resources using filters that implement web perform
 Webmasters and web developers can use thsi feature to improve the performance of their web pages when serving content.
 </mod_pagespeed_about>
 <mod_qos_explain>QOS gives some fine-grained opportunities to scale the number of used connections and to defend an attack according to bandwidth limits</mod_qos_explain>
+<Monday>Monday</Monday>
 <MONITOR>Monitor</MONITOR>
 <mounts_list>Mounts list</mounts_list>
 <move_all_process_to_default>Move all process to default</move_all_process_to_default>
@@ -1417,6 +1433,7 @@ Here it is the error that artica encounter during a Mysql connection: [br]
 <need_reboot>You may need to restart your computer before changes take effect</need_reboot>
 <network_legend>network</network_legend>
 <network_nic>Network</network_nic>
+<network_services>Network services</network_services>
 <network_softwares>Network Softwares</network_softwares>
 <next-server>Next server</next-server>
 <nics>Network Interface cards</nics>
@@ -1461,6 +1478,8 @@ Use relayed domain instead until there is no mailbox server installed.[br]
 <NSCD_DISABLE_EXPLAIN>Name Service cache Daemon is used to cache internal connections such has LDAP, DNS...It use a memory cache.[br][b]Disable it will free from 7 to 10Mb memory[/b]</NSCD_DISABLE_EXPLAIN>
 <nsrecord>Name server record</nsrecord>
 <ntp_server>NTP server</ntp_server>
+<number_of_users>Number of users</number_of_users>
+<October>October</October>
 <Offline_Uncorrectable>Off-line Scan Uncorrectable Count</Offline_Uncorrectable>
 <Offline_Uncorrectable_text>Quantity of uncorrected errors</Offline_Uncorrectable_text>
 <OnlyBranch>Only branch</OnlyBranch>
@@ -2121,6 +2140,7 @@ It should match your MTA's limit for a maximum attachment size</srv_clamav.Strea
 <Start_Stop_Count_text>Number of start/stop cycles of spindle</Start_Stop_Count_text>
 <statistics_appliance>Statistics Appliance</statistics_appliance>
 <statistics_appliance_text>Transform this server on an Appliance that will calculate and display services statistics such has Proxy or SMTP</statistics_appliance_text>
+<statistics_tasks_events_explain>This page display system events about scripts that parse, analyze,export statistics and website categories</statistics_tasks_events_explain>
 <storagebakcup_softwares>Storage & Backup softwares</storagebakcup_softwares>
 <storage_directory>Storage directory</storage_directory>
 <storage_pool>Storage Pool</storage_pool>
@@ -2129,6 +2149,7 @@ It should match your MTA's limit for a maximum attachment size</srv_clamav.Strea
 <StrictModes_text>specifies whether ssh should check user's permissions in their home directory and rhosts files before accepting login. This option must always be set to yes because sometimes users may accidentally leave their directory or files world-writable.</StrictModes_text>
 <subdomain>sub-domain</subdomain>
 <subnet-mask>subnet mask</subnet-mask>
+<Sunday>Sunday</Sunday>
 <suspend>Suspend</suspend>
 <swappiness>% of Swap utilization</swappiness>
 <swappiness_text>sets the tendency of the kernel to swap out process memory used by tasks in this cgroup instead 
@@ -2174,6 +2195,7 @@ BOOTP clients are unlikely to support this option.[br]Some DHCP clients will sup
 <Throughput_Performance>Throughput Performance</Throughput_Performance>
 <Throughput_Performance_text>Overall (general) throughput performance of a hard disk drive.[br]
 If the value of this attribute is decreasing there is a high probability that there is a problem with the disk</Throughput_Performance_text>
+<Thursday>Thursday</Thursday>
 <TimeSynchronization>Time synchronization</TimeSynchronization>
 <time_in_seconds>Number of seconds</time_in_seconds>
 <TIPS_PUREFTPD_TITLE>Provide FTP access</TIPS_PUREFTPD_TITLE>
@@ -2192,6 +2214,7 @@ If the value of this attribute is decreasing there is a high probability that th
 <traffic_second>Traffic/second</traffic_second>
 <traffic_statistics>Traffic Statistics</traffic_statistics>
 <treshold>Treshold</treshold>
+<Tuesday>Tuesday</Tuesday>
 <UDMA_CRC_Error_Count>UltraDMA CRC Error Rate</UDMA_CRC_Error_Count>
 <UDMA_CRC_Error_Count_text>Total quantity of errors CRC during UltraDMA mode</UDMA_CRC_Error_Count_text>
 <ufdbgdb_explain>The filter use local databases in order to check websites.[br]You have 2 databases:[br]
@@ -2251,6 +2274,7 @@ In this case, you can react if some of members encounter troubles in messaging r
 <virtual_server>virtual server</virtual_server>
 <virtual_servers>virtual servers</virtual_servers>
 <virtual_smb_ou_explain>If an organization is affected, organization's administrators will be able to manage this virtual server</virtual_smb_ou_explain>
+<visited>visited</visited>
 <vpn_server_wakeupip_client_explain>Define here an ip adress in your server network that should be available trough the VPN connection.[br]
 Remote sites will try to ping this IP address in order to wake up the VPN connexion.[br]
 This is only used only when define openvpn remote sites between Artica openvpn nodes.[br]
@@ -2292,15 +2316,18 @@ Do you want to perform this operation ?[br]task will be performed in background 
 <wbl_resolv_mx>Resolv MX</wbl_resolv_mx>
 <wbl_resolv_mx_explain>If checked when you add an email or a domain, Artica will try to resolv domain MX servers and add them to the IP Whitelist</wbl_resolv_mx_explain>
 <webadministration_console>Web administration console</webadministration_console>
+<webinterface>Web Interface</webinterface>
 <webproxy_statistics_appliance>Internet Proxy statistics Appliance</webproxy_statistics_appliance>
 <webproxy_statistics_appliance_text>If you enable this feature, this server will be able to receive events from an another Artica proxy or a Squid 3.2 proxy.[br]
 This server will execute specifics calculation tasks in order to serve Internet usage charts and graphs statistics</webproxy_statistics_appliance_text>
 <webservers_status>Webservers status</webservers_status>
 <websites_number>Websites number</websites_number>
 <websites_to_export>Websites to export</websites_to_export>
+<websites_to_export_explain>This page display latest categorized websites that will be exported to the Artica datacenters in order to add your categorize tasks to the public repository server.</websites_to_export_explain>
 <web_console>Web Console</web_console>
 <WEB_FILTERING>Web filtering</WEB_FILTERING>
 <web_user>Web username</web_user>
+<Wednesday>Wednesday</Wednesday>
 <weight>Weight</weight>
 <WELCOME_ARTICA_STATS_SQUID>Welcome on the Web proxy dedicated Area</WELCOME_ARTICA_STATS_SQUID>
 <welcome_organization_register>Welcome to the Artica's organization register form.[br]

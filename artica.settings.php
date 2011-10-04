@@ -233,24 +233,31 @@ function js_index(){
 	<table style='width:100%'>
 	<tr>
 	<td valign='top'>
-		<img src='img/150-bg_user.png' ><br>
-		$perfs
-		$ldap
+		<div style='font-size:18px;margin:10px;'>{artica_settings}</div>
+		<img src='img/bg_user.jpg' style='margin:30px'><br>
 	</td>
 	<td valign='top'>
 		<table style='width:99.5%'>
 			<tr>
 				<td valign='top'>$web_interface_settings</td>
-				<td valign='top'>$SMTP_NOTIFICATIONS_PAGE</td>
+				<td valign='top'>$perfs</td>
+				
 			</tr>
 			<tr>
+				<td valign='top'>$SMTP_NOTIFICATIONS_PAGE</td>
 				<td valign='top'>$proxy</td>
-				<td valign='top'>$superuser</td>
+				
 			</tr>
+			<tr>
+				<td valign='top'>$superuser</td>
+				<td valign='top'>$ldap</td>
+				
+			</tr>	
 			<tr>
 				<td valign='top'>$logs</td>
 				<td valign='top'>&nbsp;</td>
-			</tr>							
+				
+			</tr>										
 		</table>
 	</td>
 	</tr>

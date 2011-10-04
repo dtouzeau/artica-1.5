@@ -387,7 +387,7 @@ if($users->KASPERSKY_SMTP_APPLIANCE){
 if($users->AsSystemAdministrator){$array["t:cnx"]="{connections}";}
 $array=$array+main_admin_tabs_perso_tabs();
 $count=count($array);
-if($count<7){$array["add-tab"]="{add}&nbsp;&raquo;";}
+//if($count<7){$array["add-tab"]="{add}&nbsp;&raquo;";}
 $page=CurrentPageName();
 $tpl=new templates();
 $width="758px";
@@ -402,7 +402,7 @@ if(isset($_GET["newfrontend"])){$newfrontend="&newfrontend=yes";}
 			if(strlen($ligne)>15){$ligne=substr($ligne,0,12)."...";}
 			
 			if($re[1]=="cnx"){
-				$html[]= "<li ><a href=\"admin.cnx.php$newfrontend\"><span $style>$ligne</span></a></li>\n";
+				$html[]= "<li ><a href=\"admin.cnx.php?t=0$newfrontend\"><span $style>$ligne</span></a></li>\n";
 				continue;
 			}
 			
@@ -551,14 +551,20 @@ function status_right(){
 	}
 	
 	$script="
-	<div id='mem_status_computer' style='text-align:center'>".$tpl->_ENGINE_parse_body(@file_get_contents("ressources/logs/status.memory.html"))."</div>
+	<div id='mem_status_computer' style='text-align:center;width:100%;margin:10px'></div>
 	\n
 	<div id='right-status-infos'></div>
 	<script>
 		LoadAjax('left_status','$page?status=left$ajaxadd');
 		$infos
+		LoadAjax('mem_status_computer','$page?memcomputer=yes$ajaxadd');
 	</script>\n";
 	
+	if($users->ZARAFA_APPLIANCE){
+		$status=new status();
+		echo $tpl->_ENGINE_parse_body($status->ZARAFA()).$script;
+		return;
+	}
 	
 	
 	if($users->POSTFIX_INSTALLED){
@@ -575,24 +581,24 @@ function status_right(){
 		if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
 		if($SQUIDEnable==0){
 			if($users->KASPERSKY_WEB_APPLIANCE){
-				echo $memory.status_kav4proxy().$script;
+				echo status_kav4proxy().$script;
 				return null;
 			}
 			
 		}
 		
-		if($users->KASPERSKY_WEB_APPLIANCE){echo $memory.status_squid_kav().$script;return;}
+		if($users->KASPERSKY_WEB_APPLIANCE){echo status_squid_kav().$script;return;}
 		
 		if($GLOBALS["VERBOSE"]){echo "$page LINE:".__LINE__."\n";}
 		echo $memory.status_squid().$script;
 		return null;
 	}else{
-		if($users->KASPERSKY_WEB_APPLIANCE){echo $memory.status_kav4proxy().$script;return;}
+		if($users->KASPERSKY_WEB_APPLIANCE){echo status_kav4proxy().$script;return;}
 		
 		
 	}
 	
-	if($users->SAMBA_INSTALLED){echo $memory.StatusSamba().$script;return null;}
+	if($users->SAMBA_INSTALLED){echo StatusSamba().$script;return null;}
 	echo "$script";
 	
 	}
@@ -643,16 +649,15 @@ function status_squid_kav(){
 
 
 function status_postfix(){
+	$users=new usersMenus();
+	
 	$page=CurrentPageName();
 	$tpl=new templates();
 	if($_GET["counter"]==null){$_GET["counter"]=1;}
 	if($_GET["counter"]==1){$newcounter=0;}else{$newcounter=1;}
 	$counter=Field_hidden('counter',$newcounter);
 	$cachefile="/usr/share/artica-postfix/ressources/logs/status.right.1.html";
-	$cachemem="/usr/share/artica-postfix/ressources/logs/status.memory.html";
-	$memory="<div id='mem_status_computer' style='text-align:center'>". @file_get_contents("$cachemem")."</div>";
-	
-	
+
 	
 	if(!is_file($cachefile)){
 		writelogs("$cachefile no such file",__FUNCTION__,__FILE__,__LINE__);
@@ -687,7 +692,7 @@ function status_postfix(){
 	}
 	
 	
-	return $counter.$tpl->_ENGINE_parse_body($memory.$status)
+	return $counter.$tpl->_ENGINE_parse_body($status)
 	."<script>
 		LoadAjax('mem_status_computer','$page?memcomputer=yes');
 	</script>";

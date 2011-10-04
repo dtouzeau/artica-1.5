@@ -348,8 +348,21 @@ function main_network(){
 	}	
 	
 
+	if($users->autofs_installed){
+		$js="Loadjs('nfs-client.php')";
+		$img="database-network-64.png";
+		$nfs_client=Paragraphe($img,"{NFS_CLIENT}","{NFS_CLIENT_TEXT}","javascript:$js");
+	}	
+		
+
+		
 	
-	
+	if($users->NFS_SERVER_INSTALLED){
+		$js="Loadjs('SambaBrowse.php')";
+		$img="nfs-64.png";
+		$nfs_server=Paragraphe($img,"{nfs_share}","{nfs_share_text}","javascript:$js");
+	}	
+
 	if(!$user->POWER_DNS_INSTALLED){$pdns=Paragraphe('dns-64-grey.png','{APP_PDNS}','{APP_PDNS_TEXT}');}
 	
 
@@ -403,7 +416,9 @@ function main_network(){
 	$tr[]=$crossroads;
 	$tr[]=$fw;
 	$tr[]=$EmergingThreats;
-	$tr[]=$IpBlocksA;	
+	$tr[]=$IpBlocksA;
+	$tr[]=$nfs_client;
+	$tr[]=$nfs_server;	
 	
 	
 	if(isset($_GET["newinterface"])){
@@ -411,7 +426,6 @@ function main_network(){
 		$static=Paragraphe('folder-64-dns-grey.png','{nic_static_dns}','{nic_static_dns_text}','');
 		$bind9=ICON_BIND9();
 		$etc_hosts=Buildicon64("DEF_ICO_ETC_HOSTS");
-		$pdns=Buildicon64('DEF_ICO_PDNS');
 		$dyndns=Paragraphe('folder-64-dyndns.png','{nic_dynamic_dns}','{nic_dynamic_dns_text}','system.nic.dynamicdns.php');
 		$rbl_check=Paragraphe('check-64.png','{rbl_check_artica}','{rbl_check_artica_text}',"javascript:Loadjs('system.rbl.check.php')");
 		$dnsmasq=Paragraphe('dns-64.png','{APP_DNSMASQ}','{APP_DNSMASQ_TEXT}',"javascript:Loadjs('dnsmasq.index.php')");
@@ -424,7 +438,6 @@ function main_network(){
 		if($user->KASPERSKY_SMTP_APPLIANCE){$dyndns=null;}
 		if($user->KASPERSKY_WEB_APPLIANCE){$bind9=null;$pdns=null;$dyndns=null;}
 	
-		$tr[]=$pdns;
 		$tr[]=$dnsmasq;
 		$tr[]=$bind9;
 		$tr[]=$static;
@@ -463,7 +476,7 @@ function main_network(){
 
 function main_services(){
 	$sock=new sockets();
-	$users=new usersMenus();
+	if(!isset($GLOBALS["CLASS_USERS"])){$GLOBALS["CLASS_USERS"]=new usersMenus();$users=$GLOBALS["CLASS_USERS"];}else{$users=$GLOBALS["CLASS_USERS"];}
 	$users->LoadModulesEnabled();
 	if($users->DOTCLEAR_INSTALLED){
 		$dotclear=Paragraphe('64-dotclear.png','{APP_DOTCLEAR}','{APP_DOTCLEAR_TEXT}','dotclear.index.php','APP_DOTCLEAR_TEXT');
@@ -548,7 +561,10 @@ function main_services(){
 		
 	}
 	
-		
+	
+	
+
+	
 	
 	
 	$metaconsole=Paragraphe("artica-meta-64.png","{meta-console}","{meta-console-text}","javascript:Loadjs('artica.meta.php')",null,210,null,0,false);
@@ -596,6 +612,8 @@ function main_services(){
 	$tr[]=$dropbox;
 	$tr[]=$LXC;
 	$tr[]=$APP_SABNZBDPLUS;
+	$tr[]=$nfs_client;
+	$tr[]=$nfs_server;
 
 
 	

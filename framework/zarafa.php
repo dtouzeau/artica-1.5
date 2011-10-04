@@ -17,6 +17,7 @@ if(isset($_GET["zarafa-orphan-link"])){orphan_link();exit();}
 if(isset($_GET["zarafa-orphan-scan"])){orphan_scan();exit();}
 if(isset($_GET["getversion"])){getversion();exit();}
 if(isset($_GET["restart"])){restart();exit();}
+if(isset($_GET["status"])){status();exit();}
 
 
 
@@ -125,6 +126,15 @@ function csv_export(){
 	$cmd=trim("$nohup $php5 /usr/share/artica-postfix/exec.zarafa.contacts-zarafa.php --export-zarafa {$_GET["uid"]} >/dev/null 2>&1 &");
 	writelogs_framework($cmd,__FUNCTION__,__FILE__,__LINE__);
 	shell_exec($cmd);		
+}
+
+function status(){
+	$unix=new unix();
+	$php5=$unix->LOCATE_PHP5_BIN();	
+	$cmd="$php5 /usr/share/artica-postfix/exec.status.php --zarafa --nowachdog";
+	exec($cmd,$results);
+	echo "<articadatascgi>". base64_encode(@implode("\n",$results))."</articadatascgi>";
+	
 }
 
 function restart(){

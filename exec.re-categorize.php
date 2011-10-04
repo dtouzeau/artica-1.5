@@ -47,12 +47,12 @@ if($GLOBALS["VERBOSE"]){ini_set('display_errors', 1);	ini_set('html_errors',0);i
 			while (list ($num, $table) = each ($table_hours) ){
 				if($GLOBALS["VERBOSE"]){echo "Update $table\n";}
 				$q->QUERY_SQL("UPDATE $table SET category='$categories' WHERE sitename='$website'");
-				if(!$q->ok){writelogs($q->mysql_error,__FUNCTION__,__FILE__,__LINE__);}
+				if(!$q->ok){writelogs_squid($q->mysql_error,__FUNCTION__,__FILE__,__LINE__,"categorize");}
 			}
 			while (list ($num, $table) = each ($table_days) ){
 				if($GLOBALS["VERBOSE"]){echo "Update $table\n";}
 				$q->QUERY_SQL("UPDATE $table SET category='$categories' WHERE sitename='$website'");
-				if(!$q->ok){writelogs($q->mysql_error,__FUNCTION__,__FILE__,__LINE__);}
+				if(!$q->ok){writelogs_squid($q->mysql_error,__FUNCTION__,__FILE__,__LINE__,"categorize");}
 			}			
 			
 			$took=$unix->distanceOfTimeInWords($t,time());

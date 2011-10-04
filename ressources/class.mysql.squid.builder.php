@@ -676,12 +676,14 @@ class mysql_squid_builder{
 	
 }
 function writelogs_squid($text,$function,$file,$line=0,$category=null){
+		if($category==null){$category="Unknown";}
+		if($function==null){$function="Unknown";}
 		writelogs($text,$function,$file,$line);
 		$date=date('Y-m-d H:i:s');
 		$array["date"]=$date;
 		$pid=getmypid();
 		$array["category"]=$category;
-		$array["text"]=$text;
+		$array["text"]=$text."\nline:$line\nscript:".basename($file);
 		$array["function"]=$function;
 		$array["pid"]=$pid;
 		$serial=serialize($array);

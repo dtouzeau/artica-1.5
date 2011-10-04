@@ -106,26 +106,7 @@ function section_dhcp(){echo "<script>Loadjs('index.gateway.php?index_dhcp=yes&i
 
 
 
-function quicklinks_paragraphe($img,$title,$text,$link){
-	
-	$html="
-	<table style='width:205px;margin-top:2px' OnClick=\"javascript:$link\">
-	<tbody>
-	<tr>
-		<td width=1% valign='top'>". imgtootltip($img,"{{$text}}",$link)."</td>
-		<td style='color:white;padding-left:2px;' valign='top' width=99%>
-		<div style='font-size:14px;font-weight:bold;letter-spacing:-1px;padding-bottom:3px;border-bottom:1px solid white;margin-bottom:3px'  
-		OnClick=\"javascript:$link\">{{$title}}
-		</div>
-	</tr>
-	</tbody>
-	</table>
-	";
-	return $html;
-	
-	
-	
-}
+
 
 
 tabs();

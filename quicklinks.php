@@ -27,22 +27,28 @@ if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
 $samba=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("folder-granted-48.png", "fileshare","fileshare_text", "QuickLinksSamba()"));
 $squid=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("squid-reverse-48.png", "Proxy","proxyquicktext", "SquidMainQuickLinks()"));
 $network=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("network-connection2-48.png", "network",null, "QuickLinksNetwork()"));
+$postfix=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("mass-mailing-postfix-48.png", "APP_POSTFIX",null, "QuickLinkPostfix()"));
+
+
 
 if(!$users->SAMBA_INSTALLED){$samba=null;}
 if(!$users->SQUID_INSTALLED){$squid=null;}
+if(!$users->POSTFIX_INSTALLED){$postfix=null;}
 if($users->KASPERSKY_WEB_APPLIANCE){$samba=null;}
 if(!$users->AsSquidAdministrator){$squid=null;}
 if(!$users->AsSystemAdministrator){$network=null;}
+if(!$users->AsPostfixAdministrator){$postfix=null;}
+if($users->ZARAFA_APPLIANCE){$postfix=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("zarafa-logo-48.png", "APP_ZARAFA",null, "QuickLinkPostfix()"));}
 
 
 $tr[]=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("server-48.png", "manage_your_server","system_information_text", "QuickLinkSystems('section_start')"));
 $tr[]=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("48-computer.png", "system_information","system_information_text", "QuickLinkSystems('section_computers_infos')"));
+$tr[]=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("48-bouclier.png", "security","section_security_text", "QuickLinkSystems('section_security')"));
 $tr[]=$network;
 $tr[]=$samba;
 $tr[]=$squid;
+$tr[]=$postfix;
 
-$tr[]=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("48-bouclier.png", "security","section_security_text", "QuickLinkSystems('section_security')"));
-$tr[]=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("48-apps.png", "softwares","softwares_mangement_text", "QuickLinkSystems('section_softwares')"));
 
 
 $count=1;
@@ -88,6 +94,10 @@ while (list ($key, $line) = each ($tr) ){
 		
 		}
 		
+		function QuickLinkPostfix(){
+			Loadjs('quicklinks.postfix.php?js=yes');		
+		}
+		
 		function QuickLinksNetwork(){
 			LoadAjax('BodyContent','quicklinks.network.php?newinterface=yes');			
 		}
@@ -99,6 +109,7 @@ while (list ($key, $line) = each ($tr) ){
 		
 		function QuickLinkMemory(){
 			var memorized=Get_Cookie('QuickLinkCacheIndex');
+			if(memorized=='section_postfix'){memorized='section_start';}
 			if(!memorized){
 				QuickLinkSystems('section_start');
 				return;
@@ -127,26 +138,8 @@ $tpl=new templates();
 echo $tpl->_ENGINE_parse_body($html);
 
 
-function quicklinks_paragraphe($img,$title,$text,$link){
-	
-	$html="
-	<table style='width:205px;margin-top:2px' OnClick=\"javascript:$link\">
-	<tbody>
-	<tr>
-		<td width=1% valign='top'>". imgtootltip($img,"{{$text}}",$link)."</td>
-		<td style='color:white;padding-left:2px;' valign='top' width=99%>
-		<div style='font-size:14px;font-weight:bold;letter-spacing:-1px;padding-bottom:3px;border-bottom:1px solid white;margin-bottom:3px'  
-		OnClick=\"javascript:$link\">{{$title}}
-		</div>
-	</tr>
-	</tbody>
-	</table>
-	";
-	return $html;
-	
-	
-	
-}
+
+
 function section_start(){
 	
 	$html="
@@ -258,13 +251,12 @@ $html="
 function section_computers_infos(){
 	$tr[]=sysinfos();
 	$tr[]=icon_system();
-	$tr[]=nic_settings();
 	$tr[]=icon_memory();
 	$tr[]=icon_harddrive();
 	$tr[]=icon_adduser();
 	$tr[]=scancomputers();
-	$tr[]=sharenfs();
-	$tr[]=clientnfs();
+	
+	
 	
 $tables[]="<table style='width:100%' class=form><tr>";
 $t=0;
@@ -688,26 +680,9 @@ function scancomputers(){
 	return LocalParagraphe("browse_computers","browse_computers_text",$js,$img);
 	}
 	
-	function sharenfs(){
-		$GLOBALS["ICON_FAMILY"]="SYSTEM";
-	if(!isset($GLOBALS["CLASS_USERS"])){$GLOBALS["CLASS_USERS"]=new usersMenus();$users=$GLOBALS["CLASS_USERS"];}else{$users=$GLOBALS["CLASS_USERS"];}
-	if(!$users->NFS_SERVER_INSTALLED){return null;}
-	$js="Loadjs('SambaBrowse.php')";
-	$img="nfs-64.png";
-	
-	return Paragraphe($img,"{nfs_share}","{nfs_share_text}","javascript:$js");
-	return LocalParagraphe("nfs_share","nfs_share_text",$js,$img);
-	}
 
-function clientnfs(){
-	$GLOBALS["ICON_FAMILY"]="SYSTEM";
-	if(!isset($GLOBALS["CLASS_USERS"])){$GLOBALS["CLASS_USERS"]=new usersMenus();$users=$GLOBALS["CLASS_USERS"];}else{$users=$GLOBALS["CLASS_USERS"];}
-	if(!$users->autofs_installed){return null;}
-	$js="Loadjs('nfs-client.php')";
-	$img="database-network-64.png";
-	return Paragraphe($img,"{NFS_CLIENT}","{NFS_CLIENT_TEXT}","javascript:$js");
-	return LocalParagraphe("NFS_CLIENT","NFS_CLIENT_TEXT",$js,$img);
-}		
+
+		
 	
 function postfix_events(){
 	$GLOBALS["ICON_FAMILY"]="SMTP";

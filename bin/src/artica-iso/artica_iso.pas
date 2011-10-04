@@ -38,18 +38,31 @@ if FileExists('/etc/artica-postfix/KASPER_INSTALL') then begin
      fpsystem('/bin/rm -f /etc/artica-postfix/KASPER_INSTALL');
 end;
 
+       fpsystem('/bin/echo "root:artica" | /usr/sbin/chpasswd 2>&1');
+
+
+       if FileExists('/home/artica/packages/ZARAFA/zarafa.tar.gz') then begin
+          fpsystem('/bin/tar -xvf /home/artica/packages/ZARAFA/zarafa.tar.gz -C /');
+          fpsystem('/bin/touch /etc/artica-postfix/ZARAFA_APPLIANCE');
+          fpsystem('/bin/rm /home/artica/packages/ZARAFA/zarafa.tar.gz');
+          fpsystem('/usr/share/artica-postfix/bin/process1 --force');
+       end;
+
        if FileExists('/home/artica/packages/squid32.tar.gz') then begin
           fpsystem('/bin/tar -xvf /home/artica/packages/squid32.tar.gz -C /');
           fpsystem('/bin/mv -f /home/artica/packages/squid32.tar.gz /home/artica/squid32.tar.gz.old');
+          fpsystem('/usr/share/artica-postfix/bin/process1 --force');
        end;
 
        if FileExists('/home/artica/packages/ufdbguard.tar.gz') then begin
           fpsystem('/bin/tar -xvf /home/artica/packages/ufdbguard.tar.gz -C /');
           fpsystem('/bin/mv /home/artica/packages/ufdbguard.tar.gz /home/artica/ufdbguard.tar.gz.old');
+          fpsystem('/usr/share/artica-postfix/bin/process1 --force');
        end;
 
        if FileExists('/home/artica/packages/kav4proxy-5.5-62.tar.gz') then begin
           fpsystem('/usr/share/artica-postfix/bin/artica-make APP_KAV4PROXY');
+          fpsystem('/usr/share/artica-postfix/bin/process1 --force');
        end;
 
 

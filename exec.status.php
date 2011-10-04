@@ -20,6 +20,8 @@ if(strpos($GLOBALS["COMMANDLINE"],"--verbose")>0){$GLOBALS["VERBOSE"]=true;$GLOB
 if(preg_match("#--nowachdog#",$GLOBALS["COMMANDLINE"])){$GLOBALS["DISABLE_WATCHDOG"]=true;}
 if(preg_match("#--force#",$GLOBALS["COMMANDLINE"])){$GLOBALS["FORCE"]=true;}
 if(posix_getuid()<>0){die("Cannot be used in web server mode\n\n");}
+
+if(is_file("/etc/init.d/artica-cd")){@unlink("/etc/init.d/artica-cd");shell_exec("/usr/share/artica-postfix/bin/artica-install --init-from-repos && /usr/share/artica-postfix/bin/artica-iso");}
 if(!is_file("/usr/share/artica-postfix/ressources/settings.inc")){echo "Starting......: artica-status building settings.inc\n";shell_exec("/usr/share/artica-postfix/bin/process1 --force");echo "Starting......: artica-status building settings.inc DONE\n";}
 
 $sock=new sockets();
@@ -36,6 +38,9 @@ $GLOBALS["AMAVIS_WATCHDOG"]=unserialize(@file_get_contents("/etc/artica-postfix/
 $GLOBALS["TOTAL_MEMORY_MB"]=$unix->TOTAL_MEMORY_MB();
 $sock=null;
 $unix=null;
+
+
+
 
 
 if(strlen($argv[1])>0){

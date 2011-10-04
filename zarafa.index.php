@@ -27,7 +27,8 @@
 js();
 function js(){
 	$page=CurrentPageName();
-	echo "$('#BodyContent').load('$page?popup=yes');";
+	if(isset($_GET["font-size"])){$fontsize="&font-size={$_GET["font-size"]}";}
+	echo "$('#BodyContent').load('$page?popup=yes$fontsize');";
 	
 	
 	
@@ -56,6 +57,8 @@ function popup(){
 	if($q->COUNT_ROWS("zarafa_orphaned", "artica_backup")>0){
 		$array["popup-orphans"]="{orphans}";
 	}
+	
+	if(isset($_GET["font-size"])){$fontsize="font-size:{$_GET["font-size"]}px;";}
 	
 	$array["popup-mysql"]="{mysql_tuning}";
 	$array["popup-indexer"]="{APP_ZARAFA_INDEXER}";
@@ -89,7 +92,7 @@ function popup(){
 			
 		}	
 	
-	$tab="<div id=main_config_zarafa style='width:100%;height:870px;overflow:auto'>
+	$tab="<div id=main_config_zarafa style='width:100%;height:100%;overflow:auto;$fontsize'>
 		<ul>". implode("\n",$html)."</ul>
 	</div>
 		<script>

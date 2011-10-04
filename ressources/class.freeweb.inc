@@ -1136,7 +1136,7 @@
 				$this->Params["PHP_VALUES"]["magic_quotes_gpc"]="Off";
 				$this->Params["PHP_VALUES"]["register_globals"]="Off";
 				$this->Params["PHP_VALUES"]["magic_quotes_runtime"]="Off";
-				$this->Params["PHP_VALUES"]["short_open_tag"]="Off";
+				$this->Params["PHP_VALUES"]["short_open_tag"]="On";
 				$this->Params["PHP_VALUES"]["session.gc_maxlifetime"]=$ZarafaSessionTime;	
 			}
 			

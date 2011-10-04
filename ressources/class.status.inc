@@ -982,10 +982,14 @@ return $design;
 	
 }
 
+function ZARAFA(){
+	return $this->Postfix_satus(true);
+}
 
 
 
-function Postfix_satus(){
+
+function Postfix_satus($asZarafa=false){
 	$link_quarantine_progress=null;$artica_backup=null;$nb_events=null;$backup=null;$rejected=null;$quarantines=null;$instantIptables=null;$multis=array();$multiples_instances=null;$h5_style=null;$start=null;
 	if(!function_exists("mysql_connect")){ 
 		return "<H2>Unable to stat  function mysql_connect, check php Mysql module or reboot the server</H2>";
@@ -1032,7 +1036,6 @@ function Postfix_satus(){
 			}
 		}
 	}
-	
 	if($c>3){
 		
 		$multis[]="<table style='width:98%;margin:0px;' 
@@ -1048,6 +1051,16 @@ function Postfix_satus(){
 	</table>
 		";
 	}
+	
+	if($asZarafa=true){
+		$multis=array();
+		$ini=new Bs_IniHandler();
+		$ini->loadString(base64_decode($sock->getFrameWork("zarafa.php?status=yes")));
+		$multis[]=DAEMON_STATUS_LINE("APP_ZARAFA",$ini,null,1,"220px",true,1,"Loadjs('quicklinks.postfix.php?js=yes')");
+		$multis[]=DAEMON_STATUS_LINE("APP_ZARAFA_GATEWAY",$ini,null,1,"220px",true,1,"Loadjs('quicklinks.postfix.php?js=yes')");
+		$multis[]=DAEMON_STATUS_LINE("APP_ZARAFA_WEB",$ini,null,1,"220px",true,1,"Loadjs('quicklinks.postfix.php?js=yes')");
+	}
+	
 	
 	
 	if($usersmenus->DSTAT_INSTALLED){
@@ -1090,17 +1103,6 @@ function Postfix_satus(){
 		
 		
 	}
-	
-$oldaddon="				<tr>
-					<td align='right' $link>backup queue:</a>&nbsp;</td>
-					<td $link><strong>{$this->array_queue["backup"]} </strong>emails</td>
-				</tr>	
-				<tr $link_quarantine_progress>
-					<td align='right' nowrap>quarantine queue:</a>&nbsp;</td>
-					<td nowrap><strong>{$this->array_queue["quarantine"]} </strong>emails</td>
-				</tr>					
-				$artica_backup";	
-	
 	
 	$link_corrupt="Loadjs('postfix.corrupt.queue.php')";
 	$link_incoming=CellRollOver("Loadjs('postfix.queue.monitoring.php?show-queue=incoming&count={$this->array_queue["incoming"]}');");
@@ -1264,10 +1266,10 @@ $oldaddon="				<tr>
 			break;
 	}
 	
-if(is_array($multis)){$multiples_instances=@implode("\n",$multis);}
+	if(count($multis)>0){$multiples_instances=@implode("\n",$multis);}
 	
 	$_SESSION[md5("statusPostfix_satus")][$time]="
-	<div style='background-image:url(img/$img);background-repeat:no-repeat;width:350px;height:270px'>
+	<div style='background-image:url(img/$img);background-repeat:no-repeat;width:350px;height:auto;margin-bottom:10px'>
 		<div style='padding-left:155px'>
 			<H3 style='font-size:16px;font-weight:bold;'>{APP_POSTFIX}</h3>
 			<span style='font-size:11px;font-weight:bold'>

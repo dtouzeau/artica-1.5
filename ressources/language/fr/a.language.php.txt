@@ -222,6 +222,7 @@ En outre, il existe une solide communaut&eacute; &agrave; travers le monde entie
 <APP_ZARAFA_INDEXER>Indexation Zarafa</APP_ZARAFA_INDEXER>
 <APP_Z_PUSH>Z-Push</APP_Z_PUSH>
 <APP_Z_PUSH_TEXT>Le logiciel Z-Push autorise les utilisateurs de t&eacute;l&eacute;phones mobiles intelligents &agrave; synchroniser leurs messages, contacts, calendriers et t&acirc;ches avec un serveur Zarafa via une connexion UMTS, GPRS, Wifi ou GSM</APP_Z_PUSH_TEXT>
+<April>Avril</April>
 <architecture>Architecure</architecture>
 <ArticaInCgroups>Processus Artica dans les groupes de processus</ArticaInCgroups>
 <ArticaInCgroups_explain>Ex&eacute;cute les t&acirc;ches d'Artica dans un groupe de processus d&eacute;finit.</ArticaInCgroups_explain>
@@ -263,6 +264,7 @@ En effet, si vous utilisez Artica comme un serveur de messagerie uniquement pour
 <at_least_one_lower_case_letter>Au minimum une lettre minuscule</at_least_one_lower_case_letter>
 <at_least_one_special_letter>Au minimum une lettre sp&eacute;ciale</at_least_one_special_letter>
 <at_least_one_upper_case_letter>Au minimum une lettre majuscule</at_least_one_upper_case_letter>
+<August>Ao&ucirc;t</August>
 <authentication_banner>Banni&egrave;re d'authentification</authentication_banner>
 <authoritative>Autorit&eacute;</authoritative>
 <authoritativeDHCP_explain>Normalement le serveur serveur DHCP supposera que les informations de configuration d'un segment de r&eacute;seau donn&eacute; sont correctes et font autorit&eacute;.[br] Aussi si un client demande une adresse IP sur un segment de r&eacute;seau que le serveur sait &ecirc;tre invalide pour ce segment, le serveur r&eacute;pondra par un message DHCPNAK, provoquant chez le client l'abandon de son adresse IP et la demande d'une nouvelle.
@@ -284,6 +286,7 @@ Ce r&eacute;pertoire sera localis&eacute; dans /automounts</autofs_ask_dir>
 <available_modules>Modules disponibles</available_modules>
 <backup_server>Serveur de sauvegarde</backup_server>
 <ban>Bannir</ban>
+<banned>Banni</banned>
 <banned_domains>Domaines bannis</banned_domains>
 <banned_host>H&ocirc;te banni</banned_host>
 <bann_smtp_servers>Bannir des IPs SMTP</bann_smtp_servers>
@@ -559,7 +562,9 @@ PowerDNS ne sera pas d&eacute;sinstaller et vous serez en mesure de le maintenir
 <DisableWarningCalculation>D&eacute;sactiver le r&eacute;sumer des notifications d'alertes</DisableWarningCalculation>
 <disable_greylisting>D&eacute;sactiver le GreyListing</disable_greylisting>
 <disable_help_tooltips>D&eacute;sactiver les infos bulles d'aide en ligne</disable_help_tooltips>
+<disable_imap>D&eacute;sactiver IMAP</disable_imap>
 <disable_openvpn_connection>D&eacute;sactiver la connexion VPN</disable_openvpn_connection>
+<disable_pop3>D&eacute;sactiver POP3</disable_pop3>
 <disable_SSL_port>D&eacute;sactiver le SSL</disable_SSL_port>
 <disable_tooltips>D&eacute;sactiver les infos bulles</disable_tooltips>
 <disable_vrfy_command>D&eacute;sactiver la commande VRFY</disable_vrfy_command>
@@ -726,6 +731,7 @@ Si il exc&egrave;de la valeur x bytes, le reste du corps va &ecirc;tre stock&eac
 <FcgidMaxRequestLen_explain>Si la taille du corps d'une requ&ecirc;te exc&egrave;de la valeur, la requ&ecirc;te sera mise en &eacute;chec avec une erreur 500</FcgidMaxRequestLen_explain>
 <FcgidOutputBufferSize>Taille du buffeur de sortie</FcgidOutputBufferSize>
 <FcgidOutputBufferSize_explain>C'est la taille maximale de la r&eacute;ponse envoy&eacute;e au client renvoy&eacute;e par le CGI avant de &quot;flusher&quot; les donn&eacute;es vers le navigateur.</FcgidOutputBufferSize_explain>
+<February>F&eacute;vrier</February>
 <FEDORA_TEMPLATE>Mod&egrave;le Fedora</FEDORA_TEMPLATE>
 <fetchmail_execute_debug_warn>Cette op&eacute;ration va ex&eacute;cuter le processus de rapatriement en mode verbeux pour cette r&egrave;gle.[br]
 Apr&egrave;s son ex&eacute;cution, vous serez en mesure de visualiser les &eacute;v&egrave;nements afin de confirmer si les param&egrave;tres sauvegard&eacute;s sont corrects.</fetchmail_execute_debug_warn>
@@ -774,9 +780,11 @@ Un mandataire direct standard est un serveur interm&eacute;diaire qui s'intercal
 <FREEWEB_WRONG_USER_SYSTEM_TEXT>Il semble que cet utilisateur ne fait pas parti du syst&egrave;me.[br]Le serveur Web ne sera pas en mesure d'ex&eacute;cuter une instance en utilisant ce compte.[br]Vous ne pourrez utiliser un module qui n&eacute;cessite un utilisateur syst&egrave;me. (comme FastCGI)</FREEWEB_WRONG_USER_SYSTEM_TEXT>
 <free_catgorized_explain>Placez ici du texte qui contient des liens Web.[br]Les liens doivent format&eacute;s comme ceci : http://domain.tld.com/something ou http://domain.tld.com.[br]
 Le moteur sera en charge de retrouver les liens dans le texte.Vous n'avez donc pas besoin de formater explicitement les adresses. Simplement, collez le texte avec des adresses...</free_catgorized_explain>
+<Friday>Vendredi</Friday>
 <from_date>Depuis</from_date>
 <frontend_disables_options_explain>Cette section vous permet de piloter l'affichage de la page de garde administrateur</frontend_disables_options_explain>
 <ftp_directory>R&eacute;pertoire FTP</ftp_directory>
+<function>Fonction</function>
 <fw_multiples_ports_explain>C'est le ou les ports de destination.[br]Indiquez 0 pour tous les ports, vous pouvez d&eacute;finir un seul port : 22 ou de multiples ports s&eacute;par&eacute;s par une virgule : 22,25,80,443</fw_multiples_ports_explain>
 <fw_sourceaddr_explain>C'est l'adresse IP source, peut &ecirc;tre une adresse simple : 163.248.0.128 ou un r&eacute;seau de type 163.248.0.0/17</fw_sourceaddr_explain>
 <generate_parameters>G&eacute;n&eacute;rer les param&egrave;tres</generate_parameters>
@@ -790,6 +798,7 @@ Le moteur sera en charge de retrouver les liens dans le texte.Vous n'avez donc p
 <give_servername_or_ipaddr>Indiquez le nom complet de l'ordinateur ou une adresse IP</give_servername_or_ipaddr>
 <global>globale</global>
 <globals_values>Valeurs globales</globals_values>
+<goto>Aller &agrave;</goto>
 <grace_period>P&eacute;riode de gr&acirc;ce</grace_period>
 <GRAPH_POSTFIX_REJECTED_CONNEXIONS>Connections SMTP rejet&eacute;es</GRAPH_POSTFIX_REJECTED_CONNEXIONS>
 <GREENSQL_block_level>Si le taux de risque de la requ&ecirc;te est sup&eacute;rieur &agrave; cette valeur, elle sera alors bloqu&eacute;e.</GREENSQL_block_level>
@@ -811,6 +820,7 @@ Le moteur sera en charge de retrouver les liens dans le texte.Vous n'avez donc p
 Indiquez 0 afin de d&eacute;sactiver la fonctionnalit&eacute;.[br]
 Attention, 2 copies= 1 duplication.</greyhole_dirs_explain>
 <greylisted>Greylist&eacute;(s)</greylisted>
+<groupid>ID du Groupe</groupid>
 <group_description>Description du groupe</group_description>
 <Hardware_ECC_Recovered>Erreurs corrig&eacute;es par code correcteur</Hardware_ECC_Recovered>
 <Hardware_ECC_Recovered_text>Temps entre les erreurs corrig&eacute;es par code correcteur  (augmente et diminue, une faible valeur est probablement mauvais).</Hardware_ECC_Recovered_text>
@@ -874,6 +884,7 @@ Si vous utilise le service Active Directory en version Windows 2003, sachez que 
 <ID_SERIAL_SHORT>N&deg; de s&eacute;rie</ID_SERIAL_SHORT>
 <ID_TYPE>Type de disque</ID_TYPE>
 <ID_VENDOR>Constructeur</ID_VENDOR>
+<ihavereaditremove>Je l'ai lu, retirer cette information du panneau</ihavereaditremove>
 <imaps_port>Port d'&eacute;coute IMAP SSL</imaps_port>
 <imap_port>Port d'&eacute;coute IMAP</imap_port>
 <ImmediateData>Donn&eacute;e imm&eacute;diate</ImmediateData>
@@ -939,7 +950,9 @@ En mode disque, vous devrez choisir une partition qui sera le disque iSCSI parta
 <i_accept>J'accepte</i_accept>
 <jGrowlNotifsDisabled>D&eacute;sactiver les info-bulles &agrave; droite de l'&eacute;cran</jGrowlNotifsDisabled>
 <jkMount_explain>Ajoute les directives jkMount pour les fichiers *.do,*.jsp,*.jspx,*.cfm,*.cfc,*.cfchart,*.cfres</jkMount_explain>
+<July>Juillet</July>
 <jumpto>Aller &agrave;</jumpto>
+<June>Juin</June>
 <kaspersky_antivirus_connector>Connecteur ICAP Kaspersky</kaspersky_antivirus_connector>
 <kaspersky_antivirus_connector_text>Connecter le proxy &agrave; un serveur Kaspersky Anti-Virus distant.</kaspersky_antivirus_connector_text>
 <kav4proxycat_month_stats_explain>Les sites les plus visit&eacute;s du mois courant</kav4proxycat_month_stats_explain>
@@ -1068,6 +1081,7 @@ Les organisations ne pourront que cr&eacute;er des sous-domaines de ces domaines
 <manage_your_vpn_client_connection_text>Administrer la connexion VPN cliente vers le serveur OpenVPN.</manage_your_vpn_client_connection_text>
 <mapi_ip>Adresse locale MAPI</mapi_ip>
 <mapi_port>Port d'&eacute;coute MAPI</mapi_port>
+<March>Mars</March>
 <mask_lock_options>Verrouiller ces options uniquement &agrave; ces valeurs</mask_lock_options>
 <matches>Correspond</matches>
 <matchesnot>Ne correspond pas</matchesnot>
@@ -1091,6 +1105,7 @@ Les destinataires externes aux domaines locaux ne seront pas calcul&eacute;s.</m
 On consid&egrave;re que l'&eacute;metteur n'est pas en liste blanche sur le filtre de contenu mais uniquement sur les filtres de connexions.
 Si vous mettez 0, alors l'&eacute;metteur sera compl&egrave;tement mis en liste blanche...</max_score_white_text>
 <max_size>Taille maximale</max_size>
+<May>Mai</May>
 <members_connected>Utilisateurs connect&eacute;(s)</members_connected>
 <members_connected_samba_text>utilisateur(s) actuellement connect&eacute;(s) au service de partage de fichiers.[br]Cliquez ici afin d'afficher plus d'informations.</members_connected_samba_text>
 <member_type>Type de membre</member_type>
@@ -1129,6 +1144,7 @@ A l'oppos&eacute;, si vous d&eacute;finissez une valeur trop basse dans la valeu
 <mod_evasive_explain>Cette fonctionnalit&eacute; d&eacute;tecte lorsqu'un utilisateur du site web effectue de multiples requ&ecirc;tes dans une p&eacute;riode tr&egrave;s courte afin de bannir temporairement l'adresse IP de cet utilisateur.[br]La p&eacute;riode d'interdiction peut &ecirc;tre tr&egrave;s courte car le module assure automatiquement l'auto-blocage si l'attaque revient..</mod_evasive_explain>
 <mod_pagespeed_about>Cette fonctionnalit&eacute; est destin&eacute;e &agrave; booster la performance du Web, l%u2019optimisation de la mise en cache, la r&eacute;duction de l%u2019aller-retour entre le client et le serveur, et la minimisation de la taille de charge utile.[br]Cette option a donc pour objectif de diminuer le temps de chargement d%u2019une page / d%u2019un site.</mod_pagespeed_about>
 <mod_qos_explain>La QOS permet d'affiner le param&eacute;trage des connexions que va subir le site web afin de le d&eacute;fendre contre des attaques et de limiter la bande passante.</mod_qos_explain>
+<Monday>Lundi</Monday>
 <MONITOR>Moniteur</MONITOR>
 <mounts_list>Liste des connexions</mounts_list>
 <move_all_process_to_default>D&eacute;placer toutes les t&acirc;ches vers le d&eacute;faut.</move_all_process_to_default>
@@ -1169,6 +1185,7 @@ Voici l'erreur qui &agrave; &eacute;t&eacute; g&eacute;n&eacute;r&eacute;e penda
 <need_reboot>Vous devrez red&eacute;marrer la machine afin de faire prendre en compte les modifications</need_reboot>
 <network_legend>R&eacute;seau</network_legend>
 <network_nic>R&eacute;seau</network_nic>
+<network_services>Services r&eacute;seaux</network_services>
 <network_softwares>Logiciels r&eacute;seaux</network_softwares>
 <next-server>Prochain serveur</next-server>
 <nics>Interfaces r&eacute;seaux</nics>
@@ -1218,6 +1235,8 @@ Utilisez l'autre option (domaine local) dans ce contexte.</NO_RELAY_TO_THIS_SERV
 <NSCD_DISABLE_EXPLAIN>Le D&eacute;mon de mise en cache interne (NSCD) est utilis&eacute; afin de mettre en cache les connexions internes telles que LDAP, DNS..... [br]Il utilise la m&eacute;moire comme cache.[br]Le d&eacute;sactiver va &eacute;conomiser au minimum 7Mb</NSCD_DISABLE_EXPLAIN>
 <nsrecord>Serveur de nom</nsrecord>
 <ntp_server>serveur NTP</ntp_server>
+<number_of_users>Nombre d'utilisateurs</number_of_users>
+<October>Octobre</October>
 <Offline_Uncorrectable>secteurs non r&eacute;-allouables</Offline_Uncorrectable>
 <Offline_Uncorrectable_text>Nombre de secteurs non r&eacute;-allouables</Offline_Uncorrectable_text>
 <OnlyBranch>Branche seule</OnlyBranch>
@@ -1772,6 +1791,7 @@ Cette taille doit correspondre au minium &agrave; la taille autoris&eacute;e d'u
 <Start_Stop_Count_text>Nombre de cycles arr&ecirc;t/d&eacute;marrage de l'axe de rotation</Start_Stop_Count_text>
 <statistics_appliance>Appliance de statistiques</statistics_appliance>
 <statistics_appliance_text>Transforme ce serveur en une appliance qui va permettre de calculer et d'afficher les statistiques comme le Proxy Internet ou le flux SMTP</statistics_appliance_text>
+<statistics_tasks_events_explain>Cette page affiche les &eacute;v&egrave;nements des t&acirc;ches qui effectuent les analyses, l'exportation des cat&eacute;gories des sites Web.</statistics_tasks_events_explain>
 <storagebakcup_softwares>Logiciels de stockage et de sauvegarde</storagebakcup_softwares>
 <storage_directory>R&eacute;pertoire de stockage</storage_directory>
 <storage_pool>Pool de stockage</storage_pool>
@@ -1780,6 +1800,7 @@ Cette taille doit correspondre au minium &agrave; la taille autoris&eacute;e d'u
 <StrictModes_text>Sp&eacute;cifie si sshd doit v&eacute;rifier les modes et le propri&eacute;taire des fichiers de l'utilisateur et du r&eacute;pertoire de base (home directory) de l'utilisateur avant d'accepter une connexion. [br]C'est normalement souhaitable, parce que quelquefois, les novices laissent accidentellement leur r&eacute;pertoire ou leurs fichiers en acc&egrave;s complet &agrave; tout les monde.</StrictModes_text>
 <subdomain>Sous-domaine</subdomain>
 <subnet-mask>Masque de sous-r&eacute;seau</subnet-mask>
+<Sunday>Dimanche</Sunday>
 <suspend>Suspendre</suspend>
 <swappiness>% d'utilisation du SWAP</swappiness>
 <swappiness_text>D&eacute;finit la tendance au noyau d'utilisation de la m&eacute;moire pagin&eacute;e des processus du groupe. [br] La valeur par d&eacute;faut est 60%. Les valeurs inf&eacute;rieures font d&eacute;cro&icirc;tre la tendance d'utilisation de la m&eacute;moire pagin&eacute;e. Les valeurs plus grandes que 60% augmentent augmentent le taux d'utilisation.[br]Les valeurs plus grandes que 100% permettent au au noyau d'utiliser le fichier de pagination pour des acc&egrave;s m&eacute;moires normalement utilis&eacute;s via la m&eacute;moire vive.</swappiness_text>
@@ -1814,6 +1835,7 @@ Lorsque la p&eacute;riode de gr&acirc;ce &agrave; expir&eacute;e, les utilisateu
 <threads_max_number>Nombre MAX de threads d'indexation.</threads_max_number>
 <Throughput_Performance>Performance g&eacute;n&eacute;rale en sortie du disque</Throughput_Performance>
 <Throughput_Performance_text>Performance g&eacute;n&eacute;rale en sortie du disque. Si la valeur de l%u2019attribut diminue, alors la probabilit&eacute; d%u2019avoir un probl&egrave;me avec le disque augmente.</Throughput_Performance_text>
+<Thursday>Jeudi</Thursday>
 <TimeSynchronization>D&eacute;lai de synchronisation</TimeSynchronization>
 <time_in_seconds>Nombre de secondes</time_in_seconds>
 <TIPS_PUREFTPD_TITLE>Fournir des Acc&egrave;s FTP</TIPS_PUREFTPD_TITLE>
@@ -1832,6 +1854,7 @@ Lorsque la p&eacute;riode de gr&acirc;ce &agrave; expir&eacute;e, les utilisateu
 <traffic_second>Trafique/Seconde</traffic_second>
 <traffic_statistics>Statistiques du trafique</traffic_statistics>
 <treshold>Seuil</treshold>
+<Tuesday>Mardi</Tuesday>
 <UDMA_CRC_Error_Count>erreurs de CRC UltraDMA</UDMA_CRC_Error_Count>
 <UDMA_CRC_Error_Count_text>Nombre d'erreurs de CRC pendant un acc&egrave;s Ultra DMA</UDMA_CRC_Error_Count_text>
 <ufdbgdb_explain>Le filtre utilise des bases locales afin de v&eacute;rifier les sites web.[br]Vous avez deux bases de donn&eacute;es.[br]
@@ -1885,6 +1908,7 @@ Dans ce cas vous pourrez plus rapidement r&eacute;agir si des dysfonctionnements
 <virtual_server>Serveur virtuel</virtual_server>
 <virtual_servers>Serveurs virtuels</virtual_servers>
 <virtual_smb_ou_explain>Si vous indiquez une organisation, les administrateur de l'organisation s&eacute;lectionn&eacute;e seront amen&eacute; &agrave; g&eacute;rer ce serveur virtuel.</virtual_smb_ou_explain>
+<visited>visit&eacute;(s)</visited>
 <vpn_server_wakeupip_client_explain>Indiquez une adresse IP locale dans le r&eacute;seau du serveur.[br]
 Si une adresse IP est indiqu&eacute;e, les sites VPN distants  vont tenter d'effectuer un &quot;ping&quot; de l'adresse sp&eacute;cifi&eacute;e afin de r&eacute;veiller leur r&eacute;seau VPN et aussi d'informer de la connectivit&eacute;.[br]
 Si l'adresse distante n'est pas disponible; une notification sera envoy&eacute;e &agrave; l'administrateur local.[br]
@@ -1922,15 +1946,18 @@ Voulez-vous effectuer cette op&eacute;ration ?[br]Cette op&eacute;ration sera ex
 <wbl_resolv_mx>R&eacute;soudre les MX</wbl_resolv_mx>
 <wbl_resolv_mx_explain>Si activ&eacute; les Artica va r&eacute;soudre les MX des domaines ajout&eacute;s dans cette liste et mettre les adresses des MX dans la liste blanche des filtres de connexion.</wbl_resolv_mx_explain>
 <webadministration_console>Console web d'administration</webadministration_console>
+<webinterface>Interface Web</webinterface>
 <webproxy_statistics_appliance>Appliance de statistiques de Proxy Internet</webproxy_statistics_appliance>
 <webproxy_statistics_appliance_text>Si vous activez cette fonctionnalit&eacute;, ce serveur sera autoris&eacute; &agrave; recevoir les &eacute;v&egrave;nements d'autres Proxy Artica ou du Proxy Squid en version 3.2.[br]
 Il ex&eacute;cutera des t&acirc;ches de calcule sp&eacute;cifiques afin d'offrir les capacit&eacute;s d'analyse de l'utilisation d'Internet avec des graphiques.</webproxy_statistics_appliance_text>
 <webservers_status>&Eacute;tat des serveurs Web</webservers_status>
 <websites_number>Nombre de sites web</websites_number>
 <websites_to_export>Sites &agrave; exporter</websites_to_export>
+<websites_to_export_explain>Cette page affiche les derni&egrave;res cat&eacute;gorisations que vous avez effectu&eacute;.[br]Ces cat&eacute;gorisations vont &ecirc;tre envoy&eacute;es sur des serveurs Internet afin de mettre &agrave; jour les mises &agrave; jour publiques des cat&eacute;gories.</websites_to_export_explain>
 <web_console>Console Web</web_console>
 <WEB_FILTERING>Filtrage Web</WEB_FILTERING>
 <web_user>Utilisateur Web</web_user>
+<Wednesday>Mercredi</Wednesday>
 <weight>Poids</weight>
 <WELCOME_ARTICA_STATS_SQUID>Bienvenue dans l'espace d&eacute;di&eacute; au Proxy Web</WELCOME_ARTICA_STATS_SQUID>
 <welcome_organization_register>Bienvenue dans le formulaire d'enregistrement d'une organisation sur Artica.[br]

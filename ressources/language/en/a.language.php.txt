@@ -2447,6 +2447,21 @@ It is designed to automatically add added categories to an "official databases" 
 This server will execute specifics calculation tasks in order to serve Internet usage charts and graphs statistics</webproxy_statistics_appliance_text>
 <websites_to_export>Websites to export</websites_to_export>
 <number_of_users>Number of users</number_of_users>
+<October>October</October>
+<May>May</May>
+<February>February</February>
+<March>March</March>
+<April>April</April>
+<June>June</June>
+<July>July</July>
+<August>August</August>
+<September>September</September>
+<Sunday>Sunday</Sunday>
+<Tuesday>Tuesday</Tuesday>
+<Monday>Monday</Monday>
+<Wednesday>Wednesday</Wednesday>
+<Thursday>Thursday</Thursday>
+<Friday>Friday</Friday>
 <MONITOR>Monitor</MONITOR>
 <banned>Banned</banned>
 <groupid>Group ID</groupid>
@@ -2456,3 +2471,7 @@ This server will execute specifics calculation tasks in order to serve Internet 
 <goto>Go to</goto>
 <ihavereaditremove>I have read it, remove this information from the panel</ihavereaditremove>
 <network_services>Network services</network_services>
+<websites_to_export_explain>This page display latest categorized websites that will be exported to the Artica datacenters in order to add your categorize tasks to the public repository server.</websites_to_export_explain>
+<statistics_tasks_events_explain>This page display system events about scripts that parse, analyze,export statistics and website categories</statistics_tasks_events_explain>
+<function>function</function>
+<webinterface>Web Interface</webinterface>

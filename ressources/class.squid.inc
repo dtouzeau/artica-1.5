@@ -1346,6 +1346,9 @@ function BuildSquidConf(){
 			if(!$this->IS_32){if($GLOBALS["VERBOSE"]){echo "Starting......: Squid : is NOT 3.2.x OK\n";}}
 			if($this->IS_32){if($GLOBALS["VERBOSE"]){echo "Starting......: Squid : is 3.2.x OK\n";}}
 		}
+		if($this->IS_30){$conf=$conf . "# IS 3.0 YES\n";}
+		if($this->IS_32){$conf=$conf . "# IS 3.2 YES\n";}
+		if($this->IS_31){$conf=$conf . "# IS 3.1 YES\n";}  
 		
 		if($SquidActHasReverse<>1){
 			$squidGuard=$this->squidGuard();
@@ -1376,9 +1379,9 @@ function BuildSquidConf(){
 		}*/
 		
 		$kav_acl=$this->acls_multimedias();
-		if(($this->IS_30) && (!$this->IS_32)){
-			$conf=$conf. "acl manager proto cache_object\n";
-		}		
+		if($this->IS_30){$conf=$conf. "acl manager proto cache_object\n";}
+		if($this->IS_31){$conf=$conf. "acl manager proto cache_object\n";}		
+		
 		$acl_blocked_sites="acl blockedsites url_regex \"/etc/squid3/squid-block.acl\"\n";
 			
 		if($this->hasProxyTransparent==1){$this->LDAP_AUTH=0;$this->NTLM_AUTH=0;}
@@ -1746,6 +1749,13 @@ function BuildSquidConf(){
 			$conf=$conf."access_log /var/log/squid/access.log common\n";
 			$conf=$conf."access_log /var/log/squid/sarg.log squid\n";
 		}
+		
+		if(($this->IS_31) && (!$this->IS_32)){
+			$conf=$conf."cache_store_log	/var/log/squid/store.log\n";
+			$conf=$conf."access_log	none manager\n";
+			$conf=$conf."access_log /var/log/squid/access.log common\n";
+			$conf=$conf."access_log /var/log/squid/sarg.log squid\n";
+		}		
 		
 		if($this->IS_32){
 			$conf=$conf."logformat common MAC:%>eui %>a %[ui %[un [%tl] \"%rm %ru HTTP/%rv\" %>Hs %<st %Ss:%Sh\n"; 

@@ -984,7 +984,7 @@ class usersMenus {
 				if($this->AsSystemAdministrator){
 					$menus["Unity"]="javascript:Loadjs(\"unity.php\")";
 					$menus["{manage_your_server}"]="javascript:ConfigureYourserver()";
-					$menus["{global settings}"]="javascript:Loadjs(\"artica.settings.php?js=yes\")";
+					$menus["{advanced_options}"]="javascript:Loadjs(\"admin.left.php?old-menu=yes\")";
 					$menus["{softwares_install}"]="javascript:Loadjs(\"setup.index.php?js=yes\");";
 					$menus["{services}"]="javascript:Loadjs(\"admin.index.services.status.php?js=yes\");";
 				}
@@ -1324,7 +1324,7 @@ private function build_user_left_menus(){
 
 		
 		$array["{index page}"]["MAIN"]="javascript:document.location.href='users.index.php'";
-		$array["{index page}"]["SUB"]["{master_panel}"]="javascript:document.location.href='users.index.php';";
+		$array["{index page}"]["SUB"]["{master_panel}"]="javascript:ConfigureYourserver();";
 		$array["{index page}"]["SUB"]["{language}"]="javascript:Loadjs('chg.language.php');";
 		if($this->AsSystemAdministrator){
 			$array["{index page}"]["SUB"]["{backup}"]="javascript:Loadjs('backup.tasks.php?in-front-ajax=yes');";
@@ -1452,6 +1452,7 @@ private function build_user_left_menus(){
 		if($this->AsArticaAdministrator==true){
 			$array["system"]["MAIN"]="javascript:AnimateDiv('BodyContent');Loadjs('system.index.php?js=yes')";
 			$array["system"]["SUB"]["{main_parameters}"]="javascript:AnimateDiv('BodyContent');Loadjs('system.index.php?js=yes')";
+			$array["system"]["SUB"]["{artica_settings}"]="javascript:AnimateDiv('BodyContent');Loadjs('artica.settings.php?js=yes');";
 			if(!$this->AS_VPS_CLIENT){
 				$array["system"]["SUB"]["{left_menu_internal_hard_drives}"]="javascript:AnimateDiv('BodyContent');Loadjs('system.internal.disks.php?in-front-ajax=yes')";
 			}
@@ -1941,7 +1942,7 @@ private function MAILBOXES_MENUS($array=array()){
 		$tpl=new templates();
 		$html[]="
 		<div>
-		<ul id=\"navigation\">
+		<ul id=\"navigation\" style='width:170px'>
 		
 		
 		";

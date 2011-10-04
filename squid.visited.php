@@ -725,6 +725,7 @@ function CategorizeAll_perform(){
 		if(preg_match("#^www\.(.+?)$#i",trim($www),$re)){$www=$re[1];}
 		$md5=md5($www.$category);
 		$enabled=1;
+		if($www==null){echo "Alert: website is null...\n";return;}
 		$sql_add="INSERT INTO $category_table (zmd5,zDate,category,pattern,uuid,enabled) VALUES('$md5',NOW(),'$category','$www','$uuid',1)";
 		$q->QUERY_SQL($sql_add);
 		if(!$q->ok){echo $q->mysql_error."\n".basename(__FILE__)."\nLine".__LINE__."\n";echo $sql;return;}

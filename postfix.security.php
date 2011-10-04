@@ -26,8 +26,9 @@ js();
 	
 function js(){
 	$page=CurrentPageName();
+	if(isset($_GET["font-size"])){$fontsize="&font-size={$_GET["font-size"]}";$height="100%";}
 	$html="
-	$('#BodyContent').load('$page?tab=yes');
+	$('#BodyContent').load('$page?tab=yes$fontsize');
 	
 	";
 	
@@ -46,7 +47,8 @@ function tabs(){
 	$array["filters-connect"]="{filters_connect}";
 	$array["antivirus"]="antivirus";
 	$array["status-pattern"]="{patterns_versions}";
-	
+	$height="850px";
+	if(isset($_GET["font-size"])){$fontsize="font-size:{$_GET["font-size"]}px;";$height="100%";}
 
 	while (list ($num, $ligne) = each ($array) ){
 		if($num=="antispam"){
@@ -64,7 +66,7 @@ function tabs(){
 	
 	
 	echo "
-	<div id=main_config_postfix_security style='width:100%;height:850px;overflow:auto'>
+	<div id=main_config_postfix_security style='width:100%;height:$height;overflow:auto;$fontsize'>
 		<ul>". implode("\n",$html)."</ul>
 	</div>
 		<script>

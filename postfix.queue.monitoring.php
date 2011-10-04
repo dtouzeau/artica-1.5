@@ -512,17 +512,18 @@ function popup_js(){
 	if(!isset($_GET["hostname"])){$_GET["hostname"]="master";}
 	$start="StartIndex();";
 	if(isset($_GET["inline-js"])){$start="StartIndexInLine();";}
+	if(isset($_GET["font-size"])){$fontsize="&font-size={$_GET["font-size"]}";}	
 	$html="
 	$js_add
 	
 	function StartIndex(){
-		YahooWinS(720,'$page?popup=yes&hostname={$_GET["hostname"]}','$title');
+		YahooWinS(720,'$page?popup=yes&hostname={$_GET["hostname"]}$fontsize','$title');
 	
 	}
 	
 	function StartIndexInLine(){
 		document.getElementById('BodyContent').innerHTML='<center><img src=img/wait_verybig.gif></center>';
-		$('#BodyContent').load('$page?popup=yes&hostname={$_GET["hostname"]}');
+		$('#BodyContent').load('$page?popup=yes&hostname={$_GET["hostname"]}$fontsize');
 	
 	}	
 	
@@ -1038,6 +1039,7 @@ function popup_tabs(){
 	$array["params"]="{parameters}";
 	$array["banned"]="{banned_domains}";
 	$array["smtp_queues"]='{smtp_queues}';
+	if(isset($_GET["font-size"])){$fontsize="font-size:{$_GET["font-size"]}px;";$height="100%";}
 	$tpl=new templates();
 	$page=CurrentPageName();
 
@@ -1049,7 +1051,7 @@ function popup_tabs(){
 	
 	
 	echo "
-	<div id=queue_monitor style='width:100%;height:750px;overflow:auto'>
+	<div id=queue_monitor style='width:100%;height:750px;overflow:auto;$fontsize'>
 		<ul>". implode("\n",$html)."</ul>
 	</div>
 		<script>

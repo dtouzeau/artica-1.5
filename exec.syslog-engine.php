@@ -26,8 +26,9 @@ if($argv[1]=='--snort'){snort_logs();sessions_logs();ipblocks();clamd_mem();die(
 if($argv[1]=='--sessions'){sessions_logs();die();}
 if($argv[1]=='--loadavg'){loadavg_logs();clamd_mem();die();}
 if($argv[1]=='--ipblocks'){ipblocks();die();}
-if($argv[1]=='--adminlogs'){admin_logs();die();}
-if($argv[1]=='--psmem'){ps_mem(true);die();}
+if($argv[1]=='--adminlogs'){admin_logs();squid_tasks();die();}
+if($argv[1]=='--psmem'){ps_mem(true);squid_tasks();die();}
+if($argv[1]=='--squid-tasks'){squid_tasks(true);die();}
 
 
 
@@ -279,6 +280,34 @@ function admin_logs(){
 	
 	ps_mem();
 		
+}
+
+function squid_tasks($nopid=false){
+	$f=array();
+	if($nopid){
+		$unix=new unix();
+		$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
+		$pid=@file_get_contents($pidfile);
+		if($unix->process_exists($pid)){writelogs("Already running pid $pid",__FUNCTION__,__FILE__,__LINE__);return;}	
+		$t=0;		
+		
+	}
+
+	
+	
+	$prefix="INSERT IGNORE INTO updateblks_events (`zDate`,`PID`,`function`,`text`,`category`) VALUES ";
+	foreach (glob("/var/log/artica-postfix/artica-squid-events/*") as $filename) {
+		$array=unserialize(@file_get_contents($filename));
+		if(!is_array($array)){@unlink($filename);continue;}
+		$array["text"]=addslashes($array["text"]);
+		$f[]="('{$array["date"]}','{$array["pid"]}','{$array["function"]}','{$array["text"]}','{$array["category"]}')";
+		@unlink($filename);
+	}
+	
+	if(count($f)>0){$q=new mysql_squid_builder();$sql=$prefix.@implode(",", $f);$q->QUERY_SQL($sql);}
+	
+	
+	
 }
 
 function ps_mem($nopid=false){

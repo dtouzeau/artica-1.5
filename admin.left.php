@@ -3,6 +3,9 @@ $GLOBALS["ICON_FAMILY"]="SYSTEM";
 if(isset($_GET["verbose"])){$GLOBALS["VERBOSE"]=true;ini_set('display_errors', 1);ini_set('error_reporting', E_ALL);ini_set('error_prepend_string',null);ini_set('error_append_string',null);}
 include_once('ressources/class.templates.inc');
 if(isset($_GET["part1"])){left_infos_1();exit;}
+if(isset($_GET["partall"])){left_infos_1();left_infos_2();exit;}
+if(isset($_GET["old-menu"])){old_menus_js();exit;}
+if(isset($_GET["old-menu-popup"])){old_menu_popup();exit;}
 
 function left_infos_1(){
 	$newfrontend=false;
@@ -89,7 +92,7 @@ function left_infos_2(){
 		function CheckArticaMeta(){
 			var kavicapserverEnabled=$kavicapserverEnabled;
 			LoadAjax('artica-meta','$page?artica-meta=yes');
-			if(document.getElementById('loadavggraph')){LoadAjax('loadavggraph','admin.index.loadvg.php');}
+			
 			if(kavicapserverEnabled==1){
 				if(document.getElementById('kav4proxyGraphs')){LoadAjax('kav4proxyGraphs','admin.index.kav4proxy.php');}
 			}
@@ -128,4 +131,19 @@ function NightlyNotifs(){
 			"javascript:Loadjs('artica.update.php?js=yes');",null,330);
 		
 	}
+}
+
+function old_menus_js(){
+	$tpl=new templates();
+	$page=CurrentPageName();
+	$title=$tpl->javascript_parse_text("{advanced_options}");
+	$html="YahooSetupControl(189,'$page?old-menu-popup=yes','$title')";
+	echo $html;
+	
+}
+
+function old_menu_popup(){
+	echo"<div id='old-menus-popup'></div>
+	<script>LoadAjax('old-menus-popup','admin.tabs.php?left-menus=yes');</script>";
+	 
 }

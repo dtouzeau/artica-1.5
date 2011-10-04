@@ -56,8 +56,9 @@ function js_popup(){
 	$title=$tpl->_ENGINE_parse_body('{global_whitelist}');
 	$data=file_get_contents('js/wlbl.js');
 	$start="YahooWinS(700,'$page?popup=yes','$title');";
+	if(isset($_GET["font-size"])){$fontsize="&font-size={$_GET["font-size"]}";}	
 	if(isset($_GET["js-in-line"])){
-		$start="document.getElementById('BodyContent').innerHTML='<center><img src=img/wait_verybig.gif></center>';\n$('#BodyContent').load('$page?popup=yes');";
+		$start="document.getElementById('BodyContent').innerHTML='<center><img src=img/wait_verybig.gif></center>';\n$('#BodyContent').load('$page?popup=yes$fontsize');";
 	}
 	
 	$html="
@@ -501,7 +502,7 @@ function hosts_WhiteList_list(){
 
 
 function popup(){
-	
+	if(isset($_GET["font-size"])){$fontsize="font-size:{$_GET["font-size"]}px;";$height="100%";}
 	$array["popup-domain-white"]="{white list}";
 	$array["popup-global-white"]="{white list}:{global}";
 	$array["popup-hosts"]="{hosts}:{white list}";
@@ -515,19 +516,12 @@ function popup(){
 	
 	
 	echo "
-	<div id=main_config_wbladmin style='width:100%;height:550px;overflow:auto'>
+	<div id=main_config_wbladmin style='width:100%;height:550px;overflow:auto;$fontsize'>
 		<ul>". implode("\n",$html)."</ul>
 	</div>
 		<script>
 				$(document).ready(function(){
-					$('#main_config_wbladmin').tabs({
-				    load: function(event, ui) {
-				        $('a', ui.panel).click(function() {
-				            $(ui.panel).load(this.href);
-				            return false;
-				        });
-				    }
-				});
+					$('#main_config_wbladmin').tabs();
 			
 			
 			});

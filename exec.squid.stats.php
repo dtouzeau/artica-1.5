@@ -47,6 +47,7 @@ if($argv[1]=='--members-month-kill'){members_month_delete();exit;}
 if($argv[1]=='--fix-tables'){$GLOBALS["Q"]->FixTables();exit;}
 if($argv[1]=='--visited-sites'){visited_sites();exit;}
 if($argv[1]=='--sync-categories'){sync_categories();exit;}
+if($argv[1]=='--export-last-websites'){export_last_websites();exit;}
 
 //visited_sites
 if($GLOBALS["VERBOSE"]){echo "UNABLE TO UNDERSTAND: '{$argv[1]}'\n";}
@@ -662,18 +663,6 @@ function events($text){
 		@fclose($h);
 }
 
-
-
-
-
-
-	
-	
-	
-	
-
-
-
 function squid_cache_perfs(){
 	
 $q=new mysql();
@@ -883,6 +872,39 @@ function ifMustBeExecuted(){
 	if($EnableWebProxyStatsAppliance==1){$update=true;}
 	return $update;
 }
+
+function export_last_websites(){
+	$q=new mysql_squid_builder();
+	$categories=$q->LIST_TABLES_CATEGORIES();
+	$prefix="INSERT IGNORE INTO categorize (zmd5,pattern,zdate,uuid,category) VALUES ";
+	while (list ($num, $table) = each ($categories) ){
+		$sql="SELECT * FROM $table WHERE enabled=1 ORDER BY zDate DESC LIMIT 0,1000";
+		$results=$GLOBALS["Q"]->QUERY_SQL($sql);
+		while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+			if(trim($ligne["pattern"])==null){
+				$q->QUERY_SQL("DELETE FROM $table WHERE zmd5='{$ligne["zmd5"]}'");
+				writelogs_squid("{$ligne["zmd5"]} has no website.\nIt has been deleted from table $table",__FUNCTION__,__FILE__,__LINE__);
+				continue;
+			}
+			
+			
+			$f[]="('{$ligne["zmd5"]}','{$ligne["pattern"]}','{$ligne["zDate"]}','{$ligne["uuid"]}','{$ligne["category"]}')";
+			
+		}
+		
+		if(count($f)>0){
+			$q->QUERY_SQL($prefix.@implode(",", $f));
+			$f=array();
+		}
+		
+		
+	}
+	
+	
+	
+}
+
+
 
 
 ?>
