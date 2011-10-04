@@ -2388,6 +2388,7 @@ When user perform this categorize operation, you can receive a notification and 
 <you_need_to_create_virtual_ip_first>You need at least to create one virtual IP address in network section</you_need_to_create_virtual_ip_first>
 <ZarafaAllowToReinstall>Allow daemon to re-install to fix issues</ZarafaAllowToReinstall>
 <zarafaMbxLang>Mailbox folders language</zarafaMbxLang>
+<zarafaSharedStoreOnly>non-active user</zarafaSharedStoreOnly>
 <ZarafaStoreOutside>Store attachments outside database</ZarafaStoreOutside>
 <ZarafaWebNTLM>Use apache authentication method</ZarafaWebNTLM>
 <zarafa_indexer_explain>This feature offers full text searching capabilities for the Zarafa Server.[br]

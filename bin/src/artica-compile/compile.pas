@@ -91,11 +91,13 @@ function TCompile.COMPILE_GEN_VERSION():string;
 var
    txt:string;
    J:TstringList;
+   dir:string;
 begin
-
-fpsystem('date +%m%d%H >/tmp/date.txt');
+CurrentUser:=GET_curUSER();
+if CurrentUser='root' then dir:='/root' else dir:='/home/'+CurrentUser;
+fpsystem('date +%m%d%H >'+dir+'/date.txt');
 J:=TStringList.Create;
-J.LoadFromFile('/tmp/date.txt');
+J.LoadFromFile(dir+'/date.txt');
 txt:=trim(J.Strings[0]);
 result:='1.5.'+txt;
 
@@ -1506,26 +1508,52 @@ var
 l:TstringList;
 RegExpr:TRegExpr;
 i:integer;
+
+   dir:string;
+   ll:TstringList;
 begin
+CurrentUser:=GET_curUSER();
+if CurrentUser='root' then dir:='/root' else dir:='/home/'+CurrentUser;
     if not FileExists('/usr/bin/git') then exit;
-    fpsystem('/usr/bin/git status >/tmp/git 2>&1');
+    fpsystem('/usr/bin/git status >'+dir+'/git 2>&1');
     l:=Tstringlist.Create;
-    l.LoadFromFile('/tmp/git');
+    l.LoadFromFile(dir+'/git');
     RegExpr:=TRegExpr.Create;
-    RegExpr.Expression:='\s+modified:\s+(.+)';
+    ll:=Tstringlist.Create;
     SetCurrentDir('/usr/share/artica-postfix');
     for i:=0 to l.Count-1 do begin
+         RegExpr.Expression:='\s+modified:\s+(.+)';
          if RegExpr.Exec(l.Strings[i]) then begin
             fpsystem('git add '+trim(RegExpr.Match[1]));
             writeln('GIT -> ',trim(RegExpr.Match[1]));
+            ll.Add(trim(RegExpr.Match[1]));
+         end;
+
+         RegExpr.Expression:='\s+new file:\s+(.+)';
+         if RegExpr.Exec(l.Strings[i]) then begin
+              writeln('GIT -> ',trim(RegExpr.Match[1]));
+              ll.Add(trim(RegExpr.Match[1]));
          end;
     end;
 
     logs:=tlogs.Create;
-    version:=logs.ReadFromFile('/usr/share/artica-postfix/VERSION');
+    version:=trim(logs.ReadFromFile('/usr/share/artica-postfix/VERSION'));
 
     fpsystem('git commit -m "'+version+'"');
     fpsystem('git push origin master');
+
+    forcedirectories(dir+'/Bureau/artica-patchs/'+version+'/artica-postfix');
+    for i:=0 to ll.Count-1 do begin
+         RegExpr.Expression:='ressources\/language\/[a-z]+\/.+';
+         if RegExpr.Exec(ll.Strings[0]) then continue;
+         RegExpr.Expression:='bin\/src\/.+';
+         if RegExpr.Exec(ll.Strings[0]) then continue;
+         if pos('/',ll.Strings[0])>0 then forcedirectories(dir+'/Bureau/artica-patchs/'+version+'/artica-postfix/'+ExtractFilePath(ll.Strings[0]));
+         writeln('-> '+dir+'/Bureau/artica-patchs/'+version+'/artica-postfix/'+ExtractFilePath(ll.Strings[0]));
+         fpsystem('/bin/cp /usr/share/artica-postfix/'+ll.strings[i]+' '+dir+'/Bureau/artica-patchs/'+version+'/artica-postfix/'+ll.Strings[0]);
+    end;
+
+
 
 end;
 //##############################################################################

@@ -21,8 +21,8 @@ if(preg_match("#--nowachdog#",$GLOBALS["COMMANDLINE"])){$GLOBALS["DISABLE_WATCHD
 if(preg_match("#--force#",$GLOBALS["COMMANDLINE"])){$GLOBALS["FORCE"]=true;}
 if(posix_getuid()<>0){die("Cannot be used in web server mode\n\n");}
 
-if(is_file("/etc/init.d/artica-cd")){@unlink("/etc/init.d/artica-cd");shell_exec("/usr/share/artica-postfix/bin/artica-install --init-from-repos && /usr/share/artica-postfix/bin/artica-iso");}
-if(!is_file("/usr/share/artica-postfix/ressources/settings.inc")){echo "Starting......: artica-status building settings.inc\n";shell_exec("/usr/share/artica-postfix/bin/process1 --force");echo "Starting......: artica-status building settings.inc DONE\n";}
+
+
 
 $sock=new sockets();
 $DisableArticaStatusService=$sock->GET_INFO("DisableArticaStatusService");
@@ -36,10 +36,26 @@ if($GLOBALS["VERBOSE"]){echo "DEBUG MODE ENABLED\n";}
 if($GLOBALS["VERBOSE"]){echo "command line: {$GLOBALS["COMMANDLINE"]}\n";}
 $GLOBALS["AMAVIS_WATCHDOG"]=unserialize(@file_get_contents("/etc/artica-postfix/amavis.watchdog.cache"));
 $GLOBALS["TOTAL_MEMORY_MB"]=$unix->TOTAL_MEMORY_MB();
+
+if(is_file("/etc/init.d/artica-cd")){
+	@unlink("/etc/init.d/artica-cd");
+	shell_exec("{$GLOBALS["nohup"]} /usr/share/artica-postfix/bin/artica-install --init-from-repos && /usr/share/artica-postfix/bin/artica-iso >/dev/null 2>&1 &");
+	$unix->THREAD_COMMAND_SET("/etc/init.d/artica-postfix restart artica-status");
+	$unix->THREAD_COMMAND_SET("/etc/init.d/artica-postfix restart artica-exec");
+	die();	
+}
+
+
+if(!is_file("/usr/share/artica-postfix/ressources/settings.inc")){
+	echo "Starting......: artica-status building settings.inc\n";
+	shell_exec("{$GLOBALS["nohup"]} /usr/share/artica-postfix/bin/process1 --force >/dev/null 2>&1 &");
+	$unix->THREAD_COMMAND_SET("/etc/init.d/artica-postfix restart artica-status");
+	$unix->THREAD_COMMAND_SET("/etc/init.d/artica-postfix restart artica-exec");
+	
+}
+
 $sock=null;
 $unix=null;
-
-
 
 
 

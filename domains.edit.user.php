@@ -48,6 +48,10 @@ if(isset($_GET["UserChangeEmailAddrSave"])){USER_CHANGE_EMAIL_SAVE ();exit ();}
 if(isset($_GET["zarafa-mailbox-edit"])){ZARAFA_MAILBOX_EDIT_JS ();exit ();}
 if(isset($_GET["zarafaQuotaWarn"])){ZARAFA_MAILBOX_SAVE ();exit ();}
 if(isset($_POST["user_zarafa_enable_pop3"])){ZARAFA_DISABLE_FEATURES_SAVE();exit;}
+if(isset($_POST["zarafaSharedStoreOnly"])){zarafaSharedStoreOnly();exit;}
+
+
+
 if(isset($_GET["UserEndOfLIfe"])){USER_ENDOFLIFE ();exit ();}
 
 // inbound parameters
@@ -3287,6 +3291,12 @@ function ZARAFA_MAILBOX($uid) {
 						<td style='font-size:13px'>" . Field_checkbox ( "zarafaAdmin", 1, $u->zarafaAdmin ) . "</td>
 					</tr>
 					<tr>
+						<td class=legend style='font-size:13px'>{zarafaSharedStoreOnly}:</td>
+						<td style='font-size:13px'>" . Field_checkbox ( "zarafaSharedStoreOnly", 1, $u->zarafaSharedStoreOnly,"zarafaSharedStoreOnlyCheck()" ) . "</td>
+					</tr>					
+					
+					
+					<tr>
 						<td class=legend style='font-size:13px'>{enable_imap}:</td>
 						<td style='font-size:13px'>" . Field_checkbox ( "user_zarafa_enable_imap", 1, $ZarafaFeatures["imap"],"UserZarafaFeatures()" ) . "</td>
 					</tr>	
@@ -3330,6 +3340,25 @@ function ZARAFA_MAILBOX($uid) {
 			var major_version=$major_version;
 			document.getElementById('user_zarafa_enable_imap').disabled=true;
 			document.getElementById('user_zarafa_enable_pop3').disabled=true;
+			
+			
+			if(document.getElementById('zarafaSharedStoreOnly').checked){
+				document.getElementById('zarafaAdmin').disabled=true;
+				document.getElementById('zarafaQuotaWarn').disabled=true;
+				document.getElementById('zarafaQuotaSoft').disabled=true;
+				document.getElementById('zarafaQuotaHard').disabled=true;
+				return;
+			}else{
+				document.getElementById('zarafaAdmin').disabled=false;
+				document.getElementById('zarafaQuotaWarn').disabled=false;
+				document.getElementById('zarafaQuotaSoft').disabled=false;
+				document.getElementById('zarafaQuotaHard').disabled=false;			
+			
+			}
+			
+			
+			
+			
 			if(major_version>6){
 				document.getElementById('user_zarafa_enable_imap').disabled=false;
 				document.getElementById('user_zarafa_enable_pop3').disabled=false;			
@@ -3338,7 +3367,8 @@ function ZARAFA_MAILBOX($uid) {
 		
 		var X_UserZarafaFeatures= function (obj) {
 			var results=obj.responseText;
-			if(results.length>3){alert(results);}
+			if(results.length>3){alert(results);retutn;}
+			CheckFields();
 		}			
 	
 	function UserZarafaFeatures(){
@@ -3348,6 +3378,14 @@ function ZARAFA_MAILBOX($uid) {
 		XHR.appendData('uid','$uid');
 		XHR.sendAndLoad('$page', 'POST',X_UserZarafaFeatures);		
 	
+	}
+	
+	function zarafaSharedStoreOnlyCheck(){
+		var XHR = new XHRConnection();
+		if(document.getElementById('zarafaSharedStoreOnly').checked){XHR.appendData('zarafaSharedStoreOnly','1');}else{XHR.appendData('zarafaSharedStoreOnly','0');}
+		XHR.appendData('uid','$uid');
+		XHR.sendAndLoad('$page', 'POST',X_UserZarafaFeatures);	
+		
 	}
 	
 	
@@ -5614,6 +5652,18 @@ function ZARAFA_MAILBOX_INFOS_POPUP(){
 	}
 	$html[]="</table></div>";
 	echo @implode("\n",$html);
+}
+
+function zarafaSharedStoreOnly(){
+	$zarafaSharedStoreOnly=$_POST["zarafaSharedStoreOnly"];
+	if(!is_numeric($zarafaSharedStoreOnly)){$zarafaSharedStoreOnly=0;}
+	$u=new user($_POST["uid"]);
+	$ldap=new clladp();	
+	$upd["zarafaSharedStoreOnly"][0]=$zarafaSharedStoreOnly;
+	if(!$ldap->Ldap_modify($u->dn, $upd)){
+		echo "zarafaSharedStoreOnly = '$zarafaSharedStoreOnly'\nLDAP ERROR :\nFunction: ".__FUNCTION__."\nPage: ".basename(__FILE__)."\nLine:".__LINE__."\nError:\n".$ldap->ldap_last_error;
+		return;
+	}	
 }
 
 function ZARAFA_DISABLE_FEATURES_SAVE(){

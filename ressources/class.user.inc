@@ -47,6 +47,7 @@ class user{
 	var $DisableAccountLessThan4Caracters=false;	
 	var $MailingListAddressGroup=0;
 	var $zarafaAdmin=0;
+	var $zarafaSharedStoreOnly=0;
 		
 	var $uidNumber;
 	var $FinalDateToLive=0;
@@ -260,6 +261,9 @@ class user{
 			if($this->zarafaQuotaSoft==null){$this->zarafaQuotaSoft="0";}
 			if($this->zarafaQuotaHard==null){$this->zarafaQuotaHard="0";}
 			if($this->zarafaQuotaOverride==null){$this->zarafaQuotaOverride="0";}
+			if($this->zarafaSharedStoreOnly==null){$this->zarafaSharedStoreOnly="0";}
+			
+			
 			
 			if($this->WebDavUser==null){$this->WebDavUser=0;}
 			
@@ -684,6 +688,9 @@ class user{
 		if(isset($attrs["zarafaQuotaHard"][0])){$this->zarafaQuotaHard=$attrs["zarafaQuotaHard"][0];}
 		if(isset($attrs["zarafaQuotaHard"][0])){$this->zarafaQuotaOverride=$attrs["zarafaQuotaHard"][0];}
 		if(isset($attrs["zarafaMbxLang"][0])){$this->zarafaMbxLang=$attrs["zarafaMbxLang"][0];}
+		if(isset($attrs["zarafaSharedStoreOnly"][0])){$this->zarafaSharedStoreOnly=$attrs["zarafaSharedStoreOnly"][0];}
+		
+		
 		
 		
 		if(isset($attrs["zarafaEnabledFeatures"][0])){$this->zarafaEnabledFeatures=$attrs["zarafaEnabledFeatures"][0];}

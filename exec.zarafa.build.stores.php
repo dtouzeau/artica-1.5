@@ -371,7 +371,7 @@ function ldap_config(){
 	$user="cn=$ldap->ldap_admin,$ldap->suffix";
 	$ldap_loginname_attribute="uid";
 	$ldap_password_attribute="userPassword";
-	$ldap_nonactive_attribute=null;
+	$ldap_nonactive_attribute="zarafaSharedStoreOnly";
 	$ldap_group_search_filter = "(objectClass=posixGroup)";
 	$ldap_group_unique_attribute = "gidNumber";
 	$ldap_group_unique_attribute_type="text";
@@ -389,7 +389,6 @@ function ldap_config(){
 		$ldap_user_unique_attribute_type = "binary";
 		$ldap_loginname_attribute="sAMAccountName";
 		$ldap_password_attribute=null;
-		$ldap_nonactive_attribute="zarafaSharedStoreOnly";
 		$ldap_group_search_filter=null;
 		$ldap_group_unique_attribute="objectSid";
 		$ldap_group_unique_attribute_type="binary";

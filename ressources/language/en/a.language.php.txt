@@ -2475,3 +2475,4 @@ This server will execute specifics calculation tasks in order to serve Internet 
 <statistics_tasks_events_explain>This page display system events about scripts that parse, analyze,export statistics and website categories</statistics_tasks_events_explain>
 <function>function</function>
 <webinterface>Web Interface</webinterface>
+<zarafaSharedStoreOnly>non-active user</zarafaSharedStoreOnly>

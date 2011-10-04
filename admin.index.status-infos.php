@@ -23,6 +23,9 @@ $tpl=new templates();
 $q=new mysql();
 $sql="SELECT * FROM adminevents WHERE enabled=1 ORDER BY zDate DESC LIMIT 0,50";
 $results=$q->QUERY_SQL($sql,"artica_events");
+if(mysql_num_rows($results)==0){return;}
+
+
 if(!$q->ok){echo "<H2>$q->mysql_error</H2>";}
 
 $html="<table style='width:100%' class=form><tbody>";

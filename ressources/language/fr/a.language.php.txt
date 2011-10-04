@@ -2018,6 +2018,7 @@ Les utilisateurs peuvent naviguer uniquement sur les sites web dans les cat&eacu
 <you_need_to_create_virtual_ip_first>Vous devez au moins cr&eacute;er un carte r&eacute;seau virtuelle dans la section r&eacute;seau de ce serveur.</you_need_to_create_virtual_ip_first>
 <ZarafaAllowToReinstall>Autorise le d&eacute;mon &agrave; r&eacute;installer en cas de n&eacute;c&eacute;ssit&eacute;</ZarafaAllowToReinstall>
 <zarafaMbxLang>Langue des dossiers BAL</zarafaMbxLang>
+<zarafaSharedStoreOnly>Utilisateur inactif</zarafaSharedStoreOnly>
 <ZarafaStoreOutside>Stocker les pi&egrave;ces jointes sur le disque</ZarafaStoreOutside>
 <ZarafaWebNTLM>Utiliser le mode d'authentification d'Apache</ZarafaWebNTLM>
 <zarafa_indexer_explain>Cette fonctionnalit&eacute; permet d'indexer les messages afin d'offrir des capacit&eacute;s de recherche pour le serveur Zarafa.[br]
