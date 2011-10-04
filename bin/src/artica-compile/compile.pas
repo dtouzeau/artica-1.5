@@ -71,6 +71,7 @@ CurrentUser:=GET_curUSER() + ':' + GET_curUSER();
     writeln('Current user...........: ',CurrentUser);
 
 fpsystem('/bin/rm -f /usr/share/artica-postfix/ressources/settings.inc');
+fpsystem('/bin/rm -f /usr/share/artica-postfix/ressources/settings.new.inc');
 languages_bases:=Tstringlist.Create;
 languages_bases.Add('fr');
 languages_bases.add('it');
