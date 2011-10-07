@@ -237,7 +237,7 @@ class squidbee{
 		
 		$sock=new sockets();
 		$this->squid_conf=$sock->GET_INFO('GlobalSquidConf');
-		if($this->squid_conf==null){$this->squid_conf=base64_decode($sock->getFrameWork('cmd.php?squid-GetOrginalSquidConf'));}
+		if($this->squid_conf==null){$this->squid_conf=$this->LOAD_CONF_ROOT();}
 			
 		$this->ArticaSquidParameters=$sock->GET_INFO('ArticaSquidParameters');
 		$this->SquidBlockSites=$sock->GET_INFO('SquidBlockSites');
@@ -249,6 +249,11 @@ class squidbee{
 		$GLOBALS["SQUID_MEMORYCONF"]["ArticaEnableKav4ProxyInSquid"]=$this->EnableKav4Proxy;
 		
 		}
+		
+		private function LOAD_CONF_ROOT(){
+			if(!$GLOBALS["AS_ROOT"]){$sock=new sockets();return base64_decode($sock->getFrameWork('cmd.php?squid-GetOrginalSquidConf'));}
+			if(class_exists("unix")){$unix=new unix();return @file_get_contents($unix->LOCATE_SQUID_CONF());}
+		}		
 	
 	
 	function ParseConfig(){
@@ -1379,8 +1384,8 @@ function BuildSquidConf(){
 		}*/
 		
 		$kav_acl=$this->acls_multimedias();
-		if($this->IS_30){$conf=$conf. "acl manager proto cache_object\n";}
-		if($this->IS_31){$conf=$conf. "acl manager proto cache_object\n";}		
+		if(($this->IS_30) && (!$this->IS_32)){$conf=$conf. "acl manager proto cache_object\n";}
+		if(($this->IS_31) && (!$this->IS_32)){$conf=$conf. "acl manager proto cache_object\n";}		
 		
 		$acl_blocked_sites="acl blockedsites url_regex \"/etc/squid3/squid-block.acl\"\n";
 			
@@ -1764,7 +1769,7 @@ function BuildSquidConf(){
 			$conf=$conf."access_log daemon:/var/log/squid/sarg.log squid\n";			
 		}
 		
-		stdio:
+		
 		
 		if($this->enable_cicap==1){
 			$conf=$conf."icap_log /var/log/squid/icap_access.log\n";
@@ -1775,11 +1780,11 @@ function BuildSquidConf(){
 		$conf=$conf."cache_dir	{$this->CACHE_TYPE} {$this->CACHE_PATH} {$this->CACHE_SIZE} 16 256\n";
 		$conf=$conf."# --------- OTHER CACHES\n";
 		if(is_array($this->cache_list)){
-		reset($this->cache_list);
-		while (list ($num, $val) = each ($this->cache_list)){
-		if($this->ASROOT){echo "Starting......: other cache \"{$num}\" ({$this->cache_list[$num]["cache_type"]})\n";}
-		$conf=$conf."cache_dir {$this->cache_list[$num]["cache_type"]} $num {$this->cache_list[$num]["cache_size"]} {$this->cache_list[$num]["cache_dir_level1"]} {$this->cache_list[$num]["cache_dir_level2"]}\n";
-		}
+			reset($this->cache_list);
+			while (list ($num, $val) = each ($this->cache_list)){
+				if($this->ASROOT){echo "Starting......: other cache \"{$num}\" ({$this->cache_list[$num]["cache_type"]})\n";}
+				$conf=$conf."cache_dir {$this->cache_list[$num]["cache_type"]} $num {$this->cache_list[$num]["cache_size"]} {$this->cache_list[$num]["cache_dir_level1"]} {$this->cache_list[$num]["cache_dir_level2"]}\n";
+			}
 		}
 		
 		$conf=$conf."\n";

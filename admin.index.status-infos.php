@@ -23,18 +23,42 @@ $tpl=new templates();
 $q=new mysql();
 $sql="SELECT * FROM adminevents WHERE enabled=1 ORDER BY zDate DESC LIMIT 0,50";
 $results=$q->QUERY_SQL($sql,"artica_events");
-if(mysql_num_rows($results)==0){return;}
-
-
-if(!$q->ok){echo "<H2>$q->mysql_error</H2>";}
-
 $html="<table style='width:100%' class=form><tbody>";
+
+$f=squid_filters_infos();
+while (list ($num, $ligne) = each ($f) ){
+	if($ligne["subject"]==null){continue;}
+	$ligne["subject"]=$tpl->_ENGINE_parse_body($ligne["subject"]);
+	$strlen=strlen($ligne["subject"]);
+	$org_text=$ligne["subject"];
+	if($strlen>25){$text=substr($ligne["subject"], 0,21)."...";}else{$text=$org_text;}
+	
+	$html=$html."
+	<tr>
+		<td width=1%><img src='img/{$ligne["icon"]}'></td>
+		<td style='font-size:11px' nowrap><a href=\"javascript:blur();\" OnClick=\"javascript:{$ligne["js"]}\" style='font-size:11px;text-decoration:underline'>$text</a></td>
+	</tr>
+	";	
+}
+
+if(mysql_num_rows($results)==0){$html=$html."</tbody></table>";echo $html;return;}
+
+
+//if(!$q->ok){echo "<H2>$q->mysql_error</H2>";}
+
+
+
+
 
 while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
 	if($ligne["icon"]=="danger64.png"){$ligne["icon"]="danger32.png";}
 	if($ligne["icon"]=="warning64.png"){$ligne["icon"]="warning-panneau-32.png";}
 	if($ligne["icon"]=="pluswarning64.png"){$ligne["icon"]="warning-panneau-32.png";}
 	if($ligne["icon"]=="danger32.png"){$ligne["icon"]="warning-panneau-32.png";}
+	if($ligne["icon"]=="license-error-64.png"){$ligne["icon"]="license-error-32.png";}
+	
+	
+	
 	
 	$ligne["subject"]=$tpl->_ENGINE_parse_body($ligne["subject"]);
 	$strlen=strlen($ligne["subject"]);
@@ -47,10 +71,11 @@ while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
 		<td style='font-size:11px' nowrap>$text</td>
 	</tr>
 	";
-	
-	
-	
-}
+	}
+
+
+
+
 
 $html=$html."</tbody></table>
 <div style='width:100%;text-align:right'>". imgtootltip("20-refresh.png","{refresh}","LoadAjax('admin-left-infos','admin.index.status-infos.php');")."</div>
@@ -60,6 +85,35 @@ $html=$html."</tbody></table>
 echo $tpl->_ENGINE_parse_body($html);
 
 }
+
+function squid_filters_infos(){
+	$sock=new sockets();
+	$ligne2=array();
+	if(!isset($GLOBALS["CLASS_USERS_MENUS"])){$users=new usersMenus();$GLOBALS["CLASS_USERS_MENUS"]=$users;}else{$users=$GLOBALS["CLASS_USERS_MENUS"];}
+	if(!$users->SQUID_INSTALLED){return null;}
+	$SQUIDEnable=$sock->GET_INFO("SQUIDEnable");
+	if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
+	
+	if($SQUIDEnable==0){
+		if($GLOBALS["VERBOSE"]){echo "DEBUG:squid_filters_infos():: SQUIDEnable is not enabled... Aborting\n";}
+		return;
+	}	
+	
+	$sql="SELECT count(*) as tcount FROM `visited_sites` WHERE LENGTH(category)=0";	
+	$q=new mysql_squid_builder();
+	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql));
+	if(!$q->ok){echo $q->mysql_error;}
+	if($ligne["tcount"]==0){return null;}
+	
+	
+	$ligne2[0]["icon"]="32-categories.png";
+	$ligne2[0]["subject"]=$ligne["tcount"]." {websites_not_categorized}";
+	$ligne2[0]["js"]="Loadjs('squid.visited.php?onlyNot=yes');";
+	
+	return $ligne2;
+
+}
+
 
 function showInfos_js(){
 	$page=CurrentPageName();

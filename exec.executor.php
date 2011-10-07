@@ -560,8 +560,9 @@ if(!is_numeric($GLOBALS["TIME"]["GROUP2"])){$GLOBALS["TIME"]["GROUP2"]=time();re
 	
 	
 	$array[]="exec.dhcpd-leases.php";
-	$array[]="exec.mailbackup.php";
+	
 	if($GLOBALS["POSTFIX_INSTALLED"]){
+		$array[]="exec.mailbackup.php";
 		$array[]="exec.postfix-logger.php --cnx-errors";
 		$array[]="exec.postfix-logger.php --cnx-only";
 	}
@@ -880,6 +881,7 @@ function group120(){
 
 
 function mailarchives(){
+	if(!$GLOBALS["POSTFIX_INSTALLED"]){return;}
 	$array[]="exec.mailarchive.php";
 	$array[]="exec.mailbackup.php";
 	$array[]="exec.fetchmail.sql.php";

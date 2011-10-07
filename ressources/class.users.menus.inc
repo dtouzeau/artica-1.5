@@ -932,11 +932,6 @@ class usersMenus {
 			}
 			
 			
-			if($this->SAMBA_INSTALLED){
-				if($this->LOCAL_SID==null){
-					$this->LOCAL_SID=$sock->getFrameWork('cmd.php?GetLocalSid=yes');
-				}
-			}
 			
 			$this->CPU_NUMBER=$_GLOBAL["CPU_NUMBER"];
 			$this->LOAD_AVERAGE=$_GLOBAL["LOAD_AVERAGE"];

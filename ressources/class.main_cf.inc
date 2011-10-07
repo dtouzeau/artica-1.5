@@ -1,5 +1,5 @@
 <?php
-
+if(!isset($GLOBALS["AS_ROOT"])){if(posix_getuid()==0){$GLOBALS["AS_ROOT"]=true;}else{$GLOBALS["AS_ROOT"]=false;}}
 include_once(dirname(__FILE__) . '/class.ldap.inc');
 include_once(dirname(__FILE__) . '/class.ssl.certificate.inc');
 include_once(dirname(__FILE__) . '/class.artica.inc');
@@ -25,6 +25,7 @@ function verifyBranch(){
 	$ldap=new clladp();
 	$this->dn="cn=Sender_Dependent_Relay_host_Maps,cn=artica,$ldap->suffix";
 	if(!$ldap->ExistsDN($this->dn)){
+		$upd=array();
 		$upd["objectClass"][]='top';
 		$upd["objectClass"][]='PostFixStructuralClass';
 		$upd["cn"]="Sender_Dependent_Relay_host_Maps";
@@ -2005,9 +2006,21 @@ class systeminfos{
 	}
 	
 	function ParseIP(){
+		if(count($GLOBALS["ARRAY_IP"])>0){$this->array_ip=$GLOBALS["ARRAY_IP"];return;}
 		$sock=new sockets();
 		$tpl=new templates();
-		$datas=unserialize(base64_decode($sock->getFrameWork("cmd.php?ifconfig-all=yes")));
+		$datas=array();
+		if($GLOBALS["AS_ROOT"]){
+			if(class_exists("unix")){
+				$unix=new unix();
+				$cmd=$unix->find_program("ifconfig")." -a 2>&1";
+				exec($cmd,$datas);
+			}
+		}
+			
+		if(count($datas)==0){	
+			$datas=unserialize(base64_decode($sock->getFrameWork("cmd.php?ifconfig-all=yes")));
+		}
 		$this->array_datas=$datas;
 
 		while (list ($num, $val) = each ($datas) ){
@@ -2018,14 +2031,21 @@ class systeminfos{
 				}
 		}
 			
-		$this->array_ip=$array;	
+		$this->array_ip=$array;
+		$GLOBALS["ARRAY_IP"]=$this->array_ip;	
 		
 	}
 	
 	function ParseResolv_conf(){
 		$sock=new sockets();
 		$tpl=new templates();
-		$datas=unserialize(base64_decode($sock->getFrameWork("cmd.php?resolv-conf")));
+		$datas=array();
+		if($GLOBALS["AS_ROOT"]){
+			$datas=explode("\n",@file_get_contents("/etc/resolv.conf"));
+		}
+		if(count($datas)==0){
+			$datas=unserialize(base64_decode($sock->getFrameWork("cmd.php?resolv-conf")));
+		}
 		while (list ($num, $val) = each ($datas) ){
 			if(preg_match('#^nameserver\s+([a-zA-Z0-9\.\_]+)#',$val,$re)){
 				
@@ -2036,14 +2056,27 @@ class systeminfos{
 	}
 	
 	function Distri(){
-		$sock=new sockets();
-		$tpl=new templates();
-		$tbr=explode(';',trim($sock->getFrameWork('cmd.php?myos=yes')));
+		if(isset($GLOBALS["MEMORYOS"])){
+			$this->ditribution_name=$GLOBALS["MEMORYOS"]["ditribution_name"];
+			$this->kernel_version=$GLOBALS["MEMORYOS"]["kernel_version"];
+			$this->libc_version=$GLOBALS["MEMORYOS"]["libc_version"];
+			return;			
+		}
 		
-		$this->ditribution_name=$tbr[0];
-		$this->kernel_version=$tbr[1];
-		$this->libc_version=$tbr[2];
+		if($GLOBALS["AS_ROOT"]){
+			exec("/usr/share/artica-postfix/bin/artica-install --myos 2>&1",$results);
+			$tbr=explode(";",trim(@implode("",$results)));
+		}else{
+			$sock=new sockets();
+			$tbr=explode(';',trim($sock->getFrameWork('cmd.php?myos=yes')));
+		}
 		
+			$this->ditribution_name=$tbr[0];
+			$this->kernel_version=$tbr[1];
+			$this->libc_version=$tbr[2];
+			$GLOBALS["MEMORYOS"]["ditribution_name"]=$this->ditribution_name;
+			$GLOBALS["MEMORYOS"]["kernel_version"]=$this->kernel_version;
+			$GLOBALS["MEMORYOS"]["libc_version"]=$this->libc_version;
 		}
 		
 	function lspci(){
@@ -2062,8 +2095,20 @@ class systeminfos{
 	function LoadMemory(){
 		$sock=new sockets();
 		$tpl=new templates();
-		$tbr=unserialize(base64_decode($sock->getFrameWork("cmd.php?freemem=yes")));
-		if(!is_array($tbr)){return null;}
+		$tbr=array();
+		if($GLOBALS["AS_ROOT"]){
+			if(class_exists("unix")){
+				$unix=new unix();
+				$prog=$unix->find_program("free");
+				if(strlen($prog)>3){
+					exec("$prog -m -o 2>&1",$results);
+					$tbr=$results;
+				}		
+			}
+		}
+		
+		if(count($tbr)==0){$tbr=unserialize(base64_decode($sock->getFrameWork("cmd.php?freemem=yes")));}
+		if(count($tbr)==0){return null;}
 		while (list ($num, $val) = each ($tbr) ){if($val<>null){$array[]=$val;}}
 		if(is_array($array)){
 			while (list ($num, $val) = each ($array) ){	

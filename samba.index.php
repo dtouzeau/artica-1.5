@@ -248,15 +248,7 @@ function popup_js(){
 	
 	". jsaddons()."	
 	
-	function Save_neighborhood_form(field_id){
-		var value=document.getElementById(field_id).value;
-		document.getElementById('neighborhood_index').innerHTML='<center><img src=\"img/wait_verybig.gif\"></center>';
-		var XHR = new XHRConnection();
-		XHR.appendData('neighborhood-save',field_id);
-		XHR.appendData('value',value);
-		XHR.sendAndLoad('$page', 'GET',x_Save_neighborhood_form);				
-	
-	}
+
 	
 
 	
@@ -921,12 +913,7 @@ function jsaddons(){
 		YahooWin2(350,'$page?neighborhood=yes','$windows_network_neighborhood');
 	}
 	
-	function x_Save_neighborhood_form(obj) {
-		var tempvalue=obj.responseText;
-		if(tempvalue.length>3){alert(tempvalue);}
-		RefreshTab('main_config_samba');	
-		neighborhood();
-	}	
+
 	var x_SaveSambaMainConfiguration=function (obj) {
 		tempvalue=obj.responseText;
 		if(tempvalue.length>3){alert(tempvalue);}
@@ -3089,7 +3076,7 @@ function DomainAdmin_index(){
 	
 function neighborhood_index(){
 	$tpl=new templates();
-	
+	$page=CurrentPageName();
 	$samba=new samba();
 	$users=new usersMenus();
 	$sock=new sockets();
@@ -3173,13 +3160,32 @@ ROLE_DOMAIN_BDC
 	</tr>	
 	</table>
 	</div>
+	
+	<script>
+	function x_Save_neighborhood_form(obj) {
+		var tempvalue=obj.responseText;
+		if(tempvalue.length>3){alert(tempvalue);}
+		if(document.getElementById('main_config_samba')){RefreshTab('main_config_samba');}
+		if(document.getElementById('admin_perso_tabs')){RefreshTab('admin_perso_tabs');}
+		neighborhood();
+	}
+
+	function Save_neighborhood_form(field_id){
+		var value=document.getElementById(field_id).value;
+		AnimateDiv('neighborhood_index');
+		var XHR = new XHRConnection();
+		XHR.appendData('neighborhood-save',field_id);
+		XHR.appendData('value',value);
+		XHR.sendAndLoad('$page', 'GET',x_Save_neighborhood_form);				
+	
+	}
+
+	</script>
+	
 	";
 	
 	echo $tpl->_ENGINE_parse_body($html);
-	
-	
-	
-	
+
 }
 function restart_services(){
 	$sock=new sockets();

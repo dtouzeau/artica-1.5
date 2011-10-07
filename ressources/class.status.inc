@@ -22,27 +22,16 @@ class status{
 		include(dirname(__FILE__) . '/settings.inc');
 		$this->events("Loading sockets",__FUNCTION__,__LINE__);
 		$sock=new sockets();
-		$this->events("Loading cmd.php?postfixQueues=yes",__FUNCTION__,__LINE__);
-		$queues=unserialize($sock->getFrameWork("cmd.php?postfixQueues=yes"));
-		$this->array_queue=$queues;
-		$this->cyrus_init_d=$_GLOBAL["cyrus_initd_path"];
 		$this->myini=$local_ini;
 		$this->sock=new sockets();
 		if($noconnect<>0){return null;}
-		$this->events("Starting status...Postfix_satus()",__FUNCTION__,__LINE__);
-		$this->array_right[]=$this->Postfix_satus();
-		$this->events("Starting status...cyrus_satus()",__FUNCTION__,__LINE__);
-		$this->array_right[]=$this->cyrus_satus();
-		$this->events("Starting status...avestatus_satus()",__FUNCTION__,__LINE__);
-		$this->array_right[]=$this->avestatus_satus();
-		$this->events("Starting status...artica_status()",__FUNCTION__,__LINE__);
-		$this->array_left[]=$this->artica_status();
-		if ($_GLOBAL["kas_installed"]==true){
-			$this->events("Starting status...kas_status()",__FUNCTION__,__LINE__);
-			$this->array_right[]=$this->kas_status();
-		}
-		$this->events("Starting status...DONE",__FUNCTION__,__LINE__);
 		
+		if($_GLOBAL["POSTFIX_INSTALLED"]){
+			$this->events("Loading cmd.php?postfixQueues=yes",__FUNCTION__,__LINE__);
+			$queues=unserialize($sock->getFrameWork("cmd.php?postfixQueues=yes"));
+			$this->array_queue=$queues;
+			$this->cyrus_init_d=$_GLOBAL["cyrus_initd_path"];
+		}
 	}
 	
 function events($text,$function,$line ){

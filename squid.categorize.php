@@ -220,8 +220,8 @@ function popup(){
 	$page=CurrentPageName();
 	$users=new usersMenus();
 	$array["categorizer"]='{categories}';
-	$array["top10"]='{top10_hits}';
-	$array["top10-users"]='{top10_users}';
+	//$array["top10"]='{top10_hits}';
+	//$array["top10-users"]='{top10_users}';
 	
 	
 	while (list ($num, $ligne) = each ($array) ){
@@ -235,14 +235,7 @@ function popup(){
 	</div>
 		<script>
 				$(document).ready(function(){
-					$('#main_config_categorizer').tabs({
-				    load: function(event, ui) {
-				        $('a', ui.panel).click(function() {
-				            $(ui.panel).load(this.href);
-				            return false;
-				        });
-				    }
-				});
+					$('#main_config_categorizer').tabs();
 			
 			
 			});

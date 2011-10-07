@@ -284,6 +284,7 @@ function UFDBGUARD_COMPILE_SINGLE_DB($path){
 function databasesStatus(){
 	$datas=explode("\n",@file_get_contents("/etc/squid/squidGuard.conf"));
 	$count=0;
+	$f=array();
 	while (list ($a, $b) = each ($datas)){
 		
 		if(preg_match("#domainlist.+?(.+)#",$b,$re)){

@@ -160,7 +160,7 @@ function INSERT_DEB_PACKAGES(){
 			$pname=$re[2];
 			$package_description=addslashes(PACKAGE_EXTRA_INFO($pname));
 			
-		$sql="INSERT INTO debian_packages(package_status,package_name,package_version,package_info,package_description) 
+		$sql="INSERT IGNORE INTO debian_packages(package_status,package_name,package_version,package_info,package_description) 
   		VALUES('{$re[1]}','$pname','{$re[3]}','$content','$package_description');";
   		$q->QUERY_SQL($sql,"artica_backup");  			
 			
@@ -220,7 +220,7 @@ $datassql=addslashes($datas);
 
 
 $q=new mysql();
-$sql="INSERT INTO debian_packages_logs(zDate,package_name,events,install_type) VALUES(NOW(),'artica-upgrade','$datassql','upgrade');";
+$sql="INSERT IGNORE INTO debian_packages_logs(zDate,package_name,events,install_type) VALUES(NOW(),'artica-upgrade','$datassql','upgrade');";
 $q->QUERY_SQL($sql,"artica_backup");  	
 @unlink('/etc/artica-postfix/apt.upgrade.cache');
 

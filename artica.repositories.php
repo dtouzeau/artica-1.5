@@ -535,7 +535,7 @@ function install_package(){
 	if(strlen(PackageSTATUS($pname))>0){
 		$sql="UPDATE debian_packages SET package_status='a-ii' WHERE package_name='$pname'";
 	}else{
-		$sql="INSERT INTO debian_packages (package_status,package_name) VALUES('a-ii','$pname')";
+		$sql="INSERT IGNORE INTO debian_packages (package_status,package_name) VALUES('a-ii','$pname')";
 	}
 	writelogs("Mark $pname has install package...",__FUNCTION__,__FILE__);
 	

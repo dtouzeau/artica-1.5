@@ -1,4 +1,5 @@
 <?php
+if(posix_getuid()<>0){die("Cannot be used in web server mode\n\n");}
 include_once(dirname(__FILE__)."/ressources/class.system.network.inc");
 $mem=round(((memory_get_usage()/1024)/1000),2);events("{$mem}MB after class.system.network.inc","MAIN",__LINE__);
 include_once(dirname(__FILE__)."/ressources/class.mysql.inc");
@@ -13,13 +14,15 @@ include_once(dirname(__FILE__)."/framework/class.settings.inc");
 $mem=round(((memory_get_usage()/1024)/1000),2);events("{$mem}MB after class.settings.inc","MAIN",__LINE__);
 $GLOBALS["FORCE"]=false;
 $GLOBALS["EXECUTED_AS_ROOT"]=true;
+$GLOBALS["RUN_AS_DAEMON"]=false;
+$GLOBALS["AS_ROOT"]=true;
 $GLOBALS["DISABLE_WATCHDOG"]=false;
 $GLOBALS["MY-POINTER"]="/etc/artica-postfix/pids/". basename(__FILE__).".pointer";
 $GLOBALS["COMMANDLINE"]=implode(" ",$argv);
 if(strpos($GLOBALS["COMMANDLINE"],"--verbose")>0){$GLOBALS["VERBOSE"]=true;$GLOBALS["debug"]=true;$GLOBALS["DEBUG"]=true;ini_set('html_errors',0);ini_set('display_errors', 1);ini_set('error_reporting', E_ALL);}
 if(preg_match("#--nowachdog#",$GLOBALS["COMMANDLINE"])){$GLOBALS["DISABLE_WATCHDOG"]=true;}
 if(preg_match("#--force#",$GLOBALS["COMMANDLINE"])){$GLOBALS["FORCE"]=true;}
-if(posix_getuid()<>0){die("Cannot be used in web server mode\n\n");}
+
 
 
 
@@ -324,6 +327,7 @@ events("Starting PID $childpid","MAIN",__LINE__);
 $renice_bin=$unix->find_program("renice");
 events("$renice_bin 19 $childpid","MAIN",__LINE__);
 shell_exec("$renice_bin 19 $childpid &");
+$GLOBALS["RUN_AS_DAEMON"]=true;
 events("Memory: ".round(((memory_get_usage()/1024)/1000),2) ." before start service".__LINE__);
 $count=0;
 while ($stop_server==false) {
@@ -749,9 +753,7 @@ function xLoadAvg(){
 function launch_all_status($force=false){
 
 	xLoadAvg();
-	if(!is_file("/usr/share/artica-postfix/ressources/settings.inc")){
-		shell_exec("/usr/share/artica-postfix/bin/process1 --force");
-	}
+	if(!is_file("/usr/share/artica-postfix/ressources/settings.inc")){shell_exec("/usr/share/artica-postfix/bin/process1 --force");}
 
 	$trace=debug_backtrace();if(isset($trace[1])){$called=" called by ". basename($trace[1]["file"])." {$trace[1]["function"]}() line {$trace[1]["line"]}";events("$called",__FUNCTION__,__LINE__);}
 
@@ -776,14 +778,24 @@ function launch_all_status($force=false){
 	$authtailftime="/etc/artica-postfix/pids/auth-tail.time";
 	$unix=new unix();
 	$timefile=$unix->file_time_min($authtailftime);
+	events("/etc/artica-postfix/pids/auth-tail.time -> {$timefile}Mn",__FUNCTION__,__LINE__);
 	if($timefile>15){
 		@unlink($timefile);
-		@file_put_contents($timefile, time());
+		@file_put_contents($authtailftime, time());
 		$cmd=trim("{$GLOBALS["nohup"]} /etc/init.d/artica-postfix restart auth-logger >/dev/null 2>&1 &");
 		events($cmd);
 		shell_exec($cmd);
 	}
 	
+	$globalStatusIniTime=$unix->file_time_min("/usr/share/artica-postfix/ressources/logs/global.status.ini");
+	if($GLOBALS["RUN_AS_DAEMON"]){
+		if($globalStatusIniTime<2){return;}
+	}
+	
+	
+	events("**************** START ALL STATUS ****************");
+	events_start("start processing");
+	$t1=time();
 
 	$functions=array("squid_master_status","c_icap_master_status","kav4Proxy_status","dansguardian_master_status","wpa_supplicant","fetchmail","milter_greylist",
 	"framework","pdns_server","pdns_recursor","cyrus_imap","mysql_server","mysql_mgmt","mysql_replica","openldap","saslauthd","syslogger","squid_tail","amavis",
@@ -809,16 +821,19 @@ function launch_all_status($force=false){
 		$GLOBALS["CLASS_USERS"]=new settings_inc();
 		$GLOBALS["CLASS_UNIX"]=new unix();
 	}
+	
+	$took=$unix->distanceOfTimeInWords($t1,time());
+	events_start("end processing $took");
 
-
-
+   events("running ". count($functions)." functions  {$mem}MB in memory",__FUNCTION__,__LINE__);
 	while (list ($num, $func) = each ($functions) ){
 		if(function_exists($func)){
 			$mem=round(((memory_get_usage()/1024)/1000),2);
 				
-			events("running function \"$func\" {$mem}MB in memory",__FUNCTION__,__LINE__);
+			
 			if(!$force){
 				if(system_is_overloaded()){
+					events("running function \"$func\" {$mem}MB in memory",__FUNCTION__,__LINE__);
 					events("System is overloaded: {$GLOBALS["SYSTEM_INTERNAL_LOAD"]}, pause 10 seconds",__FUNCTION__,__LINE__);
 					AmavisWatchdog();
 					greyhole_watchdog();
@@ -826,6 +841,7 @@ function launch_all_status($force=false){
 					return;
 				}else{
 					if(systemMaxOverloaded()){
+						events("running function \"$func\" {$mem}MB in memory",__FUNCTION__,__LINE__);
 						events("System is very overloaded {$GLOBALS["SYSTEM_INTERNAL_LOAD"]}, stop",__FUNCTION__,__LINE__);
 						AmavisWatchdog();
 						greyhole_watchdog();
@@ -843,7 +859,7 @@ function launch_all_status($force=false){
 			if(trim($results)<>null){$conf[]=$results;usleep(5000);}
 		}
 	}
-
+	events("running ". count($functions)." functions  DONE {$mem}MB in memory",__FUNCTION__,__LINE__);
 	@unlink("/usr/share/artica-postfix/ressources/logs/global.status.ini");
 	file_put_contents("/usr/share/artica-postfix/ressources/logs/global.status.ini",@implode("\n",$conf));
 	@chmod(770,"/usr/share/artica-postfix/ressources/logs/global.status.ini");
@@ -6362,6 +6378,19 @@ function events($text,$function=null,$line=0){
 	}
 	$GLOBALS["CLASS_UNIX"]->events("$filename $function:: $text (L.$line)","/usr/share/artica-postfix/ressources/logs/launch.status.task");
 }
+function events_start($ev=null){
+		    $runasdeamon=null;
+			if($GLOBALS["RUN_AS_DAEMON"]){$runasdeamon="DAEMON";}
+			$line=date('Y-m-d H:i:s')." ".getmypid()." start $runasdeamon $ev...\n";
+			$sourcefile="/var/log/artica-postfix/artica.status.start.log";
+			$size=@filesize($sourcefile);
+			if($size>100000){@unlink($sourcefile);}
+			$f = @fopen($sourcefile, 'a');
+			@fwrite($f,$line);
+			@fclose($f);
+		}
+
+
 
 function events_Loadavg($text,$function=null,$line=0){
 	$filename=basename(__FILE__);

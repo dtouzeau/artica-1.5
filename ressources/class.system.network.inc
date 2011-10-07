@@ -1,4 +1,5 @@
 <?php
+if(!isset($GLOBALS["AS_ROOT"])){if(posix_getuid()==0){$GLOBALS["AS_ROOT"]=true;}else{$GLOBALS["AS_ROOT"]=false;}}
 class networking{
 	var $array_conf;
 	var $array_TCP;
@@ -108,7 +109,14 @@ class networking{
 		$users=new usersMenus();
 		if(isset($GLOBALS["CLASS_SOCKETS"])){$sock=$GLOBALS["CLASS_SOCKETS"];}else{$GLOBALS["CLASS_SOCKETS"]=new sockets();$sock=$GLOBALS["CLASS_SOCKETS"];}
 		$this->array_TCP=$users->TCP_ARRAY;
-		$this->hostname=trim($sock->getFrameWork('cmd.php?full-hostname=yes'));
+		if($GLOBALS["AS_ROOT"]){
+			if(class_exists('unix')){
+				$unix=new unix();
+				$this->hostname=$unix->FULL_HOSTNAME();
+			}
+		}else{
+			$this->hostname=trim($sock->getFrameWork('cmd.php?full-hostname=yes'));
+		}
 		
 	}
 	

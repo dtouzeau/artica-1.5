@@ -1824,6 +1824,7 @@ When define quota for a specific user, wait until this user have saved a file on
 <rescan-disk-system>Re-scan the system disk</rescan-disk-system>
 <rescan-disk-system>Re-scan the system disk</rescan-disk-system>
 <rescan_dhcpleases_text>Force Artica to analyze the dchp service lease file in order to refresh the lease status.</rescan_dhcpleases_text>
+<RESCAN_WWWVISISTED>Rescan the "visited" section</RESCAN_WWWVISISTED>
 <RestartServiceifReachMb>Restart if service consume more than</RestartServiceifReachMb>
 <restart_pdns>Restart PowerDNS</restart_pdns>
 <restart_pdns_text>Restart PowerDNS in order to refresh settings and daemons</restart_pdns_text>
@@ -2328,6 +2329,7 @@ This server will execute specifics calculation tasks in order to serve Internet 
 <websites_to_export_explain>This page display latest categorized websites that will be exported to the Artica datacenters in order to add your categorize tasks to the public repository server.</websites_to_export_explain>
 <web_console>Web Console</web_console>
 <WEB_FILTERING>Web filtering</WEB_FILTERING>
+<WEB_RESCAN_VISITED_TEXT>analyse the visited websites and see if there is new categories to add</WEB_RESCAN_VISITED_TEXT>
 <web_user>Web username</web_user>
 <Wednesday>Wednesday</Wednesday>
 <weight>Weight</weight>
@@ -2379,6 +2381,8 @@ The default value of 8 should be sufficient for most purposes</Wthreads_explain>
 <www_malware>infected web sites or allow to download/store malwares, virus...</www_malware>
 <www_maps>All websites helping find streets or objects position in a map, including driving directions, transport maps...</www_maps>
 <www_reale_state_office>Sites about all types of realestate, bying and selling homes, finding appartments for rent and selling</www_reale_state_office>
+<WWW_RESCAN_VISITED_ASK>This operation will synchronize visited websites in order to categorize them.
+Do you want to perform this operation ?</WWW_RESCAN_VISITED_ASK>
 <www_translators>All sites offer language translations</www_translators>
 <www_whitelisting>WhiteListing method</www_whitelisting>
 <www_whitelisting_explain>By default, you need to define which category you want to block when your users navigate trough Internet.[br]

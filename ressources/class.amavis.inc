@@ -376,7 +376,7 @@ function buildconf(){
 	$enable_dkim_verification=$sock->GET_INFO("enable_dkim_verification");
 	$AmavisDebugSpamassassin=$sock->GET_INFO("AmavisDebugSpamassassin");
 	if(!is_numeric($AmavisByPassOutgoingMessages)){$AmavisByPassOutgoingMessages=1;}
-	if(!is_numeric($AmavisDebugSpamassassin)){$AmavisDebugSpamassassin==0;}
+	if(!is_numeric($AmavisDebugSpamassassin)){$AmavisDebugSpamassassin=0;}
 	$myhostname=$sock->GET_INFO("myhostname");
 	if($myhostname==null){$myhostname=$users->fqdn;}
 	
@@ -437,7 +437,7 @@ function buildconf(){
 		if(!is_numeric($this->main_array["BEHAVIORS"]["enable_db"])){$this->main_array["BEHAVIORS"]["enable_db"]="0";}
 		if(!is_numeric($this->main_array["BEHAVIORS"]["sa_timeout"])){$this->main_array["BEHAVIORS"]["sa_timeout"]="30";}
 		if(!is_numeric($this->main_array["BEHAVIORS"]["enable_global_cache"])){$this->main_array["BEHAVIORS"]["enable_global_cache"]="0";}
-		
+		if(!is_numeric($AmavisDebugSpamassassin)){$AmavisDebugSpamassassin=0;}
 		
 		
 		if(posix_getuid()==0){echo "Starting......: amavisd-new build configuration loglevel:{$this->main_array["BEHAVIORS"]["log_level"]}\n";}

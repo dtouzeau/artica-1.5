@@ -815,9 +815,10 @@ function visited_sites(){
 	$unix=new unix();
 	if($unix->process_exists($oldpid)){if($GLOBALS["VERBOSE"]){echo "Already executed pid $oldpid\n";}return;}
 	$mypid=getmypid();
-	@file_put_contents($pidfile,$mypid);	
+	@file_put_contents($pidfile,$mypid);
+	$t1=time();	
 	
-	$sql="SELECT sitename,country FROM visited_sites";
+	$sql="SELECT sitename,country,category FROM visited_sites";
 	$results=$GLOBALS["Q"]->QUERY_SQL($sql);
 	$num_rows = mysql_num_rows($results);
 	if($num_rows==0){if($GLOBALS["VERBOSE"]){echo "No datas ". __FUNCTION__." ".__LINE__."\n";}return;}
@@ -829,9 +830,14 @@ function visited_sites(){
 		if(isset($array_country)){if(isset($array_country[0])){$country=$array_country[0];}}
 		if($country<>null){$country=",country='".addslashes($country)."'";;}
 		if($GLOBALS["VERBOSE"]){echo "{$ligne["sitename"]} {$array[0]} hits, {$array[1]} size Country '$country' on {$array[2]} tables\n";}
-		$sql="UPDATE visited_sites SET HitsNumber='{$array[0]}',Querysize='{$array[1]}'$country WHERE sitename='{$ligne["sitename"]}'";
+		$categories=$GLOBALS["Q"]->GET_CATEGORIES($ligne["sitename"],true);
+		$categories=addslashes($categories);
+		$sql="UPDATE visited_sites SET HitsNumber='{$array[0]}',Querysize='{$array[1]}'$country,category='$categories' WHERE sitename='{$ligne["sitename"]}'";
 		$GLOBALS["Q"]->QUERY_SQL($sql);
 	}
+		
+	$took=$unix->distanceOfTimeInWords($t1,time());
+	writelogs_squid("Scanned $num_rows visisted websites $took",__FUNCTION__,__FILE__,__LINE__);
 	
 }
 

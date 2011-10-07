@@ -245,10 +245,7 @@ function inject_category($categories){
 	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".".md5($categories).".pid";
 	$unix=new unix();
 	$pid=@file_get_contents($pidfile);
-	if($unix->process_exists($pid,__FILE__)){
-		writelogsBLKS("Warning: Already running pid $pid for $categories",__FUNCTION__,__FILE__,__LINE__);
-		return;
-	}
+	if($unix->process_exists($pid,__FILE__)){writelogsBLKS("Warning: Already running pid $pid for $categories",__FUNCTION__,__FILE__,__LINE__);return;}
 	
 	$unix->send_email_events("Proxy:[BlacklistsDB] processing injecting category $categories", "Pid number $pid", "proxy");
 	@file_put_contents($pidfile, getmypid());
@@ -440,17 +437,7 @@ function inject_sql($srcfilename,$filename,$categoriesTable){
 	
 }
 
-function CategoriesCountCache(){
-	$q=new mysql_squid_builder();
-	$sql="SELECT count(zmd5) as tcount,category FROM dansguardian_community_categories group by category";
-	$results=$q->QUERY_SQL($sql,"artica_backup");
-	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){	
-		$array[$ligne["category"]]=$tcount;
-	}
-	
-	@file_put_contents("/usr/share/artica-postfix/ressources/squid.categories.count.cache", serialize($array));
-	shell_exec("/bin/chmod 777 /usr/share/artica-postfix/ressources/squid.categories.count.cache");
-}
+function CategoriesCountCache(){return;}
 
 function export_table($tablename){
 	if($GLOBALS["VERBOSE"]){echo "Exporting $tablename\n";}

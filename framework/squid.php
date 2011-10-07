@@ -17,6 +17,7 @@ if(isset($_GET["kav4proxy-license-error"])){kav4proxy_license_error();exit();}
 if(isset($_GET["kav4proxy-pattern-date"])){kav4proxy_pattern_date();exit();}
 if(isset($_GET["kav4proxy-configure"])){kav4proxy_configure();exit();}
 if(isset($_GET["squid-realtime-cache"])){squid_realtime_cache();exit();}
+if(isset($_GET["visited-sites"])){visited_sites();exit();}
 
 
 
@@ -160,15 +161,22 @@ function kav4proxy_license_error(){
 			writelogs_framework("{$re[1]}",__FUNCTION__,__FILE__,__LINE__);
 			echo "<articadatascgi>". base64_encode(trim($re[1]))."</articadatascgi>";
 			return;
-		}
-		
+		}		
 	}
-	
-	
 }
 
 function squid_realtime_cache(){
 	echo "<articadatascgi>".@file_get_contents("/etc/artica-postfix/squid-realtime.cache")."</articadatascgi>";
+}
+
+function visited_sites(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$php5=$unix->LOCATE_PHP5_BIN();
+	$cmd=trim("$nohup $php5 /usr/share/artica-postfix/exec.squid.stats.php --visited-sites >/dev/null 2>&1 &");
+	shell_exec($cmd);
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	
+	
 }
 
 

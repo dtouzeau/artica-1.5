@@ -1124,6 +1124,26 @@ public function EXEC_NICE(){
 		if(is_file($net)){return $net;}
 	}
 	
+	public function FULL_HOSTNAME(){
+	$ypdomainname=$this->find_program("ypdomainname");
+	$hostname=$this->find_program("hostname");
+	$sysctl=$this->find_program("sysctl");
+	if($ypdomainname<>null){
+		exec("$ypdomainname",$results);
+		$domain=trim(@implode(" ",$results));
+	}else{exec("$sysctl -n kernel.domainname",$results);$domain=trim(@implode(" ",$results));}
+	unset($results);
+	exec("$hostname -s",$results);
+	$host=trim(@implode(" ",$results));
+	unset($results);
+	
+	if(preg_match("#not set#",$domain)){$domain=null;}
+	if(preg_match("#\(none#",$domain)){$domain=null;}
+	if($domain==null){exec("$hostname -d",$results);$domain=trim(@implode(" ",$results));}
+	if(strlen($domain)>0){$host="$host.$domain";}
+	$host=str_replace('.(none)',"",$host);		
+	}
+	
 	
 	public FUNCTION GET_LOCAL_SID(){
 		if($GLOBALS[__FUNCTION__]<>null){return $GLOBALS[__FUNCTION__];}
@@ -1133,6 +1153,7 @@ public function EXEC_NICE(){
 			if($filtime<520){return @file_get_contents("/etc/artica-postfix/LOCAL_SID");}
 		}		
 		$net=$this->LOCATE_NET_BIN_PATH();
+		if(strlen($net)<3){return null;}
 		
 		exec("$net getlocalsid 2>&1",$results);
 		while (list ($index, $line) = each ($results)){
@@ -2886,24 +2907,42 @@ public function LOCATE_STUNNEL_BIN(){
 	
 	
 	public function events($text,$logFile=null,$phplog=false){
+		$sourcefile=null;$sourcefunction=null;$sourceline=null;
+		$pid=getmypid();
+		$date=date("Y-m-d H:i:s");
+		if(function_exists("debug_backtrace")){
+			$trace=debug_backtrace();
+			$sourcefile=basename($trace[1]["file"]);
+			$sourcefunction=$trace[1]["function"];
+			$sourceline=$trace[1]["line"];
+			$line="$date [$pid] $sourcefunction::$sourceline $text\n";
+		}
+		
+		if($sourcefile<>null){
+			$sourcefile="/var/log/artica-postfix/$sourcefile.log";
+			$size=@filesize($sourcefile);
+			if($size>100000){@unlink($sourcefile);}
+			$f = @fopen($sourcefile, 'a');
+			@fwrite($f,$line);
+			@fclose($f);
+		}
+		
+		
 		$common="/var/log/artica-postfix/syslog.log";
 		if($logFile<>null){$size=@filesize($logFile);}
 		$size=@filesize($common);
 		if($size>100000){@unlink($common);}
 		
-		if($logFile<>null){
-			$size=@filesize($logFile);
-			if($size>100000){@unlink($logFile);}
-		}
+		if($logFile<>null){$size=@filesize($logFile);if($size>100000){@unlink($logFile);}}
 		
-		$pid=getmypid();
-		$date=date("Y-m-d H:i:s");
+		
+		
 		
 		if($logFile<>null){$f = @fopen($logFile, 'a');}
 		$h = @fopen($common, 'a');
 		
 		$sline="[$pid] $text";
-		$line="$date [$pid] $text\n";
+		if($line==null){$line="$date [$pid] $text\n";}
 		if($GLOBALS["VERBOSE"]){echo $line."\n";}
 		if($phplog){error_log("$sline");}
 		if($logFile<>null){@fwrite($f,$line);}
@@ -3457,12 +3496,12 @@ function writelogs_framework($text=null,$function=null,$file_source=null,$line=n
 if($file_source==null){$file_source= __FILE__ ;}
 if(posix_getuid()==0){$prefix="[DAEMON]";}else{$prefix="[CONSOLE]";}
 if(function_exists("getmypid")){$pid=getmypid();}
-
+$date=date('H:i:s');
 if($line<>null){$line=" line $line";}
 $file_source=str_replace("/usr/share/artica-postfix/","",$file_source);
 $file_source=str_replace("/home/dtouzeau/developpement/artica-postfix/","",$file_source);
 if($GLOBALS["VERBOSE"]){echo "[$pid] $prefix::$function:: $text in $file_source$line\n";}
-$text="[$pid] $prefix::$function:: $text in $file_source$line";
+$text="$date [$pid] $prefix::$function:: $text in $file_source$line";
 error_log("$text");
 writeFrameOtherlogs('/var/log/artica-postfix/framework.debug',$text);
 }

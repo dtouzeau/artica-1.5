@@ -247,27 +247,27 @@ function uncompress($srcName, $dstName) {
 
 function WriteCategory($category){
 	$squidguard=new squidguard();
+	$q=new mysql_squid_builder();
 	echo "Starting......: Artica database writing category $category\n";
 	echo "Starting......: Artica database /etc/dansguardian/lists/blacklist-artica/$category/domains\n";
 	echo "Starting......: Artica database /var/lib/squidguard/blacklist-artica/$category\n";
 	@mkdir("/etc/dansguardian/lists/blacklist-artica/$category",0755,true);
 	@mkdir("/var/lib/squidguard/blacklist-artica/$category",0755,true);
 	
-	if(!is_file("/etc/dansguardian/lists/blacklist-artica/$category/urls")){@file_put_contents("/etc/dansguardian/lists/blacklist-artica/$category/urls","#");}
-	if(!is_file("/var/lib/squidguard/blacklist-artica/$category/urls")){@file_put_contents("/var/lib/squidguard/blacklist-artica/$category/urls","#");}
-		
-	$sql="SELECT pattern FROM dansguardian_community_categories WHERE enabled=1 and category='$category'";
-	$q=new mysql_squid_builder();
+	if(!is_dir("/var/lib/squidguard/$category")){@mkdir("/var/lib/squidguard/$category",755,true);}
+	if(!is_dir("/etc/dansguardian/lists/blacklist/$category/urls")){@mkdir("/etc/dansguardian/lists/blacklist/$category/urls",755,true);}
+	if(!is_file("/etc/dansguardian/lists/blacklist/$category/urls")){@file_put_contents("/etc/dansguardian/lists/blacklist/$category/urls","\n");}
+	if(!is_file("/var/lib/squidguard/$category/urls")){@file_put_contents("/var/lib/squidguard/$category/urls","\n");}
+	$tablesource="category_".$q->category_transform_name($category);	
+	$sql="SELECT pattern FROM $tablesource WHERE enabled=1";
+	
 	$results=$q->QUERY_SQL($sql,"artica_backup");
-	if(!$q->ok){
-		echo "Starting......: Artica database $q->mysql_error\n";
-		return;
-	}
+	if(!$q->ok){echo "Starting......: Artica database $q->mysql_error\n";return;}
 	$num=mysql_num_rows($results);
 	echo "Starting......: Artica database $num domains\n";
 	
-	$domain_path_1="/etc/dansguardian/lists/blacklist-artica/$category/domains";
-	$domain_path_2="/var/lib/squidguard/blacklist-artica/$category/domains";
+	$domain_path_1="/etc/dansguardian/lists/blacklist/$category/domains";
+	$domain_path_2="/var/lib/squidguard/$category/domains";
 	$fh1 = fopen($domain_path_1, 'w+');
 	$fh2 = fopen($domain_path_2, 'w+');
 	
@@ -288,16 +288,8 @@ function WriteCategory($category){
 
 
 function GetCategory($www){
-	if(preg_match("#^www\.(.+)#",$www,$re)){$www=$re[1];}
-	$sql="SELECT category FROM dansguardian_community_categories WHERE pattern='$www' and enabled=1";
-	$q=new mysql_squid_builder();
-	$results=$q->QUERY_SQL($sql,"artica_backup");
-	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
-		$f[]=$ligne["category"];
-	}
-	
-	if(is_array($f)){return @implode(",",$f);}
-	
+$q=new mysql_squid_builder();
+return $q->GET_CATEGORIES($www);
 }
 
 

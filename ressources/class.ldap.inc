@@ -1,4 +1,5 @@
 <?php
+if(!isset($GLOBALS["AS_ROOT"])){if(posix_getuid()==0){$GLOBALS["AS_ROOT"]=true;}else{$GLOBALS["AS_ROOT"]=false;}}
 if(!isset($GLOBALS["DEBUG_TEMPLATE"])){$GLOBALS["DEBUG_TEMPLATE"]=false;}
 if($GLOBALS["DEBUG_MEM"]){events("Memory: class.ldap.inc -> START AT ".round(((memory_get_usage()/1024)/1000),2) ."M :".__LINE__);}
 
@@ -342,78 +343,75 @@ private function ldap_perform_connection($ldapport=null){
 	 
 }
 		
-		
-function ErrorConnection(){
-	$ldapClass=$this;
-	$port=$ldapClass->ldap_port;
-	$password=$ldapClass->ldap_password;
-	$admin=$ldapClass->ldap_admin;
-	$suffix=$ldapClass->suffix;
-	$ldap_host=$ldapClass->ldap_host;
-	$ldap_port=$ldapClass->ldap_port;
-	if($ldap_port==null){$ldap_port=389;}
-	$dn="cn=$admin,$suffix";
-	writelogs("testing connection dn $dn",__FUNCTION__,__FILE__);
-
-	if(!$fp=@fsockopen($ldap_host, $ldap_port, $errno, $errstr, 2)){
-		$ldapClass->builderror($errstr);
-	}
-	fclose($fp);
-
-
-	$ldap_connection=ldap_connect($ldap_host, $ldap_port );
-	if(!$ldap_connection){ 
-	$error="Please check LDAP connection, it seems that Artica is not allowed to connect to &laquo;$ldap_host:$port&raquo;<br>";}
-	writelogs("Error after connecting:$error '$ldap_connection'",__FUNCTION__,__FILE__);	
+	function ErrorConnection(){
+		$ldapClass=$this;
+		$port=$ldapClass->ldap_port;
+		$password=$ldapClass->ldap_password;
+		$admin=$ldapClass->ldap_admin;
+		$suffix=$ldapClass->suffix;
+		$ldap_host=$ldapClass->ldap_host;
+		$ldap_port=$ldapClass->ldap_port;
+		if($ldap_port==null){$ldap_port=389;}
+		$dn="cn=$admin,$suffix";
+		writelogs("testing connection dn $dn",__FUNCTION__,__FILE__);
 	
-	if($error==null){
-		writelogs("settings ldap options LDAP_OPT_PROTOCOL_VERSION",__FUNCTION__,__FILE__);
-		ldap_set_option($ldap_connection, LDAP_OPT_PROTOCOL_VERSION, 3); // on passe le LDAP en version 3, necessaire pour travailler avec le AD
-		writelogs("settings ldap options LDAP_OPT_REFERRALS",__FUNCTION__,__FILE__);
-		ldap_set_option($ldap_connection, LDAP_OPT_REFERRALS, 0); 		 
-		$ldapbind=@ldap_bind($ldap_connection, $dn, $password);
-		writelogs("Bind success",__FUNCTION__,__FILE__);	
+		if(!$fp=@fsockopen($ldap_host, $ldap_port, $errno, $errstr, 2)){
+			$ldapClass->builderror($errstr);
+		}
+		fclose($fp);
+	
+	
+		$ldap_connection=ldap_connect($ldap_host, $ldap_port );
+		if(!$ldap_connection){ 
+		$error="Please check LDAP connection, it seems that Artica is not allowed to connect to &laquo;$ldap_host:$port&raquo;<br>";}
+		writelogs("Error after connecting:$error '$ldap_connection'",__FUNCTION__,__FILE__);	
 		
-		if(!$ldapbind){
-			$errornumber=ldap_errno($ldap_connection);
-			$error_text=ldap_err2str($ldap_connection);
+		if($error==null){
+			writelogs("settings ldap options LDAP_OPT_PROTOCOL_VERSION",__FUNCTION__,__FILE__);
+			ldap_set_option($ldap_connection, LDAP_OPT_PROTOCOL_VERSION, 3); // on passe le LDAP en version 3, necessaire pour travailler avec le AD
+			writelogs("settings ldap options LDAP_OPT_REFERRALS",__FUNCTION__,__FILE__);
+			ldap_set_option($ldap_connection, LDAP_OPT_REFERRALS, 0); 		 
+			$ldapbind=@ldap_bind($ldap_connection, $dn, $password);
+			writelogs("Bind success",__FUNCTION__,__FILE__);	
 			
-			switch ($errornumber) {
-					case 0x31:
-						$error=$error . "<li>Bad username or password. Please try again.</li>";
-						break;
-					case 0x32:
-						$error=$error . "<li>Insufficient access rights.</li>";
-						break;
-					case 81:
-						$error=$error . "<li>Unable to connect to the LDAP server\n $ldap_host:$port, <br>please,verify if ldap daemon is running or the ldap server address";
-						break;						
-					case -1:
-						$error=$error . "<li>$error_text, <br>it seems that Artica could not connect to the server</li>";
-						break;
-					default:
-						$error=$error . "<li>Could not bind to the LDAP server $error_text</li>";
- 				}			
-
-		$error="Error number $errornumber,$error_text<br>$error";}
-	} 				
+			if(!$ldapbind){
+				$errornumber=ldap_errno($ldap_connection);
+				$error_text=ldap_err2str($ldap_connection);
+				
+				switch ($errornumber) {
+						case 0x31:
+							$error=$error . "<li>Bad username or password. Please try again.</li>";
+							break;
+						case 0x32:
+							$error=$error . "<li>Insufficient access rights.</li>";
+							break;
+						case 81:
+							$error=$error . "<li>Unable to connect to the LDAP server\n $ldap_host:$port, <br>please,verify if ldap daemon is running or the ldap server address";
+							break;						
+						case -1:
+							$error=$error . "<li>$error_text, <br>it seems that Artica could not connect to the server</li>";
+							break;
+						default:
+							$error=$error . "<li>Could not bind to the LDAP server $error_text</li>";
+	 				}			
 	
-		return $ldapClass->builderror($error);
-
+			$error="Error number $errornumber,$error_text<br>$error";}
+		} 				
+		
+			return $ldapClass->builderror($error);
 	
+		
 	}
-
 	
 	private function builderror($error){
-	$ldapClass=$this;
-	$port=$ldapClass->ldap_port;
-	$password=$ldapClass->ldap_password;
-	$admin=$ldapClass->ldap_admin;
-	$suffix=$ldapClass->suffix;
-	$ldap_host=$ldapClass->ldap_host;
-	return array("TITLE"=>"{LDAP_ERROR_TEXT}","TEXT"=>"<ul><li>$ldap_host:$port</li><li>$dn</li></ul>$error");
+		$ldapClass=$this;
+		$port=$ldapClass->ldap_port;
+		$password=$ldapClass->ldap_password;
+		$admin=$ldapClass->ldap_admin;
+		$suffix=$ldapClass->suffix;
+		$ldap_host=$ldapClass->ldap_host;
+		return array("TITLE"=>"{LDAP_ERROR_TEXT}","TEXT"=>"<ul><li>$ldap_host:$port</li><li>$dn</li></ul>$error");
 	}
-		
 		
 	function dn_escape($dn) {	
 		$olddn = $dn;
@@ -605,7 +603,6 @@ function ErrorConnection(){
 			return $hash[0]["mail"][0];}else{return $email;}		
 	}
 	
-	
 	function find_users_by_mail($email){
 		$this->ldap_perform_connection();
 		$pattern="(&(objectclass=userAccount)(|(mailAlias=$email)(mail=$email)(mozillaSecondEmail=$email)(FetchMailMatchAddresses=$email)))";
@@ -679,8 +676,6 @@ function ErrorConnection(){
 		}
 	}
 	
-	
-	
 	function delete_associated_domain($ou,$domain){
 		$this->ldap_perform_connection();
 		$update_array=array();
@@ -701,14 +696,12 @@ function ErrorConnection(){
 			$this->Ldap_modify("ou=$ou,dc=organizations,$this->suffix",$update_array);
 			}
 		}
-		
-		
+			
 	function StripSpecialsChars($pattern){
 		include_once(dirname(__FILE__)."/class.html.tools.inc");
 		$html=new htmltools_inc();
 		return $html->StripSpecialsChars($pattern);
 	}
-	
 	
 	function AddOrganization($ou){
 		$this->ldap_perform_connection();
@@ -795,7 +788,6 @@ function ErrorConnection(){
 	return true;
 	}	
 	
-	
 	function DeleteAllUsersInOu($ou){
 		
 		if($ou==null){return false;}
@@ -857,7 +849,7 @@ function ErrorConnection(){
 		return true;
 	}	
 	
- function HashAllGroupsForListBox(){
+ 	function HashAllGroupsForListBox(){
          		$hash=$this->hash_get_ou();
 		while (list ($num, $ou) = each ($hash) ){
 			$groups=$this->hash_groups($ou);
@@ -876,6 +868,7 @@ function ErrorConnection(){
          }
 	
 	function AddGlobalDomain($domain_name){
+		$array=array();
 		$array["o"][]=$domain_name;
 		$array["objectClass"][]='organization';
 		$array["objectClass"][]='top';
@@ -1957,6 +1950,7 @@ function Hash_GetALLUsers(){
 	}
 	
 	function add_domains_to_VirtualDomainsMapsMTA($ou,$domain){
+		$upd=array();
 		$dn="ou=$ou,dc=organizations,$this->suffix";
 		if($ou==null){writelogs("unable to open null ou...'",__FUNCTION__,__FILE__);return false;}
 		$hash=$this->OUDatas($ou);
@@ -1982,6 +1976,22 @@ function Hash_GetALLUsers(){
 	function LOCAL_SID(){
 		$sid=null;
 		if(isset($GLOBALS[__CLASS__][__FUNCTION__])){return $GLOBALS[__CLASS__][__FUNCTION__];}
+		
+		if(isset($GLOBALS["SETTINGS_INC"])){
+			if($GLOBALS["SETTINGS_INC"]["LOCAL_SID"]<>null){
+				$GLOBALS[__CLASS__][__FUNCTION__]=$GLOBALS["SETTINGS_INC"]["LOCAL_SID"];
+				return $GLOBALS["SETTINGS_INC"]["LOCAL_SID"];
+			}
+		}		
+		if(isset($GLOBALS["AS_ROOT"])){
+			if(class_exists("unix")){
+				$unix=new unix();
+				$GLOBALS[__CLASS__][__FUNCTION__] = $unix->GET_LOCAL_SID();
+				return $GLOBALS["SETTINGS_INC"]["LOCAL_SID"];
+			}
+		}
+		
+
 		include_once(dirname(__FILE__)."/class.ini.inc");
 		$sock=new sockets();
 		if(!isset($GLOBALS[__CLASS__][__FUNCTION__]["SambaSMBConf"])){
@@ -2011,7 +2021,7 @@ function Hash_GetALLUsers(){
 	}
 		
 		
-		function domains_get_locals_domains($ou){
+	function domains_get_locals_domains($ou){
 			$hash=$this->Hash_domains_table($ou);
 			if(!is_array($hash)){return array();}
 			while (list ($num, $ligne) = each ($hash) ){
@@ -2023,7 +2033,7 @@ function Hash_GetALLUsers(){
 		}
 		
 		
-		function domainsDelete($ou,$ArrayNum){
+	function domainsDelete($ou,$ArrayNum){
 			$table=$this->hash_get_domains_ou($ou);
 			//associatedDomain;
 			unset($table[$ArrayNum]);
@@ -4053,7 +4063,6 @@ function getobjectDNClass($dn,$fulldn=0){
 
 }
 
-
 class DomainsTools{
 	var $transport_port;
 	var $transport_ip;
@@ -4430,7 +4439,6 @@ function EXEC_NICE(){
 	}
 	return "$ionice$nice";    	
 }
-	
 	
 function strip_path_accents($path){
 	$path=str_replace("%E9","é",$path);

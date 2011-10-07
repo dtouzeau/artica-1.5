@@ -2476,3 +2476,7 @@ This server will execute specifics calculation tasks in order to serve Internet 
 <function>function</function>
 <webinterface>Web Interface</webinterface>
 <zarafaSharedStoreOnly>non-active user</zarafaSharedStoreOnly>
+<RESCAN_WWWVISISTED>Rescan the "visited" section</RESCAN_WWWVISISTED>
+<WEB_RESCAN_VISITED_TEXT>analyse the visited websites and see if there is new categories to add</WEB_RESCAN_VISITED_TEXT>
+<WWW_RESCAN_VISITED_ASK>This operation will synchronize visited websites in order to categorize them.
+Do you want to perform this operation ?</WWW_RESCAN_VISITED_ASK>

@@ -283,23 +283,7 @@ function ParseSitesInfos_inject($array){
 
 function ParseSitesInfos_artica_category($sitename){
 	$q=new mysql_squid_builder();
-	$sql="SELECT category FROM dansguardian_community_categories WHERE pattern='$sitename'";
-	$results=$q->QUERY_SQL($sql,"artica_backup");
-	if(!$q->ok){
-		writelogs("Fatal Error: $q->mysql_error",__FUNCTION__,__FILE__,__LINE__);
-		writelogs($sql,__FUNCTION__,__FILE__,__LINE__);
-		return;
-	}
-	
-	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
-		$cats[$ligne["category"]]=$ligne["category"];
-	}
-	
-	if(!is_array($cats)){return null;}
-	while (list ($category, $none) = each ($cats) ){
-		$f[]=$category;
-	}
-	return @implode(",",$f);
+	return $q->GET_CATEGORIES($sitename,true);
 }
 
 function include_tpl_file($path,$category){
@@ -307,37 +291,42 @@ function include_tpl_file($path,$category){
 	$uuid=base64_decode($sock->getFrameWork("cmd.php?system-unique-id=yes"));
 	if($uuid==null){echo "UUID=NULL; Aborting";return;}
 	if($category==null){echo "CATEGORY=NULL; Aborting";return;}				
-	if(!is_file($path)){
-		echo "$path no such file\n";
-		return;
-	}
+	if(!is_file($path)){echo "$path no such file\n";return;}
 	
 	$q=new mysql_squid_builder();
+	$q->CreateCategoryTable($category);
+	$TableDest="category_".$q->category_transform_name($category);	
 	$array=array();
 	$f=@explode("\n",@file_get_contents($path));
 	$count_websites=count($f);
 	$i=0;$d=0;$group=0;
+	$prefix="INSERT IGNORE INTO $TableDest (zmd5,zDate,category,pattern,uuid) VALUES";
 	while (list ($index, $website) = each ($f) ){
-		$i++;
-		$d++;
-		if($d>1000){
-			$group=$group+$d;
-			events_tail("include_tpl_file($category):: importing $group sites...");
-			$d=0;
-		}
+		$i++;$d++;
+		if($d>1000){$group=$group+$d;events_tail("include_tpl_file($category):: importing $group sites...");$d=0;}
 		if($website==null){return;}
 		$www=trim(strtolower($website));
 		if(preg_match("#www\.(.+?)$#i",$www,$re)){$www=$re[1];}
 		$md5=md5($www.$category);	
 		if($array[$md5]){echo "$www already exists\n";continue;}
 		$enabled=1;
-		$sql_add="INSERT INTO dansguardian_community_categories (zmd5,zDate,category,pattern,uuid) VALUES('$md5',NOW(),'$category','$www','$uuid')";		
+		$sql_add[]="('$md5',NOW(),'$category','$www','$uuid')";		
 		$array[$md5]=true;
 		if($GLOBALS["SIMULATE"]){echo "$i/$count_websites: $sql_add\n";continue;}
-		
-		$q->QUERY_SQL($sql_add,"artica_backup");
-		if(!$q->ok){echo "$i/$count_websites Failed: $www\n";}else{echo "$i/$count_websites Success: $www\n";}
+		if(count($sql_add)>500){
+			$sql=$prefix.@implode(",",$sql_add);
+			$q->QUERY_SQL($sql);
+			if(!$q->ok){echo "$i/$count_websites Failed: $www\n";}else{echo "$i/$count_websites Success: $www\n";}
+			$sql_add=array();
+		}
 	}
+	
+if(count($sql_add)>0){
+			$sql=$prefix.@implode(",",$sql_add);
+			$q->QUERY_SQL($sql);
+			if(!$q->ok){echo "$i/$count_websites Failed: $www\n";}else{echo "$i/$count_websites Success: $www\n";}
+			$sql_add=array();
+		}	
 	
 	
 echo " -------------------------------------------------\n";	

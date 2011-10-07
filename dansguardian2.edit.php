@@ -13,6 +13,10 @@ if(!$usersmenus->AsDansGuardianAdministrator){
 	echo "alert('$alert');";
 	die();	
 }
+while (list ($num, $ligne) = each ($_REQUEST) ){writelogs("item: $num","MAIN",__FILE__,__LINE__);}
+
+
+
 if(isset($_GET["rule"])){rule_edit();exit;}
 if(isset($_GET["blacklist"])){blacklist();exit;}
 if(isset($_GET["whitelist"])){whitelist();exit;}
@@ -204,7 +208,9 @@ function blacklist_save(){
 	$sql="SELECT ID FROM webfilter_blks WHERE category='{$_POST["blacklist"]}' AND modeblk=0 AND webfilter_id='{$_POST["rule_id"]}'";
 	$ligne=mysql_fetch_array($q->QUERY_SQL($sql));
 	if(($_POST["enabled"]==1) && ($ligne["ID"]==0)){
-		$q->QUERY_SQL("INSERT IGNORE INTO webfilter_blks (webfilter_id,category,modeblk) VALUES ('{$_POST["rule_id"]}','{$_POST["blacklist"]}','0')");
+		$sql="INSERT IGNORE INTO webfilter_blks (webfilter_id,category,modeblk) VALUES ('{$_POST["rule_id"]}','{$_POST["blacklist"]}','0')";
+		writelogs($sql,__FUNCTION__,__FILE__,__LINE__);
+		$q->QUERY_SQL($sql);
 		if(!$q->ok){echo $q->mysql_error;return;} 
 	}
 	

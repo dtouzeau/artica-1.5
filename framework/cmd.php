@@ -5040,35 +5040,9 @@ function ChangeHostName(){
 function ClamavUpdate(){
 	sys_THREAD_COMMAND_SET("/usr/share/artica-postfix/bin/artica-update --clamav");
 }
-
 function hostname_full(){
 	$unix=new unix();
-	$ypdomainname=$unix->find_program("ypdomainname");
-	$hostname=$unix->find_program("hostname");
-	$sysctl=$unix->find_program("sysctl");
-	if($ypdomainname<>null){
-		exec("$ypdomainname",$results);
-		$domain=trim(@implode(" ",$results));
-		
-		
-	}else{
-		exec("$sysctl -n kernel.domainname",$results);
-		$domain=trim(@implode(" ",$results));
-	}
-	unset($results);
-	exec("$hostname -s",$results);
-	$host=trim(@implode(" ",$results));
-	unset($results);
-	
-	if(preg_match("#not set#",$domain)){$domain=null;}
-	if(preg_match("#\(none#",$domain)){$domain=null;}
-	if($domain==null){
-		exec("$hostname -d",$results);
-		$domain=trim(@implode(" ",$results));
-	}
-	
-	if(strlen($domain)>0){$host="$host.$domain";}
-	$host=str_replace('.(none)',"",$host);
+	$host=$unix->FULL_HOSTNAME();
 	echo "<articadatascgi>$host</articadatascgi>";	
 	
 }

@@ -1,12 +1,15 @@
 <?php
 ini_set("memory_limit","400M");
+error_reporting(E_ALL & ~E_NOTICE);
 if(!isset($GLOBALS["DEBUG_INCLUDES"])){$GLOBALS["DEBUG_INCLUDES"]=false;}
 if($GLOBALS["DEBUG_INCLUDES"]){echo basename(__FILE__)."::".dirname(__FILE__)."/class.semaphores.php\n";}
 include_once(dirname(__FILE__)."/class.semaphores.php");
 include_once(dirname(__FILE__)."/logs.inc");
 
-error_reporting(E_ALL & ~E_NOTICE);
-if(function_exists("posix_getuid")){if(posix_getuid()<>0){if(!$GLOBALS["KAV4PROXY_NOSESSION"]){session_start();}}}
+if(function_exists("posix_getuid")){
+	if(!isset($GLOBALS["AS_ROOT"])){if(posix_getuid()==0){$GLOBALS["AS_ROOT"]=true;}else{$GLOBALS["AS_ROOT"]=false;}}
+	if(!$GLOBALS["AS_ROOT"]){if(!$GLOBALS["KAV4PROXY_NOSESSION"]){session_start();}}
+}
 class sockets{
 	var $remote_ip;
 	var $remote_port;
@@ -381,6 +384,8 @@ function GET_MYSQL_ROOT($key){
 	function getFrameWork($uri){
 		$line=null;
 		if($uri=="cmd.php?uri=artica_version"){
+			if($GLOBALS["AS_ROOT"]){return @file_get_contents("/usr/share/artica-postfix/VERSION");}
+			
 			if(function_exists("apc_store")){
    				$value=apc_fetch("artica_version");
    				if($value<>null){return $value;}
@@ -409,9 +414,10 @@ function GET_MYSQL_ROOT($key){
 		if(preg_match('#<articadatascgi>(.+)</articadatascgi>#s',$line,$regs)){
 			$results=trim($regs[1]);
 			//writelogs("receive ".strlen($results),__FUNCTION__,__FILE__);
-			if($uri=="cmd.php?uri=artica_version"){$this->SET_APC_STORE("artica_version",$results);}
-			return $results;
-		}
+			if($uri=="cmd.php?uri=artica_version"){
+				$this->SET_APC_STORE("artica_version",$results);}
+				return $results;
+			}
 		
 		if(preg_match('#<articadatascgi>(.+)</\s+articadatascgi>#s',$line,$regs)){
 				$results=trim($regs[1]);

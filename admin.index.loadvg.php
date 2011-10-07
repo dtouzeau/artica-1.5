@@ -158,7 +158,7 @@ function tabs(){
 	}
 // --------------------------------------------------------------------------------------
 	$gp=new artica_graphs();
-	$memory_average=$tpl->_ENGINE_parse_body("{memory_use} {today} (GB)");
+	$memory_average=$tpl->_ENGINE_parse_body("{memory_use} {today} (MB)");
 	if($GLOBALS["VERBOSE"]){echo "<hr>";}
 	$sql="SELECT DATE_FORMAT(zDate,'%Y-%m-%d') as tday,HOUR(zDate) as thour,AVG(mem) as tmem FROM ps_mem_tot GROUP BY tday,thour HAVING tday=DATE_FORMAT(NOW(),'%Y-%m-%d') ORDER BY thour";
 	if($GLOBALS["VERBOSE"]){echo "<code>$sql</code><br>";}
@@ -171,7 +171,7 @@ function tabs(){
 		HAVING thour2=DATE_FORMAT(NOW(),'%h') ORDER BY DATE_FORMAT(zDate,'%H-%i') ";
 		if($GLOBALS["VERBOSE"]){echo "<code>$sql</code><br>";}
 		$results=$q->QUERY_SQL($sql,"artica_events");
-		$memory_average=$tpl->_ENGINE_parse_body("{memory_use} {this_hour} (GB)");
+		$memory_average=$tpl->_ENGINE_parse_body("{memory_use} {this_hour} (MB)");
 		$mysql_num_rows=mysql_num_rows($results);
 		$xtitle=$tpl->javascript_parse_text("{minutes}");		
 	}
@@ -184,7 +184,6 @@ function tabs(){
 		while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
 				$size=$ligne["tmem"];
 				$size=$size/1024;
-				$size=$size/1000;
 				$size=$size/1000;
 				$size=round($size/1000,0);
 				$gp->xdata[]=$ligne["thour"];

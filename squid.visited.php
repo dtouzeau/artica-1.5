@@ -18,6 +18,9 @@
 		
 	}
 	
+	if(isset($_GET["rescan-js"])){rescan_js();exit;}
+	if(isset($_POST["rescan_perform"])){rescan_perform();exit;}
+	
 	if(isset($_GET["popup"])){popup();exit;}
 	if(isset($_GET["visited"])){visited();exit;}
 	if(isset($_GET["visited-list"])){visited_list();exit;}
@@ -66,12 +69,35 @@ function CategorizeAll_js(){
 	
 }
 
+function rescan_js(){
+	$page=CurrentPageName();
+	$tpl=new templates();
+	$text=$tpl->javascript_parse_text("{WWW_RESCAN_ASK}");
+	
+	$html="
+	if(confirm('$text')){
+		var XHR = new XHRConnection();
+		XHR.appendData('rescan_perform',1);
+		XHR.sendAndLoad('$page', 'POST');		
+		}
+	";
+	echo $html;
+}
+
+function rescan_perform(){
+	$sock=new sockets();
+	$sock->getFrameWork("squid.php?visited-sites=yes");
+	
+}
+
+
 function js(){
 	$page=CurrentPageName();
 	$tpl=new templates();
 	$title=$tpl->_ENGINE_parse_body("{visited_websites}");
 	$categorize_this_query=$tpl->_ENGINE_parse_body("{categorize_this_query}");
-	$start="YahooWin3('720','$page?popup=yes&day={$_GET["day"]}','$title');";
+	if(isset($_GET["onlyNot"])){$onlyNot="&onlyNot=yes";}
+	$start="YahooWin3('720','$page?popup=yes&day={$_GET["day"]}$onlyNot','$title');";
 	if(isset($_GET["add-www"])){
 		$title=$tpl->_ENGINE_parse_body("{add_websites}");
 		$start="YahooWin3('420','$page?free-cat=yes','$title');";
@@ -100,7 +126,12 @@ function popup(){
 	$array["free-cat"]='{add_websites}';
 	$array["params"]='{parameters}';
 
-	
+	if(isset($_GET["onlyNot"])){
+		unset($array["visited"]);
+		unset($array["yes-cat"]);
+		unset($array["free-cat"]);
+		
+	}
 
 	
 	while (list ($num, $ligne) = each ($array) ){
@@ -161,6 +192,11 @@ function parameters(){
 	$sock=new sockets();
 	$EnableCommunityFilters=$sock->GET_INFO("EnableCommunityFilters");
 	if($EnableCommunityFilters==null){$EnableCommunityFilters=1;}
+	
+	$rescan_visited=Paragraphe("compile-database-64.png","{RESCAN_WWWVISISTED}","{WEB_RESCAN_VISITED_TEXT}","javascript:Loadjs('squid.visited.php?rescan-js=yes')");
+	$tr[]=$rescan_visited;
+	
+	$table=CompileTr3($tr);
 	$page=CurrentPageName();
 	$html="
 	<table style='width:100%'>
@@ -169,6 +205,7 @@ function parameters(){
 	<td>".Field_checkbox("EnableCommunityFilters",1,$EnableCommunityFilters,"EnableCommunityFiltersCheck()")."</td>
 	</tr>
 	</table> 
+	$table
 	<script>
 		var x_EnableCommunityFiltersCheck=function(obj){
      	var tempvalue=obj.responseText;
