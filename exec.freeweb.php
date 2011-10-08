@@ -942,6 +942,7 @@ function buildHost($uid=null,$hostname,$ssl=null,$d_path=null,$Params=array()){
 	
 	$freeweb->CheckDefaultPage();
 	$freeweb->CheckWorkingDirectory();
+	$ServerAlias=$freeweb->ServerAlias();
 	if($freeweb->ServerPort>0){$FreeWebListenPort=$freeweb->ServerPort;}
 	echo "Starting......: Apache \"$hostname\" Listen $FreeWebListen:$FreeWebListenPort\n";
 	echo "Starting......: Apache \"$hostname\" Directory $freeweb->WORKING_DIRECTORY\n";
@@ -965,6 +966,7 @@ function buildHost($uid=null,$hostname,$ssl=null,$d_path=null,$Params=array()){
 	
 	if($hostname<>"_default_"){
 		$conf[]="\tServerName $hostname";
+		if($ServerAlias<>null){$conf[]=$ServerAlias;}
 		$sock=new sockets();
 		$FreeWebsEnableOpenVPNProxy=$sock->GET_INFO("FreeWebsEnableOpenVPNProxy");
 		$FreeWebsOpenVPNRemotPort=trim($sock->GET_INFO("FreeWebsOpenVPNRemotPort"));

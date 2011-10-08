@@ -28,6 +28,7 @@
 	if(isset($_POST["FreeWebsRebuildvHosts"])){FreeWebsRebuildvHosts();exit;}
 	if(isset($_POST["FreeWebsRebuildGroupware"])){FreeWebsRebuildGroupware();exit;}
 	
+	if(isset($_GET["webserver-aliases"])){webserver_aliases_list();exit;}
 	
 	
 	
@@ -1081,7 +1082,11 @@ function popup(){
 	<tr> 
 		<td class=legend nowrap>{acl_dstdomain}:</td>
 		<td colspan=2>$domain</td>
-	</tr>	
+	</tr>
+	<tr> 
+		<td class=legend nowrap>{aliases}:</td>
+		<td colspan=2><span id='webserver-aliases'></span></td>
+	</tr>		
 	<tr>
 		<td class=legend nowrap>{listen_port}:</td>
 		<td>
@@ -1454,6 +1459,10 @@ function popup(){
 	function CheckUId(){
 		LoadAjaxTiny('status-uid-www','$page?uid-check=$uid_uri');
 	}
+	
+	function WebServerAliasesRefresh(){
+		LoadAjaxTiny('webserver-aliases','$page?webserver-aliases=yes&servername={$ligne["servername"]}');
+	}
 
 	CheckUseDefaultPort();
 	CheckDatas();
@@ -1461,6 +1470,7 @@ function popup(){
 	CheckLoops();
 	CheckForwarder();
 	CheckUId();
+	WebServerAliasesRefresh();
 	</script>		
 	";
 	
@@ -1722,6 +1732,22 @@ function uid_check(){
 	}
 	
 	
+}
+
+function webserver_aliases_list(){
+	$servername=$_GET["servername"];
+	$page=CurrentPageName();
+	$tpl=new templates();
+	$free=new freeweb($servername);
+	if($servername==null){return;}
+	while (list ($host,$num) = each ($free->Params["ServerAlias"]) ){
+		$f[]=$host;
+	}
+	
+	$aliases=@implode(", ",$f);
+	
+	$html="<table><tbody><tr><td style='font-size:11px'><i>$aliases</i></td><td width=1%>". imgtootltip("edit.gif","{edit}","Loadjs('freeweb.edit.ServerAlias.php?servername=$servername')")."</td></tr></tbody></table>";
+	echo $tpl->_ENGINE_parse_body($html);
 }
 
 

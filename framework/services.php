@@ -43,6 +43,8 @@ if(isset($_GET["phpldapadmin"])){phpldapadmin();exit;}
 if(isset($_GET["ntpd-status"])){ntpd_status();exit;}
 if(isset($_GET["artica-update-cron"])){artica_schedule_cron();exit;}
 if(isset($_GET["AutoRebootSchedule"])){artica_schedule_reboot();exit;}
+if(isset($_GET["artica-patchs"])){artica_patchs();exit;}
+if(isset($_GET["patchs-force"])){artica_patchs_force();exit;}
 
 
 
@@ -118,8 +120,6 @@ function restart_tomcat(){
 	$cmd=trim("$nohup /usr/share/artica-postfix/exec.freeweb.php --httpd >/dev/null 2>&1 &");
 	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);
 	shell_exec($cmd);
-	
-	
 	$cmd=trim("$nohup /etc/init.d/artica-postfix restart tomcat >/dev/null 2>&1 &");
 	shell_exec($cmd);
 	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);
@@ -172,8 +172,23 @@ function kerbauth(){
 	$cmd=trim("$nohup ".$unix->LOCATE_PHP5_BIN(). " /usr/share/artica-postfix/exec.kerbauth.php --build");
 	shell_exec($cmd);
 	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);
+	}
 
+function artica_patchs(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim("$nohup ".$unix->LOCATE_PHP5_BIN(). " /usr/share/artica-postfix/exec.patchs.php");
+	shell_exec($cmd);
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);
+	}
+function artica_patchs_force(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim("$nohup ".$unix->LOCATE_PHP5_BIN(). " /usr/share/artica-postfix/exec.patchs.php --force");
+	shell_exec($cmd);
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	
 }
+	
 
 function openvpn(){
 	$unix=new unix();

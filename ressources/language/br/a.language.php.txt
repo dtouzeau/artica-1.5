@@ -50,6 +50,7 @@ If there is available disks, you will be able to select them.</add_iscsi_explain
 you can add multiple domains, separate them with a comma:
 eg(mydomain.com,mydomain.net,mydomain.fr,mydomain.de,mydomain.us)
 </add_official_domains_popup_text>
+<add_serveralias_ask>Give the Web servername: www.domain.tld or domain.tld or *.domain.tld...</add_serveralias_ask>
 <add_smb_virtual_server>Add a new Samba virtual server that will be emulated by the main Samba process</add_smb_virtual_server>
 <add_storage>Add new storage</add_storage>
 <add_subdomain_explain>In this form, you can add a sub-domain of listed domains in the drop-down list.[br]
@@ -852,6 +853,7 @@ When a user add/delete/modify a file in a Samba folder, greyhole will saved it a
 <enable_memory_scanning>Enable scan objects in memory</enable_memory_scanning>
 <enable_mod_fcgid>Activate FastCGI interface module</enable_mod_fcgid>
 <enable_mod_pagespeed>Enable optimizes web pages</enable_mod_pagespeed>
+<enable_patchs_update>Enable patch update</enable_patchs_update>
 <enable_pop3>Enable POP3 service</enable_pop3>
 <enable_pop3s>Enable POP3 SSL service</enable_pop3s>
 <enable_remote_announce_explain>If turn to green the announce network will be enabled in the file sharing engine.</enable_remote_announce_explain>
@@ -934,6 +936,7 @@ The filename should be a filename recognizable to whatever file transfer protoco
 <freeweb_add_dns_entry_explain>If this field is displayed, that means you have a DNS engine installed on your computer.[br]
 If you define an IP address here, the hostname will automatically added to the local DNS server.[br]
 This usually used when you build an Intranet website and if Artica handle DNS workstations queries.</freeweb_add_dns_entry_explain>
+<freeweb_aliasserver_explain>This section list other webserver names that internet user can use to reach this webserver</freeweb_aliasserver_explain>
 <freeweb_alias_explain>
 Aliases are used to map between URLs and filesystem paths.[br]
 This allows for content which is not directly under the website root served as part of the web document tree.
@@ -1530,6 +1533,7 @@ For example, Avaya phones are hard coded to "read" this scope option and pick up
 <partition_automount_center_text>Mount this partition using the Auto-mount service</partition_automount_center_text>
 <password_no_match_policy>Password did not match policy password</password_no_match_policy>
 <password_policy>Password policy</password_policy>
+<patchs>patchs</patchs>
 <patterns_versions>Patterns versions</patterns_versions>
 <pattern_database_version>Pattern Database version</pattern_database_version>
 <pdns_listen_ip_explain>By default, Artica will try to find your network cards and Ip addresses and set PowerDNS to listen these found IP.[br]
@@ -2229,6 +2233,7 @@ ufdbGuard is designed for use with the popular web proxy Squid</ufdbguard_simple
 <UPDATE_FEDORA_TEMPLATE_TEXT>Download the pre-configured Fedora i386 template, require 690Mo free space.</UPDATE_FEDORA_TEMPLATE_TEXT>
 <UPDATE_LXC_TEMPLATE_PERFOMED>The install/update task will performed in background mode, 
 depends on your bandwith it should take a long time...</UPDATE_LXC_TEMPLATE_PERFOMED>
+<update_patchnow_explain>Upgrade Artica version with patchs listed ?</update_patchnow_explain>
 <UPDATE_SA_UPDATE>Update SpamAssassin</UPDATE_SA_UPDATE>
 <UPDATE_SA_UPDATE_TEXT>Perform Spamassassin update, see update status</UPDATE_SA_UPDATE_TEXT>
 <update_url>Update URL</update_url>

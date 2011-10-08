@@ -483,6 +483,7 @@ function group10(){
 	$array[]="exec.freeweb.php --all-status";
 	$array[]="exec.clean.logs.php --clean-tmp2";
 	$array[]="exec.syslog-engine.php --psmem";
+	$array[]="exec.patchs.php";
 	
 	if($GLOBALS["UFDBGUARD_INSTALLED"]){$array[]="exec.web-community-filter.php --groupby";}
 

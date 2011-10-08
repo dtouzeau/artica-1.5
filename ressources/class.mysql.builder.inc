@@ -540,14 +540,27 @@ public function check_storage_table(){
 			  `ID` int(100) NOT NULL AUTO_INCREMENT,
 			  `subject` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
 			  `zDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-			  `text` text COLLATE utf8_unicode_ci NOT NULL,
-			  `uid` varchar(90) COLLATE utf8_unicode_ci NOT NULL,
+			  `text` text NOT NULL,
+			  `uid` varchar(90) NOT NULL,
 			  PRIMARY KEY (`ID`),
 			  KEY `zDate` (`zDate`),
 			  KEY `uid` (`uid`)
 			)";	
 			$this->QUERY_SQL($sql,"artica_events");
 	}
+	
+	if(!$this->TABLE_EXISTS('artica_patchs','artica_backup')){		
+			$sql="CREATE TABLE `artica_backup`.`artica_patchs` (
+			`patch_number` INT( 100 ) NOT NULL ,
+			`path_explain` TEXT NOT NULL ,
+			`filename` varchar(50) NOT NULL,
+			`size` INT( 100 ) NOT NULL,
+			`updated` INT( 1 ) NOT NULL DEFAULT '0',
+			PRIMARY KEY ( `patch_number` ) ,
+			INDEX ( `updated` ,`filename`)
+			)";	
+			$this->QUERY_SQL($sql,"artica_backup");
+	}	
 	
 	
 	if(!$this->TABLE_EXISTS('cgroups_processes','artica_backup')){		

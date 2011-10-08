@@ -267,7 +267,6 @@
 			}
 			
 			$this->SaveParams();
-
 		}
 		
 		private function locate_geoip_db(){
@@ -277,10 +276,21 @@
 			while (list ($key, $path) = each ($f) ){
 				if(is_file($path)){return $path;}
 			}
-
-			
+		}
+		
+		public function ServerAlias(){
+			if(!isset($this->Params["ServerAlias"])){return;}
+			if(count($this->Params["ServerAlias"])==0){return;}
+			$f=array();
+			while (list ($host,$num) = each ($this->Params["ServerAlias"]) ){
+				if(trim($host)==null){continue;}
+				$f[]="\tServerAlias $host";
+			}	
+			if(count($f)>0){return @implode("\n", $f);}
 			
 		}
+		
+		
 		
 		public function mod_pagespeed(){
 			if(!isset($this->Params["PageSpeed"])){return null;}
@@ -423,7 +433,10 @@
 			$sql="UPDATE freeweb SET `Params`='$conf' WHERE servername='$this->servername'";
 			$q=new mysql();
 			$q->QUERY_SQL($sql,"artica_backup");
-			if(!$q->ok){echo $q->mysql_error."\nclass: ".__CLASS__."\nFile: ".basename(__FILE__)."\nLine:".__LINE__;return;}
+			if(!$q->ok){
+				writelogs("$this->servername:: $q->mysql_error",__CLASS__."/".__FUNCTION__,__FILE__,__LINE__);
+				echo $q->mysql_error."\nclass: ".__CLASS__."\nFile: ".basename(__FILE__)."\nLine:".__LINE__;return;
+			}
 			$sock=new sockets();
 			$sock->getFrameWork("cmd.php?freeweb-website=yes&servername=$this->servername");
 			

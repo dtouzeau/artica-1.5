@@ -46,6 +46,7 @@ Chaque membre devra &ecirc;tre s&eacute;par&eacute; par un retour chariot.</add_
 <add_official_domains_popup_text>Ajoutez ici votre nom de domaine (ex domain.tld).
 Vous pouvez ajouter des entr&eacute;es multiples en les s&eacute;parant par une virgule:
 exemple:mydomain.com,mydomain.net)</add_official_domains_popup_text>
+<add_serveralias_ask>Indiquez l'alias du serveur : www.domain.tld ou domain.tld ou *.domain.tld ...</add_serveralias_ask>
 <add_smb_virtual_server>Ajouter un nouveau serveur virtuel Samba qui sera &eacute;mul&eacute; par l'instance principale de Samba.</add_smb_virtual_server>
 <add_storage>Ajouter un nouveau stockage</add_storage>
 <add_subdomain_explain>Dans ce formulaire, vous pouvez ajouter un sous-domaine des domaines list&eacute;s.[br]
@@ -684,6 +685,7 @@ toutes les liens seront remplac&eacute;es par l'url que vous avez d&eacute;finit
 <enable_memory_scanning>Activer l'analyse en m&eacute;moire</enable_memory_scanning>
 <enable_mod_fcgid>Activer le module FastCGI</enable_mod_fcgid>
 <enable_mod_pagespeed>Activer l'optimisation des pages</enable_mod_pagespeed>
+<enable_patchs_update>Mise &agrave; jour des correctifs</enable_patchs_update>
 <enable_pop3>Activer le service POP3</enable_pop3>
 <enable_pop3s>Activer le service POP3 SSL</enable_pop3s>
 <enable_remote_announce_explain>Si pass&eacute; en vert, la fonctionnalit&eacute; d'annonce r&eacute;seau sera activ&eacute;e dans le moteur de partage de fichiers</enable_remote_announce_explain>
@@ -760,6 +762,7 @@ des caract&egrave;res sous-lign&eacute;s (requ&ecirc;tes pour des serveurs LDAP)
 <freeweb_add_dns_entry_explain>Si ce champs est affich&eacute;, cela veut dire que vous avez un moteur DNS install&eacute; sur ce serveur.[br]
 Si vous indiquez une adresse IP, le nom d'h&ocirc;te sera automatiquement ajout&eacute; au serveur DNS.[br]
 Cette op&eacute;ration est habituellement utilis&eacute;e lorsque vous utilisez ce serveur en tant que serveur Intranet qui assure aussi les r&eacute;ponses DNS des postes de travail d'un r&eacute;seau local.</freeweb_add_dns_entry_explain>
+<freeweb_aliasserver_explain>Cette section liste les autres noms de serveur web qui peuvent &ecirc;tre utilis&eacute;s par les Internautes pour acc&eacute;der &agrave; ce serveur.</freeweb_aliasserver_explain>
 <freeweb_alias_explain>Les aliases sont utilis&eacute;s pour faire correspondre des urls &agrave; des r&eacute;pertoires situ&eacute;s dans votre espace web.[br]
 Cela autorise alors l'affiche de contenu qui n'est pas directement stock&eacute; sur le disque &agrave; l'emplacement exacte du lien web.[br]
 Dans le formulaire, indiquez dans Alias le lien virtuel que les internautes doivent utiliser (Exemple /images) et dans r&eacute;pertoire, le chemin sur le disque correspondant.(Exemple /folder/pictures/img).[br]
@@ -1292,6 +1295,7 @@ For example, Avaya phones are hard coded to "read" this scope option and pick up
 <partition_automount_center_text>Connecter cette partition avec le service d'Auto-connexion.</partition_automount_center_text>
 <password_no_match_policy>Le mot de passe ne correspond pas &agrave; la politique de mots de passe</password_no_match_policy>
 <password_policy>Politique de mot de passe</password_policy>
+<patchs>Correctifs</patchs>
 <patterns_versions>Versions de signatures</patterns_versions>
 <pattern_database_version>Version des bases de donn&eacute;es</pattern_database_version>
 <pdns_listen_ip_explain>Par d&eacute;faut, Artica va essayer de d&eacute;terminer les adresses r&eacute;seaux utilis&eacute;e par votre serveur et va les transmettre au service PowerDNS.[br]Normalement, vous n'avez pas &agrave; enrichir cette liste.[br]Toutefois dans le cas ou vous d&eacute;sirez forcer le serveur DNS &agrave; n'&eacute;couter qu'une seule adresse ou vous &ecirc;tes dans un environnement VPS (OpenVPZ) o&ugrave; Artica ne peut d&eacute;tecter les adresses r&eacute;seaux, vous allez devoir indiquer quelles sont les adresses que le serveur DNS doit &eacute;couter.</pdns_listen_ip_explain>
@@ -1875,6 +1879,7 @@ Lorsque la p&eacute;riode de gr&acirc;ce &agrave; expir&eacute;e, les utilisateu
 <UPDATE_FEDORA_TEMPLATE_TEXT>T&eacute;l&eacute;chargement du mod&egrave;le Fedora i386, requi&egrave;re 690Mb d'espace disponible.</UPDATE_FEDORA_TEMPLATE_TEXT>
 <UPDATE_LXC_TEMPLATE_PERFOMED>La t&acirc;che d'installation/Mise &agrave; jour est ex&eacute;cut&eacute;e en t&acirc;che de fond,
 Cela peut prendre du temps.. Tout d&eacute;pend de votre bande passante Internet.</UPDATE_LXC_TEMPLATE_PERFOMED>
+<update_patchnow_explain>Mettre &agrave; jour Artica avec les correctifs list&eacute;s ?</update_patchnow_explain>
 <UPDATE_SA_UPDATE>Mise &agrave; jour de SpamAssassin</UPDATE_SA_UPDATE>
 <UPDATE_SA_UPDATE_TEXT>Lancer la mise &agrave; jour, afficher les &eacute;v&egrave;nements de mise &agrave; jour.</UPDATE_SA_UPDATE_TEXT>
 <update_url>Lien de mise &agrave; jour</update_url>

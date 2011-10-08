@@ -430,7 +430,7 @@ function popup(){
 	
 	
 	echo "
-	<div id=main_config_freeweb style='width:100%;height:700px;overflow:auto'>
+	<div id=main_config_freeweb style='width:100%;height:740px;overflow:auto'>
 		<ul>". implode("\n",$html)."</ul>
 	</div>
 		<script>
@@ -720,8 +720,14 @@ function listwebs_search(){
 				$JSDNS=1;
 			}
 		}
-		
-		
+		$ServerAlias=null;
+		$Params=@unserialize(base64_decode($ligne["Params"]));
+		if(isset($Params["ServerAlias"])){
+			while (list ($host,$num) = each ($Params["ServerAlias"]) ){
+				$f[]=$host;
+			}
+			$ServerAlias="<hr style='border: 1px'><div style='font-size:11px'><a href=\"javascript:blur();\" OnClick=\"javascript:Loadjs('freeweb.edit.ServerAlias.php?servername={$ligne["servername"]}')\" style='text-decoration:underline'><i>".@implode(", ", $f)."</i></div>";
+		}
 		
 		
 		
@@ -798,7 +804,7 @@ function listwebs_search(){
 		$html=$html."
 			<tr class=$classtr>
 			<td width=1%>$edit</td>
-			<td nowrap style='color:$color'>$groupware$forward_text<span style='float:left'><strong style='font-size:13px;style='color:$color'>$href$servername_text</a>$added_port$sizevg</strong></span></td>
+			<td nowrap style='color:$color'>$groupware$forward_text<span style='float:left'><strong style='font-size:13px;style='color:$color'>$href$servername_text</a>$added_port$sizevg</strong></span>$ServerAlias</td>
 			<td width=1%><img src='img/$ssl'></td>
 			<td width=1% align='center'>$checkResolv</td>
 			<td width=1% align='center'>$checkDNS</td>

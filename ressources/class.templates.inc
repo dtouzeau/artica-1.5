@@ -4781,7 +4781,11 @@ function getLocalTimezone(){
 	if(isset($_SESSION["GET_TIME_ZONE"])){
 		if($_SESSION["GET_TIME_ZONE"]<>null){return $_SESSION["GET_TIME_ZONE"];}
 	}
-	if(!isset($GLOBALS["CLASS_SOCKET"])){$GLOBALS["CLASS_SOCKET"]=new sockets();$sock=$GLOBALS["CLASS_SOCKET"];}else{$sock=$GLOBALS["CLASS_SOCKET"];}
+	if(!isset($GLOBALS["CLASS_SOCKET"])){
+		include_once(dirname(__FILE__)."/class.sockets.inc");
+		$GLOBALS["CLASS_SOCKET"]=new sockets();
+		$sock=$GLOBALS["CLASS_SOCKET"];
+	}else{$sock=$GLOBALS["CLASS_SOCKET"];}
 	$timezones=$sock->GET_INFO('timezones');
 	if($timezones<>null){
 		$_SESSION["GET_TIME_ZONE"]=$timezones;
