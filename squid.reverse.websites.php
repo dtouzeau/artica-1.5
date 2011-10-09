@@ -50,7 +50,7 @@ function js(){
 			XHR.appendData('website',document.getElementById('website').value);
 			XHR.appendData('website_ip',document.getElementById('website_ip').value);
 			XHR.appendData('website_port',document.getElementById('website_port').value);
-			document.getElementById('www_accel_list').innerHTML='<center style=\"width:100%\"><img src=img/wait_verybig.gif></center>';	
+			AnimateDiv('www_accel_list');	
 			XHR.sendAndLoad('$page', 'GET',x_AccelAddReverseSite);	
 		}
 		

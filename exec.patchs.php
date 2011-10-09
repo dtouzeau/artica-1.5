@@ -51,9 +51,13 @@ function checkupdates(){
 	if($GLOBALS["VERBOSE"]){echo "URI: $uri\n";}
 	
 	$curl=new ccurl($uri);
-	$curl->get();
-	$array=unserialize(base64_decode($curl->data));
-	if(!is_array($array)){if($GLOBALS["VERBOSE"]){echo "No patchs available\n";}}
+	$curl->GetFile("/tmp/patchs.txt");
+	
+	$datas=base64_decode(@file_get_contents("/tmp/patchs.txt"));
+	
+	if($GLOBALS["VERBOSE"]){echo "datas decoded\n$datas\n";}
+	$array=unserialize($datas);
+	if(!is_array($array)){if($GLOBALS["VERBOSE"]){echo "No patchs available not an array\n";}}
 	
 	$prefix="INSERT IGNORE INTO artica_patchs (patch_number,path_explain,filename,`size`) VALUES ";
 	while (list ($patch_number, $line) = each ($array) ){
@@ -126,7 +130,7 @@ function UpdatePatches(){
 		shell_exec("$nohup /etc/init.d/artica-postfix restart artica-exec >/dev/null 2>&1 &");
 	}
 	
-	$sql="UPDATE artica_patchs SET updated=1 WHERE patch_number<$myversionbin";
+	$sql="UPDATE artica_patchs SET updated=1 WHERE patch_number<=$myversionbin";
 	$q->QUERY_SQL($sql,"artica_backup");
 	
 }

@@ -15,7 +15,7 @@
 	
 	
 	if(isset($_GET["patchs-list"])){patchs_list();exit;}
-	if(isset($_GET["UpdatePatchNow"])){patchs_update();exit;}
+	if(isset($_POST["UpdatePatchNow"])){patchs_update();exit;}
 	if(isset($_GET["js"])){popup_js();exit;}
 	if(isset($_GET["ajax-pop"])){popup();exit;}
 	
@@ -527,7 +527,7 @@ function patchs_start(){
 	
 	
 	<script>
-	var x_SaveArticaUpdateForm= function (obj) {
+	var x_UpdatePatchNow= function (obj) {
 			var results=obj.responseText;
 			if(results.length>0){alert(results);}
 			RefreshTab('main_config_artica_update');

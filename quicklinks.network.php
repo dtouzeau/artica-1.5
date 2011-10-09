@@ -29,6 +29,7 @@ $nic=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("folder-network-48.png", "pa
 $openvpn=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("48-openvpn.png", "APP_OPENVPN",null, "QuickLinkSystems('section_openvpn')"));
 $network_services=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("48-network-server.png", "network_services",null, "QuickLinkSystems('section_network_services')"));
 $dhcp=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("48-dhcp.png", "APP_DHCP",null, "QuickLinkSystems('section_dhcp')"));
+$stats=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("perf-stats-48.png", "statistics",null, "QuickLinkSystems('section_statistics')"));
 
 
 if(!$users->OPENVPN_INSTALLED){$openvpn=null;}
@@ -36,6 +37,7 @@ if(!$users->OPENVPN_INSTALLED){$openvpn=null;}
 $tr[]=$nic;
 $tr[]=$dhcp;
 $tr[]=$network_services;
+$tr[]=$stats;
 $tr[]=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("web-site-48.png", "main_interface","main_interface_back_interface_text", "QuickLinksHide()"));
 
 $count=1;
@@ -102,10 +104,7 @@ function section_mynic(){echo "<script>Loadjs('system.nic.config.php?js=yes&in-f
 function section_openvpn(){echo "<script>Loadjs('index.openvpn.php?infront=yes')</script>";}
 function section_network_services(){echo "<script>Loadjs('system.index.php?newtab=network')</script>";}
 function section_dhcp(){echo "<script>Loadjs('index.gateway.php?index_dhcp=yes&in-front-ajax=yes&newinterface=yes')</script>";}
-
-
-
-
+function section_statistics(){echo "<script>Loadjs('statistics.vnstat.php?newinterface=yes')</script>";}
 
 
 

@@ -176,10 +176,10 @@ $html="
 		<td valign='top' $mouse style='font-size:14px;text-decoration:underline' OnClick=\"javascript:Loadjs('squid.visited.php')\"><b>$websitesnums</b> {visited_websites}</td>
 	</tr>	
 	<tr>
-		<td valign='top' style='font-size:14px'><b>$categories</b> {websites_categorized}</td>
+		<td valign='top' $mouse style='font-size:14px;text-decoration:underline' OnClick=\"javascript:Loadjs('squid.categories.php')\"><b>$categories</b> {websites_categorized}</td>
 	</tr>			
 	<tr>
-		<td valign='top' style='font-size:14px'><b>$tablescatNUM</b> {categories}</td>
+		<td valign='top' $mouse style='font-size:14px;text-decoration:underline' OnClick=\"javascript:Loadjs('squid.categories.php')\"><b>$tablescatNUM</b> {categories}</td>
 	</tr>	
 	<tr>
 		<td valign='top' $mouse style='font-size:14px;text-decoration:underline' OnClick=\"javascript:Loadjs('squid.categories.toexport.php')\"><b>$export</b> {websites_to_export}</td>

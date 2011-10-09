@@ -8,6 +8,8 @@ System Changes:
 1.5.100812: Allow to update automatically patchs
 1.5.100812: Add a new section according patchs in the Artica update web page.
 1.5.100918: Fix unable to create a correct UidNumber after 10000 number.
+1.5.101001: Increase system load datas statistics from 7 to 60 days in order to produce statistics by current month
+1.5.101001: Fix unable to apply patch automatically
 
 Messaging Changes:
 -------------------------------------------------
@@ -25,6 +27,7 @@ Proxy changes:
 ------------------------------------------------
 1.5.100420: Fix bungled config on missing manager acl.
 1.5.100723: Improve Squid statistics.
+1.5.101001: Add possibility to delete websites from categories.
 
 Interface Changes:
 ------------------------------------------------

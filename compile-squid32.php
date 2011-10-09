@@ -12,7 +12,7 @@ $cp=$unix->find_program("cp");
 
 
 
-$v="squid-3.2.0.12-20110926-r11343.tar.gz";
+$v="squid-3.2.0.12-20111008-r11360.tar.gz";
 $dirsrc="squid-3.2.0.12";
 $Architecture=Architecture();
 

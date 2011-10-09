@@ -110,8 +110,7 @@ function js(){
 			YahooWin4(550,'$page?CategorizeAll='+escape(query),'$categorize_this_query');
 		
 		}	
-	
-	";
+		";
 	echo $html;
 	
 }
@@ -335,17 +334,16 @@ function free_catgorized_save(){
 	echo "analyze ".count($sites)." websites into $category\n";
 	while (list ($num, $www) = each ($sites) ){
 		$md5=md5($www.$category);
-		$cats=$q->GET_CATEGORIES($www);
+		$cats=$q->GET_CATEGORIES($www,true);
 		
 		
 		
 		if($cats<>null){echo "$www already added in $cats\n";continue;}		
-		echo "Added $www\n";
-		$q->QUERY_SQL($sql_add,"artica_backup");
-		if(!$q->ok){echo $q->mysql_error;return;}
+		
 		$category_table="category_".$q->category_transform_name($category);
 		$q->QUERY_SQL("INSERT IGNORE INTO $category_table (zmd5,zDate,category,pattern,uuid) VALUES('$md5',NOW(),'$category','$www','$uuid')");
 		if(!$q->ok){echo "categorize $www failed $q->mysql_error\n";continue;}
+		echo "Added $www\n";
 		$q->QUERY_SQL("INSERT IGNORE INTO categorize (zmd5,zDate,category,pattern,uuid) VALUES('$md5',NOW(),'$category','$www','$uuid')");
 		if(!$q->ok){echo $q->mysql_error."\n";echo $sql;}
 	}		
