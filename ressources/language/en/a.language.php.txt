@@ -2476,6 +2476,7 @@ This server will execute specifics calculation tasks in order to serve Internet 
 <function>function</function>
 <webinterface>Web Interface</webinterface>
 <zarafaSharedStoreOnly>non-active user</zarafaSharedStoreOnly>
+<ZarafaImportContactsInLDAPEnable>Import automatically Zarafa contacts into Artica LDAP database</ZarafaImportContactsInLDAPEnable>
 <RESCAN_WWWVISISTED>Rescan the "visited" section</RESCAN_WWWVISISTED>
 <WEB_RESCAN_VISITED_TEXT>analyse the visited websites and see if there is new categories to add</WEB_RESCAN_VISITED_TEXT>
 <WWW_RESCAN_VISITED_ASK>This operation will synchronize visited websites in order to categorize them.
@@ -2486,3 +2487,4 @@ Do you want to perform this operation ?</WWW_RESCAN_VISITED_ASK>
 <update_patchnow_explain>Upgrade Artica version with patchs listed ?</update_patchnow_explain>
 <freeweb_aliasserver_explain>This section list other webserver names that internet user can use to reach this webserver</freeweb_aliasserver_explain>
 <add_serveralias_ask>Give the Web servername: www.domain.tld or domain.tld or *.domain.tld...</add_serveralias_ask>
+<select_your_language>Select your language</select_your_language>

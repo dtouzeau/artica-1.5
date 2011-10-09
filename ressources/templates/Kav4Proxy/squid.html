@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>{TEMPLATE_TITLE_HEAD}</title>
+	<link href="/css/squid.default.css" rel="stylesheet" type="text/css" />
+	<link href="/css/styles_tables.css" rel="stylesheet" type="text/css" />
+	
+	{TEMPLATE_HEAD}
+	
+	<script>
+		function SearchWebSite(e){
+			if(!checkEnter(e)){return;}
+			SearchWebSitePerform();
+			
+		}
+
+		function SearchWebSitePerform(){
+			var pattern=escape(document.getElementById('SearchWebSiteID').value);
+			LoadAjax('content','squid.searchsite.php?find='+pattern);
+		}
+	
+	</script>
+	
+	
+</head>
+
+<body>
+<input type="hidden" id="LoadAjaxPicture" value="ressources/templates/default/images/wait_verybig.gif">
+	{TEMPLATE_BODY_YAHOO} 
+	<div id="wrapper">
+	<div id="logo">
+		<h1><a href="/squid.logon.php" style='text-transform:capitalize'>{TEMPLATE_TITLE_HEAD}</a></h1>
+	</div>
+	<div id="header">
+		<div id="menu">
+			<ul>
+				<li class="current_page_item"><a href="/squid.logon.php">{home}</a></li>
+				<li><a href="javascript:Loadjs('squid.stats.users.php');">{users}</a></li>
+				<li><a href="javascript:Loadjs('squid.consumption.users.php');">{consumption}</a></li>
+				<li><a href="javascript:Loadjs('squid.newbee.php?yes')">Proxy</a></li>
+				<li class="last"><a href="javascript:Loadjs('dansguardian.index.php?js=yes')">{rules}</a></li>
+			</ul>
+		</div>
+	</div>
+<!-- end header -->
+</div>
+<!-- start page -->
+<div id="page">
+	<!-- start content -->
+	<div id="BodyContent">
+	<div id="content">
+		{TEMPLATE_CONTENT}
+	</div>
+	
+	<!-- end content -->
+	<!-- start sidebar -->
+	<div id="sidebar">
+		<ul>
+			<li id="search">
+				<h2>{search}</h2>
+				
+					<fieldset>
+					<input type="text" id="SearchWebSiteID" name="SearchWebSiteID" value="" OnKeyPress="javascript:SearchWebSite(event)"/>
+					<input type="button" id="x" value="Search" OnClick="javascript:SearchWebSitePerform()"/>
+					</fieldset>
+				
+			</li>
+			<li id='RightMenu1'></li>
+			<li id='RightMenu2'>
+			</li>
+		</ul>
+	</div>
+	</div>
+	<!-- end sidebar -->
+	<div style="clear: both;">&nbsp;</div>
+</div>
+<!-- end page -->
+<!-- start footer -->
+<div id="footer">
+	<p id="legal">{TEMPLATE_TITLE_HEAD}</p>
+</div>
+<!-- end footer -->
+</body>
+</html>

@@ -1965,6 +1965,7 @@ To solve this problem, Microsoft now provides the Windows Internet Naming Servic
 If this attribute is decreasing, it is a sign of problems in the mechanical subsystem</Seek_Time_Performance_text>
 <select_messages>Select messages</select_messages>
 <select_this_ou>Select this organization</select_this_ou>
+<select_your_language>Select your language</select_your_language>
 <sender_ns_addrs>sender nameserver address</sender_ns_addrs>
 <sendmail_request_form>Thank for your registration, 
 to complete your registration and enter to the system
@@ -2406,6 +2407,7 @@ When user perform this categorize operation, you can receive a notification and 
 <your_ip_address>Your IP address</your_ip_address>
 <you_need_to_create_virtual_ip_first>You need at least to create one virtual IP address in network section</you_need_to_create_virtual_ip_first>
 <ZarafaAllowToReinstall>Allow daemon to re-install to fix issues</ZarafaAllowToReinstall>
+<ZarafaImportContactsInLDAPEnable>Import automatically Zarafa contacts into Artica LDAP database</ZarafaImportContactsInLDAPEnable>
 <zarafaMbxLang>Mailbox folders language</zarafaMbxLang>
 <zarafaSharedStoreOnly>non-active user</zarafaSharedStoreOnly>
 <ZarafaStoreOutside>Store attachments outside database</ZarafaStoreOutside>

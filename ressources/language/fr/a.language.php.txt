@@ -1647,6 +1647,7 @@ au lieu d'effectuer un broadcast continuel.</samba_wins_explain>
 <Seek_Time_Performance_text>Performance moyenne des op&eacute;rations d%u2019acc&egrave;s des t&ecirc;tes magn&eacute;tiques. Si cet attribut diminue, c%u2019est un signe de probl&egrave;mes avec le sous-syst&egrave;me m&eacute;canique.</Seek_Time_Performance_text>
 <select_messages>S&eacute;lectionner les messages</select_messages>
 <select_this_ou>S&eacute;lectionner cette organisation</select_this_ou>
+<select_your_language>S&eacute;lectionnez votre langue</select_your_language>
 <sender_ns_addrs>Adresse du serveur &eacute;metteur</sender_ns_addrs>
 <sendmail_request_form>Merci pour votre inscription,
 Afin de compl&eacute;ter votre enregistrement et d'activer votre compte, veuillez cliquer sur le lien ci-dessous.</sendmail_request_form>
@@ -2026,6 +2027,7 @@ Les utilisateurs peuvent naviguer uniquement sur les sites web dans les cat&eacu
 <your_ip_address>Votre adresse IP</your_ip_address>
 <you_need_to_create_virtual_ip_first>Vous devez au moins cr&eacute;er un carte r&eacute;seau virtuelle dans la section r&eacute;seau de ce serveur.</you_need_to_create_virtual_ip_first>
 <ZarafaAllowToReinstall>Autorise le d&eacute;mon &agrave; r&eacute;installer en cas de n&eacute;c&eacute;ssit&eacute;</ZarafaAllowToReinstall>
+<ZarafaImportContactsInLDAPEnable>Importer automatiquement les contacts Zarafa dans La base LDAP</ZarafaImportContactsInLDAPEnable>
 <zarafaMbxLang>Langue des dossiers BAL</zarafaMbxLang>
 <zarafaSharedStoreOnly>Utilisateur inactif</zarafaSharedStoreOnly>
 <ZarafaStoreOutside>Stocker les pi&egrave;ces jointes sur le disque</ZarafaStoreOutside>

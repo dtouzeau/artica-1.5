@@ -26,7 +26,8 @@ include_once('ressources/class.mysql.inc');
 include_once('ressources/class.privileges.inc');
 include_once('ressources/class.browser.detection.inc');
 
-
+if(isset($_GET["popup-lang"])){TEMPLATE_LANG_POPUP();exit;}
+if(isset($_GET["TEMPLATE_LANG_LINK"])){TEMPLATE_LANG_LINK();exit;}
 if($_GET["script"]=="autoaccount"){autoaccount_js();exit;}
 if(isset($_GET["first_name"])){autoaccount_submit();exit;}
 if(isset($_GET["createaccountForm"])){autoaccount_form();exit;}
@@ -34,7 +35,7 @@ if(isset($_GET["submitedform"])){autoaccount_form2();exit;}
 if(isset($_GET["lang"])){lang();exit;}
 if(isset($_POST["artica_username"])){logon();exit;}
 if(isset($_GET["login-form"])){pagelogon();exit;}
-
+if(count($_REQUEST)>0){while (list($num,$val)=each($_REQUEST)){	writelogs("Requested = ".@implode(",", $_REQUEST),__FUNCTION__,__FILE__,__LINE__);}}
 $page=CurrentPageName();
 
 if(!is_file("ressources/settings.inc")){echo "
@@ -73,7 +74,7 @@ var x_FillLogonForm=function(obj){
 	}	
 	
 var x_SendLogonStart=function(obj){
-	document.getElementById('anim').innerHTML='';
+	 if(document.getElementById('anim')){document.getElementById('anim').innerHTML='';}
      var tempvalue=obj.responseText;
 	 var re = new RegExp(/location:(.+)/);
 	 m=re.exec(tempvalue);
@@ -86,11 +87,14 @@ var x_SendLogonStart=function(obj){
 	}		
 
 	function FillLogonForm(){
+		if(!document.getElementById('loginform')){return;}
 		var LANGUAGE_SELECTOR_REMOVE={$logon_parameters["LANGUAGE_SELECTOR_REMOVE"]};
 		if(LANGUAGE_SELECTOR_REMOVE==1){
 			Set_Cookie('artica-language', '{$logon_parameters["DEFAULT_LANGUAGE"]}', '3600', '/', '', '');
 		}
-		document.getElementById('loginform').innerHTML='<center style=\"width:100%\"><img src=img/wait_verybig.gif></center>';
+		
+		
+		AnimateDiv('loginform');
 		MEM_USERNAME=escape(MEM_USERNAME);
 		MEM_PASSWORD=escape(MEM_PASSWORD);		
 		LoadAjax('loginform','$page?login-form=yes&MEM_USERNAME='+MEM_USERNAME+'&MEM_PASSWORD='+MEM_PASSWORD+'&LANGUAGE_SELECTOR_REMOVE={$logon_parameters["LANGUAGE_SELECTOR_REMOVE"]}&DEFAULT_LANGUAGE={$logon_parameters["DEFAULT_LANGUAGE"]}');
@@ -344,8 +348,7 @@ function logonForm(){
 $contour_color="#005447";
 	if($users->KASPERSKY_WEB_APPLIANCE){
 		$template="<input type='hidden' id='template' value='Kav4Proxy'>";
-		//$contour_color="#EB6947";
-		//bg_kavweb-appliance.jpg
+		
 	}
 	
 	if($users->MYCOSI_APPLIANCE){
@@ -546,6 +549,7 @@ function applyLang(){
 	include_once(dirname(__FILE__).'/ressources/class.sockets.inc');
 	$sock=new sockets();
 	$_SESSION["detected_lang"]=$_POST["Changelang"];
+	//echo "Change lang to {$_POST["Changelang"]}";
 	unset($_SESSION["translation"]);
 	setcookie("artica-language", $_POST["Changelang"], time()+172800);
 	$FileCookyKey=md5($_SERVER["REMOTE_ADDR"].$_SERVER["HTTP_USER_AGENT"]);
@@ -883,28 +887,72 @@ function lang(){
 
 
 function buildPage(){
+	$page=CurrentPageName();
 	$users=new usersMenus();
 	$logo="logo.gif";
 	$logo_bg="bg_header.gif";
 	$bg_color="#005447";
 	$ProductName="Artica";
+	$template=null;
 	
 	if($users->KASPERSKY_WEB_APPLIANCE){
-		
-		//$GLOBALS["CHANGE_TEMPLATE"]="squid.kav.html";
-		//$logo_bg="bg_header_kavweb.gif";
-		$logo="logo-kav.gif";
-		//$bg_color="#FFB683";
+		$template="Kav4Proxy";
+		 $logo="logo-kav.gif";
 	}
 	
 	if($users->MYCOSI_APPLIANCE){
-		
-		//$GLOBALS["CHANGE_TEMPLATE"]="squid.kav.html";
 		$logo_bg="bg_header_kavweb.gif";
 		$logo="logo-mycosi.gif";
 		$bg_color="#FFB683";
 		$ProductName="MyCosi";
 	}	
+	
+	if($template<>null){
+		$jquery=null;
+		
+		include_once(dirname(__FILE__)."/ressources/class.page.builder.inc");
+		$p=new pagebuilder();
+		if(is_file("ressources/templates/$template/logon.html"));
+		$tpl=@file_get_contents("ressources/templates/$template/logon.html");
+		
+		foreach (glob("ressources/templates/$template/css/*.css") as $filename) {
+			//$datas=@file_get_contents("$filename");
+			//$datas=str_replace("\n", " ", $datas);
+			$css[]="<link href=\"/$filename\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" >";;
+		}		
+
+		foreach (glob("ressources/templates/$template/js/*.js") as $filename) {
+			$filename=basename($filename);
+			
+			if(preg_match("#^jquery-([0-9\.]+)\.min\.js#", $filename)){
+				$log[]="<!-- jquery = $filename -->";
+				$jquery=$filename;
+				continue;}
+			$js[]="<script type=\"text/javascript\" src=\"/ressources/templates/$template/js/$filename\"></script>";
+			$log[]="<!-- $filename -->";
+		}
+		
+		
+		if($jquery<>null){$jquery="<script type=\"text/javascript\" src=\"/ressources/templates/$template/js/$jquery\"></script>";}
+		$jslogon="<script type=\"text/javascript\" src=\"logon.php?start=yes\"></script>";
+		
+		$jsArtica=$p->jsArtica();
+		$sock=new sockets();
+		$TITLE_RESSOURCE="ressources/templates/$template/TITLE";
+		if(is_file($TITLE_RESSOURCE)){$title=@file_get_contents($TITLE_RESSOURCE);$title=str_replace("%server", $users->hostname, $title);}else{$title=$users->hostname;}
+		$tpl=str_replace("{TEMPLATE_HEAD}","<!-- HEAD TITLE: $TITLE_RESSOURCE -->\n$jquery\n$jsArtica\n". @implode("\n", $js)."\n$jslogon\n".@implode("\n", $css)."\n".@implode("\n", $log), $tpl);
+		$tpl=str_replace("{ARTICA_VERSION}",@file_get_contents("VERSION"),$tpl);
+		$tpl=str_replace("{TEMPLATE_BODY_YAHOO}",$p->YahooBody(),$tpl);
+		$tpl=str_replace("{TEMPLATE_LANG_LINK}","<span id='llang-select'></span><script>LoadAjaxTiny('llang-select','$page?TEMPLATE_LANG_LINK=yes')</script>",$tpl);
+		$tpl=str_replace("{artica_username}",$_GET["MEM_USERNAME"],$tpl);
+		$tpl=str_replace("{LOGON_BUTTON}",button("{login}", "SendLogonStart()","18px"),$tpl);
+		$tpl=str_replace("{TEMPLATE_TITLE_HEAD}",$title,$tpl);
+	
+		$tpl2=new templates();
+		return $tpl2->_ENGINE_parse_body($tpl);
+		
+	}
+	
 	
 	
 $html="<html xmlns='http://www.w3.org/1999/xhtml'>
@@ -1102,6 +1150,91 @@ return $html;
 
 }
 
+function TEMPLATE_LANG_LINK(){
+	include_once(dirname(__FILE__)."/ressources/class.html.tools.inc");
+	$sock=new sockets();
+	$tpl=new templates();
+	$users=new usersMenus();
+	$FileCookyKey=md5($_SERVER["REMOTE_ADDR"].$_SERVER["HTTP_USER_AGENT"]);
+	$FileCookyLang=$sock->GET_INFO($FileCookyKey);
+	$template=null;
+	
+	$html=new htmltools_inc();
+	$lang=$html->LanguageArray();
+	$MEM_LANG=$_COOKIE["artica-language"];
+	if($MEM_LANG==null){$MEM_LANG=$FileCookyLang;}
+	if($MEM_LANG==null){$MEM_LANG="en";}
+	$title=$tpl->_ENGINE_parse_body("{select_your_language}");
+	
+	echo "<dl class=\"jgd-dropdown\" id=\"jgd_dd_langs_select\">
+			<dt><a href=\"#\" OnClick=\"javascript:PopupLogonLang()\">{$lang["$MEM_LANG"]}<span class=\"value\">$MEM_LANG</span></a></dt>
+		</dl>
+		
+	<script>
+		function PopupLogonLang(){
+			YahooWin('300','$page?popup-lang=yes','$title');
+		}
+	
+	</script>
+	";
+
+
+}
+
+function TEMPLATE_LANG_POPUP(){
+	$page=CurrentPageName();
+	$tpl=new templates();
+$html="	
+<table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
+<thead class='thead'>
+	<tr>
+	<th>&nbsp;</th>
+	
+	</tr>
+</thead>
+<tbody class='tbody'>";		
+	$t=time();
+	$htmlT=new htmltools_inc();
+	$lang=$htmlT->LanguageArray();
+	while (list($num,$val)=each($lang)){	
+		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
+		$html=$html."
+		<tr class=$classtr>
+			<td style='font-size:18px'><a href=\"javascript:blur();\" OnClick=\"javascript:SelectMyLanguage('$num')\" style='font-weight:bold'>$val</a></td>
+		</tr>
+		
+		";
+	}
+	
+	$html=$html."</tbody></table>
+	<script>
+	var X_SelectMyLanguage= function (obj) {
+		var results=obj.responseText;
+	
+	}
+	
+	
+		function SelectMyLanguage(lang){
+			Set_Cookie('artica-language', lang, '3600', '/', '', '');
+			var XHR = new XHRConnection();
+			XHR.appendData('Changelang',lang);
+			MEM_PASSWORD=document.getElementById('artica_password').value;
+			XHR.sendAndLoad('logon.php', 'POST');		
+			setTimeout('ReloadThisPage()',800);	
+			
+		
+		}
+		
+		function ReloadThisPage(){
+			MEM_USERNAME=document.getElementById('artica_username').value;
+			window.location.href='logon.php?MEM_USERNAME='+MEM_USERNAME+'&t=$t';
+		}
+	</script>
+	
+	";	
+	echo $tpl->_ENGINE_parse_body($html);
+	#F2FAFD
+}
 
 
 ?>

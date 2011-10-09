@@ -19,7 +19,7 @@ private
      SYS:TSystem;
      artica_path:string;
     ldap:topenldap;
-     procedure server_cfg();
+
 
     function  SPOOLER_BIN_PATH():string;
     function  INDEXER_BIN_PATH():string;
@@ -84,6 +84,7 @@ public
     procedure SERVER_START();
     procedure SERVER_STOP();
     function IS_LDAP_ACTIVE():boolean;
+    procedure server_cfg();
 END;
 
 implementation
@@ -381,9 +382,14 @@ if(ZarafaStoreOutside=1) then begin
   logs.DebugLogs('Starting zarafa..............: Zarafa-server store attachments in "'+ZarafaStoreOutsidePath+'"');
   try ForceDirectories('ZarafaStoreOutsidePath') except logs.DebugLogs('Starting zarafa..............: Fatal error while creating Zarafa attachments path') end;
 end;
+
+if ZarafaWebNTLM=1 then begin
+   logs.DebugLogs('Starting zarafa..............: Zarafa-server NTLM Mode is enabled');
    fpsystem(SYS.LOCATE_PHP5_BIN()+ ' /usr/share/artica-postfix/exec.freeweb.php --apache-user');
    APACHE_SRC_ACCOUNT:=SYS.GET_INFO('APACHE_SRC_ACCOUNT');
-
+end else begin
+   logs.DebugLogs('Starting zarafa..............: Zarafa-server NTLM Mode is disabled');
+end;
 l:=Tstringlist.Create;
 l.add('server_bind		= '+ZarafaServerListenIP);
 l.add('server_hostname          = '+SYS.HOSTNAME_g());

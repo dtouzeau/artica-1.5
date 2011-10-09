@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta name="author" content="" />
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<link rel="stylesheet" href="css/templates.users.ressources/style.css" type="text/css" />
+	<link rel="stylesheet" href="css/styles_rounded.css" type="text/css" />
+	<link rel="stylesheet" href="css/styles_forms.css" type="text/css" />
+	<link rel="stylesheet" href="css/styles_tabs.css" type="text/css" />
+	
+
+
+
+	<title>{TEMPLATE_TITLE}</title>
+{TEMPLATE_HEAD}
+</head>
+<body class="yui-skin-sam">
+	<div id="page" align="center">
+		<div id="content" style="width:800px">
+			<div id="logo">
+				<div style="margin-top:70px" class="whitetitle">{ACCOUNT}</div>
+			</div>
+			<div id="topheader">
+				<div align="left" class="bodytext">
+					<br />
+					{TEMPLATE_USER_ADDR}
+				</div>
+				<div id="toplinks" class="smallgraytext">
+					<a href="users.account.php">{ACCOUNT}</a> | 
+					<a href="users.index.php">Home</a> | <a href="#"
+					OnClick="javascript:MyHref('logoff.php');"
+					onMouseOver="javascript:AffBulle('Disconnect');this.style.cursor='pointer'" 
+					OnMouseOut="javascript:HideBulle();;this.style.cursor='auto';" id=''>disconnect</a>
+				</div>
+			</div>
+			<div id="menu">
+				<div align="right" class="smallwhitetext" style="padding:9px;">
+					{TEMPLATE_USER_MENUS_H}
+				</div>
+			</div>
+			<div id="submenu">
+				<div align="right" class="smallgraytext" style="padding:9px;">{TOOLBOX}
+					<!-- <a href="#">Submenu 1</a> | <a href="#">Submenu 2</a> | <a href="#">Submenu 3</a> | <a href="#">Submenu 4</a> | <a href="#">Submenu 5</a> | <a href="#">Submenu 6</a> -->
+				</div>
+			</div>
+			<div id="contenttext">
+				<div style="padding:10px">
+					<span class="titletext">{TEMPLATE_TITLE}</span>
+					</div>
+					<div class="bodytext" style="padding:12px;" align="justify">{TEMPLATE_CONTENT}
+				</div>
+			</div>
+			<div id="leftpanel">
+				<div align="justify" class="graypanel" id='leftpanel_content'>
+					
+					
+				</div>
+			</div>
+			<div id="footer" class="smallgraytext">
+				{TEMPLATE_USER_MENUS_H}
+			</div>
+		</div>
+	</div>
+<script>
+YAHOO.namespace("example.container");
+function init() {
+	
+
+	// Instantiate the Dialog
+	YAHOO.example.container.dialog1 = new YAHOO.widget.Dialog("dialog1", 
+							{ width : "30em",
+							  fixedcenter : true,
+							  visible : false, 
+							  constraintoviewport : true,
+							 
+							});
+							
+	YAHOO.example.container.dialog2 = new YAHOO.widget.Dialog("dialog2", 
+							{ width : "30em",
+							  fixedcenter : true,
+							  visible : false, 
+							  constraintoviewport : true,
+							 
+							});
+
+	YAHOO.example.container.dialog3 = new YAHOO.widget.Dialog("dialog3", 
+							{ width : "30em",
+							  fixedcenter : true,
+							  visible : false, 
+							  constraintoviewport : true,
+							 
+							});								
+	
+	// Render the Dialog
+	YAHOO.example.container.dialog1.render();
+	YAHOO.example.container.dialog2.render();
+	YAHOO.example.container.dialog3.render();
+
+	
+}
+
+YAHOO.util.Event.onDOMReady(init);
+</script>
+<div id="dialog1">
+	<div class="hd" id='dialog1_title'></div>
+	<div class="bd" id='dialog1_content'>
+	</div>
+</div>
+<div id="dialog2">
+	<div class="hd" id='dialog2_title'></div>
+	<div class="bd" id='dialog2_content'>
+	</div>
+</div> 
+<div id="dialog3">
+	<div class="hd" id='dialog3_title'></div>
+	<div class="bd" id='dialog3_content'>
+	</div>
+</div>  
+</body>
+</html>

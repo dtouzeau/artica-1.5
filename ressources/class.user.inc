@@ -2195,20 +2195,35 @@ function joomla(){
 	
 	
 	function LastUidNumber(){
+		$sock=new sockets();
+		$LastUidNumber=trim($sock->GET_INFO("LastUidNumber",true));
+		if(is_numeric($LastUidNumber)){
+			if($LastUidNumber>2000){
+				return $LastUidNumber+1;
+				$sock->SET_INFO("LastUidNumber", $LastUidNumber);
+			}
+		}
 		$ldap=new clladp();
 		writelogs("Search the last uid number",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
-      	$r =@ldap_search($ldap->ldap_connection, $ldap->suffix, '(uidnumber=*)',array());
+      	$r =@ldap_search($ldap->ldap_connection, $ldap->suffix, '(uidnumber=*)',array("uidnumber"));
+      	$biguid=2000;
       		if ($r){
-         			ldap_sort($ldap->ldap_connection, $r, "uidnumber");
+         			ldap_sort($ldap->ldap_connection, $r, "uidNumber");
             		$result = ldap_get_entries($ldap->ldap_connection, $r);
-         			$count = $result['count'];
-         			$biguid = $result[$count-1]['uidnumber'][0];
+					$count = $result['count'];
+         			if($GLOBALS["VERBOSE"]){echo "$count items\n";}
+         			for($i=0;$i<$count;$i++){
+         				$id=$result[$i]['uidnumber'][0];
+         				if($id>$biguid){$biguid=$id;}
+         			}
+         			
          			writelogs("biguid=$biguid",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
          			$biguid=$biguid+1;
       		}else{
       			$biguid=2000;
       		}
       		if($biguid<2000){$biguid=2000;}
+      		$sock->SET_INFO("LastUidNumber", $biguid);
       		return $biguid;
       		
 	}

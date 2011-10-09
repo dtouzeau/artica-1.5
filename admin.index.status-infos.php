@@ -20,6 +20,13 @@ function page(){
 
 $page=CurrentPageName();
 $tpl=new templates();
+$sock=new sockets();
+
+$datas=base64_decode($sock->getFrameWork("status.php?cpu-check-nx=yes"));
+if($datas<>null){NotifyAdmin("system-32.png","CPU Infos !",$datas,null);}
+
+
+
 $q=new mysql();
 $sql="SELECT * FROM adminevents WHERE enabled=1 ORDER BY zDate DESC LIMIT 0,50";
 $results=$q->QUERY_SQL($sql,"artica_events");

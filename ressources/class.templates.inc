@@ -4358,12 +4358,13 @@ class tweak_array{
 			return $array;
 		}
 } 
-function button($text,$js){
+function button($text,$js,$fontsize=null){
+	if($fontsize==null){$fontsize="10px";}
 	
 	$over="OnMouseOut=\"javascript:this.className='ui-state-default ui-corner-all';this.style.cursor='auto'\"";
 	$out="OnMouseOver=\"javascript:this.className='ui-state-active ui-corner-all';this.style.cursor='pointer'\"";
 	
-	return "<button type='button' style='padding:3px;font-size:10px' $over $out class='ui-state-default ui-corner-all' OnClick=\"javascript:this.className='ui-state-over';$js;\">&nbsp;$text&nbsp;&nbsp;&raquo</button>";
+	return "<button type='button' style='padding:3px;font-size:$fontsize' $over $out class='ui-state-default ui-corner-all' OnClick=\"javascript:this.className='ui-state-over';$js;\">&nbsp;$text&nbsp;&nbsp;&raquo</button>";
 }
 
 function pourcentage_basic($pourc,$bandwith_color,$text){

@@ -76,7 +76,10 @@ function APP_ZARAFA_WEB_SAVE(){
 	if(document.getElementById('ZarafaiCalEnable').checked){XHR.appendData('ZarafaiCalEnable',1);}else{XHR.appendData('ZarafaiCalEnable',0);}		
 	if(document.getElementById('ZarafaUserSafeMode').checked){XHR.appendData('ZarafaUserSafeMode',1);}else{XHR.appendData('ZarafaUserSafeMode',0);}	
 	if(document.getElementById('ZarafaStoreOutside').checked){XHR.appendData('ZarafaStoreOutside',1);}else{XHR.appendData('ZarafaStoreOutside',0);}
-	if(document.getElementById('ZarafaAspellEnabled').checked){XHR.appendData('ZarafaAspellEnabled',1);}else{XHR.appendData('ZarafaAspellEnabled',0);}		
+	if(document.getElementById('ZarafaAspellEnabled').checked){XHR.appendData('ZarafaAspellEnabled',1);}else{XHR.appendData('ZarafaAspellEnabled',0);}
+	if(document.getElementById('ZarafaImportContactsInLDAPEnable').checked){XHR.appendData('ZarafaImportContactsInLDAPEnable',1);}else{XHR.appendData('ZarafaImportContactsInLDAPEnable',0);}		
+
+	
 	
 	XHR.appendData('ou','$ou_decrypted');
 	document.getElementById('zrfa-logo').src='img/wait_verybig.gif';
@@ -123,6 +126,9 @@ function SAVE(){
 	$sock->SET_INFO("ZarafaAllowToReinstall",trim($_GET["ZarafaAllowToReinstall"]));
 	$sock->SET_INFO("ZarafaWebNTLM",trim($_GET["ZarafaWebNTLM"]));
 	$sock->SET_INFO("ZarafaSessionTime",$_GET["ZarafaSessionTime"]*60);
+	$sock->SET_INFO("ZarafaImportContactsInLDAPEnable",$_GET["ZarafaImportContactsInLDAPEnable"]);
+	
+	
 		
 	$sock->getFrameWork("cmd.php?zarafa-restart-web=yes");
 	$sock->getFrameWork("zarafa.php?restart=yes");
@@ -196,12 +202,14 @@ $ZarafaSessionTime=$sock->GET_INFO("ZarafaSessionTime");
 $ZarafaWebNTLM=$sock->GET_INFO("ZarafaWebNTLM");
 $Zarafa7IMAPDisable=$sock->GET_INFO("Zarafa7IMAPDisable");
 $Zarafa7Pop3Disable=$sock->GET_INFO("Zarafa7Pop3Disable");
+$ZarafaImportContactsInLDAPEnable=$sock->GET_INFO("ZarafaImportContactsInLDAPEnable");
 
 if(!is_numeric($ZarafaPop3Enable)){$ZarafaPop3Enable=1;}
 if(!is_numeric($ZarafaIMAPEnable)){$ZarafaIMAPEnable=1;}
 
 if(!is_numeric($Zarafa7IMAPDisable)){$Zarafa7IMAPDisable=0;}
 if(!is_numeric($Zarafa7Pop3Disable)){$Zarafa7Pop3Disable=0;}
+if(!is_numeric($ZarafaImportContactsInLDAPEnable)){$ZarafaImportContactsInLDAPEnable=0;}
 
 if(!is_numeric($ZarafaPop3Port)){$ZarafaPop3Port=110;}
 if(!is_numeric($ZarafaPop3sPort)){$ZarafaPop3sPort=995;}
@@ -303,6 +311,12 @@ $html="
 				<td class=legend style='font-size:12px'>{spell_checker}&nbsp;$ZarafaAspellInstalled_text&nbsp;:</td>
 				<td>". Field_checkbox("ZarafaAspellEnabled",1,$ZarafaAspellEnabled)."</td>
 			</tr>
+			<tr>
+				<td class=legend style='font-size:12px'>{ZarafaImportContactsInLDAPEnable}&nbsp;:</td>
+				<td>". Field_checkbox("ZarafaImportContactsInLDAPEnable",1,$ZarafaImportContactsInLDAPEnable)."</td>
+			</tr>			
+			
+			
 			<tr>
 				<td class=legend style='font-size:12px'>{ZarafaAllowToReinstall}:</td>
 				<td>". Field_checkbox("ZarafaAllowToReinstall",1,$ZarafaAllowToReinstall)."</td>

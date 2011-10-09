@@ -1,0 +1,208 @@
+table{
+
+font-family:'Helvetica','Tahoma','Verdana',sans-serif;
+font-size:11px;
+}
+
+table tr.rowA{
+	background-color: #f5f5f5;
+	color: inherit;
+}
+
+table td.caption {
+background-color:#F9F9F9;
+color:#4C535C;
+font-size:12px;
+font-style:normal;
+font-weight:bolder;
+padding-left:3px;
+text-align:left;
+}
+
+table td.explain {
+background-color:#ecf7ff;
+background-image:url(/img/icon-info-bg.png);
+background-position:0% 0%;
+background-repeat:no-repeat;
+color:#4C535C;
+font-size:11px;
+font-style:normal;
+padding:3px;
+padding-left:22px;
+text-align:left;
+border:1px solid #CCCCCC;
+font-style:italic;
+margin:3px;
+}
+
+table td.switchRowBlack {
+background-color:#000000;
+color:#FFFFFF;
+font-size:11px;
+font-style:normal;
+font-weight:bolder;
+padding-left:3px;
+text-align:left;
+}
+
+table tr.switchRowBlack {
+background-color:#000000;
+}
+
+
+
+
+table td.code {
+color:#4C535C;
+font-size:12px;
+font-style:normal;
+text-align:left;
+font-family:Lucida Sans Unicode;
+font-stretch:extra-expanded;
+}
+
+table td.caption_new {
+color:#4C535C;
+font-size:12px;
+font-style:normal;
+padding-left:3px;
+text-align:left;
+}
+
+
+
+table tr.rowH{
+	clear:both;
+	background-color: #ffffb1;
+	
+}
+
+table td.bottom{
+	clear:both;
+	border-bottom: 1px dotted #8e8785;
+	
+}
+
+table tr.rowN{
+	clear:both;
+	background-color:transparent;
+	border:0px;
+	
+}
+
+table td{
+	padding-left:3px;
+	padding-right:3px;
+	padding-top:0px;
+	
+	font-size:10px;
+	
+}
+
+tr.rowT{
+	background-color: #6e6e6e;
+	color: #FFFFFF;
+	text-align:center;
+	font-weight:bolder;
+	text-transform:capitalize;
+}
+
+table tr.rowB
+{
+	background-color: #fdfdfd;
+	color: inherit;
+}
+
+th {
+-moz-background-clip:border;
+-moz-background-inline-policy:continuous;
+-moz-background-origin:padding;
+background:#005447 url(images/ui-bg_highlight.png) repeat-x scroll 50% 50%;
+border:1px solid #000000;
+color:#FFFFFF;
+font-weight:bold;
+text-align:center;
+text-transform:uppercase;
+padding:3px;
+
+}
+
+.tableView thead th.checkBoxCell,
+.tableView tbody td.checkBoxCell { padding: 0px 5px 0px 10px; width: 13px; }
+.tableView thead td,
+.tableView thead th { height: 23px; border-bottom: 1px #b1b1b1 solid; padding: 0px 5px 0px 10px; }
+.tableView thead tr { background: transparent url( /ressources/templates/default/img/thead_bg.jpg ) repeat-x left bottom;}
+.tableView thead a { color: #000000; text-decoration: none; }
+.tableView tbody tr { background-color: #ffffff; }
+.tableView tbody tr.oddRow { background-color: #F2FAFD; }
+.tableView tbody td {border-bottom: 1px #d5d5d5 solid; height:41px;padding: 0px 5px 0px 10px;  }
+.tableView .checkBoxCell input { margin: 0px; padding: 0px; display: block; width: 13px; height: 13px; }
+.tableView thead span, .tableView thead a { cursor: pointer; text-shadow: #fff 1px 1px 0px; }
+.tableView { width: 100%; font-family:Arial;}
+.tableView thead th { text-align: left; font-weight: normal; font-size: 11px; }
+
+
+.aws_bodyl  { }
+.aws_border {
+	border-collapse: collapse; 
+	background-color: #CCCCDD; 
+	padding: 1px 1px 1px 1px; 
+	margin-top: 0px; 
+	margin-bottom: 0px;
+	font-size:13px;
+
+}
+.aws_title  { 
+	font-size:16px;
+	font-weight: bold;
+	letter-spacing:-1px;
+	background-color: #CCCCDD;
+	text-align: center;
+	margin-top: 0; margin-bottom: 0; padding: 1px 1px 1px 1px; 
+}
+.aws_blank  { 
+font-size: 13px;
+background-color: #FFFFFF; text-align: center; margin-bottom: 0; padding: 1px 1px 1px 1px; 
+}
+.aws_data {
+	background-color: #FFFFFF;
+	border-top-width: 1px;   
+	border-left-width: 0px;  
+	border-right-width: 0px; 
+	border-bottom-width: 0px;
+}
+
+
+.aws_data a{
+    
+    color: #F8FFFF;
+    font-weight: normal;
+    text-decoration: underline;
+}
+
+.aws_formfield { font-size: 13px; }
+.aws_button {
+	font-size: 12px;
+	border: 1px solid #ccd7e0;
+	background-image : url(/icon/other/button.gif);
+}
+
+th.aws	{ border-color: #ECECEC; border-left-width: 0px; border-right-width: 1px; border-top-width: 0px; border-bottom-width: 1px; padding: 1px 2px 1px 1px; font-size: 13px; font-weight: bold; }
+td.aws	{ 
+	border-color: #ECECEC; 
+	border-left-width: 0px; 
+	border-right-width: 1px; 
+	border-top-width: 0px; 
+	border-bottom-width: 1px; 
+	font-size: 13px;
+	text-align:left; color: #000000; 
+	padding: 0px;}
+	
+td.awsm	{ 
+		font-size:13px;
+		color: #000000; 
+		padding: 0px;
+		border-bottom:1px solid #CCCCCC;
+}
+b { font-weight: bold; }
+.currentday { font-weight: bold; }

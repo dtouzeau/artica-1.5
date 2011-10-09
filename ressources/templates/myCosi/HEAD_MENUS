@@ -1,0 +1,5 @@
+<table style='width:80%;padding:0px;margin:0px;border:0px solid black'>
+<tr>
+	<td class=HeadMenus><a href='#' OnClick="javascript:Loadjs('artica.update.php?js=yes')" style='color:black'>%articaver%</a></td>	
+</tr>
+</table>

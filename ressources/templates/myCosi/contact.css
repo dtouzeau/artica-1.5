@@ -1,0 +1,34 @@
+.contact{
+
+
+}
+
+.contact INPUT,SELECT,TEXTAREA{
+background-color:#FBFBFB;
+border-color:#D7D7D7 rgb(243, 243, 243) rgb(243, 243, 243) rgb(215, 215, 215);
+border:1px solid;
+color:#333333;
+font-size:12px;
+width:auto;
+
+}
+
+.contact INPUT[type="text"]{
+	width:90%;
+	font-size:12px;
+	font-weight:bold;
+	padding:3px;
+}
+
+.contact .legend{
+  font-size:12px;
+  font-weight:bolder;
+}
+
+.contact input[disabled], input[readonly], select[disabled], select[readonly], checkbox[disabled], checkbox[readonly], textarea[disabled], textarea[readonly] {
+background-color:#E7E7E7;
+background-image:none;
+color:#333333;
+cursor:default;
+}
+

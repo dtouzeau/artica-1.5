@@ -207,6 +207,11 @@ if ParamStr(1)='--mailflt3' then  begin
    halt(0);
 end;
 
+if Paramstr(1)='--zarafa-reconfigure' then begin
+   zZarafa:=tzarafa_server.CReate(SYS);
+   zZarafa.server_cfg();
+end;
+
 if Paramstr(1)='--tomcat-version' then begin
    ztomcat:=ttomcat.Create(SYS);
    writeln(ztomcat.VERSION());

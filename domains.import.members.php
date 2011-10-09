@@ -25,54 +25,23 @@ js();
 function js(){
 	$gid=$_GET["gid"];
 	$tpl=new templates();
-	
+	$t=time();
 	$page=CurrentPageName();
 	$group=new groups($gid);
 	$import_title=$tpl->_ENGINE_parse_body('{import}',"domains.edit.group.php");
-	$js=file_get_contents("js/webtoolkit.aim.js");
+	$title=trim("$group->ou::$group->groupName $import_title");
 	
 	$html="
-	   $js
-	   
-		function startCallback() {
-			// make something useful before submit (onStart)
-			return true;
-		}
- 
-		function completeCallback(response) {
-			// make something useful after (onComplete)
-			//document.getElementById('nr').innerHTML = parseInt(document.getElementById('nr').innerHTML) + 1;
-			document.getElementById('form_response').innerHTML = response;
-		}
-		
-	
-		function LoadImportPage(){
-			YahooWin2(550,'$page?start-page=$gid','$group->ou::$group->groupName $import_title');
-		}
-		
-	function x_PerformImport(obj) {
-		var tempvalue=obj.responseText;
-		document.getElementById('form_response').innerHTML = tempvalue;
-		RefreshTab('main_group_config');
-	}		
-		
-		function PerformImport(){
-			 var ImportMembersFile=document.getElementById('content_path').value;
-			var XHR = new XHRConnection();
-			XHR.appendData('ImportMembersFile',ImportMembersFile);
-			XHR.appendData('groupid',$gid);
-			AnimateDiv('form_response')';
-			XHR.sendAndLoad('$page', 'GET',x_PerformImport);			 
-		
-		}
-		
-		
-		LoadImportPage();
-	
-	
-	";
-	
-	echo $html;
+function Load{$t}ImportPage(){
+	YahooWin2(700,'$page?start-page=$gid','$title');
+}
+
+
+Load{$t}ImportPage();
+Loadjs('js/webtoolkit.aim.js');
+";
+header("Content-type: text/javascript");	
+echo $html;
 	
 	
 }
@@ -229,10 +198,12 @@ if(is_array($datas)){
 
 function START_PAGE($gpid){
 	$page=CurrentPageName();
+	$js=file_get_contents("js/webtoolkit.aim.js");
+	$t=time();
 	
+	$html="
 	
-	
-	$html="<div style='font-size:16px'>{importing_form_text_file}</div>
+	<div style='font-size:16px'>{importing_form_text_file}</div>
 	<p class=explain>{importuser_text}<br>{importuser_aliases_text}</div>
 		<input type='hidden' name='groupid' value='$gpid'>
     	<form action=\"$page\" method=\"post\" onsubmit=\"return AIM.submit(this, {'onStart' : startCallback, 'onComplete' : completeCallback})\">
@@ -240,6 +211,30 @@ function START_PAGE($gpid){
 		</form>
  
 	<div id='form_response'></div>
+	<script>
+function startCallback() {
+	return true;
+}
+ 
+function completeCallback(response) {
+	document.getElementById('form_response').innerHTML = response;
+}
+		
+function x_Perform{$t}Import(obj) {
+	var tempvalue=obj.responseText;
+	document.getElementById('form_response').innerHTML = tempvalue;
+	RefreshTab('main_group_config');
+}		
+function PerformImport(){
+	var ImportMembersFile=document.getElementById('content_path').value;
+	var XHR = new XHRConnection();
+	XHR.appendData('ImportMembersFile',ImportMembersFile);
+	XHR.appendData('groupid',{$_GET["start-page"]});
+	AnimateDiv('form_response');
+	XHR.sendAndLoad('$page', 'GET',x_Perform{$t}Import);			 
+}
+
+</script>	
 
  
     	

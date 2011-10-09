@@ -219,45 +219,50 @@ class pagebuilder{
 		
 		
 			$html=$backspace."<!-- template used :".dirname(__FILE__)."/templates/{$_COOKIE["artica-template"]}/$template_file-->";
+	
 			
-			$css_files["menu.css"]="menu.css";
-			$css_files["contact.css"]="contact.css";
-			$css_files["style.css"]="style.css";
-			$css_files["styles_rounded.css"]="styles_rounded.css";
-			$css_files["styles_tabs.css"]="styles_tabs.css";
-			$css_files["styles_forms.css"]="styles_forms.css";
-			$css_files["styles_tables.css"]="styles_tables.css";
-			$css_files["titles.css"]="titles.css";
-			$css_files["nav.css"]="nav.css";
-			$css_files["menus_top.css"]="menus_top.css";
-			$css_files["blurps.css"]="blurps.css";
-			$css_files["isoqlog.css"]="isoqlog.css";
+			if(!isset($GLOBALS["CSS_FILES"]["menu.css"])){$GLOBALS["CSS_FILES"]["menu.css"]="menu.css";}
+			if(!isset($GLOBALS["CSS_FILES"]["contact.css"])){$GLOBALS["CSS_FILES"]["contact.css"]="contact.css";}
+			if(!isset($GLOBALS["CSS_FILES"]["style.css"])){$GLOBALS["CSS_FILES"]["style.css"]="style.css";}
+			if(!isset($GLOBALS["CSS_FILES"]["styles_rounded.css"])){$GLOBALS["CSS_FILES"]["styles_rounded.css"]="styles_rounded.css";}
+			if(!isset($GLOBALS["CSS_FILES"]["styles_tabs.css"])){$GLOBALS["CSS_FILES"]["styles_tabs.css"]="styles_tabs.css";}
+			if(!isset($GLOBALS["CSS_FILES"]["styles_forms.css"])){$GLOBALS["CSS_FILES"]["styles_forms.css"]="styles_forms.css";}
+			if(!isset($GLOBALS["CSS_FILES"]["styles_tables.css"])){$GLOBALS["CSS_FILES"]["styles_tables.css"]="styles_tables.css";}
+			if(!isset($GLOBALS["CSS_FILES"]["titles.css"])){$GLOBALS["CSS_FILES"]["titles.css"]="titles.css";}
+			if(!isset($GLOBALS["CSS_FILES"]["nav.css"])){$GLOBALS["CSS_FILES"]["nav.css"]="nav.css";}
+			if(!isset($GLOBALS["CSS_FILES"]["menus_top.css"])){$GLOBALS["CSS_FILES"]["menus_top.css"]="menus_top.css";}
+			if(!isset($GLOBALS["CSS_FILES"]["blurps.css"])){$GLOBALS["CSS_FILES"]["blurps.css"]="blurps.css";}
+			if(!isset($GLOBALS["CSS_FILES"]["isoqlog.css"])){$GLOBALS["CSS_FILES"]["isoqlog.css"]="isoqlog.css";}
 			
 			if((CurrentPageName()=="logon.php") OR (CurrentPageName()=="logoff.php") OR (CurrentPageName()=="404.php")){
-				unset($css_files["menu.css"]);
-				unset($css_files["style.css"]);
-				unset($css_files["isoqlog.css"]);
-				unset($css_files["blurps.css"]);
-				unset($css_files["nav.css"]);
-				unset($css_files["styles_tables.css"]);	
-				unset($css_files["styles_forms.css"]);
-				unset($css_files["styles_tabs.css"]);
-				unset($css_files["styles_rounded.css"]);		
+				unset($GLOBALS["CSS_FILES"]["menu.css"]);
+				unset($GLOBALS["CSS_FILES"]["style.css"]);
+				unset($GLOBALS["CSS_FILES"]["isoqlog.css"]);
+				unset($GLOBALS["CSS_FILES"]["blurps.css"]);
+				unset($GLOBALS["CSS_FILES"]["nav.css"]);
+				unset($GLOBALS["CSS_FILES"]["styles_tables.css"]);	
+				unset($GLOBALS["CSS_FILES"]["styles_forms.css"]);
+				unset($GLOBALS["CSS_FILES"]["styles_tabs.css"]);
+				unset($GLOBALS["CSS_FILES"]["styles_rounded.css"]);		
 			}
 			
 			
 			if($GLOBALS["JQUERY_UI"]<>null){
 				//unset($css_files["styles_forms.css"]);
-				unset($css_files["style.css"]);
-				unset($css_files["styles_tabs.css"]);
+				unset($GLOBALS["CSS_FILES"]["style.css"]);
+				unset($GLOBALS["CSS_FILES"]["styles_tabs.css"]);
 				//unset($css_files["styles_rounded.css"]);
 				//unset($css_files["menus_top.css"]);
 				//unset($css_files["styles_tables.css"]);	
 			
 			}
 			
-				reset($css_files);
-				while (list ($num, $val) = each ($css_files) ){
+				$cssPerso=$this->PersoCSS();
+				$html=$html . "$backspace<!-- CSS PERSO ". count($cssPerso). " FILE(S)/". count($GLOBALS["CSS_FILES"])." ( ". date("Y-m-d H:i:s")." ) -->\n";
+				if(count($cssPerso)>0){$html=$html .@implode("\n", $cssPerso);}					
+			
+				reset($GLOBALS["CSS_FILES"]);
+				while (list ($num, $val) = each ($GLOBALS["CSS_FILES"]) ){
 					if(file_exists(dirname(__FILE__)."/templates/{$_COOKIE["artica-template"]}/$val")){
 						$css_array[]="$backspace<link rel=\"stylesheet\" type=\"text/css\" rel=\"styleSheet\"  href=\"/ressources/templates/{$_COOKIE["artica-template"]}/$val\" />";
 					}else{
@@ -276,6 +281,8 @@ class pagebuilder{
 			$jqueryUi="artica-theme";
 			if(isset($GLOBALS["JQUERY_UI"])){$jqueryUi=$GLOBALS["JQUERY_UI"];}
 			$uicss=$this->JqueryUiCss($jqueryUi);
+			$GLOBALS["CSS_FILES"][basename($uicss)]=basename($uicss);
+
 			
 			$html=$html . "$backspace<!-- jqueryUi:$jqueryUi -->";
 			$html=$html . "$backspace<link rel=\"stylesheet\" type=\"text/css\" href=\"$uicss\" />";
@@ -292,15 +299,42 @@ class pagebuilder{
 			$_SESSION["ARTICA_HEAD_TEMPLATE"]=$html;
 			return $html;
 		}
+		
+		private function PersoCSS(){
+			$css=array();
+			$backspace="\t\t";
+			if(!isset($_COOKIE["artica-template"])){return;}
+			$template=$_COOKIE["artica-template"];
+			foreach (glob("ressources/templates/$template/css/*.css") as $filename) {
+				if(isset($GLOBALS["CSS_FILES"][basename($filename)])){unset($GLOBALS["CSS_FILES"][basename($filename)]);}
+				$css[]="$backspace<link href=\"/$filename\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" >";;
+			}
+
+			return $css;
+			
+		}
+		
 
 		private function JqueryUiCss($theme){
-			if(is_file("/usr/share/artica-postfix/css/$theme/jquery-ui.custom.css")){return "/css/$theme/jquery-ui.custom.css";}
-			if(is_file("/usr/share/artica-postfix/css/$theme/jquery-ui-1.8.10.custom.css")){return "/css/$theme/jquery-ui-1.8.10.custom.css";}
-			if(is_file("/usr/share/artica-postfix/css/$theme/jquery-ui-1.8.6.custom.css")){return "/css/$theme/jquery-ui-1.8.6.custom.css";}
-			if(is_file("/usr/share/artica-postfix/css/$theme/jquery-ui-1.7.2.custom.css")){return "/css/$theme/jquery-ui-1.7.2.custom.css";}
-			if(is_file("/usr/share/artica-postfix/css/$theme/jquery-ui-1.8.16.custom.css")){return "/css/$theme/jquery-ui-1.8.16.custom.css";}
+			if($GLOBALS["EXECUTED_AS_ROOT"]){return;}
+			$files["jquery-ui.custom.css"]=true;
+			$files["jquery-ui-1.8.10.custom.css"]=true;
+			$files["jquery-ui-1.8.6.custom.css"]=true;
+			$files["jquery-ui-1.7.2.custom.css"]=true;
+			$files["jquery-ui-1.8.16.custom.css"]=true;
 			
+			
+			if(isset($_COOKIE["artica-template"])){
+				while (list ($num, $val) = each ($files) ){
+					if(is_file(dirname(__FILE__)."/templates/{$_COOKIE["artica-template"]}/css/$num")){return dirname(__FILE__)."/templates/{$_COOKIE["artica-template"]}/css/$num";}
+				}
+				reset($files);
 			}
+			while (list ($num, $val) = each ($files) ){
+				if(is_file("/usr/share/artica-postfix/css/$theme/$num")){return "/css/$theme/$num";}
+			}
+			writelogs("Warning, unable to found jquery-ui-x.x.x.css !!!",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);	
+		}
 
 	function YahooBody(){
 			if($GLOBALS["EXECUTED_AS_ROOT"]){return;}

@@ -22,6 +22,7 @@ if($argv[1]=='--clean-sessions'){sessions_clean();die();}
 if($argv[1]=='--clean-install'){CleanOldInstall();die();}
 if($argv[1]=='--paths-status'){PathsStatus();die();}
 if($argv[1]=='--maillog'){maillog();die();}
+if($argv[1]=='--wrong-numbers'){wrong_number();die();}
 
 
 
@@ -206,6 +207,7 @@ function CleanLogs(){
 	}
 	@unlink($timeOfFile);
 	@file_put_contents($timeOfFile,"#");
+	wrong_number();
 	Clean_tmp_path();
 	CleanOldInstall();
 	if(system_is_overloaded(dirname(__FILE__))){
@@ -388,7 +390,15 @@ function sessions_clean(){
 	}
 	
 }
-
+function wrong_number(){
+	$unix=new unix();
+	foreach (glob("/usr/share/artica-postfix/*") as $filename) {
+		$name=basename($filename);
+		if($name=="?"){@unlink($filename);continue;}
+		if(preg_match("#^[0-9]+$#", $name)){@unlink($filename);}
+	}
+	
+}
 
 function phplogs(){
 	$filename="/usr/share/artica-postfix/ressources/logs/php.log";

@@ -1,0 +1,174 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8">
+	<title>{TEMPLATE_TITLE_HEAD}</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" >								
+	<script type="text/javascript" src="/ressources/templates/Kav4Proxy/js/jquery-1.6.2.min.js"></script>
+	<script type="text/javascript" src="/ressources/templates/Kav4Proxy/js/jquery-ui-1.8.16.custom.min.js"></script>
+	<script type="text/javascript" src="/ressources/templates/Kav4Proxy/js/utilits.js"></script>
+	{TEMPLATE_HEAD}	
+																
+</head>
+<body>
+<script type="text/javascript">Translate.addResources({"unknownError":"Unknown error","LoadingTitle":"Loading..."});</script>
+<script>
+    $.datepicker.setDefaults($.datepicker.regional['en']);
+</script><div class="main">
+
+    <div id="header_mainpage"><div id="changeLoginsOwnPassword">
+    <div class="error-change-own-pass"></div>
+    <div id="changeLoginsOwnPasswordContent">
+        <table width="100%" border="0" style="margin-bottom: 100px;">
+        <tr>
+            <td class="changeOwnPassCell">Old password:</td>
+            <td class="changeOwnPassCellInput"><input type="password" class="text left-floated" value="" id="oldPassword" name="oldPassword"></td>
+            <td><img class="change-logins-own-pass-tick" src="/img/tick.png" id="oldPasswordTick"></td>
+
+        </tr>
+        <tr>
+            <td class="changeOwnPassCell">New password:</td>
+            <td class="changeOwnPassCellInput"><input type="password" class="text left-floated" value="" id="newPassword" name="newPassword"></td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="changeOwnPassCell">Confirm password:</td>
+
+            <td class="changeOwnPassCellInput"><input type="password" class="text left-floated" value="" id="repeatNewPassword" name="repeatNewPassword"></td>
+            <td><img class="change-logins-own-pass-tick" src="/img/tick.png" id="bothNewPasswordsTick"></td>
+        </tr>
+        <tr>
+            <td class="changeOwnPassCell"></td>
+            <td class="changeOwnPassCellInput"><input type="checkbox" value="" id="sendNewPasswordCheckbox"> Send password to the indicated email address</td>
+            <td>&nbsp;</td>
+        </tr>
+
+        <tr>
+            <td class="changeOwnPassCell"><span id="sendOwnPassToEmailAddressLabel">Email address:</span></td>
+            <td class="changeOwnPassCellInput"><input type="text" class="text left-floated" value="" id="sendNewPasswordEmail"></td>
+            <td><img class="change-logins-own-pass-tick" src="/img/tick.png" id="emailToSendNewPasswordTick"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>The new password will take effect in 5 minutes after it is changed. A notification of the password change will be immediately sent to the specified email address.</td>
+
+            <td>&nbsp;</td>
+        </tr>
+        </table>
+    </div>
+    <div class="change-own-password-bottom-panel">
+	<button class="change-own-password-bottom-panel-button" id="closechangeLoginsOwnPasswordDialog">Close</button>
+	<button class="change-own-password-bottom-panel-button" id="changePasswordButton">Change password</button>
+</div>
+</div>
+
+
+
+
+<div id="user_info">
+	    <div id="langs">
+		{TEMPLATE_LANG_LINK}
+	    </div>
+	</div>
+
+</div>
+
+    	<noscript>
+		<link href="/css/nojavascript.css" media="screen" rel="stylesheet" type="text/css" />
+		<div id="error_message" class="bg_light">
+			Javascript support disabled			<div>
+                <h5><a href="http://support.kaspersky.com/hosted_security/" target="_blank">Additional information</a></h5>
+            </div>
+		</div>
+	</noscript>
+    <div id="content"><script type="text/javascript" src="/ressources/templates/Kav4Proxy/js/front.js"></script>
+
+<div>
+	<center>
+
+		<div id="login-logo">
+			<a href="#" class="mainpage_link"><img src="/ressources/templates/Kav4Proxy/img/logo-kav.png" border="0"/></a>
+		</div>
+		
+		<div id="login-body" class="clearfix"> 
+	
+		<form action="/auth/login" method="POST" name="front-form" id="front-form" class="front-form">
+                <!-- the following hidden field is needed if we re-post the form to the old
+                    portal. -->
+                <input type="hidden" name="act" value="login_act" />
+
+                <input type="hidden" name="timeoffset" id="timeoffset" value="0" />
+                <script>
+                    $("#timeoffset").val(time_offset);
+                </script>
+                <div class="content_front">
+                    <div class="message"></div>
+                    <div class="pad">
+                        <div class="field">
+                            <label>{username}:</label>
+                            <div>
+
+                                <span class="input"><input name="login" id="artica_username" class="text" type="text" value="{artica_username}" /></span>
+                            </div>
+                        </div> <!-- .field -->
+
+                        <div class="field">
+                            <label>{password}:</label>
+                            <div>
+                                <span class="input"><input name="password" id="login_pwd" class="text" type="password" value="" /></span>
+
+                            </div>
+                        </div> <!-- .field -->
+
+                        <div class="field">
+                            <span class="label">&nbsp;</span>
+                            <div class=""><input type="submit" class="submit" value="Login" /></div>
+                            <span class="submit-process"></span>
+                        </div> <!-- .field -->
+
+                    </div>
+                </div>
+            <input type="hidden" name="returnUrl" id="returnUrl" value=""/>
+            <input type="hidden" name="menu_top" id="menu_top" value="" />
+			</form>
+	        <script type="text/javascript">
+                (function() { new FrontLoginForm($('.front-form'));})();
+	        </script>
+		</div>
+	</center>
+
+</div>
+</div>
+    <div class="footer-content-dummy"></div>
+</div><!-- end DIV.main -->
+<div class="footer">
+    <div class="footer-content">
+        <div class="copyright">
+            
+           
+
+
+            <div id="revision">{ARTICA_VERSION}</div>
+        </div>
+        <span id="time"></span> &copy; 2011 Kaspersky Lab ZAO. All rights reserved. <br>Registered trademarks and service marks are the property of their respective owners.        <script>
+            var t = format_datetime(new Date());
+            $("#time").html(t);
+        </script>
+    </div>
+</div>
+
+
+
+<div id="licensing-dialog" style="display:none" title="Licenses" >
+</div>
+<script type="text/javascript">Translate.addResources({"changeLoginsOwnPasswordTitle":"Change password","closeTitle":"Close","supportDialogTitle":"Information on Technical Support Service","errorWindowTitle":"Error","successWindowTitle":"Outcome of operation","NoMessagesWereChosen":"No messages selected","LoadingTitle":"Loading...","saveDataTitle":"Save","accountContactDetails":"Contacts","showTitle":"Show"});</script>
+<script>
+    supportDialogInit();
+    tooltipInit();
+</script>
+{TEMPLATE_BODY_YAHOO} 
+<input type='hidden' id='LoadAjaxPicture' value='/ressources/templates/Kav4Proxy/img/ajax-loader.gif'>
+</body>
+</html>
+
+

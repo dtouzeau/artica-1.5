@@ -3,6 +3,10 @@ if(posix_getuid()<>0){die("Cannot be used in web server mode\n\n");}
 include_once(dirname(__FILE__)."/ressources/class.user.inc");
 include_once(dirname(__FILE__)."/ressources/class.contacts.inc");
 include_once(dirname(__FILE__)."/ressources/class.zarafa.contacts.inc");
+include_once(dirname(__FILE__)."/ressources/class.sockets.inc");
+include_once(dirname(__FILE__).'/framework/class.unix.inc');
+include_once(dirname(__FILE__).'/framework/frame.class.inc');
+include_once(dirname(__FILE__).'/ressources/class.os.system.inc');
 
 
 include_once(dirname(__FILE__).'/framework/class.unix.inc');
@@ -12,11 +16,19 @@ if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["DEBUG"]=true;$GLOBALS
 if($GLOBALS["VERBOSE"]){ini_set('html_errors',0);ini_set('display_errors', 1);ini_set('error_reporting', E_ALL);}
 define("SERVER", "file:///var/run/zarafa");
 
+	$sock=new sockets();
+	$ZarafaImportContactsInLDAPEnable=$sock->GET_INFO("ZarafaImportContactsInLDAPEnable");
+	if(!is_numeric($ZarafaImportContactsInLDAPEnable)){$ZarafaImportContactsInLDAPEnable=0;}
+	if($ZarafaImportContactsInLDAPEnable==0){if($GLOBALS["VERBOSE"]){echo "ZarafaImportContactsInLDAPEnable = $ZarafaImportContactsInLDAPEnable, aborting\n";}}
+	
+
 if($argv[1]=="--all"){ParseAllcontacts();die();}
 ParseContacts($argv[1]);
 
 
 function ParseAllcontacts(){
+
+	
 	$unix=new unix();
 	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
 	$pidtime="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".time";
@@ -33,6 +45,8 @@ function ParseAllcontacts(){
 			$hash=ldap_get_entries($ldap->ldap_connection,$sr);
 			for($i=0;$i<$hash["count"];$i++){
 				ParseContacts($hash[$i]["uid"][0]);
+				if(system_is_overloaded(dirname(__FILE__))){$unix->send_email_events(basename(__FILE__)." Overloaded aborting task", "Zarafa contacts importation has been canceled due to overloaded system", "mailbox");return;}					
+				sleep(1);
 			}
 		}
 }
@@ -50,10 +64,7 @@ function ParseContacts($uid){
 		if($contact["email1"]==null){continue;}
 		$_contact=new contacts($ct->uid);
 		$employeeNumber=$_contact->employeeNumberByEmail($contact["email1"]);
-		if($employeeNumber<>null){
-			$_contact=new contacts($ct->uid,$employeeNumber);
-			if($_contact->modifyTimestamp==$contact["last_modification_time"]){continue;}	
-		}
+		if($employeeNumber<>null){$_contact=new contacts($ct->uid,$employeeNumber);if($_contact->modifyTimestamp==$contact["last_modification_time"]){continue;}	}
 		
 		
 		$_contact->displayName=$contact["display_name"];
@@ -94,11 +105,12 @@ function ParseContacts($uid){
 		$_contact->sn=$contact["surname"]; // Last Name=$contact["gender"];
 		$_contact->NoExport=true;
 		$_contact->Save();
-		
+		sleep(1);
 		
 		
 		
 	}
+}
 	
 	/*
 
@@ -143,4 +155,3 @@ function ParseContacts($uid){
             [notes] => /*
 	 */
 
-}

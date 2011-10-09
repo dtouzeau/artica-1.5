@@ -1,0 +1,9 @@
+/* TimeEntry styles */
+.timeEntry_control {
+	vertical-align: top;
+	margin-top: 1px;
+	margin-left: 2px;
+}
+* html .timeEntry_control { /* IE only */
+	margin-top: 2px;
+}

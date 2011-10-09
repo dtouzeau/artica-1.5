@@ -92,7 +92,7 @@ function popup(){
 			
 		}	
 	
-	$tab="<div id=main_config_zarafa style='width:100%;height:100%;overflow:auto;$fontsize'>
+	$tab="<div id=main_config_zarafa style='width:759px;height:100%;overflow:auto;$fontsize'>
 		<ul>". implode("\n",$html)."</ul>
 	</div>
 		<script>

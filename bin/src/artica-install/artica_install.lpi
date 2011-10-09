@@ -12,7 +12,7 @@
       <MainUnit Value="0"/>
       <TargetFileExt Value=""/>
       <Title Value="artica-install"/>
-      <ActiveEditorIndexAtStart Value="7"/>
+      <ActiveEditorIndexAtStart Value="0"/>
     </General>
     <VersionInfo>
       <ProjectVersion Value=""/>
@@ -34,8 +34,8 @@
         <Filename Value="artica_install.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="artica_install"/>
-        <CursorPos X="36" Y="1411"/>
-        <TopLine Value="1394"/>
+        <CursorPos X="4" Y="212"/>
+        <TopLine Value="169"/>
         <EditorIndex Value="0"/>
         <UsageCount Value="200"/>
         <Bookmarks Count="1">
@@ -56,7 +56,7 @@
         <Filename Value="global_conf.pas"/>
         <UnitName Value="global_conf"/>
         <CursorPos X="1" Y="5886"/>
-        <TopLine Value="5845"/>
+        <TopLine Value="5869"/>
         <EditorIndex Value="7"/>
         <UsageCount Value="100"/>
         <Bookmarks Count="1">
@@ -765,8 +765,8 @@
         <Filename Value="zarafa_server.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="zarafa_server"/>
-        <CursorPos X="10" Y="12"/>
-        <TopLine Value="1"/>
+        <CursorPos X="25" Y="87"/>
+        <TopLine Value="52"/>
         <EditorIndex Value="6"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -1184,123 +1184,123 @@
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="squid.pas"/>
-        <Caret Line="1091" Column="26" TopLine="1057"/>
+        <Caret Line="1367" Column="23" TopLine="1333"/>
       </Position1>
       <Position2>
         <Filename Value="squid.pas"/>
-        <Caret Line="1328" Column="17" TopLine="1294"/>
+        <Caret Line="1372" Column="18" TopLine="1333"/>
       </Position2>
       <Position3>
         <Filename Value="squid.pas"/>
-        <Caret Line="1342" Column="20" TopLine="1294"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
       </Position3>
       <Position4>
         <Filename Value="squid.pas"/>
-        <Caret Line="1352" Column="23" TopLine="1294"/>
+        <Caret Line="1111" Column="5" TopLine="1074"/>
       </Position4>
       <Position5>
-        <Filename Value="squid.pas"/>
-        <Caret Line="1361" Column="18" TopLine="1294"/>
+        <Filename Value="global_conf.pas"/>
+        <Caret Line="36" Column="4" TopLine="19"/>
       </Position5>
       <Position6>
-        <Filename Value="squid.pas"/>
-        <Caret Line="1367" Column="23" TopLine="1333"/>
+        <Filename Value="global_conf.pas"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
       </Position6>
       <Position7>
-        <Filename Value="squid.pas"/>
-        <Caret Line="1372" Column="18" TopLine="1333"/>
+        <Filename Value="global_conf.pas"/>
+        <Caret Line="17" Column="92" TopLine="1"/>
       </Position7>
       <Position8>
-        <Filename Value="squid.pas"/>
-        <Caret Line="1" Column="1" TopLine="1"/>
+        <Filename Value="global_conf.pas"/>
+        <Caret Line="98" Column="26" TopLine="64"/>
       </Position8>
       <Position9>
-        <Filename Value="squid.pas"/>
-        <Caret Line="1111" Column="5" TopLine="1074"/>
+        <Filename Value="global_conf.pas"/>
+        <Caret Line="664" Column="27" TopLine="630"/>
       </Position9>
       <Position10>
         <Filename Value="global_conf.pas"/>
-        <Caret Line="36" Column="4" TopLine="19"/>
+        <Caret Line="3134" Column="49" TopLine="3100"/>
       </Position10>
       <Position11>
         <Filename Value="global_conf.pas"/>
-        <Caret Line="1" Column="1" TopLine="1"/>
+        <Caret Line="5891" Column="52" TopLine="5857"/>
       </Position11>
       <Position12>
         <Filename Value="global_conf.pas"/>
-        <Caret Line="17" Column="92" TopLine="1"/>
+        <Caret Line="5900" Column="1" TopLine="4140"/>
       </Position12>
       <Position13>
         <Filename Value="global_conf.pas"/>
-        <Caret Line="98" Column="26" TopLine="64"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
       </Position13>
       <Position14>
         <Filename Value="global_conf.pas"/>
-        <Caret Line="664" Column="27" TopLine="630"/>
+        <Caret Line="2800" Column="65" TopLine="2766"/>
       </Position14>
       <Position15>
         <Filename Value="global_conf.pas"/>
-        <Caret Line="3134" Column="49" TopLine="3100"/>
+        <Caret Line="2802" Column="87" TopLine="2766"/>
       </Position15>
       <Position16>
         <Filename Value="global_conf.pas"/>
-        <Caret Line="5891" Column="52" TopLine="5857"/>
+        <Caret Line="5702" Column="41" TopLine="5668"/>
       </Position16>
       <Position17>
-        <Filename Value="global_conf.pas"/>
-        <Caret Line="5900" Column="1" TopLine="4140"/>
+        <Filename Value="zarafa_server.pas"/>
+        <Caret Line="337" Column="23" TopLine="284"/>
       </Position17>
       <Position18>
-        <Filename Value="global_conf.pas"/>
+        <Filename Value="zarafa_server.pas"/>
         <Caret Line="1" Column="1" TopLine="1"/>
       </Position18>
       <Position19>
-        <Filename Value="global_conf.pas"/>
-        <Caret Line="2800" Column="65" TopLine="2766"/>
+        <Filename Value="zarafa_server.pas"/>
+        <Caret Line="73" Column="22" TopLine="39"/>
       </Position19>
       <Position20>
-        <Filename Value="global_conf.pas"/>
-        <Caret Line="2802" Column="87" TopLine="2766"/>
+        <Filename Value="zarafa_server.pas"/>
+        <Caret Line="357" Column="1" TopLine="324"/>
       </Position20>
       <Position21>
-        <Filename Value="global_conf.pas"/>
-        <Caret Line="5702" Column="41" TopLine="5668"/>
+        <Filename Value="zarafa_server.pas"/>
+        <Caret Line="342" Column="29" TopLine="287"/>
       </Position21>
       <Position22>
         <Filename Value="zarafa_server.pas"/>
-        <Caret Line="337" Column="23" TopLine="284"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
       </Position22>
       <Position23>
         <Filename Value="zarafa_server.pas"/>
-        <Caret Line="1" Column="1" TopLine="1"/>
+        <Caret Line="652" Column="82" TopLine="629"/>
       </Position23>
       <Position24>
         <Filename Value="zarafa_server.pas"/>
-        <Caret Line="73" Column="22" TopLine="39"/>
+        <Caret Line="1" Column="12" TopLine="1"/>
       </Position24>
       <Position25>
-        <Filename Value="zarafa_server.pas"/>
-        <Caret Line="357" Column="1" TopLine="324"/>
+        <Filename Value="global_conf.pas"/>
+        <Caret Line="5736" Column="124" TopLine="5691"/>
       </Position25>
       <Position26>
         <Filename Value="zarafa_server.pas"/>
-        <Caret Line="342" Column="29" TopLine="287"/>
+        <Caret Line="296" Column="36" TopLine="273"/>
       </Position26>
       <Position27>
         <Filename Value="zarafa_server.pas"/>
-        <Caret Line="1" Column="1" TopLine="1"/>
+        <Caret Line="16" Column="53" TopLine="1"/>
       </Position27>
       <Position28>
-        <Filename Value="zarafa_server.pas"/>
-        <Caret Line="652" Column="82" TopLine="629"/>
+        <Filename Value="artica_install.pas"/>
+        <Caret Line="1411" Column="36" TopLine="1377"/>
       </Position28>
       <Position29>
-        <Filename Value="zarafa_server.pas"/>
-        <Caret Line="1" Column="12" TopLine="1"/>
+        <Filename Value="artica_install.pas"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
       </Position29>
       <Position30>
-        <Filename Value="global_conf.pas"/>
-        <Caret Line="5736" Column="124" TopLine="5691"/>
+        <Filename Value="artica_install.pas"/>
+        <Caret Line="19" Column="53" TopLine="1"/>
       </Position30>
     </JumpHistory>
   </ProjectOptions>

@@ -1342,7 +1342,7 @@ function AnimateDiv(id){
 	var animated="/img/wait_verybig.gif";
 	if(!document.getElementById(id)){return;}
 	if(document.getElementById("LoadAjaxPicture")){animated=document.getElementById("LoadAjaxPicture").value;}
-	document.getElementById(id).innerHTML='<div style="width:100%;background-color:white;height:auto"><center><img src="'+animated+'"></center></div>';
+	document.getElementById(id).innerHTML='<div style="width:100%;height:auto"><center><img src="'+animated+'"></center></div>';
 }
 
 function YahooWin(width,uri,title,waitfor,pos){

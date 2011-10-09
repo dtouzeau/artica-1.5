@@ -1,0 +1,5 @@
+<div class=search>
+	<strong style='color:black' >{members}:</strong>&nbsp;
+	<input type='text' value='' id='finduser' style='border:1px solid #000000;width:120px' OnKeyPress="javascript:Findusr(event);">
+	&nbsp;<input type='submit' value='{search}&nbsp;&raquo' style='margin-bottom:0px;font-size:12px' OnClick=\"javascript:FindUser();">
+</div>
