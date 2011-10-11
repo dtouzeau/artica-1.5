@@ -1,22 +1,28 @@
-1.5.100812: 
+1.5.101111: 
 ======================================================================================
 
 System Changes:
 ------------------------------------------------
+1.5.101111: Fix artica is unable to retreive the correct hostname.
+1.5.101111: Fix root password is reset all times to "artica" when installing Artica trough the ISO
+1.5.101111: Fix unable to create tables fetchmail_debug_execute and backup_storages
+1.5.101001: Increase system load datas statistics from 7 to 60 days in order to produce statistics by current month
+1.5.101001: Fix unable to apply patch automatically
 1.5.100723: Fix some artica scripts overload the system.
 1.5.100723: Improve the memory history.
 1.5.100812: Allow to update automatically patchs
 1.5.100812: Add a new section according patchs in the Artica update web page.
 1.5.100918: Fix unable to create a correct UidNumber after 10000 number.
-1.5.101001: Increase system load datas statistics from 7 to 60 days in order to produce statistics by current month
-1.5.101001: Fix unable to apply patch automatically
+
+
 
 Messaging Changes:
 -------------------------------------------------
-1.5.100416: Add zarafaSharedStoreOnly Zarafa token support It allows to turn user to an non-active user
-1.5.100416: Auto-fix Postfix error fatal: master_spawn: exec */postscreen: No such file or directory, The watchdog create a symbolic link to the right binary on the Postfix desired path
 1.5.100918: Fix security hole on Zarafa: can have access to mailbox with a wrong password.
 1.5.100918: The Zarafa contact importation task is disabled by default and has been modified in order to not overload the server.
+1.5.100416: Add zarafaSharedStoreOnly Zarafa token support It allows to turn user to an non-active user
+1.5.100416: Auto-fix Postfix error fatal: master_spawn: exec */postscreen: No such file or directory, The watchdog create a symbolic link to the right binary on the Postfix desired path
+
 
 FreeWebs changes:
 ------------------------------------------------
@@ -31,6 +37,7 @@ Proxy changes:
 
 Interface Changes:
 ------------------------------------------------
+1.5.101111: Fix 404 Not found on VLAN,SNORT,ROUTES in network section.
 1.5.100918: Fix unable to open the bulk importation feature in the group section.
 
 // http://os.tekco.com/mod_choke/README

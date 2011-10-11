@@ -139,9 +139,17 @@ function backup($ID){
 		
 	$GLOBALS["RESOURCE_MOUNTED"]=true;
 	$sql="SELECT * FROM backup_schedules WHERE ID='$ID'";
-	if($GLOBALS["VERBOSE"]){backup_events($ID,"initialization","$sql");}
+	if($GLOBALS["VERBOSE"]){backup_events($ID,"initialization","$sql",__LINE__);}
 	
 	$mount_path="/opt/artica/mounts/backup/$ID";
+	
+	if(!$q->TABLE_EXISTS("backup_storages", "artica_backup",true)){
+		$q->BuildTables();
+		if(!$q->TABLE_EXISTS("backup_storages", "artica_backup",true)){
+			backup_events($ID,"initialization","ERROR, backup_storages, no such table",__LINE__);
+			return;
+		}
+	}
 	
 	
 	$servername=$users->fqdn;
@@ -160,7 +168,7 @@ function backup($ID){
 	
 	if(!$q->ok){
 		send_email_events("Backup Task $ID:: Mysql database error !","Aborting backup\n$q->mysql_error","backup");
-		backup_events($ID,"initialization","ERROR, Mysql database error\n$q->mysql_error");
+		backup_events($ID,"initialization","ERROR, Mysql database error\n$q->mysql_error",__LINE__);
 		return false;
 	}
 	
@@ -195,7 +203,7 @@ function backup($ID){
 	$pattern=$ligne["pattern"];
 	$first_ressource=$backup->extractFirsRessource($ligne["pattern"]);
 	$container=$ligne["container"];
-	backup_events($ID,"initialization","resource: $resource_type -> $first_ressource");
+	backup_events($ID,"initialization","resource: $resource_type -> $first_ressource",__LINE__);
 	if($resource_type==null){
 		backup_events($ID,"initialization","ERROR,No resource specified");
 		send_email_events("Backup Task $ID:: No resource specified !","Aborting backup","backup");
@@ -280,7 +288,7 @@ function backup($ID){
 		CheckCommandLineCopy();
 		
 		if(!is_dir($first_ressource)){
-			backup_events($ID,"initialization","ERROR,$first_ressource no such directory");
+			backup_events($ID,"initialization","ERROR,$first_ressource no such directory",__LINE__);
 			send_email_events("Backup Task $ID::  resource: $first_ressource no such directory","Aborting backup","backup");
 			return false;
 		}

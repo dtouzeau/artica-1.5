@@ -30,7 +30,7 @@ class sockets{
 			$trace=debug_backtrace();
 			if(isset($trace[1])){
 				$called=" called by ". basename($trace[1]["file"])." {$trace[1]["function"]}() line {$trace[1]["line"]}";			
-				echo "Instanciate sockets() {$GLOBALS["posix_getuid"]}={$name["name"]} $called\n";
+				//echo "Instanciate sockets() {$GLOBALS["posix_getuid"]}={$name["name"]} $called\n";
 			}
 		}
 		

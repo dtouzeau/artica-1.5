@@ -5,6 +5,10 @@ $GLOBALS["SHOW_COMPILE_ONLY"]=false;
 $GLOBALS["NO_COMPILE"]=false;
 if($argv[1]=='--compile'){$GLOBALS["SHOW_COMPILE_ONLY"]=true;}
 if(preg_match("#--no-compile", @implode(" ", $argv))){$GLOBALS["NO_COMPILE"]=true;}
+
+if($argv[1]=="--cross-packages"){crossroads_package();exit;}
+
+
 $wget=$unix->find_program("wget");
 $tar=$unix->find_program("tar");
 $rm=$unix->find_program("rm");
@@ -132,7 +136,7 @@ shell_exec("$cp -rf /usr/bin/purge /root/squid-builder/usr/bin/purge");
 shell_exec("$cp -rf /usr/bin/squidclient /root/squid-builder/usr/bin/squidclient");
 
 
-if($Architecture==62){$Architecture="x64";}
+if($Architecture==64){$Architecture="x64";}
 if($Architecture==32){$Architecture="i386";}
 
 chdir("/root/squid-builder");
@@ -148,4 +152,29 @@ function Architecture(){
 		if(preg_match("#i[0-9]86#", $val)){return 32;}
 		if(preg_match("#x86_64#", $val)){return 64;}
 	}
+}
+
+
+function crossroads_package(){
+$Architecture=Architecture();	
+if($Architecture==64){$Architecture="x64";}
+if($Architecture==32){$Architecture="i386";}
+$unix=new unix();
+$tar=$unix->find_program("tar");
+$f[]="/usr/sbin/xrctl";
+$f[]="/usr/share/man/man1/xr.1";
+$f[]="/usr/share/man/man1/xrctl.1";
+$f[]="/usr/share/man/man5/xrctl.xml.5";
+$f[]="/usr/sbin/xr";
+@mkdir("/root/crossroads",755,true);
+while (list ($num, $file) = each ($f)){
+	$dir=dirname($file);
+	@mkdir("/root/crossroads$dir",755,true);
+	@copy($file, "/root/crossroads$file");
+
+}
+	chdir("/root/crossroads");
+	shell_exec("$tar -czf crossroads-$Architecture.tar.gz *");
+
+	
 }

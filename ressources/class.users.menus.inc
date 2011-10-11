@@ -487,6 +487,7 @@ class usersMenus {
 	var $CGROUPS_INSTALLED=false;	
 	var $APACHE_MOD_LOGSSQL=false;
 	var $MYCOSI_APPLIANCE=false;
+	var $LOAD_BALANCE_APPLIANCE=false;
 	
 	private function CheckIndexDefaults($_GLOBAL){
 		return $_GLOBAL;
@@ -511,7 +512,7 @@ class usersMenus {
 					$trace=debug_backtrace();
 					if(isset($trace[1])){
 						$called=" called by ". basename($trace[1]["file"])." {$trace[1]["function"]}() line {$trace[1]["line"]}";			
-						echo "Instanciate userMenus() $called\n";
+						//echo "Instanciate userMenus() $called\n";
 					}
 				}		
 		
@@ -761,6 +762,10 @@ class usersMenus {
 			if(isset($_GLOBAL["nmap_path"])){$this->NMAP_PATH=$_GLOBAL["nmap_path"];}
 			if(isset($_GLOBAL["msmtp_installed"])){$this->msmtp_installed=$_GLOBAL["msmtp_installed"];}
 			if(isset($_GLOBAL["nmap_version"])){$this->nmap_version=$_GLOBAL["nmap_version"];}
+			if(isset($_GLOBAL["LOAD_BALANCE_APPLIANCE"])){$this->LOAD_BALANCE_APPLIANCE=$_GLOBAL["LOAD_BALANCE_APPLIANCE"];}
+			
+			
+			
 			$this->autofs_installed=$_GLOBAL["autofs_installed"];
 			$this->APACHE_PORT=$_GLOBAL["APACHE_PORT"];
 			$this->NFS_SERVER_INSTALLED=$_GLOBAL["NFS_SERVER_INTSALLED"];

@@ -123,7 +123,7 @@ function tabs(){
 	$array["routes"]='{routes}';
 	$array["hard"]='{hardware}';
 	$tabwith="750px";
-	if(isset($_GET["newinterface"])){$fontsize="font-size:14px";$linkadd="&newinterface=yes";$tabwith="100%";}	
+	if(isset($_GET["newinterface"])){$fontsize="font-size:14px";$linkadd2="?newinterface=yes";$linkadd="&newinterface=yes";$tabwith="100%";}	
 	
 	while (list ($num, $ligne) = each ($array) ){
 		
@@ -133,17 +133,17 @@ function tabs(){
 		}
 		
 		if($num=="routes"){
-			$html[]= "<li><a href=\"system.nic.routes.php$linkadd\"><span style='$fontsize'>". $tpl->_ENGINE_parse_body($ligne)."</span></a></li>\n";
+			$html[]= "<li><a href=\"system.nic.routes.php$linkadd2\"><span style='$fontsize'>". $tpl->_ENGINE_parse_body($ligne)."</span></a></li>\n";
 			continue;
 		}	
 
 		if($num=="vlan"){
-			$html[]= "<li><a href=\"system.nic.vlan.php$linkadd\"><span style='$fontsize'>". $tpl->_ENGINE_parse_body($ligne)."</span></a></li>\n";
+			$html[]= "<li><a href=\"system.nic.vlan.php$linkadd2\"><span style='$fontsize'>". $tpl->_ENGINE_parse_body($ligne)."</span></a></li>\n";
 			continue;
 		}
 
 		if($num=="snort"){
-			$html[]= "<li><a href=\"system.nic.snort.php$linkadd\"><span style='$fontsize'>". $tpl->_ENGINE_parse_body($ligne)."</span></a></li>\n";
+			$html[]= "<li><a href=\"system.nic.snort.php$linkadd2\"><span style='$fontsize'>". $tpl->_ENGINE_parse_body($ligne)."</span></a></li>\n";
 			continue;
 		}			
 		

@@ -686,7 +686,8 @@ begin
        
    if verbosed then writeln('web_settings:: 5%');
    if not FileExists('/etc/artica-postfix/settings/Daemons/LinuxDistributionCodeName') then logs.OutputCmd('/usr/share/artica-postfix/setup-ubuntu --kill');
-    if FIleExists('/etc/artica-postfix/MYCOSI_APPLIANCE') then list.Add('$_GLOBAL["MYCOSI_APPLIANCE"]=True;');
+   if FIleExists('/etc/artica-postfix/MYCOSI_APPLIANCE') then list.Add('$_GLOBAL["MYCOSI_APPLIANCE"]=True;');
+   if FIleExists('/etc/artica-postfix/LOAD_BALANCE_APPLIANCE') then list.Add('$_GLOBAL["LOAD_BALANCE_APPLIANCE"]=True;');
    if FIleExists(SYS.LOCATE_SMBCLIENT()) then list.Add('$_GLOBAL["smbclient_installed"]=True;') else list.Add('$_GLOBAL["smbclient_installed"]=False;');
    if FIleExists(SYS.LOCATE_ZABBIX_SERVER()) then list.Add('$_GLOBAL["ZABBIX_INSTALLED"]=True;') else list.Add('$_GLOBAL["ZABBIX_INSTALLED"]=False;');
    if FIleExists(SYS.LOCATE_GENERIC_BIN('kinit')) then list.Add('$_GLOBAL["KINIT_INSTALLED"]=True;') else list.Add('$_GLOBAL["KINIT_INSTALLED"]=False;');

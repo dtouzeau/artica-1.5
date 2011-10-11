@@ -467,11 +467,13 @@ $page=CurrentPageName();
 	<tbody>
 	<tr>
 		<td valign='top' width='50%'>
-			<div id='left_status' style='margin-left:-15px'><center><img src='img/wait_verybig.gif'></center></div>
+			<div id='left_status' style='margin-left:-15px'><center id='wait1'></center></div>
 		</td>
 		<td valign='top' width='50%'>
-			<div id='right_status' style='margin-left:-5px'><center><img src='img/wait_verybig.gif'></center></div>
+			<div id='right_status' style='margin-left:-5px'><center id='wait2'></center></div>
 			<script>
+				AnimateDiv('wait1');
+				AnimateDiv('wait2');
 				LoadAjax('right_status','admin.index.php?status=right&counter=1$ajaxadd');		
 			</script>
 					

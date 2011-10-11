@@ -38,7 +38,7 @@ if FileExists('/etc/artica-postfix/KASPER_INSTALL') then begin
      fpsystem('/bin/rm -f /etc/artica-postfix/KASPER_INSTALL');
 end;
 
-       fpsystem('/bin/echo "root:artica" | /usr/sbin/chpasswd 2>&1');
+
 
 
        if FileExists('/home/artica/packages/ZARAFA/zarafa.tar.gz') then begin
@@ -62,6 +62,11 @@ end;
 
        if FileExists('/home/artica/packages/kav4proxy-5.5-62.tar.gz') then begin
           fpsystem('/usr/share/artica-postfix/bin/artica-make APP_KAV4PROXY');
+          fpsystem('/usr/share/artica-postfix/bin/process1 --force');
+       end;
+
+       if FileExists('/home/artica/packages/crossroads.tar.gz') then begin
+          fpsystem('/bin/tar -xvf /home/artica/packages/crossroads.tar.gz -C /');
           fpsystem('/usr/share/artica-postfix/bin/process1 --force');
        end;
 
@@ -122,7 +127,7 @@ if not FileExists('/etc/artica-postfix/artica-iso-first-reboot') then begin
     end;
 
 
-
+     fpsystem('/bin/echo "root:artica" | /usr/sbin/chpasswd 2>&1');
     writeln('artica-cd... Creating Artica configuration by process1, please wait...');
     fpsystem('/usr/share/artica-postfix/bin/process1 --force --yes-from-iso');
     writeln('artica-cd... remove init boot');

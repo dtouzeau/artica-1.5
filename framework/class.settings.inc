@@ -456,6 +456,7 @@ class settings_inc {
 	var $APACHE_MOD_FCGID=false;	
 	var $CGROUPS_INSTALLED=false;
 	var $APACHE_MOD_LOGSSQL=false;
+	var $LOAD_BALANCE_APPLIANCE=false;
 	private function CheckIndexDefaults($_GLOBAL){
 		return $_GLOBAL;
 		foreach($this as $key => $value) {
@@ -547,8 +548,7 @@ class settings_inc {
 			if(isset($_GLOBAL["SQUID_CACHMGR"])){$this->SQUID_CACHMGR=$_GLOBAL["SQUID_CACHMGR"];;}
 			if(isset($_GLOBAL["APACHE_DIR_SITES_ENABLED"])){$this->APACHE_DIR_SITES_ENABLED=$_GLOBAL["APACHE_DIR_SITES_ENABLED"];;}
 			if(isset($_GLOBAL["APACHE_MODULES_PATH"])){$this->APACHE_MODULES_PATH=$_GLOBAL["APACHE_MODULES_PATH"];;}
-			
-			
+			if(isset($_GLOBAL["LOAD_BALANCE_APPLIANCE"])){$this->APACHE_RUN_USER=$_GLOBAL["LOAD_BALANCE_APPLIANCE"];;}
 			if(isset($_GLOBAL["APACHE_RUN_USER"])){$this->APACHE_RUN_USER=$_GLOBAL["APACHE_RUN_USER"];;}
 			if(isset($_GLOBAL["QUOTA_INSTALLED"])){$this->QUOTA_INSTALLED=$_GLOBAL["QUOTA_INSTALLED"];;}
 			if(isset($_GLOBAL["DAVFS_INSTALLED"])){$this->DAVFS_INSTALLED=$_GLOBAL["DAVFS_INSTALLED"];;}

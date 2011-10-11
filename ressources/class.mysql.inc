@@ -880,11 +880,8 @@ function BackupTable($tablename,$database,$addons=array(),$zmd5=false,$endquery=
 		$sql="CREATE USER '$user'@'$q->mysql_server' IDENTIFIED BY '$mysql_password';";
 		$this->QUERY_SQL($sql,"mysql");
 		if(!$this->ok){writelogs("Failed to set privileges operation - Create user -\"$this->mysql_error\"");return false;	}
-	
-		
-	}else{
-		writelogs("$user already exists",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 	}
+	
 	$sql="CREATE USER '$user'@'localhost' IDENTIFIED BY '$mysql_password';";
 	$this->QUERY_SQL($sql,"mysql");	
 	

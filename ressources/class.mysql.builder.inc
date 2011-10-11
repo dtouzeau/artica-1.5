@@ -187,7 +187,7 @@ public function check_storage_table(){
 			$this->QUERY_SQL($sql,"artica_backup");
 		}	
 
-		if(!$this->TABLE_EXISTS('backup_schedules','artica_backup')){				 
+		if(!$this->TABLE_EXISTS('backup_storages','artica_backup')){				 
 				$sql="CREATE TABLE IF NOT EXISTS `backup_storages` (
 			  `taskid` int(10) NOT NULL,
 			  `zDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -200,6 +200,7 @@ public function check_storage_table(){
 			  KEY `taskid` (`taskid`,`zDate`,`size`)
 			) ";
 			$this->QUERY_SQL($sql,'artica_backup');
+			if(!$this->ok){writelogs("Fatal: $this->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}	
 		}						
 		
 		
@@ -673,7 +674,8 @@ public function check_storage_table(){
 			  KEY `account_id` (`account_id`,`zDate`),
 			  KEY `PID` (`PID`)
 			)";
-			$this->QUERY_SQL($sql,"artica_backup");
+			$this->QUERY_SQL($sql,"artica_events");
+			if(!$this->ok){writelogs("Fatal: $this->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
 	} 
 	
 	
@@ -1359,25 +1361,25 @@ function check_postfwd2_table(){
 		if(!$this->ok){writelogs("Fatal: $this->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
 	} 		
 }	
-	function Check_smtp_logs_table(){
-if(!$this->TABLE_EXISTS('greylist_turples','artica_events')){				
-		$sql="CREATE TABLE IF NOT EXISTS `greylist_turples` (
-			  `zmd5` varchar(90) NOT NULL,
-			  `mailfrom` varchar(255) NOT NULL,
-			  `mailto` varchar(255) NOT NULL,
-			  `stime` int(50) NOT NULL,
-			  `hostname` varchar(255) NOT NULL,
-			  `ip_addr` varchar(50) NOT NULL,
-			  PRIMARY KEY (`zmd5`),
-			  KEY `stime` (`stime`),
-			  KEY `mailfrom` (`mailfrom`),
-			  KEY `mailto` (`mailto`),
-			  KEY `hostname` (`hostname`),
-			  KEY `ip_addr` (`ip_addr`)
-			)";
-		$this->QUERY_SQL($sql,'artica_events');
-		if(!$this->ok){writelogs("Fatal: $this->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
-	} 		
+function Check_smtp_logs_table(){
+	if(!$this->TABLE_EXISTS('greylist_turples','artica_events')){				
+			$sql="CREATE TABLE IF NOT EXISTS `greylist_turples` (
+				  `zmd5` varchar(90) NOT NULL,
+				  `mailfrom` varchar(255) NOT NULL,
+				  `mailto` varchar(255) NOT NULL,
+				  `stime` int(50) NOT NULL,
+				  `hostname` varchar(255) NOT NULL,
+				  `ip_addr` varchar(50) NOT NULL,
+				  PRIMARY KEY (`zmd5`),
+				  KEY `stime` (`stime`),
+				  KEY `mailfrom` (`mailfrom`),
+				  KEY `mailto` (`mailto`),
+				  KEY `hostname` (`hostname`),
+				  KEY `ip_addr` (`ip_addr`)
+				)";
+			$this->QUERY_SQL($sql,'artica_events');
+			if(!$this->ok){writelogs("Fatal: $this->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
+		} 		
 	
 		
 		
@@ -3558,15 +3560,12 @@ if(!$this->TABLE_EXISTS('emailing_campain_queues','artica_backup')){
 			$q->CheckDatabases();
 			return;
 		}
-		if(!$this->DATABASE_EXISTS('artica_events')){if(!$this->CREATE_DATABASE('artica_events')){return null;}}
-		if(!$this->DATABASE_EXISTS('artica_backup')){if(!$this->CREATE_DATABASE('artica_backup')){return null;}}	
-		$squidTBLS=new mysql_squid_builder();	
-		
-		 if($GLOBALS["VERBOSE"]){echo "Check_quarantine_table()\n";}		
+		 if(!$this->DATABASE_EXISTS('artica_events')){if(!$this->CREATE_DATABASE('artica_events')){return null;}}
+		 if(!$this->DATABASE_EXISTS('artica_backup')){if(!$this->CREATE_DATABASE('artica_backup')){return null;}}	
+		 $squidTBLS=new mysql_squid_builder();	
 		 $this->Check_quarantine_table();
 		 $this->Check_iptables_table();
 		 $this->check_storage_table();
-		 if($GLOBALS["VERBOSE"]){echo "Check_smtp_logs_table()\n";}
 		 $this->Check_smtp_logs_table();
 		 $this->CheckTables_rsync();
 		 $this->CheckTables_dar();
@@ -4575,33 +4574,7 @@ public function CheckTables_openvpn(){
 				$this->QUERY_SQL($sql,"artica_backup");
 				if(!$this->ok){writelogs("$this->mysql_error\n$sql",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);return false;}
 			}		
-
-		if(!$this->FIELD_EXISTS("$table","remote_ip","artica_events")){
-				$sql="ALTER TABLE `$table` ADD `remote_ip` varchar(20) NOT NULL ,ADD INDEX ( `remote_ip` )";
-				$this->QUERY_SQL($sql,"artica_events");
-				if(!$this->ok){writelogs("$this->mysql_error\n$sql",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);return false;}
-			}
 			
-		if(!$this->FIELD_EXISTS("$table","country","artica_events")){
-				$sql="ALTER TABLE `$table` ADD `country` varchar(20) NOT NULL ,ADD INDEX ( `country` )";
-				if(!$this->QUERY_SQL($sql,"artica_events")){return false;}
-		}
-
-			
-		if(!$this->FIELD_EXISTS("$table","QuerySize","artica_events")){
-				$sql="ALTER TABLE `$table` ADD `QuerySize` INT(10) NOT NULL";
-				if(!$this->QUERY_SQL($sql,"artica_events")){return false;}
-		}			
-	
-		if(!$this->FIELD_EXISTS("$table","uid","artica_events")){
-				$sql="ALTER TABLE `$table` ADD `uid` VARCHAR( 55 ) NOT NULL,ADD INDEX ( `uid` ) ";
-				if(!$this->QUERY_SQL($sql,"artica_events")){return false;}
-		}
-
-		if(!$this->FIELD_EXISTS("$table","cached","artica_events")){
-				$sql="ALTER TABLE `$table` ADD `cached` INT( 1 ) NOT NULL DEFAULT '0', ADD INDEX ( `cached` )  ";
-				if(!$this->QUERY_SQL($sql,"artica_events")){return false;}
-		}			
 		
 	
 		

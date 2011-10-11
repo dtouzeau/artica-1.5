@@ -1129,19 +1129,30 @@ public function EXEC_NICE(){
 	$hostname=$this->find_program("hostname");
 	$sysctl=$this->find_program("sysctl");
 	if($ypdomainname<>null){
-		exec("$ypdomainname",$results);
+		exec("$ypdomainname 2>&1",$results);
 		$domain=trim(@implode(" ",$results));
-	}else{exec("$sysctl -n kernel.domainname",$results);$domain=trim(@implode(" ",$results));}
+		writelogs_framework("$ypdomainname -> $domain",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+	}else{
+		exec("$sysctl -n kernel.domainname 2>&1",$results);
+		$domain=trim(@implode(" ",$results));
+		writelogs_framework("$sysctl -n kernel.domainname -> $domain",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+	}
 	unset($results);
-	exec("$hostname -s",$results);
+	exec("$hostname -s 2>&1",$results);
 	$host=trim(@implode(" ",$results));
+	writelogs_framework("$hostname -s -> $host",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 	unset($results);
 	
 	if(preg_match("#not set#",$domain)){$domain=null;}
 	if(preg_match("#\(none#",$domain)){$domain=null;}
-	if($domain==null){exec("$hostname -d",$results);$domain=trim(@implode(" ",$results));}
+	if($domain==null){
+		exec("$hostname -d 2>&1",$results);
+		$domain=trim(@implode(" ",$results));
+		writelogs_framework("$hostname -d -> $domain",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+	}
 	if(strlen($domain)>0){$host="$host.$domain";}
-	$host=str_replace('.(none)',"",$host);		
+	$host=str_replace('.(none)',"",$host);	
+	return $host;	
 	}
 	
 	

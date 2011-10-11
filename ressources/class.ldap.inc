@@ -263,7 +263,6 @@ class clladp{
 			
 			if(!isset($GLOBALS["LDAPCHECKMASTERTREE"])){$GLOBALS["LDAPCHECKMASTERTREE"]=false;}
 			if(!$GLOBALS["LDAPCHECKMASTERTREE"]){	
-				if($GLOBALS["VERBOSE"]){writelogs("check BuildMasterTree() and ArticaCreate()",__CLASS__.'/'.__FUNCTION__,__FILE__);}
 				$this->BuildMasterTree();
 				$this->ArticaCreate();
 				$GLOBALS["LDAPCHECKMASTERTREE"]=true;
