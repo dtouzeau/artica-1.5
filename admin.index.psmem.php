@@ -135,7 +135,7 @@ function byhour(){
 				if($size<1){continue;}
 				$size=$size/1024;
 				$h=date("H");
-				$arrayMEM[$ligne["tday"].":{$ligne["thour"]}:00"]=FormatBytes($size/1000);
+				$arrayMEM[$ligne["tday"].":{$ligne["thour"]}:00"]=FormatBytes($size);
 				$size=$size/1000;
 				$hour=$ligne["thour"];
 				if($GLOBALS["VERBOSE"]){echo "<li>$hour -> $size KB</li>";}
@@ -244,9 +244,7 @@ function today(){
 				if(!is_numeric($size)){continue;}
 				if($size<1){continue;}
 				$size=round($size/1024);
-				$arrayMEM[$ligne["tday"]." {$ligne["thour"]}:00:00"]="<span style='font-size:12px'>{$ligne["tmem"]} bytes</span>";
-				$size=$size/1000;
-				
+				$arrayMEM[$ligne["tday"]." {$ligne["thour"]}:00:00"]="<span style='font-size:12px'>". FormatBytes($ligne["tmem"]/1024)."</span>";
 				$hour=$ligne["thour"];
 				if($GLOBALS["VERBOSE"]){echo "<li>$hour -> $size KB</li>";}
 				$gp->xdata[]=$hour;

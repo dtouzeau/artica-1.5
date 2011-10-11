@@ -87,7 +87,8 @@ function tabs(){
 	$array["browse-computers"]='{parameters}';
 	$array["search-computers"]='{search_computers}';
 	
-	
+	if($_GET["OnlyOCS"]==1){unset($array["browse-computers"]);}
+	if($_GET["OnlyOCS"]=="yes"){unset($array["browse-computers"]);}
 	
 	$tpl=new templates();
 
@@ -295,13 +296,13 @@ function js(){
 	var {$prefix}reste=0;	
 	
 	function browse_computers_start(){
-		YahooLogWatcher(750,'$page?tabs=yes&mode={$_GET["mode"]}&value={$_GET["value"]}&callback={$_GET["callback"]}','$title');
+		YahooLogWatcher(750,'$page?tabs=yes&mode={$_GET["mode"]}&value={$_GET["value"]}&callback={$_GET["callback"]}&OnlyOCS={$_GET["OnlyOCS"]}','$title');
 		{$prefix}demarre();
 	
 	}
 	
 	function browse_computers_start_infront(){
-	   $('#BodyContent').load('$page?tabs=yes&mode={$_GET["mode"]}&value={$_GET["value"]}&callback={$_GET["callback"]}&show-title=yes');
+	   $('#BodyContent').load('$page?tabs=yes&mode={$_GET["mode"]}&value={$_GET["value"]}&callback={$_GET["callback"]}&show-title=yes&OnlyOCS={$_GET["OnlyOCS"]}');
 	   {$prefix}demarre();
 	
 	}	
@@ -629,7 +630,7 @@ return  $tpl->_ENGINE_parse_body($html);
 function menus_right(){
 	$findcomputer=Paragraphe("64-samba-find.png","{scan_your_network}",'{scan_your_network_text}',"javascript:Loadjs('computer-browse.php?scan-nets-js=yes')","scan_your_network",210);
 	$networs=Paragraphe("64-win-nic-loupe.png","{edit_networks}",'{edit_networks_text}',"javascript:ViewNetwork()","edit_networks",210);
-	$add_computer_js="javascript:YahooUser(670,'domains.edit.user.php?userid=newcomputer$&ajaxmode=yes','New computer');";
+	$add_computer_js="javascript:YahooUser(780,'domains.edit.user.php?userid=newcomputer$&ajaxmode=yes','New computer');";
 	$add_computer=Paragraphe("64-add-computer.png","{ADD_COMPUTER}","{ADD_COMPUTER_TEXT}",$add_computer_js);
 	$sock=new sockets();
 	$ComputersAllowNmap=$sock->GET_INFO("ComputersAllowNmap");

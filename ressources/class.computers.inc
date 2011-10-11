@@ -681,12 +681,10 @@ function Add(){
 		$upd["ComputerRunning"][]=$this->ComputerRunning;
 		$upd["ComputerMacAddress"][]=$this->ComputerMacAddress;
 		$upd["ComputerHopCount"][]="UnKnown";	
-		$upd["ComputerCPU"]=$this->ComputerCPU;
-		$upd["VolatileIPAddress"]=$this->VolatileIPAddress;
-		
-		//DNS
-		$upd["DnsZoneName"][]=$this->DnsZoneName;
-		$upd["DnsType"][]=$this->DnsType;
+		if($this->ComputerCPU<>null){$upd["ComputerCPU"]=$this->ComputerCPU;}
+		if($this->VolatileIPAddress<>null){$upd["VolatileIPAddress"]=$this->VolatileIPAddress;}
+		if($this->DnsZoneName<>null){$upd["DnsZoneName"][]=$this->DnsZoneName;}
+		if($this->DnsType<>null){$upd["DnsType"][]=$this->DnsType;}
 		
 		writelogs("adding computer $this->dn",__CLASS__.'/'.__FUNCTION__,__FILE__);
 		$res=$ldap->ldap_add($this->dn,$upd);

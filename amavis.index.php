@@ -55,7 +55,7 @@ function ajax_js(){
 	$datas=file_get_contents('js/amavis.js');
 	$page=CurrentPageName();
 	
-	$start="YahooWin0(730,'$page?ajax-pop=yes','$title');";
+	$start="YahooWin0(777,'$page?ajax-pop=yes','$title');";
 	
 	if(isset($_GET["in-front-ajax"])){
 		$start="$('#BodyContent').load('$page?ajax-pop=yes');";	
@@ -1319,6 +1319,10 @@ $behavior_form="<div id='FFM_filterbehavior_popup'>
 		<td>". Field_checkbox('EnableBlockUsersTroughInternet',1,$amavis->EnableBlockUsersTroughInternet)."</td>
 	</tr>
 	<tr>
+		<td class=legend nowrap>{transfert_messages_if_av_failed}:</td>
+		<td>". Field_checkbox('always_clean',1,$amavis->main_array["BEHAVIORS"]["always_clean"])."</td>
+	</tr>	
+	<tr>
 		<td class=legend nowrap>{trust_my_net}:</td>
 		<td>". Field_checkbox('trust_my_net',1,$amavis->main_array["BEHAVIORS"]["trust_my_net"])."</td>
 	</tr>
@@ -1412,6 +1416,10 @@ $performances="
 		if(document.getElementById('trust_my_net').checked){XHR.appendData('trust_my_net',1);}else{XHR.appendData('trust_my_net',0);}
 		if(document.getElementById('enable_db').checked){XHR.appendData('enable_db',1);}else{XHR.appendData('enable_db',0);}
 		if(document.getElementById('enable_global_cache').checked){XHR.appendData('enable_global_cache',1);}else{XHR.appendData('enable_global_cache',0);}
+		if(document.getElementById('always_clean').checked){XHR.appendData('always_clean',1);}else{XHR.appendData('always_clean',0);}
+		
+		
+		
 		AnimateDiv('performancesamavis'); 
 		XHR.sendAndLoad('$page', 'GET',x_SaveAmavisPerformances);	    
 	}

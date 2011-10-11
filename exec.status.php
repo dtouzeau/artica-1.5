@@ -187,6 +187,7 @@ if($argv[1]=="--openemm"){echo openemm()."\n".openemm_sendmail();exit;}
 if($argv[1]=="--exec-nice"){$GLOBALS["VERBOSE"]=true;echo "\"{$GLOBALS["CLASS_UNIX"]->EXEC_NICE()}\"\n";die();}
 if($argv[1]=="--ntpd"){echo ntpd_server();die();}
 if($argv[1]=="--ps-mem"){echo ps_mem();die();}
+if($argv[1]=="--arpd"){echo arpd();die();}
 
 
 
@@ -261,8 +262,8 @@ if($unix->process_exists($pid,(basename(__FILE__)))){
 	print "Starting......: artica-status Already executed PID $pid...\n";
 	die();
 }
-$mem=round(((memory_get_usage()/1024)/1000),2);events("{$mem}MB artica-status Memory {$GLOBALS["TOTAL_MEMORY_MB"]}MB","MAIN",__LINE__);
-print "Starting......: artica-status Memory {$GLOBALS["TOTAL_MEMORY_MB"]}MB\n";
+$mem=round(((memory_get_usage()/1024)/1000),2);events("{$mem}MB artica-status System Memory: {$GLOBALS["TOTAL_MEMORY_MB"]}MB","MAIN",__LINE__);
+print "Starting......: artica-status system memory: {$GLOBALS["TOTAL_MEMORY_MB"]}MB\n";
 if(!function_exists("pcntl_fork")){$nofork=true;}
 if($GLOBALS["TOTAL_MEMORY_MB"]<400){$nofork=true;}
 if($DisableArticaStatusService==1){$nofork=true;}
@@ -808,7 +809,7 @@ function launch_all_status($force=false){
 	"zarafa_monitor","zarafa_gateway","zarafa_spooler","zarafa_server","assp","openvpn","vboxguest","sabnzbdplus","SwapWatchdog","artica_meta_scheduler",
 	"OpenVPNClientsStatus","stunnel","meta_checks","zarafa_licensed","CheckCurl","ufdbguardd_tail","vnstat","NetAdsWatchdog","munin","autofs","greyhole",
 	"dnsmasq","iscsi","watchdog_yorel","postfwd2","vps_servers","smartd","crossroads_multiple","auth_tail","greyhole_watchdog","greensql","nscd","tomcat",
-	"openemm","openemm_sendmail","cgroups","ntpd_server","ps_mem"
+	"openemm","openemm_sendmail","cgroups","ntpd_server","arpd","ps_mem",
 	);
 	$data1=$GLOBALS["TIME_CLASS"];
 	$data2 = time();
@@ -3596,6 +3597,35 @@ function nscd(){
 	return implode("\n",$l);return;
 
 
+}
+
+function arpd(){
+	if(!$GLOBALS["CLASS_USERS"]->ARPD_INSTALLED){if($GLOBALS["VERBOSE"]){echo __FUNCTION__." ARPD_INSTALLED = FALSE\n";}return;}
+	$bin=$GLOBALS["CLASS_UNIX"]->find_program("arpd");
+	$EnableArpDaemon=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("EnableArpDaemon");	
+	if(!is_numeric($EnableArpDaemon)){$EnableArpDaemon=1;}
+	$master_pid=$GLOBALS["CLASS_UNIX"]->PIDOF($bin,true);
+	if($EnableArpDaemon==0){if($GLOBALS["CLASS_UNIX"]->process_exists($master_pid)){shell_exec("/etc/init.d/arpd stop");}}	
+	
+	$l[]="[APP_ARPD]";
+	$l[]="service_name=APP_ARPD";
+	$l[]="master_version=No";
+	$l[]="service_disabled=$EnableArpDaemon";
+	$l[]="watchdog_features=1";
+	$l[]="family=system";
+	if($EnableArpDaemon==0){$l[]="";return implode("\n",$l);return;}
+
+	if(!$GLOBALS["CLASS_UNIX"]->process_exists($master_pid)){
+		WATCHDOG("APP_ARPD","arpd");
+		$l[]="";
+		return implode("\n",$l);
+	}
+	$l[]=GetMemoriesOf($master_pid);
+	$l[]="";
+	$cmd="{$GLOBALS["nohup"]} {$GLOBALS["NICE"]}{$GLOBALS["PHP5"]} /usr/share/artica-postfix/exec.arpscan.php >/dev/null 2>&1 &";
+	events("$cmd",__FUNCTION__,__LINE__);
+	shell_exec($cmd);
+	return implode("\n",$l);
 }
 
 function nscd_version($bin){

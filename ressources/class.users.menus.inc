@@ -488,6 +488,7 @@ class usersMenus {
 	var $APACHE_MOD_LOGSSQL=false;
 	var $MYCOSI_APPLIANCE=false;
 	var $LOAD_BALANCE_APPLIANCE=false;
+	var $ARPD_INSTALLED=false;
 	
 	private function CheckIndexDefaults($_GLOBAL){
 		return $_GLOBAL;
@@ -587,7 +588,7 @@ class usersMenus {
 			if(isset($_GLOBAL["APACHE_DIR_SITES_ENABLED"])){$this->APACHE_DIR_SITES_ENABLED=$_GLOBAL["APACHE_DIR_SITES_ENABLED"];;}
 			if(isset($_GLOBAL["APACHE_MODULES_PATH"])){$this->APACHE_MODULES_PATH=$_GLOBAL["APACHE_MODULES_PATH"];;}
 			if(isset($_GLOBAL["MYCOSI_APPLIANCE"])){$this->MYCOSI_APPLIANCE=$_GLOBAL["MYCOSI_APPLIANCE"];;}
-			
+			if(isset($_GLOBAL["ARPD_INSTALLED"])){$this->ARPD_INSTALLED=$_GLOBAL["ARPD_INSTALLED"];}
 			
 			if(isset($_GLOBAL["APACHE_RUN_USER"])){$this->APACHE_RUN_USER=$_GLOBAL["APACHE_RUN_USER"];;}
 			if(isset($_GLOBAL["QUOTA_INSTALLED"])){$this->QUOTA_INSTALLED=$_GLOBAL["QUOTA_INSTALLED"];;}

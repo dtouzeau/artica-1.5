@@ -38,12 +38,12 @@ $users=new usersMenus();
 $tpl=new templates();
 $title=$tpl->_ENGINE_parse_body('{APP_CROSSROADS}');
 $add_backend_server=$tpl->_ENGINE_parse_body('{add_backend_server}');
-
+if(isset($_GET["newinterface"])){$newinterface="&newinterface=yes";}
 $html="
 
 function CrossRoadsIndexLoadpage(){
 		document.getElementById('BodyContent').innerHTML='<center><img src=img/wait_verybig.gif></center>';
-		$('#BodyContent').load('$page?popup=yes');
+		$('#BodyContent').load('$page?popup=yes$newinterface');
 	}	
 	
 	
@@ -93,18 +93,30 @@ function BackendDelete(servername){
 
 
 function popup(){
-	
+	$users=new usersMenus();
 	$page=CurrentPageName();
 	$array["status"]='{status}';
-	$array["settings"]='{settings}';
+	if($users->LOAD_BALANCE_APPLIANCE){
+		$array["loadbalance"]='{balancers}';
+	}else{
+		$array["settings"]='{settings}';
+	}
 	$array["events"]='{events}';
 	$tpl=new templates();
-
+	
+	if(isset($_GET["newinterface"])){$fontsize="style='font-size:14px'";$width="100%";$newinterface="?newinterface=yes";}
 	
 	
 	
 	while (list ($num, $ligne) = each ($array) ){
-		$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"$page?$num=yes\"><span>$ligne</span></a></li>\n");
+		
+		if($num=="loadbalance"){
+			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"crossroads.balancers.php$newinterface\"><span $fontsize>$ligne</span></a></li>\n");
+			continue;
+			
+		}
+		
+		$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"$page?$num=yes\"><span $fontsize>$ligne</span></a></li>\n");
 	}
 	
 	
@@ -114,16 +126,7 @@ function popup(){
 	</div>
 		<script>
 				$(document).ready(function(){
-					$('#main_config_crossroads').tabs({
-				    load: function(event, ui) {
-				        $('a', ui.panel).click(function() {
-				            $(ui.panel).load(this.href);
-				            return false;
-				        });
-				    }
-				});
-			
-			
+					$('#main_config_crossroads').tabs();
 			});
 		</script>";	
 	
@@ -133,6 +136,10 @@ function popup(){
 function backend_list(){
 	$page=CurrentPageName();
 	$tpl=new templates();	
+	
+	
+	
+	
 	$html="
 	<table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
 	<thead class='thead'>
@@ -230,6 +237,7 @@ function settings(){
 	$page=CurrentPageName();
 	$tpl=new templates();		
 	$sock=new sockets();
+	$users=new usersMenus();
 	$MAIN=unserialize(base64_decode($sock->GET_INFO("CrossRoadsParams")));
 	$ip=new networking();
 	$ips=$ip->ALL_IPS_GET_ARRAY();
@@ -254,11 +262,12 @@ function settings(){
 	$algo["least-connections"]="{least-connections}";
 	$algo["round-robin"]="{round-robin}";
 	
-
+	$LOAD_BALANCE_APPLIANCE=0;
+	if($users->LOAD_BALANCE_APPLIANCE){$LOAD_BALANCE_APPLIANCE=1;}
 
 	
 	
-	$form="<table style='width:100%'>
+	$form="<table style='width:100%' class=form>
 	<tr>
 		<td class=legend style='font-size:13px'>{enable_loadblancing}:</td>
 		<td style='font-size:13px'>". Field_checkbox("EnableCrossRoads",1,$sock->GET_INFO("EnableCrossRoads"),"EnableServiceCross()")."</td>
@@ -339,6 +348,12 @@ function settings(){
 		
 		
 		function EnableServiceCross(){
+			var LOAD_BALANCE_APPLIANCE=$LOAD_BALANCE_APPLIANCE;
+			if(LOAD_BALANCE_APPLIANCE==1){
+				document.getElementById('EnableCrossRoads').checked=true;
+				document.getElementById('EnableCrossRoads').disabled=true;
+			}
+		
 			document.getElementById('listen_ip').disabled=true;
 			document.getElementById('listen_port').disabled=true;
 			document.getElementById('backend-timout').disabled=true;
@@ -387,7 +402,8 @@ var X_SaveXRConfig= function (obj) {
 		document.getElementById('xr-form').innerHTML='<center><img src=img/wait_verybig.gif></center>';
 		XHR.sendAndLoad('$page', 'GET',X_SaveXRConfig);				
 	}		
-		
+	
+	EnableServiceCross();
 		
 	</script>
 	";

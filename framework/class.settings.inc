@@ -457,6 +457,7 @@ class settings_inc {
 	var $CGROUPS_INSTALLED=false;
 	var $APACHE_MOD_LOGSSQL=false;
 	var $LOAD_BALANCE_APPLIANCE=false;
+	var $ARPD_INSTALLED=false;
 	private function CheckIndexDefaults($_GLOBAL){
 		return $_GLOBAL;
 		foreach($this as $key => $value) {
@@ -556,7 +557,7 @@ class settings_inc {
 			if(isset($_GLOBAL["APACHE_MOD_CACHE"])){$this->APACHE_MOD_CACHE=$_GLOBAL["APACHE_MOD_CACHE"];}
 			if(isset($_GLOBAL["TOMCAT_INSTALLED"])){$this->TOMCAT_INSTALLED=$_GLOBAL["TOMCAT_INSTALLED"];}
 			if(isset($_GLOBAL["TOMCAT_VERSION"])){$this->APACHE_MOD_CACHE=$_GLOBAL["TOMCAT_VERSION"];}
-			
+			if(isset($_GLOBAL["ARPD_INSTALLED"])){$this->ARPD_INSTALLED=$_GLOBAL["ARPD_INSTALLED"];}
 			
 			
 			

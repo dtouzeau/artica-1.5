@@ -28,6 +28,8 @@ Vous devez indiquer l'adresse r&eacute;seau du serveur qui est cens&eacute; h&ea
 Si des disques sont disponibles, vous serez alors amen&eacute; &agrave; les s&eacute;lectionner.</add_iscsi_explain>
 <add_keywords>Ajouter des mots clefs</add_keywords>
 <add_keywords_smtp_check>Ajouter des mots clefs dans la base afin de les rechercher dans les messages.</add_keywords_smtp_check>
+<add_loadbalance_service>Ajouter un nouveau service de r&eacute;partition</add_loadbalance_service>
+<add_loadbalance_service_text>Cr&eacute;&eacute; un nouveau service de r&eacute;partition de charge afin de pouvoir r&eacute;partir les flux vers des serveurs cibles.</add_loadbalance_service_text>
 <ADD_LVM_DISK>Ajouter un nouveau disque LVM</ADD_LVM_DISK>
 <ADD_LVM_DISK_TEXT>Convertir un disque physique vers un disque LVM.[br]Toutes les donn&eacute;es seront &eacute;cras&eacute;es et d&eacute;truites.</ADD_LVM_DISK_TEXT>
 <add_members>Ajouter des membres</add_members>
@@ -165,6 +167,7 @@ Patientez quelques secondes et rafra&icirc;chissez cette page.</apply_network_co
 <APP_AD_CONNECT>Lier &agrave; Active Directory</APP_AD_CONNECT>
 <APP_AD_CONNECT_TEXT>Connecter votre serveur Artica en tant que membre d'un domaine Microsoft Active Directory</APP_AD_CONNECT_TEXT>
 <APP_AMANDA>sauvegarde Amanda</APP_AMANDA>
+<APP_ARPD>D&eacute;mon ARP</APP_ARPD>
 <APP_ARTICA_ADM>Console d'administration Artica</APP_ARTICA_ADM>
 <APP_ARTICA_AUTH_TAIL>Surveillance des autentifications</APP_ARTICA_AUTH_TAIL>
 <APP_CGROUPS>Groupes de processus</APP_CGROUPS>
@@ -286,6 +289,8 @@ Ce r&eacute;pertoire sera localis&eacute; dans /automounts</autofs_ask_dir>
 <autostart>D&eacute;marrage automatique</autostart>
 <available_modules>Modules disponibles</available_modules>
 <backup_server>Serveur de sauvegarde</backup_server>
+<balancers>Balanciers</balancers>
+<balancers_service_section_explain>Cette section liste tous les services de r&eacute;partition de charge.[br]Vous pouvez utiliser plusieurs services de r&eacute;partition sur la m&ecirc;me machine avec des ports diff&eacute;rents.</balancers_service_section_explain>
 <ban>Bannir</ban>
 <banned>Banni</banned>
 <banned_domains>Domaines bannis</banned_domains>
@@ -561,6 +566,7 @@ PowerDNS ne sera pas d&eacute;sinstaller et vous serez en mesure de le maintenir
 <DisableSambaFileSharing>D&eacute;sactiver le moteur de partage sur le r&eacute;seau</DisableSambaFileSharing>
 <disableSSLv2>D&eacute;sactiver SSLv2</disableSSLv2>
 <DisableWarningCalculation>D&eacute;sactiver le r&eacute;sumer des notifications d'alertes</DisableWarningCalculation>
+<DISABLE_ARPD>D&eacute;sactiver le d&eacute;mon ARP</DISABLE_ARPD>
 <disable_greylisting>D&eacute;sactiver le GreyListing</disable_greylisting>
 <disable_help_tooltips>D&eacute;sactiver les infos bulles d'aide en ligne</disable_help_tooltips>
 <disable_imap>D&eacute;sactiver IMAP</disable_imap>
@@ -799,6 +805,7 @@ Le moteur sera en charge de retrouver les liens dans le texte.Vous n'avez donc p
 <give_new_size_in_mb>Donnez la nouvelle taille en Mo</give_new_size_in_mb>
 <give_process_or_full_command>Indiquez le processus ou la ligne de commande enti&egrave;re</give_process_or_full_command>
 <give_servername_or_ipaddr>Indiquez le nom complet de l'ordinateur ou une adresse IP</give_servername_or_ipaddr>
+<give_the_remote_listen_port>Donnez le num&eacute;ro de port d'&eacute;coute de ce serveur distant.</give_the_remote_listen_port>
 <global>globale</global>
 <globals_values>Valeurs globales</globals_values>
 <goto>Aller &agrave;</goto>
@@ -1502,6 +1509,7 @@ Vous allez &eacute;conomiser environ 163Mb de m&eacute;moire.[br]Vous pouvez act
 <Reduce_mysql_explain>Le serveur MySQL est le moteur SQL utilis&eacute; afin de stocker des param&egrave;tres d'Artica et de fournir un espace de contenu pour des services multiples.[br]Par d&eacute;faut et si votre serveur dispose de plus de 550Mb de m&eacute;moire vive, Artica le configure aux maximum de ses capacit&eacute;s.[br]
 Config basse: vous lib&egrave;rera 278Mb.[br]
 Config Tr&egrave;s basse: vous lib&egrave;rera 320Mb.[br]</Reduce_mysql_explain>
+<refresh_daemon_MB>Rafra&icirc;chit le service lorsque la m&eacute;moire exc&egrave;de</refresh_daemon_MB>
 <RegexSimpleWords>Blocage de mots (simple)</RegexSimpleWords>
 <register_date>Date d'enregistrement</register_date>
 <register_form>Formulaire d'enregistrement</register_form>
@@ -1859,6 +1867,20 @@ Lorsque la p&eacute;riode de gr&acirc;ce &agrave; expir&eacute;e, les utilisateu
 <traffic_request>Trafique/Requ&ecirc;te</traffic_request>
 <traffic_second>Trafique/Seconde</traffic_second>
 <traffic_statistics>Statistiques du trafique</traffic_statistics>
+<transfert_messages_if_av_failed>Transf&eacute;rer les messages m&ecirc;me si l'antivirus est indisponible</transfert_messages_if_av_failed>
+<transparent_mode_limitations>[h3]Information sur le mode transparent[/h3]
+[ul]
+[li]L'interception HTTP casse les standards TCP/IP car les navigateurs pensent qu'ils travaillent directement avec les serveurs Web.[/li]
+[li]Requi&egrave;re IPv4 avec le NAT.[/li]a ethernet 
+[li]Il cause un &eacute;chec de PMTUD qui peut rendre certains sites web inaccessibles.[br]Ce n'est normalement pas un probl&egrave;me si les clients sont connect&eacute;s via ethernet ou DSL PPPoATM lorsque le MTU ou tout autre lien entre le proxy est sup&eacute;rieur &agrave; 1500.[/li]
+[li]La fonction de CTRL F5 (recharge forc&eacute;e) ne marche pas correctement avec anciennes versions de Internet Explorer (avant la 6) [/li]
+[li]L'authentification par utilisateur/mot de passe ne fonctionne pas dans ce mode[/li]
+[li]Ce mode ne supporte que le HTTP, les protocoles SSL ou FTP ne peuvent b&eacute;n&eacute;ficier de cette architecture[/li]
+[li]Incompatible avec le filtrage IP d&eacute;sign&eacute; pour pr&eacute;venir de l'IP spoofing.[/li]
+[li]Les utilisateurs devront disposer de toutes les capacit&eacute;s de r&eacute;solution DNS des serveurs Internet.[/li]
+[li]La tentative de connexion avec un site web indisponible ne donnera pas le vrai &eacute;tat du site dans l'erreur renvoy&eacute;e par le navigateur, le navigateur va attendre plus longtemps avant de se prononcer.[/li]
+[li]Il y a des limitations d'upload lors de l'utilisation du filtre Dansguardian[/li]
+[/ul]</transparent_mode_limitations>
 <treshold>Seuil</treshold>
 <Tuesday>Mardi</Tuesday>
 <UDMA_CRC_Error_Count>erreurs de CRC UltraDMA</UDMA_CRC_Error_Count>

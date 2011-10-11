@@ -90,7 +90,7 @@ l.add('     /usr/share/artica-postfix/bin/artica-install -watchdog artica-status
 l.add('    ;;');
 l.add('');
 l.add('  *)');
-l.add('    echo "Usage: $0 {start|stop|restart}');
+l.add('    echo "Usage: $0 {start|stop|restart}"');
 l.add('    exit 1');
 l.add('    ;;');
 l.add('esac');

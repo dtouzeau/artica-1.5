@@ -12,7 +12,7 @@ uses
   jcheckmail,dhcp_server,dstat,rsync,smartd,tcpip,policyd_weight,apache_artica,autofs,assp,pdns,gluster,nfsserver,zabbix,hamachi,postfilter, vmwaretools,zarafa_server,monit,wifi,
   emailrelay,mldonkey,backuppc,kav4fs,ocsi,ocsagent,sshd,auditd,squidguard_page,dkfilter,ufdbguardd,squidguard,framework,dkimmilter,dropbox,articapolicy,virtualbox,tftpd,crossroads,articastatus,articaexecutor,articabackground,pptpd,
   apt_mirror,cluebringer,apachesrc,sabnzbdplus,fusermount,vnstat,munin,greyhole,iscsitarget,postfwd2,snort,greensql,amanda,
-  mailarchiver in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/mailarchiver.pas',ddclient,tomcat,openemm,fuppes,
+  mailarchiver in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/mailarchiver.pas',ddclient,tomcat,openemm,fuppes,arpd,
   kas3         in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/kas3.pas',
   kavmilter    in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/kavmilter.pas',
   dnsmasq      in '/home/dtouzeau/developpement/artica-postfix/bin/src/artica-install/dnsmasq.pas',
@@ -654,6 +654,7 @@ var
    tomcat:ttomcat;
    openemm:topenemm;
    fuppes:tfuppes;
+   arpd:tarpd;
 begin
     GLOBAL_INI:=myconf.Create;
     Zclam:=TClamav.Create;
@@ -798,6 +799,13 @@ begin
                fuppes:=tfuppes.Create(GLOBAL_INI.SYS);
                fuppes.STOP();
                fuppes.free;
+               exit();
+            end;
+
+            if ParamStr(2)='arpd' then begin
+               arpd:=tarpd.Create(GLOBAL_INI.SYS);
+               arpd.STOP();
+               arpd.free;
                exit();
             end;
 
@@ -1651,7 +1659,7 @@ begin
                writeln('|openssh|auditd|squidguard-http|fetchmail-logger|dkfilter|ufdb|ufdb-tail|squidguard-tail|framework|dkim-milter|dropbox|artica-policy|virtualbox-web');
                writeln('|tftpd|crossroads|artica-status|artica-exec|artica-back|pptpd|pptpd-clients|apt-mirror|squidclamav-tail|ddclient|cluebringer|apachesrc');
                writeln('|sabnzbdplus|fcron|fuse|vnstat|winbindd|munin|greyhole|amavis-milter|iscsi|auth-logger|snort|greensql|amanda|zarafa-lmtp|tomcat|openemm');
-               writeln('|sendmail-openemm|fuppes|cgroups');
+               writeln('|sendmail-openemm|fuppes|cgroups|arpd');
                exit();
             end;
 
@@ -1781,6 +1789,7 @@ var
    tomcat:ttomcat;
    openemm:topenemm;
    fuppes:tfuppes;
+   arpd:tarpd;
 begin
     GLOBAL_INI:=myconf.Create;
     SYS:=Tsystem.Create;
@@ -2153,6 +2162,14 @@ begin
                fuppes.free;
                exit();
             end;
+
+             if ParamStr(2)='arpd' then begin
+               arpd:=tarpd.Create(GLOBAL_INI.SYS);
+               arpd.START();
+               arpd.free;
+               exit();
+            end;
+
 
           if ParamStr(2)='cgroups' then begin
                fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.cgroups.php --start');
@@ -2835,7 +2852,7 @@ begin
                writeln('|openssh|auditd|squidguard-http|fetchmail-logger|dkfilter|ufdb|ufdb-tail|squidguard-tail|framework|dkim-milter|dropbox|artica-policy|virtualbox-web');
                writeln('|tftpd|crossroads|artica-status|artica-exec|artica-back|pptpd|pptpd-clients|apt-mirror|squidclamav-tail|ddclient|cluebringer|apachesrc');
                writeln('|sabnzbdplus|fcron|fuse|vnstat|winbindd|munin|greyhole|amavis-milter|iscsi|auth-logger|snort|greensql|amanda|zarafa-lmtp|tomcat|openemm');
-               writeln('|sendmail-openemm|fuppes|cgroups');
+               writeln('|sendmail-openemm|fuppes|cgroups|arpd');
                exit();
             end;
 

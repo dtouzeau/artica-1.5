@@ -1,8 +1,9 @@
-1.5.101111: 
+1.5.101201: 
 ======================================================================================
 
 System Changes:
 ------------------------------------------------
+1.5.101201: Support arpd daemon has a daemon that handle MAC addresses listing.
 1.5.101111: Fix artica is unable to retreive the correct hostname.
 1.5.101111: Fix root password is reset all times to "artica" when installing Artica trough the ISO
 1.5.101111: Fix unable to create tables fetchmail_debug_execute and backup_storages
@@ -18,6 +19,8 @@ System Changes:
 
 Messaging Changes:
 -------------------------------------------------
+1.5.101201: Add possibility to force Amavis forwarding messages if antivirus is down. 
+1.5.101201: Fix error Variable $sa_timeout was retired, changing its value has no effect when starting amavis 2.7
 1.5.100918: Fix security hole on Zarafa: can have access to mailbox with a wrong password.
 1.5.100918: The Zarafa contact importation task is disabled by default and has been modified in order to not overload the server.
 1.5.100416: Add zarafaSharedStoreOnly Zarafa token support It allows to turn user to an non-active user
@@ -31,6 +34,7 @@ FreeWebs changes:
 
 Proxy changes:
 ------------------------------------------------
+1.5.101201: Add "Transparent mode limitations" explain text under the transparent Proxy enable/disable section.
 1.5.100420: Fix bungled config on missing manager acl.
 1.5.100723: Improve Squid statistics.
 1.5.101001: Add possibility to delete websites from categories.

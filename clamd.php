@@ -212,9 +212,9 @@ function scan_engine_settings(){
 		<td>" . help_icon('{srv_clamav.RefreshDaemon_text}')."</td>
 	</tr>
 	<tr>
-		<td class=legend>{srv_clamav.ClamavRefreshDaemonMemory}:</td>
+		<td class=legend>{refresh_daemon_MB}:</td>
 		<td style=';font-size:13px'>" . Field_text("ClamavRefreshDaemonMemory",$ClamavRefreshDaemonMemory,'style:font-size:13px;padding:3px;width:50px')."&nbsp;MB</td>
-		<td>" . help_icon('{srv_clamav.RefreshDaemon_text}')."</td>
+		<td>" . help_icon('{srv_clamav.ClamavRefreshDaemonMemory}')."</td>
 	</tr>			
 	<tr>
 		<td class=legend>{srv_clamav.StreamMaxLength}:</td>

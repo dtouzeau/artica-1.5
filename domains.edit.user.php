@@ -1126,18 +1126,11 @@ var x_SaveComputerForm= function (obj) {
         if(m){return false;}
 	}
 	
-	if(document.getElementById('ZoneListComp')){
-			Loadjs('index.bind9.php?script=yes');
-			BindComputers(document.getElementById('ZoneListComp').value);
-			}
-	if(document.getElementById('browser-computers-list')){
-		Loadjs('smb.browse.php?set-field='+document.getElementById('browser-computers-list').value);
-	}
-	
-	if(document.getElementById('main-content')){
-		Loadjs('start.php');
-	}
-	
+	if(document.getElementById('main_config_browse_computers')){RefreshTab('main_config_browse_computers');}
+	if(document.getElementById('ZoneListComp')){Loadjs('index.bind9.php?script=yes');BindComputers(document.getElementById('ZoneListComp').value);}
+	if(document.getElementById('browser-computers-list')){Loadjs('smb.browse.php?set-field='+document.getElementById('browser-computers-list').value);}
+	if(document.getElementById('main-content')){Loadjs('start.php');}
+	if(document.getElementById('crossroads-backend-list-table')){SearchBackendList();}
 	setTimeout('ComputerRefresh()',1000);
 }	
 
@@ -1146,13 +1139,13 @@ function ComputerRefresh(){
 	var computer=document.getElementById('uid').value;
 	var DnsZone=document.getElementById('DnsZoneName').value;
 	YahooUser(870,'domains.edit.user.php?userid='+computer+'$&ajaxmode=yes',computer);
-	}
+}
 	
-	function SaveComputerForm(form_name){
-		m_userid=document.getElementById('uid').value;
-		//Form_name,pageToSend,return_box,noHidden,ReturnValues,idRefresh,uriRefresh,function_callback
-		ParseForm(form_name,'domains.edit.user.php',false,false,false,'computer_refresh_div',null,x_SaveComputerForm);
-	}
+function SaveComputerForm(form_name){
+	m_userid=document.getElementById('uid').value;
+	//Form_name,pageToSend,return_box,noHidden,ReturnValues,idRefresh,uriRefresh,function_callback
+	ParseForm(form_name,'domains.edit.user.php',false,false,false,'computer_refresh_div',null,x_SaveComputerForm);
+}
 	
 var x_ComputerFindByMac= function (obj) {
 	var results=obj.responseText;

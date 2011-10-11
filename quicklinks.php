@@ -39,6 +39,11 @@ if(!$users->AsSquidAdministrator){$squid=null;}
 if(!$users->AsSystemAdministrator){$network=null;}
 if(!$users->AsPostfixAdministrator){$postfix=null;}
 if($users->ZARAFA_APPLIANCE){$postfix=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("zarafa-logo-48.png", "APP_ZARAFA",null, "QuickLinkPostfix()"));}
+if($users->LOAD_BALANCE_APPLIANCE){
+	$postfix=null;
+	$squid=null;
+	$crossroads=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("48-blance-servers.png", "load_balancing",null, "QuickLinkSystems('section_crossroads')"));
+}
 
 
 $tr[]=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("server-48.png", "manage_your_server","system_information_text", "QuickLinkSystems('section_start')"));
@@ -48,6 +53,7 @@ $tr[]=$network;
 $tr[]=$samba;
 $tr[]=$squid;
 $tr[]=$postfix;
+$tr[]=$crossroads;
 
 
 
@@ -204,6 +210,10 @@ $html="
 	$tpl=new templates();
 	echo $tpl->_ENGINE_parse_body($html);	
 	
+}
+
+function section_crossroads(){
+	echo "<script>javascript:AnimateDiv('BodyContent');Loadjs('crossroads.index.php?newinterface=yes');</script>";
 }
 
 function section_softwares(){

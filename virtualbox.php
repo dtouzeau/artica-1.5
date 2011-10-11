@@ -393,7 +393,7 @@ function thinclient_popup(){
 	$softs=Paragraphe("thinclient-softwares-64.png","{services}","{thinclient_software_text}","javascript:Loadjs('thinclient.softs.php')");
 	$add_thin=Paragraphe("thinclient-add-64.png","{add_thinclient}","{add_thinclient_text}",
 	"javascript:Loadjs('computer-browse.php?callback=addthinclient&mode=selection')");
-	$add_computer_js="javascript:YahooUser(670,'domains.edit.user.php?userid=newcomputer$&ajaxmode=yes','New computer');";
+	$add_computer_js="javascript:YahooUser(780,'domains.edit.user.php?userid=newcomputer$&ajaxmode=yes','New computer');";
 	$add_computer=Paragraphe("64-add-computer.png","{ADD_COMPUTER}","{ADD_COMPUTER_TEXT}",$add_computer_js);
 	$builddistro=Paragraphe("compile-distri-64.png","{COMPILE_PXE_SYSTEM}","{THINCOMPILE_SYSTEM_TEXT}","javascript:RebuildThinClients()");
 	

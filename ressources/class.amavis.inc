@@ -1,5 +1,5 @@
 <?php
-
+if(!isset($GLOBALS["EXECUTED_AS_ROOT"])){if(posix_getuid()==0){$GLOBALS["EXECUTED_AS_ROOT"]=true;$GLOBALS["AS_ROOT"]=true;}else{$GLOBALS["EXECUTED_AS_ROOT"]=false;$GLOBALS["AS_ROOT"]=true;}}
 include_once(dirname(__FILE__).'/class.main_cf.inc');
 include_once(dirname(__FILE__).'/class.ini.inc');
 include_once(dirname(__FILE__).'/class.system.network.inc');
@@ -203,7 +203,7 @@ class amavis{
 		if($this->main_array["BEHAVIORS"]["sa_timeout"]==null){$this->main_array["BEHAVIORS"]["sa_timeout"]="30";}
 		
 		
-			
+		if(!is_numeric($this->main_array["BEHAVIORS"]["always_clean"])){$this->main_array["BEHAVIORS"]["always_clean"]=1;}
 		
 		if(!is_numeric($this->main_array["BEHAVIORS"]["max_servers"])){
 			if($GLOBALS["AS_ROOT"]){echo "Starting......: amavisd-new max_servers is not set, define to 5\n";}
@@ -379,8 +379,13 @@ function buildconf(){
 	if(!is_numeric($AmavisDebugSpamassassin)){$AmavisDebugSpamassassin=0;}
 	$myhostname=$sock->GET_INFO("myhostname");
 	if($myhostname==null){$myhostname=$users->fqdn;}
+	if($GLOBALS["EXECUTED_AS_ROOT"]){
+	if(is_file("/usr/local/sbin/amavisd")){
+		$tb=explode("\n", @file_get_contents("/usr/local/sbin/amavisd"));
+		while (list ($num, $ligne) = each ($tb) ){if(preg_match("#myversion_id.*?=.*?([0-9\.]+)';#", $ligne,$re)){$vv=explode(".",$re[1]);$major=$vv[0];$minor=$vv[1];break;}}}
+	}
 	
-	if(posix_getuid()==0){echo "Starting......: amavisd-new buildconf() EnablePostfixMultiInstance=$EnablePostfixMultiInstance\n";} 
+	if($GLOBALS["EXECUTED_AS_ROOT"]){echo "Starting......: amavisd-new buildconf() EnablePostfixMultiInstance=$EnablePostfixMultiInstance MAJOR: $major, MINOR:$minor\n";} 
 	
 	
 	if(!preg_match("#\..+?$#",$myhostname)){
@@ -437,6 +442,7 @@ function buildconf(){
 		if(!is_numeric($this->main_array["BEHAVIORS"]["enable_db"])){$this->main_array["BEHAVIORS"]["enable_db"]="0";}
 		if(!is_numeric($this->main_array["BEHAVIORS"]["sa_timeout"])){$this->main_array["BEHAVIORS"]["sa_timeout"]="30";}
 		if(!is_numeric($this->main_array["BEHAVIORS"]["enable_global_cache"])){$this->main_array["BEHAVIORS"]["enable_global_cache"]="0";}
+		if(!is_numeric($this->main_array["BEHAVIORS"]["always_clean"])){$this->main_array["BEHAVIORS"]["always_clean"]=1;}
 		if(!is_numeric($AmavisDebugSpamassassin)){$AmavisDebugSpamassassin=0;}
 		
 		
@@ -469,7 +475,9 @@ function buildconf(){
 		$conf=$conf."\$DO_SYSLOG = 1;              # log via syslogd (preferred)\n";
 		$conf=$conf."\$sa_debug = $AmavisDebugSpamassassin;\n";
 		$conf=$conf."\$sa_spawned = 1;\n";
-		$conf=$conf."\$sa_timeout = {$this->main_array["BEHAVIORS"]["sa_timeout"]};\n";
+		if($major>1 && $minor<7){
+			$conf=$conf."\$sa_timeout = {$this->main_array["BEHAVIORS"]["sa_timeout"]};\n";
+		}
 		$conf=$conf."\$syslog_facility 	= 'mail';   # Syslog facility as a string\n";
 		$conf=$conf."\$syslog_priority 	= 'debug';  # Syslog base (minimal) priority as a string,\n";
 		$conf=$conf."#\$LOGFILE 		    = \"/var/log/amavis/amavis.log\";\n";
@@ -866,15 +874,21 @@ function buildconf(){
 			$conf=$conf."\n";
 			$conf=$conf."\n";
 			$conf=$conf."@av_scanners = (\n";
-			
+			$always_clean=null;
 			if($users->CLAMAV_INSTALLED){
 				if(strlen($users->CLAMAV_SOCKET)>0){
 					$conf=$conf."['ClamAV-clamd',\&ask_daemon, [\"CONTSCAN {}\", \"$users->CLAMAV_SOCKET\"],qr/\bOK$/, qr/\bFOUND$/,qr/^.*?: (?!Infected Archive)(.*) FOUND$/m ]\n";
 				}
+				
+				if($this->main_array["BEHAVIORS"]["always_clean"]==1){
+					$always_clean="['always-clean', sub {0}]";
+				}
 			}
 			
+			
+			
 			$conf=$conf.");\n";
-			$conf=$conf."@av_scanners_backup = ();\n";
+			$conf=$conf."@av_scanners_backup = ($always_clean);\n";
 			$conf=$conf."\n";
 			$conf=$conf."\n";
 			$conf=$conf."1;  # insure a defined return value";

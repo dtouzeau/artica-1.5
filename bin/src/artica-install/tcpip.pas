@@ -19,6 +19,7 @@ private
 
 
 public
+    MEMORY_LIST_NIC:TStringlist;
     procedure   Free;
     constructor Create;
     function     LOCAL_IP_FROM_NIC(ifname:string):string;
@@ -37,6 +38,7 @@ public
     function     IsIfaceDown(ifname:string): boolean;
     function     InterfacesStringList(): Tstringlist;
     function     PHP_INTERFACES():string;
+    procedure    InterfacesStringListMEM();
 END;
 
 implementation
@@ -148,7 +150,7 @@ var
   RigaOut: String;
   l:Tstringlist;
 begin
-        l:=Tstringlist.Create();
+  l:=Tstringlist.Create();
   sock:= socket(AF_INET, SOCK_DGRAM, 0);
   if sock>= 0 then begin
     ifc.ifc_len:= SizeOf(ifr);
@@ -171,6 +173,34 @@ begin
   L.Add('eth3');
   L.Add('eth4');
   result:=l;
+end;
+//##############################################################################
+procedure ttcpip.InterfacesStringListMEM();
+const SIOCGIWNAME= 35585;
+var
+  ifc: ifconf;
+  ifr: array[0..1023] of ifreq;
+  sock, I: Integer;
+  RigaOut: String;
+  l:Tstringlist;
+begin
+  MEMORY_LIST_NIC:=Tstringlist.Create();
+  sock:= socket(AF_INET, SOCK_DGRAM, 0);
+  if sock>= 0 then begin
+    ifc.ifc_len:= SizeOf(ifr);
+    ifc.ifc_ifcu.ifcu_req:= ifr;
+    if ioctl(sock, SIOCGIFCONF, @ifc)= 0 then begin
+      for I:= 0 to ifc.ifc_len div SizeOf(ifreq)- 1 do begin
+        if (TCP_GetFlags(ifr[I].ifr_ifrn.ifrn_name) and IFF_LOOPBACK)<> 0 then RigaOut:= RigaOut+ ', Loopbak';
+        if ioctl(sock, SIOCGIWNAME, @ifr[I])= 0 then RigaOut:= RigaOut+ ', Wireless.';
+        if (TCP_GetFlags(ifr[I].ifr_ifrn.ifrn_name) and IFF_UP)<> 0 then RigaOut:= RigaOut+ ', Up.' else RigaOut:= RigaOut+ ', Down.';
+        MEMORY_LIST_NIC.Add(ifr[I].ifr_ifrn.ifrn_name);
+
+      end;
+    end;
+    libc.__close(sock);
+  end;
+
 end;
 //##############################################################################
 function ttcpip.TCP_GetFlags(ifname: String): Integer;

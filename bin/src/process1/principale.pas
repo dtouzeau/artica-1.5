@@ -713,6 +713,7 @@ begin
    if FileExists(SYS.LOCATE_GENERIC_BIN('pdnssec')) then list.Add('$_GLOBAL["PDNSSEC_INSTALLED"]=True;') else list.Add('$_GLOBAL["PDNSSEC_INSTALLED"]=False;');
    if FileExists(SYS.LOCATE_GENERIC_BIN('nscd')) then list.Add('$_GLOBAL["NSCD_INSTALLED"]=True;') else list.Add('$_GLOBAL["NSCD_INSTALLED"]=False;');
    if FileExists(SYS.LOCATE_GENERIC_BIN('msktutil')) then list.Add('$_GLOBAL["MSKTUTIL_INSTALLED"]=True;') else list.Add('$_GLOBAL["MSKTUTIL_INSTALLED"]=False;');
+   if FileExists(SYS.LOCATE_GENERIC_BIN('arpd')) then list.Add('$_GLOBAL["ARPD_INSTALLED"]=True;') else list.Add('$_GLOBAL["ARPD_INSTALLED"]=False;');
    if FileExists('/usr/share/drupal7/index.php') then list.Add('$_GLOBAL["DRUPAL7_INSTALLED"]=True;') else list.Add('$_GLOBAL["DRUPAL7_INSTALLED"]=False;');
    if FileExists('/usr/share/piwik/core/Version.php') then list.Add('$_GLOBAL["PIWIK_INSTALLED"]=True;') else list.Add('$_GLOBAL["PIWIK_INSTALLED"]=False;');
    if FileExists('/usr/local/share/artica/joomla17_src/includes/version.php') then list.Add('$_GLOBAL["JOOMLA17_INSTALLED"]=True;') else list.Add('$_GLOBAL["JOOMLA17_INSTALLED"]=False;');

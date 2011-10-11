@@ -632,7 +632,8 @@ function SERVICES_STATUS(){
 			$html=$html . BuildRow($users,$ini->_params["APP_DDCLIENT"],"{APP_DDCLIENT}");							
 			$html=$html . BuildRow($users,$ini->_params["BIND9"],"{APP_BIND9}");
 			$html=$html . BuildRow($users,$ini->_params["DHCPD"],"{APP_DHCP}");
-			$html=$html . BuildRow($users,$ini->_params["APP_NSCD"],"{APP_NSCD}");				
+			$html=$html . BuildRow($users,$ini->_params["APP_NSCD"],"{APP_NSCD}");
+			$html=$html . BuildRow($users,$ini->_params["APP_ARPD"],"{APP_ARPD}");						
 			
 			if(!$users->KASPERSKY_WEB_APPLIANCE){
 				$html=$html . BuildRow($users,$ini->_params["CLAMAV"],"{APP_CLAMAV}");	

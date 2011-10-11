@@ -67,6 +67,7 @@ end;
 
        if FileExists('/home/artica/packages/crossroads.tar.gz') then begin
           fpsystem('/bin/tar -xvf /home/artica/packages/crossroads.tar.gz -C /');
+          fpsystem('/bin/mv /home/artica/packages/crossroads.tar.gz /home/artica/crossroads.tar.gz.old');
           fpsystem('/usr/share/artica-postfix/bin/process1 --force');
        end;
 

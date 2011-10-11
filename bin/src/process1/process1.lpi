@@ -66,12 +66,12 @@
         <Filename Value="principale.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="principale"/>
-        <CursorPos X="1" Y="691"/>
+        <CursorPos X="139" Y="716"/>
         <TopLine Value="659"/>
         <EditorIndex Value="3"/>
         <UsageCount Value="206"/>
         <Bookmarks Count="1">
-          <Item0 X="6" Y="1377" ID="0"/>
+          <Item0 X="6" Y="1378" ID="0"/>
         </Bookmarks>
         <Loaded Value="True"/>
       </Unit4>

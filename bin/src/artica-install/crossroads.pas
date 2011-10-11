@@ -45,6 +45,10 @@ begin
        binpath:=BIN_PATH();
        D:=SYS.verbosed;
        if not TryStrToInt(SYS.GET_INFO('EnableCrossRoads'),EnableCrossRoads) then EnableCrossRoads:=0;
+       if FIleExists('/etc/artica-postfix/LOAD_BALANCE_APPLIANCE') then begin
+            if EnableCrossRoads=0 then SYS.set_INFO('EnableCrossRoads','1');
+            EnableCrossRoads:=1;
+       end;
 end;
 //##############################################################################
 procedure tcrossroads.free();
@@ -119,13 +123,15 @@ var
    servername:string;
    tmpfile:string;
    cmdline:string;
-
+   chmod: string;
+   xrctl_bin:string;
 begin
 
    if not FileExists(binpath) then begin
          logs.DebugLogs('Starting......: Crossroads Daemon is not installed');
          exit;
    end;
+
 
    fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.crossroads.php --multiples-start');
 
@@ -134,6 +140,10 @@ if EnableCrossRoads=0 then begin
    STOP();
    exit;
 end;
+   xrctl_bin:=SYS.LOCATE_GENERIC_BIN('xrctl');
+   chmod:= SYS.LOCATE_GENERIC_BIN('chmod');
+   fpsystem(chmod +' 755 '+ binpath);
+   fpsystem(chmod +' 755 '+ xrctl_bin);
 
    logs.DebugLogs('Starting......: Crossroads Daemon writing settings');
    fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.crossroads.php --build');

@@ -4912,11 +4912,48 @@ if(!$this->TABLE_EXISTS('kav4proxy_av_stats','artica_events')){
 			if(!$this->ok){writelogs("Fatal: $this->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
 		}	
 	
-	}
+		if(!$this->TABLE_EXISTS('crossroads_main','artica_backup')){			
+			$sql="CREATE TABLE IF NOT EXISTS `crossroads_main` (
+				  `ID` int(10) NOT NULL AUTO_INCREMENT,
+				  `name` varchar(255) NOT NULL,
+				  `crtype` int(2) NOT NULL,
+				  `ipaddrport` varchar(60) NOT NULL,
+				  `listen_ip` varchar(50) NOT NULL,
+				  `listen_port` int(3) NOT NULL,
+				  `dispatch_mode` varchar(50) NOT NULL,
+				  `backend_timout_read` int(3) NOT NULL,
+				  `backend_timout_write` int(3) NOT NULL,
+				  `client_timout` int(3) NOT NULL,
+				  `checkup_interval` int(3) NOT NULL,
+				  `wakeup_interval` int(3) NOT NULL,
+				  `loadbalancetype` int(1) NOT NULL,
+				  `enabled` int(1) NOT NULL DEFAULT '1',
+				  `client_timout_write` int(3) NOT NULL,
+				  PRIMARY KEY (`ID`),
+				  UNIQUE KEY `ipaddrport` (`ipaddrport`),
+				  KEY `crtype` (`crtype`,`listen_ip`,`listen_port`,`loadbalancetype`),
+				  KEY `enabled` (`enabled`)
+				) ";
+			$this->QUERY_SQL($sql,'artica_backup');
+			if(!$this->ok){writelogs("Fatal: $this->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
+		}	
+	
+		if(!$this->TABLE_EXISTS('crossroads_backend','artica_backup')){			
+			$sql="CREATE TABLE `artica_backup`.`crossroads_backend` (
+			`crossroads_id` INT( 10 ) NOT NULL ,
+			`backendmd` VARCHAR( 90 ) NOT NULL ,
+			`uid` VARCHAR( 90 ) NOT NULL ,
+			`listen_port` INT( 10 ) NOT NULL ,
+			`enabled` INT( 1 ) NOT NULL DEFAULT '1',
+			INDEX ( `crossroads_id` , `uid` , `listen_port` , `enabled` ) ,
+			UNIQUE (`backendmd`)";
+			$this->QUERY_SQL($sql,'artica_backup');
+			if(!$this->ok){writelogs("Fatal: $this->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
+		}					
 	
 	
-	
-	
+}	
+// --------------------------------------------------------------------------------------------------------------------------------------------------	
 	
 	public function squid_events_sites_day_patch(){
 	if(!$this->FIELD_EXISTS("squid_events_sites_day","category","artica_events")){

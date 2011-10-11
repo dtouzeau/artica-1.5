@@ -33,28 +33,24 @@ $results=$q->QUERY_SQL($sql,"artica_events");
 $html="<table style='width:100%' class=form><tbody>";
 
 $f=squid_filters_infos();
-while (list ($num, $ligne) = each ($f) ){
-	if($ligne["subject"]==null){continue;}
-	$ligne["subject"]=$tpl->_ENGINE_parse_body($ligne["subject"]);
-	$strlen=strlen($ligne["subject"]);
-	$org_text=$ligne["subject"];
-	if($strlen>25){$text=substr($ligne["subject"], 0,21)."...";}else{$text=$org_text;}
-	
-	$html=$html."
-	<tr>
-		<td width=1%><img src='img/{$ligne["icon"]}'></td>
-		<td style='font-size:11px' nowrap><a href=\"javascript:blur();\" OnClick=\"javascript:{$ligne["js"]}\" style='font-size:11px;text-decoration:underline'>$text</a></td>
-	</tr>
-	";	
-}
+	if(is_array($f)){
+		while (list ($num, $ligne) = each ($f) ){
+			if($ligne["subject"]==null){continue;}
+			$ligne["subject"]=$tpl->_ENGINE_parse_body($ligne["subject"]);
+			$strlen=strlen($ligne["subject"]);
+			$org_text=$ligne["subject"];
+			if($strlen>25){$text=substr($ligne["subject"], 0,21)."...";}else{$text=$org_text;}
+			
+			$html=$html."
+			<tr>
+				<td width=1%><img src='img/{$ligne["icon"]}'></td>
+				<td style='font-size:11px' nowrap><a href=\"javascript:blur();\" OnClick=\"javascript:{$ligne["js"]}\" style='font-size:11px;text-decoration:underline'>$text</a></td>
+			</tr>
+			";	
+		}
+	}
 
 if(mysql_num_rows($results)==0){$html=$html."</tbody></table>";echo $html;return;}
-
-
-//if(!$q->ok){echo "<H2>$q->mysql_error</H2>";}
-
-
-
 
 
 while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
@@ -63,9 +59,6 @@ while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
 	if($ligne["icon"]=="pluswarning64.png"){$ligne["icon"]="warning-panneau-32.png";}
 	if($ligne["icon"]=="danger32.png"){$ligne["icon"]="warning-panneau-32.png";}
 	if($ligne["icon"]=="license-error-64.png"){$ligne["icon"]="license-error-32.png";}
-	
-	
-	
 	
 	$ligne["subject"]=$tpl->_ENGINE_parse_body($ligne["subject"]);
 	$strlen=strlen($ligne["subject"]);

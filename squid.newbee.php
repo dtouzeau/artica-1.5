@@ -1276,7 +1276,8 @@ function transparent_popup(){
 		$field
 		<p>&nbsp;</p>
 		<div style='text-align:right;width:100%'><hr>". button("{apply}","SaveTransparentProxy();")."</div>
-	
+		<hr>
+		<div class=explain style='font-size:13px'>{transparent_mode_limitations}</div>
 	</div>
 	
 	

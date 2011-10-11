@@ -23,7 +23,7 @@ dkfilter, ufdbguardd, dkimmilter, dropbox, articapolicy, virtualbox, tftpd,
 crossroads, articastatus, articaexecutor, articabackground, pptpd, apt_mirror,
 ddclient, cluebringer, apachesrc, toolsversions, sabnzbdplus, fusermount,
 vnstat, munin, greyhole, autofs, iscsitarget, snort, greensql, amanda, tomcat,
-openemm;
+openemm, arpd;
 
 var
 install:Tclass_install;
@@ -131,7 +131,6 @@ zcluebringer:tcluebringer;
 ztoolsversions:ttoolsversions;
 zsabnzbdplus:tsabnzbdplus;
 zstunnel4:tstunnel;
-zvnstat:tvnstat;
 zmunin:tmunin;
 zgreyhole:tgreyhole;
 zautofs:tautofs;
@@ -520,6 +519,13 @@ if ParamStr(1)='--reload-artica-policy' then begin
    halt(0);
 end;
 
+if ParamStr(1)='--nickernel' then begin
+   tcp_IP:=ttcpip.Create;
+   tcp_IP.InterfacesStringListMEM();
+   for i:=0 to tcp_IP.MEMORY_LIST_NIC.Count -1 do begin
+         writeln(tcp_IP.MEMORY_LIST_NIC.Strings[i]);
+   end;
+end;
 
 if ParamStr(1)='--nicstatus' then begin
        GLOBAL_INI:=myconf.Create();
@@ -2717,7 +2723,6 @@ begin
 postfix_addon:=Tpostfix_addon.Create();
 GLOBAL_INI:=MyConf.Create();
 writeln('Inet interfaces detected : ',GLOBAL_INI.get_LINUX_INET_INTERFACES());
-postfix_addon.inet_interfaces();
 GLOBAL_INI.Free;
 halt(0);
 end;

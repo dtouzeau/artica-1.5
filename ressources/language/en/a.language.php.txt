@@ -2488,3 +2488,29 @@ Do you want to perform this operation ?</WWW_RESCAN_VISITED_ASK>
 <freeweb_aliasserver_explain>This section list other webserver names that internet user can use to reach this webserver</freeweb_aliasserver_explain>
 <add_serveralias_ask>Give the Web servername: www.domain.tld or domain.tld or *.domain.tld...</add_serveralias_ask>
 <select_your_language>Select your language</select_your_language>
+<balancers>Balancers</balancers>
+<transparent_mode_limitations>
+[h3]Transparent mode limitations (please read it)[h3]
+[ul]
+[li]Intercepting HTTP breaks TCP/IP standards because user agents think they are talking directly to the origin server.[/li]
+[li]Requires IPv4 with NAT.[/li]
+[li]It causes path-MTU (PMTUD) to fail, possibly making some remote sites inaccessible.[br] This is not usually a problem if your client machines are connected via Ethernet or DSL PPPoATM where the MTU of all links between the cache and client is 1500 or more. If your clients are connecting via DSL PPPoE then this is likely to be a problem as PPPoE links often have a reduced MTU (1472 is very common).[/li]
+[li]On older IE versions before version 6, the ctrl-reload function did not work as expected.[/li]
+[li]Proxy authentication does not work, and IP based authentication conceptually fails because the users are all seen to come from the Proxy own IP address.[/li]
+[li]You can't use IDENT lookups (which are inherently very insecure anyway).[/li]
+[li]Transparent mode only supports the HTTP protocol, not gopher, SSL, or FTP. You cannot setup a redirection-rule to the proxy server for other protocols other than HTTP since it will not know how to deal with it.[/li]
+[li]Transparent mode are incompatible with IP filtering designed to prevent address spoofing.[/li]
+[li]Clients are still expected to have full Internet DNS resolving capabilities; in certain intranet/firewalling setups, this is not always wanted.[/li]
+[li]Related to above: suppose the users browser connects to a site which is down. However, due to the transparent proxying, it gets a connected state to the interceptor[br]The end user may get wrong error messages or a hung browser, for seemingly unknown reasons to them.[/li] 
+[li]There is some uploads limitations when using Dansguardian has the main Web filter plugin[/li] 
+[/ul]
+</transparent_mode_limitations>
+<add_loadbalance_service>Add new balance service</add_loadbalance_service>
+<add_loadbalance_service_text>Create a new service that will be in charge of balancing connections to backend servers</add_loadbalance_service_text>
+<balancers_service_section_explain>This section list all load-balancing services.[br]You can handle on your server multiple load-balancing services that will serve multiple backend servers on different ports.</balancers_service_section_explain>
+<APP_ARPD>Arp Daemon</APP_ARPD>
+<DISABLE_ARPD>Disable Arp Daemon</DISABLE_ARPD>
+<give_the_remote_listen_port>Give the target remote listen port</give_the_remote_listen_port>
+<refresh_daemon_MB>Refresh daemon when memory exceed</refresh_daemon_MB>
+<transfert_messages_if_av_failed>Forward messages if antivirus did not respond</transfert_messages_if_av_failed>
+

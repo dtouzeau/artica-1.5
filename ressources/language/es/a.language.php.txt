@@ -31,6 +31,8 @@ vease http://www.iana.org/assignments/character-sets</AddDefaultCharset_explain>
 <add_iscsi_explain>Este formulario le asistira para agregar un nuevo disco iscsi al sistema.[br]Primero debe ingresar la direccion IP del servidor donde estan los discos iscsi.[br] Si existen discos disponibles, ud podra seleccionarlos.</add_iscsi_explain>
 <add_keywords>agregue palabras claves</add_keywords>
 <add_keywords_smtp_check>Agregue palabras claves a la base de datos para luego checkearlos en cada email</add_keywords_smtp_check>
+<add_loadbalance_service>Add new balance service</add_loadbalance_service>
+<add_loadbalance_service_text>Create a new service that will be in charge of balancing connections to backend servers</add_loadbalance_service_text>
 <ADD_LVM_DISK>agregue un disco LVM</ADD_LVM_DISK>
 <ADD_LVM_DISK_TEXT>Convertir un disco fisico en un disco LVM.[br] La informacion existente se perdera!</ADD_LVM_DISK_TEXT>
 <add_members>Agregar miembros</add_members>
@@ -206,6 +208,7 @@ Wait few seconds and refresh this web page</apply_network_configuration_warn>
 <APP_AD_CONNECT>ActiveDirectory Link</APP_AD_CONNECT>
 <APP_AD_CONNECT_TEXT>Connect your Artica server to your Microsoft Active Directory System</APP_AD_CONNECT_TEXT>
 <APP_AMANDA>Amanda backup system</APP_AMANDA>
+<APP_ARPD>Arp Daemon</APP_ARPD>
 <APP_ARTICA_ADM>Artica Web Administration interface</APP_ARTICA_ADM>
 <APP_ARTICA_AUTH_TAIL>Authentication Watchdog</APP_ARTICA_AUTH_TAIL>
 <APP_CGROUPS>Process Groups</APP_CGROUPS>
@@ -367,6 +370,8 @@ The directory will be stored on /automount.
 <autostart>Auto-start</autostart>
 <available_modules>Available modules</available_modules>
 <backup_server>Backup server</backup_server>
+<balancers>Balancers</balancers>
+<balancers_service_section_explain>This section list all load-balancing services.[br]You can handle on your server multiple load-balancing services that will serve multiple backend servers on different ports.</balancers_service_section_explain>
 <ban>Ban</ban>
 <banned>Banned</banned>
 <banned_domains>Banned domains</banned_domains>
@@ -699,6 +704,7 @@ It will not be uninstalled and you will be able to manage PowerDNS yourself.</Di
 <DisableSambaFileSharing>Share Engine did not provide Shared folders</DisableSambaFileSharing>
 <disableSSLv2>Disable SSLv2</disableSSLv2>
 <DisableWarningCalculation>Disable Warnings calculation icon</DisableWarningCalculation>
+<DISABLE_ARPD>Disable Arp Daemon</DISABLE_ARPD>
 <disable_greylisting>Disable the GreyListing</disable_greylisting>
 <disable_help_tooltips>Disable Help tooltips</disable_help_tooltips>
 <disable_imap>Disable IMAP</disable_imap>
@@ -993,6 +999,7 @@ The engine will try to find all urls added in your text, sou you did not need to
 <give_new_size_in_mb>Give the new size in MB</give_new_size_in_mb>
 <give_process_or_full_command>Give the process or the full command</give_process_or_full_command>
 <give_servername_or_ipaddr>Give the servername or the ip address</give_servername_or_ipaddr>
+<give_the_remote_listen_port>Give the target remote listen port</give_the_remote_listen_port>
 <global>global</global>
 <globals_values>Global Values</globals_values>
 <goto>Go to</goto>
@@ -1789,6 +1796,7 @@ Maximal performances means maximal memory used.[br]
 Lower config will get 278Mb free.[br]
 Very lower config will get 320Mb free[br]
 </Reduce_mysql_explain>
+<refresh_daemon_MB>Refresh daemon when memory exceed</refresh_daemon_MB>
 <RegexSimpleWords>Block words (simple)</RegexSimpleWords>
 <register_date>Register date</register_date>
 <register_form>Register form</register_form>
@@ -2219,6 +2227,23 @@ If the value of this attribute is decreasing there is a high probability that th
 <traffic_request>Traffic/Request</traffic_request>
 <traffic_second>Traffic/second</traffic_second>
 <traffic_statistics>Traffic Statistics</traffic_statistics>
+<transfert_messages_if_av_failed>Forward messages if antivirus did not respond</transfert_messages_if_av_failed>
+<transparent_mode_limitations>
+[h3]Transparent mode limitations (please read it)[h3]
+[ul]
+[li]Intercepting HTTP breaks TCP/IP standards because user agents think they are talking directly to the origin server.[/li]
+[li]Requires IPv4 with NAT.[/li]
+[li]It causes path-MTU (PMTUD) to fail, possibly making some remote sites inaccessible.[br] This is not usually a problem if your client machines are connected via Ethernet or DSL PPPoATM where the MTU of all links between the cache and client is 1500 or more. If your clients are connecting via DSL PPPoE then this is likely to be a problem as PPPoE links often have a reduced MTU (1472 is very common).[/li]
+[li]On older IE versions before version 6, the ctrl-reload function did not work as expected.[/li]
+[li]Proxy authentication does not work, and IP based authentication conceptually fails because the users are all seen to come from the Proxy own IP address.[/li]
+[li]You can't use IDENT lookups (which are inherently very insecure anyway).[/li]
+[li]Transparent mode only supports the HTTP protocol, not gopher, SSL, or FTP. You cannot setup a redirection-rule to the proxy server for other protocols other than HTTP since it will not know how to deal with it.[/li]
+[li]Transparent mode are incompatible with IP filtering designed to prevent address spoofing.[/li]
+[li]Clients are still expected to have full Internet DNS resolving capabilities; in certain intranet/firewalling setups, this is not always wanted.[/li]
+[li]Related to above: suppose the users browser connects to a site which is down. However, due to the transparent proxying, it gets a connected state to the interceptor[br]The end user may get wrong error messages or a hung browser, for seemingly unknown reasons to them.[/li] 
+[li]There is some uploads limitations when using Dansguardian has the main Web filter plugin[/li] 
+[/ul]
+</transparent_mode_limitations>
 <treshold>Treshold</treshold>
 <Tuesday>Tuesday</Tuesday>
 <UDMA_CRC_Error_Count>UltraDMA CRC Error Rate</UDMA_CRC_Error_Count>

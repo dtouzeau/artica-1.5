@@ -48,7 +48,7 @@ function page(){
 			var f_FilterByDate=document.getElementById('FilterByDate').value;
 			var se=escape(document.getElementById('SearchComputers').value);
 			if(f_FilterByDate.length>2){u_f_FilterByDate='&orderBydate='+f_FilterByDate;}
-			LoadAjax('SearchComputers-list','$page?SearchComputers='+se+u_f_FilterByDate);
+			LoadAjax('SearchComputers-list','$page?SearchComputers='+se+u_f_FilterByDate+'&mode={$_GET["mode"]}&value={$_GET["value"]}&callback={$_GET["callback"]}');
 		}
 		
 		function OcsFilterBYDate(){
@@ -76,7 +76,8 @@ function SearchComputers(){
 	$search=str_replace("*", "%", $search);
 	$order="ORDER BY hardware.LASTDATE DESC";
 	if(trim($_GET["orderBydate"])<>null){$order="ORDER BY hardware.LASTDATE {$_GET["orderBydate"]} ";}
-	
+	$add_computer_js="YahooUser(780,'domains.edit.user.php?userid=newcomputer$&ajaxmode=yes','New computer');";
+	$add=imgtootltip("plus-24.png","{add}",$add_computer_js);
 	$sql="SELECT networks.*,hardware.* FROM networks,hardware WHERE
 	networks.HARDWARE_ID=hardware.ID
 	AND ( (hardware.NAME LIKE '$search') OR (networks.MACADDR LIKE '$search') OR (networks.IPADDRESS LIKE '$search') OR (hardware.OSNAME LIKE '$search'))
@@ -111,14 +112,22 @@ function SearchComputers(){
 		$md=md5($ligne["MACADDR"]);
 		$uid=$computer->ComputerIDFromMAC($ligne["MACADDR"]);
 		$view="&nbsp;";
-		if($uid<>null){$view=imgtootltip("computer-32.png","{view}",MEMBER_JS($uid,1,1));}
+		$jsfiche=MEMBER_JS($uid,1,1);
+		$uri=$ligne["NAME"];
+		if($uid<>null){$view=imgtootltip("computer-32.png","{view}",$jsfiche);}
 		$js[]="LoadAjaxTiny('cmp-$md','$page?compt-status={$ligne["IPADDRESS"]}');";
 		if($ligne["OSNAME"]<>null){$OSNAME="<div style='font-size:9px'><i>{$ligne["OSNAME"]}</i></div>";}
+		if($_GET["callback"]<>null){
+			$view=imgtootltip("arrow-down-32.png","{select}","{$_GET["callback"]}('$uid')");
+			$uri=texttooltip($ligne["NAME"],"{view}",$jsfiche,null,0,"font-size:12px;text-decoration:underline");
+		}
+		
+		
 		$html=$html."
 		<tr class=$classtr>
 			<td style='font-size:12px;font-weight:normal;color:$color' width=1% nowrap>$view</td>
 			<td style='font-size:12px;font-weight:normal;color:$color' width=1% nowrap>$link{$ligne["LASTDATE"]}</a></td>
-			<td style='font-size:12px;font-weight:bold;color:$color' width=99%>$link{$ligne["NAME"]}</a>$OSNAME</td>
+			<td style='font-size:12px;font-weight:bold;color:$color' width=99%>$link$uri</a>$OSNAME</td>
 			<td style='font-size:12px;font-weight:bold;color:$color' width=1%>$link{$ligne["IPADDRESS"]}</a></td>
 			<td style='font-size:12px;font-weight:bold;color:$color' width=1%>$link{$ligne["MACADDR"]}</a></td>
 			<td width=1%><div id='cmp-$md'><img src='img/unknown24.png'></div></td>
@@ -130,6 +139,9 @@ function SearchComputers(){
 	
 	<script>
 	". @implode("\n", $js)."
+	
+	
+	
 	</script>
 	
 	";

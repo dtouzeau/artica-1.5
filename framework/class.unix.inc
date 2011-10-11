@@ -320,9 +320,7 @@ public function PingHost($cible){
 	socket_connect($socket, $cible, null);
 	$ts = microtime(true);
     socket_send($socket, $package, strLen($package), 0);
-    if (socket_read($socket, 255))
-    $result = microtime(true) - $ts;
-    else    $result = false;
+    if (socket_read($socket, 255)){$result = true;}else{    $result = false;}
 	socket_close($socket);
 	return $result;
 	}
