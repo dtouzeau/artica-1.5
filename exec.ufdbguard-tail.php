@@ -15,6 +15,7 @@ $pid=getmypid();
 file_put_contents($pidfile,$pid);
 events("ufdbtail starting PID $pid...");
 $GLOBALS["ufdbGenTable"]=$GLOBALS["CLASS_UNIX"]->find_program("ufdbGenTable");
+$GLOBALS["chown"]=$GLOBALS["CLASS_UNIX"]->find_program("chown");
 if($argv[1]=='--date'){echo date("Y-m-d H:i:s")."\n";}
 
 
@@ -64,6 +65,7 @@ if(strpos($buffer,"{")>0){return ;}
 if(strpos($buffer,"] category \"")>0){return ;}
 if(strpos($buffer,"]    domainlist     \"")>0){return ;}
 if(strpos($buffer,"]       pass ")>0){return ;}
+if(strpos($buffer,"] safe-search")>0){return ;}
 if(strpos($buffer,"configuration file")>0){return ;}
 if(strpos($buffer,'expressionlist "')>0){return ;}
 if(strpos($buffer,'is newer than')>0){return ;}
@@ -72,6 +74,7 @@ if(trim($buffer)==null){return;}
 if(strpos($buffer,'max-logfile-size')>0){return ;}
 if(strpos($buffer,'check-proxy-tunnels')>0){return ;}
 if(strpos($buffer,'seconds to allow worker')>0){return ;}
+if(strpos($buffer,'] loading URL category')>0){return ;}
 
 	if(preg_match("#\] REDIR\s+#", $buffer)){return;}
 
@@ -92,18 +95,23 @@ if(strpos($buffer,'seconds to allow worker')>0){return ;}
 	}
 	
 	if(preg_match('#\*FATAL.+? cannot read from "(.+?)".+?: No such file or directory#', $buffer,$re)){
-		events("cannot read {$re[1]} -> \"$buffer\"");
+		events("cannot read '{$re[1]}' -> \"$buffer\"");
+		if(!is_dir(dirname($re[1]))){
+			@mkdir(dirname($re[1]),755,true);
+			shell_exec("{$GLOBALS["chown"]} -R squid:squid ".dirname($re[1]));
+		}
+		
 		$newfile=str_replace(".ufdb", "", $re[1]);
 		if(!is_file($newfile)){
-			events("cannot $newfile no such file, create it");
-			@file_put_contents($newfile, "");
+			events("cannot '$newfile' no such file, create it");
+			@file_put_contents($newfile, "\n");
 		}
 		if(!is_file(dirname($newfile)."/urls")){
-			@file_put_contents(dirname($newfile)."/urls", "");
+			@file_put_contents(dirname($newfile)."/urls", "\n");
 		}
 		
 		if(!is_file(dirname($newfile)."/expressions")){
-			@file_put_contents(dirname($newfile)."/expressions", "");
+			@file_put_contents(dirname($newfile)."/expressions", "\n");
 		}		
 		
 		$category=str_replace("/var/lib/squidguard/", "", dirname($newfile));
@@ -112,8 +120,17 @@ if(strpos($buffer,'seconds to allow worker')>0){return ;}
 		$category=str_replace("personal-categories/", "", $category);
 		
 		if(preg_match("#\/(.+?)$#", $category,$re)){$category=$re[1];}
+		if(strlen($category)>15){
+			$category=str_replace("recreation_","recre_",$category);
+			$category=str_replace("automobile_","auto_",$category);
+			$category=str_replace("finance_","fin_",$category);
+			if(strlen($category)>15){
+				$category=str_replace("_", "", $category);
+				$category=substr($category, strlen($category)-15,15);
+			}
+		}
 		$cmd="{$GLOBALS["ufdbGenTable"]} -n -D -W -t $category -d $newfile -u ". dirname($newfile)."/urls";
-		events("Category $category -> $cmd");
+		events("Category $category ".strlen($category). "chars -> $cmd");
 		shell_exec($cmd);
 		shell_exec("/bin/chown -R squid:squid ". dirname($newfile)." >/dev/null 2>&1 &");
 		return;
@@ -139,12 +156,18 @@ if(strpos($buffer,'seconds to allow worker')>0){return ;}
 		return;		
 	}
 	
+	if(preg_match("#\*FATAL\*\s+expression list\s+(.+?): Permission denied#",$buffer,$re)){
+		events("UFDB expression permission issue : Problem on '{$re[1]}' -> chown squid:squid");
+		shell_exec("{$GLOBALS["chown"]} -R squid:squid ".dirname($re[1]));
+		return;
+	}
+	
 	if(preg_match("#\*FATAL.+?expression list\s+(.+?):\s+No such file or directory#", $buffer,$re)){
 		events("Expression list: Problem on {$re[1]} -> \"$buffer\"");
 		events("Creating directory ".dirname($re[1]));
-		@mkdir(dirname($re[1],755,true));
-		events("Creating empty file ".$re[1]);
-		@file_put_contents($re[1], " ");
+		@mkdir(dirname($re[1]),755,true);
+		events("Creating empty file '".$re[1]."'");
+		@file_put_contents($re[1], "\n");
 		shell_exec("/etc/init.d/ufdb reload &");
 		return;
 	}

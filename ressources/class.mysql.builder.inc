@@ -4929,24 +4929,64 @@ if(!$this->TABLE_EXISTS('kav4proxy_av_stats','artica_events')){
 				  `loadbalancetype` int(1) NOT NULL,
 				  `enabled` int(1) NOT NULL DEFAULT '1',
 				  `client_timout_write` int(3) NOT NULL,
+				  `www_port` int(3) NOT NULL,
+				  `www_username` VARCHAR( 50 ) NOT NULL,
+				  `www_password` VARCHAR( 90 ) NOT NULL,
 				  PRIMARY KEY (`ID`),
 				  UNIQUE KEY `ipaddrport` (`ipaddrport`),
+				  UNIQUE KEY `www_port` (`www_port`),
 				  KEY `crtype` (`crtype`,`listen_ip`,`listen_port`,`loadbalancetype`),
 				  KEY `enabled` (`enabled`)
 				) ";
 			$this->QUERY_SQL($sql,'artica_backup');
 			if(!$this->ok){writelogs("Fatal: $this->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
 		}	
+		
+		if(!$this->FIELD_EXISTS("crossroads_main", "www_port", "artica_backup")){		
+			$sql="ALTER TABLE `crossroads_main` ADD `www_port` INT( 3 ) NOT NULL,ADD UNIQUE (`www_port`)"; 
+			$this->QUERY_SQL($sql,"artica_backup");
+			if(!$this->ok){writelogs("$this->mysql_error\n$sql",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}			
+		}	
+
+		if(!$this->FIELD_EXISTS("crossroads_main", "www_username", "artica_backup")){		
+			$sql="ALTER TABLE `crossroads_main` ADD `www_username` VARCHAR( 50 ) NOT NULL"; 
+			$this->QUERY_SQL($sql,"artica_backup");
+			if(!$this->ok){writelogs("$this->mysql_error\n$sql",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}			
+		}	
+
+		if(!$this->FIELD_EXISTS("crossroads_main", "www_password", "artica_backup")){		
+			$sql="ALTER TABLE `crossroads_main` ADD `www_password` VARCHAR( 90 ) NOT NULL"; 
+			$this->QUERY_SQL($sql,"artica_backup");
+			if(!$this->ok){writelogs("$this->mysql_error\n$sql",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}			
+		}			
+		
+		
+		if(!$this->TABLE_EXISTS('crossroads_events','artica_events')){	
+			$sql="CREATE TABLE `artica_events`.`crossroads_events` (
+			`zDate` TIMESTAMP NOT NULL ,
+			`instance_id` INT( 10 ) NOT NULL ,
+			`function` VARCHAR( 50 ) NOT NULL ,
+			`line` INT( 100 ) NOT NULL ,
+			`description` TEXT NOT NULL ,
+			INDEX ( `zDate` , `instance_id` , `function` ))";
+			$this->QUERY_SQL($sql,'artica_events');
+			if(!$this->ok){writelogs("Fatal: $this->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
+		}	
+			
+		
 	
 		if(!$this->TABLE_EXISTS('crossroads_backend','artica_backup')){			
-			$sql="CREATE TABLE `artica_backup`.`crossroads_backend` (
-			`crossroads_id` INT( 10 ) NOT NULL ,
-			`backendmd` VARCHAR( 90 ) NOT NULL ,
-			`uid` VARCHAR( 90 ) NOT NULL ,
-			`listen_port` INT( 10 ) NOT NULL ,
-			`enabled` INT( 1 ) NOT NULL DEFAULT '1',
-			INDEX ( `crossroads_id` , `uid` , `listen_port` , `enabled` ) ,
-			UNIQUE (`backendmd`)";
+			$sql="CREATE TABLE IF NOT EXISTS `crossroads_backend` (
+			  `crossroads_id` int(10) NOT NULL,
+			  `backendmd` varchar(90) NOT NULL,
+			  `uid` varchar(90) NOT NULL,
+			  `listen_port` int(10) NOT NULL,
+			  `enabled` int(1) NOT NULL DEFAULT '1',
+			  `max_connections` int(3) NOT NULL DEFAULT '0',
+			  `backend_weight` int(3) NOT NULL DEFAULT '1',
+			  UNIQUE KEY `backendmd` (`backendmd`),
+			  KEY `crossroads_id` (`crossroads_id`,`uid`,`listen_port`,`enabled`)
+			) ";
 			$this->QUERY_SQL($sql,'artica_backup');
 			if(!$this->ok){writelogs("Fatal: $this->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
 		}					

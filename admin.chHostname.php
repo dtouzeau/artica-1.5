@@ -85,6 +85,7 @@ function popup(){
 			var results=obj.responseText;
 			if(document.getElementById('admin_perso_tabs')){RefreshTab('admin_perso_tabs');}		
 			YahooWinBrowseHide();
+			ChangeHTMLTitle();
 			}
 			
 		function ChangeQuickHostnameCheck(e){

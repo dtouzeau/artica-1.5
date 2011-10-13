@@ -15,7 +15,7 @@ if(!$usersmenus->AsDansGuardianAdministrator){
 
 if(isset($_GET["status"])){status();exit;}
 if(isset($_GET["dansguardian-status"])){status_left();exit;}
-
+if(isset($_POST["DansGuardianDeleteMainRule"])){delete_rule();exit;}
 rules();
 
 
@@ -25,6 +25,7 @@ function rules(){
 	$tpl=new templates();
 	$page=CurrentPageName();	
 	$q=new mysql_squid_builder();
+	$action_delete_rule=$tpl->javascript_parse_text("{action_delete_rule}");
 	$rule_text=$tpl->_ENGINE_parse_body("{rule}");
 	$sql="SELECT ID,enabled,groupmode,groupname FROM webfilter_rules ORDER BY groupname";
 	$results=$q->QUERY_SQL($sql);
@@ -34,7 +35,7 @@ function rules(){
 	
 	$select=imgtootltip("32-parameters.png","{edit}","DansGuardianEditRule('0','default')");
 	$style="style='font-size:14px;font-weight:bold;color:black'";
-	$html="<center>
+	$html="<center><span id='DansAnimate'></span>
 <table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:99%'>
 <thead class='thead'>
 	<tr>
@@ -61,7 +62,7 @@ function rules(){
 	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
 		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
 		$select=imgtootltip("32-parameters.png","{edit}","DansGuardianEditRule('{$ligne["ID"]}','{$ligne["groupname"]}')");
-		$delete=imgtootltip("delete-32.png","{delete}","SambaVirtalDel('{$ligne["hostname"]}')");
+		$delete=imgtootltip("delete-32.png","{delete}","DansGuardianDeleteMainRule('{$ligne["ID"]}')");
 		$color="black";
 		if($ligne["enabled"]==0){$color="#CCCCCC";}
 		$style="style='font-size:14px;font-weight:bold;color:$color'";
@@ -82,7 +83,24 @@ function rules(){
 	<script>
 		function DansGuardianEditRule(ID,rname){
 			YahooWin3('600','dansguardian2.edit.php?ID='+ID,'$rule_text::'+ID+'::'+rname);
+		}
 		
+		var x_DansGuardianDeleteMainRule= function (obj) {
+			var res=obj.responseText;
+			if (res.length>3){alert(res);}
+			if(document.getElementById('main_dansguardian_tabs')){RefreshTab('main_dansguardian_tabs');}
+			GroupsDansRuleSearch();		
+			
+			
+		}		
+		
+		function DansGuardianDeleteMainRule(ID){
+			if(confirm('$action_delete_rule')){
+				var XHR = new XHRConnection();
+				AnimateDiv('DansAnimate');
+		     	XHR.appendData('DansGuardianDeleteMainRule', ID);
+		      	XHR.sendAndLoad('$page', 'POST',x_DansGuardianDeleteMainRule);  
+			}
 		}
 	
 	
@@ -117,6 +135,19 @@ function COUNTDEGBWLS($ruleid){
 	return $ligne["tcount"];	
 }
 
+function delete_rule(){
+	$q=new mysql_squid_builder();
+	$ID=$_POST["DansGuardianDeleteMainRule"];
+	$q->QUERY_SQL("DELETE FROM webfilter_assoc_groups WHERE webfilter_id='$ID'");
+	if(!$q->ok){echo $q->mysql_error;return;}
+	$q->QUERY_SQL("DELETE FROM webfilter_blks WHERE webfilter_id='$ID'");
+	if(!$q->ok){echo $q->mysql_error;return;}
+	$q->QUERY_SQL("DELETE FROM webfilter_rules WHERE ID='$ID'");
+	if(!$q->ok){echo $q->mysql_error;return;}
+	$sock=new sockets();
+	$sock->getFrameWork("webfilter.php?compile-rules=yes");
+	
+}
 
 
 

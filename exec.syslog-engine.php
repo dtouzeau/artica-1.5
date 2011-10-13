@@ -19,15 +19,15 @@ if(preg_match("#--force#",implode(" ",$argv))){$GLOBALS["FORCE"]=true;}
 
 if($argv[1]=='--build-server'){build_server_mode();die();}
 if($argv[1]=='--build-client'){build_client_mode();die();}
-if($argv[1]=='--auth-logs'){authlogs();sessions_logs();ipblocks();clamd_mem();admin_logs();die();}
+if($argv[1]=='--auth-logs'){authlogs();sessions_logs();ipblocks();clamd_mem();admin_logs();crossroads();die();}
 if($argv[1]=='--authfw'){authfw();sessions_logs();die();ipblocks();}
 if($argv[1]=='--authfw-compile'){compile_sshd_rules();sessions_logs();ipblocks();die();}
-if($argv[1]=='--snort'){snort_logs();sessions_logs();ipblocks();clamd_mem();die();}
+if($argv[1]=='--snort'){snort_logs();sessions_logs();ipblocks();clamd_mem();crossroads();die();}
 if($argv[1]=='--sessions'){sessions_logs();die();}
-if($argv[1]=='--loadavg'){loadavg_logs();clamd_mem();die();}
+if($argv[1]=='--loadavg'){loadavg_logs();clamd_mem();crossroads();die();}
 if($argv[1]=='--ipblocks'){ipblocks();die();}
-if($argv[1]=='--adminlogs'){admin_logs();squid_tasks();die();}
-if($argv[1]=='--psmem'){ps_mem(true);squid_tasks();die();}
+if($argv[1]=='--adminlogs'){admin_logs();squid_tasks();crossroads();die();}
+if($argv[1]=='--psmem'){ps_mem(true);squid_tasks();crossroads();die();}
 if($argv[1]=='--squid-tasks'){squid_tasks(true);die();}
 
 
@@ -281,6 +281,42 @@ function admin_logs(){
 	ps_mem();
 		
 }
+
+function crossroads($nopid=false){
+	$f=array();
+	if($nopid){
+		$unix=new unix();
+		$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
+		$pid=@file_get_contents($pidfile);
+		if($unix->process_exists($pid)){writelogs("Already running pid $pid",__FUNCTION__,__FILE__,__LINE__);return;}	
+		$t=0;		
+		
+	}
+	$q=new mysql();	
+	if(!$q->TABLE_EXISTS('crossroads_events','artica_events')){$q->BuildTables();}
+	if(!$q->TABLE_EXISTS('crossroads_events','artica_events',true)){return;}
+	$prefix="INSERT IGNORE INTO crossroads_events (`zDate`,`instance_id`,`function`,`line`,`description`) VALUES ";
+	foreach (glob("/var/log/artica-postfix/crossroads/*") as $filename) {
+		$array=unserialize(@file_get_contents($filename));
+		if(!is_array($array)){@unlink($filename);continue;}		
+		$array["TEXT"]=addslashes($array["TEXT"]);
+		$f[]="('{$array["TIME"]}','{$array["ID"]}','{$array["FUNCTION"]}','{$array["LINE"]}','{$array["TEXT"]}')";
+		@unlink($filename);
+	}
+	
+	if(count($f)>0){$sql=$prefix.@implode(",", $f);
+		$q->QUERY_SQL($sql,"artica_events");
+		if(!$q->ok){
+			writelogs("$q->mysql_error",__FUNCTION__,__FILE__,__LINE__);
+		}
+	
+	}
+	
+	$num=$q->COUNT_ROWS("crossroads_events","artica_events");
+	if($num>4000){$q->QUERY_SQL("DELETE FROM crossroads_events ORDER BY zDate LIMIT 4000","artica_events");}
+	
+}
+
 
 function squid_tasks($nopid=false){
 	$f=array();

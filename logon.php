@@ -210,7 +210,13 @@ $newacc="<div style='float:left;margin-left:-180px;width:179px;margin-top:-50px'
 </td>
 </tr>
 </table>
-</div>";
+</div>
+<script>
+	ChangeHTMLTitle();
+</script>
+	
+
+";
 
 error_log("-> buildFrontEnd  ". __FILE__. " line ". __LINE__);
 $sock->getFrameWork("cmd.php?buildFrontEnd=yes");
@@ -264,6 +270,7 @@ $('#loginform').modal({onOpen: function (dialog) {
 
 
 
+
 }
 </script>
 $addedlogo
@@ -276,7 +283,10 @@ $logonForm
 	$imglogon
 	background-repeat:no-repeat;border:1px solid #FFFFFF'>
 </div>
-</center>";
+</center>
+
+<script>ChangeHTMLTitle();</script>
+";
 
 $tpl=new templates();
 $html=$tpl->_ENGINE_parse_body($html);

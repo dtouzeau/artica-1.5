@@ -313,15 +313,47 @@ private function icmpChecksum($data){
 
 
 public function PingHost($cible){
+	
+	$cachefile="/etc/artica-postfix/pinghosts.cache";
+	$cache=unserialize(@file_get_contents($cachefile));
+	$current_time=time();
+	if(is_array($cache)){
+		if(count($cache_file)>500){@unlink($cachefile);$cache=array();}	
+		if(isset($cache[$cible])){
+			$old_time=$cache[$cible]["time"];
+			if(!is_numeric($old_time)){$old_time=0;}
+			$difference = ($current_time - $old_time); 
+			writelogs_framework("$cible -> $difference sec",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+			if($difference<30){return $cache[$cible]["result"];}
+			
+		}
+	}
+	
+	
+	
 	$timeout=1;
+	$type= "\x08";
+	$code= "\x00";
+	$checksum= "\x00\x00";
+	$identifier = "\x00\x00";
+	$seqNumber = "\x00\x00";
+	$data= "Scarface";
+	$package = $type.$code.$checksum.$identifier.$seqNumber.$data;
+	//$checksum = $this->icmpChecksum($package); // Calculate the checksum
+	
     $package = "\x08\x00\x7d\x4b\x00\x00\x00\x00PingHost";
     $socket  = socket_create(AF_INET, SOCK_RAW, 1);
     socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => $timeout, 'usec' => 0));
 	socket_connect($socket, $cible, null);
 	$ts = microtime(true);
     socket_send($socket, $package, strLen($package), 0);
-    if (socket_read($socket, 255)){$result = true;}else{    $result = false;}
+    if (socket_read($socket, 255)){$result = true;}else{ $result = false;}
 	socket_close($socket);
+	if(!$result){$result=$this->PingHostCMD($cible);}
+	$cache[$cible]["result"]=$result;
+	$cache[$cible]["time"]=time();
+	if(!$result){writelogs_framework("$cible -> FALSE",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}else{writelogs_framework("$cible -> TRUE",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
+	@file_put_contents($cachefile, serialize($cache));
 	return $result;
 	}
 	
@@ -330,6 +362,20 @@ public function PingHost($cible){
 		    return $ini->get($key,$value);
 		
 	}	
+	
+	private function PingHostCMD($cible){
+		$ping=$this->find_program("ping");
+		exec("$ping -v -c1 -t3 -W1 -w1 -p ff $cible 2>&1",$results);
+		while (list ($num, $val) = each ($results) ){
+			if(preg_match("#, ([0-9]+)\% packet loss#", $val,$re)){
+				writelogs_framework("$cible -> $val = [{$re[1]}]",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+				if($re[1]==0){return true;}else{return false;}
+			}
+		}
+		
+	}
+	
+	
 
 
 	public function KAV4PROXY_GET_CONF_PATH(){
@@ -2128,6 +2174,7 @@ public function alt_stat($file) {
 			if($GLOBALS["VERBOSE"]){echo "filename: $filename\n";}	
 			$cmdline=@file_get_contents("/proc/$pid/cmdline");
 			if($GLOBALS["VERBOSE"]){echo "cmdline: $cmdline\n";}
+			$filename=str_replace("/", '\/', $filename);
 			if(preg_match("#$filename#",$cmdline)){return true;}else{return false;}
 			return true;
 		}
@@ -2144,6 +2191,17 @@ public function alt_stat($file) {
 			$difference = ($data2 - $data1); 	 
 			return round($difference/60);	 
 		}
+		
+	public function file_time_sec($path){
+		if(!is_dir($path)){
+			if(!is_file($path)){return 100000;}
+			}
+	 		$last_modified = filemtime($path);
+	 		$data1 = $last_modified;
+			$data2 = time();
+			$difference = ($data2 - $data1); 	 
+			return round($difference);	 
+		}		
 
 	PUBLIC function LOCATE_SENDMAIL_PATH(){
 		$path=$this->find_program("sendmail");

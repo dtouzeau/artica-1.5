@@ -3385,6 +3385,7 @@ function CheckSessions(){
 		$noback["miniadm.logoff.php"]=true;
 		$noback["exec.shm.php"]=true;
 		$noback["cron.notifs.php"]=true;
+		$noback["change.title.php"]=true;
 		
 		if(!class_exists("usersMenus")){
 			writelogs("Unable to stat class usersMenus include ".dirname(__FILE__)."/class.users.menus.inc",__CLASS__.'/'.__FUNCTION__,__FILE__);
@@ -3611,7 +3612,10 @@ if($bsini->_params[$key]["running"]==0){
 if($nostartandstop){$js_service=null;}
 if($jsReplace<>null) {$js_service=$jsReplace;}
 $title="{{$bsini->_params["$key"]["service_name"]}}";
-if($textoadd=="noaccoloade"){$title=$bsini->_params["$key"]["service_name"];$textoadd=null;}	
+if($textoadd=="noaccoloade"){$title=$bsini->_params["$key"]["service_name"];$textoadd=null;}
+if(preg_match("#replacetitle:(.+)#", $textoadd,$re)){$title=$re[1];}
+
+
 return "<table style='width:$width;margin:0px;' " .CellRollOver($js_service).">
 		<tr>
 			<td width=1%><img src='img/$img'></td>

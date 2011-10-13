@@ -5699,14 +5699,7 @@ begin
      end;
 
 
-     if FileExists('/etc/cron.d/sendmail') then begin
-          writeln('Starting......: removing /etc/cron.d/sendmail');
-          logs.DeleteFile('/etc/cron.d/sendmail');
-     end;
 
-      if FileExists('/usr/share/sendmail/sendmail') then begin
-            if Not FileExists('/usr/sbin/sendmail-msp') then fpsystem(SYS.LOCATE_GENERIC_BIN('touch')+' /usr/sbin/sendmail-msp');
-      end;
 
     if not FileExists('/bin/pidof') then begin
        pidof_path:=SYS.LOCATE_GENERIC_BIN('pidof');
@@ -5719,7 +5712,7 @@ begin
     if FileExists('/etc/artica-postfix/settings/Daemons/lessfsConf') then SYS.THREAD_COMMAND_SET(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.lessfs.php');
     if not FileExists('/etc/artica-postfix/locales.gen') then SYS.THREAD_COMMAND_SET(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.locale.gen.php');
     if FileExists('/etc/dhcp/dhclient-exit-hooks.d/sendmail') then logs.DeleteFile('/etc/dhcp/dhclient-exit-hooks.d/sendmail');
-
+    fpsystem(trim(nohup+' '+SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.sendmail.php --destroy >/dev/null 2>&1 &'));
 
     if FileExists('/usr/bin/apt-get') then fpsystem(trim(nohup+' '+SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.apt-get.php --sources-list >/dev/null 2>&1 &'));
     if FileExists('/etc/imapd.conf') then begin

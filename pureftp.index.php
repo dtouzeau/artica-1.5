@@ -5,6 +5,7 @@
 	include_once('ressources/class.artica.inc');
 	include_once('ressources/class.ini.inc');
 	include_once('ressources/class.pure-ftpd.inc');
+	include_once('ressources/class.system.network.inc');
 	
 	
 	if(isset($_GET["js"])){js();exit;}
@@ -60,15 +61,15 @@ function main_page(){
 	$html=
 	"<table style='width:100%'>
 	<tr>
-	<td width=1% valign='top'>
+	<td width=1% >
 		<img src='img/pure-ftpd.png' style='margin-right:50px;margin-left:50px'><br><br>
 		" . applysettings("pure-ftpd")."
 	</td>
-	<td valign='top'>
+	<td >
 	 " . main_status() . "</td>
 	</tr>
 	<tr>
-		<td colspan=2 valign='top'>
+		<td colspan=2 >
 			<div id='main_config_pureftpd'></div>
 		</td>
 	</tr>
@@ -111,12 +112,13 @@ function main_config_pureftpd_js(){
 	var x_SERVER_FTP_JS_START=function(obj){
       var tempvalue=obj.responseText;
       if(tempvalue.length>3){alert(tempvalue);}
-     document.getElementById('imgftp').innerHTML='<center style=\"width:100%\">&nbsp;</center>';
-      
+      if(document.getElementById('pureftpd-animation')){document.getElementById('pureftpd-animation').innerHTML='';}
+      if(document.getElementById('main_config_freeweb')){RefreshTab('main_config_freeweb');}
       }	
 
 	function SERVER_FTP_JS_START(){
 		var XHR = new XHRConnection();
+		AnimateDiv('pureftpd-animation');
 		XHR.appendData('SaveGeneralSettings',document.getElementById('SaveGeneralSettings').value);
 		XHR.appendData('MaxIdleTime',document.getElementById('MaxIdleTime').value);
 		XHR.appendData('MaxClientsNumber',document.getElementById('MaxClientsNumber').value);
@@ -125,6 +127,8 @@ function main_config_pureftpd_js(){
 		XHR.appendData('MaxLoad',document.getElementById('MaxLoad').value);
 		XHR.appendData('AnonymousBandwidth',document.getElementById('AnonymousBandwidth').value);
 		XHR.appendData('MaxDiskUsage',document.getElementById('MaxDiskUsage').value);
+		XHR.appendData('listen_ip',document.getElementById('listen_ip').value);
+		XHR.appendData('listen_port',document.getElementById('listen_port').value);
 		XHR.appendData('PassivePortRange',document.getElementById('PassivePortRange1').value+'  '+document.getElementById('PassivePortRange2').value);
 		if(document.getElementById('enable_pureftp').checked){XHR.appendData('enable_pureftp','1');}else{XHR.appendData('enable_pureftp','0');}
 		if(document.getElementById('BrokenClientsCompatibility').checked){XHR.appendData('BrokenClientsCompatibility','yes');}else{XHR.appendData('BrokenClientsCompatibility','no');}
@@ -137,8 +141,6 @@ function main_config_pureftpd_js(){
 		if(document.getElementById('DisplayDotFiles').checked){XHR.appendData('DisplayDotFiles','yes');}else{XHR.appendData('DisplayDotFiles','no');}
 		if(document.getElementById('ProhibitDotFilesWrite').checked){XHR.appendData('ProhibitDotFilesWrite','yes');}else{XHR.appendData('ProhibitDotFilesWrite','no');}
 		if(document.getElementById('ProhibitDotFilesRead').checked){XHR.appendData('ProhibitDotFilesRead','yes');}else{XHR.appendData('ProhibitDotFilesRead','no');}
-		
-		document.getElementById('imgftp').innerHTML='<center style=\"width:100%\"><img src=img/wait_verybig.gif></center>';
 		XHR.sendAndLoad('$page', 'GET',x_SERVER_FTP_JS_START);		
 	
 	}
@@ -163,155 +165,153 @@ function main_config_pureftpd($returned=0){
 	}else{
 		$PassivePortRange1=30000;
 		$PassivePortRange2=50000;		
-	}	
+	}
+
+	$ip=new networking();
+	$ips=$ip->ALL_IPS_GET_ARRAY();
+	$ips[null]="{all}";	
 	
 	$html="
-	<table style='width:100%'>
-	<tr>
-	<td valign='top'>
-		<div style='height:200px' id='imgftp'>&nbsp;</div>
-		</td>
-	<td valign='top'>
-	<h5>{main_settings}</H5>
-
-	
+	<div id='pureftpd-animation'></div>
 	<input type='hidden' name='hostname' id='hostname' value='$hostname'>
 	<input type='hidden' name='SaveGeneralSettings' id='SaveGeneralSettings' value='yes'>
+	<table style='width:100%' class=form>
+	<tbody>
 	
-	<div style='width:100%;height:600px;overflow:auto'>
-	<table style='width:100%'>
-	
-<tr>
-	<td $style class=legend nowrap valign='top'><strong>{enable_pureftpd}:</strong></td>
-	<td $style valign='top'>" . Field_checkbox('enable_pureftp',1,$pure->PureFtpdEnabled)."</td>
-	<td $style valign='top'>" . help_icon("{enable_pureftpd_text}")."</td>
+	<tr>
+		<td $style class=legend nowrap >{enable_pureftpd}:</strong></td>
+		<td $style >" . Field_checkbox('enable_pureftp',1,$pure->PureFtpdEnabled)."</td>
+		<td $style >" . help_icon("{enable_pureftpd_text}")."</td>
 	</tr>		
 	
 	<tr>
-	<td $style class=legend nowrap valign='top'><strong>{BrokenClientsCompatibility}:</strong></td>
-	<td $style valign='top'>" . Field_checkbox('BrokenClientsCompatibility','yes',$pure->main_array["BrokenClientsCompatibility"])."</td>
-	<td $style valign='top'>" . help_icon("{BrokenClientsCompatibility_text}")."</td>
+		<td $style class=legend nowrap >{listen_ip}:</strong></td>
+		<td $style >" . Field_array_Hash($ips,'listen_ip',$pure->main_array["listen_ip"],"style:font-size:13px;padding:3px")."</td>
+		<td $style >&nbsp;</td>
+	</tr>	
+	<tr>
+		<td $style class=legend nowrap >{listen_port}:</strong></td>
+		<td $style >" . Field_text('listen_port',$pure->main_array["listen_port"],"font-size:13px;width:65px")."</td>
+		<td $style >&nbsp;</td>
+	</tr>		
+	<tr>
+	<td $style class=legend nowrap >{BrokenClientsCompatibility}:</strong></td>
+	<td $style >" . Field_checkbox('BrokenClientsCompatibility','yes',$pure->main_array["BrokenClientsCompatibility"])."</td>
+	<td $style >" . help_icon("{BrokenClientsCompatibility_text}")."</td>
 	</tr>	
 
 
 	<tr>
-	<td $style class=legend nowrap valign='top'><strong>{NoAnonymous}:</strong></td>
-	<td $style valign='top'>" . Field_checkbox('NoAnonymous','yes',$pure->main_array["NoAnonymous"])."</td>
-	<td $style valign='top'>" . help_icon("{NoAnonymous_text}")."</td>
+	<td $style class=legend nowrap >{NoAnonymous}:</strong></td>
+	<td $style >" . Field_checkbox('NoAnonymous','yes',$pure->main_array["NoAnonymous"])."</td>
+	<td $style >" . help_icon("{NoAnonymous_text}")."</td>
 	</tr>
 	
 	<tr>
-	<td $style class=legend nowrap valign='top'><strong>{AnonymousCanCreateDirs}:</strong></td>
-	<td $style valign='top'>" . Field_checkbox('AnonymousCanCreateDirs','yes',$pure->main_array["AnonymousCanCreateDirs"])."</td>
-	<td $style valign='top'>" . help_icon("{AnonymousCanCreateDirs_text}")."</td>
+	<td $style class=legend nowrap >{AnonymousCanCreateDirs}:</strong></td>
+	<td $style >" . Field_checkbox('AnonymousCanCreateDirs','yes',$pure->main_array["AnonymousCanCreateDirs"])."</td>
+	<td $style >" . help_icon("{AnonymousCanCreateDirs_text}")."</td>
 	</tr>	
 	
 	<tr>
-	<td $style class=legend nowrap valign='top'><strong>{AnonymousCantUpload}:</strong></td>
-	<td $style valign='top'>" . Field_checkbox('AnonymousCantUpload','yes',$pure->main_array["AnonymousCantUpload"])."</td>
-	<td $style valign='top'>" . help_icon("{AnonymousCantUpload_text}")."</td>
+	<td $style class=legend nowrap >{AnonymousCantUpload}:</strong></td>
+	<td $style >" . Field_checkbox('AnonymousCantUpload','yes',$pure->main_array["AnonymousCantUpload"])."</td>
+	<td $style >" . help_icon("{AnonymousCantUpload_text}")."</td>
 	</tr>		
 	
 	<tr>
-	<td $style class=legend nowrap valign='top'><strong>{AntiWarez}:</strong></td>
-	<td $style valign='top'>" . Field_checkbox('AntiWarez','yes',$pure->main_array["AntiWarez"])."</td>
-	<td $style valign='top'>" . help_icon("{AntiWarez_text}")."</td>
+	<td $style class=legend nowrap >{AntiWarez}:</strong></td>
+	<td $style >" . Field_checkbox('AntiWarez','yes',$pure->main_array["AntiWarez"])."</td>
+	<td $style >" . help_icon("{AntiWarez_text}")."</td>
 	</tr>	
 
 	<tr>
-	<td $style class=legend nowrap valign='top'><strong>{AutoRename}:</strong></td>
-	<td $style valign='top'>" . Field_checkbox('AutoRename','yes',$pure->main_array["AutoRename"])."</td>
-	<td $style valign='top'>" . help_icon("{AutoRename_text}")."</td>
+	<td $style class=legend nowrap >{AutoRename}:</strong></td>
+	<td $style >" . Field_checkbox('AutoRename','yes',$pure->main_array["AutoRename"])."</td>
+	<td $style >" . help_icon("{AutoRename_text}")."</td>
 	</tr>		
 	
 	
 
 	<tr>
-	<td $style class=legend nowrap valign='top'><strong>{DontResolve}:</strong></td>
-	<td $style valign='top'>" . Field_checkbox('DontResolve','yes',$pure->main_array["DontResolve"])."</td>
-	<td $style valign='top'>" . help_icon("{DontResolve_text}")."</td>
+	<td $style class=legend nowrap >{DontResolve}:</strong></td>
+	<td $style >" . Field_checkbox('DontResolve','yes',$pure->main_array["DontResolve"])."</td>
+	<td $style >" . help_icon("{DontResolve_text}")."</td>
 	</tr>
 	
 	
 	<tr>
-	<td $style class=legend nowrap valign='top'><strong>{DisplayDotFiles}:</strong></td>
-	<td $style valign='top'>" . Field_checkbox('DisplayDotFiles','yes',$pure->main_array["DisplayDotFiles"])."</td>
-	<td $style valign='top'>" . help_icon("{DisplayDotFiles_text}")."</td>
+	<td $style class=legend nowrap >{DisplayDotFiles}:</strong></td>
+	<td $style >" . Field_checkbox('DisplayDotFiles','yes',$pure->main_array["DisplayDotFiles"])."</td>
+	<td $style >" . help_icon("{DisplayDotFiles_text}")."</td>
 	</tr>		
 	
 	<tr>
-	<td $style class=legend nowrap valign='top'><strong>{ProhibitDotFilesWrite}:</strong></td>
-	<td $style valign='top'>" . Field_checkbox('ProhibitDotFilesWrite','yes',$pure->main_array["ProhibitDotFilesWrite"])."</td>
-	<td $style valign='top'>" . help_icon("{ProhibitDotFilesWrite_text}")."</td>
+	<td $style class=legend nowrap >{ProhibitDotFilesWrite}:</strong></td>
+	<td $style >" . Field_checkbox('ProhibitDotFilesWrite','yes',$pure->main_array["ProhibitDotFilesWrite"])."</td>
+	<td $style >" . help_icon("{ProhibitDotFilesWrite_text}")."</td>
 	</tr>
 
 	<tr>
-	<td $style class=legend nowrap valign='top'><strong>{ProhibitDotFilesRead}:</strong></td>
-	<td $style valign='top'>" . Field_checkbox('ProhibitDotFilesRead','yes',$pure->main_array["ProhibitDotFilesRead"])."</td>
-	<td $style valign='top'>" . help_icon("{ProhibitDotFilesRead_text}")."</td>
+	<td $style class=legend nowrap >{ProhibitDotFilesRead}:</strong></td>
+	<td $style >" . Field_checkbox('ProhibitDotFilesRead','yes',$pure->main_array["ProhibitDotFilesRead"])."</td>
+	<td $style >" . help_icon("{ProhibitDotFilesRead_text}")."</td>
 	</tr>	
 
 	<tr>
-	<td $style class=legend nowrap valign='top'><strong>{MaxIdleTime}:</strong></td>
-	<td $style valign='top' colspan=2>" . Field_text('MaxIdleTime',$pure->main_array["MaxIdleTime"],'width:70px;font-size:13px;padding:3px',null,null,'{MaxIdleTime_text}')."</td>
+	<td $style class=legend nowrap >{MaxIdleTime}:</strong></td>
+	<td $style  colspan=2>" . Field_text('MaxIdleTime',$pure->main_array["MaxIdleTime"],'width:70px;font-size:13px;padding:3px',null,null,'{MaxIdleTime_text}')."</td>
 	</tr>	
 	
 	<tr>
-	<td $style class=legend nowrap valign='top'><strong>{MaxClientsNumber}:</strong></td>
-	<td $style valign='top' colspan=2>" . Field_text('MaxClientsNumber',$pure->main_array["MaxClientsNumber"],'width:70px;font-size:13px;padding:3px',null,null,'{MaxClientsNumber_text}')."</td>
+	<td $style class=legend nowrap >{MaxClientsNumber}:</strong></td>
+	<td $style  colspan=2>" . Field_text('MaxClientsNumber',$pure->main_array["MaxClientsNumber"],'width:70px;font-size:13px;padding:3px',null,null,'{MaxClientsNumber_text}')."</td>
 	</tr>	
 	
 	
 	<tr>
-	<td $style class=legend nowrap valign='top'><strong>{MaxClientsPerIP}:</strong></td>
-	<td $style valign='top' colspan=2>" . Field_text('MaxClientsPerIP',$pure->main_array["MaxClientsPerIP"],'width:70px;font-size:13px;padding:3px',null,null,'{MaxClientsPerIP_text}')."</td>
+	<td $style class=legend nowrap >{MaxClientsPerIP}:</strong></td>
+	<td $style  colspan=2>" . Field_text('MaxClientsPerIP',$pure->main_array["MaxClientsPerIP"],'width:70px;font-size:13px;padding:3px',null,null,'{MaxClientsPerIP_text}')."</td>
 	</tr>	
 
 	<tr>
-	<td $style class=legend nowrap valign='top'><strong>{LimitRecursion}:</strong></td>
-	<td $style valign='top' colspan=2>" . Field_text('LimitRecursion',$pure->main_array["LimitRecursion"],'width:70px;font-size:13px;padding:3px',null,null,'{LimitRecursion_text}')."</td>
+	<td $style class=legend nowrap >{LimitRecursion}:</strong></td>
+	<td $style  colspan=2>" . Field_text('LimitRecursion',$pure->main_array["LimitRecursion"],'width:70px;font-size:13px;padding:3px',null,null,'{LimitRecursion_text}')."</td>
 	</tr>	
 	
 	<tr>
-	<td $style class=legend nowrap valign='top'><strong>{Max_Load}:</strong></td>
-	<td $style valign='top' colspan=2>" . Field_text('MaxLoad',$pure->main_array["MaxLoad"],'width:70px;font-size:13px;padding:3px',null,null,'{MaxLoad_text}')."</td>
+	<td $style class=legend nowrap >{Max_Load}:</strong></td>
+	<td $style  colspan=2>" . Field_text('MaxLoad',$pure->main_array["MaxLoad"],'width:70px;font-size:13px;padding:3px',null,null,'{MaxLoad_text}')."</td>
 	</tr>		
 
 	<tr>
-	<td $style class=legend nowrap valign='top'><strong>{AnonymousBandwidth}:</strong></td>
-	<td $style valign='top' colspan=2>" . Field_text('AnonymousBandwidth',$pure->main_array["AnonymousBandwidth"],'width:70px;font-size:13px;padding:3px',null,null,'{AnonymousBandwidth_text}')."</td>
+	<td $style class=legend nowrap >{AnonymousBandwidth}:</strong></td>
+	<td $style  colspan=2>" . Field_text('AnonymousBandwidth',$pure->main_array["AnonymousBandwidth"],'width:70px;font-size:13px;padding:3px',null,null,'{AnonymousBandwidth_text}')."</td>
 	</tr>
 
 	<tr>
-	<td $style class=legend nowrap valign='top'><strong>{MaxDiskUsage}:</strong></td>
-	<td $style valign='top' colspan=2>" . Field_text('MaxDiskUsage',$pure->main_array["MaxDiskUsage"],'width:70px;font-size:13px;padding:3px',null,null,'{MaxDiskUsage_text}')."%</td>
+	<td $style class=legend nowrap >{MaxDiskUsage}:</strong></td>
+	<td $style  colspan=2>" . Field_text('MaxDiskUsage',$pure->main_array["MaxDiskUsage"],'width:70px;font-size:13px;padding:3px',null,null,'{MaxDiskUsage_text}')."%</td>
 	</tr>
 
 	<tr>
-	<td $style class=legend nowrap valign='top'><strong>{PassivePortRange1}:</strong></td>
-	<td $style valign='top' colspan=2>" . Field_text('PassivePortRange1',$PassivePortRange1,'width:70px;font-size:13px;padding:3px',null,null,'{PassivePortRange_text}')." <strong>Port</strong></td>
+	<td $style class=legend nowrap >{PassivePortRange1}:</strong></td>
+	<td $style  colspan=2>" . Field_text('PassivePortRange1',$PassivePortRange1,'width:70px;font-size:13px;padding:3px',null,null,'{PassivePortRange_text}')." Port</strong></td>
 	</tr>		
 	<tr>
-	<td $style class=legend nowrap valign='top'><strong>{PassivePortRange2}:</strong></td>
-	<td $style valign='top' colspan=2>" . Field_text('PassivePortRange2',$PassivePortRange2,'width:70px;font-size:13px;padding:3px',null,null,'{PassivePortRange_text}')." <strong>Port</strong></td>
+	<td $style class=legend nowrap >{PassivePortRange2}:</strong></td>
+	<td $style  colspan=2>" . Field_text('PassivePortRange2',$PassivePortRange2,'width:70px;font-size:13px;padding:3px',null,null,'{PassivePortRange_text}')." Port</strong></td>
 	</tr>	
 	
 	<tr>
-		<td $style class=legend valign='top' colspan=3 aling='right'>
+		<td $style class=legend  colspan=3 aling='right'>
 		<hr>
 		". button("{apply}","javascript:Loadjs('$page?pure-js=yes')")."	
 	</td>
 	</tr>
+	</tbody>
 	</table>
-	</FORM>
-	</div>
-	</td>
-	</tr>
-	</table>
-	
-	".main_status();
-	
-
+	";
 	
 	$tpl=new templates();
 	if($returned==1){return $tpl->_ENGINE_parse_body($html);}
@@ -329,11 +329,7 @@ function SaveGeneralSettings(){
 		
 	}
 	
-	if($pure->SaveToLdap()){
-		$tpl=new templates();
-		
-	
-	}
+	if($pure->SaveToLdap()){}
 	
 	
 }

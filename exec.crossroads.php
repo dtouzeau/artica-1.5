@@ -30,7 +30,7 @@ function build(){
 	@unlink("/etc/artica-postfix/croassroads.cmdline");
 
 	if(!is_array($MAIN["BACKENDS"])){
-		echo "Starting......: Crossroads Daemon no back end server\n";
+		echo "Starting......: Crossroads Daemon no backend server\n";
 		return;
 	}
 		

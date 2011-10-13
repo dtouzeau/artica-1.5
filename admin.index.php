@@ -170,7 +170,7 @@ if(isset($_GET["admin-ajax"])){
 	return;
 	
 }else{	
-	//if(GET_CACHED(__FILE__,__FUNCTION__,__FUNCTION__)){return null;}
+	if(GET_CACHED(__FILE__,__FUNCTION__,__FUNCTION__)){return null;}
 }
 $ldap=new clladp();
 $page=CurrentPageName();
@@ -206,6 +206,7 @@ if($users->KASPERSKY_SMTP_APPLIANCE){
 $html="
 <script>
 	LoadAjax('middle','quicklinks.php');
+	ChangeHTMLTitle();
 </script>
 
 
@@ -565,6 +566,12 @@ function status_right(){
 		echo $tpl->_ENGINE_parse_body($status->ZARAFA()).$script;
 		return;
 	}
+	
+	if($users->LOAD_BALANCE_APPLIANCE){
+		$status=new status();
+		echo $tpl->_ENGINE_parse_body($status->xr_status()).$script;
+		return;
+	}	
 	
 	
 	if($users->POSTFIX_INSTALLED){

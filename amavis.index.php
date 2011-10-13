@@ -1057,7 +1057,7 @@ function notification_popup(){
 	
 	
 	echo "
-	<div id=main_amavis_notifications style='width:100%;height:550px;overflow:auto'>
+	<div id=main_amavis_notifications style='width:100%;height:590px;overflow:auto'>
 		<ul>". implode("\n",$html)."</ul>
 	</div>
 		<script>
@@ -1137,7 +1137,7 @@ if($amavis->main_array["BEHAVIORS"]["virus_admin"]=="undef"){$amavis->main_array
 $html="
 	<div id='amavisnotifs'>
 	<input type='hidden' name='INI_SAVE' value='BEHAVIORS' id='INI_SAVE'>
-	<p class=caption>{notification_text}</p>
+	<div class=explain>{notification_text}</div>
 	<table style='width:100%'>	
 	<tr>
 		<td colspan=2><span style='margin-top:5px;font-size:14px'>$mailfrom_notify</span></td>
@@ -1159,7 +1159,7 @@ $html="
 		</tr>				
 	</tr>
 	<tr>
-		<td colspan=2><span style='margin-top:5px;font-size:14px'>{smtp_notification}:</span></td>
+		<td colspan=2><span style='margin-top:5px;font-size:14px'>{smtp_notification}:</span><hr></td>
 	</tR>	
 		<tr>
 			<td class=legend nowrap>$virus_admin</td>
@@ -1167,20 +1167,43 @@ $html="
 		</tr>	
 	<tr>
 		<td class=legend nowrap>$warnbadhsender</td>
-		<td width=1%>". Field_checkbox('warnbadhsender',1,$amavis->main_array["BEHAVIORS"]["warnbadhsender"],'{enable_disable}')."</td>
+		<td width=1%>". Field_checkbox('warnbadhsender',1,$amavis->main_array["BEHAVIORS"]["warnbadhsender"])."</td>
 	</tr>
 	<tr>
 		<td class=legend nowrap>$warnbadhrecip</td>
-		<td width=1%>". Field_checkbox('warnbadhrecip',1,$amavis->main_array["BEHAVIORS"]["warnbadhrecip"],'{enable_disable}')."</td>
+		<td width=1%>". Field_checkbox('warnbadhrecip',1,$amavis->main_array["BEHAVIORS"]["warnbadhrecip"])."</td>
 	</tr>	
 	<tr>
 		<td class=legend nowrap>$warnvirusrecip</td>
-		<td width=1%>". Field_checkbox('warnvirusrecip',1,$amavis->main_array["BEHAVIORS"]["warnvirusrecip"],'{enable_disable}')."</td>
+		<td width=1%>". Field_checkbox('warnvirusrecip',1,$amavis->main_array["BEHAVIORS"]["warnvirusrecip"])."</td>
 	</tr>		
 	<tr>
 		<td class=legend nowrap>$warnbannedrecip</td>
-		<td width=1%>". Field_checkbox('warnbannedrecip',1,$amavis->main_array["BEHAVIORS"]["warnbannedrecip"],'{enable_disable}')."</td>
-	</tr>		
+		<td width=1%>". Field_checkbox('warnbannedrecip',1,$amavis->main_array["BEHAVIORS"]["warnbannedrecip"])."</td>
+	</tr>
+	<tr>
+		<td colspan=2><span style='margin-top:5px;font-size:14px'>{administrator}:{categories}</span><hr></td>
+	</tr>
+	<tr>
+		<td class=legend nowrap>Virus</td>
+		<td width=1%>". Field_checkbox('admin_maps_by_ccat_cc_virus',1,$amavis->main_array["BEHAVIORS"]["admin_maps_by_ccat_cc_virus"])."</td>
+	</tr>	
+	<tr>
+		<td class=legend nowrap>{banned}</td>
+		<td width=1%>". Field_checkbox('admin_maps_by_ccat_cc_banned',1,$amavis->main_array["BEHAVIORS"]["admin_maps_by_ccat_cc_banned"])."</td>
+	</tr>	
+	<tr>
+		<td class=legend nowrap>{unchecked}</td>
+		<td width=1%>". Field_checkbox('admin_maps_by_ccat_cc_unchecked',1,$amavis->main_array["BEHAVIORS"]["admin_maps_by_ccat_cc_unchecked"])."</td>
+	</tr>
+	<tr>
+		<td class=legend nowrap>{spam}</td>
+		<td width=1%>". Field_checkbox('admin_maps_by_ccat_cc_spam',1,$amavis->main_array["BEHAVIORS"]["admin_maps_by_ccat_cc_spam"])."</td>
+	</tr>
+	<tr>
+		<td class=legend nowrap>{bad_header}</td>
+		<td width=1%>". Field_checkbox('admin_maps_by_ccat_cc_badh',1,$amavis->main_array["BEHAVIORS"]["admin_maps_by_ccat_cc_badh"])."</td>
+	</tr>				
 	<tr>
 		<td colspan=2 align='right'><hr>
 		". button("{apply}","SaveNotificationsEngine()")."
@@ -1190,6 +1213,7 @@ $html="
 	</table>
 	</div>
 	<script>
+	
 	
 	var x_SaveNotificationsEngine=function (obj) {
 			var results=obj.responseText;
@@ -1208,7 +1232,16 @@ $html="
 			if(document.getElementById('warnbadhrecip').checked){XHR.appendData('warnbadhrecip',1);}else{XHR.appendData('warnbadhrecip',0);}
 			if(document.getElementById('warnvirusrecip').checked){XHR.appendData('warnvirusrecip',1);}else{XHR.appendData('warnvirusrecip',0);}
 			if(document.getElementById('warnbannedrecip').checked){XHR.appendData('warnbannedrecip',1);}else{XHR.appendData('warnbannedrecip',0);}
-			document.getElementById('amavisnotifs').innerHTML='<center style=\"width:100%\"><img src=img/wait_verybig.gif></center>';
+			
+			if(document.getElementById('admin_maps_by_ccat_cc_virus').checked){XHR.appendData('admin_maps_by_ccat_cc_virus',1);}else{XHR.appendData('admin_maps_by_ccat_cc_virus',0);}
+			if(document.getElementById('admin_maps_by_ccat_cc_banned').checked){XHR.appendData('admin_maps_by_ccat_cc_banned',1);}else{XHR.appendData('admin_maps_by_ccat_cc_banned',0);}
+			if(document.getElementById('admin_maps_by_ccat_cc_unchecked').checked){XHR.appendData('admin_maps_by_ccat_cc_unchecked',1);}else{XHR.appendData('admin_maps_by_ccat_cc_unchecked',0);}
+			if(document.getElementById('admin_maps_by_ccat_cc_spam').checked){XHR.appendData('admin_maps_by_ccat_cc_spam',1);}else{XHR.appendData('admin_maps_by_ccat_cc_spam',0);}
+			if(document.getElementById('admin_maps_by_ccat_cc_badh').checked){XHR.appendData('admin_maps_by_ccat_cc_badh',1);}else{XHR.appendData('admin_maps_by_ccat_cc_badh',0);}
+			
+			
+			
+			AnimateDiv('amavisnotifs');
 			XHR.sendAndLoad('$page', 'GET',x_SaveNotificationsEngine);			
 			}
 	</script>

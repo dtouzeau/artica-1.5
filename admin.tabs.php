@@ -1059,7 +1059,7 @@ function left_menus(){
 	$tpl=new templates();
 	if($GLOBALS["DEBUG_TEMPLATE"]){error_log("DEBUG::{$GLOBALS["CURRENT_PAGE"]}: menus->BuildLeftMenus() function ".__FUNCTION__." in " . __FILE__. " line ".__LINE__);}
 	$menus=$menus->BuildLeftMenus();
-	$html="$menus<input type='hidden' id='add_new_organisation_text' value='{add_new_organisation_text}'>";
+	$html="$menus<input type='hidden' id='add_new_organisation_text' value='{add_new_organisation_text}'><script>ChangeHTMLTitle();</script>";
 	//writelogs("finish generating LEFT menus",__FUNCTION__,__FILE__,__LINE__);
 	if($GLOBALS["DEBUG_TEMPLATE"]){error_log("DEBUG::{$GLOBALS["CURRENT_PAGE"]}: tpl->_ENGINE_parse_body() function ".__FUNCTION__." in " . __FILE__. " line ".__LINE__);}
 	$final=$tpl->_ENGINE_parse_body($html);

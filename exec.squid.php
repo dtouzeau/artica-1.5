@@ -162,9 +162,32 @@ function CheckFilesAndSecurity(){
 	}
 	
 	
+	$ssl_crtd=locate_ssl_crtd();
+	if(!is_file("/var/lib/ssl_db")){
+		if(is_file($ssl_crtd)){
+			shell_exec("$ssl_crtd -c -s /var/lib/ssl_db");
+		}else{
+			echo "Starting......: unable to stat ssl_crtd !!!\n";	
+		}
+	}
+	
+	
+	
 	
 	
 }
+
+function locate_ssl_crtd(){
+	if(is_file("/lib/squid3/ssl_crtd")){return "/lib/squid3/ssl_crtd";}
+	if(is_file("/lib64/squid3/ssl_crtd")){return "/lib64/squid3/ssl_crtd";}
+	if(is_file("/lib/squid/ssl_crtd")){return "/lib/squid/ssl_crtd";}
+	if(is_file("/lib64/squid/ssl_crtd")){return "/lib64/squid/ssl_crtd";}
+	if(is_file("/usr/lib/squid/ssl_crtd")){return "/usr/lib/squid/ssl_crtd";}
+	if(is_file("/usr/lib64/squid/ssl_crtd")){return "/usr/lib64/squid/ssl_crtd";}
+	
+}
+
+
 function Reload_Squid(){
 	echo "Starting......: Reloading Squid\n";
 	exec("{$GLOBALS["SQUIDBIN"]} -k reconfigure 2>&1",$results);

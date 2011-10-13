@@ -1,5 +1,5 @@
 /**
- * @author touzeau XHRParseElements DisableFieldsFromId
+ * @author touzeau XHRParseElements DisableFieldsFromId LoadAjaxPreload
  */
 var xTimeOut;
 var xMousePos=0;
@@ -125,11 +125,24 @@ function QuickLinksHide(){
 		});
 	}	
 
+function x_ChangeHTMLTitle(obj) {
+	var tempvalue=obj.responseText;
+	if(tempvalue.length>0){
+		document.title=tempvalue;
+    }else{
+    	document.title="!!! Error !!!";
+    }
+}
 
-
-
-
-
+function ChangeHTMLTitle(){
+	  setTimeout('ChangeHTMLTitlePerform()',500);
+}
+ 
+function ChangeHTMLTitlePerform(){
+var XHR = new XHRConnection();
+XHR.appendData('GetMyTitle','yes');
+XHR.sendAndLoad("change.title.php", 'POST',x_ChangeHTMLTitle);	
+}
 
 
 function compteur_global_actions(){}
@@ -263,7 +276,20 @@ function LoadAjaxTiny(ID,uri,concatene) {
 	}
 
 }
+function LoadAjaxPreload(ID,uri,concatene) {
+	var uri_add='';
+	var datas='';
+	var xurl='';
+	if(concatene){uri_add='&datas='+concatene;}
+	uri=uri+uri_add;
+	if(document.getElementById(ID)){ 
+		 	document.getElementById(ID).innerHTML='<img src="/img/preloader.gif">';
+	        $('#'+ID).load(uri);
+	}else{
+		alert(ID+' no such id');
+	}
 
+}
 
 function ValidateIPAddress(ipaddr) {
     ipaddr = ipaddr.replace( /\s/g, "");

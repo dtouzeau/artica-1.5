@@ -236,6 +236,18 @@ function UFDBGUARD_COMPILE_SINGLE_DB($path){
 	}
 	
 	$category_compile=substr($category,0,15);
+	if(strlen($category_compile)>15){
+			$category_compile=str_replace("recreation_","recre_",$category_compile);
+			$category_compile=str_replace("automobile_","auto_",$category_compile);
+			$category_compile=str_replace("finance_","fin_",$category_compile);
+			if(strlen($category_compile)>15){
+				$category_compile=str_replace("_", "", $category_compile);
+				if(strlen($category_compile)>15){
+					$category_compile=substr($category_compile, strlen($category_compile)-15,15);
+				}
+			}
+		}	
+	
 	events_ufdb_tail("exec.squidguard.php:: category \"$category\" retranslated to \"$category_compile\"",__LINE__);
 	
 	
@@ -874,7 +886,21 @@ function UFDBGUARD_COMPILE_DB(){
 		
 		if($mustrun){
 			$dbcount=$dbcount+1;
-			$cmd="$ufdbGenTable -n -D -W -t $category$d$u";
+			$category_compile=$category;
+			if(strlen($category_compile)>15){
+			$category_compile=str_replace("recreation_","recre_",$category_compile);
+			$category_compile=str_replace("automobile_","auto_",$category_compile);
+			$category_compile=str_replace("finance_","fin_",$category_compile);
+			if(strlen($category_compile)>15){
+				$category_compile=str_replace("_", "", $category_compile);
+				if(strlen($category_compile)>15){
+					$category_compile=substr($category_compile, strlen($category_compile)-15,15);
+				}
+			}
+		}			
+			
+			
+			$cmd="$ufdbGenTable -n -D -W -t $category_compile$d$u";
 			echo $cmd."\n";
 			shell_exec($cmd);
 		}

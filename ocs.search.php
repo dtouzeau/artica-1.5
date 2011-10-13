@@ -17,8 +17,23 @@ if(posix_getuid()<>0){
 
 if(isset($_GET["SearchComputers"])){SearchComputers();exit;}
 if(isset($_GET["compt-status"])){comp_ping();exit;}
-
+if(isset($_GET["PingRestart"])){PingRestart_js();exit;}
 page();
+
+
+function PingRestart_js(){
+	$page=CurrentPageName();
+	$html="function PingRestart(md){
+		if(document.getElementById('ip-'+md)){
+			var ipaddr=document.getElementById('ip-'+md).value;
+			LoadAjaxPreload('div-'+md,'$page?compt-status='+ipaddr+'&restart='+md);
+		}
+	}
+	
+	PingRestart('{$_GET["PingRestart"]}');
+	";
+	
+}
 
 
 function page(){
@@ -101,7 +116,9 @@ function SearchComputers(){
 		$results=$q->QUERY_SQL($sql,"ocsweb");
 		$computer=new computers();
 		if(!$q->ok){echo "<H2>$q->mysql_error</H2>";}
+		$cs=0;
 		while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
+		
 		if($ligne["MACADDR"]=="unknown"){continue;}
 		$color="black";	
 		$uid=null;
@@ -122,7 +139,7 @@ function SearchComputers(){
 			$uri=texttooltip($ligne["NAME"],"{view}",$jsfiche,null,0,"font-size:12px;text-decoration:underline");
 		}
 		
-		
+		$cs++;
 		$html=$html."
 		<tr class=$classtr>
 			<td style='font-size:12px;font-weight:normal;color:$color' width=1% nowrap>$view</td>
@@ -130,18 +147,29 @@ function SearchComputers(){
 			<td style='font-size:12px;font-weight:bold;color:$color' width=99%>$link$uri</a>$OSNAME</td>
 			<td style='font-size:12px;font-weight:bold;color:$color' width=1%>$link{$ligne["IPADDRESS"]}</a></td>
 			<td style='font-size:12px;font-weight:bold;color:$color' width=1%>$link{$ligne["MACADDR"]}</a></td>
-			<td width=1%><div id='cmp-$md'><img src='img/unknown24.png'></div></td>
+			<td width=1%><input type=hidden id='ipaddr-$cs' value='{$ligne["IPADDRESS"]}'><div id='cmp-$cs'><img src='img/unknown24.png'></div></td>
 		</tr>
 		";
 	}	
 
 	$html=$html."</tbody></table>
-	
+	'
 	<script>
-	". @implode("\n", $js)."
 	
 	
+	function CheckIpConfig2(i){
+		if(document.getElementById('ipaddr-'+i)){
+			var ipaddr=document.getElementById('ipaddr-'+i).value;
+			LoadAjaxPreload('cmp-'+i,'$page?compt-status='+ipaddr);
+			i=i+1;
+			setTimeout('CheckIpConfig2('+i+')',800);	
+		}
+	}
 	
+	
+
+	
+	CheckIpConfig2(1);
 	</script>
 	
 	";
@@ -153,9 +181,24 @@ function SearchComputers(){
 
 function comp_ping(){
 	$sock=new sockets();
+	$page=CurrentPageName();
+	$tpl=new templates();
+	header("Expires: 0");
+	header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+	header("Cache-Control: no-cache, must-revalidate");		
+	$time=md5(microtime());
 	$R=$sock->getFrameWork("network.php?ping={$_GET["compt-status"]}");
-	if($R=="TRUE"){echo "<img src='img/ok24.png'>";return;}
-	echo "<img src='img/unknown24.png'>";
+	writelogs("network.php?ping={$_GET["compt-status"]} -> '$R'",__FUNCTION__,__FILE__,__LINE__);
+	if($R=="TRUE"){echo "<img src='img/ok24.png' id='$time'>";return;}
+	
+	$img=imgtootltip("unknown24.png","{check}","Loadjs('$page?PingRestart=$time')");
+	if(isset($_GET["restart"])){
+		$img=imgtootltip("unknown24.png","{check}","Loadjs('$page?PingRestart={$_GET["restart"]}');");
+		echo $tpl->_ENGINE_parse_body("<input type='hidden' id='ip-{$_GET["restart"]}' value='{$_GET["compt-status"]}'>$img</div>");
+		return;
+	}
+	
+	echo $tpl->_ENGINE_parse_body("<div id='div-$time'><input type='hidden' id='ip-$time' value='{$_GET["compt-status"]}'>$img</div>");
 }
 
 

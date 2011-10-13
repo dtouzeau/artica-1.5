@@ -698,7 +698,16 @@ if($arr[1]==null){$delete=null;}
 	if($user->SenderCanonical==null){
 		$js_disable="DisableSenderForm()";
 		$button=null;
-		$explain_a="<div class=explain>{SMTP_SENDER_FILL_SENDER_CANONICAL_FIRST}</div>";
+		$explain_a="
+		<table style='width:100%' class=form>
+		<tbody>
+		<tr>
+		<td width=1%><img src='img/warning-panneau-64.png'></td>
+		<td width=99%><a href=\"javascript:blur();\" OnClick=\"javascript:LoadUserCanonical();\" style='font-size:14px;text-decoration:underline'>
+		<div style='text-align:right'><i>{click_here}</i></div>{SMTP_SENDER_FILL_SENDER_CANONICAL_FIRST}</a></td>
+		</tr>
+		</tbody>
+		</table>";
 	}
 
 $html="

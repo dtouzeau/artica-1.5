@@ -3318,16 +3318,14 @@ function virtualbox_webserv(){
 }
 //========================================================================================================================================================
 function crossroads(){
-
-
-
-
 	if(!$GLOBALS["CLASS_USERS"]->crossroads_installed){return;}
 	$EnableCrossRoads=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("EnableCrossRoads");
 	if($EnableCrossRoads==null){$EnableCrossRoads=0;}
-
-
-
+	
+	shell_exec("{$GLOBALS["nohup"]} /usr/share/artica-postfix/exec.loadbalance.php --status --watchdog >/dev/null 2>&1 &");
+	
+	$MAIN=unserialize(base64_decode($GLOBALS["CLASS_SOCKETS"]->GET_INFO("CrossRoadsParams")));
+	if(!is_array($MAIN["BACKENDS"])){$EnableCrossRoads=0;}
 	$master_pid=trim($GLOBALS["CLASS_UNIX"]->PIDOF($GLOBALS["CLASS_UNIX"]->find_program("xr")));
 
 

@@ -205,8 +205,23 @@ function status_service(){
 	$ini=new Bs_IniHandler();
 	$tpl=new templates();
 	$sock=new sockets();
+	$q=new mysql();
+	
+	$sql="SELECT ID,name FROM crossroads_main WHERE enabled=1";
+	$q=new mysql();
+	$results=$q->QUERY_SQL($sql,"artica_backup");
+	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
+		$status=base64_decode($sock->getFrameWork("xr.php?status-instance=yes&ID={$ligne["ID"]}"));
+		$ini=new Bs_IniHandler();
+		$ini->loadString($status);		
+		$f[]=$tpl->_ENGINE_parse_body(DAEMON_STATUS_ROUND("APP_CROSSROADS", $ini,$ligne["name"]));
+		
+	}	
+	
+	
 	$ini->loadString(base64_decode($sock->getFrameWork("cmd.php?crossroads-ini-status=yes")));
-	echo $tpl->_ENGINE_parse_body(DAEMON_STATUS_ROUND("APP_CROSSROADS",$ini,null,0));	
+	$f[]=$tpl->_ENGINE_parse_body(DAEMON_STATUS_ROUND("APP_CROSSROADS",$ini,null,0));
+	echo @implode("\n", $f)	;
 }
 
 function backend_add(){

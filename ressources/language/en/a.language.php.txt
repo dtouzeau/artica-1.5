@@ -2513,4 +2513,17 @@ Do you want to perform this operation ?</WWW_RESCAN_VISITED_ASK>
 <give_the_remote_listen_port>Give the target remote listen port</give_the_remote_listen_port>
 <refresh_daemon_MB>Refresh daemon when memory exceed</refresh_daemon_MB>
 <transfert_messages_if_av_failed>Forward messages if antivirus did not respond</transfert_messages_if_av_failed>
-
+<backends>backends</backends>
+<check>Check</check>
+<backend>Backend</backend>
+<web_servers_type>HTTP/Web applications servers</web_servers_type>
+<other_tcp_proxymail>TCP services (proxy, mail server)</other_tcp_proxymail>
+<web_interface_port>Web interface port</web_interface_port>
+<xr_web_interface_port>Used to display service status</xr_web_interface_port>
+<restart_all_instances_text>Restart all instances</restart_all_instances_text>
+<LOAD_BALANCER>Load Balancer</LOAD_BALANCER>
+<no_loadbalancer_defined>No load balancer service defined</no_loadbalancer_defined>
+<title_pages>Administration interface browser title</title_pages>
+<reconfigure_all_instances_text>Reconfigure all instances</reconfigure_all_instances_text>
+<bad_header>Bad header</bad_header>
+<unchecked>Unchecked</unchecked>

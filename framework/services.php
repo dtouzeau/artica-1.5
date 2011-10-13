@@ -48,6 +48,7 @@ if(isset($_GET["patchs-force"])){artica_patchs_force();exit;}
 
 
 
+
 while (list ($num, $line) = each ($_GET)){$f[]="$num=$line";}
 
 writelogs_framework("unable to understand query !!!!!!!!!!!..." .@implode(",",$f),"main()",__FILE__,__LINE__);

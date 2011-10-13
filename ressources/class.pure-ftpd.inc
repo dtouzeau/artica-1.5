@@ -23,6 +23,7 @@ class pureftpd{
 			$sock=new sockets();
 			$PureFtpdEnabled=$sock->GET_INFO('PureFtpdEnabled');
 			$this->global_conf=$sock->GET_INFO('PureFtpdConf');
+			$this->main_array=unserialize(base64_decode($sock->GET_INFO('PureFtpdConfArray')));
 			
 			//PureFtpdEnabled ---------------------------------------------------------------------PureFtpdEnabled
 			
@@ -55,6 +56,8 @@ class pureftpd{
 				
 			}
 			
+			
+			
 			$this->BuildDefault();
 			
 		}
@@ -65,6 +68,8 @@ class pureftpd{
 		$sock=new sockets();
 		$sock->SET_INFO('PureFtpdEnabled',$this->PureFtpdEnabled);
 		$sock->SaveConfigFile($PureFtpdConf,"PureFtpdConf");
+		$sock->SaveConfigFile(base64_encode(serialize($this->main_array)),"PureFtpdConfArray");
+		$sock->getFrameWork("pure-ftpd.php?restart=yes");
 		return true;
 		
 	}
@@ -93,11 +98,9 @@ class pureftpd{
 				if($this->main_array["AntiWarez"]==null){$this->main_array["AntiWarez"]="yes";}
 				if($this->main_array["MaxIdleTime"]==null){$this->main_array["MaxIdleTime"]="15";}
 				if($this->main_array["PassivePortRange"]==null){$this->main_array["PassivePortRange"]="30000 50000";}
+				if(!is_numeric($this->main_array["listen_port"])){$this->main_array["listen_port"]=21;}
 				
-				
-				
-				
-	}
+		}
 
 
 	
@@ -321,7 +324,7 @@ class pureftpd{
 				$conf=$conf . "\n";
 				$conf=$conf . "# IP address/port to listen to (default=all IP and port 21).\n";
 				$conf=$conf . "\n";
-				$conf=$conf . "# Bind                      127.0.0.1,21\n";
+				$conf=$conf . "Bind                      {$this->main_array["listen_ip"]},{$this->main_array["listen_port"]}\n";
 				$conf=$conf . "\n";
 				$conf=$conf . "\n";
 				$conf=$conf . "\n";

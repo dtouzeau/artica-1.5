@@ -392,6 +392,7 @@ function rule_edit_save(){
 	$ID=$_POST["ID"];
 	$q=new mysql_squid_builder();
 	unset($_POST["ID"]);
+	$build=false;
 	if($_POST["groupname"]==null){$_POST["groupname"]=time();}
 	while (list ($num, $ligne) = each ($_POST) ){
 		$fieldsAddA[]="`$num`";
@@ -403,11 +404,14 @@ function rule_edit_save(){
 	$sql_edit="UPDATE webfilter_rules SET ".@implode(",", $fieldsEDIT)." WHERE ID=$ID";
 	$sql_add="INSERT IGNORE INTO webfilter_rules (".@implode(",", $fieldsAddA).") VALUES (".@implode(",", $fieldsAddB).")";
 	
-	if($ID<0){$s=$sql_add;}else{$s=$sql_edit;}
+	if($ID<0){$s=$sql_add;$build=true;}else{$s=$sql_edit;}
 	$q->QUERY_SQL($s);
 	 
 	if(!$q->ok){echo $q->mysql_error."\n$s\n";return;}
-	
+	if($build){
+		$sock=new sockets();
+		$sock->getFrameWork("webfilter.php?compile-rules=yes");
+	}
 	
 }
 
@@ -459,12 +463,15 @@ function groups_list(){
 	$page=CurrentPageName();
 	$q=new mysql_squid_builder();		
 	$add_group=$tpl->_ENGINE_parse_body("{add} {group}");
-	$sql="SELECT webfilter_assoc_groups.ID,webfilter_group.groupname,webfilter_group.description,webfilter_group.gpid,webfilter_group.localldap,
-	webfilter_group.enabled FROM webfilter_group,	
-	webfilter_assoc_groups WHERE 1
-	AND(
-		(webfilter_assoc_groups.webfilter_id={$_GET["rule-id"]}) AND ((webfilter_group.groupname LIKE '$search') OR (webfilter_group.description LIKE '$search'))
-	)
+	$sql="SELECT webfilter_assoc_groups.ID,webfilter_assoc_groups.webfilter_id,
+	webfilter_group.groupname,
+	webfilter_group.description,
+	webfilter_group.gpid,
+	webfilter_group.localldap,
+	webfilter_group.enabled 
+	FROM webfilter_group,webfilter_assoc_groups WHERE ((webfilter_group.groupname LIKE '$search' AND webfilter_assoc_groups.webfilter_id={$_GET["rule-id"]}) 
+	OR (webfilter_group.description LIKE '$search' AND webfilter_assoc_groups.webfilter_id={$_GET["rule-id"]}))
+	AND webfilter_assoc_groups.group_id=webfilter_group.ID	
 	ORDER BY webfilter_group.groupname LIMIT 0,50
 	";
 $results=$q->QUERY_SQL($sql);

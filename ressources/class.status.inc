@@ -751,6 +751,56 @@ function kav4proxy_status(){
 	
 	
 }
+function xr_status(){
+	if(!function_exists("mysql_connect")){return "<H2>Unable to stat  function mysql_connect, check php Mysql module or reboot the server</H2>";}
+	
+	$sql="SELECT name,ID FROM crossroads_main WHERE enabled=1";
+	$q=new mysql();
+	$results=$q->QUERY_SQL($sql,"artica_backup");
+	
+	$q=new mysql();
+	$ini=new Bs_IniHandler();
+	$sock=new sockets();
+	$instances_num=mysql_num_rows($results);
+	if($instances_num==0){
+		$tr[]="<table style='width:100%'><tbody><tr><td width=1%><img src='img/warning-panneau-32.png'></td><td style='font-size:12px'>{no_loadbalancer_defined}</td></tr></tbody></table>";
+	}
+	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
+		$ini->loadString(base64_decode($sock->getFrameWork("xr.php?status-instance=yes&ID={$ligne["ID"]}")));
+		$js="Loadjs('crossroads.balancers.php?add-load-balance-js=yes&ID={$ligne["ID"]}')";
+		//$key,$bsini,$textoadd=null,$noenable=0,$width=null,$nostartandstop=false,$newInterface=0,$jsReplace=null
+		
+		$tr[]=DAEMON_STATUS_LINE("APP_CROSSROADS", $ini,"replacetitle:{$ligne["name"]}",0,null,true,0,$js);
+	}
+	
+	
+	$master_version=trim($sock->getFrameWork("xr.php?xr-version=yes"));
+	if(preg_match("#2\.3.*#",$master_version)){$img='status_postfix_bg_ok23.png';}
+	if(preg_match("#2\.5.*#",$master_version)){$img='status_postfix_bg_ok25.png';}
+	if(preg_match("#2\.7.*#",$master_version)){$img='status_postfix_bg_ok27.png';}
+	if(preg_match("#2\.6.*#",$master_version)){$img='status_postfix_bg_ok26.png';}			
+	if(preg_match("#2\.8.*#",$master_version)){$img='status_postfix_bg_ok28.png';}
+	if(preg_match("#2\.9.*#",$master_version)){$img='status_postfix_bg_ok29.png';}
+	if(preg_match("#3\.0.*#",$master_version)){$img='status_postfix_bg_ok30.png';}
+	if(preg_match("#3\.1.*#",$master_version)){$img='status_postfix_bg_ok31.png';}
+	if(preg_match("#3\.2.*#",$master_version)){$img='status_postfix_bg_ok32.png';}
+	if(preg_match("#3\.3.*#",$master_version)){$img='status_postfix_bg_ok33.png';}
+			
+
+	$design="
+	<div style='background-image:url(img/$img);background-repeat:no-repeat;width:350px;height:270px'>
+		<div style='padding-left:155px'>
+			<h3 style='font-size:16px;font-weight:bold;'>{LOAD_BALANCER} $master_version</h3>
+			<br>
+			". @implode("\n", $tr)."
+		</div>
+	</div>
+	
+	";
+
+	return $design;
+	
+}
 	
 function Squid_status(){
 	if(!function_exists("mysql_connect")){

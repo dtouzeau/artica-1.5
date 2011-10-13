@@ -697,9 +697,23 @@ class squidguard{
 		$ufdbGenTable=$GLOBALS["CLASS_UNIX"]->find_program("ufdbGenTable");
 		if(!is_file("$ufdbGenTable")){echo "Starting......: ufdbGenTable($RuleID) $categoryPrint:ufdbGenTable is not installed\n";return;}
 		echo "Starting......: ufdbGenTable($RuleID) $categoryPrint: compiling new pattern\n";
-		if(strlen($categoryPrint)>15){$categoryPrint_cmd=substr($categoryPrint,0,15);}else{$categoryPrint_cmd=$categoryPrint;}
+		$category_compile=$categoryPrint;
+		if(strlen($category_compile)>15){
+			$category_compile=str_replace("recreation_","recre_",$category_compile);
+			$category_compile=str_replace("automobile_","auto_",$category_compile);
+			$category_compile=str_replace("finance_","fin_",$category_compile);
+			if(strlen($category_compile)>15){
+				$category_compile=str_replace("_", "", $category_compile);
+				if(strlen($category_compile)>15){
+					$category_compile=substr($category_compile, strlen($category_compile)-15,15);
+				}
+			}
+		}		
+		
+		
+		
 		if(is_file("$main_path/domains.ufdb")){@unlink("$main_path/domains.ufdb");}
-		$cmd="$ufdbGenTable -n -D -W -t $categoryPrint_cmd -d $main_path/domains -u $main_path/urls";
+		$cmd="$ufdbGenTable -n -D -W -t $category_compile -d $main_path/domains -u $main_path/urls";
 		if($GLOBALS["VERBOSE"]){echo "$cmd\n";}
 		exec($cmd." 2>&1",$RESULTS);
 		if(count($RESULTS)>0){while (list ($a, $b) = each ($RESULTS)){

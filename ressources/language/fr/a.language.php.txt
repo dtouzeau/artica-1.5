@@ -288,7 +288,10 @@ Ce r&eacute;pertoire sera localis&eacute; dans /automounts</autofs_ask_dir>
 <automount_this_disk>Auto-connecter ce disque et le placer en production dans le r&eacute;pertoire /automounts</automount_this_disk>
 <autostart>D&eacute;marrage automatique</autostart>
 <available_modules>Modules disponibles</available_modules>
+<backend>back-end</backend>
+<backends>serveurs back-end</backends>
 <backup_server>Serveur de sauvegarde</backup_server>
+<bad_header>Mauvaises ent&ecirc;tes</bad_header>
 <balancers>Balanciers</balancers>
 <balancers_service_section_explain>Cette section liste tous les services de r&eacute;partition de charge.[br]Vous pouvez utiliser plusieurs services de r&eacute;partition sur la m&ecirc;me machine avec des ports diff&eacute;rents.</balancers_service_section_explain>
 <ban>Bannir</ban>
@@ -382,6 +385,7 @@ C'est une mani&egrave;re d'&ecirc;tre inform&eacute; de l'&eacute;tat du Proxy s
 <change_server_hostname>Modifier le nom de votre serveur</change_server_hostname>
 <change_the_webconsole_language_text>Modifier la langue utilis&eacute;e par l'interface web</change_the_webconsole_language_text>
 <change_user_organization_text>D&eacute;placer cet utilisateur dans une autre organisation</change_user_organization_text>
+<check>V&eacute;rifier</check>
 <check_client_access_ip_explain>Ajoutez l'adresse IP ici.
 Ce peut &ecirc;tre :
 192.168.1.2 correspondant &agrave; 192.168.1.2
@@ -1237,6 +1241,7 @@ Utilisez la seconde option &quot;Domaines relais&quot;.</no_backendmailbox_insta
 <NO_FEATURE_AMAVIS_NOT_ENABLED>Le filtre de contenu Amavisd-new n'est [b]pas activ&eacute;[/b].[br]Cette fonctionnalit&eacute; n'est pas disponible.[br]Contactez votre administrateur pour l'activer.</NO_FEATURE_AMAVIS_NOT_ENABLED>
 <NO_FEATURE_AMAVIS_NOT_INSTALLED>Le filtre de contenu Amavisd-new n'est [b]pas install&eacute;[/b].[br]Cette fonctionnalit&eacute; n'est pas disponible.[br]Contactez votre administrateur pour l'activer.</NO_FEATURE_AMAVIS_NOT_INSTALLED>
 <no_info>Aucune information ajout&eacute;e</no_info>
+<no_loadbalancer_defined>Pas de service de balancier enregistr&eacute;</no_loadbalancer_defined>
 <NO_RELAY_TO_THIS_SERVER_EXPLAIN>Op&eacute;ration non permise.
 Un domaine relay&eacute; ne peut &ecirc;tre achemin&eacute; vers ce serveur (lui-m&ecirc;me).
 Utilisez l'autre option (domaine local) dans ce contexte.</NO_RELAY_TO_THIS_SERVER_EXPLAIN>
@@ -1293,6 +1298,7 @@ For example, Avaya phones are hard coded to "read" this scope option and pick up
 <ORPHANED_STORES>Boites orphelines</ORPHANED_STORES>
 <ORPHANED_STORES_TEXT>Les banques d'informations orphelines prennent de la place sur le disque dur.[br]Vous devez &ecirc;tre en mesure de les relier ou bien de les supprimer d&eacute;finitivement</ORPHANED_STORES_TEXT>
 <orphans>Orphelins</orphans>
+<other_tcp_proxymail>Services TCP (Proxy, serveur mail)</other_tcp_proxymail>
 <outgoing>Sortant</outgoing>
 <OverWriteRestrictedDomains>Surpasser la restriction de domaines</OverWriteRestrictedDomains>
 <OverWriteRestrictedDomains_allow_text>Vous pouvez surpasser la politique de restriction aux sous-domaines.[br]Si vous d&eacute;sirez ajouter votre propre domaine, indiquez ici le domaine complet</OverWriteRestrictedDomains_allow_text>
@@ -1490,6 +1496,7 @@ Voulez-vous effectuer cette op&eacute;ration ?</RecheckQuotasAll>
 <recipient_domains>Domaines destinataires</recipient_domains>
 <recompile_all_db>Re-compiler toutes les bases</recompile_all_db>
 <recompile_all_db_ww_text>Reconstruit les bases des sites web &agrave; partir de la base Mysql et les retraduit sur le disque.</recompile_all_db_ww_text>
+<reconfigure_all_instances_text>Re-param&eacute;trer toutes les instances</reconfigure_all_instances_text>
 <reconfigure_snort>Reconfigurer l'IDS</reconfigure_snort>
 <reconfigure_snort_text>Arr&ecirc;te le service, reconstruit les param&egrave;tres et d&eacute;marre le service IDS/Snort pour toutes les interfaces s&eacute;lectionn&eacute;es.</reconfigure_snort_text>
 <reconnect>Reconnecter</reconnect>
@@ -1547,6 +1554,7 @@ Ne vous inqui&eacute;tez pas de ne pas visualiser vos utilisateurs apr&egrave;s 
 <rescan_dhcpleases_text>Force Artica &agrave; analyser les baux DHCP afin de rafra&icirc;chir la liste des ordinateurs</rescan_dhcpleases_text>
 <RESCAN_WWWVISISTED>R&eacute;analyser la section visit&eacute;e</RESCAN_WWWVISISTED>
 <RestartServiceifReachMb>Red&eacute;marrer si le service consomme plus de</RestartServiceifReachMb>
+<restart_all_instances_text>Red&eacute;marrer toutes les instances</restart_all_instances_text>
 <restart_pdns>Red&eacute;marrer PowerDNS</restart_pdns>
 <restart_pdns_text>Red&eacute;marre PowerDNS afin de rafra&icirc;chir les param&egrave;tres et les d&eacute;mons</restart_pdns_text>
 <restart_service>Red&eacute;marrer le service</restart_service>
@@ -1854,6 +1862,7 @@ Lorsque la p&eacute;riode de gr&acirc;ce &agrave; expir&eacute;e, les utilisateu
 <time_in_seconds>Nombre de secondes</time_in_seconds>
 <TIPS_PUREFTPD_TITLE>Fournir des Acc&egrave;s FTP</TIPS_PUREFTPD_TITLE>
 <TIPS_PUREFTPD_TITLE_TEXT>Si vous installez pure-ftpd &agrave; travers le centre d'installation, vous serez en mesure de fournir des comptes FTP.</TIPS_PUREFTPD_TITLE_TEXT>
+<title_pages>Titre de la console dans le navigateur</title_pages>
 <today>Aujourd'hui</today>
 <today_downloaded_flow>Aujourd'hui: Flux t&eacute;l&eacute;charg&eacute;.</today_downloaded_flow>
 <tomcat_admin_interface>Console d'administration Tomcat</tomcat_admin_interface>
@@ -1890,6 +1899,7 @@ Lorsque la p&eacute;riode de gr&acirc;ce &agrave; expir&eacute;e, les utilisateu
 [b]Les bases ufdbguard[/b]: Ce sont des bases propri&eacute;taires et payantes (environ 9.000.000 d'entr&eacute;es). Contactez le support Artica si vous d&eacute;sirez les obtenir.[br]</ufdbgdb_explain>
 <ufdbguard_simple_intro>ufdbGuard est filtre web qui utilise des cat&eacute;gories pour filtrer les acc&egrave;s &agrave; Internet.[br]Il est tr&egrave;s rapide avec une performance de 50,000 URL v&eacute;rifi&eacute;es par seconde sur un seul processeur</ufdbguard_simple_intro>
 <UNABLE_TO_OBTAIN_INFORMATIONS_FROM>Incapacit&eacute; d'obtenir des informations avec</UNABLE_TO_OBTAIN_INFORMATIONS_FROM>
+<unchecked>Analyse impossible</unchecked>
 <uncompress>D&eacute;compression</uncompress>
 <unfreeze>D&eacute;geler le syst&egrave;me.</unfreeze>
 <UNITY_NO_DATAS_TEXT>Il n'y a pas de donn&eacute;e enregistr&eacute;e dans la base Unity, parcourez quelques pages d'administration afin de l'enrichir..</UNITY_NO_DATAS_TEXT>
@@ -1985,7 +1995,9 @@ Il ex&eacute;cutera des t&acirc;ches de calcule sp&eacute;cifiques afin d'offrir
 <websites_to_export_explain>Cette page affiche les derni&egrave;res cat&eacute;gorisations que vous avez effectu&eacute;.[br]Ces cat&eacute;gorisations vont &ecirc;tre envoy&eacute;es sur des serveurs Internet afin de mettre &agrave; jour les mises &agrave; jour publiques des cat&eacute;gories.</websites_to_export_explain>
 <web_console>Console Web</web_console>
 <WEB_FILTERING>Filtrage Web</WEB_FILTERING>
+<web_interface_port>Port de l'interface Web</web_interface_port>
 <WEB_RESCAN_VISITED_TEXT>Analyse les sites web et v&eacute;rifie si il n'y a pas de nouvelles cat&eacute;gories &agrave; ins&eacute;rer.</WEB_RESCAN_VISITED_TEXT>
+<web_servers_type>HTTP/Serveurs d'applications Web</web_servers_type>
 <web_user>Utilisateur Web</web_user>
 <Wednesday>Mercredi</Wednesday>
 <weight>Poids</weight>
@@ -2044,6 +2056,7 @@ En effet, vous pouvez recevoir un message &agrave; chaque demande de cat&eacute;
 <www_whitelisting_text>La m&eacute;thode par liste blanche est l'oppos&eacute;e de la m&eacute;thode par liste noire.[br]
 Les utilisateurs peuvent naviguer uniquement sur les sites web dans les cat&eacute;gories autoris&eacute;es.</www_whitelisting_text>
 <ww_pictures>Tous sites permettant de manipuler des photos ou images...</ww_pictures>
+<xr_web_interface_port>Utilis&eacute; pour visualiser l'&eacute;tat du service.</xr_web_interface_port>
 <youcanaccess_to_thefollowing_services>Vous pouvez acc&eacute;der aux services suivants</youcanaccess_to_thefollowing_services>
 <your_hostname_is_not_correct>Il semble que le nom de votre serveur ne soit pas conforme.[br]Il est important de fournir une nom de machine conforme afin de pouvoir correctement le r&eacute;soudre et de promouvoir les services Web que ce serveur peut offrir.</your_hostname_is_not_correct>
 <your_ip_address>Votre adresse IP</your_ip_address>

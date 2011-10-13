@@ -671,6 +671,8 @@ function members_first_graph(){
 		$tablesrc=date('Ym',$date)."_members";
 	}
 	
+	if(!$q->TABLE_EXISTS($tablesrc)){$q->CreateMembersDayTable();}
+	
 	$sql="SELECT COUNT(zMD5) as tcount,`day` FROM `$tablesrc` GROUP BY `day` ORDER BY `day`";
 	$results=$q->QUERY_SQL($sql);
 	if(!$q->ok){echo "<H2>$q->mysql_error</H2><center style='font-size:11px'><code>$sql</code></center>";}

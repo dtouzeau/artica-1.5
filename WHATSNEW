@@ -3,6 +3,7 @@
 
 System Changes:
 ------------------------------------------------
+Fix bulk notifications when crossroads is installed and wihtout any backend saved.
 1.5.101201: Support arpd daemon has a daemon that handle MAC addresses listing.
 1.5.101111: Fix artica is unable to retreive the correct hostname.
 1.5.101111: Fix root password is reset all times to "artica" when installing Artica trough the ISO
@@ -19,6 +20,7 @@ System Changes:
 
 Messaging Changes:
 -------------------------------------------------
+Fix bulk notifications vith amavisd 2.7.x on "UNCHECKED contents" (see http://www.mailinglistarchive.com/html/amavis-user@lists.sourceforge.net/2010-12/msg00039.html)
 1.5.101201: Add possibility to force Amavis forwarding messages if antivirus is down. 
 1.5.101201: Fix error Variable $sa_timeout was retired, changing its value has no effect when starting amavis 2.7
 1.5.100918: Fix security hole on Zarafa: can have access to mailbox with a wrong password.
@@ -29,11 +31,15 @@ Messaging Changes:
 
 FreeWebs changes:
 ------------------------------------------------
+Add possibility to change the listen address and port in pure-ftpd daemon.
 1.5.100420: Fix unable to modify the freeWeb Mysql database name to fix generated error "Error, the given value execeed: 16"
 1.5.100812: Add possibility to add Server aliases for a Website.
 
 Proxy changes:
 ------------------------------------------------
+Fix error adding a group in filtering rule add all groups.
+Fix Table 'squidlogs.xxxx_members' doesn't exist in statistics section.
+Fix (ssl_crtd): Uninitialized SSL certificate database directory: /var/lib/ssl_db. To initialize, run "ssl_crtd -c -s /var/lib/ssl_db". on squid 3.1.15
 1.5.101201: Add "Transparent mode limitations" explain text under the transparent Proxy enable/disable section.
 1.5.100420: Fix bungled config on missing manager acl.
 1.5.100723: Improve Squid statistics.
@@ -41,6 +47,7 @@ Proxy changes:
 
 Interface Changes:
 ------------------------------------------------
+Add possibility to change the Browser Web Interface title.
 1.5.101111: Fix 404 Not found on VLAN,SNORT,ROUTES in network section.
 1.5.100918: Fix unable to open the bulk importation feature in the group section.
 

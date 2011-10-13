@@ -1703,8 +1703,8 @@ function BuildSquidConf(){
 			if($arrayOpenDNS["OpenDNS1"]==null){$arrayOpenDNS["OpenDNS1"]="208.67.222.222";}
 			if($arrayOpenDNS["OpenDNS2"]==null){$arrayOpenDNS["OpenDNS2"]="208.67.220.220";}
 			writelogs("OpenDNS: {$arrayOpenDNS["OpenDNS2"]},{$arrayOpenDNS["OpenDNS2"]} ",__CLASS__.'/'.__FUNCTION__,__FILE__);
-			$conf=$conf . "dns_nameservers " . $arrayOpenDNS["OpenDNS1"] . " #OpenDNS server 1\n";
-			$conf=$conf . "dns_nameservers " . $arrayOpenDNS["OpenDNS2"] . " #OpenDNS server 2\n";
+			$conf=$conf . "dns_nameservers " . $arrayOpenDNS["OpenDNS1"]."\n";
+			$conf=$conf . "dns_nameservers " . $arrayOpenDNS["OpenDNS2"]."\n";
 			
 		}else{
 			if(is_array($this->dns_array)){

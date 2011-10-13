@@ -371,7 +371,10 @@ The directory will be stored on /automount.
 <automount_this_disk>Auto-connect this disk and make it available in /automounts directory</automount_this_disk>
 <autostart>Auto-start</autostart>
 <available_modules>Available modules</available_modules>
+<backend>Backend</backend>
+<backends>backends</backends>
 <backup_server>Backup server</backup_server>
+<bad_header>Bad header</bad_header>
 <balancers>Balancers</balancers>
 <balancers_service_section_explain>This section list all load-balancing services.[br]You can handle on your server multiple load-balancing services that will serve multiple backend servers on different ports.</balancers_service_section_explain>
 <ban>Ban</ban>
@@ -479,6 +482,7 @@ Use the form below in order to specify the new directory</ChangeMysqlDir_explain
 <change_server_hostname>Change your server hostname</change_server_hostname>
 <change_the_webconsole_language_text>Change the language used by the web console panel</change_the_webconsole_language_text>
 <change_user_organization_text>Move this user to an existing organization</change_user_organization_text>
+<check>Check</check>
 <check_client_access_ip_explain>
 Add the ip address here. 
 This should be 
@@ -1483,6 +1487,7 @@ Use relayed domain instead until there is no mailbox server installed.[br]
 <NO_FEATURE_AMAVIS_NOT_ENABLED>The Amavisd-new anti-spam content filter is [b]not activated[/b].[br]This feature is disabled.[br]if you need this feature, contant your Administrator</NO_FEATURE_AMAVIS_NOT_ENABLED>
 <NO_FEATURE_AMAVIS_NOT_INSTALLED>The Amavisd-new anti-spam content filter is [b]not installed[/b].[br]This feature is disabled.[br]if you need this feature, contant your Administrator</NO_FEATURE_AMAVIS_NOT_INSTALLED>
 <no_info>No information added</no_info>
+<no_loadbalancer_defined>No load balancer service defined</no_loadbalancer_defined>
 <NO_RELAY_TO_THIS_SERVER_EXPLAIN>Operation not permitted, a relayed domain cannot be the server itself, use local domain for this operation</NO_RELAY_TO_THIS_SERVER_EXPLAIN>
 <no_such_interfaces>No such interfaces</no_such_interfaces>
 <no_usersameftpuser>Error: the FTP user cannot be the same has the Website owner username</no_usersameftpuser>
@@ -1540,6 +1545,7 @@ For example, Avaya phones are hard coded to "read" this scope option and pick up
 <ORPHANED_STORES>Orphaned Store(s)</ORPHANED_STORES>
 <ORPHANED_STORES_TEXT>Orphaned stores increase disk size, you need to judge if these stores should be relinked or permanently deleted</ORPHANED_STORES_TEXT>
 <orphans>orphans</orphans>
+<other_tcp_proxymail>TCP services (proxy, mail server)</other_tcp_proxymail>
 <outgoing>outgoing</outgoing>
 <OverWriteRestrictedDomains>OverWrite domains restrictions</OverWriteRestrictedDomains>
 <OverWriteRestrictedDomains_allow_text>You can overwrite the restricted subdomains policy.[br]If you want to add your own domain, give here the full domain name</OverWriteRestrictedDomains_allow_text>
@@ -1773,6 +1779,7 @@ Do you want to perform this operation ?</RecheckQuotasAll>
 <recipient_domains>recipient domains</recipient_domains>
 <recompile_all_db>Recompile all databases</recompile_all_db>
 <recompile_all_db_ww_text>rebuild the databases from MySQL and compile all databases to disk</recompile_all_db_ww_text>
+<reconfigure_all_instances_text>Reconfigure all instances</reconfigure_all_instances_text>
 <reconfigure_snort>Reconfigure IDS</reconfigure_snort>
 <reconfigure_snort_text>Stop the service, rebuild parameters and restart all IDS/Snort services for all Interface Cards</reconfigure_snort_text>
 <reconnect>reconnect</reconnect>
@@ -1837,6 +1844,7 @@ When define quota for a specific user, wait until this user have saved a file on
 <rescan_dhcpleases_text>Force Artica to analyze the dchp service lease file in order to refresh the lease status.</rescan_dhcpleases_text>
 <RESCAN_WWWVISISTED>Rescan the "visited" section</RESCAN_WWWVISISTED>
 <RestartServiceifReachMb>Restart if service consume more than</RestartServiceifReachMb>
+<restart_all_instances_text>Restart all instances</restart_all_instances_text>
 <restart_pdns>Restart PowerDNS</restart_pdns>
 <restart_pdns_text>Restart PowerDNS in order to refresh settings and daemons</restart_pdns_text>
 <restart_service>Restart service</restart_service>
@@ -2215,6 +2223,7 @@ If the value of this attribute is decreasing there is a high probability that th
 <time_in_seconds>Number of seconds</time_in_seconds>
 <TIPS_PUREFTPD_TITLE>Provide FTP access</TIPS_PUREFTPD_TITLE>
 <TIPS_PUREFTPD_TITLE_TEXT>If you install pure-ftpd trough the setup center, you will be able to provide FTP accounts to your users...</TIPS_PUREFTPD_TITLE_TEXT>
+<title_pages>Administration interface browser title</title_pages>
 <today>Today</today>
 <today_downloaded_flow>Today: Downloaded flow</today_downloaded_flow>
 <tomcat_admin_interface>Tomcat Admin web interface</tomcat_admin_interface>
@@ -2256,6 +2265,7 @@ If the value of this attribute is decreasing there is a high probability that th
 <ufdbguard_simple_intro>ufdbGuard is an extremely fast and free URL filter in public domain.[br]
 ufdbGuard is designed for use with the popular web proxy Squid</ufdbguard_simple_intro>
 <UNABLE_TO_OBTAIN_INFORMATIONS_FROM>Unable to obtain informations from</UNABLE_TO_OBTAIN_INFORMATIONS_FROM>
+<unchecked>Unchecked</unchecked>
 <uncompress>Uncompress</uncompress>
 <unfreeze>Unfreeze the system</unfreeze>
 <UNITY_NO_DATAS_TEXT>There is no datas saved in Unity Database, browse on some web administration pages in order to fill the database</UNITY_NO_DATAS_TEXT>
@@ -2359,7 +2369,9 @@ This server will execute specifics calculation tasks in order to serve Internet 
 <websites_to_export_explain>This page display latest categorized websites that will be exported to the Artica datacenters in order to add your categorize tasks to the public repository server.</websites_to_export_explain>
 <web_console>Web Console</web_console>
 <WEB_FILTERING>Web filtering</WEB_FILTERING>
+<web_interface_port>Web interface port</web_interface_port>
 <WEB_RESCAN_VISITED_TEXT>analyse the visited websites and see if there is new categories to add</WEB_RESCAN_VISITED_TEXT>
+<web_servers_type>HTTP/Web applications servers</web_servers_type>
 <web_user>Web username</web_user>
 <Wednesday>Wednesday</Wednesday>
 <weight>Weight</weight>
@@ -2425,6 +2437,7 @@ When user perform this categorize operation, you can receive a notification and 
 </www_whitelisting_explain>
 <www_whitelisting_text>WhiteListing method is the oppsite of blacklist method, users can only navigate trough autorized categories</www_whitelisting_text>
 <ww_pictures>All sites about manipulating photos, pictures...</ww_pictures>
+<xr_web_interface_port>Used to display service status</xr_web_interface_port>
 <youcanaccess_to_thefollowing_services>You can access to the following services</youcanaccess_to_thefollowing_services>
 <your_hostname_is_not_correct>It seems that the server hostname is not correct.[br]
  It is important to set a correct hostname on your server in order to correctly resolv this server and enable web services.</your_hostname_is_not_correct>

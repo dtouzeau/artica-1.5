@@ -1376,6 +1376,9 @@ function cron_logon(){
 	$lang["es"]="Espanol";
 	$lang["it"]="Italiano";
 	$lang["de"]="Deutsch";	
+	$HTMLTitle=$sock->GET_INFO("HTMLTitle");
+	if(trim($HTMLTitle)==null){$HTMLTitle="%s (%v)";}
+	
 	
 	$html="
 	<div id='cron-logon-div'>
@@ -1389,6 +1392,10 @@ function cron_logon(){
 		<td class=legend style='font-size:13px'>{default_language}</td>
 		<td>". Field_array_Hash($lang,"DEFAULT_LANGUAGE",$logon_parameters["DEFAULT_LANGUAGE"],null,null,0,"font-size:13px;padding:3px")."</td>
 	</tr>
+	<tr>
+		<td class=legend style='font-size:13px'>{title_pages}:</td>
+		<td>". Field_text("HTMLTitle",$HTMLTitle,"font-size:13px;padding:3px;width:180px")."</td>
+	</tr>	
 	
 	<tr>
 		<td colspan=2 align='right'><hr>". button("{apply}","CronLogonApply()")."</td>
@@ -1404,14 +1411,12 @@ function cron_logon(){
 	
 	function CronLogonApply(){
 		var XHR = new XHRConnection();
-		if(document.getElementById('LANGUAGE_SELECTOR_REMOVE').checked){
-			XHR.appendData('LANGUAGE_SELECTOR_REMOVE',1);
-		}else{
-			XHR.appendData('LANGUAGE_SELECTOR_REMOVE',0);
-		}
+		if(document.getElementById('LANGUAGE_SELECTOR_REMOVE').checked){XHR.appendData('LANGUAGE_SELECTOR_REMOVE',1);}else{XHR.appendData('LANGUAGE_SELECTOR_REMOVE',0);}
 		XHR.appendData('DEFAULT_LANGUAGE',document.getElementById('DEFAULT_LANGUAGE').value);
-		document.getElementById('cron-logon-div').innerHTML='<center><img src=\"img/wait_verybig.gif\"></center>';
+		XHR.appendData('HTMLTitle',document.getElementById('HTMLTitle').value);
+		AnimateDiv('cron-logon-div');
 		XHR.sendAndLoad('$page', 'GET',x_CronLogonApply);
+		
 	
 	}		
 	
@@ -1422,6 +1427,7 @@ function cron_logon(){
 		}
 	}
 	CronLogonApplySelector();
+	ChangeHTMLTitle();
 	
 </script>
 	";
@@ -1439,6 +1445,8 @@ function cron_logon_save(){
 	while (list ($num, $val) = each ($_GET) ){
 		$logon_parameters[$num]=$val;
 	}
+	
+	if(isset($_GET["HTMLTitle"])){$sock->SET_INFO("HTMLTitle", $_GET["HTMLTitle"]);}
 		
 	$sock->SaveConfigFile(base64_encode(serialize($logon_parameters)),"LogonPageSettings");
 	

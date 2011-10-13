@@ -205,6 +205,13 @@ class amavis{
 		
 		if(!is_numeric($this->main_array["BEHAVIORS"]["always_clean"])){$this->main_array["BEHAVIORS"]["always_clean"]=1;}
 		
+		
+		if(!is_numeric($this->main_array["BEHAVIORS"]["admin_maps_by_ccat_cc_badh"])){$this->main_array["BEHAVIORS"]["admin_maps_by_ccat_cc_badh"]=0;}
+		if(!is_numeric($this->main_array["BEHAVIORS"]["admin_maps_by_ccat_cc_spam"])){$this->main_array["BEHAVIORS"]["admin_maps_by_ccat_cc_spam"]=0;}
+		if(!is_numeric($this->main_array["BEHAVIORS"]["admin_maps_by_ccat_cc_unchecked"])){$this->main_array["BEHAVIORS"]["admin_maps_by_ccat_cc_unchecked"]=0;}
+		if(!is_numeric($this->main_array["BEHAVIORS"]["admin_maps_by_ccat_cc_banned"])){$this->main_array["BEHAVIORS"]["admin_maps_by_ccat_cc_banned"]=1;}
+		if(!is_numeric($this->main_array["BEHAVIORS"]["admin_maps_by_ccat_cc_virus"])){$this->main_array["BEHAVIORS"]["admin_maps_by_ccat_cc_virus"]=1;}
+		
 		if(!is_numeric($this->main_array["BEHAVIORS"]["max_servers"])){
 			if($GLOBALS["AS_ROOT"]){echo "Starting......: amavisd-new max_servers is not set, define to 5\n";}
 			$this->main_array["BEHAVIORS"]["max_servers"]="5";
@@ -666,6 +673,10 @@ function buildconf(){
 		$conf=$conf."\$mailfrom_notify_spamadmin = \"{$this->main_array["BEHAVIORS"]["mailfrom_notify_spamadmin"]}\"; # notifications sender\n";
 		$conf=$conf."\$mailfrom_to_quarantine = ''; # null return path; uses original sender if undef\n";
 		$conf=$conf."\n";
+		$conf=$conf.$this->admin_maps_by_ccat();
+		
+
+		
 		
 		if($enable_dkim_verification==1){
 			$conf=$conf."\$enable_dkim_verification=1;\n";
@@ -915,7 +926,42 @@ private function bypass_byrecipients_score(){
 		return @implode(",",$f).',';
 	}
 		
-}	
+}
+
+private function admin_maps_by_ccat(){
+		if(!is_numeric($this->main_array["BEHAVIORS"]["admin_maps_by_ccat_cc_badh"])){$this->main_array["BEHAVIORS"]["admin_maps_by_ccat_cc_badh"]=0;}
+		if(!is_numeric($this->main_array["BEHAVIORS"]["admin_maps_by_ccat_cc_spam"])){$this->main_array["BEHAVIORS"]["admin_maps_by_ccat_cc_spam"]=0;}
+		if(!is_numeric($this->main_array["BEHAVIORS"]["admin_maps_by_ccat_cc_unchecked"])){$this->main_array["BEHAVIORS"]["admin_maps_by_ccat_cc_unchecked"]=0;}
+		if(!is_numeric($this->main_array["BEHAVIORS"]["admin_maps_by_ccat_cc_banned"])){$this->main_array["BEHAVIORS"]["admin_maps_by_ccat_cc_banned"]=1;}
+		if(!is_numeric($this->main_array["BEHAVIORS"]["admin_maps_by_ccat_cc_virus"])){$this->main_array["BEHAVIORS"]["admin_maps_by_ccat_cc_virus"]=1;}
+		$t=array();
+		$f=array();
+		if($this->main_array["BEHAVIORS"]["admin_maps_by_ccat_cc_badh"]==1){
+			$t[]="\tCC_BADH,        sub { ca('bad_header_admin_maps') }";
+		}
+		
+		if($this->main_array["BEHAVIORS"]["admin_maps_by_ccat_cc_spam"]==1){
+			$t[]="\tCC_SPAM,        sub { ca('spam_admin_maps') }";
+		}
+
+		if($this->main_array["BEHAVIORS"]["admin_maps_by_ccat_cc_unchecked"]==1){
+			$t[]="\tCC_UNCHECKED,        sub { ca('virus_admin_maps') }";
+		}	
+			
+		if($this->main_array["BEHAVIORS"]["admin_maps_by_ccat_cc_banned"]==1){
+			$t[]="\tCC_BANNED,        sub { ca('banned_admin_maps') }";
+		}	
+
+		if($this->main_array["BEHAVIORS"]["admin_maps_by_ccat_cc_virus"]==1){
+			$t[]="\tCC_VIRUS,        sub { ca('virus_admin_maps') }";
+		}			
+		
+	  $f[]="%admin_maps_by_ccat = (";
+	  $f[]=@implode(",\n", $t);
+	  $f[]=");\n";
+	  return @implode("\n", $f);
+  
+}
 
 private function whitelist_sender_maps(){
 	$sql="SELECT * FROM postfix_global_whitelist WHERE enabled=1 ORDER BY sender";	

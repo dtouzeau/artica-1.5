@@ -303,9 +303,8 @@ $html="
 var x_ChangeHostName= function (obj) {
 	var results=obj.responseText;
 	if(results.length>0){alert(results);}
-	if(document.getElementById('MasterNetworkSection')){
-		LoadAjax('MasterNetworkSection','$page?popup2=yes');
-	}
+	if(document.getElementById('MasterNetworkSection')){LoadAjax('MasterNetworkSection','$page?popup2=yes');}
+	ChangeHTMLTitle();
 		
 }
 
