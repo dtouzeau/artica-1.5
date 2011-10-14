@@ -196,6 +196,45 @@ function ReloadSingleInstance($instance){
 }
 
 
+function BuildObjects($instance){
+	$f=array();
+	$ms["eq"]="=";
+	$ms["eq2"]="==";
+	$ms["noteq"]="!=";
+	$ms["aboveeq"]=">";
+	$ms["abovenot"]="!>";	
+	$ms["lowereq"]=">";
+	$ms["lowernot"]="!>";
+	$ms["matches"]="=~";
+	$ms["matchesnot"]="!=~";
+	$ms["no"]="!=";		
+	
+	$sql="SELECT ID,ObjectName FROM postfwd2_objects WHERE instance='$instance'"; 
+	$q=new mysql();
+	$results=$q->QUERY_SQL($sql,'artica_backup');		
+	if(!$q->ok){echo "Starting......: postfwd2 $q->mysql_error -> BuildObjects()\n";return;}
+	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
+		$sql="SELECT * FROM postfwd2_items WHERE objectID='{$ligne["ID"]}'";
+		$results2=$q->QUERY_SQL($sql,'artica_backup');
+		$items=array();	
+		while($ligne2=mysql_fetch_array($results2,MYSQL_ASSOC)){
+			if($ligne2["item"]=="object"){$items[]="&&OBJECT{$ligne2["item_data"]}";continue;}
+			$items[]="\t".$ligne2["item"].$ms[$ligne2["operator"]].$ligne2["item_data"];
+		}
+		
+		$f[]="&&OBJECT{$ligne["ID"]}{";
+		$f[]=@implode("\n", $items);
+		$f[]="}\n";
+	}
+	
+	
+	return @implode("\n", $f);
+	
+	
+	
+}
+
+
 
 function Buildconfig($instance){
 		@mkdir("/etc/postfwd2");
@@ -204,7 +243,11 @@ function Buildconfig($instance){
 		$array_filters=unserialize(base64_decode($main->GET_BIGDATA("PluginsEnabled")));
 		$ENABLE_POSTFWD2=$array_filters["APP_POSTFWD2"];
 		if(!is_numeric($ENABLE_POSTFWD2)){$ENABLE_POSTFWD2=0;}
-		if($ENABLE_POSTFWD2==0){echo "Starting......: postfwd2 $instance is disabled\n";return;}	
+		if($ENABLE_POSTFWD2==0){echo "Starting......: postfwd2 $instance is disabled\n";return;}
+
+		
+		$GBRULES[]=BuildObjects($instance);
+		
 	
 		$sql="SELECT * FROM postfwd2 WHERE enabled=1 AND instance='$instance' ORDER BY rank";
 		$q=new mysql();
@@ -256,6 +299,7 @@ function Buildconfig($instance){
 				$rules=unserialize(base64_decode($ligne["rule"]));	
 		
 				while (list ($num, $array) = each ($rules) ){
+					if($array["item"]=="object"){$items[]="&&OBJECT{$array["item_data"]}";continue;}
 					$items[]=$array["item"].$ms[$array["operator"]].$array["item_data"];
 				}
 				

@@ -1359,7 +1359,22 @@ function check_postfwd2_table(){
 			  KEY `rank` (`rank`))";
 		$this->QUERY_SQL($sql,'artica_backup');
 		if(!$this->ok){writelogs("Fatal: $this->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
-	} 		
+	} 
+
+	if(!$this->TABLE_EXISTS('postfwd2','artica_backup')){		
+		$sql="CREATE TABLE IF NOT EXISTS `postfwd2_objects` (
+		  `ID` int(10) NOT NULL AUTO_INCREMENT,
+		  `ObjectName` varchar(128),
+		  `instance` varchar(128),
+		  PRIMARY KEY (`ID`),
+		  KEY `ObjectName` (`ObjectName`),
+		  KEY `instance` (`instance`)
+		)";
+		$this->QUERY_SQL($sql,'artica_backup');
+		if(!$this->ok){writelogs("Fatal: $this->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
+	} 		 	
+	
+	
 }	
 function Check_smtp_logs_table(){
 	if(!$this->TABLE_EXISTS('greylist_turples','artica_events')){				

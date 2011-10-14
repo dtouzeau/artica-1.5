@@ -2559,4 +2559,6 @@ In the opposite, if checked users must authenticate has following : "user". [br]
 </SambaWinbindUseDefaultDomain_text>
 <advanced_artica_options_text>Define Artica global settings such as notifications, specific Web interface settings, Proxy use, LDAP parameters, master admin and password...</advanced_artica_options_text>
 <purge_db>Purge database</purge_db>
+<postfwd_objects_explain>Objects can be used in rules.[br]An object store a set of rules that define the OR argument and allow you to set several values.</postfwd_objects_explain>
+<object>object</object> 
 

@@ -100,10 +100,15 @@ function tabs(){
 	$instance=$_GET["instance"];
 	$array["status"]='{status}';
 	$array["rules"]='{rules}';
+	$array["objects"]='{objects}';
 	
 	
 
 	while (list ($num, $ligne) = each ($array) ){
+		if($num=="objects"){
+			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"postfwd2.objects.php?instance=$instance\"><span>$ligne</span></a></li>\n");
+			continue;
+		}
 		$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"$page?$num=yes&instance=$instance\"><span>$ligne</span></a></li>\n");
 	}
 	
@@ -295,8 +300,19 @@ function rules_list(){
 		
 		$rules=unserialize(base64_decode($ligne["rule"]));
 		if(is_array($rules)){
-			while (list ($num, $array) = each ($rules) ){$rle[]=item_to_text($array);}
+			while (list ($num, $array) = each ($rules) ){
+				if($array["item"]=="object"){
+					$sql="SELECT ObjectName FROM postfwd2_objects WHERE ID='{$array["item_data"]}'";
+					$ligne3=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));
+					$sql="SELECT COUNT(ID) as tcount FROM postfwd2_items WHERE objectID={$array["item_data"]}";
+					$ligne4=mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));		
+					$array["item_data"]="{$ligne3["ObjectName"]} {with} {$ligne4["tcount"]} rules";	
+				}				
+				
+				$rle[]=item_to_text($array);}
 		}
+		
+		
 		if(count($rle)==0){$rle_text="{all_messages}";}
 		
 		
@@ -462,52 +478,9 @@ echo $tpl->_ENGINE_parse_body($html);
 }
 
 function item_to_text($array){
-	$f["date"]="{date}";
-	$f["time"]="{time}";
-	$f["days"]="{days}";
-	$f["months"]="{months}";
-	$f["rbl"]="{rbl}";
-	$f["rblcount"]="{rblcount}";
-	$f["helo_address"]="{HELO_ADDRESS}";
-	$f["sender_ns_names"]="{servername}";
-	$f["sender_ns_addrs"]="{ipaddr}";
-	$f["sender_mx_names"]="MX {servername}";
-	$f["sender_mx_addrs"]="MX {ipaddr}";
-	$f["client_address"]="{client_address}";
-	$f["client_name"]="{client_name} regex";
-	$f["reverse_client_name"]="{reverse_client_name}";
-	$f["helo_name"]="{HELO_SERVERNAME}";
-	$f["sender"]="{sender}";
-	$f["recipient"]="{recipient}";
-	$f["recipient_count"]="{recipient_count}";
-	$f["size"]="{message_size}";
-	$f["score"]="{score}";	
-		
-	
-	$ms["eq"]="=";
-	$ms["eq2"]="==";
-	$ms["noteq"]="!=";
-	$ms["aboveeq"]=">";
-	$ms["abovenot"]="!>";	
-	$ms["lowereq"]=">";
-	$ms["lowernot"]="!>";
-	$ms["matches"]="=~";
-	$ms["matchesnot"]="!=~";	
-	
-	if($array["item"]=="size"){
-		if($array["item_data"]>=1000000){
-			$MB=$array["item_data"]/1000000;
-			$array["item_data"]=$MB."MB";
-		}
-		if($array["item_data"]<=1000000){
-			$KB=$array["item_data"]/1000;
-			$array["item_data"]=$KB."KB";
-		}
-		
-	}
-	
-	return "{if} {$f[$array["item"]]} {$ms[$array["operator"]]} {$array["item_data"]}";
-	
+	include_once(dirname(__FILE__)."/ressources/class.postfwd2.inc");
+	$ptfw=new postfwd2();
+	return $ptfw->item_to_text($array);
 }
 
 function postfwd2_item_list(){
@@ -543,6 +516,15 @@ function postfwd2_item_list(){
 			if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
 			$delete=imgtootltip("delete-32.png","{delete}","Postfwd2DeleteItem($num)");
 			if($num>0){$and="{and}";}else{$and="&nbsp;";}
+			if($array["item"]=="object"){
+				$sql="SELECT ObjectName FROM postfwd2_objects WHERE ID='{$array["item_data"]}'";
+				$ligne3=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));
+				$sql="SELECT COUNT(ID) as tcount FROM postfwd2_items WHERE objectID={$array["item_data"]}";
+				$ligne4=mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));		
+				$array["item_data"]="{$ligne3["ObjectName"]} {with} {$ligne4["tcount"]} rules";	
+			}
+			
+			
 			$html=$html."
 			<tr class=$classtr>
 				<td width=1% align='center' style='font-size:14px;font-weight:bold'>$num</td>
@@ -852,11 +834,24 @@ function postfwd2_item_form(){
 	$ID=$_GET["ID"];
 	$item_id=$_GET["itemid"];
 	$q=new mysql();
-	$sql="SELECT rule FROM postfwd2 WHERE instance='{$_GET["instance"]}' AND ID={$_GET["ID"]}";
-	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));
-	if(!$q->ok){echo "<H2>$q->mysql_error</H2>";}	
-	$rules=unserialize(base64_decode($ligne["rule"]));
-	$rule_array=$rules["$item_id"];
+	$ByObject=false;
+	if(isset($_GET["ByObject"])){
+		$ByObject=true;
+		$itemUriAdd="&ByObject=yes";
+	}
+	
+	if(!$ByObject){
+		$sql="SELECT rule FROM postfwd2 WHERE instance='{$_GET["instance"]}' AND ID={$_GET["ID"]}";
+		$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));
+		if(!$q->ok){echo "<H2>$q->mysql_error</H2>";}	
+		$rules=unserialize(base64_decode($ligne["rule"]));
+		$rule_array=$rules["$item_id"];
+	}else{
+		$sql="SELECT item FROM postfwd2_items WHERE ID='$item_id'";
+		$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));
+		if(!$q->ok){echo "<H2>$q->mysql_error</H2>";}	
+		$rule_array["item"]=$ligne["item"];
+	}
 	
 	$time=time();
 	
@@ -876,12 +871,12 @@ function postfwd2_item_form(){
 	$f["client_address"]="{client_address}";
 	$f["client_name"]="{client_name} regex";
 	$f["reverse_client_name"]="{reverse_client_name}";
-	
 	$f["sender"]="{sender}";
 	$f["recipient"]="{recipient}";
 	$f["recipient_count"]="{recipient_count}";
 	$f["size"]="{message_size}";
-	$f["score"]="{score}";		
+	$f["score"]="{score}";
+	$f["object"]="{object}";			
 	$f[null]="{select}";
 
 $html="
@@ -898,7 +893,7 @@ $html="
 <script>
 	function postfwd2_item_form(){
 		var item=document.getElementById('item-array-hash-$time').value;
-		LoadAjax('item-form-selected','$page?item-form-selected=yes&item='+item+'&itemid=$item_id&ID=$ID&instance=$instance');
+		LoadAjax('item-form-selected','$page?item-form-selected=yes&item='+item+'&itemid=$item_id&ID=$ID&instance=$instance$itemUriAdd');
 	
 	}
 
@@ -915,17 +910,32 @@ function postfwd2_item_form_selected(){
 	$instance=$_GET["instance"];
 	$ID=$_GET["ID"];
 	$item_id=$_GET["itemid"];
+	$ByObject=false;
+	if(isset($_GET["ByObject"])){
+		$ByObject=true;
+		$itemUriAdd="&ByObject=yes";
+		$POSTITEM="XHR.appendData('ByObject','yes');";
+	}	
 	$q=new mysql();
-	$sql="SELECT rule FROM postfwd2 WHERE instance='{$_GET["instance"]}' AND ID={$_GET["ID"]}";
-	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));
-	if(!$q->ok){echo "<H2>$q->mysql_error</H2>";}	
-	$rules=unserialize(base64_decode($ligne["rule"]));
-	$rule_array=$rules["$item_id"];	
-	$item=$_GET["item"];
+	if(!$ByObject){
+		$sql="SELECT rule FROM postfwd2 WHERE instance='{$_GET["instance"]}' AND ID={$_GET["ID"]}";
+		$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));
+		if(!$q->ok){echo "<H2>$q->mysql_error</H2>";}	
+		$rules=unserialize(base64_decode($ligne["rule"]));
+		$rule_array=$rules["$item_id"];	
+		$item=$_GET["item"];
+	}else{
+		$sql="SELECT operator FROM postfwd2_items WHERE ID='$item_id'";
+		$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));
+		if(!$q->ok){echo "<H2>$q->mysql_error</H2>";}	
+		$item=$_GET["item"];
+		$rule_array["operator"]=$ligne["operator"];
+	}
 	
 	$ms["eq"]="{is}";
 	$ms["eq2"]="{eq2}";
 	$ms["noteq"]="{noteq}";
+	$ms["no"]="{noteq}";
 	$ms["aboveeq"]="{aboveeq}";
 	$ms["abovenot"]="{abovenot}";	
 	$ms["lowereq"]="{lowereq}";
@@ -940,7 +950,10 @@ function postfwd2_item_form_selected(){
 		//dnsrbl.db
 		$field_item_choose="<input type='hidden' id='postfwd2-operator' value=''>";
 	}
-	
+	if($item=="object"){
+		$field_item_choose="<input type='hidden' id='postfwd2-operator' value=''><span style='font-size:16px;font-weight:bold;padding:3px'>{is}</span>";
+		
+	}
 
 	$html="
 	
@@ -978,6 +991,7 @@ function postfwd2_item_form_selected(){
 			XHR.appendData('item','date');
 			XHR.appendData('operator',document.getElementById('postfwd2-operator').value);				
 			XHR.appendData('item_data',document.getElementById('postfwd2-date').value);
+			$POSTITEM
 			XHR.sendAndLoad('$page', 'GET',x_postfwd2AddDate);
 			}					
 			
@@ -985,6 +999,44 @@ function postfwd2_item_form_selected(){
 		echo $tpl->_ENGINE_parse_body($html);
 		return;
 	}
+	
+	if($item=="object"){
+		$sql="SELECT ID,ObjectName FROM postfwd2_objects WHERE instance='$instance'";
+		$q=new mysql();
+		$results=$q->QUERY_SQL($sql,"artica_backup");
+		while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){$objects[$ligne["ID"]]=$ligne["ObjectName"];}		
+		$html=$html."
+	
+		<div class=explain>{postfwd2_item_object}</div>
+		<center>
+			<hr>". Field_array_Hash($objects, "postfwd2-object",null,null,null,0,"font-size:16px;font-weight:bold;padding:5px;width:100%;color:#B23535;border:2px solid black")."<hr>
+			". button("{apply}","postfwd2AddObject()")."
+		</center>
+		
+		<script>
+		var x_postfwd2AddDate= function (obj) {
+			var tempvalue=obj.responseText;
+			if(tempvalue.length>3){alert(tempvalue);}	
+			RefreshTab('main_config_postfwd2');
+			postfwd2ReloadItemsList();
+		}		
+	
+		function postfwd2AddObject(){
+			var XHR = new XHRConnection();
+			XHR.appendData('postfwd2-add-item','yes');	
+			XHR.appendData('instance','$instance');
+			XHR.appendData('ID','$ID');
+			XHR.appendData('item','object');
+			XHR.appendData('operator',document.getElementById('postfwd2-operator').value);				
+			XHR.appendData('item_data',document.getElementById('postfwd2-object').value);
+			$POSTITEM
+			XHR.sendAndLoad('$page', 'GET',x_postfwd2AddDate);
+			}					
+			
+		</script>";
+		echo $tpl->_ENGINE_parse_body($html);
+		return;
+	}	
 	
 	if($item=="time"){
 		$html=$html."
@@ -1010,6 +1062,7 @@ function postfwd2_item_form_selected(){
 			XHR.appendData('item','time');
 			XHR.appendData('operator',document.getElementById('postfwd2-operator').value);				
 			XHR.appendData('item_data',document.getElementById('postfwd2-time').value);
+			$POSTITEM
 			XHR.sendAndLoad('$page', 'GET',x_postfwd2AddDate);
 			}					
 			
@@ -1042,6 +1095,7 @@ function postfwd2_item_form_selected(){
 			XHR.appendData('item','days');
 			XHR.appendData('operator',document.getElementById('postfwd2-operator').value);				
 			XHR.appendData('item_data',document.getElementById('postfwd2-days').value);
+			$POSTITEM
 			XHR.sendAndLoad('$page', 'GET',x_postfwd2AddDate);
 			}					
 		</script>";
@@ -1073,6 +1127,7 @@ function postfwd2_item_form_selected(){
 			XHR.appendData('item','months');
 			XHR.appendData('operator',document.getElementById('postfwd2-operator').value);				
 			XHR.appendData('item_data',document.getElementById('postfwd2-months').value);
+			$POSTITEM
 			XHR.sendAndLoad('$page', 'GET',x_postfwd2AddDate);
 			}					
 		</script>";
@@ -1104,6 +1159,7 @@ function postfwd2_item_form_selected(){
 			XHR.appendData('item','rbl');
 			XHR.appendData('operator',document.getElementById('postfwd2-operator').value);				
 			XHR.appendData('item_data',document.getElementById('postfwd2-rbl').value);
+			$POSTITEM
 			XHR.sendAndLoad('$page', 'GET',x_postfwd2AddDate);
 			}					
 		</script>";
@@ -1135,6 +1191,7 @@ function postfwd2_item_form_selected(){
 			XHR.appendData('item','rblcount');
 			XHR.appendData('operator',document.getElementById('postfwd2-operator').value);				
 			XHR.appendData('item_data',document.getElementById('postfwd2-rblcount').value);
+			$POSTITEM
 			XHR.sendAndLoad('$page', 'GET',x_postfwd2AddDate);
 			}					
 			
@@ -1167,6 +1224,7 @@ function postfwd2_item_form_selected(){
 			XHR.appendData('item','helo_address');
 			XHR.appendData('operator',document.getElementById('postfwd2-operator').value);				
 			XHR.appendData('item_data',document.getElementById('postfwd2-helo_address').value);
+			$POSTITEM
 			XHR.sendAndLoad('$page', 'GET',x_postfwd2AddDate);
 			}					
 			
@@ -1199,6 +1257,7 @@ function postfwd2_item_form_selected(){
 			XHR.appendData('item','sender_ns_names');
 			XHR.appendData('operator',document.getElementById('postfwd2-operator').value);				
 			XHR.appendData('item_data',document.getElementById('postfwd2-sender_ns_names').value);
+			$POSTITEM
 			XHR.sendAndLoad('$page', 'GET',x_postfwd2AddDate);
 			}					
 			
@@ -1232,6 +1291,7 @@ function postfwd2_item_form_selected(){
 			XHR.appendData('item','sender_ns_addrs');
 			XHR.appendData('operator',document.getElementById('postfwd2-operator').value);				
 			XHR.appendData('item_data',document.getElementById('postfwd2-Gen').value);
+			$POSTITEM
 			XHR.sendAndLoad('$page', 'GET',x_postfwd2AddDate);
 			}					
 			
@@ -1264,6 +1324,7 @@ function postfwd2_item_form_selected(){
 			XHR.appendData('item','sender_mx_names');
 			XHR.appendData('operator',document.getElementById('postfwd2-operator').value);				
 			XHR.appendData('item_data',document.getElementById('postfwd2-Gen').value);
+			$POSTITEM
 			XHR.sendAndLoad('$page', 'GET',x_postfwd2AddDate);
 			}					
 			
@@ -1296,6 +1357,7 @@ function postfwd2_item_form_selected(){
 			XHR.appendData('item','sender_mx_addrs');
 			XHR.appendData('operator',document.getElementById('postfwd2-operator').value);				
 			XHR.appendData('item_data',document.getElementById('postfwd2-Gen').value);
+			$POSTITEM
 			XHR.sendAndLoad('$page', 'GET',x_postfwd2AddDate);
 			}					
 			
@@ -1328,6 +1390,7 @@ function postfwd2_item_form_selected(){
 			XHR.appendData('item','client_address');
 			XHR.appendData('operator',document.getElementById('postfwd2-operator').value);				
 			XHR.appendData('item_data',document.getElementById('postfwd2-Gen').value);
+			$POSTITEM
 			XHR.sendAndLoad('$page', 'GET',x_postfwd2AddDate);
 			}					
 			
@@ -1360,6 +1423,7 @@ function postfwd2_item_form_selected(){
 			XHR.appendData('item','client_name');
 			XHR.appendData('operator',document.getElementById('postfwd2-operator').value);				
 			XHR.appendData('item_data',document.getElementById('postfwd2-Gen').value);
+			$POSTITEM
 			XHR.sendAndLoad('$page', 'GET',x_postfwd2AddDate);
 			}					
 			
@@ -1392,6 +1456,7 @@ function postfwd2_item_form_selected(){
 			XHR.appendData('item','reverse_client_name');
 			XHR.appendData('operator',document.getElementById('postfwd2-operator').value);				
 			XHR.appendData('item_data',document.getElementById('postfwd2-Gen').value);
+			$POSTITEM
 			XHR.sendAndLoad('$page', 'GET',x_postfwd2AddDate);
 			}					
 			
@@ -1424,6 +1489,7 @@ function postfwd2_item_form_selected(){
 			XHR.appendData('item','helo_name');
 			XHR.appendData('operator',document.getElementById('postfwd2-operator').value);				
 			XHR.appendData('item_data',document.getElementById('postfwd2-Gen').value);
+			$POSTITEM
 			XHR.sendAndLoad('$page', 'GET',x_postfwd2AddDate);
 			}					
 			
@@ -1456,6 +1522,7 @@ function postfwd2_item_form_selected(){
 			XHR.appendData('item','sender');
 			XHR.appendData('operator',document.getElementById('postfwd2-operator').value);				
 			XHR.appendData('item_data',document.getElementById('postfwd2-Gen').value);
+			$POSTITEM
 			XHR.sendAndLoad('$page', 'GET',x_postfwd2AddDate);
 			}					
 			
@@ -1488,6 +1555,7 @@ function postfwd2_item_form_selected(){
 			XHR.appendData('item','recipient');
 			XHR.appendData('operator',document.getElementById('postfwd2-operator').value);				
 			XHR.appendData('item_data',document.getElementById('postfwd2-Gen').value);
+			$POSTITEM
 			XHR.sendAndLoad('$page', 'GET',x_postfwd2AddDate);
 			}					
 			
@@ -1520,6 +1588,7 @@ if($item=="recipient_count"){
 			XHR.appendData('item','recipient_count');
 			XHR.appendData('operator',document.getElementById('postfwd2-operator').value);				
 			XHR.appendData('item_data',document.getElementById('postfwd2-Gen').value);
+			$POSTITEM
 			XHR.sendAndLoad('$page', 'GET',x_postfwd2AddDate);
 			}					
 			
@@ -1552,6 +1621,7 @@ if($item=="size"){
 			XHR.appendData('item','size');
 			XHR.appendData('operator',document.getElementById('postfwd2-operator').value);				
 			XHR.appendData('item_data',document.getElementById('postfwd2-Gen').value);
+			$POSTITEM
 			XHR.sendAndLoad('$page', 'GET',x_postfwd2AddDate);
 			}					
 			
@@ -1584,6 +1654,7 @@ if($item=="score"){
 			XHR.appendData('item','score');
 			XHR.appendData('operator',document.getElementById('postfwd2-operator').value);				
 			XHR.appendData('item_data',document.getElementById('postfwd2-Gen').value);
+			$POSTITEM
 			XHR.sendAndLoad('$page', 'GET',x_postfwd2AddDate);
 			}					
 			
@@ -1599,18 +1670,31 @@ function postfwd2_item_save(){
 	$ID=$_GET["ID"];
 	$item_id=$_GET["itemid"];
 	$q=new mysql();
-	$sql="SELECT rule FROM postfwd2 WHERE instance='{$_GET["instance"]}' AND ID={$_GET["ID"]}";
-	$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));
-	if(!$q->ok){echo "<H2>$q->mysql_error</H2>";}	
-	$rules=unserialize(base64_decode($ligne["rule"]));
-
-	if($item_id==null){$rules[]=$_GET;}else{$rules[$item_id]=$_GET;}
-	$newrules=base64_encode(serialize($rules));
-	$sql="UPDATE postfwd2 SET rule='$newrules' WHERE instance='{$_GET["instance"]}' AND ID={$_GET["ID"]}";
+	if(!isset($_GET["ByObject"])){
+		$sql="SELECT rule FROM postfwd2 WHERE instance='{$_GET["instance"]}' AND ID={$_GET["ID"]}";
+		$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,'artica_backup'));
+		if(!$q->ok){echo "<H2>$q->mysql_error</H2>";}	
+		$rules=unserialize(base64_decode($ligne["rule"]));
+	
+		if($item_id==null){$rules[]=$_GET;}else{$rules[$item_id]=$_GET;}
+		$newrules=base64_encode(serialize($rules));
+		$sql="UPDATE postfwd2 SET rule='$newrules' WHERE instance='{$_GET["instance"]}' AND ID={$_GET["ID"]}";
+		$q->QUERY_SQL($sql,"artica_backup");
+		if(!$q->ok){echo $q->mysql_error;return;}
+		$sock=new sockets();
+		$sock->getFrameWork("cmd.php?postfwd2-reload={$_GET["instance"]}");	
+		return;
+	}
+	
+	if($item_id>0){
+		$sql="UPDATE postfwd2_items SET item='{$_GET["item"]}',operator='{$_GET["operator"]}',item_data='{$_GET["item_data"]}' WHERE ID='$item_id'";
+	}else{
+		$sql="INSERT INTO postfwd2_items(objectID,item,operator,item_data) VALUES('$ID','{$_GET["item"]}','{$_GET["operator"]}','{$_GET["item_data"]}')";
+	}
 	$q->QUERY_SQL($sql,"artica_backup");
 	if(!$q->ok){echo $q->mysql_error;return;}
-	$sock=new sockets();
-	$sock->getFrameWork("cmd.php?postfwd2-reload={$_GET["instance"]}");	
+	
+	
 }
 
 function postfwd2_action_edit(){

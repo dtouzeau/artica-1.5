@@ -1497,6 +1497,7 @@ Use relayed domain instead until there is no mailbox server installed.[br]
 <nsrecord>Name server record</nsrecord>
 <ntp_server>NTP server</ntp_server>
 <number_of_users>Number of users</number_of_users>
+<object>object</object>
 <October>October</October>
 <Offline_Uncorrectable>Off-line Scan Uncorrectable Count</Offline_Uncorrectable>
 <Offline_Uncorrectable_text>Quantity of uncorrected errors</Offline_Uncorrectable_text>
@@ -1680,6 +1681,7 @@ server.domain.tld or matches [\.-_](adsl|dynamic|ppp|)[\.-_]
 <postfwd2_item_time>Give a time or a time range:[br]
 08:30:00-17:00:00 
 </postfwd2_item_time>
+<postfwd_objects_explain>Objects can be used in rules.[br]An object store a set of rules that define the OR argument and allow you to set several values.</postfwd_objects_explain>
 <Power-Off_Retract_Count>Power-Off Retract Cycle</Power-Off_Retract_Count>
 <Power-Off_Retract_Count_text>Number of the fixed "turning off drive" cycles (Fujitsu: Emergency Retract Cycle Count)</Power-Off_Retract_Count_text>
 <Power_Cycle_Count>Power Cycle Count</Power_Cycle_Count>

@@ -1253,6 +1253,7 @@ Utilisez l'autre option (domaine local) dans ce contexte.</NO_RELAY_TO_THIS_SERV
 <nsrecord>Serveur de nom</nsrecord>
 <ntp_server>serveur NTP</ntp_server>
 <number_of_users>Nombre d'utilisateurs</number_of_users>
+<object>Objet</object>
 <October>Octobre</October>
 <Offline_Uncorrectable>secteurs non r&eacute;-allouables</Offline_Uncorrectable>
 <Offline_Uncorrectable_text>Nombre de secteurs non r&eacute;-allouables</Offline_Uncorrectable_text>
@@ -1405,6 +1406,7 @@ Vous pouvez sp&eacute;cifier &quot;all&quot; afin d'&eacute;valuer tous les attr
 <postfwd2_item_sender_ns_names>V&eacute;rifie le nom du serveur &eacute;metteur :server.domain.tld ou correspond &agrave; une expression du style [\.-_](adsl|dynamic|ppp|)[\.-_]</postfwd2_item_sender_ns_names>
 <postfwd2_item_size>Taille du message: 30000000 = 30MB</postfwd2_item_size>
 <postfwd2_item_time>Donnez une heure ou une tranche d'heure :[br]08:30:00-17:00:00</postfwd2_item_time>
+<postfwd_objects_explain>Les objets sont utilis&eacute;s dans les r&egrave;gles.[br]Ils sont des conteneurs d'un jeu de r&egrave;gles pouvant d&eacute;finir l'op&eacute;rateur OU et vous autorise &agrave; indiquer plusieurs valeurs.</postfwd_objects_explain>
 <Power-Off_Retract_Count>Arr&ecirc;ter le cycle de r&eacute;traction</Power-Off_Retract_Count>
 <Power-Off_Retract_Count_text>Nombre de cycles &quot;arr&ecirc;t du disque&quot; fix&eacute; (Fujitsu: Emergency Retract Cycle Count)</Power-Off_Retract_Count_text>
 <Power_Cycle_Count>Cycles sous tension</Power_Cycle_Count>
