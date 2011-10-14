@@ -3436,6 +3436,7 @@ begin
    pid:=trim(pid);
    if not TryStrToInt(pid,pidint) then exit;
    if FileExists('/etc/artica-postfix/AS_VPS_CLIENT') then exit();
+   if FileExists('/usr/sbin/cgconfigparser') then exit();
    if not FileExists('/proc/'+pid+'/cgroup') then exit();
    RegExpr:=TRegExpr.Create;
    RegExpr.Expression:='[0-9]+.+?:/(.+?)$';

@@ -667,13 +667,29 @@ private function WINBINDD_PARAMS(){
 	}	
 	
 	if($this->EnableSambaActiveDirectory==1){$this->DisableWinbindd=0;}
+	
+	$SambaWinbindRpcOnly=$sock->GET_INFO("SambaWinbindRpcOnly");
+	if(!is_numeric($SambaWinbindRpcOnly)){$SambaWinbindRpcOnly=0;}
+	if($SambaWinbindRpcOnly==1){$SambaWinbindRpcOnly="Yes";}else{$SambaWinbindRpcOnly="No";}
+	
+	$SambaAllowTrustedDomains=$sock->GET_INFO("SambaAllowTrustedDomains");
+	if(!is_numeric($SambaAllowTrustedDomains)){$SambaAllowTrustedDomains=1;}
+	if($SambaAllowTrustedDomains==1){$SambaAllowTrustedDomains="Yes";}else{$SambaAllowTrustedDomains="No";}
+	
+	$SambaWinbindUseDefaultDomain=$sock->GET_INFO("SambaWinbindUseDefaultDomain");
+	if(!is_numeric($SambaWinbindUseDefaultDomain)){$SambaWinbindUseDefaultDomain=0;}
+	if($SambaWinbindUseDefaultDomain==1){$SambaWinbindUseDefaultDomain="Yes";}else{$SambaWinbindUseDefaultDomain="No";}	
+	
 	if($this->posix_getuid==0){echo "Starting......: Enable Active Directory...: $this->EnableSambaActiveDirectory\n";}
 	if($this->posix_getuid==0){echo "Starting......: WINBINDD disabled.........: $this->DisableWinbindd\n";}
 	if($this->posix_getuid==0){echo "Starting......: Type of Samba.............: $this->TypeOfSamba\n";}
 	if($this->posix_getuid==0){echo "Starting......: Kerberos enabled..........: $this->EnableKerbAuth\n";}
 	if($this->posix_getuid==0){echo "Starting......: Up to 3.6.x...............: $upTo36\n";}
+	if($this->posix_getuid==0){echo "Starting......: Winbindd RPC Only.........: $SambaWinbindRpcOnly\n";}
+	if($this->posix_getuid==0){echo "Starting......: Allow Trusted domains.....: $SambaAllowTrustedDomains\n";}
+	if($this->posix_getuid==0){echo "Starting......: Remove domain & separator.: $SambaWinbindUseDefaultDomain\n";}
 	
-	
+
 	
 	
 	if($this->EnableKerbAuth==1){
@@ -684,17 +700,19 @@ private function WINBINDD_PARAMS(){
 		$conf[]="\trealm = $domainUp";
 		$conf[]="\tkerberos method = system keytab";
 		$conf[]="\tidmap config $domainUp : backend = ad";
-		$conf[]="\tidmap config $domainUp : readonly = yes";
+		$conf[]="\tidmap config $domainUp : readonly = Yes";
 		$conf[]="#\tidmap config $domainUp : schema_mode = rfc2307";
 		$conf[]="\tidmap config $domainUp : range = 1000-4000000000";
 		$conf[]="\tidmap uid = 1000-4000000000";
 		$conf[]="\tidmap gid = 1000-4000000000";
-		$conf[]="\tclient use spnego = yes";
-		$conf[]="\tencrypt passwords = yes";
+		$conf[]="\tclient use spnego = Yes";
+		$conf[]="\tencrypt passwords = Yes";
 		$conf[]="\twinbind separator = +";				
-		$conf[]="\twinbind use default domain = yes";		
-		$conf[]="\twinbind enum users = yes";
-		$conf[]="\twinbind enum groups = yes";		
+		$conf[]="\twinbind use default domain = $SambaWinbindUseDefaultDomain";		
+		$conf[]="\twinbind enum users = Yes";
+		$conf[]="\twinbind enum groups = Yes";
+		$conf[]="\twinbind rpc only	= $SambaWinbindRpcOnly";
+		$conf[]="\tallow trusted domains = $SambaAllowTrustedDomains";		
 		return @implode("\n", $conf);
 	}	
 	
@@ -733,18 +751,17 @@ private function WINBINDD_PARAMS(){
 				if($this->posix_getuid==0){echo "Starting......: Samba use RID has backend\n";}
 				$conf[]="\tidmap config $WORKGROUP:backend	= rid";
 				$conf[]="\tidmap config $WORKGROUP:base_rid	= 0";
-				$conf[]="\tidmap config $WORKGROUP:read only= yes";
+				$conf[]="\tidmap config $WORKGROUP:read only= Yes";
 				$conf[]="\tidmap config $WORKGROUP:range	= 100000 - 199999";		
-				$conf[]="\tallow trusted domains = No";			
+				
 			}else{
 				if($this->posix_getuid==0){echo "Starting......: Samba use default backend\n";}
 				$conf[]="\tpassdb backend = tdbsam";
 				//$conf[]="\tidmap backend = ad";
 				$conf[]="\tidmap uid = 100000-20000000";
 				$conf[]="\tidmap gid = 100000-20000000";
-				$conf[]="\tallow trusted domains = Yes";	
+				
 			}
-		
 		}
 		
 		if($upTo36==1){
@@ -761,10 +778,11 @@ private function WINBINDD_PARAMS(){
 		if($this->client_ntlmv2_auth==0){$conf[]="\tclient ntlmv2 auth = No";$conf[]="\tclient lanman auth = Yes";}
 		$conf[]="\twinbind normalize names = Yes";
 		$conf[]="\twinbind separator = /";				
-		$conf[]="\twinbind use default domain = No";
+		$conf[]="\twinbind use default domain = $SambaWinbindUseDefaultDomain";
 		$conf[]="\twinbind enum users = Yes";
 		$conf[]="\twinbind enum groups = Yes";	
-		$conf[]="\twinbind nested groups = Yes";	
+		$conf[]="\twinbind nested groups = Yes";
+		$conf[]="\twinbind rpc only	= $SambaWinbindRpcOnly";	
 		
 		
 		$conf[]="\twinbind nss info = rfc2307"; 
@@ -780,28 +798,22 @@ private function WINBINDD_PARAMS(){
 		$conf[]="\tntlm auth = No";
 		$conf[]="\tlanman auth = No";
 		$conf[]="\tpreferred master = No";
-		
-		
-		
 		$conf[]="";
 		return @implode("\n",$conf);	
 	}
 	
-
-	
-	
-
-	
-	$conf[]="\twinbind use default domain = yes";
-	$conf[]="\twinbind enum users = yes";
-	$conf[]="\twinbind enum groups = yes";
+	$conf[]="\tallow trusted domains = $SambaAllowTrustedDomains";
+	$conf[]="\twinbind use default domain = $SambaWinbindUseDefaultDomain";
+	$conf[]="\twinbind enum users = Yes";
+	$conf[]="\twinbind enum groups = Yes";
 	$conf[]="\tpassword server=*";
-	$conf[]="\tencrypt passwords = yes";
+	$conf[]="\tencrypt passwords = Yes";
 	$conf[]="\twinbind separator = /";			
 	$conf[]="\twinbind uid = 10000-20000";
 	$conf[]="\twinbind gid = 10000-20000";
-	$conf[]="\twinbind enum users = yes";
-	$conf[]="\twinbind enum groups = yes";
+	$conf[]="\twinbind enum users = Yes";
+	$conf[]="\twinbind enum groups = Yes";
+	$conf[]="\twinbind rpc only	= $SambaWinbindRpcOnly";
 	$conf[]="\tsecurity = user";
 	$conf[]="";
 	return @implode("\n",$conf);

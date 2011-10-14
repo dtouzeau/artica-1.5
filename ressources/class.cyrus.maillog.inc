@@ -5,37 +5,89 @@ class cyrus_maillog{
 	var $buffer;
 	
 	
-	function cyrus_maillog(){
-		
+	function cyrus_maillog($buffer=null){
+		if($buffer<>null){$this->buffer=$buffer;}
 		
 	}
 	
-	public function ParseBuffer($buffer){
-		$buffer=$this->buffer;
+	public function ParseBuffer($buffer=null){
+		if($this->buffer<>null){$buffer=$this->buffer;}
+		if($buffer==null){$buffer=$this->buffer;}
+		
+		
+		if(preg_match("#imap\[.+?: Could not open seen state for (.+?)\s+\(System I\/O error#",$buffer,$re)){
+			$this->events("DBERROR detected seen state on '{$re[1]}' Line.".__LINE__);
+			$fileTime="/etc/artica-postfix/croned.1/". md5($re[1]).".cyrus.db.error";
+			$ftime=file_time_min($fileTime);
+			if($ftime>15){
+				$buffer="Artica has detected a fatal error on cyrus SEEN File\n$buffer\nthe account {$re[1]} should encounter issue on seen mails.\nUsually artica is able to fix this issue.";
+				$this->email_events("SEEN DB error on ".basename($re[1]),$buffer,"mailbox");
+				
+			}
+			$this->events("DBERROR detected on '{$re[1]}' -> {$ftime}Mn Line.".__LINE__);
+			return true;
+		}
+		
+		
 		
 		if(preg_match('#cyrus.+?:DBERROR.+?DB_VERSION_MISMATCH#',$buffer,$re)){
 			$this->cyrus_database_error($buffer);
 			return true;
 		}
-
-	if(preg_match('#cyrus\/imap.+?DBERROR db[0-9]: PANIC: fatal region error detected; run recovery#',$buffer)){
-			$this->events("DBERROR detected...");
-			$file="/etc/artica-postfix/croned.1/cyrus.db.error";
-			$ftime=file_time_min($file);
-			if($ftime>10){
-				$buffer="Artica has detected a fatal error on cyrus\n$buffer\nArtica will try to repair it but it should not working\n";
-				$buffer=$buffer."Perhaps you need to contact your support to correctly recover cyrus databases\n";
-				$buffer=$buffer."Notice,read this topic : http://www.gradstein.info/software/how-to-recover-from-cyrus-when-you-have-some-db-errors/\n";
-				$GLOBALS["CLASS_UNIX"]->THREAD_COMMAND_SET('/usr/share/artica-postfix/bin/artica-install --cyrus-recoverdb');
-				$this->email_events("Cyrus database error !!",$buffer,"mailbox");
-				$this->events("DBERROR detected, take action ftime=$ftime");
-				@unlink($file);
-				file_put_contents($file,"#");
-			}else{
-				$this->events("DBERROR detected, but take action after 10mn");
+		
+		if(preg_match("#imap\[.+?: DBERROR: opening (.+?):\s+cyrusdb error#",$buffer,$re)){
+			$this->events("DBERROR detected on '{$re[1]}' Line.".__LINE__);
+			$fileTime="/etc/artica-postfix/croned.1/". md5($re[1]).".cyrus.db.error";
+			$ftime=file_time_min($fileTime);
+			if($ftime>5){
+				$buffer="Artica has detected a fatal error on cyrus\n$buffer\nthe ".basename($re[1]) . " file will be removed";
+				$this->email_events("Cyrus database error on ".basename($re[1]),$buffer,"mailbox");
+				@unlink($re[1]);
 			}
-			return true;	
+			$this->events("DBERROR detected on '{$re[1]}' -> {$ftime}Mn Line.".__LINE__);
+			return true;
+		}
+		
+		// imap[13455]: IOERROR: opening /var/spool/cyrus/mail/s/user/*/cyrus.header: No such file or directory
+		if(preg_match("#imap\[.+?: IOERROR: opening\s+(.+?):\s+No such file or directory#",$buffer,$re)){
+			$this->events("Missing file detected on '{$re[1]}' Line.".__LINE__);
+			$fileTime="/etc/artica-postfix/croned.1/". md5($re[1]).".No.such.file.or.directory";
+			$ftime=file_time_min($fileTime);
+			if($ftime>5){
+				$buffer="Artica has detected a fatal error on cyrus\n$buffer\nthe ".basename($re[1]) . " file will be created";
+				$this->email_events("Cyrus missing file error on ".basename($re[1]),$buffer,"mailbox");
+				@mkdir(dirname($re[1]),755,true);
+				@file_put_contents($re[1], "\n");
+				$cmd="{$GLOBALS["NOHUP_PATH"]} {$GLOBALS["CHOWN"]} -R cyrus:mail ".dirname($re[1])." >/dev/null 2>&1 &";
+				$this->events($cmd);
+				shell_exec($cmd);
+			}
+			$this->events("DBERROR detected on '{$re[1]}' -> {$ftime}Mn Line.".__LINE__);
+			return true;
 		}		
+		
+		
+		
+		
+
+		if(preg_match('#cyrus\/imap.+?DBERROR db[0-9]: PANIC: fatal region error detected; run recovery#',$buffer)){
+				$this->events("DBERROR detected...");
+				$file="/etc/artica-postfix/croned.1/cyrus.db.error";
+				$ftime=file_time_min($file);
+				if($ftime>10){
+					$buffer="Artica has detected a fatal error on cyrus\n$buffer\nArtica will try to repair it but it should not working\n";
+					$buffer=$buffer."Perhaps you need to contact your support to correctly recover cyrus databases\n";
+					$buffer=$buffer."Notice,read this topic : http://www.gradstein.info/software/how-to-recover-from-cyrus-when-you-have-some-db-errors/\n";
+					$GLOBALS["CLASS_UNIX"]->THREAD_COMMAND_SET('/usr/share/artica-postfix/bin/artica-install --cyrus-recoverdb');
+					$this->email_events("Cyrus database error !!",$buffer,"mailbox");
+					$this->events("DBERROR detected, take action ftime=$ftime");
+					@unlink($file);
+					file_put_contents($file,"#");
+				}else{
+					$this->events("DBERROR detected, but take action after 10mn");
+				}
+				return true;	
+			}		
 		
 		
 		if(preg_match('#lmtpunix.+?DBERROR db4: Logging region out of memory; you may need to increase its size#',$buffer,$re)){

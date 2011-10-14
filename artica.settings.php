@@ -1,4 +1,5 @@
 <?php
+$GLOBALS["ICON_FAMILY"]="PARAMETERS";
 	include_once('ressources/class.templates.inc');
 	include_once('ressources/class.ldap.inc');
 	include_once('ressources/class.users.menus.inc');
@@ -123,12 +124,25 @@ $global_proxy=$tpl->_ENGINE_parse_body('{global_proxy}');
 $start="GlobalSettingsPage();";
 if(isset($_GET["mysql-interface"])){$start="MysqlInterface();";}
 if(isset($_GET["bigaccount-interface"])){$start="AccountsInterface();";}
+if(isset($_GET["ByPopup"])){$start="GlobalSettingsPagePopup();";}
+if(isset($_GET["func-webinterface"])){$start="WebInterFace();";}
+if(isset($_GET["func-NotificationsInterface"])){$start="NotificationsInterface();";}
+if(isset($_GET["func-ProxyInterface"])){$start="ProxyInterface();";}
+if(isset($_GET["func-AccountsInterface"])){$start="AccountsInterface();";}
+if(isset($_GET["func-LogsInterface"])){$start="LogsInterface();";}
+
+
+
 $page=CurrentPageName();
 $html="
 	function GlobalSettingsPage(){
 		AnimateDiv('BodyContent');
 		$('#BodyContent').load('$page?js-index=yes');
 		}
+		
+	function GlobalSettingsPagePopup(){
+		YahooWin(888,'$page?js-index=yes','$title');
+	}		
 		
 	function WebInterFace(){
 		YahooWin2(690,'$page?js-web-interface=yes','$title');
@@ -216,11 +230,18 @@ function js_index(){
 	
 	$tpl=new templates();
 	$mysql_settings=$tpl->_ENGINE_parse_body("{mysql_settings}");
-	$web_interface_settings=Paragraphe("folder-performances-64.png","{web_interface_settings}","{web_interface_settings_text}","javascript:WebInterFace();");
-	$SMTP_NOTIFICATIONS_PAGE=Paragraphe("folder-64-fetchmail.png","{smtp_notifications}","{smtp_notifications_text}","javascript:NotificationsInterface();");
-	$proxy=Paragraphe("proxy-64.png","{http_proxy}","{http_proxy_text}","javascript:ProxyInterface();");
-	$superuser=Paragraphe("superuser-64.png","{account}","{accounts_text}","javascript:AccountsInterface();");
-	$logs=Paragraphe("scan-64.png","{logs_cleaning}","{logs_cleaning_text}","javascript:LogsInterface();");
+	$web_interface_settings=Paragraphe("folder-performances-64.png","{web_interface_settings}","{web_interface_settings_text}",
+	"javascript:Loadjs('$page?js=yes&func-webinterface=yes');");
+	$SMTP_NOTIFICATIONS_PAGE=Paragraphe("folder-64-fetchmail.png","{smtp_notifications}","{smtp_notifications_text}",
+	"javascript:Loadjs('$page?js=yes&func-NotificationsInterface=yes');");
+	$proxy=Paragraphe("proxy-64.png","{http_proxy}","{http_proxy_text}",
+	"javascript:Loadjs('$page?js=yes&func-ProxyInterface=yes');");
+	
+	$superuser=Paragraphe("superuser-64.png","{account}","{accounts_text}",
+	"javascript:Loadjs('$page?js=yes&func-AccountsInterface=yes');");
+	
+	$logs=Paragraphe("scan-64.png","{logs_cleaning}","{logs_cleaning_text}",
+	"javascript:Loadjs('$page?js=yes&func-LogsInterface=yes');");
 	//$mysql=Paragraphe("folder-64-backup.png","{mysql_settings}","{mysql_settings_text}","javascript:MysqlInterface();","$mysql_settings");
 	$perfs=Paragraphe("perfs-64.png","{artica_performances}","{artica_performances_text}","javascript:Loadjs('artica.performances.php');");
 	

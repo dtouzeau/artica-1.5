@@ -1360,6 +1360,9 @@ function filters_connect_section(){
 	$whitelist=Buildicon64("DEF_ICO_POSTFIX_WHITELIST");
 	$postfixInstantIptables=Buildicon64("DEF_ICO_MAIL_IPABLES");
 	
+	$APP_POSTFWD2=Paragraphe("Firewall-Secure-64.png","{APP_POSTFWD2}","{APP_POSTFWD2_ICON_TEXT}",
+	"javascript:Loadjs('postfwd2.php?instance=master&with-popup=yes')",null,210,null,0,true);
+	
 	if($EnablePostfixMultiInstance==1){
 		$miltergreylist=null;
 		$policydweight=null;
@@ -1367,6 +1370,7 @@ function filters_connect_section(){
 		$tr[]=$postfixInstantIptables;
 		$tr[]=$postscreen;
 		$tr[]=$smtpd_client_restrictions;
+		$tr[]=$APP_POSTFWD2;
 		$tr[]=$miltergreylist;
 		$tr[]=$CLUEBRINGER;
 		$tr[]=$senderbase;
@@ -1562,7 +1566,10 @@ function filters_section(){
 	$quarantine_policies=Paragraphe("script-64.png","{quarantine_policies}","{quarantine_policies_text}",
 	"javascript:Loadjs('quarantine.policies.php')",null,210,null,0,true);
 
-		
+
+
+	
+
 	
 	
 	if(!$users->ASSP_INSTALLED){$assp=null;}

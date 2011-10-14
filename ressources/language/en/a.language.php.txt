@@ -2503,7 +2503,7 @@ Do you want to perform this operation ?</WWW_RESCAN_VISITED_ASK>
 [li]Clients are still expected to have full Internet DNS resolving capabilities; in certain intranet/firewalling setups, this is not always wanted.[/li]
 [li]Related to above: suppose the users browser connects to a site which is down. However, due to the transparent proxying, it gets a connected state to the interceptor[br]The end user may get wrong error messages or a hung browser, for seemingly unknown reasons to them.[/li] 
 [li]There is some uploads limitations when using Dansguardian has the main Web filter plugin[/li] 
-[/ul]
+[/ul] 
 </transparent_mode_limitations>
 <add_loadbalance_service>Add new balance service</add_loadbalance_service>
 <add_loadbalance_service_text>Create a new service that will be in charge of balancing connections to backend servers</add_loadbalance_service_text>
@@ -2527,3 +2527,36 @@ Do you want to perform this operation ?</WWW_RESCAN_VISITED_ASK>
 <reconfigure_all_instances_text>Reconfigure all instances</reconfigure_all_instances_text>
 <bad_header>Bad header</bad_header>
 <unchecked>Unchecked</unchecked>
+<APP_POSTFWD2_ICON_TEXT>Manage your SMTP rules like a FireWall with PostFwd</APP_POSTFWD2_ICON_TEXT>
+<winbind_advoptions_text>This section is designed to tune the Winbindd daemon that is in charge to communicate with your Active directory server.[br]
+Some features must be changed according your Active Directory structure.</winbind_advoptions_text>
+<SambaUseBackendAD>Use tdbsam backend for matching users ID</SambaUseBackendAD>
+<SambaUseBackendAD_text>If checked the sharing engine will use tdbsam has backend instead using RID.
+tdbsam force Samba storing user and machine account data in a "TDB" (trivial database).[br]
+This backend does not require any additional configuration.[br]
+This backend is recommended for new installations that do not require LDAP system.
+As a general guide, the Samba Team does not recommend using the tdbsam backend for sites that have 250 or more users.[br]
+All Windows accounts have a unique security identifier (SID).[br]
+The last four digits of this identifier are unique within any given domain and are called the relative identifier (RID).[br]
+The RID module maps IDs by adding the RID to the minimum value in the idmap range (100000 - 199999).[br]
+[b]Note:Up to 3.6 version only the RID backend is supported.[/b]
+</SambaUseBackendAD_text>
+<SambaWinbindRpcOnly>Use RPC to list users</SambaWinbindRpcOnly>
+<SambaWinbindRpcOnly_text>If checked, winbindd daemon will use RPC instead of LDAP queries to retrieve information from Domain Controllers.</SambaWinbindRpcOnly_text>
+<SambaAllowTrustedDomains>Trust domains</SambaAllowTrustedDomains>
+<SambaAllowTrustedDomains_text>This is useful if you only want your Samba server to serve resources to users in the domain it is a member of.[br]
+As an example, suppose that there are two domains DOMA and DOMB.[br]
+DOMB is trusted by DOMA, which contains the Samba server.[br]
+Under normal circumstances, a user with an account in DOMB can then access the resources of a UNIX account with the same account name on the 
+Samba server even if they do not have an account in DOMA.[br]
+This can make implementing a security boundary difficult.</SambaAllowTrustedDomains_text>
+<SambaWinbindUseDefaultDomain>Remove domain in user account</SambaWinbindUseDefaultDomain>
+<SambaWinbindUseDefaultDomain_text>Operate on users without domain component in their username.[br]
+Users without a domain component are treated as is part of the winbindd server's own domain.[br]
+While this does not benifit Windows users, it makes SSH, FTP and e-mail function in a way much closer to the way they would in a native unix system.[br]
+If not checked, users must authenticate has following : "DOMAIN\user". [br]
+In the opposite, if checked users must authenticate has following : "user". [br]
+</SambaWinbindUseDefaultDomain_text>
+<advanced_artica_options_text>Define Artica global settings such as notifications, specific Web interface settings, Proxy use, LDAP parameters, master admin and password...</advanced_artica_options_text>
+<purge_db>Purge database</purge_db>
+

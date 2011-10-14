@@ -34,6 +34,7 @@ if(isset($_GET["left-menus"])){left_menus();exit;}
 
 
 
+
 function switch_main(){
 
 	switch ($_GET["main"]) {
@@ -136,6 +137,8 @@ function admin_system(){
 	$phpmyadmin=Paragraphe('phpmyadmin-64.png','{APP_PHPMYADMIN}','{APP_PHPMYADMIN_TEXT}',"javascript:s_PopUpFull('mysql/index.php',1024,800);","{APP_PHPMYADMIN_TEXT}");
 	
 	
+	$artica_settings=Paragraphe('folder-interface-64.png',"{advanced_options}","{advanced_artica_options_text}","javascript:Loadjs('artica.settings.php?js=yes&ByPopup=yes');","{advanced_artica_options_text}");
+	
 	$ActiveDirectoryConnection=Paragraphe('wink3_bg.png',
 	'{APP_AD_CONNECT}',
 	'{APP_AD_CONNECT_TEXT}',
@@ -176,6 +179,7 @@ function admin_system(){
 	
 	$massmailing=Paragraphe('mass-mailing-64.png','{email_campaigns}','{APP_MASSMAILING_ENABLE_TEXT}',"javascript:Loadjs('system.enable.massmailing.php');","{APP_MASSMAILING_ENABLE_TEXT}");
 	$tr[]=$frontend_settings;
+	$tr[]=$artica_settings;
 	$tr[]=$FROMISO;
 	$tr[]=$memdump;
 	$tr[]=$artica_events;

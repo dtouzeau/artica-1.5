@@ -58,6 +58,7 @@ Choisissez le domaine principale et indiquez le sous-domaine que vous voulez cr&
 <add_websites>Ajouter des sites</add_websites>
 <ADMINISTRATION_THEME>Th&egrave;me pour l'administration du site</ADMINISTRATION_THEME>
 <ADNETBIOSDOMAIN>Nom de domaine netbios</ADNETBIOSDOMAIN>
+<advanced_artica_options_text>Personnalisez les param&egrave;tres globaux d'Artica tels que les notifications, l'utilisation d'un proxy, les param&egrave;tres LDAP, le mot de passe administrateur...</advanced_artica_options_text>
 <AD_CONNECTION_ERROR>Erreur de liaison &agrave; l'Active Directory</AD_CONNECTION_ERROR>
 <AD_CONNECTION_OK>Connect&eacute; &agrave; l'Active directory</AD_CONNECTION_OK>
 <affect_vg_to_service>Affecter ce groupe &agrave; un service (FreeWebs ou serveurs virtuels)</affect_vg_to_service>
@@ -199,6 +200,7 @@ Patientez quelques secondes et rafra&icirc;chissez cette page.</apply_network_co
 <APP_PIWIK>Piwik</APP_PIWIK>
 <APP_PIWIK_TEXT>Piwik est un logiciel d'analyse Web en temps r&eacute;el . Il vous fournit des rapports d&eacute;taill&eacute;s sur les visiteurs de votre site Web: moteur de recherche et mots cl&eacute;s utilis&eacute;s, leurs langues, vos pages les plus populaires%u2026 et bien plus encore.</APP_PIWIK_TEXT>
 <APP_POSTFWD2>R&egrave;gles de d&eacute;l&eacute;gation</APP_POSTFWD2>
+<APP_POSTFWD2_ICON_TEXT>G&eacute;rer vos r&egrave;gles SMTP comme un pare-feu avec PostFwd</APP_POSTFWD2_ICON_TEXT>
 <APP_POSTFWD2_TEXT>Policy Delegation est une sorte de pare-feu qui vous autorise &agrave; d&eacute;finir des r&egrave;gles permettant de limiter les flux de messagerie</APP_POSTFWD2_TEXT>
 <APP_POWERADMIN>PowerAdmin</APP_POWERADMIN>
 <APP_POWERADMIN_NO_MCRYPT_ENCRYPT>Il semble que le module &quot;mcrypt&quot; ne soit pas correctement charg&eacute;/install&eacute;. Essayez de red&eacute;marrer l'ordinateur ou bien contactez le support Artica.</APP_POWERADMIN_NO_MCRYPT_ENCRYPT>
@@ -1439,6 +1441,7 @@ Rediriger vers: http://cam.hometranet.home:5555/cams/sony/stream[br]
 <PubkeyAuthentication>authentification par clef publique</PubkeyAuthentication>
 <PubkeyAuthentication_text>l'authentification par clef publique permet de prouver votre identit&eacute; en utilisant une clef cryptographique en lieu et place d'un compte utilisateur et mot de passe.[br]
 Attention, vous devrez au pr&eacute;alable indiquer les clefs autoris&eacute;es &agrave; ce connecter.</PubkeyAuthentication_text>
+<purge_db>Purger la base de donn&eacute;es</purge_db>
 <put_in_hold_queue>Placer en file d'attente inactive</put_in_hold_queue>
 <pxe_root-path>nom complet de fichier</pxe_root-path>
 <pxe_root-path_explain>sp&eacute;cifie le nom complet de fichier (avec le chemin) qui contient le disque racine du client (root disk). Le nom de fichier est une cha&icirc;ne de caract&egrave;res NVT ASCII.</pxe_root-path_explain>
@@ -1588,6 +1591,11 @@ Ne vous inqui&eacute;tez pas de ne pas visualiser vos utilisateurs apr&egrave;s 
 <run_update_now>T&eacute;l&eacute;charger les mises &agrave; jour maintenant</run_update_now>
 <SambaActAsWins>Agir en tant que serveur WINS</SambaActAsWins>
 <SambaActAsWins_explain>Ce serveur est le serveur WINS</SambaActAsWins_explain>
+<SambaAllowTrustedDomains>Faire confiance aux domaines</SambaAllowTrustedDomains>
+<SambaAllowTrustedDomains_text>Pratique uniquement si vous d&eacute;sirez que le serveur assure ses ressources aux utilisateurs qui font parti du m&ecirc;me domaine que ce serveur.[br]
+Pour exemple: supposez deux domaines DOMA et DOMB.[br]
+DOMB est un domaine de confiance de DOMA et ce serveru fait partie de DOMA.[br]
+Dans un fonctionnement normal, un utilisateur avec un compte enregistr&eacute; sur DOMB peut acc&egrave;der aux partages de ce serveur m&ecirc;me si son compte n'est pas h&eacute;berg&eacute; par DOMA.[br]</SambaAllowTrustedDomains_text>
 <SAMBAD_NOT_IP_IN_SRVNAME>L'utilisation d'une adresse IP n'est pas autoris&eacute;e
 Vous avez besoin de d&eacute;finir le nom netbios du serveur Windows comme ceci: 
 gsx4,srv001,dom001,DOM...</SAMBAD_NOT_IP_IN_SRVNAME>
@@ -1597,6 +1605,22 @@ D'une autre mani&egrave;re, remplissez le champ adresse Ip.
 Artica sauvegardera cette adresse dans le fichiers h&ocirc;tes afin de le r&eacute;soudre</SAMBAD_SRVNAME_CANOT_BE_RESOLVED>
 <SambaUsDNS>Utiliser le DNS</SambaUsDNS>
 <SambaUsDNS_explain>Le service WINS va rechercher les machines dans les DNS si il ne le retrouve pas dans sa base de donn&eacute;es</SambaUsDNS_explain>
+<SambaUseBackendAD>Utilise le mod&egrave;le tdbsam pour l'association des ID utilisateurs</SambaUseBackendAD>
+<SambaUseBackendAD_text>Si cette option est activ&eacute;e, le moteur de partage va utiliser le mod&egrave;le tdbsam au lieu d'utiliser le RID.[br]
+Le mod&egrave;le tdbsam force le moteur &agrave; stocker les utilisateurs dans une base &quot;triviale&quot;.[br]
+Il ne requi&egrave;re pas de configuration particuli&egrave;re.[br]
+Toutefois ce mod&egrave;le n'est recommand&eacute; que dans les nouvelles installation ne n&eacute;cessitant pas de syst&egrave;me LDAP et dont le nombre maximal d'utilisateurs ne doit pas exc&eacute;der 250.[br]
+Tous les utilisateurs se voient associ&eacute; un compte de s&eacute;curit&eacute; unique (nomm&eacute; SID).[br]Ce SID dispose &agrave; la fin d'un num&eacute;ro unique compos&eacute; de 4 chiffres.[br]Ce num&eacute;ro est appel&eacute; RID o&ugrave; identifiant relatif.[br]
+Le mod&egrave;le RID associe ces identifiants sur une tranche d&eacute;termin&eacute;e 100000 - 199999) et les ajoute dans une base locale afin de faire correspondre le RID Active Directory &agrave; celui des comptes locaux.[br]
+[b]A noter qu'en version 3.6, seul le mod&egrave;le RID est accept&eacute;.[/b]</SambaUseBackendAD_text>
+<SambaWinbindRpcOnly>Utiliser RPC pour le listage des utilisateurs</SambaWinbindRpcOnly>
+<SambaWinbindRpcOnly_text>Si activ&eacute;, le d&eacute;mon winbindd utilisera RPC en lieu et place de requ&ecirc;tes LDAP afin de retrouver les informations des utilisateurs sur le contr&ocirc;leur de domaine.</SambaWinbindRpcOnly_text>
+<SambaWinbindUseDefaultDomain>Retire le domaine des comptes utilisateurs</SambaWinbindUseDefaultDomain>
+<SambaWinbindUseDefaultDomain_text>Permet d'assurer l'identification des compte sans avoir &agrave; sp&eacute;cifier le domaine en suffixe.[br]
+Les utilisateurs seront alors trait&eacute;s comme membre entiers de ce serveur.[br]
+Bien que ceci ne profite pas aux utilisateurs Windows, cela prend tout un sens lorsqu'il faut servir des protocoles comme SSH, FTP ou de messagerie car le format des comptes utilisateur se rapproche des syst&egrave;mes d'authentification unix.[br]
+Si d&eacute;sactiv&eacute; les utilisateurs devront s'identifier comme suit : &quot;DOMAIN\user&quot;. [br]
+Dans le cas contraire : &quot;user&quot;. [br]</SambaWinbindUseDefaultDomain_text>
 <samba_aliases_virtual_ip>Indique au serveur virtuel d'utiliser exclusivement cette adresse IP.[b]Attention si vous utilisez cette fonctionnalit&eacute;, tous les autres serveurs virtuels ainsi que le service principal devront utiliser la m&ecirc;me fonctionnalit&eacute;.[/b]</samba_aliases_virtual_ip>
 <samba_create_mask>Masque de cr&eacute;ation</samba_create_mask>
 <samba_create_mask_text>Lorsqu'un fichier est cr&eacute;&eacute;, les permissions sont calcul&eacute;es en relation avec les droits UNIX, indiquez ici le chmod de cr&eacute;ation.</samba_create_mask_text>
@@ -2020,6 +2044,8 @@ Vous pouvez indiquer les valeurs suivantes :[br]
 <whitelist_global_explain>Cette section d&eacute;sactive de fa&ccedil;on globale  les filtres de contenu sur les domaines list&eacute;s ici.[br]C'est une liste globale qui ne recherche pas les destinataires.[br]
 Donc les domaines ici vont autoriser les &eacute;metteurs &agrave; passer &agrave; travers les filtres de contenu sans v&eacute;rifier la destination des messages.</whitelist_global_explain>
 <white_listed_mode>Mode liste blanche</white_listed_mode>
+<winbind_advoptions_text>Cette section vous permet de personnaliser le d&eacute;mon Winbindd qui est en charge de faire la liaison avec votre serveur Active Directory.[br]
+Des fonctionnalit&eacute;s peuvent &ecirc;tre ajust&eacute;es en fonction de la structure de votre Active Directory.</winbind_advoptions_text>
 <winbind_user_password>Mot de passe du compte winbind</winbind_user_password>
 <WINDOWS_DNS_SUFFIX>Suffix du domaine principal</WINDOWS_DNS_SUFFIX>
 <WINDOWS_NAME_SERVICE_NOT_KNOWN>Impossible de r&eacute;soudre le serveur Windows.</WINDOWS_NAME_SERVICE_NOT_KNOWN>

@@ -62,6 +62,7 @@ Choose the main domain and set the subdomain you want to create.[br]
 <add_websites>Add websites</add_websites>
 <ADMINISTRATION_THEME>Administration theme</ADMINISTRATION_THEME>
 <ADNETBIOSDOMAIN>Netbios AD Domain</ADNETBIOSDOMAIN>
+<advanced_artica_options_text>Define Artica global settings such as notifications, specific Web interface settings, Proxy use, LDAP parameters, master admin and password...</advanced_artica_options_text>
 <AD_CONNECTION_ERROR>Error linking to Active Directory</AD_CONNECTION_ERROR>
 <AD_CONNECTION_OK>Linked to Active Directory</AD_CONNECTION_OK>
 <affect_vg_to_service>Affect this group to a service (FreeWebs or Virtuals servers)</affect_vg_to_service>
@@ -245,6 +246,7 @@ The logic is based on evaluation of SQL commands using a risk scoring matrix as 
 It provides you with detailed reports on your website visitors:[br]
 the search engines and keywords they used, the language they speak, your popular pages...[br] and so much more</APP_PIWIK_TEXT>
 <APP_POSTFWD2>Policy Delegation</APP_POSTFWD2>
+<APP_POSTFWD2_ICON_TEXT>Manage your SMTP rules like a FireWall with PostFwd</APP_POSTFWD2_ICON_TEXT>
 <APP_POSTFWD2_TEXT>Policy delegation is a kind of Firewall that allow you to define a set of rules to restrict messaging</APP_POSTFWD2_TEXT>
 <APP_POWERADMIN>PowerAdmin</APP_POWERADMIN>
 <APP_POWERADMIN_NO_MCRYPT_ENCRYPT>It seems that the module mcrypt is correctly loaded/installed. Try to reboot the computer or contact Artica support team.</APP_POWERADMIN_NO_MCRYPT_ENCRYPT>
@@ -1719,6 +1721,7 @@ return a timeout and fail gracefully instead of waiting however long it takes th
 <proxy_port>Proxy port</proxy_port>
 <PubkeyAuthentication>Use public-key authentication</PubkeyAuthentication>
 <PubkeyAuthentication_text>Public-key authentication lets you prove your identity to a remote host using a cryptographic key instead of a login password.</PubkeyAuthentication_text>
+<purge_db>Purge database</purge_db>
 <put_in_hold_queue>Put in hold queue</put_in_hold_queue>
 <pxe_root-path>PXE root path</pxe_root-path>
 <pxe_root-path_explain>
@@ -1877,6 +1880,13 @@ When define quota for a specific user, wait until this user have saved a file on
 <run_update_now>Download updates now</run_update_now>
 <SambaActAsWins>Act as WINS server</SambaActAsWins>
 <SambaActAsWins_explain>Samba will act as a WINS server.</SambaActAsWins_explain>
+<SambaAllowTrustedDomains>Trust domains</SambaAllowTrustedDomains>
+<SambaAllowTrustedDomains_text>This is useful if you only want your Samba server to serve resources to users in the domain it is a member of.[br]
+As an example, suppose that there are two domains DOMA and DOMB.[br]
+DOMB is trusted by DOMA, which contains the Samba server.[br]
+Under normal circumstances, a user with an account in DOMB can then access the resources of a UNIX account with the same account name on the 
+Samba server even if they do not have an account in DOMA.[br]
+This can make implementing a security boundary difficult.</SambaAllowTrustedDomains_text>
 <SAMBAD_NOT_IP_IN_SRVNAME>Pure ip address format is not supported,
 you need to set the netbios name in the field like
 gsx4,srv001,dom001,DOM...
@@ -1890,6 +1900,26 @@ Artica will save this information into hosts file in order to resolve your Windo
 </SAMBAD_SRVNAME_CANOT_BE_RESOLVED>
 <SambaUsDNS>Use DNS</SambaUsDNS>
 <SambaUsDNS_explain> Samba WINS server will search DNS if it cannot find a name in WINS</SambaUsDNS_explain>
+<SambaUseBackendAD>Use tdbsam backend for matching users ID</SambaUseBackendAD>
+<SambaUseBackendAD_text>If checked the sharing engine will use tdbsam has backend instead using RID.
+tdbsam force Samba storing user and machine account data in a "TDB" (trivial database).[br]
+This backend does not require any additional configuration.[br]
+This backend is recommended for new installations that do not require LDAP system.
+As a general guide, the Samba Team does not recommend using the tdbsam backend for sites that have 250 or more users.[br]
+All Windows accounts have a unique security identifier (SID).[br]
+The last four digits of this identifier are unique within any given domain and are called the relative identifier (RID).[br]
+The RID module maps IDs by adding the RID to the minimum value in the idmap range (100000 - 199999).[br]
+[b]Note:Up to 3.6 version only the RID backend is supported.[/b]
+</SambaUseBackendAD_text>
+<SambaWinbindRpcOnly>Use RPC to list users</SambaWinbindRpcOnly>
+<SambaWinbindRpcOnly_text>If checked, winbindd daemon will use RPC instead of LDAP queries to retrieve information from Domain Controllers.</SambaWinbindRpcOnly_text>
+<SambaWinbindUseDefaultDomain>Remove domain in user account</SambaWinbindUseDefaultDomain>
+<SambaWinbindUseDefaultDomain_text>Operate on users without domain component in their username.[br]
+Users without a domain component are treated as is part of the winbindd server's own domain.[br]
+While this does not benifit Windows users, it makes SSH, FTP and e-mail function in a way much closer to the way they would in a native unix system.[br]
+If not checked, users must authenticate has following : "DOMAIN\user". [br]
+In the opposite, if checked users must authenticate has following : "user". [br]
+</SambaWinbindUseDefaultDomain_text>
 <samba_aliases_virtual_ip>Define an exclusive IP address to listen on.[br]
  [b]Warning, if one of Virtual server using this feature, all virtuals server and the main service must use selected IP address too
  </samba_aliases_virtual_ip>
@@ -2398,6 +2428,8 @@ You can set patterns in this way :[br]
 <whitelist_global_explain>This section disbale content filters about domains listed here.[br]This is a global white list that did not perform recipient checks.[br]
 So domains here will allow senders to pass trough filters without checking any recipient</whitelist_global_explain>
 <white_listed_mode>Whitelist mode</white_listed_mode>
+<winbind_advoptions_text>This section is designed to tune the Winbindd daemon that is in charge to communicate with your Active directory server.[br]
+Some features must be changed according your Active Directory structure.</winbind_advoptions_text>
 <winbind_user_password>winbind user password</winbind_user_password>
 <WINDOWS_DNS_SUFFIX>Windows server DNS suffix</WINDOWS_DNS_SUFFIX>
 <WINDOWS_NAME_SERVICE_NOT_KNOWN>Unable to resolve Windows server hostname</WINDOWS_NAME_SERVICE_NOT_KNOWN>

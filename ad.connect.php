@@ -19,6 +19,8 @@
 	if(isset($_GET["netads-leave-perform"])){netadsleave_perform();exit;}
 	if(isset($_GET["EnableManageUsersTroughActiveDirectory"])){saveAdStrict();exit;}
 	if(isset($_POST["EnableParamsInPhpldapAdmin"])){EnableParamsInPhpldapAdminSave();exit;}
+	if(isset($_GET["avoptions"])){avoptions_form();exit;}
+	if(isset($_POST["SambaUseBackendAD"])){avoptions_save();exit;}
 js();
 
 function js(){
@@ -227,6 +229,7 @@ function popup(){
 	$array["winbindd"]="{APP_AD_CONNECT}";
 	//$array["kerberos"]="{APP_SAMBAKERAUTH}";
 	$array["addldap"]="{users_database}";
+	$array["avoptions"]="{advanced_options}";
 	
 	
 	
@@ -396,10 +399,6 @@ function winbindd(){
 			XHR.appendData('ADSERVER_IP',document.getElementById('ADSERVER_IP').value);
 			XHR.appendData('WINBINDPASSWORD',document.getElementById('WINBINDPASSWORD').value);
 			XHR.appendData('WINDOWS_SERVER_TYPE',document.getElementById('WINDOWS_SERVER_TYPE').value);
-			
-			
-			
-			
 			document.getElementById('sambadimg').src='img/wait_verybig.gif';
 			XHR.sendAndLoad('$page', 'GET',X_SaveAdSettings);	
 		}	
@@ -564,5 +563,94 @@ function netadsleave_icon(){
 	
 }
 
+function avoptions_form(){
+	$tpl=new templates();
+	$sock=new sockets();
+	$page=CurrentPageName();
+	$users=new usersMenus();
+	$SambaUseBackendAD=$sock->GET_INFO("SambaUseBackendAD");
+	if(!is_numeric($SambaUseBackendAD)){$SambaUseBackendAD=0;}
+	
+	$SambaWinbindRpcOnly=$sock->GET_INFO("SambaWinbindRpcOnly");
+	if(!is_numeric($SambaWinbindRpcOnly)){$SambaWinbindRpcOnly=0;}
+	
+	$SambaAllowTrustedDomains=$sock->GET_INFO("SambaAllowTrustedDomains");
+	if(!is_numeric($SambaAllowTrustedDomains)){$SambaAllowTrustedDomains=1;}	
+	
+	$SambaWinbindUseDefaultDomain=$sock->GET_INFO("SambaWinbindUseDefaultDomain");
+	if(!is_numeric($SambaWinbindUseDefaultDomain)){$SambaWinbindUseDefaultDomain=0;}	
+	
+	$version=$users->SAMBA_VERSION;
+	$upTo36=0;
+	if(preg_match("#^([0-9]+)\.([0-9]+)#", $version,$re)){
+		$major=intval($re[1]);
+		$minor=intval($re[2]);
+		if($major>=3){if($minor>=6){$upTo36=1;$upTo357=1;}}
+	}
 
+	$html="<div class=explain>{winbind_advoptions_text}</div>
+	<div id='winbind_advoptions'>
+	<table style='width:100%' class=form>
+	<tbody>
+	<tr>
+		<td class=legend>{SambaUseBackendAD}:</td>
+		<td>". Field_checkbox("SambaUseBackendAD", 1,$SambaUseBackendAD)."</td>
+		<td width=1%>". help_icon("{SambaUseBackendAD_text}")."</td>
+	</tr>
+	<tr>
+		<td class=legend>{rpc_only}:</td>
+		<td>". Field_checkbox("SambaWinbindRpcOnly", 1,$SambaWinbindRpcOnly)."</td>
+		<td width=1%>". help_icon("{SambaWinbindRpcOnly_text}")."</td>
+	</tr>	
+	<tr>
+		<td class=legend>{SambaAllowTrustedDomains}:</td>
+		<td>". Field_checkbox("SambaAllowTrustedDomains", 1,$SambaAllowTrustedDomains)."</td>
+		<td width=1%>". help_icon("{SambaAllowTrustedDomains_text}")."</td>
+	</tr>	
+	<tr>
+		<td class=legend>{SambaWinbindUseDefaultDomain}:</td>
+		<td>". Field_checkbox("SambaWinbindUseDefaultDomain", 1,$SambaWinbindUseDefaultDomain)."</td>
+		<td width=1%>". help_icon("{SambaWinbindUseDefaultDomain_text}")."</td>
+	</tr>		
+	<tr>
+		<td colspan=3 align='right'><hr>". button("{apply}","SaveWinbinddAdv()")."</td>
+	</tr>
+	</tbody>
+	</table>
+	</div>
+	<script>
+	
+	var X_SaveWinbinddAdv= function (obj) {
+		var results=obj.responseText;
+		if(results.length>32){alert(results);}
+		 RefreshTab('main_ad_connect_popup');
+		 if(document.getElementById('admin_perso_tabs')){RefreshTab('admin_perso_tabs');}
+		 if(document.getElementById('main_samba_quicklinks_config')){RefreshTab('main_samba_quicklinks_config');}
+		 if(document.getElementById('main_ad_connect_popup')){RefreshTab('main_ad_connect_popup');}
+		 
+		}		
+
+		function SaveWinbinddAdv(){
+			var XHR = new XHRConnection();
+			if(document.getElementById('SambaUseBackendAD').checked){XHR.appendData('SambaUseBackendAD',1);}else{XHR.appendData('SambaUseBackendAD',0);}
+			if(document.getElementById('SambaWinbindRpcOnly').checked){XHR.appendData('SambaWinbindRpcOnly',1);}else{XHR.appendData('SambaWinbindRpcOnly',0);}
+			if(document.getElementById('SambaAllowTrustedDomains').checked){XHR.appendData('SambaAllowTrustedDomains',1);}else{XHR.appendData('SambaAllowTrustedDomains',0);}
+			if(document.getElementById('SambaWinbindUseDefaultDomain').checked){XHR.appendData('SambaWinbindUseDefaultDomain',1);}else{XHR.appendData('SambaWinbindUseDefaultDomain',0);}
+			AnimateDiv('winbind_advoptions');
+			XHR.sendAndLoad('$page', 'POST',X_SaveWinbinddAdv);	
+		}		
+	</script>
+	";
+	
+	echo $tpl->_ENGINE_parse_body("$html");
+}
+
+function avoptions_save(){
+	$sock=new sockets();
+	$sock->SET_INFO("SambaUseBackendAD", $_POST["SambaUseBackendAD"]);
+	$sock->SET_INFO("SambaWinbindRpcOnly", $_POST["SambaWinbindRpcOnly"]);
+	$sock->SET_INFO("SambaAllowTrustedDomains", $_POST["SambaAllowTrustedDomains"]);
+	$sock->SET_INFO("SambaWinbindUseDefaultDomain", $_POST["SambaWinbindUseDefaultDomain"]);
+	$sock->getFrameWork("cmd.php?samba-save-config=yes");
+}
 

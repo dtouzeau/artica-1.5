@@ -6,7 +6,9 @@
 	include_once('ressources/class.mysql.inc');	
 if(isset($_GET["popup"])){popup();exit;}
 if(isset($_GET["find"])){find();exit;}
-if(isset($_GET["icon"])){icon();exit;}		
+if(isset($_GET["icon"])){icon();exit;}
+if(isset($_GET["start"])){start();exit;}	
+if(isset($_POST["UnityPurge"])){UnityPurge();exit;}		
 	js();
 
 	
@@ -30,7 +32,54 @@ function js(){
 	
 $page=CurrentPageName();
 
-$html="function StartUnity(){
+$html="
+jQuery.fn.center = function(params) {
+		var options = {
+//			vertical: false,
+			horizontal: true
+		}
+		op = jQuery.extend(options, params);
+
+   return this.each(function(){
+		var \$self = jQuery(this);
+		var width = \$self.width();
+		var height = \$self.height();
+		var paddingTop = parseInt(\$self.css(\"padding-top\"));
+		var paddingBottom = parseInt(\$self.css(\"padding-bottom\"));
+		var borderTop = parseInt(\$self.css(\"border-top-width\"));
+		var borderBottom = parseInt(\$self.css(\"border-bottom-width\"));
+		var mediaBorder = (borderTop+borderBottom)/2;
+		var mediaPadding = (paddingTop+paddingBottom)/2;
+		var positionType = \$self.parent().css(\"position\");
+		var halfWidth = (width/2)*(-1);
+		var halfHeight = ((height/2)*(-1))-mediaPadding-mediaBorder;
+		var cssProp = {
+			position: 'absolute'
+		};
+
+		if(op.vertical) {
+			cssProp.height = height;
+			cssProp.top = '50%';
+			cssProp.marginTop = halfHeight;
+		}
+		if(op.horizontal) {
+			cssProp.width = width;
+			cssProp.left = '50%';
+			cssProp.marginLeft = halfWidth;
+		}
+		if(positionType == 'static') {
+			\$self.parent().css(\"position\",\"relative\");
+		}
+		\$self.css(cssProp);
+
+
+   });
+
+};
+
+
+
+function StartUnity(){
 	document.onmousemove = pointeurDeplace;
 	var width=750;
 	var title='title';
@@ -39,16 +88,17 @@ $html="function StartUnity(){
 	if(!document.getElementById('UnityDivBodyContent')){
 		document.getElementById('middle').innerHTML=\"<div id='UnityDivBodyContent'></div>\"+document.getElementById('middle').innerHTML;
 		}else{
-		$('#UnityDivBodyContent').empty().remove();
-		RefreshLeftMenu();
+		CloseUnity();
 		return;
 		}
 		
+		
+	
+	
 	document.getElementById('UnityDivBodyContent').innerHTML='';
 	document.getElementById('UnityDivBodyContent').style.classname='unityDiv';
 	document.getElementById('UnityDivBodyContent').style.position='absolute';
-	document.getElementById('UnityDivBodyContent').style.top=(yMousePos -20) + 'px';
-    document.getElementById('UnityDivBodyContent').style.left=(xMousePos +15)+ 'px';		
+	document.getElementById('UnityDivBodyContent').style.top='0px';
 	document.getElementById('UnityDivBodyContent').style.opacity =0.9;
 	document.getElementById('UnityDivBodyContent').style.width ='850px';
 	document.getElementById('UnityDivBodyContent').style.height ='650px';
@@ -61,18 +111,26 @@ $html="function StartUnity(){
 	document.getElementById('UnityDivBodyContent').style.MozBorderRadius = '5px';
     document.getElementById('UnityDivBodyContent').style.filter = \"progid:DXImageTransform.Microsoft.gradient(startColorstr='#605D5D', endColorstr='#000000');\";
     
-	
+	$('#UnityDivBodyContent').center({
+	 	horizontal: true
+ 	});
+    
 	$('#Unitycallback').show('fast');
 	LoadAjaxSilent('UnityDivBodyContent','$page?popup=yes');
 	
 	
 }
+function UnityFill(){
+	var XHR = new XHRConnection();
+	XHR.appendData('unity-fill','yes');
+	XHR.sendAndLoad('admin.left.php', 'GET');
+}
+
 
 function UnityFind(){
 	var se =document.getElementById('unitySearchField').value;
 	Set_Cookie('UNITY_FIELD_SEARCH', se, '360000', '/', '', '');
 	se =escape(se);
-	
 	LoadAjaxSilent('UnityResults','$page?find='+se);
 }
 
@@ -80,19 +138,56 @@ function UnityFindChck(e){
 	if(checkEnter(e)){UnityFind();}
 }
 
+function CloseUnity(){
+	$('#UnityDivBodyContent').empty().remove();
+	if(document.getElementById('UnityDivBodyContent')){
+		document.getElementById('UnityDivBodyContent').style.top='-100px';
+		document.getElementById('UnityDivBodyContent').style.left='-100px';
+		document.getElementById('UnityDivBodyContent').style.width ='0px';
+		document.getElementById('UnityDivBodyContent').style.height ='0px';		
+	}
+	if(document.getElementById('admin-start_page')){
+		LoadAjax('admin-start_page','admin.index.php?main_admin_tabs=yes&tab-font-size=14px&tab-width=100%&newfrontend=yes');
+	}	
+	RefreshLeftMenu();	
+}
+
+var x_UnityPurge= function (obj) {
+	var tempvalue=obj.responseText;
+	if(tempvalue.length>3){alert(tempvalue);}
+	UnityFill();	
+	UnityFind();
+}	
+	
+	
+function UnityPurge(){
+	var XHR = new XHRConnection();
+	XHR.appendData('UnityPurge','yes');
+	XHR.sendAndLoad('$page', 'POST',x_UnityPurge);
+}
 
 StartUnity();
+UnityFill();
 ";
 	
 	echo $html;
 }
 
+function UnityPurge(){
+	$sql="TRUNCATE TABLE icons_db";
+	$q=new mysql();
+	$q->QUERY_SQL($sql,"artica_backup");
+}
+
 function popup(){
-	
+	$tpl=new templates();
 	$html="
+	<div style='float:right;width:50px;margin-top:-10px;margin-right:-10px'>". $tpl->_ENGINE_parse_body(imgtootltip("close-grey-48.png","{close}","CloseUnity()"))."</div>
 	<div style='margin-top:30px;padding-left:15px'>
 		<input type='text' value='{$_COOKIE["UNITY_FIELD_SEARCH"]}' style='width:90%;padding:5px' class='unityDivForm' OnKeyPress=\"javascript:UnityFindChck(event)\" id='unitySearchField'>
 	</div>
+	<div id='toolbox' style='padding-left:15px;font-size:12px;color:white;'>&nbsp;|&nbsp;<a href=\"javascript:blur();\" OnClick=\"javascript:UnityPurge()\" 
+	style='font-size:12px;color:white;font-weight:normal;text-decoration:underline'>{purge_db}</div>
 	<div id='UnityResults' style='margin-top:40px;width:100%;margin-left:10px;margin-right:10px;padding:15px'></div>
 	
 	
@@ -178,7 +273,7 @@ function UnityParagraphe($ligne){
 	$styles="
 	onmouseout=\"this.className='unityPar';this.style.cursor='default';\" 
 	onmouseover=\"this.className='unityParOver';this.style.cursor='pointer';\"
-	OnClick=\"javascript:StartUnity();$js\"";
+	OnClick=\"javascript:CloseUnity();$js\"";
 	
 	return "
 	<div id='$md5' class=unityPar style='width:220px' $styles>

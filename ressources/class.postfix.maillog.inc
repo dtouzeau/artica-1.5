@@ -13,7 +13,7 @@ class postfix_maillog_buffer{
 
 		if(preg_match("#fatal: master_spawn: exec\s+(.+?)\/postscreen: No such file or directory#",$buffer,$re)){
 			$postscreen=$GLOBALS["CLASS_UNIX"]->LOCATE_POSTFIX_POSTSCREEN();
-			$file="/etc/artica-postfix/croned.1/postscreen.no.such.file";
+			$timefile="/etc/artica-postfix/croned.1/postscreen.no.such.file";
 			$this->events("Missing Postscreen binary..",__LINE__);
 			if($this->file_time_min($timefile)>10){
 				if(is_file($postscreen)){
@@ -30,6 +30,23 @@ class postfix_maillog_buffer{
 			}
 		return true;
 		}	
+		
+		// postfix/tlsmgr[4476]: fatal: open database /var/lib/postfix/smtpd_tls_cache.db: Invalid argument
+		if(preg_match("#tlsmgr\[.+?fatal: open database\s+(.+?):\s+Invalid argument#", $buffer)){
+			$timefile="/etc/artica-postfix/croned.1/".md5($re[1]).".Invalid.argument";
+			$this->events("Database {$re[1]} Failed",__LINE__);
+			if($this->file_time_min($timefile)>5){
+				$this->events("Database {$re[1]} Failed -> Remove it",__LINE__);
+				@unlink($re[1]);
+				shell_exec(trim("{$GLOBALS["NOHUP_PATH"]} {$GLOBALS["postfix_bin_path"]} stop && {$GLOBALS["postfix_bin_path"]} start >/dev/null 2>&1"));
+			}
+			return true;
+		}		
+		
+		
+		
+		
+		
 
 	// ----------------------------------------------------------------------------------------------------------------
 	

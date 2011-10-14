@@ -47,6 +47,7 @@ function js(){
 	$title=$tpl->_ENGINE_parse_body("{APP_POSTFWD2}::{$_GET["instance"]}");
 	$start="postfwd2Start";
 	if(isset($_GET["byou"])){$start="postfwd2Start2";}
+	if(isset($_GET["with-popup"])){$start="postfwd2Start2";}
 	echo "
 	function postfwd2Start(){
 		document.getElementById('BodyContent').innerHTML='<center><img src=img/wait_verybig.gif></center>';

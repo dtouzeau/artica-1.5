@@ -6,7 +6,7 @@ if(isset($_GET["part1"])){left_infos_1();exit;}
 if(isset($_GET["partall"])){left_infos_1();left_infos_2();exit;}
 if(isset($_GET["old-menu"])){old_menus_js();exit;}
 if(isset($_GET["old-menu-popup"])){old_menu_popup();exit;}
-
+if(isset($_GET["unity-fill"])){FillUnity();exit;}
 function left_infos_1(){
 	$newfrontend=false;
 	$users=new usersMenus();
@@ -111,7 +111,22 @@ function left_infos_2(){
 	
 	";
 	$sock=new sockets();
+	FillUnity();
 	$sock->getFrameWork('cmd.php?ForceRefreshLeft=yes');	
+	
+}
+
+function FillUnity(){
+	
+	$GLOBALS["ICON_FAMILY"]="PARAMETERS";
+	$page="artica.settings.php";
+	Paragraphe("folder-performances-64.png","{web_interface_settings}","{web_interface_settings_text}","javascript:Loadjs('$page?js=yes&func-webinterface=yes');");
+	Paragraphe("folder-64-fetchmail.png","{smtp_notifications}","{smtp_notifications_text}","javascript:Loadjs('$page?js=yes&func-NotificationsInterface=yes');");
+	Paragraphe("proxy-64.png","{http_proxy}","{http_proxy_text}","javascript:Loadjs('$page?js=yes&func-ProxyInterface=yes');");
+	Paragraphe("superuser-64.png","{account}","{accounts_text}","javascript:Loadjs('$page?js=yes&func-AccountsInterface=yes');");
+	Paragraphe("scan-64.png","{logs_cleaning}","{logs_cleaning_text}","javascript:Loadjs('$page?js=yes&func-LogsInterface=yes');");
+	Paragraphe("perfs-64.png","{artica_performances}","{artica_performances_text}","javascript:Loadjs('artica.performances.php');");
+	Paragraphe("database-setup-64.png","{openldap_parameters}","{openldap_parameters_text}","javascript:Loadjs('artica.settings.php?js-ldap-interface=yes');");	
 	
 }
 

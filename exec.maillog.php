@@ -16,6 +16,13 @@ events("Memory: ".round(((memory_get_usage()/1024)/1000),2) ." after includes cl
 include_once(dirname(__FILE__).'/ressources/class.sockets.inc');
 include_once(dirname(__FILE__).'/ressources/class.postfix.maillog.inc');
 
+$set=new settings_inc();
+$GLOBALS["CLASS_SETTINGS"]=$set;
+if($set->cyrus_imapd_installed){
+	include_once(dirname(__FILE__).'/ressources/class.cyrus.maillog.inc');
+	events("Memory: ".round(((memory_get_usage()/1024)/1000),2) ." after includes class.cyrus.maillog.inc line: ".__LINE__);
+}
+
 events("Memory: FINISH ".round(((memory_get_usage()/1024)/1000),2) ." after includes line: ".__LINE__);
 
 if(posix_getuid()<>0){die("Cannot be used in web server mode\n\n");}
@@ -67,6 +74,7 @@ $GLOBALS["SMTP_HACK_CONFIG_RATE"]["SMTPHACK_TOO_MANY_ERRORS"]=10;
 smtp_hack_reconfigure();
 $GLOBALS["CLASS_UNIX"]=$unix;
 $GLOBALS["postfix_bin_path"]=$unix->find_program("postfix");
+$GLOBALS["CHOWN"]=$unix->find_program("chown");
 $GLOBALS["NOHUP_PATH"]=$unix->find_program("nohup");
 @mkdir("/var/log/artica-postfix/smtp-connections",0755,true);
 
@@ -247,6 +255,7 @@ if(strpos($buffer,"]: COMMAND TIME LIMIT from")>0){return;}
 if(strpos($buffer,"Client host triggers FILTER")>0){return;}
 if(strpos($buffer,"Starting worker process for IMAP request")>0){return;}
 if(strpos($buffer,"IMAP thread exiting")>0){return;}
+if(strpos($buffer,"]: seen_db: user ")>0){return;}
 if(strpos($buffer,"Client disconnected")>0){return;}
 if(strpos($buffer,"starting the Postfix mail system")>0){return;}
 if(strpos($buffer,"Postfix mail system is already running")>0){return;}
@@ -329,6 +338,12 @@ if(preg_match("#zarafa-dagent.+?Client disconnected#",$buffer)){return null;}
 if(regex_amavis($buffer)){return;}
 $p=new postfix_maillog_buffer($buffer);if($p->parse()){$p=null;return;}
 
+if($GLOBALS["CLASS_SETTINGS"]->cyrus_imapd_installed){
+	$p=new cyrus_maillog($buffer);if($p->ParseBuffer()){$p=null;return;}
+}
+
+
+
 
 if(preg_match("#zarafa-server.+?SQL Failed: Can't create table '\./zarafa/(.+?)\.frm'#",$buffer,$re)){
 	$file="/etc/artica-postfix/croned.1/zarafa-server.tablefailed".md5($re[1]);
@@ -351,6 +366,10 @@ if(preg_match("#zarafa-server.+?SQL Failed:(.+)#",$buffer,$re)){
 		}else{events("Zarafa-server SQL issue {$re[1]} {$timefile}Mn/5Mn");}
 	return;			
 }
+
+
+
+
 	
 if(preg_match("#(.+?)\/smtpd\[.+?fatal:\s+config variable inet_interfaces#", $buffer)){
 	$file="/etc/artica-postfix/croned.1/postfix.error.inet_interfaces";
