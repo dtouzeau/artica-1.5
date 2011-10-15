@@ -374,6 +374,7 @@ C'est une mani&egrave;re d'&ecirc;tre inform&eacute; de l'&eacute;tat du Proxy s
 <cannot_schedule_update_without_schedule>Ne peut activer le commutateur de programmation si elle n'a pas &eacute;t&eacute; programm&eacute;e.</cannot_schedule_update_without_schedule>
 <categories_white_explain>Indiquez les cat&eacute;gories que vous d&eacute;sirez autoriser.[br]Ceci est la liste blanche.</categories_white_explain>
 <categorize_this_website>Cat&eacute;goriser ce site web</categorize_this_website>
+<category_already_exists>Cette cat&eacute;gorie existe d&eacute;j&agrave;</category_already_exists>
 <cat_hospitals>Sites sur les h&ocirc;pitaux et installations m&eacute;dicales</cat_hospitals>
 <cat_medical>Sites m&eacute;dicaux</cat_medical>
 <cat_remote-control>Sites fournissant des services de contr&ocirc;les &agrave; distance, en passant &agrave; travers les pare-feux.[br]Les services VPN ne sont pas couverts par cette cat&eacute;gorie.</cat_remote-control>
@@ -433,6 +434,12 @@ domain.tld correspondant &agrave; h&ocirc;tes avec le domaine domain.tld
 <ConfirmDisableArticaWebConsole>Cette op&eacute;ration va d&eacute;sactiver le moteur Web permettant de g&eacute;n&eacute;rer la console Web Artica.
 Soyez sur que vous avez cr&eacute;er une console Web dans FreeWebs avec de valider cette action.
 D&eacute;sirez-vous continuer cette op&eacute;ration ?</ConfirmDisableArticaWebConsole>
+<confirm_dnsg_compileall_db>Cette op&eacute;ration va sauvegarder sur le disque les sites web h&eacute;berg&eacute;s par cette cat&eacute;gorie.
+Pendant l'ex&eacute;cution de la t&acirc;che, le serveur peut &ecirc;tre surcharg&eacute;.
+Voulez-vous autoriser cette op&eacute;ration ?</confirm_dnsg_compileall_db>
+<confirm_dnsg_compile_db>Cette op&eacute;ration va sauvegarder sur le disque les sites web h&eacute;berg&eacute;s par toutes les cat&eacute;gories.
+Pendant l'ex&eacute;cution de la t&acirc;che, le serveur peut &ecirc;tre surcharg&eacute;.
+Voulez-vous autoriser cette op&eacute;ration ?</confirm_dnsg_compile_db>
 <confirm_remove_zarafa_db>Cette op&eacute;ration va supprimer la base de donn&eacute;es et en cr&eacute;er une nouvelle.[br]
 Les donn&eacute;es seront d&eacute;finitivement d&eacute;truites.
 Voulez-vous proc&eacute;der &agrave; cette op&eacute;ration ?</confirm_remove_zarafa_db>
@@ -715,8 +722,10 @@ toutes les liens seront remplac&eacute;es par l'url que vous avez d&eacute;finit
 <enable_white_listed_mode_text>Cette fonctionnalit&eacute; est promise pour un serveur h&eacute;berg&eacute; sur Internet servant de relais sortant.[br]D'une autre mani&egrave;re, pour un serveur Interne, cela vous permet de le compartimenter &agrave; une population sp&eacute;cifique.</enable_white_listed_mode_text>
 <eq2>est &eacute;gale</eq2>
 <errors>Erreurs</errors>
+<error_category_textexpl>Please give a description of this category, a text that explain what kind of websites this category will store.. </error_category_textexpl>
 <error_choose_organization>Erreur: vous avez besoin de sp&eacute;cifier au minimum une organisation.</error_choose_organization>
 <error_field_max_length>Erreur, la valeur donn&eacute;e exc&egrave;de</error_field_max_length>
+<error_max_database_name_no_more_than>Erreur, le nom de la base de donn&eacute;es ne doit pas exc&eacute;der une taille de</error_max_database_name_no_more_than>
 <error_no_website_selected>Erreur, pas de site web s&eacute;lectionn&eacute;</error_no_website_selected>
 <error_please_fill_field>Erreur: Veuillez remplir le champs requis</error_please_fill_field>
 <estimate>Estimation</estimate>
@@ -1040,6 +1049,7 @@ Notifie les administrateurs des &eacute;ventuelles d&eacute;tections[br]</kav4pr
 <LimitRequestFields>Nombre d'ent&ecirc;tes (champs)</LimitRequestFields>
 <limit_memory>Limiter la m&eacute;moire &agrave;</limit_memory>
 <limit_swap>Limiter la m&eacute;moire SWAP &agrave;</limit_swap>
+<line>Ligne</line>
 <link>Lien</link>
 <load_balancer>R&eacute;partition de charge</load_balancer>
 <load_balancer_instances_explain>Cette section vous permet d'activer une r&eacute;partition de charger pour vos instances SMTP.[br]
@@ -1322,6 +1332,7 @@ For example, Avaya phones are hard coded to "read" this scope option and pick up
 <permit_dnswl_client_text>[b]dnswl_domain=d.d.d.d[/b][br]Accepte la connexion lorsque l'adresse r&eacute;seau trouv&eacute;e par r&eacute;solution invers&eacute;e  est list&eacute;e avec l'enregistrement A  &quot;d.d.d.d&quot; dans dnswl_domain</permit_dnswl_client_text>
 <permit_rhswl_client>[b]rhswl_domain=d.d.d.d[/b][br]Accepte la connexion lorsque le nom d'h&ocirc;te du client est list&eacute;e avec un enregistrement A &quot;d.d.d.d&quot; de rhswl_domain</permit_rhswl_client>
 <persistante_connection>Connexion persistante</persistante_connection>
+<personal_category>Cat&eacute;gorie personnelle</personal_category>
 <PHP_CONFIGURATION>Chemin du fichier de configuration php</PHP_CONFIGURATION>
 <php_values>Valeurs PHP</php_values>
 <picture>Image</picture>
@@ -1667,6 +1678,7 @@ Pour r&eacute;soudre ce probl&egrave;me, Microsoft propose d&eacute;sormais le W
 Avec WINS, un administrateur peut d&eacute;signer une seule machine agissant comme un serveur de r&eacute;solution de noms. chaque client dispose l'adresse de ce serveur WINS dans ses param&egrave;tres. [br]
 En cons&eacute;quence, l'enregistrement de noms et les r&eacute;solutions de machines peuvent &ecirc;tre adress&eacute;es &agrave; une seule machine &agrave; partir de n'importe quel point du r&eacute;seau,
 au lieu d'effectuer un broadcast continuel.</samba_wins_explain>
+<saveToDisk>Sauvegarder sur le disque Dur</saveToDisk>
 <sa_debug>Mode Verbeux: Spamassassin</sa_debug>
 <sa_timeout>Timeout du plugin Spamassassin</sa_timeout>
 <ScanPeriod>P&eacute;riode d'analyse</ScanPeriod>
@@ -1923,6 +1935,7 @@ Lorsque la p&eacute;riode de gr&acirc;ce &agrave; expir&eacute;e, les utilisateu
 <ufdbgdb_explain>Le filtre utilise des bases locales afin de v&eacute;rifier les sites web.[br]Vous avez deux bases de donn&eacute;es.[br]
 [b]Communaut&eacute; Artica[/b]:Ces bases de donn&eacute;es (environ 1.500.000 entr&eacute;es) sont automatiquement t&eacute;l&eacute;charg&eacute;es depuis les serveurs de mise &agrave; jour Artica et stock&eacute;s dans la base Mysql.[br]
 [b]Les bases ufdbguard[/b]: Ce sont des bases propri&eacute;taires et payantes (environ 9.000.000 d'entr&eacute;es). Contactez le support Artica si vous d&eacute;sirez les obtenir.[br]</ufdbgdb_explain>
+<ufdbguard_conf_read_text>Affiche le fichier de configuration du d&eacute;mon de filtrage web UfdbGuard</ufdbguard_conf_read_text>
 <ufdbguard_simple_intro>ufdbGuard est filtre web qui utilise des cat&eacute;gories pour filtrer les acc&egrave;s &agrave; Internet.[br]Il est tr&egrave;s rapide avec une performance de 50,000 URL v&eacute;rifi&eacute;es par seconde sur un seul processeur</ufdbguard_simple_intro>
 <UNABLE_TO_OBTAIN_INFORMATIONS_FROM>Incapacit&eacute; d'obtenir des informations avec</UNABLE_TO_OBTAIN_INFORMATIONS_FROM>
 <unchecked>Analyse impossible</unchecked>

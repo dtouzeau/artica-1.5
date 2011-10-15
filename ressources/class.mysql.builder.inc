@@ -1447,7 +1447,22 @@ function Check_smtp_logs_table(){
 		if(!$this->FIELD_EXISTS("smtp_logs","metasended","artica_events")){	
 			$sql="ALTER TABLE `smtp_logs` ADD `metasended` SMALLINT( 1 ) NOT NULL DEFAULT '0',ADD INDEX ( `metasended` )";
 			$this->QUERY_SQL($sql,'artica_events');
-		}		
+		}	
+
+		
+	if(!$this->TABLE_EXISTS('ufdbguard_admin_events','artica_events')){		
+		$sql="CREATE TABLE `artica_events`.`ufdbguard_admin_events` (
+			`zDate` TIMESTAMP NOT NULL ,
+			`description` MEDIUMTEXT NOT NULL ,
+			`function` VARCHAR( 60 ) NOT NULL ,
+			`filename` VARCHAR( 50 ) NOT NULL ,
+			`line` INT( 10 ) NOT NULL ,
+			`category` VARCHAR( 50 ) NOT NULL ,
+			INDEX ( `zDate` , `function` , `filename` , `line` , `category` )
+			)";		
+		$this->QUERY_SQL($sql,'artica_events');
+		if(!$this->ok){writelogs("Fatal: $this->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
+	}		
 		
 	if(!$this->TABLE_EXISTS('mail_con','artica_events')){		
 		$sql="CREATE TABLE `artica_events`.`mail_con` (

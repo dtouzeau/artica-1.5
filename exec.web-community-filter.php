@@ -19,6 +19,9 @@ if($argv[1]=="--sitesinfos"){die();}
 if($argv[1]=="--groupby"){die();}
 if($argv[1]=="--import"){import();die();}
 if($argv[1]=="--export"){export(true);die();}
+if($argv[1]=="--export-perso-cats"){ExportPersonalCategories(true);die();}
+
+
 
 
 
@@ -68,6 +71,55 @@ if($argv[1]=="--export"){export(true);die();}
 	$unix->send_email_events("Web filtering maintenance databases tasks success",
 		 "Exporting websites, importing websites calculate categories took $distanceOfTimeInWords", "proxy");
 	
+	
+function ExportPersonalCategories($asPid=false){
+	$unix=new unix();
+	$restartProcess=false;
+	$nohup=$unix->find_program("nohup");
+	$php5=$unix->LOCATE_PHP5_BIN();
+	$restart_cmd=trim("$nohup $php5 ".__FILE__." --export >/dev/null 2>&1 &");
+	$sock=new sockets();
+	$uuid=base64_decode($sock->getFrameWork("cmd.php?system-unique-id=yes"));
+	
+	if($asPid){
+		$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
+		$cachetime="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".time";
+		$unix=new unix();	
+		$pid=@file_get_contents($pidfile);
+		if($unix->process_exists($pid)){WriteMyLogs("Already executed PID:$pid, die()",__FUNCTION__,__FILE__,__LINE__);die();}	
+		@file_put_contents($pidfile,getmypid());
+	}
+
+	$q=new mysql_squid_builder();
+	$sql="SELECT * FROM personal_categories WHERE sended=0";
+	$results=$q->QUERY_SQL($sql);
+	if(mysql_num_rows($results)==0){return;}
+	
+	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
+		$PERSONALSCATS[$ligne["category"]]["DESC"]=$ligne["category_description"];
+		$PERSONALSCATS[$ligne["category"]]["UUID"]=$uuid;
+	}	
+	
+	WriteMyLogs("Exporting ". count($PERSONALSCATS)." personal category",__FUNCTION__,__FILE__,__LINE__);
+	$f=base64_encode(serialize($PERSONALSCATS));
+	$curl=new ccurl("http://www.artica.fr/shalla-orders.php");
+	$curl->parms["PERSO_CAT_POST"]=$f;
+
+	if(!$curl->get()){
+		writelogs("Failed exporting ".count($PERSONALSCATS)." personal categories to Artica cloud repository servers",__FUNCTION__,__FILE__,__LINE__);
+		$unix->send_email_events("Failed exporting ".count($PERSONALSCATS)." personal categories to Artica cloud repository servers",null,"proxy");
+		writelogs_squid("Failed exporting ".count($PERSONALSCATS)." personal categories to Artica cloud repository servers \"$curl->error\"",__FUNCTION__,__FILE__,__LINE__,"export");
+		return null;
+	}
+
+	if(preg_match("#<ANSWER>OK</ANSWER>#is",$curl->data)){
+		WriteMyLogs("Exporting success ". count($PERSONALSCATS)." personal categories",__FUNCTION__,__FILE__,__LINE__);
+		writelogs_squid("Success exporting ".count($PERSONALSCATS)." personal categories to Artica cloud repository servers",__FUNCTION__,__FILE__,__LINE__,"export");	
+		$q->QUERY_SQL("UPDATE personal_categories SET sended=1 WHERE sended=0");
+	}
+	
+	
+}	
 	
 function Export($asPid=false){
 	$unix=new unix();

@@ -49,19 +49,12 @@ function popup(){
 	
 	
 	echo "
-	<div id=main_stats_yorels_index style='width:100%;height:800px;overflow:auto'>
+	<div id=main_stats_yorels_index style='width:100%;height:auto;overflow:auto'>
 		<ul>". implode("\n",$html)."</ul>
 	</div>
 		<script>
 				$(document).ready(function(){
-					$('#main_stats_yorels_index').tabs({
-				    load: function(event, ui) {
-				        $('a', ui.panel).click(function() {
-				            $(ui.panel).load(this.href);
-				            return false;
-				        });
-				    }
-				});
+					$('#main_stats_yorels_index').tabs();
 			
 			
 			});
@@ -95,7 +88,7 @@ $md=md5(date('Ymdhis'));
 	
 	$html="
 <input type='hidden' id='t' value='$t'>
-<p class='caption'>{system_perfomances_text}</p>
+<div class='explain'>{system_perfomances_text}</div
 <table style='width:600px' align=center>
 <tr>
 <td valign='top'>

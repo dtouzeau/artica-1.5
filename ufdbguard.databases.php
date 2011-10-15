@@ -27,6 +27,7 @@
 	if(isset($_GET["schedule"])){schedule();exit;}
 	if(isset($_GET["EnableSchedule"])){schedule_save();exit;}
 	if(isset($_GET["maintenance-status-list"])){maintenance_status_list();exit;}
+	if(isset($_GET["config-file"])){config_file();exit;}
 	
 	if(isset($_GET["events"])){events();exit;}
 	popup();
@@ -211,6 +212,9 @@ $compilation_schedule=$tpl->javascript_parse_text("{compilation_schedule}");
 $WARNING_UFDBGUARD_COMPILES_RULES_ASK=$tpl->javascript_parse_text("WARNING_UFDBGUARD_COMPILES_RULES_ASK");
 if($_GET["scripts"]=="recompile"){$start="ReCompiledb()";}
 if($_GET["scripts"]=="compile-schedule"){$start="ReCompileScheduleudbg()";}
+if($_GET["scripts"]=="config-file"){$start="ConfigFile()";}
+
+
 
 
 	
@@ -242,6 +246,10 @@ return "var x_CompileMissingdb= function (obj) {
 	function maintenance_status_list(){
 		LoadAjax('dbguard-list-size','$page?maintenance-status-list=yes');
 	
+	}
+	
+	function ConfigFile(){
+		YahooWin5(880,'$page?config-file=yes','ufdbguard.conf');
 	}
 	
 	$start;";	
@@ -430,3 +438,32 @@ function schedule_save(){
 	$sock->getFrameWork("cmd.php?ufdbguard-compile-schedule=yes");
 }
 
+function config_file(){
+	$page=CurrentPageName();
+	$tpl=new templates();	
+	$sock=new sockets();
+	$datas=unserialize(base64_decode($sock->getFrameWork("squid.php?ufdbguardconf=yes")));
+	$html="<div style='width:100%;height:660px;overflow:auto'>
+	<table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
+<thead class='thead'>
+	<tr>
+		<th colspan=2>&nbsp;</th>
+	</tr>
+</thead>
+<tbody class='tbody'>";
+	while (list ($key, $line) = each ($datas) ){
+	if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
+	
+	$line=htmlentities($line);
+	$line=str_replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;", $line);
+	$line=str_replace(" ", "&nbsp;", $line);
+		$html=$html."<tr class=$classtr style='height:auto'>
+		<td width=1% style='font-size:13px;height:auto'>$key</td>
+		<td width=99% style='font-size:13px;height:auto'><code style='font-size:13px;height:auto'>$line</code></td>
+	</tR>
+		";
+	}
+	
+	$html=$html."</tbody></table></div>";
+	echo $tpl->_ENGINE_parse_body($html);
+}

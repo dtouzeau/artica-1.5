@@ -1017,6 +1017,7 @@ function compilation_params(){
 }
 
 function errors_details_txt(){
+return;
 @copy("/usr/share/artica-postfix/bin/install/squid/error-details.txt", "/usr/share/squid3/errors/templates/error-details.txt");
 shell_exec("/bin/chown -R squid:squid /usr/share/squid3");
 	

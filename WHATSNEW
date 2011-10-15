@@ -3,6 +3,7 @@
 
 System Changes:
 ------------------------------------------------
+Fix openvpn server daemon is killed each 6Mns
 1.5.101417: Fix Artica think that it installed on a VPS server when cgroups is installed on the computer. (Tsystem::PROCESS_ISCHROOTED:: -> 1181: it is a chrooted process for VPS "sysdefault" return true)
 1.5.101319: Fix bulk notifications when crossroads is installed and wihtout any backend saved.
 1.5.101201: Support arpd daemon has a daemon that handle MAC addresses listing.
@@ -19,6 +20,7 @@ System Changes:
 
 Messaging Changes:
 -------------------------------------------------
+1.5.101501: Add objects system in Postfwd2 (see http://forum.artica.fr/viewtopic.php?f=59&t=4753)
 1.5.101417: Add a new watchdog on cyrus DBERROR: opening *.seen: cyrusdb error
 1.5.101417: Add a new watchdog on cyrus Could not open seen state for * (System I/O error)
 1.5.101319: Fix bulk notifications vith amavisd 2.7.x on "UNCHECKED contents" (see http://www.mailinglistarchive.com/html/amavis-user@lists.sourceforge.net/2010-12/msg00039.html)
@@ -37,6 +39,16 @@ FreeWebs changes:
 
 Proxy changes:
 ------------------------------------------------
+Add an automation that smoothly rebuild UfdbGuard config when playing with rules.
+Add possibility to see artica engines events according ufdbguard tasks
+Add possibility to display the content of ufdbguard.conf trough the web interface.
+Fix misconfiguration on ufdbguard.conf: no category set in default rule.
+Fix misconfiguration on ufdbguard.conf artica used the old way to compile file.
+Fix events tab in Filtering database section did not display database tasks events.
+Add a new code that ensure that categories are correctly compiled and builded during building the UfdbGuard configuration file.
+fix missing "security" category to make ufdbGuard works.
+
+
 1.5.101319: Fix error adding a group in filtering rule add all groups.
 1.5.101319: Fix Table 'squidlogs.xxxx_members' doesn't exist in statistics section.
 1.5.101319: Fix (ssl_crtd): Uninitialized SSL certificate database directory: /var/lib/ssl_db. To initialize, run "ssl_crtd -c -s /var/lib/ssl_db". on squid 3.1.15

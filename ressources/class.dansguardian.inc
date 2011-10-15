@@ -780,7 +780,9 @@ class dansguardian_rules{
 		  	"celebrity"=>"celebrity-20.png",
 		  	"books"=>"books_20.png",
 		  	"internal"=>"network-1-20.gif",
-		  	"maps"=>"20-maps.png"
+		  	"maps"=>"20-maps.png",
+		  	"press"=>"20-news.png",
+		  	"nature"=>"nature-20.png"
 		  	
 		  	);
 									

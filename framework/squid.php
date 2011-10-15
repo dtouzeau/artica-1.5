@@ -18,6 +18,11 @@ if(isset($_GET["kav4proxy-pattern-date"])){kav4proxy_pattern_date();exit();}
 if(isset($_GET["kav4proxy-configure"])){kav4proxy_configure();exit();}
 if(isset($_GET["squid-realtime-cache"])){squid_realtime_cache();exit();}
 if(isset($_GET["visited-sites"])){visited_sites();exit();}
+if(isset($_GET["rebuild-filters"])){rebuild_filters();exit();}
+if(isset($_GET["ufdbguardconf"])){ufdbguardconf();exit();}
+if(isset($_GET["export-web-categories"])){export_web_categories();exit();}
+if(isset($_GET["ufdbguard-compile-database"])){ufdbguard_compile_database();exit();}
+if(isset($_GET["ufdbguard-compile-alldatabases"])){ufdbguard_compile_all_databases();exit();}
 
 
 
@@ -57,6 +62,15 @@ function community_reprocess_category(){
 	shell_exec($cmd);
 	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);
 }
+function export_web_categories(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$php5=$unix->LOCATE_PHP5_BIN();
+	$cmd=trim("$nohup $php5 /usr/share/artica-postfix/exec.web-community-filter.php --export-perso-cats >/dev/null 2>&1 &");
+	shell_exec($cmd);
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);
+}
+
 
 function migration_stats(){
 	$unix=new unix();
@@ -188,4 +202,36 @@ function re_categorize(){
 	shell_exec($cmd);
 	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);		
 	
+}
+
+function rebuild_filters(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$php5=$unix->LOCATE_PHP5_BIN();
+	$cmd=trim("$nohup $php5 /usr/share/artica-postfix/exec.squidguard.php --conf >/dev/null 2>&1 &");
+	shell_exec($cmd);
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);			
+}
+function ufdbguard_compile_database(){
+	$unix=new unix();
+	$database=$_GET["ufdbguard-compile-database"];
+	$nohup=$unix->find_program("nohup");
+	$php5=$unix->LOCATE_PHP5_BIN();
+	$cmd=trim("$nohup $php5 /usr/share/artica-postfix/exec.squidguard.php --compile-category $database >/dev/null 2>&1 &");
+	shell_exec($cmd);
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);		
+}
+function ufdbguard_compile_all_databases(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$php5=$unix->LOCATE_PHP5_BIN();
+	$cmd=trim("$nohup $php5 /usr/share/artica-postfix/exec.squidguard.php --compile-all-categories >/dev/null 2>&1 &");
+	shell_exec($cmd);
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	
+}
+
+
+function ufdbguardconf(){
+	$tpl=explode("\n",@file_get_contents("/etc/ufdbguard/ufdbGuard.conf"));
+	echo "<articadatascgi>". base64_encode(serialize($tpl))."</articadatascgi>";
 }

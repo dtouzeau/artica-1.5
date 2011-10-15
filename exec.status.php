@@ -1654,6 +1654,7 @@ function ufdbguardd(){
 	}
 
 	if(!$GLOBALS["CLASS_UNIX"]->process_exists($master_pid)){
+		ufdbguard_admin_events("UfdGuard master Daemon service is not running -> start it...",__FUNCTION__,__FILE__,__LINE__,"status");
 		WATCHDOG("APP_UFDBGUARD","ufdb");
 		$l[]="running=0\ninstalled=1";$l[]="";return implode("\n",$l);
 		return;
@@ -1696,8 +1697,8 @@ function ufdbguardd_tail(){
 	$filetime=file_time_min("/var/log/artica-postfix/ufdbguard-tail.debug");
 	events("ufdbguard-tail.debug {$filetime}Mn ",__FUNCTION__,__LINE__);
 	if($filetime>5){
-		events("-> restart ufdb-tail",__FUNCTION__,__LINE__);
-		$GLOBALS["CLASS_UNIX"]->THREAD_COMMAND_SET("/etc/init.d/artica-postfix restart ufdb-tail");
+		ufdbguard_admin_events("Restarting /var/log/artica-postfix/ufdbguard-tail.debug = $filetime {mn}",__FUNCTION__,__FILE__,__LINE__,"system");
+		$GLOBALS["CLASS_UNIX"]->THREAD_COMMAND_SET("/etc/init.d/artica-postfix restart ufdb-tail --noufdbg");
 	}
 	 
 	if($EnableUfdbGuard==0){
@@ -1706,6 +1707,7 @@ function ufdbguardd_tail(){
 	}
 
 	if(!$GLOBALS["CLASS_UNIX"]->process_exists($master_pid)){
+		ufdbguard_admin_events("UfdGuard watchdog service is not running -> start it...",__FUNCTION__,__FILE__,__LINE__,"status");
 		WATCHDOG("APP_UFDBGUARD_TAIL","ufdb-tail");
 		$l[]="running=0\ninstalled=1";$l[]="";return implode("\n",$l);
 		return;

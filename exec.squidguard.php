@@ -27,6 +27,18 @@ if(count($argv)>0){
 	if(preg_match("#--shalla#",$imploded)){$GLOBALS["SHALLA"]=true;}
 	if(preg_match("#--catto=(.+?)\s+#",$imploded,$re)){$GLOBALS["CATTO"]=$re[1];}
 	
+	$argvs=$argv;
+	unset($argvs[0]);
+	if($argv[1]=="--databases-status"){databases_status();exit;}
+	if($argv[1]=="--ufdbguard-status"){print_r(UFDBGUARD_STATUS());exit;}
+	if($argv[1]=="--cron-compile"){cron_compile();exit;}
+	if($argv[1]=="--compile-category"){UFDBGUARD_COMPILE_CATEGORY($argv[2]);exit;}
+	if($argv[1]=="--compile-all-categories"){UFDBGUARD_COMPILE_ALL_CATEGORIES();exit;}
+	if($argv[1]=="--ufdbguard-recompile-dbs"){echo UFDBGUARD_COMPILE_ALL_CATEGORIES();exit;}
+	
+	
+	ufdbguard_admin_events("receive ".@implode(" ", $argvs),"MAIN",__FILE__,__LINE__,"config");
+	
 	if($GLOBALS["VERBOSE"]){echo "Execute ".@implode(" ", $argv)."\n";}
 	
 	if($argv[1]=="--inject"){echo inject($argv[2],$argv[3]);exit;}
@@ -34,13 +46,12 @@ if(count($argv)>0){
 	if($argv[1]=="--ufdbguard-compile"){echo UFDBGUARD_COMPILE_SINGLE_DB($argv[2]);exit;}	
 	if($argv[1]=="--ufdbguard-dbs"){echo UFDBGUARD_COMPILE_DB();exit;}
 	if($argv[1]=="--ufdbguard-miss-dbs"){echo ufdbguard_recompile_missing_dbs();exit;}
-	if($argv[1]=="--ufdbguard-recompile-dbs"){echo ufdbguard_recompile_dbs();exit;}
+	
 	if($argv[1]=="--ufdbguard-schedule"){ufdbguard_schedule();exit;}
 	if($argv[1]=="--list-missdbs"){BuildMissingUfdBguardDBS(false,true);exit;}				
-	if($argv[1]=="--cron-compile"){cron_compile();exit;}
-	if($argv[1]=="--ufdbguard-status"){print_r(UFDBGUARD_STATUS());exit;}
-	if($argv[1]=="--persos"){PersonalCategoriesRepair();exit;}
-	if($argv[1]=="--databases-status"){databases_status();exit;}
+	
+	
+	
 	if($argv[1]=="--parsedir"){ParseDirectory($argv[2]);exit;}
 	
 	
@@ -88,17 +99,31 @@ if(!$q->ok){echo $q->mysql_error."\n";}
 
 function conf(){
 	$users=new usersMenus();
-	$s=new squidguard();
-	$datas=$s->BuildConf();
+	$ufdb=new compile_ufdbguard();
+	$datas=$ufdb->buildConfig();
 	if($GLOBALS["VERBOSE"]){echo $datas;}
 	@file_put_contents("/etc/squid/squidGuard.conf",$datas);
-	if(is_file("/usr/sbin/ufdbguardd")){if(!is_file("/usr/bin/ufdbguardd")){$unix=new unix();$ln=$unix->find_program("ln");shell_exec("$ln -s /usr/sbin/ufdbguardd /usr/bin/ufdbguardd");}}
+	if(!is_file("/var/log/ufdbguard/ufdbguardd.log")){
+		@mkdir("/var/log/ufdbguard",755,true);
+		@file_put_contents("/var/log/ufdbguard/ufdbguardd.log", "see /var/log/squid/ufdbguardd.log\n");
+		shell_exec("chmod 777 /var/log/ufdbguard/ufdbguardd.log");
+	}
 	
 	
-	@mkdir("/etc/ufdbguard",null,true);
+	if(is_file("/usr/sbin/ufdbguardd")){
+		if(!is_file("/usr/bin/ufdbguardd")){
+			$unix=new unix();
+			$ln=$unix->find_program("ln");
+			shell_exec("$ln -s /usr/sbin/ufdbguardd /usr/bin/ufdbguardd");
+		}
+	}
+	@mkdir("/etc/ufdbguard",755,true);
 	@file_put_contents("/etc/ufdbguard/ufdbGuard.conf",$datas);
-	if($users->APP_UFDBGUARD_INSTALLED){shell_exec("/etc/init.d/ufdb reconfig");}
-	PersonalCategoriesRepair();
+	if($users->APP_UFDBGUARD_INSTALLED){
+		shell_exec("/etc/init.d/ufdb reconfig");
+		ufdbguard_admin_events("Service was sucessfully rebuiled and restarted",__FUNCTION__,__FILE__,__LINE__,"config");
+	}
+	
 	
 }
 
@@ -138,32 +163,18 @@ function build(){
 	shell_exec("$chown -R $user /var/log/squid/*");
 	shell_exec("$chmod -R 755 /var/lib/squidguard/*");
 	shell_exec("$chmod -R ug+x /var/lib/squidguard/*");
-	if(is_file("/var/log/ufdbguard/ufdbguardd.log")){@chmod("/var/log/ufdbguard/ufdbguardd.log",777);}
+	
+	if(!is_file("/var/log/ufdbguard/ufdbguardd.log")){@mkdir("/var/log/ufdbguard",755,true);@file_put_contents("/var/log/ufdbguard/ufdbguardd.log", "see /var/log/squid/ufdbguardd.log\n");}
+	shell_exec("chmod 777 /var/log/ufdbguard/ufdbguardd.log");	
+	ufdbguard_admin_events("Service will be rebuiled and restarted",__FUNCTION__,__FILE__,__LINE__,"config");
 	if(is_file("/etc/init.d/ufdb")){shell_exec("/etc/init.d/ufdb reconfig >/dev/null 2>&1");}
-	PersonalCategoriesRepair();
 	shell_exec("{$GLOBALS["SQUIDBIN"]} -k reconfigure");
 	send_email_events("SquidGuard/ufdbGuard rules was rebuilded","This is new configuration file of the squidGuard/ufdbGuard:\n-------------------------------------\n$datas","system");
 	shell_exec(LOCATE_PHP5_BIN2()." ".dirname(__FILE__)."/exec.c-icap.php --maint-schedule");
 	
 	}
 	
-function PersonalCategoriesRepair(){
-	$unix=new unix();
-	$user=GetSquidUser();
-	$reload=false;
-	$dirs=$unix->dirdir("/var/lib/squidguard/personal-categories");
-	while (list ($a, $dir) = each ($dirs)){
-		if(!is_file("$dir/expressions")){
-			events_ufdb_tail("exec.squidguard.php: creating $dir/expressions",__LINE__);
-			@file_put_contents("$dir/expressions"," ");
-			$reload=true;
-		}
-		
-	}
-	
-	shell_exec("/bin/chown -R $user:$user /var/lib/squidguard >/dev/null 2>&1 &");
-	if($reload){shell_exec("{$GLOBALS["SQUIDBIN"]} -k reconfigure");}
-}
+
 	
 function FileMD5($path){
 if(strlen(trim($GLOBALS["md5sum"]))==0){
@@ -287,7 +298,7 @@ function UFDBGUARD_COMPILE_SINGLE_DB($path){
 	}		
 	PersonalCategoriesRepair();
 	events_ufdb_tail("/etc/init.d/ufdb reconfig");
-	
+	ufdbguard_admin_events("Service was sucessfully rebuiled and restarted",__FUNCTION__,__FILE__,__LINE__,"config");
 	shell_exec("/etc/init.d/ufdb reconfig");
 	
 }
@@ -1037,7 +1048,9 @@ function ufdbguard_recompile_missing_dbs(){
 		
 	}
 	build();
-	if(is_file("/etc/init.d/ufdb")){shell_exec("/etc/init.d/ufdb reconfig >/dev/null 2>&1");}
+	if(is_file("/etc/init.d/ufdb")){
+		ufdbguard_admin_events("Service will be reloaded",__FUNCTION__,__FILE__,__LINE__,"config");
+		shell_exec("/etc/init.d/ufdb reconfig >/dev/null 2>&1");}
 	
 }
 
@@ -1068,6 +1081,44 @@ function ufdbguard_schedule(){
 	events_ufdb_tail("ufdbGuard recompile all databases each day at {$UfdbGuardSchedule["H"]}:{$UfdbGuardSchedule["M"]}",__LINE__);
 }
 
+function UFDBGUARD_COMPILE_CATEGORY($category){
+	$unix=new unix();
+	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
+	$oldpid=@file_get_contents($pidfile);
+	if($unix->process_exists($pid,basename(__FILE__))){return;}
+	@file_put_contents($pidfile, getmypid());
+	
+	ufdbguard_admin_events("start $category category compilation",__FUNCTION__,__FILE__,__LINE__,"compile");
+	$ufdb=new compile_ufdbguard();
+	$ufdb->compile_category($category);
+	ufdbguard_admin_events("Service will be reloaded",__FUNCTION__,__FILE__,__LINE__,"config");
+	shell_exec("/etc/init.d/ufdb reload");	
+}
+
+function UFDBGUARD_COMPILE_ALL_CATEGORIES(){
+	$unix=new unix();
+	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
+	$oldpid=@file_get_contents($pidfile);
+	if($unix->process_exists($pid,basename(__FILE__))){return;}
+	@file_put_contents($pidfile, getmypid());
+	ufdbguard_admin_events("start all categories compilation",__FUNCTION__,__FILE__,__LINE__,"compile");
+	$q=new mysql_squid_builder();
+	$t=time();
+	$cats=$q->LIST_TABLES_CATEGORIES();
+	$ufdb=new compile_ufdbguard();
+	while (list ($table, $line) = each ($cats) ){
+		if(preg_match("#category_(.+)#", $table,$re)){
+			$ufdb->compile_category($re[1]);
+		}
+		
+	}
+	
+	$ttook=$unix->distanceOfTimeInWords($t,time(),true);
+	ufdbguard_admin_events("Compilation all categories done ($ttook)",__FUNCTION__,__FILE__,__LINE__,"global-compile");
+	ufdbguard_admin_events("Service will be reloaded",__FUNCTION__,__FILE__,__LINE__,"config");
+	shell_exec("/etc/init.d/ufdb reload");		
+}
+
 function cron_compile(){
 	$users=new usersMenus();
 	if(!$users->APP_UFDBGUARD_INSTALLED){return;}
@@ -1075,16 +1126,21 @@ function cron_compile(){
 	$unix=new unix();
 	$restart=false;
 	if($unix->process_exists(@file_get_contents($pidfile))){return;}
+	@file_put_contents($pidfile, getmypid());
+	
+	
 	if(is_file("/etc/artica-postfix/ufdbguard.compile.alldbs")){
 		@unlink("/etc/artica-postfix/ufdbguard.compile.alldbs");
 		events_ufdb_exec("CRON:: -> ufdbguard_recompile_dbs()");
-		ufdbguard_recompile_dbs();
+		ufdbguard_admin_events("-> ufdbguard_recompile_dbs()",__FUNCTION__,__FILE__,__LINE__,"config");
+		UFDBGUARD_COMPILE_ALL_CATEGORIES();
 		return;
 	}
 	
 	if(is_file("/etc/artica-postfix/ufdbguard.compile.missing.alldbs")){
 		events_ufdb_exec("CRON:: -> ufdbguard_recompile_missing_dbs()");
 		@unlink("/etc/artica-postfix/ufdbguard.compile.missing.alldbs");
+		ufdbguard_admin_events("-> ufdbguard_recompile_missing_dbs()",__FUNCTION__,__FILE__,__LINE__,"config");
 		ufdbguard_recompile_missing_dbs();
 		return;
 	}
@@ -1092,6 +1148,7 @@ function cron_compile(){
 	if(is_file("/etc/artica-postfix/ufdbguard.reconfigure.task")){
 		events_ufdb_exec("CRON:: -> build()");
 		@unlink("/etc/artica-postfix/ufdbguard.reconfigure.task");
+		ufdbguard_admin_events("-> build()",__FUNCTION__,__FILE__,__LINE__,"config");
 		build();
 		return;
 	}
@@ -1101,12 +1158,14 @@ function cron_compile(){
 		$restart=true;
 		$db=@file_get_contents($filename);
 		@unlink($filename);
+		ufdbguard_admin_events("-> UFDBGUARD_COMPILE_SINGLE_DB(/var/lib/squidguard/$db/domains)",__FUNCTION__,__FILE__,__LINE__,"config");
 		UFDBGUARD_COMPILE_SINGLE_DB("/var/lib/squidguard/$db/domains");
 		
 		
 	}
 	
 	if($restart){
+		ufdbguard_admin_events("Service will be reloaded",__FUNCTION__,__FILE__,__LINE__,"config");
 		shell_exec("/etc/init.d/ufdb reload");
 	}
 	

@@ -7,37 +7,34 @@ $GLOBALS["CLASS_UNIX"]=new unix();
 $pidfile="/etc/artica-postfix/".basename(__FILE__).".pid";
 $oldpid=@file_get_contents($pidfile);
 events("Found old PID $oldpid");
-if($GLOBALS["CLASS_UNIX"]->process_exists($oldpid,basename(__FILE__))){
-	events("Already executed PID: $oldpid.. aborting the process");
-	die();
-}
+if($GLOBALS["CLASS_UNIX"]->process_exists($oldpid,basename(__FILE__))){events("Already executed PID: $oldpid.. aborting the process");die();}
 $pid=getmypid();
 file_put_contents($pidfile,$pid);
 events("ufdbtail starting PID $pid...");
 $GLOBALS["ufdbGenTable"]=$GLOBALS["CLASS_UNIX"]->find_program("ufdbGenTable");
 $GLOBALS["chown"]=$GLOBALS["CLASS_UNIX"]->find_program("chown");
 if($argv[1]=='--date'){echo date("Y-m-d H:i:s")."\n";}
-
-
-
 @mkdir("/var/log/artica-postfix/squid-stats",0666,true);
-
 $GLOBALS["PHP5_BIN"]=$GLOBALS["CLASS_UNIX"]->LOCATE_PHP5_BIN();
 @mkdir("/var/log/artica-postfix/ufdbguard-queue",0666,true);
+
 if(is_file("/var/log/artica-postfix/ufdbguard-tail.debug")){@unlink("/var/log/artica-postfix/ufdbguard-tail.debug");}
 events("Running new $pid ");
 events_ufdb_exec("Artica ufdb-tail running $pid");
+ufdbguard_admin_events("Watchdog running pid $pid","MAIN",__FILE__,__LINE__,"watchdog");
 events("ufdbGenTable = {$GLOBALS["ufdbGenTable"]}");
 
 
 $pipe = fopen("php://stdin", "r");
 while(!feof($pipe)){
 	$buffer .= fgets($pipe, 4096);
-	Parseline($buffer);
+	try {Parseline($buffer);}
+	catch(Exception $e){ufdbguard_admin_events("Fatal error on $buffer: ".$e->getMessage(),"MAIN",__FILE__,__LINE__,"watchdog");}
 	$buffer=null;
 }
 
 fclose($pipe);
+ufdbguard_admin_events("Watchdog die PID:$pid","MAIN",__FILE__,__LINE__,"watchdog");
 events_ufdb_exec("Artica ufdb-tail shutdown");
 events("Shutdown...");
 die();
@@ -46,8 +43,8 @@ die();
 
 function Parseline($buffer){
 $buffer=trim($buffer);
+events("Noop");
 if($buffer==null){return null;}
-
 if(strpos($buffer,"ufdbGenTable should be called with the")>0){return ;}
 if(strpos($buffer,"is deprecated and ignored")>0){return ;}
 if(strpos($buffer,"init domainlist")>0){return ;}
@@ -75,12 +72,12 @@ if(strpos($buffer,'max-logfile-size')>0){return ;}
 if(strpos($buffer,'check-proxy-tunnels')>0){return ;}
 if(strpos($buffer,'seconds to allow worker')>0){return ;}
 if(strpos($buffer,'] loading URL category')>0){return ;}
-
-	if(preg_match("#\] REDIR\s+#", $buffer)){return;}
+if(preg_match("#\] REDIR\s+#", $buffer)){return;}
 
 
 	if(preg_match('#FATAL\*\s+table\s+"(.+?)"\s+could not be parsed.+?14#',$buffer,$re)){
 		events("Table on {$re[1]} crashed");
+		ufdbguard_admin_events("Table on {$re[1]} crashed\n$buffer",__FUNCTION__,__FILE__,__LINE__,"watchdog");
 		events_ufdb_exec("$buffer");
 		$GLOBALS["CLASS_UNIX"]->send_email_events("ufdbguard: {$re[1]} could not be parsed","Ufdbguard claim: $buffer\n
 		You need to compile this database","proxy");
@@ -89,6 +86,7 @@ if(strpos($buffer,'] loading URL category')>0){return ;}
 	
 	if(strpos($buffer,"HUP signal received to reload the configuration")>0){
 		events_ufdb_exec("service was reloaded, wait 15 seconds");
+		ufdbguard_admin_events("service was reloaded, wait 15 seconds\n$buffer",__FUNCTION__,__FILE__,__LINE__,"watchdog");
 		$GLOBALS["CLASS_UNIX"]->send_email_events("ufdbguard: service was reloaded, wait 15 seconds","Ufdbguard 
 		: $buffer\n","proxy");
 		return;
@@ -96,6 +94,7 @@ if(strpos($buffer,'] loading URL category')>0){return ;}
 	
 	if(preg_match('#\*FATAL.+? cannot read from "(.+?)".+?: No such file or directory#', $buffer,$re)){
 		events("cannot read '{$re[1]}' -> \"$buffer\"");
+		ufdbguard_admin_events("cannot read '{$re[1]}' -> \"$buffer\"",__FUNCTION__,__FILE__,__LINE__,"watchdog");
 		if(!is_dir(dirname($re[1]))){
 			@mkdir(dirname($re[1]),755,true);
 			shell_exec("{$GLOBALS["chown"]} -R squid:squid ".dirname($re[1]));
@@ -140,6 +139,7 @@ if(strpos($buffer,'] loading URL category')>0){return ;}
 	
 	if(preg_match('#\*FATAL\*\s+cannot read from\s+"(.+?)"#',$buffer,$re)){
 		events("Problem on {$re[1]}");
+		ufdbguard_admin_events("Problem on {$re[1]}\nYou need to compile your databases",__FUNCTION__,__FILE__,__LINE__,"watchdog");
 		events_ufdb_exec("$buffer");
 		$GLOBALS["CLASS_UNIX"]->send_email_events("ufdbguard: {$re[1]} Not compiled..","Ufdbguard claim: $buffer\nYou need to compile your databases");
 		return;		
@@ -147,6 +147,7 @@ if(strpos($buffer,'] loading URL category')>0){return ;}
 	
 	if(preg_match("#\*FATAL\*\s+cannot read from\s+\"(.+?)\.ufdb\".+?No such file or directory#",$buffer,$re)){
 		events("UFDB database missing : Problem on {$re[1]}");
+		ufdbguard_admin_events("UFDB database missing : Problem on {$re[1]}\nUfdbguard claim: $buffer\nYou need to compile your databases",__FUNCTION__,__FILE__,__LINE__,"watchdog");
 		if(!is_file($re[1])){
 			@mkdir(dirname($re[1]),666,true);
 			shell_exec("/bin/touch {$re[1]}");
@@ -157,25 +158,34 @@ if(strpos($buffer,'] loading URL category')>0){return ;}
 	}
 	
 	if(preg_match("#\*FATAL\*\s+expression list\s+(.+?): Permission denied#",$buffer,$re)){
+		ufdbguard_admin_events("UFDB expression permission issue : Problem on '{$re[1]}' -> chown squid:squid",__FUNCTION__,__FILE__,__LINE__,"watchdog");
 		events("UFDB expression permission issue : Problem on '{$re[1]}' -> chown squid:squid");
 		shell_exec("{$GLOBALS["chown"]} -R squid:squid ".dirname($re[1]));
 		return;
 	}
 	
 	if(preg_match("#\*FATAL.+?expression list\s+(.+?):\s+No such file or directory#", $buffer,$re)){
+		ufdbguard_admin_events("Expression list: Problem on {$re[1]} -> \"$buffer\", try to repair",__FUNCTION__,__FILE__,__LINE__,"watchdog");
 		events("Expression list: Problem on {$re[1]} -> \"$buffer\"");
 		events("Creating directory ".dirname($re[1]));
 		@mkdir(dirname($re[1]),755,true);
 		events("Creating empty file '".$re[1]."'");
 		@file_put_contents($re[1], "\n");
+		ufdbguard_admin_events("Service will be reloaded",__FUNCTION__,__FILE__,__LINE__,"watchdog");
 		shell_exec("/etc/init.d/ufdb reload &");
 		return;
+	}
+	
+	if(preg_match("#database table \/var\/lib\/squidguard\/(.+?)\/domains\s+is empty#",$buffer,$re)){
+		ufdbguard_admin_events("Database {$re[1]} as no datas, you should recompile your databases",__FUNCTION__,__FILE__,__LINE__,"watchdog");
+		$GLOBALS["CLASS_UNIX"]->send_email_events("ufdbguard: {$re[1]} database is empty, please compile your databases","Ufdbguard claim: $buffer\nYou need to compile your databases","proxy");
 	}
 	
 
 
 	if(preg_match("#the new configuration and database are loaded for ufdbguardd ([0-9\.]+)#",$buffer,$re)){
-		$GLOBALS["CLASS_UNIX"]->send_email_events("UfdbGuard v{$re[1]} has reloaded new configuration and database",null,"proxy");
+		ufdbguard_admin_events("UfdbGuard v{$re[1]} has reloaded new configuration and databases",__FUNCTION__,__FILE__,__LINE__,"watchdog");
+		$GLOBALS["CLASS_UNIX"]->send_email_events("UfdbGuard v{$re[1]} has reloaded new configuration and databases",null,"proxy");
 		return;
 	}
 	

@@ -27,6 +27,7 @@ var MEM_TIMOUT=0;
 var ParseFormUriReturnedBack='';
 var ParseFormUriReturnedID;
 document.onmousemove = pointeurDeplace;
+UnlimitedSession();
 ONKEYPRESS="function(event){e0.onKeyPress(event,0)}";
 
 var compteur_global_timerID  = null;
@@ -51,6 +52,29 @@ var x_time_fill= function (obj) {
 	var results=obj.responseText;
 	document.getElementById('topemnucurrentdate').innerHTML=results;
 }
+
+
+function UnlimitedSession(){
+    var dt=new Date();
+    try{
+    	var jqueryIsLoaded=jQuery;
+    	jQueryIsLoaded=true;
+    	}
+    	catch(err){
+    	var jQueryIsLoaded=false;
+    	}
+    
+    
+    window.status=dt.getHours()+":"+dt.getMinutes()+":"+dt.getSeconds();
+    if (jQueryIsLoaded) {  
+    	Loadjs('Inotify.php');
+    }
+    setTimeout("UnlimitedSession()",120000);
+    
+}	
+	
+	
+
 
 function QuickLinks(){
 	var z = $("#middle").css('display');

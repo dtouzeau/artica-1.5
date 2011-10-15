@@ -141,7 +141,7 @@ $html="
 		}
 		
 	function GlobalSettingsPagePopup(){
-		YahooWin(888,'$page?js-index=yes','$title');
+		YahooWin(917,'$page?js-index=yes','$title');
 	}		
 		
 	function WebInterFace(){

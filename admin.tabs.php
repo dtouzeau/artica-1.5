@@ -273,8 +273,23 @@ $html="<div style='width:700px'>
 }
 
 
-	
 function admin_graph(){
+	
+	$html="
+	<div id='yorels-stats' style='margin: -5px;margin-left:-15px'></div>
+	
+	<script>
+		LoadAjax('yorels-stats','statistics.systems.yorel.php?popup=yes');
+	</script>
+	";
+	echo $html;
+	
+	
+	
+}
+
+	
+function admin_graph_start(){
 /*header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); 
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Cache-Control: no-store, no-cache, must-revalidate");

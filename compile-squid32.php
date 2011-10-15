@@ -4,9 +4,11 @@ $unix=new unix();
 $GLOBALS["SHOW_COMPILE_ONLY"]=false;
 $GLOBALS["NO_COMPILE"]=false;
 if($argv[1]=='--compile'){$GLOBALS["SHOW_COMPILE_ONLY"]=true;}
-if(preg_match("#--no-compile", @implode(" ", $argv))){$GLOBALS["NO_COMPILE"]=true;}
+if(preg_match("#--no-compile#", @implode(" ", $argv))){$GLOBALS["NO_COMPILE"]=true;}
 
 if($argv[1]=="--cross-packages"){crossroads_package();exit;}
+if($argv[1]=="--factorize"){factorize($argv[2]);exit;}
+if($argv[1]=="--serialize"){serialize_tests();exit;}
 
 
 $wget=$unix->find_program("wget");
@@ -14,10 +16,10 @@ $tar=$unix->find_program("tar");
 $rm=$unix->find_program("rm");
 $cp=$unix->find_program("cp");
 
+//http://www.squid-cache.org/Versions/v3/3.2/squid-3.2.0.13.tar.gz
 
-
-$v="squid-3.2.0.12-20111008-r11360.tar.gz";
-$dirsrc="squid-3.2.0.12";
+$v="squid-3.2.0.13.tar.gz";
+$dirsrc="squid-3.2.0.13";
 $Architecture=Architecture();
 
 if(is_dir("/root/squid-builder")){shell_exec("$rm -rf /root/squid-builder");}
@@ -90,8 +92,8 @@ $cmds[]="--enable-poll";
 $cmds[]="--enable-epoll";
 $cmds[]="--enable-async-io";
 $cmds[]="--enable-delay-pools";
-//$cmds[]="--enable-ssl"; 
-//$cmds[]="--enable-ssl-crtd";
+$cmds[]="--enable-ssl"; 
+$cmds[]="--enable-ssl-crtd";
 $cmds[]="CFLAGS=\"-DNUMTHREADS=60 -O3 -pipe -fomit-frame-pointer -funroll-loops -ffast-math -fno-exceptions\""; 
 
 //CPPFLAGS="-I../libltdl"
@@ -102,6 +104,10 @@ $configure="./configure ". @implode(" ", $cmds);
 
 if($GLOBALS["SHOW_COMPILE_ONLY"]){echo $configure."\n";die();}
 if(!$GLOBALS["NO_COMPILE"]){
+	echo "Remove /usr/share/squid3\n";
+	shell_exec("/bin/rm -rf /usr/share/squid3");
+	echo "Remove /lib/squid3\n";
+	shell_exec("/bin/rm -rf /lib/squid3");
 	echo "configuring...\n";
 	shell_exec($configure);
 	echo "make...\n";
@@ -119,6 +125,11 @@ if(!$GLOBALS["NO_COMPILE"]){
 	shell_exec("make install");
 }
 if(!is_file("/usr/sbin/squid")){echo "Failed\n";}
+
+shell_exec("wget http://www.artica.fr/download/anthony-icons.tar.gz -O /tmp/anthony-icons.tar.gz");
+@mkdir("/usr/share/squid3/icons",755,true);
+shell_exec("tar -xf /tmp/anthony-icons.tar.gz -C /usr/share/squid3/icons/");
+shell_exec("/bin/chown -R squid:squid /usr/share/squid3/icons/");
 
 mkdir("/root/squid-builder/usr/share/squid3",755,true);
 mkdir("/root/squid-builder/etc/squid3",755,true);
@@ -176,5 +187,30 @@ while (list ($num, $file) = each ($f)){
 	chdir("/root/crossroads");
 	shell_exec("$tar -czf crossroads-$Architecture.tar.gz *");
 
+	
+}
+
+
+function factorize($path){
+	$f=explode("\n",@file_get_contents($path));
+	while (list ($num, $val) = each ($f)){
+		$newarray[$val]=$val;
+		
+	}
+	while (list ($num, $val) = each ($newarray)){
+		echo "$val\n";
+	}
+	
+}
+
+function serialize_tests(){
+	$array["zdate"]=date("Y-m-d H:i:s");
+	$array["text"]="this is the text";
+	$array["function"]="this is the function";
+	$array["file"]="this is the process";
+	$array["line"]="this is the line";
+	$array["category"]="this is the category";
+	$serialize=serialize($array);
+	echo $serialize;
 	
 }

@@ -2525,6 +2525,9 @@ Do you want to perform this operation ?</WWW_RESCAN_VISITED_ASK>
 <no_loadbalancer_defined>No load balancer service defined</no_loadbalancer_defined>
 <title_pages>Administration interface browser title</title_pages>
 <reconfigure_all_instances_text>Reconfigure all instances</reconfigure_all_instances_text>
+<error_max_database_name_no_more_than>Error Database name length no more than</error_max_database_name_no_more_than>
+<category_already_exists>This category already exists</category_already_exists>
+<error_category_textexpl>Please give a description of this category, a text that explain what kind of websites this category will store.. </error_category_textexpl> 
 <bad_header>Bad header</bad_header>
 <unchecked>Unchecked</unchecked>
 <APP_POSTFWD2_ICON_TEXT>Manage your SMTP rules like a FireWall with PostFwd</APP_POSTFWD2_ICON_TEXT>
@@ -2560,5 +2563,16 @@ In the opposite, if checked users must authenticate has following : "user". [br]
 <advanced_artica_options_text>Define Artica global settings such as notifications, specific Web interface settings, Proxy use, LDAP parameters, master admin and password...</advanced_artica_options_text>
 <purge_db>Purge database</purge_db>
 <postfwd_objects_explain>Objects can be used in rules.[br]An object store a set of rules that define the OR argument and allow you to set several values.</postfwd_objects_explain>
-<object>object</object> 
-
+<object>object</object>
+<line>line</line>
+<ufdbguard_conf_read_text>Display the UfdbGuard Daemon generated configuration file</ufdbguard_conf_read_text>
+<personal_category>Personal category</personal_category> 
+<confirm_dnsg_compile_db>This operation will save to disk all websites in the selected category.
+During this task the server should be loaded.
+Do you want to perform compilation this category ?
+</confirm_dnsg_compile_db>
+<saveToDisk>Save to Disk</saveToDisk>
+<confirm_dnsg_compileall_db>This operation will save to disk all websites in all categories saved in your databases.
+During this task the server should be loaded.
+Do you want to perform compilation of all categories ?
+</confirm_dnsg_compileall_db>

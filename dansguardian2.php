@@ -34,17 +34,20 @@ function tabs(){
 	$page=CurrentPageName();
 	$array["status"]='{status}';
 	
-	if($users->APP_UFDBGUARD_INSTALLED){
-		if($squid->enable_UfdbGuard==1){
-			$array["ufdbguard"]='{service_parameters}';
-		}
-		
-	}
+
 	
 	
 	$array["rules"]='{rules}';
 	$array["groups"]='{groups}';
 	$array["databases"]='{databases}';
+	
+	if($users->APP_UFDBGUARD_INSTALLED){
+		if($squid->enable_UfdbGuard==1){
+			$array["ufdbguard"]='{service_parameters}';
+			$array["ufdbguard-events"]='{events}';
+		}
+		
+	}	
 	
 
 
@@ -56,6 +59,12 @@ function tabs(){
 			continue;
 			
 		}
+		
+		if($num=="ufdbguard-events"){
+			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"ufdbguard.admin.events.php\" style='font-size:14px'><span>$ligne</span></a></li>\n");
+			continue;
+			
+		}		
 		
 		if($num=="databases"){
 			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"dansguardian2.databases.php\" style='font-size:14px'><span>$ligne</span></a></li>\n");
@@ -291,7 +300,10 @@ function ufdbguard_service_section(){
 	
 	$compile_schedule=Paragraphe("clock-gold-64.png","{compilation_schedule}","{compilation_schedule_text}","javascript:Loadjs('ufdbguard.databases.php?scripts=compile-schedule')");	
 	
+	$ufdbguard_conf=Paragraphe("script-64.png","ufdbguard.conf","{ufdbguard_conf_read_text}","javascript:Loadjs('ufdbguard.databases.php?scripts=config-file')");
+	
 	$tr[]=$ufdbguard_settings;
+	$tr[]=$ufdbguard_conf;
 	$tr[]=$squidguardweb;
 	$tr[]=$template;
 	$tr[]=$recompile_all_database;

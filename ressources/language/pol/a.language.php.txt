@@ -469,6 +469,7 @@ So you need to ensure that you have some storages to save objects in your server
 <cannot_schedule_update_without_schedule>Cannot enable Scheduling updates if you did not set the schedule!</cannot_schedule_update_without_schedule>
 <categories_white_explain>Set categories you want to allow, this is the whitelist.</categories_white_explain>
 <categorize_this_website>Categorize this website</categorize_this_website>
+<category_already_exists>This category already exists</category_already_exists>
 <cat_hospitals>Sites of hospitals and medical facilities</cat_hospitals>
 <cat_medical>Medical websites</cat_medical>
 <cat_remote-control>Sites offering the service to remotely access computers, expecially (but not limited to going) through firewalls.[br]
@@ -533,6 +534,14 @@ domain.tld to match hosts width domain domain.tld
 Be sure that you have enabled in FreeWeb an Artica web console before check this.
 Do you want to confirm this operation ?
 </ConfirmDisableArticaWebConsole>
+<confirm_dnsg_compileall_db>This operation will save to disk all websites in all categories saved in your databases.
+During this task the server should be loaded.
+Do you want to perform compilation of all categories ?
+</confirm_dnsg_compileall_db>
+<confirm_dnsg_compile_db>This operation will save to disk all websites in the selected category.
+During this task the server should be loaded.
+Do you want to perform compilation this category ?
+</confirm_dnsg_compile_db>
 <confirm_remove_zarafa_db>This operation will erase database and create a new one.[br]Datas will be removed defenitively
 Do you want to execute this operation ?</confirm_remove_zarafa_db>
 <confirm_reprosess_category>Reprocess this category? During the database processing the MySQL server should be loaded.</confirm_reprosess_category>
@@ -893,8 +902,10 @@ When a user add/delete/modify a file in a Samba folder, greyhole will saved it a
 <enable_white_listed_mode_text>It is designed if your SMTP server is stored on Internet and used only for outgoing mails.[br]In other case if you dedicate this server to only a part of your network</enable_white_listed_mode_text>
 <eq2>is equal</eq2>
 <errors>Errors</errors>
+<error_category_textexpl>Please give a description of this category, a text that explain what kind of websites this category will store.. </error_category_textexpl>
 <error_choose_organization>Error you need to choose at least an organization</error_choose_organization>
 <error_field_max_length>Error, the given value execeed</error_field_max_length>
+<error_max_database_name_no_more_than>Error Database name length no more than</error_max_database_name_no_more_than>
 <error_no_website_selected>Error no selected website</error_no_website_selected>
 <error_please_fill_field>Error, please fill the required field</error_please_fill_field>
 <estimate>Estimate</estimate>
@@ -1263,6 +1274,7 @@ Give here the ip address and port number of your Kaspersky ICAP service.</kavica
 <LimitRequestFields>Request headers (fields)</LimitRequestFields>
 <limit_memory>Limit memory to</limit_memory>
 <limit_swap>Limit memory SWAP to</limit_swap>
+<line>line</line>
 <link>link</link>
 <load_balancer>Load Balancer</load_balancer>
 <load_balancer_instances_explain>This feature allow you to enable a load blancing system for your SMTP instances.[br]
@@ -1571,6 +1583,7 @@ Usually you did not have to change this section.[br]Sometimes, you need to force
 <permit_dnswl_client_text>[b]dnswl_domain=d.d.d.d[/b][br]Accept the request when the reversed client network address is listed with the A record "d.d.d.d" under dns white list domain.</permit_dnswl_client_text>
 <permit_rhswl_client>[b]rhswl_domain=d.d.d.d[/b][br]Accept the request when the client hostname is listed with the A record "d.d.d.d" under rhswl_domain.</permit_rhswl_client>
 <persistante_connection>Persistante connection</persistante_connection>
+<personal_category>Personal category</personal_category>
 <PHP_CONFIGURATION>PHP configuration path</PHP_CONFIGURATION>
 <php_values>PHP Values</php_values>
 <picture>Picture</picture>
@@ -1990,6 +2003,7 @@ To solve this problem, Microsoft now provides the Windows Internet Naming Servic
  Consequently, name registration and resolution requests can be directed to a single machine from any point on the network, 
  instead of broadcast.
  </samba_wins_explain>
+<saveToDisk>Save to Disk</saveToDisk>
 <sa_debug>Debug Spamassassin</sa_debug>
 <sa_timeout>Spamassassin TimeOut</sa_timeout>
 <ScanPeriod>Scan period</ScanPeriod>
@@ -2295,6 +2309,7 @@ If the value of this attribute is decreasing there is a high probability that th
 [b]Artica Community[/b]: These databases (around 1.500.000 entries)are automatically downloaded from Artica update server and are stored on mysql databases.[br]
 [b]UfdbGuard databases[/b]: These databases (around 9.000.000 entries) must have an ufdbGuard license to obtain them. Contact our support team for more informations.[br]
 </ufdbgdb_explain>
+<ufdbguard_conf_read_text>Display the UfdbGuard Daemon generated configuration file</ufdbguard_conf_read_text>
 <ufdbguard_simple_intro>ufdbGuard is an extremely fast and free URL filter in public domain.[br]
 ufdbGuard is designed for use with the popular web proxy Squid</ufdbguard_simple_intro>
 <UNABLE_TO_OBTAIN_INFORMATIONS_FROM>Unable to obtain informations from</UNABLE_TO_OBTAIN_INFORMATIONS_FROM>

@@ -19,15 +19,15 @@ if(preg_match("#--force#",implode(" ",$argv))){$GLOBALS["FORCE"]=true;}
 
 if($argv[1]=='--build-server'){build_server_mode();die();}
 if($argv[1]=='--build-client'){build_client_mode();die();}
-if($argv[1]=='--auth-logs'){authlogs();sessions_logs();ipblocks();clamd_mem();admin_logs();crossroads();die();}
+if($argv[1]=='--auth-logs'){authlogs();sessions_logs();ipblocks();clamd_mem();admin_logs();crossroads();udfbguard_admin_events();die();}
 if($argv[1]=='--authfw'){authfw();sessions_logs();die();ipblocks();}
 if($argv[1]=='--authfw-compile'){compile_sshd_rules();sessions_logs();ipblocks();die();}
-if($argv[1]=='--snort'){snort_logs();sessions_logs();ipblocks();clamd_mem();crossroads();die();}
+if($argv[1]=='--snort'){snort_logs();sessions_logs();ipblocks();clamd_mem();crossroads();udfbguard_admin_events();die();}
 if($argv[1]=='--sessions'){sessions_logs();die();}
-if($argv[1]=='--loadavg'){loadavg_logs();clamd_mem();crossroads();die();}
+if($argv[1]=='--loadavg'){loadavg_logs();clamd_mem();crossroads();udfbguard_admin_events();die();}
 if($argv[1]=='--ipblocks'){ipblocks();die();}
-if($argv[1]=='--adminlogs'){admin_logs();squid_tasks();crossroads();die();}
-if($argv[1]=='--psmem'){ps_mem(true);squid_tasks();crossroads();die();}
+if($argv[1]=='--adminlogs'){admin_logs();squid_tasks();crossroads();udfbguard_admin_events();die();}
+if($argv[1]=='--psmem'){ps_mem(true);squid_tasks();crossroads();udfbguard_admin_events();die();}
 if($argv[1]=='--squid-tasks'){squid_tasks(true);die();}
 
 
@@ -280,6 +280,56 @@ function admin_logs(){
 	
 	ps_mem();
 		
+}
+
+
+function udfbguard_admin_events($nopid=false){
+	$f=array();
+	if($nopid){
+		$unix=new unix();
+		$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
+		$pid=@file_get_contents($pidfile);
+		if($unix->process_exists($pid)){writelogs("Already running pid $pid",__FUNCTION__,__FILE__,__LINE__);return;}	
+		$t=0;		
+		
+	}	
+	
+$q=new mysql();	
+	if(!$q->TABLE_EXISTS('ufdbguard_admin_events','artica_events')){$q->BuildTables();}
+	if(!$q->TABLE_EXISTS('ufdbguard_admin_events','artica_events',true)){return;}
+	$prefix="INSERT IGNORE INTO ufdbguard_admin_events (`zDate`,`function`,`filename`,`line`,`description`,`category`) VALUES ";
+	foreach (glob("/var/log/artica-postfix/ufdbguard_admin_events/*") as $filename) {
+		$array=unserialize(@file_get_contents($filename));
+		if(!is_array($array)){
+			$array["text"]=basename($filename)." is not an array, skip event ".@file_get_contents($filename);
+			$array["date"]=date('Y-m-d H:i:s');
+			$array["pid"]=getmypid();
+			$array["function"]=__FUNCTION__;
+			$array["category"]="parser";
+			$array["file"]=basename(__FILE__);
+			$array["line"]=__LINE__;
+		}			
+			
+			
+			
+		$array["text"]=addslashes($array["text"]);
+		$f[]="('{$array["zdate"]}','{$array["function"]}','{$array["file"]}','{$array["line"]}','{$array["text"]}','{$array["category"]}')";
+		@unlink($filename);
+	}
+	
+	if(count($f)>0){$sql=$prefix.@implode(",", $f);
+		$q->QUERY_SQL($sql,"artica_events");
+		if(!$q->ok){
+			writelogs("$q->mysql_error",__FUNCTION__,__FILE__,__LINE__);
+		}
+	
+	}
+	
+	$num=$q->COUNT_ROWS("ufdbguard_admin_events","artica_events");
+	if($num>4000){$q->QUERY_SQL("DELETE FROM ufdbguard_admin_events ORDER BY zDate LIMIT 4000","artica_events");}
+
+	
+	
 }
 
 function crossroads($nopid=false){

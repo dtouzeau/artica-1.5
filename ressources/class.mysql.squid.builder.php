@@ -443,6 +443,15 @@ class mysql_squid_builder{
 			$this->QUERY_SQL($sql,$this->database);
 		}
 		
+		if(!$this->TABLE_EXISTS('personal_categories',$this->database)){	
+				$sql="CREATE TABLE `squidlogs`.`personal_categories` (
+				`category` VARCHAR( 15 ) NOT NULL ,
+				`category_description` VARCHAR( 255 ) NOT NULL ,
+				`sended` INT( 1 ) NOT NULL DEFAULT '0',
+				INDEX ( `category_description` , `sended` ) ,
+				UNIQUE (`category`))";		
+				$this->QUERY_SQL($sql,$this->database);
+		}
 	}
 	
 	function COUNT_CATEGORIES(){

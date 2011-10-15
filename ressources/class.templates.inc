@@ -3386,6 +3386,7 @@ function CheckSessions(){
 		$noback["exec.shm.php"]=true;
 		$noback["cron.notifs.php"]=true;
 		$noback["change.title.php"]=true;
+		$noback["Inotify.php"]=true;
 		
 		if(!class_exists("usersMenus")){
 			writelogs("Unable to stat class usersMenus include ".dirname(__FILE__)."/class.users.menus.inc",__CLASS__.'/'.__FUNCTION__,__FILE__);

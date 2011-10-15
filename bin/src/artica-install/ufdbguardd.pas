@@ -23,7 +23,7 @@ private
      EnableUfdbGuard:integer;
      SQUIDEnable:integer;
      binpath:string;
-
+     procedure ufdb_admin_events(textlog:string;sfunction:string;sline:string);
 public
     procedure   Free;
     constructor Create(const zSYS:Tsystem);
@@ -97,6 +97,7 @@ end;
    fpsystem(cmd);
 
    count:=0;
+   ufdb_admin_events('receive command to stop UfdbGuard daemon','STOP','100');
    while SYS.PROCESS_EXIST(pidstring) do begin
         sleep(200);
         count:=count+1;
@@ -166,7 +167,7 @@ end;
    fpsystem('/bin/chown -R squid:squid /var/log/ufdbguard');
 
    if FileExists('/etc/init.d/ufdb') then cmd:='/etc/init.d/ufdb start';
-
+   ufdb_admin_events('receive command to start UfdbGuard daemon','START','100');
    fpsystem(cmd);
    count:=0;
    while not SYS.PROCESS_EXIST(PID_NUM()) do begin
@@ -225,7 +226,11 @@ var
    servername:string;
    tmpfile:string;
    cmdline,pid:string;
+   noufdbg:boolean;
+   noufdbgcmdline:string;
 begin
+ noufdbg:=SYS.COMMANDLINE_PARAMETERS('--noufdbg');
+if noufdbg then noufdbgcmdline:=' --noufdbg';
 
    if not FileExists(binpath) then begin
          logs.DebugLogs('Starting......: ufdbguardd not installed');
@@ -250,6 +255,7 @@ pidint:=0;
           if count>0 then break;
           if not TryStrToInt(pid,pidint) then continue;
           logs.DebugLogs('Starting......: ufdbguardd-tail stop tail pid '+pid);
+          ufdb_admin_events('ufdbguardd-tail stop tail pid '+pid,'TAIL_START','254');
           if pidint>0 then  fpsystem('/bin/kill '+pid);
           sleep(200);
           pid:=SYS.PIDOF_PATTERN('/usr/bin/tail -f -n 0 /var/log/ufdbguard/ufdbguardd.log');
@@ -257,12 +263,12 @@ pidint:=0;
       end;
 
 
-cmd:='/usr/bin/tail -f -n 0 '+TAIL_LOG_PATH+'|'+TAIL_STARTUP+' 2>&1 &';
+cmd:='/usr/bin/tail -f -n 0 '+TAIL_LOG_PATH+'|'+TAIL_STARTUP+noufdbgcmdline+' 2>&1 &';
 logs.Debuglogs(cmd);
 fpsystem(cmd);
 pid:=TAIL_PID_NUM();
 count:=0;
-
+   ufdb_admin_events('receive order to start ufdbguardd-tail','TAIL_START','254');
    fpsystem(cmd);
    count:=0;
    while not SYS.PROCESS_EXIST(TAIL_PID_NUM()) do begin
@@ -276,11 +282,18 @@ count:=0;
    end;
 
    if not SYS.PROCESS_EXIST(TAIL_PID_NUM()) then begin
+       ufdb_admin_events('ufdbguardd-tail (failed!!!)','TAIL_START','281');
        logs.DebugLogs('Starting......: ufdbguardd-tail (failed!!!)');
        logs.DebugLogs('Starting......: ufdbguardd-tail "'+cmd+'"');
    end else begin
-       logs.DebugLogs('Starting......: ufdbguardd-tail started with new PID '+TAIL_PID_NUM());
-       fpsystem('/etc/init.d/ufdb reconfig');
+       pid:=TAIL_PID_NUM();
+       ufdb_admin_events('ufdbguardd-tail started pid '+pid,'TAIL_START','286');
+       logs.DebugLogs('Starting......: ufdbguardd-tail started with new PID '+pid);
+
+       if not noufdbg  then begin
+          ufdb_admin_events('Reloading UfdbGuard daemon','TAIL_START','294');
+          fpsystem('/etc/init.d/ufdb reconfig');
+       end;
    end;
 
 end;
@@ -308,7 +321,8 @@ if not SYS.PROCESS_EXIST(pid) then begin
           pid:=CountTail.Strings[i];
           if count>100 then break;
           if not TryStrToInt(pid,pidint) then continue;
-         writeln('Stopping ufdbguardd-tail..........: Stop tail pid '+pid);
+          ufdb_admin_events('Stopping ufdbguardd-tail pid'+pid,'TAIL_STOP','316');
+          writeln('Stopping ufdbguardd-tail..........: Stop tail pid '+pid);
           if pidint>0 then  fpsystem('/bin/kill '+pid);
           sleep(100);
           inc(count);
@@ -327,6 +341,7 @@ end;
 
 CountTail:=Tstringlist.Create;
 CountTail.AddStrings(SYS.PIDOF_PATTERN_PROCESS_LIST('/usr/bin/tail -f -n 0 '+TAIL_LOG_PATH));
+if CountTail.Count>0 then ufdb_admin_events('Stopping Tail processe(s) number '+IntToStr(CountTail.Count),'TAIL_STOP','336');
 writeln('Stopping ufdbguardd-tail..........: Tail processe(s) number '+IntToStr(CountTail.Count));
 count:=0;
      for i:=0 to CountTail.Count-1 do begin;
@@ -406,5 +421,24 @@ l.free;
 RegExpr.free;
 end;
 //##############################################################################
+
+procedure tufdbguardd.ufdb_admin_events(textlog:string;sfunction:string;sline:string);
+
+var
+   xdate:string;
+   xtring:string;
+   md5:string;
+begin
+   xdate:=logs.DateTimeNowSQL();
+   xtring:='a:6:{s:5:"zdate";s:19:"'+xdate+'";s:4:"text";s:16:"'+textlog+'";s:8:"function";s:20:"'+sfunction+'";s:4:"file";s:19:"artica-install";s:4:"line";s:16:"'+sline+'";s:8:"category";s:20:"Daemon";}';
+   md5:=logs.MD5FromString(xtring);
+   logs.WriteToFile(xtring,'/var/log/artica-postfix/ufdbguard_admin_events/'+md5+'.log');
+end;
+
+
+
+
+
+
 // ufdbguardd
 end.

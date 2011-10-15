@@ -217,7 +217,11 @@ function blacklist_save(){
 	if(($_POST["enabled"]==0) && ($ligne["ID"]>0)){
 		$q->QUERY_SQL("DELETE FROM webfilter_blks WHERE ID={$ligne["ID"]}");
 		if(!$q->ok){echo $q->mysql_error;return;} 
-	}	
+	}
+
+	$sock=new sockets();
+	$sock->getFrameWork("squid.php?rebuild-filters=yes");
+	
 }
 
 function whitelist_save(){
@@ -232,7 +236,10 @@ function whitelist_save(){
 	if(($_POST["enabled"]==0) && ($ligne["ID"]>0)){
 		$q->QUERY_SQL("DELETE FROM webfilter_blks WHERE ID={$ligne["ID"]}");
 		if(!$q->ok){echo $q->mysql_error;return;} 
-	}		
+	}
+
+	$sock=new sockets();
+	$sock->getFrameWork("squid.php?rebuild-filters=yes");	
 	
 }
 
@@ -667,6 +674,9 @@ function groups_choose_add(){
 	$q->QUERY_SQL($sql);
 	if(!$q->ok){echo $q->mysql_error;}
 	
+	$sock=new sockets();
+	$sock->getFrameWork("squid.php?rebuild-filters=yes");	
+	
 }
 
 function groups_choose_del(){
@@ -675,7 +685,10 @@ function groups_choose_del(){
 	$q=new mysql_squid_builder();
 	$q->CheckTables(null);
 	$q->QUERY_SQL($sql);
-	if(!$q->ok){echo $q->mysql_error;}	
+	if(!$q->ok){echo $q->mysql_error;}
+
+	$sock=new sockets();
+	$sock->getFrameWork("squid.php?rebuild-filters=yes");	
 }
 
 

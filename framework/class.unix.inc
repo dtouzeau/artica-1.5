@@ -701,6 +701,7 @@ function RESTART_SYSLOG(){
 			shell_exec("/etc/init.d/artica-postfix restart sysloger");
 			shell_exec("/etc/init.d/artica-postfix restart postfix-logger");
 			shell_exec("/etc/init.d/artica-postfix restart squid-tail");
+			ufdbguard_admin_events("Restarting udbguard-tail after cleaning log files",__FUNCTION__,__FILE__,__LINE__,"system");
 			shell_exec("/etc/init.d/artica-postfix restart ufdb-tail");	
 	
 }
@@ -3691,5 +3692,24 @@ function ini_set_verbosed(){
 			ini_set('error_prepend_string','');
 			ini_set('error_append_string','');	
 }
+
+function ufdbguard_admin_events($text,$function,$file,$line,$category){
+	
+	if($GLOBALS["VERBOSE"]){echo "$function:: $text in line $line in file $file\n";}
+	$array["zdate"]=date("Y-m-d H:i:s");
+	$array["text"]=$text;
+	$array["function"]=$function;
+	$array["file"]=basename($file);
+	$array["line"]=$line;
+	$array["category"]=$category;
+	$serialize=serialize($array);
+	$md5=md5($serialize);
+	if(!is_dir("/var/log/artica-postfix/ufdbguard_admin_events")){@mkdir("/var/log/artica-postfix/ufdbguard_admin_events",755,true);}
+	@file_put_contents("/var/log/artica-postfix/ufdbguard_admin_events/$md5.log", $serialize);
+	
+	
+}
+
+
 
 ?>

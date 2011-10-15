@@ -413,8 +413,8 @@ var X_SaveXRConfig= function (obj) {
 		if(document.getElementById('EnableCrossRoads').checked){XHR.appendData('EnableCrossRoads',1);}else{XHR.appendData('EnableCrossRoads',0);}
 		
 		
+		AnimateDiv('xr-form');
 		
-		document.getElementById('xr-form').innerHTML='<center><img src=img/wait_verybig.gif></center>';
 		XHR.sendAndLoad('$page', 'GET',X_SaveXRConfig);				
 	}		
 	

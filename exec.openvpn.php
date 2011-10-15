@@ -83,9 +83,6 @@ function BuildIpTablesServer(){
 	shell_exec2("/sbin/iptables -A FORWARD -i $IPTABLES_ETH -j ACCEPT -m comment --comment \"ArticaOpenVPN\"");
 	shell_exec2("/sbin/iptables -A OUTPUT -o $IPTABLES_ETH -j ACCEPT -m comment --comment \"ArticaOpenVPN\"");
 	shell_exec2("/sbin/iptables -t nat -A POSTROUTING -o tun0 -j MASQUERADE -m comment --comment \"ArticaOpenVPN\"");
-	
-	
-	
 	echo "Starting......: OpenVPN prerouting success from tun0 -> $IPTABLES_ETH...\n";
 	
 }

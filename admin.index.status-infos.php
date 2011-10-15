@@ -28,6 +28,10 @@ if($datas<>null){NotifyAdmin("system-32.png","CPU Infos !",$datas,null);}
 
 
 $q=new mysql();
+
+$sql="DELETE FROM adminevents WHERE `text`='{websites_not_categorized_text}'";
+$q->QUERY_SQL($sql,"artica_events");
+
 $sql="SELECT * FROM adminevents WHERE enabled=1 ORDER BY zDate DESC LIMIT 0,50";
 $results=$q->QUERY_SQL($sql,"artica_events");
 $html="<table style='width:100%' class=form><tbody>";
