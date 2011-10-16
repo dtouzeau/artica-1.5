@@ -1,21 +1,27 @@
 <?php
+$GLOBALS["FORCE"]=false;
 if(posix_getuid()<>0){die("Cannot be used in web server mode\n\n");}
 include_once(dirname(__FILE__) . '/ressources/class.users.menus.inc');
 include_once(dirname(__FILE__) . '/ressources/class.templates.inc');
 include_once(dirname(__FILE__) . '/framework/class.unix.inc');
 include_once(dirname(__FILE__) . '/framework/frame.class.inc');
 include_once(dirname(__FILE__) . '/ressources/class.ldap.inc');
-if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["VERBOSE"]=true;}
+if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["FORCE"]=true;$GLOBALS["DEBUG"]=true;$GLOBALS["VERBOSE"]=true;ini_set('display_errors', 1);ini_set('error_reporting', E_ALL);ini_set('error_prepend_string',null);ini_set('error_append_string',null);}
+if(preg_match("#--force#",implode(" ",$argv))){$GLOBALS["FORCE"]=true;}
+
 
 if($argv[1]=="--chassis"){
-	if(is_file("/etc/artica-postfix/dmidecode.cache")){
-		$datas=@file_get_contents("/etc/artica-postfix/dmidecode.cache");
-		$newdatas=urlencode(base64_encode($datas));
-		@file_put_contents("/etc/artica-postfix/dmidecode.cache.url", $newdatas);
-		die();
+	if(!$GLOBALS["FORCE"]){
+		if(is_file("/etc/artica-postfix/dmidecode.cache")){
+			$datas=@file_get_contents("/etc/artica-postfix/dmidecode.cache");
+			$newdatas=urlencode(base64_encode($datas));
+			@file_put_contents("/etc/artica-postfix/dmidecode.cache.url", $newdatas);
+			die();
+		}
 	}
 	
 }
+
 
 $cache_file="/etc/artica-postfix/dmidecode.cache";
 if(!$GLOBALS["VERBOSE"]){
@@ -97,7 +103,7 @@ if(is_file($virtwhat)){
 }
 
 if($GLOBALS["VERBOSE"]){print_r($final_array);}
-$newdatas=urlencode(base64_encode($final_array));
+$newdatas=urlencode(base64_encode(serialize($final_array)));
 @file_put_contents("$cache_file",serialize($final_array));
 @file_put_contents("/etc/artica-postfix/dmidecode.cache.url",$newdatas);
 

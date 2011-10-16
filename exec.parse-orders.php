@@ -223,6 +223,14 @@ if(!is_file($pgrep)){return;}
 				shell_exec("/bin/kill -9 {$re[1]}");
 				}
 			}
+			
+			if($filename=="exec.test-connection.php"){
+				if($time>5){
+				$GLOBALS["CLASS_UNIX"]->send_email_events("[artica-background] exec.test-connection.php is killed after {$time}Mn live",null,"system");
+				events("killing exec.test-connection.php it freeze...",__FUNCTION__,__LINE__);
+				shell_exec("/bin/kill -9 {$re[1]}");
+				}
+			}
 
 			if($filename=="exec.watchdog.php"){
 				if($time>5){

@@ -350,6 +350,7 @@ error_log(basename(__FILE__)." ".__FUNCTION__.'() line '. __LINE__);
 function main_admin_tabs(){
 	if($GLOBALS["VERBOSE"]){echo "<li>".__FUNCTION__." line:".__LINE__."</li>";}
 	$array["t:frontend"]="{status}";
+	$array["t:orgs"]="{organizations}";
 	$users=new usersMenus();
 	$sys=new syslogs();
 	$artica=new artica_general();
@@ -392,7 +393,9 @@ $count=count($array);
 $page=CurrentPageName();
 $tpl=new templates();
 $width="758px";
-if(isset($_GET["tab-font-size"])){$style="style=font-size:{$_GET["tab-font-size"]}";}
+if(isset($_GET["tab-font-size"])){
+	if($_GET["tab-font-size"]=="14px"){$_GET["tab-font-size"]="12px";}
+	$style="style=font-size:{$_GET["tab-font-size"]}";}
 if(isset($_GET["tab-width"])){$width=$_GET["tab-width"];}
 if(isset($_GET["newfrontend"])){$newfrontend="&newfrontend=yes";}
 
@@ -406,6 +409,11 @@ if(isset($_GET["newfrontend"])){$newfrontend="&newfrontend=yes";}
 				$html[]= "<li ><a href=\"admin.cnx.php?t=0$newfrontend\"><span $style>$ligne</span></a></li>\n";
 				continue;
 			}
+			
+			if($re[1]=="orgs"){
+				$html[]= "<li ><a href=\"domains.index.php?inside-tab=yes$newfrontend\"><span $style>$ligne</span></a></li>\n";
+				continue;
+			}			
 			
 			$html[]= "<li><a href=\"admin.tabs.php?main={$re[1]}$newfrontend\"><span $style>$ligne</span></a></li>\n";
 			continue;

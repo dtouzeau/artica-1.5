@@ -378,6 +378,10 @@ function ldap_config(){
 	$ldap_groupname_attribute="cn";	
 	$ldap_addresslist_search_filter = "(objectClass=zarafaAddressList)";
 	$ldap_contact_type_attribute_value="zarafa-contact";
+	$ldap_groupmembers_attribute="memberUid";
+	$ldap_groupmembers_attribute_type="text";
+	$ldap_groupmembers_relation_attribute="uid";
+	$ldap_emailaliases_attribute="mailAlias";
 	
 	if($CyrusToAD==1){
 		$ldap=new ldapAD();
@@ -395,6 +399,11 @@ function ldap_config(){
 		$ldap_groupname_attribute="dn";
 		$ldap_addresslist_search_filter=null;
 		$ldap_contact_type_attribute_value="Contact";
+		$ldap_groupmembers_attribute="member";
+		$ldap_groupmembers_attribute_type="dn";
+		$ldap_groupmembers_relation_attribute=null;
+		$ldap_emailaliases_attribute ="otherMailbox";
+		
 	}
 	
 	
@@ -437,10 +446,8 @@ $f[]="ldap_authentication_method = password";
 $f[]="ldap_loginname_attribute = $ldap_loginname_attribute";
 $f[]="ldap_password_attribute = $ldap_password_attribute";
 $f[]="ldap_emailaddress_attribute = mail";
-if($CyrusToAD==1){
-	$f[]="ldap_emailaliases_attribute = otherMailbox";
-	
-}
+$f[]="ldap_emailaliases_attribute = $ldap_emailaliases_attribute";
+
 $f[]="ldap_isadmin_attribute = zarafaAdmin";
 $f[]="ldap_nonactive_attribute =$ldap_nonactive_attribute";
 $f[]="";
@@ -450,18 +457,16 @@ $f[]="ldap_group_scope = sub";
 $f[]="ldap_group_search_filter = $ldap_group_search_filter";
 $f[]="ldap_group_unique_attribute = $ldap_group_unique_attribute";
 $f[]="ldap_group_unique_attribute_type = $ldap_group_unique_attribute_type";
+$f[]="ldap_groupname_attribute = $ldap_groupname_attribute";
 if($CyrusToAD==0){
 	$f[]="ldap_group_type_attribute_value = posixGroup";
 }else{
 	$f[]="ldap_group_security_attribute = groupType";
 	$f[]="ldap_group_security_attribute_type = ads";
 }
-$f[]="";
-
-$f[]="ldap_groupname_attribute = $ldap_groupname_attribute";
-$f[]="ldap_groupmembers_attribute = member";
-$f[]="ldap_groupmembers_attribute_type = text";
-$f[]="ldap_groupmembers_relation_attribute =";
+$f[]="ldap_groupmembers_attribute = $ldap_groupmembers_attribute";
+$f[]="ldap_groupmembers_attribute_type = $ldap_groupmembers_attribute_type";
+$f[]="ldap_groupmembers_relation_attribute =$ldap_groupmembers_relation_attribute";
 
 $f[]="";
 $f[]="";

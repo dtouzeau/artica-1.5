@@ -84,10 +84,13 @@ if not FileExists('/etc/artica-postfix/artica-iso-first-reboot') then begin
 
     writeln('Moving old login binary...');
     if fileExists('/usr/share/artica-postfix/bin/artica-logon') then begin
-        fpsystem('/bin/mv /bin/login /bin/login.old');
-        fpsystem('dpkg-divert --divert /bin/login.old /bin/login');
-        fpsystem('/bin/mv /usr/share/artica-postfix/bin/artica-logon /bin/login');
-        fpsystem('/bin/chmod 777 /bin/login');
+     if not FileExists('/bin/login.old') then begin
+            fpsystem('/bin/mv /bin/login /bin/login.old');
+            fpsystem('dpkg-divert --divert /bin/login.old /bin/login');
+            fpsystem('/bin/ln -s /usr/share/artica-postfix/bin/artica-logon /bin/login');
+            fpsystem('/bin/chmod 777 /bin/login');
+            fpsystem('/bin/chmod 777 /usr/share/artica-postfix/bin/artica-logon');
+     end;
     end else begin
        writeln('/usr/share/artica-postfix/bin/artica-logon no such file !!');
     end;

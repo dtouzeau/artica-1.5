@@ -34,8 +34,8 @@
         <Filename Value="artica_iso.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="artica_iso"/>
-        <CursorPos X="79" Y="69"/>
-        <TopLine Value="29"/>
+        <CursorPos X="80" Y="92"/>
+        <TopLine Value="52"/>
         <EditorIndex Value="0"/>
         <UsageCount Value="29"/>
         <Loaded Value="True"/>
@@ -44,7 +44,7 @@
         <Filename Value="debian_class.pas"/>
         <UnitName Value="debian_class"/>
         <CursorPos X="119" Y="9"/>
-        <TopLine Value="9"/>
+        <TopLine Value="1"/>
         <EditorIndex Value="2"/>
         <UsageCount Value="13"/>
         <Loaded Value="True"/>
@@ -68,14 +68,14 @@
       <Unit4>
         <Filename Value="../artica-install/global_conf.pas"/>
         <UnitName Value="global_conf"/>
-        <CursorPos X="1" Y="5876"/>
-        <TopLine Value="5860"/>
+        <CursorPos X="38" Y="11859"/>
+        <TopLine Value="11789"/>
         <EditorIndex Value="1"/>
         <UsageCount Value="11"/>
         <Loaded Value="True"/>
       </Unit4>
     </Units>
-    <JumpHistory Count="7" HistoryIndex="6">
+    <JumpHistory Count="8" HistoryIndex="7">
       <Position1>
         <Filename Value="artica_iso.pas"/>
         <Caret Line="9" Column="15" TopLine="1"/>
@@ -104,6 +104,10 @@
         <Filename Value="debian_class.pas"/>
         <Caret Line="98" Column="1" TopLine="52"/>
       </Position7>
+      <Position8>
+        <Filename Value="../artica-install/global_conf.pas"/>
+        <Caret Line="5918" Column="31" TopLine="5860"/>
+      </Position8>
     </JumpHistory>
   </ProjectOptions>
   <CompilerOptions>

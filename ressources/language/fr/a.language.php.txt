@@ -728,6 +728,7 @@ toutes les liens seront remplac&eacute;es par l'url que vous avez d&eacute;finit
 <error_max_database_name_no_more_than>Erreur, le nom de la base de donn&eacute;es ne doit pas exc&eacute;der une taille de</error_max_database_name_no_more_than>
 <error_no_website_selected>Erreur, pas de site web s&eacute;lectionn&eacute;</error_no_website_selected>
 <error_please_fill_field>Erreur: Veuillez remplir le champs requis</error_please_fill_field>
+<error_port_already_use>Erreur, le port est d&eacute;j&agrave; utilis&eacute;:</error_port_already_use>
 <estimate>Estimation</estimate>
 <EVENT>&Eacute;v&egrave;nement</EVENT>
 <ExecBackupDeadAfterH>Un t&acirc;che de sauvegarde est consid&eacute;r&eacute;e comme &quot;morte&quot; apr&egrave;s X heures (minimum 2)</ExecBackupDeadAfterH>
@@ -941,6 +942,9 @@ Ainsi les deux services sont en accord avec les machines clientes.</IncludeDHCPL
 <instant_iptables_whitelisted_explain>Le mode liste blanche accepte seulement les serveurs list&eacute;s en liste blanche.[br]Les serveurs inconnus ne peuvent se connecter sur votre serveur.</instant_iptables_whitelisted_explain>
 <InternetDomainsOrgAsOnlySubdomains>Uniquement les domaines officiels</InternetDomainsOrgAsOnlySubdomains>
 <InternetDomainsOrgAsOnlySubdomains_text>Si activ&eacute;, seulement des sous-domaines des domaines officiels seront autoris&eacute;s &agrave; &ecirc;tre cr&eacute;&eacute;s dans les organisations.</InternetDomainsOrgAsOnlySubdomains_text>
+<INTERNET_FAILED>&Eacute;chec Internet</INTERNET_FAILED>
+<INTERNET_FAILED_TEXT>Artica n'a pas la possibilit&eacute; de se connecter sur Internet afin de r&eacute;cup&eacute;rer les informations n&eacute;cessaires pour les mises &agrave; jour.[br]
+Veuillez v&eacute;rifier votre configuration r&eacute;seau</INTERNET_FAILED_TEXT>
 <IoType>Type d'I/O</IoType>
 <ipatccount_rule_explain>Indiquez ici les adresses TCP/IP afin d'en ressortir les statistiques d&eacute;sir&eacute;es.[br]Pour une simple adresse, indique l'adresse TCP/IP et ne remplissez pas l'option masque de r&eacute;seau.[br]
 Si vous souhaitez visualiser les statistiques de votre r&eacute;seau internet, indiquez le r&eacute;seau utilis&eacute; par vos postes de travail tel que : 192.168.1.0 255.255.255.0.[br]

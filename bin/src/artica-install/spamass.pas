@@ -40,6 +40,7 @@ private
      function    BLOCK_MAIL():string;
      procedure   SPAMASSASSIN_init_pre();
      function    GET_VALUE(key:string):string;
+     procedure   CHANGE_INITD_SPAMASS();
 
 public
     SpamdEnabled:integer;
@@ -242,7 +243,9 @@ var
    tn:string;
    b:string;
    count:integer;
+   updatercd:string;
 begin
+
 
    logs.Debuglogs('############## spamass-milter ##############');
    count:=0;
@@ -252,10 +255,11 @@ begin
       exit;
    end;
    
-   
+   updatercd:=SYS.LOCATE_GENERIC_BIN('update-rc.d');
 
    if SpamAssMilterEnabled=0 then begin
         logs.DebugLogs('Starting......: spamass-milter daemon is disabled by Artica');
+         if FileExists(updatercd) then fpsystem(updatercd+' spamass-milter remove');
          MILTER_STOP();
         exit;
    end;
@@ -1260,8 +1264,20 @@ end;
 procedure Tspamass.CHANGE_INITD_MILTER();
 var
 l:TstringList;
+updatercd:string;
 begin
 if not FileExists(MILTER_INITD_PATH()) then exit;
+ updatercd:=SYS.LOCATE_GENERIC_BIN('update-rc.d');
+   if SpamAssMilterEnabled=0 then begin
+         if FileExists('/etc/init.d/spamass-milter') then begin
+            if FileExists(updatercd) then fpsystem(updatercd+' spamass-milter remove >/dev/null 2>&1');
+         end;
+         exit;
+   end;
+
+
+if FileExists(updatercd) then fpsystem(updatercd+' spamass-milter remove');
+
 l:=TstringList.Create;
 l.Add('#!/bin/sh');
 
@@ -1301,10 +1317,67 @@ l.Add('    ;;');
 l.Add('esac');
 l.Add('exit 0');
 l.SaveToFile(MILTER_INITD_PATH());
-if FileExists(SPAMASSASSIN_INITD()) then l.SaveToFile(SPAMASSASSIN_INITD());
-
+CHANGE_INITD_SPAMASS();
+ if FileExists(updatercd) then fpsystem(updatercd+' spamass-milter defaults >/dev/null 2>&1');
 end;
 //#############################################################################
+procedure Tspamass.CHANGE_INITD_SPAMASS();
+var
+l:TstringList;
+updatercd:string;
+begin
+if not FileExists(MILTER_INITD_PATH()) then exit;
+ updatercd:=SYS.LOCATE_GENERIC_BIN('update-rc.d');
+   if SpamdEnabled=0 then begin
+         if FileExists('/etc/init.d/spamassassin') then begin
+            if FileExists(updatercd) then fpsystem(updatercd+' spamassassin remove >/dev/null 2>&1');
+         end;
+         exit;
+   end;
 
+
+if FileExists(updatercd) then fpsystem(updatercd+' spamass-milter remove');
+
+l:=TstringList.Create;
+l.Add('#!/bin/sh');
+l.Add('### BEGIN INIT INFO');
+l.Add('# Provides:          spamd');
+l.Add('# Required-Start:    $local_fs $remote_fs $syslog $named $network $time');
+l.Add('# Required-Stop:     $local_fs $remote_fs $syslog $named $network');
+l.Add('# Should-Start:');
+l.Add('# Should-Stop:');
+l.Add('# Default-Start:     2 3 4 5');
+    l.Add('# Default-Stop:      0 1 6');
+    l.Add('# Short-Description: Start spamassassin');
+    l.Add('# chkconfig: 2345 11 89');
+    l.Add('# description: Spamassassin');
+    l.Add('### END INIT INFO');
+
+l.Add('#Begin /etc/init.d/artica-postfix');
+l.Add('case "$1" in');
+l.Add(' start)');
+l.Add('    /usr/share/artica-postfix/bin/artica-install start spamd $3');
+l.Add('    ;;');
+l.Add('');
+l.Add('  stop)');
+l.Add('    /usr/share/artica-postfix/bin/artica-install stop spamd $3');
+l.Add('    ;;');
+l.Add('');
+l.Add(' restart)');
+l.Add('     /usr/share/artica-postfix/bin/artica-install stop spamd $3');
+l.Add('     sleep 3');
+l.Add('     /usr/share/artica-postfix/bin/artica-install start spamd $3');
+l.Add('    ;;');
+l.Add('');
+l.Add('  *)');
+l.Add('    echo "Usage: $0 {start|stop|restart} (debug or --verbose for more infos)"');
+l.Add('    exit 1');
+l.Add('    ;;');
+l.Add('esac');
+l.Add('exit 0');
+if FileExists(SPAMASSASSIN_INITD()) then l.SaveToFile(SPAMASSASSIN_INITD());
+if FileExists(updatercd) then fpsystem(updatercd+' spamassassin defaults >/dev/null 2>&1');
+end;
+//#############################################################################
 
 end.

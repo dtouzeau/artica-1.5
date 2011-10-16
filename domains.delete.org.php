@@ -18,6 +18,11 @@ function js(){
 	$ou=$_GET["ou"];
 	$tpl=new templates();
 	$page=CurrentPageName();
+	
+	if(strlen($ou)<2){
+		echo "alert('OU `$ou` is a Null value !');";return;
+	}
+	
 	$title=$tpl->_ENGINE_parse_body('{delete_ou}');
 	$prefix=str_replace('.','',$page);
 $html="
@@ -31,7 +36,7 @@ var x_ConFirmDelete= function (obj) {
 	WinORGHide();
 	WinORG2Hide();
 	alert(results);
-	Loadjs('domains.index.php?js=yes');
+	if(document.getElementById('organization-find')){SearchOrgs();}
 	}	
 	
 	
@@ -39,7 +44,7 @@ var x_ConFirmDelete= function (obj) {
 				var XHR = new XHRConnection();
 				XHR.appendData('delete-ou','{$_GET["ou"]}');
 				XHR.appendData('delete_mailboxes',document.getElementById('delete_mailboxes').value);
-				document.getElementById('confirmdeleteou').innerHTML='<center><img src=\"img/wait_verybig.gif\"></center>';
+				AnimateDiv('confirmdeleteou');
 				XHR.sendAndLoad('$page', 'GET',x_ConFirmDelete);
 				
 			}	
@@ -59,7 +64,7 @@ function popup(){
 	if($users->cyrus_imapd_installed){
 		$cyrus="
 			<tr>
-				<td class=legend>{delete_mailboxes}</td>
+				<td class=legend style='font-size:14px'>{delete_mailboxes}</td>
 				<td>". Field_numeric_checkbox_img('delete_mailboxes',0,'{delete_mailboxes}')."</td>
 			</tr>
 		
@@ -75,7 +80,7 @@ $html="
 	<tr>
 		<td width=1%><img src='img/org-128.png'></td>
 		<td valign='top'>
-			<div class=explain>{delete_ou_text}</p>
+			<div class=explain style='font-size:14px'>{delete_ou_text}</p>
 			<table style='width:100%'>
 				$cyrus
 			</table>			
@@ -84,10 +89,10 @@ $html="
 		<td colspan=2 align='right'><hr></td></tr>
 		<tr>
 			<td>
-			". button("{cancel}","Loadjs('domains.manage.org.index.php?js=yes&ou={$_GET["ou"]}')")."
+			". button("{cancel}","Loadjs('domains.manage.org.index.php?js=yes&ou={$_GET["ou"]}')",14)."
 			</td>
 			
-		<td align='right'>". button("{confirm}","ConFirmDelete()")."
+		<td align='right'>". button("{confirm}","ConFirmDelete()",14)."
 		</td>
 		</tr>
 	</tr>

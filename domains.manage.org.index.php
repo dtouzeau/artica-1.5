@@ -1,5 +1,5 @@
 <?php
-$GLOBALS["ICON_FAMILY"]="ORGS";
+$GLOBALS["ICON_FAMILY"]="organizations";
 	include_once('ressources/class.templates.inc');
 	include_once('ressources/class.ldap.inc');
 	include_once('ressources/class.users.menus.inc');
@@ -749,7 +749,7 @@ function organization_management(){
 	$find_members=Paragraphe('find-members-64.png','{find_members}','{find_members_text}',"javascript:Loadjs('domains.find.user.php?ou=$ou')",null,210,null,0,true);		
 	
 
-	if($usersmenus->AsArticaAdministrator){$delete=Paragraphe('64-cancel.png','{delete_ou}','{delete_ou_text}',"javascript:DeleteOU(\"$ou\");",null,210,100,0,true);}
+	if($usersmenus->AsArticaAdministrator){$delete=Paragraphe('64-cancel.png',"{delete_ou} $ou",'{delete_ou_text}',"javascript:Loadjs('domains.delete.org.php?ou=$ou');",null,210,100,0,true);}
 	
 	
 if($usersmenus->AsOrgAdmin){

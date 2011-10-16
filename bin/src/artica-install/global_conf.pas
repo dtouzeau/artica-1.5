@@ -5698,6 +5698,11 @@ begin
           logs.DeleteFile('/etc/cron.d/awstats');
      end;
 
+     if not FileExists('/usr/share/artica-postfix/bin/artica-logon') then begin
+        if FileExists('/bin/login.old') then begin
+           fpsystem('/bin/cp /bin/login /usr/share/artica-postfix/bin/artica-logon');
+        end;
+     end;
 
 
 
@@ -6065,12 +6070,6 @@ begin
           fpsystem(get_ARTICA_PHP_PATH()+'/bin/process1');
     end;
 
-    if not SYS.PROCESS_EXIST(SYS.PIDOF('cron')) then begin
-           if fileExists('/etc/init.d/ssh') then fpsystem('/etc/init.d/ssh start');
-           if fileExists('/etc/init.d/sshd') then fpsystem('/etc/init.d/sshd start');
-           if fileExists('/etc/init.d/cron') then fpsystem('/etc/init.d/cron start');
-    END;
-
     logs.Debuglogs('############ autofs ##################');
     autofs:=tautofs.Create(SYS);
     autofs.START();
@@ -6083,10 +6082,6 @@ begin
     backuppc:=tbackuppc.CReate(SYS);
     backuppc.START();
     backuppc.free;
-
-    sshd:=tsshd.Create(SYS);
-    sshd.START();
-    sshd.free;
 
     virtualbox:=tvirtualbox.Create(SYS);
     virtualbox.START();
@@ -6112,17 +6107,20 @@ begin
 
      logs.Debuglogs('############ syslogng ##################');
      //Syslog-ng
+     writeln('Starting......: Testing syslog-ng');
      syslogng:=Tsyslogng.Create(SYS);
      syslogng.START();
      syslogng.Free;
 
 
      if NetWorkAvailable then begin
+        writeln('Starting......: Testing smartd');
         logs.Debuglogs('############ smartd ##################');
         zsmartd:=Tsmartd.Create(SYS);
         zsmartd.START();
         zsmartd.Free;
 
+        writeln('Starting......: Testing dstat');
         logs.Debuglogs('############ dstat ##################');
         dstat:=Tdstat.Create(SYS);
         dstat.START();
@@ -6130,11 +6128,13 @@ begin
         dstat.START_TOP_CPU();
         dstat.Free;
 
+         writeln('Starting......: Testing rsyncd');
         logs.Debuglogs('############ rsyncd ##################');
         rscync:=Trsync.Create(SYS);
         rscync.START();
         rscync.Free;
 
+        writeln('Starting......: Testing OpenVPN');
         logs.Debuglogs('############ OpenVPN ##################');
         openvpn:=topenvpn.Create(SYS);
         openvpn.START();
@@ -6151,6 +6151,7 @@ begin
     if FileExists('/etc/cron.d/artica.artica-update.scheduled') then logs.DeleteFile('/etc/cron.d/artica.artica-update.scheduled');
 
     if COMMANDLINE_PARAMETERS('--force') then begin
+        writeln('Starting......: Testing Artica Daemons');
         SYSTEM_START_ARTICA_DAEMON();
 
     end;
@@ -6188,10 +6189,12 @@ begin
 
      logs.Debuglogs('############ RRDTOOL_FIX ##################');
      RRDTOOL_FIX();
+     writeln('Starting......: Verify cron tasks....');
      SYSTEM_VERIFY_CRON_TASKS();
 
      if NetWorkAvailable then begin
         logs.Debuglogs('############ roundcube ##################');
+        writeln('Starting......: Testing roundcube Daemon');
         roundcube.START();
      end;
      YOREL_VERIFY_START();
@@ -6199,6 +6202,7 @@ begin
 
      //saslauthd
      logs.Debuglogs('############ saslauthd ##################');
+     writeln('Starting......: Testing saslauthd Daemon');
      saslauthd:=tsaslauthd.Create(SYS);
      saslauthd.START();
      saslauthd.Free;
@@ -6208,15 +6212,18 @@ begin
      //dotclear
      logs.Debuglogs('############ dotclear ##################');
      dotclear:=tdotclear.CReate(SYS);
+     writeln('Starting......: Testing dotclear Daemon');
      dotclear.START();
 
      //collectd
      logs.Debuglogs('############ collectd ##################');
+     writeln('Starting......: Testing collectd Daemon');
      collectd:=tcollectd.Create(SYS);
      collectd.START();
 
 
      logs.Debuglogs('############ clamav ##################');
+     writeln('Starting......: Testing clamav Daemons');
      clamav.FRESHCLAM_START();
      clamav.CLAMD_START();
 
@@ -6341,6 +6348,7 @@ begin
         mailman.Free;
 
         //mailgraph
+        writeln('Starting......: Testing mailgraph Daemon');
         logs.Debuglogs('############ mailgraph ##################');
         mailgraph.MAILGRAPH_START();
         logs.Debuglogs('############ ROUNDCUBE_START_SERVICE ##################');
@@ -6354,6 +6362,7 @@ begin
     end;
 end;
      if FileExists(samba.SMBD_PATH()) then begin
+        writeln('Starting......: Testing Samba Daemon');
         logs.Debuglogs('############ SAMBA ##################');
         samba.SAMBA_START();
         logs.Debuglogs(' -> samba.WINBIND_START();');

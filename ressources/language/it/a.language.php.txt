@@ -908,6 +908,7 @@ When a user add/delete/modify a file in a Samba folder, greyhole will saved it a
 <error_max_database_name_no_more_than>Error Database name length no more than</error_max_database_name_no_more_than>
 <error_no_website_selected>Error no selected website</error_no_website_selected>
 <error_please_fill_field>Error, please fill the required field</error_please_fill_field>
+<error_port_already_use>Error, port is already used:</error_port_already_use>
 <estimate>Estimate</estimate>
 <EVENT>Event</EVENT>
 <ExecBackupDeadAfterH>A backup task is turned has "Dead" after X Hours (minimal 2)</ExecBackupDeadAfterH>
@@ -1143,6 +1144,8 @@ If this feature is disabled, fixed hosts in Artica database will not be added.
 <instant_iptables_whitelisted_explain>The whitelist mode only accept SMTP connections from whitelisted list.[br]No unknown servers are able connect to your server</instant_iptables_whitelisted_explain>
 <InternetDomainsOrgAsOnlySubdomains>Use only official domains</InternetDomainsOrgAsOnlySubdomains>
 <InternetDomainsOrgAsOnlySubdomains_text>If checked only subdomains of available domains will be allowed to use when playing with domains inside the organization</InternetDomainsOrgAsOnlySubdomains_text>
+<INTERNET_FAILED>Internet Failed</INTERNET_FAILED>
+<INTERNET_FAILED_TEXT>Artica is unable to connect trough Internet.[br]it can't retreive updates informations or any required informations, please check your network</INTERNET_FAILED_TEXT>
 <IoType>I/O Type</IoType>
 <ipatccount_rule_explain>Define here TCP/IP addresses in order to collect statistics.[br]For a single address, define the ip address and null values in netmask field.[br]
 If you want to display your internal network traffic , give here the network used by your workstations eg : 192.168.1.0 255.255.255.0.[br]

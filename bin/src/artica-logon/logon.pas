@@ -69,6 +69,8 @@ var
    SYSURIS:Tsystem;
    ISOCanDisplayUserNamePassword,ISOCanChangeIP,ISOCanReboot,ISOCanShutDown,ISOCanChangeRootPWD,ISOCanChangeLanguage:integer;
 begin
+
+logs.Debuglogs('Initialize menu....');
 SYS:=Tsystem.Create;
 if not TryStrToInt(SYS.GET_INFO('ISOCanDisplayUserNamePassword'),ISOCanDisplayUserNamePassword) then ISOCanDisplayUserNamePassword:=1;
 if not TryStrToInt(SYS.GET_INFO('ISOCanChangeIP'),ISOCanChangeIP) then ISOCanChangeIP:=1;
@@ -76,9 +78,13 @@ if not TryStrToInt(SYS.GET_INFO('ISOCanReboot'),ISOCanReboot) then ISOCanReboot:
 if not TryStrToInt(SYS.GET_INFO('ISOCanShutDown'),ISOCanShutDown) then ISOCanShutDown:=1;
 if not TryStrToInt(SYS.GET_INFO('ISOCanChangeRootPWD'),ISOCanChangeRootPWD) then ISOCanChangeRootPWD:=1;
 if not TryStrToInt(SYS.GET_INFO('ISOCanChangeLanguage'),ISOCanChangeLanguage) then ISOCanChangeLanguage:=1;
-
+logs.Debuglogs('Initialize menu done....');
 fpsystem('clear');
-lighttp:=Tlighttpd.Create(SYS);
+try
+   lighttp:=Tlighttpd.Create(SYS);
+except
+   logs.Debuglogs(' Tlighttpd.Create crashed');
+end;
 writeln('########################################################');
 writeln('###                                                  ###');
 writeln('###             Artica version ' + SYS.ARTICA_VERSION()+'');
@@ -94,7 +100,9 @@ writeln('');
 //     lightstatus:='lighttpd daemon is running using '+IntToStr(SYS.PROCESS_MEMORY(lighttp.LIGHTTPD_PID()))+' Kb memory';
        slighttpd:=Tlighttpd.Create(SYS);
        port:=slighttpd.LIGHTTPD_LISTEN_PORT();
+
        SYSURIS:=Tsystem.Create();
+       try
        uris:=SYSURIS.txt_uris(port);
       if not SYS.COMMANDLINE_PARAMETERS('--verbose') then begin
          if length(uris)<5 then begin
@@ -103,9 +111,14 @@ writeln('');
             uris:=SYSURIS.txt_uris(port);
        end;
       end;
+
+       except
+       writeln('SYSURIS.txt_uris crashed');
+       logs.Debuglogs('SYSURIS.txt_uris crashed');
+       end;
        writeln(uris);
        writeln('');
-
+logs.Debuglogs('display menu....');
 
 writeln('Access to the Artica Web interface');
 writeln('**********************************************');

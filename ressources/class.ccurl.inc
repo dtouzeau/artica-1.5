@@ -13,15 +13,22 @@ class ccurl{
 	var $noproxyload=false;
 	var $authname=null;
 	var $authpass=null;
+	var $WgetBindIpAddress=null;
+	
+	// CURLOPT_INTERFACE
+	
 	function ccurl($uri,$noproxyload=false,$interface=null){
 			$this->uri=$uri;
 			$this->interface=$interface;
-			if($noproxyload){
+			$sock=new sockets();
+			$this->WgetBindIpAddress=$sock->GET_INFO("WgetBindIpAddress");
+			if(!$noproxyload){
 				$ini=new Bs_IniHandler();
 				$sock=new sockets();
 				$datas=$sock->GET_INFO("ArticaProxySettings");
 				if(trim($datas)<>null){
 					$ini->loadString($datas);
+					if($GLOBALS["VERBOSE"]){echo "ArticaProxySettings: PROXY: ArticaProxyServerEnabled -> {$ini->_params["PROXY"]["ArticaProxyServerEnabled"]}\n";}
 					$this->ArticaProxyServerEnabled=$ini->_params["PROXY"]["ArticaProxyServerEnabled"];
 					$this->ArticaProxyServerName=$ini->_params["PROXY"]["ArticaProxyServerName"];
 					$this->ArticaProxyServerPort=$ini->_params["PROXY"]["ArticaProxyServerPort"];
@@ -40,7 +47,16 @@ class ccurl{
 			}	
 				
 			$ch = curl_init();
-			if($this->interface<>null){curl_setopt($ch, CURLOPT_INTERFACE,$interface);}
+			if($this->interface<>null){
+				if($GLOBALS["VERBOSE"]){echo "CURLOPT_INTERFACE $this->interface\n";}
+				curl_setopt($ch, CURLOPT_INTERFACE,$this->interface);}
+			else{
+				
+				if($this->WgetBindIpAddress<>null){
+					if($GLOBALS["VERBOSE"]){echo "CURLOPT_INTERFACE $this->WgetBindIpAddress\n";}
+					curl_setopt($ch, CURLOPT_INTERFACE,$this->WgetBindIpAddress);
+				}
+			}
 			curl_setopt($ch, CURLOPT_URL, "$this->uri");
 			curl_setopt($ch, CURLOPT_HEADER, 0);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -54,6 +70,26 @@ class ccurl{
 			}else{
 				if($GLOBALS["VERBOSE"]){writelogs("no website authentication has enabled",__CLASS__.'/'.__FUNCTION__,__FILE__);}
 			}
+			
+			if($this->ArticaProxyServerEnabled=="yes"){
+				if($GLOBALS["VERBOSE"]){echo "Loading proxy configuration...\n";}
+				//curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+				curl_setopt($ch,CURLOPT_HTTPPROXYTUNNEL,FALSE); 
+				curl_setopt ($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
+				if($GLOBALS["VERBOSE"]){echo "setting proxy for $this->ArticaProxyServerName:$this->ArticaProxyServerPort\n";}
+				curl_setopt ($ch, CURLOPT_PROXY,"$this->ArticaProxyServerName:$this->ArticaProxyServerPort");
+				curl_setopt ($ch, CURLOPT_TIMEOUT, 120);
+				//curl_setopt($ch, CURLOPT_PROXYAUTH, CURLAUTH_BASIC | CURLAUTH_NTLM);
+				if($this->ArticaProxyServerUsername<>null){
+					curl_setopt($ch, CURLOPT_PROXYAUTH, CURLAUTH_BASIC);
+					curl_setopt($ch, CURLOPT_PROXYUSERPWD, $this->ArticaProxyServerUsername.':'.$this->ArticaProxyServerUserPassword);
+				}
+			}else{
+				if($GLOBALS["VERBOSE"]){echo "Proxy disabled....'$this->ArticaProxyServerEnabled' in line ". __LINE__."\n";}
+			}			
+			
+			
+			
 			if($curlPost<>null){curl_setopt($ch, CURLOPT_POSTFIELDS, $curlPost);}	
 			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Expect:'));
 			$this->data=curl_exec($ch);
@@ -102,6 +138,17 @@ class ccurl{
 			
 			//curl_setopt($ch, CURLOPT_NOBODY,true);
 			
+			if($this->interface<>null){
+				if($GLOBALS["VERBOSE"]){echo "CURLOPT_INTERFACE $this->interface\n";}
+				curl_setopt($ch, CURLOPT_INTERFACE,$this->interface);}
+			else{
+				
+				if($this->WgetBindIpAddress<>null){
+					if($GLOBALS["VERBOSE"]){echo "CURLOPT_INTERFACE $this->WgetBindIpAddress\n";}
+					curl_setopt($ch, CURLOPT_INTERFACE,$this->WgetBindIpAddress);
+				}
+			}			
+			
 			if(preg_match("#https:#",$this->uri)){
 				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
 				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -124,7 +171,7 @@ class ccurl{
 					curl_setopt($ch, CURLOPT_PROXYUSERPWD, $this->ArticaProxyServerUsername.':'.$this->ArticaProxyServerUserPassword);
 				}
 			}else{
-				if($GLOBALS["VERBOSE"]){echo "Proxy disabled....\n";}
+				if($GLOBALS["VERBOSE"]){echo "Proxy disabled....'$this->ArticaProxyServerEnabled' in line ". __LINE__."\n";}
 			}
 			
 			

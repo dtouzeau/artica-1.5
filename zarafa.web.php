@@ -95,7 +95,25 @@ echo $html;
 
 function SAVE(){
 	$sock=new sockets();
-	$sock->SET_INFO("ZarafaApachePort",trim($_GET["ZarafaApachePort"]));
+	$ZarafaApachePort=$sock->GET_INFO("ZarafaApachePort");
+	if(!is_numeric($_GET["ZarafaApachePort"])){$_GET["ZarafaApachePort"]=9010;}
+	if(!is_numeric($ZarafaApachePort)){$ZarafaApachePort=9010;}
+	
+	if($ZarafaApachePort<>$_GET["ZarafaApachePort"]){
+		$socket = @socket_create(AF_INET, SOCK_STREAM, 0);
+		if(socket_connect($socket, "127.0.0.1", $_GET["ZarafaApachePort"])){
+			@socket_close($socket);
+			$tpl=new templates();
+			echo $tpl->javascript_parse_text("{error_port_already_use} {$_GET["ZarafaApachePort"]}");
+		}else{
+			$sock->SET_INFO("ZarafaApachePort",trim($_GET["ZarafaApachePort"]));	
+		}
+	}
+	
+	
+	
+	
+	
 	$sock->SET_INFO("ZarafaApacheSSL",trim($_GET["ZarafaApacheSSL"]));
 	
 	$sock->SET_INFO("ZarafaiCalPort",trim($_GET["ZarafaiCalPort"]));

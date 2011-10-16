@@ -141,6 +141,7 @@ $html="
 			if(document.getElementById('GroupSettings')){
 				LoadAjax('GroupSettings','domains.edit.group.php?LoadGroupSettings=&ou=$ou_encrypted&encoded=yes')
 			}
+			if(document.getElementById('organization-find')){SearchOrgs();}
 		}
 
 

@@ -34,7 +34,9 @@ function ZARAFA_OU_LOAD(){
 var X_ENABLE_ZARAFA_COMPANY= function (obj) {
 	var results=obj.responseText;
 	if(results.length>0){alert(results);}
+	if(document.getElementById('organization-find')){SearchOrgs();YahooWin3Hide();return;}
 	ZARAFA_OU_LOAD();
+	
 	}	
 	
 function ENABLE_ZARAFA_COMPANY(){

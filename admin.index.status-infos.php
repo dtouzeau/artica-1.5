@@ -25,6 +25,8 @@ $sock=new sockets();
 $datas=base64_decode($sock->getFrameWork("status.php?cpu-check-nx=yes"));
 if($datas<>null){NotifyAdmin("system-32.png","CPU Infos !",$datas,null);}
 
+if(is_file("ressources/logs/INTERNET_FAILED")){NotifyAdmin("domain-whitelist-32.png","{INTERNET_FAILED}","{INTERNET_FAILED_TEXT}\n".@file_get_contents("ressources/logs/INTERNET_FAILED"),null);}
+
 
 
 $q=new mysql();

@@ -1068,6 +1068,7 @@ function Field_password($name,$value=null,$style=null,$class=null,$OnChange=null
 
 function imgtootltip($img,$tooltip=null,$js=null,$align=null,$imgid=null){
 	$DisableToolTips=0;
+	if(preg_match("#javascript:(.+)#", $js,$re)){$js=$re[1];}
 	$tooltip=str_replace("\n", "", $tooltip);
 	$tooltip=str_replace("\r", "", $tooltip);
 	$tooltip=str_replace("		"," ",$tooltip);

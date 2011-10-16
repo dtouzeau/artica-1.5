@@ -227,7 +227,7 @@ function js_index(){
 	
 	if(GET_CACHED(__FILE__,__FUNCTION__)){return true;}
 	
-	
+	$page=CurrentPageName();
 	$tpl=new templates();
 	$mysql_settings=$tpl->_ENGINE_parse_body("{mysql_settings}");
 	$web_interface_settings=Paragraphe("folder-performances-64.png","{web_interface_settings}","{web_interface_settings_text}",

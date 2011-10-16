@@ -27,6 +27,8 @@ var X_UserADD= function (obj) {
 		
 	}
 	
+		if(document.getElementById('organization-find')){SearchOrgs();}
+	
 	
 		if(document.getElementById('main_group_config')){
 			RefreshTab('main_group_config');

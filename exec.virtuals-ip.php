@@ -6,8 +6,10 @@ include_once(dirname(__FILE__) . '/framework/frame.class.inc');
 include_once(dirname(__FILE__) . '/ressources/class.system.network.inc');
 include_once(dirname(__FILE__) . '/ressources/class.system.nics.inc');
 $GLOBALS["NO_GLOBAL_RELOAD"]=false;
+$GLOBALS["SLEEP"]=false;
 if(posix_getuid()<>0){die("Cannot be used in web server mode\n\n");}
 if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["VERBOSE"]=true;ini_set_verbosed();}
+if(preg_match("#--sleep#",implode(" ",$argv))){$GLOBALS["SLEEP"]=true;}
 if($argv[1]=="--interfaces"){interfaces_show();die();}
 if($argv[1]=="--just-add"){routes();die();}
 if($argv[1]=="--ifconfig"){ifconfig_tests();exit;}
@@ -54,6 +56,7 @@ function interfaces_show(){
 
 function reconstruct_interface($eth){
 	$GLOBALS["NO_GLOBAL_RELOAD"]=true;
+	if($GLOBALS["SLEEP"]){sleep(10);}
 	build();
 	ifupifdown($eth);
 }

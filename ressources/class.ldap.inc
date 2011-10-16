@@ -1886,6 +1886,11 @@ function Hash_GetALLUsers(){
 		return count($this->Hash_domains_table($ou));
 	}
 	
+	function CountDeGroups($ou){
+		return count($this->hash_groups($ou));
+		
+	}
+	
 	
 	function Hash_domains_table($ou=null){
 		$this->ldap_perform_connection();

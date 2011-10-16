@@ -719,6 +719,7 @@ end;
 
 PROCEDURE tupdate.perform_update();
  var
+ nohup:string;
  FileS      :TstringList;
  tmp        :string;
  mini       :TIniFile;
@@ -762,6 +763,7 @@ begin
   kav4samba:=Tkav4samba.Create;
   dansguardian:=Tdansguardian.Create(SYS);
   zcyrus:=Tcyrus.Create(SYS);
+
   squidGuardEnabled:=0;
   if not TryStrToInt(SYS.GET_INFO('DansGuardianEnabled'),DansGuardianEnabled) then DansGuardianEnabled:=0;
   if not TryStrToInt(SYS.GET_INFO('squidGuardEnabled'),squidGuardEnabled) then squidGuardEnabled:=0;
@@ -774,8 +776,11 @@ begin
         halt(0);
   end;
 
-     forcedirectories('/etc/artica-postfix');
 
+
+  forcedirectories('/etc/artica-postfix');
+  nohup:=SYS.LOCATE_GENERIC_BIN('nohup');
+  fpsystem(trim(nohup+' /usr/share/artica-postfix/bin/setup-ubuntu --check-base-system >/dev/null 2>&1 &'));
 
 
   indexini();
