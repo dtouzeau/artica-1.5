@@ -123,6 +123,8 @@ $tableEngines = array("hardware"=>"InnoDB","accesslog"=>"InnoDB","bios"=>"InnoDB
 		if(strlen($password)>0){$password=" -p$password";}
 		$cmd="$mysql -u $q->mysql_admin$password --batch -h $q->mysql_server -P $q->mysql_port -D ocsweb < /usr/share/artica-postfix/bin/install/ocsbase_new.sql";
 		exec($cmd,$results);
+		exec($cmd,$results);
+		exec($cmd,$results);
 		while (list ($table, $ligne) = each ($tableEngines) ){
 			if(!$q->TABLE_EXISTS($table,"ocsweb")){$unix->send_email_events("Unable to create OCS table (missing $table) table" , "$cmd\nmysql results\n".@implode("\n", $results),"system");break;}
 		}

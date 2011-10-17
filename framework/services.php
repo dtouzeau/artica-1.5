@@ -45,6 +45,7 @@ if(isset($_GET["artica-update-cron"])){artica_schedule_cron();exit;}
 if(isset($_GET["AutoRebootSchedule"])){artica_schedule_reboot();exit;}
 if(isset($_GET["artica-patchs"])){artica_patchs();exit;}
 if(isset($_GET["patchs-force"])){artica_patchs_force();exit;}
+if(isset($_GET["mysql-ocs"])){mysql_ocs();exit;}
 
 
 
@@ -378,9 +379,17 @@ function artica_schedule_reboot(){
 function phpldapadmin(){
 	$unix=new unix();
 	$nohup=$unix->find_program("nohup");
-	$cmd=trim("$nohup ".$unix->LOCATE_PHP5_BIN(). " /usr/share/exec.phpldapadmin.php --build >/dev/null 2>&1");
+	$cmd=trim("$nohup ".$unix->LOCATE_PHP5_BIN(). " /usr/share/artica-postfix/exec.phpldapadmin.php --build >/dev/null 2>&1");
 	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	
 	shell_exec($cmd);		
+}
+
+function mysql_ocs(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim($unix->LOCATE_PHP5_BIN(). " /usr/share/artica-postfix/exec.mysql.build.php --checks >/dev/null 2>&1");
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	
+	shell_exec($cmd);
 }
 
 function GETclock(){

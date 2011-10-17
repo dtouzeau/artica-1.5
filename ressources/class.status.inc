@@ -1184,7 +1184,7 @@ function Postfix_satus($asZarafa=false){
 	
 		if($rejected_number>0){$rejected="
 			<tr ". CellRollOver("Loadjs('postfix.stats.cnx.php')","{rejected_mails}").">
-						<td align='right' style='$textFONTStyle'>{rejected_mails}:</a>&nbsp;</td>
+						<td align='right' style='$textFONTStyle'>{rejected}:</a>&nbsp;</td>
 						<td colspan=2 nowrap><strong style='$textFONTStyle'>". numberFormat($rejected_number,0,'.',' ')."</strong>&nbsp;emails&nbsp;</td>
 			</tr>";
 		}		

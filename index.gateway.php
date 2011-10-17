@@ -607,17 +607,17 @@ function dhcp_tabs(){
 	$array["leases"]='{leases}';
 	
 	$fontsize=null;
-	if(isset($_GET["newinterface"])){$newinterface="&newinterface=yes";$fontsize="font-size:14px;";}
+	if(isset($_GET["newinterface"])){$newinterface="&newinterface=yes";$newinterfacesuffix="?newinterface=yes";$fontsize="font-size:14px;";}
 	
 	while (list ($num, $ligne) = each ($array) ){
 		
 		if($num=="shared-network"){
-			$html[]= "<li><a href=\"dhcpd.shared-networks.php$newinterface\"><span style='$fontsize'>$ligne</span></a></li>\n";
+			$html[]= "<li><a href=\"dhcpd.shared-networks.php$newinterfacesuffix\"><span style='$fontsize'>$ligne</span></a></li>\n";
 			continue;
 		}
 		
 		if($num=="leases"){
-			$html[]= "<li><a href=\"dhcpd.leases.php$newinterface\"><span style='$fontsize'>$ligne</span></a></li>\n";
+			$html[]= "<li><a href=\"dhcpd.leases.php$newinterfacesuffix\"><span style='$fontsize'>$ligne</span></a></li>\n";
 			continue;
 		}		
 		

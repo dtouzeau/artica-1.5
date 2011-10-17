@@ -26,7 +26,7 @@ if($argv[1]=="--reconstruct-interface"){reconstruct_interface($argv[2]);exit;}
 
 
 
-
+if($GLOBALS["SLEEP"]){sleep(2);}
 build();
 
 //

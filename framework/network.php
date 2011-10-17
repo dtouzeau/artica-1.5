@@ -17,6 +17,10 @@ if(isset($_GET["fqdn"])){fqdn();exit;}
 if(isset($_GET["iptaccount-installed"])){iptaccount_check();exit;}
 if(isset($_GET["ifup-ifdown"])){ifup_ifdown();exit;}
 if(isset($_GET["reconstruct-interface"])){reconstruct_interface();exit;}
+if(isset($_GET["reconstruct-all-interfaces"])){reconstruct_all_interfaces();exit;}
+
+
+
 if(isset($_GET["dhcpd-leases"])){dhcpd_leases_force();exit;}
 if(isset($_GET["dhcpd-leases-script"])){dhcpd_leases_script();exit;}
 
@@ -161,6 +165,13 @@ function reconstruct_interface(){
 	writelogs_framework($cmd,__FUNCTION__,__FILE__,__LINE__);
 	shell_exec($cmd);	
 }
-
+function reconstruct_all_interfaces(){
+	$unix=new unix();
+	$php=$unix->LOCATE_PHP5_BIN();
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim("$nohup $php /usr/share/artica-postfix/exec.virtuals-ip.php --sleep >/dev/null 2>&1 &");
+	writelogs_framework($cmd,__FUNCTION__,__FILE__,__LINE__);
+	shell_exec($cmd);	
+}
 
 

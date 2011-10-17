@@ -910,6 +910,11 @@ function buildPage(){
 		 $logo="logo-kav.gif";
 	}
 	
+	if($users->ZARAFA_APPLIANCE){
+		$template="zarafa";
+		 $logo="logo-kav.gif";
+	}	
+	
 	if($users->MYCOSI_APPLIANCE){
 		$logo_bg="bg_header_kavweb.gif";
 		$logo="logo-mycosi.gif";
@@ -957,6 +962,13 @@ function buildPage(){
 		$tpl=str_replace("{artica_username}",$_GET["MEM_USERNAME"],$tpl);
 		$tpl=str_replace("{LOGON_BUTTON}",button("{login}", "SendLogonStart()","18px"),$tpl);
 		$tpl=str_replace("{TEMPLATE_TITLE_HEAD}",$title,$tpl);
+		$tpl=str_replace("{COPYRIGHT}","Copyright 2006 - ". date('Y'),$tpl);
+	
+		if(strpos($tpl,"{ZARAFA_VERSION")>0){
+			$sock=new sockets();
+			$tpl=str_replace("{ZARAFA_VERSION}",$sock->getFrameWork("zarafa.php?getversion=yes"),$tpl);
+			
+		}
 	
 		$tpl2=new templates();
 		return $tpl2->_ENGINE_parse_body($tpl);

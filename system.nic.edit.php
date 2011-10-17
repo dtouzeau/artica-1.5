@@ -28,7 +28,7 @@
 function js(){
 	$page=CurrentPageName();
 	
-	$html="YahooWin2('480','$page?tabs=yes&netconfig={$_GET["nic"]}','{$_GET["nic"]}');";
+	$html="YahooWin2('480','$page?tabs=yes&netconfig={$_GET["nic"]}&button={$_GET["button"]}&noreboot={$_GET["noreboot"]}','{$_GET["nic"]}');";
 	echo $html;
 	
 	
@@ -60,7 +60,7 @@ function tabs(){
 	
 	
 	while (list ($num, $ligne) = each ($array) ){
-		$html[]= "<li><a href=\"$page?$num=yes&nic=$nic\"><span>$ligne</span></a></li>\n";
+		$html[]= "<li><a href=\"$page?$num=yes&nic=$nic&button={$_GET["button"]}&noreboot={$_GET["noreboot"]}\"><span>$ligne</span></a></li>\n";
 	}
 	
 	
@@ -92,7 +92,8 @@ function ipconfig_nic(){
 
 	}
 	if(!$users->SNORT_INSTALLED){$jsSnort="DisableSnortInterface();";}
-	
+	$button="{edit}";
+	if($_GET["button"]=="confirm"){$button="{button_i_confirm_nic}";}
 	
 	
 	$nic=new system_nic($_GET["nic"]);
@@ -162,7 +163,7 @@ function ipconfig_nic(){
 	<table style='width:100%'>
 	<tr>
 	<td align='right'>
-		". button("{edit}","SaveNicSettings()")."
+		". button("$button","SaveNicSettings()")."
 	</td>
 	</tr>
 	</table>
@@ -171,8 +172,9 @@ function ipconfig_nic(){
 	
 		var X_SaveNicSettings= function (obj) {
 			var results=obj.responseText;
+			if(results.length>3){alert(results);}
 			if(document.getElementById('main_config_$eth')){RefreshTab('main_config_$eth');}
-				
+			if(document.getElementById('wizard-nic-list')){WizardRefreshNics();}
 			}
 
 		function logofff(){
@@ -193,8 +195,10 @@ function ipconfig_nic(){
 			XHR.appendData('DNS_2',document.getElementById('DNS_2').value);
 			XHR.appendData('BROADCAST',document.getElementById('BROADCAST').value);
 			XHR.appendData('save_nic',document.getElementById('save_nic').value);
+			XHR.appendData('noreboot','{$_GET["noreboot"]}');
 			if(document.getElementById('zlistnic-info-$eth')){AnimateDiv('zlistnic-info-$eth');}
 			if(document.getElementById('edit-config-$eth')){AnimateDiv('edit-config-$eth');}
+			if(document.getElementById('wizard-nic-list')){AnimateDiv('wizard-nic-list');}
 			XHR.sendAndLoad('$page', 'GET',X_SaveNicSettings);
 			
 		}
@@ -307,18 +311,20 @@ function save_nic(){
 	
 	$ROUTES=base64_encode(serialize($arrayNic["ROUTES"]));
 	
-	if(!$ip->checkIP($IPADDR)){echo "CheckIP: Address: $IPADDR = False;\n";return;}
-	if(!$ip->checkIP($NETMASK)){echo "CheckIP: NetMask $NETMASK = False;\n";return;}
-	if($GATEWAY<>"0.0.0.0"){
-		if(!$ip->checkIP($GATEWAY)){echo "CheckIP: Gateway $GATEWAY = False;\n";return;}
+	if($_GET["dhcp"]<>1){
+		if(!$ip->checkIP($IPADDR)){echo "CheckIP: Address: $IPADDR = False;\n";return;}
+		if(!$ip->checkIP($NETMASK)){echo "CheckIP: NetMask $NETMASK = False;\n";return;}
+		if($GATEWAY<>"0.0.0.0"){
+			if(!$ip->checkIP($GATEWAY)){echo "CheckIP: Gateway $GATEWAY = False;\n";return;}
+		}
 	}
-	if($DNS_1<>null){
-		if(!$ip->checkIP($DNS_1)){echo "CheckIP: DNS 1 $DNS_1 = False;\nOr set null value to remove this message";return;}	
-	}
-	
-	if($DNS_2<>null){
-		if(!$ip->checkIP($DNS_2)){echo "CheckIP: DNS 2 $DNS_2 = False;\nOr set null value to remove this message";return;}	
-	}	
+		if($DNS_1<>null){
+			if(!$ip->checkIP($DNS_1)){echo "CheckIP: DNS 1 $DNS_1 = False;\nOr set null value to remove this message";return;}	
+		}
+		
+		if($DNS_2<>null){
+			if(!$ip->checkIP($DNS_2)){echo "CheckIP: DNS 2 $DNS_2 = False;\nOr set null value to remove this message";return;}	
+		}	
 	
 	$tpl=new templates();
 	$nics=new system_nic($nic);
@@ -331,6 +337,16 @@ function save_nic(){
 	$nics->DNS2=$DNS_2;
 	$nics->dhcp=$_GET["dhcp"];
 	$nics->enabled=$_GET["enabled"];
+	
+	
+	if($_GET["noreboot"]=="noreboot"){
+		$nics->NoReboot=true;
+		if($nics->SaveNic()){
+			echo $tpl->javascript_parse_text('{success}');
+			return;
+		}
+	}
+	
 	if($nics->SaveNic()){echo $tpl->javascript_parse_text('{success}\n{success_save_nic_infos}');}
 }
 

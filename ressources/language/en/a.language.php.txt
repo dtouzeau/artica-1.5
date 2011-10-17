@@ -2579,3 +2579,17 @@ Do you want to perform compilation this category ?
 During this task the server should be loaded.
 Do you want to perform compilation of all categories ?
 </confirm_dnsg_compileall_db>
+<OCS_SEARCH_EXPLAIN>You will find here computers that has been added automatically by Artica or by administrators.[br]Artica try to browse it's network in order to help you filling the computer database.[br]
+several ways has been proceed: Network scanning, ARP injector, DNS lookup....</OCS_SEARCH_EXPLAIN>
+<FIRST_WIZARD_NIC1>It seems that you network configuration has been saved.[br]This section help you to fix the network environnement.[br]
+Please not that it is not recommended to use DHCP for your Artica server.[br]
+Check the list below and click on each row in order to display Network interface card settings and modify detected informations if necessary or confirm the detected settings.
+</FIRST_WIZARD_NIC1>
+<this_nic_is_not_configured_text>This Network interface card is not saved into database, click on it in order to confirm/edit parameters</this_nic_is_not_configured_text>
+<this_nic_is_configured_text>This Network interface card is correctly saved into Artica Database.</this_nic_is_configured_text>
+<button_i_confirm_nic>I confirm this Network Card parameters</button_i_confirm_nic>
+<reboot_computer_to_take_effects>You have to reboot the server in order to apply parameters</reboot_computer_to_take_effects>
+<not_set>Not set</not_set>
+<automatic>Automatic</automatic>
+<FIRST_WIZARD_NIC2>All Network Interface parameters are saved, if you want to apply this configuration, click on the button bellow and reboot your computer.</FIRST_WIZARD_NIC2>
+<i_prefer_leave_unconfigured>I prefer leave these parameters unconfigured</i_prefer_leave_unconfigured>

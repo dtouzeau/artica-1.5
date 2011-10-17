@@ -331,7 +331,7 @@ function main_artica_update_tabs(){
 	
 	
 	$html= "
-	<div id=main_config_artica_update style='width:100%;height:490px;overflow:auto'>
+	<div id=main_config_artica_update style='width:100%;height:500px;overflow:auto'>
 		<ul>". implode("\n",$html)."</ul>
 	</div>
 		<script>

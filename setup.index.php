@@ -317,22 +317,28 @@ function index(){
 	$prefix="SetupControlCenter";
 	
 	$synchro=Paragraphe("software-synchronize-64.png","{sync_packages}","{sync_packages_explain}","javascript:SynSysPackages()");
+	$refresh=Paragraphe("64-recycle.png","{refresh_index_file}","{refresh_index_file}","javascript:TestConnection()");
 	
+	
+	// 
 $intro="
-
-<table style='width:100%'>
+<div class=explain>{setup_index_explain}</div>	
+<center>
+<table style='width:565px'>
+	<tbody>
 	<tr>
 	<td width=1% valign='top'>
-	<div style='margin-right:30px;margin-bottom:5px'>$back</div>
-	" . Paragraphe("64-recycle.png","{refresh_index_file}","{refresh_index_file}","javascript:TestConnection()")."
-	$synchro
+		<img src='img/software-install-256.png' style='margin-rigth:30px;margin-left:30px'>
 	</td>
 	<td valign='top'>
-		<p style='font-size:14px;letter-spacing:3px;color:black;line-height:150%;font-family:verdana,helvetica,arial,sans-serif'>{setup_index_explain}</p>
-		<center><div id='mysql_status'></div></center>
+		
+		$synchro
+		$refresh
 	</td>
 	</tr>
+	</tbody>
 </table>
+</center>
 <input type='hidden' id='tabnum' name='tbanum' value='{$_GET["main"]}'>
 <script>
 	setTimeout(\"{$prefix}Launch()\",300);
@@ -426,7 +432,6 @@ function mysql_tabs(){
 	$page=CurrentPageName();
 	$tpl=new templates();
 	$users=new usersMenus();
-	$LOAD_BALANCE_APPLIANCE=false;
 	$array["index"]='{index}';
 	$sock=new sockets();
 	if($users->SQUID_INSTALLED){
@@ -444,8 +449,7 @@ function mysql_tabs(){
 	$KASPERSKY_APPLIANCE=FALSE;
 	if($users->KASPERSKY_SMTP_APPLIANCE){$KASPERSKY_APPLIANCE=TRUE;}
 	if($users->KASPERSKY_WEB_APPLIANCE){$KASPERSKY_APPLIANCE=TRUE;}
-	if($users->OPENVPN_APPLIANCE){$OPENVPN_APPLIANCE=TRUE;}
-	if($users->LOAD_BALANCE_APPLIANCE){$LOAD_BALANCE_APPLIANCE=TRUE;}				
+	if($users->OPENVPN_APPLIANCE){$OPENVPN_APPLIANCE=TRUE;}		
 	
 	
 	if($users->POSTFIX_INSTALLED){
@@ -512,14 +516,6 @@ function mysql_tabs(){
 		unset($array["service_family"]);
 	}	
 	
-	if($LOAD_BALANCE_APPLIANCE){
-		unset($array["service_family"]);
-		unset($array["samba_packages"]);
-		unset($array["smtp_packages"]);		
-		unset($array["web_packages"]);
-		unset($array["vdi"]);		
-	}
-	
 	if($FreeWebLeftMenu==0){unset($array["web_packages"]);}
 	
 if(isset($_GET["QuickLinksTop"])){$margin="margin-top:10px";$fontsize="font-size:14px";}
@@ -549,19 +545,12 @@ if(isset($_GET["QuickLinksTop"])){$margin="margin-top:10px";$fontsize="font-size
 	
 	
 	return "
-	<div id=main_setup_config style='width:100%;height:550px;overflow:auto;background-color:white;$margin'>
+	<div id=main_setup_config style='width:100%;height:590px;overflow:auto;background-color:white;$margin'>
 		<ul>". implode("\n",$html)."</ul>
 	</div>
 		<script>
 				$(document).ready(function(){
-					$('#main_setup_config').tabs({
-				    load: function(event, ui) {
-				        $('a', ui.panel).click(function() {
-				            $(ui.panel).load(this.href);
-				            return false;
-				        });
-				    }
-				});
+					$('#main_setup_config').tabs();
 			
 
 			});
@@ -587,14 +576,15 @@ function mysql_main_switch(){
 	$GLOBALS["ArticaMetaDisableSetupCenter"]=$sock->GET_INFO("ArticaMetaDisableSetupCenter");
 	
 	if(!isset($_GET["refresh"])){
-		
-	echo "
-	<input type='hidden' id='main_array_setup_install_selected' value='{$_GET["main"]}'>
-	<div style='text-align:right'>". imgtootltip("refresh-24.png","{refresh}","InstallRefresh()")."</div>
-	<div id='main_array_setup_install_{$_GET["main"]}'>";
+	 if($_GET["main"]<>"index"){
+		echo "
+			<input type='hidden' id='main_array_setup_install_selected' value='{$_GET["main"]}'>
+			<div style='text-align:right'>". imgtootltip("refresh-24.png","{refresh}","InstallRefresh()")."</div>
+			<div id='main_array_setup_install_{$_GET["main"]}'>";
+		}
 	}
 	switch ($_GET["main"]) {
-		case "index":echo $tab.index();break;
+		case "index":echo index();break;
 		case "smtp_packages":echo $tab.smtp_packages();break;
 		case "stat_packages":echo $tab.stat_packages();break;
 		case "web_packages":echo $tab.web_packages();break;
@@ -1038,12 +1028,11 @@ function system_packages(){
 $sock=new sockets();
 $users=new usersMenus();
 $KASPERSKY_APPLIANCE=FALSE;
-$LOAD_BALANCE_APPLIANCE=FALSE;
 if($users->KASPERSKY_SMTP_APPLIANCE){$KASPERSKY_APPLIANCE=TRUE;}
 if($users->KASPERSKY_WEB_APPLIANCE){$KASPERSKY_APPLIANCE=TRUE;}
 if($users->OPENVPN_APPLIANCE){$OPENVPN_APPLIANCE=TRUE;}		
 $MEM_TOTAL_INSTALLEE=$users->MEM_TOTAL_INSTALLEE;
-if($users->LOAD_BALANCE_APPLIANCE){$LOAD_BALANCE_APPLIANCE=TRUE;}
+
 
 
 
@@ -1067,56 +1056,33 @@ $html="
 <td style='font-size:13px'><strong>{status}</strong></td>
 </tr>";
 
-	$BuildRows["APP_VMTOOLS"]=BuildRows("APP_VMTOOLS",$GlobalApplicationsStatus,"VMwareTools");
-	$BuildRows["APP_VBOXADDITIONS"]= BuildRows("APP_VBOXADDITIONS",$GlobalApplicationsStatus,"VBoxLinuxAdditions-$users->ArchStruct");
-	$BuildRows["APP_OPENLDAP"]= BuildRows("APP_OPENLDAP",$GlobalApplicationsStatus,"openldap");
-	$BuildRows["APP_LXC"]= BuildRows("APP_LXC",$GlobalApplicationsStatus,"lxc");
+if($users->VMWARE_HOST){
+	$html=$html.BuildRows("APP_VMTOOLS",$GlobalApplicationsStatus,"VMwareTools");
+}
 
-	if(!$users->VMWARE_HOST){unset($BuildRows["APP_VMTOOLS"]);}
-	if($users->VIRTUALBOX_HOST){unset($BuildRows["APP_VBOXADDITIONS"]);}
+if($users->VIRTUALBOX_HOST){
+	$html=$html.BuildRows("APP_VBOXADDITIONS",$GlobalApplicationsStatus,"VBoxLinuxAdditions-$users->ArchStruct");
+}
 
-	if((!$users->LinuxDistriCode=='DEBIAN') or (!$users->LinuxDistriCode=='UBUNTU')){unset($BuildRows["APP_OPENLDAP"]);}
+if(($users->LinuxDistriCode=='DEBIAN') or ($users->LinuxDistriCode=='UBUNTU')){
+	$html=$html.BuildRows("APP_OPENLDAP",$GlobalApplicationsStatus,"openldap");
+}
 			
 
 	//if(!$users->AS_VPS_CLIENT){$html=$html.BuildRows("APP_MYSQL",$GlobalApplicationsStatus,"mysql-cluster-gpl");}
 	
-	if($KASPERSKY_APPLIANCE){	unset($BuildRows["APP_LXC"]);}
-	if($MEM_TOTAL_INSTALLEE<700000){unset($BuildRows["APP_LXC"]);}
-	if($users->AS_VPS_CLIENT){unset($BuildRows["APP_LXC"]);}
-	if($users->LOAD_BALANCE_APPLIANCE){unset($BuildRows["APP_LXC"]);}
-
-	$BuildRows["APP_PHPLDAPADMIN"]=BuildRows("APP_PHPLDAPADMIN",$GlobalApplicationsStatus,"phpldapadmin");
-	$BuildRows["APP_MYSQL"]=BuildRows("APP_MYSQL",$GlobalApplicationsStatus,"mysql-server");
-	$BuildRows["APP_PHPMYADMIN"]=BuildRows("APP_PHPMYADMIN",$GlobalApplicationsStatus,"phpMyAdmin");
-	$BuildRows["APP_GREENSQL"]=BuildRows("APP_GREENSQL",$GlobalApplicationsStatus,"greensql-fw");
-	$BuildRows["APP_TOMCAT"]=BuildRows("APP_TOMCAT",$GlobalApplicationsStatus,"apache-tomcat");
-	
-	if($KASPERSKY_APPLIANCE){
-		unset($BuildRows["APP_GREENSQL"]);
-		unset($BuildRows["APP_TOMCAT"]);
+if(!$KASPERSKY_APPLIANCE){	
+	if($MEM_TOTAL_INSTALLEE>700000){
+		if(!$users->AS_VPS_CLIENT){
+		$html=$html.BuildRows("APP_LXC",$GlobalApplicationsStatus,"lxc");	
+		}
 	}
-	
-	if($OPENVPN_APPLIANCE){
-		unset($BuildRows["APP_GREENSQL"]);
-		unset($BuildRows["APP_TOMCAT"]);
-	}
-	
-	if($LOAD_BALANCE_APPLIANCE){
-		unset($BuildRows["APP_GREENSQL"]);
-		unset($BuildRows["APP_TOMCAT"]);
-	}	
-	
-	if($MEM_TOTAL_INSTALLEE<700000){
-		unset($BuildRows["APP_GREENSQL"]);
-		unset($BuildRows["APP_TOMCAT"]);
-	}
-
-	if(count($BuildRows)>0){
-	while (list ($num, $tt) = each ($BuildRows) ){
-		$html=$html.$tt;
-	}
-	$BuildRows=array();
-	}
+}
+	$html=$html.BuildRows("APP_PHPLDAPADMIN",$GlobalApplicationsStatus,"phpldapadmin");
+	$html=$html.BuildRows("APP_MYSQL",$GlobalApplicationsStatus,"mysql-server");
+	$html=$html.BuildRows("APP_PHPMYADMIN",$GlobalApplicationsStatus,"phpMyAdmin");
+	if(!$KASPERSKY_APPLIANCE){$html=$html.BuildRows("APP_GREENSQL",$GlobalApplicationsStatus,"greensql-fw");}
+	if(!$KASPERSKY_APPLIANCE){$html=$html.BuildRows("APP_TOMCAT",$GlobalApplicationsStatus,"apache-tomcat");}
 		
 	//$html=$html.BuildRows("APP_EACCELERATOR",$GlobalApplicationsStatus,"eaccelerator");
 	if(!$KASPERSKY_APPLIANCE){
@@ -1126,209 +1092,69 @@ $html="
 	}
 	
 	
-	$BuildRows["APP_DHCP"]=BuildRows("APP_DHCP",$GlobalApplicationsStatus,"dhcp");	
-	$BuildRows["APP_PDNS"]=BuildRows("APP_PDNS",$GlobalApplicationsStatus,"pdns");
-	$BuildRows["APP_POWERADMIN"]=BuildRows("APP_POWERADMIN",$GlobalApplicationsStatus,"poweradmin");
-	$BuildRows["APP_OPENVPN"]=BuildRows("APP_OPENVPN",$GlobalApplicationsStatus,"openvpn");
-	$BuildRows["APP_IPTACCOUNT"]=BuildRows("APP_IPTACCOUNT",$GlobalApplicationsStatus,"iptaccount");
-	$BuildRows["APP_AMACHI"]=BuildRows("APP_AMACHI",$GlobalApplicationsStatus,"hamachi");
-	$BuildRows["APP_PUREFTPD"]=BuildRows("APP_PUREFTPD",$GlobalApplicationsStatus,"pure-ftpd");
-	$BuildRows["APP_MLDONKEY"]=BuildRows("APP_MLDONKEY",$GlobalApplicationsStatus,"mldonkey");
-	if($KASPERSKY_APPLIANCE){
-		unset($BuildRows["APP_DHCP"]);
-		unset($BuildRows["APP_PDNS"]);
-		unset($BuildRows["APP_POWERADMIN"]);
-		unset($BuildRows["APP_OPENVPN"]);
-		unset($BuildRows["APP_AMACHI"]);
-		unset($BuildRows["APP_PUREFTPD"]);
-		unset($BuildRows["APP_MLDONKEY"]);
-	}
-	
-	if($MEM_TOTAL_INSTALLEE<700000){
-		unset($BuildRows["APP_PDNS"]);
-		unset($BuildRows["APP_POWERADMIN"]);		
-	}
-	
-	if($OPENVPN_APPLIANCE){
-		unset($BuildRows["APP_MLDONKEY"]);
-	}
-	
-	if($LOAD_BALANCE_APPLIANCE){
-		unset($BuildRows["APP_DHCP"]);
-		unset($BuildRows["APP_PDNS"]);
-		unset($BuildRows["APP_POWERADMIN"]);
-		unset($BuildRows["APP_OPENVPN"]);
-		unset($BuildRows["APP_AMACHI"]);
-		unset($BuildRows["APP_PUREFTPD"]);
-		unset($BuildRows["APP_MLDONKEY"]);		
-	}
-	
+		
+	$html=$html.spacer('{network_softwares}');
+	if(!$KASPERSKY_APPLIANCE){$html=$html.BuildRows("APP_DHCP",$GlobalApplicationsStatus,"dhcp");}
+	if(!$KASPERSKY_APPLIANCE){if($MEM_TOTAL_INSTALLEE>700000){$html=$html.BuildRows("APP_PDNS",$GlobalApplicationsStatus,"pdns");}}
+	if(!$KASPERSKY_APPLIANCE){if($MEM_TOTAL_INSTALLEE>700000){$html=$html.BuildRows("APP_POWERADMIN",$GlobalApplicationsStatus,"poweradmin");}}
+	if(!$KASPERSKY_APPLIANCE){$html=$html.BuildRows("APP_OPENVPN",$GlobalApplicationsStatus,"openvpn");}
+	$html=$html.BuildRows("APP_IPTACCOUNT",$GlobalApplicationsStatus,"iptaccount");
+	if(!$KASPERSKY_APPLIANCE){$html=$html.BuildRows("APP_AMACHI",$GlobalApplicationsStatus,"hamachi");}
+	if(!$KASPERSKY_APPLIANCE){$html=$html.BuildRows("APP_PUREFTPD",$GlobalApplicationsStatus,"pure-ftpd");}
+	if(!$KASPERSKY_APPLIANCE){if(!$OPENVPN_APPLIANCE){$html=$html.BuildRows("APP_MLDONKEY",$GlobalApplicationsStatus,"mldonkey");}}
 	
 
 	
-	if(count($BuildRows)>1){
-		$html=$html.spacer('{network_softwares}');
-		while (list ($num, $tt) = each ($BuildRows) ){
-			$html=$html.$tt;
-		}
-		$BuildRows=array();
-	}		
-		
-	
-	$BuildRows["APP_AMANDA"]=BuildRows("APP_AMANDA",$GlobalApplicationsStatus,"amanda");
-	$BuildRows["APP_DROPBOX"]=BuildRows("APP_DROPBOX",$GlobalApplicationsStatus,"dropbox-32");
-	$BuildRows["APP_FUSE"]=BuildRows("APP_FUSE",$GlobalApplicationsStatus,"fuse");
-	$BuildRows["APP_ZFS_FUSE"]=BuildRows("APP_ZFS_FUSE",$GlobalApplicationsStatus,"zfs-fuse");
-	$BuildRows["APP_TOKYOCABINET"]=BuildRows("APP_TOKYOCABINET",$GlobalApplicationsStatus,"tokyocabinet");
-	$BuildRows["APP_LESSFS"]=BuildRows("APP_LESSFS",$GlobalApplicationsStatus,"lessfs");
-	$BuildRows["APP_DAR"]=BuildRows("APP_DAR",$GlobalApplicationsStatus,"dar");
-	
-	if($KASPERSKY_APPLIANCE){
-		unset($BuildRows["APP_AMANDA"]);
-		unset($BuildRows["APP_DROPBOX"]);
-		unset($BuildRows["APP_FUSE"]);
-		unset($BuildRows["APP_ZFS_FUSE"]);
-		unset($BuildRows["APP_TOKYOCABINET"]);
-		unset($BuildRows["APP_LESSFS"]);
-		unset($BuildRows["APP_DAR"]);
-	}
-	
-	if($OPENVPN_APPLIANCE){
-		unset($BuildRows["APP_AMANDA"]);
-		unset($BuildRows["APP_DROPBOX"]);
-		unset($BuildRows["APP_FUSE"]);
-		unset($BuildRows["APP_ZFS_FUSE"]);
-		unset($BuildRows["APP_TOKYOCABINET"]);
-		unset($BuildRows["APP_LESSFS"]);
-		unset($BuildRows["APP_DAR"]);
-	}	
-	if($LOAD_BALANCE_APPLIANCE){
-		unset($BuildRows["APP_AMANDA"]);
-		unset($BuildRows["APP_DROPBOX"]);
-		unset($BuildRows["APP_FUSE"]);
-		unset($BuildRows["APP_ZFS_FUSE"]);
-		unset($BuildRows["APP_TOKYOCABINET"]);
-		unset($BuildRows["APP_LESSFS"]);
-		unset($BuildRows["APP_DAR"]);
-	}	
-		
-	if(count($BuildRows)>1){
+	if(!$KASPERSKY_APPLIANCE){
+		if(!$OPENVPN_APPLIANCE){
 			$html=$html.spacer('{storagebakcup_softwares}');
-			while (list ($num, $tt) = each ($BuildRows) ){
-				$html=$html.$tt;
-			}
-			$BuildRows=array();
-		}			
-	
-	$BuildRows["APP_CLAMAV"]=BuildRows("APP_CLAMAV",$GlobalApplicationsStatus,"clamav");
-	$BuildRows["APP_SNORT"]=BuildRows("APP_SNORT",$GlobalApplicationsStatus,"snort");
-	$BuildRows["APP_NMAP"]=BuildRows("APP_NMAP",$GlobalApplicationsStatus,"nmap");
-	$BuildRows["APP_SMARTMONTOOLS"]=BuildRows("APP_SMARTMONTOOLS",$GlobalApplicationsStatus,"smartmontools");
-	
-	if($KASPERSKY_APPLIANCE){
-		unset($BuildRows["APP_CLAMAV"]);
-		unset($BuildRows["APP_SNORT"]);
-		unset($BuildRows["APP_NMAP"]);
-	}	
-	
-	if($MEM_TOTAL_INSTALLEE<700000){
-		unset($BuildRows["APP_CLAMAV"]);
-	}
-	
-	if($LOAD_BALANCE_APPLIANCE){	
-		unset($BuildRows["APP_CLAMAV"]);
-		unset($BuildRows["APP_SNORT"]);
-	}	
-	
-	if(count($BuildRows)>1){
-			$html=$html.spacer('{secuirty_softwares}');
-			while (list ($num, $tt) = each ($BuildRows) ){
-				$html=$html.$tt;
-			}
-			$BuildRows=array();
-		}	
-
+			$html=$html.BuildRows("APP_AMANDA",$GlobalApplicationsStatus,"amanda");
+			$html=$html.BuildRows("APP_DROPBOX",$GlobalApplicationsStatus,"dropbox-32");
+			$html=$html.BuildRows("APP_FUSE",$GlobalApplicationsStatus,"fuse");
+			$html=$html.BuildRows("APP_ZFS_FUSE",$GlobalApplicationsStatus,"zfs-fuse");
+			$html=$html.BuildRows("APP_TOKYOCABINET",$GlobalApplicationsStatus,"tokyocabinet");
+			$html=$html.BuildRows("APP_LESSFS",$GlobalApplicationsStatus,"lessfs");		
+			if(!$KASPERSKY_APPLIANCE){$html=$html.BuildRows("APP_DAR",$GlobalApplicationsStatus,"dar");}
+		}
 		
-		
-	$BuildRows["APP_WINEXE"]=BuildRows("APP_WINEXE",$GlobalApplicationsStatus,"winexe-static");
-	$BuildRows["APP_OCSI"]=BuildRows("APP_OCSI",$GlobalApplicationsStatus,"OCSNG_UNIX_SERVER");
-	$BuildRows["APP_OCSI_LINUX_CLIENT"]=BuildRows("APP_OCSI_LINUX_CLIENT",$GlobalApplicationsStatus,"OCSNG_LINUX_AGENT");
+	}
 	
-	if($KASPERSKY_APPLIANCE){
-		unset($BuildRows["APP_WINEXE"]);
-		unset($BuildRows["APP_OCSI"]);
-		unset($BuildRows["APP_OCSI_LINUX_CLIENT"]);
-	}
-	if($LOAD_BALANCE_APPLIANCE){
-		unset($BuildRows["APP_WINEXE"]);
-		unset($BuildRows["APP_OCSI"]);
-		unset($BuildRows["APP_OCSI_LINUX_CLIENT"]);
-	}			
+	
+	
+	
+	
+	
 
-	if($OPENVPN_APPLIANCE){
-		unset($BuildRows["APP_WINEXE"]);
-		unset($BuildRows["APP_OCSI"]);
-		unset($BuildRows["APP_OCSI_LINUX_CLIENT"]);
-	}
-
-	if(count($BuildRows)>1){
+if(!$KASPERSKY_APPLIANCE){	
+	$html=$html.spacer('{secuirty_softwares}');
+ 
+ 		if($MEM_TOTAL_INSTALLEE>700000){$html=$html.BuildRows("APP_CLAMAV",$GlobalApplicationsStatus,"clamav");}
+ 		$html=$html.BuildRows("APP_SNORT",$GlobalApplicationsStatus,"snort");	
+ 		$html=$html.BuildRows("APP_NMAP",$GlobalApplicationsStatus,"nmap");
+ 		$html=$html.BuildRows("APP_SMARTMONTOOLS",$GlobalApplicationsStatus,"smartmontools");
+	
+ 		if(!$OPENVPN_APPLIANCE){
 			$html=$html.spacer('{computers_management}');
-			while (list ($num, $tt) = each ($BuildRows) ){
-				$html=$html.$tt;
-			}
-			$BuildRows=array();
-		}	
-	
-
-
-	
-	
-$BuildRows["APP_XAPIAN"]=BuildRows("APP_XAPIAN",$GlobalApplicationsStatus,"xapian-core");
-$BuildRows["APP_XAPIAN_OMEGA"]=BuildRows("APP_XAPIAN_OMEGA",$GlobalApplicationsStatus,"xapian-omega");
-$BuildRows["APP_XAPIAN_PHP"]=BuildRows("APP_XAPIAN_PHP",$GlobalApplicationsStatus,"xapian-bindings");
-$BuildRows["APP_XPDF"]=BuildRows("APP_XPDF",$GlobalApplicationsStatus,"xpdf");
-$BuildRows["APP_UNRTF"]=BuildRows("APP_UNRTF",$GlobalApplicationsStatus,"unrtf");
-$BuildRows["APP_CATDOC"]=BuildRows("APP_CATDOC",$GlobalApplicationsStatus,"catdoc");		
-$BuildRows["APP_ANTIWORD"]=BuildRows("APP_ANTIWORD",$GlobalApplicationsStatus,"antiword");	
-
-	if($KASPERSKY_APPLIANCE){
-		unset($BuildRows["APP_XAPIAN"]);
-		unset($BuildRows["APP_XAPIAN_OMEGA"]);
-		unset($BuildRows["APP_XAPIAN_PHP"]);
-		unset($BuildRows["APP_XPDF"]);
-		unset($BuildRows["APP_UNRTF"]);
-		unset($BuildRows["APP_CATDOC"]);
-		unset($BuildRows["APP_ANTIWORD"]);
+			$html=$html.BuildRows("APP_WINEXE",$GlobalApplicationsStatus,"winexe-static");
+			$html=$html.BuildRows("APP_OCSI",$GlobalApplicationsStatus,"OCSNG_UNIX_SERVER");
+ 			$html=$html.BuildRows("APP_OCSI_LINUX_CLIENT",$GlobalApplicationsStatus,"OCSNG_LINUX_AGENT");
+ 		}		
 	}
 	
-	if($OPENVPN_APPLIANCE){
-		unset($BuildRows["APP_XAPIAN"]);
-		unset($BuildRows["APP_XAPIAN_OMEGA"]);
-		unset($BuildRows["APP_XAPIAN_PHP"]);
-		unset($BuildRows["APP_XPDF"]);
-		unset($BuildRows["APP_UNRTF"]);
-		unset($BuildRows["APP_CATDOC"]);
-		unset($BuildRows["APP_ANTIWORD"]);
+	
+if(!$KASPERSKY_APPLIANCE){
+	if(!$OPENVPN_APPLIANCE){
+		$html=$html.spacer('{xapian_packages}');
+		$html=$html.BuildRows("APP_XAPIAN",$GlobalApplicationsStatus,"xapian-core");
+		$html=$html.BuildRows("APP_XAPIAN_OMEGA",$GlobalApplicationsStatus,"xapian-omega");
+		$html=$html.BuildRows("APP_XAPIAN_PHP",$GlobalApplicationsStatus,"xapian-bindings");
+		$html=$html.BuildRows("APP_XPDF",$GlobalApplicationsStatus,"xpdf");
+		//$html=$html.BuildRows("APP_UNZIP",$GlobalApplicationsStatus,"unzip");
+		$html=$html.BuildRows("APP_UNRTF",$GlobalApplicationsStatus,"unrtf");
+		$html=$html.BuildRows("APP_CATDOC",$GlobalApplicationsStatus,"catdoc");		
+		$html=$html.BuildRows("APP_ANTIWORD",$GlobalApplicationsStatus,"antiword");	
 	}
-		
-	if($LOAD_BALANCE_APPLIANCE){
-		unset($BuildRows["APP_XAPIAN"]);
-		unset($BuildRows["APP_XAPIAN_OMEGA"]);
-		unset($BuildRows["APP_XAPIAN_PHP"]);
-		unset($BuildRows["APP_XPDF"]);
-		unset($BuildRows["APP_UNRTF"]);
-		unset($BuildRows["APP_CATDOC"]);
-		unset($BuildRows["APP_ANTIWORD"]);
-	}	
-	
-	
-	if(count($BuildRows)>1){
-			$html=$html.spacer('{xapian_packages}');
-			while (list ($num, $tt) = each ($BuildRows) ){
-				$html=$html.$tt;
-			}
-			$BuildRows=array();
-		}		
+}
 	$html=$html."</table>";
 	
 if(posix_getuid()==0){

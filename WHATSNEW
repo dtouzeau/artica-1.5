@@ -3,9 +3,9 @@
 
 System Changes:
 ------------------------------------------------
-1.5.101701 Fix respawning too fast when using artica-iso.
+1.5.101701: Fix respawning too fast when using artica-iso.
 1.5.101601: Fix openvpn server daemon is killed each 6Mns
-1.5.101417: Fix Artica think that it installed on a VPS server when cgroups is installed on the computer. (Tsystem::PROCESS_ISCHROOTED:: -> 1181: it is a chrooted process for VPS "sysdefault" return true)
+1.5.101417: Fix Artica think that it is installed on a VPS server when cgroups is installed on the computer. (Tsystem::PROCESS_ISCHROOTED:: -> 1181: it is a chrooted process for VPS "sysdefault" return true)
 1.5.101319: Fix bulk notifications when crossroads is installed and wihtout any backend saved.
 1.5.101201: Support arpd daemon has a daemon that handle MAC addresses listing.
 1.5.101111: Fix artica is unable to retreive the correct hostname.
@@ -22,6 +22,7 @@ System Changes:
 
 Messaging Changes:
 ------------------------------------------------
+1.5.101720: Add a new login template for Zarafa Appliance.
 1.5.101701: Fix groups created in Artica are not correclty displayed in Zarafa.
 1.5.101701: Fix users aliases created in Artica are not displayed in Zarafa.
 1.5.101701: Add a check when trying to change the Web server port for Zarafa (if port already opened, the port is not saved) 
@@ -35,12 +36,12 @@ Messaging Changes:
 1.5.100918: Fix security hole on Zarafa: can have access to mailbox with a wrong password.
 1.5.100918: The Zarafa contact importation task is disabled by default and has been modified in order to not overload the server.
 1.5.100416: Add zarafaSharedStoreOnly Zarafa token support It allows to turn user to an non-active user
-1.5.100416: Auto-fix Postfix error fatal: master_spawn: exec */postscreen: No such file or directory, The watchdog create a symbolic link to the right binary on the Postfix desired path
+1.5.100416: Auto-Fix PostFix error fatal: master_spawn: exec */postscreen: No such file or directory, The watchdog create a symbolic link to the right binary on the PostFix desired path
 
 FreeWebs changes:
 ------------------------------------------------
 1.5.101319: Add possibility to change the listen address and port in pure-ftpd daemon.
-1.5.100420: Fix unable to modify the freeWeb Mysql database name to fix generated error "Error, the given value execeed: 16"
+1.5.100420: Fix unable to modify the freeWeb Mysql database name to Fix generated error "Error, the given value execeed: 16"
 1.5.100812: Add possibility to add Server aliases for a Website.
 
 Proxy changes:
@@ -52,7 +53,7 @@ Proxy changes:
 1.5.101601: Fix misconfiguration on ufdbguard.conf artica used the old way to compile file.
 1.5.101601: Fix events tab in Filtering database section did not display database tasks events.
 1.5.101601: Add a new code that ensure that categories are correctly compiled and builded during building the UfdbGuard configuration file.
-1.5.101601: fix missing "security" category to make ufdbGuard works.
+1.5.101601: Fix missing "security" category to make ufdbGuard works.
 1.5.101319: Fix error adding a group in filtering rule add all groups.
 1.5.101319: Fix Table 'squidlogs.xxxx_members' doesn't exist in statistics section.
 1.5.101319: Fix (ssl_crtd): Uninitialized SSL certificate database directory: /var/lib/ssl_db. To initialize, run "ssl_crtd -c -s /var/lib/ssl_db". on squid 3.1.15
@@ -63,6 +64,9 @@ Proxy changes:
 
 Interface Changes:
 ------------------------------------------------
+1.5.101720: Add a new network configuation wizard when NIC settings are note saved into Artica Database.
+1.5.101720: Add a browse computers section in network/NIC section.
+1.5.101720: Fix 404 not found on DHCP groups and leases tabs.
 1.5.101701: Add organization tab in the front page panel.
 1.5.101701: Rebuild the listing organization page.
 1.5.101417: Improve unity section, add a close button on unity.
@@ -90,9 +94,9 @@ Messaging Changes:
 1.5.090215: Fix misconfigurations on milter-greylist.
 1.5.090215: Add graphs in milter-greylist section and admin section when using single-instance.
 1.5.090619: Add "dropdelivered" fetchmail attribute support.
-1.5.090619: Fix and improve Postfix tuning section (see http://www.artica.fr/forum/viewtopic.php?f=26&t=4531&start=10#p20993)
-1.5.091002: Add smtp_connection_cache_destinations support for SMTP throttle instances in both single instance and multiple Postfix instances. (see http://forum.artica.fr/viewtopic.php?f=26&t=4452&start=0)
-1.5.091400: Add possibility to display Postfix instances really enabled and active on the system instead in Artica Database, this to find Postfix orphans instances. (see http://www.artica.fr/forum/viewtopic.php?f=63&t=4575&start=0)
+1.5.090619: Fix and improve PostFix tuning section (see http://www.artica.fr/forum/viewtopic.php?f=26&t=4531&start=10#p20993)
+1.5.091002: Add smtp_connection_cache_destinations support for SMTP throttle instances in both single instance and multiple PostFix instances. (see http://forum.artica.fr/viewtopic.php?f=26&t=4452&start=0)
+1.5.091400: Add possibility to display PostFix instances really enabled and active on the system instead in Artica Database, this to find PostFix orphans instances. (see http://www.artica.fr/forum/viewtopic.php?f=63&t=4575&start=0)
 1.5.091519: Add a new function that ensure that the target LDAP server is available before starting Zarafa server. This in order to avoid orphans after starting Zarafa server.
 1.5.091519: Add a new function that automatically stop Zarafa server before stopping LDAP server.This in order to avoid orphans after starting Zarafa server.
 1.5.091519: Add possibility to define Session time in Zarafa web server parameters (this option change values in Zarafa website stored by FreeWebs too).
@@ -142,7 +146,7 @@ FreeWebs changes:
 1.5.090420: Unable to make FreeWebs working under Fedora or CentOS.
 1.5.091400: Allow to globally disable SSL protocol in FreeWebs.
 1.5.091519: Fix unable to apply mod_rewrite when using Wordpress.
-Fix error: "RewriteRule: bad argument line '(.*)'" (see http://www.artica.fr/forum/viewtopic.php?f=10&t=4604&start=0)
+1.5.091617: Fix error: "RewriteRule: bad argument line '(.*)'" (see http://www.artica.fr/forum/viewtopic.php?f=10&t=4604&start=0)
 1.5.091617: Introduce statistics per VirtualHosts using the mod_log_sql
 
 1.5.083101: 
@@ -152,13 +156,13 @@ Messaging Changes:
 1.5.081619: Fix misconfiguration when enabling PostScreen (see http://www.artica.fr/forum/viewtopic.php?f=26&t=4367&start=0)
 1.5.081800: Fix unable to activate Junk Learning (see http://forum.artica.fr/viewtopic.php?f=25&t=4366&start=0)
 1.5.081800: Artica downloading now malwarepatrol database automatically for SpamAssassin.
-1.5.081800: Add --nogpg when update spamassassin in order to fix error: gpg required but not found! (see http://forum.artica.fr/viewtopic.php?f=10&t=4379)
+1.5.081800: Add --nogpg when update spamassassin in order to Fix error: gpg required but not found! (see http://forum.artica.fr/viewtopic.php?f=10&t=4379)
 1.5.082013: Add possibility to run a fetchmail rule in debug mode.
 1.5.082013: Add new feature that able to notify, manage, Zarafa orphaned stores.
-1.5.082118: Remove the netmask calculation when adding network in postfix single instance(see http://www.artica.fr/forum/viewtopic.php?f=20&t=4399)
+1.5.082118: Remove the netmask calculation when adding network in postFix single instance(see http://www.artica.fr/forum/viewtopic.php?f=20&t=4399)
 1.5.082118: Fix artica set the sieve port to 0 when it cannot found it in /etc/services. In this case, the sieve port will be set to 2000 
 1.5.082118: Fix missing class in IntsantIptables (see http://www.artica.fr/forum/viewtopic.php?f=10&t=4408)
-1.5.082223: Fix milter-greylist unable to update it's database when using postfix multiple-instances (see http://www.artica.fr/forum/viewtopic.php?f=20&t=4405&start=0)
+1.5.082223: Fix milter-greylist unable to update it's database when using postFix multiple-instances (see http://www.artica.fr/forum/viewtopic.php?f=20&t=4405&start=0)
 1.5.082301: Add possibility to switch Zarafa authentication mode from Zarafa php logon screen page to Apache LDAP authentication method (see http://www.artica.fr/forum/viewtopic.php?f=108&t=4416)
 1.5.082517: Fix Network Error for Zarafa 6.x in setup Center.
 1.5.082517: Add possibility to change the local listen SMTP port (see http://forum.artica.fr/viewtopic.php?f=26&t=4444&start=0#p20578)
@@ -173,7 +177,7 @@ File Sharing changes
 
 System Changes
 -------------------------------------------------
-1.5.081800: Add a new watchdog according DNSMasq, apparmor block dnsmasq while reading settings, Artica is able to put it in aa-complain mode.(fix issue:  "failed to read /etc/dnsmasq.resolv.conf: Permission denied")
+1.5.081800: Add a new watchdog according DNSMasq, apparmor block dnsmasq while reading settings, Artica is able to put it in aa-complain mode.(Fix issue:  "failed to read /etc/dnsmasq.resolv.conf: Permission denied")
 1.5.081800: Fix unable to change the Mysql administrator password trough Artica.
 1.5.081800: Adding a new option that deny Artica to reboot the system if the kernel claim out of memory error.
 1.5.081800: Add a new function that ensure that LDAP server is available before re-writing dhcpd.conf (see http://forum.artica.fr/viewtopic.php?f=120&t=4377&start=0)
@@ -240,11 +244,11 @@ File Sharing changes
 Messaging Changes:
 -------------------------------------------------
 1.5.080923: Add sa_timeout token (see http://forum.artica.fr/viewtopic.php?f=26&t=4299&start=0#p19941)
-1.5.080923: Fix unable to change the message size limit when using Postfix multiple instances (see http://forum.artica.fr/viewtopic.php?f=20&t=4306)
+1.5.080923: Fix unable to change the message size limit when using PostFix multiple instances (see http://forum.artica.fr/viewtopic.php?f=20&t=4306)
 1.5.081102: Fix misconfiguration on postscreen_cache_map main.cf attribute
 1.5.081102: Add smtp_connection_cache_on_demand,smtp_connection_cache_time_limit,smtp_connection_reuse_time_limit in throttle directives (see http://www.artica.fr/forum/viewtopic.php?f=26&t=4312&start=0#p19984)
 1.5.081201: Fix unable to define personal settings in master.cf (see http://forum.artica.fr/viewtopic.php?f=26&t=4233&start=0)
-1.5.081201: Fix sometimes amavis-milter did not want to start cause postfix account did not have any environnement.
+1.5.081201: Fix sometimes amavis-milter did not want to start cause postFix account did not have any environnement.
 1.5.081201: Fix unable to change message size limit (see http://forum.artica.fr/viewtopic.php?f=20&t=4322&start=0)
 1.5.081316: Adding possibility to install Zarafa 6.x versions instead 7.x
 1.5.081415: Add notifications on Spamassassin Status + add a web console for perform SpamAssassin updates.(see http://www.artica.fr/forum/viewtopic.php?f=55&t=4349) 
@@ -274,10 +278,10 @@ System Changes
 1.5.071315: Fix Unable to compile latest PowerDNS version.
 1.5.071315: Add possibility to enable PowerDNS trough MySQL.
 1.5.071315: Add possibility to install/use PowerAdmin to manage PowerDNS trough Mysql Backend. 
-1.5.071414: Add a new command "/usr/share/artica-postfix/bin/artica-install --change-initd --force" in order to rebuild and FIX init.d LSB tags
+1.5.071414: Add a new command "/usr/share/artica-postFix/bin/artica-install --change-initd --force" in order to rebuild and Fix init.d LSB tags
 1.5.071414: Add a new information when running auditd on an OpenVZ VPS server, if auditd is not running, a notification is send and audtid is automatically disabled.
 1.5.071414: Fix unable to start GreenSQL.
-1.5.071420: Adding new LSB tag for artica-postfix init.d script use "/usr/share/artica-postfix/bin/artica-install --change-initd --force" to modify the scripts.
+1.5.071420: Adding new LSB tag for artica-postFix init.d script use "/usr/share/artica-postFix/bin/artica-install --change-initd --force" to modify the scripts.
 1.5.071420: Adding a function that patching /etc/cron.d/php5, /etc/cron.d/sendmail, /etc/cron.d/awstats in order to remove notifications from these scripts.
 1.5.071420: Adding new verbosed entries when executing exec.dhcpd.compile.php --verbose for dhcpd3.conf 
 1.5.071600: Add possibility to define listen IP addresses for PowerDNS.
@@ -290,7 +294,7 @@ System Changes
 1.5.072101: Fix Artica did not write /etc/php5/fastcgi/php.ini on OpenSuze 11.2 system that cause many php modules are not loaded for Artica interface.
 1.5.072101: Add possibility to upgrade DHCP server trough Setup center.
 1.5.072120: Some VPS providers offer a squeeze distribution but the sources.list is for a lenny : setup-ubuntu or setup-debian is able to detect it and inform that there is a misconfigured sources.list.
-1.5.072120: Add a new function to fix issue "insserv: warning: script is corrupt or invalid: /etc/init.d/../rc6.d/S00vzreboot" this is a know bug that setup-ubuntu or setup-debian is able fix on VPS servers.
+1.5.072120: Add a new function to Fix issue "insserv: warning: script is corrupt or invalid: /etc/init.d/../rc6.d/S00vzreboot" this is a know bug that setup-ubuntu or setup-debian is able Fix on VPS servers.
 1.5.072213: Add a new feature that help you to get more than 600Mb memory free (see http://www.artica.fr/forum/viewtopic.php?f=10&t=4162&start=0)
 1.5.072217: Add possibility to turn MySQL in SSL Mode.
 1.5.072217: Add slave mode in PowerDNS section.
@@ -306,19 +310,19 @@ Messaging Changes:
 1.5.070217: When adding a new contact inside Artica, artica will export automatically Address Book to Zarafa Adress Book Account, an importation task is performed each 2H from Zarafa contacts to Artica contacts addresses.
 1.5.071123: Improve Fetchmail rules verifications. If Artica cannot retreive the user email address, the fetchmail rule is not added into the Daemon.
 1.5.071123: Fix IMAPHACK, the process did not wait the max events parameter, issue was the first failed connection create the rule instead waiting 10 failed connections. 
-1.5.071123: Fix timeouts on fetchmail restart local postfix service.If fetchmail timeout are detected, Artica just sends notification and did not try to resolve the issue.
+1.5.071123: Fix timeouts on fetchmail restart local postFix service.If fetchmail timeout are detected, Artica just sends notification and did not try to resolve the issue.
 1.5.071220: Fix sometimes the Artica daemon did not detect Amavid-new in memory and try the start the service.
 1.5.071414: Fix many amavis reload tasks has been performed by Artica that cause amavis to stop.
 1.5.071723: When artica encounter /usr/lib/libinetmapi.so.1: undefined symbol: _ZTIN5vmime6objectE", by default, it automatically re-install Zarafa. (this feature can also be disabled under Zarafa section)
 1.5.072019: Improve removing Zarafa using "artica-make APP_ZARAFA --remove" command line.
-1.5.072113: Fix unable to compile postfix parameters. (a new link has been added in the top menu).
+1.5.072113: Fix unable to compile postFix parameters. (a new link has been added in the top menu).
 1.5.072600: Fix unable to define organization to a zarafa organization.
 
 File Sharing changes
 -------------------------------------------------
 1.5.071123: Adding Samba WINS server dedicated section.
 1.5.071123: Adding a new feature "Samba Watch" that help to read Samba logs.
-1.5.071123: Introduce possibility to create "Virtual samba servers" and affect them to organizations (like postfix multiple instances)
+1.5.071123: Introduce possibility to create "Virtual samba servers" and affect them to organizations (like postFix multiple instances)
 1.5.071520: Add possibility to modify the remote announce feature in samba.
 1.5.072600: Fix Artica did not set the /etc/libnss-ldap.conf 
 1.5.072600: Sometimes, rename a computer did not work. The rename computer function has been rebuilded. 
@@ -367,7 +371,7 @@ System Changes
 1.5.062513: Add possibility to display DHCPD leases.
 1.5.062812: Fix ipdeny table is not created.
 1.5.062900: The system root password can be changed with Artica front-end interface under the same section of the Master Manager password
-1.5.062900: Add possibility to fix ip address for VPN clients.
+1.5.062900: Add possibility to Fix ip address for VPN clients.
 1.5.062900: Add possibility to specify credentials on the Artica siste-to-site VPN client when enable Authentication method on the VPN servers
 
 
@@ -375,23 +379,23 @@ System Changes
 Interface Changes:
 -------------------------------------------------
 1.5.061120: Adding new feature that enables password enforcement policy.
-1.5.061319: Fix Fatal error: Unsupported operand types in /usr/share/artica-postfix/exec.openvpn.php on line 435
+1.5.061319: Fix Fatal error: Unsupported operand types in /usr/share/artica-postFix/exec.openvpn.php on line 435
 1.5.062423: Allow System administrator to move users to an existing organization.
 
 Messaging Changes:
 -------------------------------------------------
 1.5.060317: Allow users/organization administrators to whitelist from milter-greylist messages to internal user.
-1.5.061419: Fix missing postfix-pcre package when upgrading to a new Artica version.
+1.5.061419: Fix missing postFix-pcre package when upgrading to a new Artica version.
 1.5.061419: Fix Artica is unable to set Mailbox acls on sub-mailboxes when using cyrus-imap has backend server.
 1.5.062812: Supporting new Zarafa 7.0 version.
-1.5.062812: Fix Artica did not restart postfix service when playing with Postfix routing table section.
+1.5.062812: Fix Artica did not restart postFix service when playing with PostFix routing table section.
 1.5.062812: Fix unable to enable fetchmail service.
 1.5.063000: Artica is able to detect that Zarafa upgrade from 6 to 7 has not been performed and make the upgrade operation automatically. 
 
 
 OpenVPN Changes:
 -------------------------------------------------
-1.5.062812: improve OpenVPN sites-to-sites Tun mode and fix major issues. 
+1.5.062812: improve OpenVPN sites-to-sites Tun mode and Fix major issues. 
 
 FreeWebs changes
 -------------------------------------------------
@@ -410,7 +414,7 @@ File Sharing changes
 Interface Changes:
 -------------------------------------------------
 1.5.050600: Fix Chrome incompatibilities on network section. 
-1.5.052616: Optimize interfaces when more than 5 postfix instances are created
+1.5.052616: Optimize interfaces when more than 5 postFix instances are created
 
 System Changes
 -------------------------------------------------
@@ -426,9 +430,9 @@ System Changes
 
 Messaging Changes:
 -------------------------------------------------
-1.5.050815: Add a new feature TCP/IP Rotator for both single/multiple postfix instances.
+1.5.050815: Add a new feature TCP/IP Rotator for both single/multiple postFix instances.
 1.5.051115: Add possibility to change the SMTP server address/port in Zarafa.
-1.5.051115: Add possibility to visualize all postfix instances in one table.
+1.5.051115: Add possibility to visualize all postFix instances in one table.
 1.5.051115: Add possibility to create a new instance by replicating parameters from an other instance.
 1.5.051400: Add possibility to change language default mailbox folders.
 1.5.051602: Add possibility to enable Zarafa Indexer service.
@@ -442,7 +446,7 @@ Messaging Changes:
 Proxy changes
 ------------------------------------------------- 
 1.5.050917: Rebuild mechanisms for maintain ufdbguard databases, now you need to schedule and perform compilations. This to prevent high CPU usage and databases compilation corruptions.
-1.5.051122: Major bugs fixing according to the ufdbguard config generator.
+1.5.051122: Major bugs Fixing according to the ufdbguard config generator.
 1.5.051918: Fix statistics was not calculated.
 1.5.051918: Fix error 14 when parsing Porn databases.
 
@@ -465,7 +469,7 @@ System Changes:
 1.5.040316: Add a feature to create a Syslog server or to send syslog to remote syslog server.
 1.5.040402: Fix AutoFS automount[xxxx]: connect_to_server: lookup(ldap): cannot bind to server.
 1.5.040402: Add a new engine to repair crashed Mysql tables (if table cannot be recovered, artica will destroy it and rebuild it (may loosing datas)
-1.5.040415: Improve - rebuild  and fix automounts features (AutoFS) 
+1.5.040415: Improve - rebuild  and Fix automounts features (AutoFS) 
 1.5.040801: Improve - rebuild the Network section.
 1.5.040808: Adding possibility to delete all artica events items.
 1.5.040808: Fixed bugged interface in DHCP hosts section.
@@ -487,7 +491,7 @@ System Changes:
 Messaging Changes:
 -------------------------------------------------
 1.5.040202: Add possibility to disable Artica SMTP statistics generation tasks .
-1.5.040402: Add possibility to upgrade to postfix 2.8.2
+1.5.040402: Add possibility to upgrade to postFix 2.8.2
 1.5.040501: Increase performances while parsing statistics
 1.5.041016: Fix unable to start Artica-policy (missing sockets.so link in php.ini)
 1.5.041021: Add a new Feature called "PostFinder"
@@ -496,7 +500,7 @@ Messaging Changes:
 1.5.041201: Add a new feature in order to monitor amavisd-new processes usage.
 1.5.041221: Support new Spamassassin plugin : PhishTag
 1.5.041300: Add a new interface that display/enable some available Spamassassin plugins.
-1.5.041300: Corrupted messages are now automatically moved from Postfix "corrupt" queue to "drop" queue
+1.5.041300: Corrupted messages are now automatically moved from PostFix "corrupt" queue to "drop" queue
 1.5.041500: Add a new watchdog for Amavis that able to detect an amavisd child CPU hang process and able to automatically react if the child process take too long time to live or is freeze with x0% CPU during a predefined time.
 1.5.041500: When detecting bad socket on Amavis, Artica will restart only amavisd-milter not amavisd daemon and milter.
 1.5.041502: Fix unable to parse/calculate local iptables rules.
@@ -519,7 +523,7 @@ File Sharing changes
 1.5.040402: Fix unable to compile scannedonly daemon.
 1.5.041016: Fix unable to enable remote LDAP server feature in Samba.
 1.5.041112: Adding new  "greyhole" software support has a Samba realtime backup service.
-1.5.041500: fix incompatibilities between Samba and AutoFS (automount).
+1.5.041500: Fix incompatibilities between Samba and AutoFS (automount).
 1.5.041719: Add new feature that allow to define users/groups quotas on each partition.
 1.5.042117: Add possibility to change files/directories chmod attributes.
 1.5.042117: Fix some libnss misconfigurations 
@@ -548,7 +552,7 @@ Messaging Changes:
 1.5.032319: Add a new feature called VIPTrack
 1.5.032319: Add a new feature that allow adding global BlackList and WhiteList domains for the whole anti-spam plugins.
 1.5.032319: Add new graphs and charts for the blocked connections and Content filtering threats.
-1.5.032319: Add a new feature help to check the Postfix Queue.
+1.5.032319: Add a new feature help to check the PostFix Queue.
 1.5.032319: Add a new feature that allow to find messages history from single Web Page.
 1.5.032323: Fix unable to reject messages from a maximal recipients number.
 1.5.032500: Add Bcc checks in maximal recipients feature.
@@ -589,7 +593,7 @@ File Sharing changes
 -------------------------------------------------
 1.5.040117: Winbindd is now disabled by default except if Active Directory connection is set.
 1.5.040117: Minors improvements on Samba engine.
-1.5.040117: Bugs fix on SSLBridge on CentOS systems.
+1.5.040117: Bugs Fix on SSLBridge on CentOS systems.
 
 
 
@@ -599,21 +603,21 @@ File Sharing changes
 
 Messaging Changes:
 -------------------------------------------------
-1.5.020317: Add a full PostScreen support has a new Postfix Anti-Spam technology both on single instance and multiple instances.
+1.5.020317: Add a full PostScreen support has a new PostFix Anti-Spam technology both on single instance and multiple instances.
 1.5.020402: Fix unable to start eMailRelay instances for SMTP notifications and massmailing when smtp server destination contains spaces.
 1.5.020402: Fix minor error :chown: cannot access `/usr/local/man/man1/mailq.1': No such file or directory
-1.5.020402: Fix error fatal: open database /etc/postfix-(instance)/sasl_passwd.db: No such file or directory artica will create an empty file if SASL is not set
-1.5.020402: Now when adding/deleting a Postfix instance, Artica will restart all postfix instances automatically instead waiting configure them in order to make it in production just after press button.
+1.5.020402: Fix error fatal: open database /etc/postFix-(instance)/sasl_passwd.db: No such file or directory artica will create an empty file if SASL is not set
+1.5.020402: Now when adding/deleting a PostFix instance, Artica will restart all postFix instances automatically instead waiting configure them in order to make it in production just after press button.
 1.5.020514: Fix Unable to download/Upload Instant IpTables patterns from Artica Communities.
 1.5.020514: Add "Domains throttling" feature for single instance and multiple instances.
 1.5.020920: Artica filter has been optimized in order to consume less CPU.
-1.5.020920: Fix errors while trying to found daemons directory in postfix multiple instances.
+1.5.020920: Fix errors while trying to found daemons directory in postFix multiple instances.
 1.5.020920: Add a watchdog on "Unable to find company id for object" for Zarafa, artica action: try to repair user.
 1.5.021016: Fix error installing amavis en OpenSuse cause krb5-config is located in obscure path "/usr/lib/mit/bin/krb5-config"
 1.5.021016: Add Debian 6.0 support for Zarafa.
 1.5.021016: Fix unable start Zarafa on CentOS 5.5 64Bits cause using different libraries location.
 1.5.021016: Fix unable to start Zarafa-web cause Apache using a different libraries modules location.
-1.5.022001: Fix templates issues when using Postfix+stunnel.  
+1.5.022001: Fix templates issues when using PostFix+stunnel.  
 1.5.022120: Adding new SpamAssassin channels sought.rules.yerp.org and saupdates.openprotect.com
 1.5.022213: Installing Zarafa will disable & shutdown automatically cyrus-imap daemon.
 
@@ -684,8 +688,8 @@ Messaging Changes:
 -------------------------------------------------
 1.5.010721: Add a watchdog for zarafa-gateway[10881]: Unable to listen on port 110 artica action: notify and restart service
 1.5.010721: Fix prevents specials characters in passwords in imapsync commandline.
-1.5.010819: Fix artica-make did not reconfigure postfix after a successfull Zarafa server installation.
-1.5.011101: Add maximal_queue_lifetime support in postfix multiple instances. 
+1.5.010819: Fix artica-make did not reconfigure postFix after a successfull Zarafa server installation.
+1.5.011101: Add maximal_queue_lifetime support in postFix multiple instances. 
 1.5.011115: Improve quarantine manager: possibility to select multiple items
 1.5.011115: Improve quarantine manager: possibility to view message source.
 1.5.011115: Fix ionice issue on quarantine messages when using Artica on a VZ OpenVZ container 
@@ -695,7 +699,7 @@ Messaging Changes:
 1.5.011914: Now when creating user, artica save default values on Zarafa user automatically if zarafa is installed.
 1.5.012518: Fix: Unable to create mailbox when /etc/saslauthd.conf does not exists, Now artica create it itself.
 1.5.012518: Add a watchdog on amavis for "custom checks error: Insecure dependency in connect while running", artica action = Check perl Compress::Raw::Zlib version
-1.5.012710: Add a watchdog on postfix : warning: TLS library problem: 1672:error:02001002:system library:fopen:No such file or directory:bss_file.c:122:fopen('*','r'): artica action = rebuild certificate.
+1.5.012710: Add a watchdog on postFix : warning: TLS library problem: 1672:error:02001002:system library:fopen:No such file or directory:bss_file.c:122:fopen('*','r'): artica action = rebuild certificate.
 
 Proxy Changes
 -------------------------------------------------
@@ -739,9 +743,9 @@ Interface changes:
 
 Artica Meta changes (global Linux Management console):
 -------------------------------------------------
-1.5.010201: Add possibility to change Postfix Networks settings trough Artica Meta.
+1.5.010201: Add possibility to change PostFix Networks settings trough Artica Meta.
 1.5.010216: Add possibility to lock Network, reboot or shutdown, sshd, explorer features on Artica Local console.
-1.5.010216: Add possibility to Enable/Disable Postfix plugins trough Artica Meta.
+1.5.010216: Add possibility to Enable/Disable PostFix plugins trough Artica Meta.
 1.5.010320: Add possibility to play with DNS entries on remote server trough Artica Meta 
 1.5.010602: Add possibility to manage web sites (php/mysql) trough Artica Meta as "Artica FreeWebs" feature.
 1.5.010721: Add possibility to define awstats options on FreeWebs websites.
@@ -778,18 +782,18 @@ Messaging Changes:
 1.4.121317: Fix error "*" is not valid for "whitelist_from_rcvd", skipping: whitelist_from_rcvd *
 1.4.121317: Add Zarafa on 64bits support.
 1.4.121400: Fix artica did not detect Zarafa version on services status.
-1.4.121419: Fix Artica did not change postfix port when ASSP is enabled.
+1.4.121419: Fix Artica did not change postFix port when ASSP is enabled.
 1.4.121419: Fix milter-greylist status is turned to off when ASSP is installed and enabled.
-1.4.121419: Add watchdog for Fix error postfix/postmap[7294]: warning: /etc/postfix/lmtpauth: logical line must not start with whitespace: "?cyrus:secret" : Artica action verify the right value
-1.4.121419: Add watchdog for master[25238]: fatal: open lock file *: unable to set exclusive lock: Resource temporarily unavailable : Artica action notify,  perform special checking processes and restart postfix daemon.
+1.4.121419: Add watchdog for Fix error postFix/postmap[7294]: warning: /etc/postFix/lmtpauth: logical line must not start with whitespace: "?cyrus:secret" : Artica action verify the right value
+1.4.121419: Add watchdog for master[25238]: fatal: open lock file *: unable to set exclusive lock: Resource temporarily unavailable : Artica action notify,  perform special checking processes and restart postFix daemon.
 1.4.121419: Now when adding Organization it is automatically enabled has Zarafa organization. 
 1.4.121701: Fix cannot change acls on cyrus mailboxes.
-1.4.121916: Support Ipv6 listen address in single postfix instance.
-1.4.121917: minimal_backoff_time, maximal_backoff_time,bounce_queue_lifetime,in_flow_delay,default_process_limit tokens support in postfix multiple instances. 
-1.4.122415: Fix saslauthd is not started when starting postfix. (add a checks to ensure saslauthd is started).
+1.4.121916: Support Ipv6 listen address in single postFix instance.
+1.4.121917: minimal_backoff_time, maximal_backoff_time,bounce_queue_lifetime,in_flow_delay,default_process_limit tokens support in postFix multiple instances. 
+1.4.122415: Fix saslauthd is not started when starting postFix. (add a checks to ensure saslauthd is started).
 1.4.122415: Fix saslauthd parameters are not changed when changing the LDAP settings.
-1.4.122415: Fix Postfix Regex issues and redesign the form.
-1.4.122415: Add a new feature : Move Postfix queue in RAM for both postfix multiple instances and single instance. 
+1.4.122415: Fix PostFix Regex issues and redesign the form.
+1.4.122415: Add a new feature : Move PostFix queue in RAM for both postFix multiple instances and single instance. 
 
 
 System Changes:
@@ -860,7 +864,7 @@ Messaging Changes:
 1.4.111711: Add watchdog for Zarafa: zarafa-dagent  error *  error code: *  Artica action notify and try to find orphans users and rebuild stores.
 1.4.111711: Add watchdog for Zarafa: Unable to login for user *, error code: 0x8004010F : Artica action notify and check user's store.
 1.4.111800: Add New feature "Mass mailboxes migration"
-1.4.112121: Add Instant Iptables status in the Postfix status area.
+1.4.112121: Add Instant Iptables status in the PostFix status area.
 1.4.112401: Add possibility to modify amavis templates notifications.
 1.4.112417: Add possibility to search messages in queues in order to delete them.
 1.4.112818: Fix permissions errors on amavisd-new templates since 1.4.112401 version.
@@ -871,11 +875,11 @@ Groupwares changes
 1.4.111416: Add anti-hack for the RoundCube WebMail system.
 1.4.111711: Fix wrong path for ldap plugin in zarafa cause duplicate installations (one from older Artica versions and one for installed the pre-compiled Zarafa version).
 1.4.111717: Fix unable to create a sub-domain for members Artica Interface.
-1.4.111800: Fix sometimes the Zarafa front-end page freeze cause plugins has been set (fixed by disable plugins directory).
+1.4.111800: Fix sometimes the Zarafa front-end page freeze cause plugins has been set (Fixed by disable plugins directory).
 
 Proxy Changes
 -------------------------------------------------
-1.4.110600: Minors bug fix on proxy section (templates, statistics...)
+1.4.110600: Minors bug Fix on proxy section (templates, statistics...)
 1.4.110600: Add squidClamav support.
 1.4.111501: Fix banned computers filter feature is not applied in squid configuration. 
 1.4.111718: Fix unable to open Banned websites features in squid filter section.
@@ -908,7 +912,7 @@ Interface Changes
 
 Proxy Changes
 -------------------------------------------------
-1.4.100219: fix error on ftp_epsv and ftp_epsv_all when squid version is under 3.1
+1.4.100219: Fix error on ftp_epsv and ftp_epsv_all when squid version is under 3.1
 1.4.100222: Add possibility to run a database check on urls db filters each day.
 1.4.100300: Fix unable to change the squidGuard web HTTP service port.
 1.4.100321: Add UfdbGuard Web Filter support
@@ -940,7 +944,7 @@ Messaging Changes:
 1.4.100218: OpenDKIM software support.
 1.4.100514: Add automatically virtuals IP in milter-greylist whitelist 
 1.4.100514: Add new plugin DecodeShortURLs in SpamassAssin.
-1.4.100600: Add possibility to change hostname in multiple postfix instances.
+1.4.100600: Add possibility to change hostname in multiple postFix instances.
 1.4.100918: Add a watchdog on warning: mail_queue_enter: create file maildrop/*: Permission denied artica action => rebuild permissions.
 1.4.100918: Add to possibility to Import distribution lists from MS Exchange in organizations.
 1.4.101201: Fix mails are duplicated when combines Artica-filter and duplicate mails features. 
@@ -1007,7 +1011,7 @@ System Changes
 1.4.092921: Fix vulnerability: Anonymous user can read files, and get admin password of ldap with artica.update.php?ajax-events= (thanks to julien cayssol from http://aqwz.com/)
 1.4.092921: Fix vulnerability: A simple user is able to create file anywhere on the server with share-a-folder.php (thanks to julien cayssol from http://aqwz.com/)
 1.4.092921: Fix vulnerability: SQL Injection on artica.events.php (thanks to julien cayssol from http://aqwz.com/)
-1.4.092921: Fix vulnerability: Logs or stats are available for anonymous users or simple users with postfix.events.php,logs/php.log,cgi-bin/awstats.pl,/server-status,/server-config (thanks to julien cayssol from http://aqwz.com/)
+1.4.092921: Fix vulnerability: Logs or stats are available for anonymous users or simple users with postFix.events.php,logs/php.log,cgi-bin/awstats.pl,/server-status,/server-config (thanks to julien cayssol from http://aqwz.com/)
 1.4.092921: Fix vulnerability: Simple user is able to browse server with tree.php (thanks to julien cayssol from http://aqwz.com/)
 1.4.092921: Fix vulnerability: Cross site scripting, on the search function of the web interface. (thanks to julien cayssol from http://aqwz.com/)
 
@@ -1058,14 +1062,14 @@ Proxy Changes
 
 Messaging Changes:
 -------------------------------------------------
-1.4.081200: Fix cannot add SMTP server in the organization when using multiple postfix instances.
-1.4.081200: Fix unable to create senders BCC and recients BCC in postfix when using multiple postfix instances.
+1.4.081200: Fix cannot add SMTP server in the organization when using multiple postFix instances.
+1.4.081200: Fix unable to create senders BCC and recients BCC in postFix when using multiple postFix instances.
 1.4.081200: Add possibility to purge a single mailbox in administrator web interface and end-user web interface.
-1.4.081223: Improve PostfixInstant Iptables feature.
+1.4.081223: Improve PostFixInstant Iptables feature.
 1.4.081415: Add possibility to schedule quarantine PDF reports for each user (the last HTML report was removed for performances issues).
 1.4.082102: Add a syslog watchdog on amavis[5302]: (!)_DIE: Suicide in child_init_hook (artica action = restart amavisd)
 1.4.082116: Fix unable to restart policyd-weight cause monit take the hand.
-1.4.082417: Fix separator token error and adding prefix option for synchronize mailboxes features (imapSync).
+1.4.082417: Fix separator token error and adding preFix option for synchronize mailboxes features (imapSync).
 1.4.082812: Fix command-lines parameters that did not reflect the mask for synchronize mailboxes features (imapSync).
 
 File Sharing changes:
@@ -1085,7 +1089,7 @@ System Changes:
 1.4.081613: Fix wrong DHCP server status when running on Ubuntu 8.04
 1.4.082313: Unable to perform NMAP scanning to a targeted computer.
 1.4.082417: Fix downloading problems on RPMForge for setup-centos.
-1.4.082717: fix missing packages php-pecl-json, php-pecl-Fileinfo, php-dom in setup-centos for Roundcube on CentOS 5.3 
+1.4.082717: Fix missing packages php-pecl-json, php-pecl-Fileinfo, php-dom in setup-centos for Roundcube on CentOS 5.3 
 1.4.083016: OCS Linux Agent support, administrator is able to install OCS Linux Agent from Artica web console.
 1.4.083023: Add "Automatic computers injection" feature that replicate OCS database to Artica LDAP Database.
 
@@ -1109,8 +1113,8 @@ Interface Changes
 Messaging Changes:
 -------------------------------------------------
 1.4.073117: Increase parameters on mailboxes synchronization feature.
-1.4.073117: Add possibility to modify SSL certificate informations in Postfix multi-instances.
-1.4.073117: Fix wrong informations displayed in postfix queue status in multi-instances.
+1.4.073117: Add possibility to modify SSL certificate informations in PostFix multi-instances.
+1.4.073117: Fix wrong informations displayed in postFix queue status in multi-instances.
 1.4.080200: Now Roudcube configuration in vhost mode select only the organization has the LDAP NAB and enable the sievrules plugin.
 1.4.080301: Adding possibility to disable LDAP addressBook in roundcube vhosts.
 1.4.080316: Add a syslog watchdog on "Decoding of p002 (Zip archive data, at least v2.0 to extract) failed, leaving it unpacked: Compress::Raw::Zlib version 2.017 required--this is only version 2.012" (artica Action = install newest Zlib version)
@@ -1119,7 +1123,7 @@ Messaging Changes:
 1.4.080501: Improve artica-filter performances.
 1.4.080501: Add a syslog watchdog on cyrus/lmtp[18838]: IOERROR: not a sieve bytecode file * (artica action = compile sieve script)
 1.4.080501: Add a syslog watchdog on relay=127.0.0.1[127.0.0.1]:2005, said: 430 Authentication required (artica action = reconfigure lmtp in main.cf)  
-1.4.080501: artica-filter support in postfix multi instances. 
+1.4.080501: artica-filter support in postFix multi instances. 
 1.4.080517: Support sa-learn-cyrus that provides a Junk Learning process for Spamassassin from cyrus mailboxes, the interface has been rebuild for this support, end-users can enable this feature in the Artica end-user interface 
 
 System changes
@@ -1144,7 +1148,7 @@ Messaging Changes:
 -------------------------------------------------
 1.4.071502: Add a syslog watchdog on zarafa-server[5713]: INNODB engine is not support. Please enable the INNODB engine (Artica action = restart mysql service)
 1.4.071516: Fix wrong insertion of personal main.cf parameters.
-1.4.071616: Fix major bug that die postfix configurator and not set all postfix parameters.
+1.4.071616: Fix major bug that die postFix configurator and not set all postFix parameters.
 
 Interface Changes
 -------------------------------------------------
@@ -1159,13 +1163,13 @@ Messaging Changes:
 1.4.070712: Fix artica create Draft without "s" caracters that Roundcube and Thunderbird expect.
 1.4.070712: Add "null" in $rcmail_config['imap_root'] in RoundCube configuration file.
 1.4.070814: Add a new feature that allow to add some DNSBL list (especially senderbase has cisco black lists) into SpamAssassin.
-1.4.070900: Force mandatory 127.0.0.0/8 network in postfix mynetwork parameter
+1.4.070900: Force mandatory 127.0.0.0/8 network in postFix mynetwork parameter
 1.4.070900: Add a syslog watchdog on fatal: valid hostname or network address required in server description (Artica action = notify)
 1.4.070917: Add a syslog watchdog on zarafa-server  Cannot instantiate user plugin: ldap_bind_s: Invalid credentials (Artica action = restart zarafa)
-1.4.070917: Add a syslog watchdog on postfix fatal: specify a password table via the `smtp_sasl_password_maps' configuration parameter (Artica action = disable SMTP SASL)
+1.4.070917: Add a syslog watchdog on postFix fatal: specify a password table via the `smtp_sasl_password_maps' configuration parameter (Artica action = disable SMTP SASL)
 1.4.071110: Add a syslog watchdog on amavis : TROUBLE in child_init_hook: BDB can't connect db env. at /var/amavis/db (Artica action=restart amavis)
-1.4.071110: Fix unable to start milter-greylist in multiple postfix instance mode.
-1.4.071110: Add possibility to set the ip address of the local smtp server in the roundcube subdomain when using the postfix multiple instance mode.
+1.4.071110: Fix unable to start milter-greylist in multiple postFix instance mode.
+1.4.071110: Add possibility to set the ip address of the local smtp server in the roundcube subdomain when using the postFix multiple instance mode.
 1.4.071301: Add possibility to generate a global messaging report for the organization.
 1.4.071400: Add possibility to enable Virus Bounce Ruleset in Spamassassin
 1.4.071400: Add new feature that display spamassassin configuration checking.
@@ -1215,7 +1219,7 @@ Messaging Changes:
 -------------------------------------------------
 1.4.070217: Adding sslfingerprint and sslcertck options when editing fetchmail rule. (artica is able to get the fingerprint automatically). 
 1.4.070219: Fix error when creating fetchmail rule for multiple user, token from first user are remplicated in all fetchmail rules.
-1.4.070402: Adding feature in order to change postmaster recipient and from email address when sending Postfix SMTP notifications.
+1.4.070402: Adding feature in order to change postmaster recipient and from email address when sending PostFix SMTP notifications.
 1.4.070402: Adding a new feature that allow administrator to switch cyrus imap socket from unix to inet and from inet to unix.
 1.4.070517: Fix errors in aliases files.
 1.4.070517: Fix socket error permissions on any milters
@@ -1249,12 +1253,12 @@ System Changes
 
 Messaging Changes:
 -------------------------------------------------
-1.4.062303: Fetchmail is now compliance with multiple postfix instances mode.
+1.4.062303: Fetchmail is now compliance with multiple postFix instances mode.
 1.4.062312: Fix mynetworks was not correctly set.
-1.4.062312: Fix catch-all was not correctly set in postfix hash databases.
+1.4.062312: Fix catch-all was not correctly set in postFix hash databases.
 1.4.062901: Amavisd-new now write log into syslog
 1.4.062901: Fix unable to run spamassassin sa-compile cause AWL (Auto-whitelist) plugin was not enabled by default in debian systems.
-1.4.062901: amavisd-new multi postfix instances compliance.
+1.4.062901: amavisd-new multi postFix instances compliance.
 1.4.062912: Adding SPF configuration panel for AMAVIS+Spamassassin.
 
 File Sharing changes:
@@ -1300,10 +1304,10 @@ System Changes
 Messaging Changes:
 -----------------------------------------------
 1.4.060313: Fix unable to open ISP macros under messaging feature.
-1.4.060401: Fix demime error before backup mails. This cause illimited stored mysql error files in /var/log/artica-postfix that cause crash server.
+1.4.060401: Fix demime error before backup mails. This cause illimited stored mysql error files in /var/log/artica-postFix that cause crash server.
 1.4.061220: Adding Zarafa ICal/CalDav process startup/monitor.
 1.4.061320: Fix unable to start amavis when detected server name match xxx.(none)
-1.4.062001: Rebuild totally the multiple postfix instances engine (now each organization can store multiple mail servers).
+1.4.062001: Rebuild totally the multiple postFix instances engine (now each organization can store multiple mail servers).
 
  
 
@@ -1379,7 +1383,7 @@ System Changes
 1.4.052113: Introduce WIFI management.
 1.4.052202: Finish WIFI in client mode.
 1.4.052202: Fix unable to select language in logon form.
-1.4.052216: Change the startup process, now only LDAP/Mysql/lighttpd/artica-cron services are started when performing "/etc/init.d/artica-postfix start" command.
+1.4.052216: Change the startup process, now only LDAP/Mysql/lighttpd/artica-cron services are started when performing "/etc/init.d/artica-postFix start" command.
 	The scheduler artica-cron process tis in charge of run all others services one minute after it started.
 	This to speedup the boot time when restart the computer and to not wait for a long time to display Artica Interface.
 	This feature prepare appliances...
@@ -1401,7 +1405,7 @@ System Changes
 
 Messaging Changes:
 -----------------------------------------------
-1.4.051623: Fix unable to set multiple listen Interfaces in postfix.
+1.4.051623: Fix unable to set multiple listen Interfaces in postFix.
 1.4.051623: Fix wrong transport rules when transfert messages to domains.
 1.4.051717: Consolidating PoMMo starting process.
 
@@ -1411,7 +1415,7 @@ Proxy Changes:
 -------------------------------------------------
 1.4.051623: Introduce squidGuard support.
 1.4.051717: Introduce new statistics generation
-1.4.051818: Change the cache storage section and fix unable to get cache usage.
+1.4.051818: Change the cache storage section and Fix unable to get cache usage.
 1.4.051818: Adding new statistics for websites 
 
 Groupwares change
@@ -1479,7 +1483,7 @@ Messaging Changes:
 1.4.050110: Supporting "nokeep" Fetchmail token.
 1.4.050312: RoundCube Max Upload size drive the global PHP upload size setting.
 1.4.050312: Fix error on dedicated RoundCube web server did not start cause wrong username is passed in config.
-1.4.050316: Fix Postfix did not undertsand blocked extensions feature.
+1.4.050316: Fix PostFix did not undertsand blocked extensions feature.
 1.4.050818: Fix unable to create fetchmail rule since 1.4.050110 version (missing nokeep field in mysql table);
 
 File Sharing changes:
@@ -1504,7 +1508,7 @@ Proxy Changes:
 
 1.4.042420
 ========================================================================================
-WARNING ! This version change the Postfix structure from LDAP to Hash, 
+WARNING ! This version change the PostFix structure from LDAP to Hash, 
 try it before make it into production mode.(see 1.4.042316/messaging)
 
 System Changes
@@ -1543,7 +1547,7 @@ Messaging Changes:
 1.4.042316: Every mailbox deletion operations are logged by Artica.
 1.4.042316: Adding possibility to rebuild all mailboxes in one organization.
 1.4.042316: Adding possibility to include automatically mailling list group members in mailing list section. 
-1.4.042316: Now Postfix is detached from LDAP in order to prevent LDAP corruption and OpenLDAP queries for each received mail .
+1.4.042316: Now PostFix is detached from LDAP in order to prevent LDAP corruption and OpenLDAP queries for each received mail .
 			This structure return back to hash files. In this case :
 				- Performances are better
 				- A corrupted LDAP database has no impacts on the messaging.
@@ -1576,7 +1580,7 @@ File Sharing changes:
 lighttpd 1.4.26 bug :
 http://fredericiana.com/2010/03/29/lighttpd-1-4-26-ssl-bug/
 (network.c.529) SSL: error:00000000:lib(0):func(0):reason(0)
-./configure --prefix=/usr --includedir="/usr/include" --mandir="/usr/share/man" --infodir="/usr/share/info" --sysconfdir=/etc --localstatedir=/var --libexecdir="/usr/lib/lighttpd" --libdir=/usr/lib/lighttpd --with-openssl --with-kerberos5 --with-pcre --with-ldap --with-mysql --with-memcache --with-gdbm --with-attr
+./configure --preFix=/usr --includedir="/usr/include" --mandir="/usr/share/man" --infodir="/usr/share/info" --sysconfdir=/etc --localstatedir=/var --libexecdir="/usr/lib/lighttpd" --libdir=/usr/lib/lighttpd --with-openssl --with-kerberos5 --with-pcre --with-ldap --with-mysql --with-memcache --with-gdbm --with-attr
 
 ####################################################################################################################################################
 1.4.040701:
@@ -1604,7 +1608,7 @@ Messaging Changes:
 1.4.032917: Fix artica did not generate fetchmail configuration file with fetch-all parameter.
 1.4.032917: Improve fetchmail server pooling time configuration generation.
 1.4.032917: Add new possibility to reload fetchmail process trough artica Interface. 
-1.4.033003: Add possibility to see the Remote Artica SMTP Synchronization table in postfix routing table.
+1.4.033003: Add possibility to see the Remote Artica SMTP Synchronization table in postFix routing table.
 1.4.033003: Add a watchdog in Remote Artica SMTP Synchronization process that did not import routing table of an user stored on the remote server Datbase AND the local server database. 
 1.4.033018: Adding $rcmail_config['dont_override'] = array('index_sort','trash_mbox','sent_mbox','junk_mbox','drafts_mbox'); in roundcube configuration file
 1.4.040102: Fix unable to block users to send Internet.
@@ -1625,7 +1629,7 @@ Interface Changes:
 
 System changes :
 -------------------------------------------------
-1.4.032917: Fix Debian 4.x and Ubuntu 8.x did not find libmail-spf-perl package when installing postfix base trough setup-ubuntu and setup-debian.
+1.4.032917: Fix Debian 4.x and Ubuntu 8.x did not find libmail-spf-perl package when installing postFix base trough setup-ubuntu and setup-debian.
 1.4.033003: Fix error parsing NMAP results when upgrading NMAP to 5.x
 1.4.033003: Adding a new watchdog to kill ghost cpulimit processes.
 1.4.040321: Fix PowerDNS start procedure. Sometimes PowerDNS did not find local ldap server.
@@ -1687,24 +1691,24 @@ Messaging Changes:
 1.4.031917: Fix artica did not delete expected quarantine area.
 1.4.032014: Adding a new feature allows to specify a Max days to live in the storage area.
 1.4.032014: Adding New SpamAssassin version available notification
-1.4.032015: fix  can't exec /usr/lib/cyrus/bin/nice on schedule: No such file or directory when enabling cyrus squatter service.
+1.4.032015: Fix  can't exec /usr/lib/cyrus/bin/nice on schedule: No such file or directory when enabling cyrus squatter service.
 1.4.032018: Rebuild Spamassassin front-end
 1.4.032300: Rebuild Fetchmail settings builder. Now rules are stored into the Mysql database instead LDAP database in order to prevent bad preg_match parameters.
 1.4.032318: Fix unable to detect fetchmail version number when upgrading to latest fetchmail version.
 1.4.032718: Adding a wizard for creating a new mailbox.
 1.4.032718: Remove possibility to create a local domain if cyrus-imapd is not installed in Organization domains section.
 1.4.032722: Adding possibility to define if a relayed domain is a trusted domain or not.
-1.4.032801: Fix unable to save relay host settings in postfix routing section.
+1.4.032801: Fix unable to save relay host settings in postFix routing section.
 1.4.032801: Fix unable to upgrade SpamAssassin to the latest version.
-1.4.032813: Adding possibility to block some attached files direclty in the postfix connexion (based on extension name).
+1.4.032813: Adding possibility to block some attached files direclty in the postFix connexion (based on extension name).
 1.4.032816: Fix unable to set Sender Settings
-1.4.032901: Adding a new function that try to determine if smtp_sender_dependent_authentication and smtp_sasl_auth_enable must be enabled in order to enable Postfix to create SMTP authenticated session trough ISP. 
+1.4.032901: Adding a new function that try to determine if smtp_sender_dependent_authentication and smtp_sasl_auth_enable must be enabled in order to enable PostFix to create SMTP authenticated session trough ISP. 
 
 System Changes:
 -------------------------------------------------
 1.4.032318: Adding a new function in charge of cleaning /tmp temporary directories (especially when using DansGuardian) 
 1.4.032318: Adding a new feature that allow to import users periodically from Microsoft Active Directory Server (see http://www.artica.fr/index.php/artica-a-system/43-import-a-export/322-active-directory-scheduled-importation)
-1.4.032400: Allow to add SMTP domains even postfix is installed in order to set domains in DHCP server settings.
+1.4.032400: Allow to add SMTP domains even postFix is installed in order to set domains in DHCP server settings.
 1.4.032415: Fix unable to save DHCP settings if "Artica Has Gateway feature is disabled"
 1.4.032712: VmWare compliance: Artica is now able to detect if it is installed inside VMWare server and allow to install VMWare tools if it is not installed.
 1.4.032718: Adding possibility to install phpLDAPAdmin.
@@ -1743,23 +1747,23 @@ Groupwares change
 Messaging Changes:
 -----------------------------------------------
 1.4.022319: Fix urls errors on MailMan.
-1.4.022319: Fix sometimes, the Postfix SMTP SSL is not enabled.
+1.4.022319: Fix sometimes, the PostFix SMTP SSL is not enabled.
 1.4.022621: Adding possibility to manage cyrus-imap iPurge service.
-1.4.022800: Introducing postfix Multiples instances
-1.4.030101: Introducing ASSP on postfix Multiples instances
-1.4.030302: Fix time files could not be created in postfix-logger because /etc/artica-postfix/cron.1 directory is not created.
-1.4.030302: Fix milter plugins are not fully removed in postfix main.cf.
+1.4.022800: Introducing postFix Multiples instances
+1.4.030101: Introducing ASSP on postFix Multiples instances
+1.4.030302: Fix time files could not be created in postFix-logger because /etc/artica-postFix/cron.1 directory is not created.
+1.4.030302: Fix milter plugins are not fully removed in postFix main.cf.
 1.4.030521: Redesign Rules for Kaspersky For Milter Edition, now rules are only available in organbizations not in groups in order to improve performances.
-1.4.030612: fixed kavmilter[17271]: Invalid value specified for SendmailPath on Mandriva systems.
+1.4.030612: Fixed kavmilter[17271]: Invalid value specified for SendmailPath on Mandriva systems.
 1.4.030618: Improve behavior defense against error: /var/lib/imap/socket/lmtp
 1.4.031017: Fix unable to activate SASL in the interface.
 1.4.031017: Rebuild totally Kaspersky For Mail Server and Kaspersky Anti-Spam interface.
 1.4.031118: Fix unable to release quarantine mails.
 1.4.031222: Adding possibility to remove milter-greylist in setup Center.
-1.4.031222: Adding possibility to remove Postfix in setup Center.
+1.4.031222: Adding possibility to remove PostFix in setup Center.
 1.4.031317: Fix incorrect understanding value for milter-greylist activation :Artica daemon did want to enable milter-greylist.
 1.4.031317: Fix unable to start policyd-weight when administrator did not set any parameters in policyd-weight after enabled the plugin. Now artica will auto-generate a default configuration file. 
-1.4.031317: Adding a new Auto-block feature:  when Postfix generate "SASL LOGIN authentication failed: authentication failure": If a sender generate more than 15 times this event in one hour, Artica build an IpTable rule to block the sender.
+1.4.031317: Adding a new Auto-block feature:  when PostFix generate "SASL LOGIN authentication failed: authentication failure": If a sender generate more than 15 times this event in one hour, Artica build an IpTable rule to block the sender.
 
 
 Interface Changes:
@@ -1768,7 +1772,7 @@ Interface Changes:
 1.4.030112: Fix unable to start service trough the "Manage services" section.
 1.4.030302: Increase performances on low bandwith (if any box is displayed,no background refresh is performed)
 1.4.030302: Remove sql queries in end-user interface.
-1.4.030302: Remove Inbound parameters settings on user account if Postfix is not installed.
+1.4.030302: Remove Inbound parameters settings on user account if PostFix is not installed.
 1.4.030302: Update FR, PO languages.
 1.4.030317: Remove ERROR 500 if a link to the LDAP server cannot be established. 
 1.4.031300: Update FR,PT,ES languages.
@@ -1790,7 +1794,7 @@ System Changes:
 1.4.030612: Fix wrong status for ASSP when notify new available version. 
 1.4.031021: Adding VPS servers compatibilities.
 1.4.031021: Fix Artica didn't found syslog file on CentOS.
-1.4.031021: Adding behavior on low server memory (512Mb): Artica disable clamav daemon and zabbix if the server memory is lower than 750Mb memory installed in order to safe main softwares such has postfix/samba/Mysql
+1.4.031021: Adding behavior on low server memory (512Mb): Artica disable clamav daemon and zabbix if the server memory is lower than 750Mb memory installed in order to safe main softwares such has postFix/samba/Mysql
 1.4.031021: Fix error when ionice is not allowed :Artica use ionice ( http://linux.die.net/man/1/ionice ) in order to decrease IO DISK consumption of Artica's script. Now artica check if it allow to use ionice if error : "ioprio_set: Operation not permitted" is found.
 1.4.031021: Fix error when "/proc/diskstats" missing When server did not store "/proc/diskstats" ( http://www.mjmwired.net/kernel/Documentation/iostats.txt#14 ), Yorel's scripts die before creating graphs if /proc/diskstats file is missing.Script has been updated to detect this behaviour.
 1.4.031021: Fix error when "/proc/partitions" file is missing the command "fdisk -l" failed.And Artica is unable to list Hard drive informations. Artica will now detect this behaviour and switch using "df" command in order to detect disks
@@ -1818,7 +1822,7 @@ File Sharing changes:
 1.4.030612: Fix HomeDirectories are not automatically forwarded/modified accordind Organizations dedicated storage.
 1.4.030612: Adding possibility to add a sub directory for homes directory in dedicated storage.
 1.4.031222: Adding possibility to remove Samba in setup Center.
-1.4.031222: fix error save_EnableBackupAccount /usr/share/artica-postfix/ressources Line:692 Error number 21 when editing user.
+1.4.031222: Fix error save_EnableBackupAccount /usr/share/artica-postFix/ressources Line:692 Error number 21 when editing user.
 1.4.031222: Add a new notification to force Administrator to update the Domain Administrator credentials. Without this operation, linking a workstation to the domain should failed. 
 1.4.031300: Adding possibility to edit Logon script in each Artica group (see http://www.artica.fr/index.php/samba-file-sharing/53-domains-a-administration/320-manage-logon-scripts-for-each-group)
 
@@ -1927,15 +1931,15 @@ Groupwares change
 Messaging Changes:
 -----------------------------------------------
 1.4.012211: Adding a new option in order to limit the max processes for artica-filter (default is now 20 instead illimited) (see http://forum.artica.fr/viewtopic.php?f=20&t=2033)
-1.4.012211: Fix unable to disable artica-filter in the postfix configuration file.
-1.4.012211: fix javascript error when try to active SASL function.
-1.4.012216: Rebuild the Postfix routing table page.
+1.4.012211: Fix unable to disable artica-filter in the postFix configuration file.
+1.4.012211: Fix javascript error when try to active SASL function.
+1.4.012216: Rebuild the PostFix routing table page.
 1.4.012800: Fix exe.mailman.php error when creating mailing list in mailman.
 1.4.021712: Adding support of RoundCube Calendar (see http://www.artica.fr/index.php/front-ends-a-groupwares/64-roundcube/313-add-a-calendar-in-the-roundcube-webmail-system)
 
 Interface Changes:
 -------------------------------------------------
-1.4.012315: fix crazy ajax loading templates.
+1.4.012315: Fix crazy ajax loading templates.
 1.4.012512: Remove popup error while loading bad javascript.
 1.4.012814: Update fr,de,es language
 
@@ -1979,8 +1983,8 @@ File Sharing changes:
 Messaging Changes:
 -----------------------------------------------
 1.4.010921: Rebuild mailman procedure (see http://www.artica.fr/index.php/menudocmessaging/38-smtp-routing/285-using-distributions-lists-with-mailman-and-artica)
-1.4.011113: Improve the Postfix Regex Rules application on postfix.
-1.4.011320: Fix permissions error on /var/lib/postfix/master.lock
+1.4.011113: Improve the PostFix Regex Rules application on postFix.
+1.4.011320: Fix permissions error on /var/lib/postFix/master.lock
 1.4.011320: Adding new interface for changing scores in ASSP.
 1.4.011320: Adding possibility to create multiple disclaimers trough a new content filter "artica-filter" (see http://www.artica.fr/index.php/menudocmessaging/36-messaginggeneral/288-adding-disclaimers-in-your-mails)
 1.4.011720: Adding a new Out Of Office reply using artica-filter (see http://www.artica.fr/index.php/menudocmessaging/44-mailboxes-management/294-automatically-reply-to-messages-with-the-out-of-office-artica-filter-)
@@ -2009,9 +2013,9 @@ Interface Changes:
 Messaging Changes:
 -----------------------------------------------
 1.3.122300: Add possibility to enable/disable ASSP greylisting feature
-1.3.122300: Add a GLobal Whitelist function for ASSP/Milter-greylist/Postfix Instant Iptables/Policyd Daemon.
+1.3.122300: Add a GLobal Whitelist function for ASSP/Milter-greylist/PostFix Instant Iptables/Policyd Daemon.
 1.3.122318: Add possibility to disable network scanner on defaults networks.
-1.3.122519: Add new pattern to detect cyrus-imap database corruption in Postfix Log Watcher.
+1.3.122519: Add new pattern to detect cyrus-imap database corruption in PostFix Log Watcher.
 
 File Sharing changes:
 -------------------------------------------------
@@ -2070,8 +2074,8 @@ Messaging Changes:
 -----------------------------------------------
 1.3.112315: MailGraph is now disabled by default, we have see that in some cases, it should take many CPU/Memory.You need to enable it if you want to get it run.
 1.3.112518: Fix unable to access to amavis interface area.
-1.3.112818: Add a new feature that roolback the postfix listen port if ASSP is disabled.
-1.3.120115: Fix minors bugs according amavis+Postfix.
+1.3.112818: Add a new feature that roolback the postFix listen port if ASSP is disabled.
+1.3.120115: Fix minors bugs according amavis+PostFix.
 1.3.120402: Fix minors bugs according monitor.
 1.3.120402: Improve main.cf generation by change the file generation. Now it is generated by the Artica daemon instead web server to avoid file memory problems.
 1.3.120701: Adding anti-hack features on imap/pop3, if an ip address send wrong password more than 15 times in 60mn, an iptable rule is automatically added.
@@ -2136,7 +2140,7 @@ File Sharing changes:
 
 Interface Changes:
 -------------------------------------------------
-1.3.110901: fix unable to edit Fax, and Personnal information/Web site attributes in contact information. 
+1.3.110901: Fix unable to edit Fax, and Personnal information/Web site attributes in contact information. 
 1.3.111218: Create a new "framework" in order to speed artica front-end interface.
 1.3.111316: Improve messaging section display speed.
 1.3.111520: Improve change mysql username and password procedure.
@@ -2153,25 +2157,25 @@ Interface Changes:
  
 System changes:
 -------------------------------------------------
-1.3.110901: fix many processes "/usr/share/artica-postfix/exec.dstat.top.php" generated
-1.3.110901: fix mailgraph process overload CPU (100% CPU )
+1.3.110901: Fix many processes "/usr/share/artica-postFix/exec.dstat.top.php" generated
+1.3.110901: Fix mailgraph process overload CPU (100% CPU )
 1.3.110921: improve cpu load on exec.dstat.top.php
 1.3.110921: change Artica task"s schedules in order to reduce computer load
-1.3.111011: Change Artica notifications on Postfix watchdog queue number in order to not avoid SPAM when a queue growth too quickly
+1.3.111011: Change Artica notifications on PostFix watchdog queue number in order to not avoid SPAM when a queue growth too quickly
 1.3.111019: Introduce remote deployment trough Artica.
 1.3.111122: finish remote deployment trough Artica (see http://www.artica.fr/index.php/samba-file-sharing/70-workstations-administration/271-remote-install-on-windows-workstations-trough-artica)
 1.3.111218: Adding possibility to add more than one recipient in Artica notifications settings.
 1.3.111218: Add a new feature that display Mysql databases and tables.
 1.3.111316: Introduce OCS Inventory in Artica !
 1.3.111503: Supporting OpenSuse 11.2
-1.3.111503: Minors bugs fix
+1.3.111503: Minors bugs Fix
 1.3.111513: Adding timezone parameter in Artica Web settings
 1.3.111513: Removing skip-bdb in my.cnf mysql configuration file.
 1.3.111809: Adding possibility to tune database cache for OpenLDAP server.
 1.3.111809: Adding possibility to tune Artica processes pooling frequency.
 1.3.111809: Improve refresh status procedure in the front-end admin. 
 1.3.112018: Supporting Fedora 12.
-1.3.112103: fix some trouble on CentOS/Fedora according php modules.
+1.3.112103: Fix some trouble on CentOS/Fedora according php modules.
 1.3.112103: Improve OpenVPN in tun mode.
 1.3.112300: Improve Setup Center refresh infos. 
 1.3.112300: Adding a watchdog feature that disable spamassassin,amavis,syslog-ng on mysql services if computer memory is under 1Gb memory.
@@ -2183,7 +2187,7 @@ Messaging Changes:
 1.3.111322: Fix milter-greylist was unable to save database file on the disk.
 1.3.111322: Improve milter-greylist stop/start procedures.  
 1.3.111322: Improve milter-greylist version detection.
-1.3.112018: Improve postfix queue messages number status.
+1.3.112018: Improve postFix queue messages number status.
 1.3.112300: Introduce ASSP has an Anti-Spam SMTP Proxy.
  
 1.3.110818
@@ -2204,7 +2208,7 @@ Interface Changes:
 Messaging Changes:
 -----------------------------------------------
 1.3.110301: Produce monthly SMTP statistics.(see http://www.artica.fr/index.php/menudocmessaging/58-events-a-monitoring/266-display-monthly-messaging-reports)
-1.3.110313: Adding Postfix Instant IpTables's white list in policyd white list.
+1.3.110313: Adding PostFix Instant IpTables's white list in policyd white list.
 1.3.110318: Introduce IMAP/Pop3 connections statistiques.
 1.3.110318: Improve logs detections in SMTP Realtime monitor.
 1.3.110413: Adding zoom function in monthly SMTP reports
@@ -2214,8 +2218,8 @@ Messaging Changes:
 1.3.110500: Adding possibility to change cyrus IMAP account password.
 1.3.110515: Fix javascript error when display mailboxes list in cyrus imap settings area.
 1.3.110515: Fix error list internals domains in main classes.
-1.3.110518: Fix unable to delete items in Postfix Instant Iptables rules.
-1.3.110518: Adding new function that allow to delete all Postfix Instant Iptables rules. 
+1.3.110518: Fix unable to delete items in PostFix Instant Iptables rules.
+1.3.110518: Adding new function that allow to delete all PostFix Instant Iptables rules. 
 1.3.110602: Allow to define schedule antivirus scan on the mailboxes database (see http://www.artica.fr/index.php/menudocmessaging/44-mailboxes-management/267-define-antivirus-scanning-on-your-mailboxes-storage ).
 1.3.110618: Adding new function that able to repair milter-greylist if service is failed to start.
 1.3.110818: Adding more features that allow artica to handle errors on Amavis, Spamassassin, clamav.
@@ -2328,7 +2332,7 @@ File Sharing changes:
 Messaging Changes:
 -----------------------------------------------
 1.3.100611: Adding new token "maxchild" parameters in Cyrus main configuration
-1.3.100611: Rebuild the security area in the messaging/Postfix section.
+1.3.100611: Rebuild the security area in the messaging/PostFix section.
 1.3.100616: Add a new function that enforce RoundCube web folders securities.
 1.3.101115: Fix wrong Mysql queries on Quarantine Manager feature.
 1.3.101117: Add a new feature that clean old smtp events in Mysql database.
@@ -2389,9 +2393,9 @@ File Sharing changes:
 
 System changes:
 ---------------------------------------------
-1.3.092218: Fix error clamav compilation "configure: error: Cannot find libmilter" when postfix is not installed on the computer.
+1.3.092218: Fix error clamav compilation "configure: error: Cannot find libmilter" when postFix is not installed on the computer.
 1.3.092314: Fix could_not_open_infos on CPU informations.
-1.3.092322: Improve DHCP features by easly add fixed computers in DHCP server.(see http://www.artica.fr/index.php/artica-a-system/69-network/251-how-to-fix-computer-ip-addresses-for-dhcp-)
+1.3.092322: Improve DHCP features by easly add Fixed computers in DHCP server.(see http://www.artica.fr/index.php/artica-a-system/69-network/251-how-to-Fix-computer-ip-addresses-for-dhcp-)
 1.3.092502: Adding new libraries : libsnmp-dev libopenafs-dev 
 1.3.092502: Move libraires libdb4.5-dev to libdb4.6-dev (only for debian5 to compile latest cyrus-imap versions).
 1.3.092502: Fix artica-ldap could not resolv nameserver and failed to connect trought remote LDAP servers.
@@ -2415,7 +2419,7 @@ Interface Changes:
 -------------------------------------------------
 1.3.092415: Organizations list is now displayed in alphabetic order.
 1.3.092420: Fix Call to undefined method user::edit_mailbox() when try to change email address of an user.
-1.3.092420: Fix errors on TLS and wanadoo, orange 1&1 macros under postfix section.
+1.3.092420: Fix errors on TLS and wanadoo, orange 1&1 macros under postFix section.
 1.3.092420: Improve the ajax mode in SMTP organization domain page.
 1.3.092420: Adding new widgets.
 1.3.092603: Adding a new widget that allow to rebuild cyrus-imap configuration trough the web interface.
@@ -2467,7 +2471,7 @@ Groupwares changes:
 
 Interface Changes:
 -------------------------------------------------
-1.3.091123: Fix error fopen(ressources/profiles/-100.tabs) failed to open stream: No such file or directory in /usr/share/artica-postfix/ressources/class.ini.inc when adding a new tab. 
+1.3.091123: Fix error fopen(ressources/profiles/-100.tabs) failed to open stream: No such file or directory in /usr/share/artica-postFix/ressources/class.ini.inc when adding a new tab. 
 1.3.091303: Adding a new warning in Admin front-end when a new samba is available.
 1.3.091303: Adding a new warning in Admin front-end when a new RoundCube version is available.
 1.3.091317: Adding cache system for lang files parsing. (words and phrases are now cached in session array).
@@ -2582,8 +2586,8 @@ System change:
 1.3.080904: Fix errors creating on quarantine, smtp_logs,storage tables 
 1.3.081016: Fix length file_path in tables storage and quarantine (the length was 80 instead 255)
 1.3.081219: Adding missing mandatory package php5-cli in setup-*
-1.3.081411: remove error :Warning: ldap_get_entries(): supplied argument is not a valid ldap result resource in /usr/share/artica-postfix/exec.homeDirectoryBinded.php on line 24 when starting Artica daemon.
-1.3.081411: remove error BOA ERROR !!! Bind remote 127.0.0.1:47979   Connection refused (111) when starting artica-postfix (it's normal at this time).
+1.3.081411: remove error :Warning: ldap_get_entries(): supplied argument is not a valid ldap result resource in /usr/share/artica-postFix/exec.homeDirectoryBinded.php on line 24 when starting Artica daemon.
+1.3.081411: remove error BOA ERROR !!! Bind remote 127.0.0.1:47979   Connection refused (111) when starting artica-postFix (it's normal at this time).
 1.3.081417: Fix missing package php5-geoip in Ubuntu server 8.04 for setup-ubuntu.
 
 Interface Changes:
@@ -2592,7 +2596,7 @@ Interface Changes:
 1.3.081219: Fix javascript error when clicking on "Configure your backup" in "Configure your server"
 1.3.081219: Fix javascript error when saving certificate informations
 1.3.081219: Fix ajax mode between system menu and Setup Control center
-1.3.081219: fix error : Warning: ldap_search() [function.ldap-search]: Search: No such object in /usr/share/artica-postfix/ressources/class.groups.inc on line 826 when starting for the first time Artica
+1.3.081219: Fix error : Warning: ldap_search() [function.ldap-search]: Search: No such object in /usr/share/artica-postFix/ressources/class.groups.inc on line 826 when starting for the first time Artica
 1.3.081219: Update French language collection
 1.3.081316: Fix "unterminated string literal" javascript in user account form.
 1.3.081316: Adding possibility to download SMTP certificates
@@ -2603,7 +2607,7 @@ Messaging changes
 1.3.081016: Add possibility to personalize the SMTP Realtime Monitor (see http://www.artica.fr/index.php/menudocmessaging/58-events-a-monitoring/236-play-with-the-realtime-smtp-monitor)
 1.3.081219: Add possibility to filter the SMTP Realtime Monitor by events and improve RTM engine.
 1.3.081219: Fix artica is unable to update RoundCube users identities.
-1.3.081316: Adding possibility to enable Postfix Submission service.
+1.3.081316: Adding possibility to enable PostFix Submission service.
 1.3.081316: Adding possibility to download certificate for importing it into Outlook clients.
 1.3.081417: Improve Instant Iptables features
 
@@ -2623,8 +2627,8 @@ Messaging changes:
 1.3.072820: Rebuild the response messages sended to White/black lists robots in order to bypass content filtering 
 1.3.072820: Fix Block users to internet is not efficient (see http://www.artica.fr/forum/viewtopic.php?f=20&t=1406).
 1.3.072822: Remove external users checking in amavis for better performances.
-1.3.072822: Improve the Save & Apply settings for Postfix. 
-1.3.072920: Fix value error in postfix "transport_maps" token in main.cf since 1.3.072802 nightly build version.  
+1.3.072822: Improve the Save & Apply settings for PostFix. 
+1.3.072920: Fix value error in postFix "transport_maps" token in main.cf since 1.3.072802 nightly build version.  
 1.3.072920: Improve process behavior for writting white lists and blacklists on artica-ldap (when there is no @ caracter in the pattern).
 1.3.072920: Add a new feature that allow Artica to update blacklisted domains for Spamassassin (see http://www.artica.fr/index.php/menudocmessaging/39-manage-filters-anti-spam-content-filters/216-updating-more-than-300-000-blacklists-in-spamassassin)
 1.3.072920: Fix unable to update Kaspersky Antivirus For SendMail milter pattern files.
@@ -2635,18 +2639,18 @@ Messaging changes:
 1.3.073019: Fix error in duplicate mails to (email are not saved in the table).
 1.3.073117: Improve startup/shutdown amavis daemon.
 1.3.073117: Adding new feature that allow to increase amavis performances (see http://www.artica.fr/index.php/menudocmessaging/66-amavisd-new-filter/224-increase-amavis-performances)
-1.3.073121: Adding "corrupt" queue status in Postfix status queues.
-1.3.073121: Adding a new feature that display current loaded processes number used to process the mail flow. (see (see http://www.artica.fr/index.php/menudocmessaging/58-events-a-monitoring/225-display-postfix-and-amavis-components-loaded-processes-number-)
+1.3.073121: Adding "corrupt" queue status in PostFix status queues.
+1.3.073121: Adding a new feature that display current loaded processes number used to process the mail flow. (see (see http://www.artica.fr/index.php/menudocmessaging/58-events-a-monitoring/225-display-postFix-and-amavis-components-loaded-processes-number-)
 1.3.080103: Rebuild totally artica-mysqlpost (too much CPU use) it was redisigned to exec.maillog.php.
 1.3.080300: Fix performances issues on artica processes.
-1.3.080318: Adding a new feature that allow to restore corrupted postfix mails (see http://www.artica.fr/index.php/menudocmessaging/58-events-a-monitoring/229-re-processing-corrupted-mails)
+1.3.080318: Adding a new feature that allow to restore corrupted postFix mails (see http://www.artica.fr/index.php/menudocmessaging/58-events-a-monitoring/229-re-processing-corrupted-mails)
 1.3.080418: Adding "create_default_folders" with true value in RoundCube configuration file.
-1.3.080418: Adding milter-greylist in Save & apply postfix policies feature.
+1.3.080418: Adding milter-greylist in Save & apply postFix policies feature.
 1.3.080418: Improve artica-mailarchive performances for quarantines processing.
 1.3.080418: Adding a new robot that able to send white/black list report to users (see http://www.artica.fr/index.php/menudocmessaging/39-manage-filters-anti-spam-content-filters/231-adding-a-robot-address-to-get-white-and-black-list)
 1.3.080418: Adding a new feature that display quarantine analyze progression in user-interface (see http://www.artica.fr/index.php/menudocmessaging/57-quarantines/232-quarantines-process-display-running-progression)
-1.3.080802  Adding a new feature called Postfix Instant ipTables (see http://www.artica.fr/index.php/menudocmessaging/39-manage-filters-anti-spam-content-filters/234-fighting-spam-with-postfix-instant-iptables)
-1.3.080802  Adding a new feature that helps to set correctly Anti-spam options in postfix (see http://www.artica.fr/index.php/menudocmessaging/39-manage-filters-anti-spam-content-filters/235-fighting-spam-by-correctly-set-postfix-parameters)
+1.3.080802  Adding a new feature called PostFix Instant ipTables (see http://www.artica.fr/index.php/menudocmessaging/39-manage-filters-anti-spam-content-filters/234-fighting-spam-with-postFix-instant-iptables)
+1.3.080802  Adding a new feature that helps to set correctly Anti-spam options in postFix (see http://www.artica.fr/index.php/menudocmessaging/39-manage-filters-anti-spam-content-filters/235-fighting-spam-by-correctly-set-postFix-parameters)
 
 Interface Changes:
 -------------------------------------------------
@@ -2664,8 +2668,8 @@ System change:
 
 Proxy change :
 -------------------------------------------------
-1.3.080418: fix acl error on Squid (see http://www.artica.fr/forum/viewtopic.php?f=38&t=1459)
-1.3.080512: fix error inserting datas in LDAP with dansguardian (see http://www.artica.fr/forum/viewtopic.php?f=38&t=1460)
+1.3.080418: Fix acl error on Squid (see http://www.artica.fr/forum/viewtopic.php?f=38&t=1459)
+1.3.080512: Fix error inserting datas in LDAP with dansguardian (see http://www.artica.fr/forum/viewtopic.php?f=38&t=1460)
 
 
 1.3.072715
@@ -2693,11 +2697,11 @@ The backup files are saved for 7 maximal days .(see http://www.artica.fr/index.p
 
 Messaging changes:
 -------------------------------------------------
-1.3.072319: Add a new feature that allow you to display backup and quarantines disk size on the postfix status.
+1.3.072319: Add a new feature that allow you to display backup and quarantines disk size on the postFix status.
 (see http://www.artica.fr/index.php/menudocmessaging/57-quarantines/213-artica-quarantine-a-backup-areas-informations).
-1.3.072319: Redesign and fix wrong parameters for Kaspersky AntiSpam Milter edition.
-1.3.072414: Support new Postfix tokens: enable_original_recipient and recipient_bcc_maps
-1.3.072414: Fix several errors while Postfix trying to connect to milter-greylist socket
+1.3.072319: Redesign and Fix wrong parameters for Kaspersky AntiSpam Milter edition.
+1.3.072414: Support new PostFix tokens: enable_original_recipient and recipient_bcc_maps
+1.3.072414: Fix several errors while PostFix trying to connect to milter-greylist socket
 1.3.072414: Removing notification about Sieve script error (this information is not useful)
 1.3.072600: Adding a new feature that allow user to send by email white list & black lists (see http://www.artica.fr/index.php/menudocmessaging/39-manage-filters-anti-spam-content-filters/215-adding-anti-spam-white-list-or-black-list-by-sending-an-email-to-robots)
 1.3.072715: White/Blacklists robots are able to create unknown users to create white/Black list for relay domains or Artica installed in relay mode configuration.
@@ -2713,21 +2717,21 @@ Groupwares changes:
 
 1.3.072000
 =========================================================================================
-iso : https://sourceforge.net/projects/artica-postfix/files/Artica%20ISO/1.3.072000-artica.iso/download
+iso : https://sourceforge.net/projects/artica-postFix/files/Artica%20ISO/1.3.072000-artica.iso/download
 System Changes:
 -------------------------------------------------
 1.3.071323: Fix wrong operations when starting clamav, artica try to create a directory instead log file (see http://www.artica.fr/forum/viewtopic.php?f=54&t=1371)
-1.3.071414: fixed missing debian packages : libcurl4-openssl-dev,libjpeg62-dev,libpng12-dev when installing OpenGoo (see http://www.artica.fr/forum/viewtopic.php?f=10&t=1373)
-1.3.071715: fix unable to install Artica trough setup-suse on OpenSuSe 11.1 (see http://www.artica.fr/forum/viewtopic.php?f=45&t=1387)
+1.3.071414: Fixed missing debian packages : libcurl4-openssl-dev,libjpeg62-dev,libpng12-dev when installing OpenGoo (see http://www.artica.fr/forum/viewtopic.php?f=10&t=1373)
+1.3.071715: Fix unable to install Artica trough setup-suse on OpenSuSe 11.1 (see http://www.artica.fr/forum/viewtopic.php?f=45&t=1387)
 1.3.071902: Adding a new feature that allow you to display all web services ports used.(see http://www.artica.fr/index.php/artica-a-system/46-system-monitoring/199-display-a-modify-httptcp-used-ports)
 1.3.071902: Adding a new feature that allow you to install and manage Joomla web engine.(see http://www.artica.fr/index.php/front-ends-a-groupwares/65-joomla/201-what-are-the-benefits-with-articajoomla-)
-1.3.071921: fix failed install Clamav Scan engine (missing libtool-ltdl-devel package) on CentOS.
-1.3.071921: Adding a new feature that allow you to add new graphs based on dstat software.(see http://www.artica.fr/index.php/artica-a-system/46-system-monitoring/206-adding-new-graphs-for-memorycpu-and-postfix-with-dstat)
+1.3.071921: Fix failed install Clamav Scan engine (missing libtool-ltdl-devel package) on CentOS.
+1.3.071921: Adding a new feature that allow you to add new graphs based on dstat software.(see http://www.artica.fr/index.php/artica-a-system/46-system-monitoring/206-adding-new-graphs-for-memorycpu-and-postFix-with-dstat)
 
 
 Samba Changes:
 -------------------------------------------------
-1.3.071712: Minors ergonomics tweeks on Samba administration/postfix administration and services status page.
+1.3.071712: Minors ergonomics tweeks on Samba administration/postFix administration and services status page.
 1.3.071313: Supporting new packages in order to provide more Brother printers drivers
 1.3.071717: Fix unable to change the "administrator" account password.
 1.3.071717: Adding a new feature that allow samba to automatically add the Domain linked computer into LDAP Database.
@@ -2743,7 +2747,7 @@ Messaging changes
 
 Interface change
 -------------------------------------------------
-1.3.071902: fix in some cases, users is not displayed in organization's group section page
+1.3.071902: Fix in some cases, users is not displayed in organization's group section page
 
 
 
@@ -2753,11 +2757,11 @@ System Changes:
 -------------------------------------------------
 1.3.070722: Adding a new function that clean Obm users table automatically when user have no login data.
 1.3.070722: Add a new feature that allow administrator to debug an IMAP connection for a specific user.(see http://www.artica.fr/index.php/menudocmessaging/44-mailboxes-management/190-debug-an-imap-conection-trough-artica)
-1.3.070722: Add a new feature for perform repair on LDAP Artica Branch (/usr/share/artica-postfix/bin/artica-backup --repair-artica-branch) 
+1.3.070722: Add a new feature for perform repair on LDAP Artica Branch (/usr/share/artica-postFix/bin/artica-backup --repair-artica-branch) 
 1.3.070722: Add a new feature in order to check saslauthd LDAP configuration and imapd.conf LDAP configuration in order to detect corrupted parameters.
 1.3.070722: Fix wrong chmod on /dev/null When parsing HomeDirectory users LDAP attribute.
 1.3.070802: Add a new feature that allow administrators to link local folders to a specific user home directory.(see http://www.artica.fr/index.php/samba-file-sharing/61-users-a-folders/188-link-local-folders-to-home-directory-user)
-1.3.070901: fix wrong permissions when a user have Samba Administration privileges in it's area.
+1.3.070901: Fix wrong permissions when a user have Samba Administration privileges in it's area.
 1.3.071002: Adding a new feature that delete install status when refreshing the index status in Setup Application center
 1.3.071002: Adding a new feature that allow you to display BIOS informations on your computer (see http://www.artica.fr/index.php/artica-a-system/46-system-monitoring/193-get-your-server-bios-informations)
 1.3.071301: Fix error installing OBM PHP in CentOS distribution.
@@ -2794,8 +2798,8 @@ Proxy changes:
 Mail changes:
 -------------------------------------------------
 1.3.070321 Adding 192.168.0.0/24 in milter-greylist defaut configuration.
-1.3.070321 Fix artica did not correctly set the right LDAP Branch for mailman aliases lists in Postfix configuration file.
-1.3.070502 Adding a cyrus-imap watchdog when artica postfix logger found "DBERROR db4: *: unexpected file type or format" in syslog.
+1.3.070321 Fix artica did not correctly set the right LDAP Branch for mailman aliases lists in PostFix configuration file.
+1.3.070502 Adding a cyrus-imap watchdog when artica postFix logger found "DBERROR db4: *: unexpected file type or format" in syslog.
 
 Samba Changes:
 -------------------------------------------------
@@ -2814,7 +2818,7 @@ System Changes:
 1.3.070310 Adding a new function that refresh index file in Application Setup center. Usefull to test connections with the artica repository server.
 1.3.070201 Fix php5 error information line 57,157
 1.3.070321 Adding a new feature that allow artica-update to automatically clamav engine if it required.
-1.3.070201 Adding a new feature allow you to update artica to nightly builds (do /usr/share/artica-postfix/bin/artica-update --upgrade-nightly --verbose)
+1.3.070201 Adding a new feature allow you to update artica to nightly builds (do /usr/share/artica-postFix/bin/artica-update --upgrade-nightly --verbose)
 1.3.070201 Adding a new feature allow you to rebuild LDAP databases (see http://www.artica.fr/index.php/artica-a-system/47-repair-a-maintain/182-index-a-rebuild-ldap-databases)
 1.3.070303 Adding a new feature that allow users to fill their Address Book (see http://www.artica.fr/index.php/menudocmessaging/37-webmail-and-users-front-end/183-edit-your-personal-address-book)
 1.3.070321 Adding a new feature that automatically replicate LDAP user address Book to user MYSQL OBM address Book
@@ -2822,9 +2826,9 @@ System Changes:
 1.3.070410 Adding a new feature that allow you to install new NMAP Security Scanner trough Application Setup Center (see http://www.artica.fr/index.php/artica-a-system/41-update-artica-and-softwares/185-how-to-install-nmap-security-scanner-)
 1.3.070502 Adding a new feature : a watchdog in artica-mysqlpost in order to limit memory size of the process (default to 1000 bytes of memory).
 1.3.070502 Fix severals error "PHP Notice:  Undefined index..." especially on CentOS systems.
-1.3.070519 fix error installing OBM2 with php compilation error: libtool: install: error: cannot install `libaprutil-1.la' to a directory not ending in /usr/local/obm-apache/lib
+1.3.070519 Fix error installing OBM2 with php compilation error: libtool: install: error: cannot install `libaprutil-1.la' to a directory not ending in /usr/local/obm-apache/lib
 
-1.3.062200: OBM v2.2 support & bugs fix
+1.3.062200: OBM v2.2 support & bugs Fix
 =========================================================================================
 Fix no informations is displayed when deleting a computer trough DNS area in Artica.
 Fix wizard error for building a PDC Samba domain.
@@ -2833,7 +2837,7 @@ Adding possibility to change certificates expiration time.
 Add new feature that allow to install OBM 2.2.x has the new Ajax Group calendar 
 for this feature, a new installation engine has been developped. Now, Artica install Apache and PHP has a dedicated instance in order to get OBM independant).
 
-1.3.061920: pure-ftpd rebuild and bugs fix
+1.3.061920: pure-ftpd rebuild and bugs Fix
 =========================================================================================
 Fix artica is not able to stop cyrus-imap a start always new cyrus daemon that freeze connections.
 Fix artica is not able to detect if cyrus-imapd is in memory.
@@ -2858,8 +2862,8 @@ Jun 17 18:26:19 squid dhcpd: Unable to add forward map from florent-laptop.flore
 Jun 17 18:26:19 squid dhcpd: Wrote 2 leases to leases file.
 Jun 17 18:26:19 squid dhcpd: DHCPREQUEST for 192.168.1.10 from 00:1f:3c:31:38:b0 (florent-laptop) via eth0
 Jun 17 18:26:19 squid dhcpd: DHCPACK on 192.168.1.10 to 00:1f:3c:31:38:b0 (florent-laptop) via eth0
-Jun 17 18:26:36 squid artica-cron[32767]: Job /usr/share/artica-postfix/bin/artica-install --graphdefang-gen started for user root (pid 300)
-Jun 17 18:26:38 squid artica-cron[32767]: Job /usr/share/artica-postfix/bin/artica-install --graphdefang-gen completed
+Jun 17 18:26:36 squid artica-cron[32767]: Job /usr/share/artica-postFix/bin/artica-install --graphdefang-gen started for user root (pid 300)
+Jun 17 18:26:38 squid artica-cron[32767]: Job /usr/share/artica-postFix/bin/artica-install --graphdefang-gen completed
 Jun 17 18:27:01 squid /usr/sbin/cron[5894]: (*system*artica-process1) RELOAD (/etc/cron.d/artica-process1)
 Jun 17 18:27:01 squid cron[5894]: Error: bad hour; while reading /etc/cron.d/artica-cron-pflogsumm
 Jun 17 18:27:01 squid cron[5894]: Error: bad minute; while reading /etc/cron.d/GetLive
@@ -2870,7 +2874,7 @@ disable_vrfy_command = yes
 SMTP protocol allows of using VRFY to verify the validity of an user in the server. Disabling VRFY takes one more facility which is abused by spammers.
 
 strict_rfc821_envelopes = yes
-The strict_rfc821_envelopes parameter controls how tolerant Postfix is with respect to addresses given in MAIL FROM or RCPT TO commands. Being strict to the RFC not only stops unwanted mail, it may also blocks legitimate mail from poorly-written mail applications. However I haven't found any false positive from this check. This appears to be safe in my experience.
+The strict_rfc821_envelopes parameter controls how tolerant PostFix is with respect to addresses given in MAIL FROM or RCPT TO commands. Being strict to the RFC not only stops unwanted mail, it may also blocks legitimate mail from poorly-written mail applications. However I haven't found any false positive from this check. This appears to be safe in my experience.
 
 smtpd_sender_restrictions = reject_non_fqdn_sender, reject_unknown_sender_domain
 The smtpd_sender_restrictions parameter restricts what sender addresses this system accepts in MAIL FROM commands.
@@ -2882,7 +2886,7 @@ reject_unknown_sender_domain rejects the request when the sender mail address ha
 smtpd_reject_unlisted_sender
 https://lists.oetiker.ch/pipermail/mrtg/2006-September/031878.html
 
-1.3.061702: Quarantine HTML reports per user & bugs fix
+1.3.061702: Quarantine HTML reports per user & bugs Fix
 =========================================================================================
 Adding a new LDAP attribute : FetchMailMatchAddresses that help artica to define Fetchmail rules with the defined account
 Update Artica repository server to RoundCube 2.2
@@ -2895,11 +2899,11 @@ Fix unable to add a computer trough artica front-end interface
 Fix multiple errors when playing with computers in DNS section.
 Fix Artica was not able to send notifications.
 
-1.3.061400: Sieve/Mailbox filters features & bugs fix
+1.3.061400: Sieve/Mailbox filters features & bugs Fix
 =========================================================================================
-fix error: artica-mailarchive[xxxx]: tamavisquar.SCAN_AMAVIS_STANDARD_QUEUE():: FATAL ERROR ON decoding file
+Fix error: artica-mailarchive[xxxx]: tamavisquar.SCAN_AMAVIS_STANDARD_QUEUE():: FATAL ERROR ON decoding file
 Adding a new function in artica-mysqlpost in charge of detecting corrupted main.cf file.
-switch to cron daemon for the schedule of isqlog execution in order to display Postfix usage statistics.
+switch to cron daemon for the schedule of isqlog execution in order to display PostFix usage statistics.
 Adding a new feature that allow users to manage "Sieve" rules trough Artica Interface.
 (see http://www.artica.fr/index.php/menudocmessaging/44-mailboxes-management/175-sieve-interface-filtering-messages-on-delivery)
 
@@ -2908,8 +2912,8 @@ Adding a new feature that allow administrators to automatically add a Junk movin
 
 1.3.061218
 =========================================================================================
-fix error :Error number 32 Action:LDAP add dn:cn=PostfixFilesStorage,cn=artica.. No such object**** 
-fix error :unable to add a new bind9 DNS Zone
+Fix error :Error number 32 Action:LDAP add dn:cn=PostFixFilesStorage,cn=artica.. No such object**** 
+Fix error :unable to add a new bind9 DNS Zone
 Fix error that Artica did not handle clamav-milter configuration file.
 Fix unable to display the button "save" in user account.
 
@@ -2917,11 +2921,11 @@ Add a new function that verify if servername value is correcly added in cyrus-im
 Fix fetchmail error when rebooting the system. The system chown the fetchmailrc with fetchmail:root user instead root:root user.
 improve artica-mailarchive quarantine detection and performances.
 Adding a new feature that compress amavis.log if the size is more than 150Mb
-Update the Artica update server to postfix 2.6.2
+Update the Artica update server to postFix 2.6.2
 Improve vacation process and calculation.
 
 
-1.3.060711 bugs fix
+1.3.060711 bugs Fix
 =========================================================================================
 Fix error lpadmin: Unknown argument when adding a new printer with special arguments
 Fix error cannot adding more than one category phrase weight in DansGuardian default rule.
@@ -2932,7 +2936,7 @@ Adding a new daemon called artica-dansguardian-stats that perform dansguardian p
 Fix error and improve C-ICAP+SQUID installation/integration.
 (see http://www.artica.fr/forum/viewtopic.php?f=38&t=1265)
 
-1.3.060400: bug fix and cups printing support.
+1.3.060400: bug Fix and cups printing support.
 =========================================================================================
 Adding an advanced options in eSarch email backup function for the administrators that can improve the query to find backuped mails.
 Fix error that administrators can see in the organization area,a dropdown field that display all organizations and groups has organizations
@@ -2946,26 +2950,26 @@ Add a new feature that allow to install/uninstal shared printers with cups (see 
 Rebuild totally the import users from a text file function in group section.
 Include the last french language files 
 
-1.3.052201: bugs fix and postfix report improvements
+1.3.052201: bugs Fix and postFix report improvements
 =========================================================================================
 Adding an automatic recovery function when artica detect DBERROR: skiplist recovery /var/lib/cyrus*.seen: ADD at * exists;
 Fix error :KAVMilter Error(107): Cannot read group configuration file: /etc/kav/5.6/kavmilter/groups.d/default.conf
-Possibility to use the local server engine when programming the Postfix report by eMail.
+Possibility to use the local server engine when programming the PostFix report by eMail.
 
-1.3.051920: bugs fix and Per user Address Book feature
+1.3.051920: bugs Fix and Per user Address Book feature
 =========================================================================================
-Improve ssl certificates generation for Postfix TLS.
+Improve ssl certificates generation for PostFix TLS.
 Improve artica-mailarchive that change it's behavior according Mysql status
 Add a new feature that allow to repair Mysql Databases.
-Improve and fix mailboxes creation in multi-domains envrionnement.
+Improve and Fix mailboxes creation in multi-domains envrionnement.
 The LDAP structure has been modified in order to store multiples Address Books 
 (see http://www.artica.fr/index.php/artica-a-system/45-groupwares-services/170-provide-personals-address-books)
 * Warning Change the LDAP structure, the automatic upgrade procedure has been tested and should works perfectly .
 OpenLDAP now is turned in SSL mode to serve outside connections.
 
-1.3.051520: bugs fix, pflogsumm support & Countries filters
+1.3.051520: bugs Fix, pflogsumm support & Countries filters
 =========================================================================================
-fix cron error : Error: bad day-of-month; while reading /etc/cron.d/artica-autolearn, to fix this behavior autolearn, you need to save again the schedule in auto-learn feature
+Fix cron error : Error: bad day-of-month; while reading /etc/cron.d/artica-autolearn, to Fix this behavior autolearn, you need to save again the schedule in auto-learn feature
 Delete SMTP notifications Artica daemon was stopped/started
 Adding a verification check in order to reduce the number of notifications sended each 5 minutes
 
@@ -2982,15 +2986,15 @@ Adding possibility to add SpamAssassin scores for specific countries.
 (see http://www.artica.fr/index.php/menudocmessaging/39-manage-filters-anti-spam-content-filters/169-adding-scores-depends-of-countries-in-spamassassion)
 
 
-1.3.051401: Postfix 2.6 & bugs fix
+1.3.051401: PostFix 2.6 & bugs Fix
 =========================================================================================
 Adding SQUID 3.0 STABLE 15 in artica update server.
 Adding automatic installation of mhonarc software it is not present (especially on CentOS distros)
 Fix error creating/listing/deleting cyrus-imapd sub users mailboxes Drafts, Spam, Sent when using the multidomain feature.
 Adding possibility to add FreshClam mirrors in order to update Clamav antivirus databases (see http://www.artica.fr/index.php/artica-a-system/41-update-artica-and-softwares/163-add-clamav-mirrors-for-update-virus-databases)
-Adding new Postfix 2.6 version to Applications Setup Center process.(see http://www.artica.fr/index.php/artica-a-system/41-update-artica-and-softwares/164-how-to-upgrade-postfix-to-26x-version-)
+Adding new PostFix 2.6 version to Applications Setup Center process.(see http://www.artica.fr/index.php/artica-a-system/41-update-artica-and-softwares/164-how-to-upgrade-postFix-to-26x-version-)
 
-1.3.051101: Round Robin, Internal Hard disks manager & bugs fix
+1.3.051101: Round Robin, Internal Hard disks manager & bugs Fix
 ==========================================================================================
 Fix error when accessing to the Global Address book option
 Fix error no hosts are saved in bind9 confirgration files
@@ -3006,14 +3010,14 @@ Fix unable to disable vacation auto-reply feature
 Add a new group privilege Allow Modify mailbox rule that enable/disable mailbox rules in the end-user front-end.
 Add a new watchdog that kill slapcat process wich running from a long time. 
 Add a new feature that allow to add new internal hard disks and manage them.
-Add a new postfix token "myorigin" in order to prevent loop backs (see http://artica.fr/forum/viewtopic.php?f=62&t=1219&p=5338#p5338)
+Add a new postFix token "myorigin" in order to prevent loop backs (see http://artica.fr/forum/viewtopic.php?f=62&t=1219&p=5338#p5338)
 (see http://www.artica.fr/index.php/artica-a-system/48-administration-front-end/160-how-to-add-a-new-internal-disk-)
 Add a new feature Round Robin in order to transfert messages to a load distribution, load balancing, or fault-tolerance SMTP domain
-(see http://www.artica.fr/index.php/menudocmessaging/38-smtp-routing/162-add-round-robin-features-in-your-postfixmail-routing-domain)
+(see http://www.artica.fr/index.php/menudocmessaging/38-smtp-routing/162-add-round-robin-features-in-your-postFixmail-routing-domain)
 Add a new feature that permit to change anti-spam amavis settings by domain, relayed domain, users.
-Improve/fix Administrator groups privileges.
+Improve/Fix Administrator groups privileges.
 
-New artica version 1.3.050102: improvements & bugs fix
+New artica version 1.3.050102: improvements & bugs Fix
 ==========================================================================================
 Increase the polling time of SaneSecurity updates to each 4 Hours
 Increase the polling time for artica-notif execution (now each 5 minutes instead 10 seconds)
@@ -3025,11 +3029,11 @@ Adding possibility to let users adding banned web sites in exception sites list 
 Adding automatically checking new Clamav Engine Every 5 days at 2H30 morning 
 Fix Server responded: -ERR Login failed when not using multi-organizations behavior on @OpenMail
 Fix error creating mailbox when multidomains feature is selected
-Fix error (!)custom checks error: No such object at /usr/share/artica-postfix/bin/install/amavis/check-external-users.conf line 893
-Fix incompatibility with dansguardian and ClamAV when Postfix is installed on the same computer.
+Fix error (!)custom checks error: No such object at /usr/share/artica-postFix/bin/install/amavis/check-external-users.conf line 893
+Fix incompatibility with dansguardian and ClamAV when PostFix is installed on the same computer.
 Add Amavisd-new 2.6.3 in repository server for Application Setup center
 Adding "ldap ssl=no" for samba, sometimes samba try to connect by TLS on the LDAP server when the token is not added.
-Adding a new feature that display mail events logs (see http://www.artica.fr/index.php/menudocmessaging/58-events-a-monitoring/153-display-realtime-postfix-events)
+Adding a new feature that display mail events logs (see http://www.artica.fr/index.php/menudocmessaging/58-events-a-monitoring/153-display-realtime-postFix-events)
 Adding a checking that disallow creating a user with the same user id.
 Rebuild the "Add new user" function in an organisation section.
 
@@ -3042,8 +3046,8 @@ Fix error creating dansguardian_sites table on mysql that not display all statio
 
 1.3.042102
 ==========================================================================================
-fix error Warning: array_slice()fix expects parameter 1 to be array, null given in jpgraph_pie3d.php on line 40 when consulting dansguardian events statistics
-fix error programing some cron tasks
+Fix error Warning: array_slice()Fix expects parameter 1 to be array, null given in jpgraph_pie3d.php on line 40 when consulting dansguardian events statistics
+Fix error programing some cron tasks
 Adding openvpn, bridge-utils in artica-ISO and setup-*
 Add a watchdog that prevent multiple executions of artica-notif processes that handle 100% CPU
 Support OpenVPN management in Bridge mode.
@@ -3060,13 +3064,13 @@ Adding graphs and statistics for banned web sites trough dansguardian
 
 1.3.041701
  ==========================================================================================
-Adding possibility to change the logo image by adding /etc/artica-postfix/settings/Daemons/ArticaLogonImage file
-Adding possibility to disable SSH Control top menu adding "1" in /etc/artica-postfix/settings/Daemons/DisableSSHControl file
+Adding possibility to change the logo image by adding /etc/artica-postFix/settings/Daemons/ArticaLogonImage file
+Adding possibility to disable SSH Control top menu adding "1" in /etc/artica-postFix/settings/Daemons/DisableSSHControl file
 Fix Dansgardian error "Error reading file: /etc/dansguardian/filtergroupslist"
 Fix ICAP error when POST datas with Kaspersky for SQUID
 Fix artica-ldap error while saving dansguardian configuration file.
 Adding possibilty to add whitelisted web sites in DansGuardian default rule.
-New design for Milter-greylist section and fix apply settings parameters.
+New design for Milter-greylist section and Fix apply settings parameters.
 
 
 
@@ -3080,8 +3084,8 @@ Support SquidGard updates in Dansguardian.
 Fix viruses pass trough the Kaspersky For Squid (bad squid.conf configuration file).
 Fix permissions error on Kaspersky For squid.
 Fix settings when set auth mode in Artica notifications.
-Fix error "/var/spool/postfix/var/run/amavisd-new/amavisd-new.sock" in postfix when using only default settings without changing Amavis parametres for the first time.
-Major bugs fixing in dansguardian
+Fix error "/var/spool/postFix/var/run/amavisd-new/amavisd-new.sock" in postFix when using only default settings without changing Amavis parametres for the first time.
+Major bugs Fixing in dansguardian
 Improve Samba detection in memory and samba status.
 Improve logon page by reducing it's loading size.
 Adding a 5 seconds SMTP timeout in Artica-notifs function in order to prevent full process execution queue of cron.
@@ -3095,7 +3099,7 @@ Fix error setting default configuration in bind9.
 improve spamassassin updates procedure in artica-update
 improve spamassassin default settings by adding Rule2XSBody new module
 
-Adding possibility to view content messages in postfix temporary queues
+Adding possibility to view content messages in postFix temporary queues
 Adding mtools,re2c package in setup-debian and setup-ubuntu and Artica-ISO
 Adding possibility to change usb devices label
 Support multiple external storages in Incremental backup.
@@ -3117,7 +3121,7 @@ Adding possibility to update Kaspersky For Squid license.
 Adding libldap2-dev package in setup-ubuntu
 
 
-Fix postfix error /etc/postfix/bounce.template.cf, line 57: missing "e mail system?" end marker
+Fix postFix error /etc/postFix/bounce.template.cf, line 57: missing "e mail system?" end marker
 Fix error while stopping Bind9 error was generated "Stopping bind9...............: 20301 PID ".ROR: garbage process ID "20301
 Fix error Kaspersky For Proxy server : Error reading config: wrong value of parameter user found in section [options] : no such user : kluser found
 Fix error starting mailman when the servername is not fqdn compliance.
@@ -3152,7 +3156,7 @@ Adding new feature that allow to perform full incremental backup using DAR (Disk
 This new feature allow to backup restore LDAP,Cyrus-imap , Mysql, Shared Samba folders, user defined.
 A new documentation will be added has soon has possible.
 
-Include the following patchs and fix:
+Include the following patchs and Fix:
 Patch 1133
 ------------------------------------------------------------------
 Improve Samba Domain privileges and Samba groups generation.
@@ -3161,7 +3165,7 @@ Support Domains privileges.
     
 Patch 1132
 ------------------------------------------------------------------
-Possibility to modify content of bounces Postfix templates
+Possibility to modify content of bounces PostFix templates
     
 Patch 1131
 Improve Kaspersky For SendMail Milter groups configuration settings and verifications
@@ -3197,7 +3201,7 @@ ARTICA-ISO: Fix missing pkg-config and php5-mcrypt packages
 Fix unable to see samba services in "Status of all services" page
 Fix unable to add aliases in both admin and user mode (see http://www.artica.fr/forum/viewtopic.php?f=25&t=1120)
 Fix Roundcube users are changed to user@127.0.0.1
-fix An unhandled exception occurred at $00000000 : EAccessViolation : Access violation $00000000 when artica try to start bind9
+Fix An unhandled exception occurred at $00000000 : EAccessViolation : Access violation $00000000 when artica try to start bind9
 Totally rebuild the dansguardian section (see http://www.artica.fr/index.php/dansguardian-screenshots.html)
 
 
@@ -3207,7 +3211,7 @@ Fix error cannot enable Kaspersky antivirus in plugins section
 Fix Unable to save AlterMIME Disclaimer (see http://www.artica.fr/forum/viewtopic.php?f=10&t=1109)
 Fix Unable to display the RoundCube full page settings on medium screen 
 Fix Application Setup center set poMMo Mass Mailing not installed event it is installed.
-ARTICA-ISO: fix missing libssl-dev and libldap2-dev
+ARTICA-ISO: Fix missing libssl-dev and libldap2-dev
 
 Auto-update artica settings are now stored on Disk instead LDAP database.
 Adding more infos in progress bar when installing softwares with Applications setup center
@@ -3229,7 +3233,7 @@ Support poMMo has the Mass mailing application (see http://www.artica.fr/index.p
 
 1.3.030617
 ==========================================================================================
-Fix error Error number 32 Action:LDAP add dn:cn=PostfixFilesStorage,cn=artica,dc=nodomain in First settings.
+Fix error Error number 32 Action:LDAP add dn:cn=PostFixFilesStorage,cn=artica,dc=nodomain in First settings.
 Fix unable to enable/disable MailArchiver backup on the fly (see http://www.artica.fr/forum/viewtopic.php?f=10&t=1074)
 Fix error generated when executing save & apply configuration (see http://www.artica.fr/forum/viewtopic.php?f=10&t=1075)
 Fix error on libexpat-dev when installing with setup-debian
@@ -3242,7 +3246,7 @@ Adding an impad.conf verification file procedure.
 Adding/modify/delete a fetchmail rule will only reload fetchmail daemon, not stop and start.
 
 New Feature Add a disclaimer on each outgoing messages (see http://www.artica.fr/index.php?ID=1890)
-New feature Change amavisd-new Postfix hooking method (see http://www.artica.fr/index.php?ID=1891)
+New feature Change amavisd-new PostFix hooking method (see http://www.artica.fr/index.php?ID=1891)
 New feature The Junk learning features (see http://www.artica.fr/index.php?ID=1885) have been improved (Now artica-ldap will parse fetchmail rules and launch Junk Learning on remote IMAP servers saved in fetcmailrc.)
 New Feature Perform LDAP database indexing (see http://www.artica.fr/index.php?ID=1892 )
 New Feature Change the user and group used by web servers (see http://www.artica.fr/index.php?ID=1893)
@@ -3261,8 +3265,8 @@ New Feature "Network Control center" (see http://www.artica.fr/index.php?ID=1887
 
 Improve Kaspersky Anti-spam settings.
 Fix execution of multiple awstats processes (see http://www.artica.fr/forum/viewtopic.php?f=10&t=1066)
-fix error Starting......: Bad master.cf, missing service "smtp": This cause replace the master.cf configuration file every time artica restart postfix.
-fix error  "Config problem; check allowed values for maxchildren" when starting DansGuardian.
+Fix error Starting......: Bad master.cf, missing service "smtp": This cause replace the master.cf configuration file every time artica restart postFix.
+Fix error  "Config problem; check allowed values for maxchildren" when starting DansGuardian.
 Fix error on rrdtool with squid, the perl script was empty.
 Updated setup control center to squid-3.0.STABLE13-20090301
 
@@ -3273,7 +3277,7 @@ http://www.artica.fr/forum/viewtopic.php?f=24&t=898
 http://www.artica.fr/forum/viewtopic.php?f=17&t=901
 http://www.artica.fr/forum/viewtopic.php?f=26&t=915
 http://wiki.zimbra.com/index.php?title=Error_(MTA):_unreasonable_virtual_alias_maps_map_expansion_size
-postconf "sender_bcc_map = hash:/etc/postfix/sender_bcc"
+postconf "sender_bcc_map = hash:/etc/postFix/sender_bcc"
 
 
 1.3.022702
@@ -3290,16 +3294,16 @@ Improve function for starting clamd: To prevent corrupted configuration file, ar
 
 1.3.022519
 ==========================================================================================
-Add new postfix parameters : empty_address_recipient,2bounce_notice_recipient,bounce_notice_recipient,error_notice_recipient,delay_notice_recipient,address_verify_sender
+Add new postFix parameters : empty_address_recipient,2bounce_notice_recipient,bounce_notice_recipient,error_notice_recipient,delay_notice_recipient,address_verify_sender
 ,double_bounce_sender 
 Fix unable to activate Kaspersky Anti-Spam in main.cf
-fix error: nss_ldap: could not determine LDAP server from ldap.conf or DNS
+Fix error: nss_ldap: could not determine LDAP server from ldap.conf or DNS
 Change fetchmail section, more design and interface game play.
 Change Samba section, more design and interface game play.
 Support http://www.sanesecurity.com/usage.htm patterns addons in amavis.
 Support Kaspersky For Samba in Application Setup center
 Support Kaspersky For Samba License feature.
-Improve the Postfix queue monitoring section.
+Improve the PostFix queue monitoring section.
 Add a new feature to allow change user unique identifier
 Fix 100% CPU with mailgraph, artica will change the init script in ordrer to set the right parameters to mailgraph.
 Fix error while starting cyrus-imap: Artica try to repair always mailboxes even the cyrus health is good.
@@ -3315,10 +3319,10 @@ Add a new daemon function that verify freshclam.conf, clamd.conf before starting
 Fix samba local files browser error.
 Rebuild entirely the Bind9 DNS Section.
 Adding an artica link icon in Desktop when using ARTICA-ISO
-Fix postfix error may appears "warning: mail_queue_enter: create file maildrop/713410.6065: Permission denied"
+Fix postFix error may appears "warning: mail_queue_enter: create file maildrop/713410.6065: Permission denied"
 Fix amavisd-milter on ARTICA-ISO, the compiled debian version is not fully compatible with artica.
 Artica will now automatically compile a right amavisd-milter at boot up.
-Adding a new daemon function that verify the right postfix master.cf syntax: sometimes, the postfix master.cf is corrupted by artica.
+Adding a new daemon function that verify the right postFix master.cf syntax: sometimes, the postFix master.cf is corrupted by artica.
 Fix error while saving "rewriting sent address" in user sender settings
 Adding a new feature "Duplicated mails for 2 servers with the same domain name" (see http://www.artica.fr/index.php?ID=1877)
 
@@ -3326,7 +3330,7 @@ Adding a new feature "Duplicated mails for 2 servers with the same domain name" 
 ==========================================================================================
 Fix infinite bad loop and group section with Kaspersky Antivirus-milter (see http://www.artica.fr/forum/viewtopic.php?f=10&t=1023)
 Fix red status are displayed when softwares not exists.
-Fix wrong parameters set in bind9 when using bind9+postfix in messaging section.
+Fix wrong parameters set in bind9 when using bind9+postFix in messaging section.
 Add a new function in charge of adding backup schedule time in cron.d instead artica internal scheduler.
 Remove PhishingRestrictedScan in Clamav configuration file (see http://www.artica.fr/forum/viewtopic.php?f=54&t=1027)
 migrate ARTICA-ISO to debian 5 Lenny
@@ -3337,15 +3341,15 @@ Add a new feature that enable a "Quarantine Manager" for Administrators (see htt
 Fix compatibilities on setup-debian for Lenny version (see http://www.artica.fr/forum/viewtopic.php?f=34&t=1019)
 Now when changing the squid configuration in artica Squid is reloaded instead restarted.
 Adding more performances SQUID3 options set by default (you have just to save the configuration to enable these features)
-Adding SQUID3 performances token in compilation mode (use /usr/share/artica-postfix/bin/artica-make APP_SQUID --reconfigure to recompile these features)
+Adding SQUID3 performances token in compilation mode (use /usr/share/artica-postFix/bin/artica-make APP_SQUID --reconfigure to recompile these features)
 
 
 
 1.3.021601
 ==========================================================================================
-fix (!)custom checks error: Can't call method "size" on an undefined value at /usr/share/artica-postfix/bin/install/amavis/check-external-users.conf line 307.in Arica plugin for amavis
+Fix (!)custom checks error: Can't call method "size" on an undefined value at /usr/share/artica-postFix/bin/install/amavis/check-external-users.conf line 307.in Arica plugin for amavis
 Supporting quarantine management for Kaspersky For SendMail Milter
-Fix milter is not set in postfix main.cf even Kaspersky For SendMail milter is enabled and installed.
+Fix milter is not set in postFix main.cf even Kaspersky For SendMail milter is enabled and installed.
 Add a new feature "Enable global Address Book" (see http://www.artica.fr/index.php?ID=1875)
 Fix Users can reboot the computer when disconnecting (see http://www.artica.fr/forum/viewtopic.php?f=10&t=1015)
 Fix mailsync version is not displayed in Application setup center
@@ -3358,35 +3362,35 @@ Support possibility to create Internet access  restrictions times rules in squid
 1.3.021220
 ==========================================================================================
 Fix wrong parameters in freshclam.conf and clamd.conf(see http://www.artica.fr/forum/viewtopic.php?f=25&t=1003)
-Fix Call to undefined function writelogs() in /usr/share/artica-postfix/ressources/class.templates.inc on line 1866
-fix accents insertion in Displayname,sn,givenmane (see http://www.artica.fr/forum/viewtopic.php?f=25&t=1006)
+Fix Call to undefined function writelogs() in /usr/share/artica-postFix/ressources/class.templates.inc on line 1866
+Fix accents insertion in Displayname,sn,givenmane (see http://www.artica.fr/forum/viewtopic.php?f=25&t=1006)
 Adding a new feature "Default group password" (see http://www.artica.fr/index.php?ID=1872)
-Supporting Kaspersky Antivirus For SendMail Edition in postfix. (see http://www.artica.fr/index.php?ID=1873)
+Supporting Kaspersky Antivirus For SendMail Edition in postFix. (see http://www.artica.fr/index.php?ID=1873)
 
 1.3.021202
 ==========================================================================================
 Add a new feature auto-aliases (see http://www.artica.fr/index.php?ID=1871)
-Fix Postfix error fatal: No server certs available. TLS can't be enabled
-Fix certificate generation in combination of postfix SSL+TLS
+Fix PostFix error fatal: No server certs available. TLS can't be enabled
+Fix certificate generation in combination of postFix SSL+TLS
 Fix error on merging privileges when user is inserted on multiple groups.(see http://www.artica.fr/forum/viewtopic.php?f=10&t=1000)
 Improve cache settings and session cleaning.
 Fix sometimes the logon page is not displayed just after installation.
 Fix error on Centos change cron package to yum-cron (see http://www.artica.fr/forum/viewtopic.php?f=16&t=997)
-to test SSL on postfix use "openssl s_client -connect remote.host:465"
+to test SSL on postFix use "openssl s_client -connect remote.host:465"
 
 1.3.021000
 ==========================================================================================
 Fix error on enable SMTP SSL (see http://www.artica.fr/forum/viewtopic.php?f=10&t=985)
 Fix error on settings hour and max Day to live in backup (see http://www.artica.fr/forum/viewtopic.php?f=25&t=990)
 Fix error on certificate generation (see http://www.artica.fr/forum/viewtopic.php?f=10&t=985)
-Add a new feature that enable bind9 in postfix Network settings for improve DNS Queries (see http://www.artica.fr/index.php?ID=1870)
+Add a new feature that enable bind9 in postFix Network settings for improve DNS Queries (see http://www.artica.fr/index.php?ID=1870)
 
 1.3.020823
 ==========================================================================================
-fix error Warning: implode() [function.implode]: Invalid arguments passed in /usr/share/artica-postfix/auto-account.php on line 231 in logon page
+Fix error Warning: implode() [function.implode]: Invalid arguments passed in /usr/share/artica-postFix/auto-account.php on line 231 in logon page
 Fix error installing clamav and milter-greylist by the application setup center.
 Adding amavisd-milter in application setup center.
-Fix wrong options on retry service in postfix master.cf
+Fix wrong options on retry service in postFix master.cf
 Adding a specific function in order to build the right pattern for relayhost.
 Support mailman distribution list manager (see http://www.artica.fr/index.php?ID=1869)
 
@@ -3409,7 +3413,7 @@ Support importing values with accents in Active Directory importation function (
 
 1.3.020420
 ==========================================================================================
-Adding possibility querying postfix events (see http://www.artica.fr/index.php?ID=1864)
+Adding possibility querying postFix events (see http://www.artica.fr/index.php?ID=1864)
 Fix error settings trusted network in amavis (see http://www.artica.fr/forum/viewtopic.php?f=41&t=963)
 Adding possibility to get username and password of SuperADmin in setup-* tools
 Supporting OBM has a shared web calendar (see http://www.artica.fr/index.php?ID=1866)
@@ -3436,11 +3440,11 @@ Supporting DotClear has a multi-blog system (see http://www.artica.fr/index.php?
 
 1.3.012421
 ==========================================================================================
-fix TypeError: z is null when apply all configuration. (see http://www.artica.fr/forum/viewtopic.php?f=10&t=935)
-fix Warning: file_get_contents(ressources/install/*.ini) in application setup center.
+Fix TypeError: z is null when apply all configuration. (see http://www.artica.fr/forum/viewtopic.php?f=10&t=935)
+Fix Warning: file_get_contents(ressources/install/*.ini) in application setup center.
 Delete default footer message in AtMail webmail.
-Adding new Postfix statistics based on IsoQlog (see http://www.enderunix.org/isoqlog). To enable it, run this command
-"/usr/share/artica-postfix/bin/artica-make APP_ISOQLOG" or go in Application setup center
+Adding new PostFix statistics based on IsoQlog (see http://www.enderunix.org/isoqlog). To enable it, run this command
+"/usr/share/artica-postFix/bin/artica-make APP_ISOQLOG" or go in Application setup center
 Add first French translation in the product (currently translated to 41,5% many thanks to eric22 for this job)
 Add a new feature that allow to synchronize a remote mailbox for import feature (eg from MS exchange server) (see http://www.artica.fr/index.php?ID=1859)
 Add OpenSuse 11.1 support in setup-suse.
@@ -3455,16 +3459,16 @@ trought the roundcube interface
 Executing roundcube installation automatically in setup-* when choosing cyrus installation.
 Adding a new wizard in order to start first required settings....
 MimeDefang activation is no longer stored on LDAP database to prevent LDAP database errors.
-Add a new feature that allow to force Postfix transfert mails to a specific server from a specific user (see http://www.artica.fr/index.php?ID=1857)
+Add a new feature that allow to force PostFix transfert mails to a specific server from a specific user (see http://www.artica.fr/index.php?ID=1857)
 
 
 1.3.012121
 ==========================================================================================
-Adding a double check in order to point postfix to the right cyrus lmtp socket path (see http://www.artica.fr/forum/viewtopic.php?f=16&t=917).
+Adding a double check in order to point postFix to the right cyrus lmtp socket path (see http://www.artica.fr/forum/viewtopic.php?f=16&t=917).
 Adding a new script cron.roundcube.php this script is in charge to synchronize Roundcube profiles from LDAP database every 30 minutes or each editing user.
 (see http://www.artica.fr/forum/viewtopic.php?f=41&t=922)
-Delete Amavis network configuration interface, it is not usefull to use a separate Network configuration between amavis and Postfix. 
-Now Artica use the same value.Postfix network settings apply the same values for amavis Network configuration.
+Delete Amavis network configuration interface, it is not usefull to use a separate Network configuration between amavis and PostFix. 
+Now Artica use the same value.PostFix network settings apply the same values for amavis Network configuration.
 Fix Squid detection when artica is installed has only a squid configurator.
 Fix error setting acl on cyrus on mailbox master branch, acl was the user instead acl.(see http://www.artica.fr/forum/viewtopic.php?f=10&t=920).
 Adding "Insert" has the default acl mailbox when creating user.(see http://www.artica.fr/forum/viewtopic.php?f=10&t=920).
@@ -3490,7 +3494,7 @@ www.artica.fr was updating to roundCube 0.2 stable release
 Adding 1&1 script ISP
 Mysql password and admin is no longer stored in LDAP database.
 Adding a watchdog process for sfupdates kaspersky Anti-Spam ghost processes.
-Fix error failed to open stream: Permission denied in /usr/share/artica-postfix/setup.index.php on line 275 on Application Setup center
+Fix error failed to open stream: Permission denied in /usr/share/artica-postFix/setup.index.php on line 275 on Application Setup center
 (see http://www.artica.fr/forum/viewtopic.php?f=47&t=886)
 Adding a watchdog that perform purge artica temp files in /tmp (see http://www.artica.fr/forum/viewtopic.php?f=17&t=888)
 Fixed cyrus-imap events color in events section.
@@ -3502,7 +3506,7 @@ Cyrus configuration and settings will be out of the LDAP database, it will be di
 ==========================================================================================
 Adding new filters in services status in order to view only specified status.(see http://www.artica.fr/forum/viewtopic.php?f=10&t=874)
 Adding a special macro for ORANGE/OLEANE ISPs in order to set correct values when you use orange.fr/oleane has an outgoing relay server.
-Add more debug informations in Application Setup Center and fix minors tweaks (see http://www.artica.fr/forum/viewtopic.php?f=47&t=881)
+Add more debug informations in Application Setup Center and Fix minors tweaks (see http://www.artica.fr/forum/viewtopic.php?f=47&t=881)
 Add cyrus "quotawarn" imapd.conf support option in services parameters (see http://www.artica.fr/forum/viewtopic.php?f=29&t=855)
 Add DSPAM support in amavis.
 Add Mysql Amavis quarantine support
@@ -3521,7 +3525,7 @@ Fix error deleting mailbox did not delete mailbox sub-branchs (only the first br
 Fix error installing amavisd-new on Suse Distribution.
 Fix minor error starting Syslog-ng on Suse Distribution.
 Fix error adding an LDAP new group in Suse distribution
-fix error "Unable to locate necessary file:"xxx" on latest distributions
+Fix error "Unable to locate necessary file:"xxx" on latest distributions
 Improvements on mailArchiver starting scripts
 
 
@@ -3535,7 +3539,7 @@ Fix unable to install amavis with command line "artica-make APP_AMAVISD_MILTER" 
 Fix fatal error $080A9199 on setup-fedora (see http://www.artica.fr/forum/viewtopic.php?f=22&t=869)
 Fix error amavisd-new and amavisd-milter killed and restarted again again if they are disabled.
 Fix error artica is unable to find the PID of OpenLDap server and try to start it every time.
-Fix artica-ldap did not apply postfix settings in some environments.after save & Apply policies(see http://www.artica.fr/forum/viewtopic.php?f=26&t=850)
+Fix artica-ldap did not apply postFix settings in some environments.after save & Apply policies(see http://www.artica.fr/forum/viewtopic.php?f=26&t=850)
 Minors tweeks in order to install in a good way amavisd-new and mailgraph, awstats on Fedora with setup-fedora.
 Adding a warning that inform some firewall rules are activated when starting lighttpd service in order to understand why user cannot have access to 9000 port.
 Change nice values in artica processes performances, now, by default if nice values are not set it will be -19 by default
@@ -3548,7 +3552,7 @@ see http://www.artica.fr/forum/viewtopic.php?f=24&t=867 + 1month
 1.3.010701
 ==========================================================================================
 Add a new features that ensure that DNS servers string are IP formatted.(see http://www.artica.fr/forum/viewtopic.php?f=10&t=852)
-Add a new feature that automatically build mynetworks postfix configuration if it not set (see http://www.artica.fr/forum/viewtopic.php?f=10&t=852)
+Add a new feature that automatically build mynetworks postFix configuration if it not set (see http://www.artica.fr/forum/viewtopic.php?f=10&t=852)
 
 Fix MAJOR BUG
 A function in charge of finding processes return PID numbers.
@@ -3574,8 +3578,8 @@ Fix Errors "Headers Already Sent by..." In index section (see http://www.artica.
 Fix errors in Network settings when bind9 is not set (see http://www.artica.fr/forum/viewtopic.php?f=10&t=852)
 improve amavis installation, now Artica is able to detect all perl modules required (see artica-make).
 Enable the Sender Settings/Allow Send trought Internet feature with amavis.
-This feature is enable by the Amavis::Custom procedure that enable the script stored in /usr/share/artica-postfix/bin/install/amavis/check-external-users.conf 
-fix wrong compilation on mail-spy software (see http://www.artica.fr/forum/viewtopic.php?f=17&t=835)
+This feature is enable by the Amavis::Custom procedure that enable the script stored in /usr/share/artica-postFix/bin/install/amavis/check-external-users.conf 
+Fix wrong compilation on mail-spy software (see http://www.artica.fr/forum/viewtopic.php?f=17&t=835)
 
 
 1.3.010301
@@ -3607,7 +3611,7 @@ With mailsync tool, artica is now able to manually synchronize a local mailbox t
 
 1.2.122800
 ==========================================================================================
-Adding possibility to change max-connection parameter on syslog-ng in order to fix "Number of allowed concurrent connections exceeded" error
+Adding possibility to change max-connection parameter on syslog-ng in order to Fix "Number of allowed concurrent connections exceeded" error
 see (artica.performances.php web page)
 
 Fix error while discover maillog path in awstats (see http://www.artica.fr/forum/viewtopic.php?f=17&t=824)
@@ -3626,7 +3630,7 @@ Adding a new function that verify when adding a new domain if it not already exi
 ISO: cce858f1d480aa43e46057a601184bcc
 ==========================================================================================
 Change user creation shell from /bin/false /bin/sh
-Fixing /etc/postfix/main.cf chmod and chown
+Fixing /etc/postFix/main.cf chmod and chown
 multi-domains support in mailboxes/cyrus (to enable multi-domains, go in messaging/mailbox section)
 
 include the folowing patchs
@@ -3636,13 +3640,13 @@ December Thursday 11 22:54
 Fix error that artica-order didn't be executed by artica-cron.
 Fix error setting Dansguardian port calculation with Squid.
 Fix error squid acl 0.0.0.0/0.0.0.0 does not exists.
-Fix error, unable to change the listen port Postfix relay Host feature.
+Fix error, unable to change the listen port PostFix relay Host feature.
 Adding new log file interface-squid.log in /var/log
-Adding new log file interface-postfix.log in /var/log
+Adding new log file interface-postFix.log in /var/log
 Adding new watchdog for artica-cron.
 
 December Thursday 11 23:25
-Fix error, unable to change the listen port Postfix relay Host feature.
+Fix error, unable to change the listen port PostFix relay Host feature.
 
 December Saturday 13 00:37
 Improve Artica performances settings application.
@@ -3651,12 +3655,12 @@ Support day and minutes in milter-greylist main settings.(see http://www.artica.
 Adding a default values watchdog in milter-greylist settings.(see http://www.artica.fr/forum/viewtopic.php?f=25&t=746)
 
 December Saturday 13 02:42
-fix EAccessViolation : Access violation on Artica-roundcube
+Fix EAccessViolation : Access violation on Artica-roundcube
 
 1.2.121001
 ==========================================================================================
 Change artica-ldap writing settings cause conflicts file parameters.
-Adding new watchdog function for parsing artica-postfix.conf file configuration
+Adding new watchdog function for parsing artica-postFix.conf file configuration
 Adding collectd installation in setup-ubuntu
 Adding a "disconnect" menu in top menu.
 Adding a notification according connect to the interface with Opera or Internet Explorer has banned navigators in the logon page.
@@ -3675,7 +3679,7 @@ Ensure FDM enabled is croned in the system.
 
 December Tuesday 02 23:46
 Adding new option to force Artica to skip writing slpad.conf.
-To enable this feature run /bin/touch /etc/artica-postfix/no-ldap-change
+To enable this feature run /bin/touch /etc/artica-postFix/no-ldap-change
 
 December Thursday 04 01:09
 Support FDM option no-apop in fetchmail users rules.
@@ -3684,7 +3688,7 @@ December Thursday 04 12:49
 Improve daemon status and PID locks
 
 December Friday 05 00:10
-Rebuild regex postfix headers rules interface (https://yourserver:9000/smtp.rules.php)
+Rebuild regex postFix headers rules interface (https://yourserver:9000/smtp.rules.php)
 Adding a new macro in order to quick ban a domain in "Anti-spam" messaging tab.
 
 December Saturday 06 16:19
@@ -3698,17 +3702,17 @@ Fixing error attributes when adding a new user.
 
 1.2.112917
 ==========================================================================================
-Fix wrong status on Artica-postfix
-fix wrong status on Dnsmasq
-fix wrong status on inetd OpenBSD super server
-fix wrong status on milter-bogom
+Fix wrong status on Artica-postFix
+Fix wrong status on Dnsmasq
+Fix wrong status on inetd OpenBSD super server
+Fix wrong status on milter-bogom
 adding xfce4-goodies,xfce4-systemload-plugin in ARTICA-ISO
-fix Warning: implode() [function.implode]: Bad arguments. in /usr/share/artica-postfix/ressources/class.main_cf.inc on line 981
-Adding saving Postfix parameters in background in order to prevent timeout navigator.
+Fix Warning: implode() [function.implode]: Bad arguments. in /usr/share/artica-postFix/ressources/class.main_cf.inc on line 981
+Adding saving PostFix parameters in background in order to prevent timeout navigator.
 
 1.2.112301
 ==========================================================================================
-fix An unhandled exception occurred at $0812E083 : EAccessViolation : Access violation On "Unbuntu intrepid"
+Fix An unhandled exception occurred at $0812E083 : EAccessViolation : Access violation On "Unbuntu intrepid"
 Adding a new tool setup-ubuntu that allows you to install artica on Ubuntu/Debian systems.
 
 
@@ -3780,8 +3784,8 @@ ISO:f81824f50cd14867582696c164001a24
 Fix error refresh services section in "Status of all services" web page.
 Adding possibility to disable sTunnel4 (SMTPS Authenticated relay host) feature even parameters are set.
 Fix error sTunnel (SMTPS Authenticated relay host feature) parameters is not saved by artica.
-New desing on Postfix routing tables section.
-simplify Postfix SASL procedure and form (located in Messaging/Index section, security settings tab/SMTP Authentication)
+New desing on PostFix routing tables section.
+simplify PostFix SASL procedure and form (located in Messaging/Index section, security settings tab/SMTP Authentication)
 Adding new feature "backup in the fly" that using a new milter engine in order to backup all mails after security processes
 
 
@@ -3792,7 +3796,7 @@ Fix wrong status of pure-ftpd when using inetd server :By default, pureftpd is s
 Adding support of "OpenBSD Internet Superserver" in Daemons services status.
 Change the services status page, now there are tabs in order to be more readable.
 Adding a warning if smbmount is not installed in "Backup Retranslation share" feature.
-Fix wrong information in index.cgi (ARTICA-ISO) on Artica-postfix daemon status.
+Fix wrong information in index.cgi (ARTICA-ISO) on Artica-postFix daemon status.
 adding build-essential package in Artica-ISO
 Fix pure-ftpd Configuration error when pure-ftpd is not installed with full tokens commands
 Adding watchdog that disable pure-ftpd inetd integration (better in standalone mode)...
@@ -3809,8 +3813,8 @@ Adding more emails notifications on backup task execution results.
 1.2.110201
 ==========================================================================================
 Fix wrong information about c-icap: c-icap is not installed by default, so there is no reason to show service stopped.
-Fix LDAP errors on user creation when Postfix is not installed (only Samba or Squid for example)
-Fix awstats error "Error: Couldn't open file "/usr/lib/cgi-bin/awstats*.*" on Squid and Postfix reports.
+Fix LDAP errors on user creation when PostFix is not installed (only Samba or Squid for example)
+Fix awstats error "Error: Couldn't open file "/usr/lib/cgi-bin/awstats*.*" on Squid and PostFix reports.
 Fix error on Dansguardian when creating users access.
 Fix wrong status on FDM (this is not a daemon)
 the Squid/proxy/Dansguardian section was totally rebuild in order to be more simple.
@@ -3830,11 +3834,11 @@ feature created by zarvox (see http://www.artica.fr/forum/viewtopic.php?f=24&t=6
 see doc (http://www.artica.fr/index.php?ID=1854)
 
 Adding milter behavior support parameter. This option is in charge of driving the "milter_default_action" parameter in main.cf configuration file.
-The feature is located in "messaging/Plugins & Addon/Plugins behavior" that allows to enable or disable the Postfix behavior when a plugin damon failed to run or start.
-By default, artica set the plugin behavior has "pass", if a plugin failed to run.. The main postfix server will try to pass the mail to an another filter.
+The feature is located in "messaging/Plugins & Addon/Plugins behavior" that allows to enable or disable the PostFix behavior when a plugin damon failed to run or start.
+By default, artica set the plugin behavior has "pass", if a plugin failed to run.. The main postFix server will try to pass the mail to an another filter.
 
 
-fix a bad loop in user creation when no domain in mail address is specified in LDAP.
+Fix a bad loop in user creation when no domain in mail address is specified in LDAP.
 
 A faire :
 http://www.artica.fr/forum/viewtopic.php?f=38&t=544
@@ -3853,7 +3857,7 @@ Adding new packages dar, x86info,preload in ARTICA-ISO
 
 1.2.102512
 ==========================================================================================
-fix error on milter-greylist "mkstemp("/var/lib/milter-greylist/greylist.db-XXetfqk8") failed: Permission denied"
+Fix error on milter-greylist "mkstemp("/var/lib/milter-greylist/greylist.db-XXetfqk8") failed: Permission denied"
 (see http://www.artica.fr/forum/viewtopic.php?f=23&t=561&p=2412#p2412)
 Adding new feature that allow to reconstruct cyrus-imap mailboxes (in cyrus-imap, tools tab)
 Adding new feature that allow to repair a mailbox in user mailbox section.
@@ -3870,9 +3874,9 @@ Adding new option in master.cf generator that allows you to rebuild the master.c
 ==========================================================================================
 Support preload daemon (see http://www.artica.fr/forum/viewtopic.php?f=10&t=644).
 Adding new feature that allow to personnalize master.cf with artica (in messaging/Triks & tweaks tab)
-Adding new feature that allow to add smtps in postfix. (in messaging/Security settings tab)
+Adding new feature that allow to add smtps in postFix. (in messaging/Security settings tab)
 Add new parameters Output Buffers and Flushing Buffers in Artica performances section in order to tune syslog-ng daemon.
-Fix problem in Postfix TLS settings when global file certificate path  is not set.
+Fix problem in PostFix TLS settings when global file certificate path  is not set.
 Adding new function that patch /etc/init.d/syslog-ng
 Adding new feature that allow artica to delete files over than 500 Mb in /var/log (this parameter can be set in GLOBAL SETTINGS)
 
@@ -3920,7 +3924,7 @@ Fix others administrators can view the global administrator account parameters.
 See http://www.artica.fr/forum/viewtopic.php?f=10&t=648
 
 October Wednesday 15 14:09
-Fix Warning: preg_match() [function.preg-match]: Unknown modifier '\' in /usr/share/artica-postfix/ressources/class.nmap.inc on line 63
+Fix Warning: preg_match() [function.preg-match]: Unknown modifier '\' in /usr/share/artica-postFix/ressources/class.nmap.inc on line 63
 see http://www.artica.fr/forum/viewtopic.php?f=10&t=592
 
 
@@ -3934,7 +3938,7 @@ Adding new feature: Enable SMTP notifications for Artica and system behaviors
 Adding new feature: Enable purge old files on the system to prevent disk size.
 Adding new feature: If % used on disks is over than 95%, Artica will send SMTP notifications to recipients.
 Adding a watchdog on mail attribute if the first part of an email address is lost, artica will rebuild itself (see http://www.artica.fr/forum/viewtopic.php?f=10&t=628)
-fix error in ldap (see http://www.artica.fr/forum/viewtopic.php?f=10&t=631)
+Fix error in ldap (see http://www.artica.fr/forum/viewtopic.php?f=10&t=631)
 
 include following patchs:
 October Wednesday 08 23:34
@@ -3971,7 +3975,7 @@ http://blog.gaetan-grigis.eu/systeme/administration/ameliorer-les-performances-d
 zarafa astuces : 
 ***********************************************************
 http://www.zarafa.com/wiki/index.php/Store_attachment_outside_of_the_database
-http://doc.zarafa.com/trunk/Administrator_Manual/fr-FR/html-single/#_configure_zcp_postfix_integration_with_active_directory
+http://doc.zarafa.com/trunk/Administrator_Manual/fr-FR/html-single/#_configure_zcp_postFix_integration_with_active_directory
 
 R&D QOS:
 ***********************************************************
@@ -3989,7 +3993,7 @@ Javascript:
 http://flowplayer.org/tools/download/index.html
 
 Virtualbox vm.swappiness=10
-Error to fix : Jan 13 01:18:40 zarafa-cloud zarafa-server[4800]: Unable to connect to database: Access denied for user 'root'@'localhost' (using password: NO)
+Error to Fix : Jan 13 01:18:40 zarafa-cloud zarafa-server[4800]: Unable to connect to database: Access denied for user 'root'@'localhost' (using password: NO)
 /usr/lib/update-notifier/update-motd-reboot-required
 lsof -Pnl +M -i4
 _UNPACK_*

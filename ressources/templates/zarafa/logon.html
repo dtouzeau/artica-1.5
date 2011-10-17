@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8">
+  <meta content="text/html; charset=utf-8" http-equiv="Content-type" />
+  <link  rel="stylesheet" type="text/css" href="css/s.css" charset="utf-8"  />
+		<link rel="stylesheet" type="text/css" href="/css/artica-theme/jquery-ui.custom.css" />
+		<link rel="stylesheet" type="text/css" href="/css/jquery.jgrowl.css" />
+		<link rel="stylesheet" type="text/css" href="/css/jquery.cluetip.css" />
+		<link rel="stylesheet" type="text/css" href="/css/jquery.treeview.css" />
+		<link rel="stylesheet" type="text/css" href="/css/thickbox.css" media="screen"/>
+		<link rel="stylesheet" type="text/css" href="/css/jquery.qtip.css" />
+
+  <title>{TEMPLATE_TITLE_HEAD}</title>
+{TEMPLATE_HEAD}	
+</head>
+
+<body>
+<div style="postition:absolute;top:0px;left:80%;width:100%">
+<table style='width:100%;padding:0px;margin:0px'>
+<tbody><tr>
+<td width=100%>&nbsp;<td>
+<td width=1% nowrap><div id="user_info" style='text-align:right;width:90px'>
+ <div id="langs" style="text-align:right;">
+	{TEMPLATE_LANG_LINK}
+    </div>
+</div>
+</td>
+</tr>
+</tboyd>
+</table>
+</div>
+
+  <div id="sum">
+    <div id="header">
+      <h1><span>{TEMPLATE_TITLE_HEAD}</span></h1>
+    </div>
+
+
+
+
+    <div id="content">
+
+			<form action="#">
+				<div class="f">
+					<div class="field">
+						<label for="flogin">User name:</label> <input type="text" name="artica_username" id="artica_username" onfocus="this.setAttribute('class','active')" onblur="this.removeAttribute('class');" OnKeyPress="javascript:SendLogon(event)">
+		
+					</div>
+					<div class="field">
+						<label for="fpassword">Password:</label> <input type="text" name="artica_password" id="artica_password" onfocus="this.setAttribute('class','active')" onblur="this.removeAttribute('class');" OnKeyPress="javascript:SendLogon(event)">
+					</div>
+					<div class="field button">
+						{LOGON_BUTTON}
+					</div>
+				</div>
+		
+			</form>			
+    </div><!-- /#content -->
+
+    <div class="footer">
+    	<center style='font-size:13px;font-weight:bold;color:white'>Artica: {ARTICA_VERSION} Zarafa: {ZARAFA_VERSION}<br>{COPYRIGHT}</center>
+    </div><!-- /#footer -->
+  </div>
+{TEMPLATE_BODY_YAHOO}
+</body>
+</html>

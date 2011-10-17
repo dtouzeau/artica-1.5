@@ -524,6 +524,10 @@ function status_right(){
 	$sock=new sockets();
 	$tpl=new templates();
 	$newfrontend=false;
+	$DisableNetworksManagement=$sock->GET_INFO("DisableNetworksManagement");
+	$WizardNetLeaveUnconfigured=$sock->GET_INFO("WizardNetLeaveUnconfigured");
+	if(!is_numeric($DisableNetworksManagement)){$DisableNetworksManagement=0;}
+	if(!is_numeric($WizardNetLeaveUnconfigured)){$WizardNetLeaveUnconfigured=0;}		
 	if(isset($_GET["newfrontend"])){$newfrontend=true;}
 	if(!$users->AsArticaAdministrator){die("<H2 style='color:red'>permission denied</H2>");}
 	$page=CurrentPageName();
@@ -549,6 +553,19 @@ function status_right(){
 	}
 	
 	if($mustchangeHostname){echo "<script>Loadjs('admin.chHostname.php');</script>";}	
+	
+	
+	
+	if($DisableNetworksManagement==0){
+		 if($WizardNetLeaveUnconfigured==0){
+			if(!$mustchangeHostname){
+				$q=new mysql();
+				$countDeNIC=$q->COUNT_ROWS("nics", "artica_backup");
+				if($countDeNIC==0){echo "<script>Loadjs('admin.chNICs.php');</script>";}
+			}
+		}
+	}
+	
 	
 	$sock=new sockets();
 	$sock->getFrameWork('cmd.php?ForceRefreshRight=yes');

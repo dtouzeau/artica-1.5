@@ -285,6 +285,7 @@ En effet, les liaisons NFS/Partages Windows utilisent de la bande passante tout 
 Ce r&eacute;pertoire sera localis&eacute; dans /automounts</autofs_ask_dir>
 <autofs_ask_dir>Indiquez ici le nom du r&eacute;pertoire qui sera le point de montage.
 Ce r&eacute;pertoire sera localis&eacute; dans /automounts</autofs_ask_dir>
+<automatic>Automatique</automatic>
 <automatic_publicip_resolv>Ne pas R&eacute;soudre l'adresse IP publique automatiquement</automatic_publicip_resolv>
 <automount_ressource>Montages automatiques</automount_ressource>
 <automount_this_disk>Auto-connecter ce disque et le placer en production dans le r&eacute;pertoire /automounts</automount_this_disk>
@@ -340,6 +341,7 @@ De cette mani&egrave;re, vous serez en mesure de cr&eacute;er des interfaces de 
 [b]Si ce serveur est h&eacute;berg&eacute; par ESXi ou VMWare Workstation[/b], vous n'avez pas besoin de construire un pont.[br]Charge &agrave; vous de cr&eacute;er autant interfaces r&eacute;seau dans cette machine virtuelle que de serveurs virtuels.</bridge_setup_lxc_explain>
 <BUILD_OPENVPN_CLIENT_CONFIG>Construire un script client</BUILD_OPENVPN_CLIENT_CONFIG>
 <BUILD_OPENVPN_CLIENT_CONFIG_TEXT>Construit un jeu de fichiers de configuration afin de permettre aux clients de se connecter au serveur tr&egrave;s simplement.</BUILD_OPENVPN_CLIENT_CONFIG_TEXT>
+<button_i_confirm_nic>Je confirme les param&egrave;tres de cette carte r&eacute;seau</button_i_confirm_nic>
 <bypass_amavis>Passer outre le filtre de contenu (Amavis)</bypass_amavis>
 <bypass_amavisd>Passer le filtre de contenu</bypass_amavisd>
 <bypass_content_filter_for_inbound_domain>Passer outre le filtre de contenu pour cette destination.</bypass_content_filter_for_inbound_domain>
@@ -771,6 +773,11 @@ Apr&egrave;s son ex&eacute;cution, vous serez en mesure de visualiser les &eacut
 des caract&egrave;res sous-lign&eacute;s (requ&ecirc;tes pour des serveurs LDAP).</filterwin2k_text>
 <find_features_and_options>Rechercher des fonctionnalit&eacute;s et options.</find_features_and_options>
 <firewall>Pare-feu</firewall>
+<FIRST_WIZARD_NIC1>Il semble que votre configuration r&eacute;seau n'a pas &eacute;t&eacute; encore sauvegard&eacute;e.[br]
+Cette section va fixer votre environnement r&eacute;seau.[br]
+Notez que l'utilisation DHCP n'est pas conseill&eacute;e lorsqu'il s'agit d'un serveur...[br]
+V&eacute;rifiez la liste ci-dessous et cliquez sur chaque carte r&eacute;seau afin de confirmer ou de modifier les param&egrave;tres automatiquement d&eacute;tect&eacute;s par Artica.[br]</FIRST_WIZARD_NIC1>
+<FIRST_WIZARD_NIC2>Tous les param&egrave;tres des cartes r&eacute;seau sont enregistr&eacute;s.[br]Si vous d&eacute;sirez appliquer la configuration, cliquez sur le bouton ci-dessous red&eacute;marrez l'ordinateur.</FIRST_WIZARD_NIC2>
 <fixed_ip_addr>Adresse IP fixe</fixed_ip_addr>
 <force_create_mode>Masque de cr&eacute;ation (forcer)</force_create_mode>
 <form_get_credentials_upd>Indiquez dans le formulaire l'adresse de messagerie d'origine et le mot de passe utilis&eacute; dans le formulaire d'enregistrement.</form_get_credentials_upd>
@@ -977,6 +984,7 @@ En mode disque, vous devrez choisir une partition qui sera le disque iSCSI parta
 <ISOCanReboot>Peut red&eacute;marrer le syst&egrave;me</ISOCanReboot>
 <ISOCanShutDown>Peut &eacute;teindre le syst&egrave;me</ISOCanShutDown>
 <i_accept>J'accepte</i_accept>
+<i_prefer_leave_unconfigured>Je pr&eacute;f&egrave;re laisser ces param&egrave;tres inchang&eacute;s.</i_prefer_leave_unconfigured>
 <jGrowlNotifsDisabled>D&eacute;sactiver les info-bulles &agrave; droite de l'&eacute;cran</jGrowlNotifsDisabled>
 <jkMount_explain>Ajoute les directives jkMount pour les fichiers *.do,*.jsp,*.jspx,*.cfm,*.cfc,*.cfchart,*.cfres</jkMount_explain>
 <July>Juillet</July>
@@ -1249,6 +1257,7 @@ La notification est envoy&eacute;e &agrave; l'adresse indiqu&eacute;e au param&e
 <notify_class_software_text>Informe le postmaster des courriers non d&eacute;livr&eacute;s en raison de probl&egrave;mes logiciels. La notification est envoy&eacute;e &agrave; l'adresse indiqu&eacute;e au param&egrave;tre de configuration error_notice_recipient (d&eacute;faut : postmaster).</notify_class_software_text>
 <not_cached>Non mis en cache</not_cached>
 <not_categoryzed>Non cat&eacute;goris&eacute;</not_categoryzed>
+<not_set>Non d&eacute;fini</not_set>
 <NO_AD_CONNECTION>N'est pas un Membre</NO_AD_CONNECTION>
 <NO_AD_CONNECTION_TEXT>Ce serveur n'est pas Membre d'un domaine Active Directory.C'est une information, pas une erreur.[br]En effet il n'est pas obligatoire d'&ecirc;tre membre d'un domaine Microsoft.</NO_AD_CONNECTION_TEXT>
 <no_backendmailbox_installed_explain>Il n'y a pas de serveur de bo&icirc;tes aux lettres install&eacute; sur ce syst&egrave;me (Cyrus-imap ou Zarafa).[br]
@@ -1268,6 +1277,9 @@ Utilisez l'autre option (domaine local) dans ce contexte.</NO_RELAY_TO_THIS_SERV
 <ntp_server>serveur NTP</ntp_server>
 <number_of_users>Nombre d'utilisateurs</number_of_users>
 <object>Objet</object>
+<OCS_SEARCH_EXPLAIN>Vous trouverez ici des ordinateurs qui ont &eacute;t&eacute;s &quot;glan&eacute;s&quot; par Artica ou ajout&eacute;s manuellement par les Administrateurs.[br]
+Artica essaye de parcourir son r&eacute;seau afin d'aider &agrave; remplir la base d'ordinateurs.[br]
+Plusieurs techniques sont utilis&eacute;s: Analyse r&eacute;seau, injecteur ARP, recherches DNS...</OCS_SEARCH_EXPLAIN>
 <October>Octobre</October>
 <Offline_Uncorrectable>secteurs non r&eacute;-allouables</Offline_Uncorrectable>
 <Offline_Uncorrectable_text>Nombre de secteurs non r&eacute;-allouables</Offline_Uncorrectable_text>
@@ -1499,6 +1511,7 @@ Attention, vous devrez au pr&eacute;alable indiquer les clefs autoris&eacute;es 
 <Reallocated_Event_Count_text>Quantit&eacute; d'op&eacute;rations de remappage</Reallocated_Event_Count_text>
 <Reallocated_Sector_Ct>Nb secteurs r&eacute;-allou&eacute;s</Reallocated_Sector_Ct>
 <Reallocated_Sector_Ct_text>Nombre de secteurs r&eacute;-allou&eacute;s</Reallocated_Sector_Ct_text>
+<reboot_computer_to_take_effects>Vous devez red&eacute;marrer l'ordinateur afin de prendre en charge les param&egrave;tres.</reboot_computer_to_take_effects>
 <rebuild_acls>Reconstruire les ACLs</rebuild_acls>
 <rebuild_apache_groupware_text>V&eacute;rifie et reconstruit l'application web h&eacute;berg&eacute;e</rebuild_apache_groupware_text>
 <rebuild_apache_text>Reconstruire les param&egrave;tres de ce site</rebuild_apache_text>
@@ -1896,6 +1909,8 @@ Lorsque la p&eacute;riode de gr&acirc;ce &agrave; expir&eacute;e, les utilisateu
 <thanks_registration_mail>Grand merci pour vous &ecirc;tre enregistr&eacute;. Un e-mail sera envoy&eacute; &agrave; votre adresse e-mail.</thanks_registration_mail>
 <this_day>Ce jour</this_day>
 <this_hour>Cette heure</this_hour>
+<this_nic_is_configured_text>Cette carte r&eacute;seau est enregistr&eacute;e dans la base d'Artica.</this_nic_is_configured_text>
+<this_nic_is_not_configured_text>Cette carte r&eacute;seau n'est pas enregistr&eacute;e dans la base d'Artica. Cliquez dessus afin de confirmer ou d'&eacute;diter ses param&egrave;tres.</this_nic_is_not_configured_text>
 <threads_max_number>Nombre MAX de threads d'indexation.</threads_max_number>
 <Throughput_Performance>Performance g&eacute;n&eacute;rale en sortie du disque</Throughput_Performance>
 <Throughput_Performance_text>Performance g&eacute;n&eacute;rale en sortie du disque. Si la valeur de l%u2019attribut diminue, alors la probabilit&eacute; d%u2019avoir un probl&egrave;me avec le disque augmente.</Throughput_Performance_text>

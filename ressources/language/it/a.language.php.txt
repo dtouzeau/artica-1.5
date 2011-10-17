@@ -368,6 +368,7 @@ The directory will be stored on /automount.
 <autofs_ask_dir>Define here the disrectory name that will be the device mount point.
 The directory will be stored on /automount.
 </autofs_ask_dir>
+<automatic>Automatic</automatic>
 <automatic_publicip_resolv>Do not Resolv the public IP address automatically</automatic_publicip_resolv>
 <automount_ressource>Automount maps</automount_ressource>
 <automount_this_disk>Auto-connect this disk and make it available in /automounts directory</automount_this_disk>
@@ -430,6 +431,7 @@ Create any physical Network interface under your Virtual Machine and attach each
 </bridge_setup_lxc_explain>
 <BUILD_OPENVPN_CLIENT_CONFIG>Build a client configuration</BUILD_OPENVPN_CLIENT_CONFIG>
 <BUILD_OPENVPN_CLIENT_CONFIG_TEXT>Build a client configuration script that allow clients to connect to your server easly</BUILD_OPENVPN_CLIENT_CONFIG_TEXT>
+<button_i_confirm_nic>I confirm this Network Card parameters</button_i_confirm_nic>
 <bypass_amavis>Bypass content filter (amavis)</bypass_amavis>
 <bypass_amavisd>Bypass content-filter</bypass_amavisd>
 <bypass_content_filter_for_inbound_domain>Bypass the content filter for this destination</bypass_content_filter_for_inbound_domain>
@@ -957,6 +959,11 @@ The filename should be a filename recognizable to whatever file transfer protoco
 <filterwin2k_text>Makes dnsmasq ignore certain DNS requests which are made by Windows boxen every few minutes</filterwin2k_text>
 <find_features_and_options>Search features and options</find_features_and_options>
 <firewall>Firewall</firewall>
+<FIRST_WIZARD_NIC1>It seems that you network configuration has been saved,this section will fix the network environnement on your server.[br]
+PLease not that it is not recommended to use DHCP for your Artica server.[br]
+Check the list below and click on each row in order to display Network interface card settings.[br]Modify detected informations or confirm the current settings.
+</FIRST_WIZARD_NIC1>
+<FIRST_WIZARD_NIC2>All Network Interface parameters are saved, if you want to apply this configuration, click on the button bellow and reboot your computer.</FIRST_WIZARD_NIC2>
 <fixed_ip_addr>Fixed IP address</fixed_ip_addr>
 <force_create_mode>Create mask (force)</force_create_mode>
 <form_get_credentials_upd>Set here your email address and password set in the registration from</form_get_credentials_upd>
@@ -1185,6 +1192,7 @@ This file will be the shared iSCSI disk.[br]In disk mode, you will have to choos
 <ISOCanReboot>Can reboot the system</ISOCanReboot>
 <ISOCanShutDown>Can shutdown the system</ISOCanShutDown>
 <i_accept>I accept</i_accept>
+<i_prefer_leave_unconfigured>I prefer leave these parameters unconfigured</i_prefer_leave_unconfigured>
 <jGrowlNotifsDisabled>Disable tooltips notifications</jGrowlNotifsDisabled>
 <jkMount_explain>Add the JkMount directive for *.do,*.jsp,*.jspx,*.cfm,*.cfc,*.cfchart,*.cfres files</jkMount_explain>
 <July>July</July>
@@ -1495,6 +1503,7 @@ Enabling this feature will deny Artica to reboot the system.</NoOutOfMemoryReboo
 <notify_class_software_text>Inform the postmaster of mail not delivered due to software problems. </notify_class_software_text>
 <not_cached>Not cached</not_cached>
 <not_categoryzed>Not categoryzed</not_categoryzed>
+<not_set>Not set</not_set>
 <NO_AD_CONNECTION>Not a Member</NO_AD_CONNECTION>
 <NO_AD_CONNECTION_TEXT>Currently this server is not set has a Windows Active directory member, this an information, not an error.[br]It is not mandatory to be a Microsoft Active Directory Member</NO_AD_CONNECTION_TEXT>
 <no_backendmailbox_installed_explain>There is no mailbox server (cyrus-imap or Zarafa) installed on this system.
@@ -1513,6 +1522,8 @@ Use relayed domain instead until there is no mailbox server installed.[br]
 <ntp_server>NTP server</ntp_server>
 <number_of_users>Number of users</number_of_users>
 <object>object</object>
+<OCS_SEARCH_EXPLAIN>You will find here computers that has been added automatically by Artica or by administrators.[br]Artica try to browse it's network in order to help you fill the computer database.[br]
+several ways has been proceed: Network scanning, ARP injector, DNS lookup....</OCS_SEARCH_EXPLAIN>
 <October>October</October>
 <Offline_Uncorrectable>Off-line Scan Uncorrectable Count</Offline_Uncorrectable>
 <Offline_Uncorrectable_text>Quantity of uncorrected errors</Offline_Uncorrectable_text>
@@ -1784,6 +1795,7 @@ The path is formatted as a character string consisting of characters from the NV
 <Reallocated_Event_Count_text>Quantity of remapping operations</Reallocated_Event_Count_text>
 <Reallocated_Sector_Ct>Reallocated Sector Count</Reallocated_Sector_Ct>
 <Reallocated_Sector_Ct_text>Quantity of remapped sectors</Reallocated_Sector_Ct_text>
+<reboot_computer_to_take_effects>You have to reboot the server in order to apply parameters</reboot_computer_to_take_effects>
 <rebuild_acls>reconstruct acls</rebuild_acls>
 <rebuild_apache_groupware_text>check and rebuild your the application</rebuild_apache_groupware_text>
 <rebuild_apache_text>Rebuild this main website parameters in the web service.</rebuild_apache_text>
@@ -2263,6 +2275,8 @@ BOOTP clients are unlikely to support this option.[br]Some DHCP clients will sup
 <thanks_registration_mail>Many thanks for your registration, an email will be send to your email address</thanks_registration_mail>
 <this_day>This day</this_day>
 <this_hour>This hour</this_hour>
+<this_nic_is_configured_text>This Network interface card is correctly saved into Artica Database.</this_nic_is_configured_text>
+<this_nic_is_not_configured_text>This Network interface card is not saved into database, click on it in order to confirm/edit parameters</this_nic_is_not_configured_text>
 <threads_max_number>Max number of indexing threads</threads_max_number>
 <Throughput_Performance>Throughput Performance</Throughput_Performance>
 <Throughput_Performance_text>Overall (general) throughput performance of a hard disk drive.[br]

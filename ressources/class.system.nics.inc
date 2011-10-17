@@ -15,6 +15,7 @@ class system_nic{
 	var $NETWORK;
 	var $unconfigured=true;
 	var $enabled=0;
+	var $NoReboot=false;
 	
 	function system_nic($eth=null){
 		if($eth<>null){
@@ -24,6 +25,15 @@ class system_nic{
 		
 		$this->CheckUnconfigured();
 		
+	}
+	
+	public function IsConfigured(){
+		$q=new mysql();	
+		writelogs("Loading nic infos from $this->eth",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+		$sql="SELECT `Interface` FROM `nics` WHERE `Interface`='$this->eth'";
+		$ligne=mysql_fetch_array($q->QUERY_SQL($sql,"artica_backup"));
+		if($ligne["Interface"]<>null){return true;}
+		return false;
 	}
 	
 	private function loadEthConfig(){
@@ -100,8 +110,11 @@ class system_nic{
 		
 		$q->QUERY_SQL($sql,"artica_backup");
 		if(!$q->ok){echo $q->mysql_error."\n\nsql command:\n\n$sql\n\n";return false;}
-		$sock=new sockets();
-		$sock->getFrameWork("network.php?reconstruct-interface=$this->eth");
+		
+		if(!$this->NoReboot){
+			$sock=new sockets();
+			$sock->getFrameWork("network.php?reconstruct-interface=$this->eth");
+		}
 		
 		return true;
 		

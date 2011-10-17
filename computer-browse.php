@@ -36,6 +36,9 @@ if(isset($_GET["Status"])){Status();exit;}
 if(isset($_GET["view-scan-logs"])){events();exit;}
 if(isset($_GET["NetWorksDisable"])){networks_disable();exit;}
 if(isset($_GET["NetWorksEnable"])){networks_enable();exit;}
+if(isset($_GET["MenusRight"])){echo menus_right();exit;}
+
+
 
 if(isset($_GET["artica-import-popup"])){artica_import_popup();exit;}
 if(isset($_GET["artica-import-delete"])){artica_import_delete();exit;}
@@ -272,7 +275,7 @@ echo  $tpl->_ENGINE_parse_body($html);
 
 
 
-function js(){
+function js($nostartReturn=false){
 	
 	$users=new usersMenus();
 	if(!$users->AsSambaAdministrator){die("alert('no privileges')");}
@@ -288,6 +291,7 @@ function js(){
 	$start="browse_computers_start();";
 	if(isset($_GET["in-front-ajax"])){$start="browse_computers_start_infront();";}
 	if(isset($_GET["no-start-js"])){$start=null;}
+	if($nostartReturn){$start=null;};
 	$html="
 	var rule_mem='';
 	var {$prefix}timeout=0;
@@ -442,7 +446,7 @@ var x_NetWorksDisable= function (obj) {
 $start
 	";
 	
-	
+	if($nostartReturn){return $html;}
 	echo $html;
 }
 
@@ -665,7 +669,9 @@ function menus_right(){
 		$findcomputer$networs$add_computer
 	</td>
 	</tr>
-	</table>";
+	</table>
+	<script>". js(true)."</script>
+	";
 	
 	$tpl=new templates();
 	return $tpl->_ENGINE_parse_body($html);		

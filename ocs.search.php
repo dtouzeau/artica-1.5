@@ -18,7 +18,38 @@ if(posix_getuid()<>0){
 if(isset($_GET["SearchComputers"])){SearchComputers();exit;}
 if(isset($_GET["compt-status"])){comp_ping();exit;}
 if(isset($_GET["PingRestart"])){PingRestart_js();exit;}
+if(isset($_GET["js-in-front"])){js_in_front();exit;}
+if(isset($_GET["js-in-front-popup"])){js_in_front_popup();exit;}
 page();
+
+
+function js_in_front(){
+	$tpl=new templates();
+	$page=CurrentPageName();
+	echo "LoadAjax('BodyContent','$page?js-in-front-popup=yes');";
+}
+
+function js_in_front_popup(){
+	$tpl=new templates();
+	$page=CurrentPageName();	
+$html="<div class=explain>{OCS_SEARCH_EXPLAIN}</div>
+<table style='width:100%'>
+<tbody>
+<tr>
+	<td width=100% valign='top'><span id='ocs-search-div'></span></td>
+	<td width=1% valign='top'><span id='ocs-search-toolbox'></span></td>
+</tR>
+</table>
+<script>
+	LoadAjax('ocs-search-div','$page');
+	LoadAjax('ocs-search-toolbox','computer-browse.php?MenusRight=yes');
+</script>
+";
+echo $tpl->_ENGINE_parse_body($html);
+
+	
+	
+}
 
 
 function PingRestart_js(){
@@ -112,10 +143,12 @@ function SearchComputers(){
 	</tr>
 </thead>
 <tbody class='tbody'>";	
-	
 		$results=$q->QUERY_SQL($sql,"ocsweb");
 		$computer=new computers();
-		if(!$q->ok){echo "<H2>$q->mysql_error</H2>";}
+		if(!$q->ok){
+			if(preg_match("#Unknown database#", $q->mysql_error)){$sock=new sockets();$sock->getFrameWork("services.php?mysql-ocs=yes");$results=$q->QUERY_SQL($sql,"ocsweb");}
+			if(!$q->ok){echo "<H2>$q->mysql_error</H2>";}
+		}
 		$cs=0;
 		while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
 		
