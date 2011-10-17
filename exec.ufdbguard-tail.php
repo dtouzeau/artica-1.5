@@ -199,8 +199,10 @@ if(preg_match("#\] REDIR\s+#", $buffer)){return;}
 		if(strpos($www,"/")>0){$tb=explode("/",$www);$www=$tb[0];}
 		$date=time();
 		if($user<>"-"){$local_ip=$user;}
+		$table=date('Ymd')."_blocked";
+		
 		$md5=md5("$date,$local_ip,$rulename,$category,$www,$public_ip");
-		$sql="INSERT INTO `blocked_websites` (client,website,category,rulename,public_ip) VALUES";
+		$sql="INSERT INTO `$table` (client,website,category,rulename,public_ip) VALUES";
 		$sql="('$local_ip','$www','$category','$rulename','$public_ip')";
 		
 		@file_put_contents("/var/log/artica-postfix/ufdbguard-queue/$md5.sql",$sql);

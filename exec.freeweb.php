@@ -470,9 +470,8 @@ function CheckHttpdConf(){
 		if(preg_match("#User\s+#",$ligne)){$f[$num]=null;}
 		if(preg_match("#Group\s+#",$ligne)){$f[$num]=null;}
 		if(preg_match("#CustomLog\s+#",$ligne)){$f[$num]=null;}
-		if(preg_match("#LogLevel\s+#",$ligne)){$f[$num]=null;}
-		
-		 
+		if(preg_match("#LogLevel#",$ligne)){$f[$num]=null;}
+		if(trim($ligne)=="Loglevel info"){$f[$num]=null;}
 		
 	}
 	

@@ -150,10 +150,12 @@ if (!$handle = opendir("/var/log/artica-postfix/dansguardian-stats2")) {
 }
 
 function PaseUdfdbGuard(){
-	
+	$q=new mysql_squid_builder();
+	$q->CheckTables();
 	$count=0;
 	$total=0;
-	$PREFIX="INSERT INTO `blocked_websites` (client,website,category,rulename,public_ip) VALUES";
+	$tableblock=date('Ymd')."_blocked";
+	$PREFIX="INSERT INTO `$tableblock` (client,website,category,rulename,public_ip) VALUES";
 	events_tail("dansguardian-stats:: parsing /var/log/artica-postfix/ufdbguard-queue line:".__LINE__);
 	foreach (glob("/var/log/artica-postfix/ufdbguard-queue/*.sql") as $filename) {
 		events_tail("dansguardian-stats:: parsing $filename line:".__LINE__);
@@ -169,10 +171,10 @@ function PaseUdfdbGuard(){
 		if($count>500){
 			events_tail("PaseUdfdbGuard:: $count -> send to mysql");
 			$count=0;
-			$q=new mysql();
+			$q=new mysql_squid_builder();
 			$sql=$PREFIX." ".@implode(",",$f);
 			$f=array();
-			$q->QUERY_SQL($sql,"artica_events");
+			$q->QUERY_SQL($sql);
 			if(!$q->ok){
 				@file_put_contents("/var/log/artica-postfix/ufdbguard-queue/".md5($sql)."error",$sql);
 				events_tail("PaseUdfdbGuard:: Fatal $q->mysql_error");
@@ -185,9 +187,9 @@ function PaseUdfdbGuard(){
 	}
 	
 	if(count($f)>0){
-		$q=new mysql();
+		$q=new mysql_squid_builder();
 		$sql=$PREFIX." ".@implode(",",$f);
-		$q->QUERY_SQL($sql,"artica_events");
+		$q->QUERY_SQL($sql);
 		if(!$q->ok){
 			@file_put_contents("/var/log/artica-postfix/ufdbguard-queue/".md5($sql)."error",$sql);
 			events_tail("PaseUdfdbGuard:: Fatal $q->mysql_error");	

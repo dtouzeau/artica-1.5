@@ -27,7 +27,9 @@ function js(){
 	$page=CurrentPageName();
 	$tpl=new templates();
 	$title=$tpl->_ENGINE_parse_body("{categories}");
-	$start="YahooWin3('720','$page?popup=yes','$title');";
+	if($_GET["category"]<>null){$title=$title."::{$_GET["category"]}";}
+	if($_GET["website"]<>null){$title=$title."::{$_GET["website"]}";}
+	$start="YahooWin3('720','$page?popup=yes&category={$_GET["category"]}&website={$_GET["website"]}','$title');";
 	$html="
 	$start
 	";
@@ -39,6 +41,9 @@ function popup(){
 	$page=CurrentPageName();
 	$tpl=new templates();	
 	
+	$def=$_COOKIE["urlfilter_website_selected"];
+	if($_GET["website"]<>null){$def=$_GET["website"];}
+	
 	$html="
 	<table style='width:100%' class=form>
 	<tbody>
@@ -46,7 +51,7 @@ function popup(){
 	<td class=legend>{category}:</td>
 	<td><div id='cats_list'></div></td>
 	<td class=legend>{website}:</td>
-	<td>". Field_text("website_search",$_COOKIE["urlfilter_website_selected"],"font-size:16px",null,null,null,false,"SearchByCategoryCheck(event)")."</td>
+	<td>". Field_text("website_search",$def,"font-size:16px",null,null,null,false,"SearchByCategoryCheck(event)")."</td>
 	<td width=1%>". button("{search}","SearchByCategory()")."</td>
 	</tr>
 	</tbody>
@@ -68,7 +73,7 @@ function popup(){
 	
 	}
 	
-	LoadAjax('cats_list','$page?field-list=yes');
+	LoadAjax('cats_list','$page?field-list=yes&category={$_GET["category"]}');
 		
 	</script>
 	
@@ -152,11 +157,14 @@ function query(){
 
 function field_list(){
 	$page=CurrentPageName();
+	$def=$_COOKIE["urlfilter_category_selected"];
+	if($_GET["category"]<>null){$def=$_GET["category"];}
+	
 	$tpl=new templates();	
 	$dans=new dansguardian_rules();
 	while (list ($num, $ligne) = each ($dans->array_blacksites) ){$array[$num]=$num;}
 	$array[null]="{select}";
-	$html=Field_array_Hash($array, "category_selected",$_COOKIE["urlfilter_category_selected"],"SearchByCategory()",null,0,"font-size:16px");
+	$html=Field_array_Hash($array, "category_selected",$def,"SearchByCategory()",null,0,"font-size:16px");
 	echo $tpl->_ENGINE_parse_body($html."<script>SearchByCategory();</script>");
 
 }

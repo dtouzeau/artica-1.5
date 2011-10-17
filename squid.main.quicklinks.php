@@ -624,10 +624,10 @@ if($ini->_params["SQUID"]["icap_enabled"]<>'1'){
 	$requests=$q->EVENTS_SUM();
 	$requests=numberFormat($requests,0,""," ");
 	
-	$q=new mysql();
-	$sql="SELECT COUNT( ID ) as tcount FROM blocked_websites WHERE WEEK( zDate ) = WEEK( NOW( ) )";
-	$ligneW=@mysql_fetch_array($q->QUERY_SQL($sql,"artica_events"));
-	$blocked_today=numberFormat($ligneW["tcount"],0,""," ")." {blocked_websites} {this_week}";
+	
+	$tableblock=date('Ymd')."_blocked";
+	$ligneW=$q->COUNT_ROWS($tableblock);
+	$blocked_today=numberFormat($ligneW["tcount"],0,""," ")." {blocked_websites} {this_day}";
 	
 	$q=new mysql_squid_builder();
 	$websitesnums=$q->COUNT_ROWS("dansguardian_sitesinfos","artica_backup");

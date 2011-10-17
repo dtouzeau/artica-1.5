@@ -99,7 +99,8 @@ $GLOBALS["RTIME"][]=array($sitename,$uri,$TYPE,$REASON,$CLIENT,$date,$zMD5,$site
 		}
 		$today=date('Y-m-d');
 		$date=str_replace($today, "", $date);
-
+		if(strlen($uri)>85){$uri=substr($uri, 0,82)."...";}
+		
 		$html=$html."
 		<tr class=$classtr>
 			<td style='font-size:14px;font-weight:bold;color:$color' nowrap>$date</td>
@@ -116,10 +117,16 @@ $GLOBALS["RTIME"][]=array($sitename,$uri,$TYPE,$REASON,$CLIENT,$date,$zMD5,$site
 }
 
 function HTTP_BLOCKED_STATS(){
-	$html=@file_get_contents("ressources/logs/blocked-rtmm.html");
 	$tpl=new templates();
-	echo "<input type='hidden' id='switch' value='{$_GET["main"]}'>";
-	echo $tpl->_ENGINE_parse_body("$html");	
+	echo $tpl->_ENGINE_parse_body("<input type='hidden' id='switch' value='{$_GET["main"]}'>
+	<div style='width:100%;text-align:right'>". imgtootltip("refresh-24.png","{refresh}","LoadAjax('squid-blocked-events','squid.blocked.events.php');")."</div>
+	<div id='squid-blocked-events'></div>
+	<script>
+		LoadAjax('squid-blocked-events','squid.blocked.events.php');
+	</script>
+	
+	");
+		
 	
 }
 

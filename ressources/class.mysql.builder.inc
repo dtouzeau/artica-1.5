@@ -4571,31 +4571,7 @@ public function CheckTables_openvpn(){
 			 }
 		}
 		
-		if(!$this->TABLE_EXISTS('blocked_websites','artica_events')){		
-			$sql="CREATE TABLE `artica_events`.`blocked_websites` (
-			`ID` INT( 100 ) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-			`zDate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
-			`client` VARCHAR( 90 ) NOT NULL ,
-			`website` VARCHAR( 125 ) NOT NULL ,
-			`category` VARCHAR( 50 ) NOT NULL ,
-			`rulename` VARCHAR( 50 ) NOT NULL ,
-			`public_ip` VARCHAR( 40 ) NOT NULL ,
-			KEY `zDate` (`zDate`),
-			KEY `client` (`client`),
-			KEY `website` (`website`),
-			KEY `category` (`category`),
-			KEY `rulename` (`rulename`),
-			KEY `public_ip` (`public_ip`)
-			
-			)"; 
-		$this->QUERY_SQL($sql,'artica_events'); 
-		
-		if(!$this->ok){
-			writelogs("$this->mysql_error\n$sql",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
-			$this->mysql_error=$this->mysql_error."\n$sql";
-		}
 
-		}
 		
 
 	

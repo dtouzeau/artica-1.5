@@ -225,7 +225,7 @@ class mysql_squid_builder{
 	public function CheckTables($table=null){
 		
 	if(!$this->DATABASE_EXISTS($this->database)){$this->CREATE_DATABASE($this->database);}
-
+	$tableblock=date('Ymd')."_blocked";
 	if($table==null){$table="dansguardian_events_".date('Ymd');}	
 	if(!$this->TABLE_EXISTS($table,$this->database)){
 		writelogs("Checking $table in $this->database NOT EXISTS...",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
@@ -264,6 +264,37 @@ class mysql_squid_builder{
 				writelogs("Checking $table SUCCESS",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);	
 			}
 		}
+		
+		
+	if(!$this->TABLE_EXISTS($tableblock,'artica_events')){		
+			$sql="CREATE TABLE `$tableblock` (
+			`ID` BIGINT( 100 ) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+			`zDate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+			`client` VARCHAR( 90 ) NOT NULL ,
+			`website` VARCHAR( 125 ) NOT NULL ,
+			`category` VARCHAR( 50 ) NOT NULL ,
+			`rulename` VARCHAR( 50 ) NOT NULL ,
+			`public_ip` VARCHAR( 40 ) NOT NULL ,
+			KEY `zDate` (`zDate`),
+			KEY `client` (`client`),
+			KEY `website` (`website`),
+			KEY `category` (`category`),
+			KEY `rulename` (`rulename`),
+			KEY `public_ip` (`public_ip`)
+			
+			)"; 
+		$this->QUERY_SQL($sql); 
+		
+			if(!$this->ok){
+					writelogs("$this->mysql_error\n$sql",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+					$this->mysql_error=$this->mysql_error."\n$sql";
+					return false;
+				}else{
+					writelogs("Checking $table SUCCESS",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);	
+			}
+
+		}		
+		
 		
 		if(!$this->FIELD_EXISTS($table,"uid",$this->database)){
 			$sql="ALTER TABLE `$table` ADD `uid` VARCHAR( 128 ) NOT NULL,ADD INDEX ( uid )";

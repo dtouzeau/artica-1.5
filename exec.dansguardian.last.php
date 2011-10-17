@@ -123,51 +123,10 @@ $html=$html."</table></div>";
 $target_file="/usr/share/artica-postfix/ressources/logs/dansguardian-rtmm.html";
 file_put_contents($target_file,$html);
 chmod($target_file,0755);
-BlockedSites();
 die();
 
 
-function BlockedSites(){
-	
-$unix=new unix();	
-$q=new mysql();
-$sql="SELECT * FROM blocked_websites ORDER BY ID DESC LIMIT 0,300";
-writelogs("running master query",__FUNCTION__,__FILE__,__LINE__);
-$results=$q->QUERY_SQL($sql,"artica_events");
-if(!$q->ok){
-	$unix->send_email_events("Unable to execute last Proxy blocked events (".basename(__FILE__).")","on line ". __LINE__."\n$q->mysql_error","proxy");	
-	die("Wrong query");
 
-}	
-
-$html="<div style='width:100%;height:450px;overflow:auto'>
-<table style='width:100%'>";
-$today=date('Y-m-d');
-$d+0;
-while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
-	$d++;
-	$ligne["zDate"]=str_replace($today,"{today}",$ligne["zDate"]);
-	if(preg_match("#plus-(.+?)-artica#",$ligne["category"],$re)){$ligne["category"]=$re[1];}
-	$html=$html."
-	<tr>
-		<td style='font-size:12px'>{$ligne["zDate"]}</td>
-		<td style='font-size:12px'>{$ligne["client"]}</td>
-		<td width=1%><img src='img/fw_bold.gif'></td>
-		<td style='font-size:12px'>{$ligne["website"]}</td>
-		<td style='font-size:12px'>{$ligne["category"]}</td>
-		<td style='font-size:12px'>{$ligne["rulename"]}</td>
-	</tr>
-	";
-	
-}
-	$html=$html."</table>";
-if($GLOBALS["VERBOSE"]){echo "$d blocked sites\n";}
-$target_file="/usr/share/artica-postfix/ressources/logs/blocked-rtmm.html";
-file_put_contents($target_file,$html);
-chmod($target_file,0755);
-
-	
-}
 
 
 function GetToday(){

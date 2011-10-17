@@ -45,6 +45,7 @@ function tabs(){
 		if($squid->enable_UfdbGuard==1){
 			$array["ufdbguard"]='{service_parameters}';
 			$array["ufdbguard-events"]='{events}';
+			$array["ufdbguard-blocked"]='{blocked_websites}';
 		}
 		
 	}	
@@ -64,7 +65,13 @@ function tabs(){
 			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"ufdbguard.admin.events.php\" style='font-size:14px'><span>$ligne</span></a></li>\n");
 			continue;
 			
-		}		
+		}
+
+		if($num=="ufdbguard-blocked"){
+			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"squid.blocked.events.php\" style='font-size:14px'><span>$ligne</span></a></li>\n");
+			continue;
+			
+		}			
 		
 		if($num=="databases"){
 			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"dansguardian2.databases.php\" style='font-size:14px'><span>$ligne</span></a></li>\n");
