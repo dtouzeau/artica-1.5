@@ -296,7 +296,7 @@ function udfbguard_admin_events($nopid=false){
 	
 $q=new mysql();	
 	if(!$q->TABLE_EXISTS('ufdbguard_admin_events','artica_events')){$q->BuildTables();}
-	if(!$q->TABLE_EXISTS('ufdbguard_admin_events','artica_events',true)){return;}
+	if(!$q->TABLE_EXISTS('ufdbguard_admin_events','artica_events',true)){return;mysql_admin_events_check();}
 	$prefix="INSERT IGNORE INTO ufdbguard_admin_events (`zDate`,`function`,`filename`,`line`,`description`,`category`) VALUES ";
 	foreach (glob("/var/log/artica-postfix/ufdbguard_admin_events/*") as $filename) {
 		$array=unserialize(@file_get_contents($filename));
@@ -327,11 +327,60 @@ $q=new mysql();
 	
 	$num=$q->COUNT_ROWS("ufdbguard_admin_events","artica_events");
 	if($num>4000){$q->QUERY_SQL("DELETE FROM ufdbguard_admin_events ORDER BY zDate LIMIT 4000","artica_events");}
+	mysql_admin_events_check();
+	
+	
+}
+function mysql_admin_events_check($nopid=false){
+	$f=array();
+	if($nopid){
+		$unix=new unix();
+		$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
+		$pid=@file_get_contents($pidfile);
+		if($unix->process_exists($pid)){writelogs("Already running pid $pid",__FUNCTION__,__FILE__,__LINE__);return;}	
+		$t=0;		
+		
+	}	
+	
+$q=new mysql();	
+	if(!$q->TABLE_EXISTS('mysql_events','artica_events')){$q->BuildTables();}
+	if(!$q->TABLE_EXISTS('mysql_events','artica_events',true)){return;}
+	$users=new usersMenus();
+	$hostname=$users->hostname;
+	$prefix="INSERT IGNORE INTO mysql_events (`zDate`,`function`,`process`,`line`,`description`,`category`,`servername`) VALUES ";
+	foreach (glob("/var/log/artica-postfix/mysql_admin_events/*") as $filename) {
+		$array=unserialize(@file_get_contents($filename));
+		if(!is_array($array)){
+			$array["text"]=basename($filename)." is not an array, skip event ".@file_get_contents($filename);
+			$array["date"]=date('Y-m-d H:i:s');
+			$array["pid"]=getmypid();
+			$array["function"]=__FUNCTION__;
+			$array["category"]="parser";
+			$array["file"]=basename(__FILE__);
+			$array["line"]=__LINE__;
+		}			
+			
+			
+			
+		$array["text"]=addslashes($array["text"]);
+		$f[]="('{$array["zdate"]}','{$array["function"]}','{$array["file"]}','{$array["line"]}','{$array["text"]}','{$array["category"]}','$hostname')";
+		@unlink($filename);
+	}
+	
+	if(count($f)>0){$sql=$prefix.@implode(",", $f);
+		$q->QUERY_SQL($sql,"artica_events");
+		if(!$q->ok){
+			writelogs("$q->mysql_error",__FUNCTION__,__FILE__,__LINE__);
+		}
+	
+	}
+	
+	$num=$q->COUNT_ROWS("mysql_events","artica_events");
+	if($num>4000){$q->QUERY_SQL("DELETE FROM mysql_events ORDER BY zDate LIMIT 4000","artica_events");}
 
 	
 	
 }
-
 function crossroads($nopid=false){
 	$f=array();
 	if($nopid){

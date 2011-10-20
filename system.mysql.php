@@ -37,7 +37,7 @@ function js(){
 	$page=CurrentPageName();
 echo "
 		document.getElementById('BodyContent').innerHTML='<center><img src=\"img/wait_verybig.gif\"></center>';
-		$('#BodyContent').load('$page?tabs=yes');"	;
+		$('#BodyContent').load('$page?tabs=yes&tabsize={$_GET["tabsize"]}');"	;
 }
 
 	
@@ -47,13 +47,13 @@ function tabs(){
 	$tpl=new templates();
 	$users=new usersMenus();
 	$array["popup"]='MySQL';
-	$array["events"]='{events}';
 	$array["parameters"]='{mysql_settings}';
 	
 	$array["members"]='{mysql_users}';
 	$array["ssl"]='{ssl}';
 	$array["globals"]='{globals_values}';
-	
+	$array["events"]='{events}';
+	if($_GET["tabsize"]>10){$tabsize="style='font-size:{$_GET["tabsize"]}px'";}
 	
 	
 	if($users->APP_GREENSQL_INSTALLED){
@@ -62,32 +62,32 @@ function tabs(){
 	
 	while (list ($num, $ligne) = each ($array) ){
 		if($num=="greensql"){
-			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"greensql.php\"><span>$ligne</span></a></li>\n");
+			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"greensql.php\"><span $tabsize>$ligne</span></a></li>\n");
 			continue;
 		}
 		
 		if($num=="parameters"){
-			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"mysql.settings.php?inline=yes\"><span>$ligne</span></a></li>\n");
+			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"mysql.settings.php?inline=yes\"><span $tabsize>$ligne</span></a></li>\n");
 			continue;			
 			
 		}
 		
 		if($num=="ssl"){
-			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"system.mysql.ssl.php\"><span>$ligne</span></a></li>\n");
+			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"system.mysql.ssl.php\"><span $tabsize>$ligne</span></a></li>\n");
 			continue;
 		}
 
 		if($num=="globals"){
-			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"system.mysql.globals.php\"><span>$ligne</span></a></li>\n");
+			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"system.mysql.globals.php\"><span $tabsize>$ligne</span></a></li>\n");
 			continue;
 		}
 
 		if($num=="events"){
-			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"system.mysql.events.php\"><span>$ligne</span></a></li>\n");
+			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"system.mysql.events.php\"><span $tabsize>$ligne</span></a></li>\n");
 			continue;
 		}			
 		
-		$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"$page?$num=yes\"><span>$ligne</span></a></li>\n");
+		$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"$page?$num=yes\"><span $tabsize>$ligne</span></a></li>\n");
 	}
 	
 	
@@ -116,6 +116,9 @@ function popup(){
 		$browse=Buildicon64("DEF_ICO_MYSQL_BROWSE");
 		$changep=Buildicon64("DEF_ICO_MYSQL_USER");
 		$mysqlrepair=Paragraphe('mysql-repair-64.png','{mysql_repair}','{mysql_repair_text}',"javascript:YahooWin(400,'mysql.index.php?repair-databases=yes')",null);
+		
+		$mysqlcheck=Paragraphe('compile-database-64.png','{mysql_defrag}','{mysql_defrag_text}',"javascript:Loadjs('mysql.optimize.php')",null);
+		
 		//YahooWin(400,'artica.performances.php?main_config_mysql=yes');
 
 		//$mysqlperformances=Paragraphe('mysql-execute-64.png','{mysql_database}','{mysql_performance_level_text}',"javascript:YahooWin(400,'artica.performances.php?main_config_mysql=yes');",null);
@@ -131,6 +134,7 @@ function popup(){
 		
 		
 		$tr[]=$p;
+		$tr[]=$mysqlcheck;
 		$tr[]=$mysqlrepair;
 		//$tr[]=$mysqlperformances;
 		$tr[]=$i;
@@ -379,7 +383,7 @@ $page=CurrentPageName();
 		XHR.appendData('servername',document.getElementById('servername').value);
 		XHR.appendData('username',document.getElementById('username').value);
 		XHR.appendData('password',base64_encode(document.getElementById('password').value));
-		document.getElementById('memberdiv').innerHTML='<center><img src=\"img/wait_verybig.gif\"></center>';
+		AnimateDiv('memberdiv');
 		XHR.sendAndLoad('$page', 'GET',x_EditMysqlUser);
 	}		
 	</script>

@@ -163,6 +163,17 @@ function Object_data_list(){
 		writelogs("$sql",__FUNCTION__,__FILE__,__LINE__);
 		$results=$q->QUERY_SQL($sql,"artica_backup");
 		
+		if(!$q->ok){
+			if(strpos($q->mysql_error, "doesn't exist")>0){
+				$q->check_postfwd2_table();
+				if(!$q->ok){echo "<H2>$q->mysql_error</H2>";}
+				$q=new mysql();
+				$results=$q->QUERY_SQL($sql,"artica_backup");
+			}
+		}
+		
+		
+		
 		if(!$q->ok){echo "<H2>$q->mysql_error</H2>";}
 		while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
 		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}

@@ -60,7 +60,7 @@ function CategorizeAll_js(){
 	$html="
 	
 	function CategorizeAll(){
-			YahooWin4(550,'$page?CategorizeAll=$query','$categorize_this_query');
+			YahooWin4(550,'$page?CategorizeAll=$query&day={$_GET["day"]}','$categorize_this_query');
 		
 		}	
 	
@@ -100,14 +100,14 @@ function js(){
 	$start="YahooWin3('720','$page?popup=yes&day={$_GET["day"]}$onlyNot','$title');";
 	if(isset($_GET["add-www"])){
 		$title=$tpl->_ENGINE_parse_body("{add_websites}");
-		$start="YahooWin3('420','$page?free-cat=yes','$title');";
+		$start="YahooWin3('420','$page?free-cat=yes&websitetoadd={$_GET["websitetoadd"]}','$title');";
 	}
 	
 	$html="
 	$start
 	
 	function CategorizeAll(query){
-			YahooWin4(550,'$page?CategorizeAll='+escape(query),'$categorize_this_query');
+			YahooWin4(550,'$page?CategorizeAll='+escape(query)+'&day={$_GET["day"]}','$categorize_this_query');
 		
 		}	
 		";
@@ -144,14 +144,7 @@ function popup(){
 	</div>
 		<script>
 				$(document).ready(function(){
-					$('#main_config_visitedwebs').tabs({
-				    load: function(event, ui) {
-				        $('a', ui.panel).click(function() {
-				            $(ui.panel).load(this.href);
-				            return false;
-				        });
-				    }
-				});
+					$('#main_config_visitedwebs').tabs();
 			
 			
 			});
@@ -248,6 +241,9 @@ function free_catgorized(){
 		$newcat[$num]=$num;
 	}
 	$newcat[null]="{select}";
+	
+	if($_GET["websitetoadd"]<>null){$website_default="http://".$_GET["websitetoadd"]."\n";}
+	
 	$html="
 	<div class=explain>{free_catgorized_explain}</div>
 	<table style='width:100%'>
@@ -258,7 +254,7 @@ function free_catgorized(){
 	</table>
 	
 	<center>
-		<textarea style='width:100%;height:250px;overflow:auto;font-size:13px' id='textToParseCats'></textarea>
+		<textarea style='width:100%;height:250px;overflow:auto;font-size:13px' id='textToParseCats'>$website_default</textarea>
 	<hr>
 		". button("{submit}","FreeCategoryPost()")."
 		
@@ -556,6 +552,7 @@ function not_categorized_list(){
 	$tpl=new templates();
 	$categorize_this_query=$tpl->_ENGINE_parse_body("{categorize_this_query}");
 	$page=CurrentPageName();
+	$day=trim($_GET["day"]);
 	
 	if($_COOKIE["SQUID_NOT_CAT_SEARCH"]<>null){
 		$pattern=" AND sitename LIKE '%{$_COOKIE["SQUID_NOT_CAT_SEARCH"]}%' ";
@@ -619,7 +616,7 @@ $categorize_all
 			<td width=1% valign='middle' aling='center'>$country</td>
 			<td width=99%><strong style='font-size:14px'>{$ligne["website"]}</td>
 			<td width=19%><strong style='font-size:14px'>{$ligne["HitsNumber"]}</td>
-			<td width=1%>". imgtootltip("add-database-32.png","{categorize}","Loadjs('squid.categorize.php?www={$ligne["website"]}')")."</td>
+			<td width=1%>". imgtootltip("add-database-32.png","{categorize}","Loadjs('squid.categorize.php?www={$ligne["website"]}&day={$_GET["day"]}')")."</td>
 			</tr>
 			";
 	
@@ -684,7 +681,7 @@ function CategorizeAll_popup(){
 	</div>
 	<script>
 		function CategorizeAllDef(){
-			LoadAjax('cat-explain','$page?cat-explain='+escape(document.getElementById('CategorizeAll_category').value));
+			LoadAjax('cat-explain','$page?cat-explain='+escape(document.getElementById('CategorizeAll_category').value)+'&day={$_GET["day"]}');
 		}
 		var x_CategorizeAllPerform=function(obj){
      	var tempvalue=obj.responseText;
@@ -708,6 +705,7 @@ function CategorizeAll_popup(){
 				var XHR = new XHRConnection();
 				XHR.appendData('CategorizeAll_category',CategorizeAll_category);
 				XHR.appendData('pattern','{$_GET["CategorizeAll"]}');
+				XHR.appendData('day','{$_GET["day"]}');
 				document.getElementById('cat-perf-all').innerHTML='<center><img src=\"img/wait_verybig.gif\"></center>';
 				XHR.sendAndLoad('$page', 'GET',x_CategorizeAllPerform);		
 			}
@@ -725,7 +723,7 @@ function CategorizeAll_explain(){
 	$tpl=new templates();
 	$dans=new dansguardian_rules();
 	$text=$dans->array_blacksites[$_GET["cat-explain"]];
-	echo $tpl->_ENGINE_parse_body("<div class=explain>$text</div>");
+	echo $tpl->_ENGINE_parse_body("<div class=explain style='font-size:14px'>$text</div>");
 	
 }
 
@@ -768,12 +766,23 @@ function CategorizeAll_perform(){
 		$q->QUERY_SQL($sql);
 		if(!$q->ok){echo $q->mysql_error."\n".basename(__FILE__)."\nLine".__LINE__."\n";echo $sql;return;}	
 			
+		if($_GET["day"]<>null){
+			$time=strtotime($_GET["day"]." 00:00:00");
+			$tableSrc=date('Ymd')."_hour";
+			$categories=$q->GET_CATEGORIES($www,true);
+			$q->QUERY_SQL("UPDATE $tableSrc SET category='$categories' WHERE sitename='$www'");
+		
+		}		
 		
 	}
 	
 	$sql="UPDATE `visited_sites` SET `category`='$category' WHERE LENGTH( `category` )=0 $pattern";
 	$q->QUERY_SQL($sql);
-	if(!$q->ok){echo $q->mysql_error."\n".basename(__FILE__)."\nLine".__LINE__."\n";echo $sql;return;}		
+	if(!$q->ok){echo $q->mysql_error."\n".basename(__FILE__)."\nLine".__LINE__."\n";echo $sql;return;}	
+
+
+	
+	
 	$sock=new sockets();
 	$sock->getFrameWork("cmd.php?export-community-categories=yes");	
 	

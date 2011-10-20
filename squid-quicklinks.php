@@ -25,6 +25,7 @@ $sock=new sockets();
 if($_GET["stats"]){
 	$tr[]=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("perf-stats-48.png", "traffic_statistics","squid_traffic_statistics_text", "QuickLinkSystems('traffic_statistics')"));
 	$tr[]=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("members-48.png", "members","section_security_text", "QuickLinkSystems('members_statistics')"));
+	$tr[]=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("bandwith-limit-del-48.png", "blocked_websites","section_blocked_websites_text", "QuickLinkSystems('blocked_statistics')"));
 	$tr[]=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("48-tasks.png", "tasks","", "QuickLinkSystems('section_tasks')"));
 	
 	if(($users->AsSquidAdministrator) OR ($users->AsDansGuardianAdministrator)){
@@ -121,7 +122,17 @@ $tpl=new templates();
 echo $tpl->_ENGINE_parse_body($html);
 
 
-
+function blocked_statistics(){
+	$html="<div id='squid_blocked_stats'></div>
+	
+	<script>
+		LoadAjax('squid_blocked_stats','squid.blocked.statistics.php');
+	</script>
+	
+	";
+	echo $html;	
+	
+}
 
 function traffic_statistics(){
 	

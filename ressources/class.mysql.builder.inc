@@ -1361,7 +1361,8 @@ function check_postfwd2_table(){
 		if(!$this->ok){writelogs("Fatal: $this->mysql_error",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
 	} 
 
-	if(!$this->TABLE_EXISTS('postfwd2','artica_backup')){		
+	if(!$this->TABLE_EXISTS('postfwd2_objects','artica_backup')){
+		writelogs("Building: artica_backup/postfwd2_objects",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);		
 		$sql="CREATE TABLE IF NOT EXISTS `postfwd2_objects` (
 		  `ID` int(10) NOT NULL AUTO_INCREMENT,
 		  `ObjectName` varchar(128),

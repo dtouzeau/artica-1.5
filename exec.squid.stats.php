@@ -36,6 +36,7 @@ if($GLOBALS["VERBOSE"]){echo "LAUNCH: '{$argv[1]}'\n";}
 if($argv[1]=='--scan-hours'){scan_hours();die();}
 if($argv[1]=='--scan-months'){scan_months();die();}
 if($argv[1]=='--tables-days'){table_days();die();}
+if($argv[1]=='--block-days'){block_days();die();}
 if($argv[1]=='--hours'){clients_hours();die();}
 if($argv[1]=='--flow-month'){flow_month();die();}
 if($argv[1]=='--members'){members_hours();die();}
@@ -144,20 +145,20 @@ function scan_months(){
 	@file_put_contents($pidfile,$mypid);
 	table_days();
 	members_month(true);
-	flow_month(true);	
+	flow_month(true);
+	block_days(true);	
 }
 
 
 
 function flow_month($nopid=false){
+	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
 	if($nopid){
-		$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
 		$oldpid=@file_get_contents($pidfile);
+		$myfile=basename(__FILE__);
 		$unix=new unix();
-		if($unix->process_exists($oldpid)){die();}
+		if($unix->process_exists($oldpid,$myfile)){die();}
 	}
-	
-	
 	$mypid=getmypid();
 	@file_put_contents($pidfile,$mypid);
 	
@@ -267,8 +268,8 @@ function _flow_month_query_perfom($SourceTable,$destinationTable,$day){
 
 
 function members_month($nopid=false){
+	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
 	if($nopid){
-		$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
 		$oldpid=@file_get_contents($pidfile);
 		$unix=new unix();
 		if($unix->process_exists($oldpid)){die();}
@@ -390,9 +391,8 @@ function _members_month_perfom($sourcetable,$destinationtable,$day){
 
 
 function members_hours($nopid=false){
-	
+	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
 	if(!$nopid){
-		$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
 		$oldpid=@file_get_contents($pidfile);
 		$unix=new unix();
 		if($unix->process_exists($oldpid)){die();}
@@ -496,10 +496,9 @@ function _members_hours_perfom($tabledata,$nexttable){
 
 
 function clients_hours($nopid=false){
-	
+	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
 	$unix=new unix();
 	if(!$nopid){
-		$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
 		$oldpid=@file_get_contents($pidfile);
 		if($unix->process_exists($oldpid)){die();}
 		$mypid=getmypid();
@@ -907,6 +906,70 @@ function export_last_websites(){
 	}
 	
 	
+	
+}
+
+function block_days(){
+	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
+	if($nopid){
+		$oldpid=@file_get_contents($pidfile);
+		$myfile=basename(__FILE__);
+		$unix=new unix();
+		if($unix->process_exists($oldpid,$myfile)){die();}
+	}
+	$mypid=getmypid();
+	@file_put_contents($pidfile,$mypid);
+	$GLOBALS["Q"]->CheckTables();
+	$sql="SELECT zDate FROM `tables_day` WHERE blocks=0 AND zDate<DATE_SUB(NOW(),INTERVAL 1 DAY)";
+	$results=$GLOBALS["Q"]->QUERY_SQL($sql);
+	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+		$zDate=$ligne["zDate"];
+		$date=$ligne["zDate"]." 00:00:00";
+		$time=strtotime($date);
+		$TableSource=date('Ymd',$time)."_blocked";
+		$TableDest=date('Ym',$time)."_blocked_days";
+		if(!$GLOBALS["Q"]->TABLE_EXISTS("$TableSource")){
+			writelogs("Checking table $TableSource does not exists",__FUNCTION__,__FILE__,__LINE__);
+			$GLOBALS["Q"]->QUERY_SQL("UPDATE tables_day SET blocks=1 WHERE zDate='$zDate'");
+			continue;
+		}
+		writelogs("Checking table $TableSource for $zDate -> $TableDest",__FUNCTION__,__FILE__,__LINE__);
+		if(block_days_perform($TableSource,$TableDest)){
+			$sql="SELECT SUM(hits) as tcount FROM $TableDest WHERE zDate='$date'";
+			$ligne2=mysql_fetch_array($GLOBALS["Q"]->QUERY_SQL($sql));
+			$count=$ligne2["tcount"];
+			$GLOBALS["Q"]->QUERY_SQL("UPDATE tables_day SET blocks=1,totalBlocked=$count WHERE zDate='$zDate'");			
+		}
+	}
+	
+	
+	
+}
+
+function block_days_perform($TableSource,$TableDest){
+	
+	$sql="SELECT COUNT(ID) as hits, DATE_FORMAT(zDate,'%Y-%m-%d') as zDate,client,website,category,rulename,public_ip FROM $TableSource GROUP BY zDate,client,website,category,rulename,public_ip ORDER BY zDate";
+	$prefix="INSERT IGNORE INTO $TableDest (zmd5,hits,zDate,client,website,category,rulename,public_ip) VALUES ";
+	$results=$GLOBALS["Q"]->QUERY_SQL($sql);
+	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+		$tt=array();
+		while (list ($a, $b) = each ($ligne) ){$tt[]=$b;}
+		$zmd5=md5(@implode("", $tt));
+		$f[]="('$zmd5','{$ligne["hits"]}','{$ligne["zDate"]}','{$ligne["client"]}','{$ligne["website"]}','{$ligne["category"]}','{$ligne["rulename"]}','{$ligne["public_ip"]}')";
+		if(count($f)>500){
+			$GLOBALS["Q"]->QUERY_SQL($prefix.@implode(",", $f));
+			$f=array();
+			if(!$GLOBALS["Q"]->ok){echo $GLOBALS["Q"]->mysql_error."\n";return;}
+		}
+	}
+	
+	if(count($f)>0){
+			$GLOBALS["Q"]->QUERY_SQL($prefix.@implode(",", $f));
+			$f=array();
+			if(!$GLOBALS["Q"]->ok){echo $GLOBALS["Q"]->mysql_error."\n";return;}
+		}	
+	
+return true;
 	
 }
 

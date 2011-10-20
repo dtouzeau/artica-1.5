@@ -1268,7 +1268,8 @@ function check_vps_tables(){
 	function check_postfwd2_table(){
 		include_once(dirname(__FILE__).'/class.mysql.builder.inc');
 		$q=new mysql_builder();
-		return $q->check_postfwd2_table();
+		$q->check_postfwd2_table();
+		if(!$q->ok){$this->ok=false;$this->mysql_error=$q->mysql_error;}
 		}	
 	
 	function Check_iptables_table(){

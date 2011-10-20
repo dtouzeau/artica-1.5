@@ -293,7 +293,66 @@ class mysql_squid_builder{
 					writelogs("Checking $table SUCCESS",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);	
 			}
 
+		}
+		$tableblockMonth=date('Ym')."_blocked_days";
+		if(!$this->TABLE_EXISTS($tableblockMonth,'artica_events')){		
+			$sql="CREATE TABLE `$tableblockMonth` (
+			`zmd5` VARCHAR( 100 ) NOT NULL PRIMARY KEY ,
+			`hits` BIGINT( 100 ),
+			`zDate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+			`client` VARCHAR( 90 ) NOT NULL ,
+			`website` VARCHAR( 125 ) NOT NULL ,
+			`category` VARCHAR( 50 ) NOT NULL ,
+			`rulename` VARCHAR( 50 ) NOT NULL ,
+			`public_ip` VARCHAR( 40 ) NOT NULL ,
+			KEY `zDate` (`zDate`),
+			KEY `hits` (`hits`),
+			KEY `client` (`client`),
+			KEY `website` (`website`),
+			KEY `category` (`category`),
+			KEY `rulename` (`rulename`),
+			KEY `public_ip` (`public_ip`)
+			
+			)"; 
+		$this->QUERY_SQL($sql); 
+		
+			if(!$this->ok){
+					writelogs("$this->mysql_error\n$sql",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+					$this->mysql_error=$this->mysql_error."\n$sql";
+					return false;
+				}else{
+					writelogs("Checking $table SUCCESS",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);	
+			}
+
 		}		
+		
+		
+
+		
+	if(!$this->TABLE_EXISTS("mysql_events","artica_events")){
+				$sql="CREATE TABLE IF NOT EXISTS `mysql_events` (
+			  `ID` bigint(100) NOT NULL AUTO_INCREMENT,
+			  `zDate` TIMESTAMP NOT NULL,
+			  `description` text NOT NULL,
+			  `function` varchar(50) NOT NULL,
+			  `category` varchar(50) NOT NULL,
+			  `process` varchar(50) NOT NULL,
+			  `line` int(100) NOT NULL,
+			  `servername` varchar(128) NOT NULL,
+			  PRIMARY KEY (`ID`),
+			  KEY `function` (`function`,`process`,`line`),
+			  KEY `servername` (`servername`),
+			  KEY `category` (`category`),
+			  KEY `zDate` (`zDate`)
+			  
+			  )";
+		if(!$this->ok){
+			writelogs("Fatal: $this->mysql_error\n$sql",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+			$this->mysql_error=$this->mysql_error."\n$sql";
+		}
+
+	}
+		
 		
 		
 		if(!$this->FIELD_EXISTS($table,"uid",$this->database)){
@@ -388,21 +447,30 @@ class mysql_squid_builder{
 		$sql="CREATE TABLE IF NOT EXISTS `tables_day` (
 			  `tablename` varchar(90) NOT NULL,
 			  `zDate` date NOT NULL,
-			  `size` int(100) NOT NULL,
-			  `size_cached` int(100) NOT NULL,
+			  `size` BIGINT(100) NOT NULL,
+			  `size_cached` BIGINT(100) NOT NULL,
 			  `totalsize` INT( 100 ) NOT NULL ,
+			  `totalBlocked` BIGINT( 100 ) NOT NULL ,
 			  `requests` INT( 100 ) NOT NULL ,
 			  `cache_perfs` INT( 2 ) NOT NULL ,
 			  `Hour` int(1) NOT NULL,
 			  `members` int(1) NOT NULL,
+			  `blocks` int(1) NOT NULL,
 			  PRIMARY KEY (`tablename`),
 			  KEY `zDate` (`zDate`,`size`,`size_cached`,`cache_perfs`),
 			  KEY `Hour` (`Hour`),
+			  KEY `blocks` (`blocks`),
 			  KEY `totalsize` (`totalsize`),
+			  KEY `totalBlocked` (`totalBlocked`),
 			  KEY `requests` (`requests`)
 			) ";
 			$this->QUERY_SQL($sql,$this->database);
 		}
+		
+		if(!$this->FIELD_EXISTS("tables_day", "blocks")){$this->QUERY_SQL("ALTER TABLE `tables_day` ADD `blocks` INT( 1 ) NOT NULL ,ADD INDEX ( `blocks` )");}
+		if(!$this->FIELD_EXISTS("tables_day", "totalBlocked")){$this->QUERY_SQL("ALTER TABLE `tables_day` ADD `totalBlocked` BIGINT( 100 ) NOT NULL ,ADD INDEX ( `totalBlocked` )");}
+
+		
 
 		if(!$this->TABLE_EXISTS('updateblks_events',$this->database)){	
 		$sql="CREATE TABLE `squidlogs`.`updateblks_events` (

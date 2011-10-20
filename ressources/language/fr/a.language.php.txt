@@ -325,6 +325,7 @@ Vous pouvez indiquer les valeurs suivantes :[br]
 <blacklist_global_explain>Cette section vous permet de bloquer des domaines ou des adresses que vous listez ici.[br]Cette section est plus restrictive que les autres fonctionnalit&eacute;s qui utilisent plut&ocirc;t les filtres additionnels.[br]
 Les messages dont les &eacute;metteurs correspondent aux r&egrave;gles seront directement rejet&eacute;s sans analyser d'autres contenus.</blacklist_global_explain>
 <blklist_update_now_text>Lancer la mise &agrave; jour des bases de listes noires maintenant</blklist_update_now_text>
+<blocked>Bloqu&eacute;(s)</blocked>
 <blocked_ips>IPs rejet&eacute;es</blocked_ips>
 <blocked_websites>Sites interdits</blocked_websites>
 <Blocking_period>P&eacute;riode d'interdiction</Blocking_period>
@@ -1051,6 +1052,8 @@ Notifie les administrateurs des &eacute;ventuelles d&eacute;tections[br]</kav4pr
 <last_7days>Derniers 7 Jours</last_7days>
 <last_7_days>Derniers 7 jours</last_7_days>
 <last_hour>60 derni&egrave;res minutes</last_hour>
+<launch_optimize>Lancez la tache d'optimisation MySQL.</launch_optimize>
+<launch_optimize_text>Lancez la t&acirc;che d'optimisation maintenant sur les bases de donn&eacute;es s&eacute;lectionn&eacute;es.</launch_optimize_text>
 <ldap_group>Groupe LDAP</ldap_group>
 <ldap_importation>Importation LDAP</ldap_importation>
 <ldap_importation_text>Importer des utilisateurs depuis un serveur Externe LDAP comme OpenLDAP ou Zimbra</ldap_importation_text>
@@ -1186,6 +1189,7 @@ A l'oppos&eacute;, si vous d&eacute;finissez une valeur trop basse dans la valeu
 <MONITOR>Moniteur</MONITOR>
 <mounts_list>Liste des connexions</mounts_list>
 <move_all_process_to_default>D&eacute;placer toutes les t&acirc;ches vers le d&eacute;faut.</move_all_process_to_default>
+<move_category_explain>S&eacute;lectionnez la cat&eacute;gorie afin de d&eacute;placer ce site web vers la cat&eacute;gorie choisie</move_category_explain>
 <move_task>D&eacute;placer la t&acirc;che</move_task>
 <move_task_default_ask>D&eacute;placer cette t&acirc;che vers le groupe par d&eacute;faut syst&egrave;me.</move_task_default_ask>
 <multiples_mx>MX multiples</multiples_mx>
@@ -1202,6 +1206,9 @@ A l'oppos&eacute;, si vous d&eacute;finissez une valeur trop basse dans la valeu
 <mymessaging>Ma messagerie</mymessaging>
 <mysqldefault_php_text>Ci-dessous, les param&egrave;tres par d&eacute;faut de connexion au serveur Mysql utilis&eacute;s par les applications PHP (Artica compris).[br]Par d&eacute;faut, les param&egrave;tres d'Artica qui sont ceux indiqu&eacute;s ci-dessus.[br]</mysqldefault_php_text>
 <MYSQL_CONNECTION>Connexion MySQL</MYSQL_CONNECTION>
+<mysql_defrag>Programmation de la d&eacute;fragmentation des tables</mysql_defrag>
+<mysql_defrag_explain>Indiquez l'ordonnancement et les bases de donn&eacute;es qui vont &ecirc;tre optimis&eacute;es afin d'am&eacute;liorer leur performance.</mysql_defrag_explain>
+<mysql_defrag_text>Indiquez une programmation pour la t&acirc;che de d&eacute;fragmentation des tables MySQL afin d'optimiser les performances.</mysql_defrag_text>
 <mysql_error>Erreur du serveur Mysql</mysql_error>
 <mysql_error_popup_credential_text>Artica n'a pas la possibilit&eacute; de se connecter sur le serveur Mysql avec les param&egrave;tres d'acc&egrave;s par d&eacute;faut.[br]
 Vous devriez cr&eacute;er un nouvel utilisateur Mysql et un  mot de passe afin de corriger ce probl&egrave;me.[br]
@@ -1845,6 +1852,7 @@ Vous avez plusieurs solutions pour am&eacute;liorer la performance de stockage:<
 <squid_blk_explain>Cette section repr&eacute;sente l'&eacute;tat des mises &agrave; jour des bases de donn&eacute;es des sites web cat&eacute;goris&eacute;s.[br]Ces mises &agrave; jour sont importantes car elles vont conditionner les statistiques de navigation et le processus de filtrage web.</squid_blk_explain>
 <squid_members_explain>Cette section vous permet de piloter les autorisations d'acc&egrave;s &agrave; Internet incluant aussi les listes noires et blanches.</squid_members_explain>
 <SQUID_STATS>Statistiques du proxy cache Squid</SQUID_STATS>
+<SQUID_STATS1>Statistiques Proxy</SQUID_STATS1>
 <SQUID_STATS_TEXT>La Zone de statistiques Squid est une console web permettant de visualiser des graphiques et statistiques sur l'utilisation Web des utilisateurs et les cat&eacute;gories des sites web.</SQUID_STATS_TEXT>
 <squid_traffic_statistics_text>Affiche le flux qui passe &agrave; travers votre proxy, vous indique la performance de vos caches et la taille par site web et cat&eacute;gories.</squid_traffic_statistics_text>
 <srv_clamav.ClamavRefreshDaemonMemory>Red&eacute;marrer le service si la m&eacute;moire exc&egrave;de</srv_clamav.ClamavRefreshDaemonMemory>
@@ -2044,6 +2052,7 @@ Voulez-vous effectuer cette op&eacute;ration ?[br]Cette op&eacute;ration sera ex
 <wbl_resolv_mx_explain>Si activ&eacute; les Artica va r&eacute;soudre les MX des domaines ajout&eacute;s dans cette liste et mettre les adresses des MX dans la liste blanche des filtres de connexion.</wbl_resolv_mx_explain>
 <webadministration_console>Console web d'administration</webadministration_console>
 <webinterface>Interface Web</webinterface>
+<webiste_notfound_additask>Ce site Internet n'est pas trouv&eacute; dans la base de donn&eacute;es. Toutefois vous pouvez toujours l'inscrire dans une cat&eacute;gorie existante.</webiste_notfound_additask>
 <webproxy_statistics_appliance>Appliance de statistiques de Proxy Internet</webproxy_statistics_appliance>
 <webproxy_statistics_appliance_text>Si vous activez cette fonctionnalit&eacute;, ce serveur sera autoris&eacute; &agrave; recevoir les &eacute;v&egrave;nements d'autres Proxy Artica ou du Proxy Squid en version 3.2.[br]
 Il ex&eacute;cutera des t&acirc;ches de calcule sp&eacute;cifiques afin d'offrir les capacit&eacute;s d'analyse de l'utilisation d'Internet avec des graphiques.</webproxy_statistics_appliance_text>
@@ -2095,9 +2104,12 @@ Des fonctionnalit&eacute;s peuvent &ecirc;tre ajust&eacute;es en fonction de la 
 La valeur par d&eacute;faut de 8 threads est suffisante pour l'ensemble des besoins.</Wthreads_explain>
 <www_books>Libraires en ligne et sites permettant d'obtenir
  ou de lire des livres sous format &eacute;lectronique.</www_books>
+<www_browsersplugins>Sites web offrant des outils et/ou logiciels additionnels (plugins) pour les navigateurs Internet</www_browsersplugins>
 <www_celebrity>Sites qui concerne les personnes c&eacute;l&egrave;bres, acteurs et personnes connues dans le monde entier.Excluant les mannequins( voir la cat&eacute;gorie &quot;models&quot;)</www_celebrity>
 <www_forward>Transf&eacute;rer vers un autre site</www_forward>
 <www_ForwardTo>Site web &agrave; transf&eacute;rer</www_ForwardTo>
+<www_genealogy>Sites sur les arbres g&eacute;n&eacute;alogiques ou permettant de rechercher une g&eacute;n&eacute;alogie ou sur l'histoire de certaines familles.</www_genealogy>
+<www_gifts>Sites permettant d'offrir des cadeaux logiques ou physiques, id&eacute;es de cadeaux, cadeaux de No&euml;l...</www_gifts>
 <www_humanitarian_associations>Sites web &agrave; propos de des associations humanitaires ou tout ce qui s'en rapproche.</www_humanitarian_associations>
 <www_imagehosting>Sites web permettant le stockage d'images et de photos.</www_imagehosting>
 <www_internal>Sites web intranet ou adresses IP consid&eacute;r&eacute;es comme ressources internes au r&eacute;seau local.</www_internal>

@@ -2575,6 +2575,7 @@ During this task the server should be loaded.
 Do you want to perform compilation this category ?
 </confirm_dnsg_compile_db>
 <saveToDisk>Save to Disk</saveToDisk>
+<SaveToDisk>Save to Disk</SaveToDisk>
 <confirm_dnsg_compileall_db>This operation will save to disk all websites in all categories saved in your databases.
 During this task the server should be loaded.
 Do you want to perform compilation of all categories ?
@@ -2593,3 +2594,16 @@ Check the list below and click on each row in order to display Network interface
 <automatic>Automatic</automatic>
 <FIRST_WIZARD_NIC2>All Network Interface parameters are saved, if you want to apply this configuration, click on the button bellow and reboot your computer.</FIRST_WIZARD_NIC2>
 <i_prefer_leave_unconfigured>I prefer leave these parameters unconfigured</i_prefer_leave_unconfigured>
+<mysql_defrag>scheduled defragment tables</mysql_defrag>
+<mysql_defrag_text>Define the schedule task that will defragment tables in order to optimize mysql performances</mysql_defrag_text> 
+<mysql_defrag_explain>Select the schedule and databases that will be optimized in order to increase their performances.</mysql_defrag_explain>
+<launch_optimize>Launch the Mysql optimize task</launch_optimize>
+<launch_optimize_text>Perform mysql optimization on saved databases</launch_optimize_text> 
+<SQUID_STATS1>Proxy statistics</SQUID_STATS1>
+<SQUID_STATS_TEXT>Display Proxy statistics graphs and charts</SQUID_STATS_TEXT>
+<blocked>blocked</blocked>
+<www_gifts>Webistes about gifts, gifts ideas, christmas gifts...</www_gifts>
+<www_browsersplugins>Websites that offer plugins for browsers</www_browsersplugins>
+<www_genealogy>Websites that talking about genealogy and all about family history</www_genealogy>
+<move_category_explain>Select the category in order to move this website from old category to a new category</move_category_explain>
+<webiste_notfound_additask>This website is not found in database, do you want to categorize it ?</webiste_notfound_additask>

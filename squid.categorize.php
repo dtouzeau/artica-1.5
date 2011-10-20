@@ -48,12 +48,12 @@ function js(){
 	
 	$html="
 	function CategorizeLoad(){
-		YahooWinBrowse(650,'$page?popup=yes&www={$_GET["www"]}&bykav={$_GET["bykav"]}','{$_GET["www"]}');
+		YahooWinBrowse(650,'$page?popup=yes&www={$_GET["www"]}&bykav={$_GET["bykav"]}&day={$_GET["day"]}','{$_GET["www"]}');
 	
 	}
 	
 	function CategorizeLoadAjax(){
-		LoadAjax('popup_other_squid_category_webpage','$page?popup=yes&www={$_GET["www"]}&bykav={$_GET["bykav"]}');
+		LoadAjax('popup_other_squid_category_webpage','$page?popup=yes&www={$_GET["www"]}&bykav={$_GET["bykav"]}&day={$_GET["day"]}');
 	}
 	
 	
@@ -69,6 +69,7 @@ function js(){
 		XHR.appendData('website',website);
 		if(document.getElementById(md).checked){
 		XHR.appendData('enabled',1);}else{XHR.appendData('enabled',0);}
+		XHR.appendData('day','{$_GET["day"]}');
 		XHR.sendAndLoad('$page', 'GET',x_DansCommunityCategory);	
 	}
 	
@@ -88,6 +89,7 @@ function js(){
 
 
 function save_category(){
+	if($_GET["website"]==null){return;}
 	$www=trim(strtolower(base64_decode($_GET["website"])));
 	if(preg_match("#^www\.(.+?)$#i",$www,$re)){$www=$re[1];}
 	$category=$_GET["category"];
@@ -105,6 +107,9 @@ function save_category(){
 	$sql_add="INSERT IGNORE INTO categorize (zmd5,zDate,category,pattern,uuid) VALUES('$md5',NOW(),'$category','$www','$uuid')";
 	$sql_add2="INSERT IGNORE INTO category_$category_table (zmd5,zDate,category,pattern,uuid) VALUES('$md5',NOW(),'$category','$www','$uuid')";
 	$sql_edit="UPDATE category_$category_table SET enabled='$enabled' WHERE zmd5='{$ligne["zmd5"]}'";
+	
+	
+	
 	
 	writelogs("$www/$category = {$ligne["zmd5"]}",__FUNCTION__,__FILE__,__LINE__);
 	
@@ -137,6 +142,13 @@ function save_category(){
 	}else{
 		$q->QUERY_SQL("INSERT IGNORE INTO categorize_delete(zmd5,sitename,category) VALUES('$md5','$www','$category')");
 	}
+	
+	if($_GET["day"]<>null){
+		$time=strtotime($_GET["day"]." 00:00:00");
+		$tableSrc=date('Ymd')."_hour";
+		$q->QUERY_SQL("UPDATE $tableSrc SET category='$cats' WHERE sitename='$www'");
+		if(!$q->ok){echo $q->mysql_error;}
+	}		
 	
 	
 	$sock=new sockets();
@@ -225,7 +237,7 @@ function popup(){
 	
 	
 	while (list ($num, $ligne) = each ($array) ){
-		$html[]=$tpl->_ENGINE_parse_body("<li><a href=\"$page?$num=yes&www={$_GET["www"]}&bykav={$_GET["bykav"]}\"><span>$ligne</span></a></li>\n");
+		$html[]=$tpl->_ENGINE_parse_body("<li><a href=\"$page?$num=yes&www={$_GET["www"]}&bykav={$_GET["bykav"]}&day={$_GET["day"]}\"><span>$ligne</span></a></li>\n");
 	}
 	
 	

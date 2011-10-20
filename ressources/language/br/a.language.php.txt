@@ -407,6 +407,7 @@ Voc&ecirc; pode definir padr&otilde;es desta maneira:[br]
 <blacklist_global_explain>Esta sess&atilde;o ir&aacute; bloquear dom&iacute;nios ou endere&ccedil;os listados diretamente na sess&atilde;o SMTP. [br] &Eacute; mais restritivo do que outras possibilidades que usam filtros suplementares. [br]
 mensagens que as regras do remetente corresponde ao endere&ccedil;o ser&atilde;o rejeitados diretamente, sem verifica&ccedil;&atilde;o do conte&uacute;do</blacklist_global_explain>
 <blklist_update_now_text>Launch blacklist databases update now</blklist_update_now_text>
+<blocked>blocked</blocked>
 <blocked_ips>IPs bloqueados</blocked_ips>
 <blocked_websites>Websites bloqueados</blocked_websites>
 <Blocking_period>Blocking period</Blocking_period>
@@ -1265,6 +1266,8 @@ Give here the ip address and port number of your Kaspersky ICAP service.</kavica
 <last_7days>&Uacute;ltimos 7 dias</last_7days>
 <last_7_days>Last 7 days</last_7_days>
 <last_hour>Last hour</last_hour>
+<launch_optimize>Launch the Mysql optimize task</launch_optimize>
+<launch_optimize_text>Perform mysql optimization on saved databases</launch_optimize_text>
 <ldap_group>LDAP Group</ldap_group>
 <ldap_importation>LDAP Importation</ldap_importation>
 <ldap_importation_text>Importing users from an external LDAP server such OpenLDAP or Zimbra</ldap_importation_text>
@@ -1426,6 +1429,7 @@ Webmasters and web developers can use thsi feature to improve the performance of
 <MONITOR>Monitor</MONITOR>
 <mounts_list>Mounts list</mounts_list>
 <move_all_process_to_default>Move all process to default</move_all_process_to_default>
+<move_category_explain>Select the category in order to move this website from old category to a new category</move_category_explain>
 <move_task>Move task</move_task>
 <move_task_default_ask>Move this task to the default system group</move_task_default_ask>
 <multiples_mx>Multiples MX</multiples_mx>
@@ -1442,6 +1446,9 @@ Webmasters and web developers can use thsi feature to improve the performance of
 <mymessaging>My Messaging</mymessaging>
 <mysqldefault_php_text>This is the  Mysql default credentials used for PHP applications (include Artica itself).[br]by default PHP applications default credentials use the same values has Artica Mysql credential</mysqldefault_php_text>
 <MYSQL_CONNECTION>MySQL Connection</MYSQL_CONNECTION>
+<mysql_defrag>scheduled defragment tables</mysql_defrag>
+<mysql_defrag_explain>Select the schedule and databases that will be optimized in order to increase their performances.</mysql_defrag_explain>
+<mysql_defrag_text>Define the schedule task that will defragment tables in order to optimize mysql performances</mysql_defrag_text>
 <mysql_error>Mysql Error</mysql_error>
 <mysql_error_popup_credential_text>Artica is unable to connect to mysql server using the default credentials.[br]
 You should create the Mysql username and password in order to fix this issue.[br]
@@ -2190,6 +2197,7 @@ You have several ways to increase the caching performance:</squidcacheperf_howto
 <squid_blk_explain>This the update status of Artica community blacklist database[br]These update are important because it will drive statistics and url filtering processes</squid_blk_explain>
 <squid_members_explain>This section is designed to manage access trough internet from your users, include authentication mode, whitelisting and blacklisting</squid_members_explain>
 <SQUID_STATS>Squid Proxy Cache web statistics</SQUID_STATS>
+<SQUID_STATS1>Proxy statistics</SQUID_STATS1>
 <SQUID_STATS_TEXT>Squid Statistics area is a Web frontend that provides proxy statistics with charts and graphs and categorized websites</SQUID_STATS_TEXT>
 <squid_traffic_statistics_text>Display flows passed trough your Proxy, get cache performances and display websites/categories by size</squid_traffic_statistics_text>
 <srv_clamav.ClamavRefreshDaemonMemory>Restart service if memory exceed</srv_clamav.ClamavRefreshDaemonMemory>
@@ -2415,6 +2423,7 @@ Do you want to perform this operation ?[br]task will be performed in background 
 <wbl_resolv_mx_explain>If checked when you add an email or a domain, Artica will try to resolv domain MX servers and add them to the IP Whitelist</wbl_resolv_mx_explain>
 <webadministration_console>Web administration console</webadministration_console>
 <webinterface>Web Interface</webinterface>
+<webiste_notfound_additask>This website is not found in database, do you want to categorize it ?</webiste_notfound_additask>
 <webproxy_statistics_appliance>Internet Proxy statistics Appliance</webproxy_statistics_appliance>
 <webproxy_statistics_appliance_text>If you enable this feature, this server will be able to receive events from an another Artica proxy or a Squid 3.2 proxy.[br]
 This server will execute specifics calculation tasks in order to serve Internet usage charts and graphs statistics</webproxy_statistics_appliance_text>
@@ -2471,9 +2480,12 @@ Some features must be changed according your Active Directory structure.</winbin
 [br]Depending on your hardware and your (expected) workload, the number of these threads may be carefully  adjusted.[br]
 The default value of 8 should be sufficient for most purposes</Wthreads_explain>
 <www_books>Online libraries and sites where you can obtain and/or read e-books</www_books>
+<www_browsersplugins>Websites that offer plugins for browsers</www_browsersplugins>
 <www_celebrity>Sites about celebrities, actors, world known persons and all related, excluding models (see models category)</www_celebrity>
 <www_forward>Forward to other website</www_forward>
 <www_ForwardTo>New website to forward</www_ForwardTo>
+<www_genealogy>Websites that talking about genealogy and all about family history</www_genealogy>
+<www_gifts>Webistes about gifts, gifts ideas, christmas gifts...</www_gifts>
 <www_humanitarian_associations>All sites related to humanitarian associations</www_humanitarian_associations>
 <www_imagehosting>All images/pitures storages web sites</www_imagehosting>
 <www_internal>Internal/Intranet websites ip or hostnames should used in your LAN</www_internal>

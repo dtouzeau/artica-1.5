@@ -3709,7 +3709,22 @@ function ufdbguard_admin_events($text,$function,$file,$line,$category){
 	
 	
 }
-
+function mysql_admin_events($text,$function,$file,$line,$category=null){
+	$file=basename($file);
+	if($GLOBALS["VERBOSE"]){echo "$function:: $text in line $line in file $file\n";}
+	$array["zdate"]=date("Y-m-d H:i:s");
+	$array["text"]=$text;
+	$array["function"]=$function;
+	$array["file"]=basename($file);
+	$array["line"]=$line;
+	$array["category"]=$category;
+	$serialize=serialize($array);
+	$md5=md5($serialize);
+	if(!is_dir("/var/log/artica-postfix/mysql_admin_events")){@mkdir("/var/log/artica-postfix/mysql_admin_events",755,true);}
+	@file_put_contents("/var/log/artica-postfix/mysql_admin_events/$md5.log", $serialize);
+	
+	
+}
 
 
 ?>

@@ -36,7 +36,7 @@ function tabs(){
 
 while (list ($num, $ligne) = each ($array) ){
 		if($num=="day-consumption"){
-			$html[]= "<li><a href=\"squid.traffic.statistics.days.php?$num\"><span>$ligne</span></a></li>\n";
+			$html[]= "<li><a href=\"squid.blocked.statistics.days.php?$num\"><span>$ligne</span></a></li>\n";
 			continue;
 		}
 	
@@ -46,12 +46,12 @@ while (list ($num, $ligne) = each ($array) ){
 	
 	
 	echo $tpl->_ENGINE_parse_body( "
-	<div id=squid_stats_consumption style='width:100%;font-size:14px'>
+	<div id=squid_stats_blocked style='width:100%;font-size:14px'>
 		<ul>". implode("\n",$html)."</ul>
 	</div>
 		<script>
 				$(document).ready(function(){
-					$('#squid_stats_consumption').tabs();
+					$('#squid_stats_blocked').tabs();
 			
 			
 			});
@@ -97,19 +97,9 @@ function general_status(){
 	<div id='squid-status-stats'></div>
 	
 	<p>&nbsp;</p>
-	<table style='width:100%'>
-	<tbody>
-	<tr>
-		<td valign='top' style='font-size:14px'><a href=\"javascript:blur();\" OnClick=\"javascript:SquidFlowSizeQuery('size')\"$stylehref>{downloaded_flow}</a></td>
-	</tr>
-	<tr>
-		<td valign='top' style='font-size:14px'><a href=\"javascript:blur();\" OnClick=\"javascript:SquidFlowSizeQuery('req')\"$stylehref>{requests}</a></td>
-	</tr>		
-	</tbody>
-	</table>	
 	
 	<script>
-		LoadAjax('squid-status-stats','$page?squid-status-stats=yes');	
+		LoadAjax('squid-status-stats','squid.traffic.statistics.php?squid-status-stats=yes');	
 		LoadAjax('squid-status-graphs','$page?squid-status-graphs=yes');
 		
 	</script>
@@ -121,79 +111,7 @@ function general_status(){
 	
 }
 
-function squid_status_stats(){
-	$page=CurrentPageName();
-	$tpl=new templates();	
-	$q=new mysql_squid_builder();
-	$users=new usersMenus();
-	
-	$websitesnums=$q->COUNT_ROWS("visited_sites");
-	$websitesnums=numberFormat($websitesnums,0,""," ");	
 
-	
-	$export=$q->COUNT_ROWS("categorize");
-	$export=numberFormat($export,0,""," ");		
-	
-	$categories=$q->COUNT_CATEGORIES();
-	$categories=numberFormat($categories,0,""," ");
-	
-	$tablescat=$q->LIST_TABLES_CATEGORIES();
-	$tablescatNUM=numberFormat(count($tablescat),0,""," ");
-
-	$q=new mysql_squid_builder();
-	$requests=$q->EVENTS_SUM();
-	$requests=numberFormat($requests,0,""," ");	
-	
-	$DAYSNumbers=$q->COUNT_ROWS("tables_day");
-	
-	$ligne=mysql_fetch_array($q->QUERY_SQL("SELECT SUM(totalsize) as tsize FROM tables_day"));
-	$totalsize=FormatBytes($ligne["tsize"]/1024);
-	
-	$ligne=mysql_fetch_array($q->QUERY_SQL("SELECT AVG(cache_perfs) as pourc FROM tables_day"));
-	$pref=round($ligne["pourc"]);	
-	$mouse="OnMouseOver=\";this.style.cursor='pointer';\" OnMouseOut=\";this.style.cursor='default';\"";
-	
-	$submenu="	
-	<tr>
-		<td valign='top' style='font-size:14px'><b>$totalsize</b> {downloaded_flow}</td>
-	</tr>
-	<tr>
-		<td valign='top' style='font-size:14px'><b>$pref%</b> {cache_performance}</td>
-	</tr>";
-	
-	
-	
-
-$html="
-<table style='width:100%'>
-	<tbody>
-	<tr>
-		<td valign='top' style='font-size:14px;text-decoration:underline' $mouse OnClick=\"javascript:SquidQuickLinks()\"><b>$DAYSNumbers</b> {daysOfStatistics}</td>
-	</tr>
-	<tr>
-		<td valign='top' style='font-size:14px'><b>$requests</b> {requests}</td>
-	</tr>
-	<tr>
-		<td valign='top' $mouse style='font-size:14px;text-decoration:underline' OnClick=\"javascript:Loadjs('squid.visited.php')\"><b>$websitesnums</b> {visited_websites}</td>
-	</tr>	
-	<tr>
-		<td valign='top' $mouse style='font-size:14px;text-decoration:underline' OnClick=\"javascript:Loadjs('squid.categories.php')\"><b>$categories</b> {websites_categorized}</td>
-	</tr>			
-	<tr>
-		<td valign='top' $mouse style='font-size:14px;text-decoration:underline' OnClick=\"javascript:Loadjs('squid.categories.php')\"><b>$tablescatNUM</b> {categories}</td>
-	</tr>	
-	<tr>
-		<td valign='top' $mouse style='font-size:14px;text-decoration:underline' OnClick=\"javascript:Loadjs('squid.categories.toexport.php')\"><b>$export</b> {websites_to_export}</td>
-	</tr>	
-	
-	$submenu
-	</tbody>
-	</table>
-";
-
-echo $tpl->_ENGINE_parse_body($html);
-	
-}
 
 function general_status_graphs(){
 	$page=CurrentPageName();
@@ -202,10 +120,10 @@ function general_status_graphs(){
 	$selected_date="{last_30days}";
 	$filter="zDate>DATE_SUB(NOW(),INTERVAL 30 DAY) AND zDate<DATE_SUB(NOW(),INTERVAL 1 DAY)";
 	$file_prefix="default";
-	$type='size';
-	$field="totalsize";
-	$prefix_title="{downloaded_flow} (MB)";
-	$hasSize=true;
+	$type='hits';
+	$field="totalBlocked";
+	$prefix_title="{blocked} ({hits})";
+	$hasSize=false;
 	
 	if(isset($_GET["from"])){
 		$filter="zDate>='{$_GET["from"]}' AND zDate<='{$_GET["to"]}'";
@@ -215,14 +133,6 @@ function general_status_graphs(){
 		$file_prefix="$default_from_date-$default_to_date";
 	}
 	
-	if($_GET["type"]<>null){
-		$type=$_GET["type"];
-		if($_GET["type"]=="req"){
-			$field="requests as totalsize";
-			$prefix_title="{requests}";
-			$hasSize=false;
-		}
-	}
 	
 	
 	$sql="SELECT $field,DATE_FORMAT(zDate,'%d') as tdate FROM tables_day WHERE $filter ORDER BY zDate";
@@ -232,10 +142,10 @@ function general_status_graphs(){
 	if(!$q->ok){echo "<H2>$q->mysql_error</H2><center style='font-size:11px'><code>$sql</code></center>";}
 	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
 		$xdata[]=$ligne["tdate"];
-		if($hasSize){$ydata[]=round(($ligne["totalsize"]/1024)/1000);}else{$ydata[]=$ligne["totalsize"];}
+		if($hasSize){$ydata[]=round(($ligne[$field]/1024)/1000);}else{$ydata[]=$ligne[$field];}
 	}
 	
-	$targetedfile="ressources/logs/".basename(__FILE__).".".__FUNCTION__.".$file_prefix.$type.png";
+	$targetedfile="ressources/logs/".basename(__FILE__).".".__FUNCTION__.".blocked.$file_prefix.$type.png";
 	$gp=new artica_graphs();
 	$gp->width=550;
 	$gp->height=350;
@@ -313,7 +223,7 @@ function general_status_graphs(){
 function general_status_cache_graphs(){
 	$page=CurrentPageName();
 	$tpl=new templates();		
-	
+	$_GET["type"]="req";
 	
 	
 	$q=new mysql_squid_builder();	
@@ -338,14 +248,14 @@ function general_status_cache_graphs(){
 	}	
 	
 	
-	$sql="SELECT size_cached as totalsize,DATE_FORMAT(zDate,'%d') as tdate FROM tables_day WHERE $filter ORDER BY zDate";
+	$sql="SELECT totalBlocked as totalsize,DATE_FORMAT(zDate,'%d') as tdate FROM tables_day WHERE $filter ORDER BY zDate";
 	
 	$results=$q->QUERY_SQL($sql);
 
 	if(!$q->ok){echo "<H2>$q->mysql_error</H2>";}
 	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
 		$xdata[]=$ligne["tdate"];
-		$ydata[]=round(($ligne["totalsize"]/1024)/1000);
+		$ydata[]=$ligne["totalBlocked"];
 	}
 	
 	$targetedfile="ressources/logs/".basename(__FILE__).".".__FUNCTION__.".cache-perf.$file_prefix.png";
@@ -364,7 +274,7 @@ function general_status_cache_graphs(){
 
 	$gp->line_green();
 	if(!is_file($targetedfile)){writelogs("Fatal \"$targetedfile\" no such file!",__FUNCTION__,__FILE__,__LINE__);return;}
-	echo $tpl->_ENGINE_parse_body("<div ><h3>{cache} (MB) /{days} - $selected_date</h3>
+	echo $tpl->_ENGINE_parse_body("<div ><h3>{blocked} (requests) /{days} - $selected_date</h3>
 	<center>
 	<img src='$targetedfile'>
 	</center>

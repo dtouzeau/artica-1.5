@@ -99,7 +99,7 @@ while (list ($key, $line) = each ($tr) ){
 		
 		function QuickLinkMemory(){
 			var memorized=Get_Cookie('QuickLinkCachePostfix');
-			if(!memorized){QuickLinkSystems('section_mynic');return;}
+			if(!memorized){QuickLinkSystems('section_postfix');return;}
 			if(memorized.length>0){LoadAjax('BodyContent',memorized);}else{QuickLinkSystems('section_mynic');}
 		
 		}

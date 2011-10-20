@@ -14,6 +14,7 @@ if(isset($_GET["showInfos"])){showInfos_js();exit;}
 
 if(isset($_GET["showInfos-id"])){showInfos_popup();exit;}
 if(isset($_POST["disable"])){disable();exit;}
+if(isset($_GET["left-menus-services"])){left_menus_services();exit;}
 page();
 
 function page(){
@@ -27,7 +28,13 @@ if($datas<>null){NotifyAdmin("system-32.png","CPU Infos !",$datas,null);}
 
 if(is_file("ressources/logs/INTERNET_FAILED")){NotifyAdmin("domain-whitelist-32.png","{INTERNET_FAILED}","{INTERNET_FAILED_TEXT}\n".@file_get_contents("ressources/logs/INTERNET_FAILED"),null);}
 
+$services_next=$tpl->_ENGINE_parse_body("
+<div style='font-size:16px'>{services}:</div>
+<div id='left-menus-services'></div>
 
+<script>
+	LoadAjax('left-menus-services','$page?left-menus-services=yes');
+</script>");
 
 $q=new mysql();
 
@@ -56,7 +63,7 @@ $f=squid_filters_infos();
 		}
 	}
 
-if(mysql_num_rows($results)==0){$html=$html."</tbody></table>";echo $html;return;}
+if(mysql_num_rows($results)==0){$html=$html."</tbody></table><hr>$services_next";echo $html;return;}
 
 
 while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
@@ -85,12 +92,84 @@ while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
 
 $html=$html."</tbody></table>
 <div style='width:100%;text-align:right'>". imgtootltip("20-refresh.png","{refresh}","LoadAjax('admin-left-infos','admin.index.status-infos.php');")."</div>
+<hr>
+$services_next
+
 
 ";
 
 echo $tpl->_ENGINE_parse_body($html);
 
 }
+
+function left_menus_services(){
+$page=CurrentPageName();
+$tpl=new templates();
+$sock=new sockets();
+$users=new usersMenus();
+
+	$GLOBALS["ICON_FAMILY"]="SYSTEM";
+	Paragraphe("database-connect-settings-64.png", "{APP_MYSQL}", "{APP_MYSQL_TEXT}","javascript:AnimateDiv('BodyContent');Loadjs('system.mysql.php');");
+	$EnableWebProxyStatsAppliance=$sock->GET_INFO("EnableWebProxyStatsAppliance");
+	
+	
+	if($EnableWebProxyStatsAppliance==1){
+		$GLOBALS["ICON_FAMILY"]="STATISTICS";
+		$js="SquidQuickLinks()";
+		Paragraphe("statistics2-64.png", "{SQUID_STATS}", "{SQUID_STATS_TEXT}","javascript:$js");
+		$squid_stats="
+			<tr>
+				<td width=1%>". imgtootltip("statistics2-32.png","{SQUID_STATS_TEXT}","SquidQuickLinks()")."</td>
+				<td style='font-size:11px' nowrap><a href=\"javascript:blur();\" 
+						OnClick=\"javascript:$js\" 
+						style='font-size:11px;text-decoration:underline'>{SQUID_STATS1}</a></td>
+			</tr>
+						
+		
+		";
+	}
+	
+	if($users->SQUID_INSTALLED){
+		$SQUIDEnable=$sock->GET_INFO("SQUIDEnable");
+		if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
+		if($SQUIDEnable==1){
+		$GLOBALS["ICON_FAMILY"]="STATISTICS";
+		$js="SquidQuickLinks()";
+		Paragraphe("statistics2-64.png", "{SQUID_STATS}", "{SQUID_STATS_TEXT}","javascript:$js");	
+		$squid_stats="
+			<tr>
+				<td width=1%>". imgtootltip("statistics2-32.png","{SQUID_STATS_TEXT}","SquidQuickLinks()")."</td>
+				<td style='font-size:11px' nowrap><a href=\"javascript:blur();\" 
+						OnClick=\"javascript:$js;\" 
+						style='font-size:11px;text-decoration:underline'>{SQUID_STATS1}</a></td>
+			</tr>
+						
+		
+		";			
+		}
+	}
+
+	
+	
+	
+	
+	$GLOBALS["ICON_FAMILY"]="SYSTEM";
+	$html="<table style='width:100%' class=form><tbody>";
+	
+	$html=$html."
+	<tr>
+		<td width=1%>". imgtootltip("database-connect-settings-32.png","{APP_MYSQL_TEXT}","Loadjs('system.mysql.php?tabsize=14');")."</td>
+		<td style='font-size:11px' nowrap><a href=\"javascript:blur();\" 
+				OnClick=\"javascript:AnimateDiv('BodyContent');Loadjs('system.mysql.php?tabsize=14');\" style='font-size:11px;text-decoration:underline'>{APP_MYSQL}</a></td>
+	</tr>
+		$squid_stats	";		
+	
+		$html=$html."</tbody></table>";
+		echo $tpl->_ENGINE_parse_body($html);
+	
+}
+
+
 
 function squid_filters_infos(){
 	$sock=new sockets();

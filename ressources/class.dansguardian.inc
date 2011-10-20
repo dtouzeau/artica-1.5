@@ -641,7 +641,7 @@ class dansguardian_rules{
 									"imagehosting"=>"{www_imagehosting}",
 									"religion"=>"{religion}",
 									"sect"=>"{sect}",
-									
+									"genealogy"=>"{www_genealogy}",
 									
 									"ringtones"=>"{ringtones}",
 									"recreation/wellness"=>"{recreation_wellness}",
@@ -655,14 +655,17 @@ class dansguardian_rules{
 									"recreation/humor"=>"{recreation_humor}",
 									
 									"shopping"=>"{www_shopping}",
+									"gifts"=>"{www_gifts}",
 									"clothing"=>"{www_clothing}",
 									"models"=>"{models}",
 									"celebrity"=>"{www_celebrity}",
+									
 									
 									"science/chemistry"=>"{science_chemistry}",
 									"astrology"=>"{astrology}",
 									"science/astronomy"=>"{science_astronomy}",
 									"science/weather"=>"{science_weather}",
+									"browsersplugins"=>"{www_browsersplugins}",
 									"webplugins"=>"{webplugins}",
 									"maps"=>"{www_maps}",
 									"science/computing"=>"{cat_computing}",
@@ -782,7 +785,10 @@ class dansguardian_rules{
 		  	"internal"=>"network-1-20.gif",
 		  	"maps"=>"20-maps.png",
 		  	"press"=>"20-news.png",
-		  	"nature"=>"nature-20.png"
+		  	"nature"=>"nature-20.png",
+		  	"gifts"=>"gifts-20.png",
+		  	"browsersplugins"=>"20-webplugins.png",
+		  	"genealogy"=>"genealogy-20.png",
 		  	
 		  	);
 									

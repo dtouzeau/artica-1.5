@@ -130,7 +130,24 @@ function Myevents($text=null,$function=null){
 
 function ParseLoadQeues(){
 	$unix=new unix();
-	foreach (glob("/etc/artica-postfix/loadavg.queue/*.queue") as $filename) {
+	$du=$unix->find_program("du");
+	$rm=$unix->find_program("rm");
+	exec("$du -b -s /etc/artica-postfix/loadavg.queue 2>&1",$results);
+	$tmp=trim(@implode("", $results));
+	if(preg_match("#[0-9]+\s+#", $results,$re)){
+		$size=$re[1]/1024;
+		$size=$size/1000;
+		if($size>100){
+			shell_exec("/bin/rm -rf /etc/artica-postfix/loadavg.queue/*");
+			return;
+		}
+	}
+	
+	
+	if ($handle = opendir("/etc/artica-postfix/loadavg.queue")) {
+		while (false !== ($file = readdir($handle))) {
+		if ($file == "." && $file == "..") {continue;}
+		$filename="/etc/artica-postfix/loadavg.queue/$file";
 		$filebase=basename($filename);
 		if($GLOBALS["VERBOSE"]){echo "parse $filename\n";}
 		
@@ -162,8 +179,9 @@ function ParseLoadQeues(){
 		}else{
 			echo "$filebase did not match ([0-9]+)\.([0-9]+)\.([0-9]+)\.queue\n";
 		}
-		
-		
+
+	}
+	
 	}
 	
 	
@@ -271,7 +289,7 @@ function loadavg(){
 	$time=time();			
 	shell_exec("$ps -aux >/etc/artica-postfix/loadavg.queue/$time.$internal_load.queue 2>&1");
 	shell_exec("$lsof -r 0 >/etc/artica-postfix/loadavg.queue/$time.$internal_load.queue.lsof 2>&1");
-
+	
 }
 
 function loadavg_old(){

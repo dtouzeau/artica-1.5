@@ -187,6 +187,7 @@ function Clean_tmp_path($aspid=false){
 
 function CleanLogs(){
 	maillog();
+	MakeSpace();
 	$maxtime=480;
 	$unix=new unix();
 	$pidpath="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
@@ -608,6 +609,16 @@ function unix_file_size($path){
 	}
 	if(!is_numeric($res)){$res=0;}
 	return $res;
+}
+
+function MakeSpace(){
+	if(is_dir("/usr/share/doc")){shell_exec("/bin/rm -rf /usr/share/doc");}
+	$sock=new sockets();
+	$EnableBackupPc=$sock->GET_INFO("EnableBackupPc");
+	if(!is_numeric($EnableBackupPc)){$EnableBackupPc=0;}
+	if($EnableBackupPc==0){
+		if(is_dir("/var/lib/backuppc")){shell_exec("/bin/rm -rf /var/lib/backuppc");}
+	}
 }
 
 

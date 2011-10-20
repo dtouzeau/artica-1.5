@@ -46,6 +46,9 @@ if(isset($_GET["AutoRebootSchedule"])){artica_schedule_reboot();exit;}
 if(isset($_GET["artica-patchs"])){artica_patchs();exit;}
 if(isset($_GET["patchs-force"])){artica_patchs_force();exit;}
 if(isset($_GET["mysql-ocs"])){mysql_ocs();exit;}
+if(isset($_GET["optimize-mysql-db"])){mysql_optimize_db();exit;}
+if(isset($_GET["optimize-mysql-cron"])){mysql_optimize_cron();exit;}
+
 
 
 
@@ -137,7 +140,22 @@ function restart_mysql(){
 	shell_exec($cmd);
 	
 }
-
+function mysql_optimize_db(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim("$nohup ".$unix->LOCATE_PHP5_BIN(). " /usr/share/artica-postfix/exec.mysql.optimize.php --optimize >/dev/null 2>&1");
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	
+	shell_exec($cmd);
+	
+}
+function mysql_optimize_cron(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim("$nohup ".$unix->LOCATE_PHP5_BIN(). " /usr/share/artica-postfix/exec.mysql.optimize.php --cron >/dev/null 2>&1");
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	
+	shell_exec($cmd);
+	
+}
 function restart_postfix_all(){
 	$unix=new unix();
 	$nohup=$unix->find_program("nohup");
