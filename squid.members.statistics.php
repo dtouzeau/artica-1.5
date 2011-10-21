@@ -673,6 +673,12 @@ function members_first_graph(){
 	
 	if(!$q->TABLE_EXISTS($tablesrc)){$q->CreateMembersDayTable();}
 	
+	if(!$q->TABLE_EXISTS($tablesrc,true)){
+		echo $tpl->_ENGINE_parse_body("<center style='margin:50px'><H2>{error_no_datas}</H2></center><script>LoadAjax('month-list-members','$page?month-list-members=yes');</script>");
+		return;
+	}
+	
+	
 	$sql="SELECT COUNT(zMD5) as tcount,`day` FROM `$tablesrc` GROUP BY `day` ORDER BY `day`";
 	$results=$q->QUERY_SQL($sql);
 	if(!$q->ok){echo "<H2>$q->mysql_error</H2><center style='font-size:11px'><code>$sql</code></center>";}

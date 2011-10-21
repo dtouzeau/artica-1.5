@@ -5,8 +5,9 @@ include_once(dirname(__FILE__).'/ressources/class.mysql.inc');
 include_once(dirname(__FILE__).'/ressources/class.acls.inc');
 include_once(dirname(__FILE__).'/framework/class.unix.inc');
 include_once(dirname(__FILE__)."/framework/frame.class.inc");
+include_once(dirname(__FILE__)."/ressources/class.groups.inc");
 
-if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["VERBOSE"]=true;}
+if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["VERBOSE"]=true;$GLOBALS["VERBOSE"]=true;ini_set('display_errors', 1);ini_set('error_reporting', E_ALL);ini_set('error_prepend_string',null);ini_set('error_append_string',null);}
 if(preg_match("#--force#",implode(" ",$argv))){$GLOBALS["FORCE"]=true;}
 
 if($argv[1]=='--acls'){applyAcls();die();}
@@ -105,7 +106,7 @@ function ApplySingleAcls($directory){
 		}
 		
 		print_r($acls->acls_array);
-		
+		$gp=new groups();
 		if(is_array($acls->acls_array["GROUPS"])){
 			while (list ($groupname, $array) = each ($acls->acls_array["GROUPS"]) ){	
 				$perms=array();
@@ -115,12 +116,20 @@ function ApplySingleAcls($directory){
 				if($array["w"]==1){$perms[]="w";}
 				if($array["x"]==1){$perms[]="x";}
 				$perms_strings=@implode("",$perms);
-				if($perms_strings==null){
-					$events[]="No permissions set for $groupname";
-					continue;
-				}
+				if($perms_strings==null){$events[]="No permissions set for $groupname";continue;}
 				if($acls->acls_array["recursive"]==1){$recurs="-R ";}
+				$gpid=$gp->GroupIDFromGetEnt($groupname);
 				$groupname=utf8_encode($groupname);
+				
+				if($GLOBALS["VERBOSE"]){echo "`$groupname` as gidNumber `$gpid`\n";}
+				if(is_numeric($gpid)){
+					if($gpid>0){
+						$groupname=$gpid;
+					}
+				}
+					
+				
+				
 				$cmd="$setfacl_bin $recurs-m g:\"$groupname\":$perms_strings $dir 2>&1";
 				$events[]=$cmd;
 				exec("$cmd",$events);
@@ -151,14 +160,14 @@ function ApplySingleAcls($directory){
 					$events[]="No permissions set for $member";
 					continue;
 				}
-				if($aclsClass->acls_array["recursive"]==1){$recurs="R";}
+				if($acls->acls_array["recursive"]==1){$recurs="R";}
 				$member=utf8_encode($member);
 				$cmd="$setfacl_bin -m$recurs u:\"$member\":$perms_strings $dir 2>&1";
 				$events[]=$cmd;
 				exec("$cmd",$events);
 				
 				
-				if($aclsClass->acls_array["default"]==1){
+				if($acls->acls_array["default"]==1){
 					$member=utf8_encode($member);
 					$cmd="$setfacl_bin -m$recurs d:u:\"$member\":$perms_strings $dir 2>&1";
 					$events[]=$cmd;

@@ -102,6 +102,7 @@ function getent(){
 	
 	$prefix="INSERT IGNORE INTO getent_users (uid) VALUES ";
 	$q=new mysql();
+	$q->BuildTables();
 	$q->QUERY_SQL("TRUNCATE TABLE `getent_users`","artica_backup");
 	
 	
@@ -160,22 +161,35 @@ if(count($sql)>1){
 	if($GLOBALS["VERBOSE"]){writelogs("[getent group]::  Executing, please wait",__FUNCTION__,__FILE__,__LINE__);}	
 	exec("$getent group 2>&1",$results);
 	if($GLOBALS["VERBOSE"]){writelogs("[getent group]:: parsing  ".count($results)." elements ",__FUNCTION__,__FILE__,__LINE__);}
-	$prefix="INSERT IGNORE INTO getent_groups (`group`) VALUES ";
+	$prefix="INSERT IGNORE INTO getent_groups (`group`,`gpid`) VALUES ";
 	$q=new mysql();
 	$q->QUERY_SQL("TRUNCATE TABLE `getent_groups`","artica_backup");
 	while (list ($num, $ligne) = each ($results) ){
-		if(preg_match("#^(.+?):#", $ligne,$re)){
-			$re[1]=addslashes(utf8_encode($re[1]));
-			$sql[]="('{$re[1]}')";
+		if(preg_match("#^(.+?):.+?([0-9]+):#", $ligne,$re)){
+			
+			$GPIDADDED[trim($re[1])]=true;
+			$re[1]=addslashes(utf8_encode(trim($re[1])));
+			$gpid=$re[2];
+			
+			$sql[]="('{$re[1]}','$gpid')";
 			if(count($sql)>500){
 				if($GLOBALS["VERBOSE"]){writelogs("[getent group]:: Inserting ".count($sql)." elements ",__FUNCTION__,__FILE__,__LINE__);}
 				$sqlfinal=$prefix.@implode(",", $sql);
 				$q->QUERY_SQL($sqlfinal,"artica_backup");
-				if(!$q->ok){echo $q->mysql_error."\n";}
+				if(!$q->ok){echo $q->mysql_error." line:" . __LINE__."\n";}
 				$sql=array();
 			}
 		}
 	}
+	
+if(count($sql)>0){
+	if($GLOBALS["VERBOSE"]){writelogs("[getent group]:: Inserting ".count($sql)." elements ",__FUNCTION__,__FILE__,__LINE__);}
+	$sqlfinal=$prefix.@implode(",", $sql);
+	$q->QUERY_SQL($sqlfinal,"artica_backup");
+	if(!$q->ok){echo $q->mysql_error." line:" . __LINE__."\n";}
+	$sql=array();
+}	
+	
 	
 	
 if(is_ads_connected()){
@@ -184,9 +198,11 @@ if(is_ads_connected()){
 	$results=array();
 	if($GLOBALS["VERBOSE"]){writelogs("[net ads group]::  Executing, please wait",__FUNCTION__,__FILE__,__LINE__);}	
 	exec("$net ads group 2>&1",$results);
+	$prefix="INSERT IGNORE INTO getent_groups (`group`) VALUES ";
 	while (list ($num, $group) = each ($results) ){
 		$group=trim($group);
 		if($group==null){continue;}
+		if(isset($GPIDADDED[$group])){continue;}
 		$group=addslashes(utf8_encode($group));
 		$sql[]="('$group')";
 		if(count($sql)>500){

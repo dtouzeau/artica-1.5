@@ -49,10 +49,12 @@ class groups{
 		if($EnableManageUsersTroughActiveDirectory==1){$this->EnableManageUsersTroughActiveDirectory=true;}
 		$this->SAMBA_INSTALLED=$users->SAMBA_INSTALLED;
 		if($users->EnableManageUsersTroughActiveDirectory){
-				writelogs(" -> LoadFromAd($groupid,$searchPattern)",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
-				$this->LoadFromAd($groupid,$searchPattern);
-				writelogs(" -> LoadFromAd END",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
-				return;
+				if( (is_numeric($groupid) ) OR  ($searchPattern<>null) ){
+					writelogs(" -> LoadFromAd($groupid,$searchPattern)",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+					$this->LoadFromAd($groupid,$searchPattern);
+					writelogs(" -> LoadFromAd END",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+					return;
+				}
 		}
 		
 		
@@ -398,7 +400,7 @@ private function seems_utf8($Str) {
 			if(preg_match("#ou=groups,ou\=([a-zA-Z0-9\s\.\-\(\)_]+)#i",$dn,$pre)){$res["ou"]=trim($pre[1]);}
 			
 			$this->ou=$res["ou"];
-			$this->sambaSID=$attrs["sambaSID"][0];
+			if(isset($attrs["sambaSID"][0])){$this->sambaSID=$attrs["sambaSID"][0];}
 			if(isset($attrs["sambaGroupType"][0])){$this->sambaGroupType=$attrs["sambaGroupType"][0];}
 			$this->description=$attrs["description"][0];
 			$this->main_array=$res;
@@ -1403,7 +1405,30 @@ function EditSambaGroups(){
 		}		
 		
 		return $res;	
-		}	
+		}
+
+		
+		function GroupIDFromActiveDirectoryName($groupname){
+			$q=new mysql();
+			$sql="SELECT dn FROM activedirectory_groupsNames WHERE groupname='$groupname'";
+			$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,"artica_backup"));
+			writelogs("`$groupname` = `{$ligne["dn"]}`",__CLASS__.'/'.__FUNCTION__,__FILE__);
+			if($ligne["dn"]<>null){
+				$ldap=new ldapAD();
+				$array=$ldap->Ldap_search($ligne["dn"],"objectclass=*",array());
+				
+			}
+			
+		}
+		
+		function GroupIDFromGetEnt($groupname){
+			$q=new mysql();
+			$groupname=str_replace(" ", "%", $groupname);
+			$sql="SELECT gpid FROM getent_groups WHERE `group` LIKE '$groupname' AND gpid>0";
+			$ligne=@mysql_fetch_array($q->QUERY_SQL($sql,"artica_backup"));
+			if($GLOBALS["VERBOSE"]){echo $sql."\n";}	
+			return $ligne["gpid"];
+		}
 
 		
 		

@@ -44,10 +44,11 @@ $q->QUERY_SQL($sql,"artica_events");
 $sql="SELECT * FROM adminevents WHERE enabled=1 ORDER BY zDate DESC LIMIT 0,50";
 $results=$q->QUERY_SQL($sql,"artica_events");
 $html="<table style='width:100%' class=form><tbody>";
-
+$c=0;
 $f=squid_filters_infos();
 	if(is_array($f)){
 		while (list ($num, $ligne) = each ($f) ){
+			$c++;
 			if($ligne["subject"]==null){continue;}
 			$ligne["subject"]=$tpl->_ENGINE_parse_body($ligne["subject"]);
 			$strlen=strlen($ligne["subject"]);
@@ -63,7 +64,10 @@ $f=squid_filters_infos();
 		}
 	}
 
-if(mysql_num_rows($results)==0){$html=$html."</tbody></table><hr>$services_next";echo $html;return;}
+if(mysql_num_rows($results)==0){
+	if($c==0){echo $services_next;return;}
+	$html=$html."</tbody></table><hr>$services_next";echo $html;return;
+}
 
 
 while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
@@ -160,7 +164,7 @@ $users=new usersMenus();
 	<tr>
 		<td width=1%>". imgtootltip("database-connect-settings-32.png","{APP_MYSQL_TEXT}","Loadjs('system.mysql.php?tabsize=14');")."</td>
 		<td style='font-size:11px' nowrap><a href=\"javascript:blur();\" 
-				OnClick=\"javascript:AnimateDiv('BodyContent');Loadjs('system.mysql.php?tabsize=14');\" style='font-size:11px;text-decoration:underline'>{APP_MYSQL}</a></td>
+				OnClick=\"javascript:AnimateDiv('BodyContent');Loadjs('system.mysql.php?tabsize=14');\" style='font-size:11px;text-decoration:underline'>{APP_MYSQL1}</a></td>
 	</tr>
 		$squid_stats	";		
 	

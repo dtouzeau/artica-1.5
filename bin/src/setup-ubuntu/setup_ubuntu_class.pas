@@ -25,7 +25,7 @@ private
        function UbuntuName():string;
        procedure checkRepostitories6();
        procedure S00vzreboot();
-
+       function isVPSDetected():boolean;
 
 public
       constructor Create();
@@ -1138,7 +1138,7 @@ if distri.DISTRINAME_CODE='DEBIAN' then begin
         L.add('xtables-addons-common');
         L.add('xtables-addons-source');
         l.add('virt-what');
-        l.add('cgroup-bin');
+        if not isVPSDetected() then l.add('cgroup-bin');
 
 
 
@@ -1281,7 +1281,7 @@ if distri.DISTRINAME_CODE='UBUNTU' then begin
       l.add('python-pyopenssl');
       l.add('open-iscsi');
       l.Add('lha');
-      L.add('cgroup-bin');
+      if not isVPSDetected() then L.add('cgroup-bin');
 
 
    end;
@@ -1303,14 +1303,14 @@ if distri.DISTRINAME_CODE='UBUNTU' then begin
        l.add('libicu42');
        l.add('open-iscsi');
        l.Add('lha');
-       L.add('cgroup-bin');
+       if not isVPSDetected() then L.add('cgroup-bin');
 
    end;
    if UbuntuIntVer=11 then begin
         l.add('libboost-filesystem1.42.0');
         l.add('libboost-system1.42.0');
         L.add('libicu44');
-        L.add('cgroup-bin');
+        if not isVPSDetected() then L.add('cgroup-bin');
    end;
 
    if  UbuntuIntVer>9  then begin
@@ -2305,4 +2305,12 @@ begin
     SetLength(Result, Index); // wirkliche Länge festlegen
 end;
 //#########################################################################################
+
+function tubuntu.isVPSDetected():boolean;
+begin
+result:=false;
+if FIleExists('/etc/rc6.d/S00vzreboot') then exit(true);
+end;
+
+
 end.

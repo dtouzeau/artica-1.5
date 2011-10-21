@@ -665,7 +665,6 @@ if(isset($_GET["philesize-img-path"])){philesizeIMGPath();exit;}
 //samba
 if(isset($_GET["smblient"])){samba_smbclient();exit;}
 if(isset($_GET["smb-logon-scripts"])){samba_logon_scripts();exit;}
-if(isset($_GET["SAMBA-HAVE-POSIX-ACLS"])){SAMBA_HAVE_POSIX_ACLS();exit;}
 if(isset($_GET["samba-events-list"])){samba_events_lists();exit;}
 if(isset($_GET["samba-move-logs"])){samba_move_logs();exit;}
 if(isset($_GET["samba-delete-logs"])){samba_delete_logs();exit;}
@@ -1218,11 +1217,22 @@ function nmap_scan(){
 function acls_infos(){
 	$unix=new unix();
 	$path=base64_decode($_GET["path-acls"]);
+	
+	if(!is_dir($path)){
+		$array[0]="NO_SUCH_DIR";
+		writelogs_framework("$path -> NO_SUCH_DIR",__FUNCTION__,__FILE__,__LINE__);
+		echo "<articadatascgi>".base64_encode(serialize($array))."</articadatascgi>";
+		return;
+	}
+	
+	if(isset($_GET["justdirectoryTests"])){return;}
+	
 	$getfacl=$unix->find_program("getfacl");
 	if($getfacl==null){return false;}
-	exec("$getfacl --tabular \"$path\"",$results);
+	exec("$getfacl --tabular \"$path\" 2>&1",$results);
 	
 	while (list ($num, $line) = each ($results)){
+		
 		if(preg_match("#USER\s+(.+?)\s+(.*)#",$line,$re)){
 			$array["OWNER"]=array("NAME"=>$re[1],"RIGHTS"=>$re[2],"DEFAULT"=>true);
 			continue;
@@ -4884,21 +4894,7 @@ function samba_change_acl_user(){
 	}		
 }
 	
-function SAMBA_HAVE_POSIX_ACLS(){
-	$unix=new unix();
-	$HAVE_POSIX_ACLS="FALSE";
-	$smbd=$unix->find_program("smbd");
-	$grep=$unix->find_program("grep");
-	exec("$smbd -b|$grep -i acl 2>&1",$results);
-	while (list ($index, $line) = each ($results) ){
-		if(preg_match("#HAVE_POSIX_ACLS#",$line)){
-			$HAVE_POSIX_ACLS="TRUE";
-			break;
-		}
-	}
-	
-	echo "<articadatascgi>". base64_encode($HAVE_POSIX_ACLS)."</articadatascgi>";	
-	}
+
 
 function dansguardian_template(){
 	sys_THREAD_COMMAND_SET("/usr/share/artica-postfix/bin/artica-install --dansguardian-template");
@@ -8195,9 +8191,10 @@ function acls_status(){
 
 function acls_apply(){
 	$unix=new unix();
-	$cmd=LOCATE_PHP5_BIN2()." /usr/share/artica-postfix/exec.acls.php --acls-single {$_GET["acls-apply"]}";
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim($nohup. " ".LOCATE_PHP5_BIN2()." /usr/share/artica-postfix/exec.acls.php --acls-single {$_GET["acls-apply"]} >/dev/null 2>&1 &");
 	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);
-	$unix->THREAD_COMMAND_SET($cmd);	
+	shell_exec($cmd);	
 }
 function acls_delete(){
 	$unix=new unix();
@@ -8208,9 +8205,10 @@ function acls_delete(){
 }
 function acls_rebuild(){
 	$unix=new unix();
-	$cmd=LOCATE_PHP5_BIN2()." /usr/share/artica-postfix/exec.acls.php --acls";
+	$nohup=$unix->find_program("nohup");
+	$cmd=trim($nohup. " ".LOCATE_PHP5_BIN2()." /usr/share/artica-postfix/exec.acls.php --acls");
 	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);
-	$unix->THREAD_COMMAND_SET($cmd);	
+	shell_exec($cmd);	
 }
 function ufdbguard_compile_missing_dbs(){
 	@file_put_contents("/etc/artica-postfix/ufdbguard.compile.missing.alldbs","#");

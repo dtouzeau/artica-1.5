@@ -201,6 +201,23 @@ if(preg_match("#\] REDIR\s+#", $buffer)){return;}
 		if($user<>"-"){$local_ip=$user;}
 		$table=date('Ymd')."_blocked";
 		
+		if($category=="agressivecat"){$category="agressive";}
+		if($category=="automobile_bikes"){$category="automobile/bikes";}
+		if($category=="automobile_boats"){$category="automobile/boats";}
+		if($category=="automobile_planes"){$category="automobile/planes";}
+		if($category=="automobile_cars"){$category="automobile/cars";}
+		if($category=="finance_banking"){$category="finance_banking";}
+		if($category=="finance_banking"){$category="finance/banking";}
+		if($category=="finance_insurance"){$category="finance/insurance";}
+		if($category=="finance_moneylending"){$category="finance/moneylending";}
+		if($category=="finance_realestate"){$category="finance/realestate";}
+		if($category=="hobby_cooking"){$category="hobby/cooking";}
+		if($category=="hobby_arts"){$category="hobby/arts";}
+		if($category=="hobby_pets"){$category="hobby/pets";}			
+ 
+		
+		
+		
 		$md5=md5("$date,$local_ip,$rulename,$category,$www,$public_ip");
 		$sql="INSERT INTO `$table` (client,website,category,rulename,public_ip) VALUES";
 		$sql="('$local_ip','$www','$category','$rulename','$public_ip')";

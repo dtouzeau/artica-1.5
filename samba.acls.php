@@ -390,10 +390,17 @@ function popup_acls(){
 	$page=CurrentPageName();
 	$sock=new sockets();
 	$aclsClass=new aclsdirs(base64_decode($path));
-	$acls=unserialize(base64_decode($sock->getFrameWork("cmd.php?path-acls=$path")));
-	if(!is_array($acls)){
+	$aclsTests=unserialize(base64_decode($sock->getFrameWork("cmd.php?path-acls=$path")));
+	
+	if($aclsTests[0]=="NO_SUCH_DIR"){
+		$error_acl="<div class=explain style='font-size:14px'>{acls_no_such_dir_text}</div>";
+		echo $tpl->_ENGINE_parse_body($error_acl);
+		return;
 		
-		$error_acl="<div class=explain>{acls_get_error}</div>";
+	}
+	
+	if(!is_array($aclsTests)){
+			$error_acl="<div class=explain style='font-size:14px'>{acls_get_error}</div>";
 		
 	}
 //AclChangeSubitems

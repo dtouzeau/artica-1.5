@@ -17,7 +17,7 @@ if(isset($_GET["trash-restore"])){trash_restore();exit;}
 if(isset($_GET["trash-scan"])){trash_scan();exit;}
 if(isset($_GET["trash-delete"])){trash_delete();exit;}
 if(isset($_GET["SmblientBrowse"])){SmblientBrowse();exit;}
-
+if(isset($_GET["SAMBA-HAVE-POSIX-ACLS"])){SAMBA_HAVE_POSIX_ACLS();exit;}
 
 
 while (list ($num, $line) = each ($_GET)){$f[]="$num=$line";}
@@ -268,3 +268,24 @@ function getent_group(){
 	writelogs_framework("$cmd = " . count($results)." rows $false bad lines return ". count($return)." rows",__FUNCTION__,__FILE__,__LINE__);
 	echo "<articadatascgi>". base64_encode(serialize($return))."</articadatascgi>";	
 }
+
+function SAMBA_HAVE_POSIX_ACLS(){
+	$unix=new unix();
+	$HAVE_POSIX_ACLS="FALSE";
+	$smbd=$unix->find_program("smbd");
+	$grep=$unix->find_program("grep");
+	exec("$smbd -b|$grep -i acl 2>&1",$results);
+	while (list ($index, $line) = each ($results) ){
+		
+		if(preg_match("#HAVE_POSIX_ACLS#",$line)){
+			writelogs_framework("$line match !",__FUNCTION__,__FILE__,__LINE__);
+			$HAVE_POSIX_ACLS="TRUE";
+			break;
+		}else{
+			writelogs_framework("$line no match....",__FUNCTION__,__FILE__,__LINE__);
+		}
+	}
+	
+	echo "<articadatascgi>". base64_encode($HAVE_POSIX_ACLS)."</articadatascgi>";	
+	}
+

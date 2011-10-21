@@ -122,7 +122,7 @@ class mysql{
 			$this->writelogs("Error, mysql_connect function does not exists...",__FUNCTION__,__LINE__);
 			return false;
 		}
-		if($GLOBALS["VERBOSE"]){echo "mysql_connect($this->mysql_server:$this->mysql_port,$this->mysql_admin,$this->mysql_password)\n";}
+		//if($GLOBALS["VERBOSE"]){echo "mysql_connect($this->mysql_server:$this->mysql_port,$this->mysql_admin,$this->mysql_password)\n";}
 		
 		if(($this->mysql_server=="localhost") OR ($this->mysql_server=="127.0.0.1")){
 			$bd=@mysql_connect(":/var/run/mysqld/mysqld.sock",$this->mysql_admin,$this->mysql_password);

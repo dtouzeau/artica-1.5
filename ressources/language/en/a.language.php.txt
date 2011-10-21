@@ -2607,3 +2607,6 @@ Check the list below and click on each row in order to display Network interface
 <www_genealogy>Websites that talking about genealogy and all about family history</www_genealogy>
 <move_category_explain>Select the category in order to move this website from old category to a new category</move_category_explain>
 <webiste_notfound_additask>This website is not found in database, do you want to categorize it ?</webiste_notfound_additask>
+<rejected>rejected</rejected>
+<APP_MYSQL1>Mysql service</APP_MYSQL1>
+<acls_no_such_dir_text>This directory does not exists on your system.[br]Perhaps you have remove it.[br]I suggest to remove this entry..</acls_no_such_dir_text>

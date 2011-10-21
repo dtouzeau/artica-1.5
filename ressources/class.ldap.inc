@@ -1235,7 +1235,7 @@ function EditRelayDomain($ou,$domain,$ip,$port){
 		$update_array=array();
 		if($DebugThis){error_log("{$GLOBALS["CURRENT_PAGE"]}:: this->ExistsDN(cn=artica,$this->suffix)".__FUNCTION__.' in '.__FILE__. " in line ". __LINE__);}
 		if(!$this->ExistsDN("cn=artica,$this->suffix")){
-			writelogs("Creating cn=artica,$this->suffix branch",__CLASS__.'/'.__FUNCTION__,__FILE__);
+			//writelogs("Creating cn=artica,$this->suffix branch",__CLASS__.'/'.__FUNCTION__,__FILE__);
 			$dn=$this->dn_escape("cn=artica,$this->suffix");
 			$update_array["cn"][]='artica';
 			$update_array["objectClass"][]='organizationalRole';

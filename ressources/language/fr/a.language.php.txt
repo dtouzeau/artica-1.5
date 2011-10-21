@@ -4,6 +4,8 @@
 <acls_and_quotas>Acls &amp; quotas</acls_and_quotas>
 <acls_folders_rebuild_text>Ceci va reconstruire toutes les permissions.
 Effectuer l'op&eacute;ration ?</acls_folders_rebuild_text>
+<acls_no_such_dir_text>Ce r&eacute;pertoire n'existe plus dans votre syst&egrave;me.[br]
+Peut &ecirc;tre que vous devriez supprimer cette entr&eacute;e.</acls_no_such_dir_text>
 <ActHasMaster>Agir en tant que ma&icirc;tre</ActHasMaster>
 <ActHasSlave>Agir en tant qu'esclave</ActHasSlave>
 <activate_openvpn_connection>Activer la connexion VPN et se reconnecter au serveur VPN</activate_openvpn_connection>
@@ -191,6 +193,7 @@ Patientez quelques secondes et rafra&icirc;chissez cette page.</apply_network_co
 <APP_MOD_PAGESPEED>Module d'optimisation de pages Web</APP_MOD_PAGESPEED>
 <APP_MSKTUTIL>keytab client for MS Active Directory</APP_MSKTUTIL>
 <APP_MSKTUTIL_NOT_INSTALLED>msktutil n'est pas install&eacute;, utilisez le centre d'installation d'application &agrave; cet effet.</APP_MSKTUTIL_NOT_INSTALLED>
+<APP_MYSQL1>Service MySQL</APP_MYSQL1>
 <APP_NSCD>D&eacute;mon de mise en cache interne</APP_NSCD>
 <APP_OCSI2>Serveur OCS v2.x</APP_OCSI2>
 <APP_OPENEMM>Service OpenEMM</APP_OPENEMM>
@@ -1561,6 +1564,7 @@ Config Tr&egrave;s basse: vous lib&egrave;rera 320Mb.[br]</Reduce_mysql_explain>
 <register_date>Date d'enregistrement</register_date>
 <register_form>Formulaire d'enregistrement</register_form>
 <registration_complete>Fin de l'enregistrement</registration_complete>
+<rejected>rejet&eacute;(s)</rejected>
 <rejected_mails>Messages rejet&eacute;s</rejected_mails>
 <reject_rhsbl_helo>Rejeter RHSBL via HELO</reject_rhsbl_helo>
 <reject_rhsbl_helo_text>[b]rbl_domain=d.d.d.d[/b]Rejette la requ&ecirc;te lorsque le nom d'h&ocirc;te est list&eacute; avec l'enregistrement A &quot;d.d.d.d&quot; du domaine rbl_domain</reject_rhsbl_helo_text>

@@ -12,7 +12,7 @@
       <MainUnit Value="0"/>
       <TargetFileExt Value=""/>
       <Title Value="setup-ubuntu"/>
-      <ActiveEditorIndexAtStart Value="2"/>
+      <ActiveEditorIndexAtStart Value="5"/>
     </General>
     <VersionInfo>
       <ProjectVersion Value=""/>
@@ -44,8 +44,8 @@
         <Filename Value="setup_ubuntu_class.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="setup_ubuntu_class"/>
-        <CursorPos X="1" Y="927"/>
-        <TopLine Value="884"/>
+        <CursorPos X="18" Y="2309"/>
+        <TopLine Value="2248"/>
         <EditorIndex Value="5"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -112,7 +112,7 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="setup_libs"/>
         <CursorPos X="96" Y="237"/>
-        <TopLine Value="443"/>
+        <TopLine Value="237"/>
         <EditorIndex Value="8"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -129,7 +129,7 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="distriDetect"/>
         <CursorPos X="10" Y="288"/>
-        <TopLine Value="316"/>
+        <TopLine Value="288"/>
         <EditorIndex Value="7"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
@@ -158,7 +158,7 @@
         <Filename Value="setup_centos_class.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="setup_centos_class"/>
-        <CursorPos X="48" Y="1318"/>
+        <CursorPos X="86" Y="1311"/>
         <TopLine Value="1267"/>
         <EditorIndex Value="2"/>
         <UsageCount Value="200"/>
@@ -219,124 +219,124 @@
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
-        <Filename Value="setup_centos_class.pas"/>
-        <Caret Line="1" Column="1" TopLine="1"/>
+        <Filename Value="setup_ubuntu.pas"/>
+        <Caret Line="524" Column="165" TopLine="490"/>
       </Position1>
       <Position2>
-        <Filename Value="setup_centos_class.pas"/>
-        <Caret Line="26" Column="25" TopLine="1"/>
+        <Filename Value="setup_libs.pas"/>
+        <Caret Line="91" Column="27" TopLine="57"/>
       </Position2>
       <Position3>
         <Filename Value="setup_centos_class.pas"/>
-        <Caret Line="29" Column="27" TopLine="1"/>
+        <Caret Line="452" Column="24" TopLine="423"/>
       </Position3>
       <Position4>
         <Filename Value="setup_centos_class.pas"/>
-        <Caret Line="30" Column="27" TopLine="1"/>
+        <Caret Line="27" Column="25" TopLine="1"/>
       </Position4>
       <Position5>
-        <Filename Value="setup_libs.pas"/>
-        <Caret Line="2230" Column="72" TopLine="2213"/>
+        <Filename Value="setup_centos_class.pas"/>
+        <Caret Line="30" Column="27" TopLine="1"/>
       </Position5>
       <Position6>
-        <Filename Value="setup_libs.pas"/>
-        <Caret Line="1" Column="1" TopLine="1"/>
+        <Filename Value="setup_centos_class.pas"/>
+        <Caret Line="31" Column="27" TopLine="1"/>
       </Position6>
       <Position7>
-        <Filename Value="setup_libs.pas"/>
-        <Caret Line="225" Column="39" TopLine="174"/>
+        <Filename Value="setup_centos_class.pas"/>
+        <Caret Line="116" Column="13" TopLine="82"/>
       </Position7>
       <Position8>
-        <Filename Value="setup_ubuntu.pas"/>
-        <Caret Line="21" Column="36" TopLine="18"/>
+        <Filename Value="setup_centos_class.pas"/>
+        <Caret Line="352" Column="28" TopLine="318"/>
       </Position8>
       <Position9>
-        <Filename Value="setup_ubuntu.pas"/>
-        <Caret Line="1" Column="1" TopLine="1"/>
+        <Filename Value="setup_centos_class.pas"/>
+        <Caret Line="355" Column="31" TopLine="318"/>
       </Position9>
       <Position10>
-        <Filename Value="setup_ubuntu.pas"/>
-        <Caret Line="524" Column="165" TopLine="490"/>
+        <Filename Value="setup_centos_class.pas"/>
+        <Caret Line="356" Column="34" TopLine="318"/>
       </Position10>
       <Position11>
-        <Filename Value="setup_libs.pas"/>
-        <Caret Line="91" Column="27" TopLine="57"/>
+        <Filename Value="setup_centos_class.pas"/>
+        <Caret Line="359" Column="28" TopLine="318"/>
       </Position11>
       <Position12>
         <Filename Value="setup_centos_class.pas"/>
-        <Caret Line="116" Column="27" TopLine="222"/>
+        <Caret Line="362" Column="31" TopLine="318"/>
       </Position12>
       <Position13>
         <Filename Value="setup_centos_class.pas"/>
-        <Caret Line="452" Column="24" TopLine="423"/>
+        <Caret Line="500" Column="14" TopLine="466"/>
       </Position13>
       <Position14>
         <Filename Value="setup_centos_class.pas"/>
-        <Caret Line="27" Column="25" TopLine="1"/>
+        <Caret Line="565" Column="14" TopLine="531"/>
       </Position14>
       <Position15>
         <Filename Value="setup_centos_class.pas"/>
-        <Caret Line="30" Column="27" TopLine="1"/>
+        <Caret Line="566" Column="14" TopLine="531"/>
       </Position15>
       <Position16>
         <Filename Value="setup_centos_class.pas"/>
-        <Caret Line="31" Column="27" TopLine="1"/>
+        <Caret Line="663" Column="14" TopLine="629"/>
       </Position16>
       <Position17>
         <Filename Value="setup_centos_class.pas"/>
-        <Caret Line="116" Column="13" TopLine="82"/>
+        <Caret Line="664" Column="14" TopLine="629"/>
       </Position17>
       <Position18>
         <Filename Value="setup_centos_class.pas"/>
-        <Caret Line="352" Column="28" TopLine="318"/>
+        <Caret Line="898" Column="14" TopLine="864"/>
       </Position18>
       <Position19>
         <Filename Value="setup_centos_class.pas"/>
-        <Caret Line="355" Column="31" TopLine="318"/>
+        <Caret Line="1091" Column="14" TopLine="1057"/>
       </Position19>
       <Position20>
         <Filename Value="setup_centos_class.pas"/>
-        <Caret Line="356" Column="34" TopLine="318"/>
+        <Caret Line="1092" Column="14" TopLine="1057"/>
       </Position20>
       <Position21>
-        <Filename Value="setup_centos_class.pas"/>
-        <Caret Line="359" Column="28" TopLine="318"/>
+        <Filename Value="setup_ubuntu_class.pas"/>
+        <Caret Line="927" Column="1" TopLine="884"/>
       </Position21>
       <Position22>
-        <Filename Value="setup_centos_class.pas"/>
-        <Caret Line="362" Column="31" TopLine="318"/>
+        <Filename Value="setup_ubuntu_class.pas"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
       </Position22>
       <Position23>
-        <Filename Value="setup_centos_class.pas"/>
-        <Caret Line="500" Column="14" TopLine="466"/>
+        <Filename Value="setup_ubuntu_class.pas"/>
+        <Caret Line="2309" Column="1" TopLine="2244"/>
       </Position23>
       <Position24>
-        <Filename Value="setup_centos_class.pas"/>
-        <Caret Line="565" Column="14" TopLine="531"/>
+        <Filename Value="setup_ubuntu_class.pas"/>
+        <Caret Line="28" Column="30" TopLine="239"/>
       </Position24>
       <Position25>
-        <Filename Value="setup_centos_class.pas"/>
-        <Caret Line="566" Column="14" TopLine="531"/>
+        <Filename Value="setup_ubuntu_class.pas"/>
+        <Caret Line="1141" Column="54" TopLine="1107"/>
       </Position25>
       <Position26>
-        <Filename Value="setup_centos_class.pas"/>
-        <Caret Line="663" Column="14" TopLine="629"/>
+        <Filename Value="setup_ubuntu_class.pas"/>
+        <Caret Line="1284" Column="52" TopLine="1250"/>
       </Position26>
       <Position27>
-        <Filename Value="setup_centos_class.pas"/>
-        <Caret Line="664" Column="14" TopLine="629"/>
+        <Filename Value="setup_ubuntu_class.pas"/>
+        <Caret Line="1306" Column="53" TopLine="1250"/>
       </Position27>
       <Position28>
-        <Filename Value="setup_centos_class.pas"/>
-        <Caret Line="898" Column="14" TopLine="864"/>
+        <Filename Value="setup_ubuntu_class.pas"/>
+        <Caret Line="1313" Column="54" TopLine="1250"/>
       </Position28>
       <Position29>
-        <Filename Value="setup_centos_class.pas"/>
-        <Caret Line="1091" Column="14" TopLine="1057"/>
+        <Filename Value="setup_ubuntu_class.pas"/>
+        <Caret Line="34" Column="53" TopLine="1"/>
       </Position29>
       <Position30>
-        <Filename Value="setup_centos_class.pas"/>
-        <Caret Line="1092" Column="14" TopLine="1057"/>
+        <Filename Value="setup_ubuntu_class.pas"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
       </Position30>
     </JumpHistory>
   </ProjectOptions>

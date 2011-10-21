@@ -494,10 +494,17 @@ public function check_storage_table(){
 	if(!$this->TABLE_EXISTS('getent_groups','artica_backup')){		
 			$sql="CREATE TABLE `artica_backup`.`getent_groups` (
 			`group` VARCHAR( 128 ) NOT NULL ,
-			PRIMARY KEY ( `group` )
+			`gpid` BIGINT(100) NOT NULL,
+			PRIMARY KEY ( `group` ),
+			KEY `gpid` (`gpid`)
 			)";
 		$this->QUERY_SQL($sql,"artica_backup");
 	}
+	
+	if(!$this->FIELD_EXISTS("getent_groups","gpid","artica_backup")){
+		$sql="ALTER TABLE `getent_groups` ADD `gpid` BIGINT(100) NOT NULL ,ADD INDEX ( `gpid` )";
+		$this->QUERY_SQL($sql,"artica_backup");
+	}	
 	
 	if(!$this->TABLE_EXISTS('samba_domains_info','artica_backup')){		
 			$sql="CREATE TABLE `artica_backup`.`samba_domains_info` (

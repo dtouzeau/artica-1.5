@@ -137,10 +137,10 @@ function shared_folders_list(){
 
 function acldisks(){
 	$sock=new sockets();
-	$SAMBA_HAVE_POSIX_ACLS=base64_decode($sock->getFrameWork("cmd.php?SAMBA-HAVE-POSIX-ACLS=yes"));
+	$SAMBA_HAVE_POSIX_ACLS=base64_decode($sock->getFrameWork("samba.php?SAMBA-HAVE-POSIX-ACLS=yes"));
 	
 	if($SAMBA_HAVE_POSIX_ACLS<>"TRUE"){
-		$acl_samba_not="<strong style='color:red;font-size:11px;padding:4px'>{acl_samba_not}</strong>";
+		$acl_samba_not="<strong style='color:red;font-size:14px;padding:4px;margin:10Px'>{acl_samba_not}</strong>";
 	}
 	$fstab=unserialize(base64_decode($sock->getFrameWork("cmd.php?fstablist=yes")));
 	$page=CurrentPageName();
@@ -269,7 +269,7 @@ function aclfolders(){
 	if(!$q->ok){if($GLOBALS["VERBOSE"]){echo $q->mysql_error."\n";return;}}
 	$acls_folders_rebuild_text=$tpl->javascript_parse_text("{acls_folders_rebuild_text}");
 	$count=mysql_num_rows($results);
-	
+	$sock=new sockets();
 $html="
 
 <table style='width:100%;'>
@@ -280,7 +280,7 @@ $html="
 <table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
 <thead class='thead'>
 	<tr>
-		<th width=100%>{folders}</th>
+		<th width=100% colspan=2>{folders}</th>
 		<th width=1%>&nbsp;</th>
 	</tr>
 </thead>
@@ -288,11 +288,26 @@ $html="
 	
 	while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
 		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
-		$delete=imgtootltip("delete-24.png","{delete_permissions}","DeleteAclFolder('". base64_encode("{$ligne["directory"]}")."')");
 		$path=base64_encode($ligne["directory"]);
+		$info="&nbsp;";
+		$color="black";
+		$js="<a href=\"javascript:blur();\" OnClick=\"javascript:Loadjs('samba.acls.php?path=$path');\" style='font-size:14px;text-decoration:underline;color:black'>";
+		$delete=imgtootltip("delete-24.png","{delete_permissions}","DeleteAclFolder('". base64_encode("{$ligne["directory"]}")."')");
+		$aclsTests=unserialize(base64_decode($sock->getFrameWork("cmd.php?path-acls=$path&justdirectoryTests=yes")));
+		$info=imgtootltip("32-parameters.png","<b>{$ligne["directory"]}</b><hr>{parameters}","Loadjs('samba.acls.php?path=$path');");
+		
+		
+		if($aclsTests[0]=="NO_SUCH_DIR"){
+			$info=imgtootltip("warning-panneau-32.png","<b>{$ligne["directory"]}</b><hr>{acls_no_such_dir_text}");
+			$color="#CCCCCC";
+			$js=null;
+		}		
+		
+		
 		$html=$html."
 		<tr class=$classtr>
-		<td width=99%><code style='font-size:14px'><a href=\"javascript:blur();\" OnClick=\"javascript:Loadjs('samba.acls.php?path=$path');\" style='font-size:14px;text-decoration:underline'>{$ligne["directory"]}</a></code></td>
+		<td width=1%>$info</td>
+		<td width=99%>$js<code style='font-size:14px;color:$color'>{$ligne["directory"]}</a></code></td>
 		<td width=1%>$delete</td>
 		</tr>
 		

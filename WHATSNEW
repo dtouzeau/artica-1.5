@@ -1,11 +1,13 @@
 /etc/init.d/lwresd ??
 /etc/init.d/ipsec ???
 
-1.5.101720: 
+1.5.102102:
 ======================================================================================
 
 System Changes:
 ------------------------------------------------
+1.5.102102: Fix set local acls did not working on selected groups when groups are from a connected Active Directory.
+1.5.102102: Fix artica did not parse all groups from getent command.
 1.5.102019: Add new feature that allow to schedule optimize mysql tables. 
 1.5.101701: Fix respawning too fast when using artica-iso.
 1.5.101601: Fix openvpn server daemon is killed each 6Mns
@@ -51,6 +53,7 @@ FreeWebs changes:
 
 Proxy changes:
 ------------------------------------------------
+1.5.102102: Fix misconfigurations when building udfdbguard rules groups
 1.5.102019: Improve statistics, include blocked websites.
 1.5.101601: Add an automation that smoothly rebuild UfdbGuard config when playing with rules.
 1.5.101601: Add possibility to see artica engines events according ufdbguard tasks

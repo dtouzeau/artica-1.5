@@ -59,39 +59,48 @@ class compile_ufdbguard{
 	
 	
 	private function build_sources(){
+		if($GLOBALS["VERBOSE"]){echo "Starting......: ufdbGuard build SOURCES ....\n";}
 		$q=new mysql_squid_builder();
 		$sql="SELECT * FROM webfilter_group WHERE enabled=1";
 		$results=$q->QUERY_SQL($sql);
+		if(!$q->ok){echo "Starting......: ufdbGuard fatal error $q->mysql_error\n";}
+		$totalGroups=mysql_num_rows($results);
+		$c=0;
 		while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
-		$GLOBALS["SRC"][$ligne["ID"]]=$ligne["groupname"];
-		$groupname=$ligne["groupname"];
-		$array[]="source \"$groupname\" {";
-		if($GLOBALS["VERBOSE"]){writelogs("$groupname LDAP?={$ligne["localldap"]}",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
-		if($ligne["localldap"]==0){
-			$gp=new groups($ligne["gpid"]);
-			while (list ($num, $member) = each ($gp->members)){
-				if(trim($member)==null){continue;}
-				if(strpos($member, "$")>0){continue;}
-				$array[]="\tuser\t\"$member\"";
-				
+			$c++;
+			if($GLOBALS["VERBOSE"]){echo "Starting......: ufdbGuard $groupname({$ligne["ID"]})  $c/$totalGroups\n";}
+			$GLOBALS["SRC"][$ligne["ID"]]=$ligne["groupname"];
+			$groupname=$ligne["groupname"];
+			$array[]="source \"$groupname\" {";
+			if($GLOBALS["VERBOSE"]){writelogs("$groupname LDAP?={$ligne["localldap"]}",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
+			if($ligne["localldap"]==0){
+				$gp=new groups($ligne["gpid"]);
+				while (list ($num, $member) = each ($gp->members)){
+					if(trim($member)==null){continue;}
+					if(strpos($member, "$")>0){continue;}
+					$array[]="\tuser\t\"$member\"";
+					
+				}
 			}
-		}
-		if($GLOBALS["VERBOSE"]){writelogs("$groupname -> webfilter_members -> {$ligne["ID"]}",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
-		$sql="SELECT * FROM webfilter_members WHERE enabled=1 AND groupid={$ligne["ID"]}";
-		$results2=$q->QUERY_SQL($sql);
-		while($ligne2=mysql_fetch_array($results2,MYSQL_ASSOC)){
-			if(trim($ligne2["pattern"])==null){continue;}
-			if($GLOBALS["VERBOSE"]){writelogs("$groupname {$ligne2["pattern"]}={$ligne2["membertype"]}",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
-			if($ligne2["membertype"]==0){$array[]="\tip\t{$ligne2["pattern"]}";}
-			if($ligne2["membertype"]==2){$array[]="\tip\t{$ligne2["pattern"]}";}
-			if($ligne2["membertype"]==1){$array[]="\tuser\t\"{$ligne2["pattern"]}\"";}			
-		}
-		
-		$array[]="}";
-		$array[]="";
-		return @implode("\n", $array);
+			
+			$sql="SELECT * FROM webfilter_members WHERE enabled=1 AND groupid={$ligne["ID"]}";
+			$results2=$q->QUERY_SQL($sql);
+			if($GLOBALS["VERBOSE"]){echo "Starting......: ufdbGuard $groupname({$ligne["ID"]}) webfilter_members = ". mysql_num_rows($results)." items\n";}
+			
+			
+			while($ligne2=mysql_fetch_array($results2,MYSQL_ASSOC)){
+				if(trim($ligne2["pattern"])==null){continue;}
+				if($GLOBALS["VERBOSE"]){writelogs("$groupname {$ligne2["pattern"]}={$ligne2["membertype"]}",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
+				if($ligne2["membertype"]==0){$array[]="\tip\t{$ligne2["pattern"]}";}
+				if($ligne2["membertype"]==2){$array[]="\tip\t{$ligne2["pattern"]}";}
+				if($ligne2["membertype"]==1){$array[]="\tuser\t\"{$ligne2["pattern"]}\"";}			
+			}
+			
+			$array[]="}";
+			$array[]="";
+			
 	}
-		
+		return @implode("\n", $array);
 		
 		}
 		
@@ -100,6 +109,7 @@ class compile_ufdbguard{
 		$main_path="/var/lib/squidguard";
 		$sql="SELECT table_name as c FROM information_schema.tables WHERE table_schema = 'squidlogs' AND table_name LIKE 'category_%'";
 		$results=$q->QUERY_SQL($sql);
+		$add_ufdbgard_secu=false;
 		$sock=new sockets();
 		while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
 			$CountDeMembers=0;
@@ -125,7 +135,10 @@ class compile_ufdbguard{
 			}
 			
 			$GLOBALS["CATEGORIES_ADDED"][$categoryname]=true;
-			$array[]="category \"$categoryname\" {";
+			$categorynameText=$categoryname;
+			if($categoryname=="agressive"){$categorynameText="agressivecat";}
+			
+			$array[]="category \"$categorynameText\" {";
 			$array[]="\tdomainlist\t\"$categoryname/domains\"";
 			$array[]="\texpressionlist\t\"$categoryname/expressions\"";
 			$array[]="}\n";
@@ -170,7 +183,7 @@ class compile_ufdbguard{
 		$allows=array();
 		$banns=array();		
 		$q=new mysql_squid_builder();
-		$sql="SELECT * FROM webfilter_group WHERE enabled=1";
+		
 		$redirect_pattern="clientaddr=%a&clientname=%n&clientuser=%i&clientgroup=%s&targetgroup=%t&url=%u";
 		if(!preg_match("#^http.*?\/\/#",$this->SquidGuardIPWeb)){
 			$this->SquidGuardIPWeb="https://$this->SquidGuardIPWeb";
@@ -202,12 +215,15 @@ class compile_ufdbguard{
 		$array[]="\t\tredirect $this->SquidGuardIPWeb";
 		$array[]="\t}";			
 		
-		
+		$sql="SELECT * FROM webfilter_group WHERE enabled=1";
+		$results=$q->QUERY_SQL($sql);
+		echo "Starting......: ufdbGuard build ACLS for groups -> ". mysql_num_rows($results)." items...\n";
 		while($ligne=mysql_fetch_array($results,MYSQL_ASSOC)){
 			$GLOBALS["SRC"][$ligne["ID"]]=$ligne["groupname"];
 			$groupname=$ligne["groupname"];
 			$allows=array();
 			$banns=array();
+			echo "Starting......: ufdbGuard group `$groupname`\n";
 			$array[]="\t\"$groupname\"{";
 			$sql="SELECT webfilter_blks.category,webfilter_blks.modeblk FROM webfilter_assoc_groups,webfilter_blks WHERE 
 				webfilter_blks.webfilter_id=webfilter_assoc_groups.webfilter_id 
@@ -221,6 +237,12 @@ class compile_ufdbguard{
 					$category=str_replace("/", "_", $category);
 					$category=str_replace("-", "_", $category);
 					$category=str_replace(" ", "_", $category);
+					if(!isset($GLOBALS["CATEGORIES_ADDED"][$category])){
+						if($GLOBALS["VERBOSE"]){echo "Starting......: ufdbGuard group `$groupname` category `$category` is skipped\n";}
+						continue;
+					}
+					if($category=="agressive"){$category="agressivecat";}
+					
 					if($blks["modeblk"]==0){$banns[]="!$category";}
 					if($blks["modeblk"]==1){$allows[]="$category";}
 					$ARRAY["{$blks["modeblk"]}{$ligne["ID"]}{$blks["category"]}"]=true;
