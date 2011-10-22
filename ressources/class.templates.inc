@@ -441,22 +441,23 @@ class templates{
 	
 	function Body($content=null){
 		
-		
-		if(!isset($_COOKIE["artica-template"])){$_COOKIE["artica-template"]="default";}
-		
-		
 		if(!isset($_SESSION["uid"])){
 			$this->search_menus=null;
 			$this->top_menus=null;
 			}
 			
-		if($_COOKIE["artica-template"]==null){$_COOKIE["artica-template"]="default";}
+		if($GLOBALS["VERBOSE"]){echo "Template: {$_COOKIE["artica-template"]}\n";}
 		$template_file="index.html";
 		if(isset($GLOBALS["CHANGE_TEMPLATE"])){$template_file=$GLOBALS["CHANGE_TEMPLATE"];}		
 		$template_path=dirname(__FILE__) . "/templates/{$_COOKIE["artica-template"]}/$template_file";
+		if(!is_file($template_path)){
+			if($GLOBALS["VERBOSE"]){echo "Template: $template_path no such file	\n";}
+			$template_path=dirname(__FILE__) . "/templates/default/index.html";
+			$GLOBALS["CHANGE_TEMPLATE"]="default";
+		}
 		
 		
-		
+		if($GLOBALS["VERBOSE"]){echo "Template: open $template_path\n";}
 		$template=$this->_readfile($template_path);
 		if($GLOBALS["DEBUG_TEMPLATE"]){error_log("{$GLOBALS["CURRENT_PAGE"]}::".__FUNCTION__." open $template_path ". strlen($template)." bytes in " . __FILE__. " line ".__LINE__);}
 		$template=str_replace("{TEMPLATE_SEARCH}",$this->search_menus,$template);
@@ -466,6 +467,8 @@ class templates{
 		$template=str_replace("{TEMPLATE_TITLE}",$this->title,$template);
 		$template=str_replace("{TEMPLATE_HIGH_MENUS}",$this->Build_high_menus(),$template);
 		$template=str_replace("{TEMPLATE_BODY_YAHOO}",$this->YahooBody(),$template);
+		if(is_file(dirname(__FILE__) . "/templates/{$_COOKIE["artica-template"]}/img/logo.png")){$template=str_replace("/css/images/logo.gif","templates/{$_COOKIE["artica-template"]}/img/logo.png",$template);}
+		
 		$right="<div style='position:absolute;left:600px;top:50px'><img src='img/rght.gif'></div>";
 		$template=str_replace("{RIGHT}",$right,$template);
 		
@@ -1930,8 +1933,16 @@ class template_users{
 		if(!isset($_SESSION["template"])){$_SESSION["template"]="default";}
 			
 		if($cuurentpage=="logon.php"){error_log("_SESSION[\"template\"]={$_SESSION["template"]} function ".__FUNCTION__.' in '.__FILE__. " in line ". __LINE__);}	
+		$template_path=dirname(__FILE__) . "/templates/{$_COOKIE["artica-template"]}/$template_file";
 		
-		$template=file_get_contents(dirname(__FILE__) . "/templates/{$_COOKIE["artica-template"]}/$template_file");	
+			
+		if(!is_file($template_path)){
+			if($GLOBALS["VERBOSE"]){echo "Template: $template_path no such file	". __LINE__."\n";}
+			$template_path=dirname(__FILE__) . "/templates/default/index.html";
+			$GLOBALS["CHANGE_TEMPLATE"]="default";
+		}
+		
+		$template=file_get_contents($template_path);
 
 		if($cuurentpage=="logon.php"){error_log("$template_file =>". strlen($template)." bytes function ".__FUNCTION__.' in '.__FILE__. " in line ". __LINE__);}
 		if($GLOBALS["DEBUG_TEMPLATE"]){error_log("DEBUG::{$GLOBALS["CURRENT_PAGE"]}:tpl->search_menus() ".__FUNCTION__." in " . __FILE__. " line ".__LINE__);}
@@ -1965,6 +1976,13 @@ class template_users{
 		$template=str_replace("{TEMPLATE_USER_ADDR}",$template_user_addr,$template);
 		$template=str_replace("{TEMPLATE_HIGH_MENUS}",$tpl->Build_high_menus(),$template);
 		$template=str_replace("{TEMPLATE_BODY_YAHOO}",$tpl->YahooBody(),$template);
+		if(is_file(dirname(__FILE__) . "/templates/{$_COOKIE["artica-template"]}/img/logo.png")){
+			$template=str_replace("/css/images/logo.gif","ressources/templates/{$_COOKIE["artica-template"]}/img/logo.png",$template);
+			if($GLOBALS["VERBOSE"]){echo dirname(__FILE__) . "/templates/{$_COOKIE["artica-template"]}/img/logo.png -> replace\n";}
+		}else{
+			if($GLOBALS["VERBOSE"]){echo dirname(__FILE__) . "/templates/{$_COOKIE["artica-template"]}/img/logo.png no such file\n";}
+			
+		}
 		if($GLOBALS["DEBUG_TEMPLATE"]){error_log("DEBUG::{$GLOBALS["CURRENT_PAGE"]}:Checking Administrator privileges ".__FUNCTION__." in " . __FILE__. " line ".__LINE__);}
 		if($menus->AsSystemAdministrator==true){
 			writelogs("AsSystemAdministrator=\"$menus->AsSystemAdministrator\" = TRUE",__CLASS__.'/'.__FUNCTION__,__FILE__);

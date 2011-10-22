@@ -13,7 +13,14 @@
 	if(!$users->AsSambaAdministrator){echo "alert('$ERROR_NO_PRIVS');";die();}
 	
 	if(isset($_GET["popup"])){popup();exit;}
+	if(isset($_GET["admin-users"])){admin_users();exit;}
+	if(isset($_GET["tabs"])){tabs();exit;}
 	if(isset($_POST["mask_lock_options"])){Save();exit;}
+	if(isset($_POST["SambaAdminUserAdd"])){admin_users_add();exit;}
+	if(isset($_POST["SambaAdminUserDel"])){admin_users_del();exit;}
+	
+	
+	
 js();
 
 
@@ -22,8 +29,133 @@ function js(){
 	$page=CurrentPageName();
 	$tpl=new templates();
 	$title=$tpl->_ENGINE_parse_body("{shared_folders}::{default_settings}");
-	$html="YahooWin5('550','$page?popup=yes','$title')";
+	$html="YahooWin5('600','$page?tabs=yes','$title')";
 	echo $html;
+}
+
+
+function tabs(){
+	$tpl=new templates();
+	$array["popup"]='{parameters}';
+	$array["admin-users"]='{admin_users}';
+	
+	$page=CurrentPageName();
+
+	$t=time();
+	while (list ($num, $ligne) = each ($array) ){
+		$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"$page?$num=yes&t=$time\"><span>$ligne</span></a></li>\n");
+	}
+	echo "
+	<div id=main_smb_default_settings style='width:100%;height:100%;overflow:auto'>
+		<ul>". implode("\n",$html)."</ul>
+	</div>
+		<script>
+				$(document).ready(function(){
+					$('#main_smb_default_settings').tabs();
+			
+			
+			});
+		</script>";	
+}
+
+function admin_users(){
+	$page=CurrentPageName();
+	$tpl=new templates();	
+	$sock=new sockets();
+	$SambaDefaultFolderSettings=unserialize(base64_decode($sock->GET_INFO("SambaDefaultFolderSettings")));
+
+	$add=imgtootltip("plus-24.png","{add}","Loadjs('MembersBrowse.php?field-user=&OnlyGroups=0&OnlyGUID=0&NOComputers=1&callback=SambaAdminUserAdd')");
+	
+	
+	$html="<div class=explain>{samba_admin_users_explain}</div>
+<table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
+<thead class='thead'>
+	<tr>
+		<th width=1%>$add</th>
+		<th width=100%>{members}</th>
+		<th width=1%>&nbsp;</th>
+	</tr>
+</thead>
+<tbody class='tbody'>"	;
+	
+	while (list ($uid, $ligne) = each ($SambaDefaultFolderSettings["ADMINSFOLDERS"]) ){	
+		
+ 	if(preg_match("#^@(.+?)$#",$uid,$re)){
+			$img="wingroup.png";
+			$Displayname="{$re[1]}";
+			$gid=$re[2];
+		}else{
+			$Displayname=$uid;
+			$img="winuser.png";
+		}
+		
+		if(substr($uid,strlen($uid)-1,1)=='$'){
+			$Displayname=str_replace('$','',$Displayname);
+			$img="base.gif";
+		}
+		if(trim($Displayname)==null){continue;}
+		
+		$delete=imgtootltip("delete-32.png","{delete}:$Displayname","SambaAdminUserDel('$uid')");
+		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
+		$color="black";
+		$html=$html."
+		<tr class=$classtr>
+		<td width=1% align='center'><img src='img/$img'></td>
+		<td width=99%>$js<code style='font-size:14px;color:$color;font-weight:bold'>{$Displayname}</a></code></td>
+		<td width=1%>$delete</td>
+		</tr>
+		";		
+		
+		
+	}
+	
+	$html=$html."</tbody></table>
+	
+	<script>
+	var x_SambaAdminUserAdd= function (obj) {
+		var response=obj.responseText;
+		if(response.length>0){alert(response);}
+		RefreshTab('main_smb_default_settings');
+	}	
+	
+	
+		function SambaAdminUserAdd(id,prependText,guid){
+			var XHR = new XHRConnection();
+			XHR.appendData('SambaAdminUserAdd',id);
+			XHR.sendAndLoad('$page', 'POST',x_SambaAdminUserAdd);
+		
+		}
+		
+		function SambaAdminUserDel(id){
+			var XHR = new XHRConnection();
+			XHR.appendData('SambaAdminUserDel',id);
+			XHR.sendAndLoad('$page', 'POST',x_SambaAdminUserAdd);
+		
+		}		
+		
+	</script>
+		
+	
+	";
+	echo $tpl->_ENGINE_parse_body($html);
+}
+
+function admin_users_add(){
+	$sock=new sockets();
+	$SambaDefaultFolderSettings=unserialize(base64_decode($sock->GET_INFO("SambaDefaultFolderSettings")));
+	$SambaDefaultFolderSettings["ADMINSFOLDERS"][$_POST["SambaAdminUserAdd"]]=true;	
+	$data=base64_encode(serialize($SambaDefaultFolderSettings));
+	$sock->SaveConfigFile($data, "SambaDefaultFolderSettings");	
+	$sock->getFrameWork("cmd.php?samba-save-config=yes");
+}
+function admin_users_del(){
+	$sock=new sockets();
+	$SambaDefaultFolderSettings=unserialize(base64_decode($sock->GET_INFO("SambaDefaultFolderSettings")));
+	unset($SambaDefaultFolderSettings["ADMINSFOLDERS"][$_POST["SambaAdminUserDel"]]);	
+	$data=base64_encode(serialize($SambaDefaultFolderSettings));
+	$sock->SaveConfigFile($data, "SambaDefaultFolderSettings");		
+	$sock->getFrameWork("cmd.php?samba-save-config=yes");
+	
 }
 
 

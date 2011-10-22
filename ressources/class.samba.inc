@@ -984,14 +984,18 @@ function BuildConfig(){
 
 private function SECOND_PART(){
 			$sock=new sockets();
-			
+			$admin_users=null;
 			$this->EnablePrintersSharing=$sock->GET_INFO("EnablePrintersSharing");
 			if($this->EnablePrintersSharing==null){$this->EnablePrintersSharing=0;$sock->SET_INFO("EnablePrintersSharing",0);}
 			if(!is_numeric($this->client_ntlmv2_auth)){$this->client_ntlmv2_auth=1;}
 			$DisableSambaFileSharing=$sock->GET_INFO("DisableSambaFileSharing");
 			$SambaRoamingEnabled=$sock->GET_INFO('SambaRoamingEnabled');
 			$SambaEnableRemoteAnnounce=$sock->GET_INFO("SambaEnableRemoteAnnounce");
-
+			$SambaDefaultFolderSettings=unserialize(base64_decode($sock->GET_INFO("SambaDefaultFolderSettings")));
+			if(isset($SambaDefaultFolderSettings["ADMINSFOLDERS"])){
+				if(count($SambaDefaultFolderSettings["ADMINSFOLDERS"])>0){while (list ($uid, $ligne) = each ($SambaDefaultFolderSettings["ADMINSFOLDERS"]) ){$uid=trim($uid);$spacepos=strpos($uid, " ");if($spacepos>0){if(preg_match("#^@(.*)#", $uid,$re)){$uid="@\"{$re[1]}\"";}else{$uid="\"{$re[1]}\"";}}$ADMINSFOLDERS[]=$uid;}}
+				$admin_users=trim(@implode(" ", $ADMINSFOLDERS));
+			}
 			
 			$netbiosname=$this->main_array["global"]["netbios name"];
 			
@@ -1049,7 +1053,7 @@ private function SECOND_PART(){
 			$conf[]="\tguest account = nobody";
 			$conf[]="\tmap to guest = Bad Password";
 			$conf[]="\ttemplate homedir = /home/%U";
-	  		$conf[]="\ttemplate shell = /bin/false";
+	  		$conf[]="\ttemplate shell = /bin/bash";
 			$conf[]="\tenable privileges = yes";
 			
 			
@@ -1196,6 +1200,7 @@ private function SECOND_PART(){
 							if($KEY=="write_list"){continue;}
 							if($KEY=="read_list"){continue;}
 							if($KEY=="valid_users"){continue;}
+							if($KEY=="admin users"){continue;}
 							if($this->KEY_NOT_DIR_COMPATIBLE($KEY)){
 								writelogs("Folder............: $KEY No compatible, aborting",__CLASS__,__FUNCTION__,__FILE__);
 								continue;
@@ -1205,6 +1210,10 @@ private function SECOND_PART(){
 							$conf[]="\t$KEY = $VALS";
 						
 						}
+						
+						if($admin_users<>null){$conf[]="\tadmin users = $admin_users";}
+						
+						
 				}
 			}
 			

@@ -168,7 +168,7 @@ public function MountComputerRemote($computername,$ip,$username,$password){
 	}
 	
 private function events($text){
-	
+		$GLOBALS["MOUNT_EVENTS"][]=$text;
 		if(function_exists("writelogs")){
 			writelogs("$text",__CLASS__,__FILE__,__LINE__);
 			return;

@@ -310,7 +310,6 @@ $html="
 		<td width=99%>$js<code style='font-size:14px;color:$color'>{$ligne["directory"]}</a></code></td>
 		<td width=1%>$delete</td>
 		</tr>
-		
 		";
 		
 	}

@@ -27,8 +27,12 @@ function js(){
 	if(!isset($_GET["OnlyUsers"])){$_GET["OnlyUsers"]=0;}
 	if(!isset($_GET["OnlyGroups"])){$_GET["OnlyGroups"]=0;}
 	if(!isset($_GET["OnlyGUID"])){$_GET["OnlyGUID"]=0;}
+	if(!isset($_GET["NOComputers"])){$_GET["NOComputers"]=0;}
+	
+	
+	
 	$title=$tpl->_ENGINE_parse_body("{browse}::{members}::");
-	echo "LoadWinORG('350','$page?popup=yes&field-user={$_GET["field-user"]}&prepend={$_GET["prepend"]}&prepend-guid={$_GET["prepend-guid"]}&OnlyUsers={$_GET["OnlyUsers"]}&organization={$_GET["organization"]}&OnlyGroups={$_GET["OnlyGroups"]}&OnlyGUID={$_GET["OnlyGUID"]}','$title');";	
+	echo "LoadWinORG('350','$page?popup=yes&field-user={$_GET["field-user"]}&NOComputers={$_GET["NOComputers"]}&prepend={$_GET["prepend"]}&prepend-guid={$_GET["prepend-guid"]}&OnlyUsers={$_GET["OnlyUsers"]}&organization={$_GET["organization"]}&OnlyGroups={$_GET["OnlyGroups"]}&OnlyGUID={$_GET["OnlyGUID"]}&callback={$_GET["callback"]}','$title');";	
 	
 	
 	
@@ -43,6 +47,7 @@ function popup(){
 	if($_GET["prepend-guid"]==null){$_GET["prepend-guid"]=0;}
 	$OnlyGUID=$_GET["OnlyGUID"];
 	if(!is_numeric($OnlyGUID)){$OnlyGUID=0;}
+	if($_GET["callback"]<>null){$callback="{$_GET["callback"]}(id,prependText,guid);WinORGHide();return;";}
 	
 	$html="
 	<center>
@@ -67,12 +72,13 @@ function popup(){
 
 
 	function BrowseFindUserGroup(){
-		LoadAjax('finduserandgroupsidBrwse','$page?query='+escape(document.getElementById('BrowseUserQuery').value)+'&prepend={$_GET["prepend"]}&field-user={$_GET["field-user"]}&prepend-guid={$_GET["prepend-guid"]}&OnlyUsers={$_GET["OnlyUsers"]}&OnlyGUID={$_GET["OnlyGUID"]}&organization={$_GET["organization"]}&OnlyGroups={$_GET["OnlyGroups"]}');
+		LoadAjax('finduserandgroupsidBrwse','$page?query='+escape(document.getElementById('BrowseUserQuery').value)+'&prepend={$_GET["prepend"]}&field-user={$_GET["field-user"]}&prepend-guid={$_GET["prepend-guid"]}&OnlyUsers={$_GET["OnlyUsers"]}&OnlyGUID={$_GET["OnlyGUID"]}&organization={$_GET["organization"]}&OnlyGroups={$_GET["OnlyGroups"]}&callback={$_GET["callback"]}&NOComputers={$_GET["NOComputers"]}');
 	
 	}	
 	
 	
 	function SambaBrowseSelect(id,prependText,guid){
+			$callback
 			var prepend={$_GET["prepend"]};
 			var prepend_gid={$_GET["prepend-guid"]};
 			var OnlyGUID=$OnlyGUID;
@@ -152,6 +158,7 @@ while (list ($num, $ligne) = each ($hash) ){
 		}
 		
 		if(substr($num,strlen($num)-1,1)=='$'){
+			if($_GET["NOComputers"]==1){continue;}
 			$Displayname=str_replace('$','',$Displayname);
 			$img="base.gif";
 			$prepend="computer:";
@@ -159,7 +166,7 @@ while (list ($num, $ligne) = each ($hash) ){
 		}
 		
 		$js="SambaBrowseSelect('$num','$prepend',$gid)";
-		
+		if($_GET["callback"]<>null){$js="{$_GET["callback"]}('$num','$prepend',$gid)";}
 		
 	$html=$html."
 		<tr class=$classtr>

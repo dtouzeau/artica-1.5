@@ -29,7 +29,7 @@
         <LaunchingApplication PathPlusParams="/usr/X11R6/bin/xterm -T 'Lazarus Run Output' -e $(LazarusDir)/tools/runwait.sh $(TargetCmdLine)"/>
       </local>
     </RunParams>
-    <Units Count="22">
+    <Units Count="19">
       <Unit0>
         <Filename Value="setup_ubuntu.pas"/>
         <IsPartOfProject Value="True"/>
@@ -44,7 +44,7 @@
         <Filename Value="setup_ubuntu_class.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="setup_ubuntu_class"/>
-        <CursorPos X="18" Y="2309"/>
+        <CursorPos X="54" Y="2313"/>
         <TopLine Value="2248"/>
         <EditorIndex Value="5"/>
         <UsageCount Value="200"/>
@@ -55,59 +55,45 @@
         <UnitName Value="debian"/>
         <CursorPos X="29" Y="224"/>
         <TopLine Value="80"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="1"/>
       </Unit2>
       <Unit3>
         <Filename Value="logs.pas"/>
         <UnitName Value="logs"/>
         <CursorPos X="1" Y="1"/>
         <TopLine Value="1"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="1"/>
       </Unit3>
       <Unit4>
         <Filename Value="../artica-install/class_install.pas"/>
         <UnitName Value="class_install"/>
         <CursorPos X="1" Y="3929"/>
         <TopLine Value="4482"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="1"/>
       </Unit4>
       <Unit5>
         <Filename Value="../artica-install/artica_menus.pas"/>
         <UnitName Value="artica_menus"/>
         <CursorPos X="1" Y="290"/>
         <TopLine Value="254"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="1"/>
       </Unit5>
       <Unit6>
         <Filename Value="zsystem.pas"/>
         <UnitName Value="zsystem"/>
         <CursorPos X="1" Y="3591"/>
         <TopLine Value="3568"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="1"/>
       </Unit6>
       <Unit7>
-        <Filename Value="../artica-ldap/global_conf.pas"/>
-        <UnitName Value="global_conf"/>
-        <CursorPos X="1" Y="9007"/>
-        <TopLine Value="8991"/>
-        <UsageCount Value="1"/>
-      </Unit7>
-      <Unit8>
-        <Filename Value="../artica-ldap/openldap.pas"/>
-        <UnitName Value="openldap"/>
-        <CursorPos X="1" Y="105"/>
-        <TopLine Value="69"/>
-        <UsageCount Value="1"/>
-      </Unit8>
-      <Unit9>
         <Filename Value="setup_collectd.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="setup_collectd"/>
         <CursorPos X="125" Y="9"/>
         <TopLine Value="44"/>
         <UsageCount Value="200"/>
-      </Unit9>
-      <Unit10>
+      </Unit7>
+      <Unit8>
         <Filename Value="setup_libs.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="setup_libs"/>
@@ -116,15 +102,8 @@
         <EditorIndex Value="8"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
-      </Unit10>
-      <Unit11>
-        <Filename Value="../artica-ad/global_conf.pas"/>
-        <UnitName Value="global_conf"/>
-        <CursorPos X="1" Y="1381"/>
-        <TopLine Value="1345"/>
-        <UsageCount Value="2"/>
-      </Unit11>
-      <Unit12>
+      </Unit8>
+      <Unit9>
         <Filename Value="distridetect.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="distriDetect"/>
@@ -133,8 +112,8 @@
         <EditorIndex Value="7"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
-      </Unit12>
-      <Unit13>
+      </Unit9>
+      <Unit10>
         <Filename Value="setup_suse_class.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="setup_suse_class"/>
@@ -143,8 +122,8 @@
         <EditorIndex Value="1"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
-      </Unit13>
-      <Unit14>
+      </Unit10>
+      <Unit11>
         <Filename Value="setup_fedora_class.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="setup_fedora_class"/>
@@ -153,8 +132,8 @@
         <EditorIndex Value="4"/>
         <UsageCount Value="204"/>
         <Loaded Value="True"/>
-      </Unit14>
-      <Unit15>
+      </Unit11>
+      <Unit12>
         <Filename Value="setup_centos_class.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="setup_centos_class"/>
@@ -163,8 +142,8 @@
         <EditorIndex Value="2"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
-      </Unit15>
-      <Unit16>
+      </Unit12>
+      <Unit13>
         <Filename Value="setup_mandrake_class.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="setup_mandrake_class"/>
@@ -173,15 +152,15 @@
         <EditorIndex Value="3"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
-      </Unit16>
-      <Unit17>
+      </Unit13>
+      <Unit14>
         <Filename Value="../artica-install/openldap.pas"/>
         <UnitName Value="openldap"/>
         <CursorPos X="1" Y="796"/>
         <TopLine Value="758"/>
-        <UsageCount Value="20"/>
-      </Unit17>
-      <Unit18>
+        <UsageCount Value="17"/>
+      </Unit14>
+      <Unit15>
         <Filename Value="../artica-install/logs.pas"/>
         <UnitName Value="logs"/>
         <CursorPos X="1" Y="1117"/>
@@ -189,16 +168,16 @@
         <EditorIndex Value="9"/>
         <UsageCount Value="100"/>
         <Loaded Value="True"/>
-      </Unit18>
-      <Unit19>
+      </Unit15>
+      <Unit16>
         <Filename Value="../artica-install/openvpn.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="openvpn"/>
         <CursorPos X="25" Y="21"/>
         <TopLine Value="1"/>
         <UsageCount Value="200"/>
-      </Unit19>
-      <Unit20>
+      </Unit16>
+      <Unit17>
         <Filename Value="setup_archlinux_class.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="setup_archlinux_class"/>
@@ -207,15 +186,15 @@
         <EditorIndex Value="6"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
-      </Unit20>
-      <Unit21>
+      </Unit17>
+      <Unit18>
         <Filename Value="snort.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="snort"/>
         <CursorPos X="17" Y="21"/>
         <TopLine Value="1"/>
-        <UsageCount Value="64"/>
-      </Unit21>
+        <UsageCount Value="92"/>
+      </Unit18>
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>

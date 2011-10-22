@@ -289,7 +289,7 @@ function DeleteCategorizedWebsite(){
 	if(!$q->ok){echo $q->mysql_error;return;}
 	$q->QUERY_SQL("UPDATE $table SET enabled=0 WHERE zmd5='$md5'");
 	if(!$q->ok){echo $q->mysql_error;return;}
-	
+	$sock->getFrameWork("squid.php?export-deleted-categories=yes");
 }
 
 function MoveCategorizedWebsite(){
@@ -308,7 +308,8 @@ function MoveCategorizedWebsite(){
 	$q->QUERY_SQL($sql);
 	if(!$q->ok){echo $q->mysql_error;return;}
 	$q->QUERY_SQL("UPDATE $table SET enabled=0 WHERE zmd5='$md5'");
-	if(!$q->ok){echo $q->mysql_error;return;}	
+	if(!$q->ok){echo $q->mysql_error;return;}
+	$sock->getFrameWork("squid.php?export-deleted-categories=yes");
 	
 	
 	$newmd5=md5($www.$nextCategory);

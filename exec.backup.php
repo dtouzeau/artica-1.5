@@ -629,7 +629,7 @@ function mount_smb($pattern,$ID,$testwrite=true){
 
 	
 	if(!$mount->smb_mount($mount_path,$array["SERVER"],$array["USER"],$array["PASSWORD"],$array["FOLDER"])){
-		backup_events($ID,"initialization","ERROR, unable to mount target server (mount_smb())");
+		backup_events($ID,"initialization","ERROR, unable to mount target server (mount_smb($mount_path,{$array["SERVER"]}))\n".@implode("\n", $GLOBALS["MOUNT_EVENTS"]),__LINE__);
 		return false;
 	}
 	

@@ -2610,3 +2610,7 @@ Check the list below and click on each row in order to display Network interface
 <rejected>rejected</rejected>
 <APP_MYSQL1>Mysql service</APP_MYSQL1>
 <acls_no_such_dir_text>This directory does not exists on your system.[br]Perhaps you have remove it.[br]I suggest to remove this entry..</acls_no_such_dir_text>
+<samba_admin_users_explain>This is a list of users who will be granted administrative privileges on the share.[br]
+This means that they will do all file operations as the super-user (root).[br]
+You should use this option very carefully, as any user in this list will be able to do anything they like on the share, irrespective of file permissions.
+</samba_admin_users_explain>

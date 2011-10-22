@@ -534,13 +534,17 @@ class mysql_squid_builder{
 				  `sitename` varchar(255) NOT NULL,
 				  `category` varchar(128) NOT NULL,
 				  `zmd5` varchar(90) NOT NULL,
+				  `sended` INT( 1 ) NOT NULL,
 				  PRIMARY KEY (`zmd5`),
 				  KEY `category` (`category`),
-				  KEY `sitename` (`sitename`)
+				  KEY `sitename` (`sitename`),
+				  KEY `sended` (`sended`)
 				)";
 				
 			$this->QUERY_SQL($sql,$this->database);
 		}
+		
+		if(!$this->FIELD_EXISTS("categorize_delete", "sended")){$this->QUERY_SQL("ALTER TABLE `categorize_delete` ADD `sended` INT( 1 ) NOT NULL ,ADD INDEX ( `sended` )");} 
 		
 		if(!$this->TABLE_EXISTS('personal_categories',$this->database)){	
 				$sql="CREATE TABLE `squidlogs`.`personal_categories` (

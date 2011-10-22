@@ -215,13 +215,16 @@ function status(){
 	<table style='width:100%'>
 	<tbody>
 	<tr>
-		<td valign='top'><div id='dansguardian-status'></div></td>
+		<td valign='top'><div id='dansguardian-status'></div>
+			<center id='dansguardian-statistics-status' class=form style='width:100%;margin:0px'></center>
+		</td>
 		<td valign='top'><div id='dansguardian-service-status'></div>
 	</tr>
 	</tbody>
 	</table>
 	<script>
 		LoadAjax('dansguardian-status','$page?dansguardian-status=yes');
+		
 	</script>
 	";
 	echo $tpl->_ENGINE_parse_body($html);
@@ -236,11 +239,6 @@ function dansguardian_status(){
 	$sock=new sockets();
 	$ufdb=null;$dansgu=null;
 	
-	while (list ($table, $ligne) = each ($categories) ){
-		if(!preg_match("#category_.+?#", $table)){continue;}
-		$tbl[]=$table;
-		$c=$c+$q->COUNT_ROWS($table);
-	}
 	
 	if($users->APP_UFDBGUARD_INSTALLED){
 		$APP_UFDBGUARD_INSTALLED="{installed}";
@@ -269,18 +267,12 @@ function dansguardian_status(){
 	<tbody>
 	$ufdb
 	$dansgu
-	<tr>
-	<td class=legend>{categories}:</td>
-	<td><div style='font-size:14px'>". count($tbl)."</div></td>
-	</tr>
-	<tr>
-	<td class=legend>{websites_categorized}:</td>
-	<td><div style='font-size:14px'>".numberFormat($c,0,""," ")."</td>
-	</tr>	
+
 	</tbody>
 	</table>
 	<script>
 		LoadAjax('dansguardian-service-status','$page?dansguardian-service-status=yes');
+		
 	</script>	
 	";
 	
@@ -346,7 +338,12 @@ function dansguardian_service_status(){
 	$tr[]=$APP_UFDBGUARD;
 	
 	
-	$html="<center><div style='width:550px'>".CompileTr2($tr)."</div></center>";
+	$html="<center><div style='width:550px'>".CompileTr2($tr)."</div></center>
+	<script>
+	LoadAjax('dansguardian-statistics-status','squid.traffic.statistics.php?squid-status-stats=yes');
+	</script>
+	
+	";
 	$tpl=new templates();
 	$html= $tpl->_ENGINE_parse_body($html,'squid.index.php');	
 	echo $html;

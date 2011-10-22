@@ -208,11 +208,8 @@ function Save(){
 	}
 	
 	if(isset($_POST["MysqlConfigLevel"])){$sock->getFrameWork("services.php?restart-mysql=yes");}
-	
-	
-	
-	
-	
 }
+
+
 
 

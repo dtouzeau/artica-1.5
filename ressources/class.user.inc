@@ -1513,7 +1513,25 @@ class user{
 		}
 		$users=$users."*";
 		$users=str_replace('**','*',$users);
+		$usersqsql=str_replace("*", "%", $users);
+		include_once(dirname(__FILE__)."/class.mysql.inc");
+		$q=new mysql();
+		$sql="SELECT uid FROM getent_users WHERE uid LIKE '$usersqsql' ORDER BY uid LIMIT 0,50";
+		$results=$q->QUERY_SQL($sql,"artica_backup");	
+		while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+			$uid=trim($ligne["uid"]);
+			$res[$uid]=$uid;
+			
+		}
 	
+		$sql="SELECT `group`,`gpid` FROM getent_groups WHERE `group` LIKE '$usersqsql' ORDER BY uid LIMIT 0,50";
+		$results=$q->QUERY_SQL($sql,"artica_backup");	
+		while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+			$uid=trim($ligne["group"]);
+			$res["@$uid"]="@$uid:{$ligne["gpid"]}";
+			
+		}		
+		
 		
 		$sr =@ldap_search($ldap->ldap_connection,$suffix,"(&(objectClass=userAccount)(|(uid=$users)(cn=$users)(displayName=$users)))",array("displayname","uid"));
 		if($sr){
@@ -1521,6 +1539,7 @@ class user{
 				for($i=0;$i<$result["count"];$i++){
 					$displayname=$result[$i]["displayname"][0];
 					$uid=$result[$i]["uid"][0];
+					if(isset($ALREADY[$uid])){continue;}
 					if($displayname==null){$displayname=$uid;}
 					$res[$uid]=$displayname;
 				}

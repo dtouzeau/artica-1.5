@@ -199,7 +199,6 @@ function categories_search(){
 	$add=imgtootltip("plus-24.png","{add} {category}","Loadjs('$page?add-perso-cat-js=yes')");
 	$compile_all=imgtootltip("compile-distri-32.png","{saveToDisk} {all}","Loadjs('$page?compile-all-dbs-js=yes')");
 	if(!$q->ok){echo  " <H2>Fatal Error: $q->mysql_error</H2>";}
-		
 	$html="<center>
 <table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
 <thead class='thead'>
@@ -207,7 +206,7 @@ function categories_search(){
 		<th width=1%>$add</th>
 		<th width=99%>{category}</th>
 		<th width=1%>{size}</th>
-		<th width=1%>{items}</th>
+		<th width=1% colspan=2>{items}</th>
 		<th width=1%>$compile_all</th>
 		<th width=1%>&nbsp;</th>
 	</tr>
@@ -261,13 +260,14 @@ function categories_search(){
 		}
 		
 		if($sizedb_org<35){$pic="<img src='img/warning-panneau-32.png'>";}
-		
+		$viewDB=imgtootltip("mysql-browse-database-32.png","{view}","javascript:Loadjs('squid.categories.php?category={$categoryname}')");
 		$html=$html."
 		<tr class=$classtr>
 			<td width=1%>$pic</td>
 			<td style='font-size:14px;font-weight:bold;color:$color' width=99%>
 			$linkcat$categoryname</a><div style='font-size:11px;width:100%;font-weight:normal'>{$text_category}</div></td>
 			<td style='font-size:14px;font-weight:bold;color:$color' width=1% nowrap align='right'>$sizedb</td>
+			<td width=1%>$viewDB</td>
 			<td style='font-size:14px;font-weight:bold;color:$color' width=1% nowrap align='right'>".numberFormat($items,0,""," ")."</td>
 			<td width=1%>$compile</td>
 			<td width=1%>$delete</td>

@@ -954,15 +954,18 @@ function buildPage(){
 		$jsArtica=$p->jsArtica();
 		$sock=new sockets();
 		$TITLE_RESSOURCE="ressources/templates/$template/TITLE";
+		$favicon=$p->favicon();
 		if(is_file($TITLE_RESSOURCE)){$title=@file_get_contents($TITLE_RESSOURCE);$title=str_replace("%server", $users->hostname, $title);}else{$title=$users->hostname;}
-		$tpl=str_replace("{TEMPLATE_HEAD}","<!-- HEAD TITLE: $TITLE_RESSOURCE -->\n$jquery\n$jsArtica\n". @implode("\n", $js)."\n$jslogon\n".@implode("\n", $css)."\n".@implode("\n", $log), $tpl);
+		$tpl=str_replace("{COPYRIGHT}","Copyright 2006 - ". date('Y'),$tpl);
+		$tpl=str_replace("{copy-right}","Copyright 2006 - ". date('Y'),$tpl);
+		$tpl=str_replace("{TEMPLATE_HEAD}","<!-- HEAD TITLE: $TITLE_RESSOURCE -->\n$favicon\n$jquery\n$jsArtica\n". @implode("\n", $js)."\n$jslogon\n".@implode("\n", $css)."\n".@implode("\n", $log), $tpl);
 		$tpl=str_replace("{ARTICA_VERSION}",@file_get_contents("VERSION"),$tpl);
 		$tpl=str_replace("{TEMPLATE_BODY_YAHOO}",$p->YahooBody(),$tpl);
 		$tpl=str_replace("{TEMPLATE_LANG_LINK}","<span id='llang-select'></span><script>LoadAjaxTiny('llang-select','$page?TEMPLATE_LANG_LINK=yes')</script>",$tpl);
 		$tpl=str_replace("{artica_username}",$_GET["MEM_USERNAME"],$tpl);
 		$tpl=str_replace("{LOGON_BUTTON}",button("{login}", "SendLogonStart()","18px"),$tpl);
 		$tpl=str_replace("{TEMPLATE_TITLE_HEAD}",$title,$tpl);
-		$tpl=str_replace("{COPYRIGHT}","Copyright 2006 - ". date('Y'),$tpl);
+		
 	
 		if(strpos($tpl,"{ZARAFA_VERSION")>0){
 			$sock=new sockets();

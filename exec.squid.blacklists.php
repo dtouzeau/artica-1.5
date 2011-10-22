@@ -26,6 +26,7 @@ if($argv[1]=="--inject"){inject();die();}
 if($argv[1]=="--reprocess-database"){inject_category($argv[2]);die();}
 if($argv[1]=="--fullupdate"){fullupdate();die();}
 if($argv[1]=="--schedule-maintenance"){schedulemaintenance();die();}
+if($argv[1]=="--categorize-delete"){categorize_delete();die();}
 
 
 
@@ -67,7 +68,7 @@ function schedulemaintenance(){
 	
 	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){$cat[]=$ligne["categories"];}
 	if(count($cat)==0){return;}
-	$unix->send_email_events("Proxy:[BlacklistsDB] Fatal: Schedule maintenance started on ".count($cat)." categories", @implode("\n", $cat), "proxy");
+	ufdbguard_admin_events("Schedule maintenance started on ".count($cat)." categories",__FUNCTION__,__FILE__,__LINE__,"update");
 	while (list ($num, $category) = each ($cat) ){
 		$tCTR=time();	
 		inject_category($category);
@@ -75,8 +76,8 @@ function schedulemaintenance(){
 		$log[]=@implode("\n", $GLOBALS["MAILLOG"]);
 	}
 
+	ufdbguard_admin_events("Maintenance done on $num categories ".$unix->distanceOfTimeInWords($t1,time()),__FUNCTION__,__FILE__,__LINE__,"update");
 	
-	$unix->send_email_events("Proxy:[BlacklistsDB] Maintenance done on $num categories ".$unix->distanceOfTimeInWords($t1,time()), @implode("\n", $log), "proxy");
 	 
 }
 
@@ -88,8 +89,8 @@ function update(){
 	$unix=new unix();
 	$curl=new ccurl("http://www.artica.fr/blacklist/update.ini");
 	if(!$curl->GetFile("/tmp/update.ini")){
+		ufdbguard_admin_events("Fatal: unable to download blacklist index file $curl->error",__FUNCTION__,__FILE__,__LINE__,"update");
 		echo "BLACKLISTS: Failed to retreive http://www.artica.fr/blacklist/update.ini ($curl->error)\n";
-		$unix->send_email_events("Proxy:[BlacklistsDB] unable to download blacklist index file", $curl->error, "proxy");
 		return;
 	}
 	
@@ -102,6 +103,8 @@ function update(){
 			return;
 		}
 	}
+	
+	categorize_delete();
 	
 	while (list ($category, $array) = each ($ini->_params) ){
 		echo "Saving $category\n";
@@ -116,6 +119,40 @@ function update(){
 	}
 	
 	
+}
+
+
+function categorize_delete(){
+	if(!is_file("/tmp/categorize_delete.sql")){
+	$curl=new ccurl("http://www.artica.fr/blacklist/categorize_delete.gz");
+	if(!$curl->GetFile("/tmp/categorize_delete.gz")){
+		ufdbguard_admin_events("Fatal: unable to download categorize_delete.gz file $curl->error",__FUNCTION__,__FILE__,__LINE__,"update");
+		return;
+	}
+
+	if(!extractGZ("/tmp/categorize_delete.gz","/tmp/categorize_delete.sql")){
+			ufdbguard_admin_events("Fatal: unable to extract /tmp/categorize_delete.gz",__FUNCTION__,__FILE__,__LINE__,"update");
+			return;
+		}
+		
+	}
+	$q=new mysql_squid_builder();
+	$datas=explode("\n",@file_get_contents("/tmp/categorize_delete.sql"));
+	while (list ($index, $row) = each ($datas) ){
+		if(trim($row)==null){continue;}
+		$ligne=unserialize($row);
+		$category=$ligne["category"];
+		$pattern=$ligne["sitename"];
+		$tablename="category_".$q->category_transform_name($category);
+		if(!$q->TABLE_EXISTS($tablename)){$q->CreateCategoryTable($category);}
+		$q->QUERY_SQL("UPDATE $tablename SET enabled=0 WHERE `pattern`='$pattern'");
+		if(!$q->ok){
+			echo $q->mysql_error."\n";
+		}
+	}
+	
+	ufdbguard_admin_events("Success updating deleted ". count($datas)." websites from categories",__FUNCTION__,__FILE__,__LINE__,"update");
+	@unlink("/tmp/categorize_delete.sql");
 }
 
 function GetLastUpdateDate(){
@@ -141,7 +178,7 @@ function INITCategory($category,$zDate,$filename,$filesize){
 	if($GLOBALS["VERBOSE"]){echo $sql."\n";}
 	$q->QUERY_SQL($sql,"artica_backup");
 	if(!$q->ok){
-		$unix->send_email_events("Proxy:[BlacklistsDB] Fatal: mysql database error while initialize update engine", $q->mysql_error, "proxy");
+		ufdbguard_admin_events("Fatal: mysql database error while initialize update engine  $q->mysql_error",__FUNCTION__,__FILE__,__LINE__,"update");
 		return false;
 	}
 	return true;
@@ -178,7 +215,7 @@ function downloads(){
 	$results=$q->QUERY_SQL($sql,"artica_backup");
 	if(!$q->ok){
 		echo "Fatal error $sql\n";
-		$unix->send_email_events("Proxy:[BlacklistsDB] Fatal: mysql database error while retreive update list", $q->mysql_error, "proxy");
+		ufdbguard_admin_events("Fatal: mysql database error while retreive update list $q->mysql_error",__FUNCTION__,__FILE__,__LINE__,"update");
 		return;
 	}
 	$num=mysql_num_rows($results);
@@ -205,7 +242,7 @@ function downloads(){
 		echo "Downloading http://www.artica.fr/$filename\n";
 		if(!$curl->GetFile($targetfile)){
 			echo "Fatal error downloading http://www.artica.fr/$filename\n";
-			$unix->send_email_events("Proxy:[BlacklistsDB] Fatal: unable to download $filename", "", "proxy");
+			ufdbguard_admin_events("Fatal: unable to download $filename",__FUNCTION__,__FILE__,__LINE__,"update");
 			UpdateCategories($filename,0,"{error}",0);
 			continue;
 		}
@@ -239,15 +276,14 @@ function writelogsBLKS($text,$function,$file,$line){
 	}
 
 
-function inject_category($categories){
-	
-	
+function inject_category($categories,$lock=false){
 	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".".md5($categories).".pid";
-	$unix=new unix();
-	$pid=@file_get_contents($pidfile);
-	if($unix->process_exists($pid,__FILE__)){writelogsBLKS("Warning: Already running pid $pid for $categories",__FUNCTION__,__FILE__,__LINE__);return;}
-	
-	$unix->send_email_events("Proxy:[BlacklistsDB] processing injecting category $categories", "Pid number $pid", "proxy");
+	if($lock){
+			$unix=new unix();
+			$pid=@file_get_contents($pidfile);
+			if($unix->process_exists($pid,__FILE__)){writelogsBLKS("Warning: Already running pid $pid for $categories",__FUNCTION__,__FILE__,__LINE__);return;}
+	}
+	ufdbguard_admin_events("processing injecting category $categories",__FUNCTION__,__FILE__,__LINE__,"update");
 	@file_put_contents($pidfile, getmypid());
 	$t1=time();
 	
@@ -257,7 +293,7 @@ function inject_category($categories){
 	$results=$q->QUERY_SQL($sql,"artica_backup");
 	if(!$q->ok){
 		echo "Fatal error $sql\n";
-		$unix->send_email_events("Proxy:[BlacklistsDB] Fatal: inject() mysql database error while retreive update list", $q->mysql_error, "proxy");
+		ufdbguard_admin_events("Fatal: inject() mysql database error while retreive update list $q->mysql_error",__FUNCTION__,__FILE__,__LINE__,"update");
 		return;
 	}
 	$num=mysql_num_rows($results);
@@ -273,7 +309,7 @@ function inject_category($categories){
 		$targetfileUncompress=$working_dir."/".$filename.".ext";
 		UpdateCategories($filename,30,"{uncompress}",0);
 		if(!extractGZ($targetfile,$targetfileUncompress)){
-			$unix->send_email_events("Proxy:[BlacklistsDB] Fatal: unable to extract $targetfile", "", "proxy");
+			ufdbguard_admin_events("Fatal: unable to extract $targetfile",__FUNCTION__,__FILE__,__LINE__,"update");
 			UpdateCategories($filename,30,"{failed_uncompress}",0);
 			continue;
 		}
@@ -284,9 +320,8 @@ function inject_category($categories){
 	}
 	$distanceOfTimeInWords=$unix->distanceOfTimeInWords($t1,time());
 	$GLOBALS["MAILLOG"][]=__LINE__.")  Files processed: $c\nduration:$distanceOfTimeInWords\n";
+	ufdbguard_admin_events("processing injecting category $categories done ".@implode("\n", $GLOBALS["MAILLOG"]),__FUNCTION__,__FILE__,__LINE__,"update");
 	
-	$unix->send_email_events("Proxy:[BlacklistsDB] processing injecting category $categories done",
-	@implode("\n", $GLOBALS["MAILLOG"]) , "proxy");
 	$GLOBALS["MAILLOG"]=array();
 	CategoriesCountCache();
 	
@@ -315,7 +350,7 @@ function inject(){
 	$results=$q->QUERY_SQL($sql,"artica_backup");
 	if(!$q->ok){
 		echo "Fatal error $sql\n";
-		$unix->send_email_events("Proxy: Fatal:[BlacklistsDB] inject() mysql database error while retreive update list", $q->mysql_error, "proxy");
+		ufdbguard_admin_events("Fatal: mysql database error $q->mysql_error while retreive update list",__FUNCTION__,__FILE__,__LINE__,"update");
 		return;
 	}
 	$num=mysql_num_rows($results);
@@ -328,6 +363,7 @@ function inject(){
 		$targetfileUncompress=$working_dir."/".$filename.".ext";
 		UpdateCategories($filename,30,"{uncompress}",0);
 		if(!extractGZ($targetfile,$targetfileUncompress)){
+			ufdbguard_admin_events("Fatal: unable to extract $targetfile",__FUNCTION__,__FILE__,__LINE__,"update");
 			$unix->send_email_events("Proxy:[BlacklistsDB] Fatal: unable to extract $targetfile", "", "proxy");
 			UpdateCategories($filename,30,"{failed_uncompress}",0);
 			continue;
@@ -403,10 +439,9 @@ function inject_sql($srcfilename,$filename,$categoriesTable){
 					echo "Overloaded, die...\n";
 					$ldao=getSystemLoad();
 					$GLOBALS["MAILLOG"][]=__LINE__.")  Overloaded,$ldao die...";
-					$unix->send_email_events("Proxy:[BlacklistsDB] processing black list $srcfilename database injection aborted", "
-					System is overloaded ($ldao), the processing will be aborted and restart in next cycle
-					Task stopped line $c/$count rows\n
-					", "proxy");
+					ufdbguard_admin_events("$categoriesTable: processing black list $srcfilename database injection aborted System is overloaded ($ldao), the processing will be aborted and restart in next cycle
+					Task stopped line $c/$count rows\n",__FUNCTION__,__FILE__,__LINE__,"update");
+					
 					die();
 				}
 				
@@ -417,6 +452,7 @@ function inject_sql($srcfilename,$filename,$categoriesTable){
 			$q=new mysql_squid_builder();
 			$q->QUERY_SQL($sql);
 			if(!$q->ok){
+				ufdbguard_admin_events("$categoriesTable: Fatal error $q->mysql_error",__FUNCTION__,__FILE__,__LINE__,"update");
 				UpdateCategories($srcfilename,30,"{sql_error}",0);
 				return;
 			}
@@ -432,6 +468,7 @@ function inject_sql($srcfilename,$filename,$categoriesTable){
 		$q->QUERY_SQL($sql);		
 	}
 	
+	ufdbguard_admin_events("$categoriesTable: Success importing $c elements in" .$unix->distanceOfTimeInWords($t1,time()),__FUNCTION__,__FILE__,__LINE__,"update");
 	$GLOBALS["MAILLOG"][]=__LINE__.") Success importing $c elements in" .$unix->distanceOfTimeInWords($t1,time());
 	UpdateCategories($srcfilename,100,"{success}",1);
 	

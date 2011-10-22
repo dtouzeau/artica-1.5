@@ -21,6 +21,7 @@ if(isset($_GET["visited-sites"])){visited_sites();exit();}
 if(isset($_GET["rebuild-filters"])){rebuild_filters();exit();}
 if(isset($_GET["ufdbguardconf"])){ufdbguardconf();exit();}
 if(isset($_GET["export-web-categories"])){export_web_categories();exit();}
+if(isset($_GET["export-deleted-categories"])){export_deleted_categories();exit();}
 if(isset($_GET["ufdbguard-compile-database"])){ufdbguard_compile_database();exit();}
 if(isset($_GET["ufdbguard-compile-alldatabases"])){ufdbguard_compile_all_databases();exit();}
 
@@ -69,6 +70,15 @@ function export_web_categories(){
 	$cmd=trim("$nohup $php5 /usr/share/artica-postfix/exec.web-community-filter.php --export-perso-cats >/dev/null 2>&1 &");
 	shell_exec($cmd);
 	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);
+}
+
+function export_deleted_categories(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$php5=$unix->LOCATE_PHP5_BIN();
+	$cmd=trim("$nohup $php5 /usr/share/artica-postfix/exec.web-community-filter.php --export-deleted >/dev/null 2>&1 &");
+	shell_exec($cmd);
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	
 }
 
 

@@ -19,6 +19,7 @@ if($argv[1]=="--sitesinfos"){die();}
 if($argv[1]=="--groupby"){die();}
 if($argv[1]=="--import"){import();die();}
 if($argv[1]=="--export"){export(true);die();}
+if($argv[1]=="--export-deleted"){export_deleted_categories(true);die();}
 if($argv[1]=="--export-perso-cats"){ExportPersonalCategories(true);die();}
 
 
@@ -120,6 +121,61 @@ function ExportPersonalCategories($asPid=false){
 	
 	
 }	
+
+function export_deleted_categories($asPid=false){
+	$sock=new sockets();
+	$unix=new unix();
+	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
+	
+	if($asPid){
+		
+		$cachetime="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".time";
+		$unix=new unix();	
+		$pid=@file_get_contents($pidfile);
+		if($unix->process_exists($pid)){WriteMyLogs("Already executed PID:$pid, die()",__FUNCTION__,__FILE__,__LINE__);die();}	
+		
+	}	
+	
+	@file_put_contents($pidfile,getmypid());
+	$uuid=base64_decode($sock->getFrameWork("cmd.php?system-unique-id=yes"));	
+	$q=new mysql_squid_builder();
+	$ALLCOUNT=$q->COUNT_ROWS("categorize_delete");
+	if($ALLCOUNT==0){return;}
+	
+	
+	$results=$q->QUERY_SQL("SELECT * FROM categorize_delete");
+	if(!$q->ok){echo $q->mysql_error."\n$sql\n";return;}
+	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+		if($ligne["category"]==null){continue;}
+		if($ligne["sitename"]==null){continue;}
+		if($ligne["zmd5"]==null){continue;}
+		
+		$array[$ligne["zmd5"]]=array(
+				"category"=>$ligne["category"],
+				"sitename"=>$ligne["sitename"],
+			    "uuid"=>$uuid
+		);
+	}	
+	
+	$f=base64_encode(serialize($array));
+	$curl=new ccurl("http://www.artica.fr/shalla-orders.php");
+	$curl->parms["COMMUNITY_POST_CATEGORIES_DELETE"]=$f;
+
+	if(!$curl->get()){
+		writelogs("Failed exporting ".count($array)." deleted websites from categories to Artica cloud repository servers",__FUNCTION__,__FILE__,__LINE__);
+		$unix->send_email_events("Failed exporting ".count($array)." deleted websites from categories to Artica cloud repository servers",null,"proxy");
+		writelogs_squid("Failed exporting ".count($array)." deleted websites from categories to Artica cloud repository servers \"$curl->error\"",__FUNCTION__,__FILE__,__LINE__,"export");
+		return null;
+	}
+	
+	if(preg_match("#<ANSWER>OK</ANSWER>#is",$curl->data)){
+		WriteMyLogs("Exporting success ". count($array)." deleted websites from categories",__FUNCTION__,__FILE__,__LINE__);
+		writelogs_squid("Success exporting ".count($array)." deleted websites from categories to Artica cloud repository servers",__FUNCTION__,__FILE__,__LINE__,"export");
+		$q->QUERY_SQL("TRUNCATE TABLE categorize_delete");
+	}
+
+}
+
 	
 function Export($asPid=false){
 	$unix=new unix();
@@ -138,7 +194,7 @@ function Export($asPid=false){
 		@file_put_contents($pidfile,getmypid());
 	}
 	
-	
+	export_deleted_categories();
 	$q=new mysql_squid_builder();
 	$tables=$q->LIST_TABLES_CATEGORIES();
 	while (list ($table, $www) = each ($tables)){

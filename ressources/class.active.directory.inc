@@ -199,7 +199,17 @@ class ldapAD{
 	
 		return $res;	
 		
-	}		
+	}	
+
+	function CountDeDomainsOU($ou){
+		$ldap=new clladp();
+		return count($ldap->Hash_domains_table($ou));
+	}	
+	
+	function CountDeGroups($ou){
+		return count($this->hash_get_groups_from_ou_mysql($ou));
+		
+	}
 		
 		
 

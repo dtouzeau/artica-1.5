@@ -2310,6 +2310,7 @@ function tubuntu.isVPSDetected():boolean;
 begin
 result:=false;
 if FIleExists('/etc/rc6.d/S00vzreboot') then exit(true);
+if FIleExists('/etc/init.d/vzquota') then exit(true);
 end;
 
 

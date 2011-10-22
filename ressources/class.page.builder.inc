@@ -215,11 +215,17 @@ class pagebuilder{
 		if($_COOKIE["artica-template"]==null){$_COOKIE["artica-template"]="default";}
 		if($_COOKIE["artica-template"]=='!nil'){$_COOKIE["artica-template"]="default";}
 		$template_file="index.html";
+		$GLOBALS["artica-template"]=$_COOKIE["artica-template"];
+		if(!is_file(dirname(__FILE__)."/templates/{$_COOKIE["artica-template"]}/$template_file")){
+			$GLOBALS["artica-template"]="default";
+		}
+		
+	
 		if(isset($GLOBALS["CHANGE_TEMPLATE"])){$template_file=$GLOBALS["CHANGE_TEMPLATE"];}
 		
-		
+			$favicon=$this->favicon();
 			$html=$backspace."<!-- template used :".dirname(__FILE__)."/templates/{$_COOKIE["artica-template"]}/$template_file-->";
-	
+			if($favicon<>null){$html=$html.$backspace.$favicon;}
 			
 			if(!isset($GLOBALS["CSS_FILES"]["menu.css"])){$GLOBALS["CSS_FILES"]["menu.css"]="menu.css";}
 			if(!isset($GLOBALS["CSS_FILES"]["contact.css"])){$GLOBALS["CSS_FILES"]["contact.css"]="contact.css";}
@@ -263,10 +269,10 @@ class pagebuilder{
 			
 				reset($GLOBALS["CSS_FILES"]);
 				while (list ($num, $val) = each ($GLOBALS["CSS_FILES"]) ){
-					if(file_exists(dirname(__FILE__)."/templates/{$_COOKIE["artica-template"]}/$val")){
-						$css_array[]="$backspace<link rel=\"stylesheet\" type=\"text/css\" rel=\"styleSheet\"  href=\"/ressources/templates/{$_COOKIE["artica-template"]}/$val\" />";
+					if(file_exists(dirname(__FILE__)."/templates/{$GLOBALS["artica-template"]}/$val")){
+						$css_array[]="$backspace<link rel=\"stylesheet\" type=\"text/css\" rel=\"styleSheet\"  href=\"/ressources/templates/{$GLOBALS["artica-template"]}/$val\" />";
 					}else{
-						$csserror[]="$backspace<!-- missing ".dirname(__FILE__)."/templates/{$_COOKIE["artica-template"]}/$val -->";
+						$csserror[]="$backspace<!-- missing ".dirname(__FILE__)."/templates/{$GLOBALS["artica-template"]}/$val -->";
 						
 					}
 				}
@@ -303,14 +309,33 @@ class pagebuilder{
 		private function PersoCSS(){
 			$css=array();
 			$backspace="\t\t";
-			if(!isset($_COOKIE["artica-template"])){return;}
-			$template=$_COOKIE["artica-template"];
+			
+			$template=$this->GetTemplateMemory();
+			if($template=="default"){return;}
 			foreach (glob("ressources/templates/$template/css/*.css") as $filename) {
 				if(isset($GLOBALS["CSS_FILES"][basename($filename)])){unset($GLOBALS["CSS_FILES"][basename($filename)]);}
 				$css[]="$backspace<link href=\"/$filename\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" >";;
 			}
 
 			return $css;
+			
+		}
+		
+		private function GetTemplateMemory(){
+			if(isset($GLOBALS["artica-template"])){return $GLOBALS["artica-template"];}
+			if(!isset($_COOKIE["artica-template"])){$GLOBALS["artica-template"]="default";return;}
+			if(!is_file(dirname(__FILE__)."/templates/{$_COOKIE["artica-template"]}/index.html")){$GLOBALS["artica-template"]="default";return;}
+			$GLOBALS["artica-template"]=$_COOKIE["artica-template"];
+		}
+		
+		public function favicon(){
+			if(is_file(dirname(__FILE__)."/templates/{$_COOKIE["artica-template"]}/favicon.ico")){
+				$f[]="<link rel=\"icon\" href=\"ressources/templates/{$_COOKIE["artica-template"]}/favicon.ico\" type=\"image/x-icon\" />";
+				$f[]="<link rel=\"shortcut icon\" href=\"ressources/templates/{$_COOKIE["artica-template"]}/favicon.ico\" type=\"image/x-icon\" />\n";
+				return @implode("\n", $f);
+			}else{
+				return "<!-- favicon :".dirname(__FILE__)."/templates/{$_COOKIE["artica-template"]}/favicon.ico no such file -->\n";
+			}
 			
 		}
 		
@@ -322,9 +347,9 @@ class pagebuilder{
 			$files["jquery-ui-1.8.6.custom.css"]=true;
 			$files["jquery-ui-1.7.2.custom.css"]=true;
 			$files["jquery-ui-1.8.16.custom.css"]=true;
+			$template=$this->GetTemplateMemory();
 			
-			
-			if(isset($_COOKIE["artica-template"])){
+			if($template<>"default"){
 				while (list ($num, $val) = each ($files) ){
 					if(is_file(dirname(__FILE__)."/templates/{$_COOKIE["artica-template"]}/css/$num")){return dirname(__FILE__)."/templates/{$_COOKIE["artica-template"]}/css/$num";}
 				}

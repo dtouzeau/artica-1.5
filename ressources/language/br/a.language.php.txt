@@ -3,6 +3,7 @@
 <access_events>Access events</access_events>
 <acls_and_quotas>ACLS & Quotas</acls_and_quotas>
 <acls_folders_rebuild_text>This will rebuild all permissions and ACLs, perform this operation ?</acls_folders_rebuild_text>
+<acls_no_such_dir_text>This directory does not exists on your system.[br]Perhaps you have remove it.[br]I suggest to remove this entry..</acls_no_such_dir_text>
 <ActHasMaster>Act has Master</ActHasMaster>
 <ActHasSlave>Act has slave</ActHasSlave>
 <activate_openvpn_connection>Activate the VPN connection and connect to the VPN server</activate_openvpn_connection>
@@ -236,6 +237,7 @@ The logic is based on evaluation of SQL commands using a risk scoring matrix as 
 <APP_MOD_PAGESPEED>optimizing web pages module</APP_MOD_PAGESPEED>
 <APP_MSKTUTIL>keytab client for MS Active Directory</APP_MSKTUTIL>
 <APP_MSKTUTIL_NOT_INSTALLED>msktutil is not installed, use the setup center in order to install this tool</APP_MSKTUTIL_NOT_INSTALLED>
+<APP_MYSQL1>Mysql service</APP_MYSQL1>
 <APP_NSCD>Name Service cache Daemon</APP_NSCD>
 <APP_OCSI2>OCS Engine server 2</APP_OCSI2>
 <APP_OPENEMM>OpenEMM service</APP_OPENEMM>
@@ -1840,6 +1842,7 @@ Very lower config will get 320Mb free[br]
 <register_date>Register date</register_date>
 <register_form>Register form</register_form>
 <registration_complete>Registration complete</registration_complete>
+<rejected>rejected</rejected>
 <rejected_mails>Rejected messages</rejected_mails>
 <reject_rhsbl_helo>Reject rhsbl helo</reject_rhsbl_helo>
 <reject_rhsbl_helo_text>[b]rbl_domain=d.d.d.d[/b]Reject the request when the HELO or EHLO hostname hostname is listed with the A record "d.d.d.d" under rbl_domain</reject_rhsbl_helo_text>
