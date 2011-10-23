@@ -13,6 +13,7 @@ include_once(dirname(__FILE__)."/ressources/class.squid.inc");
 include_once(dirname(__FILE__)."/ressources/class.squidguard.inc");
 include_once(dirname(__FILE__)."/ressources/class.mysql.inc");
 include_once(dirname(__FILE__)."/ressources/class.compile.ufdbguard.inc");
+include_once(dirname(__FILE__)."/ressources/class.compile.dansguardian.inc");
 include_once(dirname(__FILE__).'/framework/class.unix.inc');
 include_once(dirname(__FILE__)."/framework/frame.class.inc");
 
@@ -29,6 +30,7 @@ if(count($argv)>0){
 	
 	$argvs=$argv;
 	unset($argvs[0]);
+	if($argv[1]=="--dansguardian"){buildDans();exit;}
 	if($argv[1]=="--databases-status"){databases_status();exit;}
 	if($argv[1]=="--ufdbguard-status"){print_r(UFDBGUARD_STATUS());exit;}
 	if($argv[1]=="--cron-compile"){cron_compile();exit;}
@@ -127,6 +129,11 @@ function conf(){
 	
 }
 
+function buildDans(){
+	$dans=new compile_dansguardian();
+	$dans->build();
+}
+
 function build(){
 	
 	$users=new usersMenus();
@@ -142,6 +149,10 @@ function build(){
 	if($users->SQUIDGUARD_INSTALLED){$installed=true;}
 	if($users->APP_UFDBGUARD_INSTALLED){$installed=true;}
 	if(!$installed){return false;}
+	
+	$dans=new compile_dansguardian();
+	$dans->build();	
+	
 	
 
 	$ufdb=new compile_ufdbguard();

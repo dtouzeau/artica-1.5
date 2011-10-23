@@ -820,7 +820,15 @@ function BackupTable($tablename,$database,$addons=array(),$zmd5=false,$endquery=
 				return true;
 			}
 		}
-		$this->writeLogs("testing \"$table\" failed in $database",__CLASS__.'/'.__FUNCTION__,__FILE__);
+		
+		if(function_exists("debug_backtrace")){
+					try {
+						$trace=@debug_backtrace();
+						if(isset($trace[1])){$called=" called by `". basename($trace[1]["file"])."` {$trace[1]["function"]}() line: {$trace[1]["line"]}";}
+					} catch (Exception $e) {$this->writeLogs("QUERY_SQL:: Fatal: ".$e->getMessage(),__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
+				}		
+		
+		$this->writeLogs("testing \"$table\" failed in $database $called ",__CLASS__.'/'.__FUNCTION__,__FILE__);
 		return false;
 		
 	}
@@ -1161,6 +1169,16 @@ function mysql_real_escape_string2($query){
 		if($ligne["Rows"]==null){$ligne["Rows"]=0;}
 		return $ligne["Rows"];
 		}
+		
+	FUNCTION TABLE_SIZE($table,$database){
+		if(!function_exists("mysql_connect")){return 0;}
+		$sql="show TABLE STATUS WHERE Name='$table'";
+		$ligne=@mysql_fetch_array($this->QUERY_SQL($sql,$database));
+		if($ligne["Data_length"]==null){$ligne["Data_length"]=0;}
+		if($ligne["Index_length"]==null){$ligne["Index_length"]=0;}
+		return $ligne["Index_length"]+$ligne["Data_length"];		
+		
+	}
 		
 		
 		

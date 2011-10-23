@@ -1,5 +1,5 @@
 /**
- * @author touzeau XHRParseElements DisableFieldsFromId LoadAjaxPreload
+ * @author touzeau XHRParseElements DisableFieldsFromId LoadAjaxPreload LoadAjaxTiny
  */
 var xTimeOut;
 var xMousePos=0;
@@ -1751,6 +1751,7 @@ var x_CacheOff= function (obj) {
 	if(document.getElementById('main_post_perfs_tabs')){RefreshTab('main_post_perfs_tabs');}
 	if(document.getElementById('main_config_dhcpd')){RefreshTab('main_config_dhcpd');}
 	if(document.getElementById('admin_perso_tabs')){RefreshTab('admin_perso_tabs');}
+	if(document.getElementById('squid_blocked_stats')){RefreshTab('squid_blocked_stats');}
 	
 	
 	

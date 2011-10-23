@@ -109,13 +109,18 @@ function tabs(){
 	$tpl=new templates();
 	$page=CurrentPageName();
 	$array["categories"]='{databases}';
+	$array["events-status"]='{update_status}';
 	$array["events"]='{update_events}';
-	
 	
 
 
 	$t=time();
 	while (list ($num, $ligne) = each ($array) ){
+		
+		if($num=="events-status"){
+			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"squid.blacklist.php?status=yes\" style='font-size:14px'><span>$ligne</span></a></li>\n");
+			continue;
+		}
 		
 		$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"$page?$num=$time\" style='font-size:14px'><span>$ligne</span></a></li>\n");
 	}
@@ -176,16 +181,22 @@ function categories(){
 }
 
 function categories_search(){
-	$page=CurrentPageName();
-	$tpl=new templates();
-	$q=new mysql_squid_builder();	
-	$dans=new dansguardian_rules();
-	
+
 	$search=$_GET["category-search"];
 	$search="*$search*";
 	$search=str_replace("**", "*", $search);
 	$search=str_replace("**", "*", $search);
 	$search=str_replace("*", "%", $search);	
+	if(CACHE_SESSION_GET(__FUNCTION__.$search, __FILE__,15)){return;}	
+	
+	$page=CurrentPageName();
+	$tpl=new templates();
+	$sock=new sockets();
+	$q=new mysql_squid_builder();	
+	$dans=new dansguardian_rules();
+	$EnableWebProxyStatsAppliance=$sock->GET_INFO("EnableWebProxyStatsAppliance");
+	if(!is_numeric($EnableWebProxyStatsAppliance)){$EnableWebProxyStatsAppliance=0;}
+
 	
 	$sql="SELECT * FROM personal_categories";
 	$results=$q->QUERY_SQL($sql);
@@ -199,19 +210,7 @@ function categories_search(){
 	$add=imgtootltip("plus-24.png","{add} {category}","Loadjs('$page?add-perso-cat-js=yes')");
 	$compile_all=imgtootltip("compile-distri-32.png","{saveToDisk} {all}","Loadjs('$page?compile-all-dbs-js=yes')");
 	if(!$q->ok){echo  " <H2>Fatal Error: $q->mysql_error</H2>";}
-	$html="<center>
-<table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
-<thead class='thead'>
-	<tr>
-		<th width=1%>$add</th>
-		<th width=99%>{category}</th>
-		<th width=1%>{size}</th>
-		<th width=1% colspan=2>{items}</th>
-		<th width=1%>$compile_all</th>
-		<th width=1%>&nbsp;</th>
-	</tr>
-</thead>
-<tbody class='tbody'>";		
+	
 		
 	$sock=new sockets();
 	$sock->getFrameWork("ufdbguard.php?db-status=yes");
@@ -236,7 +235,7 @@ function categories_search(){
 		$color="black";
 		
 		$items=$q->COUNT_ROWS($ligne["c"]);
-		
+		$TOTAL_ITEMS=$TOTAL_ITEMS+$items;
 		
 		if(!isset($dans->array_blacksites[$categoryname])){
 			if(isset($dans->array_blacksites[str_replace("_","-",$categoryname)])){$categoryname=str_replace("_","-",$categoryname);}
@@ -244,11 +243,18 @@ function categories_search(){
 		}
 		if($dans->array_pics[$categoryname]<>null){$pic="<img src='img/{$dans->array_pics[$categoryname]}'>";}else{$pic="&nbsp;";}
 	
-		if($sizedb==0){$pic="<img src='img/warning-panneau-32.png'>";}
-		$sizedb_org=$sizedb;
-		$sizedb=FormatBytes($sizedb/1024);
+		if($EnableWebProxyStatsAppliance==0){
+				if($sizedb==0){$pic="<img src='img/warning-panneau-32.png'>";}
+				$sizedb_org=$sizedb;
+				$sizedb=FormatBytes($sizedb/1024);
+		}else{
+			$sizedb_org=$q->TABLE_SIZE($table);
+			$sizedb=FormatBytes($sizedb_org/1024);
+		}
 		
 		$sizedb=texttooltip($sizedb,"$sizedb_org bytes",null,null,1,"font-size:14px;font-weight:bold;color:$color");
+		
+		
 	
 		$linkcat=null;
 		$text_category=$dans->array_blacksites[$categoryname];
@@ -259,7 +265,9 @@ function categories_search(){
 			style='font-size:14px;font-weight:bold;color:$color;text-decoration:underline'>";
 		}
 		
-		if($sizedb_org<35){$pic="<img src='img/warning-panneau-32.png'>";}
+		if($EnableWebProxyStatsAppliance==0){
+			if($sizedb_org<35){$pic="<img src='img/warning-panneau-32.png'>";}
+		}
 		$viewDB=imgtootltip("mysql-browse-database-32.png","{view}","javascript:Loadjs('squid.categories.php?category={$categoryname}')");
 		$html=$html."
 		<tr class=$classtr>
@@ -275,12 +283,24 @@ function categories_search(){
 		";
 	}
 	
-	
-	
+	$TOTAL_ITEMS=numberFormat($TOTAL_ITEMS,0,""," ");	
+	$header="<center>
+<table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
+<thead class='thead'>
+	<tr>
+		<th width=1%>$add</th>
+		<th width=99%>{category}</th>
+		<th width=1%>{size}</th>
+		<th width=1% colspan=2>$TOTAL_ITEMS {items}</th>
+		<th width=1%>$compile_all</th>
+		<th width=1%>&nbsp;</th>
+	</tr>
+</thead>
+<tbody class='tbody'>";		
 	
 
 	
-	$html=$html."</table>
+	$html=$header.$html."</table>
 	</center>
 	
 	<script>
@@ -289,7 +309,7 @@ function categories_search(){
 		}
 	</script>
 	";
-	echo $tpl->_ENGINE_parse_body($html);
+	CACHE_SESSION_SET(__FUNCTION__.$search, __FILE__,$tpl->_ENGINE_parse_body($html));
 }
 
 function add_category_js(){

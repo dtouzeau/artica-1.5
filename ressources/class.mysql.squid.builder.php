@@ -63,7 +63,10 @@ class mysql_squid_builder{
 	}
 	
 	
-	
+	public function TABLE_SIZE($table,$database=null){
+		if($database<>$this->database){$database=$this->database;}
+		return $this->ClassSQL->TABLE_SIZE($table,$database);		
+	}
 	
 	public function TABLE_EXISTS($table,$database=null){
 		if($database==null){$database=$this->database;}
@@ -130,7 +133,16 @@ class mysql_squid_builder{
 		}
 		return $array;
 		
-	}	
+	}
+
+	public function CategoryShellEscape($category){
+		$category=trim($category);
+		if($category==null){return;}
+		$category=str_replace("/", "_", $category);
+		$category=str_replace("-", "_", $category);
+		$category=str_replace(" ", "_", $category);		
+		
+	}
 	
 
 	
@@ -196,6 +208,7 @@ class mysql_squid_builder{
 		
 		
 		while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+			if($ligne["c"]=="category_"){$this->QUERY_SQL("DROP TABLE `category_`");}
 			$array[$ligne["c"]]=$ligne["c"];
 		}
 		$GLOBALS["LIST_TABLES_CATEGORIES"]=$array;
@@ -225,36 +238,36 @@ class mysql_squid_builder{
 	public function CheckTables($table=null){
 		
 	if(!$this->DATABASE_EXISTS($this->database)){$this->CREATE_DATABASE($this->database);}
-	$tableblock=date('Ymd')."_blocked";
+
 	if($table==null){$table="dansguardian_events_".date('Ymd');}	
 	if(!$this->TABLE_EXISTS($table,$this->database)){
 		writelogs("Checking $table in $this->database NOT EXISTS...",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
 		$sql="CREATE TABLE IF NOT EXISTS `$table` (
-				  `sitename` varchar(90) NOT NULL,
-				  `ID` bigint(100) NOT NULL AUTO_INCREMENT,
-				  `uri` varchar(90) NOT NULL,
-				  `TYPE` varchar(50) NOT NULL,
-				  `REASON` varchar(255) NOT NULL,
-				  `CLIENT` varchar(50) NOT NULL DEFAULT '',
-				  `MAC` varchar(20) NOT NULL DEFAULT '',
-				  `zDate` datetime NOT NULL,
-				  `zMD5` varchar(90) NOT NULL,
-				  `uid` varchar(128) NOT NULL,
-				  `remote_ip` varchar(20) NOT NULL,
-				  `country` varchar(20) NOT NULL,
-				  `QuerySize` int(10) NOT NULL,
-				  `cached` INT( 1 ) NOT NULL DEFAULT '0',
-				  PRIMARY KEY (`ID`),
-				  UNIQUE KEY `zMD5` (`zMD5`),
-				  KEY `sitename` (`sitename`,`TYPE`,`CLIENT`,`uri`),
-				  KEY `zDate` (`zDate`),
-				  KEY `cached` (`cached`),
-				  KEY `uri` (`uri`),
-				  KEY `remote_ip` (`remote_ip`),
-				  KEY `MAC` (`MAC`),
-				  KEY `uid` (`uid`),
-				  KEY `country` (`country`)
-				) ";
+		  `sitename` varchar(90) NOT NULL,
+		  `ID` bigint(100) NOT NULL AUTO_INCREMENT,
+		  `uri` varchar(90) NOT NULL,
+		  `TYPE` varchar(50) NOT NULL,
+		  `REASON` varchar(255) NOT NULL,
+		  `CLIENT` varchar(50) NOT NULL DEFAULT '',
+		  `zDate` datetime NOT NULL,
+		  `zMD5` varchar(90) NOT NULL,
+		  `uid` varchar(128) NOT NULL,
+		  `remote_ip` varchar(20) NOT NULL,
+		  `country` varchar(20) NOT NULL,
+		  `QuerySize` int(10) NOT NULL,
+		  `cached` int(1) NOT NULL DEFAULT '0',
+		  `MAC` varchar(20) NOT NULL,
+		  PRIMARY KEY (`ID`),
+		  UNIQUE KEY `zMD5` (`zMD5`),
+		  KEY `sitename` (`sitename`,`TYPE`,`CLIENT`,`uri`),
+		  KEY `zDate` (`zDate`),
+		  KEY `cached` (`cached`),
+		  KEY `uri` (`uri`),
+		  KEY `remote_ip` (`remote_ip`),
+		  KEY `uid` (`uid`),
+		  KEY `country` (`country`),
+		  KEY `MAC` (`MAC`)
+		) ";
 			 $this->QUERY_SQL($sql,$this->database); 
 			if(!$this->ok){
 				writelogs("$this->mysql_error\n$sql",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
@@ -266,22 +279,32 @@ class mysql_squid_builder{
 		}
 		
 		
+		
+		
+	$tableblock=date('Ymd')."_blocked";	
 	if(!$this->TABLE_EXISTS($tableblock,'artica_events')){		
 			$sql="CREATE TABLE `$tableblock` (
-			`ID` BIGINT( 100 ) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-			`zDate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
-			`client` VARCHAR( 90 ) NOT NULL ,
-			`website` VARCHAR( 125 ) NOT NULL ,
-			`category` VARCHAR( 50 ) NOT NULL ,
-			`rulename` VARCHAR( 50 ) NOT NULL ,
-			`public_ip` VARCHAR( 40 ) NOT NULL ,
-			KEY `zDate` (`zDate`),
-			KEY `client` (`client`),
-			KEY `website` (`website`),
-			KEY `category` (`category`),
-			KEY `rulename` (`rulename`),
-			KEY `public_ip` (`public_ip`)
-			
+			  `ID` bigint(100) NOT NULL AUTO_INCREMENT,
+			  `zDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			  `client` varchar(90) NOT NULL,
+			  `website` varchar(125) NOT NULL,
+			  `category` varchar(50) NOT NULL,
+			  `rulename` varchar(50) NOT NULL,
+			  `public_ip` varchar(40) NOT NULL,
+			  `uri` varchar(255) NOT NULL,
+			  `event` varchar(20) NOT NULL,
+			  `why` varchar(90) NOT NULL,
+			  `explain` text NOT NULL,
+			  `blocktype` varchar(255) NOT NULL,
+			  PRIMARY KEY (`ID`),
+			  KEY `zDate` (`zDate`),
+			  KEY `client` (`client`),
+			  KEY `website` (`website`),
+			  KEY `category` (`category`),
+			  KEY `rulename` (`rulename`),
+			  KEY `public_ip` (`public_ip`),
+			  KEY `event` (`event`),
+			  KEY `why` (`why`)
 			)"; 
 		$this->QUERY_SQL($sql); 
 		
@@ -294,6 +317,15 @@ class mysql_squid_builder{
 			}
 
 		}
+		$tableblock=date('Ymd')."_blocked";
+		if(!$this->FIELD_EXISTS("$tableblock", "uri")){$this->QUERY_SQL("ALTER TABLE `$tableblock` ADD `uri` VARCHAR( 255 ) NOT NULL");}
+		if(!$this->FIELD_EXISTS("$tableblock", "event")){$this->QUERY_SQL("ALTER TABLE `$tableblock` ADD `event` VARCHAR( 20 ) NOT NULL,ADD INDEX ( `event` )");}
+		if(!$this->FIELD_EXISTS("$tableblock", "why")){$this->QUERY_SQL("ALTER TABLE `$tableblock` ADD `why` VARCHAR( 90 ) NOT NULL,ADD INDEX ( `why` )");}
+		if(!$this->FIELD_EXISTS("$tableblock", "explain")){$this->QUERY_SQL("ALTER TABLE `$tableblock` ADD `explain` TEXT");}
+		if(!$this->FIELD_EXISTS("$tableblock", "blocktype")){$this->QUERY_SQL("ALTER TABLE `$tableblock` ADD `blocktype` VARCHAR( 255 )");}
+	
+		
+		
 		$tableblockMonth=date('Ym')."_blocked_days";
 		if(!$this->TABLE_EXISTS($tableblockMonth,'artica_events')){		
 			$sql="CREATE TABLE `$tableblockMonth` (
@@ -329,29 +361,7 @@ class mysql_squid_builder{
 		
 
 		
-	if(!$this->TABLE_EXISTS("mysql_events","artica_events")){
-				$sql="CREATE TABLE IF NOT EXISTS `mysql_events` (
-			  `ID` bigint(100) NOT NULL AUTO_INCREMENT,
-			  `zDate` TIMESTAMP NOT NULL,
-			  `description` text NOT NULL,
-			  `function` varchar(50) NOT NULL,
-			  `category` varchar(50) NOT NULL,
-			  `process` varchar(50) NOT NULL,
-			  `line` int(100) NOT NULL,
-			  `servername` varchar(128) NOT NULL,
-			  PRIMARY KEY (`ID`),
-			  KEY `function` (`function`,`process`,`line`),
-			  KEY `servername` (`servername`),
-			  KEY `category` (`category`),
-			  KEY `zDate` (`zDate`)
-			  
-			  )";
-		if(!$this->ok){
-			writelogs("Fatal: $this->mysql_error\n$sql",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
-			$this->mysql_error=$this->mysql_error."\n$sql";
-		}
 
-	}
 		
 		
 		
@@ -560,8 +570,9 @@ class mysql_squid_builder{
 	function COUNT_CATEGORIES(){
 		$c=0;
 		$tablescat=$this->LIST_TABLES_CATEGORIES();
-		while (list ($table, $none) = each ($tablescat) ){
-			$c=$c+$this->COUNT_ROWS($table);
+		while (list ($table, $none) = each ($tablescat) ){		
+			$count=$this->COUNT_ROWS($table);
+			$c=$c+$count;
 		}
 		return $c;
 	}

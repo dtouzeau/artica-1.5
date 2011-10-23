@@ -26,7 +26,7 @@
 	if(isset($_GET["js"])){js();exit;}
 	if(isset($_GET["parameters-js"])){main_parameters_js();exit;}
 	if(isset($_GET["caches-js"])){caches_js();exit;}
-	
+	if(isset($_GET["calculate-mb-size"])){calculate_mb_size();exit;}
 	
 	
 	tabs();
@@ -103,8 +103,10 @@ function parameters_main(){
 	$page=CurrentPageName();	
 	$byjs=$_GET["byjs"];							
 	$squid_infos=new squid();
-	$squid_infos->cache_type_list[null]='{select}';
-	$cache_type=Field_array_Hash($squid_infos->cache_type_list,'master_cache_type',$squid->CACHE_TYPE,"style:font-size:14px");
+	$sock=new sockets();
+	$caches_types=unserialize(base64_decode($sock->getFrameWork("squid.php?caches-types=yes")));
+	unset($caches_types["rock"]);
+	$cache_type=Field_array_Hash($caches_types,'master_cache_type',$squid->CACHE_TYPE,"style:font-size:14px");
 
 $cache_settings="
 <div id='cachesettingsinfo'>
@@ -130,12 +132,12 @@ $cache_settings="
 		</tr>
 <tr>
 		<td align='right' class=legend nowrap style='font-size:14px'>{cache_swap_low}:</strong></td>
-		<td>" . Field_text('cache_swap_low',$squid->global_conf_array["cache_swap_low"],'width:70px;font-size:14px')."%</td>
+		<td style='font-size:14px'>" . Field_text('cache_swap_low',$squid->global_conf_array["cache_swap_low"],'width:70px;font-size:14px')."&nbsp;%</td>
 		<td>" . help_icon('{cache_swap_low_text}',false,'squid.index.php')."</td>
 		</tr>
 <tr>
 		<td align='right' class=legend nowrap style='font-size:14px'>{cache_swap_high}:</strong></td>
-		<td>" . Field_text('cache_swap_high',$squid->global_conf_array["cache_swap_high"],'width:70px;font-size:14px')."%</td>
+		<td style='font-size:14px'>" . Field_text('cache_swap_high',$squid->global_conf_array["cache_swap_high"],'width:70px;font-size:14px')."&nbsp;%</td>
 		<td>" . help_icon('{cache_swap_high_text}',false,'squid.index.php')."</td>
 		</tr>
 <tr>
@@ -160,12 +162,12 @@ $cache_settings="
 		</tr>	
 <tr>
 		<td align='right' class=legend nowrap style='font-size:14px'>{ipcache_low}:</strong></td>
-		<td>" . Field_text('ipcache_low',$squid->global_conf_array["ipcache_low"],'width:70px;font-size:14px')."%</td>
+		<td style='font-size:14px'>" . Field_text('ipcache_low',$squid->global_conf_array["ipcache_low"],'width:70px;font-size:14px')."&nbsp;%</td>
 		<td>" . help_icon('{ipcache_low_text}',false,'squid.index.php')."</td>
 		</tr>
 <tr>
 		<td align='right' class=legend nowrap style='font-size:14px'>{ipcache_high}:</strong></td>
-		<td>" . Field_text('ipcache_high',$squid->global_conf_array["ipcache_high"],'width:70px;font-size:14px')."%</td>
+		<td style='font-size:14px'>" . Field_text('ipcache_high',$squid->global_conf_array["ipcache_high"],'width:70px;font-size:14px')."&nbsp;%</td>
 		<td>" . help_icon('{ipcache_high_text}',false,'squid.index.php')."</td>
 		</tr>
 <tr>
@@ -267,14 +269,25 @@ function caches_list(){
 		while (list ($path, $array) = each ($squid->cache_list) ){
 			if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
 			$unit="&nbsp;MB";
-			if($array["cache_size"]>1000){
+			$maxcachesize=null;
+			if($array["cache_type"]=="rock"){
+				$maxcachesize="&nbsp;({max_objects_size} {$array["cache_maxsize"]}$unit)";
+			}
+			
+			
+			
+			if(is_numeric($array["cache_size"])){
+				if($array["cache_size"]>1000){
 					$array["cache_size"]=$array["cache_size"]/1000;
 					$unit="&nbsp;GB";
 					}
+			}
+					
+	
 		$html=$html."
 			<tr class=$classtr>
 			<td width=1%>". imgtootltip("database-32.png","{edit}","AddCache('$path')")."</td>
-			<td nowrap><strong style='font-size:14px'>". basename($path)."</strong><div style='font-size:11px'><i>$path</i></div></td>
+			<td nowrap><strong style='font-size:14px'>". basename($path)."</strong><div style='font-size:11px'><i>$path&nbsp;$maxcachesize</i></div></td>
 			<td width=1%><strong style='font-size:14px'>{$array["cache_type"]}</strong></td>
 			<td width=1%><strong style='font-size:14px'>{$array["cache_size"]}$unit</strong></td>
 			<td>". caches_infos($cacheinfo[$path])."</td>
@@ -323,7 +336,11 @@ function cache_edit(){
 	if($s->cache_list[$cache]["cache_dir_level1"]==null){$s->cache_list[$cache]["cache_dir_level1"]="16";}	
 	if($s->cache_list[$cache]["cache_dir_level2"]==null){$s->cache_list[$cache]["cache_dir_level2"]="256";}			
 	
-	$squid->cache_type_list[null]='{select}';
+	$sock=new sockets();
+	$caches_types=unserialize(base64_decode($sock->getFrameWork("squid.php?caches-types=yes")));
+	
+	
+	$caches_types[null]='{select}';
 
 	
 	if($cache==$s->CACHE_PATH){
@@ -335,41 +352,49 @@ function cache_edit(){
 		$main_load="HideLevels();";
 	}
 	
-	$type=$tpl->_ENGINE_parse_body(Field_array_Hash($squid->cache_type_list,'cache_type',
-	$s->cache_list[$cache]["cache_type"],null,null,0,"font-size:13px;padding:3px"));	
+	if(!is_numeric($s->cache_list[$cache]["cache_maxsize"])){$s->cache_list[$cache]["cache_maxsize"]=1;}
+	
+	$type=$tpl->_ENGINE_parse_body(Field_array_Hash($caches_types,'cache_type',
+	$s->cache_list[$cache]["cache_type"],"CheckCachesTypes()",null,0,"font-size:16px;padding:3px"));	
 	
 	$html="
 	<div id='waitcache'></div>
 	<form name='FFMCACHE'>
-	<table style='width:100%' class=table_form>
+	<table style='width:100%' class=form>
 		<tr>
-		<td class=legend style='font-size:13px' nowrap>{directory}:</td>
-		<td>" . Field_text('cache_directory',$cache,'width:270px;font-size:13px;padding:3px')."</td>
+		<td class=legend style='font-size:16px' nowrap>{directory}:</td>
+		<td>" . Field_text('cache_directory',$cache,'width:270px;font-size:16px;padding:3px')."</td>
 		<td><input type='button' value='{browse}...' OnClick=\"Loadjs('SambaBrowse.php?no-shares=yes&field=cache_directory')\"></td>
 		</tr>
 		<tr>
-			<td class=legend style='font-size:13px' nowrap>{type}:</td>
+			<td class=legend style='font-size:16px' nowrap>{type}:</td>
 			<td>$type</td>
 			<td>&nbsp;</td>
 		</tr>
 		<tr>
-			<td class=legend style='font-size:13px' nowrap>{cache_size}:</td>
-			<td style='font-size:13px'>" . Field_text('size',$s->cache_list[$cache]["cache_size"],'width:100px;font-size:13px;padding:3px')."&nbsp;Mbytes</td>
+			<td class=legend style='font-size:16px' nowrap>{cache_size}:</td>
+			<td style='font-size:16px'>" . Field_text('squid-cache-size',$s->cache_list[$cache]["cache_size"],'width:100px;font-size:16px;padding:3px',null,"calculateSize()",null,false,null)."&nbsp;Mbytes&nbsp;<span id='squid-size-vals'></span></td>
 			<td>" . help_icon('{cache_size_text}',false,'squid.index.php')."</td>
 		</tr>		
 
 		<tr>
-			<td class=legend nowrap>{cache_dir_level1}:</td>
-			<td>" . Field_text('cache_dir_level1',$s->cache_list[$cache]["cache_dir_level1"],'width:30px;font-size:13px;padding:3px')."</td>
+			<td class=legend nowrap style='font-size:16px'>{cache_dir_level1}:</td>
+			<td>" . Field_text('cache_dir_level1',$s->cache_list[$cache]["cache_dir_level1"],'width:50px;font-size:16px;padding:3px')."</td>
 			<td>" . help_icon('{cache_dir_level1_text}',false,'squid.index.php')."</td>
 		</tr>			
 		<tr>
-			<td class=legend nowrap>{cache_dir_level2}:</td>
-			<td>" . Field_text('cache_dir_level2',$s->cache_list[$cache]["cache_dir_level2"],'width:30px;font-size:13px;padding:3px')."</td>
+			<td class=legend nowrap style='font-size:16px'>{cache_dir_level2}:</td>
+			<td>" . Field_text('cache_dir_level2',$s->cache_list[$cache]["cache_dir_level2"],'width:50px;font-size:16px;padding:3px')."</td>
 			<td>" . help_icon('{cache_dir_level2_text}',false,'squid.index.php')."</td>
-		</tr>	
+		</tr>
 		<tr>
-		<td align='right' colspan=3><hr>". button('{apply}','AddNewCacheSave()')."</td>
+			<td class=legend nowrap style='font-size:16px'>{max_objects_size}:</td>
+			<td  style='font-size:16px'>" . Field_text('cache_maxsize',$s->cache_list[$cache]["cache_maxsize"],'width:50px;font-size:16px;padding:3px',null,"calculateSize()",null,false,null)."&nbsp;Mbytes&nbsp;<span id='squid-maxsize-vals'></span></td>
+			<td>" . help_icon('{squid_rock_maxsize}',false,'squid.index.php')."</td>
+		</tr>
+		
+		<tr>
+		<td align='right' colspan=3><hr>". button('{apply}','AddNewCacheSave()',14)."</td>
 		</tr>
 	</table>
 	<script>
@@ -388,9 +413,10 @@ function cache_edit(){
 		var XHR = new XHRConnection();
 		XHR.appendData('cache_directory',document.getElementById('cache_directory').value);
 		XHR.appendData('cache_type',document.getElementById('cache_type').value);
-		XHR.appendData('size',document.getElementById('size').value);
+		XHR.appendData('size',document.getElementById('squid-cache-size').value);
 		XHR.appendData('cache_dir_level1',document.getElementById('cache_dir_level1').value);
 		XHR.appendData('cache_dir_level2',document.getElementById('cache_dir_level2').value);
+		XHR.appendData('cache_maxsize',document.getElementById('cache_maxsize').value);
 		$main_add
 		document.getElementById('waitcache').innerHTML='<center><img src=\"img/wait_verybig.gif\"></center>';
 		XHR.sendAndLoad('$page', 'GET',x_AddNewCacheSave);
@@ -399,14 +425,48 @@ function cache_edit(){
 		function HideLevels(){
 			document.getElementById('cache_dir_level1').disabled=true;
 			document.getElementById('cache_dir_level2').disabled=true;
+			document.getElementById('cache_maxsize').disabled=false;
 		}
 		
+		function Showlevels(){
+			document.getElementById('cache_dir_level1').disabled=false;
+			document.getElementById('cache_dir_level2').disabled=false;
+			document.getElementById('cache_maxsize').disabled=true;
+		}
+				
+		
+		function CheckCachesTypes(){
+			Showlevels();
+			cachetypes=document.getElementById('cache_type').value;
+			if(cachetypes=='rock'){
+				HideLevels();
+			}
+		
+		}
+		
+		function calculateSize(e){
+			LoadAjaxTiny('squid-maxsize-vals','$page?calculate-mb-size='+document.getElementById('cache_maxsize').value);
+			LoadAjaxTiny('squid-size-vals','$page?calculate-mb-size='+document.getElementById('squid-cache-size').value);
+			return true;
+		}
+		
+		
 		$main_load
+		CheckCachesTypes();
+		calculateSize();
 	</script>
 	
 	
 	";
 	echo $tpl->_ENGINE_parse_body($html,'squid.index.php');
+	
+}
+
+function calculate_mb_size(){
+	$size=$_GET["calculate-mb-size"];
+	if($size<1024){return;}
+	$size=$size*1024;
+	echo "(".FormatBytes($size).")";
 	
 }
 
@@ -418,6 +478,7 @@ if(isset($_GET["main-is-cache"])){
 	$squid->CACHE_PATH=$_GET["cache_directory"];
 	$squid->CACHE_SIZE=$_GET["size"];
 	$squid->CACHE_TYPE=$_GET["cache_type"];
+
 	
 }else{
 	$squid->cache_list[$_GET["cache_directory"]]=array(
@@ -425,6 +486,7 @@ if(isset($_GET["main-is-cache"])){
 	"cache_dir_level1"=>$_GET["cache_dir_level1"],
 	"cache_dir_level2"=>$_GET["cache_dir_level2"],
 	"cache_size"=>$_GET["size"],
+	"cache_maxsize"=>$_GET["cache_maxsize"]
 	);
 }
 $sock=new sockets();
@@ -475,7 +537,7 @@ function caches_main(){
 	function RebduildCaches(){
 		var XHR = new XHRConnection();
 		XHR.appendData('RebduildCaches','yes');
-		document.getElementById('squid-main-caches-list').innerHTML='<center><img src=\"img/wait_verybig.gif\"></center>';
+		AnimateDiv('squid-main-caches-list');
 		XHR.sendAndLoad('$page', 'GET',x_DeleteCache);
 	}
 
@@ -483,7 +545,7 @@ function caches_main(){
 		if(confirm('$reconstruct_caches_explain')){
 			var XHR = new XHRConnection();
 			XHR.appendData('ReConstructCaches','yes');
-			document.getElementById('squid-main-caches-list').innerHTML='<center><img src=\"img/wait_verybig.gif\"></center>';
+			AnimateDiv('squid-main-caches-list');
 			XHR.sendAndLoad('$page', 'GET',x_DeleteCache);
 		}
 	}	
@@ -503,7 +565,7 @@ function DeleteCache(folder){
 	    if(folder.length<5){return;}
 		var XHR = new XHRConnection();
 		XHR.appendData('DeleteCache',folder);
-		document.getElementById('squid-main-caches-list').innerHTML='<center><img src=\"img/wait_verybig.gif\"></center>';
+		AnimateDiv('squid-main-caches-list');
 		XHR.sendAndLoad('$page', 'GET',x_DeleteCache);
 }	
 		

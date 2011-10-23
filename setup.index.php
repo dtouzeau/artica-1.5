@@ -1199,13 +1199,6 @@ function BuildVersions(){
 			$GlobalApplicationsStatus=@file_get_contents("ressources/logs/web/global.versions.conf");
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
 	$tb=explode("\n",$GlobalApplicationsStatus);
 	while (list ($num, $line) = each ($tb) ){
 		if(preg_match('#\[(.+?)\]\s+"(.+?)"#',$line,$re)){

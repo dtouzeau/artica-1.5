@@ -223,7 +223,7 @@ function blacklist_status(){
 	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
 		if($classtr=="oddRow"){$classtr=null;}else{$classtr="oddRow";}
 		$color="black";
-		
+		if(trim($ligne["categories"])==null){continue;}
 		$js="YahooWin3('680','$page?category-details=".urlencode($ligne["categories"])."','{$ligne["categories"]}')";
 		
 		$purc=pourcentage(round($ligne["pourcent"]));

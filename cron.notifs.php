@@ -124,6 +124,7 @@ $mysql=new mysql();
 			$text=$re[1];
 			if(strlen($text)>0){
 				$bigtext=str_replace($re[0],'',$bigtext);
+				$bigtext=str_replace("'", "`", $bigtext);
 			}
 		}
 		
@@ -155,11 +156,12 @@ $mysql=new mysql();
         
         $event_id=time();
         //$text=addslashes($text);
+        $text=str_replace("'", "`", $text);
+        $subject=str_replace("'", "`", $subject);
         $text=addslashes($text);
         $subject=addslashes($subject);
         if(strlen($text)<5){writelogs("Warning New notification: $subject content seems to be empty ! \"$text\"",__FUNCTION__,__FILE__,__LINE__);}
-        $sql="INSERT IGNORE INTO events (zDate,hostname,
-        	process,text,context,content,attached_files,recipient,event_id) VALUES(
+        $sql="INSERT IGNORE INTO events (zDate,hostname,process,text,context,content,attached_files,recipient,event_id) VALUES(
         	'$date',
         	'$users->hostname',
         	'$processname',

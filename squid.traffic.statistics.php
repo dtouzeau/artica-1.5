@@ -84,6 +84,7 @@ function status(){
 }
 
 function general_status(){
+	if(CACHE_SESSION_GET(__FUNCTION__,__FILE__)){return;}
 	$page=CurrentPageName();
 	$tpl=new templates();		
 
@@ -117,11 +118,12 @@ function general_status(){
 	
 	";
 	
-	echo $tpl->_ENGINE_parse_body($html);
+	CACHE_SESSION_SET(__FUNCTION__, __FILE__,$tpl->_ENGINE_parse_body($html));
 	
 }
 
 function squid_status_stats(){
+	if(CACHE_SESSION_GET(__FUNCTION__,__FILE__)){return;}
 	$page=CurrentPageName();
 	$tpl=new templates();	
 	$q=new mysql_squid_builder();
@@ -130,7 +132,8 @@ function squid_status_stats(){
 	$websitesnums=$q->COUNT_ROWS("visited_sites");
 	$websitesnums=numberFormat($websitesnums,0,""," ");	
 
-	
+	$sql="DELETE FROM categorize WHERE LENGTH(pattern)=0";
+	$q->QUERY_SQL($sql);
 	$export=$q->COUNT_ROWS("categorize");
 	$export=numberFormat($export,0,""," ");		
 	
@@ -151,6 +154,10 @@ function squid_status_stats(){
 	
 	$ligne=mysql_fetch_array($q->QUERY_SQL("SELECT AVG(cache_perfs) as pourc FROM tables_day"));
 	$pref=round($ligne["pourc"]);	
+	
+	$ligne=mysql_fetch_array($q->QUERY_SQL("SELECT COUNT(sitename) as tcount FROM visited_sites WHERE LENGTH(category)=0"));
+	$websitesnumsNot=numberFormat($ligne["tcount"],0,""," ");	
+	
 	$mouse="OnMouseOver=\";this.style.cursor='pointer';\" OnMouseOut=\";this.style.cursor='default';\"";
 	
 	$submenu="	
@@ -176,9 +183,13 @@ $html="
 	<tr>
 		<td valign='top' $mouse style='font-size:14px;text-decoration:underline' OnClick=\"javascript:Loadjs('squid.visited.php')\"><b>$websitesnums</b> {visited_websites}</td>
 	</tr>	
+
 	<tr>
 		<td valign='top' $mouse style='font-size:14px;text-decoration:underline' OnClick=\"javascript:Loadjs('squid.categories.php')\"><b>$categories</b> {websites_categorized}</td>
-	</tr>			
+	</tr>	
+	<tr>
+		<td valign='top' $mouse style='font-size:14px;text-decoration:underline' OnClick=\"javascript:Loadjs('squid.visited.php?onlyNot=yes')\"><b>$websitesnumsNot</b> {not_categorized}</td>
+	</tr>				
 	<tr>
 		<td valign='top' $mouse style='font-size:14px;text-decoration:underline' OnClick=\"javascript:Loadjs('squid.categories.php')\"><b>$tablescatNUM</b> {categories}</td>
 	</tr>	
@@ -191,7 +202,7 @@ $html="
 	</table>
 ";
 
-echo $tpl->_ENGINE_parse_body($html);
+CACHE_SESSION_SET(__FUNCTION__, __FILE__,$tpl->_ENGINE_parse_body($html));
 	
 }
 

@@ -3472,6 +3472,10 @@ function FormatBytes($kbytes){
 	
 	if($kbytes>1048576){
 		$value=round($kbytes/1048576, 2);
+		if($value>1000){
+			$value=round($value/1000, 2);
+			return "$value&nbsp;TB";
+		}
 		return "$value&nbsp;GB";
 	}
 	elseif ($kbytes>1024){
@@ -5025,4 +5029,22 @@ function quicklinks_paragraphe($img,$title,$text,$link){
 	return $html;
 }
 
+function CACHE_SESSION_GET($function,$file,$maxtimeMin=30){
+	if(!isset($_SESSION[$file][$function])){return false;}
+	$time=$_SESSION[$file][$function]["time"];
+	$datas=$_SESSION[$file][$function]["datas"];
+	if(!is_numeric($time)){return;}
+	if(strlen($datas)==0){return;}
+	$distanceInSeconds = round(abs(time() - $time));
+	$distanceInMinutes = round($distanceInSeconds / 60);
+	if($distanceInMinutes>$maxtimeMin){unset($_SESSION[$file][$function]);return false;}
+	echo $datas;
+	return true;
+	
+}
+function CACHE_SESSION_SET($function,$file,$datas){
+	$_SESSION[$file][$function]["time"]=time();
+	$_SESSION[$file][$function]["datas"]=$datas;
+	echo $datas;
+}
 ?>

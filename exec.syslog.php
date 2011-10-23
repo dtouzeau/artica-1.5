@@ -24,6 +24,7 @@ $pidfile="/etc/artica-postfix/".basename(__FILE__).".pid";
 @mkdir("/var/log/artica-postfix/infected-queue",0755,true);
 @mkdir("/var/log/artica-postfix/snort-queue",0755,true);
 @mkdir("/var/log/artica-postfix/pdns-hack-queue",0755,true);
+@mkdir("/var/log/artica-postfix/dansguardian-stats4",0755,true);
 events("running $pid ");
 file_put_contents($pidfile,$pid);
 $sock=new sockets();
@@ -291,6 +292,25 @@ if(IfFileTime($artica_status_pointer,3)){
 	shell_exec(trim("{$GLOBALS["nohup"]} {$GLOBALS["LOCATE_PHP5_BIN"]} /usr/share/artica-postfix/exec.status --all >/dev/null 2>&1 &"));
 	WriteFileCache($artica_status_pointer);
 }
+
+// ---------------------- DANSGUARDIAN ---------------------------------
+if(strpos($buffer, "dansguardian[")>0){
+	if(preg_match("#dansguardian\[.+?:\s+[0-9\.]+\s+[0-9:]+\s+(.+?)\s+([0-9\.]+)\s+(.+?)\s+\*([A-Z]+)\*\s+(.+?):\s+(.+?)\s+([A-Z]+)\s+[0-9]+\s+[0-9]+\s+(.+?)\s+([0-9]+)#", $buffer,$re)){
+		$array["userid"]=trim($re[1]);
+		$array["ipaddr"]=$re[2];
+		$array["uri"]=$re[3];
+		$array["EVENT"]=$re[4];
+		$array["WHY"]=trim($re[5]);
+		$array["EXPLAIN"]=$re[6];
+		$array["BLOCKTYPE"]=$re[8];
+		$array["RULEID"]=$re[9];
+		$array["TIME"]=date('Y-m-d H:i:s');
+		@file_put_contents("/var/log/artica-postfix/dansguardian-stats4/".md5(serialize($array)), serialize($array));
+	}
+	return;
+}
+
+
 	
 	
 if(preg_match("#dnsmasq.+? failed to read\s+(.+?):\s+Permission denied#",$buffer,$re)){

@@ -2614,3 +2614,14 @@ Check the list below and click on each row in order to display Network interface
 This means that they will do all file operations as the super-user (root).[br]
 You should use this option very carefully, as any user in this list will be able to do anything they like on the share, irrespective of file permissions.
 </samba_admin_users_explain>
+<www_children>Websites about babies and little children, including toys, clothes,food... but excluding schools and computing games.</www_children>
+<automobile-carpool>Websites talking about car-sharing, ride-sharing, lift-sharing...</automobile-carpool>
+<update_status>Update status</update_status>
+<available_software>Available software</available_software>
+<APP_SQUID2>Squid Cache Proxy 3.2x</APP_SQUID2>
+<reconfigure>reconfigure</reconfigure>
+<squid_rock>Rock Store (rock)</squid_rock>
+<squid_rock_maxsize>Refers to the max object size.[br]It is used to select the right storage to store objects.</squid_rock_maxsize>
+<max_objects_size>Max objects size</max_objects_size>
+<disable_squidguard_dansguardian_enabled>squidGuard/UfdbGuard will be disabled Dansguardian perform same features</disable_ufdbguardd_dansguardian_enabled>
+<www_nature>Websites talking about nature, natural world, and the natural universe.[br]This includes all things animal, plant, and mineral; all natural resources and events (e.g., hurricanes, tornadoes, earthquakes). It also includes the behavior of living organisms, and the processes (e.g., erosion, metamorphism, fossilization) associated with inanimate objects</www_nature>

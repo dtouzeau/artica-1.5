@@ -346,9 +346,7 @@ function squid_status_stats(){
 	$websitesnums=$q->COUNT_ROWS("dansguardian_sitesinfos","artica_backup");
 	$websitesnums=numberFormat($websitesnums,0,""," ");	
 	
-	$q=new mysql_squid_builder();
-	$categories=$q->COUNT_ROWS("dansguardian_community_categories");
-	$categories=numberFormat($categories,0,""," ");	
+
 
 	$q=new mysql_squid_builder();
 	$requests=$q->EVENTS_SUM();
@@ -470,7 +468,7 @@ function left_status(){
 		$ligne=mysql_fetch_array($q->QUERY_SQL("SELECT COUNT(sitename) as tcount FROM `$table`"));
 		$visited=$ligne["tcount"];	
 		if(!$q->ok){$err3=icon_mysql_error($q->mysql_error);}		
-		$notcategorized=texthref($notcategorized, "Loadjs('squid.visited.php?day=$day')");
+		$notcategorized=texthref($notcategorized, "Loadjs('squid.visited.php?day=$day&onlyNot=yes')");
 		$html="
 		<table style='width:100%' class=form>
 		<tbody>

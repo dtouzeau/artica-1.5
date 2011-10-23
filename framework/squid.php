@@ -24,7 +24,7 @@ if(isset($_GET["export-web-categories"])){export_web_categories();exit();}
 if(isset($_GET["export-deleted-categories"])){export_deleted_categories();exit();}
 if(isset($_GET["ufdbguard-compile-database"])){ufdbguard_compile_database();exit();}
 if(isset($_GET["ufdbguard-compile-alldatabases"])){ufdbguard_compile_all_databases();exit();}
-
+if(isset($_GET["caches-types"])){caches_type();exit;}
 
 
 
@@ -244,4 +244,28 @@ function ufdbguard_compile_all_databases(){
 function ufdbguardconf(){
 	$tpl=explode("\n",@file_get_contents("/etc/ufdbguard/ufdbGuard.conf"));
 	echo "<articadatascgi>". base64_encode(serialize($tpl))."</articadatascgi>";
+}
+
+
+function caches_type(){
+	$unix=new unix();
+	$squidbin=$unix->find_program("squid3");
+	if(strlen($squidbin)<5){$squidbin=$unix->find_program("squid");}
+	exec("$squidbin -v 2>&1",$results);
+	writelogs_framework("$squidbin -v = ".count($results)." lines",__FUNCTION__,__FILE__,__LINE__);	
+	$caches["ufs"]="ufs";
+	while (list ($num, $ligne) = each ($results) ){	
+		if(!preg_match("#--enable-storeio=(.+?)'#", $ligne,$re)){
+			writelogs_framework("$num) $ligne no match",__FUNCTION__,__FILE__,__LINE__);
+			continue;
+		}
+		
+		$list=explode(",", $re[1]);
+		while (list ($a, $b) = each ($list) ){
+			$b=trim($b);
+			if($b==null){continue;}
+			$caches[$b]="{squid_$b}";}
+	}
+	echo "<articadatascgi>". base64_encode(serialize($caches))."</articadatascgi>";
+	
 }

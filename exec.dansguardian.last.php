@@ -1,6 +1,4 @@
 <?php
-
-
 if(posix_getuid()<>0){die("Cannot be used in web server mode\n\n");}
 include_once(dirname(__FILE__)."/ressources/class.user.inc");
 include_once(dirname(__FILE__)."/ressources/class.system.network.inc");
@@ -10,7 +8,7 @@ include_once(dirname(__FILE__)."/ressources/class.mysql.inc");
 include_once(dirname(__FILE__)."/ressources/class.rtmm.tools.inc");
 include_once(dirname(__FILE__)."/framework/class.unix.inc");
 include_once(dirname(__FILE__)."/framework/frame.class.inc");
-
+die();
 $unix=new unix();	
 	if(systemMaxOverloaded()){
 		writelogs("This system is too many overloaded, die()",__FUNCTION__,__FILE__,__LINE__);

@@ -232,7 +232,7 @@ function Export($asPid=false){
 		if($ligne["category"]==null){continue;}
 		if($ligne["pattern"]==null){continue;}
 		if($ligne["zmd5"]==null){continue;}
-		
+		$logsExp[]="{$ligne["pattern"]}:{$ligne["category"]}";
 		$array[$ligne["zmd5"]]=array(
 				"category"=>$ligne["category"],
 				"pattern"=>$ligne["pattern"],
@@ -257,6 +257,7 @@ if(count($array)==0){WriteMyLogs("Nothing to export",__FUNCTION__,__FILE__,__LIN
 	
 	if(preg_match("#<ANSWER>OK</ANSWER>#is",$curl->data)){
 		WriteMyLogs("Exporting success ". count($array)." websites",__FUNCTION__,__FILE__,__LINE__);
+		if(count($logsExp)<10){$textadd=@implode(",", $logsExp);}
 		writelogs_squid("Success exporting ".count($array)." categorized websites to Artica cloud repository servers",__FUNCTION__,__FILE__,__LINE__,"export");
 		
 		

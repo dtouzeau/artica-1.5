@@ -271,6 +271,7 @@ For Windows 2008 server you need to install [b]Hotfix 951191[/b].
 <APP_SNORT_ABOUT>Snort is an open source network intrusion prevention and detection system (IDS/IPS) developed by Sourcefire.[br]
 Combining the benefits of signature, protocol, and anomaly-based inspection, Snort is the most widely deployed 
 IDS/IPS technology worldwide</APP_SNORT_ABOUT>
+<APP_SQUID2>Squid Cache Proxy 3.2x</APP_SQUID2>
 <APP_SQUIDKERAUTH>Squid kerberos Autentication</APP_SQUIDKERAUTH>
 <APP_SQUIDKERAUTH_TEXT>Squid kerberos Autentication allow to integrate squid authentication with a Microsoft Active Directory server 2003/2008</APP_SQUIDKERAUTH_TEXT>
 <APP_SQUIDKERAUTH_TEXT_REF>Your Windows user must be a member of the "SQUID_USERS" group in Active Directory.[br]
@@ -372,10 +373,12 @@ The directory will be stored on /automount.
 </autofs_ask_dir>
 <automatic>Automatic</automatic>
 <automatic_publicip_resolv>Do not Resolv the public IP address automatically</automatic_publicip_resolv>
+<automobile-carpool>Websites talking about car-sharing, ride-sharing, lift-sharing...</automobile-carpool>
 <automount_ressource>Automount maps</automount_ressource>
 <automount_this_disk>Auto-connect this disk and make it available in /automounts directory</automount_this_disk>
 <autostart>Auto-start</autostart>
 <available_modules>Available modules</available_modules>
+<available_software>Available software</available_software>
 <backend>Backend</backend>
 <backends>backends</backends>
 <backup_server>Backup server</backup_server>
@@ -732,6 +735,7 @@ It will not be uninstalled and you will be able to manage PowerDNS yourself.</Di
 <disable_imap>Disable IMAP</disable_imap>
 <disable_openvpn_connection>Disable the VPN connection</disable_openvpn_connection>
 <disable_pop3>Disable POP3</disable_pop3>
+<disable_squidguard_dansguardian_enabled>squidGuard/UfdbGuard will be disabled Dansguardian perform same features</disable_squidguard_dansguardian_enabled>
 <disable_SSL_port>Disable SSL port</disable_SSL_port>
 <disable_tooltips>Disable tooltips</disable_tooltips>
 <disable_vrfy_command>Disable VRFY command</disable_vrfy_command>
@@ -1366,6 +1370,7 @@ Organizations can only create subdomains of these domains if the "Use only offic
 <MAX_CPU>MAX C.P.U</MAX_CPU>
 <max_events_inmysql>Max events stored in mySQL</max_events_inmysql>
 <max_messages>Max messages</max_messages>
+<max_objects_size>Max objects size</max_objects_size>
 <max_rcpt_to>Maximum recipients</max_rcpt_to>
 <max_rcpt_to_onlyForLocalDomains>Only to local domains</max_rcpt_to_onlyForLocalDomains>
 <max_rcpt_to_onlyForLocalDomains_text>Block only if internal recipients exceed the number.[br]If message must go to others domains recipients are not calculated</max_rcpt_to_onlyForLocalDomains_text>
@@ -1822,6 +1827,7 @@ Do you want to perform this operation ?</RecheckQuotasAll>
 <recipient_domains>recipient domains</recipient_domains>
 <recompile_all_db>Recompile all databases</recompile_all_db>
 <recompile_all_db_ww_text>rebuild the databases from MySQL and compile all databases to disk</recompile_all_db_ww_text>
+<reconfigure>reconfigure</reconfigure>
 <reconfigure_all_instances_text>Reconfigure all instances</reconfigure_all_instances_text>
 <reconfigure_snort>Reconfigure IDS</reconfigure_snort>
 <reconfigure_snort_text>Stop the service, rebuild parameters and restart all IDS/Snort services for all Interface Cards</reconfigure_snort_text>
@@ -1962,6 +1968,10 @@ While this does not benifit Windows users, it makes SSH, FTP and e-mail function
 If not checked, users must authenticate has following : "DOMAIN\user". [br]
 In the opposite, if checked users must authenticate has following : "user". [br]
 </SambaWinbindUseDefaultDomain_text>
+<samba_admin_users_explain>This is a list of users who will be granted administrative privileges on the share.[br]
+This means that they will do all file operations as the super-user (root).[br]
+You should use this option very carefully, as any user in this list will be able to do anything they like on the share, irrespective of file permissions.
+</samba_admin_users_explain>
 <samba_aliases_virtual_ip>Define an exclusive IP address to listen on.[br]
  [b]Warning, if one of Virtual server using this feature, all virtuals server and the main service must use selected IP address too
  </samba_aliases_virtual_ip>
@@ -2209,6 +2219,8 @@ You have several ways to increase the caching performance:</squidcacheperf_howto
 <squid_basic_filters_explain>This section is designed to add filters including directly in the Proxy features.[br]For antivirus filters or Web filtering, see other menus</squid_basic_filters_explain>
 <squid_blk_explain>This the update status of Artica community blacklist database[br]These update are important because it will drive statistics and url filtering processes</squid_blk_explain>
 <squid_members_explain>This section is designed to manage access trough internet from your users, include authentication mode, whitelisting and blacklisting</squid_members_explain>
+<squid_rock>Rock Store (rock)</squid_rock>
+<squid_rock_maxsize>Refers to the max object size.[br]It is used to select the right storage to store objects.</squid_rock_maxsize>
 <SQUID_STATS>Squid Proxy Cache web statistics</SQUID_STATS>
 <SQUID_STATS1>Proxy statistics</SQUID_STATS1>
 <SQUID_STATS_TEXT>Squid Statistics area is a Web frontend that provides proxy statistics with charts and graphs and categorized websites</SQUID_STATS_TEXT>
@@ -2357,6 +2369,7 @@ depends on your bandwith it should take a long time...</UPDATE_LXC_TEMPLATE_PERF
 <update_patchnow_explain>Upgrade Artica version with patchs listed ?</update_patchnow_explain>
 <UPDATE_SA_UPDATE>Update SpamAssassin</UPDATE_SA_UPDATE>
 <UPDATE_SA_UPDATE_TEXT>Perform Spamassassin update, see update status</UPDATE_SA_UPDATE_TEXT>
+<update_status>Update status</update_status>
 <update_url>Update URL</update_url>
 <usable_mechanisms>Usable mechanisms</usable_mechanisms>
 <useGreenSQL>Use GreenSQL</useGreenSQL>
@@ -2495,6 +2508,7 @@ The default value of 8 should be sufficient for most purposes</Wthreads_explain>
 <www_books>Online libraries and sites where you can obtain and/or read e-books</www_books>
 <www_browsersplugins>Websites that offer plugins for browsers</www_browsersplugins>
 <www_celebrity>Sites about celebrities, actors, world known persons and all related, excluding models (see models category)</www_celebrity>
+<www_children>Websites about babies and little children, including toys, clothes,food... but excluding schools and computing games.</www_children>
 <www_forward>Forward to other website</www_forward>
 <www_ForwardTo>New website to forward</www_ForwardTo>
 <www_genealogy>Websites that talking about genealogy and all about family history</www_genealogy>
@@ -2504,6 +2518,7 @@ The default value of 8 should be sufficient for most purposes</Wthreads_explain>
 <www_internal>Internal/Intranet websites ip or hostnames should used in your LAN</www_internal>
 <www_malware>infected web sites or allow to download/store malwares, virus...</www_malware>
 <www_maps>All websites helping find streets or objects position in a map, including driving directions, transport maps...</www_maps>
+<www_nature>Websites talking about nature, natural world, and the natural universe.[br]This includes all things animal, plant, and mineral; all natural resources and events (e.g., hurricanes, tornadoes, earthquakes). It also includes the behavior of living organisms, and the processes (e.g., erosion, metamorphism, fossilization) associated with inanimate objects</www_nature>
 <www_reale_state_office>Sites about all types of realestate, bying and selling homes, finding appartments for rent and selling</www_reale_state_office>
 <WWW_RESCAN_VISITED_ASK>This operation will synchronize visited websites in order to categorize them.
 Do you want to perform this operation ?</WWW_RESCAN_VISITED_ASK>

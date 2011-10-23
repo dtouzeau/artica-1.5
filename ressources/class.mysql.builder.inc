@@ -4760,9 +4760,7 @@ public function CheckTables_openvpn(){
 		 
 		}
 		
-		if($this->TABLE_EXISTS('squid_events_sites','artica_events')){$sql="DROP TABLE `squid_events_sites`";$this->QUERY_SQL($sql,"artica_events");if(!$this->ok){writelogs("$this->mysql_error\n$sql",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}}
-		if($this->TABLE_EXISTS('squid_events_clients_sites','artica_events')){$sql="DROP TABLE `artica_events`.`squid_events_clients_sites`"; $this->QUERY_SQL($sql,"artica_events");if(!$this->ok){writelogs("$this->mysql_error\n$sql",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}			}
-		
+	
 		
 	if(!$this->TABLE_EXISTS('updates_categories','artica_backup')){		
 			writelogs("Creating 'updates_categories/artica_backup",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
@@ -4791,6 +4789,30 @@ public function CheckTables_openvpn(){
 		$this->QUERY_SQL($sql,"artica_backup");
 		if(!$this->ok){writelogs("$this->mysql_error\n$sql",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}
 		}	
+		
+		if(!$this->TABLE_EXISTS("mysql_events",'artica_events')){
+		$sql="CREATE TABLE `mysql_events` (
+			  `ID` bigint(100) NOT NULL AUTO_INCREMENT,
+			  `zDate` TIMESTAMP NOT NULL,
+			  `description` text NOT NULL,
+			  `function` varchar(50) NOT NULL,
+			  `category` varchar(50) NOT NULL,
+			  `process` varchar(50) NOT NULL,
+			  `line` int(100) NOT NULL,
+			  `servername` varchar(128) NOT NULL,
+			  PRIMARY KEY (`ID`),
+			  KEY `function` (`function`,`process`,`line`),
+			  KEY `servername` (`servername`),
+			  KEY `category` (`category`),
+			  KEY `zDate` (`zDate`)
+			)";
+		$this->QUERY_SQL($sql,"artica_events"); 
+		if(!$this->ok){
+			writelogs("Fatal: $this->mysql_error\n$sql",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+			$this->mysql_error=$this->mysql_error."\n$sql";
+		}
+
+	}		
 
 		
 if(!$this->TABLE_EXISTS('kav4proxy_av_stats','artica_events')){		
@@ -4887,18 +4909,6 @@ if(!$this->TABLE_EXISTS('kav4proxy_av_stats','artica_events')){
 		$this->squid_events_sites_day();
 						
 		
-		if($this->TABLE_EXISTS('squid_events_hours','artica_events')){
-			$sql="DROP TABLE `squid_events_hours`";
-			$this->QUERY_SQL($sql,"artica_events");
-			if(!$this->ok){writelogs("$this->mysql_error\n$sql",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}			
-		}			
-		
-		if($this->TABLE_EXISTS('squid_events_clients_day','artica_events')){		
-			$sql="DROP TABLE `artica_events`.`squid_events_clients_day`"; 
-			$this->QUERY_SQL($sql,"artica_events");
-			if(!$this->ok){writelogs("$this->mysql_error\n$sql",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);}			
-		}
-	
 		if(!$this->TABLE_EXISTS('squid_adzapper','artica_backup')){	
 		
 		$sql="CREATE TABLE `artica_backup`.`squid_adzapper` (

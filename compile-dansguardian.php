@@ -8,13 +8,17 @@ if($argv[1]=="mac"){
 
 $unix=new unix();
 // netfilter error="http://muhdzamri.blogspot.com/2011/01/usrincludelinuxnetfilteripv4h53-error.html"
-
+$Architecture=Architecture();
 $wget=$unix->find_program("wget");
 $tar=$unix->find_program("tar");
 $rm=$unix->find_program("rm");
 $cp=$unix->find_program("cp");
 $v="dansguardian-2.12.0.0.tar.gz";
 $dirsrc="dansguardian-2.12.0.0";
+if($Architecture==64){$Architecture="x64";}
+if($Architecture==32){$Architecture="i386";}
+
+if(preg_match("#dansguardian-([0-9\.]+)\.tar#", $v,$re)){$master_version=$re[1];}
 
 if(is_dir("/usr/share/dansguardian")){shell_exec("$rm -rf /usr/share/dansguardian");}
 if(is_dir("/etc/dansguardian")){shell_exec("$rm -rf /etc/dansguardian");}
@@ -49,8 +53,8 @@ shell_exec("$cp -rf /etc/dansguardian/* /root/dansguardian-builder/etc/dansguard
 shell_exec("$cp -rf /usr/sbin/dansguardian /root/dansguardian-builder/usr/sbin/dansguardian");
 
 chdir("/root/dansguardian-builder");
-shell_exec("$tar -czf $dirsrc.tar.gz *");
-echo "/root/dansguardian-builder/$dirsrc.tar.gz is now ready to be uploaded\n";
+shell_exec("$tar -czf dansguardian2-$Architecture-$master_version.tar.gz *");
+echo "/root/dansguardian-builder/dansguardian2-$Architecture-$master_version.tar.gz is now ready to be uploaded\n";
 
 
 function patchnetfilter(){
@@ -82,4 +86,14 @@ function patchnetfilter(){
 	
 	return false;
 	
+}
+
+function Architecture(){
+	$unix=new unix();
+	$uname=$unix->find_program("uname");
+	exec("$uname -m 2>&1",$results);
+	while (list ($num, $val) = each ($results)){
+		if(preg_match("#i[0-9]86#", $val)){return 32;}
+		if(preg_match("#x86_64#", $val)){return 64;}
+	}
 }

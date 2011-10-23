@@ -112,6 +112,7 @@ function {$prefix}LaunchInstall(){
 }
 	
 	function {$prefix}ChargeLogs(){
+		if(document.getElementById('squid-install-status')){squid_install_status();}
 		var XHR = new XHRConnection();
 		XHR.appendData('statusof','$product');
 		XHR.sendAndLoad('$page', 'GET',x_{$prefix}ChargeLogs);	

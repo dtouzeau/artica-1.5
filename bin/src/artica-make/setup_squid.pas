@@ -32,7 +32,7 @@ public
       procedure msktutil();
      procedure  squidguard_install();
      function   command_line_squidguard():string;
-
+     procedure  squid32();
 END;
 
 implementation
@@ -51,6 +51,70 @@ begin
   libs.Free;
 end;
 //#########################################################################################
+procedure tsetup_squid.squid32();
+var
+source_folder:string;
+logs:Tlogs;
+SYS:TSystem;
+squid:tsquid;
+localversion:string;
+remoteversion:string;
+remoteBinVersion:int64;
+LocalBinVersion:int64;
+CODE_NAME:string;
+Arch:Integer;
+squidbinpath,package_name:string;
+begin
+  CODE_NAME:='APP_SQUID2';
+  install.INSTALL_PROGRESS(CODE_NAME,'{checking}');
+  install.INSTALL_STATUS(CODE_NAME,30);
+  distri:=tdistriDetect.Create;
+  Arch:=libs.ArchStruct();
+  writeln('RESULT.................: Architecture : ',Arch);
+  writeln('RESULT.................: Distribution : ',distri.DISTRINAME,' (DISTRINAME)');
+  writeln('RESULT.................: Major version: ',distri.DISTRI_MAJOR,' (DISTRI_MAJOR)');
+  writeln('RESULT.................: Artica Code  : ',distri.DISTRINAME_CODE,' (DISTRINAME_CODE)');
+  if arch=32 then package_name:='squid32-i386';
+  if arch=64 then package_name:='squid32-amd64';
+
+  source_folder:=libs.COMPILE_GENERIC_APPS(package_name);
+  if not DirectoryExists(source_folder) then begin
+         install.INSTALL_STATUS(CODE_NAME,110);
+         install.INSTALL_PROGRESS(CODE_NAME,'{failed}');
+         exit;
+      end;
+      source_folder:=extractFilePath(source_folder);
+      writeln('source.................: ',source_folder);
+      install.INSTALL_STATUS(CODE_NAME,50);
+      install.INSTALL_PROGRESS(CODE_NAME,'{uninstall}');
+      fpsystem('/etc/init.d/artica-postfix stop squid');
+
+      if FileExists('/usr/bin/apt-get') then fpsystem('/usr/bin/apt-get -y remove squid3 squid-client --purge');
+      if DirectoryExists('/usr/share/squid3') then fpsystem('/bin/rm -rf /usr/share/squid3');
+      if DirectoryExists('/lib/squid3') then fpsystem('/bin/rm -rf /lib/squid3');
+      if DirectoryExists('/usr/share/squid-langpack') then fpsystem('/bin/rm -rf /usr/share/squid-langpack/*');
+
+
+      if DirectoryExists('/lib64/squid3') then fpsystem('/bin/rm -rf /lib64/squid3');
+      squidbinpath:=SYS.LOCATE_GENERIC_BIN('squid');
+      if FileExists(squidbinpath) then fpsystem('/bin/rm -f '+squidbinpath );
+      squidbinpath:=SYS.LOCATE_GENERIC_BIN('squid3');
+      if FileExists(squidbinpath) then fpsystem('/bin/rm -f '+squidbinpath );
+      if FileExists('/usr/bin/purge') then fpsystem('/bin/rm -f /usr/bin/purge');
+      if FileExists('/usr/bin/squidclient') then fpsystem('/bin/rm -f /usr/bin/squidclient');
+      install.INSTALL_STATUS(CODE_NAME,60);
+      install.INSTALL_PROGRESS(CODE_NAME,'{installing}');
+      writeln('copy.................: ',source_folder, ' => ','/');
+      if Not DirectoryExists('/usr/share/squid-langpack') then ForceDirectories('/usr/share/squid-langpack');
+      fpsystem('/bin/cp -rfd '+source_folder+'* /');
+      install.INSTALL_STATUS(CODE_NAME,90);
+      install.INSTALL_PROGRESS(CODE_NAME,'{reconfigure}');
+      fpsystem('/etc/init.d/artica-postfix start squid');
+      install.INSTALL_STATUS(CODE_NAME,100);
+      install.INSTALL_PROGRESS(CODE_NAME,'{success}');
+
+end;
+
 
 procedure tsetup_squid.msktutil();
 var

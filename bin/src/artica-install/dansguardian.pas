@@ -60,9 +60,7 @@ public
     procedure   DANSGUARDIAN_TROUBLESHOT();
     function    transparent_image_path():string;
     function    CONF_PATH():string;
-    procedure   verify_content_scanners();
     function    filtergroupslist_path():string;
-    procedure   VERIFY_PARENT_PROXY();
     function    DANSGUARDIAN_DELETE_VALUE(key:string):string;
     function    DANSGUARDIAN_BIN_VERSION(version:string):int64;
     procedure   DANSGUARDIAN_TEMPLATE();
@@ -161,77 +159,7 @@ begin
 result:=DANSGUARDIAN_CONFIG_VALUE('filtergroupslist');
 end;
 //##############################################################################
-procedure tdansguardian.verify_content_scanners();
-var
-   icapuri:string;
-   l:TstringList;
-   socketpath:string;
-begin
-   forceDirectories('/etc/dansguardian/contentscanners');
-   
-   l:=TstringList.Create;
-   l.Add('# ICAP URL');
-   l.Add('# Use hostname rather than IP address');
-   
-   if FileExists(C_ICAP_BIN_PATH()) then begin
-       if FileExists(clamav.CLAMSCAN_BIN_PATH()) then begin
-          icapuri:='localhost:1351';
-          logs.Debuglogs('tdansguardian.verify_content_scanners()  c-icap and run on '+icapuri);
-          l.Add('plugname = ''icapscan''');
-          l.Add('');
-          l.Add('# Always specify the port');
-          l.Add('#');
-          l.Add('icapurl = ''icap://'+icapuri+'/srv_clamav''');
-          l.Add('icapsocket = ''localhost:1351''');
-          l.Add('');
-          l.Add('exceptionvirusmimetypelist = ''/etc/dansguardian/lists/contentscanners/exceptionvirusmimetypelist''');
-          l.Add('exceptionvirusextensionlist = ''/etc/dansguardian/lists/contentscanners/exceptionvirusextensionlist''');
-          l.Add('exceptionvirussitelist = ''/etc/dansguardian/lists/contentscanners/exceptionvirussitelist''');
-          l.Add('exceptionvirusurllist = ''/etc/dansguardian/lists/contentscanners/exceptionvirusurllist''');
-          l.Add('');
-          logs.Debuglogs('tdansguardian.verify_content_scanners()  Saving icap /etc/dansguardian/contentscanners/icapscan.conf '+icapuri);
-       end;
-   end;
 
-   logs.WriteToFile(l.Text,'/etc/dansguardian/contentscanners/icapscan.conf');
-
-   l.Clear;
-   l.Add('plugname = ''clamav''');
-   l.Add('scanbuffmethod = ''file''');
-   l.Add('maxfiles = 15000');
-   l.Add('maxreclevel = 10');
-   l.Add('maxscansize = 100000');
-   l.Add('exceptionvirusmimetypelist = ''/etc/dansguardian/lists/contentscanners/exceptionvirusmimetypelist''');
-   l.Add('exceptionvirusextensionlist = ''/etc/dansguardian/lists/contentscanners/exceptionvirusextensionlist''');
-   l.Add('exceptionvirussitelist = ''/etc/dansguardian/lists/contentscanners/exceptionvirussitelist''');
-   l.Add('exceptionvirusurllist = ''/etc/dansguardian/lists/contentscanners/exceptionvirusurllist''');
-   logs.Debuglogs('tdansguardian.verify_content_scanners()  Saving clamav /etc/dansguardian/contentscanners/clamav.conf ');
-   logs.WriteToFile(l.Text,'/etc/dansguardian/contentscanners/clamav.conf');
-
-
-
-
-
-   socketpath:=clamav.CLAMD_GETINFO('LocalSocket');
-   logs.Debuglogs('Starting......: DansGuardian Clamav socket path:'+ socketpath);
-   if length(socketpath)>0 then begin
-      l.Clear;
-      l.Add('plugname = ''clamdscan''');
-      l.Add('clamdudsfile = '''+socketpath+'''');
-      l.Add('exceptionvirusmimetypelist = ''/etc/dansguardian/lists/contentscanners/exceptionvirusmimetypelist''');
-      l.Add('exceptionvirusextensionlist = ''/etc/dansguardian/lists/contentscanners/exceptionvirusextensionlist''');
-      l.Add('exceptionvirussitelist = ''/etc/dansguardian/lists/contentscanners/exceptionvirussitelist''');
-      l.Add('exceptionvirusurllist = ''/etc/dansguardian/lists/contentscanners/exceptionvirusurllist''');
-      logs.Debuglogs('tdansguardian.verify_content_scanners()  Saving clamav /etc/dansguardian/contentscanners/clamdscan.conf ');
-      logs.WriteToFile(l.Text,'/etc/dansguardian/contentscanners/clamdscan.conf');
-   end;
-
-
-  l.free;
-   
-
-end;
-//##############################################################################
 function tdansguardian.DANSGUARDIAN_VERSION():string;
 var
    RegExpr        :TRegExpr;
@@ -372,16 +300,12 @@ if DansGuardianEnabled=0 then begin
 end;
 
   pid:=DANSGUARDIAN_PID();
-  fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.dansguardian.compile.php');
+  fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.squidguard.php --dansguardian');
 
 if SYS.PROCESS_EXIST(pid) then begin
      logs.Debuglogs('Starting......: DansGuardian reload dansgardian with PID '+ pid);
-     verify_content_scanners();
-     VERIFY_PARENT_PROXY();
      DANSGUARDIAN_TEMPLATE();
      logs.Syslogs('Starting......: DansGuardian will be reloaded with username "'+username+'"');
-     DANSGUARDIAN_CONFIG_VALUE_SET('daemonuser',username);
-     DANSGUARDIAN_CONFIG_VALUE_SET('daemongroup',username);
      logs.OutputCmd(BIN_PATH() + ' -r');
      DANSGUARDIAN_TAIL_START();
      exit;
@@ -446,9 +370,7 @@ pid:=DANSGUARDIAN_PID();
     exit;
  end;
  if SYS.COMMANDLINE_PARAMETERS('--verbose') then verb:=' --verbose';
- fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.dansguardian.compile.php'+verb);
- verify_content_scanners();
- VERIFY_PARENT_PROXY();
+ fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.squidguard.php --dansguardian'+verb);
  DANSGUARDIAN_TEMPLATE();
  logs.Debuglogs('Starting......: DansGuardian width username '+username);
  logs.Debuglogs('Starting......: DansGuardian...');
@@ -457,9 +379,6 @@ pid:=DANSGUARDIAN_PID();
     logs.OutputCmd('/bin/touch /var/log/dansguardian/dansguardian.log');
  end;
  logs.OutputCmd('/bin/chown -R '+username+':'+username+' /var/log/dansguardian');
- DANSGUARDIAN_CONFIG_VALUE_SET('daemonuser',username);
- DANSGUARDIAN_CONFIG_VALUE_SET('daemongroup',username);
-
  if FileExists('/tmp/.dguardianipc') then logs.DeleteFile('/tmp/.dguardianipc');
  if FileExists('/tmp/.dguardianurlipc') then logs.DeleteFile('/tmp/.dguardianurlipc');
  logs.OutputCmd('/bin/chmod 777 /tmp');
@@ -548,29 +467,7 @@ begin
  RegExpr.free;
 
 end;
-//##############################################################################
 
-
-procedure tdansguardian.VERIFY_PARENT_PROXY();
-var
-   squid:tsquid;
-   http_port:string;
-   RegExpr     :TRegExpr;
-begin
-   squid:=tsquid.Create;
-   http_port:=squid.SQUID_GET_CONFIG('http_port');
-   RegExpr:=TRegExpr.Create;
-   RegExpr.Expression:='([0-9]+)';
-
-   if RegExpr.Exec(http_port) then http_port:=RegExpr.Match[1];
-logs.DebugLogs('Starting......: Squid configuration file:' + squid.SQUID_CONFIG_PATH());
-logs.DebugLogs('Starting......: Squid listen on port : 127.0.0.1:' + http_port);
-
-DANSGUARDIAN_CONFIG_VALUE_SET('proxyport',http_port);
-DANSGUARDIAN_CONFIG_VALUE_SET('proxyip','127.0.0.1');
-DANSGUARDIAN_CONFIG_VALUE_SET('originalip','off');
-end;
-//##############################################################################
 procedure tdansguardian.C_ICAP_RELOAD();
 var
    pid:string;
@@ -912,7 +809,7 @@ var
    cmd:string;
    CountTail:Tstringlist;
 begin
-
+exit();
 if not FileExists(BIN_PATH()) then begin
    logs.Debuglogs('Starting......: artica-dansguardian realtime logs:: DansGuardian is not installed');
    exit;

@@ -25,6 +25,13 @@ if(function_exists("apc_clear_cache")){
 		if(!isset($_SESSION["detected_lang"])){$_SESSION["detected_lang"]=$_COOKIE["artica-language"];}			
 		$sock=new sockets();
 	echo "\n";
+	$cc=0;
+	while (list ($num, $val) = each ($_SESSION)){
+		if(preg_match("#\/.+?\.php$#", $num)){$cc++;unset($_SESSION[$num]);}
+		
+	}
+	
+	
 	
 	while (list ($num, $val) = each ($GLOBALS["langs"]) ){
 		$datas=$sock->LANGUAGE_DUMP($val);
@@ -42,6 +49,7 @@ if(function_exists("apc_clear_cache")){
 			$text=$text."DATA Cache........................: ".str_replace("&nbsp;"," ",FormatBytes($bytes/1024))."/". str_replace("&nbsp;"," ",FormatBytes($sock->semaphore_memory/1024))."\n";
 			
 			$text=$text."Session Cache.....................: ".str_replace("&nbsp;"," ",FormatBytes($dataSess/1024))."\n";
+			$text=$text."Session Page Cache................: $cc page(s)\n";
 			
 			
 			$bytes=$a;

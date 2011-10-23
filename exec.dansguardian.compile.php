@@ -11,6 +11,12 @@ include_once(dirname(__FILE__).'/framework/class.unix.inc');
 include_once(dirname(__FILE__)."/framework/frame.class.inc");
 
 if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["VERBOSE"]=true;$GLOBALS["cmdlineadd"]=" --verbose";}
+$unix=new unix();
+echo "Starting......: Dansguardian -> exec.squidguard.php --dansguardian\n"; 
+shell_exec($unix->LOCATE_PHP5_BIN()." ".dirname(__FILE__)."/exec.squidguard.php --dansguardian{$GLOBALS["cmdlineadd"]}");
+die();
+
+
 $_GET["LOGFILE"]="/var/log/artica-postfix/dansguardian.compile.log";
 if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["debug"]=true;}
 if(posix_getuid()<>0){die("Cannot be used in web server mode\n\n");}

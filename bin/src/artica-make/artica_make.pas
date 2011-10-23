@@ -644,7 +644,13 @@ begin
 
          fpsystem('/usr/share/artica-postfix/bin/setup-ubuntu --check-squid');
          squid.xinstall();
-         squid.sarg_install();
+         zinstall.EMPTY_CACHE();
+         halt(0);
+   end;
+
+   if ParamStr(1)='APP_SQUID2' then begin
+         squid:=tsetup_squid.Create;
+         squid.squid32();
          zinstall.EMPTY_CACHE();
          halt(0);
    end;
@@ -1814,7 +1820,8 @@ begin
    writeln('');
    writeln('SQUID');
    writeln('___________________________________________________________');
-   writeln('APP_SQUID................: install SQUID3 with ICAP enabled');
+   writeln('APP_SQUID2...............: install SQUID 3.2.x with ICAP enabled');
+   writeln('APP_SQUID................: install SQUID 3.x, SQUID 3.1.x with ICAP enabled');
    writeln('APP_SQUID................:  --reconfigure to recompile');
    writeln('APP_SQUID................:  --configure to display only configure directives');
    writeln('APP_MSKTUTIL.............:  install keytab client for Microsoft Active Directory');

@@ -398,6 +398,12 @@ function getSystemLoad(){
 
 function inject_sql($srcfilename,$filename,$categoriesTable){
 	
+	if(trim($categoriesTable)==null){
+		ufdbguard_admin_events("Fatal : no category table passed to function with the filename:$filename, aborting process" ,__FUNCTION__,__FILE__,__LINE__,"update");
+		return;
+		
+	}
+	
 	$datas=explode("\n",@file_get_contents($filename));
 	echo "Processing $filename ". count($datas)." rows\n";
 	if(!is_array($datas)){
@@ -468,8 +474,8 @@ function inject_sql($srcfilename,$filename,$categoriesTable){
 		$q->QUERY_SQL($sql);		
 	}
 	
-	ufdbguard_admin_events("$categoriesTable: Success importing $c elements in" .$unix->distanceOfTimeInWords($t1,time()),__FUNCTION__,__FILE__,__LINE__,"update");
-	$GLOBALS["MAILLOG"][]=__LINE__.") Success importing $c elements in" .$unix->distanceOfTimeInWords($t1,time());
+	ufdbguard_admin_events("$categoriesTable: Success importing $c elements in " .$unix->distanceOfTimeInWords($t1,time()),__FUNCTION__,__FILE__,__LINE__,"update");
+	$GLOBALS["MAILLOG"][]=__LINE__.") Success importing $c elements in " .$unix->distanceOfTimeInWords($t1,time());
 	UpdateCategories($srcfilename,100,"{success}",1);
 	
 }

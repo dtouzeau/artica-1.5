@@ -1142,6 +1142,7 @@ end;
 
   writeln('NightlyBuild():: Extracting package, please wait...');
   fpsystem('killall artica-install >/dev/null 2>&1');
+  fpsystem('/bin/rm -rf /usr/share/artica-postfix/ressources');
   logs.OutputCmd('/bin/tar -xf '+ArticaFileTemp +' -C /usr/share/');
 
 
@@ -1184,6 +1185,7 @@ begin
       halt(0);
   end;
     fpsystem('killall artica-install >/dev/null 2>&1');
+  fpsystem('/bin/rm -rf /usr/share/artica-postfix/ressources');
   logs.OutputCmd('tar -xf /opt/artica/sources/auto-update/'+lastestfile +' -C /usr/share/');
   logs.DeleteFile('/opt/artica/sources/auto-update/'+lastestfile);
   

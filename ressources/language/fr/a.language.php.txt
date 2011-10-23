@@ -217,6 +217,7 @@ Un reboot peut aussi aider si vous voulez &ecirc;tre sur que les caches soient e
 <APP_SNORT>Pr&eacute;vention d'intrusion r&eacute;seau (Snort)</APP_SNORT>
 <APP_SNORT_ABOUT>Snort est un logiciel libre de pr&eacute;vention d'intrusions et de syst&egrave;me de d&eacute;tection  (IDS/IPS) d&eacute;velopp&eacute; par SourceFire.[br]
 En combinant les avantages des signatures, du protocole et des inspection d'anomalies, Snort un des logiciels les plus install&eacute;s dans le mode comme syst&egrave;me IDS/IPS.</APP_SNORT_ABOUT>
+<APP_SQUID2>Proxy Cache Squid 3.2.x</APP_SQUID2>
 <APP_SQUIDKERAUTH>Authentification kerberos</APP_SQUIDKERAUTH>
 <APP_SQUIDKERAUTH_TEXT>L'authentification kerberos autorise ce serveur &agrave; int&eacute;grer l'authentification du proxy avec un serveur Microsoft Active Directory 2003/2008</APP_SQUIDKERAUTH_TEXT>
 <APP_SQUIDKERAUTH_TEXT_REF>L'utilisateur Windows doit &ecirc;tre membre du groupe &quot;SQUID_USERS&quot; dans l'active Directory.[br]
@@ -290,10 +291,12 @@ Ce r&eacute;pertoire sera localis&eacute; dans /automounts</autofs_ask_dir>
 Ce r&eacute;pertoire sera localis&eacute; dans /automounts</autofs_ask_dir>
 <automatic>Automatique</automatic>
 <automatic_publicip_resolv>Ne pas R&eacute;soudre l'adresse IP publique automatiquement</automatic_publicip_resolv>
+<automobile-carpool>Sites web concernant le covoiturage ou toute forme de transport par r&eacute;union.</automobile-carpool>
 <automount_ressource>Montages automatiques</automount_ressource>
 <automount_this_disk>Auto-connecter ce disque et le placer en production dans le r&eacute;pertoire /automounts</automount_this_disk>
 <autostart>D&eacute;marrage automatique</autostart>
 <available_modules>Modules disponibles</available_modules>
+<available_software>Logiciel disponible</available_software>
 <backend>back-end</backend>
 <backends>serveurs back-end</backends>
 <backup_server>Serveur de sauvegarde</backup_server>
@@ -591,6 +594,7 @@ PowerDNS ne sera pas d&eacute;sinstaller et vous serez en mesure de le maintenir
 <disable_imap>D&eacute;sactiver IMAP</disable_imap>
 <disable_openvpn_connection>D&eacute;sactiver la connexion VPN</disable_openvpn_connection>
 <disable_pop3>D&eacute;sactiver POP3</disable_pop3>
+<disable_squidguard_dansguardian_enabled>squidGuard/UfdbGuard sera d&eacute;sactiv&eacute; car DansGuardian fournit les m&ecirc;mes fonctionnalit&eacute;s.</disable_squidguard_dansguardian_enabled>
 <disable_SSL_port>D&eacute;sactiver le SSL</disable_SSL_port>
 <disable_tooltips>D&eacute;sactiver les infos bulles</disable_tooltips>
 <disable_vrfy_command>D&eacute;sactiver la commande VRFY</disable_vrfy_command>
@@ -1139,6 +1143,7 @@ Les organisations ne pourront que cr&eacute;er des sous-domaines de ces domaines
 <MAX_CPU>C.P.U Max</MAX_CPU>
 <max_events_inmysql>&Eacute;v&egrave;nements MAX stock&eacute;s dans MySQL</max_events_inmysql>
 <max_messages>Nombre Max de messages</max_messages>
+<max_objects_size>Taille MAX des objets</max_objects_size>
 <max_rcpt_to>Nombre maximal de destinataires</max_rcpt_to>
 <max_rcpt_to_onlyForLocalDomains>Seulement aux domaines locaux</max_rcpt_to_onlyForLocalDomains>
 <max_rcpt_to_onlyForLocalDomains_text>Comptabilise seulement les destinataires appartenant aux domaines locaux.[br]
@@ -1539,6 +1544,7 @@ Voulez-vous effectuer cette op&eacute;ration ?</RecheckQuotasAll>
 <recipient_domains>Domaines destinataires</recipient_domains>
 <recompile_all_db>Re-compiler toutes les bases</recompile_all_db>
 <recompile_all_db_ww_text>Reconstruit les bases des sites web &agrave; partir de la base Mysql et les retraduit sur le disque.</recompile_all_db_ww_text>
+<reconfigure>Re-param&eacute;trage</reconfigure>
 <reconfigure_all_instances_text>Re-param&eacute;trer toutes les instances</reconfigure_all_instances_text>
 <reconfigure_snort>Reconfigurer l'IDS</reconfigure_snort>
 <reconfigure_snort_text>Arr&ecirc;te le service, reconstruit les param&egrave;tres et d&eacute;marre le service IDS/Snort pour toutes les interfaces s&eacute;lectionn&eacute;es.</reconfigure_snort_text>
@@ -1662,6 +1668,7 @@ Les utilisateurs seront alors trait&eacute;s comme membre entiers de ce serveur.
 Bien que ceci ne profite pas aux utilisateurs Windows, cela prend tout un sens lorsqu'il faut servir des protocoles comme SSH, FTP ou de messagerie car le format des comptes utilisateur se rapproche des syst&egrave;mes d'authentification unix.[br]
 Si d&eacute;sactiv&eacute; les utilisateurs devront s'identifier comme suit : &quot;DOMAIN\user&quot;. [br]
 Dans le cas contraire : &quot;user&quot;. [br]</SambaWinbindUseDefaultDomain_text>
+<samba_admin_users_explain>C'est la liste des utilisateurs qui seront administrateurs des/du r&eacute;pertoire(s) partag&eacute;s.[br]Cela veut dire qu'ils pourront effectuer toutes les op&eacute;rations de fichiers en tant que super-utilisateur.[br]Vous devriez utiliser cette option avec pr&eacute;caution car les utilisateurs sont capables de faire ce qu'il veulent...</samba_admin_users_explain>
 <samba_aliases_virtual_ip>Indique au serveur virtuel d'utiliser exclusivement cette adresse IP.[b]Attention si vous utilisez cette fonctionnalit&eacute;, tous les autres serveurs virtuels ainsi que le service principal devront utiliser la m&ecirc;me fonctionnalit&eacute;.[/b]</samba_aliases_virtual_ip>
 <samba_create_mask>Masque de cr&eacute;ation</samba_create_mask>
 <samba_create_mask_text>Lorsqu'un fichier est cr&eacute;&eacute;, les permissions sont calcul&eacute;es en relation avec les droits UNIX, indiquez ici le chmod de cr&eacute;ation.</samba_create_mask_text>
@@ -1855,6 +1862,8 @@ Vous avez plusieurs solutions pour am&eacute;liorer la performance de stockage:<
 <squid_basic_filters_explain>Cette section vous permet de piloter les filtres inclus de base dans le proxy.[br]Pour l'antivirus ou le filtrage des sites web, utilisez les autres menus</squid_basic_filters_explain>
 <squid_blk_explain>Cette section repr&eacute;sente l'&eacute;tat des mises &agrave; jour des bases de donn&eacute;es des sites web cat&eacute;goris&eacute;s.[br]Ces mises &agrave; jour sont importantes car elles vont conditionner les statistiques de navigation et le processus de filtrage web.</squid_blk_explain>
 <squid_members_explain>Cette section vous permet de piloter les autorisations d'acc&egrave;s &agrave; Internet incluant aussi les listes noires et blanches.</squid_members_explain>
+<squid_rock>Rock Store (rock)</squid_rock>
+<squid_rock_maxsize>Fait r&eacute;f&eacute;rence &agrave; la taille maximale d'un objet.[br]Utilis&eacute; afin de basculer sur le bon cache afin de le stocker.</squid_rock_maxsize>
 <SQUID_STATS>Statistiques du proxy cache Squid</SQUID_STATS>
 <SQUID_STATS1>Statistiques Proxy</SQUID_STATS1>
 <SQUID_STATS_TEXT>La Zone de statistiques Squid est une console web permettant de visualiser des graphiques et statistiques sur l'utilisation Web des utilisateurs et les cat&eacute;gories des sites web.</SQUID_STATS_TEXT>
@@ -1985,6 +1994,7 @@ Cela peut prendre du temps.. Tout d&eacute;pend de votre bande passante Internet
 <update_patchnow_explain>Mettre &agrave; jour Artica avec les correctifs list&eacute;s ?</update_patchnow_explain>
 <UPDATE_SA_UPDATE>Mise &agrave; jour de SpamAssassin</UPDATE_SA_UPDATE>
 <UPDATE_SA_UPDATE_TEXT>Lancer la mise &agrave; jour, afficher les &eacute;v&egrave;nements de mise &agrave; jour.</UPDATE_SA_UPDATE_TEXT>
+<update_status>&Eacute;tat des mises &agrave; jour</update_status>
 <update_url>Lien de mise &agrave; jour</update_url>
 <usable_mechanisms>M&eacute;canismes disponibles</usable_mechanisms>
 <useGreenSQL>Utiliser le Proxy GreenSQL</useGreenSQL>
@@ -2110,6 +2120,7 @@ La valeur par d&eacute;faut de 8 threads est suffisante pour l'ensemble des beso
  ou de lire des livres sous format &eacute;lectronique.</www_books>
 <www_browsersplugins>Sites web offrant des outils et/ou logiciels additionnels (plugins) pour les navigateurs Internet</www_browsersplugins>
 <www_celebrity>Sites qui concerne les personnes c&eacute;l&egrave;bres, acteurs et personnes connues dans le monde entier.Excluant les mannequins( voir la cat&eacute;gorie &quot;models&quot;)</www_celebrity>
+<www_children>Sites web sur les b&eacute;b&eacute;s et petite enfance incluant les jouets, v&ecirc;tements, nourriture... mais excluant les &eacute;coles et &eacute;tablissements ainsi que les jeux vid&eacute;os.</www_children>
 <www_forward>Transf&eacute;rer vers un autre site</www_forward>
 <www_ForwardTo>Site web &agrave; transf&eacute;rer</www_ForwardTo>
 <www_genealogy>Sites sur les arbres g&eacute;n&eacute;alogiques ou permettant de rechercher une g&eacute;n&eacute;alogie ou sur l'histoire de certaines familles.</www_genealogy>
@@ -2119,6 +2130,7 @@ La valeur par d&eacute;faut de 8 threads est suffisante pour l'ensemble des beso
 <www_internal>Sites web intranet ou adresses IP consid&eacute;r&eacute;es comme ressources internes au r&eacute;seau local.</www_internal>
 <www_malware>Sites infect&eacute;s ou proposant de t&eacute;l&eacute;charger, stocker des virus ou malwares...</www_malware>
 <www_maps>Sites permettant de trouver des adresses sur une carte, la position d'un objet. Incluant aussi les sites de cartographies et d'itin&eacute;raires routiers</www_maps>
+<www_nature>Sites Internet sur la nature, le monde naturel et la nature universelle.[br]Incluant toutes les choses animales, plantes et min&eacute;raux.[br]Aussi les ressources naturelles et &eacute;v&egrave;nements naturels (ouragans, tornades..), la vie et cycles des organismes...</www_nature>
 <www_reale_state_office>Site d'achats et vente de immobilier, trouver des appartements &agrave; louer et &agrave; vendre</www_reale_state_office>
 <WWW_RESCAN_VISITED_ASK>Cette op&eacute;ration va re-synchroniser les liste des sites web visit&eacute;s afin de les cat&eacute;goriser.
 Voulez-vous effectuer cette op&eacute;ration ?</WWW_RESCAN_VISITED_ASK>

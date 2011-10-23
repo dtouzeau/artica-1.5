@@ -1,0 +1,67 @@
+
+body{
+	font: 10pt Arial, Helvetica, sans-serif;
+	background: #263849 url('../i/pattern.png');
+}
+#sum{
+	width: 485px;
+	height: 221px;
+	margin: 167px auto;
+	
+}
+h1{
+	width: 401px;
+	height: 127px;
+	background: transparent url('../i/logo.png') no-repeat;
+	margin: 0 27px 21px;
+} 
+h1 span{
+	display: none;
+}
+#content{
+	width: 485px;
+	height: 221px;
+	background: url('../i/form.png') no-repeat;	
+}
+.f{
+	padding: 45px 50px 45px 38px;	
+	overflow: hidden;
+}
+.field{
+	clear:both;
+	text-align: right;
+	margin-bottom: 15px;
+}
+.field label{
+	float:left;
+	font-weight: bold;
+	line-height: 42px;
+}
+.field input{
+	background: #fff url('../i/input.png') no-repeat;
+	outline: none;
+	border: none;
+	font-size: 10pt;
+	padding: 7px 9px 8px;
+	width: 279px;
+	height: 25px;
+	font-size: 18px;
+	font-weight:bolder;
+	color:#444444;
+}
+.field input.active{
+	background: url('../i/input_act.png') no-repeat;
+}
+.button{
+	width: 297px;
+	float: right;
+}
+.button input{
+	width: 69px;
+	background: url('../i/btn_bg.png') no-repeat;
+	border: 0;
+	font-weight: bold;
+	height: 27px;
+	float: left;
+	padding: 0;
+}

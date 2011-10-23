@@ -1481,6 +1481,7 @@ echo $tpl->_ENGINE_parse_body($html,'squid.index.php');
 function plugins_save(){
 	$squid=new squidbee();
 	$sock=new sockets();
+	$tpl=new templates();
 	$multiple=false;
 	$users=new usersMenus();
 	if(preg_match('#^([0-9]+)\.([0-9]+)#',$users->SQUID_VERSION,$re)){
@@ -1501,6 +1502,13 @@ function plugins_save(){
 			}
 		}
 		$squid->enable_kavproxy=$_GET["enable_kavproxy"];
+	}
+	
+	if(isset($_GET["enable_dansguardian"])){
+		if($_GET["enable_dansguardian"]==1){
+			if($_GET["enable_ufdbguardd"]==1){echo $tpl->javascript_parse_text("{disable_ufdbguardd_dansguardian_enabled}\n");}
+			$_GET["enable_ufdbguardd"]=0;
+		}
 	}
 	
 	writelogs("Save kavProxy {$_GET["enable_kavproxy"]}",__FUNCTION__,__FILE__);
@@ -1620,7 +1628,6 @@ function plugins_popup(){
 	
 	
 	if($users->KASPERSKY_WEB_APPLIANCE){
-		$dans=null;
 		$cicap=null;
 		$squidclamav=null;
 		$squidguard=null;

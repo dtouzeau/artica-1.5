@@ -16,7 +16,8 @@ if(!$usersmenus->AsSquidAdministrator){
 
 
 if(isset($_GET["services"])){section_services();exit;}
-if(isset($_GET["status"])){squid_left_status();exit;}
+if(isset($_GET["status"])){status_start();exit;}
+if(isset($_GET["status-left"])){status_squid_left();exit;}
 if(isset($_GET["squid-services"])){all_status();exit;}
 if(isset($_GET["architecture-tabs"])){section_architecture_tabs();exit;}
 if(isset($_GET["architecture-status"])){section_architecture_status();exit;}
@@ -48,16 +49,13 @@ $tr[]=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("service-check-48.png", "se
 $tr[]=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("48-parameters.png", "parameters","section_security_text", "QuickLinkSystems('section_architecture')"));
 $tr[]=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("48-network-user.png", "members","softwares_mangement_text", "QuickLinkSystems('section_members')"));
 $tr[]=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("Firewall-Secure-48.png", "basic_filters","softwares_mangement_text", "QuickLinkSystems('section_basic_filters')"));
+$webfiltering=false;
+if($users->DANSGUARDIAN_INSTALLED){if($users->AsDansGuardianAdministrator){$webfiltering=true;}}
+if($users->APP_UFDBGUARD_INSTALLED){if($users->AsDansGuardianAdministrator){$webfiltering=true;}}
 
-if($users->DANSGUARDIAN_INSTALLED){
-	if($users->AsDansGuardianAdministrator){
-		$tr[]=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("web-filtering-48.png", "WEB_FILTERING","softwares_mangement_text", "QuickLinkSystems('section_webfiltering_dansguardian')"));
-	}
-}
-if($users->APP_UFDBGUARD_INSTALLED){
-	if($users->AsDansGuardianAdministrator){
-		$tr[]=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("web-filtering-48.png", "WEB_FILTERING","softwares_mangement_text", "QuickLinkSystems('section_webfiltering_dansguardian')"));
-	}
+
+if($webfiltering){
+	$tr[]=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("web-filtering-48.png", "WEB_FILTERING","softwares_mangement_text", "QuickLinkSystems('section_webfiltering_dansguardian')"));
 }
 
 
@@ -546,7 +544,10 @@ $html="
 	
 }
 
-function squid_left_status(){
+function status_squid_left(){
+	if(CACHE_SESSION_GET(__FUNCTION__,__FILE__,30)){return;}
+	
+	
 	$tpl=new templates();
 	$page=CurrentPageName();	
 	include_once(dirname(__FILE__)."/ressources/class.status.inc");
@@ -717,13 +718,14 @@ if($ini->_params["SQUID"]["icap_enabled"]<>'1'){
 	</script>
 	";
 	
-	echo $tpl->_ENGINE_parse_body($html);
+	$html=$tpl->_ENGINE_parse_body($html);
+	CACHE_SESSION_SET(__FUNCTION__,__FILE__,$html);
 	
 	
 }
 
 
-function section_status(){
+function status_start(){
 	$tpl=new templates();
 	$page=CurrentPageName();	
 	$html="
@@ -735,7 +737,7 @@ function section_status(){
 	</table>
 	
 	<script>
-		LoadAjax('squid-status','$page?status=yes');
+		LoadAjax('squid-status','$page?status-left=yes');
 	</script>
 	
 	";
@@ -848,9 +850,44 @@ function section_architecture_status(){
 	
 }
 
+function section_status(){
+	$page=CurrentPageName();
+	$users=new usersMenus();
+	$tpl=new templates();
+	$array["status"]='{services_status}';
+	$array["software-update"]='{softwares_update}';
+	
+	
+	
+	while (list ($num, $ligne) = each ($array) ){
+		
+		if($num=="software-update"){
+			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"squid.softwares.php\"><span style='font-size:14px'>$ligne</span></a></li>\n");
+			continue;
+		}
+		
+		$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"$page?$num=yes\"><span style='font-size:14px'>$ligne</span></a></li>\n");
+		//$html=$html . "<li><a href=\"javascript:LoadAjax('squid_main_config','$page?main=$num&hostname={$_GET["hostname"]}')\" $class>$ligne</a></li>\n";
+			
+		}
+	echo "
+	<div id=squid_main_svc style='width:100%;100%;overflow:auto'>
+		<ul>". implode("\n",$html)."</ul>
+	</div>
+		<script>
+				$(document).ready(function(){
+					$('#squid_main_svc').tabs();
+			
+			
+			});
+		</script>";			
+	
+	
+}
+
 function all_status(){
 	
-	
+	if(CACHE_SESSION_GET(__FUNCTION__, ___FILE__,5)){return;}
 	$page=CurrentPageName();
 	$sock=new sockets();
 	$ini=new Bs_IniHandler();
@@ -907,7 +944,7 @@ function all_status(){
 			
 	
 	
-	echo $tpl->_parse_body($html);
+	CACHE_SESSION_SET(__FUNCTION__, __FILE__, $tpl->_parse_body($html));
 	
 	
 	

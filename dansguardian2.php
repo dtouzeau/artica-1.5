@@ -238,9 +238,10 @@ function dansguardian_status(){
 	$categories=$q->LIST_TABLES_CATEGORIES();
 	$sock=new sockets();
 	$ufdb=null;$dansgu=null;
-	
+	$t=0;
 	
 	if($users->APP_UFDBGUARD_INSTALLED){
+		$t++;
 		$APP_UFDBGUARD_INSTALLED="{installed}";
 		$EnableUfdbGuard=$sock->GET_INFO("EnableUfdbGuard");
 		if($EnableUfdbGuard==1){$EnableUfdbGuard="{enabled}";}else{$EnableUfdbGuard="{disabled}";}
@@ -252,27 +253,45 @@ function dansguardian_status(){
 	}
 	
 	if($users->DANSGUARDIAN_INSTALLED){
+		$t++;
 		$DANSGUARDIAN_INSTALLED="{installed}";
 		$DansGuardianEnabled=$sock->GET_INFO("DansGuardianEnabled");
 		if($DansGuardianEnabled==1){$DansGuardianEnabled="{enabled}";}else{$DansGuardianEnabled="{disabled}";}
 			$dansgu="<tr>
-			<td class=legend>{APP_UFDBGUARD}:</td>
+			<td class=legend>{APP_DANSGUARDIAN}:</td>
 			<td><div style='font-size:14px'>". texthref($DansGuardianEnabled,"Loadjs('squid.popups.php?script=plugins')")."</td>
 			</tr>";			
 		
 	}	
 	
-	$html="
-	<table style='width:100%' class=form>
-	<tbody>
-	$ufdb
-	$dansgu
-
-	</tbody>
-	</table>
-	<script>
-		LoadAjax('dansguardian-service-status','$page?dansguardian-service-status=yes');
+	if($users->KAV4PROXY_INSTALLED){
+		$t++;
+		$kavicapserverEnabled=$sock->GET_INFO("kavicapserverEnabled");
+		if($kavicapserverEnabled==1){$kavicapserverEnabled="{enabled}";}else{$kavicapserverEnabled="{disabled}";}
+		$kav="<tr>
+			<td class=legend>{APP_KAV4PROXY}:</td>
+			<td><div style='font-size:14px'>". texthref($kavicapserverEnabled,"Loadjs('squid.popups.php?script=plugins')")."</td>
+			</tr>";			
+	}else{
+		$kavicapserverEnabled="{not_installed}";
+		$kav="<tr>
+			<td class=legend>{APP_KAV4PROXY}:</td>
+			<td><div style='font-size:14px'>$kavicapserverEnabled</td>
+			</tr>";			
+	}
+	
+	if($t>0){
+		$table="<table style='width:100%' class=form><tbody>$ufdb$dansgu$kav</tbody></table>";
 		
+	}
+	
+	$html="
+	$table
+	<script>
+		function RefreshDansguardianMainService(){
+			LoadAjax('dansguardian-service-status','$page?dansguardian-service-status=yes');
+		}
+		RefreshDansguardianMainService();
 	</script>	
 	";
 	
@@ -330,15 +349,19 @@ function dansguardian_service_status(){
 	$squid_status=DAEMON_STATUS_ROUND("SQUID",$ini,null,1);
 	$dansguardian_status=DAEMON_STATUS_ROUND("DANSGUARDIAN",$ini,null,1);
 	$APP_SQUIDGUARD_HTTP=DAEMON_STATUS_ROUND("APP_SQUIDGUARD_HTTP",$ini,null,1);
-	$APP_UFDBGUARD=DAEMON_STATUS_ROUND("APP_UFDBGUARD",$ini,null,1);	
+	$APP_UFDBGUARD=DAEMON_STATUS_ROUND("APP_UFDBGUARD",$ini,null,1);
+	$KAV4PROXY=DAEMON_STATUS_ROUND("KAV4PROXY",$ini,null,1);
 	
 	$tr[]=$squid_status;
 	$tr[]=$dansguardian_status;
 	$tr[]=$APP_SQUIDGUARD_HTTP;
 	$tr[]=$APP_UFDBGUARD;
+	$tr[]=$KAV4PROXY;
 	
 	
-	$html="<center><div style='width:550px'>".CompileTr2($tr)."</div></center>
+	$html="
+		<center><div style='width:550px'>".CompileTr2($tr)."</div></center>
+		<div style='text-align:right;width:100%'>". imgtootltip("refresh-24.png","{refresh}","RefreshDansguardianMainService()")."</div>
 	<script>
 	LoadAjax('dansguardian-statistics-status','squid.traffic.statistics.php?squid-status-stats=yes');
 	</script>

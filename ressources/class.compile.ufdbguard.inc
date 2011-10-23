@@ -232,11 +232,7 @@ class compile_ufdbguard{
 				if(!$q->ok){echo $q->mysql_error."\n$sql\n";}
 				while($blks=mysql_fetch_array($results2,MYSQL_ASSOC)){
 					if(isset($ARRAY["{$blks["modeblk"]}{$ligne["ID"]}{$blks["category"]}"])){continue;}
-					$category=trim($blks["category"]);
-					if($category==null){continue;}
-					$category=str_replace("/", "_", $category);
-					$category=str_replace("-", "_", $category);
-					$category=str_replace(" ", "_", $category);
+					$category=$q->CategoryShellEscape($category);
 					if(!isset($GLOBALS["CATEGORIES_ADDED"][$category])){
 						if($GLOBALS["VERBOSE"]){echo "Starting......: ufdbGuard group `$groupname` category `$category` is skipped\n";}
 						continue;

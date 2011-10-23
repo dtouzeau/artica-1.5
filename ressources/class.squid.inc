@@ -79,7 +79,7 @@ class squidbee{
 	var $EnableKavICAPRemote=0;
 	var $KavICAPRemoteAddr=null;
 	var $KavICAPRemotePort=0;
-	
+	var $CPU_NUMBER;
 	function squidbee(){
 		if(posix_getuid()==0){$this->ASROOT=true;}
 		$this->VerifyLdapBranch();
@@ -89,6 +89,7 @@ class squidbee{
 		
 		if(!isset($GLOBALS["CLASS_USERS"])){$GLOBALS["CLASS_USERS"]=new usersMenus();}
 		$users=$GLOBALS["CLASS_USERS"];
+		$this->CPU_NUMBER=$users->CPU_NUMBER;
 		$this->SQUID_BIN_VERSION=$users->SQUID_BIN_VERSION;
 		if($this->ASROOT){$this->SQUID_VERSION=$this->root_squid_version();}else{$this->SQUID_VERSION=$users->SQUID_VERSION;}
 		$this->SQUID_ICAP_ENABLED=$users->SQUID_ICAP_ENABLED;
@@ -316,6 +317,7 @@ class squidbee{
 							"cache_dir_level1"=>$ini->_params[$num]["cache_dir_level1"],
 							"cache_dir_level2"=>$ini->_params[$num]["cache_dir_level2"],
 							"cache_size"=>$ini->_params[$num]["cache_size"],
+							"cache_maxsize"=>$ini->_params[$num]["cache_maxsize"],
 							);
 						}
 						
@@ -406,7 +408,7 @@ class squidbee{
 		if($this->global_conf_array["peer_connect_timeout"]==null){$this->global_conf_array["peer_connect_timeout"]="3 minutes";}
 		if(!is_numeric($this->global_conf_array["request_body_max_size"])){$this->global_conf_array["request_body_max_size"]="5000";}
 		if($this->global_conf_array["maximum_object_size"]==null){$this->global_conf_array["maximum_object_size"]="300 MB";}
-		if($this->global_conf_array["cache_mem"]==null){$this->global_conf_array["cache_mem"]="8 MB";}
+		if($this->global_conf_array["cache_mem"]==null){$this->global_conf_array["cache_mem"]="256 MB";}
 		if($this->global_conf_array["cache_swap_high"]==null){$this->global_conf_array["cache_swap_high"]="90";}
 		if($this->global_conf_array["cache_swap_low"]==null){$this->global_conf_array["cache_swap_low"]="95";}
 		if($this->global_conf_array["minimum_object_size"]==null){$this->global_conf_array["minimum_object_size"]="0 KB";}
@@ -562,6 +564,7 @@ function SaveToLdap($norestart=false){
 					$ini=$ini."cache_dir_level1={$val["cache_dir_level1"]}\n";
 					$ini=$ini."cache_dir_level2={$val["cache_dir_level2"]}\n";
 					$ini=$ini."cache_size={$val["cache_size"]}\n";
+					$ini=$ini."cache_maxsize={$val["cache_maxsize"]}\n";
 				}
 			}
 			
@@ -1328,6 +1331,28 @@ public function SquidGuardDatabasesStatus($all=0){
 		
 	}
 	
+	
+	private function x_forwarded_for(){
+		if(!$this->ASROOT){return;}
+		$enabled=false;
+		$unix=new unix();
+		$squidbin=$unix->find_program("squid3");
+		if(strlen($squidbin)<5){$squidbin=$unix->find_program("squid");}
+		exec("$squidbin -v 2>&1",$results);
+		while (list($num,$val)=each($results)){
+			if(preg_match("#enable-follow-x-forwarded-for#", $val)){$enabled=true;}
+		}
+		if(!$enabled){
+			if($GLOBALS["VERBOSE"]){echo "DEBUG : enable-follow-x-forwarded-for no such compilation option !\n";}
+			return;
+		}
+		if($GLOBALS["VERBOSE"]){echo "DEBUG : enable-follow-x-forwarded-for OK\n";}
+		$f[]="# --------- Use x-forwarded-for for local Dansguardian or load balancers"; 
+		$f[]="log_uses_indirect_client	on";
+		$f[]="follow_x_forwarded_for allow localhost";
+		return @implode("\n", $f)."\n";
+	}	
+	
 		
 		
 function BuildSquidConf(){
@@ -1405,6 +1430,13 @@ function BuildSquidConf(){
 		$conf=$conf . "client_db off\n";
 		$conf=$conf . "buffered_logs on\n";
 		$conf=$conf . "half_closed_clients off\n";
+		if($this->IS_32){
+			if($this->CPU_NUMBER>1){
+				//$conf=$conf . "workers $this->CPU_NUMBER\n";
+			}
+		}
+		
+		
 		
 		$GLOBALS["HTTP_ACCESS"]["BLOCKEDSITES"]="http_access deny blockedsites";
 		$conf=$conf.$squidGuard;
@@ -1520,6 +1552,7 @@ function BuildSquidConf(){
 		$conf=$conf."# --------- SAFE ports\n";
 		$conf=$conf.$this->SAFE_PORTS();
 		
+
 		$conf=$conf."#\n";
 
 		if($EnableMalwarePatrol==1){
@@ -1598,7 +1631,7 @@ function BuildSquidConf(){
 		$this->CheckVersion();
 		
 		if($this->ignore_expect_100==1){$ignore_expect_100="on";}else{$ignore_expect_100="off";}
-			
+		$conf=$conf .$this->x_forwarded_for();
 		$conf=$conf .$acl_access_time;
 		$conf=$conf. $this->SSL_PORTS();
 		$conf=$conf .$this->ACL_FTP_RESTRICTIONS();
@@ -1607,7 +1640,7 @@ function BuildSquidConf(){
 		$conf=$conf .$this->ACL_MESSENGERS();
 		
 		
-		$conf=$conf."acl MULTIMEDIA rep_mime_type -i ^(audio\/x-mpegurl|audio\/mpeg|video\/flv|video\/x-flv|application\/x-shockwave-flash|audio\/ogg|video\/ogg|application\/ogg)$\n";
+		
 		$conf=$conf ."\n\n";
 		$bandwith=new squid_bandwith_builder();
 		$conf=$conf. $bandwith->compile()."\n";
@@ -1777,12 +1810,20 @@ function BuildSquidConf(){
 		
 		if($this->ASROOT){echo "Starting......: Squid Main cache \"{$this->CACHE_PATH}\" ({$this->CACHE_TYPE})\n";}
 		$conf=$conf."\n";
+		
 		$conf=$conf."cache_dir	{$this->CACHE_TYPE} {$this->CACHE_PATH} {$this->CACHE_SIZE} 16 256\n";
 		$conf=$conf."# --------- OTHER CACHES\n";
 		if(is_array($this->cache_list)){
 			reset($this->cache_list);
 			while (list ($num, $val) = each ($this->cache_list)){
 				if($this->ASROOT){echo "Starting......: other cache \"{$num}\" ({$this->cache_list[$num]["cache_type"]})\n";}
+				if($this->cache_list[$num]["cache_type"]=="rock"){
+					$mxsize=$this->cache_list[$num]["cache_maxsize"]*1000;
+					$mxsize=$mxsize*1024;
+					//$conf=$conf."cache_dir {$this->cache_list[$num]["cache_type"]} $num {$this->cache_list[$num]["cache_size"]} max-size=32768\n";
+					continue;
+				}
+				
 				$conf=$conf."cache_dir {$this->cache_list[$num]["cache_type"]} $num {$this->cache_list[$num]["cache_size"]} {$this->cache_list[$num]["cache_dir_level1"]} {$this->cache_list[$num]["cache_dir_level2"]}\n";
 			}
 		}
@@ -2139,7 +2180,9 @@ private function SSL_PORTS(){
 
 		
 function acls_multimedias(){
+		return null;
 		$conf=null;
+		$conf=$conf."acl MULTIMEDIA rep_mime_type -i ^(audio\/x-mpegurl|audio\/mpeg|video\/flv|video\/x-flv|application\/x-shockwave-flash|audio\/ogg|video\/ogg|application\/ogg)$\n";
 		$conf=$conf."acl multimedia_rep rep_mime_type -i ^video/x-ms-asf$\n";
 		$conf=$conf."acl multimedia_rep rep_mime_type -i ^application/vnd.ms.wms-hdr.asfv1$\n";
 		$conf=$conf."acl multimedia_rep rep_mime_type -i ^application/x-mms-framed$\n";

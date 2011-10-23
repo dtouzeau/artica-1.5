@@ -899,6 +899,7 @@ function lang(){
 function buildPage(){
 	$page=CurrentPageName();
 	$users=new usersMenus();
+	$sock=new sockets();
 	$logo="logo.gif";
 	$logo_bg="bg_header.gif";
 	$bg_color="#005447";
@@ -920,7 +921,20 @@ function buildPage(){
 		$logo="logo-mycosi.gif";
 		$bg_color="#FFB683";
 		$ProductName="MyCosi";
-	}	
+	}
+
+	if($template==null){
+		if($users->SQUID_INSTALLED){
+			if(!$users->POSTFIX_INSTALLED){
+				if(!$users->SAMBA_INSTALLED){
+					$SQUIDEnable=$sock->GET_INFO("SQUIDEnable");
+					if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
+					if($SQUIDEnable==1){$template="Squid";}
+				}
+			}
+		}
+	
+	}
 	
 	if($template<>null){
 		$jquery=null;
@@ -960,6 +974,8 @@ function buildPage(){
 		$tpl=str_replace("{copy-right}","Copyright 2006 - ". date('Y'),$tpl);
 		$tpl=str_replace("{TEMPLATE_HEAD}","<!-- HEAD TITLE: $TITLE_RESSOURCE -->\n$favicon\n$jquery\n$jsArtica\n". @implode("\n", $js)."\n$jslogon\n".@implode("\n", $css)."\n".@implode("\n", $log), $tpl);
 		$tpl=str_replace("{ARTICA_VERSION}",@file_get_contents("VERSION"),$tpl);
+		$tpl=str_replace("{SQUID_VERSION}",$users->SQUID_VERSION,$tpl);
+	
 		$tpl=str_replace("{TEMPLATE_BODY_YAHOO}",$p->YahooBody(),$tpl);
 		$tpl=str_replace("{TEMPLATE_LANG_LINK}","<span id='llang-select'></span><script>LoadAjaxTiny('llang-select','$page?TEMPLATE_LANG_LINK=yes')</script>",$tpl);
 		$tpl=str_replace("{artica_username}",$_GET["MEM_USERNAME"],$tpl);

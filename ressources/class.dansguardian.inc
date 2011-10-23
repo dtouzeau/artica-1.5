@@ -564,6 +564,7 @@ class dansguardian_rules{
 									"automobile/boats"=>"{automobile-boats}",
 									"automobile/cars"=>"{automobile-cars}",
 									"automobile/planes"=>"{automobile-planes}",
+									"automobile/carpool"=>"{automobile-carpool}",
 
 									
 									"publicite"=>"{publicite}",
@@ -653,7 +654,7 @@ class dansguardian_rules{
 									
 									"recreation/sports"=>"{recreation_sports}",
 									"recreation/humor"=>"{recreation_humor}",
-									
+									"children"=>"{www_children}",
 									"shopping"=>"{www_shopping}",
 									"gifts"=>"{www_gifts}",
 									"clothing"=>"{www_clothing}",
@@ -665,6 +666,7 @@ class dansguardian_rules{
 									"astrology"=>"{astrology}",
 									"science/astronomy"=>"{science_astronomy}",
 									"science/weather"=>"{science_weather}",
+									"nature"=>"{www_nature}",
 									"browsersplugins"=>"{www_browsersplugins}",
 									"webplugins"=>"{webplugins}",
 									"maps"=>"{www_maps}",
@@ -789,6 +791,9 @@ class dansguardian_rules{
 		  	"gifts"=>"gifts-20.png",
 		  	"browsersplugins"=>"20-webplugins.png",
 		  	"genealogy"=>"genealogy-20.png",
+		  	"children"=>"baby-20.png",
+		  	"automobile/carpool"=>"carpool-20.png",
+		  	"nature"=>"nature-20.png"
 		  	
 		  	);
 									

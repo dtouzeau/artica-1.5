@@ -195,7 +195,7 @@ class icap{
 		
 		if($this->EnableClamavInCiCap==1){
 			$kav_rules[]="adaptation_service_set  class_antivirus service_antivir";
-			$kav_rules[]="adaptation_access       class_antivirus deny MULTIMEDIA";
+			//$kav_rules[]="adaptation_access       class_antivirus deny MULTIMEDIA";
 			$kav_rules[]="adaptation_access       class_antivirus allow all";
 		}		
 		return @implode("\n",$kav_rules);	
@@ -207,7 +207,7 @@ class icap{
 		$kav_rules[]="";
 		$kav_rules[]="adaptation_service_set class_antivirus_kav_resp is_kav_resp";
 		$kav_rules[]="adaptation_service_set class_antivirus_kav_req is_kav_req";	
-		$kav_rules[]="adaptation_access class_antivirus_kav_req deny MULTIMEDIA";
+		//$kav_rules[]="adaptation_access class_antivirus_kav_req deny MULTIMEDIA";
 		$kav_rules[]="adaptation_access class_antivirus_kav_req allow all";
 		$kav_rules[]="adaptation_access class_antivirus_kav_resp allow all";
 		$kav_rules[]="";			
@@ -232,7 +232,7 @@ class icap{
 		if($this->enable_kavproxy){$a[]="is_kav_resp";$b[]="is_kav_req";}
 		
 		$f[]="adaptation_service_chain ANTIVIRUS_CHAINS ".@implode(" ",$a);
-		$f[]="adaptation_access ANTIVIRUS_CHAINS deny MULTIMEDIA";
+		//$f[]="adaptation_access ANTIVIRUS_CHAINS deny MULTIMEDIA";
 		$f[]="adaptation_access ANTIVIRUS_CHAINS allow all";
 		
 		if(is_array($b)){

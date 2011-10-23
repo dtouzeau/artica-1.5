@@ -146,6 +146,7 @@ function save_category(){
 	if($_GET["day"]<>null){
 		$time=strtotime($_GET["day"]." 00:00:00");
 		$tableSrc=date('Ymd')."_hour";
+		if(!$q->TABLE_EXISTS($tableSrc)){$q->CreateHourTable($tableSrc);}
 		$q->QUERY_SQL("UPDATE $tableSrc SET category='$cats' WHERE sitename='$www'");
 		if(!$q->ok){echo $q->mysql_error;}
 	}		
