@@ -178,6 +178,7 @@ function ParseLoadQeues(){
 			@unlink($filename);
 		}else{
 			echo "$filebase did not match ([0-9]+)\.([0-9]+)\.([0-9]+)\.queue\n";
+			@unlink($filename);
 		}
 
 	}
@@ -259,7 +260,10 @@ function loadmem(){
 
 
 function loadavg(){
-	
+	$sock=new sockets();
+	$DisableLoadAVGQueue=$sock->GET_INFO("DisableLoadAVGQueue");
+	if(!is_numeric($DisableLoadAVGQueue)){$DisableLoadAVGQueue=0;}
+	if($DisableLoadAVGQueue==1){return;}
 	$unix=new unix();
 	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__)."/pids/".__FUNCTION__.".pid";
 	$pid=@file_get_contents($pidfile);

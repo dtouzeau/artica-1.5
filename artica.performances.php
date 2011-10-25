@@ -197,7 +197,6 @@ function cron_index(){
 	
 	
 	
-	
 	//no_organization
 	
 	if($DisableWarnNotif==null){$DisableWarnNotif=0;}
@@ -206,6 +205,7 @@ function cron_index(){
 	if($DisableFrontEndArticaEvents==null){$DisableFrontEndArticaEvents=0;}
 	if($AllowShutDownByInterface==null){$AllowShutDownByInterface=0;}
 	if($ArticaInCgroups==null){$ArticaInCgroups=0;}
+	
 	
 	
 	$DisableWarnNotif=Field_checkbox("DisableWarnNotif",1,$DisableWarnNotif);
@@ -639,6 +639,8 @@ function main_config_artica(){
 	$ArticaCgroup=$sock->GET_INFO('ArticaCgroup');
 	$systemMaxOverloaded=trim($sock->GET_INFO("systemMaxOverloaded"));
 	$AutoRebootScheduleText=trim($sock->GET_INFO("AutoRebootScheduleText"));
+	$DisableLoadAVGQueue=$sock->GET_INFO('DisableLoadAVGQueue');
+		
 	
 	$cgroupsEnabled=$sock->GET_INFO("cgroupsEnabled");
 	$CGROUPS_INSTALLED=0;
@@ -653,7 +655,7 @@ function main_config_artica(){
 	if(!is_numeric($cpulimit)){$cpulimit=0;}
 	if(!is_numeric($cgroupsEnabled)){$cgroupsEnabled=0;}
 	if(!is_numeric($AutoRebootSchedule)){$AutoRebootSchedule=0;}
-	
+	if(!is_numeric($DisableLoadAVGQueue)){$DisableLoadAVGQueue=0;}
 	
 	
 	$q=new mysql();
@@ -800,10 +802,16 @@ $html="
 			<td>" . help_icon("{EnableArticaWatchDog_explain}")."</td>
 		</tr>
 		<tr>
+			<td nowrap width=1% align='right' class=legend>{DisableLoadAVGQueue}:</td>
+			<td>" . Field_checkbox("DisableLoadAVGQueue",1,$DisableLoadAVGQueue)."</td>
+			<td>" . help_icon("{DisableLoadAVGQueue_explain}")."</td>
+		</tr>		
+		<tr>
 			<td nowrap width=1% align='right' class=legend>{EnableBandwithCalculation}:</td>
 			<td>" . Field_checkbox("EnableBandwithCalculation",1,$EnableBandwithCalculation)."</td>
 			<td>" . help_icon("{EnableBandwithCalculation_explain}")."</td>
-		</tr>		
+		</tr>	
+			
 		$backupmailsize
 		<tr>
 			<td nowrap width=1% align='right' class=legend>{MaxEventsInDatabase} (mail):</td>
@@ -1180,7 +1188,7 @@ if(isset($_POST["SystemV5CacheEnabled"])){$sock->SET_INFO('SystemV5CacheEnabled'
 if(isset($_POST["MaxMailEventsLogs"])){$sock->SET_INFO('MaxMailEventsLogs',$_POST["MaxMailEventsLogs"]);}
 if(isset($_POST["ArticaCgroup"])){$sock->SET_INFO('ArticaCgroup',$_POST["ArticaCgroup"]);}
 if(isset($_POST["ArticaInCgroups"])){$sock->SET_INFO('ArticaInCgroups',$_POST["ArticaInCgroups"]);}
-
+if(isset($_POST["DisableLoadAVGQueue"])){$sock->SET_INFO('DisableLoadAVGQueue',$_POST["DisableLoadAVGQueue"]);}
 if(isset($_POST["AutoRebootScheduleText"])){$sock->SET_INFO('AutoRebootScheduleText',$_POST["AutoRebootScheduleText"]);}
 if(isset($_POST["AutoRebootSchedule"])){$sock->SET_INFO('AutoRebootSchedule',$_POST["AutoRebootSchedule"]);}
 if(isset($_POST["AutoRebootSchedule"])){$sock->getFrameWork("services.php?AutoRebootSchedule=yes");}

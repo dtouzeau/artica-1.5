@@ -722,6 +722,11 @@ Uncheck the box: Around 18Mb memory free.
 </DisableEnableArticaBackgroundService_explain>
 <DisableHtAccess>Disable .htaccess</DisableHtAccess>
 <DisableLDAPDatabase>Disable LDAP Database</DisableLDAPDatabase>
+<DisableLoadAVGQueue>Disable overload reports</DisableLoadAVGQueue>
+<DisableLoadAVGQueue_explain>When the system is overloaded, Artica create a temporary report in a dedciated directory.
+[br]A second process is in charge to parse this directory and send reports by mail.[br]
+If your server is too much overloaded.[br]The directory should be incremented indefinitively.
+[br]In this case, you should enable this option in order to disable generation reports task.</DisableLoadAVGQueue_explain>
 <DisablePowerDnsManagement>Unlink PowerDNS from Artica</DisablePowerDnsManagement>
 <DisablePowerDnsManagement_text>This operation will unlink PowerDNS from Artica process.
 It means that Artica will not handle PowerDNS process and database.
@@ -1810,6 +1815,7 @@ The path is formatted as a character string consisting of characters from the NV
 <Reallocated_Event_Count_text>Quantity of remapping operations</Reallocated_Event_Count_text>
 <Reallocated_Sector_Ct>Reallocated Sector Count</Reallocated_Sector_Ct>
 <Reallocated_Sector_Ct_text>Quantity of remapped sectors</Reallocated_Sector_Ct_text>
+<reboot>reboot</reboot>
 <reboot_computer_to_take_effects>You have to reboot the server in order to apply parameters</reboot_computer_to_take_effects>
 <rebuild_acls>reconstruct acls</rebuild_acls>
 <rebuild_apache_groupware_text>check and rebuild your the application</rebuild_apache_groupware_text>

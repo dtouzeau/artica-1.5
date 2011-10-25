@@ -6,6 +6,8 @@
 
 System Changes:
 ------------------------------------------------
+1.5.102517: Fix wrong uidNumber incrementation.
+1.5.102517: Add possibility to disable overload reports generation process.
 1.5.102102: Fix set local acls did not working on selected groups when groups are from a connected Active Directory.
 1.5.102102: Fix artica did not parse all groups from getent command.
 1.5.102019: Add new feature that allow to schedule optimize mysql tables. 

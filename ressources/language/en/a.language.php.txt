@@ -2626,3 +2626,9 @@ You should use this option very carefully, as any user in this list will be able
 <disable_squidguard_dansguardian_enabled>squidGuard/UfdbGuard will be disabled Dansguardian perform same features</disable_ufdbguardd_dansguardian_enabled>
 <www_nature>Websites talking about nature, natural world, and the natural universe.[br]This includes all things animal, plant, and mineral; all natural resources and events (e.g., hurricanes, tornadoes, earthquakes). It also includes the behavior of living organisms, and the processes (e.g., erosion, metamorphism, fossilization) associated with inanimate objects</www_nature>
 <softwares_update>Softwares update</softwares_update>
+<reboot>reboot</reboot>
+<DisableLoadAVGQueue>Disable overload reports</DisableLoadAVGQueue>
+<DisableLoadAVGQueue_explain>When the system is overloaded, Artica create a temporary report in a dedicated directory.
+[br]A second process is in charge to parse this directory and send reports by mail.[br]
+If your server is too much overloaded.[br]The directory should be incremented indefinitively.
+[br]In this case, you should enable this option in order to disable generation reports task.</DisableLoadAVGQueue_explain>

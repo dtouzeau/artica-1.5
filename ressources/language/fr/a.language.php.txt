@@ -581,6 +581,8 @@ D&eacute;cocher la case: Lib&egrave;re a peu pr&egrave;s 25Mb de m&eacute;moire 
 D&eacute;cocher la case: Lib&egrave;re a peu pr&egrave;s 18Mb de m&eacute;moire vive.</DisableEnableArticaBackgroundService_explain>
 <DisableHtAccess>D&eacute;sactiver la lecture .htaccess</DisableHtAccess>
 <DisableLDAPDatabase>D&eacute;sactiver l'utilisation de la base LDAP</DisableLDAPDatabase>
+<DisableLoadAVGQueue>D&eacute;sactiver les rapports de surcharge</DisableLoadAVGQueue>
+<DisableLoadAVGQueue_explain>Lorsque le syst&egrave;me est surcharg&eacute;, Artica produit un rapport temporaire de surcharge dans une file d'attente.[br]Un second processus est alors en charge, lorsque le serveur est &quot;calm&eacute;&quot; d'envoyer ces rapports par email.[br]Si vous serveur est continuellement surcharg&eacute;, il se peut que la fille d'attente s'incr&eacute;mente in-d&eacute;finitivement.[br]Dans ce cas, vous devriez activer cette option afin d'&eacute;liminer la g&eacute;n&eacute;ration des rapports.</DisableLoadAVGQueue_explain>
 <DisablePowerDnsManagement>D&eacute;connecter PowerDNS d'Artica</DisablePowerDnsManagement>
 <DisablePowerDnsManagement_text>Cette op&eacute;ration va d&eacute;connecter PowerDNS de la gestion d'Artica.
 Cela veut dire que Artica ne prendra plus en charge les processus PowerDNS et sa base de donn&eacute;e.
@@ -1526,6 +1528,7 @@ Attention, vous devrez au pr&eacute;alable indiquer les clefs autoris&eacute;es 
 <Reallocated_Event_Count_text>Quantit&eacute; d'op&eacute;rations de remappage</Reallocated_Event_Count_text>
 <Reallocated_Sector_Ct>Nb secteurs r&eacute;-allou&eacute;s</Reallocated_Sector_Ct>
 <Reallocated_Sector_Ct_text>Nombre de secteurs r&eacute;-allou&eacute;s</Reallocated_Sector_Ct_text>
+<reboot>Red&eacute;marrage</reboot>
 <reboot_computer_to_take_effects>Vous devez red&eacute;marrer l'ordinateur afin de prendre en charge les param&egrave;tres.</reboot_computer_to_take_effects>
 <rebuild_acls>Reconstruire les ACLs</rebuild_acls>
 <rebuild_apache_groupware_text>V&eacute;rifie et reconstruit l'application web h&eacute;berg&eacute;e</rebuild_apache_groupware_text>

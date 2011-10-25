@@ -2193,7 +2193,7 @@ function joomla(){
 			$uidNumber=$this->uidNumber;
 			
 		
-			if($this->uidNumber==null){
+			if(!is_numeric($this->uidNumber)){
 				$this->uidNumber=$this->LastUidNumber();
 				return $this->uidNumber;
 			}
@@ -2202,12 +2202,6 @@ function joomla(){
 				$this->uidNumber=$this->LastUidNumber();
 				return $this->uidNumber;
 			}
-			$CountUidNumbers=$this->CountUidNumbers();
-			if($CountUidNumbers>1){
-				$this->uidNumber=$this->LastUidNumber();
-				return $this->uidNumber;
-			}
-			
 			return $this->uidNumber;
 			
 	}
