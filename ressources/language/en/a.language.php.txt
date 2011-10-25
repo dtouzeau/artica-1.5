@@ -2632,3 +2632,10 @@ You should use this option very carefully, as any user in this list will be able
 [br]A second process is in charge to parse this directory and send reports by mail.[br]
 If your server is too much overloaded.[br]The directory should be incremented indefinitively.
 [br]In this case, you should enable this option in order to disable generation reports task.</DisableLoadAVGQueue_explain>
+<recategorize_schedule>Re-categorize task</recategorize_schedule>
+<recategorizewww_schedule_text>Define the re-categorize Web statistics task schedule.</recategorizewww_schedule_text>
+<www_recategorize_explain>After updating or modify category databases, you need to recalculate categorized websites in the table history in order to get the correct information and charts.[br]
+For example, if you move a website from shopping to webphone, you need to update all entries in hours/day/month/week tables.[br]
+This operation will consume server performances.[br]This section define the task schedule and tweaks when executed.</www_recategorize_explain>
+<RecategorizeSecondsToWaitOverload>Sleep X seconds if server is overloaded</RecategorizeSecondsToWaitOverload>
+<MaxExecutionTime>MAX execution time</MaxExecutionTime>

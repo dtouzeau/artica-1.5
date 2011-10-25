@@ -723,7 +723,7 @@ Uncheck the box: Around 18Mb memory free.
 <DisableHtAccess>Disable .htaccess</DisableHtAccess>
 <DisableLDAPDatabase>Disable LDAP Database</DisableLDAPDatabase>
 <DisableLoadAVGQueue>Disable overload reports</DisableLoadAVGQueue>
-<DisableLoadAVGQueue_explain>When the system is overloaded, Artica create a temporary report in a dedciated directory.
+<DisableLoadAVGQueue_explain>When the system is overloaded, Artica create a temporary report in a dedicated directory.
 [br]A second process is in charge to parse this directory and send reports by mail.[br]
 If your server is too much overloaded.[br]The directory should be incremented indefinitively.
 [br]In this case, you should enable this option in order to disable generation reports task.</DisableLoadAVGQueue_explain>
@@ -1367,6 +1367,7 @@ Organizations can only create subdomains of these domains if the "Use only offic
 <matchesnot>did not matches</matchesnot>
 <MaxClients>Max clients</MaxClients>
 <maxdumps>MAX DUMPs</maxdumps>
+<MaxExecutionTime>MAX execution time</MaxExecutionTime>
 <MaxKeepAliveRequests>Max KeepAlive requests</MaxKeepAliveRequests>
 <maxpromotedayExplain>max number of day for a promotion, set it 0 if you don't want promotion, set it to 1 or 2 if your disk get overpromoted</maxpromotedayExplain>
 <MaxSpareServers>Max spare Servers</MaxSpareServers>
@@ -1824,6 +1825,9 @@ The path is formatted as a character string consisting of characters from the NV
 <rebuild_groupoffice_text>Erase all datas and rebuild the groupware database and code</rebuild_groupoffice_text>
 <rebuild_groupware_warning>This operation will erase all web site datas, do you want to perform this operation ?</rebuild_groupware_warning>
 <rebuild_items>Rebuild items</rebuild_items>
+<RecategorizeSecondsToWaitOverload>Sleep X seconds if server is overloaded</RecategorizeSecondsToWaitOverload>
+<recategorizewww_schedule_text>Define the re-categorize Web statistics task schedule.</recategorizewww_schedule_text>
+<recategorize_schedule>Re-categorize task</recategorize_schedule>
 <recheck>Checking operation</recheck>
 <RecheckQuotasAll>This will perform a filsystem quota checks on your partitions
 Quotas will be turned off during this process.
@@ -2527,6 +2531,9 @@ The default value of 8 should be sufficient for most purposes</Wthreads_explain>
 <www_maps>All websites helping find streets or objects position in a map, including driving directions, transport maps...</www_maps>
 <www_nature>Websites talking about nature, natural world, and the natural universe.[br]This includes all things animal, plant, and mineral; all natural resources and events (e.g., hurricanes, tornadoes, earthquakes). It also includes the behavior of living organisms, and the processes (e.g., erosion, metamorphism, fossilization) associated with inanimate objects</www_nature>
 <www_reale_state_office>Sites about all types of realestate, bying and selling homes, finding appartments for rent and selling</www_reale_state_office>
+<www_recategorize_explain>After updating or modify category databases, you need to recalculate categorized websites in the table history in order to get the correct information and charts.[br]
+For example, if you move a website from shopping to webphone, you need to update all entries in hours/day/month/week tables.[br]
+This operation will consume server performances.[br]This section define the task schedule and tweaks when executed.</www_recategorize_explain>
 <WWW_RESCAN_VISITED_ASK>This operation will synchronize visited websites in order to categorize them.
 Do you want to perform this operation ?</WWW_RESCAN_VISITED_ASK>
 <www_translators>All sites offer language translations</www_translators>

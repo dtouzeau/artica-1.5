@@ -81,7 +81,7 @@ var x_SaveArticaUpdateForm= function (obj) {
 		XHR.appendData('WgetBindIpAddress',document.getElementById('WgetBindIpAddress').value);
     	XHR.appendData('CheckEveryMinutes',document.getElementById('CheckEveryMinutes').value);
     	XHR.appendData('uri',document.getElementById('uri').value);
-    	document.getElementById('ArticaUpdateForm').innerHTML='<center><img src=\"img/wait_verybig.gif\"></center>';
+    	AnimateDiv('ArticaUpdateForm');
     	XHR.sendAndLoad('$page', 'GET',x_SaveArticaUpdateForm);
 		}
 	

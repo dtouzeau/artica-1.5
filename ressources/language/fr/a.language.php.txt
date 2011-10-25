@@ -1137,6 +1137,7 @@ Les organisations ne pourront que cr&eacute;er des sous-domaines de ces domaines
 <matchesnot>Ne correspond pas</matchesnot>
 <MaxClients>Clients connect&eacute;s simultan&eacute;ment MAX</MaxClients>
 <maxdumps>Extractions MAX</maxdumps>
+<MaxExecutionTime>Temps maximal d'ex&eacute;cution.</MaxExecutionTime>
 <MaxKeepAliveRequests>Requ&ecirc;tes maintenues MAX</MaxKeepAliveRequests>
 <maxpromotedayExplain>nombre maximum de jours pour une promotion, indiquez 0 si vous ne d&eacute;sirez pas de promotion, 1 ou 2 si votre disque est en d&eacute;passement de promotion.</maxpromotedayExplain>
 <MaxSpareServers>Nombre maximal de processus en m&eacute;moire</MaxSpareServers>
@@ -1538,6 +1539,9 @@ Attention, vous devrez au pr&eacute;alable indiquer les clefs autoris&eacute;es 
 <rebuild_groupware_warning>Cette op&eacute;ration va d&eacute;truire toutes les donn&eacute;es du site web d&eacute;j&agrave; enregistr&eacute;es.
 Voulez-vous effectuer cette op&eacute;ration ?</rebuild_groupware_warning>
 <rebuild_items>Reconstruire les &eacute;l&eacute;ments</rebuild_items>
+<RecategorizeSecondsToWaitOverload>Geler pendant X secondes si le serveur est surcharg&eacute;</RecategorizeSecondsToWaitOverload>
+<recategorizewww_schedule_text>Indiquez la p&eacute;riode de re-cat&eacute;gorisation des statistiques Web</recategorizewww_schedule_text>
+<recategorize_schedule>T&acirc;che de re-cat&eacute;gorization</recategorize_schedule>
 <recheck>Op&eacute;ration de v&eacute;rification</recheck>
 <RecheckQuotasAll>Cette op&eacute;ration va effectuer une v&eacute;rification des quotas dans vos partitions.
 Les quotas seront momentan&eacute;ment arr&ecirc;t&eacute;s pendant cette op&eacute;ration.
@@ -2136,6 +2140,8 @@ La valeur par d&eacute;faut de 8 threads est suffisante pour l'ensemble des beso
 <www_maps>Sites permettant de trouver des adresses sur une carte, la position d'un objet. Incluant aussi les sites de cartographies et d'itin&eacute;raires routiers</www_maps>
 <www_nature>Sites Internet sur la nature, le monde naturel et la nature universelle.[br]Incluant toutes les choses animales, plantes et min&eacute;raux.[br]Aussi les ressources naturelles et &eacute;v&egrave;nements naturels (ouragans, tornades..), la vie et cycles des organismes...</www_nature>
 <www_reale_state_office>Site d'achats et vente de immobilier, trouver des appartements &agrave; louer et &agrave; vendre</www_reale_state_office>
+<www_recategorize_explain>Apr&egrave;s la mise &agrave; jour des bases de cat&eacute;gories ou leurs modifications, il est n&eacute;cessaire de re-calculer les sites web cat&eacute;goris&eacute;s afin de disposer d'informations r&eacute;elles dans les graphiques et statistiques.[br]Par exemple , si vous d&eacute;placez un site web de la cat&eacute;gorie shopping vers la cat&eacute;gorie webphone, vous avez besoin de mettre &agrave; jour toutes les tables heure/jour/semaine/mois.[br]
+Cette op&eacute;ration de re-cat&eacute;gorisation peut consommer de la ressource machine.[br]Indiquez la p&eacute;riode d'ex&eacute;cution et les param&egrave;tres de performance.</www_recategorize_explain>
 <WWW_RESCAN_VISITED_ASK>Cette op&eacute;ration va re-synchroniser les liste des sites web visit&eacute;s afin de les cat&eacute;goriser.
 Voulez-vous effectuer cette op&eacute;ration ?</WWW_RESCAN_VISITED_ASK>
 <www_translators>Sites web offrant des services de traductions linguistiques</www_translators>

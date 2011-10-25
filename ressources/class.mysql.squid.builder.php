@@ -583,7 +583,7 @@ class mysql_squid_builder{
 		if(trim($sitename)==null){return;}
 		$sitename=strtolower(trim($sitename));
 		if(preg_match("#^www\.(.+)#", $sitename,$re)){$sitename=$re[1];}
-		
+		$cattmp=array();
 		if(!$nocache){
 			$sql="SELECT category FROM visited_sites WHERE sitename='$sitename'";
 			$ligne=mysql_fetch_array($this->QUERY_SQL($sql));
@@ -598,9 +598,14 @@ class mysql_squid_builder{
 			
 			if($ligne["category"]<>null){
 				if($GLOBALS["VERBOSE"]){echo "Found {$ligne["category"]} FOR \"$sitename\n";}
-				$cat[]=$ligne["category"];
+				$cattmp[$ligne["category"]]=$ligne["category"];
 			}
 		}
+		
+		while (list ($a, $b) = each ($cattmp) ){
+			$cat[]=$b;
+		}
+		
 		
 		if(count($cat)>0){
 			$sitename=addslashes($sitename);

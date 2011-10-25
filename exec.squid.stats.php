@@ -7,7 +7,9 @@ include_once(dirname(__FILE__).'/ressources/class.mysql.inc');
 include_once(dirname(__FILE__).'/framework/class.unix.inc');
 include_once(dirname(__FILE__).'/ressources/class.squid.inc');
 include_once(dirname(__FILE__).'/ressources/class.artica.graphs.inc');
+include_once(dirname(__FILE__).'/ressources/class.os.system.inc');
 include_once(dirname(__FILE__)."/framework/frame.class.inc");
+
 $GLOBALS["OLD"]=false;
 $GLOBALS["FORCE"]=false;
 $GLOBALS["Q"]=new mysql_squid_builder();
@@ -48,6 +50,8 @@ if($argv[1]=='--members-month-kill'){members_month_delete();exit;}
 if($argv[1]=='--fix-tables'){$GLOBALS["Q"]->FixTables();exit;}
 if($argv[1]=='--visited-sites'){visited_sites();exit;}
 if($argv[1]=='--sync-categories'){sync_categories();exit;}
+if($argv[1]=='--re-categorize'){re_categorize();exit;}
+if($argv[1]=='--re-re-categorize'){__re_categorize_subtables();exit;}
 if($argv[1]=='--export-last-websites'){export_last_websites();exit;}
 
 //visited_sites
@@ -66,7 +70,7 @@ function sync_categories(){
 	$oldpid=@file_get_contents($pidfile);
 	if($oldpid<100){$oldpid=null;}
 	$unix=new unix();
-	if($unix->process_exists($oldpid)){if($GLOBALS["VERBOSE"]){echo "Already executed pid $oldpid\n";}die();}
+	if($unix->process_exists($oldpid,basename(__FILE__))){if($GLOBALS["VERBOSE"]){echo "Already executed pid $oldpid\n";}die();}
 	$mypid=getmypid();
 	@file_put_contents($pidfile,$mypid);	
 	
@@ -123,6 +127,108 @@ function sync_categories(){
 }
 
 
+function re_categorize(){
+	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
+	$oldpid=@file_get_contents($pidfile);
+	if($oldpid<100){$oldpid=null;}
+	$unix=new unix();
+	if($unix->process_exists($oldpid,basename(__FILE__))){if($GLOBALS["VERBOSE"]){echo "Already executed pid $oldpid\n";}die();}
+	
+	if(systemMaxOverloaded()){writelogs_squid("Fatal: VERY Overloaded system, die();",__FUNCTION__,__FILE__,__LINE__,"stats");return;	}		
+	
+	$mypid=getmypid();
+	@file_put_contents($pidfile,$mypid);	
+	$sock=new sockets();
+	$RecategorizeSecondsToWaitOverload=$sock->GET_INFO("RecategorizeSecondsToWaitOverload");
+	$RecategorizeMaxExecutionTime=$sock->GET_INFO("RecategorizeSecondsToWaitOverload");
+	$RecategorizeProxyStats=$sock->GET_INFO("RecategorizeProxyStats");
+	if(!is_numeric($RecategorizeProxyStats)){$RecategorizeProxyStats=1;}	
+	if(!is_numeric($RecategorizeSecondsToWaitOverload)){$RecategorizeSecondsToWaitOverload=30;}
+	if(!is_numeric($RecategorizeMaxExecutionTime)){$RecategorizeMaxExecutionTime=210;}
+	if($RecategorizeProxyStats==0){return;}	
+	$t=time();
+	$sql="SELECT * FROM visited_sites";
+	$results=$GLOBALS["Q"]->QUERY_SQL($sql);
+	$num_rows = mysql_num_rows($results);
+	
+	$c=0;
+	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+		$website=trim($ligne["sitename"]);
+		if($website==null){continue;}
+		$category=trim($GLOBALS["Q"]->GET_CATEGORIES($website,true));
+		$GLOBALS["Q"]->QUERY_SQL("UPDATE visited_sites SET category='$category' WHERE sitename='$website'");
+		if(!$GLOBALS["Q"]->ok){writelogs_squid("Fatal: mysql error {$GLOBALS["Q"]->mysql_error}",__FUNCTION__,__FILE__,__LINE__,"stats");return;}	
+		$c++;
+		if($c>5000){
+			$distanceInSeconds = round(abs(time() - $t));
+	    	$distanceInMinutes = round($distanceInSeconds / 60);
+	    	if($distanceInMinutes>$RecategorizeMaxExecutionTime){
+	    		$took=$unix->distanceOfTimeInWords($t,time());
+	    		writelogs_squid("Re-categorized websites task aborted (Max execution time {$RecategorizeMaxExecutionTime}Mn) ($took)",__FUNCTION__,__FILE__,__LINE__,"stats");
+	    		return;
+	    	}
+	    	$c=0;
+		}
+		
+		
+		
+	}
+	$took=$unix->distanceOfTimeInWords($t,time());
+	writelogs_squid("$num_rows re-categorized  websites in main table  ($took)",__FUNCTION__,__FILE__,__LINE__,"stats");
+	__re_categorize_subtables($t);
+	
+}
+
+function __re_categorize_subtables($oldT1=0){
+	$unix=new unix();
+	if(systemMaxOverloaded()){writelogs_squid("Fatal: VERY Overloaded system, die();",__FUNCTION__,__FILE__,__LINE__,"stats");return;	}	
+	$sock=new sockets();
+	$RecategorizeSecondsToWaitOverload=$sock->GET_INFO("RecategorizeSecondsToWaitOverload");
+	$RecategorizeMaxExecutionTime=$sock->GET_INFO("RecategorizeSecondsToWaitOverload");
+	if(!is_numeric($RecategorizeSecondsToWaitOverload)){$RecategorizeSecondsToWaitOverload=30;}
+	if(!is_numeric($RecategorizeMaxExecutionTime)){$RecategorizeMaxExecutionTime=210;}
+	if($oldT1>1){$t=$oldT1;}else{$t=time();}
+	
+	
+	$tables_days=$GLOBALS["Q"]->LIST_TABLES_DAYS();
+	$tables_hours=$GLOBALS["Q"]->LIST_TABLES_HOURS();
+	$sql="SELECT * FROM visited_sites";	
+	$results=$GLOBALS["Q"]->QUERY_SQL($sql);
+	$num_rows = mysql_num_rows($results);	
+	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
+		$website=trim($ligne["sitename"]);
+		$category=trim($ligne["category"]);
+		if($website==null){continue;}
+		if($category==null){continue;}
+		reset($tables_days);
+		reset($tables_hours);
+		while (list ($num, $tablename) = each ($tables_days) ){
+			$category=addslashes($category);
+			$GLOBALS["Q"]->QUERY_SQL("UPDATE $tablename SET category='$category' WHERE sitename='$website'");
+			if(!$GLOBALS["Q"]->ok){writelogs_squid("Fatal: mysql error on table $tablename {$GLOBALS["Q"]->mysql_error}",__FUNCTION__,__FILE__,__LINE__,"stats");return;}
+		}
+		
+		while (list ($num, $tablename) = each ($tables_hours) ){
+			$category=addslashes($category);
+			$GLOBALS["Q"]->QUERY_SQL("UPDATE $tablename SET category='$category' WHERE sitename='$website'");
+			if(!$GLOBALS["Q"]->ok){writelogs_squid("Fatal: mysql error on table $tablename {$GLOBALS["Q"]->mysql_error}",__FUNCTION__,__FILE__,__LINE__,"stats");return;}
+		}
+
+		if(system_is_overloaded(__FILE__)){writelogs_squid("Fatal: Overloaded system, sleeping $RecategorizeSecondsToWaitOverload secondes...",__FUNCTION__,__FILE__,__LINE__,"stats");sleep($RecategorizeSecondsToWaitOverload);}
+		if(systemMaxOverloaded()){writelogs_squid("Fatal: VERY Overloaded system, die();",__FUNCTION__,__FILE__,__LINE__,"stats");return;	}
+		
+		$distanceInSeconds = round(abs(time() - $t));
+	    $distanceInMinutes = round($distanceInSeconds / 60);
+	    if($distanceInMinutes>$RecategorizeMaxExecutionTime){$took=$unix->distanceOfTimeInWords($t,time());writelogs_squid("Re-categorized websites task aborted (Max execution time {$RecategorizeMaxExecutionTime}Mn) ($took)",__FUNCTION__,__FILE__,__LINE__,"stats");return;}		
+		
+	}
+	
+	$took=$unix->distanceOfTimeInWords($t,time());
+	writelogs_squid("$num_rows re-categorized  websites updated in ". count($tables_days). " day tables, ". count($tables_hours). " hours tables, ($took)",__FUNCTION__,__FILE__,__LINE__,"stats");
+
+}
+
+
 function scan_hours(){
 	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".". __FUNCTION__.".pid";
 	$oldpid=@file_get_contents($pidfile);
@@ -131,6 +237,8 @@ function scan_hours(){
 	$mypid=getmypid();
 	@file_put_contents($pidfile,$mypid);
 	$GLOBALS["Q"]->FixTables();
+	$php5=$unix->LOCATE_PHP5_BIN();
+	shell_exec("$php5 /usr/share/artica-postfix/exec.fcron.php --squid-recategorize-task &");
 	table_days();
 	clients_hours(true);
 	members_hours(true);

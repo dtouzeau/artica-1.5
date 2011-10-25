@@ -14,6 +14,7 @@ if($argv[1]=="--postmaster-cron"){postmaster_cron();die();}
 if($argv[1]=="--artica-schedule"){artica_schedule();die();}
 if($argv[1]=="--artica-reboot-schedule"){artica_reboot_schedule();die();}
 if($argv[1]=="--reboot-task"){artica_reboot_task();die();}
+if($argv[1]=="--squid-recategorize-task"){squid_recategorize_task();die();}
 
 function artica_reboot_schedule(){
 		$targetfile="/etc/cron.d/RebootScheduler";
@@ -40,6 +41,32 @@ function artica_reboot_schedule(){
 		$chmod=$unix->find_program("chmod");
 		shell_exec("$chmod 640 $targetfile");
 		unset($f);	
+}
+
+function squid_recategorize_task(){
+	$sock=new sockets();
+	$unix=new unix();	
+	$targetfile="/etc/cron.d/SquidStatsRecategorizeScheduler";
+	@unlink($targetfile);
+	$RecategorizeProxyStats=$sock->GET_INFO("RecategorizeProxyStats");
+	$RecategorizeCronTask=$sock->GET_INFO("RecategorizeCronTask");
+	if(!is_numeric($RecategorizeProxyStats)){$RecategorizeProxyStats=1;}
+	if($GLOBALS["VERBOSE"]){echo "RecategorizeCronTask = $RecategorizeCronTask -> $RecategorizeProxyStats\n";}
+	if($RecategorizeProxyStats==0){return;}	
+	if($RecategorizeCronTask==null){$RecategorizeCronTask="0 5 * * *";}	
+	$php5=$unix->LOCATE_PHP5_BIN();
+ 	$f[]="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/X11R6/bin:/usr/share/artica-postfix/bin";
+	$f[]="MAILTO=\"\"";
+	$f[]="$RecategorizeCronTask  root $php5 /usr/share/artica-postfix/exec.squid.stats.php --re-categorize >/dev/null 2>&1";
+	$f[]="";	
+	if($GLOBALS["VERBOSE"]){echo " -> $targetfile\n";}
+	@file_put_contents($targetfile,implode("\n",$f));
+	if(!is_file($targetfile)){if($GLOBALS["VERBOSE"]){echo " -> $targetfile No such file\n";}}
+	$chmod=$unix->find_program("chmod");
+	shell_exec("$chmod 640 $targetfile");
+	unset($f);		
+	
+	
 }
 
 function artica_reboot_task(){

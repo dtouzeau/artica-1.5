@@ -27,6 +27,7 @@ if(isset($_GET["ufdbguard-compile-alldatabases"])){ufdbguard_compile_all_databas
 if(isset($_GET["caches-types"])){caches_type();exit;}
 if(isset($_GET["full-version"])){root_squid_version();exit;}
 if(isset($_GET["full-dans-version"])){root_dansg_version();exit;}
+if(isset($_GET["recategorize-task"])){recategorize_task();exit;}
 
 
 
@@ -85,6 +86,15 @@ function community_reprocess_category(){
 	shell_exec($cmd);
 	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);
 }
+function recategorize_task(){
+	$unix=new unix();
+	$nohup=$unix->find_program("nohup");
+	$php5=$unix->LOCATE_PHP5_BIN();
+	$cmd=trim("$nohup $php5 /usr/share/artica-postfix/exec.fcron.php --squid-recategorize-task >/dev/null 2>&1 &");
+	shell_exec($cmd);
+	writelogs_framework("$cmd",__FUNCTION__,__FILE__,__LINE__);	
+}
+
 function export_web_categories(){
 	$unix=new unix();
 	$nohup=$unix->find_program("nohup");

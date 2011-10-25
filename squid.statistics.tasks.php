@@ -8,6 +8,10 @@
 	if(isset($_GET["tasks"])){tasks();exit;}
 	if(isset($_GET["events"])){events_popup();exit;}
 	if(isset($_GET["events-list"])){events_list();exit;}
+	
+	if(isset($_GET["re-categorize-js"])){re_categorize_js();exit;}
+	if(isset($_GET["re-categorize-popup"])){re_categorize_popup();exit;}
+	if(isset($_POST["RecategorizeProxyStats"])){re_categorize_save();exit;}
 	tabs();
 	
 	
@@ -36,8 +40,113 @@ function tabs(){
 }	
 
 function tasks(){
+	$page=CurrentPageName();
+	$tpl=new templates();		
+	$GLOBALS["ICON_FAMILY"]="STATISTICS";
+	$schedule_recategorize=Paragraphe("64-categories-task.png", "{recategorize_schedule}", "{recategorizewww_schedule_text}","javascript:Loadjs('$page?re-categorize-js=yes')");
 	
+	$tr[]=$schedule_recategorize;
 	
+	echo $tpl->_ENGINE_parse_body("<table><tbody>".CompileTr2($tr)."</tbody></table>");
+	
+}
+
+function re_categorize_js(){
+	$tpl=new templates();
+	$page=CurrentPageName();
+	$title=$tpl->_ENGINE_parse_body("{recategorize_schedule}");
+	$html="YahooWin2('650','$page?re-categorize-popup=yes','$title');";
+	echo $html;
+	}
+function re_categorize_popup(){
+	$tpl=new templates();
+	$page=CurrentPageName();	
+	$sock=new sockets();
+	$RecategorizeProxyStats=$sock->GET_INFO("RecategorizeProxyStats");
+	$RecategorizeSecondsToWaitOverload=$sock->GET_INFO("RecategorizeSecondsToWaitOverload");
+	$RecategorizeMaxExecutionTime=$sock->GET_INFO("RecategorizeSecondsToWaitOverload");
+	if(!is_numeric($RecategorizeSecondsToWaitOverload)){$RecategorizeSecondsToWaitOverload=30;}
+	if(!is_numeric($RecategorizeMaxExecutionTime)){$RecategorizeMaxExecutionTime=210;}
+	if(!is_numeric($RecategorizeProxyStats)){$RecategorizeProxyStats=1;}		
+	$RecategorizeCronTask=$sock->GET_INFO("RecategorizeCronTask");
+	if($RecategorizeCronTask==null){$RecategorizeCronTask="0 5 * * *";}
+	
+	$js="Loadjs('cron.php?field=RecategorizeCronTask')";
+	
+	$html="<div class=explain style='font-size:14px' id='www_recategorize_explain'>{www_recategorize_explain}</div>
+	<input type='hidden' id='RecategorizeCronTask' value='$RecategorizeCronTask'>
+	<table style='width:100%' class=form>
+	<tbody>
+	<tr>
+		<td class=legend style='font-size:14px'>{enable}:</td>
+		<td>". Field_checkbox("RecategorizeProxyStats", 1,$RecategorizeProxyStats,"RecategorizeProxyStatsCheck()")."</td>
+	</tr>	
+	<tr>
+		<td class=legend style='font-size:14px'>{schedule}:</td>
+		<td>". texttooltip("{schedule}","{edit}:{schedule}",$js,null,0,"font-size:14px;font-weight:bold;text-decoration:underline")."</td>
+	</tr>
+	<tr>
+		<td class=legend style='font-size:14px'>{RecategorizeSecondsToWaitOverload}:</td>
+		<td style='font-size:14px'>". Field_text("RecategorizeSecondsToWaitOverload",$RecategorizeSecondsToWaitOverload,"font-size:14px;width:90px")."&nbsp;{seconds}</td>
+	</tr>	
+	<tr>
+		<td class=legend style='font-size:14px'>{MaxExecutionTime}:</td>
+		<td style='font-size:14px'>". Field_text("RecategorizeMaxExecutionTime",$RecategorizeMaxExecutionTime,"font-size:14px;width:90px")."&nbsp;{minutes}</td>
+	</tr>		
+	<tr>
+	<td colspan=2 align=right'><hr>". button("{apply}", "SaveRecategoProxy()")."</td>
+	</tr>
+	
+	</tbody>
+	</table>
+	
+	<script>
+		function SaveRecategorizeSchedule(value){
+			document.getElementById('RecategorizeCronTask').value=value;
+		}
+		
+	var x_SaveRecategoProxy= function (obj) {
+			var results=obj.responseText;
+			if(results.length>0){alert(results);}
+			YahooWin2Hide();
+			}			
+		
+		function RecategorizeProxyStatsCheck(){
+			document.getElementById('RecategorizeCronTask').disabled=true;
+			document.getElementById('RecategorizeSecondsToWaitOverload').disabled=true;
+			document.getElementById('RecategorizeMaxExecutionTime').disabled=true;
+			if(document.getElementById('RecategorizeProxyStats').checked){
+				document.getElementById('RecategorizeCronTask').disabled=false;
+				document.getElementById('RecategorizeSecondsToWaitOverload').disabled=false;
+				document.getElementById('RecategorizeMaxExecutionTime').disabled=false;			
+			}
+		}
+		
+		function SaveRecategoProxy(){
+			var XHR = new XHRConnection();
+			if(document.getElementById('RecategorizeProxyStats').checked){XHR.appendData('RecategorizeProxyStats','1');}else{XHR.appendData('RecategorizeProxyStats','0');}
+			XHR.appendData('RecategorizeCronTask',document.getElementById('RecategorizeCronTask').value);
+			XHR.appendData('RecategorizeSecondsToWaitOverload',document.getElementById('RecategorizeSecondsToWaitOverload').value);
+			XHR.appendData('RecategorizeMaxExecutionTime',document.getElementById('RecategorizeMaxExecutionTime').value);
+			AnimateDiv('www_recategorize_explain');
+			XHR.sendAndLoad('$page', 'POST',x_SaveRecategoProxy);
+		}
+		
+		
+		RecategorizeProxyStatsCheck();
+	</script>
+	
+	";
+	echo $tpl->_ENGINE_parse_body($html);
+}
+
+function re_categorize_save(){
+	$sock=new sockets();
+	$sock->SET_INFO("RecategorizeProxyStats", $_POST["RecategorizeProxyStats"]);
+	$sock->SET_INFO("RecategorizeCronTask", $_POST["RecategorizeCronTask"]);
+	$sock->SET_INFO("RecategorizeSecondsToWaitOverload", $_POST["RecategorizeSecondsToWaitOverload"]);
+	$sock->SET_INFO("RecategorizeMaxExecutionTime", $_POST["RecategorizeMaxExecutionTime"]);
+	$sock->getFrameWork("squid.php?recategorize-task=yes");
 	
 }
 

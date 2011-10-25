@@ -234,8 +234,10 @@ function events_class($text){
 
 function system_is_overloaded($file=null){
 	$d=new debuglogs();
-	
+	if(strpos($file, '/')>0){$file=basename($file);}
 	$notlog["exec.squid.blacklists.php"]=true;
+	$notlog["exec.squid.stats.php"]=true;
+	
 	if(!isset($notlog[$file])){$notlog[$file]=false;}
 	
 	if(!isset($GLOBALS["CPU_NUMBER"])){

@@ -549,7 +549,7 @@ function main_tabs(){
 	
 	
 	return "
-	<div id=main_config_articaproc style='width:100%;height:650px;overflow:auto'>
+	<div id=main_config_articaproc style='width:100%;height:660px;overflow:auto'>
 		<ul>". implode("\n",$html)."</ul>
 	</div>
 		<script>
