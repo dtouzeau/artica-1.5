@@ -25,6 +25,8 @@ if(isset($_GET["export-deleted-categories"])){export_deleted_categories();exit()
 if(isset($_GET["ufdbguard-compile-database"])){ufdbguard_compile_database();exit();}
 if(isset($_GET["ufdbguard-compile-alldatabases"])){ufdbguard_compile_all_databases();exit();}
 if(isset($_GET["caches-types"])){caches_type();exit;}
+if(isset($_GET["full-version"])){root_squid_version();exit;}
+if(isset($_GET["full-dans-version"])){root_dansg_version();exit;}
 
 
 
@@ -49,10 +51,30 @@ function access_logs(){
 	exec($cmd,$results);
 	writelogs_framework($cmd ." ". count($results)." rows",__FUNCTION__,__FILE__,__LINE__);
 	echo "<articadatascgi>". base64_encode(serialize($results))."</articadatascgi>";	
+}
+function root_squid_version(){
+		$unix=new unix();
+		$squidbin=$unix->find_program("squid");
+		if($squidbin==null){$squidbin=$unix->find_program("squid3");}
+		exec("$squidbin -v 2>&1",$results);
+		while (list ($num, $val) = each ($results)){
+			if(preg_match("#Squid Cache: Version.*?([0-9\.\-a-z]+)#", $val,$re)){
+				echo "<articadatascgi>". trim($re[1])."</articadatascgi>";	
+			}
+		}
+		
+	}
 	
-	
-	
-	
+function root_dansg_version(){
+		$unix=new unix();
+		$bin=$unix->find_program("dansguardian");
+		if(!is_file($bin)){echo "<articadatascgi>0.0.0.0</articadatascgi>";return;}
+		exec("$bin -v 2>&1",$results);	
+		while (list ($num, $val) = each ($results)){
+			if(preg_match("#^DansGuardian\s+([0-9\.\-a-z]+)#", $val,$re)){
+				echo "<articadatascgi>". trim($re[1])."</articadatascgi>";	
+			}
+		}	
 }
 
 function community_reprocess_category(){

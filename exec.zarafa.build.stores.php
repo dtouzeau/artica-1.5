@@ -202,9 +202,21 @@ function emergency_user($uid){
 
 
 function export_hash(){
+	
+	
+	
 	$unix=new unix();
+	$time=$unix->file_time_min("/etc/artica-postfix/zarafa-export.db");
+	
+	if($time<240){$unix->events(basename(__FILE__).": /etc/artica-postfix/zarafa-export.db $time Minutes < 240 aborting...");return;}
+	
+	
+	
 	$pidfile="/etc/artica-postfix/cron.2/".basename(__FILE__).".".__FUNCTION__.".pid";
-	if($unix->process_exists(@file_get_contents($pidfile))){return;}
+	if($unix->process_exists(@file_get_contents($pidfile,basename(__FILE__)))){
+		$unix->events(basename(__FILE__).":Already executed, aborting");
+		return;
+	}
 	@file_get_contents($pidfile,getmypid());
 	
 	
@@ -232,6 +244,7 @@ function export_hash(){
 		
 	}
 	
+	@unlink("/etc/artica-postfix/zarafa-export.db");
 	@file_put_contents("/etc/artica-postfix/zarafa-export.db",base64_encode(serialize($companies)));
 	
 	

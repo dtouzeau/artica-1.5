@@ -2182,6 +2182,7 @@ This allows connections to be reused for other deliveries, and can improve mail 
 <smtp_sasl_security_options_nodictionary>Disallow methods subject to passive (dictionary) attack</smtp_sasl_security_options_nodictionary>
 <smtp_sasl_security_options_noplaintext>Disallow methods that use plaintext passwords</smtp_sasl_security_options_noplaintext>
 <smtp_sasl_security_options_text>SASL security options</smtp_sasl_security_options_text>
+<softwares_update>Softwares update</softwares_update>
 <source_address>Source address</source_address>
 <SpamassassinMaxRCPTScore_text>Define the score when the content filter detect the maximal recipients number.After reach the score message will be quarantined or rejected.</SpamassassinMaxRCPTScore_text>
 <spamassassin_pkugins_explain>Here it is plugins you can add into the content filter.[br]These plugins help to increase the detection rate but increase the CPU time and DNS checking.</spamassassin_pkugins_explain>

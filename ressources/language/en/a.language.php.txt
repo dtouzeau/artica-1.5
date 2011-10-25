@@ -2625,3 +2625,4 @@ You should use this option very carefully, as any user in this list will be able
 <max_objects_size>Max objects size</max_objects_size>
 <disable_squidguard_dansguardian_enabled>squidGuard/UfdbGuard will be disabled Dansguardian perform same features</disable_ufdbguardd_dansguardian_enabled>
 <www_nature>Websites talking about nature, natural world, and the natural universe.[br]This includes all things animal, plant, and mineral; all natural resources and events (e.g., hurricanes, tornadoes, earthquakes). It also includes the behavior of living organisms, and the processes (e.g., erosion, metamorphism, fossilization) associated with inanimate objects</www_nature>
+<softwares_update>Softwares update</softwares_update>

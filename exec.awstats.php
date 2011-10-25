@@ -171,7 +171,7 @@ function awstats_mail(){
 	
 	$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
 	$oldpid=@file_get_contents($pidfile);
-	if($unix->process_exists($oldpid)){
+	if($unix->process_exists($oldpid,basename(__FILE__))){
 		echo "$oldpid is already in memory\n";
 		return;
 	}

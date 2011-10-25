@@ -15,10 +15,14 @@ include_once(dirname(__FILE__).'/framework/frame.class.inc');
 include_once(dirname(__FILE__).'/ressources/class.mysql.inc');
 $GLOBALS["RELOAD"]=false;
 $GLOBALS["VERBOSE"]=false;
+$GLOBALS["NO_USE_BIN"]=false;
 
 if(!is_file("/usr/share/artica-postfix/ressources/settings.inc")){shell_exec("/usr/share/artica-postfix/bin/process1 --force --verbose");}
 if(preg_match("#--verbose#",implode(" ",$argv))){$GLOBALS["VERBOSE"]=true;}
 if(preg_match("#--reload#",implode(" ",$argv))){$GLOBALS["RELOAD"]=true;}
+if(preg_match("#--withoutloading#",implode(" ",$argv))){$GLOBALS["NO_USE_BIN"]=true;}
+
+
 if($GLOBALS["VERBOSE"]){ini_set('display_errors', 1);	ini_set('html_errors',0);ini_set('display_errors', 1);ini_set('error_reporting', E_ALL);}
 if($GLOBALS["VERBOSE"]){echo " commands= ".implode(" ",$argv)."\n";}
 
@@ -87,17 +91,14 @@ if($argv[1]=="--reconfigure"){
 if($argv[1]=="--build"){
 		$EXEC_PID_FILE="/etc/artica-postfix/".basename(__FILE__).".build.pid";
 		$unix=new unix();
-		if($unix->process_exists(@file_get_contents($EXEC_PID_FILE))){
-			print "Starting......: Checking squid Already executed pid ". @file_get_contents($EXEC_PID_FILE)."...\n";
-			die();
-		}
-	$childpid=posix_getpid();
-	$sock=new sockets();
-	@file_put_contents($EXEC_PID_FILE,$childpid);
-	if(is_file("/etc/squid3/mime.conf")){shell_exec("/bin/chown squid:squid /etc/squid3/mime.conf");}
-	$EnableKerbAuth=$sock->GET_INFO("EnableKerbAuth");
-	if(!is_numeric("$EnableKerbAuth")){$EnableKerbAuth=0;}	
-	echo "Starting......: Checking squid kerberos authentification is set to $EnableKerbAuth\n";
+		if($unix->process_exists(@file_get_contents($EXEC_PID_FILE))){print "Starting......: Checking squid Already executed pid ". @file_get_contents($EXEC_PID_FILE)."...\n";die();}
+		$childpid=posix_getpid();
+		$sock=new sockets();
+		@file_put_contents($EXEC_PID_FILE,$childpid);
+		if(is_file("/etc/squid3/mime.conf")){shell_exec("/bin/chown squid:squid /etc/squid3/mime.conf");}
+		$EnableKerbAuth=$sock->GET_INFO("EnableKerbAuth");
+		if(!is_numeric("$EnableKerbAuth")){$EnableKerbAuth=0;}	
+		echo "Starting......: Checking squid kerberos authentification is set to $EnableKerbAuth\n";
 	
 	echo "Starting......: Checking squid certificate\n";
 	certificate_generate();
@@ -149,6 +150,8 @@ function CheckFilesAndSecurity(){
 	}
 	
 	shell_exec("$chown -R $squid_user /etc/squid3/* >/dev/null 2>&1");
+	if(!is_dir("/var/run/squid")){@mkdir("/var/run/squid",755,true);}
+	shell_exec("$chown $squid_user /var/run/squid >/dev/null 2>&1");	
 	if(is_dir("/usr/share/squid-langpack")){shell_exec("$chown -R $squid_user /usr/share/squid-langpack");}
 	if(!is_file("/var/log/squid/squidGuard.log")){@file_put_contents("/var/log/squid/squidGuard.log","#");}
 	@mkdir("/var/log/squid/squid",755,true);
@@ -189,6 +192,7 @@ function locate_ssl_crtd(){
 
 
 function Reload_Squid(){
+	if($GLOBALS["NO_USE_BIN"]){return;}
 	echo "Starting......: Reloading Squid\n";
 	exec("{$GLOBALS["SQUIDBIN"]} -k reconfigure 2>&1",$results);
 	while (list ($num, $val) = each ($results)){

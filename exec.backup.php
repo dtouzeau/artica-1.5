@@ -563,27 +563,34 @@ function CleanContainers($ID,$mount_path_final){
 	$unix=new unix();
 	$ExecBackupMaxContainers=$sock->GET_INFO("ExecBackupMaxContainers");
 	if(!is_numeric($ExecBackupMaxContainers)){$ExecBackupMaxContainers=6;}
+	events("ExecBackupMaxContainers: $ExecBackupMaxContainers",__LINE__);
 	backup_events($ID,"CLEANING","INFO,$ExecBackupMaxContainers Max containers",__LINE__);
 	if($ExecBackupMaxContainers==0){backup_events($ID,"initialization","CLEANING, cleaning containers stopped....");return;}
 	
 	$q=new mysql();
 	$ligne=mysql_fetch_array($q->QUERY_SQL("SELECT COUNT(ID) as tcount FROM backup_storages WHERE taskid=$ID","artica_backup"));
-	if(!$q->ok){backup_events($ID,"CLEANING","ERROR, mysql $q->mysql_error",__LINE__);return;}	
+	if(!$q->ok){
+		writelogs("$q->mysql_error",__FUNCTION__,__LINE__);
+		backup_events($ID,"CLEANING","ERROR, mysql $q->mysql_error",__LINE__);
+		return;
+	}	
 	
 	backup_events($ID,"CLEANING","INFO, {$ligne["tcount"]} Containers....",__LINE__);
+	events("{$ligne["tcount"]} Containers....",__LINE__);
 	if($ligne["tcount"]<$ExecBackupMaxContainers){backup_events($ID,"initialization","CLEANING, cleaning containers stopped....",__LINE__);return;}
 	
 	$sql="SELECT * FROM backup_storages WHERE taskid=$ID ORDER BY zDate DESC";
-	
+	events("$sql",__LINE__);
 	$results=$q->QUERY_SQL($sql,"artica_backup");	
 	if(!$q->ok){backup_events($ID,"CLEANING","ERROR, mysql $q->mysql_error",__LINE__);return;}
 	
 	if(preg_match("#backup\.([0-9\-]+)\/(.+?)$#", $mount_path_final,$re)){$mount_path_final=str_replace("backup.{$re[1]}/{$re[2]}", "", $mount_path_final);}
 	backup_events($ID,"CLEANING","INFO, Clean containers in $mount_path_final",__LINE__);
-	
+	events("Clean containers in $mount_path_final",__LINE__);
 	
 	$unix=new unix();
 	$rm=$unix->find_program("rm");
+	events("rm = $rm",__LINE__);
 	
 	$c=0;
 	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
@@ -1370,7 +1377,7 @@ function backup_mkdir($path){
 			return;
 		}
 		
-		writelogs($cmd,__FUNCTION__,__FILE__,__LINE__);
+		events($cmd,__LINE__);
 		system($cmd);
 		shell_exec("/bin/rm -rf /tmp/artica-temp/*");
 		chdir("/root");
@@ -1385,6 +1392,7 @@ function backup_mkdir($path){
 
 
 function backup_events($task_id,$source_type,$text,$line){
+	events("[TASK $task_id]: $text",$line);
 	if(!isset($line)){$line="not defined";}
 	$text=addslashes($text);
 	$date=date('Y-m-d H:i:s');

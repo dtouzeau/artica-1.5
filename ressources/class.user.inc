@@ -2217,9 +2217,13 @@ function joomla(){
 		$sock=new sockets();
 		$LastUidNumber=trim($sock->GET_INFO("LastUidNumber",true));
 		if(is_numeric($LastUidNumber)){
+			if($GLOBALS["VERBOSE"]){echo "$LastUidNumber is_numeric... OK\n";}
 			if($LastUidNumber>2000){
-				return $LastUidNumber+1;
+				if($GLOBALS["VERBOSE"]){echo "$LastUidNumber >2000 OK\n";}
+				$LastUidNumber=$LastUidNumber+1;
 				$sock->SET_INFO("LastUidNumber", $LastUidNumber);
+				return $LastUidNumber;
+				
 			}
 		}
 		$ldap=new clladp();

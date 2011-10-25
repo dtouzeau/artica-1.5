@@ -2241,19 +2241,29 @@ function syslogger(){
 //========================================================================================================================================================
 function squid_tail(){
 	if(!$GLOBALS["CLASS_USERS"]->SQUID_INSTALLED){return;}
-	$DansGuardianEnabled=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("DansGuardianEnabled");
-	if($DansGuardianEnabled==1){return;}
+	$SQUID_VERSION=$GLOBALS["CLASS_USERS"]->SQUID_VERSION;
+	
+	
 	$SQUIDEnable=$GLOBALS["CLASS_SOCKETS"]->GET_INFO("SQUIDEnable");
 	if(!is_numeric($SQUIDEnable)){$SQUIDEnable=1;}
 	$RAM=$GLOBALS["MEMORY_INSTALLED"]["ram"]["total"];
 	$service_disabled=1;
 	if($RAM<512000){$SQUIDEnable=0;}
-
-	if($SQUIDEnable==0){return;}
-
-
-
+	$srv="squid-tail";
 	$pid_path="/etc/artica-postfix/exec.squid-tail.php.pid";
+	
+	if($SQUIDEnable==0){return;}
+	if(preg_match('#^([0-9]+)\.([0-9]+)#',$SQUID_VERSION,$re)){
+		if($re[1]>2){
+			if($re[2]>1){
+				$pid_path="/etc/artica-postfix/pids/exec.squid2.logger.php.pid";
+				$srv="squid-tail-sock";
+			}
+		}
+	}
+
+
+	
 	$master_pid=trim(@file_get_contents($pid_path));
 
 	$l[]="[APP_ARTICA_SQUID_TAIL]";
@@ -2265,7 +2275,7 @@ function squid_tail(){
 	$l[]="watchdog_features=1";
 	$l[]="family=squid";
 	if(!$GLOBALS["CLASS_UNIX"]->process_exists($master_pid)){
-		WATCHDOG("APP_ARTICA_SQUID_TAIL","squid-tail");
+		WATCHDOG("APP_ARTICA_SQUID_TAIL",$srv);
 		$l[]="";return implode("\n",$l);
 		return;
 	}

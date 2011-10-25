@@ -1838,6 +1838,7 @@ Indiquez 0 afin de retourner &agrave; la valeur par d&eacute;faut.</SlapdThreads
 <smtp_sasl_security_options_nodictionary>Rejeter les m&eacute;thodes sujettes &agrave; une attaque active (sans dictionnaire).</smtp_sasl_security_options_nodictionary>
 <smtp_sasl_security_options_noplaintext>Rejette les m&eacute;thodes utilisant les mots de passe en clair.</smtp_sasl_security_options_noplaintext>
 <smtp_sasl_security_options_text>Options de s&eacute;curit&eacute; SASL</smtp_sasl_security_options_text>
+<softwares_update>Mise &agrave; jour logiciels</softwares_update>
 <source_address>Adresse source</source_address>
 <SpamassassinMaxRCPTScore_text>Indiquez le score &agrave; ajouter lorsque le nombre de destinataires atteint la limite.[br]Si le score total est atteint, le message sera mis en quarantaine ou rejet&eacute;.</SpamassassinMaxRCPTScore_text>
 <spamassassin_pkugins_explain>Vous trouverez ici les &quot;modules&quot; qui peuvent &ecirc;tre utilis&eacute;s par le filtre de contenu.[br]Ces modules (ou plugins) contribuent &agrave; augmenter le taux de d&eacute;tection des SPAM mais vont augmenter la charge machine et les requ&ecirc;tes DNS.[br]

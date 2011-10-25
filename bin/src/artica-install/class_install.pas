@@ -1413,6 +1413,11 @@ begin
                halt(0);
             end;
 
+            if ParamStr(2)='squid-tail-sock' then begin
+               zsquid.TAIL_SOCK_STOP();
+               halt(0);
+            end;
+
             if ParamStr(2)='squidclamav-tail' then begin
                zsquid.TAIL_SQUIDCLAMAV_STOP();
                halt(0);
@@ -1651,7 +1656,7 @@ begin
 
             if length(ParamStr(2))>0 then begin
                writeln('Usage:');
-               writeln('/etc/init.d/artica-postfix stop ldap|imap|kav6|squid|squid-cache|squid-tail|dansgardian|boa|ftp|mysql|apache|spamd|clamd|freshclam|mgreylist|ntpd');
+               writeln('/etc/init.d/artica-postfix stop ldap|imap|kav6|squid|squid-cache|squid-tail|squid-tail-sock|dansgardian|boa|ftp|mysql|apache|spamd|clamd|freshclam|mgreylist|ntpd');
                writeln('|tail|daemon|clammilter|dnsmasq|stunnel|dkim|postfix|mailgraph|mimedefang|roundcube|kav4samba|bind9|obm|p3scan|syslogng|mailarchiver|bogom');
                writeln('|collectd|fetchmail|mailspy|amavis|retranslator|retranslator-tsk|watchdog|dotclear|jcheckmail|mailman|kas3|dhcp|cicap|openvpn|postfix-logger');
                writeln('|dansguardian-tail|cups|dstat|dstat-top-mem|dstat-top-cpu|rsync|smartd|policydw|mysql-cluster|assp|pdns|gluster|gluster-cli|sysloger');
@@ -2517,6 +2522,11 @@ begin
                  exit();
               end;
 
+              if ParamStr(2)='squid-tail-sock' then begin
+               zsquid.TAIL_SOCK_START(false);
+               halt(0);
+            end;
+
               if ParamStr(2)='squidclamav-tail' then begin
                  zsquid.TAIL_SQUIDCLAMAV_START();
                  exit();
@@ -2844,7 +2854,7 @@ begin
         if length(ParamStr(2))>0 then begin
                writeln('Your parameter: "' +ParamStr(2)+'" is not understood...');
                writeln('Usage:');
-               writeln('/etc/init.d/artica-postfix start all|ldap|saslauthd|imap|kav6|squid|squid-cache|squid-tail|dansgardian|boa|ftp|mysql|apache|spamd|clamd|freshclam|mgreylist');
+               writeln('/etc/init.d/artica-postfix start all|ldap|saslauthd|imap|kav6|squid|squid-cache|squid-tail|squid-tail-sock|dansgardian|boa|ftp|mysql|apache|spamd|clamd|freshclam|mgreylist');
                writeln('|daemon|clammilter|dnsmasq|stunnel|postfix|mailgraph|mimedefang|roundcube|kav4samba|bind9|obm|yorel|p3scan|syslogng|mailarchive|bogom');
                writeln('|collectd|mysql|fetchmail|mailspy|amavis|retranslator|spfmilter|dotclear|jcheckmail|mailman|kas3|dhcp|cicap[openvpn|postfix-logger');
                writeln('|dansguardian-tail|apache-groupware|cups|dstat|dstat-top-mem|dstat-top-cpu|rsync|policydw|autofs|mysql-cluster|assp|pdns|gluster|gluster-cli');

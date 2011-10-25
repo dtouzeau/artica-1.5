@@ -41,15 +41,20 @@ private
      function    DANSGUARDIAN_PORT():string;
      function    GET_LOCAL_PORT():string;
      function    TAIL_PID():string;
+     function    TAIL_SOCK_PID():string;
      function    PROXY_PAC_PID():string;
      function    GET_SSL_PORT():string;
      function    IPTABLES_SQUID_DELETE_SSL():boolean;
      function    IPTABLES_SQUID_DELETE_HTTP():boolean;
      function    is31Ver():boolean;
+     function    is32Ver():boolean;
      procedure   zapper_install();
      function    SQUID_OLD_PROCESS():integer;
      procedure   SQUID_STOP_GHOST();
      procedure   SQUID_STOP_LISTEN_PROCESSES();
+     function    GET_SQUID_PORT():string;
+   function      TAIL_SOCK_STOP_LISTEN_PROCESSES():boolean;
+
 public
     Caches      :TstringList;
     DansGuardianEnabled:integer;
@@ -85,6 +90,9 @@ public
     procedure   TAIL_START();
     procedure   TAIL_STOP();
     function    TAIL_STATUS():string;
+
+    procedure   TAIL_SOCK_START(norestart:boolean);
+    procedure   TAIL_SOCK_STOP();
 
     procedure   SQUID_RELOAD();
     procedure   AS_TRANSPARENT_MODE();
@@ -533,6 +541,23 @@ begin
 end;
 
 //##############################################################################
+function tsquid.GET_SQUID_PORT():string;
+var
+   RegExpr      :TRegExpr;
+
+
+begin
+   result:=SQUID_GET_CONFIG('http_port');
+   RegExpr:=TRegExpr.Create;
+   RegExpr.Expression:='([0-9]+)';
+   RegExpr.Exec(result);
+   result:=RegExpr.Match[1];
+
+
+end;
+
+//##############################################################################
+
 function tsquid.GET_SSL_PORT():string;
 var
    RegExpr      :TRegExpr;
@@ -648,14 +673,14 @@ if not FileExists('/etc/squid3/squid-block.acl') then fpsystem('/bin/touch /etc/
 
 if not withoutcompile then begin
    logs.DebugLogs('Starting......: Squid compiling settings..');
-   fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.squid.php --build >' +FileTemp+' 2>&1');
+   fpsystem(SYS.LOCATE_PHP5_BIN()+' /usr/share/artica-postfix/exec.squid.php --build --withoutloading >' +FileTemp+' 2>&1');
 end;
 
    logs.DebugLogs('Starting......: Squid checking /var/log/squid');
    fpsystem('/bin/chown squid:squid /var/log/squid >/dev/null 2>&1');
    fpsystem('/bin/chmod 700 /var/log/squid >/dev/null 2>&1');
 
-
+if is32ver() then TAIL_SOCK_START(false);
 logs.DebugLogs('Starting......: Squid Execute daemon now');
 cmd:=SQUID_BIN_PATH() + ' '+options +' >>' +FileTemp+' 2>&1';
 
@@ -678,6 +703,10 @@ fpsystem(cmd);
  try
     if FileExists(FileTemp) then l.LoadFromFile(FileTemp);
     for count:=0 to l.Count-1 do begin
+     RegExpr.Expression:='WARNING: ';
+     if RegExpr.Exec(L.Strings[count]) then continue;
+
+
         logs.DebugLogs('Starting......: Squid '+ L.Strings[count]);
         RegExpr.Expression:='error while loading shared libraries';
         if RegExpr.Exec(L.Strings[count]) then begin
@@ -737,6 +766,25 @@ begin
 
 end;
 //##############################################################################
+function tsquid.is32Ver():boolean;
+
+var
+ver:string;
+major,minor:integer;
+RegExpr:TRegExpr;
+begin
+   ver:=SQUID_VERSION();
+   RegExpr:=TRegExpr.Create;
+   RegExpr.Expression:='^([0-9]+)\.([0-9]+)';
+   RegExpr.Exec(ver);
+   TryStrToInt(RegExpr.Match[1],major);
+   TryStrToInt(RegExpr.Match[1],minor);
+   if major>=3 then begin
+      if minor>=2 then result:=true;
+   end;
+
+end;
+//##############################################################################
 procedure tsquid.SQUID_START();
  var
     pid:string;
@@ -759,7 +807,7 @@ SYS:=Tsystem.Create;
      exit;
 end;
   SYS.MONIT_DELETE('APP_DANSGUARDIAN');
-  TAIL_START();
+  if not is32Ver() then TAIL_START() else TAIL_SOCK_START(false);
   TAIL_SQUIDCLAMAV_START();
   ERROR_FD();
   pid:=SQUID_PID();
@@ -1258,18 +1306,22 @@ procedure tsquid.SQUID_STOP_LISTEN_PROCESSES();
     FileTemp:string;
     l:Tstringlist;
     RegExpr:TRegExpr;
+    cmdline:string;
 begin
 binpath:=SYS.LOCATE_GENERIC_BIN('lsof');
-port:=GET_LOCAL_PORT();
+port:=GET_SQUID_PORT();
 writeln('Stopping Squid...............: checking ghost processes listen on port '+Port);
 FileTemp:=logs.FILE_TEMP();
-fpsystem(binpath+' -i TCP:'+port+' >'+FileTemp +' 2>&1');
+cmdline:=binpath+' -i TCP:'+port+' >'+FileTemp +' 2>&1';
+fpsystem(cmdline);
 l:=Tstringlist.Create;
 l.LoadFromFile(FileTemp);
+logs.Debuglogs(cmdline+' = > '+INtTOstr(l.count)+' line(s)');
 logs.DeleteFile(FileTemp);
 RegExpr:=TRegExpr.Create;
 RegExpr.Expression:='.+?\s+([0-9]+)\s+.+?TCP\s+(.+?):'+port+'\s+';
 for i:=0 to l.Count-1 do begin
+     logs.Debuglogs(l.Strings[i]);
      if RegExpr.Exec(l.Strings[i]) then begin
           writeln('Stopping Squid...............: stop process PID '+RegExpr.Match[1]+' listen on '+RegExpr.Match[2]+':'+port);
           fpsystem('/bin/kill -9 '+RegExpr.Match[1]);
@@ -1308,6 +1360,20 @@ end;
         if count>30 then break;
         pid:=SYS.PIDOF(binpath);
    end;
+
+pid:=SYS.PIDOF_PATTERN('\(squid-[0-9]+\)\s+');
+ while SYS.PROCESS_EXIST(pid) do begin
+        if length(trim(pid))>0 then begin
+           writeln('Stopping Squid...............: stopping other process "' + pid + '" PID');
+           fpsystem('/bin/kill -9 '+pid);
+        end;
+        sleep(200);
+        inc(count);
+        if count>30 then break;
+       pid:=SYS.PIDOF_PATTERN('\(squid-[0-9]+\)\s+');
+   end;
+
+
    SQUID_STOP_LISTEN_PROCESSES();
 
 
@@ -1322,6 +1388,7 @@ procedure tsquid.SQUID_STOP();
     FileTemp:string;
     configpath:string;
     oldproc:integer;
+    l:Tstringlist;
 begin
 count:=0;
 binpath:=SQUID_BIN_PATH();
@@ -1337,11 +1404,18 @@ SYS.MONIT_DELETE('APP_SQUID');
 
 
 
-
+  FileTemp:=logs.FILE_TEMP();
   if SYS.PROCESS_EXIST(pid) then begin
      if length(trim(pid))>0 then writeln('Stopping Squid smoothly......: "' + pid + '" PID');
-     fpsystem(binpath+' -f '+configpath+' -k shutdown >/dev/null 2>&1');
+     fpsystem(binpath+' -f '+configpath+' -k shutdown >'+FileTemp+' 2>&1');
      sleep(800);
+     l:=TstringList.Create;
+     l.LoadFromFile(FileTemp);
+     logs.DeleteFile(FileTemp);
+     For i:=0 to l.count-1 do begin
+         if length(trim(l.Strings[i]))=0 then continue;
+         writeln('Stopping Squid...............: ',l.Strings[i]);
+     end;
      pid:=SQUID_PID();
 
    while SYS.PROCESS_EXIST(pid) do begin
@@ -1424,6 +1498,7 @@ if not SYS.PROCESS_EXIST(pid) then begin
      AS_TRANSPARENT_MODE();
      writeln('Stopping Squid...............: Stopping artica watchdog logger');
      TAIL_STOP();
+     TAIL_SOCK_STOP();
      writeln('Stopping Squid...............: Stopping artica squidclamav logger');
      TAIL_SQUIDCLAMAV_STOP();
   end;
@@ -1821,7 +1896,7 @@ begin
 
 if FileExists('/etc/artica-postfix/exec.squid-tail.php.pid') then begin
    pid:=SYS.GET_PID_FROM_PATH('/etc/artica-postfix/exec.squid-tail.php.pid');
-   logs.Debuglogs('DANSGUARDIAN_TAIL_PID /etc/artica-postfix/exec.squid-tail.php.pid='+pid);
+   logs.Debuglogs('TAIL_PID /etc/artica-postfix/exec.squid-tail.php.pid='+pid);
    if SYS.PROCESS_EXIST(pid) then result:=pid;
    exit;
 end;
@@ -1831,6 +1906,118 @@ result:=SYS.PIDOF_PATTERN(TAIL_STARTUP);
 logs.Debuglogs(TAIL_STARTUP+' pid='+pid);
 end;
 //#####################################################################################
+function tsquid.TAIL_SOCK_PID():string;
+var
+   pid:string;
+begin
+
+if FileExists('/etc/artica-postfix/pids/exec.squid2.logger.php.pid') then begin
+   pid:=SYS.GET_PID_FROM_PATH('/etc/artica-postfix/pids/exec.squid2.logger.php.pid');
+
+   if SYS.PROCESS_EXIST(pid) then begin
+      logs.Debuglogs('TAIL_SOCK_PID /etc/artica-postfix/exec.squid-tail.php.pid='+pid);
+      result:=pid;
+      exit;
+   end;
+end;
+result:=SYS.PIDOF_PATTERN('exec.squid2.logger.php');
+
+end;
+//#####################################################################################
+procedure tsquid.TAIL_SOCK_START(norestart:boolean);
+var
+   pid:string;
+   pidint:integer;
+   php5:string;
+   count:integer;
+   cmd:string;
+   CountTail:Tstringlist;
+begin
+   if not FileExists(SQUID_BIN_PATH()) then begin
+   logs.Debuglogs('Starting......: squid RealTime log (sock mode) squid is not installed');
+   exit;
+end;
+
+if not is32Ver() then begin
+    logs.Debuglogs('Starting......: squid RealTime log (sock mode) squid is not in  3.2 version');
+    TAIL_SOCK_STOP();
+    exit;
+end;
+
+  pid:=TAIL_SOCK_PID();
+  if SYS.PROCESS_EXIST(pid) then begin
+      logs.DebugLogs('Starting......: squid RealTime log (sock mode) already running with pid '+pid);
+      exit;
+  end;
+
+  php5:=SYS.LOCATE_PHP5_BIN();
+  logs.DebugLogs('Starting......: squid RealTime log (sock mode) ...');
+  fpsystem(php5 +' /usr/share/artica-postfix/exec.squid2.logger.php');
+  count:=0;
+while not SYS.PROCESS_EXIST(pid) do begin
+        sleep(100);
+        inc(count);
+        if count>40 then begin
+           logs.DebugLogs('Starting......: squid RealTime log (sock mode) (timeout)');
+           break;
+        end;
+        pid:=TAIL_SOCK_PID();
+  end;
+
+pid:=TAIL_SOCK_PID();
+if SYS.PROCESS_EXIST(pid) then begin
+     logs.DebugLogs('Starting......: squid RealTime log (sock mode) (2)...');
+     fpsystem(php5 +' /usr/share/artica-postfix/exec.squid2.logger.php');
+     count:=0;
+  while not SYS.PROCESS_EXIST(pid) do begin
+        sleep(100);
+        inc(count);
+        if count>40 then begin
+           logs.DebugLogs('Starting......: squid RealTime log (sock mode) (timeout)');
+           break;
+        end;
+        pid:=TAIL_SOCK_PID();
+  end;
+end;
+pid:=TAIL_SOCK_PID();
+if SYS.PROCESS_EXIST(pid) then begin
+     logs.DebugLogs('Starting......: squid RealTime log (sock mode) (3)...');
+     fpsystem(php5 +' /usr/share/artica-postfix/exec.squid2.logger.php');
+     count:=0;
+  while not SYS.PROCESS_EXIST(pid) do begin
+        sleep(100);
+        inc(count);
+        if count>40 then begin
+           logs.DebugLogs('Starting......: squid RealTime log (sock mode) (timeout)');
+           break;
+        end;
+        pid:=TAIL_SOCK_PID();
+  end;
+end;
+
+if SYS.PROCESS_EXIST(pid) then begin
+      sleep(2000);
+      cmd:=trim(logs.ReadFromFile('/etc/artica-postfix/pids/squid-tail-sock'));
+      if cmd<>'OK' then begin
+         logs.DebugLogs('Starting......: squid RealTime log (sock mode) socket error result:'+cmd);
+         TAIL_SOCK_STOP();
+         TAIL_SOCK_START(false);
+         exit;
+      end;
+      logs.DebugLogs('Starting......: squid RealTime log (sock mode) success with pid '+pid);
+      if SYS.PROCESS_EXIST(SQUID_PID()) then fpsystem(SQUID_BIN_PATH()+' -k reconfigure >/dev/null 2>&1');
+      exit;
+end else begin
+    logs.DebugLogs('Starting......: squid RealTime log (sock mode) failed');
+    if not norestart then begin
+       TAIL_SOCK_STOP();
+       TAIL_SOCK_START(true);
+    end;
+end;
+
+end;
+//#####################################################################################
+
 procedure tsquid.TAIL_START();
 var
    pid:string;
@@ -1852,6 +2039,13 @@ if DansGuardianEnabled=1 then begin
     TAIL_STOP();
     exit;
 end;
+
+if is32Ver() then begin
+    logs.Debuglogs('Starting......: squid RealTime log squid is in 3.2 version switch to daemon logger');
+    TAIL_STOP();
+    exit;
+end;
+
 
 pid:=TAIL_PID();
 if SYS.PROCESS_EXIST(pid) then begin
@@ -1929,8 +2123,13 @@ var
    pidint,i:integer;
    count:integer;
    CountTail:Tstringlist;
+   pidDaemon:string;
 begin
+
 pid:=TAIL_PID();
+
+
+
 if not SYS.PROCESS_EXIST(pid) then begin
       writeln('Stopping squid RealTime log: Already stopped');
       CountTail:=Tstringlist.Create;
@@ -1980,6 +2179,115 @@ count:=0;
 
 end;
 //####################################################################################
+procedure tsquid.TAIL_SOCK_STOP();
+var
+   pid,pidDaemon:string;
+   pidint,i:integer;
+   count:integer;
+   CountPgrep:Tstringlist;
+   pgrep,tmpstr:string;
+   RegExpr:TRegExpr;
+   MustWait:boolean;
+begin
+
+pidDaemon:=trim(logs.ReadFromFile('/etc/artica-postfix/pids/exec.squid2.logger.php.D.pid'));
+if SYS.PROCESS_EXIST(pidDaemon) then begin
+    writeln('Stopping squid RealTime log: (sock mode) Daemon PID:"'+pidDaemon+'"');
+    fpsystem('/bin/kill -9 '+pidDaemon);
+end;
+
+pid:=TAIL_SOCK_PID();
+MustWait:=false;
+if SYS.PROCESS_EXIST(pid) then begin
+writeln('Stopping squid RealTime log: (sock mode) Stopping pid '+pid);
+fpsystem('/bin/kill '+pid);
+MustWait:=true;
+pid:=TAIL_SOCK_PID();
+writeln('Stopping squid RealTime log: (sock mode) stop pid "'+pid+'"');
+count:=0;
+      while SYS.PROCESS_EXIST(pid) do begin
+          if count>30 then begin
+             writeln('Stopping squid RealTime log: (sock mode) stop pid "'+pid+'" (timeout)');
+             break;
+          end;
+
+          if not TryStrToInt(pid,pidint) then continue;
+          if pidint>0 then  if SYS.PROCESS_EXIST(pid) then fpsystem('/bin/kill '+pid);
+          sleep(200);
+          pid:=TAIL_SOCK_PID();
+          inc(count);
+      end;
+end;
+
+
+pgrep:=SYS.LOCATE_GENERIC_BIN('pgrep');
+tmpstr:=logs.FILE_TEMP();
+if FileExists(pgrep) then begin
+ fpsystem(pgrep+' -f "exec.squid2.logger.php" >'+tmpstr+' 2>&1');
+ CountPgrep:=Tstringlist.Create();
+ CountPgrep.LoadFromFile(tmpstr);
+ logs.DeleteFile(tmpstr);
+ RegExpr:=TRegExpr.Create;
+ for i:=0 to CountPgrep.Count-1 do begin
+    RegExpr.Expression:='^([0-9]+)';
+    if RegExpr.Exec(CountPgrep.Strings[i]) then begin
+       if SYS.PROCESS_EXIST(RegExpr.Match[1]) then begin
+             writeln('Stopping squid RealTime log: (sock mode) stop pid "'+RegExpr.Match[1]+'" L.2180');
+             fpsystem('/bin/kill '+RegExpr.Match[1]);
+             MustWait:=true;
+       end;
+    end;
+ end;
+end;
+if TAIL_SOCK_STOP_LISTEN_PROCESSES() then MustWait:=true;
+if MustWait then sleep(2000);
+pid:=TAIL_SOCK_PID();
+if not SYS.PROCESS_EXIST(pid) then begin
+      writeln('Stopping squid RealTime log: (sock mode) Stopped');
+end;
+
+end;
+//####################################################################################
+function tsquid.TAIL_SOCK_STOP_LISTEN_PROCESSES():boolean;
+ var
+    port:integer;
+    count:integer;
+    i:integer;
+    binpath:string;
+    FileTemp:string;
+    l:Tstringlist;
+    RegExpr:TRegExpr;
+    cmdline:string;
+begin
+result:=false;
+binpath:=SYS.LOCATE_GENERIC_BIN('lsof');
+if not TryStrToInt(SYS.GET_INFO('SquidTailSockPort'),port) then port:=54424;
+
+ writeln('Stopping squid RealTime log: (sock mode) processes listen on port ',Port);
+FileTemp:=logs.FILE_TEMP();
+cmdline:=binpath+' -i TCP:'+IntToStr(port)+' >'+FileTemp +' 2>&1';
+fpsystem(cmdline);
+l:=Tstringlist.Create;
+l.LoadFromFile(FileTemp);
+logs.Debuglogs(cmdline+' = > '+INtTOstr(l.count)+' line(s)');
+logs.DeleteFile(FileTemp);
+RegExpr:=TRegExpr.Create;
+RegExpr.Expression:='.+?\s+([0-9]+)\s+.+?TCP\s+(.+?):'+IntToStr(port)+'\s+';
+for i:=0 to l.Count-1 do begin
+     logs.Debuglogs(l.Strings[i]);
+     if RegExpr.Exec(l.Strings[i]) then begin
+          writeln('Stopping squid RealTime log: (sock mode) stop process PID `'+RegExpr.Match[1]+'` listen on '+RegExpr.Match[2]+': for port:',port);
+          fpsystem('/bin/kill '+RegExpr.Match[1]);
+          result:=true;
+     end;
+end;
+
+
+
+end;
+//##############################################################################
+
+
 function  tsquid.PROXY_PAC_PID():string;
 begin
 result:=SYS.GET_PID_FROM_PATH('/var/run/proxypac.pid');

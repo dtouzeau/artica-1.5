@@ -655,6 +655,14 @@ begin
          halt(0);
    end;
 
+   if ParamStr(1)='APP_DANSGUARDIAN2' then begin
+         squid:=tsetup_squid.Create;
+         squid.dansguardian2();
+         zinstall.EMPTY_CACHE();
+         halt(0);
+   end;
+
+
     if ParamStr(1)='APP_MSKTUTIL' then begin
        fpsystem('/usr/share/artica-postfix/bin/setup-ubuntu --check-base-system');
        squid:=tsetup_squid.Create;

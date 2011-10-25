@@ -147,6 +147,7 @@ OpenVPN changes
 
 Proxy changes:
 ------------------------------------------------
+1.5.102400: Introduce Next Artica For Squid generation with squid 3.2 and new Dansguardian version.
 1.5.090316: Add a feature that display cache storage engine performance (see http://www.artica.fr/forum/viewtopic.php?f=38&t=4540)
 
 FreeWebs changes:

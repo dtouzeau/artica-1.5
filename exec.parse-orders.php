@@ -149,7 +149,8 @@ $Toremove["exec.fetmaillog.php"]=true;
 $Toremove["exec.dansguardian-tail.php"]=true;	
 $Toremove["exec.auth-tail.php"]=true;	
 $Toremove["exec.artica-filter-daemon.php"]=true;	
-$Toremove["exec.postfix-logger.php"]=true;	
+$Toremove["exec.postfix-logger.php"]=true;
+$Toremove["exec.squid2.logger.php"]=true;	
 if(!is_file($pgrep)){return;}
 	
 	

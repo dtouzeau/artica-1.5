@@ -19,7 +19,7 @@ define("SERVER", "file:///var/run/zarafa");
 	$sock=new sockets();
 	$ZarafaImportContactsInLDAPEnable=$sock->GET_INFO("ZarafaImportContactsInLDAPEnable");
 	if(!is_numeric($ZarafaImportContactsInLDAPEnable)){$ZarafaImportContactsInLDAPEnable=0;}
-	if($ZarafaImportContactsInLDAPEnable==0){if($GLOBALS["VERBOSE"]){echo "ZarafaImportContactsInLDAPEnable = $ZarafaImportContactsInLDAPEnable, aborting\n";}}
+	if($ZarafaImportContactsInLDAPEnable==0){if($GLOBALS["VERBOSE"]){echo "ZarafaImportContactsInLDAPEnable = $ZarafaImportContactsInLDAPEnable, aborting\n";die();}}
 	
 
 if($argv[1]=="--all"){ParseAllcontacts();die();}

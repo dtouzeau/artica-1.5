@@ -33,6 +33,7 @@ public
      procedure  squidguard_install();
      function   command_line_squidguard():string;
      procedure  squid32();
+     procedure  dansguardian2();
 END;
 
 implementation
@@ -114,7 +115,53 @@ begin
       install.INSTALL_PROGRESS(CODE_NAME,'{success}');
 
 end;
+//#########################################################################################
+procedure tsetup_squid.dansguardian2();
+var
+source_folder:string;
+logs:Tlogs;
+SYS:TSystem;
+squid:tsquid;
+localversion:string;
+remoteversion:string;
+remoteBinVersion:int64;
+LocalBinVersion:int64;
+CODE_NAME:string;
+Arch:Integer;
+squidbinpath,package_name:string;
+begin
+  CODE_NAME:='APP_DANSGUARDIAN2';
+  install.INSTALL_PROGRESS(CODE_NAME,'{checking}');
+  install.INSTALL_STATUS(CODE_NAME,30);
+  distri:=tdistriDetect.Create;
+  Arch:=libs.ArchStruct();
+  writeln('RESULT.................: Architecture : ',Arch);
+  writeln('RESULT.................: Distribution : ',distri.DISTRINAME,' (DISTRINAME)');
+  writeln('RESULT.................: Major version: ',distri.DISTRI_MAJOR,' (DISTRI_MAJOR)');
+  writeln('RESULT.................: Artica Code  : ',distri.DISTRINAME_CODE,' (DISTRINAME_CODE)');
+  if arch=32 then package_name:='dansguardian2-i386';
+  if arch=64 then package_name:='dansguardian2-amd64';
 
+  source_folder:=libs.COMPILE_GENERIC_APPS(package_name);
+  if not DirectoryExists(source_folder) then begin
+         install.INSTALL_STATUS(CODE_NAME,110);
+         install.INSTALL_PROGRESS(CODE_NAME,'{failed}');
+         exit;
+      end;
+      source_folder:=extractFilePath(source_folder);
+      writeln('source.................: ',source_folder);
+      install.INSTALL_STATUS(CODE_NAME,50);
+      install.INSTALL_STATUS(CODE_NAME,60);
+      install.INSTALL_PROGRESS(CODE_NAME,'{installing}');
+      writeln('copy.................: ',source_folder, ' => ','/');
+      fpsystem('/bin/cp -rfd '+source_folder+'* /');
+      install.INSTALL_STATUS(CODE_NAME,90);
+      install.INSTALL_PROGRESS(CODE_NAME,'{reconfigure}');
+      fpsystem('/etc/init.d/artica-postfix restart dansguardian');
+      install.INSTALL_STATUS(CODE_NAME,100);
+      install.INSTALL_PROGRESS(CODE_NAME,'{success}');
+
+end;
 
 procedure tsetup_squid.msktutil();
 var

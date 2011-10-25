@@ -935,9 +935,6 @@ function all_status(){
 	$refresh=imgtootltip("refresh-32.png","{refresh}","LoadAjax('squid-services','$page?squid-services=yes');");
 	$tables[]="</table>";
 	$html="
-		<div class=explain>
-			{APP_SQUID_TEXT}
-		</div>
 		<div style='text-align:right;margin-bottom:10px'>".button("{restart_all_services}","Loadjs('squid.restart.php')")."</div>
 		".@implode("\n", $tables)."<div style='text-align:right'>$refresh</div>";
 	

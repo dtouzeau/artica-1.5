@@ -40,7 +40,9 @@ $GlobalApplicationsStatus=$sock->APC_GET("GlobalApplicationsStatus",2);
 if($GlobalApplicationsStatus==null){$GlobalApplicationsStatus=base64_decode($sock->getFrameWork('cmd.php?Global-Applications-Status=yes'));$sock->APC_SAVE("GlobalApplicationsStatus",$GlobalApplicationsStatus);$GLOBALS["GlobalApplicationsStatus"]=$GlobalApplicationsStatus;}	
 $squid_version=	ParseAppli($GlobalApplicationsStatus,"APP_SQUID");
 $availableversion=$ini->_params["NEXT"]["squid32-$ArchStruct"];
-
+$actualversion=$sock->getFrameWork("squid.php?full-version=yes");
+$availableversion_dansguardian=$ini->_params["NEXT"]["dansguardian2-$ArchStruct"];
+$actualversion_dansguardian=$sock->getFrameWork("squid.php?full-dans-version=yes");
 
 $html="
 <H2>In dev progress, don't use ! - no 64 bits support...</H2>
@@ -53,26 +55,75 @@ $html="
 			<table style='width:100%' class=form>
 				<tbody>
 					<tr>
-						<td colspan=2><div style='font-size:16px'>{available_software}:&nbsp;{APP_SQUID2}</div></td>
+						<td class=legend style='font-size:14px'>{available_software}:</td>
+						<td style='font-size:14px;font-weight:bold'>{APP_SQUID2}</div></td>
 					</tr>
 					<tr>
-						<td class=legend style='font-size:14px'>{version}:</td>
+						<td class=legend style='font-size:14px'>&nbsp;</td>
 						<td style='font-size:14px;font-weight:bold'>$availableversion</td>
 					</tr>
+					<tr>
+						<td class=legend style='font-size:14px'>{current}:</td>
+						<td style='font-size:14px;font-weight:bold'>$actualversion</td>
+					</tr>					
+					
 				</tbody>
+				
 			</table>
+			<div style='font-size:12px'>{APP_SQUID_TEXT}</div>
 			<p>&nbsp;</p>
 			<span id='squid-install-status'></span>
 			<div style='text-align:right;width:100%'>". imgtootltip("refresh-24.png","{refresh}","squid_install_status()")."</div>
 	</td>
 </tr>
+
+<tr>
+	<td colspan=2><hr></td>
+</tr>
+
+<tr>
+	<td valign='top' width=1%><img src='img/bg_dansguardian.jpg'></td>
+	<td valign='top'>
+			<table style='width:100%' class=form>
+				<tbody>
+					<tr>
+						<td class=legend style='font-size:14px'>{available_software}:</td>
+						<td style='font-size:14px;font-weight:bold'>{APP_DANSGUARDIAN}</div></td>
+					</tr>
+					<tr>
+						<td class=legend style='font-size:14px'>&nbsp;</td>
+						<td style='font-size:14px;font-weight:bold'>$availableversion_dansguardian</td>
+					</tr>
+					<tr>
+						<td class=legend style='font-size:14px'>{current}:</td>
+						<td style='font-size:14px;font-weight:bold'>$actualversion_dansguardian</td>
+					</tr>					
+					
+				</tbody>
+				
+			</table>
+			<div style='font-size:12px'>{danseguardian_simple_intro}</div>
+			<p>&nbsp;</p>
+			<span id='dansguardian-install-status'></span>
+			<div style='text-align:right;width:100%'>". imgtootltip("refresh-24.png","{refresh}","dansguardian_install_status()")."</div>
+	</td>
+</tr>
+
+
+
+
 </tbody>
 </table>
 <script>
 	function squid_install_status(){
 		LoadAjaxTiny('squid-install-status','$page?install-status=yes&APPLI=APP_SQUID2');
 	}
+	
+	function dansguardian_install_status(){
+		LoadAjaxTiny('dansguardian-install-status','$page?install-status=yes&APPLI=APP_DANSGUARDIAN2');
+	}	
 squid_install_status();
+dansguardian_install_status();
 </script>
 ";
 
@@ -122,7 +173,7 @@ function install_status(){
 	if($status==null){$status=0;}
 	if($status==0){
 		
-		echo $tpl->_ENGINE_parse_body("<center style='margin:10px'>".button("{install_upgrade}", "Loadjs('setup.index.progress.php?product=APP_SQUID2&start-install=yes')",14)."</center>");
+		echo $tpl->_ENGINE_parse_body("<center style='margin:10px'>".button("{install_upgrade}", "Loadjs('setup.index.progress.php?product=$appname&start-install=yes')",14)."</center>");
 		return;
 		
 	}

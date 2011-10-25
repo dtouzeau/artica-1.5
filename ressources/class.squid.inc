@@ -80,6 +80,7 @@ class squidbee{
 	var $KavICAPRemoteAddr=null;
 	var $KavICAPRemotePort=0;
 	var $CPU_NUMBER;
+	var $EnableICPPort=0;
 	function squidbee(){
 		if(posix_getuid()==0){$this->ASROOT=true;}
 		$this->VerifyLdapBranch();
@@ -113,6 +114,15 @@ class squidbee{
 		$this->CheckVersion();
 		$this->hasProxyTransparent=$sock->GET_INFO("hasProxyTransparent");
 		if($this->hasProxyTransparent==null){$this->hasProxyTransparent=0;}
+		if($this->ASROOT){
+			if($this->IS_32){
+				if(!is_file("/etc/init.d/squid-tail")){
+					$this->buil_init_squid_tail();
+				}
+			}
+		}
+		
+		
 		
 	}
 	
@@ -307,6 +317,7 @@ class squidbee{
 			$this->EnableUserAgentBanAll=$ini->_params["NETWORK"]["EnableUserAgentBanAll"];
 			$this->EnableChangeRequestSize=$ini->_params["NETWORK"]["EnableChangeRequestSize"];
 			$this->allow_squid_localhost=$ini->_params["NETWORK"]["allow_squid_localhost"];
+			$this->EnableICPPort=$ini->_params["NETWORK"]["EnableICPPort"];
 			if(isset($ini->_params["NETWORK"]["ignore_expect_100"])){$this->ignore_expect_100=$ini->_params["NETWORK"]["ignore_expect_100"];}
 			
 				if(is_array($ini->_params)){
@@ -520,6 +531,7 @@ function SaveToLdap($norestart=false){
 			$ini=$ini."EnableUserAgentBanAll=$this->EnableUserAgentBanAll\n";
 			$ini=$ini."EnableChangeRequestSize=$this->EnableChangeRequestSize\n";
 			$ini=$ini."allow_squid_localhost=$this->allow_squid_localhost\n";
+			$ini=$ini."EnableICPPort=$this->EnableICPPort\n";
 			
 			if($this->IS_30){if($GLOBALS["VERBOSE"]){echo "Starting......: Squid : is 3.x OK\n";}}
 			if(!$this->IS_32){if($GLOBALS["VERBOSE"]){echo "Starting......: Squid : is NOT 3.2.x OK\n";}}
@@ -1128,6 +1140,8 @@ public function SquidGuardDatabasesStatus($all=0){
 		return "$users->ufdbgclient_path -l /var/log/squid";
 	}
 	
+	
+	
 	private function zapchain_squidclamav(){
 	if(!isset($GLOBALS["CLASS_USERS"])){$GLOBALS["CLASS_USERS"]=new usersMenus();}
 	$users=$GLOBALS["CLASS_USERS"];
@@ -1351,7 +1365,67 @@ public function SquidGuardDatabasesStatus($all=0){
 		$f[]="log_uses_indirect_client	on";
 		$f[]="follow_x_forwarded_for allow localhost";
 		return @implode("\n", $f)."\n";
-	}	
+	}
+
+function buil_init_squid_tail(){
+	$unix=new unix();
+	$unix=new unix();
+	$php5=$unix->LOCATE_PHP5_BIN();
+	$chmod=$unix->find_program("chmod");	
+	$conf[]="#! /bin/sh";
+	$conf[]="# /etc/init.d/squid-tail";
+	$conf[]="#";
+	$conf[]="# squid-tail-sock Debian init script";
+	$conf[]="#";
+	$conf[]="### BEGIN INIT INFO";
+	$conf[]="# Provides:          squid-tail";
+	$conf[]="# Required-Start:    \$syslog";
+	$conf[]="# Required-Stop:     \$syslog";
+	$conf[]="# Should-Start:      \$local_fs";
+	$conf[]="# Should-Stop:       \$local_fs";
+	$conf[]="# Default-Start:     2 3 4 5";
+	$conf[]="# Default-Stop:      1";
+	$conf[]="# Short-Description: Launch squid-tail server";
+	$conf[]="# Description:       Launch squid-tail server";
+	$conf[]="### END INIT INFO";
+	$conf[]="";
+	$conf[]="case \"\$1\" in";
+	$conf[]=" start)";
+	$conf[]="    /etc/init.d/artica-postfix start squid-tail-sock \$1 \$2";
+	$conf[]="    ;;";
+	$conf[]="";
+	$conf[]="  stop)";
+	$conf[]="    /etc/init.d/artica-postfix stop squid-tail-sock \$1 \$2";
+	$conf[]="    ;;";
+	$conf[]="";
+	$conf[]=" restart)";
+	$conf[]="     /etc/init.d/artica-postfix restart squid-tail-sock \$1 \$2";
+	$conf[]="    ;;";
+	$conf[]="";
+	$conf[]=" reload)";
+	$conf[]="     /etc/init.d/artica-postfix restart squid-tail-sock \$1 \$2";
+	$conf[]="    ;;";
+	$conf[]="";
+	$conf[]="";
+	$conf[]="  *)";
+	$conf[]="    echo \"Usage: \$0 {start|stop|restart|reload}\"";
+	$conf[]="    exit 1";
+	$conf[]="    ;;";
+	$conf[]="esac";
+	$conf[]="exit 0\n";	
+	@file_put_contents("/etc/init.d/squid-tail",@implode("\n",$conf));	
+	$debianbin=$unix->find_program("update-rc.d");
+	$redhatbin=$unix->find_program("chkconfig");
+	
+	shell_exec("$chmod +x /etc/init.d/squid-tail >/dev/null 2>&1");
+	if(is_file($debianbin)){
+		shell_exec("$debianbin -f squid-tail defaults >/dev/null 2>&1");
+	}
+	if(is_file($redhatbin)){
+		shell_exec("$redhatbin --add squid-tail >/dev/null 2>&1");
+		shell_exec("$redhatbin --level 2345 squid-tail on >/dev/null 2>&1");
+	}
+}	
 	
 		
 		
@@ -1758,7 +1832,8 @@ function BuildSquidConf(){
 		$conf=$conf.$this->refresh_pattern_list();
 		$conf=$conf."refresh_pattern .		   0	20%	4320\n";
 		$conf=$conf ."refresh_pattern -i (/cg-bin/|\?) 0 0% 0\n";
-		$conf=$conf."icp_port 3130\n";
+		
+		if($this->EnableICPPort==1){$conf=$conf."icp_port 3130\n";}
 		$conf=$conf."\n";
 		$conf=$conf."\n";
 		$conf=$conf."#Logs-------------------------------------------------\n";
@@ -1799,6 +1874,7 @@ function BuildSquidConf(){
 			//$conf=$conf."access_log	none manager\n";
 			$conf=$conf."cache_store_log	stdio:/var/log/squid/store.log\n";
 			$conf=$conf."access_log daemon:/var/log/squid/access.log common\n";
+			$conf=$conf."access_log tcp:127.0.0.1:54424 common\n";
 			$conf=$conf."access_log daemon:/var/log/squid/sarg.log squid\n";			
 		}
 		
