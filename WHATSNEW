@@ -6,6 +6,7 @@
 
 System Changes:
 ------------------------------------------------
+Store DHCP syslog events to Mysql database in order to query them.
 1.5.102517: Fix wrong uidNumber incrementation.
 1.5.102517: Add possibility to disable overload reports generation process.
 1.5.102102: Fix set local acls did not working on selected groups when groups are from a connected Active Directory.

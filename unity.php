@@ -181,13 +181,14 @@ function UnityPurge(){
 
 function popup(){
 	$tpl=new templates();
+	$purge_db=$tpl->_ENGINE_parse_body("{purge_db}");
 	$html="
 	<div style='float:right;width:50px;margin-top:-10px;margin-right:-10px'>". $tpl->_ENGINE_parse_body(imgtootltip("close-grey-48.png","{close}","CloseUnity()"))."</div>
 	<div style='margin-top:30px;padding-left:15px'>
 		<input type='text' value='{$_COOKIE["UNITY_FIELD_SEARCH"]}' style='width:90%;padding:5px' class='unityDivForm' OnKeyPress=\"javascript:UnityFindChck(event)\" id='unitySearchField'>
 	</div>
 	<div id='toolbox' style='padding-left:15px;font-size:12px;color:white;'>&nbsp;|&nbsp;<a href=\"javascript:blur();\" OnClick=\"javascript:UnityPurge()\" 
-	style='font-size:12px;color:white;font-weight:normal;text-decoration:underline'>{purge_db}</div>
+	style='font-size:12px;color:white;font-weight:normal;text-decoration:underline'>$purge_db</div>
 	<div id='UnityResults' style='margin-top:40px;width:100%;margin-left:10px;margin-right:10px;padding:15px'></div>
 	
 	

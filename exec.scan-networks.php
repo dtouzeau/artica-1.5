@@ -4,15 +4,10 @@ include_once(dirname(__FILE__) .'/ressources/class.computers.inc');
 include_once(dirname(__FILE__) .'/ressources/class.groups.inc');
 include_once(dirname(__FILE__) .'/computer-browse.php');
 
-if(posix_getuid()<>0){
-	die("Cannot be used in web server mode\n\n");
-}
+if(posix_getuid()<>0){die("Cannot be used in web server mode\n\n");}
+if(!is_file("/usr/bin/nmap")){events('Unable to stat /usr/bin/nmap');die();}
+if(is_file("/etc/artica-postfix/AS_KIMSUFFI")){echo "AS_KIMSUFFI!\n";die();}
 
-
-if(!is_file("/usr/bin/nmap")){
-	events('Unable to stat /usr/bin/nmap');
-	die();
-}
 $cmdline=implode(" ",$argv);
 if(preg_match("#--verbose#",$cmdline)){$_GET["VERBOSE"]=true;}
 if($argv[1]=='--parse'){parseContent($argv[2]);die();}

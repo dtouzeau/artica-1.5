@@ -707,6 +707,8 @@ begin
 
    if FileExists('/etc/artica-postfix/FROM_ISO') then list.Add('$_GLOBAL["FROM_ISO"]=True;') else list.Add('$_GLOBAL["FROM_ISO"]=False;');
    if FileExists('/etc/artica-postfix/APACHE_APPLIANCE') then list.Add('$_GLOBAL["APACHE_APPLIANCE"]=True;') else list.Add('$_GLOBAL["APACHE_APPLIANCE"]=False;');
+   if FileExists('/etc/artica-postfix/AS_KIMSUFFI') then list.Add('$_GLOBAL["AS_KIMSUFFI"]=True;') else list.Add('$_GLOBAL["AS_KIMSUFFI"]=False;');
+
 
 
    if FileExists(SYS.LOCATE_GENERIC_BIN('iptaccount')) then list.Add('$_GLOBAL["IPTABLES_ACCOUNTING_EXISTS"]=True;') else list.Add('$_GLOBAL["IPTABLES_ACCOUNTING_EXISTS"]=False;');

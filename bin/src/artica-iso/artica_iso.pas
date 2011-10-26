@@ -42,33 +42,43 @@ end;
 
 
        if FileExists('/home/artica/packages/ZARAFA/zarafa.tar.gz') then begin
-          fpsystem('/bin/tar -xvf /home/artica/packages/ZARAFA/zarafa.tar.gz -C /');
+          writeln('PLEASE WAIT.... INSTALLING ZARAFA.....');
+          fpsystem('/bin/tar -xf /home/artica/packages/ZARAFA/zarafa.tar.gz -C / >/dev/null 2>&1');
           fpsystem('/bin/touch /etc/artica-postfix/ZARAFA_APPLIANCE');
           fpsystem('/bin/rm /home/artica/packages/ZARAFA/zarafa.tar.gz');
-          fpsystem('/usr/share/artica-postfix/bin/process1 --force');
+          writeln('PLEASE WAIT.... CREATING CONFIGURATION.....');
+          fpsystem('/usr/share/artica-postfix/bin/process1 --force  >/dev/null 2>&1');
        end;
 
        if FileExists('/home/artica/packages/squid32.tar.gz') then begin
+          writeln('PLEASE WAIT.... INSTALLING SQUID 3.2x.....');
           fpsystem('/bin/tar -xvf /home/artica/packages/squid32.tar.gz -C /');
           fpsystem('/bin/mv -f /home/artica/packages/squid32.tar.gz /home/artica/squid32.tar.gz.old');
-          fpsystem('/usr/share/artica-postfix/bin/process1 --force');
+          writeln('PLEASE WAIT.... CREATING CONFIGURATION.....');
+          fpsystem('/usr/share/artica-postfix/bin/process1 --force >/dev/null 2>&1');
        end;
 
        if FileExists('/home/artica/packages/ufdbguard.tar.gz') then begin
-          fpsystem('/bin/tar -xvf /home/artica/packages/ufdbguard.tar.gz -C /');
+          writeln('PLEASE WAIT.... INSTALLING UFDBGUARD.....');
+          fpsystem('/bin/tar -xvf /home/artica/packages/ufdbguard.tar.gz -C / >/dev/null 2>&1');
           fpsystem('/bin/mv /home/artica/packages/ufdbguard.tar.gz /home/artica/ufdbguard.tar.gz.old');
-          fpsystem('/usr/share/artica-postfix/bin/process1 --force');
+          writeln('PLEASE WAIT.... CREATING CONFIGURATION.....');
+          fpsystem('/usr/share/artica-postfix/bin/process1 --force >/dev/null 2>&1');
        end;
 
        if FileExists('/home/artica/packages/kav4proxy-5.5-62.tar.gz') then begin
-          fpsystem('/usr/share/artica-postfix/bin/artica-make APP_KAV4PROXY');
-          fpsystem('/usr/share/artica-postfix/bin/process1 --force');
+          writeln('PLEASE WAIT.... INSTALLING KAV4PROXY.....');
+          fpsystem('/usr/share/artica-postfix/bin/artica-make APP_KAV4PROXY >/dev/null 2>&1');
+          writeln('PLEASE WAIT.... CREATING CONFIGURATION.....');
+          fpsystem('/usr/share/artica-postfix/bin/process1 --force >/dev/null 2>&1');
        end;
 
        if FileExists('/home/artica/packages/crossroads.tar.gz') then begin
-          fpsystem('/bin/tar -xvf /home/artica/packages/crossroads.tar.gz -C /');
+          writeln('PLEASE WAIT.... INSTALLING LOAD BALANCER.....');
+          fpsystem('/bin/tar -xvf /home/artica/packages/crossroads.tar.gz -C / >/dev/null 2>&1');
           fpsystem('/bin/mv /home/artica/packages/crossroads.tar.gz /home/artica/crossroads.tar.gz.old');
-          fpsystem('/usr/share/artica-postfix/bin/process1 --force');
+          writeln('PLEASE WAIT.... CREATING CONFIGURATION.....');
+          fpsystem('/usr/share/artica-postfix/bin/process1 --force >/dev/null 2>&1');
        end;
 
 
@@ -133,7 +143,7 @@ if not FileExists('/etc/artica-postfix/artica-iso-first-reboot') then begin
 
      fpsystem('/bin/echo "root:artica" | /usr/sbin/chpasswd 2>&1');
     writeln('artica-cd... Creating Artica configuration by process1, please wait...');
-    fpsystem('/usr/share/artica-postfix/bin/process1 --force --yes-from-iso');
+    fpsystem('/usr/share/artica-postfix/bin/process1 --force --yes-from-iso >/dev/null 2>&1');
     writeln('artica-cd... remove init boot');
     fpsystem('update-rc.d -f artica-cd remove');
     fpsystem('/bin/rm -f /etc/init.d/artica-cd');

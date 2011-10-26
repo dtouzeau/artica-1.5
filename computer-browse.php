@@ -20,6 +20,9 @@ if($_GET["mode"]=="selection"){selection_js();exit;}
 if(isset($_GET["networkslist"])){networkslist(0);exit;}
 if(isset($_GET["ComputersAllowDHCPLeases"])){ComputersAllowDHCPLeasesSave();exit;}
 if(isset($_GET["ComputersAllowNmap"])){ComputersAllowNmapSave();exit;}
+if(isset($_GET["EnableArpDaemon"])){EnableArpDaemonSave();exit;}
+
+
 
 if(isset($_GET["browse-computers"])){index();exit;}
 
@@ -68,6 +71,12 @@ function ComputersAllowNmapSave(){
 	$sock=new sockets();
 	$sock->SET_INFO("ComputersAllowNmap",$_GET["ComputersAllowNmap"]);
 	
+}
+
+function EnableArpDaemonSave(){
+	$sock=new sockets();
+	$sock->SET_INFO("EnableArpDaemon",$_GET["EnableArpDaemon"]);
+	$sock->getFrameWork("cmd.php?restart-artica-status=yes");	
 }
 
 function scan_net_js(){
@@ -718,9 +727,11 @@ function networks(){
 	$sock=new sockets();
 	$ComputersAllowNmap=$sock->GET_INFO("ComputersAllowNmap");
 	$ComputersAllowDHCPLeases=$sock->GET_INFO("ComputersAllowDHCPLeases");
+	$EnableArpDaemon=$sock->GET_INFO("EnableArpDaemon");
 	
 	if(!is_numeric($ComputersAllowNmap)){$ComputersAllowNmap=1;}
-	if(!is_numeric(ComputersAllowDHCPLeases)){$ComputersAllowDHCPLeases=1;}
+	if(!is_numeric($ComputersAllowDHCPLeases)){$ComputersAllowDHCPLeases=1;}
+	if(!is_numeric($EnableArpDaemon)){$EnableArpDaemon=1;}
 	
 	$autoscan_form="
 	<table style='width:100%'>
@@ -732,6 +743,10 @@ function networks(){
 		<td valign='top' class=legend>{allow_parse_dhcp_leases}</td>
 		<td valign='top'>". Field_checkbox("ComputersAllowDHCPLeases",1,$ComputersAllowDHCPLeases,"ComputersAllowDHCPLeasesCheck()")."</td>
 	</tr>	
+	<tr>
+		<td valign='top' class=legend>{EnableArpDaemon}</td>
+		<td valign='top'>". Field_checkbox("EnableArpDaemon",1,$EnableArpDaemon,"EnableArpDaemonCheck()")."</td>
+	</tr>	
 	</table>
 	
 	";
@@ -741,7 +756,9 @@ function networks(){
 	$height_artica=200;
 	if(strlen($articas)<5){$height_artica=0;}
 	$NMAP_INSTALLED=1;
+	$ARPD_INSTALLED=1;
 	if(!$users->nmap_installed){$NMAP_INSTALLED=0;}
+	if(!$users->ARPD_INSTALLED){$ARPD_INSTALLED=0;}
 	
 	$html="
 	<div id='networks'>
@@ -780,7 +797,14 @@ function networks(){
 	function ImportListComputers(){
 		YahooWin3('450','$page?artica-importlist-popup=yes','$import_artica_computers');
 	
-	}		
+	}
+
+		function EnableArpDaemonCheck(){
+			var XHR = new XHRConnection();
+			if(document.getElementById('EnableArpDaemon').checked){
+			XHR.appendData('EnableArpDaemon',1);}else{XHR.appendData('EnableArpDaemon',0);}
+			XHR.sendAndLoad('$page', 'GET'); 
+		}	
 	
 	
 		function ComputersAllowDHCPLeasesCheck(){
@@ -813,8 +837,11 @@ function networks(){
 	
 	function CheckNmap(){
 		var NMAP_INSTALLED=$NMAP_INSTALLED;
+		var ARPD_INSTALLED=$ARPD_INSTALLED;
 		document.getElementById('ComputersAllowNmap').disabled=true;
+		document.getElementById('EnableArpDaemon').disabled=true;
 		if(NMAP_INSTALLED==1){document.getElementById('ComputersAllowNmap').disabled=false;}
+		if(ARPD_INSTALLED==1){document.getElementById('EnableArpDaemon').disabled=false;}
 	
 	}
 	CheckNmap();

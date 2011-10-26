@@ -658,6 +658,7 @@ Vous avez simplement besoin d'indiquer la nouvelle adresse IP du nouveau serveur
 <edit_openvpn_connection>Afficher les param&egrave;tres et modifier le comportement de la connexion.</edit_openvpn_connection>
 <empty_cache>Vider le cache</empty_cache>
 <empty_database>Vider la base de donn&eacute;es</empty_database>
+<EnableArpDaemon>Activer le d&eacute;mon ARPD</EnableArpDaemon>
 <EnableAuth>Activer l'authentification</EnableAuth>
 <EnableBandwithCalculation>Activer le calcul de bande passante</EnableBandwithCalculation>
 <EnableBandwithCalculation_explain>Si activ&eacute;, Artica tentera de calculer votre bande passante internet</EnableBandwithCalculation_explain>
@@ -1639,6 +1640,7 @@ Ne vous inqui&eacute;tez pas de ne pas visualiser vos utilisateurs apr&egrave;s 
 <root_directory>R&eacute;pertoire racine</root_directory>
 <root_password_not_changed>Modifier le mot de passe root</root_password_not_changed>
 <root_password_not_changed_text>il est recommand&eacute; de modifier le mot de passe du compte root.[br]Le compte root permet d'acc&eacute;der au serveur &agrave; travers SSH ou via la console afin d'op&eacute;rer des t&acirc;ches syst&egrave;mes.</root_password_not_changed_text>
+<rpc_only>RPC seulement</rpc_only>
 <running_in_debug_mode>Ex&eacute;cution en mode verbeux !</running_in_debug_mode>
 <running_processes>Processus ex&eacute;cut&eacute;s</running_processes>
 <run_every_day>Ex&eacute;cuter chaque</run_every_day>

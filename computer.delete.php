@@ -22,21 +22,11 @@ var x_DeleteComputer= function (obj) {
 	if (results.length>0){alert(results);}
 	YahooUserHide();
 	
-	if(document.getElementById('computerlist')){
-		BrowsComputersRefresh();
-	}
-	
-	if(document.getElementById('DnsZoneName')){
-		BindComputers(document.getElementById('DnsZoneName').value)
-	}
-	
-	if(document.getElementById('bind9_hosts_list')){
-		BindRefresh();
-	}
-	
-	if(document.getElementById('main-content')){
-		Loadjs('start.php');
-	}	
+	if(document.getElementById('computerlist')){BrowsComputersRefresh();}
+	if(document.getElementById('DnsZoneName')){BindComputers(document.getElementById('DnsZoneName').value)}	
+	if(document.getElementById('bind9_hosts_list')){BindRefresh();}
+	if(document.getElementById('main-content')){Loadjs('start.php');}
+	if(document.getElementById('main_config_dhcpd')){RefreshTab('main_config_dhcpd');}	
 	
 	
 }

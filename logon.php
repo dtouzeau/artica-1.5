@@ -907,7 +907,7 @@ function buildPage(){
 	$template=null;
 	
 	if($users->KASPERSKY_WEB_APPLIANCE){
-		$template="Kav4Proxy";
+		 $template="Kav4Proxy";
 		 $logo="logo-kav.gif";
 	}
 	
@@ -964,7 +964,7 @@ function buildPage(){
 		
 		if($jquery<>null){$jquery="<script type=\"text/javascript\" src=\"/ressources/templates/$template/js/$jquery\"></script>";}
 		$jslogon="<script type=\"text/javascript\" src=\"logon.php?start=yes\"></script>";
-		
+		if($ProductName<>null){$ProductName="<input type='hidden' id='change-artica-name' value='$ProductName'>";}
 		$jsArtica=$p->jsArtica();
 		$sock=new sockets();
 		$TITLE_RESSOURCE="ressources/templates/$template/TITLE";
@@ -979,10 +979,11 @@ function buildPage(){
 		$tpl=str_replace("{TEMPLATE_BODY_YAHOO}",$p->YahooBody(),$tpl);
 		$tpl=str_replace("{TEMPLATE_LANG_LINK}","<span id='llang-select'></span><script>LoadAjaxTiny('llang-select','$page?TEMPLATE_LANG_LINK=yes')</script>",$tpl);
 		$tpl=str_replace("{artica_username}",$_GET["MEM_USERNAME"],$tpl);
-		$tpl=str_replace("{LOGON_BUTTON}",button("{login}", "SendLogonStart()","18px"),$tpl);
+		$tpl=str_replace("{LOGON_BUTTON}","<input type='hidden' id='template' value='$template'>$ProductName".button("{login}", "SendLogonStart()","18px"),$tpl);
 		$tpl=str_replace("{TEMPLATE_TITLE_HEAD}",$title,$tpl);
 		
-	
+			
+		
 		if(strpos($tpl,"{ZARAFA_VERSION")>0){
 			$sock=new sockets();
 			$tpl=str_replace("{ZARAFA_VERSION}",$sock->getFrameWork("zarafa.php?getversion=yes"),$tpl);

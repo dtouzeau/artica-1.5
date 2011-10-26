@@ -25,6 +25,7 @@ $pidfile="/etc/artica-postfix/".basename(__FILE__).".pid";
 @mkdir("/var/log/artica-postfix/snort-queue",0755,true);
 @mkdir("/var/log/artica-postfix/pdns-hack-queue",0755,true);
 @mkdir("/var/log/artica-postfix/dansguardian-stats4",0755,true);
+if(!is_dir("/var/log/artica-postfix/dhcpd")){echo "Starting......: sysloger Creating dhcpd queue\n";@mkdir("/var/log/artica-postfix/dhcpd",0755,true);}
 events("running $pid ");
 file_put_contents($pidfile,$pid);
 $sock=new sockets();
@@ -1348,6 +1349,23 @@ function email_events($subject,$text,$context){
 }
 
 function dhcpd($buffer){
+	
+	if(strpos($buffer,"dhcpd: ")==0){return false;}
+	if(strpos($buffer,"the README")>0){return true;}
+	if(strpos($buffer,"requesting help")>0){return true;}
+	if(strpos($buffer,"isc.org")>0){return true;}
+	if(strpos($buffer,"All rights reserved")>0){return true;}
+	if(strpos($buffer,"circumstances send")>0){return true;}
+	if(strpos($buffer,"bug reports")>0){return true;}
+	if(strpos($buffer,"Copyright")>0){return true;}
+	
+	if(preg_match("#dhcpd:\s+(.+)#",$buffer,$re)){
+		$day=date('Y-m-d H:i:s');
+		$text=addslashes($re[1]);
+		$sqlcontent="('$day','$text')";
+		@file_put_contents("/var/log/artica-postfix/dhcpd/".md5($sqlcontent),$sqlcontent);
+	}
+	
 	
 	if(preg_match("#dhcpd: Multiple interfaces match the same shared network:\s+(.+)$#",$buffer,$re)){
 		if($GLOBALS["CLASS_SOCKET"]->GET_INFO('EnableDHCPServer')==0){return true;}

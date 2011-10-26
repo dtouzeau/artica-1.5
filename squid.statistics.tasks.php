@@ -94,7 +94,7 @@ function re_categorize_popup(){
 		<td style='font-size:14px'>". Field_text("RecategorizeMaxExecutionTime",$RecategorizeMaxExecutionTime,"font-size:14px;width:90px")."&nbsp;{minutes}</td>
 	</tr>		
 	<tr>
-	<td colspan=2 align=right'><hr>". button("{apply}", "SaveRecategoProxy()")."</td>
+	<td colspan=2 align='right'><hr>". button("{apply}", "SaveRecategoProxy()")."</td>
 	</tr>
 	
 	</tbody>

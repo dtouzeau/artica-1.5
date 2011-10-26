@@ -121,10 +121,7 @@ $configure="./configure ". @implode(" ", $cmds);
 
 if($GLOBALS["SHOW_COMPILE_ONLY"]){echo $configure."\n";die();}
 if(!$GLOBALS["NO_COMPILE"]){
-	echo "Remove /usr/share/squid3\n";
-	shell_exec("/bin/rm -rf /usr/share/squid3");
-	echo "Remove /lib/squid3\n";
-	shell_exec("/bin/rm -rf /lib/squid3");
+	
 	echo "configuring...\n";
 	shell_exec($configure);
 	echo "make...\n";
@@ -134,10 +131,8 @@ if(!$GLOBALS["NO_COMPILE"]){
 	$unix=new unix();
 	$squid3=$unix->find_program("squid3");
 	if(is_file($squid3)){@unlink($squid3);}
-	
-	@unlink("/usr/sbin/squid");
-	@unlink("/usr/bin/purge");
-	@unlink("/usr/bin/squidclient");
+	remove_squid();
+	echo "Make install\n";
 	shell_exec("make install");
 }
 if(!is_file("/usr/sbin/squid")){echo "Failed\n";}
@@ -422,4 +417,39 @@ $f[]="detail: \"%ssl_error_descr: %ssl_subject\"";
 $f[]="descr: \"Application verification failure\";\n";
 @file_put_contents("/usr/share/squid3/errors/templates/error-details.txt", @implode("\n", $f));
 
+}
+
+
+function remove_squid(){
+$bins[]="/usr/sbin/squid3";
+$bins[]="/usr/sbin/squid";
+$bins[]="/usr/share/man/man8/squid3.8.gz";
+$bins[]="/usr/sbin/squid";
+$bins[]="/usr/bin/purge";
+$bins[]="/usr/bin/squidclient";
+
+while (list ($num, $filename) = each ($bins)){
+	if(is_file($filename)){
+		echo "Remove $filename\n";
+		@unlink($filename);
+	}
+	
+}
+
+$dirs[]="/etc/squid3";
+$dirs[]="/lib/squid3"; 
+$dirs[]="/usr/lib/squid3"; 
+$dirs[]="/lib64/squid3"; 
+$dirs[]="/usr/lib64/squid3"; 
+$dirs[]="/usr/share/squid3"; 
+
+while (list ($num, $filename) = each ($dirs)){
+	if(is_dir($filename)){
+		echo "Remove $filename\n";
+		shell_exec("/bin/rm -rf $filename");
+	}
+	
+}
+	
+	
 }

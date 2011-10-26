@@ -47,7 +47,7 @@
         <Filename Value="zsystem.pas"/>
         <UnitName Value="zsystem"/>
         <CursorPos X="31" Y="3709"/>
-        <TopLine Value="3684"/>
+        <TopLine Value="3692"/>
         <EditorIndex Value="17"/>
         <UsageCount Value="104"/>
         <Loaded Value="True"/>
@@ -56,7 +56,7 @@
         <Filename Value="global_conf.pas"/>
         <UnitName Value="global_conf"/>
         <CursorPos X="10" Y="42"/>
-        <TopLine Value="1"/>
+        <TopLine Value="25"/>
         <EditorIndex Value="6"/>
         <UsageCount Value="100"/>
         <Bookmarks Count="1">
@@ -68,7 +68,7 @@
         <Filename Value="class_install.pas"/>
         <UnitName Value="class_install"/>
         <CursorPos X="44" Y="2526"/>
-        <TopLine Value="2492"/>
+        <TopLine Value="2509"/>
         <EditorIndex Value="5"/>
         <UsageCount Value="100"/>
         <Bookmarks Count="2">
@@ -187,8 +187,8 @@
       <Unit17>
         <Filename Value="squid.pas"/>
         <UnitName Value="squid"/>
-        <CursorPos X="21" Y="2209"/>
-        <TopLine Value="2164"/>
+        <CursorPos X="31" Y="785"/>
+        <TopLine Value="752"/>
         <EditorIndex Value="11"/>
         <UsageCount Value="105"/>
         <Loaded Value="True"/>
@@ -263,7 +263,7 @@
         <Filename Value="dansguardian.pas"/>
         <UnitName Value="dansguardian"/>
         <CursorPos X="1" Y="812"/>
-        <TopLine Value="531"/>
+        <TopLine Value="795"/>
         <EditorIndex Value="7"/>
         <UsageCount Value="92"/>
         <Loaded Value="True"/>
@@ -1184,19 +1184,19 @@
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="squid.pas"/>
-        <Caret Line="2163" Column="13" TopLine="2129"/>
+        <Caret Line="2163" Column="14" TopLine="2129"/>
       </Position1>
       <Position2>
         <Filename Value="squid.pas"/>
-        <Caret Line="2251" Column="18" TopLine="2265"/>
+        <Caret Line="1400" Column="81" TopLine="1375"/>
       </Position2>
       <Position3>
         <Filename Value="squid.pas"/>
-        <Caret Line="2163" Column="14" TopLine="2129"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
       </Position3>
       <Position4>
         <Filename Value="squid.pas"/>
-        <Caret Line="1400" Column="81" TopLine="1375"/>
+        <Caret Line="1349" Column="31" TopLine="1334"/>
       </Position4>
       <Position5>
         <Filename Value="squid.pas"/>
@@ -1204,103 +1204,103 @@
       </Position5>
       <Position6>
         <Filename Value="squid.pas"/>
-        <Caret Line="1349" Column="31" TopLine="1334"/>
+        <Caret Line="2188" Column="1" TopLine="2171"/>
       </Position6>
       <Position7>
         <Filename Value="squid.pas"/>
-        <Caret Line="1" Column="1" TopLine="1"/>
+        <Caret Line="56" Column="18" TopLine="1"/>
       </Position7>
       <Position8>
         <Filename Value="squid.pas"/>
-        <Caret Line="2188" Column="1" TopLine="2171"/>
+        <Caret Line="55" Column="42" TopLine="22"/>
       </Position8>
       <Position9>
         <Filename Value="squid.pas"/>
-        <Caret Line="56" Column="18" TopLine="1"/>
+        <Caret Line="2202" Column="1" TopLine="2168"/>
       </Position9>
       <Position10>
         <Filename Value="squid.pas"/>
-        <Caret Line="55" Column="42" TopLine="22"/>
+        <Caret Line="1967" Column="10" TopLine="1940"/>
       </Position10>
       <Position11>
         <Filename Value="squid.pas"/>
-        <Caret Line="2202" Column="1" TopLine="2168"/>
+        <Caret Line="1969" Column="98" TopLine="1899"/>
       </Position11>
       <Position12>
         <Filename Value="squid.pas"/>
-        <Caret Line="1967" Column="10" TopLine="1940"/>
+        <Caret Line="1967" Column="80" TopLine="1934"/>
       </Position12>
       <Position13>
         <Filename Value="squid.pas"/>
-        <Caret Line="1969" Column="98" TopLine="1899"/>
+        <Caret Line="2160" Column="53" TopLine="2139"/>
       </Position13>
       <Position14>
         <Filename Value="squid.pas"/>
-        <Caret Line="1967" Column="80" TopLine="1934"/>
+        <Caret Line="2200" Column="1" TopLine="2194"/>
       </Position14>
       <Position15>
         <Filename Value="squid.pas"/>
-        <Caret Line="2160" Column="53" TopLine="2139"/>
+        <Caret Line="56" Column="18" TopLine="18"/>
       </Position15>
       <Position16>
         <Filename Value="squid.pas"/>
-        <Caret Line="2200" Column="1" TopLine="2194"/>
+        <Caret Line="1924" Column="33" TopLine="1890"/>
       </Position16>
       <Position17>
         <Filename Value="squid.pas"/>
-        <Caret Line="56" Column="18" TopLine="18"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
       </Position17>
       <Position18>
         <Filename Value="squid.pas"/>
-        <Caret Line="1924" Column="33" TopLine="1890"/>
+        <Caret Line="94" Column="50" TopLine="60"/>
       </Position18>
       <Position19>
         <Filename Value="squid.pas"/>
-        <Caret Line="1" Column="1" TopLine="1"/>
+        <Caret Line="683" Column="40" TopLine="649"/>
       </Position19>
       <Position20>
         <Filename Value="squid.pas"/>
-        <Caret Line="94" Column="50" TopLine="60"/>
+        <Caret Line="810" Column="64" TopLine="776"/>
       </Position20>
       <Position21>
-        <Filename Value="squid.pas"/>
-        <Caret Line="683" Column="40" TopLine="649"/>
+        <Filename Value="class_install.pas"/>
+        <Caret Line="2857" Column="132" TopLine="2823"/>
       </Position21>
       <Position22>
         <Filename Value="squid.pas"/>
-        <Caret Line="810" Column="64" TopLine="776"/>
+        <Caret Line="1944" Column="21" TopLine="1921"/>
       </Position22>
       <Position23>
-        <Filename Value="class_install.pas"/>
-        <Caret Line="2857" Column="132" TopLine="2823"/>
+        <Filename Value="squid.pas"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
       </Position23>
       <Position24>
         <Filename Value="squid.pas"/>
-        <Caret Line="1944" Column="21" TopLine="1921"/>
+        <Caret Line="44" Column="31" TopLine="1"/>
       </Position24>
       <Position25>
         <Filename Value="squid.pas"/>
-        <Caret Line="1" Column="1" TopLine="1"/>
+        <Caret Line="56" Column="49" TopLine="1"/>
       </Position25>
       <Position26>
         <Filename Value="squid.pas"/>
-        <Caret Line="44" Column="31" TopLine="1"/>
+        <Caret Line="2189" Column="19" TopLine="2143"/>
       </Position26>
       <Position27>
         <Filename Value="squid.pas"/>
-        <Caret Line="56" Column="49" TopLine="1"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
       </Position27>
       <Position28>
         <Filename Value="squid.pas"/>
-        <Caret Line="2189" Column="19" TopLine="2143"/>
+        <Caret Line="44" Column="31" TopLine="1"/>
       </Position28>
       <Position29>
         <Filename Value="squid.pas"/>
-        <Caret Line="1" Column="1" TopLine="1"/>
+        <Caret Line="2043" Column="11" TopLine="2005"/>
       </Position29>
       <Position30>
         <Filename Value="squid.pas"/>
-        <Caret Line="44" Column="31" TopLine="1"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
       </Position30>
     </JumpHistory>
   </ProjectOptions>
@@ -1373,7 +1373,7 @@
       </Item11>
       <Item12>
         <Source Value="squid.pas"/>
-        <Line Value="1002"/>
+        <Line Value="1008"/>
       </Item12>
       <Item13>
         <Source Value="zsystem.pas"/>

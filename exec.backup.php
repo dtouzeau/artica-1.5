@@ -586,11 +586,17 @@ function CleanContainers($ID,$mount_path_final){
 	
 	if(preg_match("#backup\.([0-9\-]+)\/(.+?)$#", $mount_path_final,$re)){$mount_path_final=str_replace("backup.{$re[1]}/{$re[2]}", "", $mount_path_final);}
 	backup_events($ID,"CLEANING","INFO, Clean containers in $mount_path_final",__LINE__);
-	events("Clean containers in $mount_path_final",__LINE__);
+	events("Clean containers in `$mount_path_final`",__LINE__);
 	
 	$unix=new unix();
 	$rm=$unix->find_program("rm");
-	events("rm = $rm",__LINE__);
+	events("rm = $rm / ExecBackupMaxContainers=$ExecBackupMaxContainers",__LINE__);
+	
+	$temparay=$unix->dirdir($mount_path_final);
+	while (list ($index, $line) = each ($temparay) ){
+		events("Found a directory called `$index`",__LINE__);
+	}
+	
 	
 	$c=0;
 	while($ligne=@mysql_fetch_array($results,MYSQL_ASSOC)){
@@ -598,9 +604,13 @@ function CleanContainers($ID,$mount_path_final){
 		$cnx_params=unserialize(base64_decode($ligne["cnx_params"]));
 		$container=$cnx_params["CONTAINER"];
 		if(trim($container)==null){backup_events($ID,"CLEANING","ERROR, {$ligne["ID"]} Container name is null....",__LINE__);continue;}
-		if(!is_dir("$mount_path_final/$container")){backup_events($ID,"CLEANING","ERROR, {$ligne["ID"]} $mount_path_final/$container no such directory",__LINE__);continue;}
-		shell_exec("$rm -rf $mount_path_final/$container");
-		if(is_dir("$mount_path_final/$container")){backup_events($ID,"CLEANING","ERROR, {$ligne["ID"]} $mount_path_final/$container permission denied",__LINE__);continue;}
+		$TargetDirectory="$mount_path_final/$container";
+		$TargetDirectory=str_replace("//", "/", $TargetDirectory);
+		events("Checking = `$TargetDirectory`",__LINE__);
+		if(!is_dir($TargetDirectory)){backup_events($ID,"CLEANING","ERROR, {$ligne["ID"]} $TargetDirectory no such directory",__LINE__);continue;}
+		events("$rm -rf $TargetDirectory",__LINE__);
+		shell_exec("$rm -rf $TargetDirectory");
+		if(is_dir("$TargetDirectory")){backup_events($ID,"CLEANING","ERROR, {$ligne["ID"]} $TargetDirectory permission denied",__LINE__);continue;}
 		$q->QUERY_SQL("DELETE FROM backup_storages WHERE ID={$ligne["ID"]}","artica_backup");
 	}	
 		

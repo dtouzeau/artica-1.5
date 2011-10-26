@@ -3623,7 +3623,16 @@ function arpd(){
 	$l[]="service_disabled=$EnableArpDaemon";
 	$l[]="watchdog_features=1";
 	$l[]="family=system";
-	if($EnableArpDaemon==0){$l[]="";return implode("\n",$l);return;}
+	if($EnableArpDaemon==0){
+		if($GLOBALS["CLASS_UNIX"]->process_exists($master_pid)){
+			$cmd="{$GLOBALS["nohup"]} {$GLOBALS["NICE"]}/etc/init.d/artica-postfix stop arpd >/dev/null 2>&1 &"; 
+			events("$cmd",__FUNCTION__,__LINE__);
+			shell_exec($cmd);
+			
+		}
+		$l[]="";return implode("\n",$l);
+		return;
+	}
 
 	if(!$GLOBALS["CLASS_UNIX"]->process_exists($master_pid)){
 		WATCHDOG("APP_ARPD","arpd");

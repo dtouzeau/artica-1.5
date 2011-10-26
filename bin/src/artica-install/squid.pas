@@ -772,13 +772,19 @@ var
 ver:string;
 major,minor:integer;
 RegExpr:TRegExpr;
+D:boolean;
 begin
+  result:=false;
+  D:=logs.COMMANDLINE_PARAMETERS('--verbose');
    ver:=SQUID_VERSION();
+   if D then writeln('Version:', ver);
    RegExpr:=TRegExpr.Create;
    RegExpr.Expression:='^([0-9]+)\.([0-9]+)';
    RegExpr.Exec(ver);
    TryStrToInt(RegExpr.Match[1],major);
-   TryStrToInt(RegExpr.Match[1],minor);
+   TryStrToInt(RegExpr.Match[2],minor);
+   if D then writeln('Major:', major);
+   if D then writeln('minor:', major);
    if major>=3 then begin
       if minor>=2 then result:=true;
    end;

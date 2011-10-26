@@ -19,7 +19,7 @@ if(function_exists("posix_getuid")){
 if($GLOBALS["DEBUG_MEM"]){events("Memory: class.users.menus.inc -> ".round(((memory_get_usage()/1024)/1000),2) ." LOADED line:".__LINE__);}
 
 class usersMenus {
-
+	var $AS_KIMSUFFI=false;
 	var $TreePage=array("domains.edit.group.php"=>true,"samba.index.php"=>true);
 	var $squid_kerb_auth_path=null;
 	var $ArchStruct=0;
@@ -589,6 +589,9 @@ class usersMenus {
 			if(isset($_GLOBAL["APACHE_MODULES_PATH"])){$this->APACHE_MODULES_PATH=$_GLOBAL["APACHE_MODULES_PATH"];;}
 			if(isset($_GLOBAL["MYCOSI_APPLIANCE"])){$this->MYCOSI_APPLIANCE=$_GLOBAL["MYCOSI_APPLIANCE"];;}
 			if(isset($_GLOBAL["ARPD_INSTALLED"])){$this->ARPD_INSTALLED=$_GLOBAL["ARPD_INSTALLED"];}
+			if(isset($_GLOBAL["AS_KIMSUFFI"])){$this->AS_KIMSUFFI=$_GLOBAL["AS_KIMSUFFI"];}
+			
+			
 			
 			if(isset($_GLOBAL["APACHE_RUN_USER"])){$this->APACHE_RUN_USER=$_GLOBAL["APACHE_RUN_USER"];;}
 			if(isset($_GLOBAL["QUOTA_INSTALLED"])){$this->QUOTA_INSTALLED=$_GLOBAL["QUOTA_INSTALLED"];;}

@@ -2639,3 +2639,5 @@ For example, if you move a website from shopping to webphone, you need to update
 This operation will consume server performances.[br]This section define the task schedule and tweaks when executed.</www_recategorize_explain>
 <RecategorizeSecondsToWaitOverload>Sleep X seconds if server is overloaded</RecategorizeSecondsToWaitOverload>
 <MaxExecutionTime>MAX execution time</MaxExecutionTime>
+<rpc_only>RPC Only</rpc_only>
+<EnableArpDaemon>Enable ARPD Daemon</EnableArpDaemon>

@@ -8,7 +8,8 @@
 	include_once(dirname(__FILE__).'/ressources/class.mount.inc');
 	include_once(dirname(__FILE__).'/framework/frame.class.inc');
 	include_once(dirname(__FILE__).'/framework/class.unix.inc');
-	
+
+if(is_file("/etc/artica-postfix/AS_KIMSUFFI")){echo "AS_KIMSUFFI!\n";die();}	
 if($argv[1]=="--schedules"){set_computer_schedules();exit;}
 if($argv[1]=="--import-list"){importcomputersFromList();exit;}		
 $computer=$argv[1];

@@ -34,13 +34,16 @@ $ini->loadString(@file_get_contents(dirname(__FILE__). '/ressources/index.ini'))
 $users=new usersMenus();
 $ArchStruct=$users->ArchStruct;
 if($ArchStruct=="32"){$ArchStruct="i386";}
-if($ArchStruct=="64"){$ArchStruct="amd64";}
+if($ArchStruct=="64"){$ArchStruct="x64";}
 
 $GlobalApplicationsStatus=$sock->APC_GET("GlobalApplicationsStatus",2);
 if($GlobalApplicationsStatus==null){$GlobalApplicationsStatus=base64_decode($sock->getFrameWork('cmd.php?Global-Applications-Status=yes'));$sock->APC_SAVE("GlobalApplicationsStatus",$GlobalApplicationsStatus);$GLOBALS["GlobalApplicationsStatus"]=$GlobalApplicationsStatus;}	
 $squid_version=	ParseAppli($GlobalApplicationsStatus,"APP_SQUID");
+
 $availableversion=$ini->_params["NEXT"]["squid32-$ArchStruct"];
 $actualversion=$sock->getFrameWork("squid.php?full-version=yes");
+if($actualversion==null){$actualversion="0.0.0";}
+
 $availableversion_dansguardian=$ini->_params["NEXT"]["dansguardian2-$ArchStruct"];
 $actualversion_dansguardian=$sock->getFrameWork("squid.php?full-dans-version=yes");
 

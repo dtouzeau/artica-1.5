@@ -4812,7 +4812,25 @@ public function CheckTables_openvpn(){
 			$this->mysql_error=$this->mysql_error."\n$sql";
 		}
 
-	}		
+	}
+
+	
+	if(!$this->TABLE_EXISTS("dhcpd_logs",'artica_events')){
+			$sql="CREATE TABLE `artica_events`.`dhcpd_logs` (
+				`ID` BIGINT( 100 ) NOT NULL AUTO_INCREMENT ,
+				`zDate` TIMESTAMP NOT NULL ,
+				`description` TEXT NOT NULL ,
+				PRIMARY KEY ( `ID` ) ,
+			  	KEY `zDate` (`zDate`),
+			  	FULLTEXT KEY `description` (`description`)
+				)";
+			$this->QUERY_SQL($sql,"artica_events"); 
+			if(!$this->ok){
+				writelogs("Fatal: $this->mysql_error\n$sql",__CLASS__.'/'.__FUNCTION__,__FILE__,__LINE__);
+				$this->mysql_error=$this->mysql_error."\n$sql";
+			}
+
+	} 	
 
 		
 if(!$this->TABLE_EXISTS('kav4proxy_av_stats','artica_events')){		

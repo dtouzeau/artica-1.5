@@ -150,7 +150,8 @@ $Toremove["exec.dansguardian-tail.php"]=true;
 $Toremove["exec.auth-tail.php"]=true;	
 $Toremove["exec.artica-filter-daemon.php"]=true;	
 $Toremove["exec.postfix-logger.php"]=true;
-$Toremove["exec.squid2.logger.php"]=true;	
+$Toremove["exec.squid2.logger.php"]=true;
+$Toremove["exec.openvpn.php"]=true;		
 if(!is_file($pgrep)){return;}
 	
 	
@@ -159,6 +160,9 @@ if(!is_file($pgrep)){return;}
 	events("$cmd",__FUNCTION__,__LINE__);
 	exec("$cmd",$results);
 	while (list ($num, $ligne) = each ($results) ){
+		if(preg_match("#bin\/openvpn#",$ligne)){continue;}
+		
+		
 		if(preg_match("#^([0-9]+)\s+.+?\s+\/usr\/share\/artica-postfix\/(.+?)\.php.*?$#",$ligne,$re)){
 			$filename=trim($re[2]).".php";
 			if($Toremove[$filename]){continue;}
@@ -170,7 +174,7 @@ if(!is_file($pgrep)){return;}
 			
 			if($filename=="exec.artica.meta.php"){
 				if($time>20){
-					$GLOBALS["CLASS_UNIX"]->send_email_events("[artica-background] exec.artica.meta.php is killed after {$time}Mn live",null,"system");
+					$GLOBALS["CLASS_UNIX"]->send_email_events("[artica-background] exec.artica.meta.php is killed after {$time}Mn live",$ligne,"system");
 					events("killing exec.artica.meta.php it freeze...",__FUNCTION__,__LINE__);
 					shell_exec("/bin/kill -9 {$re[1]}");
 				}
@@ -179,7 +183,7 @@ if(!is_file($pgrep)){return;}
 			
 		 	if($filename=="exec.clean.logs.php"){
 				if($time>60){
-				$GLOBALS["CLASS_UNIX"]->send_email_events("[artica-background] exec.clean.logs.php is killed after {$time}Mn live",null,"system");
+				$GLOBALS["CLASS_UNIX"]->send_email_events("[artica-background] exec.clean.logs.php is killed after {$time}Mn live",$ligne,"system");
 				events("killing exec.clean.logs.php it freeze...",__FUNCTION__,__LINE__);
 				shell_exec("/bin/kill -9 {$re[1]}");
 				}
@@ -187,7 +191,7 @@ if(!is_file($pgrep)){return;}
 			
 			if($filename=="exec.squid.stats.php"){
 				if($time>60){
-				$GLOBALS["CLASS_UNIX"]->send_email_events("[artica-background] exec.squid.stats.php is killed after {$time}Mn live",null,"system");
+				$GLOBALS["CLASS_UNIX"]->send_email_events("[artica-background] exec.squid.stats.php is killed after {$time}Mn live",$ligne,"system");
 				events("killing exec.squid.stats.php it freeze...",__FUNCTION__,__LINE__);
 				shell_exec("/bin/kill -9 {$re[1]}");
 				}
@@ -195,7 +199,7 @@ if(!is_file($pgrep)){return;}
 			
 			if($filename=="exec.mysql.build.php"){
 				if($time>30){
-				$GLOBALS["CLASS_UNIX"]->send_email_events("[artica-background] exec.mysql.build.php is killed after {$time}Mn live",null,"system");
+				$GLOBALS["CLASS_UNIX"]->send_email_events("[artica-background] exec.mysql.build.php is killed after {$time}Mn live",$ligne,"system");
 				events("killing exec.mysql.build.php it freeze...",__FUNCTION__,__LINE__);
 				shell_exec("/bin/kill -9 {$re[1]}");
 				}
@@ -203,7 +207,7 @@ if(!is_file($pgrep)){return;}
 						
 			if($filename=="exec.smtp-hack.export.php"){
 				if($time>10){
-				$GLOBALS["CLASS_UNIX"]->send_email_events("[artica-background] exec.smtp-hack.export.php is killed after {$time}Mn live",null,"system");
+				$GLOBALS["CLASS_UNIX"]->send_email_events("[artica-background] exec.smtp-hack.export.php is killed after {$time}Mn live",$ligne,"system");
 				events("killing exec.smtp-hack.export.php it freeze...",__FUNCTION__,__LINE__);
 				shell_exec("/bin/kill -9 {$re[1]}");
 				}
@@ -211,7 +215,7 @@ if(!is_file($pgrep)){return;}
 			
 			if($filename=="exec.postfix-logger.php"){
 				if($time>10){
-				$GLOBALS["CLASS_UNIX"]->send_email_events("[artica-background] exec.postfix-logger.php is killed after {$time}Mn live",null,"system");
+				$GLOBALS["CLASS_UNIX"]->send_email_events("[artica-background] exec.postfix-logger.php is killed after {$time}Mn live",$ligne,"system");
 				events("killing exec.postfix-logger.php it freeze...",__FUNCTION__,__LINE__);
 				shell_exec("/bin/kill -9 {$re[1]}");
 				}
@@ -219,7 +223,7 @@ if(!is_file($pgrep)){return;}
 
 			if($filename=="exec.openvpn.php"){
 				if($time>5){
-				$GLOBALS["CLASS_UNIX"]->send_email_events("[artica-background] exec.openvpn.php is killed after {$time}Mn live",null,"system");
+				$GLOBALS["CLASS_UNIX"]->send_email_events("[artica-background] exec.openvpn.php is killed after {$time}Mn live",$ligne,"system");
 				events("killing exec.openvpn.php it freeze...",__FUNCTION__,__LINE__);
 				shell_exec("/bin/kill -9 {$re[1]}");
 				}
@@ -227,7 +231,7 @@ if(!is_file($pgrep)){return;}
 			
 			if($filename=="exec.test-connection.php"){
 				if($time>5){
-				$GLOBALS["CLASS_UNIX"]->send_email_events("[artica-background] exec.test-connection.php is killed after {$time}Mn live",null,"system");
+				$GLOBALS["CLASS_UNIX"]->send_email_events("[artica-background] exec.test-connection.php is killed after {$time}Mn live",$ligne,"system");
 				events("killing exec.test-connection.php it freeze...",__FUNCTION__,__LINE__);
 				shell_exec("/bin/kill -9 {$re[1]}");
 				}
@@ -235,7 +239,7 @@ if(!is_file($pgrep)){return;}
 
 			if($filename=="exec.watchdog.php"){
 				if($time>5){
-					$GLOBALS["CLASS_UNIX"]->send_email_events("[artica-background] exec.watchdog.php is killed after {$time}Mn live",null,"system");
+					$GLOBALS["CLASS_UNIX"]->send_email_events("[artica-background] exec.watchdog.php is killed after {$time}Mn live",$ligne,"system");
 					events("killing exec.openvpn.php it freeze...",__FUNCTION__,__LINE__);
 					shell_exec("/bin/kill -9 {$re[1]}");
 				}				

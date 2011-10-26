@@ -76,7 +76,7 @@ begin
   writeln('RESULT.................: Major version: ',distri.DISTRI_MAJOR,' (DISTRI_MAJOR)');
   writeln('RESULT.................: Artica Code  : ',distri.DISTRINAME_CODE,' (DISTRINAME_CODE)');
   if arch=32 then package_name:='squid32-i386';
-  if arch=64 then package_name:='squid32-amd64';
+  if arch=64 then package_name:='squid32-x64';
 
   source_folder:=libs.COMPILE_GENERIC_APPS(package_name);
   if not DirectoryExists(source_folder) then begin
@@ -140,7 +140,7 @@ begin
   writeln('RESULT.................: Major version: ',distri.DISTRI_MAJOR,' (DISTRI_MAJOR)');
   writeln('RESULT.................: Artica Code  : ',distri.DISTRINAME_CODE,' (DISTRINAME_CODE)');
   if arch=32 then package_name:='dansguardian2-i386';
-  if arch=64 then package_name:='dansguardian2-amd64';
+  if arch=64 then package_name:='dansguardian2-x64';
 
   source_folder:=libs.COMPILE_GENERIC_APPS(package_name);
   if not DirectoryExists(source_folder) then begin

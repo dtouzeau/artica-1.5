@@ -28,13 +28,13 @@ $samba=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("folder-granted-48.png", "
 $squid=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("squid-reverse-48.png", "Proxy","proxyquicktext", "SquidMainQuickLinks()"));
 $network=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("network-connection2-48.png", "network",null, "QuickLinksNetwork()"));
 $postfix=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("mass-mailing-postfix-48.png", "APP_POSTFIX",null, "QuickLinkPostfix()"));
+$freewebs=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("website-48.png", "free_web_servers","freewebs_explain", "QuickLinkSystems('section_freeweb')"));
 
-
-
+if(!$users->APACHE_INSTALLED){$freewebs=null;}
 if(!$users->SAMBA_INSTALLED){$samba=null;}
 if(!$users->SQUID_INSTALLED){$squid=null;}
 if(!$users->POSTFIX_INSTALLED){$postfix=null;}
-if($users->KASPERSKY_WEB_APPLIANCE){$samba=null;}
+if($users->KASPERSKY_WEB_APPLIANCE){$samba=null;$freewebs=null;}
 if(!$users->AsSquidAdministrator){$squid=null;}
 if(!$users->AsSystemAdministrator){$network=null;}
 if(!$users->AsPostfixAdministrator){$postfix=null;}
@@ -42,6 +42,7 @@ if($users->ZARAFA_APPLIANCE){$postfix=$tpl->_ENGINE_parse_body(quicklinks_paragr
 if($users->LOAD_BALANCE_APPLIANCE){
 	$postfix=null;
 	$squid=null;
+	$freewebs=null;
 	$crossroads=$tpl->_ENGINE_parse_body(quicklinks_paragraphe("48-blance-servers.png", "load_balancing",null, "QuickLinkSystems('section_crossroads')"));
 }
 
@@ -55,12 +56,14 @@ $tr[]=$squid;
 $tr[]=$postfix;
 $tr[]=$crossroads;
 
+while (list ($key, $line) = each ($tr) ){if($line==null){continue;}$tr2[]=$line;}
 
+if(count($tr2)<7){$tr2[]=$freewebs;}
 
 $count=1;
 
 
-while (list ($key, $line) = each ($tr) ){
+while (list ($key, $line) = each ($tr2) ){
 	if($line==null){continue;}
 	$f[]="<li id='kwick1'>$line</li>";
 	$count++;
@@ -214,6 +217,11 @@ $html="
 
 function section_crossroads(){
 	echo "<script>javascript:AnimateDiv('BodyContent');Loadjs('crossroads.index.php?newinterface=yes');</script>";
+}
+
+function section_freeweb(){
+	echo "<script>javascript:AnimateDiv('BodyContent');Loadjs('freeweb.php?in-front-ajax=yes&newinterface=yes');</script>";
+	
 }
 
 function section_softwares(){

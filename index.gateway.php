@@ -605,6 +605,7 @@ function dhcp_tabs(){
 	$array["shared-network"]='{groups}';
 	$array["hosts"]='{hosts}';
 	$array["leases"]='{leases}';
+	$array["events"]='{events}';
 	
 	$fontsize=null;
 	if(isset($_GET["newinterface"])){$newinterface="&newinterface=yes";$newinterfacesuffix="?newinterface=yes";$fontsize="font-size:14px;";}
@@ -619,7 +620,12 @@ function dhcp_tabs(){
 		if($num=="leases"){
 			$html[]= "<li><a href=\"dhcpd.leases.php$newinterfacesuffix\"><span style='$fontsize'>$ligne</span></a></li>\n";
 			continue;
-		}		
+		}
+
+		if($num=="events"){
+			$html[]= "<li><a href=\"dhcpd.events-sql.php$newinterfacesuffix\"><span style='$fontsize'>$ligne</span></a></li>\n";
+			continue;
+		}			
 		
 		$html[]= "<li><a href=\"$page?dhcp-tab=$num$newinterface\"><span style='$fontsize'>$ligne</span></a></li>\n";
 	}

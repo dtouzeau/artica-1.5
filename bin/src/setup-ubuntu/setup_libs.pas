@@ -90,6 +90,7 @@ public
       function  IS_DEBIAN_NON_FREE_IN_SOURCE_LIST():boolean;
       function  ArchStruct():integer;
       PROCEDURE NOTIFICATION(subject:string;text:string;context:string);
+      function IsKImsuffi():boolean;
 END;
 
 implementation
@@ -112,6 +113,45 @@ end;
 //#########################################################################################
 procedure tlibs.Free();
 begin
+
+end;
+//#########################################################################################
+function tlibs.IsKImsuffi():boolean;
+var
+   l:Tstringlist;
+   RegExpr:TRegExpr;
+   i:integer;
+begin
+if FileExists('/etc/artica-postfix/AS_KIMSUFFI') then exit(true);
+RegExpr:=TRegExpr.Create;
+l:=Tstringlist.Create;
+ForceDirectories('/etc/artica-postfix');
+result:=false;
+if  FileExists('/etc/issue') then begin
+        try l.LoadFromFile('/etc/issue'); except exit(); end;
+        RegExpr.Expression:='kimsufi';
+        For i:=0 to l.Count-1 do begin
+            if RegExpr.Exec(l.Strings[i]) then begin
+               fpsystem('/bin/touch /etc/artica-postfix/AS_KIMSUFFI');
+               l.free; RegExpr.free; exit(true);
+            end;
+         end;
+    end;
+
+if  FileExists('/etc/rc0.d/K01fixudev') then begin
+        try l.LoadFromFile('/etc/rc0.d/K01fixudev'); except exit(); end;
+        RegExpr.Expression:='rules\.ovh';
+        For i:=0 to l.Count-1 do begin
+            if RegExpr.Exec(l.Strings[i]) then begin
+               fpsystem('/bin/touch /etc/artica-postfix/AS_KIMSUFFI');
+               l.free; RegExpr.free; exit(true);
+            end;
+         end;
+    end;
+
+l.free;
+RegExpr.free;
+exit(false);
 
 end;
 //#########################################################################################

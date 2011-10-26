@@ -48,9 +48,9 @@ js();
 function js(){
 	
 	$page=CurrentPageName();
-	
+	if(isset($_GET["newinterface"])){$newinterface="&newinterface=yes";}
 	if(isset($_GET["in-front-ajax"])){
-		echo "$('#BodyContent').load('$page?popup=yes');";
+		echo "$('#BodyContent').load('$page?popup=yes$newinterface');";
 		return;
 	}	
 	
@@ -408,7 +408,7 @@ function popup(){
 	}
 		
 	
-	
+	if(isset($_GET["newinterface"])){$fontsize="style='font-size:14px'";}
 	
 	
 	
@@ -416,16 +416,16 @@ function popup(){
 	while (list ($num, $ligne) = each ($array) ){
 		
 		if($num=="pure-ftpd"){
-			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"pureftp.index.php?pure-ftpd-page=yes\"><span>$ligne</span></a></li>\n");
+			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"pureftp.index.php?pure-ftpd-page=yes\" $fontsize><span $fontsize>$ligne</span></a></li>\n");
 			continue;
 		}
 		
 		if($num=="tomcat"){
-			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"tomcat.php\"><span>$ligne</span></a></li>\n");
+			$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"tomcat.php\" $fontsize><span $fontsize>$ligne</span></a></li>\n");
 			continue;
 		}		
 		
-		$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"$page?$num=yes\"><span>$ligne</span></a></li>\n");
+		$html[]= $tpl->_ENGINE_parse_body("<li><a href=\"$page?$num=yes\" $fontsize><span $fontsize>$ligne</span></a></li>\n");
 	}
 	
 	
@@ -583,11 +583,11 @@ function popup_webs(){
 	<table style='width:100%'>
 	<tr>
 		<td width=99%><div class=explain>{freewebs_explain}</div></td>
-		<td width=1%>". imgtootltip("website-add-64.png","{add}","Loadjs('freeweb.edit.php?hostname=')")."</td>
+		<td width=1%>". imgtootltip("service-restart-64.png","{rebuild_items}","RebuildFreeweb()")."</td>
 	</tr>
 </table>
 	<div style='width:100%;text-align:right'>
-	<a href=\"javascript:blur();\" OnClick=\"javascript:RebuildFreeweb();\" style='font-size:14px'>{rebuild_items}</a></div>
+	
 		
 	<div id='freewebs_list' style='margin:5px'></div>
 	
@@ -688,7 +688,8 @@ function listwebs_search(){
 <table cellspacing='0' cellpadding='0' border='0' class='tableView' style='width:100%'>
 <thead class='thead'>
 	<tr>
-	<th colspan=2>{joomlaservername}:$ou</th>
+	<th width=1%>".imgtootltip("plus-24.png","{add} {joomlaservername}","Loadjs('freeweb.edit.php?hostname=')")."</th>
+	<th>{joomlaservername}:$ou</th>
 	<th>SSL</th>
 	<th>RESOLV</th>
 	<th>DNS</th>

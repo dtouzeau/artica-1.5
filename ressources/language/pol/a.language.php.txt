@@ -826,6 +826,7 @@ You only need to give the new IP address of the new server in order to create it
 <edit_openvpn_connection>Display parameters and modify connection behavior</edit_openvpn_connection>
 <empty_cache>Empty cache</empty_cache>
 <empty_database>Empty database</empty_database>
+<EnableArpDaemon>Enable ARPD Daemon</EnableArpDaemon>
 <EnableAuth>Activate authentication method</EnableAuth>
 <EnableBandwithCalculation>Enable bandwith calculation</EnableBandwithCalculation>
 <EnableBandwithCalculation_explain>If enabled, artica will try to determine your Internet bandwith</EnableBandwithCalculation_explain>
@@ -1932,6 +1933,7 @@ When define quota for a specific user, wait until this user have saved a file on
 <root_directory>Root directory</root_directory>
 <root_password_not_changed>Modifiy root password</root_password_not_changed>
 <root_password_not_changed_text>It is recommended to change the system root password.[br]The root user allow to access to this server trough SSH and console in order to perform system tasks</root_password_not_changed_text>
+<rpc_only>RPC Only</rpc_only>
 <running_in_debug_mode>Running in debug mode!</running_in_debug_mode>
 <running_processes>Running processes</running_processes>
 <run_every_day>Run every</run_every_day>

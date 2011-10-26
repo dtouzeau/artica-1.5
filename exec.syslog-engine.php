@@ -19,15 +19,15 @@ if(preg_match("#--force#",implode(" ",$argv))){$GLOBALS["FORCE"]=true;}
 
 if($argv[1]=='--build-server'){build_server_mode();die();}
 if($argv[1]=='--build-client'){build_client_mode();die();}
-if($argv[1]=='--auth-logs'){authlogs();sessions_logs();ipblocks();clamd_mem();admin_logs();crossroads();udfbguard_admin_events();die();}
+if($argv[1]=='--auth-logs'){authlogs();sessions_logs();ipblocks();clamd_mem();admin_logs();crossroads();udfbguard_admin_events();dhcpd_logs();die();}
 if($argv[1]=='--authfw'){authfw();sessions_logs();die();ipblocks();}
 if($argv[1]=='--authfw-compile'){compile_sshd_rules();sessions_logs();ipblocks();die();}
 if($argv[1]=='--snort'){snort_logs();sessions_logs();ipblocks();clamd_mem();crossroads();udfbguard_admin_events();die();}
 if($argv[1]=='--sessions'){sessions_logs();die();}
 if($argv[1]=='--loadavg'){loadavg_logs();clamd_mem();crossroads();udfbguard_admin_events();die();}
 if($argv[1]=='--ipblocks'){ipblocks();die();}
-if($argv[1]=='--adminlogs'){admin_logs();squid_tasks();crossroads();udfbguard_admin_events();die();}
-if($argv[1]=='--psmem'){ps_mem(true);squid_tasks();crossroads();udfbguard_admin_events();die();}
+if($argv[1]=='--adminlogs'){admin_logs();squid_tasks();crossroads();udfbguard_admin_events();dhcpd_logs();die();}
+if($argv[1]=='--psmem'){ps_mem(true);squid_tasks();crossroads();udfbguard_admin_events();dhcpd_logs();die();}
 if($argv[1]=='--squid-tasks'){squid_tasks(true);die();}
 
 
@@ -381,6 +381,44 @@ $q=new mysql();
 	
 	
 }
+function dhcpd_logs($nopid=false){
+	$f=array();
+	if($nopid){
+		$unix=new unix();
+		$pidfile="/etc/artica-postfix/pids/".basename(__FILE__).".".__FUNCTION__.".pid";
+		$pid=@file_get_contents($pidfile);
+		if($unix->process_exists($pid)){writelogs("Already running pid $pid",__FUNCTION__,__FILE__,__LINE__);return;}	
+		$t=0;		
+		
+	}
+	$q=new mysql();	
+	if(!$q->TABLE_EXISTS('dhcpd_logs','artica_events')){$q->BuildTables();}
+	if(!$q->TABLE_EXISTS('dhcpd_logs','artica_events',true)){return;}
+	$prefix="INSERT IGNORE INTO dhcpd_logs (`zDate`,`description`) VALUES ";
+	foreach (glob("/var/log/artica-postfix/dhcpd/*") as $filename) {
+		$sqlcontent=@file_get_contents($filename);
+		if(trim($sqlcontent)==null){@unlink($filename);continue;}
+		
+		$f[]=$sqlcontent;
+		@unlink($filename);
+	}
+	
+	if(count($f)>0){$sql=$prefix.@implode(",", $f);
+		$q->QUERY_SQL($sql,"artica_events");
+		if(!$q->ok){
+			writelogs("$q->mysql_error",__FUNCTION__,__FILE__,__LINE__);
+		}
+	
+	}
+	
+	$num=$q->COUNT_ROWS("dhcpd_logs","artica_events");
+	if($num>400000){$q->QUERY_SQL("DELETE FROM dhcpd_logs ORDER BY zDate LIMIT 400000","artica_events");}	
+	
+	
+}
+
+
+
 function crossroads($nopid=false){
 	$f=array();
 	if($nopid){

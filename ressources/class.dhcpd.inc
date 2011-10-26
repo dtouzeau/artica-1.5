@@ -482,6 +482,13 @@ private function GetMyDNS(){
 			
 		$range_suffix=0;
 		if(is_numeric($re[4])){if($re[4]>0){$range_suffix=$re[4];}}
+		$final_subnet="{$re[1]}.{$re[2]}.{$re[3]}.$range_suffix";
+		if($final_subnet=="...0"){$final_subnet="0.0.0.0";}
+		if($GLOBALS["VERBOSE"]){echo "Starting......: DHCP DEBUG: final_subnet=$final_subnet\n";}
+		
+		
+		
+		
 		$conf=$conf."\n";
 		$conf=$conf."subnet {$re[1]}.{$re[2]}.{$re[3]}.$range_suffix netmask $this->netmask {\n";
 		if(preg_match('#([0-9]+)\.([0-9]+)\.([0-9]+)#',$this->range1,$re)){
