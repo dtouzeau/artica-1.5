@@ -277,7 +277,7 @@ foreach my $key (sort keys %mailboxes) {
                 $args[0] .= " --prefspath=$conf{'sa:prefs_file'}";
                 $args[0] .= " --siteconfigpath=$conf{'sa:site_config_path'}";
                 $args[0] .= ' --' . $learn; 
-                $args[0] .= " --dir $learn_path";
+                $args[0] .= " --dir '$learn_path'";
                 $args[0] .= " -D" if $conf{'sa:debug'} =~ /^[yY]/;
                 $args[0] .= " 1>$tmp_file";
                 $args[0] .= ' 2>&1';
